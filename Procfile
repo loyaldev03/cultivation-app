@@ -1,1 +1,1 @@
-web: PORT=3000 bundle exec rails server
+web: bundle exec rails server

@@ -19,6 +19,9 @@ Things you may want to cover:
 
 * Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
+### Deployment instructions
+* (once) `heroku git:remote -a cannvas-staging`
+* `git push heroku master`
 
-* ...
+### Staging Server
+* http://cannvas-staging.herokuapp.com/

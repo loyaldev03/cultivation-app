@@ -32,6 +32,8 @@ gem 'mongoid', '~> 6.4.1'
 
 gem 'simple_command'
 
+gem 'devise'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 

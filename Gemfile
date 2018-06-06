@@ -28,11 +28,22 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+# Database
 gem 'mongoid', '~> 6.4.1'
 
+# User authentication
+gem 'devise'
+
+# Use command pattern to build service classes
 gem 'simple_command'
 
-gem 'devise'
+# Performance Profiler (place after mongoid)
+gem 'rack-mini-profiler'
+# For memory profiling
+gem 'memory_profiler'
+# For call-stack profiling flamegraphs
+gem 'flamegraph'
+gem 'stackprof'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false

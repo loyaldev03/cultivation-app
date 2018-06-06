@@ -28,6 +28,10 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+
+# Frontend
+gem 'webpacker', '~> 3.5'
+
 # Database
 gem 'mongoid', '~> 6.4.1'
 

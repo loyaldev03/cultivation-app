@@ -64,6 +64,10 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 
+  # Ruby code formatter (.rufo)
+  gem 'rufo', '~> 0.3.1'
+
+  # Run app with Procfile
   gem 'foreman', '~> 0.84.0'
 end
 

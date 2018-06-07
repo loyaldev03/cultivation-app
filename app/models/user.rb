@@ -5,6 +5,11 @@ class User
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  # Personal Information
+  field :first_name, type: String
+  field :last_name, type: String
+  field :timezone, type: String, default: 'UTC'
+
   ## Database authenticatable
   field :email, type: String, default: ''
   field :encrypted_password, type: String, default: ''
@@ -34,6 +39,8 @@ class User
   # field :unlock_token,    type: String # Only if unlock strategy is :email or :both
   # field :locked_at,       type: Time
 
+  # TODO: Need a flag to indicate user is developer
+  # This need to be refactor
   def is_dev?
     true
   end

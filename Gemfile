@@ -26,28 +26,6 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
-
-# Frontend
-gem 'webpacker', '~> 3.5'
-gem 'react-rails'
-
-# Database
-gem 'mongoid', '~> 6.4.1'
-
-# User authentication
-gem 'devise'
-
-# Use command pattern to build service classes
-gem 'simple_command'
-
-# Performance Profiler (place after mongoid)
-gem 'rack-mini-profiler'
-# For memory profiling
-gem 'memory_profiler'
-# For call-stack profiling flamegraphs
-gem 'flamegraph'
-gem 'stackprof'
-
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
@@ -74,3 +52,27 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+# Frontend
+gem 'webpacker', '~> 3.5'
+gem 'react-rails'
+
+# Database
+gem 'mongoid', '~> 6.4.1'
+
+# User authentication
+gem 'devise'
+
+# Use command pattern to build service classes
+gem 'simple_command'
+
+# Performance Profiler (place after mongoid)
+gem 'rack-mini-profiler'
+# For memory profiling
+gem 'memory_profiler'
+# For call-stack profiling flamegraphs
+gem 'flamegraph'
+gem 'stackprof'
+
+# Error tracking
+gem 'rollbar'

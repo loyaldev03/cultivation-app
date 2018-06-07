@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Run bundle install if Gemfile changes
+[ -f Gemfile ] && bundle install > /dev/null &

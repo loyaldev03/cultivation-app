@@ -10,7 +10,8 @@
     "prop-types": "^15.6.1",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
-    "react_ujs": "^2.4.4"
+    "react_ujs": "^2.4.4",
+    "tachyons": "^4.10.0"
   },
   "devDependencies": {
     "eslint": "^4.19.1",

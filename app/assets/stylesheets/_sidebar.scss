@@ -1,0 +1,13 @@
+// SIZES
+$width__sidebar: 255px;
+
+// COLOURS
+$sidebar_dark: rgb(0, 21, 41);
+
+.sidebar {
+  background-color: $sidebar_dark;
+  width: $width__sidebar;
+  color: rgba(255, 255, 255, 65);
+  transition: 0.7s;
+}
+

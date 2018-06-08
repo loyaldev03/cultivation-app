@@ -4,22 +4,37 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
-      <div className="screen-lg">
-        <div class="ant-layout ant-layout-has-sider">
-          <%= react_component('Sidebar', menuLinks: [
-            { name: 'Procurement', url: '#1' },
-            { name: 'Quality', url: '#2' },
-          ]) %>
-          <div>
-            <p class="notice"><%= notice %></p>
-            <p class="alert"><%= alert %></p>
-            <div>
+      <div class="flex flex-row min-vh-100">
+        <div class="sidebar">
+          <div class="bg-gray ma2 h3 flex justify-center items-center ">
+            <span class="dib">LOGO</span>
+          </div>
+          <ul class="list pl0 ma2">
+            <li class="pa2 mb2 bb b--mid-gray">
+              <span>Menu 1</span>
+            </li>
+            <li class="pa2 mb2 bb b--mid-gray">
+              <span>Menu 2</span>
+            </li>
+            <li class="pa2 mb2 bb b--mid-gray">
+              <span>Menu 3</span>
+            </li>
+          </ul>
+        </div>
+        <div class="main bg-silver flex-auto">
+          <header class="bg-yellow h3">Header</header>
+          <main class="min-vh-100 bg-blue">
+            <div class="">breadcrumb</div>
+            <div class="">
+              <p class="notice"><%= notice %></p>
+              <p class="alert"><%= alert %></p>
               <%= yield %>
             </div>
-          </div>
+          </main>
         </div>
       </div>
     </div>
     <%= debug(params) if Rails.env.development? %>
   </body>
 </html>
+

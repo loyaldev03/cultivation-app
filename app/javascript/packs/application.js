@@ -8,7 +8,8 @@
 // layout file, like app/views/layouts/application.html.erb
 
 // Support component names relative to this directory:
-import 'antd/dist/antd.css'
+// import 'antd/dist/antd.css'
+//
 
 var componentRequireContext = require.context('components', true)
 var ReactRailsUJS = require('react_ujs')

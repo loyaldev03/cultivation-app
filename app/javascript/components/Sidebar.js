@@ -32,7 +32,7 @@ class Sidebar extends React.PureComponent {
   renderMenuItems = links => (
     <React.Fragment>
       {links.map((r, i) => (
-        <Menu.Item key={`menu${i}`}>
+        <Menu.Item key={`menu-${i}`}>
           <Icon type="desktop" />
           <span>
             <a href={r.url}>{r.name}</a>
@@ -64,14 +64,6 @@ class Sidebar extends React.PureComponent {
   }
 }
 
-// <Menu
-//   theme="dark"
-//   defaultSelectedKeys={[this.currentLink]}
-//   mode="inline"
-// >
-//   {this.renderMenuItems(menuLinks)}
-//   {this.renderMenuItems(adminLinks)}
-// </Menu>
 Sidebar.propTypes = {
   menuLinks: PropTypes.array,
   adminLinks: PropTypes.array,

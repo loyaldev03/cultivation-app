@@ -4,13 +4,19 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
-      <%= render "layouts/topnav" %>
-      <%= render "layouts/sidebar" %>
-      <div>
-        <p class="notice"><%= notice %></p>
-        <p class="alert"><%= alert %></p>
-        <div>
-          <%= yield %>
+      <div className="screen-lg">
+        <div class="ant-layout ant-layout-has-sider">
+          <%= react_component('Sidebar', menuLinks: [
+            { name: 'Procurement', url: '#1' },
+            { name: 'Quality', url: '#2' },
+          ]) %>
+          <div>
+            <p class="notice"><%= notice %></p>
+            <p class="alert"><%= alert %></p>
+            <div>
+              <%= yield %>
+            </div>
+          </div>
         </div>
       </div>
     </div>

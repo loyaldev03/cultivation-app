@@ -5,10 +5,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
+import { DatePicker, Button } from 'antd'
 
-const Hello = props => (
-  <div>Hello {props.name}!</div>
-)
+const Hello = props => <div>Hello {props.name}!</div>
 
 Hello.defaultProps = {
   name: 'David'
@@ -20,7 +19,11 @@ Hello.propTypes = {
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Hello name="Hello David" />,
-    document.body.appendChild(document.createElement('div')),
+    <div>
+      <p className="ajinomoto">Where can you buy ajinomoto?</p>
+      <Button />
+      <DatePicker />
+    </div>,
+    document.body.appendChild(document.createElement('div'))
   )
 })

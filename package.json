@@ -4,6 +4,8 @@
   "dependencies": {
     "@rails/webpacker": "3.5",
     "antd": "^3.6.1",
+    "babel-core": "^6.26.3",
+    "babel-plugin-import": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "prop-types": "^15.6.1",
     "react": "^16.4.0",
@@ -11,6 +13,11 @@
     "react_ujs": "^2.4.4"
   },
   "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-plugin-react": "^7.9.1",
     "webpack-dev-server": "2.11.2"
+  },
+  "scripts": {
+    "format": "prettier-eslint --write \"app/javascript/**/*.js\""
   }
 }

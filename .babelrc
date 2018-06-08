@@ -14,6 +14,9 @@
     "react"
   ],
   "plugins": [
+    [
+      "import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }
+    ],
     "syntax-dynamic-import",
     "transform-object-rest-spread",
     [

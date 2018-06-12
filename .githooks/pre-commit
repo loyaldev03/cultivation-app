@@ -4,4 +4,4 @@
 bundle exec rufo app/ & yarn run format
 
 # Run unit tests
-bundle exec rails test
+bundle exec rails spec

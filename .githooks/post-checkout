@@ -2,3 +2,6 @@
 
 # Run bundle install if Gemfile changes
 [ -f Gemfile ] && bundle install > /dev/null &
+
+# Run unit tests
+bundle exec rails spec

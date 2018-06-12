@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <%= render "layouts/head" %>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+      <div class="min-vh-100 w-100">
+        <p class="notice"><%= notice %></p>
+        <p class="alert"><%= alert %></p>
+        <%= yield %>
+      </div>
+    </div>
+    <%= debug(params) if Rails.env.development? %>
+  </body>
+</html>
+

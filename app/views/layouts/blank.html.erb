@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <%= render "layouts/head" %>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+      <div class="flex flex-row min-vh-100">
+        <div class="main bg-silver flex flex-column flex-auto">
+          <main class="min-vh-100 bg-blue">
+            <div class="pa3">
+              <p class="notice"><%= notice %></p>
+              <p class="alert"><%= alert %></p>
+              <%= yield %>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+    <%= debug(params) if Rails.env.development? %>
+  </body>
+</html>
+

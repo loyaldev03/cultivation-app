@@ -5,3 +5,7 @@
 <div>
   <h1>Hello <%= current_user && current_user.is_dev? %></h1>
 </div>
+
+<div>
+  <%= link_to "Setup a new facility (Wizard)", facility_setup_new_path %>
+</div>

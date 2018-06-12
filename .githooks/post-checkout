@@ -4,4 +4,4 @@
 [ -f Gemfile ] && bundle install > /dev/null &
 
 # Run unit tests
-bundle exec rails spec
+bundle exec rspec spec --format documentation

@@ -48,6 +48,9 @@ group :development do
 
   # Run app with Procfile
   gem 'foreman', '~> 0.84.0'
+
+  # Automatically re-run rspec tests
+  gem 'guard-rspec', require: false
 end
 
 

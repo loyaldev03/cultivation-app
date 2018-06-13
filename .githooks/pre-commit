@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Format ruby codes
-bundle exec rufo app/ & yarn run format
+bundle exec rufo app/ && yarn run format
 
 # Run unit tests
 bundle exec rails spec

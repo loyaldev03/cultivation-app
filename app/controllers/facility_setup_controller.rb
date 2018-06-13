@@ -5,8 +5,6 @@ class FacilitySetupController < ApplicationController
     current_step = params['step'] || 1
     next_step = current_step.next
 
-    Rails.logger.debug "===== GOTO current_step: #{current_step}"
-
     if current_step == 1
       @facility = Facility.new(facility_params)
     else
@@ -14,11 +12,11 @@ class FacilitySetupController < ApplicationController
     end
 
     if @facility.save
-      Rails.logger.debug "===== GOTO Next step"
-      # continue to next step
-      redirect_to facility_setup_wizard_path(facility_id: @facility.id, step: next_step)
+      # continue to next step or show summary
+      redirect_to current_step != '6' ?
+                    facility_setup_wizard_path(facility_id: @facility.id, step: next_step) :
+                    facility_setup_summary_path(facility_id: @facility.id)
     else
-      Rails.logger.debug "===== GOTO Current step"
       render "facility_setup/step#{current_step}"
     end
   end
@@ -28,6 +26,10 @@ class FacilitySetupController < ApplicationController
     # @facility = FacilitySetupForm.new
     @facility = @current_step == 1 ? Facility.new : Facility.find(params[:facility_id])
     render "facility_setup/step#{@current_step}"
+  end
+
+  def summary
+    @facility = Facility.find(params[:facility_id])
   end
 
   private

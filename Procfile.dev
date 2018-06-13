@@ -1,3 +1,2 @@
-wds: bin/webpack-dev-server
+webpack: bin/webpack-dev-server
 web: PORT=3000 bundle exec rails server
-test: bundle exec guard

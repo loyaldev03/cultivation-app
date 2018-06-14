@@ -17,8 +17,6 @@ class Facility
   field :room_count, type: Integer
 
   embeds_many :rooms
-
-  validates :name, presence: true
 end
 
 class Room

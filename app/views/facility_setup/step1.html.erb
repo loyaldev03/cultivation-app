@@ -2,7 +2,7 @@
   <div class="dtc v-mid">
     <div class="measure center">
       <h1>New Facility Wizard</h1>
-      <%= form_with(model: @facility, url: facility_setup_save_path, local: true) do |f| %>
+      <%= form_with scope: :facility, url: facility_setup_save_path, local: true do |f| %>
         <% if @facility.errors.any? %>
           <div id="error_explanation" class="red">
             <h3><%= pluralize(@facility.errors.count, "error") %> prohibited this facility from being saved:</h2>

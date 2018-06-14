@@ -2,6 +2,3 @@
 
 # Format ruby codes
 bundle exec rufo app/ && yarn run format
-
-# Run unit tests
-bundle exec rspec spec --format documentation

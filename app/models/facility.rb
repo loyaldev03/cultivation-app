@@ -22,14 +22,11 @@ end
 class Room
   include Mongoid::Document
   field :name, type: String
-  field :desc, type: String
   field :code, type: String
+  field :desc, type: String
 
   embedded_in :facility
   embeds_many :sections
-
-  validates :name, presence: true
-  validates :code, presence: true
 end
 
 class Section

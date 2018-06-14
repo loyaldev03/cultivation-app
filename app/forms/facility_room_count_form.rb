@@ -12,6 +12,7 @@ class FacilityRoomCountForm
   def submit(params)
     @facility.attributes = params.slice(:room_count)
     if valid?
+      @facility.rooms = @facility.room_count.times.map { Room.new }
       @facility.save!
     else
       false

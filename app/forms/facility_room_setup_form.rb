@@ -1,10 +1,14 @@
 class FacilityRoomSetupForm
   include ActiveModel::Model
 
-  delegate :id, :name, :room_count, to: :@facility
+  delegate :id, :name, :code, to: :@facility
 
-  def initialize(_facility)
-    @facility = _facility
+  validates :id, presence: true
+  validates :name, presence: true
+  validates :code, presence: true
+
+  def initialize(facility)
+    @facility = facility
   end
 
   def submit(params)

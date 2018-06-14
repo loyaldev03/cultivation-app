@@ -40,10 +40,8 @@ class FacilitySetupController < ApplicationController
     when 2
       @wizard_form ||= FacilityRoomCountForm.new(facility)
     when 3
-      @wizard_form ||= FacilityRoomsOverviewForm.new(facility)
-    when 4
       @wizard_form ||= FacilityRoomSetupForm.new(facility)
-    when 5
+    when 4
       @wizard_form ||= FacilitySectionSetupForm.new(facility)
     else
       @wizard_form ||= FacilitySummaryView.new(facility)
@@ -69,7 +67,7 @@ class FacilitySetupController < ApplicationController
     when 2
       facility_room_count_params
     when 3
-      facility_room_count_params
+      facility_room_setup_params
     when 4
       facility_room_count_params
     when 5
@@ -79,15 +77,18 @@ class FacilitySetupController < ApplicationController
     end
   end
 
+  # Step 1
   def facility_basic_info_params
     params.require(:facility).permit(:name, :code, :address, :zipcode, :city, :state, :country, :phone, :fax)
   end
 
+  # Step 2
   def facility_room_count_params
     params.require(:facility).permit(:room_count)
   end
 
-  def facility_rooms_overview_params
-    params.require(:facility).permit(:room_count)
+  # Step 3
+  def facility_room_setup_params
+    params.require(:facility).permit(:id, :name, :code, :desc)
   end
 end

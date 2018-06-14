@@ -14,6 +14,11 @@
           </div>
         <% end %>
 
+        <div class="mt3 mb2">
+          <%= f.label :room_count, "How many rooms in this facility?", class: "f6 b db mb1" %>
+          <%= f.number_field :room_count, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+        </div>
+
         <div class="mt3">
           <%= f.submit "Save & Continue", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
         </div>

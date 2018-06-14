@@ -2,23 +2,13 @@
   <div class="dtc v-mid">
     <div class="measure center">
       <h1>Facilityy Summary</h1>
-      <%= form_with(model: @facility, url: facility_setup_save_path(step: @current_step, facility_id: @facility.id), method: :post, local: true) do |f| %>
-        <% if @facility.errors.any? %>
-          <div id="error_explanation" class="red">
-            <h3><%= pluralize(@facility.errors.count, "error") %> prohibited this facility from being saved:</h2>
-            <ul>
-            <% @facility.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-            </ul>
-          </div>
-        <% end %>
 
-        <div class="mt3">
-          <%= link_to "Setup a another facility (Wizard)", facility_setup_new_path, class: "link db mv3" %>
-          <%= link_to "Close", root_path, class: "link db mv3" %>
-        </div>
-      <% end %>
+      <span>Facility Name: <% @wizard_form.name %></span>
+
+      <div class="mt3">
+        <%= link_to "Setup a another facility (Wizard)", facility_setup_new_path, class: "link db mv3" %>
+        <%= link_to "Close", root_path, class: "link db mv3" %>
+      </div>
     </div>
   </div>
 </div>

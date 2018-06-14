@@ -75,10 +75,15 @@ gem 'devise'
 # Use command pattern to build service classes
 gem 'simple_command'
 
+# Form Object / View Model
+gem 'virtus'
+
 # Performance Profiler (place after mongoid)
 gem 'rack-mini-profiler'
+
 # For memory profiling
 gem 'memory_profiler'
+
 # For call-stack profiling flamegraphs
 gem 'flamegraph'
 gem 'stackprof'

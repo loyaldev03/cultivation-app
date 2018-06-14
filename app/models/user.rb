@@ -5,7 +5,7 @@ class User
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  # Personal Information
+  # Information
   field :first_name, type: String
   field :last_name, type: String
   field :timezone, type: String, default: 'UTC'

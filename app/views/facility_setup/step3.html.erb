@@ -1,7 +1,7 @@
 <div class="vh-100 w-100 dt">
   <div class="dtc v-mid">
     <div class="measure-wide center">
-      <h1>Step 3 - Setup Rooms</h1>
+      <h1>Step 3 - Setup Room (1 of 5)</h1>
       <div class="flex flex-row">
         <div class="pa2">
           <ul class="list pa2 w4 flex flex-wrap justify-around">
@@ -13,7 +13,7 @@
         </div>
         <span class="db pa2 mr2 bl b--black-10"></span>
         <div class="db measure w-100">
-          <%= form_with(scope: :facility, url: facility_setup_save_path(step: @current_step, facility_id: @wizard_form.id), method: :post, local: true) do |f| %>
+          <%= form_with(scope: :facility, url: facility_setup_save_path(step: @current_step, facility_id: @wizard_form.facility_id, :room_id: @wizard_form.room_id), method: :post, local: true) do |f| %>
             <% if @wizard_form.errors.any? %>
               <div id="error_explanation" class="red">
                 <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
@@ -26,18 +26,18 @@
             <% end %>
 
             <div class="mt3 mb2">
-              <%= f.label :name, "Room Name", class: "f6 b db mb1" %>
+              <%= f.label :room_name, "Room Name", class: "f6 b db mb1" %>
               <%= f.text_field :room_name, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
             </div>
 
             <div class="mt3 mb2">
-              <%= f.label :code, "Room ID", class: "f6 b db mb1" %>
+              <%= f.label :room_code, "Room ID", class: "f6 b db mb1" %>
               <%= f.text_field :room_code, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
             </div>
 
             <div class="mt3 mb2">
-              <%= f.label :desc, "Description", class: "f6 b db mb1" %>
-              <%= f.text_area :desc, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+              <%= f.label :room_desc, "Description", class: "f6 b db mb1" %>
+              <%= f.text_area :room_desc, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
             </div>
 
             <div class="mt3">

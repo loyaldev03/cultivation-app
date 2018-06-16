@@ -7,22 +7,16 @@ class FacilitySetupController < ApplicationController
   end
 
   def save
-    Rails.logger.debug '-----------------current step-----------------------'
-    Rails.logger.debug current_step
-    Rails.logger.debug '-----------------next step-----------------------'
-    Rails.logger.debug next_step
-    Rails.logger.debug '----------------------------------------'
-    Rails.logger.debug wizard_form_params
     if wizard_form.submit(wizard_form_params)
       # continue to next step or show summary
-      redirect_to current_step < 6 ?
-                    facility_setup_new_path(facility_id: wizard_form.id, step: next_step) :
-                    facility_setup_summary_path(facility_id: wizard_form.id)
+      if current_step == 3
+        redirect_to facility_setup_new_path(step: next_step, facility_id: wizard_form.facility_id, room_id: wizard_form.room_id)
+      else
+        redirect_to current_step < 6 ?
+                      facility_setup_new_path(facility_id: wizard_form.id, step: next_step) :
+                      facility_setup_summary_path(facility_id: wizard_form.id)
+      end
     else
-      Rails.logger.debug '------------------------------------------------------'
-      Rails.logger.debug '--------------- failed to submit ---------------------'
-      Rails.logger.debug '------------------------------------------------------'
-      Rails.logger.debug wizard_form.errors
       render "facility_setup/step#{current_step}"
     end
   end
@@ -40,7 +34,7 @@ class FacilitySetupController < ApplicationController
     when 2
       @wizard_form ||= FacilityRoomCountForm.new(facility)
     when 3
-      @wizard_form ||= FacilityRoomSetupForm.new(facility)
+      @wizard_form ||= FacilityRoomSetupForm.new(facility, room_id)
     when 4
       @wizard_form ||= FacilitySectionSetupForm.new(facility)
     else
@@ -50,6 +44,10 @@ class FacilitySetupController < ApplicationController
 
   def facility
     @facility ||= Facility.find(params[:facility_id]) if params[:facility_id]
+  end
+
+  def room_id
+    @room_id ||= params[:room_id]
   end
 
   def current_step
@@ -89,6 +87,6 @@ class FacilitySetupController < ApplicationController
 
   # Step 3
   def facility_room_setup_params
-    params.require(:facility).permit(:id, :name, :code, :desc)
+    params.require(:facility).permit(:room_name, :room_code, :room_desc)
   end
 end

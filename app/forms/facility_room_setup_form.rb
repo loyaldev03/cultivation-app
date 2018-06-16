@@ -1,8 +1,8 @@
 class FacilityRoomSetupForm
   include ActiveModel::Model
 
-  delegate :id, :name, :code, :rooms, to: :facility, prefix: true
-  delegate :id, :name, :code, :desc, to: :room, prefix: true
+  delegate :id, :name, :code, :room_count, :rooms, to: :facility, prefix: true
+  delegate :id, :name, :code, :desc, :is_complete, to: :room, prefix: true
 
   validates :facility_id, presence: true
   validates :facility_name, presence: true
@@ -10,7 +10,6 @@ class FacilityRoomSetupForm
   validates :room_id, presence: true
   validates :room_name, presence: true
   validates :room_code, presence: true
-  validates :room_desc, presence: true
 
   def initialize(_facility, _room_id = nil)
     @facility = _facility
@@ -26,11 +25,12 @@ class FacilityRoomSetupForm
   end
 
   def submit(params)
-    @room.name = params[:room_name]
-    @room.code = params[:room_code]
+    room.name = params[:room_name]
+    room.code = params[:room_code]
+    room.desc = params[:room_desc]
     # TODO: Validate uniqueness of room code
     if valid?
-      return true
+      room.save!
     else
       return false
     end

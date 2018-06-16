@@ -4,6 +4,7 @@ class FacilityBasicInfoForm
   delegate :id, :name, :code, :address, :zipcode, :city, :state, :country, :phone, :fax, to: :facility
 
   validates :name, presence: true
+  validates :code, presence: true
 
   def submit(params)
     facility.attributes = params.slice(:name, :code, :address, :zipcode, :city, :state, :country, :phone, :fax, to: :facility)

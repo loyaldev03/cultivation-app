@@ -12,26 +12,33 @@
               </div>
             <% end %>
           </div>
-          <ul class="list pl0">
-            <li class="pa3 grow">
-              <span class="fw1 f4">Facilities</span>
-            </li>
-            <li class="pa3 grow">
-              <span class="fw1 f4">Inventory</span>
-            </li>
-            <li class="pa3 grow">
-              <span class="fw1 f4">Cultivation</span>
-            </li>
-            <hr>
-            <li class="pa3 grow">
-              <span class="fw1 f4">
-                <%= link_to 'Settings', settings_path, class: 'link blue' %>
-              </span>
-            </li>
-          </ul>
+          <% if Facility.completed.count > 0 %>
+            <ul class="list pl0">
+              <li class="pa3 grow">
+                <span class="fw1 f4">Facilities</span>
+              </li>
+              <li class="pa3 grow">
+                <span class="fw1 f4">Inventory</span>
+              </li>
+              <li class="pa3 grow">
+                <span class="fw1 f4">Cultivation</span>
+              </li>
+              <hr>
+              <li class="pa3 grow">
+                <span class="fw1 f4">
+                  <%= link_to 'Settings', settings_path, class: 'link blue' %>
+                </span>
+              </li>
+            </ul>
+          <% end %>
         </div>
         <div class="main flex flex-column flex-auto">
-          <header class="bg-gray h3 white pa2">Header</header>
+          <header class="bg-gray h3 white flex items-center">
+            <div class="w-100 pl4">Header</div> 
+            <div class="w-30 pr4 tr ">
+              <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: 'link fw3 f6 light-gray' %>
+            </div>
+          </header>
           <main class="min-vh-100">
             <div class="ph4 mt3 f6">breadcrumb</div>
             <div class="">

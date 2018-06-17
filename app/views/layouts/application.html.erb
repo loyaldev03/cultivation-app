@@ -5,26 +5,35 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="flex flex-row min-vh-100">
-        <div class="sidebar">
-          <div class="bg-gray ma2 h3 flex justify-center items-center ">
-            <span class="dib">LOGO</span>
+        <div class="sidebar br b--light-gray">
+          <div class="flex justify-start ">
+            <%= link_to root_path do %>
+              <div class="br3 bg-light-gray dim ba b--mid-gray ma3 mb0" style="width: 50px; height: 50px;">
+              </div>
+            <% end %>
           </div>
-          <ul class="list pl0 ma2">
-            <li class="pa2 mb2 bb b--mid-gray">
-              <span>Menu 1A</span>
+          <ul class="list pl0">
+            <li class="pa3 grow">
+              <span class="fw1 f4">Facilities</span>
             </li>
-            <li class="pa2 mb2 bb b--mid-gray">
-              <span>Menu 2</span>
+            <li class="pa3 grow">
+              <span class="fw1 f4">Inventory</span>
             </li>
-            <li class="pa2 mb2 bb b--mid-gray">
-              <span>Menu 3</span>
+            <li class="pa3 grow">
+              <span class="fw1 f4">Cultivation</span>
+            </li>
+            <hr>
+            <li class="pa3 grow">
+              <span class="fw1 f4">
+                <%= link_to 'Settings', settings_path, class: 'link blue' %>
+              </span>
             </li>
           </ul>
         </div>
         <div class="main flex flex-column flex-auto">
-          <header class="bg-gray h3 white">Header</header>
+          <header class="bg-gray h3 white pa2">Header</header>
           <main class="min-vh-100">
-            <div class="">breadcrumb</div>
+            <div class="ph4 mt3 f6">breadcrumb</div>
             <div class="">
               <p class="notice"><%= notice %></p>
               <p class="alert"><%= alert %></p>

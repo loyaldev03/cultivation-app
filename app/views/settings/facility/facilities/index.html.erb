@@ -1,13 +1,84 @@
-<% content_for :sidebar do %>
-  <%= render "layouts/sidebar" %>
+<% content_for :breadcrumb do %>
+  Settings &gt; Facilities &gt; Facilities
 <% end %>
 
-<div class="w-100 ph3 pt3 flex">
-  <div class="w-20 pa3 pt0">
-    <div class="card bg-light-gray br3 w-100 pa3 flex items-start grow" >
-      
-      <%= link_to 'Facilities', all_settings_facility_facilities_path, class: 'ma0 dark-gray fw6 link db w-100', style: 'height: 100px' %>
-    </div>
-  </div>
+<style type="text/css">
+  .table tbody td {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .table tbody tr:hover {
+    background-color: #f6f6f6;
+  }
+
+  .table tbody tr {
+    border-bottom: 1px solid #eee;
+  }
+
+  .table tbody {
+    background-color: #fbfbfb;
+  }
+
+  .table thead tr {
+    background-color: #6699CC;
+  }
+
+
+  .active.status-bullet {
+    color: green;
+    border-color: green;
+  }
+</style>
+
+<div class="ph4 w-100 pb4 tr">
+  <%= link_to "Add facility", '', class: 'link ba bw1 b b--blue blue pa2 ph4 br4' %>
 </div>
 
+<div class="w-100 ph0">
+  <table class="w-100 table collapse">
+    <thead>
+      <tr>
+        <th class="f6 white pv3 tl pl4 pr3">#</th>
+        <th class="f6 white pv3 tl w-10">Code</th>
+        <th class="f6 white pv3 tl w-20">Name</th>
+        <th class="f6 white pv3 tl w-30">Location & contact</th>
+        <th class="f6 white pv3 tr w-10">Rooms</th>
+        <th class="f6 white pv3 tr w-20 pr4">Status</th>
+        
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @facilities.each_with_index do |f, i| %>
+        <tr>
+          <td class="f6 tl pl4 pr3 gray"><%= i+1 %></td>
+          <td class="f6 tl"><%= link_to f.code, '', class: 'link blue' %></td>
+          <td class="f6 tl"><%= f.name %></td>
+          <td class="f6 tl">
+            <p class="ma0 mb1"><%= f.address %></p>
+            <p class="ma0 mb1"><%= f.zipcode %> <%= f.city %></p>
+            <p class="ma0 mb1"><%= f.state %></p> 
+            <p class="ma0 mb1"><%= f.country %></p>
+            <p class="ma0 mb1">Tel: <%= f.phone || 'N/A' %></p>
+            <p class="ma0 mb1">Fax: <%= f.fax || 'N/A' %></p>
+          </td>
+          <td class="f6 tr">
+            <%= f.room_count %>
+          </td>
+          <td class="f6 tr pr4">
+            <% status = if !f.is_complete 
+                        "Continue setup"
+                      elsif f.is_enabled
+                        "active"
+                      else
+                        "disabled"
+                      end
+            %>
+            <span class="<%=status %> status-bullet ba b bw1 b--blue blue pa1 ph2 br4 f7"><%= status %></span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

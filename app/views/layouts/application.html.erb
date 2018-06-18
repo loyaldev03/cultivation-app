@@ -23,29 +23,41 @@
               <li class="pa3 grow">
                 <span class="fw1 f4">Cultivation</span>
               </li>
-              <hr>
-              <li class="pa3 grow">
+              <hr class="mt5">
+              <li class="pa3   grow">
                 <span class="fw1 f4">
-                  <%= link_to 'Settings', settings_path, class: 'link blue' %>
+                  <%= link_to 'Settings', settings_path, class: 'link blue fw3 f6' %>
                 </span>
+              </li>
+              <li class="pa3   grow">
+                <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: 'link fw3 f6 blue' %>
               </li>
             </ul>
           <% end %>
         </div>
         <div class="main flex flex-column flex-auto">
-          <header class="bg-gray h3 white flex items-center">
+          <% if notice %>
+            <p class="notice"><%= notice %></p>
+          <% end %>
+
+          <% if alert %>
+            <p class="alert"><%= alert %></p>
+          <% end %>
+
+          <!-- <header class="bg-gray h3 white flex items-center">
             <div class="w-100 pl4">Header</div> 
             <div class="w-30 pr4 tr ">
               <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: 'link fw3 f6 light-gray' %>
             </div>
-          </header>
+          </header> -->
           <main class="min-vh-100">
-            <div class="ph4 mt3 f6">breadcrumb</div>
-            <div class="">
-              <p class="notice"><%= notice %></p>
-              <p class="alert"><%= alert %></p>
-              <%= yield %>
+            <div class="ph4 pv4 f6 w-100">
+              <% if content_for? :breadcrumb %>
+                <%= yield :breadcrumb %>
+              <% end %>
             </div>
+            <%= yield %>
+            
           </main>
         </div>
       </div>

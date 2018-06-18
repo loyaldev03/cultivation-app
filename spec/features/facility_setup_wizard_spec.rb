@@ -12,22 +12,33 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
 
       fill_in "Name", :with => "Facility Name 1"
       fill_in "Code", :with => "Fas1"
-      click_button "Save & Continue"
+      click_button "Save & Continue" # Submit Basic Info
 
       expect(page).to have_text("Step 2")
       expect(Facility.count).to eq 1
     end
 
     scenario "Facility wizard step 2" do
-      visit facility_setup_new_path
+      facility = create(:facility, :after_step_1)
+      visit facility_setup_new_path(facility_id: facility.id, step: 2)
 
-      fill_in "Name", :with => "Facility Name 1"
-      fill_in "Code", :with => "Fas1"
-      click_button "Save & Continue" # Submit Basic Info
-      fill_in "How many rooms in this facility?", :with => "1"
-      click_button "Save & Continue" # Submit Room Number
+      fill_in "How many rooms in this facility?", :with => "2"
+      click_button "Save & Continue" # Submit Room Count
 
       expect(page).to have_text("Step 3")
+      expect(Facility.count).to eq 1
+    end
+
+    scenario "Facility wizard step 3" do
+      facility = create(:facility, :after_step_2)
+      visit facility_setup_new_path(facility_id: facility.id, step: 3)
+
+      fill_in "Room Name", :with => "Room 1"
+      fill_in "Room ID", :with => "Rm1"
+      fill_in "Description", :with => "Some description for Room 1"
+      click_button "Save & Continue" # Submit Room Setup
+
+      expect(page).to have_text("Step 4")
       expect(Facility.count).to eq 1
     end
   end

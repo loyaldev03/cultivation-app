@@ -1,0 +1,32 @@
+<% content_for :sidebar do %>
+  <%= render "layouts/sidebar" %>
+<% end %>
+
+<div class="w-100 ph3 pt3 flex flex-wrap">
+  <div class="w-20 pa3 pt0">
+    <div class="card bg-light-gray br3 w-100 pa3 flex items-start grow" >
+      <%= link_to 'Rooms', settings_facility_rooms_path, class: 'ma0 dark-gray fw6 link db w-100', style: 'height: 100px' %>
+    </div>
+  </div>
+  <div class="w-20 pa3 pt0">
+    <div class="card bg-light-gray br3 w-100 pa3 flex items-start grow" >
+      <%= link_to 'Sections', '', class: 'ma0 dark-gray fw6 link db w-100', style: 'height: 100px' %>
+    </div>
+  </div>
+  <div class="w-20 pa3 pt0">
+    <div class="card bg-light-gray br3 w-100 pa3 flex items-start grow" >
+      <%= link_to 'Rows', '', class: 'ma0 dark-gray fw6 link db w-100', style: 'height: 100px' %>
+    </div>
+  </div>
+  <div class="w-20 pa3 pt0">
+    <div class="card bg-light-gray br3 w-100 pa3 flex items-start grow" >
+      <%= link_to 'Shelves', '', class: 'ma0 dark-gray fw6 link db w-100', style: 'height: 100px' %>
+    </div>
+  </div>
+  <div class="w-20 pa3 pt0">
+    <div class="card bg-light-gray br3 w-100 pa3 flex items-start grow" >
+      <%= link_to 'Settings', '', class: 'ma0 dark-gray fw6 link db w-100', style: 'height: 100px' %>
+    </div>
+  </div>
+</div>
+

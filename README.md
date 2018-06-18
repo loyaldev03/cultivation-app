@@ -1,27 +1,33 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
-Things you may want to cover:
+## Development Setup
+---
 
-* Ruby version
+### Rails / Ruby version
+* v5.2.0 / v2.5.1
 
-* System dependencies
+### Database
+* Install MongoDB (v3.6+) locally for development
+* Install Robo 3T (https://robomongo.org/download) - GUI tools for MongoDB
 
-* Configuration
+### Configuration
+* Copy `master.key` from others any put it under `config/master.key`
+* Run `git config core.hooksPath .githooks` - to configure git hooks
+* NOTE: `git commit` would trigger pre-commit hook to format Ruby & JavaScript codes
 
-* Database creation
+### Running development server
+* `foreman start -f Procfile.dev`
 
-* Database initialization
+### Running the test suite
+* `bundle exec rspec`
 
-* How to run the test suite
+## Staging Setup
+---
 
-* Services (job queues, cache servers, search engines, etc.)
+### Heroku app
+* Run `heroku git:remote -a cannvas-staging` - to add heroku app
 
-### Deployment instructions
-* (once) `heroku git:remote -a cannvas-staging`
-* `git push heroku master`
-
-### Staging Server
-* http://cannvas-staging.herokuapp.com/
+### Deploying to Staging Server
+* Run `git push heroku master` - to deploy to master to staging
+* Staging URL http://cannvas-staging.herokuapp.com/

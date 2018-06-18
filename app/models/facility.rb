@@ -17,6 +17,8 @@ class Facility
   field :room_count, type: Integer
 
   embeds_many :rooms
+
+  scope :completed, -> { where(is_complete: true) }
 end
 
 class Room

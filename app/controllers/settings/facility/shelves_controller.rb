@@ -1,4 +1,4 @@
-class Settings::Facility::ShelvesController < ApplicationController  
+class Settings::Facility::ShelvesController < ApplicationController
   def index
     render plain: 'facilities root'
   end

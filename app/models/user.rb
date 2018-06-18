@@ -44,6 +44,6 @@ class User
   # TODO: Need a flag to indicate user is developer
   # This need to be refactor
   def is_dev?
-    role == "dev"
+    role == 'dev'
   end
 end

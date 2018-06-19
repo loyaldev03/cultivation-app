@@ -57,7 +57,7 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       fill_in "Storage Type", :with => ":consumable"
       fill_in "No of row", :with => 2
       fill_in "No of shelves in each row", :with => 1
-      fill_in "Capacity for each shelf ", :with => 10
+      fill_in "Capacity for each shelf", :with => 10
       click_button "Save & Continue"
 
       expect(page).to have_text("Step 5")

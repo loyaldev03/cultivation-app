@@ -47,6 +47,76 @@
               <%= f.text_area :section_desc, class: "ba b--black-20 pa2 mb2 db w-100" %>
             </div>
 
+            <div class="mt3 mb2">
+              <label class="f6 db b mb1">Purpose of this section?</label>
+              <div class="dib">
+                <%= f.radio_button :purpose, 'storage', class: "purpose-option", checked: true,
+                  data: { toggle: 'purpose_storage_toggle', group: 'purpose_option_group'}
+                %>
+                <%= f.label :purpose_storage, "Storage" %>
+              </div>
+              <div class="ml2 dib">
+                <%= f.radio_button :purpose, 'cultivation', class: "purpose-option",
+                  data: {toggle: 'purpose_cultivation_toggle', group: 'purpose_option_group'}
+                %>
+                <%= f.label :purpose_cultivation, "Cultivation" %>
+              </div>
+            </div>
+
+            <div class="mt3 mb2">
+              <div class="purpose_option_group purpose_storage_toggle" style="display: block">
+                <span class="db">
+                  <%= f.check_box :storage_types, { multiple: true } %>
+                  <%= f.label :purpose_cultivation, "Sales Item" %>
+                </span>
+                <span class="db">
+                  <%= f.check_box :storage_types, { multiple: true } %>
+                  <%= f.label :purpose_cultivation, "Consumable" %>
+                </span>
+                <span class="db">
+                  <%= f.check_box :storage_types, { multiple: true } %>
+                  <%= f.label :purpose_cultivation, "Mother / Seed" %>
+                </span>
+              </div>
+              <div class="purpose_option_group purpose_cultivation_toggle" style="display: none">
+                <span class="db">
+                  <%= f.check_box :storage_types, { multiple: true } %>
+                  <%= f.label :purpose_cultivation, "Mothering" %>
+                </span>
+                <span class="db">
+                  <%= f.check_box :storage_types, { multiple: true } %>
+                  <%= f.label :purpose_cultivation, "Clone" %>
+                </span>
+                <span class="db">
+                  <%= f.check_box :storage_types, { multiple: true } %>
+                  <%= f.label :purpose_cultivation, "Veg Phase 1" %>
+                </span>
+                <span class="db">
+                  <%= f.check_box :storage_types, { multiple: true } %>
+                  <%= f.label :purpose_cultivation, "Veg Phase 2" %>
+                </span>
+                <span class="db">
+                  <%= f.check_box :storage_types, { multiple: true } %>
+                  <%= f.label :purpose_cultivation, "Flower" %>
+                </span>
+              </div>
+            </div>
+
+            <div class="mt3 mb2">
+              <%= f.label :section_row_count, "No of row", class: "f6 b db mb1" %>
+              <%= f.number_field :section_row_count, class: "ba b--black-20 pa2 mb2 db w-100" %>
+            </div>
+
+            <div class="mt3 mb2">
+              <%= f.label :section_shelf_count, "No of shelves in each row", class: "f6 b db mb1" %>
+              <%= f.number_field :section_shelf_count, class: "ba b--black-20 pa2 mb2 db w-100" %>
+            </div>
+
+            <div class="mt3 mb2">
+              <%= f.label :section_shelf_capacity, "Capacity for each shelf", class: "f6 b db mb1" %>
+              <%= f.number_field :section_shelf_capacity, class: "ba b--black-20 pa2 mb2 db w-100" %>
+            </div>
+
             <div class="mt3">
               <%= f.submit "Save & Continue", class: "b ph3 pv2 ba b--black bg-transparent grow pointer f6" %>
             </div>
@@ -56,3 +126,18 @@
     </div>
   </div>
 </div>
+
+<% content_for :before_body_end do %>
+  <script>
+    $$('input[data-toggle]').on('change', function(e) {
+      const toggle = e.target.getAttribute('data-toggle')
+      const group = e.target.getAttribute('data-group')
+      $$("." + group).forEach(function(g) {
+        g.style.display = "none"
+      });
+      $$("." + toggle).forEach(function(g) {
+        g.style.display = "block"
+      });
+    })
+  </script>
+<% end %>

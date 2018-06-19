@@ -31,21 +31,50 @@
 
             <div class="mt3 mb2">
               <%= f.label :room_name, "Room Name", class: "f6 b db mb1" %>
-              <%= f.text_field :room_name, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+              <%= f.text_field :room_name, class: "ba b--black-20 pa2 mb2 db w-100" %>
             </div>
 
             <div class="mt3 mb2">
               <%= f.label :room_code, "Room ID", class: "f6 b db mb1" %>
-              <%= f.text_field :room_code, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+              <%= f.text_field :room_code, class: "ba b--black-20 pa2 mb2 db w-100" %>
             </div>
 
             <div class="mt3 mb2">
               <%= f.label :room_desc, "Description", class: "f6 b db mb1" %>
-              <%= f.text_area :room_desc, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+              <%= f.text_area :room_desc, class: "ba b--black-20 pa2 mb2 db w-100" %>
+            </div>
+
+            <div class="modal">
+              <div class="modal__content w-100">
+                <div class="modal__dialog measure-narrow bg-white br1 ml-auto mr-auto mw6">
+                  <h3 class="mt0 pv3 pl3 bg-black-60 white br1 br--top">Create sections for this room?</h3>
+                  <div class="ph3">
+                    <p class="db">
+                      Will this room be divided into multiple sections?
+                      <%= @wizard_form.room_have_sections ? "yes":"no" %>
+                    </p>
+                    <span>
+                      <%= f.radio_button :room_have_sections, true, class: "have-section", checked: @wizard_form.room_have_sections %>
+                      <%= f.label :room_have_sections_yes, "Yes" %>
+                    </span>
+                    <span class="ml2">
+                      <%= f.radio_button :room_have_sections, false, class: "have-section" %>
+                      <%= f.label :room_have_sections_no, "Only 1 section" %>
+                    </span>
+                    <div class="have-section-question mt3" style="display: block">
+                      <%= f.label :room_section_count, "How many sections in this room?", class: "db mb1" %>
+                      <%= f.number_field :room_section_count, class: "have-section-answer ba b--black-20 pa2 mb2 db", required: @wizard_form.room_have_sections %>
+                    </div>
+                  </div>
+                  <div class="pa3 flex justify-end">
+                    <%= f.submit "Next", class: "b ph3 pv2 ba b--black bg-transparent grow pointer f6" %>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="mt3">
-              <%= f.submit "Save & Continue", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+              <input type="button" value="Save & Continue" class="continue-button b ph3 pv2 ba b--black bg-transparent grow pointer f6" />
             </div>
           <% end %>
         </div>
@@ -53,3 +82,28 @@
     </div>
   </div>
 </div>
+
+<% content_for :before_body_end do %>
+  <script>
+    $(".continue-button").on("click", function(e) {
+      $(".modal").classList.add("modal--openned")
+    })
+
+    $(".continue-button").on("click", function(e) {
+      $(".modal").classList.add("modal--openned")
+    })
+
+    $$('.have-section').on("change", function() {
+      const el = $('.have-section[value=true]')
+      const question = $('.have-section-question')
+      const answer = $('.have-section-answer')
+      if (el.checked) {
+        question.style.display = "block"
+        answer.setAttribute('required', 'required')
+      } else {
+        question.style.display = "none"
+        answer.removeAttribute('required')
+      }
+    })
+  </script>
+<% end %>

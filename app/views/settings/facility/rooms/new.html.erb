@@ -3,5 +3,9 @@
 <% end %>
 
 <div class="ph4 w-100 pb4">
-  <%= render partial: 'form', locals: { facility: @room, path: settings_facility_rooms_path } %>
+  <h1 class="ma0 pa0 f3">Create room</h1>
+</div>
+
+<div class="ph4 w-50 pb4">
+  <%= render partial: 'form', locals: { room: @room, path: settings_facility_rooms_path, is_create: true } %>
 </div>

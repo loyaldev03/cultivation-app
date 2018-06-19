@@ -19,6 +19,10 @@ class Facility
   embeds_many :rooms
 
   scope :completed, -> { where(is_complete: true) }
+
+  def display_name
+    name.blank? ? '- no name -' : name
+  end
 end
 
 class Room
@@ -26,10 +30,13 @@ class Room
   field :name, type: String
   field :code, type: String
   field :desc, type: String
+  field :section_count, type: Integer
   field :is_complete, type: Boolean, default: -> { false }
 
   embedded_in :facility
   embeds_many :sections
+
+  validates :code, presence: true
 end
 
 class Section

@@ -36,6 +36,7 @@ class FacilityRoomSetupForm
 
     # TODO: Validate uniqueness of room code
     if valid?
+      room.sections = room.section_count.times.map { Section.new } unless room.is_complete
       room.save!
     else
       return false

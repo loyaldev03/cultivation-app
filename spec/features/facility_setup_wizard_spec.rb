@@ -36,10 +36,13 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       fill_in "Room Name", :with => "Room 1"
       fill_in "Room ID", :with => "Rm1"
       fill_in "Description", :with => "Some description for Room 1"
-      click_button "Save & Continue" # Submit Room Setup
+      click_button "Save & Continue"
+      fill_in "How many sections in this room?", :with => 8
+      click_button "Next"
 
       expect(page).to have_text("Step 4")
-      expect(Facility.count).to eq 1
+      facility = Facility.find_by(id: facility.id)
+      expect(facility.rooms.first.section_count).to eq 8
     end
   end
 end

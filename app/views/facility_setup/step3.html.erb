@@ -61,8 +61,8 @@
                       <%= f.radio_button :room_have_sections, false, class: "have-section" %>
                       <%= f.label :room_have_sections_no, "Only 1 section" %>
                     </span>
-                    <div class="have-section-question" style="display: block">
-                      <p>How many sections in this room?</p>
+                    <div class="have-section-question mt3" style="display: block">
+                      <%= f.label :room_section_count, "How many sections in this room?", class: "db mb1" %>
                       <%= f.number_field :room_section_count, class: "have-section-answer ba b--black-20 pa2 mb2 db", required: @wizard_form.room_have_sections %>
                     </div>
                   </div>

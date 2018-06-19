@@ -2,37 +2,8 @@
   Settings &gt; Facilities &gt; Facilities
 <% end %>
 
-<style type="text/css">
-  .table tbody td {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
-
-  .table tbody tr:hover {
-    background-color: #f6f6f6;
-  }
-
-  .table tbody tr {
-    border-bottom: 1px solid #eee;
-  }
-
-  .table tbody {
-    background-color: #fbfbfb;
-  }
-
-  .table thead tr {
-    background-color: #6699CC;
-  }
-
-
-  .active.status-bullet {
-    color: green;
-    border-color: green;
-  }
-</style>
-
 <div class="ph4 w-100 pb4 tr">
-  <%= link_to "Add facility", '', class: 'link ba bw1 b b--blue blue pa2 ph4 br4' %>
+  <%= link_to "Add facility", facility_setup_new_path, class: 'link ba bw1 b b--blue blue pa2 ph4 br4' %>
 </div>
 
 <div class="w-100 ph0">

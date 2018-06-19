@@ -1,47 +1,47 @@
-<div class="w-100 mb3">
-  <h1 class="ma0 pa0 f4 fw3">Rooms</h1>
-</div>
-<div class="w-60">
-    <table class="table table-sm table-stripped">
-      <thead class="">
-        <tr>
-          <th scope="col" class="f6">#</th>
-          <th scope="col" class="f6">PR #</th>
-          <th scope="col" class="f6">PR Date</th>
-          <th scope="col" class="f6">Requester</th>
-          <th scope="col" class="f6">From</th>
-          <th scope="col" class="f6 tr">Amount, RM</th>
-          <th scope="col" class="f6 tc">Status</th>
-          <th scope="col" class="f6">PO #</th>
-        </tr>
-      </thead>
+<% content_for :breadcrumb do %>
+  Settings &gt; Facilities &gt; Rooms
+<% end %>
 
-      <tbody>
+
+<div class="ph4 w-100 pb4 tr">
+  <%= link_to "Add room", new_settings_facility_room_path, class: 'link ba bw1 b b--blue blue pa2 ph4 br4' %>
+</div>
+
+<div class="w-100 ph0">
+  <table class="w-100 table collapse">
+    <thead>
+      <tr>
+        <th class="f6 white pv3 tl pl4 pr3">#</th>
+        <th class="f6 white pv3 tl w-10">Code</th>
+        <th class="f6 white pv3 tl w-20">Name</th>
+        <th class="f6 white pv3 tl w-40">Description</th>
+        <th class="f6 white pv3 tr w-20 pr4">Status</th>
+        
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @rooms.each_with_index do |f, i| %>
         <tr>
-          <th class="f6" scope="row">1</th>
-          <td class="f6">
-            <a href="#">PR001</a>
+          <td class="f6 tl pl4 pr3 gray"><%= i+1 %></td>
+          <td class="f6 tl"><%= link_to f.code, '', class: 'link blue' %></td>
+          <td class="f6 tl"><%= f.name %></td>
+          <td class="f6 tl">
+            <p class="ma0 mb1"><%= f.description %></p>
           </td>
-          <td class="f6">2018-05-24</td>
-          <td class="f6">Jane</td>
-          <td class="f6">Sales</td>
-          <td class="f6 tr">5,640.00</td>
-          <td class="f6 tc">New</td>
-          <td class="f6"></td>
-        </tr>
-        <tr>
-          <th class="f6" scope="row">2</th>
-          <td class="f6">
-            <a href="#">PR002</a>
+          <td class="f6 tr pr4">
+            <% status = if !f.is_complete 
+                        "Continue setup"
+                      elsif f.is_enabled
+                        "active"
+                      else
+                        "disabled"
+                      end
+            %>
+            <span class="<%=status %> status-bullet ba b bw1 b--blue blue pa1 ph2 br4 f7"><%= status %></span>
           </td>
-          <td class="f6">2018-05-24</td>
-          <td class="f6">John</td>
-          <td class="f6">Sales</td>
-          <td class="f6 tr">700.00</td>
-          
-          <td class="f6 tc">New</td>
-          <td class="f6"></td>
         </tr>
-      </tbody>
-    </table>
+      <% end %>
+    </tbody>
+  </table>
 </div>

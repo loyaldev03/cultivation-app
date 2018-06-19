@@ -1,0 +1,7 @@
+<% content_for :breadcrumb do %>
+  Settings &gt; Facilities &gt; Rooms &gt; New
+<% end %>
+
+<div class="ph4 w-100 pb4">
+  <%= render partial: 'form', locals: { facility: @room, path: settings_facility_rooms_path } %>
+</div>

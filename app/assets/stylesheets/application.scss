@@ -1,5 +1,13 @@
+/* IMPORT BASE */
 @import 'base';
+
+/* IMPORT COMPONENTS */
 @import 'sidebar';
 @import 'logo';
-@import 'debug';
+@import 'modal';
+
+/* IMPORT TACHYONS */
 @import 'tachyons/css/tachyons';
+
+/* IMPORT for DEVELOPMENT */
+@import 'debug';

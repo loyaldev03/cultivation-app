@@ -2,7 +2,8 @@ class FacilityRoomSetupForm
   include ActiveModel::Model
 
   delegate :id, :name, :code, :room_count, :rooms, to: :facility, prefix: true
-  delegate :id, :name, :code, :desc, :is_complete, to: :room, prefix: true
+  delegate :id, :name, :code, :desc, :is_complete, :section_count, to: :room, prefix: true
+  attr_accessor :have_sections
 
   validates :facility_id, presence: true
   validates :facility_name, presence: true
@@ -28,6 +29,7 @@ class FacilityRoomSetupForm
     room.name = params[:room_name]
     room.code = params[:room_code]
     room.desc = params[:room_desc]
+    room.section_count = params[:room_section_count]
     # TODO: Validate uniqueness of room code
     if valid?
       room.save!

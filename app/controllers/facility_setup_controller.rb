@@ -87,6 +87,6 @@ class FacilitySetupController < ApplicationController
 
   # Step 3
   def facility_room_setup_params
-    params.require(:facility).permit(:room_name, :room_code, :room_desc)
+    params.require(:facility).permit(:room_name, :room_code, :room_desc, :room_have_sections, :room_section_count)
   end
 end

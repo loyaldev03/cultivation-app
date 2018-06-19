@@ -65,6 +65,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 # Frontend
 gem 'webpacker', '~> 3.5'
 gem 'react-rails'
+gem 'simple_form'
 
 # Database
 gem 'mongoid', '~> 6.4.1'

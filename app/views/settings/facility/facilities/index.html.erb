@@ -1,5 +1,5 @@
 <% content_for :breadcrumb do %>
-  Settings &gt; Facilities &gt; Facilities
+  <%= breadcrumbs ["Settings", settings_path], ["Facilities", all_settings_facility_facilities_path], "Facilities" %>
 <% end %>
 
 <div class="ph4 w-100 pb4 tr">
@@ -16,7 +16,6 @@
         <th class="f6 white pv3 tl w-30">Location & contact</th>
         <th class="f6 white pv3 tr w-10">Rooms</th>
         <th class="f6 white pv3 tr w-20 pr4">Status</th>
-        
       </tr>
     </thead>
 

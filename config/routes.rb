@@ -11,14 +11,14 @@ Rails.application.routes.draw do
   namespace 'settings' do
     namespace 'facility' do
       # get '/', action: 'index', controller: 'root'
-      resources :facilities do
+      resources :facilities, only: [:edit, :update, :index] do
         get 'all', on: :collection
       end
 
-      resources :rooms
-      resources :sections
-      resources :rows
-      resources :shelves
+      resources :rooms,     only: [:index, :edit, :update, :new, :create]
+      resources :sections,  only: [:index, :edit, :update]
+      resources :rows,      only: [:index, :edit, :update]
+      resources :shelves,   only: [:index, :edit, :update]
     end
   end
 end

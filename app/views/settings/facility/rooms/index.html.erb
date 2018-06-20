@@ -1,24 +1,35 @@
 <% content_for :breadcrumb do %>
-  Settings &gt; Facilities &gt; Rooms
+  <%= breadcrumbs ["Settings", settings_path], ["Facilities", all_settings_facility_facilities_path], "Rooms" %>
 <% end %>
 
 
 <div class="ph4 w-100 pb4 flex items-center">
-  <div class="w-20">
+  <div class="w-70">
     <div class="dropdown">
-      <a class="dropbtn link ba dib bw1 b b--blue blue pa2 ph4 br4">
-        <%= params[:facility_id].present? ? Facility.find(params[:facility_id]).display_name : 'Filter by facility' %>
+      <a class="dropbtn link ba dib bw1 b b--light-gray gray pa2 ph3 br4">
+        <%= params[:facility_id].present? ? blank(Facility.find(params[:facility_id]).name) : 'View by facility' %>
       </a>
       <div class="dropdown-content">
         <%= link_to "Show all", settings_facility_rooms_path, class: "pv3 ph3 bb b--light-gray f6 gray tc" %>
         <% Facility.all.each do |f| %>
-          <%= link_to f.display_name, settings_facility_rooms_path(facility_id: f.id), class: "pv3 ph3 bb b--light-gray blue f6 tc" %>
+          <%= link_to blank(f.name), settings_facility_rooms_path(facility_id: f.id), class: "pv3 ph3 bb b--light-gray blue f6 tc" %>
+        <% end %>
+      </div>
+      
+    </div>
+    <div class="dropdown ml2">
+      <a class="dropbtn link ba dib bw1 b b--light-gray  gray pa2 ph3 br4">
+        <%= params[:filter].present? ? params[:filter] : 'Filter' %>
+      </a>
+      <div class="dropdown-content">
+        <% ["Completed", "Incomplete"].each do |f| %>
+          <%= link_to f, settings_facility_rooms_path(filter: f), class: "pv3 ph3 bb b--light-gray blue f6 tc" %>
         <% end %>
       </div>
     </div>
   </div>
-  <div class="w-80 tr">
-    <%= link_to "Add room", new_settings_facility_room_path, class: 'link ba bw1 b b--blue blue pa2 ph4 br4' %>
+  <div class="w-30 tr">
+    <%= link_to "+ Add room", new_settings_facility_room_path, class: 'link ba bw1 b b--blue blue pa2 ph3 br4' %>
   </div>
 </div>
 
@@ -27,12 +38,12 @@
     <thead>
       <tr>
         <th class="f6 white pv3 tl pl4 pr3">#</th>
-        <th class="f6 white pv3 tl w-10">Code</th>
         <th class="f6 white pv3 tl w-20">Name</th>
+        <th class="f6 white pv3 tl w-10">Code</th>
         <th class="f6 white pv3 tl w-20">Description</th>
         <th class="f6 white pv3 tl ">Facility</th>
         <th class="f6 white pv3 tr ">Sections</th>
-        <th class="f6 white pv3 tr w-20 pr4">Status</th>
+        <th class="f6 white pv3 tc w-20 pr4">Status</th>
         
       </tr>
     </thead>
@@ -41,9 +52,8 @@
       <% @rooms.each_with_index do |f, i| %>
         <tr>
           <td class="f6 tl pl4 pr3 gray"><%= i+1 %></td>
-          
-          <td class="f6 tl"><%= link_to f.code, '', class: 'link blue' %></td>
-          <td class="f6 tl"><%= f.name %></td>
+          <td class="f6 tl"><%= link_to blank(f.name), edit_settings_facility_room_path(f.id), class: 'link blue' %></td>
+          <td class="f6 tl"><%= f.code %></td>
           <td class="f6 tl">
             <p class="ma0 mb1"><%= f.desc %></p>
           </td>
@@ -51,7 +61,7 @@
           <td class="f6 tr ">
             <%= f.sections.count %>
           </td>
-          <td class="f6 tr pr4">
+          <td class="f6 tc pr4">
             <% status = if !f.is_complete 
                         "Continue setup"
                       elsif f.facility.is_enabled

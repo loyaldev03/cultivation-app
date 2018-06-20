@@ -3,7 +3,7 @@
 <% end %>
 
 <% content_for :breadcrumb do %>
-  Settings &gt; Facilities
+  <%= breadcrumbs ["Settings", settings_path], "Facilities" %>
 <% end %>
 
 <div class="w-100 ph3 flex flex-wrap">

@@ -61,6 +61,7 @@ end
 class Row
   include Mongoid::Document
 
+  field :name, type: String
   field :code, type: String
 
   embeds_many :shelves

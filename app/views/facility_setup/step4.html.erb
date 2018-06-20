@@ -130,8 +130,8 @@
 <% content_for :before_body_end do %>
   <script>
     $$('input[data-toggle]').on('change', function(e) {
-      const toggle = e.target.getAttribute('data-toggle')
-      const group = e.target.getAttribute('data-group')
+      var toggle = e.target.getAttribute('data-toggle')
+      var group = e.target.getAttribute('data-group')
       $$("." + group).forEach(function(g) {
         g.style.display = "none"
       });

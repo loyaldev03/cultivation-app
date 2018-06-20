@@ -47,7 +47,7 @@ class Section
   field :desc, type: String
   field :purpose, type: String          # e.g. :storage, :cultivation, :other
   field :custom_purpose, type: String   # used when purpose = :other, e.g. 'general'
-  field :storage_types, type: Array     # purpose = :storage, e.g. :consumable
+  field :storage_types, type: Array     # purpose = :storage, e.g. :consumable, :sales_items
   field :cultivation_types, type: Array # purpose = :cultivation, e.g. :mothering, :clone
   field :row_count, type: Integer       # for wizard, show only when is_complete = false
   field :shelf_count, type: Integer     # for wizard, show only when is_complete = false

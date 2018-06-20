@@ -32,6 +32,7 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'pry-byebug', platforms: [:mri]
   gem 'factory_bot_rails'
+  gem 'faker'
   gem 'rspec-rails'
   gem 'capybara'
 end

@@ -46,22 +46,34 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
     end
 
     scenario "Facility wizard step 4" do
-      skip "WIP"
       facility = create(:facility, :after_step_3)
       room = facility.rooms.first
       visit facility_setup_new_path(facility_id: facility.id, step: 4, room_id: room.id)
 
+      # fake_custom_purpose = Faker::Lorem.word
+
       fill_in "Section Name", :with => "Section 1"
-      fill_in "Section ID", :with => "Sec1"
-      fill_in "Description", :with => "Section 1 Description"
-      fill_in "Purpose", :with => ":storage"
-      fill_in "Storage Type", :with => ":consumable"
+      fill_in "Section ID", :with => "S1"
+      fill_in "Description", :with => "S 1"
+      choose("Storage")
+      # choose("Consumable")
+      # choose("Sales Item")
       fill_in "No of row", :with => 2
-      fill_in "No of shelves in each row", :with => 1
+      fill_in "No of shelves in each row", :with => 3
       fill_in "Capacity for each shelf", :with => 10
       click_button "Save & Continue"
 
       expect(page).to have_text("Step 5")
+      room = Facility.find_by(id: facility.id).rooms.first
+      section = room.sections.first
+      expect(section.name).to eq "Section 1"
+      expect(section.code).to eq "S1"
+      expect(section.desc).to eq "S 1"
+      expect(section.purpose).to eq "storage"
+      expect(section.row_count).to eq 2
+      expect(section.shelf_count).to eq 3
+      expect(section.shelf_capacity).to eq 10
+      expect(section.is_complete).to eq false
     end
   end
 end

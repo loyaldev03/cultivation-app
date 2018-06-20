@@ -103,6 +103,6 @@ class FacilitySetupController < ApplicationController
 
   # Step 4
   def facility_section_setup_params
-    params.require(:facility).permit(:section_name, :section_code, :section_desc)
+    params.require(:facility).permit(:section_name, :section_code, :section_desc, :section_purpose, :section_row_count, :section_shelf_count, :section_shelf_capacity)
   end
 end

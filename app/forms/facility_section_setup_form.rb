@@ -20,6 +20,7 @@ class FacilitySectionSetupForm
     section.code = params[:section_code]
     section.desc = params[:section_desc]
     section.purpose = params[:section_purpose]
+    section.custom_purpose = params[:section_custom_purpose]
     section.storage_types = params[:section_storage_types]
     section.cultivation_types = params[:section_cultivation_types]
     section.row_count = params[:section_row_count]

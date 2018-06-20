@@ -50,32 +50,32 @@
             <div class="mt3 mb2">
               <label class="f6 db b mb1">Purpose of this section?</label>
               <div class="dib">
-                <%= f.radio_button :purpose, 'storage', class: "purpose-option", checked: true,
+                <%= f.radio_button :section_purpose, 'storage', class: "purpose-option", checked: true,
                   data: { toggle: 'purpose_storage_toggle', group: 'purpose_option_group'}
                 %>
-                <%= f.label :purpose_storage, "Storage" %>
+                <%= f.label :section_purpose_storage, "Storage" %>
               </div>
               <div class="ml2 dib">
-                <%= f.radio_button :purpose, 'cultivation', class: "purpose-option",
+                <%= f.radio_button :section_purpose, 'cultivation', class: "purpose-option",
                   data: {toggle: 'purpose_cultivation_toggle', group: 'purpose_option_group'}
                 %>
-                <%= f.label :purpose_cultivation, "Cultivation" %>
+                <%= f.label :section_purpose_cultivation, "Cultivation" %>
               </div>
             </div>
 
             <div class="mt3 mb2">
               <div class="purpose_option_group purpose_storage_toggle" style="display: block">
                 <span class="db">
-                  <%= f.check_box :storage_types, { multiple: true } %>
-                  <%= f.label :purpose_cultivation, "Sales Item" %>
+                  <%= f.check_box :section_storage_types, { multiple: true } %>
+                  <%= f.label :section_purpose_cultivation, "Sales Item" %>
                 </span>
                 <span class="db">
-                  <%= f.check_box :storage_types, { multiple: true } %>
-                  <%= f.label :purpose_cultivation, "Consumable" %>
+                  <%= f.check_box :section_storage_types, { multiple: true } %>
+                  <%= f.label :section_purpose_cultivation, "Consumable" %>
                 </span>
                 <span class="db">
-                  <%= f.check_box :storage_types, { multiple: true } %>
-                  <%= f.label :purpose_cultivation, "Mother / Seed" %>
+                  <%= f.check_box :section_storage_types, { multiple: true } %>
+                  <%= f.label :section_purpose_cultivation, "Mother / Seed" %>
                 </span>
               </div>
               <div class="purpose_option_group purpose_cultivation_toggle" style="display: none">

@@ -21,10 +21,14 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Ignore packs & node_modules
 /public/packs
 /public/packs-test
 /node_modules
+
 yarn-debug.log*
 .yarn-integrity
 .env
 .DS_Store
+.pryrc

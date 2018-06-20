@@ -1,5 +1,5 @@
 class Item
-  include ActiveModel::Model
+  include Mongoid::Document
 
   field :name, type: String
   field :code, type: String # part no

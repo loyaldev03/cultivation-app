@@ -35,8 +35,6 @@ class Room
 
   embedded_in :facility
   embeds_many :sections
-
-  validates :code, presence: true
 end
 
 class Section

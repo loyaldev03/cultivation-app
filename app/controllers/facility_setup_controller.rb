@@ -98,11 +98,27 @@ class FacilitySetupController < ApplicationController
 
   # Step 3
   def facility_room_setup_params
-    params.require(:facility).permit(:room_name, :room_code, :room_desc, :room_have_sections, :room_section_count)
+    params.require(:facility).permit(
+      :room_name,
+      :room_code,
+      :room_desc,
+      :room_have_sections,
+      :room_section_count
+    )
   end
 
   # Step 4
   def facility_section_setup_params
-    params.require(:facility).permit(:section_name, :section_code, :section_desc, :section_purpose, :section_row_count, :section_shelf_count, :section_shelf_capacity)
+    params.require(:facility).permit(
+      :section_name,
+      :section_code,
+      :section_desc,
+      :section_purpose,
+      :section_row_count,
+      :section_shelf_count,
+      :section_shelf_capacity,
+      section_storage_types: [],
+      section_cultivation_types: [],
+    )
   end
 end

@@ -45,7 +45,7 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       expect(facility.rooms.first.section_count).to eq 8
     end
 
-    scenario "Facility wizard step 4" do
+    scenario "Facility wizard step 4 - Storage" do
       facility = create(:facility, :after_step_3)
       room = facility.rooms.first
       visit facility_setup_new_path(facility_id: facility.id, step: 4, room_id: room.id)
@@ -56,8 +56,8 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       fill_in "Section ID", :with => "S1"
       fill_in "Description", :with => "S 1"
       choose("Storage")
-      # choose("Consumable")
-      # choose("Sales Item")
+      check("Consumable")
+      check("Sales Item")
       fill_in "No of row", :with => 2
       fill_in "No of shelves in each row", :with => 3
       fill_in "Capacity for each shelf", :with => 10
@@ -70,9 +70,46 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       expect(section.code).to eq "S1"
       expect(section.desc).to eq "S 1"
       expect(section.purpose).to eq "storage"
+      expect(section.storage_types.sort).to eq ["consumable", "sales_item"].sort
+      expect(section.cultivation_types).to be nil
       expect(section.row_count).to eq 2
       expect(section.shelf_count).to eq 3
       expect(section.shelf_capacity).to eq 10
+      expect(section.is_complete).to eq false
+    end
+
+    scenario "Facility wizard step 4 - Cultivation" do
+      facility = create(:facility, :after_step_3)
+      room = facility.rooms.first
+      visit facility_setup_new_path(facility_id: facility.id, step: 4, room_id: room.id)
+
+      fake_name = Faker::Lorem.word
+      fake_row_count = Faker::Number.number(1).to_i
+      fake_capacity = Faker::Number.number(2).to_i
+
+      fill_in "Section Name", :with => fake_name
+      fill_in "Section ID", :with => "S1"
+      fill_in "Description", :with => "S 1"
+      choose("Cultivation")
+      find('input#facility_section_cultivation_types_clone', visible: false).set(true) # check("Clone")
+      find('input#facility_section_cultivation_types_flower', visible: false).set(true) # check("Flower")
+      fill_in "No of row", :with => fake_row_count
+      fill_in "No of shelves in each row", :with => 3
+      fill_in "Capacity for each shelf", :with => fake_capacity
+      click_button "Save & Continue"
+
+      expect(page).to have_text("Step 5")
+      room = Facility.find_by(id: facility.id).rooms.first
+      section = room.sections.first
+      expect(section.name).to eq fake_name
+      expect(section.code).to eq "S1"
+      expect(section.desc).to eq "S 1"
+      expect(section.purpose).to eq "cultivation"
+      expect(section.storage_types).to be nil
+      expect(section.cultivation_types).to eq ["clone", "flower"]
+      expect(section.row_count).to eq fake_row_count
+      expect(section.shelf_count).to eq 3
+      expect(section.shelf_capacity).to eq fake_capacity
       expect(section.is_complete).to eq false
     end
   end

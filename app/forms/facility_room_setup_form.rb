@@ -28,11 +28,9 @@ class FacilityRoomSetupForm
   end
 
   def submit(params)
-    room.attributes = params.slice(
-      :room_name,
-      :room_code,
-      :room_desc
-    )
+    room.name = params[:room_name]
+    room.code = params[:room_code]
+    room.desc = params[:room_desc]
     room.section_count = params[:room_section_count]
     self.room_have_sections = params[:room_have_sections] == 'true'
 

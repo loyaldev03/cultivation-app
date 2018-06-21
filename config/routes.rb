@@ -10,7 +10,6 @@ Rails.application.routes.draw do
 
   namespace 'settings' do
     namespace 'facility' do
-      # get '/', action: 'index', controller: 'root'
       resources :facilities, only: [:edit, :update, :index] do
         get 'all', on: :collection
       end

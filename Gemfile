@@ -66,6 +66,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'webpacker', '~> 3.5'
 gem 'react-rails'
 gem 'simple_form'
+gem 'country_select'
 
 # Database
 gem 'mongoid', '~> 6.4.1'

@@ -1,5 +1,5 @@
 <% content_for :breadcrumb do %>
-  Settings &gt; Facilities &gt; Rooms &gt; <%= @room.name %> - <%= @room.code %>
+  <%= breadcrumbs ["Settings", settings_path], ["Facilities", all_settings_facility_facilities_path], ["Rooms", settings_facility_rooms_path], "#{@room.name} - #{@room.code}" %>
 <% end %>
 
 <div class="ph4 w-100 pb4">

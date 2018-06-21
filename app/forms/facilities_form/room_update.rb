@@ -28,9 +28,5 @@ module FacilitiesForm
         false
       end
     end
-
-    def persisted?
-      true
-    end
   end
 end

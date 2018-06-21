@@ -28,7 +28,8 @@ class FacilitySectionSetupForm
     section.shelf_capacity = params[:section_shelf_capacity]
 
     if valid?
-      section.save!
+      section.rows = section.row_count.times.map { Section.new } unless section.is_complete
+      facility.save!
     else
       false
     end

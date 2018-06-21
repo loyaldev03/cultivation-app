@@ -12,6 +12,8 @@ class FacilityRoomCountForm
   def submit(params)
     facility.attributes = params.slice(:room_count)
     if valid?
+      # TODO: Re-think how this would work if user edit a facility, since we do
+      # not want to regenerate the rooms. Probably shoudn't pre-generate the rooms.
       facility.rooms = facility.room_count.times.map { Room.new } unless facility.is_complete
       facility.save!
     else

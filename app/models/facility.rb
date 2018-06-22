@@ -21,57 +21,63 @@ class Facility
   # TODO: refactor into Service Object
   scope :completed, -> { where(is_complete: true) }
 
-  def display_name
-    name.blank? ? '- no name -' : name
-  end
-end
+  # TODO: To be cleaned up by Karg after Andy verified.
+  #
+  # <<<<<<< HEAD
+  # =======
 
-class Room
-  include Mongoid::Document
+  #   def display_name
+  #     name.blank? ? '- no name -' : name
+  #   end
+  # end
 
-  field :name, type: String
-  field :code, type: String
-  field :desc, type: String
-  field :section_count, type: Integer # for wizard, show only when is_complete = false
-  field :is_complete, type: Boolean, default: -> { false }
+  # class Room
+  #   include Mongoid::Document
 
-  embedded_in :facility
-  embeds_many :sections
-end
+  #   field :name, type: String
+  #   field :code, type: String
+  #   field :desc, type: String
+  #   field :section_count, type: Integer # for wizard, show only when is_complete = false
+  #   field :is_complete, type: Boolean, default: -> { false }
 
-class Section
-  include Mongoid::Document
+  #   embedded_in :facility
+  #   embeds_many :sections
+  # end
 
-  field :name, type: String
-  field :code, type: String
-  field :desc, type: String
-  field :purpose, type: String          # e.g. :storage, :cultivation, :other
-  field :custom_purpose, type: String   # used when purpose = :other, e.g. 'general'
-  field :storage_types, type: Array     # purpose = :storage, e.g. :consumable
-  field :cultivation_types, type: Array # purpose = :cultivation, e.g. :mothering, :clone
-  field :row_count, type: Integer       # for wizard, show only when is_complete = false
-  field :shelf_count, type: Integer     # for wizard, show only when is_complete = false
-  field :shelf_capacity, type: Integer  # for wizard, show only when is_complete = false
-  field :is_complete, type: Boolean, default: -> { false }
+  # class Section
+  #   include Mongoid::Document
 
-  embedded_in :room
-  embeds_many :rows
-end
+  #   field :name, type: String
+  #   field :code, type: String
+  #   field :desc, type: String
+  #   field :purpose, type: String          # e.g. :storage, :cultivation, :other
+  #   field :custom_purpose, type: String   # used when purpose = :other, e.g. 'general'
+  #   field :storage_types, type: Array     # purpose = :storage, e.g. :consumable
+  #   field :cultivation_types, type: Array # purpose = :cultivation, e.g. :mothering, :clone
+  #   field :row_count, type: Integer       # for wizard, show only when is_complete = false
+  #   field :shelf_count, type: Integer     # for wizard, show only when is_complete = false
+  #   field :shelf_capacity, type: Integer  # for wizard, show only when is_complete = false
+  #   field :is_complete, type: Boolean, default: -> { false }
 
-class Row
-  include Mongoid::Document
+  #   embedded_in :room
+  #   embeds_many :rows
+  # end
 
-  field :code, type: String
+  # class Row
+  #   include Mongoid::Document
 
-  embeds_many :shelves
-end
+  #   field :code, type: String
 
-class Shelf
-  include Mongoid::Document
+  #   embeds_many :shelves
+  # end
 
-  field :code, type: String
-  field :desc, type: String
-  field :capacity, type: Integer
+  # class Shelf
+  #   include Mongoid::Document
 
-  embedded_in :row
+  #   field :code, type: String
+  #   field :desc, type: String
+  #   field :capacity, type: Integer
+
+  #   embedded_in :row
+  # >>>>>>> master
 end

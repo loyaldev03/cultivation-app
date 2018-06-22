@@ -34,5 +34,8 @@ module Cannvas
       g.javascripts false
       g.helper false
     end
+
+    config.autoload_paths << Rails.root.join('app','commands')
+    config.autoload_paths << Rails.root.join('app','commands','facilities')
   end
 end

@@ -18,6 +18,12 @@ class FacilitySetupController < ApplicationController
                                             facility_id: wizard_form.facility_id,
                                             room_id: wizard_form.room_id,
                                             section_id: wizard_form.section_id)
+      elsif current_step == 5
+        redirect_to facility_setup_new_path(step: current_step,
+                                            facility_id: wizard_form.facility_id,
+                                            room_id: wizard_form.room_id,
+                                            section_id: wizard_form.section_id,
+                                            row_id: wizard_form.row_id)
       else
         redirect_to current_step < 6 ?
                       facility_setup_new_path(facility_id: wizard_form.id, step: next_step) :
@@ -44,6 +50,8 @@ class FacilitySetupController < ApplicationController
       @wizard_form ||= FacilityRoomSetupForm.new(facility, room_id)
     when 4
       @wizard_form ||= FacilitySectionSetupForm.new(facility, room_id, section_id)
+    when 5
+      @wizard_form ||= FacilityRowSetupForm.new(facility, room_id, section_id, row_id)
     else
       @wizard_form ||= FacilitySummaryView.new(facility)
     end
@@ -59,6 +67,10 @@ class FacilitySetupController < ApplicationController
 
   def section_id
     @section_id ||= params[:section_id]
+  end
+
+  def row_id
+    @row_id ||= params[:row_id]
   end
 
   def current_step
@@ -80,7 +92,7 @@ class FacilitySetupController < ApplicationController
     when 4
       facility_section_setup_params
     when 5
-      facility_room_count_params
+      facility_row_shelves_params
     else
       facility_room_count_params
     end
@@ -98,11 +110,37 @@ class FacilitySetupController < ApplicationController
 
   # Step 3
   def facility_room_setup_params
-    params.require(:facility).permit(:room_name, :room_code, :room_desc, :room_have_sections, :room_section_count)
+    params.require(:facility).permit(
+      :room_name,
+      :room_code,
+      :room_desc,
+      :room_have_sections,
+      :room_section_count
+    )
   end
 
   # Step 4
   def facility_section_setup_params
-    params.require(:facility).permit(:section_name, :section_code, :section_desc)
+    params.require(:facility).permit(
+      :section_name,
+      :section_code,
+      :section_desc,
+      :section_purpose,
+      :section_row_count,
+      :section_shelf_count,
+      :section_shelf_capacity,
+      section_storage_types: [],
+      section_cultivation_types: [],
+    )
+  end
+
+  # Step 5
+  def facility_row_shelves_params
+    params.require(:facility).permit(
+      :row_name,
+      :row_code,
+      :row_desc,
+      shelves: [:id, :code, :capacity, :desc],
+    )
   end
 end

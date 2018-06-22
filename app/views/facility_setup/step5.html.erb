@@ -1,28 +1,85 @@
 <div class="vh-100 w-100 dt">
   <div class="dtc v-mid">
-    <div class="measure center">
-      <h1>Step 5</h1>
-      <%= form_with(scope: :facility, url: facility_setup_save_path(step: @current_step, facility_id: @wizard_form.id), method: :post, local: true) do |f| %>
-        <% if @wizard_form.errors.any? %>
-          <div id="error_explanation" class="red">
-            <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
-            <ul>
-            <% @wizard_form.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
+    <div class="measure-wide center">
+      <h1>Step 5 - Setup Shelf for Row</h1>
+      <div class="flex flex-row">
+      <div class="pa2">
+          <span>Rows</span>
+          <ul class="list pl0 w4">
+            <% @wizard_form.section_row_count.times { |i| %>
+              <li class="ma2 h2">
+                <%= link_to @wizard_form.rows[i].name,
+                  facility_setup_save_path(
+                    facility_id: @wizard_form.facility_id,
+                    room_id: @wizard_form.room_id,
+                    section_id: @wizard_form.section_id,
+                    row_id: @wizard_form.rows[i].id,
+                    step: @current_step
+                  )
+                %>
+              </li>
+            <% } %>
+          </ul>
+        </div>
+        <span class="db pa2 mr2 bl b--black-10"></span>
+        <div class="db measure w-100">
+          <%= form_with(scope: :facility,
+                        url: facility_setup_save_path(step: @current_step, facility_id: @wizard_form.facility_id, room_id: @wizard_form.room_id, section_id: @wizard_form.section_id, row_id: @wizard_form.row_id),
+                        method: :post,
+                        local: true) do |f| %>
+            <% if @wizard_form.errors.any? %>
+              <div id="error_explanation" class="red">
+                <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
+                <ul>
+                <% @wizard_form.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+                </ul>
+              </div>
             <% end %>
-            </ul>
-          </div>
-        <% end %>
 
-        <div class="mt3 mb2">
-          <%= f.label :room_count, "How many rooms in this facility?", class: "f6 b db mb1" %>
-          <%= f.number_field :room_count, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
+            <div class="mt3 mb2">
+              <%= f.label :row_name, class: "f6 b db mb1" %>
+              <%= f.text_field :row_name, value: @wizard_form.row_name, class: "ba b--black-20 pa2 mb2 db w-100" %>
+              <%= f.label :row_code, class: "f6 b db mb1" %>
+              <%= f.text_field :row_code, value: @wizard_form.row_code, class: "ba b--black-20 pa2 mb2 db w-100" %>
+            </div>
 
-        <div class="mt3">
-          <%= f.submit "Save & Continue", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+            <div class="mt3 mb2">
+              <span class="f6 b db mb1">Shelves</span>
+              <table class="collapse ba br2 b--black-10 pv2 ph3">
+                <tbody>
+                  <tr class="striped--light-gray">
+                    <th class="pv2 ph3 tl f6 fw6">ID</th>
+                    <th class="tl f6 fw6 pv2 ph3">Capacity</th>
+                    <th class="tl f6 fw6 pv2 ph3">Description</th>
+                  </tr>
+
+                  <% @wizard_form.row_shelves.each do |shelf| %>
+                    <tr class="striped--light-gray">
+                        <%= hidden_field_tag "facility[shelves][][id]", shelf.id %>
+                        <td class="pv2 ph3">
+                          <%= text_field_tag "facility[shelves][][code]", shelf.code %>
+                        </td>
+                        <td class="pv2 ph3 tr">
+                          <%= text_field_tag "facility[shelves][][capacity]", shelf.capacity %>
+                        </td>
+                        <td class="pv2 ph3">
+                          <%= text_field_tag "facility[shelves][][desc]", shelf.desc %>
+                        </td>
+                    </tr>
+                  <% end %>
+
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mt3">
+              <%= f.submit "Save & Continue", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+            </div>
+          <% end %>
         </div>
-      <% end %>
+      </div>
     </div>
   </div>
 </div>

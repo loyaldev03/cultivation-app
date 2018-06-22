@@ -50,54 +50,54 @@
             <div class="mt3 mb2">
               <label class="f6 db b mb1">Purpose of this section?</label>
               <div class="dib">
-                <%= f.radio_button :purpose, 'storage', class: "purpose-option", checked: true,
+                <%= f.radio_button :section_purpose, 'storage', class: "purpose-option", checked: true,
                   data: { toggle: 'purpose_storage_toggle', group: 'purpose_option_group'}
                 %>
-                <%= f.label :purpose_storage, "Storage" %>
+                <%= f.label :section_purpose_storage, "Storage" %>
               </div>
               <div class="ml2 dib">
-                <%= f.radio_button :purpose, 'cultivation', class: "purpose-option",
+                <%= f.radio_button :section_purpose, 'cultivation', class: "purpose-option",
                   data: {toggle: 'purpose_cultivation_toggle', group: 'purpose_option_group'}
                 %>
-                <%= f.label :purpose_cultivation, "Cultivation" %>
+                <%= f.label :section_purpose_cultivation, "Cultivation" %>
               </div>
             </div>
 
             <div class="mt3 mb2">
               <div class="purpose_option_group purpose_storage_toggle" style="display: block">
                 <span class="db">
-                  <%= f.check_box :storage_types, { multiple: true } %>
-                  <%= f.label :purpose_cultivation, "Sales Item" %>
+                  <%= f.check_box :section_storage_types, { multiple: true }, "sales_item", false %>
+                  <%= f.label :section_storage_types_sales_item, "Sales Item" %>
                 </span>
                 <span class="db">
-                  <%= f.check_box :storage_types, { multiple: true } %>
-                  <%= f.label :purpose_cultivation, "Consumable" %>
+                  <%= f.check_box :section_storage_types, { multiple: true }, "consumable", false %>
+                  <%= f.label :section_storage_types_consumable, "Consumable" %>
                 </span>
                 <span class="db">
-                  <%= f.check_box :storage_types, { multiple: true } %>
-                  <%= f.label :purpose_cultivation, "Mother / Seed" %>
+                  <%= f.check_box :section_storage_types, { multiple: true }, "mother_or_seed", false %>
+                  <%= f.label :section_storage_types_mother_or_seed, "Mother / Seed" %>
                 </span>
               </div>
               <div class="purpose_option_group purpose_cultivation_toggle" style="display: none">
                 <span class="db">
-                  <%= f.check_box :storage_types, { multiple: true } %>
-                  <%= f.label :purpose_cultivation, "Mothering" %>
+                  <%= f.check_box :section_cultivation_types, { multiple: true }, "mothering", false %>
+                  <%= f.label :section_cultivation_types_mothering, "Mothering" %>
                 </span>
                 <span class="db">
-                  <%= f.check_box :storage_types, { multiple: true } %>
-                  <%= f.label :purpose_cultivation, "Clone" %>
+                  <%= f.check_box :section_cultivation_types, { multiple: true }, "clone", false %>
+                  <%= f.label :section_cultivation_types_clone, "Clone" %>
                 </span>
                 <span class="db">
-                  <%= f.check_box :storage_types, { multiple: true } %>
-                  <%= f.label :purpose_cultivation, "Veg Phase 1" %>
+                  <%= f.check_box :section_cultivation_types, { multiple: true }, "veg_phase_1", false %>
+                  <%= f.label :section_cultivation_types_veg_phase_1, "Veg Phase 1" %>
                 </span>
                 <span class="db">
-                  <%= f.check_box :storage_types, { multiple: true } %>
-                  <%= f.label :purpose_cultivation, "Veg Phase 2" %>
+                  <%= f.check_box :section_cultivation_types, { multiple: true }, "veg_phase_2", false %>
+                  <%= f.label :section_cultivation_types_veg_phase_2, "Veg Phase 2" %>
                 </span>
                 <span class="db">
-                  <%= f.check_box :storage_types, { multiple: true } %>
-                  <%= f.label :purpose_cultivation, "Flower" %>
+                  <%= f.check_box :section_cultivation_types, { multiple: true }, "flower", false %>
+                  <%= f.label :section_cultivation_types_flower, "Flower" %>
                 </span>
               </div>
             </div>

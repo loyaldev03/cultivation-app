@@ -103,6 +103,8 @@ GEM
     factory_bot_rails (4.10.0)
       factory_bot (~> 4.10.0)
       railties (>= 3.0.0)
+    faker (1.8.7)
+      i18n (>= 0.7)
     ffi (1.9.25)
     flamegraph (0.9.5)
     foreman (0.84.0)
@@ -320,6 +322,7 @@ DEPENDENCIES
   devise
   email_spec
   factory_bot_rails
+  faker
   flamegraph
   foreman (~> 0.84.0)
   guard-rspec

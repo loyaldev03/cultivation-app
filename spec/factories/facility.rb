@@ -26,6 +26,20 @@ FactoryBot.define do
       room_count 2
       rooms { [build(:room, :room_1), build(:room)] }
     end
+
+    trait :facility_with_rooms_sections do
+      name 'Facility 1'
+      code 'Fa1'
+      room_count 1
+      rooms { [build(:room, :room_1_with_2_sections)] }
+    end
+
+    trait :facility_with_rooms_sections_row do
+      name 'Facility 1'
+      code 'Fa1'
+      room_count 1
+      rooms { [build(:room, :room_1_with_2_sections_row)] }
+    end
   end
 
   factory :room do
@@ -44,6 +58,12 @@ FactoryBot.define do
       code 'Rm1'
       sections { [build(:section, :section_1),build(:section, :section_2)] }
     end
+
+    trait :room_1_with_2_sections_row do
+      name 'Default Room 1'
+      code 'DefaultRm1'
+      sections { [build(:section, :section_1_row)] }
+    end
   end
 
   factory :section do
@@ -57,13 +77,24 @@ FactoryBot.define do
       code 'Sec1'
     end
 
+    trait :section_1_row do
+      name 'Section 1'
+      code 'Sec1'
+      rows { [build(:row)] }
+    end
+
     trait :section_2 do
       name 'Section 2'
       code 'Sec2'
     end
 
     trait :complete do
-      is_complete true
+      is_complete false
     end
+  end
+
+  factory :row do
+    name 'Default Row'
+    code 'DefRw1'
   end
 end

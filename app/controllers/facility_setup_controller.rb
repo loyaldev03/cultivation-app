@@ -137,10 +137,9 @@ class FacilitySetupController < ApplicationController
   # Step 5
   def facility_row_shelves_params
     params.require(:facility).permit(
-      :row_id,
       :row_name,
       :row_code,
-      shelves: [:id, :code, :desc],
+      shelf: [:id, :code, :capacity, :desc],
     )
   end
 end

@@ -64,7 +64,8 @@ class Row
   field :name, type: String
   field :code, type: String
 
-  embeds_many :shelves
+  embedded_in :section
+  embeds_many :shelves, class_name: 'Shelf'
 end
 
 class Shelf

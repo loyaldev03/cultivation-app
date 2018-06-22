@@ -29,6 +29,9 @@
               </div>
             <% end %>
 
+            <%= f.text_field :row_name, value: @wizard_form.row_name %>
+            <%= f.text_field :row_code, value: @wizard_form.row_code %>
+
             <div class="mt3 mb2">
               <table class="collapse ba br2 b--black-10 pv2 ph3">
                 <tbody>
@@ -38,9 +41,9 @@
                     <th class="tr f6 ttu fw6 pv2 ph3">Description</th>
                   </tr>
 
-                  <% @wizard_form.shelves.each do |shelf| %>
+                  <% @wizard_form.row.shelves.each do |shelf| %>
                     <tr class="striped--light-gray">
-                      <%= f.fields_for :shelves, shelf do |s| %>
+                      <%= f.fields_for('shelf', shelf) do |s| %>
                         <%= s.hidden_field :id %>
                         <td class="pv2 ph3">
                           <%= s.text_field :code %>

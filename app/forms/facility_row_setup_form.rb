@@ -10,19 +10,25 @@ class FacilityRowSetupForm
   validate :verify_unique_row_code
 
   def initialize(_facility, _room_id, _section_id, _row_id = nil)
+    raise(ArgumentError, ':facility is required') if _facility.nil?
+    raise(ArgumentError, ':room_id is required') if _room_id.nil?
+    raise(ArgumentError, ':section_id is required') if _section_id.nil?
+
     @facility = _facility
     @room = facility.rooms.detect { |r| r.id.to_s == _room_id }
     @section = room.sections.detect { |s| s.id.to_s == _section_id }
-    @row = set_row(_row_id)
+    set_rows(_row_id)
+    @row = get_row(_row_id)
+    set_shelves
   end
 
   def submit(params)
-    row.id = params[:row_id]
     row.name = params[:row_name]
     row.code = params[:row_code]
+    Rails.logger.debug params.to_json
+    map_shelves_from_params(params[:shelves])
     if valid?
-      section.rows = [row] if section.rows.blank?
-      facility.save!
+      section.save!
     else
       false
     end
@@ -40,36 +46,61 @@ class FacilityRowSetupForm
     @section
   end
 
+  def rows
+    @section.rows
+  end
+
   def row
     @row
   end
 
-  def shelves
-    @shelves ||= set_shelves
-  end
-
   private
 
-  def set_row(row_id)
-    result ||= section.rows.blank? ? Row.new : section.rows.first if row_id.nil?
-    result ||= section.rows.detect { |r| r.id.to_s == row_id }
+  def map_shelves_from_params(_shelves)
+    set_shelves(_shelves)
+    _shelves.each { |s| find_and_update_shelf(s) } if _shelves.present?
   end
 
-  def set_shelves
-    results = Array.new(section.shelf_count)
-    section.shelf_count.times do |i|
-      results[i] = set_shelf(i)
+  def get_row(row_id)
+    row_id.nil? ? rows.first : rows.detect { |r| r.id.to_s == row_id }
+  end
+
+  def set_rows(row_id)
+    rows.build({id: row_id}) if rows.blank? && row_id.present?
+    rows << missing_row_count.times.map { |i| Row.new({code: i + 1}) } if missing_row_count > 0
+    rows ||= []
+  end
+
+  def set_shelves(_shelves = nil)
+    row.shelves << _shelves.size.times.map { |i| build_shelf(_shelves[i], i + 1) } if row.shelves.blank? && _shelves.present?
+    row.shelves << missing_shelf_count.times.map { |i| build_shelf(nil, i + 1 + missing_shelf_count) } if missing_shelf_count > 0
+    row.shelves ||= []
+  end
+
+  def missing_row_count
+    @missing_row_count ||= rows.blank? ? section.row_count : section.row_count - rows.size
+  end
+
+  def missing_shelf_count
+    @missing_shelf_count ||= row.shelves.blank? ? section.shelf_count : section.shelf_count - row.shelves.size
+  end
+
+  def build_shelf(_shelf, code)
+    res = _shelf.blank? ? Shelf.new({code: code, capacity: section.shelf_capacity}) : Shelf.new(_shelf)
+  end
+
+  def find_and_update_shelf(_shelf)
+    found = row.shelves.detect { |s| s.id.to_s == _shelf[:id] }
+    unless found.nil?
+      found.code = _shelf[:code]
+      found.capacity = _shelf[:capacity]
+      found.desc = _shelf[:desc]
     end
-    results
-  end
-
-  def set_shelf(number)
-    row.shelves[number] || Shelf.new({code: number + 1, capacity: section.shelf_capacity})
   end
 
   def verify_unique_row_code
     unless row.code.nil?
-      errors.add(:row_code, 'already exists') if section.rows.any? { |r| r.code == row.code && r.id != row.id }
+      errors.add(:row_code, 'already exists') if rows.any? { |r| r.code == row.code && r.id != row.id }
     end
   end
 end

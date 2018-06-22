@@ -2,7 +2,7 @@ class FacilityRowSetupForm
   include ActiveModel::Model
 
   delegate :id, :name, :code, to: :facility, prefix: true
-  delegate :id, :name, :code, :row_count, :shelf_count, :shelf_capacity, to: :section, prefix: true
+  delegate :id, :name, :code, to: :section, prefix: true
   delegate :id, to: :room, prefix: true
   delegate :id, :name, :code, :shelves, to: :row, prefix: true
 
@@ -66,27 +66,44 @@ class FacilityRowSetupForm
   end
 
   def set_rows(row_id)
-    rows.build({id: row_id}) if rows.blank? && row_id.present?
-    rows << missing_row_count.times.map { |i| Row.new({code: i + 1}) } if missing_row_count > 0
-    rows ||= []
+    rows.build(id: row_id) if rows.blank? && row_id.present?
+    if missing_row_count.positive?
+      rows << Array.new(missing_row_count) { |i| Row.new(code: i + 1) }
+    end
+    rows || []
   end
 
   def set_shelves(_shelves = nil)
-    row.shelves << _shelves.size.times.map { |i| build_shelf(_shelves[i], i + 1) } if row.shelves.blank? && _shelves.present?
-    row.shelves << missing_shelf_count.times.map { |i| build_shelf(nil, i + 1 + missing_shelf_count) } if missing_shelf_count > 0
-    row.shelves ||= []
+    if row.shelves.blank? && _shelves.present?
+      row.shelves << Array.new(_shelves.size) do |i|
+        build_shelf(_shelves[i], i + 1)
+      end
+    end
+    if missing_shelf_count.positive?
+      row.shelves << Array.new(missing_shelf_count) do |i|
+        build_shelf(nil, i + 1 + missing_shelf_count)
+      end
+    else
+      row.shelves ||= []
+    end
   end
 
   def missing_row_count
-    @missing_row_count ||= rows.blank? ? section.row_count : section.row_count - rows.size
+    @missing_row_count ||= section.row_count if rows.blank?
+    @missing_row_count ||= section.row_count - rows.size
   end
 
   def missing_shelf_count
-    @missing_shelf_count ||= row.shelves.blank? ? section.shelf_count : section.shelf_count - row.shelves.size
+    @missing_shelf_count ||= section.shelf_count if row.shelves.blank?
+    @missing_shelf_count ||= section.shelf_count - row.shelves.size
   end
 
   def build_shelf(_shelf, code)
-    res = _shelf.blank? ? Shelf.new({code: code, capacity: section.shelf_capacity}) : Shelf.new(_shelf)
+    if _shelf.blank?
+      Shelf.new(code: code, capacity: section.shelf_capacity)
+    else
+      Shelf.new(_shelf)
+    end
   end
 
   def find_and_update_shelf(_shelf)
@@ -99,8 +116,9 @@ class FacilityRowSetupForm
   end
 
   def verify_unique_row_code
-    unless row.code.nil?
-      errors.add(:row_code, 'already exists') if rows.any? { |r| r.code == row.code && r.id != row.id }
+    if row.code.present?
+      exist = rows.any? { |r| r.code == row.code && r.id != row.id }
+      errors.add(:row_code, 'already exists') if exist
     end
   end
 end

@@ -19,7 +19,7 @@ class FacilitySetupController < ApplicationController
                                             room_id: wizard_form.room_id,
                                             section_id: wizard_form.section_id)
       elsif current_step == 5
-        redirect_to facility_setup_new_path(step: next_step,
+        redirect_to facility_setup_new_path(step: current_step,
                                             facility_id: wizard_form.facility_id,
                                             room_id: wizard_form.room_id,
                                             section_id: wizard_form.section_id,
@@ -139,7 +139,8 @@ class FacilitySetupController < ApplicationController
     params.require(:facility).permit(
       :row_name,
       :row_code,
-      shelf: [:id, :code, :capacity, :desc],
+      :row_desc,
+      shelves: [:id, :code, :capacity, :desc],
     )
   end
 end

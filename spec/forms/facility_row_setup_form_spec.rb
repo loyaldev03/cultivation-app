@@ -169,11 +169,16 @@ RSpec.describe FacilityRowSetupForm, type: :model do
       saved_row = saved_section.rows.detect { |r| r.id == row.id }
       expect(row.name).to eq saved_row.name
       expect(saved_row.shelves.blank?).to be false
+
       expect(saved_row.shelves[0].id.to_s).to eq params[:shelves][0][:id]
-      expect(saved_row.shelves[1].id.to_s).to eq params[:shelves][1][:id]
       expect(saved_row.shelves[0].code).to eq params[:shelves][0][:code]
+      expect(saved_row.shelves[0].desc).to eq params[:shelves][0][:desc]
+      expect(saved_row.shelves[0].capacity).to eq params[:shelves][0][:capacity]
+
+      expect(saved_row.shelves[1].id.to_s).to eq params[:shelves][1][:id]
       expect(saved_row.shelves[1].code).to eq params[:shelves][1][:code]
       expect(saved_row.shelves[1].desc).to eq params[:shelves][1][:desc]
+      expect(saved_row.shelves[1].capacity).to eq params[:shelves][1][:capacity]
     end
   end
 end

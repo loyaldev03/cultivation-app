@@ -4,7 +4,7 @@ class FacilityRowSetupForm
   delegate :id, :name, :code, to: :facility, prefix: true
   delegate :id, :name, :code, :row_count, :shelf_count, :shelf_capacity, to: :section, prefix: true
   delegate :id, to: :room, prefix: true
-  delegate :id, :name, :code, to: :row, prefix: true
+  delegate :id, :name, :code, :shelves, to: :row, prefix: true
   delegate :id, :name, :code, to: :shelf, prefix: true
 
   validate :verify_unique_row_code
@@ -25,7 +25,6 @@ class FacilityRowSetupForm
   def submit(params)
     row.name = params[:row_name]
     row.code = params[:row_code]
-    Rails.logger.debug params.to_json
     map_shelves_from_params(params[:shelves])
     if valid?
       section.save!

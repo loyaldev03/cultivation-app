@@ -1,13 +1,22 @@
 <div class="vh-100 w-100 dt">
   <div class="dtc v-mid">
     <div class="measure-wide center">
-      <h1>Step 5 - Setup Shelf for Row 1</h1>
+      <h1>Step 5 - Setup Shelf for Row</h1>
       <div class="flex flex-row">
       <div class="pa2">
+          <span>Rows</span>
           <ul class="list pl0 w4">
             <% @wizard_form.section_row_count.times { |i| %>
               <li class="ma2 h2">
-                <a href="#0" class="link">Row <%= i + 1 %></a>
+                <%= link_to @wizard_form.rows[i].name,
+                  facility_setup_save_path(
+                    facility_id: @wizard_form.facility_id,
+                    room_id: @wizard_form.room_id,
+                    section_id: @wizard_form.section_id,
+                    row_id: @wizard_form.rows[i].id,
+                    step: @current_step
+                  )
+                %>
               </li>
             <% } %>
           </ul>
@@ -29,28 +38,35 @@
               </div>
             <% end %>
 
-            <%= f.text_field :row_name, value: @wizard_form.row_name %>
-            <%= f.text_field :row_code, value: @wizard_form.row_code %>
+            <div class="mt3 mb2">
+              <%= f.label :row_name, class: "f6 b db mb1" %>
+              <%= f.text_field :row_name, value: @wizard_form.row_name, class: "ba b--black-20 pa2 mb2 db w-100" %>
+              <%= f.label :row_code, class: "f6 b db mb1" %>
+              <%= f.text_field :row_code, value: @wizard_form.row_code, class: "ba b--black-20 pa2 mb2 db w-100" %>
+            </div>
 
             <div class="mt3 mb2">
+              <span class="f6 b db mb1">Shelves</span>
               <table class="collapse ba br2 b--black-10 pv2 ph3">
                 <tbody>
                   <tr class="striped--light-gray">
-                    <th class="pv2 ph3 tl f6 fw6 ttu">Shelf ID</th>
-                    <th class="tr f6 ttu fw6 pv2 ph3">Capacity</th>
-                    <th class="tr f6 ttu fw6 pv2 ph3">Description</th>
+                    <th class="pv2 ph3 tl f6 fw6">ID</th>
+                    <th class="tl f6 fw6 pv2 ph3">Capacity</th>
+                    <th class="tl f6 fw6 pv2 ph3">Description</th>
                   </tr>
 
-                  <% @wizard_form.row.shelves.each do |shelf| %>
+                  <% @wizard_form.row_shelves.each do |shelf| %>
                     <tr class="striped--light-gray">
-                      <%= f.fields_for('shelf', shelf) do |s| %>
-                        <%= s.hidden_field :id %>
+                        <%= hidden_field_tag "facility[shelves][][id]", shelf.id %>
                         <td class="pv2 ph3">
-                          <%= s.text_field :code %>
+                          <%= text_field_tag "facility[shelves][][code]", shelf.code %>
                         </td>
-                        <td class="pv2 ph3 tr"><%= s.text_field :capacity %></td>
-                        <td class="pv2 ph3"><%= s.text_field :desc %></td>
-                      <% end %>
+                        <td class="pv2 ph3 tr">
+                          <%= text_field_tag "facility[shelves][][capacity]", shelf.capacity %>
+                        </td>
+                        <td class="pv2 ph3">
+                          <%= text_field_tag "facility[shelves][][desc]", shelf.desc %>
+                        </td>
                     </tr>
                   <% end %>
 

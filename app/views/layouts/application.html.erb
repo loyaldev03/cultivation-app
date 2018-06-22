@@ -12,28 +12,26 @@
               </div>
             <% end %>
           </div>
-          <!-- <% if Facility.completed.count > 0 %> -->
-            <ul class="list pl0">
-              <li class="pa3 grow">
-                <%= link_to "Home", root_path, class: "link fw1 f4" %>
-              </li>
-              <li class="pa3 grow">
-                <span class="fw1 f4">Inventory</span>
-              </li>
-              <li class="pa3 grow">
-                <span class="fw1 f4">Cultivation</span>
-              </li>
-              <hr class="mt5">
-              <li class="pa3   grow">
-                <span class="fw1 f4">
-                  <%= link_to 'Settings', settings_path, class: 'link blue fw3 f6' %>
-                </span>
-              </li>
-              <li class="pa3   grow">
-                <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: 'link fw3 f6 blue' %>
-              </li>
-            </ul>
-          <!-- <% end %> -->
+          <ul class="list pl0">
+            <li class="pa3 grow">
+              <%= link_to "Home", root_path, class: "link fw1 f4" %>
+            </li>
+            <li class="pa3 grow">
+              <span class="fw1 f4">Inventory</span>
+            </li>
+            <li class="pa3 grow">
+              <span class="fw1 f4">Cultivation</span>
+            </li>
+            <hr class="mt5">
+            <li class="pa3   grow">
+              <span class="fw1 f4">
+                <%= link_to 'Settings', settings_path, class: 'link blue fw3 f6' %>
+              </span>
+            </li>
+            <li class="pa3   grow">
+              <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: 'link fw3 f6 blue' %>
+            </li>
+          </ul>
         </div>
         <div class="main flex flex-column flex-auto" style="padding-left: 230px;">
           <% if notice %>

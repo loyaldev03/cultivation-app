@@ -5,8 +5,9 @@ class FacilityRowSetupForm
   delegate :id, :name, :code, :row_count, :shelf_count, :shelf_capacity, to: :section, prefix: true
   delegate :id, to: :room, prefix: true
   delegate :id, :name, :code, :shelves, to: :row, prefix: true
-  delegate :id, :name, :code, to: :shelf, prefix: true
 
+  validates :row_name, presence: true
+  validates :row_code, presence: true
   validate :verify_unique_row_code
 
   def initialize(_facility, _room_id, _section_id, _row_id = nil)

@@ -21,6 +21,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_timezone
-    Time.zone = current_user.timezone || ActiveSupport::TimeZone['Mountain Time (US & Canada)']
+    tz = current_user.timezone if user_signed_in?
+    Time.zone = tz || ActiveSupport::TimeZone['Mountain Time (US & Canada)']
   end
 end

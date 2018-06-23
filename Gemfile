@@ -51,10 +51,11 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 
   # Ruby code formatter (.rufo)
-  gem 'rufo', '~> 0.3.1'
+  gem 'rufo', '~> 0.3.1', require: false
+  gem 'rubocop', '~> 0.57.2', require: false
 
   # Run app with Procfile
-  gem 'foreman', '~> 0.84.0'
+  gem 'foreman', '~> 0.85.0', require: false
 
   # Automatically re-run rspec tests
   gem 'guard-rspec', require: false
@@ -78,9 +79,6 @@ gem 'devise'
 
 # Use command pattern to build service classes
 gem 'simple_command'
-
-# Form Object / View Model
-gem 'virtus'
 
 # Performance Profiler (place after mongoid)
 gem 'rack-mini-profiler'

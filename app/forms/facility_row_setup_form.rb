@@ -2,7 +2,7 @@ class FacilityRowSetupForm
   include ActiveModel::Model
 
   delegate :id, :name, :code, to: :facility, prefix: true
-  delegate :id, :name, :code, to: :section, prefix: true
+  delegate :id, :name, :code, :row_count, to: :section, prefix: true
   delegate :id, to: :room, prefix: true
   delegate :id, :name, :code, :shelves, to: :row, prefix: true
 

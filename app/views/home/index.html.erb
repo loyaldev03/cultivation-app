@@ -2,10 +2,22 @@
   <%= render "layouts/sidebar" %>
 <% end %>
 
-<div>
-  <h1>Hello <%= current_user && current_user.is_dev? %></h1>
-</div>
+<div class="ph4">
+  <% content_for :breadcrumb do %>
+    <h1 class="ma0">Dashboard</h1>
+  <% end %>
 
-<div>
-  <%= link_to "Setup a new facility (Wizard)", facility_setup_new_path %>
+  <h2 class="black-60">Issues require your attention:</h2>
+  <% @dashboard.incomplete_facilities.each do |f| %>
+    <p class="mt2 pa4 bg-yellow">
+      Complete to setup facility 
+      <%= link_to "#{f['code']} (#{f['name']})",
+        facility_setup_new_path(facility_id: f['_id'], step: 3),
+        class: "link blue"
+      %>
+    </p>
+  <% end %>
+
+  <h2 class="black-60 mt4">Shortcuts:</h2>
+  <%= link_to "Setup a new facility (Wizard)", facility_setup_new_path, class: "dib link pv2 ph3 ba b--green" %>
 </div>

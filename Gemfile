@@ -73,6 +73,7 @@ gem 'country_select'
 
 # Database
 gem 'mongoid', '~> 6.4.1'
+gem 'pluck_all'
 
 # User authentication
 gem 'devise'

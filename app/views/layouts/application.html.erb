@@ -12,6 +12,9 @@
               </div>
             <% end %>
           </div>
+          <% if user_signed_in? %>
+            <div class="pt2 pb3 mh3 f5 bb b--black-20">Hi, <%= current_user.email %></div>
+          <% end %>
           <ul class="list pl0">
             <li class="pa3 grow">
               <%= link_to "Home", root_path, class: "link fw1 f4" %>
@@ -52,7 +55,6 @@
               <% end %>
             </div>
             <%= yield %>
-            
           </main>
         </div>
       </div>

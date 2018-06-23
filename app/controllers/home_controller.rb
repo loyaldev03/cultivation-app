@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
   def index
-    @users = User.all
+    @dashboard = DashboardForm::DashboardForm.new
   end
 end

@@ -26,7 +26,7 @@ module Cannvas
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
-    
+
     config.generators.system_tests = nil
 
     config.generators do |g|
@@ -34,8 +34,5 @@ module Cannvas
       g.javascripts false
       g.helper false
     end
-
-    config.autoload_paths << Rails.root.join('app','commands')
-    config.autoload_paths << Rails.root.join('app','commands','facilities')
   end
 end

@@ -7,7 +7,7 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       login_as(user, :scope => :user)
     end
 
-    scenario "Facility wizard step 1" do
+    scenario "Facility wizard step 1 - Facility Info" do
       visit facility_setup_new_path
 
       fill_in "Name", :with => "Facility Name 1"
@@ -18,7 +18,7 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       expect(Facility.count).to eq 1
     end
 
-    scenario "Facility wizard step 2" do
+    scenario "Facility wizard step 2 - Facility Room Count" do
       facility = create(:facility, :after_step_1)
       visit facility_setup_new_path(facility_id: facility.id, step: 2)
 
@@ -29,7 +29,7 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       expect(Facility.count).to eq 1
     end
 
-    scenario "Facility wizard step 3" do
+    scenario "Facility wizard step 3 - Room Info" do
       facility = create(:facility, :after_step_2)
       visit facility_setup_new_path(facility_id: facility.id, step: 3)
 
@@ -45,7 +45,7 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       expect(facility.rooms.first.section_count).to eq 8
     end
 
-    scenario "Facility wizard step 4 - Storage" do
+    scenario "Facility wizard step 4 - Section / Storage" do
       facility = create(:facility, :after_step_3)
       room = facility.rooms.first
       visit facility_setup_new_path(facility_id: facility.id, step: 4, room_id: room.id)
@@ -78,7 +78,7 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       expect(section.is_complete).to eq false
     end
 
-    scenario "Facility wizard step 4 - Cultivation" do
+    scenario "Facility wizard step 4 - Section / Cultivation" do
       facility = create(:facility, :after_step_3)
       room = facility.rooms.first
       visit facility_setup_new_path(facility_id: facility.id, step: 4, room_id: room.id)
@@ -135,10 +135,28 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       expect(row.code).to eq fake_row_code
       expect(row.shelves.size).to eq 2
       expect(row.shelves[0].code).to_not eq nil
+      expect(row.is_complete).to be true
       expect(row.shelves[1].code).to_not eq nil
       expect(row.section.row_count).to eq 2
       expect(row.section.shelf_count).to eq 2
       expect(row.section.id).to_not be nil
+    end
+
+    scenario "Facility wizard step 5 - Rows & Shelves / Next Row" do
+      facility = create(:facility, :facility_with_rooms_sections)
+      room = facility.rooms.first
+      section = room.sections.first
+      expect(section.row_count >= 2).to be true
+      visit facility_setup_new_path(facility_id: facility.id, room_id: room.id, section_id: section.id, step: 5)
+
+      fake_row_name = Faker::Lorem.word
+      fake_row_code = Faker::Lorem.word
+      fill_in "Row Name", with: fake_row_name
+      fill_in "Row ID", with: fake_row_code
+      all("input[name='facility[shelves][][code]']").each { |e| e.set(Faker::Lorem.word) }
+      click_button "Save & Continue"
+
+      expect(page).to have_text("Step 5")
     end
   end
 end

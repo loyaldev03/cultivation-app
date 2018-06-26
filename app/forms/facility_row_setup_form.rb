@@ -36,6 +36,16 @@ class FacilityRowSetupForm
     end
   end
 
+  def next_row
+    current_row_index = rows.index { |r| r.id == row.id }
+    if current_row_index + 1 > section.row_count
+      # current row is already the last row
+      nil
+    else
+      rows[current_row_index + 1]
+    end
+  end
+
   def facility
     @facility
   end

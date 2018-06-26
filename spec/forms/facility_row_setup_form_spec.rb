@@ -71,6 +71,51 @@ RSpec.describe FacilityRowSetupForm, type: :model do
       expect(form_object.next_row.id).to eq row3.id
     end
 
+    it "should return nil given last row_id" do
+      row1 = Row.new({code: "Row1"})
+      row2 = Row.new({code: "Row2"})
+      row3 = Row.new({code: "Row3"})
+      @section.rows = [row1, row2, row3]
+      @section.row_count = 3
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s, row3.id.to_s)
+
+      expect(form_object.next_row.blank?).to eq true
+    end
+
+    it "should define next section" do
+      @room.section_count = 2
+      next_section = @room.sections[1]
+      expect(next_section.blank?).to eq false
+      expect(@room.sections.size).to eq 2
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s)
+
+      expect(form_object.next_section.blank?).to eq false
+      expect(form_object.next_section.id).to eq next_section.id
+    end
+
+    it "should define next section given section_id" do
+      @room.section_count = 3
+      @room.sections = [build(:section), build(:section), build(:section)]
+      @section = @room.sections[1]
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s)
+
+      expect(form_object.next_section.blank?).to eq false
+      expect(form_object.next_section.id).to eq @room.sections[2].id
+    end
+
+    it "should return nil given last section_id" do
+      @room.section_count = 3
+      @room.sections = [build(:section), build(:section), build(:section)]
+      @section = @room.sections[2]
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s)
+
+      expect(form_object.next_section.blank?).to eq true
+    end
+
     it "should initialize with row for corresponding row_id" do
       row1 = Row.new({code: "Row1"})
       row2 = Row.new({code: "Row2"})

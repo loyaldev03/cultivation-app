@@ -39,10 +39,20 @@ class FacilityRowSetupForm
   def next_row
     current_row_index = rows.index { |r| r.id == row.id }
     if current_row_index + 1 > section.row_count
-      # current row is already the last row
+      # already the last row
       nil
     else
       rows[current_row_index + 1]
+    end
+  end
+
+  def next_section
+    current_section_index = room.sections.index { |s| s.id == section.id }
+    if current_section_index + 1 > room.section_count
+      # already last section
+      nil
+    else
+      room.sections[current_section_index + 1]
     end
   end
 
@@ -90,7 +100,7 @@ class FacilityRowSetupForm
 
   def set_rows(row_id = nil)
     rows.build(id: row_id) if rows.blank? && row_id.present?
-    if missing_row_count > 0
+    if missing_row_count.positive?
       rows << Array.new(missing_row_count) { |i| Row.new(code: i + 1) }
     end
     rows || []

@@ -251,5 +251,32 @@ RSpec.describe FacilityRowSetupForm, type: :model do
       expect(form_object.valid?).to be false
       expect(saved_row.name).to_not eq "3rd First Row"
     end
+
+    it "should update shelf is_complete given correct inputs" do
+      row = @section.rows.first
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s, row.id.to_s)
+
+      params = {
+        row_name: row.name,
+        row_code: row.code,
+        shelves: [
+          { id: form_object.row.shelves[0].id.to_s,
+            code: "Shelf1",
+            capacity: Faker::Number.number(2).to_i,
+            desc: Faker::Lorem.sentence },
+          { id: form_object.row.shelves[1].id.to_s,
+            code:  "Shelf2",
+            capacity: Faker::Number.number(2).to_i,
+            desc: Faker::Lorem.sentence },
+        ]
+      }
+      form_object.submit(params)
+
+      saved_facility = Facility.find_by(id: form_object.facility_id)
+      saved_section = saved_facility.rooms.first.sections.first
+      saved_row = saved_section.rows.detect { |r| r.id == row.id }
+      expect(saved_row.is_complete).to be true
+    end
   end
 end

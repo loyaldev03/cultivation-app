@@ -29,7 +29,8 @@ class FacilityRowSetupForm
     row.code = params[:row_code]
     map_shelves_from_params(params[:shelves])
     if valid?
-      section.save!
+      row.is_complete = true
+      facility.save!
     else
       false
     end

@@ -1,4 +1,4 @@
-class Settings::Facility::RoomsController < ApplicationController
+class Settings::Facilities::RoomsController < ApplicationController
   def index
     @facilities = Facility.all
     @rooms = []

@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get "settings" => "home#settings"
 
   namespace 'settings' do
-    namespace 'facility' do
+    namespace 'facilities', as: :facility do
       resources :facilities, only: [:edit, :update, :index] do
         get 'all', on: :collection
       end

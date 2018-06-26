@@ -9,43 +9,39 @@
 <div class="ph4 w-50 pb4">
   <%= simple_form_for @facility, url: settings_facility_facility_path(id: @facility.id), method: :patch, html: { class: 'vertical-form' } do |f| %>
     <%= f.input :name,
-      label_html: { class: 'w-30 dib mb2' }, 
+      label_html: { class: 'w-30 dib' }, 
       input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
     %>
     <%= f.input :code,
-      label_html: { class: 'w-30 dib mb2' }, 
+      label_html: { class: 'w-30 dib' }, 
       input_html: { class: 'w-30 pa2 ba b--silver outline-0' } 
     %>
     <%= f.input :address,
-      label_html: { class: 'w-30 dib mb2' }, 
+      label_html: { class: 'w-30 dib' }, 
       input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
     %>
     <%= f.input :zipcode,
-      label_html: { class: 'w-30 dib mb2' }, 
+      label_html: { class: 'w-30 dib' }, 
       input_html: { class: 'w-30 pa2 ba b--silver outline-0' } 
     %>
     <%= f.input :city,
-      label_html: { class: 'w-30 dib mb2' }, 
+      label_html: { class: 'w-30 dib' }, 
       input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
     %>
     <%= f.input :state,
-      label_html: { class: 'w-30 dib mb2' }, 
+      label_html: { class: 'w-30 dib' }, 
       input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
     %>
     <%= f.input :country, 
-      label_html: { class: 'w-30 dib mb2' }, 
+      label_html: { class: 'w-30 dib' }, 
       input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
     %>
     <%= f.input :phone,
-      label_html: { class: 'w-30 dib mb2' }, 
+      label_html: { class: 'w-30 dib' }, 
       input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
     %>
     <%= f.input :fax,
-      label_html: { class: 'w-30 dib mb2' }, 
-      input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
-    %>
-    <%= f.input :is_enabled,
-      label_html: { class: 'w-30 dib mb2' }, 
+      label_html: { class: 'w-30 dib' }, 
       input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
     %>
     <div class="pv3 tr w-100 flex items-center justify-end">

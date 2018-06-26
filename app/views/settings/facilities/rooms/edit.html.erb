@@ -7,29 +7,23 @@
 </div>
 
 <div class="ph4 w-50 pb4">
-  <%= simple_form_for @room, url: settings_facility_room_path(@room), html: { class: 'vertical-form' } do |f| %>
-    <div class="pv2">
-      <%= f.input :name, 
+  <%= simple_form_for @room, url: settings_facility_room_path(id: @room.id), method: :patch, html: { class: 'vertical-form' } do |f| %>
+    <%= f.input :name, 
       label_html: { class: 'w-30 dib mb2' }, 
       input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
-      %>
-    </div>
-    <div class="pv2">
-      <%= f.input :code, 
+    %>
+    <%= f.input :code, 
       label_html: { class: 'w-30 dib mb2' }, 
       input_html: { class: 'w-30 pa2 ba b--silver outline-0' } 
-      %>
-    </div>
-    <div class="pv2">
-      <%= f.input :desc,
+    %>
+    <%= f.input :desc,
       as: :text,
       label: "Description",
       wrapper_html: { class: 'flex' },
       label_html: { class: 'w-30 dib mb2' }, 
       input_html: { class: 'w-70 pa2 ba b--silver outline-0', rows: 5 } 
-      %>
-    </div>
-    <div class="pv2 flex">
+    %>
+    <div class="flex">
       <div class="w-30 dib mb2">
         Facility
       </div>

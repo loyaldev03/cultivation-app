@@ -1,4 +1,4 @@
-class Settings::Facility::FacilitiesController < ApplicationController
+class Settings::Facilities::FacilitiesController < ApplicationController
   def index
     # render plain: 'facilities root'
     @facilities = Facility.all

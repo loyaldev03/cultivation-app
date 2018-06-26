@@ -1,0 +1,113 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Settings", settings_path], ["Facilities", all_settings_facility_facilities_path], ["Sections", settings_facility_sections_path], "#{blank(@section.name)} - #{@section.code}" %>
+<% end %>
+
+<div class="ph4 w-100 pb4">
+  <h1 class="ma0 pa0 f3">Modify section</h1>
+</div>
+
+<div class="ph4 w-50 pb4">
+  <%= simple_form_for @section, url: settings_facility_section_path(id: @section.id), method: :patch, html: { class: 'vertical-form' } do |f| %>
+    <%= f.input :name,
+      label_html: { class: 'w-30 dib mb2' }, 
+      input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
+    %>
+    <%= f.input :code,
+      label_html: { class: 'w-30 dib mb2' }, 
+      input_html: { class: 'w-30 pa2 ba b--silver outline-0' } 
+    %>
+    <%= f.input :desc,
+      as: :text,
+      label: 'Description',
+      label_html: { class: 'w-30 dib mb2 self-start' }, 
+      input_html: { class: 'w-70 pa2 ba b--silver outline-0', rows: 5 } 
+    %>
+
+    <div class="mt2">
+      <%= f.input :purpose,
+        as: :radio_buttons,
+        label: 'Purpose of this section?',
+        label_html: { class: 'w-30 dib mb2' }, 
+        input_html: { class: 'pa2  mr2 ba b--silver outline-0' },
+        disabled: @section.rows.count > 0,
+        collection: [
+          ['Storage', 'storage', class: 'mr2', data: { toggle: '#storage-options' }], 
+          ['Cultivation', 'cultivation', class: 'mr2 ml3', data: { toggle: '#cultivation-options' }]]
+      %>
+    </div>
+
+    <%= f.input :storage_types, 
+      as: :check_boxes, 
+      label: false do %>
+        <div id="storage-options" class="w-100 flex" style="display:none;">
+          <div class='w-30 mb2 mt2'></div>
+          <div class='w-70 mt2'>
+            <%= f.collection_check_boxes :storage_types, [
+              ["Sales item", "sales_item"],
+              ["Consumable", "consumable"],
+              ["Mother / Seed", "mother_or_seed"]], 
+              :second, :first, {},
+              { class: 'mr2' } do |b|
+               b.label(class: 'db pb2') { b.check_box(class: 'mr2', disabled: @section.rows.count > 0) + b.text }
+             end %>
+          </div>
+        </div>
+    <% end %>
+
+    <%= f.input :cultivation_types, 
+      as: :check_boxes, 
+      label: false  do %>
+        <div id="cultivation-options" class="w-100 flex" style="display:none;">
+          <div class='w-30 mb2 mt2'></div>
+          <div class='w-70 mt2'>
+            <%= f.collection_check_boxes :cultivation_types, [
+              ["Mothering", "mothering"], 
+              ["Clone", "clone"], 
+              ["Veg Phase 1", "veg_phase_1"],
+              ["Veg Phase 2", "veg_phase_2"],
+              ["Flower", "flower"]], 
+              :second, :first, {},
+              { class: 'mr2' } do |b|
+               b.label(class: 'db pb2') { b.check_box(class: 'mr2', disabled: @section.rows.count > 0) + b.text }
+             end %>
+          </div>
+        </div>
+    <% end %>
+
+    <% if @section.rows.count > 0 %>
+      <div class="flex mt2 mb3">
+        <div class="w-30"></div>
+        <div class="w-70 ba br3 b--moon-gray pa3 bg-light-yellow">
+          <p class="ma0 pa0 lh-copy f6 dark-gray">
+            Storage purpose cannot be editted as this section already has rows/ shelves.
+          </p>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="pv3 tr w-100 flex items-center justify-end">
+        <%= f.submit "Update", class: "pa2 ph4 ba b--blue blue bw1 br4 dim" %>
+        <%= link_to "Cancel", settings_facility_sections_path, class: 'f6 blue link ml4' %>
+    </div>
+  <% end %>
+</div>
+
+
+<% content_for :before_body_end do %>
+  <script type="text/javascript">
+    $$('input[data-toggle]').on('change', function(e) {
+      $$('input[data-toggle]').forEach(function(g) {
+        var defaultTarget = g.getAttribute('data-toggle');
+        if (g.checked) {
+          console.log(g.checked);
+          $$(defaultTarget)[0].style.display = "";  
+        } else {
+          $$(defaultTarget)[0].style.display = "none";  
+        }
+      });
+    });
+
+    var changeEvent = new Event("change");
+    $$('input[data-toggle][checked]').forEach(function(t) { t.dispatchEvent(changeEvent) });
+  </script>
+<% end %>

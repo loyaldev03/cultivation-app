@@ -17,8 +17,8 @@ RSpec.describe FacilitySectionSetupForm, type: :model do
       expect(form_object.section_purpose).to eq 'storage'
       expect(form_object.section_storage_types).to eq nil
       expect(form_object.section_cultivation_types).to eq nil
-      expect(form_object.section_row_count).to eq 10
-      expect(form_object.section_shelf_count).to eq 5
+      expect(form_object.section_row_count).to eq 3
+      expect(form_object.section_shelf_count).to eq 2
       expect(form_object.section_shelf_capacity).to eq 20
     end
 

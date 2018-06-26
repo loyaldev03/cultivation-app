@@ -2,13 +2,14 @@ class FacilityRowSetupForm
   include ActiveModel::Model
 
   delegate :id, :name, :code, to: :facility, prefix: true
-  delegate :id, :name, :code, :row_count, to: :section, prefix: true
+  delegate :id, :name, :code, :row_count, :shelf_count, to: :section, prefix: true
   delegate :id, to: :room, prefix: true
   delegate :id, :name, :code, :shelves, to: :row, prefix: true
 
   validates :row_name, presence: true
   validates :row_code, presence: true
   validate :verify_unique_row_code
+  validate :verify_shelves
 
   def initialize(_facility, _room_id, _section_id, _row_id = nil)
     raise(ArgumentError, ':facility is required') if _facility.nil?
@@ -51,41 +52,7 @@ class FacilityRowSetupForm
   end
 
   def row
-    @row
-  end
-
-  private
-
-  def map_shelves_from_params(_shelves)
-    set_shelves(_shelves)
-    _shelves.each { |s| find_and_update_shelf(s) } if _shelves.present?
-  end
-
-  def get_row(row_id)
-    row_id.nil? ? rows.first : rows.detect { |r| r.id.to_s == row_id }
-  end
-
-  def set_rows(row_id)
-    rows.build(id: row_id) if rows.blank? && row_id.present?
-    if missing_row_count.positive?
-      rows << Array.new(missing_row_count) { |i| Row.new(code: i + 1) }
-    end
-    rows || []
-  end
-
-  def set_shelves(_shelves = nil)
-    if row.shelves.blank? && _shelves.present?
-      row.shelves << Array.new(_shelves.size) do |i|
-        build_shelf(_shelves[i], i + 1)
-      end
-    end
-    if missing_shelf_count.positive?
-      row.shelves << Array.new(missing_shelf_count) do |i|
-        build_shelf(nil, i + 1 + missing_shelf_count)
-      end
-    else
-      row.shelves ||= []
-    end
+    @row ||= set_rows
   end
 
   def missing_row_count
@@ -94,8 +61,42 @@ class FacilityRowSetupForm
   end
 
   def missing_shelf_count
-    @missing_shelf_count ||= section.shelf_count if row.shelves.blank?
-    @missing_shelf_count ||= section.shelf_count - row.shelves.size
+    @missing_shelf_count ||= section.shelf_count if row&.shelves&.blank?
+    @missing_shelf_count ||= section.shelf_count - row&.shelves&.size
+  end
+
+  private
+
+  def map_shelves_from_params(_shelves)
+    row.shelves = []
+    set_shelves(_shelves)
+    _shelves.each { |s| find_and_update_shelf(s) } if _shelves.present?
+  end
+
+  def get_row(row_id = nil)
+    row_id.nil? ? rows.first : rows.detect { |r| r.id.to_s == row_id }
+  end
+
+  def set_rows(row_id = nil)
+    rows.build(id: row_id) if rows.blank? && row_id.present?
+    if missing_row_count > 0
+      rows << Array.new(missing_row_count) { |i| Row.new(code: i + 1) }
+    end
+    rows || []
+  end
+
+  def set_shelves(_shelves = nil)
+    if row&.shelves&.blank? && _shelves.present?
+      row.shelves << Array.new(_shelves.size) do |i|
+        build_shelf(_shelves[i], i + 1)
+      end
+    elsif missing_shelf_count.positive?
+      row.shelves << Array.new(missing_shelf_count) do |i|
+        build_shelf(nil, i + 1 + missing_shelf_count)
+      end
+    else
+      row.shelves ||= []
+    end
   end
 
   def build_shelf(_shelf, code)
@@ -119,6 +120,24 @@ class FacilityRowSetupForm
     if row.code.present?
       exist = rows.any? { |r| r.code == row.code && r.id != row.id }
       errors.add(:row_code, 'already exists') if exist
+    end
+  end
+
+  def verify_shelves
+    if row&.shelves&.any?
+      row.shelves.each_with_index do |s, i|
+        if s.code.blank?
+          errors.add("Shelves ID ##{i + 1}", 'is required')
+          return
+        end
+      end
+      row.shelves.each_with_index do |s, i|
+        count_exist = row.shelves.select { |r| s.code == r.code }.count
+        if count_exist > 1
+          errors.add("Shelves ID ##{i + 1}", "(#{s.code}) already being used")
+          return
+        end
+      end
     end
   end
 end

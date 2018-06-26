@@ -67,8 +67,8 @@ FactoryBot.define do
   end
 
   factory :section do
-    row_count 10
-    shelf_count 5
+    row_count 3
+    shelf_count 2
     shelf_capacity 20
     purpose 'storage'
 

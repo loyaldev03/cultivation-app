@@ -98,6 +98,7 @@ RSpec.describe FacilityRowSetupForm, type: :model do
       @section = @room.sections.first
       @section.shelf_count = 3
     end
+
     it "should save new row given correct inputs" do
       form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s)
 
@@ -129,6 +130,7 @@ RSpec.describe FacilityRowSetupForm, type: :model do
       saved_facility = Facility.find_by(id: form_object.facility_id)
       saved_section = saved_facility.rooms.first.sections.first
       saved_row = saved_section.rows.detect { |r| r.id.to_s == params[:row_id] }
+      expect(form_object.errors.blank?).to be true
       expect(saved_row.id.to_s).to eq params[:row_id]
       expect(saved_row.name).to eq params[:row_name]
       expect(saved_row.code).to eq params[:row_code]
@@ -144,15 +146,20 @@ RSpec.describe FacilityRowSetupForm, type: :model do
 
     it "should update shelves given correct inputs" do
       row = @section.rows.first
+      expect(row.shelves.size).to eq 0
+      expect(@section.shelf_count).to eq 3
 
       form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s, row.id.to_s)
+      expect(form_object.row_shelves.size).to eq 3
+      expect(form_object.missing_shelf_count).to eq 3
+
       shelf1_id = form_object.row.shelves[0].id.to_s
       shelf2_id = form_object.row.shelves[1].id.to_s
       params = {
-        row_name: '3nd First Row',
-        row_code: '3nd Rw1',
+        row_name: '3rd First Row',
+        row_code: '3rd Rw1',
         shelves: [
-          { id: shelf1_id, 
+          { id: shelf1_id,
             code: "shelf-1",
             capacity: Faker::Number.number(2).to_i,
             desc: Faker::Lorem.sentence },
@@ -164,21 +171,85 @@ RSpec.describe FacilityRowSetupForm, type: :model do
       }
       form_object.submit(params)
 
+      expect(form_object.missing_shelf_count).to eq 3
+      expect(form_object.row_shelves.size).to eq 2
       saved_facility = Facility.find_by(id: form_object.facility_id)
       saved_section = saved_facility.rooms.first.sections.first
       saved_row = saved_section.rows.detect { |r| r.id == row.id }
-      expect(row.name).to eq saved_row.name
-      expect(saved_row.shelves.blank?).to be false
-
+      expect(form_object.section_shelf_count).to eq 3
+      expect(form_object.errors.blank?).to be true
+      expect(form_object.valid?).to be true
+      expect(saved_row.name).to eq "3rd First Row"
+      expect(saved_row.code).to eq "3rd Rw1"
       expect(saved_row.shelves[0].id.to_s).to eq params[:shelves][0][:id]
       expect(saved_row.shelves[0].code).to eq params[:shelves][0][:code]
       expect(saved_row.shelves[0].desc).to eq params[:shelves][0][:desc]
       expect(saved_row.shelves[0].capacity).to eq params[:shelves][0][:capacity]
-
       expect(saved_row.shelves[1].id.to_s).to eq params[:shelves][1][:id]
       expect(saved_row.shelves[1].code).to eq params[:shelves][1][:code]
       expect(saved_row.shelves[1].desc).to eq params[:shelves][1][:desc]
       expect(saved_row.shelves[1].capacity).to eq params[:shelves][1][:capacity]
+    end
+
+    it "should show errors given duplicate shelf-code inputs" do
+      row = @section.rows.first
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s, row.id.to_s)
+      shelf1_id = form_object.row.shelves[0].id.to_s
+      shelf2_id = form_object.row.shelves[1].id.to_s
+      params = {
+        row_name: '3rd First Row',
+        row_code: '3rd Rw1',
+        shelves: [
+          { id: shelf1_id,
+            code: "shelf-1",
+            capacity: Faker::Number.number(2).to_i,
+            desc: Faker::Lorem.sentence },
+          { id: shelf2_id,
+            code: "shelf-1", # purposely use same shelf code
+            capacity: Faker::Number.number(2).to_i,
+            desc: Faker::Lorem.sentence },
+        ]
+      }
+      form_object.submit(params)
+
+      saved_facility = Facility.find_by(id: form_object.facility_id)
+      saved_section = saved_facility.rooms.first.sections.first
+      saved_row = saved_section.rows.detect { |r| r.id == row.id }
+      expect(form_object.errors.blank?).to be false
+      expect(form_object.valid?).to be false
+      expect(saved_row.name).to_not eq "3rd First Row"
+    end
+
+    it "should show errors given missing shelf-code inputs" do
+      row = @section.rows.first
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s, row.id.to_s)
+      shelf1_id = form_object.row.shelves[0].id.to_s
+      shelf2_id = form_object.row.shelves[1].id.to_s
+      params = {
+        row_name: '3rd First Row',
+        row_code: '3rd Rw1',
+        shelves: [
+          { id: shelf1_id,
+            code: "shelf-1",
+            capacity: Faker::Number.number(2).to_i,
+            desc: Faker::Lorem.sentence },
+          { id: shelf2_id,
+            code: "", # purposely use empty code
+            capacity: Faker::Number.number(2).to_i,
+            desc: Faker::Lorem.sentence },
+        ]
+      }
+      form_object.submit(params)
+
+      saved_facility = Facility.find_by(id: form_object.facility_id)
+      saved_section = saved_facility.rooms.first.sections.first
+      saved_row = saved_section.rows.detect { |r| r.id == row.id }
+      expect(form_object.errors.blank?).to be false
+      expect(form_object.errors.full_messages[0]).to eq "Shelves id #2 is required"
+      expect(form_object.valid?).to be false
+      expect(saved_row.name).to_not eq "3rd First Row"
     end
   end
 end

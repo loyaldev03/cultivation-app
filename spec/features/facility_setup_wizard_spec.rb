@@ -112,5 +112,33 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       expect(section.shelf_capacity).to eq fake_capacity
       expect(section.is_complete).to eq false
     end
+
+    scenario "Facility wizard step 5 - Rows & Shelves" do
+      facility = create(:facility, :facility_with_rooms_sections)
+      room = facility.rooms.first
+      section = room.sections.first
+      section.row_count = 2
+      section.shelf_count = 2
+      section.save!
+      visit facility_setup_new_path(facility_id: facility.id, room_id: room.id, section_id: section.id, step: 5)
+
+      fake_row_name = Faker::Lorem.word
+      fake_row_code = Faker::Lorem.word
+      fill_in "Row Name", with: fake_row_name
+      fill_in "Row ID", with: fake_row_code
+      all("input[name='facility[shelves][][code]']").each { |e| e.set(Faker::Lorem.word) }
+      click_button "Save & Continue"
+
+      row = Facility.find_by(id: facility.id).rooms.first.sections.first.rows.first
+      expect(row.id).to_not be nil
+      expect(row.name).to eq fake_row_name
+      expect(row.code).to eq fake_row_code
+      expect(row.shelves.size).to eq 2
+      expect(row.shelves[0].code).to_not eq nil
+      expect(row.shelves[1].code).to_not eq nil
+      expect(row.section.row_count).to eq 2
+      expect(row.section.shelf_count).to eq 2
+      expect(row.section.id).to_not be nil
+    end
   end
 end

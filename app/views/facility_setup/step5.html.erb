@@ -39,9 +39,9 @@
             <% end %>
 
             <div class="mt3 mb2">
-              <%= f.label :row_name, class: "f6 b db mb1" %>
+              <%= f.label :row_name, "Row Name", class: "f6 b db mb1" %>
               <%= f.text_field :row_name, value: @wizard_form.row_name, class: "ba b--black-20 pa2 mb2 db w-100" %>
-              <%= f.label :row_code, class: "f6 b db mb1" %>
+              <%= f.label :row_code, "Row ID", class: "f6 b db mb1" %>
               <%= f.text_field :row_code, value: @wizard_form.row_code, class: "ba b--black-20 pa2 mb2 db w-100" %>
             </div>
 
@@ -57,15 +57,15 @@
 
                   <% @wizard_form.row_shelves.each do |shelf| %>
                     <tr class="striped--light-gray">
-                        <%= hidden_field_tag "facility[shelves][][id]", shelf.id %>
+                        <%= hidden_field_tag "facility[shelves][][id]", shelf.id, id: nil %>
                         <td class="pv2 ph3">
-                          <%= text_field_tag "facility[shelves][][code]", shelf.code %>
+                          <%= text_field_tag "facility[shelves][][code]", shelf.code, id: nil %>
                         </td>
                         <td class="pv2 ph3 tr">
-                          <%= text_field_tag "facility[shelves][][capacity]", shelf.capacity %>
+                          <%= text_field_tag "facility[shelves][][capacity]", shelf.capacity, id: nil %>
                         </td>
                         <td class="pv2 ph3">
-                          <%= text_field_tag "facility[shelves][][desc]", shelf.desc %>
+                          <%= text_field_tag "facility[shelves][][desc]", shelf.desc, id: nil %>
                         </td>
                     </tr>
                   <% end %>

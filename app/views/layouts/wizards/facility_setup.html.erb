@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <%= render "layouts/head", include_turbolink: true %>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+      <div class="flex flex-row min-vh-100">
+        <div class="main flex flex-column flex-auto">
+          <main class="min-vh-100">
+            <%= yield %>
+          </main>
+        </div>
+      </div>
+    </div>
+    <%= render "layouts/before_body_end" %>
+    <script>
+      Turbolinks.start()
+    </script>
+  </body>
+</html>
+

@@ -42,6 +42,80 @@ RSpec.describe FacilityRowSetupForm, type: :model do
       expect(@section.rows.size).to eq @section.row_count
     end
 
+    it "should define next_row correctly give no row_id" do
+      row1 = Row.new({code: "Row1"})
+      row2 = Row.new({code: "Row2"})
+      @section.rows = [row1, row2]
+      @section.row_count = 2
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s)
+
+      expect(form_object.rows.size).to eq 2
+      expect(form_object.row.id).to eq row1.id
+      expect(form_object.next_row.blank?).to eq false
+      expect(form_object.next_row.id).to eq row2.id
+    end
+
+    it "should define next_row correctly given row_id" do
+      row1 = Row.new({code: "Row1"})
+      row2 = Row.new({code: "Row2"})
+      row3 = Row.new({code: "Row3"})
+      @section.rows = [row1, row2, row3]
+      @section.row_count = 3
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s, row2.id.to_s)
+
+      expect(form_object.rows.size).to eq 3
+      expect(form_object.row.id).to eq row2.id
+      expect(form_object.next_row.blank?).to eq false
+      expect(form_object.next_row.id).to eq row3.id
+    end
+
+    it "should return nil given last row_id" do
+      row1 = Row.new({code: "Row1"})
+      row2 = Row.new({code: "Row2"})
+      row3 = Row.new({code: "Row3"})
+      @section.rows = [row1, row2, row3]
+      @section.row_count = 3
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s, row3.id.to_s)
+
+      expect(form_object.next_row.blank?).to eq true
+    end
+
+    it "should define next section" do
+      @room.section_count = 2
+      next_section = @room.sections[1]
+      expect(next_section.blank?).to eq false
+      expect(@room.sections.size).to eq 2
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s)
+
+      expect(form_object.next_section.blank?).to eq false
+      expect(form_object.next_section.id).to eq next_section.id
+    end
+
+    it "should define next section given section_id" do
+      @room.section_count = 3
+      @room.sections = [build(:section), build(:section), build(:section)]
+      @section = @room.sections[1]
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s)
+
+      expect(form_object.next_section.blank?).to eq false
+      expect(form_object.next_section.id).to eq @room.sections[2].id
+    end
+
+    it "should return nil given last section_id" do
+      @room.section_count = 3
+      @room.sections = [build(:section), build(:section), build(:section)]
+      @section = @room.sections[2]
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s)
+
+      expect(form_object.next_section.blank?).to eq true
+    end
+
     it "should initialize with row for corresponding row_id" do
       row1 = Row.new({code: "Row1"})
       row2 = Row.new({code: "Row2"})
@@ -57,6 +131,31 @@ RSpec.describe FacilityRowSetupForm, type: :model do
       expect(form_object.row_id).to eq row2.id
       expect(form_object.row.id).to eq row2.id
       expect(@section.rows.size).to eq @section.row_count
+    end
+
+    it "should define next room" do
+      @facility.rooms = [build(:room), build(:room)]
+      @room = @facility.rooms[0]
+      @room.section_count = 2
+      @room.sections = [build(:section, :section_1_row)]
+      @section = @room.sections[0]
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s)
+
+      expect(form_object.next_room.blank?).to eq false
+      expect(form_object.next_room.id).to eq @facility.rooms[1].id
+    end
+
+    it "should return nil given last room_id" do
+      @facility.rooms = [build(:room, :room_1), build(:room, :room_2)]
+      @room = @facility.rooms[1]
+      @room.section_count = 1
+      @room.sections = [build(:section, :section_1_row)]
+      @section = @room.sections[0]
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s)
+
+      expect(form_object.next_room.blank?).to eq true
     end
   end
 

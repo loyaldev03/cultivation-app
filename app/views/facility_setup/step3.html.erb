@@ -1,7 +1,7 @@
 <div class="vh-100 w-100 dt">
   <div class="dtc v-mid">
     <div class="measure-wide center">
-      <h1>Step 3 - Setup Room (1 of 5)</h1>
+      <h1>Step 3 - Setup Room (<%= @wizard_form.current_room_number %> of <%= @wizard_form.facility_room_count %>)</h1>
       <div class="flex flex-row">
         <div class="pa2">
           <ul class="list pa2 w4 flex flex-wrap justify-around">
@@ -85,18 +85,18 @@
 
 <% content_for :before_body_end do %>
   <script>
-    $(".continue-button").on("click", function(e) {
-      $(".modal").classList.add("modal--openned")
+    $_(".continue-button").on("click", function(e) {
+      $_(".modal").classList.add("modal--openned")
     })
 
-    $(".continue-button").on("click", function(e) {
-      $(".modal").classList.add("modal--openned")
+    $_(".continue-button").on("click", function(e) {
+      $_(".modal").classList.add("modal--openned")
     })
 
     $$('.have-section').on("change", function() {
-      const el = $('.have-section[value=true]')
-      const question = $('.have-section-question')
-      const answer = $('.have-section-answer')
+      const el = $_('.have-section[value=true]')
+      const question = $_('.have-section-question')
+      const answer = $_('.have-section-answer')
       if (el.checked) {
         question.style.display = "block"
         answer.setAttribute('required', 'required')

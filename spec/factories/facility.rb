@@ -71,6 +71,7 @@ FactoryBot.define do
     shelf_count 2
     shelf_capacity 20
     purpose 'storage'
+    code Faker::Number::number(4)
 
     trait :section_1 do
       name 'Section 1'

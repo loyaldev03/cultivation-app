@@ -36,6 +36,39 @@ class FacilityRowSetupForm
     end
   end
 
+  def next_row
+    current_row_index = rows.index { |r| r.id == row.id }
+    if current_row_index.blank? || current_row_index + 1 > section.row_count
+      # already the last row
+      nil
+    else
+      rows[current_row_index + 1]
+    end
+  end
+
+  def next_section
+    current_section_index = room.sections.index { |s| s.id == section.id }
+    if current_section_index.blank? || room.blank? || room.section_count.blank?
+      return nil
+    end
+    if current_section_index + 1 > room.section_count
+      # already last section
+      nil
+    else
+      room.sections[current_section_index + 1]
+    end
+  end
+
+  def next_room
+    current_room_index = facility.rooms.index { |r| r.id == room.id }
+    if current_room_index + 1 > facility.room_count
+      # already last room
+      nil
+    else
+      facility.rooms[current_room_index + 1]
+    end
+  end
+
   def facility
     @facility
   end
@@ -53,17 +86,34 @@ class FacilityRowSetupForm
   end
 
   def row
-    @row ||= set_rows
+    if @row.nil?
+      set_rows
+      @row = get_row
+    else
+      @row
+    end
+  end
+
+  def name_of_row(index = 0)
+    row[index]&.name || "Row #{index + 1}"
   end
 
   def missing_row_count
     @missing_row_count ||= section.row_count if rows.blank?
-    @missing_row_count ||= section.row_count - rows.size
+    if section.row_count.present?
+      @missing_row_count ||= section.row_count - rows.size
+    else
+      @missing_row_count ||= 0
+    end
   end
 
   def missing_shelf_count
-    @missing_shelf_count ||= section.shelf_count if row&.shelves&.blank?
-    @missing_shelf_count ||= section.shelf_count - row&.shelves&.size
+    @missing_shelf_count ||= section.shelf_count if row.shelves.blank?
+    if section.shelf_count.present?
+      @missing_shelf_count ||= section.shelf_count - row.shelves.size
+    else
+      @missing_shelf_count ||= 0
+    end
   end
 
   private
@@ -80,14 +130,14 @@ class FacilityRowSetupForm
 
   def set_rows(row_id = nil)
     rows.build(id: row_id) if rows.blank? && row_id.present?
-    if missing_row_count > 0
+    if missing_row_count.positive?
       rows << Array.new(missing_row_count) { |i| Row.new(code: i + 1) }
     end
     rows || []
   end
 
   def set_shelves(_shelves = nil)
-    if row&.shelves&.blank? && _shelves.present?
+    if row.shelves.blank? && _shelves.present?
       row.shelves << Array.new(_shelves.size) do |i|
         build_shelf(_shelves[i], i + 1)
       end
@@ -98,6 +148,8 @@ class FacilityRowSetupForm
     else
       row.shelves ||= []
     end
+  rescue
+    row.shelves = []
   end
 
   def build_shelf(_shelf, code)
@@ -125,7 +177,7 @@ class FacilityRowSetupForm
   end
 
   def verify_shelves
-    if row&.shelves&.any?
+    if row.shelves.any?
       row.shelves.each_with_index do |s, i|
         if s.code.blank?
           errors.add("Shelves ID ##{i + 1}", 'is required')

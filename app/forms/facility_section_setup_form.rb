@@ -7,6 +7,7 @@ class FacilitySectionSetupForm
 
   validates :section_name, presence: true
   validates :section_code, presence: true
+  validates :section_row_count, presence: true
   validate :verify_unique_section_code
 
   def initialize(_facility, _room_id, _section_id = nil)

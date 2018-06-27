@@ -1,5 +1,5 @@
 class FacilitySetupController < ApplicationController
-  layout 'blank'
+  layout 'wizards/facility_setup'
 
   def new
     wizard_form
@@ -19,11 +19,24 @@ class FacilitySetupController < ApplicationController
                                             room_id: wizard_form.room_id,
                                             section_id: wizard_form.section_id)
       elsif current_step == 5
-        redirect_to facility_setup_new_path(step: current_step,
-                                            facility_id: wizard_form.facility_id,
-                                            room_id: wizard_form.room_id,
-                                            section_id: wizard_form.section_id,
-                                            row_id: wizard_form.row_id)
+        if wizard_form.next_row.present?
+          redirect_to facility_setup_new_path(step: current_step,
+                                              facility_id: wizard_form.facility_id,
+                                              room_id: wizard_form.room_id,
+                                              section_id: wizard_form.section_id,
+                                              row_id: wizard_form.next_row.id)
+        elsif wizard_form.next_section.present?
+          redirect_to facility_setup_new_path(step: 4,
+                                              facility_id: wizard_form.facility_id,
+                                              room_id: wizard_form.room_id,
+                                              section_id: wizard_form.next_section.id)
+        elsif wizard_form.next_room.present?
+          redirect_to facility_setup_new_path(step: 3,
+                                              facility_id: wizard_form.facility_id,
+                                              room_id: wizard_form.next_room.id)
+        else
+          redirect_to root_path
+        end
       else
         redirect_to current_step < 6 ?
                       facility_setup_new_path(facility_id: wizard_form.id, step: next_step) :

@@ -27,6 +27,11 @@ class FacilityRoomSetupForm
     @room
   end
 
+  def current_room_number
+    current_room_index = facility.rooms.index { |r| r.id == room.id }
+    current_room_index + 1
+  end
+
   def submit(params)
     room.name = params[:room_name]
     room.code = params[:room_code]

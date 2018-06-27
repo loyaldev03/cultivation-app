@@ -1,4 +1,6 @@
+// TODO: $ will be replaced with $_
 const $ = document.querySelector.bind(document)
+const $_ = document.querySelector.bind(document)
 const $$ = document.querySelectorAll.bind(document)
 
 Node.prototype.on = window.on = function(name, fn) {

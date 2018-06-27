@@ -85,18 +85,18 @@
 
 <% content_for :before_body_end do %>
   <script>
-    $(".continue-button").on("click", function(e) {
-      $(".modal").classList.add("modal--openned")
+    $_(".continue-button").on("click", function(e) {
+      $_(".modal").classList.add("modal--openned")
     })
 
-    $(".continue-button").on("click", function(e) {
-      $(".modal").classList.add("modal--openned")
+    $_(".continue-button").on("click", function(e) {
+      $_(".modal").classList.add("modal--openned")
     })
 
     $$('.have-section').on("change", function() {
-      const el = $('.have-section[value=true]')
-      const question = $('.have-section-question')
-      const answer = $('.have-section-answer')
+      const el = $_('.have-section[value=true]')
+      const question = $_('.have-section-question')
+      const answer = $_('.have-section-answer')
       if (el.checked) {
         question.style.display = "block"
         answer.setAttribute('required', 'required')

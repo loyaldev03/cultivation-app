@@ -127,7 +127,7 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       fill_in "Row Name", with: fake_row_name
       fill_in "Row ID", with: fake_row_code
       all("input[name='facility[shelves][][code]']").each { |e| e.set(Faker::Lorem.word) }
-      click_button "Save & Continue"
+      find('input[type="submit"]').click
 
       row = Facility.find_by(id: facility.id).rooms.first.sections.first.rows.first
       expect(row.id).to_not be nil
@@ -146,7 +146,7 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       facility = create(:facility, :facility_with_rooms_sections)
       room = facility.rooms.first
       section = room.sections.first
-      expect(section.row_count >= 2).to be true
+      expect(section.row_count).to eq 3
       visit facility_setup_new_path(facility_id: facility.id, room_id: room.id, section_id: section.id, step: 5)
 
       fake_row_name = Faker::Lorem.word
@@ -154,9 +154,17 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       fill_in "Row Name", with: fake_row_name
       fill_in "Row ID", with: fake_row_code
       all("input[name='facility[shelves][][code]']").each { |e| e.set(Faker::Lorem.word) }
-      click_button "Save & Continue"
+      find('input[type="submit"]').click
 
+      expect(page).to have_selector('ul.list > li', count: 3)
       expect(page).to have_text("Step 5")
+    end
+
+    scenario "Facility wizard step 5 - Show Next Row" do
+      # facility = create(:facility, :facility_with_rooms_sections)
+      # room = facility.rooms.first
+      # section = room.sections.first
+      # row = section.rows[1]
     end
   end
 end

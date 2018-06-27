@@ -28,11 +28,12 @@ RSpec.describe FacilitySectionSetupForm, type: :model do
 
       params = {
         section_name: "",
-        section_code: ""
+        section_code: "",
+        section_row_count: nil,
       }
       form_object.submit(params)
 
-      expect(form_object.errors.size).to be 2
+      expect(form_object.errors.size).to eq 3
     end
 
     it "should validate unique section code" do
@@ -42,11 +43,12 @@ RSpec.describe FacilitySectionSetupForm, type: :model do
       params = {
         section_name: "Section 1",
         section_code: "Sec2",
+        section_row_count: 3,
       }
       form_object.submit(params)
 
       expect(form_object.section_is_complete).to be false
-      expect(form_object.errors.size).to be 1
+      expect(form_object.errors.size).to eq 1
     end
 
     it "should save section if valid" do

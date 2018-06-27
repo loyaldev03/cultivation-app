@@ -132,6 +132,31 @@ RSpec.describe FacilityRowSetupForm, type: :model do
       expect(form_object.row.id).to eq row2.id
       expect(@section.rows.size).to eq @section.row_count
     end
+
+    it "should define next room" do
+      @facility.rooms = [build(:room), build(:room)]
+      @room = @facility.rooms[0]
+      @room.section_count = 2
+      @room.sections = [build(:section, :section_1_row)]
+      @section = @room.sections[0]
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s)
+
+      expect(form_object.next_room.blank?).to eq false
+      expect(form_object.next_room.id).to eq @facility.rooms[1].id
+    end
+
+    it "should return nil given last room_id" do
+      @facility.rooms = [build(:room, :room_1), build(:room, :room_2)]
+      @room = @facility.rooms[1]
+      @room.section_count = 1
+      @room.sections = [build(:section, :section_1_row)]
+      @section = @room.sections[0]
+
+      form_object = FacilityRowSetupForm.new(@facility, @room.id.to_s, @section.id.to_s)
+
+      expect(form_object.next_room.blank?).to eq true
+    end
   end
 
   context "initializing form_object with correct shelves" do

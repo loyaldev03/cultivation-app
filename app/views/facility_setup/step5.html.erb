@@ -3,19 +3,18 @@
     <div class="measure-wide center">
       <h1>Step 5 - Setup Shelf for Row</h1>
       <div class="flex flex-row">
-      <div class="pa2">
-          <span>Rows</span>
+        <div class="pa2">
           <ul class="list pl0 w4">
             <% @wizard_form.section_row_count.times { |i| %>
-              <li class="ma2 h2">
-                <%= link_to @wizard_form.rows[i].name,
+              <li class="db">
+                <%= link_to @wizard_form.name_of_row(i),
                   facility_setup_save_path(
                     facility_id: @wizard_form.facility_id,
                     room_id: @wizard_form.room_id,
                     section_id: @wizard_form.section_id,
                     row_id: @wizard_form.rows[i].id,
-                    step: @current_step
-                  )
+                    step: @current_step),
+                    class: "link db pa2 hover-bg-black-20 pointer #{'bg-black-10' if @wizard_form.row_id == @wizard_form.rows[i].id}"
                 %>
               </li>
             <% } %>
@@ -75,7 +74,15 @@
             </div>
 
             <div class="mt3">
-              <%= f.submit "Save & Continue", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+              <% if @wizard_form.next_row.present? %>
+                <%= f.submit "Continue to next row", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+              <% elsif @wizard_form.next_section.present? %>
+                <%= f.submit "Continue to next section", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+              <% elsif @wizard_form.next_room.present? %>
+                <%= f.submit "Continue to next room", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+              <% else @wizard_form.next_room.present? %>
+                <%= f.submit "Complete", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+              <% end %>
             </div>
           <% end %>
         </div>

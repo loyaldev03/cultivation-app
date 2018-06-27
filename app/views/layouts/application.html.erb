@@ -5,38 +5,8 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="flex flex-row min-vh-100 ">
-        <div class="sidebar br b--light-gray fixed min-vh-100">
-          <div class="flex justify-start ">
-            <%= link_to root_path do %>
-              <div class="br3 bg-light-gray dim ba b--mid-gray ma3 mb0" style="width: 50px; height: 50px;">
-              </div>
-            <% end %>
-          </div>
-          <% if user_signed_in? %>
-            <div class="pt2 pb3 mh3 f5 bb b--black-20">Hi, <%= current_user.email %></div>
-          <% end %>
-          <ul class="list pl0">
-            <li class="pa3 grow">
-              <%= link_to "Home", root_path, class: "link fw1 f4" %>
-            </li>
-            <li class="pa3 grow">
-              <span class="fw1 f4">Inventory</span>
-            </li>
-            <li class="pa3 grow">
-              <span class="fw1 f4">Cultivation</span>
-            </li>
-            <hr class="mt5">
-            <li class="pa3   grow">
-              <span class="fw1 f4">
-                <%= link_to 'Settings', settings_path, class: 'link blue fw3 f6' %>
-              </span>
-            </li>
-            <li class="pa3   grow">
-              <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: 'link fw3 f6 blue' %>
-            </li>
-          </ul>
-        </div>
-        <div class="main flex flex-column flex-auto" style="padding-left: 230px;">
+        <%= render 'layouts/sidebar' %>
+        <div id="main" class="main flex flex-column flex-auto" style="padding-left: 80px;">
           <% if notice %>
             <p class="notice"><%= notice %></p>
           <% end %>
@@ -56,6 +26,9 @@
             </div>
             <%= yield %>
           </main>
+          <% if content_for? :right_sidebar %>
+            <%= yield :right_sidebar %>
+          <% end %>
         </div>
       </div>
     </div>

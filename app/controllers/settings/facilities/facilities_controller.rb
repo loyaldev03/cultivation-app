@@ -10,12 +10,14 @@ class Settings::Facilities::FacilitiesController < ApplicationController
 
   def edit
     @facility = FacilitiesForm::FacilityUpdate.find(params[:id])
+    render 'edit', layout: 'blank'
   end
 
   def update
     @facility = FacilitiesForm::FacilityUpdate.find(params[:id])
     if @facility.update(facility_params)
-      redirect_to settings_facility_facilities_path
+      # redirect_to settings_facility_facilities_path
+      render 'reload'
     else
       render 'edit'
     end

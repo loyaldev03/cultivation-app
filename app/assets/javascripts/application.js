@@ -11,4 +11,7 @@
 // about supported directives.
 //
 //= require rails-ujs
+//= require cable
+//= require bling
+//= require sidebar
 //= require_tree .

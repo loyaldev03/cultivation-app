@@ -19,8 +19,4 @@ class Facility
   embeds_many :rooms
 
   scope :completed, -> { where(is_complete: true) }
-
-  def display_name
-    name.blank? ? '- no name -' : name
-  end
 end

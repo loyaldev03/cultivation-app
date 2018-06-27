@@ -1,1 +1,53 @@
-<%= react_component("Sidebar") %>
+<div id="sidebar" class="sidebar br b--light-gray fixed min-vh-100 collapsed overflow-hidden">
+  <div class="flex justify-start ">
+    <%= link_to root_path do %>
+      <div class="br3 bg-light-gray dim ba b--mid-gray ma3 mb0" style="width: 50px; height: 50px;">
+      </div>
+    <% end %>
+  </div>
+  <% if user_signed_in? %>
+    <div class="pv3 mh3 f6 gray hide truncate">Hi, <%= current_user.email %></div>
+  <% end %>
+  <ul class="list pl0 hide">
+    <li class="pa3 grow">
+      <%= link_to "Home", root_path, class: "link fw1 f4" %>
+    </li>
+    <li class="pa3 grow">
+      <span class="fw1 f4">Inventory</span>
+    </li>
+    <li class="pa3 grow">
+      <span class="fw1 f4">Cultivation</span>
+    </li>
+    <hr class="mt3">
+    <li class="pa3   grow">
+      <span class="fw1 f4">
+        <%= link_to 'Settings', settings_path, class: 'link blue fw3 f6' %>
+      </span>
+    </li>
+    <li class="pa3   grow">
+      <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: 'link fw3 f6 blue' %>
+    </li>
+  </ul>
+  <ul class="list pl0 ma0 pa0 show-collapsed mt4 pt4">
+    <li class="pa3 grow tc">
+      <%= link_to "H", root_path, class: "link fw3 f3 dib ph3" %>
+    </li>
+    <li class="pa3 grow tc">
+      <span class="fw3 f3 dib ph3 pointer">I</span>
+    </li>
+    <li class="pa3 grow tc">
+      <span class="fw3 f3 dib ph3 pointer">C</span>
+    </li>
+    <hr class="mt3">
+    <li class="pa3 grow tc">
+      <span>
+        <%= link_to 'S', settings_path, class: 'link blue fw3 f6 dib ph3' %>
+      </span>
+    </li>
+  </ul>
+  <div class="tc fixed bg-black-10 flex dim align-center justify-center left-toggle-button">
+    <a id="toggle-sidebar" href="#" class="link white f3 outline-0 w-100 self-center ">
+      &#8677;
+    </a>
+  </div>
+</div>

@@ -5,10 +5,58 @@ $width__sidebar: 230px;
 // $sidebar_dark: rgb(0, 21, 41);
 $sidebar_dark: #f9f9f9;
 
-.sidebar {
+#sidebar {
   background-color: $sidebar_dark;
   width: $width__sidebar;
   // color: rgba(255, 255, 255, 65);
-  transition: 0.7s;
+  transition: 0.3s;
+  
+  &.collapsed {
+    width: 80px;
+    .hide { 
+      display: none;
+      transition: 1s;
+    }
+
+    .show-collapsed {
+      display: block;
+      transition: 1s; 
+    }
+  }
+
+  &.uncollapsed {
+    .hide { 
+      display: block; 
+      transition: 1s;
+    }
+
+    .show-collapsed {
+      display: none;
+      transition: 1s; 
+    }
+  }
 }
 
+#main {
+  transition: 0.3s;
+}
+
+#right-sidebar {
+  transition: 0.3s;
+  top: 0; 
+  bottom: 0; 
+  right: 0; 
+  border-left-width: 1px; 
+}
+
+#hide-sidebar {
+  font-size: 4.2rem;
+}
+
+.left-toggle-button {
+  bottom: 30px;
+  left: 22px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}

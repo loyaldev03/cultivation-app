@@ -1,12 +1,9 @@
-<% content_for :breadcrumb do %>
-  <%= breadcrumbs ["Settings", settings_path], ["Facilities", all_settings_facility_facilities_path], ["Facilities", settings_facility_facilities_path], "#{@facility.name} - #{@facility.code}" %>
-<% end %>
 
-<div class="ph4 w-100 pb4">
+<div class="ph4 w-100 pb4 mt3">
   <h1 class="ma0 pa0 f3">Modify facility</h1>
 </div>
 
-<div class="ph4 w-50 pb4">
+<div class="ph4 w-80 pb4">
   <%= simple_form_for @facility, url: settings_facility_facility_path(id: @facility.id), method: :patch, html: { class: 'vertical-form' } do |f| %>
     <%= f.input :name,
       label_html: { class: 'w-30 dib' }, 
@@ -45,8 +42,7 @@
       input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
     %>
     <div class="pv3 tr w-100 flex items-center justify-end">
-        <%= f.submit "Update", class: "pa2 ph4 ba b--blue blue bw1 br4 dim" %>
-        <%= link_to "Cancel", settings_facility_facilities_path, class: 'f6 blue link ml4' %>
+      <%= f.submit "Update", class: "pa2 ph4 ba b--blue blue bw1 br4 dim" %>
     </div>
   <% end %>
 </div>

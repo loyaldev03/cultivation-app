@@ -2,6 +2,16 @@
   <%= breadcrumbs ["Settings", settings_path], ["Facilities", all_settings_facility_facilities_path], "Facilities" %>
 <% end %>
 
+<% content_for :breadcrumb do %>
+  <div id="right-sidebar" frameborder="0" class="collapse vh-100 ba0 fixed bg-white shadow-1 overflow-y b--light-gray" style="width: 0px;">
+    <div class="ph4 tl mt2">
+      <a href="" id="hide-sidebar" class="link gray fw1 outline-0">&times;</a>
+    </div>
+    <iframe id="right-sidebar-content" frameborder="0" class="w-100 min-vh-100 db"" >
+    </iframe>
+  </div>
+<% end %>
+
 <div class="ph4 w-100 pb4 tr">
   <%= link_to "Add facility", facility_setup_new_path, class: 'link ba bw1 b b--blue blue pa2 ph4 br4' %>
 </div>
@@ -21,10 +31,10 @@
 
     <tbody>
       <% @facilities.each_with_index do |f, i| %>
-        <tr>
+        <tr data-toggle-right="<%= edit_settings_facility_facility_url(f)%>" class="pointer">
           <td class="f6 tl pl4 pr3 gray"><%= i+1 %></td>
-          <td class="f6 tl"><%= link_to blank(f.name), edit_settings_facility_facility_path(f), class: 'link blue' %></td>
-          <td class="f6 tl"><%= f.code %></td>
+          <td class="f6 tl"><%= blank(f.name) %></td>
+          <td class="f6 tl"><%= blank(f.code) %></td>
           <td class="f6 tl">
             <p class="ma0 mb1"><%= f.address %></p>
             <p class="ma0 mb1"><%= f.zipcode %> <%= f.city %></p>

@@ -1,5 +1,5 @@
 class FacilitySetupController < ApplicationController
-  layout 'blank'
+  layout 'wizards/facility_setup'
 
   def new
     wizard_form

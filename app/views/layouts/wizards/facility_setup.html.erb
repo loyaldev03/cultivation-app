@@ -6,13 +6,18 @@
     <div id="root">
       <div class="flex flex-row min-vh-100">
         <div class="main flex flex-column flex-auto">
-          <main class="min-vh-100">
+          <main class="min-vh-100 wizard-form">
             <%= yield %>
           </main>
         </div>
       </div>
     </div>
     <%= render "layouts/before_body_end" %>
+    <script>
+      document.addEventListener('turbolinks:load', function() {
+        TurbolinksAnimate.init({ animation: 'fadeinright', element: $_('.wizard-form') });
+      });
+    </script>
   </body>
 </html>
 

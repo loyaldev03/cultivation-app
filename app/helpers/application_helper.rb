@@ -16,4 +16,22 @@ module ApplicationHelper
       content_tag :span, '>', class: 'ph2'
     ).html_safe
   end
+
+  def flash_css_class(msg_type)
+    case msg_type
+    when 'notice' then 'alert alert-info'
+    when 'success' then 'alert alert-success'
+    when 'error' then 'alert alert-error'
+    when 'alert' then 'alert alert-error'
+    end
+  end
+
+  def flash_messages(opts = {})
+    flash.each do |msg_type, message|
+      concat(content_tag(:div, message, class: flash_css_class(msg_type)) do
+        concat message
+      end)
+    end
+    nil
+  end
 end

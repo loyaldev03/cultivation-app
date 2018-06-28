@@ -11,6 +11,7 @@ class FacilityRoomSetupForm
   validates :room_id, presence: true
   validates :room_name, presence: true
   validates :room_code, presence: true
+  validates :room_section_count, presence: true
   validate :verify_unique_room_code
 
   def initialize(_facility, _room_id = nil)
@@ -27,6 +28,10 @@ class FacilityRoomSetupForm
     @room
   end
 
+  def name_of_room(index = 0)
+    facility_rooms[index]&.name || "#{index + 1}"
+  end
+
   def current_room_number
     current_room_index = facility.rooms.index { |r| r.id == room.id }
     current_room_index + 1
@@ -36,10 +41,9 @@ class FacilityRoomSetupForm
     room.name = params[:room_name]
     room.code = params[:room_code]
     room.desc = params[:room_desc]
-    room.section_count = params[:room_section_count]
+    room.section_count = params[:room_section_count].blank? || 1
     self.room_have_sections = params[:room_have_sections] == 'true'
 
-    # TODO: Validate uniqueness of room code
     if valid?
       room.sections = room.section_count.times.map { Section.new } unless room.is_complete
       room.save!

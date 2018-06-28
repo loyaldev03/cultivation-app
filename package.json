@@ -12,7 +12,9 @@
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react_ujs": "^2.4.4",
-    "tachyons": "^4.10.0"
+    "tachyons": "^4.10.0",
+    "turbolinks": "^5.1.1",
+    "turbolinks-animate": "^3.0.5"
   },
   "devDependencies": {
     "eslint": "^4.19.1",

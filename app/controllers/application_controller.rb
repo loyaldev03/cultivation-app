@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
 
   def miniprofiler
     # Enable mini profiler only if developer login
-    Rack::MiniProfiler.authorize_request if current_user && current_user.is_dev?
+    Rack::MiniProfiler.authorize_request # if current_user&.is_dev?
   end
 
   def layout_by_resource

@@ -17,8 +17,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 document.addEventListener("DOMContentLoaded", function(event) {
   console.log('sidebar loaded...');
-  var rightSidebar = $("#right-sidebar");
-  var rightSidebarIframe = $("#right-sidebar-content");
+  var rightSidebar = $_("#right-sidebar");
+  var rightSidebarIframe = $_("#right-sidebar-content");
 
   if (rightSidebarIframe) {
     window.addEventListener("message", function(e) {
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     });
   }
 
-  var hideSidebar = $("#hide-sidebar");
+  var hideSidebar = $_("#hide-sidebar");
   if (hideSidebar) {
     hideSidebar.on("click", function(e){
       rightSidebar.style.width = "0%";

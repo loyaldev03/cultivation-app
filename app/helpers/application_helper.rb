@@ -19,10 +19,10 @@ module ApplicationHelper
 
   def flash_css_class(msg_type)
     case msg_type
-    when 'notice' then 'alert alert-info'
-    when 'success' then 'alert alert-success'
-    when 'error' then 'alert alert-error'
-    when 'alert' then 'alert alert-error'
+    when 'notice' then 'ph3 pv2 mb2 bg-blue tc'
+    when 'success' then 'ph3 pv2 mb2 bg-green white tc'
+    when 'error' then 'ph3 pv2 mb2 bg-yellow tc'
+    when 'alert' then 'ph3 pv2 mb2 bg-yellow tc'
     end
   end
 

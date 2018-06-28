@@ -7,17 +7,7 @@
       <div class="flex flex-row min-vh-100 ">
         <%= render 'layouts/sidebar' %>
         <div id="main" class="main flex flex-column flex-auto" style="padding-left: 80px;">
-          <% if notice %>
-            <p class="notice"><%= notice %></p>
-          <% end %>
-
-          <% if alert %>
-            <p class="alert"><%= alert %></p>
-          <% end %>
-
-          <!-- <header class="bg-gray h3 white flex items-center">
-          <header class="bg-gray h3 white flex items-center">
-          </header> -->
+          <%= flash_messages %>
           <main class="min-vh-100">
             <div class="ph4 pv4 f6 w-100">
               <% if content_for? :breadcrumb %>

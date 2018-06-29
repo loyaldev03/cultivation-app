@@ -5,6 +5,7 @@ class FacilityBasicInfoForm
 
   validates :name, presence: true
   validates :code, presence: true
+  validates_with UniqFacilityCodeValidator
 
   def submit(params)
     facility.attributes = params.slice(:name, :code, :address, :zipcode, :city, :state, :country, :phone, :fax, to: :facility)

@@ -12,7 +12,7 @@ class FacilityRoomSetupForm
   validates :room_name, presence: true
   validates :room_code, presence: true
   validates :room_section_count, presence: true
-  validate :verify_unique_room_code
+  validates_with UniqRoomCodeValidator
 
   def initialize(_facility, _room_id = nil)
     @facility = _facility
@@ -45,18 +45,12 @@ class FacilityRoomSetupForm
     self.room_have_sections = params[:room_have_sections] == 'true'
 
     if valid?
+      # TODO: Re-think how this would work if user edit a facility, since we
+      # do not want to regenerate the sections
       room.sections = room.section_count.times.map { Section.new } unless room.is_complete
       room.save!
     else
       return false
-    end
-  end
-
-  private
-
-  def verify_unique_room_code
-    unless room.code.nil?
-      errors.add(:room_code, 'already exists') if facility.rooms.any? { |r| r.code == room.code && r.id != room.id }
     end
   end
 end

@@ -16,7 +16,7 @@ class FacilityRoomSetupForm
 
   def initialize(_facility, _room_id = nil)
     @facility = _facility
-    @room = _room_id.nil? ? _facility.rooms.first : _facility.rooms.detect { |r| r.id.to_s == _room_id }
+    @room = set_room(_room_id)
     set_section_count
   end
 
@@ -25,7 +25,7 @@ class FacilityRoomSetupForm
   end
 
   def room
-    @room
+    @room ||= facility.rooms.build
   end
 
   def name_of_room(index = 0)
@@ -48,16 +48,51 @@ class FacilityRoomSetupForm
     room.section_count = params[:room_section_count].blank? ? 1 : params[:room_section_count]
 
     if valid?
-      # TODO: Re-think how this would work if user edit a facility, since we
-      # do not want to regenerate the sections
-      room.sections = room.section_count.times.map { Section.new } unless room.is_complete
-      room.save!
+      facility.save!
     else
       return false
     end
   end
 
   private
+
+  def set_room(_room_id)
+    set_rooms(_room_id)
+    if _room_id.nil?
+      facility.rooms.first
+    else
+      facility.rooms.detect { |r| r.id.to_s == _room_id }
+    end
+  end
+
+  def set_rooms(_room_id)
+    if facility.rooms.blank?
+      _room_id.nil? ? facility.rooms.build : facility.rooms.build(id: _room_id)
+    end
+    facility.rooms << Array.new(missing_room_count) do |i|
+      build_room(i)
+    end
+  end
+
+  def missing_room_count
+    set_room_count
+    if facility.rooms.blank?
+      facility.room_count
+    else
+      facility.room_count - facility.rooms.size
+    end
+  end
+
+  def set_room_count
+    facility.room_count = 1 if facility.room_count.nil?
+    if !facility.rooms.blank? && facility.room_count < facility.rooms.size
+      facility.room_count = facility.rooms.size
+    end
+  end
+
+  def build_room(code)
+    Room.new
+  end
 
   def set_section_count
     if room.section_count.blank?

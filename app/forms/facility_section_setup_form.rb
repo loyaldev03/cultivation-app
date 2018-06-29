@@ -81,7 +81,7 @@ class FacilitySectionSetupForm
 
   def set_sections(_section_id)
     if room.sections.blank?
-      _section_id.nil? ? room.sections.build(id: _section_id) : room.sections.build
+      _section_id.nil? ? room.sections.build : room.sections.build(id: _section_id)
     end
     room.sections << Array.new(missing_section_count) do |i|
       build_section(i + 1)
@@ -89,7 +89,7 @@ class FacilitySectionSetupForm
   end
 
   def build_section(code)
-    code.nil? ? Section.new(code: code) : Section.new
+    code.nil? ? Section.new : Section.new
   end
 
   def verify_unique_section_code

@@ -139,11 +139,11 @@ class FacilityRowSetupForm
   def set_shelves(_shelves = nil)
     if row.shelves.blank? && _shelves.present?
       row.shelves << Array.new(_shelves.size) do |i|
-        build_shelf(_shelves[i], i + 1)
+        build_shelf(_shelves[i], i)
       end
     elsif missing_shelf_count.positive?
       row.shelves << Array.new(missing_shelf_count) do |i|
-        build_shelf(nil, i + 1 + missing_shelf_count)
+        build_shelf(nil, i)
       end
     else
       row.shelves ||= []

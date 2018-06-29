@@ -6,7 +6,6 @@
         <div class="pa2">
           <ul class="list pa2 w4 flex flex-wrap justify-around">
             <% @wizard_form.room_section_count.times { |i| %>
-              <span class="dib">section_id:</span> <%= @wizard_form.room_sections[i].id %>
               <li class="hover-bg-black-20 pointer ba b--black-10 h-100 w-100 mb3 h2 tc flex justify-center items-center" >
                 <%= link_to @wizard_form.name_of_section(i),
                   facility_setup_save_path(

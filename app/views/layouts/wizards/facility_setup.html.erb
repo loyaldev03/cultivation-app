@@ -7,6 +7,7 @@
       <div class="flex flex-row min-vh-100">
         <div class="main flex flex-column flex-auto">
           <main class="min-vh-100 wizard-form">
+            <%= link_to "Continue Later", root_path, class: "absolute right--3 top--3 db h2 w4 ma2 pa2", data: { turbolinks: "false" } %>
             <%= yield %>
           </main>
         </div>

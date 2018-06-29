@@ -1,12 +1,22 @@
 <div class="vh-100 w-100 dt">
   <div class="dtc v-mid">
     <div class="measure center">
-      <h1>Step 4 - Setup Section for Room 1</h1>
+      <h1>Step 4 - Setup Section</h1>
       <div class="flex flex-row">
         <div class="pa2">
           <ul class="list pa2 w4 flex flex-wrap justify-around">
-            <% @wizard_form.facility_room_count.times { |i| %>
-              <li class="outline ma2 w2 h2"></li>
+            <% @wizard_form.room_section_count.times { |i| %>
+              <%= @wizard_form.room_sections[i].to_json %>
+              <li class="hover-bg-black-20 pointer ba b--black-10 h-100 w-100 mb3 h2 tc flex justify-center items-center" >
+                <%= link_to @wizard_form.name_of_section(i),
+                  facility_setup_save_path(
+                    facility_id: @wizard_form.facility_id,
+                    room_id: @wizard_form.room_id,
+                    section_id: @wizard_form.room_sections[i].id,
+                    step: @current_step),
+                    class: "link pa2 w-100 db #{'bg-black-30 b--black-80' if @wizard_form.section_id == @wizard_form.room_sections[i].id}"
+                %>
+              </li>
             <% } %>
           </ul>
         </div>

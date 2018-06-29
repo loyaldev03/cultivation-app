@@ -58,14 +58,13 @@
                   <div class="ph3">
                     <p class="db">
                       Will this room be divided into multiple sections?
-                      <%= @wizard_form.room_have_sections ? "yes":"no" %>
                     </p>
                     <span>
-                      <%= f.radio_button :room_have_sections, true, class: "have-section", checked: @wizard_form.room_have_sections %>
+                      <%= f.radio_button(:room_have_sections, true, class: "have-section", checked: @wizard_form.room_have_sections == true) %>
                       <%= f.label :room_have_sections_true, "Yes" %>
                     </span>
                     <span class="ml2">
-                      <%= f.radio_button :room_have_sections, false, class: "have-section" %>
+                      <%= f.radio_button(:room_have_sections, false, class: "have-section", checked: @wizard_form.room_have_sections == false) %>
                       <%= f.label :room_have_sections_false, "Only 1 section" %>
                     </span>
                     <div class="have-section-question mt3" style="display: block">
@@ -92,15 +91,7 @@
 
 <% content_for :before_body_end do %>
   <script>
-    $_(".continue-button").on("click", function(e) {
-      $_(".modal").classList.add("modal--openned")
-    })
-
-    $_(".continue-button").on("click", function(e) {
-      $_(".modal").classList.add("modal--openned")
-    })
-
-    $$('.have-section').on("change", function() {
+    var updateChoice = function() {
       const el = $_('.have-section[value=true]')
       const question = $_('.have-section-question')
       const answer = $_('.have-section-answer')
@@ -111,6 +102,22 @@
         question.style.display = "none"
         answer.removeAttribute('required')
       }
+    }
+
+    document.addEventListener("turbolinks:load", function() {
+      updateChoice()
+    })
+
+    $_(".continue-button").on("click", function(e) {
+      $_(".modal").classList.add("modal--openned")
+    })
+
+    $_(".continue-button").on("click", function(e) {
+      $_(".modal").classList.add("modal--openned")
+    })
+
+    $$('.have-section').on("change", function() {
+      updateChoice()
     })
   </script>
 <% end %>

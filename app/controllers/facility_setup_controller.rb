@@ -71,7 +71,7 @@ class FacilitySetupController < ApplicationController
   end
 
   def facility
-    @facility ||= Facility.find_by(id: params[:facility_id]) if params[:facility_id]
+    @facility ||= Facility.where(id: params[:facility_id]).first if params[:facility_id]
   end
 
   def room_id

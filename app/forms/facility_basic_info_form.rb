@@ -7,6 +7,10 @@ class FacilityBasicInfoForm
   validates :code, presence: true
   validates_with UniqFacilityCodeValidator
 
+  def initialize(_facility = nil)
+    @facility = _facility
+  end
+
   def submit(params)
     facility.attributes = params.slice(:name, :code, :address, :zipcode, :city, :state, :country, :phone, :fax, to: :facility)
     if valid?

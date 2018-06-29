@@ -9,7 +9,9 @@ class FacilitySetupController < ApplicationController
   def save
     if wizard_form.submit(wizard_form_params)
       # continue to next step or show summary
-      if current_step == 3
+      if current_step == 1 || current_step == 2
+        redirect_to facility_setup_new_path(facility_id: wizard_form.id, step: next_step)
+      elsif current_step == 3
         redirect_to facility_setup_new_path(step: next_step,
                                             facility_id: wizard_form.facility_id,
                                             room_id: wizard_form.room_id)
@@ -38,9 +40,7 @@ class FacilitySetupController < ApplicationController
           redirect_to root_path
         end
       else
-        redirect_to current_step < 6 ?
-                      facility_setup_new_path(facility_id: wizard_form.id, step: next_step) :
-                      facility_setup_summary_path(facility_id: wizard_form.id)
+        redirect_to root_path
       end
     else
       render "facility_setup/step#{current_step}"
@@ -56,7 +56,7 @@ class FacilitySetupController < ApplicationController
   def wizard_form
     case current_step
     when 1
-      @wizard_form ||= FacilityBasicInfoForm.new
+      @wizard_form ||= FacilityBasicInfoForm.new(facility)
     when 2
       @wizard_form ||= FacilityRoomCountForm.new(facility)
     when 3
@@ -71,7 +71,7 @@ class FacilitySetupController < ApplicationController
   end
 
   def facility
-    @facility ||= Facility.find(params[:facility_id]) if params[:facility_id]
+    @facility ||= Facility.find_by(id: params[:facility_id]) if params[:facility_id]
   end
 
   def room_id

@@ -6,7 +6,14 @@
         <div class="pa2">
           <ul class="list pa2 w4 flex flex-wrap justify-around">
             <% @wizard_form.facility_room_count.times { |i| %>
-              <li class="outline ma2 w2 h2">
+              <li class="hover-bg-black-20 pointer ba b--black-10 h-100 w-100 mb3 h2 tc flex justify-center items-center" >
+                <%= link_to @wizard_form.name_of_room(i),
+                  facility_setup_save_path(
+                    facility_id: @wizard_form.facility_id,
+                    room_id: @wizard_form.facility_rooms[i].id,
+                    step: @current_step),
+                    class: "link pa2 w-100 db #{'bg-black-30 b--black-80' if @wizard_form.room_id == @wizard_form.facility_rooms[i].id}"
+                %>
               </li>
             <% } %>
           </ul>
@@ -20,7 +27,7 @@
                        ) do |f| %>
             <% if @wizard_form.errors.any? %>
               <div id="error_explanation" class="red">
-                <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
+                <h3><%= pluralize(@wizard_form.errors.count, "error") %> found:</h2>
                 <ul>
                 <% @wizard_form.errors.full_messages.each do |message| %>
                   <li><%= message %></li>
@@ -29,14 +36,18 @@
               </div>
             <% end %>
 
+            <pre>
+              <%= f.text_field :facility_room_count, value: @wizard_form.facility_room_count, class: "ba b--black-20 pa2 mb2 db w-100" %>
+            </pre>
+
             <div class="mt3 mb2">
               <%= f.label :room_name, "Room Name", class: "f6 b db mb1" %>
-              <%= f.text_field :room_name, class: "ba b--black-20 pa2 mb2 db w-100" %>
+              <%= f.text_field :room_name, value: @wizard_form.room_name, class: "ba b--black-20 pa2 mb2 db w-100" %>
             </div>
 
             <div class="mt3 mb2">
               <%= f.label :room_code, "Room ID", class: "f6 b db mb1" %>
-              <%= f.text_field :room_code, class: "ba b--black-20 pa2 mb2 db w-100" %>
+              <%= f.text_field :room_code, value: @wizard_form.room_code, class: "ba b--black-20 pa2 mb2 db w-100" %>
             </div>
 
             <div class="mt3 mb2">
@@ -51,15 +62,14 @@
                   <div class="ph3">
                     <p class="db">
                       Will this room be divided into multiple sections?
-                      <%= @wizard_form.room_have_sections ? "yes":"no" %>
                     </p>
                     <span>
-                      <%= f.radio_button :room_have_sections, true, class: "have-section", checked: @wizard_form.room_have_sections %>
-                      <%= f.label :room_have_sections_yes, "Yes" %>
+                      <%= f.radio_button(:room_have_sections, true, class: "have-section", checked: @wizard_form.room_have_sections == true) %>
+                      <%= f.label :room_have_sections_true, "Yes" %>
                     </span>
                     <span class="ml2">
-                      <%= f.radio_button :room_have_sections, false, class: "have-section" %>
-                      <%= f.label :room_have_sections_no, "Only 1 section" %>
+                      <%= f.radio_button(:room_have_sections, false, class: "have-section", checked: @wizard_form.room_have_sections == false) %>
+                      <%= f.label :room_have_sections_false, "Only 1 section" %>
                     </span>
                     <div class="have-section-question mt3" style="display: block">
                       <%= f.label :room_section_count, "How many sections in this room?", class: "db mb1" %>
@@ -85,15 +95,7 @@
 
 <% content_for :before_body_end do %>
   <script>
-    $_(".continue-button").on("click", function(e) {
-      $_(".modal").classList.add("modal--openned")
-    })
-
-    $_(".continue-button").on("click", function(e) {
-      $_(".modal").classList.add("modal--openned")
-    })
-
-    $$('.have-section').on("change", function() {
+    var updateChoice = function() {
       const el = $_('.have-section[value=true]')
       const question = $_('.have-section-question')
       const answer = $_('.have-section-answer')
@@ -104,6 +106,22 @@
         question.style.display = "none"
         answer.removeAttribute('required')
       }
+    }
+
+    document.addEventListener("turbolinks:load", function() {
+      updateChoice()
+    })
+
+    $_(".continue-button").on("click", function(e) {
+      $_(".modal").classList.add("modal--openned")
+    })
+
+    $_(".continue-button").on("click", function(e) {
+      $_(".modal").classList.add("modal--openned")
+    })
+
+    $$('.have-section').on("change", function() {
+      updateChoice()
     })
   </script>
 <% end %>

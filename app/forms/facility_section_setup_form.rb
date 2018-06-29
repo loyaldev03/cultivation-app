@@ -2,18 +2,18 @@ class FacilitySectionSetupForm
   include ActiveModel::Model
 
   delegate :id, :name, :code, :room_count, to: :facility, prefix: true
-  delegate :id, :name, :code, to: :room, prefix: true
+  delegate :id, :name, :code, :section_count, :sections, to: :room, prefix: true
   delegate :id, :name, :code, :desc, :purpose, :storage_types, :cultivation_types, :row_count, :shelf_count, :shelf_capacity, :is_complete, to: :section, prefix: true
 
   validates :section_name, presence: true
   validates :section_code, presence: true
   validates :section_row_count, presence: true
-  validate :verify_unique_section_code
+  validates_with UniqSectionCodeValidator
 
   def initialize(_facility, _room_id, _section_id = nil)
     @facility = _facility
     @room = _facility.rooms.detect { |r| r.id.to_s == _room_id }
-    @section = _section_id.nil? ? @room.sections.first : @room.sections.detect { |s| s.id.to_s == _section_id }
+    @section = set_section(_section_id)
   end
 
   def submit(params)
@@ -48,7 +48,49 @@ class FacilitySectionSetupForm
     @section
   end
 
+  def missing_section_count
+    set_section_count
+    if room.sections.blank?
+      room.section_count
+    else
+      room.section_count - room.sections.size
+    end
+  end
+
+  def name_of_section(index)
+    room.sections[index]&.name || "Section #{index + 1}"
+  end
+
   private
+
+  def set_section_count
+    room.section_count = 1 if room.section_count.nil?
+    if !room.sections.blank? && room.section_count < room.sections.size
+      room.section_count = room.sections.size
+    end
+  end
+
+  def set_section(_section_id)
+    set_sections(_section_id)
+    if _section_id.nil?
+      room.sections.first
+    else
+      room.sections.detect { |s| s.id.to_s == _section_id }
+    end
+  end
+
+  def set_sections(_section_id)
+    if room.sections.blank?
+      _section_id.nil? ? room.sections.build : room.sections.build(id: _section_id)
+    end
+    room.sections << Array.new(missing_section_count) do |i|
+      build_section(i + 1)
+    end
+  end
+
+  def build_section(code)
+    code.nil? ? Section.new : Section.new
+  end
 
   def verify_unique_section_code
     unless section.code.nil?

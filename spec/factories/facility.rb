@@ -43,6 +43,8 @@ FactoryBot.define do
   end
 
   factory :room do
+    name Faker::Name.name
+
     trait :room_1 do
       name 'Room 1'
       code 'Rm1'

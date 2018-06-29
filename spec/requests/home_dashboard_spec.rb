@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Home - Dashboard" do
-  context "denied anonymous access" do
+  context "anonymous access" do
     describe "GET index" do
       it "should redirect to login page" do
         get root_path
@@ -11,7 +11,7 @@ RSpec.describe "Home - Dashboard" do
     end
   end
 
-  context "admin has logged-in" do
+  context "admin access" do
     before do
       user = create(:user, :admin)
       login_as(user, :scope => :user)
@@ -19,7 +19,7 @@ RSpec.describe "Home - Dashboard" do
 
     describe "GET index" do
       it "should render dashboard" do
-        get "/"
+        get root_path
 
         expect(response.status).to eq(200)
         expect(response.body).to include("Dashboard")

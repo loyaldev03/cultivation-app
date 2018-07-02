@@ -2,18 +2,10 @@
   <%= breadcrumbs ["Settings", settings_path], ["Facilities", all_settings_facility_facilities_path], "Facilities" %>
 <% end %>
 
-<% content_for :breadcrumb do %>
-  <div id="right-sidebar" frameborder="0" class="collapse vh-100 ba0 fixed bg-white shadow-1 overflow-y b--light-gray" style="width: 0px;">
-    <div class="ph4 tl mt2">
-      <a href="" id="hide-sidebar" class="link gray fw1 outline-0">&times;</a>
-    </div>
-    <iframe id="right-sidebar-content" frameborder="0" class="w-100 min-vh-100 db"" >
-    </iframe>
-  </div>
-<% end %>
+<%= render 'layouts/right_sidebar' %>
 
-<div class="ph4 w-100 pb4 tr">
-  <%= link_to "Add facility", facility_setup_new_path, class: 'link ba bw1 b b--blue blue pa2 ph4 br4' %>
+<div class="ph4 w-100 tr pb3 pt3">
+  <%= link_to "+ Add facility", facility_setup_new_path, class: 'link ba bw1 b b--blue blue pa2 ph4 br4 dib' %>
 </div>
 
 <div class="w-100 ph0">

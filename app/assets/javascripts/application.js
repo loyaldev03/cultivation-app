@@ -13,3 +13,6 @@
 //= require rails-ujs
 //= require cable
 //= require bling
+//= require sidebar
+//= require radio_toggle
+//= require_tree .

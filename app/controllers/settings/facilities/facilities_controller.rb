@@ -1,25 +1,26 @@
 class Settings::Facilities::FacilitiesController < ApplicationController
   def index
-    # render plain: 'facilities root'
     @facilities = Facility.all
   end
 
   def all
-    # render plain: 'facilities listing'
   end
 
   def edit
     @facility = FacilitiesForm::FacilityUpdate.find(params[:id])
-    render 'edit', layout: 'blank'
+    render 'edit', layout: nil
+
+    # if request.xhr?
+    #   render 'edit', layout: nil
+    # end
   end
 
   def update
     @facility = FacilitiesForm::FacilityUpdate.find(params[:id])
     if @facility.update(facility_params)
-      # redirect_to settings_facility_facilities_path
-      render 'reload'
+      render 'layouts/hide_sidebar', layout: nil
     else
-      render 'edit'
+      render 'edit', layout: nil
     end
   end
 

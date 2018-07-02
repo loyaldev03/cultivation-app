@@ -9,16 +9,14 @@
         <div id="main" class="main flex flex-column flex-auto" style="padding-left: 80px;">
           <%= flash_messages %>
           <main class="min-vh-100">
-            <div class="ph4 pv4 f6 w-100">
+            <div class="ph4 pt4 pb2 f6 w-100">
               <% if content_for? :breadcrumb %>
                 <%= yield :breadcrumb %>
               <% end %>
             </div>
             <%= yield %>
           </main>
-          <% if content_for? :right_sidebar %>
-            <%= yield :right_sidebar %>
-          <% end %>
+          <%= render "layouts/right_sidebar" %>
         </div>
       </div>
     </div>

@@ -3,6 +3,14 @@
     padding-left: 30%;
     width: 100%;
   }
+
+  .compound-input-1 {
+    .error {
+      padding-left: 0;
+      margin-top: 0.5rem;
+      margin-bottom: 0;
+    }
+  }
 }
 
 select {

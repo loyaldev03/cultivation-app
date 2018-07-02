@@ -13,28 +13,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 
-
-
 document.addEventListener("DOMContentLoaded", function(event) {
-  console.log('sidebar loaded...');
+  // console.log('sidebar loaded...');
   var rightSidebar = $_("#right-sidebar");
-  var rightSidebarIframe = $_("#right-sidebar-content");
-
-  if (rightSidebarIframe) {
-    window.addEventListener("message", function(e) {
-      if (e.data === 'reload me') {
-        rightSidebar.style.width = "0%";
-        window.location.reload();
-      }
-    });
-  }
 
   if (rightSidebar) {
     $$("[data-toggle-right]").on("click", function(e) {
       rightSidebar.style.width = "50%";
-      if (this.dataset.toggleRight && rightSidebarIframe.src !== this.dataset.toggleRight) {
-        rightSidebarIframe.src = this.dataset.toggleRight;
-      }
+
+      Rails.ajax({
+        url: this.dataset.toggleRight,
+        type: 'GET',
+        dataType : 'script',
+        success: function(data) { 
+        }
+      });
       e.preventDefault();
     });
   }

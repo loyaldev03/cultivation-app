@@ -1,0 +1,88 @@
+<div class="ph4 w-100 pb4 mt3">
+  <h1 class="ma0 pa0 f3">Modify section</h1>
+</div>
+
+<div class="ph4 w-90 pb4">
+  <%= simple_form_for @section, url: settings_facility_section_path(id: @section.id), method: :patch, remote: true, html: { class: 'vertical-form' } do |f| %>
+    <%= f.input :name,
+      label_html: { class: 'w-30 dib mb2' }, 
+      input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
+    %>
+    <%= f.input :code,
+      label_html: { class: 'w-30 dib mb2' }, 
+      input_html: { class: 'w-30 pa2 ba b--silver outline-0' } 
+    %>
+    <%= f.input :desc,
+      as: :text,
+      label: 'Description',
+      label_html: { class: 'w-30 dib mb2 self-start' }, 
+      input_html: { class: 'w-70 pa2 ba b--silver outline-0', rows: 5 } 
+    %>
+
+    <div class="mt2 flex">
+
+      <div class="w-30">
+        <%= f.label :purpose, "Purpose of this section?" %>
+      </div>
+      <div class="w-70 compound-input-1">
+        <%= f.input :purpose,
+          as: :radio_buttons,
+          label: false,
+          input_html: { class: 'pa2  mr2 ba b--silver outline-0' },
+          disabled: !@section.purpose_editable?,
+          collection: [
+            ['Storage', 'storage', class: 'mr2', data: { toggle: '#storage-options' }], 
+            ['Cultivation', 'cultivation', class: 'mr2 ml3', data: { toggle: '#cultivation-options' }]]
+        %>
+
+        <%= f.input :storage_types, as: :check_boxes, label: false do %>
+          <div id="storage-options" class="w-100 flex" style="display:none;">
+            <div class='w-100 mt2'>
+              <%= f.collection_check_boxes :storage_types, [
+                ["Sales item", "sales_item"],
+                ["Consumable", "consumable"],
+                ["Mother / Seed", "mother_or_seed"]], 
+                :second, :first, {},
+                { class: 'mr2' } do |b|
+                 b.label(class: 'db pb2') { b.check_box(class: 'mr2', disabled: !@section.cultivation_editable?) + b.text }
+               end %>
+            </div>
+          </div>
+        <% end %>
+
+        <%= f.input :cultivation_types, as: :check_boxes, label: false  do %>
+          <div id="cultivation-options" class="w-100 flex" style="display:none;">
+            <div class='w-100 mt2'>
+              <%= f.collection_check_boxes :cultivation_types, [
+                ["Mothering", "mothering"], 
+                ["Clone", "clone"], 
+                ["Veg Phase 1", "veg_phase_1"],
+                ["Veg Phase 2", "veg_phase_2"],
+                ["Flower", "flower"]], 
+                :second, :first, {},
+                { class: 'mr2' } do |b|
+                 b.label(class: 'db pb2') { 
+                  b.check_box(class: 'mr2', disabled: !@section.cultivation_editable? ) + b.text 
+                }
+               end %>
+            </div>
+          </div>
+        <% end %>
+
+        <% unless @section.purpose_editable? %>
+          <div class="flex mt2 mb3">
+            <div class="w-70 ba br3 b--moon-gray pa3 bg-light-yellow">
+              <p class="ma0 pa0 lh-copy f6 dark-gray">
+                Storage purpose cannot be editted as this section already has rows/ shelves.
+              </p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>    
+
+    <div class="pv3 tr w-100 flex items-center justify-end">
+        <%= f.submit "Update", class: "pa2 ph4 ba b--blue blue bw1 br4 dim" %>
+    </div>
+  <% end %>
+</div>

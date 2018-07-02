@@ -20,7 +20,7 @@ class Settings::Facilities::RoomsController < ApplicationController
     @room = FacilitiesForm::RoomCreate.new(room_params)
 
     if @room.save
-      redirect_to settings_facility_rooms_path(facility_id: @room.facility)
+      render 'layouts/hide_sidebar', layout: nil
     else
       render 'new'
     end
@@ -28,14 +28,15 @@ class Settings::Facilities::RoomsController < ApplicationController
 
   def edit
     @room = FacilitiesForm::RoomUpdate.find(params[:id])
+    render 'edit', layout: nil
   end
 
   def update
     @room = FacilitiesForm::RoomUpdate.find(params[:id])
     if @room.update(room_update_params)
-      redirect_to settings_facility_rooms_path(facility_id: @room.facility)
+      render 'layouts/hide_sidebar', layout: nil
     else
-      render 'edit'
+      render 'edit', layout: nil
     end
   end
 

@@ -1,0 +1,6 @@
+$_("#right-sidebar").addEventListener("transitionend", function(event) {
+  window.location.reload();
+});
+
+var ev = new MouseEvent('click');
+$_("#hide-sidebar").dispatchEvent(ev);

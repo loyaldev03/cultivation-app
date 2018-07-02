@@ -28,10 +28,10 @@ module FacilitiesForm
     end
 
     def update(params)
-      @facility.attributes = params.slice(:name, :code, :address, :zipcode, :city, :state, :country, :phone, :fax)
+      self.facility.attributes = params.slice(:name, :code, :address, :zipcode, :city, :state, :country, :phone, :fax)
 
       if valid?
-        @facility.save!
+        facility.save!
       else
         false
       end

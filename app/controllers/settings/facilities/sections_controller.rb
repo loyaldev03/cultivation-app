@@ -12,12 +12,13 @@ class Settings::Facilities::SectionsController < ApplicationController
 
   def edit
     @section = FacilitiesForm::SectionUpdate.find(params[:id])
+    render 'edit', layout: nil
   end
 
   def update
     @section = FacilitiesForm::SectionUpdate.find(params[:id])
     if @section.update(section_params)
-      redirect_to settings_facility_sections_path
+      render 'layouts/hide_sidebar', layout: nil
     else
       render 'edit'
     end
@@ -30,8 +31,8 @@ class Settings::Facilities::SectionsController < ApplicationController
       :desc,
       :purpose,
       :custom_purpose,
-      :storage_types,
-      :cultivation_types
+      storage_types: [],
+      cultivation_types: [],
     )
   end
 end

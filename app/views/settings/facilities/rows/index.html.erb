@@ -1,0 +1,55 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Settings", settings_path], ["Facilities", all_settings_facility_facilities_path], "Rows" %>
+<% end %>
+
+
+<div class="ph4 w-100 flex items-center pb3 pt3">
+  <div class="w-70">
+    <div class="dropdown">
+      <a class="dropbtn link ba dib bw1 b b--light-gray gray pa2 ph3 br4">
+        <%= params[:facility_id].present? ? blank(Facility.find(params[:facility_id]).name) : 'View by facility' %>
+      </a>
+      <div class="dropdown-content">
+        <%= link_to "Show all", settings_facility_rows_path, class: "pv3 ph3 bb b--light-gray f6 gray tc" %>
+        <% Facility.all.each do |f| %>
+          <%= link_to blank(f.name), settings_facility_rows_path(facility_id: f.id), class: "pv3 ph3 bb b--light-gray blue f6 tc" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="w-30 tr">
+    <%= link_to "+ Add Shelves", '', class: 'link ba bw1 b b--blue blue pa2 ph3 br4' %>
+  </div>
+</div>
+
+<div class="w-100 ph0">
+  <table class="w-100 table collapse">
+    <thead>
+      <tr>
+        <th class="f6 white pv3 tl pl4">#</th>
+        <th class="f6 white pv3 tl w-20">Name</th>
+        <th class="f6 white pv3 tl">Code</th>
+        <th class="f6 white pv3 tl">Facility</th>
+        <th class="f6 white pv3 tl">Room</th>
+        <th class="f6 white pv3 tl">Section</th>
+        <th class="f6 white pv3 tl "># of shelves</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @rows.each_with_index do |f, i| %>
+        <tr data-toggle-right="<%= edit_settings_facility_row_path(f)%>" class="pointer">
+          <td class="f6 tl pl4 gray"><%= i+1 %></td>
+          <td class="f6 tl"><%= blank(f.name) %></td>
+          <td class="f6 tl"><%= blank(f.code) %></td>
+          <td class="f6 tl"><%= f.section.room.facility.name %></td>
+          <td class="f6 tl"><%= f.section.room.name %></td>
+          <td class="f6 tl"><%= f.section.name %></td>
+          <td class="f6 tl "><%= f.shelves.count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+

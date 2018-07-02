@@ -4,13 +4,40 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
-      <div class="flex flex-row min-vh-100">
-        <div class="main flex flex-column flex-auto">
-          <main class="min-vh-100 wizard-form">
-            <%= link_to "Continue Later", root_path, class: "absolute right--3 top--3 db h2 w4 ma2 pa2", data: { turbolinks: "false" } %>
-            <%= yield %>
-          </main>
+      <div class="h-100 pt3">
+        <div class="pa3">
+          <div class="pt4 pb3 tc">
+            <div class="pa2 dib bg-near-white f5 w4 bg-green white">
+              Step 1:
+              <br />
+              <small>Basic Info</small>
+            </div>
+            <div class="pa2 dib bg-near-white f5 w4 <%= "white bg-green" if params[:step] >= "2" %>">
+              Step 2:
+              <br />
+              <small>Number of Rooms</small>
+            </div>
+            <div class="pa2 dib bg-near-white f5 w4 <%= "white bg-green" if params[:step] >= "3" %>">
+              Step 3:
+              <br />
+              <small>Room</small>
+            </div>
+            <div class="pa2 dib bg-near-white f5 w4 <%= "white bg-green" if params[:step] >= "4" %>">
+              Step 4:
+              <br />
+              <small>Section</small>
+            </div>
+            <div class="pa2 dib bg-near-white f5 w4 <%= "white bg-green" if params[:step] >= "5" %>">
+              Step 5:
+              <br />
+              <small>Rows &amp; Shelves</small>
+            </div>
+          </div>
         </div>
+        <div class="pt3 wizard-form">
+          <%= yield %>
+        </div>
+        <%= link_to "Continue Later", root_path, class: "db tr pr5 pa2", data: { turbolinks: "false" } %>
       </div>
     </div>
     <%= render "layouts/before_body_end" %>

@@ -1,71 +1,67 @@
-<div class="vh-100 w-100 dt">
-  <div class="dtc v-mid">
-    <div class="measure center">
-      <h1>New Facility Wizard</h1>
-      <%= form_with scope: :facility, url: facility_setup_save_path(facility_id: @wizard_form.id, step: 1), local: true do |f| %>
-        <% if @wizard_form.errors.any? %>
-          <div id="error_explanation" class="red">
-            <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
+<div class="measure center">
+  <h1>New Facility Wizard</h1>
+  <%= form_with scope: :facility, url: facility_setup_save_path(facility_id: @wizard_form.id, step: 1), local: true do |f| %>
+    <% if @wizard_form.errors.any? %>
+      <div id="error_explanation" class="red">
+        <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
 
-            <ul>
-            <% @wizard_form.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-            </ul>
-          </div>
+        <ul>
+        <% @wizard_form.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
         <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-        <div class="mt4 mb2">
-          <%= f.label :name, class: "f6 b db mb1" %>
-          <%= f.text_field :name, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="mv2">
-          <%= f.label :code, class: "f6 b db mb1" %>
-          <%= f.text_field :code, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="mv2">
-          <%= f.label :address, class: "f6 b db mb1" %>
-          <%= f.text_area :address, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="mv2">
-          <%= f.label :zipcode, class: "f6 b db mb1" %>
-          <%= f.text_field :zipcode, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="mv2">
-          <%= f.label :city, class: "f6 b db mb1" %>
-          <%= f.text_field :city, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="mv2">
-          <%= f.label :state, class: "f6 b db mb1" %>
-          <%= f.text_field :state, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="mt2 mb3">
-          <%= f.label :country, class: "f6 b db mb1" %>
-          <%= f.text_field :country, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-
-        <hr />
-
-        <div class="mt3">
-          <%= f.label :phone, class: "f6 b db mb1" %>
-          <%= f.text_field :phone, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="mv2">
-          <%= f.label :fax, class: "f6 b db mb1" %>
-          <%= f.text_field :fax, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="mt3">
-          <%= f.submit "Save & Continue", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
-        </div>
-      <% end %>
+    <div class="mt4 mb2">
+      <%= f.label :name, class: "f6 b db mb1" %>
+      <%= f.text_field :name, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
     </div>
-  </div>
+
+    <div class="mv2">
+      <%= f.label :code, class: "f6 b db mb1" %>
+      <%= f.text_field :code, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+    </div>
+
+    <div class="mv2">
+      <%= f.label :address, class: "f6 b db mb1" %>
+      <%= f.text_area :address, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+    </div>
+
+    <div class="mv2">
+      <%= f.label :zipcode, class: "f6 b db mb1" %>
+      <%= f.text_field :zipcode, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+    </div>
+
+    <div class="mv2">
+      <%= f.label :city, class: "f6 b db mb1" %>
+      <%= f.text_field :city, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+    </div>
+
+    <div class="mv2">
+      <%= f.label :state, class: "f6 b db mb1" %>
+      <%= f.text_field :state, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+    </div>
+
+    <div class="mt2 mb3">
+      <%= f.label :country, class: "f6 b db mb1" %>
+      <%= f.text_field :country, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+    </div>
+
+    <hr />
+
+    <div class="mt3">
+      <%= f.label :phone, class: "f6 b db mb1" %>
+      <%= f.text_field :phone, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+    </div>
+
+    <div class="mv2">
+      <%= f.label :fax, class: "f6 b db mb1" %>
+      <%= f.text_field :fax, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+    </div>
+
+    <div class="mt3">
+      <%= f.submit "Save & Continue", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+    </div>
+  <% end %>
 </div>

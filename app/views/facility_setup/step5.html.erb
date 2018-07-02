@@ -1,92 +1,88 @@
-<div class="vh-100 w-100 dt">
-  <div class="dtc v-mid">
-    <div class="measure-wide center">
-      <h1>Step 5 - Setup Shelf for Row</h1>
-      <div class="flex flex-row">
-        <div class="pa2">
-          <ul class="list pl0 w4">
-            <% @wizard_form.section_row_count.times { |i| %>
-              <li class="db">
-                <%= link_to @wizard_form.name_of_row(i),
-                  facility_setup_save_path(
-                    facility_id: @wizard_form.facility_id,
-                    room_id: @wizard_form.room_id,
-                    section_id: @wizard_form.section_id,
-                    row_id: @wizard_form.rows[i].id,
-                    step: @current_step),
-                    class: "link db pa2 hover-bg-black-20 pointer #{'bg-black-10' if @wizard_form.row_id == @wizard_form.rows[i].id}"
-                %>
-              </li>
-            <% } %>
-          </ul>
-        </div>
-        <span class="db pa2 mr2 bl b--black-10"></span>
-        <div class="db measure w-100">
-          <%= form_with(scope: :facility,
-                        url: facility_setup_save_path(step: @current_step, facility_id: @wizard_form.facility_id, room_id: @wizard_form.room_id, section_id: @wizard_form.section_id, row_id: @wizard_form.row_id),
-                        method: :post,
-                        local: true) do |f| %>
-            <% if @wizard_form.errors.any? %>
-              <div id="error_explanation" class="red">
-                <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
-                <ul>
-                <% @wizard_form.errors.full_messages.each do |message| %>
-                  <li><%= message %></li>
-                <% end %>
-                </ul>
-              </div>
+<div class="measure-wide center">
+  <h1>Step 5 - Setup Shelf for Row</h1>
+  <div class="flex flex-row">
+    <div class="pa2">
+      <ul class="list pl0 w4">
+        <% @wizard_form.section_row_count.times { |i| %>
+          <li class="db">
+            <%= link_to @wizard_form.name_of_row(i),
+              facility_setup_save_path(
+                facility_id: @wizard_form.facility_id,
+                room_id: @wizard_form.room_id,
+                section_id: @wizard_form.section_id,
+                row_id: @wizard_form.rows[i].id,
+                step: @current_step),
+                class: "link db pa2 hover-bg-black-20 pointer #{'bg-black-10' if @wizard_form.row_id == @wizard_form.rows[i].id}"
+            %>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+    <span class="db pa2 mr2 bl b--black-10"></span>
+    <div class="db measure w-100">
+      <%= form_with(scope: :facility,
+                    url: facility_setup_save_path(step: @current_step, facility_id: @wizard_form.facility_id, room_id: @wizard_form.room_id, section_id: @wizard_form.section_id, row_id: @wizard_form.row_id),
+                    method: :post,
+                    local: true) do |f| %>
+        <% if @wizard_form.errors.any? %>
+          <div id="error_explanation" class="red">
+            <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
+            <ul>
+            <% @wizard_form.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
             <% end %>
+            </ul>
+          </div>
+        <% end %>
 
-            <div class="mt3 mb2">
-              <%= f.label :row_name, "Row Name", class: "f6 b db mb1" %>
-              <%= f.text_field :row_name, value: @wizard_form.row_name, class: "ba b--black-20 pa2 mb2 db w-100" %>
-              <%= f.label :row_code, "Row ID", class: "f6 b db mb1" %>
-              <%= f.text_field :row_code, value: @wizard_form.row_code, class: "ba b--black-20 pa2 mb2 db w-100" %>
-            </div>
+        <div class="mt3 mb2">
+          <%= f.label :row_name, "Row Name", class: "f6 b db mb1" %>
+          <%= f.text_field :row_name, value: @wizard_form.row_name, class: "ba b--black-20 pa2 mb2 db w-100" %>
+          <%= f.label :row_code, "Row ID", class: "f6 b db mb1" %>
+          <%= f.text_field :row_code, value: @wizard_form.row_code, class: "ba b--black-20 pa2 mb2 db w-100" %>
+        </div>
 
-            <div class="mt3 mb2">
-              <span class="f6 b db mb1">Shelves</span>
-              <table class="collapse ba br2 b--black-10 pv2 ph3">
-                <tbody>
-                  <tr class="striped--light-gray">
-                    <th class="pv2 ph3 tl f6 fw6">ID</th>
-                    <th class="tl f6 fw6 pv2 ph3">Capacity</th>
-                    <th class="tl f6 fw6 pv2 ph3">Description</th>
-                  </tr>
+        <div class="mt3 mb2">
+          <span class="f6 b db mb1">Shelves</span>
+          <table class="collapse ba br2 b--black-10 pv2 ph3">
+            <tbody>
+              <tr class="striped--light-gray">
+                <th class="pv2 ph3 tl f6 fw6">ID</th>
+                <th class="tl f6 fw6 pv2 ph3">Capacity</th>
+                <th class="tl f6 fw6 pv2 ph3">Description</th>
+              </tr>
 
-                  <% @wizard_form.row_shelves.each do |shelf| %>
-                    <tr class="striped--light-gray">
-                        <%= hidden_field_tag "facility[shelves][][id]", shelf.id, id: nil %>
-                        <td class="pv2 ph3">
-                          <%= text_field_tag "facility[shelves][][code]", shelf.code, id: nil %>
-                        </td>
-                        <td class="pv2 ph3 tr">
-                          <%= text_field_tag "facility[shelves][][capacity]", shelf.capacity, id: nil %>
-                        </td>
-                        <td class="pv2 ph3">
-                          <%= text_field_tag "facility[shelves][][desc]", shelf.desc, id: nil %>
-                        </td>
-                    </tr>
-                  <% end %>
-
-                </tbody>
-              </table>
-            </div>
-
-            <div class="mt3">
-              <% if @wizard_form.next_row.present? %>
-                <%= f.submit "Continue to next row", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
-              <% elsif @wizard_form.next_section.present? %>
-                <%= f.submit "Continue to next section", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
-              <% elsif @wizard_form.next_room.present? %>
-                <%= f.submit "Continue to next room", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
-              <% else @wizard_form.next_room.present? %>
-                <%= f.submit "Complete", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+              <% @wizard_form.row_shelves.each do |shelf| %>
+                <tr class="striped--light-gray">
+                    <%= hidden_field_tag "facility[shelves][][id]", shelf.id, id: nil %>
+                    <td class="pv2 ph3">
+                      <%= text_field_tag "facility[shelves][][code]", shelf.code, id: nil %>
+                    </td>
+                    <td class="pv2 ph3 tr">
+                      <%= text_field_tag "facility[shelves][][capacity]", shelf.capacity, id: nil %>
+                    </td>
+                    <td class="pv2 ph3">
+                      <%= text_field_tag "facility[shelves][][desc]", shelf.desc, id: nil %>
+                    </td>
+                </tr>
               <% end %>
-            </div>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt3">
+          <% if @wizard_form.next_row.present? %>
+            <%= f.submit "Continue to next row", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+          <% elsif @wizard_form.next_section.present? %>
+            <%= f.submit "Continue to next section", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+          <% elsif @wizard_form.next_room.present? %>
+            <%= f.submit "Continue to next room", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+          <% else @wizard_form.next_room.present? %>
+            <%= f.submit "Complete", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
           <% end %>
         </div>
-      </div>
+      <% end %>
     </div>
   </div>
 </div>

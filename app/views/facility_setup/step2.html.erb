@@ -1,33 +1,29 @@
-<div class="vh-100 w-100 dt">
-  <div class="dtc v-mid">
-    <div class="measure center">
-      <h1>Step 2 - Create rooms for this facility</h1>
-      <%= form_with(scope: :facility, url: facility_setup_save_path(step: @current_step, facility_id: @wizard_form.id), method: :post, local: true) do |f| %>
-        <% if @wizard_form.errors.any? %>
-          <div id="error_explanation" class="red">
-            <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
-            <ul>
-            <% @wizard_form.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-            </ul>
-          </div>
+<div class="measure center">
+  <h1>Step 2 - Create rooms for this facility</h1>
+  <%= form_with(scope: :facility, url: facility_setup_save_path(step: @current_step, facility_id: @wizard_form.id), method: :post, local: true) do |f| %>
+    <% if @wizard_form.errors.any? %>
+      <div id="error_explanation" class="red">
+        <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
+        <ul>
+        <% @wizard_form.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
         <% end %>
-        <div class="mt4">
-          <b>
-            <%= "Facility Name: #{@wizard_form.name}" %>
-          </b>
-        </div>
-
-        <div class="mt3 mb2">
-          <%= f.label :room_count, "How many rooms in this facility?", class: "f6 b db mb1" %>
-          <%= f.number_field :room_count, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="mt3">
-          <%= f.submit "Save & Continue", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
-        </div>
-      <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <div class="mt4">
+      <b>
+        <%= "Facility Name: #{@wizard_form.name}" %>
+      </b>
     </div>
-  </div>
+
+    <div class="mt3 mb2">
+      <%= f.label :room_count, "How many rooms in this facility?", class: "f6 b db mb1" %>
+      <%= f.number_field :room_count, class: "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+    </div>
+
+    <div class="mt3">
+      <%= f.submit "Save & Continue", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
+    </div>
+  <% end %>
 </div>

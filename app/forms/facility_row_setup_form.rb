@@ -2,8 +2,8 @@ class FacilityRowSetupForm
   include ActiveModel::Model
 
   delegate :id, :name, :code, to: :facility, prefix: true
-  delegate :id, :name, :code, :row_count, :shelf_count, to: :section, prefix: true
   delegate :id, to: :room, prefix: true
+  delegate :id, :name, :code, :row_count, :shelf_count, to: :section, prefix: true
   delegate :id, :name, :code, :shelves, to: :row, prefix: true
 
   validates :row_name, presence: true
@@ -30,9 +30,37 @@ class FacilityRowSetupForm
     map_shelves_from_params(params[:shelves])
     if valid?
       row.is_complete = true
+      if is_all_complete?
+        set_all_complete
+      end
       facility.save!
     else
       false
+    end
+  end
+
+  def set_all_complete
+    facility.is_complete = true
+    facility.rooms.each do |room|
+      room.is_complete = true
+      room.sections.each do |sec|
+        sec.is_complete = true
+        sec.rows.each do |row|
+          row.is_complete = true
+        end
+      end
+    end
+  end
+
+  def is_all_complete?
+    if next_row.present?
+      false
+    elsif next_section.present?
+      false
+    elsif next_room.present?
+      false
+    else
+      true
     end
   end
 

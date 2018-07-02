@@ -47,7 +47,11 @@
                         "disabled"
                       end
             %>
-            <span class="<%=status %> status-bullet ba b bw1 b--blue blue pa1 ph2 br4 f7"><%= status %></span>
+            <% if !f.is_complete %>
+              <%= link_to "Continue setup", facility_setup_save_path(facility_id: f.id, step: 1), class: "link status-bullet ba b bw1 b--blue blue pa1 ph2 br4 f7" %>
+            <% else %>
+              <span class="<%=status %> status-bullet ba b bw1 b--blue blue pa1 ph2 br4 f7"><%= status %></span>
+            <% end %>
           </td>
         </tr>
       <% end %>

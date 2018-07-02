@@ -80,7 +80,7 @@
                 <%= f.submit "Continue to next section", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
               <% elsif @wizard_form.next_room.present? %>
                 <%= f.submit "Continue to next room", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
-              <% else @wizard_form.next_room.present? %>
+              <% else %>
                 <%= f.submit "Complete", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
               <% end %>
             </div>

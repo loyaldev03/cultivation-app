@@ -15,4 +15,3 @@
 //= require bling
 //= require sidebar
 //= require radio_toggle
-//= require_tree .

@@ -66,7 +66,7 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Frontend
-gem 'webpacker', '~> 3.5'
+gem 'webpacker', '~> 3.5' # Use in-conjunction with webpack-dev-server v2.11
 gem 'react-rails'
 gem 'simple_form'
 gem 'country_select'

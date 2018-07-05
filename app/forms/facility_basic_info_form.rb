@@ -23,6 +23,11 @@ class FacilityBasicInfoForm
   private
 
   def facility
-    @facility ||= Facility.new
+    if @facility.nil?
+      next_code = NextFacilityCode.call(last_code: Facility.last&.code, code_type: :facility).result
+      @facility = Facility.new(code: next_code)
+    else
+      @facility
+    end
   end
 end

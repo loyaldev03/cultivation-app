@@ -37,6 +37,7 @@ class FacilitySetupController < ApplicationController
                                               facility_id: wizard_form.facility_id,
                                               room_id: wizard_form.next_room.id)
         else
+          flash[:success] = "Facility setup completed: #{wizard_form.facility_name}" if wizard_form.is_all_complete?
           redirect_to root_path
         end
       else

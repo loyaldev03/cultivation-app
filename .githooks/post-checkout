@@ -3,5 +3,8 @@
 # Run bundle install if Gemfile changes
 [ -f Gemfile ] && bundle install > /dev/null &
 
+# Run yarn install if package.json changes
+[ -f package.json ] && yarn install > /dev/null &
+
 # Run unit tests
-bundle exec rspec
+# bundle exec rspec

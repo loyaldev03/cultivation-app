@@ -35,6 +35,10 @@ group :development, :test do
   gem 'faker'
   gem 'rspec-rails'
   gem 'capybara'
+
+  # Automatically re-run rspec tests
+  gem 'spring-commands-rspec'
+  gem 'guard-rspec', require: false
 end
 
 group :test do
@@ -56,9 +60,6 @@ group :development do
 
   # Run app with Procfile
   gem 'foreman', '~> 0.85.0', require: false
-
-  # Automatically re-run rspec tests
-  gem 'guard-rspec', require: false
 end
 
 

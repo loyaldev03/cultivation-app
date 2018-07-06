@@ -12,7 +12,7 @@
 * Install Robo 3T (https://robomongo.org/download) - GUI tools for MongoDB
 
 ### Configuration
-* Copy `master.key` from others any put it under `config/master.key`
+* Copy `master.key` from others and put it under `config/master.key`
 * Run `git config core.hooksPath .githooks` - to configure git hooks
 * NOTE: `git commit` would trigger pre-commit hook to format Ruby & JavaScript codes
 
@@ -21,6 +21,10 @@
 
 ### Running the test suite
 * `bundle exec rspec`
+
+#### TDD: To keep running rspec during development: 
+* Run `bundle exec spring rspec`
+* Run `bundle exec guard`
 
 ## Staging Setup
 ---

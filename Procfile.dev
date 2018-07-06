@@ -1,2 +1,2 @@
-webpack: bin/webpack-dev-server
-web: PORT=3000 bundle exec rails server
+webpack: yarn install && bin/webpack-dev-server
+web: bundle install && PORT=3000 bundle exec rails server

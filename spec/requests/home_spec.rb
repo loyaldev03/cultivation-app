@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Home - Dashboard", :type => :request do
+RSpec.describe "Home", :type => :request do
   context "anonymous access" do
     describe "GET index" do
       it "should redirect to login page" do

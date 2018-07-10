@@ -10,7 +10,8 @@ Rails.application.routes.draw do
 
   namespace 'settings' do
     namespace 'core', as: :core do
-      resources :unit_of_measure
+      get '/' => 'core#index'
+      resources :unit_of_measure, only: [:index, :edit, :update]
     end
 
     namespace 'facilities', as: :facility do

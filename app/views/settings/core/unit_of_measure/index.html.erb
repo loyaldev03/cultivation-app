@@ -25,8 +25,8 @@
     </thead>
 
     <tbody>
-      <% @uom_list.each_with_index do |f, i| %>
-        <tr data-toggle-right="<%= edit_settings_facility_room_path(f.id)%>" class="pointer">
+      <% @list.each_with_index do |f, i| %>
+        <tr data-toggle-right="<%= edit_settings_core_unit_of_measure_path(f.id)%>" class="pointer">
           <td class="f6 tl pl4 pr3 gray"><%= i+1 %></td>
           <td class="f6 tl"><%= blank(f.name) %></td>
           <td class="f6 tl"><%= blank(f.code) %></td>

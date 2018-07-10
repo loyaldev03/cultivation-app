@@ -22,5 +22,9 @@
     <div class="pv3 tr w-100 flex items-center justify-end">
         <%= f.submit "Update", class: "pa2 ph4 ba b--blue blue bw1 br4 dim" %>
     </div>
+
+    <div class="pv3 tr w-100 flex items-center justify-end">
+        <%= button_to "Delete", settings_core_unit_of_measure_path(:id => @record.id), :method => :delete, class: "red pa2 ph4 ba b--red blue bw1 br4 dim", data: {confirm: "Are you sure?"} %>
+    </div>
   <% end %>
 </div>

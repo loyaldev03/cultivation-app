@@ -30,6 +30,13 @@ class Settings::Core::UnitOfMeasuresController < ApplicationController
   end
 
   def destroy
+    command = DestroyUnitOfMeasure.call(params[:id])
+    if command.success?
+      render 'layouts/hide_sidebar', layouts: nil
+    else
+      flash[:error] = 'Unable to delete'
+      render 'edit', layout: nil
+    end
   end
 
   private

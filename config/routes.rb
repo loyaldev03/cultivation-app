@@ -9,6 +9,10 @@ Rails.application.routes.draw do
   get "settings" => "home#settings"
 
   namespace 'settings' do
+    namespace 'core', as: :core do
+      resources :unit_of_measure
+    end
+
     namespace 'facilities', as: :facility do
       resources :facilities, only: [:edit, :update, :index] do
         get 'all', on: :collection

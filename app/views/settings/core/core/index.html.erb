@@ -1,0 +1,8 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Settings", settings_path], "General Settings" %>
+<% end %>
+
+<div class="ph4 pt2">
+  <h2>General Settings</h2>
+  <%= link_to "Unit of Measure", settings_core_unit_of_measures_path, class: "link" %>
+</div>

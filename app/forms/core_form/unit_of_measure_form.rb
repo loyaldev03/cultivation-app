@@ -8,8 +8,8 @@ module CoreForm
     validates :code, presence: true
     validates_with UniqUomCodeValidator
 
-    def initialize(_record = nil)
-      @uom = _record
+    def initialize(uom_id = nil)
+      @uom_id = uom_id
     end
 
     def submit(params)
@@ -24,7 +24,11 @@ module CoreForm
     private
 
     def uom
-      @uom ||= UnitOfMeasure.new
+      if @uom_id.nil?
+        @uom ||= UnitOfMeasure.new
+      else
+        @uom ||= UnitOfMeasure.find_by(id: @uom_id)
+      end
     end
   end
 end

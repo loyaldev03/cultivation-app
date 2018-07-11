@@ -8,11 +8,21 @@ RSpec.describe "Core Settings - Unit of Measure", :type => :request do
     end
 
     describe "GET Settings > Core > Unit of Measure" do
-      it "should render Unit of Measure listing page" do
-        get settings_core_unit_of_measure_index_path
+      it "should render UoM listing page" do
+        get settings_core_unit_of_measures_path
 
         expect(response.status).to eq(200)
         expect(response.body).to include("Unit of Measure")
+        expect(response.body).to include("Name")
+        expect(response.body).to include("Code")
+      end
+
+      it "should render Add New button" do
+        get settings_core_unit_of_measures_path
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include("Unit of Measure")
+        expect(response.body).to include("Add New")
       end
     end
   end

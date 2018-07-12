@@ -57,7 +57,7 @@ class FacilitySetupController < ApplicationController
   def wizard_form
     case current_step
     when 1
-      @wizard_form ||= FacilityBasicInfoForm.new(facility)
+      @wizard_form ||= FacilityBasicInfoForm.new(facility, current_user)
     when 2
       @wizard_form ||= FacilityRoomCountForm.new(facility)
     when 3
@@ -72,7 +72,7 @@ class FacilitySetupController < ApplicationController
   end
 
   def facility
-    @facility ||= Facility.where(id: params[:facility_id]).first if params[:facility_id]
+    @facility ||= FindFacility.call({id: params[:facility_id]}).result unless params[:facility_id].blank?
   end
 
   def room_id

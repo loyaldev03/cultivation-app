@@ -8,11 +8,11 @@ RSpec.describe "Core Settings - Home", :type => :request do
     end
 
     describe "GET Settings > Core" do
-      it "should render Core Settings" do
+      it "should render General Settings" do
         get settings_core_path
 
         expect(response.status).to eq(200)
-        expect(response.body).to include("Core Settings")
+        expect(response.body).to include("General Settings")
       end
     end
 

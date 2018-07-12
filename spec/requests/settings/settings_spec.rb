@@ -17,7 +17,7 @@ RSpec.describe "Settings Page", :type => :request do
       end
     end
 
-    describe "GET Settings > Core" do
+    describe "GET Settings > General Settings" do
       it "should show General Settings option" do
         get settings_path
 

@@ -1,21 +1,20 @@
-module CoreForm
-  class UnitOfMeasureForm
+module MaterialsForm
+  class ItemForm
     include ActiveModel::Model
 
     attr_accessor :id, :name, :code, :desc
 
     validates :name, presence: true
     validates :code, presence: true
-    validates_with UniqUomCodeValidator
 
     def initialize(record_id = nil)
       set_record(record_id)
     end
 
-    def submit(params)
-      uom.attributes = params.slice(:name, :code, :desc)
+    def submit(record)
+      map_attributes(record)
       if valid?
-        uom.save!
+        SaveItem.call(record).result
       else
         false
       end
@@ -34,7 +33,7 @@ module CoreForm
       if record_id.nil?
         self.id = BSON::ObjectId.new
       else
-        saved = UnitOfMeasure.find_by(id: record_id)
+        saved = FindItem.call({id: record_id}).result
         map_attributes(saved) if saved
       end
     end

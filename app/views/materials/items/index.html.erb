@@ -1,15 +1,18 @@
 <% content_for :breadcrumb do %>
-  <%= breadcrumbs ["Settings", settings_path], ["General Settings", settings_core_path], "Unit of Measure" %>
+  <%= breadcrumbs ["Materials", materials_path], "Items" %>
 <% end %>
 
 <%= render 'layouts/right_sidebar' %>
 
 <div class="ph4 w-100 flex items-center pb3 pt3">
   <div class="w-70">
-    <h2 class="pa0 ma0">Unit of Measure</h2>
+    <h2 class="pa0 ma0">Items</h2>
   </div>
   <div class="w-30 tr">
-    <a href="#0" data-toggle-right="<%= new_settings_core_unit_of_measure_path %>" class='link ba bw1 b b--blue blue pa2 ph3 br4 dib'>
+    <a href="#0"
+       data-toggle-right="<%= new_materials_item_path %>"
+       class="link ba bw1 b b--blue blue pa2 ph3 br4 dib"
+    >
       + Add New
     </a>
   </div>
@@ -25,10 +28,9 @@
         <th class="f6 white pv3 tl w-20">Description</th>
       </tr>
     </thead>
-
     <tbody>
-      <% @list.each_with_index do |f, i| %>
-        <tr data-toggle-right="<%= edit_settings_core_unit_of_measure_path(f.id)%>" class="pointer">
+      <% @records.try(:each_with_index) do |f, i| %>
+        <tr data-toggle-right="<%= edit_materials_item_path(f.id)%>" class="pointer">
           <td class="f6 tl pl4 pr3 gray"><%= i+1 %></td>
           <td class="f6 tl"><%= blank(f.name) %></td>
           <td class="f6 tl"><%= blank(f.code) %></td>

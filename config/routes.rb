@@ -8,6 +8,11 @@ Rails.application.routes.draw do
   post "facility_setup/save" => "facility_setup#save"
   get "settings" => "home#settings"
 
+  namespace 'materials', as: :materials do
+    get '/' => 'materials#index'
+    resources :items, only: [:index, :edit, :update, :new, :create, :destroy]
+  end
+
   namespace 'settings' do
     namespace 'core', as: :core do
       get '/' => 'core#index'

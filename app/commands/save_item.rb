@@ -1,4 +1,4 @@
-class SaveFacility
+class SaveItem
   prepend SimpleCommand
 
   attr_reader :args
@@ -8,15 +8,20 @@ class SaveFacility
   end
 
   def call
-    save_facility
+    save_record
   end
 
   private
 
-  def save_facility
-    facility = Facility.new(args)
-    facility.save!
-    facility
+  def save_record
+    record = Item.new(args)
+    if args[:id]
+      # TODO: timestamp missing
+      record.upsert
+    else
+      record.save!
+    end
+    record
   rescue StandardError => ex
     errors.add(:error, $!.to_s)
   end

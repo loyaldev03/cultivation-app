@@ -25,9 +25,7 @@ class NextFacilityCode
 
   def next_times(code, increment = 1)
     result = code
-    increment.times {
-      result = result.next
-    }
+    increment.times { result = result.next }
     result
   end
 end

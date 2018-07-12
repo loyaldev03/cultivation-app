@@ -17,7 +17,7 @@ class SaveFacility
     facility = Facility.new(args)
     facility.save!
     facility
-  rescue Exception => ex
+  rescue StandardError => ex
     errors.add(:error, $!.to_s)
   end
 end

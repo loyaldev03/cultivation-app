@@ -1,15 +1,15 @@
-class Settings::Core::UnitOfMeasuresController < ApplicationController
+class Materials::ItemsController < ApplicationController
   def index
-    @list = UnitOfMeasure.all.order_by(name: :asc)
+    @records = QueryItems.call.result
   end
 
   def new
-    @record = CoreForm::UnitOfMeasureForm.new
+    @record = MaterialsForm::ItemForm.new
   end
 
   def create
-    @record = CoreForm::UnitOfMeasureForm.new
-    if @record.submit(uom_params)
+    @record = MaterialsForm::ItemForm.new
+    if @record.submit(record_params)
       render 'layouts/hide_sidebar', layouts: nil
     else
       render 'new', layout: nil
@@ -17,12 +17,13 @@ class Settings::Core::UnitOfMeasuresController < ApplicationController
   end
 
   def edit
-    @record = CoreForm::UnitOfMeasureForm.new(params[:id])
+    @record = MaterialsForm::ItemForm.new(params[:id])
   end
 
   def update
-    form_object = CoreForm::UnitOfMeasureForm.new(params[:id])
-    if form_object.submit(uom_params)
+    form_object = MaterialsForm::ItemForm.new(params[:id])
+    update_params = {id: params[:id]}.merge(record_params)
+    if form_object.submit(update_params)
       render 'layouts/hide_sidebar', layouts: nil
     else
       render 'edit', layout: nil
@@ -30,7 +31,7 @@ class Settings::Core::UnitOfMeasuresController < ApplicationController
   end
 
   def destroy
-    command = DestroyUnitOfMeasure.call(params[:id])
+    command = DestroyItem.call(params[:id])
     if command.success?
       render 'layouts/hide_sidebar', layouts: nil
     else
@@ -41,7 +42,7 @@ class Settings::Core::UnitOfMeasuresController < ApplicationController
 
   private
 
-  def uom_params
+  def record_params
     params.require(:record).permit(:code, :name, :desc)
   end
 end

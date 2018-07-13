@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe FacilityRoomSetupForm do
+RSpec.describe NextFacilityCode do
   context "generate next code for facility" do
     it "should return next code given facility" do
       cmd = NextFacilityCode.call(last_code: "FA1", code_type: :facility)

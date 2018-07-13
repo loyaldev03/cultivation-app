@@ -14,15 +14,14 @@ class SaveItem
   private
 
   def save_record
-    record = Item.new(args)
     if args[:id]
-      # TODO: timestamp missing
-      record.upsert
+      record = Item.where(id: args[:id]).update(args)
     else
+      record = Item.new(args)
       record.save!
     end
     record
-  rescue StandardError => ex
-    errors.add(:error, $!.to_s)
+  rescue
+    errors.add(:error, $!.message)
   end
 end

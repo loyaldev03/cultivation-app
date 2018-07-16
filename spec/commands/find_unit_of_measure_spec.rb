@@ -1,82 +1,80 @@
 require 'rails_helper'
 
-RSpec.describe FindItem, type: :command do
-  context "given item args" do
+RSpec.describe FindUnitOfMeasure, type: :command do
+  context "given uom args" do
 
-    subject(:item) {
-      Item.create!(
+    subject(:record) {
+      UnitOfMeasure.create!(
         name: Faker::Lorem.word,
         code: Faker::Number.number(3),
         desc: Faker::Lorem.sentence,
-        uom: Faker::Lorem.word
       )
     }
 
     it "should return record when id exists" do
-      cmd = FindItem.call({id: item.id.to_s})
+      cmd = FindUnitOfMeasure.call({id: record.id.to_s})
 
       expect(cmd.errors).to be {}
       expect(cmd.success?).to be true
       expect(cmd.result.c_at).to_not be nil
       expect(cmd.result.u_at).to_not be nil
       expect(cmd.result).to have_attributes(
-        id: item.id,
-        name: item.name,
-        code: item.code,
-        desc: item.desc,
-        uom: item.uom
+        id: record.id,
+        name: record.name,
+        code: record.code,
+        desc: record.desc,
       )
     end
 
     it "should return record when name exists" do
-      cmd = FindItem.call({name: item.name})
+      cmd = FindUnitOfMeasure.call({name: record.name})
 
       expect(cmd.errors).to be {}
       expect(cmd.success?).to be true
       expect(cmd.result.c_at).to_not be nil
       expect(cmd.result.u_at).to_not be nil
       expect(cmd.result).to have_attributes(
-        id: item.id,
-        name: item.name,
-        code: item.code,
-        desc: item.desc
+        id: record.id,
+        name: record.name,
+        code: record.code,
+        desc: record.desc
       )
     end
 
     it "should return record when code exists" do
-      cmd = FindItem.call({code: item.code})
+      cmd = FindUnitOfMeasure.call({code: record.code})
 
       expect(cmd.errors).to be {}
       expect(cmd.success?).to be true
       expect(cmd.result.c_at).to_not be nil
       expect(cmd.result.u_at).to_not be nil
       expect(cmd.result).to have_attributes(
-        id: item.id,
-        name: item.name,
-        code: item.code,
-        desc: item.desc
+        id: record.id,
+        name: record.name,
+        code: record.code,
+        desc: record.desc
       )
     end
 
     it "should return record when id & code exists" do
-      cmd = FindItem.call({id: item.id.to_s, code: item.code})
+      cmd = FindUnitOfMeasure.call({id: record.id.to_s, code: record.code})
 
       expect(cmd.errors).to be {}
       expect(cmd.success?).to be true
       expect(cmd.result.c_at).to_not be nil
       expect(cmd.result.u_at).to_not be nil
       expect(cmd.result).to have_attributes(
-        id: item.id,
-        name: item.name,
-        code: item.code,
-        desc: item.desc
+        id: record.id,
+        name: record.name,
+        code: record.code,
+        desc: record.desc
       )
     end
 
     it "should return error if record not found" do
-      item = Item.new
+      record = UnitOfMeasure.new
 
-      cmd = FindItem.call({id: item.id.to_s})
+      cmd = FindUnitOfMeasure.call({id: record.id.to_s})
 
       expect(cmd.success?).to be false
       expect(cmd.errors).to eq ({ not_found: ["Record Not Found"] })

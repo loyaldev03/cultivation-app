@@ -30,4 +30,5 @@ RSpec.describe MaterialsForm::ItemForm, type: :form do
         uom: record.uom
       )
     end
+  end
 end

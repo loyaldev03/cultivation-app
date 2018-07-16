@@ -2,7 +2,7 @@ module MaterialsForm
   class ItemForm
     include ActiveModel::Model
 
-    attr_accessor :id, :name, :code, :desc
+    attr_accessor :id, :name, :code, :desc, :uom
 
     validates :name, presence: true
     validates :code, presence: true

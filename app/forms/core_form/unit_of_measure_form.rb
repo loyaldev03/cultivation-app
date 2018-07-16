@@ -28,14 +28,13 @@ module CoreForm
       self.name = record[:name] if record[:name]
       self.code = record[:code] if record[:code]
       self.desc = record[:desc] if record[:desc]
-      self.uom = record[:uom] if record[:uom]
     end
 
     def set_record(record_id)
       if record_id.nil?
         self.id = BSON::ObjectId.new
       else
-        saved = FindUnitOfMeasure.call(id: record_id)
+        saved = FindUnitOfMeasure.call({id: record_id}).result
         map_attributes(saved) if saved
       end
     end

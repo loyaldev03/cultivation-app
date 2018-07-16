@@ -27,6 +27,7 @@ module MaterialsForm
       self.name = record[:name] if record[:name]
       self.code = record[:code] if record[:code]
       self.desc = record[:desc] if record[:desc]
+      self.uom = record[:uom] if record[:uom]
     end
 
     def set_record(record_id)

@@ -11,10 +11,10 @@ module MaterialsForm
       set_record(record_id)
     end
 
-    def submit(record)
-      map_attributes(record)
+    def submit(params)
+      map_attributes(params)
       if valid?
-        SaveItem.call(record).result
+        SaveItem.call(params).result
       else
         false
       end

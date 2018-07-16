@@ -13,9 +13,9 @@ module CoreForm
     end
 
     def submit(params)
-      uom.attributes = params.slice(:name, :code, :desc)
+      map_attributes(params)
       if valid?
-        uom.save!
+        SaveUnitOfMeasure.call(params).result
       else
         false
       end
@@ -28,13 +28,14 @@ module CoreForm
       self.name = record[:name] if record[:name]
       self.code = record[:code] if record[:code]
       self.desc = record[:desc] if record[:desc]
+      self.uom = record[:uom] if record[:uom]
     end
 
     def set_record(record_id)
       if record_id.nil?
         self.id = BSON::ObjectId.new
       else
-        saved = UnitOfMeasure.find_by(id: record_id)
+        saved = FindUnitOfMeasure.call(id: record_id)
         map_attributes(saved) if saved
       end
     end

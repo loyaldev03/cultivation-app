@@ -6,42 +6,42 @@
     <% end %>
   </div>
   <% if user_signed_in? %>
-    <div class="pv3 mh3 f6 gray hide truncate">Hi, <%= current_user.email %></div>
+    <div class="pv3 mh3 f6 white hide truncate">Hi, <%= current_user.email %></div>
   <% end %>
   <ul class="list pl0 hide">
     <li class="pa3 grow">
-      <%= link_to "Home", root_path, class: "link fw1 f4" %>
+      <%= link_to "Home", root_path, class: "link fw5 f5 white" %>
     </li>
     <li class="pa3 grow">
-      <span class="fw1 f4">Inventory</span>
+      <span class="link fw5 f5 white">Inventory</span>
     </li>
     <li class="pa3 grow">
-      <span class="fw1 f4">Cultivation</span>
+      <span class="link fw5 f5 white">Cultivation</span>
     </li>
     <hr class="mt3">
     <li class="pa3   grow">
       <span class="fw1 f4">
-        <%= link_to 'Settings', settings_path, class: 'link blue fw3 f6' %>
+        <%= link_to 'Settings', settings_path, class: 'link fw5 f6 white' %>
       </span>
     </li>
     <li class="pa3   grow">
-      <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: 'link fw3 f6 blue' %>
+      <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: 'link fw5 f6 white' %>
     </li>
   </ul>
   <ul class="list pl0 ma0 pa0 show-collapsed mt4 pt4">
     <li class="pa3 grow tc">
-      <%= link_to "H", root_path, class: "link fw3 f3 dib ph3" %>
+      <%= link_to "H", root_path, class: "link white fw3 f3 dib ph3" %>
     </li>
     <li class="pa3 grow tc">
-      <span class="fw3 f3 dib ph3 pointer">I</span>
+      <span class="fw3 white f3 dib ph3 pointer">I</span>
     </li>
     <li class="pa3 grow tc">
-      <span class="fw3 f3 dib ph3 pointer">C</span>
+      <span class="fw3 white f3 dib ph3 pointer">C</span>
     </li>
     <hr class="mt3">
     <li class="pa3 grow tc">
       <span>
-        <%= link_to 'S', settings_path, class: 'link blue fw3 f6 dib ph3' %>
+        <%= link_to 'S', settings_path, class: 'white link fw3 f6 dib ph3' %>
       </span>
     </li>
   </ul>

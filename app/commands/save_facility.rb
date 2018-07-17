@@ -8,12 +8,12 @@ class SaveFacility
   end
 
   def call
-    save_facility
+    save_record
   end
 
   private
 
-  def save_facility
+  def save_record
     facility = Facility.new(args)
     facility.save!
     facility

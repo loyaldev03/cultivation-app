@@ -5,9 +5,9 @@ class Facility
   field :name, type: String
   field :code, type: String
   field :address, type: String
-  field :zipcode, type: String
   field :city, type: String
   field :state, type: String
+  field :zipcode, type: String
   field :country, type: String
   field :timezone, type: String
   field :phone, type: String

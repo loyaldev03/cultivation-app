@@ -1,5 +1,10 @@
 RSpec.configure do |config|
   config.example_status_persistence_file_path = "tmp/rspec-example-status.txt"
+
+  # stick to 1 type of syntax for consistency
+  config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
   # config.around(:each) do |example|
   #   example.run.tap do |result|
   #     debugger if result.is_a?(RSpec::Expectations::ExpectationNotMetError)

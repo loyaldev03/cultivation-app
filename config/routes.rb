@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   namespace 'materials', as: :materials do
     get '/' => 'materials#index'
     resources :items, only: [:index, :edit, :update, :new, :create, :destroy]
+    resources :strains, only: [:index, :edit, :update, :new, :create, :destroy]
   end
 
   namespace 'settings' do

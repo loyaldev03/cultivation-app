@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Home", :type => :request do
-  context "anonymous access" do
+  context "when logged out" do
     describe "GET index" do
       it "should redirect to login page" do
         get root_path
@@ -11,7 +11,7 @@ RSpec.describe "Home", :type => :request do
     end
   end
 
-  context "admin access" do
+  context "when logged in" do
     before do
       user = create(:user, :admin)
       login_as(user, :scope => :user)

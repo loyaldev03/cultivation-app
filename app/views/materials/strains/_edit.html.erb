@@ -3,14 +3,10 @@
 </div>
 
 <div class="ph4 w-80 pb4">
-  <%= simple_form_for :record, url: settings_core_unit_of_measure_path(id: @record.id), method: :patch, remote: true, html: { class: 'vertical-form' } do |f| %>
+  <%= simple_form_for :record, url: materials_strain_path(id: @record.id), method: :patch, remote: true, html: { class: 'vertical-form' } do |f| %>
     <%= f.input :name, 
       label_html: { class: 'w-30 dib mb2' }, 
       input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
-    %>
-    <%= f.input :code, 
-      label_html: { class: 'w-30 dib mb2' }, 
-      input_html: { class: 'w-30 pa2 ba b--silver outline-0' } 
     %>
     <%= f.input :desc,
       as: :text,

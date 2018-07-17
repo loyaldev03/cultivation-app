@@ -1,14 +1,16 @@
 require "rails_helper"
 
 RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
-  context "Setup New Facility" do
-    it "should initialize form with default facility_code" do
+  context ".new" do
+    it "initialize new form object with default facility_code" do
       form_object = FacilityWizardForm::BasicInfoForm.new
 
       # Sequence already define the format of the code to be F##
       expect(form_object.code).to eq (Sequence.facility_code_format % 1)
     end
+  end
 
+  context ".submit" do
     it "should save facility after submit" do
       form_object = FacilityWizardForm::BasicInfoForm.new
 

@@ -2,7 +2,7 @@ module MaterialsForm
   class ItemForm
     include ActiveModel::Model
 
-    attr_accessor :id, :name, :code, :desc
+    attr_accessor :id, :name, :code, :desc, :uom
 
     validates :name, presence: true
     validates :code, presence: true
@@ -11,10 +11,10 @@ module MaterialsForm
       set_record(record_id)
     end
 
-    def submit(record)
-      map_attributes(record)
+    def submit(params)
+      map_attributes(params)
       if valid?
-        SaveItem.call(record).result
+        SaveItem.call(params).result
       else
         false
       end
@@ -27,6 +27,7 @@ module MaterialsForm
       self.name = record[:name] if record[:name]
       self.code = record[:code] if record[:code]
       self.desc = record[:desc] if record[:desc]
+      self.uom = record[:uom] if record[:uom]
     end
 
     def set_record(record_id)

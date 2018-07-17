@@ -10,8 +10,8 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
     scenario "Facility wizard step 1 - Facility Info" do
       visit facility_setup_new_path
 
-      fill_in "Name", :with => "Facility Name 1"
-      fill_in "Code", :with => "Fas1"
+      fill_in "facility_name", :with => "Facility Name 1"
+      fill_in "facility_code", :with => "Fas1"
       click_button "Save & Continue" # Submit Basic Info
 
       expect(page).to have_text("Step 2")
@@ -22,7 +22,7 @@ RSpec.feature "Facility Setup Wizard", type: :feature do
       facility = create(:facility, :after_step_1)
       visit facility_setup_new_path(facility_id: facility.id, step: 2)
 
-      fill_in "How many rooms in this facility?", :with => "2"
+      fill_in "facility_room_count", :with => "2"
       click_button "Save & Continue" # Submit Room Count
 
       expect(page).to have_text("Step 3")

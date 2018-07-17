@@ -2,12 +2,31 @@
   <%= render "layouts/sidebar" %>
 <% end %>
 
+<% content_for :topnav do %>
+  <%= render "layouts/topnav" %>
+<% end %>
+
 <div class="ph4">
   <% content_for :breadcrumb do %>
-    <h1 class="ma0">Dashboard</h1>
+    <div class="flex flex-row items-center justify-between">
+      <h3 class="ma0 fw6">Home > Dashboard</h1>
+
+      <div class="flex flex-row items-center">
+        <img
+          src="http://tachyons.io/img/logo.jpg"
+          class="br-100 h2 w2 mr3 dib" alt="avatar">
+
+        <h3 class="ma0 ttc fw5 gray">User Name</h3>
+      </div>
+    </div>
   <% end %>
 
-  <h2 class="black-60">Issues require your attention:</h2>
+  <p class="f1 fw6 w-100 tc">
+    Welcome to Cannected, user.
+    <br/>
+    Where do you want to start?
+  </p>
+
   <% @dashboard.incomplete_facilities.each do |f| %>
     <p class="mt2 pa4 bg-yellow">
       Complete to setup facility 
@@ -18,6 +37,31 @@
     </p>
   <% end %>
 
-  <h2 class="black-60 mt4">Shortcuts:</h2>
-  <%= link_to "Setup a new facility (Wizard)", facility_setup_new_path, class: "dib link pv2 ph3 ba b--green" %>
+  <div class="flex flex-row items-center justify-center">
+    <div class="w-20 tc bg-white pa3 ba b--black-20">
+      <%= link_to "Setup a new facility (Wizard)", 
+          facility_setup_new_path, 
+          class: "mv3 dim dib link pv2 ph3 ba b--black-20 br-100 h4 w4 flex items-center justify-center center" 
+      %>
+      <h2 class="fw5 ttc">Setting up facility</h2>
+      <p class="w-100 center lh-copy gray fw5">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+    </div>
+
+    <div class="w-20 tc bg-white pa3 mh4 ba b--black-20">
+      <%= link_to "Setup a new inventory", 
+          "#", 
+          class: "mv3 dim dib link pv2 ph3 ba b--black-20 br-100 h4 w4 flex items-center justify-center center" 
+      %>
+      <h2 class="fw5 ttc">Setting up inventory</h2>
+      <p class="w-100 center lh-copy gray fw5">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+    </div>
+
+    <div class="w-20 tc bg-white pa3 ba b--black-20">
+      <%= link_to "Setup a new cultivation", 
+          "#", 
+          class: "mv3 dim dib link pv2 ph3 ba b--black-20 br-100 h4 w4 flex items-center justify-center center" 
+      %>
+      <h2 class="fw5 ttc">Setting up cultivation</h2>
+      <p class="w-100 center lh-copy gray fw5">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+    </div>
 </div>

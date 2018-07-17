@@ -34,10 +34,17 @@
             </div>
           </div>
         </div>
+
         <div class="pt3 wizard-form">
           <%= yield %>
         </div>
-        <%= link_to "Continue Later", root_path, class: "db tr pr5 pa2", data: { turbolinks: "false" } %>
+
+        <hr/>
+
+        <div class="pv4 ph5 flex flex-row justify-between items-center">
+          <%= link_to "Back", root_path, class: "db tr pa2 ttu tracked link dim dark-gray fw6 f5" %>
+          <%= link_to "Continue Later", root_path, class: "db tr pa3 bg-green white bn br2 ttu tracked link dim f5 fw6", data: { turbolinks: "false" } %>
+        </div>
       </div>
     </div>
     <%= render "layouts/before_body_end" %>

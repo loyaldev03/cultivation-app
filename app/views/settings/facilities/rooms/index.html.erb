@@ -11,9 +11,9 @@
         <%= params[:facility_id].present? ? blank(Facility.find(params[:facility_id]).name) : 'View by facility' %>
       </a>
       <div class="dropdown-content">
-        <%= link_to "Show all", settings_facility_rooms_path, class: "pv3 ph3 bb b--light-gray f6 gray tc" %>
+        <%= link_to "Show all", settings_facility_rooms_path, class: "dim pv3 ph3 bb b--light-gray f6 gray tc" %>
         <% Facility.all.each do |f| %>
-          <%= link_to blank(f.name), settings_facility_rooms_path(facility_id: f.id), class: "pv3 ph3 bb b--light-gray blue f6 tc" %>
+          <%= link_to blank(f.name), settings_facility_rooms_path(facility_id: f.id), class: "dim pv3 ph3 bb b--light-gray blue f6 tc" %>
         <% end %>
       </div>
       
@@ -24,7 +24,7 @@
       </a>
       <div class="dropdown-content">
         <% ["Completed", "Incomplete"].each do |f| %>
-          <%= link_to f, settings_facility_rooms_path(filter: f), class: "pv3 ph3 bb b--light-gray blue f6 tc" %>
+          <%= link_to f, settings_facility_rooms_path(filter: f), class: "dim pv3 ph3 bb b--light-gray blue f6 tc" %>
         <% end %>
       </div>
     </div>

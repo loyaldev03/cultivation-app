@@ -2,23 +2,23 @@
   <h1 class="ma0 pa0 f3">New Item</h1>
 </div>
 
-<div class="ph4 w-80 pb4">
+<div class="ph4 w-100 pb4">
   <%= simple_form_for :record, url: materials_items_path, remote: true, method: :post, html: { class: 'vertical-form' } do |f| %>
-    <%= f.input :name, 
-      label_html: { class: 'w-30 dib' }, 
-      input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
+    <%= f.input :name, label: 'Name',
+      label_html: { class: 'w-100 dib f5 fw6 gray' }, 
+      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
     %>
-    <%= f.input :code, 
-      label_html: { class: 'w-30 dib' }, 
-      input_html: { class: 'w-30 pa2 ba b--silver outline-0' } 
+    <%= f.input :code, label: 'Code',
+      label_html: { class: 'w-100 dib f5 fw6 gray' }, 
+      input_html: { class: 'w-30 pa2 gray ba b--black-20 br2 outline-0' } 
     %>
     <%= f.input :desc,
-      as: :text,
-      label_html: { class: 'w-30 dib' }, 
-      input_html: { class: 'w-70 pa2 ba b--silver outline-0', rows: 5 } 
+      as: :text, label: 'Description',
+      label_html: { class: 'w-100 dib f5 fw6 gray' }, 
+      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0', rows: 5 } 
     %>
-    <div class="pv3 tr w-100 flex items-center justify-end">
-        <%= f.submit "Create", class: "pa2 ph4 ba b--blue blue bw1 br4" %>
+    <div class="pv3 w-100 flex items-center justify-start">
+        <%= f.submit "Create", class: "pointer dim pa2 ph4 ba b--blue blue bw1 br4" %>
     </div>
   <% end %>
 </div>

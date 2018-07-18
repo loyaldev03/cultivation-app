@@ -2,21 +2,21 @@
   <h1 class="ma0 pa0 f3"><%= @record.name %></h1>
 </div>
 
-<div class="ph4 w-80 pb4">
+<div class="ph4 w-100 pb4">
   <%= simple_form_for :record, url: materials_strain_path(id: @record.id), method: :patch, remote: true, html: { class: 'vertical-form' } do |f| %>
-    <%= f.input :name, 
-      label_html: { class: 'w-30 dib mb2' }, 
-      input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
+    <%= f.input :name, label: 'Name',
+      label_html: { class: 'w-100 dib mb2 f5 fw6 gray' }, 
+      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
     %>
     <%= f.input :desc,
       as: :text,
       label: "Description",
       wrapper_html: { class: 'flex' },
-      label_html: { class: 'w-30 dib mb2' }, 
-      input_html: { class: 'w-70 pa2 ba b--silver outline-0', rows: 5 } 
+      label_html: { class: 'w-100 dib mb2 f5 fw6 gray' }, 
+      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0', rows: 5 } 
     %>
-    <div class="pv3 tr w-100 flex items-center justify-end">
-        <%= f.submit "Update", class: "pa2 ph4 ba b--blue blue bw1 br4 dim" %>
+    <div class="pv3 w-100 flex items-center justify-start">
+        <%= f.submit "Update", class: "pointer pa2 ph4 ba b--blue blue bw1 br4 dim" %>
     </div>
   <% end %>
 </div>

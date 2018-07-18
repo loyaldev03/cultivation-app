@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   if (rightSidebar) {
     $$("[data-toggle-right]").on("click", function(e) {
-      rightSidebar.style.width = "50%";
+      rightSidebar.style.width = "35%";
 
       Rails.ajax({
         url: this.dataset.toggleRight,

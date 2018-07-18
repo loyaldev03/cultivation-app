@@ -1,4 +1,4 @@
-module MaterialsForm
+module PurchasingForm
   class VendorForm
     include ActiveModel::Model
 

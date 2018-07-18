@@ -22,7 +22,6 @@ class Materials::StrainsController < ApplicationController
 
   def update
     form_object = MaterialsForm::StrainForm.new(params[:id])
-    update_params = {id: params[:id]}.merge(record_params)
     if form_object.submit(update_params)
       render 'layouts/hide_sidebar', layouts: nil
     else
@@ -44,5 +43,9 @@ class Materials::StrainsController < ApplicationController
 
   def record_params
     params.require(:record).permit(:name, :desc)
+  end
+
+  def update_params
+    {id: params[:id]}.merge(record_params)
   end
 end

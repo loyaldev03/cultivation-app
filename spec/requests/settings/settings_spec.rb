@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe "Settings Page", :type => :request do
+RSpec.describe "/settings", :type => :request do
   # TODO: add context for non-admin
-  context "Settings" do
+  context "user logged in" do
     before do
       user = create(:user, :admin)
       login_as(user, :scope => :user)
@@ -15,18 +15,25 @@ RSpec.describe "Settings Page", :type => :request do
       expect(response.body).to include("Facilities module")
     end
 
-    it "show link to General Settings" do
+    it "show link to General Settings page" do
       get settings_path
 
       expect(response.status).to eq(200)
       expect(response.body).to include("General Settings")
     end
 
-    it "show link to Materials Settings" do
+    it "show link to Materials page" do
       get settings_path
 
       expect(response.status).to eq(200)
-      expect(response.body).to include("Materials Settings")
+      expect(response.body).to include("Materials")
+    end
+
+    it "show link to Purchasing page" do
+      get settings_path
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include("Purchasing")
     end
   end
 end

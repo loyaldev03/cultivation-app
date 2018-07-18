@@ -14,6 +14,11 @@ Rails.application.routes.draw do
     resources :strains, only: [:index, :edit, :update, :new, :create, :destroy]
   end
 
+  namespace 'purchasing', as: :purchasing do
+    get '/' => 'purchasing#index'
+    resources :vendors, only: [:index, :edit, :update, :new, :create, :destroy]
+  end
+
   namespace 'settings' do
     namespace 'core', as: :core do
       get '/' => 'core#index'

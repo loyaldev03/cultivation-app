@@ -1,14 +1,14 @@
-class Settings::Core::UnitOfMeasuresController < ApplicationController
+class Purchasing::VendorsController < ApplicationController
   def index
-    @list = UnitOfMeasure.all.order_by(name: :asc)
+    @records = QueryVendor.call.result
   end
 
   def new
-    @record = CoreForm::UnitOfMeasureForm.new
+    @record = PurchasingForm::VendorForm.new
   end
 
   def create
-    @record = CoreForm::UnitOfMeasureForm.new
+    @record = PurchasingForm::VendorForm.new
     if @record.submit(record_params)
       render 'layouts/hide_sidebar', layouts: nil
     else
@@ -17,11 +17,11 @@ class Settings::Core::UnitOfMeasuresController < ApplicationController
   end
 
   def edit
-    @record = CoreForm::UnitOfMeasureForm.new(params[:id])
+    @record = PurchasingForm::VendorForm.new(params[:id])
   end
 
   def update
-    form_object = CoreForm::UnitOfMeasureForm.new(params[:id])
+    form_object = PurchasingForm::VendorForm.new(params[:id])
     if form_object.submit(update_params)
       render 'layouts/hide_sidebar', layouts: nil
     else
@@ -30,7 +30,7 @@ class Settings::Core::UnitOfMeasuresController < ApplicationController
   end
 
   def destroy
-    command = DestroyUnitOfMeasure.call(params[:id])
+    command = DestroyVendor.call(params[:id])
     if command.success?
       render 'layouts/hide_sidebar', layouts: nil
     else
@@ -42,7 +42,7 @@ class Settings::Core::UnitOfMeasuresController < ApplicationController
   private
 
   def record_params
-    params.require(:record).permit(:code, :name, :desc)
+    params.require(:record).permit(:name)
   end
 
   def update_params

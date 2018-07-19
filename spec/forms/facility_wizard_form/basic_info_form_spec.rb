@@ -10,57 +10,49 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
     end
   end
 
-  context ".submit" do
-    it "should save facility after submit" do
-      form_object = FacilityWizardForm::BasicInfoForm.new
+  context ".new with id" do
+    subject {
+      Facility.create!(
+        name: Faker::Lorem.word,
+        code: Faker::Number.number(2),
+        company_name: Faker::Company.name,
+        state_license: Faker::Code.asin,
+        site_license: Faker::Code.asin,
+        timezone: Faker::Address.country,
+        address: { 
+          name: "Main",
+          address: Faker::Address.country,
+          city: Faker::Address.city,
+          state: Faker::Address.state,
+          zipcode: Faker::Address.zip,
+          country: Faker::Address.country,
+          main_number: Faker::PhoneNumber.phone_number,
+          mobile_number: Faker::PhoneNumber.cell_phone,
+          fax_number: Faker::PhoneNumber.phone_number,
+          email: Faker::Internet.email,
+        },
+        is_complete: true,
+        is_enabled: false,
+      )
+    }
 
-      params = {
-        id: form_object.id,
-        name: Faker::Name.last_name,
-        code: Faker::Number.number(3),
-        address: Faker::Address.street_address
-      }
-      form_object.submit(params)
+    it "init form_object with existing attributes" do
+      form_object = FacilityWizardForm::BasicInfoForm.new(subject.id.to_s)
 
-      saved_facility = Facility.find(form_object.id)
-      expect(saved_facility).to_not be nil
-      expect(saved_facility.name).to eq form_object.name
-      expect(saved_facility.code).to eq form_object.code
-      expect(saved_facility.address).to eq form_object.address
-    end
-  end
+      expect(form_object).to have_attributes(
+        name: subject[:name],
+        code: subject[:code],
+        company_name: subject[:company_name],
+        state_license: subject[:state_license],
+        site_license: subject[:site_license],
+        timezone: subject[:timezone],
+        is_complete: subject[:is_complete],
+        is_enabled: subject[:is_enabled],
+      )
 
-  context "Continue Setup Facility" do
-    it "should initialize form with existing facility data" do
-      facility = create(:facility,
-                        code: Faker::Number.number(3),
-                        address: Faker::Address.street_address)
-
-      form_object = FacilityWizardForm::BasicInfoForm.new(facility)
-
-      expect(form_object.id).to_not be nil
-      expect(form_object.id).to eq facility.id
-      expect(form_object.code).to eq facility.code
-      expect(form_object.address).to eq facility.address
-    end
-
-    it "should save facility after submit" do
-      facility = create(:facility,
-                        code: Faker::Number.number(3),
-                        address: Faker::Address.street_address)
-      facility.save!
-      form_object = FacilityWizardForm::BasicInfoForm.new(facility)
-
-      params = {
-        id: facility.id,
-        name: Faker::Name.last_name,
-        address: Faker::Address.street_address
-      }
-      form_object.submit(params)
-
-      expect(form_object.id).to eq facility.id
-      expect(form_object.code).to eq facility.code
-      expect(form_object.address).to eq params[:address]
+      expect(form_object.address).to have_attributes(
+        name: "Main",
+      )
     end
   end
 end

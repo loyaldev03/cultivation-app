@@ -4,16 +4,20 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
-      <div class="debug">
-        <div class="wizard-form">
-          <%= yield %>
-        </div>
+      <div class="pv5 ph4 bg-washed-yellow">
+        <div class="bg-white bn br1">
+          <div class="wizard-form">
+            <%= yield %>
+          </div>
+          <hr/>
+          <div class="pv4 ph5 flex flex-row justify-between items-center">
+            <div class="dim flex flex-row items-center pointer">
+              <i class="material-icons gray">keyboard_arrow_left</i>
+              <%= link_to "Back", root_path, class: "db tr ttu tracked link gray fw6 f5" %>
+            </div>
 
-        <hr/>
-
-        <div class="pv4 ph5 flex flex-row justify-between items-center">
-          <%= link_to "Back", root_path, class: "db tr pa2 ttu tracked link dim dark-gray fw6 f5" %>
-          <%= link_to "Continue Later", root_path, class: "db tr pa3 bg-green white bn br2 ttu tracked link dim f5 fw6", data: { turbolinks: "false" } %>
+            <%= link_to "Continue Later", root_path, class: "db tr pa3 bg-green white bn br2 ttu tracked link dim f5 fw6", data: { turbolinks: "false" } %>
+          </div>
         </div>
       </div>
     </div>

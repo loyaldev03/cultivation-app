@@ -1,5 +1,7 @@
-<div class="w-40 center mb4">
-  <h1 class="tc">Facility Setup</h1>
+<h1 class="tl pl3">Facility Setup</h1>
+<hr/>
+
+<div class="w-40 center mv4">
   <%= form_with scope: :facility, url: facility_setup_save_path(facility_id: @wizard_form.id, step: 1), local: true do |f| %>
     <% if @wizard_form.errors.any? %>
       <div id="error_explanation" class="red">

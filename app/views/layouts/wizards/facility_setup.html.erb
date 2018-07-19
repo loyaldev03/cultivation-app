@@ -5,12 +5,12 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="pv5 ph4 bg-washed-yellow">
-        <div class="bg-white bn br1">
+        <div class="bg-white bn br1 flex flex-column">
           <div class="wizard-form">
             <%= yield %>
           </div>
-          <hr/>
-          <div class="pv4 ph5 flex flex-row justify-between items-center">
+
+          <div class="pv4 ph5 flex flex-row justify-between items-center ba bt-1 bb-0 br-0 bl-0 b--black-10">
             <div class="dim flex flex-row items-center pointer">
               <i class="material-icons gray">keyboard_arrow_left</i>
               <%= link_to "Back", root_path, class: "db tr ttu tracked link gray fw6 f5" %>

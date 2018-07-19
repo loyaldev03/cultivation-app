@@ -4,13 +4,13 @@ module Constants
     {code: :mother, name: 'Mother'},
     {code: :seed, name: 'Seed'},
     {code: :veg, name: 'Veg Group'},
-  ]
+  ].freeze
 
   STRAIN_TYPES = [
     {code: :hybrid, name: 'Hybrid'},
     {code: :indica, name: 'Indica'},
     {code: :sativa, name: 'Sativa'},
-  ]
+  ].freeze
 
   ROOM_PURPOSE = [
     {code: :clone, name: 'Clone'},
@@ -24,18 +24,18 @@ module Constants
     {code: :veg, name: 'Veg'},
     {code: :veg1, name: 'Veg 1'},
     {code: :veg2, name: 'Veg 2'},
-  ]
+  ].freeze
 
   SOURCE_TYPES = [
     {code: :clone, name: 'Clone'},
     {code: :mother, name: 'Mother'},
     {code: :seed, name: 'Seed'},
-  ]
+  ].freeze
 
   CLONE_TYPES = [
     {code: :purchased, name: 'Purchased'},
     {code: :mother, name: 'Mother'},
-  ]
+  ].freeze
 
   ACCOUNTING_CATEGORY = [
     {code: :cogs, name: 'Cost of Goods'},
@@ -43,14 +43,14 @@ module Constants
     {code: :raw_materials, name: 'Raw Materials'},
     {code: :wip, name: 'Work in Process'},
     {code: :other, name: 'Other'},
-  ]
+  ].freeze
 
   INVENTORY_TYPES = [
     {code: :harvest_yield, name: "Harvest Yield"},
     {code: :non_sales, name: "Non Sales"},
     {code: :raw_materials, name: "Raw Materials"},
     {code: :sales_product, name: "Sales Product"}
-  ]
+  ].freeze
 
   RAW_MATERIALS = [
     {code: :antibacterial_soap, name: "Antibacterial Soap"},
@@ -70,7 +70,7 @@ module Constants
     {code: :trimming_scissors, name: "Trimming Scissors"},
     {code: :vacuum_sealer, name: "Vacuum Sealer"},
     {code: :other, name: "Other"},
-  ]
+  ].freeze
 
   GROW_LIGHTS = [
     {code: :cmh, name: "CMH"},
@@ -79,7 +79,7 @@ module Constants
     {code: :led, name: "LED"},
     {code: :ms, name: "MS"},
     {code: :t5_fluorescent, name: "T5 Fluorescent"},
-  ]
+  ].freeze
 
   GROW_MEDIUM = [
     {code: :coco_coir, name: "Coco coir"},
@@ -91,14 +91,14 @@ module Constants
     {code: :soil, name: "Soil"},
     {code: :sphagnum, name: "Sphagnum"},
     {code: :vermiculite, name: "Vermiculite"},
-  ]
+  ].freeze
 
   NUTRIENT_TYPE = [
     {code: :blend, name: "Blend"},
     {code: :nitrogen, name: "Nitrogen"},
     {code: :phosphate, name: "Phosphate"},
     {code: :potassium, name: "Potassium"},
-  ]
+  ].freeze
 
   NITROGEN_PRODUCTS = [
     {code: :ammonia_nh3, name: "Ammonia (NH3)"},
@@ -106,23 +106,23 @@ module Constants
     {code: :cottonseed_meal, name: "Cottonseed Meal"},
     {code: :fish_emulsion, name: "Fish Emulsion"},
     {code: :urea, name: "Urea"},
-  ]
+  ].freeze
 
   PHOSPHATE_PRODUCT = [
     {code: :bone_meal, name: "Bone Meal"},
     {code: :rock_phosphate, name: "Rock Phosphate"},
     {code: :slag, name: "Slag"},
     {code: :super_phosphate, name: "Super Phosphate"},
-  ]
+  ].freeze
 
   POTASSIUM_PRODUCT = [
     {code: :seaweed, name: "Seaweed"},
     {code: :wood_ashes, name: "Wood ashes"},
-  ]
+  ].freeze
 
   SUPPLEMENTS = [
-    {code: :amino_acid, name: "Amino Acid,"},
-    {code: :azomite, name: "Azomite,"},
+    {code: :amino_acid, name: "Amino Acid"},
+    {code: :azomite, name: "Azomite"},
     {code: :bat_guano, name: "Bat Guano"},
     {code: :blood_meal, name: "Blood Meal"},
     {code: :carbohydrates, name: "Carbohydrates"},
@@ -139,12 +139,12 @@ module Constants
     {code: :sulfur_based_additives, name: "Sulfur based additives"},
     {code: :vitamin, name: "Vitamin"},
     {code: :worm_castings, name: "Worm Castings"},
-  ]
+  ].freeze
 
   YIELD_WEIGHT_TYPE = [
     {code: :dry, name: "Dry"},
     {code: :wet, name: "Wet"},
-  ]
+  ].freeze
 
   HARVEST_YIELD = [
     {code: :flower, name: "Flower"},
@@ -153,7 +153,7 @@ module Constants
     {code: :waste, name: "Waste"},
     {code: :wet_plant, name: "Wet Plant"},
     {code: :other, name: "Other"},
-  ]
+  ].freeze
 
   SALES_PRODUCT_TYPE = [
     {code: :blunt, name: "Blunt"},
@@ -170,7 +170,7 @@ module Constants
     {code: :shakes_trim, name: "Shakes/Trim"},
     {code: :wax, name: "Wax"},
     {code: :other, name: "Other"},
-  ]
+  ].freeze
 
   SALES_PRODUCT_CATEGORY = [
     {code: :high_cbd, name: "High CBD"},
@@ -180,18 +180,19 @@ module Constants
     {code: :vapes, name: "Vapes"},
     {code: :sativa, name: "Sativa"},
     {code: :other, name: "Other"},
-  ]
+  ].freeze
 
 
   NON_SALES_TYPES = [
     {code: :a, name: "A"},
     {code: :b, name: "B"},
     {code: :c, name: "C"},
+    {code: :d, name: "D"},
     {code: :other, name: "Other"},
-  ]
+  ].freeze
 
   YES_NO = [
     {code: :yes, name: "Yes"},
     {code: :no, name: "No"},
-  ]
+  ].freeze
 end

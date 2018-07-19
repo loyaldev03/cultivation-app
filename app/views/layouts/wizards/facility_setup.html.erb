@@ -4,38 +4,8 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
-      <div class="h-100 pt3">
-        <div class="pa3">
-          <div class="pt4 pb3 tc">
-            <div class="pa2 dib bg-near-white f5 w4 bg-green white">
-              Step 1:
-              <br />
-              <small>Basic Info</small>
-            </div>
-            <div class="pa2 dib bg-near-white f5 w4 <%= "white bg-green" if @current_step >= 2 %>">
-              Step 2:
-              <br />
-              <small>Number of Rooms</small>
-            </div>
-            <div class="pa2 dib bg-near-white f5 w4 <%= "white bg-green" if @current_step >= 3 %>">
-              Step 3:
-              <br />
-              <small>Room</small>
-            </div>
-            <div class="pa2 dib bg-near-white f5 w4 <%= "white bg-green" if @current_step >= 4 %>">
-              Step 4:
-              <br />
-              <small>Section</small>
-            </div>
-            <div class="pa2 dib bg-near-white f5 w4 <%= "white bg-green" if @current_step >= 5 %>">
-              Step 5:
-              <br />
-              <small>Rows &amp; Shelves</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="pt3 wizard-form">
+      <div class="debug">
+        <div class="wizard-form">
           <%= yield %>
         </div>
 
@@ -47,7 +17,9 @@
         </div>
       </div>
     </div>
+
     <%= render "layouts/before_body_end" %>
+
     <script>
       document.addEventListener('turbolinks:load', function() {
         TurbolinksAnimate.init({ animation: 'fadeinright', element: $_('.wizard-form') });

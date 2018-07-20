@@ -1,88 +1,35 @@
-<div class="measure-wide center">
-  <h1>Step 3 - Setup Room (<%= @wizard_form.current_room_number %> of <%= @wizard_form.facility_room_count %>)</h1>
-  <div class="flex flex-row">
-    <div class="pa2">
-      <ul class="list pa2 w4 flex flex-wrap justify-around">
-        <% @wizard_form.facility_room_count.times { |i| %>
-          <li class="hover-bg-black-20 pointer ba b--black-10 h-100 w-100 mb3 h2 tc flex justify-center items-center" >
-            <%= link_to @wizard_form.name_of_room(i),
-              facility_setup_save_path(
-                facility_id: @wizard_form.facility_id,
-                room_id: @wizard_form.facility_rooms[i].id,
-                step: @current_step),
-                class: "link pa2 w-100 db #{'bg-black-30 b--black-80' if @wizard_form.room_id == @wizard_form.facility_rooms[i].id}"
-            %>
-          </li>
-        <% } %>
-      </ul>
-    </div>
-    <span class="db pa2 mr2 bl b--black-10"></span>
-    <div class="db measure w-100">
-      <%= form_with(scope: :facility,
-                    url: facility_setup_save_path(step: @current_step, facility_id: @wizard_form.facility_id, room_id: @wizard_form.room_id),
-                    method: :post,
-                    local: true
-                    ) do |f| %>
-        <% if @wizard_form.errors.any? %>
-          <div id="error_explanation" class="red">
-            <h3><%= pluralize(@wizard_form.errors.count, "error") %> found:</h2>
-            <ul>
-            <% @wizard_form.errors.full_messages.each do |message| %>
-              <li><%= message %></li>
-            <% end %>
-            </ul>
-          </div>
-        <% end %>
+<div class="ph5 pv3 mt2 ba bt-0 bb-1 br-0 bl-0 b--black-10">
+  <h2 class="tl pa0 ma0 fw4 dark-gray">Room Setup</h2>
+</div>
 
-        <div class="mt3 mb2">
-          <%= f.label :room_name, "Room Name", class: "f6 b db mb1" %>
-          <%= f.text_field :room_name, value: @wizard_form.room_name, class: "ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
+<div class="pt4 ph5">
+  <div class="fl w-70 flex flex-column">
+    <h2 class="f2 tl pa0 ma0 fw4 dark-gray">Room Setup</h2>
+    <p class="mt2 f5 fw5 dark-gray">
+      Awesome, you've just setup your facility! Room details are next...
+    </p>
 
-        <div class="mt3 mb2">
-          <%= f.label :room_code, "Room ID", class: "f6 b db mb1" %>
-          <%= f.text_field :room_code, value: @wizard_form.room_code, class: "ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="mt3 mb2">
-          <%= f.label :room_desc, "Description", class: "f6 b db mb1" %>
-          <%= f.text_area :room_desc, value: @wizard_form.room_desc, class: "ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="modal">
-          <div class="modal__content w-100">
-            <div class="modal__dialog measure-narrow bg-white br1 ml-auto mr-auto mw6">
-              <h3 class="mt0 pv3 pl3 bg-black-60 white br1 br--top">Create sections for this room?</h3>
-              <div class="ph3">
-                <p class="db">
-                  Will this room be divided into multiple sections?
-                </p>
-                <span>
-                  <%= f.radio_button(:room_have_sections, true, class: "have-section", checked: @wizard_form.room_have_sections == true) %>
-                  <%= f.label :room_have_sections_true, "Yes" %>
-                </span>
-                <span class="ml2">
-                  <%= f.radio_button(:room_have_sections, false, class: "have-section", checked: @wizard_form.room_have_sections == false) %>
-                  <%= f.label :room_have_sections_false, "Only 1 section" %>
-                </span>
-                <div class="have-section-question mt3" style="display: block">
-                  <%= f.label :room_section_count, "How many sections in this room?", class: "db mb1" %>
-                  <%= f.number_field :room_section_count, class: "have-section-answer ba b--black-20 pa2 mb2 db", required: @wizard_form.room_have_sections %>
-                </div>
-              </div>
-              <div class="pa3 flex justify-end">
-                <%= f.submit "Next", class: "b ph3 pv2 ba b--black bg-transparent grow pointer f6" %>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt3">
-          <input type="button" value="Save & Continue" class="continue-button b ph3 pv2 ba b--black bg-transparent grow pointer f6" />
-        </div>
-      <% end %>
+    <div class="flex flex-row">
+      <div class="pa2">
+        <ul class="list pa2 w4 flex flex-wrap justify-around">
+          <% @wizard_form.facility_room_count.times { |i| %>
+            <li class="hover-bg-black-20 pointer ba b--black-10 h-100 w-100 mb3 h2 tc flex justify-center items-center" >
+              <%= link_to @wizard_form.name_of_room(i),
+                facility_setup_save_path(
+                  facility_id: @wizard_form.facility_id,
+                  room_id: @wizard_form.facility_rooms[i].id,
+                  step: @current_step),
+                  class: "link pa2 w-100 db #{'bg-black-30 b--black-80' if @wizard_form.room_id == @wizard_form.facility_rooms[i].id}"
+              %>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+      <span class="db pa2 mr2 bl b--black-10"></span>
     </div>
   </div>
+
+  <div class="fl w-30"></div>
 </div>
 
 <% content_for :before_body_end do %>

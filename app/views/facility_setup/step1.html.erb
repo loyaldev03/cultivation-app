@@ -1,96 +1,123 @@
-<div class="w-40 center mb4">
-  <h1 class="tc">Facility Setup</h1>
-  <%= form_with scope: :facility, url: facility_setup_save_path(facility_id: @wizard_form.id, step: 1), local: true do |f| %>
-    <% if @wizard_form.errors.any? %>
-      <div id="error_explanation" class="red">
-        <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
+<div class="ph5 pv3 mt2 ba bt-0 bb-1 br-0 bl-0 b--black-10">
+  <h2 class="tl pa0 ma0 fw4 dark-gray">Facility Setup</h2>
+</div>
 
-        <ul>
-        <% @wizard_form.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-        </ul>
+<div class="pt4 ph5">
+  <div class="fl w-70 flex flex-column">
+    <h2 class="f2 tl pa0 ma0 fw4 dark-gray">Facility Setup</h2>
+    <p class="mt2 f5 fw5 dark-gray">
+      Let's get a few fetails of your facility to get things rolling...
+    </p>
+
+    <%= form_with scope: :facility, url: facility_setup_save_path(facility_id: @wizard_form.id, step: 1), local: true do |f| %>
+      <% if @wizard_form.errors.any? %>
+        <div id="error_explanation" class="red">
+          <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
+
+          <ul>
+          <% @wizard_form.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="flex flex-column mt3">
+        <div class="mv4 flex flex-row">
+          <div class="w-20">
+            <span class="f6 fw6 mid-gray">Facility Details</span>
+          </div>
+
+          <div class="fl w-80 flex-column">
+            <div class="flex flex-row mb3">
+              <div class="w-50 mr4">
+                <%= f.label "Company name", class: "f6 fw5 db mb1 gray ttc" %>
+                <%= f.text_field :name, placeholder: "Company's name", class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+              </div>
+
+              <div class="w-20">
+                <%= f.label "State License #", class: "f6 fw5 db mb1 gray ttc" %>
+                <%= f.text_field :code, placeholder: "S0001", value: @wizard_form.code, class: "gray input-reset br2 outline-0 ba b--black-20 pa2 db w-100" %>
+              </div>
+            </div>
+
+            <div class="flex flex-row">
+              <div class="mr4 w-50">
+                <%= f.label "Facility name", class: "f6 fw5 db mb1 gray ttc" %>
+                <%= f.text_field :name, placeholder: "Facility's name", class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+              </div>
+
+              <div class="w-20">
+                <%= f.label "Facility code", class: "f6 fw5 db mb1 gray ttc" %>
+                <%= f.text_field :code, placeholder: "S0001", value: @wizard_form.code, class: "gray input-reset br2 outline-0 ba b--black-20 pa2 db w-100" %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mv4 flex flex-row">
+          <div class="w-20">
+            <span class="f6 fw6 mid-gray">Location Details</span>
+          </div>
+
+          <div class="fl w-80 flex flex-column">
+            <div class="flex flex-row">
+              <div class="w-20 mr4">
+                <%= f.label "Location license #", class: "f6 fw5 db mb1 gray ttc" %>
+                <%= f.text_area :address, placeholder: "F0001", rows: 1,class: "ttu gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+              </div>
+
+              <div class="w-50">
+                <%= f.label "Address", class: "f6 fw5 db mb1 gray" %>
+                <%= f.text_field :city, placeholder: "1011, 11th ave ne", class: "ttu gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
+              </div>
+            </div>
+
+            <div class="flex flex-row">
+              <div class="w-20 mr4">
+                <%= f.label "Zipcode", class: "f6 fw5 db mb1 gray" %>
+                <%= f.text_field :zipcode, placeholder: "123000", class: "gray ba b--black-20 br2 outline-0 br2 outline-0 pa2 db w-100" %>
+              </div>
+
+              <div class="w-50 flex flex-row">
+                <div class="w-50 mr4">
+                  <%= f.label :state, class: "f6 fw5 db mb1 gray" %>
+                  <%= f.text_field :state, placeholder: "Carlifornia", class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                </div>
+
+                <div class="w-50">
+                  <%= f.label :country, class: "f6 fw5 db mb1 gray" %>
+                  <%= f.text_field :country, placeholder: "United States of America" , class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb4 flex flex-row">
+          <div class="w-20">
+            <span class="f6 fw6 mid-gray">Contact Details</span>
+          </div>
+
+          <div class="fl w-70 flex flex-row">
+            <div class="mr4 w-40">
+              <%= f.label "Phone Number", class: "f6 fw5 db mb1 gray ttc" %>
+              <%= f.text_field :phone, placeholder: "1234567", class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+            </div>
+
+            <div class="w-40">
+              <%= f.label "Fax Number", class: "f6 fw5 db mb1 gray ttc" %>
+              <%= f.text_field :fax, placeholder: "011 1234567" ,class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb4">
+          <%= f.submit "Save & Continue", class: "b ph3 pv2 ba b--black bg-transparent grow pointer f6" %>
+        </div>
       </div>
     <% end %>
+  </div>
 
-    <div class="mt4 mb2">
-      <p class="mt0 f5 fw6 dark-gray">
-        1. Let's get a few fetails of your facility to get things rolling...
-      </p>
-
-      <div class="flex flex-row">
-        <div class="mr4 w-50">
-          <%= f.label "Facility name", class: "f6 fw5 db mb1 gray" %>
-          <%= f.text_field :name, class: "gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="w-20 mr4">
-          <%= f.label "Facility code", class: "f6 fw5 db mb1 gray" %>
-          <%= f.text_field :code, value: @wizard_form.code, class: "gray input-reset br2 outline-0 ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="w-20">
-          <%= f.label "Number of Rooms", class: "f6 fw5 db mb1 gray" %>
-          <%= f.number_field :room_count, class: "input-reset gray br2 ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-      </div>
-    </div>
-
-    <div class="mt3">
-      <p class="mt0 f5 fw6 dark-gray">
-        2. What is the location of your facility?
-      </p>
-
-      <div class="flex flex-row">
-        <div class="mr4 w-90">
-          <%= f.label :address, class: "f6 fw5 db mb1 gray" %>
-          <%= f.text_area :address, rows: 1,class: "gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="">
-          <%= f.label :zipcode, class: "f6 fw5 db mb1 gray" %>
-          <%= f.text_field :zipcode, class: "gray ba b--black-20 br2 outline-0 br2 outline-0 pa2 mb2 db w-100" %>
-        </div>
-      </div>
-
-      <div class="w-100">
-        <%= f.label :city, class: "f6 fw5 db mb1 gray" %>
-        <%= f.text_field :city, class: "gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
-      </div>
-
-      <div class="flex flex-row">
-        <div class="mr4 w-50">
-          <%= f.label :state, class: "f6 fw5 db mb1 gray" %>
-          <%= f.text_field :state, class: "gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="w-50">
-          <%= f.label :country, class: "f6 fw5 db mb1 gray" %>
-          <%= f.text_field :country, class: "gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
-        </div>
-      </div>
-    </div>
-
-    <div class="mt3">
-      <p class="mt0 f5 fw6 dark-gray">
-        3. How about contact details?
-      </p>
-
-      <div class="flex flex-row">
-        <div class="mr4 w-50">
-          <%= f.label "Phone Number", class: "f6 fw5 db mb1 gray" %>
-          <%= f.text_field :phone, class: "gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="w-50">
-          <%= f.label "Fax Number", class: "f6 fw5 db mb1 gray" %>
-          <%= f.text_field :fax, class: "gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
-        </div>
-      </div>
-    </div>
-
-    <div class="mt3">
-      <%= f.submit "Save & Continue", class: "b ph3 pv2 ba b--black bg-transparent grow pointer f6" %>
-    </div>
-  <% end %>
+  <div class="fl w-30"></div>
 </div>

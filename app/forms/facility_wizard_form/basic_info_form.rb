@@ -2,22 +2,24 @@ module FacilityWizardForm
   class BasicInfoForm
     include ActiveModel::Model
 
-    attr_accessor :id,
-                  :name,
-                  :code,
-                  :company_name,
-                  :state_license,
-                  :site_license,
-                  :timezone,
-                  :is_complete,
-                  :is_enabled,
-                  :address_address,
-                  :address_city,
-                  :address_state,
-                  :address_zipcode,
-                  :address_country,
-                  :address_main_number,
-                  :address_fax_number
+    ATTRS = [:id,
+             :name,
+             :code,
+             :company_name,
+             :state_license,
+             :site_license,
+             :timezone,
+             :is_complete,
+             :is_enabled,
+             :address_address,
+             :address_city,
+             :address_state,
+             :address_zipcode,
+             :address_country,
+             :address_main_number,
+             :address_fax_number]
+
+    attr_accessor(*ATTRS)
 
     validates :name, presence: true
     validates_with UniqFacilityCodeValidator

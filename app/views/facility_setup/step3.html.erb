@@ -2,31 +2,43 @@
   <h2 class="tl pa0 ma0 fw4 dark-gray">Room Setup</h2>
 </div>
 
-<div class="pt4 ph5">
+<div class="pt4 ph5 debug">
   <div class="fl w-70 flex flex-column">
     <h2 class="f2 tl pa0 ma0 fw4 dark-gray">Room Setup</h2>
     <p class="mt2 f5 fw5 dark-gray">
       Awesome, you've just setup your facility! Room details are next...
     </p>
 
-    <div class="flex flex-row">
-      <div class="pa2">
-        <ul class="list pa2 w4 flex flex-wrap justify-around">
+    <div class="mt3 flex flex-column">
+        <div class="mv4 flex flex-row">
+          <div class="w-20">
+            <span class="f6 fw6 mid-gray">Room Details</span>
+          </div>
+
+          <div class="w-80">
+            <span class="f6 fw5 db mb1 gray">How many number of rooms in total?</span>
+            <div class="input-reset gray br2 ba b--black-20 pa2 db w-30"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ba">
+        <div class="flex flex-row items-center pa3">
           <% @wizard_form.facility_room_count.times { |i| %>
-            <li class="hover-bg-black-20 pointer ba b--black-10 h-100 w-100 mb3 h2 tc flex justify-center items-center" >
-              <%= link_to @wizard_form.name_of_room(i),
+            <div class="ba b--black-10 br2 h2 tc flex justify-center items-center">
+              <%= link_to"hellos", @wizard_form.name_of_room(i),
                 facility_setup_save_path(
                   facility_id: @wizard_form.facility_id,
                   room_id: @wizard_form.facility_rooms[i].id,
                   step: @current_step),
                   class: "link pa2 w-100 db #{'bg-black-30 b--black-80' if @wizard_form.room_id == @wizard_form.facility_rooms[i].id}"
               %>
-            </li>
+            </div>
           <% } %>
-        </ul>
+        </div>
       </div>
       <span class="db pa2 mr2 bl b--black-10"></span>
-    </div>
+    
   </div>
 
   <div class="fl w-30"></div>

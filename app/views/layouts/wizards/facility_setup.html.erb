@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
   <%= render "layouts/head", include_turbolink: true %>
-  <body style="height: 125%">
+  <body style="height: 1024px">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="pt5 ph4 bg-light-green h-100">
-        <div class="bg-white bn br1 flex flex-column">
+        <div class="bg-white bn br1 flex flex-column justify-between" style="height: 867px">
           <div class="wizard-form">
             <%= yield %>
           </div>
@@ -16,7 +16,10 @@
               <%= link_to "Back", root_path, class: "db tr ttu tracked link gray fw6 f5" %>
             </div>
 
-            <%= link_to "Continue Later", root_path, class: "db tr pa3 bg-green white bn br2 ttu tracked link dim f5 fw6", data: { turbolinks: "false" } %>
+            <div class="flex flex-row items-center">
+              <%= link_to "save as draft", root_path, class: "db pa3 tr black ttu tracked link dim f5 fw7" %>
+              <%= link_to "Continue Later", root_path, class: "db tr pa3 bg-green white bn br2 ttu tracked link dim f5 fw6", data: { turbolinks: "false" } %>
+            </div>
           </div>
         </div>
       </div>

@@ -19,7 +19,7 @@ RSpec.describe PurchasingForm::VendorForm, type: :form do
       )
     }
 
-    it "init form_object with existing attributes" do
+    it "init form_object from saved record" do
       form_object = PurchasingForm::VendorForm.new(record.id.to_s)
 
       expect(form_object.nil?).to be false

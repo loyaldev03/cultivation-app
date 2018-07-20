@@ -2,26 +2,40 @@ module FacilityWizardForm
   class BasicInfoForm
     include ActiveModel::Model
 
-    attr_accessor :id, :name, :code, :address, :zipcode, :city, :state, :country, :phone, :fax
+    ATTRS = [:id,
+             :name,
+             :code,
+             :company_name,
+             :state_license,
+             :site_license,
+             :timezone,
+             :is_complete,
+             :is_enabled,
+             :address_address,
+             :address_city,
+             :address_state,
+             :address_zipcode,
+             :address_country,
+             :address_main_number,
+             :address_fax_number]
+
+    attr_accessor(*ATTRS)
 
     validates :name, presence: true
-    validates :code, presence: true
     validates_with UniqFacilityCodeValidator
 
-    def initialize(facility = nil)
-      if facility.nil?
-        # TODO: Move Facility.last to else where
-        self.id = BSON::ObjectId.new
-        self.code = NextFacilityCode.call(last_code: Facility.last&.code, code_type: :facility).result
-      else
-        map_attributes(facility)
-      end
+    def initialize(record_id = nil)
+      set_record(record_id)
     end
 
+    # Note: params should include :id for update operation
     def submit(params)
-      map_attributes(params)
+      map_attrs_from_request(params)
       if valid?
-        @facility = SaveFacility.call(params).result
+        save_cmd = SaveFacility.call(self)
+        if save_cmd.success?
+          map_attrs_from_model(save_cmd.result) if save_cmd.success?
+        end
       else
         false
       end
@@ -29,17 +43,62 @@ module FacilityWizardForm
 
     private
 
-    def map_attributes(facility)
-      self.id = facility[:id] if facility[:id]
-      self.name = facility[:name] if facility[:name]
-      self.code = facility[:code] if facility[:code]
-      self.address = facility[:address] if facility[:address]
-      self.zipcode = facility[:zipcode] if facility[:zipcode]
-      self.city = facility[:city] if facility[:city]
-      self.state = facility[:state] if facility[:state]
-      self.country = facility[:country] if facility[:country]
-      self.phone = facility[:phone] if facility[:phone]
-      self.fax = facility[:fax] if facility[:fax]
+    def map_attrs_from_request(record)
+      self.id = record[:id]
+      self.name = record[:name]
+      self.code = record[:code]
+      self.company_name = record[:company_name]
+      self.state_license = record[:state_license]
+      self.site_license = record[:site_license]
+      self.timezone = record[:timezone]
+      self.is_complete = record[:is_complete]
+      self.is_enabled = record[:is_enabled]
+      self.address_address = record[:address_address]
+      self.address_city = record[:address_city]
+      self.address_state = record[:address_state]
+      self.address_zipcode = record[:address_zipcode]
+      self.address_country = record[:address_country]
+      self.address_main_number = record[:address_main_number]
+      self.address_fax_number = record[:address_fax_number]
+    end
+
+    def map_attrs_from_model(record)
+      self.id = record.id
+      self.name = record.name
+      self.code = record.code
+      self.company_name = record.company_name
+      self.state_license = record.state_license
+      self.site_license = record.site_license
+      self.timezone = record.timezone
+      self.is_complete = record.is_complete
+      self.is_enabled = record.is_enabled
+      if record.address
+        self.address_address = record.address.address
+        self.address_city = record.address.city
+        self.address_state = record.address.state
+        self.address_zipcode = record.address.zipcode
+        self.address_country = record.address.country
+        self.address_main_number = record.address.main_number
+        self.address_fax_number = record.address.fax_number
+      end
+    end
+
+    def set_record(record_id)
+      if record_id.nil?
+        self.id = BSON::ObjectId.new
+        self.code = generate_code
+      else
+        find_cmd = FindFacility.call({id: record_id})
+        if find_cmd.success?
+          map_attrs_from_model(find_cmd.result)
+        end
+      end
+    end
+
+    def generate_code
+      last_record = FindLastFacility.call.result
+      cmd = NextFacilityCode.call(:facility, last_record&.code)
+      cmd.result
     end
   end
 end

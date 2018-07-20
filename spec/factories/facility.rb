@@ -1,5 +1,19 @@
 FactoryBot.define do
   factory :facility do
+    trait :filled do
+      name Faker::Lorem.word
+      code Faker::Number.number(2)
+      company_name Faker::Company.name
+      state_license Faker::Code.asin
+      site_license Faker::Address.country
+      timezone Faker::Address.country
+      is_complete true
+      is_enabled false
+      address {
+        build(:address)
+      }
+    end
+
     trait :after_step_1 do
       name 'Facility 1'
       code 'Fa1'

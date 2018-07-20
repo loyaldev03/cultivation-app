@@ -10,35 +10,54 @@
     </p>
 
     <div class="mt3 flex flex-column">
-        <div class="mv4 flex flex-row">
-          <div class="w-20">
-            <span class="f6 fw6 mid-gray">Room Details</span>
-          </div>
+      <div class="mv4 flex flex-row">
+        <div class="w-20">
+          <span class="f6 fw6 mid-gray">Room Details</span>
+        </div>
 
-          <div class="w-80">
-            <span class="f6 fw5 db mb1 gray">How many number of rooms in total?</span>
-            <div class="input-reset gray br2 ba b--black-20 pa2 db w-30"></div>
-          </div>
+        <div class="w-80">
+          <span class="f6 fw5 db mb1 gray">How many number of rooms in total?</span>
+          <div class="input-reset gray br2 ba b--black-20 pa2 db w-30"></div>    
         </div>
       </div>
 
-      <div class="ba">
-        <div class="flex flex-row items-center pa3">
-          <% @wizard_form.facility_room_count.times { |i| %>
-            <div class="ba b--black-10 br2 h2 tc flex justify-center items-center">
-              <%= link_to"hellos", @wizard_form.name_of_room(i),
-                facility_setup_save_path(
-                  facility_id: @wizard_form.facility_id,
-                  room_id: @wizard_form.facility_rooms[i].id,
-                  step: @current_step),
-                  class: "link pa2 w-100 db #{'bg-black-30 b--black-80' if @wizard_form.room_id == @wizard_form.facility_rooms[i].id}"
-              %>
-            </div>
-          <% } %>
+      <div class="w-100 flex flex-row">
+        <div class="w-20 fl"></div>
+          <div class="w-80 flex flex-row items-center">
+            <% @wizard_form.facility_room_count.times { |i| %>
+              <div
+                style="height: 254.7px; width: 168.8px;"
+                class="mr4 ba b--black-10 br2 tc flex flex-column justify-between items-center"
+              >
+                <div class="w-100 flex pa2 flex flex-column">
+                  <div class="w-100 flex items-center justify-between mb3">
+                    <i class="material-icons gray f6 dim pointer">delete</i>
+                  </div>
+
+                  <div class="w-100 flex flex-column">
+                    <img
+                      src="http://tachyons.io/img/logo.jpg"
+                      class="br-100 ba h3 w3 dib center mb2"
+                    >
+                    <span class="mid-gray f6 fw6">Room id</span>
+                    <span class="gray f7">Capacity: N/A</span>
+                  </div>
+                </div>
+                
+                <div class="w-100 dim">
+                  <%= link_to @wizard_form.name_of_room(i),
+                    facility_setup_save_path(
+                    facility_id: @wizard_form.facility_id,
+                    room_id: @wizard_form.facility_rooms[i].id,
+                    step: @current_step),
+                    class: "link flex f6 fw6 black justify-center w-100 pv2 bg-light-green #{'' if @wizard_form.room_id == @wizard_form.facility_rooms[i].id}"
+                  %>
+                </div>
+              </div>
+            <% } %>
+          </div>
         </div>
       </div>
-      <span class="db pa2 mr2 bl b--black-10"></span>
-    
   </div>
 
   <div class="fl w-30"></div>

@@ -1,53 +1,35 @@
 <!DOCTYPE html>
 <html>
   <%= render "layouts/head", include_turbolink: true %>
-  <body>
+  <body style="height: 1024px">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
-      <div class="h-100 pt3">
-        <div class="pa3">
-          <div class="pt4 pb3 tc">
-            <div class="pa2 dib bg-near-white f5 w4 bg-green white">
-              Step 1:
-              <br />
-              <small>Basic Info</small>
+      <div class="pt5 ph4 bg-light-green h-100">
+        <div class="bg-white bn br1 flex flex-column justify-between" style="height: 867px">
+          <div class="wizard-form">
+            <%= yield %>
+          </div>
+          <div class="pv4 ph5 flex flex-row justify-between items-center ba bt-1 bb-0 br-0 bl-0 b--black-10">
+            <div class="dim flex flex-row items-center pointer">
+              <i class="material-icons gray">keyboard_arrow_left</i>
+              <%= link_to "Back", root_path, class: "db tr ttu tracked link gray fw6 f5" %>
             </div>
-            <div class="pa2 dib bg-near-white f5 w4 <%= "white bg-green" if @current_step >= 2 %>">
-              Step 2:
-              <br />
-              <small>Number of Rooms</small>
-            </div>
-            <div class="pa2 dib bg-near-white f5 w4 <%= "white bg-green" if @current_step >= 3 %>">
-              Step 3:
-              <br />
-              <small>Room</small>
-            </div>
-            <div class="pa2 dib bg-near-white f5 w4 <%= "white bg-green" if @current_step >= 4 %>">
-              Step 4:
-              <br />
-              <small>Section</small>
-            </div>
-            <div class="pa2 dib bg-near-white f5 w4 <%= "white bg-green" if @current_step >= 5 %>">
-              Step 5:
-              <br />
-              <small>Rows &amp; Shelves</small>
+
+            <div class="flex flex-row items-center">
+              <%= link_to "Save As Draft", root_path, class: "db pa3 tr black ttu tracked link dim f5 fw7" %>
+              <input
+                type="submit"
+                form="wizard-form"
+                value="Save &amp; Continue"
+                class="db tr pa3 bg-green white bn br2 ttu tracked link dim f5 fw6" />
             </div>
           </div>
         </div>
-
-        <div class="pt3 wizard-form">
-          <%= yield %>
-        </div>
-
-        <hr/>
-
-        <div class="pv4 ph5 flex flex-row justify-between items-center">
-          <%= link_to "Back", root_path, class: "db tr pa2 ttu tracked link dim dark-gray fw6 f5" %>
-          <%= link_to "Continue Later", root_path, class: "db tr pa3 bg-green white bn br2 ttu tracked link dim f5 fw6", data: { turbolinks: "false" } %>
-        </div>
       </div>
     </div>
+
     <%= render "layouts/before_body_end" %>
+
     <script>
       document.addEventListener('turbolinks:load', function() {
         TurbolinksAnimate.init({ animation: 'fadeinright', element: $_('.wizard-form') });

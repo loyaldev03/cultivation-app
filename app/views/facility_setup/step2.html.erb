@@ -1,43 +1,44 @@
-<div class="w-40 center">
-  <h1 class="tc">Room Setup</h1>
-  <%= form_with(scope: :facility, url: facility_setup_save_path(step: @current_step, facility_id: @wizard_form.id), method: :post, local: true) do |f| %>
-    <% if @wizard_form.errors.any? %>
-      <div id="error_explanation" class="red">
-        <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
-        <ul>
-        <% @wizard_form.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-        </ul>
+<div class="ph5 pv3 mt2 ba bt-0 bb-1 br-0 bl-0 b--black-10">
+  <h2 class="tl pa0 ma0 fw4 dark-gray">Room Setup</h2>
+</div>
+
+<div class="pt4 ph5">
+  <div class="fl w-70 flex flex-column">
+    <h2 class="f2 tl pa0 ma0 fw4 dark-gray">Room Setup</h2>
+    <p class="mt2 f5 fw5 dark-gray">
+      Awesome, you've just setup your facility! Room details are next...
+    </p>
+
+    <%= form_with(scope: :facility, url: facility_setup_save_path(step: @current_step, facility_id: @wizard_form.id), method: :post, local: true) do |f| %>
+      <% if @wizard_form.errors.any? %>
+        <div id="error_explanation" class="red">
+          <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
+          <ul>
+          <% @wizard_form.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mt3 flex flex-column">
+        <div class="mv4 flex flex-row">
+          <div class="w-20">
+            <span class="f6 fw6 mid-gray">Room Details</span>
+          </div>
+
+          <div class="w-80">
+            <%= f.label "How many number of rooms in total?", class: "f6 fw5 db mb1 gray" %>
+            <%= f.number_field :room_count, class: "input-reset gray br2 ba b--black-20 pa2 db w-30" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="mv4">
+        <%= f.submit "Save & Continue", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
       </div>
     <% end %>
+  </div>
 
-    <div class="mt4">
-      <p class="mt0 f5 fw6 dark-gray">
-        1. Let's start by setting up the first room in your facility.
-      </p>
-
-      <div class="flex flex-row">
-        <div class="mr4 w-50">
-          <%= f.label "Room name", class: "f6 fw5 db mb1 gray" %>
-          <%= f.text_field :name, class: "gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
-        </div>
-
-        <div class="w-20">
-          <%= f.label "Room code", class: "f6 fw5 db mb1 gray" %>
-        <!--  <%= f.text_field :name, class: "gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>  -->
-          <%= f.number_field :room_count, class: "input-reset gray br2 ba b--black-20 pa2 mb2 db w-100" %>
-        </div>
-      </div>
-
-      <div class="w-90">
-          <%= f.label "Room Description", class: "f6 fw5 db mb1 gray" %>
-          <%= f.text_area :address, rows: 4, class: "gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
-        </div>
-    </div>
-
-    <div class="mt3">
-      <%= f.submit "Save & Continue", class: "b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" %>
-    </div>
-  <% end %>
+  <div class="fl w-30"></div>
 </div>

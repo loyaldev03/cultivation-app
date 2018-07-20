@@ -47,14 +47,13 @@ module FacilityWizardForm
       self.timezone = record[:timezone]
       self.is_complete = record[:is_complete]
       self.is_enabled = record[:is_enabled]
-      self.address = record[:address]
       self.address_address = record[:address_address]
       self.address_city = record[:address_city]
       self.address_state = record[:address_state]
       self.address_zipcode = record[:address_zipcode]
       self.address_country = record[:address_country]
       self.address_main_number = record[:address_main_number]
-      self.address_fax_numbe = record[:address_fax_numbe]
+      self.address_fax_number = record[:address_fax_number]
     end
 
     def set_record(record_id)
@@ -62,8 +61,10 @@ module FacilityWizardForm
         self.id = BSON::ObjectId.new
         self.code = generate_code
       else
-        saved = FindFacility.call({id: record_id}).result
-        map_attributes(saved) if saved
+        find_cmd = FindFacility.call({id: record_id})
+        if find_cmd.success?
+          map_attributes(find_cmd.result)
+        end
       end
     end
 

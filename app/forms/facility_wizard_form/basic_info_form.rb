@@ -26,10 +26,14 @@ module FacilityWizardForm
       set_record(record_id)
     end
 
+    # Note: params should include :id for update operation
     def submit(params)
-      map_attributes(params)
+      map_attrs_from_request(params)
       if valid?
-        @facility = SaveFacility.call(self).result
+        save_cmd = SaveFacility.call(self)
+        if save_cmd.success?
+          map_attrs_from_model(save_cmd.result) if save_cmd.success?
+        end
       else
         false
       end
@@ -37,7 +41,7 @@ module FacilityWizardForm
 
     private
 
-    def map_attributes(record)
+    def map_attrs_from_request(record)
       self.id = record[:id]
       self.name = record[:name]
       self.code = record[:code]
@@ -56,6 +60,27 @@ module FacilityWizardForm
       self.address_fax_number = record[:address_fax_number]
     end
 
+    def map_attrs_from_model(record)
+      self.id = record.id
+      self.name = record.name
+      self.code = record.code
+      self.company_name = record.company_name
+      self.state_license = record.state_license
+      self.site_license = record.site_license
+      self.timezone = record.timezone
+      self.is_complete = record.is_complete
+      self.is_enabled = record.is_enabled
+      if record.address
+        self.address_address = record.address.address
+        self.address_city = record.address.city
+        self.address_state = record.address.state
+        self.address_zipcode = record.address.zipcode
+        self.address_country = record.address.country
+        self.address_main_number = record.address.main_number
+        self.address_fax_number = record.address.fax_number
+      end
+    end
+
     def set_record(record_id)
       if record_id.nil?
         self.id = BSON::ObjectId.new
@@ -63,7 +88,7 @@ module FacilityWizardForm
       else
         find_cmd = FindFacility.call({id: record_id})
         if find_cmd.success?
-          map_attributes(find_cmd.result)
+          map_attrs_from_model(find_cmd.result)
         end
       end
     end

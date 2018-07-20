@@ -17,8 +17,6 @@ class SaveFacility
     map_attributes(record, form_object)
     record.save!
     record
-  rescue
-    errors.add(:error, $!.message)
   end
 
   def map_attributes(record, form_object)

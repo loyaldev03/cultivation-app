@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
   context ".new" do
-    it "initialize new form object with default facility_code" do
+    it "init form_object with default facility_code" do
       form_object = FacilityWizardForm::BasicInfoForm.new
 
       # Sequence already define the format of the code to be F##
@@ -11,47 +11,77 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
   end
 
   context ".new with id" do
-    subject {
-      Facility.create!(
-        name: Faker::Lorem.word,
-        code: Faker::Number.number(2),
-        company_name: Faker::Company.name,
-        state_license: Faker::Code.asin,
-        site_license: Faker::Code.asin,
-        timezone: Faker::Address.country,
-        address: { 
-          name: "Main",
-          address: Faker::Address.country,
-          city: Faker::Address.city,
-          state: Faker::Address.state,
-          zipcode: Faker::Address.zip,
-          country: Faker::Address.country,
-          main_number: Faker::PhoneNumber.phone_number,
-          mobile_number: Faker::PhoneNumber.cell_phone,
-          fax_number: Faker::PhoneNumber.phone_number,
-          email: Faker::Internet.email,
-        },
-        is_complete: true,
-        is_enabled: false,
-      )
+    subject(:facility) {
+      create(:facility, :filled)
     }
-
-    it "init form_object with existing attributes" do
-      form_object = FacilityWizardForm::BasicInfoForm.new(subject.id.to_s)
+    it "init form_object from saved record" do
+      form_object = FacilityWizardForm::BasicInfoForm.new(facility.id)
 
       expect(form_object).to have_attributes(
-        name: subject[:name],
-        code: subject[:code],
-        company_name: subject[:company_name],
-        state_license: subject[:state_license],
-        site_license: subject[:site_license],
-        timezone: subject[:timezone],
-        is_complete: subject[:is_complete],
-        is_enabled: subject[:is_enabled],
+        name: facility.name,
+        code: facility.code,
+        company_name: facility.company_name,
+        state_license: facility.state_license,
+        site_license: facility.site_license,
+        timezone: facility.timezone,
+        is_complete: facility.is_complete,
+        is_enabled: facility.is_enabled,
+        address_address: facility.address.address,
+        address_city: facility.address.city,
+        address_state: facility.address.state,
+        address_zipcode: facility.address.zipcode,
+        address_country: facility.address.country,
+        address_main_number: facility.address.main_number,
+        address_fax_number: facility.address.fax_number,
       )
+    end
+  end
 
-      expect(form_object.address).to have_attributes(
-        name: "Main",
+  context ".submit new" do
+    it "saves to db" do
+      form_object = FacilityWizardForm::BasicInfoForm.new
+      params = {
+        name: Faker::Name.name,
+        code: Faker::Number.number(3),
+        company_name: Faker::Name.name
+      }
+
+      form_object.submit(params)
+
+      saved = Facility.find_by(code: params[:code])
+      expect(form_object.valid?).to eq true
+      expect(saved).to have_attributes(
+         name: params[:name],
+         code: params[:code],
+         company_name: params[:company_name]
+      )
+    end
+  end
+
+  context ".submit update" do
+    subject(:facility) {
+      create(:facility, :filled)
+    }
+    it "update to db" do
+      form_object = FacilityWizardForm::BasicInfoForm.new(facility.id)
+      params = {
+        id: facility.id,
+        name: Faker::Company.name,
+        code: Faker::Number.number(3),
+        company_name: Faker::Name.name
+      }
+
+      form_object.submit(params)
+
+      saved = Facility.find_by(id: facility.id)
+      expect(form_object.valid?).to eq true
+      expect(form_object.id).to eq facility.id
+      expect(form_object.name).to eq params[:name]
+      expect(form_object.company_name).to eq params[:company_name]
+      expect(saved).to have_attributes(
+        name: params[:name],
+        code: params[:code],
+        company_name: params[:company_name],
       )
     end
   end

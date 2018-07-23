@@ -1,9 +1,9 @@
-<div class="ph5 pv3 mt2 ba bt-0 bb-1 br-0 bl-0 b--black-10">
+<div class="ph5 pv3 ba bt-0 bb-1 br-0 bl-0 b--black-10">
   <h2 class="tl pa0 ma0 fw4 dark-gray">Room Setup</h2>
 </div>
 
-<div class="pt4 ph5">
-  <div class="fl w-70 flex flex-column">
+<div class="pv4 ph5" style="min-height: 692px">
+  <div class="fl w-70 flex flex-column mb4">
     <h2 class="f2 tl pa0 ma0 fw4 dark-gray">Room Setup</h2>
     <p class="mt2 f5 fw5 dark-gray">
       Awesome, you've just setup your facility! Room details are next...
@@ -24,11 +24,17 @@
       <div class="w-100 flex flex-row">
         <div class="w-20 fl"></div>
 
-        <div class="w-80 flex flex-row items-center">
+        <div
+          style="
+                  display: grid; 
+                  grid-template-columns: repeat(4, 1fr); 
+                  grid-gap: 2rem;
+                "
+          class="w-80">
           <% @wizard_form.facility_room_count.times { |i| %>
             <div
               style="height: 254.7px; width: 168.8px;"
-              class="mr4 ba b--black-10 br2 tc flex flex-column justify-between items-center">
+              class="ba b--black-10 bg-white br2 tc flex flex-column justify-between items-center">
               <div class="w-100 flex pa2 flex flex-column">
                 <div class="w-100 flex items-center justify-between mb2">
                   <i class="material-icons gray f6 dim pointer">delete</i>

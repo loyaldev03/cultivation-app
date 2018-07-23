@@ -1,0 +1,11 @@
+<div class="ph5 pv3 mt2 ba bt-0 bb-1 br-0 bl-0 b--black-10">
+  <h2 class="tl pa0 ma0 fw4 dark-gray">Rooms Setup</h2>
+</div>
+
+<div class="pa3">
+  <%= link_to "Room Count", fetch_rooms_path, remote: true %>
+</div>
+
+<div class="pa3">
+  <%= render partial: 'rooms_grid', locals: {rooms: @rooms} %>
+</div>

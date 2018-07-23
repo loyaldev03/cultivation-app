@@ -6,11 +6,24 @@ class FacilitySetupController < ApplicationController
     render "facility_setup/step#{current_step}"
   end
 
+  def rooms_info
+    @rooms = []
+  end
+
+  def rooms_from_count
+    @selected = [Room.new(name: "Room 1", code: "1"), Room.new(name: "Room 2", code: "2")]
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def save
     if wizard_form.submit(wizard_form_params)
       # continue to next step or show summary
       if current_step == 1 || current_step == 2
         redirect_to facility_setup_new_path(facility_id: wizard_form.id, step: next_step)
+      # elsif current_step == 2
+      #   redirect_to facility_setup_rooms_setup_path(facility_id: wizard_form.id, step: next_step)
       elsif current_step == 3
         redirect_to facility_setup_new_path(step: next_step,
                                             facility_id: wizard_form.facility_id,

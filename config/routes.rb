@@ -4,7 +4,8 @@ Rails.application.routes.draw do
 
   get "facility_setup/new" => "facility_setup#new"
   get "facility_setup/save" => "facility_setup#new"
-  get "facility_setup/summary" => "facility_setup#summary"
+  get "facility_setup/rooms_info" => "facility_setup#rooms_info"
+  get "facility_setup/rooms_from_count" => "facility_setup#rooms_from_count", as: 'fetch_rooms'
   post "facility_setup/save" => "facility_setup#save"
   get "settings" => "home#settings"
 

@@ -6,6 +6,6 @@ class Vendor
   field :default_terms, type: String
   field :status, type: String
   field :notes, type: String
-  
+
   embeds_many :addresses, as: :addressable, class_name: 'Address'
 end

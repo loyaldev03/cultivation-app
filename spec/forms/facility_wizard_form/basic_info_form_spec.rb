@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
   context ".new" do
-    it "initialize new form object with default facility_code" do
+    it "init form_object with default facility_code" do
       form_object = FacilityWizardForm::BasicInfoForm.new
 
       # Sequence already define the format of the code to be F##
@@ -10,57 +10,79 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
     end
   end
 
-  context ".submit" do
-    it "should save facility after submit" do
-      form_object = FacilityWizardForm::BasicInfoForm.new
+  context ".new with id" do
+    subject(:facility) {
+      create(:facility, :filled)
+    }
+    it "init form_object from saved record" do
+      form_object = FacilityWizardForm::BasicInfoForm.new(facility.id)
 
-      params = {
-        id: form_object.id,
-        name: Faker::Name.last_name,
-        code: Faker::Number.number(3),
-        address: Faker::Address.street_address
-      }
-      form_object.submit(params)
-
-      saved_facility = Facility.find(form_object.id)
-      expect(saved_facility).to_not be nil
-      expect(saved_facility.name).to eq form_object.name
-      expect(saved_facility.code).to eq form_object.code
-      expect(saved_facility.address).to eq form_object.address
+      expect(form_object).to have_attributes(
+        name: facility.name,
+        code: facility.code,
+        company_name: facility.company_name,
+        state_license: facility.state_license,
+        site_license: facility.site_license,
+        timezone: facility.timezone,
+        is_complete: facility.is_complete,
+        is_enabled: facility.is_enabled,
+        address_address: facility.address.address,
+        address_city: facility.address.city,
+        address_state: facility.address.state,
+        address_zipcode: facility.address.zipcode,
+        address_country: facility.address.country,
+        address_main_number: facility.address.main_number,
+        address_fax_number: facility.address.fax_number,
+      )
     end
   end
 
-  context "Continue Setup Facility" do
-    it "should initialize form with existing facility data" do
-      facility = create(:facility,
-                        code: Faker::Number.number(3),
-                        address: Faker::Address.street_address)
-
-      form_object = FacilityWizardForm::BasicInfoForm.new(facility)
-
-      expect(form_object.id).to_not be nil
-      expect(form_object.id).to eq facility.id
-      expect(form_object.code).to eq facility.code
-      expect(form_object.address).to eq facility.address
-    end
-
-    it "should save facility after submit" do
-      facility = create(:facility,
-                        code: Faker::Number.number(3),
-                        address: Faker::Address.street_address)
-      facility.save!
-      form_object = FacilityWizardForm::BasicInfoForm.new(facility)
-
+  context ".submit new" do
+    it "saves to db" do
+      form_object = FacilityWizardForm::BasicInfoForm.new
       params = {
-        id: facility.id,
-        name: Faker::Name.last_name,
-        address: Faker::Address.street_address
+        name: Faker::Name.name,
+        code: Faker::Number.number(3),
+        company_name: Faker::Name.name
       }
+
       form_object.submit(params)
 
+      saved = Facility.find_by(code: params[:code])
+      expect(form_object.valid?).to eq true
+      expect(saved).to have_attributes(
+         name: params[:name],
+         code: params[:code],
+         company_name: params[:company_name]
+      )
+    end
+  end
+
+  context ".submit update" do
+    subject(:facility) {
+      create(:facility, :filled)
+    }
+    it "update to db" do
+      form_object = FacilityWizardForm::BasicInfoForm.new(facility.id)
+      params = {
+        id: facility.id,
+        name: Faker::Company.name,
+        code: Faker::Number.number(3),
+        company_name: Faker::Name.name
+      }
+
+      form_object.submit(params)
+
+      saved = Facility.find_by(id: facility.id)
+      expect(form_object.valid?).to eq true
       expect(form_object.id).to eq facility.id
-      expect(form_object.code).to eq facility.code
-      expect(form_object.address).to eq params[:address]
+      expect(form_object.name).to eq params[:name]
+      expect(form_object.company_name).to eq params[:company_name]
+      expect(saved).to have_attributes(
+        name: params[:name],
+        code: params[:code],
+        company_name: params[:company_name],
+      )
     end
   end
 end

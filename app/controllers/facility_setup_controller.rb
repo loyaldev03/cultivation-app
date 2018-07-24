@@ -57,7 +57,7 @@ class FacilitySetupController < ApplicationController
   def wizard_form
     case current_step
     when 1
-      @wizard_form ||= FacilityBasicInfoForm.new(facility, current_user)
+      @wizard_form ||= FacilityWizardForm::BasicInfoForm.new(params[:facility_id])
     when 2
       @wizard_form ||= FacilityRoomCountForm.new(facility)
     when 3
@@ -114,7 +114,7 @@ class FacilitySetupController < ApplicationController
 
   # Step 1
   def facility_basic_info_params
-    params.require(:facility).permit(:name, :code, :address, :zipcode, :city, :state, :country, :phone, :fax)
+    params.require(:facility).permit(FacilityWizardForm::BasicInfoForm::ATTRS)
   end
 
   # Step 2

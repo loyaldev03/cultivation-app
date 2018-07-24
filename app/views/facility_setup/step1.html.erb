@@ -9,7 +9,10 @@
       Let's get a few fetails of your facility to get things rolling...
     </p>
 
-    <%= form_with scope: :facility, url: facility_setup_save_path(facility_id: @wizard_form.id, step: 1), local: true do |f| %>
+    <%= form_with scope: :facility,
+      url: facility_setup_save_path(facility_id: @wizard_form.id, step: 1),
+      html: {id: "wizard-form"},
+      local: true do |f| %>
       <% if @wizard_form.errors.any? %>
         <div id="error_explanation" class="red">
           <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
@@ -32,24 +35,36 @@
             <div class="flex flex-row mb3">
               <div class="w-50 mr4">
                 <%= f.label "Company name", class: "f6 fw5 db mb1 gray ttc" %>
-                <%= f.text_field :name, placeholder: "Company's name", class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                <%= f.text_field :company_name,
+                  placeholder: "Company's name",
+                  value: @wizard_form.company_name,
+                  class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
               </div>
 
               <div class="w-20">
                 <%= f.label "State License #", class: "f6 fw5 db mb1 gray ttc" %>
-                <%= f.text_field :code, placeholder: "S0001", value: @wizard_form.code, class: "gray input-reset br2 outline-0 ba b--black-20 pa2 db w-100" %>
+                <%= f.text_field :state_license,
+                  placeholder: "S0001",
+                  value: @wizard_form.state_license,
+                  class: "gray input-reset br2 outline-0 ba b--black-20 pa2 db w-100" %>
               </div>
             </div>
 
             <div class="flex flex-row">
               <div class="mr4 w-50">
                 <%= f.label "Facility name", class: "f6 fw5 db mb1 gray ttc" %>
-                <%= f.text_field :name, placeholder: "Facility's name", class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                <%= f.text_field :name,
+                  placeholder: "Facility's name",
+                  value: @wizard_form.name,
+                  class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
               </div>
 
               <div class="w-20">
-                <%= f.label "Facility code", class: "f6 fw5 db mb1 gray ttc" %>
-                <%= f.text_field :code, placeholder: "S0001", value: @wizard_form.code, class: "gray input-reset br2 outline-0 ba b--black-20 pa2 db w-100" %>
+                <%= f.label "Facility ID", class: "f6 fw5 db mb1 gray ttc" %>
+                <%= f.text_field :code,
+                  placeholder: "S0001",
+                  value: @wizard_form.code,
+                  class: "gray input-reset br2 outline-0 ba b--black-20 pa2 db w-100" %>
               </div>
             </div>
           </div>
@@ -64,30 +79,41 @@
             <div class="flex flex-row">
               <div class="w-20 mr4">
                 <%= f.label "Location license #", class: "f6 fw5 db mb1 gray ttc" %>
-                <%= f.text_area :address, placeholder: "F0001", rows: 1,class: "ttu gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                <%= f.text_field :site_license,
+                  placeholder: "F0001",
+                  rows: 1,
+                  class: "ttu gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
               </div>
 
               <div class="w-50">
                 <%= f.label "Address", class: "f6 fw5 db mb1 gray" %>
-                <%= f.text_field :city, placeholder: "1011, 11th ave ne", class: "ttu gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
+                <%= f.text_field :address_address,
+                  placeholder: "1011, 11th ave ne",
+                  class: "ttu gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
               </div>
             </div>
 
             <div class="flex flex-row">
               <div class="w-20 mr4">
                 <%= f.label "Zipcode", class: "f6 fw5 db mb1 gray" %>
-                <%= f.text_field :zipcode, placeholder: "123000", class: "gray ba b--black-20 br2 outline-0 br2 outline-0 pa2 db w-100" %>
+                <%= f.text_field :address_zipcode,
+                  placeholder: "123000",
+                  class: "gray ba b--black-20 br2 outline-0 br2 outline-0 pa2 db w-100" %>
               </div>
 
               <div class="w-50 flex flex-row">
                 <div class="w-50 mr4">
-                  <%= f.label :state, class: "f6 fw5 db mb1 gray" %>
-                  <%= f.text_field :state, placeholder: "Carlifornia", class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                  <%= f.label :address_state, class: "f6 fw5 db mb1 gray" %>
+                  <%= f.text_field :address_state,
+                    placeholder: "Carlifornia",
+                    class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
                 </div>
 
                 <div class="w-50">
-                  <%= f.label :country, class: "f6 fw5 db mb1 gray" %>
-                  <%= f.text_field :country, placeholder: "United States of America" , class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                  <%= f.label :address_country, class: "f6 fw5 db mb1 gray" %>
+                  <%= f.text_field :address_country,
+                    placeholder: "United States of America" ,
+                    class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
                 </div>
               </div>
             </div>
@@ -102,18 +128,14 @@
           <div class="fl w-70 flex flex-row">
             <div class="mr4 w-40">
               <%= f.label "Phone Number", class: "f6 fw5 db mb1 gray ttc" %>
-              <%= f.text_field :phone, placeholder: "1234567", class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+              <%= f.text_field :address_main_number, placeholder: "1234567", class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
             </div>
 
             <div class="w-40">
               <%= f.label "Fax Number", class: "f6 fw5 db mb1 gray ttc" %>
-              <%= f.text_field :fax, placeholder: "011 1234567" ,class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+              <%= f.text_field :address_fax_number, placeholder: "011 1234567" ,class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
             </div>
           </div>
-        </div>
-
-        <div class="mb4">
-          <%= f.submit "Save & Continue", class: "b ph3 pv2 ba b--black bg-transparent grow pointer f6" %>
         </div>
       </div>
     <% end %>

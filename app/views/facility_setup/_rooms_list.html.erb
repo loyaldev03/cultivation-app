@@ -1,6 +1,16 @@
-Rooms List <%= rooms.size %>
 <% rooms.each do |room| %>
   <div class="pa3">
-    <%= room.id %>
+    <div>
+      <%= room.id %>
+    </div>
+    <div>
+      <%= room.code %>
+    </div>
+    <div>
+      <%= room.name %>
+    </div>
+    <div>
+      <%= room.sections_count %>
+    </div>
   </div>
 <% end %>

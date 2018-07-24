@@ -7,11 +7,13 @@ class FacilitySetupController < ApplicationController
   end
 
   def rooms_info
-    @rooms = []
+    @rooms_info_form = FacilityWizardForm::RoomsInfoForm.new(params[:facility_id])
   end
 
   def rooms_from_count
-    @selected = [Room.new(name: "Room 1", code: "1"), Room.new(name: "Room 2", code: "2")]
+    @rooms_info_form = FacilityWizardForm::RoomsInfoForm.new(params[:facility_id])
+    rooms_count = params[:rooms_count].nil? ? 1 : params[:rooms_count].to_i
+    @rooms_info_form.set_rooms_from_count(rooms_count)
     respond_to do |format|
       format.js
     end

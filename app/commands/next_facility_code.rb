@@ -1,6 +1,9 @@
 class NextFacilityCode
   prepend SimpleCommand
 
+  # @code_type: :facility, :room, :section, :row...
+  # @last_code: last record code
+  # @increment: number of increment to the sequence number
   def initialize(code_type, last_code = nil, increment = 1)
     @code_format_name = "#{code_type}_code_format"
     raise "Invalid code_type: #{code_type}" unless Sequence.respond_to?(@code_format_name)

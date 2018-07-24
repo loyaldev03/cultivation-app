@@ -3,9 +3,20 @@
 </div>
 
 <div class="pa3">
-  <%= link_to "Room Count", fetch_rooms_path, remote: true %>
+  <label>Room Count:</label>
+  <%# <%= link_to "Room Count", fetch_rooms_path, remote: true %1> %>
+  <%= select_tag :rooms_count,
+    options_for_select(["",*1..25], ""),
+    data: {
+      remote: true,
+      url: fetch_rooms_path(facility_id: @rooms_info_form.facility_id),
+      method: :get
+    }
+  %>
 </div>
 
 <div class="pa3">
-  <%= render partial: 'rooms_grid', locals: {rooms: @rooms} %>
+  <div id="rooms_grid">
+    <%= render partial: 'rooms_list', locals: {rooms: @rooms_info_form.rooms} %>
+  </div>
 </div>

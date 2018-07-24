@@ -1,16 +1,16 @@
 <% rooms.each do |room| %>
   <div class="pa3">
-    <div>
-      <%= room.id %>
-    </div>
-    <div>
-      <%= room.code %>
-    </div>
-    <div>
-      <%= room.name %>
-    </div>
-    <div>
-      <%= room.sections_count %>
+    <div class="pa4">
+      <%= link_to room.code,
+        fetch_room_info_path(
+          facility_id: room.facility_id,
+          room_id: room.id,
+          room_name: room.name,
+          room_code: room.code,
+        ), remote: true %>
+      <%= room.code %> <br/>
+      <%= room.name %> <br/>
+      <%= room.sections_count %> <br/>
     </div>
   </div>
 <% end %>

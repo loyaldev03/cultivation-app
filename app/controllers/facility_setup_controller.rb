@@ -10,10 +10,25 @@ class FacilitySetupController < ApplicationController
     @rooms_info_form = FacilityWizardForm::RoomsInfoForm.new(params[:facility_id])
   end
 
+  # called through ajax when user changes room count
   def rooms_from_count
     @rooms_info_form = FacilityWizardForm::RoomsInfoForm.new(params[:facility_id])
     rooms_count = params[:rooms_count].nil? ? 1 : params[:rooms_count].to_i
     @rooms_info_form.set_rooms_from_count(rooms_count)
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  # called through ajax when user click on Room
+  def room_info
+    @room_info_form = FacilityWizardForm::RoomInfo.new_by_id(
+      params[:facility_id],
+      params[:room_id],
+      params[:room_name],
+      params[:room_code],
+    )
+    # Build the RoomInfoForm object
     respond_to do |format|
       format.js
     end

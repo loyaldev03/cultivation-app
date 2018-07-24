@@ -20,3 +20,7 @@
     <%= render partial: 'rooms_list', locals: {rooms: @rooms_info_form.rooms} %>
   </div>
 </div>
+
+<div id="slide-from_right">
+  <%= @room_info_form.code if @room_info_form %>
+</div>

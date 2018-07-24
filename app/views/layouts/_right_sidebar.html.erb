@@ -1,7 +1,21 @@
-<div id="right-sidebar" class="vh-100 ba0 fixed bg-white shadow-1 overflow-y-scroll b--light-gray" style="width: 0px;">
-  <div class="ph4 tl mt2">
-    <a href="#0" id="hide-sidebar" class="link gray fw1 outline-0">&times;</a>
+<div 
+  id="right-sidebar" 
+  style="width: 0px;"
+  class="vh-100 ba0 fixed bg-white shadow-1 overflow-y-scroll b--light-gray">
+
+  <div class="ph4 pv2 flex items-center justify-between bb b--black-10">
+    <h1 class="f4 fw5">Modal Title</h1>
+
+    <a href="#0" id="hide-sidebar" class="link outline-0 dim">
+      <i class="material-icons mid-gray md-18">close</i>
+    </a>
   </div>
-  <div id="right-sidebar-content" class="w-40 db fixed">
+
+  <div id="right-sidebar-content" class="w-30 db fixed"></div>
+  
+  <div class="w-100 ph4 pt4 pb5 bt b--black-10 absolute flex items-center" style="bottom: 0;">
+    <%= link_to "#" , class: "link fixed" do %>
+      <div class="db tr pa3 bg-green white bn br2 ttu tracked link dim f5 fw6">Continue</div>
+    <% end %>
   </div>
 </div>

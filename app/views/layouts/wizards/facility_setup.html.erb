@@ -1,40 +1,26 @@
 <!DOCTYPE html>
 <html>
-  <%= render "layouts/head", include_turbolink: true %>
-  <body style="">
+  <%= render "layouts/head", include_turbolink: true,  include_sidebar: true %>
+  <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root" class="bg-light-green">
-      <div class="pa4 bg-light-green">
-        <div class="bg-white bn br1 flex flex-column justify-between" style="">
-          <div class="wizard-form">
+    <div id="root">
+      <div class="flex flex-row min-vh-100 ">
+        <%= render 'layouts/sidebar' %>
+        <div id="main" class="main flex flex-column flex-auto" style="padding-left: 80px;">
+          <%= flash_messages %>
+          <main class="min-vh-100">
+            <div class="ph4 pv3 f6 w-100 bg-light-gray shadow-4">
+              <% if content_for? :breadcrumb %>
+                <%= yield :breadcrumb %>
+              <% end %>
+            </div>
             <%= yield %>
-          </div>
-          <div class="pv4 ph5 flex flex-row justify-between items-center ba bt-1 bb-0 br-0 bl-0 b--black-10">
-            <div class="dim flex flex-row items-center pointer">
-              <i class="material-icons gray">keyboard_arrow_left</i>
-              <%= link_to "Back", root_path, class: "db tr ttu tracked link gray fw6 f5" %>
-            </div>
-
-            <div class="flex flex-row items-center">
-              <%= link_to "Save As Draft", root_path, class: "db pa3 tr black ttu tracked link dim f5 fw7" %>
-              <input
-                type="submit"
-                form="wizard-form"
-                value="Save &amp; Continue"
-                class="db tr pa3 bg-green white bn br2 ttu tracked link dim f5 fw6" />
-            </div>
-          </div>
+          </main>
+          <%= render "layouts/right_sidebar" %>
         </div>
       </div>
     </div>
-
     <%= render "layouts/before_body_end" %>
-
-    <script>
-      document.addEventListener('turbolinks:load', function() {
-        TurbolinksAnimate.init({ animation: 'fadeinright', element: $_('.wizard-form') });
-      });
-    </script>
   </body>
 </html>
 

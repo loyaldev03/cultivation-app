@@ -106,10 +106,10 @@ module FacilityWizardForm
 
         # if facility.rooms is empty just set to empty array
         self.rooms ||= []
-        self.wz_room_count = facility.wz_room_count
+        self.wz_room_count = facility.wz_room_count || 0
 
         # handle unsaved wz rooms count
-        if facility.wz_room_count > self.rooms.size
+        if self.wz_room_count > self.rooms.size
           self.set_rooms_from_count(facility.wz_room_count)
         end
       end

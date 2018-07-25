@@ -6,10 +6,40 @@ class FacilitySetupController < ApplicationController
     render "facility_setup/step#{current_step}"
   end
 
+  def rooms_info
+    @rooms_info_form = FacilityWizardForm::RoomsInfoForm.new(params[:facility_id])
+  end
+
+  # called through ajax when user changes room count
+  def rooms_from_count
+    @rooms_info_form = FacilityWizardForm::RoomsInfoForm.new(params[:facility_id])
+    rooms_count = params[:rooms_count].nil? ? 1 : params[:rooms_count].to_i
+    @rooms_info_form.set_rooms_from_count(rooms_count)
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  # called through ajax when user click on Room
+  def room_info
+    @room_info_form = FacilityWizardForm::RoomInfo.new_by_id(
+      params[:facility_id],
+      params[:room_id],
+      params[:room_name],
+      params[:room_code],
+    )
+    # Build the RoomInfoForm object
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def save
     if wizard_form.submit(wizard_form_params)
       # continue to next step or show summary
-      if current_step == 1 || current_step == 2
+      if current_step == 1
+        redirect_to facility_setup_rooms_info_path(facility_id: wizard_form.id, step: next_step)
+      elsif current_step == 2
         redirect_to facility_setup_new_path(facility_id: wizard_form.id, step: next_step)
       elsif current_step == 3
         redirect_to facility_setup_new_path(step: next_step,

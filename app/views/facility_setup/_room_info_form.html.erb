@@ -1,0 +1,25 @@
+<div class="db pa3 measure">
+  <%= form_with(scope: :room_info) do |f| %>
+    <div>
+      <%= f.label "Room Name", class:"f6 w-100 db" %>
+      <%= f.text_field :name, value: room.name, class: "f6 w-100 db" %>
+    </div>
+    <div>
+      <%= f.label "Room ID", class:"f6 w-100  db" %>
+      <%= f.text_field :code, value: room.code, class: "f6 w-100 db" %>
+    </div>
+    <div>
+      <%= f.label "Description", class:"f6 w-100 db" %>
+      <%= f.text_area :desc, value: room.desc, class: "f6 w-100 db" %>
+    </div>
+    <div>
+      <%= f.label "Purpose of Room", class:"f6 w-100 db" %>
+      <%= f.select :purpose, options_for_select(Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}) %> 
+    </div>
+    <div>
+      <label>Split into one or more sections?
+        <%= f.check_box :has_sections %>
+      </label>
+    </div>
+  <% end %>
+</div>

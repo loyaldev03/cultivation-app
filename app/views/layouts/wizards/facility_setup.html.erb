@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html>
-  <%= render "layouts/head", include_turbolink: true %>
-  <body style="">
+  <%= render "layouts/head", include_turbolink: true,  include_sidebar: true %>
+  <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root" class="bg-light-green">
-      <div class="pa4 bg-light-green">
-        <div class="bg-white bn br1">
-          <div class="wizard-form">
+    <div id="root">
+      <div class="flex flex-row min-vh-100 ">
+        <%= render 'layouts/sidebar' %>
+        <div id="main" class="main flex flex-column flex-auto" style="padding-left: 80px;">
+          <%= flash_messages %>
+          <main class="min-vh-100">
+            <div class="ph4 pv3 f6 w-100 bg-light-gray shadow-4">
+              <% if content_for? :breadcrumb %>
+                <%= yield :breadcrumb %>
+              <% end %>
+            </div>
             <%= yield %>
-          </div>
+          </main>
+          <%= render "layouts/right_sidebar" %>
         </div>
       </div>
     </div>
-
     <%= render "layouts/before_body_end" %>
-
-    <script>
-      document.addEventListener('turbolinks:load', function() {
-        TurbolinksAnimate.init({ animation: 'fadeinright', element: $_('.wizard-form') });
-      });
-    </script>
   </body>
 </html>
 

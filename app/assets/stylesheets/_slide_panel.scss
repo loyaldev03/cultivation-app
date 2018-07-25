@@ -1,0 +1,35 @@
+$slidePanelWidth: 300px;
+$slidePanelBgColor: #fefefe;
+
+.animated.slide-panel {
+  animation-duration: 0.3s;
+}
+
+.slide-panel {
+  width: $slidePanelWidth;
+  position: absolute;
+  top: 0;
+  right: 0;
+  visibility: hidden;
+  background-color: $slidePanelBgColor;
+  min-height: 100%;
+  border-left: 1px solid #cccccc;
+  overflow: hidden;
+}
+
+.slide-panel__close-button {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  padding: 0.5em;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.slide-panel__body {
+  padding-top: 2em;
+}
+
+.slide-panel--visible {
+  visibility: visible;
+}

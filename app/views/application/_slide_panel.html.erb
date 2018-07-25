@@ -1,0 +1,13 @@
+<div class="slide-panel">
+  <span class="slide-panel__close-button">X</span>
+  <div class="slide-panel__body"></div>
+</div>
+
+
+<% content_for :before_body_end do %>
+  <script>
+    $_('.slide-panel__close-button').on('click', function() {
+      $_('.slide-panel').classList.replace('slideInRight', 'slideOutRight')
+    });
+  </script>
+<% end %>

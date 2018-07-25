@@ -18,12 +18,12 @@ class FacilitySetupController < ApplicationController
 
   # GET show list of rooms in facility - step 2
   def rooms_info
-    @rooms_info_form = FacilityWizardForm::RoomsInfoForm.new(params[:facility_id])
+    @rooms_info_form = FacilityWizardForm::RoomsForm.new(params[:facility_id])
   end
 
   # GET called through ajax when user click on Room
   def room_info
-    @room_info_form = FacilityWizardForm::RoomInfo.new_by_id(
+    @room_info_form = FacilityWizardForm::RoomInfoForm.new_by_id(
       params[:facility_id],
       params[:room_id],
       params[:room_name],
@@ -38,7 +38,7 @@ class FacilitySetupController < ApplicationController
   # GET called through ajax when user changes room count (generate room template)
   def rooms_from_count
     facility_id = params[:facility_id]
-    @rooms_info_form = FacilityWizardForm::RoomsInfoForm.new(facility_id)
+    @rooms_info_form = FacilityWizardForm::RoomsForm.new(facility_id)
     rooms_count = params[:rooms_count].nil? ? 1 : params[:rooms_count].to_i
     @rooms_info_form.set_rooms_from_count(rooms_count)
     SaveFacilityRoomCount.call(facility_id, rooms_count)
@@ -47,13 +47,13 @@ class FacilitySetupController < ApplicationController
     end
   end
 
-  # POST update room count
-  def update_rooms_info
-    # update the room count as uses changes the number of rooms selection
-  end
-
   # POST update specific room info - from the right sidebar
   def update_room_info
+    form_object = FacilityWizardForm::UpdateRoomInfoForm.new
+    if form_object.submit(params[:facility_id], params[:id], room_info_params)
+      redirect_to facility_setup_rooms_info_path(facility_id: form_object.facility_id)
+    else
+    end
   end
 
   # POST
@@ -165,14 +165,14 @@ class FacilitySetupController < ApplicationController
     end
   end
 
-  # Step 1
+  # Step - Update Basic Info
   def facility_basic_info_params
     params.require(:facility).permit(FacilityWizardForm::BasicInfoForm::ATTRS)
   end
 
-  # Step 2
-  def facility_room_count_params
-    params.require(:facility).permit(:room_count)
+  # Step - Update Room Info
+  def room_info_params
+    params.require(:room_info).permit(FacilityWizardForm::UpdateRoomInfoForm::ATTRS)
   end
 
   # Step 3

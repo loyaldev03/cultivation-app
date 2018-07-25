@@ -1,5 +1,5 @@
 <div class="db pa3 measure">
-  <%= form_with(scope: :room_info) do |f| %>
+  <%= form_with(scope: :room_info, url: facility_setup_update_room_info_path(id: room.id, facility_id: room.facility_id)) do |f| %>
     <div>
       <%= f.label "Room Name", class:"f6 w-100 db" %>
       <%= f.text_field :name, value: room.name, class: "f6 w-100 db" %>
@@ -16,10 +16,16 @@
       <%= f.label "Purpose of Room", class:"f6 w-100 db" %>
       <%= f.select :purpose, options_for_select(Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}) %> 
     </div>
-    <div>
-      <label>Split into one or more sections?
-        <%= f.check_box :has_sections %>
-      </label>
+    <div class="w-100">
+      <div>
+        <p> Is the room split into one or  more sections? </p>
+        <p> Quick tip: Will you... </p>
+      </div>
+      <%= f.check_box :has_sections, class: "toggle toggle-default" %>
+      <label class="toggle-button" for="room_info_has_sections"></label>
+    </div>
+    <div class="pa3 absolute right-0 bottom-0">
+      <%= f.submit "Save & Continue", class: "b ph3 pv2 ba b--black grow pointer f6" %>
     </div>
   <% end %>
 </div>

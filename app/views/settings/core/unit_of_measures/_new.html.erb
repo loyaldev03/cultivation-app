@@ -1,30 +1,32 @@
-<div class="ph4 w-80 pb4 mt3">
-  <h1 class="ma0 pa0 f3">New Unit of Measure</h1>
-</div>
+<div class="pa4 w-80 h-100">
+  <%= simple_form_for :record, 
+      url: settings_core_unit_of_measures_path, 
+      remote: true, 
+      method: :post, 
+      html: { 
+        class: 'vertical-form h-100 flex flex-column justify-between' 
+      } do |f|
+  %>
 
-<div class="ph4 w-80 pb4">
-  <%= simple_form_for :record, url: settings_core_unit_of_measures_path, remote: true, method: :post, html: { class: 'vertical-form' } do |f| %>
-    <div class="flex flex-column justify-between">
-      <div class="">
-        <%= f.input :name, label: 'Name',
-          label_html: { class: 'w-100 dib f5 fw6 gray' }, 
-          input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
-        %>
+    <div class="">
+      <%= f.input :name, label: 'Name',
+        label_html: { class: 'w-100 dib f6 fw5 gray' }, 
+        input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
+      %>
 
-        <%= f.input :code, label: 'Code',
-          label_html: { class: 'w-100 dib f5 fw6 gray' }, 
-          input_html: { class: 'w-30 pa2 gray ba b--black-20 br2 outline-0' } 
-        %>
-        <%= f.input :desc, label: 'Description',
-          as: :text,
-          label_html: { class: 'w-100 dib f5 fw6 gray' }, 
-          input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0', rows: 5 } 
-        %>
-      </div>
+      <%= f.input :code, label: 'Code',
+        label_html: { class: 'w-100 dib f6 fw5 gray' }, 
+        input_html: { class: 'w-30 pa2 gray ba b--black-20 br2 outline-0' } 
+      %>
+      <%= f.input :desc, label: 'Description',
+        as: :text,
+        label_html: { class: 'w-100 dib f6 fw5 gray' }, 
+        input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0', rows: 5 } 
+      %>
+    </div>
 
-      <div class="pv3 w-100 flex items-center justify-end">
-          <%= f.submit "Create", class: "pointer dim pa2 ph4 ba b--blue blue bw1 br4" %>
-      </div>
+    <div class="w-100 flex justify-end">
+      <%= f.submit "Create", class: "pointer db tc pa3 bg-green white bn br2 ttu tracked link dim f5 fw6" %>
     </div>
   <% end %>
 </div>

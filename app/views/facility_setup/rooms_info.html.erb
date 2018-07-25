@@ -33,14 +33,26 @@
           </div>
         </div>
 
-        <div class="">
-          <div id="rooms_grid">
+        <div class="w-100 h-100 flex flex-row">
+          <div class="w-20 fl"></div>
+          
+          <div 
+            id="rooms_grid"
+            class="w-80" 
+            style="
+                    display: grid; 
+                    grid-template-columns: repeat(4, 1fr); 
+                    grid-gap: 2rem;
+                  "
+          >
             <%= render partial: 'rooms_list', locals: {rooms: @rooms_info_form.rooms} %>
           </div>
         </div>
       </div>
 
-      <div class="fl w-30"></div>
+      <div class="fl w-30 flex justify-end">
+        <%= render "layouts/timeline" %>
+      </div>
     </div>
 
     <%= render "form_buttons" %>

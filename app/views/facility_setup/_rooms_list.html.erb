@@ -1,6 +1,7 @@
 <% rooms.each do |room| %>
-  <div class="pa3">
-    <div class="pa4">
+  <div style="height: 254.7px; width: 168.8px;"
+        class="ba b--black-10 bg-white br2 tc flex flex-column justify-between items-center">
+    <div class="w-100 flex pa2 flex flex-column">
       <%= link_to room.code,
         fetch_room_info_path(
           facility_id: room.facility_id,

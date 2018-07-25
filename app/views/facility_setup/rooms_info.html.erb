@@ -6,7 +6,7 @@
   <label>Room Count:</label>
   <%# <%= link_to "Room Count", fetch_rooms_path, remote: true %1> %>
   <%= select_tag :rooms_count,
-    options_for_select(["",*1..25], ""),
+    options_for_select(["",*1..25], @rooms_info_form.wz_room_count),
     data: {
       remote: true,
       url: fetch_rooms_path(facility_id: @rooms_info_form.facility_id),

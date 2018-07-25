@@ -11,6 +11,7 @@ module FacilityWizardForm
              :timezone,
              :is_complete,
              :is_enabled,
+             :wz_room_count,
              :address_address,
              :address_city,
              :address_state,
@@ -53,6 +54,7 @@ module FacilityWizardForm
       self.timezone = record[:timezone]
       self.is_complete = record[:is_complete]
       self.is_enabled = record[:is_enabled]
+      self.wz_room_count = record[:wz_room_count]
       self.address_address = record[:address_address]
       self.address_city = record[:address_city]
       self.address_state = record[:address_state]
@@ -72,6 +74,7 @@ module FacilityWizardForm
       self.timezone = record.timezone
       self.is_complete = record.is_complete
       self.is_enabled = record.is_enabled
+      self.wz_room_count = record.wz_room_count
       if record.address
         self.address_address = record.address.address
         self.address_city = record.address.city

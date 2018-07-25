@@ -10,7 +10,7 @@
     </p>
 
     <%= form_with scope: :facility,
-      url: facility_setup_save_path(facility_id: @wizard_form.id, step: 1),
+      url: facility_setup_update_basic_info_path(facility_id: @wizard_form.id, step: 1),
       html: {id: "wizard-form"},
       local: true do |f| %>
       <% if @wizard_form.errors.any? %>

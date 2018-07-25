@@ -20,8 +20,8 @@ module FacilityWizardForm
 
     class << self
       def new_by_id(facility_id, room_id, room_name, room_code)
-        raise ArgumentError, "Invalid facility_id" if facility_id.nil?
-        raise ArgumentError, "Invalid room_id" if room_id.nil?
+        raise ArgumentError, 'Invalid facility_id' if facility_id.nil?
+        raise ArgumentError, 'Invalid room_id' if room_id.nil?
         find_cmd = FindFacility.call({id: facility_id})
         if find_cmd.success?
           facility = find_cmd.result
@@ -37,7 +37,7 @@ module FacilityWizardForm
             room_info
           end
         else
-          raise ArgumentError, "Invalid Record"
+          raise ArgumentError, 'Invalid Record'
         end
       end
     end
@@ -53,9 +53,7 @@ module FacilityWizardForm
   end
 
   class RoomsInfoForm
-    attr_reader :facility_id
-    attr_reader :facility
-    attr_accessor :rooms
+    attr_accessor :facility_id, :facility, :rooms, :wz_room_count
 
     def initialize(facility_id)
       @facility_id = facility_id
@@ -64,12 +62,13 @@ module FacilityWizardForm
     end
 
     def set_rooms_from_count(rooms_count = 0)
+      @wz_room_count = rooms_count
       if self.rooms.blank?
         self.rooms = Array.new(rooms_count) do |i|
           RoomInfo.new(@facility_id, {
             id: BSON::ObjectId.new,
-            code: "RM#{i+1}",
-            name: "Room #{i+1}"
+            code: "RM#{i + 1}",
+            name: "Room #{i + 1}",
           })
         end
       else
@@ -84,7 +83,7 @@ module FacilityWizardForm
             room_name = "Room #{self.rooms.size + next_count}"
             RoomInfo.new(@facility_id, {
               id: BSON::ObjectId.new,
-              code: room_code, name: room_name
+              code: room_code, name: room_name,
             })
           end
           self.rooms.concat(missing_rooms)
@@ -95,7 +94,7 @@ module FacilityWizardForm
     private
 
     def set_record(facility_id)
-      raise ArgumentError, "Invalid Facility" if facility_id.nil?
+      raise ArgumentError, 'Invalid Facility' if facility_id.nil?
       find_cmd = FindFacility.call({id: facility_id})
       if find_cmd.success?
         facility = find_cmd.result
@@ -103,6 +102,15 @@ module FacilityWizardForm
           self.rooms = facility.rooms.map do |room|
             RoomInfo.new(@facility_id, room)
           end
+        end
+
+        # if facility.rooms is empty just set to empty array
+        self.rooms ||= []
+        self.wz_room_count = facility.wz_room_count
+
+        # handle unsaved wz rooms count
+        if facility.wz_room_count > self.rooms.size
+          self.set_rooms_from_count(facility.wz_room_count)
         end
       end
     end

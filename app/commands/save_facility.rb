@@ -28,6 +28,7 @@ class SaveFacility
     record.timezone = form_object.timezone
     record.is_complete = form_object.is_complete
     record.is_enabled = form_object.is_enabled
+    record.wz_room_count = form_object.wz_room_count
 
     address = record.address ||= Address.new
     address.address = form_object.address_address

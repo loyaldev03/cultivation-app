@@ -1,26 +1,27 @@
 class FacilitySetupController < ApplicationController
   layout 'wizards/facility_setup'
 
+  # GET new facility - basic info form page - step 1
   def new
     wizard_form
     render "facility_setup/step#{current_step}"
   end
 
+  # POST update facility basic info - step 1 / submit
+  def update_basic_info
+    if wizard_form.submit(facility_basic_info_params)
+      redirect_to facility_setup_rooms_info_path(facility_id: wizard_form.id, step: next_step)
+    else
+      render "facility_setup/step#{current_step}"
+    end
+  end
+
+  # GET show list of rooms in facility - step 2
   def rooms_info
     @rooms_info_form = FacilityWizardForm::RoomsInfoForm.new(params[:facility_id])
   end
 
-  # called through ajax when user changes room count
-  def rooms_from_count
-    @rooms_info_form = FacilityWizardForm::RoomsInfoForm.new(params[:facility_id])
-    rooms_count = params[:rooms_count].nil? ? 1 : params[:rooms_count].to_i
-    @rooms_info_form.set_rooms_from_count(rooms_count)
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  # called through ajax when user click on Room
+  # GET called through ajax when user click on Room
   def room_info
     @room_info_form = FacilityWizardForm::RoomInfo.new_by_id(
       params[:facility_id],
@@ -34,6 +35,28 @@ class FacilitySetupController < ApplicationController
     end
   end
 
+  # GET called through ajax when user changes room count (generate room template)
+  def rooms_from_count
+    facility_id = params[:facility_id]
+    @rooms_info_form = FacilityWizardForm::RoomsInfoForm.new(facility_id)
+    rooms_count = params[:rooms_count].nil? ? 1 : params[:rooms_count].to_i
+    @rooms_info_form.set_rooms_from_count(rooms_count)
+    SaveFacilityRoomCount.call(facility_id, rooms_count)
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  # POST update room count
+  def update_rooms_info
+    # update the room count as uses changes the number of rooms selection
+  end
+
+  # POST update specific room info - from the right sidebar
+  def update_room_info
+  end
+
+  # POST
   def save
     if wizard_form.submit(wizard_form_params)
       # continue to next step or show summary

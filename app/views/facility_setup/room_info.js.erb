@@ -1,1 +1,3 @@
-$_("#slide-from_right").innerHTML = ("<%= j render 'room_info_form', room: @room_info_form %>")
+$_(".slide-panel__body").innerHTML = ("<%= j render 'room_info_form', room: @room_info_form %>")
+$_(".slide-panel").classList.add("slide-panel--visible", "animated", "slideInRight");
+$_(".slide-panel").classList.replace("slideOutRight", "slideInRight");

@@ -1,5 +1,7 @@
 <div class="db pa3 measure">
-  <%= form_with(scope: :room_info, url: facility_setup_update_room_info_path(id: room.id, facility_id: room.facility_id)) do |f| %>
+  <%= form_with scope: :room_info, url: facility_setup_update_room_info_path do |f| %>
+    <%= f.hidden_field :id, value: room.id %>
+    <%= f.hidden_field :facility_id, value: room.facility_id %>
     <div>
       <%= f.label "Room Name", class:"f6 w-100 db" %>
       <%= f.text_field :name, value: room.name, class: "f6 w-100 db" %>

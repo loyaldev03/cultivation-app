@@ -50,7 +50,7 @@ class FacilitySetupController < ApplicationController
   # POST update specific room info - from the right sidebar
   def update_room_info
     form_object = FacilityWizardForm::UpdateRoomInfoForm.new
-    if form_object.submit(params[:facility_id], params[:id], room_info_params)
+    if form_object.submit(room_info_params)
       redirect_to facility_setup_rooms_info_path(facility_id: form_object.facility_id)
     else
     end

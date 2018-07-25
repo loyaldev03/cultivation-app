@@ -49,7 +49,11 @@ class FacilitySetupController < ApplicationController
 
   # POST update specific room info - from the right sidebar
   def update_room_info
-    byebug
+    form_object = FacilityWizardForm::UpdateRoomInfoForm.new
+    if form_object.submit(params[:facility_id], params[:id], room_info_params)
+      redirect_to facility_setup_rooms_info_path(facility_id: form_object.facility_id)
+    else
+    end
   end
 
   # POST
@@ -161,14 +165,14 @@ class FacilitySetupController < ApplicationController
     end
   end
 
-  # Step 1
+  # Step - Update Basic Info
   def facility_basic_info_params
     params.require(:facility).permit(FacilityWizardForm::BasicInfoForm::ATTRS)
   end
 
-  # Step 2
-  def facility_room_count_params
-    params.require(:facility).permit(:room_count)
+  # Step - Update Room Info
+  def room_info_params
+    params.require(:room_info).permit(FacilityWizardForm::UpdateRoomInfoForm::ATTRS)
   end
 
   # Step 3

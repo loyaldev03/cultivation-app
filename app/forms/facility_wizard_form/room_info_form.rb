@@ -6,6 +6,7 @@ module FacilityWizardForm
              :code,
              :desc,
              :purpose,
+             :has_sections,
              :capacity,
              :rows_count,
              :sections_count,
@@ -49,6 +50,8 @@ module FacilityWizardForm
       self.name = room_model[:name]
       self.code = room_model[:code]
       self.desc = room_model[:desc]
+      self.purpose = room_model[:purpose]
+      self.has_sections = room_model[:has_sections]
     end
   end
 end

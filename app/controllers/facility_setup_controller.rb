@@ -37,10 +37,10 @@ class FacilitySetupController < ApplicationController
   def save
     if wizard_form.submit(wizard_form_params)
       # continue to next step or show summary
-      if current_step == 1 || current_step == 2
+      if current_step == 1
+        redirect_to facility_setup_rooms_info_path(facility_id: wizard_form.id, step: next_step)
+      elsif current_step == 2
         redirect_to facility_setup_new_path(facility_id: wizard_form.id, step: next_step)
-      # elsif current_step == 2
-      #   redirect_to facility_setup_rooms_setup_path(facility_id: wizard_form.id, step: next_step)
       elsif current_step == 3
         redirect_to facility_setup_new_path(step: next_step,
                                             facility_id: wizard_form.facility_id,

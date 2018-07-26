@@ -53,7 +53,9 @@ class FacilitySetupController < ApplicationController
     form_object = FacilityWizardForm::UpdateRoomInfoForm.new
     respond_to do |format|
       if form_object.submit(room_info_params)
-        format.js { render :js => "toast('Room Saved', 'success')" }
+        @rooms_info_form = FacilityWizardForm::RoomsForm.new(form_object.facility_id)
+        format.js
+        # format.js { render :js => "toast('Room Saved', 'success')" }
       else
       end
     end

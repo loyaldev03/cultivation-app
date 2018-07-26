@@ -10,11 +10,11 @@ $slidePanelBgColor: #fefefe;
   position: absolute;
   top: 0;
   right: 0;
-  visibility: hidden;
   background-color: $slidePanelBgColor;
   min-height: 100%;
   border-left: 1px solid #cccccc;
   overflow: hidden;
+  display: none;
 }
 
 .slide-panel__close-button {
@@ -28,8 +28,4 @@ $slidePanelBgColor: #fefefe;
 
 .slide-panel__body {
   padding-top: 2em;
-}
-
-.slide-panel--visible {
-  visibility: visible;
 }

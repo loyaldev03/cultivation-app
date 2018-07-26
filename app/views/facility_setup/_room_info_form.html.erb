@@ -30,19 +30,23 @@
       %> 
     </div>
 
-    <div class="w-100">
-      <div>
-        <p> Is the room split into one or  more sections? </p>
-        <p> Quick tip: Will you... </p>
-      </div>
+    <div class="w-100 pt3">
+      <span class="f5 fw5"> Is the room split into one or more sections? </span>
+      <p class="gray f6 lh-copy mt1 w-90">
+        Quick tip: Will you be using this room for multiple growth stages of your plants? 
+        If you are, please split the room into sections.
+      </p>
 
-      <%= f.check_box :has_sections, checked: room.has_sections, class: "toggle toggle-default" %>
-      <label class="toggle-button" for="room_info_has_sections"></label>
+
+      <div class="flex justify-end w-90">
+        <%= f.check_box :has_sections, checked: room.has_sections, class: "toggle toggle-default" %>
+        <label class="toggle-button" for="room_info_has_sections"></label>
+      </div>
     </div>
 
-    <div class="pa3 absolute right-0 bottom-0">
-      <%= f.submit "Save Changes", class: "b ph3 pv2 ba b--black grow pointer f6 mr2" %>
-      <%= link_to "Next > Setup Row", facility_setup_room_summary_path, class: "link b ph3 pv2 ba b--black grow pointer f6 dib ml3" %>
+    <div class="w-100 pa4 bt b--black-10 absolute right-0 bottom-0 flex items-center justify-between">
+      <%= f.submit "Save Changes", class: "db pv2 bg-white bn ttu tracked link dim f6 fw7 green pointer" %>
+      <%= link_to "Next > Setup Row", facility_setup_room_summary_path, class: "db tr pv2 ph3 bg-green white bn br2 ttu tracked link dim f6 fw6" %>
     </div>
   <% end %>
 </div>

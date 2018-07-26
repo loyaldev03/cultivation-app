@@ -5,6 +5,7 @@
   --yellow: #FFC600;
   --black: #393939;
   --white: #FFFFFF;
+  --whiteSmoke: #F9F7F5;
 }
 
 html {
@@ -12,6 +13,7 @@ html {
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
   font-size: 14px;
   color: var(--black);
+  background-color: var(--whiteSmoke);
 }
 
 #root, body, html {

@@ -1,4 +1,4 @@
-<div class="slide-panel">
+<div class="slide-panel animated dn slideOutRight">
   <span class="slide-panel__close-button">X</span>
   <div class="slide-panel__body"></div>
 </div>
@@ -6,8 +6,22 @@
 
 <% content_for :before_body_end do %>
   <script>
+    function showSlidePanel() {
+      elm = $_(".slide-panel")
+      elm.classList.replace("dn", "db");
+      elm.classList.replace("slideOutRight", "slideInRight");
+    }
+
+    function hideSlidePanel() {
+      elm = $_(".slide-panel")
+      elm.classList.replace("slideInRight", "slideOutRight");
+      setTimeout(function(){
+        $_('.slide-panel').classList.replace('db', 'dn');
+      }, 300);
+    }
+
     $_('.slide-panel__close-button').on('click', function() {
-      $_('.slide-panel').classList.replace('slideInRight', 'slideOutRight')
+      hideSlidePanel()
     });
   </script>
 <% end %>

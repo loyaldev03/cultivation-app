@@ -61,8 +61,19 @@ class FacilitySetupController < ApplicationController
     end
   end
 
-  # Get show room setup summary
+  # GET show room setup summary
   def room_summary
+  end
+
+  # GET show row & shelf setup page
+  # User can dynamically changes the number of rows
+  def row_shelf_info
+    @room_info_form = FacilityWizardForm::RoomInfoForm.new_by_id(
+      params[:facility_id],
+      params[:room_id],
+      nil,
+      nil
+    )
   end
 
   # POST

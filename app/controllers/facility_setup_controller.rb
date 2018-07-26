@@ -61,6 +61,10 @@ class FacilitySetupController < ApplicationController
     end
   end
 
+  # Get show room setup summary
+  def room_summary
+  end
+
   # POST
   def save
     if wizard_form.submit(wizard_form_params)

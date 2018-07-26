@@ -15,8 +15,8 @@ module FacilityWizardForm
     attr_accessor(*ATTRS)
 
     def initialize(facility_id, room_model = {})
-      self.facility_id = facility_id
       map_model_to_form(room_model)
+      self.facility_id = facility_id
     end
 
     class << self
@@ -46,12 +46,9 @@ module FacilityWizardForm
     private
 
     def map_model_to_form(room_model)
-      self.id = room_model[:id]
-      self.name = room_model[:name]
-      self.code = room_model[:code]
-      self.desc = room_model[:desc]
-      self.purpose = room_model[:purpose]
-      self.has_sections = room_model[:has_sections]
+      ATTRS.each do |key|
+        self.send("#{key}=", room_model[key])
+      end
     end
   end
 end

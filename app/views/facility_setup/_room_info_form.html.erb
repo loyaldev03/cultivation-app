@@ -27,7 +27,8 @@
       <label class="toggle-button" for="room_info_has_sections"></label>
     </div>
     <div class="pa3 absolute right-0 bottom-0">
-      <%= f.submit "Save & Continue", class: "b ph3 pv2 ba b--black grow pointer f6" %>
+      <%= f.submit "Save Changes", class: "b ph3 pv2 ba b--black grow pointer f6 mr2" %>
+      <%= link_to "Next > Setup Row", facility_setup_room_summary_path, class: "link b ph3 pv2 ba b--black grow pointer f6 dib ml3" %>
     </div>
   <% end %>
 </div>

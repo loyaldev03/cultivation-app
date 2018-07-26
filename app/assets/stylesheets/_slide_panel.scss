@@ -1,4 +1,4 @@
-$slidePanelWidth: 300px;
+$slidePanelWidth: 25%;
 $slidePanelBgColor: #fefefe;
 
 .animated.slide-panel {
@@ -7,7 +7,7 @@ $slidePanelBgColor: #fefefe;
 
 .slide-panel {
   width: $slidePanelWidth;
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   background-color: $slidePanelBgColor;

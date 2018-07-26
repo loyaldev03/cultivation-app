@@ -16,14 +16,14 @@
     </div>
     <div>
       <%= f.label "Purpose of Room", class:"f6 w-100 db" %>
-      <%= f.select :purpose, options_for_select(Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}) %> 
+      <%= f.select :purpose, options_for_select(Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}, room.purpose) %> 
     </div>
     <div class="w-100">
       <div>
         <p> Is the room split into one or  more sections? </p>
         <p> Quick tip: Will you... </p>
       </div>
-      <%= f.check_box :has_sections, class: "toggle toggle-default" %>
+      <%= f.check_box :has_sections, checked: room.has_sections, class: "toggle toggle-default" %>
       <label class="toggle-button" for="room_info_has_sections"></label>
     </div>
     <div class="pa3 absolute right-0 bottom-0">

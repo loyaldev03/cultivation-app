@@ -3,14 +3,15 @@ class FacilitySetupController < ApplicationController
 
   # GET new facility - basic info form page - step 1
   def new
-    wizard_form
+    @wizard_form = FacilityWizardForm::BasicInfoForm.new(params[:facility_id])
     render "facility_setup/step#{current_step}"
   end
 
   # POST update facility basic info - step 1 / submit
   def update_basic_info
-    if wizard_form.submit(facility_basic_info_params)
-      redirect_to facility_setup_rooms_info_path(facility_id: wizard_form.id, step: next_step)
+    @wizard_form = FacilityWizardForm::BasicInfoForm.new(params[:facility_id])
+    if @wizard_form.submit(facility_basic_info_params)
+      redirect_to facility_setup_rooms_info_path(facility_id: wizard_form.id)
     else
       render "facility_setup/step#{current_step}"
     end
@@ -50,9 +51,11 @@ class FacilitySetupController < ApplicationController
   # POST update specific room info - from the right sidebar
   def update_room_info
     form_object = FacilityWizardForm::UpdateRoomInfoForm.new
-    if form_object.submit(room_info_params)
-      redirect_to facility_setup_rooms_info_path(facility_id: form_object.facility_id)
-    else
+    respond_to do |format|
+      if form_object.submit(room_info_params)
+        format.js { render :js => "toast('Room Saved', 'success')" }
+      else
+      end
     end
   end
 
@@ -60,11 +63,7 @@ class FacilitySetupController < ApplicationController
   def save
     if wizard_form.submit(wizard_form_params)
       # continue to next step or show summary
-      if current_step == 1
-        redirect_to facility_setup_rooms_info_path(facility_id: wizard_form.id, step: next_step)
-      elsif current_step == 2
-        redirect_to facility_setup_new_path(facility_id: wizard_form.id, step: next_step)
-      elsif current_step == 3
+      if current_step == 3
         redirect_to facility_setup_new_path(step: next_step,
                                             facility_id: wizard_form.facility_id,
                                             room_id: wizard_form.room_id)

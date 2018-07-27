@@ -45,7 +45,9 @@
                 options_for_select(["",*1..25], @rooms_info_form.wz_room_count),
                 data: {
                   remote: true,
-                  url: generate_rooms_path(facility_id: @rooms_info_form.facility_id, mode: 'new'),
+                  url: generate_rooms_path(
+                    facility_id: @rooms_info_form.facility_id,
+                    mode: 'new'),
                   method: :post
                 },
                 class: "w-20 mt2 gray br2 ba b--black-20 outline-0"

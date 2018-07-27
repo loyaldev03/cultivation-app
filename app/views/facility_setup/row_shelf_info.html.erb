@@ -1,19 +1,69 @@
-find me at /views/facility_setup/row_shelf_info
+<% content_for :breadcrumb do %>
+  <div class="flex flex-row items-center justify-between">
+    <div>
+      <%= breadcrumbs ["Home",root_path], 
+          ["Dashboard", root_path], 
+          ["Facility Setup", facility_setup_new_path], 
+          ["Room Setup"], 
+          "Row Setup" 
+      %>
+    </div>
 
-<h2>Row and Shelf Setup</h2>
-<h1>Row and Shelf Setup</h1>
-<p>Boom, you just set up the room! now lets configure your grow room by adding rows and shelves</p>
+    <div class="flex flex-row items-center">
+      <i class="material-icons gray f6 mr3 dim">notifications</i>
 
-<div>
-  <strong>Row Details</strong>
-  <label>How many number of rows in total?</label>
-  <%= select_tag :rooms_count,
-    options_for_select(["",*1..25], @rows_form.wz_rows_count),
-    data: {
-      remote: true,
-      url: generate_rows_path(facility_id: @rows_form.facility_id),
-      method: :post
-    },
-    class: "w-20 mt2 gray br2 ba b--black-20"
-  %>
+      <img
+        src="http://tachyons.io/img/logo.jpg"
+        class="br-100 h2 w2 mr3 dib" alt="avatar">
+
+      <h3 class="ma0 ttc f6 fw5 gray">User Name</h3>
+
+      <i class="material-icons dim f6 gray ml2">keyboard_arrow_down</i>
+    </div>
+  </div>
+<% end %>
+
+<div class="pa4 bg-washed-green">
+  <div class="flex flex-column justify-between bg-white">
+    <div class="ph5 pv3 ba bt-0 bb-1 br-0 bl-0 b--black-10">
+      <h2 class="tl pa0 ma0 fw4 dark-gray">Row and Shelf Setup</h2>
+    </div>
+
+    <div class="pv4 ph5 vh-75">
+      <div class="fl w-70 flex flex-column">
+        <h2 class="f2 tl pa0 ma0 fw4 dark-gray">Row and Shelf Setup</h2>
+        <p class="mv3 f5 fw4 dark-gray">
+          Boom, you just set up the room! Now let's configure your grow room by adding rows and shelves.
+        </p>
+
+        <div class="mt3 flex flex-column">
+          <div class="mv4 flex flex-row">
+            <div class="w-20">
+              <span class="f6 fw6 mid-gray">Row Details</span>
+            </div>
+
+            <div class="w-80">
+              <label class="f6 fw5 db mb1 gray">How many number of rows in total?</label>
+
+              <%= select_tag :rooms_count,
+                  options_for_select(["",*1..25], @rows_form.wz_rows_count),
+                  data: {
+                    remote: true,
+                    url: generate_rows_path(facility_id: @rows_form.facility_id),
+                    method: :post
+                  },
+                  class: "w-20 mt2 gray br2 ba b--black-20"
+                %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fl w-30 flex justify-end">
+        <%= render "layouts/timeline" %>
+      </div>
+    </div>
+
+    <%= render "form_buttons" %>
+  </div>
 </div>

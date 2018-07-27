@@ -36,13 +36,14 @@ class FacilitySetupController < ApplicationController
     end
   end
 
-  # GET called through ajax when user changes room count (generate room template)
-  def rooms_from_count
+  # POST called through ajax when user changes room count (generate room record)
+  def generate_rooms
     facility_id = params[:facility_id]
     @rooms_info_form = FacilityWizardForm::RoomsForm.new(facility_id)
     rooms_count = params[:rooms_count].nil? ? 1 : params[:rooms_count].to_i
     @rooms_info_form.set_rooms_from_count(rooms_count)
-    SaveFacilityRoomCount.call(facility_id, rooms_count)
+    SaveFacilityWizardRooms.call(facility_id, @rooms_info_form.rooms)
+
     respond_to do |format|
       format.js
     end
@@ -61,8 +62,19 @@ class FacilitySetupController < ApplicationController
     end
   end
 
-  # Get show room setup summary
+  # GET show room setup summary
   def room_summary
+  end
+
+  # GET show row & shelf setup page
+  # User can dynamically changes the number of rows
+  def row_shelf_info
+    @room_info_form = FacilityWizardForm::RoomInfoForm.new_by_id(
+      params[:facility_id],
+      params[:room_id],
+      nil,
+      nil
+    )
   end
 
   # POST

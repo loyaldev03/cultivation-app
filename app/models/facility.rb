@@ -10,8 +10,6 @@ class Facility
   field :timezone, type: String
   field :is_complete, type: Boolean, default: -> { false }
   field :is_enabled, type: Boolean, default: -> { true }
-  # room count for use on wizard
-  field :wz_room_count, type: Integer, default: -> { 0 }
 
   embeds_one :address, as: :addressable, class_name: 'Address'
   embeds_many :rooms

@@ -78,7 +78,30 @@ class FacilitySetupController < ApplicationController
     @rows_form = FacilityWizardForm::RowsForm.new(params[:facility_id], params[:room_id])
   end
 
+  # GET when user changes number of rows
   def generate_rows
+    facility_id = params[:facility_id]
+    room_id = params[:room_id]
+    mode = params[:mode]
+
+    @rows_form = FacilityWizardForm::RowsForm.new(facility_id, room_id)
+    rows_count = params[:rows_count].nil? ? 1 : params[:rows_count].to_i
+    @rows_form.generate_rows(rows_count)
+
+    if mode == 'new'
+      SaveFacilityWizardRows.call(facility_id, room_id, @rows_form.rows, true)
+    elsif mode == 'increment'
+      SaveFacilityWizardRows.call(facility_id, room_id, [@rows_form.rows.last])
+    end
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  # GET called through ajax when user click on Room
+  def row_info
+    # TODO: Return RowInfoForm
   end
 
   # POST

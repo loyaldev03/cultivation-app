@@ -1,4 +1,4 @@
-$slidePanelWidth: 300px;
+$slidePanelWidth: 383px;
 $slidePanelBgColor: #fefefe;
 
 .animated.slide-panel {
@@ -7,7 +7,7 @@ $slidePanelBgColor: #fefefe;
 
 .slide-panel {
   width: $slidePanelWidth;
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   background-color: $slidePanelBgColor;
@@ -19,7 +19,7 @@ $slidePanelBgColor: #fefefe;
 
 .slide-panel__close-button {
   position: absolute;
-  top: 1em;
+  top: 0.5em;
   right: 1em;
   padding: 0.5em;
   font-weight: 600;
@@ -27,5 +27,5 @@ $slidePanelBgColor: #fefefe;
 }
 
 .slide-panel__body {
-  padding-top: 2em;
+  padding-top: 0;
 }

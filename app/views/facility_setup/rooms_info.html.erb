@@ -1,7 +1,7 @@
 <% content_for :breadcrumb do %>
   <div class="flex flex-row items-center justify-between">
     <div>
-      <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], ["Facility Setup"], "Room Setup" %>
+      <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], ["Facility Setup", facility_setup_new_path], "Room Setup" %>
     </div>
 
     <div class="flex flex-row items-center">
@@ -47,7 +47,7 @@
                   url: fetch_rooms_path(facility_id: @rooms_info_form.facility_id),
                   method: :get
                 },
-                class: "w-20 mt2 gray br2 ba b--black-20"
+                class: "w-20 mt2 gray br2 ba b--black-20 outline-0"
               %>
             </div>
           </div>

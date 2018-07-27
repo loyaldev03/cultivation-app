@@ -10,33 +10,33 @@ module FacilityWizardForm
       set_record(facility_id)
     end
 
-    def set_rooms_from_count(rooms_count = 0)
+    def generate_rooms(rooms_count = 0)
       @wz_room_count = rooms_count
-      if self.rooms.blank?
-        self.rooms = Array.new(rooms_count) do |i|
+      if @rooms.blank?
+        @rooms = Array.new(rooms_count) do |i|
           RoomInfoForm.new(@facility_id, {
             id: BSON::ObjectId.new,
-            code: "RM#{i + 1}",
+            code: "RM#{i + 1}", # TODO: Use sequence generator
             name: "Room #{i + 1}",
           })
         end
       else
-        if rooms_count <= self.rooms.size
-          self.rooms = self.rooms.first(rooms_count)
+        if rooms_count <= @rooms.size
+          @rooms = @rooms.first(rooms_count)
         else
-          missing_count = rooms_count - self.rooms.size
-          last_code = self.rooms.last.code
+          missing_count = rooms_count - @rooms.size
+          last_code = @rooms.last.code
           missing_rooms = Array.new(missing_count) do |i|
             next_count = i + 1
             room_code = NextFacilityCode.call(:room, last_code, next_count).result
-            room_name = "Room #{self.rooms.size + next_count}"
+            room_name = "Room #{@rooms.size + next_count}"
             RoomInfoForm.new(@facility_id, {
               id: BSON::ObjectId.new,
               code: room_code,
               name: room_name,
             })
           end
-          self.rooms.concat(missing_rooms)
+          @rooms.concat(missing_rooms)
         end
       end
     end
@@ -48,15 +48,15 @@ module FacilityWizardForm
       find_cmd = FindFacility.call({id: facility_id})
       if find_cmd.success?
         facility = find_cmd.result
-        unless facility.rooms.blank?
-          self.rooms = facility.rooms.map do |room|
+        if facility.rooms.blank?
+          @wz_room_count = 0
+          @rooms ||= []
+        else
+          @wz_room_count = facility.rooms.size
+          @rooms = facility.rooms.map do |room|
             RoomInfoForm.new(@facility_id, room)
           end
         end
-
-        # if facility.rooms is empty just set to empty array
-        self.rooms ||= []
-        self.wz_room_count = facility.rooms.blank? ? 0 : facility.rooms.size
       end
     end
   end

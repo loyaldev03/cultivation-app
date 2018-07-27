@@ -32,7 +32,7 @@ module FacilityWizardForm
           if room.nil?
             room_info = RoomInfoForm.new(facility_id, {
               id: room_id,
-              name: room_name, # copy auto generated name 
+              name: room_name, # copy auto generated name
               code: room_code, # copy auto generated code
             })
           else

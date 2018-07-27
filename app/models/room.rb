@@ -13,5 +13,5 @@ class Room
   field :wz_generated, type: Boolean, default: -> { true }
 
   embedded_in :facility
-  embeds_many :sections
+  embeds_many :rows
 end

@@ -11,3 +11,19 @@
 /* Rules for using icons as white on a dark background. */
 .material-icons.md-light { color: rgba(255, 255, 255, 1); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+
+/* Responsive media queries */
+@media (max-width: 1500px){
+  #rooms_grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    grid-column-gap: 1rem !important;
+  }
+}
+
+@media (max-width: 1260px) {
+  #rooms_grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-column-gap: 1rem !important;
+  }
+}

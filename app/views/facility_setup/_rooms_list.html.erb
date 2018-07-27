@@ -1,6 +1,6 @@
 <% rooms.each do |room| %>
   <div style="height: 254.7px; width: 168.8px;"
-        class="ba b--black-10 bg-white br2 tc flex flex-column justify-between items-center">
+      class="ba b--black-10 bg-white br2 tc flex flex-column justify-between items-center">
     
     <div class="w-100 flex pa2 flex flex-column">
       <div class="w-100 flex items-center justify-between mb2">
@@ -77,6 +77,12 @@
 <% end %>
 
 
-<% if rooms.size > 0 %>
-  <%= link_to "Add Room", generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), remote: true, method: :post %>
-<% end %>
+<div style="height: 254.7px; width: 168.8px;"
+  class="ba b--black-10 b--dashed bg-white br2 pa3 flex items-center justify-center">
+  <% if rooms.size > 0 %>
+    <%= link_to generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), 
+        remote: true, method: :post, class: "dim link" do %>
+        <i class="material-icons md-48 green">add_circle</i>
+    <%end%>
+  <% end %>
+</div>

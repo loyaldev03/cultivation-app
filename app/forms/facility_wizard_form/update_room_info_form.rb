@@ -1,6 +1,8 @@
 module FacilityWizardForm
   class UpdateRoomInfoForm
     include ActiveModel::Model
+    include Mapper
+
     ATTRS = [:facility_id,
              :id,
              :name,
@@ -15,17 +17,9 @@ module FacilityWizardForm
     validates :code, presence: true
 
     def submit(params)
-      map_attrs_from_request(params)
+      self.map_attrs_from_hash(ATTRS, params)
       if valid?
         save_cmd = SaveRoom.call(self)
-      end
-    end
-
-    private
-
-    def map_attrs_from_request(params)
-      ATTRS.each do |key|
-        self.send("#{key}=", params[key])
       end
     end
   end

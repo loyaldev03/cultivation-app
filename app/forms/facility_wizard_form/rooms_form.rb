@@ -1,6 +1,8 @@
 module FacilityWizardForm
   class RoomsForm
-    attr_accessor :facility_id, :facility, :rooms, :wz_room_count
+    ATTRS = [:facility_id, :facility, :rooms, :wz_room_count]
+
+    attr_accessor(*ATTRS)
 
     def initialize(facility_id)
       @facility_id = facility_id
@@ -30,7 +32,8 @@ module FacilityWizardForm
             room_name = "Room #{self.rooms.size + next_count}"
             RoomInfoForm.new(@facility_id, {
               id: BSON::ObjectId.new,
-              code: room_code, name: room_name,
+              code: room_code,
+              name: room_name,
             })
           end
           self.rooms.concat(missing_rooms)

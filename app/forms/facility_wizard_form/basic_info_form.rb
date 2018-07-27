@@ -1,6 +1,7 @@
 module FacilityWizardForm
   class BasicInfoForm
     include ActiveModel::Model
+    include Mapper
 
     ATTRS = [:id,
              :name,
@@ -30,7 +31,7 @@ module FacilityWizardForm
 
     # Note: params should include :id for update operation
     def submit(params)
-      map_attrs_from_request(params)
+      self.map_attrs_from_hash(ATTRS, params)
       if valid?
         save_cmd = SaveFacility.call(self)
         if save_cmd.success?
@@ -42,25 +43,6 @@ module FacilityWizardForm
     end
 
     private
-
-    def map_attrs_from_request(record)
-      self.id = record[:id]
-      self.name = record[:name]
-      self.code = record[:code]
-      self.company_name = record[:company_name]
-      self.state_license = record[:state_license]
-      self.site_license = record[:site_license]
-      self.timezone = record[:timezone]
-      self.is_complete = record[:is_complete]
-      self.is_enabled = record[:is_enabled]
-      self.address_address = record[:address_address]
-      self.address_city = record[:address_city]
-      self.address_state = record[:address_state]
-      self.address_zipcode = record[:address_zipcode]
-      self.address_country = record[:address_country]
-      self.address_main_number = record[:address_main_number]
-      self.address_fax_number = record[:address_fax_number]
-    end
 
     def map_attrs_from_model(record)
       self.id = record.id

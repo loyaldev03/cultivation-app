@@ -28,7 +28,7 @@
   <h1>Room Setup successfully</h1>
   <p>Boom, you just set up the room!...</p>
 
-  <%= link_to "Start", facility_setup_row_shelf_info_path, class: "dib br2 mv2 f5 link white ph4 pv3 ba b--green bg-green" %>
+  <%= link_to "Start", facility_setup_row_shelf_info_path(facility_id: @room_summary_form.facility_id, room_id: @room_summary_form.room_id), class: "dib br2 mv2 f5 link white ph4 pv3 ba b--green bg-green" %>
 
   <div class="ph3">
       <h3>Rows</h3>

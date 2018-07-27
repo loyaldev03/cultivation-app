@@ -1,29 +1,31 @@
 class SaveFacilityWizardRooms
   prepend SimpleCommand
 
-  def initialize(facility_id, rooms_form, replace = false)
+  def initialize(facility_id, form_rooms, replace = false)
     @facility_id = facility_id
-    @rooms_form = rooms_form
+    @form_rooms = form_rooms
     @replace = replace
   end
 
   def call
-    save_record(@facility_id, @rooms_form, @replace)
+    save_record(@facility_id, @form_rooms, @replace)
   end
 
   private
 
   # Note: Save wizard generated rooms to facility
-  def save_record(facility_id, rooms_form, replace)
+  def save_record(facility_id, form_rooms, replace = false)
     facility = Facility.find(facility_id)
+    raise ArgumentError, 'Invalid Facility' if facility.nil?
     facility.rooms ||= []
+
     if replace
-      facility.rooms = Array.new(rooms_form.size) do |i|
-        build_room(rooms_form[i])
+      facility.rooms = Array.new(form_rooms.size) do |i|
+        build_room(form_rooms[i])
       end
     else
-      facility.rooms << Array.new(rooms_form.size) do |i|
-        build_room(rooms_form[i])
+      facility.rooms << Array.new(form_rooms.size) do |i|
+        build_room(form_rooms[i])
       end
     end
     facility.save!

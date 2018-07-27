@@ -43,7 +43,7 @@ class FacilitySetupController < ApplicationController
 
     @rooms_info_form = FacilityWizardForm::RoomsForm.new(facility_id)
     rooms_count = params[:rooms_count].nil? ? 1 : params[:rooms_count].to_i
-    @rooms_info_form.set_rooms_from_count(rooms_count)
+    @rooms_info_form.generate_rooms(rooms_count)
     if mode == 'new'
       SaveFacilityWizardRooms.call(facility_id, @rooms_info_form.rooms, true)
     elsif mode == 'increment'
@@ -75,12 +75,10 @@ class FacilitySetupController < ApplicationController
   # GET show row & shelf setup page
   # User can dynamically changes the number of rows
   def row_shelf_info
-    @room_info_form = FacilityWizardForm::RoomInfoForm.new_by_id(
-      params[:facility_id],
-      params[:room_id],
-      nil,
-      nil
-    )
+    @rows_form = FacilityWizardForm::RowsForm.new(params[:facility_id], params[:room_id])
+  end
+
+  def generate_rows
   end
 
   # POST

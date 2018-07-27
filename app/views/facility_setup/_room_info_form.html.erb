@@ -1,34 +1,52 @@
-<div class="db pa3 measure">
+<div class="ph4 pv3 bb b--light-gray">
+  <h1 class="f4 fw5 ma0"><%= room.name %> Setup</h1>
+</div>
+
+<div class="db ph4 pv3 measure">
   <%= form_with scope: :room_info, url: facility_setup_update_room_info_path do |f| %>
     <%= f.hidden_field :id, value: room.id %>
     <%= f.hidden_field :facility_id, value: room.facility_id %>
-    <div>
-      <%= f.label "Room Name", class:"f6 w-100 db" %>
-      <%= f.text_field :name, value: room.name, class: "f6 w-100 db" %>
+    
+    <div class="mb3">
+      <%= f.label "Room Name", class:"f6 fw5 db mb1 gray ttc" %>
+      <%= f.text_field :name, value: room.name, class: "db w-70 pa2 f6 gray ba b--black-20 br2 outline-0" %>
     </div>
-    <div>
-      <%= f.label "Room ID", class:"f6 w-100  db" %>
-      <%= f.text_field :code, value: room.code, class: "f6 w-100 db" %>
+
+    <div class="mb3">
+      <span class="f6 fw5 db mb1 gray ttc">Room ID</span>
+      <%= f.text_field :code, value: room.code, class: "db w-30 pa2 f6 gray ba b--black-20 br2 outline-0" %>
     </div>
-    <div>
-      <%= f.label "Description", class:"f6 w-100 db" %>
-      <%= f.text_area :desc, value: room.desc, class: "f6 w-100 db" %>
+
+    <div class="mb3">
+      <%= f.label "Description", class:"f6 fw5 db mb1 gray ttc" %>
+      <%= f.text_area :desc, value: room.desc, class: "db w-90 pa2 f6 gray ba b--black-20 br2 outline-0" %>
     </div>
-    <div>
-      <%= f.label "Purpose of Room", class:"f6 w-100 db" %>
-      <%= f.select :purpose, options_for_select(Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}, room.purpose) %> 
+
+    <div class="mb3">
+      <%= f.label "Purpose of Room", class:"f6 fw5 db mb1 gray ttc" %>
+      <%= f.select :purpose,
+        options_for_select(
+          Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}, room.purpose,) 
+      %> 
     </div>
-    <div class="w-100">
-      <div>
-        <p> Is the room split into one or  more sections? </p>
-        <p> Quick tip: Will you... </p>
+
+    <div class="w-100 pt3">
+      <span class="f5 fw5"> Is the room split into one or more sections? </span>
+      <p class="gray f6 lh-copy mt1 w-90">
+        Quick tip: Will you be using this room for multiple growth stages of your plants? 
+        If you are, please split the room into sections.
+      </p>
+
+
+      <div class="flex justify-end w-90">
+        <%= f.check_box :has_sections, checked: room.has_sections, class: "toggle toggle-default" %>
+        <label class="toggle-button" for="room_info_has_sections"></label>
       </div>
-      <%= f.check_box :has_sections, checked: room.has_sections, class: "toggle toggle-default" %>
-      <label class="toggle-button" for="room_info_has_sections"></label>
     </div>
-    <div class="pa3 absolute right-0 bottom-0">
-      <%= f.submit "Save Changes", class: "b ph3 pv2 ba b--black grow pointer f6 mr2" %>
-      <%= link_to "Next > Setup Row", facility_setup_room_summary_path, class: "link b ph3 pv2 ba b--black grow pointer f6 dib ml3" %>
+
+    <div class="w-100 pa4 bt b--black-10 absolute right-0 bottom-0 flex items-center justify-between">
+      <%= f.submit "Save Changes", class: "db pv2 bg-white bn ttu tracked link dim f6 fw7 green pointer" %>
+      <%= link_to "Next > Setup Row", facility_setup_room_summary_path, class: "db tr pv2 ph3 bg-green white bn br2 ttu tracked link dim f6 fw6" %>
     </div>
   <% end %>
 </div>

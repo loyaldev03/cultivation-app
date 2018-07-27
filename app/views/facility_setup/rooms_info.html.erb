@@ -1,7 +1,7 @@
 <% content_for :breadcrumb do %>
   <div class="flex flex-row items-center justify-between">
     <div>
-      <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], ["Facility Setup"], "Room Setup" %>
+      <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], ["Facility Setup", facility_setup_new_path], "Room Setup" %>
     </div>
 
     <div class="flex flex-row items-center">
@@ -38,19 +38,21 @@
             </div>
 
             <% if @rooms_info_form.wz_room_count == 0 %>
-              <div class="w-80">
-                <label class="f6 fw5 db mb1 gray">How many number of rooms in total?</label>
-                <%= select_tag :rooms_count,
-                  options_for_select(["",*1..25], @rooms_info_form.wz_room_count),
-                  data: {
-                    remote: true,
-                    url: generate_rooms_path(facility_id: @rooms_info_form.facility_id),
-                    method: :post
-                  },
-                  class: "w-20 mt2 gray br2 ba b--black-20"
-                %>
-              </div>
+            <div class="w-80">
+              <label class="f6 fw5 db mb1 gray">How many number of rooms in total?</label>
+              <%# <%= link_to "Room Count", fetch_rooms_path, remote: true %1> %>
+              <%= select_tag :rooms_count,
+                options_for_select(["",*1..25], @rooms_info_form.wz_room_count),
+                data: {
+                  remote: true,
+                  url: fetch_rooms_path(facility_id: @rooms_info_form.facility_id),
+                  method: :get
+                },
+                class: "w-20 mt2 gray br2 ba b--black-20 outline-0"
+              %>
+            </div>
             <% end %>
+
           </div>
         </div>
 

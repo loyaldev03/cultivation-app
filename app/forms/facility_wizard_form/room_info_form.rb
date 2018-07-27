@@ -1,5 +1,7 @@
 module FacilityWizardForm
   class RoomInfoForm
+    include Mapper
+
     ATTRS = [:id,
              :facility_id,
              :name,
@@ -15,7 +17,7 @@ module FacilityWizardForm
     attr_accessor(*ATTRS)
 
     def initialize(facility_id, room_model = {})
-      map_model_to_form(room_model)
+      self.map_attrs_from_hash(ATTRS, room_model)
       self.facility_id = facility_id
     end
 
@@ -40,14 +42,6 @@ module FacilityWizardForm
         else
           raise ArgumentError, 'Invalid Record'
         end
-      end
-    end
-
-    private
-
-    def map_model_to_form(room_model)
-      ATTRS.each do |key|
-        self.send("#{key}=", room_model[key])
       end
     end
   end

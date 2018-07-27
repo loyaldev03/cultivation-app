@@ -46,7 +46,7 @@
 
     <div class="w-100 pa4 bt b--black-10 absolute right-0 bottom-0 flex items-center justify-between">
       <%= f.submit "Save Changes", class: "db pv2 bg-white bn ttu tracked link dim f6 fw7 green pointer" %>
-      <%= link_to "Next > Setup Row", facility_setup_room_summary_path, class: "db tr pv2 ph3 bg-green white bn br2 ttu tracked link dim f6 fw6" %>
+      <%= link_to "Next > Setup Row", facility_setup_room_summary_path(facility_id: room.facility_id, room_id: room.id), class: "db tr pv2 ph3 bg-green white bn br2 ttu tracked link dim f6 fw6" %>
     </div>
   <% end %>
 </div>

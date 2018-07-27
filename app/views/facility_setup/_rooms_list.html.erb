@@ -75,3 +75,8 @@
     </div>
   </div>
 <% end %>
+
+
+<% if rooms.size > 0 %>
+  <%= link_to "Add Room", generate_rooms_path(facility_id: facility_id, mode: 'add'), remote: true %>
+<% end %>

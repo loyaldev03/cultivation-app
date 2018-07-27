@@ -26,6 +26,7 @@ class SaveRoom
     room.desc = form_object.desc
     room.purpose = form_object.purpose
     room.has_sections = form_object.has_sections
+    room.wz_generated = false
     facility.save!
     room
   end

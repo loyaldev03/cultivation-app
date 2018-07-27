@@ -62,7 +62,6 @@ class FacilitySetupController < ApplicationController
       if form_object.submit(room_info_params)
         @rooms_info_form = FacilityWizardForm::RoomsForm.new(form_object.facility_id)
         format.js
-        # format.js { render :js => "toast('Room Saved', 'success')" }
       else
       end
     end
@@ -70,6 +69,7 @@ class FacilitySetupController < ApplicationController
 
   # GET show room setup summary
   def room_summary
+    @room_summary_form = FacilityWizardForm::RoomSummaryForm.new(params)
   end
 
   # GET show row & shelf setup page

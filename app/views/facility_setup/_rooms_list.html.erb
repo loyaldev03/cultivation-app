@@ -78,5 +78,5 @@
 
 
 <% if rooms.size > 0 %>
-  <%= link_to "Add Room", generate_rooms_path(facility_id: facility_id, mode: 'add'), remote: true %>
+  <%= link_to "Add Room", generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), remote: true, method: :post %>
 <% end %>

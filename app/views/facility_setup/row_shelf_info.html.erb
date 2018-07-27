@@ -1,0 +1,19 @@
+find me at /views/facility_setup/row_shelf_info
+
+<h2>Row and Shelf Setup</h2>
+<h1>Row and Shelf Setup</h1>
+<p>Boom, you just set up the room! now lets configure your grow room by adding rows and shelves</p>
+
+<div>
+  <strong>Row Details</strong>
+  <label>How many number of rows in total?</label>
+  <%= select_tag :rooms_count,
+    options_for_select(["",*1..25], @room_info_form.wz_row_count),
+    data: {
+      remote: true,
+      url: fetch_rooms_path(facility_id: @room_info_form.facility_id),
+      method: :get
+    },
+    class: "w-20 mt2 gray br2 ba b--black-20"
+  %>
+</div>

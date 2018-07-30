@@ -4,8 +4,8 @@
     data: {
       remote: true,
       url: generate_rows_path(
-        facility_id: @rows_form.facility_id,
-        room_id: @rows_form.room_id,
+        facility_id: facility_id,
+        room_id: room_id,
         mode: 'new'),
       method: :post
     },
@@ -31,8 +31,8 @@
   <div class="dib pa3 outline ma2 fl">
     <%= link_to "Add Row",
       generate_rows_path(
-        facility_id: @rows_form.facility_id,
-        room_id: @rows_form.room_id,
+        facility_id: facility_id,
+        room_id: room_id,
         rows_count: rows.size + 1,
         mode: 'increment'),
       remote: true,

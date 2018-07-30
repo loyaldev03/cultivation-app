@@ -115,6 +115,14 @@ class FacilitySetupController < ApplicationController
 
   # POST update specific row info - from right panel
   def update_row_info
+    form_object = FacilityWizardForm::UpdateRowInfoForm.new
+    respond_to do |format|
+      if form_object.submit(row_info_params)
+        @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
+                                                          form_object.room_id)
+        format.js
+      end
+    end
     # form_object = FacilityWizardForm::UpdateRoomInfoForm.new
     # respond_to do |format|
     #   if form_object.submit(room_info_params)
@@ -235,9 +243,14 @@ class FacilitySetupController < ApplicationController
     params.require(:facility).permit(FacilityWizardForm::BasicInfoForm::ATTRS)
   end
 
-  # Step - Update Room Info
+  # Step - Update Room Info (Right Panel)
   def room_info_params
     params.require(:room_info).permit(FacilityWizardForm::UpdateRoomInfoForm::ATTRS)
+  end
+
+  # Step - Update Row Info (Right Panel)
+  def row_info_params
+    params.require(:row_info).permit(FacilityWizardForm::UpdateRowInfoForm::ATTRS)
   end
 
   # Step 3

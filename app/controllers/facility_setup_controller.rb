@@ -67,6 +67,17 @@ class FacilitySetupController < ApplicationController
     end
   end
 
+  # POST delete a room
+  def destroy_room
+    @facility_id = params[:facility_id]
+    @room_id = params[:room_id]
+    SaveFacilityDestroyRoom.call(@facility_id, @room_id)
+    respond_to do |format|
+      @rooms_info_form = FacilityWizardForm::RoomsForm.new(@facility_id)
+      format.js
+    end
+  end
+
   # GET show room setup summary
   def room_summary
     @room_summary_form = FacilityWizardForm::RoomSummaryForm.new(params)

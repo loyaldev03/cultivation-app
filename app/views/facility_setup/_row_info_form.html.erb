@@ -7,12 +7,12 @@
     <%= f.hidden_field :id, value: row.id %>
     <%= f.hidden_field :facility_id, value: row.facility_id %>
 
-    <div class="">
+    <div class="mb3">
       <%= f.label "row Name", class:"f6 fw5 db mb1 gray ttc" %>
       <%= f.text_field :name, value: row.name, class: "db w-70 pa2 f6 gray ba b--black-20 br2 outline-0" %>
     </div>
 
-    <div class="mv3">
+    <div class="mb3">
       <span class="f6 fw5 db mb1 gray ttc">row ID</span>
       <%= f.text_field :code, value: row.code, class: "db w-30 pa2 f6 gray ba b--black-20 br2 outline-0" %>
     </div>
@@ -21,6 +21,17 @@
       <span class="f5 fw5">Does the row have multiple levels? </span>
       <p class="gray f6 lh-copy mt1 w-90">
         If toggle is not selected, then that means that this is only 1 shelf that exists at the row.
+      </p>
+    </div>
+
+    <div class="mv3">
+      <span class="f6 fw5 db mb1 gray">How many trays per shelf?</span>
+    </div>
+
+    <div class="pt3">
+      <span class="f5 fw5">Do you use trays? </span>
+      <p class="gray f6 lh-copy mt1 w-90">
+        If toggle is not selected, then that means that this is only 1 shelf that exists on the shelf.
       </p>
     </div>
 

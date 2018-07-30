@@ -37,7 +37,6 @@ module FacilityWizardForm
             })
           else
             room_info = RoomInfoForm.new(facility_id, room)
-            room_info
           end
         else
           raise ArgumentError, 'Invalid Record'

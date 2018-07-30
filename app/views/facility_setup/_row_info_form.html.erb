@@ -1,0 +1,24 @@
+<div class="ph4 pv3 bb b--light-gray">
+  <h1 class="f4 fw5 ma0"><%= row.name %> Setup</h1>
+</div>
+
+<div class="db ph4 pv3 measure">
+  <%= form_with scope: :row_info, url: facility_setup_update_row_info_path do |f| %>
+    <%= f.hidden_field :id, value: row.id %>
+    <%= f.hidden_field :facility_id, value: row.facility_id %>
+
+    <div class="mb3">
+      <%= f.label "row Name", class:"f6 fw5 db mb1 gray ttc" %>
+      <%= f.text_field :name, value: row.name, class: "db w-70 pa2 f6 gray ba b--black-20 br2 outline-0" %>
+    </div>
+
+    <div class="mb3">
+      <span class="f6 fw5 db mb1 gray ttc">row ID</span>
+      <%= f.text_field :code, value: row.code, class: "db w-30 pa2 f6 gray ba b--black-20 br2 outline-0" %>
+    </div>
+
+    <div class="w-100 pa4 bt b--black-10 absolute right-0 bottom-0 flex items-center justify-between">
+      <%= f.submit "Save Changes", class: "db pv2 bg-white bn ttu tracked link dim f6 fw7 green pointer" %>
+    </div>
+  <% end %>
+</div>

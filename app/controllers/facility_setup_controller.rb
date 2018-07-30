@@ -55,7 +55,7 @@ class FacilitySetupController < ApplicationController
     end
   end
 
-  # POST update specific room info - from the right sidebar
+  # POST update specific room info - from the right panel
   def update_room_info
     form_object = FacilityWizardForm::UpdateRoomInfoForm.new
     respond_to do |format|
@@ -99,9 +99,30 @@ class FacilitySetupController < ApplicationController
     end
   end
 
-  # GET called through ajax when user click on Room
+  # GET called through ajax when user click on Row
   def row_info
-    # TODO: Return RowInfoForm
+    @row_info_form = FacilityWizardForm::RowInfoForm.new_by_id(
+      params[:facility_id],
+      params[:room_id],
+      params[:row_id],
+      params[:row_name],
+      params[:row_code]
+    )
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  # POST update specific row info - from right panel
+  def update_row_info
+    # form_object = FacilityWizardForm::UpdateRoomInfoForm.new
+    # respond_to do |format|
+    #   if form_object.submit(room_info_params)
+    #     @rooms_info_form = FacilityWizardForm::RoomsForm.new(form_object.facility_id)
+    #     format.js
+    #   else
+    #   end
+    # end
   end
 
   # POST

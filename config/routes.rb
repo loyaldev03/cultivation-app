@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get "facility_setup/row_shelf_info" => "facility_setup#row_shelf_info"
   post "facility_setup/update_basic_info" => "facility_setup#update_basic_info"
   post "facility_setup/update_room_info" => "facility_setup#update_room_info"
+  post "facility_setup/update_row_info" => "facility_setup#update_row_info"
   post "facility_setup/save" => "facility_setup#save"
   get "settings" => "home#settings"
 

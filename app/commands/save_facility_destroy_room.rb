@@ -12,7 +12,6 @@ class SaveFacilityDestroyRoom
 
   private
 
-  # Note: Save wizard generated rooms to facility
   def save_record(facility_id, room_id)
     facility = Facility.find(facility_id)
     room = facility.rooms.find(room_id)

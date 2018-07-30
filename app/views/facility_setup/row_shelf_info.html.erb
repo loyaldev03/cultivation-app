@@ -45,15 +45,13 @@
             <div class="w-80">
               <label class="f6 fw5 db mb1 gray">How many number of rows in total?</label>
 
-              <%= select_tag :rooms_count,
-                  options_for_select(["",*1..25], @rows_form.wz_rows_count),
-                  data: {
-                    remote: true,
-                    url: generate_rows_path(facility_id: @rows_form.facility_id),
-                    method: :post
-                  },
-                  class: "w-20 mt2 gray br2 ba b--black-20"
+              <div id="rows_grid">
+                <%= render partial: 'rows_list',
+                  locals: {facility_id: @rows_form.facility_id,
+                          room_id: @rows_form.room_id,
+                          rows: @rows_form.rows} 
                 %>
+              </div>
             </div>
           </div>
         </div>

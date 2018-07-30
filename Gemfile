@@ -57,6 +57,8 @@ group :development do
   # Ruby code formatter (.rufo)
   gem 'rufo', '~> 0.3.1', require: false
   gem 'rubocop', '~> 0.57.2', require: false
+  # Format erb files
+  gem 'htmlbeautifier'
 
   # Run app with Procfile
   gem 'foreman', '~> 0.85.0', require: false

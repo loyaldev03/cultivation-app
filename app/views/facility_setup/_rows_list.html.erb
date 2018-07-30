@@ -16,6 +16,18 @@
 <div>
   <% rows.each do |row| %>
     <div class="dib pa3 outline ma2 fl">
+      <%= link_to "Delete",
+        destroy_row_path(
+          facility_id: row.facility_id,
+          room_id: row.room_id,
+          row_id: row.id),
+        remote: true,
+        method: :post,
+        data: {
+          confirm: "Are you sure?"
+        }
+      %>
+
       <%= row.name %>
       <%= link_to "Set Up Row",
         fetch_row_info_path(

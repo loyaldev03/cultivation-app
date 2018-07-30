@@ -78,12 +78,8 @@
 <div 
   style="height: 254.7px; width: 168.8px;"
   class="ba b--black-10 b--dashed bg-white br2 pa3 flex items-center justify-center">
-  <%= link_to "Add Row",
-    generate_rows_path(
-      facility_id: @rows_form.facility_id,
-      room_id: @rows_form.room_id,
-      rows_count: rows.size + 1,
-      mode: 'increment'),
-    remote: true,
-    method: :post %>
+  <%= link_to generate_rows_path(facility_id: @rows_form.facility_id, room_id: @rows_form.room_id, rows_count: rows.size + 1, mode: 'increment'),
+    remote: true, method: :post, class: "dim link" do %>
+    <i class="material-icons md-48 green">add_circle</i>
+  <% end %>
 </div>

@@ -190,6 +190,12 @@ module Constants
     {code: :other, name: 'Other'},
   ].freeze
 
+  TRAY_CAPACITY_TYPES = [
+    {code: :trays, name: 'Trays'},
+    {code: :pots, name: 'Pots / Plants'},
+    {code: :cups, name: 'Cups'},
+  ].freeze
+
   YES_NO = [
     {code: :yes, name: 'Yes'},
     {code: :no, name: 'No'},

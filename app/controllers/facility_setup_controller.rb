@@ -126,12 +126,18 @@ class FacilitySetupController < ApplicationController
 
   # POST update specific row info - from right panel
   def update_row_info
-    form_object = FacilityWizardForm::UpdateRowInfoForm.new
+    # this value should be same as the value in "Continue" button (_row_info_form)
+    is_continue = params[:commit] == "continue"
+    form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
     respond_to do |format|
       if form_object.submit(row_info_params)
         @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
                                                           form_object.room_id)
-        format.js
+        if is_continue
+          format.js { render template: "facility_setup/update_row_continue" }
+        else
+          format.js
+        end
       end
     end
   end

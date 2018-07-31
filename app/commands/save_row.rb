@@ -25,8 +25,9 @@ class SaveRow
     row.code = form_object.code
     row.has_shelves = form_object.has_shelves
     row.has_trays = form_object.has_trays
-    row.wz_shelves_count = form_object.wz_shelves_count
-    row.wz_trays_count = form_object.wz_trays_count
+    row.wz_shelves_count = row.has_shelves ? form_object.wz_shelves_count : 1
+    row.wz_trays_count = row.has_trays ? form_object.wz_trays_count : 0
+    row.wz_generated = false
     room.save!
     row
   end

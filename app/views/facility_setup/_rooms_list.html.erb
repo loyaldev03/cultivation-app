@@ -1,7 +1,7 @@
 <% if @rooms_info_form.wz_room_count == 0 %>
-  <div class="w-80">
+  <div class="w-100">
     <label class="f6 fw5 db mb1 gray">How many number of rooms in total?</label>
-    <%# <%= link_to "Room Count", fetch_rooms_path, remote: true %1> %>
+
     <%= select_tag :rooms_count,
       options_for_select(["",*1..25], @rooms_info_form.wz_room_count),
       data: {
@@ -11,7 +11,7 @@
           mode: 'new'),
         method: :post
       },
-      class: "w-20 mt2 gray br2 ba b--black-20 outline-0"
+      class: "w-100 mt2 gray br2 ba b--black-20 outline-0"
     %>
   </div>
 <% end %>

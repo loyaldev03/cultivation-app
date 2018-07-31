@@ -1,16 +1,20 @@
 <% if @rows_form.wz_rows_count.blank?  %>
-  <%= select_tag :rows_count,
-    options_for_select(["",*1..25], @rows_form.wz_rows_count),
-    data: {
-      remote: true,
-      url: generate_rows_path(
-        facility_id: facility_id,
-        room_id: room_id,
-        mode: 'new'),
-      method: :post
-    },
-    class: "w-20 mt2 gray br2 ba b--black-20"
-  %>
+  <div class="">
+    <label class="f6 fw5 db mb1 gray">How many number of rows in total?</label>
+    
+    <%= select_tag :rows_count,
+      options_for_select(["",*1..25], @rows_form.wz_rows_count),
+      data: {
+        remote: true,
+        url: generate_rows_path(
+          facility_id: facility_id,
+          room_id: room_id,
+          mode: 'new'),
+        method: :post
+      },
+      class: "w-100 mt2 gray br2 ba b--black-20"
+    %>
+  </div>
 <% end %>
 
 <% rows.each do |row| %>
@@ -86,11 +90,15 @@
   </div>
 <% end %>
 
-<div 
-  style="height: 254.7px; width: 168.8px;"
-  class="ba b--black-10 b--dashed bg-white br2 pa3 flex items-center justify-center">
-  <%= link_to generate_rows_path(facility_id: facility_id, room_id: room_id, rows_count: rows.size + 1, mode: 'increment'),
-    remote: true, method: :post, class: "dim link" do %>
-    <i class="material-icons md-48 green">add_circle</i>
-  <% end %>
-</div>
+<% unless rows.blank? %>
+  <div 
+    style="height: 254.7px; width: 168.8px;"
+    class="ba b--black-10 b--dashed bg-white br2 pa3 flex items-center justify-center">
+    <% if rows.size > 0 %>
+      <%= link_to generate_rows_path(facility_id: facility_id, room_id: room_id, rows_count: rows.size + 1, mode: 'increment'),
+        remote: true, method: :post, class: "dim link" do %>
+        <i class="material-icons md-48 green">add_circle</i>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

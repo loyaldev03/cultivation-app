@@ -42,24 +42,20 @@
               <span class="f6 fw6 mid-gray">Row Details</span>
             </div>
 
-            <div class="w-80">
-              <label class="f6 fw5 db mb1 gray">How many number of rows in total?</label>
-
-              <div 
-                id="rows_grid"
-                class="w-80" 
-                style="
-                    display: grid; 
-                    grid-template-columns: repeat(4, 1fr); 
-                    grid-gap: 2rem;
-                  "
-              >
-                <%= render partial: 'rows_list',
-                  locals: {facility_id: @rows_form.facility_id,
-                          room_id: @rows_form.room_id,
-                          rows: @rows_form.rows} 
-                %>
-              </div>
+            <div 
+              id="rows_grid"
+              class="w-80 fl" 
+              style="
+                  display: grid; 
+                  grid-template-columns: repeat(4, 1fr); 
+                  grid-gap: 2rem;
+                "
+            >
+              <%= render partial: 'rows_list',
+                locals: {facility_id: @rows_form.facility_id,
+                        room_id: @rows_form.room_id,
+                        rows: @rows_form.rows} 
+              %>
             </div>
           </div>
         </div>

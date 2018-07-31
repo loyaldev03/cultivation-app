@@ -1,6 +1,7 @@
 class SaveRow
   prepend SimpleCommand
 
+  # NOTE: This method is called when user save the basic row info
   # @form_object = UpdateRowInfoForm
   def initialize(form_object)
     @form_object = form_object
@@ -27,7 +28,6 @@ class SaveRow
     row.has_trays = form_object.has_trays
     row.wz_shelves_count = row.has_shelves ? form_object.wz_shelves_count : 1
     row.wz_trays_count = row.has_trays ? form_object.wz_trays_count : 0
-    row.wz_generated = false
     room.save!
     row
   end

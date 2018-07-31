@@ -134,14 +134,19 @@ class FacilitySetupController < ApplicationController
         format.js
       end
     end
-    # form_object = FacilityWizardForm::UpdateRoomInfoForm.new
-    # respond_to do |format|
-    #   if form_object.submit(room_info_params)
-    #     @rooms_info_form = FacilityWizardForm::RoomsForm.new(form_object.facility_id)
-    #     format.js
-    #   else
-    #   end
-    # end
+  end
+
+  # POST delete a row
+  def destroy_row
+    @facility_id = params[:facility_id]
+    @room_id = params[:room_id]
+    @row_id = params[:row_id]
+    SaveFacilityDestroyRow.call(@facility_id, @room_id, @row_id)
+    respond_to do |format|
+      @rows_form = FacilityWizardForm::RowsForm.new(@facility_id,
+                                                    @room_id)
+      format.js
+    end
   end
 
   # POST

@@ -36,22 +36,18 @@
             <div class="w-20">
               <span class="f6 fw6 mid-gray">Room Details</span>
             </div>
-          </div>
-        </div>
 
-        <div class="w-100 h-100 flex flex-row">
-          <div class="w-20 fl"></div>
-          
-          <div 
-            id="rooms_grid"
-            class="w-80" 
-            style="
-                    display: grid; 
-                    grid-template-columns: repeat(4, 1fr); 
-                    grid-gap: 2rem;
-                  "
-          >
-            <%= render partial: 'rooms_list', locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms} %>
+            <div 
+              id="rooms_grid"
+              class="w-80 fl" 
+              style="
+                      display: grid; 
+                      grid-template-columns: repeat(4, 1fr); 
+                      grid-gap: 2rem;
+                    "
+            >
+              <%= render partial: 'rooms_list', locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms} %>
+            </div>
           </div>
         </div>
       </div>

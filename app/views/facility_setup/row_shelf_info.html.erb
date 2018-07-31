@@ -29,7 +29,7 @@
       <h2 class="tl pa0 ma0 fw4 dark-gray">Row and Shelf Setup</h2>
     </div>
 
-    <div class="pv4 ph5 vh-75">
+    <div class="pv4 ph5" style="min-height: 75vh;">
       <div class="fl w-70 flex flex-column">
         <h2 class="f2 tl pa0 ma0 fw4 dark-gray">Row and Shelf Setup</h2>
         <p class="mv3 f5 fw4 dark-gray">
@@ -42,16 +42,20 @@
               <span class="f6 fw6 mid-gray">Row Details</span>
             </div>
 
-            <div class="w-80">
-              <label class="f6 fw5 db mb1 gray">How many number of rows in total?</label>
-
-              <div id="rows_grid">
-                <%= render partial: 'rows_list',
-                  locals: {facility_id: @rows_form.facility_id,
-                          room_id: @rows_form.room_id,
-                          rows: @rows_form.rows} 
-                %>
-              </div>
+            <div 
+              id="rows_grid"
+              class="w-80 fl" 
+              style="
+                  display: grid; 
+                  grid-template-columns: repeat(4, 1fr); 
+                  grid-gap: 2rem;
+                "
+            >
+              <%= render partial: 'rows_list',
+                locals: {facility_id: @rows_form.facility_id,
+                        room_id: @rows_form.room_id,
+                        rows: @rows_form.rows} 
+              %>
             </div>
           </div>
         </div>

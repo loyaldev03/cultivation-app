@@ -1,5 +1,5 @@
 <div class="ph4 pv3 bb b--light-gray">
-  <h1 class="f4 fw5 ma0"><%= row.name %> Setup</h1>
+  <h1 class="f4 fw5 ma0">Row & Shelf Details</h1>
 </div>
 
 <div class="db ph4 pv3 measure">
@@ -21,7 +21,8 @@
     <div class="mt4">
       <span class="f5 fw5">Does the row have multiple levels?</span>
       <p class="gray f6 lh-copy mt1 w-90">
-        If not toggle, it means that there's only 1 shelf for this row.
+               If toggle is not selected, then that means that there is no trays that exists on the shelf.
+
       </p>
 
       <div class="flex justify-end w-90">
@@ -37,14 +38,15 @@
     <div class="w-100 shelves_number_options" style="display: none">
       <div class="mt3">
         <%= f.label :shelves_count,
-          title: "How many shelves per row?",
-          class: "f6 fw5 db mb1 gray ttc"
+          title: "How many trays per shelf?",
+          class: "f6 fw5 db gray"
         %>
+
         <%= f.select :shelves_count,
           options_for_select([*1..5], row.wz_shelves_count),
           {},
           {
-            class: "w3 mt2 gray br2 ba b--black-20 outline-0"
+            class: "w-40 mt2 gray br2 ba b--black-20 outline-0"
           }
         %>
       </div>
@@ -53,7 +55,7 @@
     <div class="mt4">
       <span class="f5 fw5">Do you use trays?</span>
       <p class="gray f6 lh-copy mt1 w-90">
-        If not toggled, it means there's no trays on the shelf.
+        If toggle is not selected, then that means that there is no trays that exists on the shelf.
       </p>
       <div class="flex justify-end w-90">
         <%= f.check_box :has_trays,
@@ -69,13 +71,14 @@
       <div class="mt3">
         <%= f.label :trays_count,
           title: "How many trays per shelf?",
-          class: "f6 fw5 db mb1 gray ttc"
+          class: "f6 fw5 db gray"
         %>
+
         <%= f.select :trays_count,
           options_for_select(["", *1..10], row.wz_trays_count),
           {},
           {
-            class: "w3 mt2 gray br2 ba b--black-20 outline-0"
+            class: "w-40 mt2 gray br2 ba b--black-20 outline-0"
           }
         %>
       </div>

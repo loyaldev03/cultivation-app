@@ -11,14 +11,26 @@ function setupRadioToggle(filter = null) {
       var defaultTarget = g.getAttribute('data-toggle');
       if (g.checked) {
         // console.log(g.checked);
-        $$(defaultTarget)[0].style.display = "";  
+        $$(defaultTarget)[0].style.display = "";
       } else {
-        $$(defaultTarget)[0].style.display = "none";  
+        $$(defaultTarget)[0].style.display = "none";
       }
     });
   });
 
   var changeEvent = new Event("change");
   var checkedSelector = selector + '[checked]';
-  $$(checkedSelector).forEach(function(t) { t.dispatchEvent(changeEvent) });  
+  $$(checkedSelector).forEach(function(t) { t.dispatchEvent(changeEvent) });
+}
+
+function setupCheckboxToggle() {
+  let selector = 'input[data-toggle]';
+  $$(selector).on('change', function(e) {
+    let toggleTarget = e.target.getAttribute('data-toggle')
+    let targetDisplay = e.target.checked ? "" : "none"
+    $$("." + toggleTarget).forEach(function(tElm) {
+      tElm.style.display = targetDisplay
+      tElm.classList.add("animated","faster","fadeIn")
+    })
+  })
 }

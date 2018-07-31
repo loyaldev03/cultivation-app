@@ -1,3 +1,22 @@
+<% if @rooms_info_form.wz_room_count == 0 %>
+  <div class="w-80">
+    <label class="f6 fw5 db mb1 gray">How many number of rooms in total?</label>
+    <%# <%= link_to "Room Count", fetch_rooms_path, remote: true %1> %>
+    <%= select_tag :rooms_count,
+      options_for_select(["",*1..25], @rooms_info_form.wz_room_count),
+      data: {
+        remote: true,
+        url: generate_rooms_path(
+          facility_id: @rooms_info_form.facility_id,
+          mode: 'new'),
+        method: :post
+      },
+      class: "w-20 mt2 gray br2 ba b--black-20 outline-0"
+    %>
+  </div>
+<% end %>
+
+
 <% rooms.each do |room| %>
   <div style="height: 254.7px; width: 168.8px;"
       class="ba b--black-10 bg-white br2 tc flex flex-column justify-between items-center">
@@ -78,19 +97,21 @@
           room_name: room.name,
           room_code: room.code,
         ), remote: true, 
-        class: "ttc link flex f6 fw5 black justify-center w-100 pv2 bg-washed-green"
+        class: "ttc link flex f6 fw5 black justify-center w-100 pv2"
       %>
     </div>
   </div>
 <% end %>
 
 
-<div style="height: 254.7px; width: 168.8px;"
-  class="ba b--black-10 b--dashed bg-white br2 pa3 flex items-center justify-center">
-  <% if rooms.size > 0 %>
-    <%= link_to generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), 
-        remote: true, method: :post, class: "dim link" do %>
-        <i class="material-icons md-48 green">add_circle</i>
-    <%end%>
-  <% end %>
-</div>
+<% unless rooms.blank? %>
+  <div style="height: 254.7px; width: 168.8px;"
+    class="ba b--black-10 b--dashed bg-white br2 pa3 flex items-center justify-center">
+    <% if rooms.size > 0 %>
+      <%= link_to generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), 
+          remote: true, method: :post, class: "dim link" do %>
+          <i class="material-icons md-48 green">add_circle</i>
+      <%end%>
+    <% end %>
+  </div>
+<% end %>

@@ -37,7 +37,11 @@
 
     <div class="w-100 shelves_number_options" style="display: none">
       <div class="mt3">
-        <label class="f6 fw5 gray db">How many trays per shelf?</label>
+        <%= f.label :shelves_count,
+          title: "How many trays per shelf?",
+          class: "f6 fw5 db gray"
+        %>
+
         <%= f.select :shelves_count,
           options_for_select([*1..5], row.wz_shelves_count),
           {},
@@ -65,7 +69,11 @@
 
     <div class="w-100 trays_number_options" style="display: none">
       <div class="mt3">
-        <label class="f6 fw5 gray db">How many trays per shelf?</label>
+        <%= f.label :trays_count,
+          title: "How many trays per shelf?",
+          class: "f6 fw5 db gray"
+        %>
+
         <%= f.select :trays_count,
           options_for_select(["", *1..10], row.wz_trays_count),
           {},

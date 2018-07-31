@@ -8,7 +8,7 @@ function setupRadioToggle(filter = null) {
 
   $$(selector).on('change', function(e) {
     $$(selector).forEach(function(g) {
-      var defaultTarget = g.getAttribute('data-toggle');
+      let defaultTarget = g.getAttribute('data-toggle');
       if (g.checked) {
         // console.log(g.checked);
         $$(defaultTarget)[0].style.display = "";
@@ -18,19 +18,25 @@ function setupRadioToggle(filter = null) {
     });
   });
 
-  var changeEvent = new Event("change");
-  var checkedSelector = selector + '[checked]';
+  let changeEvent = new Event("change");
+  let checkedSelector = selector + '[checked]';
   $$(checkedSelector).forEach(function(t) { t.dispatchEvent(changeEvent) });
+}
+
+function updateToggleDisplay() {
+  let selector = 'input[data-toggle]';
+  $$(selector).forEach(function(e1) {
+    let toggleTarget = e1.getAttribute('data-toggle');
+    let targetDisplay = e1.checked ? "" : "none";
+    $$("." + toggleTarget).forEach(function(e2) {
+      e2.style.display = targetDisplay;
+      e2.classList.add("animated", "faster", "fadeIn");
+    })
+  })
 }
 
 function setupCheckboxToggle() {
   let selector = 'input[data-toggle]';
-  $$(selector).on('change', function(e) {
-    let toggleTarget = e.target.getAttribute('data-toggle')
-    let targetDisplay = e.target.checked ? "" : "none"
-    $$("." + toggleTarget).forEach(function(tElm) {
-      tElm.style.display = targetDisplay
-      tElm.classList.add("animated","faster","fadeIn")
-    })
-  })
+  $$(selector).on('change', updateToggleDisplay);
+  updateToggleDisplay();
 }

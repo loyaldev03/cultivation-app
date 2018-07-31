@@ -23,6 +23,10 @@ class SaveRow
     # mappings
     row.name = form_object.name
     row.code = form_object.code
+    row.has_shelves = form_object.has_shelves
+    row.has_trays = form_object.has_trays
+    row.wz_shelves_count = form_object.wz_shelves_count
+    row.wz_trays_count = form_object.wz_trays_count
     room.save!
     row
   end

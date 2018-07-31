@@ -2,15 +2,15 @@ module FacilityWizardForm
   class RowInfoForm
     include Mapper
 
-    ATTRS = [:id,
+    ATTRS = [:facility_id,
+             :room_id,
+             :id,
              :code,
              :name,
-             :facility_id,
              :has_shelves,
              :has_trays,
              :wz_shelves_count,
-             :wz_trays_count,
-             :room_id]
+             :wz_trays_count]
 
     attr_accessor(*ATTRS)
 

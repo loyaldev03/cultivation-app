@@ -7,7 +7,11 @@ module FacilityWizardForm
              :room_id,
              :id,
              :name,
-             :code]
+             :code,
+             :has_shelves,
+             :has_trays,
+             :wz_shelves_count,
+             :wz_trays_count]
 
     attr_accessor(*ATTRS)
 

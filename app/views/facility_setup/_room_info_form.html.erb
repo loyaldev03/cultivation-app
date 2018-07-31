@@ -26,7 +26,7 @@
       <%= f.label "Purpose of Room", class:"f6 fw5 db mb1 gray ttc" %>
       <%= f.select :purpose,
         options_for_select(
-          Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}, room.purpose,) 
+          Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}, room.purpose)
       %> 
     </div>
 

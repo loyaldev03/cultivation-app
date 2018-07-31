@@ -20,6 +20,22 @@ module FacilityWizardForm
       self.room_id = room_id
     end
 
+    def shelves_count_text
+      if self.has_shelves && self.wz_shelves_count > 0
+        self.wz_shelves_count
+      else
+        "N/A"
+      end
+    end
+
+    def trays_count_text
+      if self.has_trays && self.wz_trays_count > 0
+        self.wz_trays_count
+      else
+        "N/A"
+      end
+    end
+
     class << self
       def new_by_id(facility_id, room_id, row_id, row_name, row_code)
         facility = RowInfoForm.get_facility(facility_id)

@@ -146,6 +146,19 @@ class FacilitySetupController < ApplicationController
     end
   end
 
+  # POST delete a row
+  def destroy_row
+    @facility_id = params[:facility_id]
+    @room_id = params[:room_id]
+    @row_id = params[:row_id]
+    SaveFacilityDestroyRow.call(@facility_id, @room_id, @row_id)
+    respond_to do |format|
+      @rows_form = FacilityWizardForm::RowsForm.new(@facility_id,
+                                                    @room_id)
+      format.js
+    end
+  end
+
   # GET toggle between different shelves
   def row_shelf_trays
     @facility_id = params[:facility_id]
@@ -164,19 +177,27 @@ class FacilitySetupController < ApplicationController
     end
   end
 
-  # POST delete a row
-  def destroy_row
+  def update_shelf_trays
     @facility_id = params[:facility_id]
     @room_id = params[:room_id]
     @row_id = params[:row_id]
-    SaveFacilityDestroyRow.call(@facility_id, @room_id, @row_id)
+    @shelf_id = params[:id]
+    Rails.logger.debug ">>> shelf_trays_params"
+    Rails.logger.debug shelf_trays_params.inspect
+    
+    # form_object = FacilityWizardForm::UpdateShelfTraysForm.new(shelf_trays_params)
+
     respond_to do |format|
-      @rows_form = FacilityWizardForm::RowsForm.new(@facility_id,
-                                                    @room_id)
+      @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
+        @facility_id,
+        @room_id,
+        @row_id,
+        @shelf_id
+      )
       format.js
     end
   end
-
+  
   # POST
   def save
     if wizard_form.submit(wizard_form_params)
@@ -295,6 +316,14 @@ class FacilitySetupController < ApplicationController
   # Step - Update Row Info (Right Panel)
   def row_info_params
     params.require(:row_info).permit(FacilityWizardForm::UpdateRowInfoForm::ATTRS)
+  end
+
+  def shelf_trays_params
+    params.require(:shelf_trays_info).permit(
+      :id,
+      :code,
+      trays: [:id, :code, :capacity, :capacity_type]
+    )
   end
 
   # Step 3

@@ -18,7 +18,7 @@ class SaveRow
     room = facility.rooms.detect { |r| r.id.to_s == form_object.room_id }
     row = room.rows.detect { |o| o.id.to_s == form_object.id }
     if row.nil?
-      row = room.rows.build(id: form_object.id) 
+      row = room.rows.build(id: form_object.id)
     end
 
     # mappings

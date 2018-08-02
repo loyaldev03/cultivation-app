@@ -2,6 +2,60 @@
   <h1 class="f4 fw5 ma0">Row & Shelf Details</h1>
 </div>
 
-<div class="pa4">
+<div class="pl4 pt2">
   <h3>Shelf & Tray</h3>
+  <div class="pa2">
+    <% shelves.each_with_index do |shelf, i| %>
+      <%= link_to "Shelf #{i+1}",
+        fetch_row_shelf_trays_path(
+          facility_id: facility_id,
+          room_id: room_id,
+          row_id: row_id,
+          shelf_id: shelf.id),
+        class: "link ba ma2 pa2",
+        remote: true %>
+    <% end %>
+  </div>
+  <%= form_with scope: :shelf_trays_info, url: update_shelf_trays_path do |f| %>
+    <%= f.hidden_field :facility_id, value: facility_id %>
+    <%= f.hidden_field :room_id, value: room_id %>
+    <%= f.hidden_field :row_id, value: row_id %>
+    <%= f.hidden_field :id, value: shelf_id %>
+    <div class="">
+      <div class="mt3 w-100">
+        <h3>Shelf Details</h3>
+        <div>
+          <label>Shelf ID</label>
+          <%= f.text_field :code, value: shelf_code %>
+        </div>
+      </div>
+      <div class="mt3 w-100">
+        <h3>Trays Details</h3>
+        
+        <table>
+          <tbody>
+            <tr>
+              <th></th>
+              <th>Tray ID</th>
+              <th class="w3">Capacity</th>
+              <th>Tray Type</th>
+            </tr>
+            <% trays.each_with_index do |tray,i| %>
+              <tr>
+                <%= hidden_field_tag "shelf_trays_info[trays][][id]", tray.id, id: nil %>
+                <td>Tray <%= i+1%></td>
+                <td><%= text_field_tag "shelf_trays_info[trays][][code]", tray.code, class: "w3" %></td>
+                <td><%= text_field_tag "shelf_trays_info[trays][][capacity]", tray.capacity, class: "w3" %></td>
+                <td><%= text_field_tag "shelf_trays_info[trays][][capacity_type]", tray.capacity_type, class: "w3" %></td>
+                <td>X</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <div class="pt3">
+        <%= f.submit "Save" %>
+      </div>
+    </div>
+  <% end %>
 </div>

@@ -44,7 +44,7 @@ module FacilityWizardForm
             RowInfoForm.new(@facility_id, @room_id, {
               id: BSON::ObjectId.new,
               code: row_code,
-              name: row_name
+              name: row_name,
             })
           end
           @rows.concat(missing_rows)

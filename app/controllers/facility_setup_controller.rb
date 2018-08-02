@@ -62,7 +62,6 @@ class FacilitySetupController < ApplicationController
       if form_object.submit(room_info_params)
         @rooms_info_form = FacilityWizardForm::RoomsForm.new(form_object.facility_id)
         format.js
-      else
       end
     end
   end
@@ -127,18 +126,41 @@ class FacilitySetupController < ApplicationController
   # POST update specific row info - from right panel
   def update_row_info
     # this value should be same as the value in "Continue" button (_row_info_form)
-    is_continue = params[:commit] == "continue"
+    is_continue = params[:commit] == 'continue'
     form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
     respond_to do |format|
       if form_object.submit(row_info_params)
         @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
-                                                          form_object.room_id)
+                                                      form_object.room_id)
         if is_continue
-          format.js { render template: "facility_setup/update_row_continue" }
+          @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
+            form_object.facility_id,
+            form_object.room_id,
+            form_object.id
+          )
+          format.js { render template: 'facility_setup/update_row_continue' }
         else
           format.js
         end
       end
+    end
+  end
+
+  # GET toggle between different shelves
+  def row_shelf_trays
+    @facility_id = params[:facility_id]
+    @room_id = params[:room_id]
+    @row_id = params[:row_id]
+    @shelf_id = params[:shelf_id]
+
+    respond_to do |format|
+      @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
+        @facility_id,
+        @room_id,
+        @row_id,
+        @shelf_id
+      )
+      format.js
     end
   end
 

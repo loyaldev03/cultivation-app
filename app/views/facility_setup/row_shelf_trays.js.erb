@@ -1,10 +1,3 @@
-toast('Row Saved', 'success');
-
-$_("#rows_grid").innerHTML = ("<%= j render 'rows_list',
-                              facility_id: @rows_form.facility_id,
-                              room_id: @rows_form.room_id,
-                              rows: @rows_form.rows %>")
-
 $_(".slide-panel__body").innerHTML = ("<%= j render 'row_shelves_trays_form',
                                       facility_id: @row_shelves_trays_form.facility_id,
                                       room_id: @row_shelves_trays_form.room_id,

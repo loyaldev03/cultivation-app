@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"
   get "facility_setup/room_info" => "facility_setup#room_info", as: 'fetch_room_info'
   get "facility_setup/row_info" => "facility_setup#row_info", as: 'fetch_row_info'
+  get "facility_setup/row_shelf_trays" => "facility_setup#row_shelf_trays", as: 'fetch_row_shelf_trays'
   post "facility_setup/generate_rooms" => "facility_setup#generate_rooms", as: 'generate_rooms'
   post "facility_setup/generate_rows" => "facility_setup#generate_rows", as: 'generate_rows'
   post "facility_setup/destroy_room" => "facility_setup#destroy_room", as: 'destroy_room'

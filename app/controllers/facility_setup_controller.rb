@@ -178,26 +178,28 @@ class FacilitySetupController < ApplicationController
   end
 
   def update_shelf_trays
-    @facility_id = params[:facility_id]
-    @room_id = params[:room_id]
-    @row_id = params[:row_id]
-    @shelf_id = params[:id]
-    Rails.logger.debug ">>> shelf_trays_params"
-    Rails.logger.debug shelf_trays_params.inspect
-    
-    # form_object = FacilityWizardForm::UpdateShelfTraysForm.new(shelf_trays_params)
-
-    respond_to do |format|
-      @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
-        @facility_id,
-        @room_id,
-        @row_id,
-        @shelf_id
-      )
-      format.js
+    form_object = FacilityWizardForm::UpdateShelfTraysForm.new(shelf_trays_params)
+    Rails.logger.debug '>>> form_object'
+    Rails.logger.debug form_object.inspect
+    if form_object.submit(shelf_trays_params)
+      Rails.logger.debug '>>>'
+      Rails.logger.debug '>>> form_object submitted'
+      respond_to do |format|
+        @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
+          form_object.facility_id,
+          form_object.room_id,
+          form_object.row_id,
+          form_object.id
+        )
+        format.js
+      end
+    else
+      Rails.logger.debug '>>>'
+      Rails.logger.debug '>>> form_object NOT submitted'
+      nil
     end
   end
-  
+
   # POST
   def save
     if wizard_form.submit(wizard_form_params)
@@ -320,9 +322,12 @@ class FacilitySetupController < ApplicationController
 
   def shelf_trays_params
     params.require(:shelf_trays_info).permit(
+      :facility_id,
+      :room_id,
+      :row_id,
       :id,
       :code,
-      trays: [:id, :code, :capacity, :capacity_type]
+      trays: [:id, :code, :capacity, :capacity_type],
     )
   end
 

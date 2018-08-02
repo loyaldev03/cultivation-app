@@ -12,6 +12,8 @@ module FacilityWizardForm
 
     attr_accessor(*ATTRS)
 
+    validates :code, presence: true
+
     def submit(params)
       @facility_id = params[:facility_id]
       @room_id = params[:room_id]
@@ -19,6 +21,19 @@ module FacilityWizardForm
       @id = params[:id]
       @code = params[:code]
       @trays = map_trays_from_params(params[:trays])
+
+      if valid?
+        cmd = SaveShelf.call(params)
+        @trays.each do |tray|
+          Rails.logger.debug '>>> >>> >>>'
+          Rails.logger.debug tray.inspect
+          Rails.logger.debug '>>> >>> >>>'
+          SaveTray.call(cmd.result, tray)
+          Rails.logger.debug '>>> after call >>>'
+        end
+      else
+        false
+      end
     end
 
     private

@@ -16,12 +16,10 @@
         remote: true %>
     <% end %>
   </div>
-  <%= form_with scope: :shelf_trays_info,
-    url: update_shelf_trays_path(
-      facility_id: facility_id,
-      room_id: room_id,
-      row_id: row_id
-    ) do |f| %>
+  <%= form_with scope: :shelf_trays_info, url: update_shelf_trays_path do |f| %>
+    <%= f.hidden_field :facility_id, value: facility_id %>
+    <%= f.hidden_field :room_id, value: room_id %>
+    <%= f.hidden_field :row_id, value: row_id %>
     <%= f.hidden_field :id, value: shelf_id %>
     <div class="">
       <div class="mt3 w-100">

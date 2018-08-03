@@ -73,6 +73,19 @@
           </tbody>
         </table>
       </div>
+                  <%= link_to "Add tray",
+                    generate_tray_path(
+                      facility_id: facility_id,
+                      room_id: room_id,
+                      row_id: row_id,
+                      shelf_id: shelf_id),
+                    class: "link pa1",
+                    remote: true,
+                    method: :post,
+                    data: {
+                      confirm: "Add tray to shelf?"
+                    }
+                  %>
       <div class="pt3">
         <%= f.submit "Save" %>
       </div>

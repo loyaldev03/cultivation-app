@@ -200,6 +200,24 @@ class FacilitySetupController < ApplicationController
     end
   end
 
+  def destroy_tray
+    @facility_id = params[:facility_id]
+    @room_id = params[:room_id]
+    @row_id = params[:row_id]
+    @shelf_id = params[:shelf_id]
+    @tray_id = params[:id]
+    DestroyShelfTray.call(@tray_id)
+    respond_to do |format|
+      @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
+        @facility_id,
+        @room_id,
+        @row_id,
+        @shelf_id
+      )
+      format.js
+    end
+  end
+
   # POST
   def save
     if wizard_form.submit(wizard_form_params)

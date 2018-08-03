@@ -52,7 +52,22 @@
                     class: "w3"
                   %> 
                 </td>
-                <td>X</td>
+                <td>
+                  <%= link_to "X",
+                    destroy_tray_path(
+                      facility_id: facility_id,
+                      room_id: room_id,
+                      row_id: row_id,
+                      shelf_id: shelf_id,
+                      id: tray.id),
+                    class: "link pa1",
+                    remote: true,
+                    method: :post,
+                    data: {
+                      confirm: "Are you sure?"
+                    }
+                  %>
+                </td>
               </tr>
             <% end %>
           </tbody>

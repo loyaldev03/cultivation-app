@@ -17,6 +17,8 @@ class SaveFacilityDestroyRow
     facility = Facility.find(facility_id)
     room = facility.rooms.find(room_id)
     row = room.rows.find(row_id)
+    # TODO: delete all shelves & tray under row?
+    # or run cleanup job to remove orphan record
     room.rows.delete(row)
   end
 end

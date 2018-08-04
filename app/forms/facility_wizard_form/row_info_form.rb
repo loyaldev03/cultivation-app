@@ -24,7 +24,7 @@ module FacilityWizardForm
       if self.has_shelves && self.wz_shelves_count > 0
         self.wz_shelves_count
       else
-        "N/A"
+        'N/A'
       end
     end
 
@@ -32,7 +32,7 @@ module FacilityWizardForm
       if self.has_trays && self.wz_trays_count > 0
         self.wz_trays_count
       else
-        "N/A"
+        'N/A'
       end
     end
 
@@ -44,7 +44,6 @@ module FacilityWizardForm
         row
       end
     end
-
 
     class << self
       def get_facility(facility_id)
@@ -75,7 +74,7 @@ module FacilityWizardForm
           row_info = RowInfoForm.new(facility_id, room.id.to_s, {
             id: row_id,
             name: row_name,
-            code: row_code
+            code: row_code,
           })
         else
           row_info = RowInfoForm.new(facility_id, room.id.to_s, row)

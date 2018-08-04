@@ -1,12 +1,11 @@
-$slidePanelWidth: 383px;
 $slidePanelBgColor: #fefefe;
 
-.animated.slide-panel {
-  animation-duration: 0.3s;
-}
+// .animated.rc-slide-panel {
+//   animation-duration: 0.3s;
+// }
 
-.slide-panel {
-  width: $slidePanelWidth;
+.rc-slide-panel {
+  width: 0;
   position: fixed;
   top: 0;
   right: 0;
@@ -14,12 +13,12 @@ $slidePanelBgColor: #fefefe;
   min-height: 100%;
   border-left: 1px solid #cccccc;
   overflow: hidden;
-  display: none;
   box-shadow: -10px 0px 15px rgba(0,0,0,0.15);
   z-index: 999999;
+  transition: 0.3s;
 }
 
-.slide-panel__close-button {
+.rc-slide-panel__close-button {
   position: absolute;
   top: 0.5em;
   right: 1em;
@@ -28,6 +27,6 @@ $slidePanelBgColor: #fefefe;
   cursor: pointer;
 }
 
-.slide-panel__body {
+.rc-slide-panel__body {
   padding-top: 0;
 }

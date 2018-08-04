@@ -1,0 +1,70 @@
+<% content_for :breadcrumb do %>
+  <div class="flex flex-row items-center justify-between">
+    <div>
+      <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], ['Inventory Setup', inventory_setup_path], 'Plant Inventory' %>
+    </div>
+
+    <div class="flex flex-row items-center">
+      <i class="material-icons gray f6 mr3 dim">notifications</i>
+
+      <img
+        src="http://tachyons.io/img/logo.jpg"
+        class="br-100 h2 w2 mr3 dib" alt="avatar">
+
+      <h3 class="ma0 ttc f6 fw5 gray">User Name</h3>
+
+      <i class="material-icons dim f6 gray ml2">keyboard_arrow_down</i>
+    </div>
+  </div>
+<% end %>
+
+
+<div class="pa4">
+  <div class="flex flex-column justify-between bg-white">
+    
+    <div class="ph5 pv3 ba bt-0 bb-1 br-0 bl-0 b--black-10">
+      <h2 class="tl pa0 ma0 fw4 dark-gray">Plant Inventory</h2>
+    </div>
+
+    <div class="ph5 pv4">
+      <ol class="lh-copy" style="line-height: 2.4em;">
+        <li>Tell me strain name</li>
+        <li>Tell me type</li>
+        <li>Do you have current stock to add?</li>
+        <li>If yes & they are from my farm, jump to 9</li>
+        <li>If yes & they are from vendor, jump to 6:</li>
+
+        <li>Would you like to import from file?</li>
+        <li>If yes, show import file</li>
+        <li>If no, ask the following depending on type:
+          <ul>
+            <li>vendor</li>
+            <li>vendor license</li>
+            <li>invoice no</li>
+            <li>list of plant/seed/ clone identifiers</li>
+            <li>notes</li>
+            <li>Purchase dates</li>
+            <li>current location</li>
+          </ul>
+        </li>
+
+        <li>
+          Ask the following:
+          <ul>
+            <li>vendor</li>
+            <li>Parent ID</li>
+            <li>Clone ID</li>
+            <li>Clone date</li>
+            <li>current location</li>
+            <li>Harvest batch id, if currently under harvest</li>
+            <li>current stage, if currently under harvest</li>
+          </ul>
+        </li>
+        <li>or would you like to import from file?</li>
+      </ol>
+      <%= render 'react_slide_panel' %>
+      <%= react_component 'inventory/plant/components/PlantList' %>
+    </div>
+
+  </div>
+</div>

@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   post "facility_setup/save" => "facility_setup#save"
   get "settings" => "home#settings"
 
+  get "inventory/setup" => "home#inventory_setup"
+
   namespace 'materials', as: :materials do
     get '/' => 'materials#index'
     resources :items, only: [:index, :edit, :update, :new, :create, :destroy]
@@ -28,6 +30,10 @@ Rails.application.routes.draw do
   namespace 'purchasing', as: :purchasing do
     get '/' => 'purchasing#index'
     resources :vendors, only: [:index, :edit, :update, :new, :create, :destroy]
+  end
+
+  namespace 'inventory', as: :inventory do
+    resources 'plant_setup'
   end
 
   namespace 'settings' do

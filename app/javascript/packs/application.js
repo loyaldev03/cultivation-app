@@ -7,9 +7,7 @@
 // To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
 // layout file, like app/views/layouts/application.html.erb
 
-// Support component names relative to this directory:
-// import 'antd/dist/antd.css'
-//
+import { editorSidebarHandler } from '../components/utils/EditorSidebarHandler'
 
 var componentRequireContext = require.context('components', true)
 var ReactRailsUJS = require('react_ujs')

@@ -4,20 +4,20 @@
   "dependencies": {
     "@rails/webpacker": "3.5",
     "animate.css": "^3.7.0",
-    "antd": "^3.6.5",
     "babel-core": "^6.26.3",
-    "babel-plugin-import": "^1.8.0",
     "babel-preset-react": "^6.24.1",
     "prettier-eslint": "^8.8.2",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-table": "^6.8.6",
     "react_ujs": "^2.4.4",
     "tachyons": "^4.11.1",
     "turbolinks": "^5.1.1",
     "turbolinks-animate": "^3.0.5"
   },
   "devDependencies": {
+    "babel-plugin-import": "^1.8.0",
     "eslint": "^5.0.1",
     "eslint-plugin-react": "^7.10.0",
     "prettier-eslint-cli": "^4.7.1",

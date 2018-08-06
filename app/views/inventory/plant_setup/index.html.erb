@@ -26,7 +26,14 @@
       <h2 class="tl pa0 ma0 fw4 dark-gray">Plant Inventory</h2>
     </div>
 
-    <div class="ph5 pv4">
+    <div class="ph5 pv4 f6">
+      <% # render 'react_slide_panel' %>
+      <% # react_component 'inventory/plant/components/PlantList' %>
+
+      <%= react_component 'inventory/plant_setup/components/PlantSetupApp' %>
+    </div>
+
+    <div class="ph5 pv4 f6">
       <ol class="lh-copy" style="line-height: 2.4em;">
         <li>Tell me strain name</li>
         <li>Tell me type</li>
@@ -62,8 +69,6 @@
         </li>
         <li>or would you like to import from file?</li>
       </ol>
-      <%= render 'react_slide_panel' %>
-      <%= react_component 'inventory/plant/components/PlantList' %>
     </div>
 
   </div>

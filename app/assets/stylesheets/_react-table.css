@@ -67,7 +67,8 @@
   border-right: 1px solid rgba(0, 0, 0, 0.02);
 }
 .ReactTable .rt-thead.-header {
-  box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.15);
+  /* box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.15); */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 .ReactTable .rt-thead .rt-tr {
   text-align: center;

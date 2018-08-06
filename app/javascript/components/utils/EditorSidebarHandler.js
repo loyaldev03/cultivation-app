@@ -8,13 +8,13 @@ class EditorSidebarHandler {
     // console.log(window.sidebarNode);
     const event = new CustomEvent('editor-sidebar-open', { detail: data })
     document.dispatchEvent(event)
-    this.sidebarNode.style.width = "450px";
+    this.sidebarNode.style.width = '450px'
   }
 
   close(data) {
     const event = new CustomEvent('editor-sidebar-close', { detail: data })
     document.dispatchEvent(event)
-    this.sidebarNode.style.width = 0;
+    this.sidebarNode.style.width = 0
   }
 
   setup(node) {
@@ -25,11 +25,10 @@ class EditorSidebarHandler {
 const editorSidebarHandler = new EditorSidebarHandler()
 window.editorSidebar = editorSidebarHandler
 
-
-document.addEventListener("DOMContentLoaded", function(event) {
-  console.log(document.querySelector("[data-role=sidebar]"))
+document.addEventListener('DOMContentLoaded', function(event) {
+  console.log(document.querySelector('[data-role=sidebar]'))
   console.log('calling setup....')
-  const sidebarNode = document.querySelector("[data-role=sidebar]")
+  const sidebarNode = document.querySelector('[data-role=sidebar]')
   if (sidebarNode) {
     window.editorSidebar.setup(sidebarNode)
   }

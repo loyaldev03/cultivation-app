@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   end
 
   namespace 'inventory', as: :inventory do
-    resources 'plant_setup'
+    resources 'plant_setup', only: [:index]
   end
 
   namespace 'settings' do
@@ -51,6 +51,12 @@ Rails.application.routes.draw do
       resources :sections,  only: [:index, :edit, :update]
       resources :rows,      only: [:index, :edit, :update]
       resources :shelves,   only: [:index, :edit, :update]
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      resources :plants
     end
   end
 end

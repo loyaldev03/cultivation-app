@@ -64,7 +64,7 @@ const users = [
 //     field :code, type: String # part no
 //     field :desc, type: String
 //     field :uom, type: String # unit of measure
-//     field :storage_type, type: String  # plant (seed, mother, clone), harvest, sale item, consumable, others, waste } 
+//     field :storage_type, type: String  # plant (seed, mother, clone), harvest, sale item, consumable, others, waste }
 //     field :strain, type: String
 
 const plants = [

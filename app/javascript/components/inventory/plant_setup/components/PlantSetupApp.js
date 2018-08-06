@@ -1,7 +1,6 @@
 import React from 'react'
 import PlantList from './PlantList'
 
-
 class PlantSetupApp extends React.Component {
   constructor(props) {
     super(props)
@@ -27,16 +26,18 @@ class PlantSetupApp extends React.Component {
       <React.Fragment>
         <button onClick={this.openSidebar}>Add plant</button>
         <PlantList />
-        <div className="rc-slide-panel animated slideOutRight" data-role="sidebar">
+        <div
+          className="rc-slide-panel animated slideOutRight"
+          data-role="sidebar"
+        >
           <span className="rc-slide-panel__close-button dim">
             <i className="material-icons mid-gray md-18">close</i>
           </span>
-          <div className="rc-slide-panel__body"></div>
+          <div className="rc-slide-panel__body" />
         </div>
       </React.Fragment>
     )
   }
-
 }
 
 export default PlantSetupApp

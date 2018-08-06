@@ -1,17 +1,20 @@
 :root {
+  --orange: #F66830;
   --red: #FF4136;
   --blue: #357EDD;
   --green: #19A974;
   --yellow: #FFC600;
   --black: #393939;
+  --dark-gray: #2E3B4E;
+  --light-gray: #707A8B;
   --white: #FFFFFF;
-  --whiteSmoke: #F9F7F5;
+  --whiteSmoke: #F3F5F7;
 }
 
 html {
   /* A system font stack so things load nice and quick! */
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
-  font-size: 14px;
+  //font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   color: var(--black);
   background-color: var(--whiteSmoke);
 }
@@ -22,6 +25,8 @@ html {
 
 body {
   width: 100%;
+  -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 hr {
@@ -34,4 +39,40 @@ hr {
 a {
   outline-width: 0;
   outline: 0 !important;
+}
+
+/* box - border, shadow */
+.br3 {
+  border-radius: 3px;
+}
+
+.box-shadow {
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,0.15);
+}
+
+.box-shadow-header {
+  box-shadow: 0 3px 10px 0 rgba(0,0,0,0.06);
+}
+
+/* Typescale */
+
+h3 {
+  font-size: 50px;
+  letter-spacing: 0;
+  font-weight: 400;
+  color: var(--dark-gray);
+}
+
+h6 {
+  font-size: 22px;
+  letter-spacing: 0.15px;
+  font-weight: 600;
+  color: var(--dark-gray);
+}
+
+.body-1 {
+  font-size: 17px;
+  letter-spacing: 0.5px;
+  font-weight: 400;
+  color: var(--light-gray);
 }

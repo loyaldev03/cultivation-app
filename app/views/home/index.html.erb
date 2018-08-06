@@ -4,7 +4,7 @@
 
 <div class="ph4">
   <% content_for :breadcrumb do %>
-    <div class="flex flex-row items-center justify-between">
+    <div class="flex flex-row items-center justify-between bg-white">
       <div>
         <%= breadcrumbs ["Home",root_path], "Dashboard" %>
       </div>
@@ -23,11 +23,11 @@
     </div>
   <% end %>
 
-  <p class="f1 fw6 w-100 tc">
+  <h3 class="w-100 tc">
     Welcome to Cannected, user.
     <br/>
     Where do you want to start?
-  </p>
+  </h3>
 
   <% @dashboard.incomplete_facilities.each do |f| %>
     <p class="mt2 pa4 bg-yellow">
@@ -40,31 +40,42 @@
   <% end %>
 
   <div class="flex flex-row items-center justify-center">
-    <div class="w-20 tc bg-white pa3 ba b--black-20">
-      <%= link_to "Setup a new facility (Wizard)", 
-          facility_setup_new_path, 
-          class: "mv3 dim dib link pv2 ph3 ba b--black-20 br-100 h4 w4 flex items-center justify-center center" 
+    <div
+      style="height: 378px; width: 300px;" 
+      class="w-20 tc bg-white pa3 bn br3 box-shadow flex flex-column justify-center">
+      
+      <%= link_to facility_setup_new_path, 
+          class: "mb3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" do
       %>
-      <h2 class="fw5 ttc">Setting up facility</h2>
-      <p class="w-100 center lh-copy gray fw4">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+        <%= image_tag 'icons/add-facility' %>
+      <% end %>
+
+      <h6 class="ttc ma0">Setting up facility</h6>
+      <p class="w-100 center body-1">Set up unlimited facilities, rooms and shelves for proper planning.</p>
     </div>
 
-    <div class="w-20 tc bg-white pa3 mh4 ba b--black-20">
-      <%= link_to "Setup a new inventory", 
-          "#", 
-          class: "mv3 dim dib link pv2 ph3 ba b--black-20 br-100 h4 w4 flex items-center justify-center center" 
-      %>
-      <h2 class="fw5 ttc">Setting up inventory</h2>
-      <p class="w-100 center lh-copy gray fw4">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+    <div 
+      style="height: 378px; width: 300px;" 
+      class="w-20 mh4 tc bg-white pa3 bn br3 box-shadow flex flex-column justify-center">
+      
+      <%= link_to "#" do %>
+        <%= content_tag :a, image_tag('icons/add-inventory'), 
+            :class=> "mb3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" %>
+      <% end %>
+
+      <h6 class="ma0 ttc">Setting up inventory</h6>
+      <p class="w-100 center body-1">Set up unlimited facilities, rooms and shelves for proper planning.</p>
     </div>
 
-    <div class="w-20 tc bg-white pa3 ba b--black-20">
-      <%= link_to "Setup a new cultivation", 
-          "#", 
-          class: "mv3 dim dib link pv2 ph3 ba b--black-20 br-100 h4 w4 flex items-center justify-center center" 
-      %>
-      <h2 class="fw5 ttc">Setting up cultivation</h2>
-      <p class="w-100 center lh-copy gray fw4">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+    <div 
+      style="height: 378px; width: 300px;" 
+      class="w-20 tc bg-white pa3 bn br3 box-shadow flex flex-column justify-center">
+      
+      <%= content_tag :a, image_tag('icons/add-cultivation'), 
+          :class=> "mb3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" %>
+
+      <h6 class="ma0 ttc">Setting up cultivation</h6>
+      <p class="w-100 center body-1">Set up unlimited facilities, rooms and shelves for proper planning.</p>
     </div>
   </div>
 </div>

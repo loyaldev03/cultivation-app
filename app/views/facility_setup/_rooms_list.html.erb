@@ -1,28 +1,26 @@
 <% if @rooms_info_form.wz_room_count == 0 %>
-  <div class="w-100">
-    <label class="f6 fw5 db mb1 gray">How many number of rooms in total?</label>
+  <div class="ml6">
+      <label class="f6 fw5 mb1 gray">How many number of rooms in total?</label>
 
-    <%= select_tag :rooms_count,
-      options_for_select(["",*1..25], @rooms_info_form.wz_room_count),
-      data: {
-        remote: true,
-        url: generate_rooms_path(
-          facility_id: @rooms_info_form.facility_id,
-          mode: 'new'),
-        method: :post
-      },
-      class: "w-100 mt2 gray br2 ba b--black-20 outline-0"
-    %>
-  </div>
+      <%= select_tag :rooms_count,
+        options_for_select(["",*1..25], @rooms_info_form.wz_room_count),
+        data: {
+          remote: true,
+          url: generate_rooms_path(
+            facility_id: @rooms_info_form.facility_id,
+            mode: 'new'),
+          method: :post
+        },
+        class: "w-100 mt2 gray br2 ba b--black-20 outline-0"
+      %>
+    </div>
 <% end %>
 
-
+<div class="siema">
 <% rooms.each do |room| %>
-  <div style="height: 254.7px; width: 168.8px;"
-      class="ba b--black-10 bg-white br2 tc flex flex-column justify-between items-center">
-    
-    <div class="w-100 flex pa2 flex flex-column">
-      <div class="w-100 flex items-center justify-between mb2">
+  <div class="width: 233px">
+    <div class="">
+      <div class="">
         <%= link_to destroy_room_path(facility_id: room.facility_id, room_id: room.id),
           remote: true, method: :post,
           data: {
@@ -104,8 +102,7 @@
 
 
 <% unless rooms.blank? %>
-  <div style="height: 254.7px; width: 168.8px;"
-    class="ba b--black-10 b--dashed bg-white br2 pa3 flex items-center justify-center">
+  <div style="" class="">
     <% if rooms.size > 0 %>
       <%= link_to generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), 
           remote: true, method: :post, class: "dim link" do %>
@@ -114,3 +111,5 @@
     <% end %>
   </div>
 <% end %>
+
+</div>

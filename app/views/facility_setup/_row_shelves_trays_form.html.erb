@@ -13,7 +13,7 @@
           room_id: room_id,
           row_id: row_id,
           shelf_id: shelf.id),
-        class: "shelf-button link ba bt-0 bb-0 bl-0 bw1 pa3 flex flex-auto justify-center green fw5 f5",
+        class: "shelf-button link ba bt-0 bb-0 bl-0 bw1 pa3 flex flex-auto justify-center green fw5 f5 dim",
         remote: true %>
     <% end %>
   </div>
@@ -69,13 +69,42 @@
               </td>
 
               <td>
-                <i class="material-icons md-16 gray dim pointer">delete</i>
+                <%= link_to destroy_tray_path(
+                      facility_id: facility_id,
+                      room_id: room_id,
+                      row_id: row_id,
+                      shelf_id: shelf_id,
+                      id: tray.id),
+                    class: "link",
+                    remote: true,
+                    method: :post,
+                    data: {
+                      confirm: "Are you sure?"
+                    } do
+                %>
+                  <i class="material-icons md-16 gray dim pointer">delete</i>
+                <% end %>
               </td>
             </tr>
           <% end %>
         </tbody>
       </table>
     </div>
+    
+    <%= link_to generate_tray_path(
+        facility_id: facility_id,
+        room_id: room_id,
+        row_id: row_id,
+        shelf_id: shelf_id),
+      class: "link pa3 mt3 flex items-center justify-center dim",
+      remote: true,
+      method: :post,
+      data: {
+        confirm: "Add tray to shelf?"
+      } do
+    %>
+      <i class="material-icons md-24 green">add_circle</i>
+    <% end %>
 
     <div class="pt3 w-100 pa4 bt b--light-gray absolute left-0 bottom-0 flex justify-end">
       <%= f.submit "Save", class: "pointer db tr pv3 ph4 bg-green white bn br2 ttu tracked link dim f6 fw6" %>

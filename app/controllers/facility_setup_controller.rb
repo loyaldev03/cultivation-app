@@ -218,6 +218,23 @@ class FacilitySetupController < ApplicationController
     end
   end
 
+  def generate_tray
+    @facility_id = params[:facility_id]
+    @room_id = params[:room_id]
+    @row_id = params[:row_id]
+    @shelf_id = params[:shelf_id]
+    SaveShelfAddTray.call(@facility_id, @room_id, @row_id, @shelf_id)
+    respond_to do |format|
+      @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
+        @facility_id,
+        @room_id,
+        @row_id,
+        @shelf_id
+      )
+      format.js
+    end
+  end
+
   # POST
   def save
     if wizard_form.submit(wizard_form_params)

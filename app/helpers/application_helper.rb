@@ -6,14 +6,15 @@ module ApplicationHelper
   def breadcrumbs(*paths)
     paths.map do |pair|
       if pair.length == 2
-        link_to pair[0], pair[1], class: 'black link fw5 f6'
+        link_to pair[0], pair[1], class: 'link active-link'
       elsif pair.is_a? String
-        content_tag :span, pair, class: 'gray fw5 f6'
+        content_tag :span, pair, class: 'inactive-link'
       else
-        pair[0]
+        content_tag :span, pair, class: 'inactive-link'
       end
     end.join(
-      content_tag :span, '>', class: 'ph2 black fw5 f6'
+      content_tag :i,'keyboard_arrow_right', class: 'material-icons md-600 md-gray md-17 ph2'
+      
     ).html_safe
   end
 

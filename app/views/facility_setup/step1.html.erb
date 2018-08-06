@@ -1,20 +1,18 @@
 <% content_for :breadcrumb do %>
-  <div class="flex flex-row items-center justify-between">
-    <div>
-      <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], "Facility Setup" %>
-    </div>
+  <div class="flex items-center">
+    <%= breadcrumbs ["Home",root_path], "Facility Setup" %>
+  </div>
 
-    <div class="flex flex-row items-center">
-      <i class="material-icons gray f6 mr3 dim">notifications</i>
+  <div class="flex flex-row items-center">
+    <i class="material-icons gray f6 mr3 dim">notifications</i>
 
-      <img
-        src="http://tachyons.io/img/logo.jpg"
-        class="br-100 h2 w2 mr3 dib" alt="avatar">
+    <img
+      src="http://tachyons.io/img/logo.jpg"
+      class="br-100 h2 w2 mr3 dib" alt="avatar">
 
-      <h3 class="ma0 ttc f6 fw5 gray">User Name</h3>
+    <h3 class="ma0 ttc f6 fw5 gray">User Name</h3>
 
-      <i class="material-icons dim f6 gray ml2">keyboard_arrow_down</i>
-    </div>
+    <i class="material-icons dim f6 gray ml2">keyboard_arrow_down</i>
   </div>
 <% end %>
 

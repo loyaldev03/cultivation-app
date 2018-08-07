@@ -2,11 +2,10 @@ class SaveShelfAddTray
   prepend SimpleCommand
 
   def initialize(
-    facility_id,
-    room_id,
-    row_id,
-    shelf_id
-  )
+                 facility_id,
+                 room_id,
+                 row_id,
+                 shelf_id)
     @facility_id = facility_id
     @room_id = room_id
     @row_id = row_id

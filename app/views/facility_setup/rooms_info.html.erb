@@ -1,39 +1,45 @@
 <% content_for :breadcrumb do %>
-  <div class="flex flex-row items-center justify-between">
-    <div>
-      <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], ["Facility Setup", facility_setup_new_path], "Room Setup" %>
-    </div>
+  <div class="flex items-center">
+    <%= breadcrumbs ["Home",root_path], 
+        ["Facility Setup", facility_setup_new_path], 
+        "Room Setup" 
+    %>
+  </div>
 
-    <div class="flex flex-row items-center">
-      <i class="material-icons gray f6 mr3 dim">notifications</i>
+  <div class="flex flex-row items-center">
+    <i class="material-icons gray f6 mr3 dim">notifications</i>
 
-      <img
-        src="http://tachyons.io/img/logo.jpg"
-        class="br-100 h2 w2 mr3 dib" alt="avatar">
+    <img
+      src="http://tachyons.io/img/logo.jpg"
+      class="br-100 h2 w2 mr3 dib" alt="avatar">
 
-      <h3 class="ma0 ttc f6 fw5 gray">User Name</h3>
+    <span class="ttc subtitle-2 grey">User Name</span>
 
-      <i class="material-icons dim f6 gray ml2">keyboard_arrow_down</i>
-    </div>
+    <i class="material-icons dim f6 grey ml2">keyboard_arrow_down</i>
   </div>
 <% end %>
 
 <div class="pa4">
   <div class="flex flex-column justify-between bg-white">
-    <div class="ph5 pv3 ba bt-0 bb-1 br-0 bl-0 b--black-10">
-      <h2 class="tl pa0 ma0 fw4 dark-gray">Room Setup</h2>
-    </div>
-
-    <div class="pv4" style="min-height: 500px;">
+    <div class="pa4" style="min-height: 75vh;">
       <div class="fl w-70 flex flex-column">
-        <h2 class="ph5 f2 tl pa0 ma0 fw4 dark-gray">Room Setup</h2>
-        <p class="ph5 mt2 f5 fw4 dark-gray">
+        <h5 class="tl pa0 ma0 h5--font dark-grey">Room Setup</h5>
+        <p class="mt2 body-1">
           Awesome, you've just setup your facility! Room details are next...
         </p>
-        <div id="rooms_grid" class="ph5 pv4 bg-near-white carousel-wrapper">
-          <%= render partial: 'rooms_list',
-            locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms}
-          %>
+
+        <div class="mt3 flex flex-column">
+          <div class="mv4 flex flex-row">
+            <div class="w-20">
+              <span class="subtitle-2 grey">Room Details</span>
+            </div>
+
+            <div id="rooms_grid" class="ph5 pv4 bg-near-white carousel-wrapper">
+              <%= render partial: 'rooms_list',
+                locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms}
+              %>
+            </div>
+          </div>
         </div>
       </div>
       <div class="ph5 fl w-30 flex justify-end">

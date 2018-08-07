@@ -1,5 +1,5 @@
 <div class="ph4 pv3 bb b--light-gray">
-  <h1 class="f4 fw5 ma0"><%= room.name %> Setup</h1>
+  <h5 class="h6--font dark-grey ma0"><%= room.name %> Setup</h5>
 </div>
 
 <div class="db ph4 pv3 measure">
@@ -8,22 +8,22 @@
     <%= f.hidden_field :facility_id, value: room.facility_id %>
     
     <div class="mb3">
-      <%= f.label "Room Name", class:"f6 fw5 db mb1 gray ttc" %>
-      <%= f.text_field :name, value: room.name, class: "db w-70 pa2 f6 gray ba b--black-20 br2 outline-0" %>
+      <%= f.label "Room Name", class:"subtitle-2 grey db mb1 ttc" %>
+      <%= f.text_field :name, value: room.name, class: "db w-70 pa2 f6 grey subtitle-2 grey ba b--black-20 br2 outline-0" %>
     </div>
 
     <div class="mb3">
-      <span class="f6 fw5 db mb1 gray ttc">Room ID</span>
-      <%= f.text_field :code, value: room.code, class: "db w-30 pa2 f6 gray ba b--black-20 br2 outline-0" %>
+      <span class="subtitle-2 db mb1 grey ttc">Room ID</span>
+      <%= f.text_field :code, value: room.code, class: "db w-30 pa2 f6 grey ba b--black-20 br2 outline-0" %>
     </div>
 
     <div class="mb3">
-      <%= f.label "Description", class:"f6 fw5 db mb1 gray ttc" %>
-      <%= f.text_area :desc, value: room.desc, class: "db w-90 pa2 f6 gray ba b--black-20 br2 outline-0" %>
+      <%= f.label "Description", class:"subtitle-2 db mb1 grey ttc" %>
+      <%= f.text_area :desc, value: room.desc, class: "db w-90 pa2 f6 grey ba b--black-20 br2 outline-0" %>
     </div>
 
     <div class="mb3">
-      <%= f.label "Purpose of Room", class:"f6 fw5 db mb1 gray ttc" %>
+      <%= f.label "Purpose of Room", class:"subtitle-2 db mb1 grey ttc" %>
       <%= f.select :purpose,
         options_for_select(
           Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}, room.purpose)
@@ -31,8 +31,8 @@
     </div>
 
     <div class="w-100 pt3">
-      <span class="f5 fw5"> Is the room split into one or more sections? </span>
-      <p class="gray f6 lh-copy mt1 w-90">
+      <span class="subtitle-2 grey"> Is the room split into one or more sections? </span>
+      <p class="grey f6 lh-copy mt1 w-90">
         Quick tip: Will you be using this room for multiple growth stages of your plants? 
         If you are, please split the room into sections.
       </p>
@@ -45,8 +45,9 @@
     </div>
 
     <div class="w-100 pa4 bt b--black-10 absolute right-0 bottom-0 flex items-center justify-between">
-      <%= f.submit "Save Changes", class: "db pv2 bg-white bn ttu tracked link dim f6 fw7 green pointer" %>
-      <%= link_to "Next > Setup Row", facility_setup_room_summary_path(facility_id: room.facility_id, room_id: room.id), class: "db tr pv2 ph3 bg-green white bn br2 ttu tracked link dim f6 fw6" %>
+      <%= f.submit "Save Changes", class: "db pv2 bn ttu button orange link dim pointer" %>
+      <%= link_to "Next > Setup Row", facility_setup_room_summary_path(facility_id: room.facility_id, room_id: room.id), 
+          class: "db tr pv2 ph3 bg-orange white bn br3--box ttu link dim pointer" %>
     </div>
   <% end %>
 </div>

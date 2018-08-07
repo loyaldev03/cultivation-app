@@ -133,11 +133,6 @@ class FacilitySetupController < ApplicationController
         @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
                                                       form_object.room_id)
         if is_continue
-          @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
-            form_object.facility_id,
-            form_object.room_id,
-            form_object.id
-          )
           format.js { render template: 'facility_setup/update_row_continue' }
         else
           format.js

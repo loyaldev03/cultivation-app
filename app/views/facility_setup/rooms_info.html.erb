@@ -34,28 +34,28 @@
               <span class="subtitle-2 grey">Room Details</span>
             </div>
 
-            <div 
-              id="rooms_grid"
-              class="w-80 fl" 
-              style="
-                      display: grid; 
-                      grid-template-columns: repeat(4, 1fr); 
-                      grid-gap: 2rem;
-                    "
-            >
-              <%= render partial: 'rooms_list', locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms} %>
+            <div id="rooms_grid" class="ph5 pv4 bg-near-white carousel-wrapper">
+              <%= render partial: 'rooms_list',
+                locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms}
+              %>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="fl w-30 flex justify-end">
+      <div class="ph5 fl w-30 flex justify-end">
         <%= render "layouts/timeline" %>
       </div>
     </div>
-
     <%= render "form_buttons" %>
   </div>
 </div>
 
 <%= render "slide_panel" %>
+
+<% content_for :before_body_end do %>
+  <script>
+    document.addEventListener("turbolinks:load", function() {
+      bindCarousel();
+    })
+  </script>
+<% end %>

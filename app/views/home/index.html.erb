@@ -19,7 +19,8 @@
 
       <i class="material-icons grey dim ml2">keyboard_arrow_down</i>
     </div>
-  <% end %>
+  </div>
+<% end %>
 
   <h3 class="w-100 tc h3--font dark-grey">
     Welcome to Cannected, user.
@@ -58,8 +59,11 @@
       style="height: 378px; width: 300px;" 
       class="mh3 tc bg-white pa4 bn br3--box box-shadow flex flex-column justify-between">
       
-      <%= content_tag :a, image_tag('icons/add-inventory'), 
-          :class=> "mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" %>
+      <%= link_to inventory_setup_path, 
+          class: "mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" do
+      %>
+        <%= image_tag 'icons/add-inventory' %>
+      <% end %>
 
       <div class="flex flex-column mb3">
         <h6 class="mt0 mb2 ttc h6--font dark-grey">Setting up inventory</h6>

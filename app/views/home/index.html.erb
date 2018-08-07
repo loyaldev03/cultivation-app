@@ -2,27 +2,27 @@
   <%= render "layouts/sidebar" %>
 <% end %>
 
-<div class="ph4">
-  <% content_for :breadcrumb do %>
-    <div class="flex flex-row items-center justify-between">
-      <div>
-        <%= breadcrumbs ["Home",root_path], "Dashboard" %>
-      </div>
-
-      <div class="flex flex-row items-center">
-        <i class="material-icons gray f6 mr3 dim">notifications</i>
-
-        <img
-          src="http://tachyons.io/img/logo.jpg"
-          class="br-100 h2 w2 mr3 dib" alt="avatar">
-
-        <h3 class="ma0 ttc f6 fw5 gray">User Name</h3>
-
-        <i class="material-icons dim f6 gray ml2">keyboard_arrow_down</i>
-      </div>
+<% content_for :breadcrumb do %>
+  <div class="flex flex-row items-center justify-between">
+    <div>
+      <%= breadcrumbs ["Home",root_path], "Dashboard" %>
     </div>
-  <% end %>
 
+    <div class="flex flex-row items-center">
+      <i class="material-icons gray f6 mr3 dim">notifications</i>
+
+      <img
+        src="http://tachyons.io/img/logo.jpg"
+        class="br-100 h2 w2 mr3 dib" alt="avatar">
+
+      <h3 class="ma0 ttc f6 fw5 gray">User Name</h3>
+
+      <i class="material-icons dim f6 gray ml2">keyboard_arrow_down</i>
+    </div>
+  </div>
+<% end %>
+
+<div class="ph4">
   <p class="f1 fw6 w-100 tc">
     Welcome to Cannected, user.
     <br/>
@@ -50,12 +50,12 @@
     </div>
 
     <div class="w-20 tc bg-white pa3 mh4 ba b--black-20">
-      <%= link_to "Setup a new inventory", 
-          "#", 
+      <%= link_to "Setup inventory", 
+          inventory_setup_path, 
           class: "mv3 dim dib link pv2 ph3 ba b--black-20 br-100 h4 w4 flex items-center justify-center center" 
       %>
-      <h2 class="fw5 ttc">Setting up inventory</h2>
-      <p class="w-100 center lh-copy gray fw4">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+      <h2 class="fw5 ttc">Setup inventory</h2>
+      <p class="w-100 center lh-copy gray fw4">Set up seeds & plants, raw materials &amp; other items stored in your facilities.</p>
     </div>
 
     <div class="w-20 tc bg-white pa3 ba b--black-20">

@@ -17,7 +17,7 @@ class PlantSetupApp extends React.Component {
 
   openSidebar() {
     window.editorSidebar.open()
-  } 
+  }
 
   closeSidebar() {
     window.editorSidebar.close()

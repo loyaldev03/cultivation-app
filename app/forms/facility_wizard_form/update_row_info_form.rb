@@ -5,7 +5,7 @@ module FacilityWizardForm
 
     ATTRS = [:facility_id,
              :room_id,
-             :id,
+             :id, # row.id
              :name,
              :code,
              :has_shelves,
@@ -31,6 +31,8 @@ module FacilityWizardForm
       if valid?
         save_cmd = SaveRow.call(self)
         if save_cmd.success? && @is_continue
+          # NOTE: Save the row for the first time
+          # This will also generate the shelves & trays
           SaveRowShelvesTrays.call(self)
         end
         return save_cmd.success?

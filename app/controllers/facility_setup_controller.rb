@@ -62,7 +62,6 @@ class FacilitySetupController < ApplicationController
       if form_object.submit(room_info_params)
         @rooms_info_form = FacilityWizardForm::RoomsForm.new(form_object.facility_id)
         format.js
-      else
       end
     end
   end
@@ -151,6 +150,82 @@ class FacilitySetupController < ApplicationController
     respond_to do |format|
       @rows_form = FacilityWizardForm::RowsForm.new(@facility_id,
                                                     @room_id)
+      format.js
+    end
+  end
+
+  # GET toggle between different shelves
+  def row_shelf_trays
+    @facility_id = params[:facility_id]
+    @room_id = params[:room_id]
+    @row_id = params[:row_id]
+    @shelf_id = params[:shelf_id]
+
+    respond_to do |format|
+      @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
+        @facility_id,
+        @room_id,
+        @row_id,
+        @shelf_id
+      )
+      format.js
+    end
+  end
+
+  def update_shelf_trays
+    form_object = FacilityWizardForm::UpdateShelfTraysForm.new(shelf_trays_params)
+    Rails.logger.debug '>>> form_object'
+    Rails.logger.debug form_object.inspect
+    if form_object.submit(shelf_trays_params)
+      Rails.logger.debug '>>>'
+      Rails.logger.debug '>>> form_object submitted'
+      respond_to do |format|
+        @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
+          form_object.facility_id,
+          form_object.room_id,
+          form_object.row_id,
+          form_object.id
+        )
+        format.js
+      end
+    else
+      Rails.logger.debug '>>>'
+      Rails.logger.debug '>>> form_object NOT submitted'
+      nil
+    end
+  end
+
+  def destroy_tray
+    @facility_id = params[:facility_id]
+    @room_id = params[:room_id]
+    @row_id = params[:row_id]
+    @shelf_id = params[:shelf_id]
+    @tray_id = params[:id]
+    DestroyShelfTray.call(@tray_id)
+    respond_to do |format|
+      @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
+        @facility_id,
+        @room_id,
+        @row_id,
+        @shelf_id
+      )
+      format.js
+    end
+  end
+
+  def generate_tray
+    @facility_id = params[:facility_id]
+    @room_id = params[:room_id]
+    @row_id = params[:row_id]
+    @shelf_id = params[:shelf_id]
+    SaveShelfAddTray.call(@facility_id, @room_id, @row_id, @shelf_id)
+    respond_to do |format|
+      @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
+        @facility_id,
+        @room_id,
+        @row_id,
+        @shelf_id
+      )
       format.js
     end
   end
@@ -273,6 +348,17 @@ class FacilitySetupController < ApplicationController
   # Step - Update Row Info (Right Panel)
   def row_info_params
     params.require(:row_info).permit(FacilityWizardForm::UpdateRowInfoForm::ATTRS)
+  end
+
+  def shelf_trays_params
+    params.require(:shelf_trays_info).permit(
+      :facility_id,
+      :room_id,
+      :row_id,
+      :id,
+      :code,
+      trays: [:id, :code, :capacity, :capacity_type],
+    )
   end
 
   # Step 3

@@ -1,11 +1,13 @@
 import React from 'react'
 import PlantList from './PlantList'
+import PlantEditor from './PlantEditor'
 
 class PlantSetupApp extends React.Component {
   constructor(props) {
     super(props)
     this.onAddPlant = this.onAddPlant.bind(this)
     this.openSidebar = this.openSidebar.bind(this)
+    this.closeSidebar = this.closeSidebar.bind(this)
   }
 
   componentDidMount() {
@@ -15,6 +17,10 @@ class PlantSetupApp extends React.Component {
 
   openSidebar() {
     window.editorSidebar.open()
+  } 
+
+  closeSidebar() {
+    window.editorSidebar.close()
   }
 
   onAddPlant() {
@@ -26,15 +32,7 @@ class PlantSetupApp extends React.Component {
       <React.Fragment>
         <button onClick={this.openSidebar}>Add plant</button>
         <PlantList />
-        <div
-          className="rc-slide-panel animated slideOutRight"
-          data-role="sidebar"
-        >
-          <span className="rc-slide-panel__close-button dim">
-            <i className="material-icons mid-gray md-18">close</i>
-          </span>
-          <div className="rc-slide-panel__body" />
-        </div>
+        <PlantEditor onClose={this.closeSidebar} />
       </React.Fragment>
     )
   }

@@ -7,15 +7,19 @@ Rails.application.routes.draw do
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"
   get "facility_setup/room_info" => "facility_setup#room_info", as: 'fetch_room_info'
   get "facility_setup/row_info" => "facility_setup#row_info", as: 'fetch_row_info'
+  get "facility_setup/row_shelf_trays" => "facility_setup#row_shelf_trays", as: 'fetch_row_shelf_trays'
   post "facility_setup/generate_rooms" => "facility_setup#generate_rooms", as: 'generate_rooms'
   post "facility_setup/generate_rows" => "facility_setup#generate_rows", as: 'generate_rows'
+  post "facility_setup/generate_tray" => "facility_setup#generate_tray", as: 'generate_tray'
   post "facility_setup/destroy_room" => "facility_setup#destroy_room", as: 'destroy_room'
   post "facility_setup/destroy_row" => "facility_setup#destroy_row", as: 'destroy_row'
+  post "facility_setup/destroy_tray" => "facility_setup#destroy_tray", as: 'destroy_tray'
   get "facility_setup/room_summary" => "facility_setup#room_summary"
   get "facility_setup/row_shelf_info" => "facility_setup#row_shelf_info"
   post "facility_setup/update_basic_info" => "facility_setup#update_basic_info"
   post "facility_setup/update_room_info" => "facility_setup#update_room_info"
   post "facility_setup/update_row_info" => "facility_setup#update_row_info"
+  post "facility_setup/update_shelf_trays" => "facility_setup#update_shelf_trays", as: 'update_shelf_trays'
   post "facility_setup/save" => "facility_setup#save"
   get "settings" => "home#settings"
 
@@ -56,7 +60,9 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :plants
+      resources :plants do
+        get 'strains/(:filter)', action: :strains, on: :collection
+      end
     end
   end
 end

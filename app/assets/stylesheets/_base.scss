@@ -5,7 +5,7 @@
   --green: #19A974;
   --yellow: #FFC600;
   --black: #393939;
-  --dark-gray: #2E3B4E;
+  --dark-grey: #2E3B4E;
   --light-gray: #707A8B;
   --white: #FFFFFF;
   --whiteSmoke: #F3F5F7;
@@ -60,14 +60,21 @@ h3 {
   font-size: 50px;
   letter-spacing: 0;
   font-weight: 400;
-  color: var(--dark-gray);
+  color: var(--dark-grey);
+}
+
+h5 {
+  font-size: 27px;
+  letter-spacing: 0;
+  font-weight: 500;
+  //color: var(--dark-grey);
 }
 
 h6 {
   font-size: 22px;
   letter-spacing: 0.15px;
   font-weight: 600;
-  color: var(--dark-gray);
+  color: var(--dark-grey);
 }
 
 .body-1 {

@@ -4,7 +4,6 @@ import CloneEditor from './editor/CloneEditor'
 import MotherEditor from './editor/MotherEditor'
 import VegGroupEditor from './editor/VegGroupEditor'
 
-
 const VEG_GROUP = 'VEG_GROUP'
 const SEED = 'SEED'
 const CLONE = 'CLONE'
@@ -82,34 +81,39 @@ export default class PlantEditor extends React.Component {
             className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
             href=""
             data-editor={SEED}
-            onClick={this.onSetStockEditor}>
+            onClick={this.onSetStockEditor}
+          >
             Add seed
           </a>
           <a
             className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
             href=""
             data-editor={CLONE}
-            onClick={this.onSetStockEditor}>
+            onClick={this.onSetStockEditor}
+          >
             Add clones
           </a>
           <a
             className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
             href=""
             data-editor={MOTHER}
-            onClick={this.onSetStockEditor}>
+            onClick={this.onSetStockEditor}
+          >
             Add mother
           </a>
           <a
             className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
             href=""
             data-editor={VEG_GROUP}
-            onClick={this.onSetStockEditor}>
+            onClick={this.onSetStockEditor}
+          >
             Add veg group
           </a>
           <a
             className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
             href=""
-            data-editor={''}>
+            data-editor={''}
+          >
             Add harvest yield
           </a>
         </div>
@@ -154,9 +158,10 @@ export default class PlantEditor extends React.Component {
   renderCloseSidebar() {
     if (this.editorSelected) {
       return (
-        <div 
+        <div
           className="dim gray f7 pv1 flex fw3 self-end pointer ttu self-end"
-          onClick={this.onResetEditor}>
+          onClick={this.onResetEditor}
+        >
           Cancel
         </div>
       )
@@ -177,8 +182,10 @@ export default class PlantEditor extends React.Component {
       <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
           <div className="ph4 pv3 bb b--light-gray flex items-center">
-            <h1 className="f4 fw5 ma0 flex flex-auto ttc">{ this.renderTitle() }</h1>
-            { this.renderCloseSidebar() }
+            <h1 className="f4 fw5 ma0 flex flex-auto ttc">
+              {this.renderTitle()}
+            </h1>
+            {this.renderCloseSidebar()}
           </div>
 
           <div className="ph4 mt3 mb3 flex">
@@ -222,16 +229,12 @@ export default class PlantEditor extends React.Component {
 
           <hr className="mt3 m b--light-gray w-100" />
 
-          { this.renderEditorToggle() }
+          {this.renderEditorToggle()}
 
-          { this.renderSeedEditor() }
-          { this.renderCloneEditor() }
-          { this.renderMotherEditor() }
-          { this.renderVegGroupEditor() }
-
-          
-
-          
+          {this.renderSeedEditor()}
+          {this.renderCloneEditor()}
+          {this.renderMotherEditor()}
+          {this.renderVegGroupEditor()}
         </div>
       </div>
     )

@@ -39,22 +39,32 @@ class CloneEditor extends React.Component {
 
     this.onCloneIdsChanged = this.onCloneIdsChanged.bind(this)
     this.onPlantedOnChanged = this.onPlantedOnChanged.bind(this)
-    this.onExpectedHarvestDateChanged = this.onExpectedHarvestDateChanged.bind(this)
+    this.onExpectedHarvestDateChanged = this.onExpectedHarvestDateChanged.bind(
+      this
+    )
     this.onCloneDateChanged = this.onCloneDateChanged.bind(this)
 
     this.onIsBoughtChanged = this.onIsBoughtChanged.bind(this)
     this.onMotherIdChanged = this.onMotherIdChanged.bind(this)
 
     // Vendor/ source
-    this.onVendorNameChanged = this.onVendorNameChanged.bind(this) 
-    this.onVendorIDChanged = this.onVendorIDChanged.bind(this) 
-    this.onAddressChanged = this.onAddressChanged.bind(this) 
-    this.onVendorStateLicenseNumChanged = this.onVendorStateLicenseNumChanged.bind(this) 
-    this.onVendorStateLicenseExpirationDateChanged = this.onVendorStateLicenseExpirationDateChanged.bind(this) 
-    this.onVendorLocationLicenseNumChanged = this.onVendorLocationLicenseNumChanged.bind(this) 
-    this.onVendorLocationLicenseExpirationDateChanged = this.onVendorLocationLicenseExpirationDateChanged.bind(this) 
-    this.onPurchaseDateChanged = this.onPurchaseDateChanged.bind(this) 
-    this.onInvoiceNoChanged = this.onInvoiceNoChanged.bind(this) 
+    this.onVendorNameChanged = this.onVendorNameChanged.bind(this)
+    this.onVendorIDChanged = this.onVendorIDChanged.bind(this)
+    this.onAddressChanged = this.onAddressChanged.bind(this)
+    this.onVendorStateLicenseNumChanged = this.onVendorStateLicenseNumChanged.bind(
+      this
+    )
+    this.onVendorStateLicenseExpirationDateChanged = this.onVendorStateLicenseExpirationDateChanged.bind(
+      this
+    )
+    this.onVendorLocationLicenseNumChanged = this.onVendorLocationLicenseNumChanged.bind(
+      this
+    )
+    this.onVendorLocationLicenseExpirationDateChanged = this.onVendorLocationLicenseExpirationDateChanged.bind(
+      this
+    )
+    this.onPurchaseDateChanged = this.onPurchaseDateChanged.bind(this)
+    this.onInvoiceNoChanged = this.onInvoiceNoChanged.bind(this)
 
     // Storage location
     this.onRoomChanged = this.onRoomChanged.bind(this)
@@ -72,15 +82,15 @@ class CloneEditor extends React.Component {
   }
 
   onCloneIdsChanged(event) {
-    this.setState({ cloneIds: event.target.value })  
+    this.setState({ cloneIds: event.target.value })
   }
-  
+
   onPlantedOnChanged(event) {
-    this.setState({ planted_on: event.target.value })  
+    this.setState({ planted_on: event.target.value })
   }
-  
+
   onExpectedHarvestDateChanged(event) {
-    this.setState({ expected_harvest_date: event.target.value })  
+    this.setState({ expected_harvest_date: event.target.value })
   }
 
   onCloneDateChanged(event) {
@@ -97,39 +107,41 @@ class CloneEditor extends React.Component {
   }
 
   onVendorNameChanged(event) {
-    this.setState({ vendor_name: event.target.value})
+    this.setState({ vendor_name: event.target.value })
   }
-  
+
   onVendorIDChanged(event) {
-    this.setState({ vendor_id : event.target.value})
+    this.setState({ vendor_id: event.target.value })
   }
-  
+
   onAddressChanged(event) {
-    this.setState({ address : event.target.value})
+    this.setState({ address: event.target.value })
   }
-  
+
   onVendorStateLicenseNumChanged(event) {
-    this.setState({ vendor_state_license_num : event.target.value})
+    this.setState({ vendor_state_license_num: event.target.value })
   }
-  
+
   onVendorStateLicenseExpirationDateChanged(event) {
-    this.setState({ vendor_state_license_expiration_date : event.target.value})
+    this.setState({ vendor_state_license_expiration_date: event.target.value })
   }
-  
+
   onVendorLocationLicenseNumChanged(event) {
-    this.setState({ vendor_location_license_num : event.target.value})
+    this.setState({ vendor_location_license_num: event.target.value })
   }
-  
+
   onVendorLocationLicenseExpirationDateChanged(event) {
-    this.setState({ vendor_location_license_expiration_date : event.target.value})
+    this.setState({
+      vendor_location_license_expiration_date: event.target.value
+    })
   }
-  
+
   onPurchaseDateChanged(event) {
-    this.setState({ purchase_date : event.target.value})
+    this.setState({ purchase_date: event.target.value })
   }
-  
+
   onInvoiceNoChanged(event) {
-    this.setState({ invoice_no : event.target.value})
+    this.setState({ invoice_no: event.target.value })
   }
 
   onRoomChanged(event) {
@@ -166,7 +178,9 @@ class CloneEditor extends React.Component {
 
   showMetcMessage(event) {
     event.preventDefault()
-    alert('It calls on Metrc system to generate / retrieve Plant ID and populates them to text area.')
+    alert(
+      'It calls on Metrc system to generate / retrieve Plant ID and populates them to text area.'
+    )
   }
 
   renderProcurementInfo() {
@@ -175,7 +189,11 @@ class CloneEditor extends React.Component {
         <React.Fragment>
           <div className="ph4 mb3 flex">
             <div className="w-60">
-              <TextInput label={'Mother plant ID'} value={this.state.mother_id} onChange={this.onMotherIdChanged} />
+              <TextInput
+                label={'Mother plant ID'}
+                value={this.state.mother_id}
+                onChange={this.onMotherIdChanged}
+              />
             </div>
             {/* <div className="w-40 pl3">
               <TextInput label={'Clone date'} value={this.state.clone_date} onChange={this.onCloneDateChanged} />
@@ -183,52 +201,87 @@ class CloneEditor extends React.Component {
           </div>
         </React.Fragment>
       )
-    }
-    else {
+    } else {
       return (
         <React.Fragment>
           <div className="ph4 mb3 flex">
             <div className="w-100">
-              <TextInput label={'Vendor name'} value={this.state.vendor_name} onChange={this.onVendorNameChanged} />
+              <TextInput
+                label={'Vendor name'}
+                value={this.state.vendor_name}
+                onChange={this.onVendorNameChanged}
+              />
             </div>
           </div>
 
           <div className="ph4 mb3 flex">
             <div className="w-50">
-              <TextInput label={'Vendor ID'} value={this.state.vendor_id} onChange={this.onVendorIDChanged} />
+              <TextInput
+                label={'Vendor ID'}
+                value={this.state.vendor_id}
+                onChange={this.onVendorIDChanged}
+              />
             </div>
           </div>
 
           <div className="ph4 mb3 flex">
             <div className="w-100">
-              <TextInput label={'Address'} value={this.state.address} onChange={this.onAddressChanged} />
+              <TextInput
+                label={'Address'}
+                value={this.state.address}
+                onChange={this.onAddressChanged}
+              />
             </div>
           </div>
 
           <div className="ph4 mb3 flex">
             <div className="w-50">
-              <TextInput label={'Vendor State License #'} value={this.vendor_state_license_num} onChange={this.onVendorStateLicenseNumChanged} />
+              <TextInput
+                label={'Vendor State License #'}
+                value={this.vendor_state_license_num}
+                onChange={this.onVendorStateLicenseNumChanged}
+              />
             </div>
             <div className="w-50 pl3">
-              <TextInput label={'Expiration date'} value={this.state.vendor_state_license_expiration_date} onChange={this.onVendorStateLicenseExpirationDateChanged} />
+              <TextInput
+                label={'Expiration date'}
+                value={this.state.vendor_state_license_expiration_date}
+                onChange={this.onVendorStateLicenseExpirationDateChanged}
+              />
             </div>
           </div>
 
           <div className="ph4 mb3 flex">
             <div className="w-50">
-              <TextInput label={'Vendor location license #'} value={this.vendor_location_license_num} onChange={this.onVendorLocationLicenseNumChanged} />
+              <TextInput
+                label={'Vendor location license #'}
+                value={this.vendor_location_license_num}
+                onChange={this.onVendorLocationLicenseNumChanged}
+              />
             </div>
             <div className="w-50 pl3">
-              <TextInput label={'Expiration date'} value={this.state.vendor_location_license_expiration_date} onChange={this.onVendorLocationLicenseExpirationDateChanged} />
+              <TextInput
+                label={'Expiration date'}
+                value={this.state.vendor_location_license_expiration_date}
+                onChange={this.onVendorLocationLicenseExpirationDateChanged}
+              />
             </div>
           </div>
 
           <div className="ph4 mb3 flex">
             <div className="w-50">
-              <TextInput label={'Purchase Date'} value={this.purchase_date} onChange={this.onPurchaseDateChanged} />
+              <TextInput
+                label={'Purchase Date'}
+                value={this.purchase_date}
+                onChange={this.onPurchaseDateChanged}
+              />
             </div>
             <div className="w-50 pl3">
-              <TextInput label={'Invoice no'} value={this.state.invoice_no} onChange={this.onInvoiceNoChanged} />
+              <TextInput
+                label={'Invoice no'}
+                value={this.state.invoice_no}
+                onChange={this.onInvoiceNoChanged}
+              />
             </div>
           </div>
         </React.Fragment>
@@ -246,31 +299,59 @@ class CloneEditor extends React.Component {
         </div>
         <div className="ph4 mb3 flex">
           <div className="w-60">
-            <TextInput label={'Room'} value={this.state.room} onChange={this.onRoomChanged} />
+            <TextInput
+              label={'Room'}
+              value={this.state.room}
+              onChange={this.onRoomChanged}
+            />
           </div>
           <div className="w-40 pl3">
-            <TextInput label={'Room Id'} value={this.state.room_id} onChange={this.onRoomIdChanged} />
+            <TextInput
+              label={'Room Id'}
+              value={this.state.room_id}
+              onChange={this.onRoomIdChanged}
+            />
           </div>
         </div>
 
         <div className="ph4 mb3 flex">
           <div className="w-60">
-            <TextInput label={'Section'} value={this.state.section_name} onChange={this.onSectionNameChanged} />
+            <TextInput
+              label={'Section'}
+              value={this.state.section_name}
+              onChange={this.onSectionNameChanged}
+            />
           </div>
           <div className="w-40 pl3">
-            <TextInput label={'Section Id'} value={this.state.section_id} onChange={this.onSectionIdChanged} />
+            <TextInput
+              label={'Section Id'}
+              value={this.state.section_id}
+              onChange={this.onSectionIdChanged}
+            />
           </div>
         </div>
 
         <div className="ph4 mb3 flex">
           <div className="w-30">
-            <TextInput label={'Row Id'} value={this.state.row_id} onChange={this.onRowIdChanged} />
+            <TextInput
+              label={'Row Id'}
+              value={this.state.row_id}
+              onChange={this.onRowIdChanged}
+            />
           </div>
           <div className="w-30 pl3">
-            <TextInput label={'Shelf Id'} value={this.state.shelf_id} onChange={this.onShelfIdChanged} />
+            <TextInput
+              label={'Shelf Id'}
+              value={this.state.shelf_id}
+              onChange={this.onShelfIdChanged}
+            />
           </div>
           <div className="w-40 pl3">
-            <TextInput label={'Tray Id'} value={this.state.tray_id} onChange={this.onTrayIdChanged} />
+            <TextInput
+              label={'Tray Id'}
+              value={this.state.tray_id}
+              onChange={this.onTrayIdChanged}
+            />
           </div>
         </div>
       </React.Fragment>
@@ -283,30 +364,48 @@ class CloneEditor extends React.Component {
         <div className="ph4 mt3 mb3">
           <span className="f6 fw6 dark-gray">Plant IDs</span>
         </div>
-        
+
         <div className="ph4 mb2 flex">
           <div className="w-100">
-            <p className="f7 fw3 gray mt0 mb0 pa0 lh-copy">Each clone has its own <strong>Plant ID</strong>.</p>
-            <p className="f7 fw3 gray mt0 mb2 pa0 lh-copy"> If you already have them, paste Plant IDs with its corresponding tray ID like below:</p>
+            <p className="f7 fw3 gray mt0 mb0 pa0 lh-copy">
+              Each clone has its own <strong>Plant ID</strong>.
+            </p>
+            <p className="f7 fw3 gray mt0 mb2 pa0 lh-copy">
+              {' '}
+              If you already have them, paste Plant IDs with its corresponding
+              tray ID like below:
+            </p>
             <textarea
               rows="5"
               className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-              placeholder='Plant0001, Tray0001&#10;Plant0002, Tray0001&#10;Plant0003, Tray0002&#10;Plant0004, Tray0002'
-            >
-            </textarea>
-
+              placeholder="Plant0001, Tray0001&#10;Plant0002, Tray0001&#10;Plant0003, Tray0002&#10;Plant0004, Tray0002"
+            />
           </div>
         </div>
         <div className="ph4 mb4 flex justify-end">
-          <a href="#" onClick={this.showMetcMessage} className="fw4 f7 link dark-blue">Don't have Plant ID? Click here to generate.</a>
+          <a
+            href="#"
+            onClick={this.showMetcMessage}
+            className="fw4 f7 link dark-blue"
+          >
+            Don't have Plant ID? Click here to generate.
+          </a>
         </div>
 
         <div className="ph4 mt2 mb3 flex">
           <div className="w-60">
-            <TextInput label={'Planted On'} value={this.state.planted_on} onChange={this.onPlantedOnChanged} />
+            <TextInput
+              label={'Planted On'}
+              value={this.state.planted_on}
+              onChange={this.onPlantedOnChanged}
+            />
           </div>
           <div className="w-40 pl3">
-            <TextInput label={'Expected Harvest Date'} value={this.state.expected_harvest_date} onChange={this.onExpectedHarvestDateChanged} />
+            <TextInput
+              label={'Expected Harvest Date'}
+              value={this.state.expected_harvest_date}
+              onChange={this.onExpectedHarvestDateChanged}
+            />
           </div>
         </div>
 
@@ -316,28 +415,41 @@ class CloneEditor extends React.Component {
         </div>
         <div className="ph4 mb3 flex justify-between">
           <label className="f6 fw5 db mb1 gray">Clones are purchased</label>
-          <input className  ="toggle toggle-default" type="checkbox" value="1" id="is_bought_input" onChange={this.onIsBoughtChanged} />
-          <label className  ="toggle-button" htmlFor="is_bought_input"></label>
+          <input
+            className="toggle toggle-default"
+            type="checkbox"
+            value="1"
+            id="is_bought_input"
+            onChange={this.onIsBoughtChanged}
+          />
+          <label className="toggle-button" htmlFor="is_bought_input" />
         </div>
-        
-        { this.renderProcurementInfo() }
+
+        {this.renderProcurementInfo()}
 
         <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mt3 mb3 flex">
           <div className="w-60">
-            <TextInput 
-              label={'Accounting category'} 
-              value={this.state.account_category} 
-              onChange={this.onAccountCategoryChanged} />
+            <TextInput
+              label={'Accounting category'}
+              value={this.state.account_category}
+              onChange={this.onAccountCategoryChanged}
+            />
           </div>
         </div>
 
-
         <div className="w-100 mt4 pa4 bt b--black-10 flex items-center justify-between">
-          <a className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw4 gray" href="#" onClick={this.props.onResetEditor}>
+          <a
+            className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw4 gray"
+            href="#"
+            onClick={this.props.onResetEditor}
+          >
             Save draft
           </a>
-          <a className="db tr pv2 ph3 bg-green white bn br2 ttu tracked link dim f6 fw6" href="#" >
+          <a
+            className="db tr pv2 ph3 bg-green white bn br2 ttu tracked link dim f6 fw6"
+            href="#"
+          >
             Preview &amp; Save
           </a>
         </div>

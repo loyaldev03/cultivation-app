@@ -20,21 +20,44 @@ import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 const columns = [
   {
     Header: 'Plant type',
+    headerClassName: 'tl pl3',
     accessor: 'storage_type', // String-based value accessors!
     Cell: props => (
-      <a href="javascript:;" className="ttc link" onClick={e => editorSidebarHandler.open({ width: '500px'})}>
+      <a
+        href="javascript:;"
+        className="ttc link"
+        onClick={e => editorSidebarHandler.open({ width: '500px' })}
+      >
         {props.value}
       </a>
     )
   },
   {
-    Header: 'Quantity',
+    Header: 'Stock count',
     accessor: 'total_quantity',
-    Cell: props => <span className="tr">{props.value}</span> // Custom cell components!
+    headerClassName: 'tr pr3',
+    Cell: props => <div className="tr pr3">{props.value}</div> // Custom cell components!
+  },
+  {
+    Header: 'Stock intakes/ Batches',
+    accessor: 'intake_count',
+    headerClassName: 'tr pr3',
+    Cell: props => (
+      <div className="tr pr3">
+        <a
+          href="javascript:;"
+          className="ttc link"
+          onClick={e => alert('expands the row to show latest 5-9 stock intakes') }
+        >
+          {props.value}
+        </a>
+      </div>
+    )
   },
   {
     id: 'facility', // Required because our accessor is not a string
     Header: 'Facility',
+    headerClassName: 'tl pl3',
     accessor: 'facility'
   }
 ]
@@ -73,14 +96,16 @@ const plants = [
     storage_type: 'mother',
     type: 'Seed',
     total_quantity: 1000,
-    facility: 'Farm 1'
+    facility: 'Farm 1',
+    intake_count: 5,
   },
   {
     id: '2',
     storage_type: 'seed',
     type: 'Plant',
     total_quantity: 500,
-    facility: 'Farm 1'
+    facility: 'Farm 1',
+    intake_count: 5,
   },
   {
     id: '2',
@@ -88,7 +113,8 @@ const plants = [
     strain: 'OG Kush',
     type: 'Plant',
     total_quantity: 8000,
-    facility: 'Farm 1'
+    facility: 'Farm 1',
+    intake_count: 5,
   },
   {
     id: '2',
@@ -96,7 +122,8 @@ const plants = [
     strain: 'OG Kush',
     type: 'Plant',
     total_quantity: 16000,
-    facility: 'Farm 1'
+    facility: 'Farm 1',
+    intake_count: 5,
   },
   {
     id: '2',
@@ -104,7 +131,9 @@ const plants = [
     strain: 'OG Kush',
     type: 'Plant',
     total_quantity: 16000,
-    facility: 'Farm 1'
+    facility: 'Farm 1',
+    intake_count: 5,
+
   },
   {
     id: '2',
@@ -112,9 +141,9 @@ const plants = [
     strain: 'OG Kush',
     type: 'Plant',
     total_quantity: 1000,
-    facility: 'Farm 1'
+    facility: 'Farm 1',
+    intake_count: 5,
   }
-
 ]
 
 export default class PlantList extends React.Component {

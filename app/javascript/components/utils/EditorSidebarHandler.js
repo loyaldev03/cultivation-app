@@ -8,7 +8,12 @@ class EditorSidebarHandler {
     // console.log(window.sidebarNode);
     const event = new CustomEvent('editor-sidebar-open', { detail: data })
     document.dispatchEvent(event)
-    this.sidebarNode.style.width = '450px'
+
+    if (data && data.width) {
+      this.sidebarNode.style.width = data.width
+    } else {
+      this.sidebarNode.style.width = '450px'
+    }
   }
 
   close(data) {

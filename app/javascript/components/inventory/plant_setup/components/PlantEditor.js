@@ -1,15 +1,36 @@
 import React from 'react'
+import SeedEditor from './editor/SeedEditor'
+import CloneEditor from './editor/CloneEditor'
+import MotherEditor from './editor/MotherEditor'
+import VegGroupEditor from './editor/VegGroupEditor'
+
+
+const VEG_GROUP = 'VEG_GROUP'
+const SEED = 'SEED'
+const CLONE = 'CLONE'
+const MOTHER = 'MOTHER'
 
 export default class PlantEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       strain: '',
-      strain_type: ''
+      strain_type: '',
+      facility_id: '',
+      stockEditor: '',
+      source: ''
     } // or set from props
 
     this.onChangeStrain = this.onChangeStrain.bind(this)
     this.onChangeStrainType = this.onChangeStrainType.bind(this)
+    this.onFacilityChanged = this.onFacilityChanged.bind(this)
+    this.onSetStockEditor = this.onSetStockEditor.bind(this)
+    this.onResetEditor = this.onResetEditor.bind(this)
+    this.onClose = this.onClose.bind(this)
+  }
+
+  get editorSelected() {
+    return this.state.stockEditor.length > 0
   }
 
   onChangeStrain(event) {
@@ -17,25 +38,147 @@ export default class PlantEditor extends React.Component {
   }
 
   onChangeStrainType(event) {
-    console.log(event.target.value)
     this.setState({ strain_type: event.target.value })
+  }
+
+  onFacilityChanged(event) {
+    this.setState({ facility_id: event.target.value })
+  }
+
+  onSetStockEditor(event) {
+    // console.log(event.target.dataset)
+    this.setState({ stockEditor: event.target.dataset.editor })
+    event.preventDefault()
+  }
+
+  onResetEditor(event) {
+    this.setState({ stockEditor: '' })
+    event.preventDefault()
+  }
+
+  onClose() {
+    // reset everything before close.
+    this.props.onClose()
+  }
+
+  renderEditorToggle() {
+    if (this.editorSelected) return null
+
+    return (
+      <React.Fragment>
+        <div className="ph4 mb3 pt3">
+          <div className="flex justify-between items-center">
+            <label className="f6 fw5 db dark-gray">
+              I have stock for this strain...
+            </label>
+            {/* <div>
+              <input className  ="toggle toggle-default" type="checkbox" value="1" name="room_info" id="room_info_has_sections" />
+              <label className  ="toggle-button" htmlFor="room_info_has_sections"></label>
+            </div> */}
+          </div>
+        </div>
+        <div className="ph4 mb3">
+          <a
+            className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
+            href=""
+            data-editor={SEED}
+            onClick={this.onSetStockEditor}>
+            Add seed
+          </a>
+          <a
+            className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
+            href=""
+            data-editor={CLONE}
+            onClick={this.onSetStockEditor}>
+            Add clones
+          </a>
+          <a
+            className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
+            href=""
+            data-editor={MOTHER}
+            onClick={this.onSetStockEditor}>
+            Add mother
+          </a>
+          <a
+            className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
+            href=""
+            data-editor={VEG_GROUP}
+            onClick={this.onSetStockEditor}>
+            Add veg group
+          </a>
+          <a
+            className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
+            href=""
+            data-editor={''}>
+            Add harvest yield
+          </a>
+        </div>
+      </React.Fragment>
+    )
+  }
+
+  renderSeedEditor() {
+    if (this.state.stockEditor !== SEED) return null
+    return <SeedEditor onResetEditor={this.onResetEditor} />
+  }
+
+  renderCloneEditor() {
+    if (this.state.stockEditor !== CLONE) return null
+    return <CloneEditor onResetEditor={this.onResetEditor} />
+  }
+
+  renderMotherEditor() {
+    if (this.state.stockEditor !== MOTHER) return null
+    return <MotherEditor onResetEditor={this.onResetEditor} />
+  }
+
+  renderVegGroupEditor() {
+    if (this.state.stockEditor !== VEG_GROUP) return null
+    return <VegGroupEditor onResetEditor={this.onResetEditor} />
+  }
+
+  renderTitle() {
+    if (this.state.stockEditor === VEG_GROUP) {
+      return 'Add Veg Group'
+    } else if (this.state.stockEditor === SEED) {
+      return 'Add seed'
+    } else if (this.state.stockEditor === CLONE) {
+      return 'Add clone'
+    } else if (this.state.stockEditor === MOTHER) {
+      return 'Add mother plant'
+    } else {
+      return 'Add Plant'
+    }
+  }
+
+  renderCloseSidebar() {
+    if (this.editorSelected) {
+      return (
+        <div 
+          className="dim gray f7 pv1 flex fw3 self-end pointer ttu self-end"
+          onClick={this.onResetEditor}>
+          Cancel
+        </div>
+      )
+    } else {
+      return (
+        <span
+          className="rc-slide-panel__close-button dim"
+          onClick={this.onClose}
+        >
+          <i className="material-icons mid-gray md-18">close</i>
+        </span>
+      )
+    }
   }
 
   render() {
     return (
-      <div
-        className="rc-slide-panel animated slideOutRight"
-        data-role="sidebar"
-      >
-        <span
-          className="rc-slide-panel__close-button dim"
-          onClick={this.props.onClose}
-        >
-          <i className="material-icons mid-gray md-18">close</i>
-        </span>
-        <div className="rc-slide-panel__body">
-          <div className="ph4 pv3 bb b--light-gray">
-            <h1 className="f4 fw5 ma0">Add Plant</h1>
+      <div className="rc-slide-panel" data-role="sidebar">
+        <div className="rc-slide-panel__body flex flex-column">
+          <div className="ph4 pv3 bb b--light-gray flex items-center">
+            <h1 className="f4 fw5 ma0 flex flex-auto ttc">{ this.renderTitle() }</h1>
+            { this.renderCloseSidebar() }
           </div>
 
           <div className="ph4 mt3 mb3 flex">
@@ -51,8 +194,6 @@ export default class PlantEditor extends React.Component {
             <div className="w-40 pl3">
               <label className="f6 fw5 db mb1 gray ttc">Strain type</label>
               <select
-                name="room_info[purpose]"
-                id="room_info_purpose"
                 className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
                 onChange={this.onChangeStrainType}
                 value={this.state.strain_type}
@@ -64,130 +205,33 @@ export default class PlantEditor extends React.Component {
             </div>
           </div>
 
-          {/* <hr className="mb3 m b--light-gray w-100" /> */}
-
-          <div className="ph4 mb3 pt3">
-            <div className="flex justify-between items-center">
-              <label className="f6 fw5 db black">
-                I have stock for this strain:
-              </label>
-              {/* <div>
-                <input className  ="toggle toggle-default" type="checkbox" value="1" name="room_info" id="room_info_has_sections" />
-                <label className  ="toggle-button" htmlFor="room_info_has_sections"></label>
-              </div> */}
-            </div>
-          </div>
-
-          <div className="ph4 mb3">
-            <div className="flex flex-wrap">
-              <a
-                className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2"
-                href=""
+          <div className="ph4 mb3 flex">
+            <div className="w-60">
+              <label className="f6 fw5 db mb1 gray ttc">Facility</label>
+              <select
+                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
+                onChange={this.onFacilityChanged}
+                value={this.state.facility_id}
               >
-                Add seed
-              </a>
-              <a
-                className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2"
-                href=""
-              >
-                Add clones
-              </a>
-              <a
-                className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2"
-                href=""
-              >
-                Add mother
-              </a>
-              <a
-                className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2"
-                href=""
-              >
-                Add veg group
-              </a>
-            </div>
-            {/* <select 
-              name="room_info[purpose]" id="room_info_purpose"
-              className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0" >
-              <option value="seed">Seed</option>
-              <option value="clone">Clone</option>
-              <option value="mother">Mother plan</option>
-              <option value="mother">Veg group</option>
-            </select> */}
-          </div>
-
-          <div className="ph4 mt3 mb3">
-            <hr className="mb3 mt4 m b--light-gray w-100" />
-            <span className="f6 fw6 gray">Veg group</span>
-          </div>
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-50">
-              <label className="f6 fw5 db mb1 gray ttc">Planted on</label>
-              <input
-                value=""
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-                type="text"
-              />
-            </div>
-            <div className="w-50 pl3">
-              <label className="f6 fw5 db mb1 gray ttc">
-                Expected harvest date
-              </label>
-              <input
-                value=""
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-                type="text"
-              />
+                <option value="farm1">Farm 1</option>
+                <option value="farm2">Farm 2</option>
+                <option value="farm3">Farm 3</option>
+              </select>
             </div>
           </div>
 
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-50">
-              <label className="f6 fw5 db mb1 gray ttc">
-                Location ID (Tray ID)
-              </label>
-              <input
-                value=""
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-                type="text"
-              />
-            </div>
-          </div>
+          <hr className="mt3 m b--light-gray w-100" />
 
-          <div className="ph4 mt3 mb3">
-            <hr className="mb3 mt4 m b--light-gray w-100" />
-            <span className="f6 fw6 gray">Origin</span>
-          </div>
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-50">
-              <label className="f6 fw5 db mb1 gray ttc">Mother ID</label>
-              <input
-                value=""
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-                type="text"
-              />
-            </div>
-          </div>
+          { this.renderEditorToggle() }
 
-          <div className="ph4 mt3 mb3">
-            <hr className="mb3 mt4 m b--light-gray w-100" />
-            <span className="f6 fw6 gray">Who you bought from?</span>
-          </div>
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-50">
-              <label className="f6 fw5 db mb1 gray ttc">Supplier</label>
-              <input
-                value=""
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-                type="text"
-              />
-            </div>
-          </div>
-        </div>
+          { this.renderSeedEditor() }
+          { this.renderCloneEditor() }
+          { this.renderMotherEditor() }
+          { this.renderVegGroupEditor() }
 
-        <div className="w-100 mt5 pa4 bt b--black-10 flex items-center justify-between">
-          <a className="db tr pv2 ph3 bg-green white bn br2 ttu tracked link dim f6 fw6">
-            Save
-          </a>
+          
+
+          
         </div>
       </div>
     )

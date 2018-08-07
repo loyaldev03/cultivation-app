@@ -1,15 +1,15 @@
-<div class="pv4 ph5 flex flex-row justify-between items-center ba bt-1 bb-0 br-0 bl-0 b--black-10">
+<div class="pv3 ph4 flex flex-row justify-between items-center ba bt-1 bb-0 br-0 bl-0 b--black-10">
   <div class="dim flex flex-row items-center pointer">
-    <i class="material-icons gray">keyboard_arrow_left</i>
-    <%= link_to "Back", root_path, class: "db tr ttu tracked link gray fw6 f5" %>
+    <i class="material-icons md-light-gray">keyboard_arrow_left</i>
+    <%= link_to "Back", root_path, class: "db tr ttu link button--font light-gray" %>
   </div>
 
   <div class="flex flex-row items-center">
-    <%= link_to "Save As Draft", root_path, class: "db pa3 tr black ttu tracked link dim f5 fw7" %>
+    <%= link_to "Save As Draft", root_path, class: "db pa3 button--font orange ttu link dim" %>
     <input
       type="submit"
       form="wizard-form"
       value="Save &amp; Continue"
-      class="db pa3 bg-green white bn br2 ttu tracked link dim f5 fw6" />
+      class="db pv3 ph4 bg-orange white button--font bn br3--box ttu link dim" />
   </div>
 </div>

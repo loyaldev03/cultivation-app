@@ -24,28 +24,22 @@
       <h2 class="tl pa0 ma0 fw4 dark-gray">Room Setup</h2>
     </div>
 
-    <div class="pv4 ph5" style="min-height: 75vh;">
+    <div class="pv4" style="min-height: 500px;">
       <div class="fl w-70 flex flex-column">
-        <h2 class="f2 tl pa0 ma0 fw4 dark-gray">Room Setup</h2>
-        <p class="mt2 f5 fw4 dark-gray">
+        <h2 class="ph5 f2 tl pa0 ma0 fw4 dark-gray">Room Setup</h2>
+        <p class="ph5 mt2 f5 fw4 dark-gray">
           Awesome, you've just setup your facility! Room details are next...
         </p>
-
-        <div class="mt3 flex flex-column">
-          <div class="mt4">
-            <span class="f6 fw6 mid-gray dib fl">Room Details</span>
-          </div>
-          <div id="rooms_grid" class="mt4" style="max-width: 699px">
-            <%= render partial: 'rooms_list', locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms} %>
-          </div>
+        <div id="rooms_grid" class="ph5 pv4 bg-near-white carousel-wrapper">
+          <%= render partial: 'rooms_list',
+            locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms}
+          %>
         </div>
       </div>
-
-      <div class="fl w-30 flex justify-end">
+      <div class="ph5 fl w-30 flex justify-end">
         <%= render "layouts/timeline" %>
       </div>
     </div>
-
     <%= render "form_buttons" %>
   </div>
 </div>
@@ -55,9 +49,7 @@
 <% content_for :before_body_end do %>
   <script>
     document.addEventListener("turbolinks:load", function() {
-      new Siema({
-        perPage: 3,
-      });
+      bindCarousel();
     })
   </script>
 <% end %>

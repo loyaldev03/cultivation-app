@@ -63,11 +63,22 @@ a {
   semi-bold: 600
 */
 
+.dark-grey {
+  color: #2E3B4E;
+}
+
+.grey {
+  color: #707A8B; 
+}
+
+.light-grey {
+  color: #C7C7C7;
+}
+
 .h3--font {
   font-size: 50px;
   letter-spacing: 0;
   font-weight: 400;
-  color: var(--dark-gray);
 }
 
 .h5--font {
@@ -80,7 +91,6 @@ a {
   font-size: 22px;
   letter-spacing: 0.15px;
   font-weight: 600;
-  color: var(--dark-gray);
 }
 
 .body-1 {

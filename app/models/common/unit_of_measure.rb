@@ -7,6 +7,9 @@ module Common
     field :name, type: String
     field :code, type: String
     field :desc, type: String
+    field :base_unit, type: Boolean
+    field :base_uom, type: String
+    field :conversion, type: Integer
 
     # NOTE / TODO: Add conversion rules
     # field :base_uom, type: String

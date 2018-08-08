@@ -35,14 +35,14 @@
             </div>
           </div>
 
-          <div class="w-100 mt2 pa2 flex flex-column">
-            <div class="flex flex-column items-center mb2">
+          <div class="w-100 ph2 flex flex-column">
+            <div class="flex flex-column items-center">
               <img src="http://tachyons.io/img/logo.jpg" class="br-100 ba h3 w3 dib center mb2" >
               <span class="mid-gray f6 fw6"><%= room.name %></span>
               <span class="gray f7">Capacity: N/A</span>
             </div>
 
-            <div class="mv2">
+            <div class="pa1">
               <div class="flex flex-row">
                 <div class="flex flex-row w-50 tl pr1">
                   <i class="material-icons gray f7">radio_button_unchecked</i>
@@ -88,7 +88,7 @@
               room_name: room.name,
               room_code: room.code,
             ), remote: true, 
-            class: "absolute bg-blue bottom-0 w-100 ttc link flex f6 fw5 black justify-center w-100 pv2"
+            class: "absolute bg-orange bottom-0 w-100 ttu link flex f6 fw6 white justify-center w-100 pv2"
           %>
         </div>
       <% end %>

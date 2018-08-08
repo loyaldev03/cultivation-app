@@ -128,11 +128,11 @@ class FacilitySetupController < ApplicationController
     # this value should be same as the value in "Continue" button (_row_info_form)
     is_continue = params[:commit] == 'continue'
     form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
-    Rails.logger.debug ">>>>>>>>>>"
+    Rails.logger.debug '>>>>>>>>>>'
     Rails.logger.debug row_info_params[:facility_id]
     Rails.logger.debug row_info_params[:room_id]
     Rails.logger.debug row_info_params[:id]
-    Rails.logger.debug ">>>>>>>>>>"
+    Rails.logger.debug '>>>>>>>>>>'
     respond_to do |format|
       if form_object.submit(row_info_params)
         @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
@@ -179,11 +179,7 @@ class FacilitySetupController < ApplicationController
 
   def update_shelf_trays
     form_object = FacilityWizardForm::UpdateShelfTraysForm.new(shelf_trays_params)
-    Rails.logger.debug '>>> form_object'
-    Rails.logger.debug form_object.inspect
     if form_object.submit(shelf_trays_params)
-      Rails.logger.debug '>>>'
-      Rails.logger.debug '>>> form_object submitted'
       respond_to do |format|
         @row_shelves_trays_form = get_row_shelves_trays_form(
           form_object.facility_id,
@@ -191,11 +187,10 @@ class FacilitySetupController < ApplicationController
           form_object.row_id,
           form_object.id
         )
+        @row_shelves_trays_form.set_shelf_by_index(@row_shelves_trays_form.next_shelf_index)
         format.js
       end
     else
-      Rails.logger.debug '>>>'
-      Rails.logger.debug '>>> form_object NOT submitted'
       nil
     end
   end

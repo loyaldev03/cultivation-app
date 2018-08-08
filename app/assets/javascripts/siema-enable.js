@@ -1,5 +1,11 @@
 //= require siema/dist/siema.min.js
 
+function clearSelection()
+{
+ if (window.getSelection) {window.getSelection().removeAllRanges();}
+ else if (document.selection) {document.selection.empty();}
+}
+
 // Bind Carousel as 4 card in a row (used in Rooms / Rows setup)
 function bindCarousel(gotoLast) {
   const siemaElm = $_(".siema");
@@ -18,7 +24,10 @@ function bindCarousel(gotoLast) {
 
         // Note: Fix for accidental select entire carousel when user click add / delete.
         //       Clicking the body will under any selection
-        document.body.click();
+        setTimeout(function(){
+          document.body.click();
+          clearSelection();
+        }, 300);
       }
     }
     else {

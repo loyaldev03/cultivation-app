@@ -1,5 +1,5 @@
 $carouselBtnSize: 40px;
-$carouselWidth: 860px;
+$carouselWidth: 859px;
 $carouselHeight: 250px;
 $carouselCardWidth: 168px;
 
@@ -25,6 +25,7 @@ $carouselCardWidth: 168px;
   background-color: #FFF;
   width: $carouselCardWidth;
   height: $carouselHeight;
+  border: 1px solid var(--light-gray);
 }
 
 .carousel__body--less .carousel__card{

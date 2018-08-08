@@ -1,19 +1,31 @@
-.tab-buttons {
-  border: 1px solid var(--green);
+$tabColor: var(--green);
+
+.tab-control {
+  border: 2px solid $tabColor;
   border-radius: 4px;
   display: flex;
 }
 
-.tab-button {
+.tab-control__button {
   flex: 1;
   text-align: center;
   padding: 0.5em 0;
   text-decoration: none;
-  color: var(--green);
-  border: 1px solid var(--green);
+  color: $tabColor;
+  border: 1px solid $tabColor;
+
+  &:first-child {
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+  }
+
+  &:last-child {
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+  }
 }
 
-.tab-button--active {
-  background: var(--green);
+.tab-control__button--active {
+  background: $tabColor;
   color: white;
 }

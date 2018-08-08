@@ -1,6 +1,6 @@
 class Settings::Core::UnitOfMeasuresController < ApplicationController
   def index
-    @list = UnitOfMeasure.all.order_by(name: :asc)
+    @list = Common::UnitOfMeasure.all.order_by(name: :asc)
   end
 
   def new

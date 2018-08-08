@@ -16,7 +16,9 @@
   </div>
 <% else %>
   <div class="carousel">
-    <div class="carousel__button carousel__button--left"></div>
+    <div class="carousel__button carousel__button--left pointer dim flex items-center justify-center">
+      <i class="material-icons md-light fw6">keyboard_arrow_left</i>
+    </div>
     <div class="carousel__body siema">
       <% rooms.each do |room| %>
         <div class="f6 fw6 carousel__card relative">
@@ -101,7 +103,9 @@
         </div>
       <% end %>
     </div>
-    <div class="carousel__button carousel__button--right"></div>
+    <div class="carousel__button carousel__button--right pointer dim flex items-center justify-center">
+      <i class="material-icons md-light fw6">keyboard_arrow_right</i>
+    </div>
   </div>
 <% end %>
 

@@ -128,11 +128,11 @@ class FacilitySetupController < ApplicationController
     # this value should be same as the value in "Continue" button (_row_info_form)
     is_continue = params[:commit] == 'continue'
     form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
-    Rails.logger.debug ">>>>>>>>>>"
+    Rails.logger.debug '>>>>>>>>>>'
     Rails.logger.debug row_info_params[:facility_id]
     Rails.logger.debug row_info_params[:room_id]
     Rails.logger.debug row_info_params[:id]
-    Rails.logger.debug ">>>>>>>>>>"
+    Rails.logger.debug '>>>>>>>>>>'
     respond_to do |format|
       if form_object.submit(row_info_params)
         @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,

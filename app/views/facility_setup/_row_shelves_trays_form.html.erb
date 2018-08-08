@@ -5,7 +5,7 @@
 <div class="db ph4 pv3 measure">
   <h3 class="mt0 fw5">Shelf & Tray</h3>
 
-  <div class="ba br2 bw1 green flex flex-row items-center justify-between">
+  <div class="tab-buttons">
     <% shelves.each_with_index do |shelf, i| %>
       <%= link_to "Shelf #{i+1}",
         fetch_row_shelf_trays_path(
@@ -13,7 +13,7 @@
           room_id: room_id,
           row_id: row_id,
           shelf_id: shelf.id),
-        class: "shelf-button link ba bt-0 bb-0 bl-0 bw1 pa3 flex flex-auto justify-center green fw5 f5 dim",
+        class: "tab-button #{"tab-button--active" if shelf.id == shelf_id}",
         remote: true %>
     <% end %>
   </div>

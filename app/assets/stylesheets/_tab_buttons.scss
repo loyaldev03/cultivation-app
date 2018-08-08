@@ -1,8 +1,7 @@
-$tabColor: var(--green);
+$tabColor: var(--orange);
+$tabButtonRadius: 4px;
 
 .tab-control {
-  border: 2px solid $tabColor;
-  border-radius: 4px;
   display: flex;
 }
 
@@ -12,16 +11,20 @@ $tabColor: var(--green);
   padding: 0.5em 0;
   text-decoration: none;
   color: $tabColor;
+  font-weight: 600;
+  font-size: 0.95em;
   border: 1px solid $tabColor;
+  border-left: none;
 
   &:first-child {
-    border-top-left-radius: 2px;
-    border-bottom-left-radius: 2px;
+    border-left: 1px solid $tabColor;
+    border-top-left-radius: $tabButtonRadius;
+    border-bottom-left-radius: $tabButtonRadius;
   }
 
   &:last-child {
-    border-top-right-radius: 2px;
-    border-bottom-right-radius: 2px;
+    border-top-right-radius: $tabButtonRadius;
+    border-bottom-right-radius: $tabButtonRadius;
   }
 }
 

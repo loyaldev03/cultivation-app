@@ -1,5 +1,5 @@
 $carouselBtnSize: 35px;
-$carouselWidth: 930px;
+$carouselWidth: 999px;
 $carouselHeight: 347px;
 $carouselCardWidth: 200px;
 
@@ -31,7 +31,7 @@ $carouselCardWidth: 200px;
 
 .carousel__body--less .carousel__card{
   float: left;
-  margin-right: 14px;
+  margin-right: 30px;
 }
 
 .carousel__card--add {
@@ -51,7 +51,7 @@ $carouselCardWidth: 200px;
 }
 
 .carousel__button--left {
-  margin: 10px 23px 10px 10px;
+  margin: 10px 43px 10px 10px;
 }
 
 .carousel__button--right {

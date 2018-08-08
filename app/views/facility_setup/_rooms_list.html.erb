@@ -19,9 +19,10 @@
     <div class="carousel__button carousel__button--left pointer dim flex items-center justify-center">
       <i class="material-icons md-light fw6">keyboard_arrow_left</i>
     </div>
+
     <div class="carousel__body siema">
       <% rooms.each do |room| %>
-        <div class="f6 fw6 carousel__card relative">
+        <div class="f6 fw6 carousel__card relative b--light-grey br3--box ba">
           <div class="pa1">
             <%= link_to destroy_room_path(facility_id: room.facility_id, room_id: room.id),
               remote: true, method: :post,
@@ -33,15 +34,15 @@
             <% end %>
 
             <div class="fr">
-              <i class="material-icons green f6 dim">info</i>
+              <i class="material-icons orange f6 dim">info</i>
             </div>
           </div>
 
           <div class="w-100 ph2 flex flex-column">
             <div class="flex flex-column items-center">
-              <img src="http://tachyons.io/img/logo.jpg" class="br-100 ba h3 w3 dib center mb2" >
-              <span class="mid-gray f6 fw6"><%= room.name %></span>
-              <span class="gray f7">Capacity: N/A</span>
+              <%= image_tag 'room-icon.svg', class: "h3 w3 dib center mb2" %>
+              <span class="h6--font dark-grey"><%= room.name %></span>
+              <span class="grey body-1">Capacity: N/A</span>
             </div>
 
             <div class="pa1">
@@ -89,16 +90,17 @@
               room_id: room.id,
               room_name: room.name,
               room_code: room.code,
-            ), remote: true, 
-            class: "absolute bg-orange bottom-0 w-100 ttu link flex f6 fw6 white justify-center w-100 pv2"
+            ), remote: true,
+            style: "height: 46px",
+            class: " w-100 absolute bottom-0 bg-orange tc ttu link button white dim flex justify-center items-center"
           %>
         </div>
       <% end %>
       <% unless rooms.blank? %>
-        <div class="carousel__card carousel__card--add">
+        <div class="carousel__card carousel__card--add pa2 br3--box box-shadow b--dashed b--light-grey">
           <%= link_to generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), 
               remote: true, method: :post, class: "dim link" do %>
-              <i class="material-icons md-48 green">add_circle</i>
+              <div class="button white bg-orange ttu pa2">add a new room</div>
           <%end%>
         </div>
       <% end %>

@@ -1,10 +1,11 @@
-$carouselBtnSize: 40px;
-$carouselWidth: 859px;
-$carouselHeight: 250px;
-$carouselCardWidth: 168px;
+$carouselBtnSize: 35px;
+$carouselWidth: 930px;
+$carouselHeight: 347px;
+$carouselCardWidth: 200px;
 
 .carousel-wrapper {
-  width: $carouselWidth + 80px;
+  //width: $carouselWidth + 80px;
+  width: 100%;
 }
 
 .carousel {
@@ -25,7 +26,7 @@ $carouselCardWidth: 168px;
   background-color: #FFF;
   width: $carouselCardWidth;
   height: $carouselHeight;
-  border: 1px solid var(--light-gray);
+  border-width: 1px;
 }
 
 .carousel__body--less .carousel__card{
@@ -36,7 +37,6 @@ $carouselCardWidth: 168px;
 .carousel__card--add {
   background-color: #FFF;
   height: $carouselHeight;
-  border: dotted 1px #ccc;
   display: flex;
   justify-content: center;
   align-items: center;

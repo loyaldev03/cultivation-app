@@ -2,8 +2,7 @@
   <div class="flex itmes-center">
     <%= breadcrumbs ["Home",root_path], 
         ["Facility Setup", facility_setup_new_path], 
-        "Room Setup", 
-        "Row Setup" 
+        ["Room Setup", facility_setup_rooms_info_path(facility_id: @room_summary_form.facility_id)]
     %>
   </div>
 
@@ -25,7 +24,7 @@
     <div class="pa4 vh-75">
       <div class="fl w-70 flex flex-column">
         <h5 class="tl pa0 ma0 h5--font dark-grey">Great job so far, User!</h5>
-        <p class="mt2 body-1">
+        <p class="mt2 body-1 grey">
           Boom, you just set up the room! Now let's configure your grow room by adding rows and shelves.
         </p>
 
@@ -39,11 +38,23 @@
         </p>
 
         <div class="w-70 mt2">
+
+          <% if @room_summary_form.has_sections %>
+            <div class="mb4 flex flex-row">
+              <img
+                src="http://tachyons.io/img/logo.jpg"
+                class="br-100 ba h3 w3 dib"
+              >
+
+              <div class="ml3 flex flex-column">
+                <h3 class="f5 fw5 black mt0 mb2">Sections</h3>
+                <p class="subtitle-2 fw4 grey ma0">You can split a room to a few sections, with each section can serve more specialized functions</p>
+              </div>
+            </div>
+          <% end %>
+
           <div class="flex flex-row">
-            <img
-              src="http://tachyons.io/img/logo.jpg"
-              class="br-100 ba h3 w3 dib"
-            >
+            <%= image_tag 'row-icon.svg', class: "b--light-grey br-100 ba h3 w3 dib" %>
 
             <div class="ml3 flex flex-column">
               <h3 class="f5 fw5 black mt0 mb2">Rows</h3>
@@ -52,10 +63,7 @@
           </div>
 
           <div class="mv4 flex flex-row">
-            <img
-              src="http://tachyons.io/img/logo.jpg"
-              class="br-100 ba h3 w3 dib"
-            >
+            <%= image_tag 'shelf-icon.svg', class: "b--light-grey br-100 ba h3 w3 dib" %>
 
             <div class="ml3 flex flex-column">
               <h3 class="f5 fw5 black mt0 mb2">Shevles</h3>
@@ -64,10 +72,7 @@
           </div>
 
           <div class="flex flex-row">
-            <img
-              src="http://tachyons.io/img/logo.jpg"
-              class="br-100 ba h3 w3 dib"
-            >
+            <%= image_tag 'tray-icon.svg', class: "b--light-grey br-100 ba h3 w3 dib" %>
 
             <div class="ml3 flex flex-column">
               <h3 class="f5 fw5 black mt0 mb2">Trays</h3>

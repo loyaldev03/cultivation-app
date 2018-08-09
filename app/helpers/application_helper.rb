@@ -13,8 +13,8 @@ module ApplicationHelper
         content_tag :span, pair, class: 'subtitle-2 grey'
       end
     end.join(
-      content_tag :i,'keyboard_arrow_right', class: 'material-icons md-600 md-gray md-17 ph2'
-      
+      content_tag :i, 'keyboard_arrow_right', class: 'material-icons md-600 md-gray md-17 ph2'
+
     ).html_safe
   end
 

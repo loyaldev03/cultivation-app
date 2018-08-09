@@ -8,6 +8,10 @@ $carouselCardWidth: 200px;
   width: 100%;
 }
 
+.carousel-group {
+  width: $carouselWidth;
+}
+
 .carousel {
   margin: 10px 0 10px 0;
   width: $carouselWidth;

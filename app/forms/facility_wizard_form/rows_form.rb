@@ -6,7 +6,9 @@ module FacilityWizardForm
              :room_id,
              :has_sections,
              :wz_rows_count,
-             :rows]
+             :rows,
+             :sections,
+            ]
 
     attr_accessor(*ATTRS)
 
@@ -61,6 +63,14 @@ module FacilityWizardForm
       end
     end
 
+    def get_rows(section_id = nil)
+      if @has_sections
+        @rows.select { |x| x.section_id == section_id.to_bson_id }
+      else
+        @rows
+      end
+    end
+
     private
 
     def set_record(facility_id, room_id)
@@ -71,8 +81,8 @@ module FacilityWizardForm
         facility = find_cmd.result
         room = facility.rooms.detect { |r| r.id.to_s == room_id }
         @has_sections = room.has_sections
+        @sections = room.sections
         raise ArgumentError, 'Invalid Room' if room.nil?
-
         if room.rows.blank?
           @wz_rows_count = 0
           @rows = []

@@ -3,7 +3,7 @@
 </div>
 
 <div class="ph4 w-100 pb4">
-  <%= simple_form_for :record, url: "settings_core_unit_of_measure_path(id: @record.id)", method: :patch, remote: true, html: { class: 'vertical-form' } do |f| %>
+  <%= simple_form_for :record, url: settings_core_unit_of_measure_path(id: @record.id), method: :patch, remote: true, html: { class: 'vertical-form' } do |f| %>
     <%= f.input :name, label: 'Name',
       label_html: { class: 'w-100 dib f5 fw6 gray' }, 
       input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
@@ -19,6 +19,25 @@
       label_html: { class: 'w-100 dib f5 fw6 gray' }, 
       input_html: { class: 'w-70 pa2 bgray ba b--black-20 br2 outline-0', rows: 5 } 
     %>
+      <div class="mb2">
+        <%= f.input :base_unit, label: 'Base Unit',
+          as: :boolean,
+          label_html: { class: 'w-100 dib f6 fw5 gray' }, 
+          input_html: { class: 'ph2 pv1 gray ba b--black-20 br2 outline-0', rows: 5 } 
+        %>
+      </div>
+      <div class="mb2">
+        <%= f.input :base_uom, label: 'Base UOM',
+          label_html: { class: 'w-100 dib f6 fw5 gray' }, 
+          input_html: { class: 'w-70 ph2 pv1 gray ba b--black-20 br2 outline-0', rows: 5 } 
+        %>
+      </div>
+      <div class="mb2">
+        <%= f.input :conversion, label: 'Conversion',
+          label_html: { class: 'w-100 dib f6 fw5 gray' }, 
+          input_html: { class: 'w-70 ph2 pv1 gray ba b--black-20 br2 outline-0', rows: 5 } 
+        %>
+      </div>
     <div class="pv3 w-100 flex items-center justify-start">
         <%= f.submit "Update", class: "pointer dim pa2 ph4 ba b--blue blue bw1 br4" %>
     </div>

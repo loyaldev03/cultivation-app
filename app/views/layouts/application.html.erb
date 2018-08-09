@@ -9,7 +9,10 @@
         <div id="main" class="main flex flex-column flex-auto" style="padding-left: 80px;">
           <%= flash_messages %>
           <main class="min-vh-100">
-            <div class="ph4 pv3 f6 w-100 bg-white shadow-0">
+            <div 
+              style="height: 50px" 
+              class="ph4 f6 w-100 bg-white box-shadow-header flex flex-row items-center justify-between"
+            >
               <% if content_for? :breadcrumb %>
                 <%= yield :breadcrumb %>
               <% end %>

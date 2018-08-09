@@ -1,0 +1,60 @@
+$carouselBtnSize: 35px;
+$carouselWidth: 999px;
+$carouselHeight: 347px;
+$carouselCardWidth: 200px;
+
+.carousel-wrapper {
+  //width: $carouselWidth + 80px;
+  width: 100%;
+}
+
+.carousel {
+  margin: 10px 0 10px 0;
+  width: $carouselWidth;
+  height: $carouselHeight;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.carousel__body {
+  height: 100%;
+  flex: 1;
+}
+
+.carousel__card {
+  background-color: #FFF;
+  width: $carouselCardWidth;
+  height: $carouselHeight;
+  border-width: 1px;
+}
+
+.carousel__body--less .carousel__card{
+  float: left;
+  margin-right: 30px;
+}
+
+.carousel__card--add {
+  background-color: #FFF;
+  height: $carouselHeight;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel__button {
+  background-color: #F66830;
+  width: $carouselBtnSize;
+  height: $carouselBtnSize;
+  border-radius: $carouselBtnSize / 2;
+  text-align: center;
+}
+
+.carousel__button--left {
+  margin: 10px 43px 10px 10px;
+}
+
+.carousel__button--right {
+  margin: 10px;
+}
+

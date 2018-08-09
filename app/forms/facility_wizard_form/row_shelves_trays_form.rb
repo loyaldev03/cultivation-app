@@ -19,6 +19,28 @@ module FacilityWizardForm
       set_record
     end
 
+    def next_shelf_index
+      unless @shelf_id.nil?
+        curr_index = @shelves.find_index { |x| x.id == BSON::ObjectId.from_string(@shelf_id) }
+        if curr_index + 1 < @shelves.size
+          curr_index + 1
+        else
+          -1
+        end
+      end
+    end
+
+    def set_shelf_by_index(shelf_index)
+      if shelf_index == -1
+        shelf = @shelves&.last
+      else
+        shelf = @shelves[shelf_index]
+      end
+      @shelf_id = shelf.id
+      @shelf_code = shelf_code
+      @trays = get_trays
+    end
+
     private
 
     def set_record
@@ -32,12 +54,16 @@ module FacilityWizardForm
           ShelfInfoForm.new(@facility_id, @room_id, @id, shelf)
         end
       end
-      # if no shelf_id provided, return trays for first shelf
+
       if @shelf_id.nil?
+        # if no shelf_id provided, return trays for first shelf
         first_shelf = @shelves&.first
+      elsif @shelf_id == -1
+        first_shelf = @shelves&.last
       else
         first_shelf = row.shelves.find(@shelf_id)
       end
+
       @shelf_id = first_shelf&.id
       @shelf_code = first_shelf&.code
       @trays = get_trays

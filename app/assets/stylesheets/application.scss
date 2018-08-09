@@ -9,10 +9,13 @@
 @import 'react_slide_panel';
 @import 'toggle';
 @import 'toast';
+@import 'carousel';
 @import 'react-table';
+@import 'tab_buttons';
 
 /* IMPORT TACHYONS */
 @import 'tachyons/css/tachyons';
+@import 'tachyons_extra';
 
 /* IMPORT for DEVELOPMENT */
 @import 'debug';

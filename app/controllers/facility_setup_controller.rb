@@ -128,11 +128,21 @@ class FacilitySetupController < ApplicationController
     # this value should be same as the value in "Continue" button (_row_info_form)
     is_continue = params[:commit] == 'continue'
     form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
+    Rails.logger.debug '>>>>>>>>>>'
+    Rails.logger.debug row_info_params[:facility_id]
+    Rails.logger.debug row_info_params[:room_id]
+    Rails.logger.debug row_info_params[:id]
+    Rails.logger.debug '>>>>>>>>>>'
     respond_to do |format|
       if form_object.submit(row_info_params)
         @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
                                                       form_object.room_id)
         if is_continue
+          @row_shelves_trays_form = get_row_shelves_trays_form(
+            row_info_params[:facility_id],
+            row_info_params[:room_id],
+            row_info_params[:id]
+          )
           format.js { render template: 'facility_setup/update_row_continue' }
         else
           format.js
@@ -156,17 +166,12 @@ class FacilitySetupController < ApplicationController
 
   # GET toggle between different shelves
   def row_shelf_trays
-    @facility_id = params[:facility_id]
-    @room_id = params[:room_id]
-    @row_id = params[:row_id]
-    @shelf_id = params[:shelf_id]
-
     respond_to do |format|
-      @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
-        @facility_id,
-        @room_id,
-        @row_id,
-        @shelf_id
+      @row_shelves_trays_form = get_row_shelves_trays_form(
+        params[:facility_id],
+        params[:room_id],
+        params[:row_id],
+        params[:shelf_id]
       )
       format.js
     end
@@ -174,23 +179,18 @@ class FacilitySetupController < ApplicationController
 
   def update_shelf_trays
     form_object = FacilityWizardForm::UpdateShelfTraysForm.new(shelf_trays_params)
-    Rails.logger.debug '>>> form_object'
-    Rails.logger.debug form_object.inspect
     if form_object.submit(shelf_trays_params)
-      Rails.logger.debug '>>>'
-      Rails.logger.debug '>>> form_object submitted'
       respond_to do |format|
-        @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
+        @row_shelves_trays_form = get_row_shelves_trays_form(
           form_object.facility_id,
           form_object.room_id,
           form_object.row_id,
           form_object.id
         )
+        @row_shelves_trays_form.set_shelf_by_index(@row_shelves_trays_form.next_shelf_index)
         format.js
       end
     else
-      Rails.logger.debug '>>>'
-      Rails.logger.debug '>>> form_object NOT submitted'
       nil
     end
   end
@@ -333,6 +333,15 @@ class FacilitySetupController < ApplicationController
     else
       facility_room_count_params
     end
+  end
+
+  def get_row_shelves_trays_form(facility_id, room_id, row_id, shelf_id = nil)
+    @row_shelves_trays_form = FacilityWizardForm::RowShelvesTraysForm.new(
+      facility_id,
+      room_id,
+      row_id,
+      shelf_id
+    )
   end
 
   # Step - Update Basic Info

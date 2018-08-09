@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <%= render "layouts/head", include_turbolink: true,  include_sidebar: true %>
+  <%= render "layouts/head", include_turbolink: true, include_sidebar: true, include_carousel: true %>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
@@ -10,7 +10,9 @@
         <div id="main" class="main flex flex-column flex-auto" style="padding-left: 80px;">
           <%= flash_messages %>
           <main class="min-vh-100">
-            <div class="ph4 pv3 f6 w-100 bg-white shadow-0">
+            <div style="height: 50px" 
+              class="ph4 f6 w-100 bg-white box-shadow-header flex flex-row items-center justify-between"
+            >
               <% if content_for? :breadcrumb %>
                 <%= yield :breadcrumb %>
               <% end %>

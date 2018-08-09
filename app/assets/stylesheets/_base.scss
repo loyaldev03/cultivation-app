@@ -1,18 +1,19 @@
 :root {
+  --orange: #F66830;
   --red: #FF4136;
   --blue: #357EDD;
   --green: #19A974;
   --yellow: #FFC600;
   --black: #393939;
+  --dark-gray: #2E3B4E;
+  --gray: #707A8B;
+  --light-gray: #C7C7C7;
   --white: #FFFFFF;
-  --whiteSmoke: #F9F7F5;
+  --whiteSmoke: #F3F5F7;
 }
 
 html {
-  /* A system font stack so things load nice and quick! */
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",sans-serif;
-  font-size: 14px;
-  color: var(--black);
+  font-family: 'Source Sans Pro', sans-serif;
   background-color: var(--whiteSmoke);
 }
 
@@ -22,6 +23,8 @@ html {
 
 body {
   width: 100%;
+  -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 hr {

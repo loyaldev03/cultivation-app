@@ -1,2 +1,3 @@
 toast('Room Deleted', 'notice');
 $_("#rooms_grid").innerHTML = ("<%= j render 'rooms_list', facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms %>")
+<%= render 'carousel_reload' %>

@@ -15,9 +15,9 @@ class SaveUnitOfMeasure
 
   def save_record
     if args[:id]
-      record = UnitOfMeasure.where(id: args[:id]).update(args)
+      record = Common::UnitOfMeasure.where(id: args[:id]).update(args)
     else
-      record = UnitOfMeasure.new(args)
+      record = Common::UnitOfMeasure.new(args)
       record.save!
     end
     record

@@ -3,12 +3,12 @@ require 'rails_helper'
 RSpec.describe QueryUnitOfMeasure, type: :command do
   context ".call" do
     it "should return record when id exists" do
-      UnitOfMeasure.create!(
+      Common::UnitOfMeasure.create!(
         name: "AK47",
         code: Faker::Number.number(3),
         desc: Faker::Lorem.sentence,
       )
-      UnitOfMeasure.create!(
+      Common::UnitOfMeasure.create!(
         name: "AK47",
         code: Faker::Number.number(3),
         desc: Faker::Lorem.sentence,

@@ -72,9 +72,6 @@ class VegGroupEditor extends React.Component {
     this.onShelfIdChanged = this.onShelfIdChanged.bind(this)
     this.onTrayIdChanged = this.onTrayIdChanged.bind(this)
 
-    // Accounting
-    this.onAccountCategoryChanged = this.onAccountCategoryChanged.bind(this)
-
     this.showMetcMessage = this.showMetcMessage.bind(this)
   }
 
@@ -164,10 +161,6 @@ class VegGroupEditor extends React.Component {
     this.setState({ tray_id: event.target.value })
   }
 
-  onAccountCategoryChanged(event) {
-    this.setState({ account_category: event.target.value })
-  }
-
   showMetcMessage(event) {
     event.preventDefault()
     alert(
@@ -186,6 +179,9 @@ class VegGroupEditor extends React.Component {
                 value={this.state.mother_id}
                 onChange={this.onMotherIdChanged}
               />
+            </div>
+            <div className="w-40 pl3">
+              <TextInput label={'Mother location ID'} />
             </div>
           </div>
         </React.Fragment>
@@ -340,7 +336,8 @@ class VegGroupEditor extends React.Component {
         <div className="ph4 mb2 flex">
           <div className="w-100">
             <p className="f7 fw3 gray mt0 mb0 pa0 lh-copy">
-              If you have multiple batches for the same strain, you can create another entry for next batch.
+              If you have multiple batches for the same strain, you can create
+              another entry for next batch.
             </p>
             <p className="f7 fw3 gray mt0 mb0 pa0 lh-copy">
               Each plant has its own <strong>Plant ID</strong>.
@@ -368,14 +365,13 @@ class VegGroupEditor extends React.Component {
 
         <div className="ph4 mt2 mb3 flex">
           <div className="w-60">
-            <TextInput
-              label={'Cultivation Batch ID'}
-            />
+            <TextInput label={'Cultivation Batch ID'} />
           </div>
           <div className="w-40 pl3">
-            <TextInput
-              label={'Current phase'}
-            />
+            <TextInput label={'Current phase'} />
+            <p className="f7 f4 gray i">
+              Possible values are: Veg 1, Veg 2, Dry
+            </p>
           </div>
         </div>
 
@@ -416,17 +412,6 @@ class VegGroupEditor extends React.Component {
 
         {this.renderProcurementInfo()}
         {/* { this.renderStorageInfo() } */}
-
-        <hr className="mt3 m b--light-gray w-100" />
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-60">
-            <TextInput
-              label={'Accounting category'}
-              value={this.state.account_category}
-              onChange={this.onAccountCategoryChanged}
-            />
-          </div>
-        </div>
 
         <div className="w-100 mt4 pa4 bt b--black-10 flex items-center justify-between">
           <a

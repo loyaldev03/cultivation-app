@@ -47,7 +47,9 @@ const columns = [
         <a
           href="javascript:;"
           className="ttc link"
-          onClick={e => alert('expands the row to show latest 5-9 stock intakes') }
+          onClick={e =>
+            alert('expands the row to show latest 5-9 stock intakes')
+          }
         >
           {props.value}
         </a>
@@ -97,7 +99,7 @@ const plants = [
     type: 'Seed',
     total_quantity: 1000,
     facility: 'Farm 1',
-    intake_count: 5,
+    intake_count: 5
   },
   {
     id: '2',
@@ -105,7 +107,7 @@ const plants = [
     type: 'Plant',
     total_quantity: 500,
     facility: 'Farm 1',
-    intake_count: 5,
+    intake_count: 5
   },
   {
     id: '2',
@@ -114,7 +116,7 @@ const plants = [
     type: 'Plant',
     total_quantity: 8000,
     facility: 'Farm 1',
-    intake_count: 5,
+    intake_count: 5
   },
   {
     id: '2',
@@ -123,7 +125,7 @@ const plants = [
     type: 'Plant',
     total_quantity: 16000,
     facility: 'Farm 1',
-    intake_count: 5,
+    intake_count: 5
   },
   {
     id: '2',
@@ -132,8 +134,7 @@ const plants = [
     type: 'Plant',
     total_quantity: 16000,
     facility: 'Farm 1',
-    intake_count: 5,
-
+    intake_count: 5
   },
   {
     id: '2',
@@ -142,7 +143,7 @@ const plants = [
     type: 'Plant',
     total_quantity: 1000,
     facility: 'Farm 1',
-    intake_count: 5,
+    intake_count: 5
   }
 ]
 

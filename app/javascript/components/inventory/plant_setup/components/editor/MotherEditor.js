@@ -29,10 +29,7 @@ class MotherEditor extends React.Component {
       section_id: '',
       row_id: '',
       shelf_id: '',
-      tray_id: '',
-
-      // Accounting
-      account_category: ''
+      tray_id: ''
     }
 
     this.onPlantIdsChanged = this.onPlantIdsChanged.bind(this)
@@ -68,9 +65,6 @@ class MotherEditor extends React.Component {
     this.onRowIdChanged = this.onRowIdChanged.bind(this)
     this.onShelfIdChanged = this.onShelfIdChanged.bind(this)
     this.onTrayIdChanged = this.onTrayIdChanged.bind(this)
-
-    // Accounting
-    this.onAccountCategoryChanged = this.onAccountCategoryChanged.bind(this)
 
     this.showMetcMessage = this.showMetcMessage.bind(this)
   }
@@ -157,10 +151,6 @@ class MotherEditor extends React.Component {
     this.setState({ tray_id: event.target.value })
   }
 
-  onAccountCategoryChanged(event) {
-    this.setState({ account_category: event.target.value })
-  }
-
   showMetcMessage(event) {
     event.preventDefault()
     alert(
@@ -179,6 +169,9 @@ class MotherEditor extends React.Component {
                 value={this.state.mother_id}
                 onChange={this.onMotherIdChanged}
               />
+            </div>
+            <div className="w-40 pl3">
+              <TextInput label={'Mother location ID'} />
             </div>
           </div>
         </React.Fragment>
@@ -388,17 +381,6 @@ class MotherEditor extends React.Component {
 
         {this.renderProcurementInfo()}
         {this.renderStorageInfo()}
-
-        <hr className="mt3 m b--light-gray w-100" />
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-60">
-            <TextInput
-              label={'Accounting category'}
-              value={this.state.account_category}
-              onChange={this.onAccountCategoryChanged}
-            />
-          </div>
-        </div>
 
         <div className="w-100 mt4 pa4 bt b--black-10 flex items-center justify-between">
           <a

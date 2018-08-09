@@ -26,11 +26,9 @@ class SeedEditor extends React.Component {
       section_id: '',
       row_id: '',
       shelf_id: '',
-      tray_id: '',
-
-      // Accounting
-      account_category: ''
+      tray_id: ''
     }
+
     this.onQuantityChanged = this.onQuantityChanged.bind(this)
     this.onPackageIdChanged = this.onPackageIdChanged.bind(this)
 
@@ -61,9 +59,6 @@ class SeedEditor extends React.Component {
     this.onRowIdChanged = this.onRowIdChanged.bind(this)
     this.onShelfIdChanged = this.onShelfIdChanged.bind(this)
     this.onTrayIdChanged = this.onTrayIdChanged.bind(this)
-
-    // Accounting
-    this.onAccountCategoryChanged = this.onAccountCategoryChanged.bind(this)
   }
 
   onPackageIdChanged(event) {
@@ -138,10 +133,6 @@ class SeedEditor extends React.Component {
 
   onTrayIdChanged(event) {
     this.setState({ tray_id: event.target.value })
-  }
-
-  onAccountCategoryChanged(event) {
-    this.setState({ account_category: event.target.value })
   }
 
   render() {
@@ -319,17 +310,6 @@ class SeedEditor extends React.Component {
               label={'Tray Id'}
               value={this.state.tray_id}
               onChange={this.onTrayIdChanged}
-            />
-          </div>
-        </div>
-
-        <hr className="mt3 m b--light-gray w-100" />
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-60">
-            <TextInput
-              label={'Accounting category'}
-              value={this.state.account_category}
-              onChange={this.onAccountCategoryChanged}
             />
           </div>
         </div>

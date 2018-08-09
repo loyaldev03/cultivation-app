@@ -2,7 +2,7 @@
   <div class="flex itmes-center">
     <%= breadcrumbs ["Home",root_path], 
         ["Facility Setup", facility_setup_new_path], 
-        "Room Setup", 
+        ["Room Setup", facility_setup_rooms_info_path(facility_id: @room_summary_form.facility_id)], 
         "Row Setup" 
     %>
   </div>
@@ -39,6 +39,21 @@
         </p>
 
         <div class="w-70 mt2">
+
+          <% if @room_summary_form.has_sections %>
+            <div class="mb4 flex flex-row">
+              <img
+                src="http://tachyons.io/img/logo.jpg"
+                class="br-100 ba h3 w3 dib"
+              >
+
+              <div class="ml3 flex flex-column">
+                <h3 class="f5 fw5 black mt0 mb2">Sections</h3>
+                <p class="subtitle-2 fw4 grey ma0">You can split a room to a few sections, with each section can serve more specialized functions</p>
+              </div>
+            </div>
+          <% end %>
+
           <div class="flex flex-row">
             <img
               src="http://tachyons.io/img/logo.jpg"

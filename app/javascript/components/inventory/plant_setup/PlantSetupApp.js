@@ -32,7 +32,7 @@ class PlantSetupApp extends React.Component {
       <React.Fragment>
         <div className="mb3">
           <button
-            className="pv2 ph3 bg-green white bn br2 ttu tracked link dim f6 fw6 pointer"
+            className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
             onClick={this.openSidebar}
           >
             Add plant

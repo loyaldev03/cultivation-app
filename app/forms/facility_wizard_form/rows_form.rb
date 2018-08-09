@@ -18,9 +18,9 @@ module FacilityWizardForm
 
     def breadcrumb_title
       if @has_sections
-        "Section, Row and Shelf Setup"
+        'Section, Row and Shelf Setup'
       else
-        "Row and Shelf Setup"
+        'Row and Shelf Setup'
       end
     end
 

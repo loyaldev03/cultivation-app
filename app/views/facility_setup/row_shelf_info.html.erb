@@ -2,8 +2,8 @@
   <div class="flex items-center">
     <%= breadcrumbs ["Home",root_path], 
         ["Facility Setup", facility_setup_new_path], 
-        "Room Setup", 
-        "Row Setup" 
+        ["Room Setup", facility_setup_rooms_info_path(facility_id: @rows_form.facility_id)], 
+        @rows_form.breadcrumb_title 
     %>
   </div>
 

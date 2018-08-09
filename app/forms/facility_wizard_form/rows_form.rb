@@ -4,6 +4,7 @@ module FacilityWizardForm
 
     ATTRS = [:facility_id,
              :room_id,
+             :has_sections,
              :wz_rows_count,
              :rows]
 
@@ -13,6 +14,14 @@ module FacilityWizardForm
       @facility_id = facility_id
       @room_id = room_id
       set_record(facility_id, room_id)
+    end
+
+    def breadcrumb_title
+      if @has_sections
+        "Section, Row and Shelf Setup"
+      else
+        "Row and Shelf Setup"
+      end
     end
 
     def generate_rows(rows_count = 0)
@@ -48,8 +57,6 @@ module FacilityWizardForm
             })
           end
           @rows.concat(missing_rows)
-          # Rails.logger.debug ">>>> 8: rows after generate => #{@rows.size}"
-          # Rails.logger.debug ">>>> 8: rows after generate => #{@rows.to_s}"
         end
       end
     end
@@ -63,8 +70,7 @@ module FacilityWizardForm
       if find_cmd.success?
         facility = find_cmd.result
         room = facility.rooms.detect { |r| r.id.to_s == room_id }
-        # Rails.logger.debug ">>>> 001: room.name => #{room.name}"
-        # Rails.logger.debug ">>>> 002: room.rows => #{room.rows}"
+        @has_sections = room.has_sections
         raise ArgumentError, 'Invalid Room' if room.nil?
 
         if room.rows.blank?
@@ -76,7 +82,6 @@ module FacilityWizardForm
             RowInfoForm.new(facility.id, room.id, row)
           end
         end
-        # Rails.logger.debug ">>>> 002: db.room. @rows.size => #{@rows.size}"
       end
     end
   end

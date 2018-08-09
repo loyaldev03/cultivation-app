@@ -32,39 +32,28 @@
         <p class="mv3 f5 fw4 dark-gray">
           Boom, you just set up the room! Now let's configure your grow room by adding rows and shelves.
         </p>
-
-        <div class="mt3 flex flex-column">
-          <div class="mv4 flex flex-row">
-            <div class="w-20">
-              <span class="f6 fw6 mid-gray">Row Details</span>
-            </div>
-
-            <div 
-              id="rows_grid"
-              class="w-80 fl" 
-              style="
-                  display: grid; 
-                  grid-template-columns: repeat(4, 1fr); 
-                  grid-gap: 2rem;
-                "
-            >
-              <%= render partial: 'rows_list',
-                locals: {facility_id: @rows_form.facility_id,
-                        room_id: @rows_form.room_id,
-                        rows: @rows_form.rows} 
-              %>
-            </div>
-          </div>
+        <div id="rows_grid" class="pv4 carousel-wrapper">
+          <%= render partial: 'rows_list',
+            locals: {facility_id: @rows_form.facility_id,
+                    room_id: @rows_form.room_id,
+                    rows: @rows_form.rows} 
+          %>
         </div>
       </div>
-
       <div class="fl w-30 flex justify-end">
         <%= render "layouts/timeline" %>
       </div>
     </div>
-
     <%= render "form_buttons" %>
   </div>
 </div>
 
 <%= render "slide_panel" %>
+
+<% content_for :before_body_end do %>
+  <script>
+    document.addEventListener("turbolinks:load", function() {
+      bindCarousel();
+    })
+  </script>
+<% end %>

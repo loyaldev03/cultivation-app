@@ -1,7 +1,7 @@
-<% if @rows_form.wz_rows_count.blank?  %>
-  <div class="">
+<% if @rows_form.wz_rows_count == 0 %>
+  <span class="grey subtitle-2 dib fl">Row Details</span>
+  <div class="ml6 dib fl">
     <label class="f6 fw5 db mb1 gray">How many number of rows in total?</label>
-    
     <%= select_tag :rows_count,
       options_for_select(["",*1..25], @rows_form.wz_rows_count),
       data: {
@@ -12,93 +12,105 @@
           mode: 'new'),
         method: :post
       },
-      class: "w-100 mt2 gray br2 ba b--black-20"
+      class: "grey br3--box ba b--light-grey outline-0 w-80 height--dropdown"
     %>
   </div>
-<% end %>
-
-<% rows.each do |row| %>
-  <div 
-    style="height: 254.7px; width: 168.8px;"
-    class="ba b--black-10 bg-white br2 tc flex flex-column justify-between items-center">
-    
-    <div class="w-100 flex pa2 flex flex-column">
-      <div class="w-100 flex items-center justify-between mb2">
-        <%= link_to destroy_row_path(
-            facility_id: row.facility_id,
-            room_id: row.room_id,
-            row_id: row.id),
-          remote: true,
-          method: :post,
-          data: {
-            confirm: "Are you sure?"
-          } do
-        %>
-          <i class="material-icons gray f6 dim pointer">delete</i>
-        <% end %>
-
-        <div class="flex flex-row items-center justify-center">
-          <div class="br-100 bg-green pa3"></div>
-          <div class="br-100 bg-white pa2 absolute"></div>
-        </div>
-      </div>
+<% else %>
+  <div class="carousel">
+    <div class="carousel__button carousel__button--left pointer dim flex items-center justify-center">
+      <i class="material-icons md-light fw6">keyboard_arrow_left</i>
     </div>
 
-    <div class="w-100 flex flex-column pa2">
-      <div class="flex flex-column mb2">
-        <img
-          src="http://tachyons.io/img/logo.jpg"
-          class="br-100 ba h3 w3 dib center mb2"
-        >
-        <span class="mid-gray f6 fw6"><%= row.name %></span>
-        <span class="gray f7">Capacity: N/A</span>
-      </div>
+    <div class="carousel__body siema">
 
-      <div class="mt3">
-        <div class="flex flex-row">
-          <div class="flex flex-row w-50 tl pr1">
-            <i class="material-icons gray f7">radio_button_unchecked</i>
-            <div class="flex flex-column w-100 ml2">
-              <span class="mid-gray f6 fw6"><%= row.shelves_count_text %></span>
-              <span class="gray f7">Shevles</span>
+      <% rows.each do |row| %>
+        <div 
+          style="height: 254.7px; width: 168.8px;"
+          class="ba b--black-10 bg-white br2 tc flex flex-column justify-between items-center">
+          
+          <div class="w-100 flex pa2 flex flex-column">
+            <div class="w-100 flex items-center justify-between mb2">
+              <%= link_to destroy_row_path(
+                  facility_id: row.facility_id,
+                  room_id: row.room_id,
+                  row_id: row.id),
+                remote: true,
+                method: :post,
+                data: {
+                  confirm: "Are you sure?"
+                } do
+              %>
+                <i class="material-icons gray f6 dim pointer">delete</i>
+              <% end %>
+
+              <div class="flex flex-row items-center justify-center">
+                <div class="br-100 bg-green pa3"></div>
+                <div class="br-100 bg-white pa2 absolute"></div>
+              </div>
             </div>
           </div>
 
-          <div class="flex flex-row w-50 tl pl1">
-            <i class="material-icons gray f7">radio_button_unchecked</i>
-            <div class="flex flex-column w-100 ml2">
-              <span class="mid-gray f6 fw6"><%= row.trays_count_text %></span>
-              <span class="gray f7">Trays</span>
+          <div class="w-100 flex flex-column pa2">
+            <div class="flex flex-column mb2">
+              <img
+                src="http://tachyons.io/img/logo.jpg"
+                class="br-100 ba h3 w3 dib center mb2"
+              >
+              <span class="mid-gray f6 fw6"><%= row.name %></span>
+              <span class="gray f7">Capacity: N/A</span>
+            </div>
+
+            <div class="mt3">
+              <div class="flex flex-row">
+                <div class="flex flex-row w-50 tl pr1">
+                  <i class="material-icons gray f7">radio_button_unchecked</i>
+                  <div class="flex flex-column w-100 ml2">
+                    <span class="mid-gray f6 fw6"><%= row.shelves_count_text %></span>
+                    <span class="gray f7">Shevles</span>
+                  </div>
+                </div>
+
+                <div class="flex flex-row w-50 tl pl1">
+                  <i class="material-icons gray f7">radio_button_unchecked</i>
+                  <div class="flex flex-column w-100 ml2">
+                    <span class="mid-gray f6 fw6"><%= row.trays_count_text %></span>
+                    <span class="gray f7">Trays</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+
+          <div class="w-100 dim">
+            <%= link_to "Set Up Row",
+              fetch_row_info_path(
+                facility_id: row.facility_id,
+                room_id: row.room_id,
+                row_id: row.id,
+                row_name: row.name,
+                row_code: row.code),
+                remote: true,
+                class: "ttc link flex f6 fw5 black justify-center w-100 pv2 bg-washed-green"
+            %>
+          </div>
         </div>
-      </div>
-    </div>
-
-    <div class="w-100 dim">
-      <%= link_to "Set Up Row",
-        fetch_row_info_path(
-          facility_id: row.facility_id,
-          room_id: row.room_id,
-          row_id: row.id,
-          row_name: row.name,
-          row_code: row.code),
-          remote: true,
-          class: "ttc link flex f6 fw5 black justify-center w-100 pv2 bg-washed-green"
-      %>
-    </div>
-  </div>
-<% end %>
-
-<% unless rows.blank? %>
-  <div 
-    style="height: 254.7px; width: 168.8px;"
-    class="ba b--black-10 b--dashed bg-white br2 pa3 flex items-center justify-center">
-    <% if rows.size > 0 %>
-      <%= link_to generate_rows_path(facility_id: facility_id, room_id: room_id, rows_count: rows.size + 1, mode: 'increment'),
-        remote: true, method: :post, class: "dim link" do %>
-        <i class="material-icons md-48 green">add_circle</i>
       <% end %>
-    <% end %>
+      <% unless rows.blank? %>
+        <div 
+          style="height: 254.7px; width: 168.8px;"
+          class="ba b--black-10 b--dashed bg-white br2 pa3 flex items-center justify-center">
+          <% if rows.size > 0 %>
+            <%= link_to generate_rows_path(facility_id: facility_id, room_id: room_id, rows_count: rows.size + 1, mode: 'increment'),
+              remote: true, method: :post, class: "dim link" do %>
+              <i class="material-icons md-48 green">add_circle</i>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <div class="carousel__button carousel__button--right pointer dim flex items-center justify-center">
+      <i class="material-icons md-light fw6">keyboard_arrow_right</i>
+    </div>
   </div>
 <% end %>
+

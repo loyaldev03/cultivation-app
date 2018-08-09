@@ -11,8 +11,11 @@ module Common
     field :base_uom, type: String
     field :conversion, type: Integer
 
+    scope :base_unit, -> { where(base_unit: true) }
     # NOTE / TODO: Add conversion rules
     # field :base_uom, type: String
     # field :conversion, type: Number
+    
+
   end
 end

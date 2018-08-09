@@ -31,7 +31,7 @@ module CoreForm
       self.base_unit = record[:base_unit] if record[:base_unit]
       self.base_uom = record[:base_uom] if record[:base_uom]
       self.conversion = record[:conversion] if record[:conversion]
-      self.base_uom_select = Common::UnitOfMeasure.all
+      self.base_uom_select = Common::UnitOfMeasure.base_unit.all
     end
 
     def set_record(record_id)

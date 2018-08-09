@@ -74,7 +74,7 @@ module FacilityWizardForm
         raise ArgumentError, 'Invalid Room' if room.nil?
 
         if room.rows.blank?
-          @wz_rows_count = []
+          @wz_rows_count = 0
           @rows = []
         else
           @wz_rows_count = room.rows.blank? ? 0 : room.rows.size

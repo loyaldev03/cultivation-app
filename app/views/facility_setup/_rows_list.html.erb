@@ -16,6 +16,9 @@
     %>
   </div>
 <% else %>
+  <% if @rows_form.has_sections %>
+    <h1>Has Sections</h1>
+  <% end %>
   <div class="carousel">
     <div class="carousel__button carousel__button--left pointer dim flex items-center justify-center">
       <i class="material-icons md-light fw6">keyboard_arrow_left</i>
@@ -24,40 +27,29 @@
     <div class="carousel__body siema">
 
       <% rows.each do |row| %>
-        <div 
-          style="height: 254.7px; width: 168.8px;"
-          class="ba b--black-10 bg-white br2 tc flex flex-column justify-between items-center">
-          
-          <div class="w-100 flex pa2 flex flex-column">
-            <div class="w-100 flex items-center justify-between mb2">
-              <%= link_to destroy_row_path(
-                  facility_id: row.facility_id,
-                  room_id: row.room_id,
-                  row_id: row.id),
-                remote: true,
-                method: :post,
-                data: {
-                  confirm: "Are you sure?"
-                } do
-              %>
-                <i class="material-icons gray f6 dim pointer">delete</i>
-              <% end %>
-
-              <div class="flex flex-row items-center justify-center">
-                <div class="br-100 bg-green pa3"></div>
-                <div class="br-100 bg-white pa2 absolute"></div>
-              </div>
+        <div class="carousel__card relative b--light-grey br3--box ba">
+          <div class="ph2 pt2 pb0">
+            <%= link_to destroy_row_path(
+                facility_id: row.facility_id,
+                room_id: row.room_id,
+                row_id: row.id),
+              remote: true,
+              method: :post,
+              data: { confirm: "Are you sure?" } do
+            %>
+              <i class="material-icons grey f6 dim pointer">delete</i>
+            <% end %>
+            <div class="flex flex-row items-center justify-center">
+              <div class="br-100 bg-green pa3"></div>
+              <div class="br-100 bg-white pa2 absolute"></div>
             </div>
           </div>
 
-          <div class="w-100 flex flex-column pa2">
-            <div class="flex flex-column mb2">
-              <img
-                src="http://tachyons.io/img/logo.jpg"
-                class="br-100 ba h3 w3 dib center mb2"
-              >
+          <div class="w-100 ph2 pv3 flex flex-column">
+            <div class="flex flex-column items-center mv3">
+              <%= image_tag 'row-icon.svg', class: "h3 w3 dib center mb2" %>
               <span class="mid-gray f6 fw6"><%= row.name %></span>
-              <span class="gray f7">Capacity: N/A</span>
+              <span class="gray body-1">Capacity: N/A</span>
             </div>
 
             <div class="mt3">
@@ -88,22 +80,19 @@
                 room_id: row.room_id,
                 row_id: row.id,
                 row_name: row.name,
-                row_code: row.code),
-                remote: true,
-                class: "ttc link flex f6 fw5 black justify-center w-100 pv2 bg-washed-green"
+                row_code: row.code
+            ), remote: true,
+               class: "h2 w-100 absolute bottom-0 bg-orange tc ttu link button white dim flex justify-center items-center"
             %>
           </div>
         </div>
       <% end %>
       <% unless rows.blank? %>
-        <div 
-          style="height: 254.7px; width: 168.8px;"
-          class="ba b--black-10 b--dashed bg-white br2 pa3 flex items-center justify-center">
-          <% if rows.size > 0 %>
-            <%= link_to generate_rows_path(facility_id: facility_id, room_id: room_id, rows_count: rows.size + 1, mode: 'increment'),
-              remote: true, method: :post, class: "dim link" do %>
-              <i class="material-icons md-48 green">add_circle</i>
-            <% end %>
+        <div class="carousel__card carousel__card--add flex flex-column items-center justify-center a2 br3--box box-shadow b--dashed b--light-grey">
+          <%= image_tag 'row-icon.svg', class: "h3 w3 dib center mb2" %>
+          <%= link_to generate_rows_path(facility_id: facility_id, room_id: room_id, rows_count: rows.size + 1, mode: 'increment'),
+            remote: true, method: :post, class: "dim link" do %>
+            <i class="material-icons md-48 green">add_circle</i>
           <% end %>
         </div>
       <% end %>

@@ -3,7 +3,7 @@
 </div>
 
 <div class="ph4 w-100 pb4">
-  <%= simple_form_for :record, url: settings_core_unit_of_measure_path(id: @record.id), method: :patch, remote: true, html: { class: 'vertical-form' } do |f| %>
+  <%= simple_form_for :record, url: "settings_core_unit_of_measure_path(id: @record.id)", method: :patch, remote: true, html: { class: 'vertical-form' } do |f| %>
     <%= f.input :name, label: 'Name',
       label_html: { class: 'w-100 dib f5 fw6 gray' }, 
       input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 

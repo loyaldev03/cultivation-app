@@ -128,6 +128,30 @@ class FacilitySetupController < ApplicationController
     end
   end
 
+  def add_section
+    facility_id = params[:facility_id]
+    room_id = params[:room_id]
+
+    SaveFacilityAddSection.call(facility_id, room_id)
+    @rows_form = FacilityWizardForm::RowsForm.new(facility_id, room_id)
+
+    respond_to do |format|
+      format.js { render template: 'facility_setup/generate_rows' }
+    end
+  end
+
+  def destroy_section
+    facility_id = params[:facility_id]
+    room_id = params[:room_id]
+    section_id = params[:section_id]
+
+    SaveFacilityDestroySection.call(facility_id, room_id, section_id)
+    @rows_form = FacilityWizardForm::RowsForm.new(facility_id, room_id)
+    respond_to do |format|
+      format.js { render template: 'facility_setup/generate_rows' }
+    end
+  end
+
   # GET called through ajax when user click on Row
   def row_info
     @row_info_form = FacilityWizardForm::RowInfoForm.new_by_id(

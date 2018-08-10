@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   get "facility_setup/row_shelf_trays" => "facility_setup#row_shelf_trays", as: 'fetch_row_shelf_trays'
   post "facility_setup/generate_rooms" => "facility_setup#generate_rooms", as: 'generate_rooms'
   post "facility_setup/generate_rows" => "facility_setup#generate_rows", as: 'generate_rows'
+  post "facility_setup/add_section" => "facility_setup#add_section", as: 'add_section'
+  post "facility_setup/destroy_section" => "facility_setup#destroy_section", as: 'destroy_section'
   post "facility_setup/generate_tray" => "facility_setup#generate_tray", as: 'generate_tray'
   post "facility_setup/destroy_room" => "facility_setup#destroy_room", as: 'destroy_room'
   post "facility_setup/destroy_row" => "facility_setup#destroy_row", as: 'destroy_row'

@@ -140,7 +140,7 @@ class SeedEditor extends React.Component {
       <React.Fragment>
         <div className="ph4 mt3 mb3">
           <span className="f6 fw6 dark-gray">Stock count</span>
-          <p className="f7 fw3 gray mt2">
+          <p className="f7 fw4 gray mt2">
             It is recommended to add stock by invoice number.
           </p>
         </div>
@@ -154,7 +154,7 @@ class SeedEditor extends React.Component {
             />
           </div>
           <div className="w-30 pl3">
-            <label className="f6 fw5 db mb1 gray ttc">UoM</label>
+            <label className="f6 fw6 db mb1 gray ttc">UoM</label>
             <select className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0">
               <option value="lb">lb</option>
               <option value="g">grams</option>
@@ -270,7 +270,7 @@ class SeedEditor extends React.Component {
           </div>
           <div className="w-40 pl3">
             {/* <TextInput label={'Room Id'} value={this.state.room_id} onChange={this.onRoomIdChanged} /> */}
-            <label className="f6 fw5 db mb1 gray ttc">Room ID</label>
+            <label className="f6 fw6 db mb1 gray ttc">Room ID</label>
             <p className="i f6 fw4 black-30">Room ID</p>
           </div>
         </div>
@@ -285,7 +285,7 @@ class SeedEditor extends React.Component {
           </div>
           <div className="w-40 pl3">
             {/* <TextInput label={'Section Id'} value={this.state.section_id} onChange={this.onSectionIdChanged} /> */}
-            <label className="f6 fw5 db mb1 gray ttc">Section ID</label>
+            <label className="f6 fw6 db mb1 gray ttc">Section ID</label>
             <p className="i f6 fw4 black-30">Section ID</p>
           </div>
         </div>
@@ -316,14 +316,14 @@ class SeedEditor extends React.Component {
 
         <div className="w-100 mt4 pa4 bt b--black-10 flex items-center justify-between">
           <a
-            className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw4 gray"
+            className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
             href="#"
             onClick={this.props.onResetEditor}
           >
             Save draft
           </a>
           <a
-            className="db pv2 ph3 bg-green white bn br2 ttu tracked link dim f6 fw6"
+            className="db pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
             href="#"
           >
             Preview &amp; Save

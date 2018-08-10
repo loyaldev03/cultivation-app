@@ -290,7 +290,7 @@ class VegGroupEditor extends React.Component {
             />
           </div>
           <div className="w-40 pl3">
-            <label className="f6 fw5 db mb1 gray ttc">Room ID</label>
+            <label className="f6 fw6 db mb1 gray ttc">Room ID</label>
             <p className="i f6 fw4 black-30">Room ID</p>
             {/* <TextInput label={'Room Id'} value={this.state.room_id} onChange={this.onRoomIdChanged} /> */}
           </div>
@@ -305,7 +305,7 @@ class VegGroupEditor extends React.Component {
             />
           </div>
           <div className="w-40 pl3">
-            <label className="f6 fw5 db mb1 gray ttc">Section ID</label>
+            <label className="f6 fw6 db mb1 gray ttc">Section ID</label>
             <p className="i f6 fw4 black-30">Section ID</p>
             {/* <TextInput label={'Section Id'} value={this.state.section_id} onChange={this.onSectionIdChanged} /> */}
           </div>
@@ -335,14 +335,14 @@ class VegGroupEditor extends React.Component {
 
         <div className="ph4 mb2 flex">
           <div className="w-100">
-            <p className="f7 fw3 gray mt0 mb0 pa0 lh-copy">
+            <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
               If you have multiple batches for the same strain, you can create
               another entry for next batch.
             </p>
-            <p className="f7 fw3 gray mt0 mb0 pa0 lh-copy">
+            <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
               Each plant has its own <strong>Plant ID</strong>.
             </p>
-            <p className="f7 fw3 gray mt0 mb2 pa0 lh-copy">
+            <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
               If you already have them, paste Plant IDs with its corresponding
               tray ID like below:
             </p>
@@ -399,7 +399,7 @@ class VegGroupEditor extends React.Component {
           </span>
         </div>
         <div className="ph4 mb3 flex justify-between">
-          <label className="f6 fw5 db mb1 gray">The plants are purchased</label>
+          <label className="f6 fw6 db mb1 gray">The plants are purchased</label>
           <input
             className="toggle toggle-default"
             type="checkbox"
@@ -415,14 +415,14 @@ class VegGroupEditor extends React.Component {
 
         <div className="w-100 mt4 pa4 bt b--black-10 flex items-center justify-between">
           <a
-            className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw4 gray"
+            className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
             href="#"
             onClick={this.props.onResetEditor}
           >
             Save draft
           </a>
           <a
-            className="db tr pv2 ph3 bg-green white bn br2 ttu tracked link dim f6 fw6"
+            className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
             href="#"
           >
             Preview &amp; Save

@@ -67,7 +67,7 @@ export default class PlantEditor extends React.Component {
       <React.Fragment>
         <div className="ph4 mb3 pt3">
           <div className="flex justify-between items-center">
-            <label className="f6 fw5 db dark-gray">
+            <label className="f6 fw6 db dark-gray">
               I have stock for this strain...
             </label>
             {/* <div>
@@ -78,7 +78,7 @@ export default class PlantEditor extends React.Component {
         </div>
         <div className="ph4 mb3">
           <a
-            className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
+            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib"
             href=""
             data-editor={SEED}
             onClick={this.onSetStockEditor}
@@ -86,7 +86,7 @@ export default class PlantEditor extends React.Component {
             Add seed
           </a>
           <a
-            className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
+            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib"
             href=""
             data-editor={CLONE}
             onClick={this.onSetStockEditor}
@@ -94,7 +94,7 @@ export default class PlantEditor extends React.Component {
             Add clones
           </a>
           <a
-            className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
+            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib"
             href=""
             data-editor={MOTHER}
             onClick={this.onSetStockEditor}
@@ -102,7 +102,7 @@ export default class PlantEditor extends React.Component {
             Add mother
           </a>
           <a
-            className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
+            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib"
             href=""
             data-editor={VEG_GROUP}
             onClick={this.onSetStockEditor}
@@ -110,11 +110,20 @@ export default class PlantEditor extends React.Component {
             Add veg group
           </a>
           <a
-            className="pv2 ph3 mb2 bg-green white bn br2 link dim f6 fw6 mr2 dib"
-            href=""
+            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib"
+            href="#"
             data-editor={''}
+            onClick={() => alert('To be implmented.')}
           >
             Add harvest yield
+          </a>
+          <a
+            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib"
+            href="#"
+            data-editor={''}
+            onClick={() => alert('To be implmented.')}
+          >
+            Add waste
           </a>
         </div>
       </React.Fragment>
@@ -159,7 +168,7 @@ export default class PlantEditor extends React.Component {
     if (this.editorSelected) {
       return (
         <div
-          className="dim gray f7 pv1 flex fw3 self-end pointer ttu self-end"
+          className="dim gray f7 pv1 flex fw4 pointer ttu"
           onClick={this.onResetEditor}
         >
           Cancel
@@ -181,8 +190,11 @@ export default class PlantEditor extends React.Component {
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
-          <div className="ph4 pv3 bb b--light-gray flex items-center">
-            <h1 className="f4 fw5 ma0 flex flex-auto ttc">
+          <div
+            className="ph4 pv2 bb b--light-gray flex items-center"
+            style={{ height: '51px' }}
+          >
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">
               {this.renderTitle()}
             </h1>
             {this.renderCloseSidebar()}
@@ -190,7 +202,7 @@ export default class PlantEditor extends React.Component {
 
           <div className="ph4 mt3 mb3 flex">
             <div className="w-60">
-              <label className="f6 fw5 db mb1 gray ttc">Strain</label>
+              <label className="f6 fw6 db mb1 gray ttc">Strain</label>
               <input
                 className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
                 onChange={this.onChangeStrain}
@@ -199,7 +211,7 @@ export default class PlantEditor extends React.Component {
               />
             </div>
             <div className="w-40 pl3">
-              <label className="f6 fw5 db mb1 gray ttc">Strain type</label>
+              <label className="f6 fw6 db mb1 gray ttc">Strain type</label>
               <select
                 className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
                 onChange={this.onChangeStrainType}
@@ -214,7 +226,7 @@ export default class PlantEditor extends React.Component {
 
           <div className="ph4 mb3 flex">
             <div className="w-60">
-              <label className="f6 fw5 db mb1 gray ttc">Facility</label>
+              <label className="f6 fw6 db mb1 gray ttc">Facility</label>
               <select
                 className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
                 onChange={this.onFacilityChanged}

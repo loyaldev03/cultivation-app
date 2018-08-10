@@ -65,9 +65,19 @@ module FacilityWizardForm
 
     def get_rows(section_id = nil)
       if @has_sections
-        @rows.select { |x| x.section_id == section_id.to_bson_id }
+        result = @rows.select { |x| x.section_id == section_id.to_bson_id }
       else
-        @rows
+        result = @rows
+      end
+      result ||= []
+    end
+
+    def has_rows(section_id = nil)
+      if @has_sections
+        raise ArgumentError, 'Invalid section_id' if section_id.nil?
+        result = @rows.any? { |x| x.section_id == section_id }
+      else
+        result = @rows.any?
       end
     end
 

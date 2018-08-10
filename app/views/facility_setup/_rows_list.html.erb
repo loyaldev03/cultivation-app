@@ -1,41 +1,48 @@
-<% if @rows_form.wz_rows_count == 0 %>
-  <span class="grey subtitle-2 dib fl">Row Details</span>
-  <div class="ml6 dib fl">
-    <label class="f6 fw5 db mb1 gray">How many number of rows in total?</label>
-    <%= select_tag :rows_count,
-      options_for_select(["",*1..25], @rows_form.wz_rows_count),
-      data: {
-        remote: true,
-        url: generate_rows_path(
-          facility_id: facility_id,
-          room_id: room_id,
-          mode: 'new'),
-        method: :post
-      },
-      class: "grey br3--box ba b--light-grey outline-0 w-80 height--dropdown"
-    %>
-  </div>
-<% else %>
-
-  <% if @rows_form.has_sections %>
-    <% @rows_form.sections.each do |section| %>
-      <div class="bb b--black-20 pb2 carousel-group">
+<% if @rows_form.has_sections %>
+  <%# HAS SECTIONS %>
+  <% @rows_form.sections.each do |section| %>
+    <div class="carousel-group">
+      <div class="bb b--black-20 pb2 carousel-group__header">
         <i class="material-icons grey dim pointer fl">delete_outline</i>
         <span class="lh-copy ml2 grey fw6">Section <%= section.name || section.code %></span>
         <span class="lh-copy ml2 grey fw6 fr mt1">Edit Section</span>
       </div>
-      <div class="mt2 ba b--dashed b--black-20 pv2 carousel-group">
+      <div class="mt2 ba b--dashed b--black-20 pv2 carousel-group__body">
         <%= render partial: "rows_carousel", locals: {
           facility_id: @rows_form.facility_id,
           room_id: @rows_form.room_id,
-          rows: @rows_form.get_rows(nil)
+          rows: @rows_form.get_rows(section.id),
+          show_add_on_empty: true
         } %>
       </div>
-    <% end %>
+    </div>
   <% end %>
-
-  <% if @rows_form.has_sections %>
-    <p class="lh-copy grey fw6 mt3 db">Not assigned to any sections</p>
+  <%# <p class="lh-copy grey fw6 mt3 db">Not assigned to any sections</p> %>
+<% else %>
+  <%# NO SECTIONS %>
+  <% if @rows_form.has_rows %>
+    <%= render partial: "rows_carousel", locals: {
+      facility_id: @rows_form.facility_id,
+      room_id: @rows_form.room_id,
+      rows: @rows_form.get_rows
+    } %>
+  <% else %>
+    <span class="grey subtitle-2 dib fl">Row Details</span>
+    <div class="ml6 dib fl">
+      <label class="f6 fw5 db mb1 gray">How many number of rows in total?</label>
+      <%= select_tag :rows_count,
+        options_for_select(["",*1..25], @rows_form.wz_rows_count),
+        data: {
+          remote: true,
+          url: generate_rows_path(
+            facility_id: facility_id,
+            room_id: room_id,
+            mode: 'new'),
+          method: :post
+        },
+        class: "grey br3--box ba b--light-grey outline-0 w-80 height--dropdown"
+      %>
+    </div>
   <% end %>
 <% end %>
 

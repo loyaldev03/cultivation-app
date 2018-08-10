@@ -2,6 +2,7 @@ $carouselBtnSize: 35px;
 $carouselWidth: 999px;
 $carouselHeight: 347px;
 $carouselCardWidth: 200px;
+$carouselEmptyHeight: 148px;
 
 .carousel-wrapper {
   //width: $carouselWidth + 80px;
@@ -21,6 +22,10 @@ $carouselCardWidth: 200px;
   justify-content: space-between;
 }
 
+.carousel--empty {
+  height: unset;
+}
+
 .carousel__body {
   height: 100%;
   flex: 1;
@@ -33,18 +38,34 @@ $carouselCardWidth: 200px;
   border-width: 1px;
 }
 
-.carousel__body--less .carousel__card{
-  float: left;
-  margin-right: 30px;
-}
-
 .carousel__card--add {
   background-color: #FFF;
   height: $carouselHeight;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.15);
+  border-radius: 0.3em;
+  border-style: dashed;
+  border-color: var(--light-gray);
 }
+
+.carousel__body--less {
+  .carousel__card {
+    float: left;
+    margin-right: 30px;
+    &.carousel__card--center {
+      float: inherit;
+      margin: 0 auto;
+      height: $carouselEmptyHeight;
+      &.carousel__card--add {
+        border: none;
+        box-shadow: inherit;
+      }
+    }
+  }
+}
+
 
 .carousel__button {
   background-color: #F66830;

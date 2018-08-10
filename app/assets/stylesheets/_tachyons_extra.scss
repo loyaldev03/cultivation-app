@@ -38,6 +38,20 @@
   height: 45px;
 }
 
+.box--scrollable {
+  position: absolute;
+  top: 26%;
+  bottom: 1rem;
+  left: 2rem;
+  right: 2rem;
+  overflow: auto;
+}
+
+::-webkit-scrollbar {
+  background: transparent;
+  width: 0px;
+}
+
 /* Typescale */
 /*
   light: 300

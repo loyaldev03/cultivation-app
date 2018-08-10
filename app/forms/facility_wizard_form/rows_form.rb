@@ -27,11 +27,11 @@ module FacilityWizardForm
     end
 
     def generate_rows(rows_count = 0, section_id = nil)
-      Rails.logger.debug ">>>>>> rows_count: #{rows_count}"
-      Rails.logger.debug ">>>>>> section_id: #{section_id}"
+      # Rails.logger.debug ">>>>>> rows_count: #{rows_count}"
+      # Rails.logger.debug ">>>>>> section_id: #{section_id}"
       @wz_rows_count = rows_count
       if @rows.blank?
-        Rails.logger.debug ">>>>>> generate_rows 2.1"
+        # Rails.logger.debug ">>>>>> generate_rows 2.1"
         @rows = Array.new(rows_count) do |i|
           RowInfoForm.new(@facility_id, @room_id, {
             id: BSON::ObjectId.new,
@@ -41,14 +41,14 @@ module FacilityWizardForm
           })
         end
       else
-        Rails.logger.debug ">>>>>> generate_rows 2.2"
+        # Rails.logger.debug ">>>>>> generate_rows 2.2"
         if rows_count <= @rows.size
-          Rails.logger.debug ">>>>>> generate_rows 2.3"
+          # Rails.logger.debug ">>>>>> generate_rows 2.3"
           # NOTE: This would trim few record at the back of the array
           @rows = @rows.first(rows_count)
           # Rails.logger.debug ">>>> 1: rows_count => #{rows_count}"
         else
-          Rails.logger.debug ">>>>>> generate_rows 2.4"
+          # Rails.logger.debug ">>>>>> generate_rows 2.4"
           missing_count = rows_count - @rows.size
           # Rails.logger.debug ">>>> 2: missing_count => #{missing_count}"
           last_code = @rows.last&.code
@@ -60,9 +60,9 @@ module FacilityWizardForm
             # Rails.logger.debug ">>>> 6: row_code => #{row_code}"
             row_name = "Row #{@rows.size + next_count}"
             # Rails.logger.debug ">>>> 7: row_name => #{row_name}"
-            Rails.logger.debug ">>>>>> generate_rows 2.5"
-            Rails.logger.debug section_id
-            Rails.logger.debug ">>>>>> generate_rows 2.6"
+            # Rails.logger.debug ">>>>>> generate_rows 2.5"
+            # Rails.logger.debug section_id
+            # Rails.logger.debug ">>>>>> generate_rows 2.6"
             RowInfoForm.new(@facility_id, @room_id, {
               id: BSON::ObjectId.new,
               code: row_code,
@@ -77,17 +77,19 @@ module FacilityWizardForm
 
     def get_rows(section_id = nil)
       if @has_sections
-        result = @rows.select { |x| x.section_id == section_id.to_bson_id }
+        # Rails.logger.debug ">>> get_rows: #{section_id}, total rows: #{@rows.size}<<<"
+        result = @rows.select { |x| x.section_id.to_bson_id == section_id.to_bson_id }
+        # Rails.logger.debug ">>> get_rows: rows found: #{result.size}"
+        result
       else
         result = @rows
       end
-      result ||= []
     end
 
     def has_rows(section_id = nil)
       if @has_sections
         raise ArgumentError, 'Invalid section_id' if section_id.nil?
-        result = @rows.any? { |x| x.section_id == section_id }
+        result = @rows.any? { |x| x.section_id.to_bson_id == section_id.to_bson_id }
       else
         result = @rows.any?
       end

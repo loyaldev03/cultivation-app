@@ -98,16 +98,19 @@ class FacilitySetupController < ApplicationController
     rows_count = params[:rows_count].nil? ? 1 : params[:rows_count].to_i
 
     @rows_form = FacilityWizardForm::RowsForm.new(facility_id, room_id)
+    # Rails.logger.debug ">>>>>> original size #{@rows_form.rows.size}"
 
     if mode == 'new'
       # generate number of rows (user select # from select control)
       @rows_form.generate_rows(rows_count, section_id)
-      Rails.logger.debug ">>>>>> generate_rows 5.1"
+      # Rails.logger.debug ">>>>>> generate_rows 5.1"
+      # Rails.logger.debug ">>>>>> generate_rows 5.1.1 #{@rows_form.rows.size}"
       SaveFacilityWizardRows.call(facility_id, room_id, @rows_form.rows, true)
     elsif mode == 'increment'
       # generate additional 1 row (user click the add row button)
       @rows_form.generate_rows(@rows_form.rows.size + 1, section_id)
-      Rails.logger.debug ">>>>>> generate_rows 5.2"
+      # Rails.logger.debug ">>>>>> generate_rows 5.2"
+      # Rails.logger.debug ">>>>>> generate_rows 5.2.1 #{@rows_form.rows.size}"
       SaveFacilityWizardRows.call(facility_id, room_id, [@rows_form.rows.last])
     end
 
@@ -245,11 +248,6 @@ class FacilitySetupController < ApplicationController
         redirect_to facility_setup_new_path(step: next_step,
                                             facility_id: wizard_form.facility_id,
                                             room_id: wizard_form.room_id)
-      elsif current_step == 4
-        redirect_to facility_setup_new_path(step: next_step,
-                                            facility_id: wizard_form.facility_id,
-                                            room_id: wizard_form.room_id,
-                                            section_id: wizard_form.section_id)
       elsif current_step == 5
         if wizard_form.next_row.present?
           redirect_to facility_setup_new_path(step: current_step,

@@ -5,7 +5,7 @@ class Array
   end
 end
 
-# Convert string into BSON::ObjectID
+# Convert string into BSON::ObjectId
 class String
   def to_bson_id
     BSON::ObjectId.from_string(self)

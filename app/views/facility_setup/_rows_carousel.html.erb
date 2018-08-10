@@ -68,8 +68,16 @@
     <% if rows.any? || show_add_on_empty %>
       <div class="carousel__card carousel__card--add <%= "carousel__card--center" if rows.blank? %> flex flex-column">
         <%= image_tag 'row-icon.svg', class: "h3 w3 dib center mb2" %>
-        <%= link_to generate_rows_path(facility_id: facility_id, room_id: room_id, rows_count: rows.size + 1, mode: 'increment'),
-          remote: true, method: :post, class: "dim link" do %>
+        <%= link_to generate_rows_path(
+          facility_id: facility_id,
+          room_id: room_id,
+          section_id: section_id,
+          rows_count: rows.size + 1,
+          mode: 'increment'
+        ),
+          remote: true,
+          method: :post,
+          class: "dim link" do %>
           <i class="material-icons md-48 green">add_circle</i>
         <% end %>
       </div>

@@ -14,7 +14,7 @@ class SaveFacilityWizardRows
 
   private
 
-  # Note: Save wizard generated rooms to facility
+  # NOTE: Save wizard generated rooms to facility
   def save_record(facility_id, room_id, form_rows, replace = false)
     facility = Facility.find(facility_id)
     raise ArgumentError, 'Invalid Facility' if facility.nil?
@@ -40,6 +40,7 @@ class SaveFacilityWizardRows
       id: row_info_form.id,
       code: row_info_form.code,
       name: row_info_form.name,
+      section_id: row_info_form.section_id.to_bson_id,
     )
   end
 end

@@ -92,15 +92,22 @@ class FacilitySetupController < ApplicationController
   def generate_rows
     facility_id = params[:facility_id]
     room_id = params[:room_id]
+    section_id = params[:section_id]
     mode = params[:mode]
+    # number of rows to generate / the N(th) rows to be generate
+    rows_count = params[:rows_count].nil? ? 1 : params[:rows_count].to_i
 
     @rows_form = FacilityWizardForm::RowsForm.new(facility_id, room_id)
-    rows_count = params[:rows_count].nil? ? 1 : params[:rows_count].to_i
-    @rows_form.generate_rows(rows_count)
 
     if mode == 'new'
+      # generate number of rows (user select # from select control)
+      @rows_form.generate_rows(rows_count, section_id)
+      Rails.logger.debug ">>>>>> generate_rows 5.1"
       SaveFacilityWizardRows.call(facility_id, room_id, @rows_form.rows, true)
     elsif mode == 'increment'
+      # generate additional 1 row (user click the add row button)
+      @rows_form.generate_rows(@rows_form.rows.size + 1, section_id)
+      Rails.logger.debug ">>>>>> generate_rows 5.2"
       SaveFacilityWizardRows.call(facility_id, room_id, [@rows_form.rows.last])
     end
 
@@ -128,11 +135,11 @@ class FacilitySetupController < ApplicationController
     # this value should be same as the value in "Continue" button (_row_info_form)
     is_continue = params[:commit] == 'continue'
     form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
-    Rails.logger.debug '>>>>>>>>>>'
-    Rails.logger.debug row_info_params[:facility_id]
-    Rails.logger.debug row_info_params[:room_id]
-    Rails.logger.debug row_info_params[:id]
-    Rails.logger.debug '>>>>>>>>>>'
+    # Rails.logger.debug '>>>>>>>>>>'
+    # Rails.logger.debug row_info_params[:facility_id]
+    # Rails.logger.debug row_info_params[:room_id]
+    # Rails.logger.debug row_info_params[:id]
+    # Rails.logger.debug '>>>>>>>>>>'
     respond_to do |format|
       if form_object.submit(row_info_params)
         @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,

@@ -26,6 +26,10 @@ class SaveRoom
     room.desc = form_object.desc
     room.purpose = form_object.purpose
     room.has_sections = form_object.has_sections
+    if room.has_sections && room.sections.blank?
+      new_code = NextFacilityCode.call(:section, nil, 1).result
+      room.sections.build(code: new_code)
+    end
     room.wz_generated = false
     facility.save!
     room

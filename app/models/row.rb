@@ -3,6 +3,7 @@ class Row
 
   field :name, type: String
   field :code, type: String
+  field :section_id, type: BSON::ObjectId
   field :has_shelves, type: Boolean, default: -> { false }
   field :has_trays, type: Boolean, default: -> { false }
   field :is_complete, type: Boolean, default: -> { false }

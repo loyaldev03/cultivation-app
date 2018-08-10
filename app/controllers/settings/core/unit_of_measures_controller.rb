@@ -1,6 +1,6 @@
 class Settings::Core::UnitOfMeasuresController < ApplicationController
   def index
-    @list = UnitOfMeasure.all.order_by(name: :asc)
+    @list = Common::UnitOfMeasure.all.order_by(name: :asc)
   end
 
   def new
@@ -42,7 +42,7 @@ class Settings::Core::UnitOfMeasuresController < ApplicationController
   private
 
   def record_params
-    params.require(:record).permit(:code, :name, :desc)
+    params.require(:record).permit(:code, :name, :desc, :base_unit, :base_uom, :conversion)
   end
 
   def update_params

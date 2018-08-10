@@ -1,23 +1,20 @@
 <% content_for :breadcrumb do %>
-  <div class="flex flex-row items-center justify-between">
-    <div>
-      <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], 'Inventory Setup' %>
-    </div>
+  <div class="flex items-center">
+    <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], 'Inventory Setup' %>
+  </div>
 
-    <div class="flex flex-row items-center">
-      <i class="material-icons gray f6 mr3 dim">notifications</i>
+  <div class="flex flex-row items-center">
+    <i class="material-icons grey f6 mr3 dim">notifications</i>
 
-      <img
-        src="http://tachyons.io/img/logo.jpg"
-        class="br-100 h2 w2 mr3 dib" alt="avatar">
+    <img
+      src="http://tachyons.io/img/logo.jpg"
+      class="br-100 h2 w2 mr3 dib" alt="avatar">
 
-      <h3 class="ma0 ttc f6 fw5 gray">User Name</h3>
+    <span class="ttc subtitle-2 grey">User Name</span>
 
-      <i class="material-icons dim f6 gray ml2">keyboard_arrow_down</i>
-    </div>
+    <i class="material-icons grey dim ml2">keyboard_arrow_down</i>
   </div>
 <% end %>
-
 
 <div class="pa4">
   <div class="flex flex-column justify-between bg-white">
@@ -35,7 +32,7 @@
         
       </div>
 
-      <div class="fl w-50 flex flex-column mb3">
+      <div class="fl w-60 flex flex-column mb3">
         <p class="mt2 mb4 f5 fw6 dark-gray">
           Quick overview to setup your inventory:
         </p>
@@ -43,27 +40,14 @@
           <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%"></div>
           <div class="flex-auto ph3 f6">
             <p class="ma0 pa0 mb2 fw6 dark-gray ttc">
-              Plant inventory
+              Active plant inventory
             </p>
             <p class="ma0 pa0 fw4 gray lh-copy ">
-              These are your seeds, mother plants, clones together with their IDs.
+              These are your plant inventories such as seeds, mother plants, clones, harvest yield and waste. Plant inventory requires unique IDs for legal compliance and traceability.
             </p>
           </div>
-          <%= link_to 'Start', inventory_plant_setup_index_path, class: 'flex-none bg-green link white f6 fw6 pv2 ph3 br2 dim' %>
+          <%= link_to 'Start', inventory_plant_setup_index_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim' %>
           
-        </div>
-
-        <div class="flex flex-row justify-center items-center mb4">
-          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%"></div>
-          <div class="flex-auto ph3 f6">
-            <p class="ma0 pa0 mb2 fw6 dark-gray ttc">
-              Harvest yield
-            </p>
-            <p class="ma0 pa0 fw4 gray lh-copy ">
-              Plants you have harvested but in drying phase or not packed to sales product.
-            </p>
-          </div>
-          <a href="#" class="flex-none bg-green link white f6 fw6 pv2 ph3 br2 dim">Start</a>
         </div>
 
         <div class="flex flex-row justify-center items-center mb4">
@@ -73,10 +57,10 @@
               Raw materials
             </p>
             <p class="ma0 pa0 fw4 gray lh-copy ">
-              Any consumables used in the facility.
+              Other consumables used for production.
             </p>
           </div>
-          <a href="#" class="flex-none bg-green link white f6 fw6 pv2 ph3 br2 dim">Start</a>
+          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
         </div>
 
         <div class="flex flex-row justify-center items-center mb4">
@@ -86,10 +70,10 @@
               Sales product
             </p>
             <p class="ma0 pa0 fw4 gray lh-copy ">
-              Sales product with their unique identifier.
+              Sales product together with unique identifier and lab test.
             </p>
           </div>
-          <a href="#" class="flex-none bg-green link white f6 fw6 pv2 ph3 br2 dim">Start</a>
+          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
         </div>
 
 
@@ -100,10 +84,10 @@
               Non sales items
             </p>
             <p class="ma0 pa0 fw4 gray lh-copy ">
-              Any item that you want to keep track e.g. fixed assets or does not fit any category above.
+              Any item that you want to keep track such as fixed assets or does not fit any category above.
             </p>
           </div>
-          <a href="#" class="flex-none bg-green link white f6 fw6 pv2 ph3 br2 dim">Start</a>
+          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
         </div>
 
 
@@ -116,7 +100,7 @@
               Vendor listing
             </p>
           </div>
-          <a href="#" class="flex-none bg-green link white f6 fw6 pv2 ph3 br2 dim">Start</a>
+          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
         </div>
 
         <div class="flex flex-row justify-center items-center mb4">
@@ -126,9 +110,10 @@
               Purchase Order &amp; stock intake settings
             </p>
           </div>
-          <a href="#" class="flex-none bg-green link white f6 fw6 pv2 ph3 br2 dim">Start</a>
+          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
         </div>
 
+        <!-- 
         <div class="flex flex-row justify-center items-center mb4">
           <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%"></div>
           <div class="flex-auto ph3 f6">
@@ -136,99 +121,9 @@
               User access
             </p>
           </div>
-          <a href="#" class="flex-none bg-green link white f6 fw6 pv2 ph3 br2 dim">Start</a>
-        </div>
-
+          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
+        </div> -->
       </div>
-
-  <!-- 
-      <div class="fl w-100 flex flex-row flex-wrap">
-        <div class="w-20 mb4">
-          <div class="ba mr3 b--black-10 bg-white grow br2 tc flex flex-column justify-between items-center">
-            <%= link_to "", class: "flex flex-column w-100 pa3 link", class2: "ttc link flex f6 fw5 black justify-center w-100 pv3 dim" do %>
-              <img
-                src="http://tachyons.io/img/logo.jpg"
-                class="br-100 ba h3 w3 dib center"
-              >
-              <p class="f6 gray pa0 lh-title mb0">Add seeds, mother plants and clones with current stock.</p>
-              <div class="link ttc link f6 fw5 black mt3">Add plants</div>
-            <% end %>
-          </div>
-        </div>
-
-        <div class="w-20 mb4">
-          <div class="ba mr3 b--black-10 bg-white br2 tc flex flex-column items-center">
-            <%= link_to "", class: "flex flex-column dim w-100 pa3 link", class2: "ttc link flex f6 fw5 black justify-center w-100 pv3 dim" do %>
-              <img
-                src="http://tachyons.io/img/logo.jpg"
-                class="br-100 ba h3 w3 dib center"
-              >
-              <div class="link ttc link f6 fw5 black mt3">Add harvest yield</div>
-            <% end %>
-          </div>
-        </div>
-
-        <div class="w-20 mb4">
-          <div class="ba mr3 b--black-10 bg-white br2 tc flex flex-column items-center">
-            <%= link_to "", class: "flex flex-column dim w-100 pa3 link", class2: "ttc link flex f6 fw5 black justify-center w-100 pv3 dim" do %>
-              <img
-                src="http://tachyons.io/img/logo.jpg"
-                class="br-100 ba h3 w3 dib center"
-              >
-              <div class="link ttc link f6 fw5 black mt3">Add raw materials</div>
-            <% end %>
-          </div>
-        </div>
-
-        <div class="w-20">
-          <div class="ba mr3 b--black-10 bg-white br2 tc flex flex-column items-center">
-            <%= link_to "", class: "flex flex-column dim w-100 pa3 link", class2: "ttc link flex f6 fw5 black justify-center w-100 pv3 dim" do %>
-              <img
-                src="http://tachyons.io/img/logo.jpg"
-                class="br-100 ba h3 w3 dib center"
-              >
-              <div class="link ttc link f6 fw5 black mt3">Add sales product</div>
-            <% end %>
-          </div>
-        </div>
-
-        <div class="w-20">
-          <div class="ba mr3 b--black-10 bg-white br2 tc flex flex-column items-center">
-            <%= link_to "", class: "flex flex-column dim w-100 pa3 link", class2: "ttc link flex f6 fw5 black justify-center w-100 pv3 dim" do %>
-              <img
-                src="http://tachyons.io/img/logo.jpg"
-                class="br-100 ba h3 w3 dib center"
-              >
-              <div class="link ttc link f6 fw5 black mt3">Add non-sales</div>
-            <% end %>
-          </div>
-        </div>
-
-        <div class="w-20 mb4">
-          <div class="ba mr3 b--black-10 bg-white br2 tc flex flex-column items-center">
-            <%= link_to "", class: "flex flex-column dim w-100 pa3 link", class2: "ttc link flex f6 fw5 black justify-center w-100 pv3 dim" do %>
-              <img
-                src="http://tachyons.io/img/logo.jpg"
-                class="br-100 ba h3 w3 dib center"
-              >
-              <div class="link ttc link f6 fw5 black mt3">Purchase Order and stock intake rules</div>
-            <% end %>
-          </div>
-        </div>
-
-        <div class="w-20 mb4">
-          <div class="ba mr3 b--black-10 bg-white br2 tc flex flex-column items-center">
-            <%= link_to "", class: "flex flex-column dim w-100 pa3 link", class2: "ttc link flex f6 fw5 black justify-center w-100 pv3 dim" do %>
-              <img
-                src="http://tachyons.io/img/logo.jpg"
-                class="br-100 ba h3 w3 dib center"
-              >
-              <div class="link ttc link f6 fw5 black mt3">User access</div>
-            <% end %>
-          </div>
-        </div>
-      </div>
--->
     </div>
 
   </div>

@@ -14,7 +14,7 @@ class FindUnitOfMeasure
   private
 
   def query_record
-    record = UnitOfMeasure.where(@args).first
+    record = Common::UnitOfMeasure.where(@args).first
     if record.nil?
       errors.add :not_found, 'Record Not Found'
       nil

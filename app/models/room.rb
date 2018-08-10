@@ -14,4 +14,5 @@ class Room
 
   embedded_in :facility
   embeds_many :rows
+  embeds_many :sections
 end

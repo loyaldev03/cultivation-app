@@ -26,7 +26,6 @@ function bindCarousel(gotoLast) {
           }, 300);
         }
       } else {
-        console.log({cardCount})
         if (cardCount == 1) {
           siemaElm.closest(".carousel").classList.add("carousel--empty")
         }

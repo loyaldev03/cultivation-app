@@ -1,98 +1,100 @@
-<div class="ph4 pv3 bb b--light-gray">
+<div class="ph4 pv3 bb b--light-grey">
   <h1 class="h6--font dark-grey ma0">Row & Shelf Details</h1>
 </div>
 
-<div class="flex flex-column justify-center items-center bb b--light-gray pv2">
+<div class="flex flex-column justify-center items-center bb b--light-grey pv2">
   <%= image_tag 'row-icon.svg', class: "h3 w3 db" %>
   <span class="dark-grey h6--font">Row</span>
 </div>
 
-<div class="db ph4 pv3 measure">
+<div class="db pv3 measure">
   <%= form_with scope: :row_info, url: facility_setup_update_row_info_path do |f| %>
     <%= f.hidden_field :facility_id, value: row.facility_id %>
     <%= f.hidden_field :room_id, value: row.room_id %>
     <%= f.hidden_field :id, value: row.id %>
 
     <div class="box--scrollable">
-      <div class="mb3">
-        <%= f.label "row Name", class:"subtitle-2 db mb1 grey ttc" %>
-        <%= f.text_field :name, value: row.name, class: "box--height db w-70 pa2 body-1 grey ba b--light-grey br3--box outline-0" %>
-      </div>
+      <div class="ph4">
+        <div class="mb3">
+          <%= f.label "row Name", class:"subtitle-2 db mb1 grey ttc" %>
+          <%= f.text_field :name, value: row.name, class: "box--height db w-70 pa2 body-1 grey ba b--light-grey br3--box outline-0" %>
+        </div>
 
-      <div class="mb3">
-        <span class="subtitle-2 db mb1 grey ttc">row ID</span>
-        <%= f.text_field :code, value: row.code, class: "box--height db w-70 pa2 body-1 grey ba b--light-grey br3--box outline-0" %>
-      </div>
+        <div class="mb3">
+          <span class="subtitle-2 db mb1 grey ttc">row ID</span>
+          <%= f.text_field :code, value: row.code, class: "box--height db w-70 pa2 body-1 grey ba b--light-grey br3--box outline-0" %>
+        </div>
 
-      <div class="mt4">
-        <div class="flex flex-row items-center justify-between">
-          <span class="subtitle-2 db mb1 grey ttc">Does the row have multiple levels?</span>
+        <div class="mt4">
+          <div class="flex flex-row items-center justify-between">
+            <span class="subtitle-2 db mb1 grey ttc">Does the row have multiple levels?</span>
+            
+            <div class="">
+              <%= f.check_box :has_shelves,
+                checked: row.has_shelves,
+                class: "toggle toggle-default",
+                data: { toggle: 'shelves_number_options' }
+              %>
+              <label class="toggle-button" for="row_info_has_shelves"></label>
+            </div>
+          </div>
+          <p class="grey caption mt2 w-90">
+            If toggle is not selected, then that means that there is no trays that exists on the shelf.
+          </p>
+        </div>
+
+        <div class="w-100 shelves_number_options" style="display: none">
+          <div class="mt3">
+            <%= f.label :wz_shelves_count, "How many shelves per row?",
+              class: "subtitle-2 db mb1 grey"
+            %>
+            <%= f.select :wz_shelves_count,
+              options_for_select([*1..5], row.wz_shelves_count),
+              {},
+              {
+                class: "w-70 grey br3--box ba b--light-grey outline-0 box--height"
+              }
+            %>
+          </div>
+        </div>
+
+        <div class="mt4">
+          <div class="flex flex-row items-center justify-between">
+            <span class="subtitle-2 grey">Do you use trays?</span>
+
+            <div class="">
+              <%= f.check_box :has_trays,
+                checked: row.has_trays,
+                class: "toggle toggle-default",
+                data: { toggle: 'trays_number_options' }
+              %>
+              <label class="toggle-button" for="row_info_has_trays"></label>
+            </div>
+          </div>
+
+          <p class="grey caption mt2 w-90">
+            If toggle is not selected, then that means that there is no trays that exists on the shelf.
+          </p>
           
-          <div class="">
-            <%= f.check_box :has_shelves,
-              checked: row.has_shelves,
-              class: "toggle toggle-default",
-              data: { toggle: 'shelves_number_options' }
+        </div>
+
+        <div class="w-100 trays_number_options" style="display: none">
+          <div class="mt3">
+            <%= f.label :wz_trays_count, "How many trays per shelf?",
+              class: "subtitle-2 db mb1 grey"
             %>
-            <label class="toggle-button" for="row_info_has_shelves"></label>
+            <%= f.select :wz_trays_count,
+              options_for_select([*1..10], row.wz_trays_count),
+              {},
+              {
+                class: "w-70 grey br3--box ba b--light-grey outline-0 box--height"
+              }
+            %>
           </div>
         </div>
-        <p class="grey caption mt2 w-90">
-          If toggle is not selected, then that means that there is no trays that exists on the shelf.
-        </p>
       </div>
 
-      <div class="w-100 shelves_number_options" style="display: none">
-        <div class="mt3">
-          <%= f.label :wz_shelves_count, "How many shelves per row?",
-            class: "subtitle-2 db mb1 grey"
-          %>
-          <%= f.select :wz_shelves_count,
-            options_for_select([*1..5], row.wz_shelves_count),
-            {},
-            {
-              class: "w-70 grey br3--box ba b--light-grey outline-0 box--height"
-            }
-          %>
-        </div>
-      </div>
-
-      <div class="mt4">
-        <div class="flex flex-row items-center justify-between">
-          <span class="subtitle-2 grey">Do you use trays?</span>
-
-          <div class="">
-            <%= f.check_box :has_trays,
-              checked: row.has_trays,
-              class: "toggle toggle-default",
-              data: { toggle: 'trays_number_options' }
-            %>
-            <label class="toggle-button" for="row_info_has_trays"></label>
-          </div>
-        </div>
-
-        <p class="grey caption mt2 w-90">
-          If toggle is not selected, then that means that there is no trays that exists on the shelf.
-        </p>
-        
-      </div>
-
-      <div class="w-100 trays_number_options" style="display: none">
-        <div class="mt3">
-          <%= f.label :wz_trays_count, "How many trays per shelf?",
-            class: "subtitle-2 db mb1 grey"
-          %>
-          <%= f.select :wz_trays_count,
-            options_for_select([*1..10], row.wz_trays_count),
-            {},
-            {
-              class: "w-70 grey br3--box ba b--light-grey outline-0 box--height"
-            }
-          %>
-        </div>
-      </div>
-
-      <div class="w-100 mt5 pt3 bt b--light-grey flex items-center justify-between">
+      <div class="w-100 mt5 pt3 ph4 bt b--light-grey flex items-center justify-between">
         <%= f.submit "Save Changes", class: "db pv2 bn ttu button orange link dim pointer" %>
         <%= f.submit "save & continue", value: "continue", class: "db tr pv2 ph3 bg-orange white bn br3--box ttu link dim pointer" %>
       </div>

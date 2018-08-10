@@ -1,10 +1,20 @@
 <div class="ph4 pv3 bb b--light-gray">
-  <h1 class="f4 fw5 ma0">Row & Shelf Details</h1>
+  <h1 class="h6--font dark-grey ma0">Row & Shelf Details</h1>
+</div>
+
+<div class="flex flex-row item-center justify-around pv2 ph3 bb b--light-gray">
+  <div class="flex flex-column justify-center items-center">
+    <%= image_tag 'row-icon.svg', class: "h3 w3 db" %>
+    <span class="dark-grey h6--font">Row</span>
+  </div>
+
+  <div class="flex flex-column justify-center items-center">
+    <%= image_tag 'shelf-icon.svg', class: "h3 w3 db" %>
+    <span class="dark-grey h6--font">Shelf & Tray</span>
+  </div>
 </div>
 
 <div class="db ph4 pv3 measure">
-  <h3 class="mt0 fw5">Shelf & Tray</h3>
-
   <div class="tab-control">
     <% shelves.each_with_index do |shelf, i| %>
       <%= link_to "Shelf #{i+1}",

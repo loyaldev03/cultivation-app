@@ -52,16 +52,18 @@
           <table class="w-100">
             <tbody>
               <tr>
-                <th></th>
+                <th style="min-width: 42px;"></th>
                 <th class="caption grey tl">Tray ID</th>
                 <th class="w3 caption grey tl">Capacity</th>
                 <th class="caption grey tl">Tray Type</th>
               </tr>
 
               <% trays.each_with_index do |tray,i| %>
-                <tr class="tc">
+                <tr class="">
                   <%= hidden_field_tag "shelf_trays_info[trays][][id]", tray.id, id: nil %>
-                  <td class="grey caption tl">Tray <%= i+1%></td>
+                  <td class="grey caption tl">
+                    <span>Tray <%= i+1%></span>
+                  </td>
                   
                   <td class="tl">
                     <%= text_field_tag "shelf_trays_info[trays][][code]", tray.code, required: true,
@@ -126,8 +128,8 @@
         <% end %>
       </div>
 
-      <div class="w-100 mt5 pa3 bt b--light-grey flex items-center justify-end">
-        <%= f.submit "Save & Continue", class: "pointer db tr pv3 ph4 bg-orange white bn br3--box ttu tracked link dim f6 fw6" %>
+      <div class="w-100 mt5 ph4 pv3 bt b--light-grey flex items-center justify-end">
+        <%= f.submit "Save & Continue", class: "pointer db tr pa3 bg-orange white bn br3--box ttu link dim pointer" %>
       </div>
     <% end %>
   </div>

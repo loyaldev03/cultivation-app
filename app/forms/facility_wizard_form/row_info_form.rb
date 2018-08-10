@@ -7,6 +7,7 @@ module FacilityWizardForm
              :id,
              :code,
              :name,
+             :section_id,
              :has_shelves,
              :has_trays,
              :wz_shelves_count,

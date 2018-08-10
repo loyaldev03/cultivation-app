@@ -7,7 +7,7 @@
   <span class="dark-grey h6--font">Row</span>
 </div>
 
-<div class="db pv3 measure">
+<div class="db measure">
   <%= form_with scope: :row_info, url: facility_setup_update_row_info_path do |f| %>
     <%= f.hidden_field :facility_id, value: row.facility_id %>
     <%= f.hidden_field :room_id, value: row.room_id %>

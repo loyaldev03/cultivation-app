@@ -1,7 +1,7 @@
 <% if @rows_form.has_sections %>
   <%# HAS SECTIONS %>
   <% @rows_form.sections.each do |section| %>
-    <div class="carousel-group">
+    <div class="carousel-group <%= "carousel-group--empty" unless @rows_form.has_rows(section.id) %>">
       <div class="bb b--black-20 pb2 carousel-group__header">
         <%= link_to destroy_section_path(
             facility_id: @rows_form.facility_id,
@@ -16,7 +16,7 @@
         <span class="lh-copy ml2 grey fw6">Section <%= section.name || section.code %></span>
         <span class="lh-copy ml2 grey fw6 fr mt1">Edit Section</span>
       </div>
-      <div class="mt2 ba b--dashed b--black-20 pv2 carousel-group__body">
+      <div class="carousel-group__body">
         <%= render partial: "rows_carousel", locals: {
             facility_id: @rows_form.facility_id,
             room_id: @rows_form.room_id,

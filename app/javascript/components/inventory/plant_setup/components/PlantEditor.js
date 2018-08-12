@@ -1,4 +1,6 @@
 import React from 'react'
+import AsyncSelect from 'react-select/lib/Async'
+import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable';
 import SeedEditor from './editor/SeedEditor'
 import CloneEditor from './editor/CloneEditor'
 import MotherEditor from './editor/MotherEditor'
@@ -186,6 +188,43 @@ export default class PlantEditor extends React.Component {
     }
   }
 
+  promiseOptions = (inputValue) => {
+    // console.log(inputValue.length)
+    // const filter = inputValue.length > 0 ? inputValue : this.state.strain
+    
+    return fetch('/api/v1/plants/strains?filter=' + inputValue, {
+      credentials: 'include'  
+    })
+      .then(response => response.json())
+      .then((data) => {
+        console.log(data.data)
+        return data.data.map(x => ({ 
+          label: x.name, 
+          value: x.name, 
+          id: 5,
+          strain_type: x.strain_type
+        }))
+      })
+  }
+
+  handleInputChange = (newValue, meta) => {
+    // this.setState({ strain: newValue })
+    return newValue
+  };
+
+  onStrainSelected = (item) => {
+    console.log(item)
+    let label = ''
+    if (item) {
+      label = item.label
+    }
+    
+    this.setState({ 
+      strain: label,
+      strain_type: item.strain_type
+    })
+  }
+
   render() {
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -203,11 +242,16 @@ export default class PlantEditor extends React.Component {
           <div className="ph4 mt3 mb3 flex">
             <div className="w-60">
               <label className="f6 fw6 db mb1 gray ttc">Strain</label>
-              <input
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-                onChange={this.onChangeStrain}
-                value={this.state.strain}
-                type="text"
+              <AsyncCreatableSelect
+                defaultOptions
+                noOptionsMessage={() => 'Type to search strain...' }
+                cacheOptions
+                loadOptions={this.promiseOptions}
+                onInputChange={this.handleInputChange}
+                styles={customStyles}
+                placeholder=""
+                value={{ label: this.state.strain, value: this.state.strain }}
+                onChange={this.onStrainSelected}
               />
             </div>
             <div className="w-40 pl3">
@@ -250,5 +294,42 @@ export default class PlantEditor extends React.Component {
         </div>
       </div>
     )
+  }
+}
+
+
+// const filterColors = (inputValue) => {
+//   return (colourOptions.filter(i =>
+//     i.label.toLowerCase().includes(inputValue.toLowerCase())
+//   ))
+// }
+
+const customStyles = {
+  control: (base, state) => ({
+    ...base,
+    fontSize: '0.875rem',
+    backgroundColor: '#fff',
+    height: '30px',
+    minHeight: '30px',
+    borderColor: 'rgba(0, 0, 0, 0.2)'
+  }),
+  indicatorSeparator: () => ({
+    display: 'none'
+  }),
+  menu: (base, state) => ({
+    ...base,
+    marginTop: 2
+  }),
+  dropdownIndicator: () => ({
+    display: 'none'
+  }),
+  option: (base, state) => {
+    return { 
+      ...base, 
+      backgroundColor: (state.isFocused || state.isSelected) ? 'rgba(100, 100, 100, 0.1)' : 'transparent',
+      ':active':  'rgba(100, 100, 100, 0.1)',
+      WebkitTapHighlightColor: 'rgba(100, 100, 100, 0.1)',
+      color: 'black',
+    }
   }
 }

@@ -2,32 +2,30 @@
   <%= render "layouts/sidebar" %>
 <% end %>
 
-<% content_for :breadcrumb do %>
-  <div class="flex flex-row items-center justify-between">
+<div class="ph4">
+  <% content_for :breadcrumb do %>
     <div>
-      <%= breadcrumbs ["Home",root_path], "Dashboard" %>
+      <%= breadcrumbs "Home" %>
     </div>
 
     <div class="flex flex-row items-center">
-      <i class="material-icons gray f6 mr3 dim">notifications</i>
+      <i class="material-icons grey f6 mr3 dim">notifications</i>
 
       <img
         src="http://tachyons.io/img/logo.jpg"
         class="br-100 h2 w2 mr3 dib" alt="avatar">
 
-      <h3 class="ma0 ttc f6 fw5 gray">User Name</h3>
+      <span class="ttc subtitle-2 grey">User Name</span>
 
-      <i class="material-icons dim f6 gray ml2">keyboard_arrow_down</i>
+      <i class="material-icons grey dim ml2">keyboard_arrow_down</i>
     </div>
-  </div>
-<% end %>
+  <% end %>
 
-<div class="ph4">
-  <p class="f1 fw6 w-100 tc">
+  <h3 class="w-100 tc h3--font dark-grey">
     Welcome to Cannected, user.
     <br/>
     Where do you want to start?
-  </p>
+  </h3>
 
   <% @dashboard.incomplete_facilities.each do |f| %>
     <p class="mt2 pa4 bg-yellow">
@@ -40,31 +38,49 @@
   <% end %>
 
   <div class="flex flex-row items-center justify-center">
-    <div class="w-20 tc bg-white pa3 ba b--black-20">
-      <%= link_to "Setup a new facility (Wizard)", 
-          facility_setup_new_path, 
-          class: "mv3 dim dib link pv2 ph3 ba b--black-20 br-100 h4 w4 flex items-center justify-center center" 
+    <div
+      style="height: 378px; width: 300px;" 
+      class="tc bg-white pa4 bn br3--box box-shadow flex flex-column justify-between">
+      
+      <%= link_to facility_setup_new_path, 
+          class: "mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" do
       %>
-      <h2 class="fw5 ttc">Setting up facility</h2>
-      <p class="w-100 center lh-copy gray fw4">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+        <%= image_tag "add-facility.svg" %>
+      <% end %>
+
+      <div class="flex flex-column mb3">
+        <h6 class="ttc mt0 mb2 h6--font dark-grey">Setting up facility</h6>
+        <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+      </div>
     </div>
 
-    <div class="w-20 tc bg-white pa3 mh4 ba b--black-20">
-      <%= link_to "Setup inventory", 
-          inventory_setup_path, 
-          class: "mv3 dim dib link pv2 ph3 ba b--black-20 br-100 h4 w4 flex items-center justify-center center" 
+    <div 
+      style="height: 378px; width: 300px;" 
+      class="mh3 tc bg-white pa4 bn br3--box box-shadow flex flex-column justify-between">
+      
+      <%= link_to inventory_setup_path, 
+          class: "mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" do
       %>
-      <h2 class="fw5 ttc">Setup inventory</h2>
-      <p class="w-100 center lh-copy gray fw4">Set up seeds & plants, raw materials &amp; other items stored in your facilities.</p>
+        <%= image_tag "add-inventory.svg" %>
+      <% end %>
+
+      <div class="flex flex-column mb3">
+        <h6 class="mt0 mb2 ttc h6--font dark-grey">Setting up inventory</h6>
+        <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+      </div>
     </div>
 
-    <div class="w-20 tc bg-white pa3 ba b--black-20">
-      <%= link_to "Setup a new cultivation", 
-          "#", 
-          class: "mv3 dim dib link pv2 ph3 ba b--black-20 br-100 h4 w4 flex items-center justify-center center" 
-      %>
-      <h2 class="fw5 ttc">Setting up cultivation</h2>
-      <p class="w-100 center lh-copy gray fw4">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+    <div 
+      style="height: 378px; width: 300px;" 
+      class="tc bg-white pa4 bn br3--box box-shadow flex flex-column justify-between">
+      
+      <%= content_tag :a, image_tag("add-cultivation.svg"), 
+          :class=> "mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" %>
+      
+      <div class="flex flex-column mb3">
+        <h6 class="mt0 mb2 ttc h6--font dark-grey">Setting up cultivation</h6>
+        <p class="w-100 center grey body-1 ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
+      </div>
     </div>
   </div>
 </div>

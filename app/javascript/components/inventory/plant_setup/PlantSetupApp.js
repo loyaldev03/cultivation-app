@@ -1,6 +1,6 @@
 import React from 'react'
-import PlantList from './PlantList'
-import PlantEditor from './PlantEditor'
+import PlantList from './components/PlantList'
+import PlantEditor from './components/PlantEditor'
 
 class PlantSetupApp extends React.Component {
   constructor(props) {
@@ -16,7 +16,7 @@ class PlantSetupApp extends React.Component {
   }
 
   openSidebar() {
-    window.editorSidebar.open()
+    window.editorSidebar.open({ width: '500px' })
   }
 
   closeSidebar() {
@@ -30,8 +30,17 @@ class PlantSetupApp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <button onClick={this.openSidebar}>Add plant</button>
-        <PlantList />
+        <div className="mb3">
+          <button
+            className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
+            onClick={this.openSidebar}
+          >
+            Add plant
+          </button>
+        </div>
+        <div className="w-80">
+          <PlantList />
+        </div>
         <PlantEditor onClose={this.closeSidebar} />
       </React.Fragment>
     )

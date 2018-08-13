@@ -1,33 +1,27 @@
 <% content_for :breadcrumb do %>
-  <div class="flex flex-row items-center justify-between">
-    <div>
-      <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], "Facility Setup" %>
-    </div>
+  <div class="flex items-center">
+    <%= breadcrumbs ["Home",root_path], "Facility Setup" %>
+  </div>
 
-    <div class="flex flex-row items-center">
-      <i class="material-icons gray f6 mr3 dim">notifications</i>
+  <div class="flex flex-row items-center">
+    <i class="material-icons grey f6 mr3 dim">notifications</i>
 
-      <img
-        src="http://tachyons.io/img/logo.jpg"
-        class="br-100 h2 w2 mr3 dib" alt="avatar">
+    <img
+      src="http://tachyons.io/img/logo.jpg"
+      class="br-100 h2 w2 mr3 dib" alt="avatar">
 
-      <h3 class="ma0 ttc f6 fw5 gray">User Name</h3>
+    <span class="ttc subtitle-2 grey">User Name</span>
 
-      <i class="material-icons dim f6 gray ml2">keyboard_arrow_down</i>
-    </div>
+    <i class="material-icons grey dim ml2">keyboard_arrow_down</i>
   </div>
 <% end %>
 
 <div class="pa4">
   <div class="flex flex-column justify-between bg-white">
-    <div class="ph5 pv3 ba bt-0 bb-1 br-0 bl-0 b--black-10">
-      <h2 class="tl pa0 ma0 fw4 dark-gray">Facility Setup</h2>
-    </div>
-
-    <div class="pv4 ph5 vh-75">
+    <div class="pa4 min-vh-80">
       <div class="fl w-70 flex flex-column">
-        <h2 class="f2 tl pa0 ma0 fw4 dark-gray">Facility Setup</h2>
-        <p class="mt2 f5 fw4 dark-gray">
+        <h5 class="tl pa0 ma0 h5--font dark-grey">Tell us about your facility.</h5>
+        <p class="mt2 body-1 grey">
           Let's get a few fetails of your facility to get things rolling...
         </p>
 
@@ -50,43 +44,43 @@
           <div class="flex flex-column mt3">
             <div class="mv4 flex flex-row">
               <div class="w-20">
-                <span class="f6 fw6 mid-gray">Facility Details</span>
+                <span class="subtitle-2 grey">Facility Details</span>
               </div>
 
               <div class="fl w-80 flex-column">
                 <div class="flex flex-row mb3">
                   <div class="w-50 mr4">
-                    <%= f.label "Company name", class: "f6 fw5 db mb1 gray ttc" %>
+                    <%= f.label "Company name", class: "db mb1 grey subtitle-2 ttc" %>
                     <%= f.text_field :company_name,
                       placeholder: "Company's name",
                       value: @wizard_form.company_name,
-                      class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                      class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
                   </div>
 
                   <div class="w-20">
-                    <%= f.label "State License #", class: "f6 fw5 db mb1 gray ttc" %>
+                    <%= f.label "State License #", class: "db mb1 grey subtitle-2 ttc" %>
                     <%= f.text_field :state_license,
                       placeholder: "S0001",
                       value: @wizard_form.state_license,
-                      class: "gray input-reset br2 outline-0 ba b--black-20 pa2 db w-100" %>
+                      class: "grey input-reset br2 outline-0 ba b--black-20 pa2 db w-100" %>
                   </div>
                 </div>
 
                 <div class="flex flex-row">
                   <div class="mr4 w-50">
-                    <%= f.label "Facility name", class: "f6 fw5 db mb1 gray ttc" %>
+                    <%= f.label "Facility name", class: "grey subtitle-2 ttc db mb1" %>
                     <%= f.text_field :name,
                       placeholder: "Facility's name",
                       value: @wizard_form.name,
-                      class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                      class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
                   </div>
 
                   <div class="w-20">
-                    <%= f.label "Facility ID", class: "f6 fw5 db mb1 gray ttc" %>
+                    <%= f.label "Facility ID", class: "grey subtitle-2 ttc db mb1" %>
                     <%= f.text_field :code,
                       placeholder: "S0001",
                       value: @wizard_form.code,
-                      class: "gray input-reset br2 outline-0 ba b--black-20 pa2 db w-100" %>
+                      class: "grey input-reset br2 outline-0 ba b--black-20 pa2 db w-100" %>
                   </div>
                 </div>
               </div>
@@ -94,48 +88,48 @@
 
             <div class="mv4 flex flex-row">
               <div class="w-20">
-                <span class="f6 fw6 mid-gray">Location Details</span>
+                <span class="grey subtitle-2 ttc">Location Details</span>
               </div>
 
               <div class="fl w-80 flex flex-column">
                 <div class="flex flex-row">
                   <div class="w-20 mr4">
-                    <%= f.label "Location license #", class: "f6 fw5 db mb1 gray ttc" %>
+                    <%= f.label "Location license #", class: "grey subtitle-2 ttc db mb1" %>
                     <%= f.text_field :site_license,
                       placeholder: "F0001",
                       rows: 1,
-                      class: "ttu gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                      class: "ttu grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
                   </div>
 
                   <div class="w-50">
-                    <%= f.label "Address", class: "f6 fw5 db mb1 gray" %>
+                    <%= f.label "Address", class: "grey subtitle-2 ttc db mb1" %>
                     <%= f.text_field :address_address,
                       placeholder: "1011, 11th ave ne",
-                      class: "ttu gray ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
+                      class: "ttu grey ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
                   </div>
                 </div>
 
                 <div class="flex flex-row">
                   <div class="w-20 mr4">
-                    <%= f.label "Zipcode", class: "f6 fw5 db mb1 gray" %>
+                    <%= f.label "Zipcode", class: "grey subtitle-2 ttc db mb1" %>
                     <%= f.text_field :address_zipcode,
                       placeholder: "123000",
-                      class: "gray ba b--black-20 br2 outline-0 br2 outline-0 pa2 db w-100" %>
+                      class: "grey ba b--black-20 br2 outline-0 br2 outline-0 pa2 db w-100" %>
                   </div>
 
                   <div class="w-50 flex flex-row">
                     <div class="w-50 mr4">
-                      <%= f.label :address_state, class: "f6 fw5 db mb1 gray" %>
+                      <%= f.label :address_state, class: "grey subtitle-2 ttc db mb1" %>
                       <%= f.text_field :address_state,
                         placeholder: "Carlifornia",
-                        class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                        class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
                     </div>
 
                     <div class="w-50">
-                      <%= f.label :address_country, class: "f6 fw5 db mb1 gray" %>
+                      <%= f.label :address_country, class: "grey subtitle-2 ttc db mb1" %>
                       <%= f.text_field :address_country,
                         placeholder: "United States of America" ,
-                        class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                        class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
                     </div>
                   </div>
                 </div>
@@ -144,18 +138,18 @@
 
             <div class="mb4 flex flex-row">
               <div class="w-20">
-                <span class="f6 fw6 mid-gray">Contact Details</span>
+                <span class="grey subtitle-2 ttc">Contact Details</span>
               </div>
 
               <div class="fl w-70 flex flex-row">
                 <div class="mr4 w-40">
-                  <%= f.label "Phone Number", class: "f6 fw5 db mb1 gray ttc" %>
-                  <%= f.text_field :address_main_number, placeholder: "1234567", class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                  <%= f.label "Phone Number", class: "grey subtitle-2 ttc db mb1" %>
+                  <%= f.text_field :address_main_number, placeholder: "1234567", class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
                 </div>
 
                 <div class="w-40">
-                  <%= f.label "Fax Number", class: "f6 fw5 db mb1 gray ttc" %>
-                  <%= f.text_field :address_fax_number, placeholder: "011 1234567" ,class: "gray ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                  <%= f.label "Fax Number", class: "grey subtitle-2 ttc db mb1" %>
+                  <%= f.text_field :address_fax_number, placeholder: "011 1234567" ,class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
                 </div>
               </div>
             </div>

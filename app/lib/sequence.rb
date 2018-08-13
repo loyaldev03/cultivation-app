@@ -9,7 +9,7 @@ class Sequence
     end
 
     def section_code_format
-      return 'C%02d'
+      return 'SEC%02d'
     end
 
     def row_code_format

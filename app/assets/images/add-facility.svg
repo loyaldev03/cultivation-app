@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="143px" height="143px" viewBox="0 0 143 143" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>add facility icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1.0-Dashboard-Menu-Sidebar-Expanded" transform="translate(-424.000000, -402.000000)">
+            <g id="Group" transform="translate(345.000000, 352.000000)">
+                <g id="action-group-1">
+                    <g id="add-facility-icon" transform="translate(79.000000, 50.000000)">
+                        <circle id="Oval" fill="#F3F5F7" cx="71.5" cy="71.5" r="71.5"></circle>
+                        <path d="M71.5,53.4444444 L71.5,39 L35,39 L35,104 L108,104 L108,53.4444444 L71.5,53.4444444 L71.5,53.4444444 Z M49,97 L42,97 L42,90 L49,90 L49,97 L49,97 Z M49,82 L42,82 L42,75 L49,75 L49,82 L49,82 Z M49,68 L42,68 L42,61 L49,61 L49,68 L49,68 Z M49,53 L42,53 L42,46 L49,46 L49,53 L49,53 Z M64,97 L57,97 L57,90 L64,90 L64,97 L64,97 Z M64,82 L57,82 L57,75 L64,75 L64,82 L64,82 Z M64,68 L57,68 L57,61 L64,61 L64,68 L64,68 Z M64,53 L57,53 L57,46 L64,46 L64,53 L64,53 Z M100,97 L71,97 L71,89.8 L78.25,89.8 L78.25,82.6 L71,82.6 L71,75.4 L78.25,75.4 L78.25,68.2 L71,68.2 L71,61 L100,61 L100,97 L100,97 Z M93,68 L86,68 L86,75 L93,75 L93,68 L93,68 Z M93,82 L86,82 L86,89 L93,89 L93,82 L93,82 Z" id="Shape" stroke="#F3F5F7" stroke-width="2" fill="#A6BCC6"></path>
+                        <path d="M100,75 C91.72,75 85,81.72 85,90 C85,98.28 91.72,105 100,105 C108.28,105 115,98.28 115,90 C115,81.72 108.28,75 100,75 L100,75 Z" id="Path" fill="#F66830"></path>
+                        <polygon id="Shape" fill="#FFFFFF" points="101.5 82.5 98.5 82.5 98.5 88.5 92.5 88.5 92.5 91.5 98.5 91.5 98.5 97.5 101.5 97.5 101.5 91.5 107.5 91.5 107.5 88.5 101.5 88.5"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

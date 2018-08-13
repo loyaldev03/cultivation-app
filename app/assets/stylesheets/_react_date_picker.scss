@@ -1,0 +1,70 @@
+.react-date-picker__button {
+  display: flex;
+  border: 1px solid  rgba(0, 0, 0, 0.2);
+  border-radius: .25rem;
+  padding-left: .5rem;
+
+  input, button {
+    outline: 0;
+  }
+}
+
+.react-date-picker__button__input {
+  flex: 1;
+  align-items: center;
+  display: flex;
+
+  input {
+    border: none;
+  }
+}
+
+.react-date-picker__button__icon {
+  border: none;
+  padding: 4px;
+
+  svg {
+    width: 13px;
+    opacity: 0.5;
+  }
+}
+
+.react-calendar__tile {
+  border: none;
+}
+
+.react-date-picker__calendar--closed {
+  display: none;
+}
+
+.react-date-picker__calendar--open {
+  position: relative;
+
+  .react-calendar {
+    position: absolute;
+    background-color: white;
+    top: 4px;
+    border: 1px solid  rgba(0, 0, 0, 0.2);
+    padding-bottom: 5px;
+    z-index: 2147483647;
+  }
+
+  .react-calendar__navigation {
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    button {
+      border: none;
+    }
+  }
+
+  .react-calendar__month-view__weekdays {
+    padding-bottom: 5px;
+    font-size: 11px;
+    text-align: center;
+  }
+
+  .react-calendar__tile:hover {
+    background-color: rgba(246, 104, 48, 0.2);
+  }
+}

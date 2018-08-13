@@ -1,11 +1,31 @@
-// window.sidebarNode = null;
+/******************************************
+// USAGE
+// 1. setup on page load, already done
+// window.editorSidebar.setup(document.getElementById('sidebar'));
+// 
+// 2. open with parameters
+// window.editorSidebar.open({ invoice_id: 123 });
+// 
+// 3. close with parameters
+// window.editorSidebar.close({ invoice_id: 123 });
+// 
+// 4.1 Attach to listeners
+// document.addEventListener("editor-sidebar-open", function(ev) { 
+//   console.log('open event'); 
+//   console.log(ev); 
+// });
+// 
+// 4.2 Attach to listeners
+// document.addEventListener("editor-sidebar-close", function(ev) { 
+//   console.log('close event 2'); 
+//   console.log(ev); 
+// });
+******************************************/
 
 class EditorSidebarHandler {
   sidebarNode = null
 
   open(data) {
-    // console.log("data: " + JSON.stringify(data));
-    // console.log(window.sidebarNode);
     const event = new CustomEvent('editor-sidebar-open', { detail: data })
     document.dispatchEvent(event)
 
@@ -40,27 +60,3 @@ document.addEventListener('DOMContentLoaded', function(event) {
 })
 
 export { editorSidebarHandler }
-
-/*
-// USAGE
-// 1. setup on page load, already done
-// window.editorSidebar.setup(document.getElementById('sidebar'));
-// 
-// 2. open with parameters
-// window.editorSidebar.open({ invoice_id: 123 });
-// 
-// 3. close with parameters
-// window.editorSidebar.close({ invoice_id: 123 });
-// 
-// 4.1 Attach to listeners
-// document.addEventListener("editor-sidebar-open", function(ev) { 
-//   console.log('open event'); 
-//   console.log(ev); 
-// });
-// 
-// 4.2 Attach to listeners
-// document.addEventListener("editor-sidebar-close", function(ev) { 
-//   console.log('close event 2'); 
-//   console.log(ev); 
-// });
-*/

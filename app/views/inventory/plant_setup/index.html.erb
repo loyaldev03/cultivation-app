@@ -28,7 +28,10 @@
       <% # render 'react_slide_panel' %>
       <% # react_component 'inventory/plant/components/PlantList' %>
 
-      <%= react_component 'inventory/plant_setup/PlantSetupApp' %>
+      <%= react_component('inventory/plant_setup/PlantSetupApp', {
+          strain_types: ['Hybrid', 'Indica', 'Sativa'],
+          facilities: Facility.completed.map{|x| { id: x.id, name: x.name }}
+        }) %>
     </div>
 
     <!-- 

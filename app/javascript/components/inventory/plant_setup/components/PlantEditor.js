@@ -1,10 +1,10 @@
 import React from 'react'
-import AsyncSelect from 'react-select/lib/Async'
-import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable';
+import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 import SeedEditor from './editor/SeedEditor'
 import CloneEditor from './editor/CloneEditor'
 import MotherEditor from './editor/MotherEditor'
 import VegGroupEditor from './editor/VegGroupEditor'
+import { FieldError } from '../../../utils/FormHelpers'
 
 const VEG_GROUP = 'VEG_GROUP'
 const SEED = 'SEED'
@@ -16,11 +16,11 @@ export default class PlantEditor extends React.Component {
     super(props)
     this.state = {
       strain: '',
-      strain_type: '',
-      facility_id: '',
+      strain_type: props.strain_types[0],
+      facility_id: props.facilities[0].id,
       stockEditor: '',
-      source: ''
-    } // or set from props
+      errors: {}
+    } 
 
     this.onChangeStrain = this.onChangeStrain.bind(this)
     this.onChangeStrainType = this.onChangeStrainType.bind(this)
@@ -28,6 +28,7 @@ export default class PlantEditor extends React.Component {
     this.onSetStockEditor = this.onSetStockEditor.bind(this)
     this.onResetEditor = this.onResetEditor.bind(this)
     this.onClose = this.onClose.bind(this)
+    this.onValidateParent = this.onValidateParent.bind(this)
   }
 
   get editorSelected() {
@@ -47,7 +48,6 @@ export default class PlantEditor extends React.Component {
   }
 
   onSetStockEditor(event) {
-    // console.log(event.target.dataset)
     this.setState({ stockEditor: event.target.dataset.editor })
     event.preventDefault()
   }
@@ -62,66 +62,79 @@ export default class PlantEditor extends React.Component {
     this.props.onClose()
   }
 
+  onValidateParent(isDraft= false) {
+    const { strain, strain_type, facility_id, stockEditor: plant_type} = this.state
+    let errors = {}
+    if (strain === undefined || strain.length <= 0) {
+      errors = { ...errors, strain: ['Please select a strain.'] }
+    }
+
+    if (strain_type === undefined || strain_type.length <= 0) {
+      errors = { ...errors, strain_type: ['Please select a strain type.'] }
+    }
+
+    if (!isDraft && (facility_id === undefined || facility_id.length <= 0)) {
+      errors = { ...errors, facility_id: ['Please select a facility.'] }
+    }
+    
+    if (!isDraft && Object.getOwnPropertyNames(errors).length > 0) {
+      this.setState({ errors })
+      return { strain, strain_type, facility_id, plant_type, errors, isDraft, isValid: false}
+    }
+
+    return { strain, strain_type, facility_id, plant_type, errors, isDraft, isValid: true }
+  }
+
   renderEditorToggle() {
     if (this.editorSelected) return null
 
     return (
       <React.Fragment>
-        <div className="ph4 mb3 pt3">
+        <div className="ph4 mb3 pt3" style={{ width: '500px', overflow: 'hidden' }}>
           <div className="flex justify-between items-center">
             <label className="f6 fw6 db dark-gray">
               I have stock for this strain...
             </label>
-            {/* <div>
-              <input className  ="toggle toggle-default" type="checkbox" value="1" name="room_info" id="room_info_has_sections" />
-              <label className  ="toggle-button" htmlFor="room_info_has_sections"></label>
-            </div> */}
           </div>
         </div>
-        <div className="ph4 mb3">
+        <div className="ph4 mb3" style={{ width: '500px', overflow: 'hidden' }}>
           <a
-            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib"
-            href=""
+            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
             data-editor={SEED}
             onClick={this.onSetStockEditor}
           >
             Add seed
           </a>
           <a
-            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib"
-            href=""
+            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
             data-editor={CLONE}
             onClick={this.onSetStockEditor}
           >
             Add clones
           </a>
           <a
-            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib"
-            href=""
+            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
             data-editor={MOTHER}
             onClick={this.onSetStockEditor}
           >
             Add mother
           </a>
           <a
-            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib"
-            href=""
+            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
             data-editor={VEG_GROUP}
             onClick={this.onSetStockEditor}
           >
             Add veg group
           </a>
           <a
-            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib"
-            href="#"
+            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
             data-editor={''}
             onClick={() => alert('To be implmented.')}
           >
             Add harvest yield
           </a>
           <a
-            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib"
-            href="#"
+            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
             data-editor={''}
             onClick={() => alert('To be implmented.')}
           >
@@ -134,7 +147,13 @@ export default class PlantEditor extends React.Component {
 
   renderSeedEditor() {
     if (this.state.stockEditor !== SEED) return null
-    return <SeedEditor onResetEditor={this.onResetEditor} />
+
+    // Instead of parent level calling save, the child take input from parent
+    // by calling onValidateParent and follow up the save process itself.
+    return <SeedEditor 
+      onResetEditor={this.onResetEditor} 
+      onValidateParent={this.onValidateParent} 
+    />
   }
 
   renderCloneEditor() {
@@ -188,46 +207,43 @@ export default class PlantEditor extends React.Component {
     }
   }
 
-  promiseOptions = (inputValue) => {
-    // console.log(inputValue.length)
-    // const filter = inputValue.length > 0 ? inputValue : this.state.strain
-    
+  loadStrainOptions = (inputValue) => {
     return fetch('/api/v1/plants/strains?filter=' + inputValue, {
-      credentials: 'include'  
+      credentials: 'include'
     })
       .then(response => response.json())
-      .then((data) => {
-        console.log(data.data)
-        return data.data.map(x => ({ 
-          label: x.name, 
-          value: x.name, 
+      .then(data => {
+        // console.log(data.data)
+        return data.data.map(x => ({
+          label: x.name,
+          value: x.name,
           id: 5,
           strain_type: x.strain_type
         }))
       })
   }
 
-  handleInputChange = (newValue, meta) => {
-    // this.setState({ strain: newValue })
+  handleInputChange = (newValue) => {
     return newValue
-  };
+  }
 
-  onStrainSelected = (item) => {
-    console.log(item)
+  onStrainSelected = item => {
     let label = ''
     if (item) {
       label = item.label
     }
-    
-    this.setState({ 
+
+    this.setState({
       strain: label,
       strain_type: item.strain_type
     })
   }
 
   render() {
+    const widthStyle = this.props.isOpened ? { width: '500px' } : { width: '0px' };
+
     return (
-      <div className="rc-slide-panel" data-role="sidebar">
+      <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
         <div className="rc-slide-panel__body flex flex-column">
           <div
             className="ph4 pv2 bb b--light-gray flex items-center"
@@ -244,15 +260,16 @@ export default class PlantEditor extends React.Component {
               <label className="f6 fw6 db mb1 gray ttc">Strain</label>
               <AsyncCreatableSelect
                 defaultOptions
-                noOptionsMessage={() => 'Type to search strain...' }
+                noOptionsMessage={() => 'Type to search strain...'}
                 cacheOptions
-                loadOptions={this.promiseOptions}
+                loadOptions={this.loadStrainOptions}
                 onInputChange={this.handleInputChange}
                 styles={customStyles}
                 placeholder=""
                 value={{ label: this.state.strain, value: this.state.strain }}
                 onChange={this.onStrainSelected}
               />
+              <FieldError errors={this.state.errors} field="strain" />
             </div>
             <div className="w-40 pl3">
               <label className="f6 fw6 db mb1 gray ttc">Strain type</label>
@@ -261,10 +278,9 @@ export default class PlantEditor extends React.Component {
                 onChange={this.onChangeStrainType}
                 value={this.state.strain_type}
               >
-                <option value="Hybrid">Hybrid</option>
-                <option value="Indica">Indica</option>
-                <option value="Sativa">Sativa</option>
+                {this.props.strain_types.map( x => <option value={x} key={x}>{x}</option> )}
               </select>
+              <FieldError errors={this.state.errors} field="strain_type" />
             </div>
           </div>
 
@@ -276,17 +292,15 @@ export default class PlantEditor extends React.Component {
                 onChange={this.onFacilityChanged}
                 value={this.state.facility_id}
               >
-                <option value="farm1">Farm 1</option>
-                <option value="farm2">Farm 2</option>
-                <option value="farm3">Farm 3</option>
+                {this.props.facilities.map( x => <option value={x.id} key={x.id}>{x.name}</option> )}
               </select>
+              <FieldError errors={this.state.errors} field="facility_id" />
             </div>
           </div>
 
           <hr className="mt3 m b--light-gray w-100" />
 
           {this.renderEditorToggle()}
-
           {this.renderSeedEditor()}
           {this.renderCloneEditor()}
           {this.renderMotherEditor()}
@@ -296,13 +310,6 @@ export default class PlantEditor extends React.Component {
     )
   }
 }
-
-
-// const filterColors = (inputValue) => {
-//   return (colourOptions.filter(i =>
-//     i.label.toLowerCase().includes(inputValue.toLowerCase())
-//   ))
-// }
 
 const customStyles = {
   control: (base, state) => ({
@@ -324,12 +331,15 @@ const customStyles = {
     display: 'none'
   }),
   option: (base, state) => {
-    return { 
-      ...base, 
-      backgroundColor: (state.isFocused || state.isSelected) ? 'rgba(100, 100, 100, 0.1)' : 'transparent',
-      ':active':  'rgba(100, 100, 100, 0.1)',
+    return {
+      ...base,
+      backgroundColor:
+        state.isFocused || state.isSelected
+          ? 'rgba(100, 100, 100, 0.1)'
+          : 'transparent',
+      ':active': 'rgba(100, 100, 100, 0.1)',
       WebkitTapHighlightColor: 'rgba(100, 100, 100, 0.1)',
-      color: 'black',
+      color: 'black'
     }
   }
 }

@@ -16,7 +16,7 @@ class PlantSetupApp extends React.Component {
   }
 
   openSidebar() {
-    window.editorSidebar.open({ width: '500px' })
+    window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
   closeSidebar() {
@@ -41,10 +41,17 @@ class PlantSetupApp extends React.Component {
         <div className="w-80">
           <PlantList />
         </div>
-        <PlantEditor onClose={this.closeSidebar} />
+        <PlantEditor 
+          isOpened
+          onClose={this.closeSidebar}
+          strain_types={this.props.strain_types}
+          facilities={this.props.facilities} />
       </React.Fragment>
     )
   }
 }
+
+
+
 
 export default PlantSetupApp

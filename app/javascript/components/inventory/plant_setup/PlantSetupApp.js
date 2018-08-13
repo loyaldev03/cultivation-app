@@ -43,8 +43,16 @@ class PlantSetupApp extends React.Component {
       <div className="mb3">
         <div className="w-50">
           <h1 className="mt0 f3 fw4 dark-gray">Setup active plant inventory</h1>
-          <p className="gray mb3 lh-copy">Add your existing plant inventories. Do not worry if you are unable to add all the records, you can always continue later from the settings menu.</p>
-          <p className="gray mb4 lh-copy">We recommend to prioritise on <strong>seed, clone</strong> and <strong>mother data</strong> so that you can proceed to do cultivation planning in the next phase of the setup.</p>
+          <p className="gray mb3 lh-copy">
+            Add your existing plant inventories. Do not worry if you are unable
+            to add all the records, you can always continue later from the
+            settings menu.
+          </p>
+          <p className="gray mb4 lh-copy">
+            We recommend to prioritise on <strong>seed, clone</strong> and{' '}
+            <strong>mother data</strong> so that you can proceed to do
+            cultivation planning in the next phase of the setup.
+          </p>
         </div>
         <button
           className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
@@ -59,8 +67,8 @@ class PlantSetupApp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        { this.renderFirstTime() }
-        { this.renderPlantList() }
+        {this.renderFirstTime()}
+        {this.renderPlantList()}
         <PlantEditor
           isOpened={false}
           onClose={this.closeSidebar}

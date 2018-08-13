@@ -19,7 +19,11 @@ module FacilityWizardForm
 
     def initialize(facility_id, room_id, row_model = {})
       self.map_attrs_from_hash(ATTRS, row_model)
-      calculate_capacity(row_model.shelves)
+      if row_model.try(:shelves)
+        calculate_capacity(row_model.shelves)
+      else
+        self.capacity_text = "--"
+      end
       self.facility_id = facility_id
       self.room_id = room_id
     end

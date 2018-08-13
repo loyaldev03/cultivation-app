@@ -21,11 +21,19 @@ module FacilityWizardForm
     def initialize(facility_id, room_model = {})
       self.map_attrs_from_hash(ATTRS, room_model)
       self.facility_id = facility_id
-      if room_model.rows.blank?
+      if room_model.try(:rows)
+        set_rows(room_model.rows)
+      else
+        self.capacity_text = "--"
+      end
+    end
+
+    def set_rows(model_rows)
+      if model_rows.blank?
         self.rows = []
       else
-        self.rows = room_model.rows.map do |row|
-          RowInfoForm.new(facility_id, room_model.id, row)
+        self.rows = model_rows.map do |row|
+          RowInfoForm.new(self.facility_id, self.id, row)
         end
       end
       calculate_capacity(self.rows)

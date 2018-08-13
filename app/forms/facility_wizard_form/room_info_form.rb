@@ -9,7 +9,9 @@ module FacilityWizardForm
              :desc,
              :purpose,
              :has_sections,
+             :rows,
              :capacity,
+             :capacity_text,
              :rows_count,
              :sections_count,
              :shelves_count]
@@ -19,6 +21,24 @@ module FacilityWizardForm
     def initialize(facility_id, room_model = {})
       self.map_attrs_from_hash(ATTRS, room_model)
       self.facility_id = facility_id
+      if room_model.rows.blank?
+        self.rows = []
+      else
+        self.rows = room_model.rows.map do |row|
+          RowInfoForm.new(facility_id, room_model.id, row)
+        end
+      end
+      calculate_capacity(self.rows)
+    end
+
+    def calculate_capacity(rows)
+      if rows.blank?
+        self.capacity = 0
+        self.capacity_text = "--"
+      else
+        self.capacity = rows.sum { |h| h.capacity }
+        self.capacity_text = self.capacity
+      end
     end
 
     class << self

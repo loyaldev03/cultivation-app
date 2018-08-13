@@ -19,9 +19,17 @@ class SaveShelf
     row = room.rows.find(args[:row_id])
     shelf = row.shelves.find(args[:id])
     shelf.code = args[:code]
+    shelf.capacity = calculate_capacity(args[:trays])
+    shelf.wz_generated = false
     shelf.save!
     shelf
-  rescue
-    errors.add(:error, $!.message)
+  end
+
+  def calculate_capacity(trays)
+    if trays.blank?
+      0
+    else
+      trays.sum {|h| h[:capacity]}
+    end
   end
 end

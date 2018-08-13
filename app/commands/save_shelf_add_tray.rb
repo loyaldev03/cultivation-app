@@ -23,12 +23,15 @@ class SaveShelfAddTray
     room = facility.rooms.find(@room_id)
     row = room.rows.find(@row_id)
     shelf = row.shelves.find(@shelf_id)
-    # TODO: Update flag on Shelf regards using trays
+    shelf.is_use_trays = true
+    shelf.save!
+
     if shelf.trays.blank?
       last_code = Sequence.tray_code_format % 0
     else
       last_code = shelf.trays&.last&.code
     end
+
     tray = Tray.new
     tray.shelf = shelf
     tray.code = NextFacilityCode.call(:tray, last_code, 1).result

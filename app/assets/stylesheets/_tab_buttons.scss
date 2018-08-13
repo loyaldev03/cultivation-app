@@ -1,5 +1,5 @@
 $tabColor: var(--orange);
-$tabButtonRadius: 4px;
+$tabButtonRadius: 3px;
 
 .tab-control {
   display: flex;
@@ -8,13 +8,15 @@ $tabButtonRadius: 4px;
 .tab-control__button {
   flex: 1;
   text-align: center;
-  padding: 0.5em 0;
+  padding: 0.7em 0;
   text-decoration: none;
   color: $tabColor;
   font-weight: 600;
-  font-size: 0.95em;
+  font-size: 15px;
+  letter-spacing: 0.1px;
   border: 1px solid $tabColor;
   border-left: none;
+  height: 43px;
 
   &:first-child {
     border-left: 1px solid $tabColor;

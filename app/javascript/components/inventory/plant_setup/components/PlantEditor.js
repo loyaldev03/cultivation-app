@@ -19,9 +19,9 @@ export default class PlantEditor extends React.Component {
       strain_type: props.strain_types[0],
       facility_id: props.facilities[0].id,
       stockEditor: '',
+      rooms: [],
       errors: {}
     }
-
     this.onChangeStrain = this.onChangeStrain.bind(this)
     this.onChangeStrainType = this.onChangeStrainType.bind(this)
     this.onFacilityChanged = this.onFacilityChanged.bind(this)
@@ -44,7 +44,10 @@ export default class PlantEditor extends React.Component {
   }
 
   onFacilityChanged(event) {
-    this.setState({ facility_id: event.target.value })
+    this.setState({
+      facility_id: event.target.value,
+      rooms: [new Date().toString(), 'b', 'c']
+    })
   }
 
   onSetStockEditor(event) {
@@ -84,15 +87,6 @@ export default class PlantEditor extends React.Component {
 
     if (!isDraft && Object.getOwnPropertyNames(errors).length > 0) {
       this.setState({ errors })
-      return {
-        strain,
-        strain_type,
-        facility_id,
-        plant_type,
-        errors,
-        isDraft,
-        isValid: false
-      }
     }
 
     return {
@@ -102,7 +96,7 @@ export default class PlantEditor extends React.Component {
       plant_type,
       errors,
       isDraft,
-      isValid: true
+      isValid: Object.getOwnPropertyNames(errors).length > 0
     }
   }
 
@@ -178,6 +172,7 @@ export default class PlantEditor extends React.Component {
       <SeedEditor
         onResetEditor={this.onResetEditor}
         onValidateParent={this.onValidateParent}
+        rooms={this.state.rooms}
       />
     )
   }

@@ -1,6 +1,7 @@
 import React from 'react'
-import DatePicker from 'react-date-picker'
 import { TextInput, NumericInput } from '../../../../utils/FormHelpers'
+import PurchaseInfo from './PurchaseInfo'
+import StorageInfo from './StorageInfo'
 
 class SeedEditor extends React.Component {
   constructor(props) {
@@ -21,48 +22,64 @@ class SeedEditor extends React.Component {
       invoice_no: '',
 
       // Storage location
+      // rooms: [],
       room: '',
       room_id: '',
       section_name: '',
       section_id: '',
       row_id: '',
       shelf_id: '',
-      tray_id: ''
+      tray_id: '',
+      facility_id: ''
     }
+
+    this.purchaseInfoEditor = React.createRef()
+    this.storageInfoEditor = React.createRef()
 
     this.onQuantityChanged = this.onQuantityChanged.bind(this)
     this.onPackageIdChanged = this.onPackageIdChanged.bind(this)
 
     // Vendor/ source
-    this.onVendorNameChanged = this.onVendorNameChanged.bind(this)
-    this.onVendorIDChanged = this.onVendorIDChanged.bind(this)
-    this.onAddressChanged = this.onAddressChanged.bind(this)
-    this.onVendorStateLicenseNumChanged = this.onVendorStateLicenseNumChanged.bind(
-      this
-    )
-    this.onVendorStateLicenseExpirationDateChanged = this.onVendorStateLicenseExpirationDateChanged.bind(
-      this
-    )
-    this.onVendorLocationLicenseNumChanged = this.onVendorLocationLicenseNumChanged.bind(
-      this
-    )
-    this.onVendorLocationLicenseExpirationDateChanged = this.onVendorLocationLicenseExpirationDateChanged.bind(
-      this
-    )
-    this.onPurchaseDateChanged = this.onPurchaseDateChanged.bind(this)
-    this.onInvoiceNoChanged = this.onInvoiceNoChanged.bind(this)
+    // this.onVendorNameChanged = this.onVendorNameChanged.bind(this)
+    // this.onVendorIDChanged = this.onVendorIDChanged.bind(this)
+    // this.onAddressChanged = this.onAddressChanged.bind(this)
+    // this.onVendorStateLicenseNumChanged = this.onVendorStateLicenseNumChanged.bind(
+    //   this
+    // )
+    // this.onVendorStateLicenseExpirationDateChanged = this.onVendorStateLicenseExpirationDateChanged.bind(
+    //   this
+    // )
+    // this.onVendorLocationLicenseNumChanged = this.onVendorLocationLicenseNumChanged.bind(
+    //   this
+    // )
+    // this.onVendorLocationLicenseExpirationDateChanged = this.onVendorLocationLicenseExpirationDateChanged.bind(
+    //   this
+    // )
+    // this.onPurchaseDateChanged = this.onPurchaseDateChanged.bind(this)
+    // this.onInvoiceNoChanged = this.onInvoiceNoChanged.bind(this)
 
     // Storage location
-    this.onRoomChanged = this.onRoomChanged.bind(this)
-    this.onRoomIdChanged = this.onRoomIdChanged.bind(this)
-    this.onSectionNameChanged = this.onSectionNameChanged.bind(this)
-    this.onSectionIdChanged = this.onSectionIdChanged.bind(this)
-    this.onRowIdChanged = this.onRowIdChanged.bind(this)
-    this.onShelfIdChanged = this.onShelfIdChanged.bind(this)
-    this.onTrayIdChanged = this.onTrayIdChanged.bind(this)
+    // this.onRoomChanged = this.onRoomChanged.bind(this)
+    // this.onRoomIdChanged = this.onRoomIdChanged.bind(this)
+    // this.onSectionNameChanged = this.onSectionNameChanged.bind(this)
+    // this.onSectionIdChanged = this.onSectionIdChanged.bind(this)
+    // this.onRowIdChanged = this.onRowIdChanged.bind(this)
+    // this.onShelfIdChanged = this.onShelfIdChanged.bind(this)
+    // this.onTrayIdChanged = this.onTrayIdChanged.bind(this)
 
     this.onSave = this.onSave.bind(this)
   }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log(prevState)
+  //   if (this.state.facility_id !== 1) {
+  //     const newRooms = ["a", "b", "c"]
+  //     this.setState({
+  //       rooms: newRooms,
+  //       facility_id: 1
+  //     })
+  //   }
+  // }
 
   onPackageIdChanged(event) {
     this.setState({ package_id: event.target.value })
@@ -72,75 +89,42 @@ class SeedEditor extends React.Component {
     this.setState({ quantity: event.target.value })
   }
 
-  onVendorNameChanged(event) {
-    this.setState({ vendor_name: event.target.value })
-  }
+  // onRoomChanged(event) {
+  //   this.setState({ room: event.target.value })
+  // }
 
-  onVendorIDChanged(event) {
-    this.setState({ vendor_id: event.target.value })
-  }
+  // onRoomIdChanged(event) {
+  //   this.setState({ room_id: event.target.value })
+  // }
 
-  onAddressChanged(event) {
-    this.setState({ address: event.target.value })
-  }
+  // onSectionNameChanged(event) {
+  //   this.setState({ section_name: event.target.value })
+  // }
 
-  onVendorStateLicenseNumChanged(event) {
-    this.setState({ vendor_state_license_num: event.target.value })
-  }
+  // onSectionIdChanged(event) {
+  //   this.setState({ section_id: event.target.value })
+  // }
 
-  onVendorStateLicenseExpirationDateChanged(date) {
-    this.setState({ vendor_state_license_expiration_date: date })
-  }
+  // onRowIdChanged(event) {
+  //   this.setState({ row_id: event.target.value })
+  // }
 
-  onVendorLocationLicenseNumChanged(event) {
-    this.setState({ vendor_location_license_num: event.target.value })
-  }
+  // onShelfIdChanged(event) {
+  //   this.setState({ shelf_id: event.target.value })
+  // }
 
-  onVendorLocationLicenseExpirationDateChanged(date) {
-    this.setState({
-      vendor_location_license_expiration_date: date
-    })
-  }
-
-  onPurchaseDateChanged(date) {
-    this.setState({ purchase_date: date })
-  }
-
-  onInvoiceNoChanged(event) {
-    this.setState({ invoice_no: event.target.value })
-  }
-
-  onRoomChanged(event) {
-    this.setState({ room: event.target.value })
-  }
-
-  onRoomIdChanged(event) {
-    this.setState({ room_id: event.target.value })
-  }
-
-  onSectionNameChanged(event) {
-    this.setState({ section_name: event.target.value })
-  }
-
-  onSectionIdChanged(event) {
-    this.setState({ section_id: event.target.value })
-  }
-
-  onRowIdChanged(event) {
-    this.setState({ row_id: event.target.value })
-  }
-
-  onShelfIdChanged(event) {
-    this.setState({ shelf_id: event.target.value })
-  }
-
-  onTrayIdChanged(event) {
-    this.setState({ tray_id: event.target.value })
-  }
+  // onTrayIdChanged(event) {
+  //   this.setState({ tray_id: event.target.value })
+  // }
 
   onSave(event) {
+    console.log(this.state.data)
+
     const data = this.props.onValidateParent()
     console.log(data)
+
+    const purchaseData = this.purchaseInfoEditor.current.getValues()
+    console.log(purchaseData)
     event.preventDefault()
   }
 
@@ -173,94 +157,36 @@ class SeedEditor extends React.Component {
         </div>
 
         <hr className="mt3 m b--light-gray w-100" />
-        <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">
-            Where the seeds are sourced from?
-          </span>
-        </div>
-        <div className="ph4 mb3 flex">
-          <div className="w-100">
-            <TextInput
-              label={'Vendor name'}
-              value={this.state.vendor_name}
-              onChange={this.onVendorNameChanged}
-            />
-          </div>
-        </div>
-
-        <div className="ph4 mb3 flex">
-          <div className="w-50">
-            <TextInput
-              label={'Vendor ID'}
-              value={this.state.vendor_id}
-              onChange={this.onVendorIDChanged}
-            />
-          </div>
-        </div>
-
-        <div className="ph4 mb3 flex">
-          <div className="w-100">
-            <TextInput
-              label={'Address'}
-              value={this.state.address}
-              onChange={this.onAddressChanged}
-            />
-          </div>
-        </div>
-
-        <div className="ph4 mb3 flex">
-          <div className="w-50">
-            <TextInput
-              label={'Vendor State License #'}
-              value={this.vendor_state_license_num}
-              onChange={this.onVendorStateLicenseNumChanged}
-            />
-          </div>
-          <div className="w-50 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
-            <DatePicker
-              value={this.state.vendor_state_license_expiration_date}
-              onChange={this.onVendorStateLicenseExpirationDateChanged}
-            />
-          </div>
-        </div>
-
-        <div className="ph4 mb3 flex">
-          <div className="w-50">
-            <TextInput
-              label={'Vendor location license #'}
-              value={this.vendor_location_license_num}
-              onChange={this.onVendorLocationLicenseNumChanged}
-            />
-          </div>
-          <div className="w-50 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
-            <DatePicker
-              value={this.state.vendor_location_license_expiration_date}
-              onChange={this.onVendorLocationLicenseExpirationDateChanged}
-            />
-          </div>
-        </div>
-
-        <div className="ph4 mb3 flex">
-          <div className="w-50">
-            <label className="f6 fw6 db mb1 gray ttc">Purchase date</label>
-            <DatePicker
-              value={this.state.purchase_date}
-              onChange={this.onPurchaseDateChanged}
-            />
-          </div>
-          <div className="w-50 pl3">
-            <TextInput
-              label={'Invoice no'}
-              value={this.state.invoice_no}
-              onChange={this.onInvoiceNoChanged}
-            />
-          </div>
-        </div>
+        <PurchaseInfo
+          ref={this.purchaseInfoEditor}
+          vendor_name={this.state.vendor_name}
+          vendor_id={this.state.vendor_id}
+          address={this.state.address}
+          vendor_state_license_num={this.state.vendor_state_license_num}
+          vendor_state_license_expiration_date={
+            this.state.vendor_state_license_expiration_date
+          }
+          vendor_location_license_num={this.state.vendor_location_license_num}
+          vendor_location_license_expiration_date={
+            this.state.vendor_location_license_expiration_date
+          }
+          purchase_date={this.state.purchase_date}
+          invoice_no={this.state.invoice_no}
+        />
 
         <hr className="mt3 m b--light-gray w-100" />
-        <div className="ph4 mb3 mt3">
+        <StorageInfo
+          ref={this.storageInfoEditor}
+          rooms={this.props.rooms}
+          room={this.state.room}
+          room_id={this.state.room_id}
+          section_name={this.state.section_name}
+          section_id={this.state.section_id}
+          row_id={this.state.row_id}
+          shelf_id={this.state.shelf_id}
+          tray_id={this.state.tray_id}
+        />
+        {/* <div className="ph4 mb3 mt3">
           <span className="f6 fw6 dark-gray">Where are they stored?</span>
         </div>
         <div className="ph4 mb3 flex">
@@ -313,7 +239,7 @@ class SeedEditor extends React.Component {
               onChange={this.onTrayIdChanged}
             />
           </div>
-        </div>
+        </div> */}
 
         <div className="w-100 mt4 pa4 bt b--black-10 flex items-center justify-between">
           <a

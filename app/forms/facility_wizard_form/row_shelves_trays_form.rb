@@ -37,7 +37,7 @@ module FacilityWizardForm
         shelf = @shelves[shelf_index]
       end
       @shelf_id = shelf.id
-      @shelf_code = shelf_code
+      @shelf_code = shelf.code
       @trays = get_trays
     end
 

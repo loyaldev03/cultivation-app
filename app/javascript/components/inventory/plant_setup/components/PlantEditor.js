@@ -20,7 +20,7 @@ export default class PlantEditor extends React.Component {
       facility_id: props.facilities[0].id,
       stockEditor: '',
       errors: {}
-    } 
+    }
 
     this.onChangeStrain = this.onChangeStrain.bind(this)
     this.onChangeStrainType = this.onChangeStrainType.bind(this)
@@ -62,8 +62,13 @@ export default class PlantEditor extends React.Component {
     this.props.onClose()
   }
 
-  onValidateParent(isDraft= false) {
-    const { strain, strain_type, facility_id, stockEditor: plant_type} = this.state
+  onValidateParent(isDraft = false) {
+    const {
+      strain,
+      strain_type,
+      facility_id,
+      stockEditor: plant_type
+    } = this.state
     let errors = {}
     if (strain === undefined || strain.length <= 0) {
       errors = { ...errors, strain: ['Please select a strain.'] }
@@ -76,13 +81,29 @@ export default class PlantEditor extends React.Component {
     if (!isDraft && (facility_id === undefined || facility_id.length <= 0)) {
       errors = { ...errors, facility_id: ['Please select a facility.'] }
     }
-    
+
     if (!isDraft && Object.getOwnPropertyNames(errors).length > 0) {
       this.setState({ errors })
-      return { strain, strain_type, facility_id, plant_type, errors, isDraft, isValid: false}
+      return {
+        strain,
+        strain_type,
+        facility_id,
+        plant_type,
+        errors,
+        isDraft,
+        isValid: false
+      }
     }
 
-    return { strain, strain_type, facility_id, plant_type, errors, isDraft, isValid: true }
+    return {
+      strain,
+      strain_type,
+      facility_id,
+      plant_type,
+      errors,
+      isDraft,
+      isValid: true
+    }
   }
 
   renderEditorToggle() {
@@ -90,7 +111,10 @@ export default class PlantEditor extends React.Component {
 
     return (
       <React.Fragment>
-        <div className="ph4 mb3 pt3" style={{ width: '500px', overflow: 'hidden' }}>
+        <div
+          className="ph4 mb3 pt3"
+          style={{ width: '500px', overflow: 'hidden' }}
+        >
           <div className="flex justify-between items-center">
             <label className="f6 fw6 db dark-gray">
               I have stock for this strain...
@@ -150,10 +174,12 @@ export default class PlantEditor extends React.Component {
 
     // Instead of parent level calling save, the child take input from parent
     // by calling onValidateParent and follow up the save process itself.
-    return <SeedEditor 
-      onResetEditor={this.onResetEditor} 
-      onValidateParent={this.onValidateParent} 
-    />
+    return (
+      <SeedEditor
+        onResetEditor={this.onResetEditor}
+        onValidateParent={this.onValidateParent}
+      />
+    )
   }
 
   renderCloneEditor() {
@@ -207,7 +233,7 @@ export default class PlantEditor extends React.Component {
     }
   }
 
-  loadStrainOptions = (inputValue) => {
+  loadStrainOptions = inputValue => {
     return fetch('/api/v1/plants/strains?filter=' + inputValue, {
       credentials: 'include'
     })
@@ -223,7 +249,7 @@ export default class PlantEditor extends React.Component {
       })
   }
 
-  handleInputChange = (newValue) => {
+  handleInputChange = newValue => {
     return newValue
   }
 
@@ -240,7 +266,9 @@ export default class PlantEditor extends React.Component {
   }
 
   render() {
-    const widthStyle = this.props.isOpened ? { width: '500px' } : { width: '0px' };
+    const widthStyle = this.props.isOpened
+      ? { width: '500px' }
+      : { width: '0px' }
 
     return (
       <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
@@ -278,7 +306,11 @@ export default class PlantEditor extends React.Component {
                 onChange={this.onChangeStrainType}
                 value={this.state.strain_type}
               >
-                {this.props.strain_types.map( x => <option value={x} key={x}>{x}</option> )}
+                {this.props.strain_types.map(x => (
+                  <option value={x} key={x}>
+                    {x}
+                  </option>
+                ))}
               </select>
               <FieldError errors={this.state.errors} field="strain_type" />
             </div>
@@ -292,7 +324,11 @@ export default class PlantEditor extends React.Component {
                 onChange={this.onFacilityChanged}
                 value={this.state.facility_id}
               >
-                {this.props.facilities.map( x => <option value={x.id} key={x.id}>{x.name}</option> )}
+                {this.props.facilities.map(x => (
+                  <option value={x.id} key={x.id}>
+                    {x.name}
+                  </option>
+                ))}
               </select>
               <FieldError errors={this.state.errors} field="facility_id" />
             </div>

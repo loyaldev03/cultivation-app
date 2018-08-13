@@ -41,17 +41,15 @@ class PlantSetupApp extends React.Component {
         <div className="w-80">
           <PlantList />
         </div>
-        <PlantEditor 
+        <PlantEditor
           isOpened
           onClose={this.closeSidebar}
           strain_types={this.props.strain_types}
-          facilities={this.props.facilities} />
+          facilities={this.props.facilities}
+        />
       </React.Fragment>
     )
   }
 }
-
-
-
 
 export default PlantSetupApp

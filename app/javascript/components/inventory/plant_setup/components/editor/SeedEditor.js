@@ -40,9 +40,15 @@ class SeedEditor extends React.Component {
     this.onVendorStateLicenseNumChanged = this.onVendorStateLicenseNumChanged.bind(
       this
     )
-    this.onVendorStateLicenseExpirationDateChanged = this.onVendorStateLicenseExpirationDateChanged.bind(this)
-    this.onVendorLocationLicenseNumChanged = this.onVendorLocationLicenseNumChanged.bind(this)
-    this.onVendorLocationLicenseExpirationDateChanged = this.onVendorLocationLicenseExpirationDateChanged.bind(this)
+    this.onVendorStateLicenseExpirationDateChanged = this.onVendorStateLicenseExpirationDateChanged.bind(
+      this
+    )
+    this.onVendorLocationLicenseNumChanged = this.onVendorLocationLicenseNumChanged.bind(
+      this
+    )
+    this.onVendorLocationLicenseExpirationDateChanged = this.onVendorLocationLicenseExpirationDateChanged.bind(
+      this
+    )
     this.onPurchaseDateChanged = this.onPurchaseDateChanged.bind(this)
     this.onInvoiceNoChanged = this.onInvoiceNoChanged.bind(this)
 
@@ -54,7 +60,6 @@ class SeedEditor extends React.Component {
     this.onRowIdChanged = this.onRowIdChanged.bind(this)
     this.onShelfIdChanged = this.onShelfIdChanged.bind(this)
     this.onTrayIdChanged = this.onTrayIdChanged.bind(this)
-
 
     this.onSave = this.onSave.bind(this)
   }
@@ -140,7 +145,6 @@ class SeedEditor extends React.Component {
   }
 
   render() {
-
     return (
       <React.Fragment>
         <div className="ph4 mt3 mb3">
@@ -214,7 +218,7 @@ class SeedEditor extends React.Component {
           </div>
           <div className="w-50 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
-            <DatePicker 
+            <DatePicker
               value={this.state.vendor_state_license_expiration_date}
               onChange={this.onVendorStateLicenseExpirationDateChanged}
             />
@@ -231,7 +235,7 @@ class SeedEditor extends React.Component {
           </div>
           <div className="w-50 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
-            <DatePicker 
+            <DatePicker
               value={this.state.vendor_location_license_expiration_date}
               onChange={this.onVendorLocationLicenseExpirationDateChanged}
             />
@@ -241,7 +245,7 @@ class SeedEditor extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Purchase date</label>
-            <DatePicker 
+            <DatePicker
               value={this.state.purchase_date}
               onChange={this.onPurchaseDateChanged}
             />

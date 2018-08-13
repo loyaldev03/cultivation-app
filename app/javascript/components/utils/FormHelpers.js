@@ -15,7 +15,12 @@ function TextInput({ label, value = '', placeholder, onChange = () => {} }) {
   )
 }
 
-function NumericInput({ label, value = undefined, placeholder, onChange = () => {} }) {
+function NumericInput({
+  label,
+  value = undefined,
+  placeholder,
+  onChange = () => {}
+}) {
   return (
     <React.Fragment>
       <label className="f6 fw6 db mb1 gray ttc">{label}</label>
@@ -30,15 +35,15 @@ function NumericInput({ label, value = undefined, placeholder, onChange = () => 
   )
 }
 
-function FieldError({errors, field='' }) {
+function FieldError({ errors, field = '' }) {
   const messageArray = errors[field]
   if (messageArray) {
-    const errorMessages = messageArray.map((message, i) => <p key={i} className="red f7 mt1 mb0 i">{message}</p>)
-    return (
-      <React.Fragment>
-        {errorMessages}
-      </React.Fragment>
-    )
+    const errorMessages = messageArray.map((message, i) => (
+      <p key={i} className="red f7 mt1 mb0 i">
+        {message}
+      </p>
+    ))
+    return <React.Fragment>{errorMessages}</React.Fragment>
   }
   return null
 }

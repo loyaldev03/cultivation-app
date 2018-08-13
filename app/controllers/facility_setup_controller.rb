@@ -232,6 +232,9 @@ class FacilitySetupController < ApplicationController
     # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
     form_object = FacilityWizardForm::UpdateShelfTraysForm.new(shelf_trays_params)
     if form_object.submit(shelf_trays_params)
+      # To refresh the row list carousel
+      @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
+                                                    form_object.room_id)
       respond_to do |format|
         @row_shelves_trays_form = get_row_shelves_trays_form(
           form_object.facility_id,

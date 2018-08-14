@@ -45,9 +45,12 @@
     </div>
 
     <div class="w-100 pa4 bt b--black-10 absolute right-0 bottom-0 flex items-center justify-between">
-      <%= f.submit "Save Changes", class: "db pv2 bn ttu button orange link dim pointer" %>
-      <%= link_to "save & continue", facility_setup_room_summary_path(facility_id: room.facility_id, room_id: room.id), 
-          class: "db tr pv2 ph3 bg-orange white bn br3--box ttu link dim pointer" %>
+      <%= f.submit "Save", class: "db pv2 bn ttu button orange link dim pointer" %>
+      <%= f.button "Save & Continue",
+        name: :commit,
+        type: :submit,
+        value: "continue",
+        class: "ttu db tr pv2 ph3 bg-orange white bn box--br3 ttu link dim pointer" %>
     </div>
   <% end %>
 </div>

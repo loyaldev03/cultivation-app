@@ -20,6 +20,7 @@ class SaveTray
     record.code = @args.code
     record.capacity = @args.capacity
     record.capacity_type = @args.capacity_type
+    record.wz_generated = false
     record.save!
     record
   end

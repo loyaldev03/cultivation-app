@@ -7,8 +7,11 @@ module FacilityWizardForm
              :id,
              :code,
              :name,
+             :section_id,
              :has_shelves,
              :has_trays,
+             :capacity,
+             :capacity_text,
              :wz_shelves_count,
              :wz_trays_count]
 
@@ -16,6 +19,11 @@ module FacilityWizardForm
 
     def initialize(facility_id, room_id, row_model = {})
       self.map_attrs_from_hash(ATTRS, row_model)
+      if row_model.try(:shelves)
+        calculate_capacity(row_model.shelves)
+      else
+        self.capacity_text = "--"
+      end
       self.facility_id = facility_id
       self.room_id = room_id
     end
@@ -33,6 +41,16 @@ module FacilityWizardForm
         self.wz_trays_count
       else
         'N/A'
+      end
+    end
+
+    def calculate_capacity(shelves)
+      if shelves.blank?
+        self.capacity = 0
+        self.capacity_text = "--"
+      else
+        self.capacity = shelves.sum {|h| h[:capacity]}
+        self.capacity_text = self.capacity
       end
     end
 

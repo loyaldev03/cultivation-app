@@ -22,9 +22,10 @@
         </p>
         <div id="rows_grid" class="pv4 carousel-wrapper">
           <%= render partial: 'rows_list',
-            locals: {facility_id: @rows_form.facility_id,
-                    room_id: @rows_form.room_id,
-                    rows: @rows_form.rows} 
+            locals: {
+              facility_id: @rows_form.facility_id,
+              room_id: @rows_form.room_id
+            } 
           %>
         </div>
       </div>
@@ -32,7 +33,7 @@
         <%= render "layouts/timeline" %>
       </div>
     </div>
-    <%= render "form_buttons" %>
+    <%= render "bottom_back_button" %>
   </div>
 </div>
 

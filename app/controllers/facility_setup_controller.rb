@@ -57,11 +57,20 @@ class FacilitySetupController < ApplicationController
 
   # POST update specific room info - from the right panel
   def update_room_info
+    is_continue = params[:commit] == "continue"
     form_object = FacilityWizardForm::UpdateRoomInfoForm.new
     respond_to do |format|
       if form_object.submit(room_info_params)
-        @rooms_info_form = FacilityWizardForm::RoomsForm.new(form_object.facility_id)
-        format.js
+        if is_continue
+          room_path = facility_setup_room_summary_path(
+            facility_id: form_object.facility_id,
+            room_id: form_object.id
+          )
+          format.js { render js: "Turbolinks.visit('#{room_path}')" }
+        else
+          @rooms_info_form = FacilityWizardForm::RoomsForm.new(form_object.facility_id)
+          format.js
+        end
       end
     end
   end
@@ -92,15 +101,25 @@ class FacilitySetupController < ApplicationController
   def generate_rows
     facility_id = params[:facility_id]
     room_id = params[:room_id]
+    section_id = params[:section_id]
     mode = params[:mode]
+    # number of rows to generate / the N(th) rows to be generate
+    rows_count = params[:rows_count].nil? ? 1 : params[:rows_count].to_i
 
     @rows_form = FacilityWizardForm::RowsForm.new(facility_id, room_id)
-    rows_count = params[:rows_count].nil? ? 1 : params[:rows_count].to_i
-    @rows_form.generate_rows(rows_count)
+    # Rails.logger.debug ">>>>>> original size #{@rows_form.rows.size}"
 
     if mode == 'new'
+      # generate number of rows (user select # from select control)
+      @rows_form.generate_rows(rows_count, section_id)
+      # Rails.logger.debug ">>>>>> generate_rows 5.1"
+      # Rails.logger.debug ">>>>>> generate_rows 5.1.1 #{@rows_form.rows.size}"
       SaveFacilityWizardRows.call(facility_id, room_id, @rows_form.rows, true)
     elsif mode == 'increment'
+      # generate additional 1 row (user click the add row button)
+      @rows_form.generate_rows(@rows_form.rows.size + 1, section_id)
+      # Rails.logger.debug ">>>>>> generate_rows 5.2"
+      # Rails.logger.debug ">>>>>> generate_rows 5.2.1 #{@rows_form.rows.size}"
       SaveFacilityWizardRows.call(facility_id, room_id, [@rows_form.rows.last])
     end
 
@@ -109,7 +128,31 @@ class FacilitySetupController < ApplicationController
     end
   end
 
-  # GET called through ajax when user click on Row
+  def add_section
+    facility_id = params[:facility_id]
+    room_id = params[:room_id]
+
+    SaveFacilityAddSection.call(facility_id, room_id)
+    @rows_form = FacilityWizardForm::RowsForm.new(facility_id, room_id)
+
+    respond_to do |format|
+      format.js { render template: 'facility_setup/generate_rows' }
+    end
+  end
+
+  def destroy_section
+    facility_id = params[:facility_id]
+    room_id = params[:room_id]
+    section_id = params[:section_id]
+
+    SaveFacilityDestroySection.call(facility_id, room_id, section_id)
+    @rows_form = FacilityWizardForm::RowsForm.new(facility_id, room_id)
+    respond_to do |format|
+      format.js { render template: 'facility_setup/generate_rows' }
+    end
+  end
+
+  # GET called through ajax when user click on "SET UP ROW"
   def row_info
     @row_info_form = FacilityWizardForm::RowInfoForm.new_by_id(
       params[:facility_id],
@@ -128,11 +171,14 @@ class FacilitySetupController < ApplicationController
     # this value should be same as the value in "Continue" button (_row_info_form)
     is_continue = params[:commit] == 'continue'
     form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
-    Rails.logger.debug '>>>>>>>>>>'
-    Rails.logger.debug row_info_params[:facility_id]
-    Rails.logger.debug row_info_params[:room_id]
-    Rails.logger.debug row_info_params[:id]
-    Rails.logger.debug '>>>>>>>>>>'
+    # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+    # Rails.logger.debug '>>>>> update_row_info >>>>>'
+    # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+    # Rails.logger.debug "facility_id: #{row_info_params[:facility_id]}"
+    # Rails.logger.debug "room_id: #{row_info_params[:room_id]}"
+    # Rails.logger.debug "row id: #{row_info_params[:id]}"
+    # Rails.logger.debug "is_continue: #{is_continue}"
+    # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>'
     respond_to do |format|
       if form_object.submit(row_info_params)
         @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
@@ -178,8 +224,17 @@ class FacilitySetupController < ApplicationController
   end
 
   def update_shelf_trays
+    # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+    # Rails.logger.debug '>>>>> update_shelf_trays >>>>>'
+    # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
+    # Rails.logger.debug ">>> row_id: #{shelf_trays_params[:row_id]}"
+    # Rails.logger.debug ">>> shelf_id: #{shelf_trays_params[:id]}"
+    # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
     form_object = FacilityWizardForm::UpdateShelfTraysForm.new(shelf_trays_params)
     if form_object.submit(shelf_trays_params)
+      # To refresh the row list carousel
+      @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
+                                                    form_object.room_id)
       respond_to do |format|
         @row_shelves_trays_form = get_row_shelves_trays_form(
           form_object.facility_id,
@@ -187,6 +242,8 @@ class FacilitySetupController < ApplicationController
           form_object.row_id,
           form_object.id
         )
+        # Rails.logger.debug '>>>>>>>>>>>>>>>>>>'
+        # Rails.logger.debug ">>> " + @row_shelves_trays_form.to_json
         @row_shelves_trays_form.set_shelf_by_index(@row_shelves_trays_form.next_shelf_index)
         format.js
       end
@@ -238,11 +295,6 @@ class FacilitySetupController < ApplicationController
         redirect_to facility_setup_new_path(step: next_step,
                                             facility_id: wizard_form.facility_id,
                                             room_id: wizard_form.room_id)
-      elsif current_step == 4
-        redirect_to facility_setup_new_path(step: next_step,
-                                            facility_id: wizard_form.facility_id,
-                                            room_id: wizard_form.room_id,
-                                            section_id: wizard_form.section_id)
       elsif current_step == 5
         if wizard_form.next_row.present?
           redirect_to facility_setup_new_path(step: current_step,

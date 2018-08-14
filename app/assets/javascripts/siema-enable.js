@@ -2,36 +2,38 @@
 
 function clearSelection()
 {
- if (window.getSelection) {window.getSelection().removeAllRanges();}
- else if (document.selection) {document.selection.empty();}
+  if (window.getSelection) {window.getSelection().removeAllRanges();}
+  else if (document.selection) {document.selection.empty();}
 }
 
-// Bind Carousel as 4 card in a row (used in Rooms / Rows setup)
+// Bind Carousel as pageSize card in a row (used in Rooms / Rows setup)
 function bindCarousel(gotoLast) {
-  const siemaElm = $_(".siema");
-  if (siemaElm) {
-    const cardCount = siemaElm.children.length;
-    if (cardCount >= 4) {
-      const mySiema = new Siema({
-        perPage: 4,
-        loop: true,
-      });
-      $_('.carousel__button--left').on('click', function() { mySiema.prev() });
-      $_('.carousel__button--right').on('click', function() { mySiema.next() });
-
-      if (gotoLast) {
-        mySiema.goTo(cardCount - 4);
-
-        // Note: Fix for accidental select entire carousel when user click add / delete.
-        //       Clicking the body will under any selection
-        setTimeout(function(){
-          document.body.click();
-          clearSelection();
-        }, 300);
+  const pageSize = 4;
+  const siemaElms = $$(".siema");
+  if (siemaElms) {
+    for (let i = 0; i < siemaElms.length; i++) {
+      const siemaElm = siemaElms[i]
+      const carousel = siemaElm.closest(".carousel")
+      const cardCount = siemaElm.children.length;
+      if (cardCount >= pageSize) {
+        const mySiema = new Siema({ selector: siemaElm, perPage: pageSize, loop: true });
+        const leftBtn = carousel.children[0]
+        const rightBtn = carousel.children[2]
+        leftBtn.addEventListener("click", () => mySiema.prev());
+        rightBtn.addEventListener("click", () => mySiema.next());
+        if (gotoLast) {
+          mySiema.goTo(cardCount - pageSize);
+          // Note: Clear highlighted elements when added / deleting
+          setTimeout(() => clearSelection(), 300);
+        }
+      } else {
+        if (cardCount == 1) {
+          // when the carousel is empty (only contain the "Add" card
+          carousel.classList.add("carousel--empty")
+        }
+        // when the carousel contains less then pageSize
+        siemaElm.classList.add("carousel__body--less")
       }
-    }
-    else {
-      siemaElm.classList.add('carousel__body--less')
     }
   }
 }

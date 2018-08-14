@@ -14,6 +14,6 @@ class QueryUnitOfMeasure
   private
 
   def query_records(args)
-    UnitOfMeasure.where(args).to_a
+    Common::UnitOfMeasure.where(args).to_a
   end
 end

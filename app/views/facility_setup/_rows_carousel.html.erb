@@ -88,19 +88,3 @@
   </div>
 </div>
 
-<div class="setup_success_card pa3 bg-yellow dn">
-  Done
-</div>
-
-<% content_for :before_body_end do %>
-  <script>
-    function show_row_setup_success(rowId) {
-      const carouselCard = $_(".carousel__card--" + rowId)
-      const successCard = $_(".setup_success_card")
-      successCard.classList.remove("dn")
-      var popper = new Popper(carouselCard, successCard, {
-        placement: 'right'
-      });
-    }
-  </script>
-<% end %>

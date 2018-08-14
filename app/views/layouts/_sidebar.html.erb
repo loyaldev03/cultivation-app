@@ -1,9 +1,9 @@
-<div id="sidebar" class="sidebar br b--light-gray fixed min-vh-100 collapsed overflow-hidden" data-turbolinks="false">
-  <div class="tc pv3 show-collapsed">
+<div id="sidebar" class="sidebar fixed min-vh-100 collapsed overflow-hidden" data-turbolinks="false">
+  <div class="tc pv3 flex justify-center show-collapsed box--shadow-header" style="height: 50px">
     <%= image_tag 'logo-small.svg' %>
   </div>
 
-  <div class="tc pv3 hide">
+  <div class="tc pv3 hide box--shadow-header" style="height: 50px">
     <%= image_tag 'logo.svg' %>
   </div>
 
@@ -70,21 +70,41 @@
     </li>
   </ul>
 
-  <ul class="list pl0 ma0 pa0 show-collapsed mt4 pt4">
+  <ul class="list pl0 ma0 pa0 show-collapsed">
     <li class="pv3 ph4 grow flex flex-row items-center tc">
-      <%= link_to "H", root_path, class: "link  fw4 f3 dib ph3" %>
+      <%= link_to root_path do %>
+        <i class="material-icons md-16 grey mr3">home</i>
+      <% end %>
     </li>
+    
     <li class="pv3 ph4 grow flex flex-row items-center tc">
-      <span class="fw4  f3 dib ph3 pointer">I</span>
+      <i class="material-icons md-16 grey mr3">style</i>
     </li>
+
     <li class="pv3 ph4 grow flex flex-row items-center tc">
-      <span class="fw4  f3 dib ph3 pointer">C</span>
+      <i class="material-icons md-16 grey mr3">account_balance_wallet</i>
     </li>
-    <hr class="mt3">
+
     <li class="pv3 ph4 grow flex flex-row items-center tc">
-      <span>
-        <%= link_to 'S', settings_path, class: ' link fw4 f6 dib ph3' %>
-      </span>
+      <i class="material-icons md-16 grey mr3">view_quilt</i>
+    </li>
+
+    <li class="pv3 ph4 grow flex flex-row items-center tc">
+      <i class="material-icons md-16 grey mr3">track_changes</i>
+    </li>
+
+    <li class="pv3 ph4 grow flex flex-row items-center tc">
+      <i class="material-icons md-16 grey mr3">assignment_ind</i>
+    </li>
+    
+    <li class="pv3 ph4 grow flex flex-row items-center tc">
+      <i class="material-icons md-16 grey mr3">insert_chart</i>
+    </li>
+    
+    <li class="pv3 ph4 grow flex flex-row items-center tc">
+        <%= link_to settings_path do %>
+          <i class="material-icons md-16 grey mr3">settings</i>
+        <% end %>
     </li>
   </ul>
 

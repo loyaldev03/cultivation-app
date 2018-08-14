@@ -17,12 +17,12 @@
       <div class="ph4">
         <div class="mb3">
           <%= f.label "row Name", class:"subtitle-2 db mb1 grey ttc" %>
-          <%= f.text_field :name, value: row.name, class: "box--height db w-70 pa2 body-1 grey ba b--light-grey br3--box outline-0" %>
+          <%= f.text_field :name, value: row.name, class: "box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
         </div>
 
         <div class="mb3">
           <span class="subtitle-2 db mb1 grey ttc">row ID</span>
-          <%= f.text_field :code, value: row.code, class: "box--height db w-70 pa2 body-1 grey ba b--light-grey br3--box outline-0" %>
+          <%= f.text_field :code, value: row.code, class: "box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
         </div>
 
         <div class="mt4">
@@ -52,7 +52,7 @@
               options_for_select([*1..5], row.wz_shelves_count),
               {},
               {
-                class: "w-70 grey br3--box ba b--light-grey outline-0 box--height"
+                class: "w-70 grey box--br3 ba b--light-grey outline-0 box--height"
               }
             %>
           </div>
@@ -87,7 +87,7 @@
               options_for_select([*1..10], row.wz_trays_count),
               {},
               {
-                class: "w-70 grey br3--box ba b--light-grey outline-0 box--height"
+                class: "w-70 grey box--br3 ba b--light-grey outline-0 box--height"
               }
             %>
           </div>
@@ -96,7 +96,7 @@
 
       <div class="w-100 mt5 pv3 ph4 bt b--light-grey flex items-center justify-between">
         <%= f.submit "Save Changes", class: "db pv2 bn ttu button orange link dim pointer" %>
-        <%= f.submit "save & continue", value: "continue", class: "db tr pa3 bg-orange white bn br3--box ttu link dim pointer" %>
+        <%= f.submit "save & continue", value: "continue", class: "db tr pa3 bg-orange white bn box--br3 ttu link dim pointer" %>
       </div>
     </div>
   <% end %>

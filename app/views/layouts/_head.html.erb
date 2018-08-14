@@ -19,7 +19,8 @@
   <%# <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %1> %>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet", media: 'all', 'data-turbolinks-track': 'reload'>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
-  <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-  
+  <% unless defined? disable_react %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <% end %>
   <title>Cannvas</title>
 </head>

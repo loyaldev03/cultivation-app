@@ -15,6 +15,7 @@
     "prettier-eslint": "^8.8.2",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
+    "react-day-picker": "^7.1.10",
     "react-dom": "^16.4.1",
     "react-table": "^6.8.6",
     "react_ujs": "^2.4.4",

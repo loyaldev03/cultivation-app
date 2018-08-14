@@ -1,0 +1,88 @@
+<% content_for :breadcrumb do %>
+  <div class="flex items-center">
+    <%= breadcrumbs ["Home",root_path], "Cultivation Setup" %>
+  </div>
+
+  <div class="flex flex-row items-center">
+    <i class="material-icons grey f6 mr3 dim">notifications</i>
+
+    <img
+      src="http://tachyons.io/img/logo.jpg"
+      class="br-100 h2 w2 mr3 dib" alt="avatar">
+
+    <span class="ttc subtitle-2 grey">User Name</span>
+
+    <i class="material-icons grey dim ml2">keyboard_arrow_down</i>
+  </div>
+<% end %>
+
+<div class="pa4">
+  <div class="flex flex-column justify-between bg-white">
+    <div class="pa4 min-vh-80">
+      <div class="fl w-70 flex flex-column">
+        <h5 class="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
+        <p class="mt2 body-1 grey">
+          Let's get a few fetails of your facility to get things rolling...
+        </p>
+
+
+<%= simple_form_for :record, 
+      url: "settings_core_unit_of_measures_path", 
+      remote: true, 
+      method: :post, 
+      html: { 
+        class: 'vertical-form h-100 flex flex-column justify-between' 
+      } do |f|
+  %>
+
+    <div class="">
+      <div class="w-100 shelves_number_options">
+        <div class="mt3">
+          <%= f.label :batch_source, "Batch Source",
+            class: "f6 fw5 db mb1 gray"
+          %>
+          <%= f.input :batch_source, label: false,
+            label: false,
+            collection: ["Clones from mother plant", "Seeds", "Pre-purchased clones"],
+            label_html: { class: 'w-100 dib f6 fw5 gray' }, 
+            input_html: { class: 'w-70 ph2 pv1 gray ba b--black-20 br2 outline-0', rows: 5 } 
+          %>
+        </div>
+      </div>
+      <div class="w-100 shelves_number_options">
+        <div class="mt3">
+          <%= f.label :strain, "Select Strain",
+            class: "f6 fw5 db mb1 gray"
+          %>
+          <%= f.input :strain, label: false,
+            label: false,
+            collection: ["Soil", "Hydrophonic"],
+            label_html: { class: 'w-100 dib f6 fw5 gray' }, 
+            input_html: { class: 'w-70 ph2 pv1 gray ba b--black-20 br2 outline-0', rows: 5 } 
+          %>
+        </div>
+      </div>
+      <div class="w-100 shelves_number_options">
+        <div class="mb2">
+          <%= f.input :conversion, label: false,
+            label_html: { class: 'w-100 dib f6 fw5 gray' }, 
+            input_html: { class: 'w-70 ph2 pv1 gray ba b--black-20 br2 outline-0', rows: 5 }, as: :hidden
+          %>
+        </div>
+      </div>
+    </div>
+      <%= react_component 'utils/DatepickerInput' %>
+
+    <div class="w-100 flex justify-end">
+      <%= f.submit "Create", class: "pointer db tc pa3 bg-green white bn br2 ttu tracked link dim f5 fw6" %>
+    </div>
+  <% end %>
+
+
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

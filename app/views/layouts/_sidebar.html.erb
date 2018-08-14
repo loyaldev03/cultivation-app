@@ -1,52 +1,95 @@
 <div id="sidebar" class="sidebar br b--light-gray fixed min-vh-100 collapsed overflow-hidden" data-turbolinks="false">
-  <div class="flex justify-start ">
-    <%= link_to root_path do %>
-      <div class="br3 bg-light-gray dim ba b--mid-gray ma3 mb0" style="width: 50px; height: 50px;">
-      </div>
-    <% end %>
+  <div class="tc pv3 show-collapsed">
+    <%= image_tag 'logo-small.svg' %>
   </div>
+
+  <div class="tc pv3 hide">
+    <%= image_tag 'logo.svg' %>
+  </div>
+
   <% if user_signed_in? %>
-    <div class="pv3 mh3 f6 white hide truncate">Hi, <%= current_user.email %></div>
+    <div class="ma3 hide truncate tc">
+      <div class="flex flex-row items-center">
+        <%= image_tag 'logo-small.svg', class: "dib mr3" %>
+        <div class="flex flex-column">
+          <span class="dark-grey subtitle-1">User name</span>
+          <span class="grey overline ttc">Admin Head</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ma3 tc show-collapsed truncate">
+      <%= image_tag 'logo-small.svg', class: "dib" %>
+    </div>
   <% end %>
+
   <ul class="list pl0 hide">
-    <li class="pa3 grow">
-      <%= link_to "Home", root_path, class: "link fw5 f5 white" %>
+    <li class="pv3 ph4 grow flex flex-row items-center">
+      <i class="material-icons md-16 grey mr3">home</i>
+      <%= link_to "Home", root_path, class: "link subtitle-2-regular grey" %>
     </li>
-    <li class="pa3 grow">
-      <span class="link fw5 f5 white">Inventory</span>
+    
+    <li class="pv3 ph4 grow flex flex-row items-center">
+      <i class="material-icons md-16 grey mr3">style</i>
+      <span class="link subtitle-2-regular grey">Inventory</span>
     </li>
-    <li class="pa3 grow">
-      <span class="link fw5 f5 white">Cultivation</span>
+    
+    <li class="pv3 ph4 grow flex flex-row items-center">
+      <i class="material-icons md-16 grey mr3">account_balance_wallet</i>
+      <span class="link subtitle-2-regular grey">Accounting</span>
     </li>
-    <hr class="mt3">
-    <li class="pa3   grow">
-      <span class="fw1 f4">
-        <%= link_to 'Settings', settings_path, class: 'link fw5 f6 white' %>
-      </span>
+
+    <li class="pv3 ph4 grow flex flex-row items-center">
+      <i class="material-icons md-16 grey mr3">view_quilt</i>
+      <span class="link subtitle-2-regular grey">Cultivation</span>
     </li>
-    <li class="pa3   grow">
-      <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: 'link fw5 f6 white' %>
+
+    <li class="pv3 ph4 grow flex flex-row items-center">
+      <i class="material-icons md-16 grey mr3">track_changes</i>
+      <span class="link subtitle-2-regular grey">Planning</span>
+    </li>
+
+    <li class="pv3 ph4 grow flex flex-row items-center">
+      <i class="material-icons md-16 grey mr3">assignment_ind</i>
+      <span class="link subtitle-2-regular grey">Payroll</span>
+    </li>
+
+    <li class="pv3 ph4 grow flex flex-row items-center">
+      <i class="material-icons md-16 grey mr3">insert_chart</i>
+      <span class="link subtitle-2-regular grey">Report</span>
+    </li>
+
+    <li class="pv3 ph4 grow flex flex-row items-center">
+      <i class="material-icons md-16 grey mr3">settings</i>
+      <%= link_to 'Settings', settings_path, class: 'link subtitle-2-regular grey' %>
+    </li>
+    
+    <li class="pv3 ph4 grow flex flex-row items-center">
+      <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
+          class: 'link subtitle-2-regular grey' %>
     </li>
   </ul>
+
   <ul class="list pl0 ma0 pa0 show-collapsed mt4 pt4">
-    <li class="pa3 grow tc">
-      <%= link_to "H", root_path, class: "link white fw4 f3 dib ph3" %>
+    <li class="pv3 ph4 grow flex flex-row items-center tc">
+      <%= link_to "H", root_path, class: "link  fw4 f3 dib ph3" %>
     </li>
-    <li class="pa3 grow tc">
-      <span class="fw4 white f3 dib ph3 pointer">I</span>
+    <li class="pv3 ph4 grow flex flex-row items-center tc">
+      <span class="fw4  f3 dib ph3 pointer">I</span>
     </li>
-    <li class="pa3 grow tc">
-      <span class="fw4 white f3 dib ph3 pointer">C</span>
+    <li class="pv3 ph4 grow flex flex-row items-center tc">
+      <span class="fw4  f3 dib ph3 pointer">C</span>
     </li>
     <hr class="mt3">
-    <li class="pa3 grow tc">
+    <li class="pv3 ph4 grow flex flex-row items-center tc">
       <span>
-        <%= link_to 'S', settings_path, class: 'white link fw4 f6 dib ph3' %>
+        <%= link_to 'S', settings_path, class: ' link fw4 f6 dib ph3' %>
       </span>
     </li>
   </ul>
-  <div class="tc fixed bg-black-10 flex dim align-center justify-center left-toggle-button">
-    <a id="toggle-sidebar" href="#" class="link white f3 outline-0 w-100 self-center ">
+
+  <div class="tc fixed flex dim align-center justify-center left-toggle-button">
+    <a id="toggle-sidebar" href="#" class="link grey outline-0 w-100 self-center ">
       &#8677;
     </a>
   </div>

@@ -87,3 +87,11 @@
     <i class="material-icons md-light fw6">keyboard_arrow_right</i>
   </div>
 </div>
+
+<% content_for :before_body_end do %>
+  <script>
+    function show_row_setup_success(msg) {
+      console.log("Hello", msg)
+    }
+  </script>
+<% end %>

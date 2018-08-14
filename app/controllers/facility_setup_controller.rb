@@ -232,19 +232,24 @@ class FacilitySetupController < ApplicationController
     # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
     form_object = FacilityWizardForm::UpdateShelfTraysForm.new(shelf_trays_params)
     if form_object.submit(shelf_trays_params)
-      # To refresh the row list carousel
-      @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
-                                                    form_object.room_id)
       respond_to do |format|
+        # To refresh the row list carousel
+        @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
+                                                      form_object.room_id)
         @row_shelves_trays_form = get_row_shelves_trays_form(
           form_object.facility_id,
           form_object.room_id,
           form_object.row_id,
           form_object.id
         )
-        # Rails.logger.debug '>>>>>>>>>>>>>>>>>>'
-        # Rails.logger.debug ">>> " + @row_shelves_trays_form.to_json
+        Rails.logger.debug ">>> shelves.size: #{@row_shelves_trays_form.shelves.size}"
+        Rails.logger.debug ">>> next_shelf_index: #{@row_shelves_trays_form.next_shelf_index}"
+        # Return the form object for next shelf (move user to setup next shelf)
         @row_shelves_trays_form.set_shelf_by_index(@row_shelves_trays_form.next_shelf_index)
+        if @row_shelves_trays_form.next_shelf_index == -1
+          # TODO: Offer duplicate row function
+          Rails.logger.debug ">>> saved last shelf: #{@row_shelves_trays_form.next_shelf_index}"
+        end
         format.js
       end
     else

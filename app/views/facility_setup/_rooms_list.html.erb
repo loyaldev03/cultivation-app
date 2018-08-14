@@ -11,7 +11,7 @@
           mode: 'new'),
         method: :post
       },
-      class: "grey br3--box ba b--light-grey outline-0 w-80 box--height"
+      class: "grey box--br3 ba b--light-grey outline-0 w-80 box--height"
     %>
   </div>
 <% else %>
@@ -22,7 +22,7 @@
 
     <div class="carousel__body siema">
       <% rooms.each do |room| %>
-        <div class="carousel__card relative b--light-grey br3--box ba">
+        <div class="carousel__card relative b--light-grey box--br3 ba">
           <div class="ph2 pt2 pb0">
             <%= link_to destroy_room_path(facility_id: room.facility_id, room_id: room.id),
               remote: true, method: :post,
@@ -96,7 +96,7 @@
         </div>
       <% end %>
       <% unless rooms.blank? %>
-        <div class="carousel__card carousel__card--add flex flex-column items-center justify-center a2 br3--box box-shadow b--dashed b--light-grey">
+        <div class="carousel__card carousel__card--add flex flex-column items-center justify-center a2 box--br3 box--shadow b--dashed b--light-grey">
           <%= image_tag 'room-icon.svg', class: "h3 w3 dib center mb2" %>
           <%= link_to generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), 
               remote: true, method: :post, class: "dim link" do %>

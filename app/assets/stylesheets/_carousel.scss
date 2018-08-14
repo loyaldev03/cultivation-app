@@ -58,7 +58,7 @@ $carouselEmptyHeight: 148px;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.15);
+  box--shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.15);
   border-radius: 0.3em;
   border-style: dashed;
   border-color: var(--light-gray);
@@ -74,7 +74,7 @@ $carouselEmptyHeight: 148px;
       height: $carouselEmptyHeight;
       &.carousel__card--add {
         border: none;
-        box-shadow: inherit;
+        box--shadow: inherit;
       }
     }
   }

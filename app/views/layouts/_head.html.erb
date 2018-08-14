@@ -16,7 +16,9 @@
   <% if defined? include_carousel %>
     <%= javascript_include_tag 'siema-enable', 'data-turbolinks-track': 'reload' %>
   <% end %>
-  <%# <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %1> %>
+  <% if defined? include_tippy %>
+    <%= javascript_include_tag 'tippy-enable', 'data-turbolinks-track': 'reload' %>
+  <% end %>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet", media: 'all', 'data-turbolinks-track': 'reload'>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
   <% unless defined? disable_react %>

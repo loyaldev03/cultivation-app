@@ -5,3 +5,8 @@ $_("#rows_grid").innerHTML = ("<%= j render 'rows_list',
                                %>")
 <%= render 'row_shelf_trays' %>
 <%= render 'carousel_reload' %>
+
+<% if @row_shelves_trays_form.next_shelf_index == -1 %>
+    show_row_setup_success("<%= @row_shelves_trays_form.id %>")
+<% end %>
+

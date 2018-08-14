@@ -11,7 +11,7 @@
           mode: 'new'),
         method: :post
       },
-      class: "grey br3--box ba b--light-grey outline-0 w-80 box--height"
+      class: "grey box--br3 ba b--light-grey outline-0 w-80 box--height"
     %>
   </div>
 <% else %>
@@ -22,7 +22,7 @@
 
     <div class="carousel__body siema">
       <% rooms.each do |room| %>
-        <div class="carousel__card relative b--light-grey br3--box ba">
+        <div class="carousel__card relative b--light-grey box--br3 ba">
           <div class="ph2 pt2 pb0">
             <%= link_to destroy_room_path(facility_id: room.facility_id, room_id: room.id),
               remote: true, method: :post,
@@ -30,10 +30,10 @@
                 confirm: "Are you sure?"
               } do
             %>
-              <i class="material-icons grey f6 dim pointer">delete</i>
+              <i class="material-icons grey f6 dim pointer" style="opacity: 0.3;">delete</i>
             <% end %>
             <div class="fr">
-              <i class="material-icons orange f6 dim">info</i>
+              <i class="material-icons orange f6 dim" style="opacity: 0.3;">info</i>
             </div>
           </div>
 
@@ -63,7 +63,7 @@
                 </div>
               </div>
 
-              <div class="flex flex-row mt3">
+              <div class="flex flex-row mt0">
                 <div class="flex flex-row items-center w-50 tl pr1">
                   <i class="material-icons grey f7">radio_button_unchecked</i>
                   <div class="flex flex-column w-100 ml2">
@@ -96,7 +96,7 @@
         </div>
       <% end %>
       <% unless rooms.blank? %>
-        <div class="carousel__card carousel__card--add flex flex-column items-center justify-center a2 br3--box box-shadow b--dashed b--light-grey">
+        <div class="carousel__card carousel__card--add flex flex-column items-center justify-center a2 box--br3 box--shadow b--dashed b--light-grey">
           <%= image_tag 'room-icon.svg', class: "h3 w3 dib center mb2" %>
           <%= link_to generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), 
               remote: true, method: :post, class: "dim link" do %>

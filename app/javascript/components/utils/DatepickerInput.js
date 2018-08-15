@@ -19,12 +19,18 @@ color: #777;
     border-width: 1px;
 }
 .DayPickerInput {
-    display: inline-block;
+    display: initial;
 }
 `
 
 class DatepickerInput extends React.Component {
 
+
+  setDateValue = (date) => {
+    console.log(date)
+    var s = document.getElementById('record_date_start');
+    s.value = date;
+  }
 
   render() {
     return (
@@ -38,7 +44,7 @@ class DatepickerInput extends React.Component {
               When to start 
               <abbr title="required">*</abbr>
             </label>
-              <DayPickerInput onDayChange={day => console.log(day)}/>
+              <DayPickerInput onDayChange={day => this.setDateValue(day)}/>
             </div>
           </div>
         </div>

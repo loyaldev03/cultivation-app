@@ -1,12 +1,79 @@
+$orange: var(--orange);
+$fogZindex: 20;
+
+.btn {
+  display: inline-block;
+  cursor: pointer;
+  height: 46px;
+  padding-left: 20px;
+  padding-right: 20px;
+  font-weight: 600;
+  color: var(--gray);
+  text-transform: uppercase;
+  border: 1px solid var(--light-gray);
+  border-radius: 4px;
+}
+
+.btn--primary {
+  border: 1px solid $orange;
+  background-color: $orange;
+  color: white;
+}
+
+.fog {
+  opacity: 0.65;
+  background-color: var(--white); 
+  width: 100%; 
+  height: 100%; 
+  z-index: $fogZindex;
+  top: 0; 
+  left: 0; 
+  position: fixed; 
+}
+
 .setup_success_card {
-  height: 345px;
-  width: 198px;
-  background-color: #CCCCCC;
-  border: solid 1px gray;
+  position: relative;
+  z-index: $fogZindex + 1;
+  margin-left: 20px;
+  margin-right: 20px;
+  height: 362px;
+  width: 378px;
+  background-color: var(--white);
+  border: 1px solid var(--light-gray);
+  box-shadow: 0 1px 10px 0 #0000000f;
 }
 
 .setup_success_card__header {
+  padding: 20px;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.setup_success_card__title {
 }
 
 .setup_success_card__body {
+  padding: 20px;
+}
+
+.setup_success_card__footer {
+  padding: 0 19px 19px 0;
+  min-height: 65px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+.setup_success_card__button {
+  float: right;
+}
+
+.carousel__card--highlight {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  border: solid 2px rgba(246, 104, 48, 1);
+  border-radius: 4px;
+  background-color: rgba(246, 104, 48, 0.5);
+  z-index: $fogZindex + 1;
 }

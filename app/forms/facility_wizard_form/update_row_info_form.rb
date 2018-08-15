@@ -14,7 +14,7 @@ module FacilityWizardForm
              :wz_trays_count]
 
     attr_accessor(*ATTRS)
-    attr_reader :is_continue
+    attr_reader :is_continue, :result
 
     validates :facility_id, presence: true
     validates :room_id, presence: true
@@ -30,6 +30,7 @@ module FacilityWizardForm
       self.map_attrs_from_hash(ATTRS, params)
       if valid?
         save_cmd = SaveRow.call(self)
+        @result = save_cmd.result
         if save_cmd.success? && @is_continue
           # NOTE: Save the row for the first time
           # This will also generate the shelves & trays

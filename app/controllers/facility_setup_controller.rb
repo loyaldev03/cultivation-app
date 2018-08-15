@@ -170,7 +170,7 @@ class FacilitySetupController < ApplicationController
   def update_row_info
     # this value should be same as the value in "Continue" button (_row_info_form)
     is_continue = params[:commit] == 'continue'
-    form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
+    @form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
     # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>'
     # Rails.logger.debug '>>>>> update_row_info >>>>>'
     # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>'
@@ -180,9 +180,10 @@ class FacilitySetupController < ApplicationController
     # Rails.logger.debug "is_continue: #{is_continue}"
     # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>'
     respond_to do |format|
-      if form_object.submit(row_info_params)
-        @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
-                                                      form_object.room_id)
+      if @form_object.submit(row_info_params)
+        @row_info_form = FacilityWizardForm::RowInfoForm.new(@form_object.facility_id,
+                                                             @form_object.room_id,
+                                                             @form_object.result)
         if is_continue
           @row_shelves_trays_form = get_row_shelves_trays_form(
             row_info_params[:facility_id],
@@ -233,23 +234,19 @@ class FacilitySetupController < ApplicationController
     form_object = FacilityWizardForm::UpdateShelfTraysForm.new(shelf_trays_params)
     if form_object.submit(shelf_trays_params)
       respond_to do |format|
-        # To refresh the row list carousel
-        @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
-                                                      form_object.room_id)
+        # To refresh a single row card in the carousel
+        @row_info_form = FacilityWizardForm::RowInfoForm.find_by_id(form_object.facility_id,
+                                                                    form_object.room_id,
+                                                                    form_object.row_id)
         @row_shelves_trays_form = get_row_shelves_trays_form(
           form_object.facility_id,
           form_object.room_id,
           form_object.row_id,
           form_object.id
         )
-        Rails.logger.debug ">>> shelves.size: #{@row_shelves_trays_form.shelves.size}"
-        Rails.logger.debug ">>> next_shelf_index: #{@row_shelves_trays_form.next_shelf_index}"
-        # Return the form object for next shelf (move user to setup next shelf)
+        # NOTE: Return form object for next shelf (move user to setup next shelf)
         @row_shelves_trays_form.set_shelf_by_index(@row_shelves_trays_form.next_shelf_index)
-        if @row_shelves_trays_form.next_shelf_index == -1
-          # TODO: Offer duplicate row function
-          Rails.logger.debug ">>> saved last shelf: #{@row_shelves_trays_form.next_shelf_index}"
-        end
+        # NOTE: Offer duplicate row function (see update_shelf_trays.js.erb)
         format.js
       end
     else

@@ -7,11 +7,13 @@
 <% content_for :before_body_end do %>
   <script>
     function show_row_setup_success(rowId) {
-      const carouselCard = $_(".carousel__card--" + rowId)
-      const carousel = carouselCard.closest(".carousel")
+      console.log(rowId)
+      const rowCards = $$(".carousel__card")
+      const targetCard = $_(".carousel__card--" + rowId)
+      const carousel = targetCard.closest(".carousel")
       const successCard = $_(".setup_success_card")
       successCard.classList.remove("dn")
-      var popper = new Popper(carousel, successCard, {
+      var popper = new Popper(targetCard, successCard, {
         positionFixed: true,
         placement: 'left'
       });

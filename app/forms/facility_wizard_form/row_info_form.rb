@@ -61,6 +61,11 @@ module FacilityWizardForm
         row = RowInfoForm.get_row(facility_id, room, row_id, row_name, row_code)
         row
       end
+
+      def find_by_id(facility_id, room_id, row_id)
+        find_row_cmd = FindRow.call(facility_id, room_id, row_id)
+        row = RowInfoForm.new(facility_id, room_id, find_row_cmd.result)
+      end
     end
 
     class << self

@@ -5,7 +5,7 @@
 
   <div class="carousel__body siema">
     <% rows.each do |row| %>
-      <div class="carousel__card relative b--light-grey box--br3 ba">
+      <div class="carousel__card carousel__card--<%= row.id %> relative b--light-grey box--br3 ba">
         <div class="ph2 pt2 pb0">
           <%= link_to destroy_row_path(
               facility_id: row.facility_id,
@@ -87,3 +87,20 @@
     <i class="material-icons md-light fw6">keyboard_arrow_right</i>
   </div>
 </div>
+
+<div class="setup_success_card pa3 bg-yellow dn">
+  Done
+</div>
+
+<% content_for :before_body_end do %>
+  <script>
+    function show_row_setup_success(rowId) {
+      const carouselCard = $_(".carousel__card--" + rowId)
+      const successCard = $_(".setup_success_card")
+      successCard.classList.remove("dn")
+      var popper = new Popper(carouselCard, successCard, {
+        placement: 'right'
+      });
+    }
+  </script>
+<% end %>

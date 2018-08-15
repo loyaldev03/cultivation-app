@@ -5,6 +5,6 @@ $_('<%= ".carousel__card--#{@row_info_form.id}" %>').innerHTML = ("<%= j render 
 <%= render 'row_shelf_trays' %>
 
 <% if @row_shelves_trays_form.next_shelf_index == -1 %>
-    show_row_setup_success("<%= @row_shelves_trays_form.id %>")
+    showRowSetupSuccess("<%= @row_shelves_trays_form.id %>")
 <% end %>
 

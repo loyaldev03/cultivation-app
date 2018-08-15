@@ -1,27 +1,69 @@
 <div class="setup_success_card dn">
-  Done
-
-  <button onclick="hideSetupSuccess()">Hide</button>
+  <div class="setup_success_card__header">
+    <span class="setup_success_card__title f3">Row Setup Success</span>
+  </div>
+  <div class="setup_success_card__body">
+    <span class="fw6 f3 dark-grey">You've now completed the setup of your row</span>
+    <p class="b gray">Shall we duplicate this row setup across other rows?</p>
+    <p class="ma0 pa0 f6 gray">
+      Pro tip: Duplicating row across other rows will allow you setup quicker, provided that you have
+      similar number of shelves and trays. You can always edit the shelf or tray that contains
+      different info.
+    </p>
+  </div>
+  <div class="setup_success_card__footer">
+    <button class="setup_success_card__button btn btn--primary">Yes, Duplicate</button>
+    <button class="setup_success_card__button setup_success_card__button--cancel btn mr2">Cancel</button>
+  </div>
 </div>
 
 <% content_for :before_body_end do %>
   <script>
-    function show_row_setup_success(rowId) {
-      console.log(rowId)
-      const rowCards = $$(".carousel__card")
+    function hideSuccessCard() {
+      $_(".setup_success_card").classList.add("dn")
+      unhighlightCard();
+      hideFog();
+    }
+
+    function showSuccessCard() {
+      $_(".setup_success_card").classList.remove("dn")
+    }
+
+    function hideFog() {
+      $_(".fog").classList.add("dn")
+    }
+
+    function showFog() {
+      $_(".fog").classList.remove("dn")
+    }
+
+    function highlightCard(card) {
+      const cardCover = document.createElement("div")
+      cardCover.classList.add("carousel__card--highlight")
+      card.appendChild(cardCover)
+    }
+
+    function unhighlightCard() {
+      const cardCover = $_(".carousel__card--highlight");
+      cardCover.parentNode.removeChild(cardCover);
+    }
+
+    function showRowSetupSuccess(rowId) {
+      showFog();
+      showSuccessCard();
+
       const targetCard = $_(".carousel__card--" + rowId)
+      highlightCard(targetCard);
+
       const carousel = targetCard.closest(".carousel")
       const successCard = $_(".setup_success_card")
-      successCard.classList.remove("dn")
+
       var popper = new Popper(targetCard, successCard, {
         positionFixed: true,
-        placement: 'left'
+        placement: 'right'
       });
     }
 
-    function hideSetupSuccess() {
-      const successCard = $_(".setup_success_card")
-      successCard.classList.add("dn")
-    }
+    $_(".setup_success_card__button--cancel").on("click", hideSuccessCard);
   </script>
 <% end %>

@@ -6,17 +6,15 @@
 
 <% content_for :before_body_end do %>
   <script>
-    function show_setup_success(rowId) {
+    function show_row_setup_success(rowId) {
       const carouselCard = $_(".carousel__card--" + rowId)
+      const carousel = carouselCard.closest(".carousel")
       const successCard = $_(".setup_success_card")
       successCard.classList.remove("dn")
-      var popper = new Popper(carouselCard, successCard, {
-        placement: 'right'
+      var popper = new Popper(carousel, successCard, {
+        positionFixed: true,
+        placement: 'left'
       });
-    }
-
-    function show_row_setup_success(rowId) {
-      setTimeout(() => { show_setup_success(rowId); }, 300);
     }
 
     function hideSetupSuccess() {

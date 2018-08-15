@@ -1,18 +1,16 @@
 // SIZES
-$width__sidebar: 230px;
+$width__sidebar: 210px;
 
 // COLOURS
-// $sidebar_dark: rgb(0, 21, 41);
-$sidebar_dark: #bebebe;
+$sidebar_bg: #FFFFFF;
 
 #sidebar {
-  background-color: $sidebar_dark;
+  background-color: $sidebar_bg;
   width: $width__sidebar;
-  // color: rgba(255, 255, 255, 65);
   transition: 0.3s;
   
   &.collapsed {
-    width: 80px;
+    width: 75px;
     .hide { 
       display: none;
       transition: 1s;

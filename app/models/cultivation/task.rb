@@ -20,6 +20,5 @@ module Cultivation
 
     embeds_many :users, class_name: 'User'
     belongs_to :batch, class_name: 'Cultivation::Batch'
-    
   end
 end

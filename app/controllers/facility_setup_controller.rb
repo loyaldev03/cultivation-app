@@ -57,14 +57,14 @@ class FacilitySetupController < ApplicationController
 
   # POST update specific room info - from the right panel
   def update_room_info
-    is_continue = params[:commit] == "continue"
+    is_continue = params[:commit] == 'continue'
     form_object = FacilityWizardForm::UpdateRoomInfoForm.new
     respond_to do |format|
       if form_object.submit(room_info_params)
         if is_continue
           room_path = facility_setup_room_summary_path(
             facility_id: form_object.facility_id,
-            room_id: form_object.id
+            room_id: form_object.id,
           )
           format.js { render js: "Turbolinks.visit('#{room_path}')" }
         else

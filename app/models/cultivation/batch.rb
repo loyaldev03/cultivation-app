@@ -6,6 +6,5 @@ module Cultivation
     field :name, type: String
 
     has_many :tasks, class_name: 'Cultivation::Task'
-    
   end
 end

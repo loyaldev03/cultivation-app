@@ -24,7 +24,7 @@ module FacilityWizardForm
       if room_model.try(:rows)
         set_rows(room_model.rows)
       else
-        self.capacity_text = "--"
+        self.capacity_text = '--'
       end
     end
 
@@ -42,7 +42,7 @@ module FacilityWizardForm
     def calculate_capacity(rows)
       if rows.blank?
         self.capacity = 0
-        self.capacity_text = "--"
+        self.capacity_text = '--'
       else
         self.capacity = rows.sum { |h| h.capacity }
         self.capacity_text = self.capacity

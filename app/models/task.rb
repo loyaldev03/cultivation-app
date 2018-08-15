@@ -11,5 +11,4 @@ class Task
   field :created_by, type: Integer
   field :task_type, type: String
   field :notes, type: String
-
 end

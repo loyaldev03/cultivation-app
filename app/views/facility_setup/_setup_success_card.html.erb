@@ -1,0 +1,25 @@
+<div class="setup_success_card dn">
+  Done
+
+  <button onclick="hideSetupSuccess()">Hide</button>
+</div>
+
+<% content_for :before_body_end do %>
+  <script>
+    function show_row_setup_success(rowId) {
+      const carouselCard = $_(".carousel__card--" + rowId)
+      const carousel = carouselCard.closest(".carousel")
+      const successCard = $_(".setup_success_card")
+      successCard.classList.remove("dn")
+      var popper = new Popper(carousel, successCard, {
+        positionFixed: true,
+        placement: 'left'
+      });
+    }
+
+    function hideSetupSuccess() {
+      const successCard = $_(".setup_success_card")
+      successCard.classList.add("dn")
+    }
+  </script>
+<% end %>

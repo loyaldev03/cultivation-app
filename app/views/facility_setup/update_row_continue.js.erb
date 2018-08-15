@@ -1,7 +1,5 @@
 toast('Row Saved', 'success');
-$_("#rows_grid").innerHTML = ("<%= j render 'rows_list',
-                                facility_id: @rows_form.facility_id,
-                                room_id: @rows_form.room_id
-                               %>")
+
+$_('<%= ".carousel__card--#{@row_info_form.id}" %>').innerHTML = ("<%= j render 'row_card_body', row: @row_info_form %>")
+
 <%= render 'row_shelf_trays' %>
-<%= render 'carousel_reload' %>

@@ -170,7 +170,7 @@ class FacilitySetupController < ApplicationController
   def update_row_info
     # this value should be same as the value in "Continue" button (_row_info_form)
     is_continue = params[:commit] == 'continue'
-    form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
+    @form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
     # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>'
     # Rails.logger.debug '>>>>> update_row_info >>>>>'
     # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>'
@@ -180,9 +180,10 @@ class FacilitySetupController < ApplicationController
     # Rails.logger.debug "is_continue: #{is_continue}"
     # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>'
     respond_to do |format|
-      if form_object.submit(row_info_params)
-        @rows_form = FacilityWizardForm::RowsForm.new(form_object.facility_id,
-                                                      form_object.room_id)
+      if @form_object.submit(row_info_params)
+        @row_info_form = FacilityWizardForm::RowInfoForm.new(@form_object.facility_id,
+                                                             @form_object.room_id,
+                                                             @form_object.result)
         if is_continue
           @row_shelves_trays_form = get_row_shelves_trays_form(
             row_info_params[:facility_id],

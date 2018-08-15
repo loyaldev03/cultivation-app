@@ -100,7 +100,7 @@
           <%= image_tag 'room-icon.svg', class: "h3 w3 dib center mb2" %>
           <%= link_to generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), 
               remote: true, method: :post, class: "dim link" do %>
-              <div class="button white bg-orange ttu pv2 ph3">add a new room</div>
+              <div class="carousel__secondary_button">add a new room</div>
           <% end %>
         </div>
       <% end %>

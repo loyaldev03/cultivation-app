@@ -1,5 +1,5 @@
 <div class="carousel">
-  <div class="carousel__button carousel__button--left pointer dim flex items-center justify-center">
+  <div class="carousel__button carousel__button--left dim">
     <i class="material-icons md-light fw6">keyboard_arrow_left</i>
   </div>
 
@@ -17,9 +17,8 @@
           %>
             <i class="material-icons grey f6 dim pointer">delete</i>
           <% end %>
-          <div class="flex flex-row items-center justify-center">
-            <div class="br-100 bg-green pa3"></div>
-            <div class="br-100 bg-white pa2 absolute"></div>
+          <div class="fr">
+            <i class="material-icons orange f6 dim">info</i>
           </div>
         </div>
 
@@ -60,7 +59,7 @@
               row_name: row.name,
               row_code: row.code
           ), remote: true,
-             class: "h2 w-100 absolute bottom-0 bg-orange tc ttu link button white dim flex justify-center items-center"
+             class: "carousel__main_button link button dim"
           %>
         </div>
       </div>
@@ -78,29 +77,13 @@
           remote: true,
           method: :post,
           class: "dim link" do %>
-          <i class="material-icons md-48 green">add_circle</i>
+          <span class="carousel__secondary_button">Add a new row</span>
         <% end %>
       </div>
     <% end %>
   </div>
-  <div class="carousel__button carousel__button--right pointer dim flex items-center justify-center">
+  <div class="carousel__button carousel__button--right dim">
     <i class="material-icons md-light fw6">keyboard_arrow_right</i>
   </div>
 </div>
 
-<div class="setup_success_card pa3 bg-yellow dn">
-  Done
-</div>
-
-<% content_for :before_body_end do %>
-  <script>
-    function show_row_setup_success(rowId) {
-      const carouselCard = $_(".carousel__card--" + rowId)
-      const successCard = $_(".setup_success_card")
-      successCard.classList.remove("dn")
-      var popper = new Popper(carouselCard, successCard, {
-        placement: 'right'
-      });
-    }
-  </script>
-<% end %>

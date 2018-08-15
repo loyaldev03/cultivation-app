@@ -28,7 +28,7 @@ class DatepickerInput extends React.Component {
 
   setDateValue = (date) => {
     console.log(date)
-    var s = document.getElementById('record_date_start');
+    var s = document.getElementById('record_start_date');
     s.value = date;
   }
 

@@ -1,0 +1,5 @@
+var cardContent = ("<%= j render 'row_card_body', row: @row_info_form %>")
+
+$$('<%= ".carousel__card--#{@row_info_form.id}" %>').forEach(function(el) {
+  el.innerHTML = cardContent
+})

@@ -1,5 +1,5 @@
 toast('Row Saved', 'success');
 
-$_('<%= ".carousel__card--#{@row_info_form.id}" %>').innerHTML = ("<%= j render 'row_card_body', row: @row_info_form %>")
+<%= render "refresh_cards" %>
 
 hideSlidePanel();

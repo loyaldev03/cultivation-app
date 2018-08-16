@@ -16,3 +16,5 @@ NodeList.prototype.on = NodeList.prototype.addEventListener = function(
     elem.on(name, fn)
   })
 }
+
+NodeList.prototype.forEach = Array.prototype.forEach;

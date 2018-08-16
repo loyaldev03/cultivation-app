@@ -1,7 +1,5 @@
 //= require siema/dist/siema.min.js
-
-function clearSelection()
-{
+function clearSelection() {
   if (window.getSelection) {window.getSelection().removeAllRanges();}
   else if (document.selection) {document.selection.empty();}
 }

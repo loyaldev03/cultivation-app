@@ -26,49 +26,47 @@
   <% end %>
 
   <div class="flex flex-row items-center justify-center">
-    <div
-      style="height: 378px; width: 300px;" 
-      class="tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between">
+    <%= link_to facility_setup_new_path,
+      style: "height: 378px; width: 300px;", 
+      class: "tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between grow  link" do %>
       
-      <%= link_to facility_setup_new_path, 
-          class: "mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" do
-      %>
+      <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
         <%= image_tag "add-facility.svg" %>
-      <% end %>
+      </div>
 
       <div class="flex flex-column mb3">
         <h6 class="ttc mt0 mb2 h6--font dark-grey">Setting up facility</h6>
         <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
       </div>
-    </div>
+    <% end %>
 
-    <div 
-      style="height: 378px; width: 300px;" 
-      class="mh3 tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between">
+    <%= link_to inventory_setup_path, 
+      style: "height: 378px; width: 300px;", 
+      class: "mh3 tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between grow  link" do %>
       
-      <%= link_to inventory_setup_path, 
-          class: "mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" do
-      %>
+      <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
         <%= image_tag "add-inventory.svg" %>
-      <% end %>
+      </div>
 
       <div class="flex flex-column mb3">
         <h6 class="mt0 mb2 ttc h6--font dark-grey">Setting up inventory</h6>
         <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
       </div>
-    </div>
+    <% end %>
 
-    <div 
-      style="height: 378px; width: 300px;" 
-      class="tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between">
+
+    <%= link_to '',
+      style: "height: 378px; width: 300px;", 
+      class: "tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between grow  link" do %>
       
-      <%= content_tag :a, image_tag("add-cultivation.svg"), 
-          :class=> "mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" %>
-      
+      <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
+        <%= image_tag "add-cultivation.svg" %>
+      </div>
+
       <div class="flex flex-column mb3">
         <h6 class="mt0 mb2 ttc h6--font dark-grey">Setting up cultivation</h6>
         <p class="w-100 center grey body-1 ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
       </div>
-    </div>
+    <% end %>
   </div>
 </div>

@@ -10,7 +10,7 @@
       </div>
     <% end %>
     <% if rows.any? || show_add_on_empty %>
-      <div class="carousel__card carousel__card--add <%= "carousel__card--center" if rows.blank? %> flex flex-column">
+      <div class="carousel__card carousel__card--add relative <%= "carousel__card--center" if rows.blank? %>">
         <%= image_tag 'row-icon.svg', class: "h3 w3 dib center mb2" %>
         <%= link_to generate_rows_path(
           facility_id: facility_id,
@@ -24,6 +24,7 @@
           class: "dim link" do %>
           <span class="carousel__secondary_button">Add a new row</span>
         <% end %>
+        <div class="carousel__card__cover"></div>
       </div>
     <% end %>
   </div>

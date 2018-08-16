@@ -1,4 +1,4 @@
-<div class="setup_success_card dn">
+<div class="setup_success_card setup_success_card--step1 dn">
   <div class="setup_success_card__header">
     <span class="setup_success_card__title f3">Row Setup Success</span>
   </div>
@@ -12,7 +12,21 @@
     </p>
   </div>
   <div class="setup_success_card__footer">
-    <button class="setup_success_card__button btn btn--primary">Yes, Duplicate</button>
+    <button class="setup_success_card__button setup_success_card__button--confirm btn btn--primary">Yes, Duplicate</button>
+    <button class="setup_success_card__button setup_success_card__button--cancel btn mr2">Cancel</button>
+  </div>
+</div>
+
+<div class="setup_success_card setup_success_card--step2 dn">
+  <div class="setup_success_card__header">
+    <span class="setup_success_card__title f3">Row Duplication</span>
+  </div>
+  <div class="setup_success_card__body">
+    <span class="fw6 f3 dark-grey">How do I duplicate to other row?</span>
+    <p class="b gray">Simply select the rows that you want to duplicate into by selecting them.</p>
+  </div>
+  <div class="setup_success_card__footer">
+    <button class="setup_success_card__button setup_success_card__button--duplicate btn btn--primary">Okay, Got It!</button>
     <button class="setup_success_card__button setup_success_card__button--cancel btn mr2">Cancel</button>
   </div>
 </div>
@@ -23,18 +37,32 @@
       const rect = el.getBoundingClientRect();
       const leftBound = 100;
       const rightBound = 1200;
-
       return rect.left >= leftBound && rect.right <= rightBound;
     }
 
-    function hideSuccessCard() {
-      $_(".setup_success_card").classList.add("dn")
-      unhighlightCard();
+    function cancelCard() {
       hideFog();
+      unhighlightCard();
+      hideSuccessCard();
+      hideStartDuplicateCard();
+    }
+
+    function hideSuccessCard() {
+      $_(".setup_success_card--step1").classList.add("dn")
     }
 
     function showSuccessCard() {
-      $_(".setup_success_card").classList.remove("dn")
+      $_(".setup_success_card--step1").classList.remove("dn")
+      $_(".setup_success_card--step1").classList.add("animated", "fadeIn")
+    }
+
+    function hideStartDuplicateCard() {
+      $_(".setup_success_card--step2").classList.add("dn")
+    }
+
+    function showStartDuplicateCard() {
+      $_(".setup_success_card--step2").classList.remove("dn")
+      $_(".setup_success_card--step2").classList.add("animated", "fadeIn")
     }
 
     function hideFog() {
@@ -46,20 +74,25 @@
     }
 
     function highlightCard(card) {
-      const cardCover = document.createElement("div")
-      cardCover.classList.add("carousel__card--highlight")
-      card.appendChild(cardCover)
+      // change carousel zIndex
+      carousel = card.closest(".carousel")
+      carousel.classList.add("carousel--active")
     }
 
     function unhighlightCard() {
-      const cardCover = $_(".carousel__card--highlight")
-      cardCover.parentNode.removeChild(cardCover)
+      $$(".carousel__card").forEach(function(elm) {
+        elm.classList.remove("carousel__card--active")
+      })
+      $$(".carousel").forEach(function(elm) {
+        elm.classList.remove("carousel--active")
+      })
     }
 
     function findActiveCard(rowId) {
       const targetCards = $$(".carousel__card--" + rowId)
       let visibleCard = null
       targetCards.forEach(function(el) {
+        el.classList.add("carousel__card--active")
         if (isVisibleCard(el)) {
           visibleCard = el
         }
@@ -68,21 +101,39 @@
     }
 
     function showRowSetupSuccess(rowId) {
-      showFog();
-      showSuccessCard();
-
       const targetCard = findActiveCard(rowId)
       highlightCard(targetCard);
-
-      const carousel = targetCard.closest(".carousel")
-      const successCard = $_(".setup_success_card")
-
-      var popper = new Popper(targetCard, successCard, {
+      const successCard = $_(".setup_success_card--step1")
+      new Popper(targetCard, successCard, {
         positionFixed: true,
         placement: 'right'
       });
+      showFog();
+      showSuccessCard();
     }
 
-    $_(".setup_success_card__button--cancel").on("click", hideSuccessCard);
+    function startDuplicate() {
+      hideSuccessCard();
+
+      const targetCard = $_(".carousel__card--active")
+      const duplicateCard = $_(".setup_success_card--step2")
+
+      new Popper(targetCard, duplicateCard, {
+        positionFixed: true,
+        placement: 'right'
+      });
+
+      showStartDuplicateCard();
+    }
+
+    function startSelectRows() {
+      hideStartDuplicateCard();
+      const carousel = $_(".carousel--active")
+      carousel.classList.replace("carousel--active", "carousel--active-select")
+    }
+
+    $$(".setup_success_card__button--cancel").on("click", cancelCard);
+    $$(".setup_success_card__button--duplicate").on("click", startSelectRows);
+    $_(".setup_success_card__button--confirm").on("click", startDuplicate);
   </script>
 <% end %>

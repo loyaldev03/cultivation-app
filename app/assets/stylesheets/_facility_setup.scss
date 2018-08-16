@@ -1,5 +1,4 @@
 $orange: var(--orange);
-$fogZindex: 20;
 
 .btn {
   display: inline-block;
@@ -67,13 +66,3 @@ $fogZindex: 20;
   float: right;
 }
 
-.carousel__card--highlight {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  border: solid 2px rgba(246, 104, 48, 1);
-  border-radius: 4px;
-  background-color: rgba(246, 104, 48, 0.5);
-  z-index: $fogZindex + 1;
-}

@@ -1,8 +1,6 @@
-import store from '../stores/TaskStore'
+import TaskStore from '../stores/TaskStore'
 
 class loadTask {
-  constructor(){
-  }
 
   loadbatch(batch_id) {
     let id = batch_id['$oid']
@@ -10,9 +8,7 @@ class loadTask {
     fetch(url)
       .then((resp) => resp.json()) // Transform the data into json
       .then(function (data) {
-        console.log(data.data)
-        store.replaceList(data.data)
-        console.log(JSON.stringify(store))
+        TaskStore.replace(data.data)
       }).catch(function (error) {
         console.log(error)
     });

@@ -5,13 +5,29 @@ import { observable } from "mobx";
 import { observer, Provider } from "mobx-react";
 
 import taskStore from '../stores/TaskStore'
-
+import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
+import TaskEditor from './TaskEditor'
+import updateSidebarTask from '../actions/updateSidebarTask'
 
 import ReactTable from "react-table"
 import "react-table/react-table.css"
 
 @observer
 class TaskList extends React.Component {
+
+  componentDidMount() {
+    const sidebarNode = document.querySelector('[data-role=sidebar]')
+    window.editorSidebar.setup(sidebarNode)
+  }
+
+  openSidebar=()=> {
+    window.editorSidebar.open({ width: '500px' })
+  }
+
+  closeSidebar=()=> {
+    window.editorSidebar.close()
+  }
+
   render() {
     return(
       <React.Fragment>
@@ -54,8 +70,19 @@ class TaskList extends React.Component {
           rows={100}
           className="-striped -highlight"
           defaultPageSize={100}
-        />
+          getTrProps={(state, rowInfo) => {
+            return {
+              onClick: (e) => {
+                console.log(rowInfo.row)
+                updateSidebarTask.update(rowInfo.row['attributes.name'])
+                editorSidebarHandler.open({ width: '500px' })
 
+              }
+            }
+          }
+        }
+        />
+        <TaskEditor onClose={this.closeSidebar} />
       </React.Fragment> 
    
     )

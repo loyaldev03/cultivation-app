@@ -19,6 +19,14 @@
 
 <% content_for :before_body_end do %>
   <script>
+    function isVisibleCard(el) {
+      const rect = el.getBoundingClientRect();
+      const leftBound = 100;
+      const rightBound = 1200;
+
+      return rect.left >= leftBound && rect.right <= rightBound;
+    }
+
     function hideSuccessCard() {
       $_(".setup_success_card").classList.add("dn")
       unhighlightCard();
@@ -44,15 +52,26 @@
     }
 
     function unhighlightCard() {
-      const cardCover = $_(".carousel__card--highlight");
-      cardCover.parentNode.removeChild(cardCover);
+      const cardCover = $_(".carousel__card--highlight")
+      cardCover.parentNode.removeChild(cardCover)
+    }
+
+    function findActiveCard(rowId) {
+      const targetCards = $$(".carousel__card--" + rowId)
+      let visibleCard = null
+      targetCards.forEach(function(el) {
+        if (isVisibleCard(el)) {
+          visibleCard = el
+        }
+      })
+      return visibleCard
     }
 
     function showRowSetupSuccess(rowId) {
       showFog();
       showSuccessCard();
 
-      const targetCard = $_(".carousel__card--" + rowId)
+      const targetCard = findActiveCard(rowId)
       highlightCard(targetCard);
 
       const carousel = targetCard.closest(".carousel")

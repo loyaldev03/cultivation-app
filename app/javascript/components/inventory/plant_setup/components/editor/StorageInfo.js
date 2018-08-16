@@ -14,11 +14,11 @@ export default class StorageInfo extends React.Component {
       room_code: props.room_code || '--',
       room_name: props.room_name || '',
       room_purpose: props.room_purpose || '',
-      
+
       // section_id: props.section_id || '',
       section_code: props.section_code || '--',
       section_name: props.section_name || '',
-      
+
       row_id: props.row_id || '',
       row_code: props.row_code || '--',
       shelf_id: props.shelf_id || '',
@@ -30,10 +30,12 @@ export default class StorageInfo extends React.Component {
       errors: {}
     }
 
-    this.mode = props.mode || 'all'  // Accepts either 'all' or 'storage', in the future to be enhanced by storage_types.
+    this.mode = props.mode || 'all' // Accepts either 'all' or 'storage', in the future to be enhanced by storage_types.
 
     if (this.isStorageMode) {
-      this.locations = props.locations.filter( x => x.rm_id.length == 0 || (x.rm_purpose === 'storage'))
+      this.locations = props.locations.filter(
+        x => x.rm_id.length == 0 || x.rm_purpose === 'storage'
+      )
     } else {
       this.locations = props.locations
     }
@@ -110,11 +112,11 @@ export default class StorageInfo extends React.Component {
       room_code: item.rm_code.length > 0 ? item.rm_code : '--',
       room_name: item.rm_name,
       room_purpose: item.rm_purpose,
-      
+
       // section_id: item.s_id,
       section_code: item.s_code.length > 0 ? item.s_code : '--',
       section_name: item.s_name,
-      
+
       row_id: item.rw_id,
       row_code: item.rw_code.length > 0 ? item.rw_code : '--',
 
@@ -144,7 +146,7 @@ export default class StorageInfo extends React.Component {
             <p className="f6 fw4 black mb0 mt0">{this.state.facility_name}</p>
           </div>
         </div>
-      
+
         <div className="mb2 pt2 bt b--black-10 ">
           <div className="ph4 flex">
             <div className="w-20 flex flex-column justify-end">
@@ -155,10 +157,16 @@ export default class StorageInfo extends React.Component {
               <p className="f6 fw4 black mb0 mt0">{this.state.room_name}</p>
             </div>
             <div className="w-40 pl3 flex items-end pl3">
-              <p className="f6 fw4 black mb0 mt0 ttc">{this.state.room_purpose}</p>
+              <p className="f6 fw4 black mb0 mt0 ttc">
+                {this.state.room_purpose}
+              </p>
             </div>
           </div>
-          <FieldError errors={this.state.errors} className="ph4 mb1" field="room" />
+          <FieldError
+            errors={this.state.errors}
+            className="ph4 mb1"
+            field="room"
+          />
         </div>
       </React.Fragment>
     )
@@ -183,7 +191,11 @@ export default class StorageInfo extends React.Component {
               <p className="f6 fw4 black mb0 mt0">{this.state.section_name}</p>
             </div>
           </div>
-          <FieldError errors={this.state.errors} className="ph4 mb1" field="row" />
+          <FieldError
+            errors={this.state.errors}
+            className="ph4 mb1"
+            field="row"
+          />
         </div>
 
         <div className="mb2 pt2 bt b--black-10 ">
@@ -201,13 +213,20 @@ export default class StorageInfo extends React.Component {
               <p className="f6 fw4 black mb0 mt0">{this.state.tray_capacity}</p>
             </div>
           </div>
-          <FieldError errors={this.state.errors} className="ph4 mb1" field="shelf" />
-          <FieldError errors={this.state.errors} className="ph4 mb1" field="tray" />
+          <FieldError
+            errors={this.state.errors}
+            className="ph4 mb1"
+            field="shelf"
+          />
+          <FieldError
+            errors={this.state.errors}
+            className="ph4 mb1"
+            field="tray"
+          />
         </div>
       </React.Fragment>
     )
   }
-
 
   render() {
     return (
@@ -223,8 +242,8 @@ export default class StorageInfo extends React.Component {
             <FieldError errors={this.state.errors} field="location" />
           </div>
         </div>
-        { this.renderFacilityRoom() }
-        { this.renderRowSectionShelfTray() }
+        {this.renderFacilityRoom()}
+        {this.renderRowSectionShelfTray()}
       </React.Fragment>
     )
   }

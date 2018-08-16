@@ -74,11 +74,7 @@ export default class PlantEditor extends React.Component {
   }
 
   onValidateParent(isDraft = false) {
-    const {
-      strain,
-      strain_type,
-      stockEditor: plant_type
-    } = this.state
+    const { strain, strain_type, stockEditor: plant_type } = this.state
     let errors = {}
     if (strain === undefined || strain.length <= 0) {
       errors = { ...errors, strain: ['Please select a strain.'] }
@@ -171,7 +167,7 @@ export default class PlantEditor extends React.Component {
 
   renderSeedEditor() {
     if (this.state.stockEditor !== SEED) return null
-    
+
     // Instead of parent level calling save, the child take input from parent
     // by calling onValidateParent and follow up the save process itself.
     return (

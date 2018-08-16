@@ -20,32 +20,32 @@ class TaskList extends React.Component {
           columns={[
             {
               Header: "Phase",
-              accessor: "phase",
+              accessor: "attributes.phase",
               maxWidth: '100'
             },
             {
               Header: "Category",
-              accessor: "task_category",
+              accessor: "attributes.task_category",
               maxWidth: '100'
 
             },
             {
               Header: "Name",
-              accessor: "name"
+              accessor: "attributes.name"
             },
             {
               Header: "Start Date",
-              accessor: "start_date",
+              accessor: "attributes.start_date",
               maxWidth: '100'
             },
             {
               Header: "End Date",
-              accessor: "end_date",
+              accessor: "attributes.end_date",
               maxWidth: '100'
             },
             {
               Header: "Duration",
-              accessor: "duration",
+              accessor: "attributes.duration",
               maxWidth: '100'
 
             }

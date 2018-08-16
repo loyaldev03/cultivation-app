@@ -1,6 +1,12 @@
 class QueryAllValidFacilityLocations
   prepend SimpleCommand
 
+  attr_reader :storage_types
+
+  def initialize(*storage_types)
+    @storage_types = storage_types || []
+  end
+
   def call
     facility_list = []
     room_list = []
@@ -13,18 +19,17 @@ class QueryAllValidFacilityLocations
       add_facility(facility_list, facility)
 
       facility.rooms.each do |room|
+        next unless valid_room? room
+
         add_room(room_list, facility, room)
+        add_sections(section_list, facility, room)
+        add_rows(row_list, facility, room, room.rows)
 
-        if room.is_complete
-          add_sections(section_list, facility, room)
-          add_rows(row_list, facility, room, room.rows)
+        room.rows.each do |row|
+          add_shelves(shelf_list, facility, room, row, row.shelves)
 
-          room.rows.each do |row|
-            add_shelves(shelf_list, facility, room, row, row.shelves)
-
-            row.shelves.each do |shelf|
-              add_trays(tray_list, facility, room, row, shelf, shelf.trays)
-            end
+          row.shelves.each do |shelf|
+            add_trays(tray_list, facility, room, row, shelf, shelf.trays)
           end
         end
       end
@@ -39,6 +44,12 @@ class QueryAllValidFacilityLocations
   end
 
   private
+
+  def valid_room?(room)
+    return false if !room.is_complete             # Do not return incomplete rooms
+    return true if @storage_types.empty?         # Return all rooms if no filter provided
+    return @storage_types.include? room.purpose   # Returns only the room that match the purpose
+  end
 
   def add_facility(collection, facility)
     item = transform(facility)
@@ -90,58 +101,31 @@ class QueryAllValidFacilityLocations
   end
 
   def transform(facility, room = nil, section = nil, row = nil, shelf = nil, tray = nil)
-    # item = {
-    #   facility_id:   facility.id.to_s,
-    #   facility_name: facility.name,
-    #   facility_code: facility.code,
-
-    #   room_id:      room ? room.id.to_s : '',
-    #   room_name:    room ? room.name : '',
-    #   room_code:    room ? room.code : '',
-    #   room_purpose: room ? room.purpose : '',
-
-    #   section_id:   section ? section.id.to_s : '',
-    #   section_name: section ? section.name : '',
-    #   section_code: section ? section.code : '',
-
-    #   row_id:       row ? row.id.to_s : '',
-    #   row_name:     row ? row.name : '',
-    #   row_code:     row ? row.code : '',
-
-    #   shelf_id:     shelf ? shelf.id.to_s : '',
-    #   shelf_code:   shelf ? shelf.code : '',
-
-    #   tray_id:      tray ? tray.id.to_s : '',
-    #   tray_code:    tray ? tray.code : '',
-    #   tray_purpose: '',
-    #   tray_cap: 0
-    # }
-
     item = {
-      fid: facility.id.to_s,
-      fn: facility.name,
-      fc: facility.code,
+      f_id: facility.id.to_s,
+      f_name: facility.name,
+      f_code: facility.code,
 
-      rmid: room ? room.id.to_s : '',
-      rmn: room ? room.name : '',
-      rmc: room ? room.code : '',
-      rmp: room ? room.purpose : '',
+      rm_id: room ? room.id.to_s : '',
+      rm_name: room ? room.name : '',
+      rm_code: room ? room.code : '',
+      rm_purpose: room ? room.purpose : '',
 
-      sid: section ? section.id.to_s : '',
-      sn: section ? section.name : '',
-      sc: section ? section.code : '',
+      s_id: section ? section.id.to_s : '',
+      s_name: section ? section.name : '',
+      s_code: section ? section.code : '',
 
-      rwid: row ? row.id.to_s : '',
-      rwn: row ? row.name : '',
-      rwc: row ? row.code : '',
+      rw_id: row ? row.id.to_s : '',
+      rw_name: row ? row.name : '',
+      rw_code: row ? row.code : '',
 
-      sfid: shelf ? shelf.id.to_s : '',
-      sfc: shelf ? shelf.code : '',
+      sf_id: shelf ? shelf.id.to_s : '',
+      sf_code: shelf ? shelf.code : '',
 
-      tid: tray ? tray.id.to_s : '',
-      tc: tray ? tray.code : '',
-      cap: tray ? tray.capacity : 0,
-      tp: '',
+      t_id: tray ? tray.id.to_s : '',
+      t_code: tray ? tray.code : '',
+      t_capacity: tray ? tray.capacity : 0,
+      t_purpose: '',
     }
 
     search = [facility.code]
@@ -150,7 +134,8 @@ class QueryAllValidFacilityLocations
     search.push row.code if row
     search.push shelf.code if shelf
     search.push tray.code if tray
+    search_string = search.join('.')
 
-    item.merge!({search: search.join('.')})
+    item.merge!({value: search_string, label: search_string})
   end
 end

@@ -58,15 +58,6 @@ class SeedEditor extends React.Component {
     // this.onPurchaseDateChanged = this.onPurchaseDateChanged.bind(this)
     // this.onInvoiceNoChanged = this.onInvoiceNoChanged.bind(this)
 
-    // Storage location
-    // this.onRoomChanged = this.onRoomChanged.bind(this)
-    // this.onRoomIdChanged = this.onRoomIdChanged.bind(this)
-    // this.onSectionNameChanged = this.onSectionNameChanged.bind(this)
-    // this.onSectionIdChanged = this.onSectionIdChanged.bind(this)
-    // this.onRowIdChanged = this.onRowIdChanged.bind(this)
-    // this.onShelfIdChanged = this.onShelfIdChanged.bind(this)
-    // this.onTrayIdChanged = this.onTrayIdChanged.bind(this)
-
     this.onSave = this.onSave.bind(this)
   }
 
@@ -89,34 +80,6 @@ class SeedEditor extends React.Component {
     this.setState({ quantity: event.target.value })
   }
 
-  // onRoomChanged(event) {
-  //   this.setState({ room: event.target.value })
-  // }
-
-  // onRoomIdChanged(event) {
-  //   this.setState({ room_id: event.target.value })
-  // }
-
-  // onSectionNameChanged(event) {
-  //   this.setState({ section_name: event.target.value })
-  // }
-
-  // onSectionIdChanged(event) {
-  //   this.setState({ section_id: event.target.value })
-  // }
-
-  // onRowIdChanged(event) {
-  //   this.setState({ row_id: event.target.value })
-  // }
-
-  // onShelfIdChanged(event) {
-  //   this.setState({ shelf_id: event.target.value })
-  // }
-
-  // onTrayIdChanged(event) {
-  //   this.setState({ tray_id: event.target.value })
-  // }
-
   onSave(event) {
     console.log(this.state.data)
 
@@ -125,6 +88,9 @@ class SeedEditor extends React.Component {
 
     const purchaseData = this.purchaseInfoEditor.current.getValues()
     console.log(purchaseData)
+
+    const storageInfo = this.storageInfoEditor.current.getValues()
+    console.log(storageInfo)
     event.preventDefault()
   }
 
@@ -177,6 +143,8 @@ class SeedEditor extends React.Component {
         <hr className="mt3 m b--light-gray w-100" />
         <StorageInfo
           ref={this.storageInfoEditor}
+          mode="storage"
+          locations={this.props.locations}
           rooms={this.props.rooms}
           room={this.state.room}
           room_id={this.state.room_id}

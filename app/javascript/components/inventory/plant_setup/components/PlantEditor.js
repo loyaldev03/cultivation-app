@@ -16,15 +16,17 @@ export default class PlantEditor extends React.Component {
     super(props)
     this.state = {
       strain: '',
-      strain_type: props.strain_types[0],
-      facility_id: props.facilities[0].id,
+      strain_type: props.strainTypes[0].code,
       stockEditor: '',
       rooms: [],
       errors: {}
     }
-    this.onChangeStrain = this.onChangeStrain.bind(this)
+
+    this.locations = props.locations
+    this.strainTypes = props.strainTypes
+
+    this.onStrainSelected = this.onStrainSelected.bind(this)
     this.onChangeStrainType = this.onChangeStrainType.bind(this)
-    this.onFacilityChanged = this.onFacilityChanged.bind(this)
     this.onSetStockEditor = this.onSetStockEditor.bind(this)
     this.onResetEditor = this.onResetEditor.bind(this)
     this.onClose = this.onClose.bind(this)
@@ -35,19 +37,25 @@ export default class PlantEditor extends React.Component {
     return this.state.stockEditor.length > 0
   }
 
-  onChangeStrain(event) {
-    this.setState({ strain: event.target.value })
+  componentDidMount() {
+    console.log(this.props.locations)
+  }
+
+  onStrainSelected(item) {
+    let label = ''
+    if (item) {
+      label = item.label
+    }
+
+    this.setState({
+      strain: label,
+      strain_type: item.strain_type,
+      errors: {}
+    })
   }
 
   onChangeStrainType(event) {
     this.setState({ strain_type: event.target.value })
-  }
-
-  onFacilityChanged(event) {
-    this.setState({
-      facility_id: event.target.value,
-      rooms: [new Date().toString(), 'b', 'c']
-    })
   }
 
   onSetStockEditor(event) {
@@ -69,7 +77,6 @@ export default class PlantEditor extends React.Component {
     const {
       strain,
       strain_type,
-      facility_id,
       stockEditor: plant_type
     } = this.state
     let errors = {}
@@ -81,9 +88,9 @@ export default class PlantEditor extends React.Component {
       errors = { ...errors, strain_type: ['Please select a strain type.'] }
     }
 
-    if (!isDraft && (facility_id === undefined || facility_id.length <= 0)) {
-      errors = { ...errors, facility_id: ['Please select a facility.'] }
-    }
+    // if (!isDraft && (facility_id === undefined || facility_id.length <= 0)) {
+    //   errors = { ...errors, facility_id: ['Please select a facility.'] }
+    // }
 
     if (!isDraft && Object.getOwnPropertyNames(errors).length > 0) {
       this.setState({ errors })
@@ -92,7 +99,6 @@ export default class PlantEditor extends React.Component {
     return {
       strain,
       strain_type,
-      facility_id,
       plant_type,
       errors,
       isDraft,
@@ -165,7 +171,7 @@ export default class PlantEditor extends React.Component {
 
   renderSeedEditor() {
     if (this.state.stockEditor !== SEED) return null
-
+    
     // Instead of parent level calling save, the child take input from parent
     // by calling onValidateParent and follow up the save process itself.
     return (
@@ -173,6 +179,7 @@ export default class PlantEditor extends React.Component {
         onResetEditor={this.onResetEditor}
         onValidateParent={this.onValidateParent}
         rooms={this.state.rooms}
+        locations={this.locations}
       />
     )
   }
@@ -248,18 +255,6 @@ export default class PlantEditor extends React.Component {
     return newValue
   }
 
-  onStrainSelected = item => {
-    let label = ''
-    if (item) {
-      label = item.label
-    }
-
-    this.setState({
-      strain: label,
-      strain_type: item.strain_type
-    })
-  }
-
   render() {
     const widthStyle = this.props.isOpened
       ? { width: '500px' }
@@ -301,31 +296,13 @@ export default class PlantEditor extends React.Component {
                 onChange={this.onChangeStrainType}
                 value={this.state.strain_type}
               >
-                {this.props.strain_types.map(x => (
-                  <option value={x} key={x}>
-                    {x}
-                  </option>
-                ))}
-              </select>
-              <FieldError errors={this.state.errors} field="strain_type" />
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-60">
-              <label className="f6 fw6 db mb1 gray ttc">Facility</label>
-              <select
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-                onChange={this.onFacilityChanged}
-                value={this.state.facility_id}
-              >
-                {this.props.facilities.map(x => (
-                  <option value={x.id} key={x.id}>
+                {this.strainTypes.map(x => (
+                  <option value={x.code} key={x.code}>
                     {x.name}
                   </option>
                 ))}
               </select>
-              <FieldError errors={this.state.errors} field="facility_id" />
+              <FieldError errors={this.state.errors} field="strain_type" />
             </div>
           </div>
 

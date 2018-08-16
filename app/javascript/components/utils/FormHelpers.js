@@ -35,11 +35,11 @@ function NumericInput({
   )
 }
 
-function FieldError({ errors, field = '' }) {
+function FieldError({ errors, field = '', className = '' }) {
   const messageArray = errors[field]
   if (messageArray) {
     const errorMessages = messageArray.map((message, i) => (
-      <p key={i} className="red f7 mt1 mb0 i">
+      <p key={i} className={`red f7 mt1 mb0 i ${className}`}>
         {message}
       </p>
     ))

@@ -15,8 +15,8 @@
     <div class="ph5 pv4 f6">
 
       <%= react_component('inventory/plant_setup/PlantSetupApp', {
-          strain_types: ['Hybrid', 'Indica', 'Sativa'],
-          facilities: Facility.completed.map{|x| { id: x.id.to_s, name: x.name  }}
+          strain_types: @strain_types,
+          locations: @locations
         }) %>
     </div>
   </div>

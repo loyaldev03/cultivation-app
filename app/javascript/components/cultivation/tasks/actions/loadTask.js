@@ -1,3 +1,5 @@
+import store from '../stores/TaskStore'
+
 class loadTask {
   constructor(){
   }
@@ -9,16 +11,11 @@ class loadTask {
       .then((resp) => resp.json()) // Transform the data into json
       .then(function (data) {
         console.log(data.data)
-
-
+        store.replaceList(data.data)
+        console.log(JSON.stringify(store))
       }).catch(function (error) {
         console.log(error)
     });
-    // fetch(....).then(data => {
-    //   store.replaceList(data.tasks))
-    //   store.batchName = data.batch_name
-    //   store.startDate = new Date(data.start_date)
-    // }
   }
 }
 

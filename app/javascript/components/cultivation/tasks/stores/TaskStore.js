@@ -4,14 +4,16 @@ class TaskStore {
   @observable tasks = [];
 
   constructor() {
-    //need id here
-    //api call /batch/:id/tasks
     this.tasks = [{name: 'Fathi'}, {name: 'Abdul'}, {name: 'Rahim'}]
   }
 
   @action
   update(id, status) {
     this.status = status
+  }
+
+  replaceList(newList){
+    this.tasks = newList
   }
 }
 const tasks = new TaskStore()

@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html>
-  <%= render "layouts/head", include_turbolink: true, include_sidebar: true, include_carousel: true %>
+  <%= render "layouts/head",
+    include_turbolink: true,
+    include_sidebar: true,
+    include_carousel: true,
+    include_popper: true,
+    disable_react: true
+  %>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <%= render 'toast' %>
       <div class="flex flex-row min-vh-100">
         <%= render 'layouts/sidebar' %>
-        <div id="main" class="main flex flex-column flex-auto" style="padding-left: 80px;">
+        <div id="main" class="main flex flex-column flex-auto" style="padding-left: 75px;">
           <%= flash_messages %>
           <main class="min-vh-100">
             <div style="height: 50px" 

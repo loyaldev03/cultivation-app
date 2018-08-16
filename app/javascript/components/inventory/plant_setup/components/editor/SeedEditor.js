@@ -209,7 +209,7 @@ class SeedEditor extends React.Component {
           </div>
         </div> */}
 
-        <div className="w-100 mt4 pa4 bt b--black-10 flex items-center justify-between">
+        <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
           <a
             className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
             href="#"

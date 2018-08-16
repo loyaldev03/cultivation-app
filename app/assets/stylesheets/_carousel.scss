@@ -1,12 +1,15 @@
-$carouselBtnSize: 35px;
-$carouselWidth: 999px;
-$carouselHeight: 347px;
-$carouselCardWidth: 200px;
-$carouselEmptyHeight: 148px;
+$carouselBtnSize: 32px;  // The left & right arrows
+$carouselMainButtonHeight: 46px;
+$carouselSecondaryButtonHeight: 46px;
+$carouselSecondaryButtonWidth: 160px;
+$carouselWidth: 910px;
+$carouselHeight: 345px;
+$carouselCardWidth: 188px;
+$carouselCardGutter: 19px;
+$carouselEmptyHeight: 148px; // Height of carousel when it's empty
 
 .carousel-wrapper {
-  //width: $carouselWidth + 80px;
-  width: 100%;
+  width: $carouselWidth;
 }
 
 .carousel-group {
@@ -14,12 +17,14 @@ $carouselEmptyHeight: 148px;
   margin-bottom: 40px;
 }
 
+.carousel-group__body {
+  padding-top: 12px;
+}
+
 .carousel-group--empty {
-  
-  .carousel-group__body {
-    border: 1px dashed rgba(0, 0, 0, 0.2);
+  .carousel {
+    border: 0.1em dashed rgba(0, 0, 0, 0.2);
     border-radius: 0.3em;
-    margin-top: 0.5em;
   }
 
   .carousel__button {
@@ -28,7 +33,6 @@ $carouselEmptyHeight: 148px;
 }
 
 .carousel {
-  margin: 10px 0 10px 0;
   width: $carouselWidth;
   height: $carouselHeight;
   display: flex;
@@ -56,6 +60,7 @@ $carouselEmptyHeight: 148px;
   background-color: #FFF;
   height: $carouselHeight;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   box--shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.15);
@@ -67,7 +72,7 @@ $carouselEmptyHeight: 148px;
 .carousel__body--less {
   .carousel__card {
     float: left;
-    margin-right: 30px;
+    margin-right: $carouselCardGutter;
     &.carousel__card--center {
       float: inherit;
       margin: 0 auto;
@@ -86,13 +91,91 @@ $carouselEmptyHeight: 148px;
   height: $carouselBtnSize;
   border-radius: $carouselBtnSize / 2;
   text-align: center;
+  cursor: pointer;
+  .material-icons {
+    line-height: $carouselBtnSize;
+  }
+}
+
+.carousel__main_button {
+  height: $carouselMainButtonHeight;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  font-weight: 600;
+  color: var(--white);
+  text-transform: uppercase;
+  text-align: center;
+  line-height: $carouselMainButtonHeight;
+  background-color: var(--orange);
+}
+
+.carousel__secondary_button {
+  display: inline-block;
+  height: $carouselSecondaryButtonHeight;
+  width: $carouselSecondaryButtonWidth;
+  border-radius: 4px;
+  font-weight: 600;
+  color: var(--white);
+  text-align: center;
+  text-transform: uppercase;
+  line-height: $carouselSecondaryButtonHeight;
+  background-color: var(--orange);
 }
 
 .carousel__button--left {
-  margin: 10px 43px 10px 10px;
+  margin-right: 20px;
 }
 
 .carousel__button--right {
-  margin: 10px;
 }
 
+.carousel__card__cover {
+  display: none;
+}
+
+.carousel--active {
+  position: relative;
+  z-index: $fogZindex + 1;
+
+  .carousel__card--active {
+    .carousel__card__cover {
+      position: absolute;
+      display: block;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      border: solid 2px rgba(246, 104, 48, 1);
+      border-radius: 4px;
+      background-color: rgba(246, 104, 48, 0.5);
+      z-index: $fogZindex + 1;
+    }
+  }
+}
+
+.carousel--active-select {
+  position: relative;
+  z-index: $fogZindex + 1;
+
+  .carousel__card__cover {
+    position: absolute;
+    display: block;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: $fogZindex + 1;
+  }
+
+  .carousel__card--active {
+    .carousel__card__cover {
+      position: absolute;
+      display: block;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.5);
+      z-index: $fogZindex + 1;
+    }
+  }
+}

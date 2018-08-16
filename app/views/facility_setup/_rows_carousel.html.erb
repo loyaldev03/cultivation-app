@@ -1,72 +1,16 @@
 <div class="carousel">
-  <div class="carousel__button carousel__button--left pointer dim flex items-center justify-center">
+  <div class="carousel__button carousel__button--left dim">
     <i class="material-icons md-light fw6">keyboard_arrow_left</i>
   </div>
 
   <div class="carousel__body siema">
     <% rows.each do |row| %>
-      <div class="carousel__card relative b--light-grey box--br3 ba">
-        <div class="ph2 pt2 pb0">
-          <%= link_to destroy_row_path(
-              facility_id: row.facility_id,
-              room_id: row.room_id,
-              row_id: row.id),
-            remote: true,
-            method: :post,
-            data: { confirm: "Are you sure?" } do
-          %>
-            <i class="material-icons grey f6 dim pointer">delete</i>
-          <% end %>
-          <div class="flex flex-row items-center justify-center">
-            <div class="br-100 bg-green pa3"></div>
-            <div class="br-100 bg-white pa2 absolute"></div>
-          </div>
-        </div>
-
-        <div class="w-100 ph2 pv3 flex flex-column">
-          <div class="flex flex-column items-center mv3">
-            <%= image_tag 'row-icon.svg', class: "h3 w3 dib center mb2" %>
-            <span class="mid-gray f6 fw6"><%= row.name %></span>
-            <span class="gray body-1">Capacity: <%= row.capacity_text %></span>
-          </div>
-
-          <div class="mt3">
-            <div class="flex flex-row">
-              <div class="flex flex-row w-50 tl pr1">
-                <i class="material-icons gray f7">radio_button_unchecked</i>
-                <div class="flex flex-column w-100 ml2">
-                  <span class="mid-gray f6 fw6"><%= row.shelves_count_text %></span>
-                  <span class="gray f7">Shevles</span>
-                </div>
-              </div>
-
-              <div class="flex flex-row w-50 tl pl1">
-                <i class="material-icons gray f7">radio_button_unchecked</i>
-                <div class="flex flex-column w-100 ml2">
-                  <span class="mid-gray f6 fw6"><%= row.trays_count_text %></span>
-                  <span class="gray f7">Trays</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="w-100 dim">
-          <%= link_to "Set Up Row",
-            fetch_row_info_path(
-              facility_id: row.facility_id,
-              room_id: row.room_id,
-              row_id: row.id,
-              row_name: row.name,
-              row_code: row.code
-          ), remote: true,
-             class: "h2 w-100 absolute bottom-0 bg-orange tc ttu link button white dim flex justify-center items-center"
-          %>
-        </div>
+      <div class="carousel__card carousel__card--<%= row.id %> relative b--light-grey box--br3 ba">
+        <%= render partial: "row_card_body", locals: { row: row } %>
       </div>
     <% end %>
     <% if rows.any? || show_add_on_empty %>
-      <div class="carousel__card carousel__card--add <%= "carousel__card--center" if rows.blank? %> flex flex-column">
+      <div class="carousel__card carousel__card--add relative <%= "carousel__card--center" if rows.blank? %>">
         <%= image_tag 'row-icon.svg', class: "h3 w3 dib center mb2" %>
         <%= link_to generate_rows_path(
           facility_id: facility_id,
@@ -78,12 +22,14 @@
           remote: true,
           method: :post,
           class: "dim link" do %>
-          <i class="material-icons md-48 green">add_circle</i>
+          <span class="carousel__secondary_button">Add a new row</span>
         <% end %>
+        <div class="carousel__card__cover"></div>
       </div>
     <% end %>
   </div>
-  <div class="carousel__button carousel__button--right pointer dim flex items-center justify-center">
+  <div class="carousel__button carousel__button--right dim">
     <i class="material-icons md-light fw6">keyboard_arrow_right</i>
   </div>
 </div>
+

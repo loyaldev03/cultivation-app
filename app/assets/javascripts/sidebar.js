@@ -4,10 +4,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var main = $$("#main")[0];
     if (sidebar.className.indexOf("uncollapsed") >= 0) {
       sidebar.className = sidebar.className.replace(/ uncollapsed/g, ' collapsed');
-      main.style.paddingLeft = "80px";
+      main.style.paddingLeft = "75px";
     } else {
       sidebar.className = sidebar.className.replace(/ collapsed/g, ' uncollapsed');
-      main.style.paddingLeft = "230px";
+      main.style.paddingLeft = "210px";
     }
   });
 });

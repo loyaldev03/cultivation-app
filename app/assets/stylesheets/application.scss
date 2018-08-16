@@ -18,6 +18,9 @@
 @import 'tachyons/css/tachyons';
 @import 'tachyons_extra';
 
+/* IMPORT PAGE SPECIFIC */
+@import 'facility_setup';
+
 /* IMPORT for DEVELOPMENT */
 @import 'debug';
 

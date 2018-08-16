@@ -1,11 +1,11 @@
 <div id="sidebar" class="sidebar fixed min-vh-100 collapsed overflow-hidden" data-turbolinks="false">
-  <div class="tc pv3 flex justify-center show-collapsed box--shadow-header" style="height: 50px">
+  <%= link_to root_path, class: 'tc pv3 flex justify-center show-collapsed box--shadow-header outline-0', style: 'height: 50px' do %>
     <%= image_tag 'logo-small.svg' %>
-  </div>
+  <% end %>
 
-  <div class="tc pv3 hide box--shadow-header" style="height: 50px">
+  <%= link_to root_path, class: 'tc pv3 hide box--shadow-header outline-0', style: 'height: 50px' do %>
     <%= image_tag 'logo.svg' %>
-  </div>
+  <% end %>
 
   <% if user_signed_in? %>
     <div class="ma3 hide truncate tc">

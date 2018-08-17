@@ -3,7 +3,6 @@ Rails.application.routes.draw do
   root to: "home#index"
 
   get "facility_setup/new" => "facility_setup#new"
-  get "facility_setup/save" => "facility_setup#new"
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"
   get "facility_setup/room_info" => "facility_setup#room_info", as: 'fetch_room_info'
   get "facility_setup/row_info" => "facility_setup#row_info", as: 'fetch_row_info'
@@ -22,7 +21,7 @@ Rails.application.routes.draw do
   post "facility_setup/update_room_info" => "facility_setup#update_room_info"
   post "facility_setup/update_row_info" => "facility_setup#update_row_info"
   post "facility_setup/update_shelf_trays" => "facility_setup#update_shelf_trays", as: 'update_shelf_trays'
-  post "facility_setup/save" => "facility_setup#save"
+
   get "settings" => "home#settings"
 
   get "inventory/setup" => "home#inventory_setup"

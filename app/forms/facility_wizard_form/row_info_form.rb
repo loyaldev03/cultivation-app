@@ -10,6 +10,8 @@ module FacilityWizardForm
              :section_id,
              :has_shelves,
              :has_trays,
+             :capacity,
+             :capacity_text,
              :wz_shelves_count,
              :wz_trays_count]
 
@@ -17,6 +19,11 @@ module FacilityWizardForm
 
     def initialize(facility_id, room_id, row_model = {})
       self.map_attrs_from_hash(ATTRS, row_model)
+      if row_model.try(:shelves)
+        calculate_capacity(row_model.shelves)
+      else
+        self.capacity_text = '--'
+      end
       self.facility_id = facility_id
       self.room_id = room_id
     end
@@ -37,12 +44,27 @@ module FacilityWizardForm
       end
     end
 
+    def calculate_capacity(shelves)
+      if shelves.blank?
+        self.capacity = 0
+        self.capacity_text = '--'
+      else
+        self.capacity = shelves.sum { |h| h[:capacity] }
+        self.capacity_text = self.capacity
+      end
+    end
+
     class << self
       def new_by_id(facility_id, room_id, row_id, row_name, row_code)
         facility = RowInfoForm.get_facility(facility_id)
         room = RowInfoForm.get_room(facility, room_id)
         row = RowInfoForm.get_row(facility_id, room, row_id, row_name, row_code)
         row
+      end
+
+      def find_by_id(facility_id, room_id, row_id)
+        find_row_cmd = FindRow.call(facility_id, room_id, row_id)
+        row = RowInfoForm.new(facility_id, room_id, find_row_cmd.result)
       end
     end
 

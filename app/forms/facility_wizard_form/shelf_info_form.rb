@@ -7,6 +7,7 @@ module FacilityWizardForm
              :row_id,
              :id,
              :code,
+             :capacity,
              :is_use_trays]
 
     attr_accessor(*ATTRS)

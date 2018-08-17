@@ -2,20 +2,28 @@
   <%# HAS SECTIONS %>
   <% @rows_form.sections.each do |section| %>
     <div class="carousel-group <%= "carousel-group--empty" unless @rows_form.has_rows(section.id) %>">
-      <div class="bb b--black-20 pb2 carousel-group__header">
-        <%= link_to destroy_section_path(
-            facility_id: @rows_form.facility_id,
-            room_id: @rows_form.room_id,
-            section_id: section.id),
-            remote: true,
-            method: :post,
-            class: "link lh-copy ml2 fw6 orange dim",
-            data: { confirm: "Delete Section?" } do %>
-          <i class="material-icons grey dim pointer fl">delete_outline</i>
-        <% end %>
-        <span class="lh-copy ml2 grey fw6">Section <%= section.name || section.code %></span>
-        <span class="lh-copy ml2 grey fw6 fr mt1">Edit Section</span>
+      <div class="bb b--light-grey pb2 carousel-group__header flex flex-row items-center justify-between">
+        <div class="flex flex-row items-center">
+          <%= link_to destroy_section_path(
+              facility_id: @rows_form.facility_id,
+              room_id: @rows_form.room_id,
+              section_id: section.id),
+              remote: true,
+              method: :post,
+              class: "link orange dim",
+              data: { confirm: "Delete Section?" } do %>
+            <i class="material-icons grey md-16 dim pointer">remove_circle_outline</i>
+          <% end %>
+          <span class="subtitle-2 ml2 grey">Section <%= section.name || section.code %></span>
+        </div>
+
+        <div class="flex flex-row items-center">
+          <i class="material-icons md-16 grey mr2">create</i>
+          <span class="subtitle-2 grey">Edit Section</span>
+          <i class="material-icons md-16 grey ml3 dim pointer">keyboard_arrow_down</i>
+        </div>
       </div>
+
       <div class="carousel-group__body">
         <%= render partial: "rows_carousel", locals: {
             facility_id: @rows_form.facility_id,
@@ -27,15 +35,19 @@
       </div>
     </div>
   <% end %>
+
   <div class="mt2">
     <%= link_to add_section_path(
         facility_id: @rows_form.facility_id,
         room_id: @rows_form.room_id),
         remote: true,
         method: :post,
-        class: "link lh-copy ml2 fw6 orange dim" do %>
-      <i class="material-icons orange pointer fl">add_circle_outline</i>
-      Add a new Section
+        class: "link orange" do %>
+      
+      <div class="flex flex-row items-center dim">
+        <i class="material-icons pointer mr2">add_circle_outline</i>
+        <span class="subtitle-2 ">Add a new Section</span>
+      </div>
     <% end %>
   </div>
 <% else %>
@@ -50,7 +62,7 @@
   <% else %>
     <span class="grey subtitle-2 dib fl">Row Details</span>
     <div class="ml6 dib fl">
-      <label class="f6 fw5 db mb1 gray">How many number of rows in total?</label>
+      <label class="mb2 grey subtitle-2 db">How many number of rows in total?</label>
       <%= select_tag :rows_count,
         options_for_select(["",*1..25], @rows_form.wz_rows_count),
         data: {
@@ -61,7 +73,7 @@
             mode: 'new'),
           method: :post
         },
-        class: "grey br3--box ba b--light-grey outline-0 w-80 height--dropdown"
+        class: "grey box--br3 ba b--light-grey outline-0 w-80 height--dropdown"
       %>
     </div>
   <% end %>

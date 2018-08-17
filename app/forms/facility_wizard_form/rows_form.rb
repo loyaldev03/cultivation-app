@@ -7,8 +7,7 @@ module FacilityWizardForm
              :has_sections,
              :wz_rows_count,
              :rows,
-             :sections,
-            ]
+             :sections]
 
     attr_accessor(*ATTRS)
 
@@ -67,7 +66,7 @@ module FacilityWizardForm
               id: BSON::ObjectId.new,
               code: row_code,
               name: row_name,
-              section_id: section_id
+              section_id: section_id,
             })
           end
           @rows.concat(missing_rows)

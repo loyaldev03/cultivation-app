@@ -25,11 +25,7 @@ module FacilityWizardForm
       if valid?
         cmd = SaveShelf.call(params)
         @trays.each do |tray|
-          Rails.logger.debug '>>> >>> >>>'
-          Rails.logger.debug tray.inspect
-          Rails.logger.debug '>>> >>> >>>'
           SaveTray.call(cmd.result, tray)
-          Rails.logger.debug '>>> after call >>>'
         end
       else
         false

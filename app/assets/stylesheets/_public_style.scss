@@ -3,6 +3,7 @@
 .material-icons.md-16 { font-size: 16px; }
 .material-icons.md-17 { font-size: 17px; }
 .material-icons.md-18 { font-size: 18px; }
+.material-icons.md-21 { font-size: 21px; }
 .material-icons.md-24 { font-size: 24px; }
 .material-icons.md-36 { font-size: 36px; }
 .material-icons.md-48 { font-size: 48px; }
@@ -19,18 +20,7 @@
 .material-icons.md-light { color: rgba(255, 255, 255, 1); }
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 
-
-/* Responsive media queries */
-@media (max-width: 1500px){
-  #rooms_grid, #rows_grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    grid-column-gap: 1rem !important;
-  }
-}
-
-@media (max-width: 1260px) {
-  #rooms_grid, #rows_grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    grid-column-gap: 1rem !important;
-  }
+.link.grow,
+.link.grow:hover {
+  transition: all 0.25s, color 0s; /* disables color transition inheritted from .link */
 }

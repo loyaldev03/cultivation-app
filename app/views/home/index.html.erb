@@ -7,18 +7,6 @@
     <div>
       <%= breadcrumbs "Home" %>
     </div>
-
-    <div class="flex flex-row items-center">
-      <i class="material-icons grey f6 mr3 dim">notifications</i>
-
-      <img
-        src="http://tachyons.io/img/logo.jpg"
-        class="br-100 h2 w2 mr3 dib" alt="avatar">
-
-      <span class="ttc subtitle-2 grey">User Name</span>
-
-      <i class="material-icons grey dim ml2">keyboard_arrow_down</i>
-    </div>
   <% end %>
 
   <h3 class="w-100 tc h3--font dark-grey">
@@ -38,54 +26,47 @@
   <% end %>
 
   <div class="flex flex-row items-center justify-center">
-    <div
-      style="height: 378px; width: 300px;" 
-      class="tc bg-white pa4 bn br3--box box-shadow flex flex-column justify-between">
+    <%= link_to facility_setup_new_path,
+      style: "height: 378px; width: 300px;", 
+      class: "tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between grow  link" do %>
       
-      <%= link_to facility_setup_new_path, 
-          class: "mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" do
-      %>
+      <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
         <%= image_tag "add-facility.svg" %>
-      <% end %>
+      </div>
 
       <div class="flex flex-column mb3">
         <h6 class="ttc mt0 mb2 h6--font dark-grey">Setting up facility</h6>
         <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
       </div>
-    </div>
+    <% end %>
 
-    <div 
-      style="height: 378px; width: 300px;" 
-      class="mh3 tc bg-white pa4 bn br3--box box-shadow flex flex-column justify-between">
+    <%= link_to inventory_setup_path, 
+      style: "height: 378px; width: 300px;", 
+      class: "mh3 tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between grow  link" do %>
       
-      <%= link_to inventory_setup_path, 
-          class: "mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" do
-      %>
+      <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
         <%= image_tag "add-inventory.svg" %>
-      <% end %>
+      </div>
 
       <div class="flex flex-column mb3">
         <h6 class="mt0 mb2 ttc h6--font dark-grey">Setting up inventory</h6>
         <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
       </div>
-    </div>
+    <% end %>
 
-    <div 
-      style="height: 378px; width: 300px;" 
-      class="tc bg-white pa4 bn br3--box box-shadow flex flex-column justify-between">
 
-      <%= link_to new_cultivation_batch_path, 
-          class: "mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center" do
-      %>
+    <%= link_to '',
+      style: "height: 378px; width: 300px;", 
+      class: "tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between grow  link" do %>
+      
+      <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
         <%= image_tag "add-cultivation.svg" %>
-      <% end %>
-
-
+      </div>
 
       <div class="flex flex-column mb3">
         <h6 class="mt0 mb2 ttc h6--font dark-grey">Plan your own cultivation</h6>
         <p class="w-100 center grey body-1 ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
       </div>
-    </div>
+    <% end %>
   </div>
 </div>

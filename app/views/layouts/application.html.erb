@@ -6,15 +6,26 @@
     <div id="root">
       <div class="flex flex-row min-vh-100 ">
         <%= render 'layouts/sidebar' %>
-        <div id="main" class="main flex flex-column flex-auto" style="padding-left: 80px;">
+        <div id="main" class="main flex flex-column flex-auto" style="padding-left: 75px;">
           <%= flash_messages %>
           <main class="min-vh-100">
             <div 
               style="height: 50px" 
-              class="ph4 f6 w-100 bg-white box-shadow-header flex flex-row items-center justify-between"
+              class="ph4 f6 w-100 bg-white box--shadow-header flex flex-row items-center justify-between"
             >
               <% if content_for? :breadcrumb %>
                 <%= yield :breadcrumb %>
+                <div class="flex flex-row items-center">
+                  <i class="material-icons grey f6 mr3 dim md-21">notifications_none</i>
+
+                  <img
+                    src="http://tachyons.io/img/logo.jpg"
+                    class="br-100 h2 w2 mr3 dib" alt="avatar">
+
+                  <h3 class="ma0 ttc f6 fw5 grey">User Name</h3>
+
+                  <i class="material-icons dim f6 grey ml2">keyboard_arrow_down</i>
+                </div>
               <% end %>
             </div>
             <%= yield %>

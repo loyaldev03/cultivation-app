@@ -1,3 +1,12 @@
 toast('Shelf Saved', 'success');
+
+$_('<%= ".carousel__card--#{@row_info_form.id}" %>').innerHTML = ("<%= j render 'row_card_body', row: @row_info_form %>")
+
 <%= render 'row_shelf_trays' %>
-<%= render 'carousel_reload' %>
+
+hideSlidePanel();
+
+<% if @row_shelves_trays_form.next_shelf_index == -1 %>
+    showRowSetupSuccess("<%= @row_shelves_trays_form.id %>")
+<% end %>
+

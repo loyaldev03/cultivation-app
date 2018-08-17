@@ -9,6 +9,5 @@ module Cultivation
     field :start_date, type: DateTime
 
     has_many :tasks, class_name: 'Cultivation::Task'
-    
   end
 end

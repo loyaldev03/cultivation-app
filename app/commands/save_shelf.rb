@@ -19,9 +19,25 @@ class SaveShelf
     row = room.rows.find(args[:row_id])
     shelf = row.shelves.find(args[:id])
     shelf.code = args[:code]
-    shelf.save!
+    # Rails.logger.debug ">>> save_shelf facility: #{facility.id}"
+    # Rails.logger.debug ">>> save_shelf room: #{room.id}"
+    # Rails.logger.debug ">>> save_shelf row: #{row.id}"
+    # Rails.logger.debug ">>> save_shelf shelf: #{shelf.id}"
+    # Rails.logger.debug ">>> save_shelf trays: #{args[:trays]}"
+    if args.try(:trays) || args[:trays].any?
+      # Rails.logger.debug ">>> save_shelf update capacity: #{args[:trays]}"
+      shelf.capacity = calculate_capacity(args[:trays])
+    end
+    shelf.wz_generated = false
+    saved = shelf.save!
     shelf
-  rescue
-    errors.add(:error, $!.message)
+  end
+
+  def calculate_capacity(trays)
+    if trays.blank?
+      0
+    else
+      trays.reduce(0) { |sum, hash| sum + hash[:capacity].to_i }
+    end
   end
 end

@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   post "facility_setup/update_room_info" => "facility_setup#update_room_info"
   post "facility_setup/update_row_info" => "facility_setup#update_row_info"
   post "facility_setup/update_shelf_trays" => "facility_setup#update_shelf_trays", as: 'update_shelf_trays'
+  post "facility_setup/duplicate_rows" => "facility_setup#duplicate_rows", as: "duplicate_rows"
 
   get "settings" => "home#settings"
 

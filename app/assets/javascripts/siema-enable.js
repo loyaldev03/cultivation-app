@@ -6,22 +6,29 @@ function clearSelection() {
 
 // Bind Carousel as pageSize card in a row (used in Rooms / Rows setup)
 function bindCarousel(gotoLast) {
-  const pageSize = 4;
+  console.log('bindCarousel')
   const siemaElms = $$(".siema");
+  const siemaPageSize = 4;
+  const siemaOptions = {
+    perPage: siemaPageSize,
+    draggable: false,
+    multipleDrag: false,
+    loop: true
+  }
   if (siemaElms) {
     for (let i = 0; i < siemaElms.length; i++) {
       const siemaElm = siemaElms[i]
       const carousel = siemaElm.closest(".carousel")
       const cardCount = siemaElm.children.length;
-      if (cardCount >= pageSize) {
-        console.log('new Siema', i)
-        const mySiema = new Siema({ selector: siemaElm, perPage: pageSize, loop: true });
+      console.log({cardCount})
+      if (cardCount > siemaPageSize) {
+        const mySiema = new Siema(Object.assign(siemaOptions, { selector: siemaElm}));
         const leftBtn = carousel.children[0]
         const rightBtn = carousel.children[2]
         leftBtn.addEventListener("click", () => mySiema.prev());
         rightBtn.addEventListener("click", () => mySiema.next());
         if (gotoLast) {
-          mySiema.goTo(cardCount - pageSize);
+          mySiema.goTo(cardCount - siemaPageSize);
           // Note: Clear highlighted elements when added / deleting
           setTimeout(() => clearSelection(), 300);
         }
@@ -30,7 +37,7 @@ function bindCarousel(gotoLast) {
           // when the carousel is empty (only contain the "Add" card
           carousel.classList.add("carousel--empty")
         }
-        // when the carousel contains less then pageSize
+        // when the carousel contains less then siemaPageSize
         siemaElm.classList.add("carousel__body--less")
       }
     }

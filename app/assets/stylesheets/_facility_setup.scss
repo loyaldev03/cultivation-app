@@ -20,8 +20,7 @@ $orange: var(--orange);
 }
 
 .fog {
-  opacity: 0.65;
-  background-color: var(--white); 
+  background-color: rgba(255, 255, 255, 0.65);
   width: 100%; 
   height: 100%; 
   z-index: $fogZindex;
@@ -66,3 +65,48 @@ $orange: var(--orange);
   float: right;
 }
 
+.card-checkmark {
+  border-radius: 30px;
+  background-color: #FFFFFF;
+  width: 30px;
+  height: 30px;
+  padding: 15px;
+}
+
+.card-checkmark--icon {
+  fill: $orange;
+}
+
+$iconSize: 32px;
+$iconInnerSize: 7px;
+
+.icon-button {
+  cursor: pointer;
+  border-radius: $iconSize / 2;
+  background-color: #FFFFFF;
+  width: $iconSize - ($iconInnerSize * 2);
+  height: $iconSize - ($iconInnerSize * 2);
+  padding: $iconInnerSize;
+}
+
+.icon-button--top-right {
+  position: absolute;
+  background-color: $orange;
+  top: 0.5em;
+  right: 1em;
+}
+
+.icon-button__fill {
+  fill: #FFFFFF;
+}
+
+.icon-button--close {
+  background: transparent;
+  .icon-button__fill {
+    fill: var(--gray);
+  }
+}
+
+.confirm-duplicate-button {
+  z-index: $fogZindex + 1;
+}

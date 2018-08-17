@@ -73,7 +73,7 @@ $carouselEmptyHeight: 148px; // Height of carousel when it's empty
 .carousel__body--less {
   .carousel__card {
     float: left;
-    margin-right: $carouselCardGutter;
+    margin-right: $carouselCardGutter - 1px;
     &.carousel__card--center {
       float: inherit;
       margin: 0 auto;
@@ -202,4 +202,3 @@ $carouselEmptyHeight: 148px; // Height of carousel when it's empty
   display: block;
   pointer-events: none;
 }
-

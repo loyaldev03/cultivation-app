@@ -31,6 +31,10 @@
   </div>
 </div>
 
+<div class="confirm-duplicate-button dn pb3">
+  <button class="btn btn--primary ttu">Confirm Duplication</button>
+</div>
+
 <% content_for :before_body_end do %>
   <script>
     function isVisibleCard(el) {
@@ -41,10 +45,15 @@
     }
 
     function cancelCard() {
+      console.log('cancelCard clicked');
+      $$(".carousel--active-select").forEach(function(elm) {
+        elm.classList.remove("carousel--active-select");
+      });
       hideFog();
       unhighlightCard();
       hideSuccessCard();
       hideStartDuplicateCard();
+      hideConfirmDuplicate();
     }
 
     function hideSuccessCard() {
@@ -110,6 +119,7 @@
       });
       showFog();
       showSuccessCard();
+      bindCardSelect(rowId);
     }
 
     function startDuplicate() {
@@ -131,6 +141,30 @@
       carousel.classList.replace("carousel--active", "carousel--active-select")
     }
 
+    function hideConfirmDuplicate() {
+      const confirmDuplicateButton = $_(".confirm-duplicate-button")
+      confirmDuplicateButton.classList.add("dn")
+    }
+
+    function showConfirmDuplicate() {
+      // This is call after user selected rows to duplicate
+      const targetCard = $_(".carousel--active-select")
+      const confirmDuplicateButton = $_(".confirm-duplicate-button")
+      confirmDuplicateButton.classList.remove("dn")
+      new Popper(targetCard, confirmDuplicateButton, {
+        placement: 'top'
+      });
+    }
+
+    function bindCardSelect(rowId) {
+      $$(".carousel__card__cover").forEach(function(elm) {
+        const cardRowId = elm.getAttribute("data-row-id");
+        if (cardRowId && cardRowId !== rowId) {
+          elm.addEventListener("click", selectRowToggle);
+        }
+      });
+    }
+
     function selectRowToggle(e) {
       const rowId = e.target.getAttribute('data-row-id')
       const checked = e.target.closest(".carousel__card").classList.contains("checked")
@@ -149,11 +183,27 @@
           }
         }
       });
+
+      const checkedCount = $$(".checked > .carousel__card__cover").length
+      if (checkedCount > 0) {
+        console.log("something checked")
+        showConfirmDuplicate();
+      } else {
+        console.log("nothing checked")
+        hideConfirmDuplicate();
+      }
     }
 
-    $$(".setup_success_card__button--cancel").on("click", cancelCard);
-    $$(".setup_success_card__button--duplicate").on("click", startSelectRows);
-    $_(".setup_success_card__button--confirm").on("click", startDuplicate);
-    $$(".carousel__card__cover").on("click", selectRowToggle);
+    function submitRowsToDuplicate() {
+      const checkedCount = $$(".carousel__card.checked").length
+      console.log("selected rows");
+    }
+
+    document.addEventListener("turbolinks:load", function() {
+      $$(".icon-button--close").on("click", cancelCard);
+      $$(".setup_success_card__button--cancel").on("click", cancelCard);
+      $$(".setup_success_card__button--duplicate").on("click", startSelectRows);
+      $_(".setup_success_card__button--confirm").on("click", startDuplicate);
+    })
   </script>
 <% end %>

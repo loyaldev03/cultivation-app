@@ -134,21 +134,27 @@ $carouselEmptyHeight: 148px; // Height of carousel when it's empty
   display: none;
 }
 
+.carousel__card__cover--content_center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: $fogZindex + 1;
+}
+
 .carousel--active {
   position: relative;
   z-index: $fogZindex + 1;
 
   .carousel__card--active {
     .carousel__card__cover {
-      position: absolute;
-      display: block;
-      top: 0;
-      height: 100%;
-      width: 100%;
+      @extend .carousel__card__cover--content_center;
       border: solid 2px rgba(246, 104, 48, 1);
       border-radius: 4px;
       background-color: rgba(246, 104, 48, 0.5);
-      z-index: $fogZindex + 1;
     }
   }
 }
@@ -158,24 +164,14 @@ $carouselEmptyHeight: 148px; // Height of carousel when it's empty
   z-index: $fogZindex + 1;
 
   .carousel__card__cover {
-    position: absolute;
-    display: block;
-    top: 0;
-    height: 100%;
-    width: 100%;
+    @extend .carousel__card__cover--content_center;
     background-color: rgba(0, 0, 0, 0.2);
-    z-index: $fogZindex + 1;
   }
 
   .carousel__card--active {
     .carousel__card__cover {
-      position: absolute;
-      display: block;
-      top: 0;
-      height: 100%;
-      width: 100%;
+      @extend .carousel__card__cover--content_center;
       background-color: rgba(255, 255, 255, 0.5);
-      z-index: $fogZindex + 1;
     }
   }
 }

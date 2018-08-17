@@ -289,6 +289,23 @@ class FacilitySetupController < ApplicationController
     end
   end
 
+  def duplicate_rows
+    @facility_id = params[:facility_id]
+    @room_id = params[:room_id]
+    @row_id = params[:row_id]
+    @target_rows = params[:target_rows]
+
+    # Rails.logger.debug ">>> >>> >>>"
+    # Rails.logger.debug @facility_id
+    # Rails.logger.debug @room_id
+    # Rails.logger.debug @row_id
+    # Rails.logger.debug @target_rows
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
   private
 
   def get_row_shelves_trays_form(facility_id, room_id, row_id, shelf_id = nil)

@@ -35,6 +35,9 @@
   <button class="btn btn--primary ttu">Confirm Duplication</button>
 </div>
 
+<%= hidden_field_tag 'facility_id', @rows_form.facility_id %>
+<%= hidden_field_tag 'room_id', @rows_form.room_id %>
+
 <% content_for :before_body_end do %>
   <script>
     function isVisibleCard(el) {
@@ -120,6 +123,7 @@
       showFog();
       showSuccessCard();
       bindCardSelect(rowId);
+      bindConfirmDuplicateButton(rowId);
     }
 
     function startDuplicate() {
@@ -194,9 +198,29 @@
       }
     }
 
-    function submitRowsToDuplicate() {
-      const checkedCount = $$(".carousel__card.checked").length
-      console.log("selected rows");
+    function bindConfirmDuplicateButton(rowId) {
+      $_(".confirm-duplicate-button > .btn").on("click", function(elm) {
+        submitRowsToDuplicate(rowId);
+      });
+    }
+
+    function submitRowsToDuplicate(rowId) {
+      console.log('duplicate from', rowId)
+      const checkedIds = $$(".checked > .carousel__card__cover").map(function(elm) {
+        return elm.getAttribute("data-row-id");
+      });
+      const facilityId = $_("#facility_id").value
+      const roomId = $_("#room_id").value
+      const targetRows = Array.from(new Set(checkedIds))
+      console.log('copy into', targetRows)
+      Rails.ajax({
+        url: "/facility_setup/duplicate_rows",
+        type: "POST",
+          data: `facility_id=${facilityId}&room_id=${roomId}&row_id=${rowId}&target_rows=${targetRows}`,
+        success: function(data) {
+          console.log(data);
+        }
+      });
     }
 
     document.addEventListener("turbolinks:load", function() {

@@ -4,7 +4,7 @@ class FacilitySetupController < ApplicationController
   # GET new facility - basic info form page - step 1
   def new
     @wizard_form = FacilityWizardForm::BasicInfoForm.new(params[:facility_id])
-    render "facility_setup/step1"
+    render 'facility_setup/step1'
   end
 
   # POST update facility basic info - step 1 / submit
@@ -13,7 +13,7 @@ class FacilitySetupController < ApplicationController
     if @wizard_form.submit(facility_basic_info_params)
       redirect_to facility_setup_rooms_info_path(facility_id: @wizard_form.id)
     else
-      render "facility_setup/step1"
+      render 'facility_setup/step1'
     end
   end
 
@@ -57,14 +57,14 @@ class FacilitySetupController < ApplicationController
 
   # POST update specific room info - from the right panel
   def update_room_info
-    is_continue = params[:commit] == "continue"
+    is_continue = params[:commit] == 'continue'
     form_object = FacilityWizardForm::UpdateRoomInfoForm.new
     respond_to do |format|
       if form_object.submit(room_info_params)
         if is_continue
           room_path = facility_setup_room_summary_path(
             facility_id: form_object.facility_id,
-            room_id: form_object.id
+            room_id: form_object.id,
           )
           format.js { render js: "Turbolinks.visit('#{room_path}')" }
         else

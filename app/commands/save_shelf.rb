@@ -37,7 +37,7 @@ class SaveShelf
     if trays.blank?
       0
     else
-      trays.reduce(0){|sum,hash| sum + hash[:capacity].to_i}
+      trays.reduce(0) { |sum, hash| sum + hash[:capacity].to_i }
     end
   end
 end

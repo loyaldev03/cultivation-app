@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextInput } from '../FormHelper'
+import { TextInput } from '../../../../utils/FormHelpers'
 
 class CloneEditor extends React.Component {
   constructor(props) {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextInput } from '../FormHelper'
+import { TextInput } from '../../../../utils/FormHelpers'
 
 class MotherEditor extends React.Component {
   constructor(props) {

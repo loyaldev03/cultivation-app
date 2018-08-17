@@ -22,7 +22,7 @@ module FacilityWizardForm
       if row_model.try(:shelves)
         calculate_capacity(row_model.shelves)
       else
-        self.capacity_text = "--"
+        self.capacity_text = '--'
       end
       self.facility_id = facility_id
       self.room_id = room_id
@@ -47,9 +47,9 @@ module FacilityWizardForm
     def calculate_capacity(shelves)
       if shelves.blank?
         self.capacity = 0
-        self.capacity_text = "--"
+        self.capacity_text = '--'
       else
-        self.capacity = shelves.sum {|h| h[:capacity]}
+        self.capacity = shelves.sum { |h| h[:capacity] }
         self.capacity_text = self.capacity
       end
     end

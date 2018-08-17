@@ -14,7 +14,6 @@ function bindCarousel(gotoLast) {
       const carousel = siemaElm.closest(".carousel")
       const cardCount = siemaElm.children.length;
       if (cardCount >= pageSize) {
-        console.log('new Siema', i)
         const mySiema = new Siema({ selector: siemaElm, perPage: pageSize, loop: true });
         const leftBtn = carousel.children[0]
         const rightBtn = carousel.children[2]

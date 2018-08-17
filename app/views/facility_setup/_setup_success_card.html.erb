@@ -113,8 +113,6 @@
     }
 
     function startDuplicate() {
-      hideSuccessCard();
-
       const targetCard = $_(".carousel__card--active")
       const duplicateCard = $_(".setup_success_card--step2")
 
@@ -123,17 +121,39 @@
         placement: 'right'
       });
 
-      showStartDuplicateCard();
+      hideSuccessCard();
+      showStartDuplicateCard()
     }
 
     function startSelectRows() {
-      hideStartDuplicateCard();
+      hideStartDuplicateCard()
       const carousel = $_(".carousel--active")
       carousel.classList.replace("carousel--active", "carousel--active-select")
+    }
+
+    function selectRowToggle(e) {
+      const rowId = e.target.getAttribute('data-row-id')
+      const checked = e.target.closest(".carousel__card").classList.contains("checked")
+      console.log('clicked', {target: e.target, rowId, checked})
+      $$(".carousel__card__cover").forEach(function(cb) {
+        const cbRowId = cb.getAttribute('data-row-id')
+        if (cbRowId && cbRowId === rowId) {
+          const parent = cb.closest(".carousel__card");
+          // NOTE: toggele the checked status
+          if (checked) {
+            console.log("Need to remove checked");
+            parent.classList.remove("checked");
+          } else {
+            console.log("Need to add checked");
+            parent.classList.add("checked");
+          }
+        }
+      });
     }
 
     $$(".setup_success_card__button--cancel").on("click", cancelCard);
     $$(".setup_success_card__button--duplicate").on("click", startSelectRows);
     $_(".setup_success_card__button--confirm").on("click", startDuplicate);
+    $$(".carousel__card__cover").on("click", selectRowToggle);
   </script>
 <% end %>

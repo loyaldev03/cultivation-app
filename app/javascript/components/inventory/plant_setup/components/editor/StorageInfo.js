@@ -49,8 +49,9 @@ export default class StorageInfo extends React.Component {
   }
 
   getValues(isDraft = false) {
+    let errors = {}
+
     if (!isDraft) {
-      let errors = {}
       if (this.isStorageMode) {
         errors = this.validateStorage()
       } else {
@@ -65,7 +66,9 @@ export default class StorageInfo extends React.Component {
       room_id,
       row_id,
       shelf_id,
-      tray_id
+      tray_id,
+      errors,
+      isValid: Object.getOwnPropertyNames(errors).length > 0
     }
   }
 

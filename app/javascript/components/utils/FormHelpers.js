@@ -19,6 +19,8 @@ function NumericInput({
   label,
   value = undefined,
   placeholder,
+  min = '',
+  max = '',
   onChange = () => {}
 }) {
   return (
@@ -30,6 +32,8 @@ function NumericInput({
         type="number"
         placeholder={placeholder}
         onChange={onChange}
+        min={min}
+        max={max}
       />
     </React.Fragment>
   )

@@ -136,6 +136,20 @@ export default class PurchaseInfo extends React.Component {
       }
 
       this.setState({ errors })
+
+      return {
+        vendor_name,
+        vendor_id,
+        address,
+        vendor_state_license_num,
+        vendor_state_license_expiration_date,
+        vendor_location_license_num,
+        vendor_location_license_expiration_date,
+        purchase_date,
+        invoice_no,
+        errors,
+        isValid: Object.getOwnPropertyNames(errors).length > 0
+      }
     }
 
     return {

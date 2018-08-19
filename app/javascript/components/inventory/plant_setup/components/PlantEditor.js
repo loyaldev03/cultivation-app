@@ -38,7 +38,7 @@ export default class PlantEditor extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.locations)
+    // console.log(this.props.locations)
   }
 
   onStrainSelected(item) {
@@ -97,7 +97,6 @@ export default class PlantEditor extends React.Component {
       strain_type,
       plant_type,
       errors,
-      isDraft,
       isValid: Object.getOwnPropertyNames(errors).length > 0
     }
   }

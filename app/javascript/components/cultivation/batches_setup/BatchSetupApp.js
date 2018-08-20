@@ -138,7 +138,7 @@ class BatchSetupApp extends React.Component {
             </div>
           </div>
           <div className="w-100 flex justify-end">
-            <a className="pointer db tc pa3 bg-green white bn br2 ttu tracked link dim f5 fw6" onClick={this.handleSubmit}>Submit</a>
+            <a className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer" onClick={this.handleSubmit}>Submit</a>
           </div>
 
         </form>

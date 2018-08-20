@@ -8,6 +8,7 @@ module FacilityWizardForm
              :code,
              :name,
              :section_id,
+             :is_complete,
              :has_shelves,
              :has_trays,
              :capacity,

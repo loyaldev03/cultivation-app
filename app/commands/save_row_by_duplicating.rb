@@ -2,7 +2,7 @@ class SaveRowByDuplicating
   prepend SimpleCommand
   include Mapper
 
-  def initialize(facility_id, room_id, source_row_id, *target_rows_id)
+  def initialize(facility_id, room_id, source_row_id, target_rows_id)
     @facility_id = facility_id
     @room_id = room_id
     @source_row_id = source_row_id
@@ -40,7 +40,7 @@ class SaveRowByDuplicating
       Rails.logger.debug ">>> duplicate_rows 3"
 
       @target_rows_id.each do |target_row_id|
-        Rails.logger.debug ">>> duplicate_rows - loop target ids" 
+        Rails.logger.debug ">>> duplicate_rows - loop target ids #{target_row_id}"
         target_row = room.rows.detect { |o| o.id == target_row_id.to_bson_id }
         
         Rails.logger.debug ">>> duplicate_rows - 4" 

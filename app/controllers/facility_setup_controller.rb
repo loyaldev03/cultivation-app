@@ -293,7 +293,7 @@ class FacilitySetupController < ApplicationController
     @facility_id = params[:facility_id]
     @room_id = params[:room_id]
     @row_id = params[:row_id]
-    @target_rows = params[:target_rows]
+    @target_rows = params[:target_rows].split(",")
 
     # Rails.logger.debug ">>> >>> >>>"
     # Rails.logger.debug @facility_id

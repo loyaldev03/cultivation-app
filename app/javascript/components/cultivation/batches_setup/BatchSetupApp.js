@@ -69,6 +69,12 @@ class BatchSetupApp extends React.Component {
       .then(data => {
         console.log(data.data)
         if(data.data.id != null){
+
+          let elm = $_('#toast')
+          elm.innerHTML = 'Batch Saved';
+          elm.classList.add('fadeIn', 'toast--' + 'success', 'db');
+          setTimeout(function () { fadeToast(); }, 3000);
+
           document.location.href = `/cultivation/batches/${data.data.id}`
         }
         else{alert('something is wrong')}
@@ -90,7 +96,8 @@ class BatchSetupApp extends React.Component {
     return (
       <React.Fragment>
         <style>{styles}</style>
-
+        <div id="toast" class="toast animated toast--success">Row Saved</div>
+        
         <h5 className="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
         <p className="mt2 body-1 grey">
           Let's get a few fetails of your facility to get things rolling...

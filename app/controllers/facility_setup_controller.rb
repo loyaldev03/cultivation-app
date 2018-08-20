@@ -300,7 +300,10 @@ class FacilitySetupController < ApplicationController
     # Rails.logger.debug @room_id
     # Rails.logger.debug @row_id
     # Rails.logger.debug @target_rows
-
+    duplicate_cmd = SaveRowByDuplicating.call(@facility_id,
+                                              @room_id,
+                                              @row_id,
+                                              @target_rows)
     respond_to do |format|
       format.js
     end

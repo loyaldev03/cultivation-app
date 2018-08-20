@@ -8,13 +8,17 @@ class SaveRowIsComplete
   end
 
   def call
-    new_result = get_is_complete(@row.shelves)
-    Rails.logger.debug ">>> SaveRowIsComplete 1 #{new_result}"
-    Rails.logger.debug ">>> SaveRowIsComplete 2 #{@row.is_complete}"
-    if @row.is_complete != new_result
-      @row.is_complete = new_result
-      @row.save!
-    end
+    @row.wz_shelves_count = get_shelves_count(@row.shelves)
+    @row.has_shelves = true if @row.wz_shelves_count > 1
+    @row.wz_trays_count = get_trays_count(@row.shelves)
+    @row.has_trays = @row.wz_trays_count > 0
+    @row.is_complete = get_is_complete(@row.shelves)
+    @row.save!
+    Rails.logger.debug ">>> + SaveRowIsComplete <<<"
+    Rails.logger.debug ">>> wz_shelves_count: #{@row.wz_shelves_count}"
+    Rails.logger.debug ">>> wz_trays_count: #{@row.wz_trays_count}"
+    Rails.logger.debug ">>> is_complete: #{@row.is_complete}"
+    Rails.logger.debug ">>> - SaveRowIsComplete <<<"
     @row
   end
 
@@ -26,6 +30,22 @@ class SaveRowIsComplete
     else
       res = shelves.any? { |s| s.is_complete == false }
       !res
+    end
+  end
+
+  def get_shelves_count(shelves)
+    if shelves.blank?
+      0
+    else
+      shelves.size
+    end
+  end
+
+  def get_trays_count(shelves)
+    if shelves.blank?
+      0
+    else
+      shelves.reduce(0) { |sum, shelf| sum + (shelf.trays.blank? ? 0 : shelf.trays.size) }
     end
   end
 end

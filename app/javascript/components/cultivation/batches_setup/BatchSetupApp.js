@@ -98,9 +98,9 @@ class BatchSetupApp extends React.Component {
         <style>{styles}</style>
         <div id="toast" class="toast animated toast--success">Row Saved</div>
         
-        <h5 className="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
-        <p className="mt2 body-1 grey">
-          Let's get a few fetails of your facility to get things rolling...
+        <h5 class="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
+        <p class="mt2 body-1 grey">
+          Some cultivation setup here
         </p>
         <form>
           <div className="w-100 shelves_number_options">

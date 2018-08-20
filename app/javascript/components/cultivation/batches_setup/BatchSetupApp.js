@@ -106,21 +106,28 @@ class BatchSetupApp extends React.Component {
           <div className="w-100 shelves_number_options">
             <div className="mt3">
               <label className="f6 fw5 db mb1 gray" for="record_batch_source">Select Plant</label>
-              <Select options={plants} onChange={(e)=>this.handleChange('plant', e.value)} />
+              <Select options={plants} 
+              onChange={(e)=>this.handleChange('plant', e.value)} 
+              styles={customStyles}
+              />
             </div>
           </div>
 
           <div className="w-100 shelves_number_options">
             <div className="mt3">
               <label className="f6 fw5 db mb1 gray" for="record_batch_source">Select Facility</label>
-              <Select options={facilities} onChange={(e) => this.handleChange('facility', e.value)} />
+              <Select options={facilities} 
+                styles={customStyles}
+                onChange={(e) => this.handleChange('facility', e.value)} />
             </div>
           </div>
 
           <div className="w-100 shelves_number_options">
             <div className="mt3">
               <label className="f6 fw5 db mb1 gray" for="record_batch_source">Select Strains</label>
-              <Select options={strains} onChange={(e) => this.handleChange('strain', e.value)} />
+              <Select options={strains} 
+                styles={customStyles}
+                onChange={(e) => this.handleChange('strain', e.value)} />
             </div>
           </div>
 
@@ -140,5 +147,39 @@ class BatchSetupApp extends React.Component {
   }
 
 }
+
+const customStyles = {
+  control: (base, state) => ({
+    ...base,
+    fontSize: '0.875rem',
+    backgroundColor: '#fff',
+    height: '30px',
+    minHeight: '30px',
+    borderColor: 'rgba(0, 0, 0, 0.2)'
+  }),
+  indicatorSeparator: () => ({
+    display: 'none'
+  }),
+  menu: (base, state) => ({
+    ...base,
+    marginTop: 2
+  }),
+  dropdownIndicator: () => ({
+    display: 'none'
+  }),
+  option: (base, state) => {
+    return {
+      ...base,
+      backgroundColor:
+        state.isFocused || state.isSelected
+          ? 'rgba(100, 100, 100, 0.1)'
+          : 'transparent',
+      ':active': 'rgba(100, 100, 100, 0.1)',
+      WebkitTapHighlightColor: 'rgba(100, 100, 100, 0.1)',
+      color: 'black'
+    }
+  }
+}
+
 
 export default BatchSetupApp

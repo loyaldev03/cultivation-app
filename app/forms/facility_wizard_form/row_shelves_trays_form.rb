@@ -19,11 +19,14 @@ module FacilityWizardForm
       set_record
     end
 
-    def next_shelf_index
+    def current_shelf_index
+      Rails.logger.debug ">>> current_shelf_index <<<"
       unless @shelf_id.nil?
-        curr_index = @shelves.find_index { |x| x.id == BSON::ObjectId.from_string(@shelf_id) }
-        if curr_index + 1 < @shelves.size
-          curr_index + 1
+        curr_index = @shelves.find_index { |x| x.id == @shelf_id.to_bson_id }
+        Rails.logger.debug ">>> j curr_index <<< #{curr_index}"
+        Rails.logger.debug ">>> k @shelves.size <<< #{@shelves.size}"
+        if curr_index <= @shelves.size
+          curr_index
         else
           -1
         end

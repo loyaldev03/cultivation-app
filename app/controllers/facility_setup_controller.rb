@@ -168,6 +168,7 @@ class FacilitySetupController < ApplicationController
 
   # POST update specific row info - from right panel
   def update_row_info
+    Rails.logger.debug ">>> update_row_info"
     # this value should be same as the value in "Continue" button (_row_info_form)
     is_continue = params[:commit] == 'continue'
     @form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)

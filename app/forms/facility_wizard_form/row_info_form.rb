@@ -33,7 +33,7 @@ module FacilityWizardForm
       if self.has_shelves && self.wz_shelves_count > 0
         self.wz_shelves_count
       else
-        'N/A'
+        '--'
       end
     end
 
@@ -41,7 +41,7 @@ module FacilityWizardForm
       if self.has_trays && self.wz_trays_count > 0
         self.wz_trays_count
       else
-        'N/A'
+        '--'
       end
     end
 

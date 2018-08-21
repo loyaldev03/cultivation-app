@@ -1,5 +1,5 @@
 Turbolinks.visit("/facility_setup/row_shelf_info?facility_id=<%=@facility_id %>&room_id=<%= @room_id%>")
 
-document.addEventListener("turbolinks:load", function() {
+setTimeout(function() {
   toast('Rows has been duplicated', 'success');
-})
+}, 800)

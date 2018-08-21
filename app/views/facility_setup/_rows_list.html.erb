@@ -21,22 +21,10 @@
           <i class="material-icons md-16 grey mr2">create</i>
           <span class="subtitle-2 grey">Edit Section</span>
           <i class="material-icons md-16 grey ml3 dim pointer toggle-icon">keyboard_arrow_down</i>
-         
-          <div class="">
-            <%#= @rows_form.check_box :has_sections,
-              checked: @rows_form.has_sections,
-              class: "toggle toggle-default",
-              data: { toggle: 'shelves_number_options' }
-            %>
-
-            <%#= check_box("post", "validated") %>
-            <label class="toggle-button" for="row_info_has_shelves"></label>
-          </div>
-        
         </div>
       </div>
 
-      <div class="carousel-group__body shelves_number_options" style="  ">
+      <div class="carousel-group__body">
         <%= render partial: "rows_carousel", locals: {
             facility_id: @rows_form.facility_id,
             room_id: @rows_form.room_id,
@@ -90,11 +78,3 @@
     </div>
   <% end %>
 <% end %>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function(event) {
-    $$(".toggle-icon").on("click", function(event) {
-      console.log(event.target.parentElement)
-    })
-  })
-</script>

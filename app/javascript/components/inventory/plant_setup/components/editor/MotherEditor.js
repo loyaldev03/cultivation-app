@@ -65,7 +65,7 @@ class MotherEditor extends React.Component {
     const lines = (event.target.value.match(/\n/g) || []).length
 
     if (lines >= 5 && node.scrollHeight < 350) {
-      node.style.height = 40 + (lines * 25) + 'px'
+      node.style.height = 40 + lines * 25 + 'px'
     } else {
       node.style.height = 'auto'
     }
@@ -115,7 +115,7 @@ class MotherEditor extends React.Component {
       if (parseInt(plant_qty) <= 0) {
         errors = { ...errors, plant_qty: ['Quantity must be at least 1.'] }
       }
-    } else if (plant_ids.length <= 0) {      
+    } else if (plant_ids.length <= 0) {
       errors = { ...errors, plant_ids: ['Plant ID is required.'] }
     }
 
@@ -131,8 +131,9 @@ class MotherEditor extends React.Component {
 
     const locationData = this.storageInfoEditor.current.getValues()
 
-    const isValid = strainData.isValid && 
-      purchaseData.isValid && 
+    const isValid =
+      strainData.isValid &&
+      purchaseData.isValid &&
       locationData.isValid &&
       Object.getOwnPropertyNames(errors).length === 0
 
@@ -140,11 +141,11 @@ class MotherEditor extends React.Component {
       this.setState({ errors })
     }
 
-    const data  = {
+    const data = {
       ...strainData,
       ...purchaseData,
       ...locationData,
-      isValid,
+      isValid
     }
     return data
   }
@@ -163,9 +164,7 @@ class MotherEditor extends React.Component {
             <FieldError errors={this.state.errors} field="plant_qty" />
           </div>
           <div className="w-60 pl3">
-            <label className="f6 fw6 db mb1 gray">
-              Planted On
-            </label>
+            <label className="f6 fw6 db mb1 gray">Planted On</label>
             <DatePicker
               value={this.state.planted_on}
               onChange={this.onPlantedOnChanged}
@@ -226,9 +225,7 @@ class MotherEditor extends React.Component {
         </div>
         <div className="ph4 mt0 mb3 flex">
           <div className="w-50">
-            <label className="f6 fw6 db mb1 gray">
-              Planted On
-            </label>
+            <label className="f6 fw6 db mb1 gray">Planted On</label>
             <DatePicker
               value={this.state.planted_on}
               onChange={this.onPlantedOnChanged}
@@ -247,8 +244,8 @@ class MotherEditor extends React.Component {
           <span className="f6 fw6 dark-gray">Plant IDs</span>
         </div>
 
-        { this.renderPlantIdForm() }
-        { this.renderPlantQtyForm() }
+        {this.renderPlantIdForm()}
+        {this.renderPlantQtyForm()}
 
         <hr className="mt3 m b--light-gray w-100" />
         <StorageInfo
@@ -260,12 +257,16 @@ class MotherEditor extends React.Component {
           section_id={this.state.section_id}
         />
 
-        <hr className="mt3 mb3 b--light-gray w-100"/>
+        <hr className="mt3 mb3 b--light-gray w-100" />
         <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">Where the mother plants are from?</span>
+          <span className="f6 fw6 dark-gray">
+            Where the mother plants are from?
+          </span>
         </div>
         <div className="ph4 mb3 flex justify-between">
-          <label className="f6 fw6 db mb1 gray">Mother plants are purchased</label>
+          <label className="f6 fw6 db mb1 gray">
+            Mother plants are purchased
+          </label>
           <input
             className="toggle toggle-default"
             type="checkbox"
@@ -275,22 +276,25 @@ class MotherEditor extends React.Component {
           />
           <label className="toggle-button" htmlFor="is_bought_input" />
         </div>
-        { 
-          this.state.isBought && 
-          <PurchaseInfo 
+        {this.state.isBought && (
+          <PurchaseInfo
             showLabel={false}
             ref={this.setPurchaseInfoEditor}
             vendor_name={this.state.vendor_name}
             vendor_id={this.state.vendor_id}
             address={this.state.address}
             vendor_state_license_num={this.state.vendor_state_license_num}
-            vendor_state_license_expiration_date={this.state.vendor_state_license_expiration_date}
+            vendor_state_license_expiration_date={
+              this.state.vendor_state_license_expiration_date
+            }
             vendor_location_license_num={this.state.vendor_location_license_num}
-            vendor_location_license_expiration_date={this.state.vendor_location_license_expiration_date}
+            vendor_location_license_expiration_date={
+              this.state.vendor_location_license_expiration_date
+            }
             purchase_date={this.state.purchase_date}
             invoice_no={this.state.invoice_no}
           />
-        }
+        )}
 
         <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
           <a

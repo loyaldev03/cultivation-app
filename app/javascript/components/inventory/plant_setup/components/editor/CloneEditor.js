@@ -14,8 +14,8 @@ class CloneEditor extends React.Component {
     this.state = {
       // source
       clone_ids: '',
-      generator_plant_count: 0,
-      generator_tray_id: '',
+      plant_qty: 0,
+      tray: '',
       generator_location: '',
       last_plant_id: 0,
       planted_on: null,
@@ -58,7 +58,7 @@ class CloneEditor extends React.Component {
     this.motherLocationChanged = this.motherLocationChanged.bind(this)
     this.onSave = this.onSave.bind(this)
     this.onToggleGeneratePlantId = this.onToggleGeneratePlantId.bind(this)
-    this.onGeneratePlantId = this.onGeneratePlantId.bind(this)
+    // this.onGeneratePlantId = this.onGeneratePlantId.bind(this)
   }
 
   onCloneIdsChanged(event) {
@@ -66,7 +66,7 @@ class CloneEditor extends React.Component {
     const lines = (event.target.value.match(/\n/g) || []).length
 
     if (lines >= 4 && this.cloneIdTextArea.scrollHeight < 350) {
-      this.cloneIdTextArea.style.height = 40 + (lines * 25) + 'px'
+      this.cloneIdTextArea.style.height = 40 + lines * 25 + 'px'
     } else {
       this.cloneIdTextArea.style.height = 'auto'
     }
@@ -100,43 +100,43 @@ class CloneEditor extends React.Component {
   }
 
   onChangeGeneratorPlantCount(event) {
-    this.setState({ generator_plant_count: event.target.value })
+    this.setState({ plant_qty: event.target.value })
   }
 
   onGeneratorTraySelected(item) {
-    this.setState({ generator_location: item.label })
+    this.setState({ tray: item.label })
   }
 
-  onGeneratePlantId(event) {
-    event.preventDefault()
-    if (this.state.generator_plant_count <= 0) {
-      return
-    }
+  // onGeneratePlantId(event) {
+  //   event.preventDefault()
+  //   if (this.state.generator_plant_count <= 0) {
+  //     return
+  //   }
 
-    let cloneIds = ''
-    let i = parseInt(this.state.last_plant_id)
-    let iMax = i + parseInt(this.state.generator_plant_count)
+  //   let cloneIds = ''
+  //   let i = parseInt(this.state.last_plant_id)
+  //   let iMax = i + parseInt(this.state.generator_plant_count)
 
-    for (i; i < iMax; i++) {
-      const serialNo =
-        new Date().getFullYear().toString() + i.toString().padStart(6, '0')
-      const id = `P${serialNo}, ${this.state.generator_location}\n`
-      cloneIds += id
-    }
+  //   for (i; i < iMax; i++) {
+  //     const serialNo =
+  //       new Date().getFullYear().toString() + i.toString().padStart(6, '0')
+  //     const id = `P${serialNo}, ${this.state.generator_location}\n`
+  //     cloneIds += id
+  //   }
 
-    this.setState({
-      clone_ids: this.state.clone_ids + cloneIds,
-      last_plant_id: iMax
-    })
+  //   this.setState({
+  //     clone_ids: this.state.clone_ids + cloneIds,
+  //     last_plant_id: iMax
+  //   })
 
-    const lines = (this.state.clone_ids.match(/\n/g) || []).length
+  //   const lines = (this.state.clone_ids.match(/\n/g) || []).length
 
-    if (lines >= 4 && this.cloneIdTextArea.scrollHeight < 350) {
-      this.cloneIdTextArea.style.height = 40 + (lines * 25) + 'px'
-    } else {
-      this.cloneIdTextArea.style.height = 'auto'
-    }
-  }
+  //   if (lines >= 4 && this.cloneIdTextArea.scrollHeight < 350) {
+  //     this.cloneIdTextArea.style.height = 40 + lines * 25 + 'px'
+  //   } else {
+  //     this.cloneIdTextArea.style.height = 'auto'
+  //   }
+  // }
 
   onSave(event) {
     const data = this.validateAndGetValues()
@@ -151,6 +151,9 @@ class CloneEditor extends React.Component {
   validateAndGetValues() {
     const {
       clone_ids,
+      plant_qty,
+      isShowPlantIdGenerator,
+      tray,
       planted_on,
       expected_harvest_date,
       is_bought,
@@ -165,6 +168,16 @@ class CloneEditor extends React.Component {
 
     if (clone_ids.trim().length <= 0) {
       errors = { ...errors, clone_ids: ['Plant ID is required.'] }
+    }
+
+    if (isShowPlantIdGenerator) {
+      if (parseInt(plant_qty) <= 0) {
+        errors = { ...errors, plant_qty: ['Number of clones must be at least 1.'] }
+      }
+
+      if (tray.length === 0) {
+        errors = { ...errors, tray: ['Location of the clones is required.'] }
+      }
     }
 
     let purchaseData = { idValid: true }
@@ -265,38 +278,33 @@ class CloneEditor extends React.Component {
     if (!this.state.isShowPlantIdGenerator) return null
     return (
       <React.Fragment>
-        <div className="ph4 mb2 mt2 flex">
+        <div className="ph4 mb2 mt0 flex">
           <div className="w-50">
             <NumericInput
               label={'Number of plants'}
-              value={this.state.generator_plant_count}
+              value={this.state.plant_qty}
               onChange={this.onChangeGeneratorPlantCount}
             />
+            <FieldError errors={this.state.errors} field="plant_qty" />
           </div>
           <div className="w-50 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Tray ID</label>
             <LocationPicker
               mode="tray"
               locations={this.locations}
-              value={this.state.generator_location}
+              value={this.state.tray}
               onChange={this.onGeneratorTraySelected}
             />
+            <FieldError errors={this.state.errors} field="tray" />
           </div>
         </div>
         <div className="ph4 mb3 flex justify-end">
           <a
             href="#"
             onClick={this.onToggleGeneratePlantId}
-            className="fw4 f7 link gray mr3"
-          >
-            Cancel
-          </a>
-          <a
-            href="#"
-            onClick={this.onGeneratePlantId}
             className="fw4 f7 link dark-blue"
           >
-            Generate
+            Cancel
           </a>
         </div>
       </React.Fragment>
@@ -304,6 +312,8 @@ class CloneEditor extends React.Component {
   }
 
   renderPlantIdTextArea() {
+    if (this.state.isShowPlantIdGenerator) return null
+
     return (
       <React.Fragment>
         <div className="ph4 mb2 flex">
@@ -326,19 +336,17 @@ class CloneEditor extends React.Component {
             <FieldError errors={this.state.errors} field="clone_ids" />
           </div>
         </div>
-        {!this.state.isShowPlantIdGenerator && (
-          <div className="ph4 mb3 flex justify-start">
-            <a
-              href="#"
-              onClick={this.onToggleGeneratePlantId}
-              className="fw4 f7 link dark-blue"
-            >
-              {this.state.clone_ids.length > 0
-                ? 'Generate more IDs'
-                : 'Don\'t have Plant ID? Click here to generate.'}
-            </a>
-          </div>
-        )}
+        <div className="ph4 mb3 flex justify-end">
+          <a
+            href="#"
+            onClick={this.onToggleGeneratePlantId}
+            className="fw4 f7 link dark-blue"
+          >
+            {this.state.clone_ids.length > 0
+              ? 'Generate more IDs'
+              : 'Don\'t have Plant ID? Click here to generate.'}
+          </a>
+        </div>
       </React.Fragment>
     )
   }

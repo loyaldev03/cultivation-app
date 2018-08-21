@@ -124,13 +124,13 @@ export default class PlantEditor extends React.Component {
           >
             Add mother
           </a>
-          <a
+          {/* <a
             className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
             data-editor={SEED}
             onClick={this.onSetStockEditor}
           >
             Add seed
-          </a>
+          </a> */}
           <a
             className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
             data-editor={CLONE}

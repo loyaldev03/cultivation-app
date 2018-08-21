@@ -62,7 +62,7 @@ class StorageInfo extends React.Component {
         shelf_code: location.sf_code,
         tray_id: location.t_id,
         tray_code: location.t_code,
-        tray_capacity: location.t_capacity,
+        tray_capacity: location.t_capacity
       }
     }
 
@@ -277,7 +277,8 @@ class StorageInfo extends React.Component {
             <Select
               options={this.locations}
               onChange={this.onSearchFound}
-              styles={reactSelectStyle} />
+              styles={reactSelectStyle}
+            />
             <FieldError errors={this.state.errors} field="location" />
           </div>
         </div>

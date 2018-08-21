@@ -173,9 +173,7 @@ class PurchaseInfo extends React.Component {
       <React.Fragment>
         {this.props.showLabel && (
           <div className="ph4 mb3 mt3">
-            <span className="f6 fw6 dark-gray">
-              { this.props.label }
-            </span>
+            <span className="f6 fw6 dark-gray">{this.props.label}</span>
           </div>
         )}
         <div className="ph4 mb3 flex">
@@ -280,7 +278,6 @@ class PurchaseInfo extends React.Component {
     )
   }
 }
-
 
 PurchaseInfo.propTypes = {
   vendor_name: PropTypes.string,

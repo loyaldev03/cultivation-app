@@ -63,7 +63,7 @@ class MotherEditor extends React.Component {
     this.setState({ plant_ids: event.target.value })
     const node = this.plantIdsTextArea
     const lines = (event.target.value.match(/\n/g) || []).length
-    
+
     if (lines < 5) {
       node.style.height = 'auto'
       node.style.minHeight = ''

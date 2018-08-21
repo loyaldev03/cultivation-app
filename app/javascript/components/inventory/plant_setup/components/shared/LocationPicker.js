@@ -3,26 +3,26 @@ import Select from 'react-select'
 import PropTypes from 'prop-types'
 import reactSelectStyle from './reactSelectStyle'
 
-const VEG_TRAY_PURPOSES = [
-  'cure',
-  'dry',
-  'flower',
-  'veg',
-  'veg1',
-  'veg2'
-]
+const VEG_TRAY_PURPOSES = ['cure', 'dry', 'flower', 'veg', 'veg1', 'veg2']
 
 class LocationPicker extends React.Component {
   constructor(props) {
     super(props)
 
     if (props.mode === 'clone') {
-      this.trays = props.locations.filter(x => x.t_id.length > 0 && x.rm_purpose === 'clone')
+      this.trays = props.locations.filter(
+        x => x.t_id.length > 0 && x.rm_purpose === 'clone'
+      )
     } else if (props.mode === 'vegTray') {
-      this.trays = props.locations.filter(x => x.t_id.length > 0 && VEG_TRAY_PURPOSES.indexOf(x.rm_purpose) >= 0 )
+      this.trays = props.locations.filter(
+        x => x.t_id.length > 0 && VEG_TRAY_PURPOSES.indexOf(x.rm_purpose) >= 0
+      )
     } else if (props.mode === 'mother') {
       this.trays = props.locations.filter(
-        x => x.rm_id.length > 0 && x.rw_id.length === 0 && x.rm_purpose === 'mother'
+        x =>
+          x.rm_id.length > 0 &&
+          x.rw_id.length === 0 &&
+          x.rm_purpose === 'mother'
       )
     } else if (props.mode === 'room') {
       this.trays = props.locations.filter(

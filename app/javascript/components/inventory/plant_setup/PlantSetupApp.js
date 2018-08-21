@@ -42,7 +42,9 @@ class PlantSetupApp extends React.Component {
     return (
       <div className="ph4 pt4 pb5 mb3 bg-white w-70">
         <div className="w-60">
-          <h1 className="mt0 mb4 f3 fw4 dark-gray">Setup active plant inventory</h1>
+          <h1 className="mt0 mb4 f3 fw4 dark-gray">
+            Setup active plant inventory
+          </h1>
           <p className="mb3 lh-copy f5 grey">
             Add your existing plant inventories. Do not worry if you are unable
             to add all the records, you can always continue later from the

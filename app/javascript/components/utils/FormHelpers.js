@@ -1,6 +1,13 @@
 import React from 'react'
 
-function TextInput({ label, value = '', placeholder, onChange = () => {}, errors = {}, errorField = null }) {
+function TextInput({
+  label,
+  value = '',
+  placeholder,
+  onChange = () => {},
+  errors = {},
+  errorField = null
+}) {
   return (
     <React.Fragment>
       <label className="f6 fw6 db mb1 gray ttc">{label}</label>
@@ -11,7 +18,7 @@ function TextInput({ label, value = '', placeholder, onChange = () => {}, errors
         placeholder={placeholder}
         onChange={onChange}
       />
-      { errorField && <FieldError errors={errors} field={errorField} /> }
+      {errorField && <FieldError errors={errors} field={errorField} />}
     </React.Fragment>
   )
 }
@@ -23,7 +30,7 @@ function NumericInput({
   min = '',
   max = '',
   onChange = () => {},
-  errors = {}, 
+  errors = {},
   errorField = null
 }) {
   return (
@@ -38,7 +45,7 @@ function NumericInput({
         min={min}
         max={max}
       />
-      { errorField && <FieldError errors={errors} field={errorField} /> }
+      {errorField && <FieldError errors={errors} field={errorField} />}
     </React.Fragment>
   )
 }

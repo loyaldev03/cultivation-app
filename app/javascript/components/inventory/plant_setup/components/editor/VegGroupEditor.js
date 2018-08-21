@@ -2,7 +2,11 @@ import React from 'react'
 import DatePicker from 'react-date-picker'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import LocationPicker from '../shared/LocationPicker'
-import { TextInput, NumericInput, FieldError } from '../../../../utils/FormHelpers'
+import {
+  TextInput,
+  NumericInput,
+  FieldError
+} from '../../../../utils/FormHelpers'
 
 class VegGroupEditor extends React.Component {
   constructor(props) {
@@ -51,7 +55,9 @@ class VegGroupEditor extends React.Component {
     this.onTogglePlantQtyForm = this.onTogglePlantQtyForm.bind(this)
     this.onPlantQtyChanged = this.onPlantQtyChanged.bind(this)
     this.onTraySelected = this.onTraySelected.bind(this)
-    this.onCultivationBatchIdChanged = this.onCultivationBatchIdChanged.bind(this)
+    this.onCultivationBatchIdChanged = this.onCultivationBatchIdChanged.bind(
+      this
+    )
     this.onPlantedOnChanged = this.onPlantedOnChanged.bind(this)
     this.onExpectedHarvestDateChanged = this.onExpectedHarvestDateChanged.bind(
       this
@@ -111,7 +117,7 @@ class VegGroupEditor extends React.Component {
   onMotherIdChanged(event) {
     this.setState({ mother_id: event.target.value })
   }
-  
+
   onMotherLocationChanged(item) {
     this.setState({ mother_location: item.rm_id })
   }
@@ -143,7 +149,10 @@ class VegGroupEditor extends React.Component {
 
     if (isShowPlantQtyForm) {
       if (parseInt(plant_qty) <= 0) {
-        errors = { ...errors, plant_qty: ['Number of plant must be at least 1.'] }
+        errors = {
+          ...errors,
+          plant_qty: ['Number of plant must be at least 1.']
+        }
       }
 
       if (tray.length <= 0) {
@@ -156,7 +165,10 @@ class VegGroupEditor extends React.Component {
     }
 
     if (cultivation_batch_id.length <= 0) {
-      errors = { ...errors, cultivation_batch_id: ['Cultivation batch ID is required.'] }
+      errors = {
+        ...errors,
+        cultivation_batch_id: ['Cultivation batch ID is required.']
+      }
     }
 
     if (planted_on === null) {
@@ -174,13 +186,16 @@ class VegGroupEditor extends React.Component {
       }
 
       if (mother_location.length <= 0) {
-        errors = { ...errors, mother_location: ['Mother plant location is required.']}
+        errors = {
+          ...errors,
+          mother_location: ['Mother plant location is required.']
+        }
       }
     }
 
     const isValid =
       Object.getOwnPropertyNames(errors).length == 0 &&
-      strainData.isValid && 
+      strainData.isValid &&
       purchaseData.isValid
 
     if (!isValid) {
@@ -197,13 +212,14 @@ class VegGroupEditor extends React.Component {
 
   renderPlantIdForm() {
     if (this.state.isShowPlantQtyForm) return null
-    return(
+    return (
       <React.Fragment>
         <div className="ph4 mb2 flex">
           <div className="w-100">
             <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
               If you have multiple batches for the same strain, you can create
-              another entry for next batch. Each plant has its own <strong>Plant ID</strong>.
+              another entry for next batch. Each plant has its own{' '}
+              <strong>Plant ID</strong>.
             </p>
             <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
               If you already have them, paste Plant IDs with its corresponding
@@ -299,10 +315,7 @@ class VegGroupEditor extends React.Component {
                 value={this.state.mother_location}
                 onChange={this.onMotherLocationChanged}
               />
-              <FieldError
-                errors={this.state.errors}
-                field="mother_location"
-              />
+              <FieldError errors={this.state.errors} field="mother_location" />
             </div>
           </div>
         </React.Fragment>
@@ -336,18 +349,21 @@ class VegGroupEditor extends React.Component {
         <div className="ph4 mt3 mb3">
           <span className="f6 fw6 dark-gray">Plant IDs</span>
         </div>
-        
-        { this.renderPlantIdForm() }
-        { this.renderPlantQtyForm() }
+
+        {this.renderPlantIdForm()}
+        {this.renderPlantQtyForm()}
 
         <div className="ph4 mb3 flex">
           <div className="w-50">
-            <TextInput 
-              label={'Cultivation Batch ID'} 
+            <TextInput
+              label={'Cultivation Batch ID'}
               value={this.state.cultivation_batch_id}
               onChange={this.onCultivationBatchIdChanged}
             />
-            <FieldError errors={this.state.errors} field="cultivation_batch_id" />
+            <FieldError
+              errors={this.state.errors}
+              field="cultivation_batch_id"
+            />
           </div>
         </div>
 
@@ -387,7 +403,7 @@ class VegGroupEditor extends React.Component {
           <label className="toggle-button" htmlFor="is_bought_input" />
         </div>
 
-        { this.renderProcurementInfo() }
+        {this.renderProcurementInfo()}
 
         <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
           <a

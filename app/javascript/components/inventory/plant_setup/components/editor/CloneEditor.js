@@ -65,7 +65,7 @@ class CloneEditor extends React.Component {
     this.setState({ clone_ids: event.target.value })
     const lines = (event.target.value.match(/\n/g) || []).length
     const node = this.cloneIdTextArea
-    
+
     if (lines < 5) {
       node.style.height = 'auto'
       node.style.minHeight = ''

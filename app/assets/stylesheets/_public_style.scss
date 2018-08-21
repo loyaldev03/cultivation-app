@@ -24,3 +24,7 @@
 .link.grow:hover {
   transition: all 0.25s, color 0s; /* disables color transition inheritted from .link */
 }
+
+.select {
+  height: 34px;
+}

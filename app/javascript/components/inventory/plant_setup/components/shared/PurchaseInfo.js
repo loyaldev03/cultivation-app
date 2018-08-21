@@ -2,6 +2,7 @@ import React from 'react'
 import DatePicker from 'react-date-picker'
 import { TextInput, FieldError } from '../../../../utils/FormHelpers'
 
+// Need default props
 export default class PurchaseInfo extends React.Component {
   constructor(props) {
     super(props)
@@ -148,7 +149,7 @@ export default class PurchaseInfo extends React.Component {
         purchase_date,
         invoice_no,
         errors,
-        isValid: Object.getOwnPropertyNames(errors).length > 0
+        isValid: Object.getOwnPropertyNames(errors).length === 0
       }
     }
 
@@ -169,11 +170,13 @@ export default class PurchaseInfo extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">
-            Where the seeds are sourced from?
-          </span>
-        </div>
+        { this.props.showLabel && 
+          <div className="ph4 mb3 mt3">
+            <span className="f6 fw6 dark-gray">
+              Where the seeds are sourced from?
+            </span>
+          </div>
+        }
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <TextInput

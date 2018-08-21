@@ -1,8 +1,8 @@
 import React from 'react'
 import PlantList from './components/PlantList'
 import PlantEditor from './components/PlantEditor'
-import plantStore from './store/PlantStore'
-import addPlant from './actions/addPlant'
+// import plantStore from './store/PlantStore'
+// import addPlant from './actions/addPlant'
 
 class PlantSetupApp extends React.Component {
   constructor(props) {

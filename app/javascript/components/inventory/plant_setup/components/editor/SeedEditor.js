@@ -1,7 +1,11 @@
 import React from 'react'
-import { TextInput, NumericInput, FieldError } from '../../../../utils/FormHelpers'
-import PurchaseInfo from './PurchaseInfo'
-import StorageInfo from './StorageInfo'
+import {
+  TextInput,
+  NumericInput,
+  FieldError
+} from '../../../../utils/FormHelpers'
+import PurchaseInfo from '../shared/PurchaseInfo'
+import StorageInfo from '../shared/StorageInfo'
 
 class SeedEditor extends React.Component {
   constructor(props) {
@@ -42,6 +46,7 @@ class SeedEditor extends React.Component {
     this.onQuantityChanged = this.onQuantityChanged.bind(this)
     this.onPackageIdChanged = this.onPackageIdChanged.bind(this)
     this.onSave = this.onSave.bind(this)
+    this.onSaveDraft = this.onSaveDraft.bind(this)
   }
 
   onPackageIdChanged(event) {
@@ -62,7 +67,7 @@ class SeedEditor extends React.Component {
     const storageInfo = this.storageInfoEditor.current.getValues()
     // console.log(storageInfo)
 
-    if(this.validate()) {
+    if (this.validate()) {
       const data = {
         ...strainData,
         ...purchaseData,
@@ -79,16 +84,29 @@ class SeedEditor extends React.Component {
     event.preventDefault()
   }
 
+  onSaveDraft(event) {
+    const strainData = this.props.onValidateParent(true)
+    const purchaseData = this.purchaseInfoEditor.current.getValues(true)
+    const storageInfo = this.storageInfoEditor.current.getValues(true)
+    const data = {
+      ...strainData,
+      ...purchaseData,
+      ...storageInfo,
+      quantity: this.state.quantity,
+      package_id: this.state.package_id
+    }
+    // console.log(data)
+    event.preventDefault()
+  }
+
   validate() {
     let errors = {}
-    console.log(this.state.quantity)
-
     if (this.state.quantity <= 0 || !this.state.quantity) {
-      errors = { ...errors, quantity: ['Quantity must be at least 1.']}
+      errors = { ...errors, quantity: ['Quantity must be at least 1.'] }
     }
 
     if (this.state.package_id.length <= 0) {
-      errors = { ...errors, package_id: ['Package ID must be present.']}
+      errors = { ...errors, package_id: ['Package ID must be present.'] }
     }
 
     this.setState({ errors })
@@ -157,12 +175,12 @@ class SeedEditor extends React.Component {
           shelf_id={this.state.shelf_id}
           tray_id={this.state.tray_id}
         />
-        
+
         <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
           <a
             className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
             href="#"
-            onClick={this.props.onResetEditor}
+            onClick={this.props.onSaveDraft}
           >
             Save draft
           </a>

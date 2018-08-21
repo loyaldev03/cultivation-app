@@ -1,32 +1,33 @@
 import React from 'react'
 import Select from 'react-select'
+import PropTypes from 'prop-types'
 import { FieldError } from '../../../../utils/FormHelpers'
 
-export default class StorageInfo extends React.Component {
+class StorageInfo extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      facility_id: props.facility_id || '',
-      facility_code: props.facility_code || '--',
-      facility_name: props.facility_name || '',
+      facility_id: props.facility_id,
+      facility_code: props.facility_code,
+      facility_name: props.facility_name,
 
-      room_id: props.room_id || '',
-      room_code: props.room_code || '--',
-      room_name: props.room_name || '',
-      room_purpose: props.room_purpose || '',
+      room_id: props.room_id,
+      room_code: props.room_code,
+      room_name: props.room_name,
+      room_purpose: props.room_purpose,
 
-      // section_id: props.section_id || '',
-      section_code: props.section_code || '--',
-      section_name: props.section_name || '',
+      // section_id: props.section_id,
+      section_code: props.section_code,
+      section_name: props.section_name,
 
-      row_id: props.row_id || '',
-      row_code: props.row_code || '--',
-      shelf_id: props.shelf_id || '',
-      shelf_code: props.shelf_code || '--',
+      row_id: props.row_id,
+      row_code: props.row_code,
+      shelf_id: props.shelf_id,
+      shelf_code: props.shelf_code,
 
-      tray_id: props.tray_id || '',
-      tray_code: props.tray_code || '--',
-      tray_capacity: props.tray_capacity || '--',
+      tray_id: props.tray_id,
+      tray_code: props.tray_code,
+      tray_capacity: props.tray_capacity,
       errors: {}
     }
 
@@ -213,7 +214,7 @@ export default class StorageInfo extends React.Component {
             </div>
             <div className="w-40 flex-column justify-end pl3">
               <label className="f6 fw6 db mb1 gray ttc">Tray capacity</label>
-              <p className="f6 fw4 black mb0 mt0">{this.state.tray_capacity}</p>
+              <p className="f6 fw4 black mb0 mt0">{this.state.tray_capacity || '--'}</p>
             </div>
           </div>
           <FieldError
@@ -236,7 +237,6 @@ export default class StorageInfo extends React.Component {
       <React.Fragment>
         <div className="ph4 mb3 mt3">
           <span className="f6 fw6 dark-gray">Where are they stored?</span>
-          {this.props.rooms.join(', ')}
         </div>
         <div className="ph4 mb3 flex">
           <div className="w-100">
@@ -251,3 +251,37 @@ export default class StorageInfo extends React.Component {
     )
   }
 }
+
+StorageInfo.propTypes = {
+  mode: PropTypes.string.isRequired,
+  facility_id: PropTypes.string,
+  facility_code: PropTypes.string,
+  facility_name: PropTypes.string,
+  room_id: PropTypes.string,
+  room_code: PropTypes.string,
+  room_name: PropTypes.string,
+  room_purpose: PropTypes.string,
+  section_code: PropTypes.string,
+  section_name: PropTypes.string,
+  row_id: PropTypes.string,
+  row_code: PropTypes.string,
+  shelf_id: PropTypes.string,
+  shelf_code: PropTypes.string,
+  tray_id: PropTypes.string,
+  tray_code: PropTypes.string,
+  tray_capacity: PropTypes.number,
+}
+
+StorageInfo.defaultProps = {
+  mode: 'all',
+  facility_id: '',
+  facility_code: '--',
+  room_code: '--',
+  section_code: '--',
+  row_code: '--',
+  shelf_code: '--',
+  tray_code: '--',
+  tray_capacity: null
+}
+
+export default StorageInfo

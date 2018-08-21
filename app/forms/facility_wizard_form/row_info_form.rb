@@ -31,7 +31,7 @@ module FacilityWizardForm
     end
 
     def shelves_count_text
-      if self.has_shelves && self.wz_shelves_count > 0
+      if self.wz_shelves_count > 0
         self.wz_shelves_count
       else
         '--'

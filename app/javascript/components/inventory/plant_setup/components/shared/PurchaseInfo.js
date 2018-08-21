@@ -170,13 +170,13 @@ export default class PurchaseInfo extends React.Component {
   render() {
     return (
       <React.Fragment>
-        { this.props.showLabel && 
+        {this.props.showLabel && (
           <div className="ph4 mb3 mt3">
             <span className="f6 fw6 dark-gray">
               Where the seeds are sourced from?
             </span>
           </div>
-        }
+        )}
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <TextInput

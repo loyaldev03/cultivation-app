@@ -214,7 +214,9 @@ class StorageInfo extends React.Component {
             </div>
             <div className="w-40 flex-column justify-end pl3">
               <label className="f6 fw6 db mb1 gray ttc">Tray capacity</label>
-              <p className="f6 fw4 black mb0 mt0">{this.state.tray_capacity || '--'}</p>
+              <p className="f6 fw4 black mb0 mt0">
+                {this.state.tray_capacity || '--'}
+              </p>
             </div>
           </div>
           <FieldError
@@ -269,7 +271,7 @@ StorageInfo.propTypes = {
   shelf_code: PropTypes.string,
   tray_id: PropTypes.string,
   tray_code: PropTypes.string,
-  tray_capacity: PropTypes.number,
+  tray_capacity: PropTypes.number
 }
 
 StorageInfo.defaultProps = {

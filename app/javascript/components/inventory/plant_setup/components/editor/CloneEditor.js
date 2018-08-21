@@ -1,6 +1,10 @@
 import React from 'react'
 import DatePicker from 'react-date-picker'
-import { TextInput, NumericInput, FieldError } from '../../../../utils/FormHelpers'
+import {
+  TextInput,
+  NumericInput,
+  FieldError
+} from '../../../../utils/FormHelpers'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import LocationPicker from '../shared/LocationPicker'
 
@@ -24,7 +28,7 @@ class CloneEditor extends React.Component {
     }
 
     this.locations = props.locations
-    
+
     // Converting to callback ref because purchase info editor is hidding and showing.
     // This will cause the standard way to set ref to be broken / undefined.
     this.purchaseInfoEditor = null
@@ -32,21 +36,23 @@ class CloneEditor extends React.Component {
       this.purchaseInfoEditor = element
     }
 
-    this.cloneIdTextArea = null 
+    this.cloneIdTextArea = null
     // Callback ref to get instance of html DOM: https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
     // Getting a ref to textarea in order to adjust height according to content.
-    this.setCloneIdTextArea = element => { 
+    this.setCloneIdTextArea = element => {
       this.cloneIdTextArea = element
     }
 
     this.onCloneIdsChanged = this.onCloneIdsChanged.bind(this)
-    this.onChangeGeneratorPlantCount = this.onChangeGeneratorPlantCount.bind(this)
+    this.onChangeGeneratorPlantCount = this.onChangeGeneratorPlantCount.bind(
+      this
+    )
     this.onGeneratorTraySelected = this.onGeneratorTraySelected.bind(this)
     this.onPlantedOnChanged = this.onPlantedOnChanged.bind(this)
     this.onExpectedHarvestDateChanged = this.onExpectedHarvestDateChanged.bind(
       this
     )
-    
+
     this.onIsBoughtChanged = this.onIsBoughtChanged.bind(this)
     this.onMotherIdChanged = this.onMotherIdChanged.bind(this)
     this.motherLocationChanged = this.motherLocationChanged.bind(this)
@@ -80,7 +86,9 @@ class CloneEditor extends React.Component {
   }
 
   onToggleGeneratePlantId(event) {
-    this.setState({ isShowPlantIdGenerator: !this.state.isShowPlantIdGenerator })
+    this.setState({
+      isShowPlantIdGenerator: !this.state.isShowPlantIdGenerator
+    })
     if (event) event.preventDefault()
   }
 
@@ -94,7 +102,7 @@ class CloneEditor extends React.Component {
 
   onGeneratePlantId(event) {
     event.preventDefault()
-    if(this.state.generator_plant_count <= 0) {
+    if (this.state.generator_plant_count <= 0) {
       return
     }
 
@@ -102,26 +110,27 @@ class CloneEditor extends React.Component {
     let i = parseInt(this.state.last_plant_id)
     let iMax = i + parseInt(this.state.generator_plant_count)
 
-    for(i; i < iMax; i++) {
-      const serialNo= new Date().getFullYear().toString() + i.toString().padStart(6, '0')
+    for (i; i < iMax; i++) {
+      const serialNo =
+        new Date().getFullYear().toString() + i.toString().padStart(6, '0')
       const id = `P${serialNo}, ${this.state.generator_location}\n`
       cloneIds += id
     }
 
-    this.setState({ 
+    this.setState({
       clone_ids: this.state.clone_ids + cloneIds,
       last_plant_id: iMax
     })
 
     const node = this.cloneIdTextArea
     if (node.scrollHeight < 350) {
-      node.style.height = (40 + node.scrollHeight) + 'px'
+      node.style.height = 40 + node.scrollHeight + 'px'
     }
   }
 
   onSave(event) {
     const data = this.validateAndGetValues()
-    if(data.isValid) {
+    if (data.isValid) {
       // alert('not valid')
       // call API
     }
@@ -130,7 +139,7 @@ class CloneEditor extends React.Component {
   }
 
   validateAndGetValues() {
-    const { 
+    const {
       clone_ids,
       planted_on,
       expected_harvest_date,
@@ -141,29 +150,33 @@ class CloneEditor extends React.Component {
 
     let errors = {}
     if (planted_on === null) {
-      errors = { ...errors, planted_on: ['Planted on date is required.']}
+      errors = { ...errors, planted_on: ['Planted on date is required.'] }
     }
 
     if (clone_ids.trim().length <= 0) {
-      errors = { ...errors, clone_ids: ['Plant ID is required.']}
+      errors = { ...errors, clone_ids: ['Plant ID is required.'] }
     }
 
     let purchaseData = { idValid: true }
     if (!is_bought) {
       if (mother_id.length <= 0) {
-        errors = { ...errors, mother_id: ['Mother ID is required.']}
+        errors = { ...errors, mother_id: ['Mother ID is required.'] }
       }
 
       if (mother_location_id.length <= 0) {
-        errors = { ...errors, mother_location_id: ['Mother plant location is required.']}
+        errors = {
+          ...errors,
+          mother_location_id: ['Mother plant location is required.']
+        }
       }
     } else {
       purchaseData = this.purchaseInfoEditor.getValues()
     }
 
     const strainData = this.props.onValidateParent()
-    const isValid = Object.getOwnPropertyNames(errors).length == 0 && 
-      strainData.isValid && 
+    const isValid =
+      Object.getOwnPropertyNames(errors).length == 0 &&
+      strainData.isValid &&
       purchaseData.isValid
 
     const data = {
@@ -176,8 +189,8 @@ class CloneEditor extends React.Component {
       ...purchaseData,
       errors,
       isValid
-    }  
-    
+    }
+
     if (!data.isValid) {
       this.setState({ errors: data.errors })
     }
@@ -195,17 +208,22 @@ class CloneEditor extends React.Component {
                 value={this.state.mother_id}
                 onChange={this.onMotherIdChanged}
               />
-              <FieldError errors={this.state.errors} field='mother_id' />
+              <FieldError errors={this.state.errors} field="mother_id" />
             </div>
             <div className="w-50 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">Mother location ID</label>
-              <LocationPicker 
+              <label className="f6 fw6 db mb1 gray ttc">
+                Mother location ID
+              </label>
+              <LocationPicker
                 mode="room"
                 locations={this.locations}
-                value={this.state.mother_location_name} 
+                value={this.state.mother_location_name}
                 onChange={this.motherLocationChanged}
               />
-              <FieldError errors={this.state.errors} field='mother_location_id' />
+              <FieldError
+                errors={this.state.errors}
+                field="mother_location_id"
+              />
             </div>
           </div>
         </React.Fragment>
@@ -218,7 +236,7 @@ class CloneEditor extends React.Component {
           vendor_name={this.state.vendor_name}
           vendor_id={this.state.vendor_id}
           address={this.state.address}
-          vendor_state_license_num={this.state.vendor_state_license_num }
+          vendor_state_license_num={this.state.vendor_state_license_num}
           vendor_state_license_expiration_date={
             this.state.vendor_state_license_expiration_date
           }
@@ -247,10 +265,10 @@ class CloneEditor extends React.Component {
           </div>
           <div className="w-50 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Tray ID</label>
-            <LocationPicker 
+            <LocationPicker
               mode="tray"
               locations={this.locations}
-              value={this.state.generator_location} 
+              value={this.state.generator_location}
               onChange={this.onGeneratorTraySelected}
             />
           </div>
@@ -298,17 +316,19 @@ class CloneEditor extends React.Component {
             <FieldError errors={this.state.errors} field="clone_ids" />
           </div>
         </div>
-        { !this.state.isShowPlantIdGenerator && 
+        {!this.state.isShowPlantIdGenerator && (
           <div className="ph4 mb3 flex justify-start">
             <a
               href="#"
               onClick={this.onToggleGeneratePlantId}
               className="fw4 f7 link dark-blue"
             >
-              { this.state.clone_ids.length > 0 ? 'Generate more IDs' : 'Don\'t have Plant ID? Click here to generate.' }
+              {this.state.clone_ids.length > 0
+                ? 'Generate more IDs'
+                : 'Don\'t have Plant ID? Click here to generate.'}
             </a>
           </div>
-        }
+        )}
       </React.Fragment>
     )
   }
@@ -320,9 +340,9 @@ class CloneEditor extends React.Component {
           <span className="f6 fw6 dark-gray">Plant IDs</span>
         </div>
 
-        { this.renderPlantIdTextArea() }
-        { this.renderPlantIdGenerator() }
-        
+        {this.renderPlantIdTextArea()}
+        {this.renderPlantIdGenerator()}
+
         <div className="ph4 mt2 mb3 flex">
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Planted On</label>
@@ -333,7 +353,9 @@ class CloneEditor extends React.Component {
             <FieldError errors={this.state.errors} field="planted_on" />
           </div>
           <div className="w-50 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">Expected Harvest Date</label>
+            <label className="f6 fw6 db mb1 gray ttc">
+              Expected Harvest Date
+            </label>
             <DatePicker
               value={this.state.expected_harvest_date}
               onChange={this.onExpectedHarvestDateChanged}

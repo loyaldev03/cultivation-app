@@ -10,12 +10,14 @@ class LocationPicker extends React.Component {
     if (props.mode === 'tray') {
       this.trays = props.locations.filter(x => x.t_id.length > 0)
     } else if (props.mode === 'room') {
-      this.trays = props.locations.filter(x => x.rm_id.length > 0 && x.rw_id.length === 0)
+      this.trays = props.locations.filter(
+        x => x.rm_id.length > 0 && x.rw_id.length === 0
+      )
     } else {
       this.trays = props.locations
     }
 
-    const item = this.trays.find(x => x.value === props.value) || null    
+    const item = this.trays.find(x => x.value === props.value) || null
     this.state = { value: item }
 
     this.onChange = this.onChange.bind(this)
@@ -28,7 +30,7 @@ class LocationPicker extends React.Component {
 
   render() {
     return (
-      <Select 
+      <Select
         styles={reactSelectStyle}
         placeholder="Type to search location..."
         options={this.trays}

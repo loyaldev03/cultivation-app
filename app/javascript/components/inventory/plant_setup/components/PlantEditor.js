@@ -181,8 +181,8 @@ export default class PlantEditor extends React.Component {
   renderCloneEditor() {
     if (this.state.stockEditor !== CLONE) return null
     return (
-      <CloneEditor 
-        onResetEditor={this.onResetEditor} 
+      <CloneEditor
+        onResetEditor={this.onResetEditor}
         onValidateParent={this.onValidateParent}
         locations={this.locations}
       />
@@ -192,8 +192,8 @@ export default class PlantEditor extends React.Component {
   renderMotherEditor() {
     if (this.state.stockEditor !== MOTHER) return null
     return (
-      <MotherEditor 
-        onResetEditor={this.onResetEditor} 
+      <MotherEditor
+        onResetEditor={this.onResetEditor}
         onValidateParent={this.onValidateParent}
         locations={this.locations}
       />
@@ -203,8 +203,8 @@ export default class PlantEditor extends React.Component {
   renderVegGroupEditor() {
     if (this.state.stockEditor !== VEG_GROUP) return null
     return (
-      <VegGroupEditor 
-        onResetEditor={this.onResetEditor} 
+      <VegGroupEditor
+        onResetEditor={this.onResetEditor}
         onValidateParent={this.onValidateParent}
         locations={this.locations}
       />

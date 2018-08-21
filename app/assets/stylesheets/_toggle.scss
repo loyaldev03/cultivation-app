@@ -64,5 +64,9 @@
   &:checked + .toggle-button {
     background: #F66830;
   }
+  &:checked[disabled] + .toggle-button {
+    background: rgba(246, 104, 48, 0.5);
+    cursor: default;
+  }
 }
 

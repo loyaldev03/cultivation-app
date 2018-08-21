@@ -13,6 +13,7 @@ module FacilityWizardForm
              :has_trays,
              :capacity,
              :capacity_text,
+             :wz_generated,
              :wz_shelves_count,
              :wz_trays_count]
 

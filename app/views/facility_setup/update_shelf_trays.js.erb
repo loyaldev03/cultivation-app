@@ -4,8 +4,8 @@ $_('<%= ".carousel__card--#{@row_info_form.id}" %>').innerHTML = ("<%= j render 
 
 <%= render 'row_shelf_trays' %>
 
-<% if @row_shelves_trays_form.current_shelf_index == -1 %>
-    hideSlidePanel();
-    showRowSetupSuccess("<%= @row_shelves_trays_form.id %>")
+<% if @row_shelves_trays_form.show_duplicate_dialog %>
+  hideSlidePanel();
+  showRowSetupSuccess("<%= @row_shelves_trays_form.id %>")
 <% end %>
 

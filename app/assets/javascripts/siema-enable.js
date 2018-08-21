@@ -6,7 +6,6 @@ function clearSelection() {
 
 // Bind Carousel as pageSize card in a row (used in Rooms / Rows setup)
 function bindCarousel(gotoLast) {
-  console.log('bindCarousel')
   const siemaElms = $$(".siema");
   const siemaPageSize = 4;
   const siemaOptions = {
@@ -20,7 +19,6 @@ function bindCarousel(gotoLast) {
       const siemaElm = siemaElms[i]
       const carousel = siemaElm.closest(".carousel")
       const cardCount = siemaElm.children.length;
-      console.log({cardCount})
       if (cardCount > siemaPageSize) {
         const mySiema = new Siema(Object.assign(siemaOptions, { selector: siemaElm}));
         const leftBtn = carousel.children[0]

@@ -244,9 +244,14 @@ class FacilitySetupController < ApplicationController
           form_object.row_id,
           form_object.id
         )
-        # NOTE: Return form object for next shelf (move user to setup next shelf)
-        @row_shelves_trays_form.set_shelf_by_index(@row_shelves_trays_form.current_shelf_index + 1)
-        # NOTE: Offer duplicate row function (see update_shelf_trays.js.erb)
+
+        if @row_shelves_trays_form.is_last_shelf
+          # NOTE: Offer duplicate row function (see update_shelf_trays.js.erb)
+          @row_shelves_trays_form.show_duplicate_dialog = true
+        else
+          # NOTE: Return form object for next shelf (move user to setup next shelf)
+          @row_shelves_trays_form.set_next_shelf(@row_shelves_trays_form.current_shelf_index)
+        end
         # Rails.logger.debug ">>> update_shelf_trays.current_shelf_index"
         # Rails.logger.debug ">>> update_shelf_trays #{@row_shelves_trays_form.current_shelf_index}"
         format.js

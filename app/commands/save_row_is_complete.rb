@@ -14,11 +14,11 @@ class SaveRowIsComplete
     @row.has_trays = @row.wz_trays_count > 0
     @row.is_complete = get_is_complete(@row.shelves)
     @row.save!
-    Rails.logger.debug ">>> + SaveRowIsComplete <<<"
-    Rails.logger.debug ">>> wz_shelves_count: #{@row.wz_shelves_count}"
-    Rails.logger.debug ">>> wz_trays_count: #{@row.wz_trays_count}"
-    Rails.logger.debug ">>> is_complete: #{@row.is_complete}"
-    Rails.logger.debug ">>> - SaveRowIsComplete <<<"
+    # Rails.logger.debug ">>> + SaveRowIsComplete <<<"
+    # Rails.logger.debug ">>> wz_shelves_count: #{@row.wz_shelves_count}"
+    # Rails.logger.debug ">>> wz_trays_count: #{@row.wz_trays_count}"
+    # Rails.logger.debug ">>> is_complete: #{@row.is_complete}"
+    # Rails.logger.debug ">>> - SaveRowIsComplete <<<"
     @row
   end
 

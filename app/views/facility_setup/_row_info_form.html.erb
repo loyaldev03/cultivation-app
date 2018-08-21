@@ -25,13 +25,20 @@
           <%= f.text_field :code, value: row.code, class: "box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
         </div>
 
+        <% if !row.wz_generated %>
+          <%= f.hidden_field :has_shelves, value: (row.has_shelves ? true : false) %>
+          <%= f.hidden_field :wz_shelves_count, value: row.wz_shelves_count %>
+          <%= f.hidden_field :has_trays, value: (row.has_trays ? true : false) %>
+          <%= f.hidden_field :wz_trays_count, value: row.wz_trays_count %>
+        <% end %>
+
         <div class="mt4">
           <div class="flex flex-row items-center justify-between">
             <span class="subtitle-2 db mb1 grey ttc">Does the row have multiple levels?</span>
-            
             <div class="">
               <%= f.check_box :has_shelves,
                 checked: row.has_shelves,
+                disabled: !row.wz_generated,
                 class: "toggle toggle-default",
                 data: { toggle: 'shelves_number_options' }
               %>
@@ -52,6 +59,7 @@
               options_for_select([*1..5], row.wz_shelves_count),
               {},
               {
+                disabled: !row.wz_generated,
                 class: "w-70 grey box--br3 ba b--light-grey outline-0 box--height"
               }
             %>
@@ -61,10 +69,10 @@
         <div class="mt4">
           <div class="flex flex-row items-center justify-between">
             <span class="subtitle-2 grey">Do you use trays?</span>
-
             <div class="">
               <%= f.check_box :has_trays,
                 checked: row.has_trays,
+                disabled: !row.wz_generated,
                 class: "toggle toggle-default",
                 data: { toggle: 'trays_number_options' }
               %>
@@ -87,6 +95,7 @@
               options_for_select([*1..10], row.wz_trays_count),
               {},
               {
+                disabled: !row.wz_generated,
                 class: "w-70 grey box--br3 ba b--light-grey outline-0 box--height"
               }
             %>

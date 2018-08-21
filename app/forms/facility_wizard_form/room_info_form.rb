@@ -7,6 +7,7 @@ module FacilityWizardForm
              :name,
              :code,
              :desc,
+             :is_complete,
              :purpose,
              :has_sections,
              :rows,

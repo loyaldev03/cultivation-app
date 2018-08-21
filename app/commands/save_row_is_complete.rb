@@ -1,8 +1,6 @@
 class SaveRowIsComplete
   prepend SimpleCommand
 
-  attr_reader :args
-
   def initialize(row)
     @row = row
   end

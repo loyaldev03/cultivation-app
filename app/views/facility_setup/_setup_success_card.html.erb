@@ -1,38 +1,38 @@
-<div class="setup_success_card setup_success_card--step1 dn">
+<div class="setup_success_card setup_success_card--step1 dn box--shadow">
   <div class="setup_success_card__header">
-    <span class="setup_success_card__title f3">Row Setup Success</span>
+    <span class="setup_success_card__title dark-grey">Row Setup Success</span>
   </div>
   <div class="setup_success_card__body">
-    <span class="fw6 f3 dark-grey">You've now completed the setup of your row</span>
-    <p class="b gray">Shall we duplicate this row setup across other rows?</p>
-    <p class="ma0 pa0 f6 gray">
+    <span class="h6--font dark-grey">You've now completed the setup of your row</span>
+    <p class="grey subtitle-2">Shall we duplicate this row setup across other rows?</p>
+    <p class="ma0 pa0 caption grey">
       Pro tip: Duplicating row across other rows will allow you setup quicker, provided that you have
       similar number of shelves and trays. You can always edit the shelf or tray that contains
       different info.
     </p>
   </div>
   <div class="setup_success_card__footer">
-    <button class="setup_success_card__button setup_success_card__button--confirm btn btn--primary">Yes, Duplicate</button>
-    <button class="setup_success_card__button setup_success_card__button--cancel btn mr2">Cancel</button>
+    <button class="setup_success_card__button setup_success_card__button--confirm btn btn--primary button--font box--br3 dim">Yes, Duplicate</button>
+    <button class="setup_success_card__button setup_success_card__button--cancel btn button--font box--br3 grey mr2 dim">Cancel</button>
   </div>
 </div>
 
-<div class="setup_success_card setup_success_card--step2 dn">
+<div class="setup_success_card setup_success_card--step2 dn box--shadow">
   <div class="setup_success_card__header">
-    <span class="setup_success_card__title f3">Row Duplication</span>
+    <span class="setup_success_card__title dark-grey">Row Duplication</span>
   </div>
   <div class="setup_success_card__body">
-    <span class="fw6 f3 dark-grey">How do I duplicate to other row?</span>
-    <p class="b gray">Simply select the rows that you want to duplicate into by selecting them.</p>
+    <span class="h6--font dark-grey">How do I duplicate to other row?</span>
+    <p class="subtitle-2 grey">Simply select the rows that you want to duplicate into by selecting them.</p>
   </div>
   <div class="setup_success_card__footer">
-    <button class="setup_success_card__button setup_success_card__button--duplicate btn btn--primary">Okay, Got It!</button>
-    <button class="setup_success_card__button setup_success_card__button--cancel btn mr2">Cancel</button>
+    <button class="setup_success_card__button setup_success_card__button--duplicate btn btn--primary button--font box--br3 dim">Okay, Got It!</button>
+    <button class="setup_success_card__button setup_success_card__button--cancel btn button--font box--br3 grey mr2 dim">Cancel</button>
   </div>
 </div>
 
 <div class="confirm-duplicate-button dn pb3">
-  <button class="btn btn--primary ttu">Confirm Duplication</button>
+  <button class="btn btn--primary ttu button--font">Confirm Duplication</button>
 </div>
 
 <%= hidden_field_tag 'facility_id', @rows_form.facility_id %>

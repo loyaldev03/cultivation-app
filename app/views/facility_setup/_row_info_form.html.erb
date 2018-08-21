@@ -2,9 +2,16 @@
   <h1 class="h6--font dark-grey ma0">Row & Shelf Details</h1>
 </div>
 
-<div class="flex flex-column justify-center items-center bb b--light-grey pv2">
-  <%= image_tag 'row-icon.svg', class: "h3 w3 db" %>
-  <span class="dark-grey h6--font">Row</span>
+<div class="flex flex-row item-center justify-around pv2 ph3 bb b--light-grey">
+  <div class="flex flex-column justify-center items-center">
+    <%= image_tag 'row-icon.svg', class: "h3 w3 db" %>
+    <span class="dark-grey h6--font">Row</span>
+  </div>
+
+  <div class="flex flex-column justify-center items-center">
+    <%= image_tag 'shelf-icon.svg', class: "h3 w3 db" %>
+    <span class="dark-grey h6--font">Shelf &amp; Tray</span>
+  </div>
 </div>
 
 <div class="db measure">
@@ -13,7 +20,7 @@
     <%= f.hidden_field :room_id, value: row.room_id %>
     <%= f.hidden_field :id, value: row.id %>
 
-    <div class="box--scrollable">
+    <div class="box--scrollable w-100">
       <div class="ph4">
         <div class="mb3">
           <%= f.label "row Name", class:"subtitle-2 db mb1 grey ttc" %>
@@ -34,7 +41,8 @@
 
         <div class="mt4">
           <div class="flex flex-row items-center justify-between">
-            <span class="subtitle-2 db mb1 grey">Does the row have multiple levels?</span>
+            <span class="subtitle-2 db mb1 grey">Does the row has multiple levels?</span>
+            
             <div class="">
               <%= f.check_box :has_shelves,
                 checked: row.has_shelves,
@@ -103,10 +111,12 @@
         </div>
       </div>
 
-      <div class="w-100 mt5 pv3 ph4 bt b--light-grey flex items-center justify-between">
+      <div class="w-100 mt5 pv3 ph4 bg-white bt b--light-grey flex items-center justify-between">
         <%= f.submit "Save Changes", class: "db pv2 bn ttu button orange link dim pointer" %>
         <%= f.submit "save & continue", value: "continue", class: "db tr pa3 bg-orange white bn box--br3 ttu link dim pointer" %>
       </div>
     </div>
+
+    
   <% end %>
 </div>

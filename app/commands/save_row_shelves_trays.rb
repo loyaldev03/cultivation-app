@@ -27,7 +27,7 @@ class SaveRowShelvesTrays
     end
 
     trays_count = trays_count(row)
-    Rails.logger.debug ">>> trays_count #{trays_count}"
+    # Rails.logger.debug ">>> trays_count #{trays_count}"
 
     if trays_count == 0
       # NOTE: Generate a single tray into the first shelf if nothing
@@ -42,7 +42,7 @@ class SaveRowShelvesTrays
   end
 
   def generate_shelves(row)
-    Rails.logger.debug ">>> generate_shelves"
+    # Rails.logger.debug ">>> generate_shelves"
     s_count = row.wz_shelves_count
     s_count ||= 1 # Default to 1 Shelf if undefined
     t_count = row.wz_trays_count

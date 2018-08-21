@@ -29,6 +29,7 @@ module FacilityWizardForm
     def submit(params)
       self.map_attrs_from_hash(ATTRS, params)
       if valid?
+        Rails.logger.debug ">>> UpdateRowInfoForm::submit"
         save_cmd = SaveRow.call(self)
         @result = save_cmd.result
         if save_cmd.success? && @is_continue

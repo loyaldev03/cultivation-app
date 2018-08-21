@@ -11,7 +11,7 @@ class SaveRowIsComplete
     @row.wz_shelves_count = get_shelves_count(@row.shelves)
     @row.has_shelves = true if @row.wz_shelves_count > 1
     @row.wz_trays_count = get_trays_count(@row.shelves)
-    @row.has_trays = @row.wz_trays_count > 0
+    @row.has_trays = true if @row.wz_trays_count > 1
     @row.is_complete = get_is_complete(@row.shelves)
     @row.save!
     # Rails.logger.debug ">>> + SaveRowIsComplete <<<"

@@ -182,8 +182,9 @@ class PurchaseInfo extends React.Component {
               label={'Vendor name'}
               value={this.state.vendor_name}
               onChange={this.onNameChanged}
+              errors={this.state.errors}
+              errorField="vendor_name"
             />
-            <FieldError errors={this.state.errors} field="vendor_name" />
           </div>
         </div>
 
@@ -193,8 +194,9 @@ class PurchaseInfo extends React.Component {
               label={'Vendor ID'}
               value={this.state.vendor_id}
               onChange={this.onIDChanged}
+              errors={this.state.errors}
+              errorField="vendor_id"
             />
-            <FieldError errors={this.state.errors} field="vendor_id" />
           </div>
         </div>
 
@@ -214,10 +216,8 @@ class PurchaseInfo extends React.Component {
               label={'Vendor State License #'}
               value={this.state.vendor_state_license_num}
               onChange={this.onStateLicenseChanged}
-            />
-            <FieldError
               errors={this.state.errors}
-              field="vendor_state_license_num"
+              errorField="vendor_state_license_num"
             />
           </div>
           <div className="w-50 pl3">
@@ -239,10 +239,8 @@ class PurchaseInfo extends React.Component {
               label={'Vendor location license #'}
               value={this.state.vendor_location_license_num}
               onChange={this.onLocationLicenseChanged}
-            />
-            <FieldError
               errors={this.state.errors}
-              field="vendor_location_license_num"
+              errorField="vendor_location_license_num"
             />
           </div>
           <div className="w-50 pl3">

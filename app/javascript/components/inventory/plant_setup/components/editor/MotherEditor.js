@@ -63,10 +63,15 @@ class MotherEditor extends React.Component {
     this.setState({ plant_ids: event.target.value })
     const node = this.plantIdsTextArea
     const lines = (event.target.value.match(/\n/g) || []).length
-
-    if (lines >= 5 && node.scrollHeight < 350) {
+    
+    if (lines < 5) {
+      node.style.height = 'auto'
+      node.style.minHeight = ''
+    } else if (lines >= 5 && lines < 15) {
       node.style.height = 40 + lines * 25 + 'px'
+      node.style.minHeight = ''
     } else {
+      node.style.minHeight = 40 + 15 * 25 + 'px'
       node.style.height = 'auto'
     }
   }
@@ -183,7 +188,7 @@ class MotherEditor extends React.Component {
         </div>
         <div className="ph4 mb2 flex">
           <p className="w-100 ma0 f7 fw4 gray">
-            Unique PlantID will be generated after pressing preview and save.
+            PlantID will be generated for each plant after saving.
           </p>
         </div>
       </React.Fragment>

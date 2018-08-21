@@ -93,7 +93,7 @@ class SeedEditor extends React.Component {
       quantity: this.state.quantity,
       package_id: this.state.package_id
     }
-    console.log(data)
+    // console.log(data)
     event.preventDefault()
   }
 

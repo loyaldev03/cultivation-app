@@ -55,7 +55,7 @@ class CloneEditor extends React.Component {
 
     this.onIsBoughtChanged = this.onIsBoughtChanged.bind(this)
     this.onMotherIdChanged = this.onMotherIdChanged.bind(this)
-    this.motherLocationChanged = this.motherLocationChanged.bind(this)
+    this.onMotherLocationChanged = this.onMotherLocationChanged.bind(this)
     this.onSave = this.onSave.bind(this)
     this.onToggleGeneratePlantId = this.onToggleGeneratePlantId.bind(this)
     // this.onGeneratePlantId = this.onGeneratePlantId.bind(this)
@@ -64,11 +64,17 @@ class CloneEditor extends React.Component {
   onCloneIdsChanged(event) {
     this.setState({ clone_ids: event.target.value })
     const lines = (event.target.value.match(/\n/g) || []).length
-
-    if (lines >= 4 && this.cloneIdTextArea.scrollHeight < 350) {
-      this.cloneIdTextArea.style.height = 40 + lines * 25 + 'px'
+    const node = this.cloneIdTextArea
+    
+    if (lines < 5) {
+      node.style.height = 'auto'
+      node.style.minHeight = ''
+    } else if (lines >= 5 && lines < 15) {
+      node.style.height = 40 + lines * 25 + 'px'
+      node.style.minHeight = ''
     } else {
-      this.cloneIdTextArea.style.height = 'auto'
+      node.style.minHeight = 40 + 15 * 25 + 'px'
+      node.style.height = 'auto'
     }
   }
 
@@ -88,7 +94,7 @@ class CloneEditor extends React.Component {
     this.setState({ mother_id: event.target.value })
   }
 
-  motherLocationChanged(item) {
+  onMotherLocationChanged(item) {
     this.setState({ mother_location_id: item.rm_id })
   }
 
@@ -172,7 +178,10 @@ class CloneEditor extends React.Component {
 
     if (isShowPlantIdGenerator) {
       if (parseInt(plant_qty) <= 0) {
-        errors = { ...errors, plant_qty: ['Number of clones must be at least 1.'] }
+        errors = {
+          ...errors,
+          plant_qty: ['Number of clones must be at least 1.']
+        }
       }
 
       if (tray.length === 0) {
@@ -238,10 +247,10 @@ class CloneEditor extends React.Component {
                 Mother location ID
               </label>
               <LocationPicker
-                mode="room"
+                mode="mother"
                 locations={this.locations}
                 value={this.state.mother_location_name}
-                onChange={this.motherLocationChanged}
+                onChange={this.onMotherLocationChanged}
               />
               <FieldError
                 errors={this.state.errors}
@@ -290,7 +299,7 @@ class CloneEditor extends React.Component {
           <div className="w-50 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Tray ID</label>
             <LocationPicker
-              mode="tray"
+              mode="clone"
               locations={this.locations}
               value={this.state.tray}
               onChange={this.onGeneratorTraySelected}

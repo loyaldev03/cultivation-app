@@ -4,11 +4,13 @@ $orange: var(--orange);
   display: inline-block;
   cursor: pointer;
   height: 46px;
+  line-height: 43px;
   padding-left: 20px;
   padding-right: 20px;
   font-weight: 600;
   color: var(--gray);
   text-transform: uppercase;
+  text-decoration: none;
   border: 1px solid var(--light-gray);
   border-radius: 4px;
 }

@@ -40,7 +40,12 @@
       </div>
     </div>
 
-    <%= render "bottom_back_button" %>
+    <%= render partial: "bottom_back_button",
+      locals: {
+        right_button: true,
+        right_button_text: "Continue",
+        right_button_url: facility_setup_rooms_info_path(facility_id: @rows_form.facility_id)
+      } %>
   </div>
 </div>
 

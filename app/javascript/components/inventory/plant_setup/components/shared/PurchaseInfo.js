@@ -1,23 +1,24 @@
 import React from 'react'
 import DatePicker from 'react-date-picker'
+import PropTypes from 'prop-types'
 import { TextInput, FieldError } from '../../../../utils/FormHelpers'
 
 // Need default props
-export default class PurchaseInfo extends React.Component {
+class PurchaseInfo extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      vendor_name: props.vendor_name || '',
-      vendor_id: props.vendor_id || '',
-      address: props.address || '',
-      vendor_state_license_num: props.vendor_state_license_num || '',
+      vendor_name: props.vendor_name,
+      vendor_id: props.vendor_id,
+      address: props.address,
+      vendor_state_license_num: props.vendor_state_license_num,
       vendor_state_license_expiration_date:
-        props.vendor_state_license_expiration_date || null,
-      vendor_location_license_num: props.vendor_location_license_num || '',
+        props.vendor_state_license_expiration_date,
+      vendor_location_license_num: props.vendor_location_license_num,
       vendor_location_license_expiration_date:
-        props.vendor_location_license_expiration_date || null,
-      purchase_date: props.purchase_date || null,
-      invoice_no: props.invoice_no || '',
+        props.vendor_location_license_expiration_date,
+      purchase_date: props.purchase_date,
+      invoice_no: props.invoice_no,
       errors: {}
     }
 
@@ -173,7 +174,7 @@ export default class PurchaseInfo extends React.Component {
         {this.props.showLabel && (
           <div className="ph4 mb3 mt3">
             <span className="f6 fw6 dark-gray">
-              Where the seeds are sourced from?
+              { this.props.label }
             </span>
           </div>
         )}
@@ -279,3 +280,28 @@ export default class PurchaseInfo extends React.Component {
     )
   }
 }
+
+
+PurchaseInfo.propTypes = {
+  vendor_name: PropTypes.string,
+  vendor_id: PropTypes.string,
+  address: PropTypes.string,
+  vendor_state_license_num: PropTypes.string,
+  vendor_state_license_expiration_date: PropTypes.instanceOf(Date),
+  vendor_location_license_num: PropTypes.string,
+  vendor_location_license_expiration_date: PropTypes.instanceOf(Date),
+  purchase_date: PropTypes.instanceOf(Date),
+  invoice_no: PropTypes.string,
+  showLabel: PropTypes.bool,
+  label: PropTypes.string
+}
+
+PurchaseInfo.defaultProps = {
+  vendor_state_license_expiration_date: null,
+  vendor_location_license_expiration_date: null,
+  purchase_date: null,
+  showLabel: true,
+  label: 'Where the seeds are sourced from?'
+}
+
+export default PurchaseInfo

@@ -63,6 +63,13 @@ class CloneEditor extends React.Component {
 
   onCloneIdsChanged(event) {
     this.setState({ clone_ids: event.target.value })
+    const lines = (event.target.value.match(/\n/g) || []).length
+
+    if (lines >= 4 && this.cloneIdTextArea.scrollHeight < 350) {
+      this.cloneIdTextArea.style.height = 40 + (lines * 25) + 'px'
+    } else {
+      this.cloneIdTextArea.style.height = 'auto'
+    }
   }
 
   onPlantedOnChanged(date) {
@@ -122,9 +129,12 @@ class CloneEditor extends React.Component {
       last_plant_id: iMax
     })
 
-    const node = this.cloneIdTextArea
-    if (node.scrollHeight < 350) {
-      node.style.height = 40 + node.scrollHeight + 'px'
+    const lines = (this.state.clone_ids.match(/\n/g) || []).length
+
+    if (lines >= 4 && this.cloneIdTextArea.scrollHeight < 350) {
+      this.cloneIdTextArea.style.height = 40 + (lines * 25) + 'px'
+    } else {
+      this.cloneIdTextArea.style.height = 'auto'
     }
   }
 

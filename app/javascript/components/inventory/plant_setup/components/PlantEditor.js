@@ -232,7 +232,7 @@ export default class PlantEditor extends React.Component {
           className="dim gray f7 pv1 flex fw4 pointer ttu"
           onClick={this.onResetEditor}
         >
-          Cancel
+          Back
         </div>
       )
     } else {
@@ -247,6 +247,7 @@ export default class PlantEditor extends React.Component {
     }
   }
 
+  // Should refactor this to ./actions
   loadStrainOptions = inputValue => {
     return fetch('/api/v1/plants/strains?filter=' + inputValue, {
       credentials: 'include'

@@ -26,8 +26,6 @@ class SeedEditor extends React.Component {
       invoice_no: '',
 
       // Storage location
-      rooms: [],
-      room: '',
       room_id: '',
       section_name: '',
       section_id: '',
@@ -95,7 +93,7 @@ class SeedEditor extends React.Component {
       quantity: this.state.quantity,
       package_id: this.state.package_id
     }
-    // console.log(data)
+    console.log(data)
     event.preventDefault()
   }
 
@@ -110,7 +108,7 @@ class SeedEditor extends React.Component {
     }
 
     this.setState({ errors })
-    return Object.getOwnPropertyNames(errors).length > 0
+    return Object.getOwnPropertyNames(errors).length === 0
   }
 
   render() {
@@ -166,14 +164,9 @@ class SeedEditor extends React.Component {
           ref={this.storageInfoEditor}
           mode="storage"
           locations={this.props.locations}
-          rooms={this.props.rooms}
-          room={this.state.room}
           room_id={this.state.room_id}
           section_name={this.state.section_name}
           section_id={this.state.section_id}
-          row_id={this.state.row_id}
-          shelf_id={this.state.shelf_id}
-          tray_id={this.state.tray_id}
         />
 
         <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">

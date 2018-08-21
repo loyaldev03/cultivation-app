@@ -36,7 +36,8 @@
       </div>
 
       <div class="fl w-30 flex justify-end">
-        <%= render "layouts/timeline" %>
+        <%= render partial: "layouts/timeline",
+          locals: { has_sections: @rows_form.has_sections }  %>
       </div>
     </div>
 

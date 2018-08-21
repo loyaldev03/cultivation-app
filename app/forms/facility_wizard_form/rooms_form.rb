@@ -10,6 +10,10 @@ module FacilityWizardForm
       set_record(facility_id)
     end
 
+    def has_sections
+      self.rooms.any? { |r| r.has_sections }
+    end
+
     def generate_rooms(rooms_count = 0)
       @wz_room_count = rooms_count
       if @rooms.blank?

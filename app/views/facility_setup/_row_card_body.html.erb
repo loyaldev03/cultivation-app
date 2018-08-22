@@ -7,35 +7,35 @@
     method: :post,
     data: { confirm: "Are you sure?" } do
   %>
-    <i class="material-icons grey f6 dim pointer">delete</i>
+    <i class="material-icons grey dim pointer" style="opacity: 0.3;">delete</i>
   <% end %>
   <div class="fr">
-    <i class="material-icons orange f6 dim">info</i>
+    <i class="material-icons <%= row.is_complete ? "green" : "orange" %> dim" style="opacity: 0.3;">info</i>
   </div>
 </div>
 
 <div class="w-100 ph2 pv3 flex flex-column">
   <div class="flex flex-column items-center mv3">
     <%= image_tag 'row-icon.svg', class: "h3 w3 dib center mb2" %>
-    <span class="mid-gray f6 fw6"><%= row.name %></span>
-    <span class="gray body-1">Capacity: <%= row.capacity_text %></span>
+    <span class="h6--font dark-grey"><%= row.name %></span>
+    <span class="grey body-1">Capacity: <%= row.capacity_text %></span>
   </div>
 
-  <div class="mt3">
+  <div class="ph1">
     <div class="flex flex-row">
-      <div class="flex flex-row w-50 tl pr1">
-        <i class="material-icons gray f7">radio_button_unchecked</i>
+      <div class="flex flex-row w-50 tl items-center">
+        <i class="material-icons md-16 grey">view_carousel</i>
         <div class="flex flex-column w-100 ml2">
-          <span class="mid-gray f6 fw6"><%= row.shelves_count_text %></span>
-          <span class="gray f7">Shevles</span>
+          <span class="subtitle-2 dark-grey"><%= row.shelves_count_text %></span>
+          <span class="grey caption" style="line-height: 1;">Shevles</span>
         </div>
       </div>
 
-      <div class="flex flex-row w-50 tl pl1">
-        <i class="material-icons gray f7">radio_button_unchecked</i>
+      <div class="flex flex-row w-50 tl pl3 items-center">
+        <i class="material-icons grey md-16">view_list</i>
         <div class="flex flex-column w-100 ml2">
-          <span class="mid-gray f6 fw6"><%= row.trays_count_text %></span>
-          <span class="gray f7">Trays</span>
+          <span class="subtitle-2 dark-grey"><%= row.trays_count_text %></span>
+          <span class="grey caption" style="line-height: 1;">Trays</span>
         </div>
       </div>
     </div>
@@ -54,4 +54,10 @@
      class: "carousel__main_button link button dim"
   %>
 </div>
-<div class="carousel__card__cover"></div>
+
+<div class="carousel__card__cover" data-row-id="<%=row.id%>">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="card-checkmark">
+    <path fill="none" d="M0 0h24v24H0z"/>
+    <path class="card-checkmark--icon" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+  </svg>
+</div>

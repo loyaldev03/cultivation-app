@@ -10,6 +10,7 @@ module FacilityWizardForm
              :trays]
 
     attr_accessor(*ATTRS)
+    attr_accessor :is_last_shelf, :show_duplicate_dialog
 
     def initialize(facility_id, room_id, row_id, shelf_id = nil)
       @facility_id = facility_id
@@ -19,26 +20,20 @@ module FacilityWizardForm
       set_record
     end
 
-    def next_shelf_index
-      unless @shelf_id.nil?
-        curr_index = @shelves.find_index { |x| x.id == BSON::ObjectId.from_string(@shelf_id) }
-        if curr_index + 1 < @shelves.size
-          curr_index + 1
-        else
-          -1
-        end
-      end
+    def current_shelf_index
+      curr_index = @shelves.find_index { |x| x.id == @shelf_id.to_bson_id } unless @shelf_id.nil?
     end
 
-    def set_shelf_by_index(shelf_index)
-      if shelf_index == -1
-        shelf = @shelves&.last
-      else
-        shelf = @shelves[shelf_index]
-      end
+    def set_next_shelf(curr_index)
+      next_index = curr_index + 1
+      shelf = next_index >= @shelves.size ? @shelves&.last : @shelves[next_index]
       @shelf_id = shelf.id
       @shelf_code = shelf.code
       @trays = get_trays
+    end
+
+    def is_last_shelf
+      @shelves&.last&.id == @shelf_id
     end
 
     private

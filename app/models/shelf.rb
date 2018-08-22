@@ -10,6 +10,10 @@ class Shelf
   # the shelf level instead)
   field :is_use_trays, type: Boolean, default: -> { false }
 
+  # Shelf is consider complete if all trays contain capacity
+  # and capacity_type info
+  field :is_complete, type: Boolean, default: -> { false }
+
   embedded_in :row
 
   has_many :trays, dependent: :restrict

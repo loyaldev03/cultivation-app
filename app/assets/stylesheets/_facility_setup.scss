@@ -3,14 +3,11 @@ $orange: var(--orange);
 .btn {
   display: inline-block;
   cursor: pointer;
-  height: 46px;
+  outline: 0;
+  height: 40px;
   padding-left: 20px;
   padding-right: 20px;
-  font-weight: 600;
-  color: var(--gray);
   text-transform: uppercase;
-  border: 1px solid var(--light-gray);
-  border-radius: 4px;
 }
 
 .btn--primary {
@@ -20,8 +17,7 @@ $orange: var(--orange);
 }
 
 .fog {
-  opacity: 0.65;
-  background-color: var(--white); 
+  background-color: #ffffffa6;
   width: 100%; 
   height: 100%; 
   z-index: $fogZindex;
@@ -38,16 +34,17 @@ $orange: var(--orange);
   height: 362px;
   width: 378px;
   background-color: var(--white);
-  border: 1px solid var(--light-gray);
-  box-shadow: 0 1px 10px 0 #0000000f;
+  border: 1px solid #E0E5E7;
 }
 
 .setup_success_card__header {
   padding: 20px;
-  border-bottom: 1px solid var(--light-gray);
+  border-bottom: 1px solid #E0E5E7;
 }
 
 .setup_success_card__title {
+  font-size: 22px;
+  letter-spacing: 0.15px;
 }
 
 .setup_success_card__body {
@@ -55,14 +52,59 @@ $orange: var(--orange);
 }
 
 .setup_success_card__footer {
-  padding: 0 19px 19px 0;
+  padding: 0 20px 10px 20px;
   min-height: 65px;
   width: 100%;
   position: absolute;
-  bottom: 0;
+  bottom: -10px;
 }
 
 .setup_success_card__button {
   float: right;
 }
 
+.card-checkmark {
+  border-radius: 30px;
+  background-color: #FFFFFF;
+  width: 30px;
+  height: 30px;
+  padding: 15px;
+}
+
+.card-checkmark--icon {
+  fill: $orange;
+}
+
+$iconSize: 32px;
+$iconInnerSize: 7px;
+
+.icon-button {
+  cursor: pointer;
+  border-radius: $iconSize / 2;
+  background-color: #FFFFFF;
+  width: $iconSize - ($iconInnerSize * 2);
+  height: $iconSize - ($iconInnerSize * 2);
+  padding: $iconInnerSize;
+}
+
+.icon-button--top-right {
+  position: absolute;
+  background-color: $orange;
+  top: 0.5em;
+  right: 1em;
+}
+
+.icon-button__fill {
+  fill: #FFFFFF;
+}
+
+.icon-button--close {
+  background: transparent;
+  .icon-button__fill {
+    fill: var(--gray);
+  }
+}
+
+.confirm-duplicate-button {
+  z-index: $fogZindex + 1;
+}

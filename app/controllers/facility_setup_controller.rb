@@ -168,6 +168,7 @@ class FacilitySetupController < ApplicationController
 
   # POST update specific row info - from right panel
   def update_row_info
+    Rails.logger.debug ">>> update_row_info"
     # this value should be same as the value in "Continue" button (_row_info_form)
     is_continue = params[:commit] == 'continue'
     @form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
@@ -244,9 +245,16 @@ class FacilitySetupController < ApplicationController
           form_object.row_id,
           form_object.id
         )
-        # NOTE: Return form object for next shelf (move user to setup next shelf)
-        @row_shelves_trays_form.set_shelf_by_index(@row_shelves_trays_form.next_shelf_index)
-        # NOTE: Offer duplicate row function (see update_shelf_trays.js.erb)
+
+        if @row_shelves_trays_form.is_last_shelf
+          # NOTE: Offer duplicate row function (see update_shelf_trays.js.erb)
+          @row_shelves_trays_form.show_duplicate_dialog = true
+        else
+          # NOTE: Return form object for next shelf (move user to setup next shelf)
+          @row_shelves_trays_form.set_next_shelf(@row_shelves_trays_form.current_shelf_index)
+        end
+        # Rails.logger.debug ">>> update_shelf_trays.current_shelf_index"
+        # Rails.logger.debug ">>> update_shelf_trays #{@row_shelves_trays_form.current_shelf_index}"
         format.js
       end
     else
@@ -285,6 +293,26 @@ class FacilitySetupController < ApplicationController
         @row_id,
         @shelf_id
       )
+      format.js
+    end
+  end
+
+  def duplicate_rows
+    @facility_id = params[:facility_id]
+    @room_id = params[:room_id]
+    @row_id = params[:row_id]
+    @target_rows = params[:target_rows].split(",")
+
+    # Rails.logger.debug ">>> >>> >>>"
+    # Rails.logger.debug @facility_id
+    # Rails.logger.debug @room_id
+    # Rails.logger.debug @row_id
+    # Rails.logger.debug @target_rows
+    duplicate_cmd = SaveRowByDuplicating.call(@facility_id,
+                                              @room_id,
+                                              @row_id,
+                                              @target_rows)
+    respond_to do |format|
       format.js
     end
   end

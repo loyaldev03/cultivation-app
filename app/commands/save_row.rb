@@ -33,13 +33,7 @@ class SaveRow
   end
 
   def get_facility(facility_id)
-    raise ArgumentError, 'Invalid RowId' if facility_id.nil?
-    find_cmd = FindFacility.call({id: facility_id})
-    if find_cmd.success?
-      find_cmd.result
-    else
-      raise ArgumentError, 'Invalid Facility'
-      nil
-    end
+    raise ArgumentError, 'Invalid facility_id' if facility_id.nil?
+    facility = Facility.find(facility_id)
   end
 end

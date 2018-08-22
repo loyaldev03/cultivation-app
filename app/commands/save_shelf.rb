@@ -28,8 +28,16 @@ class SaveShelf
       # Rails.logger.debug ">>> save_shelf update capacity: #{args[:trays]}"
       shelf.capacity = calculate_capacity(args[:trays])
     end
+    shelf.is_complete = get_is_complete(args[:trays])
     shelf.wz_generated = false
-    saved = shelf.save!
+    shelf.save!
+
+    # NOTE: Update is_complete flag for current row
+    SaveRowIsComplete.call(row)
+
+    # NOTE: Update is_complete flag for current room
+    SaveRoomIsComplete.call(room)
+
     shelf
   end
 
@@ -39,5 +47,10 @@ class SaveShelf
     else
       trays.reduce(0) { |sum, hash| sum + hash[:capacity].to_i }
     end
+  end
+
+  def get_is_complete(trays)
+    have_blank = trays.detect { |t| t[:capacity].blank? || t[:capacity_type].blank? }
+    return !have_blank
   end
 end

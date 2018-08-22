@@ -7,14 +7,17 @@ module FacilityWizardForm
              :name,
              :code,
              :desc,
+             :is_complete,
              :purpose,
              :has_sections,
+             :sections,
              :rows,
              :capacity,
              :capacity_text,
-             :rows_count,
-             :sections_count,
-             :shelves_count]
+             :rows_count_text,
+             :sections_count_text,
+             :shelves_count_text,
+             :trays_count_text]
 
     attr_accessor(*ATTRS)
 
@@ -37,6 +40,10 @@ module FacilityWizardForm
         end
       end
       calculate_capacity(self.rows)
+      calculate_sections
+      calculate_rows(self.rows)
+      calculate_shelves(self.rows)
+      calculate_trays(self.rows)
     end
 
     def calculate_capacity(rows)
@@ -46,6 +53,41 @@ module FacilityWizardForm
       else
         self.capacity = rows.sum { |h| h.capacity }
         self.capacity_text = self.capacity
+      end
+    end
+
+    def calculate_rows(rows)
+      if rows.blank?
+        self.rows_count_text = '--'
+      else
+        self.rows_count_text = rows.size
+      end
+    end
+
+    def calculate_sections
+      if !self.has_sections || self.sections.blank?
+        self.sections_count_text = '--'
+      else
+        self.sections_count_text = self.sections.size
+      end
+    end
+
+    def calculate_shelves(rows)
+      if rows.blank?
+        self.shelves_count_text = '--'
+      else
+ # shelves.reduce(0) { |sum, shelf| sum + (shelf.trays.blank? ? 0 : shelf.trays.size) }
+        shelves_count = rows.sum { |x| x.wz_shelves_count }
+        self.shelves_count_text = shelves_count > 0 ? shelves_count : '--'
+      end
+    end
+
+    def calculate_trays(rows)
+      if rows.blank?
+        self.trays_count_text = '--'
+      else
+        trays_count = rows.sum { |x| x.wz_trays_count }
+        self.trays_count_text = trays_count > 0 ? trays_count : '--'
       end
     end
 

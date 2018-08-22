@@ -51,7 +51,13 @@ class SaveRowByDuplicating
         # copy shelves fields
         source_row.shelves.each_with_index do |source_shelf, index|
           Rails.logger.debug ">>> duplicate_rows - 6"
-          target_shelf = target_row.shelves.build
+          if target_row.shelves.blank? || target_row.shelves.size < index + 1
+            # Only build new shelves if there are more shelves in source row
+            target_shelf = target_row.shelves.build
+          else
+            # Reuse existing shelf in target
+            target_shelf = target_row.shelves[index]
+          end
           Rails.logger.debug ">>> duplicate_rows - 7"
           copy_attrs(COPY_SHELF_ATTRS, source_shelf, target_shelf)
           Rails.logger.debug ">>> duplicate_rows - 8"

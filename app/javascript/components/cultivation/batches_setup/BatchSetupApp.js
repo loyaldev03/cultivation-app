@@ -75,7 +75,7 @@ class BatchSetupApp extends React.Component {
           elm.classList.add('fadeIn', 'toast--' + 'success', 'db');
           setTimeout(function () { fadeToast(); }, 3000);
 
-          document.location.href = `/cultivation/batches/${data.data.id}`
+          document.location.href = `/cultivation/batches/${data.data.id}?step=1`
         }
         else{alert('something is wrong')}
       })

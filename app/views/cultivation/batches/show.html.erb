@@ -7,13 +7,16 @@
 <div class="pa4">
   <div class="flex flex-column justify-between bg-white box--shadow">
     <div class="pa4 min-h-600">
-      <div class="fl w-100 flex flex-column">
-        <h5 class="tl pa0 ma0 h5--font dark-grey">Task List</h5>
-        <p class="mt2 body-1 grey">
-        </p>
-      <%= react_component 'cultivation/tasks/BatchPlanner', {batch_id: @record.id} %>
-
-      </div>
+      <% if params[:step].present?%>
+        <%= render 'step1'%>
+      <% else %>
+        <div class="fl w-100 flex flex-column">
+          <h5 class="tl pa0 ma0 h5--font dark-grey">Task List</h5>
+          <p class="mt2 body-1 grey">
+          </p>
+          <%= react_component 'cultivation/tasks/BatchPlanner', {batch_id: @record.id} %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

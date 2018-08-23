@@ -1,9 +1,13 @@
 import SidebarTaskStore from '../stores/SidebarTaskStore'
+import TaskStore from '../stores/TaskStore'
+
+
 
 class updateSidebarTask {
 
-  update(id) {
-    SidebarTaskStore.name = id
+  update(row) {
+    let a = TaskStore.find(e => e.id === row['id']);
+    SidebarTaskStore.id = row['id']
   }
 }
 

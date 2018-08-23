@@ -1,6 +1,12 @@
 import React from 'react'
 import { observer, Provider } from "mobx-react";
 import sidebarTask from '../stores/SidebarTaskStore'
+import updateSidebarTask from '../actions/updateSidebarTask'
+
+import TaskStore from '../stores/TaskStore'
+
+
+import SidebarTaskEditor from './SidebarTaskEditor'
 
 @observer
 export default class TaskEditor extends React.Component {
@@ -13,9 +19,20 @@ export default class TaskEditor extends React.Component {
       stockEditor: '',
       source: ''
     } // or set from props
-
     this.onResetEditor = this.onResetEditor.bind(this)
     this.onClose = this.onClose.bind(this)
+  }
+
+  onChangeHandler(attr, value){
+    sidebarTask[attr] = value.persist()
+    // updateSidebarTask.update_attr(attr, value)
+  }
+
+  renderSidebarTaskEditor() {
+    //find task here and send
+    if (sidebarTask.id === undefined) return null
+    let task = TaskStore.find(e => e.id === sidebarTask.id);
+    return <SidebarTaskEditor id={sidebarTask.id} task={task} />
   }
 
   get editorSelected() {
@@ -33,7 +50,7 @@ export default class TaskEditor extends React.Component {
   }
 
   renderTitle() {
-    return 'Add Plant'
+    return 'Update Task'
   }
 
   renderCloseSidebar() {
@@ -68,49 +85,25 @@ export default class TaskEditor extends React.Component {
           >
             <h1 className="f4 fw6 ma0 flex flex-auto ttc">
               {this.renderTitle()}
-              {sidebarTask.name}
             </h1>
             {this.renderCloseSidebar()}
           </div>
 
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-60">
-              <label className="f6 fw6 db mb1 gray ttc">Strain</label>
-              <input
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-                onChange={this.onChangeStrain}
-                value={this.state.strain}
-                type="text"
-              />
-            </div>
-            <div className="w-40 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">Strain type</label>
-              <select
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-                onChange={this.onChangeStrainType}
-                value={this.state.strain_type}
-              >
-                <option value="Hybrid">Hybrid</option>
-                <option value="Indica">Indica</option>
-                <option value="Sativa">Sativa</option>
-              </select>
-            </div>
-          </div>
+          {this.renderSidebarTaskEditor()}
 
-          <div className="ph4 mb3 flex">
-            <div className="w-60">
-              <label className="f6 fw6 db mb1 gray ttc">Facility</label>
-              <select
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-                onChange={this.onFacilityChanged}
-                value={this.state.facility_id}
-              >
-                <option value="farm1">Farm 1</option>
-                <option value="farm2">Farm 2</option>
-                <option value="farm3">Farm 3</option>
-              </select>
-            </div>
-          </div>
+<p>
+Details to show in the sidebar:
+1. Task name
+2. Task category: prepare, clone, clean, waiting (based on Brian's task sheet).
+3. Instructions for the worker
+4. Days
+5. Start date
+6. end date
+7. Estimated Hours needed
+8. Assigned employees
+9. Materials & suggested qty
+9.1 Some materials may need to be further specified e.g. particular nutrient inventory to use.
+</p>
         </div>
       </div>
     )

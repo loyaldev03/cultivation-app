@@ -29,11 +29,18 @@ class TaskList extends React.Component {
   }
 
   render() {
+    let tasks = taskStore
     return(
       <React.Fragment>
-        {taskStore}
+        {tasks}
         <ReactTable
           columns={[
+            {
+              Header: "Id",
+              accessor: "id",
+              maxWidth: '100',
+              show: false
+            },
             {
               Header: "Phase",
               accessor: "attributes.phase",
@@ -66,7 +73,7 @@ class TaskList extends React.Component {
 
             }
           ]}
-          data={taskStore}
+          data={tasks}
           rows={100}
           className="-striped -highlight"
           defaultPageSize={100}
@@ -74,9 +81,8 @@ class TaskList extends React.Component {
             return {
               onClick: (e) => {
                 console.log(rowInfo.row)
-                updateSidebarTask.update(rowInfo.row['attributes.name'])
+                updateSidebarTask.update(rowInfo.row)
                 editorSidebarHandler.open({ width: '500px' })
-
               }
             }
           }

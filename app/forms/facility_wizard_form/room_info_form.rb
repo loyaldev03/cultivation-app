@@ -2,8 +2,8 @@ module FacilityWizardForm
   class RoomInfoForm
     include Mapper
 
-    ATTRS = [:id,
-             :facility_id,
+    ATTRS = [:facility_id,
+             :id,
              :name,
              :code,
              :desc,
@@ -76,7 +76,7 @@ module FacilityWizardForm
       if rows.blank?
         self.shelves_count_text = '--'
       else
- # shelves.reduce(0) { |sum, shelf| sum + (shelf.trays.blank? ? 0 : shelf.trays.size) }
+        # shelves.reduce(0) { |sum, shelf| sum + (shelf.trays.blank? ? 0 : shelf.trays.size) }
         shelves_count = rows.sum { |x| x.wz_shelves_count }
         self.shelves_count_text = shelves_count > 0 ? shelves_count : '--'
       end

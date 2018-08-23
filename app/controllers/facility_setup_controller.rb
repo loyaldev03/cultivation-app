@@ -28,9 +28,23 @@ class FacilitySetupController < ApplicationController
       params[:facility_id],
       params[:room_id],
       params[:room_name],
-      params[:room_code],
+      params[:room_code]
     )
     # Build the RoomInfoForm object
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  # GET called throught ajax when user click on edit Section
+  def section_info
+    @section_info_form = FacilityWizardForm::SectionInfoForm.new_by_id(
+      params[:facility_id],
+      params[:room_id],
+      params[:section_id],
+      params[:section_name],
+      params[:section_code]
+    )
     respond_to do |format|
       format.js
     end
@@ -71,6 +85,21 @@ class FacilitySetupController < ApplicationController
           @rooms_info_form = FacilityWizardForm::RoomsForm.new(form_object.facility_id)
           format.js
         end
+      end
+    end
+  end
+
+  # POST update specific section info - from the right panel
+  def update_section_info
+    form_object = FacilityWizardForm::UpdateSectionInfoForm.new
+    respond_to do |format|
+      res = form_object.submit(section_info_params)
+      if form_object.submit(section_info_params)
+        room_path = facility_setup_row_shelf_info_path(
+          facility_id: form_object.facility_id,
+          room_id: form_object.room_id,
+        )
+        format.js { render js: "Turbolinks.visit('#{room_path}')" }
       end
     end
   end
@@ -168,7 +197,7 @@ class FacilitySetupController < ApplicationController
 
   # POST update specific row info - from right panel
   def update_row_info
-    Rails.logger.debug ">>> update_row_info"
+    Rails.logger.debug '>>> update_row_info'
     # this value should be same as the value in "Continue" button (_row_info_form)
     is_continue = params[:commit] == 'continue'
     @form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
@@ -301,7 +330,7 @@ class FacilitySetupController < ApplicationController
     @facility_id = params[:facility_id]
     @room_id = params[:room_id]
     @row_id = params[:row_id]
-    @target_rows = params[:target_rows].split(",")
+    @target_rows = params[:target_rows].split(',')
 
     # Rails.logger.debug ">>> >>> >>>"
     # Rails.logger.debug @facility_id
@@ -336,6 +365,11 @@ class FacilitySetupController < ApplicationController
   # Step - Update Room Info (Right Panel)
   def room_info_params
     params.require(:room_info).permit(FacilityWizardForm::UpdateRoomInfoForm::ATTRS)
+  end
+
+  # Step - Update Section Info (Right Panel)
+  def section_info_params
+    params.require(:section_info).permit(FacilityWizardForm::UpdateSectionInfoForm::ATTRS)
   end
 
   # Step - Update Row Info (Right Panel)

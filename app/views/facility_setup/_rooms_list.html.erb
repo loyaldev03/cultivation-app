@@ -22,61 +22,63 @@
 
     <div class="carousel__body siema">
       <% rooms.each do |room| %>
-        <div class="carousel__card relative b--light-grey box--br3 ba pa2">
-          <div class="">
-            <%= link_to destroy_room_path(facility_id: room.facility_id, room_id: room.id),
-              remote: true, method: :post,
-              data: {
-                confirm: "Are you sure?"
-              } do
-            %>
-              <i class="material-icons grey dim pointer" style="opacity: 0.3;">delete</i>
-            <% end %>
-            <div class="fr">
-              <i class="material-icons <%= room.is_complete ? "green" : "yellow" %> f6 dim" style="opacity: 0.3;">info</i>
-            </div>
-          </div>
-
-          <div class="w-100 pv3 flex flex-column">
-            <div class="flex flex-column items-center mv3">
-              <%= image_tag 'room-icon.svg', class: "h3 w3 dib center mb2" %>
-              <span class="h6--font dark-grey"><%= room.name %></span>
-              <span class="grey body-1">Capacity: <%= room.capacity_text %></span>
+        <div class="carousel__card relative b--light-grey box--br3 ba pa2 flex flex-column justify-between">
+          <div>
+            <div class="">
+              <%= link_to destroy_room_path(facility_id: room.facility_id, room_id: room.id),
+                remote: true, method: :post,
+                data: {
+                  confirm: "Are you sure?"
+                } do
+              %>
+                <i class="material-icons grey dim pointer" style="opacity: 0.3;">delete</i>
+              <% end %>
+              <div class="fr">
+                <i class="material-icons <%= room.is_complete ? "green" : "yellow" %> f6 dim" style="opacity: 0.3;">info</i>
+              </div>
             </div>
 
-            <div class="flex flex-column justify-between ph1">
-              <div class="flex flex-row">
-                <div class="flex flex-row items-center w-50 tl">
-                  <i class="material-icons md-16 grey">view_quilt</i>
-                  <div class="flex flex-column w-100 ml2">
-                    <span class="subtitle-2 dark-grey"><%= room.sections_count_text %></span>
-                    <span class="grey caption" style="line-height: 1;">Sections</span>
-                  </div>
-                </div>
-
-                <div class="flex flex-row items-center w-50 tl pl3">
-                  <i class="material-icons md-16 grey">view_list</i>
-                  <div class="flex flex-column w-100 ml2">
-                    <span class="subtitle-2 dark-grey"><%= room.rows_count_text %></span>
-                    <span class="grey caption" style="line-height: 1;">Rows</span>
-                  </div>
-                </div>
+            <div class="w-100 pv3 flex flex-column">
+              <div class="flex flex-column items-center mv3">
+                <%= image_tag 'room-icon.svg', class: "h3 w3 dib center mb2" %>
+                <span class="h6--font dark-grey"><%= room.name %></span>
+                <span class="grey body-1">Capacity: <%= room.capacity_text %></span>
               </div>
 
-              <div class="flex flex-row items-center mt2">
-                <div class="flex flex-row items-center w-50 tl">
-                  <i class="material-icons md-16 grey">view_carousel</i>
-                  <div class="flex flex-column w-100 ml2">
-                    <span class="subtitle-2 dark-grey"><%= room.shelves_count_text %></span>
-                    <span class="grey caption" style="line-height: 1;">Shelves</span>
+              <div class="flex flex-column justify-between ph1">
+                <div class="flex flex-row">
+                  <div class="flex flex-row items-center w-50 tl">
+                    <i class="material-icons md-16 grey">view_quilt</i>
+                    <div class="flex flex-column w-100 ml2">
+                      <span class="subtitle-2 dark-grey"><%= room.sections_count_text %></span>
+                      <span class="grey caption" style="line-height: 1;">Sections</span>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-row items-center w-50 tl pl3">
+                    <i class="material-icons md-16 grey">view_list</i>
+                    <div class="flex flex-column w-100 ml2">
+                      <span class="subtitle-2 dark-grey"><%= room.rows_count_text %></span>
+                      <span class="grey caption" style="line-height: 1;">Rows</span>
+                    </div>
                   </div>
                 </div>
 
-                <div class="flex flex-row items-center w-50 tl pl3">
-                  <i class="material-icons md-16 grey">view_list</i>
-                  <div class="flex flex-column w-100 ml2">
-                    <span class="subtitle-2 dark-grey"><%= room.trays_count_text %></span>
-                    <span class="grey caption" style="line-height: 1;">Trays</span>
+                <div class="flex flex-row items-center mt2">
+                  <div class="flex flex-row items-center w-50 tl">
+                    <i class="material-icons md-16 grey">view_carousel</i>
+                    <div class="flex flex-column w-100 ml2">
+                      <span class="subtitle-2 dark-grey"><%= room.shelves_count_text %></span>
+                      <span class="grey caption" style="line-height: 1;">Shelves</span>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-row items-center w-50 tl pl3">
+                    <i class="material-icons md-16 grey">view_list</i>
+                    <div class="flex flex-column w-100 ml2">
+                      <span class="subtitle-2 dark-grey"><%= room.trays_count_text %></span>
+                      <span class="grey caption" style="line-height: 1;">Trays</span>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -1,0 +1,19 @@
+<%= form_with scope: :section_info, url: update_section_info_path do |f| %>
+  <%= f.hidden_field :facility_id, value: section.facility_id %>
+  <%= f.hidden_field :room_id, value: section.room_id %>
+  <%= f.hidden_field :id, value: section.id %>
+
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name, value: section.name %>
+  </div>
+
+  <div>
+    <%= f.label :code %>
+    <%= f.text_field :code, value: section.code %>
+  </div>
+
+  <div>
+    <%= f.submit "Save", class: "btn" %>
+  </div>
+<% end %>

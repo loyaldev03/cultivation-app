@@ -1,8 +1,12 @@
 <div class="flex items-center justify-between ph4 ba bt-1 bb-0 br-0 bl-0 b--light-grey" style="height: 86px">
   <div class="flex flex-row items-center pointer dim">
       <i class="material-icons md-light-gray">keyboard_arrow_left</i>
-      <%= link_to 'Back', 'javascript:history.back()', class: "db ttu link button--font light-grey" %>
+      <%#= link_to 'Back', 'javascript:history.back()', class: "db ttu link button--font light-grey" %>
+      <%= link_to "Back",
+        left_button_url,
+        class: "db ttu link button--font light-grey" %>
   </div>
+  
   <div class="">
     <% if right_button %>
       <%= link_to right_button_text,

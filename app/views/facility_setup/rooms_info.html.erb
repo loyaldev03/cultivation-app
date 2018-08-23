@@ -23,7 +23,10 @@
       </div>
     </div>
 
-    <%= render partial: "bottom_back_button", locals: { right_button: false } %>
+    <%= render partial: "bottom_back_button", 
+        locals: { 
+          right_button: false,
+          left_button_url: facility_setup_new_path } %>
   </div>
 </div>
 

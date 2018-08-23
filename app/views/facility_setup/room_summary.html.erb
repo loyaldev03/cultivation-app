@@ -71,12 +71,11 @@
       </div>
     </div>
 
-    <div class="flex items-center ph4 ba bt-1 bb-0 br-0 bl-0 b--light-grey" style="height: 86px">
-      <div class="flex flex-row items-center pointer dim">
-          <i class="material-icons md-light-gray">keyboard_arrow_left</i>
-          <%= link_to 'Back', facility_setup_rooms_info_path(facility_id: @room_summary_form.facility_id), 
-              class: "db ttu link button--font light-grey" %>
-      </div>
-    </div>
+     <%= render partial: "bottom_back_button", 
+        locals: { 
+          right_button: false,
+          left_button_url:  facility_setup_rooms_info_path(facility_id: @room_summary_form.facility_id) 
+        } 
+      %>
   </div>
 </div>

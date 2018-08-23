@@ -1,48 +1,50 @@
-<div class="ph2 pt2 pb0">
-  <%= link_to destroy_row_path(
-      facility_id: row.facility_id,
-      room_id: row.room_id,
-      row_id: row.id),
-    remote: true,
-    method: :post,
-    data: { confirm: "Are you sure?" } do
-  %>
-    <i class="material-icons grey dim pointer" style="opacity: 0.3;">delete</i>
-  <% end %>
-  <div class="fr">
-    <i class="material-icons <%= row.is_complete ? "green" : "orange" %> dim" style="opacity: 0.3;">info</i>
-  </div>
-</div>
-
-<div class="w-100 ph2 pv3 flex flex-column">
-  <div class="flex flex-column items-center mv3">
-    <%= image_tag 'row-icon.svg', class: "h3 w3 dib center mb2" %>
-    <span class="h6--font dark-grey"><%= row.name %></span>
-    <span class="grey body-1">Capacity: <%= row.capacity_text %></span>
+<div>
+  <div class="">
+    <%= link_to destroy_row_path(
+        facility_id: row.facility_id,
+        room_id: row.room_id,
+        row_id: row.id),
+      remote: true,
+      method: :post,
+      data: { confirm: "Are you sure?" } do
+    %>
+      <i class="material-icons grey dim pointer" style="opacity: 0.3;">delete</i>
+    <% end %>
+    <div class="fr">
+      <i class="material-icons <%= row.is_complete ? "green" : "orange" %> dim" style="opacity: 0.3;">info</i>
+    </div>
   </div>
 
-  <div class="ph1">
-    <div class="flex flex-row">
-      <div class="flex flex-row w-50 tl items-center">
-        <i class="material-icons md-16 grey">view_carousel</i>
-        <div class="flex flex-column w-100 ml2">
-          <span class="subtitle-2 dark-grey"><%= row.shelves_count_text %></span>
-          <span class="grey caption" style="line-height: 1;">Shevles</span>
+  <div class="w-100 pv3 flex flex-column">
+    <div class="flex flex-column items-center mv3">
+      <%= image_tag 'row-icon.svg', class: "h3 w3 dib center mb2" %>
+      <span class="h6--font dark-grey"><%= row.name %></span>
+      <span class="grey body-1">Capacity: <%= row.capacity_text %></span>
+    </div>
+
+    <div class="ph1">
+      <div class="flex flex-row">
+        <div class="flex flex-row w-50 tl items-center">
+          <i class="material-icons md-16 grey">view_carousel</i>
+          <div class="flex flex-column w-100 ml2">
+            <span class="subtitle-2 dark-grey"><%= row.shelves_count_text %></span>
+            <span class="grey caption" style="line-height: 1;">Shevles</span>
+          </div>
         </div>
-      </div>
 
-      <div class="flex flex-row w-50 tl pl3 items-center">
-        <i class="material-icons grey md-16">view_list</i>
-        <div class="flex flex-column w-100 ml2">
-          <span class="subtitle-2 dark-grey"><%= row.trays_count_text %></span>
-          <span class="grey caption" style="line-height: 1;">Trays</span>
+        <div class="flex flex-row w-50 tl pl3 items-center">
+          <i class="material-icons grey md-16">view_list</i>
+          <div class="flex flex-column w-100 ml2">
+            <span class="subtitle-2 dark-grey"><%= row.trays_count_text %></span>
+            <span class="grey caption" style="line-height: 1;">Trays</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="w-100 dim">
+<div class="w-100">
   <%= link_to "Set Up Row",
     fetch_row_info_path(
       facility_id: row.facility_id,
@@ -51,7 +53,7 @@
       row_name: row.name,
       row_code: row.code
   ), remote: true,
-     class: "carousel__main_button link button dim"
+     class: "carousel__main_button w-100 bg-orange bn box--br3 ttu link button--font white dim flex justify-center items-center"
   %>
 </div>
 

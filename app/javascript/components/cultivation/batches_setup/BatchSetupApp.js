@@ -3,14 +3,8 @@ import React from "react";
 import Select from 'react-select'
 import { render } from "react-dom";
 
-import { observable } from "mobx";
-import { observer, Provider } from "mobx-react";
+import DatePicker from 'react-date-picker'
 
-// import loadTasks from './actions/loadTask'
-// import TaskList from './components/TaskList'
-// import TaskEditor from './components/TaskEditor'
-import DayPickerInput from 'react-day-picker/DayPickerInput';
-import 'react-day-picker/lib/style.css';
 
 const styles = `
 
@@ -134,7 +128,10 @@ class BatchSetupApp extends React.Component {
           <div className="w-100 shelves_number_options">
             <div className="mt3">
               <label className="f6 fw5 db mb1 gray" for="record_batch_source">Select Start Date</label>
-              <DayPickerInput onDayChange={(e) => this.handleChange('start_date', e)} />
+              <DatePicker
+                value={this.state.start_date}
+                onChange={(e) => this.handleChange('start_date', e)}
+              />
             </div>
           </div>
           <div className="w-100 flex justify-end">

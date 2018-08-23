@@ -5,24 +5,24 @@
 
   <div class="carousel__body siema">
     <% rows.each do |row| %>
-      <div class="carousel__card carousel__card--<%= row.id %> relative b--light-grey box--br3 ba">
+      <div class="carousel__card carousel__card--<%= row.id %> relative b--light-grey box--br3 ba pa2 flex flex-column justify-between">
         <%= render partial: "row_card_body", locals: { row: row } %>
       </div>
     <% end %>
     <% if rows.any? || show_add_on_empty %>
       <div class="carousel__card carousel__card--add relative <%= "carousel__card--center" if rows.blank? %>">
-        <%= image_tag 'row-icon.svg', class: "h3 w3 dib center mb2" %>
+        <i class="material-icons md-48 mb3 orange">add_circle_outline</i>
         <%= link_to generate_rows_path(
-          facility_id: facility_id,
-          room_id: room_id,
-          section_id: section_id,
-          rows_count: rows.size + 1,
-          mode: 'increment'
-        ),
-          remote: true,
-          method: :post,
-          class: "dim link" do %>
-          <span class="carousel__secondary_button">Add a new row</span>
+            facility_id: facility_id,
+            room_id: room_id,
+            section_id: section_id,
+            rows_count: rows.size + 1,
+            mode: 'increment'
+          ),
+            remote: true,
+            method: :post,
+            class: "dim link" do %>
+          <span class="carousel__secondary_button bn box--br3 button--font">Add a new row</span>
         <% end %>
         <div class="carousel__card__cover">
           <i class="material-icons md-light fw6">done</i>

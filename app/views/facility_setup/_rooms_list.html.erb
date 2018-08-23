@@ -22,8 +22,8 @@
 
     <div class="carousel__body siema">
       <% rooms.each do |room| %>
-        <div class="carousel__card relative b--light-grey box--br3 ba">
-          <div class="ph2 pt2 pb0">
+        <div class="carousel__card relative b--light-grey box--br3 ba pa2">
+          <div class="">
             <%= link_to destroy_room_path(facility_id: room.facility_id, room_id: room.id),
               remote: true, method: :post,
               data: {
@@ -37,7 +37,7 @@
             </div>
           </div>
 
-          <div class="w-100 ph2 pv3 flex flex-column">
+          <div class="w-100 pv3 flex flex-column">
             <div class="flex flex-column items-center mv3">
               <%= image_tag 'room-icon.svg', class: "h3 w3 dib center mb2" %>
               <span class="h6--font dark-grey"><%= room.name %></span>
@@ -91,16 +91,16 @@
               room_code: room.code,
             ), remote: true,
             style: "height: 46px",
-            class: "w-100 absolute bottom-0 bg-orange tc ttu link button white dim flex justify-center items-center"
+            class: "w-100 bg-orange bn box--br3 ttu link button--font white dim flex justify-center items-center"
           %>
         </div>
       <% end %>
       <% unless rooms.blank? %>
         <div class="carousel__card carousel__card--add flex flex-column items-center justify-center a2 box--br3 box--shadow b--dashed b--light-grey">
-          <%= image_tag 'room-icon.svg', class: "h3 w3 dib center mb2" %>
+          <i class="material-icons md-48 mb3 orange">add_circle_outline</i>
           <%= link_to generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), 
               remote: true, method: :post, class: "dim link" do %>
-              <div class="carousel__secondary_button">add a new room</div>
+              <div class="carousel__secondary_button bn box--br3 button--font">add a new room</div>
           <% end %>
         </div>
       <% end %>

@@ -36,7 +36,26 @@ function updateToggleDisplay() {
 }
 
 function setupCheckboxToggle() {
+  console.log('setupCheckboxToggle')
   let selector = 'input[data-toggle]';
   $$(selector).on('change', updateToggleDisplay);
   updateToggleDisplay();
+}
+
+function updateToggleCollapsible(e) {
+  const targetClass = e.target.getAttribute('data-toggle')
+  const targetElm = $_(`[data-collapse="${targetClass}"]`)
+  if (!targetElm) {
+    return;
+  }
+  if (e.target.checked) {
+    targetElm.style.display = "none"
+  } else {
+    targetElm.style.removeProperty("display")
+  }
+}
+
+function setupCollapsible() {
+  let selector = 'input[role="toggle"]';
+  $$(selector).on('change', updateToggleCollapsible)
 }

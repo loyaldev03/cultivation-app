@@ -1,8 +1,8 @@
 import React from 'react'
 import PlantList from './components/PlantList'
 import PlantEditor from './components/PlantEditor'
-import plantStore from './store/PlantStore'
-import addPlant from './actions/addPlant'
+// import plantStore from './store/PlantStore'
+// import addPlant from './actions/addPlant'
 
 class PlantSetupApp extends React.Component {
   constructor(props) {
@@ -40,26 +40,28 @@ class PlantSetupApp extends React.Component {
 
   renderFirstTime() {
     return (
-      <div className="mb3">
-        <div className="w-50">
-          <h1 className="mt0 f3 fw4 dark-gray">Setup active plant inventory</h1>
-          <p className="gray mb3 lh-copy">
+      <div className="ph4 pt4 pb5 mb3 bg-white w-70">
+        <div className="w-60">
+          <h1 className="mt0 mb4 f3 fw4 dark-gray">
+            Setup active plant inventory
+          </h1>
+          <p className="mb3 lh-copy f5 grey">
             Add your existing plant inventories. Do not worry if you are unable
             to add all the records, you can always continue later from the
             settings menu.
           </p>
-          <p className="gray mb4 lh-copy">
+          <p className="mb4 lh-copy f5 grey">
             We recommend to prioritise on <strong>seed, clone</strong> and{' '}
             <strong>mother data</strong> so that you can proceed to do
             cultivation planning in the next phase of the setup.
           </p>
+          <button
+            className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
+            onClick={this.openSidebar}
+          >
+            Add my first plant
+          </button>
         </div>
-        <button
-          className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
-          onClick={this.openSidebar}
-        >
-          Add my first plant
-        </button>
       </div>
     )
   }
@@ -70,7 +72,7 @@ class PlantSetupApp extends React.Component {
         {this.renderFirstTime()}
         {this.renderPlantList()}
         <PlantEditor
-          isOpened
+          isOpened={false}
           onClose={this.closeSidebar}
           strainTypes={this.props.strain_types}
           locations={this.props.locations}

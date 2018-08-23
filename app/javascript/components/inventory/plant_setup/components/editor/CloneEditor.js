@@ -1,351 +1,360 @@
 import React from 'react'
-import { TextInput } from '../../../../utils/FormHelpers'
+import DatePicker from 'react-date-picker'
+import {
+  TextInput,
+  NumericInput,
+  FieldError
+} from '../../../../utils/FormHelpers'
+import PurchaseInfo from '../shared/PurchaseInfo'
+import LocationPicker from '../shared/LocationPicker'
 
 class CloneEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       // source
-      cloneIds: '',
-      planted_on: '',
-      expected_harvest_date: '',
-      isBought: false,
+      clone_ids: '',
+      plant_qty: 0,
+      tray: '',
+      generator_location: '',
+      last_plant_id: 0,
+      planted_on: null,
+      expected_harvest_date: null,
+      is_bought: false,
       mother_id: '',
-      clone_date: '',
+      mother_location_id: '',
+      isShowPlantIdGenerator: false,
+      errors: {}
+    }
 
-      // Vendor/ source
-      vendor_name: '',
-      vendor_id: '',
-      address: '',
-      vendor_state_license_num: '',
-      vendor_state_license_expiration_date: '',
-      vendor_location_license_num: '',
-      vendor_location_license_expiration_date: '',
-      purchase_date: '',
-      invoice_no: '',
+    this.locations = props.locations
 
-      // Storage location
-      room: '',
-      room_id: '',
-      section_name: '',
-      section_id: '',
-      row_id: '',
-      shelf_id: '',
-      tray_id: ''
+    // Converting to callback ref because purchase info editor is hidding and showing.
+    // This will cause the standard way to set ref to be broken / undefined.
+    this.purchaseInfoEditor = null
+    this.setPurchaseInfoEditor = element => {
+      this.purchaseInfoEditor = element
+    }
+
+    this.cloneIdTextArea = null
+    // Callback ref to get instance of html DOM: https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
+    // Getting a ref to textarea in order to adjust height according to content.
+    this.setCloneIdTextArea = element => {
+      this.cloneIdTextArea = element
     }
 
     this.onCloneIdsChanged = this.onCloneIdsChanged.bind(this)
+    this.onChangeGeneratorPlantCount = this.onChangeGeneratorPlantCount.bind(
+      this
+    )
+    this.onGeneratorTraySelected = this.onGeneratorTraySelected.bind(this)
     this.onPlantedOnChanged = this.onPlantedOnChanged.bind(this)
     this.onExpectedHarvestDateChanged = this.onExpectedHarvestDateChanged.bind(
       this
     )
-    this.onCloneDateChanged = this.onCloneDateChanged.bind(this)
 
     this.onIsBoughtChanged = this.onIsBoughtChanged.bind(this)
     this.onMotherIdChanged = this.onMotherIdChanged.bind(this)
-
-    // Vendor/ source
-    this.onVendorNameChanged = this.onVendorNameChanged.bind(this)
-    this.onVendorIDChanged = this.onVendorIDChanged.bind(this)
-    this.onAddressChanged = this.onAddressChanged.bind(this)
-    this.onVendorStateLicenseNumChanged = this.onVendorStateLicenseNumChanged.bind(
-      this
-    )
-    this.onVendorStateLicenseExpirationDateChanged = this.onVendorStateLicenseExpirationDateChanged.bind(
-      this
-    )
-    this.onVendorLocationLicenseNumChanged = this.onVendorLocationLicenseNumChanged.bind(
-      this
-    )
-    this.onVendorLocationLicenseExpirationDateChanged = this.onVendorLocationLicenseExpirationDateChanged.bind(
-      this
-    )
-    this.onPurchaseDateChanged = this.onPurchaseDateChanged.bind(this)
-    this.onInvoiceNoChanged = this.onInvoiceNoChanged.bind(this)
-
-    // Storage location
-    this.onRoomChanged = this.onRoomChanged.bind(this)
-    this.onRoomIdChanged = this.onRoomIdChanged.bind(this)
-    this.onSectionNameChanged = this.onSectionNameChanged.bind(this)
-    this.onSectionIdChanged = this.onSectionIdChanged.bind(this)
-    this.onRowIdChanged = this.onRowIdChanged.bind(this)
-    this.onShelfIdChanged = this.onShelfIdChanged.bind(this)
-    this.onTrayIdChanged = this.onTrayIdChanged.bind(this)
-
-    this.showMetcMessage = this.showMetcMessage.bind(this)
+    this.onMotherLocationChanged = this.onMotherLocationChanged.bind(this)
+    this.onSave = this.onSave.bind(this)
+    this.onToggleGeneratePlantId = this.onToggleGeneratePlantId.bind(this)
+    // this.onGeneratePlantId = this.onGeneratePlantId.bind(this)
   }
 
   onCloneIdsChanged(event) {
-    this.setState({ cloneIds: event.target.value })
+    this.setState({ clone_ids: event.target.value })
+    const lines = (event.target.value.match(/\n/g) || []).length
+    const node = this.cloneIdTextArea
+
+    if (lines < 5) {
+      node.style.height = 'auto'
+      node.style.minHeight = ''
+    } else if (lines >= 5 && lines < 15) {
+      node.style.height = 40 + lines * 25 + 'px'
+      node.style.minHeight = ''
+    } else {
+      node.style.minHeight = 40 + 15 * 25 + 'px'
+      node.style.height = 'auto'
+    }
   }
 
-  onPlantedOnChanged(event) {
-    this.setState({ planted_on: event.target.value })
+  onPlantedOnChanged(date) {
+    this.setState({ planted_on: date })
   }
 
-  onExpectedHarvestDateChanged(event) {
-    this.setState({ expected_harvest_date: event.target.value })
-  }
-
-  onCloneDateChanged(event) {
-    this.setState({ clone_date: event.target.value })
+  onExpectedHarvestDateChanged(date) {
+    this.setState({ expected_harvest_date: date })
   }
 
   onIsBoughtChanged(event) {
-    console.log(event)
-    this.setState({ isBought: !this.state.isBought })
+    this.setState({ is_bought: !this.state.is_bought })
   }
 
   onMotherIdChanged(event) {
     this.setState({ mother_id: event.target.value })
   }
 
-  onVendorNameChanged(event) {
-    this.setState({ vendor_name: event.target.value })
+  onMotherLocationChanged(item) {
+    this.setState({ mother_location_id: item.rm_id })
   }
 
-  onVendorIDChanged(event) {
-    this.setState({ vendor_id: event.target.value })
-  }
-
-  onAddressChanged(event) {
-    this.setState({ address: event.target.value })
-  }
-
-  onVendorStateLicenseNumChanged(event) {
-    this.setState({ vendor_state_license_num: event.target.value })
-  }
-
-  onVendorStateLicenseExpirationDateChanged(event) {
-    this.setState({ vendor_state_license_expiration_date: event.target.value })
-  }
-
-  onVendorLocationLicenseNumChanged(event) {
-    this.setState({ vendor_location_license_num: event.target.value })
-  }
-
-  onVendorLocationLicenseExpirationDateChanged(event) {
+  onToggleGeneratePlantId(event) {
     this.setState({
-      vendor_location_license_expiration_date: event.target.value
+      isShowPlantIdGenerator: !this.state.isShowPlantIdGenerator
     })
+    if (event) event.preventDefault()
   }
 
-  onPurchaseDateChanged(event) {
-    this.setState({ purchase_date: event.target.value })
+  onChangeGeneratorPlantCount(event) {
+    this.setState({ plant_qty: event.target.value })
   }
 
-  onInvoiceNoChanged(event) {
-    this.setState({ invoice_no: event.target.value })
+  onGeneratorTraySelected(item) {
+    this.setState({ tray: item.label })
   }
 
-  onRoomChanged(event) {
-    this.setState({ room: event.target.value })
-  }
+  // onGeneratePlantId(event) {
+  //   event.preventDefault()
+  //   if (this.state.generator_plant_count <= 0) {
+  //     return
+  //   }
 
-  onRoomIdChanged(event) {
-    this.setState({ room_id: event.target.value })
-  }
+  //   let cloneIds = ''
+  //   let i = parseInt(this.state.last_plant_id)
+  //   let iMax = i + parseInt(this.state.generator_plant_count)
 
-  onSectionNameChanged(event) {
-    this.setState({ section_name: event.target.value })
-  }
+  //   for (i; i < iMax; i++) {
+  //     const serialNo =
+  //       new Date().getFullYear().toString() + i.toString().padStart(6, '0')
+  //     const id = `P${serialNo}, ${this.state.generator_location}\n`
+  //     cloneIds += id
+  //   }
 
-  onSectionIdChanged(event) {
-    this.setState({ section_id: event.target.value })
-  }
+  //   this.setState({
+  //     clone_ids: this.state.clone_ids + cloneIds,
+  //     last_plant_id: iMax
+  //   })
 
-  onRowIdChanged(event) {
-    this.setState({ row_id: event.target.value })
-  }
+  //   const lines = (this.state.clone_ids.match(/\n/g) || []).length
 
-  onShelfIdChanged(event) {
-    this.setState({ shelf_id: event.target.value })
-  }
+  //   if (lines >= 4 && this.cloneIdTextArea.scrollHeight < 350) {
+  //     this.cloneIdTextArea.style.height = 40 + lines * 25 + 'px'
+  //   } else {
+  //     this.cloneIdTextArea.style.height = 'auto'
+  //   }
+  // }
 
-  onTrayIdChanged(event) {
-    this.setState({ tray_id: event.target.value })
-  }
+  onSave(event) {
+    const data = this.validateAndGetValues()
+    if (data.isValid) {
+      // alert('not valid')
+      // call API
+    }
 
-  showMetcMessage(event) {
     event.preventDefault()
-    alert(
-      'It calls on Metrc system to generate / retrieve Plant ID and populates them to text area.'
-    )
+  }
+
+  validateAndGetValues() {
+    const {
+      clone_ids,
+      plant_qty,
+      isShowPlantIdGenerator,
+      tray,
+      planted_on,
+      expected_harvest_date,
+      is_bought,
+      mother_id,
+      mother_location_id
+    } = this.state
+
+    let errors = {}
+    if (planted_on === null) {
+      errors = { ...errors, planted_on: ['Planted on date is required.'] }
+    }
+
+    if (clone_ids.trim().length <= 0) {
+      errors = { ...errors, clone_ids: ['Plant ID is required.'] }
+    }
+
+    if (isShowPlantIdGenerator) {
+      if (parseInt(plant_qty) <= 0) {
+        errors = {
+          ...errors,
+          plant_qty: ['Number of clones must be at least 1.']
+        }
+      }
+
+      if (tray.length === 0) {
+        errors = { ...errors, tray: ['Location of the clones is required.'] }
+      }
+    }
+
+    let purchaseData = { idValid: true }
+    if (!is_bought) {
+      if (mother_id.length <= 0) {
+        errors = { ...errors, mother_id: ['Mother ID is required.'] }
+      }
+
+      if (mother_location_id.length <= 0) {
+        errors = {
+          ...errors,
+          mother_location_id: ['Mother plant location is required.']
+        }
+      }
+    } else {
+      purchaseData = this.purchaseInfoEditor.getValues()
+    }
+
+    const strainData = this.props.onValidateParent()
+    const isValid =
+      Object.getOwnPropertyNames(errors).length == 0 &&
+      strainData.isValid &&
+      purchaseData.isValid
+
+    const data = {
+      clone_ids,
+      planted_on,
+      expected_harvest_date,
+      is_bought,
+      mother_id,
+      mother_location_id,
+      ...purchaseData,
+      errors,
+      isValid
+    }
+
+    if (!data.isValid) {
+      this.setState({ errors: data.errors })
+    }
+    return data
   }
 
   renderProcurementInfo() {
-    if (!this.state.isBought) {
+    if (!this.state.is_bought) {
       return (
         <React.Fragment>
           <div className="ph4 mb3 flex">
-            <div className="w-60">
+            <div className="w-50">
               <TextInput
                 label={'Mother plant ID'}
                 value={this.state.mother_id}
                 onChange={this.onMotherIdChanged}
               />
+              <FieldError errors={this.state.errors} field="mother_id" />
             </div>
-            {/* <div className="w-40 pl3">
-              <TextInput label={'Clone date'} value={this.state.clone_date} onChange={this.onCloneDateChanged} />
-            </div> */}
-            <div className="w-40 pl3">
-              <TextInput label={'Mother location ID'} />
+            <div className="w-50 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">
+                Mother location ID
+              </label>
+              <LocationPicker
+                mode="mother"
+                locations={this.locations}
+                value={this.state.mother_location_name}
+                onChange={this.onMotherLocationChanged}
+              />
+              <FieldError
+                errors={this.state.errors}
+                field="mother_location_id"
+              />
             </div>
           </div>
         </React.Fragment>
       )
     } else {
       return (
-        <React.Fragment>
-          <div className="ph4 mb3 flex">
-            <div className="w-100">
-              <TextInput
-                label={'Vendor name'}
-                value={this.state.vendor_name}
-                onChange={this.onVendorNameChanged}
-              />
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <TextInput
-                label={'Vendor ID'}
-                value={this.state.vendor_id}
-                onChange={this.onVendorIDChanged}
-              />
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-100">
-              <TextInput
-                label={'Address'}
-                value={this.state.address}
-                onChange={this.onAddressChanged}
-              />
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <TextInput
-                label={'Vendor State License #'}
-                value={this.vendor_state_license_num}
-                onChange={this.onVendorStateLicenseNumChanged}
-              />
-            </div>
-            <div className="w-50 pl3">
-              <TextInput
-                label={'Expiration date'}
-                value={this.state.vendor_state_license_expiration_date}
-                onChange={this.onVendorStateLicenseExpirationDateChanged}
-              />
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <TextInput
-                label={'Vendor location license #'}
-                value={this.vendor_location_license_num}
-                onChange={this.onVendorLocationLicenseNumChanged}
-              />
-            </div>
-            <div className="w-50 pl3">
-              <TextInput
-                label={'Expiration date'}
-                value={this.state.vendor_location_license_expiration_date}
-                onChange={this.onVendorLocationLicenseExpirationDateChanged}
-              />
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <TextInput
-                label={'Purchase Date'}
-                value={this.purchase_date}
-                onChange={this.onPurchaseDateChanged}
-              />
-            </div>
-            <div className="w-50 pl3">
-              <TextInput
-                label={'Invoice no'}
-                value={this.state.invoice_no}
-                onChange={this.onInvoiceNoChanged}
-              />
-            </div>
-          </div>
-        </React.Fragment>
+        <PurchaseInfo
+          ref={this.setPurchaseInfoEditor}
+          showLabel={false}
+          vendor_name={this.state.vendor_name}
+          vendor_id={this.state.vendor_id}
+          address={this.state.address}
+          vendor_state_license_num={this.state.vendor_state_license_num}
+          vendor_state_license_expiration_date={
+            this.state.vendor_state_license_expiration_date
+          }
+          vendor_location_license_num={this.state.vendor_location_license_num}
+          vendor_location_license_expiration_date={
+            this.state.vendor_location_license_expiration_date
+          }
+          purchase_date={this.state.purchase_date}
+          invoice_no={this.state.invoice_no}
+        />
       )
     }
   }
 
-  /* This method might be removed */
-  renderStorageInfo() {
+  renderPlantIdGenerator() {
+    if (!this.state.isShowPlantIdGenerator) return null
     return (
       <React.Fragment>
-        <hr className="mt3 m b--light-gray w-100" />
-        <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">Where it is stored?</span>
-        </div>
-        <div className="ph4 mb3 flex">
-          <div className="w-60">
-            <TextInput
-              label={'Room'}
-              value={this.state.room}
-              onChange={this.onRoomChanged}
+        <div className="ph4 mb2 mt0 flex">
+          <div className="w-50">
+            <NumericInput
+              label={'Number of plants'}
+              value={this.state.plant_qty}
+              onChange={this.onChangeGeneratorPlantCount}
             />
+            <FieldError errors={this.state.errors} field="plant_qty" />
           </div>
-          <div className="w-40 pl3">
-            <TextInput
-              label={'Room Id'}
-              value={this.state.room_id}
-              onChange={this.onRoomIdChanged}
+          <div className="w-50 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">Tray ID</label>
+            <LocationPicker
+              mode="clone"
+              locations={this.locations}
+              value={this.state.tray}
+              onChange={this.onGeneratorTraySelected}
             />
+            <FieldError errors={this.state.errors} field="tray" />
           </div>
         </div>
+        <div className="ph4 mb3 flex justify-end">
+          <a
+            href="#"
+            onClick={this.onToggleGeneratePlantId}
+            className="fw4 f7 link dark-blue"
+          >
+            Cancel
+          </a>
+        </div>
+      </React.Fragment>
+    )
+  }
 
-        <div className="ph4 mb3 flex">
-          <div className="w-60">
-            <TextInput
-              label={'Section'}
-              value={this.state.section_name}
-              onChange={this.onSectionNameChanged}
+  renderPlantIdTextArea() {
+    if (this.state.isShowPlantIdGenerator) return null
+
+    return (
+      <React.Fragment>
+        <div className="ph4 mb2 flex">
+          <div className="w-100">
+            <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
+              Each clone has its own <strong>Plant ID</strong>.
+            </p>
+            <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
+              If you already have them, paste Plant IDs with its corresponding
+              tray ID:
+            </p>
+            <textarea
+              ref={this.setCloneIdTextArea}
+              rows="4"
+              value={this.state.clone_ids}
+              className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
+              placeholder="Plant0001, Tray0001&#10;Plant0002, Tray0001&#10;Plant0003, Tray0002&#10;Plant0004, Tray0002"
+              onChange={this.onCloneIdsChanged}
             />
-          </div>
-          <div className="w-40 pl3">
-            <TextInput
-              label={'Section Id'}
-              value={this.state.section_id}
-              onChange={this.onSectionIdChanged}
-            />
+            <FieldError errors={this.state.errors} field="clone_ids" />
           </div>
         </div>
-
-        <div className="ph4 mb3 flex">
-          <div className="w-30">
-            <TextInput
-              label={'Row Id'}
-              value={this.state.row_id}
-              onChange={this.onRowIdChanged}
-            />
-          </div>
-          <div className="w-30 pl3">
-            <TextInput
-              label={'Shelf Id'}
-              value={this.state.shelf_id}
-              onChange={this.onShelfIdChanged}
-            />
-          </div>
-          <div className="w-40 pl3">
-            <TextInput
-              label={'Tray Id'}
-              value={this.state.tray_id}
-              onChange={this.onTrayIdChanged}
-            />
-          </div>
+        <div className="ph4 mb3 flex justify-end">
+          <a
+            href="#"
+            onClick={this.onToggleGeneratePlantId}
+            className="fw4 f7 link dark-blue"
+          >
+            {this.state.clone_ids.length > 0
+              ? 'Generate more IDs'
+              : 'Don\'t have Plant ID? Click here to generate.'}
+          </a>
         </div>
       </React.Fragment>
     )
@@ -358,44 +367,23 @@ class CloneEditor extends React.Component {
           <span className="f6 fw6 dark-gray">Plant IDs</span>
         </div>
 
-        <div className="ph4 mb2 flex">
-          <div className="w-100">
-            <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
-              Each clone has its own <strong>Plant ID</strong>.
-            </p>
-            <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
-              {' '}
-              If you already have them, paste Plant IDs with its corresponding
-              tray ID like below:
-            </p>
-            <textarea
-              rows="5"
-              className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-              placeholder="Plant0001, Tray0001&#10;Plant0002, Tray0001&#10;Plant0003, Tray0002&#10;Plant0004, Tray0002"
-            />
-          </div>
-        </div>
-        <div className="ph4 mb4 flex justify-end">
-          <a
-            href="#"
-            onClick={this.showMetcMessage}
-            className="fw4 f7 link dark-blue"
-          >
-            Don't have Plant ID? Click here to generate.
-          </a>
-        </div>
+        {this.renderPlantIdTextArea()}
+        {this.renderPlantIdGenerator()}
 
         <div className="ph4 mt2 mb3 flex">
-          <div className="w-60">
-            <TextInput
-              label={'Planted On'}
+          <div className="w-50">
+            <label className="f6 fw6 db mb1 gray ttc">Planted On</label>
+            <DatePicker
               value={this.state.planted_on}
               onChange={this.onPlantedOnChanged}
             />
+            <FieldError errors={this.state.errors} field="planted_on" />
           </div>
-          <div className="w-40 pl3">
-            <TextInput
-              label={'Expected Harvest Date'}
+          <div className="w-50 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">
+              Expected Harvest Date
+            </label>
+            <DatePicker
               value={this.state.expected_harvest_date}
               onChange={this.onExpectedHarvestDateChanged}
             />
@@ -431,6 +419,7 @@ class CloneEditor extends React.Component {
           <a
             className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
             href="#"
+            onClick={this.onSave}
           >
             Preview &amp; Save
           </a>

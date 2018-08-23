@@ -31,6 +31,8 @@
 
 .react-calendar__tile {
   border: none;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .react-date-picker__calendar--closed {
@@ -67,4 +69,17 @@
   .react-calendar__tile:hover {
     background-color: rgba(246, 104, 48, 0.2);
   }
+}
+
+.react-calendar__year-view__months__month,
+.react-calendar__decade-view__years__year {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 12px;
+}
+
+.react-calendar__navigation__arrow,
+.react-calendar__navigation__label {
+  outline-width: 1px;
+  outline: gray;
 }

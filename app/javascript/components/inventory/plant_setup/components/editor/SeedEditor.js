@@ -1,13 +1,17 @@
 import React from 'react'
-import { TextInput, NumericInput } from '../../../../utils/FormHelpers'
-import PurchaseInfo from './PurchaseInfo'
-import StorageInfo from './StorageInfo'
+import {
+  TextInput,
+  NumericInput,
+  FieldError
+} from '../../../../utils/FormHelpers'
+import PurchaseInfo from '../shared/PurchaseInfo'
+import StorageInfo from '../shared/StorageInfo'
 
 class SeedEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      quantity: undefined,
+      quantity: '',
       package_id: '',
 
       // Vendor/ source
@@ -22,15 +26,16 @@ class SeedEditor extends React.Component {
       invoice_no: '',
 
       // Storage location
-      // rooms: [],
-      room: '',
       room_id: '',
       section_name: '',
       section_id: '',
       row_id: '',
       shelf_id: '',
       tray_id: '',
-      facility_id: ''
+      facility_id: '',
+
+      // Validation errors outside of custom components
+      errors: {}
     }
 
     this.purchaseInfoEditor = React.createRef()
@@ -38,39 +43,9 @@ class SeedEditor extends React.Component {
 
     this.onQuantityChanged = this.onQuantityChanged.bind(this)
     this.onPackageIdChanged = this.onPackageIdChanged.bind(this)
-
-    // Vendor/ source
-    // this.onVendorNameChanged = this.onVendorNameChanged.bind(this)
-    // this.onVendorIDChanged = this.onVendorIDChanged.bind(this)
-    // this.onAddressChanged = this.onAddressChanged.bind(this)
-    // this.onVendorStateLicenseNumChanged = this.onVendorStateLicenseNumChanged.bind(
-    //   this
-    // )
-    // this.onVendorStateLicenseExpirationDateChanged = this.onVendorStateLicenseExpirationDateChanged.bind(
-    //   this
-    // )
-    // this.onVendorLocationLicenseNumChanged = this.onVendorLocationLicenseNumChanged.bind(
-    //   this
-    // )
-    // this.onVendorLocationLicenseExpirationDateChanged = this.onVendorLocationLicenseExpirationDateChanged.bind(
-    //   this
-    // )
-    // this.onPurchaseDateChanged = this.onPurchaseDateChanged.bind(this)
-    // this.onInvoiceNoChanged = this.onInvoiceNoChanged.bind(this)
-
     this.onSave = this.onSave.bind(this)
+    this.onSaveDraft = this.onSaveDraft.bind(this)
   }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   console.log(prevState)
-  //   if (this.state.facility_id !== 1) {
-  //     const newRooms = ["a", "b", "c"]
-  //     this.setState({
-  //       rooms: newRooms,
-  //       facility_id: 1
-  //     })
-  //   }
-  // }
 
   onPackageIdChanged(event) {
     this.setState({ package_id: event.target.value })
@@ -81,17 +56,59 @@ class SeedEditor extends React.Component {
   }
 
   onSave(event) {
-    console.log(this.state.data)
-
-    const data = this.props.onValidateParent()
-    console.log(data)
+    const strainData = this.props.onValidateParent()
+    // console.log(strainData)
 
     const purchaseData = this.purchaseInfoEditor.current.getValues()
-    console.log(purchaseData)
+    // console.log(purchaseData)
 
     const storageInfo = this.storageInfoEditor.current.getValues()
-    console.log(storageInfo)
+    // console.log(storageInfo)
+
+    if (this.validate()) {
+      const data = {
+        ...strainData,
+        ...purchaseData,
+        ...storageInfo,
+        quantity: this.state.quantity,
+        package_id: this.state.package_id
+      }
+
+      console.log(data)
+      // call save by passing data
+      // saveSeed(data).then( x => afterSave(x) )
+    }
+
     event.preventDefault()
+  }
+
+  onSaveDraft(event) {
+    const strainData = this.props.onValidateParent(true)
+    const purchaseData = this.purchaseInfoEditor.current.getValues(true)
+    const storageInfo = this.storageInfoEditor.current.getValues(true)
+    const data = {
+      ...strainData,
+      ...purchaseData,
+      ...storageInfo,
+      quantity: this.state.quantity,
+      package_id: this.state.package_id
+    }
+    // console.log(data)
+    event.preventDefault()
+  }
+
+  validate() {
+    let errors = {}
+    if (this.state.quantity <= 0 || !this.state.quantity) {
+      errors = { ...errors, quantity: ['Quantity must be at least 1.'] }
+    }
+
+    if (this.state.package_id.length <= 0) {
+      errors = { ...errors, package_id: ['Package ID must be present.'] }
+    }
+
+    this.setState({ errors })
+    return Object.getOwnPropertyNames(errors).length === 0
   }
 
   render() {
@@ -112,6 +129,7 @@ class SeedEditor extends React.Component {
               value={this.state.quantity}
               onChange={this.onQuantityChanged}
             />
+            <FieldError errors={this.state.errors} field="quantity" />
           </div>
           <div className="w-60 pl3">
             <TextInput
@@ -119,6 +137,7 @@ class SeedEditor extends React.Component {
               value={this.state.package_id}
               onChange={this.onPackageIdChanged}
             />
+            <FieldError errors={this.state.errors} field="package_id" />
           </div>
         </div>
 
@@ -145,75 +164,16 @@ class SeedEditor extends React.Component {
           ref={this.storageInfoEditor}
           mode="storage"
           locations={this.props.locations}
-          rooms={this.props.rooms}
-          room={this.state.room}
           room_id={this.state.room_id}
           section_name={this.state.section_name}
           section_id={this.state.section_id}
-          row_id={this.state.row_id}
-          shelf_id={this.state.shelf_id}
-          tray_id={this.state.tray_id}
         />
-        {/* <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">Where are they stored?</span>
-        </div>
-        <div className="ph4 mb3 flex">
-          <div className="w-60">
-            <TextInput
-              label={'Room'}
-              value={this.state.room}
-              onChange={this.onRoomChanged}
-            />
-          </div>
-          <div className="w-40 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">Room ID</label>
-            <p className="i f6 fw4 black-30">Room ID</p>
-          </div>
-        </div>
-
-        <div className="ph4 mb3 flex">
-          <div className="w-60">
-            <TextInput
-              label={'Section'}
-              value={this.state.section_name}
-              onChange={this.onSectionNameChanged}
-            />
-          </div>
-          <div className="w-40 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">Section ID</label>
-            <p className="i f6 fw4 black-30">Section ID</p>
-          </div>
-        </div>
-
-        <div className="ph4 mb3 flex">
-          <div className="w-30">
-            <TextInput
-              label={'Row Id'}
-              value={this.state.row_id}
-              onChange={this.onRowIdChanged}
-            />
-          </div>
-          <div className="w-30 pl3">
-            <TextInput
-              label={'Shelf Id'}
-              value={this.state.shelf_id}
-              onChange={this.onShelfIdChanged}
-            />
-          </div>
-          <div className="w-40 pl3">
-            <TextInput
-              label={'Tray Id'}
-              value={this.state.tray_id}
-              onChange={this.onTrayIdChanged}
-            />
-          </div>
-        </div> */}
 
         <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
           <a
             className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
             href="#"
-            onClick={this.props.onResetEditor}
+            onClick={this.props.onSaveDraft}
           >
             Save draft
           </a>

@@ -18,5 +18,7 @@ class SaveFacilityDestroySection
     room = facility.rooms.find(@room_id)
     section = room.sections.find(@section_id)
     room.sections.delete(section)
+    SaveRoomIsComplete.call(room)
+    room
   end
 end

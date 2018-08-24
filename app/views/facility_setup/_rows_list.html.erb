@@ -29,14 +29,14 @@
               Edit Section
             </span>
           <% end %>
-          <input id="cb-<%= section.id %>" type="checkbox" role="toggle" data-toggle="<%= section.id %>" />
+          <input id="cb-<%= section.id %>" checked type="checkbox" data-toggle="sec-<%= section.id %>" />
           <label for="cb-<%= section.id %>" class="material-icons md-16 grey ml3 dim pointer toggle-collapse-icon">
             keyboard_arrow_down
           </label>
         </div>
       </div>
 
-      <div class="carousel-group__body toggle-collapse-body" data-collapse="<%= section.id %>">
+      <div class="carousel-group__body toggle-collapse-body" data-collapse="sec-<%= section.id %>">
         <%= render partial: "rows_carousel", locals: {
             facility_id: @rows_form.facility_id,
             room_id: @rows_form.room_id,

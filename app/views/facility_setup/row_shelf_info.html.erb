@@ -1,7 +1,7 @@
 <% content_for :breadcrumb do %>
   <div class="flex items-center">
     <%= breadcrumbs ["Home",root_path], 
-        ["Facility Setup", facility_setup_new_path], 
+        ["Facility Setup", facility_setup_new_path(facility_id: @rows_form.facility_id)], 
         ["Room Setup", facility_setup_rooms_info_path(facility_id: @rows_form.facility_id)], 
         @rows_form.breadcrumb_title 
     %>

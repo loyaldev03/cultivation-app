@@ -28,15 +28,17 @@ function updateCollapsibleState() {
   $$(selector).forEach(function(e1) {
     let toggleTarget = e1.getAttribute('data-toggle');
     let targetDisplay = e1.checked ? "" : "none";
-    $$("." + toggleTarget).forEach(function(e2) {
-      e2.style.display = targetDisplay;
-      e2.classList.add("animated", "faster", "fadeIn");
+    $$(`[data-collapse="${toggleTarget}"]`).forEach(function(e2) {
+      if (e1.checked) {
+        e2.style.removeProperty("display")
+      } else {
+        e2.style.display = "none"
+      }
     })
   })
 }
 
 function updateToggleCollapsible(e) {
-  console.log('updateToggleCollapsible', e.target)
   const targetClass = e.target.getAttribute('data-toggle')
   const targetElm = $_(`[data-collapse="${targetClass}"]`)
   if (!targetElm) {
@@ -50,7 +52,6 @@ function updateToggleCollapsible(e) {
 }
 
 function setupCollapsible() {
-  console.log('setupCollapsible')
   let selector = 'input[data-toggle]';
   $$(selector).on('change', updateToggleCollapsible)
   updateCollapsibleState();

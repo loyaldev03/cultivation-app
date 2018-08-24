@@ -58,7 +58,7 @@
           </p>
         </div>
 
-        <div class="w-100 shelves_number_options" style="display: none">
+        <div class="w-100" data-collapse="shelves_number_options">
           <div class="mt3">
             <%= f.label :wz_shelves_count, "How many shelves per row?",
               class: "subtitle-2 db mb1 grey"
@@ -91,10 +91,9 @@
           <p class="grey caption mt2 w-90">
             If toggle is not selected, then that means that there is no trays that exists on the shelf.
           </p>
-          
         </div>
 
-        <div class="w-100 trays_number_options" style="display: none">
+        <div class="w-100" data-collapse="trays_number_options">
           <div class="mt3">
             <%= f.label :wz_trays_count, "How many trays per shelf?",
               class: "subtitle-2 db mb1 grey"

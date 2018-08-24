@@ -65,6 +65,7 @@
     </li>
     
     <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+      <i class="material-icons md-16 grey mr3">exit_to_app</i>
       <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
           class: 'link subtitle-2-regular grey' %>
     </li>
@@ -105,6 +106,12 @@
         <%= link_to settings_path do %>
           <i class="material-icons md-16 grey mr3">settings</i>
         <% end %>
+    </li>
+
+    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+      <%= link_to destroy_user_session_path, method: :delete do %>
+        <i class="material-icons md-16 grey mr3">exit_to_app</i>
+      <% end %>
     </li>
   </ul>
 

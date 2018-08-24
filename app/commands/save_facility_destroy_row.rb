@@ -20,5 +20,8 @@ class SaveFacilityDestroyRow
     # TODO: delete all shelves & tray under row?
     # or run cleanup job to remove orphan record
     room.rows.delete(row)
+    # Update is_complete flag for room
+    SaveRoomIsComplete.call(room)
+    room
   end
 end

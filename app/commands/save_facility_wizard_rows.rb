@@ -31,7 +31,7 @@ class SaveFacilityWizardRows
         build_row(form_rows[i])
       end
     end
-    room.save!
+    SaveRoomIsComplete.call(room) # This would called `save!` already
     room
   end
 

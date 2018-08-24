@@ -9,17 +9,17 @@
     
     <div class="mb3">
       <%= f.label "Room Name", class:"subtitle-2 grey db mb1 ttc" %>
-      <%= f.text_field :name, value: room.name, class: "db w-70 pa2 f6 grey subtitle-2 grey ba b--black-20 br2 outline-0" %>
+      <%= f.text_field :name, value: room.name, class: "box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
     </div>
 
     <div class="mb3">
       <span class="subtitle-2 db mb1 grey ttc">Room ID</span>
-      <%= f.text_field :code, value: room.code, class: "db w-30 pa2 f6 grey ba b--black-20 br2 outline-0" %>
+      <%= f.text_field :code, value: room.code, class: "box--height db w-30 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
     </div>
 
     <div class="mb3">
       <%= f.label "Description", class:"subtitle-2 db mb1 grey ttc" %>
-      <%= f.text_area :desc, value: room.desc, class: "db w-90 pa2 f6 grey ba b--black-20 br2 outline-0" %>
+      <%= f.text_area :desc, value: room.desc, class: "box--height db w-90 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
     </div>
 
     <div class="mb3">
@@ -32,7 +32,7 @@
 
     <div class="w-100 pt3">
       <span class="subtitle-2 grey"> Is the room split into one or more sections? </span>
-      <p class="grey f6 lh-copy mt1 w-90">
+      <p class="grey caption mt2 w-90">
         Quick tip: Will you be using this room for multiple growth stages of your plants? 
         If you are, please split the room into sections.
       </p>
@@ -45,12 +45,12 @@
     </div>
 
     <div class="w-100 pa4 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
-      <%= f.submit "Save", class: "db pv3 bn ttu button orange link dim pointer" %>
+      <%= f.submit "Save", class: "button--font db pv3 bn ttu orange link dim pointer" %>
       <%= f.button "Save & Continue",
         name: :commit,
         type: :submit,
         value: "continue",
-        class: "ttu db tr pa3 bg-orange white bn box--br3 ttu link dim pointer" %>
+        class: "ttu db tr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" %>
     </div>
   <% end %>
 </div>

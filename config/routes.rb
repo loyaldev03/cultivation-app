@@ -69,7 +69,7 @@ Rails.application.routes.draw do
         get 'strains/(:filter)', action: :strains, on: :collection
       end
       resources :batches do
-        resources :tasks, only: [:index]
+        resources :tasks, only: [:index, :update]
       end
     end
   end

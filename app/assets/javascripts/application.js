@@ -13,4 +13,5 @@
 //= require rails-ujs
 //= require cable
 //= require bling
+//= require animation
 //= require toggle

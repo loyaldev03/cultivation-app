@@ -41,13 +41,12 @@ function updateCollapsibleState() {
 function updateToggleCollapsible(e) {
   const targetClass = e.target.getAttribute('data-toggle')
   const targetElm = $_(`[data-collapse="${targetClass}"]`)
-  if (!targetElm) {
-    return;
-  }
-  if (e.target.checked) {
-    targetElm.style.removeProperty("display")
-  } else {
-    targetElm.style.display = "none"
+  if (targetElm) {
+    if (e.target.checked) {
+      show(targetElm)
+    } else {
+      hide(targetElm)
+    }
   }
 }
 

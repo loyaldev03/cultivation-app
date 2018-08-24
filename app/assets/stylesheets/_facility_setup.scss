@@ -1,4 +1,5 @@
 $orange: var(--orange);
+$yellow: var(--yellow);
 
 .btn {
   display: inline-block;
@@ -107,4 +108,17 @@ $iconInnerSize: 7px;
 
 .confirm-duplicate-button {
   z-index: $fogZindex + 1;
+}
+
+@keyframes highlight {
+  0% {
+    background: $yellow; 
+  }
+  100% {
+    background: none;
+  }
+}
+
+.highlight {
+  animation: highlight 1s;
 }

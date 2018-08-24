@@ -72,9 +72,8 @@
 
 /* Collapsible DIV toggle */
 
-input[type="checkbox"][role="toggle"] {
+input[type="checkbox"][data-toggle] {
   display: none;
-
   &:checked + .toggle-collapse-icon {
     transform: rotate(180deg);
   }

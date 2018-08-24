@@ -23,8 +23,7 @@ function setupRadioToggle(filter = null) {
   $$(checkedSelector).forEach(function(t) { t.dispatchEvent(changeEvent) });
 }
 
-function updateToggleDisplay() {
-  console.log('updateToggleDisplay')
+function updateCollapsibleState() {
   let selector = 'input[data-toggle]';
   $$(selector).forEach(function(e1) {
     let toggleTarget = e1.getAttribute('data-toggle');
@@ -36,29 +35,23 @@ function updateToggleDisplay() {
   })
 }
 
-function setupCheckboxToggle() {
-  console.log('setupCheckboxToggle')
-  let selector = 'input[data-toggle]';
-  $$(selector).on('change', updateToggleDisplay);
-  updateToggleDisplay();
-}
-
 function updateToggleCollapsible(e) {
-  console.log('updateToggleCollapsible')
+  console.log('updateToggleCollapsible', e.target)
   const targetClass = e.target.getAttribute('data-toggle')
   const targetElm = $_(`[data-collapse="${targetClass}"]`)
   if (!targetElm) {
     return;
   }
   if (e.target.checked) {
-    targetElm.style.display = "none"
-  } else {
     targetElm.style.removeProperty("display")
+  } else {
+    targetElm.style.display = "none"
   }
 }
 
 function setupCollapsible() {
   console.log('setupCollapsible')
-  let selector = 'input[role="toggle"]';
+  let selector = 'input[data-toggle]';
   $$(selector).on('change', updateToggleCollapsible)
+  updateCollapsibleState();
 }

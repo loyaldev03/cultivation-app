@@ -24,6 +24,7 @@ function setupRadioToggle(filter = null) {
 }
 
 function updateToggleDisplay() {
+  console.log('updateToggleDisplay')
   let selector = 'input[data-toggle]';
   $$(selector).forEach(function(e1) {
     let toggleTarget = e1.getAttribute('data-toggle');
@@ -43,6 +44,7 @@ function setupCheckboxToggle() {
 }
 
 function updateToggleCollapsible(e) {
+  console.log('updateToggleCollapsible')
   const targetClass = e.target.getAttribute('data-toggle')
   const targetElm = $_(`[data-collapse="${targetClass}"]`)
   if (!targetElm) {
@@ -56,6 +58,7 @@ function updateToggleCollapsible(e) {
 }
 
 function setupCollapsible() {
+  console.log('setupCollapsible')
   let selector = 'input[role="toggle"]';
   $$(selector).on('change', updateToggleCollapsible)
 }

@@ -32,13 +32,16 @@ class SaveShelf
     shelf.wz_generated = false
     shelf.save!
 
-    # NOTE: Update is_complete flag for current row
-    SaveRowIsComplete.call(row)
-
-    # NOTE: Update is_complete flag for current room
-    SaveRoomIsComplete.call(room)
+    update_is_complete_flag(row, room)
 
     shelf
+  end
+
+  def update_is_complete_flag(row, room)
+    # NOTE: Update is_complete flag for current row
+    SaveRowIsComplete.call(row)
+    # NOTE: Update is_complete flag for current room
+    SaveRoomIsComplete.call(room)
   end
 
   def calculate_capacity(trays)

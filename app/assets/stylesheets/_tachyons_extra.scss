@@ -62,6 +62,35 @@
   width: 0px;
 }
 
+/* navbar hover */
+.nav-ex:hover {
+  background-color: #FEE8E0;
+  cursor: pointer;
+  border-left-color: var(--orange);
+  border-left-width: 7px;
+  
+  .link {
+    color: var(--orange);
+    font-weight: 600;
+  }
+  
+  .material-icons {
+    color: var(--orange);
+  }
+}
+
+.nav-cl:hover {
+  background-color: #FEE8E0;
+  cursor: pointer;
+  border-left-color: var(--orange);
+  border-left-width: 5px;
+  padding-left: 1.6rem;
+
+  .material-icons {
+    color: var(--orange);
+  }
+}
+
 /* Typescale */
 /*
   light: 300

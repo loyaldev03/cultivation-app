@@ -14,7 +14,7 @@
               data: { confirm: "Delete Section?" } do %>
             <i class="material-icons grey md-16 dim pointer">remove_circle_outline</i>
           <% end %>
-          <span class="subtitle-2 ml2 grey">Section <%= section.name || section.code %></span>
+          <span class="subtitle-2 ml2 grey"><%= section.name || section.code %></span>
         </div>
 
         <div class="flex flex-row items-center">

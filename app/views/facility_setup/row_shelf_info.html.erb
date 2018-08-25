@@ -1,20 +1,28 @@
 <% content_for :breadcrumb do %>
   <div class="flex items-center">
     <%= breadcrumbs ["Home",root_path], 
-        ["Facility Setup", facility_setup_new_path], 
+        ["Facility Setup", facility_setup_new_path(facility_id: @rows_form.facility_id)], 
         ["Room Setup", facility_setup_rooms_info_path(facility_id: @rows_form.facility_id)], 
         @rows_form.breadcrumb_title 
     %>
   </div>
 <% end %>
 
+<div class="fog dn">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="icon-button icon-button--close icon-button--top-right dim">
+    <title>Close</title>
+    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" class="icon-button__fill"/>
+    <path d="M0 0h24v24H0z" fill="none"/>
+  </svg>
+</div>
+
 <div class="pa4">
-  <div class="flex flex-column justify-between bg-white"> 
+  <div class="flex flex-column justify-between bg-white box--shadow"> 
     <div class="pv4 ph5 min-h-600">
       <div class="fl w-70 flex flex-column">
-        <h5 class="tl pa0 ma0 h5--font dark-grey">Section Setup</h5>
+        <h5 class="tl pa0 ma0 h5--font dark-grey"> <%= @rows_form.breadcrumb_title %> </h5>
         <p class="mt2 body-1 grey">
-          You can add more sections simply by clicking on "Add a New Section" button.
+          Boom, you just set up the room! Now let's configure your grow room by adding rows and shelves.
         </p>
 
         <div id="rows_grid" class="pv4 carousel-wrapper">
@@ -26,24 +34,29 @@
           %>
         </div>
       </div>
-
-      <div class="fl w-30 flex justify-end">
-        <%= render "layouts/timeline" %>
-      </div>
     </div>
 
-    <%= render "bottom_back_button" %>
+    <%= render partial: "bottom_back_button",
+      locals: {
+        left_button_url: facility_setup_room_summary_path(facility_id: @rows_form.facility_id, room_id: @rows_form.room_id),
+        right_button: @rows_form.is_complete,
+        right_button_text: "Continue",
+        right_button_url: facility_setup_rooms_info_path(facility_id: @rows_form.facility_id)
+      } %>
   </div>
 </div>
 
 <%= render "slide_panel" %>
-<%= render "setup_success_card" %>
 
 <% content_for :before_body_end do %>
-  <div class="fog dn"></div>
   <script>
     document.addEventListener("turbolinks:load", function() {
       bindCarousel();
+      setupCollapsible();
     })
   </script>
 <% end %>
+
+<%# Render setup card after binding carousel %>
+<%= render "setup_success_card" %>
+

@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get "facility_setup/room_info" => "facility_setup#room_info", as: 'fetch_room_info'
   get "facility_setup/row_info" => "facility_setup#row_info", as: 'fetch_row_info'
   get "facility_setup/row_shelf_trays" => "facility_setup#row_shelf_trays", as: 'fetch_row_shelf_trays'
+  get "facility_setup/section_info" => "facility_setup#section_info", as: 'fetch_section_info'
   post "facility_setup/generate_rooms" => "facility_setup#generate_rooms", as: 'generate_rooms'
   post "facility_setup/generate_rows" => "facility_setup#generate_rows", as: 'generate_rows'
   post "facility_setup/add_section" => "facility_setup#add_section", as: 'add_section'
@@ -19,8 +20,10 @@ Rails.application.routes.draw do
   get "facility_setup/row_shelf_info" => "facility_setup#row_shelf_info"
   post "facility_setup/update_basic_info" => "facility_setup#update_basic_info"
   post "facility_setup/update_room_info" => "facility_setup#update_room_info"
+  post "facility_setup/update_section_info" => "facility_setup#update_section_info", as: 'update_section_info'
   post "facility_setup/update_row_info" => "facility_setup#update_row_info"
   post "facility_setup/update_shelf_trays" => "facility_setup#update_shelf_trays", as: 'update_shelf_trays'
+  post "facility_setup/duplicate_rows" => "facility_setup#duplicate_rows", as: "duplicate_rows"
 
   get "settings" => "home#settings"
 

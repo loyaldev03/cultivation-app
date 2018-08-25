@@ -8,10 +8,12 @@ module FacilityWizardForm
              :code,
              :name,
              :section_id,
+             :is_complete,
              :has_shelves,
              :has_trays,
              :capacity,
              :capacity_text,
+             :wz_generated,
              :wz_shelves_count,
              :wz_trays_count]
 
@@ -29,10 +31,10 @@ module FacilityWizardForm
     end
 
     def shelves_count_text
-      if self.has_shelves && self.wz_shelves_count > 0
+      if self.wz_shelves_count && self.wz_shelves_count > 0
         self.wz_shelves_count
       else
-        'N/A'
+        '--'
       end
     end
 
@@ -40,7 +42,7 @@ module FacilityWizardForm
       if self.has_trays && self.wz_trays_count > 0
         self.wz_trays_count
       else
-        'N/A'
+        '--'
       end
     end
 

@@ -12,7 +12,7 @@ class SaveFacility
   private
 
   def save_record(form_object)
-    record = Facility.where(id: form_object.id).first
+    record = Facility.where(id: form_object.id.to_bson_id).first
     record ||= Facility.new
     map_attributes(record, form_object)
     record.save!

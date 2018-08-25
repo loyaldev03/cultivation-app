@@ -14,17 +14,29 @@
               data: { confirm: "Delete Section?" } do %>
             <i class="material-icons grey md-16 dim pointer">remove_circle_outline</i>
           <% end %>
-          <span class="subtitle-2 ml2 grey">Section <%= section.name || section.code %></span>
+          <span class="subtitle-2 ml2 grey"><%= section.name || section.code %></span>
         </div>
 
         <div class="flex flex-row items-center">
-          <i class="material-icons md-16 grey mr2">create</i>
-          <span class="subtitle-2 grey">Edit Section</span>
-          <i class="material-icons md-16 grey ml3 dim pointer">keyboard_arrow_down</i>
+          <%= link_to fetch_section_info_path(
+              facility_id: @rows_form.facility_id,
+              room_id: @rows_form.room_id,
+              section_id: section.id),
+              remote: true,
+              class: "link subtitle-2 grey dim" do %>
+            <i class="material-icons md-16 grey mr2">create</i>
+            <span class="">
+              Edit Section
+            </span>
+          <% end %>
+          <input id="cb-<%= section.id %>" checked type="checkbox" data-toggle="sec-<%= section.id %>" />
+          <label for="cb-<%= section.id %>" class="material-icons md-16 grey ml3 dim pointer toggle-collapse-icon">
+            keyboard_arrow_down
+          </label>
         </div>
       </div>
 
-      <div class="carousel-group__body">
+      <div class="carousel-group__body toggle-collapse-body" data-collapse="sec-<%= section.id %>">
         <%= render partial: "rows_carousel", locals: {
             facility_id: @rows_form.facility_id,
             room_id: @rows_form.room_id,
@@ -78,4 +90,3 @@
     </div>
   <% end %>
 <% end %>
-

@@ -4,6 +4,7 @@ module FacilityWizardForm
 
     ATTRS = [:facility_id,
              :room_id,
+             :is_complete,
              :has_sections,
              :wz_rows_count,
              :rows,
@@ -103,6 +104,7 @@ module FacilityWizardForm
       if find_cmd.success?
         facility = find_cmd.result
         room = facility.rooms.detect { |r| r.id.to_s == room_id }
+        @is_complete = room.is_complete
         @has_sections = room.has_sections
         @sections = room.sections
         raise ArgumentError, 'Invalid Room' if room.nil?

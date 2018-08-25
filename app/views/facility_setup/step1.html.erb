@@ -17,10 +17,10 @@
           url: facility_setup_update_basic_info_path(facility_id: @wizard_form.id),
           html: {id: "wizard-form"},
           local: true do |f| %>
+          <%= f.hidden_field :id, value: @wizard_form.id %>
           <% if @wizard_form.errors.any? %>
             <div id="error_explanation" class="red">
               <h3><%= pluralize(@wizard_form.errors.count, "error") %> prohibited this facility from being saved:</h2>
-
               <ul>
               <% @wizard_form.errors.full_messages.each do |message| %>
                 <li><%= message %></li>
@@ -143,10 +143,6 @@
             </div>
           </div>
         <% end %>
-      </div>
-
-      <div class="fl w-30 flex justify-end">
-        <%= render "layouts/timeline" %>
       </div>
     </div>
 

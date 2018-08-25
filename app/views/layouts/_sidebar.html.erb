@@ -11,7 +11,7 @@
     <div class="ma3 hide truncate tc">
       <div class="flex flex-row items-center">
         <%= image_tag 'logo-small.svg', class: "dib mr3" %>
-        <div class="flex flex-column">
+        <div class="flex flex-column tl">
           <span class="dark-grey subtitle-1">User name</span>
           <span class="grey overline ttc">Admin Head</span>
         </div>
@@ -24,87 +24,94 @@
   <% end %>
 
   <ul class="list pl0 hide">
-    <li class="pv3 ph4 grow flex flex-row items-center">
+    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">home</i>
       <%= link_to "Home", root_path, class: "link subtitle-2-regular grey" %>
     </li>
     
-    <li class="pv3 ph4 grow flex flex-row items-center">
+    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">style</i>
       <span class="link subtitle-2-regular grey">Inventory</span>
     </li>
     
-    <li class="pv3 ph4 grow flex flex-row items-center">
+    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">account_balance_wallet</i>
       <span class="link subtitle-2-regular grey">Accounting</span>
     </li>
 
-    <li class="pv3 ph4 grow flex flex-row items-center">
+    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">view_quilt</i>
       <span class="link subtitle-2-regular grey">Cultivation</span>
     </li>
 
-    <li class="pv3 ph4 grow flex flex-row items-center">
+    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">track_changes</i>
       <span class="link subtitle-2-regular grey">Planning</span>
     </li>
 
-    <li class="pv3 ph4 grow flex flex-row items-center">
+    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">assignment_ind</i>
       <span class="link subtitle-2-regular grey">Payroll</span>
     </li>
 
-    <li class="pv3 ph4 grow flex flex-row items-center">
+    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">insert_chart</i>
       <span class="link subtitle-2-regular grey">Report</span>
     </li>
 
-    <li class="pv3 ph4 grow flex flex-row items-center">
+    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">settings</i>
       <%= link_to 'Settings', settings_path, class: 'link subtitle-2-regular grey' %>
     </li>
     
-    <li class="pv3 ph4 grow flex flex-row items-center">
+    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+      <i class="material-icons md-16 grey mr3">exit_to_app</i>
       <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
           class: 'link subtitle-2-regular grey' %>
     </li>
   </ul>
 
   <ul class="list pl0 ma0 pa0 show-collapsed">
-    <li class="pv3 ph4 grow flex flex-row items-center tc">
+    <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
       <%= link_to root_path do %>
         <i class="material-icons md-16 grey mr3">home</i>
       <% end %>
     </li>
     
-    <li class="pv3 ph4 grow flex flex-row items-center tc">
+    <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">style</i>
     </li>
 
-    <li class="pv3 ph4 grow flex flex-row items-center tc">
+    <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">account_balance_wallet</i>
     </li>
 
-    <li class="pv3 ph4 grow flex flex-row items-center tc">
+    <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">view_quilt</i>
     </li>
 
-    <li class="pv3 ph4 grow flex flex-row items-center tc">
+    <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">track_changes</i>
     </li>
 
-    <li class="pv3 ph4 grow flex flex-row items-center tc">
+    <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">assignment_ind</i>
     </li>
     
-    <li class="pv3 ph4 grow flex flex-row items-center tc">
+    <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">insert_chart</i>
     </li>
     
-    <li class="pv3 ph4 grow flex flex-row items-center tc">
+    <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
         <%= link_to settings_path do %>
           <i class="material-icons md-16 grey mr3">settings</i>
         <% end %>
+    </li>
+
+    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+      <%= link_to destroy_user_session_path, method: :delete do %>
+        <i class="material-icons md-16 grey mr3">exit_to_app</i>
+      <% end %>
     </li>
   </ul>
 

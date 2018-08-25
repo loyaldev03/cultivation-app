@@ -1,35 +1,42 @@
-<div class="setup_success_card setup_success_card--step1 dn">
+<div class="setup_success_card setup_success_card--step1 dn box--shadow">
   <div class="setup_success_card__header">
-    <span class="setup_success_card__title f3">Row Setup Success</span>
+    <span class="setup_success_card__title dark-grey">Row Setup Success</span>
   </div>
   <div class="setup_success_card__body">
-    <span class="fw6 f3 dark-grey">You've now completed the setup of your row</span>
-    <p class="b gray">Shall we duplicate this row setup across other rows?</p>
-    <p class="ma0 pa0 f6 gray">
+    <span class="h6--font dark-grey">You've now completed the setup of your row</span>
+    <p class="grey subtitle-2">Shall we duplicate this row setup across other rows?</p>
+    <p class="ma0 pa0 caption grey">
       Pro tip: Duplicating row across other rows will allow you setup quicker, provided that you have
       similar number of shelves and trays. You can always edit the shelf or tray that contains
       different info.
     </p>
   </div>
   <div class="setup_success_card__footer">
-    <button class="setup_success_card__button setup_success_card__button--confirm btn btn--primary">Yes, Duplicate</button>
-    <button class="setup_success_card__button setup_success_card__button--cancel btn mr2">Cancel</button>
+    <button class="setup_success_card__button setup_success_card__button--confirm btn btn--primary button--font box--br3 dim">Yes, Duplicate</button>
+    <button class="setup_success_card__button setup_success_card__button--cancel btn button--font box--br3 grey mr2 dim">Cancel</button>
   </div>
 </div>
 
-<div class="setup_success_card setup_success_card--step2 dn">
+<div class="setup_success_card setup_success_card--step2 dn box--shadow">
   <div class="setup_success_card__header">
-    <span class="setup_success_card__title f3">Row Duplication</span>
+    <span class="setup_success_card__title dark-grey">Row Duplication</span>
   </div>
   <div class="setup_success_card__body">
-    <span class="fw6 f3 dark-grey">How do I duplicate to other row?</span>
-    <p class="b gray">Simply select the rows that you want to duplicate into by selecting them.</p>
+    <span class="h6--font dark-grey">How do I duplicate to other row?</span>
+    <p class="subtitle-2 grey">Simply select the rows that you want to duplicate into by selecting them.</p>
   </div>
   <div class="setup_success_card__footer">
-    <button class="setup_success_card__button setup_success_card__button--duplicate btn btn--primary">Okay, Got It!</button>
-    <button class="setup_success_card__button setup_success_card__button--cancel btn mr2">Cancel</button>
+    <button class="setup_success_card__button setup_success_card__button--duplicate btn btn--primary button--font box--br3 dim">Okay, Got It!</button>
+    <button class="setup_success_card__button setup_success_card__button--cancel btn button--font box--br3 grey mr2 dim">Cancel</button>
   </div>
 </div>
+
+<div class="confirm-duplicate-button dn pb3">
+  <button class="btn btn--primary ttu button--font box--br3">Confirm Duplication</button>
+</div>
+
+<%= hidden_field_tag 'facility_id', @rows_form.facility_id %>
+<%= hidden_field_tag 'room_id', @rows_form.room_id %>
 
 <% content_for :before_body_end do %>
   <script>
@@ -41,10 +48,14 @@
     }
 
     function cancelCard() {
+      $$(".carousel--active-select").forEach(function(elm) {
+        elm.classList.remove("carousel--active-select");
+      });
       hideFog();
       unhighlightCard();
       hideSuccessCard();
       hideStartDuplicateCard();
+      hideConfirmDuplicate();
     }
 
     function hideSuccessCard() {
@@ -110,11 +121,11 @@
       });
       showFog();
       showSuccessCard();
+      bindCardSelect(rowId);
+      bindConfirmDuplicateButton(rowId);
     }
 
     function startDuplicate() {
-      hideSuccessCard();
-
       const targetCard = $_(".carousel__card--active")
       const duplicateCard = $_(".setup_success_card--step2")
 
@@ -123,17 +134,91 @@
         placement: 'right'
       });
 
-      showStartDuplicateCard();
+      hideSuccessCard();
+      showStartDuplicateCard()
     }
 
     function startSelectRows() {
-      hideStartDuplicateCard();
+      hideStartDuplicateCard()
       const carousel = $_(".carousel--active")
       carousel.classList.replace("carousel--active", "carousel--active-select")
     }
 
-    $$(".setup_success_card__button--cancel").on("click", cancelCard);
-    $$(".setup_success_card__button--duplicate").on("click", startSelectRows);
-    $_(".setup_success_card__button--confirm").on("click", startDuplicate);
+    function hideConfirmDuplicate() {
+      const confirmDuplicateButton = $_(".confirm-duplicate-button")
+      confirmDuplicateButton.classList.add("dn")
+    }
+
+    function showConfirmDuplicate() {
+      // This is call after user selected rows to duplicate
+      const targetCard = $_(".carousel--active-select")
+      const confirmDuplicateButton = $_(".confirm-duplicate-button")
+      confirmDuplicateButton.classList.remove("dn")
+      new Popper(targetCard, confirmDuplicateButton, {
+        placement: 'top'
+      });
+    }
+
+    function bindCardSelect(rowId) {
+      $$(".carousel__card__cover").forEach(function(elm) {
+        const cardRowId = elm.getAttribute("data-row-id");
+        if (cardRowId && cardRowId !== rowId) {
+          elm.addEventListener("click", selectRowToggle);
+        }
+      });
+    }
+
+    function selectRowToggle(e) {
+      const rowId = e.target.getAttribute('data-row-id')
+      const checked = e.target.closest(".carousel__card").classList.contains("checked")
+      $$(".carousel__card__cover").forEach(function(cb) {
+        const cbRowId = cb.getAttribute('data-row-id')
+        if (cbRowId && cbRowId === rowId) {
+          const parent = cb.closest(".carousel__card");
+          // NOTE: toggele the checked status
+          if (checked) {
+            parent.classList.remove("checked");
+          } else {
+            parent.classList.add("checked");
+          }
+        }
+      });
+
+      const checkedCount = $$(".checked > .carousel__card__cover").length
+      if (checkedCount > 0) {
+        showConfirmDuplicate();
+      } else {
+        hideConfirmDuplicate();
+      }
+    }
+
+    function bindConfirmDuplicateButton(rowId) {
+      $_(".confirm-duplicate-button > .btn").on("click", function(elm) {
+        submitRowsToDuplicate(rowId);
+      });
+    }
+
+    function submitRowsToDuplicate(rowId) {
+      const checkedIds = $$(".checked > .carousel__card__cover").map(function(elm) {
+        return elm.getAttribute("data-row-id");
+      });
+      const facilityId = $_("#facility_id").value
+      const roomId = $_("#room_id").value
+      const targetRows = Array.from(new Set(checkedIds))
+      Rails.ajax({
+        url: "/facility_setup/duplicate_rows",
+        type: "POST",
+          data: `facility_id=${facilityId}&room_id=${roomId}&row_id=${rowId}&target_rows=${targetRows}`,
+        success: function(data) {
+        }
+      });
+    }
+
+    document.addEventListener("turbolinks:load", function() {
+      $$(".icon-button--close").on("click", cancelCard);
+      $$(".setup_success_card__button--cancel").on("click", cancelCard);
+      $$(".setup_success_card__button--duplicate").on("click", startSelectRows);
+      $$(".setup_success_card__button--confirm").on("click", startDuplicate);
+    })
   </script>
 <% end %>

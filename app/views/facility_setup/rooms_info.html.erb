@@ -1,7 +1,7 @@
 <% content_for :breadcrumb do %>
   <div class="flex items-center">
     <%= breadcrumbs ["Home",root_path], 
-        ["Facility Setup", facility_setup_new_path], 
+        ["Facility Setup", facility_setup_new_path(facility_id: @rooms_info_form.facility_id)], 
         "Room Setup" 
     %>
   </div>
@@ -19,14 +19,19 @@
           <%= render partial: 'rooms_list',
             locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms}
           %>
+          <p class="db dark-grey mt4 pa2 br2">
+            * Tips: A complete Facility would consists of: 
+            Mother Room, Clone Room, Flower Room, Veg Room (Veg1 / Veg2),
+            Dry Room, Trim Room, and a Vault
+          </p>
         </div>
-      </div>
-      <div class="fl w-30 flex justify-end">
-        <%= render "layouts/timeline" %>
       </div>
     </div>
 
-    <%= render "bottom_back_button" %>
+    <%= render partial: "bottom_back_button", 
+        locals: { 
+          right_button: false,
+          left_button_url: facility_setup_new_path } %>
   </div>
 </div>
 

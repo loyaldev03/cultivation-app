@@ -2,9 +2,16 @@
   <h1 class="h6--font dark-grey ma0">Row & Shelf Details</h1>
 </div>
 
-<div class="flex flex-column justify-center items-center bb b--light-grey pv2">
-  <%= image_tag 'row-icon.svg', class: "h3 w3 db" %>
-  <span class="dark-grey h6--font">Row</span>
+<div class="flex flex-row item-center justify-around pv2 ph3 bb b--light-grey">
+  <div class="flex flex-column justify-center items-center">
+    <%= image_tag 'row-icon.svg', class: "h3 w3 db" %>
+    <span class="dark-grey h6--font">Row</span>
+  </div>
+
+  <div class="flex flex-column justify-center items-center">
+    <%= image_tag 'shelf-icon.svg', class: "h3 w3 db" %>
+    <span class="dark-grey h6--font">Shelf &amp; Tray</span>
+  </div>
 </div>
 
 <div class="db measure">
@@ -13,7 +20,7 @@
     <%= f.hidden_field :room_id, value: row.room_id %>
     <%= f.hidden_field :id, value: row.id %>
 
-    <div class="box--scrollable">
+    <div class="box--scrollable w-100">
       <div class="ph4">
         <div class="mb3">
           <%= f.label "row Name", class:"subtitle-2 db mb1 grey ttc" %>
@@ -25,13 +32,21 @@
           <%= f.text_field :code, value: row.code, class: "box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
         </div>
 
+        <% if !row.wz_generated %>
+          <%= f.hidden_field :has_shelves, value: (row.has_shelves ? true : false) %>
+          <%= f.hidden_field :wz_shelves_count, value: row.wz_shelves_count %>
+          <%= f.hidden_field :has_trays, value: (row.has_trays ? true : false) %>
+          <%= f.hidden_field :wz_trays_count, value: row.wz_trays_count %>
+        <% end %>
+
         <div class="mt4">
           <div class="flex flex-row items-center justify-between">
-            <span class="subtitle-2 db mb1 grey ttc">Does the row have multiple levels?</span>
+            <span class="subtitle-2 db mb1 grey">Does the row has multiple levels?</span>
             
             <div class="">
               <%= f.check_box :has_shelves,
                 checked: row.has_shelves,
+                disabled: !row.wz_generated,
                 class: "toggle toggle-default",
                 data: { toggle: 'shelves_number_options' }
               %>
@@ -39,11 +54,11 @@
             </div>
           </div>
           <p class="grey caption mt2 w-90">
-            If toggle is not selected, then that means that there is no trays that exists on the shelf.
+            If toggle is not selected, then that means that there is only 1 shelf.
           </p>
         </div>
 
-        <div class="w-100 shelves_number_options" style="display: none">
+        <div class="w-100" data-collapse="shelves_number_options">
           <div class="mt3">
             <%= f.label :wz_shelves_count, "How many shelves per row?",
               class: "subtitle-2 db mb1 grey"
@@ -52,6 +67,7 @@
               options_for_select([*1..5], row.wz_shelves_count),
               {},
               {
+                disabled: !row.wz_generated,
                 class: "w-70 grey box--br3 ba b--light-grey outline-0 box--height"
               }
             %>
@@ -61,10 +77,10 @@
         <div class="mt4">
           <div class="flex flex-row items-center justify-between">
             <span class="subtitle-2 grey">Do you use trays?</span>
-
             <div class="">
               <%= f.check_box :has_trays,
                 checked: row.has_trays,
+                disabled: !row.wz_generated,
                 class: "toggle toggle-default",
                 data: { toggle: 'trays_number_options' }
               %>
@@ -75,10 +91,9 @@
           <p class="grey caption mt2 w-90">
             If toggle is not selected, then that means that there is no trays that exists on the shelf.
           </p>
-          
         </div>
 
-        <div class="w-100 trays_number_options" style="display: none">
+        <div class="w-100" data-collapse="trays_number_options">
           <div class="mt3">
             <%= f.label :wz_trays_count, "How many trays per shelf?",
               class: "subtitle-2 db mb1 grey"
@@ -87,6 +102,7 @@
               options_for_select([*1..10], row.wz_trays_count),
               {},
               {
+                disabled: !row.wz_generated,
                 class: "w-70 grey box--br3 ba b--light-grey outline-0 box--height"
               }
             %>
@@ -94,10 +110,12 @@
         </div>
       </div>
 
-      <div class="w-100 mt5 pv3 ph4 bt b--light-grey flex items-center justify-between">
-        <%= f.submit "Save Changes", class: "db pv2 bn ttu button orange link dim pointer" %>
-        <%= f.submit "save & continue", value: "continue", class: "db tr pa3 bg-orange white bn box--br3 ttu link dim pointer" %>
+      <div class="w-100 mt5 pv3 ph4 bg-white bt b--light-grey flex items-center justify-between">
+        <%= f.submit "Save Changes", class: "db pv2 bn ttu button--font orange link dim pointer" %>
+        <%= f.submit "save & continue", value: "continue", class: "db tr button--font pa3 bg-orange white bn box--br3 ttu link dim pointer" %>
       </div>
     </div>
+
+    
   <% end %>
 </div>

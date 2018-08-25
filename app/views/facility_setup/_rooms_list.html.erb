@@ -22,61 +22,63 @@
 
     <div class="carousel__body siema">
       <% rooms.each do |room| %>
-        <div class="carousel__card relative b--light-grey box--br3 ba">
-          <div class="ph2 pt2 pb0">
-            <%= link_to destroy_room_path(facility_id: room.facility_id, room_id: room.id),
-              remote: true, method: :post,
-              data: {
-                confirm: "Are you sure?"
-              } do
-            %>
-              <i class="material-icons grey f6 dim pointer" style="opacity: 0.3;">delete</i>
-            <% end %>
-            <div class="fr">
-              <i class="material-icons orange f6 dim" style="opacity: 0.3;">info</i>
-            </div>
-          </div>
-
-          <div class="w-100 ph2 pv3 flex flex-column">
-            <div class="flex flex-column items-center mv3">
-              <%= image_tag 'room-icon.svg', class: "h3 w3 dib center mb2" %>
-              <span class="h6--font dark-grey"><%= room.name %></span>
-              <span class="grey body-1">Capacity: <%= room.capacity_text %></span>
+        <div class="carousel__card relative b--light-grey box--br3 ba pa2 flex flex-column justify-between">
+          <div>
+            <div class="">
+              <%= link_to destroy_room_path(facility_id: room.facility_id, room_id: room.id),
+                remote: true, method: :post,
+                data: {
+                  confirm: "Are you sure?"
+                } do
+              %>
+                <i class="material-icons grey dim pointer" style="opacity: 0.3;">delete</i>
+              <% end %>
+              <div class="fr">
+                <i class="material-icons <%= room.is_complete ? "green" : "yellow" %> f6 dim" style="opacity: 0.3;">info</i>
+              </div>
             </div>
 
-            <div class="flex flex-column justify-between">
-              <div class="flex flex-row">
-                <div class="flex flex-row items-center w-50 tl pr1">
-                  <i class="material-icons grey f7">radio_button_unchecked</i>
-                  <div class="flex flex-column w-100 ml2">
-                    <span class="subtitle-2 dark-grey">--</span>
-                    <span class="grey caption">Sections</span>
-                  </div>
-                </div>
-
-                <div class="flex flex-row items-center w-50 tl pl1">
-                  <i class="material-icons grey f7">radio_button_unchecked</i>
-                  <div class="flex flex-column w-100 ml2">
-                    <span class="subtitle-2 dark-grey">--</span>
-                    <span class="grey caption">Rows</span>
-                  </div>
-                </div>
+            <div class="w-100 pv3 flex flex-column">
+              <div class="flex flex-column items-center mv3">
+                <%= image_tag 'room-icon.svg', class: "h3 w3 dib center mb2" %>
+                <span class="h6--font dark-grey"><%= room.name %></span>
+                <span class="grey body-1">Capacity: <%= room.capacity_text %></span>
               </div>
 
-              <div class="flex flex-row mt0">
-                <div class="flex flex-row items-center w-50 tl pr1">
-                  <i class="material-icons grey f7">radio_button_unchecked</i>
-                  <div class="flex flex-column w-100 ml2">
-                    <span class="subtitle-2 dark-grey">--</span>
-                    <span class="grey caption">Shelves</span>
+              <div class="flex flex-column justify-between ph1">
+                <div class="flex flex-row">
+                  <div class="flex flex-row items-center w-50 tl">
+                    <i class="material-icons md-16 grey">view_quilt</i>
+                    <div class="flex flex-column w-100 ml2">
+                      <span class="subtitle-2 dark-grey"><%= room.sections_count_text %></span>
+                      <span class="grey caption" style="line-height: 1;">Sections</span>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-row items-center w-50 tl pl3">
+                    <i class="material-icons md-16 grey">view_list</i>
+                    <div class="flex flex-column w-100 ml2">
+                      <span class="subtitle-2 dark-grey"><%= room.rows_count_text %></span>
+                      <span class="grey caption" style="line-height: 1;">Rows</span>
+                    </div>
                   </div>
                 </div>
 
-                <div class="flex flex-row items-center w-50 tl pl1">
-                  <i class="material-icons grey f7">radio_button_unchecked</i>
-                  <div class="flex flex-column w-100 ml2">
-                    <span class="subtitle-2 dark-grey">--</span>
-                    <span class="grey caption">Trays</span>
+                <div class="flex flex-row items-center mt2">
+                  <div class="flex flex-row items-center w-50 tl">
+                    <i class="material-icons md-16 grey">view_carousel</i>
+                    <div class="flex flex-column w-100 ml2">
+                      <span class="subtitle-2 dark-grey"><%= room.shelves_count_text %></span>
+                      <span class="grey caption" style="line-height: 1;">Shelves</span>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-row items-center w-50 tl pl3">
+                    <i class="material-icons md-16 grey">view_list</i>
+                    <div class="flex flex-column w-100 ml2">
+                      <span class="subtitle-2 dark-grey"><%= room.trays_count_text %></span>
+                      <span class="grey caption" style="line-height: 1;">Trays</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -91,16 +93,16 @@
               room_code: room.code,
             ), remote: true,
             style: "height: 46px",
-            class: "w-100 absolute bottom-0 bg-orange tc ttu link button white dim flex justify-center items-center"
+            class: "w-100 bg-orange bn box--br3 ttu link button--font white dim flex justify-center items-center"
           %>
         </div>
       <% end %>
       <% unless rooms.blank? %>
         <div class="carousel__card carousel__card--add flex flex-column items-center justify-center a2 box--br3 box--shadow b--dashed b--light-grey">
-          <%= image_tag 'room-icon.svg', class: "h3 w3 dib center mb2" %>
+          <i class="material-icons md-48 mb3 orange">add_circle_outline</i>
           <%= link_to generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), 
               remote: true, method: :post, class: "dim link" do %>
-              <div class="carousel__secondary_button">add a new room</div>
+              <div class="carousel__secondary_button bn box--br3 button--font">add a new room</div>
           <% end %>
         </div>
       <% end %>

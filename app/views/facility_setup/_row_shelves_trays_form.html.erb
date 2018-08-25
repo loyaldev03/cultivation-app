@@ -15,7 +15,7 @@
 </div>
 
 <div class="db measure">
-  <div class="box--scrollable">
+  <div class="box--scrollable w-100">
     <div class="ph4">
       <div class="tab-control">
         <% shelves.each_with_index do |shelf, i| %>
@@ -46,68 +46,79 @@
           </div>
         </div>
 
-        <div class="mt4 w-100">
-          <h3 class="subtitle-2 grey db mt0 mb3">Trays Details</h3>
-          
-          <table class="w-100">
-            <tbody>
-              <tr>
-                <th style="min-width: 42px;"></th>
-                <th class="caption grey tl">Tray ID</th>
-                <th class="w3 caption grey tl">Capacity</th>
-                <th class="caption grey tl">Tray Type</th>
-              </tr>
-
-              <% trays.each_with_index do |tray,i| %>
-                <tr class="">
-                  <%= hidden_field_tag "shelf_trays_info[trays][][id]", tray.id, id: nil %>
-                  <td class="grey caption tl">
-                    <span>Tray <%= i+1%></span>
-                  </td>
-                  
-                  <td class="tl">
-                    <%= text_field_tag "shelf_trays_info[trays][][code]", tray.code, required: true,
-                        class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1",
-                        style: "width: 80px;" %>
-                  </td>
-                  
-                  <td class="tl ph1">
-                    <%= number_field_tag "shelf_trays_info[trays][][capacity]", tray.capacity, 
-                        class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1",
-                        style: "width: 55px;"    
-                    %>
-                  </td>
-                  
-                  <td class="tl">
-                    <%= select_tag "shelf_trays_info[trays][][capacity_type]",
-                      options_for_select(Constants::TRAY_CAPACITY_TYPES.collect {|p| [ p[:name], p[:code]]}, tray.capacity_type),
-                      class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1",
-                      style: "width: 115px;"
-                    %> 
-                  </td>
-
-                  <td>
-                    <%= link_to destroy_tray_path(
-                          facility_id: facility_id,
-                          room_id: room_id,
-                          row_id: row_id,
-                          shelf_id: shelf_id,
-                          id: tray.id),
-                        class: "link",
-                        remote: true,
-                        method: :post,
-                        data: {
-                          confirm: "Are you sure?"
-                        } do
-                    %>
-                      <i class="material-icons md-16 grey dim pointer">delete</i>
-                    <% end %>
-                  </td>
+        <% if !trays.blank? && trays.size == 1 %>
+          <% trays.each_with_index do |tray,i| %>
+            <%= hidden_field_tag "shelf_trays_info[trays][][id]", tray.id, id: nil %>
+            <%= hidden_field_tag "shelf_trays_info[trays][][code]", tray.code, id: nil %>
+            <label class="subtitle-2 grey db mb1">Capacity</label>
+            <%= number_field_tag "shelf_trays_info[trays][][capacity]", tray.capacity, class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1" %>
+            <label class="subtitle-2 grey db mt3 mb1">Tray Type</label>
+            <%= select_tag "shelf_trays_info[trays][][capacity_type]",
+              options_for_select(Constants::TRAY_CAPACITY_TYPES.collect {|p| [ p[:name], p[:code]]}, tray.capacity_type),
+              class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1",
+              style: "width: 115px;"
+            %> 
+          <% end %>
+        <% else %>
+          <div class="mt4 w-100">
+            <h3 class="subtitle-2 grey db mt0 mb3">Trays Details</h3>
+            <table class="w-100">
+              <tbody>
+                <tr>
+                  <th style="min-width: 42px;"></th>
+                  <th class="caption grey tl">Tray ID</th>
+                  <th class="w3 caption grey tl">Capacity</th>
+                  <th class="caption grey tl">Tray Type</th>
                 </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
+                <% trays.each_with_index do |tray,i| %>
+                  <tr class="">
+                    <%= hidden_field_tag "shelf_trays_info[trays][][id]", tray.id, id: nil %>
+                    <td class="grey caption tl">
+                      <span>Tray <%= i+1%></span>
+                    </td>
+                    <td class="tl">
+                      <%= text_field_tag "shelf_trays_info[trays][][code]", tray.code, required: true,
+                          class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1",
+                          style: "width: 80px;" %>
+                    </td>
+                    <td class="tl ph1">
+                      <%= number_field_tag "shelf_trays_info[trays][][capacity]", tray.capacity, 
+                          class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1",
+                          style: "width: 55px;"    
+                      %>
+                    </td>
+                    <td class="tl">
+                      <%= select_tag "shelf_trays_info[trays][][capacity_type]",
+                        options_for_select(Constants::TRAY_CAPACITY_TYPES.collect {|p| [ p[:name], p[:code]]}, tray.capacity_type),
+                        class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1",
+                        style: "width: 115px;"
+                      %> 
+                    </td>
+                    <td>
+                      <%= link_to destroy_tray_path(
+                            facility_id: facility_id,
+                            room_id: room_id,
+                            row_id: row_id,
+                            shelf_id: shelf_id,
+                            id: tray.id),
+                          class: "link",
+                          remote: true,
+                          method: :post,
+                          data: {
+                            confirm: "Are you sure?"
+                          } do
+                      %>
+                        <i class="material-icons md-16 grey dim pointer">delete</i>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% end %>
+
+        
         
         <%= link_to generate_tray_path(
             facility_id: facility_id,
@@ -129,7 +140,7 @@
       </div>
 
       <div class="w-100 mt5 ph4 pv3 bt b--light-grey flex items-center justify-end">
-        <%= f.submit "Save & Continue", class: "pointer db tr pa3 bg-orange white bn box--br3 ttu link dim pointer" %>
+        <%= f.submit "Save & Continue", class: "button--font db tr pa3 bg-orange white bn box--br3 ttu link dim pointer" %>
       </div>
     <% end %>
   </div>

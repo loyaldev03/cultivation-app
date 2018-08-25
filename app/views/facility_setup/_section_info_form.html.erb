@@ -1,0 +1,27 @@
+<div class="ph4 pv3 bb b--light-gray">
+  <h5 class="h6--font dark-grey ma0 ttc">Edit section</h5>
+</div>
+
+<div class="db ph4 pv3 measure">
+  <%= form_with scope: :section_info, url: update_section_info_path do |f| %>
+    <%= f.hidden_field :facility_id, value: section.facility_id %>
+    <%= f.hidden_field :room_id, value: section.room_id %>
+    <%= f.hidden_field :id, value: section.id %>
+
+    <div>
+      <%= f.label "Section name", class: "subtitle-2 grey db mb1 ttc" %>
+      <%= f.text_field :name, value: section.name, 
+          class: "box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
+    </div>
+
+    <div class="mv3">
+      <%= f.label "section code", class: "subtitle-2 grey db mb1 ttc" %>
+      <%= f.text_field :code, value: section.code,
+          class: "box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
+    </div>
+
+    <div class="w-100 ph4 pv3 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-end">
+      <%= f.submit "Save", class: "ttu db tr pv3 ph4 bg-orange white button--font bn box--br3 ttu link dim pointer" %>
+    </div>
+  <% end %>
+</div>

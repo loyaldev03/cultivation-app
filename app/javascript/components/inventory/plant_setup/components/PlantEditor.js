@@ -5,6 +5,7 @@ import CloneEditor from './editor/CloneEditor'
 import MotherEditor from './editor/MotherEditor'
 import VegGroupEditor from './editor/VegGroupEditor'
 import { FieldError } from '../../../utils/FormHelpers'
+import reactSelectStyle from './shared/reactSelectStyle'
 
 const VEG_GROUP = 'VEG_GROUP'
 const SEED = 'SEED'
@@ -18,7 +19,6 @@ export default class PlantEditor extends React.Component {
       strain: '',
       strain_type: props.strainTypes[0].code,
       stockEditor: '',
-      rooms: [],
       errors: {}
     }
 
@@ -38,7 +38,7 @@ export default class PlantEditor extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.locations)
+    // console.log(this.props.locations)
   }
 
   onStrainSelected(item) {
@@ -97,8 +97,7 @@ export default class PlantEditor extends React.Component {
       strain_type,
       plant_type,
       errors,
-      isDraft,
-      isValid: Object.getOwnPropertyNames(errors).length > 0
+      isValid: Object.getOwnPropertyNames(errors).length === 0
     }
   }
 
@@ -120,24 +119,24 @@ export default class PlantEditor extends React.Component {
         <div className="ph4 mb3" style={{ width: '500px', overflow: 'hidden' }}>
           <a
             className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
+            data-editor={MOTHER}
+            onClick={this.onSetStockEditor}
+          >
+            Add mother
+          </a>
+          {/* <a
+            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
             data-editor={SEED}
             onClick={this.onSetStockEditor}
           >
             Add seed
-          </a>
+          </a> */}
           <a
             className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
             data-editor={CLONE}
             onClick={this.onSetStockEditor}
           >
             Add clones
-          </a>
-          <a
-            className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
-            data-editor={MOTHER}
-            onClick={this.onSetStockEditor}
-          >
-            Add mother
           </a>
           <a
             className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
@@ -174,7 +173,6 @@ export default class PlantEditor extends React.Component {
       <SeedEditor
         onResetEditor={this.onResetEditor}
         onValidateParent={this.onValidateParent}
-        rooms={this.state.rooms}
         locations={this.locations}
       />
     )
@@ -182,17 +180,35 @@ export default class PlantEditor extends React.Component {
 
   renderCloneEditor() {
     if (this.state.stockEditor !== CLONE) return null
-    return <CloneEditor onResetEditor={this.onResetEditor} />
+    return (
+      <CloneEditor
+        onResetEditor={this.onResetEditor}
+        onValidateParent={this.onValidateParent}
+        locations={this.locations}
+      />
+    )
   }
 
   renderMotherEditor() {
     if (this.state.stockEditor !== MOTHER) return null
-    return <MotherEditor onResetEditor={this.onResetEditor} />
+    return (
+      <MotherEditor
+        onResetEditor={this.onResetEditor}
+        onValidateParent={this.onValidateParent}
+        locations={this.locations}
+      />
+    )
   }
 
   renderVegGroupEditor() {
     if (this.state.stockEditor !== VEG_GROUP) return null
-    return <VegGroupEditor onResetEditor={this.onResetEditor} />
+    return (
+      <VegGroupEditor
+        onResetEditor={this.onResetEditor}
+        onValidateParent={this.onValidateParent}
+        locations={this.locations}
+      />
+    )
   }
 
   renderTitle() {
@@ -216,7 +232,7 @@ export default class PlantEditor extends React.Component {
           className="dim gray f7 pv1 flex fw4 pointer ttu"
           onClick={this.onResetEditor}
         >
-          Cancel
+          Back
         </div>
       )
     } else {
@@ -231,6 +247,7 @@ export default class PlantEditor extends React.Component {
     }
   }
 
+  // Should refactor this to ./actions
   loadStrainOptions = inputValue => {
     return fetch('/api/v1/plants/strains?filter=' + inputValue, {
       credentials: 'include'
@@ -278,7 +295,7 @@ export default class PlantEditor extends React.Component {
                 cacheOptions
                 loadOptions={this.loadStrainOptions}
                 onInputChange={this.handleInputChange}
-                styles={customStyles}
+                styles={reactSelectStyle}
                 placeholder=""
                 value={{ label: this.state.strain, value: this.state.strain }}
                 onChange={this.onStrainSelected}
@@ -288,7 +305,7 @@ export default class PlantEditor extends React.Component {
             <div className="w-40 pl3">
               <label className="f6 fw6 db mb1 gray ttc">Strain type</label>
               <select
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
+                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 select"
                 onChange={this.onChangeStrainType}
                 value={this.state.strain_type}
               >
@@ -312,38 +329,5 @@ export default class PlantEditor extends React.Component {
         </div>
       </div>
     )
-  }
-}
-
-const customStyles = {
-  control: (base, state) => ({
-    ...base,
-    fontSize: '0.875rem',
-    backgroundColor: '#fff',
-    height: '30px',
-    minHeight: '30px',
-    borderColor: 'rgba(0, 0, 0, 0.2)'
-  }),
-  indicatorSeparator: () => ({
-    display: 'none'
-  }),
-  menu: (base, state) => ({
-    ...base,
-    marginTop: 2
-  }),
-  dropdownIndicator: () => ({
-    display: 'none'
-  }),
-  option: (base, state) => {
-    return {
-      ...base,
-      backgroundColor:
-        state.isFocused || state.isSelected
-          ? 'rgba(100, 100, 100, 0.1)'
-          : 'transparent',
-      ':active': 'rgba(100, 100, 100, 0.1)',
-      WebkitTapHighlightColor: 'rgba(100, 100, 100, 0.1)',
-      color: 'black'
-    }
   }
 }

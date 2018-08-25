@@ -54,6 +54,7 @@ $carouselEmptyHeight: 148px; // Height of carousel when it's empty
   width: $carouselCardWidth;
   height: $carouselHeight;
   border-width: 1px;
+  border-bottom: none;
 }
 
 .carousel__card--add {
@@ -72,7 +73,7 @@ $carouselEmptyHeight: 148px; // Height of carousel when it's empty
 .carousel__body--less {
   .carousel__card {
     float: left;
-    margin-right: $carouselCardGutter;
+    margin-right: $carouselCardGutter - 1px;
     &.carousel__card--center {
       float: inherit;
       margin: 0 auto;
@@ -99,23 +100,12 @@ $carouselEmptyHeight: 148px; // Height of carousel when it's empty
 
 .carousel__main_button {
   height: $carouselMainButtonHeight;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  font-weight: 600;
-  color: var(--white);
-  text-transform: uppercase;
-  text-align: center;
-  line-height: $carouselMainButtonHeight;
-  background-color: var(--orange);
 }
 
 .carousel__secondary_button {
   display: inline-block;
   height: $carouselSecondaryButtonHeight;
   width: $carouselSecondaryButtonWidth;
-  border-radius: 4px;
-  font-weight: 600;
   color: var(--white);
   text-align: center;
   text-transform: uppercase;
@@ -131,7 +121,19 @@ $carouselEmptyHeight: 148px; // Height of carousel when it's empty
 }
 
 .carousel__card__cover {
+  box-sizing: border-box;
   display: none;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: $fogZindex + 2;
+}
+
+.carousel__card__cover--content_center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .carousel--active {
@@ -139,43 +141,53 @@ $carouselEmptyHeight: 148px; // Height of carousel when it's empty
   z-index: $fogZindex + 1;
 
   .carousel__card--active {
+    border: none;
     .carousel__card__cover {
-      position: absolute;
-      display: block;
-      top: 0;
-      height: 100%;
-      width: 100%;
+      @extend .carousel__card__cover--content_center;
       border: solid 2px rgba(246, 104, 48, 1);
       border-radius: 4px;
       background-color: rgba(246, 104, 48, 0.5);
-      z-index: $fogZindex + 1;
+      margin-left: -8px;
     }
   }
 }
 
+/* Set carousel into select mode */
 .carousel--active-select {
   position: relative;
   z-index: $fogZindex + 1;
 
+  /* Rows available to duplicate to */
   .carousel__card__cover {
-    position: absolute;
-    display: block;
-    top: 0;
-    height: 100%;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.2);
-    z-index: $fogZindex + 1;
+    @extend .carousel__card__cover--content_center;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0);
   }
 
+  /* Rows selected to duplicate into */
+  .checked .carousel__card__cover {
+    border: solid 2px rgba(246, 104, 48, 1);
+    border-radius: 4px;
+    background-color: rgba(246, 104, 48, 0.5);
+    margin-left: -8px;
+  }
+
+  /* Add new row card */
+  .carousel__card--add,
+  /* Row to duplicate from */
   .carousel__card--active {
     .carousel__card__cover {
-      position: absolute;
-      display: block;
-      top: 0;
-      height: 100%;
-      width: 100%;
+      @extend .carousel__card__cover--content_center;
       background-color: rgba(255, 255, 255, 0.5);
-      z-index: $fogZindex + 1;
     }
   }
+}
+
+.card-checkmark {
+  display: none;
+}
+
+.checked .card-checkmark {
+  display: block;
+  pointer-events: none;
 }

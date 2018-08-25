@@ -90,20 +90,6 @@ export default class TaskEditor extends React.Component {
           </div>
 
           {this.renderSidebarTaskEditor()}
-
-<p>
-Details to show in the sidebar:
-1. Task name
-2. Task category: prepare, clone, clean, waiting (based on Brian's task sheet).
-3. Instructions for the worker
-4. Days
-5. Start date
-6. end date
-7. Estimated Hours needed
-8. Assigned employees
-9. Materials & suggested qty
-9.1 Some materials may need to be further specified e.g. particular nutrient inventory to use.
-</p>
         </div>
       </div>
     )

@@ -13,6 +13,7 @@ export default class TaskEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      id: '',
       strain: '',
       strain_type: '',
       facility_id: '',
@@ -23,6 +24,16 @@ export default class TaskEditor extends React.Component {
     this.onClose = this.onClose.bind(this)
   }
 
+  componentDidMount() {
+    const _this = this
+    document.addEventListener("editor-sidebar-open", function(ev) { 
+      console.log('open event'); 
+      console.log(ev.detail.data.id); 
+      _this.setState({ id: ev.detail.data.id})
+      // this.setState(...);
+    });
+  }
+
   onChangeHandler(attr, value){
     sidebarTask[attr] = value.persist()
     // updateSidebarTask.update_attr(attr, value)
@@ -30,9 +41,10 @@ export default class TaskEditor extends React.Component {
 
   renderSidebarTaskEditor() {
     //find task here and send
-    if (sidebarTask.id === undefined) return null
-    let task = TaskStore.find(e => e.id === sidebarTask.id);
-    return <SidebarTaskEditor id={sidebarTask.id} task={task} />
+    console.log(task === undefined)
+    let task = TaskStore.find(e => e.id === this.state.id);
+    if (task === undefined) return null
+    return <SidebarTaskEditor id={this.state.id} task={task} />
   }
 
   get editorSelected() {

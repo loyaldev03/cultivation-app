@@ -24,16 +24,23 @@ class SidebarTaskEditor extends React.Component {
 
   
 
-  handleChangeTask = (key, value) => {
+  handleChangeTask = (event) => {
+    console.log(event.target.attributes.fieldName.value)
     let oldContents = this.state.task;
     let newContents = update(oldContents, { attributes: {[key]: { $set: value } } } );
     this.handleChange('task', newContents);
   }
 
   handleChange = (key, value) => {
-    this.setState(prevState => ({
-      [key]: value
-    }))
+    this.setState({
+     task: {...this.state.task,
+       [key]: value
+     } 
+    })
+
+    // this.setState(prevState => ({
+    //   [key]: value
+    // }))
   }
 
   render() {
@@ -44,7 +51,9 @@ class SidebarTaskEditor extends React.Component {
             <label className="f6 fw6 db mb1 gray ttc">Task</label>
             <input
               className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-              onChange={(e) => { this.handleChangeTask('name', e.target.value) }}
+              fieldName="name"
+              onChange={this.handleChangeTask}
+              // onChange={(e) => { this.handleChangeTask('name', e.target.value) }}
               value={this.state.task.attributes.name}
               type="text"
             />
@@ -53,7 +62,9 @@ class SidebarTaskEditor extends React.Component {
             <label className="f6 fw6 db mb1 gray ttc">Category</label>
             <input
               className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-              onChange={(e) => { this.handleChangeTask('task_category', e.target.value) }}
+              fieldName="task_category"
+              onChange={this.handleChangeTask}
+              // onChange={(e) => { this.handleChangeTask('task_category', e.target.value) }}
               value={this.state.task.attributes.task_category}
               type="text"
             />
@@ -78,7 +89,9 @@ class SidebarTaskEditor extends React.Component {
             <label className="f6 fw6 db mb1 gray ttc">Days</label>
             <input
               className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-              onChange={(e) => { this.handleChangeTask('days', e.target.value) }}
+              fieldName="days"
+              // onChange={(e) => { this.handleChangeTask('days', e.target.value) }}
+              onChange={this.handleChangeTask}
               value={this.state.task.attributes.days}
               type="text"
             />

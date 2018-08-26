@@ -80,9 +80,9 @@ class TaskList extends React.Component {
           getTrProps={(state, rowInfo) => {
             return {
               onClick: (e) => {
-                console.log(rowInfo.row)
-                updateSidebarTask.update(rowInfo.row)
-                editorSidebarHandler.open({ width: '500px' })
+                // console.log(rowInfo.row)
+                // updateSidebarTask.update(rowInfo.row)
+                editorSidebarHandler.open({ width: '500px', data: rowInfo.row })
               }
             }
           }

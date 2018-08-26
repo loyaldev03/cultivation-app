@@ -50,7 +50,7 @@ class EditorSidebarHandler {
 const editorSidebarHandler = new EditorSidebarHandler()
 window.editorSidebar = editorSidebarHandler
 
-document.addEventListener('DOMContentLoaded', function(event) {
+document.addEventListener('DOMContentLoaded', function (event) {
   // console.log(document.querySelector('[data-role=sidebar]'))
   // console.log('calling setup....')
   const sidebarNode = document.querySelector('[data-role=sidebar]')

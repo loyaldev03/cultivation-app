@@ -95,3 +95,6 @@ gem 'stackprof'
 
 # Error tracking
 gem 'rollbar'
+
+#Api Serializer
+gem 'fast_jsonapi'

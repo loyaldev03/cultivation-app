@@ -62,10 +62,17 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace 'cultivation' do
+    resources :batches
+  end
+
   namespace :api do
     namespace :v1 do
       resources :plants do
         get 'strains/(:filter)', action: :strains, on: :collection
+      end
+      resources :batches do
+        resources :tasks, only: [:index, :update]
       end
     end
   end

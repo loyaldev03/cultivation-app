@@ -1,6 +1,5 @@
 import React from 'react'
 import { observer, Provider } from "mobx-react";
-import sidebarTask from '../stores/SidebarTaskStore'
 import updateSidebarTask from '../actions/updateSidebarTask'
 
 import TaskStore from '../stores/TaskStore'

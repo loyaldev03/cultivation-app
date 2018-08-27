@@ -9,7 +9,7 @@ import loadTasks from './actions/loadTask'
 import TaskList from './components/TaskList'
 import TaskEditor from './components/TaskEditor'
 
-class BatchPlanner extends React.Component {
+class TaskSetup extends React.Component {
 
 
   componentDidMount() {
@@ -30,16 +30,13 @@ class BatchPlanner extends React.Component {
 
 
   render() {
-    
-    //return "hello"
     return (
       <React.Fragment>
         <TaskList />
       </React.Fragment>
-
     )
   }
 
 }
 
-export default BatchPlanner
+export default TaskSetup

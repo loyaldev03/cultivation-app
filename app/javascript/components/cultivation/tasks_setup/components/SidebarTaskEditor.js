@@ -5,68 +5,68 @@ import update from 'immutability-helper'
 import taskStore from '../stores/TaskStore'
 import DatePicker from 'react-date-picker'
 import Select from 'react-select';
+import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 
 
 class SidebarTaskEditor extends React.Component {
   constructor(props){
     super(props)
-    this.state = {
-      task: this.props.task
+    this.state ={
+      id: props.task.id,
+      ...props.task.attributes,
+      days: '',
+      start_date: new Date(),
+      end_date: new Date(),
+      errors: '',
+      estimated_hours: ''
     }
   }
 
   componentWillReceiveProps(props) {
     const { task } = this.props;
     if (props.task !== task) {
-      this.setState({task: props.task})
+      this.setState({
+        id: props.task.id,
+        ...props.task.attributes
+      })
     }
   }
 
-  
-
   handleChangeTask = (event) => {
-    console.log(event.target.attributes.fieldName.value)
-    let oldContents = this.state.task;
-    let newContents = update(oldContents, { attributes: {[key]: { $set: value } } } );
-    this.handleChange('task', newContents);
+    let key = event.target.attributes.fieldname.value
+    let value = event.target.value
+    this.setState({ [key]: value });
   }
 
-  handleChange = (key, value) => {
-    this.setState({
-     task: {...this.state.task,
-       [key]: value
-     } 
-    })
-
-    // this.setState(prevState => ({
-    //   [key]: value
-    // }))
+  handleChangeDate =(key, value) => {
+    console.log(value)
+    this.setState({ [key]: value})
   }
+
 
   render() {
     return (
       <React.Fragment>
+        {JSON.stringify(this.state)}
         <div className="ph4 mt3 mb3 flex">
           <div className="w-60">
-            <label className="f6 fw6 db mb1 gray ttc">Task</label>
-            <input
-              className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-              fieldName="name"
+            <TextInput
+              label={'Task'}
+              value={this.state.name}
               onChange={this.handleChangeTask}
-              // onChange={(e) => { this.handleChangeTask('name', e.target.value) }}
-              value={this.state.task.attributes.name}
-              type="text"
+              fieldname="name"
+              errors={this.state.errors}
+              errorField="name"
             />
           </div>
           <div className="w-40 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">Category</label>
-            <input
-              className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-              fieldName="task_category"
+            <TextInput
+              label={'Category'}
+              value={this.state.task_category}
               onChange={this.handleChangeTask}
-              // onChange={(e) => { this.handleChangeTask('task_category', e.target.value) }}
-              value={this.state.task.attributes.task_category}
-              type="text"
+              fieldname="task_category"
+              errors={this.state.errors}
+              errorField="task_category"
             />
           </div>
         </div>
@@ -75,25 +75,26 @@ class SidebarTaskEditor extends React.Component {
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Instruction</label>
             <textarea
-              value={this.state.task.attributes.instructions}
-              onChange={(e) => { this.handleChangeTask('instructions', e.target.value) }}
+              value={this.state.instructions}
+              onChange={this.handleChangeTask}
+              fieldname="instruction"
               rows="5"
               className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
               placeholder="Plant0001, Tray0001&#10;Plant0002, Tray0001&#10;Plant0003, Tray0002&#10;Plant0004, Tray0002"
             />
+            <FieldError errors={this.state.errors} fieldname="instruction" />
           </div>
         </div>
 
         <div className="ph4 mt3 mb3 flex">
           <div className="w-20">
-            <label className="f6 fw6 db mb1 gray ttc">Days</label>
-            <input
-              className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-              fieldName="days"
-              // onChange={(e) => { this.handleChangeTask('days', e.target.value) }}
+            <NumericInput
+              label={'Days'}
+              value={this.state.days}
               onChange={this.handleChangeTask}
-              value={this.state.task.attributes.days}
-              type="text"
+              fieldname="days"
+              errors={this.state.errors}
+              errorField="days"
             />
           </div>
 
@@ -101,15 +102,17 @@ class SidebarTaskEditor extends React.Component {
             <label className="f6 fw6 db mb1 gray ttc">Start Date</label>
             <DatePicker
               value={this.state.start_date}
-              onChange={(e) => this.handleChangeTask('start_date', e)}
+              fieldname="start_date"
+              onChange={(e) => this.handleChangeDate('start_date', e)}
             />
           </div>
 
           <div className="w-40 pl3">
             <label className="f6 fw6 db mb1 gray ttc">End Date</label>
             <DatePicker
-              value={this.state.start_date}
-              onChange={(e) => this.handleChangeTask('end_date', e)}
+              value={this.state.end_date}
+              fieldname="end_date"
+              onChange={(e) => this.handleChangeDate('end_date', e)}
             />
           </div>
 
@@ -117,13 +120,16 @@ class SidebarTaskEditor extends React.Component {
 
         <div className="ph4 mt3 mb3 flex">
           <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Estimated Hours Needed</label>
-            <input
-              className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-              onChange={(e) => { this.handleChangeTask('estimated_hours', e.target.value) }}
-              value={this.state.task.attributes.estimated_hours}
-              type="text"
+
+            <NumericInput
+              label={'Estimated Hours Needed'}
+              value={this.state.estimated_hours}
+              onChange={this.handleChangeTask}
+              fieldname="estimated_hours"
+              errors={this.state.errors}
+              errorField="estimated_hours"
             />
+
           </div>
         </div>
         <div className="ph4 mt3 mb3 flex">

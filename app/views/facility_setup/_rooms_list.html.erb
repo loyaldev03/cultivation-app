@@ -1,6 +1,7 @@
 <% if @rooms_info_form.wz_room_count == 0 %>
   <span class="grey subtitle-2 dib fl w-20">Room Details</span>
-  <div class="flex flex-column">
+  
+  <div class="flex flex-column pt0-l pt3 w-100-l w-80">
     <div class="w-70 dib fl">
       <label class="mb2 grey subtitle-2 db">How many number of rooms in total?</label>
       <%= select_tag :rooms_count,
@@ -16,7 +17,7 @@
       %>
     </div>
 
-    <p class="db caption grey mt3 w-70">
+    <p class="db caption grey mt3 w-70-l w-60">
       * Tips: A complete Facility would consists of: 
       Mother Room, Clone Room, Flower Room, Veg Room (Veg1 / Veg2),
       Dry Room, Trim Room, and a Vault
@@ -103,7 +104,7 @@
                   room_code: room.code,
                 ), remote: true,
                 style: "height: 38px",
-                class: "w-100 box--br3 ttu link button--font ba b--light-grey orange dim flex justify-center items-center"
+                class: "w-100 box--br3 mb1 ttu link button--font ba b--light-grey orange dim flex justify-center items-center"
               %>
               <%= link_to "Setup Rows & Shelves",
                 facility_setup_row_shelf_info_path(
@@ -111,7 +112,7 @@
                   room_id: room.id,
                 ),
                 style: "height: 38px",
-                class: "tc w-100 bg-orange bn box--br3 ttu link button-font white dim flex justify-center items-center"
+                class: "tc w-100 bg-orange bn box--br3 ttu link button--font-s white dim flex justify-center items-center"
               %>
             </div>
           <% else %>
@@ -123,7 +124,7 @@
                 room_code: room.code,
             ), remote: true,
                style: "height: 38px",
-               class: "w-100 box--br3 ttu link button--font ba b--light-grey orange dim flex justify-center items-center"
+               class: "w-100 box--br3 mb1 ttu link button--font ba b--light-grey orange dim flex justify-center items-center"
             %>
           <% end %>
         </div>

@@ -9,9 +9,14 @@ class FacilitySetupController < ApplicationController
 
   # POST update facility basic info - step 1 / submit
   def update_basic_info
+    is_draft = params[:commit] == 'draft'
     @wizard_form = FacilityWizardForm::BasicInfoForm.new(params[:facility_id])
     if @wizard_form.submit(facility_basic_info_params)
-      redirect_to facility_setup_rooms_info_path(facility_id: @wizard_form.id)
+      if is_draft
+        redirect_to facility_setup_new_path(facility_id: @wizard_form.id)
+      else
+        redirect_to facility_setup_rooms_info_path(facility_id: @wizard_form.id)
+      end
     else
       render 'facility_setup/step1'
     end

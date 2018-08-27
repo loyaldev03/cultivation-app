@@ -5,7 +5,12 @@
   </div>
 
   <div class="flex flex-row items-center">
-    <%= link_to "Save As Draft", root_path, class: "db pa3 button--font orange ttu link dim" %>
+    <button
+      form="wizard-form"
+      name="commit"
+      type="submit"
+      class="db pv3 ph4 orange button--font bn box--br3 ttu link dim pointer"
+      value="draft">Save Draft</button>
     <input
       type="submit"
       form="wizard-form"

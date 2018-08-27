@@ -10,6 +10,7 @@ module FacilityWizardForm
              :is_complete,
              :purpose,
              :has_sections,
+             :wz_generated,
              :sections,
              :rows,
              :capacity,

@@ -38,9 +38,9 @@
               </div>
             </div>
 
-            <div class="w-100 pv3 flex flex-column">
-              <div class="flex flex-column items-center mv3">
-                <%= image_tag 'room-icon.svg', class: "h3 w3 dib center mb2" %>
+            <div class="w-100 pb2 flex flex-column">
+              <div class="flex flex-column items-center mb2">
+                <%= image_tag 'room-icon.svg', class: "h3 w3 dib center" %>
                 <span class="h6--font dark-grey"><%= room.name %></span>
                 <span class="grey body-1">Capacity: <%= room.capacity_text %></span>
               </div>
@@ -85,16 +85,39 @@
             </div>
           </div>
 
-          <%= link_to "Set up room",
-            fetch_room_info_path(
-              facility_id: room.facility_id,
-              room_id: room.id,
-              room_name: room.name,
-              room_code: room.code,
+          <% if !room.wz_generated %>
+            <div>
+              <%= link_to "Edit Room",
+                fetch_room_info_path(
+                  facility_id: room.facility_id,
+                  room_id: room.id,
+                  room_name: room.name,
+                  room_code: room.code,
+                ), remote: true,
+                style: "height: 38px",
+                class: "w-100 box--br3 mb1 ttu link f6 fw6 ba b--light-grey orange dim flex justify-center items-center"
+              %>
+              <%= link_to "Setup Rows & Shelves",
+                facility_setup_row_shelf_info_path(
+                  facility_id: room.facility_id,
+                  room_id: room.id,
+                ),
+                style: "height: 38px",
+                class: "tc w-100 bg-orange bn box--br3 ttu link f6 fw6 white dim flex justify-center items-center"
+              %>
+            </div>
+          <% else %>
+            <%= link_to "Edit Room",
+              fetch_room_info_path(
+                facility_id: room.facility_id,
+                room_id: room.id,
+                room_name: room.name,
+                room_code: room.code,
             ), remote: true,
-            style: "height: 46px",
-            class: "w-100 bg-orange bn box--br3 ttu link button--font white dim flex justify-center items-center"
-          %>
+               style: "height: 38px",
+               class: "w-100 box--br3 mb1 ttu link f6 fw6 ba b--light-grey orange dim flex justify-center items-center"
+            %>
+          <% end %>
         </div>
       <% end %>
       <% unless rooms.blank? %>

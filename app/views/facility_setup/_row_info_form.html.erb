@@ -39,75 +39,80 @@
           <%= f.hidden_field :wz_trays_count, value: row.wz_trays_count %>
         <% end %>
 
-        <div class="mt4">
-          <div class="flex flex-row items-center justify-between">
-            <span class="subtitle-2 db mb1 grey">Does the row has multiple levels?</span>
-            
-            <div class="">
-              <%= f.check_box :has_shelves,
-                checked: row.has_shelves,
-                disabled: !row.wz_generated,
-                class: "toggle toggle-default",
-                data: { toggle: 'shelves_number_options' }
-              %>
-              <label class="toggle-button" for="row_info_has_shelves"></label>
+        <% if row.wz_generated %>
+
+          <div class="mt4">
+            <div class="flex flex-row items-center justify-between">
+              <span class="subtitle-2 db mb1 grey">Does the row has multiple levels?</span>
+              
+              <div class="">
+                <%= f.check_box :has_shelves,
+                  checked: row.has_shelves,
+                  disabled: !row.wz_generated,
+                  class: "toggle toggle-default",
+                  data: { toggle: 'shelves_number_options' }
+                %>
+                <label class="toggle-button" for="row_info_has_shelves"></label>
+              </div>
             </div>
+            <p class="grey caption mt2 w-90">
+              If toggle is not selected, then that means that there is only 1 shelf.
+            </p>
           </div>
-          <p class="grey caption mt2 w-90">
-            If toggle is not selected, then that means that there is only 1 shelf.
-          </p>
-        </div>
 
-        <div class="w-100" data-collapse="shelves_number_options">
-          <div class="mt3">
-            <%= f.label :wz_shelves_count, "How many shelves per row?",
-              class: "subtitle-2 db mb1 grey"
-            %>
-            <%= f.select :wz_shelves_count,
-              options_for_select([*1..5], row.wz_shelves_count),
-              {},
-              {
-                disabled: !row.wz_generated,
-                class: "w-70 grey box--br3 ba b--light-grey outline-0 box--height"
-              }
-            %>
-          </div>
-        </div>
-
-        <div class="mt4">
-          <div class="flex flex-row items-center justify-between">
-            <span class="subtitle-2 grey">Do you use trays?</span>
-            <div class="">
-              <%= f.check_box :has_trays,
-                checked: row.has_trays,
-                disabled: !row.wz_generated,
-                class: "toggle toggle-default",
-                data: { toggle: 'trays_number_options' }
+          <div class="w-100" data-collapse="shelves_number_options">
+            <div class="mt3">
+              <%= f.label :wz_shelves_count, "How many shelves per row?",
+                class: "subtitle-2 db mb1 grey"
               %>
-              <label class="toggle-button" for="row_info_has_trays"></label>
+              <%= f.select :wz_shelves_count,
+                options_for_select([*1..5], row.wz_shelves_count),
+                {},
+                {
+                  disabled: !row.wz_generated,
+                  class: "w-70 grey box--br3 ba b--light-grey outline-0 box--height"
+                }
+              %>
             </div>
           </div>
 
-          <p class="grey caption mt2 w-90">
-            If toggle is not selected, then that means that there is no trays that exists on the shelf.
-          </p>
-        </div>
+          <div class="mt4">
+            <div class="flex flex-row items-center justify-between">
+              <span class="subtitle-2 grey">Do you use trays?</span>
+              <div class="">
+                <%= f.check_box :has_trays,
+                  checked: row.has_trays,
+                  disabled: !row.wz_generated,
+                  class: "toggle toggle-default",
+                  data: { toggle: 'trays_number_options' }
+                %>
+                <label class="toggle-button" for="row_info_has_trays"></label>
+              </div>
+            </div>
 
-        <div class="w-100" data-collapse="trays_number_options">
-          <div class="mt3">
-            <%= f.label :wz_trays_count, "How many trays per shelf?",
-              class: "subtitle-2 db mb1 grey"
-            %>
-            <%= f.select :wz_trays_count,
-              options_for_select([*1..10], row.wz_trays_count),
-              {},
-              {
-                disabled: !row.wz_generated,
-                class: "w-70 grey box--br3 ba b--light-grey outline-0 box--height"
-              }
-            %>
+            <p class="grey caption mt2 w-90">
+              If toggle is not selected, then that means that there is no trays that exists on the shelf.
+            </p>
           </div>
-        </div>
+
+          <div class="w-100" data-collapse="trays_number_options">
+            <div class="mt3">
+              <%= f.label :wz_trays_count, "How many trays per shelf?",
+                class: "subtitle-2 db mb1 grey"
+              %>
+              <%= f.select :wz_trays_count,
+                options_for_select([*1..10], row.wz_trays_count),
+                {},
+                {
+                  disabled: !row.wz_generated,
+                  class: "w-70 grey box--br3 ba b--light-grey outline-0 box--height"
+                }
+              %>
+            </div>
+          </div>
+
+        <% end %>
+
       </div>
 
       <div class="w-100 mt5 pv3 ph4 bg-white bt b--light-grey flex items-center justify-between">

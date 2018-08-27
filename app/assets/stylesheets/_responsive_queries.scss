@@ -9,6 +9,17 @@ and (orientation: landscape) {
   .margin-mr3 {
     margin-right: 1rem;
   }
+
+  .carousel-wrapper, 
+  .carousel-group, 
+  .carousel-group--empty .carousel {
+    width: 730px;
+  }
+
+  .carousel__button--right {
+    margin-right: 1.5rem;
+  }
+
 }
 
 @media only screen 

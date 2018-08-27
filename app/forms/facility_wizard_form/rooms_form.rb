@@ -22,6 +22,7 @@ module FacilityWizardForm
             id: BSON::ObjectId.new,
             code: "RM#{i + 1}", # TODO: Use sequence generator
             name: "Room #{i + 1}",
+            wz_generated: true
           })
         end
       else
@@ -38,6 +39,7 @@ module FacilityWizardForm
               id: BSON::ObjectId.new,
               code: room_code,
               name: room_name,
+              wz_generated: true
             })
           end
           @rooms.concat(missing_rooms)

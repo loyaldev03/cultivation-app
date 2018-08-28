@@ -4,6 +4,7 @@ import Select from 'react-select'
 import { render } from "react-dom";
 
 import DatePicker from 'react-date-picker'
+import reactSelectStyle from './../../utils/reactSelectStyle'
 
 
 const styles = `
@@ -102,7 +103,7 @@ class BatchSetupApp extends React.Component {
               <label className="f6 fw5 db mb1 gray" for="record_batch_source">Select Plant</label>
               <Select options={plants} 
               onChange={(e)=>this.handleChange('plant', e.value)} 
-              styles={customStyles}
+              styles={reactSelectStyle}
               />
             </div>
           </div>
@@ -111,7 +112,7 @@ class BatchSetupApp extends React.Component {
             <div className="mt3">
               <label className="f6 fw5 db mb1 gray" for="record_batch_source">Select Facility</label>
               <Select options={facilities} 
-                styles={customStyles}
+                styles={reactSelectStyle}
                 onChange={(e) => this.handleChange('facility', e.value)} />
             </div>
           </div>
@@ -120,7 +121,7 @@ class BatchSetupApp extends React.Component {
             <div className="mt3">
               <label className="f6 fw5 db mb1 gray" for="record_batch_source">Select Strains</label>
               <Select options={strains} 
-                styles={customStyles}
+                styles={reactSelectStyle}
                 onChange={(e) => this.handleChange('strain', e.value)} />
             </div>
           </div>
@@ -143,39 +144,6 @@ class BatchSetupApp extends React.Component {
     )
   }
 
-}
-
-const customStyles = {
-  control: (base, state) => ({
-    ...base,
-    fontSize: '0.875rem',
-    backgroundColor: '#fff',
-    height: '30px',
-    minHeight: '30px',
-    borderColor: 'rgba(0, 0, 0, 0.2)'
-  }),
-  indicatorSeparator: () => ({
-    display: 'none'
-  }),
-  menu: (base, state) => ({
-    ...base,
-    marginTop: 2
-  }),
-  dropdownIndicator: () => ({
-    display: 'none'
-  }),
-  option: (base, state) => {
-    return {
-      ...base,
-      backgroundColor:
-        state.isFocused || state.isSelected
-          ? 'rgba(100, 100, 100, 0.1)'
-          : 'transparent',
-      ':active': 'rgba(100, 100, 100, 0.1)',
-      WebkitTapHighlightColor: 'rgba(100, 100, 100, 0.1)',
-      color: 'black'
-    }
-  }
 }
 
 

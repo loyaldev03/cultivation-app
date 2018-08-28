@@ -6,6 +6,8 @@ import taskStore from '../stores/TaskStore'
 import DatePicker from 'react-date-picker'
 import Select from 'react-select';
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
+import reactSelectStyle from './../../../utils/reactSelectStyle'
+import { throws } from "assert";
 
 
 class SidebarTaskEditor extends React.Component {
@@ -18,7 +20,8 @@ class SidebarTaskEditor extends React.Component {
       start_date: new Date(),
       end_date: new Date(),
       errors: '',
-      estimated_hours: ''
+      estimated_hours: '',
+      assigned_employee: []
     }
   }
 
@@ -33,6 +36,7 @@ class SidebarTaskEditor extends React.Component {
   }
 
   handleChangeTask = (event) => {
+    console.log(event[0].value)
     let key = event.target.attributes.fieldname.value
     let value = event.target.value
     this.setState({ [key]: value });
@@ -43,11 +47,29 @@ class SidebarTaskEditor extends React.Component {
     this.setState({ [key]: value})
   }
 
+  handleChangeSelect = (value, { action, removedValue }) => {
+    console.log(value)
+    let arr = this.state.assigned_employee
+    switch (action) {
+      case 'select-option':
+        // arr.push(value[0])
+        // console.log(value[0].value)
+        break;
+      case 'remove-value':
+        // console.log(removedValue.value)
+        const index = arr.indexOf(removedValue);
+        arr.splice(index, 1);
+        break;
+    }
+    this.setState({ assigned_employee: value})
+    // value = orderOptions(value);
+    // this.setState({ value: value });
+  }
+
 
   render() {
     return (
       <React.Fragment>
-        {JSON.stringify(this.state)}
         <div className="ph4 mt3 mb3 flex">
           <div className="w-60">
             <TextInput
@@ -141,7 +163,10 @@ class SidebarTaskEditor extends React.Component {
               options={[{ value: 'Fathi', label: 'Fathi' }, { value: 'Andy', label: 'Andy' }, { value: 'Karg', label: 'Karg' }, { value: 'Allison', label: 'Allison' }]}
               className="basic-multi-select"
               classNamePrefix="select"
-              styles={customStyles}
+              fieldname="assigned_employee"
+              onChange={this.handleChangeSelect}
+              value={this.state.assigned_employee}
+              styles={reactSelectStyle}
             />
           </div>
         </div>
@@ -156,7 +181,7 @@ class SidebarTaskEditor extends React.Component {
               options={[{ value: 'Fathi', label: 'Fathi' }, { value: 'Andy', label: 'Andy' }, { value: 'Karg', label: 'Karg' }, { value: 'Allison', label: 'Allison' }]}
               className="basic-multi-select"
               classNamePrefix="select"
-              styles={customStyles}
+              styles={reactSelectStyle}
             />
           </div>
         </div>
@@ -164,39 +189,6 @@ class SidebarTaskEditor extends React.Component {
       </React.Fragment>
 
     )
-  }
-}
-
-const customStyles = {
-  control: (base, state) => ({
-    ...base,
-    fontSize: '0.875rem',
-    backgroundColor: '#fff',
-    height: '30px',
-    minHeight: '30px',
-    borderColor: 'rgba(0, 0, 0, 0.2)'
-  }),
-  indicatorSeparator: () => ({
-    display: 'none'
-  }),
-  menu: (base, state) => ({
-    ...base,
-    marginTop: 2
-  }),
-  dropdownIndicator: () => ({
-    display: 'none'
-  }),
-  option: (base, state) => {
-    return {
-      ...base,
-      backgroundColor:
-        state.isFocused || state.isSelected
-          ? 'rgba(100, 100, 100, 0.1)'
-          : 'transparent',
-      ':active': 'rgba(100, 100, 100, 0.1)',
-      WebkitTapHighlightColor: 'rgba(100, 100, 100, 0.1)',
-      color: 'black'
-    }
   }
 }
 

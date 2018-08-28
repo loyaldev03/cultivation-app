@@ -122,10 +122,10 @@
       <% end %>
       <% unless rooms.blank? %>
         <div class="carousel__card carousel__card--add flex flex-column items-center justify-center a2 box--br3 box--shadow b--dashed b--light-grey">
-          <i class="material-icons md-48 mb3 orange">add_circle_outline</i>
           <%= link_to generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), 
-              remote: true, method: :post, class: "dim link" do %>
-              <div class="carousel__secondary_button bn box--br3 button--font">add a new room</div>
+              remote: true, method: :post, class: "dim link tc w-90" do %>
+              <i class="material-icons md-48 mb3 orange">add_circle_outline</i>
+              <div class="carousel__main_button">add a new room</div>
           <% end %>
         </div>
       <% end %>

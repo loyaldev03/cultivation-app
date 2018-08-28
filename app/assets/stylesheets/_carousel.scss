@@ -1,5 +1,6 @@
 $carouselBtnSize: 32px;  // The left & right arrows
-$carouselMainButtonHeight: 46px;
+$carouselBtnFontSize: 14px;
+$carouselMainButtonHeight: 36px;
 $carouselSecondaryButtonHeight: 46px;
 $carouselSecondaryButtonWidth: 160px;
 $carouselWidth: 910px;
@@ -99,18 +100,19 @@ $carouselEmptyHeight: 148px; // Height of carousel when it's empty
 }
 
 .carousel__main_button {
-  height: $carouselMainButtonHeight;
-}
-
-.carousel__secondary_button {
   display: inline-block;
-  height: $carouselSecondaryButtonHeight;
-  width: $carouselSecondaryButtonWidth;
+  width: 100%;
   color: var(--white);
-  text-align: center;
+  height: $carouselMainButtonHeight;
+  line-height: $carouselMainButtonHeight;
+  font-size: $carouselBtnFontSize;
+  font-weight: 600;
   text-transform: uppercase;
-  line-height: $carouselSecondaryButtonHeight;
+  text-decoration: none;
+  text-align: center;
   background-color: var(--orange);
+  border: none;
+  border-radius: 4px;
 }
 
 .carousel__button--left {

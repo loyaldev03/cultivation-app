@@ -1,9 +1,6 @@
 import React from "react";
 import { render } from "react-dom";
-import update from 'immutability-helper'
 import TaskStore from '../stores/TaskStore'
-// import DatePicker from 'react-date-picker'
-//import DatePicker from 'react-date-picker/dist/entry.nostyle.js'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import Select from 'react-select';
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'

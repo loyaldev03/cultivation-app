@@ -137,12 +137,18 @@
               <div class="fl w-70 flex flex-row">
                 <div class="mr4 w-40">
                   <%= f.label "Phone Number", class: "grey subtitle-2 ttc db mb1" %>
-                  <%= f.text_field :address_main_number, placeholder: "1234567", class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                  <%= f.text_field :address_main_number,
+                    placeholder: "1234567",
+                    value: @wizard_form.address_main_number,
+                    class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
                 </div>
 
                 <div class="w-40">
                   <%= f.label "Fax Number", class: "grey subtitle-2 ttc db mb1" %>
-                  <%= f.text_field :address_fax_number, placeholder: "011 1234567" ,class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                  <%= f.text_field :address_fax_number,
+                    placeholder: "011 1234567",
+                    value: @wizard_form.address_fax_number,
+                    class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
                 </div>
               </div>
             </div>

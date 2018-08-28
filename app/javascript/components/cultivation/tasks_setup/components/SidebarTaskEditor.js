@@ -2,7 +2,8 @@ import React from "react";
 import { render } from "react-dom";
 import update from 'immutability-helper'
 import TaskStore from '../stores/TaskStore'
-import DatePicker from 'react-date-picker'
+// import DatePicker from 'react-date-picker'
+import DatePicker from 'react-date-picker/dist/entry.nostyle.js'
 import Select from 'react-select';
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import { fadeToast, toast } from '../../../utils/toast'
@@ -136,7 +137,7 @@ class SidebarTaskEditor extends React.Component {
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Instruction</label>
             <textarea
-              value={this.state.instructions}
+              value={this.state.instruction}
               onChange={this.handleChangeTask}
               fieldname="instruction"
               rows="5"

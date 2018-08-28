@@ -1,6 +1,5 @@
 import React from 'react'
 import { observer, Provider } from "mobx-react";
-import sidebarTask from '../stores/SidebarTaskStore'
 import updateSidebarTask from '../actions/updateSidebarTask'
 
 import TaskStore from '../stores/TaskStore'
@@ -27,8 +26,6 @@ export default class TaskEditor extends React.Component {
   componentDidMount() {
     const _this = this
     document.addEventListener("editor-sidebar-open", function(ev) { 
-      console.log('open event'); 
-      console.log(ev.detail.data.id); 
       _this.setState({ id: ev.detail.data.id})
       // this.setState(...);
     });

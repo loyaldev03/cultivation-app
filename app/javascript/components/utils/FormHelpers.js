@@ -6,7 +6,7 @@ function TextInput({
   placeholder,
   onChange = () => {},
   errors = {},
-  errorField = null
+  fieldname = null,
 }) {
   return (
     <React.Fragment>
@@ -17,8 +17,9 @@ function TextInput({
         type="text"
         placeholder={placeholder}
         onChange={onChange}
+        fieldname={fieldname}
       />
-      {errorField && <FieldError errors={errors} field={errorField} />}
+      {fieldname && <FieldError errors={errors} field={fieldname} />}
     </React.Fragment>
   )
 }
@@ -31,7 +32,7 @@ function NumericInput({
   max = '',
   onChange = () => {},
   errors = {},
-  errorField = null
+  fieldname = null
 }) {
   return (
     <React.Fragment>
@@ -44,8 +45,9 @@ function NumericInput({
         onChange={onChange}
         min={min}
         max={max}
+        fieldname={fieldname}
       />
-      {errorField && <FieldError errors={errors} field={errorField} />}
+      {fieldname && <FieldError errors={errors} field={fieldname} />}
     </React.Fragment>
   )
 }

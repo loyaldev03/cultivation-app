@@ -30,19 +30,22 @@
       %> 
     </div>
 
-    <div class="w-100 pt3">
-      <span class="subtitle-2 grey"> Is the room split into one or more sections? </span>
-      <p class="grey caption mt2 w-90">
-        Quick tip: Will you be using this room for multiple growth stages of your plants? 
-        If you are, please split the room into sections.
-      </p>
+    <% if room.wz_generated %>
+      <div class="w-100 pt3">
+        <span class="subtitle-2 grey"> Is the room split into one or more sections? </span>
+        <p class="grey caption mt2 w-90">
+          Quick tip: Will you be using this room for multiple growth stages of your plants? 
+          If you are, please split the room into sections.
+        </p>
 
-
-      <div class="flex justify-end w-90">
-        <%= f.check_box :has_sections, checked: room.has_sections, class: "toggle toggle-default" %>
-        <label class="toggle-button" for="room_info_has_sections"></label>
+        <div class="flex justify-end w-90">
+          <%= f.check_box :has_sections, checked: room.has_sections, class: "toggle toggle-default" %>
+          <label class="toggle-button" for="room_info_has_sections"></label>
+        </div>
       </div>
-    </div>
+    <% else %>
+      <%= f.hidden_field :has_sections, value: room.has_sections %>
+    <% end %>
 
     <div class="w-100 pa4 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
       <%= f.submit "Save", class: "button--font bg-white db pv3 bn ttu orange link dim pointer" %>

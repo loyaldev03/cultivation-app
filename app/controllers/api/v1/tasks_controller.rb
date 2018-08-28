@@ -19,6 +19,9 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     batch = Cultivation::Batch.find(params[:batch_id])
     task = batch.tasks.find_by(id: params[:id])
     task.update(task_params)
+    options = {}
+    task_json = TaskSerializer.new(task, options).serialized_json
+    render json: task_json
   end
 
   def strains

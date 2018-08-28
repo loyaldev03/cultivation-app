@@ -4,7 +4,7 @@ import { render } from "react-dom";
 import { observable } from "mobx";
 import { observer, Provider } from "mobx-react";
 
-import taskStore from '../stores/TaskStore'
+import TaskStore from '../stores/TaskStore'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import TaskEditor from './TaskEditor'
 import updateSidebarTask from '../actions/updateSidebarTask'
@@ -29,7 +29,7 @@ class TaskList extends React.Component {
   }
 
   render() {
-    let tasks = taskStore
+    let tasks = TaskStore
     return(
       <React.Fragment>
         {tasks}
@@ -88,11 +88,11 @@ class TaskList extends React.Component {
           }
         }
         />
-        <TaskEditor onClose={this.closeSidebar} />
+        <TaskEditor onClose={this.closeSidebar} batch_id={this.props.batch_id} />
       </React.Fragment> 
    
     )
-    // const list = taskStore.thelist.map((x, i) => <Item data={x} key={i} />
+    // const list = TaskStore.thelist.map((x, i) => <Item data={x} key={i} />
     //     return (<React.Fragment>{list}</React.Fragment>)
 
   }

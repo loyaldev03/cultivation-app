@@ -3,7 +3,8 @@ import { render } from "react-dom";
 import update from 'immutability-helper'
 import TaskStore from '../stores/TaskStore'
 // import DatePicker from 'react-date-picker'
-import DatePicker from 'react-date-picker/dist/entry.nostyle.js'
+//import DatePicker from 'react-date-picker/dist/entry.nostyle.js'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import Select from 'react-select';
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import { fadeToast, toast } from '../../../utils/toast'
@@ -79,7 +80,7 @@ class SidebarTaskEditor extends React.Component {
     fetch(url, {
       method: 'PUT',
       credentials: 'include',
-      body: JSON.stringify(this.state),
+      body: JSON.stringify({task: this.state}),
       headers: {
         "Content-Type": "application/json"
       }

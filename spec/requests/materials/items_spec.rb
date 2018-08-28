@@ -5,9 +5,10 @@ RSpec.describe "/materials", :type => :request do
     before do
       user = create(:user, :admin)
       login_as(user, :scope => :user)
-      Item.create!([
-        { name: Faker::Lorem.word, desc: Faker::Lorem.sentences },
-        { name: Faker::Lorem.word, desc: Faker::Lorem.sentences }
+      facility = Facility.create!(name: Faker::Lorem.word)
+      Inventory::Item.create!([
+        { name: Faker::Lorem.word, description: Faker::Lorem.sentences, facility: facility },
+        { name: Faker::Lorem.word, description: Faker::Lorem.sentences, facility: facility }
       ])
     end
 

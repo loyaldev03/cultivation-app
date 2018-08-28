@@ -1,5 +1,5 @@
 import React from 'react'
-import DatePicker from 'react-date-picker'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import LocationPicker from '../shared/LocationPicker'
 import {
@@ -25,7 +25,7 @@ class VegGroupEditor extends React.Component {
 
       // Vendor/ source
       vendor_name: '',
-      vendor_id: '',
+      vendor_no: '',
       address: '',
       vendor_state_license_num: '',
       vendor_state_license_expiration_date: null,
@@ -326,7 +326,7 @@ class VegGroupEditor extends React.Component {
           ref={this.setPurchaseInfoEditor}
           showLabel={false}
           vendor_name={this.state.vendor_name}
-          vendor_id={this.state.vendor_id}
+          vendor_no={this.state.vendor_no}
           address={this.state.address}
           vendor_state_license_num={this.state.vendor_state_license_num}
           vendor_state_license_expiration_date={

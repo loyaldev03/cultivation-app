@@ -16,7 +16,7 @@ class SeedEditor extends React.Component {
 
       // Vendor/ source
       vendor_name: '',
-      vendor_id: '',
+      vendor_no: '',
       address: '',
       vendor_state_license_num: '',
       vendor_state_license_expiration_date: null,
@@ -145,7 +145,7 @@ class SeedEditor extends React.Component {
         <PurchaseInfo
           ref={this.purchaseInfoEditor}
           vendor_name={this.state.vendor_name}
-          vendor_id={this.state.vendor_id}
+          vendor_no={this.state.vendor_no}
           address={this.state.address}
           vendor_state_license_num={this.state.vendor_state_license_num}
           vendor_state_license_expiration_date={

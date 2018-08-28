@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe DestroyUnitOfMeasure, type: :command do
   context ".call" do
     it "should delete record from db" do
-      record = UnitOfMeasure.new(
+      record = Common::UnitOfMeasure.new(
         name: Faker::Lorem.word,
         code: Faker::Number.number(3),
         desc: Faker::Lorem.sentence,
@@ -14,7 +14,7 @@ RSpec.describe DestroyUnitOfMeasure, type: :command do
       
       expect(cmd.errors).to be {}
       expect(cmd.success?).to be true
-      expect(UnitOfMeasure.count).to eq 0
+      expect(Common::UnitOfMeasure.count).to eq 0
     end
   end
 end

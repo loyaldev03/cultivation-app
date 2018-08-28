@@ -3,6 +3,4 @@ class BatchSerializer
   attributes :name, :batch_source, :strain
 
   has_many :tasks
-
-  
 end

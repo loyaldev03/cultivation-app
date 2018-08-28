@@ -19,7 +19,5 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
 
   def record_params
     params.require(:batch).permit(:batch_source, :strain, :start_date, facility: {})
-
   end
-
 end

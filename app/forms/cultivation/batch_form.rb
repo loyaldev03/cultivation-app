@@ -35,7 +35,7 @@ module Cultivation
         self.id = BSON::ObjectId.new
       else
         saved = Cultivation::FindBatch.call({id: record_id}).result
-        Rails.logger.debug "Saved"
+        Rails.logger.debug 'Saved'
         map_attributes(saved) if saved
       end
     end

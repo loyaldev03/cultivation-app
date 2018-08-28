@@ -13,7 +13,7 @@ module PurchasingForm
     def submit(params)
       map_attributes(params)
       if valid?
-        SaveVendor.call(params).result
+        Inventory::SaveVendor.call(params).result
       else
         false
       end

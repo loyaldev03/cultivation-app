@@ -10,6 +10,6 @@ class DestroyVendor
   end
 
   def call
-    @record = Vendor.where(id: @record_id).delete
+    @record = Inventory::Vendor.where(id: @record_id).delete
   end
 end

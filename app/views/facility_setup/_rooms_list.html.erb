@@ -44,10 +44,12 @@
                 <span class="h6--font dark-grey"><%= room.name %></span>
                 <span class="grey body-1 ttu">
                   <%= room.purpose %>
-                  <% if room.capacity > 0 %>
-                    (<%= room.capacity_text %>)
-                  <% end %>
                 </span>
+                <% if room.capacity_text != "--" %>
+                  <span class="grey body-2 ttu">
+                    Capacity: <%= room.capacity_text %>
+                  </span>
+                <% end %>
               </div>
               <% unless room.wz_generated %>
                 <div class="flex flex-column justify-between ph1">

@@ -4,7 +4,7 @@ RSpec.describe FindUnitOfMeasure, type: :command do
   context "given uom args" do
 
     subject(:record) {
-      UnitOfMeasure.create!(
+      Common::UnitOfMeasure.create!(
         name: Faker::Lorem.word,
         code: Faker::Number.number(3),
         desc: Faker::Lorem.sentence,
@@ -72,7 +72,7 @@ RSpec.describe FindUnitOfMeasure, type: :command do
     end
 
     it "should return error if record not found" do
-      record = UnitOfMeasure.new
+      record = Common::UnitOfMeasure.new
 
       cmd = FindUnitOfMeasure.call({id: record.id.to_s})
 

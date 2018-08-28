@@ -3,7 +3,7 @@ import React from "react";
 import { render } from "react-dom";
 import update from 'immutability-helper'
 import taskStore from '../stores/TaskStore'
-import DatePicker from 'react-date-picker'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import Select from 'react-select';
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from './../../../utils/reactSelectStyle'

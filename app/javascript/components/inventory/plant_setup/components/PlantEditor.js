@@ -41,17 +41,14 @@ export default class PlantEditor extends React.Component {
     // console.log(this.props.locations)
   }
 
+  // TODO:  May need more logic to add newly created item into the async list: https://react-select.com/props#creatable-props
+  // At the moment, newly created item does not appear on suggestion list.
   onStrainSelected(item) {
-    let label = ''
-    if (item) {
-      label = item.label
-    }
-
     this.setState({
-      strain: label,
-      strain_type: item.strain_type,
+      strain: item.label,
+      strain_type: item.strain_type || this.state.strain_type,
       errors: {}
-    })
+    }/*, () => console.log(this.state.strain_type)*/)
   }
 
   onChangeStrainType(event) {

@@ -14,6 +14,6 @@ class QueryStrain
   private
 
   def query_records
-    Strain.where(@args).to_a
+    Common::Strain.where(@args).to_a
   end
 end

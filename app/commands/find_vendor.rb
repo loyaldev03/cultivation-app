@@ -14,7 +14,7 @@ class FindVendor
   private
 
   def query_record
-    record = Vendor.where(@args).first
+    record = Inventory::Vendor.where(@args).first
     if record.nil?
       errors.add :not_found, 'Record Not Found'
       nil

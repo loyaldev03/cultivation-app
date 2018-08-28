@@ -3,7 +3,7 @@ import React from "react";
 import Select from 'react-select'
 import { render } from "react-dom";
 
-import DatePicker from 'react-date-picker'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import reactSelectStyle from './../../utils/reactSelectStyle'
 
 

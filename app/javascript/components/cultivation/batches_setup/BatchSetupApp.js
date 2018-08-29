@@ -41,7 +41,7 @@ class BatchSetupApp extends React.Component {
       facility: '',
       strain: '',
       start_date: '',
-      capacity: '',
+      quantity: '',
       grow_method: ''
     }
   }
@@ -59,7 +59,7 @@ class BatchSetupApp extends React.Component {
       body: JSON.stringify({
         batch_source: this.state.plant, facility: this.state.facility, 
         strain: this.state.strain, start_date: this.state.start_date,
-        capacity: this.state.capacity, grow_method: this.state.grow_method
+        quantity: this.state.quantity, grow_method: this.state.grow_method
       }),
       headers: {
         "Content-Type": "application/json"
@@ -145,12 +145,12 @@ class BatchSetupApp extends React.Component {
           <div className="w-100 shelves_number_options">
             <div className="mt3">
               <TextInput
-                label={'Capacity'}
-                value={this.state.capacity}
+                label={'Quantity'}
+                value={this.state.quantity}
                 onChange={this.handleChangeInput}
-                fieldname="capacity"
+                fieldname="quantity"
                 errors={this.state.errors}
-                errorField="capacity"
+                errorField="quantity"
               />
             </div>
           </div>

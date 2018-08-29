@@ -9,7 +9,7 @@ module Cultivation
     field :start_date, type: DateTime
     field :facility, type: String
     field :grow_method, type: String
-    field :capicity, type: String
+    field :quantity, type: String
 
     has_many :tasks, class_name: 'Cultivation::Task'
   end

@@ -26,6 +26,17 @@ module Constants
     {code: :veg2, name: 'Veg 2'},
   ].freeze
 
+  SECTION_PURPOSE = [
+    {code: :cure, name: 'Cure'},
+    {code: :drying_plants, name: 'Drying Plants'},
+  ].freeze
+
+  DRYING_METHOD = [
+    {code: :wire_lines, name: 'Wire lines'},
+    {code: :dry_racks, name: 'Dry racks'},
+    {code: :high_rise_dry_racks, name: 'High rise drying racks'},
+  ].freeze
+
   SOURCE_TYPES = [
     {code: :clone, name: 'Clone'},
     {code: :mother, name: 'Mother'},

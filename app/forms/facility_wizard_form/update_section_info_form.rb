@@ -7,7 +7,9 @@ module FacilityWizardForm
              :room_id,
              :id,
              :name,
-             :code]
+             :code,
+             :purpose,
+             :purpose_option]
 
     attr_accessor(*ATTRS)
 

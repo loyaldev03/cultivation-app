@@ -1,6 +1,6 @@
 <div class="carousel">
   <div class="carousel__button carousel__button--left dim">
-    <i class="material-icons md-light fw6">keyboard_arrow_left</i>
+    <i class="material-icons md-light">keyboard_arrow_left</i>
   </div>
 
   <div class="carousel__body siema">
@@ -11,7 +11,6 @@
     <% end %>
     <% if rows.any? || show_add_on_empty %>
       <div class="carousel__card carousel__card--add relative <%= "carousel__card--center" if rows.blank? %>">
-        <i class="material-icons md-48 mb3 orange">add_circle_outline</i>
         <%= link_to generate_rows_path(
             facility_id: facility_id,
             room_id: room_id,
@@ -21,17 +20,18 @@
           ),
             remote: true,
             method: :post,
-            class: "dim link" do %>
-          <span class="carousel__secondary_button bn box--br3 button--font">Add a new row</span>
+            class: "dim link tc" do %>
+          <i class="material-icons md-48 mb3 orange">add_circle_outline</i>
+          <span class="carousel__main_button dim">Add a new row</span>
         <% end %>
         <div class="carousel__card__cover">
-          <i class="material-icons md-light fw6">done</i>
+          <i class="material-icons md-light">done</i>
         </div>
       </div>
     <% end %>
   </div>
   <div class="carousel__button carousel__button--right dim">
-    <i class="material-icons md-light fw6">keyboard_arrow_right</i>
+    <i class="material-icons md-light">keyboard_arrow_right</i>
   </div>
 </div>
 

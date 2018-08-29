@@ -1,18 +1,27 @@
 <% if @rooms_info_form.wz_room_count == 0 %>
-  <span class="grey subtitle-2 dib fl">Room Details</span>
-  <div class="ml6 dib fl">
-    <label class="mb2 grey subtitle-2 db">How many number of rooms in total?</label>
-    <%= select_tag :rooms_count,
-      options_for_select(["",*1..25], @rooms_info_form.wz_room_count),
-      data: {
-        remote: true,
-        url: generate_rooms_path(
-          facility_id: @rooms_info_form.facility_id,
-          mode: 'new'),
-        method: :post
-      },
-      class: "grey box--br3 ba b--light-grey outline-0 w-80 box--height"
-    %>
+  <span class="grey subtitle-2 dib fl w-20">Room Details</span>
+  
+  <div class="flex flex-column pt0-l pt3 w-100-l w-80">
+    <div class="w-70 dib fl">
+      <label class="mb2 grey subtitle-2 db">How many number of rooms in total?</label>
+      <%= select_tag :rooms_count,
+        options_for_select(["",*1..25], @rooms_info_form.wz_room_count),
+        data: {
+          remote: true,
+          url: generate_rooms_path(
+            facility_id: @rooms_info_form.facility_id,
+            mode: 'new'),
+          method: :post
+        },
+        class: "grey box--br3 ba b--light-grey outline-0 w-40"
+      %>
+    </div>
+
+    <p class="db caption grey mt3 w-70-l w-60">
+      * Tips: A complete Facility would consists of: 
+      Mother Room, Clone Room, Flower Room, Veg Room (Veg1 / Veg2),
+      Dry Room, Trim Room, and a Vault
+    </p>
   </div>
 <% else %>
   <div class="carousel">
@@ -42,46 +51,54 @@
               <div class="flex flex-column items-center mb2">
                 <%= image_tag 'room-icon.svg', class: "h3 w3 dib center" %>
                 <span class="h6--font dark-grey"><%= room.name %></span>
-                <span class="grey body-1">Capacity: <%= room.capacity_text %></span>
+                <span class="grey body-1 ttu">
+                  <%= room.purpose %>
+                </span>
+                <% if room.capacity_text != "--" %>
+                  <span class="grey body-2 ttu">
+                    Capacity: <%= room.capacity_text %>
+                  </span>
+                <% end %>
               </div>
+              <% unless room.wz_generated %>
+                <div class="flex flex-column justify-between ph1">
+                  <div class="flex flex-row">
+                    <div class="flex flex-row items-center w-50 tl">
+                      <i class="material-icons md-16 grey">view_quilt</i>
+                      <div class="flex flex-column w-100 ml2">
+                        <span class="subtitle-2 dark-grey"><%= room.sections_count_text %></span>
+                        <span class="grey caption" style="line-height: 1;">Sections</span>
+                      </div>
+                    </div>
 
-              <div class="flex flex-column justify-between ph1">
-                <div class="flex flex-row">
-                  <div class="flex flex-row items-center w-50 tl">
-                    <i class="material-icons md-16 grey">view_quilt</i>
-                    <div class="flex flex-column w-100 ml2">
-                      <span class="subtitle-2 dark-grey"><%= room.sections_count_text %></span>
-                      <span class="grey caption" style="line-height: 1;">Sections</span>
+                    <div class="flex flex-row items-center w-50 tl pl3">
+                      <i class="material-icons md-16 grey">view_list</i>
+                      <div class="flex flex-column w-100 ml2">
+                        <span class="subtitle-2 dark-grey"><%= room.rows_count_text %></span>
+                        <span class="grey caption" style="line-height: 1;">Rows</span>
+                      </div>
                     </div>
                   </div>
 
-                  <div class="flex flex-row items-center w-50 tl pl3">
-                    <i class="material-icons md-16 grey">view_list</i>
-                    <div class="flex flex-column w-100 ml2">
-                      <span class="subtitle-2 dark-grey"><%= room.rows_count_text %></span>
-                      <span class="grey caption" style="line-height: 1;">Rows</span>
+                  <div class="flex flex-row items-center mt2">
+                    <div class="flex flex-row items-center w-50 tl">
+                      <i class="material-icons md-16 grey">view_carousel</i>
+                      <div class="flex flex-column w-100 ml2">
+                        <span class="subtitle-2 dark-grey"><%= room.shelves_count_text %></span>
+                        <span class="grey caption" style="line-height: 1;">Shelves</span>
+                      </div>
+                    </div>
+
+                    <div class="flex flex-row items-center w-50 tl pl3">
+                      <i class="material-icons md-16 grey">view_list</i>
+                      <div class="flex flex-column w-100 ml2">
+                        <span class="subtitle-2 dark-grey"><%= room.trays_count_text %></span>
+                        <span class="grey caption" style="line-height: 1;">Trays</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-
-                <div class="flex flex-row items-center mt2">
-                  <div class="flex flex-row items-center w-50 tl">
-                    <i class="material-icons md-16 grey">view_carousel</i>
-                    <div class="flex flex-column w-100 ml2">
-                      <span class="subtitle-2 dark-grey"><%= room.shelves_count_text %></span>
-                      <span class="grey caption" style="line-height: 1;">Shelves</span>
-                    </div>
-                  </div>
-
-                  <div class="flex flex-row items-center w-50 tl pl3">
-                    <i class="material-icons md-16 grey">view_list</i>
-                    <div class="flex flex-column w-100 ml2">
-                      <span class="subtitle-2 dark-grey"><%= room.trays_count_text %></span>
-                      <span class="grey caption" style="line-height: 1;">Trays</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <% end %>
             </div>
           </div>
 
@@ -95,7 +112,7 @@
                   room_code: room.code,
                 ), remote: true,
                 style: "height: 38px",
-                class: "w-100 box--br3 mb1 ttu link f6 fw6 ba b--light-grey orange dim flex justify-center items-center"
+                class: "w-100 box--br3 mb1 ttu link button--font ba b--light-grey orange dim flex justify-center items-center"
               %>
               <%= link_to "Setup Rows & Shelves",
                 facility_setup_row_shelf_info_path(
@@ -103,7 +120,7 @@
                   room_id: room.id,
                 ),
                 style: "height: 38px",
-                class: "tc w-100 bg-orange bn box--br3 ttu link f6 fw6 white dim flex justify-center items-center"
+                class: "tc w-100 bg-orange bn box--br3 ttu link button--font-s white dim flex justify-center items-center"
               %>
             </div>
           <% else %>
@@ -115,17 +132,17 @@
                 room_code: room.code,
             ), remote: true,
                style: "height: 38px",
-               class: "w-100 box--br3 mb1 ttu link f6 fw6 ba b--light-grey orange dim flex justify-center items-center"
+               class: "w-100 box--br3 mb1 ttu link button--font ba b--light-grey orange dim flex justify-center items-center"
             %>
           <% end %>
         </div>
       <% end %>
       <% unless rooms.blank? %>
         <div class="carousel__card carousel__card--add flex flex-column items-center justify-center a2 box--br3 box--shadow b--dashed b--light-grey">
-          <i class="material-icons md-48 mb3 orange">add_circle_outline</i>
           <%= link_to generate_rooms_path(facility_id: facility_id, rooms_count: rooms.size + 1, mode: 'increment'), 
-              remote: true, method: :post, class: "dim link" do %>
-              <div class="carousel__secondary_button bn box--br3 button--font">add a new room</div>
+              remote: true, method: :post, class: "dim link tc w-90" do %>
+              <i class="material-icons md-48 mb3 orange">add_circle_outline</i>
+              <div class="carousel__main_button">add a new room</div>
           <% end %>
         </div>
       <% end %>

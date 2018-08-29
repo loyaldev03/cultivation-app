@@ -31,7 +31,6 @@
         <th class="f6 white pv3 tl">Code</th>
         <th class="f6 white pv3 tl">Facility</th>
         <th class="f6 white pv3 tl">Room</th>
-        <th class="f6 white pv3 tl">Section</th>
         <th class="f6 white pv3 tl "># of shelves</th>
       </tr>
     </thead>
@@ -42,9 +41,8 @@
           <td class="f6 tl pl4 gray"><%= i+1 %></td>
           <td class="f6 tl"><%= blank(f.name) %></td>
           <td class="f6 tl"><%= blank(f.code) %></td>
-          <td class="f6 tl"><%= f.section.room.facility.name %></td>
-          <td class="f6 tl"><%= f.section.room.name %></td>
-          <td class="f6 tl"><%= f.section.name %></td>
+          <td class="f6 tl"><%= f.room.facility.name %></td>
+          <td class="f6 tl"><%= f.room.name %></td>
           <td class="f6 tl "><%= f.shelves.count %></td>
         </tr>
       <% end %>

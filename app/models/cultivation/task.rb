@@ -17,6 +17,9 @@ module Cultivation
     field :no_of_employees, type: Integer #needed
     field :materials, type: String # later need to integrate with real material module
     field :instruction, type: String
+    field :isPhase, type: String #for phase
+    field :parent_id, type: String
+
 
     embeds_many :users, class_name: 'User'
     belongs_to :batch, class_name: 'Cultivation::Batch'

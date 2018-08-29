@@ -25,9 +25,16 @@
                     src="http://tachyons.io/img/logo.jpg"
                     class="br-100 h2 w2 mr3 dib" alt="avatar">
 
-                  <h3 class="ma0 ttc f6 fw5 grey">User Name</h3>
+                  <h3 class="ma0 ttc grey subtitle-2">User Name</h3>
 
-                  <i class="material-icons dim f6 grey ml2">keyboard_arrow_down</i>
+                  <i onclick="toggleDropdown()" class="material-icons dim grey ml2 pointer" id="toggle-dropdown">keyboard_arrow_down</i>
+                  
+                  <div class="dropdown">
+                    <div id="myDropdown" class="dropdown-content">
+                      <a href="#home" class="grey subtitle-2">Sign out</a>
+                    </div>
+                  </div>
+
                 </div>
               <% end %>
             </div>

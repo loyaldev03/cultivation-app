@@ -10,20 +10,15 @@
 <div class="pa4">
   <div class="flex flex-column justify-between bg-white box--shadow">
     <div class="pa4 min-h-600">
-      <div class="fl w-70 flex flex-column">
+      <div class="fl w-70-l w-100 flex flex-column width-100">
         <h5 class="tl pa0 ma0 h5--font dark-grey">Room Setup</h5>
         <p class="mt2 body-1 grey">
           Awesome, you've just setup your facility! Room details are next...
         </p>
-        <div id="rooms_grid" class="pv4 carousel-wrapper">
+        <div id="rooms_grid" class="pv4 carousel-wrapper flex flex-row-l flex-column">
           <%= render partial: 'rooms_list',
             locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms}
           %>
-          <p class="db dark-grey mt4 pa2 br2">
-            * Tips: A complete Facility would consists of: 
-            Mother Room, Clone Room, Flower Room, Veg Room (Veg1 / Veg2),
-            Dry Room, Trim Room, and a Vault
-          </p>
         </div>
       </div>
     </div>

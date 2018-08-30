@@ -5,6 +5,8 @@ import { render } from "react-dom";
 
 import DatePicker from 'react-date-picker'
 import reactSelectStyle from './../../utils/reactSelectStyle'
+import {toast} from './../../utils/toast'
+import { TextInput, NumericInput, FieldError } from './../../utils/FormHelpers'
 
 
 const styles = `
@@ -38,7 +40,9 @@ class BatchSetupApp extends React.Component {
       plant: '',
       facility: '',
       strain: '',
-      start_date: ''
+      start_date: '',
+      quantity: '',
+      grow_method: ''
     }
   }
 
@@ -54,7 +58,8 @@ class BatchSetupApp extends React.Component {
       credentials: 'include',
       body: JSON.stringify({
         batch_source: this.state.plant, facility: this.state.facility, 
-        strain: this.state.strain, start_date: this.state.start_date
+        strain: this.state.strain, start_date: this.state.start_date,
+        quantity: this.state.quantity, grow_method: this.state.grow_method
       }),
       headers: {
         "Content-Type": "application/json"
@@ -64,12 +69,7 @@ class BatchSetupApp extends React.Component {
       .then(data => {
         console.log(data.data)
         if(data.data.id != null){
-
-          let elm = $_('#toast')
-          elm.innerHTML = 'Batch Saved';
-          elm.classList.add('fadeIn', 'toast--' + 'success', 'db');
-          setTimeout(function () { fadeToast(); }, 3000);
-
+          toast('Batch Created', 'success')
           document.location.href = `/cultivation/batches/${data.data.id}?step=1`
         }
         else{alert('something is wrong')}
@@ -78,6 +78,13 @@ class BatchSetupApp extends React.Component {
 
   handleChange=(field, value)=>{
     this.setState({ [field]: value });
+  }
+
+  handleChangeInput = (event) => {
+    // console.log(event[0].value)
+    let key = event.target.attributes.fieldname.value
+    let value = event.target.value
+    this.setState({ [key]: value });
   }
 
   setDateValue =(event) => {
@@ -91,16 +98,16 @@ class BatchSetupApp extends React.Component {
     return (
       <React.Fragment>
         <style>{styles}</style>
-        <div id="toast" class="toast animated toast--success">Row Saved</div>
+        <div id="toast" className="toast animated toast--success">Row Saved</div>
         
-        <h5 class="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
-        <p class="mt2 body-1 grey">
+        <h5 className="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
+        <p className="mt2 body-1 grey">
           Some cultivation setup here
         </p>
         <form>
           <div className="w-100 shelves_number_options">
             <div className="mt3">
-              <label className="f6 fw5 db mb1 gray" for="record_batch_source">Select Plant</label>
+              <label className="f6 fw6 db mb1 gray ttc" htmlFor="record_batch_source">Select Batch Source</label>
               <Select options={plants} 
               onChange={(e)=>this.handleChange('plant', e.value)} 
               styles={reactSelectStyle}
@@ -110,7 +117,7 @@ class BatchSetupApp extends React.Component {
 
           <div className="w-100 shelves_number_options">
             <div className="mt3">
-              <label className="f6 fw5 db mb1 gray" for="record_batch_source">Select Facility</label>
+              <label className="f6 fw6 db mb1 gray ttc" htmlFor="record_batch_source">Select Facility</label>
               <Select options={facilities} 
                 styles={reactSelectStyle}
                 onChange={(e) => this.handleChange('facility', e.value)} />
@@ -119,7 +126,7 @@ class BatchSetupApp extends React.Component {
 
           <div className="w-100 shelves_number_options">
             <div className="mt3">
-              <label className="f6 fw5 db mb1 gray" for="record_batch_source">Select Strains</label>
+              <label className="f6 fw6 db mb1 gray ttc" htmlFor="record_batch_source">Select Strains</label>
               <Select options={strains} 
                 styles={reactSelectStyle}
                 onChange={(e) => this.handleChange('strain', e.value)} />
@@ -128,13 +135,36 @@ class BatchSetupApp extends React.Component {
 
           <div className="w-100 shelves_number_options">
             <div className="mt3">
-              <label className="f6 fw5 db mb1 gray" for="record_batch_source">Select Start Date</label>
+              <label className="f6 fw6 db mb1 gray ttc" htmlFor="record_batch_source">Select Grow Method</label>
+              <Select options={strains}
+                styles={reactSelectStyle}
+                onChange={(e) => this.handleChange('grow_method', e.value)} />
+            </div>
+          </div>
+
+          <div className="w-100 shelves_number_options">
+            <div className="mt3">
+              <TextInput
+                label={'Quantity'}
+                value={this.state.quantity}
+                onChange={this.handleChangeInput}
+                fieldname="quantity"
+                errors={this.state.errors}
+                errorField="quantity"
+              />
+            </div>
+          </div>
+
+          <div className="w-100 shelves_number_options">
+            <div className="mt3">
+              <label className="f6 fw6 db mb1 gray ttc" htmlFor="record_batch_source">Select Start Date</label>
               <DatePicker
                 value={this.state.start_date}
                 onChange={(e) => this.handleChange('start_date', e)}
               />
             </div>
           </div>
+
           <div className="w-100 flex justify-end">
             <a className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer" onClick={this.handleSubmit}>Submit</a>
           </div>

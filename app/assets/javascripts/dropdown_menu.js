@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
       var dropdowns = $_('.dropdown-content')
 
       for (var i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i].value;
+        var openDropdown = dropdowns[i].val();
         if (openDropdown.classList.contains('show')) {
           openDropdown.classList.remove('show')
         }

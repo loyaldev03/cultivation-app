@@ -19,6 +19,7 @@ module Cultivation
     field :instruction, type: String
     field :isPhase, type: String #for phase
     field :parent_id, type: String
+    field :depend_on, type: String
 
 
     embeds_many :users, class_name: 'User'

@@ -60,7 +60,7 @@
                   </span>
                 <% end %>
               </div>
-              <% unless room.wz_generated %>
+              <% if !room.wz_generated && room.need_setup_rows %>
                 <div class="flex flex-column justify-between ph1">
                   <div class="flex flex-row">
                     <div class="flex flex-row items-center w-50 tl">
@@ -114,14 +114,16 @@
                 style: "height: 38px",
                 class: "w-100 box--br3 mb1 ttu link button--font ba b--light-grey orange dim flex justify-center items-center"
               %>
-              <%= link_to "Setup Rows & Shelves",
-                facility_setup_row_shelf_info_path(
-                  facility_id: room.facility_id,
-                  room_id: room.id,
-                ),
-                style: "height: 38px",
-                class: "tc w-100 bg-orange bn box--br3 ttu link button--font-s white dim flex justify-center items-center"
-              %>
+              <% if !room.wz_generated && room.need_setup_rows %>
+                <%= link_to "Setup Rows & Shelves",
+                  facility_setup_row_shelf_info_path(
+                    facility_id: room.facility_id,
+                    room_id: room.id,
+                  ),
+                  style: "height: 38px",
+                  class: "tc w-100 bg-orange bn box--br3 ttu link button--font-s white dim flex justify-center items-center"
+                %>
+              <% end %>
             </div>
           <% else %>
             <%= link_to "Edit Room",

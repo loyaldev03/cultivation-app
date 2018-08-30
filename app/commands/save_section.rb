@@ -20,6 +20,10 @@ class SaveSection
     section = room.sections.detect { |s| s.id == fo.id.to_bson_id }
     section.name = fo.name
     section.code = fo.code
+    section.purpose = fo.purpose
+    section.purpose_option = fo.purpose_option
+    section.rack_has_levels = fo.rack_has_levels
+    section.rack_count = fo.rack_count
     facility.save!
     section
   end

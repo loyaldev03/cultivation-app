@@ -9,15 +9,72 @@
     <%= f.hidden_field :id, value: section.id %>
 
     <div>
-      <%= f.label "Section name", class: "subtitle-2 grey db mb1 ttc" %>
+      <%= f.label "Section Name", class: "subtitle-2 grey db mb1 ttc" %>
       <%= f.text_field :name, value: section.name, 
           class: "box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
     </div>
 
     <div class="mv3">
-      <%= f.label "section code", class: "subtitle-2 grey db mb1 ttc" %>
+      <%= f.label "Section ID", class: "subtitle-2 grey db mb1 ttc" %>
       <%= f.text_field :code, value: section.code,
           class: "box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
+    </div>
+
+    <input id="toggle_section_change" type="hidden" value='{"cure":"cure_options","dry":"drying_method_options"}' />
+    <input id="toggle_dry_method_change" type="hidden" value='{"dry_racks":"dry_rack_count_options","highrise_dry_racks":"highrise_rack_count_options"}' />
+
+    <div class="mv3">
+      <%= f.label "Section Purpose", class: "subtitle-2 grey db mb1 ttc" %>
+      <%= f.select :purpose,
+        options_for_select(
+          Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}, section.purpose),
+          {},
+          { class: "", data: { toggle: "toggle_section_change" } }
+      %>
+    </div>
+    
+    <div class="mv3" data-collapse="toggle_section_change" data-collapse-option="cure_options" style="display: none">
+      <%= f.label "Cure Method", class: "subtitle-2 grey db mb1 ttc" %>
+      <%= f.select :purpose_option,
+        options_for_select(
+          Constants::CURE_METHOD.collect {|p| [ p[:name], p[:code]]}, section.purpose_option)
+      %>
+
+      <div class="mv3">
+        <%= f.label "How many hanging high rise racks?", class: "subtitle-2 grey db mb1 ttc" %>
+        <%= f.select :rack_count, options_for_select(["",*1..15], section.rack_count) %>
+      </div>
+    </div>
+
+    <div class="mv3" data-collapse="toggle_section_change" data-collapse-option="drying_method_options" style="display: none">
+      <%= f.label "Drying Method", class: "subtitle-2 grey db mb1 ttc" %>
+      <%= f.select :purpose_option,
+        options_for_select(
+          Constants::DRYING_METHOD.collect {|p| [ p[:name], p[:code]]}, section.purpose_option),
+          {},
+          { class: "", data: { toggle: "toggle_dry_method_change" } }
+      %>
+
+      <div data-collapse="toggle_dry_method_change" data-collapse-option="dry_rack_count_options" style="display: none">
+        <div class="mv3">
+          <%= f.label "How many dry racks?", class: "subtitle-2 grey db mb1 ttc" %>
+          <%= f.select :rack_count, options_for_select(["",*1..15], section.rack_count) %>
+        </div>
+        <div class="mv3">
+          <div class="flex justify-between items-center w-100">
+            <span class="subtitle-2 grey">Does each rack have multiple levels? </span>
+            <%= f.check_box :rack_has_levels, checked: section.rack_has_levels, class: "toggle toggle-default" %>
+            <label class="toggle-button" for="section_info_rack_has_levels"></label>
+          </div>
+        </div>
+      </div>
+
+      <div data-collapse="toggle_dry_method_change" data-collapse-option="highrise_rack_count_options" style="display: none">
+        <div class="mv3">
+          <%= f.label "How many high rise drying racks?", class: "subtitle-2 grey db mb1 ttc" %>
+          <%= f.select :rack_count, options_for_select(["",*1..15], section.rack_count) %>
+        </div>
+      </div>
     </div>
 
     <div class="w-100 ph4 pv3 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-end">

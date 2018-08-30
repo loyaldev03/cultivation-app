@@ -24,10 +24,9 @@ function setupRadioToggle(filter = null) {
 }
 
 function updateCollapsibleState() {
-  let selector = 'input[data-toggle]';
+  const selector = 'input[data-toggle]';
   $$(selector).forEach(function(e1) {
-    let toggleTarget = e1.getAttribute('data-toggle');
-    let targetDisplay = e1.checked ? "" : "none";
+    const toggleTarget = e1.getAttribute('data-toggle');
     $$(`[data-collapse="${toggleTarget}"]`).forEach(function(e2) {
       if (e1.checked) {
         e2.style.removeProperty("display")
@@ -44,14 +43,44 @@ function updateToggleCollapsible(e) {
   if (targetElm) {
     if (e.target.checked) {
       show(targetElm)
-    } else {
+    }
+    else {
       hide(targetElm)
     }
   }
 }
 
+function updateToggleSelect(e) {
+  const toggleOptionsId = e.target.getAttribute('data-toggle')
+  const toggleOptions = JSON.parse($_("#"+toggleOptionsId).value)
+  const selectedValue = e.target.value
+  const selectedToggle = toggleOptions[selectedValue]
+  const toggleElms = $$(`[data-collapse="${toggleOptionsId}"]`)
+  toggleElms.forEach(function(elm) {
+    const selectCtrl = elm.querySelector("select")
+    const collapseOption = elm.getAttribute("data-collapse-option")
+    if (collapseOption !== selectedToggle) {
+      selectCtrl.disabled = true
+      hide(elm)
+    } else {
+      selectCtrl.disabled = false
+      show(elm)
+    }
+  })
+}
+
 function setupCollapsible() {
-  let selector = 'input[data-toggle]';
-  $$(selector).on('change', updateToggleCollapsible)
-  updateCollapsibleState();
+  console.log('setupCollapsible')
+  let selector = '[data-toggle]';
+  $$(selector).forEach(function(elm) {
+    if (elm.tagName === "INPUT") {
+      elm.addEventListener('change', updateToggleCollapsible)
+    }
+    if (elm.tagName === "SELECT") {
+      elm.addEventListener('change', updateToggleSelect)
+    }
+    // Manually trigger a change event to set an initial state
+    elm.dispatchEvent(new Event('change'));
+  })
+  updateCollapsibleState()
 }

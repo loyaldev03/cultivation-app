@@ -6,7 +6,11 @@ module FacilityWizardForm
              :room_id,
              :id,
              :name,
-             :code]
+             :code,
+             :purpose,
+             :purpose_option,
+             :rack_has_levels,
+             :rack_count]
 
     attr_accessor(*ATTRS)
 

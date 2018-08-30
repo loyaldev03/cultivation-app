@@ -14,8 +14,8 @@ module Constants
 
   ROOM_PURPOSE = [
     {code: :clone, name: 'Clone'},
-    {code: :cure, name: 'Cure Room'},
-    {code: :dry, name: 'Dry Room'},
+    {code: :cure, name: 'Cure'},
+    {code: :dry, name: 'Drying'},
     {code: :flower, name: 'Flower'},
     {code: :mother, name: 'Mother'},
     {code: :storage, name: 'Storage'},

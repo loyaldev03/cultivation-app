@@ -76,6 +76,8 @@ function setupCollapsible() {
     if (elm.tagName === "SELECT") {
       elm.addEventListener('change', updateToggleSelect)
     }
+    // Manually trigger a change event to set an initial state
+    elm.dispatchEvent(new Event('change'));
   })
-  updateCollapsibleState();
+  updateCollapsibleState()
 }

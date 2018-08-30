@@ -20,19 +20,19 @@
           class: "box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
     </div>
 
-    <input id="toggle_select_options" type="hidden" value='{"cure":"cure_options","drying_plants":"drying_method_options"}' />
+    <input id="toggle_select_options" type="hidden" value='{"cure":"cure_options","dry":"drying_method_options"}' />
 
     <div class="mv3">
       <%= f.label "Section Purpose", class: "subtitle-2 grey db mb1 ttc" %>
       <%= f.select :purpose,
         options_for_select(
-          Constants::SECTION_PURPOSE.collect {|p| [ p[:name], p[:code]]}, section.purpose),
+          Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}, section.purpose),
           {},
           { class: "", data: { toggle: "toggle_select_options" } }
       %>
     </div>
 
-    <div class="mv3" data-collapse="toggle_select_options" data-collapse-option="drying_method_options">
+    <div class="mv3" data-collapse="toggle_select_options" data-collapse-option="drying_method_options" style="display: none">
       <%= f.label "Drying Method", class: "subtitle-2 grey db mb1 ttc" %>
       <%= f.select :purpose_option,
         options_for_select(

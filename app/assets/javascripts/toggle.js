@@ -57,10 +57,13 @@ function updateToggleSelect(e) {
   const selectedToggle = toggleOptions[selectedValue]
   const toggleElms = $$(`[data-collapse="${toggleOptionsId}"]`)
   toggleElms.forEach(function(elm) {
+    const selectCtrl = elm.querySelector("select")
     const collapseOption = elm.getAttribute("data-collapse-option")
     if (collapseOption !== selectedToggle) {
+      selectCtrl.disabled = true
       hide(elm)
     } else {
+      selectCtrl.disabled = false
       show(elm)
     }
   })

@@ -32,6 +32,19 @@
           { class: "", data: { toggle: "toggle_section_change" } }
       %>
     </div>
+    
+    <div class="mv3" data-collapse="toggle_section_change" data-collapse-option="cure_options" style="display: none">
+      <%= f.label "Cure Method", class: "subtitle-2 grey db mb1 ttc" %>
+      <%= f.select :purpose_option,
+        options_for_select(
+          Constants::CURE_METHOD.collect {|p| [ p[:name], p[:code]]}, section.purpose_option)
+      %>
+
+      <div class="mv3">
+        <%= f.label "How many hanging high rise racks?", class: "subtitle-2 grey db mb1 ttc" %>
+        <%= f.select :rack_count, options_for_select(["",*1..15], section.rack_count) %>
+      </div>
+    </div>
 
     <div class="mv3" data-collapse="toggle_section_change" data-collapse-option="drying_method_options" style="display: none">
       <%= f.label "Drying Method", class: "subtitle-2 grey db mb1 ttc" %>

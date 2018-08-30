@@ -37,6 +37,11 @@ module Constants
     {code: :highrise_dry_racks, name: 'High rise drying racks'},
   ].freeze
 
+  CURE_METHOD = [
+    {code: :highrise_cure_racks, name: 'Hanging high rise curing rack'},
+    {code: :curing_racks, name: 'Curing rack'},
+  ]
+
   SOURCE_TYPES = [
     {code: :clone, name: 'Clone'},
     {code: :mother, name: 'Mother'},

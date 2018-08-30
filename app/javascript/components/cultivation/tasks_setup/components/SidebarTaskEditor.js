@@ -1,11 +1,10 @@
-
 import React from "react";
 import { render } from "react-dom";
-import update from 'immutability-helper'
-import taskStore from '../stores/TaskStore'
-import DatePicker from 'react-date-picker'
+import TaskStore from '../stores/TaskStore'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import Select from 'react-select';
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
+import { fadeToast, toast } from '../../../utils/toast'
 import reactSelectStyle from './../../../utils/reactSelectStyle'
 import { throws } from "assert";
 
@@ -14,6 +13,7 @@ class SidebarTaskEditor extends React.Component {
   constructor(props){
     super(props)
     this.state ={
+      batch_id: this.props.batch_id,
       id: props.task.id,
       ...props.task.attributes,
       days: '',
@@ -30,13 +30,19 @@ class SidebarTaskEditor extends React.Component {
     if (props.task !== task) {
       this.setState({
         id: props.task.id,
-        ...props.task.attributes
+        ...props.task.attributes,
+        days: '',
+        start_date: new Date(),
+        end_date: new Date(),
+        errors: '',
+        estimated_hours: '',
+        assigned_employee: []
       })
     }
   }
 
   handleChangeTask = (event) => {
-    console.log(event[0].value)
+    // console.log(event[0].value)
     let key = event.target.attributes.fieldname.value
     let value = event.target.value
     this.setState({ [key]: value });
@@ -65,6 +71,38 @@ class SidebarTaskEditor extends React.Component {
     // value = orderOptions(value);
     // this.setState({ value: value });
   }
+
+  handleSubmit = (event) =>{
+    let url = `/api/v1/batches/${this.state.batch_id['$oid']}/tasks/${this.state.id}`
+    fetch(url, {
+      method: 'PUT',
+      credentials: 'include',
+      body: JSON.stringify({task: this.state}),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.data)
+        if (data.data.id != null) {
+          toast('Task Updated', 'success')
+          let task = TaskStore.find(e => e.id === data.data.id);
+          console.log(data.data)
+          console.log(JSON.stringify(task))
+          console.log(JSON.stringify(task.attributes))
+          
+          TaskStore.forEach((element, index) => {
+            if (element.id === data.data.id) {
+              TaskStore[index] = data.data;
+            }
+          });
+
+        }
+        else { toast('Something happen', 'error') }
+      })
+  }
+
 
 
   render() {
@@ -97,7 +135,7 @@ class SidebarTaskEditor extends React.Component {
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Instruction</label>
             <textarea
-              value={this.state.instructions}
+              value={this.state.instruction}
               onChange={this.handleChangeTask}
               fieldname="instruction"
               rows="5"
@@ -184,6 +222,13 @@ class SidebarTaskEditor extends React.Component {
               styles={reactSelectStyle}
             />
           </div>
+        </div>
+
+        {/* <div className="w-100 flex justify-end">
+          <a className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer" onClick={this.handleSubmit}>Submit</a>
+        </div> */}
+        <div className="w-100 pa4 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
+          <button name="commit" type="submit" value="continue" className="ttu db tr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" onClick={this.handleSubmit} >Update &amp; Close</button>
         </div>
 
       </React.Fragment>

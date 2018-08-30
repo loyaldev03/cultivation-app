@@ -11,7 +11,6 @@ import TaskEditor from './components/TaskEditor'
 
 class TaskSetup extends React.Component {
 
-
   componentDidMount() {
     loadTasks.loadbatch(this.props.batch_id)
 
@@ -32,7 +31,9 @@ class TaskSetup extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <TaskList />
+        <TaskList batch_id={this.props.batch_id}/>
+        <div id="toast" className="toast animated toast--success">Row Saved</div>
+
       </React.Fragment>
     )
   }

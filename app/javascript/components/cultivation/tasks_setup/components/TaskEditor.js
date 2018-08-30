@@ -27,13 +27,11 @@ export default class TaskEditor extends React.Component {
     const _this = this
     document.addEventListener("editor-sidebar-open", function(ev) { 
       _this.setState({ id: ev.detail.data.id})
-      // this.setState(...);
     });
   }
 
   onChangeHandler(attr, value){
     sidebarTask[attr] = value.persist()
-    // updateSidebarTask.update_attr(attr, value)
   }
 
   renderSidebarTaskEditor() {
@@ -41,7 +39,7 @@ export default class TaskEditor extends React.Component {
     console.log(task === undefined)
     let task = TaskStore.find(e => e.id === this.state.id);
     if (task === undefined) return null
-    return <SidebarTaskEditor id={this.state.id} task={task} />
+    return <SidebarTaskEditor id={this.state.id} task={task} batch_id={this.props.batch_id} />
   }
 
   get editorSelected() {

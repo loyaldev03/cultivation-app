@@ -34,7 +34,7 @@ module Constants
   DRYING_METHOD = [
     {code: :wire_lines, name: 'Wire lines'},
     {code: :dry_racks, name: 'Dry racks'},
-    {code: :high_rise_dry_racks, name: 'High rise drying racks'},
+    {code: :highrise_dry_racks, name: 'High rise drying racks'},
   ].freeze
 
   SOURCE_TYPES = [

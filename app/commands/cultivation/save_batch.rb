@@ -17,24 +17,29 @@ module Cultivation
     def task_templates
       [
         {:phase=>"Clone", :task_category=>"", :name=>"", :days=>17, :days_from_start_date=>0, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"true"},
+        {:phase=>"Clone", :task_category=>"Prepare", :name=>"", :days=>1, :days_from_start_date=>0, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false", :isCategory=>"true"},
         {:phase=>"Clone", :task_category=>"Prepare", :name=>"Prepare Sample", :days=>1, :days_from_start_date=>0, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false"},
         {:phase=>"Clone", :task_category=>"Prepare", :name=>"Fill Cloner w/ Water", :days=>1, :days_from_start_date=>0, :expected_hours_taken=>0.25, :no_of_employees=>1, :materials=>"Water, Gloves", :isPhase=>"false"},
         {:phase=>"Clone", :task_category=>"Prepare", :name=>"Mix Nutrients", :days=>1, :days_from_start_date=>0, :expected_hours_taken=>0.25, :no_of_employees=>1, :materials=>"Nutrients, MicroNutrients, Gloves", :isPhase=>"false"}, 
         {:phase=>"Clone", :task_category=>"Prepare", :name=>"Place Collars", :days=>1, :days_from_start_date=>0, :expected_hours_taken=>0.25, :no_of_employees=>1, :materials=>"Collars, ", :isPhase=>"false"},
         {:phase=>"Clone", :task_category=>"Clone", :name=>"Clone", :days=>1, :days_from_start_date=>2, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false"},
+        {:phase=>"Clone", :task_category=>"Clone", :name=>"", :days=>1, :days_from_start_date=>2, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false", :isCategory=>"true"},
         {:phase=>"Clone", :task_category=>"Clone", :name=>"Get Mother Plant", :days=>1, :days_from_start_date=>2, :expected_hours_taken=>0.1, :no_of_employees=>1, :materials=>nil, :isPhase=>"false"},
         {:phase=>"Clone", :task_category=>"Clone", :name=>"Cut, Dip & Place", :days=>1, :days_from_start_date=>2, :expected_hours_taken=>6.8, :no_of_employees=>3, :materials=>"Clone Gel, Razors, Exacto Knife, Bags", :isPhase=>"false"},
         {:phase=>"Clone", :task_category=>"Clean", :name=>"Clean", :days=>1, :days_from_start_date=>4, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false"},
+        {:phase=>"Clone", :task_category=>"", :name=>"Clean", :days=>1, :days_from_start_date=>4, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false", :isCategory=>"true"},
         {:phase=>"Clone", :task_category=>"Clean", :name=>"Return Mother Plant", :days=>1, :days_from_start_date=>4, :expected_hours_taken=>0.1, :no_of_employees=>1, :materials=>nil, :isPhase=>"false"},
         {:phase=>"Clone", :task_category=>"Clean", :name=>"Clean and Return Supplies", :days=>1, :days_from_start_date=>4, :expected_hours_taken=>0.25, :no_of_employees=>1, :materials=>"Gloves, Paper Towels, Cleaner, Broom", :isPhase=>"false"},
         {:phase=>"Clone", :task_category=>"Waiting", :name=>"Waiting", :days=>11, :days_from_start_date=>6, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false"},
         {:phase=>"VEG1", :task_category=>"", :name=>"", :days=>14, :days_from_start_date=>18, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"true"},
+        {:phase=>"VEG1", :task_category=>"Plant", :name=>"", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false", :isCategory=>"true"},
         {:phase=>"VEG1", :task_category=>"Plant", :name=>"Plant Clone and Loose into Rockwool", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false"},
         {:phase=>"VEG1", :task_category=>"Plant", :name=>"Unpack Rockwool Boxes", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>0.1, :no_of_employees=>2, :materials=>"Rockwool, Cutters, Gloves", :isPhase=>"false"},
         {:phase=>"VEG1", :task_category=>"Plant", :name=>"Mix “Loose” Rockwool and Water", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>0.5, :no_of_employees=>2, :materials=>"Rockwool, Cutters, Water, Nutrients, Micronutrients", :isPhase=>"false"},
         {:phase=>"VEG1", :task_category=>"Plant", :name=>"Get EZ Cloner", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>0.1, :no_of_employees=>1, :materials=>nil, :isPhase=>"false"},
         {:phase=>"VEG1", :task_category=>"Plant", :name=>"Plant Clone and Loose into Rockwool", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>6, :no_of_employees=>3, :materials=>"Gloves", :isPhase=>"false"},
         {:phase=>"VEG1", :task_category=>"Plant", :name=>"Place Drip Square and Connect Hose ", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>1, :no_of_employees=>2, :materials=>"Drip Squares, Hosing, Cutters", :isPhase=>"false"},
+        {:phase=>"VEG1", :task_category=>"Clean", :name=>"", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false", :isCategory=>"true"},
         {:phase=>"VEG1", :task_category=>"Clean", :name=>"Clean", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false"},
         {:phase=>"VEG1", :task_category=>"Clean", :name=>"Return EZ Cloner", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>0.1, :no_of_employees=>1, :materials=>nil, :isPhase=>"false"},
         {:phase=>"VEG1", :task_category=>"Clean", :name=>"Clean EZ Cloner", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>1, :no_of_employees=>nil, :materials=>"Paper Towels, Water, Hydrogen Peroxide, Gloves ", :isPhase=>"false"},
@@ -42,8 +47,10 @@ module Cultivation
         {:phase=>"VEG1", :task_category=>"Clean", :name=>"Wipe Tables", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>0.2, :no_of_employees=>1, :materials=>"Paper Towels, Gloves", :isPhase=>"false"},
         {:phase=>"VEG1", :task_category=>"Clean", :name=>"Clean ", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>0.25, :no_of_employees=>1, :materials=>nil, :isPhase=>"false"},
         {:phase=>"VEG1", :task_category=>"Clean", :name=>"Return Supplies", :days=>1, :days_from_start_date=>18, :expected_hours_taken=>0.1, :no_of_employees=>1, :materials=>nil, :isPhase=>"false"},
+        {:phase=>"VEG1", :task_category=>"Waiting", :name=>"", :days=>12, :days_from_start_date=>20, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false", :isCategory=>"true"},
         {:phase=>"VEG1", :task_category=>"Waiting", :name=>"Waiting", :days=>12, :days_from_start_date=>20, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false"},
         {:phase=>"VEG2", :task_category=>"", :name=>"", :days=>14, :days_from_start_date=>19, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"true"},
+        {:phase=>"VEG2", :task_category=>"Transfer", :name=>"", :days=>1, :days_from_start_date=>19, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false", :isCategory=>"true"},
         {:phase=>"VEG2", :task_category=>"Transfer", :name=>"Transfer from Left to Right side of room", :days=>1, :days_from_start_date=>19, :expected_hours_taken=>nil, :no_of_employees=>nil, :materials=>nil, :isPhase=>"false"},
         {:phase=>"VEG2", :task_category=>"Transfer", :name=>"Unpack Rockwool Boxes", :days=>1, :days_from_start_date=>32, :expected_hours_taken=>0.25, :no_of_employees=>2, :materials=>"Rockwool, Gloves, Cutter", :isPhase=>"false"},
         {:phase=>"VEG2", :task_category=>"Transfer", :name=>"Place Rockwool in Trays", :days=>1, :days_from_start_date=>32, :expected_hours_taken=>0.25, :no_of_employees=>2, :materials=>nil, :isPhase=>"false"},
@@ -100,6 +107,7 @@ module Cultivation
     def save_record(args)
       batch = Cultivation::Batch.create(args)
       parent_id = nil
+      category_id = nil
       task_templates.each do |task|
         a = build_task(batch, task, parent_id)
         parent_id = a['id'] if task[:isPhase] == "true"
@@ -109,6 +117,7 @@ module Cultivation
 
     def build_task(batch, task, parent_id)
       start_date = batch.start_date
+      #check if its a new category 
       params = {
         phase: task[:phase],
         task_category: task[:task_category],

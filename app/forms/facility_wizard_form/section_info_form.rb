@@ -8,7 +8,9 @@ module FacilityWizardForm
              :name,
              :code,
              :purpose,
-             :purpose_option]
+             :purpose_option,
+             :rack_has_levels,
+             :rack_count]
 
     attr_accessor(*ATTRS)
 

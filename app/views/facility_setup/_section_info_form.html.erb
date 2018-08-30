@@ -45,13 +45,13 @@
       <div data-collapse="toggle_dry_method_change" data-collapse-option="dry_rack_count_options" style="display: none">
         <div class="mv3">
           <%= f.label "How many dry racks?", class: "subtitle-2 grey db mb1 ttc" %>
-          <%= f.select :rack_count, options_for_select(["",*1..15], section.purpose_option) %>
+          <%= f.select :rack_count, options_for_select(["",*1..15], section.rack_count) %>
         </div>
         <div class="mv3">
           <div class="flex justify-between items-center w-100">
             <span class="subtitle-2 grey">Does each rack have multiple levels? </span>
-            <%= f.check_box :rack_has_levels, checked: section.purpose_option, class: "toggle toggle-default" %>
-            <label class="toggle-button" for="section_info_has_levels"></label>
+            <%= f.check_box :rack_has_levels, checked: section.rack_has_levels, class: "toggle toggle-default" %>
+            <label class="toggle-button" for="section_info_rack_has_levels"></label>
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
       <div data-collapse="toggle_dry_method_change" data-collapse-option="highrise_rack_count_options" style="display: none">
         <div class="mv3">
           <%= f.label "How many high rise drying racks?", class: "subtitle-2 grey db mb1 ttc" %>
-          <%= f.select :rack_count, options_for_select(["",*1..15], section.purpose_option) %>
+          <%= f.select :rack_count, options_for_select(["",*1..15], section.rack_count) %>
         </div>
       </div>
     </div>

@@ -31,7 +31,8 @@
                   
                   <div class="dropdown">
                     <div id="myDropdown" class="dropdown-content box--shadow-header">
-                      <a href="#home" class="grey subtitle-2 pv3 tc dim">Sign out</a>
+                      <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
+                          class: 'grey subtitle-2 pv3 tc dim' %>
                     </div>
                   </div>
                 </div>

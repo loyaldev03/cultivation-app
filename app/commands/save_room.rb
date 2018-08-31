@@ -31,7 +31,7 @@ class SaveRoom
       room.sections.build(code: new_code)
     end
 
-    if room.purpose == "trim" || room.purpose == "storage"
+    if room.purpose == 'trim' || room.purpose == 'storage'
       # Mark room as complete since there's no setup requrired
       # for Trim and Storage room
       room.is_complete = true

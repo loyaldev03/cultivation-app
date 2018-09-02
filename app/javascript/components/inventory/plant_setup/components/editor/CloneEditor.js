@@ -3,7 +3,7 @@ import {
   TextInput,
   NumericInput,
   FieldError,
-  CalendarPicker,
+  CalendarPicker
 } from '../../../../utils/FormHelpers'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import LocationPicker from '../shared/LocationPicker'
@@ -161,19 +161,19 @@ class CloneEditor extends React.Component {
   onSave(event) {
     const data = this.validateAndGetValues()
     // if (data.isValid) {
-      // fetch('/api/v1/plant_setup/create_mother', {
-      //   method: 'POST',
-      //   credentials: 'include',
-      //   body: JSON.stringify(data),
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   }
-      // })
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     console.log(data)
-      //     console.log(data.data)
-      //   })
+    // fetch('/api/v1/plant_setup/create_mother', {
+    //   method: 'POST',
+    //   credentials: 'include',
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   }
+    // })
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     console.log(data)
+    //     console.log(data.data)
+    //   })
     // }
 
     event.preventDefault()

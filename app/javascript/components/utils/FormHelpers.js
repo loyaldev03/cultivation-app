@@ -7,7 +7,7 @@ function TextInput({
   placeholder,
   onChange = () => {},
   errors = {},
-  fieldname = null,
+  fieldname = null
 }) {
   return (
     <React.Fragment>

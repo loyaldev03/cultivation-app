@@ -1,17 +1,14 @@
+import React from 'react'
+import { render } from 'react-dom'
 
-import React from "react";
-import { render } from "react-dom";
-
-import { observable } from "mobx";
-import { observer, Provider } from "mobx-react";
+import { observable } from 'mobx'
+import { observer, Provider } from 'mobx-react'
 
 import loadTasks from './actions/loadTask'
 import TaskList from './components/TaskList'
 import TaskEditor from './components/TaskEditor'
 
 class TaskSetup extends React.Component {
-
-
   componentDidMount() {
     loadTasks.loadbatch(this.props.batch_id)
 
@@ -19,15 +16,13 @@ class TaskSetup extends React.Component {
     window.editorSidebar.setup(sidebarNode)
   }
 
-  openSidebar =()=> {
+  openSidebar = () => {
     window.editorSidebar.open({ width: '500px' })
   }
 
-  closeSidebar =()=> {
+  closeSidebar = () => {
     window.editorSidebar.close()
   }
-
-
 
   render() {
     return (
@@ -36,7 +31,6 @@ class TaskSetup extends React.Component {
       </React.Fragment>
     )
   }
-
 }
 
 export default TaskSetup

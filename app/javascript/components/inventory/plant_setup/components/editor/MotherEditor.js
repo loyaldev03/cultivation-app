@@ -109,7 +109,7 @@ class MotherEditor extends React.Component {
           'Content-Type': 'application/json'
         }
       })
-        .then(response => { 
+        .then(response => {
           console.log(response)
           return response.json()
         })

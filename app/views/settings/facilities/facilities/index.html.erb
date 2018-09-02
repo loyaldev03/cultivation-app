@@ -14,8 +14,7 @@
       <tr>
         <th class="f6 white pv3 tl pl4 pr3">#</th>
         <th class="f6 white pv3 tl w-20">Name</th>
-        <th class="f6 white pv3 tl w-10">Code</th>
-        <th class="f6 white pv3 tl w-30">Location & contact</th>
+        <th class="f6 white pv3 tl w-10">ID</th>
         <th class="f6 white pv3 tr w-10">Rooms</th>
         <th class="f6 white pv3 tr w-20 pr4">Status</th>
       </tr>
@@ -27,16 +26,8 @@
           <td class="f6 tl pl4 pr3 gray"><%= i+1 %></td>
           <td class="f6 tl"><%= blank(f.name) %></td>
           <td class="f6 tl"><%= blank(f.code) %></td>
-          <td class="f6 tl">
-            <p class="ma0 mb1"><%= f.address %></p>
-            <p class="ma0 mb1"><%= f.zipcode %> <%= f.city %></p>
-            <p class="ma0 mb1"><%= f.state %></p> 
-            <p class="ma0 mb1"><%= f.country %></p>
-            <p class="ma0 mb1">Tel: <%= f.phone || 'N/A' %></p>
-            <p class="ma0 mb1">Fax: <%= f.fax || 'N/A' %></p>
-          </td>
           <td class="f6 tr">
-            <%= f.room_count %>
+            <%= f.rooms&.size %>
           </td>
           <td class="f6 tr pr4">
             <% status = if !f.is_complete 
@@ -48,7 +39,7 @@
                       end
             %>
             <% if !f.is_complete %>
-              <%= link_to "Continue setup", facility_setup_save_path(facility_id: f.id, step: 1), class: "link status-bullet ba b bw1 b--blue blue pa1 ph2 br4 f7" %>
+              <%= link_to "Continue setup", facility_setup_new_path(facility_id: f.id), class: "link status-bullet ba b bw1 b--blue blue pa1 ph2 br4 f7" %>
             <% else %>
               <span class="<%=status %> status-bullet ba b bw1 b--blue blue pa1 ph2 br4 f7"><%= status %></span>
             <% end %>

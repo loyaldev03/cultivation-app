@@ -5,9 +5,7 @@ class Settings::Facilities::RowsController < ApplicationController
 
     facilities.each do |f|
       f.rooms.each do |r|
-        r.sections.each do |s|
-          @rows.concat(s.rows)
-        end
+        @rows.concat(r.rows)
       end
     end
   end

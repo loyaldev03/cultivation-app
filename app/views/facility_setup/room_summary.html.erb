@@ -10,14 +10,14 @@
 <div class="pa4">
   <div class="flex flex-column justify-between bg-white box--shadow">
     <div class="pa4 min-h-600">
-      <div class="fl w-70 flex flex-column">
+      <div class="fl w-70-l w-100 flex flex-column width-100">
         <div class="flex flex-row items-center">
           <h5 class="tl pa0 ma0 h5--font dark-grey">Great job so far, User!</h5>
           <i class="material-icons md-24 orange ml3">thumb_up</i>
         </div>
 
         <p class="mt2 body-1 grey">
-          Boom, you just set up the room! Now let's configure your grow room by adding rows and shelves.
+          Boom, you just set up the room! Now let's configure your <%= @room_summary_form.purpose %> room by adding rows and shelves.
         </p>
 
         <div class="w-100 pv4">
@@ -29,7 +29,7 @@
           Here's a few quick tips to create rows, shelves and trays:
         </p>
 
-        <div class="w-70 mt4">
+        <div class="w-70-l w-80 mt4">
           <% if @room_summary_form.has_sections %>
             <div class="mb4 flex flex-row items-center">
               <%= image_tag 'section-icon.svg', class: "b--light-grey br-100 ba h3 w3 dib" %>
@@ -46,7 +46,7 @@
 
             <div class="ml3 flex flex-column">
               <h3 class="subtitle-2 grey mt0 mb1">Rows</h3>
-              <p class="subtitle-2-regular grey ma0">You can customize your grow room by adding the number of rows you have in your grow room.</p>
+              <p class="subtitle-2-regular grey ma0">You can customize your <%= @room_summary_form.purpose %> room by adding the number of rows you have in your <%= @room_summary_form.purpose %> room.</p>
             </div>
           </div>
 
@@ -59,14 +59,25 @@
             </div>
           </div>
 
-          <div class="flex flex-row items-center">
-            <%= image_tag 'tray-icon.svg', class: "b--light-grey br-100 ba h3 w3 dib" %>
+          <% if @room_summary_form.purpose == "dry" %>
+            <div class="flex flex-row items-center">
+              <%= image_tag 'tray-icon.svg', class: "b--light-grey br-100 ba h3 w3 dib" %>
 
-            <div class="ml3 flex flex-column">
-              <h3 class="subtitle-2 grey mt0 mb1">Trays</h3>
-              <p class="subtitle-2-regular grey ma0">Do you put your plants on trays? if so, you may add how many trays you have on each shelf.</p>
+              <div class="ml3 flex flex-column">
+                <h3 class="subtitle-2 grey mt0 mb1">Levels</h3>
+                <p class="subtitle-2-regular grey ma0">Does  each  dry  rack  have  multiple  levels?  You  may  add  the  levels  by  adding  shelves.</p>
+              </div>
             </div>
-          </div>
+          <% else %>
+            <div class="flex flex-row items-center">
+              <%= image_tag 'tray-icon.svg', class: "b--light-grey br-100 ba h3 w3 dib" %>
+
+              <div class="ml3 flex flex-column">
+                <h3 class="subtitle-2 grey mt0 mb1">Trays</h3>
+                <p class="subtitle-2-regular grey ma0">Does  each  dry  rack  have  multiple  levels?  You  may  add  the  levels  by  adding  shelves.</p>
+              </div>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

@@ -78,6 +78,12 @@ class FacilitySetupController < ApplicationController
   def update_room_info
     is_continue = params[:commit] == 'continue'
     form_object = FacilityWizardForm::UpdateRoomInfoForm.new
+
+    # LOGIC#0001 - No rows setup for Trim and Storage room
+    if room_info_params[:purpose] == 'trim' || room_info_params[:purpose] == 'storage'
+      is_continue = false
+    end
+
     respond_to do |format|
       if form_object.submit(room_info_params)
         if is_continue
@@ -202,7 +208,7 @@ class FacilitySetupController < ApplicationController
 
   # POST update specific row info - from right panel
   def update_row_info
-    Rails.logger.debug '>>> update_row_info'
+    # Rails.logger.debug '>>> update_row_info'
     # this value should be same as the value in "Continue" button (_row_info_form)
     is_continue = params[:commit] == 'continue'
     @form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)

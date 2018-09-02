@@ -68,7 +68,6 @@ RSpec.describe Inventory::SaveVendor, type: :command do
       }
 
       SaveVendor.call(params)
-      puts ">>>>> #{params}"
       saved = Inventory::Vendor.find(params[:id])
       expect(saved).to have_attributes(
         name: params[:name],

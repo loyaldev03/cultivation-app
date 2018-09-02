@@ -19,8 +19,8 @@ module Constants
 
   ROOM_PURPOSE = [
     {code: :clone, name: 'Clone'}, #
-    {code: :cure, name: 'Cure Room'}, #
-    {code: :dry, name: 'Dry Room'}, #
+    {code: :cure, name: 'Cure'}, #
+    {code: :dry, name: 'Drying'}, #
     {code: :flower, name: 'Flower'}, #
     {code: :mother, name: 'Mother'}, #
     {code: :storage, name: 'Storage'},
@@ -30,6 +30,22 @@ module Constants
     {code: :veg1, name: 'Veg 1'},
     {code: :veg2, name: 'Veg 2'},
   ].freeze
+
+  SECTION_PURPOSE = [
+    {code: :cure, name: 'Cure'},
+    {code: :drying_plants, name: 'Drying Plants'},
+  ].freeze
+
+  DRYING_METHOD = [
+    {code: :wire_lines, name: 'Wire lines'},
+    {code: :dry_racks, name: 'Dry racks'},
+    {code: :highrise_dry_racks, name: 'High rise drying racks'},
+  ].freeze
+
+  CURE_METHOD = [
+    {code: :highrise_cure_racks, name: 'Hanging high rise curing rack'},
+    {code: :curing_racks, name: 'Curing rack'},
+  ]
 
   SOURCE_TYPES = [
     {code: :clone, name: 'Clone'},

@@ -102,7 +102,7 @@ export default class PlantEditor extends React.Component {
   }
 
   onResetParent() {
-    this.setState({ 
+    this.setState({
       strain: '',
       strain_type: props.strainTypes[0].code,
       errors: {}

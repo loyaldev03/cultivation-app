@@ -55,7 +55,7 @@ class PlantSetupApp extends React.Component {
 
   renderFirstTime() {
     if (plantStore.plants.length > 0) {
-      return null 
+      return null
     }
 
     return (

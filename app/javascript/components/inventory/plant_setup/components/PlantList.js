@@ -5,7 +5,6 @@ import plantStore from '../store/PlantStore'
 import { observer } from 'mobx-react'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 
-
 // const columns = [
 //   {
 //     Header: 'Plant type',
@@ -73,7 +72,9 @@ const columns = [
     Header: 'Growth stage',
     accessor: 'attributes.plant_status',
     headerStyle: { textAlign: 'left' },
-    Cell: props => <span>{props.value.charAt(0).toUpperCase() + props.value.substr(1)}</span>
+    Cell: props => (
+      <span>{props.value.charAt(0).toUpperCase() + props.value.substr(1)}</span>
+    )
   },
   {
     Header: 'Planted On',
@@ -81,7 +82,9 @@ const columns = [
     headerStyle: { textAlign: 'left' },
     Cell: props => {
       const d = new Date(props.value)
-      return <span>{`${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`}</span> // Custom cell components!
+      return (
+        <span>{`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`}</span>
+      ) // Custom cell components!
     }
   },
   {
@@ -93,7 +96,7 @@ const columns = [
     Header: 'Cultivation batch',
     accessor: 'attributes.cultivation_batch_name',
     headerStyle: { textAlign: 'left' }
-  },
+  }
 ]
 
 @observer

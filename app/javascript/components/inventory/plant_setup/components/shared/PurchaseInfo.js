@@ -164,6 +164,21 @@ class PurchaseInfo extends React.Component {
     }
   }
 
+  reset() {
+    this.setState({
+      vendor_name: this.props.vendor_name,
+      vendor_no: this.props.vendor_no,
+      address: this.props.address,
+      vendor_state_license_num: this.props.vendor_state_license_num,
+      vendor_state_license_expiration_date: null,
+      vendor_location_license_num: this.props.vendor_location_license_num,
+      vendor_location_license_expiration_date: null,
+      purchase_date: null,
+      invoice_no: this.props.invoice_no,
+      errors: {}
+    })
+  }
+
   render() {
     return (
       <React.Fragment>

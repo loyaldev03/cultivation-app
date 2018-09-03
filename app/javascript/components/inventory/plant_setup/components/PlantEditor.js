@@ -28,7 +28,7 @@ export default class PlantEditor extends React.Component {
     this.onStrainSelected = this.onStrainSelected.bind(this)
     this.onChangeStrainType = this.onChangeStrainType.bind(this)
     this.onSetStockEditor = this.onSetStockEditor.bind(this)
-    this.onResetEditor = this.onResetEditor.bind(this)
+    this.onExitCurrentEditor = this.onExitCurrentEditor.bind(this)
     this.onClose = this.onClose.bind(this)
     this.onValidateParent = this.onValidateParent.bind(this)
     this.onResetParent = this.onResetParent.bind(this)
@@ -63,7 +63,7 @@ export default class PlantEditor extends React.Component {
     event.preventDefault()
   }
 
-  onResetEditor(event) {
+  onExitCurrentEditor(event) {
     this.setState({ stockEditor: '' })
     event.preventDefault()
   }
@@ -104,7 +104,7 @@ export default class PlantEditor extends React.Component {
   onResetParent() {
     this.setState({
       strain: '',
-      strain_type: props.strainTypes[0].code,
+      strain_type: this.props.strainTypes[0].code,
       errors: {}
     })
   }
@@ -179,7 +179,7 @@ export default class PlantEditor extends React.Component {
     // by calling onValidateParent and follow up the save process itself.
     return (
       <SeedEditor
-        onResetEditor={this.onResetEditor}
+        onExitCurrentEditor={this.onExitCurrentEditor}
         onValidateParent={this.onValidateParent}
         locations={this.locations}
       />
@@ -190,7 +190,7 @@ export default class PlantEditor extends React.Component {
     if (this.state.stockEditor !== CLONE) return null
     return (
       <CloneEditor
-        onResetEditor={this.onResetEditor}
+        onExitCurrentEditor={this.onExitCurrentEditor}
         onValidateParent={this.onValidateParent}
         locations={this.locations}
       />
@@ -201,8 +201,9 @@ export default class PlantEditor extends React.Component {
     if (this.state.stockEditor !== MOTHER) return null
     return (
       <MotherEditor
-        onResetEditor={this.onResetEditor}
+        onExitCurrentEditor={this.onExitCurrentEditor}
         onValidateParent={this.onValidateParent}
+        onResetParent={this.onResetParent}
         locations={this.locations}
       />
     )
@@ -212,7 +213,7 @@ export default class PlantEditor extends React.Component {
     if (this.state.stockEditor !== VEG_GROUP) return null
     return (
       <VegGroupEditor
-        onResetEditor={this.onResetEditor}
+        onExitCurrentEditor={this.onExitCurrentEditor}
         onValidateParent={this.onValidateParent}
         locations={this.locations}
       />
@@ -238,7 +239,7 @@ export default class PlantEditor extends React.Component {
       return (
         <div
           className="dim gray f7 pv1 flex fw4 pointer ttu"
-          onClick={this.onResetEditor}
+          onClick={this.onExitCurrentEditor}
         >
           Back
         </div>

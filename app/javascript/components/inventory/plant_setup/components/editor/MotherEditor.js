@@ -116,20 +116,52 @@ class MotherEditor extends React.Component {
           }))
         })
         .then(({ status, data }) => {
-          console.log(data)
-          console.log(status)
+          // console.log(data)
+          // console.log(status)
 
           if (status >= 400) {
             this.setState({ errors: data.errors })
           } else {
-            console.log(JSON.parse(data.data))
+            // console.log(JSON.parse(data.data))
             let savedPlants = JSON.parse(data.data).data
             plantStore.add(savedPlants)
+            this.props.onResetParent()
+            this.reset()
           }
         })
     }
 
     event.preventDefault()
+  }
+
+  reset() {
+    console.log('reset called')
+    this.setState({
+      plant_ids: '',
+      plant_qty: 0,
+      planted_on: null,
+      // mother_id: '',
+
+      vendor_name: '',
+      vendor_no: '',
+      address: '',
+      vendor_state_license_num: '',
+      vendor_state_license_expiration_date: null,
+      vendor_location_license_num: '',
+      vendor_location_license_expiration_date: null,
+      purchase_date: null,
+      invoice_no: '',
+      room: '',
+      room_id: '',
+      section_name: '',
+      section_id: '',
+      isShowPlantQtyForm: false,
+      isBought: false,
+      errors: {}
+    })
+
+    this.storageInfoEditor.current.reset()
+    this.purchaseInfoEditor.reset()
   }
 
   validateAndGetValues() {
@@ -340,7 +372,7 @@ class MotherEditor extends React.Component {
           <a
             className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
             href="#"
-            onClick={this.props.onExitChildEditor}
+            onClick={this.props.onExitCurrentEditor}
           >
             Save draft
           </a>

@@ -38,7 +38,8 @@ class StorageInfo extends React.Component {
       tray_id: props.tray_id,
       tray_code: props.tray_code,
       tray_capacity: props.tray_capacity,
-      errors: {}
+      errors: {},
+      something: ''
     }
 
     // console.log(this.locations)
@@ -104,6 +105,29 @@ class StorageInfo extends React.Component {
     }
   }
 
+  reset() {
+    this.setState({
+      facility_id: this.props.facility_id,
+      facility_code: this.props.facility_code,
+      facility_name: this.props.facility_name,
+      room_id: this.props.room_id,
+      room_code: this.props.room_code,
+      room_name: this.props.room_name,
+      room_purpose: this.props.room_purpose,
+      section_code: this.props.section_code,
+      section_name: this.props.section_name,
+      row_id: this.props.row_id,
+      row_code: this.props.row_code,
+      shelf_id: this.props.shelf_id,
+      shelf_code: this.props.shelf_code,
+      tray_id: this.props.tray_id,
+      tray_code: this.props.tray_code,
+      tray_capacity: this.props.tray_capacity,
+      errors: {},
+      something: {label: '', value: ''}
+    })
+  }
+
   validateAll() {
     let errors = this.validateStorage()
     const { row_id, shelf_id, tray_id } = this.state
@@ -161,7 +185,8 @@ class StorageInfo extends React.Component {
       tray_id: item.t_id,
       tray_code: item.t_code.length > 0 ? item.t_code : '--',
       tray_capacity: item.t_capacity,
-      errors: {}
+      errors: {},
+      something: { label: item.label, value: item.value }
     })
   }
 
@@ -275,6 +300,7 @@ class StorageInfo extends React.Component {
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Location</label>
             <Select
+              value={this.state.something}
               options={this.locations}
               onChange={this.onSearchFound}
               styles={reactSelectStyle}

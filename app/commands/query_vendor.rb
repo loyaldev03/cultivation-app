@@ -14,6 +14,6 @@ class QueryVendor
   private
 
   def query_records
-    Vendor.where(@args).to_a
+    Inventory::Vendor.where(@args).to_a
   end
 end

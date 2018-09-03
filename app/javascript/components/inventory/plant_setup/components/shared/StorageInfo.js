@@ -100,7 +100,7 @@ class StorageInfo extends React.Component {
       shelf_id,
       tray_id,
       errors,
-      isValid: Object.getOwnPropertyNames(errors).length > 0
+      isValid: Object.getOwnPropertyNames(errors).length === 0
     }
   }
 

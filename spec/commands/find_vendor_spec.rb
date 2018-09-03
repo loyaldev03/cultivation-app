@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe FindVendor, type: :command do
   context ".call with args" do
     subject {
-      Vendor.create!(
+      Inventory::Vendor.create!(
         name: Faker::Lorem.word,
       )
     }
@@ -35,7 +35,7 @@ RSpec.describe FindVendor, type: :command do
     end
 
     it "return error if record not found" do
-      new_record = Vendor.new
+      new_record = Inventory::Vendor.new
 
       cmd = FindVendor.call({id: new_record.id.to_s})
 

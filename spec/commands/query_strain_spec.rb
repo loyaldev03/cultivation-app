@@ -4,7 +4,7 @@ RSpec.describe QueryStrain, type: :command do
   context ".call" do
     it "should return record when id exists" do
       fake_name = Faker::Lorem.word
-      Strain.create!([
+      Common::Strain.create!([
         { name: fake_name },
         { name: fake_name },
         { name: fake_name },

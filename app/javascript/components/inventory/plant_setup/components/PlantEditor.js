@@ -31,6 +31,7 @@ export default class PlantEditor extends React.Component {
     this.onResetEditor = this.onResetEditor.bind(this)
     this.onClose = this.onClose.bind(this)
     this.onValidateParent = this.onValidateParent.bind(this)
+    this.onResetParent = this.onResetParent.bind(this)
   }
 
   get editorSelected() {
@@ -41,17 +42,16 @@ export default class PlantEditor extends React.Component {
     // console.log(this.props.locations)
   }
 
+  // TODO:  May need more logic to add newly created item into the async list: https://react-select.com/props#creatable-props
+  // At the moment, newly created item does not appear on suggestion list.
   onStrainSelected(item) {
-    let label = ''
-    if (item) {
-      label = item.label
-    }
-
-    this.setState({
-      strain: label,
-      strain_type: item.strain_type,
-      errors: {}
-    })
+    this.setState(
+      {
+        strain: item.label,
+        strain_type: item.strain_type || this.state.strain_type,
+        errors: {}
+      } /*, () => console.log(this.state.strain_type)*/
+    )
   }
 
   onChangeStrainType(event) {
@@ -99,6 +99,14 @@ export default class PlantEditor extends React.Component {
       errors,
       isValid: Object.getOwnPropertyNames(errors).length === 0
     }
+  }
+
+  onResetParent() {
+    this.setState({
+      strain: '',
+      strain_type: props.strainTypes[0].code,
+      errors: {}
+    })
   }
 
   renderEditorToggle() {

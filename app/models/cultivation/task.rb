@@ -20,7 +20,6 @@ module Cultivation
     field :isPhase, type: String #for phase
     field :parent_id, type: String
 
-
     embeds_many :users, class_name: 'User'
     belongs_to :batch, class_name: 'Cultivation::Batch'
   end

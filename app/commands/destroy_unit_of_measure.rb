@@ -10,6 +10,6 @@ class DestroyUnitOfMeasure
   end
 
   def call
-    @record = UnitOfMeasure.where(id: @record_id).delete
+    @record = Common::UnitOfMeasure.where(id: @record_id).delete
   end
 end

@@ -14,7 +14,7 @@ class FindStrain
   private
 
   def query_record
-    record = Strain.where(@args).first
+    record = Common::Strain.where(@args).first
     if record.nil?
       errors.add :not_found, 'Record Not Found'
       nil

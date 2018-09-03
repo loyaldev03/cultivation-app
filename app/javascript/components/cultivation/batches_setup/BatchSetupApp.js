@@ -1,13 +1,11 @@
-
-import React from "react";
+import React from 'react'
 import Select from 'react-select'
-import { render } from "react-dom";
+import { render } from 'react-dom'
 
-import DatePicker from 'react-date-picker'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import reactSelectStyle from './../../utils/reactSelectStyle'
-import {toast} from './../../utils/toast'
+import { toast } from './../../utils/toast'
 import { TextInput, NumericInput, FieldError } from './../../utils/FormHelpers'
-
 
 const styles = `
 
@@ -30,7 +28,7 @@ color: #777;
 `
 
 class BatchSetupApp extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       plants: this.props.plants,
@@ -46,50 +44,51 @@ class BatchSetupApp extends React.Component {
     }
   }
 
-
   componentDidMount() {
     // loadTasks.loadbatch(this.props.batch_id)
   }
 
-  handleSubmit=(event)=>{
+  handleSubmit = event => {
     let url = '/api/v1/batches'
     fetch(url, {
       method: 'POST',
       credentials: 'include',
       body: JSON.stringify({
-        batch_source: this.state.plant, facility: this.state.facility, 
-        strain: this.state.strain, start_date: this.state.start_date,
-        quantity: this.state.quantity, grow_method: this.state.grow_method
+        batch_source: this.state.plant,
+        facility: this.state.facility,
+        strain: this.state.strain,
+        start_date: this.state.start_date,
+        quantity: this.state.quantity,
+        grow_method: this.state.grow_method
       }),
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       }
     })
       .then(response => response.json())
       .then(data => {
         console.log(data.data)
-        if(data.data.id != null){
+        if (data.data.id != null) {
           toast('Batch Created', 'success')
           document.location.href = `/cultivation/batches/${data.data.id}?step=1`
+        } else {
+          alert('something is wrong')
         }
-        else{alert('something is wrong')}
       })
   }
 
-  handleChange=(field, value)=>{
-    this.setState({ [field]: value });
+  handleChange = (field, value) => {
+    this.setState({ [field]: value })
   }
 
-  handleChangeInput = (event) => {
+  handleChangeInput = event => {
     // console.log(event[0].value)
     let key = event.target.attributes.fieldname.value
     let value = event.target.value
-    this.setState({ [key]: value });
+    this.setState({ [key]: value })
   }
 
-  setDateValue =(event) => {
-    
-  }
+  setDateValue = event => {}
 
   render() {
     let plants = this.state.plants
@@ -98,47 +97,74 @@ class BatchSetupApp extends React.Component {
     return (
       <React.Fragment>
         <style>{styles}</style>
-        <div id="toast" className="toast animated toast--success">Row Saved</div>
-        
+        <div id="toast" className="toast animated toast--success">
+          Row Saved
+        </div>
+
         <h5 className="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
-        <p className="mt2 body-1 grey">
-          Some cultivation setup here
-        </p>
+        <p className="mt2 body-1 grey">Some cultivation setup here</p>
         <form>
           <div className="w-100 shelves_number_options">
             <div className="mt3">
-              <label className="f6 fw6 db mb1 gray ttc" htmlFor="record_batch_source">Select Batch Source</label>
-              <Select options={plants} 
-              onChange={(e)=>this.handleChange('plant', e.value)} 
-              styles={reactSelectStyle}
+              <label
+                className="f6 fw6 db mb1 gray ttc"
+                htmlFor="record_batch_source"
+              >
+                Select Batch Source
+              </label>
+              <Select
+                options={plants}
+                onChange={e => this.handleChange('plant', e.value)}
+                styles={reactSelectStyle}
               />
             </div>
           </div>
 
           <div className="w-100 shelves_number_options">
             <div className="mt3">
-              <label className="f6 fw6 db mb1 gray ttc" htmlFor="record_batch_source">Select Facility</label>
-              <Select options={facilities} 
+              <label
+                className="f6 fw6 db mb1 gray ttc"
+                htmlFor="record_batch_source"
+              >
+                Select Facility
+              </label>
+              <Select
+                options={facilities}
                 styles={reactSelectStyle}
-                onChange={(e) => this.handleChange('facility', e.value)} />
+                onChange={e => this.handleChange('facility', e.value)}
+              />
             </div>
           </div>
 
           <div className="w-100 shelves_number_options">
             <div className="mt3">
-              <label className="f6 fw6 db mb1 gray ttc" htmlFor="record_batch_source">Select Strains</label>
-              <Select options={strains} 
+              <label
+                className="f6 fw6 db mb1 gray ttc"
+                htmlFor="record_batch_source"
+              >
+                Select Strains
+              </label>
+              <Select
+                options={strains}
                 styles={reactSelectStyle}
-                onChange={(e) => this.handleChange('strain', e.value)} />
+                onChange={e => this.handleChange('strain', e.value)}
+              />
             </div>
           </div>
 
           <div className="w-100 shelves_number_options">
             <div className="mt3">
-              <label className="f6 fw6 db mb1 gray ttc" htmlFor="record_batch_source">Select Grow Method</label>
-              <Select options={strains}
+              <label
+                className="f6 fw6 db mb1 gray ttc"
+                htmlFor="record_batch_source"
+              >
+                Select Grow Method
+              </label>
+              <Select
+                options={strains}
                 styles={reactSelectStyle}
-                onChange={(e) => this.handleChange('grow_method', e.value)} />
+                onChange={e => this.handleChange('grow_method', e.value)}
+              />
             </div>
           </div>
 
@@ -157,24 +183,31 @@ class BatchSetupApp extends React.Component {
 
           <div className="w-100 shelves_number_options">
             <div className="mt3">
-              <label className="f6 fw6 db mb1 gray ttc" htmlFor="record_batch_source">Select Start Date</label>
+              <label
+                className="f6 fw6 db mb1 gray ttc"
+                htmlFor="record_batch_source"
+              >
+                Select Start Date
+              </label>
               <DatePicker
                 value={this.state.start_date}
-                onChange={(e) => this.handleChange('start_date', e)}
+                onChange={e => this.handleChange('start_date', e)}
               />
             </div>
           </div>
 
           <div className="w-100 flex justify-end">
-            <a className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer" onClick={this.handleSubmit}>Submit</a>
+            <a
+              className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
+              onClick={this.handleSubmit}
+            >
+              Submit
+            </a>
           </div>
-
         </form>
       </React.Fragment>
     )
   }
-
 }
-
 
 export default BatchSetupApp

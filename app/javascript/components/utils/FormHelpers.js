@@ -1,4 +1,5 @@
 import React from 'react'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 
 function TextInput({
   label,
@@ -6,7 +7,7 @@ function TextInput({
   placeholder,
   onChange = () => {},
   errors = {},
-  fieldname = null,
+  fieldname = null
 }) {
   return (
     <React.Fragment>
@@ -65,4 +66,8 @@ function FieldError({ errors, field = '', className = '' }) {
   return null
 }
 
-export { TextInput, NumericInput, FieldError }
+function CalendarPicker(props = {}) {
+  return <DatePicker {...props} />
+}
+
+export { TextInput, NumericInput, FieldError, CalendarPicker }

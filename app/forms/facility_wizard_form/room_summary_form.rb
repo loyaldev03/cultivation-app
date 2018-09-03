@@ -10,7 +10,7 @@ module FacilityWizardForm
       self.map_attrs_from_hash(ATTRS, params)
       set_record
     end
-    
+
     private
 
     def set_record

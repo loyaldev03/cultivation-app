@@ -27,7 +27,7 @@ class SaveRoomIsComplete
   private
 
   def get_is_complete(rows)
-    if @room.purpose == "trim" || @room.purpose == "storage"
+    if @room.purpose == 'trim' || @room.purpose == 'storage'
       return true
     end
     if rows.blank?

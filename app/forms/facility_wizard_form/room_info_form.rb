@@ -32,6 +32,15 @@ module FacilityWizardForm
       end
     end
 
+    def need_setup_rows
+      # LOGIC#0001
+      if self.purpose == 'trim' || self.purpose == 'storage'
+        false
+      else
+        true
+      end
+    end
+
     def set_rows(model_rows)
       if model_rows.blank?
         self.rows = []

@@ -30,6 +30,13 @@ class SaveRoom
       new_code = NextFacilityCode.call(:section, nil, 1).result
       room.sections.build(code: new_code)
     end
+
+    if room.purpose == 'trim' || room.purpose == 'storage'
+      # Mark room as complete since there's no setup requrired
+      # for Trim and Storage room
+      room.is_complete = true
+    end
+
     room.wz_generated = false
     facility.save!
     room

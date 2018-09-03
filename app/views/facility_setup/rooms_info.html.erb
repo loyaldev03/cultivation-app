@@ -15,7 +15,7 @@
         <p class="mt2 body-1 grey">
           Awesome, you've just setup your facility! Room details are next...
         </p>
-        <div id="rooms_grid" class="pv4 carousel-wrapper flex flex-row-l flex-column">
+        <div id="rooms_grid" class="pv4 carousel-wrapper">
           <%= render partial: 'rooms_list',
             locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms}
           %>

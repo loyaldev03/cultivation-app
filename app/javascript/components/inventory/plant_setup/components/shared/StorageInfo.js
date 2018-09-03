@@ -124,7 +124,7 @@ class StorageInfo extends React.Component {
       tray_code: this.props.tray_code,
       tray_capacity: this.props.tray_capacity,
       errors: {},
-      something: {label: '', value: ''}
+      something: { label: '', value: '' }
     })
   }
 

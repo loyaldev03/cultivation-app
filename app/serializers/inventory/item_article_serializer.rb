@@ -20,14 +20,17 @@ module Inventory
     end
 
     attribute :location_name do |object|
-      result = nil
       if object.location_type == 'room'
-        result = Facility.find_by(:'rooms._id' => BSON::ObjectId(object.location_id))
+        facility = Facility.find_by(:'rooms._id' => BSON::ObjectId(object.location_id))
+        room = facility.rooms.find(object.location_id)
+        room ? "#{facility.code}.#{room.code} - #{room.name} " : ''
       elsif object.location_type == 'tray'
-        result = Tray.find_by(object.location_id)
+        tray = Tray.find_by(object.location_id)
+        facility = Facility.find_by(:'rooms.rows.shelves._id' => tray.shelf_id)
+        tray ? "#{facility.code}...#{tray.code} - #{tray.name} " : ''
+      else
+        ''
       end
-
-      result ? result.name : ''
     end
 
     attribute :facility_name do |object|

@@ -4,6 +4,7 @@ import plantStore from '../store/PlantStore'
  * Resets and reload list of plants
  */
 export default function loadPlants(plant_type = 'mother') {
+  plantStore.isLoading = true
   fetch('/api/v1/plants/plants?plant_status=' + plant_type, {
     method: 'GET',
     credentials: 'include',
@@ -24,6 +25,7 @@ export default function loadPlants(plant_type = 'mother') {
         console.log('Something wrong when calling /api/v1/plants/plants')
       } else {
         plantStore.load(data)
+        plantStore.isLoading = false
       }
     })
 }

@@ -31,6 +31,7 @@ export default class PlantEditor extends React.Component {
     this.onResetEditor = this.onResetEditor.bind(this)
     this.onClose = this.onClose.bind(this)
     this.onValidateParent = this.onValidateParent.bind(this)
+    this.onResetParent = this.onResetParent.bind(this)
   }
 
   get editorSelected() {
@@ -98,6 +99,14 @@ export default class PlantEditor extends React.Component {
       errors,
       isValid: Object.getOwnPropertyNames(errors).length === 0
     }
+  }
+
+  onResetParent() {
+    this.setState({ 
+      strain: '',
+      strain_type: props.strainTypes[0].code,
+      errors: {}
+    })
   }
 
   renderEditorToggle() {

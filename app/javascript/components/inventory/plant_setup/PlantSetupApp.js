@@ -34,32 +34,36 @@ class PlantSetupApp extends React.Component {
   }
 
   renderPlantList() {
-    return null
-    // return (
-    //   <div className="w-80">
-    //     <PlantList />
-    //   </div>
-    // )
+    if (plantStore.plants.length === 0) {
+      return null
+    }
+
+    return (
+      <div className="w-80 bg-white pa3">
+        <div className="mb3">
+          <button
+            className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
+            onClick={this.openSidebar}
+          >
+            Add active plant
+          </button>
+        </div>
+        <PlantList />
+      </div>
+    )
   }
 
   renderFirstTime() {
     if (plantStore.plants.length > 0) {
-      const content = plantStore.plants.map(x => (
-        <div key={x.id}>{x.attributes.serial_no}</div>
-      ))
-      return (
-        <div className="ph4 pt4 pb5 mb3 bg-white w-70">
-          <div className="w-60">{content}</div>
-        </div>
-      )
+      return null 
     }
+
     return (
       <div className="ph4 pt4 pb5 mb3 bg-white w-70">
         <div className="w-60">
           <h1 className="mt0 mb4 f3 fw4 dark-gray">
             Setup active plant inventory
           </h1>
-          <p>plantStore.plants.length: {plantStore.plants.length}</p>
           <p className="mb3 lh-copy f5 grey">
             Add your existing plant inventories. Do not worry if you are unable
             to add all the records, you can always continue later from the
@@ -71,7 +75,7 @@ class PlantSetupApp extends React.Component {
             cultivation planning in the next phase of the setup.
           </p>
           <button
-            className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
+            className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
             onClick={this.openSidebar}
           >
             Add my first plant
@@ -87,7 +91,7 @@ class PlantSetupApp extends React.Component {
         {this.renderFirstTime()}
         {this.renderPlantList()}
         <PlantEditor
-          isOpened
+          isOpened={false}
           onClose={this.closeSidebar}
           strainTypes={this.props.strain_types}
           locations={this.props.locations}

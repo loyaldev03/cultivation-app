@@ -10,6 +10,7 @@ import { observable, action } from 'mobx'
 
 class PlantStore {
   plants = observable([])
+  @observable isLoading = false
 
   @action
   load(newPlants) {

@@ -1,4 +1,9 @@
 module Constants
+  USER_ROLE_ADMIN = 'admin'
+  USER_ROLE_MANAGER = 'manager'
+  USER_ROLE_SUPERVISOR = 'supervisor'
+  USER_ROLE_STAFF = 'staff'
+
   PLANT_TYPES = [
     {code: :clone, name: 'Clone'},
     {code: :mother, name: 'Mother'},
@@ -13,15 +18,15 @@ module Constants
   ].freeze
 
   ROOM_PURPOSE = [
-    {code: :clone, name: 'Clone'},
-    {code: :cure, name: 'Cure'},
-    {code: :dry, name: 'Drying'},
-    {code: :flower, name: 'Flower'},
-    {code: :mother, name: 'Mother'},
+    {code: :clone, name: 'Clone'}, #
+    {code: :cure, name: 'Cure'}, #
+    {code: :dry, name: 'Drying'}, #
+    {code: :flower, name: 'Flower'}, #
+    {code: :mother, name: 'Mother'}, #
     {code: :storage, name: 'Storage'},
     {code: :vault, name: 'Vault'},
-    {code: :trim, name: 'Trim'},
-    {code: :veg, name: 'Veg'},
+    {code: :trim, name: 'Trim'}, #
+    {code: :veg, name: 'Veg'}, #
     {code: :veg1, name: 'Veg 1'},
     {code: :veg2, name: 'Veg 2'},
   ].freeze

@@ -1,8 +1,8 @@
-import React from "react";
-import { render } from "react-dom";
+import React from 'react'
+import { render } from 'react-dom'
 import TaskStore from '../stores/TaskStore'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import Select from 'react-select';
+import Select from 'react-select'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import { fadeToast, toast } from '../../../utils/toast'
 import reactSelectStyle from './../../../utils/reactSelectStyle'
@@ -11,9 +11,9 @@ import updateTasks from '../actions/updateTask'
 
 
 class SidebarTaskEditor extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
-    this.state ={
+    this.state = {
       batch_id: this.props.batch_id,
       id: props.task.id,
       ...props.task.attributes,
@@ -27,7 +27,7 @@ class SidebarTaskEditor extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    const { task } = this.props;
+    const { task } = this.props
     if (props.task !== task) {
       this.setState({
         id: props.task.id,
@@ -42,16 +42,16 @@ class SidebarTaskEditor extends React.Component {
     }
   }
 
-  handleChangeTask = (event) => {
+  handleChangeTask = event => {
     // console.log(event[0].value)
     let key = event.target.attributes.fieldname.value
     let value = event.target.value
-    this.setState({ [key]: value });
+    this.setState({ [key]: value })
   }
 
-  handleChangeDate =(key, value) => {
+  handleChangeDate = (key, value) => {
     console.log(value)
-    this.setState({ [key]: value})
+    this.setState({ [key]: value })
   }
 
   handleChangeSelect = (value, { action, removedValue }) => {
@@ -61,14 +61,14 @@ class SidebarTaskEditor extends React.Component {
       case 'select-option':
         // arr.push(value[0])
         // console.log(value[0].value)
-        break;
+        break
       case 'remove-value':
         // console.log(removedValue.value)
-        const index = arr.indexOf(removedValue);
-        arr.splice(index, 1);
-        break;
+        const index = arr.indexOf(removedValue)
+        arr.splice(index, 1)
+        break
     }
-    this.setState({ assigned_employee: value})
+    this.setState({ assigned_employee: value })
     // value = orderOptions(value);
     // this.setState({ value: value });
   }
@@ -76,8 +76,6 @@ class SidebarTaskEditor extends React.Component {
   handleSubmit = (event) =>{
     updateTasks.updateTask(this.state)
   }
-
-
 
   render() {
     return (
@@ -137,7 +135,7 @@ class SidebarTaskEditor extends React.Component {
             <DatePicker
               value={this.state.start_date}
               fieldname="start_date"
-              onChange={(e) => this.handleChangeDate('start_date', e)}
+              onChange={e => this.handleChangeDate('start_date', e)}
             />
           </div>
 
@@ -146,15 +144,13 @@ class SidebarTaskEditor extends React.Component {
             <DatePicker
               value={this.state.end_date}
               fieldname="end_date"
-              onChange={(e) => this.handleChangeDate('end_date', e)}
+              onChange={e => this.handleChangeDate('end_date', e)}
             />
           </div>
-
         </div>
 
         <div className="ph4 mt3 mb3 flex">
           <div className="w-100">
-
             <NumericInput
               label={'Estimated Hours Needed'}
               value={this.state.estimated_hours}
@@ -163,7 +159,6 @@ class SidebarTaskEditor extends React.Component {
               errors={this.state.errors}
               errorField="estimated_hours"
             />
-
           </div>
         </div>
         <div className="ph4 mt3 mb3 flex">
@@ -172,7 +167,12 @@ class SidebarTaskEditor extends React.Component {
             <Select
               isMulti
               name="colors"
-              options={[{ value: 'Fathi', label: 'Fathi' }, { value: 'Andy', label: 'Andy' }, { value: 'Karg', label: 'Karg' }, { value: 'Allison', label: 'Allison' }]}
+              options={[
+                { value: 'Fathi', label: 'Fathi' },
+                { value: 'Andy', label: 'Andy' },
+                { value: 'Karg', label: 'Karg' },
+                { value: 'Allison', label: 'Allison' }
+              ]}
               className="basic-multi-select"
               classNamePrefix="select"
               fieldname="assigned_employee"
@@ -183,14 +183,18 @@ class SidebarTaskEditor extends React.Component {
           </div>
         </div>
 
-
         <div className="ph4 mt3 mb3 flex">
           <div className="w-60">
             <label className="f6 fw6 db mb1 gray ttc">Material Suggested</label>
             <Select
               isMulti
               name="colors"
-              options={[{ value: 'Fathi', label: 'Fathi' }, { value: 'Andy', label: 'Andy' }, { value: 'Karg', label: 'Karg' }, { value: 'Allison', label: 'Allison' }]}
+              options={[
+                { value: 'Fathi', label: 'Fathi' },
+                { value: 'Andy', label: 'Andy' },
+                { value: 'Karg', label: 'Karg' },
+                { value: 'Allison', label: 'Allison' }
+              ]}
               className="basic-multi-select"
               classNamePrefix="select"
               styles={reactSelectStyle}
@@ -202,11 +206,17 @@ class SidebarTaskEditor extends React.Component {
           <a className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer" onClick={this.handleSubmit}>Submit</a>
         </div> */}
         <div className="w-100 pa4 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
-          <button name="commit" type="submit" value="continue" className="ttu db tr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" onClick={this.handleSubmit} >Update &amp; Close</button>
+          <button
+            name="commit"
+            type="submit"
+            value="continue"
+            className="ttu db tr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer"
+            onClick={this.handleSubmit}
+          >
+            Update &amp; Close
+          </button>
         </div>
-
       </React.Fragment>
-
     )
   }
 }

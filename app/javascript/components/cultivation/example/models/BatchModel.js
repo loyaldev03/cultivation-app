@@ -1,15 +1,14 @@
-import { observable, computed, action } from "mobx";
+import { observable, computed, action } from 'mobx'
 
 class BatchModel {
-  id = Math.random();
-  @observable batch_source;
-  @observable status = "pending";
+  id = Math.random()
+  @observable batch_source
+  @observable status = 'pending'
 
-  constructor() {
-  }
+  constructor() {}
 
   @action
-  update(status){
+  update(status) {
     this.status = status
   }
 }

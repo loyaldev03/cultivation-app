@@ -12,7 +12,14 @@
       <div class="flex flex-row items-center">
         <%= image_tag 'logo-small.svg', class: "dib mr3" %>
         <div class="flex flex-column tl">
-          <span class="dark-grey subtitle-1">User name</span>
+          <% if !current_user.first_name %>
+            <span class="dark-grey subtitle-1"> <%= current_user.email %> </span>
+          <% else %>
+            <span class="dark-grey subtitle-1"> 
+              <%= current_user.first_name %> <%= current_user.last_name %>
+            </span>
+          <% end %>
+          
           <span class="grey overline ttc">Admin Head</span>
         </div>
       </div>

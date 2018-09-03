@@ -1,15 +1,13 @@
+import React from 'react'
+import { render } from 'react-dom'
 
-import React from "react";
-import { render } from "react-dom";
-
-import { observable } from "mobx";
-import { observer, Provider } from "mobx-react";
+import { observable } from 'mobx'
+import { observer, Provider } from 'mobx-react'
 
 import loadTasks from './actions/loadTask'
 import TaskList from './components/TaskList'
 
 class TaskSetup extends React.Component {
-
   componentDidMount() {
     loadTasks.loadbatch(this.props.batch_id)
   }
@@ -23,7 +21,6 @@ class TaskSetup extends React.Component {
       </React.Fragment>
     )
   }
-
 }
 
 export default TaskSetup

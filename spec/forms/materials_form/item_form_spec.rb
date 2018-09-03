@@ -11,7 +11,7 @@ RSpec.describe MaterialsForm::ItemForm, type: :form do
 
   context ".new with record id" do
     subject(:record) {
-      Item.create!(
+      Inventory::Item.create!(
         name: Faker::Lorem.word,
         code: Faker::Number.number(3),
         desc: Faker::Lorem.sentence,

@@ -4,7 +4,7 @@ RSpec.describe QueryVendor, type: :command do
   context ".call" do
     it "should return record when id exists" do
       fake_name = Faker::Lorem.word
-      Vendor.create!([
+      Inventory::Vendor.create!([
         { name: fake_name },
         { name: fake_name },
         { name: fake_name },

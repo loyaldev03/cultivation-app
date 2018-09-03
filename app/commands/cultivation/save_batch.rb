@@ -176,7 +176,6 @@ module Cultivation
       end
       return depend_on
     end
-
   end
 end
 

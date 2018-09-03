@@ -1,5 +1,4 @@
 class Cultivation::BatchesController < ApplicationController
-
   def index
   end
 
@@ -29,6 +28,4 @@ class Cultivation::BatchesController < ApplicationController
   def update_params
     {id: params[:id]}.merge(record_params)
   end
-
-
 end

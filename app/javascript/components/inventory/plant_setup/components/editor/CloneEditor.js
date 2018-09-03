@@ -1,9 +1,9 @@
 import React from 'react'
-import DatePicker from 'react-date-picker'
 import {
   TextInput,
   NumericInput,
-  FieldError
+  FieldError,
+  CalendarPicker
 } from '../../../../utils/FormHelpers'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import LocationPicker from '../shared/LocationPicker'
@@ -23,6 +23,19 @@ class CloneEditor extends React.Component {
       is_bought: false,
       mother_id: '',
       mother_location_id: '',
+
+      // purchase info
+      vendor_name: '',
+      vendor_no: '',
+      address: '',
+      vendor_state_license_num: '',
+      vendor_state_license_expiration_date: null,
+      vendor_location_license_num: '',
+      vendor_location_license_expiration_date: null,
+      purchase_date: '',
+      invoice_no: '',
+
+      // UI states
       isShowPlantIdGenerator: false,
       errors: {}
     }
@@ -88,6 +101,7 @@ class CloneEditor extends React.Component {
 
   onIsBoughtChanged(event) {
     this.setState({ is_bought: !this.state.is_bought })
+    event.preventDefault()
   }
 
   onMotherIdChanged(event) {
@@ -146,10 +160,21 @@ class CloneEditor extends React.Component {
 
   onSave(event) {
     const data = this.validateAndGetValues()
-    if (data.isValid) {
-      // alert('not valid')
-      // call API
-    }
+    // if (data.isValid) {
+    // fetch('/api/v1/plant_setup/create_mother', {
+    //   method: 'POST',
+    //   credentials: 'include',
+    //   body: JSON.stringify(data),
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   }
+    // })
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     console.log(data)
+    //     console.log(data.data)
+    //   })
+    // }
 
     event.preventDefault()
   }
@@ -266,7 +291,7 @@ class CloneEditor extends React.Component {
           ref={this.setPurchaseInfoEditor}
           showLabel={false}
           vendor_name={this.state.vendor_name}
-          vendor_id={this.state.vendor_id}
+          vendor_no={this.state.vendor_no}
           address={this.state.address}
           vendor_state_license_num={this.state.vendor_state_license_num}
           vendor_state_license_expiration_date={
@@ -373,7 +398,7 @@ class CloneEditor extends React.Component {
         <div className="ph4 mt2 mb3 flex">
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Planted On</label>
-            <DatePicker
+            <CalendarPicker
               value={this.state.planted_on}
               onChange={this.onPlantedOnChanged}
             />
@@ -383,7 +408,7 @@ class CloneEditor extends React.Component {
             <label className="f6 fw6 db mb1 gray ttc">
               Expected Harvest Date
             </label>
-            <DatePicker
+            <CalendarPicker
               value={this.state.expected_harvest_date}
               onChange={this.onExpectedHarvestDateChanged}
             />
@@ -412,7 +437,7 @@ class CloneEditor extends React.Component {
           <a
             className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
             href="#"
-            onClick={this.props.onResetEditor}
+            onClick={this.props.onExitChildEditor}
           >
             Save draft
           </a>

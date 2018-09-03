@@ -11,7 +11,7 @@ RSpec.describe PurchasingForm::VendorForm, type: :form do
 
   context ".new with id" do
     subject(:record) {
-      Vendor.create!(
+      Inventory::Vendor.create!(
         name: Faker::Lorem.word,
         default_terms: Faker::Lorem.word,
         status: Faker::Lorem.word,
@@ -34,7 +34,7 @@ RSpec.describe PurchasingForm::VendorForm, type: :form do
 
   context ".submit" do
     subject(:record) {
-      Vendor.create!(
+      Inventory::Vendor.create!(
         name: Faker::Lorem.word,
         default_terms: Faker::Lorem.word,
         status: Faker::Lorem.word,
@@ -54,7 +54,7 @@ RSpec.describe PurchasingForm::VendorForm, type: :form do
       }
       form_object.submit(params)
 
-      saved = Vendor.find(record.id)
+      saved = Inventory::Vendor.find(record.id)
       expect(form_object.valid?).to be true
       expect(form_object).to have_attributes(
         name: params[:name],

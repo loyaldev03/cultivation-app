@@ -20,6 +20,16 @@
 //   console.log('close event 2'); 
 //   console.log(ev); 
 // });
+
+// HTML recommendations
+Easiest way to setup the sidebar with necessary CSS that handles expansion and hide is to put
+the following as the root of sidebar.
+
+<div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
+  <div className="rc-slide-panel__body flex flex-column">
+    ...
+  </div>
+</div>
 ******************************************/
 
 class EditorSidebarHandler {
@@ -50,7 +60,7 @@ class EditorSidebarHandler {
 const editorSidebarHandler = new EditorSidebarHandler()
 window.editorSidebar = editorSidebarHandler
 
-document.addEventListener('DOMContentLoaded', function (event) {
+document.addEventListener('DOMContentLoaded', function(event) {
   // console.log(document.querySelector('[data-role=sidebar]'))
   // console.log('calling setup....')
   const sidebarNode = document.querySelector('[data-role=sidebar]')

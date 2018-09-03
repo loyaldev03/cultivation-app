@@ -37,7 +37,7 @@ class TaskList extends React.Component {
               Header: 'Id',
               accessor: 'id',
               maxWidth: '100',
-              show: false
+              show: true
             },
             {
               Header: 'Phase',

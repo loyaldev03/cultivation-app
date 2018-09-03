@@ -25,5 +25,12 @@ module Cultivation
 
     embeds_many :users, class_name: 'User'
     belongs_to :batch, class_name: 'Cultivation::Batch'
+
+
+    def tasks_depend
+      batch.tasks.where(depend_on: self.id)
+    end
+
+    
   end
 end

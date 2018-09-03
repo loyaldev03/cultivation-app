@@ -1,5 +1,5 @@
 import React from 'react'
-import { observer } from "mobx-react"
+import { observer } from 'mobx-react'
 import PlantList from './components/PlantList'
 import PlantEditor from './components/PlantEditor'
 import plantStore from './store/PlantStore'
@@ -44,12 +44,12 @@ class PlantSetupApp extends React.Component {
 
   renderFirstTime() {
     if (plantStore.plants.length > 0) {
-      const content = plantStore.plants.map(x => <div key={x.id}>{x.attributes.serial_no}</div> )
+      const content = plantStore.plants.map(x => (
+        <div key={x.id}>{x.attributes.serial_no}</div>
+      ))
       return (
         <div className="ph4 pt4 pb5 mb3 bg-white w-70">
-          <div className="w-60">
-            {content}
-          </div>
+          <div className="w-60">{content}</div>
         </div>
       )
     }

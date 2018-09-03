@@ -1,7 +1,7 @@
 import plantStore from '../store/PlantStore'
 
-/** 
- * Resets and reload list of plants 
+/**
+ * Resets and reload list of plants
  */
 export default function loadPlants(plant_type = 'mother') {
   fetch('/api/v1/plants/plants?plant_status=' + plant_type, {

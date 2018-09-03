@@ -1,6 +1,4 @@
 import { observable, action } from 'mobx'
-import { loadavg } from 'os';
-
 
 // Maybe facility store here instead with methods to
 // 1. load/ reload,
@@ -9,7 +7,6 @@ import { loadavg } from 'os';
 // 4. retun rows base on section or room id
 // 5. retun shelves base on row
 // 6. retun trays base on shelve id
-
 
 class PlantStore {
   plants = observable([])

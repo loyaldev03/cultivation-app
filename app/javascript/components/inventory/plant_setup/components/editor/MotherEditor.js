@@ -118,7 +118,7 @@ class MotherEditor extends React.Component {
         .then(({ status, data }) => {
           console.log(data)
           console.log(status)
-          
+
           if (status >= 400) {
             this.setState({ errors: data.errors })
           } else {

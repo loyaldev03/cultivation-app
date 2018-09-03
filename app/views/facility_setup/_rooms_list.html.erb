@@ -51,12 +51,12 @@
             <div class="w-100 pb2 flex flex-column">
               <div class="flex flex-column items-center mb2">
                 <%= image_tag 'room-icon.svg', class: "h3 w3 dib center" %>
-                <span class="h6--font dark-grey"><%= room.name %></span>
-                <span class="grey body-1 ttu">
+                <span class="h6--font dark-grey card--title"><%= room.name %></span>
+                <span class="grey body-1 ttu card--subtitle">
                   <%= room.purpose %>
                 </span>
                 <% if room.capacity_text != "--" %>
-                  <span class="grey body-2 ttu">
+                  <span class="grey body-1 ttu card--subtitle">
                     Capacity: <%= room.capacity_text %>
                   </span>
                 <% end %>
@@ -113,7 +113,7 @@
                   room_code: room.code,
                 ), remote: true,
                 style: "height: 38px",
-                class: "w-100 box--br3 mb1 ttu link button--font ba b--light-grey orange dim flex justify-center items-center"
+                class: "w-100 box--br3 mb1 ttu link button--font ba b--light-grey orange dim flex justify-center items-center height-0 card--button"
               %>
               <% if !room.wz_generated && room.need_setup_rows %>
                 <%= link_to "Setup Rows & Shelves",
@@ -122,7 +122,7 @@
                     room_id: room.id,
                   ),
                   style: "height: 38px",
-                  class: "tc w-100 bg-orange bn box--br3 ttu link button--font-s white dim flex justify-center items-center"
+                  class: "tc w-100 bg-orange bn box--br3 ttu link button--font-s white dim flex justify-center items-center height-0 card--button"
                 %>
               <% end %>
             </div>

@@ -4,9 +4,10 @@ class Api::V1::PlantSetupsController < Api::V1::BaseApiController
     Rails.logger.debug ">>>>> Inventory::SetupMother.call: #{command.success?}"
 
     if command.success?
-      render json: {data: 'ok'}
+      data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
+      render json: {data: data}
     else
-      render json: {data: 'not ok', errors: command.result}, status: 400
+      render json: {data: params[:plant_setup].to_unsafe_h, errors: command.errors}, status: 422
     end
   end
 

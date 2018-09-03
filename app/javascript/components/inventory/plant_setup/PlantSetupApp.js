@@ -1,9 +1,12 @@
 import React from 'react'
+import { observer } from "mobx-react"
 import PlantList from './components/PlantList'
 import PlantEditor from './components/PlantEditor'
-// import plantStore from './store/PlantStore'
+import plantStore from './store/PlantStore'
+import loadPlants from './actions/loadPlants'
 // import addPlant from './actions/addPlant'
 
+@observer
 class PlantSetupApp extends React.Component {
   constructor(props) {
     super(props)
@@ -15,6 +18,7 @@ class PlantSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
+    loadPlants()
   }
 
   openSidebar() {
@@ -39,12 +43,23 @@ class PlantSetupApp extends React.Component {
   }
 
   renderFirstTime() {
+    if (plantStore.plants.length > 0) {
+      const content = plantStore.plants.map(x => <div key={x.id}>{x.attributes.serial_no}</div> )
+      return (
+        <div className="ph4 pt4 pb5 mb3 bg-white w-70">
+          <div className="w-60">
+            {content}
+          </div>
+        </div>
+      )
+    }
     return (
       <div className="ph4 pt4 pb5 mb3 bg-white w-70">
         <div className="w-60">
           <h1 className="mt0 mb4 f3 fw4 dark-gray">
             Setup active plant inventory
           </h1>
+          <p>plantStore.plants.length: {plantStore.plants.length}</p>
           <p className="mb3 lh-copy f5 grey">
             Add your existing plant inventories. Do not worry if you are unable
             to add all the records, you can always continue later from the

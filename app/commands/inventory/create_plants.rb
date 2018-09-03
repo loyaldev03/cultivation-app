@@ -13,7 +13,7 @@ module Inventory
       :planted_on,
       :status
 
-    def initialize(plant_ids:,
+    def initialize(plant_ids: [],
                    strain_name:,
                    location_id:,
                    location_type:,
@@ -75,7 +75,7 @@ module Inventory
     # TODO: Maybe should pass in the batch ID
     def create_articles_for_plants(item)
       plants = []
-      plant_ids.split(',').each do |plant_id|
+      plant_ids.each do |plant_id|
         plant = Inventory::ItemArticle.find_or_initialize_by(
           serial_no: plant_id.strip,
           strain: item.strain,

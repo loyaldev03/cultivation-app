@@ -70,7 +70,8 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :plants do
-        get 'strains/(:filter)', action: :strains, on: :collection
+        get 'strains/(:filter)',      action: :strains, on: :collection
+        get 'plants/(:plant_status)', action: :plants, on: :collection
       end
       resources :batches do
         resources :tasks, only: [:index, :update]

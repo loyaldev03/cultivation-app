@@ -33,7 +33,7 @@ module Inventory
       @plant_ids = args[:plant_ids]
       @room_id = args[:room_id]
       @planted_on = args[:planted_on]
-      @vendor_name = args[:vendor_name].strip
+      @vendor_name = args[:vendor_name] && args[:vendor_name].strip
       @vendor_no = args[:vendor_no]
       @address = args[:address]
       @vendor_state_license_num = args[:vendor_state_license_num]
@@ -43,6 +43,8 @@ module Inventory
     end
 
     def call
+      @plant_ids = args[:plant_ids].gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
+
       if valid_permission? && valid_data?
         create_strain
         vendor = create_vendor
@@ -60,7 +62,12 @@ module Inventory
 
     def valid_data?
       # All serial number should be new
-      plant_ids = args[:plant_ids].split(',').map(&:strip)
+      # Rails.logger.debug "args[:plant_ids].index('\\n') - #{i} " +  args[:plant_ids].gsub(/[\n\r]/, ",").split(",").to_s
+      # Rails.logger.debug "args[:plant_ids].index('\\r') - #{f}"
+      # Rails.logger.debug "args[:plant_ids].index('n') - #{g}"
+
+      # plant_ids = args[:plant_ids].gsub(/[\n\r]/, ",").split(",").reject {|x| x.empty? }.map(&:strip)
+      # Rails.logger.debug "plant_ids: " + plant_ids.count.to_s
       existing_records = Inventory::ItemArticle.in(serial_no: plant_ids).pluck(:serial_no)
 
       if existing_records.count > 0

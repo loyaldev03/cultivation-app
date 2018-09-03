@@ -3,6 +3,7 @@ import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { NumericInput, FieldError } from '../../../../utils/FormHelpers'
 import StorageInfo from '../shared/StorageInfo'
 import PurchaseInfo from '../shared/PurchaseInfo'
+import plantStore from '../../store/PlantStore'
 
 class MotherEditor extends React.Component {
   constructor(props) {
@@ -97,10 +98,9 @@ class MotherEditor extends React.Component {
 
   onSave() {
     const { errors, isValid, ...payload } = this.validateAndGetValues()
-    console.log(errors)
-    console.log(isValid)
 
-    if (true) {
+    if (isValid) {
+      // TODO: The following should move to action
       fetch('/api/v1/plant_setup/create_mother', {
         method: 'POST',
         credentials: 'include',
@@ -110,12 +110,22 @@ class MotherEditor extends React.Component {
         }
       })
         .then(response => {
-          console.log(response)
-          return response.json()
+          return response.json().then(data => ({
+            status: response.status,
+            data
+          }))
         })
-        .then(data => {
+        .then(({ status, data }) => {
           console.log(data)
-          console.log(data.data)
+          console.log(status)
+          
+          if (status >= 400) {
+            this.setState({ errors: data.errors })
+          } else {
+            console.log(JSON.parse(data.data))
+            let savedPlants = JSON.parse(data.data).data
+            plantStore.add(savedPlants)
+          }
         })
     }
 
@@ -153,9 +163,9 @@ class MotherEditor extends React.Component {
 
     const locationData = this.storageInfoEditor.current.getValues()
 
-    console.log(`strainData.isValid: ${strainData.isValid}`)
-    console.log(`purchaseData.isValid: ${purchaseData.isValid}`)
-    console.log(`locationData.isValid: ${locationData.isValid}`)
+    // console.log(`strainData.isValid: ${strainData.isValid}`)
+    // console.log(`purchaseData.isValid: ${purchaseData.isValid}`)
+    // console.log(`locationData.isValid: ${locationData.isValid}`)
 
     const isValid =
       strainData.isValid &&
@@ -173,7 +183,7 @@ class MotherEditor extends React.Component {
       ...locationData,
       plant_ids,
       plant_qty,
-      planted_on: planted_on.toISOString(),
+      planted_on: planted_on && planted_on.toISOString(),
       isBought,
       isValid
     }

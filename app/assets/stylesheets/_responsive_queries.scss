@@ -10,6 +10,10 @@ and (orientation: landscape) {
     margin-right: 1rem;
   }
 
+  .carousel {
+    width: 820px;
+  }
+
   .carousel-wrapper, 
   .carousel-group, 
   .carousel-group--empty .carousel {
@@ -17,7 +21,20 @@ and (orientation: landscape) {
   }
 
   .carousel__button--right {
-    margin-right: 1.5rem;
+    margin-left: 2rem;
+  }
+
+  .carousel-group {
+    margin-bottom: 25px;
+  }
+
+  .carousel__card, .carousel__card--add {
+    width: 170px;
+    height: 320px;
+  }
+
+  .carousel__body--less .carousel__card {
+    margin-right: 7px;
   }
 
 }

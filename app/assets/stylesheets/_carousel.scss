@@ -6,7 +6,7 @@ $carouselSecondaryButtonWidth: 160px;
 $carouselWidth: 910px;
 $carouselHeight: 345px;
 $carouselCardWidth: 188px;
-$carouselCardGutter: 19px;
+$carouselCardGutter: 19.5px;
 $carouselEmptyHeight: 148px; // Height of carousel when it's empty
 
 .carousel-wrapper {
@@ -74,7 +74,7 @@ $carouselEmptyHeight: 148px; // Height of carousel when it's empty
 .carousel__body--less {
   .carousel__card {
     float: left;
-    margin-right: $carouselCardGutter - 1px;
+    margin-right: $carouselCardGutter;
     &.carousel__card--center {
       float: inherit;
       margin: 0 auto;
@@ -116,7 +116,7 @@ $carouselEmptyHeight: 148px; // Height of carousel when it's empty
 }
 
 .carousel__button--left {
-  margin-right: 20px;
+  margin-right: 1rem;
 }
 
 .carousel__button--right {

@@ -9,7 +9,7 @@ RSpec.describe Inventory::CreatePlants, type: :command do
 
     it "should create mother for a given strain & location" do
       cmd = Inventory::CreatePlants.call(
-        plant_ids: 'a1, a2, a3, a4',
+        plant_ids: %w(a1 a2 a3 a4),
         strain_name: strain.name,
         location_id: room.id.to_s,
         location_type: 'room',

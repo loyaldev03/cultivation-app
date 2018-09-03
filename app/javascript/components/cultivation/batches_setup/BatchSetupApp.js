@@ -145,7 +145,7 @@ class BatchSetupApp extends React.Component {
           <div className="w-100 shelves_number_options">
             <div className="mt3">
               <TextInput
-                label={'Quantity'}
+                label={'Quantity (Capacity)'}
                 value={this.state.quantity}
                 onChange={this.handleChangeInput}
                 fieldname="quantity"

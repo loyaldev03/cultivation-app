@@ -63,34 +63,52 @@ class TaskList extends React.Component {
               accessor: 'attributes.end_date',
               maxWidth: '100'
             },
-            {
-              Header: 'Duration',
-              accessor: 'attributes.duration',
-              maxWidth: '100'
-            }
+            // {
+            //   Header: 'Duration',
+            //   accessor: 'attributes.duration',
+            //   maxWidth: '100'
+
+            // },
+            // {
+            //   Header: "Parent",
+            //   accessor: "attributes.parent_id"
+
+            // },
+            // {
+            //   Header: "Depend On",
+            //   accessor: "attributes.depend_on"
+            // },
+            // {
+            //   Header: "Category?",
+            //   accessor: "attributes.isCategory",
+            // },
+            // {
+            //   Header: "Phase?",
+            //   accessor: "attributes.isPhase",
+            // }
           ]}
           data={tasks}
           rows={100}
           className="-striped -highlight"
           defaultPageSize={100}
-          getTrProps={(state, rowInfo) => {
-            return {
-              onClick: e => {
-                // console.log(rowInfo.row)
-                // updateSidebarTask.update(rowInfo.row)
-                editorSidebarHandler.open({ width: '500px', data: rowInfo.row })
+          getTrProps={(state, rowInfo, column) => {
+            if (rowInfo) {
+              return {
+                style: {
+                  // background: rowInfo.row['attributes.isPhase'] == "true" ? '#bdbdbd' : null,
+                },
+                onClick: (e, handleOriginal) => {
+                  // console.log(handleOriginal)
+                  editorSidebarHandler.open({ width: '500px', data: rowInfo.row })
+                }
               }
             }
-          }}
-        />
-        <TaskEditor
-          onClose={this.closeSidebar}
-          batch_id={this.props.batch_id}
+            return {}
+          }
+        }
         />
       </React.Fragment>
     )
-    // const list = TaskStore.thelist.map((x, i) => <Item data={x} key={i} />
-    //     return (<React.Fragment>{list}</React.Fragment>)
   }
 }
 

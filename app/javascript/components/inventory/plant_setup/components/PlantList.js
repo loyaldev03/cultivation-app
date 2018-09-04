@@ -38,7 +38,15 @@ const columns = [
       }
       return (
         <div className="flex justify-center items-center h-100">
-          <span style={{width: '8px', height: '8px', color: 'green', borderRadius: '50%', backgroundColor: color}}/>
+          <span
+            style={{
+              width: '8px',
+              height: '8px',
+              color: 'green',
+              borderRadius: '50%',
+              backgroundColor: color
+            }}
+          />
         </div>
       )
     }
@@ -68,7 +76,9 @@ const columns = [
     Cell: props => {
       const d = new Date(props.value)
       if (props.value || props.value.length > 0) {
-        return <span>{`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`}</span>
+        return (
+          <span>{`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`}</span>
+        )
       } else {
         return ''
       }
@@ -90,7 +100,6 @@ const columns = [
 class PlantList extends React.Component {
   render() {
     return (
-      
       <ReactTable
         columns={columns}
         pagination={{ position: 'top' }}
@@ -102,7 +111,6 @@ class PlantList extends React.Component {
         className="f6"
         showPagination={plantStore.plants.length > 30}
       />
-      
     )
   }
 }

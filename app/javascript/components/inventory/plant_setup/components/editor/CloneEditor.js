@@ -9,7 +9,6 @@ import PurchaseInfo from '../shared/PurchaseInfo'
 import LocationPicker from '../shared/LocationPicker'
 import setupClones from '../../actions/setupClones'
 
-
 class CloneEditor extends React.Component {
   constructor(props) {
     super(props)
@@ -161,7 +160,7 @@ class CloneEditor extends React.Component {
   // }
 
   onSave(event) {
-    const data  = this.validateAndGetValues()
+    const data = this.validateAndGetValues()
     const { errors, isValid, ...payload } = data
     console.log(`isValid: ${isValid}`)
     console.log(`errors: ${errors}`)
@@ -198,7 +197,6 @@ class CloneEditor extends React.Component {
     })
     this.props.onResetParent()
   }
-  
 
   validateAndGetValues() {
     const {
@@ -262,7 +260,8 @@ class CloneEditor extends React.Component {
       ...purchaseData,
       clone_ids,
       planted_on: planted_on && planted_on.toISOString(),
-      expected_harvested_on: expected_harvested_on && expected_harvested_on.toISOString(),
+      expected_harvested_on:
+        expected_harvested_on && expected_harvested_on.toISOString(),
       isBought,
       mother_id,
       mother_location_id,

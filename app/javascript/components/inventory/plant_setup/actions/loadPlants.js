@@ -5,7 +5,7 @@ import plantStore from '../store/PlantStore'
  */
 export default function loadPlants(plant_type = '') {
   plantStore.isLoading = true
-  let apiUrl = '/api/v1/plants/plants' 
+  let apiUrl = '/api/v1/plants/plants'
   if (plant_type.length > 0) {
     apiUrl = apiUrl + '?plant_status=' + plant_type
   }

@@ -147,8 +147,8 @@ module Cultivation
         expected_hours_taken: task[:expected_hours_taken],
         no_of_employees: task[:no_of_employees],
         materials: task[:materials],
-        isPhase: task[:isPhase],
-        isCategory: task[:isCategory],
+        isPhase: to_boolean(task[:isPhase]),
+        isCategory: to_boolean(task[:isCategory]),
         parent_id: parent_id,
         depend_on: depend_on
       }
@@ -176,6 +176,15 @@ module Cultivation
       end
       return depend_on
     end
+
+    def to_boolean(obj)
+      if obj == "true"
+        true
+      else
+        false
+      end
+    end
+
   end
 end
 

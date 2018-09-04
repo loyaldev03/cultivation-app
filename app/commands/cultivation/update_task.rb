@@ -1,5 +1,5 @@
 module Cultivation
-  class UpdateDateTask
+  class UpdateTask
     prepend SimpleCommand
 
     attr_reader :args
@@ -15,12 +15,10 @@ module Cultivation
     private
 
     def update_task(args)
-      task = Cultivation::Task.find(args[:id])
-
-      
+      task = Cultivation::Task.find(args["_id"])
       task.update(args)
-
       find_task_related(task)
+      task
     end
 
 

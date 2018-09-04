@@ -5,7 +5,7 @@ RSpec.describe "/materials", :type => :request do
     before do
       user = create(:user, :admin)
       login_as(user, :scope => :user)
-      Strain.create!([
+      Common::Strain.create!([
         { name: Faker::Lorem.word, desc: Faker::Lorem.sentences },
         { name: Faker::Lorem.word, desc: Faker::Lorem.sentences }
       ])

@@ -5,6 +5,6 @@ module Common
 
     field :name, type: String
     field :desc, type: String
-    field :strain_type, type: String  # Hybrid, Indica, Sativa
+    field :strain_type, type: String  # hybrid, indica, sativa
   end
 end

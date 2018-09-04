@@ -66,13 +66,23 @@ Rails.application.routes.draw do
     resources :batches
   end
 
+  # API for web pages
   namespace :api do
     namespace :v1 do
       resources :plants do
-        get 'strains/(:filter)', action: :strains, on: :collection
+        get 'strains/(:filter)',      action: :strains, on: :collection
+        get 'plants/(:plant_status)', action: :plants, on: :collection
       end
       resources :batches do
         resources :tasks, only: [:index, :update]
+      end
+
+      resource :plant_setup, only: [] do
+        post 'create_mother'
+        post 'create_clone'
+        post 'create_veg'
+        post 'create_harvest_yield'
+        post 'create_waste'
       end
     end
   end

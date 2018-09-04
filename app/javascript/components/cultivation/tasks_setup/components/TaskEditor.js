@@ -1,9 +1,8 @@
 import React from 'react'
-import { observer, Provider } from "mobx-react";
+import { observer, Provider } from 'mobx-react'
 import updateSidebarTask from '../actions/updateSidebarTask'
 
 import TaskStore from '../stores/TaskStore'
-
 
 import SidebarTaskEditor from './SidebarTaskEditor'
 
@@ -25,21 +24,27 @@ export default class TaskEditor extends React.Component {
 
   componentDidMount() {
     const _this = this
-    document.addEventListener("editor-sidebar-open", function(ev) { 
-      _this.setState({ id: ev.detail.data.id})
-    });
+    document.addEventListener('editor-sidebar-open', function(ev) {
+      _this.setState({ id: ev.detail.data.id })
+    })
   }
 
-  onChangeHandler(attr, value){
+  onChangeHandler(attr, value) {
     sidebarTask[attr] = value.persist()
   }
 
   renderSidebarTaskEditor() {
     //find task here and send
     console.log(task === undefined)
-    let task = TaskStore.find(e => e.id === this.state.id);
+    let task = TaskStore.find(e => e.id === this.state.id)
     if (task === undefined) return null
-    return <SidebarTaskEditor id={this.state.id} task={task} batch_id={this.props.batch_id} />
+    return (
+      <SidebarTaskEditor
+        id={this.state.id}
+        task={task}
+        batch_id={this.props.batch_id}
+      />
+    )
   }
 
   get editorSelected() {

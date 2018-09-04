@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe DestroyVendor, type: :command do
   context ".call" do
     subject {
-      Vendor.create!(
+      Inventory::Vendor.create!(
         name: Faker::Lorem.word,
       )
     }
@@ -12,7 +12,7 @@ RSpec.describe DestroyVendor, type: :command do
       
       expect(cmd.errors).to be {}
       expect(cmd.success?).to be true
-      expect(Vendor.count).to eq 0
+      expect(Inventory::Vendor.count).to eq 0
     end
   end
 end

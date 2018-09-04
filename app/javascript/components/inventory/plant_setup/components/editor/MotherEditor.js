@@ -1,8 +1,9 @@
 import React from 'react'
-import DatePicker from 'react-date-picker'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { NumericInput, FieldError } from '../../../../utils/FormHelpers'
 import StorageInfo from '../shared/StorageInfo'
 import PurchaseInfo from '../shared/PurchaseInfo'
+import plantStore from '../../store/PlantStore'
 
 class MotherEditor extends React.Component {
   constructor(props) {
@@ -16,7 +17,7 @@ class MotherEditor extends React.Component {
 
       // Vendor/ source
       vendor_name: '',
-      vendor_id: '',
+      vendor_no: '',
       address: '',
       vendor_state_license_num: '',
       vendor_state_license_expiration_date: null,
@@ -96,10 +97,36 @@ class MotherEditor extends React.Component {
   }
 
   onSave() {
-    const data = this.validateAndGetValues()
-    if (data.isValid) {
-      // alert('not valid')
-      // call API
+    const { errors, isValid, ...payload } = this.validateAndGetValues()
+
+    if (isValid) {
+      // TODO: The following should move to action
+      fetch('/api/v1/plant_setup/create_mother', {
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify(payload),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          return response.json().then(data => ({
+            status: response.status,
+            data
+          }))
+        })
+        .then(({ status, data }) => {
+          console.log(data)
+          console.log(status)
+
+          if (status >= 400) {
+            this.setState({ errors: data.errors })
+          } else {
+            console.log(JSON.parse(data.data))
+            let savedPlants = JSON.parse(data.data).data
+            plantStore.add(savedPlants)
+          }
+        })
     }
 
     event.preventDefault()
@@ -136,6 +163,10 @@ class MotherEditor extends React.Component {
 
     const locationData = this.storageInfoEditor.current.getValues()
 
+    // console.log(`strainData.isValid: ${strainData.isValid}`)
+    // console.log(`purchaseData.isValid: ${purchaseData.isValid}`)
+    // console.log(`locationData.isValid: ${locationData.isValid}`)
+
     const isValid =
       strainData.isValid &&
       purchaseData.isValid &&
@@ -150,6 +181,10 @@ class MotherEditor extends React.Component {
       ...strainData,
       ...purchaseData,
       ...locationData,
+      plant_ids,
+      plant_qty,
+      planted_on: planted_on && planted_on.toISOString(),
+      isBought,
       isValid
     }
     return data
@@ -286,7 +321,7 @@ class MotherEditor extends React.Component {
             showLabel={false}
             ref={this.setPurchaseInfoEditor}
             vendor_name={this.state.vendor_name}
-            vendor_id={this.state.vendor_id}
+            vendor_no={this.state.vendor_no}
             address={this.state.address}
             vendor_state_license_num={this.state.vendor_state_license_num}
             vendor_state_license_expiration_date={
@@ -305,7 +340,7 @@ class MotherEditor extends React.Component {
           <a
             className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
             href="#"
-            onClick={this.props.onResetEditor}
+            onClick={this.props.onExitChildEditor}
           >
             Save draft
           </a>

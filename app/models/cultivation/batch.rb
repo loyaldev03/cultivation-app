@@ -4,8 +4,9 @@ module Cultivation
     include Mongoid::Timestamps::Short
 
     field :name, type: String
+    field :batch_no, type: String
     field :batch_source, type: String
-    field :strain, type: String
+    field :strain, type: String   # TODO: Change this to strain ID
     field :start_date, type: DateTime
     field :facility, type: String
     field :grow_method, type: String

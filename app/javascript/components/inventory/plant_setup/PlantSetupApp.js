@@ -1,9 +1,12 @@
 import React from 'react'
+import { observer } from 'mobx-react'
 import PlantList from './components/PlantList'
 import PlantEditor from './components/PlantEditor'
-// import plantStore from './store/PlantStore'
+import plantStore from './store/PlantStore'
+import loadPlants from './actions/loadPlants'
 // import addPlant from './actions/addPlant'
 
+@observer
 class PlantSetupApp extends React.Component {
   constructor(props) {
     super(props)
@@ -15,6 +18,7 @@ class PlantSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
+    loadPlants()
   }
 
   openSidebar() {
@@ -30,15 +34,30 @@ class PlantSetupApp extends React.Component {
   }
 
   renderPlantList() {
-    return null
-    // return (
-    //   <div className="w-80">
-    //     <PlantList />
-    //   </div>
-    // )
+    if (plantStore.plants.length === 0) {
+      return null
+    }
+
+    return (
+      <div className="w-80 bg-white pa3">
+        <div className="mb3">
+          <button
+            className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
+            onClick={this.openSidebar}
+          >
+            Add active plant
+          </button>
+        </div>
+        <PlantList />
+      </div>
+    )
   }
 
   renderFirstTime() {
+    if (plantStore.plants.length > 0) {
+      return null
+    }
+
     return (
       <div className="ph4 pt4 pb5 mb3 bg-white w-70">
         <div className="w-60">
@@ -56,7 +75,7 @@ class PlantSetupApp extends React.Component {
             cultivation planning in the next phase of the setup.
           </p>
           <button
-            className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
+            className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
             onClick={this.openSidebar}
           >
             Add my first plant

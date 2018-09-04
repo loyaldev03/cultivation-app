@@ -14,13 +14,13 @@ RSpec.describe SaveUnitOfMeasure, type: :command do
       SaveUnitOfMeasure.call(params)
       SaveUnitOfMeasure.call(params)
 
-      expect(UnitOfMeasure.count).to eq 2
+      expect(Common::UnitOfMeasure.count).to eq 2
     end
 
     it "save all attributes" do
       cmd = SaveUnitOfMeasure.call(params)
 
-      saved = UnitOfMeasure.find_by(id: cmd.result.id)
+      saved = Common::UnitOfMeasure.find_by(id: cmd.result.id)
       expect(cmd.errors).to be {}
       expect(cmd.success?).to be true
       expect(cmd.result.c_at).to_not be nil

@@ -10,6 +10,6 @@ class DestroyStrain
   end
 
   def call
-    @record = Strain.where(id: @record_id).delete
+    @record = Common::Strain.where(id: @record_id).delete
   end
 end

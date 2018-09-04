@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe FindStrain, type: :command do
   context ".call with args" do
     subject {
-      Strain.create!(
+      Common::Strain.create!(
         name: Faker::Lorem.word,
         desc: Faker::Lorem.sentence,
       )
@@ -38,7 +38,7 @@ RSpec.describe FindStrain, type: :command do
     end
 
     it "return error if record not found" do
-      new_record = Strain.new
+      new_record = Common::Strain.new
 
       cmd = FindStrain.call({id: new_record.id.to_s})
 

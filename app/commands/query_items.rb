@@ -14,6 +14,6 @@ class QueryItems
   private
 
   def query_records
-    Item.where(@args).to_a
+    Inventory::Item.where(@args).to_a
   end
 end

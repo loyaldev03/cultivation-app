@@ -11,7 +11,7 @@ RSpec.describe MaterialsForm::StrainForm, type: :form do
 
   context ".new with id" do
     subject(:record) {
-      Strain.create!(
+      Common::Strain.create!(
         name: Faker::Lorem.word,
         desc: Faker::Lorem.sentence,
       )

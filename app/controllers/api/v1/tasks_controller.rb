@@ -30,10 +30,9 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   private
 
   def task_params
-    params.require(:task).permit(:batch_id, :phase, :task_category, :name, :days, 
-      #:expected_end_date, :estimated_hours, :assigned_employee,
-      :days_from_start_date, :expected_start_date, :start_date, :end_date, :expected_hours_taken,
-      :time_taken, :no_of_employees, :materials, :instruction)
+    params.require(:task).permit(:batch_id, :phase, :task_category, :name, :days,
+                                 #:expected_end_date, :estimated_hours, :assigned_employee,
+                                 :days_from_start_date, :expected_start_date, :start_date, :end_date, :expected_hours_taken,
+                                 :time_taken, :no_of_employees, :materials, :instruction)
   end
-
 end

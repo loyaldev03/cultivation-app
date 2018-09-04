@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe DestroyStrain, type: :command do
   context ".call" do
     subject {
-      Strain.create!(
+      Common::Strain.create!(
         name: Faker::Lorem.word,
         desc: Faker::Lorem.sentence
       )
@@ -13,7 +13,7 @@ RSpec.describe DestroyStrain, type: :command do
       
       expect(cmd.errors).to be {}
       expect(cmd.success?).to be true
-      expect(Strain.count).to eq 0
+      expect(Common::Strain.count).to eq 0
     end
   end
 end

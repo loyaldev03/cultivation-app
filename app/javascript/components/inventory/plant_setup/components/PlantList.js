@@ -1,176 +1,121 @@
 import React from 'react'
 import ReactTable from 'react-table'
+import 'react-table/react-table.css'
+import plantStore from '../store/PlantStore'
+import { observer } from 'mobx-react'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 
-// const columns = [{
-//   title: 'Name',
-//   dataIndex: 'name',
-//   key: 'name',
-//   render: text => (<a href="javascript:;" onClick={(e) => editorSidebarHandler.open() }>{text}</a>),
-// }, {
-//   title: 'Age',
-//   dataIndex: 'age',
-//   key: 'age',
-// }, {
-//   title: 'Address',
-//   dataIndex: 'address',
-//   key: 'address',
-// }]
-
-const columns = [
-  {
-    Header: 'Plant type',
-    headerClassName: 'tl pl3',
-    accessor: 'storage_type', // String-based value accessors!
-    Cell: props => (
-      <a
-        href="javascript:;"
-        className="ttc link"
-        onClick={e => editorSidebarHandler.open({ width: '500px' })}
-      >
-        {props.value}
-      </a>
-    )
-  },
-  {
-    Header: 'Stock count',
-    accessor: 'total_quantity',
-    headerClassName: 'tr pr3',
-    Cell: props => <div className="tr pr3">{props.value}</div> // Custom cell components!
-  },
-  {
-    Header: 'Stock intakes/ Batches',
-    accessor: 'intake_count',
-    headerClassName: 'tr pr3',
-    Cell: props => (
-      <div className="tr pr3">
-        <a
-          href="javascript:;"
-          className="ttc link"
-          onClick={e =>
-            alert('expands the row to show latest 5-9 stock intakes')
-          }
-        >
-          {props.value}
-        </a>
-      </div>
-    )
-  },
-  {
-    id: 'facility', // Required because our accessor is not a string
-    Header: 'Facility',
-    headerClassName: 'tl pl3',
-    accessor: 'facility'
-  }
-]
-
-// const users = [
+// const columns = [
 //   {
-//     key: '1',
-//     name: 'John Brown',
-//     age: 32,
-//     address: 'New York No. 1 Lake Park'
+//     Header: 'Plant type',
+//     headerClassName: 'tl pl3',
+//     accessor: 'storage_type', // String-based value accessors!
+//     Cell: props => (
+//       <a
+//         href="javascript:;"
+//         className="ttc link"
+//         onClick={e => editorSidebarHandler.open({ width: '500px' })}
+//       >
+//         {props.value}
+//       </a>
+//     )
 //   },
 //   {
-//     key: '2',
-//     name: 'Jim Green',
-//     age: 42,
-//     address: 'London No. 1 Lake Park'
+//     Header: 'Stock count',
+//     accessor: 'total_quantity',
+//     headerClassName: 'tr pr3',
+//     Cell: props => <div className="tr pr3">{props.value}</div> // Custom cell components!
 //   },
 //   {
-//     key: '3',
-//     name: 'Joe Black',
-//     age: 32,
-//     address: 'Sidney No. 1 Lake Park'
+//     Header: 'Stock intakes/ Batches',
+//     accessor: 'intake_count',
+//     headerClassName: 'tr pr3',
+//     Cell: props => (
+//       <div className="tr pr3">
+//         <a
+//           href="javascript:;"
+//           className="ttc link"
+//           onClick={e =>
+//             alert('expands the row to show latest 5-9 stock intakes')
+//           }
+//         >
+//           {props.value}
+//         </a>
+//       </div>
+//     )
+//   },
+//   {
+//     id: 'facility', // Required because our accessor is not a string
+//     Header: 'Facility',
+//     headerClassName: 'tl pl3',
+//     accessor: 'facility'
 //   }
 // ]
 
-// field :name, type: String
-//     field :code, type: String # part no
-//     field :desc, type: String
-//     field :uom, type: String # unit of measure
-//     field :storage_type, type: String  # plant (seed, mother, clone), harvest, sale item, consumable, others, waste }
-//     field :strain, type: String
-
-const plants = [
+const columns = [
   {
-    id: '1',
-    storage_type: 'mother',
-    type: 'Seed',
-    total_quantity: 1000,
-    facility: 'Farm 1',
-    intake_count: 5
+    Header: 'ID',
+    accessor: 'id',
+    show: false
   },
   {
-    id: '2',
-    storage_type: 'seed',
-    type: 'Plant',
-    total_quantity: 500,
-    facility: 'Farm 1',
-    intake_count: 5
+    Header: 'Plant ID',
+    accessor: 'attributes.serial_no',
+    headerStyle: { textAlign: 'left' }
   },
   {
-    id: '2',
-    storage_type: 'clone',
-    strain: 'OG Kush',
-    type: 'Plant',
-    total_quantity: 8000,
-    facility: 'Farm 1',
-    intake_count: 5
+    Header: 'Strain',
+    accessor: 'attributes.item_name',
+    headerStyle: { textAlign: 'left' }
   },
   {
-    id: '2',
-    storage_type: 'veg',
-    strain: 'OG Kush',
-    type: 'Plant',
-    total_quantity: 16000,
-    facility: 'Farm 1',
-    intake_count: 5
+    Header: 'Growth stage',
+    accessor: 'attributes.plant_status',
+    headerStyle: { textAlign: 'left' },
+    Cell: props => (
+      <span>{props.value.charAt(0).toUpperCase() + props.value.substr(1)}</span>
+    )
   },
   {
-    id: '2',
-    storage_type: 'harvest',
-    strain: 'OG Kush',
-    type: 'Plant',
-    total_quantity: 16000,
-    facility: 'Farm 1',
-    intake_count: 5
+    Header: 'Planted On',
+    accessor: 'attributes.planted_on',
+    headerStyle: { textAlign: 'left' },
+    Cell: props => {
+      const d = new Date(props.value)
+      return (
+        <span>{`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`}</span>
+      ) // Custom cell components!
+    }
   },
   {
-    id: '2',
-    storage_type: 'flowers',
-    strain: 'OG Kush',
-    type: 'Plant',
-    total_quantity: 1000,
-    facility: 'Farm 1',
-    intake_count: 5
+    Header: 'Location',
+    accessor: 'attributes.location_name',
+    headerStyle: { textAlign: 'left' }
+  },
+  {
+    Header: 'Cultivation batch',
+    accessor: 'attributes.cultivation_batch_name',
+    headerStyle: { textAlign: 'left' }
   }
 ]
 
-export default class PlantList extends React.Component {
+@observer
+class PlantList extends React.Component {
   render() {
     return (
-      <div>
-        <h1 className="f3 fw4 dib">OG Kush</h1>
+      <div className="bg-white">
         <ReactTable
           columns={columns}
           pagination={{ position: 'top' }}
-          data={plants}
+          data={plantStore.plants.slice()}
           showPagination={false}
-          pageSize={5}
+          pageSize={50}
         />
 
-        <hr className="hr b--white mv3" />
-
-        <h1 className="f3 fw4 dib">OMango Kush</h1>
-        <ReactTable
-          columns={columns}
-          pagination={{ position: 'top' }}
-          data={plants}
-          showPagination={false}
-          pageSize={5}
-        />
+        {/* <hr className="hr b--white mv3" /> */}
       </div>
     )
   }
 }
+
+export default PlantList

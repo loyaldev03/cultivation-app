@@ -1,5 +1,5 @@
 import React from 'react'
-import DatePicker from 'react-date-picker'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import PropTypes from 'prop-types'
 import { TextInput, FieldError } from '../../../../utils/FormHelpers'
 
@@ -9,7 +9,7 @@ class PurchaseInfo extends React.Component {
     super(props)
     this.state = {
       vendor_name: props.vendor_name,
-      vendor_id: props.vendor_id,
+      vendor_no: props.vendor_no,
       address: props.address,
       vendor_state_license_num: props.vendor_state_license_num,
       vendor_state_license_expiration_date:
@@ -24,7 +24,7 @@ class PurchaseInfo extends React.Component {
 
     // Vendor/ source
     this.onNameChanged = this.onNameChanged.bind(this)
-    this.onIDChanged = this.onIDChanged.bind(this)
+    this.onVendorNoChanged = this.onVendorNoChanged.bind(this)
     this.onAddressChanged = this.onAddressChanged.bind(this)
     this.onStateLicenseChanged = this.onStateLicenseChanged.bind(this)
     this.onStateLicenseExpirationDateChanged = this.onStateLicenseExpirationDateChanged.bind(
@@ -42,8 +42,8 @@ class PurchaseInfo extends React.Component {
     this.setState({ vendor_name: event.target.value })
   }
 
-  onIDChanged(event) {
-    this.setState({ vendor_id: event.target.value })
+  onVendorNoChanged(event) {
+    this.setState({ vendor_no: event.target.value })
   }
 
   onAddressChanged(event) {
@@ -80,7 +80,7 @@ class PurchaseInfo extends React.Component {
     let errors = {}
     const {
       vendor_name,
-      vendor_id,
+      vendor_no,
       address,
       vendor_state_license_num,
       vendor_state_license_expiration_date,
@@ -93,10 +93,6 @@ class PurchaseInfo extends React.Component {
     if (!isDraft) {
       if (vendor_name === undefined || vendor_name.length <= 0) {
         errors = { ...errors, vendor_name: ['Vendor name is required.'] }
-      }
-
-      if (vendor_id === undefined || vendor_id.length <= 0) {
-        errors = { ...errors, vendor_id: ['Vendor ID is required.'] }
       }
 
       if (
@@ -141,12 +137,12 @@ class PurchaseInfo extends React.Component {
 
       return {
         vendor_name,
-        vendor_id,
+        vendor_no,
         address,
         vendor_state_license_num,
-        vendor_state_license_expiration_date,
+        vendor_state_license_expiration_date: vendor_state_license_expiration_date.toISOString(),
         vendor_location_license_num,
-        vendor_location_license_expiration_date,
+        vendor_location_license_expiration_date: vendor_location_license_expiration_date.toISOString(),
         purchase_date,
         invoice_no,
         errors,
@@ -156,7 +152,7 @@ class PurchaseInfo extends React.Component {
 
     return {
       vendor_name,
-      vendor_id,
+      vendor_no,
       address,
       vendor_state_license_num,
       vendor_state_license_expiration_date,
@@ -183,7 +179,7 @@ class PurchaseInfo extends React.Component {
               value={this.state.vendor_name}
               onChange={this.onNameChanged}
               errors={this.state.errors}
-              errorField="vendor_name"
+              fieldname="vendor_name"
             />
           </div>
         </div>
@@ -191,11 +187,11 @@ class PurchaseInfo extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-50">
             <TextInput
-              label={'Vendor ID'}
-              value={this.state.vendor_id}
-              onChange={this.onIDChanged}
+              label={'Vendor No'}
+              value={this.state.vendor_no}
+              onChange={this.onVendorNoChanged}
               errors={this.state.errors}
-              errorField="vendor_id"
+              fieldname="vendor_no"
             />
           </div>
         </div>
@@ -217,7 +213,7 @@ class PurchaseInfo extends React.Component {
               value={this.state.vendor_state_license_num}
               onChange={this.onStateLicenseChanged}
               errors={this.state.errors}
-              errorField="vendor_state_license_num"
+              fieldname="vendor_state_license_num"
             />
           </div>
           <div className="w-50 pl3">
@@ -240,7 +236,7 @@ class PurchaseInfo extends React.Component {
               value={this.state.vendor_location_license_num}
               onChange={this.onLocationLicenseChanged}
               errors={this.state.errors}
-              errorField="vendor_location_license_num"
+              fieldname="vendor_location_license_num"
             />
           </div>
           <div className="w-50 pl3">
@@ -279,7 +275,7 @@ class PurchaseInfo extends React.Component {
 
 PurchaseInfo.propTypes = {
   vendor_name: PropTypes.string,
-  vendor_id: PropTypes.string,
+  vendor_no: PropTypes.string,
   address: PropTypes.string,
   vendor_state_license_num: PropTypes.string,
   vendor_state_license_expiration_date: PropTypes.instanceOf(Date),

@@ -1,6 +1,9 @@
 class QueryReadyTrays
   prepend SimpleCommand
 
+  # NOTE: This query all the Trays in a Facility that are
+  # ready to be use in cultivation
+
   attr_reader :args
 
   def initialize(args = {})

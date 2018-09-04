@@ -1,6 +1,8 @@
 class QueryPlannedTrays
   prepend SimpleCommand
 
+  # NOTE: This query all the "booking" of Trays
+
   attr_reader :args
 
   def initialize(args = {})

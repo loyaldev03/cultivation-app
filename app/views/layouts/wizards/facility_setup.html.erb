@@ -20,7 +20,34 @@
               class="ph4 f6 w-100 bg-white box--shadow-header flex flex-row items-center justify-between"
             >
               <% if content_for? :breadcrumb %>
-                <%= yield :breadcrumb %>
+                <div class="flex items-center">
+                  <%= yield :breadcrumb %>
+                </div>
+
+                <div class="flex flex-row items-center">
+                  <i class="material-icons grey f6 mr3 dim md-21">notifications_none</i>
+
+                  <img
+                    src="http://tachyons.io/img/logo.jpg"
+                    class="br-100 h2 w2 mr3 dib" alt="avatar">
+
+                  <% if !current_user.first_name %>
+                    <span class="grey subtitle-2"> <%= current_user.email %> </span>
+                  <% else %>
+                    <span class="ttc grey subtitle-2"> 
+                      <%= current_user.first_name %> <%= current_user.last_name %>
+                    </span>
+                  <% end %>
+
+                  <i onclick="toggleDropdown()" class="material-icons dim grey ml2 pointer" id="toggle-dropdown">keyboard_arrow_down</i>
+                  
+                  <div class="dropdown">
+                    <div id="myDropdown" class="dropdown-content box--shadow-header">
+                      <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
+                          class: 'grey subtitle-2 pv3 tc dim' %>
+                    </div>
+                  </div>
+                </div>
               <% end %>
             </div>
             <%= yield %>

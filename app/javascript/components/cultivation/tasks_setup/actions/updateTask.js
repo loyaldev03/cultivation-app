@@ -1,0 +1,42 @@
+import TaskStore from '../stores/TaskStore'
+import { fadeToast, toast } from '../../../utils/toast'
+
+class updateTask {
+
+  updateTask(state) {
+
+    let url = `/api/v1/batches/${state.batch_id['$oid']}/tasks/${state.id}`
+    fetch(url, {
+      method: 'PUT',
+      credentials: 'include',
+      body: JSON.stringify({ task: state }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.data)
+        if (data.data.id != null) {
+          toast('Task Updated', 'success')
+          let task = TaskStore.find(e => e.id === data.data.id);
+          console.log(data.data)
+          console.log(JSON.stringify(task))
+          console.log(JSON.stringify(task.attributes))
+
+          TaskStore.forEach((element, index) => {
+            if (element.id === data.data.id) {
+              TaskStore[index] = data.data;
+            }
+          });
+
+        }
+        else { toast('Something happen', 'error') }
+      })
+
+
+  }
+}
+
+const task = new updateTask()
+export default task

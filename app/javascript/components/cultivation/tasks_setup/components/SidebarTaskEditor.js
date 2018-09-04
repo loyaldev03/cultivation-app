@@ -6,7 +6,9 @@ import Select from 'react-select'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import { fadeToast, toast } from '../../../utils/toast'
 import reactSelectStyle from './../../../utils/reactSelectStyle'
-import { throws } from 'assert'
+import { throws } from "assert";
+import updateTasks from '../actions/updateTask'
+
 
 class SidebarTaskEditor extends React.Component {
   constructor(props) {
@@ -71,37 +73,8 @@ class SidebarTaskEditor extends React.Component {
     // this.setState({ value: value });
   }
 
-  handleSubmit = event => {
-    let url = `/api/v1/batches/${this.state.batch_id['$oid']}/tasks/${
-      this.state.id
-    }`
-    fetch(url, {
-      method: 'PUT',
-      credentials: 'include',
-      body: JSON.stringify({ task: this.state }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data.data)
-        if (data.data.id != null) {
-          toast('Task Updated', 'success')
-          let task = TaskStore.find(e => e.id === data.data.id)
-          console.log(data.data)
-          console.log(JSON.stringify(task))
-          console.log(JSON.stringify(task.attributes))
-
-          TaskStore.forEach((element, index) => {
-            if (element.id === data.data.id) {
-              TaskStore[index] = data.data
-            }
-          })
-        } else {
-          toast('Something happen', 'error')
-        }
-      })
+  handleSubmit = (event) =>{
+    updateTasks.updateTask(this.state)
   }
 
   render() {

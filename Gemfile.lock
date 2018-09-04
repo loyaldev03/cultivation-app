@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/benedikt/mongoid-tree
+  revision: 0970a945a16a1539511f6dd2017e78f1ba54d4bd
+  specs:
+    mongoid-tree (2.1.1)
+      mongoid (>= 4.0, < 8)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -339,6 +346,7 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.2)
   memory_profiler
   mongoid (~> 6.4.1)
+  mongoid-tree!
   pry-byebug
   puma (~> 3.11)
   rack-mini-profiler

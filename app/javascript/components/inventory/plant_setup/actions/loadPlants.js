@@ -3,9 +3,14 @@ import plantStore from '../store/PlantStore'
 /**
  * Resets and reload list of plants
  */
-export default function loadPlants(plant_type = 'mother') {
+export default function loadPlants(plant_type = '') {
   plantStore.isLoading = true
-  fetch('/api/v1/plants/plants?plant_status=' + plant_type, {
+  let apiUrl = '/api/v1/plants/plants' 
+  if (plant_type.length > 0) {
+    apiUrl = apiUrl + '?plant_status=' + plant_type
+  }
+
+  fetch(apiUrl, {
     method: 'GET',
     credentials: 'include',
     headers: {

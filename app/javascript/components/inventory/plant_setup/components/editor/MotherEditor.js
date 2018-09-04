@@ -107,7 +107,6 @@ class MotherEditor extends React.Component {
         if (status >= 400) {
           this.setState({ errors: data.errors })
         } else {
-          this.props.onResetParent()
           this.reset()
         }
       })
@@ -140,6 +139,7 @@ class MotherEditor extends React.Component {
       errors: {}
     })
 
+    this.props.onResetParent()
     this.storageInfoEditor.current.reset()
   }
 

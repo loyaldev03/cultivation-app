@@ -18,7 +18,7 @@ class VegGroupEditor extends React.Component {
       tray: '',
       cultivation_batch_id: '',
       planted_on: null,
-      expected_harvest_date: null,
+      expected_harvested_on: null,
       mother_id: '',
       mother_location: '',
       is_bought: false,
@@ -107,7 +107,7 @@ class VegGroupEditor extends React.Component {
   }
 
   onExpectedHarvestDateChanged(date) {
-    this.setState({ expected_harvest_date: date })
+    this.setState({ expected_harvested_on: date })
   }
 
   onIsBoughtChanged() {
@@ -379,8 +379,8 @@ class VegGroupEditor extends React.Component {
           <div className="w-50 pl3">
             <label className="f6 fw6 db mb1 gray">Expected Harvest Date</label>
             <DatePicker
-              value={this.state.expected_harvest_date}
-              onChange={this.onExpectedHarvestDateChanged}
+              value={this.state.expected_harvested_on}
+              onChange={this.expected_harvested_on}
             />
           </div>
         </div>

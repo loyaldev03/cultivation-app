@@ -79,7 +79,7 @@ Rails.application.routes.draw do
 
       resource :plant_setup, only: [] do
         post 'setup_mother'
-        post 'setup_clone'
+        post 'setup_clones'
         post 'setup_veg'
         post 'setup_harvest_yield'
         post 'setup_waste'

@@ -7,6 +7,8 @@ import {
 } from '../../../../utils/FormHelpers'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import LocationPicker from '../shared/LocationPicker'
+import setupClones from '../../actions/setupClones'
+
 
 class CloneEditor extends React.Component {
   constructor(props) {
@@ -19,8 +21,7 @@ class CloneEditor extends React.Component {
       generator_location: '',
       last_plant_id: 0,
       planted_on: null,
-      expected_harvest_date: null,
-      is_bought: false,
+      expected_harvested_on: null,
       mother_id: '',
       mother_location_id: '',
 
@@ -36,6 +37,7 @@ class CloneEditor extends React.Component {
       invoice_no: '',
 
       // UI states
+      isBought: false,
       isShowPlantIdGenerator: false,
       errors: {}
     }
@@ -96,11 +98,11 @@ class CloneEditor extends React.Component {
   }
 
   onExpectedHarvestDateChanged(date) {
-    this.setState({ expected_harvest_date: date })
+    this.setState({ expected_harvested_on: date })
   }
 
   onIsBoughtChanged(event) {
-    this.setState({ is_bought: !this.state.is_bought })
+    this.setState({ isBought: !this.state.isBought })
     event.preventDefault()
   }
 
@@ -159,25 +161,44 @@ class CloneEditor extends React.Component {
   // }
 
   onSave(event) {
-    const data = this.validateAndGetValues()
-    // if (data.isValid) {
-    // fetch('/api/v1/plant_setup/create_mother', {
-    //   method: 'POST',
-    //   credentials: 'include',
-    //   body: JSON.stringify(data),
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   }
-    // })
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     console.log(data)
-    //     console.log(data.data)
-    //   })
-    // }
+    const data  = this.validateAndGetValues()
+    const { errors, isValid, ...payload } = data
+    console.log(`isValid: ${isValid}`)
+    console.log(`errors: ${errors}`)
+    console.log(data)
+
+    if (isValid) {
+      setupClones(payload).then(({ status, data }) => {
+        if (status >= 400) {
+          this.setState({ errors: data.errors })
+        } else {
+          this.props.onResetParent()
+          this.reset()
+        }
+      })
+    }
 
     event.preventDefault()
   }
+
+  reset() {
+    this.setState({
+      clone_ids: '',
+      plant_qty: 0,
+      tray: '',
+      generator_location: '',
+      planted_on: null,
+      expected_harvested_on: null,
+      mother_id: '',
+      mother_location_id: '',
+      // UI states
+      isShowPlantIdGenerator: false,
+      isBought: false,
+      errors: {}
+    })
+    this.props.onResetParent()
+  }
+  
 
   validateAndGetValues() {
     const {
@@ -186,8 +207,8 @@ class CloneEditor extends React.Component {
       isShowPlantIdGenerator,
       tray,
       planted_on,
-      expected_harvest_date,
-      is_bought,
+      expected_harvested_on,
+      isBought,
       mother_id,
       mother_location_id
     } = this.state
@@ -214,8 +235,8 @@ class CloneEditor extends React.Component {
       }
     }
 
-    let purchaseData = { idValid: true }
-    if (!is_bought) {
+    let purchaseData = { isValid: true }
+    if (!isBought) {
       if (mother_id.length <= 0) {
         errors = { ...errors, mother_id: ['Mother ID is required.'] }
       }
@@ -237,13 +258,14 @@ class CloneEditor extends React.Component {
       purchaseData.isValid
 
     const data = {
+      ...strainData,
+      ...purchaseData,
       clone_ids,
-      planted_on,
-      expected_harvest_date,
-      is_bought,
+      planted_on: planted_on && planted_on.toISOString(),
+      expected_harvested_on: expected_harvested_on && expected_harvested_on.toISOString(),
+      isBought,
       mother_id,
       mother_location_id,
-      ...purchaseData,
       errors,
       isValid
     }
@@ -255,7 +277,7 @@ class CloneEditor extends React.Component {
   }
 
   renderProcurementInfo() {
-    if (!this.state.is_bought) {
+    if (!this.state.isBought) {
       return (
         <React.Fragment>
           <div className="ph4 mb3 flex">
@@ -409,7 +431,7 @@ class CloneEditor extends React.Component {
               Expected Harvest Date
             </label>
             <CalendarPicker
-              value={this.state.expected_harvest_date}
+              value={this.state.expected_harvested_on}
               onChange={this.onExpectedHarvestDateChanged}
             />
           </div>
@@ -426,6 +448,7 @@ class CloneEditor extends React.Component {
             type="checkbox"
             value="1"
             id="is_bought_input"
+            checked={this.state.isBought}
             onChange={this.onIsBoughtChanged}
           />
           <label className="toggle-button" htmlFor="is_bought_input" />

@@ -181,6 +181,7 @@ export default class PlantEditor extends React.Component {
       <SeedEditor
         onExitCurrentEditor={this.onExitCurrentEditor}
         onValidateParent={this.onValidateParent}
+        onResetParent={this.onResetParent}
         locations={this.locations}
       />
     )
@@ -192,6 +193,7 @@ export default class PlantEditor extends React.Component {
       <CloneEditor
         onExitCurrentEditor={this.onExitCurrentEditor}
         onValidateParent={this.onValidateParent}
+        onResetParent={this.onResetParent}
         locations={this.locations}
       />
     )
@@ -215,6 +217,7 @@ export default class PlantEditor extends React.Component {
       <VegGroupEditor
         onExitCurrentEditor={this.onExitCurrentEditor}
         onValidateParent={this.onValidateParent}
+        onResetParent={this.onResetParent}
         locations={this.locations}
       />
     )

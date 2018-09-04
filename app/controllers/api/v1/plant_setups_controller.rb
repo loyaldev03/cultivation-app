@@ -9,8 +9,8 @@ class Api::V1::PlantSetupsController < Api::V1::BaseApiController
     end
   end
 
-  def setup_clone
-    command = Inventory::SetupMother.call(current_user, params[:plant_setup].to_unsafe_h)
+  def setup_clones
+    command = Inventory::SetupClones.call(current_user, params[:plant_setup].to_unsafe_h)
     if command.success?
       data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
       render json: {data: data}

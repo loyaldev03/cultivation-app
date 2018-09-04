@@ -1,10 +1,8 @@
 import React from 'react'
 import ReactTable from 'react-table'
-import 'react-table/react-table.css'
 import plantStore from '../store/PlantStore'
 import { observer } from 'mobx-react'
-import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
-
+// import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 // const columns = [
 //   {
 //     Header: 'Plant type',
@@ -19,44 +17,31 @@ import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 //         {props.value}
 //       </a>
 //     )
-//   },
-//   {
-//     Header: 'Stock count',
-//     accessor: 'total_quantity',
-//     headerClassName: 'tr pr3',
-//     Cell: props => <div className="tr pr3">{props.value}</div> // Custom cell components!
-//   },
-//   {
-//     Header: 'Stock intakes/ Batches',
-//     accessor: 'intake_count',
-//     headerClassName: 'tr pr3',
-//     Cell: props => (
-//       <div className="tr pr3">
-//         <a
-//           href="javascript:;"
-//           className="ttc link"
-//           onClick={e =>
-//             alert('expands the row to show latest 5-9 stock intakes')
-//           }
-//         >
-//           {props.value}
-//         </a>
-//       </div>
-//     )
-//   },
-//   {
-//     id: 'facility', // Required because our accessor is not a string
-//     Header: 'Facility',
-//     headerClassName: 'tl pl3',
-//     accessor: 'facility'
 //   }
 // ]
 
 const columns = [
+  // {
+  //   Header: 'ID',
+  //   accessor: 'id',
+  //   show: false
+  // },
   {
-    Header: 'ID',
-    accessor: 'id',
-    show: false
+    Header: '',
+    accessor: 'attributes.status',
+    filterable: false,
+    width: 30,
+    Cell: props => {
+      let color = 'red'
+      if (props.value === 'available') {
+        color = '#00cc77'
+      }
+      return (
+        <div className="flex justify-center items-center h-100">
+          <span style={{width: '8px', height: '8px', color: 'green', borderRadius: '50%', backgroundColor: color}}/>
+        </div>
+      )
+    }
   },
   {
     Header: 'Plant ID',
@@ -82,9 +67,11 @@ const columns = [
     headerStyle: { textAlign: 'left' },
     Cell: props => {
       const d = new Date(props.value)
-      return (
-        <span>{`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`}</span>
-      ) // Custom cell components!
+      if (props.value || props.value.length > 0) {
+        return <span>{`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`}</span>
+      } else {
+        return ''
+      }
     }
   },
   {
@@ -103,17 +90,19 @@ const columns = [
 class PlantList extends React.Component {
   render() {
     return (
-      <div className="bg-white">
-        <ReactTable
-          columns={columns}
-          pagination={{ position: 'top' }}
-          data={plantStore.plants.slice()}
-          showPagination={false}
-          pageSize={30}
-        />
-
-        {/* <hr className="hr b--white mv3" /> */}
-      </div>
+      
+      <ReactTable
+        columns={columns}
+        pagination={{ position: 'top' }}
+        data={plantStore.plants.slice()}
+        showPagination={false}
+        pageSize={30}
+        minRows={30}
+        filterable
+        className="f6"
+        showPagination={plantStore.plants.length > 30}
+      />
+      
     )
   }
 }

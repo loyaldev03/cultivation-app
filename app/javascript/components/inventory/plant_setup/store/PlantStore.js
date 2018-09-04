@@ -19,6 +19,11 @@ class PlantStore {
   }
 
   @action
+  prepend(newPlants = []) {
+    this.plants.replace(newPlants.concat(this.plants.slice()))
+  }
+
+  @action
   add(newPlants = []) {
     // console.log(newPlants)
     // this.plants.concat(newPlants)

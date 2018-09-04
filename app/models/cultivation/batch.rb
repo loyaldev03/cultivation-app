@@ -8,7 +8,7 @@ module Cultivation
     field :batch_source, type: String
     field :strain, type: String   # TODO: Change this to strain ID
     field :start_date, type: DateTime
-    field :facility, type: String
+    field :facility_id, type: BSON::ObjectId
     field :grow_method, type: String
     field :quantity, type: String
 

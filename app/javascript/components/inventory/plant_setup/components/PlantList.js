@@ -109,7 +109,7 @@ class PlantList extends React.Component {
           pagination={{ position: 'top' }}
           data={plantStore.plants.slice()}
           showPagination={false}
-          pageSize={50}
+          pageSize={30}
         />
 
         {/* <hr className="hr b--white mv3" /> */}

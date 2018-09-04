@@ -65,9 +65,6 @@ module Inventory
       # Rails.logger.debug "args[:plant_ids].index('\\n') - #{i} " +  args[:plant_ids].gsub(/[\n\r]/, ",").split(",").to_s
       # Rails.logger.debug "args[:plant_ids].index('\\r') - #{f}"
       # Rails.logger.debug "args[:plant_ids].index('n') - #{g}"
-
-      # plant_ids = args[:plant_ids].gsub(/[\n\r]/, ",").split(",").reject {|x| x.empty? }.map(&:strip)
-      # Rails.logger.debug "plant_ids: " + plant_ids.count.to_s
       existing_records = Inventory::ItemArticle.in(serial_no: plant_ids).pluck(:serial_no)
 
       if existing_records.count > 0

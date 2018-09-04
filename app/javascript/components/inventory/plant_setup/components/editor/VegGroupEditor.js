@@ -409,7 +409,7 @@ class VegGroupEditor extends React.Component {
           <a
             className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
             href="#"
-            onClick={this.props.onExitChildEditor}
+            onClick={this.props.onExitCurrentEditor}
           >
             Save draft
           </a>

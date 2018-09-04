@@ -4,6 +4,7 @@ import { NumericInput, FieldError } from '../../../../utils/FormHelpers'
 import StorageInfo from '../shared/StorageInfo'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import plantStore from '../../store/PlantStore'
+import setupMother from '../../actions/setupMother'
 
 class MotherEditor extends React.Component {
   constructor(props) {
@@ -100,48 +101,27 @@ class MotherEditor extends React.Component {
     const { errors, isValid, ...payload } = this.validateAndGetValues()
 
     if (isValid) {
-      // TODO: The following should move to action
-      fetch('/api/v1/plant_setup/create_mother', {
-        method: 'POST',
-        credentials: 'include',
-        body: JSON.stringify(payload),
-        headers: {
-          'Content-Type': 'application/json'
+      setupMother(payload).then(({ status, data }) => {
+        // console.log(data)
+        // console.log(status)
+        if (status >= 400) {
+          this.setState({ errors: data.errors })
+        } else {
+          this.props.onResetParent()
+          this.reset()
         }
       })
-        .then(response => {
-          return response.json().then(data => ({
-            status: response.status,
-            data
-          }))
-        })
-        .then(({ status, data }) => {
-          // console.log(data)
-          // console.log(status)
-
-          if (status >= 400) {
-            this.setState({ errors: data.errors })
-          } else {
-            // console.log(JSON.parse(data.data))
-            let savedPlants = JSON.parse(data.data).data
-            plantStore.add(savedPlants)
-            this.props.onResetParent()
-            this.reset()
-          }
-        })
     }
 
     event.preventDefault()
   }
 
   reset() {
-    console.log('reset called')
     this.setState({
       plant_ids: '',
       plant_qty: 0,
       planted_on: null,
       // mother_id: '',
-
       vendor_name: '',
       vendor_no: '',
       address: '',
@@ -161,7 +141,6 @@ class MotherEditor extends React.Component {
     })
 
     this.storageInfoEditor.current.reset()
-    this.purchaseInfoEditor.reset()
   }
 
   validateAndGetValues() {
@@ -343,6 +322,7 @@ class MotherEditor extends React.Component {
             className="toggle toggle-default"
             type="checkbox"
             value="1"
+            checked={this.state.isBought}
             id="is_bought_input"
             onChange={this.onIsBoughtChanged}
           />

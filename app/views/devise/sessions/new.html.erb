@@ -1,38 +1,38 @@
 <%= form_for(resource,
               as: resource_name,
               url: session_path(resource_name),
-              html: { class: "flex flex-column justify-center items-center bg-black-80 pa4 br2" }) do |f| %>
+              html: { class: "bg-white flex flex-column justify-center items-center" }) do |f| %>
 
   <%= image_tag "logo.svg" %>
 
-  <div class="pt3 w5">
-    <div class="mv2">
-      <%= f.label :email, class: "f5 white-80 db mb1" %>
+  <div class="pt4 w5">
+    <div class="mb2">
+      <%= f.label :email, class: "subtitle-2 dark-grey db mb1" %>
       <%= f.email_field :email,
         autofocus: true,
         autocomplete: "email",
-        class: "bg-transparent white pv1 ph2 ba b--white br2 w-100" %>
+        class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
     </div>
 
-    <div class="mv2">
-      <%= f.label :password, class: "f5 white-80 db mb1"  %>
+    <div class="mb2">
+      <%= f.label :password, class: "subtitle-2 dark-grey db mb1"  %>
       <%= f.password_field :password,
         autocomplete: "off",
-        class: "bg-transparent white pv1 ph2 ba b--white br2 w-100" %>
+        class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
     </div>
 
     <% if devise_mapping.rememberable? -%>
-      <div class="mt2 mb3">
-        <%= f.check_box :remember_me, class: "" %>
-        <%= f.label :remember_me, class: "white-80 f6" %>
+      <div class="mb4">
+        <%= f.check_box :remember_me, class: "mr2" %>
+        <%= f.label :remember_me, class: "grey subtitle-2-regular" %>
       </div>
     <% end -%>
   </div>
 
   <div class="actions w-100 mh2">
-    <%= f.submit "Log in", class: "f6 link dim br-pill ph3 pv2 mb2 dib white bg-transparent w-100" %>
+    <%= f.submit "Log in", class: "ttu button--font white link dim bg-orange bn box--br3 ph2 pv3 dib w-100 pointer" %>
   </div>
 
-  <%= link_to "Forgot your password?", new_user_password_url, class: "mt3 f7 white-60" %> 
+  <%= link_to "Forgot your password?", new_user_password_url, class: "mt4 caption grey dim" %> 
 <% end %>
 

@@ -39,7 +39,6 @@ class BatchSetupApp extends React.Component {
       facility: '',
       strain: '',
       start_date: '',
-      quantity: '',
       grow_method: ''
     }
   }
@@ -56,9 +55,8 @@ class BatchSetupApp extends React.Component {
       body: JSON.stringify({
         batch_source: this.state.plant,
         facility_id: this.state.facility,
-        strain: this.state.strain,
+        strain_id: this.state.strain,
         start_date: this.state.start_date,
-        quantity: this.state.quantity,
         grow_method: this.state.grow_method
       }),
       headers: {
@@ -164,19 +162,6 @@ class BatchSetupApp extends React.Component {
                 options={strains}
                 styles={reactSelectStyle}
                 onChange={e => this.handleChange('grow_method', e.value)}
-              />
-            </div>
-          </div>
-
-          <div className="w-100 shelves_number_options">
-            <div className="mt3">
-              <TextInput
-                label={'Quantity (Capacity)'}
-                value={this.state.quantity}
-                onChange={this.handleChangeInput}
-                fieldname="quantity"
-                errors={this.state.errors}
-                errorField="quantity"
               />
             </div>
           </div>

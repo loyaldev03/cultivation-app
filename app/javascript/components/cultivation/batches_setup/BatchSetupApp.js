@@ -55,7 +55,7 @@ class BatchSetupApp extends React.Component {
       credentials: 'include',
       body: JSON.stringify({
         batch_source: this.state.plant,
-        facility: this.state.facility,
+        facility_id: this.state.facility,
         strain: this.state.strain,
         start_date: this.state.start_date,
         quantity: this.state.quantity,

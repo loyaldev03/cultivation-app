@@ -107,6 +107,7 @@ class TaskList extends React.Component {
           }
         }
         />
+        <TaskEditor onClose={this.closeSidebar} batch_id={this.props.batch_id} />
       </React.Fragment>
     )
   }

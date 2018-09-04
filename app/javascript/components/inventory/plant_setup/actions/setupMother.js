@@ -14,7 +14,8 @@ export default function setupMother(payload) {
         status: response.status,
         data
       }))
-    }).then(result => {
+    })
+    .then(result => {
       const { status, data } = result
       if (status == 200) {
         const savedPlants = JSON.parse(data.data).data

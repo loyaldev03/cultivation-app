@@ -15,6 +15,18 @@
 
   <div class="w5">
     <div class="field mt4">
+      <%= f.label :first_name, class: "subtitle-2 dark-grey db mb1 ttc" %>
+      <%= f.text_field :first_name, autofocus: false,
+          class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
+    </div>
+
+    <div class="field mv2">
+      <%= f.label :last_name, class: "subtitle-2 dark-grey db mb1 ttc" %>
+      <%= f.text_field :last_name, autofocus: false,
+          class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
+    </div>
+
+    <div class="field">
       <%= f.label :email, class: "subtitle-2 dark-grey db mb1 ttc" %>
       <%= f.email_field :email, autofocus: true, autocomplete: "email",
           class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
@@ -26,7 +38,17 @@
       </div>
     <% end %>
 
-    <div class="field mv2">
+     <div class="field mv2">
+      <%= f.label :current_password, class: "subtitle-2 dark-grey db mb1 ttc" %> 
+      <%= f.password_field :current_password, autocomplete: "off",
+          class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
+      
+      <i class="caption grey mt1">
+        (we need your current password to confirm your changes)
+      </i>
+    </div>
+
+    <div class="field">
       <%= f.label :password, class: "subtitle-2 dark-grey db mb1 ttc" %>
       <%= f.password_field :password, autocomplete: "off",
           class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
@@ -40,20 +62,10 @@
       <i class="caption grey mt1">(leave blank if you don't want to change it)</i>
     </div>
 
-    <div class="field">
+    <div class="field mt2">
       <%= f.label :password_confirmation, class: "subtitle-2 dark-grey db mb1 ttc" %>
       <%= f.password_field :password_confirmation, autocomplete: "off",
           class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
-    </div>
-
-    <div class="field mt2">
-      <%= f.label :current_password, class: "subtitle-2 dark-grey db mb1 ttc" %> 
-      <%= f.password_field :current_password, autocomplete: "off",
-          class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
-      
-      <i class="caption grey mt1">
-        (we need your current password to confirm your changes)
-      </i>
     </div>
 
     <div class="actions mv4">

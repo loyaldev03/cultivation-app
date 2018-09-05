@@ -8,6 +8,7 @@
 // layout file, like app/views/layouts/application.html.erb
 
 import { editorSidebarHandler } from '../components/utils/EditorSidebarHandler'
+import 'react-table/react-table.css'
 
 var componentRequireContext = require.context('components', true)
 var ReactRailsUJS = require('react_ujs')

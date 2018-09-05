@@ -96,9 +96,8 @@ class PlantSetupApp extends React.Component {
         {this.renderFirstTime()}
         {this.renderPlantList()}
         <PlantEditor
-          isOpened={true}
+          isOpened={false}
           onClose={this.closeSidebar}
-          strainTypes={this.props.strain_types}
           locations={this.props.locations}
         />
       </React.Fragment>

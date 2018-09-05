@@ -19,7 +19,7 @@ export default function setupMother(payload) {
       const { status, data } = result
       if (status == 200) {
         const savedPlants = JSON.parse(data.data).data
-        plantStore.add(savedPlants)
+        plantStore.prepend(savedPlants)
       }
 
       return result

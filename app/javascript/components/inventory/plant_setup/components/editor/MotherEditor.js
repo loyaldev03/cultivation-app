@@ -3,13 +3,16 @@ import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { NumericInput, FieldError } from '../../../../utils/FormHelpers'
 import StorageInfo from '../shared/StorageInfo'
 import PurchaseInfo from '../shared/PurchaseInfo'
-import plantStore from '../../store/PlantStore'
 import setupMother from '../../actions/setupMother'
+import StrainPicker from '../shared/StrainPicker'
 
 class MotherEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      strain: '',
+      strain_type: '',
+
       // source
       plant_ids: '',
       plant_qty: 0,
@@ -52,6 +55,7 @@ class MotherEditor extends React.Component {
     }
 
     this.storageInfoEditor = React.createRef()
+    this.strainPicker = React.createRef()
 
     this.onChangePlantIds = this.onChangePlantIds.bind(this)
     this.onChangeGeneratorPlantQty = this.onChangeGeneratorPlantQty.bind(this)
@@ -59,6 +63,7 @@ class MotherEditor extends React.Component {
     this.onToggleGeneratePlantId = this.onToggleGeneratePlantId.bind(this)
     this.onIsBoughtChanged = this.onIsBoughtChanged.bind(this)
     this.onSave = this.onSave.bind(this)
+    this.onStrainSelected = this.onStrainSelected.bind(this)
   }
 
   onChangePlantIds(event) {
@@ -91,6 +96,13 @@ class MotherEditor extends React.Component {
       isShowPlantQtyForm: !this.state.isShowPlantQtyForm
     })
     if (event) event.preventDefault()
+  }
+
+  onStrainSelected(data) {
+    this.setState({
+      strain: data.strain,
+      strain_type: data.strain_type
+    })
   }
 
   onIsBoughtChanged() {
@@ -139,13 +151,15 @@ class MotherEditor extends React.Component {
       errors: {}
     })
 
-    this.props.onResetParent()
     this.storageInfoEditor.current.reset()
+    this.strainPicker.current.reset()
   }
 
   validateAndGetValues() {
     const {
       isShowPlantQtyForm,
+      strain,
+      strain_type,
       plant_ids,
       plant_qty,
       planted_on,
@@ -166,7 +180,6 @@ class MotherEditor extends React.Component {
       errors = { ...errors, planted_on: ['Planted on date is required.'] }
     }
 
-    const strainData = this.props.onValidateParent()
     let purchaseData = { isValid: true }
     if (isBought) {
       purchaseData = this.purchaseInfoEditor.getValues()
@@ -178,8 +191,10 @@ class MotherEditor extends React.Component {
     // console.log(`purchaseData.isValid: ${purchaseData.isValid}`)
     // console.log(`locationData.isValid: ${locationData.isValid}`)
 
+    const { isValid: strainValid } = this.strainPicker.current.validate()
+
     const isValid =
-      strainData.isValid &&
+      strainValid &&
       purchaseData.isValid &&
       locationData.isValid &&
       Object.getOwnPropertyNames(errors).length === 0
@@ -189,9 +204,10 @@ class MotherEditor extends React.Component {
     }
 
     const data = {
-      ...strainData,
       ...purchaseData,
       ...locationData,
+      strain,
+      strain_type,
       plant_ids,
       plant_qty,
       planted_on: planted_on && planted_on.toISOString(),
@@ -250,9 +266,17 @@ class MotherEditor extends React.Component {
             <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
               Each mother plant has its own <strong>Plant ID</strong>.
             </p>
+            <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
+              If you already have them, paste Plant IDs like below.
+            </p>
             <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
-              {' '}
-              If you already have them, paste Plant IDs like below:
+              <a
+                href="#"
+                onClick={this.onToggleGeneratePlantId}
+                className="fw4 f7 link dark-blue"
+              >
+                Don't have Plant ID? Let us generate for you.
+              </a>
             </p>
             <textarea
               ref={this.setPlantIdsTextArea}
@@ -264,15 +288,6 @@ class MotherEditor extends React.Component {
             />
             <FieldError errors={this.state.errors} field="plant_ids" />
           </div>
-        </div>
-        <div className="ph4 mb3 flex justify-end">
-          <a
-            href="#"
-            onClick={this.onToggleGeneratePlantId}
-            className="fw4 f7 link dark-blue"
-          >
-            Don't have Plant ID? Let us generate for you.
-          </a>
         </div>
         <div className="ph4 mt0 mb3 flex">
           <div className="w-50">
@@ -291,6 +306,11 @@ class MotherEditor extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <StrainPicker 
+          ref={this.strainPicker}
+          onStrainSelected={this.onStrainSelected} 
+        />
+        <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mt3 mb3">
           <span className="f6 fw6 dark-gray">Plant IDs</span>
         </div>
@@ -361,7 +381,7 @@ class MotherEditor extends React.Component {
             href="#"
             onClick={this.onSave}
           >
-            Preview &amp; Save
+            Save
           </a>
         </div>
       </React.Fragment>

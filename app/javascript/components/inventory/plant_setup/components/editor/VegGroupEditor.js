@@ -2,6 +2,7 @@ import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import LocationPicker from '../shared/LocationPicker'
+import StrainPicker from '../shared/StrainPicker'
 import {
   TextInput,
   NumericInput,
@@ -12,6 +13,9 @@ class VegGroupEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      strain: '',
+      strain_type: '',
+
       // source
       plant_ids: '',
       plant_qty: 0,
@@ -51,6 +55,8 @@ class VegGroupEditor extends React.Component {
       this.purchaseInfoEditor = element
     }
 
+    this.strainPicker = React.createRef()
+
     this.onPlantIdsChanged = this.onPlantIdsChanged.bind(this)
     this.onTogglePlantQtyForm = this.onTogglePlantQtyForm.bind(this)
     this.onPlantQtyChanged = this.onPlantQtyChanged.bind(this)
@@ -67,6 +73,7 @@ class VegGroupEditor extends React.Component {
     this.onMotherIdChanged = this.onMotherIdChanged.bind(this)
     this.onMotherLocationChanged = this.onMotherLocationChanged.bind(this)
     this.onSave = this.onSave.bind(this)
+    this.onStrainSelected = this.onStrainSelected.bind(this)
   }
 
   onTogglePlantQtyForm() {
@@ -122,6 +129,14 @@ class VegGroupEditor extends React.Component {
     this.setState({ mother_location: item.rm_id })
   }
 
+  onStrainSelected(data) {
+    this.setState({
+      strain: data.strain,
+      strain_type: data.strain_type
+    })
+  }
+
+
   onSave(event) {
     const data = this.validateAndGetValues()
     if (data.isValid) {
@@ -132,8 +147,19 @@ class VegGroupEditor extends React.Component {
     event.preventDefault()
   }
 
+  reset() {
+    this.setState({
+      strain: '',
+      strain_type: '',
+    })
+
+    this.strainPicker.current.reset()
+  }
+
   validateAndGetValues() {
     const {
+      strain,
+      strain_type,
       isShowPlantQtyForm,
       plant_ids,
       plant_qty,
@@ -175,7 +201,7 @@ class VegGroupEditor extends React.Component {
       errors = { ...errors, planted_on: ['Planted date is required.'] }
     }
 
-    const strainData = this.props.onValidateParent()
+    
 
     let purchaseData = { idValid: true }
     if (is_bought) {
@@ -192,10 +218,11 @@ class VegGroupEditor extends React.Component {
         }
       }
     }
+    const { isValid: strainValid } = this.strainPicker.current.validate()
 
     const isValid =
       Object.getOwnPropertyNames(errors).length == 0 &&
-      strainData.isValid &&
+      strainValid &&
       purchaseData.isValid
 
     if (!isValid) {
@@ -203,6 +230,17 @@ class VegGroupEditor extends React.Component {
     }
 
     const data = {
+      strain,
+      strain_type,
+      isShowPlantQtyForm,
+      plant_ids,
+      plant_qty,
+      tray,
+      cultivation_batch_id,
+      planted_on,
+      is_bought,
+      mother_id,
+      mother_location,
       ...purchaseData,
       isValid
     }
@@ -346,6 +384,11 @@ class VegGroupEditor extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <StrainPicker 
+          ref={this.strainPicker}
+          onStrainSelected={this.onStrainSelected} 
+        />
+        <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mt3 mb3">
           <span className="f6 fw6 dark-gray">Plant IDs</span>
         </div>

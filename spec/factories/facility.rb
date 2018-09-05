@@ -42,8 +42,8 @@ FactoryBot.define do
     end
 
     trait :is_complete do
-      is_complete { true }
-      wz_generated { false }
+      is_complete {true}
+      wz_generated {false}
       rows {
         [
           build(:row, :row1, :is_complete),
@@ -93,7 +93,10 @@ FactoryBot.define do
       is_use_trays {true}
       capacity {20}
       trays {
-        [build(:tray, :tray1), build(:tray, :tray2)]
+        [
+          build(:tray, :tray1),
+          build(:tray, :tray2)
+        ]
       }
     end
   end

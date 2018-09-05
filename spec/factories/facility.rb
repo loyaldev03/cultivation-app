@@ -1,117 +1,114 @@
 FactoryBot.define do
   factory :facility do
-    trait :filled do
-      name Faker::Lorem.word
-      code Faker::Number.number(2)
-      company_name Faker::Company.name
-      state_license Faker::Code.asin
-      site_license Faker::Address.country
-      timezone Faker::Address.country
-      is_complete true
-      is_enabled false
+    name {Faker::Lorem.word}
+    code {Faker::Number.number(2)}
+
+    trait :is_complete do
+      company_name {Faker::Company.name}
+      state_license {Faker::Code.asin}
+      site_license {Faker::Address.country}
+      timezone {Faker::Address.country}
+      is_complete {true}
       address {
         build(:address)
       }
-    end
-
-    trait :after_step_1 do
-      name 'Facility 1'
-      code 'Fa1'
-      rooms []
-    end
-
-    trait :after_step_2 do
-      name 'Facility 1'
-      code 'Fa1'
-      room_count 2
-      rooms { [build(:room), build(:room)] }
-    end
-
-    trait :after_step_3 do
-      name 'Facility 1'
-      code 'Fa1'
-      room_count 2
-      rooms { [build(:room, :room_1_with_2_sections), build(:room)] }
-    end
-
-    trait :after_step_4 do
-      name 'Facility 1'
-      code 'Fa1'
-      room_count 2
-      rooms { [build(:room, :room_1), build(:room)] }
-    end
-
-    trait :facility_with_rooms_sections do
-      name 'Facility 1'
-      code 'Fa1'
-      room_count 1
-      rooms { [build(:room, :room_1_with_2_sections)] }
-    end
-
-    trait :facility_with_rooms_sections_row do
-      name 'Facility 1'
-      code 'Fa1'
-      room_count 1
-      rooms { [build(:room, :room_1_with_2_sections_row)] }
+      rooms {
+        [
+          build(:room, :mother, :is_complete),
+          build(:room, :clone, :is_complete),
+          build(:room, :veg, :is_complete),
+        ]
+      }
     end
   end
 
   factory :room do
-    name Faker::Name.name
-
-    trait :room_1 do
-      name 'Room 1'
-      code 'Rm1'
+    trait :mother do
+      name {'Mother Room'}
+      code {'Rm01'}
+      purpose { 'mother' }
     end
 
-    trait :room_2 do
-      name 'Room 2'
-      code 'Rm2'
+    trait :clone do
+      name {'Clone Room'}
+      code {'Rm02'}
+      purpose { 'clone' }
     end
 
-    trait :room_1_with_2_sections do
-      name 'Room 1'
-      code 'Rm1'
-      sections { [build(:section, :section_1),build(:section, :section_2)] }
+    trait :veg do
+      name {'Veg Room'}
+      code {'Rm03'}
+      purpose { 'veg' }
     end
 
-    trait :room_1_with_2_sections_row do
-      name 'Default Room 1'
-      code 'DefaultRm1'
-      sections { [build(:section, :section_1_row)] }
-    end
-  end
-
-  factory :section do
-    row_count 3
-    shelf_count 2
-    shelf_capacity 20
-    purpose 'storage'
-    code Faker::Number::number(4)
-
-    trait :section_1 do
-      name 'Section 1'
-      code 'Sec1'
-    end
-
-    trait :section_1_row do
-      name 'Section 1'
-      code 'Sec1'
-      rows { [build(:row)] }
-    end
-
-    trait :section_2 do
-      name 'Section 2'
-      code 'Sec2'
-    end
-
-    trait :complete do
-      is_complete false
+    trait :is_complete do
+      is_complete { true }
+      wz_generated { false }
+      rows {
+        [
+          build(:row, :row1, :is_complete),
+          build(:row, :row2, :is_complete)
+        ]
+      }
     end
   end
 
   factory :row do
-    name 'Default Row'
-    code 'DefRw1'
+    trait :row1 do
+      name {'Row One'}
+      code {'Rw01'}
+    end
+
+    trait :row2 do
+      name {'Row Two'}
+      code {'Rw02'}
+    end
+
+    trait :is_complete do
+      is_complete {true}
+      wz_generated {false}
+      has_shelves {true}
+      has_trays {true}
+      shelves {
+        [
+          build(:shelf, :shelf1, :is_complete),
+          build(:shelf, :shelf2, :is_complete)
+        ]
+      }
+    end
+  end
+
+  factory :shelf do
+    trait :shelf1 do
+      code {'Sf01'}
+    end
+
+    trait :shelf2 do
+      code {'Sf02'}
+    end
+
+    trait :is_complete do
+      is_complete {true}
+      wz_generated {false}
+      is_use_trays {true}
+      capacity {20}
+      trays {
+        [build(:tray, :tray1), build(:tray, :tray2)]
+      }
+    end
+  end
+
+  factory :tray do
+    wz_generated {false}
+    trait :tray1 do
+      code {"TR001"}
+      capacity { 10 }
+      capacity_type { "cups" }
+    end
+    trait :tray2 do
+      code {"TR002"}
+      capacity { 10 }
+      capacity_type { "cups" }
+    end
   end
 end

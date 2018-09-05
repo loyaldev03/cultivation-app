@@ -136,7 +136,6 @@ class VegGroupEditor extends React.Component {
     })
   }
 
-
   onSave(event) {
     const data = this.validateAndGetValues()
     if (data.isValid) {
@@ -150,7 +149,7 @@ class VegGroupEditor extends React.Component {
   reset() {
     this.setState({
       strain: '',
-      strain_type: '',
+      strain_type: ''
     })
 
     this.strainPicker.current.reset()
@@ -200,8 +199,6 @@ class VegGroupEditor extends React.Component {
     if (planted_on === null) {
       errors = { ...errors, planted_on: ['Planted date is required.'] }
     }
-
-    
 
     let purchaseData = { idValid: true }
     if (is_bought) {
@@ -384,9 +381,9 @@ class VegGroupEditor extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <StrainPicker 
+        <StrainPicker
           ref={this.strainPicker}
-          onStrainSelected={this.onStrainSelected} 
+          onStrainSelected={this.onStrainSelected}
         />
         <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mt3 mb3">

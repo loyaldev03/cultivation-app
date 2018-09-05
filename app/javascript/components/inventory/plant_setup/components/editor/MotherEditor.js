@@ -306,9 +306,9 @@ class MotherEditor extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <StrainPicker 
+        <StrainPicker
           ref={this.strainPicker}
-          onStrainSelected={this.onStrainSelected} 
+          onStrainSelected={this.onStrainSelected}
         />
         <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mt3 mb3">

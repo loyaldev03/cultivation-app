@@ -75,7 +75,10 @@ export default class PlantEditor extends React.Component {
 
     return (
       <React.Fragment>
-        <div className="ph4 mt4 mb3" style={{ width: '500px', overflow: 'hidden' }}>
+        <div
+          className="ph4 mt4 mb3"
+          style={{ width: '500px', overflow: 'hidden' }}
+        >
           <a
             className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
             data-editor={MOTHER}
@@ -186,7 +189,10 @@ export default class PlantEditor extends React.Component {
 
     if (title === 'Add Active Plant') {
       return (
-        <div className="ph4 pv2 bb b--light-gray flex items-center" style={{ height: '51px' }}>
+        <div
+          className="ph4 pv2 bb b--light-gray flex items-center"
+          style={{ height: '51px' }}
+        >
           <h1 className="f4 fw6 ma0 flex flex-auto ttc">{title}</h1>
           <span
             className="rc-slide-panel__close-button dim"
@@ -198,12 +204,14 @@ export default class PlantEditor extends React.Component {
       )
     } else {
       return (
-        <div className="ph4 pt2 bb b--light-gray flex flex-column items-start" >
+        <div className="ph4 pt2 bb b--light-gray flex flex-column items-start">
           <div
             className="dim gray f7 pv1 flex fw4 pointer ttu mb2 flex items-center"
             onClick={this.onExitCurrentEditor}
           >
-            <i className="material-icons mid-gray md-18 mr2">keyboard_backspace</i>
+            <i className="material-icons mid-gray md-18 mr2">
+              keyboard_backspace
+            </i>
             Back
           </div>
           <h1 className="f4 fw6 ma0 flex flex-auto ttc mb3">{title}</h1>

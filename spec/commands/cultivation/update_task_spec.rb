@@ -5,7 +5,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
     subject {
       params ={
         batch_source: 'Seeds',
-        strain: 'AK-47',
+        strain_id: 'AK-47',
         start_date: Date.new(2018, 1, 1)
       }
       result = Cultivation::SaveBatch.call(params).result
@@ -16,18 +16,27 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       task = subject.tasks.first
       task.start_date = Date.today
       result = Cultivation::UpdateTask.call(task.attributes).result
+      result.children.each do |child_task|
+        expect(child_task).to have_attributes(
+          start_date: Date.today
+        )
+      end
 
-      puts result.children.inspect
+      # puts result.children.first.inspect
     end
 
     it "should update all depending task start_date after updating task end_date" do
     end
 
-    it "should not update any task child start_date after updating task start_date" do
+    it "should not update any task child start_date after updating task other attributes" do
     end
 
     it "should not update any depending task start_date after updating task end_date" do
     end
+
+    it "task end date beyond parent end_date, should update parent end_date" do
+    end
+
 
     # it "return result when name exists" do
     #   cmd = FindFacility.call({name: subject.name})

@@ -107,9 +107,8 @@ class CloneEditor extends React.Component {
     this.setState({ expected_harvested_on: date })
   }
 
-  onIsBoughtChanged(event) {
+  onIsBoughtChanged() {
     this.setState({ isBought: !this.state.isBought })
-    event.preventDefault()
   }
 
   onMotherIdChanged(event) {
@@ -141,37 +140,6 @@ class CloneEditor extends React.Component {
       strain_type: data.strain_type
     })
   }
-
-  // onGeneratePlantId(event) {
-  //   event.preventDefault()
-  //   if (this.state.generator_plant_count <= 0) {
-  //     return
-  //   }
-
-  //   let cloneIds = ''
-  //   let i = parseInt(this.state.last_plant_id)
-  //   let iMax = i + parseInt(this.state.generator_plant_count)
-
-  //   for (i; i < iMax; i++) {
-  //     const serialNo =
-  //       new Date().getFullYear().toString() + i.toString().padStart(6, '0')
-  //     const id = `P${serialNo}, ${this.state.generator_location}\n`
-  //     cloneIds += id
-  //   }
-
-  //   this.setState({
-  //     clone_ids: this.state.clone_ids + cloneIds,
-  //     last_plant_id: iMax
-  //   })
-
-  //   const lines = (this.state.clone_ids.match(/\n/g) || []).length
-
-  //   if (lines >= 4 && this.cloneIdTextArea.scrollHeight < 350) {
-  //     this.cloneIdTextArea.style.height = 40 + lines * 25 + 'px'
-  //   } else {
-  //     this.cloneIdTextArea.style.height = 'auto'
-  //   }
-  // }
 
   onSave(event) {
     const data = this.validateAndGetValues()
@@ -393,9 +361,18 @@ class CloneEditor extends React.Component {
             <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
               Each clone has its own <strong>Plant ID</strong>.
             </p>
-            <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
+            <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
               If you already have them, paste Plant IDs with its corresponding
               tray ID:
+            </p>
+            <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
+              <a
+                href="#"
+                onClick={this.onToggleGeneratePlantId}
+                className="fw4 f7 link dark-blue"
+              >
+                Don't have Plant ID? Click here to generate
+              </a>
             </p>
             <textarea
               ref={this.setCloneIdTextArea}
@@ -408,17 +385,6 @@ class CloneEditor extends React.Component {
             <FieldError errors={this.state.errors} field="clone_ids" />
           </div>
         </div>
-        <div className="ph4 mb3 flex justify-end">
-          <a
-            href="#"
-            onClick={this.onToggleGeneratePlantId}
-            className="fw4 f7 link dark-blue"
-          >
-            {this.state.clone_ids.length > 0
-              ? 'Generate more IDs'
-              : 'Don\'t have Plant ID? Click here to generate.'}
-          </a>
-        </div>
       </React.Fragment>
     )
   }
@@ -426,9 +392,9 @@ class CloneEditor extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <StrainPicker 
+        <StrainPicker
           ref={this.strainPicker}
-          onStrainSelected={this.onStrainSelected} 
+          onStrainSelected={this.onStrainSelected}
         />
         <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mt3 mb3">
@@ -460,7 +426,7 @@ class CloneEditor extends React.Component {
 
         <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">Where the clones are from?</span>
+          <span className="f6 fw6 dark-gray">Plant Origin?</span>
         </div>
         <div className="ph4 mb3 flex justify-between">
           <label className="f6 fw6 db mb1 gray">Clones are purchased</label>
@@ -483,14 +449,14 @@ class CloneEditor extends React.Component {
             href="#"
             onClick={this.props.onExitCurrentEditor}
           >
-            Save draft
+            Save for later
           </a>
           <a
             className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
             href="#"
             onClick={this.onSave}
           >
-            Preview &amp; Save
+            Save
           </a>
         </div>
       </React.Fragment>

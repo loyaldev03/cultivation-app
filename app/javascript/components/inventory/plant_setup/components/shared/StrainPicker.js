@@ -79,7 +79,7 @@ export default class StrainPicker extends React.Component {
       isValid: Object.getOwnPropertyNames(errors).length === 0
     }
   }
-  
+
   render() {
     return (
       <div className="ph4 mt3 mb3 flex">
@@ -105,9 +105,15 @@ export default class StrainPicker extends React.Component {
             onChange={this.onChangeStrainType}
             value={this.state.strain_type}
           >
-            <option value="hybrid" key="hybrid">Hybrid</option>
-            <option value="indica" key="indica">Indica</option>
-            <option value="sativa" key="sativa">Sativa</option>
+            <option value="hybrid" key="hybrid">
+              Hybrid
+            </option>
+            <option value="indica" key="indica">
+              Indica
+            </option>
+            <option value="sativa" key="sativa">
+              Sativa
+            </option>
           </select>
           <FieldError errors={this.state.errors} field="strain_type" />
         </div>

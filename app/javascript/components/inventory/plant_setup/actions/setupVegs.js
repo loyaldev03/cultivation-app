@@ -1,8 +1,8 @@
 import plantStore from '../store/PlantStore'
 
-export default function setupClones(payload) {
+export default function setupVegs(payload) {
   
-  return fetch('/api/v1/plant_setup/setup_clones', {
+  return fetch('/api/v1/plant_setup/setup_vegs', {
     method: 'POST',
     credentials: 'include',
     body: JSON.stringify(payload),

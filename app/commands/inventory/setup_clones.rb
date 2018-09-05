@@ -65,16 +65,9 @@ module Inventory
       if valid_permission? && valid_data?
         create_strain
         vendor = create_vendor
-        mother = unless is_purchased?
-                   create_mother_plant
-                 end
-
-        Rails.logger.debug ">>>>> mother: #{mother}"
-        Rails.logger.debug mother.attributes if mother
-
-        clones = create_clones(clone_ids, mother)
+        @mother_id = nil if is_purchased?
+        clones = create_clones(clone_ids, @mother_id)
         create_invoice(clones, vendor, invoice_no) if is_purchased?
-        clones.append(mother) if mother
         clones
       end
     end
@@ -138,34 +131,7 @@ module Inventory
       end
     end
 
-    def create_mother_plant
-      # Rails.logger.debug ">>> create_mother_plant"
-      # Rails.logger.debug ">>> mother_id: #{mother_id}"
-      # Rails.logger.debug ">>> strain_name: #{strain_name}"
-      # Rails.logger.debug ">>> mother_location_id: #{mother_location_id}"
-
-      # Save as draft first because other fields is not available
-      command = Inventory::CreatePlants.call(
-        status: 'draft',
-        plant_ids: [mother_id],
-        strain_name: strain_name,
-        location_id: mother_location_id,
-        location_type: 'room',
-        planted_on: nil,
-        plant_status: 'mother',
-      )
-
-      if command.success?
-        command.result[0]
-      else
-        combine_errors(command.errors, :plant_ids, :mother_id)
-        combine_errors(command.errors, :strain_name, :strain)
-        combine_errors(command.errors, :location_id, :mother_location_id)
-        nil
-      end
-    end
-
-    def create_clones(clone_ids, mother)
+    def create_clones(clone_ids, mother_id)
       trays = QueryAllValidFacilityLocations.call.result.reject { |x| x[:t_id].blank? }
       result = Hash.new { |hash, key| hash[key] = [] }
 
@@ -177,8 +143,6 @@ module Inventory
       end
 
       clones = []
-      mother_id = mother ? mother.id : nil
-
       result.each do |_tray_id, _plant_ids|
         new_clones = create_clone(_plant_ids,
                                   strain_name,

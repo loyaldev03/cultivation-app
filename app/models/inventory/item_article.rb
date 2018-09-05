@@ -20,6 +20,9 @@ module Inventory
     field :planted_on, type: DateTime
     field :expected_harvested_on, type: DateTime
     field :mother_plant_id, type: BSON::ObjectId
+    field :mother_plant, type: String                     # reserved for mother plant that may link or may not link to a plant record.
+                                                          # mother_plant_id (BSON::ObjectId) will be empty when the plant is an old record 
+                                                          # and its mother has no record in store.
 
     # To record drying
     field :wet_weight, type: BigDecimal

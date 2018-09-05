@@ -306,9 +306,9 @@ class MotherEditor extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <StrainPicker 
+        <StrainPicker
           ref={this.strainPicker}
-          onStrainSelected={this.onStrainSelected} 
+          onStrainSelected={this.onStrainSelected}
         />
         <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mt3 mb3">
@@ -331,7 +331,7 @@ class MotherEditor extends React.Component {
         <hr className="mt3 mb3 b--light-gray w-100" />
         <div className="ph4 mb3 mt3">
           <span className="f6 fw6 dark-gray">
-            Where the mother plants are from?
+            Plant Origin?
           </span>
         </div>
         <div className="ph4 mb3 flex justify-between">
@@ -374,7 +374,7 @@ class MotherEditor extends React.Component {
             href="#"
             onClick={this.props.onExitCurrentEditor}
           >
-            Save draft
+            Save for later
           </a>
           <a
             className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"

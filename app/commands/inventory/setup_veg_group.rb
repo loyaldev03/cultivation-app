@@ -6,23 +6,21 @@ module Inventory
   class SetupVegGroup
     prepend SimpleCommand
 
-    # "clone_ids"=>"c001,SG9.RM1.SEC01.Rw1.S01.T01",
-    # "planted_on"=>"2018-08-27T16:00:00.000Z",
-    # "expected_harvest_date"=>"2018-08-27T16:00:00.000Z",
-    # "is_bought"=>false,
-    # "mother_id"=>"ma01",
-    # "mother_location_id"=>"5b729967edfdb2d54674e9d6"
+    # TODO: 
+    # 1. validation on mother plant id
+    # 2. mother location not needed
+    # 3. validate is bought
+    # 4. validate trays are not veg only
 
     attr_reader :user,
       :args,
       :strain_name,
       :strain_type,
       :plant_ids,
-      :clone_ids,  # clone_ids is raw plant ID and location ID pairing
+      :veg_ids,  # veg_ids is raw plant ID and location ID pairing
       :planted_on,
       :expected_harvested_on,
       :mother_id,
-      :mother_location_id,
       :vendor_id,
       :vendor_name,
       :vendor_no,
@@ -36,18 +34,16 @@ module Inventory
     def initialize(user, args)
       @user = user
       @args = HashWithIndifferentAccess.new(args)
-      Rails.logger.debug '>>>> SetupClones'
+      Rails.logger.debug '>>>> SetupVeg'
       Rails.logger.debug @args
 
       @strain_name = args[:strain]
       @strain_type = args[:strain_type]
-      @clone_ids = args[:clone_ids]
-      @room_id = args[:room_id]
+      @veg_ids = args[:veg_ids]
       @planted_on = args[:planted_on]
       @expected_harvested_on = args[:expected_harvested_on]
       @mother_id = args[:mother_id]
-      @mother_location_id = args[:mother_location_id]
-
+      
       @vendor_id = args[:vendor_id]
       @vendor_name = args[:vendor_name] && args[:vendor_name].strip
       @vendor_no = args[:vendor_no]
@@ -59,27 +55,24 @@ module Inventory
     end
 
     def call
-      @clone_ids = @clone_ids.split(/[\n\r]/).reject { |x| x.empty? }.map(&:strip)
-      @plant_ids = @clone_ids.map { |x| x.split(',')[0].strip }
+      split_veg_ids
 
       if valid_permission? && valid_data?
         create_strain
         vendor = create_vendor
-        mother = unless is_purchased?
-                   create_mother_plant
-                 end
-
-        Rails.logger.debug ">>>>> mother: #{mother}"
-        Rails.logger.debug mother.attributes if mother
-
-        clones = create_clones(clone_ids, mother)
-        create_invoice(clones, vendor, invoice_no) if is_purchased?
-        clones.append(mother) if mother
-        clones
+        @mother_id = nil if is_purchased?
+        vegs = create_vegs(veg_ids, @mother_id)
+        create_invoice(vegs, vendor, invoice_no) if is_purchased?
+        vegs
       end
     end
 
     private
+
+    def split_veg_ids
+      @veg_ids = @veg_ids.split(/[\n\r]/).reject { |x| x.empty? }.map(&:strip)
+      @plant_ids = @veg_ids.map { |x| x.split(',')[0].strip }
+    end
 
     def valid_permission?
       true  # TODO: Check user role
@@ -138,61 +131,41 @@ module Inventory
       end
     end
 
-    def create_mother_plant
-      # Rails.logger.debug ">>> create_mother_plant"
-      # Rails.logger.debug ">>> mother_id: #{mother_id}"
-      # Rails.logger.debug ">>> strain_name: #{strain_name}"
-      # Rails.logger.debug ">>> mother_location_id: #{mother_location_id}"
-
-      # Save as draft first because other fields is not available
-      command = Inventory::CreatePlants.call(
-        status: 'draft',
-        plant_ids: [mother_id],
-        strain_name: strain_name,
-        location_id: mother_location_id,
-        location_type: 'room',
-        planted_on: nil,
-        plant_status: 'mother',
-      )
-
-      if command.success?
-        command.result[0]
-      else
-        combine_errors(command.errors, :plant_ids, :mother_id)
-        combine_errors(command.errors, :strain_name, :strain)
-        combine_errors(command.errors, :location_id, :mother_location_id)
-        nil
-      end
-    end
-
-    def create_clones(clone_ids, mother)
+    def create_vegs(veg_ids, mother_id)
       trays = QueryAllValidFacilityLocations.call.result.reject { |x| x[:t_id].blank? }
-      result = Hash.new { |hash, key| hash[key] = [] }
+      result = Hash.new { |hash, key| hash[key] = { plant_ids: [], plant_status: nil } }
 
-      clone_ids.each do |line|
+      veg_ids.each do |line|
         plant_id, location = line.split(',')
         tray = trays.find { |x| x[:value] == location.strip }
+        Rails.logger.debug("tray: #{tray}")
         tray_id = tray[:t_id]
-        result[tray_id] << plant_id.strip
+        plant_status = tray[:rm_purpose]
+
+        result[tray_id][:plant_ids] << plant_id.strip
+        result[tray_id][:plant_status] = plant_status
       end
 
-      clones = []
-      mother_id = mother ? mother.id : nil
+      vegs = []
+      result.each do |_tray_id, plant_ids_and_status|
+        _plant_ids     = plant_ids_and_status[:plant_ids]
+        _plant_status  = plant_ids_and_status[:plant_status]
+        Rails.logger.debug("_plant_status: #{_plant_status}")
 
-      result.each do |_tray_id, _plant_ids|
-        new_clones = create_clone(_plant_ids,
-                                  strain_name,
-                                  _tray_id,
-                                  planted_on,
-                                  expected_harvested_on,
-                                  mother_id)
-        clones.concat(new_clones)
+        new_vegs       = create_veg(_plant_ids,
+                                    _plant_status,
+                                    strain_name,
+                                    _tray_id,
+                                    planted_on,
+                                    expected_harvested_on,
+                                    mother_id)
+        vegs.concat(new_vegs)
       end
 
-      clones
+      vegs
     end
 
-    def create_clone(_plant_ids, _strain_name, _tray_id, _planted_on, _expected_harvested_on, _mother_plant_id)
+    def create_veg(_plant_ids, _plant_status, _strain_name, _tray_id, _planted_on, _expected_harvested_on, _mother_plant_id)
       command = Inventory::CreatePlants.call(
         status: 'available',
         plant_ids: _plant_ids,
@@ -201,7 +174,7 @@ module Inventory
         location_type: 'tray',
         planted_on: _planted_on,
         expected_harvested_on: _expected_harvested_on,
-        plant_status: 'clone',
+        plant_status: _plant_status,
         mother_plant_id: _mother_plant_id,
       )
 

@@ -3,7 +3,7 @@ import Select from 'react-select'
 import PropTypes from 'prop-types'
 import reactSelectStyle from './reactSelectStyle'
 
-const VEG_TRAY_PURPOSES = ['cure', 'dry', 'flower', 'veg', 'veg1', 'veg2']
+const VEG_TRAY_PURPOSES = ['veg', 'veg1', 'veg2']
 
 class LocationPicker extends React.Component {
   constructor(props) {

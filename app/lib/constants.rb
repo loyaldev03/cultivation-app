@@ -212,8 +212,7 @@ module Constants
   ].freeze
 
   TRAY_CAPACITY_TYPES = [
-    {code: :trays, name: 'Trays'},
-    {code: :pots, name: 'Pots / Plants'},
+    {code: :pots, name: 'Pots'},
     {code: :cups, name: 'Cups'},
   ].freeze
 

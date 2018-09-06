@@ -11,6 +11,7 @@ module Cultivation
     field :facility_id, type: BSON::ObjectId
     field :grow_method, type: String
 
+    has_one :tray_plan, class_name:'Cultivation::TrayPlan'
     has_many :tasks, class_name: 'Cultivation::Task'
   end
 end

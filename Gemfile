@@ -98,4 +98,3 @@ gem 'rollbar'
 
 #Api Serializer
 gem 'fast_jsonapi'
-gem 'mongoid-tree', :git => 'git://github.com/benedikt/mongoid-tree'

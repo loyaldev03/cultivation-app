@@ -4,7 +4,7 @@ module Cultivation
 
     attr_reader :args, :task, :array
 
-    def initialize(args)
+    def initialize(args = nil)
       @args = args
     end
 
@@ -24,7 +24,6 @@ module Cultivation
 
     def find_changes(task, array)
       return if(task.children.count == 0 and task.tasks_depend.count == 0)
-
       task.children.each do |child|
         temp_child = child
         end_date = task.start_date + child.days.to_i.send('days')

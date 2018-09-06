@@ -2,7 +2,6 @@ module Cultivation
   class Task
     include Mongoid::Document
     include Mongoid::Timestamps::Short
-    include Mongoid::Tree
 
     field :phase, type: String
     field :task_category, type: String
@@ -31,6 +30,9 @@ module Cultivation
       batch.tasks.where(depend_on: self.id)
     end
 
+    def children
+      batch.tasks.where(parent_id: self.id)
+    end
     
   end
 end

@@ -6,7 +6,7 @@ module Inventory
   class SetupVegGroup
     prepend SimpleCommand
 
-    # TODO: 
+    # TODO:
     # 1. validation on mother plant id
     # 2. mother location not needed
     # 3. validate is bought
@@ -43,7 +43,7 @@ module Inventory
       @planted_on = args[:planted_on]
       @expected_harvested_on = args[:expected_harvested_on]
       @mother_id = args[:mother_id]
-      
+
       @vendor_id = args[:vendor_id]
       @vendor_name = args[:vendor_name] && args[:vendor_name].strip
       @vendor_no = args[:vendor_no]
@@ -133,7 +133,7 @@ module Inventory
 
     def create_vegs(veg_ids, mother_id)
       trays = QueryAllValidFacilityLocations.call.result.reject { |x| x[:t_id].blank? }
-      result = Hash.new { |hash, key| hash[key] = { plant_ids: [], plant_status: nil } }
+      result = Hash.new { |hash, key| hash[key] = {plant_ids: [], plant_status: nil} }
 
       veg_ids.each do |line|
         plant_id, location = line.split(',')
@@ -148,17 +148,17 @@ module Inventory
 
       vegs = []
       result.each do |_tray_id, plant_ids_and_status|
-        _plant_ids     = plant_ids_and_status[:plant_ids]
-        _plant_status  = plant_ids_and_status[:plant_status]
+        _plant_ids = plant_ids_and_status[:plant_ids]
+        _plant_status = plant_ids_and_status[:plant_status]
         Rails.logger.debug("_plant_status: #{_plant_status}")
 
-        new_vegs       = create_veg(_plant_ids,
-                                    _plant_status,
-                                    strain_name,
-                                    _tray_id,
-                                    planted_on,
-                                    expected_harvested_on,
-                                    mother_id)
+        new_vegs = create_veg(_plant_ids,
+                              _plant_status,
+                              strain_name,
+                              _tray_id,
+                              planted_on,
+                              expected_harvested_on,
+                              mother_id)
         vegs.concat(new_vegs)
       end
 

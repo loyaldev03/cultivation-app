@@ -296,7 +296,6 @@ class VegGroupEditor extends React.Component {
               <strong>Plant ID</strong>.
             </p>
             <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
-            
               If you already have them, paste Plant IDs with its corresponding
               tray ID like below:
             </p>
@@ -462,15 +461,16 @@ class VegGroupEditor extends React.Component {
               value={this.state.expected_harvested_on}
               onChange={this.onExpectedHarvestDateChanged}
             />
-            <FieldError errors={this.state.errors} field="expected_harvested_on" />
+            <FieldError
+              errors={this.state.errors}
+              field="expected_harvested_on"
+            />
           </div>
         </div>
 
         <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">
-            Plant Origin?
-          </span>
+          <span className="f6 fw6 dark-gray">Plant Origin?</span>
         </div>
         <div className="ph4 mb3 flex justify-between">
           <label className="f6 fw6 db mb1 gray">The plants are purchased</label>

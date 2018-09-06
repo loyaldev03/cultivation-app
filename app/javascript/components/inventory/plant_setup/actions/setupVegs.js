@@ -1,7 +1,6 @@
 import plantStore from '../store/PlantStore'
 
 export default function setupVegs(payload) {
-  
   return fetch('/api/v1/plant_setup/setup_vegs', {
     method: 'POST',
     credentials: 'include',

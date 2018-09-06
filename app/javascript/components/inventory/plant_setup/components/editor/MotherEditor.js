@@ -330,9 +330,7 @@ class MotherEditor extends React.Component {
 
         <hr className="mt3 mb3 b--light-gray w-100" />
         <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">
-            Plant Origin?
-          </span>
+          <span className="f6 fw6 dark-gray">Plant Origin?</span>
         </div>
         <div className="ph4 mb3 flex justify-between">
           <label className="f6 fw6 db mb1 gray">

@@ -9,7 +9,6 @@ import TaskEditor from './TaskEditor'
 import updateSidebarTask from '../actions/updateSidebarTask'
 
 import ReactTable from 'react-table'
-import 'react-table/react-table.css'
 
 @observer
 class TaskList extends React.Component {

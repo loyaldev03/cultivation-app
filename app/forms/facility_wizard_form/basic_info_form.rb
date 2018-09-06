@@ -32,6 +32,7 @@ module FacilityWizardForm
 
     # Note: params should include :id for update operation
     def submit(params)
+      self.map_attrs_from_hash(ATTRS, params)
       if valid?
         save_cmd = SaveFacility.call(self)
         if save_cmd.success?

@@ -23,11 +23,11 @@ module Inventory
       if object.location_type == 'room'
         facility = Facility.find_by(:'rooms._id' => BSON::ObjectId(object.location_id))
         room = facility.rooms.find(object.location_id)
-        room ? "#{facility.code}.#{room.code} - #{room.name} " : ''
+        room ? "#{facility.code}.#{room.code} - #{room.name}" : ''
       elsif object.location_type == 'tray'
-        tray = Tray.find_by(object.location_id)
+        tray = Tray.find_by(id: object.location_id)
         facility = Facility.find_by(:'rooms.rows.shelves._id' => tray.shelf_id)
-        tray ? "#{facility.code}...#{tray.code} - #{tray.name} " : ''
+        tray ? "#{facility.code}...#{tray.code}" : ''
       else
         ''
       end

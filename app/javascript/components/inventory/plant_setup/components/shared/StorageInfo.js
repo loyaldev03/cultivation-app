@@ -11,11 +11,11 @@ class StorageInfo extends React.Component {
     this.mode = props.mode || 'all' // Accepts either 'all' or 'storage', in the future to be enhanced by storage_types.
     if (this.isStorageMode) {
       this.locations = props.locations.filter(
-        x => x.rm_id.length == 0 || x.rm_purpose === 'storage'
+        x => x.rm_id.length > 0 || x.rm_purpose === 'storage'
       )
     } else if (this.isMotherMode) {
       this.locations = props.locations.filter(
-        x => x.rm_id.length == 0 || x.rm_purpose === 'mother'
+        x => x.rm_id.length > 0 && x.rm_purpose === 'mother'
       )
     } else {
       this.locations = props.locations
@@ -151,7 +151,7 @@ class StorageInfo extends React.Component {
     let errors = {}
     const { facility_id, room_id } = this.state
     if (facility_id.length <= 0) {
-      errors = { location: ['Facility is required.'] }
+      errors = { location: ['Room is required.'] }
     }
 
     if (room_id.length <= 0) {

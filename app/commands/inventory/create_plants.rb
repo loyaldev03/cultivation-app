@@ -35,9 +35,10 @@ module Inventory
     end
 
     def call
-      if valid?
+      can_save = (status == 'draft' || valid?)
+      if can_save
         item = create_item
-        plants = create_articles_for_plants(item)
+        plants = create_articles_for_plants(item, status: status)
         plants
       end
     end
@@ -73,7 +74,7 @@ module Inventory
     end
 
     # TODO: Maybe should pass in the batch ID
-    def create_articles_for_plants(item)
+    def create_articles_for_plants(item, status: 'draft')
       plants = []
       plant_ids.each do |plant_id|
         plant = Inventory::ItemArticle.find_or_initialize_by(
@@ -85,7 +86,7 @@ module Inventory
           t.location_id = location_id
           t.location_type = location_type
           t.facility = item.facility
-          t.status = 'available'
+          t.status = status
           t.mother_plant_id = mother_plant_id
           t.expected_harvested_on = nil
           t.planted_on = planted_on

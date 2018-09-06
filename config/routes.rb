@@ -82,11 +82,11 @@ Rails.application.routes.draw do
       end
 
       resource :plant_setup, only: [] do
-        post 'create_mother'
-        post 'create_clone'
-        post 'create_veg'
-        post 'create_harvest_yield'
-        post 'create_waste'
+        post 'setup_mother'
+        post 'setup_clones'
+        post 'setup_veg'
+        post 'setup_harvest_yield'
+        post 'setup_waste'
       end
     end
   end

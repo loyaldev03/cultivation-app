@@ -7,11 +7,16 @@ import {
 } from '../../../../utils/FormHelpers'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import LocationPicker from '../shared/LocationPicker'
+import StrainPicker from '../shared/StrainPicker'
+import setupClones from '../../actions/setupClones'
 
 class CloneEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      strain: '',
+      strain_type: '',
+
       // source
       clone_ids: '',
       plant_qty: 0,
@@ -19,8 +24,7 @@ class CloneEditor extends React.Component {
       generator_location: '',
       last_plant_id: 0,
       planted_on: null,
-      expected_harvest_date: null,
-      is_bought: false,
+      expected_harvested_on: null,
       mother_id: '',
       mother_location_id: '',
 
@@ -36,6 +40,7 @@ class CloneEditor extends React.Component {
       invoice_no: '',
 
       // UI states
+      isBought: false,
       isShowPlantIdGenerator: false,
       errors: {}
     }
@@ -56,6 +61,8 @@ class CloneEditor extends React.Component {
       this.cloneIdTextArea = element
     }
 
+    this.strainPicker = React.createRef()
+
     this.onCloneIdsChanged = this.onCloneIdsChanged.bind(this)
     this.onChangeGeneratorPlantCount = this.onChangeGeneratorPlantCount.bind(
       this
@@ -72,6 +79,7 @@ class CloneEditor extends React.Component {
     this.onSave = this.onSave.bind(this)
     this.onToggleGeneratePlantId = this.onToggleGeneratePlantId.bind(this)
     // this.onGeneratePlantId = this.onGeneratePlantId.bind(this)
+    this.onStrainSelected = this.onStrainSelected.bind(this)
   }
 
   onCloneIdsChanged(event) {
@@ -96,11 +104,11 @@ class CloneEditor extends React.Component {
   }
 
   onExpectedHarvestDateChanged(date) {
-    this.setState({ expected_harvest_date: date })
+    this.setState({ expected_harvested_on: date })
   }
 
   onIsBoughtChanged(event) {
-    this.setState({ is_bought: !this.state.is_bought })
+    this.setState({ isBought: !this.state.isBought })
     event.preventDefault()
   }
 
@@ -125,6 +133,13 @@ class CloneEditor extends React.Component {
 
   onGeneratorTraySelected(item) {
     this.setState({ tray: item.label })
+  }
+
+  onStrainSelected(data) {
+    this.setState({
+      strain: data.strain,
+      strain_type: data.strain_type
+    })
   }
 
   // onGeneratePlantId(event) {
@@ -160,34 +175,54 @@ class CloneEditor extends React.Component {
 
   onSave(event) {
     const data = this.validateAndGetValues()
-    // if (data.isValid) {
-    // fetch('/api/v1/plant_setup/create_mother', {
-    //   method: 'POST',
-    //   credentials: 'include',
-    //   body: JSON.stringify(data),
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   }
-    // })
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     console.log(data)
-    //     console.log(data.data)
-    //   })
-    // }
+    const { errors, isValid, ...payload } = data
+
+    if (isValid) {
+      setupClones(payload).then(({ status, data }) => {
+        if (status >= 400) {
+          this.setState({ errors: data.errors })
+        } else {
+          this.props.onResetParent()
+          this.reset()
+        }
+      })
+    }
 
     event.preventDefault()
   }
 
+  reset() {
+    this.setState({
+      strain: '',
+      strain_type: '',
+      clone_ids: '',
+      plant_qty: 0,
+      tray: '',
+      generator_location: '',
+      planted_on: null,
+      expected_harvested_on: null,
+      mother_id: '',
+      mother_location_id: '',
+      // UI states
+      isShowPlantIdGenerator: false,
+      isBought: false,
+      errors: {}
+    })
+
+    this.strainPicker.current.reset()
+  }
+
   validateAndGetValues() {
     const {
+      strain,
+      strain_type,
       clone_ids,
       plant_qty,
       isShowPlantIdGenerator,
       tray,
       planted_on,
-      expected_harvest_date,
-      is_bought,
+      expected_harvested_on,
+      isBought,
       mother_id,
       mother_location_id
     } = this.state
@@ -214,8 +249,8 @@ class CloneEditor extends React.Component {
       }
     }
 
-    let purchaseData = { idValid: true }
-    if (!is_bought) {
+    let purchaseData = { isValid: true }
+    if (!isBought) {
       if (mother_id.length <= 0) {
         errors = { ...errors, mother_id: ['Mother ID is required.'] }
       }
@@ -230,20 +265,23 @@ class CloneEditor extends React.Component {
       purchaseData = this.purchaseInfoEditor.getValues()
     }
 
-    const strainData = this.props.onValidateParent()
+    const { isValid: strainValid } = this.strainPicker.current.validate()
     const isValid =
       Object.getOwnPropertyNames(errors).length == 0 &&
-      strainData.isValid &&
+      strainValid &&
       purchaseData.isValid
 
     const data = {
+      ...purchaseData,
+      strain,
+      strain_type,
       clone_ids,
-      planted_on,
-      expected_harvest_date,
-      is_bought,
+      planted_on: planted_on && planted_on.toISOString(),
+      expected_harvested_on:
+        expected_harvested_on && expected_harvested_on.toISOString(),
+      isBought,
       mother_id,
       mother_location_id,
-      ...purchaseData,
       errors,
       isValid
     }
@@ -255,7 +293,7 @@ class CloneEditor extends React.Component {
   }
 
   renderProcurementInfo() {
-    if (!this.state.is_bought) {
+    if (!this.state.isBought) {
       return (
         <React.Fragment>
           <div className="ph4 mb3 flex">
@@ -388,6 +426,11 @@ class CloneEditor extends React.Component {
   render() {
     return (
       <React.Fragment>
+        <StrainPicker
+          ref={this.strainPicker}
+          onStrainSelected={this.onStrainSelected}
+        />
+        <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mt3 mb3">
           <span className="f6 fw6 dark-gray">Plant IDs</span>
         </div>
@@ -409,7 +452,7 @@ class CloneEditor extends React.Component {
               Expected Harvest Date
             </label>
             <CalendarPicker
-              value={this.state.expected_harvest_date}
+              value={this.state.expected_harvested_on}
               onChange={this.onExpectedHarvestDateChanged}
             />
           </div>
@@ -426,6 +469,7 @@ class CloneEditor extends React.Component {
             type="checkbox"
             value="1"
             id="is_bought_input"
+            checked={this.state.isBought}
             onChange={this.onIsBoughtChanged}
           />
           <label className="toggle-button" htmlFor="is_bought_input" />

@@ -30,7 +30,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
     it "should not include trays planned prior to schedule" do
       # Prepare
       p1_start_date = DateTime.strptime("2018/07/25", "%Y/%m/%d")
-      p1_end_date = DateTime.strptime("2018/08/01", "%Y/%m/%d")
+      p1_end_date = DateTime.strptime("2018/07/31", "%Y/%m/%d")
       p1 = create(:tray_plan,
                   facility_id: facility.id,
                   room_id: first_room.id,
@@ -50,7 +50,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
     it "should include trays planned with end-date overlapping schedule start-date" do
       # Prepare
       p1_start_date = DateTime.strptime("2018/07/25", "%Y/%m/%d")
-      p1_end_date = DateTime.strptime("2018/08/02", "%Y/%m/%d") # Overlap with schedule start date
+      p1_end_date = DateTime.strptime("2018/08/01", "%Y/%m/%d") # Overlap with schedule start date
       p1 = create(:tray_plan,
                   facility_id: facility.id,
                   room_id: first_room.id,
@@ -273,6 +273,48 @@ RSpec.describe QueryPlannedTrays, type: :command do
 
       # Validate
       expect(res.result.size).to eq 0
+    end
+
+    it "should include trays planned start ealier than schedule start-date and ends on same schedule end-date" do
+      # Prepare
+      # A tray has been booked within the schedule start_date & end_date
+      p1_start_date = DateTime.strptime("2018/07/26", "%Y/%m/%d")
+      p1_end_date = DateTime.strptime("2018/08/17", "%Y/%m/%d")
+      p1 = create(:tray_plan,
+                  facility_id: facility.id,
+                  room_id: first_room.id,
+                  row_id: first_row.id,
+                  shelf_id: first_shelf.id,
+                  tray_id: first_tray.id,
+                  start_date: p1_start_date,
+                  end_date: p1_end_date)
+
+      # Perform
+      res = QueryPlannedTrays.call(schedule_start_date, schedule_end_date)
+
+      # Validate
+      expect(res.result.size).to eq 1
+    end
+
+    it "should include trays that last 1 day of schedule end date" do
+      # Prepare
+      # A tray has been booked within the schedule start_date & end_date
+      p1_start_date = DateTime.strptime("2018/08/17", "%Y/%m/%d")
+      p1_end_date = DateTime.strptime("2018/08/17", "%Y/%m/%d")
+      p1 = create(:tray_plan,
+                  facility_id: facility.id,
+                  room_id: first_room.id,
+                  row_id: first_row.id,
+                  shelf_id: first_shelf.id,
+                  tray_id: first_tray.id,
+                  start_date: p1_start_date,
+                  end_date: p1_end_date)
+
+      # Perform
+      res = QueryPlannedTrays.call(schedule_start_date, schedule_end_date)
+
+      # Validate
+      expect(res.result.size).to eq 1
     end
   end
 end

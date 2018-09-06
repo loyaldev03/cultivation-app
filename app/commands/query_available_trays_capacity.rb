@@ -1,16 +1,14 @@
-class QueryAvailableTrays
+class QueryReadyTrays
   prepend SimpleCommand
 
-  attr_reader :facility_id, :start_date, :end_date
+  # NOTE: This query all the Trays in a Facility that are
+  # ready to be use in cultivation
 
-  def initialize(facility_id, start_date, end_date)
-    raise ArgumentError, 'start_date' if start_date.nil?
-    raise ArgumentError, 'end_date' if end_date.nil?
-    raise ArgumentError, 'start_date should be ealier than end_date' if end_date <= start_date
-    
-    @facility_id = facility_id
-    @start_date = start_date.beginning_of_day
-    @end_date = end_date.end_of_day
+  attr_reader :start_date, :end_date
+
+  def initialize(args = {})
+    @start_date = args[:start_date].beginning_of_day if args.key?(:start_date)
+    @end_date = args[:end_date].end_of_day if args.key?(:end_date)
   end
 
   def call
@@ -66,8 +64,8 @@ class QueryAvailableTrays
             { "$match": {
                 "$expr": {
                   "$or":[
-                    { "$and":[ { "$gte": ["$end_date", "$$startDate"] }, { "$lte": ["$start_date", "$$endDate"] } ] },
-                    { "$and":[ { "$gte": ["$start_date", "$$startDate"] }, { "$lte": ["$start_date", "$$endDate"] } ] },
+                    { "$and":[ { "$gt": ["$end_date", "$$startDate"] }, { "$lte": ["$end_date", "$$endDate"] } ] },
+                    { "$and":[ { "$gte": ["$start_date", "$$startDate"] }, { "$lt": ["$start_date", "$$endDate"] } ] },
                     { "$and":[ { "$lte": ["$start_date", "$$startDate"] }, { "$gte": ["$end_date", "$$endDate"] } ] }
                   ]
                 }
@@ -108,6 +106,7 @@ class QueryAvailableTrays
           tray_code: "$trays.code",
           tray_capacity: "$trays.capacity",
           tray_capacity_type: "$trays.capacity_type",
+          planned: 1,
           planned_capacity: 1,
           remaining_capacity: 1,
         }

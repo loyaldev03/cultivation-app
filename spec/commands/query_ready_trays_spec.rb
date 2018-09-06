@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe QueryReadyTrays, type: :command, focus: true do
+RSpec.describe QueryReadyTrays, type: :command do
   subject! {
     create(:facility, :is_complete)
   }
@@ -25,7 +25,6 @@ RSpec.describe QueryReadyTrays, type: :command, focus: true do
       expect(Tray.count).to eq 24
       expect(query_cmd.success?).to eq true
       expect(query_cmd.result.size).to eq 24
-      expect(query_cmd.result).to eq ""
     end
   end
 end

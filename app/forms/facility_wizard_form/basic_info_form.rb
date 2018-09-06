@@ -17,6 +17,7 @@ module FacilityWizardForm
              :address_state,
              :address_zipcode,
              :address_country,
+             :address_email,
              :address_main_number,
              :address_fax_number]
 
@@ -31,7 +32,6 @@ module FacilityWizardForm
 
     # Note: params should include :id for update operation
     def submit(params)
-      self.map_attrs_from_hash(ATTRS, params)
       if valid?
         save_cmd = SaveFacility.call(self)
         if save_cmd.success?
@@ -60,6 +60,7 @@ module FacilityWizardForm
         self.address_state = record.address.state
         self.address_zipcode = record.address.zipcode
         self.address_country = record.address.country
+        self.address_email = record.address.email
         self.address_main_number = record.address.main_number
         self.address_fax_number = record.address.fax_number
       end

@@ -34,5 +34,9 @@ module Cultivation
       batch.tasks.where(parent_id: self.id)
     end
     
+    def parent
+      batch.tasks.find_by(id: self.parent_id)
+    end
+
   end
 end

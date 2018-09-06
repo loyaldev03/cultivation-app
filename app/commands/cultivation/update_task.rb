@@ -9,12 +9,16 @@ module Cultivation
     end
 
     def call
-      update_task(@args)
+      task = Cultivation::Task.find(@args[:_id])
+      update_task(task, @args)
+      update_task(task.parent, {end_date: task.end_date}) if task.end_date > task.parent.end_date 
     end
 
-    def update_task(args)
-      task = Cultivation::Task.find(args[:_id])
+
+
+    def update_task(task, args)
       task.update(args)
+      #check if current task end_date is beyond end_date of parent
       tasks_changes = []
       find_changes(task, tasks_changes) #store into temp array
       bulk_update(tasks_changes) #bulk update

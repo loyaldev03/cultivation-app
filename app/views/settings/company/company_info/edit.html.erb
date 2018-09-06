@@ -1,0 +1,23 @@
+find me under views/settings/company/company_info/edit.html.erb
+
+
+<%= form_with model: @company_info, url: settings_company_company_info_path, local: true do |f| %>
+  <div class="pa2">
+    <%= f.label "Company name" %>
+    <%= f.text_field :name %>
+  </div>
+
+    phone<br/>
+
+    fax<br/>
+
+    website<br/>
+    
+    state_license<br/>
+
+    tax_id<br/>
+
+    timezone<br/>
+  <%= f.submit "Save" %>
+<% end %>
+

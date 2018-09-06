@@ -95,11 +95,11 @@
                     <%= f.text_field :address_address,
                       placeholder: "1011, 11th ave ne",
                       value: @wizard_form.address_address,
-                      class: "ttu grey ba b--black-20 br2 outline-0 pa2 mb2 db w-100" %>
+                      class: "ttu grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
                   </div>
                 </div>
 
-                <div class="flex flex-row">
+                <div class="flex flex-row mt3">
                   <div class="w-20-l w-30 mr4">
                     <%= f.label "Zipcode", class: "grey subtitle-2 ttc db mb1" %>
                     <%= f.text_field :address_zipcode,
@@ -134,21 +134,31 @@
                 <span class="grey subtitle-2 ttc">Contact Details</span>
               </div>
 
-              <div class="fl w-70-l w-100 flex flex-row pt0-l pt3">
-                <div class="mr4 w-40">
-                  <%= f.label "Phone Number", class: "grey subtitle-2 ttc db mb1" %>
-                  <%= f.text_field :address_main_number,
-                    placeholder: "1234567",
-                    value: @wizard_form.address_main_number,
-                    class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
+              <div class="fl w-70-l w-100 flex flex-column pt0-l pt3">
+                <div class="flex flex-row">
+                  <div class="mr4 w-40">
+                    <%= f.label "Phone Number", class: "grey subtitle-2 ttc db mb1" %>
+                    <%= f.text_field :address_main_number,
+                      placeholder: "1234567",
+                      value: @wizard_form.address_main_number,
+                      class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                  </div>
+
+                  <div class="w-40">
+                    <%= f.label "Fax Number", class: "grey subtitle-2 ttc db mb1" %>
+                    <%= f.text_field :address_fax_number,
+                      placeholder: "011 1234567",
+                      value: @wizard_form.address_fax_number,
+                      class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                  </div>
                 </div>
 
-                <div class="w-40">
-                  <%= f.label "Fax Number", class: "grey subtitle-2 ttc db mb1" %>
-                  <%= f.text_field :address_fax_number,
-                    placeholder: "011 1234567",
-                    value: @wizard_form.address_fax_number,
-                    class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
+                <div class="w-40 mt3">
+                  <%= f.label :email, class: "grey subtitle-2 ttc db mb1" %>
+                    <%= f.text_field :address_email,
+                      placeholder: "user@email.com",
+                      value: @wizard_form.address_email,
+                      class: "grey ba b--black-20 br2 outline-0 pa2 db w-100" %>
                 </div>
               </div>
             </div>

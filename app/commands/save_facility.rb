@@ -35,6 +35,7 @@ class SaveFacility
     address.state = form_object.address_state
     address.zipcode = form_object.address_zipcode
     address.country = form_object.address_country
+    address.email = form_object.address_email
     address.main_number = form_object.address_main_number
     address.fax_number = form_object.address_fax_number
 

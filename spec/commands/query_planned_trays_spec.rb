@@ -1,11 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe QueryPlannedTrays, type: :command, focus: true do
+RSpec.describe QueryPlannedTrays, type: :command do
   subject(:facility) {
     create(:facility, :is_complete)
-  }
-  subject(:user) {
-    create(:user)
   }
   context ".call" do
     subject(:first_room) {

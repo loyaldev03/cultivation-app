@@ -37,6 +37,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
     it "task end date beyond parent end_date, should update parent end_date" do
     end
 
+    #handle validation
 
     # it "return result when name exists" do
     #   cmd = FindFacility.call({name: subject.name})

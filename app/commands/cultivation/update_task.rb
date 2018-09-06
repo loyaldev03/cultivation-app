@@ -2,7 +2,7 @@ module Cultivation
   class UpdateTask
     prepend SimpleCommand
 
-    attr_reader :args
+    attr_reader :args, :task, :array
 
     def initialize(args)
       @args = args

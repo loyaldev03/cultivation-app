@@ -50,6 +50,10 @@ Rails.application.routes.draw do
       resources :unit_of_measures, only: [:index, :edit, :update, :new, :create, :destroy]
     end
 
+    namespace 'company', as: :company do
+      resources :company_info, only: [:edit, :update]
+    end
+
     namespace 'facilities', as: :facility do
       resources :facilities, only: [:edit, :update, :index] do
         get 'all', on: :collection

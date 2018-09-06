@@ -13,7 +13,7 @@ class MotherPicker extends React.Component {
     }
   }
 
-  onMotherSelected = (item) => {
+  onMotherSelected = item => {
     this.setState({ mother_id: item.value, motherName: item.label })
     this.props.onMotherSelected(item.value)
   }
@@ -39,7 +39,10 @@ class MotherPicker extends React.Component {
             onInputChange={this.handleInputChange}
             styles={reactSelectStyle}
             placeholder=""
-            value={{ label: this.state.motherName, value: this.state.mother_id }}
+            value={{
+              label: this.state.motherName,
+              value: this.state.mother_id
+            }}
             onChange={this.onMotherSelected}
           />
           <FieldError errors={this.state.errors} field="strain" />

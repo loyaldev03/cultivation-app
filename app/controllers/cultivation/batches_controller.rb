@@ -27,8 +27,8 @@ class Cultivation::BatchesController < ApplicationController
       if available_trays_cmd.success?
         @locations = available_trays_cmd.result
         # TODO: Return on trays for single facility
-        @facility_id = available_trays_cmd.result.last[:facility_id]
-        @locations = available_trays_cmd.result.select { |t| t[:facility_id] == @facility_id }
+        # @facility_id = available_trays_cmd.result.first[:facility_id]
+        # @locations = available_trays_cmd.result.select { |t| t[:facility_id] == @facility_id }
       else
         @locations = []
       end

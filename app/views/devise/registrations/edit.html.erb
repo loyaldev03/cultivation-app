@@ -76,7 +76,7 @@
                       </em>
                     <% end %>
                     <br />
-                    <i class="caption grey mt1">(leave blank if you don't want to change it)</i>
+                    <i class="caption grey mt1">(leave it blank if you don't want to change it)</i>
                   </div>
                 </div>
 
@@ -95,6 +95,18 @@
                 Currently waiting confirmation for: <%= resource.unconfirmed_email %>
               </div>
             <% end %>
+          </div>
+      
+          <div class="mt5">
+            <h5 class="tl pa0 ma0 subtitle-1 dark-grey ttc">Cancel my account</h5>
+            <p class="mt2 subtitle-2--regular grey lh-copy">
+              Are you sure you want to cancel your account?<br/>
+              <i>* Please noted that this action cannot be undone.</i>
+            </p>
+
+            <%= button_to "Cancel my account", registration_path(resource_name), 
+                data: { confirm: "Are you sure?" }, method: :delete,
+                class: "ttu outline-0 bg-white button--font orange bn dim pv3 pointer" %>
           </div>
       </div>
     </div>

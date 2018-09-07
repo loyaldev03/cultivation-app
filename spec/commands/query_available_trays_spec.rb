@@ -280,6 +280,42 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
 
+    it "Condition M - Consolidate 2 Tray Plans" do
+      # Prepare
+      p1_start_date = DateTime.strptime("2018/08/01", DATE_FORMAT)
+      p1_end_date = DateTime.strptime("2018/08/1", DATE_FORMAT)
+      p1_capacity = 3
+      p1 = create(:tray_plan,
+                  facility_id: subject.id,
+                  room_id: last_room.id,
+                  row_id: last_row.id,
+                  shelf_id: last_shelf.id,
+                  tray_id: last_tray.id,
+                  capacity: p1_capacity,
+                  start_date: p1_start_date,
+                  end_date: p1_end_date)
+
+      p2_start_date = DateTime.strptime("2018/08/02", DATE_FORMAT)
+      p2_end_date = DateTime.strptime("2018/08/3", DATE_FORMAT)
+      p2_capacity = 10
+      p2 = create(:tray_plan,
+                  facility_id: subject.id,
+                  room_id: last_room.id,
+                  row_id: last_row.id,
+                  shelf_id: last_shelf.id,
+                  tray_id: last_tray.id,
+                  capacity: p2_capacity,
+                  start_date: p2_start_date,
+                  end_date: p2_end_date)
+
+      query_cmd = QueryAvailableTrays.(start_date, end_date, {facility_id: subject.id})
+
+      # Validate
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      expect(target[:planned_capacity]).to eq 13
+      expect(target[:remaining_capacity]).to eq -3
+    end
+
     it "Condition X - Not Overlapping / Before Schedule" do
       # Prepare
       p1_start_date = DateTime.strptime("2018/07/25", DATE_FORMAT)

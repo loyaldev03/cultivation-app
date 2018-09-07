@@ -45,7 +45,8 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.(start_date, end_date, {facility_id: subject.id})
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
+      expect(query_cmd.result.size).to eq 24
       expect(target[:planned_capacity]).to eq p1_capacity
       expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
@@ -68,7 +69,7 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.(start_date, end_date, {facility_id: subject.id})
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
       expect(target[:planned_capacity]).to eq p1_capacity
       expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
@@ -91,7 +92,7 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.(start_date, end_date, {facility_id: subject.id})
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
       expect(target[:planned_capacity]).to eq p1_capacity
       expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
@@ -114,7 +115,7 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.(start_date, end_date, {facility_id: subject.id})
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
       expect(target[:planned_capacity]).to eq p1_capacity
       expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
@@ -137,7 +138,7 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.(start_date, end_date, {facility_id: subject.id})
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
       expect(target[:planned_capacity]).to eq p1_capacity
       expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
@@ -160,7 +161,7 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.(start_date, end_date, {facility_id: subject.id})
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
       expect(target[:planned_capacity]).to eq p1_capacity
       expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
@@ -183,7 +184,7 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.(start_date, end_date, {facility_id: subject.id})
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
       expect(target[:planned_capacity]).to eq p1_capacity
       expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
@@ -206,7 +207,7 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.(start_date, end_date, {facility_id: subject.id})
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
       expect(target[:planned_capacity]).to eq p1_capacity
       expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
@@ -229,7 +230,7 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.(start_date, end_date, {facility_id: subject.id})
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
       expect(target[:planned_capacity]).to eq p1_capacity
       expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
@@ -252,7 +253,7 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.(start_date, end_date, {facility_id: subject.id})
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
       expect(target[:planned_capacity]).to eq p1_capacity
       expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
@@ -275,7 +276,7 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.(start_date, end_date, {facility_id: subject.id})
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
       expect(target[:planned_capacity]).to eq p1_capacity
       expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
@@ -311,7 +312,7 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.(start_date, end_date, {facility_id: subject.id})
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
       expect(target[:planned_capacity]).to eq 13
       expect(target[:remaining_capacity]).to eq -3
     end
@@ -334,7 +335,7 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.call(start_date, end_date)
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
       expect(target[:planned_capacity]).to eq 0
       expect(target[:remaining_capacity]).to eq 10
     end
@@ -357,7 +358,7 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       query_cmd = QueryAvailableTrays.call(start_date, end_date)
 
       # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_s }
       expect(target[:planned_capacity]).to eq 0
       expect(target[:remaining_capacity]).to eq 10
     end

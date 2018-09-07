@@ -1,12 +1,13 @@
 import React from "react"
+import { groupBy } from '../../utils/ArrayHelper'
 
-
-const BatchLocationEditor = ({ plant, onSave }) => {
+const BatchLocationEditor = ({ plant, locations, onSave }) => {
   let quantityField = null
   let locationIdField = null
-  console.log({tag:"BatchLocationEditor", plantId: plant.id, quantity: plant.quantity })
+  let rooms = groupBy(locations, 'room_id')
+  console.log(rooms)
   return (
-    <div>
+    <div className="pa2">
       <p>Set Quantity and Location</p>
       <form
         onSubmit={e => {
@@ -43,7 +44,27 @@ const BatchLocationEditor = ({ plant, onSave }) => {
             />
           </label>
         </div>
-        <input type="submit" value="Save" />
+
+        <div className="mt2">
+          <span className="">Choose location:</span>
+          <div className="">
+            <label className="db">Select room:</label>
+            { Object.keys(rooms).map(roomId => {
+                const firstRoom = rooms[roomId][0]
+                console.log({ firstRoom, code: firstRoom.facility_code })
+                return (
+                  <div key={roomId} className="pa2 bg-yellow fl">
+                    <span>{firstRoom.facility_code}</span>
+                  </div>
+                )
+              })
+            }
+          </div>
+        </div>
+
+        <div>
+          <input type="submit" value="Save" />
+        </div>
       </form>
     </div>
   )

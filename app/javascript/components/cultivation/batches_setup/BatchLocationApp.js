@@ -26,7 +26,6 @@ const LocationField = ({ plant, onEdit }) => {
   return null
 }
 
-
 class BatchLocationApp extends React.Component {
   state = {
     fromMotherPlant: true,
@@ -146,6 +145,7 @@ class BatchLocationApp extends React.Component {
               <BatchLocationEditor
                 key={editingPlant.id}
                 plant={editingPlant}
+                locations={this.props.locations}
                 onSave={this.onEditorSave}
               />
             }

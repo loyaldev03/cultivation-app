@@ -29,13 +29,14 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
       # Prepare
       p1_start_date = DateTime.strptime("2018/07/25", "%Y/%m/%d")
       p1_end_date = DateTime.strptime("2018/08/01", "%Y/%m/%d")
+      p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
                   room_id: last_room.id,
                   row_id: last_row.id,
                   shelf_id: last_shelf.id,
                   tray_id: last_tray.id,
-                  capacity: 4,
+                  capacity: p1_capacity,
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
@@ -43,30 +44,22 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
 
       # Validate
       target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
-      expect(target[:tray_capacity]).to eq 10
-      expect(target[:planned_capacity]).to eq 4
-      expect(target[:remaining_capacity]).to eq 6
-
-      # target_model = Cultivation::TrayResult.new(target)
-      # expect(target_model.facility_id).to eq subject.id.to_bson_id
-      # expect(target_model.tray_capacity).to eq 10
-      # expect(target_model.planned_capacity).to eq 3
-      # expect(last_tray).not_to be nil
-      # expect(query_cmd.success?).to eq true
-      # expect(query_cmd.result.size).to eq Tray.count
+      expect(target[:planned_capacity]).to eq p1_capacity
+      expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
 
     it "Condition B" do
       # Prepare
       p1_start_date = DateTime.strptime("2018/07/25", "%Y/%m/%d")
       p1_end_date = DateTime.strptime("2018/08/17", "%Y/%m/%d")
+      p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
                   room_id: last_room.id,
                   row_id: last_row.id,
                   shelf_id: last_shelf.id,
                   tray_id: last_tray.id,
-                  capacity: 4,
+                  capacity: p1_capacity,
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
@@ -74,22 +67,22 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
 
       # Validate
       target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
-      expect(target[:tray_capacity]).to eq 10
-      expect(target[:planned_capacity]).to eq 4
-      expect(target[:remaining_capacity]).to eq 6
+      expect(target[:planned_capacity]).to eq p1_capacity
+      expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
 
     it "Condition C" do
       # Prepare
       p1_start_date = DateTime.strptime("2018/07/25", "%Y/%m/%d")
       p1_end_date = DateTime.strptime("2018/08/20", "%Y/%m/%d")
+      p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
                   room_id: last_room.id,
                   row_id: last_row.id,
                   shelf_id: last_shelf.id,
                   tray_id: last_tray.id,
-                  capacity: 5,
+                  capacity: p1_capacity,
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
@@ -97,22 +90,22 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
 
       # Validate
       target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
-      expect(target[:tray_capacity]).to eq 10
-      expect(target[:planned_capacity]).to eq 5
-      expect(target[:remaining_capacity]).to eq 5
+      expect(target[:planned_capacity]).to eq p1_capacity
+      expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
 
     it "Condition D" do
       # Prepare
       p1_start_date = DateTime.strptime("2018/08/01", "%Y/%m/%d")
       p1_end_date = DateTime.strptime("2018/08/16", "%Y/%m/%d")
+      p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
                   room_id: last_room.id,
                   row_id: last_row.id,
                   shelf_id: last_shelf.id,
                   tray_id: last_tray.id,
-                  capacity: 6,
+                  capacity: p1_capacity,
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
@@ -120,22 +113,22 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
 
       # Validate
       target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
-      expect(target[:tray_capacity]).to eq 10
-      expect(target[:planned_capacity]).to eq 6
-      expect(target[:remaining_capacity]).to eq 4
+      expect(target[:planned_capacity]).to eq p1_capacity
+      expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
 
     it "Condition E" do
       # Prepare
       p1_start_date = DateTime.strptime("2018/08/02", "%Y/%m/%d")
       p1_end_date = DateTime.strptime("2018/08/17", "%Y/%m/%d")
+      p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
                   room_id: last_room.id,
                   row_id: last_row.id,
                   shelf_id: last_shelf.id,
                   tray_id: last_tray.id,
-                  capacity: 1,
+                  capacity: p1_capacity,
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
@@ -143,22 +136,22 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
 
       # Validate
       target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
-      expect(target[:tray_capacity]).to eq 10
-      expect(target[:planned_capacity]).to eq 1
-      expect(target[:remaining_capacity]).to eq 9
+      expect(target[:planned_capacity]).to eq p1_capacity
+      expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
 
     it "Condition F" do
       # Prepare
       p1_start_date = DateTime.strptime("2018/08/01", "%Y/%m/%d")
       p1_end_date = DateTime.strptime("2018/08/17", "%Y/%m/%d")
+      p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
                   room_id: last_room.id,
                   row_id: last_row.id,
                   shelf_id: last_shelf.id,
                   tray_id: last_tray.id,
-                  capacity: 1,
+                  capacity: p1_capacity,
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
@@ -166,22 +159,22 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
 
       # Validate
       target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
-      expect(target[:tray_capacity]).to eq 10
-      expect(target[:planned_capacity]).to eq 1
-      expect(target[:remaining_capacity]).to eq 9
+      expect(target[:planned_capacity]).to eq p1_capacity
+      expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
 
     it "Condition G" do
       # Prepare
       p1_start_date = DateTime.strptime("2018/08/17", "%Y/%m/%d")
       p1_end_date = DateTime.strptime("2018/08/22", "%Y/%m/%d")
+      p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
                   room_id: last_room.id,
                   row_id: last_row.id,
                   shelf_id: last_shelf.id,
                   tray_id: last_tray.id,
-                  capacity: 1,
+                  capacity: p1_capacity,
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
@@ -189,22 +182,22 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
 
       # Validate
       target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
-      expect(target[:tray_capacity]).to eq 10
-      expect(target[:planned_capacity]).to eq 1
-      expect(target[:remaining_capacity]).to eq 9
+      expect(target[:planned_capacity]).to eq p1_capacity
+      expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
 
     it "Condition H" do
       # Prepare
       p1_start_date = DateTime.strptime("2018/08/03", "%Y/%m/%d")
       p1_end_date = DateTime.strptime("2018/08/15", "%Y/%m/%d")
+      p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
                   room_id: last_room.id,
                   row_id: last_row.id,
                   shelf_id: last_shelf.id,
                   tray_id: last_tray.id,
-                  capacity: 2,
+                  capacity: p1_capacity,
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
@@ -212,45 +205,22 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
 
       # Validate
       target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
-      expect(target[:tray_capacity]).to eq 10
-      expect(target[:planned_capacity]).to eq 2
-      expect(target[:remaining_capacity]).to eq 8
-    end
-
-    it "Condition K" do
-      # Prepare
-      p1_start_date = DateTime.strptime("2018/08/17", "%Y/%m/%d")
-      p1_end_date = DateTime.strptime("2018/08/17", "%Y/%m/%d")
-      p1 = create(:tray_plan,
-                  facility_id: subject.id,
-                  room_id: last_room.id,
-                  row_id: last_row.id,
-                  shelf_id: last_shelf.id,
-                  tray_id: last_tray.id,
-                  capacity: 3,
-                  start_date: p1_start_date,
-                  end_date: p1_end_date)
-
-      query_cmd = QueryAvailableTrays.call(subject.id, start_date, end_date)
-
-      # Validate
-      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
-      expect(target[:tray_capacity]).to eq 10
-      expect(target[:planned_capacity]).to eq 3
-      expect(target[:remaining_capacity]).to eq 7
+      expect(target[:planned_capacity]).to eq p1_capacity
+      expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
 
     it "Condition J" do
       # Prepare
       p1_start_date = DateTime.strptime("2018/08/01", "%Y/%m/%d")
       p1_end_date = DateTime.strptime("2018/08/19", "%Y/%m/%d")
+      p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
                   room_id: last_room.id,
                   row_id: last_row.id,
                   shelf_id: last_shelf.id,
                   tray_id: last_tray.id,
-                  capacity: 8,
+                  capacity: p1_capacity,
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
@@ -258,22 +228,68 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
 
       # Validate
       target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
-      expect(target[:tray_capacity]).to eq 10
-      expect(target[:planned_capacity]).to eq 8
-      expect(target[:remaining_capacity]).to eq 2
+      expect(target[:planned_capacity]).to eq p1_capacity
+      expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
     end
 
-    it "Condition X" do
+    it "Condition K" do
+      # Prepare
+      p1_start_date = DateTime.strptime("2018/08/17", "%Y/%m/%d")
+      p1_end_date = DateTime.strptime("2018/08/17", "%Y/%m/%d")
+      p1_capacity = Faker::Number.number(1).to_i
+      p1 = create(:tray_plan,
+                  facility_id: subject.id,
+                  room_id: last_room.id,
+                  row_id: last_row.id,
+                  shelf_id: last_shelf.id,
+                  tray_id: last_tray.id,
+                  capacity: p1_capacity,
+                  start_date: p1_start_date,
+                  end_date: p1_end_date)
+
+      query_cmd = QueryAvailableTrays.call(subject.id, start_date, end_date)
+
+      # Validate
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      expect(target[:planned_capacity]).to eq p1_capacity
+      expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
+    end
+
+    it "Condition L" do
+      # Prepare
+      p1_start_date = DateTime.strptime("2018/08/01", "%Y/%m/%d")
+      p1_end_date = DateTime.strptime("2018/08/1", "%Y/%m/%d")
+      p1_capacity = Faker::Number.number(1).to_i
+      p1 = create(:tray_plan,
+                  facility_id: subject.id,
+                  room_id: last_room.id,
+                  row_id: last_row.id,
+                  shelf_id: last_shelf.id,
+                  tray_id: last_tray.id,
+                  capacity: p1_capacity,
+                  start_date: p1_start_date,
+                  end_date: p1_end_date)
+
+      query_cmd = QueryAvailableTrays.call(subject.id, start_date, end_date)
+
+      # Validate
+      target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
+      expect(target[:planned_capacity]).to eq p1_capacity
+      expect(target[:remaining_capacity]).to eq (10 - p1_capacity)
+    end
+
+    it "Condition X - Not Overlapping / Before Schedule" do
       # Prepare
       p1_start_date = DateTime.strptime("2018/07/25", "%Y/%m/%d")
       p1_end_date = DateTime.strptime("2018/07/31", "%Y/%m/%d")
+      p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
                   room_id: last_room.id,
                   row_id: last_row.id,
                   shelf_id: last_shelf.id,
                   tray_id: last_tray.id,
-                  capacity: 8,
+                  capacity: p1_capacity,
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
@@ -281,22 +297,22 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
 
       # Validate
       target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
-      expect(target[:tray_capacity]).to eq 10
       expect(target[:planned_capacity]).to eq 0
       expect(target[:remaining_capacity]).to eq 10
     end
 
-    it "Condition Y" do
+    it "Condition Y - Not Overlapping / After Schedule" do
       # Prepare
       p1_start_date = DateTime.strptime("2018/08/18", "%Y/%m/%d")
       p1_end_date = DateTime.strptime("2018/08/31", "%Y/%m/%d")
+      p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
                   room_id: last_room.id,
                   row_id: last_row.id,
                   shelf_id: last_shelf.id,
                   tray_id: last_tray.id,
-                  capacity: 2,
+                  capacity: p1_capacity,
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
@@ -304,7 +320,6 @@ RSpec.describe QueryAvailableTrays, type: :command, focus: true do
 
       # Validate
       target = query_cmd.result.detect { |t| t[:tray_id] == last_tray.id.to_bson_id }
-      expect(target[:tray_capacity]).to eq 10
       expect(target[:planned_capacity]).to eq 0
       expect(target[:remaining_capacity]).to eq 10
     end

@@ -3,12 +3,12 @@ class QueryAvailableTrays
 
   attr_reader :facility_id, :start_date, :end_date
 
-  def initialize(facility_id, start_date, end_date)
+  def initialize(start_date, end_date, filter = {})
     raise ArgumentError, 'start_date' if start_date.nil?
     raise ArgumentError, 'end_date' if end_date.nil?
     raise ArgumentError, 'start_date should be ealier than end_date' if end_date <= start_date
     
-    @facility_id = facility_id
+    @facility_id = filter[:facility_id] if filter.key?(:facility_id)
     @start_date = start_date.beginning_of_day
     @end_date = end_date.end_of_day
   end
@@ -19,8 +19,17 @@ class QueryAvailableTrays
 
   private
 
+  def match_facility
+    if @facility_id
+      {"$match": { _id: @facility_id.to_bson_id} }
+    else
+      {"$match": {} }
+    end
+  end
+
   def query_records
     result = Facility.collection.aggregate [
+      match_facility,
       { "$project": { _id: 0, facility_id:"$_id", facility_code:"$code", facility_name:"$name", rooms:1 } },
       { "$unwind": "$rooms" },
       { "$unwind": "$rooms.rows" },
@@ -28,7 +37,7 @@ class QueryAvailableTrays
       { "$match": {
           "$and": [
             { "rooms.is_complete": true },
-            { "rooms.rows.shelves.is_complete": true }
+            { "rooms.rows.shelves.is_complete": true },
           ]
         }
       },

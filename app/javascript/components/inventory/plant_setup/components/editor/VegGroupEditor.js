@@ -61,8 +61,8 @@ class VegGroupEditor extends React.Component {
       this.purchaseInfoEditor = element
     }
 
-    this.strainPicker   = React.createRef()
-    this.motherPicker   = React.createRef()
+    this.strainPicker = React.createRef()
+    this.motherPicker = React.createRef()
     this.locationPicker = React.createRef()
   }
 

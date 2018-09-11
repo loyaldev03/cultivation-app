@@ -185,7 +185,10 @@ class CloneEditor extends React.Component {
     }
 
     if (cultivation_batch_id.length === 0) {
-      errors = { ...errors, cultivation_batch_id: ['Cultivation batch ID is required.'] }
+      errors = {
+        ...errors,
+        cultivation_batch_id: ['Cultivation batch ID is required.']
+      }
     }
 
     if (isShowPlantIdGenerator) {

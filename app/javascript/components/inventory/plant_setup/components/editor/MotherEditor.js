@@ -54,7 +54,7 @@ class MotherEditor extends React.Component {
     this.strainPicker = React.createRef()
   }
 
-  onChangePlantIds = (event) => {
+  onChangePlantIds = event => {
     this.setState({ plant_ids: event.target.value })
     const node = this.plantIdsTextArea
     const lines = (event.target.value.match(/\n/g) || []).length
@@ -71,29 +71,29 @@ class MotherEditor extends React.Component {
     }
   }
 
-  onPlantedOnChanged = (date) => {
+  onPlantedOnChanged = date => {
     this.setState({ planted_on: date })
   }
 
-  onChangeGeneratorPlantQty = (event) => {
+  onChangeGeneratorPlantQty = event => {
     this.setState({ plant_qty: event.target.value })
   }
 
-  onToggleGeneratePlantId = (event) => {
+  onToggleGeneratePlantId = event => {
     this.setState({
       isShowPlantQtyForm: !this.state.isShowPlantQtyForm
     })
     if (event) event.preventDefault()
   }
 
-  onStrainSelected = (data) => {
+  onStrainSelected = data => {
     this.setState({
       strain: data.strain,
       strain_type: data.strain_type
     })
   }
 
-  onIsBoughtChanged= () => {
+  onIsBoughtChanged = () => {
     this.setState({ isBought: !this.state.isBought })
   }
 
@@ -256,7 +256,8 @@ class MotherEditor extends React.Component {
         <div className="ph4 mb2 flex">
           <div className="w-100">
             <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
-              Each mother plant has its own <strong>Plant ID</strong>. If you already have them, paste Plant IDs like below.
+              Each mother plant has its own <strong>Plant ID</strong>. If you
+              already have them, paste Plant IDs like below.
             </p>
             <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
               <a

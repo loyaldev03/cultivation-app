@@ -32,19 +32,21 @@ class LocationPicker extends React.Component {
   }
 
   isMother(item) {
-    return  item.rm_id.length > 0 &&
-            item.rw_id.length === 0 &&
-            item.rm_purpose === 'mother'
+    return (
+      item.rm_id.length > 0 &&
+      item.rw_id.length === 0 &&
+      item.rm_purpose === 'mother'
+    )
   }
 
   isVeg(item) {
-    return  item.t_id.length > 0 && 
-            VEG_TRAY_PURPOSES.indexOf(item.rm_purpose) >= 0
+    return (
+      item.t_id.length > 0 && VEG_TRAY_PURPOSES.indexOf(item.rm_purpose) >= 0
+    )
   }
 
   isRoomOnly(item) {
-    return  item.rm_id.length > 0 && 
-            item.rw_id.length === 0
+    return item.rm_id.length > 0 && item.rw_id.length === 0
   }
 
   /* Utility method to find item from location id & mode combination */
@@ -53,8 +55,7 @@ class LocationPicker extends React.Component {
     let item = null
     if (mode === 'mother' || mode === 'room') {
       item = this.locations.find(x => x.rm_id === location_id)
-    } 
-    else if (mode === 'clone' || mode === 'vegTray') {
+    } else if (mode === 'clone' || mode === 'vegTray') {
       item = this.locations.find(x => x.t_id === location_id)
     }
     return item ? item : { value: '', label: '' }
@@ -64,26 +65,25 @@ class LocationPicker extends React.Component {
   extractLocationId(selectedItem) {
     const mode = this.mode
     if (mode === 'mother' || mode === 'room') {
-      return { 
-        location_id: selectedItem.rm_id, 
-        location_type: selectedItem.rm_purpose 
+      return {
+        location_id: selectedItem.rm_id,
+        location_type: selectedItem.rm_purpose
       }
-    } 
-    else if (mode === 'clone' || mode === 'vegTray') {
-      return { 
-        location_id: selectedItem.t_id, 
-        location_type: selectedItem.rm_purpose 
+    } else if (mode === 'clone' || mode === 'vegTray') {
+      return {
+        location_id: selectedItem.t_id,
+        location_type: selectedItem.rm_purpose
       }
     } else {
       console.log('Unable find location id for selected item and mode.')
-      return { 
-        location_id: '', 
+      return {
+        location_id: '',
         location_type: ''
       }
     }
   }
 
-  onChange = (item) => {
+  onChange = item => {
     const locationData = this.extractLocationId(item, this.props.mode)
     this.props.onChange({ ...item, ...locationData })
     this.setState({ value: { value: item.value, label: item.label } })

@@ -35,7 +35,9 @@ class StorageInfo extends React.Component {
   }
 
   onComponentDidMount() {
-    const location = this.locationPicker.current.findLocation(this.props.location_id)
+    const location = this.locationPicker.current.findLocation(
+      this.props.location_id
+    )
     const state = {
       ...this.state,
       facility_id: location.f_id,
@@ -78,7 +80,15 @@ class StorageInfo extends React.Component {
       this.setState({ errors })
     }
 
-    const { facility_id, room_id, row_id, shelf_id, tray_id, location_id, location_type } = this.state
+    const {
+      facility_id,
+      room_id,
+      row_id,
+      shelf_id,
+      tray_id,
+      location_id,
+      location_type
+    } = this.state
     return {
       facility_id,
       room_id,
@@ -108,7 +118,7 @@ class StorageInfo extends React.Component {
       tray_capacity: '',
       location_id: '',
       location_type: '',
-      errors: {},
+      errors: {}
     })
 
     this.locationPicker.current.reset()
@@ -277,7 +287,6 @@ class StorageInfo extends React.Component {
       </React.Fragment>
     )
   }
-
 
   render() {
     return (

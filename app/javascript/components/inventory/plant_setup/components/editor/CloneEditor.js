@@ -154,7 +154,7 @@ class CloneEditor extends React.Component {
       planted_on: null,
       expected_harvested_on: null,
       mother_id: '',
-      
+
       // UI states
       isShowPlantIdGenerator: false,
       isBought: false,
@@ -195,7 +195,10 @@ class CloneEditor extends React.Component {
       }
 
       if (location_id.length === 0) {
-        errors = { ...errors, location_id: ['Location of the clones is required.'] }
+        errors = {
+          ...errors,
+          location_id: ['Location of the clones is required.']
+        }
       }
     }
 
@@ -220,7 +223,8 @@ class CloneEditor extends React.Component {
       plant_qty,
       mother_id,
       planted_on: planted_on && planted_on.toISOString(),
-      expected_harvested_on: expected_harvested_on && expected_harvested_on.toISOString(),
+      expected_harvested_on:
+        expected_harvested_on && expected_harvested_on.toISOString(),
       isBought,
       errors,
       isValid

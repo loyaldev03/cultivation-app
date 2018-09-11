@@ -1,22 +1,30 @@
-import React from "react"
+import React from 'react'
 import classNames from 'classnames'
 import { groupBy } from '../../utils/ArrayHelper'
 
-const LabelWithChangeEvent = ({ label, onClick }) => (
-  <span className="dib blue pointer" onClick={onClick}>{ label ? label : "-- Select --" }</span>
-)
+const LabelWithChangeEvent = ({ isSelecting, value, onClick }) => {
+  if (isSelecting) {
+    return <span className="dib orange pointer">-- Select --</span>
+  } else {
+    return (
+      <span className="dib blue pointer" onClick={onClick}>
+        {value ? value : '-- Select --'}
+      </span>
+    )
+  }
+}
 
 class BatchLocationEditor extends React.PureComponent {
   state = {
     selectedRoom: '',
-    selectedRow: '',
+    selectedRow: ''
   }
 
   onSelectRoom = value => e => {
     this.setState({
       selectedRoom: value,
       showRoomList: false,
-      showRowList: true,
+      showRowList: true
     })
   }
 
@@ -24,7 +32,7 @@ class BatchLocationEditor extends React.PureComponent {
     this.setState({
       selectedRow: value,
       showRowList: false,
-      showShelfList: true,
+      showShelfList: true
     })
   }
 
@@ -32,6 +40,14 @@ class BatchLocationEditor extends React.PureComponent {
     this.setState({
       selectedShelf: value,
       showShelfList: false,
+      showTrayList: true
+    })
+  }
+
+  onSelectTray = value => e => {
+    this.setState({
+      selectedTray: value,
+      showTrayList: false
     })
   }
 
@@ -39,10 +55,20 @@ class BatchLocationEditor extends React.PureComponent {
 
   render() {
     const { plant, locations, onSave } = this.props
-    const { selectedRoom, selectedRow, selectedShelf, selectedTray } = this.state
+    const {
+      showRoomList,
+      showRowList,
+      showShelfList,
+      showTrayList,
+      selectedRoom,
+      selectedRow,
+      selectedShelf,
+      selectedTray
+    } = this.state
     let rooms = []
     let rows = []
     let shelves = []
+    let trays = []
 
     if (locations) {
       rooms = groupBy(locations, 'room_id')
@@ -52,6 +78,10 @@ class BatchLocationEditor extends React.PureComponent {
 
         if (selectedRow && rows[selectedRow]) {
           shelves = groupBy(rows[selectedRow], 'shelf_id')
+
+          if (selectedShelf && shelves[selectedShelf]) {
+            trays = groupBy(shelves[selectedShelf], 'tray_id')
+          }
         }
       }
     }
@@ -74,23 +104,25 @@ class BatchLocationEditor extends React.PureComponent {
           <p>PlantID: {plant.id}</p>
 
           <div className="mt2">
-            <label>Quantity:
+            <label>
+              Quantity:
               <input
                 type="number"
                 defaultValue={plant.quantity || ''}
                 min="0"
                 step="1"
-                ref={input => this.quantityField = input}
+                ref={input => (this.quantityField = input)}
               />
             </label>
           </div>
 
           <div className="mt2">
-            <label>Location:
+            <label>
+              Location:
               <input
                 type="text"
                 defaultValue={plant.locationId || ''}
-                ref={input => this.locationIdField = input}
+                ref={input => (this.locationIdField = input)}
               />
             </label>
           </div>
@@ -99,101 +131,128 @@ class BatchLocationEditor extends React.PureComponent {
             <span className="db">Choose location:</span>
             <span className="mt2 dib mr2">Select room:</span>
             <LabelWithChangeEvent
-              label={selectedRoom}
+              isSelecting={this.state.showRoomList}
+              value={selectedRoom}
               onClick={this.onChange('showRoomList', true)}
             />
             <br />
 
-            { this.state.showRoomList &&
-              <div className="mt1" style={
-                {
-                  display: "grid",
-                  gridColumnGap: "10px",
-                  gridRowGap: "10px",
-                  gridTemplateColumns: "1fr 1fr 1fr"
-                }
-              }>
-                { Object.keys(rooms).map(roomId => {
-                    const firstRoom = rooms[roomId][0]
-                    console.log({ firstRoom, code: firstRoom.facility_code })
-                    return (
-                      <div
-                        key={roomId}
-                        className={
-                          classNames("ba b--gray pa2 pointer h3",
-                            { "bg-orange white bn": selectedRoom === roomId })
-                        }
-                        onClick={this.onSelectRoom(roomId)}
-                      >
-                        <span>{firstRoom.room_name} / {firstRoom.room_code}</span>
-                      </div>
-                    )
-                  })
-                }
+            {this.state.showRoomList && (
+              <div
+                className="mt1"
+                style={{
+                  display: 'grid',
+                  gridColumnGap: '10px',
+                  gridRowGap: '10px',
+                  gridTemplateColumns: '1fr 1fr 1fr'
+                }}
+              >
+                {Object.keys(rooms).map(roomId => {
+                  const firstRoom = rooms[roomId][0]
+                  console.log({ firstRoom, code: firstRoom.facility_code })
+                  return (
+                    <div
+                      key={roomId}
+                      className={classNames('ba b--gray pa2 pointer h3', {
+                        'bg-orange white bn': selectedRoom === roomId
+                      })}
+                      onClick={this.onSelectRoom(roomId)}
+                    >
+                      <span>
+                        {firstRoom.room_name} / {firstRoom.room_code}
+                      </span>
+                    </div>
+                  )
+                })}
               </div>
-            }
+            )}
 
             <span className="mt2 dib mr2">Select row:</span>
             <LabelWithChangeEvent
-              label={selectedRow}
+              isSelecting={this.state.showRowList}
+              value={selectedRow}
               onClick={this.onChange('showRowList', true)}
             />
             <br />
 
-            { this.state.showRowList &&
+            {this.state.showRowList && (
               <div>
-                { Object.keys(rows).map(rowId => {
-                    const firstRow = rows[rowId][0]
-                    console.log({ firstRow, code: firstRow.row_code })
-                    return (
-                      <div
-                        key={rowId}
-                        className={
-                          classNames("ba b--gray pa2 pointer h3",
-                            { "bg-orange white bn": selectedRow === rowId })
-                        }
-                        onClick={this.onSelectRow(rowId)}
-                      >
-                        <span className="dib">{firstRow.row_code}</span>
-                      </div>
-                    )
-                  })
-                }
+                {Object.keys(rows).map(rowId => {
+                  const firstRow = rows[rowId][0]
+                  console.log({ firstRow, code: firstRow.row_code })
+                  return (
+                    <div
+                      key={rowId}
+                      className={classNames('ba b--gray pa2 pointer h3', {
+                        'bg-orange white bn': selectedRow === rowId
+                      })}
+                      onClick={this.onSelectRow(rowId)}
+                    >
+                      <span className="dib">{firstRow.row_code}</span>
+                    </div>
+                  )
+                })}
               </div>
-            }
+            )}
 
             <span className="mt2 dib mr2">Select shelf:</span>
             <LabelWithChangeEvent
-              label={selectedShelf}
+              isSelecting={this.state.showShelfList}
+              value={selectedShelf}
               onClick={this.onChange('showShelfList', true)}
             />
             <br />
 
-            { this.state.showShelfList &&
+            {this.state.showShelfList && (
               <div>
-                { Object.keys(shelves).map(shelfId => {
-                    const firstShelf = shelves[shelfId][0]
-                    console.log({ firstShelf, code: firstShelf.shelf_code })
-                    return (
-                      <div
-                        key={shelfId}
-                        className={
-                          classNames("ba b--gray pa2 pointer h3",
-                            { "bg-orange white bn": selectedShelf === shelfId })
-                        }
-                        onClick={this.onSelectShelf(shelfId)}
-                      >
-                        <span className="dib">{firstShelf.shelf_code}</span>
-                      </div>
-                    )
-                  })
-                }
+                {Object.keys(shelves).map(shelfId => {
+                  const firstShelf = shelves[shelfId][0]
+                  console.log({ firstShelf, code: firstShelf.shelf_code })
+                  return (
+                    <div
+                      key={shelfId}
+                      className={classNames('ba b--gray pa2 pointer h3', {
+                        'bg-orange white bn': selectedShelf === shelfId
+                      })}
+                      onClick={this.onSelectShelf(shelfId)}
+                    >
+                      <span className="dib">{firstShelf.shelf_code}</span>
+                    </div>
+                  )
+                })}
               </div>
-            }
+            )}
 
+            <span className="mt2 dib mr2">Select Tray:</span>
+            <LabelWithChangeEvent
+              isSelecting={this.state.showTrayList}
+              value={selectedTray}
+              onClick={this.onChange('showTrayList', true)}
+            />
+            <br />
+
+            {this.state.showTrayList && (
+              <div>
+                {Object.keys(trays).map(trayId => {
+                  const firstTray = trays[trayId][0]
+                  console.log({ firstTray, code: firstTray.tray_code })
+                  return (
+                    <div
+                      key={trayId}
+                      className={classNames('ba b--gray pa2 pointer h3', {
+                        'bg-orange white bn': selectedTray === trayId
+                      })}
+                      onClick={this.onSelectTray(trayId)}
+                    >
+                      <span className="dib">{firstTray.tray_code}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
           <div className="mt2">
-            <input type="submit" value="Save" className="btn btn--primary"/>
+            <input type="submit" value="Save" className="btn btn--primary" />
           </div>
         </form>
       </div>

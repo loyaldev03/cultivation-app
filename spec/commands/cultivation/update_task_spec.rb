@@ -158,7 +158,6 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
     end
 
 
-
     # it "should update all task child start_date after updating task start_date" do
     #   task = subject.tasks.first
     #   task.start_date = Date.today
@@ -173,6 +172,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
     # end
 
     it "task end date beyond parent end_date, should update parent end_date" do
+      
     end
 
     #handle validation

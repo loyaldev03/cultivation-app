@@ -5,11 +5,11 @@ class TaskSerializer
     :time_taken, :no_of_employees, :materials, :instruction, :isPhase, :isCategory, :parent_id, :depend_on
 
   attribute :start_date do |object|
-    object.start_date.try(:strftime,"%d/%m/%Y")
+    object.start_date.try(:strftime,"%m/%d/%Y")
   end
 
   attribute :end_date do |object|
-    object.end_date.try(:strftime,"%d/%m/%Y")
+    object.end_date.try(:strftime,"%m/%d/%Y")
   end
 
 end

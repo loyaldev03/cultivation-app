@@ -53,6 +53,10 @@ class BatchLocationEditor extends React.PureComponent {
 
   onChange = (field, value) => e => this.setState({ [field]: value })
 
+  sumOfShelvesCapacity = records => {
+    return records.reduce((acc, obj) => acc + (obj.shelf_capacity || 0), 0)
+  }
+
   render() {
     const { plant, locations, onSave } = this.props
     const {
@@ -70,6 +74,8 @@ class BatchLocationEditor extends React.PureComponent {
     let shelves = []
     let trays = []
 
+    console.log(locations)
+    window.allLocations = locations
     if (locations) {
       rooms = groupBy(locations, 'room_id')
 
@@ -80,7 +86,8 @@ class BatchLocationEditor extends React.PureComponent {
           shelves = groupBy(rows[selectedRow], 'shelf_id')
 
           if (selectedShelf && shelves[selectedShelf]) {
-            trays = groupBy(shelves[selectedShelf], 'tray_id')
+            // There's no need to group trays, as it's already filter by shelf_id
+            trays = shelves[selectedShelf]
           }
         }
       }
@@ -149,18 +156,20 @@ class BatchLocationEditor extends React.PureComponent {
               >
                 {Object.keys(rooms).map(roomId => {
                   const firstRoom = rooms[roomId][0]
-                  console.log({ firstRoom, code: firstRoom.facility_code })
+                  const roomCapacity = this.sumOfShelvesCapacity(rooms[roomId])
+                  console.log({ where: "Room", rows: rooms[roomId], roomCapacity })
+                  // console.log({ firstRoom, code: firstRoom.facility_code })
                   return (
                     <div
                       key={roomId}
-                      className={classNames('ba b--gray pa2 pointer h3', {
+                      className={classNames('ba b--gray pa2 pointer h3 f6', {
                         'bg-orange white bn': selectedRoom === roomId
                       })}
                       onClick={this.onSelectRoom(roomId)}
                     >
-                      <span>
-                        {firstRoom.room_name} / {firstRoom.room_code}
-                      </span>
+                      <span className="ttc">{firstRoom.room_name}</span><br />
+                      <span className="">Room ID: {firstRoom.room_code} </span><br />
+                      <span className="">Capacity: {firstRoom.capacity || 0}/{roomCapacity || "N/A"} </span>
                     </div>
                   )
                 })}
@@ -179,7 +188,8 @@ class BatchLocationEditor extends React.PureComponent {
               <div>
                 {Object.keys(rows).map(rowId => {
                   const firstRow = rows[rowId][0]
-                  console.log({ firstRow, code: firstRow.row_code })
+                  const rowCapacity = this.sumOfShelvesCapacity(rows[rowId])
+                  console.log({ where: "Row", shelves: rows[rowId] })
                   return (
                     <div
                       key={rowId}
@@ -188,7 +198,8 @@ class BatchLocationEditor extends React.PureComponent {
                       })}
                       onClick={this.onSelectRow(rowId)}
                     >
-                      <span className="dib">{firstRow.row_code}</span>
+                      <span className="dib">{firstRow.row_code}</span><br />
+                      <span className="">Capacity: {firstRow.capacity || 0}/{rowCapacity || "N/A"} </span>
                     </div>
                   )
                 })}
@@ -207,6 +218,7 @@ class BatchLocationEditor extends React.PureComponent {
               <div>
                 {Object.keys(shelves).map(shelfId => {
                   const firstShelf = shelves[shelfId][0]
+                  const shelfCapacity = firstShelf.shelf_capacity
                   console.log({ firstShelf, code: firstShelf.shelf_code })
                   return (
                     <div
@@ -216,7 +228,8 @@ class BatchLocationEditor extends React.PureComponent {
                       })}
                       onClick={this.onSelectShelf(shelfId)}
                     >
-                      <span className="dib">{firstShelf.shelf_code}</span>
+                      <span className="dib">{firstShelf.shelf_code}</span><br />
+                      <span className="">Capacity: {firstShelf.capacity || 0}/{shelfCapacity || "N/A"} </span>
                     </div>
                   )
                 })}
@@ -233,18 +246,17 @@ class BatchLocationEditor extends React.PureComponent {
 
             {this.state.showTrayList && (
               <div>
-                {Object.keys(trays).map(trayId => {
-                  const firstTray = trays[trayId][0]
-                  console.log({ firstTray, code: firstTray.tray_code })
+                {trays.map(tray => {
                   return (
                     <div
-                      key={trayId}
+                      key={tray.tray_id}
                       className={classNames('ba b--gray pa2 pointer h3', {
-                        'bg-orange white bn': selectedTray === trayId
+                        'bg-orange white bn': selectedTray === tray.tray_id
                       })}
-                      onClick={this.onSelectTray(trayId)}
+                      onClick={this.onSelectTray(tray.tray_id)}
                     >
-                      <span className="dib">{firstTray.tray_code}</span>
+                      <span className="dib">{tray.tray_code}</span><br />
+                      <span className="">Capacity: {tray.capacity || 0}/{tray.tray_capacity || "N/A"} </span>
                     </div>
                   )
                 })}

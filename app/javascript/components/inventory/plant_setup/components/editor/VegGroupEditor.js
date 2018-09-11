@@ -382,7 +382,7 @@ class VegGroupEditor extends React.Component {
             <LocationPicker
               mode="vegTray"
               locations={this.locations}
-              value={this.state.tray}
+              location_id={this.state.tray}
               onChange={this.onTraySelected}
             />
             <FieldError errors={this.state.errors} field="tray" />

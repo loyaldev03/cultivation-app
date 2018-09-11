@@ -10,37 +10,87 @@ class LocationPicker extends React.Component {
     super(props)
 
     if (props.mode === 'clone') {
-      this.trays = props.locations.filter(
-        x => x.t_id.length > 0 && x.rm_purpose === 'clone'
-      )
+      this.locations = props.locations.filter(this.isClone)
     } else if (props.mode === 'vegTray') {
-      this.trays = props.locations.filter(
-        x => x.t_id.length > 0 && VEG_TRAY_PURPOSES.indexOf(x.rm_purpose) >= 0
-      )
+      this.locations = props.locations.filter(this.isVeg)
     } else if (props.mode === 'mother') {
-      this.trays = props.locations.filter(
-        x =>
-          x.rm_id.length > 0 &&
-          x.rw_id.length === 0 &&
-          x.rm_purpose === 'mother'
-      )
+      this.locations = props.locations.filter(this.isMother)
     } else if (props.mode === 'room') {
-      this.trays = props.locations.filter(
-        x => x.rm_id.length > 0 && x.rw_id.length === 0
-      )
+      this.locations = props.locations.filter(this.isRoomOnly)
     } else {
-      this.trays = props.locations
+      this.locations = props.locations
     }
-    // console.log(this.trays)
-    const item = this.trays.find(x => x.value === props.value) || null
-    this.state = { value: item }
+    this.mode = props.mode
 
-    this.onChange = this.onChange.bind(this)
+    console.log(`props.location_id: ${props.location_id}`)
+    const item = this.findLocation(props.location_id)
+    this.state = { value: item }
   }
 
-  onChange(item) {
-    this.props.onChange(item)
+  isClone(item) {
+    return item.t_id.length > 0 && item.rm_purpose === 'clone'
+  }
+
+  isMother(item) {
+    return  item.rm_id.length > 0 &&
+            item.rw_id.length === 0 &&
+            item.rm_purpose === 'mother'
+  }
+
+  isVeg(item) {
+    return  item.t_id.length > 0 && 
+            VEG_TRAY_PURPOSES.indexOf(item.rm_purpose) >= 0
+  }
+
+  isRoomOnly(item) {
+    return  item.rm_id.length > 0 && 
+            item.rw_id.length === 0
+  }
+
+  /* Utility method to find item from location id & mode combination */
+  findLocation(location_id) {
+    const mode = this.mode
+    let item = null
+    if (mode === 'mother' || mode === 'room') {
+      item = this.locations.find(x => x.rm_id === location_id)
+    } 
+    else if (mode === 'clone' || mode === 'vegTray') {
+      item = this.locations.find(x => x.t_id === location_id)
+    }
+    return item ? item : { value: '', label: '' }
+  }
+
+  /* Utility method to extract location id & mode combination from item */
+  extractLocationId(selectedItem) {
+    const mode = this.mode
+    if (mode === 'mother' || mode === 'room') {
+      return { 
+        location_id: selectedItem.rm_id, 
+        location_type: selectedItem.rm_purpose 
+      }
+    } 
+    else if (mode === 'clone' || mode === 'vegTray') {
+      return { 
+        location_id: selectedItem.t_id, 
+        location_type: selectedItem.rm_purpose 
+      }
+    } else {
+      console.log('Unable find location id for selected item and mode.')
+      return { 
+        location_id: '', 
+        location_type: ''
+      }
+    }
+  }
+
+  onChange = (item) => {
+    const locationData = this.extractLocationId(item, this.props.mode)
+    this.props.onChange({ ...item, ...locationData })
     this.setState({ value: { value: item.value, label: item.label } })
+  }
+
+  reset() {
+    this.setState({ value: { value: '', label: '' } })
   }
 
   render() {
@@ -48,7 +98,7 @@ class LocationPicker extends React.Component {
       <Select
         styles={reactSelectStyle}
         placeholder="Type to search location..."
-        options={this.trays}
+        options={this.locations}
         onChange={this.onChange}
         value={this.state.value}
         filterOption={(option, input) => {
@@ -64,12 +114,12 @@ LocationPicker.propTypes = {
   mode: PropTypes.string.isRequired,
   locations: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string
+  location_id: PropTypes.string
 }
 
 LocationPicker.defaultProps = {
   mode: 'tray',
-  value: ''
+  location_id: ''
 }
 
 export default LocationPicker

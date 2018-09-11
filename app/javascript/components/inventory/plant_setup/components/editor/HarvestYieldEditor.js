@@ -102,7 +102,7 @@ export default class HarvestYieldEditor extends React.Component {
             <label className="f6 fw6 db mb1 gray ttc">Location ID</label>
             <LocationPicker
               locations={this.locations}
-              value={this.state.location_id}
+              location_id={this.state.location_id}
               onChange={this.onLocationSelected}
             />
             <FieldError errors={this.state.errors} field="location_id" />

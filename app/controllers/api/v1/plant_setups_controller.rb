@@ -1,6 +1,10 @@
 class Api::V1::PlantSetupsController < Api::V1::BaseApiController
   def setup_mother
     command = Inventory::SetupMother.call(current_user, params[:plant_setup].to_unsafe_h)
+    Rails.logger.debug('>>>>> PlantSetupsController#setup_mother')
+    Rails.logger.debug(command.result)
+    Rails.logger.debug(command.errors)
+
     if command.success?
       data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
       render json: {data: data}

@@ -10,12 +10,13 @@ module Inventory
       :args,
       :strain_name,
       :strain_type,
-      :plant_ids,
-      :clone_ids,  # clone_ids is raw plant ID and location ID pairing
+      :cultivation_batch_id,
+      :location_id,
+      :mother_id,
+      :clone_qty,
+      :clone_ids,
       :planted_on,
       :expected_harvested_on,
-      :mother_id,
-      :mother_location_id,
       :vendor_id,
       :vendor_name,
       :vendor_no,
@@ -34,13 +35,12 @@ module Inventory
 
       @strain_name = args[:strain]
       @strain_type = args[:strain_type]
+      @cultivation_batch_id = args[:cultivation_batch_id]
+      @location_id = args[:location_id]
+      @mother_id = args[:mother_id]
       @clone_ids = args[:clone_ids]
-      @room_id = args[:room_id]
       @planted_on = args[:planted_on]
       @expected_harvested_on = args[:expected_harvested_on]
-      @mother_id = args[:mother_id]
-      @mother_location_id = args[:mother_location_id]
-
       @vendor_id = args[:vendor_id]
       @vendor_name = args[:vendor_name] && args[:vendor_name].strip
       @vendor_no = args[:vendor_no]
@@ -52,14 +52,13 @@ module Inventory
     end
 
     def call
-      @clone_ids = @clone_ids.split(/[\n\r]/).reject { |x| x.empty? }.map(&:strip)
-      @plant_ids = @clone_ids.map { |x| x.split(',')[0].strip }
+      @clone_ids = generate_or_extract_plant_ids
 
       if valid_permission? && valid_data?
         create_strain
         vendor = create_vendor
         @mother_id = nil if is_purchased?
-        clones = create_clones(clone_ids, @mother_id)
+        clones = create_clones
         create_invoice(clones, vendor, invoice_no) if is_purchased?
         clones
       end
@@ -67,17 +66,30 @@ module Inventory
 
     private
 
+    def generate_or_extract_plant_ids
+      if clone_ids.strip.present?
+        clone_ids.gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
+      else
+        ids = Inventory::GeneratePlantSerialNo.call(plant_qty.to_i).result
+      end
+    end
+
     def valid_permission?
       true  # TODO: Check user role
     end
 
     def valid_data?
       # All serial number should be new
-      existing_records = Inventory::ItemArticle.in(serial_no: @plant_ids).pluck(:serial_no)
+      existing_records = Inventory::ItemArticle.in(serial_no: clone_ids).pluck(:serial_no)
 
       if existing_records.count > 0
         errors.add(:clone_ids, "These plant ID #{existing_records.join(', ')} already exists in the system.")
       end
+
+      if (Tray.find(location_id).nil?)
+        errors.add(:location_id, 'Tray not found.')
+      end
+
       errors.empty?
     end
 
@@ -97,7 +109,6 @@ module Inventory
     def create_vendor
       vendor = Inventory::Vendor.find_by(name: vendor_name)
       vendor_id = vendor ? vendor.id : nil
-
       command = Inventory::SaveVendor.call(
         id: vendor_id,
         name: vendor_name,
@@ -124,48 +135,24 @@ module Inventory
       end
     end
 
-    def create_clones(clone_ids, mother_id)
-      trays = QueryAllValidFacilityLocations.call.result.reject { |x| x[:t_id].blank? }
-      result = Hash.new { |hash, key| hash[key] = [] }
-
-      clone_ids.each do |line|
-        plant_id, location = line.split(',')
-        tray = trays.find { |x| x[:value] == location.strip }
-        tray_id = tray[:t_id]
-        result[tray_id] << plant_id.strip
-      end
-
-      clones = []
-      result.each do |_tray_id, _plant_ids|
-        new_clones = create_clone(_plant_ids,
-                                  strain_name,
-                                  _tray_id,
-                                  planted_on,
-                                  expected_harvested_on,
-                                  mother_id)
-        clones.concat(new_clones)
-      end
-
-      clones
-    end
-
-    def create_clone(_plant_ids, _strain_name, _tray_id, _planted_on, _expected_harvested_on, _mother_plant_id)
+    def create_clones
       command = Inventory::CreatePlants.call(
         status: 'available',
-        plant_ids: _plant_ids,
-        strain_name: _strain_name,
-        location_id: _tray_id,
+        plant_ids: clone_ids,
+        strain_name: strain_name,
+        location_id: location_id,
         location_type: 'tray',
-        planted_on: _planted_on,
-        expected_harvested_on: _expected_harvested_on,
+        planted_on: planted_on,
+        expected_harvested_on: expected_harvested_on,
         plant_status: 'clone',
-        mother_plant_id: _mother_plant_id,
+        mother_plant_id: mother_id,
+        cultivation_batch_id: cultivation_batch_id,
       )
 
       if command.success?
         command.result
       else
-        combine_errors(command.errors, :plant_ids, :clone_ids)
+        combine_errors(command.errors, :clone_ids, :clone_ids)
         combine_errors(command.errors, :strain_name, :strain_name)
         combine_errors(command.errors, :location_id, :clone_ids)  # there is no field to host tray id errors, i just park all under clone_ids
         []

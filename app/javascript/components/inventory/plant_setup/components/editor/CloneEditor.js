@@ -21,9 +21,7 @@ class CloneEditor extends React.Component {
       // source
       clone_ids: '',
       plant_qty: 0,
-      tray: '',
-      generator_location: '',
-      last_plant_id: 0,
+      location_id: '',
       planted_on: null,
       expected_harvested_on: null,
       cultivation_batch_id: '',
@@ -38,7 +36,6 @@ class CloneEditor extends React.Component {
       vendor_location_license_expiration_date: null,
       purchase_date: '',
       invoice_no: '',
-      tray: '',
 
       // UI states
       isBought: false,
@@ -123,7 +120,7 @@ class CloneEditor extends React.Component {
   }
 
   onTraySelected = item => {
-    this.setState({ tray: item.t_id })
+    this.setState({ location_id: item.t_id })
   }
 
   onCultivationBatchIdChanged = event => {
@@ -153,12 +150,11 @@ class CloneEditor extends React.Component {
       strain_type: '',
       clone_ids: '',
       plant_qty: 0,
-      tray: '',
-      generator_location: '',
+      location_id: '',
       planted_on: null,
       expected_harvested_on: null,
       mother_id: '',
-      mother_location_id: '',
+      
       // UI states
       isShowPlantIdGenerator: false,
       isBought: false,
@@ -175,7 +171,7 @@ class CloneEditor extends React.Component {
       clone_ids,
       plant_qty,
       isShowPlantIdGenerator,
-      tray,
+      location_id,
       planted_on,
       expected_harvested_on,
       isBought
@@ -198,8 +194,8 @@ class CloneEditor extends React.Component {
         }
       }
 
-      if (tray.length === 0) {
-        errors = { ...errors, tray: ['Location of the clones is required.'] }
+      if (location_id.length === 0) {
+        errors = { ...errors, location_id: ['Location of the clones is required.'] }
       }
     }
 
@@ -220,11 +216,12 @@ class CloneEditor extends React.Component {
       strain,
       strain_type,
       clone_ids,
-      planted_on: planted_on && planted_on.toISOString(),
-      expected_harvested_on:
-        expected_harvested_on && expected_harvested_on.toISOString(),
-      isBought,
+      location_id,
+      plant_qty,
       mother_id,
+      planted_on: planted_on && planted_on.toISOString(),
+      expected_harvested_on: expected_harvested_on && expected_harvested_on.toISOString(),
+      isBought,
       errors,
       isValid
     }
@@ -236,58 +233,26 @@ class CloneEditor extends React.Component {
   }
 
   renderProcurementInfo() {
-    if (!this.state.isBought) {
-      return null
-      // return (
-      //   <React.Fragment>
-      //     <div className="ph4 mb3 flex">
-      //       <div className="w-50">
-      //         <TextInput
-      //           label={'Mother plant ID'}
-      //           value={this.state.mother_id}
-      //           onChange={this.onMotherIdChanged}
-      //         />
-      //         <FieldError errors={this.state.errors} field="mother_id" />
-      //       </div>
-      //       <div className="w-50 pl3">
-      //         <label className="f6 fw6 db mb1 gray ttc">
-      //           Mother location ID
-      //         </label>
-      //         <LocationPicker
-      //           mode="mother"
-      //           locations={this.locations}
-      //           value={this.state.mother_location_name}
-      //           onChange={this.onMotherLocationChanged}
-      //         />
-      //         <FieldError
-      //           errors={this.state.errors}
-      //           field="mother_location_id"
-      //         />
-      //       </div>
-      //     </div>
-      //   </React.Fragment>
-      // )
-    } else {
-      return (
-        <PurchaseInfo
-          ref={this.setPurchaseInfoEditor}
-          showLabel={false}
-          vendor_name={this.state.vendor_name}
-          vendor_no={this.state.vendor_no}
-          address={this.state.address}
-          vendor_state_license_num={this.state.vendor_state_license_num}
-          vendor_state_license_expiration_date={
-            this.state.vendor_state_license_expiration_date
-          }
-          vendor_location_license_num={this.state.vendor_location_license_num}
-          vendor_location_license_expiration_date={
-            this.state.vendor_location_license_expiration_date
-          }
-          purchase_date={this.state.purchase_date}
-          invoice_no={this.state.invoice_no}
-        />
-      )
-    }
+    if (!this.state.isBought) return null
+    return (
+      <PurchaseInfo
+        ref={this.setPurchaseInfoEditor}
+        showLabel={false}
+        vendor_name={this.state.vendor_name}
+        vendor_no={this.state.vendor_no}
+        address={this.state.address}
+        vendor_state_license_num={this.state.vendor_state_license_num}
+        vendor_state_license_expiration_date={
+          this.state.vendor_state_license_expiration_date
+        }
+        vendor_location_license_num={this.state.vendor_location_license_num}
+        vendor_location_license_expiration_date={
+          this.state.vendor_location_license_expiration_date
+        }
+        purchase_date={this.state.purchase_date}
+        invoice_no={this.state.invoice_no}
+      />
+    )
   }
 
   renderPlantIdGenerator() {
@@ -389,10 +354,10 @@ class CloneEditor extends React.Component {
             <LocationPicker
               mode="clone"
               locations={this.locations}
-              value={this.state.tray}
+              location_id={this.state.location_id}
               onChange={this.onTraySelected}
             />
-            <FieldError errors={this.state.errors} field="tray" />
+            <FieldError errors={this.state.errors} field="location_id" />
           </div>
         </div>
 

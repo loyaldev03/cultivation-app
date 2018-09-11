@@ -10,10 +10,10 @@ export default function setupMother(payload) {
     }
   })
     .then(response => {
-      return response.json().then(data => ({
-        status: response.status,
-        data
-      }))
+      return response.json().then(data => {
+        console.log(data)
+        return { status: response.status, data }
+      })
     })
     .then(result => {
       const { status, data } = result

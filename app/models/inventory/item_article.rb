@@ -12,9 +12,9 @@ module Inventory
     field :location_id, type: BSON::ObjectId
     field :location_type, type: String
 
-    field :serial_no, type: String                  # aka Plant ID
+    field :serial_no, type: String                     # aka Plant ID
     field :sub_serial_no, type: String
-    field :status, type: String                  # available, consumed, disposed, damaged, draft
+    field :status, type: String                        # available, consumed, disposed, damaged, draft
 
     # Only for plants
     field :plant_status, type: String                  # indicate plant is curently mother / clone / veg / flower

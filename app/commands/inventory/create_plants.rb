@@ -10,8 +10,10 @@ module Inventory
       :plant_status,
       :mother_plant_id,
       :expected_harvested_on,
+      :cultivation_batch_id,
       :planted_on,
-      :status
+      :status,
+      :facility
 
     def initialize(plant_ids: [],
                    strain_name:,
@@ -21,7 +23,8 @@ module Inventory
                    planted_on: nil,
                    plant_status:,
                    mother_plant_id: nil,
-                   expected_harvested_on: nil)
+                   expected_harvested_on: nil,
+                   cultivation_batch_id: nil)
       @plant_ids = plant_ids
       @strain_name = strain_name
       @location_id = location_id
@@ -32,13 +35,17 @@ module Inventory
       @expected_harvested_on = expected_harvested_on
       @planted_on = planted_on
       @status = status
+      @cultivation_batch_id = cultivation_batch_id
     end
 
     def call
+      @facility = get_facility
       can_save = (status == 'draft' || valid?)
+
       if can_save
         item = create_item
-        plants = create_articles_for_plants(item, status: status)
+        batch = create_batch
+        plants = create_articles_for_plants(item, status: status, batch: batch)
         plants
       end
     end
@@ -46,7 +53,6 @@ module Inventory
     private
 
     def create_item
-      facility = get_facility
       strain = Common::Strain.find_by(name: strain_name)
       inventory = Inventory::Item.find_or_create_by(
         strain: strain,
@@ -73,8 +79,18 @@ module Inventory
       end
     end
 
+    def create_batch
+      return nil if cultivation_batch_id.nil?
+
+      Cultivation::Batch.find_or_create_by(batch_no: cultivation_batch_id,
+                                           strain: strain_name,
+                                           facility: facility) do |batch|
+        batch.name = 'Batch from Plant Setup'
+      end
+    end
+
     # TODO: Maybe should pass in the batch ID
-    def create_articles_for_plants(item, status: 'draft')
+    def create_articles_for_plants(item, status: 'draft', batch: nil)
       plants = []
       plant_ids.each do |plant_id|
         plant = Inventory::ItemArticle.find_or_initialize_by(
@@ -90,6 +106,7 @@ module Inventory
           t.mother_plant_id = mother_plant_id
           t.expected_harvested_on = nil
           t.planted_on = planted_on
+          t.batch_id = batch.id unless batch.nil?
         end
 
         unless plant.persisted? # Create plants that is not in the system only. Do not override existing

@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx'
+import { observable, action, computed } from 'mobx'
 
 // Maybe facility store here instead with methods to
 // 1. load/ reload,
@@ -35,6 +35,12 @@ class PlantStore {
   @action
   update(plant) {
     // find and replace...
+  }
+
+
+  @computed
+  get motherPlants() {
+    this.plants.slice().filter(x => x.attributes.plant_status === 'mother')
   }
 }
 

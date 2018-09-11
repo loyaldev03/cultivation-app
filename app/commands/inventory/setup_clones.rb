@@ -6,13 +6,6 @@ module Inventory
   class SetupClones
     prepend SimpleCommand
 
-    # "clone_ids"=>"c001,SG9.RM1.SEC01.Rw1.S01.T01",
-    # "planted_on"=>"2018-08-27T16:00:00.000Z",
-    # "expected_harvest_date"=>"2018-08-27T16:00:00.000Z",
-    # "is_bought"=>false,
-    # "mother_id"=>"ma01",
-    # "mother_location_id"=>"5b729967edfdb2d54674e9d6"
-
     attr_reader :user,
       :args,
       :strain_name,

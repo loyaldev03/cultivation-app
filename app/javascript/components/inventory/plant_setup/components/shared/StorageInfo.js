@@ -2,7 +2,8 @@ import React from 'react'
 import Select from 'react-select'
 import PropTypes from 'prop-types'
 import { FieldError } from '../../../../utils/FormHelpers'
-import reactSelectStyle from './reactSelectStyle'
+import LocationPicker from './LocationPicker'
+import reactSelectStyle from '../../../../utils/reactSelectStyle'
 
 class StorageInfo extends React.Component {
   constructor(props) {
@@ -299,11 +300,11 @@ class StorageInfo extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Location</label>
-            <Select
+            <LocationPicker
               value={this.state.something}
-              options={this.locations}
+              locations={this.locations}
               onChange={this.onSearchFound}
-              styles={reactSelectStyle}
+              mode={this.props.mode}
             />
             <FieldError errors={this.state.errors} field="location" />
           </div>

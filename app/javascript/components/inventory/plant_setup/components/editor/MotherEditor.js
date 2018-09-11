@@ -17,7 +17,6 @@ class MotherEditor extends React.Component {
       plant_ids: '',
       plant_qty: 0,
       planted_on: null,
-      // mother_id: '',
 
       // Vendor/ source
       vendor_name: '',
@@ -31,10 +30,7 @@ class MotherEditor extends React.Component {
       invoice_no: '',
 
       // Storage location
-      room: '',
       room_id: '',
-      section_name: '',
-      section_id: '',
 
       // UI states
       isShowPlantQtyForm: false,

@@ -26,7 +26,8 @@ const reactSelectStyle = {
           : 'transparent',
       ':active': 'rgba(100, 100, 100, 0.1)',
       WebkitTapHighlightColor: 'rgba(100, 100, 100, 0.1)',
-      color: 'black'
+      color: 'black',
+      fontSize: '0.875rem'
     }
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
 import PropTypes from 'prop-types'
-import reactSelectStyle from './reactSelectStyle'
+import reactSelectStyle from '../../../../utils/reactSelectStyle'
 
 const VEG_TRAY_PURPOSES = ['veg', 'veg1', 'veg2']
 
@@ -43,6 +43,8 @@ class LocationPicker extends React.Component {
     this.setState({ value: { value: item.value, label: item.label } })
   }
 
+  
+
   render() {
     return (
       <Select
@@ -51,6 +53,10 @@ class LocationPicker extends React.Component {
         options={this.trays}
         onChange={this.onChange}
         value={this.state.value}
+        filterOption={(option, input) => {
+          const words = input.toLowerCase().split(/\s/)
+          return words.every(x => option.label.toLowerCase().indexOf(x) >= 0)
+        }}
       />
     )
   }

@@ -21,6 +21,8 @@ module Inventory
       :planted_on,
       :expected_harvested_on,
       :mother_id,
+      :tray_id,
+      :cultivation_batch_id,
       :vendor_id,
       :vendor_name,
       :vendor_no,
@@ -43,6 +45,8 @@ module Inventory
       @planted_on = args[:planted_on]
       @expected_harvested_on = args[:expected_harvested_on]
       @mother_id = args[:mother_id]
+      @tray_id = args[:tray]
+      @cultivation_batch_id = args[:cultivation_batch_id]
 
       @vendor_id = args[:vendor_id]
       @vendor_name = args[:vendor_name] && args[:vendor_name].strip
@@ -55,13 +59,11 @@ module Inventory
     end
 
     def call
-      split_veg_ids
-
       if valid_permission? && valid_data?
         create_strain
         vendor = create_vendor
         @mother_id = nil if is_purchased?
-        vegs = create_vegs(veg_ids, @mother_id)
+        vegs = create_vegs(veg_ids, @mother_id, tray_id)
         create_invoice(vegs, vendor, invoice_no) if is_purchased?
         vegs
       end
@@ -69,9 +71,8 @@ module Inventory
 
     private
 
-    def split_veg_ids
-      @veg_ids = @veg_ids.split(/[\n\r]/).reject { |x| x.empty? }.map(&:strip)
-      @plant_ids = @veg_ids.map { |x| x.split(',')[0].strip }
+    def split_veg_ids(input)
+      input.split(/[\n\r]/).reject { |x| x.empty? }.map(&:strip)
     end
 
     def valid_permission?
@@ -79,13 +80,28 @@ module Inventory
     end
 
     def valid_data?
+      plant_ids = split_veg_ids(@veg_ids)
       # All serial number should be new
-      existing_records = Inventory::ItemArticle.in(serial_no: @plant_ids).pluck(:serial_no)
+      existing_records = Inventory::ItemArticle.in(serial_no: plant_ids).pluck(:serial_no)
 
       if existing_records.count > 0
-        errors.add(:clone_ids, "These plant ID #{existing_records.join(', ')} already exists in the system.")
+        errors.add(:veg_ids, "These plant ID #{existing_records.join(', ')} already exists in the system.")
       end
+
+      valid_tray()
       errors.empty?
+    end
+
+    def valid_tray()
+      locations = QueryAllValidFacilityLocations.call.result
+      tray = locations.find { |x| x[:t_id] == tray_id }
+      mother_room = locations.find { |x| x[:room_id] }
+
+      if tray.nil?
+        errors.add(:tray, 'Tray does not exists.')
+      elsif !%w(veg veg1 veg2).include?(tray[:rm_purpose])
+        errors.add(:tray, 'Tray does not belong to a veg room.')
+      end
     end
 
     def is_purchased?
@@ -131,41 +147,20 @@ module Inventory
       end
     end
 
-    def create_vegs(veg_ids, mother_id)
-      trays = QueryAllValidFacilityLocations.call.result.reject { |x| x[:t_id].blank? }
-      result = Hash.new { |hash, key| hash[key] = {plant_ids: [], plant_status: nil} }
-
-      veg_ids.each do |line|
-        plant_id, location = line.split(',')
-        tray = trays.find { |x| x[:value] == location.strip }
-        Rails.logger.debug("tray: #{tray}")
-        tray_id = tray[:t_id]
-        plant_status = tray[:rm_purpose]
-
-        result[tray_id][:plant_ids] << plant_id.strip
-        result[tray_id][:plant_status] = plant_status
-      end
-
-      vegs = []
-      result.each do |_tray_id, plant_ids_and_status|
-        _plant_ids = plant_ids_and_status[:plant_ids]
-        _plant_status = plant_ids_and_status[:plant_status]
-        Rails.logger.debug("_plant_status: #{_plant_status}")
-
-        new_vegs = create_veg(_plant_ids,
-                              _plant_status,
-                              strain_name,
-                              _tray_id,
-                              planted_on,
-                              expected_harvested_on,
-                              mother_id)
-        vegs.concat(new_vegs)
-      end
-
+    def create_vegs(veg_ids, mother_id, tray_id)
+      plant_ids = split_veg_ids(veg_ids)
+      vegs = _create_veg(plant_ids,
+                         'veg',
+                         strain_name,
+                         tray_id,
+                         planted_on,
+                         expected_harvested_on,
+                         mother_id,
+                         cultivation_batch_id)
       vegs
     end
 
-    def create_veg(_plant_ids, _plant_status, _strain_name, _tray_id, _planted_on, _expected_harvested_on, _mother_plant_id)
+    def _create_veg(_plant_ids, _plant_status, _strain_name, _tray_id, _planted_on, _expected_harvested_on, _mother_plant_id, _cultivation_batch_id)
       command = Inventory::CreatePlants.call(
         status: 'available',
         plant_ids: _plant_ids,
@@ -176,6 +171,7 @@ module Inventory
         expected_harvested_on: _expected_harvested_on,
         plant_status: _plant_status,
         mother_plant_id: _mother_plant_id,
+        cultivation_batch_id: _cultivation_batch_id,
       )
 
       if command.success?

@@ -14,6 +14,16 @@ const LabelWithChangeEvent = ({ isSelecting, value, onClick }) => {
   }
 }
 
+const SelectWithRange = ({ min, max, onChange }) => {
+  let children = []
+  for (let i = min; i <= max; i++) {
+    children.push(<option value={i} key={i}>{i}</option>)
+  }
+  return (
+    <select onChange={onChange}>{children}</select>
+  )
+}
+
 class BatchLocationEditor extends React.PureComponent {
   state = {
     selectedRoom: '',
@@ -22,7 +32,6 @@ class BatchLocationEditor extends React.PureComponent {
   }
 
   onShowAddLocation = () => {
-    console.log('clicked')
     this.setState({
       showAddLocation: true
     })
@@ -84,6 +93,8 @@ class BatchLocationEditor extends React.PureComponent {
 
   onChange = (field, value) => e => this.setState({ [field]: value })
 
+  onChangeInput = field => e => this.setState({ [field]: e.target.value })
+
   getLocationName = (locations, location_type, id) => {
     if (!id) {
       return "-- Select --"
@@ -136,6 +147,9 @@ class BatchLocationEditor extends React.PureComponent {
       }
     }
 
+    const selectedQuantity = parseInt(this.state.selectedQuantity ? this.state.selectedQuantity : 0)
+    const selectedTraysCapacity = parseInt(selectedTrays.reduce((a, v) => a + parseInt(v.capacity), 0))
+
     return (
       <div className="pa2">
         <p>Set Quantity and Location</p>
@@ -144,7 +158,7 @@ class BatchLocationEditor extends React.PureComponent {
             e.preventDefault()
             const updatePlant = {
               id: plant.id,
-              quantity: this.quantityField.value,
+              quantity: selectedQuantity,
             }
             console.log({ updatePlant })
             onSave(updatePlant)
@@ -156,39 +170,57 @@ class BatchLocationEditor extends React.PureComponent {
             <label>
               Quantity: <br />
               <input
+                className="tr"
                 type="number"
                 defaultValue={plant.quantity || ''}
                 min="0"
                 step="1"
-                ref={input => (this.quantityField = input)}
+                required={true}
+                onChange={this.onChangeInput('selectedQuantity')}
               />
             </label>
           </div>
 
           <div className="mt2">
             <span className="db">Locations:</span>
-            <table className="collapse ba br2 b--black-10 pv2 ph3">
-              <tbody>
-                <tr className="striped--light-gray">
-                  <td className="pv2 ph3">Location</td>
-                  <td className="pv2 ph3 tr">Quantity</td>
-                  <td></td>
-                </tr>
-                { selectedTrays.map(tray => (
-                  <tr key={tray.id}>
-                    <td className="pv2 ph3">{this.getLocationName(locations, 'tray', tray.id)}</td>
-                    <td className="pv2 ph3">{tray.capacity}</td>
-                    <td className="pv2 ph3">
-                      {!showAddLocation &&
-                        <a href="#0" onClick={this.onRemoveSelectedTray(tray.id)}>Remove</a>
-                      }
-                    </td>
+            {selectedTrays && selectedTrays.length > 0 &&
+              <table className="collapse ba br2 b--black-10 pv2 ph3 f6">
+                <tbody>
+                  <tr className="striped--light-gray">
+                    <td className="pv2 ph3">#</td>
+                    <td className="pv2 ph3">Location</td>
+                    <td className="pv2 ph3 tr">Quantity</td>
+                    <td></td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                  {selectedTrays.map((tray, index) => (
+                    <tr key={tray.id}>
+                      <td className="pv2 ph3">{index + 1}</td>
+                      <td className="pv2 ph3">{this.getLocationName(locations, 'tray', tray.id)}</td>
+                      <td className="pv2 ph3 tr">{tray.capacity}</td>
+                      <td className="pv2 ph3">
+                        {!showAddLocation &&
+                          <a href="#0" onClick={this.onRemoveSelectedTray(tray.id)}>Remove</a>
+                        }
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr className="bt b--light-gray">
+                    <td className="pv2 tr" colSpan={2}>Total</td>
+                    <td className={classNames("pv2 ph3 tr", {
+                      "red": (selectedQuantity === 0 || selectedTraysCapacity > selectedQuantity || selectedTraysCapacity < selectedQuantity),
+                      "green": selectedTraysCapacity === selectedQuantity,
+                    })}>
+                      {selectedTraysCapacity}/{selectedQuantity}
+                    </td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+            }
             {!showAddLocation &&
-              <a href="#0" className="link mt2" onClick={this.onShowAddLocation}>
+              <a href="#0" className="link dib mt2" onClick={this.onShowAddLocation}>
                 + Add Quantity &amp; Location
               </a>
             }
@@ -311,7 +343,7 @@ class BatchLocationEditor extends React.PureComponent {
               <span className="mt2 dib mr2">Select Tray:</span>
               <LabelWithChangeEvent
                 isSelecting={showTrayList}
-                value={selectedTrays.length}
+                value={selectedTrays.length > 0 ? selectedTrays[selectedTrays.length - 1].capacity : ""}
                 onClick={this.onChange('showTrayList', true)}
               />
 
@@ -335,19 +367,23 @@ class BatchLocationEditor extends React.PureComponent {
                         <span className="">{tray.tray_code}</span><br />
                         <span className="">Capacity: {tray.planned_capacity}/{tray.tray_capacity} </span><br />
                         <span className="dib">Select Capacity: </span>
-                        <input type="number" max={tray.remaining_capacity} onChange={this.onSelectTray(tray.tray_id)} />
+                        <SelectWithRange
+                          min={0}
+                          max={tray.remaining_capacity}
+                          onChange={this.onSelectTray(tray.tray_id)}
+                        />
                       </div>
                     )
                   })}
-                  <a href="#0" onClick={this.onDoneSelectTray}>Add</a>
+                  <a href="#0" onClick={this.onDoneSelectTray}>Set</a>
                 </div>
               )}
             </div>
           }
-          {!showAddLocation &&
-            <div className="mt2">
+          {!showAddLocation && selectedQuantity === selectedTraysCapacity &&
+            <div className="mt3">
+              <input type="submit" value="Save" className="btn btn--primary dim br2" />
               <a href="#0" className="link btn mr2" onClick={onClose}>Cancel</a>
-              <input type="submit" value="Save" className="btn btn--primary dim" />
             </div>
           }
         </form>

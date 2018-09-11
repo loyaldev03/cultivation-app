@@ -18,6 +18,7 @@ module Inventory
       :strain_type,
       :plant_ids,
       :veg_ids,  # veg_ids is raw plant ID and location ID pairing
+      :plant_qty,
       :planted_on,
       :expected_harvested_on,
       :mother_id,
@@ -42,6 +43,7 @@ module Inventory
       @strain_name = args[:strain]
       @strain_type = args[:strain_type]
       @veg_ids = args[:veg_ids]
+      @plant_qty = args[:plant_qty]
       @planted_on = args[:planted_on]
       @expected_harvested_on = args[:expected_harvested_on]
       @mother_id = args[:mother_id]
@@ -59,17 +61,28 @@ module Inventory
     end
 
     def call
+      @veg_ids = generate_or_extract_plant_ids
+
       if valid_permission? && valid_data?
         create_strain
         vendor = create_vendor
         @mother_id = nil if is_purchased?
-        vegs = create_vegs(veg_ids, @mother_id, tray_id)
+        vegs = create_vegs
         create_invoice(vegs, vendor, invoice_no) if is_purchased?
         vegs
       end
     end
 
     private
+
+    def generate_or_extract_plant_ids
+      if veg_ids.strip.present?
+        veg_ids.gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
+      else
+        ids = Inventory::GeneratePlantSerialNo.call(plant_qty.to_i).result
+        ids
+      end
+    end
 
     def split_veg_ids(input)
       input.split(/[\n\r]/).reject { |x| x.empty? }.map(&:strip)
@@ -80,9 +93,7 @@ module Inventory
     end
 
     def valid_data?
-      plant_ids = split_veg_ids(@veg_ids)
-      # All serial number should be new
-      existing_records = Inventory::ItemArticle.in(serial_no: plant_ids).pluck(:serial_no)
+      existing_records = Inventory::ItemArticle.in(serial_no: veg_ids).pluck(:serial_no)
 
       if existing_records.count > 0
         errors.add(:veg_ids, "These plant ID #{existing_records.join(', ')} already exists in the system.")
@@ -147,9 +158,8 @@ module Inventory
       end
     end
 
-    def create_vegs(veg_ids, mother_id, tray_id)
-      plant_ids = split_veg_ids(veg_ids)
-      vegs = _create_veg(plant_ids,
+    def create_vegs
+      vegs = _create_veg(veg_ids,
                          'veg',
                          strain_name,
                          tray_id,
@@ -177,7 +187,7 @@ module Inventory
       if command.success?
         command.result
       else
-        combine_errors(command.errors, :plant_ids, :clone_ids)
+        combine_errors(command.errors, :plant_ids, :veg_ids)
         combine_errors(command.errors, :strain_name, :strain_name)
         combine_errors(command.errors, :location_id, :clone_ids)  # there is no field to host tray id errors, i just park all under clone_ids
         []
@@ -187,7 +197,7 @@ module Inventory
     def create_invoice(plants, vendor, invoice_no)
       command = Inventory::SaveBlankInvoice.call(nil, plants, vendor, invoice_no)
       unless command.success?
-        combine_errors(command.errors, :errors, :plant_ids)
+        combine_errors(command.errors, :errors, :veg_ids)
       end
     end
 

@@ -43,18 +43,18 @@ module Inventory
       can_save = (status == 'draft' || valid?)
 
       if can_save
-        item = create_item
-        batch = create_batch
-        plants = create_articles_for_plants(item, status: status, batch: batch)
+        item = create_item!
+        batch = create_batch!
+        plants = create_articles_for_plants!(item, status: status, batch: batch)
         plants
       end
     end
 
     private
 
-    def create_item
+    def create_item!
       strain = Common::Strain.find_by(name: strain_name)
-      inventory = Inventory::Item.find_or_create_by(
+      inventory = Inventory::Item.find_or_create_by!(
         strain: strain,
         item_type: 'plant',
         facility: facility,
@@ -79,18 +79,22 @@ module Inventory
       end
     end
 
-    def create_batch
+    def create_batch!
+      Rails.logger.debug ">>>>> cultivation_batch_id: #{cultivation_batch_id}"
       return nil if cultivation_batch_id.nil?
 
-      Cultivation::Batch.find_or_create_by(batch_no: cultivation_batch_id,
-                                           strain: strain_name,
-                                           facility: facility) do |batch|
-        batch.name = 'Batch from Plant Setup'
+      batch = Cultivation::Batch.find_or_create_by!(
+        batch_no: cultivation_batch_id,
+        strain: strain_name,
+        facility: facility,
+      ) do |b|
+        b.name = 'Batch from Plant Setup'
       end
+      batch
     end
 
     # TODO: Maybe should pass in the batch ID
-    def create_articles_for_plants(item, status: 'draft', batch: nil)
+    def create_articles_for_plants!(item, status: 'draft', batch: nil)
       plants = []
       plant_ids.each do |plant_id|
         plant = Inventory::ItemArticle.find_or_initialize_by(
@@ -106,11 +110,11 @@ module Inventory
           t.mother_plant_id = mother_plant_id
           t.expected_harvested_on = nil
           t.planted_on = planted_on
-          t.batch_id = batch.id unless batch.nil?
+          t.cultivation_batch = batch.id unless batch.nil?
         end
 
         unless plant.persisted? # Create plants that is not in the system only. Do not override existing
-          plant.save                  # ones as they may already associated to another batch.
+          plant.save!                 # ones as they may already associated to another batch.
           plants << plant
         end
       end

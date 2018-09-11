@@ -154,6 +154,7 @@ class CloneEditor extends React.Component {
       planted_on: null,
       expected_harvested_on: null,
       mother_id: '',
+      cultivation_batch_id: '',
 
       // UI states
       isShowPlantIdGenerator: false,
@@ -165,11 +166,12 @@ class CloneEditor extends React.Component {
   }
 
   validateAndGetValues() {
-    const {
+    let {
       strain,
       strain_type,
       clone_ids,
       plant_qty,
+      cultivation_batch_id,
       isShowPlantIdGenerator,
       location_id,
       planted_on,
@@ -182,11 +184,12 @@ class CloneEditor extends React.Component {
       errors = { ...errors, planted_on: ['Planted on date is required.'] }
     }
 
-    if (clone_ids.trim().length <= 0) {
-      errors = { ...errors, clone_ids: ['Plant ID is required.'] }
+    if (cultivation_batch_id.length === 0) {
+      errors = { ...errors, cultivation_batch_id: ['Cultivation batch ID is required.'] }
     }
 
     if (isShowPlantIdGenerator) {
+      clone_ids = ''
       if (parseInt(plant_qty) <= 0) {
         errors = {
           ...errors,
@@ -200,10 +203,15 @@ class CloneEditor extends React.Component {
           location_id: ['Location of the clones is required.']
         }
       }
+    } else {
+      plant_qty = 0
+      if (clone_ids.trim().length <= 0) {
+        errors = { ...errors, clone_ids: ['Plant ID is required.'] }
+      }
     }
 
     let purchaseData = { isValid: true }
-    if (!isBought) {
+    if (isBought) {
       purchaseData = this.purchaseInfoEditor.getValues()
     }
 
@@ -218,6 +226,7 @@ class CloneEditor extends React.Component {
       ...purchaseData,
       strain,
       strain_type,
+      cultivation_batch_id,
       clone_ids,
       location_id,
       plant_qty,

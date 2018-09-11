@@ -61,8 +61,9 @@ class VegGroupEditor extends React.Component {
       this.purchaseInfoEditor = element
     }
 
-    this.strainPicker = React.createRef()
-    this.motherPicker = React.createRef()
+    this.strainPicker   = React.createRef()
+    this.motherPicker   = React.createRef()
+    this.locationPicker = React.createRef()
   }
 
   onTogglePlantQtyForm = event => {
@@ -166,6 +167,7 @@ class VegGroupEditor extends React.Component {
     })
 
     this.strainPicker.current.reset()
+    this.locationPicker.current.reset()
   }
 
   validateAndGetValues() {
@@ -380,6 +382,7 @@ class VegGroupEditor extends React.Component {
           <div className="w-100 mb3">
             <label className="f6 fw6 db mb1 gray ttc">Tray ID</label>
             <LocationPicker
+              ref={this.locationPicker}
               mode="vegTray"
               locations={this.locations}
               location_id={this.state.tray}

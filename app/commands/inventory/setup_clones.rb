@@ -13,7 +13,7 @@ module Inventory
       :cultivation_batch_id,
       :location_id,
       :mother_id,
-      :clone_qty,
+      :plant_qty,
       :clone_ids,
       :planted_on,
       :expected_harvested_on,
@@ -39,6 +39,7 @@ module Inventory
       @location_id = args[:location_id]
       @mother_id = args[:mother_id]
       @clone_ids = args[:clone_ids]
+      @plant_qty = args[:plant_qty]
       @planted_on = args[:planted_on]
       @expected_harvested_on = args[:expected_harvested_on]
       @vendor_id = args[:vendor_id]
@@ -71,6 +72,7 @@ module Inventory
         clone_ids.gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
       else
         ids = Inventory::GeneratePlantSerialNo.call(plant_qty.to_i).result
+        ids
       end
     end
 
@@ -86,7 +88,8 @@ module Inventory
         errors.add(:clone_ids, "These plant ID #{existing_records.join(', ')} already exists in the system.")
       end
 
-      if (Tray.find(location_id).nil?)
+      tray = Tray.find(location_id)
+      if (tray.nil?)
         errors.add(:location_id, 'Tray not found.')
       end
 

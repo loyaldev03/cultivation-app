@@ -15,6 +15,10 @@ class Api::V1::PlantSetupsController < Api::V1::BaseApiController
 
   def setup_clones
     command = Inventory::SetupClones.call(current_user, params[:plant_setup].to_unsafe_h)
+    Rails.logger.debug('>>>>> PlantSetupsController#setup_clones')
+    Rails.logger.debug(command.result)
+    Rails.logger.debug(command.errors)
+
     if command.success?
       data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
       # TODO: Try rewrite to
@@ -29,6 +33,10 @@ class Api::V1::PlantSetupsController < Api::V1::BaseApiController
 
   def setup_vegs
     command = Inventory::SetupVegGroup.call(current_user, params[:plant_setup].to_unsafe_h)
+    Rails.logger.debug('>>>>> PlantSetupsController#setup_vegs')
+    Rails.logger.debug(command.result)
+    Rails.logger.debug(command.errors)
+
     if command.success?
       data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
       render json: {data: data}

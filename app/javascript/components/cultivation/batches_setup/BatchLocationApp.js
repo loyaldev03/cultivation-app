@@ -191,6 +191,7 @@ class BatchLocationApp extends React.Component {
                 plant={editingPlant}
                 locations={this.props.locations}
                 onSave={this.onEditorSave}
+                onClose={this.closeSidebar}
               />
             )}
           </div>

@@ -58,7 +58,7 @@ class BatchLocationEditor extends React.PureComponent {
   }
 
   render() {
-    const { plant, locations, onSave } = this.props
+    const { plant, locations, onSave, onClose } = this.props
     const {
       showRoomList,
       showRowList,
@@ -146,7 +146,7 @@ class BatchLocationEditor extends React.PureComponent {
 
             {this.state.showRoomList && (
               <div
-                className="mt1"
+                className="mt1 f6"
                 style={{
                   display: 'grid',
                   gridColumnGap: '10px',
@@ -162,7 +162,7 @@ class BatchLocationEditor extends React.PureComponent {
                   return (
                     <div
                       key={roomId}
-                      className={classNames('ba b--gray pa2 pointer h3 f6', {
+                      className={classNames('ba b--gray pa2 pointer h3', {
                         'bg-orange white bn': selectedRoom === roomId
                       })}
                       onClick={this.onSelectRoom(roomId)}
@@ -185,7 +185,14 @@ class BatchLocationEditor extends React.PureComponent {
             <br />
 
             {this.state.showRowList && (
-              <div>
+              <div
+                className="mt1 f6"
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr',
+                  gridRowGap: '10px',
+                }}
+              >
                 {Object.keys(rows).map(rowId => {
                   const firstRow = rows[rowId][0]
                   const rowCapacity = this.sumOfShelvesCapacity(rows[rowId])
@@ -215,7 +222,14 @@ class BatchLocationEditor extends React.PureComponent {
             <br />
 
             {this.state.showShelfList && (
-              <div>
+              <div
+                className="mt1 f6"
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr',
+                  gridRowGap: '10px',
+                }}
+              >
                 {Object.keys(shelves).map(shelfId => {
                   const firstShelf = shelves[shelfId][0]
                   const shelfCapacity = firstShelf.shelf_capacity
@@ -245,18 +259,25 @@ class BatchLocationEditor extends React.PureComponent {
             <br />
 
             {this.state.showTrayList && (
-              <div>
+              <div
+                className="mt1 f6"
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr',
+                  gridRowGap: '10px',
+                }}
+              >
                 {trays.map(tray => {
                   return (
                     <div
                       key={tray.tray_id}
-                      className={classNames('ba b--gray pa2 pointer h3', {
+                      className={classNames('ba b--gray pa2 pointer h4', {
                         'bg-orange white bn': selectedTray === tray.tray_id
                       })}
-                      onClick={this.onSelectTray(tray.tray_id)}
                     >
                       <span className="dib">{tray.tray_code}</span><br />
-                      <span className="">Capacity: {tray.capacity || 0}/{tray.tray_capacity || "N/A"} </span>
+                      <span className="">Capacity: {tray.capacity || 0}/{tray.tray_capacity || "N/A"} </span><br />
+                      <button onClick={this.onSelectTray(tray.tray_id)}>Done</button>
                     </div>
                   )
                 })}
@@ -264,7 +285,8 @@ class BatchLocationEditor extends React.PureComponent {
             )}
           </div>
           <div className="mt2">
-            <input type="submit" value="Save" className="btn btn--primary" />
+            <a href="#0" className="link btn mr2" onClick={onClose}>Cancel</a>
+            <input type="submit" value="Save" className="btn btn--primary dim" />
           </div>
         </form>
       </div>

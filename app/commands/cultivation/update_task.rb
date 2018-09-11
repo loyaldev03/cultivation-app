@@ -9,7 +9,7 @@ module Cultivation
     end
 
     def call
-      task = Cultivation::Task.find(@args[:_id])
+      task = Cultivation::Task.find(@args[:id]['$oid'])
       update_task(task, @args)
       #check if current task end_date is beyond end_date of parent
       #update parent task and (depending task) only using => {children: false} to avoid updating children task
@@ -17,6 +17,7 @@ module Cultivation
       # TO DO should this update task be recursive ? what if parent task end_date is extended beyond its parent task ?
 
       update_task(task.parent, {end_date: task.end_date}, {children: false}) if task.parent and (task.end_date > task.parent.end_date) 
+      task
     end
 
 

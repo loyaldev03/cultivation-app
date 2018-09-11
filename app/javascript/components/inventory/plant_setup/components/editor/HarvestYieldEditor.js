@@ -28,24 +28,20 @@ export default class HarvestYieldEditor extends React.Component {
     this.motherPicker = React.createRef()
   }
 
-  onStrainSelected = (data) => {
+  onStrainSelected = data => {
     this.setState({
       strain: data.strain,
       strain_type: data.strain_type
     })
   }
 
-  onCultivationBatchIdChanged = (event) => {
+  onCultivationBatchIdChanged = event => {
     this.setState({ cultivation_batch_id: event.target.value })
   }
 
-  onLocationSelected = () => {
+  onLocationSelected = () => {}
 
-  }
-
-  onSave = () => {
-
-  }
+  onSave = () => {}
 
   renderYieldType() {
     const options = [
@@ -54,9 +50,14 @@ export default class HarvestYieldEditor extends React.Component {
       ['Trim', 'trim'],
       ['Waste', 'waste'],
       ['Wet Plant', 'wet'],
-      ['Other', 'other']]
+      ['Other', 'other']
+    ]
 
-    const htmlOptions = options.map(x => <option value={x[1]} key={x[1]}>{x[0]}</option> )
+    const htmlOptions = options.map(x => (
+      <option value={x[1]} key={x[1]}>
+        {x[0]}
+      </option>
+    ))
     return (
       <select
         className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 select"
@@ -89,10 +90,10 @@ export default class HarvestYieldEditor extends React.Component {
           </div>
           <div className="w-50 pl3">
             <MotherPicker
-              mode="veg" 
-              ref={this.motherPicker} 
-              strain={this.state.strain} 
-              key={this.state.strain} 
+              mode="veg"
+              ref={this.motherPicker}
+              strain={this.state.strain}
+              key={this.state.strain}
             />
           </div>
         </div>
@@ -112,7 +113,7 @@ export default class HarvestYieldEditor extends React.Component {
         <div className="ph4 mt3 flex flex-column">
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Yield Type</label>
-            {this.renderYieldType() }
+            {this.renderYieldType()}
             <FieldError errors={this.state.errors} field="location_id" />
           </div>
         </div>
@@ -121,8 +122,12 @@ export default class HarvestYieldEditor extends React.Component {
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Weight Type</label>
             <select className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 select">
-              <option key="dry" value="dry">Dry</option>
-              <option key="wet" value="wet">Wet</option>
+              <option key="dry" value="dry">
+                Dry
+              </option>
+              <option key="wet" value="wet">
+                Wet
+              </option>
             </select>
           </div>
           <div className="w-20 pl3">
@@ -131,10 +136,18 @@ export default class HarvestYieldEditor extends React.Component {
           <div className="w-30 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Weight Unit</label>
             <select className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 select">
-              <option key="g" value="g">g</option>
-              <option key="kg" value="kg">kg</option>
-              <option key="lb" value="lb">lb</option>
-              <option key="oz" value="wet">oz</option>
+              <option key="g" value="g">
+                g
+              </option>
+              <option key="kg" value="kg">
+                kg
+              </option>
+              <option key="lb" value="lb">
+                lb
+              </option>
+              <option key="oz" value="wet">
+                oz
+              </option>
             </select>
           </div>
         </div>

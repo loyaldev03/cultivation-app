@@ -46,7 +46,7 @@ class VegGroupEditor extends React.Component {
 
       // UI state
       isShowPlantQtyForm: false,
-      errors: {},
+      errors: {}
     }
 
     this.locations = props.locations
@@ -65,12 +65,12 @@ class VegGroupEditor extends React.Component {
     this.motherPicker = React.createRef()
   }
 
-  onTogglePlantQtyForm = (event) => {
+  onTogglePlantQtyForm = event => {
     this.setState({ isShowPlantQtyForm: !this.state.isShowPlantQtyForm })
     event.preventDefault()
   }
 
-  onPlantIdsChanged = (event) => {
+  onPlantIdsChanged = event => {
     this.setState({ veg_ids: event.target.value })
     const node = this.plantIdsTextArea
     const lines = (event.target.value.match(/\n/g) || []).length
@@ -87,23 +87,23 @@ class VegGroupEditor extends React.Component {
     }
   }
 
-  onPlantQtyChanged = (event) => {
+  onPlantQtyChanged = event => {
     this.setState({ plant_qty: event.target.value })
   }
 
-  onTraySelected = (item) => {
+  onTraySelected = item => {
     this.setState({ tray: item.t_id })
   }
 
-  onCultivationBatchIdChanged = (event) => {
+  onCultivationBatchIdChanged = event => {
     this.setState({ cultivation_batch_id: event.target.value })
   }
 
-  onPlantedOnChanged = (date) => {
+  onPlantedOnChanged = date => {
     this.setState({ planted_on: date })
   }
 
-  onExpectedHarvestDateChanged = (date) => {
+  onExpectedHarvestDateChanged = date => {
     this.setState({ expected_harvested_on: date })
   }
 
@@ -111,14 +111,14 @@ class VegGroupEditor extends React.Component {
     this.setState({ is_bought: !this.state.is_bought })
   }
 
-  onStrainSelected = (data) => {
+  onStrainSelected = data => {
     this.setState({
       strain: data.strain,
       strain_type: data.strain_type
     })
   }
 
-  onSave = (event) => {
+  onSave = event => {
     const data = this.validateAndGetValues()
     const { errors, isValid, ...payload } = data
     // console.log(data)
@@ -217,7 +217,10 @@ class VegGroupEditor extends React.Component {
     }
 
     const { isValid: strainValid } = this.strainPicker.current.validate()
-    const { isValid: motherValid, mother_id } = this.motherPicker.current.getValues()
+    const {
+      isValid: motherValid,
+      mother_id
+    } = this.motherPicker.current.getValues()
 
     const isValid =
       Object.getOwnPropertyNames(errors).length == 0 &&
@@ -287,7 +290,6 @@ class VegGroupEditor extends React.Component {
           </div>
 
           <div className="w-100 mb2">
- 
             <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
               If you already have them, paste Plant IDs with its corresponding
               tray ID like below:
@@ -302,7 +304,7 @@ class VegGroupEditor extends React.Component {
               </a>
             </p>
           </div>
-          
+
           <div className="w-100">
             <textarea
               ref={this.setPlantIdsTextArea}
@@ -322,8 +324,7 @@ class VegGroupEditor extends React.Component {
   renderProcurementInfo() {
     if (!this.state.is_bought) {
       return null
-    }
-    else {     
+    } else {
       return (
         <PurchaseInfo
           ref={this.setPurchaseInfoEditor}
@@ -367,10 +368,10 @@ class VegGroupEditor extends React.Component {
             />
           </div>
           <div className="w-50 pl3">
-            <MotherPicker 
-              ref={this.motherPicker} 
-              strain={this.state.strain} 
-              key={this.state.strain} 
+            <MotherPicker
+              ref={this.motherPicker}
+              strain={this.state.strain}
+              key={this.state.strain}
             />
           </div>
         </div>

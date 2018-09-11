@@ -37,7 +37,6 @@ class PlantStore {
     // find and replace...
   }
 
-
   @computed
   get motherPlants() {
     this.plants.slice().filter(x => x.attributes.plant_status === 'mother')

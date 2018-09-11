@@ -43,8 +43,6 @@ class LocationPicker extends React.Component {
     this.setState({ value: { value: item.value, label: item.label } })
   }
 
-  
-
   render() {
     return (
       <Select

@@ -5,7 +5,6 @@ import MotherEditor from './editor/MotherEditor'
 import VegGroupEditor from './editor/VegGroupEditor'
 import HarvestYieldEditor from './editor/HarvestYieldEditor'
 
-
 const VEG_GROUP = 'VEG_GROUP'
 const SEED = 'SEED'
 const CLONE = 'CLONE'
@@ -47,7 +46,6 @@ export default class PlantEditor extends React.Component {
     return { isValid: true }
   }
 
- 
   renderEditorToggle() {
     if (this.editorSelected) return null
 
@@ -150,26 +148,26 @@ export default class PlantEditor extends React.Component {
   renderHarvestYieldEditor() {
     if (this.state.stockEditor !== HARVEST) return null
     return (
-      <HarvestYieldEditor 
+      <HarvestYieldEditor
         onExitCurrentEditor={this.onExitCurrentEditor}
-        locations={this.locations} 
+        locations={this.locations}
       />
     )
   }
 
   renderEditor() {
     // this.renderSeedEditor()
-    switch(this.state.stockEditor) {
-      case MOTHER:
-        return this.renderMotherEditor()
-      case CLONE:
-        return this.renderCloneEditor()
-      case VEG_GROUP:
-        return this.renderVegGroupEditor()
-      case HARVEST:
-        return this.renderHarvestYieldEditor()
-      default:
-        return this.renderEditorToggle() 
+    switch (this.state.stockEditor) {
+    case MOTHER:
+      return this.renderMotherEditor()
+    case CLONE:
+      return this.renderCloneEditor()
+    case VEG_GROUP:
+      return this.renderVegGroupEditor()
+    case HARVEST:
+      return this.renderHarvestYieldEditor()
+    default:
+      return this.renderEditorToggle()
     }
   }
 

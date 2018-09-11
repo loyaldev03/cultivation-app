@@ -63,10 +63,10 @@ class CloneEditor extends React.Component {
     }
 
     this.strainPicker = React.createRef()
-    this.motherPicker = React.createRef()  
+    this.motherPicker = React.createRef()
   }
 
-  onCloneIdsChanged = (event) => {
+  onCloneIdsChanged = event => {
     this.setState({ clone_ids: event.target.value })
     const lines = (event.target.value.match(/\n/g) || []).length
     const node = this.cloneIdTextArea
@@ -83,16 +83,16 @@ class CloneEditor extends React.Component {
     }
   }
 
-  onChangeGeneratorPlantCount = (event) => {
+  onChangeGeneratorPlantCount = event => {
     this.setState({ plant_qty: event.target.value })
     event.preventDefault()
   }
 
-  onPlantedOnChanged = (date) => {
+  onPlantedOnChanged = date => {
     this.setState({ planted_on: date })
   }
 
-  onExpectedHarvestDateChanged = (date) => {
+  onExpectedHarvestDateChanged = date => {
     this.setState({ expected_harvested_on: date })
   }
 
@@ -100,38 +100,37 @@ class CloneEditor extends React.Component {
     this.setState({ isBought: !this.state.isBought })
   }
 
-  onMotherIdChanged = (event) => {
+  onMotherIdChanged = event => {
     this.setState({ mother_id: event.target.value })
   }
 
-  onMotherLocationChanged = (item) => {
+  onMotherLocationChanged = item => {
     this.setState({ mother_location_id: item.rm_id })
   }
 
-  onToggleGeneratePlantId = (event) => {
+  onToggleGeneratePlantId = event => {
     this.setState({
       isShowPlantIdGenerator: !this.state.isShowPlantIdGenerator
     })
     if (event) event.preventDefault()
   }
 
-  onStrainSelected = (data) => {
+  onStrainSelected = data => {
     this.setState({
       strain: data.strain,
       strain_type: data.strain_type
     })
   }
 
-  onTraySelected = (item) => {
+  onTraySelected = item => {
     this.setState({ tray: item.t_id })
   }
 
-  onCultivationBatchIdChanged = (event) => {
+  onCultivationBatchIdChanged = event => {
     this.setState({ cultivation_batch_id: event.target.value })
   }
 
-
-  onSave = (event) => {
+  onSave = event => {
     const data = this.validateAndGetValues()
     const { errors, isValid, ...payload } = data
 
@@ -316,7 +315,6 @@ class CloneEditor extends React.Component {
             </div>
           </div>
         </div>
-        
       </React.Fragment>
     )
   }
@@ -329,7 +327,8 @@ class CloneEditor extends React.Component {
         <div className="ph4 mb2 flex">
           <div className="w-100">
             <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
-              Each clone has its own <strong>Plant ID</strong>. If you already have them, paste them below.
+              Each clone has its own <strong>Plant ID</strong>. If you already
+              have them, paste them below.
             </p>
             <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
               <a
@@ -376,10 +375,10 @@ class CloneEditor extends React.Component {
             />
           </div>
           <div className="w-50 pl3">
-            <MotherPicker 
-              ref={this.motherPicker} 
-              strain={this.state.strain} 
-              key={this.state.strain} 
+            <MotherPicker
+              ref={this.motherPicker}
+              strain={this.state.strain}
+              key={this.state.strain}
             />
           </div>
         </div>
@@ -402,7 +401,7 @@ class CloneEditor extends React.Component {
         </div>
         {this.renderPlantIdTextArea()}
         {this.renderPlantIdGenerator()}
-        
+
         <div className="ph4 mt3 flex">
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Planted On</label>

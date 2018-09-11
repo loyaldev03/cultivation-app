@@ -48,7 +48,14 @@ class QueryAvailableTrays
             { "$unwind": "$rooms" },
             { "$unwind": "$rooms.sections" },
             { "$match": { "$expr": { "$eq": ["$rooms.sections._id", "$$sectionId"] } } },
-            { "$project": { _id:0, section_id: "$rooms.sections._id", section_name: "$rooms.sections.name" } }
+            { "$project": {
+                _id:0,
+                section_id: "$rooms.sections._id",
+                section_name: "$rooms.sections.name",
+                section_code: "$rooms.sections.code",
+                section_purpose: "$rooms.sections.purpose",
+              }
+            }
           ],
           as: "section"
         }
@@ -110,6 +117,8 @@ class QueryAvailableTrays
           row_code: "$rooms.rows.code",
           section_id: { "$toString": "$section.section_id" },
           section_name: "$section.section_name",
+          section_code: "$section.section_code",
+          section_purpose: "$section.section_purpose",
           shelf_id: { "$toString": "$rooms.rows.shelves._id" },
           shelf_code: "$rooms.rows.shelves.code",
           shelf_name: "$rooms.rows.shelves.name",

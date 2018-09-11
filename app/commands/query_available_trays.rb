@@ -113,6 +113,7 @@ class QueryAvailableTrays
           shelf_id: { "$toString": "$rooms.rows.shelves._id" },
           shelf_code: "$rooms.rows.shelves.code",
           shelf_name: "$rooms.rows.shelves.name",
+          shelf_capacity: "$rooms.rows.shelves.capacity",
           tray_id: { "$toString": "$trays._id" },
           tray_code: "$trays.code",
           tray_capacity: "$trays.capacity",

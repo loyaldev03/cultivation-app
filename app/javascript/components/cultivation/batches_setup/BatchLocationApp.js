@@ -2,13 +2,6 @@ import React from 'react'
 import classNames from 'classnames'
 
 import BatchLocationEditor from './BatchLocationEditor'
-import { editorSidebarHandler } from '../../utils/EditorSidebarHandler'
-
-const MotherPlantSouceSelection = () => (
-  <div>
-    <span>Please select the mother plant source:</span>
-  </div>
-)
 
 const QuantityField = ({ plant, onEdit }) => {
   if (plant) {
@@ -24,7 +17,7 @@ const QuantityField = ({ plant, onEdit }) => {
 
 const LocationField = ({ plant, onEdit }) => {
   if (plant) {
-    const text = plant.locationId ? plant.locationId : 'Set Location'
+    const text = plant.locations ? 'Combine Tray Name' : 'Set Location'
     return (
       <span className="blue pointer" onClick={() => onEdit(plant.id)}>
         {text}
@@ -87,20 +80,20 @@ class BatchLocationApp extends React.Component {
     return found
   }
 
-  updateSelectedPlant = plant => {
+  updateSelectedPlant = plantConfig => {
     this.setState({
       selectedPlants: this.state.selectedPlants.map(
-        x => (x.id === plant.id ? plant : x)
+        x => (x.id === plantConfig.id ? plantConfig : x)
       )
     })
   }
 
-  onEditorSave = plant => {
-    console.log('save sidebar clicked', { plant })
-    const found = this.getSelected(plant.id)
-    found.quantity = plant.quantity
-    found.locationId = plant.locationId
-    this.updateSelectedPlant(plant)
+  onEditorSave = plantConfig => {
+    // find and update the corresponding record in memory
+    const found = this.getSelected(plantConfig.id)
+    found.quantity = plantConfig.quantity
+    found.locations = plantConfig.locations
+    this.updateSelectedPlant(plantConfig)
   }
 
   isDisableNext = () => {
@@ -109,7 +102,7 @@ class BatchLocationApp extends React.Component {
     }
     // if there's a missing data, disable next step
     const missed = this.state.selectedPlants.find(
-      x => !x.quantity || !x.locationId
+      x => !x.quantity || !x.locations
     )
     return !!missed
   }

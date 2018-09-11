@@ -28,7 +28,8 @@ class BatchLocationEditor extends React.PureComponent {
   state = {
     selectedRoom: '',
     selectedRow: '',
-    selectedTrays: [],
+    selectedTrays: this.props.plant.locations || [],
+    selectedQuantity: this.props.plant.quantity || 0
   }
 
   onShowAddLocation = () => {
@@ -159,6 +160,7 @@ class BatchLocationEditor extends React.PureComponent {
             const updatePlant = {
               id: plant.id,
               quantity: selectedQuantity,
+              locations: selectedTrays,
             }
             console.log({ updatePlant })
             onSave(updatePlant)

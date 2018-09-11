@@ -53,6 +53,14 @@ class BatchLocationEditor extends React.PureComponent {
 
   onChange = (field, value) => e => this.setState({ [field]: value })
 
+  getLocationName = (locations, location_type, id) => {
+    if (!id) {
+      return "-- Select --"
+    }
+    const found = locations.find(x=> x[location_type + '_id'] === id)
+    return found ? (found[location_type + '_name'] || found[location_type + '_code']) : "Unnamed"
+  }
+
   sumOfShelvesCapacity = records => {
     return records.reduce((acc, obj) => acc + (obj.shelf_capacity || 0), 0)
   }
@@ -74,8 +82,6 @@ class BatchLocationEditor extends React.PureComponent {
     let shelves = []
     let trays = []
 
-    console.log(locations)
-    window.allLocations = locations
     if (locations) {
       rooms = groupBy(locations, 'room_id')
 
@@ -139,7 +145,7 @@ class BatchLocationEditor extends React.PureComponent {
             <span className="mt2 dib mr2">Select room:</span>
             <LabelWithChangeEvent
               isSelecting={this.state.showRoomList}
-              value={selectedRoom}
+              value={this.getLocationName(locations, 'room', selectedRoom)}
               onClick={this.onChange('showRoomList', true)}
             />
             <br />
@@ -179,7 +185,7 @@ class BatchLocationEditor extends React.PureComponent {
             <span className="mt2 dib mr2">Select row:</span>
             <LabelWithChangeEvent
               isSelecting={this.state.showRowList}
-              value={selectedRow}
+              value={this.getLocationName(locations, 'row', selectedRow)}
               onClick={this.onChange('showRowList', true)}
             />
             <br />
@@ -205,7 +211,8 @@ class BatchLocationEditor extends React.PureComponent {
                       })}
                       onClick={this.onSelectRow(rowId)}
                     >
-                      <span className="dib">{firstRow.row_code}</span><br />
+                      <span className="ttc">{firstRow.row_name}</span><br />
+                      <span className="dib">Row ID: {firstRow.row_code}</span><br />
                       <span className="">Capacity: {firstRow.capacity || 0}/{rowCapacity || "N/A"} </span>
                     </div>
                   )
@@ -216,7 +223,7 @@ class BatchLocationEditor extends React.PureComponent {
             <span className="mt2 dib mr2">Select shelf:</span>
             <LabelWithChangeEvent
               isSelecting={this.state.showShelfList}
-              value={selectedShelf}
+              value={this.getLocationName(locations, 'shelf', selectedShelf)}
               onClick={this.onChange('showShelfList', true)}
             />
             <br />

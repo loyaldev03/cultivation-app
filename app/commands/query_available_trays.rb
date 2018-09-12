@@ -3,12 +3,12 @@ class QueryAvailableTrays
 
   attr_reader :facility_id, :start_date, :end_date
 
-  def initialize(facility_id, start_date, end_date)
+  def initialize(start_date, end_date, filter = {})
     raise ArgumentError, 'start_date' if start_date.nil?
     raise ArgumentError, 'end_date' if end_date.nil?
     raise ArgumentError, 'start_date should be ealier than end_date' if end_date <= start_date
     
-    @facility_id = facility_id
+    @facility_id = filter[:facility_id] if filter.key?(:facility_id)
     @start_date = start_date.beginning_of_day
     @end_date = end_date.end_of_day
   end
@@ -19,8 +19,17 @@ class QueryAvailableTrays
 
   private
 
+  def match_facility
+    if @facility_id
+      {"$match": { _id: @facility_id.to_bson_id} }
+    else
+      {"$match": {} }
+    end
+  end
+
   def query_records
     result = Facility.collection.aggregate [
+      match_facility,
       { "$project": { _id: 0, facility_id:"$_id", facility_code:"$code", facility_name:"$name", rooms:1 } },
       { "$unwind": "$rooms" },
       { "$unwind": "$rooms.rows" },
@@ -28,7 +37,7 @@ class QueryAvailableTrays
       { "$match": {
           "$and": [
             { "rooms.is_complete": true },
-            { "rooms.rows.shelves.is_complete": true }
+            { "rooms.rows.shelves.is_complete": true },
           ]
         }
       },
@@ -39,7 +48,14 @@ class QueryAvailableTrays
             { "$unwind": "$rooms" },
             { "$unwind": "$rooms.sections" },
             { "$match": { "$expr": { "$eq": ["$rooms.sections._id", "$$sectionId"] } } },
-            { "$project": { _id:0, section_id: "$rooms.sections._id", section_name: "$rooms.sections.name" } }
+            { "$project": {
+                _id:0,
+                section_id: "$rooms.sections._id",
+                section_name: "$rooms.sections.name",
+                section_code: "$rooms.sections.code",
+                section_purpose: "$rooms.sections.purpose",
+              }
+            }
           ],
           as: "section"
         }
@@ -88,23 +104,26 @@ class QueryAvailableTrays
       },
       { "$project":
         {
-          facility_id: 1,
+          facility_id: { "$toString": "$facility_id" },
           facility_code: 1,
           facility_name: 1,
-          room_id: "$rooms._id",
+          room_id: { "$toString": "$rooms._id" },
           room_is_complete: "$rooms.is_complete",
           room_name: "$rooms.name",
           room_code: "$rooms.code",
           room_purpose: "$rooms.purpose",
-          row_id: "$rooms.rows._id",
+          row_id: { "$toString": "$rooms.rows._id" },
           row_name: "$rooms.rows.name",
           row_code: "$rooms.rows.code",
-          section_id: "$section.section_id",
+          section_id: { "$toString": "$section.section_id" },
           section_name: "$section.section_name",
-          shelf_id: "$rooms.rows.shelves._id",
+          section_code: "$section.section_code",
+          section_purpose: "$section.section_purpose",
+          shelf_id: { "$toString": "$rooms.rows.shelves._id" },
           shelf_code: "$rooms.rows.shelves.code",
           shelf_name: "$rooms.rows.shelves.name",
-          tray_id: "$trays._id",
+          shelf_capacity: "$rooms.rows.shelves.capacity",
+          tray_id: { "$toString": "$trays._id" },
           tray_code: "$trays.code",
           tray_capacity: "$trays.capacity",
           tray_capacity_type: "$trays.capacity_type",

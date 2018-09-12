@@ -5,7 +5,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
       # tasks_json = batch.tasks.map{|a| TaskSerializer.new(a).serializable_hash}
       # batch_json = BatchSerializer.new(batch).serializable_hash
 
-      tasks = @batch.tasks.order(:parent_id)
+      tasks = @batch.generate_tree
       options = {}
       options[:is_collection]
       task_json = TaskSerializer.new(tasks, options).serialized_json

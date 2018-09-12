@@ -17,7 +17,7 @@ const QuantityField = ({ plant, onEdit }) => {
 
 const LocationField = ({ plant, onEdit }) => {
   if (plant) {
-    const text = plant.locations ? 'Combine Tray Name' : 'Set Location'
+    const text = plant.trays ? 'Combine Tray Name' : 'Set Location'
     return (
       <span className="blue pointer" onClick={() => onEdit(plant.id)}>
         {text}
@@ -92,7 +92,7 @@ class BatchLocationApp extends React.Component {
     // find and update the corresponding record in memory
     const found = this.getSelected(plantConfig.id)
     found.quantity = plantConfig.quantity
-    found.locations = plantConfig.locations
+    found.trays = plantConfig.trays
     this.updateSelectedPlant(plantConfig)
   }
 
@@ -102,7 +102,7 @@ class BatchLocationApp extends React.Component {
     }
     // if there's a missing data, disable next step
     const missed = this.state.selectedPlants.find(
-      x => !x.quantity || !x.locations
+      x => !x.quantity || !x.trays
     )
     return !!missed
   }

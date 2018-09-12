@@ -26,9 +26,10 @@ const SelectWithRange = ({ min, max, onChange }) => {
 
 class BatchLocationEditor extends React.PureComponent {
   state = {
+    locations: this.props.locations || [], // all available tray locations from database
     selectedRoom: '',
     selectedRow: '',
-    selectedTrays: this.props.plant.locations || [],
+    selectedTrays: this.props.plant.trays || [],
     selectedQuantity: this.props.plant.quantity || 0
   }
 
@@ -82,6 +83,12 @@ class BatchLocationEditor extends React.PureComponent {
     })
   }
 
+  onEditLocation = trayId => e => {
+    this.setState({
+      selectedTrays: this.state.selectedTrays.filter(t => t.id !== trayId)
+    })
+  }
+
   onDoneSelectTray = () => {
     this.setState({
       showAddLocation: false,
@@ -96,11 +103,11 @@ class BatchLocationEditor extends React.PureComponent {
 
   onChangeInput = field => e => this.setState({ [field]: e.target.value })
 
-  getLocationName = (locations, location_type, id) => {
+  getLocationName = (location_type, id) => {
     if (!id) {
       return "-- Select --"
     }
-    const found = locations.find(x => x[location_type + '_id'] === id)
+    const found = this.state.locations.find(x => x[location_type + '_id'] === id)
     return found ? (found[location_type + '_name'] || found[location_type + '_code']) : "Unnamed"
   }
 
@@ -114,8 +121,9 @@ class BatchLocationEditor extends React.PureComponent {
   }
 
   render() {
-    const { plant, locations, onSave, onClose } = this.props
+    const { plant, onSave, onClose } = this.props
     const {
+      locations,
       showRoomList,
       showRowList,
       showShelfList,
@@ -131,7 +139,7 @@ class BatchLocationEditor extends React.PureComponent {
     let shelves = []
     let trays = []
 
-    if (locations) {
+    if (locations && locations.length > 0) {
       rooms = groupBy(locations, 'room_id')
 
       if (selectedRoom && rooms[selectedRoom]) {
@@ -160,7 +168,7 @@ class BatchLocationEditor extends React.PureComponent {
             const updatePlant = {
               id: plant.id,
               quantity: selectedQuantity,
-              locations: selectedTrays,
+              trays: selectedTrays,
             }
             console.log({ updatePlant })
             onSave(updatePlant)
@@ -197,7 +205,11 @@ class BatchLocationEditor extends React.PureComponent {
                   {selectedTrays.map((tray, index) => (
                     <tr key={tray.id}>
                       <td className="pv2 ph3">{index + 1}</td>
-                      <td className="pv2 ph3">{this.getLocationName(locations, 'tray', tray.id)}</td>
+                      <td className="pv2 ph3">
+                        <a href="#0" onClick={this.onEditLocation(tray.id)} className="link">
+                          {this.getLocationName('tray', tray.id)}
+                        </a>
+                      </td>
                       <td className="pv2 ph3 tr">{tray.capacity}</td>
                       <td className="pv2 ph3">
                         {!showAddLocation &&
@@ -233,7 +245,7 @@ class BatchLocationEditor extends React.PureComponent {
               <span className="mt2 dib mr2">Select room:</span>
               <LabelWithChangeEvent
                 isSelecting={showRoomList}
-                value={this.getLocationName(locations, 'room', selectedRoom)}
+                value={this.getLocationName('room', selectedRoom)}
                 onClick={this.onChange('showRoomList', true)}
               />
 
@@ -255,7 +267,7 @@ class BatchLocationEditor extends React.PureComponent {
                     return (
                       <div
                         key={roomId}
-                        className={classNames('ba b--gray pa2 pointer h3', {
+                        className={classNames('ba b--gray pa2 pointer', {
                           'bg-orange white bn': selectedRoom === roomId
                         })}
                         onClick={this.onSelectRoom(roomId)}
@@ -272,7 +284,7 @@ class BatchLocationEditor extends React.PureComponent {
               <span className="mt2 dib mr2">Select row:</span>
               <LabelWithChangeEvent
                 isSelecting={showRowList}
-                value={this.getLocationName(locations, 'row', selectedRow)}
+                value={this.getLocationName('row', selectedRow)}
                 onClick={this.onChange('showRowList', true)}
               />
 
@@ -309,7 +321,7 @@ class BatchLocationEditor extends React.PureComponent {
               <span className="mt2 dib mr2">Select shelf:</span>
               <LabelWithChangeEvent
                 isSelecting={showShelfList}
-                value={this.getLocationName(locations, 'shelf', selectedShelf)}
+                value={this.getLocationName('shelf', selectedShelf)}
                 onClick={this.onChange('showShelfList', true)}
               />
 

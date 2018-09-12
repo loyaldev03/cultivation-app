@@ -62,22 +62,27 @@ class BatchLocationEditor extends React.PureComponent {
   }
 
   onSelectTray = trayId => e => {
-    const trayObj = {
-      id: trayId,
-      capacity: e.target.value,
+    const trayLoc = this.state.locations.find(t => t.tray_id === trayId)
+    const traySel = this.state.selectedTrays.find(t => t.tray_id === trayId)
+    if (trayLoc) {
+      const trayObj = {
+        room_id: trayLoc.room_id,
+        shelf_id: trayLoc.shelf_id,
+        tray_id: trayId,
+        tray_capacity: e.target.value,
+      }
+      const selectedTrays = traySel ?
+        this.state.selectedTrays.map(t => t.tray_id === trayId ? trayObj : t) :
+        this.state.selectedTrays.concat([trayObj])
+      this.setState({
+        selectedTrays,
+      })
     }
-    const found = this.state.selectedTrays.find(t => t.id === trayId)
-    const selectedTrays = found ?
-      this.state.selectedTrays.map(t => t.id === trayId ? trayObj : t) :
-      this.state.selectedTrays.concat([trayObj])
-    this.setState({
-      selectedTrays,
-    })
   }
 
   onRemoveSelectedTray = trayId => e => {
     this.setState({
-      selectedTrays: this.state.selectedTrays.filter(t => t.id !== trayId)
+      selectedTrays: this.state.selectedTrays.filter(t => t.tray_id !== trayId)
     })
   }
 
@@ -88,6 +93,7 @@ class BatchLocationEditor extends React.PureComponent {
       selectedRow: loc.row_id,
       selectedShelf: loc.shelf_id,
       showAddLocation: true,
+      showTrayList: true,
     })
   }
 
@@ -110,8 +116,8 @@ class BatchLocationEditor extends React.PureComponent {
 
   getSelectedTrayCapacity = trayId => {
     if (trayId && this.state.selectedTrays && this.state.selectedTrays.length > 0) {
-      const tray = this.state.selectedTrays.find(t => t.id === trayId)
-      return tray ? tray.capacity : 0
+      const tray = this.state.selectedTrays.find(t => t.tray_id === trayId)
+      return tray ? tray.tray_capacity : 0
     }
     return 0
   }
@@ -125,7 +131,7 @@ class BatchLocationEditor extends React.PureComponent {
   }
 
   sumBy = (records, field) => {
-    return records.reduce((acc, obj) => acc + (obj[field] || 0), 0)
+    return records.reduce((acc, obj) => acc + parseFloat(obj[field] || 0), 0)
   }
 
   joinBy = (records, field, separator = ',') => {
@@ -136,7 +142,7 @@ class BatchLocationEditor extends React.PureComponent {
 
   isSelectedTray = trayId => {
     if (trayId && this.state.selectedTrays && this.state.selectedTrays.length > 0) {
-      const tray = this.state.selectedTrays.find(t => t.id === trayId)
+      const tray = this.state.selectedTrays.find(t => t.tray_id === trayId)
       return !!tray
     }
     return false
@@ -181,7 +187,7 @@ class BatchLocationEditor extends React.PureComponent {
     }
 
     const selectedQuantity = parseInt(this.state.selectedQuantity ? this.state.selectedQuantity : 0)
-    const selectedTraysCapacity = parseInt(selectedTrays.reduce((a, v) => a + parseInt(v.capacity), 0))
+    const selectedTraysCapacity = parseInt(selectedTrays.reduce((a, v) => a + parseInt(v.tray_capacity), 0))
 
     return (
       <div className="pa2">
@@ -227,17 +233,17 @@ class BatchLocationEditor extends React.PureComponent {
                     <td></td>
                   </tr>
                   {selectedTrays.map((tray, index) => (
-                    <tr key={tray.id}>
+                    <tr key={tray.tray_id}>
                       <td className="pv2 ph3">{index + 1}</td>
                       <td className="pv2 ph3">
-                        <a href="#0" onClick={this.onEditLocation(tray.id)} className="link">
-                          {this.getLocationName('tray', tray.id)}
+                        <a href="#0" onClick={this.onEditLocation(tray.tray_id)} className="link">
+                          {this.getLocationName('tray', tray.tray_id)}
                         </a>
                       </td>
-                      <td className="pv2 ph3 tr">{tray.capacity}</td>
+                      <td className="pv2 ph3 tr">{tray.tray_capacity}</td>
                       <td className="pv2 ph3">
                         {!showAddLocation &&
-                          <a href="#0" onClick={this.onRemoveSelectedTray(tray.id)}>Remove</a>
+                          <a href="#0" onClick={this.onRemoveSelectedTray(tray.tray_id)}>Remove</a>
                         }
                       </td>
                     </tr>
@@ -286,8 +292,9 @@ class BatchLocationEditor extends React.PureComponent {
                   {Object.keys(rooms).map(roomId => {
                     const firstRoom = rooms[roomId][0]
                     const roomCapacity = this.sumBy(rooms[roomId], 'shelf_capacity')
-                    console.log({ where: "Room", rows: rooms[roomId], roomCapacity })
-                    // console.log({ firstRoom, code: firstRoom.facility_code })
+                    const selectedCapacity = this.sumBy(selectedTrays.filter(t => t.room_id === roomId), 'tray_capacity')
+                    // console.log({ where: "Room", rows: rooms[roomId], roomCapacity })
+                    console.log({ where: "firstRoom", firstRoom, roomCapacity, selectedCapacity })
                     return (
                       <div
                         key={roomId}
@@ -298,7 +305,7 @@ class BatchLocationEditor extends React.PureComponent {
                       >
                         <span className="ttc">{firstRoom.room_name}</span><br />
                         <span className="">Room ID: {firstRoom.room_code} </span><br />
-                        <span className="">Capacity: {firstRoom.capacity || 0}/{roomCapacity || "N/A"} </span>
+                        <span className="">Capacity: {selectedCapacity}/{roomCapacity || "N/A"} </span>
                       </div>
                     )
                   })}

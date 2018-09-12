@@ -160,7 +160,7 @@ class QueryAvailableTrays
         tray_capacity_type: x[:tray_capacity_type],
         planned_capacity: x[:planned_capacity],
         remaining_capacity: x[:remaining_capacity],
-      })
+      }).marshal_dump
     end
 
     res

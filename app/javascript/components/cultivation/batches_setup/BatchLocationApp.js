@@ -72,7 +72,7 @@ class BatchLocationApp extends React.Component {
     this.setState({
       editingPlant: this.getSelected(plantId)
     })
-    window.editorSidebar.open({})
+    window.editorSidebar.open({ width: '500px' })
   }
 
   getSelected = plantId => {

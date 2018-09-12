@@ -10,7 +10,7 @@
   <% if user_signed_in? %>
     <div class="ma3 hide truncate tc">
       <div class="flex flex-row items-center">
-        <%= image_tag 'logo-small.svg', class: "dib mr3" %>
+        <%= image_tag 'blank-avatar.png', class: "dib mr3 br-100 cover", style: "height: 3rem" %>
         <div class="flex flex-column tl">
           <% if !current_user.first_name %>
             <span class="dark-grey subtitle-1"> <%= current_user.email %> </span>
@@ -26,7 +26,7 @@
     </div>
 
     <div class="ma3 tc show-collapsed truncate">
-      <%= image_tag 'logo-small.svg', class: "dib" %>
+     <%= image_tag 'blank-avatar.png', class: "dib br-100 cover", style: "height: 3rem" %>
     </div>
   <% end %>
 

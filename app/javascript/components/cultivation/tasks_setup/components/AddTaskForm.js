@@ -7,13 +7,14 @@ import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import { fadeToast, toast } from '../../../utils/toast'
 import reactSelectStyle from './../../../utils/reactSelectStyle'
 import { throws } from "assert";
-import updateTasks from '../actions/updateTask'
+import createTask from '../actions/createTask'
 
 
 class AddTaskForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      batch_id: this.props.batch_id,
       parent_task: props.parent_task,
       parent_id: props.id,
       name: '',
@@ -78,11 +79,7 @@ class AddTaskForm extends React.Component {
   }
 
   handleSubmit = (event) => {
-    window.editorSidebar.close()
-
-    toast('Task Created', 'success')
-
-    // updateTasks.updateTask(this.state)
+    createTask.createTask(this.state)
   }
 
   render() {

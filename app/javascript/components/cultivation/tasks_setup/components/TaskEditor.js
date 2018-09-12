@@ -51,7 +51,11 @@ export default class TaskEditor extends React.Component {
       )
     }else {
       return (
-        <AddTaskForm id={this.state.id} parent_task={task}/>
+        <AddTaskForm 
+          id={this.state.id} 
+          parent_task={task}
+          batch_id={this.props.batch_id}
+        />
       )
     }
 

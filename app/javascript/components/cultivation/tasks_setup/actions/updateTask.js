@@ -1,11 +1,12 @@
 import TaskStore from '../stores/TaskStore'
 import { fadeToast, toast } from '../../../utils/toast'
+import loadTasks from './loadTask'
 
 class updateTask {
 
   updateTask(state) {
-
-    let url = `/api/v1/batches/${state.batch_id['$oid']}/tasks/${state.id}`
+    let id = state.id['$oid']
+    let url = `/api/v1/batches/${state.batch_id['$oid']}/tasks/${id}`
     fetch(url, {
       method: 'PUT',
       credentials: 'include',
@@ -29,6 +30,9 @@ class updateTask {
               TaskStore[index] = data.data;
             }
           });
+
+          loadTasks.loadbatch(state.batch_id)
+
 
         }
         else { toast('Something happen', 'error') }

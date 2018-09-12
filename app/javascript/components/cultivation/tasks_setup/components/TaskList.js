@@ -62,12 +62,12 @@ class TaskList extends React.Component {
               accessor: 'attributes.end_date',
               maxWidth: '100'
             },
-            // {
-            //   Header: 'Duration',
-            //   accessor: 'attributes.duration',
-            //   maxWidth: '100'
+            {
+              Header: 'Duration',
+              accessor: 'attributes.days',
+              maxWidth: '100'
 
-            // },
+            },
             // {
             //   Header: "Parent",
             //   accessor: "attributes.parent_id"

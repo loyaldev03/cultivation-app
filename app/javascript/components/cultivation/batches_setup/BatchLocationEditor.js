@@ -14,7 +14,7 @@ const LabelWithChangeEvent = ({ isSelecting, value, onClick }) => {
   }
 }
 
-const SelectWithRange = ({ min, max, onChange, selectedValue = 0}) => {
+const SelectWithRange = ({ min, max, onChange, selectedValue = 0 }) => {
   let children = []
   for (let i = min; i <= max; i++) {
     children.push(<option value={i} key={i}>{i}</option>)
@@ -93,6 +93,9 @@ class BatchLocationEditor extends React.PureComponent {
 
   onDoneSelectTray = () => {
     this.setState({
+      selectedRoom: '',
+      selectedRow: '',
+      selectedShelf: '',
       showAddLocation: false,
       showRoomList: false,
       showRowList: false,
@@ -255,14 +258,14 @@ class BatchLocationEditor extends React.PureComponent {
               </table>
             }
             {!showAddLocation &&
-              <a href="#0" className="link dib mt2" onClick={this.onShowAddLocation}>
-                + Add Quantity &amp; Location
+              <a href="#0" className="link dib mt2 f6 br2 ba pa2" onClick={this.onShowAddLocation}>
+                + Add Location
               </a>
             }
           </div>
 
           {showAddLocation &&
-            <div className="mt2 db">
+            <div className="mt2 db ba ph3 pt2 pb3 b--light-gray">
               <span className="mt2 dib mr2">Select room:</span>
               <LabelWithChangeEvent
                 isSelecting={showRoomList}
@@ -411,9 +414,9 @@ class BatchLocationEditor extends React.PureComponent {
                       </div>
                     )
                   })}
-                  <a href="#0" onClick={this.onDoneSelectTray}>Set</a>
                 </div>
               )}
+              <a href="#0" className="link ph2 pv1 ba bg-gray db w3 mt2 tc center f6 br2 white" onClick={this.onDoneSelectTray}>Close</a>
             </div>
           }
           {!showAddLocation && selectedQuantity === selectedTraysCapacity &&

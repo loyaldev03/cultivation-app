@@ -26,13 +26,13 @@
               <div class="fl w-80-l w-100 pt0-l pt3 flex flex-column">
                 <div class="flex flex-row mb3">
                   <div class="w-40 mr4">
-                    <%= f.label :first_name, class: "subtitle-2 dark-grey db mb1 ttc" %>
+                    <%= f.label :first_name, class: "subtitle-2 grey db mb1 ttc" %>
                     <%= f.text_field :first_name, autofocus: false,
                         class: "ttc grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
                   </div>
 
                   <div class="w-40">
-                    <%= f.label :last_name, class: "subtitle-2 dark-grey db mb1 ttc" %>
+                    <%= f.label :last_name, class: "subtitle-2 grey db mb1 ttc" %>
                     <%= f.text_field :last_name, autofocus: false,
                         class: "ttc grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
                   </div>
@@ -40,7 +40,7 @@
 
                 <div class="flex flex-row">
                   <div class="w-40">
-                    <%= f.label :email, class: "subtitle-2 dark-grey db mb1 ttc" %>
+                    <%= f.label :email, class: "subtitle-2 grey db mb1 ttc" %>
                     <%= f.email_field :email, autofocus: true, autocomplete: "email",
                         class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
                   </div>
@@ -56,7 +56,7 @@
               <div class="fl w-80-l w-100 pt0-l pt3 flex flex-column">
                 <div class="flex flex-row mb3">
                   <div class="w-40 mr4">
-                    <%= f.label :current_password, class: "subtitle-2 dark-grey db mb1 ttc" %> 
+                    <%= f.label :current_password, class: "subtitle-2 grey db mb1 ttc" %> 
                     <%= f.password_field :current_password, autocomplete: "off",
                         class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
                     
@@ -66,7 +66,7 @@
                   </div>
 
                   <div class="w-40">
-                    <%= f.label :password, class: "subtitle-2 dark-grey db mb1 ttc" %>
+                    <%= f.label :password, class: "subtitle-2 grey db mb1 ttc" %>
                     <%= f.password_field :password, autocomplete: "off",
                         class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
                     
@@ -82,7 +82,7 @@
 
                 <div class="flex flex-row">
                   <div class="w-40">
-                    <%= f.label :password_confirmation, class: "subtitle-2 dark-grey db mb1 ttc" %>
+                    <%= f.label :password_confirmation, class: "subtitle-2 grey db mb1 ttc" %>
                     <%= f.password_field :password_confirmation, autocomplete: "off",
                         class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
                   </div>
@@ -106,7 +106,8 @@
 
             <%= button_to "Cancel account", registration_path(resource_name), 
                 data: { confirm: "Are you sure?" }, method: :delete,
-                class: "ttu outline-0 bg-white button--font orange bn dim pv3 pointer" %>
+                class: "ttu outline-0 bg-white button--font orange bn dim pv3 pointer" 
+            %>
           </div>
       </div>
     </div>
@@ -121,7 +122,7 @@
        <%= f.submit "update",
           class: "db pv3 ph4 bg-orange white button--font bn box--br3 ttu link dim pointer" %>
       </div>
-      <% end %>
     </div>
+    <% end %>
   </div>
 </div>

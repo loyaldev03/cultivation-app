@@ -52,6 +52,7 @@ Rails.application.routes.draw do
 
     namespace 'company', as: :company do
       resources :company_info, only: [:edit, :update]
+      resources :team, only: [:index]
     end
 
     namespace 'facilities', as: :facility do

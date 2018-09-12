@@ -1,0 +1,21 @@
+<div class="pa3 bg-white ma4">
+  <h1>Team Settings</h1>
+
+  <h2>Users</h2>
+  <table class="collapse ba br2 b--black-10 pv2 ph3 f6">
+    <tbody>
+      <tr class="striped--light-gray">
+        <td class="pv2 ph3">Name</td>
+        <td class="pv2 ph3">Email</td>
+        <td class="pv2 ph3">Title</td>
+      </tr>
+      <% @users.each do |user| %>
+        <tr class="striped--light-gray">
+          <td class="pv2 ph3"><%= user.first_name %> <%= user.last_name %></td>
+          <td class="pv2 ph3"><%= user.email %></td>
+          <td class="pv2 ph3"><%= user.title %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -23,6 +23,9 @@ module Cultivation
 
 
     def update_task(task, args, opt={})
+      Rails.logger.debug "args => #{args}"
+      args[:start_date] = args[:start_date].to_date + 1.days
+      args[:end_date] = args[:end_date].to_date + 1.days
       task.update(args)
       tasks_changes = []
       find_changes(task, tasks_changes, opt) #store into temp array

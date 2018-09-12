@@ -41,11 +41,18 @@
                   </div>
 
                   <div class="flex flex-row">
-                    <div class="w-40">
+                    <div class="w-40 mr4">
                       <%= f.label :email, class: "subtitle-2 grey db mb1 ttc" %>
                       <%= f.email_field :email, autofocus: true, autocomplete: "email",
                           value: @user.email,
                           class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
+                    </div>
+
+                    <div class="w-40">
+                      <%= f.label :title, class: "subtitle-2 grey db mb1 ttc" %>
+                      <%= f.text_field :title, autofocus: false,
+                          value: @user.title,
+                          class: "ttc grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
                     </div>
                   </div>
                 </div>

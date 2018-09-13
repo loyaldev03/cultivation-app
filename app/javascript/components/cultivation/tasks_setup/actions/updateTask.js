@@ -32,7 +32,7 @@ class updateTask {
           });
 
           loadTasks.loadbatch(state.batch_id)
-
+          window.editorSidebar.close()
 
         }
         else { toast('Something happen', 'error') }

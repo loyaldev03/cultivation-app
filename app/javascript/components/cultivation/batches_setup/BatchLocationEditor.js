@@ -109,8 +109,9 @@ class BatchLocationEditor extends React.PureComponent {
     if (selectedLocation) {
       const trayObj = {
         room_id: selectedLocation.room_id,
+        row_id: selectedLocation.row_id,
         shelf_id: selectedLocation.shelf_id,
-        tray_id: trayId,
+        tray_id: selectedLocation.tray_id,
         tray_code: selectedLocation.tray_code,
         tray_capacity: e.target.value,
       }
@@ -228,8 +229,6 @@ class BatchLocationEditor extends React.PureComponent {
         }
       }
     }
-
-    console.log({ selectedLocation })
 
     const selectedTraysCapacity = parseInt(selectedTrays.reduce((a, v) => a + parseInt(v.tray_capacity), 0))
 

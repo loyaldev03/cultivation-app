@@ -57,7 +57,7 @@ const LabelWithChangeEvent = ({ isSelecting, value, onClick }) => {
     return null
   } else {
     return (
-      <span className="db blue pointer" onClick={onClick}>
+      <span className="db blue pointer f6" onClick={onClick}>
         {value ? value : '-- Select --'}
       </span>
     )
@@ -323,14 +323,13 @@ class BatchLocationEditor extends React.PureComponent {
             {showAddLocation &&
               <div className="mt2 db ba ph3 pt2 pb3 b--light-gray">
                 <label className="mt2 db mr2">Select room:</label>
+                <LabelWithChangeEvent
+                  isSelecting={showRoomList}
+                  value={this.getLocationName('room', selectedRoom)}
+                  onClick={this.onChange('showRoomList', true)}
+                />
                 <div className="mt1 f6" style={gridStyles}>
-                  {!showRoomList ?
-                    <LocationBox
-                      highlighted={false}
-                      onClick={this.onChange('showRoomList', true)}
-                      name={(selectedRoom && selectedLocation) ? selectedLocation.room_name : '-- Room --'}
-                      code={(selectedRoom && selectedLocation) ? selectedLocation.room_code : null}
-                    /> :
+                  {showRoomList &&
                     <React.Fragment>
                       {Object.keys(rooms).map(roomId => {
                         const firstRoom = rooms[roomId][0]
@@ -355,14 +354,13 @@ class BatchLocationEditor extends React.PureComponent {
                 </div>
 
                 <label className="mt2 db mr2">Select row:</label>
+                <LabelWithChangeEvent
+                  isSelecting={showRowList}
+                  value={this.getLocationName('row', selectedRow)}
+                  onClick={this.onChange('showRowList', true)}
+                />
                 <div className="mt1 f6" style={gridStyles}>
-                  {!showRowList ?
-                    <LocationBox
-                      highlighted={false}
-                      onClick={this.onChange('showRowList', true)}
-                      name={(selectedRow && selectedLocation) ? selectedLocation.row_name : '-- Row --'}
-                      code={(selectedRow && selectedLocation) ? selectedLocation.row_code : null}
-                    /> :
+                  {showRowList &&
                     <React.Fragment>
                       {Object.keys(rows).map(rowId => {
                         const firstRow = rows[rowId][0]
@@ -387,14 +385,13 @@ class BatchLocationEditor extends React.PureComponent {
                 </div>
 
                 <label className="mt2 dib mr2">Select shelf:</label>
+                <LabelWithChangeEvent
+                  isSelecting={showShelfList}
+                  value={this.getLocationName('shelf', selectedShelf)}
+                  onClick={this.onChange('showShelfList', true)}
+                />
                 <div className="mt1 f6" style={gridStyles}>
-                  {!showShelfList ?
-                    <LocationBox
-                      highlighted={false}
-                      onClick={this.onChange('showShelfList', true)}
-                      name={(selectedShelf && selectedLocation) ? null : '-- Shelf --'}
-                      code={(selectedShelf && selectedLocation) ? selectedLocation.shelf_code : null}
-                    /> :
+                  {showShelfList &&
                     <React.Fragment>
                       {Object.keys(shelves).map(shelfId => {
                         const firstShelf = shelves[shelfId][0]
@@ -419,13 +416,15 @@ class BatchLocationEditor extends React.PureComponent {
                 </div>
 
                 <label className="mt2 dib mr2">Select Tray:</label>
+                <LabelWithChangeEvent
+                  isSelecting={showTrayList}
+                  value={
+                    joinBy(selectedTrays.filter(t => t.shelf_id === selectedShelf), 'tray_code')
+                  }
+                  onClick={this.onChange('showTrayList', true)}
+                />
                 <div className="mt1 f6" style={gridStyles}>
-                  {!showTrayList ?
-                    <LocationBox
-                      highlighted={false}
-                      onClick={this.onChange('showTrayList', true)}
-                      name={trays ? joinBy(trays, 'tray_code') : '-- Row --'}
-                    /> :
+                  {showTrayList &&
                     <React.Fragment>
                       {trays.map(tray => {
                         return (

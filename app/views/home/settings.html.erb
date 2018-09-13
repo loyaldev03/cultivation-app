@@ -8,44 +8,44 @@
 
 <div class="w-100 pv3 flex flex-row flex-wrap">
   <div class="w-50 w-30-m w-20-l pa3 pt0">
-    <div class="card bg-white box--br3 box--shadow pa3 grow" >
-      <%= link_to 'Company Info', edit_settings_company_company_info_path(id: "my-company"), 
-          class: 'orange subtitle-2 link flex justify-center items-center tc', style: 'height: 100px' %>
-    </div>
+    <%= link_to edit_settings_company_company_info_path(id: "my-company"), 
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+      Company inπfo 
+    <% end %>
   </div>
 
   <div class="w-50 w-30-m w-20-l pa3 pt0">
-    <div class="card bg-white box--br3 box--shadow pa3 grow" >
-      <%= link_to 'Team Settings', settings_company_team_index_path, style: 'height: 100px',
-          class: 'orange subtitle-2 link flex justify-center items-center tc' %>
-    </div>
+    <%= link_to settings_company_team_index_path,
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+      Team Settings
+    <% end %>
   </div>
   
   <div class="w-50 w-30-m w-20-l pa3 pt0">
-    <div class="card bg-white box--br3 box--shadow pa3 grow" >
-      <%= link_to 'General Settings', settings_core_path, style: 'height: 100px',
-          class: 'orange subtitle-2 link flex justify-center items-center tc' %>
-    </div>
+    <%= link_to settings_core_path,
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+      General Settings
+    <% end %>
   </div>
 
   <div class="w-50 w-30-m w-20-l pa3 pt0">
-    <div class="card bg-white box--br3 box--shadow pa3 grow" >
-      <%= link_to 'Materials', materials_path, style: 'height: 100px',
-          class: 'orange subtitle-2 link flex justify-center items-center tc' %>
-    </div>
+    <%= link_to materials_path,
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+      Materials
+    <% end %>
   </div>
 
   <div class="w-50 w-30-m w-20-l pa3 pt0">
-    <div class="card bg-white box--br3 box--shadow pa3 grow" >
-      <%= link_to 'Purchasing', purchasing_path, style: 'height: 100px',
-          class: 'orange subtitle-2 link flex justify-center items-center tc' %>
-    </div>
+    <%= link_to purchasing_path,
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+      Purchasing
+    <% end %>
   </div>
 
   <div class="w-50 w-30-m w-20-l pa3 pt0">
-    <div class="card bg-white box--br3 box--shadow pa3 grow" >
-      <%= link_to 'Facilities module', all_settings_facility_facilities_path, style: 'height: 100px',
-          class: 'orange subtitle-2 link flex justify-center items-center tc' %>
-    </div>
+    <%= link_to all_settings_facility_facilities_path,
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+      Facilities module
+    <% end %>
   </div>
 </div>

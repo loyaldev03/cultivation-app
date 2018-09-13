@@ -20,3 +20,8 @@ select {
   border-radius: 0;
   overflow: hidden;
 }
+
+
+input:read-only {
+    background-color: rgba(0, 0, 0, 0.1);
+}

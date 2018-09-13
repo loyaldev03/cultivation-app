@@ -5,6 +5,7 @@ import updateSidebarTask from '../actions/updateSidebarTask'
 import TaskStore from '../stores/TaskStore'
 
 import SidebarTaskEditor from './SidebarTaskEditor'
+import AddTaskForm from './AddTaskForm'
 
 @observer
 export default class TaskEditor extends React.Component {
@@ -16,7 +17,8 @@ export default class TaskEditor extends React.Component {
       strain_type: '',
       facility_id: '',
       stockEditor: '',
-      source: ''
+      source: '',
+      action: ''
     } // or set from props
     this.onResetEditor = this.onResetEditor.bind(this)
     this.onClose = this.onClose.bind(this)
@@ -25,7 +27,7 @@ export default class TaskEditor extends React.Component {
   componentDidMount() {
     const _this = this
     document.addEventListener('editor-sidebar-open', function(ev) {
-      _this.setState({ id: ev.detail.data.id })
+      _this.setState({ id: ev.detail.data.id, action: ev.detail.action })
     })
   }
 
@@ -35,16 +37,28 @@ export default class TaskEditor extends React.Component {
 
   renderSidebarTaskEditor() {
     //find task here and send
+    // alert(this.state.action)
     console.log(task === undefined)
     let task = TaskStore.find(e => e.id === this.state.id)
     if (task === undefined) return null
-    return (
-      <SidebarTaskEditor
-        id={this.state.id}
-        task={task}
-        batch_id={this.props.batch_id}
-      />
-    )
+    if(this.state.action === 'update'){
+      return (
+        <SidebarTaskEditor
+          id={this.state.id}
+          task={task}
+          batch_id={this.props.batch_id}
+        />
+      )
+    }else {
+      return (
+        <AddTaskForm 
+          id={this.state.id} 
+          parent_task={task}
+          batch_id={this.props.batch_id}
+        />
+      )
+    }
+
   }
 
   get editorSelected() {
@@ -62,7 +76,11 @@ export default class TaskEditor extends React.Component {
   }
 
   renderTitle() {
-    return 'Update Task'
+    if(this.state.action == 'update'){
+      return 'Update Task'
+    }else{
+      return 'Add New Task'
+    }
   }
 
   renderCloseSidebar() {

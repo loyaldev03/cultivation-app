@@ -79,7 +79,7 @@ Rails.application.routes.draw do
         get 'plants/(:plant_status)', action: :plants, on: :collection
       end
       resources :batches do
-        resources :tasks, only: [:index, :update]
+        resources :tasks, only: [:index, :update, :create]
       end
 
       resource :plant_setup, only: [] do

@@ -380,10 +380,10 @@ class VegGroupEditor extends React.Component {
 
         <div className="ph4 mb3 flex flex-column">
           <div className="w-100 mb3">
-            <label className="f6 fw6 db mb1 gray ttc">Tray ID</label>
             <LocationPicker
               ref={this.locationPicker}
               mode="vegTray"
+              filter_facility_id=""
               locations={this.locations}
               location_id={this.state.tray}
               onChange={this.onTraySelected}

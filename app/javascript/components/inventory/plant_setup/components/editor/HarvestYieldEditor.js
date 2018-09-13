@@ -101,6 +101,7 @@ export default class HarvestYieldEditor extends React.Component {
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Location ID</label>
             <LocationPicker
+              filter_facility_id=""
               locations={this.locations}
               location_id={this.state.location_id}
               onChange={this.onLocationSelected}

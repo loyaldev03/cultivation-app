@@ -366,8 +366,8 @@ class CloneEditor extends React.Component {
 
         <div className="ph4 mt3 flex flex-column">
           <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Tray ID</label>
             <LocationPicker
+              filter_facility_id=""
               mode="clone"
               locations={this.locations}
               location_id={this.state.location_id}

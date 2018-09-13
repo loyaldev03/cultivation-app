@@ -296,9 +296,9 @@ class StorageInfo extends React.Component {
         </div>
         <div className="ph4 mb3 flex">
           <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Location</label>
             <LocationPicker
               ref={this.locationPicker}
+              filter_facility_id={this.props.filter_facility_id}
               locations={this.props.locations}
               onChange={this.onSearchFound}
               mode={this.props.mode}
@@ -316,12 +316,14 @@ class StorageInfo extends React.Component {
 
 StorageInfo.propTypes = {
   mode: PropTypes.string.isRequired,
-  location_id: PropTypes.string
+  location_id: PropTypes.string,
+  filter_facility_id: PropTypes.string
 }
 
 StorageInfo.defaultProps = {
   mode: 'all',
-  location_id: PropTypes.string
+  location_id: '',
+  filter_facility_id: ''
 }
 
 export default StorageInfo

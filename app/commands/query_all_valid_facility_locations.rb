@@ -128,10 +128,11 @@ class QueryAllValidFacilityLocations
       t_purpose: '',
     }
 
-    search = ["Facility #{facility.code}"]
+    # search = ["Facility #{facility.code}"]
+    search = []
     search.push "#{room.name} - #{room.code}" if room
     search.push "Section - #{section.code}" if section
-    search.push row.code if row
+    search.push "#{row.name} - #{row.code}" if row
     search.push shelf.code if shelf
     search.push "Tray #{tray.code}" if tray
     search_string = search.join(', ')

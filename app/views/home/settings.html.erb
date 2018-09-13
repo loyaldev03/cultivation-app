@@ -6,35 +6,46 @@
   <%= breadcrumbs "Settings"%>
 <% end %>
 
-<div class="w-100 pv3 flex">
-  <div class="w-20 pa3 pt0">
-    <div class="card bg-light-grey br3 w-100 pa3 flex items-start grow" >
-      <%= link_to 'Company Info', edit_settings_company_company_info_path(id: "my-company"), class: 'ma0 dark-grey fw6 link db w-100', style: 'height: 100px' %>
+<div class="w-100 pv3 flex flex-row flex-wrap">
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <div class="card bg-white box--br3 box--shadow pa3 grow" >
+      <%= link_to 'Company Info', edit_settings_company_company_info_path(id: "my-company"), 
+          class: 'dark-grey subtitle-2 link flex justify-center items-center tc', style: 'height: 100px' %>
     </div>
   </div>
-  <div class="w-20 pa3 pt0">
-    <div class="card bg-light-grey br3 w-100 pa3 flex items-start grow" >
-      <%= link_to 'Team Settings', settings_company_team_index_path, class: 'ma0 dark-grey fw6 link db w-100', style: 'height: 100px' %>
+
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <div class="card bg-white box--br3 box--shadow pa3 grow" >
+      <%= link_to 'Team Settings', settings_company_team_index_path, style: 'height: 100px',
+          class: 'dark-grey subtitle-2 link flex justify-center items-center tc' %>
     </div>
   </div>
-  <div class="w-20 pa3 pt0">
-    <div class="card bg-light-grey br3 w-100 pa3 flex items-start grow" >
-      <%= link_to 'General Settings', settings_core_path, class: 'ma0 dark-grey fw6 link db w-100', style: 'height: 100px' %>
+  
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <div class="card bg-white box--br3 box--shadow pa3 grow" >
+      <%= link_to 'General Settings', settings_core_path, style: 'height: 100px',
+          class: 'dark-grey subtitle-2 link flex justify-center items-center tc' %>
     </div>
   </div>
-  <div class="w-20 pa3 pt0">
-    <div class="card bg-light-grey br3 w-100 pa3 flex items-start grow" >
-      <%= link_to 'Materials', materials_path, class: 'ma0 dark-grey fw6 link db w-100', style: 'height: 100px' %>
+
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <div class="card bg-white box--br3 box--shadow pa3 grow" >
+      <%= link_to 'Materials', materials_path, style: 'height: 100px',
+          class: 'dark-grey subtitle-2 link flex justify-center items-center tc' %>
     </div>
   </div>
-  <div class="w-20 pa3 pt0">
-    <div class="card bg-light-grey br3 w-100 pa3 flex items-start grow" >
-      <%= link_to 'Purchasing', purchasing_path, class: 'ma0 dark-grey fw6 link db w-100', style: 'height: 100px' %>
+
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <div class="card bg-white box--br3 box--shadow pa3 grow" >
+      <%= link_to 'Purchasing', purchasing_path, style: 'height: 100px',
+          class: 'dark-grey subtitle-2 link flex justify-center items-center tc' %>
     </div>
   </div>
-  <div class="w-20 pa3 pt0">
-    <div class="card bg-light-grey br3 w-100 pa3 flex items-start grow" >
-      <%= link_to 'Facilities module', all_settings_facility_facilities_path, class: 'ma0 dark-grey fw6 link db w-100', style: 'height: 100px' %>
+
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <div class="card bg-white box--br3 box--shadow pa3 grow" >
+      <%= link_to 'Facilities module', all_settings_facility_facilities_path, style: 'height: 100px',
+          class: 'dark-grey subtitle-2 link flex justify-center items-center tc' %>
     </div>
   </div>
 </div>

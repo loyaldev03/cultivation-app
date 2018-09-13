@@ -50,6 +50,11 @@ Rails.application.routes.draw do
       resources :unit_of_measures, only: [:index, :edit, :update, :new, :create, :destroy]
     end
 
+    namespace 'company', as: :company do
+      resources :company_info, only: [:edit, :update]
+      resources :team, only: [:index]
+    end
+
     namespace 'facilities', as: :facility do
       resources :facilities, only: [:edit, :update, :index] do
         get 'all', on: :collection
@@ -74,7 +79,7 @@ Rails.application.routes.draw do
         get 'plants/(:plant_status)', action: :plants, on: :collection
       end
       resources :batches do
-        resources :tasks, only: [:index, :update]
+        resources :tasks, only: [:index, :update, :create]
       end
 
       resource :plant_setup, only: [] do

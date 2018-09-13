@@ -7,6 +7,7 @@ import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import { fadeToast, toast } from '../../../utils/toast'
 import reactSelectStyle from './../../../utils/reactSelectStyle'
 import { throws } from 'assert'
+import updateTasks from '../actions/updateTask'
 
 class SidebarTaskEditor extends React.Component {
   constructor(props) {
@@ -15,9 +16,9 @@ class SidebarTaskEditor extends React.Component {
       batch_id: this.props.batch_id,
       id: props.task.id,
       ...props.task.attributes,
-      days: '',
-      start_date: new Date(),
-      end_date: new Date(),
+      days: this.props.task.attributes.days,
+      start_date: new Date(this.props.task.attributes.start_date),
+      end_date: new Date(this.props.task.attributes.end_date),
       errors: '',
       estimated_hours: '',
       assigned_employee: []
@@ -28,11 +29,14 @@ class SidebarTaskEditor extends React.Component {
     const { task } = this.props
     if (props.task !== task) {
       this.setState({
+        batch_id: this.props.batch_id,
         id: props.task.id,
         ...props.task.attributes,
-        days: '',
+        days: props.task.attributes.days,
         start_date: new Date(),
         end_date: new Date(),
+        start_date: new Date(props.task.attributes.start_date),
+        end_date: new Date(props.task.attributes.end_date),
         errors: '',
         estimated_hours: '',
         assigned_employee: []
@@ -72,36 +76,7 @@ class SidebarTaskEditor extends React.Component {
   }
 
   handleSubmit = event => {
-    let url = `/api/v1/batches/${this.state.batch_id['$oid']}/tasks/${
-      this.state.id
-    }`
-    fetch(url, {
-      method: 'PUT',
-      credentials: 'include',
-      body: JSON.stringify({ task: this.state }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data.data)
-        if (data.data.id != null) {
-          toast('Task Updated', 'success')
-          let task = TaskStore.find(e => e.id === data.data.id)
-          console.log(data.data)
-          console.log(JSON.stringify(task))
-          console.log(JSON.stringify(task.attributes))
-
-          TaskStore.forEach((element, index) => {
-            if (element.id === data.data.id) {
-              TaskStore[index] = data.data
-            }
-          })
-        } else {
-          toast('Something happen', 'error')
-        }
-      })
+    updateTasks.updateTask(this.state)
   }
 
   render() {
@@ -144,6 +119,25 @@ class SidebarTaskEditor extends React.Component {
             <FieldError errors={this.state.errors} fieldname="instruction" />
           </div>
         </div>
+        <div className="ph4 mt3 mb3 flex">
+          <div className="w-50">
+            <label className="f6 fw6 db mb1 gray ttc">Start Date</label>
+            <DatePicker
+              value={this.state.start_date}
+              fieldname="start_date"
+              onChange={e => this.handleChangeDate('start_date', e)}
+            />
+          </div>
+
+          <div className="w-50 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">End Date</label>
+            <DatePicker
+              value={this.state.end_date}
+              fieldname="end_date"
+              onChange={e => this.handleChangeDate('end_date', e)}
+            />
+          </div>
+        </div>
 
         <div className="ph4 mt3 mb3 flex">
           <div className="w-20">
@@ -158,26 +152,6 @@ class SidebarTaskEditor extends React.Component {
           </div>
 
           <div className="w-40 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">Start Date</label>
-            <DatePicker
-              value={this.state.start_date}
-              fieldname="start_date"
-              onChange={e => this.handleChangeDate('start_date', e)}
-            />
-          </div>
-
-          <div className="w-40 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">End Date</label>
-            <DatePicker
-              value={this.state.end_date}
-              fieldname="end_date"
-              onChange={e => this.handleChangeDate('end_date', e)}
-            />
-          </div>
-        </div>
-
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-100">
             <NumericInput
               label={'Estimated Hours Needed'}
               value={this.state.estimated_hours}
@@ -188,6 +162,7 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         </div>
+
         <div className="ph4 mt3 mb3 flex">
           <div className="w-60">
             <label className="f6 fw6 db mb1 gray ttc">Assigned Employees</label>

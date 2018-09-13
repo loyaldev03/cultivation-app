@@ -25,6 +25,44 @@ class TaskList extends React.Component {
     window.editorSidebar.close()
   }
 
+  renderAddButton = row => {
+    if (row.value == true) {
+      return (
+        <div>
+          <i
+            className="material-icons md-600 md-gray md-17 ph2 cursor-pointer"
+            onClick={e => {
+              this.handleAddTask(row)
+            }}
+          >
+            add
+          </i>
+        </div>
+      )
+    }
+  }
+
+  renderPhaseColumn = row => {
+    if (row.row['attributes.isPhase'] == true) {
+      return <div>{row.value}</div>
+    }
+  }
+
+  renderCategoryColumn = row => {
+    if (row.row['attributes.isCategory'] == true) {
+      return <div>{row.value}</div>
+    }
+  }
+
+  handleAddTask = row => {
+    console.log(row.row.id)
+    editorSidebarHandler.open({
+      width: '500px',
+      data: { id: row.row.id },
+      action: 'add'
+    })
+  }
+
   render() {
     let tasks = TaskStore
     return (
@@ -39,18 +77,28 @@ class TaskList extends React.Component {
               show: false
             },
             {
+              Header: '',
+              accessor: 'attributes.isCategory',
+              maxWidth: '50',
+              id: 'button-column',
+              Cell: row => <div>{this.renderAddButton(row)}</div>
+            },
+            {
               Header: 'Phase',
               accessor: 'attributes.phase',
-              maxWidth: '100'
+              maxWidth: '100',
+              Cell: row => <div>{this.renderPhaseColumn(row)}</div>
             },
             {
               Header: 'Category',
               accessor: 'attributes.task_category',
-              maxWidth: '100'
+              maxWidth: '100',
+              Cell: row => <div>{this.renderCategoryColumn(row)}</div>
             },
             {
               Header: 'Name',
-              accessor: 'attributes.name'
+              accessor: 'attributes.name',
+              maxWidth: '300'
             },
             {
               Header: 'Start Date',
@@ -64,22 +112,49 @@ class TaskList extends React.Component {
             },
             {
               Header: 'Duration',
-              accessor: 'attributes.duration',
+              accessor: 'attributes.days',
               maxWidth: '100'
+            },
+            {
+              Header: 'Parent',
+              accessor: 'attributes.parent_id',
+              show: false
+            },
+            {
+              Header: 'Depend On',
+              accessor: 'attributes.depend_on',
+              show: false
+            },
+            {
+              Header: 'Category?',
+              accessor: 'attributes.isCategory',
+              show: false
+            },
+            {
+              Header: 'Phase?',
+              accessor: 'attributes.isPhase',
+              show: false
             }
           ]}
           data={tasks}
           rows={100}
           className="-striped -highlight"
           defaultPageSize={100}
-          getTrProps={(state, rowInfo) => {
-            return {
-              onClick: e => {
-                // console.log(rowInfo.row)
-                // updateSidebarTask.update(rowInfo.row)
-                editorSidebarHandler.open({ width: '500px', data: rowInfo.row })
+          getTdProps={(state, rowInfo, column, instance) => {
+            if (rowInfo) {
+              return {
+                onClick: (e, handleOriginal) => {
+                  if (column.id != 'button-column') {
+                    editorSidebarHandler.open({
+                      width: '500px',
+                      data: rowInfo.row,
+                      action: 'update'
+                    })
+                  }
+                }
               }
             }
+            return {}
           }}
         />
         <TaskEditor
@@ -88,8 +163,6 @@ class TaskList extends React.Component {
         />
       </React.Fragment>
     )
-    // const list = TaskStore.thelist.map((x, i) => <Item data={x} key={i} />
-    //     return (<React.Fragment>{list}</React.Fragment>)
   }
 }
 

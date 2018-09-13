@@ -10,39 +10,55 @@
   <% if user_signed_in? %>
     <div class="ma3 hide truncate tc">
       <div class="flex flex-row items-center">
-        <%= image_tag 'logo-small.svg', class: "dib mr3" %>
+        <%= image_tag 'blank-avatar.png', class: "dib mr3 br-100 cover", style: "height: 3rem" %>
         <div class="flex flex-column tl">
-          <span class="dark-grey subtitle-1">User name</span>
+          <% if !current_user.first_name %>
+            <span class="dark-grey subtitle-1"> <%= current_user.email %> </span>
+          <% else %>
+            <span class="dark-grey subtitle-1"> 
+              <%= current_user.first_name %> <%= current_user.last_name %>
+            </span>
+          <% end %>
+          
           <span class="grey overline ttc">Admin Head</span>
         </div>
       </div>
     </div>
 
     <div class="ma3 tc show-collapsed truncate">
-      <%= image_tag 'logo-small.svg', class: "dib" %>
+      <%= image_tag 'blank-avatar.png', 
+          class: "dib br-100 cover", 
+          style: "height: 2.5rem; margin-top: 0.5rem;" 
+      %>
     </div>
   <% end %>
 
   <ul class="list pl0 hide">
-    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
-      <i class="material-icons md-16 grey mr3">home</i>
-      <%= link_to "Home", root_path, class: "link subtitle-2-regular grey" %>
-    </li>
+    <%= link_to root_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">home</i>
+        <span class="link subtitle-2-regular grey">Home</span>
+      </li>
+    <% end %>
     
-    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
-      <i class="material-icons md-16 grey mr3">style</i>
-      <span class="link subtitle-2-regular grey">Inventory</span>
-    </li>
+    <%= link_to inventory_setup_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">style</i>
+        <span class="link subtitle-2-regular grey">Inventory</span>
+      </li>
+    <% end %>
     
     <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">account_balance_wallet</i>
       <span class="link subtitle-2-regular grey">Accounting</span>
     </li>
 
-    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
-      <i class="material-icons md-16 grey mr3">view_quilt</i>
-      <span class="link subtitle-2-regular grey">Cultivation</span>
-    </li>
+    <%= link_to new_cultivation_batch_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">view_quilt</i>
+        <span class="link subtitle-2-regular grey">Cultivation</span>
+      </li>
+    <% end %>
 
     <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">track_changes</i>
@@ -58,31 +74,37 @@
       <i class="material-icons md-16 grey mr3">insert_chart</i>
       <span class="link subtitle-2-regular grey">Report</span>
     </li>
-
-    <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
-      <i class="material-icons md-16 grey mr3">settings</i>
-      <%= link_to 'Settings', settings_path, class: 'link subtitle-2-regular grey' %>
-    </li>
+    
+    <%= link_to settings_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">settings</i>
+        <span class="link subtitle-2-regular grey">Settings</span>
+      </li>
+    <% end %>
   </ul>
 
   <ul class="list pl0 ma0 pa0 show-collapsed">
-    <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
-      <%= link_to root_path do %>
+    <%= link_to root_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
         <i class="material-icons md-16 grey mr3">home</i>
-      <% end %>
-    </li>
+      </li>
+    <% end %>
     
-    <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
-      <i class="material-icons md-16 grey mr3">style</i>
-    </li>
+    <%= link_to inventory_setup_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">style</i>
+      </li>
+    <% end %>
 
     <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">account_balance_wallet</i>
     </li>
 
-    <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
-      <i class="material-icons md-16 grey mr3">view_quilt</i>
-    </li>
+    <%= link_to new_cultivation_batch_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">view_quilt</i>
+      </li>
+    <% end %>
 
     <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">track_changes</i>
@@ -96,11 +118,11 @@
       <i class="material-icons md-16 grey mr3">insert_chart</i>
     </li>
     
-    <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
-        <%= link_to settings_path do %>
-          <i class="material-icons md-16 grey mr3">settings</i>
-        <% end %>
-    </li>
+    <%= link_to settings_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">settings</i>
+      </li>
+    <% end %>
   </ul>
 
   <div class="tc fixed flex dim align-center justify-center left-toggle-button">

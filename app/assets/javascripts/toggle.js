@@ -70,7 +70,6 @@ function updateToggleSelect(e) {
 }
 
 function setupCollapsible() {
-  console.log('setupCollapsible')
   let selector = '[data-toggle]';
   $$(selector).forEach(function(elm) {
     if (elm.tagName === "INPUT") {
@@ -78,9 +77,9 @@ function setupCollapsible() {
     }
     if (elm.tagName === "SELECT") {
       elm.addEventListener('change', updateToggleSelect)
+      // Manually trigger a change event to set an initial state
+      elm.dispatchEvent(new Event('change'));
     }
-    // Manually trigger a change event to set an initial state
-    elm.dispatchEvent(new Event('change'));
   })
   updateCollapsibleState()
 }

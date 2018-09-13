@@ -8,6 +8,7 @@ class User
   # Information
   field :first_name, type: String
   field :last_name, type: String
+  field :title, type: String
   field :timezone, type: String, default: 'UTC'
 
   ## Database authenticatable

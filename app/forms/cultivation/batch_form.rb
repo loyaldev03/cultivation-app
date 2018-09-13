@@ -2,10 +2,10 @@ module Cultivation
   class BatchForm
     include ActiveModel::Model
 
-    attr_accessor :id, :batch_source, :strain, :start_date, :tasks
+    attr_accessor :id, :facility_id, :batch_source, :strain_id, :start_date, :tasks
 
     validates :batch_source, presence: true
-    validates :strain, presence: true
+    validates :strain_id, presence: true
 
     def initialize(record_id = nil)
       set_record(record_id)
@@ -24,8 +24,9 @@ module Cultivation
 
     def map_attributes(record)
       self.id = record[:id] if record[:id]
+      self.facility_id = record[:facility_id]
       self.batch_source = record[:batch_source] if record[:batch_source]
-      self.strain = record[:strain] if record[:strain]
+      self.strain_id = record[:strain_id] if record[:strain_id]
       self.start_date = record[:start_date] if record[:start_date]
       self.tasks = record.try(:tasks)
     end

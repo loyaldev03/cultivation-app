@@ -7,7 +7,8 @@ function TextInput({
   placeholder,
   onChange = () => {},
   errors = {},
-  fieldname = null
+  fieldname = null,
+  readOnly = false
 }) {
   return (
     <React.Fragment>
@@ -19,6 +20,7 @@ function TextInput({
         placeholder={placeholder}
         onChange={onChange}
         fieldname={fieldname}
+        readOnly={readOnly}
       />
       {fieldname && <FieldError errors={errors} field={fieldname} />}
     </React.Fragment>

@@ -25,12 +25,21 @@
                     src="http://tachyons.io/img/logo.jpg"
                     class="br-100 h2 w2 mr3 dib" alt="avatar">
 
-                  <h3 class="ma0 ttc grey subtitle-2">User Name</h3>
+                  <% if !current_user.first_name %>
+                    <span class="grey subtitle-2"> <%= current_user.email %> </span>
+                  <% else %>
+                    <span class="ttc grey subtitle-2"> 
+                      <%= current_user.first_name %> <%= current_user.last_name %>
+                    </span>
+                  <% end %>
 
                   <i onclick="toggleDropdown()" class="material-icons dim grey ml2 pointer" id="toggle-dropdown">keyboard_arrow_down</i>
                   
                   <div class="dropdown">
                     <div id="myDropdown" class="dropdown-content box--shadow-header">
+                      <%= link_to 'Edit profile', edit_user_registration_path,
+                           class: 'ttc grey subtitle-2 pv3 tc dim' %>
+
                       <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
                           class: 'grey subtitle-2 pv3 tc dim' %>
                     </div>

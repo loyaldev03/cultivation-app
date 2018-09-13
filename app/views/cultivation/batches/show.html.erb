@@ -7,8 +7,12 @@
 <div class="pa4">
   <div class="flex flex-column justify-between bg-white box--shadow">
     <div class="pa4 min-h-600">
-      <% if params[:step].present?%>
-        <%= render 'step1'%>
+      <% if params[:step].present? %>
+        <%= react_component 'cultivation/batches_setup/BatchLocationApp',
+          {
+            batch_id: @record.id,
+            locations: @locations
+          } %>
       <% else %>
         <div class="fl w-100 flex flex-column">
           <h5 class="tl pa0 ma0 h5--font dark-grey">Task List</h5>
@@ -20,8 +24,3 @@
     </div>
   </div>
 </div>
-
-
-
-
-

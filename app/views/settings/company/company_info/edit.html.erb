@@ -1,0 +1,113 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Settings", settings_path], "Company Setup"%>
+<% end %>
+
+<div class="pa4">
+  <div class="flex flex-column justify-between bg-white box--shadow">
+    <div class="pa4 min-h-600">
+      <div class="fl w-70-l w-100 flex flex-column width-100">
+        <h5 class="tl pa0 ma0 h5--font dark-grey ttc">company setup</h5>
+        <p class="mt2 body-1 grey">
+          Let's get a few details of your company info.
+        </p>
+        
+        <%= form_with model: @company_info, url: settings_company_company_info_path, local: true do |f| %>
+          <div class="flex flex-column mt3">
+            <div class="mv4 flex flex-row-l flex-column">
+              <div class="w-20">
+                <span class="subtitle-2 grey">Company Details</span>
+              </div>
+
+              <div class="fl w-80-l w-100 pt0-l pt3 flex flex-column">
+                <div class="flex flex-row mb3">
+                  <div class="w-40 mr4">
+                    <%= f.label "Company name", class: "db mb1 grey subtitle-2 ttc" %>
+                    <%= f.text_field :name, 
+                        placeholder: "Company's name",
+                        value: @company_info.name,
+                        class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+                  </div>
+
+                  <div class="w-40">
+                    <%= f.label "state license #", class: "db mb1 grey subtitle-2 ttc" %>
+                    <%= f.text_field :state_license, 
+                        placeholder: "S0001",
+                        value: @company_info.state_license,
+                        class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+                  </div>
+                </div>
+
+                <div class="flex flex-row">
+                  <div class="w-40 mr4">
+                    <%= f.label "timezone", class: "db mb1 grey subtitle-2 ttc" %>
+                    <%= f.text_field :timezone, 
+                        placeholder: "timezone",
+                        value: @company_info.timezone,
+                        class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+                  </div>
+
+                  <div class="w-40">
+                    <%= f.label "tax ID", class: "db mb1 grey subtitle-2 ttc" %>
+                    <%= f.text_field :tax_id, 
+                        placeholder: "00-1234567",
+                        value: @company_info.tax_id,
+                        class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-row-l flex-column">
+              <div class="w-20">
+                <span class="subtitle-2 grey">Contact Details</span>
+              </div>
+
+              <div class="fl w-80-l w-100 pt0-l pt3 flex flex-column">
+                <div class="flex flex-row mb3">
+                  <div class="w-40 mr4">
+                    <%= f.label "phone number", class: "db mb1 grey subtitle-2 ttc" %>
+                    <%= f.text_field :phone, 
+                        placeholder: "000-1234567",
+                        value: @company_info.phone,
+                        class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+                  </div>
+
+                  <div class="w-40">
+                    <%= f.label "fax number", class: "db mb1 grey subtitle-2 ttc" %>
+                    <%= f.text_field :fax, 
+                        placeholder: "000-1234567",
+                        value: @company_info.fax,
+                        class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+                  </div>
+                </div>
+
+                <div class="flex flex-row">
+                  <div class="w-40">
+                    <%= f.label "website", class: "db mb1 grey subtitle-2 ttc" %>
+                    <%= f.text_field :website, 
+                        placeholder: "https://www.google.com/",
+                        value: @company_info.website,
+                        class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="ph4 flex flex-row justify-between items-center ba bt-1 bb-0 br-0 bl-0 b--light-grey" style="height: 86px">
+      <div class="dim flex flex-row items-center pointer">
+        <i class="material-icons md-light-gray">keyboard_arrow_left</i>
+        <%= link_to "Back", settings_path, class: "db tr ttu link button--font light-grey" %>
+      </div>
+
+      <div class="flex flex-row items-center">
+       <%= f.submit "Save",
+          class: "db pv3 ph4 bg-orange white button--font bn box--br3 ttu link dim pointer" %>
+      </div>
+    </div>
+     
+  <% end %>
+  </div>
+</div>

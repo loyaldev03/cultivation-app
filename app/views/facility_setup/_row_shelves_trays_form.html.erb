@@ -52,11 +52,10 @@
             <%= hidden_field_tag "shelf_trays_info[trays][][code]", tray.code, id: nil %>
             <label class="subtitle-2 grey db mb1">Capacity</label>
             <%= number_field_tag "shelf_trays_info[trays][][capacity]", tray.capacity, class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1" %>
-            <label class="subtitle-2 grey db mt3 mb1">Tray Type</label>
+            <label class="subtitle-2 grey db mt3 mb1">Container Type</label>
             <%= select_tag "shelf_trays_info[trays][][capacity_type]",
               options_for_select(Constants::TRAY_CAPACITY_TYPES.collect {|p| [ p[:name], p[:code]]}, tray.capacity_type),
-              class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1",
-              style: "width: 115px;"
+              class: "outline-0 ba box--height box--br3 b--light-grey pa2 grey body-1 w-60"
             %> 
           <% end %>
         <% else %>
@@ -68,7 +67,7 @@
                   <th style="min-width: 42px;"></th>
                   <th class="caption grey tl">Tray ID</th>
                   <th class="w3 caption grey tl">Capacity</th>
-                  <th class="caption grey tl">Tray Type</th>
+                  <th class="caption grey tl">Container Type</th>
                 </tr>
                 <% trays.each_with_index do |tray,i| %>
                   <tr class="">

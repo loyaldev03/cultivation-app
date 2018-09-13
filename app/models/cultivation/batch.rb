@@ -18,8 +18,15 @@ module Cultivation
       tasks.where(isPhase: true)
     end
 
+    def orphan_tasks
+      tasks.where(parent_id: "", isPhase: false, isCategory: false)
+    end
+
     def generate_tree
       tasks = []
+      orphan_tasks.each do |task|
+        tasks << task
+      end
       phases.each do |phase|
         tasks << phase
         phase.children.each do |children|

@@ -73,6 +73,30 @@ class LocationPicker extends React.Component {
     }
   }
 
+  isDry(facility_id) {
+    if (facility_id) {
+      return item =>
+        item.t_id.length > 0 &&
+        item.rm_purpose === 'dry' &&
+        item.f_id === facility_id
+    } else {
+      return item =>
+        item.t_id.length > 0 && item.rm_purpose === 'dry'
+    }
+  }
+
+  isFlower(facility_id) {
+    if (facility_id) {
+      return item =>
+        item.t_id.length > 0 &&
+        item.rm_purpose === 'flower' &&
+        item.f_id === facility_id
+    } else {
+      return item =>
+        item.t_id.length > 0 && item.rm_purpose === 'flower'
+    }
+  }
+
   isRoomOnly(facility_id) {
     if (facility_id) {
       return item =>
@@ -105,6 +129,10 @@ class LocationPicker extends React.Component {
       _locations = locations.filter(this.isMother(facility_id))
     } else if (mode === 'room') {
       _locations = locations.filter(this.isRoomOnly(facility_id))
+    } else if (mode === 'flower') {
+      _locations = locations.filter(this.isFlower(facility_id))
+    } else if (mode === 'dry') {
+      _locations = locations.filter(this.isDry(facility_id))
     } else {
       _locations = locations
     }
@@ -117,10 +145,9 @@ class LocationPicker extends React.Component {
     let item = null
     if (mode === 'mother' || mode === 'room') {
       item = locations.find(x => x.rm_id === location_id)
-    } else if (mode === 'clone' || mode === 'vegTray') {
+    } else if (['clone', 'vegTray', 'flower', 'dry'].indexOf(mode) >= 0) {
       item = locations.find(x => x.t_id === location_id)
     }
-    //return item ? item : { value: '', label: '' }
     return item
   }
 
@@ -136,7 +163,7 @@ class LocationPicker extends React.Component {
         location_id: selectedItem.rm_id,
         location_type: selectedItem.rm_purpose
       }
-    } else if (mode === 'clone' || mode === 'vegTray') {
+    } else if (['clone', 'vegTray', 'flower', 'dry'].indexOf(mode) >= 0) {
       return {
         location_id: selectedItem.t_id,
         location_type: selectedItem.rm_purpose
@@ -150,8 +177,8 @@ class LocationPicker extends React.Component {
   }
 
   onChangeFacility = item => {
-    console.log('onChangeFacility')
-    console.log(item)
+    // console.log('onChangeFacility')
+    // console.log(item)
     this.setState({
       facility: { value: item.f_id, label: item.label },
       value: { value: '', label: '' },

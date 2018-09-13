@@ -31,7 +31,7 @@ const LocationBox = ({ highlighted, onClick, isSelected, name, code, showChangeT
     className={classNames('db f6 link ba b--gray pa2 pointer relative br2 dim', {
       'bg-orange white bn': highlighted,
     })}
-    style={{ "height": "100px", "width": "95px" }}
+    style={{ "height": "100px" }}
     onClick={onClick}
   >
     {!!name &&
@@ -68,7 +68,6 @@ class BatchLocationEditor extends React.PureComponent {
   state = {
     locations: this.props.locations || [], // all available tray locations from database
     selectedTrays: this.props.plant.trays || [],
-    selectedQuantity: this.props.plant.quantity || 0
   }
 
   onShowAddLocation = () => {
@@ -232,7 +231,6 @@ class BatchLocationEditor extends React.PureComponent {
 
     console.log({ selectedLocation })
 
-    const selectedQuantity = parseInt(this.state.selectedQuantity ? this.state.selectedQuantity : 0)
     const selectedTraysCapacity = parseInt(selectedTrays.reduce((a, v) => a + parseInt(v.tray_capacity), 0))
 
     return (
@@ -247,51 +245,35 @@ class BatchLocationEditor extends React.PureComponent {
               e.preventDefault()
               const updatePlant = {
                 id: plant.id,
-                quantity: selectedQuantity,
+                quantity: selectedTraysCapacity,
                 trays: selectedTrays,
               }
-              console.log({ updatePlant })
               onSave(updatePlant)
             }}
           >
             <span className="subtitle-2 grey db mt3 mb1">PlantID: {plant.id}</span>
 
             <div className="mt2">
-              <label className="subtitle-2 grey db mb1">
-                Quantity: <br />
-                <input
-                  className="tr db measure mt1 pa2 grey ba b--light-grey box--br3 outline-0"
-                  type="number"
-                  defaultValue={plant.quantity || ''}
-                  min="0"
-                  step="1"
-                  required={true}
-                  onChange={this.onChangeInput('selectedQuantity')}
-                />
-              </label>
-            </div>
-
-            <div className="mt2">
               <label className="subtitle-2 grey db mb1">Locations:</label>
               {selectedTrays && selectedTrays.length > 0 &&
-                <table className="collapse ba br2 b--black-10 pv2 ph3 f6">
+                <table className="collapse ba br2 b--black-10 pv2 ph3 f6 w-100">
                   <tbody>
                     <tr className="striped--light-gray">
-                      <td className="pv2 ph3">#</td>
+                      <td className="pv2 ph3 w1">#</td>
                       <td className="pv2 ph3">Location</td>
                       <td className="pv2 ph3 tr">Quantity</td>
-                      <td></td>
+                      <td style={{width: "50px"}}></td>
                     </tr>
                     {selectedTrays.map((tray, index) => (
                       <tr key={tray.tray_id}>
-                        <td className="pv2 ph3">{index + 1}</td>
+                        <td className="pv2 ph3 w1">{index + 1}</td>
                         <td className="pv2 ph3 w4">
                           <a href="#0" onClick={this.onEditLocation(tray.tray_id)} className="link">
                             {this.getLocationName('tray', tray.tray_id)}
                           </a>
                         </td>
                         <td className="pv2 ph3 tr w3">{tray.tray_capacity}</td>
-                        <td className="pv2 ph2 w3">
+                        <td className="tc">
                           {!showAddLocation &&
                             <a href="#0" onClick={this.onRemoveSelectedTray(tray.tray_id)}>Remove</a>
                           }
@@ -302,12 +284,7 @@ class BatchLocationEditor extends React.PureComponent {
                   <tfoot>
                     <tr className="bt b--light-gray">
                       <td className="pv2 tr" colSpan={2}>Total</td>
-                      <td className={classNames("pv2 ph3 tr", {
-                        "red": (selectedQuantity === 0 || selectedTraysCapacity > selectedQuantity || selectedTraysCapacity < selectedQuantity),
-                        "green": selectedTraysCapacity === selectedQuantity,
-                      })}>
-                        {selectedTraysCapacity}/{selectedQuantity}
-                      </td>
+                      <td className="pv2 ph3 tr">{selectedTraysCapacity}</td>
                       <td></td>
                     </tr>
                   </tfoot>
@@ -454,7 +431,7 @@ class BatchLocationEditor extends React.PureComponent {
                 <a href="#0" className="link ph2 pv1 ba bg-gray db w3 mt2 tc center f6 br2 white" onClick={this.onDoneSelectTray}>Close</a>
               </div>
             }
-            {!showAddLocation && selectedQuantity === selectedTraysCapacity &&
+            {!showAddLocation &&
               <div className="mt3">
                 <input type="submit" value="Save" className="btn btn--primary dim br2" />
                 <a href="#0" className="link btn mr2" onClick={onClose}>Cancel</a>

@@ -11,19 +11,42 @@
           Browses through your team's information here.
         </p>
 
-        <h2>Users</h2>
-        <table class="collapse ba br2 b--black-10 pv2 ph3 f6">
+        <div class="pv3 mt3">
+          <%= link_to '#', class: "link pa3 dim ba bb-0 bt-1 bl-1 br-1 b--light-grey" do %>
+            <span class="subtitle-2 dark-grey ttc">group</span>
+          <% end %>
+
+          <%= link_to '#', class: "link pa3 dim ba bb-0 bt-1 bl-0 br-1 b--light-grey" do %>
+            <span class="subtitle-2 dark-grey ttc">roles</span>
+          <% end %>
+
+          <%= link_to '#', class: "link pa3 dim ba bb-0 bt-1 bl-0 br-1 b--light-grey" do %>
+            <span class="subtitle-2 dark-grey ttc">users</span>
+          <% end %>
+        </div>
+
+        <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6">
           <tbody>
             <tr class="striped--light-gray">
-              <td class="pv2 ph3">Name</td>
-              <td class="pv2 ph3">Email</td>
-              <td class="pv2 ph3">Title</td>
+              <td class="pv2 ph3 subtitle-2 dark-grey">Photo</td>
+              <td class="pv2 ph3 subtitle-2 dark-grey">Name</td>
+              <td class="pv2 ph3 subtitle-2 dark-grey">Email</td>
+              <td class="pv2 ph3 subtitle-2 dark-grey">Title</td>
             </tr>
             <% @users.each do |user| %>
               <tr class="striped--light-gray">
-                <td class="pv2 ph3"><%= user.first_name %> <%= user.last_name %></td>
-                <td class="pv2 ph3"><%= user.email %></td>
-                <td class="pv2 ph3"><%= user.title %></td>
+                <td class="pv2 ph3">
+                  <%= image_tag 'blank-avatar.png', class: "br-100", style: "max-height: 2rem" %>
+                </td>
+
+                <td class="pv2 ph3">
+                  <%= link_to "#", class: "blue link dim subtitle-2-regular" do %>
+                    <%= user.first_name %> <%= user.last_name %>
+                  <% end %>
+                </td>
+
+                <td class="pv2 ph3 subtitle-2-regular grey"><%= user.email %></td>
+                <td class="pv2 ph3 subtitle-2-regular grey"><%= user.title %></td>
               </tr>
             <% end %>
           </tbody>

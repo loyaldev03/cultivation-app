@@ -9,16 +9,23 @@ class LocationPicker extends React.Component {
   constructor(props) {
     super(props)
 
-    this.facilities = props.locations.filter(this.isFacilityOnly).map(x => ({...x, label: `${x.f_name} - ${x.f_code}` }))
-    const facility = this.findFacility(this.facilities, props.filter_facility_id)
+    this.facilities = props.locations
+      .filter(this.isFacilityOnly)
+      .map(x => ({ ...x, label: `${x.f_name} - ${x.f_code}` }))
+    const facility = this.findFacility(
+      this.facilities,
+      props.filter_facility_id
+    )
 
-    const locations = this.filterLocationByFacility(this.props.filter_facility_id)
+    const locations = this.filterLocationByFacility(
+      this.props.filter_facility_id
+    )
     const location = this.findLocation(locations, props.location_id)
 
-    this.state = { 
+    this.state = {
       value: location,
       facility,
-      locations,
+      locations
     }
 
     this.mode = props.mode
@@ -30,7 +37,10 @@ class LocationPicker extends React.Component {
 
   isClone(facility_id) {
     if (facility_id) {
-      return item => item.t_id.length > 0 && item.rm_purpose === 'clone' && item.f_id === facility_id
+      return item =>
+        item.t_id.length > 0 &&
+        item.rm_purpose === 'clone' &&
+        item.f_id === facility_id
     } else {
       return item => item.t_id.length > 0 && item.rm_purpose === 'clone'
     }
@@ -38,44 +48,49 @@ class LocationPicker extends React.Component {
 
   isMother(facility_id) {
     if (facility_id) {
-      return item =>  item.rm_id.length > 0 &&
-                      item.rw_id.length === 0 &&
-                      item.rm_purpose === 'mother' &&
-                      item.f_id === facility_id
+      return item =>
+        item.rm_id.length > 0 &&
+        item.rw_id.length === 0 &&
+        item.rm_purpose === 'mother' &&
+        item.f_id === facility_id
     } else {
-      return item =>  item.rm_id.length > 0 &&
-                      item.rw_id.length === 0 &&
-                      item.rm_purpose === 'mother'
+      return item =>
+        item.rm_id.length > 0 &&
+        item.rw_id.length === 0 &&
+        item.rm_purpose === 'mother'
     }
   }
 
   isVeg(facility_id) {
     if (facility_id) {
-      return item =>  item.t_id.length > 0 && 
-                      VEG_TRAY_PURPOSES.indexOf(item.rm_purpose) >= 0 &&
-                      item.f_id === facility_id
+      return item =>
+        item.t_id.length > 0 &&
+        VEG_TRAY_PURPOSES.indexOf(item.rm_purpose) >= 0 &&
+        item.f_id === facility_id
     } else {
-      return item =>  item.t_id.length > 0 && 
-                      VEG_TRAY_PURPOSES.indexOf(item.rm_purpose) >= 0
+      return item =>
+        item.t_id.length > 0 && VEG_TRAY_PURPOSES.indexOf(item.rm_purpose) >= 0
     }
   }
 
   isRoomOnly(facility_id) {
     if (facility_id) {
-      return item =>  item.rm_id.length > 0 && 
-                      item.rw_id.length === 0 &&
-                      item.f_id === facility_id
+      return item =>
+        item.rm_id.length > 0 &&
+        item.rw_id.length === 0 &&
+        item.f_id === facility_id
     } else {
-      return item =>  item.rm_id.length > 0 && 
-                      item.rw_id.length === 0
+      return item => item.rm_id.length > 0 && item.rw_id.length === 0
     }
   }
 
   get isFacilitySet() {
-    return this.props.filter_facility_id || this.props.filter_facility_id.length > 0
+    return (
+      this.props.filter_facility_id || this.props.filter_facility_id.length > 0
+    )
   }
 
-  filterLocationByFacility = (facility_id) => {
+  filterLocationByFacility = facility_id => {
     if (facility_id === null || facility_id.length <= 0) {
       return []
     }
@@ -110,7 +125,7 @@ class LocationPicker extends React.Component {
   }
 
   findFacility(locations, facility_id) {
-    return locations.find(x => x.f_id === facility_id )
+    return locations.find(x => x.f_id === facility_id)
   }
 
   /* Utility method to extract location id & mode combination from item */
@@ -137,7 +152,7 @@ class LocationPicker extends React.Component {
   onChangeFacility = item => {
     console.log('onChangeFacility')
     console.log(item)
-    this.setState({ 
+    this.setState({
       facility: { value: item.f_id, label: item.label },
       value: { value: '', label: '' },
       locations: this.filterLocationByFacility(item.f_id)
@@ -158,7 +173,7 @@ class LocationPicker extends React.Component {
   render() {
     return (
       <React.Fragment>
-        { !this.isFacilitySet && 
+        {!this.isFacilitySet && (
           <div className="mb3">
             <label className="f6 fw6 db mb1 gray ttc">Facility ID</label>
             <Select
@@ -169,11 +184,13 @@ class LocationPicker extends React.Component {
               value={this.state.facility}
               filterOption={(option, input) => {
                 const words = input.toLowerCase().split(/\s/)
-                return words.every(x => option.label.toLowerCase().indexOf(x) >= 0)
+                return words.every(
+                  x => option.label.toLowerCase().indexOf(x) >= 0
+                )
               }}
             />
           </div>
-        }
+        )}
         <label className="f6 fw6 db mb1 gray ttc">Tray ID</label>
         <Select
           key={this.state.facility}

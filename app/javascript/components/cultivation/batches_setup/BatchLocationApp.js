@@ -1,7 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
-
 import BatchLocationEditor from './BatchLocationEditor'
+import { joinBy } from '../../utils/ArrayHelper'
 
 const QuantityField = ({ plant, onEdit }) => {
   if (plant) {
@@ -16,12 +16,13 @@ const QuantityField = ({ plant, onEdit }) => {
 }
 
 const LocationField = ({ plant, onEdit }) => {
+  console.log({ where: 'LocationField', plant })
   if (plant) {
-    const text = plant.trays ? 'Combine Tray Name' : 'Set Location'
+    const text = plant.trays ? joinBy(plant.trays, 'tray_code') : 'Set Location'
     return (
-      <span className="blue pointer" onClick={() => onEdit(plant.id)}>
+      <a href="#0" className="link blue pointer" onClick={() => onEdit(plant.id)}>
         {text}
-      </span>
+      </a>
     )
   }
   return null
@@ -177,7 +178,7 @@ class BatchLocationApp extends React.Component {
         )}
 
         <div data-role="sidebar" className="rc-slide-panel">
-          <div className="rc-slide-panel__body flex flex-column">
+          <div className="rc-slide-panel__body h-100">
             {editingPlant.id && (
               <BatchLocationEditor
                 key={editingPlant.id}

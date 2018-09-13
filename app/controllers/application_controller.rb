@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
 
   def miniprofiler
     # Enable mini profiler only if developer login
+    # DEBUG: Is your MongoDb Running?
     Rack::MiniProfiler.authorize_request if current_user && current_user.is_dev?
   end
 

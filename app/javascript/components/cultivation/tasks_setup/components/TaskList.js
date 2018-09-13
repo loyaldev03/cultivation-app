@@ -58,8 +58,8 @@ class TaskList extends React.Component {
   }
 
   handleAddTask = (row) => {
-    console.log(row.row.id)
-    editorSidebarHandler.open({ width: '500px', data: {id: row.row.id}, action: 'add' })
+    // console.log(row.row.id)
+    editorSidebarHandler.open({ width: '500px', data: {}, action: 'add' })
 
   }
 
@@ -105,6 +105,10 @@ class TaskList extends React.Component {
     return (
       <React.Fragment>
         {tasks} 
+        <div className="mb4">
+          <a className="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim" onClick={this.handleAddTask}>New Task</a>
+        </div>
+
         <ReactTable
           columns={[
             {
@@ -118,7 +122,8 @@ class TaskList extends React.Component {
               accessor: 'attributes.isCategory',
               maxWidth: '50',
               id: 'button-column',
-              Cell: (row) => (<div>{this.renderAddButton(row)}</div>)
+              show: false
+              // Cell: (row) => (<div>{this.renderAddButton(row)}</div>)
             },
             {
               Header: 'Phase',

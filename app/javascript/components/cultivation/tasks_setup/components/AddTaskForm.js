@@ -16,7 +16,7 @@ class AddTaskForm extends React.Component {
     this.state = {
       batch_id: this.props.batch_id,
       parent_task: props.parent_task,
-      parent_id: props.id,
+      parent_id: '',
       name: '',
       days: '',
       task_category: props.parent_task.attributes.task_category,

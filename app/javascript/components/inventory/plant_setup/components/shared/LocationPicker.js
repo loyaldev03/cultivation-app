@@ -80,8 +80,7 @@ class LocationPicker extends React.Component {
         item.rm_purpose === 'dry' &&
         item.f_id === facility_id
     } else {
-      return item =>
-        item.t_id.length > 0 && item.rm_purpose === 'dry'
+      return item => item.t_id.length > 0 && item.rm_purpose === 'dry'
     }
   }
 
@@ -92,8 +91,7 @@ class LocationPicker extends React.Component {
         item.rm_purpose === 'flower' &&
         item.f_id === facility_id
     } else {
-      return item =>
-        item.t_id.length > 0 && item.rm_purpose === 'flower'
+      return item => item.t_id.length > 0 && item.rm_purpose === 'flower'
     }
   }
 

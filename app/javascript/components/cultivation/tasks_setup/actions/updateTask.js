@@ -40,6 +40,14 @@ class updateTask {
 
 
   }
+
+  updatePosition(a, b) {
+    if(a !== null && b !== null){
+      TaskStore.splice(a, 0, TaskStore.splice(b, 1)[0]);
+    }
+    // console.log(TaskStore[a].attributes.name)
+    // console.log(TaskStore.splice(b, 1)[0].attributes.name)
+  }
 }
 
 const task = new updateTask()

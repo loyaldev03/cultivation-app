@@ -7,14 +7,24 @@ import TaskStore from '../stores/TaskStore'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import TaskEditor from './TaskEditor'
 import updateSidebarTask from '../actions/updateSidebarTask'
+import updateTask from '../actions/updateTask'
 
 import ReactTable from 'react-table'
 
 @observer
 class TaskList extends React.Component {
+  constructor(props) {
+    super(props);
+    this.dragged = null;
+  }
+
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
+    let _this = this
+
+    // need to find after data react-table is loaded callback
+    setTimeout(function () { _this.mountEvents(); }, 5000); 
   }
 
   openSidebar = () => {
@@ -53,18 +63,55 @@ class TaskList extends React.Component {
 
   }
 
+  mountEvents() {
+    const headers = Array.prototype.slice.call(
+      document.querySelectorAll(".rt-tr-group")
+    );
+
+    headers.forEach((header, i) => {
+      header.setAttribute("draggable", true);
+      //the dragged header
+      header.ondragstart = e => {
+        e.stopPropagation();
+        this.dragged = i;
+      };
+
+      header.ondrag = e => e.stopPropagation;
+
+      header.ondragend = e => {
+        e.stopPropagation();
+        setTimeout(() => (this.dragged = null), 1000);
+      };
+
+      //the dropped header
+      header.ondragover = e => {
+        e.preventDefault();
+      };
+
+      header.ondrop = e => {
+        e.preventDefault();
+        updateTask.updatePosition(i, this.dragged)
+      };
+    });
+  }
+
+
+
   render() {
     let tasks = TaskStore
+
+    // this.reorder.forEach(o => tasks.splice(o.a, 0, tasks.splice(o.b, 1)[0]));
+
     return (
       <React.Fragment>
-        {tasks}
+        {tasks} 
         <ReactTable
           columns={[
             {
               Header: 'Id',
               accessor: 'id',
               maxWidth: '100',
-              show: false
+              show: false,
             },
             {
               Header: '',
@@ -144,9 +191,9 @@ class TaskList extends React.Component {
                   }
                 }
               }
-              return {}
-            }
+              return {}  
           }
+        }
         />
         <TaskEditor onClose={this.closeSidebar} batch_id={this.props.batch_id} />
       </React.Fragment>

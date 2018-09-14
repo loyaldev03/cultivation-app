@@ -1,7 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
-
 import BatchLocationEditor from './BatchLocationEditor'
+import { joinBy } from '../../utils/ArrayHelper'
 
 const QuantityField = ({ plant, onEdit }) => {
   if (plant) {
@@ -17,11 +17,11 @@ const QuantityField = ({ plant, onEdit }) => {
 
 const LocationField = ({ plant, onEdit }) => {
   if (plant) {
-    const text = plant.locations ? 'Combine Tray Name' : 'Set Location'
+    const text = plant.trays ? joinBy(plant.trays, 'tray_code') : 'Set Location'
     return (
-      <span className="blue pointer" onClick={() => onEdit(plant.id)}>
+      <a href="#0" className="link blue pointer" onClick={() => onEdit(plant.id)}>
         {text}
-      </span>
+      </a>
     )
   }
   return null
@@ -36,7 +36,8 @@ class BatchLocationApp extends React.Component {
       { id: 'P0001', code: 'ABCD-001', name: 'AK-47' },
       { id: 'P0002', code: 'ABCD-002', name: 'AK-47' },
       { id: 'P0003', code: 'ABCD-003', name: 'AK-47' }
-    ]
+    ],
+    locations: this.props.locations,
   }
 
   componentDidMount() {
@@ -80,20 +81,17 @@ class BatchLocationApp extends React.Component {
     return found
   }
 
-  updateSelectedPlant = plantConfig => {
+  onEditorSave = plantConfig => {
+    // find and update the corresponding record in memory
+    const found = this.getSelected(plantConfig.id)
+    found.quantity = plantConfig.quantity
+    found.trays = plantConfig.trays
     this.setState({
       selectedPlants: this.state.selectedPlants.map(
         x => (x.id === plantConfig.id ? plantConfig : x)
       )
     })
-  }
-
-  onEditorSave = plantConfig => {
-    // find and update the corresponding record in memory
-    const found = this.getSelected(plantConfig.id)
-    found.quantity = plantConfig.quantity
-    found.locations = plantConfig.locations
-    this.updateSelectedPlant(plantConfig)
+    // TODO: Update remaining count in this.state.locations
   }
 
   isDisableNext = () => {
@@ -102,20 +100,18 @@ class BatchLocationApp extends React.Component {
     }
     // if there's a missing data, disable next step
     const missed = this.state.selectedPlants.find(
-      x => !x.quantity || !x.locations
+      x => !x.quantity || !x.trays
     )
     return !!missed
   }
 
+  gotoNext = () => {
+    window.location.replace("/cultivation/batches/" + this.props.batch_id)
+  }
+
   render() {
     const plants = this.state.dummyPlants
-    const selected = this.state.selectedPlants
-    const editingPlant = this.state.editingPlant
-    console.log('editing:', {
-      selected,
-      editingPlant,
-      disable: this.isDisableNext()
-    })
+    const { locations, editingPlant } = this.state
     return (
       <div>
         {this.state.fromMotherPlant && (
@@ -169,7 +165,7 @@ class BatchLocationApp extends React.Component {
             </table>
 
             <div className="pv2">
-              <button className="btn" disabled={this.isDisableNext()}>
+              <button className="btn" disabled={this.isDisableNext()} onClick={this.gotoNext}>
                 Next
               </button>
             </div>
@@ -177,7 +173,7 @@ class BatchLocationApp extends React.Component {
         )}
 
         <div data-role="sidebar" className="rc-slide-panel">
-          <div className="rc-slide-panel__body flex flex-column">
+          <div className="rc-slide-panel__body h-100">
             {editingPlant.id && (
               <BatchLocationEditor
                 key={editingPlant.id}

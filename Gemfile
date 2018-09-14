@@ -98,3 +98,4 @@ gem 'rollbar'
 
 #Api Serializer
 gem 'fast_jsonapi'
+gem 'mongoid_orderable'

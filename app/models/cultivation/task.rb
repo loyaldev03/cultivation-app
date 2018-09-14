@@ -2,6 +2,7 @@ module Cultivation
   class Task
     include Mongoid::Document
     include Mongoid::Timestamps::Short
+    include Mongoid::Orderable
 
     field :phase, type: String
     field :task_category, type: String
@@ -25,6 +26,7 @@ module Cultivation
     embeds_many :users, class_name: 'User'
     belongs_to :batch, class_name: 'Cultivation::Batch'
 
+    orderable scope: :batch, base: 0
 
     def tasks_depend
       batch.tasks.where(depend_on: self.id)

@@ -410,7 +410,7 @@ class BatchLocationEditor extends React.PureComponent {
                             className={classNames('db f6 link ba b--gray pa2 pointer relative br2 dim', {
                               'bg-orange white bn': this.isSelected(tray.tray_id, 'tray')
                             })}
-                            style={{ "height": "100px", "width": "95px" }}
+                            style={{ "height": "100px" }}
                           >
                             <span className="db">{tray.tray_code}</span>
                             <span className="dib">Select Capacity:</span>

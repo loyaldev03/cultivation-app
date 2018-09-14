@@ -6,36 +6,41 @@
   <%= breadcrumbs ["Settings", settings_path], "Facilities" %>
 <% end %>
 
-<div class="w-100 ph3 flex flex-wrap pt4">
-  <div class="w-20 pa3 pt0">
-    <div class="card bg-light-gray br3 w-100  flex items-start grow" >
-      <%= link_to 'Facilities', settings_facility_facilities_path, class: 'ma0 dark-gray fw6 link db w-100 pa3 outline-0', style: 'height: 130px' %>
-    </div>
+<div class="w-100 pv3 flex flex-row flex-wrap">
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <%= link_to 'Facilities', settings_facility_facilities_path, 
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow'
+    %> 
   </div>
-  <div class="w-20 pa3 pt0">
-    <div class="card bg-light-gray br3 w-100 flex items-start grow" >
-      <%= link_to 'Rooms', settings_facility_rooms_path, class: 'ma0 dark-gray fw6 link db w-100 pa3 outline-0', style: 'height: 130px' %>
-    </div>
+
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <%= link_to 'Rooms', settings_facility_rooms_path, 
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' 
+    %>
   </div>
-  <div class="w-20 pa3 pt0">
-    <div class="card bg-light-gray br3 w-100 flex items-start grow" >
-      <%= link_to 'Sections', settings_facility_sections_path, class: 'ma0 dark-gray fw6 link db w-100 pa3 outline-0', style: 'height: 130px' %>
-    </div>
+
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <%= link_to 'Sections', settings_facility_sections_path, 
+      class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' 
+    %>
   </div>
-  <div class="w-20 pa3 pt0">
-    <div class="card bg-light-gray br3 w-100 flex items-start grow" >
-      <%= link_to 'Rows', settings_facility_rows_path, class: 'ma0 dark-gray fw6 link db w-100 pa3 outline-0', style: 'height: 130px' %>
-    </div>
+
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <%= link_to 'Rows', settings_facility_rows_path, 
+      class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' 
+    %>
   </div>
-  <div class="w-20 pa3 pt0">
-    <div class="card bg-light-gray br3 w-100 flex items-start grow" >
-      <%= link_to 'Shelves', settings_facility_shelves_path, class: 'ma0 dark-gray fw6 link db w-100 pa3 outline-0', style: 'height: 130px' %>
-    </div>
+
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <%= link_to 'Shelves', settings_facility_shelves_path, 
+      class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' 
+    %>
   </div>
-  <div class="w-20 pa3 pt0">
-    <div class="card bg-light-gray br3 w-100 flex items-start grow" >
-      <%= link_to 'Settings', '', class: 'ma0 dark-gray fw6 link db w-100 pa3 outline-0', style: 'height: 130px' %>
-    </div>
+
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <%= link_to 'Settings', '', 
+      class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' 
+    %>
   </div>
 </div>
 

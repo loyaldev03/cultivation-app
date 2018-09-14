@@ -10,7 +10,7 @@
       <% if params[:step].present? %>
         <%= react_component 'cultivation/batches_setup/BatchLocationApp',
           {
-            batch_id: @record.id,
+            batch_id: @record.id.to_s,
             locations: @locations
           } %>
       <% else %>

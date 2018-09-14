@@ -2,12 +2,22 @@
   <%= breadcrumbs ["Settings", settings_path], "Materials"%>
 <% end %>
 
-<h1 class="pl4">Materials</h1>
+<div class="pa4">
+  <h5 class="tl pa0 ma0 h5--font dark-grey ttc">Materials</h5>
 
-<div class="ma4">
-  <%= link_to "Items", materials_items_path %>
-</div>
+  <div class="flex flex-row flex-wrap mt4">
+    <div class="w-50 w-30-m w-20-l mr4 mb4">
+      <%= link_to materials_items_path, 
+          class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+        Items
+      <% end %>
+    </div>
 
-<div class="ma4">
-  <%= link_to "Strains", materials_strains_path %>
+    <div class="w-50 w-30-m w-20-l">
+      <%= link_to materials_strains_path, 
+          class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+        Strains
+      <% end %>
+    </div>
+  </div>
 </div>

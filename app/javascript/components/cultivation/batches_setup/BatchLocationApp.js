@@ -133,8 +133,8 @@ class BatchLocationApp extends React.Component {
     const { editingPlant } = this.state
     const availableLocations = this.getAvailableLocations(editingPlant.id)
 
-    console.log('remainingLocations 1st tray >> ', availableLocations[0].remaining_capacity)
-    console.log('remainingLocations 2nd tray >> ', availableLocations[1].remaining_capacity)
+    // console.log('remainingLocations 1st tray >> ', availableLocations[0].remaining_capacity)
+    // console.log('remainingLocations 2nd tray >> ', availableLocations[1].remaining_capacity)
 
     return (
       <div>

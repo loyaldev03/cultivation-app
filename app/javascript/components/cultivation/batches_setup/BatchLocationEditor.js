@@ -258,26 +258,26 @@ class BatchLocationEditor extends React.PureComponent {
     const selectedTraysCapacity = parseInt(selectedTrays.reduce((a, v) => a + parseInt(v.tray_capacity), 0))
 
     return (
-      <div className="h-100">
+      <div className="h-100 flex flex-column">
         <div className="ph4 pv3 bb b--light-grey">
           <h5 className="h6--font dark-grey ma0">Quantity &amp; Location</h5>
         </div>
-        <div className="ph4 pv3 h-100">
-          <form
-            className="flex flex-column justify-between"
-            onSubmit={e => {
-              e.preventDefault()
-              const updatePlant = {
-                id: plant.id,
-                quantity: selectedTraysCapacity,
-                trays: selectedTrays,
-              }
-              onSave(updatePlant)
-            }}
-          >
-            <span className="subtitle-2 grey db mt3 mb1">PlantID: {plant.id}</span>
-
+        <form
+          className="ph4 pv3 h-100 flex-auto flex flex-column justify-between"
+          onSubmit={e => {
+            e.preventDefault()
+            const updatePlant = {
+              id: plant.id,
+              quantity: selectedTraysCapacity,
+              trays: selectedTrays,
+            }
+            onSave(updatePlant)
+          }}
+        >
+          <div>
             <div className="mt2">
+              <span className="subtitle-2 grey db mt3 mb1">PlantID: {plant.id}</span>
+
               <label className="subtitle-2 grey db mb1">Locations:</label>
               {selectedTrays && selectedTrays.length > 0 &&
                 <table className="collapse ba br2 b--black-10 pv2 ph3 f6 w-100">
@@ -462,14 +462,12 @@ class BatchLocationEditor extends React.PureComponent {
                 <a href="#0" className="link ph2 pv1 ba bg-gray db w3 mt2 tc center f6 br2 white" onClick={this.onDoneSelectTray}>Close</a>
               </div>
             }
-            {!showAddLocation &&
-              <div className="mt3">
-                <input type="submit" value="Save" className="btn btn--primary dim br2" />
-                <a href="#0" className="link btn mr2" onClick={onClose}>Cancel</a>
-              </div>
-            }
-          </form>
-        </div>
+          </div>
+          <div className="mt3 tr">
+            <a href="#0" className="link btn mr2" onClick={onClose}>Cancel</a>
+            <input type="submit" value="Save" className="btn btn--primary dim br2" />
+          </div>
+        </form>
       </div>
     )
   }

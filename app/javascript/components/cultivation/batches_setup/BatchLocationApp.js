@@ -105,6 +105,10 @@ class BatchLocationApp extends React.Component {
     return !!missed
   }
 
+  gotoNext = () => {
+    window.location.replace("/cultivation/batches/" + this.props.batch_id)
+  }
+
   render() {
     const plants = this.state.dummyPlants
     const { locations, editingPlant } = this.state
@@ -161,7 +165,7 @@ class BatchLocationApp extends React.Component {
             </table>
 
             <div className="pv2">
-              <button className="btn" disabled={this.isDisableNext()}>
+              <button className="btn" disabled={this.isDisableNext()} onClick={this.gotoNext}>
                 Next
               </button>
             </div>

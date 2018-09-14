@@ -74,8 +74,18 @@
                       (we need your current password to confirm your changes)
                     </i>
                   </div>
+                </div>
+              </div>
+            </div>
 
-                  <div class="w-40">
+            <div class="flex flex-row-l flex-column mt4-l mt2">
+              <div class="w-20-l w-50">
+                <span class="subtitle-2 grey">Change Password</span>
+              </div>
+
+              <div class="fl w-80-l w-100 pt0-l pt3 flex flex-column">
+                <div class="flex flex-row mb3">
+                  <div class="w-40 mr4">
                     <%= f.label :password, class: "subtitle-2 grey db mb1 ttc" %>
                     <%= f.password_field :password, autocomplete: "off",
                         class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
@@ -88,13 +98,11 @@
                     <br />
                     <i class="caption grey mt1">(leave it blank if you don't want to change it)</i>
                   </div>
-                </div>
-
-                <div class="flex flex-row">
                   <div class="w-40">
                     <%= f.label :password_confirmation, class: "subtitle-2 grey db mb1 ttc" %>
                     <%= f.password_field :password_confirmation, autocomplete: "off",
-                        class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
+                        class: "grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" 
+                    %>
                   </div>
                 </div>
               </div>

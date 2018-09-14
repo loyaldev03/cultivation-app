@@ -2,8 +2,11 @@
   <%= breadcrumbs ["Settings", settings_path], "Purchasing"%>
 <% end %> 
 
-<h1 class="pl4">Purchasing</h1>
-
-<div class="ma4">
-  <%= link_to "Vendors", purchasing_vendors_path %>
+<div class="pa4">
+  <h5 class="tl pa0 ma0 h5--font dark-grey ttc">Purchasing</h5>
+  
+  <%= link_to purchasing_vendors_path, 
+      class: 'mt4 w-20 h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+    Vendors
+  <% end %>
 </div>

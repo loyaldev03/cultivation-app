@@ -1,7 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 import BatchLocationEditor from './BatchLocationEditor'
-import { joinBy } from '../../utils/ArrayHelper'
+import { joinBy, sumBy } from '../../utils/ArrayHelper'
 
 const QuantityField = ({ plant, onEdit }) => {
   if (plant) {
@@ -86,12 +86,31 @@ class BatchLocationApp extends React.Component {
     const found = this.getSelected(plantConfig.id)
     found.quantity = plantConfig.quantity
     found.trays = plantConfig.trays
+    const selectedPlants = this.state.selectedPlants.map(x => (x.id === plantConfig.id ? plantConfig : x))
     this.setState({
-      selectedPlants: this.state.selectedPlants.map(
-        x => (x.id === plantConfig.id ? plantConfig : x)
-      )
+      selectedPlants
     })
-    // TODO: Update remaining count in this.state.locations
+  }
+
+  getAvailableLocations = (plantId) => {
+    const plant = this.getSelected(plantId)
+    const { selectedPlants, locations } = this.state
+    const allPlantsTrays = selectedPlants.filter(p => p.id !== plantId)
+                                         .reduce((acc, val) => acc.concat(val.trays || []), [])
+    const remainingLocations = locations.map((loc) => {
+      const found = allPlantsTrays.filter(t => t.tray_id === loc.tray_id)
+      if (found && found.length > 0) {
+        const newTrayPlannedCapacity = parseInt(loc.planned_capacity) + sumBy(found, 'tray_capacity')
+        const newLoc = {
+          ...loc,
+          planned_capacity: newTrayPlannedCapacity,
+          remaining_capacity: parseInt(loc.tray_capacity) - newTrayPlannedCapacity
+        }
+        return newLoc
+      }
+      return loc
+    })
+    return remainingLocations
   }
 
   isDisableNext = () => {
@@ -111,7 +130,12 @@ class BatchLocationApp extends React.Component {
 
   render() {
     const plants = this.state.dummyPlants
-    const { locations, editingPlant } = this.state
+    const { editingPlant } = this.state
+    const availableLocations = this.getAvailableLocations(editingPlant.id)
+
+    console.log('remainingLocations 1st tray >> ', availableLocations[0].remaining_capacity)
+    console.log('remainingLocations 2nd tray >> ', availableLocations[1].remaining_capacity)
+
     return (
       <div>
         {this.state.fromMotherPlant && (
@@ -178,7 +202,7 @@ class BatchLocationApp extends React.Component {
               <BatchLocationEditor
                 key={editingPlant.id}
                 plant={editingPlant}
-                locations={this.props.locations}
+                locations={availableLocations}
                 onSave={this.onEditorSave}
                 onClose={this.closeSidebar}
               />

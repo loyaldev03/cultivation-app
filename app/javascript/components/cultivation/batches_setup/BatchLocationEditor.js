@@ -25,14 +25,36 @@ const SelectWithRange = ({ min, max, onChange, selectedValue = 0 }) => {
   )
 }
 
-const LocationBox = ({ highlighted, onClick, isSelected, name, code, showChangeText, remainingCapacity = 0, selectedCapacity = 0, totalCapacity = 0 }) => (
+const BadgeNumber = ({ show, value = 0}) => {
+  if (show && value > 0) {
+    return (
+      <span className="badge badge--green">
+        {value}
+      </span>
+    )
+  }
+  return null
+}
+
+const LocationBox = ({
+  highlighted,
+  onClick,
+  isSelected,
+  name,
+  code,
+  showChangeText,
+  plannedCapacity = 0,
+  selectedCapacity = 0,
+  totalCapacity = 0
+}) => (
   <a
     href="#0"
     className={classNames('db f6 link ba b--gray pa2 pointer relative br2 dim', {
       'bg-orange white bn': highlighted,
+      'bg-light-gray black-50 bn': plannedCapacity == totalCapacity,
     })}
     style={{ "height": "100px" }}
-    onClick={onClick}
+    onClick={(plannedCapacity == totalCapacity) ? null : onClick}
   >
     {!!name &&
       <span className="ttc db">{name}</span>
@@ -40,14 +62,11 @@ const LocationBox = ({ highlighted, onClick, isSelected, name, code, showChangeT
     {!!code &&
       <span className="db ttu">ID: {code} </span>
     }
-    {(!!totalCapacity && totalCapacity > 0) &&
-      <span className="db">Capacity: {selectedCapacity + remainingCapacity}/{totalCapacity}</span>
-    }
-    {(!!isSelected && selectedCapacity > 0) &&
-      <span className="bg-green h1 db absolute top-0 right-0 w1 br3 ma1 tc white f7">
-        {selectedCapacity}
-      </span>
-    }
+    <span className="db">Planned: {plannedCapacity}</span>
+    <span className="db">Total: {totalCapacity}</span>
+
+    <BadgeNumber show={isSelected} value={selectedCapacity} />
+
     {showChangeText && <span className="db hide-child"><span>Change</span></span>}
   </a>
 )
@@ -108,6 +127,7 @@ class BatchLocationEditor extends React.PureComponent {
     const traySel = this.state.selectedTrays.find(t => t.tray_id === trayId)
     if (selectedLocation) {
       const trayObj = {
+        plant_id: this.props.plant.id,
         room_id: selectedLocation.room_id,
         row_id: selectedLocation.row_id,
         shelf_id: selectedLocation.shelf_id,
@@ -115,9 +135,11 @@ class BatchLocationEditor extends React.PureComponent {
         tray_code: selectedLocation.tray_code,
         tray_capacity: e.target.value,
       }
+
       const selectedTrays = traySel ?
         this.state.selectedTrays.map(t => t.tray_id === trayId ? trayObj : t) :
         this.state.selectedTrays.concat([trayObj])
+
       this.setState({
         selectedTrays,
         selectedLocation
@@ -139,7 +161,10 @@ class BatchLocationEditor extends React.PureComponent {
       selectedShelf: loc.shelf_id,
       selectedLocation: loc,
       showAddLocation: true,
-      showTrayList: false,
+      showRoomList: true,
+      showRowList: true,
+      showShelfList: true,
+      showTrayList: true,
     })
   }
 
@@ -233,26 +258,26 @@ class BatchLocationEditor extends React.PureComponent {
     const selectedTraysCapacity = parseInt(selectedTrays.reduce((a, v) => a + parseInt(v.tray_capacity), 0))
 
     return (
-      <div className="h-100">
+      <div className="h-100 flex flex-column">
         <div className="ph4 pv3 bb b--light-grey">
           <h5 className="h6--font dark-grey ma0">Quantity &amp; Location</h5>
         </div>
-        <div className="ph4 pv3 h-100">
-          <form
-            className="flex flex-column justify-between"
-            onSubmit={e => {
-              e.preventDefault()
-              const updatePlant = {
-                id: plant.id,
-                quantity: selectedTraysCapacity,
-                trays: selectedTrays,
-              }
-              onSave(updatePlant)
-            }}
-          >
-            <span className="subtitle-2 grey db mt3 mb1">PlantID: {plant.id}</span>
-
+        <form
+          className="ph4 pv3 h-100 flex-auto flex flex-column justify-between"
+          onSubmit={e => {
+            e.preventDefault()
+            const updatePlant = {
+              id: plant.id,
+              quantity: selectedTraysCapacity,
+              trays: selectedTrays,
+            }
+            onSave(updatePlant)
+          }}
+        >
+          <div>
             <div className="mt2">
+              <span className="subtitle-2 grey db mt3 mb1">PlantID: {plant.id}</span>
+
               <label className="subtitle-2 grey db mb1">Locations:</label>
               {selectedTrays && selectedTrays.length > 0 &&
                 <table className="collapse ba br2 b--black-10 pv2 ph3 f6 w-100">
@@ -310,6 +335,7 @@ class BatchLocationEditor extends React.PureComponent {
                       {Object.keys(rooms).map(roomId => {
                         const firstRoom = rooms[roomId][0]
                         const roomCapacity = sumBy(rooms[roomId], 'shelf_capacity')
+                        const plannedCapacity = sumBy(rooms[roomId], 'planned_capacity')
                         const selectedCapacity = sumBy(selectedTrays.filter(t => t.room_id === roomId), 'tray_capacity')
                         return (
                           <LocationBox
@@ -319,7 +345,7 @@ class BatchLocationEditor extends React.PureComponent {
                             isSelected={this.isSelected(roomId, 'room')}
                             name={firstRoom.room_name}
                             code={firstRoom.room_code}
-                            remainingCapacity={0}
+                            plannedCapacity={plannedCapacity}
                             selectedCapacity={selectedCapacity}
                             totalCapacity={roomCapacity}
                           />
@@ -341,6 +367,7 @@ class BatchLocationEditor extends React.PureComponent {
                       {Object.keys(rows).map(rowId => {
                         const firstRow = rows[rowId][0]
                         const rowCapacity = sumBy(rows[rowId], 'shelf_capacity')
+                        const plannedCapacity = sumBy(rows[rowId], 'planned_capacity')
                         const selectedCapacity = sumBy(selectedTrays.filter(t => t.row_id === rowId), 'tray_capacity')
                         return (
                           <LocationBox
@@ -350,7 +377,7 @@ class BatchLocationEditor extends React.PureComponent {
                             isSelected={this.isSelected(rowId, 'row')}
                             name={firstRow.row_name}
                             code={firstRow.row_code}
-                            remainingCapacity={0}
+                            plannedCapacity={plannedCapacity}
                             selectedCapacity={selectedCapacity}
                             totalCapacity={rowCapacity}
                           />
@@ -372,8 +399,8 @@ class BatchLocationEditor extends React.PureComponent {
                       {Object.keys(shelves).map(shelfId => {
                         const firstShelf = shelves[shelfId][0]
                         const shelfCapacity = firstShelf.shelf_capacity
+                        const plannedCapacity = sumBy(shelves[shelfId], 'planned_capacity')
                         const selectedCapacity = sumBy(selectedTrays.filter(t => t.shelf_id === shelfId), 'tray_capacity')
-                        // console.log({ firstShelf, code: firstShelf.shelf_code })
                         return (
                           <LocationBox
                             key={shelfId}
@@ -381,7 +408,7 @@ class BatchLocationEditor extends React.PureComponent {
                             onClick={this.onSelectShelf(shelfId)}
                             isSelected={this.isSelected(shelfId, 'shelf')}
                             code={firstShelf.shelf_code}
-                            remainingCapacity={0}
+                            plannedCapacity={plannedCapacity}
                             selectedCapacity={selectedCapacity}
                             totalCapacity={shelfCapacity}
                           />
@@ -403,21 +430,26 @@ class BatchLocationEditor extends React.PureComponent {
                   {showTrayList &&
                     <React.Fragment>
                       {trays.map(tray => {
+                        const plannedCapacity = sumBy(trays, 'planned_capacity')
+                        const isSelected = this.isSelected(tray.tray_id, 'tray')
+                        const selectedCapacity = this.getSelectedTrayCapacity(tray.tray_id)
                         return (
                           <a
                             href="#0"
                             key={tray.tray_id}
                             className={classNames('db f6 link ba b--gray pa2 pointer relative br2 dim', {
-                              'bg-orange white bn': this.isSelected(tray.tray_id, 'tray')
+                              'bg-orange white bn': isSelected
                             })}
-                            style={{ "height": "100px", "width": "95px" }}
+                            style={{ "height": "100px" }}
                           >
+                            <BadgeNumber show={isSelected} value={selectedCapacity} />
                             <span className="db">{tray.tray_code}</span>
+                            <span className="db">Planned: {plannedCapacity}</span>
                             <span className="dib">Select Capacity:</span>
                             <SelectWithRange
                               min={0}
                               max={tray.remaining_capacity}
-                              selectedValue={this.getSelectedTrayCapacity(tray.tray_id)}
+                              selectedValue={selectedCapacity}
                               onChange={this.onSelectTray(tray.tray_id)}
                             /> / <span>{tray.tray_capacity}</span>
                           </a>
@@ -430,14 +462,12 @@ class BatchLocationEditor extends React.PureComponent {
                 <a href="#0" className="link ph2 pv1 ba bg-gray db w3 mt2 tc center f6 br2 white" onClick={this.onDoneSelectTray}>Close</a>
               </div>
             }
-            {!showAddLocation &&
-              <div className="mt3">
-                <input type="submit" value="Save" className="btn btn--primary dim br2" />
-                <a href="#0" className="link btn mr2" onClick={onClose}>Cancel</a>
-              </div>
-            }
-          </form>
-        </div>
+          </div>
+          <div className="mt3 tr">
+            <a href="#0" className="link btn mr2" onClick={onClose}>Cancel</a>
+            <input type="submit" value="Save" className="btn btn--primary dim br2" />
+          </div>
+        </form>
       </div>
     )
   }

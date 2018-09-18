@@ -67,7 +67,6 @@ class TaskList extends React.Component {
   }
 
   handleAddTask = row => {
-    // console.log(row.row.id)
     editorSidebarHandler.open({ width: '500px', data: {}, action: 'add' })
   }
 
@@ -93,49 +92,32 @@ class TaskList extends React.Component {
 
       //the dropped header
       header.ondragover = e => {
-        // e.target.style.borderColor = "red"
-        // console.log(e)
         e.preventDefault()
       }
 
       header.ondragenter = e => {
-        console.log('enter')
-        // e.target.style.borderColor = "red"
         e.target.closest('.rt-tr-group').style.borderBottomColor =
           'rgb(255,112,67)'
       }
 
       header.ondragleave = e => {
-        console.log('leave')
         e.target.closest('.rt-tr-group').style.borderBottomColor = ''
       }
 
       header.ondrop = e => {
         e.preventDefault()
         e.target.closest('.rt-tr-group').style.borderBottomColor = ''
-
-        // console.log(i === "")
-        // console.log(i)
-        // console.log(this.dragged === "")
-        // console.log(this.dragged)
         if (this.dragged !== null && i !== null) {
           TaskStore.splice(i, 0, TaskStore.splice(this.dragged, 1)[0])
+          updateTask.updatePosition(this.props.batch_id, i, this.dragged)
+
         }
-        // if (i !== null && this.dragged !== null) {
-        //   TaskStore.splice(i, 0, TaskStore.splice(this.dragged, 1)[0]);
-        //   console.log('checking ')
-        //   console.log(i == "")
-        //   console.log(this.dragged == "")
-        // }
-        // updateTask.updatePosition(this.state, i, this.dragged)
       }
     })
   }
 
   render() {
     let tasks = TaskStore
-
-    // this.reorder.forEach(o => tasks.splice(o.a, 0, tasks.splice(o.b, 1)[0]));
 
     return (
       <React.Fragment>

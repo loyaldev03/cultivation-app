@@ -17,7 +17,14 @@ class Cultivation::BatchesController < ApplicationController
 
   def show
     @record = Cultivation::BatchForm.new(params[:id])
-
+    @batch_attributes = {
+      id: @record.id,
+      strain: @record.strain_id,
+      batch_source: @record.batch_source,
+      grow_method: @record.grow_method,
+      start_date: @record.start_date.try(:strftime, '%m/%d/%Y'),
+      estimated_harvest_date: @record.estimated_harvest_date.try(:strftime, '%m/%d/%Y'),
+    }
     # TODO: Use other params
     if params[:step].present?
       # TODO: Get start date and end date from batch (@record)

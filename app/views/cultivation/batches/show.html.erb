@@ -16,10 +16,7 @@
           } %>
       <% else %>
         <div class="fl w-100 flex flex-column">
-          <h5 class="tl pa0 ma0 h5--font dark-grey">Task List</h5>
-          <p class="mt2 body-1 grey">
-          </p>
-          <%= react_component 'cultivation/tasks_setup/TaskSetup', {batch_id: @record.id} %>
+          <%= react_component 'cultivation/tasks_setup/TaskSetup', {batch_id: @record.id, batch: @batch_attributes} %>
         </div>
       <% end %>
     </div>

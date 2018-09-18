@@ -16,6 +16,9 @@ class TaskList extends React.Component {
   constructor(props) {
     super(props)
     this.dragged = null
+    this.state = {
+      batch: this.props.batch
+    }
   }
 
   componentDidMount() {
@@ -67,7 +70,6 @@ class TaskList extends React.Component {
   }
 
   handleAddTask = row => {
-    // console.log(row.row.id)
     editorSidebarHandler.open({ width: '500px', data: {}, action: 'add' })
   }
 
@@ -93,41 +95,25 @@ class TaskList extends React.Component {
 
       //the dropped header
       header.ondragover = e => {
-        // e.target.style.borderColor = "red"
-        // console.log(e)
         e.preventDefault()
       }
 
       header.ondragenter = e => {
-        console.log('enter')
-        // e.target.style.borderColor = "red"
         e.target.closest('.rt-tr-group').style.borderBottomColor =
           'rgb(255,112,67)'
       }
 
       header.ondragleave = e => {
-        console.log('leave')
         e.target.closest('.rt-tr-group').style.borderBottomColor = ''
       }
 
       header.ondrop = e => {
         e.preventDefault()
         e.target.closest('.rt-tr-group').style.borderBottomColor = ''
-
-        // console.log(i === "")
-        // console.log(i)
-        // console.log(this.dragged === "")
-        // console.log(this.dragged)
         if (this.dragged !== null && i !== null) {
           TaskStore.splice(i, 0, TaskStore.splice(this.dragged, 1)[0])
+          updateTask.updatePosition(this.props.batch_id, i, this.dragged)
         }
-        // if (i !== null && this.dragged !== null) {
-        //   TaskStore.splice(i, 0, TaskStore.splice(this.dragged, 1)[0]);
-        //   console.log('checking ')
-        //   console.log(i == "")
-        //   console.log(this.dragged == "")
-        // }
-        // updateTask.updatePosition(this.state, i, this.dragged)
       }
     })
   }
@@ -135,18 +121,90 @@ class TaskList extends React.Component {
   render() {
     let tasks = TaskStore
 
-    // this.reorder.forEach(o => tasks.splice(o.a, 0, tasks.splice(o.b, 1)[0]));
-
     return (
       <React.Fragment>
         {tasks}
-        <div className="mb4">
-          <a
-            className="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim"
-            onClick={this.handleAddTask}
-          >
-            New Task
-          </a>
+        <div className=" flex">
+          <div className="w-40">
+            <h4 className="tl pa0 ma0 h6--font dark-grey">Task List</h4>
+          </div>
+          <div className="w-40">
+            <div className="mb4 mt2">
+              <a
+                className="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim"
+                onClick={this.handleAddTask}
+              >
+                New Task
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="mb3 flex">
+          <div className="w-50">
+            <div className=" flex">
+              <div className="w-40">
+                <label>Batch Source</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.batch_source}</label>
+                </div>
+              </div>
+            </div>
+            <div className=" flex">
+              <div className="w-40">
+                <label>Batch Id</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.id['$oid']}</label>
+                </div>
+              </div>
+            </div>
+            <div className=" flex">
+              <div className="w-40">
+                <label>Start Date</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.start_date}</label>
+                </div>
+              </div>
+            </div>
+
+            <div className=" flex">
+              <div className="w-40">
+                <label>Estimated Harvest Date</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.estimated_harvest_date}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="w-50">
+            <div className=" flex">
+              <div className="w-20">
+                <label>Grow Method</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.grow_method}</label>
+                </div>
+              </div>
+            </div>
+            <div className=" flex">
+              <div className="w-20">
+                <label>Strain</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.strain}</label>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <ReactTable

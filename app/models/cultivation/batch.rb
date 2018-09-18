@@ -11,7 +11,7 @@ module Cultivation
     field :facility_id, type: BSON::ObjectId
     field :grow_method, type: String
 
-    has_one :tray_plan, class_name:'Cultivation::TrayPlan'
+    has_one :tray_plan, class_name: 'Cultivation::TrayPlan'
     has_many :tasks, class_name: 'Cultivation::Task'
 
     def phases
@@ -19,7 +19,7 @@ module Cultivation
     end
 
     def orphan_tasks
-      tasks.where(parent_id: "", isPhase: false, isCategory: false)
+      tasks.where(parent_id: '', isPhase: false, isCategory: false)
     end
 
     def generate_tree
@@ -41,7 +41,7 @@ module Cultivation
     end
 
     def dependent_task(tasks, task)
-      return if task.tasks_depend.count == 0 
+      return if task.tasks_depend.count == 0
       task.tasks_depend.each do |task_depend|
         tasks << task_depend
         task_depend.children.each do |children|
@@ -50,7 +50,5 @@ module Cultivation
         dependent_task(tasks, task_depend)
       end
     end
-
-
   end
 end

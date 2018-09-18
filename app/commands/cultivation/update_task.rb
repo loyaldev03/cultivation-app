@@ -10,7 +10,7 @@ module Cultivation
 
     def call
       task = Cultivation::Task.find(@args[:id]['$oid'])
-      if @args[:type] == "position"
+      if @args[:type] == 'position'
         update_position(task, @args[:position])
       else
         update_task(task, @args)
@@ -19,7 +19,7 @@ module Cultivation
 
         # TO DO should this update task be recursive ? what if parent task end_date is extended beyond its parent task ?
 
-        update_task(task.parent, {end_date: task.end_date}, {children: false}) if task.parent and (task.end_date > task.parent.end_date) 
+        update_task(task.parent, {end_date: task.end_date}, {children: false}) if task.parent and (task.end_date > task.parent.end_date)
       end
       task
     end
@@ -28,8 +28,7 @@ module Cultivation
       task.move_to! (position)
     end
 
-
-    def update_task(task, args, opt={})
+    def update_task(task, args, opt = {})
       Rails.logger.debug "args => #{args}"
       args[:start_date] = args[:start_date].to_date + 1.days
       args[:end_date] = args[:end_date].to_date + 1.days
@@ -40,8 +39,8 @@ module Cultivation
       task
     end
 
-    def find_changes(task, array, opt={})
-      return if(task.children.count == 0 and task.tasks_depend.count == 0)
+    def find_changes(task, array, opt = {})
+      return if (task.children.count == 0 and task.tasks_depend.count == 0)
 
       if opt[:children] != false #used for avoid updating children task
         task.children.each do |child|
@@ -71,25 +70,20 @@ module Cultivation
 
     def bulk_update(array)
       bulk_order = array.map do |arr|
-        { update_one:
-          {
-            filter: { _id: arr.id },
-            update: { :'$set' => {
-              start_date: arr.start_date,
-              end_date: arr.end_date
-            }}
-          }
-        }
+        {update_one: {
+          filter: {_id: arr.id},
+          update: {:'$set' => {
+            start_date: arr.start_date,
+            end_date: arr.end_date,
+          }},
+        }}
       end
       Cultivation::Task.collection.bulk_write(bulk_order)
     end
-
-
   end
 end
 
-
-    #def find_task_related(task)
+#def find_task_related(task)
 #       return if(task.children.count == 0 and task.tasks_depend.count == 0)
 
 #       task.children.each do |child|
@@ -112,5 +106,3 @@ end
 #assign all the tasks to a variable
 #loop and change <- update -- can test the update
 #loop and save <- save -- can test its save
-
-

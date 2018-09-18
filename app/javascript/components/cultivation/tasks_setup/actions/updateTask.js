@@ -3,7 +3,6 @@ import { fadeToast, toast } from '../../../utils/toast'
 import loadTasks from './loadTask'
 
 class updateTask {
-
   updateTask(state) {
     let id = state.id['$oid']
     let url = `/api/v1/batches/${state.batch_id['$oid']}/tasks/${id}`
@@ -12,7 +11,7 @@ class updateTask {
       credentials: 'include',
       body: JSON.stringify({ task: state }),
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       }
     })
       .then(response => response.json())
@@ -20,25 +19,23 @@ class updateTask {
         console.log(data.data)
         if (data.data.id != null) {
           toast('Task Updated', 'success')
-          let task = TaskStore.find(e => e.id === data.data.id);
+          let task = TaskStore.find(e => e.id === data.data.id)
           console.log(data.data)
           console.log(JSON.stringify(task))
           console.log(JSON.stringify(task.attributes))
 
           TaskStore.forEach((element, index) => {
             if (element.id === data.data.id) {
-              TaskStore[index] = data.data;
+              TaskStore[index] = data.data
             }
-          });
+          })
 
           loadTasks.loadbatch(state.batch_id)
           window.editorSidebar.close()
-
+        } else {
+          toast('Something happen', 'error')
         }
-        else { toast('Something happen', 'error') }
       })
-
-
   }
 
   updatePosition(state, a, b) {

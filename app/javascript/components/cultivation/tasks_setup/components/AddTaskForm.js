@@ -6,9 +6,8 @@ import Select from 'react-select'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import { fadeToast, toast } from '../../../utils/toast'
 import reactSelectStyle from './../../../utils/reactSelectStyle'
-import { throws } from "assert";
+import { throws } from 'assert'
 import createTask from '../actions/createTask'
-
 
 class AddTaskForm extends React.Component {
   constructor(props) {
@@ -78,7 +77,7 @@ class AddTaskForm extends React.Component {
     // this.setState({ value: value });
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     createTask.createTask(this.state)
   }
 
@@ -124,7 +123,6 @@ class AddTaskForm extends React.Component {
           </div>
         </div>
         <div className="ph4 mt3 mb3 flex">
-
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Start Date</label>
             <DatePicker

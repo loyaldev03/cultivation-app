@@ -34,7 +34,7 @@ export default class HarvestYieldEditor extends React.Component {
     this.motherPicker = React.createRef()
   }
 
-  onStrainSelected = ({strain, strain_type}) => {
+  onStrainSelected = ({ strain, strain_type }) => {
     this.setState({ strain, strain_type })
   }
 
@@ -90,20 +90,26 @@ export default class HarvestYieldEditor extends React.Component {
       weight_type,
       weight,
       weight_unit,
-      harvested_on,
+      harvested_on
     } = this.state
 
-    const { mother_id, isValid: isMotherValid } = this.motherPicker.current.getValues()
+    const {
+      mother_id,
+      isValid: isMotherValid
+    } = this.motherPicker.current.getValues()
     const { isValid: isStrainValid } = this.strainPicker.current.validate()
 
-    let errors= {}
+    let errors = {}
 
     if (strain.length == 0) {
       errors = { ...errors, strain: ['Strain is required.'] }
     }
 
     if (cultivation_batch_id.length == 0) {
-      errors = { ...errors, cultivation_batch_id: ['Cultivation Batch ID is required.'] }
+      errors = {
+        ...errors,
+        cultivation_batch_id: ['Cultivation Batch ID is required.']
+      }
     }
 
     if (weight <= 0) {
@@ -115,11 +121,14 @@ export default class HarvestYieldEditor extends React.Component {
     }
 
     if (location_id.length <= 0) {
-      errors = { ...errors, location_id: ['Harvest yield location is required.'] }
+      errors = {
+        ...errors,
+        location_id: ['Harvest yield location is required.']
+      }
     }
 
-    const isValid = 
-      Object.getOwnPropertyNames(errors).length === 0 && 
+    const isValid =
+      Object.getOwnPropertyNames(errors).length === 0 &&
       isMotherValid &&
       isStrainValid
 
@@ -246,7 +255,7 @@ export default class HarvestYieldEditor extends React.Component {
         <div className="ph4 mt3 flex">
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Weight Type</label>
-            <select 
+            <select
               className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 select"
               value={this.state.weight_type}
               onChange={this.onWeightTypeChanged}
@@ -258,20 +267,19 @@ export default class HarvestYieldEditor extends React.Component {
                 Wet
               </option>
             </select>
-            
           </div>
           <div className="w-50 pl3">
             <div className="flex">
               <div className="w-50">
-                <NumericInput 
+                <NumericInput
                   value={this.state.weight}
-                  label="Weight" 
+                  label="Weight"
                   onChange={this.onWeightChanged}
                 />
               </div>
               <div className="w-50 pl3">
                 <label className="f6 fw6 db mb1 gray ttc">Weight Unit</label>
-                <select 
+                <select
                   className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 select"
                   onChange={this.onWeightUnitChanged}
                 >
@@ -292,13 +300,12 @@ export default class HarvestYieldEditor extends React.Component {
             </div>
             <FieldError errors={this.state.errors} field="weight" />
           </div>
-          
         </div>
 
         <div className="ph4 mt3 flex">
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray">Harvested On</label>
-            <CalendarPicker 
+            <CalendarPicker
               value={this.state.harvested_on}
               onChange={this.onHarvestDateChanged}
             />

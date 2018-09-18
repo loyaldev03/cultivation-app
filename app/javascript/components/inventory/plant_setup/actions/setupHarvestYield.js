@@ -20,7 +20,6 @@ export default function setupHarvestYield(payload) {
       }))
     })
     .then(result => {
-
       console.log(result)
       const { status, data } = result
       if (status == 200) {

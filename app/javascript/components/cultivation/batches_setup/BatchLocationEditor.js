@@ -250,8 +250,7 @@ class BatchLocationEditor extends React.PureComponent {
       selectedRoom,
       selectedRow,
       selectedShelf,
-      selectedTrays,
-      selectedLocation
+      selectedTrays
     } = this.state
     let rooms = []
     let rows = []
@@ -299,7 +298,7 @@ class BatchLocationEditor extends React.PureComponent {
           <div>
             <div className="mt2">
               <span className="subtitle-2 grey db mt3 mb1">
-                PlantID: {plant.id}
+                PlantID: {plant.serialNo}
               </span>
 
               <label className="subtitle-2 grey db mb1">Locations:</label>

@@ -1,23 +1,22 @@
 <div class="h-100 flex flex-column">
-<div class="ph4 pv3 bb b--light-grey">
-  <h1 class="h6--font dark-grey ma0">Row & Shelf Details</h1>
-</div>
-
-<div class="flex flex-row item-center justify-around pv2 ph3 bb b--light-grey">
-  <div class="flex flex-column justify-center items-center">
-    <%= image_tag 'row-icon.svg', class: "h3 w3 db" %>
-    <span class="dark-grey h6--font">Row</span>
+  <div class="ph4 pv3 bb b--light-grey">
+    <h1 class="h6--font dark-grey ma0">Row & Shelf Details</h1>
   </div>
 
-  <div class="flex flex-column justify-center items-center">
-    <%= image_tag 'shelf-icon.svg', class: "h3 w3 db" %>
-    <span class="dark-grey h6--font">Shelf &amp; Tray</span>
-  </div>
-</div>
+  <div class="flex flex-row item-center justify-around pa3 bb b--light-grey">
+    <div class="flex flex-column justify-center items-center">
+      <%= image_tag 'row-icon.svg', class: "h3 w3 db" %>
+      <span class="dark-grey h6--font">Row</span>
+    </div>
 
-<div class="db measure">
-  <div class="box--scrollable w-100">
-    <div class="ph4">
+    <div class="flex flex-column justify-center items-center">
+      <%= image_tag 'shelf-icon.svg', class: "h3 w3 db" %>
+      <span class="dark-grey h6--font">Shelf &amp; Tray</span>
+    </div>
+  </div>
+  
+  <div class="flex flex-column justify-between w-100">
+    <div class="ph4 mt4">
       <div class="tab-control">
         <% shelves.each_with_index do |shelf, i| %>
           <%= link_to "Shelf #{i+1}",
@@ -32,14 +31,15 @@
       </div>
     </div>
 
-    <%= form_with scope: :shelf_trays_info, url: update_shelf_trays_path do |f| %>
+    <%= form_with scope: :shelf_trays_info, url: update_shelf_trays_path,
+        class: "h-100 flex-auto flex flex-column justify-between" do |f| %>
       <%= f.hidden_field :facility_id, value: facility_id %>
       <%= f.hidden_field :room_id, value: room_id %>
       <%= f.hidden_field :row_id, value: row_id %>
       <%= f.hidden_field :id, value: shelf_id %>
       
       <div class="ph4">
-        <div class="mt3 w-100">
+        <div class="mt4 w-100">
           <div class="mb3 flex flex-column">
             <label class="subtitle-2 grey db mb1">Shelf ID</label>
             <%= f.text_field :code, value: shelf_code, required: true,
@@ -144,5 +144,4 @@
       </div>
     <% end %>
   </div>
-</div>
 </div>

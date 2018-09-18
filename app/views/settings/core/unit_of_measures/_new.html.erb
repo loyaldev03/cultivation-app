@@ -2,35 +2,37 @@
   <%= simple_form_for :record, 
       url: settings_core_unit_of_measures_path, 
       remote: true, 
-      method: :post, 
+      method: :post,
+      wrapper: false,
       html: { 
         class: 'vertical-form h-100 flex flex-column justify-between' 
       } do |f|
   %>
 
     <div class="">
-      <div class="mb2">
+      <div class="mb3 flex flex-column">
         <%= f.input :name, label: 'Name',
-          label_html: { class: 'w-100 dib f6 fw5 gray' }, 
-          input_html: { class: 'w-70 ph2 pv1 gray ba b--black-20 br2 outline-0' } 
+          label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+          input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
         %>
       </div>
 
-      <div class="mb2">
+      <div class="mb3">
         <%= f.input :code, label: 'Code',
-          label_html: { class: 'w-100 dib f6 fw5 gray' }, 
+          label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
           input_html: { class: 'w-30 ph2 pv1 gray ba b--black-20 br2 outline-0' } 
         %>
       </div>
 
-      <div class="mb2">
+      <div class="mb3">
         <%= f.input :desc, label: 'Description',
           as: :text,
-          label_html: { class: 'w-100 dib f6 fw5 gray' }, 
-          input_html: { class: 'w-70 ph2 pv1 gray ba b--black-20 br2 outline-0', rows: 5 } 
+          label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+          input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
         %>
       </div>
-      <div class="mt4">
+
+      <div class="">
         <span class="f5 fw5">Is this a base unit?</span>
         <p class="gray f6 lh-copy mt1 w-90">
                 If toggle is not selected, then that means that its not a base unit.
@@ -56,16 +58,16 @@
             label: false,
             collection: @record.base_uom_select,
             value_method: :code,
-            label_html: { class: 'w-100 dib f6 fw5 gray' }, 
-            input_html: { class: 'w-70 ph2 pv1 gray ba b--black-20 br2 outline-0', rows: 5 } 
+            label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+            input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
           %>
         </div>
       </div>
 
       <div class="mb2">
         <%= f.input :conversion, label: 'Conversion',
-          label_html: { class: 'w-100 dib f6 fw5 gray' }, 
-          input_html: { class: 'w-70 ph2 pv1 gray ba b--black-20 br2 outline-0', rows: 5 } 
+          label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+          input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
         %>
       </div>
     </div>

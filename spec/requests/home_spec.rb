@@ -22,7 +22,6 @@ RSpec.describe "Home", :type => :request do
         get root_path
 
         expect(response.status).to eq(200)
-        expect(response.body).to include("Dashboard")
       end
     end
   end

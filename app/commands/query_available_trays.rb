@@ -1,16 +1,19 @@
 class QueryAvailableTrays
   prepend SimpleCommand
 
-  attr_reader :facility_id, :start_date, :end_date
+  attr_reader :facility_id, :start_date, :end_date, :purpose
 
   def initialize(start_date, end_date, filter = {})
     raise ArgumentError, 'start_date' if start_date.nil?
     raise ArgumentError, 'end_date' if end_date.nil?
     raise ArgumentError, 'start_date should be ealier than end_date' if end_date <= start_date
     
-    @facility_id = filter[:facility_id] if filter.key?(:facility_id)
     @start_date = start_date.beginning_of_day
     @end_date = end_date.end_of_day
+
+    # Optional filters
+    @facility_id = filter[:facility_id]
+    @purpose = filter[:purpose]
   end
 
   def call
@@ -61,6 +64,10 @@ class QueryAvailableTrays
         }
       },
       { "$unwind": { path: "$section", preserveNullAndEmptyArrays: true } },
+      { "$addFields": {
+          "tray_purpose": { "$ifNull": [ "$section.section_purpose", "$rooms.purpose" ] }
+        }
+      },
       { "$lookup": {
           from: "trays",
           localField: "rooms.rows.shelves._id",
@@ -127,6 +134,7 @@ class QueryAvailableTrays
           tray_code: "$trays.code",
           tray_capacity: "$trays.capacity",
           tray_capacity_type: "$trays.capacity_type",
+          tray_purpose: 1,
           planned_capacity: 1,
           remaining_capacity: 1,
         }
@@ -158,6 +166,7 @@ class QueryAvailableTrays
         tray_code: x[:tray_code],
         tray_capacity: x[:tray_capacity],
         tray_capacity_type: x[:tray_capacity_type],
+        tray_purpose: x[:tray_purpose],
         planned_capacity: x[:planned_capacity],
         remaining_capacity: x[:remaining_capacity],
       }).marshal_dump

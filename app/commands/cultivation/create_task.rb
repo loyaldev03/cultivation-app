@@ -21,9 +21,5 @@ module Cultivation
       Rails.logger.debug "Errors ==> #{task.inspect}"
       task
     end
-
-    
-
   end
 end
-

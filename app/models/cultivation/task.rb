@@ -25,7 +25,6 @@ module Cultivation
     embeds_many :users, class_name: 'User'
     belongs_to :batch, class_name: 'Cultivation::Batch'
 
-
     def tasks_depend
       batch.tasks.where(depend_on: self.id)
     end
@@ -33,10 +32,9 @@ module Cultivation
     def children
       batch.tasks.where(parent_id: self.id)
     end
-    
+
     def parent
       batch.tasks.find_by(id: self.parent_id)
     end
-
   end
 end

@@ -24,9 +24,17 @@ class QueryAvailableTrays
 
   def match_facility
     if @facility_id
-      {"$match": { _id: @facility_id.to_bson_id} }
+      {"$match": {_id: @facility_id.to_bson_id} }
     else
-      {"$match": {} }
+      {"$match": {}}
+    end
+  end
+
+  def match_purpose
+    if @purpose
+      {"$match": {tray_purpose: @purpose} }
+    else
+      {"$match": {}}
     end
   end
 
@@ -68,6 +76,7 @@ class QueryAvailableTrays
           "tray_purpose": { "$ifNull": [ "$section.section_purpose", "$rooms.purpose" ] }
         }
       },
+      match_purpose,
       { "$lookup": {
           from: "trays",
           localField: "rooms.rows.shelves._id",

@@ -1,46 +1,13 @@
 import React from 'react'
-import classNames from 'classnames'
+import BatchPlantSelectionList from './BatchPlantSelectionList'
 import BatchLocationEditor from './BatchLocationEditor'
-import { joinBy, sumBy } from '../../utils/ArrayHelper'
-
-const QuantityField = ({ plant, onEdit }) => {
-  if (plant) {
-    const text = plant.quantity ? plant.quantity : 'Set Quantity'
-    return (
-      <span className="blue pointer" onClick={() => onEdit(plant.id)}>
-        {text}
-      </span>
-    )
-  }
-  return null
-}
-
-const LocationField = ({ plant, onEdit }) => {
-  if (plant) {
-    const text = plant.trays ? joinBy(plant.trays, 'tray_code') : 'Set Location'
-    return (
-      <a
-        href="#0"
-        className="link blue pointer"
-        onClick={() => onEdit(plant.id)}
-      >
-        {text}
-      </a>
-    )
-  }
-  return null
-}
+import { sumBy } from '../../utils/ArrayHelper'
 
 class BatchLocationApp extends React.Component {
   state = {
     fromMotherPlant: true,
     selectedPlants: [],
     editingPlant: {},
-    dummyPlants: [
-      { id: 'P0001', code: 'ABCD-001', name: 'AK-47' },
-      { id: 'P0002', code: 'ABCD-002', name: 'AK-47' },
-      { id: 'P0003', code: 'ABCD-003', name: 'AK-47' }
-    ],
     locations: this.props.locations
   }
 
@@ -60,11 +27,13 @@ class BatchLocationApp extends React.Component {
     const plantId = e.target.value
     const found = this.getSelected(plantId)
     if (e.target.checked && !found) {
+      //console.log({ where: 'onSelectPlant: first check', plantId, found })
       const plant = { id: plantId, quantity: 0 }
       this.setState({
         selectedPlants: [...this.state.selectedPlants, plant]
       })
     } else if (found) {
+      //console.log({ where: 'onSelectPlant: uncheck', plantId, found })
       this.setState({
         selectedPlants: this.state.selectedPlants.filter(x => x.id !== plantId)
       })
@@ -99,7 +68,6 @@ class BatchLocationApp extends React.Component {
   }
 
   getAvailableLocations = plantId => {
-    const plant = this.getSelected(plantId)
     const { selectedPlants, locations } = this.state
     const allPlantsTrays = selectedPlants
       .filter(p => p.id !== plantId)
@@ -132,12 +100,12 @@ class BatchLocationApp extends React.Component {
   }
 
   gotoNext = () => {
-    window.location.replace('/cultivation/batches/' + this.props.batch_id)
+    window.location.replace('/cultivation/batches/' + this.props.batchId)
   }
 
   render() {
-    const plants = this.state.dummyPlants
-    const { editingPlant } = this.state
+    const plantType = this.props.plantType
+    const { editingPlant, selectedPlants } = this.state
     const availableLocations = this.getAvailableLocations(editingPlant.id)
 
     // console.log('remainingLocations 1st tray >> ', availableLocations[0].remaining_capacity)
@@ -146,55 +114,17 @@ class BatchLocationApp extends React.Component {
     return (
       <div>
         {this.state.fromMotherPlant && (
-          <div>
+          <React.Fragment>
             <span className="db dark-grey mb2">
               Please select the mother plant source:
             </span>
-            <table className="collapse ba br2 b--black-10 pv2 ph3">
-              <tbody>
-                <tr className="striped--light-gray">
-                  <th className="pv2 ph3 tl f6 fw6 ttu">Plant ID</th>
-                  <th className="tr f6 ttu fw6 pv2 ph3">Strain</th>
-                  <th className="tr f6 ttu fw6 pv2 ph3 w4 tr">Quantiy</th>
-                  <th className="tr f6 ttu fw6 pv2 ph3 w4 tr">Location</th>
-                  <th className="w1 tc" />
-                </tr>
-                {plants &&
-                  plants.length &&
-                  plants.map(p => (
-                    <tr
-                      key={p.id}
-                      className={classNames('striped--light-gray', {
-                        'black-50': !this.getSelected(p.id)
-                      })}
-                    >
-                      <td className="pv2 ph3">{p.code}</td>
-                      <td className="pv2 ph3">{p.name}</td>
-                      <td className="pv2 ph3 tr">
-                        <QuantityField
-                          plant={this.getSelected(p.id)}
-                          onEdit={this.onClickSelectionEdit}
-                        />
-                      </td>
-                      <td className="pv2 ph3 tr">
-                        <LocationField
-                          plant={this.getSelected(p.id)}
-                          onEdit={this.onClickSelectionEdit}
-                        />
-                      </td>
-                      <td className="pv2 ph3 tc">
-                        {' '}
-                        <input
-                          type="checkbox"
-                          value={p.id}
-                          onChange={this.onSelectPlant}
-                        />{' '}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-
+            <BatchPlantSelectionList
+              onEdit={this.onClickSelectionEdit}
+              selectedPlants={selectedPlants}
+              plantType={plantType}
+              getSelected={this.getSelected}
+              onSelectPlant={this.onSelectPlant}
+            />
             <div className="pv2">
               <button
                 className="btn"
@@ -204,7 +134,7 @@ class BatchLocationApp extends React.Component {
                 Next
               </button>
             </div>
-          </div>
+          </React.Fragment>
         )}
 
         <div data-role="sidebar" className="rc-slide-panel">

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 DATE_FORMAT = "%Y/%m/%d"
 
-RSpec.describe QueryAvailableTrays, type: :command, focus: true do
+RSpec.describe QueryAvailableTrays, type: :command do
   subject! {
     facility = create(:facility, :is_complete)
 

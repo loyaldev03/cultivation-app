@@ -141,7 +141,6 @@ class TaskList extends React.Component {
         </div>
         <div className="mb3 flex">
           <div className="w-50">
-
             <div className=" flex">
               <div className="w-20">
                 <label>Batch Id</label>
@@ -172,7 +171,6 @@ class TaskList extends React.Component {
                 </div>
               </div>
             </div>
-
           </div>
           <div className="w-50">
             <div className=" flex">
@@ -196,8 +194,6 @@ class TaskList extends React.Component {
               </div>
             </div>
           </div>
-
-
         </div>
 
         <ReactTable

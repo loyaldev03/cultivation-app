@@ -22,7 +22,8 @@ class Cultivation::BatchesController < ApplicationController
       strain: @record.strain_id,
       batch_source: @record.batch_source,
       grow_method: @record.grow_method,
-      start_date: @record.start_date.strftime('%m/%d/%Y'),
+      start_date: @record.start_date.try(:strftime, '%m/%d/%Y'),
+      estimated_harvest_date: @record.estimated_harvest_date.try(:strftime, '%m/%d/%Y'),
     }
     # TODO: Use other params
     if params[:step].present?

@@ -125,7 +125,7 @@ class TaskList extends React.Component {
       <React.Fragment>
         {tasks}
         <div className=" flex">
-          <div className="w-20">
+          <div className="w-40">
             <h4 className="tl pa0 ma0 h6--font dark-grey">Task List</h4>
           </div>
           <div className="w-40">
@@ -142,17 +142,7 @@ class TaskList extends React.Component {
         <div className="mb3 flex">
           <div className="w-50">
             <div className=" flex">
-              <div className="w-20">
-                <label>Batch Id</label>
-              </div>
               <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.id['$oid']}</label>
-                </div>
-              </div>
-            </div>
-            <div className=" flex">
-              <div className="w-20">
                 <label>Batch Source</label>
               </div>
               <div className="w-40">
@@ -162,12 +152,33 @@ class TaskList extends React.Component {
               </div>
             </div>
             <div className=" flex">
-              <div className="w-20">
+              <div className="w-40">
+                <label>Batch Id</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.id['$oid']}</label>
+                </div>
+              </div>
+            </div>
+            <div className=" flex">
+              <div className="w-40">
                 <label>Start Date</label>
               </div>
               <div className="w-40">
                 <div className="">
                   <label>{this.state.batch.start_date}</label>
+                </div>
+              </div>
+            </div>
+
+            <div className=" flex">
+              <div className="w-40">
+                <label>Estimated Harvest Date</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.estimated_harvest_date}</label>
                 </div>
               </div>
             </div>

@@ -20,7 +20,12 @@
               {value: 'clones_purchased', label: 'Pre-purchased clones'}
             ],
             strains: Common::Strain.all.map{|a| {value: a['name'], label: a['name']}},
-            facilities: Facility.all.map{|a| {value: a['id'], label: a['code']}}
+            facilities: Facility.all.map{|a| {value: a['id'], label: a['code']}},
+            grow_methods: [
+                          {value: 'Soil', label: 'Soil'}, 
+                          {value: 'Hydrophonic', label: 'Hydrophonic'}, 
+                          {value: 'Coco noir', label: 'Coco noir'}
+            ]
           } 
         %>
       </div>

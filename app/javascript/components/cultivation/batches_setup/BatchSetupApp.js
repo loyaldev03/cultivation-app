@@ -33,6 +33,7 @@ class BatchSetupApp extends React.Component {
     this.state = {
       plants: this.props.plants,
       strains: this.props.strains,
+      grow_methods: this.props.grow_methods,
       facilities: this.props.facilities,
       id: '',
       plant: '',
@@ -92,6 +93,7 @@ class BatchSetupApp extends React.Component {
     let plants = this.state.plants
     let strains = this.state.strains
     let facilities = this.state.facilities
+    let grow_methods = this.state.grow_methods
     return (
       <React.Fragment>
         <style>{styles}</style>
@@ -159,7 +161,7 @@ class BatchSetupApp extends React.Component {
                 Select Grow Method
               </label>
               <Select
-                options={strains}
+                options={grow_methods}
                 styles={reactSelectStyle}
                 onChange={e => this.handleChange('grow_method', e.value)}
               />

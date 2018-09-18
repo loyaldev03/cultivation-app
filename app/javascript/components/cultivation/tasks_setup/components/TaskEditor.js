@@ -37,8 +37,6 @@ export default class TaskEditor extends React.Component {
 
   renderSidebarTaskEditor() {
     //find task here and send
-    // alert(this.state.action)
-    console.log(task === undefined)
     let task = TaskStore.find(e => e.id === this.state.id)
     if(this.state.action === 'update'){
       if (task === undefined) return null

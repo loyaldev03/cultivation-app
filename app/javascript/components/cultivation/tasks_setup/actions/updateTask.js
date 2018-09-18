@@ -42,9 +42,10 @@ class updateTask {
   }
 
   updatePosition(state, a, b) {
-    if(a !== null && b !== null){
-      TaskStore.splice(a, 0, TaskStore.splice(b, 1)[0]);
-    }
+    // if(a !== null && b !== null){
+    //   // alert('both not null')
+    //   // TaskStore.splice(a, 0, TaskStore.splice(b, 1)[0]);
+    // }
     // let id = state.id['$oid']
     // let url = `/api/v1/batches/${state.batch_id['$oid']}/tasks/${id}`
     // fetch(url, {
@@ -66,7 +67,8 @@ class updateTask {
     //     }
     //     else { toast('Something happen', 'error') }
     //   })
-    console.log(a)
+    console.log(b) // dragged
+    console.log(a) // to destination
     console.log(TaskStore[a].attributes.name)
     console.log(TaskStore.splice(b, 1)[0].attributes.name)
   }

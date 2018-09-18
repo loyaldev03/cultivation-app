@@ -92,8 +92,6 @@ class QueryReadyTrays
           tray_code: "$trays.code",
           tray_capacity: "$trays.capacity",
           tray_capacity_type: "$trays.capacity_type",
-          planned_capacity: 1,
-          remaining_capacity: 1,
         }
       }
     ]

@@ -334,7 +334,7 @@ class BatchLocationEditor extends React.PureComponent {
                     <React.Fragment>
                       {Object.keys(rooms).map(roomId => {
                         const firstRoom = rooms[roomId][0]
-                        const roomCapacity = sumBy(rooms[roomId], 'shelf_capacity')
+                        const roomCapacity = sumBy(rooms[roomId], 'tray_capacity')
                         const plannedCapacity = sumBy(rooms[roomId], 'planned_capacity')
                         const selectedCapacity = sumBy(selectedTrays.filter(t => t.room_id === roomId), 'tray_capacity')
                         return (
@@ -366,7 +366,7 @@ class BatchLocationEditor extends React.PureComponent {
                     <React.Fragment>
                       {Object.keys(rows).map(rowId => {
                         const firstRow = rows[rowId][0]
-                        const rowCapacity = sumBy(rows[rowId], 'shelf_capacity')
+                        const rowCapacity = sumBy(rows[rowId], 'tray_capacity')
                         const plannedCapacity = sumBy(rows[rowId], 'planned_capacity')
                         const selectedCapacity = sumBy(selectedTrays.filter(t => t.row_id === rowId), 'tray_capacity')
                         return (

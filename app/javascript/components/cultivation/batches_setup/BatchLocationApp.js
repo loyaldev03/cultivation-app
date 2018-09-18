@@ -19,7 +19,11 @@ const LocationField = ({ plant, onEdit }) => {
   if (plant) {
     const text = plant.trays ? joinBy(plant.trays, 'tray_code') : 'Set Location'
     return (
-      <a href="#0" className="link blue pointer" onClick={() => onEdit(plant.id)}>
+      <a
+        href="#0"
+        className="link blue pointer"
+        onClick={() => onEdit(plant.id)}
+      >
         {text}
       </a>
     )
@@ -37,7 +41,7 @@ class BatchLocationApp extends React.Component {
       { id: 'P0002', code: 'ABCD-002', name: 'AK-47' },
       { id: 'P0003', code: 'ABCD-003', name: 'AK-47' }
     ],
-    locations: this.props.locations,
+    locations: this.props.locations
   }
 
   componentDidMount() {
@@ -86,25 +90,30 @@ class BatchLocationApp extends React.Component {
     const found = this.getSelected(plantConfig.id)
     found.quantity = plantConfig.quantity
     found.trays = plantConfig.trays
-    const selectedPlants = this.state.selectedPlants.map(x => (x.id === plantConfig.id ? plantConfig : x))
+    const selectedPlants = this.state.selectedPlants.map(
+      x => (x.id === plantConfig.id ? plantConfig : x)
+    )
     this.setState({
       selectedPlants
     })
   }
 
-  getAvailableLocations = (plantId) => {
+  getAvailableLocations = plantId => {
     const plant = this.getSelected(plantId)
     const { selectedPlants, locations } = this.state
-    const allPlantsTrays = selectedPlants.filter(p => p.id !== plantId)
-                                         .reduce((acc, val) => acc.concat(val.trays || []), [])
-    const remainingLocations = locations.map((loc) => {
+    const allPlantsTrays = selectedPlants
+      .filter(p => p.id !== plantId)
+      .reduce((acc, val) => acc.concat(val.trays || []), [])
+    const remainingLocations = locations.map(loc => {
       const found = allPlantsTrays.filter(t => t.tray_id === loc.tray_id)
       if (found && found.length > 0) {
-        const newTrayPlannedCapacity = parseInt(loc.planned_capacity) + sumBy(found, 'tray_capacity')
+        const newTrayPlannedCapacity =
+          parseInt(loc.planned_capacity) + sumBy(found, 'tray_capacity')
         const newLoc = {
           ...loc,
           planned_capacity: newTrayPlannedCapacity,
-          remaining_capacity: parseInt(loc.tray_capacity) - newTrayPlannedCapacity
+          remaining_capacity:
+            parseInt(loc.tray_capacity) - newTrayPlannedCapacity
         }
         return newLoc
       }
@@ -118,14 +127,12 @@ class BatchLocationApp extends React.Component {
       return true
     }
     // if there's a missing data, disable next step
-    const missed = this.state.selectedPlants.find(
-      x => !x.quantity || !x.trays
-    )
+    const missed = this.state.selectedPlants.find(x => !x.quantity || !x.trays)
     return !!missed
   }
 
   gotoNext = () => {
-    window.location.replace("/cultivation/batches/" + this.props.batch_id)
+    window.location.replace('/cultivation/batches/' + this.props.batch_id)
   }
 
   render() {
@@ -133,8 +140,14 @@ class BatchLocationApp extends React.Component {
     const { editingPlant } = this.state
     const availableLocations = this.getAvailableLocations(editingPlant.id)
 
-    console.log('remainingLocations 1st tray >> ', availableLocations[0].remaining_capacity)
-    console.log('remainingLocations 2nd tray >> ', availableLocations[1].remaining_capacity)
+    console.log(
+      'remainingLocations 1st tray >> ',
+      availableLocations[0].remaining_capacity
+    )
+    console.log(
+      'remainingLocations 2nd tray >> ',
+      availableLocations[1].remaining_capacity
+    )
 
     return (
       <div>
@@ -189,7 +202,11 @@ class BatchLocationApp extends React.Component {
             </table>
 
             <div className="pv2">
-              <button className="btn" disabled={this.isDisableNext()} onClick={this.gotoNext}>
+              <button
+                className="btn"
+                disabled={this.isDisableNext()}
+                onClick={this.gotoNext}
+              >
                 Next
               </button>
             </div>

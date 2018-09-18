@@ -6,9 +6,8 @@ import Select from 'react-select'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import { fadeToast, toast } from '../../../utils/toast'
 import reactSelectStyle from './../../../utils/reactSelectStyle'
-import { throws } from "assert";
+import { throws } from 'assert'
 import createTask from '../actions/createTask'
-
 
 class AddTaskForm extends React.Component {
   constructor(props) {
@@ -16,10 +15,10 @@ class AddTaskForm extends React.Component {
     this.state = {
       batch_id: this.props.batch_id,
       parent_task: props.parent_task,
-      parent_id: props.id,
+      parent_id: '',
       name: '',
       days: '',
-      task_category: props.parent_task.attributes.task_category,
+      task_category: '',
       instruction: '',
       start_date: new Date(),
       end_date: new Date(),
@@ -29,23 +28,23 @@ class AddTaskForm extends React.Component {
     }
   }
 
-  componentWillReceiveProps(props) {
-    const { parent_id } = this.props.id
-    if (props.id !== parent_id) {
-      this.setState({
-        parent_id: props.id,
-        name: '',
-        days: '',
-        task_category: props.parent_task.attributes.task_category,
-        instruction: '',
-        start_date: new Date(),
-        end_date: new Date(),
-        errors: '',
-        estimated_hours: '',
-        assigned_employee: []
-      })
-    }
-  }
+  // componentWillReceiveProps(props) {
+  //   const { parent_id } = this.props.id
+  //   if (props.id !== parent_id) {
+  //     this.setState({
+  //       parent_id: props.id,
+  //       name: '',
+  //       days: '',
+  //       task_category: '',
+  //       instruction: '',
+  //       start_date: new Date(),
+  //       end_date: new Date(),
+  //       errors: '',
+  //       estimated_hours: '',
+  //       assigned_employee: []
+  //     })
+  //   }
+  // }
 
   handleChangeTask = event => {
     // console.log(event[0].value)
@@ -78,7 +77,7 @@ class AddTaskForm extends React.Component {
     // this.setState({ value: value });
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     createTask.createTask(this.state)
   }
 
@@ -124,7 +123,6 @@ class AddTaskForm extends React.Component {
           </div>
         </div>
         <div className="ph4 mt3 mb3 flex">
-
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Start Date</label>
             <DatePicker

@@ -37,11 +37,9 @@ export default class TaskEditor extends React.Component {
 
   renderSidebarTaskEditor() {
     //find task here and send
-    // alert(this.state.action)
-    console.log(task === undefined)
     let task = TaskStore.find(e => e.id === this.state.id)
-    if (task === undefined) return null
-    if(this.state.action === 'update'){
+    if (this.state.action === 'update') {
+      if (task === undefined) return null
       return (
         <SidebarTaskEditor
           id={this.state.id}
@@ -49,16 +47,9 @@ export default class TaskEditor extends React.Component {
           batch_id={this.props.batch_id}
         />
       )
-    }else {
-      return (
-        <AddTaskForm 
-          id={this.state.id} 
-          parent_task={task}
-          batch_id={this.props.batch_id}
-        />
-      )
+    } else {
+      return <AddTaskForm batch_id={this.props.batch_id} />
     }
-
   }
 
   get editorSelected() {
@@ -76,9 +67,9 @@ export default class TaskEditor extends React.Component {
   }
 
   renderTitle() {
-    if(this.state.action == 'update'){
+    if (this.state.action == 'update') {
       return 'Update Task'
-    }else{
+    } else {
       return 'Add New Task'
     }
   }

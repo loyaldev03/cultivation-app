@@ -32,6 +32,8 @@ class Cultivation::BatchesController < ApplicationController
       @end_date = Time.now + 15.days
 
       if @record.batch_source == 'clones_from_mother'
+        # Set the plantType for react BatchPlantSelectionList
+        @plant_type = 'mother'
         # Get available trays based on purpose
         available_trays_cmd = QueryAvailableTrays.call(
           @start_date,

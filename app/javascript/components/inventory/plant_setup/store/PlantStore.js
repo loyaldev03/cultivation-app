@@ -20,7 +20,11 @@ class PlantStore {
 
   @action
   prepend(newPlants = []) {
-    this.plants.replace(newPlants.concat(this.plants.slice()))
+    if (Array.isArray(newPlants)) {
+      this.plants.replace(newPlants.concat(this.plants.slice()))
+    } else {
+      this.plants.replace([newPlants, ...this.plants.slice()])
+    }
   }
 
   @action

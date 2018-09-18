@@ -98,3 +98,6 @@ gem 'rollbar'
 
 #Api Serializer
 gem 'fast_jsonapi'
+
+# UoM gem
+gem 'measured'

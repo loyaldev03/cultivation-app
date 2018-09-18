@@ -6,11 +6,13 @@ module Cultivation
     field :name, type: String
     field :batch_no, type: String
     field :batch_source, type: String
-    field :strain_id, type: BSON::ObjectId   # TODO: Change this to strain ID
+    # field :strain_id, type: BSON::ObjectId   # TODO: Change this to strain ID
     field :start_date, type: DateTime
-    field :facility_id, type: BSON::ObjectId
+    # field :facility_id, type: BSON::ObjectId
     field :grow_method, type: String
 
+    belongs_to :facility, class_name: 'Facility'
+    belongs_to :strain, class_name: 'Common::Strain'
     has_one :tray_plan, class_name: 'Cultivation::TrayPlan'
     has_many :tasks, class_name: 'Cultivation::Task'
 

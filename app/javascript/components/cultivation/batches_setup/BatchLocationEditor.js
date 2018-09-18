@@ -527,8 +527,8 @@ class BatchLocationEditor extends React.PureComponent {
                               max={tray.remaining_capacity}
                               selectedValue={selectedCapacity}
                               onChange={this.onSelectTray(tray.tray_id)}
-                            />{' '}
-                            / <span>{tray.tray_capacity}</span>
+                            />
+                            <span> / {tray.tray_capacity}</span>
                           </a>
                         )
                       })}

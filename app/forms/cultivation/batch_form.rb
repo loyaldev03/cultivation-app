@@ -2,7 +2,7 @@ module Cultivation
   class BatchForm
     include ActiveModel::Model
 
-    attr_accessor :id, :facility_id, :batch_source, :strain_id, :start_date, :tasks
+    attr_accessor :id, :facility_id, :batch_source, :strain_id, :start_date, :grow_method, :tasks
 
     validates :batch_source, presence: true
     validates :strain_id, presence: true
@@ -28,6 +28,7 @@ module Cultivation
       self.batch_source = record[:batch_source] if record[:batch_source]
       self.strain_id = record[:strain_id] if record[:strain_id]
       self.start_date = record[:start_date] if record[:start_date]
+      self.grow_method = record[:grow_method] if record[:grow_method]
       self.tasks = record.try(:tasks)
     end
 
@@ -36,7 +37,6 @@ module Cultivation
         self.id = BSON::ObjectId.new
       else
         saved = Cultivation::FindBatch.call({id: record_id}).result
-        Rails.logger.debug 'Saved'
         map_attributes(saved) if saved
       end
     end

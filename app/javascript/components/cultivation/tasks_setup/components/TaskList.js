@@ -110,7 +110,6 @@ class TaskList extends React.Component {
         if (this.dragged !== null && i !== null) {
           TaskStore.splice(i, 0, TaskStore.splice(this.dragged, 1)[0])
           updateTask.updatePosition(this.props.batch_id, i, this.dragged)
-
         }
       }
     })

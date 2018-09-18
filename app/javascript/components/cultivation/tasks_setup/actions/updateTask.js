@@ -44,9 +44,9 @@ class updateTask {
     fetch(url, {
       method: 'PUT',
       credentials: 'include',
-      body: JSON.stringify({ task: { id: id, position: a, type: 'position'} }),
+      body: JSON.stringify({ task: { id: id, position: a, type: 'position' } }),
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       }
     })
       .then(response => response.json())
@@ -55,11 +55,10 @@ class updateTask {
           toast('Task Moved', 'success')
 
           loadTasks.loadbatch(batch_id)
-
+        } else {
+          toast('Something happen', 'error')
         }
-        else { toast('Something happen', 'error') }
       })
-
   }
 }
 

@@ -41,12 +41,34 @@ class updateTask {
 
   }
 
-  updatePosition(a, b) {
+  updatePosition(state, a, b) {
     if(a !== null && b !== null){
       TaskStore.splice(a, 0, TaskStore.splice(b, 1)[0]);
     }
-    // console.log(TaskStore[a].attributes.name)
-    // console.log(TaskStore.splice(b, 1)[0].attributes.name)
+    // let id = state.id['$oid']
+    // let url = `/api/v1/batches/${state.batch_id['$oid']}/tasks/${id}`
+    // fetch(url, {
+    //   method: 'PUT',
+    //   credentials: 'include',
+    //   body: JSON.stringify({ task: { id: state.id, position: a, type: 'position'} }),
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   }
+    // })
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     console.log(data.data)
+    //     if (data.data.id != null) {
+    //       toast('Task Moved', 'success')
+
+    //       loadTasks.loadbatch(state.batch_id)
+
+    //     }
+    //     else { toast('Something happen', 'error') }
+    //   })
+    console.log(a)
+    console.log(TaskStore[a].attributes.name)
+    console.log(TaskStore.splice(b, 1)[0].attributes.name)
   }
 }
 

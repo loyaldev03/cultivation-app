@@ -90,7 +90,7 @@ class TaskList extends React.Component {
 
       header.ondrop = e => {
         e.preventDefault();
-        updateTask.updatePosition(i, this.dragged)
+        updateTask.updatePosition(this.state, i, this.dragged)
       };
     });
   }

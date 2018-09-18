@@ -11,7 +11,7 @@ const sumBy = (records, field) => {
 
 const joinBy = (records, field, separator = ',') => {
   return records.reduce((acc, obj) => {
-    return acc ? `${acc}${separator} ${(obj[field] || '')}` : (obj[field] || '')
+    return acc ? `${acc}${separator} ${obj[field] || ''}` : obj[field] || ''
   }, '')
 }
 

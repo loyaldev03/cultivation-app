@@ -12,26 +12,26 @@ const gridStyles = {
 const SelectWithRange = ({ min, max, onChange, selectedValue = 0 }) => {
   let children = []
   for (let i = min; i <= max; i++) {
-    children.push(<option value={i} key={i}>{i}</option>)
+    children.push(
+      <option value={i} key={i}>
+        {i}
+      </option>
+    )
   }
   return (
     <select
       onChange={onChange}
       value={selectedValue}
-      className={classNames("", { "white": !!selectedValue })}
+      className={classNames('', { white: !!selectedValue })}
     >
       {children}
     </select>
   )
 }
 
-const BadgeNumber = ({ show, value = 0}) => {
+const BadgeNumber = ({ show, value = 0 }) => {
   if (show && value > 0) {
-    return (
-      <span className="badge badge--green">
-        {value}
-      </span>
-    )
+    return <span className="badge badge--green">{value}</span>
   }
   return null
 }
@@ -49,25 +49,28 @@ const LocationBox = ({
 }) => (
   <a
     href="#0"
-    className={classNames('db f6 link ba b--gray pa2 pointer relative br2 dim', {
-      'bg-orange white bn': highlighted,
-      'bg-light-gray black-50 bn': plannedCapacity == totalCapacity,
-    })}
-    style={{ "height": "100px" }}
-    onClick={(plannedCapacity == totalCapacity) ? null : onClick}
+    className={classNames(
+      'db f6 link ba b--gray pa2 pointer relative br2 dim',
+      {
+        'bg-orange white bn': highlighted,
+        'bg-light-gray black-50 bn': plannedCapacity == totalCapacity
+      }
+    )}
+    style={{ height: '100px' }}
+    onClick={plannedCapacity == totalCapacity ? null : onClick}
   >
-    {!!name &&
-      <span className="ttc db">{name}</span>
-    }
-    {!!code &&
-      <span className="db ttu">ID: {code} </span>
-    }
+    {!!name && <span className="ttc db">{name}</span>}
+    {!!code && <span className="db ttu">ID: {code} </span>}
     <span className="db">Planned: {plannedCapacity}</span>
     <span className="db">Total: {totalCapacity}</span>
 
     <BadgeNumber show={isSelected} value={selectedCapacity} />
 
-    {showChangeText && <span className="db hide-child"><span>Change</span></span>}
+    {showChangeText && (
+      <span className="db hide-child">
+        <span>Change</span>
+      </span>
+    )}
   </a>
 )
 
@@ -86,7 +89,7 @@ const LabelWithChangeEvent = ({ isSelecting, value, onClick }) => {
 class BatchLocationEditor extends React.PureComponent {
   state = {
     locations: this.props.locations || [], // all available tray locations from database
-    selectedTrays: this.props.plant.trays || [],
+    selectedTrays: this.props.plant.trays || []
   }
 
   onShowAddLocation = () => {
@@ -101,7 +104,7 @@ class BatchLocationEditor extends React.PureComponent {
       selectedRoom: value,
       selectedRow: null,
       selectedShelf: null,
-      showRoomList: false,
+      showRoomList: false
     })
   }
 
@@ -110,7 +113,7 @@ class BatchLocationEditor extends React.PureComponent {
       selectedLocation: this.getSelectedLocation('row', value),
       selectedRow: value,
       selectedShelf: null,
-      showRowList: false,
+      showRowList: false
     })
   }
 
@@ -118,7 +121,7 @@ class BatchLocationEditor extends React.PureComponent {
     this.setState({
       selectedLocation: this.getSelectedLocation('shelf', value),
       selectedShelf: value,
-      showShelfList: false,
+      showShelfList: false
     })
   }
 
@@ -133,12 +136,14 @@ class BatchLocationEditor extends React.PureComponent {
         shelf_id: selectedLocation.shelf_id,
         tray_id: selectedLocation.tray_id,
         tray_code: selectedLocation.tray_code,
-        tray_capacity: e.target.value,
+        tray_capacity: e.target.value
       }
 
-      const selectedTrays = traySel ?
-        this.state.selectedTrays.map(t => t.tray_id === trayId ? trayObj : t) :
-        this.state.selectedTrays.concat([trayObj])
+      const selectedTrays = traySel
+        ? this.state.selectedTrays.map(
+            t => (t.tray_id === trayId ? trayObj : t)
+          )
+        : this.state.selectedTrays.concat([trayObj])
 
       this.setState({
         selectedTrays,
@@ -164,7 +169,7 @@ class BatchLocationEditor extends React.PureComponent {
       showRoomList: true,
       showRowList: true,
       showShelfList: true,
-      showTrayList: true,
+      showTrayList: true
     })
   }
 
@@ -178,7 +183,7 @@ class BatchLocationEditor extends React.PureComponent {
       showRoomList: false,
       showRowList: false,
       showShelfList: false,
-      showTrayList: false,
+      showTrayList: false
     })
   }
 
@@ -187,7 +192,11 @@ class BatchLocationEditor extends React.PureComponent {
   onChangeInput = field => e => this.setState({ [field]: e.target.value })
 
   getSelectedTrayCapacity = trayId => {
-    if (trayId && this.state.selectedTrays && this.state.selectedTrays.length > 0) {
+    if (
+      trayId &&
+      this.state.selectedTrays &&
+      this.state.selectedTrays.length > 0
+    ) {
       const tray = this.state.selectedTrays.find(t => t.tray_id === trayId)
       return tray ? tray.tray_capacity : 0
     }
@@ -196,7 +205,9 @@ class BatchLocationEditor extends React.PureComponent {
 
   getSelectedLocation = (location_type, id) => {
     if (location_type && id) {
-      const found = this.state.locations.find(x => x[location_type + '_id'] === id)
+      const found = this.state.locations.find(
+        x => x[location_type + '_id'] === id
+      )
       return found
     }
     return null
@@ -204,14 +215,23 @@ class BatchLocationEditor extends React.PureComponent {
 
   getLocationName = (location_type, id) => {
     if (!id || !location_type) {
-      return "-- Select --"
+      return '-- Select --'
     }
-    const found = this.state.locations.find(x => x[location_type + '_id'] === id)
-    return found ? (found[location_type + '_name'] || found[location_type + '_code']) : "Unnamed"
+    const found = this.state.locations.find(
+      x => x[location_type + '_id'] === id
+    )
+    return found
+      ? found[location_type + '_name'] || found[location_type + '_code']
+      : 'Unnamed'
   }
 
   isSelected = (id, type) => {
-    if (id && type && this.state.selectedTrays && this.state.selectedTrays.length > 0) {
+    if (
+      id &&
+      type &&
+      this.state.selectedTrays &&
+      this.state.selectedTrays.length > 0
+    ) {
       const record = this.state.selectedTrays.find(r => r[type + '_id'] === id)
       return !!record
     }
@@ -231,7 +251,7 @@ class BatchLocationEditor extends React.PureComponent {
       selectedRow,
       selectedShelf,
       selectedTrays,
-      selectedLocation,
+      selectedLocation
     } = this.state
     let rooms = []
     let rows = []
@@ -255,7 +275,9 @@ class BatchLocationEditor extends React.PureComponent {
       }
     }
 
-    const selectedTraysCapacity = parseInt(selectedTrays.reduce((a, v) => a + parseInt(v.tray_capacity), 0))
+    const selectedTraysCapacity = parseInt(
+      selectedTrays.reduce((a, v) => a + parseInt(v.tray_capacity), 0)
+    )
 
     return (
       <div className="h-100 flex flex-column">
@@ -269,59 +291,81 @@ class BatchLocationEditor extends React.PureComponent {
             const updatePlant = {
               id: plant.id,
               quantity: selectedTraysCapacity,
-              trays: selectedTrays,
+              trays: selectedTrays
             }
             onSave(updatePlant)
           }}
         >
           <div>
             <div className="mt2">
-              <span className="subtitle-2 grey db mt3 mb1">PlantID: {plant.id}</span>
+              <span className="subtitle-2 grey db mt3 mb1">
+                PlantID: {plant.id}
+              </span>
 
               <label className="subtitle-2 grey db mb1">Locations:</label>
-              {selectedTrays && selectedTrays.length > 0 &&
-                <table className="collapse ba br2 b--black-10 pv2 ph3 f6 w-100">
-                  <tbody>
-                    <tr className="striped--light-gray">
-                      <td className="pv2 ph3 w1">#</td>
-                      <td className="pv2 ph3">Location</td>
-                      <td className="pv2 ph3 tr">Quantity</td>
-                      <td style={{width: "50px"}}></td>
-                    </tr>
-                    {selectedTrays.map((tray, index) => (
-                      <tr key={tray.tray_id}>
-                        <td className="pv2 ph3 w1">{index + 1}</td>
-                        <td className="pv2 ph3 w4">
-                          <a href="#0" onClick={this.onEditLocation(tray.tray_id)} className="link">
-                            {this.getLocationName('tray', tray.tray_id)}
-                          </a>
-                        </td>
-                        <td className="pv2 ph3 tr w3">{tray.tray_capacity}</td>
-                        <td className="tc">
-                          {!showAddLocation &&
-                            <a href="#0" onClick={this.onRemoveSelectedTray(tray.tray_id)}>Remove</a>
-                          }
-                        </td>
+              {selectedTrays &&
+                selectedTrays.length > 0 && (
+                  <table className="collapse ba br2 b--black-10 pv2 ph3 f6 w-100">
+                    <tbody>
+                      <tr className="striped--light-gray">
+                        <td className="pv2 ph3 w1">#</td>
+                        <td className="pv2 ph3">Location</td>
+                        <td className="pv2 ph3 tr">Quantity</td>
+                        <td style={{ width: '50px' }} />
                       </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    <tr className="bt b--light-gray">
-                      <td className="pv2 tr" colSpan={2}>Total</td>
-                      <td className="pv2 ph3 tr">{selectedTraysCapacity}</td>
-                      <td></td>
-                    </tr>
-                  </tfoot>
-                </table>
-              }
-              {!showAddLocation &&
-                <a href="#0" className="link dib mt2 f6 fw6 orange tc" onClick={this.onShowAddLocation}>
+                      {selectedTrays.map((tray, index) => (
+                        <tr key={tray.tray_id}>
+                          <td className="pv2 ph3 w1">{index + 1}</td>
+                          <td className="pv2 ph3 w4">
+                            <a
+                              href="#0"
+                              onClick={this.onEditLocation(tray.tray_id)}
+                              className="link"
+                            >
+                              {this.getLocationName('tray', tray.tray_id)}
+                            </a>
+                          </td>
+                          <td className="pv2 ph3 tr w3">
+                            {tray.tray_capacity}
+                          </td>
+                          <td className="tc">
+                            {!showAddLocation && (
+                              <a
+                                href="#0"
+                                onClick={this.onRemoveSelectedTray(
+                                  tray.tray_id
+                                )}
+                              >
+                                Remove
+                              </a>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot>
+                      <tr className="bt b--light-gray">
+                        <td className="pv2 tr" colSpan={2}>
+                          Total
+                        </td>
+                        <td className="pv2 ph3 tr">{selectedTraysCapacity}</td>
+                        <td />
+                      </tr>
+                    </tfoot>
+                  </table>
+                )}
+              {!showAddLocation && (
+                <a
+                  href="#0"
+                  className="link dib mt2 f6 fw6 orange tc"
+                  onClick={this.onShowAddLocation}
+                >
                   + Add Location
                 </a>
-              }
+              )}
             </div>
 
-            {showAddLocation &&
+            {showAddLocation && (
               <div className="mt2 db ba ph3 pt2 pb3 b--light-gray">
                 <label className="mt2 db mr2">Select room:</label>
                 <LabelWithChangeEvent
@@ -330,13 +374,22 @@ class BatchLocationEditor extends React.PureComponent {
                   onClick={this.onChange('showRoomList', true)}
                 />
                 <div className="mt1 f6" style={gridStyles}>
-                  {showRoomList &&
+                  {showRoomList && (
                     <React.Fragment>
                       {Object.keys(rooms).map(roomId => {
                         const firstRoom = rooms[roomId][0]
-                        const roomCapacity = sumBy(rooms[roomId], 'shelf_capacity')
-                        const plannedCapacity = sumBy(rooms[roomId], 'planned_capacity')
-                        const selectedCapacity = sumBy(selectedTrays.filter(t => t.room_id === roomId), 'tray_capacity')
+                        const roomCapacity = sumBy(
+                          rooms[roomId],
+                          'tray_capacity'
+                        )
+                        const plannedCapacity = sumBy(
+                          rooms[roomId],
+                          'planned_capacity'
+                        )
+                        const selectedCapacity = sumBy(
+                          selectedTrays.filter(t => t.room_id === roomId),
+                          'tray_capacity'
+                        )
                         return (
                           <LocationBox
                             key={roomId}
@@ -352,7 +405,7 @@ class BatchLocationEditor extends React.PureComponent {
                         )
                       })}
                     </React.Fragment>
-                  }
+                  )}
                 </div>
 
                 <label className="mt2 db mr2">Select row:</label>
@@ -362,13 +415,19 @@ class BatchLocationEditor extends React.PureComponent {
                   onClick={this.onChange('showRowList', true)}
                 />
                 <div className="mt1 f6" style={gridStyles}>
-                  {showRowList &&
+                  {showRowList && (
                     <React.Fragment>
                       {Object.keys(rows).map(rowId => {
                         const firstRow = rows[rowId][0]
-                        const rowCapacity = sumBy(rows[rowId], 'shelf_capacity')
-                        const plannedCapacity = sumBy(rows[rowId], 'planned_capacity')
-                        const selectedCapacity = sumBy(selectedTrays.filter(t => t.row_id === rowId), 'tray_capacity')
+                        const rowCapacity = sumBy(rows[rowId], 'tray_capacity')
+                        const plannedCapacity = sumBy(
+                          rows[rowId],
+                          'planned_capacity'
+                        )
+                        const selectedCapacity = sumBy(
+                          selectedTrays.filter(t => t.row_id === rowId),
+                          'tray_capacity'
+                        )
                         return (
                           <LocationBox
                             key={rowId}
@@ -384,7 +443,7 @@ class BatchLocationEditor extends React.PureComponent {
                         )
                       })}
                     </React.Fragment>
-                  }
+                  )}
                 </div>
 
                 <label className="mt2 dib mr2">Select shelf:</label>
@@ -394,13 +453,19 @@ class BatchLocationEditor extends React.PureComponent {
                   onClick={this.onChange('showShelfList', true)}
                 />
                 <div className="mt1 f6" style={gridStyles}>
-                  {showShelfList &&
+                  {showShelfList && (
                     <React.Fragment>
                       {Object.keys(shelves).map(shelfId => {
                         const firstShelf = shelves[shelfId][0]
                         const shelfCapacity = firstShelf.shelf_capacity
-                        const plannedCapacity = sumBy(shelves[shelfId], 'planned_capacity')
-                        const selectedCapacity = sumBy(selectedTrays.filter(t => t.shelf_id === shelfId), 'tray_capacity')
+                        const plannedCapacity = sumBy(
+                          shelves[shelfId],
+                          'planned_capacity'
+                        )
+                        const selectedCapacity = sumBy(
+                          selectedTrays.filter(t => t.shelf_id === shelfId),
+                          'tray_capacity'
+                        )
                         return (
                           <LocationBox
                             key={shelfId}
@@ -415,57 +480,80 @@ class BatchLocationEditor extends React.PureComponent {
                         )
                       })}
                     </React.Fragment>
-                  }
+                  )}
                 </div>
 
                 <label className="mt2 dib mr2">Select Tray:</label>
                 <LabelWithChangeEvent
                   isSelecting={showTrayList}
-                  value={
-                    joinBy(selectedTrays.filter(t => t.shelf_id === selectedShelf), 'tray_code')
-                  }
+                  value={joinBy(
+                    selectedTrays.filter(t => t.shelf_id === selectedShelf),
+                    'tray_code'
+                  )}
                   onClick={this.onChange('showTrayList', true)}
                 />
                 <div className="mt1 f6" style={gridStyles}>
-                  {showTrayList &&
+                  {showTrayList && (
                     <React.Fragment>
                       {trays.map(tray => {
                         const plannedCapacity = sumBy(trays, 'planned_capacity')
                         const isSelected = this.isSelected(tray.tray_id, 'tray')
-                        const selectedCapacity = this.getSelectedTrayCapacity(tray.tray_id)
+                        const selectedCapacity = this.getSelectedTrayCapacity(
+                          tray.tray_id
+                        )
                         return (
                           <a
                             href="#0"
                             key={tray.tray_id}
-                            className={classNames('db f6 link ba b--gray pa2 pointer relative br2 dim', {
-                              'bg-orange white bn': isSelected
-                            })}
-                            style={{ "height": "100px" }}
+                            className={classNames(
+                              'db f6 link ba b--gray pa2 pointer relative br2 dim',
+                              {
+                                'bg-orange white bn': isSelected
+                              }
+                            )}
+                            style={{ height: '100px' }}
                           >
-                            <BadgeNumber show={isSelected} value={selectedCapacity} />
+                            <BadgeNumber
+                              show={isSelected}
+                              value={selectedCapacity}
+                            />
                             <span className="db">{tray.tray_code}</span>
-                            <span className="db">Planned: {plannedCapacity}</span>
+                            <span className="db">
+                              Planned: {plannedCapacity}
+                            </span>
                             <span className="dib">Select Capacity:</span>
                             <SelectWithRange
                               min={0}
                               max={tray.remaining_capacity}
                               selectedValue={selectedCapacity}
                               onChange={this.onSelectTray(tray.tray_id)}
-                            /> / <span>{tray.tray_capacity}</span>
+                            />{' '}
+                            / <span>{tray.tray_capacity}</span>
                           </a>
                         )
                       })}
                     </React.Fragment>
-                  }
-
+                  )}
                 </div>
-                <a href="#0" className="link ph2 pv1 ba bg-gray db w3 mt2 tc center f6 br2 white" onClick={this.onDoneSelectTray}>Close</a>
+                <a
+                  href="#0"
+                  className="link ph2 pv1 ba bg-gray db w3 mt2 tc center f6 br2 white"
+                  onClick={this.onDoneSelectTray}
+                >
+                  Close
+                </a>
               </div>
-            }
+            )}
           </div>
           <div className="mt3 tr">
-            <a href="#0" className="link btn mr2" onClick={onClose}>Cancel</a>
-            <input type="submit" value="Save" className="btn btn--primary dim br2" />
+            <a href="#0" className="link btn mr2" onClick={onClose}>
+              Cancel
+            </a>
+            <input
+              type="submit"
+              value="Save"
+              className="btn btn--primary dim br2"
+            />
           </div>
         </form>
       </div>

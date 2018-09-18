@@ -12,7 +12,7 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
 
   context ".new with id" do
     subject(:facility) {
-      create(:facility, :filled)
+      create(:facility, :is_complete)
     }
     it "init form_object from saved record" do
       form_object = FacilityWizardForm::BasicInfoForm.new(facility.id)
@@ -60,7 +60,7 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
 
   context ".submit update" do
     subject(:facility) {
-      create(:facility, :filled)
+      create(:facility, :is_complete)
     }
     it "update to db" do
       form_object = FacilityWizardForm::BasicInfoForm.new(facility.id)

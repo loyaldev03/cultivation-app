@@ -14,19 +14,13 @@
       <div class="fl w-40 flex flex-column">
         <%= react_component 'cultivation/batches_setup/BatchSetupApp', 
           {
-            plants: [
-              {value: 'Clones from mother plant', label: 'Clones from mother plant'}, 
-              {value: 'Seeds', label: 'Seeds'}, 
-              {value: 'Pre-purchased clones', label: 'Pre-purchased clones'}
-            ],
+            plants: Constants::PLANT_SOURCE_TYPES.map{|a| {value: a[:code], label: a[:name]}},
             strains: Common::Strain.all.map{|a| {value: a['name'], label: a['name']}},
-            facilities: Facility.all.map{|a| {value: a['id'], label: a['code']}}
+            facilities: Facility.all.map{|a| {value: a['id'], label: a['code']}},
+            grow_methods: Constants::GROW_METHODS.map{|a| {value: a[:code], label: a[:name]}},
           } 
         %>
       </div>
     </div>
-  
-        
-
   </div>
 </div>

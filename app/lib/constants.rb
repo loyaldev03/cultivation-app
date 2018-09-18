@@ -47,10 +47,10 @@ module Constants
     {code: :curing_racks, name: 'Curing rack'},
   ]
 
-  SOURCE_TYPES = [
-    {code: :clone, name: 'Clone'},
-    {code: :mother, name: 'Mother'},
-    {code: :seed, name: 'Seed'},
+  PLANT_SOURCE_TYPES = [
+    {code: :clones_from_mother, name: 'Clones from Mother plant'},
+    {code: :clones_purchased, name: 'Pre-purchased clones'},
+    {code: :seeds, name: 'Seeds'},
   ].freeze
 
   CLONE_TYPES = [
@@ -101,6 +101,12 @@ module Constants
     {code: :ms, name: 'MS'},
     {code: :t5_fluorescent, name: 'T5 Fluorescent'},
   ].freeze
+
+  GROW_METHODS = [
+    {code: :cmh, name: 'Soil'},
+    {code: :cmh, name: 'Hydrophonics'},
+    {code: :cmh, name: 'Coco coir'},
+  ]
 
   GROW_MEDIUM = [
     {code: :coco_coir, name: 'Coco coir'},

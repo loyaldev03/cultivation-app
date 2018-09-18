@@ -1,11 +1,12 @@
 class Api::V1::TasksController < Api::V1::BaseApiController
   before_action :set_batch
+
   def index
     if @batch.present?
       # tasks_json = batch.tasks.map{|a| TaskSerializer.new(a).serializable_hash}
       # batch_json = BatchSerializer.new(batch).serializable_hash
 
-      tasks = @batch.generate_tree
+      tasks = @batch.tasks.order_by(position: :asc)
       options = {}
       options[:is_collection]
       task_json = TaskSerializer.new(tasks, options).serialized_json
@@ -41,9 +42,9 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def task_params
     params.require(:task).permit(:parent_id, :phase, :task_category, :name, :days,
-                                 :estimated_hours, :assigned_employee,
+                                 :estimated_hours, :assigned_employee, :type, :position,
                                  #:expected_end_date, :estimated_hours, :assigned_employee,
                                  :days_from_start_date, :expected_start_date, :start_date, :end_date, :expected_hours_taken,
-                                 :time_taken, :no_of_employees, :materials, :instruction, id: {}, batch_id: {}, )
+                                 :time_taken, :no_of_employees, :materials, :instruction, id: {}, batch_id: {})
   end
 end

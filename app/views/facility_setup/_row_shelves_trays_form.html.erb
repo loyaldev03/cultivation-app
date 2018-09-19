@@ -15,7 +15,7 @@
     </div>
   </div>
   
-  <div class="flex flex-column justify-between w-100">
+  <div class="flex flex-column justify-between w-100 h-100 overflow-y-scroll">
     <div class="ph4 mt4">
       <div class="tab-control">
         <% shelves.each_with_index do |shelf, i| %>
@@ -117,8 +117,6 @@
             </table>
           </div>
         <% end %>
-
-        
         
         <%= link_to generate_tray_path(
             facility_id: facility_id,
@@ -139,8 +137,8 @@
         <% end %>
       </div>
 
-      <div class="w-100 mt5 ph4 pv3 bt b--light-grey flex items-center justify-end">
-        <%= f.submit "Save & Continue", class: "button--font db tr pa3 bg-orange white bn box--br3 ttu link dim pointer" %>
+      <div class="w-100 mt5 ph4 bt b--light-grey flex items-center justify-end">
+        <%= f.submit "Save & Continue", class: "mv3 button--font db tr pa3 bg-orange white bn box--br3 ttu link dim pointer" %>
       </div>
     <% end %>
   </div>

@@ -7,6 +7,7 @@ class BatchLocationApp extends React.Component {
   state = {
     selectedPlants: [],
     editingPlant: {},
+    totalAvailableCapacity: sumBy(this.props.locations, 'remaining_capacity'),
     locations: this.props.locations
   }
 
@@ -126,10 +127,14 @@ class BatchLocationApp extends React.Component {
 
   render() {
     const { plantType, batchSource } = this.props
-    const { editingPlant, selectedPlants } = this.state
+    const { editingPlant, selectedPlants, totalAvailableCapacity } = this.state
+
+    // build available locations, taking out capacity occupied by different rows
     const availableLocations = this.getAvailableLocations(editingPlant.id)
+
     return (
       <React.Fragment>
+        <div>{totalAvailableCapacity}</div>
         {batchSource === 'clones_from_mother' &&
           this.renderClonesFromMother(plantType, selectedPlants)}
         <div data-role="sidebar" className="rc-slide-panel">

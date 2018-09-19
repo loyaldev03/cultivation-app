@@ -23,17 +23,15 @@ class BatchLocationApp extends React.Component {
     window.editorSidebar.close()
   }
 
-  onSelectPlant = e => {
+  onSelectPlant = serialNo => e => {
     const plantId = e.target.value
     const found = this.getSelected(plantId)
     if (e.target.checked && !found) {
-      //console.log({ where: 'onSelectPlant: first check', plantId, found })
-      const plant = { id: plantId, quantity: 0 }
+      const plant = { id: plantId, serialNo, quantity: 0 }
       this.setState({
         selectedPlants: [...this.state.selectedPlants, plant]
       })
     } else if (found) {
-      //console.log({ where: 'onSelectPlant: uncheck', plantId, found })
       this.setState({
         selectedPlants: this.state.selectedPlants.filter(x => x.id !== plantId)
       })

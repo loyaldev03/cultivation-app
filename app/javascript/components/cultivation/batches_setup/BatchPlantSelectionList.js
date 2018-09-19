@@ -85,7 +85,7 @@ class BatchPlantSelectionList extends React.Component {
                       <input
                         type="checkbox"
                         value={p.id}
-                        onChange={onSelectPlant}
+                        onChange={onSelectPlant(p.attributes.serial_no)}
                       />
                     </td>
                   </tr>

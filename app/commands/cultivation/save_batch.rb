@@ -128,6 +128,8 @@ module Cultivation
         end
         category_id = a['id'] if task[:isCategory] == 'true'
       end
+      #update estimated finish
+      update_harvest_date(batch)
       batch
     end
 
@@ -183,6 +185,10 @@ module Cultivation
       else
         false
       end
+    end
+
+    def update_harvest_date(batch)
+      batch.update(estimated_harvest_date: batch.tasks.last.end_date)
     end
   end
 end

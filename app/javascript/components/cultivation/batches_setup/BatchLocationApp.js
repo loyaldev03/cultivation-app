@@ -5,7 +5,6 @@ import { sumBy } from '../../utils/ArrayHelper'
 
 class BatchLocationApp extends React.Component {
   state = {
-    fromMotherPlant: true,
     selectedPlants: [],
     editingPlant: {},
     locations: this.props.locations
@@ -101,8 +100,32 @@ class BatchLocationApp extends React.Component {
     window.location.replace('/cultivation/batches/' + this.props.batchId)
   }
 
+  renderClonesFromMother = (plantType, selectedPlants) => (
+    <React.Fragment>
+      <span className="db dark-grey mb2">
+        Please select the mother plant source:
+      </span>
+      <BatchPlantSelectionList
+        onEdit={this.onClickSelectionEdit}
+        selectedPlants={selectedPlants}
+        plantType={plantType}
+        getSelected={this.getSelected}
+        onSelectPlant={this.onSelectPlant}
+      />
+      <div className="pv2">
+        <button
+          className="btn"
+          disabled={this.isDisableNext()}
+          onClick={this.gotoNext}
+        >
+          Next
+        </button>
+      </div>
+    </React.Fragment>
+  )
+
   render() {
-    const plantType = this.props.plantType
+    const { plantType, batchSource } = this.props
     const { editingPlant, selectedPlants } = this.state
     const availableLocations = this.getAvailableLocations(editingPlant.id)
 
@@ -110,31 +133,9 @@ class BatchLocationApp extends React.Component {
     // console.log('remainingLocations 2nd tray >> ', availableLocations[1].remaining_capacity)
 
     return (
-      <div>
-        {this.state.fromMotherPlant && (
-          <React.Fragment>
-            <span className="db dark-grey mb2">
-              Please select the mother plant source:
-            </span>
-            <BatchPlantSelectionList
-              onEdit={this.onClickSelectionEdit}
-              selectedPlants={selectedPlants}
-              plantType={plantType}
-              getSelected={this.getSelected}
-              onSelectPlant={this.onSelectPlant}
-            />
-            <div className="pv2">
-              <button
-                className="btn"
-                disabled={this.isDisableNext()}
-                onClick={this.gotoNext}
-              >
-                Next
-              </button>
-            </div>
-          </React.Fragment>
-        )}
-
+      <React.Fragment>
+        {batchSource === 'clones_from_mother' &&
+          this.renderClonesFromMother(plantType, selectedPlants)}
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body h-100">
             {editingPlant.id && (
@@ -148,7 +149,7 @@ class BatchLocationApp extends React.Component {
             )}
           </div>
         </div>
-      </div>
+      </React.Fragment>
     )
   }
 }

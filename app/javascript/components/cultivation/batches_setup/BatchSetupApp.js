@@ -7,40 +7,17 @@ import reactSelectStyle from './../../utils/reactSelectStyle'
 import { toast } from './../../utils/toast'
 import { TextInput, NumericInput, FieldError } from './../../utils/FormHelpers'
 
-const styles = `
-
-.DayPickerInput input{
-  border-radius: .25rem;
-  margin-bottom: .5rem;
-  padding-left: .5rem;
-  padding-right: .5rem;
-  padding-top: .25rem;
-  padding-bottom: .25rem;
-color: #777;
-    width: 70%;
-    border-color: rgba(0, 0, 0, 0.2);
-    border-style: solid;
-    border-width: 1px;
-}
-.DayPickerInput {
-    display: initial;
-}
-`
-
 class BatchSetupApp extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      plants: this.props.plants,
-      strains: this.props.strains,
-      grow_methods: this.props.grow_methods,
-      facilities: this.props.facilities,
       id: '',
       plant: '',
       facility: '',
       strain: '',
       start_date: '',
-      grow_method: ''
+      grow_method: '',
+      isLoading: false
     }
   }
 
@@ -49,6 +26,7 @@ class BatchSetupApp extends React.Component {
   }
 
   handleSubmit = event => {
+    this.setState({ isLoading: true })
     let url = '/api/v1/batches'
     fetch(url, {
       method: 'POST',
@@ -66,12 +44,12 @@ class BatchSetupApp extends React.Component {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data.data)
+        this.setState({ isLoading: false })
         if (data.data.id != null) {
           toast('Batch Created', 'success')
-          document.location.href = `/cultivation/batches/${data.data.id}?step=1`
+          window.location.replace(`/cultivation/batches/${data.data.id}?step=1`)
         } else {
-          alert('something is wrong')
+          toast('Error creating batch', 'error')
         }
       })
   }
@@ -90,13 +68,9 @@ class BatchSetupApp extends React.Component {
   setDateValue = event => {}
 
   render() {
-    let plants = this.state.plants
-    let strains = this.state.strains
-    let facilities = this.state.facilities
-    let grow_methods = this.state.grow_methods
+    const { plants, strains, facilities, grow_methods } = this.props
     return (
       <React.Fragment>
-        <style>{styles}</style>
         <div id="toast" className="toast animated toast--success">
           Row Saved
         </div>
@@ -188,7 +162,7 @@ class BatchSetupApp extends React.Component {
               className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
               onClick={this.handleSubmit}
             >
-              Save &amp; Continue
+              {this.state.isLoading ? 'Saving...' : 'Save & Continue'}
             </a>
           </div>
         </form>

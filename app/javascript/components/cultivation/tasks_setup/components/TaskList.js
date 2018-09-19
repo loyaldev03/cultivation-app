@@ -2,6 +2,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { observable } from 'mobx'
 import { observer, Provider } from 'mobx-react'
+import { Manager, Reference, Popper, Arrow } from 'react-popper'
 
 import TaskStore from '../stores/TaskStore'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
@@ -11,12 +12,22 @@ import updateTask from '../actions/updateTask'
 
 import ReactTable from 'react-table'
 
+// const styles = `
+// .button-dropdown{
+//   display: none;
+// }
+// .hover:hover + .button-dropdown{
+//   display: block;
+// }
+// `
+
 @observer
 class TaskList extends React.Component {
   constructor(props) {
     super(props)
     this.dragged = null
     this.state = {
+      isOpen: false,
       batch: this.props.batch
     }
   }
@@ -68,6 +79,39 @@ class TaskList extends React.Component {
       return <div>{row.value}</div>
     }
   }
+  handleMouseOver = row =>{
+    console.log(row)
+  }
+
+  renderAttributesName = row => {
+    let id = row.row['id']
+    return (
+      <div className="flex justify-between-ns">
+        <div className="">{row.value}</div>
+
+        <Manager>
+          <Reference>
+            {({ ref }) => (
+              <i ref={ref} id={row.row['id']} onClick={this.handleClick} onMouseOver={this.handleMouseOver} className="material-icons dim grey ml2 pointer button-dropdown" style={{display: 'none', fontSize: '18px'}}>
+                more_horiz
+              </i>
+            )}
+          </Reference>
+          {(this.state.isOpen && this.state.idOpen === id) && (
+            <Popper placement="bottom" style={{borderColor: 'red'}}>
+              {({ ref, style, placement, arrowProps }) => (
+                <div ref={ref} id={'dropdown-' + row.row['id']} style={style} data-placement={placement}>
+                  Popper element
+            <div ref={arrowProps.ref} style={arrowProps.style} />
+                </div>
+              )}
+            </Popper>
+          )}
+        </Manager>
+
+
+      </div>)
+  }
 
   handleAddTask = row => {
     editorSidebarHandler.open({ width: '500px', data: {}, action: 'add' })
@@ -118,11 +162,24 @@ class TaskList extends React.Component {
     })
   }
 
+  handleClick = (e) => {
+    e.persist()
+    if(e.target && e.target !== null){
+    this.setState(prevState => ({
+      isOpen: !prevState.isOpen,
+      idOpen: e.target.id
+    }))
+    }
+  }
+
   render() {
     let tasks = TaskStore.slice()
 
     return (
       <React.Fragment>
+        {/* <style> {styles} </style> */}
+
+
         <div className=" flex">
           <div className="w-40">
             <h4 className="tl pa0 ma0 h6--font dark-grey">Task List</h4>
@@ -237,7 +294,8 @@ class TaskList extends React.Component {
             {
               Header: 'Name',
               accessor: 'attributes.name',
-              maxWidth: '300'
+              maxWidth: '300',
+              Cell: row => <div>{this.renderAttributesName(row)}</div>             
             },
             {
               Header: 'Start Date',
@@ -277,20 +335,34 @@ class TaskList extends React.Component {
           ]}
           data={tasks}
           rows={100}
-          // className="-striped -highlight"
           defaultPageSize={100}
           getTdProps={(state, rowInfo, column, instance) => {
             if (rowInfo) {
               return {
                 onClick: (e, handleOriginal) => {
-                  if (column.id != 'button-column') {
-                    editorSidebarHandler.open({
-                      width: '500px',
-                      data: rowInfo.row,
-                      action: 'update'
-                    })
-                  }
+                  // if (column.id != 'button-column') {
+                  //   editorSidebarHandler.open({
+                  //     width: '500px',
+                  //     data: rowInfo.row,
+                  //     action: 'update'
+                  //   })
+                  // }
                 }
+              }
+            }
+            return {}
+          }}
+          getTrProps={(state, rowInfo, column) => {
+            if (rowInfo) {
+              return {
+                onMouseOver: (e, handleOriginal) => {
+                  let button = document.getElementById(rowInfo.row.id);
+                  button.style.display = "block";
+                },
+                onMouseOut: (e, handleOriginal) => {
+                  let button = document.getElementById(rowInfo.row.id);
+                  button.style.display = "none";
+                }              
               }
             }
             return {}

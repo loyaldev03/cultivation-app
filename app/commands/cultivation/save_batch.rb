@@ -188,6 +188,7 @@ module Cultivation
     end
 
     def update_harvest_date(batch)
+      ##should be harvest phase end_date
       batch.update(estimated_harvest_date: batch.tasks.last.end_date)
     end
   end

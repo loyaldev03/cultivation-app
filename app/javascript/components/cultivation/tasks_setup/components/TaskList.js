@@ -119,11 +119,10 @@ class TaskList extends React.Component {
   }
 
   render() {
-    let tasks = TaskStore
+    let tasks = TaskStore.slice()
 
     return (
       <React.Fragment>
-        {tasks}
         <div className=" flex">
           <div className="w-40">
             <h4 className="tl pa0 ma0 h6--font dark-grey">Task List</h4>

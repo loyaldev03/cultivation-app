@@ -103,9 +103,9 @@ module Constants
   ].freeze
 
   GROW_METHODS = [
-    {code: :cmh, name: 'Soil'},
-    {code: :cmh, name: 'Hydrophonics'},
     {code: :cmh, name: 'Coco coir'},
+    {code: :cmh, name: 'Hydrophonics'},
+    {code: :cmh, name: 'Soil'},
   ]
 
   GROW_MEDIUM = [

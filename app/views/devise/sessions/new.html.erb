@@ -1,9 +1,9 @@
 <%= form_for(resource,
               as: resource_name,
               url: session_path(resource_name),
-              html: { class: "bg-white flex flex-column justify-center items-center" }) do |f| %>
+              html: { class: "bg-white flex flex-column justify-center items-center pa3 ba br3 b--orange mb" }) do |f| %>
 
-  <%= image_tag "logo.svg", class: "mv4" %>
+  <%= image_tag "logo.svg", class: "mt2 mb4" %>
 
   <div class="w5">
     <div class="mb2">
@@ -35,4 +35,3 @@
 
   <%= link_to "Forgot your password?", new_user_password_url, class: "db mt4 orange button--font dim" %> 
 <% end %>
-

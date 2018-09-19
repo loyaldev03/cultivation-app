@@ -13,7 +13,7 @@
             plants: Constants::PLANT_SOURCE_TYPES.map{|a| {value: a[:code], label: a[:name]}},
             strains: Common::Strain.all.map{|a| {value: a['name'], label: a['name']}},
             facilities: Facility.all.map{|a| {value: a['id'], label: a['code']}},
-            grow_methods: Constants::GROW_METHODS.map{|a| {value: a[:code], label: a[:name]}},
+            grow_methods: Constants::GROW_MEDIUM.map{|a| {value: a[:code], label: a[:name]}},
           } 
         %>
       </div>

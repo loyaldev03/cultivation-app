@@ -2,11 +2,13 @@ import React from 'react'
 import BatchPlantSelectionList from './BatchPlantSelectionList'
 import BatchLocationEditor from './BatchLocationEditor'
 import { sumBy } from '../../utils/ArrayHelper'
+import { toast } from './../../utils/toast'
 
 class BatchLocationApp extends React.Component {
   state = {
     selectedPlants: [],
     editingPlant: {},
+    totalAvailableCapacity: sumBy(this.props.locations, 'remaining_capacity'),
     locations: this.props.locations
   }
 
@@ -51,6 +53,8 @@ class BatchLocationApp extends React.Component {
     return found
   }
 
+  onChangeInput = field => e => this.setState({ [field]: e.target.value })
+
   onEditorSave = plantConfig => {
     // find and update the corresponding record in memory
     const found = this.getSelected(plantConfig.id)
@@ -88,7 +92,19 @@ class BatchLocationApp extends React.Component {
   }
 
   isDisableNext = () => {
+    if (!this.state.quantity) {
+      // Quantity is required
+      return true
+    }
     if (!this.state.selectedPlants || !this.state.selectedPlants.length) {
+      toast('Please select plants & locations to continue.', 'warning')
+      // Plants Location & Quantity is required
+      return true
+    }
+    const totalSelectedQuantity = sumBy(this.state.selectedPlants, 'quantity')
+    if (parseInt(this.state.quantity) !== totalSelectedQuantity) {
+      toast('"Total Quantity Selected" does not match "Quantity Needed".', 'warning')
+      // Total quanty has to match with needed quantity
       return true
     }
     // if there's a missing data, disable next step
@@ -112,26 +128,67 @@ class BatchLocationApp extends React.Component {
         getSelected={this.getSelected}
         onSelectPlant={this.onSelectPlant}
       />
-      <div className="pv2">
-        <button
-          className="btn"
-          disabled={this.isDisableNext()}
-          onClick={this.gotoNext}
-        >
-          Next
-        </button>
-      </div>
     </React.Fragment>
   )
 
   render() {
     const { plantType, batchSource } = this.props
-    const { editingPlant, selectedPlants } = this.state
+    const { editingPlant, selectedPlants, totalAvailableCapacity } = this.state
+
+    // build available locations, taking out capacity occupied by different rows
     const availableLocations = this.getAvailableLocations(editingPlant.id)
+
     return (
       <React.Fragment>
-        {batchSource === 'clones_from_mother' &&
-          this.renderClonesFromMother(plantType, selectedPlants)}
+        <div id="toast" className="toast" />
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+            if (!this.isDisableNext()) {
+              this.gotoNext()
+            }
+          }}
+        >
+          <div className="dark-grey mb2">
+            <span className="w5 dib">Available Capacity</span>
+            <input
+              className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
+              type="number"
+              value={totalAvailableCapacity}
+              readOnly
+            />
+          </div>
+          <div className="dark-grey mb2">
+            <span className="w5 dib">Quantity Needed</span>
+            <input
+              className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
+              type="number"
+              onChange={this.onChangeInput('quantity')}
+              required
+              min={1}
+              max={totalAvailableCapacity}
+            />
+          </div>
+          <div className="dark-grey mb4">
+            <span className="w5 dib">Total Quantity Selected</span>
+            <input
+              className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
+              type="number"
+              value={sumBy(selectedPlants, 'quantity')}
+              readOnly
+            />
+          </div>
+          {batchSource === 'clones_from_mother' &&
+            this.renderClonesFromMother(plantType, selectedPlants)}
+          <div className="pv2">
+            <input
+              type="submit"
+              className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
+              value="Save &amp; Continue"
+            />
+          </div>
+        </form>
+
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body h-100">
             {editingPlant.id && (

@@ -27,7 +27,7 @@ class BatchSetupApp extends React.Component {
 
   handleSubmit = event => {
     this.setState({ isLoading: true })
-    let url = '/api/v1/batches'
+    const url = '/api/v1/batches'
     fetch(url, {
       method: 'POST',
       credentials: 'include',
@@ -45,7 +45,7 @@ class BatchSetupApp extends React.Component {
       .then(response => response.json())
       .then(data => {
         this.setState({ isLoading: false })
-        if (data.data.id != null) {
+        if (data.data && data.data.id) {
           toast('Batch Created', 'success')
           window.location.replace(`/cultivation/batches/${data.data.id}?step=1`)
         } else {

@@ -97,7 +97,14 @@ class BatchLocationApp extends React.Component {
       return true
     }
     if (!this.state.selectedPlants || !this.state.selectedPlants.length) {
+      toast('Please select plants & locations to continue.', 'warning')
       // Plants Location & Quantity is required
+      return true
+    }
+    const totalSelectedQuantity = sumBy(this.state.selectedPlants, 'quantity')
+    if (parseInt(this.state.quantity) !== totalSelectedQuantity) {
+      toast('"Total Quantity Selected" does not match "Quantity Needed".', 'warning')
+      // Total quanty has to match with needed quantity
       return true
     }
     // if there's a missing data, disable next step
@@ -139,8 +146,6 @@ class BatchLocationApp extends React.Component {
             e.preventDefault()
             if (!this.isDisableNext()) {
               this.gotoNext()
-            } else {
-              toast('Please select plants & locations to continue.', 'warning')
             }
           }}
         >

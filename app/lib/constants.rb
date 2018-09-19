@@ -102,16 +102,11 @@ module Constants
     {code: :t5_fluorescent, name: 'T5 Fluorescent'},
   ].freeze
 
-  GROW_METHODS = [
-    {code: :cmh, name: 'Soil'},
-    {code: :cmh, name: 'Hydrophonics'},
-    {code: :cmh, name: 'Coco coir'},
-  ]
-
   GROW_MEDIUM = [
     {code: :coco_coir, name: 'Coco coir'},
     {code: :compost_soil, name: 'Compost soil'},
     {code: :hardened_expanded_clay_hec, name: 'Hardened Expanded Clay (HEC)'},
+    {code: :hydrophonics, name: 'Hydrophonics'},
     {code: :mineral_wool, name: 'Mineral Wool'},
     {code: :peat, name: 'Peat'},
     {code: :perlite, name: 'Perlite'},

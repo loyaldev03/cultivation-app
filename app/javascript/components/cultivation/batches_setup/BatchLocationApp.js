@@ -133,7 +133,7 @@ class BatchLocationApp extends React.Component {
 
     return (
       <React.Fragment>
-        <div id="toast" className="toast"></div>
+        <div id="toast" className="toast" />
         <form
           onSubmit={e => {
             e.preventDefault()
@@ -142,25 +142,36 @@ class BatchLocationApp extends React.Component {
             } else {
               toast('Please select plants & locations to continue.', 'warning')
             }
-          }}>
+          }}
+        >
           <div className="dark-grey mb2">
             <span className="w5 dib">Available Capacity</span>
-            <input className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
-              type="number" value={totalAvailableCapacity} readOnly />
+            <input
+              className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
+              type="number"
+              value={totalAvailableCapacity}
+              readOnly
+            />
           </div>
           <div className="dark-grey mb2">
             <span className="w5 dib">Quantity Needed</span>
-            <input className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
+            <input
+              className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
               type="number"
               onChange={this.onChangeInput('quantity')}
               required
               min={1}
-              max={totalAvailableCapacity} />
+              max={totalAvailableCapacity}
+            />
           </div>
           <div className="dark-grey mb4">
             <span className="w5 dib">Total Quantity Selected</span>
-            <input className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
-              type="number" value={sumBy(selectedPlants, 'quantity')} readOnly />
+            <input
+              className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
+              type="number"
+              value={sumBy(selectedPlants, 'quantity')}
+              readOnly
+            />
           </div>
           {batchSource === 'clones_from_mother' &&
             this.renderClonesFromMother(plantType, selectedPlants)}

@@ -23,7 +23,9 @@ const QuantityField = ({ plant, onEdit }) => {
 
 const LocationField = ({ plant, onEdit }) => {
   if (plant) {
-    const text = plant.trays ? joinBy(plant.trays, 'tray_code') : 'Set Quantity & Location'
+    const text = plant.trays
+      ? joinBy(plant.trays, 'tray_code')
+      : 'Set Quantity & Location'
     return (
       <a
         href="#0"
@@ -80,8 +82,7 @@ class BatchPlantSelectionList extends React.Component {
                     <td className="pv2 ph3">{p.attributes.serial_no}</td>
                     <td className="pv2 ph3">{p.attributes.item_name}</td>
                     <td className="pv2 ph3">{p.attributes.status}</td>
-                    {
-                      (getSelected(p.id) && getSelected(p.id).quantity) ?
+                    {getSelected(p.id) && getSelected(p.id).quantity ? (
                       <React.Fragment>
                         <td className="pv2 ph3 tr">
                           <QuantityField
@@ -95,15 +96,15 @@ class BatchPlantSelectionList extends React.Component {
                             onEdit={onEdit}
                           />
                         </td>
-                      </React.Fragment> :
+                      </React.Fragment>
+                    ) : (
                       <td className="pv2 ph3 tr" colSpan="2">
                         <LocationField
                           plant={getSelected(p.id)}
                           onEdit={onEdit}
                         />
                       </td>
-                    }
-                    
+                    )}
                   </tr>
                 ))}
             </tbody>

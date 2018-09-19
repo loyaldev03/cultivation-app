@@ -130,9 +130,8 @@ class BatchLocationApp extends React.Component {
     const availableLocations = this.getAvailableLocations(editingPlant.id)
     return (
       <React.Fragment>
-        {batchSource === "clones_from_mother" &&
-         this.renderClonesFromMother(plantType, selectedPlants)
-        }
+        {batchSource === 'clones_from_mother' &&
+          this.renderClonesFromMother(plantType, selectedPlants)}
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body h-100">
             {editingPlant.id && (

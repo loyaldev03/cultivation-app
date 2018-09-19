@@ -13,7 +13,7 @@ module Cultivation
     has_one :tray_plan, class_name: 'Cultivation::TrayPlan'
     has_many :tasks, class_name: 'Cultivation::Task'
     belongs_to :strain, class_name: 'Common::Strain'
-    
+
     def phases
       tasks.where(isPhase: true)
     end

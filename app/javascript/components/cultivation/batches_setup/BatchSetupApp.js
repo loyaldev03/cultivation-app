@@ -16,7 +16,8 @@ class BatchSetupApp extends React.Component {
       facility: '',
       strain: '',
       start_date: '',
-      grow_method: ''
+      grow_method: '',
+      isLoading: false
     }
   }
 
@@ -25,6 +26,7 @@ class BatchSetupApp extends React.Component {
   }
 
   handleSubmit = event => {
+    this.setState({ isLoading: true })
     let url = '/api/v1/batches'
     fetch(url, {
       method: 'POST',
@@ -42,12 +44,12 @@ class BatchSetupApp extends React.Component {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data.data)
+        this.setState({ isLoading: false })
         if (data.data.id != null) {
           toast('Batch Created', 'success')
-          document.location.href = `/cultivation/batches/${data.data.id}?step=1`
+          window.location.replace(`/cultivation/batches/${data.data.id}?step=1`)
         } else {
-          alert('something is wrong')
+          toast('Error creating batch', 'error')
         }
       })
   }
@@ -160,7 +162,7 @@ class BatchSetupApp extends React.Component {
               className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
               onClick={this.handleSubmit}
             >
-              Save &amp; Continue
+              {this.state.isLoading ? 'Saving...' : 'Save & Continue'}
             </a>
           </div>
         </form>

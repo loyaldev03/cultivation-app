@@ -7,34 +7,10 @@ import reactSelectStyle from './../../utils/reactSelectStyle'
 import { toast } from './../../utils/toast'
 import { TextInput, NumericInput, FieldError } from './../../utils/FormHelpers'
 
-const styles = `
-
-.DayPickerInput input{
-  border-radius: .25rem;
-  margin-bottom: .5rem;
-  padding-left: .5rem;
-  padding-right: .5rem;
-  padding-top: .25rem;
-  padding-bottom: .25rem;
-color: #777;
-    width: 70%;
-    border-color: rgba(0, 0, 0, 0.2);
-    border-style: solid;
-    border-width: 1px;
-}
-.DayPickerInput {
-    display: initial;
-}
-`
-
 class BatchSetupApp extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      plants: this.props.plants,
-      strains: this.props.strains,
-      grow_methods: this.props.grow_methods,
-      facilities: this.props.facilities,
       id: '',
       plant: '',
       facility: '',
@@ -90,13 +66,9 @@ class BatchSetupApp extends React.Component {
   setDateValue = event => {}
 
   render() {
-    let plants = this.state.plants
-    let strains = this.state.strains
-    let facilities = this.state.facilities
-    let grow_methods = this.state.grow_methods
+    const { plants, strains, facilities, grow_methods } = this.props
     return (
       <React.Fragment>
-        <style>{styles}</style>
         <div id="toast" className="toast animated toast--success">
           Row Saved
         </div>

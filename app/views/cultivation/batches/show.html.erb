@@ -11,6 +11,7 @@
         <%= react_component 'cultivation/batches_setup/BatchLocationApp',
           {
             batchId: @record.id.to_s,
+            batchSource: @record.batch_source,
             plantType: @plant_type,
             locations: @locations
           } %>

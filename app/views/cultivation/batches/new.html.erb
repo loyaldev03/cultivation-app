@@ -11,8 +11,8 @@
         <%= react_component 'cultivation/batches_setup/BatchSetupApp', 
           {
             plants: Constants::PLANT_SOURCE_TYPES.map{|a| {value: a[:code], label: a[:name]}},
-            strains: Common::Strain.all.map{|a| {value: a['name'], label: a['name']}},
-            facilities: Facility.all.map{|a| {value: a['id'], label: a['code']}},
+            strains: Common::Strain.all.map{|a| {value: a.id.to_s, label: "#{a.name} (#{a.strain_type})"}},
+            facilities: Facility.completed.map{|a| {value: a.id.to_s, label: "#{a.name} (#{a.code})" }},
             grow_methods: Constants::GROW_MEDIUM.map{|a| {value: a[:code], label: a[:name]}},
           } 
         %>

@@ -52,6 +52,8 @@ class BatchLocationApp extends React.Component {
     return found
   }
 
+  onChangeInput = field => e => this.setState({ [field]: e.target.value })
+
   onEditorSave = plantConfig => {
     // find and update the corresponding record in memory
     const found = this.getSelected(plantConfig.id)
@@ -89,7 +91,12 @@ class BatchLocationApp extends React.Component {
   }
 
   isDisableNext = () => {
+    if (!this.state.quantity) {
+      // Quantity is required
+      return true
+    }
     if (!this.state.selectedPlants || !this.state.selectedPlants.length) {
+      // Plants Location & Quantity is required
       return true
     }
     // if there's a missing data, disable next step
@@ -134,9 +141,20 @@ class BatchLocationApp extends React.Component {
 
     return (
       <React.Fragment>
-        <div>{totalAvailableCapacity}</div>
         {batchSource === 'clones_from_mother' &&
           this.renderClonesFromMother(plantType, selectedPlants)}
+          <div className="dark-grey mb3">
+            <span className="w5 dib">Available Capacity:</span><b className="green w4 tr dib">{totalAvailableCapacity}</b>
+          </div>
+          <div className="dark-grey mb3">
+            <span className="w5 dib">Quantity Needed:</span>
+            <input className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
+              type="number"
+              onChange={this.onChangeInput('quantity')}
+              required
+              min={1}
+              max={totalAvailableCapacity} />
+          </div>
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body h-100">
             {editingPlant.id && (

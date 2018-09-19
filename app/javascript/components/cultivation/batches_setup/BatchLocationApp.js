@@ -2,6 +2,7 @@ import React from 'react'
 import BatchPlantSelectionList from './BatchPlantSelectionList'
 import BatchLocationEditor from './BatchLocationEditor'
 import { sumBy } from '../../utils/ArrayHelper'
+import { toast } from './../../utils/toast'
 
 class BatchLocationApp extends React.Component {
   state = {
@@ -120,15 +121,6 @@ class BatchLocationApp extends React.Component {
         getSelected={this.getSelected}
         onSelectPlant={this.onSelectPlant}
       />
-      <div className="pv2">
-        <button
-          className="btn"
-          disabled={this.isDisableNext()}
-          onClick={this.gotoNext}
-        >
-          Next
-        </button>
-      </div>
     </React.Fragment>
   )
 
@@ -141,8 +133,16 @@ class BatchLocationApp extends React.Component {
 
     return (
       <React.Fragment>
-        {batchSource === 'clones_from_mother' &&
-          this.renderClonesFromMother(plantType, selectedPlants)}
+        <div id="toast" className="toast"></div>
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+            if (!this.isDisableNext()) {
+              this.gotoNext()
+            } else {
+              toast('Please select plants & locations to continue.', 'warning')
+            }
+          }}>
           <div className="dark-grey mb3">
             <span className="w5 dib">Available Capacity:</span><b className="green w4 tr dib">{totalAvailableCapacity}</b>
           </div>
@@ -155,6 +155,17 @@ class BatchLocationApp extends React.Component {
               min={1}
               max={totalAvailableCapacity} />
           </div>
+          {batchSource === 'clones_from_mother' &&
+            this.renderClonesFromMother(plantType, selectedPlants)}
+          <div className="pv2">
+            <input
+              type="submit"
+              className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
+              value="Save &amp; Continue"
+            />
+          </div>
+        </form>
+
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body h-100">
             {editingPlant.id && (

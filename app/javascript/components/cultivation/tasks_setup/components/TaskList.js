@@ -18,7 +18,10 @@ const styles = `
   top: initial;
   min-width: 200px;
 }
-#myDropdown a:hover{
+.table-dropdown a:hover{
+  background-color: #eee;
+} 
+.button-dropdown:hover{
   background-color: #eee;
 }
 
@@ -100,11 +103,37 @@ class TaskList extends React.Component {
       )
     }
   }
-  handleMouseOver = row => {
-    console.log(row)
-  }
 
   handleMouseLeave = row => {
+    this.setState(prevState => ({
+      idOpen: null
+    }))
+  }
+
+  handleIndent = (row, action) => {
+    this.clearDropdown()
+    console.log(action)
+  }
+
+  handleClick = e => {
+    e.persist()
+    if (e.target && e.target !== null) {
+      this.setState(prevState => ({
+        idOpen: e.target.id
+      }))
+    }
+  }
+
+  handleEdit = e => {
+    this.clearDropdown()
+    editorSidebarHandler.open({
+      width: '500px',
+      data: e.row,
+      action: 'update'
+    })
+  }
+
+  clearDropdown() {
     this.setState(prevState => ({
       idOpen: null
     }))
@@ -114,6 +143,7 @@ class TaskList extends React.Component {
     let id = row.row['id']
     let handleEdit = this.handleEdit
     let handleMouseLeave = this.handleMouseLeave
+    let handleIndent = this.handleIndent
     return (
       <div className="flex justify-between-ns">
         <a
@@ -131,8 +161,7 @@ class TaskList extends React.Component {
                 ref={ref}
                 id={row.row['id']}
                 onClick={this.handleClick}
-                onMouseOver={this.handleMouseOver}
-                className="material-icons dim grey ml2 pointer button-dropdown"
+                className="material-icons ml2 pointer button-dropdown"
                 style={{ display: 'none', fontSize: '18px' }}
               >
                 more_horiz
@@ -156,7 +185,9 @@ class TaskList extends React.Component {
                     <a
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
-                    >
+                      onClick={e => {
+                        handleIndent(row, 'in')
+                      }}                    >
                       <i className="material-icons md-600 md-17 ph2">
                         format_indent_increase
                       </i>
@@ -165,6 +196,9 @@ class TaskList extends React.Component {
                     <a
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
+                      onClick={e => {
+                        handleIndent(row, 'out')
+                      }} 
                     >
                       <i className="material-icons md-600 md-17 ph2">
                         format_indent_decrease
@@ -265,26 +299,6 @@ class TaskList extends React.Component {
           updateTask.updatePosition(this.props.batch_id, i, this.dragged)
         }
       }
-    })
-  }
-
-  handleClick = e => {
-    e.persist()
-    if (e.target && e.target !== null) {
-      this.setState(prevState => ({
-        idOpen: e.target.id
-      }))
-    }
-  }
-
-  handleEdit = e => {
-    this.setState(prevState => ({
-      idOpen: null
-    }))
-    editorSidebarHandler.open({
-      width: '500px',
-      data: e.row,
-      action: 'update'
     })
   }
 
@@ -448,6 +462,7 @@ class TaskList extends React.Component {
             }
           ]}
           data={tasks}
+          className=""
           rows={100}
           defaultPageSize={100}
           getTdProps={(state, rowInfo, column, instance) => {

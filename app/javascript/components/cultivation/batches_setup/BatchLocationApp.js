@@ -1,11 +1,14 @@
+import 'babel-polyfill'
 import React from 'react'
 import BatchPlantSelectionList from './BatchPlantSelectionList'
 import BatchLocationEditor from './BatchLocationEditor'
 import { sumBy } from '../../utils/ArrayHelper'
 import { toast } from './../../utils/toast'
+import { submitBatchLocations } from '../actions/submitBatchLocations'
 
 class BatchLocationApp extends React.Component {
   state = {
+    isLoading: false,
     selectedPlants: [],
     editingPlant: {},
     totalAvailableCapacity: sumBy(this.props.locations, 'remaining_capacity'),
@@ -102,7 +105,10 @@ class BatchLocationApp extends React.Component {
     }
     const totalSelectedQuantity = sumBy(this.state.selectedPlants, 'quantity')
     if (parseInt(this.state.quantity) !== totalSelectedQuantity) {
-      toast('"Total Quantity Selected" does not match "Quantity Needed".', 'warning')
+      toast(
+        '"Total Quantity Selected" does not match "Quantity Needed".',
+        'warning'
+      )
       // Total quanty has to match with needed quantity
       return true
     }
@@ -111,9 +117,40 @@ class BatchLocationApp extends React.Component {
     return !!missed
   }
 
-  onSubmit = () => {
+  onSubmit = async () => {
+    this.setState({ isLoading: true })
     // TODO: Submit selected plants's quantity & locations
-    console.table(this.state.selectedPlants)
+    const locations = this.state.selectedPlants.reduce(
+      (acc, val) => acc.concat(val.trays || []),
+      []
+    )
+
+    // Calling the update_location api
+    const payload = {
+      batch_id: this.props.batchId,
+      locations
+    }
+
+    try {
+      const response = await (await fetch(
+        `/api/v1/batches/${this.props.batchId}/update_locations`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        }
+      )).json()
+      console.log('onSubmit::update_locations:', response)
+    } catch (error) {
+      console.error('onSubmit::update_locations:', error)
+    }
+    this.setState({ isLoading: false })
+
+    // TODO: Navigate to next page
     // window.location.replace('/cultivation/batches/' + this.props.batchId)
   }
 
@@ -134,7 +171,12 @@ class BatchLocationApp extends React.Component {
 
   render() {
     const { plantType, batchSource } = this.props
-    const { editingPlant, selectedPlants, totalAvailableCapacity } = this.state
+    const {
+      isLoading,
+      editingPlant,
+      selectedPlants,
+      totalAvailableCapacity
+    } = this.state
 
     // build available locations, taking out capacity occupied by different rows
     const availableLocations = this.getAvailableLocations(editingPlant.id)
@@ -143,7 +185,7 @@ class BatchLocationApp extends React.Component {
       <React.Fragment>
         <div id="toast" className="toast" />
         <form
-          onSubmit={e => {
+          onSubmit={async e => {
             e.preventDefault()
             if (!this.isDisableNext()) {
               this.onSubmit()
@@ -181,11 +223,11 @@ class BatchLocationApp extends React.Component {
           </div>
           {batchSource === 'clones_from_mother' &&
             this.renderClonesFromMother(plantType, selectedPlants)}
-          <div className="pv2">
+          <div className="pv2 w4">
             <input
               type="submit"
-              className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
-              value="Save &amp; Continue"
+              className="pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+              value={isLoading ? 'Saving...' : 'Save & Continue'}
             />
           </div>
         </form>

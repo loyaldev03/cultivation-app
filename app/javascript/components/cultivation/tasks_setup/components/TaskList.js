@@ -306,7 +306,7 @@ class TaskList extends React.Component {
               </div>
               <div className="w-40">
                 <div className="">
-                  <label>{this.state.batch.id['$oid']}</label>
+                  <label>{this.state.batch.id}</label>
                 </div>
               </div>
             </div>
@@ -355,7 +355,6 @@ class TaskList extends React.Component {
             </div>
           </div>
         </div>
-
         <ReactTable
           columns={[
             {

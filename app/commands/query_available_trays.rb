@@ -31,7 +31,7 @@ class QueryAvailableTrays
   end
 
   def match_purpose
-    if @purpose
+    if @purpose.present?
       {"$match": {tray_purpose: @purpose}}
     else
       {"$match": {}}

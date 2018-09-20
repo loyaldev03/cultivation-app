@@ -26,7 +26,7 @@ module Cultivation
       elsif args[:action] == 'out'
         #task become category or phase
         if task.isCategory
-          params = {isPhase: true, isCategory: false, phase: task.task_category, name: nil}
+          params = {isPhase: true, isCategory: false, phase: task.task_category, name: nil, task_category: nil}
         elsif !task.isPhase && !task.isCategory
           params = {isPhase: false, isCategory: true, task_category: task.name, name: nil}
         end

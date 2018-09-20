@@ -1,79 +1,81 @@
-<div class="pa4 w-80 h-100">
-  <%= simple_form_for :record, 
-      url: settings_core_unit_of_measures_path, 
-      remote: true, 
-      method: :post,
-      wrapper: false,
-      html: { 
-        class: 'vertical-form h-100 flex flex-column justify-between' 
-      } do |f|
-  %>
+<div class="ph4 pv3 bb b--light-grey">
+  <h5 class="h6--font dark-grey ma0 ttc">unit of measure</h5>
+</div>
+
+<%= simple_form_for :record, 
+    url: settings_core_unit_of_measures_path, 
+    remote: true, 
+    method: :post,
+    wrapper: false,
+    html: { 
+      class: 'h-100 flex flex-column justify-between' 
+    } do |f|
+%>
+
+  <div class="pa4">
+    <div class="mb3">
+      <%= f.input :name, label: 'Name',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :code, label: 'Code',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'db w-30 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :desc, label: 'Description',
+        as: :text,
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
+      %>
+    </div>
 
     <div class="">
-      <div class="mb3 flex flex-column">
-        <%= f.input :name, label: 'Name',
-          label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
-          input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      <span class="f5 fw5">Is this a base unit?</span>
+      <p class="gray f6 lh-copy mt1 w-90">
+              If toggle is not selected, then that means that its not a base unit.
+
+      </p>
+
+      <div class="flex justify-end w-90">
+        <%= f.check_box :base_unit,
+          checked: @record.base_unit,
+          class: "toggle toggle-default",
+          data: { toggle: 'shelves_number_options' }
         %>
+        <label class="toggle-button" for="record_base_unit"></label>
       </div>
+    </div>
 
-      <div class="mb3">
-        <%= f.input :code, label: 'Code',
-          label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
-          input_html: { class: 'w-30 ph2 pv1 gray ba b--black-20 br2 outline-0' } 
+    <div class="w-100 shelves_number_options" style="display: none">
+      <div class="mt3">
+        <%= f.label :base_uom, "Base UOM",
+          class: "f6 fw5 db mb1 gray"
         %>
-      </div>
-
-      <div class="mb3">
-        <%= f.input :desc, label: 'Description',
-          as: :text,
-          label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
-          input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
-        %>
-      </div>
-
-      <div class="">
-        <span class="f5 fw5">Is this a base unit?</span>
-        <p class="gray f6 lh-copy mt1 w-90">
-                If toggle is not selected, then that means that its not a base unit.
-
-        </p>
-
-        <div class="flex justify-end w-90">
-          <%= f.check_box :base_unit,
-            checked: @record.base_unit,
-            class: "toggle toggle-default",
-            data: { toggle: 'shelves_number_options' }
-          %>
-          <label class="toggle-button" for="record_base_unit"></label>
-        </div>
-      </div>
-
-      <div class="w-100 shelves_number_options" style="display: none">
-        <div class="mt3">
-          <%= f.label :base_uom, "Base UOM",
-            class: "f6 fw5 db mb1 gray"
-          %>
-          <%= f.input :base_uom, label: 'Base UOM',
-            label: false,
-            collection: @record.base_uom_select,
-            value_method: :code,
-            label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
-            input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
-          %>
-        </div>
-      </div>
-
-      <div class="mb2">
-        <%= f.input :conversion, label: 'Conversion',
+        <%= f.input :base_uom, label: 'Base UOM',
+          label: false,
+          collection: @record.base_uom_select,
+          value_method: :code,
           label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
           input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
         %>
       </div>
     </div>
 
-    <div class="w-100 flex justify-end">
-      <%= f.submit "Create", class: "pointer db tc pa3 bg-green white bn br2 ttu tracked link dim f5 fw6" %>
+    <div class="mb2">
+      <%= f.input :conversion, label: 'Conversion',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
+      %>
     </div>
-  <% end %>
-</div>
+  </div>
+
+  <div class="bt b--light-grey pv3 ph4">
+    <%= f.submit "Create", class: "fr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" %>
+  </div>
+<% end %>

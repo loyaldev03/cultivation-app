@@ -25,8 +25,4 @@ export default function indentTask(batch_id, row, action) {
         toast('Something happen', 'error')
       }
     })
-
-
 }
-
-

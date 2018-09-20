@@ -21,6 +21,7 @@ const styles = `
 #myDropdown a:hover{
   background-color: #eee;
 }
+
 `
 
 @observer
@@ -58,7 +59,7 @@ class TaskList extends React.Component {
       return (
         <div>
           <i
-            className="material-icons md-600 md-gray md-17 ph2 cursor-pointer"
+            className="material-icons md-600 md-gray md-17 ph2 pointer"
             onClick={e => {
               this.handleAddTask(row)
             }}
@@ -103,9 +104,17 @@ class TaskList extends React.Component {
     console.log(row)
   }
 
+  handleMouseLeave = row => {
+    this.setState(prevState => ({
+      idOpen: null
+    }))
+  }
+
+
   renderAttributesName = row => {
     let id = row.row['id']
     let handleEdit = this.handleEdit
+    let handleMouseLeave = this.handleMouseLeave
     return (
       <div className="flex justify-between-ns">
         <a
@@ -142,46 +151,47 @@ class TaskList extends React.Component {
                 >
                   <div
                     id="myDropdown"
+                    onMouseLeave={handleMouseLeave}
                     className="table-dropdown dropdown-content box--shadow-header show"
                   >
-                    <a className="ttc pv2 tc flex" style={{ display: 'flex' }}>
-                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">
+                    <a className="ttc pv2 tc flex pointer" style={{ display: 'flex' }}>
+                      <i className="material-icons md-600 md-17 ph2">
                         format_indent_increase
                       </i>
                       Indent In
                     </a>
-                    <a className="ttc pv2 tc flex" style={{ display: 'flex' }}>
-                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">
+                    <a className="ttc pv2 tc flex pointer" style={{ display: 'flex' }}>
+                      <i className="material-icons md-600 md-17 ph2">
                         format_indent_decrease
                       </i>
                       Indent Out
                     </a>
-                    <a className="ttc pv2 tc flex" style={{ display: 'flex' }}>
-                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">
+                    <a className="ttc pv2 tc flex pointer" style={{ display: 'flex' }}>
+                      <i className="material-icons md-600 md-17 ph2">
                         vertical_align_top
                       </i>
                       Insert Task Above
                     </a>
-                    <a className="ttc pv2 tc flex" style={{ display: 'flex' }}>
-                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">
+                    <a className="ttc pv2 tc flex pointer" style={{ display: 'flex' }}>
+                      <i className="material-icons md-600 md-17 ph2">
                         vertical_align_bottom
                       </i>
                       Insert Task Below
                     </a>
                     <a
-                      className="ttc pv2 tc flex"
+                      className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
                         handleEdit(row)
                       }}
                     >
-                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">
+                      <i className="material-icons md-600 md-17 ph2">
                         edit
                       </i>
                       Edit
                     </a>
-                    <a className="ttc pv2 tc flex" style={{ display: 'flex' }}>
-                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">
+                    <a className="ttc pv2 tc flex pointer" style={{ display: 'flex' }}>
+                      <i className="material-icons md-600 md-17 ph2">
                         delete_outline
                       </i>
                       Delete

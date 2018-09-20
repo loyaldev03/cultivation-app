@@ -78,7 +78,8 @@ Rails.application.routes.draw do
         get 'strains/(:filter)',      action: :strains, on: :collection
         get 'plants/(:plant_status)', action: :plants, on: :collection
       end
-      resources :batches do
+      resources :batches, only: [:create] do
+        post 'update_locations'
         resources :tasks, only: [:index, :update, :create]
       end
 

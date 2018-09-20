@@ -111,8 +111,10 @@ class BatchLocationApp extends React.Component {
     return !!missed
   }
 
-  gotoNext = () => {
-    window.location.replace('/cultivation/batches/' + this.props.batchId)
+  onSubmit = () => {
+    // TODO: Submit selected plants's quantity & locations
+    console.table(this.state.selectedPlants)
+    // window.location.replace('/cultivation/batches/' + this.props.batchId)
   }
 
   renderClonesFromMother = (plantType, selectedPlants) => (
@@ -144,7 +146,7 @@ class BatchLocationApp extends React.Component {
           onSubmit={e => {
             e.preventDefault()
             if (!this.isDisableNext()) {
-              this.gotoNext()
+              this.onSubmit()
             }
           }}
         >

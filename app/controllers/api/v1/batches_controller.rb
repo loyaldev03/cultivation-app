@@ -1,7 +1,4 @@
 class Api::V1::BatchesController < Api::V1::BaseApiController
-  def index
-  end
-
   def create
     @record = Cultivation::BatchForm.new
     @record = @record.submit(record_params)
@@ -11,6 +8,10 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     else
       render json: {error: 'Something wrong'}
     end
+  end
+
+  def update_locations
+    render json: {data: 'Okay'}
   end
 
   private

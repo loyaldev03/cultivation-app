@@ -42,9 +42,8 @@ class BatchLocationApp extends React.Component {
   }
 
   onClickSelectionEdit = plantId => {
-    this.setState({
-      editingPlant: this.getSelected(plantId)
-    })
+    const editingPlant = this.getSelected(plantId)
+    this.setState({ editingPlant })
     window.editorSidebar.open({ width: '500px' })
   }
 
@@ -61,7 +60,7 @@ class BatchLocationApp extends React.Component {
     found.quantity = plantConfig.quantity
     found.trays = plantConfig.trays
     const selectedPlants = this.state.selectedPlants.map(
-      x => (x.id === plantConfig.id ? plantConfig : x)
+      x => (x.id === found.id ? found : x)
     )
     this.setState({
       selectedPlants

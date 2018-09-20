@@ -9,6 +9,7 @@ import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import TaskEditor from './TaskEditor'
 import updateSidebarTask from '../actions/updateSidebarTask'
 import updateTask from '../actions/updateTask'
+import indentTask from '../actions/indentTask'
 
 import ReactTable from 'react-table'
 
@@ -112,7 +113,8 @@ class TaskList extends React.Component {
 
   handleIndent = (row, action) => {
     this.clearDropdown()
-    console.log(action)
+    console.log(row.row.id)
+    indentTask(this.props.batch_id, row.row, action)
   }
 
   handleClick = e => {

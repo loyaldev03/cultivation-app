@@ -4,7 +4,6 @@ import BatchPlantSelectionList from './BatchPlantSelectionList'
 import BatchLocationEditor from './BatchLocationEditor'
 import { sumBy } from '../../utils/ArrayHelper'
 import { toast } from './../../utils/toast'
-import { submitBatchLocations } from '../actions/submitBatchLocations'
 
 class BatchLocationApp extends React.Component {
   state = {
@@ -119,17 +118,10 @@ class BatchLocationApp extends React.Component {
 
   onSubmit = async () => {
     this.setState({ isLoading: true })
-    // TODO: Submit selected plants's quantity & locations
     const locations = this.state.selectedPlants.reduce(
       (acc, val) => acc.concat(val.trays || []),
       []
     )
-
-    // Calling the update_location api
-    const payload = {
-      batch_id: this.props.batchId,
-      locations
-    }
 
     try {
       const response = await (await fetch(
@@ -141,7 +133,9 @@ class BatchLocationApp extends React.Component {
             Accept: 'application/json',
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(payload)
+          body: JSON.stringify({
+            locations
+          })
         }
       )).json()
       console.log('onSubmit::update_locations:', response)
@@ -149,9 +143,8 @@ class BatchLocationApp extends React.Component {
       console.error('onSubmit::update_locations:', error)
     }
     this.setState({ isLoading: false })
-
     // TODO: Navigate to next page
-    // window.location.replace('/cultivation/batches/' + this.props.batchId)
+    window.location.replace('/cultivation/batches/' + this.props.batchId)
   }
 
   renderClonesFromMother = (plantType, selectedPlants) => (

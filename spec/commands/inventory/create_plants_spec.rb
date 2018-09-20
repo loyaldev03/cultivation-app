@@ -74,5 +74,7 @@ RSpec.describe Inventory::CreatePlants, type: :command do
         planted_on: planted_on
       )
     end
+
+    it "should save for later"
   end
 end

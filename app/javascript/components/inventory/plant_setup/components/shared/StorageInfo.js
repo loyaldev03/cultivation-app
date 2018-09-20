@@ -2,75 +2,62 @@ import React from 'react'
 import Select from 'react-select'
 import PropTypes from 'prop-types'
 import { FieldError } from '../../../../utils/FormHelpers'
-import reactSelectStyle from './reactSelectStyle'
+import LocationPicker from './LocationPicker'
+import reactSelectStyle from '../../../../utils/reactSelectStyle'
 
 class StorageInfo extends React.Component {
   constructor(props) {
     super(props)
-
-    this.mode = props.mode || 'all' // Accepts either 'all' or 'storage', in the future to be enhanced by storage_types.
-    if (this.isStorageMode) {
-      this.locations = props.locations.filter(
-        x => x.rm_id.length > 0 || x.rm_purpose === 'storage'
-      )
-    } else if (this.isMotherMode) {
-      this.locations = props.locations.filter(
-        x => x.rm_id.length > 0 && x.rm_purpose === 'mother'
-      )
-    } else {
-      this.locations = props.locations
+    this.state = {
+      facility_id: '',
+      facility_code: '',
+      facility_name: '',
+      room_code: '',
+      room_name: '',
+      room_purpose: '',
+      section_code: '',
+      section_name: '',
+      row_code: '',
+      shelf_code: '',
+      tray_code: '',
+      tray_capacity: '',
+      location_id: '',
+      location_type: '',
+      errors: {}
     }
 
-    let state = {
-      facility_id: props.facility_id,
-      facility_code: props.facility_code,
-      facility_name: props.facility_name,
-      room_id: props.room_id,
-      room_code: props.room_code,
-      room_name: props.room_name,
-      room_purpose: props.room_purpose,
-      section_code: props.section_code,
-      section_name: props.section_name,
-      row_id: props.row_id,
-      row_code: props.row_code,
-      shelf_id: props.shelf_id,
-      shelf_code: props.shelf_code,
-      tray_id: props.tray_id,
-      tray_code: props.tray_code,
-      tray_capacity: props.tray_capacity,
-      errors: {},
-      something: ''
-    }
-
-    // console.log(this.locations)
-    // console.log(props.tray_id)
-    if (props.tray_id) {
-      const location = this.locations.find(x => x.t_id === props.tray_id)
-      state = {
-        ...state,
-        facility_id: location.f_id,
-        facility_code: location.f_code,
-        facility_name: location.f_name,
-        room_id: location.rm_id,
-        room_code: location.rm_code,
-        room_name: location.rm_name,
-        room_purpose: location.rm_purpose,
-        section_code: location.s_code,
-        section_name: location.s_name,
-        row_id: location.rw_id,
-        row_code: location.rw_code,
-        shelf_id: location.sf_id,
-        shelf_code: location.sf_code,
-        tray_id: location.t_id,
-        tray_code: location.t_code,
-        tray_capacity: location.t_capacity
-      }
-    }
-
-    this.state = state
+    // Accepts either 'all' or 'storage', in the future to be enhanced by storage_types.
+    this.mode = props.mode || 'storage'
 
     // Storage location
     this.onSearchFound = this.onSearchFound.bind(this)
+    this.locationPicker = React.createRef()
+  }
+
+  onComponentDidMount() {
+    const location = this.locationPicker.current.findLocation(
+      this.props.location_id
+    )
+    const state = {
+      ...this.state,
+      facility_id: location.f_id,
+      facility_code: location.f_code,
+      facility_name: location.f_name,
+      room_id: location.rm_id,
+      room_code: location.rm_code,
+      room_name: location.rm_name,
+      room_purpose: location.rm_purpose,
+      section_code: location.s_code,
+      section_name: location.s_name,
+      row_id: location.rw_id,
+      row_code: location.rw_code,
+      shelf_id: location.sf_id,
+      shelf_code: location.sf_code,
+      tray_id: location.t_id,
+      tray_code: location.t_code,
+      tray_capacity: location.t_capacity
+    }
+    this.setState({ state })
   }
 
   get isStorageMode() {
@@ -93,13 +80,23 @@ class StorageInfo extends React.Component {
       this.setState({ errors })
     }
 
-    const { facility_id, room_id, row_id, shelf_id, tray_id } = this.state
+    const {
+      facility_id,
+      room_id,
+      row_id,
+      shelf_id,
+      tray_id,
+      location_id,
+      location_type
+    } = this.state
     return {
       facility_id,
       room_id,
       row_id,
       shelf_id,
       tray_id,
+      location_id,
+      location_type,
       errors,
       isValid: Object.getOwnPropertyNames(errors).length === 0
     }
@@ -107,25 +104,24 @@ class StorageInfo extends React.Component {
 
   reset() {
     this.setState({
-      facility_id: this.props.facility_id,
-      facility_code: this.props.facility_code,
-      facility_name: this.props.facility_name,
-      room_id: this.props.room_id,
-      room_code: this.props.room_code,
-      room_name: this.props.room_name,
-      room_purpose: this.props.room_purpose,
-      section_code: this.props.section_code,
-      section_name: this.props.section_name,
-      row_id: this.props.row_id,
-      row_code: this.props.row_code,
-      shelf_id: this.props.shelf_id,
-      shelf_code: this.props.shelf_code,
-      tray_id: this.props.tray_id,
-      tray_code: this.props.tray_code,
-      tray_capacity: this.props.tray_capacity,
-      errors: {},
-      something: { label: '', value: '' }
+      facility_id: '',
+      facility_code: '',
+      facility_name: '',
+      room_code: '',
+      room_name: '',
+      room_purpose: '',
+      section_code: '',
+      section_name: '',
+      row_code: '',
+      shelf_code: '',
+      tray_code: '',
+      tray_capacity: '',
+      location_id: '',
+      location_type: '',
+      errors: {}
     })
+
+    this.locationPicker.current.reset()
   }
 
   validateAll() {
@@ -185,8 +181,10 @@ class StorageInfo extends React.Component {
       tray_id: item.t_id,
       tray_code: item.t_code.length > 0 ? item.t_code : '--',
       tray_capacity: item.t_capacity,
-      errors: {},
-      something: { label: item.label, value: item.value }
+
+      location_id: item.location_id,
+      location_type: item.location_type,
+      errors: {}
     })
   }
 
@@ -298,12 +296,13 @@ class StorageInfo extends React.Component {
         </div>
         <div className="ph4 mb3 flex">
           <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Location</label>
-            <Select
-              value={this.state.something}
-              options={this.locations}
+            <LocationPicker
+              ref={this.locationPicker}
+              filter_facility_id={this.props.filter_facility_id}
+              locations={this.props.locations}
               onChange={this.onSearchFound}
-              styles={reactSelectStyle}
+              mode={this.props.mode}
+              location_id={this.props.location_id}
             />
             <FieldError errors={this.state.errors} field="location" />
           </div>
@@ -317,34 +316,14 @@ class StorageInfo extends React.Component {
 
 StorageInfo.propTypes = {
   mode: PropTypes.string.isRequired,
-  facility_id: PropTypes.string,
-  facility_code: PropTypes.string,
-  facility_name: PropTypes.string,
-  room_id: PropTypes.string,
-  room_code: PropTypes.string,
-  room_name: PropTypes.string,
-  room_purpose: PropTypes.string,
-  section_code: PropTypes.string,
-  section_name: PropTypes.string,
-  row_id: PropTypes.string,
-  row_code: PropTypes.string,
-  shelf_id: PropTypes.string,
-  shelf_code: PropTypes.string,
-  tray_id: PropTypes.string,
-  tray_code: PropTypes.string,
-  tray_capacity: PropTypes.number
+  location_id: PropTypes.string,
+  filter_facility_id: PropTypes.string
 }
 
 StorageInfo.defaultProps = {
   mode: 'all',
-  facility_id: '',
-  facility_code: '--',
-  room_code: '--',
-  section_code: '--',
-  row_code: '--',
-  shelf_code: '--',
-  tray_code: '--',
-  tray_capacity: null
+  location_id: '',
+  filter_facility_id: ''
 }
 
 export default StorageInfo

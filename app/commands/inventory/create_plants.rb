@@ -10,8 +10,14 @@ module Inventory
       :plant_status,
       :mother_plant_id,
       :expected_harvested_on,
+      :cultivation_batch_id,
       :planted_on,
-      :status
+      :status,
+      :facility,
+      :harvested_on,
+      :weight,
+      :weight_type,
+      :weight_unit
 
     def initialize(plant_ids: [],
                    strain_name:,
@@ -21,7 +27,13 @@ module Inventory
                    planted_on: nil,
                    plant_status:,
                    mother_plant_id: nil,
-                   expected_harvested_on: nil)
+                   expected_harvested_on: nil,
+                   cultivation_batch_id: nil,
+                   # This block below should only belongs to harvest
+                   harvested_on: nil,
+                   weight: nil,
+                   weight_type: nil,
+                   weight_unit: nil)
       @plant_ids = plant_ids
       @strain_name = strain_name
       @location_id = location_id
@@ -32,23 +44,59 @@ module Inventory
       @expected_harvested_on = expected_harvested_on
       @planted_on = planted_on
       @status = status
+      @cultivation_batch_id = cultivation_batch_id
+      @harvested_on = harvested_on
+      @weight = weight
+      @weight_type = weight_type
+      @weight_unit = weight_unit
     end
 
     def call
+      @facility = get_facility
       can_save = (status == 'draft' || valid?)
+
       if can_save
-        item = create_item
-        plants = create_articles_for_plants(item, status: status)
-        plants
+        item = create_item!
+        batch = create_batch!
+
+        if is_harvest?(plant_status)
+          plants = create_harvest_yield!(item, status: status, batch: batch)
+          plants
+        else
+          plants = create_articles_for_plants!(item, status: status, batch: batch)
+          plants
+        end
       end
     end
 
     private
 
-    def create_item
-      facility = get_facility
+    def create_harvest_yield!(item, status: 'draft', batch: nil)
+      harvest_yield = Inventory::ItemArticle.create!(
+        serial_no: plant_ids.first,
+        strain: item.strain,
+        item: item,
+        plant_status: plant_status,
+        location_id: location_id,
+        location_type: location_type,
+        facility: item.facility,
+        status: status,
+        mother_plant_id: mother_plant_id,
+        expected_harvested_on: nil,
+        planted_on: planted_on,
+        cultivation_batch: batch.nil? ? nil : batch.id,
+        weight: weight,
+        weight_type: weight_type,
+        weight_unit: weight_unit,
+      )
+
+      harvest_yield.save!
+      harvest_yield
+    end
+
+    def create_item!
       strain = Common::Strain.find_by(name: strain_name)
-      inventory = Inventory::Item.find_or_create_by(
+      inventory = Inventory::Item.find_or_create_by!(
         strain: strain,
         item_type: 'plant',
         facility: facility,
@@ -73,16 +121,34 @@ module Inventory
       end
     end
 
+    def create_batch!
+      Rails.logger.debug ">>>>> cultivation_batch_id: #{cultivation_batch_id}"
+      Rails.logger.debug ">>>>> facility: #{facility}"
+      Rails.logger.debug ">>>>> strain_name: #{strain_name}"
+
+      return nil if cultivation_batch_id.nil?
+
+      strain = Common::Strain.find_by(name: strain_name)
+      batch = Cultivation::Batch.find_or_create_by!(
+        batch_no: cultivation_batch_id,
+        strain: strain,
+        facility: facility,
+      ) do |b|
+        b.name = 'Batch from Plant Setup'
+      end
+      batch
+    end
+
     # TODO: Maybe should pass in the batch ID
-    def create_articles_for_plants(item, status: 'draft')
+    def create_articles_for_plants!(item, status: 'draft', batch: nil)
       plants = []
       plant_ids.each do |plant_id|
         plant = Inventory::ItemArticle.find_or_initialize_by(
           serial_no: plant_id.strip,
           strain: item.strain,
           item: item,
+          plant_status: plant_status,
         ) do |t|
-          t.plant_status = plant_status
           t.location_id = location_id
           t.location_type = location_type
           t.facility = item.facility
@@ -90,10 +156,11 @@ module Inventory
           t.mother_plant_id = mother_plant_id
           t.expected_harvested_on = nil
           t.planted_on = planted_on
+          t.cultivation_batch = batch.id unless batch.nil?
         end
 
         unless plant.persisted? # Create plants that is not in the system only. Do not override existing
-          plant.save                  # ones as they may already associated to another batch.
+          plant.save!                 # ones as they may already associated to another batch.
           plants << plant
         end
       end
@@ -109,8 +176,12 @@ module Inventory
       errors.add(:plant_ids, 'Plant IDs are required') if plant_ids.empty?
       errors.add(:strain_name, 'Strain is required') if strain_name.empty?
       errors.add(:location_id, 'Plant location is required') if location_id.nil?
-      errors.add(:planted_on, 'Planted on date is required') if planted_on.nil?
+      errors.add(:planted_on, 'Planted on date is required') if planted_on.nil? && !is_harvest?(plant_status)
       errors.empty?
+    end
+
+    def is_harvest?(plant_status)
+      %w(flower shakes trim waste wet other).include?(plant_status)
     end
   end
 end

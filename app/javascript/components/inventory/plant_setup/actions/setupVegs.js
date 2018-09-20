@@ -1,7 +1,7 @@
 import plantStore from '../store/PlantStore'
 
-export default function setupMother(payload) {
-  return fetch('/api/v1/plant_setup/setup_mother', {
+export default function setupVegs(payload) {
+  return fetch('/api/v1/plant_setup/setup_vegs', {
     method: 'POST',
     credentials: 'include',
     body: JSON.stringify(payload),
@@ -10,10 +10,10 @@ export default function setupMother(payload) {
     }
   })
     .then(response => {
-      return response.json().then(data => {
-        console.log(data)
-        return { status: response.status, data }
-      })
+      return response.json().then(data => ({
+        status: response.status,
+        data
+      }))
     })
     .then(result => {
       const { status, data } = result

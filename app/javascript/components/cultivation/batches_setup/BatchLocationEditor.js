@@ -138,13 +138,11 @@ class BatchLocationEditor extends React.PureComponent {
         tray_code: selectedLocation.tray_code,
         tray_capacity: e.target.value
       }
-
       const selectedTrays = traySel
         ? this.state.selectedTrays.map(
             t => (t.tray_id === trayId ? trayObj : t)
           )
         : this.state.selectedTrays.concat([trayObj])
-
       this.setState({
         selectedTrays,
         selectedLocation

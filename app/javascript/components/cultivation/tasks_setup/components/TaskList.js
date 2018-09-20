@@ -12,14 +12,16 @@ import updateTask from '../actions/updateTask'
 
 import ReactTable from 'react-table'
 
-// const styles = `
-// .button-dropdown{
-//   display: none;
-// }
-// .hover:hover + .button-dropdown{
-//   display: block;
-// }
-// `
+const styles = `
+.table-dropdown {
+  box-shadow: 0 3px 10px 0 #00000087;
+  top: initial;
+  min-width: 200px;
+}
+#myDropdown a:hover{
+  background-color: #eee;
+}
+`
 
 @observer
 class TaskList extends React.Component {
@@ -69,48 +71,92 @@ class TaskList extends React.Component {
   }
 
   renderPhaseColumn = row => {
+    let handleEdit = this.handleEdit
     if (row.row['attributes.isPhase'] == true) {
-      return <div>{row.value}</div>
+      return <a onClick={(e) => { handleEdit(row) }}>{row.value}</a>
+
     }
   }
 
   renderCategoryColumn = row => {
+    let handleEdit = this.handleEdit
     if (row.row['attributes.isCategory'] == true) {
-      return <div>{row.value}</div>
+      return <a onClick={(e) => { handleEdit(row) }}>{row.value}</a>
+
     }
   }
-  handleMouseOver = row =>{
+  handleMouseOver = row => {
     console.log(row)
   }
 
   renderAttributesName = row => {
     let id = row.row['id']
+    let handleEdit = this.handleEdit
     return (
       <div className="flex justify-between-ns">
-        <div className="">{row.value}</div>
+        <a onClick={(e) => { handleEdit(row) }}>{row.value}</a>
 
         <Manager>
           <Reference>
             {({ ref }) => (
-              <i ref={ref} id={row.row['id']} onClick={this.handleClick} onMouseOver={this.handleMouseOver} className="material-icons dim grey ml2 pointer button-dropdown" style={{display: 'none', fontSize: '18px'}}>
+              <i
+                ref={ref}
+                id={row.row['id']}
+                onClick={this.handleClick}
+                onMouseOver={this.handleMouseOver}
+                className="material-icons dim grey ml2 pointer button-dropdown"
+                style={{ display: 'none', fontSize: '18px' }}
+              >
                 more_horiz
               </i>
             )}
           </Reference>
-          {(this.state.isOpen && this.state.idOpen === id) && (
-            <Popper placement="bottom" style={{borderColor: 'red'}}>
-              {({ ref, style, placement, arrowProps }) => (
-                <div ref={ref} id={'dropdown-' + row.row['id']} style={style} data-placement={placement}>
-                  Popper element
-            <div ref={arrowProps.ref} style={arrowProps.style} />
-                </div>
-              )}
-            </Popper>
-          )}
+          {
+            this.state.idOpen === id && (
+              <Popper placement="bottom" style={{ borderColor: 'red' }}>
+                {({ ref, style, placement, arrowProps }) => (
+                  <div
+                    ref={ref}
+                    id={'dropdown-' + row.row['id']}
+                    style={style}
+                    data-placement={placement}
+                  >
+                    
+                    <div id="myDropdown" className="table-dropdown dropdown-content box--shadow-header show">
+                      <a className="ttc pv2 tc flex" style={{display: 'flex'}}>
+                        <i className="material-icons md-600 md-17 ph2 cursor-pointer">format_indent_increase</i>
+                        Indent In
+                      </a>
+                      <a className="ttc pv2 tc flex" style={{display: 'flex'}}>
+                        <i className="material-icons md-600 md-17 ph2 cursor-pointer">format_indent_decrease</i>
+                        Indent Out
+                      </a>
+                      <a className="ttc pv2 tc flex" style={{display: 'flex'}}>
+                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">vertical_align_top</i>
+                        Insert Task Above
+                      </a>
+                      <a className="ttc pv2 tc flex" style={{display: 'flex'}}>
+                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">vertical_align_bottom</i>
+                        Insert Task Below
+                      </a>
+                      <a className="ttc pv2 tc flex" style={{ display: 'flex' }} onClick={(e)=> {handleEdit(row)}}>
+                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">edit</i>
+                      Edit
+                      </a>
+                      <a className="ttc pv2 tc flex" style={{ display: 'flex' }}>
+                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">delete_outline</i>
+                      Delete
+                      </a>
+
+                    </div>
+                    <div ref={arrowProps.ref} style={arrowProps.style} />
+                  </div>
+                )}
+              </Popper>
+            )}
         </Manager>
-
-
-      </div>)
+      </div>
+    )
   }
 
   handleAddTask = row => {
@@ -162,14 +208,24 @@ class TaskList extends React.Component {
     })
   }
 
-  handleClick = (e) => {
+  handleClick = e => {
     e.persist()
-    if(e.target && e.target !== null){
-    this.setState(prevState => ({
-      isOpen: !prevState.isOpen,
-      idOpen: e.target.id
-    }))
+    if (e.target && e.target !== null) {
+      this.setState(prevState => ({
+        idOpen: e.target.id
+      }))
     }
+  }
+
+  handleEdit = e => {
+    this.setState(prevState => ({
+      idOpen: null
+    }))
+    editorSidebarHandler.open({
+      width: '500px',
+      data: e.row,
+      action: 'update'
+    })
   }
 
   render() {
@@ -177,8 +233,7 @@ class TaskList extends React.Component {
 
     return (
       <React.Fragment>
-        {/* <style> {styles} </style> */}
-
+        <style> {styles} </style>
 
         <div className=" flex">
           <div className="w-40">
@@ -295,7 +350,7 @@ class TaskList extends React.Component {
               Header: 'Name',
               accessor: 'attributes.name',
               maxWidth: '300',
-              Cell: row => <div>{this.renderAttributesName(row)}</div>             
+              Cell: row => <div>{this.renderAttributesName(row)}</div>
             },
             {
               Header: 'Start Date',
@@ -356,13 +411,13 @@ class TaskList extends React.Component {
             if (rowInfo) {
               return {
                 onMouseOver: (e, handleOriginal) => {
-                  let button = document.getElementById(rowInfo.row.id);
-                  button.style.display = "block";
+                  let button = document.getElementById(rowInfo.row.id)
+                  button.style.display = 'block'
                 },
                 onMouseOut: (e, handleOriginal) => {
-                  let button = document.getElementById(rowInfo.row.id);
-                  button.style.display = "none";
-                }              
+                  let button = document.getElementById(rowInfo.row.id)
+                  button.style.display = 'none'
+                }
               }
             }
             return {}

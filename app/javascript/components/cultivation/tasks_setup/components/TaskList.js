@@ -187,7 +187,8 @@ class TaskList extends React.Component {
                       style={{ display: 'flex' }}
                       onClick={e => {
                         handleIndent(row, 'in')
-                      }}                    >
+                      }}
+                    >
                       <i className="material-icons md-600 md-17 ph2">
                         format_indent_increase
                       </i>
@@ -198,7 +199,7 @@ class TaskList extends React.Component {
                       style={{ display: 'flex' }}
                       onClick={e => {
                         handleIndent(row, 'out')
-                      }} 
+                      }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
                         format_indent_decrease

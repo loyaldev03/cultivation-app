@@ -73,16 +73,30 @@ class TaskList extends React.Component {
   renderPhaseColumn = row => {
     let handleEdit = this.handleEdit
     if (row.row['attributes.isPhase'] == true) {
-      return <a onClick={(e) => { handleEdit(row) }}>{row.value}</a>
-
+      return (
+        <a
+          onClick={e => {
+            handleEdit(row)
+          }}
+        >
+          {row.value}
+        </a>
+      )
     }
   }
 
   renderCategoryColumn = row => {
     let handleEdit = this.handleEdit
     if (row.row['attributes.isCategory'] == true) {
-      return <a onClick={(e) => { handleEdit(row) }}>{row.value}</a>
-
+      return (
+        <a
+          onClick={e => {
+            handleEdit(row)
+          }}
+        >
+          {row.value}
+        </a>
+      )
     }
   }
   handleMouseOver = row => {
@@ -94,7 +108,13 @@ class TaskList extends React.Component {
     let handleEdit = this.handleEdit
     return (
       <div className="flex justify-between-ns">
-        <a onClick={(e) => { handleEdit(row) }}>{row.value}</a>
+        <a
+          onClick={e => {
+            handleEdit(row)
+          }}
+        >
+          {row.value}
+        </a>
 
         <Manager>
           <Reference>
@@ -111,49 +131,67 @@ class TaskList extends React.Component {
               </i>
             )}
           </Reference>
-          {
-            this.state.idOpen === id && (
-              <Popper placement="bottom" style={{ borderColor: 'red' }}>
-                {({ ref, style, placement, arrowProps }) => (
+          {this.state.idOpen === id && (
+            <Popper placement="bottom" style={{ borderColor: 'red' }}>
+              {({ ref, style, placement, arrowProps }) => (
+                <div
+                  ref={ref}
+                  id={'dropdown-' + row.row['id']}
+                  style={style}
+                  data-placement={placement}
+                >
                   <div
-                    ref={ref}
-                    id={'dropdown-' + row.row['id']}
-                    style={style}
-                    data-placement={placement}
+                    id="myDropdown"
+                    className="table-dropdown dropdown-content box--shadow-header show"
                   >
-                    
-                    <div id="myDropdown" className="table-dropdown dropdown-content box--shadow-header show">
-                      <a className="ttc pv2 tc flex" style={{display: 'flex'}}>
-                        <i className="material-icons md-600 md-17 ph2 cursor-pointer">format_indent_increase</i>
-                        Indent In
-                      </a>
-                      <a className="ttc pv2 tc flex" style={{display: 'flex'}}>
-                        <i className="material-icons md-600 md-17 ph2 cursor-pointer">format_indent_decrease</i>
-                        Indent Out
-                      </a>
-                      <a className="ttc pv2 tc flex" style={{display: 'flex'}}>
-                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">vertical_align_top</i>
-                        Insert Task Above
-                      </a>
-                      <a className="ttc pv2 tc flex" style={{display: 'flex'}}>
-                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">vertical_align_bottom</i>
-                        Insert Task Below
-                      </a>
-                      <a className="ttc pv2 tc flex" style={{ display: 'flex' }} onClick={(e)=> {handleEdit(row)}}>
-                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">edit</i>
+                    <a className="ttc pv2 tc flex" style={{ display: 'flex' }}>
+                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">
+                        format_indent_increase
+                      </i>
+                      Indent In
+                    </a>
+                    <a className="ttc pv2 tc flex" style={{ display: 'flex' }}>
+                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">
+                        format_indent_decrease
+                      </i>
+                      Indent Out
+                    </a>
+                    <a className="ttc pv2 tc flex" style={{ display: 'flex' }}>
+                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">
+                        vertical_align_top
+                      </i>
+                      Insert Task Above
+                    </a>
+                    <a className="ttc pv2 tc flex" style={{ display: 'flex' }}>
+                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">
+                        vertical_align_bottom
+                      </i>
+                      Insert Task Below
+                    </a>
+                    <a
+                      className="ttc pv2 tc flex"
+                      style={{ display: 'flex' }}
+                      onClick={e => {
+                        handleEdit(row)
+                      }}
+                    >
+                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">
+                        edit
+                      </i>
                       Edit
-                      </a>
-                      <a className="ttc pv2 tc flex" style={{ display: 'flex' }}>
-                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">delete_outline</i>
+                    </a>
+                    <a className="ttc pv2 tc flex" style={{ display: 'flex' }}>
+                      <i className="material-icons md-600 md-17 ph2 cursor-pointer">
+                        delete_outline
+                      </i>
                       Delete
-                      </a>
-
-                    </div>
-                    <div ref={arrowProps.ref} style={arrowProps.style} />
+                    </a>
                   </div>
-                )}
-              </Popper>
-            )}
+                  <div ref={arrowProps.ref} style={arrowProps.style} />
+                </div>
+              )}
+            </Popper>
+          )}
         </Manager>
       </div>
     )

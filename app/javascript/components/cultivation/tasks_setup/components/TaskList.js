@@ -110,7 +110,6 @@ class TaskList extends React.Component {
     }))
   }
 
-
   renderAttributesName = row => {
     let id = row.row['id']
     let handleEdit = this.handleEdit
@@ -154,25 +153,37 @@ class TaskList extends React.Component {
                     onMouseLeave={handleMouseLeave}
                     className="table-dropdown dropdown-content box--shadow-header show"
                   >
-                    <a className="ttc pv2 tc flex pointer" style={{ display: 'flex' }}>
+                    <a
+                      className="ttc pv2 tc flex pointer"
+                      style={{ display: 'flex' }}
+                    >
                       <i className="material-icons md-600 md-17 ph2">
                         format_indent_increase
                       </i>
                       Indent In
                     </a>
-                    <a className="ttc pv2 tc flex pointer" style={{ display: 'flex' }}>
+                    <a
+                      className="ttc pv2 tc flex pointer"
+                      style={{ display: 'flex' }}
+                    >
                       <i className="material-icons md-600 md-17 ph2">
                         format_indent_decrease
                       </i>
                       Indent Out
                     </a>
-                    <a className="ttc pv2 tc flex pointer" style={{ display: 'flex' }}>
+                    <a
+                      className="ttc pv2 tc flex pointer"
+                      style={{ display: 'flex' }}
+                    >
                       <i className="material-icons md-600 md-17 ph2">
                         vertical_align_top
                       </i>
                       Insert Task Above
                     </a>
-                    <a className="ttc pv2 tc flex pointer" style={{ display: 'flex' }}>
+                    <a
+                      className="ttc pv2 tc flex pointer"
+                      style={{ display: 'flex' }}
+                    >
                       <i className="material-icons md-600 md-17 ph2">
                         vertical_align_bottom
                       </i>
@@ -185,12 +196,13 @@ class TaskList extends React.Component {
                         handleEdit(row)
                       }}
                     >
-                      <i className="material-icons md-600 md-17 ph2">
-                        edit
-                      </i>
+                      <i className="material-icons md-600 md-17 ph2">edit</i>
                       Edit
                     </a>
-                    <a className="ttc pv2 tc flex pointer" style={{ display: 'flex' }}>
+                    <a
+                      className="ttc pv2 tc flex pointer"
+                      style={{ display: 'flex' }}
+                    >
                       <i className="material-icons md-600 md-17 ph2">
                         delete_outline
                       </i>

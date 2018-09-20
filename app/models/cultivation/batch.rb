@@ -7,6 +7,7 @@ module Cultivation
     field :batch_no, type: String
     field :batch_source, type: String
     field :start_date, type: DateTime
+    field :estimated_harvest_date, type: DateTime
     field :facility_id, type: BSON::ObjectId
     field :grow_method, type: String
 

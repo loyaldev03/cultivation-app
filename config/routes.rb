@@ -78,15 +78,18 @@ Rails.application.routes.draw do
         get 'strains/(:filter)',      action: :strains, on: :collection
         get 'plants/(:plant_status)', action: :plants, on: :collection
       end
+
       resources :batches, only: [:create] do
         post 'update_locations'
-        resources :tasks, only: [:index, :update, :create]
+        resources :tasks, only: [:index, :update, :create] do
+          put 'indent', on: :member
+        end
       end
 
       resource :plant_setup, only: [] do
         post 'setup_mother'
         post 'setup_clones'
-        post 'setup_veg'
+        post 'setup_vegs'
         post 'setup_harvest_yield'
         post 'setup_waste'
       end

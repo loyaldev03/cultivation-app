@@ -1,16 +1,15 @@
 import React from 'react'
-import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
-import SeedEditor from './editor/SeedEditor'
+// import SeedEditor from './editor/SeedEditor'
 import CloneEditor from './editor/CloneEditor'
 import MotherEditor from './editor/MotherEditor'
 import VegGroupEditor from './editor/VegGroupEditor'
-import { FieldError } from '../../../utils/FormHelpers'
-import reactSelectStyle from './shared/reactSelectStyle'
+import HarvestYieldEditor from './editor/HarvestYieldEditor'
 
 const VEG_GROUP = 'VEG_GROUP'
 const SEED = 'SEED'
 const CLONE = 'CLONE'
 const MOTHER = 'MOTHER'
+const HARVEST = 'HARVEST'
 
 export default class PlantEditor extends React.Component {
   constructor(props) {
@@ -22,28 +21,11 @@ export default class PlantEditor extends React.Component {
     this.onExitCurrentEditor = this.onExitCurrentEditor.bind(this)
     this.onClose = this.onClose.bind(this)
     this.onValidateParent = this.onValidateParent.bind(this)
-    this.onResetParent = this.onResetParent.bind(this)
   }
 
   get editorSelected() {
     return this.state.stockEditor.length > 0
   }
-
-  // TODO:  May need more logic to add newly created item into the async list: https://react-select.com/props#creatable-props
-  // At the moment, newly created item does not appear on suggestion list.
-  // onStrainSelected(item) {
-  //   this.setState(
-  //     {
-  //       strain: item.label,
-  //       strain_type: item.strain_type || this.state.strain_type,
-  //       errors: {}
-  //     } /*, () => console.log(this.state.strain_type)*/
-  //   )
-  // }
-
-  // onChangeStrainType(event) {
-  //   this.setState({ strain_type: event.target.value })
-  // }
 
   onSetStockEditor(event) {
     this.setState({ stockEditor: event.target.dataset.editor })
@@ -62,12 +44,6 @@ export default class PlantEditor extends React.Component {
 
   onValidateParent() {
     return { isValid: true }
-  }
-
-  onResetParent() {
-    this.setState({
-      errors: {}
-    })
   }
 
   renderEditorToggle() {
@@ -109,18 +85,18 @@ export default class PlantEditor extends React.Component {
           </a>
           <a
             className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
-            data-editor={''}
-            onClick={() => alert('To be implmented.')}
+            data-editor={HARVEST}
+            onClick={this.onSetStockEditor}
           >
             Add harvest yield
           </a>
-          <a
+          {/* <a
             className="pv2 ph3 mb2 bg-orange white bn br2 link dim f6 fw6 mr2 dib pointer"
             data-editor={''}
             onClick={() => alert('To be implmented.')}
           >
             Add waste
-          </a>
+          </a> */}
         </div>
       </React.Fragment>
     )
@@ -134,7 +110,6 @@ export default class PlantEditor extends React.Component {
     return (
       <SeedEditor
         onExitCurrentEditor={this.onExitCurrentEditor}
-        onResetParent={this.onResetParent}
         locations={this.locations}
       />
     )
@@ -145,7 +120,6 @@ export default class PlantEditor extends React.Component {
     return (
       <CloneEditor
         onExitCurrentEditor={this.onExitCurrentEditor}
-        onResetParent={this.onResetParent}
         locations={this.locations}
       />
     )
@@ -156,7 +130,6 @@ export default class PlantEditor extends React.Component {
     return (
       <MotherEditor
         onExitCurrentEditor={this.onExitCurrentEditor}
-        onResetParent={this.onResetParent}
         locations={this.locations}
       />
     )
@@ -167,10 +140,35 @@ export default class PlantEditor extends React.Component {
     return (
       <VegGroupEditor
         onExitCurrentEditor={this.onExitCurrentEditor}
-        onResetParent={this.onResetParent}
         locations={this.locations}
       />
     )
+  }
+
+  renderHarvestYieldEditor() {
+    if (this.state.stockEditor !== HARVEST) return null
+    return (
+      <HarvestYieldEditor
+        onExitCurrentEditor={this.onExitCurrentEditor}
+        locations={this.locations}
+      />
+    )
+  }
+
+  renderEditor() {
+    // this.renderSeedEditor()
+    switch (this.state.stockEditor) {
+    case MOTHER:
+      return this.renderMotherEditor()
+    case CLONE:
+      return this.renderCloneEditor()
+    case VEG_GROUP:
+      return this.renderVegGroupEditor()
+    case HARVEST:
+      return this.renderHarvestYieldEditor()
+    default:
+      return this.renderEditorToggle()
+    }
   }
 
   renderTitle() {
@@ -183,6 +181,8 @@ export default class PlantEditor extends React.Component {
       title = 'Add Clone'
     } else if (this.state.stockEditor === MOTHER) {
       title = 'Add Mother Plant'
+    } else if (this.state.stockEditor === HARVEST) {
+      title = 'Add Harvest Yield'
     } else {
       title = 'Add Active Plant'
     }
@@ -229,11 +229,7 @@ export default class PlantEditor extends React.Component {
       <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
         <div className="rc-slide-panel__body flex flex-column">
           {this.renderTitle()}
-          {this.renderEditorToggle()}
-          {this.renderSeedEditor()}
-          {this.renderCloneEditor()}
-          {this.renderMotherEditor()}
-          {this.renderVegGroupEditor()}
+          {this.renderEditor()}
         </div>
       </div>
     )

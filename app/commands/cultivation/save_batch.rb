@@ -26,7 +26,7 @@ module Cultivation
         {:phase => 'Clone', :task_category => 'Clone', :name => 'Clone', :days => 1, :days_from_start_date => 2, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :isPhase => 'false', :isCategory => 'false'},
         {:phase => 'Clone', :task_category => 'Clone', :name => 'Get Mother Plant', :days => 1, :days_from_start_date => 2, :estimated_hours => 0.1, :no_of_employees => 1, :materials => nil, :isPhase => 'false', :isCategory => 'false'},
         {:phase => 'Clone', :task_category => 'Clone', :name => 'Cut, Dip & Place', :days => 1, :days_from_start_date => 2, :estimated_hours => 6.8, :no_of_employees => 3, :materials => 'Clone Gel, Razors, Exacto Knife, Bags', :isPhase => 'false', :isCategory => 'false'},
-        {:phase => 'Clone', :task_category => '', :name => '', :days => 1, :days_from_start_date => 4, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :isPhase => 'false', :isCategory => 'true'},
+        {:phase => 'Clone', :task_category => 'Clean', :name => '', :days => 1, :days_from_start_date => 4, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :isPhase => 'false', :isCategory => 'true'},
         {:phase => 'Clone', :task_category => 'Clean', :name => 'Clean', :days => 1, :days_from_start_date => 4, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :isPhase => 'false', :isCategory => 'false'},
         {:phase => 'Clone', :task_category => 'Clean', :name => 'Return Mother Plant', :days => 1, :days_from_start_date => 4, :estimated_hours => 0.1, :no_of_employees => 1, :materials => nil, :isPhase => 'false', :isCategory => 'false'},
         {:phase => 'Clone', :task_category => 'Clean', :name => 'Clean and Return Supplies', :days => 1, :days_from_start_date => 4, :estimated_hours => 0.25, :no_of_employees => 1, :materials => 'Gloves, Paper Towels, Cleaner, Broom', :isPhase => 'false', :isCategory => 'false'},
@@ -128,6 +128,8 @@ module Cultivation
         end
         category_id = a['id'] if task[:isCategory] == 'true'
       end
+      #update estimated finish
+      update_harvest_date(batch)
       batch
     end
 
@@ -183,6 +185,11 @@ module Cultivation
       else
         false
       end
+    end
+
+    def update_harvest_date(batch)
+      ##should be harvest phase end_date
+      batch.update(estimated_harvest_date: batch.tasks.last.end_date)
     end
   end
 end

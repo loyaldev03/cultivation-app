@@ -1,7 +1,7 @@
 import React from 'react'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 import { FieldError } from '../../../../utils/FormHelpers'
-import reactSelectStyle from './reactSelectStyle'
+import reactSelectStyle from '../../../../utils/reactSelectStyle'
 
 export default class StrainPicker extends React.Component {
   constructor(props) {

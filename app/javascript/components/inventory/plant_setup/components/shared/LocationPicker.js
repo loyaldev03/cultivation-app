@@ -1,57 +1,235 @@
 import React from 'react'
 import Select from 'react-select'
 import PropTypes from 'prop-types'
-import reactSelectStyle from './reactSelectStyle'
+import reactSelectStyle from '../../../../utils/reactSelectStyle'
 
-const VEG_TRAY_PURPOSES = ['cure', 'dry', 'flower', 'veg', 'veg1', 'veg2']
+const VEG_TRAY_PURPOSES = ['veg', 'veg1', 'veg2']
 
 class LocationPicker extends React.Component {
   constructor(props) {
     super(props)
 
-    if (props.mode === 'clone') {
-      this.trays = props.locations.filter(
-        x => x.t_id.length > 0 && x.rm_purpose === 'clone'
-      )
-    } else if (props.mode === 'vegTray') {
-      this.trays = props.locations.filter(
-        x => x.t_id.length > 0 && VEG_TRAY_PURPOSES.indexOf(x.rm_purpose) >= 0
-      )
-    } else if (props.mode === 'mother') {
-      this.trays = props.locations.filter(
-        x =>
-          x.rm_id.length > 0 &&
-          x.rw_id.length === 0 &&
-          x.rm_purpose === 'mother'
-      )
-    } else if (props.mode === 'room') {
-      this.trays = props.locations.filter(
-        x => x.rm_id.length > 0 && x.rw_id.length === 0
-      )
-    } else {
-      this.trays = props.locations
-    }
-    // console.log(this.trays)
-    const item = this.trays.find(x => x.value === props.value) || null
-    this.state = { value: item }
+    this.facilities = props.locations
+      .filter(this.isFacilityOnly)
+      .map(x => ({ ...x, label: `${x.f_name} - ${x.f_code}` }))
+    const facility = this.findFacility(
+      this.facilities,
+      props.filter_facility_id
+    )
 
-    this.onChange = this.onChange.bind(this)
+    const locations = this.filterLocationByFacility(
+      this.props.filter_facility_id
+    )
+    const location = this.findLocation(locations, props.location_id)
+
+    this.state = {
+      value: location,
+      facility,
+      locations
+    }
+
+    this.mode = props.mode
   }
 
-  onChange(item) {
-    this.props.onChange(item)
+  isFacilityOnly(item) {
+    return item.f_id.length > 0 && item.rm_id.length <= 0
+  }
+
+  isClone(facility_id) {
+    if (facility_id) {
+      return item =>
+        item.t_id.length > 0 &&
+        item.rm_purpose === 'clone' &&
+        item.f_id === facility_id
+    } else {
+      return item => item.t_id.length > 0 && item.rm_purpose === 'clone'
+    }
+  }
+
+  isMother(facility_id) {
+    if (facility_id) {
+      return item =>
+        item.rm_id.length > 0 &&
+        item.rw_id.length === 0 &&
+        item.rm_purpose === 'mother' &&
+        item.f_id === facility_id
+    } else {
+      return item =>
+        item.rm_id.length > 0 &&
+        item.rw_id.length === 0 &&
+        item.rm_purpose === 'mother'
+    }
+  }
+
+  isVeg(facility_id) {
+    if (facility_id) {
+      return item =>
+        item.t_id.length > 0 &&
+        VEG_TRAY_PURPOSES.indexOf(item.rm_purpose) >= 0 &&
+        item.f_id === facility_id
+    } else {
+      return item =>
+        item.t_id.length > 0 && VEG_TRAY_PURPOSES.indexOf(item.rm_purpose) >= 0
+    }
+  }
+
+  isDry(facility_id) {
+    if (facility_id) {
+      return item =>
+        item.t_id.length > 0 &&
+        item.rm_purpose === 'dry' &&
+        item.f_id === facility_id
+    } else {
+      return item => item.t_id.length > 0 && item.rm_purpose === 'dry'
+    }
+  }
+
+  isFlower(facility_id) {
+    if (facility_id) {
+      return item =>
+        item.t_id.length > 0 &&
+        item.rm_purpose === 'flower' &&
+        item.f_id === facility_id
+    } else {
+      return item => item.t_id.length > 0 && item.rm_purpose === 'flower'
+    }
+  }
+
+  isRoomOnly(facility_id) {
+    if (facility_id) {
+      return item =>
+        item.rm_id.length > 0 &&
+        item.rw_id.length === 0 &&
+        item.f_id === facility_id
+    } else {
+      return item => item.rm_id.length > 0 && item.rw_id.length === 0
+    }
+  }
+
+  get isFacilitySet() {
+    return (
+      this.props.filter_facility_id || this.props.filter_facility_id.length > 0
+    )
+  }
+
+  filterLocationByFacility = facility_id => {
+    if (facility_id === null || facility_id.length <= 0) {
+      return []
+    }
+
+    let _locations = []
+    const { mode, locations } = this.props
+    if (mode === 'clone') {
+      _locations = locations.filter(this.isClone(facility_id))
+    } else if (mode === 'vegTray') {
+      _locations = locations.filter(this.isVeg(facility_id))
+    } else if (mode === 'mother') {
+      _locations = locations.filter(this.isMother(facility_id))
+    } else if (mode === 'room') {
+      _locations = locations.filter(this.isRoomOnly(facility_id))
+    } else if (mode === 'flower') {
+      _locations = locations.filter(this.isFlower(facility_id))
+    } else if (mode === 'dry') {
+      _locations = locations.filter(this.isDry(facility_id))
+    } else {
+      _locations = locations
+    }
+    return _locations
+  }
+
+  /* Utility method to find item from location id & mode combination */
+  findLocation(locations, location_id) {
+    const mode = this.mode
+    let item = null
+    if (mode === 'mother' || mode === 'room') {
+      item = locations.find(x => x.rm_id === location_id)
+    } else if (['clone', 'vegTray', 'flower', 'dry'].indexOf(mode) >= 0) {
+      item = locations.find(x => x.t_id === location_id)
+    }
+    return item
+  }
+
+  findFacility(locations, facility_id) {
+    return locations.find(x => x.f_id === facility_id)
+  }
+
+  /* Utility method to extract location id & mode combination from item */
+  extractLocationId(selectedItem) {
+    const mode = this.mode
+    if (mode === 'mother' || mode === 'room') {
+      return {
+        location_id: selectedItem.rm_id,
+        location_type: selectedItem.rm_purpose
+      }
+    } else if (['clone', 'vegTray', 'flower', 'dry'].indexOf(mode) >= 0) {
+      return {
+        location_id: selectedItem.t_id,
+        location_type: selectedItem.rm_purpose
+      }
+    } else {
+      return {
+        location_id: '',
+        location_type: ''
+      }
+    }
+  }
+
+  onChangeFacility = item => {
+    // console.log('onChangeFacility')
+    // console.log(item)
+    this.setState({
+      facility: { value: item.f_id, label: item.label },
+      value: { value: '', label: '' },
+      locations: this.filterLocationByFacility(item.f_id)
+    })
+  }
+
+  onChange = item => {
+    console.log(item)
+    const locationData = this.extractLocationId(item, this.props.mode)
+    this.props.onChange({ ...item, ...locationData })
     this.setState({ value: { value: item.value, label: item.label } })
+  }
+
+  reset() {
+    this.setState({ value: null })
   }
 
   render() {
     return (
-      <Select
-        styles={reactSelectStyle}
-        placeholder="Type to search location..."
-        options={this.trays}
-        onChange={this.onChange}
-        value={this.state.value}
-      />
+      <React.Fragment>
+        {!this.isFacilitySet && (
+          <div className="mb3">
+            <label className="f6 fw6 db mb1 gray ttc">Facility ID</label>
+            <Select
+              styles={reactSelectStyle}
+              placeholder="Type to search facility..."
+              options={this.facilities}
+              onChange={this.onChangeFacility}
+              value={this.state.facility}
+              filterOption={(option, input) => {
+                const words = input.toLowerCase().split(/\s/)
+                return words.every(
+                  x => option.label.toLowerCase().indexOf(x) >= 0
+                )
+              }}
+            />
+          </div>
+        )}
+        <label className="f6 fw6 db mb1 gray ttc">Tray ID</label>
+        <Select
+          key={this.state.facility}
+          styles={reactSelectStyle}
+          placeholder="Search location within your facility"
+          options={this.state.locations}
+          onChange={this.onChange}
+          value={this.state.value}
+          filterOption={(option, input) => {
+            const words = input.toLowerCase().split(/\s/)
+            return words.every(x => option.label.toLowerCase().indexOf(x) >= 0)
+          }}
+        />
+      </React.Fragment>
     )
   }
 }
@@ -60,12 +238,14 @@ LocationPicker.propTypes = {
   mode: PropTypes.string.isRequired,
   locations: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string
+  location_id: PropTypes.string,
+  filter_facility_id: PropTypes.string
 }
 
 LocationPicker.defaultProps = {
   mode: 'tray',
-  value: ''
+  location_id: '',
+  filter_facility_id: null
 }
 
 export default LocationPicker

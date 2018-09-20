@@ -9,6 +9,7 @@ import PurchaseInfo from '../shared/PurchaseInfo'
 import LocationPicker from '../shared/LocationPicker'
 import StrainPicker from '../shared/StrainPicker'
 import setupClones from '../../actions/setupClones'
+import MotherPicker from '../shared/MotherPicker'
 
 class CloneEditor extends React.Component {
   constructor(props) {
@@ -20,13 +21,10 @@ class CloneEditor extends React.Component {
       // source
       clone_ids: '',
       plant_qty: 0,
-      tray: '',
-      generator_location: '',
-      last_plant_id: 0,
+      location_id: '',
       planted_on: null,
       expected_harvested_on: null,
-      mother_id: '',
-      mother_location_id: '',
+      cultivation_batch_id: '',
 
       // purchase info
       vendor_name: '',
@@ -62,27 +60,10 @@ class CloneEditor extends React.Component {
     }
 
     this.strainPicker = React.createRef()
-
-    this.onCloneIdsChanged = this.onCloneIdsChanged.bind(this)
-    this.onChangeGeneratorPlantCount = this.onChangeGeneratorPlantCount.bind(
-      this
-    )
-    this.onGeneratorTraySelected = this.onGeneratorTraySelected.bind(this)
-    this.onPlantedOnChanged = this.onPlantedOnChanged.bind(this)
-    this.onExpectedHarvestDateChanged = this.onExpectedHarvestDateChanged.bind(
-      this
-    )
-
-    this.onIsBoughtChanged = this.onIsBoughtChanged.bind(this)
-    this.onMotherIdChanged = this.onMotherIdChanged.bind(this)
-    this.onMotherLocationChanged = this.onMotherLocationChanged.bind(this)
-    this.onSave = this.onSave.bind(this)
-    this.onToggleGeneratePlantId = this.onToggleGeneratePlantId.bind(this)
-    // this.onGeneratePlantId = this.onGeneratePlantId.bind(this)
-    this.onStrainSelected = this.onStrainSelected.bind(this)
+    this.motherPicker = React.createRef()
   }
 
-  onCloneIdsChanged(event) {
+  onCloneIdsChanged = event => {
     this.setState({ clone_ids: event.target.value })
     const lines = (event.target.value.match(/\n/g) || []).length
     const node = this.cloneIdTextArea
@@ -99,81 +80,54 @@ class CloneEditor extends React.Component {
     }
   }
 
-  onPlantedOnChanged(date) {
-    this.setState({ planted_on: date })
-  }
-
-  onExpectedHarvestDateChanged(date) {
-    this.setState({ expected_harvested_on: date })
-  }
-
-  onIsBoughtChanged(event) {
-    this.setState({ isBought: !this.state.isBought })
+  onChangeGeneratorPlantCount = event => {
+    this.setState({ plant_qty: event.target.value })
     event.preventDefault()
   }
 
-  onMotherIdChanged(event) {
+  onPlantedOnChanged = date => {
+    this.setState({ planted_on: date })
+  }
+
+  onExpectedHarvestDateChanged = date => {
+    this.setState({ expected_harvested_on: date })
+  }
+
+  onIsBoughtChanged = () => {
+    this.setState({ isBought: !this.state.isBought })
+  }
+
+  onMotherIdChanged = event => {
     this.setState({ mother_id: event.target.value })
   }
 
-  onMotherLocationChanged(item) {
+  onMotherLocationChanged = item => {
     this.setState({ mother_location_id: item.rm_id })
   }
 
-  onToggleGeneratePlantId(event) {
+  onToggleGeneratePlantId = event => {
     this.setState({
       isShowPlantIdGenerator: !this.state.isShowPlantIdGenerator
     })
     if (event) event.preventDefault()
   }
 
-  onChangeGeneratorPlantCount(event) {
-    this.setState({ plant_qty: event.target.value })
-  }
-
-  onGeneratorTraySelected(item) {
-    this.setState({ tray: item.label })
-  }
-
-  onStrainSelected(data) {
+  onStrainSelected = data => {
     this.setState({
       strain: data.strain,
       strain_type: data.strain_type
     })
   }
 
-  // onGeneratePlantId(event) {
-  //   event.preventDefault()
-  //   if (this.state.generator_plant_count <= 0) {
-  //     return
-  //   }
+  onTraySelected = item => {
+    this.setState({ location_id: item.t_id })
+  }
 
-  //   let cloneIds = ''
-  //   let i = parseInt(this.state.last_plant_id)
-  //   let iMax = i + parseInt(this.state.generator_plant_count)
+  onCultivationBatchIdChanged = event => {
+    this.setState({ cultivation_batch_id: event.target.value })
+  }
 
-  //   for (i; i < iMax; i++) {
-  //     const serialNo =
-  //       new Date().getFullYear().toString() + i.toString().padStart(6, '0')
-  //     const id = `P${serialNo}, ${this.state.generator_location}\n`
-  //     cloneIds += id
-  //   }
-
-  //   this.setState({
-  //     clone_ids: this.state.clone_ids + cloneIds,
-  //     last_plant_id: iMax
-  //   })
-
-  //   const lines = (this.state.clone_ids.match(/\n/g) || []).length
-
-  //   if (lines >= 4 && this.cloneIdTextArea.scrollHeight < 350) {
-  //     this.cloneIdTextArea.style.height = 40 + lines * 25 + 'px'
-  //   } else {
-  //     this.cloneIdTextArea.style.height = 'auto'
-  //   }
-  // }
-
-  onSave(event) {
+  onSave = event => {
     const data = this.validateAndGetValues()
     const { errors, isValid, ...payload } = data
 
@@ -182,7 +136,6 @@ class CloneEditor extends React.Component {
         if (status >= 400) {
           this.setState({ errors: data.errors })
         } else {
-          this.props.onResetParent()
           this.reset()
         }
       })
@@ -197,12 +150,12 @@ class CloneEditor extends React.Component {
       strain_type: '',
       clone_ids: '',
       plant_qty: 0,
-      tray: '',
-      generator_location: '',
+      location_id: '',
       planted_on: null,
       expected_harvested_on: null,
       mother_id: '',
-      mother_location_id: '',
+      cultivation_batch_id: '',
+
       // UI states
       isShowPlantIdGenerator: false,
       isBought: false,
@@ -213,18 +166,17 @@ class CloneEditor extends React.Component {
   }
 
   validateAndGetValues() {
-    const {
+    let {
       strain,
       strain_type,
       clone_ids,
       plant_qty,
+      cultivation_batch_id,
       isShowPlantIdGenerator,
-      tray,
+      location_id,
       planted_on,
       expected_harvested_on,
-      isBought,
-      mother_id,
-      mother_location_id
+      isBought
     } = this.state
 
     let errors = {}
@@ -232,11 +184,15 @@ class CloneEditor extends React.Component {
       errors = { ...errors, planted_on: ['Planted on date is required.'] }
     }
 
-    if (clone_ids.trim().length <= 0) {
-      errors = { ...errors, clone_ids: ['Plant ID is required.'] }
+    if (cultivation_batch_id.length === 0) {
+      errors = {
+        ...errors,
+        cultivation_batch_id: ['Cultivation batch ID is required.']
+      }
     }
 
     if (isShowPlantIdGenerator) {
+      clone_ids = ''
       if (parseInt(plant_qty) <= 0) {
         errors = {
           ...errors,
@@ -244,28 +200,26 @@ class CloneEditor extends React.Component {
         }
       }
 
-      if (tray.length === 0) {
-        errors = { ...errors, tray: ['Location of the clones is required.'] }
+      if (location_id.length === 0) {
+        errors = {
+          ...errors,
+          location_id: ['Location of the clones is required.']
+        }
+      }
+    } else {
+      plant_qty = 0
+      if (clone_ids.trim().length <= 0) {
+        errors = { ...errors, clone_ids: ['Plant ID is required.'] }
       }
     }
 
     let purchaseData = { isValid: true }
-    if (!isBought) {
-      if (mother_id.length <= 0) {
-        errors = { ...errors, mother_id: ['Mother ID is required.'] }
-      }
-
-      if (mother_location_id.length <= 0) {
-        errors = {
-          ...errors,
-          mother_location_id: ['Mother plant location is required.']
-        }
-      }
-    } else {
+    if (isBought) {
       purchaseData = this.purchaseInfoEditor.getValues()
     }
 
     const { isValid: strainValid } = this.strainPicker.current.validate()
+    const { mother_id } = this.motherPicker.current.getValues(false)
     const isValid =
       Object.getOwnPropertyNames(errors).length == 0 &&
       strainValid &&
@@ -275,13 +229,15 @@ class CloneEditor extends React.Component {
       ...purchaseData,
       strain,
       strain_type,
+      cultivation_batch_id,
       clone_ids,
+      location_id,
+      plant_qty,
+      mother_id,
       planted_on: planted_on && planted_on.toISOString(),
       expected_harvested_on:
         expected_harvested_on && expected_harvested_on.toISOString(),
       isBought,
-      mother_id,
-      mother_location_id,
       errors,
       isValid
     }
@@ -293,57 +249,26 @@ class CloneEditor extends React.Component {
   }
 
   renderProcurementInfo() {
-    if (!this.state.isBought) {
-      return (
-        <React.Fragment>
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <TextInput
-                label={'Mother plant ID'}
-                value={this.state.mother_id}
-                onChange={this.onMotherIdChanged}
-              />
-              <FieldError errors={this.state.errors} field="mother_id" />
-            </div>
-            <div className="w-50 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Mother location ID
-              </label>
-              <LocationPicker
-                mode="mother"
-                locations={this.locations}
-                value={this.state.mother_location_name}
-                onChange={this.onMotherLocationChanged}
-              />
-              <FieldError
-                errors={this.state.errors}
-                field="mother_location_id"
-              />
-            </div>
-          </div>
-        </React.Fragment>
-      )
-    } else {
-      return (
-        <PurchaseInfo
-          ref={this.setPurchaseInfoEditor}
-          showLabel={false}
-          vendor_name={this.state.vendor_name}
-          vendor_no={this.state.vendor_no}
-          address={this.state.address}
-          vendor_state_license_num={this.state.vendor_state_license_num}
-          vendor_state_license_expiration_date={
-            this.state.vendor_state_license_expiration_date
-          }
-          vendor_location_license_num={this.state.vendor_location_license_num}
-          vendor_location_license_expiration_date={
-            this.state.vendor_location_license_expiration_date
-          }
-          purchase_date={this.state.purchase_date}
-          invoice_no={this.state.invoice_no}
-        />
-      )
-    }
+    if (!this.state.isBought) return null
+    return (
+      <PurchaseInfo
+        ref={this.setPurchaseInfoEditor}
+        showLabel={false}
+        vendor_name={this.state.vendor_name}
+        vendor_no={this.state.vendor_no}
+        address={this.state.address}
+        vendor_state_license_num={this.state.vendor_state_license_num}
+        vendor_state_license_expiration_date={
+          this.state.vendor_state_license_expiration_date
+        }
+        vendor_location_license_num={this.state.vendor_location_license_num}
+        vendor_location_license_expiration_date={
+          this.state.vendor_location_license_expiration_date
+        }
+        purchase_date={this.state.purchase_date}
+        invoice_no={this.state.invoice_no}
+      />
+    )
   }
 
   renderPlantIdGenerator() {
@@ -360,24 +285,16 @@ class CloneEditor extends React.Component {
             <FieldError errors={this.state.errors} field="plant_qty" />
           </div>
           <div className="w-50 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">Tray ID</label>
-            <LocationPicker
-              mode="clone"
-              locations={this.locations}
-              value={this.state.tray}
-              onChange={this.onGeneratorTraySelected}
-            />
-            <FieldError errors={this.state.errors} field="tray" />
+            <div className="flex justify-start items-center h-100 mt2">
+              <a
+                href="#"
+                onClick={this.onToggleGeneratePlantId}
+                className="fw4 f7 link dark-blue"
+              >
+                Cancel
+              </a>
+            </div>
           </div>
-        </div>
-        <div className="ph4 mb3 flex justify-end">
-          <a
-            href="#"
-            onClick={this.onToggleGeneratePlantId}
-            className="fw4 f7 link dark-blue"
-          >
-            Cancel
-          </a>
         </div>
       </React.Fragment>
     )
@@ -391,33 +308,28 @@ class CloneEditor extends React.Component {
         <div className="ph4 mb2 flex">
           <div className="w-100">
             <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
-              Each clone has its own <strong>Plant ID</strong>.
+              Each clone has its own <strong>Plant ID</strong>. If you already
+              have them, paste them below.
             </p>
             <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
-              If you already have them, paste Plant IDs with its corresponding
-              tray ID:
+              <a
+                href="#"
+                onClick={this.onToggleGeneratePlantId}
+                className="fw4 f7 link dark-blue"
+              >
+                If you want us to generate them, click here.
+              </a>
             </p>
             <textarea
               ref={this.setCloneIdTextArea}
-              rows="4"
+              rows="3"
               value={this.state.clone_ids}
               className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-              placeholder="Plant0001, Tray0001&#10;Plant0002, Tray0001&#10;Plant0003, Tray0002&#10;Plant0004, Tray0002"
+              placeholder="Plant0001&#10;Plant0002&#10;Plant0003"
               onChange={this.onCloneIdsChanged}
             />
             <FieldError errors={this.state.errors} field="clone_ids" />
           </div>
-        </div>
-        <div className="ph4 mb3 flex justify-end">
-          <a
-            href="#"
-            onClick={this.onToggleGeneratePlantId}
-            className="fw4 f7 link dark-blue"
-          >
-            {this.state.clone_ids.length > 0
-              ? 'Generate more IDs'
-              : 'Don\'t have Plant ID? Click here to generate.'}
-          </a>
         </div>
       </React.Fragment>
     )
@@ -431,14 +343,47 @@ class CloneEditor extends React.Component {
           onStrainSelected={this.onStrainSelected}
         />
         <hr className="mt3 m b--light-gray w-100" />
-        <div className="ph4 mt3 mb3">
-          <span className="f6 fw6 dark-gray">Plant IDs</span>
+        <div className="ph4 mt3 flex">
+          <div className="w-50">
+            <TextInput
+              label={'Cultivation Batch ID'}
+              value={this.state.cultivation_batch_id}
+              onChange={this.onCultivationBatchIdChanged}
+            />
+            <FieldError
+              errors={this.state.errors}
+              field="cultivation_batch_id"
+            />
+          </div>
+          <div className="w-50 pl3">
+            <MotherPicker
+              ref={this.motherPicker}
+              strain={this.state.strain}
+              key={this.state.strain}
+            />
+          </div>
         </div>
 
+        <div className="ph4 mt3 flex flex-column">
+          <div className="w-100">
+            <LocationPicker
+              filter_facility_id=""
+              mode="clone"
+              locations={this.locations}
+              location_id={this.state.location_id}
+              onChange={this.onTraySelected}
+            />
+            <FieldError errors={this.state.errors} field="location_id" />
+          </div>
+        </div>
+
+        <div className="ph4 mt3 mb2">
+          <span className="f6 fw6 gray">Plant IDs</span>
+        </div>
         {this.renderPlantIdTextArea()}
         {this.renderPlantIdGenerator()}
 
-        <div className="ph4 mt2 mb3 flex">
+        <div className="ph4 mt3 flex">
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Planted On</label>
             <CalendarPicker
@@ -460,7 +405,7 @@ class CloneEditor extends React.Component {
 
         <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">Where the clones are from?</span>
+          <span className="f6 fw6 dark-gray">Plant Origin?</span>
         </div>
         <div className="ph4 mb3 flex justify-between">
           <label className="f6 fw6 db mb1 gray">Clones are purchased</label>
@@ -483,14 +428,14 @@ class CloneEditor extends React.Component {
             href="#"
             onClick={this.props.onExitCurrentEditor}
           >
-            Save draft
+            Save for later
           </a>
           <a
             className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
             href="#"
             onClick={this.onSave}
           >
-            Preview &amp; Save
+            Save
           </a>
         </div>
       </React.Fragment>

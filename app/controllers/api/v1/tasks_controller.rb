@@ -31,6 +31,13 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     render json: task_json
   end
 
+  def indent
+    task = Cultivation::IndentTask.call(task_params).result
+    options = {}
+    task_json = TaskSerializer.new(task, options).serialized_json
+    render json: task_json
+  end
+
   def strains
   end
 

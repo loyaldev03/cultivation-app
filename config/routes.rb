@@ -79,7 +79,9 @@ Rails.application.routes.draw do
         get 'plants/(:plant_status)', action: :plants, on: :collection
       end
       resources :batches do
-        resources :tasks, only: [:index, :update, :create]
+        resources :tasks, only: [:index, :update, :create] do
+          put 'indent', on: :member
+        end
       end
 
       resource :plant_setup, only: [] do

@@ -9,7 +9,7 @@ module Cultivation
     end
 
     def call
-      task = Cultivation::Task.find(@args[:id]['$oid'])
+      task = Cultivation::Task.find(@args[:id])
       if @args[:type] == 'position'
         update_position(task, @args[:position])
       else

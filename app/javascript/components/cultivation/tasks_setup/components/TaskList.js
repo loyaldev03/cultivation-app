@@ -2,14 +2,31 @@ import React from 'react'
 import { render } from 'react-dom'
 import { observable } from 'mobx'
 import { observer, Provider } from 'mobx-react'
+import { Manager, Reference, Popper, Arrow } from 'react-popper'
 
 import TaskStore from '../stores/TaskStore'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import TaskEditor from './TaskEditor'
 import updateSidebarTask from '../actions/updateSidebarTask'
 import updateTask from '../actions/updateTask'
+import indentTask from '../actions/indentTask'
 
 import ReactTable from 'react-table'
+
+const styles = `
+.table-dropdown {
+  box-shadow: 0 3px 10px 0 #00000087;
+  top: initial;
+  min-width: 200px;
+}
+.table-dropdown a:hover{
+  background-color: #eee;
+} 
+.button-dropdown:hover{
+  background-color: #eee;
+}
+
+`
 
 @observer
 class TaskList extends React.Component {
@@ -17,6 +34,7 @@ class TaskList extends React.Component {
     super(props)
     this.dragged = null
     this.state = {
+      isOpen: false,
       batch: this.props.batch
     }
   }
@@ -45,7 +63,7 @@ class TaskList extends React.Component {
       return (
         <div>
           <i
-            className="material-icons md-600 md-gray md-17 ph2 cursor-pointer"
+            className="material-icons md-600 md-gray md-17 ph2 pointer"
             onClick={e => {
               this.handleAddTask(row)
             }}
@@ -58,15 +76,184 @@ class TaskList extends React.Component {
   }
 
   renderPhaseColumn = row => {
+    let handleEdit = this.handleEdit
     if (row.row['attributes.isPhase'] == true) {
-      return <div>{row.value}</div>
+      return (
+        <a
+          onClick={e => {
+            handleEdit(row)
+          }}
+        >
+          {row.value}
+        </a>
+      )
     }
   }
 
   renderCategoryColumn = row => {
+    let handleEdit = this.handleEdit
     if (row.row['attributes.isCategory'] == true) {
-      return <div>{row.value}</div>
+      return (
+        <a
+          onClick={e => {
+            handleEdit(row)
+          }}
+        >
+          {row.value}
+        </a>
+      )
     }
+  }
+
+  handleMouseLeave = row => {
+    this.setState(prevState => ({
+      idOpen: null
+    }))
+  }
+
+  handleIndent = (row, action) => {
+    this.clearDropdown()
+    console.log(row.row.id)
+    indentTask(this.props.batch_id, row.row, action)
+  }
+
+  handleClick = e => {
+    e.persist()
+    if (e.target && e.target !== null) {
+      this.setState(prevState => ({
+        idOpen: e.target.id
+      }))
+    }
+  }
+
+  handleEdit = e => {
+    this.clearDropdown()
+    editorSidebarHandler.open({
+      width: '500px',
+      data: e.row,
+      action: 'update'
+    })
+  }
+
+  clearDropdown() {
+    this.setState(prevState => ({
+      idOpen: null
+    }))
+  }
+
+  renderAttributesName = row => {
+    let id = row.row['id']
+    let handleEdit = this.handleEdit
+    let handleMouseLeave = this.handleMouseLeave
+    let handleIndent = this.handleIndent
+    return (
+      <div className="flex justify-between-ns">
+        <a
+          onClick={e => {
+            handleEdit(row)
+          }}
+        >
+          {row.value}
+        </a>
+
+        <Manager>
+          <Reference>
+            {({ ref }) => (
+              <i
+                ref={ref}
+                id={row.row['id']}
+                onClick={this.handleClick}
+                className="material-icons ml2 pointer button-dropdown"
+                style={{ display: 'none', fontSize: '18px' }}
+              >
+                more_horiz
+              </i>
+            )}
+          </Reference>
+          {this.state.idOpen === id && (
+            <Popper placement="bottom" style={{ borderColor: 'red' }}>
+              {({ ref, style, placement, arrowProps }) => (
+                <div
+                  ref={ref}
+                  id={'dropdown-' + row.row['id']}
+                  style={style}
+                  data-placement={placement}
+                >
+                  <div
+                    id="myDropdown"
+                    onMouseLeave={handleMouseLeave}
+                    className="table-dropdown dropdown-content box--shadow-header show"
+                  >
+                    <a
+                      className="ttc pv2 tc flex pointer"
+                      style={{ display: 'flex' }}
+                      onClick={e => {
+                        handleIndent(row, 'in')
+                      }}
+                    >
+                      <i className="material-icons md-600 md-17 ph2">
+                        format_indent_increase
+                      </i>
+                      Indent In
+                    </a>
+                    <a
+                      className="ttc pv2 tc flex pointer"
+                      style={{ display: 'flex' }}
+                      onClick={e => {
+                        handleIndent(row, 'out')
+                      }}
+                    >
+                      <i className="material-icons md-600 md-17 ph2">
+                        format_indent_decrease
+                      </i>
+                      Indent Out
+                    </a>
+                    <a
+                      className="ttc pv2 tc flex pointer"
+                      style={{ display: 'flex' }}
+                    >
+                      <i className="material-icons md-600 md-17 ph2">
+                        vertical_align_top
+                      </i>
+                      Insert Task Above
+                    </a>
+                    <a
+                      className="ttc pv2 tc flex pointer"
+                      style={{ display: 'flex' }}
+                    >
+                      <i className="material-icons md-600 md-17 ph2">
+                        vertical_align_bottom
+                      </i>
+                      Insert Task Below
+                    </a>
+                    <a
+                      className="ttc pv2 tc flex pointer"
+                      style={{ display: 'flex' }}
+                      onClick={e => {
+                        handleEdit(row)
+                      }}
+                    >
+                      <i className="material-icons md-600 md-17 ph2">edit</i>
+                      Edit
+                    </a>
+                    <a
+                      className="ttc pv2 tc flex pointer"
+                      style={{ display: 'flex' }}
+                    >
+                      <i className="material-icons md-600 md-17 ph2">
+                        delete_outline
+                      </i>
+                      Delete
+                    </a>
+                  </div>
+                  <div ref={arrowProps.ref} style={arrowProps.style} />
+                </div>
+              )}
+            </Popper>
+          )}
+        </Manager>
+      </div>
+    )
   }
 
   handleAddTask = row => {
@@ -119,11 +306,12 @@ class TaskList extends React.Component {
   }
 
   render() {
-    let tasks = TaskStore
+    let tasks = TaskStore.slice()
 
     return (
       <React.Fragment>
-        {tasks}
+        <style> {styles} </style>
+
         <div className=" flex">
           <div className="w-40">
             <h4 className="tl pa0 ma0 h6--font dark-grey">Task List</h4>
@@ -157,7 +345,7 @@ class TaskList extends React.Component {
               </div>
               <div className="w-40">
                 <div className="">
-                  <label>{this.state.batch.id['$oid']}</label>
+                  <label>{this.state.batch.id}</label>
                 </div>
               </div>
             </div>
@@ -206,7 +394,6 @@ class TaskList extends React.Component {
             </div>
           </div>
         </div>
-
         <ReactTable
           columns={[
             {
@@ -238,7 +425,8 @@ class TaskList extends React.Component {
             {
               Header: 'Name',
               accessor: 'attributes.name',
-              maxWidth: '300'
+              maxWidth: '300',
+              Cell: row => <div>{this.renderAttributesName(row)}</div>
             },
             {
               Header: 'Start Date',
@@ -277,20 +465,35 @@ class TaskList extends React.Component {
             }
           ]}
           data={tasks}
+          className=""
           rows={100}
-          // className="-striped -highlight"
           defaultPageSize={100}
           getTdProps={(state, rowInfo, column, instance) => {
             if (rowInfo) {
               return {
                 onClick: (e, handleOriginal) => {
-                  if (column.id != 'button-column') {
-                    editorSidebarHandler.open({
-                      width: '500px',
-                      data: rowInfo.row,
-                      action: 'update'
-                    })
-                  }
+                  // if (column.id != 'button-column') {
+                  //   editorSidebarHandler.open({
+                  //     width: '500px',
+                  //     data: rowInfo.row,
+                  //     action: 'update'
+                  //   })
+                  // }
+                }
+              }
+            }
+            return {}
+          }}
+          getTrProps={(state, rowInfo, column) => {
+            if (rowInfo) {
+              return {
+                onMouseOver: (e, handleOriginal) => {
+                  let button = document.getElementById(rowInfo.row.id)
+                  button.style.display = 'block'
+                },
+                onMouseOut: (e, handleOriginal) => {
+                  let button = document.getElementById(rowInfo.row.id)
+                  button.style.display = 'none'
                 }
               }
             }

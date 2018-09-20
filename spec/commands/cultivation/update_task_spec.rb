@@ -4,9 +4,10 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
   context ".find_changes with task and temp_tasks" do
     subject {
+      strain = Common::Strain.create(name: 'Zkittles', strain_type: 'indica')
       params ={
         batch_source: 'seeds',
-        strain_id: 'AK-47',
+        strain_id: strain.id,
         start_date: Date.new(2018, 1, 1)
       }
       result = Cultivation::SaveBatch.call(params).result #create batch
@@ -85,9 +86,10 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
   context ".call with file_changes and bulk_update" do
     subject {
+      strain = Common::Strain.create(name: 'Zkittles', strain_type: 'indica')
       params ={
         batch_source: 'seeds',
-        strain_id: 'AK-47',
+        strain_id: strain.id,
         start_date: Date.new(2018, 1, 1)
       }
       result = Cultivation::SaveBatch.call(params).result #create batch

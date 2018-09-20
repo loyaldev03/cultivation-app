@@ -2,7 +2,7 @@ import TaskStore from '../stores/TaskStore'
 
 class loadTask {
   loadbatch(batch_id) {
-    let id = batch_id['$oid']
+    let id = batch_id
     let url = `/api/v1/batches/${id}/tasks`
     fetch(url)
       .then(resp => resp.json()) // Transform the data into json

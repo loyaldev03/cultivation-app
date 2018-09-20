@@ -47,10 +47,10 @@ module Constants
     {code: :curing_racks, name: 'Curing rack'},
   ]
 
-  SOURCE_TYPES = [
-    {code: :clone, name: 'Clone'},
-    {code: :mother, name: 'Mother'},
-    {code: :seed, name: 'Seed'},
+  PLANT_SOURCE_TYPES = [
+    {code: :clones_from_mother, name: 'Clones from Mother plant'},
+    {code: :clones_purchased, name: 'Pre-purchased clones'},
+    {code: :seeds, name: 'Seeds'},
   ].freeze
 
   CLONE_TYPES = [
@@ -106,6 +106,7 @@ module Constants
     {code: :coco_coir, name: 'Coco coir'},
     {code: :compost_soil, name: 'Compost soil'},
     {code: :hardened_expanded_clay_hec, name: 'Hardened Expanded Clay (HEC)'},
+    {code: :hydrophonics, name: 'Hydrophonics'},
     {code: :mineral_wool, name: 'Mineral Wool'},
     {code: :peat, name: 'Peat'},
     {code: :perlite, name: 'Perlite'},

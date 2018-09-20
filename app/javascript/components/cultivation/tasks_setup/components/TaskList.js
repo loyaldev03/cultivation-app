@@ -7,14 +7,29 @@ import TaskStore from '../stores/TaskStore'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import TaskEditor from './TaskEditor'
 import updateSidebarTask from '../actions/updateSidebarTask'
+import updateTask from '../actions/updateTask'
 
 import ReactTable from 'react-table'
 
 @observer
 class TaskList extends React.Component {
+  constructor(props) {
+    super(props)
+    this.dragged = null
+    this.state = {
+      batch: this.props.batch
+    }
+  }
+
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
+    let _this = this
+
+    // need to find after data react-table is loaded callback
+    setTimeout(function() {
+      _this.mountEvents()
+    }, 5000)
   }
 
   openSidebar = () => {
@@ -55,19 +70,143 @@ class TaskList extends React.Component {
   }
 
   handleAddTask = row => {
-    console.log(row.row.id)
-    editorSidebarHandler.open({
-      width: '500px',
-      data: { id: row.row.id },
-      action: 'add'
+    editorSidebarHandler.open({ width: '500px', data: {}, action: 'add' })
+  }
+
+  mountEvents() {
+    const headers = Array.prototype.slice.call(
+      document.querySelectorAll('.rt-tr-group')
+    )
+
+    headers.forEach((header, i) => {
+      header.setAttribute('draggable', true)
+      //the dragged header
+      header.ondragstart = e => {
+        e.stopPropagation()
+        this.dragged = i
+      }
+
+      header.ondrag = e => e.stopPropagation
+
+      header.ondragend = e => {
+        e.stopPropagation()
+        setTimeout(() => (this.dragged = null), 1000)
+      }
+
+      //the dropped header
+      header.ondragover = e => {
+        e.preventDefault()
+      }
+
+      header.ondragenter = e => {
+        e.target.closest('.rt-tr-group').style.borderBottomColor =
+          'rgb(255,112,67)'
+      }
+
+      header.ondragleave = e => {
+        e.target.closest('.rt-tr-group').style.borderBottomColor = ''
+      }
+
+      header.ondrop = e => {
+        e.preventDefault()
+        e.target.closest('.rt-tr-group').style.borderBottomColor = ''
+        if (this.dragged !== null && i !== null) {
+          TaskStore.splice(i, 0, TaskStore.splice(this.dragged, 1)[0])
+          updateTask.updatePosition(this.props.batch_id, i, this.dragged)
+        }
+      }
     })
   }
 
   render() {
     let tasks = TaskStore
+
     return (
       <React.Fragment>
         {tasks}
+        <div className=" flex">
+          <div className="w-40">
+            <h4 className="tl pa0 ma0 h6--font dark-grey">Task List</h4>
+          </div>
+          <div className="w-40">
+            <div className="mb4 mt2">
+              <a
+                className="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim"
+                onClick={this.handleAddTask}
+              >
+                New Task
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="mb3 flex">
+          <div className="w-50">
+            <div className=" flex">
+              <div className="w-40">
+                <label>Batch Source</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.batch_source}</label>
+                </div>
+              </div>
+            </div>
+            <div className=" flex">
+              <div className="w-40">
+                <label>Batch Id</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.id['$oid']}</label>
+                </div>
+              </div>
+            </div>
+            <div className=" flex">
+              <div className="w-40">
+                <label>Start Date</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.start_date}</label>
+                </div>
+              </div>
+            </div>
+
+            <div className=" flex">
+              <div className="w-40">
+                <label>Estimated Harvest Date</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.estimated_harvest_date}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="w-50">
+            <div className=" flex">
+              <div className="w-20">
+                <label>Grow Method</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.grow_method}</label>
+                </div>
+              </div>
+            </div>
+            <div className=" flex">
+              <div className="w-20">
+                <label>Strain</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.strain}</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <ReactTable
           columns={[
             {
@@ -81,7 +220,8 @@ class TaskList extends React.Component {
               accessor: 'attributes.isCategory',
               maxWidth: '50',
               id: 'button-column',
-              Cell: row => <div>{this.renderAddButton(row)}</div>
+              show: false
+              // Cell: (row) => (<div>{this.renderAddButton(row)}</div>)
             },
             {
               Header: 'Phase',
@@ -138,7 +278,7 @@ class TaskList extends React.Component {
           ]}
           data={tasks}
           rows={100}
-          className="-striped -highlight"
+          // className="-striped -highlight"
           defaultPageSize={100}
           getTdProps={(state, rowInfo, column, instance) => {
             if (rowInfo) {

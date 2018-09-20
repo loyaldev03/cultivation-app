@@ -1,46 +1,14 @@
 import React from 'react'
-import classNames from 'classnames'
+import BatchPlantSelectionList from './BatchPlantSelectionList'
 import BatchLocationEditor from './BatchLocationEditor'
-import { joinBy } from '../../utils/ArrayHelper'
-
-const QuantityField = ({ plant, onEdit }) => {
-  if (plant) {
-    const text = plant.quantity ? plant.quantity : 'Set Quantity'
-    return (
-      <span className="blue pointer" onClick={() => onEdit(plant.id)}>
-        {text}
-      </span>
-    )
-  }
-  return null
-}
-
-const LocationField = ({ plant, onEdit }) => {
-  if (plant) {
-    const text = plant.trays ? joinBy(plant.trays, 'tray_code') : 'Set Location'
-    return (
-      <a
-        href="#0"
-        className="link blue pointer"
-        onClick={() => onEdit(plant.id)}
-      >
-        {text}
-      </a>
-    )
-  }
-  return null
-}
+import { sumBy } from '../../utils/ArrayHelper'
+import { toast } from './../../utils/toast'
 
 class BatchLocationApp extends React.Component {
   state = {
-    fromMotherPlant: true,
     selectedPlants: [],
     editingPlant: {},
-    dummyPlants: [
-      { id: 'P0001', code: 'ABCD-001', name: 'AK-47' },
-      { id: 'P0002', code: 'ABCD-002', name: 'AK-47' },
-      { id: 'P0003', code: 'ABCD-003', name: 'AK-47' }
-    ],
+    totalAvailableCapacity: sumBy(this.props.locations, 'remaining_capacity'),
     locations: this.props.locations
   }
 
@@ -56,11 +24,11 @@ class BatchLocationApp extends React.Component {
     window.editorSidebar.close()
   }
 
-  onSelectPlant = e => {
+  onSelectPlant = serialNo => e => {
     const plantId = e.target.value
     const found = this.getSelected(plantId)
     if (e.target.checked && !found) {
-      const plant = { id: plantId, quantity: 0 }
+      const plant = { id: plantId, serialNo, quantity: 0 }
       this.setState({
         selectedPlants: [...this.state.selectedPlants, plant]
       })
@@ -85,21 +53,58 @@ class BatchLocationApp extends React.Component {
     return found
   }
 
+  onChangeInput = field => e => this.setState({ [field]: e.target.value })
+
   onEditorSave = plantConfig => {
     // find and update the corresponding record in memory
     const found = this.getSelected(plantConfig.id)
     found.quantity = plantConfig.quantity
     found.trays = plantConfig.trays
+    const selectedPlants = this.state.selectedPlants.map(
+      x => (x.id === plantConfig.id ? plantConfig : x)
+    )
     this.setState({
-      selectedPlants: this.state.selectedPlants.map(
-        x => (x.id === plantConfig.id ? plantConfig : x)
-      )
+      selectedPlants
     })
-    // TODO: Update remaining count in this.state.locations
+  }
+
+  getAvailableLocations = plantId => {
+    const { selectedPlants, locations } = this.state
+    const allPlantsTrays = selectedPlants
+      .filter(p => p.id !== plantId)
+      .reduce((acc, val) => acc.concat(val.trays || []), [])
+    const remainingLocations = locations.map(loc => {
+      const found = allPlantsTrays.filter(t => t.tray_id === loc.tray_id)
+      if (found && found.length > 0) {
+        const newTrayPlannedCapacity =
+          parseInt(loc.planned_capacity) + sumBy(found, 'tray_capacity')
+        const newLoc = {
+          ...loc,
+          planned_capacity: newTrayPlannedCapacity,
+          remaining_capacity:
+            parseInt(loc.tray_capacity) - newTrayPlannedCapacity
+        }
+        return newLoc
+      }
+      return loc
+    })
+    return remainingLocations
   }
 
   isDisableNext = () => {
+    if (!this.state.quantity) {
+      // Quantity is required
+      return true
+    }
     if (!this.state.selectedPlants || !this.state.selectedPlants.length) {
+      toast('Please select plants & locations to continue.', 'warning')
+      // Plants Location & Quantity is required
+      return true
+    }
+    const totalSelectedQuantity = sumBy(this.state.selectedPlants, 'quantity')
+    if (parseInt(this.state.quantity) !== totalSelectedQuantity) {
+      toast('"Total Quantity Selected" does not match "Quantity Needed".', 'warning')
+      // Total quanty has to match with needed quantity
       return true
     }
     // if there's a missing data, disable next step
@@ -107,68 +112,82 @@ class BatchLocationApp extends React.Component {
     return !!missed
   }
 
-  render() {
-    const plants = this.state.dummyPlants
-    const { locations, editingPlant } = this.state
-    return (
-      <div>
-        {this.state.fromMotherPlant && (
-          <div>
-            <span className="db dark-grey mb2">
-              Please select the mother plant source:
-            </span>
-            <table className="collapse ba br2 b--black-10 pv2 ph3">
-              <tbody>
-                <tr className="striped--light-gray">
-                  <th className="pv2 ph3 tl f6 fw6 ttu">Plant ID</th>
-                  <th className="tr f6 ttu fw6 pv2 ph3">Strain</th>
-                  <th className="tr f6 ttu fw6 pv2 ph3 w4 tr">Quantiy</th>
-                  <th className="tr f6 ttu fw6 pv2 ph3 w4 tr">Location</th>
-                  <th className="w1 tc" />
-                </tr>
-                {plants &&
-                  plants.length &&
-                  plants.map(p => (
-                    <tr
-                      key={p.id}
-                      className={classNames('striped--light-gray', {
-                        'black-50': !this.getSelected(p.id)
-                      })}
-                    >
-                      <td className="pv2 ph3">{p.code}</td>
-                      <td className="pv2 ph3">{p.name}</td>
-                      <td className="pv2 ph3 tr">
-                        <QuantityField
-                          plant={this.getSelected(p.id)}
-                          onEdit={this.onClickSelectionEdit}
-                        />
-                      </td>
-                      <td className="pv2 ph3 tr">
-                        <LocationField
-                          plant={this.getSelected(p.id)}
-                          onEdit={this.onClickSelectionEdit}
-                        />
-                      </td>
-                      <td className="pv2 ph3 tc">
-                        {' '}
-                        <input
-                          type="checkbox"
-                          value={p.id}
-                          onChange={this.onSelectPlant}
-                        />{' '}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+  gotoNext = () => {
+    window.location.replace('/cultivation/batches/' + this.props.batchId)
+  }
 
-            <div className="pv2">
-              <button className="btn" disabled={this.isDisableNext()}>
-                Next
-              </button>
-            </div>
+  renderClonesFromMother = (plantType, selectedPlants) => (
+    <React.Fragment>
+      <span className="db dark-grey mb2">
+        Please select the mother plant source:
+      </span>
+      <BatchPlantSelectionList
+        onEdit={this.onClickSelectionEdit}
+        selectedPlants={selectedPlants}
+        plantType={plantType}
+        getSelected={this.getSelected}
+        onSelectPlant={this.onSelectPlant}
+      />
+    </React.Fragment>
+  )
+
+  render() {
+    const { plantType, batchSource } = this.props
+    const { editingPlant, selectedPlants, totalAvailableCapacity } = this.state
+
+    // build available locations, taking out capacity occupied by different rows
+    const availableLocations = this.getAvailableLocations(editingPlant.id)
+
+    return (
+      <React.Fragment>
+        <div id="toast" className="toast" />
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+            if (!this.isDisableNext()) {
+              this.gotoNext()
+            }
+          }}
+        >
+          <div className="dark-grey mb2">
+            <span className="w5 dib">Available Capacity</span>
+            <input
+              className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
+              type="number"
+              value={totalAvailableCapacity}
+              readOnly
+            />
           </div>
-        )}
+          <div className="dark-grey mb2">
+            <span className="w5 dib">Quantity Needed</span>
+            <input
+              className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
+              type="number"
+              onChange={this.onChangeInput('quantity')}
+              required
+              min={1}
+              max={totalAvailableCapacity}
+            />
+          </div>
+          <div className="dark-grey mb4">
+            <span className="w5 dib">Total Quantity Selected</span>
+            <input
+              className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
+              type="number"
+              value={sumBy(selectedPlants, 'quantity')}
+              readOnly
+            />
+          </div>
+          {batchSource === 'clones_from_mother' &&
+            this.renderClonesFromMother(plantType, selectedPlants)}
+          <div className="pv2">
+            <input
+              type="submit"
+              className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
+              value="Save &amp; Continue"
+            />
+          </div>
+        </form>
 
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body h-100">
@@ -176,14 +195,14 @@ class BatchLocationApp extends React.Component {
               <BatchLocationEditor
                 key={editingPlant.id}
                 plant={editingPlant}
-                locations={this.props.locations}
+                locations={availableLocations}
                 onSave={this.onEditorSave}
                 onClose={this.closeSidebar}
               />
             )}
           </div>
         </div>
-      </div>
+      </React.Fragment>
     )
   }
 }

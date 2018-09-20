@@ -101,3 +101,4 @@ gem 'fast_jsonapi'
 
 # UoM gem
 gem 'measured'
+gem 'mongoid_orderable'

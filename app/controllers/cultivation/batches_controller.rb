@@ -17,18 +17,42 @@ class Cultivation::BatchesController < ApplicationController
 
   def show
     @record = Cultivation::BatchForm.new(params[:id])
-
+    @batch_attributes = {
+      id: @record.id,
+      strain: @record.strain_id,
+      batch_source: @record.batch_source,
+      grow_method: @record.grow_method,
+      start_date: @record.start_date.try(:strftime, '%m/%d/%Y'),
+      estimated_harvest_date: @record.estimated_harvest_date.try(:strftime, '%m/%d/%Y'),
+    }
     # TODO: Use other params
     if params[:step].present?
       # TODO: Get start date and end date from batch (@record)
       @start_date = Time.now
       @end_date = Time.now + 15.days
-      available_trays_cmd = QueryAvailableTrays.call(@start_date, @end_date)
+
+      if @record.batch_source == 'clones_from_mother'
+        # Set the plantType for react BatchPlantSelectionList
+        @plant_type = 'mother'
+        # Get available trays based on purpose
+        available_trays_cmd = QueryAvailableTrays.call(
+          @start_date,
+          @end_date,
+          {
+            facility_id: @record.facility_id,
+            purpose: 'clone',
+          }
+        )
+      else
+        available_trays_cmd = QueryAvailableTrays.call(
+          @start_date,
+          @end_date,
+          {facility_id: @record.facility_id}
+        )
+      end
+
       if available_trays_cmd.success?
         @locations = available_trays_cmd.result
-        # TODO: Return on trays for single facility
-        # @facility_id = available_trays_cmd.result.first[:facility_id]
-        # @locations = available_trays_cmd.result.select { |t| t[:facility_id] == @facility_id }
       else
         @locations = []
       end

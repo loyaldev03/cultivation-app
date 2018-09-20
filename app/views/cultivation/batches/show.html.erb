@@ -1,6 +1,6 @@
 <% content_for :breadcrumb do %>
   <div class="flex items-center">
-    <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], ['Cultivation Batches', cultivation_batches_path], "Something here" %>
+    <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], ['Cultivation Batches', cultivation_batches_path], "Locations & Tasks" %>
   </div>
 <% end %>
 
@@ -10,15 +10,14 @@
       <% if params[:step].present? %>
         <%= react_component 'cultivation/batches_setup/BatchLocationApp',
           {
-            batch_id: @record.id,
+            batchId: @record.id.to_s,
+            batchSource: @record.batch_source,
+            plantType: @plant_type,
             locations: @locations
           } %>
       <% else %>
         <div class="fl w-100 flex flex-column">
-          <h5 class="tl pa0 ma0 h5--font dark-grey">Task List</h5>
-          <p class="mt2 body-1 grey">
-          </p>
-          <%= react_component 'cultivation/tasks_setup/TaskSetup', {batch_id: @record.id} %>
+          <%= react_component 'cultivation/tasks_setup/TaskSetup', {batch_id: @record.id, batch: @batch_attributes} %>
         </div>
       <% end %>
     </div>

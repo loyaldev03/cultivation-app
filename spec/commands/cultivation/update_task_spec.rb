@@ -5,7 +5,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
   context ".find_changes with task and temp_tasks" do
     subject {
       params ={
-        batch_source: 'Seeds',
+        batch_source: 'seeds',
         strain_id: 'AK-47',
         start_date: Date.new(2018, 1, 1)
       }
@@ -86,7 +86,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
   context ".call with file_changes and bulk_update" do
     subject {
       params ={
-        batch_source: 'Seeds',
+        batch_source: 'seeds',
         strain_id: 'AK-47',
         start_date: Date.new(2018, 1, 1)
       }

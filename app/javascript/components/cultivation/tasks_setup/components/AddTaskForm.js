@@ -15,10 +15,10 @@ class AddTaskForm extends React.Component {
     this.state = {
       batch_id: this.props.batch_id,
       parent_task: props.parent_task,
-      parent_id: props.id,
+      parent_id: '',
       name: '',
       days: '',
-      task_category: props.parent_task.attributes.task_category,
+      task_category: '',
       instruction: '',
       start_date: new Date(),
       end_date: new Date(),
@@ -28,23 +28,23 @@ class AddTaskForm extends React.Component {
     }
   }
 
-  componentWillReceiveProps(props) {
-    const { parent_id } = this.props.id
-    if (props.id !== parent_id) {
-      this.setState({
-        parent_id: props.id,
-        name: '',
-        days: '',
-        task_category: props.parent_task.attributes.task_category,
-        instruction: '',
-        start_date: new Date(),
-        end_date: new Date(),
-        errors: '',
-        estimated_hours: '',
-        assigned_employee: []
-      })
-    }
-  }
+  // componentWillReceiveProps(props) {
+  //   const { parent_id } = this.props.id
+  //   if (props.id !== parent_id) {
+  //     this.setState({
+  //       parent_id: props.id,
+  //       name: '',
+  //       days: '',
+  //       task_category: '',
+  //       instruction: '',
+  //       start_date: new Date(),
+  //       end_date: new Date(),
+  //       errors: '',
+  //       estimated_hours: '',
+  //       assigned_employee: []
+  //     })
+  //   }
+  // }
 
   handleChangeTask = event => {
     // console.log(event[0].value)

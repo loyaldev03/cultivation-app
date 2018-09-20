@@ -4,29 +4,19 @@
   </div>
 <% end %>
 
-
-
-
-
 <div class="pa4">
   <div class="flex flex-column justify-between bg-white box--shadow">
-    <div class="pa4 min-h-600">
-      <div class="fl w-40 flex flex-column">
+    <div class="pa4 min-h-500 measure">
+      <div class="fl w-100 flex flex-column">
         <%= react_component 'cultivation/batches_setup/BatchSetupApp', 
           {
-            plants: [
-              {value: 'Clones from mother plant', label: 'Clones from mother plant'}, 
-              {value: 'Seeds', label: 'Seeds'}, 
-              {value: 'Pre-purchased clones', label: 'Pre-purchased clones'}
-            ],
-            strains: Common::Strain.all.map{|a| {value: a['name'], label: a['name']}},
-            facilities: Facility.all.map{|a| {value: a['id'], label: a['code']}}
+            plants: Constants::PLANT_SOURCE_TYPES.map{|a| {value: a[:code], label: a[:name]}},
+            strains: Common::Strain.all.map{|a| {value: a.id.to_s, label: "#{a.name} (#{a.strain_type})"}},
+            facilities: Facility.completed.map{|a| {value: a.id.to_s, label: "#{a.name} (#{a.code})" }},
+            grow_methods: Constants::GROW_MEDIUM.map{|a| {value: a[:code], label: a[:name]}},
           } 
         %>
       </div>
     </div>
-  
-        
-
   </div>
 </div>

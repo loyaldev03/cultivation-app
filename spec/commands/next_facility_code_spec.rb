@@ -41,7 +41,7 @@ RSpec.describe NextFacilityCode do
     it "should return next code no section with increment" do
       cmd = NextFacilityCode.call(:section, nil, 6)
 
-      expect(cmd.result).to eq "C06"
+      expect(cmd.result).to eq "SEC06"
     end
 
     it "should return next code no row with increment" do

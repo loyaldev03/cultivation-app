@@ -15,7 +15,7 @@ class TaskSetup extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <TaskList batch_id={this.props.batch_id} />
+        <TaskList batch_id={this.props.batch_id} batch={this.props.batch} />
         <div id="toast" className="toast animated toast--success">
           Row Saved
         </div>

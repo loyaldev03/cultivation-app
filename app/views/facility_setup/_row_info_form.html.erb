@@ -20,7 +20,7 @@
   <%= f.hidden_field :room_id, value: row.room_id %>
   <%= f.hidden_field :id, value: row.id %>
 
-  <div class="ph4">
+  <div class="ph4 pb5">
     <div class="mb3">
       <%= f.label "row Name", class:"subtitle-2 db mb1 grey ttc" %>
       <%= f.text_field :name, value: row.name, class: "box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
@@ -113,9 +113,9 @@
 
   </div>
 
-  <div class="w-100 mt5 bg-white bt b--light-grey flex items-center justify-between self-end">
-    <%= f.submit "Save Changes", class: "db ml4 mv3 pv3 bg-white bn ttu button--font orange link dim pointer" %>
-    <%= f.submit "save & continue", value: "continue", class: "db mr4 mv3 tr button--font pa3 bg-orange white bn box--br3 ttu link dim pointer" %>
+  <div class="w-100 pv3 ph4 bt b--light-grey">
+    <%= f.submit "Save Changes", class: "pv3 bg-white bn ttu button--font orange link dim pointer" %>    
+    <%= f.submit "save & continue", value: "continue", class: "fr pa3 button--font bg-orange white bn box--br3 ttu link dim pointer" %>
   </div>
 <% end %>
     

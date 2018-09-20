@@ -103,7 +103,10 @@ class BatchLocationApp extends React.Component {
     }
     const totalSelectedQuantity = sumBy(this.state.selectedPlants, 'quantity')
     if (parseInt(this.state.quantity) !== totalSelectedQuantity) {
-      toast('"Total Quantity Selected" does not match "Quantity Needed".', 'warning')
+      toast(
+        '"Total Quantity Selected" does not match "Quantity Needed".',
+        'warning'
+      )
       // Total quanty has to match with needed quantity
       return true
     }

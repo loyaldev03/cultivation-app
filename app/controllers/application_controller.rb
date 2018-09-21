@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
 
   def set_rollbar_scope
     if current_user.present?
-      Rollbar.scope!(:person => { :id => current_user.id.to_s, :email => current_user.email, :username => current_user.display_name })
+      Rollbar.scope!(:person => {:id => current_user.id.to_s, :email => current_user.email, :username => current_user.display_name})
     end
   end
 

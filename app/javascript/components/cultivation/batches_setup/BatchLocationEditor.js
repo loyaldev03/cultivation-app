@@ -282,7 +282,7 @@ class BatchLocationEditor extends React.PureComponent {
           <h5 className="h6--font dark-grey ma0">Quantity &amp; Location</h5>
         </div>
         <form
-          className="ph4 pv3 h-100 flex-auto flex flex-column justify-between"
+          className="pv3 h-100 flex-auto flex flex-column justify-between"
           onSubmit={e => {
             e.preventDefault()
             const updatePlant = {
@@ -293,7 +293,7 @@ class BatchLocationEditor extends React.PureComponent {
             onSave(updatePlant)
           }}
         >
-          <div>
+          <div className="ph4">
             <div className="mt2">
               <span className="subtitle-2 grey db mt3 mb1">
                 PlantID: {plant.serialNo}
@@ -542,14 +542,19 @@ class BatchLocationEditor extends React.PureComponent {
               </div>
             )}
           </div>
-          <div className="mt3 tr">
-            <a href="#0" className="link btn mr2" onClick={onClose}>
+          <div className="bt b--light-grey pv3 ph4">
+            <a
+              href="#0"
+              onClick={onClose}
+              className="fl pv3 bg-white button--font orange bn box--br3 ttu link dim pointer"
+            >
               Cancel
             </a>
+
             <input
               type="submit"
               value="Save"
-              className="btn btn--primary dim br2"
+              className="fr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer"
             />
           </div>
         </form>

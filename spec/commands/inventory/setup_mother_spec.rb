@@ -134,5 +134,7 @@ RSpec.describe Inventory::SetupMother, type: :command do
     it "should create mother for a existing vendor"
 
     it "should create mother for a existing batch & strain"
+
+    it "should save mother for later"
   end
 end

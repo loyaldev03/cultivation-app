@@ -10,6 +10,7 @@ module Inventory
       :strain_name,
       :strain_type,
       :plant_ids,
+      :plant_qty,
       :room_id,
       :planted_on,
       :vendor_id,
@@ -31,6 +32,7 @@ module Inventory
       @strain_name = args[:strain]
       @strain_type = args[:strain_type]
       @plant_ids = args[:plant_ids]
+      @plant_qty = args[:plant_qty]
       @room_id = args[:room_id]
       @planted_on = args[:planted_on]
       @vendor_name = args[:vendor_name] && args[:vendor_name].strip
@@ -43,7 +45,7 @@ module Inventory
     end
 
     def call
-      @plant_ids = args[:plant_ids].gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
+      @plant_ids = generate_or_extract_plant_ids
 
       if valid_permission? && valid_data?
         create_strain
@@ -55,6 +57,14 @@ module Inventory
     end
 
     private
+
+    def generate_or_extract_plant_ids
+      if plant_ids.strip.present?
+        plant_ids.gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
+      else
+        ids = Inventory::GeneratePlantSerialNo.call(plant_qty.to_i).result
+      end
+    end
 
     def valid_permission?
       true  # TODO: Check user role

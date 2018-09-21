@@ -175,13 +175,13 @@ class SeedEditor extends React.Component {
             href="#"
             onClick={this.props.onSaveDraft}
           >
-            Save draft
+            Save for later
           </a>
           <a
             className="db pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
             onClick={this.onSave}
           >
-            Preview &amp; Save
+            Save
           </a>
         </div>
       </React.Fragment>

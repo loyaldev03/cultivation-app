@@ -9,7 +9,7 @@ module Cultivation
     end
 
     def call
-      task = Cultivation::Task.find(@args[:id]['$oid'])
+      task = Cultivation::Task.find(@args[:id])
       if @args[:type] == 'position'
         update_position(task, @args[:position])
       else
@@ -45,7 +45,7 @@ module Cultivation
       if opt[:children] != false #used for avoid updating children task
         task.children.each do |child|
           temp_child = child
-          end_date = task.start_date + child.days.to_i.send('days')
+          end_date = task.start_date + child.duration.to_i.send('days')
           temp_child.start_date = task.start_date
           temp_child.end_date = end_date
           array << temp_child #store inside temp_array
@@ -58,7 +58,7 @@ module Cultivation
           temp_depend_task = depend_task
 
           start_date = task.end_date + 1.days
-          end_date = start_date + depend_task.days.to_i.send('days')
+          end_date = start_date + depend_task.duration.to_i.send('days')
 
           temp_depend_task.start_date = start_date
           temp_depend_task.end_date = end_date
@@ -82,25 +82,6 @@ module Cultivation
     end
   end
 end
-
-#def find_task_related(task)
-#       return if(task.children.count == 0 and task.tasks_depend.count == 0)
-
-#       task.children.each do |child|
-#         end_date = task.start_date + child.days.to_i.send('days')
-#         result = child.update(start_date: task.start_date, end_date: end_date)
-#         find_task_related(child) #find childrens
-#       end
-
-#       task.tasks_depend.each do |depend_task|
-#         start_date = task.end_date + 1.days
-#         end_date = start_date + depend_task.days.to_i.send('days')
-#         result = depend_task.update(start_date: start_date, end_date: end_date)
-#         find_task_related(depend_task)
-#       end
-#     end
-
-# ##################################
 
 #seperate save and update
 #assign all the tasks to a variable

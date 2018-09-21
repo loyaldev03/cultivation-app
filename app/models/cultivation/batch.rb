@@ -11,16 +11,16 @@ module Cultivation
     field :facility_id, type: BSON::ObjectId
     field :grow_method, type: String
 
-    has_one :tray_plan, class_name: 'Cultivation::TrayPlan'
+    has_many :tray_plans, class_name: 'Cultivation::TrayPlan'
     has_many :tasks, class_name: 'Cultivation::Task'
     belongs_to :strain, class_name: 'Common::Strain'
 
     def phases
-      tasks.where(isPhase: true)
+      tasks.where(is_phase: true)
     end
 
     def orphan_tasks
-      tasks.where(parent_id: '', isPhase: false, isCategory: false)
+      tasks.where(parent_id: '', is_phase: false, is_category: false)
     end
 
     def generate_tree

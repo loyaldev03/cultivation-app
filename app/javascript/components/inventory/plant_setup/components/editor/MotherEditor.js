@@ -17,7 +17,6 @@ class MotherEditor extends React.Component {
       plant_ids: '',
       plant_qty: 0,
       planted_on: null,
-      // mother_id: '',
 
       // Vendor/ source
       vendor_name: '',
@@ -31,10 +30,7 @@ class MotherEditor extends React.Component {
       invoice_no: '',
 
       // Storage location
-      room: '',
       room_id: '',
-      section_name: '',
-      section_id: '',
 
       // UI states
       isShowPlantQtyForm: false,
@@ -42,9 +38,9 @@ class MotherEditor extends React.Component {
       errors: {}
     }
 
-    this.plantIdsTextArea = null
     // Callback ref to get instance of html DOM: https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
     // Getting a ref to textarea in order to adjust height according to content.
+    this.plantIdsTextArea = null
     this.setPlantIdsTextArea = element => {
       this.plantIdsTextArea = element
     }
@@ -56,25 +52,17 @@ class MotherEditor extends React.Component {
 
     this.storageInfoEditor = React.createRef()
     this.strainPicker = React.createRef()
-
-    this.onChangePlantIds = this.onChangePlantIds.bind(this)
-    this.onChangeGeneratorPlantQty = this.onChangeGeneratorPlantQty.bind(this)
-    this.onPlantedOnChanged = this.onPlantedOnChanged.bind(this)
-    this.onToggleGeneratePlantId = this.onToggleGeneratePlantId.bind(this)
-    this.onIsBoughtChanged = this.onIsBoughtChanged.bind(this)
-    this.onSave = this.onSave.bind(this)
-    this.onStrainSelected = this.onStrainSelected.bind(this)
   }
 
-  onChangePlantIds(event) {
+  onChangePlantIds = event => {
     this.setState({ plant_ids: event.target.value })
     const node = this.plantIdsTextArea
     const lines = (event.target.value.match(/\n/g) || []).length
 
-    if (lines < 5) {
+    if (lines < 3) {
       node.style.height = 'auto'
       node.style.minHeight = ''
-    } else if (lines >= 5 && lines < 15) {
+    } else if (lines >= 3 && lines < 15) {
       node.style.height = 40 + lines * 25 + 'px'
       node.style.minHeight = ''
     } else {
@@ -83,33 +71,33 @@ class MotherEditor extends React.Component {
     }
   }
 
-  onPlantedOnChanged(date) {
+  onPlantedOnChanged = date => {
     this.setState({ planted_on: date })
   }
 
-  onChangeGeneratorPlantQty(event) {
+  onChangeGeneratorPlantQty = event => {
     this.setState({ plant_qty: event.target.value })
   }
 
-  onToggleGeneratePlantId(event) {
+  onToggleGeneratePlantId = event => {
     this.setState({
       isShowPlantQtyForm: !this.state.isShowPlantQtyForm
     })
     if (event) event.preventDefault()
   }
 
-  onStrainSelected(data) {
+  onStrainSelected = data => {
     this.setState({
       strain: data.strain,
       strain_type: data.strain_type
     })
   }
 
-  onIsBoughtChanged() {
+  onIsBoughtChanged = () => {
     this.setState({ isBought: !this.state.isBought })
   }
 
-  onSave() {
+  onSave = () => {
     const { errors, isValid, ...payload } = this.validateAndGetValues()
 
     if (isValid) {
@@ -132,6 +120,7 @@ class MotherEditor extends React.Component {
       plant_ids: '',
       plant_qty: 0,
       planted_on: null,
+      room_id: '',
       // mother_id: '',
       vendor_name: '',
       vendor_no: '',
@@ -142,10 +131,6 @@ class MotherEditor extends React.Component {
       vendor_location_license_expiration_date: null,
       purchase_date: null,
       invoice_no: '',
-      room: '',
-      room_id: '',
-      section_name: '',
-      section_id: '',
       isShowPlantQtyForm: false,
       isBought: false,
       errors: {}
@@ -156,7 +141,7 @@ class MotherEditor extends React.Component {
   }
 
   validateAndGetValues() {
-    const {
+    let {
       isShowPlantQtyForm,
       strain,
       strain_type,
@@ -180,13 +165,20 @@ class MotherEditor extends React.Component {
       errors = { ...errors, planted_on: ['Planted on date is required.'] }
     }
 
+    if (isShowPlantQtyForm) {
+      plant_ids = ''
+    } else {
+      plant_qty = null
+    }
+
     let purchaseData = { isValid: true }
     if (isBought) {
       purchaseData = this.purchaseInfoEditor.getValues()
     }
 
     const locationData = this.storageInfoEditor.current.getValues()
-
+    // console.log(`locationData:`)
+    // console.log(locationData)
     // console.log(`strainData.isValid: ${strainData.isValid}`)
     // console.log(`purchaseData.isValid: ${purchaseData.isValid}`)
     // console.log(`locationData.isValid: ${locationData.isValid}`)
@@ -264,10 +256,8 @@ class MotherEditor extends React.Component {
         <div className="ph4 mb2 flex">
           <div className="w-100">
             <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
-              Each mother plant has its own <strong>Plant ID</strong>.
-            </p>
-            <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
-              If you already have them, paste Plant IDs like below.
+              Each mother plant has its own <strong>Plant ID</strong>. If you
+              already have them, paste Plant IDs like below.
             </p>
             <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
               <a
@@ -280,9 +270,9 @@ class MotherEditor extends React.Component {
             </p>
             <textarea
               ref={this.setPlantIdsTextArea}
-              rows="5"
+              rows="3"
               className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-              placeholder="Mother0001&#10;Mother0002&#10;Mother0003&#10;Mother0004"
+              placeholder="Mother0001&#10;Mother0002&#10;Mother0003"
               value={this.state.plant_ids}
               onChange={this.onChangePlantIds}
             />
@@ -323,16 +313,12 @@ class MotherEditor extends React.Component {
           ref={this.storageInfoEditor}
           mode="mother"
           locations={this.props.locations}
-          room_id={this.state.room_id}
-          section_name={this.state.section_name}
-          section_id={this.state.section_id}
+          location_id={this.state.room_id}
         />
 
         <hr className="mt3 mb3 b--light-gray w-100" />
         <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">
-            Where the mother plants are from?
-          </span>
+          <span className="f6 fw6 dark-gray">Plant Origin?</span>
         </div>
         <div className="ph4 mb3 flex justify-between">
           <label className="f6 fw6 db mb1 gray">
@@ -374,7 +360,7 @@ class MotherEditor extends React.Component {
             href="#"
             onClick={this.props.onExitCurrentEditor}
           >
-            Save draft
+            Save for later
           </a>
           <a
             className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"

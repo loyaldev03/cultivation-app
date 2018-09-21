@@ -1,8 +1,6 @@
 class QueryAvailableTrays
   prepend SimpleCommand
 
-  attr_reader :facility_id, :start_date, :end_date, :purpose
-
   def initialize(start_date, end_date, filter = {})
     raise ArgumentError, 'start_date' if start_date.nil?
     raise ArgumentError, 'end_date' if end_date.nil?
@@ -11,9 +9,10 @@ class QueryAvailableTrays
     @start_date = start_date.beginning_of_day
     @end_date = end_date.end_of_day
 
-    # Optional filters
-    @facility_id = filter[:facility_id]
+    # Optional match clauses
+    @facility_id = filter[:facility_id].to_bson_id if filter[:facility_id]
     @purpose = filter[:purpose]
+    @exclude_batch_id = filter[:exclude_batch_id].to_bson_id if filter[:exclude_batch_id]
   end
 
   def call
@@ -24,14 +23,14 @@ class QueryAvailableTrays
 
   def match_facility
     if @facility_id
-      {"$match": {_id: @facility_id.to_bson_id}}
+      {"$match": {_id: @facility_id}}
     else
       {"$match": {}}
     end
   end
 
   def match_purpose
-    if @purpose.present?
+    if @purpose
       {"$match": {tray_purpose: @purpose}}
     else
       {"$match": {}}
@@ -87,9 +86,17 @@ class QueryAvailableTrays
           "trayId": '$trays._id',
           "startDate": @start_date,
           "endDate": @end_date,
+          "batchId": @exclude_batch_id,
         },
         pipeline: [
-          {"$match": {"$expr": {"$eq": ['$tray_id', '$$trayId']}}},
+          {"$match": {
+            "$expr": {
+              "$and": [
+                {"$eq": ['$tray_id', '$$trayId']},
+                {"$ne": ['$batch_id', '$$batchId']},
+              ],
+            },
+          }},
           {"$match": {
             "$expr": {
               "$or": [

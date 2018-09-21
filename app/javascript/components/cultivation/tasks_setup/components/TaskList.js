@@ -77,7 +77,7 @@ class TaskList extends React.Component {
 
   renderPhaseColumn = row => {
     let handleEdit = this.handleEdit
-    if (row.row['attributes.isPhase'] == true) {
+    if (row.row['attributes.is_phase'] == true) {
       return (
         <a
           onClick={e => {
@@ -92,7 +92,7 @@ class TaskList extends React.Component {
 
   renderCategoryColumn = row => {
     let handleEdit = this.handleEdit
-    if (row.row['attributes.isCategory'] == true) {
+    if (row.row['attributes.is_category'] == true) {
       return (
         <a
           onClick={e => {
@@ -404,7 +404,7 @@ class TaskList extends React.Component {
             },
             {
               Header: '',
-              accessor: 'attributes.isCategory',
+              accessor: 'attributes.is_category',
               maxWidth: '50',
               id: 'button-column',
               show: false
@@ -455,12 +455,12 @@ class TaskList extends React.Component {
             },
             {
               Header: 'Category?',
-              accessor: 'attributes.isCategory',
+              accessor: 'attributes.is_category',
               show: false
             },
             {
               Header: 'Phase?',
-              accessor: 'attributes.isPhase',
+              accessor: 'attributes.is_phase',
               show: false
             }
           ]}

@@ -16,11 +16,11 @@ module Cultivation
     belongs_to :strain, class_name: 'Common::Strain'
 
     def phases
-      tasks.where(isPhase: true)
+      tasks.where(is_phase: true)
     end
 
     def orphan_tasks
-      tasks.where(parent_id: '', isPhase: false, isCategory: false)
+      tasks.where(parent_id: '', is_phase: false, is_category: false)
     end
 
     def generate_tree

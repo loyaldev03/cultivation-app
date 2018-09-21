@@ -18,8 +18,8 @@ module Cultivation
     field :no_of_employees, type: Integer #needed
     field :materials, type: String # later need to integrate with real material module
     field :instruction, type: String
-    field :isPhase, type: Boolean, default: -> { false } #to identify phase
-    field :isCategory, type: Boolean, default: -> { false } #to identify category
+    field :is_phase, type: Boolean, default: -> { false } #to identify phase
+    field :is_category, type: Boolean, default: -> { false } #to identify category
     field :parent_id, type: String
     field :depend_on, type: String
 

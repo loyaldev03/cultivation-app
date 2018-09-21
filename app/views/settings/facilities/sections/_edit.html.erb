@@ -1,34 +1,45 @@
-<div class="ph4 w-100 pb4 mt3">
-  <h1 class="ma0 pa0 f3 ttc">Modify section</h1>
+<div class="ph4 pv3 bb b--light-grey">
+  <h5 class="h6--font dark-grey ma0 ttc">modify section</h5>
 </div>
 
-<div class="ph4 w-100 pb4">
-  <%= simple_form_for @section, url: settings_facility_section_path(id: @section.id), method: :patch, remote: true, html: { class: 'vertical-form' } do |f| %>
-    <%= f.input :name, label: 'Name',
-      label_html: { class: 'w-100 dib mb2 f5 fw6 gray' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :code, label: 'Code',
-      label_html: { class: 'w-100 dib mb2 f5 fw6 gray' }, 
-      input_html: { class: 'w-30 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :desc,
-      as: :text,
-      label: 'Description',
-      label_html: { class: 'w-100 dib mb2 f5 fw6 gray' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0', rows: 5 } 
-    %>
+<%= simple_form_for @section, url: settings_facility_section_path(id: @section.id), 
+    method: :patch, remote: true, 
+    html: { class: 'h-100 flex flex-column justify-between' } do |f| %>
+  
+  <div class="pa4">
+    <div class="mb3">
+      <%= f.input :name, label: 'Name',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'w-70 pa2 grey ba b--light-grey br2 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :code, label: 'Code',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'w-30 pa2 grey ba b--light-grey br2 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :desc,
+        as: :text,
+        label: 'Description',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'w-70 pa2 grey ba b--light-grey br2 outline-0', rows: 5 } 
+      %>
+    </div>
 
     <div class="mt2 flex flex-column">
       <div class="w-100 mb2">
-        <%= f.label :purpose, "Purpose of this section?" , class: "f5 fw6 gray" %>
+        <%= f.label :purpose, "Purpose of this section?" , class: "subtitle-2 grey" %>
       </div>
 
       <div class="w-70 compound-input-1">
         <%= f.input :purpose,
           as: :radio_buttons,
           label: false,
-          input_html: { class: 'pa2  mr2 gray ba b--black-20 br2 outline-0' },
+          input_html: { class: 'pa2 mr2 grey ba b--light-grey br2 outline-0' },
           disabled: !@section.purpose_editable?,
           collection: [
             ['Storage', 'storage', class: 'mr2', data: { toggle: '#storage-options' }], 
@@ -44,8 +55,8 @@
                 ["Mother / Seed", "mother_or_seed"]], 
                 :second, :first, {},
                 { class: 'mr2' } do |b|
-                 b.label(class: 'db pb2') { b.check_box(class: 'mr2', disabled: !@section.cultivation_editable?) + b.text }
-               end %>
+                  b.label(class: 'db pb2') { b.check_box(class: 'mr2', disabled: !@section.cultivation_editable?) + b.text }
+                end %>
             </div>
           </div>
         <% end %>
@@ -61,28 +72,28 @@
                 ["Flower", "flower"]], 
                 :second, :first, {},
                 { class: 'mr2' } do |b|
-                 b.label(class: 'db pb2') { 
+                  b.label(class: 'db pb2') { 
                   b.check_box(class: 'mr2', disabled: !@section.cultivation_editable? ) + b.text 
                 }
-               end %>
+                end %>
             </div>
           </div>
         <% end %>
 
         <% unless @section.purpose_editable? %>
           <div class="flex mb3">
-            <div class="w-80 ba br3 b--moon-gray pa3 bg-light-yellow">
-              <p class="ma0 pa0 lh-copy f6 dark-gray">
+            <div class="w-80 ba box--br3 b--moon-grey pa3 bg-light-yellow">
+              <p class="ma0 pa0 lh-copy subtitle-2-regular dark-grey">
                 Storage purpose cannot be edited as this section already has rows/ shelves.
               </p>
             </div>
           </div>
         <% end %>
       </div>
-    </div>    
-
-    <div class="pv3 w-100 flex items-center justify-start">
-        <%= f.submit "Update", class: "pointer pa2 ph4 ba b--blue blue bw1 br4 dim" %>
     </div>
-  <% end %>
-</div>
+  </div>    
+
+  <div class="bt b--light-grey pv3 ph4">
+      <%= f.submit "Update", class: "fr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" %>
+  </div>
+<% end %>

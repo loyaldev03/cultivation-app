@@ -1,36 +1,46 @@
-<div class="ph4 w-100 pb4 mt3">
-  <h1 class="ma0 pa0 f3 ttc">Modify room</h1>
+<div class="ph4 pv3 bb b--light-grey">
+  <h5 class="h6--font dark-grey ma0 ttc">modify room</h5>
 </div>
 
-<div class="ph4 w-100 pb4">
-  <%= simple_form_for @room, url: settings_facility_room_path(id: @room.id), method: :patch, remote: true, html: { class: 'vertical-form' } do |f| %>
-    <%= f.input :name, label: 'Name',
-      label_html: { class: 'w-100 dib mb2 f5 fw6 gray' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :code, label: 'Code',
-      label_html: { class: 'w-100 dib mb2 f5 fw6 gray' }, 
-      input_html: { class: 'w-30 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :desc,
-      as: :text,
-      label: "Description",
-      wrapper_html: { class: 'flex' },
-      label_html: { class: 'w-100 dib mb2 f5 fw6 gray' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0', rows: 5 } 
-    %>
+<%= simple_form_for @room, url: settings_facility_room_path(id: @room.id), method: :patch, remote: true, 
+    html: { class: 'h-100 flex flex-column justify-between' } do |f| %>
+  
+  <div class="pa4">
+    <div class="mb3">
+      <%= f.input :name, label: 'Name',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
 
-    <div class="flex mb3">
+    <div class="mb3">
+      <%= f.input :code, label: 'Code',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'box--height db w-30 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :desc,
+        as: :text,
+        label: "Description",
+        wrapper_html: { class: 'flex' },
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
+      %>
+    </div>
+    
+    <div class="flex flex-row">
       <div class="w-30 dib mb2">
-        <span class="f5 fw6 gray">Facility</span>
+        <span class="subtitle-2 grey">Facility</span>
       </div>
       <div class="w-70">
-        <span class="f6 gray"><%= @room.facility.name %></span>
+        <span class="subtitle-2-regular grey"><%= @room.facility.name %></span>
       </div>
     </div>
+  </div>
 
-    <div class="pt3 w-100 flex items-center justify-start">
-        <%= f.submit "Update", class: "pa2 ph4 ba b--blue blue bw1 br4 dim pointer" %>
-    </div>
-  <% end %>
-</div>
+  <div class="bt b--light-grey pv3 ph4">
+    <%= f.submit "Update", class: "fr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" %>
+  </div>
+<% end %>

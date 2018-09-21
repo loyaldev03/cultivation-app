@@ -440,7 +440,7 @@ class TaskList extends React.Component {
             },
             {
               Header: 'Duration',
-              accessor: 'attributes.days',
+              accessor: 'attributes.duration',
               maxWidth: '100'
             },
             {

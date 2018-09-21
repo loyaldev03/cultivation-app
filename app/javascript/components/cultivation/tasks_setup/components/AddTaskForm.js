@@ -17,7 +17,7 @@ class AddTaskForm extends React.Component {
       parent_task: props.parent_task,
       parent_id: '',
       name: '',
-      days: '',
+      duration: '',
       task_category: '',
       instruction: '',
       start_date: new Date(),
@@ -27,24 +27,6 @@ class AddTaskForm extends React.Component {
       assigned_employee: []
     }
   }
-
-  // componentWillReceiveProps(props) {
-  //   const { parent_id } = this.props.id
-  //   if (props.id !== parent_id) {
-  //     this.setState({
-  //       parent_id: props.id,
-  //       name: '',
-  //       days: '',
-  //       task_category: '',
-  //       instruction: '',
-  //       start_date: new Date(),
-  //       end_date: new Date(),
-  //       errors: '',
-  //       estimated_hours: '',
-  //       assigned_employee: []
-  //     })
-  //   }
-  // }
 
   handleChangeTask = event => {
     // console.log(event[0].value)
@@ -145,12 +127,12 @@ class AddTaskForm extends React.Component {
         <div className="ph4 mt3 mb3 flex">
           <div className="w-20">
             <NumericInput
-              label={'Days'}
-              value={this.state.days}
+              label={'Duration'}
+              value={this.state.duration}
               onChange={this.handleChangeTask}
-              fieldname="days"
+              fieldname="duration"
               errors={this.state.errors}
-              errorField="days"
+              errorField="duration"
             />
           </div>
 

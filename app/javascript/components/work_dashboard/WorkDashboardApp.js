@@ -1,4 +1,6 @@
 import React from 'react'
+import TodoList from './components/TodoList'
+import DoneList from './components/DoneList'
 
 class WorkDashboardApp extends React.Component {
   constructor(props) {
@@ -7,7 +9,10 @@ class WorkDashboardApp extends React.Component {
 
   render() {
     return (
-      <div>Foo</div>
+      <React.Fragment>
+        <TodoList />
+        <DoneList />
+      </React.Fragment>
     )
   }
 }

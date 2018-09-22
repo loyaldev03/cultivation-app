@@ -111,6 +111,10 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace 'work_dashboard' do
+    get '/', action: 'index'
+  end
+
   # API for web pages
   namespace :api do
     namespace :v1 do

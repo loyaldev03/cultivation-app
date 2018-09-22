@@ -15,20 +15,20 @@
           <% if !current_user.first_name %>
             <span class="dark-grey subtitle-1"> <%= current_user.email %> </span>
           <% else %>
-            <span class="dark-grey subtitle-1"> 
+            <span class="dark-grey subtitle-1">
               <%= current_user.first_name %> <%= current_user.last_name %>
             </span>
           <% end %>
-          
+
           <span class="grey overline ttc">Admin Head</span>
         </div>
       </div>
     </div>
 
     <div class="ma3 tc show-collapsed truncate">
-      <%= image_tag 'blank-avatar.png', 
-          class: "dib br-100 cover", 
-          style: "height: 2.5rem; margin-top: 0.5rem;" 
+      <%= image_tag 'blank-avatar.png',
+          class: "dib br-100 cover",
+          style: "height: 2.5rem; margin-top: 0.5rem;"
       %>
     </div>
   <% end %>
@@ -40,14 +40,21 @@
         <span class="link subtitle-2-regular grey">Home</span>
       </li>
     <% end %>
-    
+
+    <%= link_to work_dashboard_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">dashboard</i>
+        <span class="link subtitle-2-regular grey">Dashboard</span>
+      </li>
+    <% end %>
+
     <%= link_to inventory_setup_path, class: "link" do %>
       <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
         <i class="material-icons md-16 grey mr3">style</i>
         <span class="link subtitle-2-regular grey">Inventory</span>
       </li>
     <% end %>
-    
+
     <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">account_balance_wallet</i>
       <span class="link subtitle-2-regular grey">Accounting</span>
@@ -74,7 +81,7 @@
       <i class="material-icons md-16 grey mr3">insert_chart</i>
       <span class="link subtitle-2-regular grey">Report</span>
     </li>
-    
+
     <%= link_to settings_path, class: "link" do %>
       <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
         <i class="material-icons md-16 grey mr3">settings</i>
@@ -89,7 +96,13 @@
         <i class="material-icons md-16 grey mr3">home</i>
       </li>
     <% end %>
-    
+
+    <%= link_to work_dashboard_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">dashboard</i>
+      </li>
+    <% end %>
+
     <%= link_to inventory_setup_path, class: "link" do %>
       <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
         <i class="material-icons md-16 grey mr3">style</i>
@@ -113,11 +126,11 @@
     <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">assignment_ind</i>
     </li>
-    
+
     <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
       <i class="material-icons md-16 grey mr3">insert_chart</i>
     </li>
-    
+
     <%= link_to settings_path, class: "link" do %>
       <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
         <i class="material-icons md-16 grey mr3">settings</i>

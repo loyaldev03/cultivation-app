@@ -1,15 +1,18 @@
-<div class="ph4 w-100 pb4 mt3">
-  <h1 class="ma0 pa0 f3">New Vendor</h1>
+<div class="ph4 pv3 bb b--light-grey">
+  <h5 class="h6--font dark-grey ma0 ttc">new vendor</h5>
 </div>
 
-<div class="ph4 w-80 pb4">
-  <%= simple_form_for :record, url: purchasing_vendors_path, remote: true, method: :post, html: { class: 'vertical-form' } do |f| %>
+<%= simple_form_for :record, url: purchasing_vendors_path, remote: true, method: :post, 
+    html: { class: 'h-100 flex flex-column justify-between' } do |f| %>
+
+  <div class="pa4">
     <%= f.input :name, 
-      label_html: { class: 'w-30 dib' }, 
-      input_html: { class: 'w-70 pa2 ba b--silver outline-0' } 
+      label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+      input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
     %>
-    <div class="pv3 tr w-100 flex items-center justify-end">
-        <%= f.submit "Create", class: "pa2 ph4 ba b--blue blue bw1 br4" %>
-    </div>
-  <% end %>
-</div>
+  </div>
+  
+  <div class="bt b--light-grey pv3 ph4">
+    <%= f.submit "Create", class: "fr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" %>
+  </div>
+<% end %>

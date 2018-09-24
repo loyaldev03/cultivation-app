@@ -15,6 +15,10 @@ module Cultivation
     has_many :tasks, class_name: 'Cultivation::Task'
     belongs_to :strain, class_name: 'Common::Strain'
 
+    # KW: New fields replacing strain and plants
+    belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
+    has_many :plants, class_name: 'Inventory::Plants'
+
     def phases
       tasks.where(isPhase: true)
     end

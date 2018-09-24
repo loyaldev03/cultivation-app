@@ -27,19 +27,19 @@ RSpec.describe Cultivation::CreateTask, type: :command do
     end
 
     it "New Task position above the task related" do
-      phase = subject.first
+      phase = subject.third
       params = {task_related_id: phase.id, batch_id: phase.batch_id, position: 'top', name: 'Testing Task'}
 
       result = Cultivation::CreateTask.call(params).result
 
       expect(result.errors).to be {}
       expect(result).to have_attributes(
-        position: phase.position == 0 ? 0 : (phase.position - 1)
+        position: phase.position
       )
     end
 
     it "New Task position below the task related" do
-      phase = subject.first
+      phase = subject.third
       params = {task_related_id: phase.id, batch_id: phase.batch_id, position: 'bottom', name: 'Testing Task'}
 
       result = Cultivation::CreateTask.call(params).result

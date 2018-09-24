@@ -1,5 +1,8 @@
 Rails.application.routes.draw do  
   devise_for :users
+
+  get "dashboard" => "home#dashboard"
+
   root to: "home#index"
 
   get "facility_setup/new" => "facility_setup#new"

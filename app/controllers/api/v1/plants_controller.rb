@@ -22,11 +22,17 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def plants
-    plants = if params[:plant_status]
-               Inventory::ItemArticle.where(plant_status: params[:plant_status]).order(c_at: :desc)
-             else
-               Inventory::ItemArticle.all.order(c_at: :desc)
-             end
+    plants = Inventory::ItemArticle.includes(:facility, :item)
+
+    if params[:plant_status]
+      plants = plants.where(plant_status: params[:plant_status])
+    end
+
+    if params[:strain_id]
+      plants = plants.where(strain_id: params[:strain_id])
+    end
+
+    plants = plants.order(c_at: :desc)
 
     data = Inventory::ItemArticleSerializer.new(plants).serialized_json
     render json: data

@@ -10,6 +10,7 @@ module Cultivation
     field :estimated_harvest_date, type: DateTime
     field :facility_id, type: BSON::ObjectId
     field :grow_method, type: String
+    field :is_active, type: Boolean, default: -> { false }
 
     has_many :tray_plans, class_name: 'Cultivation::TrayPlan'
     has_many :tasks, class_name: 'Cultivation::Task'

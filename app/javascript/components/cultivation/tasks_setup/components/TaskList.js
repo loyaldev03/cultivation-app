@@ -327,16 +327,6 @@ class TaskList extends React.Component {
           <div className="w-40">
             <h4 className="tl pa0 ma0 h6--font dark-grey">Task List</h4>
           </div>
-          <div className="w-40">
-            <div className="mb4 mt2">
-              <a
-                className="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim"
-                onClick={this.handleAddTask}
-              >
-                New Task
-              </a>
-            </div>
-          </div>
         </div>
         <div className="mb3 flex">
           <div className="w-50">

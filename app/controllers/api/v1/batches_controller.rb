@@ -11,18 +11,12 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def update_locations
-    Rails.logger.debug '>>>1'
-    Rails.logger.debug '>>>'
-    Rails.logger.debug '>>> update_locations <<<'
     batch_id = locations_params[:batch_id]
     locations = locations_params[:locations]
     save_cmd = Cultivation::SaveTrayPlans.call(batch_id, locations)
     if save_cmd.success?
       render json: {data: 'Ok'}
     else
-      Rails.logger.debug '>>>2'
-      Rails.logger.debug '>>>'
-      Rails.logger.debug save_cmd.errors
       render json: {error: 'Error saving tray plans'}
     end
   end

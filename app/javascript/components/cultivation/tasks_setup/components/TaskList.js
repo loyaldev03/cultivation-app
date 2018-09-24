@@ -213,7 +213,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        handleAddTask(row.row.id, 'above')
+                        handleAddTask(row.row.id, 'top')
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
@@ -225,7 +225,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        handleAddTask(row.row.id, 'below')
+                        handleAddTask(row.row.id, 'bottom')
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
@@ -264,7 +264,11 @@ class TaskList extends React.Component {
   }
 
   handleAddTask = (task_related_id, position) => {
-    editorSidebarHandler.open({ width: '500px', data: { task_related_id: task_related_id, position: position}, action: 'add' })
+    editorSidebarHandler.open({
+      width: '500px',
+      data: { task_related_id: task_related_id, position: position },
+      action: 'add'
+    })
   }
 
   mountEvents() {

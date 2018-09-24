@@ -29,13 +29,12 @@ export default class TaskEditor extends React.Component {
   componentDidMount() {
     const _this = this
     document.addEventListener('editor-sidebar-open', function(ev) {
-      _this.setState({ 
-        id: ev.detail.data.id, 
+      _this.setState({
+        id: ev.detail.data.id,
         action: ev.detail.action,
         task_related_id: ev.detail.data.task_related_id,
         position: ev.detail.data.position
       })
-      console.log("related task id => " + JSON.stringify(ev.detail.data))
     })
   }
 
@@ -56,11 +55,13 @@ export default class TaskEditor extends React.Component {
         />
       )
     } else {
-      return <AddTaskForm 
-                batch_id={this.props.batch_id}
-                task_related_id={this.state.task_related_id}
-                position={this.state.position}
-            />
+      return (
+        <AddTaskForm
+          batch_id={this.props.batch_id}
+          task_related_id={this.state.task_related_id}
+          position={this.state.position}
+        />
+      )
     }
   }
 

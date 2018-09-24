@@ -38,7 +38,6 @@ class AddTaskForm extends React.Component {
     })
   }
 
-
   handleChangeTask = event => {
     let key = event.target.attributes.fieldname.value
     let value = event.target.value

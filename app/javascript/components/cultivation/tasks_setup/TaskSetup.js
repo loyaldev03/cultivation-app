@@ -25,7 +25,7 @@ class TaskSetup extends React.Component {
           className="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim mt3"
         >
           Save & Continue
-              </a>
+        </a>
       </React.Fragment>
     )
   }

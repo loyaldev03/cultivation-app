@@ -146,6 +146,7 @@ class TaskList extends React.Component {
     let handleEdit = this.handleEdit
     let handleMouseLeave = this.handleMouseLeave
     let handleIndent = this.handleIndent
+    let handleAddTask = this.handleAddTask
     return (
       <div className="flex justify-between-ns">
         <a
@@ -211,6 +212,9 @@ class TaskList extends React.Component {
                     <a
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
+                      onClick={e => {
+                        handleAddTask(row.row.id, 'above')
+                      }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
                         vertical_align_top
@@ -220,6 +224,9 @@ class TaskList extends React.Component {
                     <a
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
+                      onClick={e => {
+                        handleAddTask(row.row.id, 'below')
+                      }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
                         vertical_align_bottom
@@ -256,8 +263,8 @@ class TaskList extends React.Component {
     )
   }
 
-  handleAddTask = row => {
-    editorSidebarHandler.open({ width: '500px', data: {}, action: 'add' })
+  handleAddTask = (task_related_id, position) => {
+    editorSidebarHandler.open({ width: '500px', data: { task_related_id: task_related_id, position: position}, action: 'add' })
   }
 
   mountEvents() {

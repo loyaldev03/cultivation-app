@@ -19,6 +19,7 @@ module Cultivation
           return OpenStruct.new({
                    id: phase_task.id,
                    name: phase_task.name,
+                   phase: @phase,
                    start_date: start_date,
                    duration: phase_task.duration,
                    end_date: end_date,

@@ -11,7 +11,7 @@ class BatchLocationApp extends React.Component {
     selectedPlants: [],
     editingPlant: {},
     totalAvailableCapacity: sumBy(this.props.locations, 'remaining_capacity'),
-    locations: this.props.locations
+    locations: this.props.locations || []
   }
 
   componentDidMount() {

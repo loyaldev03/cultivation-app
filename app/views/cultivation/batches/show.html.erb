@@ -1,7 +1,8 @@
 <% content_for :breadcrumb do %>
-  <div class="flex items-center">
-    <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], ['Cultivation Batches', cultivation_batches_path], "Locations & Tasks" %>
-  </div>
+  <%= breadcrumbs ["Home",root_path], 
+      'Cultivation Batches', 
+      'Locations & Tasks' 
+  %>
 <% end %>
 
 <div class="pa4">
@@ -12,7 +13,7 @@
           {
             batchId: @record.id.to_s,
             batchSource: @record.batch_source,
-            plantType: @plant_type,
+            plantType: @plant_selection_type,
             locations: @locations
           } %>
       <% else %>

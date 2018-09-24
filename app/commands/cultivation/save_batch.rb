@@ -137,14 +137,15 @@ module Cultivation
       start_date = batch.start_date
       parent_id = get_parent_id(task, phase_id, category_id)
       depend_on = get_depend_on(task, phase_id, category_id)
+      duration = task[:duration].to_i unless task[:duration].nil?
 
       params = {
         phase: task[:phase],
         task_category: task[:task_category],
         name: task[:name],
-        duration: task[:duration],
+        duration: duration,
         start_date: (start_date + task[:days_from_start_date]),
-        end_date: (start_date + task[:days_from_start_date]) + task[:duration].to_i.send('days'),
+        end_date: (start_date + task[:days_from_start_date]) + duration.days,
         days_from_start_date: task[:days_from_start_date],
         estimated_hours: task[:estimated_hours],
         no_of_employees: task[:no_of_employees],

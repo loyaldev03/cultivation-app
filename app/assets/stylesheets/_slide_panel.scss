@@ -10,13 +10,14 @@ $slidePanelBgColor: #fefefe;
   position: fixed;
   top: 0;
   right: 0;
+  bottom: 0;
   background-color: $slidePanelBgColor;
   min-height: 100%;
   border-left: 1px solid #cccccc;
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
   display: none;
-  box--shadow: -10px 0px 15px rgba(0,0,0,0.15);
-  z-index: 10;
+  z-index: 20;
 }
 
 .slide-panel__close-button {
@@ -30,4 +31,7 @@ $slidePanelBgColor: #fefefe;
 
 .slide-panel__body {
   padding-top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }

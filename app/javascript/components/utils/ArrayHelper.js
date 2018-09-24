@@ -6,10 +6,12 @@ const groupBy = function(xs, key) {
 }
 
 const sumBy = (records, field) => {
+  if (!records) return;
   return records.reduce((acc, obj) => acc + parseFloat(obj[field] || 0), 0)
 }
 
 const joinBy = (records, field, separator = ',') => {
+  if (!records) return;
   return records.reduce((acc, obj) => {
     return acc ? `${acc}${separator} ${obj[field] || ''}` : obj[field] || ''
   }, '')

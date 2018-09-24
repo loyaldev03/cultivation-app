@@ -1,12 +1,14 @@
-<div class="ph4 pv3 bb b--light-gray">
+<div class="ph4 pv3 bb b--light-grey">
   <h5 class="h6--font dark-grey ma0"><%= room.name %> Setup</h5>
 </div>
 
-<div class="db ph4 pv3 measure">
-  <%= form_with scope: :room_info, url: facility_setup_update_room_info_path do |f| %>
-    <%= f.hidden_field :id, value: room.id %>
-    <%= f.hidden_field :facility_id, value: room.facility_id %>
-    
+
+<%= form_with scope: :room_info, url: facility_setup_update_room_info_path,
+    class: "mt4 flex-auto flex flex-column justify-between" do |f| %>
+  <%= f.hidden_field :id, value: room.id %>
+  <%= f.hidden_field :facility_id, value: room.facility_id %>
+  
+  <div class="ph4 pb5">
     <div class="mb3">
       <%= f.label "Room Name", class:"subtitle-2 grey db mb1 ttc" %>
       <%= f.text_field :name, value: room.name, class: "box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0" %>
@@ -46,14 +48,16 @@
     <% else %>
       <%= f.hidden_field :has_sections, value: room.has_sections %>
     <% end %>
+  </div>
 
-    <div class="w-100 ph4 pv3 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
-      <%= f.submit "Save", class: "button--font bg-white db pv3 bn ttu orange link dim pointer" %>
-      <%= f.button "Save & Continue",
-        name: :commit,
-        type: :submit,
-        value: "continue",
-        class: "ttu db tr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" %>
-    </div>
-  <% end %>
-</div>
+  <div class="ph4 pv3 bt b--light-grey">
+    <%= f.submit "Save", class: "fl button--font bg-white pv3 bn ttu orange link dim pointer" %>
+    
+    <%= f.button "Save & Continue",
+      name: :commit,
+      type: :submit,
+      value: "continue",
+      class: "fr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" %>
+  </div>
+<% end %>
+

@@ -41,6 +41,11 @@ class User
   # field :failed_attempts, type: Integer, default: 0 # Only if lock strategy is :failed_attempts
   # field :unlock_token,    type: String # Only if unlock strategy is :email or :both
   # field :locked_at,       type: Time
+  #
+
+  def display_name
+    "#{first_name} #{last_name}"
+  end
 
   # TODO: Need a flag to indicate user is developer
   # This need to be refactor

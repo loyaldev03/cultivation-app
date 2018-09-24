@@ -7,7 +7,7 @@ module Cultivation
     field :phase, type: String
     field :task_category, type: String
     field :name, type: String
-    field :duration, type: String
+    field :duration, type: Integer
     field :days_from_start_date, type: Integer
     field :expected_start_date, type: DateTime
     field :expected_end_date, type: DateTime

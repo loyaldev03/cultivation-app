@@ -56,8 +56,10 @@ class Cultivation::BatchesController < ApplicationController
       when 'clones_from_mother'
         filter_args = {facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id}
       when 'clones_purchased'
+        # TODO: Change purpose when clones_purchased
         filter_args = {facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id}
       when 'seeds'
+        # TODO: Change purpose when seeds
         filter_args = {facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id}
       else
         # return empty array if no phase task found

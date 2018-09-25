@@ -6,5 +6,5 @@ class Tray
   field :capacity_type, type: String # TRAY_CAPACITY_TYPES
   field :wz_generated, type: Boolean, default: -> { true }
 
-  belongs_to :shelf
+  belongs_to :shelf, optional: true
 end

@@ -274,6 +274,14 @@ class FacilitySetupController < ApplicationController
     # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
     form_object = FacilityWizardForm::UpdateShelfTraysForm.new(shelf_trays_params)
     if form_object.submit(shelf_trays_params)
+      if form_object.duplicate_target.present?
+        SaveShelvesByDuplicating.call(form_object.facility_id,
+                                      form_object.room_id,
+                                      form_object.row_id,
+                                      form_object.id,
+                                      form_object.duplicate_target)
+      end
+
       respond_to do |format|
         # To refresh a single row card in the carousel
         @row_info_form = FacilityWizardForm::RowInfoForm.find_by_id(form_object.facility_id,
@@ -396,6 +404,7 @@ class FacilitySetupController < ApplicationController
       :row_id,
       :id,
       :code,
+      :duplicate_target,
       trays: [:id, :code, :capacity, :capacity_type],
     )
   end

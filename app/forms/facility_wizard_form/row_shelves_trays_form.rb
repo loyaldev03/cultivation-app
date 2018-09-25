@@ -10,7 +10,7 @@ module FacilityWizardForm
              :trays]
 
     attr_accessor(*ATTRS)
-    attr_accessor :is_last_shelf, :show_duplicate_dialog
+    attr_accessor :is_last_shelf, :show_duplicate_dialog, :duplicate_target
 
     def initialize(facility_id, room_id, row_id, shelf_id = nil)
       @facility_id = facility_id

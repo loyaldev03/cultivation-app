@@ -33,7 +33,7 @@ class LocationPicker extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let hasNewState = false
     let newState = {}
-    
+
     if (nextProps.location_id !== prevState.location_id) {
       newState = { location_id: nextProps.location_id }
       hasNewState = true
@@ -128,7 +128,10 @@ class LocationPicker extends React.Component {
   }
 
   filterLocationByFacility = facility_id => {
-    if (this.mode !== 'facility' && (facility_id === null || facility_id.length <= 0)) {
+    if (
+      this.mode !== 'facility' &&
+      (facility_id === null || facility_id.length <= 0)
+    ) {
       return []
     }
 
@@ -149,12 +152,11 @@ class LocationPicker extends React.Component {
     } else if (mode === 'dry') {
       _locations = locations.filter(this.isDry(facility_id))
     } else if (mode === 'facility') {
-      _locations = locations.filter(this.isFacilityOnly)
-                            .map(x => ({ 
-                              ...x, 
-                              label: `${x.f_name} - ${x.f_code}`, 
-                              value: x.f_id 
-                            }))
+      _locations = locations.filter(this.isFacilityOnly).map(x => ({
+        ...x,
+        label: `${x.f_name} - ${x.f_code}`,
+        value: x.f_id
+      }))
     } else {
       _locations = locations
     }
@@ -197,8 +199,7 @@ class LocationPicker extends React.Component {
         location_id: selectedItem.f_id,
         location_type: selectedItem.f_name
       }
-    } 
-    else {
+    } else {
       return {
         location_id: '',
         location_type: ''
@@ -252,24 +253,25 @@ class LocationPicker extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {!this.isFacilitySet && this.mode !== 'facility' && (
-          <div className="mb3">
-            <label className="f6 fw6 db mb1 gray ttc">Facility ID</label>
-            <Select
-              styles={reactSelectStyle}
-              placeholder="Type to search facility..."
-              options={this.facilities}
-              onChange={this.onChangeFacility}
-              value={this.state.facility}
-              filterOption={(option, input) => {
-                const words = input.toLowerCase().split(/\s/)
-                return words.every(
-                  x => option.label.toLowerCase().indexOf(x) >= 0
-                )
-              }}
-            />
-          </div>
-        )}
+        {!this.isFacilitySet &&
+          this.mode !== 'facility' && (
+            <div className="mb3">
+              <label className="f6 fw6 db mb1 gray ttc">Facility ID</label>
+              <Select
+                styles={reactSelectStyle}
+                placeholder="Type to search facility..."
+                options={this.facilities}
+                onChange={this.onChangeFacility}
+                value={this.state.facility}
+                filterOption={(option, input) => {
+                  const words = input.toLowerCase().split(/\s/)
+                  return words.every(
+                    x => option.label.toLowerCase().indexOf(x) >= 0
+                  )
+                }}
+              />
+            </div>
+          )}
         <label className="f6 fw6 db mb1 gray ttc">{this.label}</label>
         <Select
           key={this.state.facility}

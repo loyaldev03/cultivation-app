@@ -27,9 +27,7 @@ class StrainApp extends React.Component {
     return (
       <div className="w-80 bg-white pa3">
         <div className="flex mt3 mb4">
-          <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
-            Strains
-          </h1>
+          <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Strains</h1>
           <div style={{ justifySelf: 'end' }}>
             <button
               className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
@@ -74,10 +72,7 @@ class StrainApp extends React.Component {
       <React.Fragment>
         {this.renderFirstTime()}
         {this.renderStrainList()}
-        <StrainEditor
-          isOpened={false}
-          locations={this.props.locations}
-        />
+        <StrainEditor isOpened={false} locations={this.props.locations} />
       </React.Fragment>
     )
   }

@@ -11,13 +11,15 @@ class StrainStore {
   }
 
   @action
-  prepend(strain) {    
+  prepend(strain) {
     this.strains.replace([strain, ...this.strains.slice()])
   }
 
   @action
   update(strain) {
-    const index = this.strains.findIndex(x => x.attributes.id === strain.attributes.id)
+    const index = this.strains.findIndex(
+      x => x.attributes.id === strain.attributes.id
+    )
     this.strains[index] = strain
   }
 }

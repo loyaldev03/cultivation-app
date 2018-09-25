@@ -1,9 +1,6 @@
 import React from 'react'
 import StrainAutoSuggest from './StrainAutoSuggest'
-import {
-  NumericInput,
-  FieldError
-} from '../../../utils/FormHelpers'
+import { NumericInput, FieldError } from '../../../utils/FormHelpers'
 import LocationPicker from '../../../utils/LocationPicker'
 import saveStrain from '../actions/saveStrain'
 import getStrain from '../actions/getStrain'
@@ -34,7 +31,7 @@ export default class StrainEditor extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener("editor-sidebar-open", event => { 
+    document.addEventListener('editor-sidebar-open', event => {
       const { facility_strain_id } = event.detail
 
       if (!facility_strain_id) {
@@ -42,9 +39,17 @@ export default class StrainEditor extends React.Component {
         return
       }
 
-      getStrain(facility_strain_id).then((data) => {
+      getStrain(facility_strain_id).then(data => {
         const {
-          id, strain_name, strain_type, facility_id, thc, cbd, indica_makeup, sativa_makeup, testing_status
+          id,
+          strain_name,
+          strain_type,
+          facility_id,
+          thc,
+          cbd,
+          indica_makeup,
+          sativa_makeup,
+          testing_status
         } = data.data.attributes
 
         this.setState({
@@ -88,7 +93,7 @@ export default class StrainEditor extends React.Component {
     window.editorSidebar.close()
   }
 
-  onSave = (event) => {
+  onSave = event => {
     const { errors, isValid, ...payload } = this.getValues()
     if (!isValid) {
       this.setState({ errors })
@@ -142,7 +147,8 @@ export default class StrainEditor extends React.Component {
       errors = { ...errors, facility_id: ['Facility is required.'] }
     }
 
-    const isValid = Object.getOwnPropertyNames(errors).length == 0 &&
+    const isValid =
+      Object.getOwnPropertyNames(errors).length == 0 &&
       this.strainPicker.current.validate().isValid
 
     return {
@@ -162,86 +168,98 @@ export default class StrainEditor extends React.Component {
 
   renderForm() {
     const percentageOptions = []
-    for(let i = 0 ; i <= 20; i++) {
-      percentageOptions.push(<option key={i} value={i*5}>{i*5} %</option>)
+    for (let i = 0; i <= 20; i++) {
+      percentageOptions.push(
+        <option key={i} value={i * 5}>
+          {i * 5} %
+        </option>
+      )
     }
 
     return (
       <React.Fragment>
-        <StrainAutoSuggest 
+        <StrainAutoSuggest
           ref={this.strainPicker}
           strain_name={this.state.strain_name}
           strain_type={this.state.strain_type}
           onStrainSelected={this.onStrainSelected}
         />
         <div className="ph4">
-          <FieldError errors={this.state.errors} field="strain_name"/>
+          <FieldError errors={this.state.errors} field="strain_name" />
         </div>
 
-        { !this.isFacilitySet && 
+        {!this.isFacilitySet && (
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
-              <LocationPicker 
+              <LocationPicker
                 mode="facility"
                 locations={this.props.locations}
                 location_id={this.state.facility_id}
                 onChange={this.onFacilityChanged}
               />
-              <FieldError errors={this.state.errors} field="facility_id"/>
+              <FieldError errors={this.state.errors} field="facility_id" />
             </div>
           </div>
-        }
+        )}
 
         <hr className="mt3 m b--light-gray w-100" />
 
         <div className="ph4 mt3 flex">
           <div className="w-100">
-            <label className="f6 fw6 db mb0 dark-gray ttc">Strain details</label>
-            <p className="i f7 gray mt1">Remember to complete the following before synchronize to Metrc.</p>
+            <label className="f6 fw6 db mb0 dark-gray ttc">
+              Strain details
+            </label>
+            <p className="i f7 gray mt1">
+              Remember to complete the following before synchronize to Metrc.
+            </p>
           </div>
         </div>
         <div className="ph4 mt3 flex">
           <div className="w-50">
-            <NumericInput 
-              label="THC content" 
-              fieldname="thc" 
+            <NumericInput
+              label="THC content"
+              fieldname="thc"
               value={this.state.thc}
               onChange={this.genericOnChange}
             />
-            <p className="i f7 gray mt1">This is a 2 year average of testing.</p>
+            <p className="i f7 gray mt1">
+              This is a 2 year average of testing.
+            </p>
           </div>
           <div className="w-50 pl3">
-            <NumericInput 
-              label="CBD content" 
-              fieldname="cbd" 
+            <NumericInput
+              label="CBD content"
+              fieldname="cbd"
               value={this.state.cbd}
               onChange={this.genericOnChange}
             />
-            <p className="i f7 gray mt1">This is a 2 year average of testing.</p>
+            <p className="i f7 gray mt1">
+              This is a 2 year average of testing.
+            </p>
           </div>
         </div>
 
         <div className="ph4 mt3 flex">
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Indica makeup</label>
-            <select 
+            <select
               className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 select"
               fieldname="indica_makeup"
               value={this.state.indica_makeup}
               onChange={this.genericOnChange}
             >
-              { percentageOptions }
+              {percentageOptions}
             </select>
           </div>
           <div className="w-50 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Sativa makeup</label>
-            <select 
+            <select
               className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 select"
               fieldname="sativa_makeup"
               value={this.state.sativa_makeup}
               onChange={this.genericOnChange}
             >
-              { percentageOptions }
+              {percentageOptions}
             </select>
           </div>
         </div>
@@ -249,7 +267,7 @@ export default class StrainEditor extends React.Component {
         <div className="ph4 mt3 flex">
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Testing status</label>
-            <select 
+            <select
               className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 select"
               fieldname="testing_status"
               value={this.state.testing_status}

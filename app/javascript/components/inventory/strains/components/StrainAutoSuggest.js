@@ -18,7 +18,7 @@ export default class StrainAutoSuggest extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     let hasNewState = false
     let newState = {}
-    
+
     if (nextProps.strain_name !== prevState.strain) {
       newState = { ...newState, strain: nextProps.strain_name }
       hasNewState = true

@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactTable from 'react-table'
 import { observer } from 'mobx-react'
-import strainStore from '../store/StrainStore';
+import strainStore from '../store/StrainStore'
 
 const columns = [
   {
@@ -41,7 +41,8 @@ const columns = [
     accessor: 'attributes.facility_name',
     className: 'tl',
     headerClassName: 'tl'
-  }, {
+  },
+  {
     Header: '',
     className: 'tc',
     filterable: false,

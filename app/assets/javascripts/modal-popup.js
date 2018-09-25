@@ -1,8 +1,9 @@
 function openModal() {
   const notificationIcon = $_('#notification-popup')
-  const modalCard = $_('#myModal')
+  const modalCard = $_('#modalCard')
 
   modalCard.classList.remove('dn')
+
   new Popper(notificationIcon, modalCard, {
     positionFixed: true,
     placement: 'bottom'
@@ -10,5 +11,5 @@ function openModal() {
 }
 
 function hideModal() {
-  $_('#myModal').classList.add('dn')
+  $_('#modalCard').classList.add('dn')
 }

@@ -4,7 +4,6 @@ import loadTasks from './loadTask'
 
 class createTask {
   createTask(state) {
-    console.log(state)
     let url = `/api/v1/batches/${state.batch_id}/tasks`
     fetch(url, {
       method: 'POST',

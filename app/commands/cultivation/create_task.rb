@@ -15,10 +15,17 @@ module Cultivation
     private
 
     def save_record(args)
-      Rails.logger.debug "Errors ==> #{args.inspect}"
+      task_related = Cultivation::Task.find(args[:task_related_id])
+      batch = task_related.batch
+      task = batch.tasks.create(args.except(:task_related_id, :position))
 
-      task = Cultivation::Task.create(args)
-      Rails.logger.debug "Errors ==> #{task.inspect}"
+      if args[:position] == 'top'
+        position = (task_related.position == 0 ? 0 : (task_related.position - 1))
+        task.move_to! task_related.position
+      else
+        position = (task_related.position + 1)
+        task.move_to! position
+      end
       task
     end
   end

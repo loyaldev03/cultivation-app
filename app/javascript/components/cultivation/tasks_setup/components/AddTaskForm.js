@@ -24,12 +24,21 @@ class AddTaskForm extends React.Component {
       end_date: new Date(),
       errors: '',
       estimated_hours: '',
-      assigned_employee: []
+      assigned_employee: [],
+      position: props.position,
+      task_related_id: props.task_related_id
     }
   }
 
+  componentWillReceiveProps(props) {
+    this.setState({
+      position: props.position,
+      task_related_id: props.task_related_id,
+      batch_id: props.batch_id
+    })
+  }
+
   handleChangeTask = event => {
-    // console.log(event[0].value)
     let key = event.target.attributes.fieldname.value
     let value = event.target.value
     this.setState({ [key]: value })

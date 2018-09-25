@@ -53,11 +53,11 @@ class Cultivation::BatchesController < ApplicationController
     if phase_info.present?
       case record.batch_source
       when 'clones_from_mother'
-        filter_args = { facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id }
+        filter_args = {facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id}
       when 'clones_purchased'
-        filter_args = { facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id }
+        filter_args = {facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id}
       when 'seeds'
-        filter_args = { facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id }
+        filter_args = {facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id}
       else
         # return empty array if no phase task found
         return []
@@ -70,6 +70,17 @@ class Cultivation::BatchesController < ApplicationController
       end
     end
   end
+
+  def update
+    if params[:type] == 'active'
+      @batch = Cultivation::Batch.find(params[:id])
+      @batch.update(is_active: true)
+      flash[:notice] = 'Batch successfully updated to active'
+      redirect_to root_path
+    end
+  end
+
+  private
 
   def get_batch_phase(record, phase)
     find_phase_cmd = Cultivation::FindBatchPhase.call(record, phase)

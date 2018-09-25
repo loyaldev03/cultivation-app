@@ -1,20 +1,14 @@
-function hideModal() {
-  console.log("close")
-   $_('.modal').classList.add("dn");
+function openModal() {
+  const notificationIcon = $_('#notification-popup')
+  const modalCard = $_('#myModal')
+
+  modalCard.classList.remove('dn')
+  new Popper(notificationIcon, modalCard, {
+    positionFixed: true,
+    placement: 'bottom'
+  })
 }
 
-document.addEventListener('DOMContentLoaded', function(event) {
-  var modal = $_('#myModal');
-  const targetCard = $('#notification-popup');
-  const modalCard = $('.modal'); 
-
-  $_('#notification-popup').on('click', function() {
-    modal.style.display = 'block'
-  })
-
-  // $_('#close-modal').on("click", function() {
-  //   console.log("close")
-  //   //modal.style.display = "none";
-  //   $_('.modal').classList.add("dn");
-  // })
-})
+function hideModal() {
+  $_('#myModal').classList.add('dn')
+}

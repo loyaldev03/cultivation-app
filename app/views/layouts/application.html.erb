@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <%= render "layouts/head", include_sidebar: true %>
+  <%= render "layouts/head", include_sidebar: true, include_popper: true %>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
@@ -19,10 +19,10 @@
                 </div>
 
                 <div class="flex flex-row items-center">
-                  <i id = "notification-popup" class="material-icons grey mr3 dim md-21">notifications_none</i>
+                  <i onclick="openModal()" id="notification-popup" class="material-icons grey mr3 dim md-21">notifications_none</i>
 
-                  <div id="myModal" class="modal">
-                    <div class="modal-content">
+                  <div id="myModal" class="dn" >
+                    <div class="">
                       <span onclick="hideModal()" id="close-modal" class="close">&times;</span>
                       <p>Some text in the Modal..</p>
                     </div>

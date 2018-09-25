@@ -10,6 +10,7 @@ module Cultivation
     field :facility_id, type: BSON::ObjectId
     field :grow_method, type: String
     field :is_active, type: Boolean, default: -> { false }
+    field :code, type: String
 
     has_many :tray_plans, class_name: 'Cultivation::TrayPlan'
     has_many :tasks, class_name: 'Cultivation::Task'

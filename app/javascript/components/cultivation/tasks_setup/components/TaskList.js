@@ -346,7 +346,7 @@ class TaskList extends React.Component {
               </div>
               <div className="w-40">
                 <div className="">
-                  <label>{this.state.batch.id}</label>
+                  <label>{this.state.batch.code}</label>
                 </div>
               </div>
             </div>

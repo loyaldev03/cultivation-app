@@ -19,6 +19,7 @@ class Cultivation::BatchesController < ApplicationController
     @record = Cultivation::BatchForm.new(params[:id])
     @batch_attributes = {
       id: @record.id.to_s,
+      code: @record.code.to_s,
       strain: @record.strain_id.to_s,
       batch_source: @record.batch_source,
       grow_method: @record.grow_method,

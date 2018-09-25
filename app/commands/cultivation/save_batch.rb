@@ -117,7 +117,9 @@ module Cultivation
     end
 
     def save_record(args)
-      batch = Cultivation::Batch.create(args)
+      batch = Cultivation::Batch.new(args)
+      batch.code = NextFacilityCode.call(:batch, Cultivation::Batch.last.code).result
+      batch.save!
       phase_id = nil
       category_id = nil
       task_templates.each do |task|

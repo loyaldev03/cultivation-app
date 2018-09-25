@@ -14,5 +14,7 @@ class Facility
   embeds_one :address, as: :addressable, class_name: 'Address'
   embeds_many :rooms
 
+  has_many :strains, class_name: 'Inventory::FacilityStrain'
+
   scope :completed, -> { where(is_complete: true) }
 end

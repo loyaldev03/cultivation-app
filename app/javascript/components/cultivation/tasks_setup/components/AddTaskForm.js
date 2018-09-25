@@ -45,12 +45,10 @@ class AddTaskForm extends React.Component {
   }
 
   handleChangeDate = (key, value) => {
-    console.log(value)
     this.setState({ [key]: value })
   }
 
   handleChangeSelect = (value, { action, removedValue }) => {
-    console.log(value)
     let arr = this.state.assigned_employee
     switch (action) {
       case 'select-option':

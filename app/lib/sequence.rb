@@ -23,5 +23,9 @@ class Sequence
     def tray_code_format
       return 'T%02d'
     end
+
+    def batch_code_format
+      return 'B%02d'
+    end
   end
 end

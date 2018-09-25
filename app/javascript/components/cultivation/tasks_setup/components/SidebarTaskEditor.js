@@ -51,7 +51,7 @@ class SidebarTaskEditor extends React.Component {
   }
 
   handleChangeDate = (key, value) => {
-    this.setState({ [key]: value.toDateString() })
+    this.setState({ [key]: value })
   }
 
   handleChangeSelect = (value, { action, removedValue }) => {

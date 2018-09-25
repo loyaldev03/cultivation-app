@@ -6,10 +6,14 @@ class updateTask {
   updateTask(state) {
     let id = state.id
     let url = `/api/v1/batches/${state.batch_id}/tasks/${id}`
+    let task = state
+    task.start_date = state.start_date.toDateString()
+    task.end_date = state.end_date.toDateString()
+
     fetch(url, {
       method: 'PUT',
       credentials: 'include',
-      body: JSON.stringify({ task: state }),
+      body: JSON.stringify({ task: task }),
       headers: {
         'Content-Type': 'application/json'
       }

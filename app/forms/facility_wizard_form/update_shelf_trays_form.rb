@@ -11,6 +11,7 @@ module FacilityWizardForm
              :trays]
 
     attr_accessor(*ATTRS)
+    attr_accessor :duplicate_target
 
     validates :code, presence: true
 

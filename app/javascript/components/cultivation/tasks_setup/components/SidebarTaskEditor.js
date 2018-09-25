@@ -45,19 +45,16 @@ class SidebarTaskEditor extends React.Component {
   }
 
   handleChangeTask = event => {
-    // console.log(event[0].value)
     let key = event.target.attributes.fieldname.value
     let value = event.target.value
     this.setState({ [key]: value })
   }
 
   handleChangeDate = (key, value) => {
-    console.log(value)
     this.setState({ [key]: value })
   }
 
   handleChangeSelect = (value, { action, removedValue }) => {
-    console.log(value)
     let arr = this.state.assigned_employee
     switch (action) {
       case 'select-option':

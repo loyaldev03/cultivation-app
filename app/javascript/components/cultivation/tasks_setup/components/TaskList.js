@@ -152,18 +152,7 @@ class TaskList extends React.Component {
         <div className="">
           <div className="flex">
             <div className="w1 ml3">
-              {row.row['attributes.is_phase'] === true &&
-              <a
-                onClick={e => {
-                  handleEdit(row)
-                }}
-              >
-                {row.value}
-              </a>
-            }
-            </div>
-            <div className="w1 ml3">
-              {row.row['attributes.is_category'] === true &&
+              {row.row['attributes.is_phase'] === true && (
                 <a
                   onClick={e => {
                     handleEdit(row)
@@ -171,10 +160,10 @@ class TaskList extends React.Component {
                 >
                   {row.value}
                 </a>
-              }
+              )}
             </div>
             <div className="w1 ml3">
-              {row.row['attributes.is_phase'] === false && row.row['attributes.is_category']=== false &&
+              {row.row['attributes.is_category'] === true && (
                 <a
                   onClick={e => {
                     handleEdit(row)
@@ -182,11 +171,22 @@ class TaskList extends React.Component {
                 >
                   {row.value}
                 </a>
-              }
+              )}
+            </div>
+            <div className="w1 ml3">
+              {row.row['attributes.is_phase'] === false &&
+                row.row['attributes.is_category'] === false && (
+                  <a
+                    onClick={e => {
+                      handleEdit(row)
+                    }}
+                  >
+                    {row.value}
+                  </a>
+                )}
             </div>
           </div>
         </div>
-
 
         <Manager>
           <Reference>

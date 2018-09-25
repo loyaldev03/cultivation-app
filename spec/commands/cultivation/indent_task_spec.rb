@@ -21,8 +21,8 @@ RSpec.describe Cultivation::IndentTask, type: :command do
       result = Cultivation::IndentTask.call(params).result
 
       expect(result).to have_attributes(
-        isPhase: false,
-        isCategory: true,
+        is_phase: false,
+        is_category: true,
         task_category: result.phase
       )
     end
@@ -34,8 +34,8 @@ RSpec.describe Cultivation::IndentTask, type: :command do
       result = Cultivation::IndentTask.call(params).result
 
       expect(result).to have_attributes(
-        isPhase: false,
-        isCategory: false,
+        is_phase: false,
+        is_category: false,
         name: result.task_category
       )
     end
@@ -47,8 +47,8 @@ RSpec.describe Cultivation::IndentTask, type: :command do
       result = Cultivation::IndentTask.call(params).result
 
       expect(result).to have_attributes(
-        isPhase: task.isPhase,
-        isCategory: task.isCategory,
+        is_phase: task.is_phase,
+        is_category: task.is_category,
         name: task.name,
         task_category: task.task_category
       )
@@ -63,8 +63,8 @@ RSpec.describe Cultivation::IndentTask, type: :command do
       result = Cultivation::IndentTask.call(params).result
 
       expect(result).to have_attributes(
-        isPhase: phase.isPhase,
-        isCategory: phase.isCategory,
+        is_phase: phase.is_phase,
+        is_category: phase.is_category,
         name: phase.name,
         task_category: phase.task_category,
         phase: phase.phase
@@ -78,8 +78,8 @@ RSpec.describe Cultivation::IndentTask, type: :command do
       result = Cultivation::IndentTask.call(params).result
 
       expect(result).to have_attributes(
-        isPhase: true,
-        isCategory: false,
+        is_phase: true,
+        is_category: false,
         name: nil,
         task_category: nil,
         phase: category.task_category
@@ -93,8 +93,8 @@ RSpec.describe Cultivation::IndentTask, type: :command do
       result = Cultivation::IndentTask.call(params).result
 
       expect(result).to have_attributes(
-        isPhase: false,
-        isCategory: true,
+        is_phase: false,
+        is_category: true,
         name: nil,
         task_category: task.name
       )

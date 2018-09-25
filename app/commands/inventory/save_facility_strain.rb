@@ -3,26 +3,17 @@ module Inventory
     prepend SimpleCommand
     attr_reader :facility_strain
 
-    def initialize(current_user,
-                   facility_strain_id: nil,
-                   facility_id: nil,          # Only needed for create
-                   strain_name:,
-                   strain_type:,
-                   sativa_makeup: 0,
-                   indica_makeup: 0,
-                   testing_status: 'none',
-                   thc: 0,
-                   cbd: 0)
+    def initialize(current_user, args)
       @current_user = current_user
-      @facility_strain_id = facility_strain_id
-      @facility_id = facility_id
-      @strain_name = strain_name
-      @strain_type = strain_type
-      @sativa_makeup = sativa_makeup
-      @indica_makeup = indica_makeup
-      @testing_status = testing_status
-      @thc = thc
-      @cbd = cbd
+      @id = args[:id]
+      @facility_id = args[:facility_id]
+      @strain_name = args[:strain_name]
+      @strain_type = args[:strain_type]
+      @sativa_makeup = args[:sativa_makeup]
+      @indica_makeup = args[:indica_makeup]
+      @testing_status = args[:testing_status]
+      @thc = args[:thc]
+      @cbd = args[:cbd]
     end
 
     def call
@@ -34,8 +25,8 @@ module Inventory
     private
 
     def build_facility_strain
-      if @facility_strain_id.present?
-        @facility_strain = Inventory::FacilityStrain.find(@facility_strain_id)
+      if @id.present?
+        @facility_strain = Inventory::FacilityStrain.find(@id)
       else
         @facility_strain = Inventory::FacilityStrain.new(
           facility_id: @facility_id,
@@ -63,10 +54,20 @@ module Inventory
     def valid_data?
       errors.add(:strain_name, 'Strain name is required') if facility_strain.strain_name.empty?
       errors.add(:strain_type, 'Strain type is required') if facility_strain.strain_type.empty?
-      errors.add(:thc, 'THC quantity is requried') if facility_strain.thc.nil?
-      errors.add(:cbd, 'CBD quantity is required') if facility_strain.cbd.nil?
       errors.add(:facility_id, 'Facility is required') if facility_strain.facility_id.nil?
-      errors.add(:testing_status, 'Testing status is required') if facility_strain.testing_status.empty?
+
+      if FacilityStrain.find_by(
+        strain_name: facility_strain.strain_name,
+        facility_id: facility_strain.facility_id,
+      ).present? &&
+         !facility_strain.persisted?
+        errors.add(:strain_name, 'Strain name is already taken.')
+      end
+
+      # errors.add(:thc, 'THC quantity is requried') if facility_strain.thc.nil?
+      # errors.add(:cbd, 'CBD quantity is required') if facility_strain.cbd.nil?
+      # errors.add(:testing_status, 'Testing status is required') if facility_strain.testing_status.empty?
+
       # TODO: Check facility is ready?
       # TODO: Check testing status is valid
       # TODO: Check indica + sativa makesup equals 100

@@ -16,7 +16,7 @@ class SidebarTaskEditor extends React.Component {
       batch_id: this.props.batch_id,
       id: props.task.id,
       ...props.task.attributes,
-      days: this.props.task.attributes.days,
+      duration: this.props.task.attributes.duration,
       start_date: new Date(this.props.task.attributes.start_date),
       end_date: new Date(this.props.task.attributes.end_date),
       errors: '',
@@ -32,7 +32,7 @@ class SidebarTaskEditor extends React.Component {
         batch_id: this.props.batch_id,
         id: props.task.id,
         ...props.task.attributes,
-        days: props.task.attributes.days,
+        duration: props.task.attributes.duration,
         start_date: new Date(),
         end_date: new Date(),
         start_date: new Date(props.task.attributes.start_date),
@@ -142,12 +142,12 @@ class SidebarTaskEditor extends React.Component {
         <div className="ph4 mt3 mb3 flex">
           <div className="w-20">
             <NumericInput
-              label={'Days'}
-              value={this.state.days}
+              label={'Duration'}
+              value={this.state.duration}
               onChange={this.handleChangeTask}
-              fieldname="days"
+              fieldname="duration"
               errors={this.state.errors}
-              errorField="days"
+              errorField="duration"
             />
           </div>
 

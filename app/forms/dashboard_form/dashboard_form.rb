@@ -1,12 +1,20 @@
 module DashboardForm
   class DashboardForm
-    attr_accessor :all_facilities, :incomplete_facilities, :last_facility
+    attr_accessor :cultivation_batches
 
     def initialize
-      @all_facilities = Facility.all.pluck_to_hash(['id', :name, :code, :room_count, :is_complete])
-      @incomplete_facilities = all_facilities.select { |f| f['is_complete'] == false }
-      # @have_incomplete_facility = @incomplete_facilities.any?
-      @last_facility = Facility.last
+      set_records
+    end
+
+    private
+
+    def set_records
+      find_cmd = Cultivation::QueryBatch.call()
+      if find_cmd.success?
+        @cultivation_batches = find_cmd.result.order(start_date: :desc)
+      else
+        @cultivation_batches = []
+      end
     end
   end
 end

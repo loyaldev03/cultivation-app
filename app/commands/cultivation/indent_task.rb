@@ -18,17 +18,17 @@ module Cultivation
     def indent(task, args)
       if args[:action] == 'in'
         #task become child
-        if task.isPhase
-          params = {isPhase: false, isCategory: true, task_category: task.phase, name: nil}
-        elsif task.isCategory
-          params = {isPhase: false, isCategory: false, name: task.task_category}
+        if task.is_phase
+          params = {is_phase: false, is_category: true, task_category: task.phase, name: nil}
+        elsif task.is_category
+          params = {is_phase: false, is_category: false, name: task.task_category}
         end
       elsif args[:action] == 'out'
         #task become category or phase
-        if task.isCategory
-          params = {isPhase: true, isCategory: false, phase: task.task_category, name: nil, task_category: nil}
-        elsif !task.isPhase && !task.isCategory
-          params = {isPhase: false, isCategory: true, task_category: task.name, name: nil}
+        if task.is_category
+          params = {is_phase: true, is_category: false, phase: task.task_category, name: nil, task_category: nil}
+        elsif !task.is_phase && !task.is_category
+          params = {is_phase: false, is_category: true, task_category: task.name, name: nil}
         end
       end
       task.update(params)

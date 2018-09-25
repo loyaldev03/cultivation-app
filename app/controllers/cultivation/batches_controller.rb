@@ -27,22 +27,25 @@ class Cultivation::BatchesController < ApplicationController
     }
     # TODO: Use other params
     if params[:step].present?
-      # TODO: Get start date and end date from batch (@record)
-      @start_date = Time.now
-      @end_date = Time.now + 15.days
-
       if @record.batch_source == 'clones_from_mother'
-        # Set the plantType for react BatchPlantSelectionList
-        @plant_type = 'mother'
-        # Get available trays based on purpose
-        available_trays_cmd = QueryAvailableTrays.call(
-          @start_date,
-          @end_date,
-          {
-            facility_id: @record.facility_id,
-            purpose: 'clone',
-          }
-        )
+        # Get start_date and end_date from batch @record
+        find_phase_cmd = Cultivation::FindBatchPhase.call(@record, 'Clone')
+        if find_phase_cmd.success?
+          @start_date = find_phase_cmd.result.start_date
+          @end_date = find_phase_cmd.result.end_date
+          # Set the plantType for react BatchPlantSelectionList
+          @plant_type = 'mother'
+          # Get available trays based on purpose
+          available_trays_cmd = QueryAvailableTrays.call(
+            @start_date,
+            @end_date,
+            {
+              facility_id: @record.facility_id,
+              purpose: 'clone',
+              exclude_batch_id: @record.id,
+            }
+          )
+        end
       else
         available_trays_cmd = QueryAvailableTrays.call(
           @start_date,

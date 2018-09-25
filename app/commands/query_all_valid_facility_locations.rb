@@ -1,10 +1,8 @@
 class QueryAllValidFacilityLocations
   prepend SimpleCommand
 
-  attr_reader :storage_types
-
-  def initialize(*storage_types)
-    @storage_types = storage_types || []
+  def initialize(facility_only: false)
+    @facility_only = facility_only
   end
 
   def call
@@ -19,7 +17,7 @@ class QueryAllValidFacilityLocations
       add_facility(facility_list, facility)
 
       facility.rooms.each do |room|
-        next unless valid_room? room
+        next if (!valid_room?(room) || @facility_only)
 
         add_room(room_list, facility, room)
         add_sections(section_list, facility, room)
@@ -46,9 +44,7 @@ class QueryAllValidFacilityLocations
   private
 
   def valid_room?(room)
-    return false if !room.is_complete             # Do not return incomplete rooms
-    return true if @storage_types.empty?         # Return all rooms if no filter provided
-    return @storage_types.include? room.purpose   # Returns only the room that match the purpose
+    return !room.is_complete             # Do not return incomplete rooms
   end
 
   def add_facility(collection, facility)

@@ -1,47 +1,76 @@
-<div class="ph4 w-100 pb4 mt3">
-  <h1 class="ma0 pa0 f3 ttc">Modify facility</h1>
+<div class="ph4 pv3 bb b--light-grey">
+  <h5 class="h6--font dark-grey ma0 ttc">modify facility</h5>
 </div>
 
-<div class="ph4 w-100 pb4" style="height: 560px; overflow: scroll">
-  <%= simple_form_for @facility, url: settings_facility_facility_path(id: @facility.id), remote: true, method: :patch, html: { class: 'vertical-form' } do |f| %>
-    <%= f.input :name, label: 'Name',
-      label_html: { class: 'w-100 f5 fw6 gray dib' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :code, label: 'Code',
-      label_html: { class: 'w-100 f5 fw6 gray dib' }, 
-      input_html: { class: 'w-30 f5 fw6 gray pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :address, label: 'Address',
-      label_html: { class: 'w-100 f5 fw6 gray dib' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :zipcode, label: 'Zipcode',
-      label_html: { class: 'w-100 f5 fw6 gray dib' }, 
-      input_html: { class: 'w-30 f5 fw6 gray pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :city, label: 'City',
-      label_html: { class: 'w-100 f5 fw6 gray dib' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :state, label: 'State',
-      label_html: { class: 'w-100 f5 fw6 gray dib' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :country, label: 'Country',
-      label_html: { class: 'w-100 f5 fw6 gray dib' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :phone, label: 'Phone',
-      label_html: { class: 'w-100 f5 fw6 gray dib' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :fax, label: 'Fax',
-      label_html: { class: 'w-100 f5 fw6 gray dib' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <div class="pv3 w-100 flex items-center justify-start">
-      <%= f.submit "Update", class: "pointer pa2 ph4 ba b--blue blue bw1 br4 dim" %>
+<%= simple_form_for @facility, url: settings_facility_facility_path(id: @facility.id), remote: true, method: :patch, 
+    html: { class: 'h-100 flex flex-column justify-between' } do |f| %>
+  
+  <div class="pa4">
+    <div class="mb3">
+      <%= f.input :name, label: 'Name',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
     </div>
-  <% end %>
-</div>
+
+    <div class="mb3">
+      <%= f.input :code, label: 'Code',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'box--height db w-30 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :address, label: 'Address',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :zipcode, label: 'Zipcode',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'box--height db w-30 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :city, label: 'City',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :state, label: 'State',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :country, label: 'Country',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :phone, label: 'Phone',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :fax, label: 'Fax',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+  </div>
+
+  <div class="bt b--light-grey pv3 ph4">
+    <%= f.submit "Update", class: "fr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" %>
+  </div>
+<% end %>

@@ -39,7 +39,7 @@ RSpec.describe Inventory::SaveFacilityStrain, type: :command do
     it "should update strain for facility" do
       command = Inventory::SaveFacilityStrain.call(
         valid_user,
-        facility_strain_id: existing_fs.id.to_s,
+        id: existing_fs.id.to_s,
         strain_name: 'xxx',
         strain_type: 'indica',
         sativa_makeup: '77',

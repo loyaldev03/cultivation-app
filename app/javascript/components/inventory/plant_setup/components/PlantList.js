@@ -2,30 +2,8 @@ import React from 'react'
 import ReactTable from 'react-table'
 import plantStore from '../store/PlantStore'
 import { observer } from 'mobx-react'
-// import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
-// const columns = [
-//   {
-//     Header: 'Plant type',
-//     headerClassName: 'tl pl3',
-//     accessor: 'storage_type', // String-based value accessors!
-//     Cell: props => (
-//       <a
-//         href="javascript:;"
-//         className="ttc link"
-//         onClick={e => editorSidebarHandler.open({ width: '500px' })}
-//       >
-//         {props.value}
-//       </a>
-//     )
-//   }
-// ]
 
 const columns = [
-  // {
-  //   Header: 'ID',
-  //   accessor: 'id',
-  //   show: false
-  // },
   {
     Header: '',
     accessor: 'attributes.status',

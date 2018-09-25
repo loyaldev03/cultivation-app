@@ -1,7 +1,5 @@
 <% content_for :breadcrumb do %>
-  <div class="flex items-center">
-    <%= breadcrumbs ["Home",root_path], ["Dashboard", root_path], 'Inventory Setup' %>
-  </div>
+  <%= breadcrumbs ["Home",root_path], 'Inventory Setup' %>
 <% end %>
 
 <div class="pa4">
@@ -31,7 +29,7 @@
               Register strains that are grown at your facility.
             </p>
           </div>
-          <%= link_to 'Start', inventory_plant_setup_index_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim' %>
+          <%= link_to 'Start', inventory_strains_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim' %>
         </div>
         <div class="flex flex-row justify-center items-center mb4">
           <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%"></div>

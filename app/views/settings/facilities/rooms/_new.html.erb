@@ -1,29 +1,43 @@
-<div class="ph4 w-100 pb4 mt3">
-  <h1 class="ma0 pa0 f3">Create room</h1>
+<div class="ph4 pv3 bb b--light-grey">
+  <h5 class="h6--font dark-grey ma0 ttc">create room</h5>
 </div>
 
-<div class="ph4 w-100 pb4">
-  <%= simple_form_for @room, url: settings_facility_rooms_path, remote: true, html: { class: 'vertical-form' } do |f| %>
-    <%= f.input :name, label: 'Name',
-      label_html: { class: 'w-100 dib f5 fw6 gray' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :code, label: 'Code',
-      label_html: { class: 'w-100 dib f5 fw6 gray' }, 
-      input_html: { class: 'w-30 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <%= f.input :desc, label: 'Description',
-      as: :text,
-      label_html: { class: 'w-100 dib f5 fw6 gray' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0', rows: 5 } 
-    %>
-    <%= f.input :facility_id, as: :select, collection: Facility.all, 
-      include_blank: false, 
-      label_html: { class: 'w-100 dib f5 fw6 gray' }, 
-      input_html: { class: 'w-70 pa2 gray ba b--black-20 br2 outline-0' } 
-    %>
-    <div class="pv3 w-100 flex items-center justify-start">
-        <%= f.submit "Create", class: "pointer dim pa2 ph4 ba b--blue blue bw1 br4" %>
+<%= simple_form_for @room, url: settings_facility_rooms_path, remote: true, 
+    html: { class: 'h-100 flex flex-column justify-between' } do |f| %>
+  
+  <div class="pa4">
+    <div class="mb3">
+      <%= f.input :name, label: 'Name',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc'}, 
+        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
     </div>
-  <% end %>
-</div>
+
+    <div class="mb3">
+      <%= f.input :code, label: 'Code',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc'}, 
+        input_html: { class: 'box--height db w-30 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :desc, label: 'Description',
+        as: :text,
+        label_html: { class: 'subtitle-2 db mb1 grey ttc'}, 
+        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :facility_id, as: :select, collection: Facility.all, 
+        include_blank: false, 
+        label_html: { class: 'subtitle-2 db mb1 grey ttc'}, 
+        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+  </div>
+
+  <div class="bt b--light-grey pv3 ph4">
+    <%= f.submit "Create", class: "fr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" %>
+  </div>
+<% end %>

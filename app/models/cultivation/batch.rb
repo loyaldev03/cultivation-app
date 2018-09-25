@@ -3,7 +3,6 @@ module Cultivation
     include Mongoid::Document
     include Mongoid::Timestamps::Short
 
-    field :name, type: String
     field :batch_no, type: String
     field :batch_source, type: String
     field :start_date, type: DateTime
@@ -19,12 +18,16 @@ module Cultivation
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     has_many :plants, class_name: 'Inventory::Plants'
 
+    def name
+      strain.name
+    end
+
     def phases
-      tasks.where(isPhase: true)
+      tasks.where(is_phase: true)
     end
 
     def orphan_tasks
-      tasks.where(parent_id: '', isPhase: false, isCategory: false)
+      tasks.where(parent_id: '', is_phase: false, is_category: false)
     end
 
     def generate_tree

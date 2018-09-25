@@ -1,5 +1,8 @@
 Rails.application.routes.draw do  
   devise_for :users
+
+  get "dashboard" => "home#dashboard"
+
   root to: "home#index"
 
   get "facility_setup/new" => "facility_setup#new"
@@ -42,6 +45,7 @@ Rails.application.routes.draw do
 
   namespace 'inventory', as: :inventory do
     resources 'plant_setup', only: [:index]
+    resources 'strains', only: [:index]
   end
 
   namespace 'settings' do
@@ -74,9 +78,19 @@ Rails.application.routes.draw do
   # API for web pages
   namespace :api do
     namespace :v1 do
+      
       resources :plants do
-        get 'strains/(:filter)',      action: :strains, on: :collection
-        get 'plants/(:plant_status)', action: :plants, on: :collection
+        # get 'strains/(:filter)',      action: :strains, on: :collection
+        get 'all/(:plant_status)',    action: :all, on: :collection
+        # post 'setup_mother'
+        # post 'setup_clones'
+        # post 'setup_vegs'
+        # post 'setup_harvest_yield'
+        # post 'setup_waste'
+      end
+
+      resources :strains, only: [:index, :create, :show] do
+        get 'suggest', on: :collection
       end
 
       resources :batches, only: [:create] do

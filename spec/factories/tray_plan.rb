@@ -14,6 +14,8 @@ FactoryBot.define do
   end
 
   factory :batch, class: Cultivation::Batch do
-    name {Faker::Name.name}
+    batch_no {Faker::Number.number(4)}
+    strain_id { BSON::ObjectId.new }
+    is_active { true }
   end
 end

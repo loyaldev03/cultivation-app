@@ -106,7 +106,21 @@ class QueryAvailableTrays
               ],
             },
           }},
-          {"$project": {capacity: '$capacity', start_date: '$start_date', end_date: '$end_date'}},
+          {"$lookup": {
+            from: 'cultivation_batches',
+            localField: 'batch_id',
+            foreignField: '_id',
+            as: 'batch',
+          }},
+          {"$addFields": {"batch": {"$arrayElemAt": ['$batch', 0]}}},
+          {"$project": {batch_active: '$batch.is_active', capacity: 1, start_date: 1, end_date: 1}},
+          {"$match": {
+            "$expr": {
+              "$and": [
+                {"$eq": ['$batch_active', true]},
+              ],
+            },
+          }},
         ],
         as: 'planned',
       }},

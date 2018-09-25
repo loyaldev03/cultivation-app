@@ -149,13 +149,44 @@ class TaskList extends React.Component {
     let handleAddTask = this.handleAddTask
     return (
       <div className="flex justify-between-ns">
-        <a
-          onClick={e => {
-            handleEdit(row)
-          }}
-        >
-          {row.value}
-        </a>
+        <div className="">
+          <div className="flex">
+            <div className="w1 ml3">
+              {row.row['attributes.is_phase'] === true &&
+              <a
+                onClick={e => {
+                  handleEdit(row)
+                }}
+              >
+                {row.value}
+              </a>
+            }
+            </div>
+            <div className="w1 ml3">
+              {row.row['attributes.is_category'] === true &&
+                <a
+                  onClick={e => {
+                    handleEdit(row)
+                  }}
+                >
+                  {row.value}
+                </a>
+              }
+            </div>
+            <div className="w1 ml3">
+              {row.row['attributes.is_phase'] === false && row.row['attributes.is_category']=== false &&
+                <a
+                  onClick={e => {
+                    handleEdit(row)
+                  }}
+                >
+                  {row.value}
+                </a>
+              }
+            </div>
+          </div>
+        </div>
+
 
         <Manager>
           <Reference>
@@ -415,18 +446,20 @@ class TaskList extends React.Component {
               Header: 'Phase',
               accessor: 'attributes.phase',
               maxWidth: '100',
+              show: false,
               Cell: row => <div>{this.renderPhaseColumn(row)}</div>
             },
             {
               Header: 'Category',
               accessor: 'attributes.task_category',
               maxWidth: '100',
+              show: false,
               Cell: row => <div>{this.renderCategoryColumn(row)}</div>
             },
             {
               Header: 'Name',
               accessor: 'attributes.name',
-              maxWidth: '300',
+              maxWidth: '500',
               Cell: row => <div>{this.renderAttributesName(row)}</div>
             },
             {
@@ -442,6 +475,11 @@ class TaskList extends React.Component {
             {
               Header: 'Duration',
               accessor: 'attributes.duration',
+              maxWidth: '100'
+            },
+            {
+              Header: 'Estimated Hours',
+              accessor: 'attributes.estimated_hours',
               maxWidth: '100'
             },
             {

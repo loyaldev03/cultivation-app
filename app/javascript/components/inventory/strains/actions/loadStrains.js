@@ -1,14 +1,11 @@
-import plantStore from '../store/PlantStore'
+import strainStore from '../store/StrainStore'
 
 /**
  * Resets and reload list of plants
  */
-export default function loadPlants(plant_type = '') {
-  plantStore.isLoading = true
-  let apiUrl = '/api/v1/plants/all'
-  if (plant_type.length > 0) {
-    apiUrl = apiUrl + '?plant_status=' + plant_type
-  }
+export default function loadStrains(facility_id = null) {
+  strainStore.isLoading = true
+  let apiUrl = '/api/v1/strains'
 
   fetch(apiUrl, {
     method: 'GET',
@@ -27,10 +24,10 @@ export default function loadPlants(plant_type = '') {
     })
     .then(({ status, data }) => {
       if (status >= 400) {
-        console.log('Something wrong when calling /api/v1/plants/plants')
+        console.log('Something wrong when calling /api/v1/strains')
       } else {
-        plantStore.load(data)
-        plantStore.isLoading = false
+        strainStore.load(data)
+        strainStore.isLoading = false
       }
     })
 }

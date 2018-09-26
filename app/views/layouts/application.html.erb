@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <%= render "layouts/head", include_sidebar: true %>
+  <%= render "layouts/head", include_sidebar: true, include_popper: true %>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
@@ -19,11 +19,15 @@
                 </div>
 
                 <div class="flex flex-row items-center">
-                  <i class="material-icons grey f6 mr3 dim md-21">notifications_none</i>
+                  <i 
+                    onclick="openModal()" id="notification-popup" 
+                    class="material-icons grey mr3 dim md-21 pointer">
+                    notifications_none
+                  </i>
 
-                  <img
-                    src="http://tachyons.io/img/logo.jpg"
-                    class="br-100 h2 w2 mr3 dib" alt="avatar">
+                  <%= render 'layouts/notification' %>
+
+                  <%= image_tag 'blank-avatar.png', class: "br-100 h2 w2 mr3 dib" %>
 
                   <% if !current_user.first_name %>
                     <span class="grey subtitle-2"> <%= current_user.email %> </span>

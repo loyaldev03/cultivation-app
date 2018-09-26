@@ -76,6 +76,7 @@ export default class TaskEditor extends React.Component {
 
   onClose() {
     // reset everything before close.
+    this.props.handleReset()
     this.props.onClose()
   }
 

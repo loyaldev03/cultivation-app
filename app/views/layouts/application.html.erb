@@ -25,43 +25,7 @@
                     notifications_none
                   </i>
 
-                  <div id="modalCard" class="dn popup-modal">
-                    <div class="flex flex-row items-center justify-between bb b--light-grey pa3">
-                      <span class="subtitle-2 grey">Notifications</span>
-
-                      <i onclick="hideModal()" class="material-icons grey dim md-21 pointer">clear</i>
-                    </div>
-
-                    <!--
-
-                    <div class="ma3 flex flex-column flex-auto items-center justify-center">
-                      <span class="body-1 dark-grey ttc db mb1">no unread notifications</span>
-
-                      <span class="grey subtitle-2-regular">
-                        Click 
-                        <%= link_to 'view all', "#", class: "dark-grey dim ttc mh1" %>
-                        to view all of your notifications
-                      </span>
-                    </div>
-
-                    -->
-
-                    <div class="flex flex-column flex-auto">
-
-                      <div class="bb light-grey">
-                        <div class="pa3">
-                          <span class="grey subtitle-2-regular">Room 1 card has been modified.</span>
-                        </div>
-                      </div>
-
-                      <div class="bb light-grey">
-                        <div class="pa3">
-                          <span class="grey subtitle-2-regular">Room 1 card has been modified.</span>
-                        </div>
-                      </div>
-                      
-                    </div>
-                  </div>
+                  <%= render 'layouts/notification' %>
 
                   <%= image_tag 'blank-avatar.png', class: "br-100 h2 w2 mr3 dib" %>
 

@@ -139,7 +139,6 @@ class TaskList extends React.Component {
     deleteTask(this.props.batch_id, row.row)
   }
 
-
   clearDropdown() {
     this.setState(prevState => ({
       idOpen: null
@@ -283,7 +282,9 @@ class TaskList extends React.Component {
                     <a
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
-                      onClick={(e) => {handleDelete(row)}}
+                      onClick={e => {
+                        handleDelete(row)
+                      }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
                         delete_outline

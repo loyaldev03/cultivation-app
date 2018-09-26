@@ -10,6 +10,8 @@ import TaskEditor from './TaskEditor'
 import updateSidebarTask from '../actions/updateSidebarTask'
 import updateTask from '../actions/updateTask'
 import indentTask from '../actions/indentTask'
+import deleteTask from '../actions/deleteTask'
+
 import ReactTable from 'react-table'
 
 const styles = `
@@ -112,7 +114,6 @@ class TaskList extends React.Component {
 
   handleIndent = (row, action) => {
     this.clearDropdown()
-    console.log(row.row.id)
     indentTask(this.props.batch_id, row.row, action)
   }
 
@@ -134,6 +135,11 @@ class TaskList extends React.Component {
     })
   }
 
+  handleDelete = row => {
+    deleteTask(this.props.batch_id, row.row)
+  }
+
+
   clearDropdown() {
     this.setState(prevState => ({
       idOpen: null
@@ -146,6 +152,7 @@ class TaskList extends React.Component {
     let handleMouseLeave = this.handleMouseLeave
     let handleIndent = this.handleIndent
     let handleAddTask = this.handleAddTask
+    let handleDelete = this.handleDelete
     return (
       <div className="flex justify-between-ns">
         <div className="">
@@ -276,6 +283,7 @@ class TaskList extends React.Component {
                     <a
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
+                      onClick={(e) => {handleDelete(row)}}
                     >
                       <i className="material-icons md-600 md-17 ph2">
                         delete_outline

@@ -15,35 +15,25 @@ export default class PlantEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = { stockEditor: '' }
-
     this.locations = props.locations
-    this.onSetStockEditor = this.onSetStockEditor.bind(this)
-    this.onExitCurrentEditor = this.onExitCurrentEditor.bind(this)
-    this.onClose = this.onClose.bind(this)
-    this.onValidateParent = this.onValidateParent.bind(this)
   }
 
   get editorSelected() {
     return this.state.stockEditor.length > 0
   }
 
-  onSetStockEditor(event) {
+  onSetStockEditor = event => {
     this.setState({ stockEditor: event.target.dataset.editor })
     event.preventDefault()
   }
 
-  onExitCurrentEditor(event) {
+  onExitCurrentEditor = event => {
     this.setState({ stockEditor: '' })
     event.preventDefault()
   }
 
-  onClose() {
-    // reset everything before close.
-    this.props.onClose()
-  }
-
-  onValidateParent() {
-    return { isValid: true }
+  onClose = () => {
+    window.editorSidebar.close()
   }
 
   renderEditorToggle() {
@@ -158,16 +148,16 @@ export default class PlantEditor extends React.Component {
   renderEditor() {
     // this.renderSeedEditor()
     switch (this.state.stockEditor) {
-    case MOTHER:
-      return this.renderMotherEditor()
-    case CLONE:
-      return this.renderCloneEditor()
-    case VEG_GROUP:
-      return this.renderVegGroupEditor()
-    case HARVEST:
-      return this.renderHarvestYieldEditor()
-    default:
-      return this.renderEditorToggle()
+      case MOTHER:
+        return this.renderMotherEditor()
+      case CLONE:
+        return this.renderCloneEditor()
+      case VEG_GROUP:
+        return this.renderVegGroupEditor()
+      case HARVEST:
+        return this.renderHarvestYieldEditor()
+      default:
+        return this.renderEditorToggle()
     }
   }
 

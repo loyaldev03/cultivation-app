@@ -80,9 +80,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       
       resources :plants do
-        # get 'strains/(:filter)',      action: :strains, on: :collection
         get 'all/(:plant_status)',    action: :all, on: :collection
-        # post 'setup_mother'
+        post 'setup_mother'
         # post 'setup_clones'
         # post 'setup_vegs'
         # post 'setup_harvest_yield'
@@ -101,7 +100,7 @@ Rails.application.routes.draw do
       end
 
       resource :plant_setup, only: [] do
-        post 'setup_mother'
+        
         post 'setup_clones'
         post 'setup_vegs'
         post 'setup_harvest_yield'

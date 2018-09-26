@@ -60,6 +60,7 @@ export default class TaskEditor extends React.Component {
           batch_id={this.props.batch_id}
           task_related_id={this.state.task_related_id}
           position={this.state.position}
+          handleReset={this.props.handleReset}
         />
       )
     }

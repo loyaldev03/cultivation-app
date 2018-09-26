@@ -43,7 +43,7 @@ class PlantStore {
 
   @computed
   get motherPlants() {
-    this.plants.slice().filter(x => x.attributes.plant_status === 'mother')
+    return this.plants.slice().filter(x => x.attributes.plant_status === 'mother')
   }
 }
 

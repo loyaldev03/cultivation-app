@@ -294,83 +294,102 @@ class MotherEditor extends React.Component {
   }
 
   render() {
+    const widthStyle = this.props.isOpened
+      ? { width: '500px' }
+      : { width: '0px' }
+
     return (
-      <React.Fragment>
-        <StrainPicker
-          ref={this.strainPicker}
-          onStrainSelected={this.onStrainSelected}
-        />
-        <hr className="mt3 m b--light-gray w-100" />
-        <div className="ph4 mt3 mb3">
-          <span className="f6 fw6 dark-gray">Plant IDs</span>
-        </div>
-
-        {this.renderPlantIdForm()}
-        {this.renderPlantQtyForm()}
-
-        <hr className="mt3 m b--light-gray w-100" />
-        <StorageInfo
-          ref={this.storageInfoEditor}
-          mode="mother"
-          locations={this.props.locations}
-          location_id={this.state.room_id}
-        />
-
-        <hr className="mt3 mb3 b--light-gray w-100" />
-        <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">Plant Origin?</span>
-        </div>
-        <div className="ph4 mb3 flex justify-between">
-          <label className="f6 fw6 db mb1 gray">
-            Mother plants are purchased
-          </label>
-          <input
-            className="toggle toggle-default"
-            type="checkbox"
-            value="1"
-            checked={this.state.isBought}
-            id="is_bought_input"
-            onChange={this.onIsBoughtChanged}
-          />
-          <label className="toggle-button" htmlFor="is_bought_input" />
-        </div>
-        {this.state.isBought && (
-          <PurchaseInfo
-            showLabel={false}
-            ref={this.setPurchaseInfoEditor}
-            vendor_name={this.state.vendor_name}
-            vendor_no={this.state.vendor_no}
-            address={this.state.address}
-            vendor_state_license_num={this.state.vendor_state_license_num}
-            vendor_state_license_expiration_date={
-              this.state.vendor_state_license_expiration_date
-            }
-            vendor_location_license_num={this.state.vendor_location_license_num}
-            vendor_location_license_expiration_date={
-              this.state.vendor_location_license_expiration_date
-            }
-            purchase_date={this.state.purchase_date}
-            invoice_no={this.state.invoice_no}
-          />
-        )}
-
-        <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
-          <a
-            className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
-            href="#"
-            onClick={this.props.onExitCurrentEditor}
+      <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
+        <div className="rc-slide-panel__body flex flex-column">
+          <div
+            className="ph4 pv2 bb b--light-gray flex items-center"
+            style={{ height: '51px' }}
           >
-            Save for later
-          </a>
-          <a
-            className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
-            href="#"
-            onClick={this.onSave}
-          >
-            Save
-          </a>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Mother</h1>
+            <span
+              className="rc-slide-panel__close-button dim"
+              onClick={() => {window.editorSidebar.close()}}
+            >
+              <i className="material-icons mid-gray md-18">close</i>
+            </span>
+          </div>
+
+          <StrainPicker
+            ref={this.strainPicker}
+            onStrainSelected={this.onStrainSelected}
+          />
+          <hr className="mt3 m b--light-gray w-100" />
+          <div className="ph4 mt3 mb3">
+            <span className="f6 fw6 dark-gray">Plant IDs</span>
+          </div>
+
+          {this.renderPlantIdForm()}
+          {this.renderPlantQtyForm()}
+
+          <hr className="mt3 m b--light-gray w-100" />
+          <StorageInfo
+            ref={this.storageInfoEditor}
+            mode="mother"
+            locations={this.props.locations}
+            location_id={this.state.room_id}
+          />
+
+          <hr className="mt3 mb3 b--light-gray w-100" />
+          <div className="ph4 mb3 mt3">
+            <span className="f6 fw6 dark-gray">Plant Origin?</span>
+          </div>
+          <div className="ph4 mb3 flex justify-between">
+            <label className="f6 fw6 db mb1 gray">
+              Mother plants are purchased
+            </label>
+            <input
+              className="toggle toggle-default"
+              type="checkbox"
+              value="1"
+              checked={this.state.isBought}
+              id="is_bought_input"
+              onChange={this.onIsBoughtChanged}
+            />
+            <label className="toggle-button" htmlFor="is_bought_input" />
+          </div>
+          {this.state.isBought && (
+            <PurchaseInfo
+              showLabel={false}
+              ref={this.setPurchaseInfoEditor}
+              vendor_name={this.state.vendor_name}
+              vendor_no={this.state.vendor_no}
+              address={this.state.address}
+              vendor_state_license_num={this.state.vendor_state_license_num}
+              vendor_state_license_expiration_date={
+                this.state.vendor_state_license_expiration_date
+              }
+              vendor_location_license_num={this.state.vendor_location_license_num}
+              vendor_location_license_expiration_date={
+                this.state.vendor_location_license_expiration_date
+              }
+              purchase_date={this.state.purchase_date}
+              invoice_no={this.state.invoice_no}
+            />
+          )}
+
+          <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
+            <a
+              className="db tr pv2 bn br2 ttu tracked link dim f6 fw6 orange"
+              href="#"
+              onClick={this.props.onExitCurrentEditor}
+            >
+              Save for later
+            </a>
+            <a
+              className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
+              href="#"
+              onClick={this.onSave}
+            >
+              Save
+            </a>
+          </div>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }

@@ -29,7 +29,6 @@ Rails.application.routes.draw do
   post "facility_setup/duplicate_rows" => "facility_setup#duplicate_rows", as: "duplicate_rows"
 
   get "settings" => "home#settings"
-
   get "inventory/setup" => "home#inventory_setup"
 
   namespace 'materials', as: :materials do
@@ -44,8 +43,18 @@ Rails.application.routes.draw do
   end
 
   namespace 'inventory', as: :inventory do
-    resources 'plant_setup', only: [:index]
     resources 'strains', only: [:index]
+    resources 'plants', only: [:index] do 
+      collection do
+        get 'mothers'
+        get 'cultivation_batches'
+        get 'clones'
+        get 'vegs'
+        get 'flowers'
+        get 'harvests'
+        get 'harvest_batches'
+      end
+    end
   end
 
   namespace 'settings' do

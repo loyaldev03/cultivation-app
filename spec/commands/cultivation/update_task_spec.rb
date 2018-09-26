@@ -11,7 +11,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
         start_date: Date.new(2018, 1, 1)
       }
       result = Cultivation::SaveBatch.call(params).result #create batch
-      result.tasks.sample(1).first
+      result.tasks.find_by(position: 40)
     }
 
     it "should update temp children task" do
@@ -51,8 +51,8 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
         depend_task_template1 = temp_tasks.find{|x| x.id == BSON::ObjectId(depend_task.id)}
         
         expect(depend_task_template1).to have_attributes(
-          start_date: (task.end_date + 1.days),
-          end_date: (task.end_date + 1.days) + depend_task_template1.duration.to_i.send('days')
+          start_date: (task.end_date),
+          end_date: (task.end_date) + depend_task_template1.duration.to_i.send('days')
         )  
       end    
 
@@ -62,8 +62,8 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
         depend_task_template2 = temp_tasks.find{|x| x.id == BSON::ObjectId(depend_task.id)}
         
         expect(depend_task_template2).to have_attributes(
-          start_date: (depend_task_template1.end_date + 1.days),
-          end_date: (depend_task_template1.end_date + 1.days) + depend_task_template2.duration.to_i.send('days')
+          start_date: (depend_task_template1.end_date),
+          end_date: (depend_task_template1.end_date) + depend_task_template2.duration.to_i.send('days')
         )
       end
 
@@ -73,8 +73,8 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
         depend_task_template3 = temp_tasks.find{|x| x.id == BSON::ObjectId(depend_task.id)}
         
         expect(depend_task_template3).to have_attributes(
-          start_date: (depend_task_template2.end_date + 1.days),
-          end_date: (depend_task_template2.end_date + 1.days) + depend_task_template3.duration.to_i.send('days')
+          start_date: (depend_task_template2.end_date),
+          end_date: (depend_task_template2.end_date) + depend_task_template3.duration.to_i.send('days')
         )
       end
 
@@ -134,8 +134,8 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       depend_task = task.tasks_depend.first
       unless depend_task.nil?
         expect(depend_task).to have_attributes(
-          start_date: (task.end_date + 1.days),
-          end_date: (task.end_date + 1.days) + depend_task.duration.to_i.send('days')
+          start_date: (task.end_date),
+          end_date: (task.end_date) + depend_task.duration.to_i.send('days')
         )  
       end    
 
@@ -143,8 +143,8 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       depend_task = depend_task.tasks_depend.first if depend_task
       unless depend_task.nil?        
         expect(depend_task).to have_attributes(
-          start_date: (depend_task.end_date + 1.days),
-          end_date: (depend_task.end_date + 1.days) + depend_task.duration.to_i.send('days')
+          start_date: (depend_task.end_date),
+          end_date: (depend_task.end_date) + depend_task.duration.to_i.send('days')
         )
       end
       
@@ -152,8 +152,8 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       depend_task = depend_task.tasks_depend.first if depend_task
       unless depend_task.nil?
         expect(depend_task).to have_attributes(
-          start_date: (depend_task.end_date + 1.days),
-          end_date: (depend_task.end_date + 1.days) + depend_task.duration.to_i.send('days')
+          start_date: (depend_task.end_date),
+          end_date: (depend_task.end_date) + depend_task.duration.to_i.send('days')
         )
       end
 

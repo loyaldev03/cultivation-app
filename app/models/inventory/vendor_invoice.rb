@@ -5,10 +5,14 @@ module Inventory
 
     field :invoice_no, type: String
     field :total_amount, type: BigDecimal
-    field :items, type: Array
-    field :item_articles, type: Array
+    field :plants, type: Array
     field :status, type: String
-    belongs_to :vendor
+
+    # has_many :item_articles
+    # has_many :items
+
+    belongs_to :vendor, class_name: 'Inventory::Vendor'
+    # has_many   :plants, class_name: 'Inventory::Plants'
 
     # TODO: This is missing or to be added...
     # An invoice

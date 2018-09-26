@@ -1,53 +1,49 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import PlantList from './components/PlantList'
-import PlantEditor from './components/PlantEditor'
-import plantStore from './store/PlantStore'
-import loadPlants from './actions/loadPlants'
+import PropTypes from 'prop-types'
+import StrainList from './components/StrainList'
+import StrainEditor from './components/StrainEditor'
+import strainStore from './store/StrainStore'
+import loadStrains from './actions/loadStrains'
+// import addPlant from './actions/addPlant'
 
 @observer
-class PlantSetupApp extends React.Component {
+class StrainApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadPlants()
+    loadStrains()
   }
 
-  openSidebar() {
+  openSidebar = () => {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
-  onAddPlant = () => {
-    this.openSidebar()
-  }
-
-  renderPlantList() {
-    if (plantStore.plants.length === 0) {
+  renderStrainList() {
+    if (strainStore.strains.length === 0) {
       return null
     }
 
     return (
       <div className="w-80 bg-white pa3">
-        <div className="flex mt3 mb3">
-          <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
-            Active Plant Inventory
-          </h1>
+        <div className="flex mt3 mb4">
+          <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Strains</h1>
           <div style={{ justifySelf: 'end' }}>
             <button
               className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
               onClick={this.openSidebar}
             >
-              Add plant
+              Add strain
             </button>
           </div>
         </div>
-        <PlantList />
+        <StrainList />
       </div>
     )
   }
 
   renderFirstTime() {
-    if (plantStore.plants.length > 0) {
+    if (strainStore.strains.length > 0) {
       return null
     }
 
@@ -55,23 +51,16 @@ class PlantSetupApp extends React.Component {
       <div className="ph4 pt4 pb5 mb3 bg-white w-70">
         <div className="w-60">
           <h1 className="mt0 mb4 f3 fw4 dark-gray">
-            Setup active plant inventory
+            Setup strains for my facility
           </h1>
           <p className="mb3 lh-copy f5 grey">
-            Add your existing plant inventories. Do not worry if you are unable
-            to add all the records, you can always continue later from the
-            settings menu.
-          </p>
-          <p className="mb4 lh-copy f5 grey">
-            We recommend to prioritise on <strong>seed, clone</strong> and{' '}
-            <strong>mother data</strong> so that you can proceed to do
-            cultivation planning in the next phase of the setup.
+            Add strains grown at your facility.
           </p>
           <button
             className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
             onClick={this.openSidebar}
           >
-            Add my first plant
+            Add my first strain
           </button>
         </div>
       </div>
@@ -82,11 +71,21 @@ class PlantSetupApp extends React.Component {
     return (
       <React.Fragment>
         {this.renderFirstTime()}
-        {this.renderPlantList()}
-        <PlantEditor isOpened={false} locations={this.props.locations} />
+        {this.renderStrainList()}
+        <StrainEditor isOpened={false} locations={this.props.locations} />
       </React.Fragment>
     )
   }
 }
 
-export default PlantSetupApp
+StrainApp.propTypes = {
+  facility_id: PropTypes.string.isRequired,
+  locations: PropTypes.array.isRequired
+}
+
+StrainApp.defaultProps = {
+  facility_id: null,
+  locations: []
+}
+
+export default StrainApp

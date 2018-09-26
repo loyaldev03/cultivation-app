@@ -1,17 +1,13 @@
 import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import Select from 'react-select'
-import CreatableSelect from 'react-select/lib/Creatable'
-
-import PurchaseInfo from '../shared/PurchaseInfo'
-import LocationPicker from '../shared/LocationPicker'
-import StrainPicker from '../shared/StrainPicker'
 import {
   TextInput,
   NumericInput,
   FieldError
 } from '../../../../utils/FormHelpers'
-import reactSelectStyle from '../../../../utils/reactSelectStyle'
+import LocationPicker from '../../../../utils//LocationPicker'
+import StrainPicker from '../shared/StrainPicker'
+import PurchaseInfo from '../shared/PurchaseInfo'
 import setupVegs from '../../actions/setupVegs'
 import MotherPicker from '../shared/MotherPicker'
 

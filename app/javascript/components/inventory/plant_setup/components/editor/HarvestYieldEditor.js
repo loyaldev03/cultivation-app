@@ -5,8 +5,8 @@ import {
   FieldError,
   CalendarPicker
 } from '../../../../utils/FormHelpers'
+import LocationPicker from '../../../../utils/LocationPicker'
 import PurchaseInfo from '../shared/PurchaseInfo'
-import LocationPicker from '../shared/LocationPicker'
 import StrainPicker from '../shared/StrainPicker'
 import MotherPicker from '../shared/MotherPicker'
 import setupHarvestYield from '../../actions/setupHarvestYield'

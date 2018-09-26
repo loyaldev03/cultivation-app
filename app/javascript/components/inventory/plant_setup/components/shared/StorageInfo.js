@@ -1,9 +1,7 @@
 import React from 'react'
-import Select from 'react-select'
 import PropTypes from 'prop-types'
 import { FieldError } from '../../../../utils/FormHelpers'
-import LocationPicker from './LocationPicker'
-import reactSelectStyle from '../../../../utils/reactSelectStyle'
+import LocationPicker from '../../../../utils/LocationPicker'
 
 class StorageInfo extends React.Component {
   constructor(props) {

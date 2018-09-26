@@ -1,34 +1,67 @@
 class Api::V1::PlantsController < Api::V1::BaseApiController
-  def index
-    Rails.logger.debug "\t\t\t >>> request.cookies.count: #{request.cookies.count}"
+  def all
+    plants = Inventory::ItemArticle.includes(:facility, :item)
 
-    # Need to revise to follow plants method below
-    render json: [{data: Inventory::Item.where(storage_type: ['seed', 'mother', 'clone'])}]
-  end
-
-  def strains
-    result = []
-    if params[:filter].present?
-      filter = params[:filter]
-      result = Common::Strain.where(:name => /^#{filter}/i).limit(7).to_a
-    else
-      result = Common::Strain.all.asc(:name).limit(7).to_a
+    if params[:plant_status]
+      plants = plants.where(plant_status: params[:plant_status])
     end
 
-    result = result.map { |x| {name: x.name, strain_type: x.strain_type} }  # to be replaced with json serializer
+    if params[:strain_id]
+      plants = plants.where(strain_id: params[:strain_id])
+    end
 
-    # Need to revise to follow plants method below
-    render json: {data: result}  # to be expanded to have current page count, page size, total record count
-  end
-
-  def plants
-    plants = if params[:plant_status]
-               Inventory::ItemArticle.where(plant_status: params[:plant_status]).order(c_at: :desc)
-             else
-               Inventory::ItemArticle.all.order(c_at: :desc)
-             end
-
+    plants = plants.order(c_at: :desc)
     data = Inventory::ItemArticleSerializer.new(plants).serialized_json
     render json: data
+  end
+
+  def setup_mother
+    command = Inventory::SetupMother.call(current_user, params[:plant_setup].to_unsafe_h)
+
+    if command.success?
+      data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
+      render json: data
+    else
+      render json: request_with_errors(command.errors), status: 422
+    end
+  end
+
+  def setup_clones
+    command = Inventory::SetupClones.call(current_user, params[:plant_setup].to_unsafe_h)
+
+    if command.success?
+      data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
+      render json: data
+    else
+      render json: request_with_errors(command.errors), status: 422
+    end
+  end
+
+  def setup_vegs
+    command = Inventory::SetupVegGroup.call(current_user, params[:plant_setup].to_unsafe_h)
+
+    if command.success?
+      data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
+      render json: data
+    else
+      render json: request_with_errors(command.errors), status: 422
+    end
+  end
+
+  def setup_harvest_yield
+    command = Inventory::SetupHarvestYield.call(current_user, params[:plant_setup].to_unsafe_h)
+
+    if command.success?
+      data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
+      render json: data
+    else
+      render json: request_with_errors(command.errors), status: 422
+    end
+  end
+
+  private
+
+  def request_with_errors(errors)
+    params[:plant_setup].to_unsafe_h.merge(errors: errors)
   end
 end

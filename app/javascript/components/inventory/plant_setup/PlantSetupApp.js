@@ -83,10 +83,7 @@ class PlantSetupApp extends React.Component {
       <React.Fragment>
         {this.renderFirstTime()}
         {this.renderPlantList()}
-        <PlantEditor
-          isOpened={false}
-          locations={this.props.locations}
-        />
+        <PlantEditor isOpened={false} locations={this.props.locations} />
       </React.Fragment>
     )
   }

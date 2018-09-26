@@ -80,12 +80,24 @@ class PlantList extends React.Component {
     return (
       <React.Fragment>
         <div className="flex mb3">
-          <a href="#" className="mr3 link">Mothers</a>
-          <a href="#" className="mr3 link">Cultivation Batches</a>
-          <a href="#" className="mr3 link">Clones/ Plantings</a>
-          <a href="#" className="mr3 link">Veg</a>
-          <a href="#" className="mr3 link">Flower</a>
-          <a href="#" className="mr3 link">Harvest Batches</a>
+          <a href="#" className="mr3 link">
+            Mothers
+          </a>
+          <a href="#" className="mr3 link">
+            Cultivation Batches
+          </a>
+          <a href="#" className="mr3 link">
+            Clones/ Plantings
+          </a>
+          <a href="#" className="mr3 link">
+            Veg
+          </a>
+          <a href="#" className="mr3 link">
+            Flower
+          </a>
+          <a href="#" className="mr3 link">
+            Harvest Batches
+          </a>
         </div>
         <ReactTable
           columns={columns}

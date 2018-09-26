@@ -15,19 +15,19 @@ export default class PlantEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = { stockEditor: '' }
-    this.locations = props.locations 
+    this.locations = props.locations
   }
 
   get editorSelected() {
     return this.state.stockEditor.length > 0
   }
 
-  onSetStockEditor = (event) => {
+  onSetStockEditor = event => {
     this.setState({ stockEditor: event.target.dataset.editor })
     event.preventDefault()
   }
 
-  onExitCurrentEditor = (event) => {
+  onExitCurrentEditor = event => {
     this.setState({ stockEditor: '' })
     event.preventDefault()
   }
@@ -148,16 +148,16 @@ export default class PlantEditor extends React.Component {
   renderEditor() {
     // this.renderSeedEditor()
     switch (this.state.stockEditor) {
-    case MOTHER:
-      return this.renderMotherEditor()
-    case CLONE:
-      return this.renderCloneEditor()
-    case VEG_GROUP:
-      return this.renderVegGroupEditor()
-    case HARVEST:
-      return this.renderHarvestYieldEditor()
-    default:
-      return this.renderEditorToggle()
+      case MOTHER:
+        return this.renderMotherEditor()
+      case CLONE:
+        return this.renderCloneEditor()
+      case VEG_GROUP:
+        return this.renderVegGroupEditor()
+      case HARVEST:
+        return this.renderHarvestYieldEditor()
+      default:
+        return this.renderEditorToggle()
     }
   }
 

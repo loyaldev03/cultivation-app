@@ -10,7 +10,6 @@ import TaskEditor from './TaskEditor'
 import updateSidebarTask from '../actions/updateSidebarTask'
 import updateTask from '../actions/updateTask'
 import indentTask from '../actions/indentTask'
-
 import ReactTable from 'react-table'
 
 const styles = `
@@ -244,7 +243,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        handleAddTask(row.row.id, 'top')
+                        handleAddTask(row, 'top')
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
@@ -256,7 +255,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        handleAddTask(row.row.id, 'bottom')
+                        handleAddTask(row, 'bottom')
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
@@ -294,12 +293,17 @@ class TaskList extends React.Component {
     )
   }
 
-  handleAddTask = (task_related_id, position) => {
+  handleAddTask = (row, position) => {
+    this.setState({ taskRelatedId: row.row.id, taskRelatedPosition: position })
     editorSidebarHandler.open({
       width: '500px',
-      data: { task_related_id: task_related_id, position: position },
+      data: { task_related_id: row.row.id, position: position },
       action: 'add'
     })
+  }
+
+  handleReset = () => {
+    this.setState({ taskRelatedId: '', taskRelatedPosition: '' })
   }
 
   mountEvents() {
@@ -457,7 +461,7 @@ class TaskList extends React.Component {
               Cell: row => <div>{this.renderCategoryColumn(row)}</div>
             },
             {
-              Header: 'Name',
+              Header: 'Tasks',
               accessor: 'attributes.name',
               maxWidth: '500',
               Cell: row => <div>{this.renderAttributesName(row)}</div>
@@ -480,7 +484,7 @@ class TaskList extends React.Component {
             {
               Header: 'Estimated Hours',
               accessor: 'attributes.estimated_hours',
-              maxWidth: '100'
+              maxWidth: '200'
             },
             {
               Header: 'Parent',
@@ -526,6 +530,18 @@ class TaskList extends React.Component {
           getTrProps={(state, rowInfo, column) => {
             if (rowInfo) {
               return {
+                style: {
+                  borderBottom:
+                    this.state.taskRelatedId === rowInfo.row.id &&
+                    this.state.taskRelatedPosition === 'bottom'
+                      ? 'solid 1px rgb(255, 112, 67)'
+                      : null,
+                  borderTop:
+                    this.state.taskRelatedId === rowInfo.row.id &&
+                    this.state.taskRelatedPosition === 'top'
+                      ? 'solid 1px rgb(255, 112, 67)'
+                      : null
+                },
                 onMouseOver: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)
                   button.style.display = 'block'
@@ -542,6 +558,7 @@ class TaskList extends React.Component {
         <TaskEditor
           onClose={this.closeSidebar}
           batch_id={this.props.batch_id}
+          handleReset={this.handleReset}
         />
       </React.Fragment>
     )

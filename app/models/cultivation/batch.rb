@@ -13,11 +13,11 @@ module Cultivation
 
     has_many :tray_plans, class_name: 'Cultivation::TrayPlan'
     has_many :tasks, class_name: 'Cultivation::Task'
-    belongs_to :strain, class_name: 'Common::Strain'
+    belongs_to :strain, class_name: 'Common::Strain', optional: true
 
     # KW: New fields replacing strain and plants
-    belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
-    has_many :plants, class_name: 'Inventory::Plants'
+    belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
+    has_many :plants, class_name: 'Inventory::Plant'
 
     def name
       strain.name

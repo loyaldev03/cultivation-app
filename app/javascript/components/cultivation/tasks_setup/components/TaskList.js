@@ -303,7 +303,7 @@ class TaskList extends React.Component {
   }
 
   handleReset = () => {
-    this.setState({taskRelatedId: '', taskRelatedPosition: ''})
+    this.setState({ taskRelatedId: '', taskRelatedPosition: '' })
   }
 
   mountEvents() {
@@ -531,8 +531,16 @@ class TaskList extends React.Component {
             if (rowInfo) {
               return {
                 style: {
-                  borderBottom: (this.state.taskRelatedId === rowInfo.row.id && this.state.taskRelatedPosition === "bottom") ? 'solid 1px rgb(255, 112, 67)' : null,
-                  borderTop: (this.state.taskRelatedId === rowInfo.row.id && this.state.taskRelatedPosition === "top") ? 'solid 1px rgb(255, 112, 67)' : null
+                  borderBottom:
+                    this.state.taskRelatedId === rowInfo.row.id &&
+                    this.state.taskRelatedPosition === 'bottom'
+                      ? 'solid 1px rgb(255, 112, 67)'
+                      : null,
+                  borderTop:
+                    this.state.taskRelatedId === rowInfo.row.id &&
+                    this.state.taskRelatedPosition === 'top'
+                      ? 'solid 1px rgb(255, 112, 67)'
+                      : null
                 },
                 onMouseOver: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)

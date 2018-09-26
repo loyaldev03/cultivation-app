@@ -19,6 +19,7 @@ class Cultivation::BatchesController < ApplicationController
     @record = Cultivation::BatchForm.new(params[:id])
     @batch_attributes = {
       id: @record.id.to_s,
+      batch_no: @record.batch_no.to_s,
       strain: @record.strain_id.to_s,
       batch_source: @record.batch_source,
       grow_method: @record.grow_method,
@@ -55,8 +56,10 @@ class Cultivation::BatchesController < ApplicationController
       when 'clones_from_mother'
         filter_args = {facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id}
       when 'clones_purchased'
+        # TODO: Change purpose when clones_purchased
         filter_args = {facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id}
       when 'seeds'
+        # TODO: Change purpose when seeds
         filter_args = {facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id}
       else
         # return empty array if no phase task found

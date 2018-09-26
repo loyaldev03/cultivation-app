@@ -35,7 +35,7 @@ class BatchSetupApp extends React.Component {
         batch_source: this.state.plant,
         facility_id: this.state.facility,
         strain_id: this.state.strain,
-        start_date: this.state.start_date,
+        start_date: this.state.start_date.toDateString(),
         grow_method: this.state.grow_method
       }),
       headers: {

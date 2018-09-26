@@ -457,7 +457,7 @@ class TaskList extends React.Component {
               Cell: row => <div>{this.renderCategoryColumn(row)}</div>
             },
             {
-              Header: 'Name',
+              Header: 'Tasks',
               accessor: 'attributes.name',
               maxWidth: '500',
               Cell: row => <div>{this.renderAttributesName(row)}</div>
@@ -480,7 +480,7 @@ class TaskList extends React.Component {
             {
               Header: 'Estimated Hours',
               accessor: 'attributes.estimated_hours',
-              maxWidth: '100'
+              maxWidth: '200'
             },
             {
               Header: 'Parent',

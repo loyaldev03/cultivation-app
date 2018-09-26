@@ -19,6 +19,7 @@ class TaskSetup extends React.Component {
         <div id="toast" className="toast animated toast--success">
           Row Saved
         </div>
+        <br/>
         <a
           href={'/cultivation/batches/' + this.props.batch_id + '?type=active'}
           data-method="put"

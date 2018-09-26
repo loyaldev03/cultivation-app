@@ -68,6 +68,22 @@ class AddTaskForm extends React.Component {
 
   handleSubmit = event => {
     createTask.createTask(this.state)
+    this.clearState()
+  }
+
+  clearState = event => {
+    this.setState({
+      parent_id: '',
+      name: '',
+      duration: '',
+      task_category: '',
+      instruction: '',
+      start_date: new Date(),
+      end_date: new Date(),
+      errors: '',
+      estimated_hours: '',
+      assigned_employee: []
+    })
   }
 
   render() {

@@ -24,24 +24,31 @@ class AddTaskForm extends React.Component {
       end_date: new Date(),
       errors: '',
       estimated_hours: '',
-      assigned_employee: []
+      assigned_employee: [],
+      position: props.position,
+      task_related_id: props.task_related_id
     }
   }
 
+  componentWillReceiveProps(props) {
+    this.setState({
+      position: props.position,
+      task_related_id: props.task_related_id,
+      batch_id: props.batch_id
+    })
+  }
+
   handleChangeTask = event => {
-    // console.log(event[0].value)
     let key = event.target.attributes.fieldname.value
     let value = event.target.value
     this.setState({ [key]: value })
   }
 
   handleChangeDate = (key, value) => {
-    console.log(value)
     this.setState({ [key]: value })
   }
 
   handleChangeSelect = (value, { action, removedValue }) => {
-    console.log(value)
     let arr = this.state.assigned_employee
     switch (action) {
       case 'select-option':
@@ -61,6 +68,22 @@ class AddTaskForm extends React.Component {
 
   handleSubmit = event => {
     createTask.createTask(this.state)
+    this.clearState()
+  }
+
+  clearState = event => {
+    this.setState({
+      parent_id: '',
+      name: '',
+      duration: '',
+      task_category: '',
+      instruction: '',
+      start_date: new Date(),
+      end_date: new Date(),
+      errors: '',
+      estimated_hours: '',
+      assigned_employee: []
+    })
   }
 
   render() {

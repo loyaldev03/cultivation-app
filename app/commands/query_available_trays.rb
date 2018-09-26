@@ -106,7 +106,21 @@ class QueryAvailableTrays
               ],
             },
           }},
-          {"$project": {capacity: '$capacity', start_date: '$start_date', end_date: '$end_date'}},
+          {"$lookup": {
+            from: 'cultivation_batches',
+            localField: 'batch_id',
+            foreignField: '_id',
+            as: 'batch',
+          }},
+          {"$addFields": {"batch": {"$arrayElemAt": ['$batch', 0]}}},
+          {"$project": {batch_active: '$batch.is_active', capacity: 1, start_date: 1, end_date: 1}},
+          {"$match": {
+            "$expr": {
+              "$and": [
+                {"$eq": ['$batch_active', true]},
+              ],
+            },
+          }},
         ],
         as: 'planned',
       }},
@@ -147,36 +161,8 @@ class QueryAvailableTrays
     ]
 
     res = criteria.map do |x|
-      OpenStruct.new({
-        facility_id: x[:facility_id].to_s,
-        facility_code: x[:facility_code],
-        facility_name: x[:facility_name],
-        room_id: x[:room_id].to_s,
-        room_is_complete: x[:room_is_complete],
-        room_name: x[:room_name],
-        room_code: x[:room_code],
-        room_purpose: x[:room_purpose],
-        row_id: x[:row_id].to_s,
-        row_name: x[:row_name],
-        row_code: x[:row_code],
-        section_id: x[:section_id].to_s,
-        section_name: x[:section_name],
-        section_code: x[:section_code],
-        section_purpose: x[:section_purpose],
-        shelf_id: x[:shelf_id].to_s,
-        shelf_code: x[:shelf_code],
-        shelf_name: x[:shelf_name],
-        shelf_capacity: x[:shelf_capacity],
-        tray_id: x[:tray_id].to_s,
-        tray_code: x[:tray_code],
-        tray_capacity: x[:tray_capacity],
-        tray_capacity_type: x[:tray_capacity_type],
-        tray_purpose: x[:tray_purpose],
-        planned_capacity: x[:planned_capacity],
-        remaining_capacity: x[:remaining_capacity],
-      }).marshal_dump
+      AvailableTray.new(x)
     end
-
-    res
+    res ||= []
   end
 end

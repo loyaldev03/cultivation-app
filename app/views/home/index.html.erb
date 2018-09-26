@@ -15,20 +15,10 @@
     Where do you want to start?
   </h3>
 
-  <% @dashboard.incomplete_facilities.each do |f| %>
-    <p class="mt2 pa4 bg-yellow">
-      Complete to setup facility 
-      <%= link_to "#{f['code']} (#{f['name']})",
-        facility_setup_new_path(facility_id: f['_id'], step: 3),
-        class: "link blue"
-      %>
-    </p>
-  <% end %>
-
   <div class="flex flex-row-l flex-column items-center justify-center">
     <div>
-      <% if @dashboard.last_facility %>
-        <%= link_to facility_setup_new_path(facility_id: @dashboard.last_facility.id),
+      <% if @home.last_facility %>
+        <%= link_to facility_setup_new_path(facility_id: @home.last_facility.id),
           style: "height: 378px; width: 300px;",
           class: "tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between grow  link" do %>
           
@@ -39,7 +29,7 @@
           <div class="flex flex-column mb3">
             <h6 class="ttc mt0 mb2 h6--font dark-grey">
               Continue Setup <br/> 
-              <%= @dashboard.last_facility.name %>
+              <%= @home.last_facility.name %>
             </h6>
             <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
           </div>
@@ -90,4 +80,10 @@
       </div>
     <% end %>
   </div>
+
+  <% if @home.has_inventories && @home.has_batches %>
+    <div class="tc mt4">
+      <%= link_to "Go to Dashboard", dashboard_path, class: 'link grey f4 dim' %>
+    </div>
+  <% end %>
 </div>

@@ -36,6 +36,6 @@
     "webpack-dev-server": "2.11.2"
   },
   "scripts": {
-    "format": "prettier-eslint --write \"app/javascript/**/*.js\""
+    "format": "rufo app/ && prettier-eslint --write \"app/javascript/**/*.js\""
   }
 }

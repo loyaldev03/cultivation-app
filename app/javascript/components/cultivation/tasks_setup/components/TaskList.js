@@ -146,15 +146,47 @@ class TaskList extends React.Component {
     let handleEdit = this.handleEdit
     let handleMouseLeave = this.handleMouseLeave
     let handleIndent = this.handleIndent
+    let handleAddTask = this.handleAddTask
     return (
       <div className="flex justify-between-ns">
-        <a
-          onClick={e => {
-            handleEdit(row)
-          }}
-        >
-          {row.value}
-        </a>
+        <div className="">
+          <div className="flex">
+            <div className="w1 ml3">
+              {row.row['attributes.is_phase'] === true && (
+                <a
+                  onClick={e => {
+                    handleEdit(row)
+                  }}
+                >
+                  {row.value}
+                </a>
+              )}
+            </div>
+            <div className="w1 ml3">
+              {row.row['attributes.is_category'] === true && (
+                <a
+                  onClick={e => {
+                    handleEdit(row)
+                  }}
+                >
+                  {row.value}
+                </a>
+              )}
+            </div>
+            <div className="w1 ml3">
+              {row.row['attributes.is_phase'] === false &&
+                row.row['attributes.is_category'] === false && (
+                  <a
+                    onClick={e => {
+                      handleEdit(row)
+                    }}
+                  >
+                    {row.value}
+                  </a>
+                )}
+            </div>
+          </div>
+        </div>
 
         <Manager>
           <Reference>
@@ -211,6 +243,9 @@ class TaskList extends React.Component {
                     <a
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
+                      onClick={e => {
+                        handleAddTask(row.row.id, 'top')
+                      }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
                         vertical_align_top
@@ -220,6 +255,9 @@ class TaskList extends React.Component {
                     <a
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
+                      onClick={e => {
+                        handleAddTask(row.row.id, 'bottom')
+                      }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
                         vertical_align_bottom
@@ -256,8 +294,12 @@ class TaskList extends React.Component {
     )
   }
 
-  handleAddTask = row => {
-    editorSidebarHandler.open({ width: '500px', data: {}, action: 'add' })
+  handleAddTask = (task_related_id, position) => {
+    editorSidebarHandler.open({
+      width: '500px',
+      data: { task_related_id: task_related_id, position: position },
+      action: 'add'
+    })
   }
 
   mountEvents() {
@@ -316,16 +358,6 @@ class TaskList extends React.Component {
           <div className="w-40">
             <h4 className="tl pa0 ma0 h6--font dark-grey">Task List</h4>
           </div>
-          <div className="w-40">
-            <div className="mb4 mt2">
-              <a
-                className="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim"
-                onClick={this.handleAddTask}
-              >
-                New Task
-              </a>
-            </div>
-          </div>
         </div>
         <div className="mb3 flex">
           <div className="w-50">
@@ -345,7 +377,7 @@ class TaskList extends React.Component {
               </div>
               <div className="w-40">
                 <div className="">
-                  <label>{this.state.batch.id}</label>
+                  <label>{this.state.batch.batch_no}</label>
                 </div>
               </div>
             </div>
@@ -414,18 +446,20 @@ class TaskList extends React.Component {
               Header: 'Phase',
               accessor: 'attributes.phase',
               maxWidth: '100',
+              show: false,
               Cell: row => <div>{this.renderPhaseColumn(row)}</div>
             },
             {
               Header: 'Category',
               accessor: 'attributes.task_category',
               maxWidth: '100',
+              show: false,
               Cell: row => <div>{this.renderCategoryColumn(row)}</div>
             },
             {
               Header: 'Name',
               accessor: 'attributes.name',
-              maxWidth: '300',
+              maxWidth: '500',
               Cell: row => <div>{this.renderAttributesName(row)}</div>
             },
             {
@@ -441,6 +475,11 @@ class TaskList extends React.Component {
             {
               Header: 'Duration',
               accessor: 'attributes.duration',
+              maxWidth: '100'
+            },
+            {
+              Header: 'Estimated Hours',
+              accessor: 'attributes.estimated_hours',
               maxWidth: '100'
             },
             {

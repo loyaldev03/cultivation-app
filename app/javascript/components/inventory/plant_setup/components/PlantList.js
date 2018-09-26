@@ -78,17 +78,27 @@ const columns = [
 class PlantList extends React.Component {
   render() {
     return (
-      <ReactTable
-        columns={columns}
-        pagination={{ position: 'top' }}
-        data={plantStore.plants.slice()}
-        showPagination={false}
-        pageSize={30}
-        minRows={30}
-        filterable
-        className="f6"
-        showPagination={plantStore.plants.length > 30}
-      />
+      <React.Fragment>
+        <div className="flex mb3">
+          <a href="#" className="mr3 link">Mothers</a>
+          <a href="#" className="mr3 link">Cultivation Batches</a>
+          <a href="#" className="mr3 link">Clones/ Plantings</a>
+          <a href="#" className="mr3 link">Veg</a>
+          <a href="#" className="mr3 link">Flower</a>
+          <a href="#" className="mr3 link">Harvest Batches</a>
+        </div>
+        <ReactTable
+          columns={columns}
+          pagination={{ position: 'top' }}
+          data={plantStore.plants.slice()}
+          showPagination={false}
+          pageSize={30}
+          minRows={30}
+          filterable
+          className="f6"
+          showPagination={plantStore.plants.length > 30}
+        />
+      </React.Fragment>
     )
   }
 }

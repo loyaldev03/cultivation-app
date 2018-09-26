@@ -15,35 +15,25 @@ export default class PlantEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = { stockEditor: '' }
-
-    this.locations = props.locations
-    this.onSetStockEditor = this.onSetStockEditor.bind(this)
-    this.onExitCurrentEditor = this.onExitCurrentEditor.bind(this)
-    this.onClose = this.onClose.bind(this)
-    this.onValidateParent = this.onValidateParent.bind(this)
+    this.locations = props.locations 
   }
 
   get editorSelected() {
     return this.state.stockEditor.length > 0
   }
 
-  onSetStockEditor(event) {
+  onSetStockEditor = (event) => {
     this.setState({ stockEditor: event.target.dataset.editor })
     event.preventDefault()
   }
 
-  onExitCurrentEditor(event) {
+  onExitCurrentEditor = (event) => {
     this.setState({ stockEditor: '' })
     event.preventDefault()
   }
 
-  onClose() {
-    // reset everything before close.
-    this.props.onClose()
-  }
-
-  onValidateParent() {
-    return { isValid: true }
+  onClose = () => {
+    window.editorSidebar.close()
   }
 
   renderEditorToggle() {

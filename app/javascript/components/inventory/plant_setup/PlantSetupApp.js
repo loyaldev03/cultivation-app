@@ -4,17 +4,9 @@ import PlantList from './components/PlantList'
 import PlantEditor from './components/PlantEditor'
 import plantStore from './store/PlantStore'
 import loadPlants from './actions/loadPlants'
-// import addPlant from './actions/addPlant'
 
 @observer
 class PlantSetupApp extends React.Component {
-  constructor(props) {
-    super(props)
-    this.onAddPlant = this.onAddPlant.bind(this)
-    this.openSidebar = this.openSidebar.bind(this)
-    this.closeSidebar = this.closeSidebar.bind(this)
-  }
-
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
@@ -25,11 +17,7 @@ class PlantSetupApp extends React.Component {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
-  closeSidebar() {
-    window.editorSidebar.close()
-  }
-
-  onAddPlant() {
+  onAddPlant = () => {
     this.openSidebar()
   }
 
@@ -40,7 +28,7 @@ class PlantSetupApp extends React.Component {
 
     return (
       <div className="w-80 bg-white pa3">
-        <div className="flex mt3 mb4">
+        <div className="flex mt3 mb3">
           <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
             Active Plant Inventory
           </h1>
@@ -97,7 +85,6 @@ class PlantSetupApp extends React.Component {
         {this.renderPlantList()}
         <PlantEditor
           isOpened={false}
-          onClose={this.closeSidebar}
           locations={this.props.locations}
         />
       </React.Fragment>

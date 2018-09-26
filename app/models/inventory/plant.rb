@@ -3,8 +3,10 @@ module Inventory
     include Mongoid::Document
     include Mongoid::Timestamps::Short
 
+    # Seed data for prepurchased clone
+
     belongs_to :created_by, class_name: 'User'
-    belongs_to :cultivation_batch, class_name: 'Cultivation::Batch'
+    belongs_to :cultivation_batch, class_name: 'Cultivation::Batch', optional: true
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     # belongs_to :harvest_batch,      class_name: 'Cultivation::HarvestBatch',  optional: true
     # belongs_to :manicure_batch,     class_name: 'Cultivation::ManicureBatch', optional: true
@@ -23,7 +25,6 @@ module Inventory
     field :veg2_date, type: DateTime
     field :flower_date, type: DateTime
     field :harvest_date, type: DateTime
-    field :expected_harvest_date, type: DateTime
     field :expected_harvest_date, type: DateTime
     field :destroyed_date, type: DateTime
 

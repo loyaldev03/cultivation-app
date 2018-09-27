@@ -127,6 +127,7 @@ class TaskList extends React.Component {
   }
 
   handleEdit = e => {
+    this.setState({ taskSelected: e.row.id })
     this.clearDropdown()
     editorSidebarHandler.open({
       width: '500px',
@@ -303,7 +304,7 @@ class TaskList extends React.Component {
   }
 
   handleAddTask = (row, position) => {
-    this.setState({ taskRelatedId: row.row.id, taskRelatedPosition: position })
+    this.setState({ taskSelected: row.row.id})
     editorSidebarHandler.open({
       width: '500px',
       data: { task_related_id: row.row.id, position: position },
@@ -312,7 +313,7 @@ class TaskList extends React.Component {
   }
 
   handleReset = () => {
-    this.setState({ taskRelatedId: '', taskRelatedPosition: '' })
+    this.setState({ taskSelected: '', taskRelatedPosition: '' })
   }
 
   mountEvents() {
@@ -369,7 +370,7 @@ class TaskList extends React.Component {
 
         <div className=" flex">
           <div className="w-40">
-            <h4 className="tl pa0 ma0 h6--font dark-grey">Task List</h4>
+            <h4 className="tl pa0 ma0 h6--font dark-grey">Batch {this.state.batch.batch_no}</h4>
           </div>
         </div>
         <div className="mb3 flex">
@@ -381,16 +382,6 @@ class TaskList extends React.Component {
               <div className="w-40">
                 <div className="">
                   <label>{this.state.batch.batch_source}</label>
-                </div>
-              </div>
-            </div>
-            <div className=" flex">
-              <div className="w-40">
-                <label>Batch Id</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.batch_no}</label>
                 </div>
               </div>
             </div>
@@ -540,16 +531,18 @@ class TaskList extends React.Component {
             if (rowInfo) {
               return {
                 style: {
-                  borderBottom:
-                    this.state.taskRelatedId === rowInfo.row.id &&
-                    this.state.taskRelatedPosition === 'bottom'
-                      ? 'solid 1px rgb(255, 112, 67)'
-                      : null,
-                  borderTop:
-                    this.state.taskRelatedId === rowInfo.row.id &&
-                    this.state.taskRelatedPosition === 'top'
-                      ? 'solid 1px rgb(255, 112, 67)'
-                      : null
+                  // borderBottom:
+                  //   this.state.taskSelected === rowInfo.row.id &&
+                  //   this.state.taskRelatedPosition === 'bottom'
+                  //     ? 'solid 1px rgb(255, 112, 67)'
+                  //     : null,
+                  // borderTop:
+                  //   this.state.taskSelected === rowInfo.row.id &&
+                  //   this.state.taskRelatedPosition === 'top'
+                  //     ? 'solid 1px rgb(255, 112, 67)'
+                  //     : null,
+                  backgroundColor: this.state.taskSelected === rowInfo.row.id ? 'rgb(255, 112, 67)' : null,
+                  color: this.state.taskSelected === rowInfo.row.id ? 'white' : null
                 },
                 onMouseOver: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)

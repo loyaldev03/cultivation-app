@@ -396,7 +396,7 @@ class TaskList extends React.Component {
                 </div>
               </div>
             </div>
-            <hr/>
+            <hr />
             <div className=" flex">
               <div className="w-40">
                 <label>Strain</label>
@@ -419,11 +419,10 @@ class TaskList extends React.Component {
               </div>
             </div>
             <hr />
-
           </div>
-          
+
           <div className="w-30 ml5">
-            <hr/>
+            <hr />
             <div className=" flex">
               <div className="w-50">
                 <label>Start Date </label>
@@ -434,14 +433,14 @@ class TaskList extends React.Component {
                 </div>
               </div>
             </div>
-            <hr/>
+            <hr />
             <div className=" flex">
               <div className="w-50">
                 <label>Total Estimation Cost</label>
               </div>
               <div className="w-50">
                 <div className="">
-                  <label>{this.state.batch.strain}</label>
+                  <label>???</label>
                 </div>
               </div>
             </div>
@@ -456,7 +455,7 @@ class TaskList extends React.Component {
                 </div>
               </div>
             </div>
-            <hr/>
+            <hr />
           </div>
 
           <div className="w-30 ml5">
@@ -478,7 +477,7 @@ class TaskList extends React.Component {
               </div>
               <div className="w-50">
                 <div className="">
-                  <label>{this.state.batch.strain}</label>
+                  <label>???</label>
                 </div>
               </div>
             </div>
@@ -493,7 +492,7 @@ class TaskList extends React.Component {
                 </div>
               </div>
             </div>
-            <hr/>
+            <hr />
           </div>
         </div>
         <ReactTable

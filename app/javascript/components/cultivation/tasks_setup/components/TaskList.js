@@ -530,16 +530,6 @@ class TaskList extends React.Component {
             if (rowInfo) {
               return {
                 style: {
-                  // borderBottom:
-                  //   this.state.taskSelected === rowInfo.row.id &&
-                  //   this.state.taskRelatedPosition === 'bottom'
-                  //     ? 'solid 1px rgb(255, 112, 67)'
-                  //     : null,
-                  // borderTop:
-                  //   this.state.taskSelected === rowInfo.row.id &&
-                  //   this.state.taskRelatedPosition === 'top'
-                  //     ? 'solid 1px rgb(255, 112, 67)'
-                  //     : null,
                   backgroundColor:
                     this.state.taskSelected === rowInfo.row.id
                       ? 'rgb(255, 112, 67)'

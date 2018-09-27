@@ -373,7 +373,8 @@ class TaskList extends React.Component {
           </div>
         </div>
         <div className="mb3 flex">
-          <div className="w-50">
+          <div className="w-30">
+            <hr />
             <div className=" flex">
               <div className="w-40">
                 <label>Batch Source</label>
@@ -384,41 +385,20 @@ class TaskList extends React.Component {
                 </div>
               </div>
             </div>
+            <hr />
             <div className=" flex">
               <div className="w-40">
-                <label>Start Date</label>
+                <label>Batch Id</label>
               </div>
               <div className="w-40">
                 <div className="">
-                  <label>{this.state.batch.start_date}</label>
+                  <label>{this.state.batch.id}</label>
                 </div>
               </div>
             </div>
-
+            <hr/>
             <div className=" flex">
               <div className="w-40">
-                <label>Estimated Harvest Date</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.estimated_harvest_date}</label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="w-50">
-            <div className=" flex">
-              <div className="w-20">
-                <label>Grow Method</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.grow_method}</label>
-                </div>
-              </div>
-            </div>
-            <div className=" flex">
-              <div className="w-20">
                 <label>Strain</label>
               </div>
               <div className="w-40">
@@ -427,6 +407,93 @@ class TaskList extends React.Component {
                 </div>
               </div>
             </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-40">
+                <label>Grow Method</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.grow_method}</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+
+          </div>
+          
+          <div className="w-30 ml5">
+            <hr/>
+            <div className=" flex">
+              <div className="w-50">
+                <label>Start Date </label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>{this.state.batch.start_date}</label>
+                </div>
+              </div>
+            </div>
+            <hr/>
+            <div className=" flex">
+              <div className="w-50">
+                <label>Total Estimation Cost</label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>{this.state.batch.strain}</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Total Estimation Hours</label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>???</label>
+                </div>
+              </div>
+            </div>
+            <hr/>
+          </div>
+
+          <div className="w-30 ml5">
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Estimated Harvest Dat </label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>{this.state.batch.start_date}</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Total Actual Cost</label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>{this.state.batch.strain}</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Total Actual Hour</label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>???</label>
+                </div>
+              </div>
+            </div>
+            <hr/>
           </div>
         </div>
         <ReactTable

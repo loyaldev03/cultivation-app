@@ -23,9 +23,6 @@ const styles = `
 .table-dropdown a:hover{
   background-color: #eee;
 } 
-.button-dropdown:hover{
-  background-color: #eee;
-}
 
 `
 
@@ -546,9 +543,7 @@ class TaskList extends React.Component {
                   backgroundColor:
                     this.state.taskSelected === rowInfo.row.id
                       ? 'rgb(255, 112, 67)'
-                      : null,
-                  color:
-                    this.state.taskSelected === rowInfo.row.id ? 'white' : null
+                      : null
                 },
                 onMouseOver: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)

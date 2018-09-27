@@ -29,7 +29,8 @@ class User
   field :current_sign_in_ip, type: String
   field :last_sign_in_ip, type: String
 
-  field :role, type: String
+  field :roles, type: Array, default: []
+  field :groups, type: Array, default: []
 
   ## Confirmable
   # field :confirmation_token,   type: String
@@ -50,6 +51,6 @@ class User
   # TODO: Need a flag to indicate user is developer
   # This need to be refactor
   def is_dev?
-    role == 'dev'
+    true
   end
 end

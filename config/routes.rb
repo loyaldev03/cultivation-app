@@ -106,6 +106,10 @@ Rails.application.routes.draw do
         post 'setup_harvest_yield'
         post 'setup_waste'
       end
+
+      resource :user_roles, only: [] do
+        get 'search'
+      end
     end
   end
 end

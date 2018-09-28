@@ -596,18 +596,24 @@ class TaskList extends React.Component {
             if (rowInfo) {
               return {
                 style: {
-                  backgroundColor:
+                  boxShadow: 
                     this.state.taskSelected === rowInfo.row.id
-                      ? 'rgb(255, 112, 67)'
+                      ?  '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
                       : null
-                },
+                        },
                 onMouseOver: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)
+                  window.hello = button
+                  button.parentElement.parentElement.parentElement.parentElement.style.boxShadow = '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
                   button.style.display = 'block'
                 },
                 onMouseOut: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)
+                  if(this.state.taskSelected !== rowInfo.row.id){
+                    button.parentElement.parentElement.parentElement.parentElement.style.boxShadow = ''
+                  }
                   button.style.display = 'none'
+
                 }
               }
             }

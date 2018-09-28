@@ -29,7 +29,7 @@ class TeamSetttingApp extends React.Component {
     if (!window.editorSidebar || !window.editorSidebar.sidebarNode) {
       window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
     }
-    window.editorSidebar.open({ width: '600px' })
+    window.editorSidebar.open({ width: '500px' })
   }
 
   closeSidebar = () => {

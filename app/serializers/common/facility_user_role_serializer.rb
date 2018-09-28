@@ -1,7 +1,15 @@
 module Common
   class FacilityUserRoleSerializer
     include FastJsonapi::ObjectSerializer
-    attributes :name
+    attribute :facilities do |object|
+      object.facilities.map do |facility|
+        {
+          id: facility[:id].to_s,
+          name: facility[:name],
+          code: facility[:code],
+        }
+      end
+    end
 
     attribute :groups do |object|
       object.groups.map do |group|

@@ -2,7 +2,7 @@ import { observable, action, runInAction } from 'mobx'
 
 class UserRoleStore {
   @observable isLoading = false
-  @observable userRoleData = []
+  @observable userRoles
 
   @action
   async loadUsers() {
@@ -19,7 +19,7 @@ class UserRoleStore {
       })).json()
       runInAction(() => {
         this.isLoading = false
-        this.userRoleData = response.data
+        this.userRoles = response.data
       })
     } catch (err) {
       console.error(err)

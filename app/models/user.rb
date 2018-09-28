@@ -32,6 +32,8 @@ class User
   field :roles, type: Array, default: []
   field :groups, type: Array, default: []
 
+  # TODO: Add last accessed facility
+
   ## Confirmable
   # field :confirmation_token,   type: String
   # field :confirmed_at,         type: Time

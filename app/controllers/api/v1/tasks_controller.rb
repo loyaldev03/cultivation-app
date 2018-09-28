@@ -41,6 +41,11 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   def strains
   end
 
+  def destroy
+    result = Cultivation::DestroyTask.call(params[:id]).result
+    render json: {result: result}
+  end
+
   private
 
   def set_batch

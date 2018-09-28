@@ -94,7 +94,7 @@ Rails.application.routes.draw do
 
       resources :batches, only: [:create] do
         post 'update_locations'
-        resources :tasks, only: [:index, :update, :create] do
+        resources :tasks, only: [:index, :update, :create, :destroy] do
           put 'indent', on: :member
         end
       end

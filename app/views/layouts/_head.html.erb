@@ -20,9 +20,9 @@
   <% if defined? include_popper %>
     <%= javascript_include_tag 'popper-enable', 'data-turbolinks-track': 'reload' %>
   <% end %>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet", media: 'all', 'data-turbolinks-track': 'reload'>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet", media='all', data-turbolinks-track='reload'>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
   <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-  <%= stylesheet_pack_tag 'application' %>
+  <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   <title>Cannvas</title>
 </head>

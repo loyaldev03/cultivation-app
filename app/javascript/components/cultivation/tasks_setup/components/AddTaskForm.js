@@ -69,6 +69,7 @@ class AddTaskForm extends React.Component {
   handleSubmit = event => {
     createTask.createTask(this.state)
     this.clearState()
+    this.props.handleReset()
   }
 
   clearState = event => {

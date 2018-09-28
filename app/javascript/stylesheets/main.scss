@@ -1,0 +1,5 @@
+/* NOTE: Put react stylesheets here instead of app/assets/stylesheets, since that one uses Sprockets, and this one uses Webpack */
+/* TODO: Move all app/assets/stylesheets to here and uses Webpack instead of Sprockets */
+
+/* IMPORT COMPONENTS STYLES */
+@import 'react-table/react-table.css'

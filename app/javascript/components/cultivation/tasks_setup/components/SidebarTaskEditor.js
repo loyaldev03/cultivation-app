@@ -79,7 +79,6 @@ class SidebarTaskEditor extends React.Component {
   }
 
   render() {
-
     let users = UserStore.users
     return (
       <React.Fragment>

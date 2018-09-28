@@ -5,6 +5,8 @@ import { observer, Provider } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 
 import TaskStore from '../stores/TaskStore'
+import UserStore from '../stores/UserStore'
+
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import TaskEditor from './TaskEditor'
 import updateSidebarTask from '../actions/updateSidebarTask'
@@ -360,7 +362,7 @@ class TaskList extends React.Component {
 
   render() {
     let tasks = TaskStore.slice()
-
+    let users = UserStore
     return (
       <React.Fragment>
         <style> {styles} </style>
@@ -603,7 +605,6 @@ class TaskList extends React.Component {
                 },
                 onMouseOver: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)
-                  window.hello = button
                   button.parentElement.parentElement.parentElement.parentElement.style.boxShadow =
                     '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
                   button.style.display = 'block'

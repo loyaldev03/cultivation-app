@@ -89,12 +89,14 @@ Rails.application.routes.draw do
     namespace :v1 do
       
       resources :plants do
-        get 'all/(:plant_status)',    action: :all, on: :collection
-        post 'setup_mother'
-        # post 'setup_clones'
-        # post 'setup_vegs'
-        # post 'setup_harvest_yield'
-        # post 'setup_waste'
+        get 'all/(:current_growth_stage)',    action: :all, on: :collection
+        collection do
+          post 'setup_mother'
+          # post 'setup_clones'
+          # post 'setup_vegs'
+          # post 'setup_harvest_yield'
+          # post 'setup_waste'
+        end
       end
 
       resources :strains, only: [:index, :create, :show] do

@@ -10,23 +10,13 @@ class LocationPicker extends React.Component {
     super(props)
 
     this.mode = props.mode
-    this.facilities = props.locations
-      .filter(this.isFacilityOnly)
-      .map(x => ({ ...x, label: `${x.f_name} - ${x.f_code}` }))
-
-    const facility = this.findFacility(
-      this.facilities,
-      props.filter_facility_id
-    )
-
-    const locations = this.filterLocationByFacility(
-      this.props.filter_facility_id
-    )
-
+    this.locations = props.locations
+    window.locs = props.locations
+    
     this.state = {
       location_id: props.location_id || '',
-      facility,
-      locations
+      facility_id: props.facility_id,
+      locations: this.filterLocationByFacility(props.facility_id)
     }
   }
 
@@ -39,7 +29,10 @@ class LocationPicker extends React.Component {
       hasNewState = true
     }
 
-    if (facility_id)
+    if (nextProps.facility_id !== prevState.facility_id) {
+      newState = { ...newState, facility_id: nextProps.facility_id}
+      hasNewState = true
+    }
 
     if (hasNewState) {
       return newState
@@ -58,9 +51,8 @@ class LocationPicker extends React.Component {
         item.t_id.length > 0 &&
         item.rm_purpose === 'clone' &&
         item.f_id === facility_id
-    } else {
-      return item => item.t_id.length > 0 && item.rm_purpose === 'clone'
-    }
+    } 
+    return () => false
   }
 
   isMother(facility_id) {
@@ -70,12 +62,8 @@ class LocationPicker extends React.Component {
         item.rw_id.length === 0 &&
         item.rm_purpose === 'mother' &&
         item.f_id === facility_id
-    } else {
-      return item =>
-        item.rm_id.length > 0 &&
-        item.rw_id.length === 0 &&
-        item.rm_purpose === 'mother'
     }
+    return () => false
   }
 
   isVeg(facility_id) {
@@ -84,10 +72,8 @@ class LocationPicker extends React.Component {
         item.t_id.length > 0 &&
         VEG_TRAY_PURPOSES.indexOf(item.rm_purpose) >= 0 &&
         item.f_id === facility_id
-    } else {
-      return item =>
-        item.t_id.length > 0 && VEG_TRAY_PURPOSES.indexOf(item.rm_purpose) >= 0
     }
+    return () => false
   }
 
   isDry(facility_id) {
@@ -96,9 +82,8 @@ class LocationPicker extends React.Component {
         item.t_id.length > 0 &&
         item.rm_purpose === 'dry' &&
         item.f_id === facility_id
-    } else {
-      return item => item.t_id.length > 0 && item.rm_purpose === 'dry'
-    }
+    } 
+    return () => false
   }
 
   isFlower(facility_id) {
@@ -107,9 +92,8 @@ class LocationPicker extends React.Component {
         item.t_id.length > 0 &&
         item.rm_purpose === 'flower' &&
         item.f_id === facility_id
-    } else {
-      return item => item.t_id.length > 0 && item.rm_purpose === 'flower'
-    }
+    } 
+    return () => false
   }
 
   isRoomOnly(facility_id) {
@@ -118,29 +102,15 @@ class LocationPicker extends React.Component {
         item.rm_id.length > 0 &&
         item.rw_id.length === 0 &&
         item.f_id === facility_id
-    } else {
-      return item => item.rm_id.length > 0 && item.rw_id.length === 0
     }
+    return () => false
   }
 
-  get isFacilitySet() {
-    return (
-      this.props.filter_facility_id && this.props.filter_facility_id.length > 0
-    )
-  }
 
   filterLocationByFacility = facility_id => {
-    if (
-      this.mode !== 'facility' &&
-      (facility_id === null || facility_id.length <= 0)
-    ) {
-      return []
-    }
-
     let _locations = []
     const { mode, locations } = this.props
-    // console.log(locations)
-
+    
     if (mode === 'clone') {
       _locations = locations.filter(this.isClone(facility_id))
     } else if (mode === 'vegTray') {
@@ -168,7 +138,7 @@ class LocationPicker extends React.Component {
   /* Utility method to find item from location id & mode combination */
   findLocation(locations, location_id) {
     const mode = this.mode
-    let item = null
+    let item = { value: '', label: '' }
     if (mode === 'mother' || mode === 'room') {
       item = locations.find(x => x.rm_id === location_id)
     } else if (['clone', 'vegTray', 'flower', 'dry'].indexOf(mode) >= 0) {
@@ -177,10 +147,6 @@ class LocationPicker extends React.Component {
       item = locations.find(x => x.f_id === location_id)
     }
     return item
-  }
-
-  findFacility(locations, facility_id) {
-    return locations.find(x => x.f_id === facility_id)
   }
 
   /* Utility method to extract location id & mode combination from item */
@@ -209,14 +175,6 @@ class LocationPicker extends React.Component {
     }
   }
 
-  onChangeFacility = item => {
-    this.setState({
-      facility: { value: item.f_id, label: item.label },
-      value: { value: '', label: '' },
-      locations: this.filterLocationByFacility(item.f_id)
-    })
-  }
-
   onChange = item => {
     // console.log(item)
     const locationData = this.extractLocationId(item, this.props.mode)
@@ -224,8 +182,12 @@ class LocationPicker extends React.Component {
     this.setState({ value: { value: item.value, label: item.label } })
   }
 
-  reset() {
-    this.setState({ value: null })
+  get selectedLocation() {
+    return this.findLocation(this.state.locations, this.state.location_id)
+  }
+
+  get filteredLocations() {
+    return this.filterLocationByFacility(this.state.facility_id)
   }
 
   get label() {
@@ -248,38 +210,15 @@ class LocationPicker extends React.Component {
     }
   }
 
-  get selectedLocation() {
-    return this.findLocation(this.state.locations, this.state.location_id)
-  }
-
   render() {
     return (
       <React.Fragment>
-        {!this.isFacilitySet &&
-          this.mode !== 'facility' && (
-            <div className="mb3">
-              <label className="f6 fw6 db mb1 gray ttc">Facility ID</label>
-              <Select
-                styles={reactSelectStyle}
-                placeholder="Type to search facility..."
-                options={this.facilities}
-                onChange={this.onChangeFacility}
-                value={this.state.facility}
-                filterOption={(option, input) => {
-                  const words = input.toLowerCase().split(/\s/)
-                  return words.every(
-                    x => option.label.toLowerCase().indexOf(x) >= 0
-                  )
-                }}
-              />
-            </div>
-          )}
         <label className="f6 fw6 db mb1 gray ttc">{this.label}</label>
         <Select
-          key={this.state.facility}
+          key={this.state.facility_id}
           styles={reactSelectStyle}
           placeholder="Search location within your facility"
-          options={this.state.locations}
+          options={this.filteredLocations}
           onChange={this.onChange}
           value={this.selectedLocation}
           filterOption={(option, input) => {
@@ -297,13 +236,13 @@ LocationPicker.propTypes = {
   locations: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
   location_id: PropTypes.string,
-  filter_facility_id: PropTypes.string
+  facility_id: PropTypes.string
 }
 
 LocationPicker.defaultProps = {
   mode: 'tray',
   location_id: '',
-  filter_facility_id: null
+  facility_id: null
 }
 
 export default LocationPicker

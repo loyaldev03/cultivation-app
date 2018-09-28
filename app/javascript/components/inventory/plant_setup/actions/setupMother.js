@@ -1,7 +1,7 @@
 import plantStore from '../store/PlantStore'
 
 export default function setupMother(payload) {
-  return fetch('/api/v1/plant_setup/setup_mother', {
+  return fetch('/api/v1/plants/setup_mother', {
     method: 'POST',
     credentials: 'include',
     body: JSON.stringify(payload),
@@ -18,7 +18,9 @@ export default function setupMother(payload) {
     .then(result => {
       const { status, data } = result
       if (status == 200) {
-        const savedPlants = JSON.parse(data.data).data
+        const savedPlants = data.data
+        console.log('savedPlants')
+        console.log(savedPlants)
         plantStore.prepend(savedPlants)
       }
 

@@ -1,20 +1,15 @@
 class Api::V1::PlantsController < Api::V1::BaseApiController
   def all
-    plants = if params[:plant_status]
-               Inventory::ItemArticle.where(plant_status: params[:plant_status]).order(c_at: :desc)
-             else
-               Inventory::ItemArticle.all.order(c_at: :desc)
-             end
-
-    data = Inventory::ItemArticleSerializer.new(plants).serialized_json
+    plants = Inventory::Plant.where(current_growth_stage: params[:current_growth_stage]).order(c_at: :desc)
+    data = Inventory::PlantSerializer.new(plants).serialized_json
     render json: data
   end
 
   def setup_mother
-    command = Inventory::SetupMother.call(current_user, params[:plant_setup].to_unsafe_h)
+    command = Inventory::SetupMother.call(current_user, params[:plant].to_unsafe_h)
 
     if command.success?
-      data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
+      data = Inventory::PlantSerializer.new(command.result).serialized_json
       render json: data
     else
       render json: request_with_errors(command.errors), status: 422
@@ -22,7 +17,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def setup_clones
-    command = Inventory::SetupClones.call(current_user, params[:plant_setup].to_unsafe_h)
+    command = Inventory::SetupClones.call(current_user, params[:plant].to_unsafe_h)
 
     if command.success?
       data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
@@ -33,7 +28,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def setup_vegs
-    command = Inventory::SetupVegGroup.call(current_user, params[:plant_setup].to_unsafe_h)
+    command = Inventory::SetupVegGroup.call(current_user, params[:plant].to_unsafe_h)
 
     if command.success?
       data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
@@ -44,7 +39,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def setup_harvest_yield
-    command = Inventory::SetupHarvestYield.call(current_user, params[:plant_setup].to_unsafe_h)
+    command = Inventory::SetupHarvestYield.call(current_user, params[:plant].to_unsafe_h)
 
     if command.success?
       data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
@@ -57,6 +52,6 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   private
 
   def request_with_errors(errors)
-    params[:plant_setup].to_unsafe_h.merge(errors: errors)
+    params[:plant].to_unsafe_h.merge(errors: errors)
   end
 end

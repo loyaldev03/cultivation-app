@@ -6,6 +6,7 @@ import reactSelectStyle from '../utils/reactSelectStyle'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import { groupBy } from '../utils/ArrayHelper'
+import UserDetailsEditor from './UserDetailsEditor'
 
 const build_facilities_options = facilities =>
   facilities.map(f => ({
@@ -13,11 +14,44 @@ const build_facilities_options = facilities =>
     label: `${f.name} (${f.code})`
   }))
 
+const build_roles_options = roles =>
+  roles.map(f => ({
+    value: f.id,
+    label: `${f.name}`
+  }))
 @observer
 class TeamSetttingApp extends React.Component {
   async componentDidMount() {
     await store.loadUsers()
   }
+
+  openSidebar = () => {
+    if (!window.editorSidebar || !window.editorSidebar.sidebarNode) {
+      window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
+    }
+    window.editorSidebar.open({ width: '600px' })
+  }
+
+  closeSidebar = () => {
+    this.setState({
+      // editingPlant: {}
+    })
+    window.editorSidebar.close()
+  }
+
+  onSelectChange = (field, option) => {
+    if (option) {
+      this.setState({ [field]: option.value })
+    } else {
+      this.setState({ [field]: '' })
+    }
+  }
+
+  onClickSelectionEdit = userId => e => {
+    console.log('Clicked row', userId)
+    this.openSidebar()
+  }
+
   render() {
     if (store.isLoading || !store.userRoles) {
       return <span className="grey">Loading...</span>
@@ -35,49 +69,79 @@ class TeamSetttingApp extends React.Component {
                 Browses through your team's information here.
               </p>
 
-              <label className="grey">Facility:</label>
-              <Select
-                options={build_facilities_options(facilities)}
-                isClearable={true}
-                className="measure mt1"
-              />
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gridColumnGap: '3em'
+                }}
+              >
+                <div>
+                  <label className="grey">Facility:</label>
+                  <Select
+                    options={build_facilities_options(facilities)}
+                    isClearable={true}
+                    onChange={opt => this.onSelectChange('facilityFilter', opt)}
+                    className="mt1 w-100"
+                  />
+                </div>
+                <div>
+                  <label className="grey">Roles:</label>
+                  <Select
+                    options={build_roles_options(roles)}
+                    isClearable={true}
+                    onChange={opt => this.onSelectChange('roleFilter', opt)}
+                    className="mt1 w-100"
+                  />
+                </div>
+              </div>
 
               <label className="grey mt3">Users:</label>
-              <table className="collapse ba br2 b--black-10 pv2 ph3 f6 mt1">
+              <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1">
                 <tbody>
                   <tr className="striped--light-gray">
-                    <th className="pv2 ph3 tl fw6 ttu">First Name</th>
-                    <th className="tl ttu fw6 pv2 ph3">Last name</th>
-                    <th className="tl ttu fw6 pv2 ph3">Email</th>
-                    <th>Title</th>
+                    <th className="pv2 ph3 subtitle-2 hark-grey tl ttu">
+                      Photo
+                    </th>
+                    <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
+                      First Name
+                    </th>
+                    <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
+                      Last name
+                    </th>
+                    <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
+                      Email
+                    </th>
+                    <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
+                      Facility
+                    </th>
+                    <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
+                      Role
+                    </th>
                   </tr>
                   {users.map(x => (
-                    <tr key={x.id} className="striped--light-gray">
+                    <tr
+                      key={x.id}
+                      className="striped--light-gray dim pointer"
+                      onClick={this.onClickSelectionEdit(x.id)}
+                    >
+                      <td className="pv2 ph3" />
                       <td className="tl pv2 ph3">{x.first_name}</td>
                       <td className="tl pv2 ph3">{x.last_name}</td>
                       <td className="tl pv2 ph3">{x.email}</td>
-                      <td className="pv2 ph3">{x.title}</td>
+                      <td className="tl pv2 ph3">{x.roles}</td>
+                      <td className="tl pv2 ph3">{x.roles}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-
-              <h3>Groups</h3>
-              {groups.map(x => {
-                return <span key={x.id}>{x.name}</span>
-              })}
-
-              <h3>Roles</h3>
-              {roles.map(x => {
-                return <span key={x.id}>{x.name}</span>
-              })}
-
-              <h3>Users</h3>
             </div>
           </div>
         </div>
         <div data-role="sidebar" className="rc-slide-panel">
-          <div className="rc-slide-panel__body">Side panel</div>
+          <div className="rc-slide-panel__body">
+            <UserDetailsEditor onClose={this.closeSidebar} />
+          </div>
         </div>
       </React.Fragment>
     )

@@ -186,14 +186,15 @@ class PlantSetupApp extends React.Component {
           Setup active plant inventory
         </h1>
         <p className="mb3 lh-copy f5 grey w-60">
-          Add your existing plant inventories. Do not worry if you are unable
-          to add all the records, you can always continue later from the
-          settings menu.
+          Add your existing plant inventories. Do not worry if you are unable to
+          add all the records, you can always continue later from the settings
+          menu.
         </p>
         <p className="mb3 lh-copy f5 grey w-60">
-          We recommend to prioritise to start with <strong>cultivation batches </strong> 
-          follow by <strong>mother and clones</strong> so that you can proceed to do
-          cultivation planning in the next phase of the setup.
+          We recommend to prioritise to start with{' '}
+          <strong>cultivation batches </strong>
+          follow by <strong>mother and clones</strong> so that you can proceed
+          to do cultivation planning in the next phase of the setup.
         </p>
       </div>
     )
@@ -204,9 +205,9 @@ class PlantSetupApp extends React.Component {
       <React.Fragment>
         {this.renderFirstTime()}
         {this.renderPlantList()}
-        <MotherEditor 
+        <MotherEditor
           isOpened={false}
-          locations={this.props.locations} 
+          locations={this.props.locations}
           facilityStrains={this.props.facility_strains}
         />
       </React.Fragment>

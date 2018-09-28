@@ -20,7 +20,7 @@ class MotherEditor extends React.Component {
       // source
       plant_ids: '',
       location_id: '',
-      
+
       // Vendor/ source
       vendor_name: '',
       vendor_no: '',
@@ -89,11 +89,11 @@ class MotherEditor extends React.Component {
     this.setState({
       facility_strain_id: data.value,
       facility_id: data.facility_id,
-      strain_name: data.label,
+      strain_name: data.label
     })
   }
-  
-  onLocationChanged = ({location_id}) => {
+
+  onLocationChanged = ({ location_id }) => {
     this.setState({ location_id })
   }
 
@@ -101,7 +101,7 @@ class MotherEditor extends React.Component {
     this.setState({ isBought: !this.state.isBought })
   }
 
-  onSave = (event) => {
+  onSave = event => {
     const { errors, isValid, ...payload } = this.validateAndGetValues()
 
     if (isValid) {
@@ -135,7 +135,7 @@ class MotherEditor extends React.Component {
       vendor_location_license_expiration_date: null,
       purchase_date: null,
       invoice_no: '',
-      
+
       isBought: false,
       errors: {}
       // isShowPlantQtyForm: false,
@@ -152,7 +152,7 @@ class MotherEditor extends React.Component {
       // plant_qty,
       planted_on,
       isBought,
-      location_id  //
+      location_id //
     } = this.state
 
     let errors = {}
@@ -179,10 +179,9 @@ class MotherEditor extends React.Component {
     if (isBought) {
       purchaseData = this.purchaseInfoEditor.getValues()
     }
-    
+
     const isValid =
-      purchaseData.isValid &&
-      Object.getOwnPropertyNames(errors).length === 0
+      purchaseData.isValid && Object.getOwnPropertyNames(errors).length === 0
 
     if (!isValid) {
       this.setState({ errors })
@@ -267,10 +266,16 @@ class MotherEditor extends React.Component {
                 options={this.state.strainOptions}
                 noOptionsMessage={() => 'Type to search strain...'}
                 onChange={this.onStrainSelected}
-                value={{label: this.state.strain_name, value: this.state.facility_strain_id}}
+                value={{
+                  label: this.state.strain_name,
+                  value: this.state.facility_strain_id
+                }}
                 styles={reactSelectStyle}
               />
-              <FieldError errors={this.state.errors} field="facility_strain_id" />
+              <FieldError
+                errors={this.state.errors}
+                field="facility_strain_id"
+              />
             </div>
           </div>
           <hr className="mt3 m b--light-gray w-100" />

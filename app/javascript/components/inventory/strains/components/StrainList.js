@@ -48,7 +48,7 @@ const columns = [
     filterable: false,
     maxWidth: 45,
     Cell: x => (
-      <a href="#" onClick={(event) => openStrain(event, x.index)}>
+      <a href="#" onClick={event => openStrain(event, x.index)}>
         <i className="material-icons gray">more_horiz</i>
       </a>
     )

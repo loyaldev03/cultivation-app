@@ -12,7 +12,7 @@ class LocationPicker extends React.Component {
     this.mode = props.mode
     this.locations = props.locations
     window.locs = props.locations
-    
+
     this.state = {
       location_id: props.location_id || '',
       facility_id: props.facility_id,
@@ -30,7 +30,7 @@ class LocationPicker extends React.Component {
     }
 
     if (nextProps.facility_id !== prevState.facility_id) {
-      newState = { ...newState, facility_id: nextProps.facility_id}
+      newState = { ...newState, facility_id: nextProps.facility_id }
       hasNewState = true
     }
 
@@ -51,7 +51,7 @@ class LocationPicker extends React.Component {
         item.t_id.length > 0 &&
         item.rm_purpose === 'clone' &&
         item.f_id === facility_id
-    } 
+    }
     return () => false
   }
 
@@ -82,7 +82,7 @@ class LocationPicker extends React.Component {
         item.t_id.length > 0 &&
         item.rm_purpose === 'dry' &&
         item.f_id === facility_id
-    } 
+    }
     return () => false
   }
 
@@ -92,7 +92,7 @@ class LocationPicker extends React.Component {
         item.t_id.length > 0 &&
         item.rm_purpose === 'flower' &&
         item.f_id === facility_id
-    } 
+    }
     return () => false
   }
 
@@ -106,11 +106,10 @@ class LocationPicker extends React.Component {
     return () => false
   }
 
-
   filterLocationByFacility = facility_id => {
     let _locations = []
     const { mode, locations } = this.props
-    
+
     if (mode === 'clone') {
       _locations = locations.filter(this.isClone(facility_id))
     } else if (mode === 'vegTray') {

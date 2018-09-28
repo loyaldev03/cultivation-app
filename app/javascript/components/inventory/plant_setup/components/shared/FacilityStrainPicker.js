@@ -89,7 +89,10 @@ export default class FacilityStrainPicker extends React.Component {
             options={this.state.motherOptions}
             noOptionsMessage={() => 'Type to search strain...'}
             onChange={() => {}}
-            value={{ label: this.state.strain_name, value: this.state.facility_strain_id }}
+            value={{
+              label: this.state.strain_name,
+              value: this.state.facility_strain_id
+            }}
             styles={reactSelectStyle}
           />
           <FieldError errors={this.state.errors} field="facility_strain_id" />

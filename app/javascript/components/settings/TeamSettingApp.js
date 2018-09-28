@@ -19,10 +19,21 @@ const build_roles_options = roles =>
     value: f.id,
     label: `${f.name}`
   }))
+
 @observer
 class TeamSetttingApp extends React.Component {
+  state = {
+    editingUser: {}
+  }
   async componentDidMount() {
     await store.loadUsers()
+
+    // TODO: TESTING MODE
+    this.setState({
+      editingUser: store.getUser('5b63cd7149a93423dd399949')
+    })
+    this.openSidebar()
+    // TODO: TESTING MODE
   }
 
   openSidebar = () => {
@@ -34,7 +45,7 @@ class TeamSetttingApp extends React.Component {
 
   closeSidebar = () => {
     this.setState({
-      // editingPlant: {}
+      editingUser: {}
     })
     window.editorSidebar.close()
   }
@@ -48,12 +59,20 @@ class TeamSetttingApp extends React.Component {
   }
 
   onClickSelectionEdit = userId => e => {
-    console.log('Clicked row', userId)
-    this.openSidebar()
+    const editingUser = store.getUser(userId)
+    if (editingUser) {
+      this.setState({ editingUser })
+      this.openSidebar()
+    }
   }
 
   onAddUser = () => {
+    this.setState({ editingUser: {} })
     this.openSidebar()
+  }
+
+  onEditorSave = userDetails => {
+    console.log('onEditorSave', userDetails)
   }
 
   render() {
@@ -61,6 +80,10 @@ class TeamSetttingApp extends React.Component {
       return <span className="grey">Loading...</span>
     }
     const { facilities, users, roles, groups } = store.userRoles.attributes
+    const { editingUser } = this.state
+    const facilitiesOptions = build_facilities_options(facilities)
+    const rolesOptions = build_roles_options(roles)
+
     return (
       <React.Fragment>
         <div className="pa4">
@@ -90,21 +113,21 @@ class TeamSetttingApp extends React.Component {
                   <div>
                     <label className="grey">Facility:</label>
                     <Select
-                      options={build_facilities_options(facilities)}
+                      options={facilitiesOptions}
                       isClearable={true}
                       onChange={opt =>
                         this.onSelectChange('facilityFilter', opt)
                       }
-                      className="mt1 w-100"
+                      className="mt1 w-100 f6"
                     />
                   </div>
                   <div>
                     <label className="grey">Roles:</label>
                     <Select
-                      options={build_roles_options(roles)}
+                      options={rolesOptions}
                       isClearable={true}
                       onChange={opt => this.onSelectChange('roleFilter', opt)}
-                      className="mt1 w-100"
+                      className="mt1 w-100 f6"
                     />
                   </div>
                 </div>
@@ -151,7 +174,7 @@ class TeamSetttingApp extends React.Component {
                         <td className="tl pv2 ph3">{x.last_name}</td>
                         <td className="tl pv2 ph3">{x.email}</td>
                         <td className="tl pv2 ph3">{x.roles}</td>
-                        <td className="tl pv2 ph3">{x.roles}</td>
+                        <td className="tl pv2 ph3">{x.id}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -162,7 +185,14 @@ class TeamSetttingApp extends React.Component {
         </div>
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body">
-            <UserDetailsEditor onClose={this.closeSidebar} />
+            <UserDetailsEditor
+              key={editingUser.id}
+              user={editingUser}
+              onSave={this.onEditorSave}
+              onClose={this.closeSidebar}
+              facilitiesOptions={facilitiesOptions}
+              rolesOptions={rolesOptions}
+            />
           </div>
         </div>
       </React.Fragment>

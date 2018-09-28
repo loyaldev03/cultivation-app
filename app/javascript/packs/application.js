@@ -16,14 +16,18 @@ ReactRailsUJS.useContext(componentRequireContext)
 
 // handle body click
 
-document.addEventListener("DOMContentLoaded", function(event) { 
-  document.body.addEventListener('click', function(e) {
-    if ( !e.target.closest('.rc-slide-panel') ) {
+document.addEventListener('DOMContentLoaded', function(event) {
+  document.body.addEventListener(
+    'click',
+    function(e) {
+      if (!e.target.closest('.rc-slide-panel')) {
         // Clicked outside the element...
         //console.log('Clicked outside the slide-panel', e
         if (window.editorSidebar && window.editorSidebar.sidebarNode) {
           window.editorSidebar.close()
         }
-    }
-  }, true)
-});
+      }
+    },
+    true
+  )
+})

@@ -23,9 +23,6 @@ const styles = `
 .table-dropdown a:hover{
   background-color: #eee;
 } 
-.button-dropdown:hover{
-  background-color: #eee;
-}
 
 `
 
@@ -127,6 +124,7 @@ class TaskList extends React.Component {
   }
 
   handleEdit = e => {
+    this.setState({ taskSelected: e.row.id })
     this.clearDropdown()
     editorSidebarHandler.open({
       width: '500px',
@@ -303,7 +301,7 @@ class TaskList extends React.Component {
   }
 
   handleAddTask = (row, position) => {
-    this.setState({ taskRelatedId: row.row.id, taskRelatedPosition: position })
+    this.setState({ taskSelected: row.row.id })
     editorSidebarHandler.open({
       width: '500px',
       data: { task_related_id: row.row.id, position: position },
@@ -312,7 +310,7 @@ class TaskList extends React.Component {
   }
 
   handleReset = () => {
-    this.setState({ taskRelatedId: '', taskRelatedPosition: '' })
+    this.setState({ taskSelected: '', taskRelatedPosition: '' })
   }
 
   mountEvents() {
@@ -369,11 +367,14 @@ class TaskList extends React.Component {
 
         <div className=" flex">
           <div className="w-40">
-            <h4 className="tl pa0 ma0 h6--font dark-grey">Task List</h4>
+            <h4 className="tl pa0 ma0 h6--font dark-grey">
+              Batch {this.state.batch.batch_no}
+            </h4>
           </div>
         </div>
         <div className="mb3 flex">
-          <div className="w-50">
+          <div className="w-30">
+            <hr />
             <div className=" flex">
               <div className="w-40">
                 <label>Batch Source</label>
@@ -384,51 +385,20 @@ class TaskList extends React.Component {
                 </div>
               </div>
             </div>
+            <hr />
             <div className=" flex">
               <div className="w-40">
                 <label>Batch Id</label>
               </div>
               <div className="w-40">
                 <div className="">
-                  <label>{this.state.batch.batch_no}</label>
+                  <label>{this.state.batch.id}</label>
                 </div>
               </div>
             </div>
+            <hr />
             <div className=" flex">
               <div className="w-40">
-                <label>Start Date</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.start_date}</label>
-                </div>
-              </div>
-            </div>
-
-            <div className=" flex">
-              <div className="w-40">
-                <label>Estimated Harvest Date</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.estimated_harvest_date}</label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="w-50">
-            <div className=" flex">
-              <div className="w-20">
-                <label>Grow Method</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.grow_method}</label>
-                </div>
-              </div>
-            </div>
-            <div className=" flex">
-              <div className="w-20">
                 <label>Strain</label>
               </div>
               <div className="w-40">
@@ -437,6 +407,92 @@ class TaskList extends React.Component {
                 </div>
               </div>
             </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-40">
+                <label>Grow Method</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.grow_method}</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+          </div>
+
+          <div className="w-30 ml5">
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Start Date </label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>{this.state.batch.start_date}</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Total Estimation Cost</label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>???</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Total Estimation Hours</label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>???</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+          </div>
+
+          <div className="w-30 ml5">
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Estimated Harvest Dat </label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>{this.state.batch.start_date}</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Total Actual Cost</label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>???</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Total Actual Hour</label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>???</label>
+                </div>
+              </div>
+            </div>
+            <hr />
           </div>
         </div>
         <ReactTable
@@ -540,23 +596,24 @@ class TaskList extends React.Component {
             if (rowInfo) {
               return {
                 style: {
-                  borderBottom:
-                    this.state.taskRelatedId === rowInfo.row.id &&
-                    this.state.taskRelatedPosition === 'bottom'
-                      ? 'solid 1px rgb(255, 112, 67)'
-                      : null,
-                  borderTop:
-                    this.state.taskRelatedId === rowInfo.row.id &&
-                    this.state.taskRelatedPosition === 'top'
-                      ? 'solid 1px rgb(255, 112, 67)'
+                  boxShadow:
+                    this.state.taskSelected === rowInfo.row.id
+                      ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
                       : null
                 },
                 onMouseOver: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)
+                  window.hello = button
+                  button.parentElement.parentElement.parentElement.parentElement.style.boxShadow =
+                    '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
                   button.style.display = 'block'
                 },
                 onMouseOut: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)
+                  if (this.state.taskSelected !== rowInfo.row.id) {
+                    button.parentElement.parentElement.parentElement.parentElement.style.boxShadow =
+                      ''
+                  }
                   button.style.display = 'none'
                 }
               }

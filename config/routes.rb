@@ -99,6 +99,8 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :users, only: [:index]
+
       resource :plant_setup, only: [] do
         
         post 'setup_clones'

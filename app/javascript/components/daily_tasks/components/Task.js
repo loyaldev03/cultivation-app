@@ -7,7 +7,7 @@ class TodoItem extends React.Component {
 
   render() {
     return (
-      <div>Foo</div>
+      <div>Bars</div>
     )
   }
 }

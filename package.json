@@ -32,6 +32,7 @@
     "react-table": "^6.8.6",
     "react_ujs": "^2.4.4",
     "siema": "^1.5.1",
+    "styled-components": "^3.4.9",
     "tachyons": "^4.11.1",
     "turbolinks": "^5.1.1"
   },

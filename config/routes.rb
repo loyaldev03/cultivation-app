@@ -87,7 +87,7 @@ Rails.application.routes.draw do
     resources :batches
   end
 
-  namespace 'work_dashboard' do
+  namespace 'daily_tasks' do
     get '/', action: 'index'
   end
 

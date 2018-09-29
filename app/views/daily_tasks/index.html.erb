@@ -5,10 +5,5 @@
 <% end %>
 
 <div class="pa4">
-  <div class="flex flex-column justify-between bg-white">
-
-    <div class="ph5 pv4 f6">
-      <%= react_component 'daily_tasks/DailyTasksApp' %>
-    </div>
-  </div>
+  <%= react_component 'daily_tasks/DailyTasksApp', { todo: @todo, done: @done } %>
 </div>

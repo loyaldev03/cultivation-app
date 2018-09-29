@@ -1,2 +1,0 @@
-class WorkDashboardController < ApplicationController
-end

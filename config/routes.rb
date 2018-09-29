@@ -111,7 +111,7 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace 'work_dashboard' do
+  namespace 'daily_tasks' do
     get '/', action: 'index'
   end
 

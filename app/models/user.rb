@@ -46,7 +46,6 @@ class User
   field :roles, type: Array, default: []
   field :facilities, type: Array, default: []
 
-  has_and_belongs_to_many :cultivation_tasks, class_name: 'Cultivation::Task'
   ## Confirmable
   # field :confirmation_token,   type: String
   # field :confirmed_at,         type: Time
@@ -71,5 +70,9 @@ class User
   # This need to be refactor
   def is_dev?
     true
+  end
+
+  def cultivation_tasks
+    Cultivation::Task.in(user_ids: id)
   end
 end

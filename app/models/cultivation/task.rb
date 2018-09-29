@@ -23,12 +23,17 @@ module Cultivation
     field :parent_id, type: String
     field :depend_on, type: String
 
-    has_and_belongs_to_many :users, inverse_of: nil
     belongs_to :batch, class_name: 'Cultivation::Batch'
+    has_and_belongs_to_many :users, inverse_of: nil
+    embeds_many :work_days, class_name: 'Cultivation::WorkDay'
 
     embeds_many :items, class_name: 'Cultivation::Item'
 
     orderable scope: :batch, base: 0
+
+    scope :expected_on, ->(date) {
+      all.and(:expected_start_date.lte => date, :expected_end_date.gte => date)
+    }
 
     def tasks_depend
       batch.tasks.where(depend_on: self.id)

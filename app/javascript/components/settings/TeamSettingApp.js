@@ -6,6 +6,7 @@ import reactSelectStyle from '../utils/reactSelectStyle'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import { groupBy } from '../utils/ArrayHelper'
+import LetterAvatar from '../utils/LetterAvatar'
 import UserDetailsEditor from './UserDetailsEditor'
 
 const build_facilities_options = facilities =>
@@ -144,9 +145,7 @@ class TeamSetttingApp extends React.Component {
                 <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100">
                   <tbody>
                     <tr className="striped--light-gray">
-                      <th className="pv2 ph3 subtitle-2 hark-grey tl ttu">
-                        Photo
-                      </th>
+                      <th className="pv2 ph3 subtitle-2 hark-grey tl ttu"></th>
                       <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
                         First Name
                       </th>
@@ -169,7 +168,9 @@ class TeamSetttingApp extends React.Component {
                         className="striped--light-gray dim pointer"
                         onClick={this.onClickSelectionEdit(x.id)}
                       >
-                        <td className="pv2 ph3" />
+                        <td className="pv2 ph3">
+                          <LetterAvatar firstName={x.first_name} lastName={x.last_name} size={36} radius={18} />
+                        </td>
                         <td className="tl pv2 ph3">{x.first_name}</td>
                         <td className="tl pv2 ph3">{x.last_name}</td>
                         <td className="tl pv2 ph3">{x.email}</td>

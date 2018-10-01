@@ -17,6 +17,8 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def update
+    task_params = task_params.merge(user_ids: task_params[:assigned_employee].pluck(:value))
+    task_params.delete('assigned_employee')
     Cultivation::UpdateTask.call(task_params)
     options = {}
     task = Cultivation::Task.find(params[:id])
@@ -54,10 +56,9 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def task_params
     params.require(:task).permit(:parent_id, :phase, :task_category, :name, :duration, :action,
-                                 :estimated_hours, :assigned_employee, :type, :position,
+                                 :estimated_hours, :type, :position,
                                  :task_related_id,
-                                 #:expected_end_date, :estimated_hours, :assigned_employee,
                                  :days_from_start_date, :expected_start_date, :start_date, :end_date, :expected_hours_taken,
-                                 :time_taken, :no_of_employees, :materials, :instruction, :id, :batch_id)
+                                 :time_taken, :no_of_employees, :materials, :instruction, :id, :batch_id, assigned_employee: [:label, :value])
   end
 end

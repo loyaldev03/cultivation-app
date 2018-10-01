@@ -23,7 +23,7 @@ module Cultivation
     field :parent_id, type: String
     field :depend_on, type: String
 
-    embeds_many :users, class_name: 'User'
+    has_and_belongs_to_many :users, inverse_of: nil
     belongs_to :batch, class_name: 'Cultivation::Batch'
 
     orderable scope: :batch, base: 0

@@ -47,7 +47,7 @@ Rails.application.routes.draw do
 
   namespace 'inventory', as: :inventory do
     resources 'strains', only: [:index]
-    resources 'plants', only: [:index] do 
+    resources 'plants', only: [:index] do
       collection do
         get 'mothers'
         get 'cultivation_batches'
@@ -94,7 +94,7 @@ Rails.application.routes.draw do
   # API for web pages
   namespace :api do
     namespace :v1 do
-      
+
       resources :plants do
         get 'all/(:current_growth_stage)',    action: :all, on: :collection
         get 'search/:current_growth_stage/(:facility_strain_id)/(:search)',    action: :search, on: :collection
@@ -133,6 +133,11 @@ Rails.application.routes.draw do
 
       resources :items, only: [:index, :create, :destroy]
 
+      scope :daily_tasks do
+        put ':id/start_task', to: 'daily_tasks#start_task'
+        put ':id/stop_task', to: 'daily_tasks#stop_task'
+        put ':id/add_notes', to: 'daily_tasks#add_notes'
+      end
     end
   end
 end

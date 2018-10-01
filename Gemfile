@@ -97,7 +97,7 @@ gem 'stackprof'
 # Error tracking
 gem 'rollbar'
 
-#Api Serializer
+# Api Serializer
 gem 'fast_jsonapi'
 
 # UoM gem
@@ -110,3 +110,6 @@ gem 'shrine-mongoid'
 
 # Authorization
 gem 'pundit'
+
+# Model state machine
+gem 'aasm'

@@ -22,8 +22,7 @@ class SidebarTaskEditor extends React.Component {
       start_date: new Date(this.props.task.attributes.start_date),
       end_date: new Date(this.props.task.attributes.end_date),
       errors: '',
-      estimated_hours: '',
-      assigned_employee: []
+      estimated_hours: ''
     }
   }
 
@@ -40,8 +39,7 @@ class SidebarTaskEditor extends React.Component {
         start_date: new Date(props.task.attributes.start_date),
         end_date: new Date(props.task.attributes.end_date),
         errors: '',
-        estimated_hours: '',
-        assigned_employee: []
+        estimated_hours: ''
       })
     }
   }

@@ -17,9 +17,10 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def update
-    task_params = task_params.merge(user_ids: task_params[:assigned_employee].pluck(:value))
-    task_params.delete('assigned_employee')
-    Cultivation::UpdateTask.call(task_params)
+    new_params = task_params
+    new_params = new_params.merge(user_ids: new_params[:assigned_employee].pluck(:value))
+    new_params.delete('assigned_employee')
+    Cultivation::UpdateTask.call(new_params)
     options = {}
     task = Cultivation::Task.find(params[:id])
     task_json = TaskSerializer.new(task, options).serialized_json

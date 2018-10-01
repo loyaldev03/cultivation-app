@@ -553,7 +553,7 @@ class BatchLocationEditor extends React.PureComponent {
             <input
               type="submit"
               value="Save"
-              className="fr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer"
+              className="fr ph3 pv2 bg-orange button--font white bn box--br3 ttu link dim pointer"
             />
           </div>
         </form>

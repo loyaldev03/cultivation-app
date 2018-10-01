@@ -109,6 +109,8 @@ Rails.application.routes.draw do
 
       resource :user_roles, only: [] do
         get 'search'
+        post 'update_user'
+        post 'update_role_permission'
       end
     end
   end

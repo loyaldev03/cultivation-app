@@ -72,8 +72,23 @@ class TeamSetttingApp extends React.Component {
     this.openSidebar()
   }
 
-  onEditorSave = userDetails => {
-    console.log('onEditorSave', userDetails)
+  onEditorSave = async userDetails => {
+    // TODO: Move isSaving to mobx
+    this.setState({ isSaving: true })
+    try {
+      await await fetch('/api/v1/user_roles/update_user', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userDetails)
+      })
+    } catch (error) {
+      console.error('Error while saving user', error)
+    }
+    this.setState({ isSaving: false })
   }
 
   render() {
@@ -81,7 +96,7 @@ class TeamSetttingApp extends React.Component {
       return <span className="grey">Loading...</span>
     }
     const { facilities, users, roles, groups } = store.userRoles.attributes
-    const { editingUser } = this.state
+    const { editingUser, isSaving } = this.state
     const facilitiesOptions = build_facilities_options(facilities)
     const rolesOptions = build_roles_options(roles)
 
@@ -145,7 +160,7 @@ class TeamSetttingApp extends React.Component {
                 <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100">
                   <tbody>
                     <tr className="striped--light-gray">
-                      <th className="pv2 ph3 subtitle-2 hark-grey tl ttu"></th>
+                      <th className="pv2 ph3 subtitle-2 hark-grey tl ttu" />
                       <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
                         First Name
                       </th>
@@ -169,7 +184,12 @@ class TeamSetttingApp extends React.Component {
                         onClick={this.onClickSelectionEdit(x.id)}
                       >
                         <td className="pv2 ph3">
-                          <LetterAvatar firstName={x.first_name} lastName={x.last_name} size={36} radius={18} />
+                          <LetterAvatar
+                            firstName={x.first_name}
+                            lastName={x.last_name}
+                            size={36}
+                            radius={18}
+                          />
                         </td>
                         <td className="tl pv2 ph3">{x.first_name}</td>
                         <td className="tl pv2 ph3">{x.last_name}</td>
@@ -185,7 +205,7 @@ class TeamSetttingApp extends React.Component {
           </div>
         </div>
         <div data-role="sidebar" className="rc-slide-panel">
-          <div className="rc-slide-panel__body">
+          <div className="rc-slide-panel__body h-100">
             <UserDetailsEditor
               key={editingUser.id}
               user={editingUser}
@@ -193,6 +213,7 @@ class TeamSetttingApp extends React.Component {
               onClose={this.closeSidebar}
               facilitiesOptions={facilitiesOptions}
               rolesOptions={rolesOptions}
+              isSaving={isSaving}
             />
           </div>
         </div>

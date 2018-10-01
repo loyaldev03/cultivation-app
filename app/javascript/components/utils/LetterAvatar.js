@@ -74,7 +74,7 @@ class LetterAvatar extends React.PureComponent {
         backgroundColor: `rgb(${bgColor})`,
         width: size,
         height: size,
-        fontSize: (size/3/11) + 'em',
+        fontSize: size / 3 / 11 + 'em',
         fontWeight: '600',
         lineHeight: size + 'px',
         color: 'rgba(233,233,233,0.9)',

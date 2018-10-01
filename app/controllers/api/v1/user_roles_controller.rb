@@ -11,6 +11,30 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
     render json: data
   end
 
-  def update_group
+  def update_user
+    # Rails.logger.debug ">>> #{user_params}"
+    # # TODO: update
+    # # - first name, last name
+    # # - roles, facilities
+    # # - is_active
+    # if true
+    #   render json: {data: "user"}
+    # else
+    #   render json: {error: "Error saving user details"}
+    # end
+    render json: {data: 'Ok'}
+  end
+
+  def update_role_permission
+  end
+
+  private
+
+  def user_params
+    params.require(:user).permit(
+      :id,
+      :first_name,
+      :last_name,
+    )
   end
 end

@@ -10,6 +10,8 @@ class User
   field :last_name, type: String
   field :title, type: String
   field :timezone, type: String, default: 'UTC'
+  field :last_facility_id, type: BSON::ObjectId
+  field :is_active, type: Boolean, default: -> { true }
 
   ## Database authenticatable
   field :email, type: String, default: ''
@@ -31,8 +33,6 @@ class User
 
   field :roles, type: Array, default: []
   field :groups, type: Array, default: []
-
-  # TODO: Add last accessed facility
 
   ## Confirmable
   # field :confirmation_token,   type: String

@@ -280,6 +280,13 @@ class BatchLocationEditor extends React.PureComponent {
       <div className="h-100 flex flex-column">
         <div className="ph4 pv3 bb b--light-grey">
           <h5 className="h6--font dark-grey ma0">Quantity &amp; Location</h5>
+          <a
+            href="#0"
+            className="slide-panel__close-button dim"
+            onClick={onClose}
+          >
+            <i className="material-icons mid-gray md-18 pa1">close</i>
+          </a>
         </div>
         <form
           className="pv3 h-100 flex-auto flex flex-column justify-between"
@@ -543,18 +550,10 @@ class BatchLocationEditor extends React.PureComponent {
             )}
           </div>
           <div className="bt b--light-grey pv3 ph4">
-            <a
-              href="#0"
-              onClick={onClose}
-              className="fl pv3 bg-white button--font orange bn box--br3 ttu link dim pointer"
-            >
-              Cancel
-            </a>
-
             <input
               type="submit"
               value="Save"
-              className="fr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer"
+              className="fr ph3 pv2 bg-orange button--font white bn box--br3 ttu link dim pointer"
             />
           </div>
         </form>

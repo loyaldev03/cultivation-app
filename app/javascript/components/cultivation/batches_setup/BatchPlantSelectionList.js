@@ -42,6 +42,7 @@ const LocationField = ({ plant, onEdit }) => {
 @observer
 class BatchPlantSelectionList extends React.Component {
   componentDidMount() {
+    console.log('loadPlants', this.props.plantType)
     loadPlants(this.props.plantType)
   }
   render() {

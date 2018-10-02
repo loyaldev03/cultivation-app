@@ -26,8 +26,7 @@
     "react_ujs": "^2.4.4",
     "siema": "^1.5.1",
     "tachyons": "^4.11.1",
-    "turbolinks": "^5.1.1",
-    "turbolinks-animate": "^3.0.5"
+    "turbolinks": "^5.1.1"
   },
   "devDependencies": {
     "eslint": "^5.0.1",

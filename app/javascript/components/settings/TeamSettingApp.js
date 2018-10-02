@@ -44,10 +44,10 @@ class TeamSetttingApp extends React.Component {
     await store.loadUsers()
 
     // TODO: TESTING MODE
-    this.setState({
-      editingUser: store.getUser('5b63cd7149a93423dd399949')
-    })
-    this.openSidebar()
+    // this.setState({
+    //   editingUser: store.getUser('5b63cd7149a93423dd399949')
+    // })
+    // this.openSidebar()
     // TODO: TESTING MODE
   }
 

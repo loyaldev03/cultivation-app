@@ -1,0 +1,63 @@
+<% tabStyle = 'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white' %>
+<% selectedStyle = 'link bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white' %>
+<div class="flex">
+  <% if selected == 'mother' %>
+    <div class="<%= selectedStyle %>">
+      Mother Plants
+    </div>
+  <% else %>
+    <%= link_to 'Mother Plants',
+      mothers_inventory_plants_path, 
+      class: tabStyle %>
+  <% end %>
+
+  <% if selected == 'cultivation_batch' %>
+    <div class="<%= selectedStyle %>">
+      Cultivation Batches
+    </div>
+  <% else %>
+    <%= link_to 'Cultivation Batches', 
+      cultivation_batches_inventory_plants_path, 
+      class: tabStyle %>
+  <% end %>
+
+  <% if selected == 'clone' %>
+    <div class="<%= selectedStyle %>">
+      Mother Plants
+    </div>
+  <% else %>
+    <%= link_to 'Clones/ Plantings',
+      '#', 
+      class: tabStyle %>
+  <% end %>
+
+  <% if selected == 'veg' %>
+    <div class="<%= selectedStyle %>">
+      Veg
+    </div>
+  <% else %>
+    <%= link_to 'Veg',
+      '#', 
+      class: tabStyle %>
+  <% end %>
+
+  <% if selected == 'flower' %>
+    <div class="<%= selectedStyle %>">
+      Flower
+    </div>
+  <% else %>
+    <%= link_to 'Flower',
+      '#', 
+      class: tabStyle %>
+  <% end %>
+
+  <% if selected == 'harvest_batch' %>
+    <div class="<%= selectedStyle %>">
+      Harvest Batches
+    </div>
+  <% else %>
+    <%= link_to 'Harvest Batches',
+      '#', 
+      class: tabStyle %>
+  <% end %>
+</div>

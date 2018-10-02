@@ -5,7 +5,6 @@ import StrainList from './components/StrainList'
 import StrainEditor from './components/StrainEditor'
 import strainStore from './store/StrainStore'
 import loadStrains from './actions/loadStrains'
-// import addPlant from './actions/addPlant'
 
 @observer
 class StrainApp extends React.Component {

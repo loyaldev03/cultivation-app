@@ -8,6 +8,8 @@
 
 
 <div class="pa4">
+  <%= render partial: 'setupIntro' %>
+  <%= render partial: 'setupNavigation', locals: { selected: 'mother' } %>
   <div class="flex flex-column">
     <%= react_component('inventory/plant_setup/MotherSetupApp', {
         facility_strains: @facility_strains,

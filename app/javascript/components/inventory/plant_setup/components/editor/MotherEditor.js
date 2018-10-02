@@ -261,7 +261,7 @@ class MotherEditor extends React.Component {
 
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Strain</label>
+              <label className="f6 fw6 db mb1 gray ttc">Select Strain</label>
               <Select
                 options={this.state.strainOptions}
                 noOptionsMessage={() => 'Type to search strain...'}

@@ -103,20 +103,20 @@ Rails.application.routes.draw do
         get 'suggest', on: :collection
       end
 
-      resources :batches, only: [:create] do
+      resources :batches, only: [:index, :create] do
+        post 'setup_simple_batch', on: :collection
         post 'update_locations'
         resources :tasks, only: [:index, :update, :create] do
           put 'indent', on: :member
         end
       end
 
-      resource :plant_setup, only: [] do
-        
-        post 'setup_clones'
-        post 'setup_vegs'
-        post 'setup_harvest_yield'
-        post 'setup_waste'
-      end
+      # resource :plant_setup, only: [] do
+      #   post 'setup_clones'
+      #   post 'setup_vegs'
+      #   post 'setup_harvest_yield'
+      #   post 'setup_waste'
+      # end
     end
   end
 end

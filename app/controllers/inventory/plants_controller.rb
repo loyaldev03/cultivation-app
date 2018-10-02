@@ -1,5 +1,6 @@
-# TODO: To be dropeed
 class Inventory::PlantsController < ApplicationController
+  before_action :set_selectable_values, except: [:index]
+
   def index
     # Rails.logger.debug "\t\t\t >>> request.cookies.count: #{request.cookies.count}"
     @strain_types = Constants::STRAIN_TYPES
@@ -7,17 +8,10 @@ class Inventory::PlantsController < ApplicationController
   end
 
   def mothers
-    @facility_strains = Inventory::FacilityStrain.includes(:facility).all.map do |x|
-      {
-        value: x.id.to_s,
-        label: "#{x.strain_name} - (#{x.facility.name})",
-        strain_name: x.strain_name,
-        facility_id: x.facility_id.to_s,
-      }
-    end
     @locations = QueryAllValidFacilityLocations.call.result
+  end
 
-    Rails.logger.debug "\t\t>>>>>> @locations: #{@locations.count}"
+  def cultivation_batches
   end
 
   def clones
@@ -39,5 +33,18 @@ class Inventory::PlantsController < ApplicationController
   end
 
   def destroy_plant
+  end
+
+  private
+
+  def set_selectable_values
+    @facility_strains = Inventory::FacilityStrain.includes(:facility).all.map do |x|
+      {
+        value: x.id.to_s,
+        label: "#{x.strain_name} - (#{x.facility.name})",
+        strain_name: x.strain_name,
+        facility_id: x.facility_id.to_s,
+      }
+    end
   end
 end

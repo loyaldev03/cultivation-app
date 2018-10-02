@@ -23,14 +23,14 @@ const build_roles_options = roles =>
     label: `${f.name}`
   }))
 
-const FacilityTag = ({id}) => (
-  <span className="f7 bg-blue pv1 ph2 white ma1">
+const FacilityTag = ({ id }) => (
+  <span className="f7 bg-blue pv1 ph2 white ma1 dib">
     {store.getFacilityCode(id)}
   </span>
 )
 
-const RoleTag = ({id}) => (
-  <span className="f7 bg-blue pv1 ph2 white ma1">
+const RoleTag = ({ id }) => (
+  <span className="f7 bg-blue pv1 ph2 white ma1 dib">
     {store.getRoleName(id)}
   </span>
 )
@@ -200,10 +200,11 @@ class TeamSetttingApp extends React.Component {
                     {users.map(x => (
                       <tr
                         key={x.id}
-                        className={
-                          classNames("striped--light-gray dim pointer",
-                          {"grey": !x.is_active})}
-                          onClick={this.onClickSelectionEdit(x.id)}
+                        className={classNames(
+                          'striped--light-gray dim pointer',
+                          { grey: !x.is_active }
+                        )}
+                        onClick={this.onClickSelectionEdit(x.id)}
                       >
                         <td className="pa2 tc">
                           <LetterAvatar
@@ -215,19 +216,22 @@ class TeamSetttingApp extends React.Component {
                         </td>
                         <td className="tl pv2 ph3">
                           {x.first_name} {x.last_name}
-                          <span className={
-                            classNames("db f7", {"green": x.is_active})
-                            }
+                          <span
+                            className={classNames('db f7', {
+                              green: x.is_active
+                            })}
                           >
                             {x.is_active ? 'Active' : 'Deactivated'}
                           </span>
                         </td>
                         <td className="tl pv2 ph3">{x.email}</td>
                         <td className="tl pv2 ph3">
-                          {x.facilities.map(f => <FacilityTag key={f} id={f} />)}
+                          {x.facilities.map(f => (
+                            <FacilityTag key={f} id={f} />
+                          ))}
                         </td>
                         <td className="tl pv2 ph3">
-                          { x.roles.map(r => <RoleTag key={r} id={r} />)}
+                          {x.roles.map(r => <RoleTag key={r} id={r} />)}
                         </td>
                       </tr>
                     ))}

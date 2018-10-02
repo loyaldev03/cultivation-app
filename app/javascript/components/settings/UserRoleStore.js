@@ -59,7 +59,9 @@ class UserRoleStore {
 
   getFacilityCode(facilityId) {
     if (facilityId) {
-      const facility = this.userRoles.attributes.facilities.find(x => x.id === facilityId)
+      const facility = this.userRoles.attributes.facilities.find(
+        x => x.id === facilityId
+      )
       return facility.name
     }
   }

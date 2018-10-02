@@ -26,6 +26,18 @@ class UserRoleStore {
     }
   }
 
+  @action
+  setUser(user) {
+    const found = this.userRoles.attributes.users.find(x => x.id === user.id)
+    if (found) {
+      this.userRoles.attributes.users = this.userRoles.attributes.users.map(
+        u => (u.id === user.id ? user : u)
+      )
+    } else {
+      this.userRoles.attributes.users.push(user)
+    }
+  }
+
   getUser(userId) {
     if (
       userId &&
@@ -36,6 +48,20 @@ class UserRoleStore {
       return toJS(user)
     }
     return null
+  }
+
+  getRoleName(roleId) {
+    if (roleId) {
+      const role = this.userRoles.attributes.roles.find(x => x.id === roleId)
+      return role.name
+    }
+  }
+
+  getFacilityCode(facilityId) {
+    if (facilityId) {
+      const facility = this.userRoles.attributes.facilities.find(x => x.id === facilityId)
+      return facility.name
+    }
   }
 }
 

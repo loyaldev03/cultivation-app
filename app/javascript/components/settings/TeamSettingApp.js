@@ -8,6 +8,8 @@ import { observer } from 'mobx-react'
 import { groupBy } from '../utils/ArrayHelper'
 import LetterAvatar from '../utils/LetterAvatar'
 import UserDetailsEditor from './UserDetailsEditor'
+import { toast } from '../utils/toast'
+import classNames from 'classnames'
 
 const build_facilities_options = facilities =>
   facilities.map(f => ({
@@ -20,6 +22,18 @@ const build_roles_options = roles =>
     value: f.id,
     label: `${f.name}`
   }))
+
+const FacilityTag = ({id}) => (
+  <span className="f7 bg-blue pv1 ph2 white ma1">
+    {store.getFacilityCode(id)}
+  </span>
+)
+
+const RoleTag = ({id}) => (
+  <span className="f7 bg-blue pv1 ph2 white ma1">
+    {store.getRoleName(id)}
+  </span>
+)
 
 @observer
 class TeamSetttingApp extends React.Component {
@@ -76,7 +90,7 @@ class TeamSetttingApp extends React.Component {
     // TODO: Move isSaving to mobx
     this.setState({ isSaving: true })
     try {
-      await await fetch('/api/v1/user_roles/update_user', {
+      const response = await (await fetch('/api/v1/user_roles/update_user', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -84,7 +98,13 @@ class TeamSetttingApp extends React.Component {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(userDetails)
-      })
+      })).json()
+      if (response && response.data) {
+        store.setUser({ id: response.data.id, ...response.data.attributes })
+        toast('User updated.', 'success')
+      } else {
+        console.log(response)
+      }
     } catch (error) {
       console.error('Error while saving user', error)
     }
@@ -95,16 +115,17 @@ class TeamSetttingApp extends React.Component {
     if (store.isLoading || !store.userRoles) {
       return <span className="grey">Loading...</span>
     }
-    const { facilities, users, roles, groups } = store.userRoles.attributes
+    const { facilities, users, roles } = store.userRoles.attributes
     const { editingUser, isSaving } = this.state
     const facilitiesOptions = build_facilities_options(facilities)
     const rolesOptions = build_roles_options(roles)
 
     return (
       <React.Fragment>
+        <div id="toast" className="toast" />
         <div className="pa4">
           <div className="bg-white box--shadow pa4 min-h-600">
-            <div className="fl w-70-l w-100 width-100">
+            <div className="fl w-70-l w-100toast('Please select plants & locations to continue.', 'warning') width-100">
               <h5 className="tl pa0 ma0 h5--font dark-grey ttc">
                 Team Settings
               </h5>
@@ -119,6 +140,7 @@ class TeamSetttingApp extends React.Component {
                 Roles &amp; Permissions
               </label>
               <div className="mt0 ba b--light-grey pa3">
+                {/*
                 <div
                   style={{
                     display: 'grid',
@@ -147,8 +169,9 @@ class TeamSetttingApp extends React.Component {
                     />
                   </div>
                 </div>
+                */}
 
-                <div className="pt4 pb2 db tr">
+                <div className="pb2 db tr">
                   <a
                     href="#0"
                     className="dib pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
@@ -160,12 +183,9 @@ class TeamSetttingApp extends React.Component {
                 <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100">
                   <tbody>
                     <tr className="striped--light-gray">
-                      <th className="pv2 ph3 subtitle-2 hark-grey tl ttu" />
+                      <th />
                       <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
-                        First Name
-                      </th>
-                      <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
-                        Last name
+                        Name
                       </th>
                       <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
                         Email
@@ -180,10 +200,12 @@ class TeamSetttingApp extends React.Component {
                     {users.map(x => (
                       <tr
                         key={x.id}
-                        className="striped--light-gray dim pointer"
-                        onClick={this.onClickSelectionEdit(x.id)}
+                        className={
+                          classNames("striped--light-gray dim pointer",
+                          {"grey": !x.is_active})}
+                          onClick={this.onClickSelectionEdit(x.id)}
                       >
-                        <td className="pv2 ph3">
+                        <td className="pa2 tc">
                           <LetterAvatar
                             firstName={x.first_name}
                             lastName={x.last_name}
@@ -191,11 +213,22 @@ class TeamSetttingApp extends React.Component {
                             radius={18}
                           />
                         </td>
-                        <td className="tl pv2 ph3">{x.first_name}</td>
-                        <td className="tl pv2 ph3">{x.last_name}</td>
+                        <td className="tl pv2 ph3">
+                          {x.first_name} {x.last_name}
+                          <span className={
+                            classNames("db f7", {"green": x.is_active})
+                            }
+                          >
+                            {x.is_active ? 'Active' : 'Deactivated'}
+                          </span>
+                        </td>
                         <td className="tl pv2 ph3">{x.email}</td>
-                        <td className="tl pv2 ph3">{x.roles}</td>
-                        <td className="tl pv2 ph3">{x.id}</td>
+                        <td className="tl pv2 ph3">
+                          {x.facilities.map(f => <FacilityTag key={f} id={f} />)}
+                        </td>
+                        <td className="tl pv2 ph3">
+                          { x.roles.map(r => <RoleTag key={r} id={r} />)}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -214,6 +247,7 @@ class TeamSetttingApp extends React.Component {
               facilitiesOptions={facilitiesOptions}
               rolesOptions={rolesOptions}
               isSaving={isSaving}
+              getRole={store.getRole}
             />
           </div>
         </div>

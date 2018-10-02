@@ -53,7 +53,7 @@ class UserRoleStore {
   getRoleName(roleId) {
     if (roleId) {
       const role = this.userRoles.attributes.roles.find(x => x.id === roleId)
-      return role.name
+      return role ? role.name : "Invalid Role"
     }
   }
 
@@ -62,7 +62,7 @@ class UserRoleStore {
       const facility = this.userRoles.attributes.facilities.find(
         x => x.id === facilityId
       )
-      return facility.name
+      return facility ? facility.name : "Invalid Facility"
     }
   }
 }

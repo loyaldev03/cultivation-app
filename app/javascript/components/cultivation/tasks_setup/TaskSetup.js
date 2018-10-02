@@ -5,11 +5,14 @@ import { observable } from 'mobx'
 import { observer, Provider } from 'mobx-react'
 
 import loadTasks from './actions/loadTask'
+import loadUsers from './actions/loadUsers'
+
 import TaskList from './components/TaskList'
 
 class TaskSetup extends React.Component {
   componentDidMount() {
     loadTasks.loadbatch(this.props.batch_id)
+    loadUsers()
   }
 
   render() {

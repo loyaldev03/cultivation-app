@@ -46,6 +46,10 @@ class User
   # field :locked_at,       type: Time
   #
 
+  def cultivation_tasks
+    Cultivation::Task.in(user_ids: id)
+  end
+
   def display_name
     "#{first_name} #{last_name}"
   end

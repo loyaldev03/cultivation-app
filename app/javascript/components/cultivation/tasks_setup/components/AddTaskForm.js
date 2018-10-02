@@ -1,6 +1,8 @@
 import React from 'react'
 import { render } from 'react-dom'
 import TaskStore from '../stores/TaskStore'
+import UserStore from '../stores/UserStore'
+
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import Select from 'react-select'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
@@ -88,6 +90,7 @@ class AddTaskForm extends React.Component {
   }
 
   render() {
+    let users = UserStore.users
     return (
       <React.Fragment>
         <div className="ph4 mt3 mb3 flex">
@@ -178,12 +181,7 @@ class AddTaskForm extends React.Component {
             <Select
               isMulti
               name="colors"
-              options={[
-                { value: 'Fathi', label: 'Fathi' },
-                { value: 'Andy', label: 'Andy' },
-                { value: 'Karg', label: 'Karg' },
-                { value: 'Allison', label: 'Allison' }
-              ]}
+              options={users}
               className="basic-multi-select"
               classNamePrefix="select"
               fieldname="assigned_employee"

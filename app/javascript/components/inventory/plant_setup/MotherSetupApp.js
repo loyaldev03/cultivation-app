@@ -136,14 +136,13 @@ class PlantSetupApp extends React.Component {
     )
   }
 
-  
   render() {
     return (
       <React.Fragment>
         {this.renderPlantList()}
-        <MotherEditor 
+        <MotherEditor
           isOpened={false}
-          locations={this.props.locations} 
+          locations={this.props.locations}
           facilityStrains={this.props.facility_strains}
         />
       </React.Fragment>

@@ -3,7 +3,7 @@ import store from '../store/CultivationBatchStore'
 export default function loadCultivationBatches() {
   store.isLoading = true
   let apiUrl = '/api/v1/batches'
-  
+
   fetch(apiUrl, {
     method: 'GET',
     credentials: 'include',

@@ -5,7 +5,6 @@ import store from './store/CultivationBatchStore'
 import loadCultivationBatch from './actions/loadCultivationBatch'
 import BatchEditor from './components/BatchEditor'
 
-
 const columns = [
   {
     Header: '',
@@ -49,7 +48,11 @@ const columns = [
     headerStyle: { textAlign: 'left' },
     Cell: props => {
       if (props.value) {
-        return (<span>{props.value.charAt(0).toUpperCase() + props.value.substr(1)}</span>)
+        return (
+          <span>
+            {props.value.charAt(0).toUpperCase() + props.value.substr(1)}
+          </span>
+        )
       }
       return null
     }
@@ -99,7 +102,9 @@ class SimpleCultivationBatchSetupApp extends React.Component {
       <React.Fragment>
         <div className="w-80 bg-white pa3">
           <div className="flex mb4 mt2">
-            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Cultivation Batches</h1>
+            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
+              Cultivation Batches
+            </h1>
             <div style={{ justifySelf: 'end' }}>
               <button
                 className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
@@ -126,15 +131,15 @@ class SimpleCultivationBatchSetupApp extends React.Component {
     )
   }
 
-  
   render() {
     return (
       <React.Fragment>
         {this.renderBatchList()}
-        <BatchEditor 
+        <BatchEditor
           facility_strains={this.props.facility_strains}
           plants={this.props.plants}
-          grow_methods={this.props.grow_methods}/>
+          grow_methods={this.props.grow_methods}
+        />
       </React.Fragment>
     )
   }

@@ -15,8 +15,7 @@ class CultivationBatchStore {
   }
 
   @action
-  update(batch) {
-  }
+  update(batch) {}
 
   @computed
   get bindableBatches() {

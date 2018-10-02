@@ -12,6 +12,7 @@ class UserDetailsEditor extends React.PureComponent {
         lastName: props.user.last_name || '',
         email: props.user.email || '',
         title: props.user.title || '',
+        roles: props.user.roles || [],
         isActive: props.user.is_active || false
       }
     } else {
@@ -21,6 +22,7 @@ class UserDetailsEditor extends React.PureComponent {
         lastName: '',
         email: '',
         title: '',
+        roles: [],
         isActive: false
       }
     }
@@ -30,9 +32,9 @@ class UserDetailsEditor extends React.PureComponent {
 
   onChangeToggle = field => e => this.setState({ [field]: e.target.checked })
 
-  onSelectChange = (field, option) => {
-    if (option) {
-      this.setState({ [field]: option.value })
+  onSelectChange = (field, options) => {
+    if (options && options.length) {
+      this.setState({ [field]: options.map(o => o.value) })
     } else {
       this.setState({ [field]: '' })
     }
@@ -41,10 +43,13 @@ class UserDetailsEditor extends React.PureComponent {
   onSubmit = e => {
     e.preventDefault()
     const userDetails = {
-      user_update: {
-        user_id: this.state.userId,
+      user: {
+        id: this.state.userId,
         first_name: this.state.firstName,
-        last_name: this.state.lastName
+        last_name: this.state.lastName,
+        title: this.state.title,
+        roles: this.state.roles,
+        is_active: this.state.isActive || false
       }
     }
     this.props.onSave(userDetails)
@@ -171,7 +176,7 @@ class UserDetailsEditor extends React.PureComponent {
                 type="checkbox"
                 className="toggle toggle-default"
                 onChange={this.onChangeToggle('isActive')}
-                checked={this.isActive}
+                checked={isActive}
               />
               <label className="toggle-button mt1 fr" htmlFor="is_active" />
               <p className="gray f6 db mv1">

@@ -36,6 +36,7 @@ module Common
           id: user.id.to_s,
           first_name: user.first_name,
           last_name: user.last_name,
+          is_active: user.is_active,
           title: user.title,
           email: user.email,
           roles: user.roles.map(&:to_s),

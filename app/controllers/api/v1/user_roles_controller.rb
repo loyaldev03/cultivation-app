@@ -12,7 +12,12 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
   end
 
   def update_user
-    # Rails.logger.debug ">>> #{user_params}"
+    Rails.logger.debug "\033[31m #{user_params} \033[0m"
+    user = User.find(user_params[:id])
+    user.first_name = user_params[:first_name]
+    user.last_name = user_params[:last_name]
+    user.title = user_params[:title]
+    user.is_active = user_params[:is_active]
     # # TODO: update
     # # - first name, last name
     # # - roles, facilities
@@ -35,6 +40,10 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       :id,
       :first_name,
       :last_name,
+      :title,
+      :is_active,
+      facilities: [],
+      roles: [],
     )
   end
 end

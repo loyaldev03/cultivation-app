@@ -1,5 +1,6 @@
 class User
   include Mongoid::Document
+  include ImageUploader::Attachment.new(:photo)
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -12,6 +13,7 @@ class User
   field :timezone, type: String, default: 'UTC'
   field :default_facility_id, type: BSON::ObjectId
   field :is_active, type: Boolean, default: -> { true }
+  field :photo_data, type: String
 
   ## Database authenticatable
   field :email, type: String, default: ''

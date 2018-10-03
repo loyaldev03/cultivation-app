@@ -99,7 +99,9 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :users, only: [:index]
+      resources :users, only: [:index] do
+        get 'roles', on: :collection
+      end
 
       resource :plant_setup, only: [] do
         

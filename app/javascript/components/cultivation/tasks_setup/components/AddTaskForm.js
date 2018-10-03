@@ -94,7 +94,7 @@ class AddTaskForm extends React.Component {
     return (
       <React.Fragment>
         <div className="ph4 mt3 mb3 flex">
-          <div className="w-60">
+          <div className="w-100">
             <TextInput
               label={'Task'}
               value={this.state.name}
@@ -102,17 +102,6 @@ class AddTaskForm extends React.Component {
               fieldname="name"
               errors={this.state.errors}
               errorField="name"
-            />
-          </div>
-          <div className="w-40 pl3">
-            <TextInput
-              label={'Category'}
-              value={this.state.task_category}
-              onChange={this.handleChangeTask}
-              fieldname="task_category"
-              errors={this.state.errors}
-              errorField="task_category"
-              readOnly={true}
             />
           </div>
         </div>
@@ -124,9 +113,9 @@ class AddTaskForm extends React.Component {
               value={this.state.instruction}
               onChange={this.handleChangeTask}
               fieldname="instruction"
-              rows="5"
+              rows="2"
               className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-              placeholder="Plant0001, Tray0001&#10;Plant0002, Tray0001&#10;Plant0003, Tray0002&#10;Plant0004, Tray0002"
+              placeholder=""
             />
             <FieldError errors={this.state.errors} fieldname="instruction" />
           </div>
@@ -176,7 +165,7 @@ class AddTaskForm extends React.Component {
         </div>
 
         <div className="ph4 mt3 mb3 flex">
-          <div className="w-60">
+          <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Assigned Employees</label>
             <Select
               isMulti
@@ -193,7 +182,7 @@ class AddTaskForm extends React.Component {
         </div>
 
         <div className="ph4 mt3 mb3 flex">
-          <div className="w-60">
+          <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Material Suggested</label>
             <Select
               isMulti

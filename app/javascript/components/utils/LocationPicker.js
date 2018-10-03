@@ -39,10 +39,9 @@ class LocationPicker extends React.Component {
       hasNewState = true
     }
 
-    if (facility_id)
-      if (hasNewState) {
-        return newState
-      }
+    if (hasNewState) {
+      return newState
+    }
 
     return null
   }

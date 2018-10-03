@@ -72,7 +72,7 @@ class StrainList extends React.Component {
         data={strainStore.strains.slice()}
         showPagination={false}
         pageSize={30}
-        minRows={10}
+        minRows={5}
         filterable
         className="f6"
         showPagination={strainStore.strains.length > 30}

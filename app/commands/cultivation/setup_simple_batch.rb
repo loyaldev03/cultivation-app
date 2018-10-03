@@ -54,6 +54,8 @@ module Cultivation
 
       facility_strain = Inventory::FacilityStrain.find facility_strain_id
       estimated_harvest_date = start_date + (clone_duration + veg_duration + veg1_duration + veg2_duration + flower_duration).days
+
+      # Running no. By facility
       batch_no = NextFacilityCode.call(:batch, Cultivation::Batch.last.batch_no).result
 
       batch = Cultivation::Batch.create!(

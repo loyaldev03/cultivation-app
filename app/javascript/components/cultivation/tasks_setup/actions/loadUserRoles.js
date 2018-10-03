@@ -13,11 +13,6 @@ export default function loadUsers() {
     })
 }
 
-
-
-
-
-
 const build_roles_options = roles =>
   roles.map(f => ({
     value: f.id,

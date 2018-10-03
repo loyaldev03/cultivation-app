@@ -162,9 +162,8 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         </div>
-        <div class="mt3 fl w-100 pt3 bt b--light-gray">
-        </div>
-        
+        <div class="mt3 fl w-100 pt3 bt b--light-gray" />
+
         <div className="ph4 mt3 mb3 flex">
           <div className="w-30">
             <label className="f6 fw6 db mb1 gray ttc">Roles</label>

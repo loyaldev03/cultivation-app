@@ -23,11 +23,11 @@
 
   <% if selected == 'clone' %>
     <div class="<%= selectedStyle %>">
-      Mother Plants
+      Clones / Plantings
     </div>
   <% else %>
     <%= link_to 'Clones/ Plantings',
-      '#', 
+      clones_inventory_plants_path, 
       class: tabStyle %>
   <% end %>
 
@@ -37,7 +37,7 @@
     </div>
   <% else %>
     <%= link_to 'Veg',
-      '#', 
+      vegs_inventory_plants_path, 
       class: tabStyle %>
   <% end %>
 
@@ -47,7 +47,7 @@
     </div>
   <% else %>
     <%= link_to 'Flower',
-      '#', 
+      flowers_inventory_plants_path, 
       class: tabStyle %>
   <% end %>
 
@@ -57,7 +57,7 @@
     </div>
   <% else %>
     <%= link_to 'Harvest Batches',
-      '#', 
+      harvest_batches_inventory_plants_path, 
       class: tabStyle %>
   <% end %>
 </div>

@@ -1,5 +1,6 @@
 class Inventory::PlantsController < ApplicationController
-  before_action :set_selectable_values, except: [:index]
+  before_action :load_facility_strains, only: [:mothers, :cultivation_batches]
+  before_action :load_batches, only: [:clones, :vegs, :flowers, :harvest_batches, :manicure]
 
   def index
     # Rails.logger.debug "\t\t\t >>> request.cookies.count: #{request.cookies.count}"
@@ -29,15 +30,19 @@ class Inventory::PlantsController < ApplicationController
   def manicure(batches)
   end
 
-  def waste_logs
-  end
+  # def waste_logs
+  # end
 
-  def destroy_plant
-  end
+  # def destroy_plant
+  # end
 
   private
 
-  def set_selectable_values
+  def load_batches
+    @cultivation_batches = Cultivation::Batch.includes(:facility_strain).all
+  end
+
+  def load_facility_strains
     @facility_strains = Inventory::FacilityStrain.includes(:facility).all.map do |x|
       {
         value: x.id.to_s,

@@ -20,6 +20,7 @@ export default function loadCultivationBatches() {
       })
     })
     .then(({ status, data }) => {
+      // console.log(data)
       if (status >= 400) {
         console.log('Something wrong when calling /api/v1/batches/all')
       } else {

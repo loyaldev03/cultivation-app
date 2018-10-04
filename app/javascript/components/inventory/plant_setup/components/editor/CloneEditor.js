@@ -5,6 +5,7 @@ import {
   FieldError,
   CalendarPicker
 } from '../../../../utils/FormHelpers'
+import Select from 'react-select'
 import LocationPicker from '../../../../utils/LocationPicker'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import StrainPicker from '../shared/StrainPicker'
@@ -43,7 +44,7 @@ class CloneEditor extends React.Component {
       errors: {}
     }
 
-    this.locations = props.locations
+    this.locations = []
 
     // Converting to callback ref because purchase info editor is hidding and showing.
     // This will cause the standard way to set ref to be broken / undefined.
@@ -271,34 +272,7 @@ class CloneEditor extends React.Component {
     )
   }
 
-  renderPlantIdGenerator() {
-    if (!this.state.isShowPlantIdGenerator) return null
-    return (
-      <React.Fragment>
-        <div className="ph4 mb2 mt0 flex">
-          <div className="w-50">
-            <NumericInput
-              label={'Number of plants'}
-              value={this.state.plant_qty}
-              onChange={this.onChangeGeneratorPlantCount}
-            />
-            <FieldError errors={this.state.errors} field="plant_qty" />
-          </div>
-          <div className="w-50 pl3">
-            <div className="flex justify-start items-center h-100 mt2">
-              <a
-                href="#"
-                onClick={this.onToggleGeneratePlantId}
-                className="fw4 f7 link dark-blue"
-              >
-                Cancel
-              </a>
-            </div>
-          </div>
-        </div>
-      </React.Fragment>
-    )
-  }
+  
 
   renderPlantIdTextArea() {
     if (this.state.isShowPlantIdGenerator) return null
@@ -310,15 +284,6 @@ class CloneEditor extends React.Component {
             <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
               Each clone has its own <strong>Plant ID</strong>. If you already
               have them, paste them below.
-            </p>
-            <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
-              <a
-                href="#"
-                onClick={this.onToggleGeneratePlantId}
-                className="fw4 f7 link dark-blue"
-              >
-                If you want us to generate them, click here.
-              </a>
             </p>
             <textarea
               ref={this.setCloneIdTextArea}
@@ -336,16 +301,32 @@ class CloneEditor extends React.Component {
   }
 
   render() {
+    const widthStyle = this.props.isOpened
+      ? { width: '500px' }
+      : { width: '0px' }
+
     return (
-      <React.Fragment>
-        <StrainPicker
-          ref={this.strainPicker}
-          onStrainSelected={this.onStrainSelected}
-        />
-        <hr className="mt3 m b--light-gray w-100" />
+      <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
+        <div className="rc-slide-panel__body flex flex-column">
+          <div
+            className="ph4 pv2 bb b--light-gray flex items-center"
+            style={{ height: '51px' }}
+          >
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Clone</h1>
+            <span
+              className="rc-slide-panel__close-button dim"
+              onClick={() => {
+                window.editorSidebar.close()
+              }}
+            >
+              <i className="material-icons mid-gray md-18">close</i>
+            </span>
+          </div>
+
         <div className="ph4 mt3 flex">
-          <div className="w-50">
-            <TextInput
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc">Cultivation Batch</label>
+            <Select
               label={'Cultivation Batch ID'}
               value={this.state.cultivation_batch_id}
               onChange={this.onCultivationBatchIdChanged}
@@ -355,7 +336,9 @@ class CloneEditor extends React.Component {
               field="cultivation_batch_id"
             />
           </div>
-          <div className="w-50 pl3">
+        </div>
+        <div className="ph4 mt3 flex">
+          <div className="w-50">
             <MotherPicker
               ref={this.motherPicker}
               strain={this.state.strain}
@@ -364,24 +347,12 @@ class CloneEditor extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mt3 flex flex-column">
-          <div className="w-100">
-            <LocationPicker
-              filter_facility_id=""
-              mode="clone"
-              locations={this.locations}
-              location_id={this.state.location_id}
-              onChange={this.onTraySelected}
-            />
-            <FieldError errors={this.state.errors} field="location_id" />
-          </div>
-        </div>
+        
 
         <div className="ph4 mt3 mb2">
           <span className="f6 fw6 gray">Plant IDs</span>
         </div>
         {this.renderPlantIdTextArea()}
-        {this.renderPlantIdGenerator()}
 
         <div className="ph4 mt3 flex">
           <div className="w-50">
@@ -391,15 +362,6 @@ class CloneEditor extends React.Component {
               onChange={this.onPlantedOnChanged}
             />
             <FieldError errors={this.state.errors} field="planted_on" />
-          </div>
-          <div className="w-50 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">
-              Expected Harvest Date
-            </label>
-            <CalendarPicker
-              value={this.state.expected_harvested_on}
-              onChange={this.onExpectedHarvestDateChanged}
-            />
           </div>
         </div>
 
@@ -438,7 +400,9 @@ class CloneEditor extends React.Component {
             Save
           </a>
         </div>
-      </React.Fragment>
+      
+      </div>
+      </div>
     )
   }
 }

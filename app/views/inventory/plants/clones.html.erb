@@ -1,0 +1,18 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Home",root_path], 
+      ['Inventory Setup', inventory_setup_path], 
+      'Active Plant Inventory',
+      'Clone / Plantings' 
+  %>
+<% end %>
+
+
+<div class="pa4">
+  <%= render partial: 'setupIntro' %>
+  <%= render partial: 'setupNavigation', locals: { selected: 'clone' } %>
+  <div class="flex flex-column">
+    <%= react_component('inventory/plant_setup/CloneSetupApp', {
+        cultivation_batches: @cultivation_batches
+      }) %>
+  </div>
+</div>

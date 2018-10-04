@@ -31,6 +31,18 @@ module Constants
     {code: :veg2, name: 'Veg 2'},
   ].freeze
 
+  RP_CLONE = 'clone'
+  RP_CURE = 'cure'
+  RP_DRY = 'dry'
+  RP_FLOWER = 'flower'
+  RP_MOTHER = 'mother'
+  RP_STORAGE = 'storage'
+  RP_VAULT = 'vault'
+  RP_TRIM = 'trim'
+  RP_VEG = 'veg'
+  RP_VEG1 = 'veg1'
+  RP_VEG2 = 'veg2'
+
   SECTION_PURPOSE = [
     {code: :cure, name: 'Cure'},
     {code: :drying_plants, name: 'Drying Plants'},

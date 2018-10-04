@@ -1,20 +1,19 @@
 import React from 'react'
-import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
-import store from './store/CultivationBatchStore'
-import loadCultivationBatch from './actions/loadCultivationBatch'
-import BatchEditor from './components/BatchEditor'
+import CloneEditor from './components/editor/CloneEditor'
+import plantStore from './store/PlantStore'
+import loadPlants from './actions/loadPlants'
 
 const columns = [
   {
     Header: '',
-    accessor: 'attributes.is_active',
+    accessor: 'attributes.status',
     filterable: false,
     width: 30,
     Cell: props => {
       let color = 'red'
-      if (props.value === true) {
+      if (props.value === 'available') {
         color = '#00cc77'
       }
       return (
@@ -33,34 +32,42 @@ const columns = [
     }
   },
   {
-    Header: 'Batch No',
-    accessor: 'attributes.batch_no',
-    headerStyle: { textAlign: 'left' },
-    width: 120
-  },
-  {
-    Header: 'Batch name',
-    accessor: 'attributes.name',
+    Header: 'Plant ID',
+    accessor: 'attributes.plant_id',
     headerStyle: { textAlign: 'left' }
   },
   {
-    Header: 'Batch source',
-    accessor: 'attributes.batch_source',
+    Header: 'Batch',
+    accessor: 'attributes.current_growth_stage',
     headerStyle: { textAlign: 'left' },
-    Cell: props => {
-      if (props.value) {
-        return (
-          <span>
-            {props.value.charAt(0).toUpperCase() + props.value.substr(1)}
-          </span>
-        )
-      }
-      return null
-    }
+    Cell: props => (
+      <span>{props.value.charAt(0).toUpperCase() + props.value.substr(1)}</span>
+    )
   },
   {
-    Header: 'Facility',
-    accessor: 'attributes.facility',
+    Header: 'Strain',
+    accessor: 'attributes.strain_name',
+    headerStyle: { textAlign: 'left' }
+  },
+  {
+    Header: 'Clone start date',
+    accessor: 'attributes.planting_date',
+    headerStyle: { textAlign: 'left' },
+    Cell: props => {
+      const d = new Date(props.value)
+      if (props.value || props.value.length > 0) {
+        return (
+          <span>{`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`}</span>
+        )
+      } else {
+        return ''
+      }
+    }
+  },
+
+  {
+    Header: 'Location',
+    accessor: 'attributes.location_name',
     headerStyle: { textAlign: 'left' }
   },
   {
@@ -68,52 +75,48 @@ const columns = [
     className: 'tc',
     filterable: false,
     maxWidth: 45,
-    Cell: record => (
-      <a href="#" onClick={event => { 
-        const data = toJS(record.original)
-        openBatch(event, data)
-      }}>
+    Cell: x => (
+      <a href="#" onClick={event => openStrain(event, x.index)}>
         <i className="material-icons gray">more_horiz</i>
       </a>
     )
   }
 ]
 
-function openBatch(event, data) {
-  window.editorSidebar.open({ width: '500px', data })
+function openStrain(event, index) {
+  // const id = plantStore.strains.slice()[index].id
+  window.editorSidebar.open({ width: '500px' })
   event.preventDefault()
 }
 
 @observer
-class SimpleCultivationBatchSetupApp extends React.Component {
+class CloneSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadCultivationBatch()
+    loadPlants('clone')
   }
 
   openSidebar() {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
-  onAddBatch = () => {
+  onAddPlant = () => {
     this.openSidebar()
   }
 
-  renderBatchList() {
+  renderPlantList() {
     return (
       <React.Fragment>
         <div className="w-80 bg-white pa3">
           <div className="flex mb4 mt2">
-            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
-              Cultivation Batches
-            </h1>
+            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Clones / Plantings</h1>
             <div style={{ justifySelf: 'end' }}>
               <button
-                className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
-                onClick={this.onAddBatch}
+                className="pv2 ph3 bg-orange white bn br2 ttc link dim f6 fw6 pointer"
+                onClick={this.openSidebar}
               >
-                Add batch
+                Add clone/ plantings
               </button>
             </div>
           </div>
@@ -121,13 +124,13 @@ class SimpleCultivationBatchSetupApp extends React.Component {
           <ReactTable
             columns={columns}
             pagination={{ position: 'top' }}
-            data={store.bindableBatches}
+            data={plantStore.motherPlants}
             showPagination={false}
             pageSize={30}
             minRows={5}
             filterable
             className="f6"
-            showPagination={store.bindableBatches.length > 30}
+            showPagination={plantStore.plants.length > 30}
           />
         </div>
       </React.Fragment>
@@ -137,15 +140,11 @@ class SimpleCultivationBatchSetupApp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {this.renderBatchList()}
-        <BatchEditor
-          facility_strains={this.props.facility_strains}
-          plants={this.props.plants}
-          grow_methods={this.props.grow_methods}
-        />
+        {this.renderPlantList()}
+        <CloneEditor />
       </React.Fragment>
     )
   }
 }
 
-export default SimpleCultivationBatchSetupApp
+export default CloneSetupApp

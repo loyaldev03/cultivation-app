@@ -47,7 +47,7 @@ class SidebarTaskEditor extends React.Component {
   }
 
   handleChange = (key, value) => {
-    this.setState({[key]: value})
+    this.setState({ [key]: value })
   }
 
   handleChangeTask = event => {

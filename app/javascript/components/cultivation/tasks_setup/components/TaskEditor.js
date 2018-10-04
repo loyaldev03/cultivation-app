@@ -132,7 +132,6 @@ export default class TaskEditor extends React.Component {
 
   render() {
     return (
-
       <div className="rc-slide-panel" data-role="sidebar">
         <style> {styles} </style>
         <div className="rc-slide-panel__body flex flex-column">
@@ -141,15 +140,9 @@ export default class TaskEditor extends React.Component {
             style={{ height: '51px' }}
           >
             <div className="mt3 mb3 flex">
-              <div className="w-40 ph4 active">
-                General
-              </div>
-              <div className="w-40 pl3 ph4">
-                Resource
-              </div>
-              <div className="w-40 pl3 ph4">
-                Material
-              </div>
+              <div className="w-40 ph4 active">General</div>
+              <div className="w-40 pl3 ph4">Resource</div>
+              <div className="w-40 pl3 ph4">Material</div>
             </div>
             {this.renderCloseSidebar()}
           </div>

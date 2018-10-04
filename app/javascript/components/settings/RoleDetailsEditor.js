@@ -65,6 +65,12 @@ class RoleDetailsEditor extends React.PureComponent {
 
   onChangeInput = field => e => this.setState({ [field]: e.target.value })
 
+  onSubmit = e => {
+    e.preventDefault()
+    console.log("Submit clicked")
+    // TODO: Call props onSave
+  }
+
   render() {
     const { onClose, isSaving } = this.props
     const { name, desc } = this.state

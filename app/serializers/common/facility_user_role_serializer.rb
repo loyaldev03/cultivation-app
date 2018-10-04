@@ -30,6 +30,7 @@ module Common
           is_active: user.is_active,
           email: user.email,
           title: user.title,
+          photo_data: user.photo_data,
           photo_url: user.photo_url,
           roles: user.roles.map(&:to_s),
           facilities: user.facilities.map(&:to_s),

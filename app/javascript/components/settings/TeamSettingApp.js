@@ -122,7 +122,7 @@ class TeamSetttingApp extends React.Component {
         <div id="toast" className="toast" />
         <div className="pa4">
           <div className="bg-white box--shadow pa4 min-h-600">
-            <div className="fl w-70-l w-100toast('Please select plants & locations to continue.', 'warning') width-100">
+            <div className="fl w-80-l w-100-m">
               <h5 className="tl pa0 ma0 h5--font dark-grey ttc">
                 Team Settings
               </h5>

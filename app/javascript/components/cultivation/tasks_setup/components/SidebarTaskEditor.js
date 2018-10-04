@@ -16,6 +16,7 @@ class SidebarTaskEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      tabs: 'general',
       batch_id: this.props.batch_id,
       id: props.task.id,
       ...props.task.attributes,
@@ -43,6 +44,10 @@ class SidebarTaskEditor extends React.Component {
         estimated_hours: ''
       })
     }
+  }
+
+  handleChange = (key, value) => {
+    this.setState({[key]: value})
   }
 
   handleChangeTask = event => {

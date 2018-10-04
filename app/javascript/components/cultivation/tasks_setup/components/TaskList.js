@@ -551,7 +551,16 @@ class TaskList extends React.Component {
             {
               Header: 'Estimated Hours',
               accessor: 'attributes.estimated_hours',
+              maxWidth: '150'
+            },
+            {
+              Header: 'Resources',
+              accessor: 'attributes.resources',
               maxWidth: '200'
+            },
+            {
+              Header: 'Materials',
+              maxWidth: '100'
             },
             {
               Header: 'Parent',

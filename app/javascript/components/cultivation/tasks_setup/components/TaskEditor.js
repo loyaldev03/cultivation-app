@@ -7,6 +7,25 @@ import TaskStore from '../stores/TaskStore'
 import SidebarTaskEditor from './SidebarTaskEditor'
 import AddTaskForm from './AddTaskForm'
 
+const styles = `
+
+.active{
+    display: inline-block;
+  position: relative;
+}
+
+.active:after:after {
+  position: absolute;
+  content: '';
+  border-bottom: 1px solid red;
+  width: 70%;
+  transform: translateX(-50%);
+  bottom: -15px;
+  left: 50%;
+}
+
+`
+
 @observer
 export default class TaskEditor extends React.Component {
   constructor(props) {
@@ -113,15 +132,25 @@ export default class TaskEditor extends React.Component {
 
   render() {
     return (
+
       <div className="rc-slide-panel" data-role="sidebar">
+        <style> {styles} </style>
         <div className="rc-slide-panel__body flex flex-column">
           <div
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">
-              {this.renderTitle()}
-            </h1>
+            <div className="mt3 mb3 flex">
+              <div className="w-40 ph4 active">
+                General
+              </div>
+              <div className="w-40 pl3 ph4">
+                Resource
+              </div>
+              <div className="w-40 pl3 ph4">
+                Material
+              </div>
+            </div>
             {this.renderCloseSidebar()}
           </div>
 

@@ -137,37 +137,6 @@ class TeamSetttingApp extends React.Component {
                 Roles &amp; Permissions
               </label>
               <div className="mt0 ba b--light-grey pa3">
-                {/*
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gridColumnGap: '3em'
-                  }}
-                >
-                  <div>
-                    <label className="grey">Facility:</label>
-                    <Select
-                      options={facilitiesOptions}
-                      isClearable={true}
-                      onChange={opt =>
-                        this.onSelectChange('facilityFilter', opt)
-                      }
-                      className="mt1 w-100 f6"
-                    />
-                  </div>
-                  <div>
-                    <label className="grey">Roles:</label>
-                    <Select
-                      options={rolesOptions}
-                      isClearable={true}
-                      onChange={opt => this.onSelectChange('roleFilter', opt)}
-                      className="mt1 w-100 f6"
-                    />
-                  </div>
-                </div>
-                */}
-
                 <div className="pb2 db tr">
                   <a
                     href="#0"
@@ -204,12 +173,27 @@ class TeamSetttingApp extends React.Component {
                         onClick={this.onClickSelectionEdit(x.id)}
                       >
                         <td className="pa2 tc">
-                          <LetterAvatar
-                            firstName={x.first_name}
-                            lastName={x.last_name}
-                            size={36}
-                            radius={18}
-                          />
+                          {x.photo_url ? (
+                            <div
+                              style={{
+                                height: '36px',
+                                borderRadius: '36px',
+                                overflow: 'hidden'
+                              }}
+                            >
+                              <img
+                                src={x.photo_url}
+                                style={{ height: '100%' }}
+                              />
+                            </div>
+                          ) : (
+                            <LetterAvatar
+                              firstName={x.first_name}
+                              lastName={x.last_name}
+                              size={36}
+                              radius={18}
+                            />
+                          )}
                         </td>
                         <td className="tl pv2 ph3">
                           {x.first_name} {x.last_name}

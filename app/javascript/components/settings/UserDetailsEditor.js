@@ -30,6 +30,7 @@ class UserDetailsEditor extends React.PureComponent {
         lastName: props.user.last_name || '',
         email: props.user.email || '',
         title: props.user.title || '',
+        photoUrl: props.user.photo_url,
         isActive: props.user.is_active || false,
         facilities,
         roles,
@@ -42,6 +43,7 @@ class UserDetailsEditor extends React.PureComponent {
         lastName: '',
         email: '',
         title: '',
+        photoUrl: '',
         isActive: false,
         facilities: [],
         roles: [],
@@ -101,6 +103,7 @@ class UserDetailsEditor extends React.PureComponent {
       lastName,
       email,
       title,
+      photoUrl,
       isActive,
       facilities,
       roles,
@@ -130,6 +133,22 @@ class UserDetailsEditor extends React.PureComponent {
               <label className="f6 fw6 db mb0 dark-gray ttc">Basic Info</label>
             </div>
             <div className="mt2 fl w-100">
+              <div className="w-100 fl pr3">
+                <label className="f6 fw6 db mb1 gray ttc">Photo</label>
+                <div
+                  className={classNames('hide-child relative tc fl mb2 w4', {
+                    'bg-light-gray h4': !photoUrl
+                  })}
+                >
+                  <img src={photoUrl} className="fl" />
+                  <a
+                    href="#0"
+                    className="child pa1 absolute white f6 bg-black-50 left-0 bottom-0 link w-100"
+                  >
+                    Change
+                  </a>
+                </div>
+              </div>
               <div className="w-50 fl pr3">
                 <label className="f6 fw6 db mb1 gray ttc">First Name</label>
                 <input
@@ -243,28 +262,6 @@ class UserDetailsEditor extends React.PureComponent {
               <p className="gray f6 db mv1">
                 Only active user are allowed to access the system.
               </p>
-            </div>
-            <div className="mt2 fl w-100">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Recent Access Logs
-              </label>
-              <div className="grey pa1 ba bb b--light-grey f6">
-                <span className="mr1">Sign in count:</span>
-                <span>{user.sign_in_count}</span>
-                <br />
-                <span className="mr1">Current IP:</span>
-                <span>{user.current_sign_in_ip}</span>
-                <br />
-                <span className="mr1">Sign in at:</span>
-                <span>{user.current_sign_in_at}</span>
-                <br />
-                <span className="mr1">Last sign in at:</span>
-                <span>{user.last_sign_in_at}</span>
-                <br />
-                <span className="mr1">Last sign in IP:</span>
-                <span>{user.last_sign_in_ip}</span>
-                <br />
-              </div>
             </div>
           </div>
 

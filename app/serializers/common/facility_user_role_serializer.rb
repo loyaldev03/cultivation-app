@@ -16,6 +16,7 @@ module Common
         {
           id: role.id.to_s,
           name: role.name,
+          desc: role.desc,
         }
       end
     end

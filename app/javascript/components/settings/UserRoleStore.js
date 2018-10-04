@@ -52,6 +52,14 @@ class UserRoleStore {
     return null
   }
 
+  getRole(roleId) {
+    if (roleId) {
+      const role = this.userRoles.attributes.roles.find(x => x.id === roleId)
+      return toJS(role)
+    }
+    return null
+  }
+
   getRoleName(roleId) {
     if (roleId) {
       const role = this.userRoles.attributes.roles.find(x => x.id === roleId)

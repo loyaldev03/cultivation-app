@@ -16,6 +16,7 @@ module Common
         {
           id: role.id.to_s,
           name: role.name,
+          desc: role.desc,
         }
       end
     end
@@ -28,8 +29,10 @@ module Common
           first_name: user.first_name,
           last_name: user.last_name,
           is_active: user.is_active,
-          title: user.title,
           email: user.email,
+          title: user.title,
+          photo_data: user.photo_data,
+          photo_url: user.photo_url,
           roles: user.roles.map(&:to_s),
           facilities: user.facilities.map(&:to_s),
           default_facility_id: default_facility_id,

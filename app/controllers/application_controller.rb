@@ -30,7 +30,13 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     # Permit the `first_name` & `last_name` parameter along with the other sign up parameters.
     devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :timezone])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :timezone])
+    devise_parameter_sanitizer.permit(:account_update, keys: [
+                                                         :first_name,
+                                                         :last_name,
+                                                         :title,
+                                                         :photo,
+                                                         :timezone,
+                                                       ])
   end
 
   def layout_by_resource

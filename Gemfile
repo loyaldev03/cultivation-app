@@ -102,3 +102,7 @@ gem 'fast_jsonapi'
 # UoM gem
 gem 'measured'
 gem 'mongoid_orderable'
+
+# File attachment
+gem 'shrine', '~> 2.0'
+gem 'shrine-mongoid'

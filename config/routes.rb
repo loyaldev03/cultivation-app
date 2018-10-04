@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   # Mount a POST endpoint /images/upload endpoint which accepts file multipart upload
-  mount ImageUploader.upload_endpoint(:cache) => "/images/upload"
+  mount ImageUploader.upload_endpoint(:avatar) => "/images/upload"
 
   devise_for :users
 

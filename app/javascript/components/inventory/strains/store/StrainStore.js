@@ -2,7 +2,8 @@ import { observable, action, toJS } from 'mobx'
 
 class StrainStore {
   strains = observable([])
-  @observable isLoading = false
+  @observable
+  isLoading = false
 
   @action
   load(strains) {

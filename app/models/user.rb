@@ -1,6 +1,6 @@
 class User
   include Mongoid::Document
-  include ImageUploader::Attachment.new(:photo)
+  include ImageUploader::Attachment.new(:photo, store: :avatar)
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,

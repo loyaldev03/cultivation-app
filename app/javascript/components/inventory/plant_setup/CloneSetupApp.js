@@ -110,7 +110,9 @@ class CloneSetupApp extends React.Component {
       <React.Fragment>
         <div className="w-80 bg-white pa3">
           <div className="flex mb4 mt2">
-            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Clones / Plantings</h1>
+            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
+              Clones / Plantings
+            </h1>
             <div style={{ justifySelf: 'end' }}>
               <button
                 className="pv2 ph3 bg-orange white bn br2 ttc link dim f6 fw6 pointer"

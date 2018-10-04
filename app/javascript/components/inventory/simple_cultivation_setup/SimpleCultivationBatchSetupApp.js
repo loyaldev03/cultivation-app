@@ -69,10 +69,13 @@ const columns = [
     filterable: false,
     maxWidth: 45,
     Cell: record => (
-      <a href="#" onClick={event => { 
-        const data = toJS(record.original)
-        openBatch(event, data)
-      }}>
+      <a
+        href="#"
+        onClick={event => {
+          const data = toJS(record.original)
+          openBatch(event, data)
+        }}
+      >
         <i className="material-icons gray">more_horiz</i>
       </a>
     )

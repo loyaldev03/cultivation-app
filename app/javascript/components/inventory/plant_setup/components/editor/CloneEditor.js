@@ -272,8 +272,6 @@ class CloneEditor extends React.Component {
     )
   }
 
-  
-
   renderPlantIdTextArea() {
     if (this.state.isShowPlantIdGenerator) return null
 
@@ -323,85 +321,84 @@ class CloneEditor extends React.Component {
             </span>
           </div>
 
-        <div className="ph4 mt3 flex">
-          <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Cultivation Batch</label>
-            <Select
-              label={'Cultivation Batch ID'}
-              value={this.state.cultivation_batch_id}
-              onChange={this.onCultivationBatchIdChanged}
+          <div className="ph4 mt3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">
+                Cultivation Batch
+              </label>
+              <Select
+                label={'Cultivation Batch ID'}
+                value={this.state.cultivation_batch_id}
+                onChange={this.onCultivationBatchIdChanged}
+              />
+              <FieldError
+                errors={this.state.errors}
+                field="cultivation_batch_id"
+              />
+            </div>
+          </div>
+          <div className="ph4 mt3 flex">
+            <div className="w-50">
+              <MotherPicker
+                ref={this.motherPicker}
+                strain={this.state.strain}
+                key={this.state.strain}
+              />
+            </div>
+          </div>
+
+          <div className="ph4 mt3 mb2">
+            <span className="f6 fw6 gray">Plant IDs</span>
+          </div>
+          {this.renderPlantIdTextArea()}
+
+          <div className="ph4 mt3 flex">
+            <div className="w-50">
+              <label className="f6 fw6 db mb1 gray ttc">Planted On</label>
+              <CalendarPicker
+                value={this.state.planted_on}
+                onChange={this.onPlantedOnChanged}
+              />
+              <FieldError errors={this.state.errors} field="planted_on" />
+            </div>
+          </div>
+
+          <hr className="mt3 m b--light-gray w-100" />
+          <div className="ph4 mb3 mt3">
+            <span className="f6 fw6 dark-gray">Plant Origin?</span>
+          </div>
+          <div className="ph4 mb3 flex justify-between">
+            <label className="f6 fw6 db mb1 gray">Clones are purchased</label>
+            <input
+              className="toggle toggle-default"
+              type="checkbox"
+              value="1"
+              id="is_bought_input"
+              checked={this.state.isBought}
+              onChange={this.onIsBoughtChanged}
             />
-            <FieldError
-              errors={this.state.errors}
-              field="cultivation_batch_id"
-            />
+            <label className="toggle-button" htmlFor="is_bought_input" />
+          </div>
+
+          {this.renderProcurementInfo()}
+
+          <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
+            <a
+              className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
+              href="#"
+              onClick={this.props.onExitCurrentEditor}
+            >
+              Save for later
+            </a>
+            <a
+              className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
+              href="#"
+              onClick={this.onSave}
+            >
+              Save
+            </a>
           </div>
         </div>
-        <div className="ph4 mt3 flex">
-          <div className="w-50">
-            <MotherPicker
-              ref={this.motherPicker}
-              strain={this.state.strain}
-              key={this.state.strain}
-            />
-          </div>
-        </div>
-
-        
-
-        <div className="ph4 mt3 mb2">
-          <span className="f6 fw6 gray">Plant IDs</span>
-        </div>
-        {this.renderPlantIdTextArea()}
-
-        <div className="ph4 mt3 flex">
-          <div className="w-50">
-            <label className="f6 fw6 db mb1 gray ttc">Planted On</label>
-            <CalendarPicker
-              value={this.state.planted_on}
-              onChange={this.onPlantedOnChanged}
-            />
-            <FieldError errors={this.state.errors} field="planted_on" />
-          </div>
-        </div>
-
-        <hr className="mt3 m b--light-gray w-100" />
-        <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">Plant Origin?</span>
-        </div>
-        <div className="ph4 mb3 flex justify-between">
-          <label className="f6 fw6 db mb1 gray">Clones are purchased</label>
-          <input
-            className="toggle toggle-default"
-            type="checkbox"
-            value="1"
-            id="is_bought_input"
-            checked={this.state.isBought}
-            onChange={this.onIsBoughtChanged}
-          />
-          <label className="toggle-button" htmlFor="is_bought_input" />
-        </div>
-
-        {this.renderProcurementInfo()}
-
-        <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
-          <a
-            className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
-            href="#"
-            onClick={this.props.onExitCurrentEditor}
-          >
-            Save for later
-          </a>
-          <a
-            className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
-            href="#"
-            onClick={this.onSave}
-          >
-            Save
-          </a>
-        </div>
-      
-      </div>
       </div>
     )
   }

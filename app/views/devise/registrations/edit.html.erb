@@ -27,7 +27,7 @@
                 <div class="w5 mb3">
                   <div class="db mr4">
                     <%= f.label "Photo", class: "subtitle-2 grey db mb1 ttc" %>
-                    <%= f.hidden_field :cached_photo_data, value: @user.cached_photo_data %>
+                    <%= f.hidden_field :photo, value: @user.cached_photo_data %>
                     <%= f.file_field :photo, autofocus: false,
                       class: "ttc grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
                     <%= image_tag @user.photo_url, class: "mt2" %>

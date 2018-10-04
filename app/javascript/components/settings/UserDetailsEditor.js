@@ -145,7 +145,11 @@ class UserDetailsEditor extends React.PureComponent {
             <div className="mt2 fl w-100">
               <div className="w-100 fl pr3">
                 <label className="f6 fw6 db mb1 gray ttc">Photo</label>
-                <div className="hide-child relative tc fl mb2 w4 h4 bg-black-10">
+                <div
+                  className={classNames('hide-child relative tc fl mb2', {
+                    'w4 h4 bg-black-10': !photoUrl
+                  })}
+                >
                   <img src={photoUrl} className="fl" />
                   <AvatarPicker
                     key={photoUrl}

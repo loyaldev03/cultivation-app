@@ -14,18 +14,15 @@ class BatchEditor extends React.Component {
 
   componentDidMount() {
     document.addEventListener('editor-sidebar-open', event => {
-      // console.log(event)
-
       if (!event.detail.data) {
         this.setState(this.resetState())
       } else {
-        console.log(event.detail.data.attributes)
         const newState = {
           ...this.resetState(),
           ...event.detail.data.attributes,
+          id: event.detail.data.id,
           start_date: new Date(event.detail.data.attributes.start_date)
         }
-
         this.setState(newState)
       }
     })
@@ -33,6 +30,7 @@ class BatchEditor extends React.Component {
 
   resetState() {
     return {
+      id: '',
       name: '',
       facility_strain_id: '',
       strain_name: '',
@@ -87,6 +85,10 @@ class BatchEditor extends React.Component {
     this.setState({ [key]: value })
   }
 
+  onDateSelected = (field, value) => {
+    this.setState({ [field]: value })
+  }
+
   onSave = event => {
     const { errors, isValid, ...payload } = this.validateAndGetValues()
 
@@ -106,6 +108,7 @@ class BatchEditor extends React.Component {
 
   validateAndGetValues() {
     const {
+      id,
       name,
       facility_strain_id,
       batch_source,
@@ -147,6 +150,7 @@ class BatchEditor extends React.Component {
     }
 
     return {
+      id,
       name,
       facility_strain_id,
       batch_source,
@@ -161,10 +165,6 @@ class BatchEditor extends React.Component {
       curing_duration,
       isValid
     }
-  }
-
-  onDateSelected = (field, value) => {
-    this.setState({ [field]: value })
   }
 
   render() {
@@ -194,6 +194,28 @@ class BatchEditor extends React.Component {
             </span>
           </div>
 
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">Select Strain</label>
+              <Select
+                key={this.state.facility_strain_id}
+                options={facility_strains}
+                defaultValue={facility_strains.find(
+                  x => x.value === this.state.facility_strain_id
+                )}
+                noOptionsMessage={() => 'Type to search strain...'}
+                onChange={this.onFacilityStrainSelected}
+                styles={reactSelectStyle}
+              />
+              <FieldError
+                errors={this.state.errors}
+                field="facility_strain_id"
+              />
+            </div>
+          </div>
+
+          <hr className="mt3 m b--light-gray w-100" />
+
           <div className="ph4 mt3 flex">
             <div className="w-100">
               <label
@@ -212,26 +234,6 @@ class BatchEditor extends React.Component {
                 styles={reactSelectStyle}
               />
               <FieldError field="batch_source" errors={this.state.errors} />
-            </div>
-          </div>
-
-          <div className="ph4 mt3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Select Strain</label>
-              <Select
-                key={this.state.facility_strain_id}
-                options={facility_strains}
-                defaultValue={facility_strains.find(
-                  x => x.value === this.state.facility_strain_id
-                )}
-                noOptionsMessage={() => 'Type to search strain...'}
-                onChange={this.onFacilityStrainSelected}
-                styles={reactSelectStyle}
-              />
-              <FieldError
-                errors={this.state.errors}
-                field="facility_strain_id"
-              />
             </div>
           </div>
 
@@ -257,7 +259,7 @@ class BatchEditor extends React.Component {
             </div>
           </div>
 
-          <div className="ph4 mt3 mb2 flex">
+          <div className="ph4 mt3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb2 gray ttc">Batch name</label>
               <TextInput
@@ -280,9 +282,11 @@ class BatchEditor extends React.Component {
             </div>
           </div>
 
-          <div className="ph4 mt4 mb2 flex">
+          <hr className="mt3 m b--light-gray w-100" />
+
+          <div className="ph4 mt3 mb2 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 gray">
+              <label className="f6 fw6 db mb1 dark-gray">
                 Specify duration for each phase
               </label>
             </div>

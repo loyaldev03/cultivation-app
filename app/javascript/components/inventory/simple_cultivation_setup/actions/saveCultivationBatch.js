@@ -19,11 +19,12 @@ export default function saveCultivationBatch(payload) {
       const { status, data } = result
       if (status == 200) {
         const batch = data.data
-        console.log('saved batch')
-        console.log(batch)
-        store.prepend(batch)
+        if (payload.id) {
+          store.update(batch)
+        } else {
+          store.prepend(batch)
+        }
       }
-
       return result
     })
 }

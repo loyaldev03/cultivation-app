@@ -278,7 +278,7 @@ class MotherEditor extends React.Component {
               />
             </div>
           </div>
-          <hr className="mt3 m b--light-gray w-100" />
+          <hr className="mt3 b--light-gray w-100" />
           <div className="ph4 mt3 mb1">
             <span className="f6 fw6 dark-gray">Plant IDs</span>
           </div>

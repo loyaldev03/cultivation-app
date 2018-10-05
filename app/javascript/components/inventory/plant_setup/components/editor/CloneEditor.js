@@ -30,13 +30,6 @@ class CloneEditor extends React.Component {
     this.setPurchaseInfoEditor = element => {
       this.purchaseInfoEditor = element
     }
-
-    this.cloneIdTextArea = React.createRef()
-    // Callback ref to get instance of html DOM: https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
-    // Getting a ref to textarea in order to adjust height according to content.
-    // this.setCloneIdTextArea = element => {
-    //   this.cloneIdTextArea = element
-    // }
   }
 
   resetState() {
@@ -46,9 +39,9 @@ class CloneEditor extends React.Component {
       facility_id: '',
       plant_ids: '',
       plant_qty: 0,
-
       location_id: '',
       planting_date: null,
+      mother_id: '',
       // purchase info
       vendor_name: '',
       vendor_no: '',
@@ -88,7 +81,8 @@ class CloneEditor extends React.Component {
   }
 
   onLocationChanged = event => {
-    this.setState({ location_id: event.value })
+    console.log(event)
+    this.setState({ location_id: event.location_id })
   }
 
   onPlantedOnChanged = date => {
@@ -127,6 +121,7 @@ class CloneEditor extends React.Component {
     const { errors, isValid, ...payload } = data
 
     if (isValid) {
+      console.log(payload)
       setupClones(payload).then(({ status, data }) => {
         if (status >= 400) {
           this.setState({ errors: data.errors })
@@ -145,11 +140,12 @@ class CloneEditor extends React.Component {
   }
 
   validateAndGetValues() {
-    let {
+    const {
       cultivation_batch_id,
       plant_ids,
       location_id,
       planting_date,
+      mother_id,
       vendor_name,
       vendor_no,
       address,
@@ -189,15 +185,12 @@ class CloneEditor extends React.Component {
       }
     }
 
-    const { mother_id } = this.motherPicker.current.getValues(false)
-
     let purchaseData = { isValid: true }
     if (isBought) {
       purchaseData = this.purchaseInfoEditor.getValues()
     }
 
-    const isValid =
-      Object.getOwnPropertyNames(errors).length == 0 && purchaseData.isValid
+    const isValid = Object.getOwnPropertyNames(errors).length == 0 && purchaseData.isValid
 
     // Purchase data should have:
     //
@@ -213,16 +206,11 @@ class CloneEditor extends React.Component {
 
     const data = {
       ...purchaseData,
-      strain,
-      strain_type,
       cultivation_batch_id,
-      clone_ids,
+      plant_ids,
       location_id,
-      plant_qty,
+      planting_date: planting_date && planting_date.toISOString(),
       mother_id,
-      planted_on: planted_on && planted_on.toISOString(),
-      expected_harvested_on:
-        expected_harvested_on && expected_harvested_on.toISOString(),
       isBought,
       errors,
       isValid

@@ -44,7 +44,7 @@ const columns = [
     headerStyle: { textAlign: 'left' }
   },
   {
-    Header: 'Batch source',
+    Header: 'Batch Source',
     accessor: 'attributes.batch_source',
     headerStyle: { textAlign: 'left' },
     Cell: props => {
@@ -57,6 +57,10 @@ const columns = [
       }
       return null
     }
+  },
+  {
+    Header: 'Grow Method',
+    accessor: 'attributes.grow_method'
   },
   {
     Header: 'Start date',
@@ -91,6 +95,7 @@ const columns = [
 ]
 
 function openBatch(event, data) {
+  console.log(data)
   window.editorSidebar.open({ width: '500px', data })
   event.preventDefault()
 }
@@ -101,6 +106,8 @@ class SimpleCultivationBatchSetupApp extends React.Component {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
     loadCultivationBatch()
+
+    window.batchStore = store
   }
 
   openSidebar() {

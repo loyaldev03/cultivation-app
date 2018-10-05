@@ -7,6 +7,7 @@ module Inventory
     prepend SimpleCommand
     attr_reader :user,
       :args,
+      :id,
       :is_draft,
       :user,
       :facility_strain_id,
@@ -30,6 +31,7 @@ module Inventory
       # Rails.logger.debug @args
 
       @is_draft = false
+      @id = args[:id]
       @facility_strain_id = args[:facility_strain_id]
       @plant_ids = generate_or_extract_plant_ids(args[:plant_ids])
       @location_id = args[:location_id]
@@ -142,13 +144,14 @@ module Inventory
         plant = Inventory::Plant.find_or_initialize_by(
           plant_id: plant_id,
           facility_strain_id: facility_strain_id,
-          current_growth_stage: 'mother',
         ) do |t|
+          t.current_growth_stage = 'mother'
           t.created_by = user
           t.location_id = location_id
           t.location_type = 'room'
           t.status = is_draft ? 'draft' : 'available'
           t.planting_date = planted_on
+          t.mother_date = ''
         end
         plant.save!
         plants << plant

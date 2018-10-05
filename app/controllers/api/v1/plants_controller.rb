@@ -26,8 +26,6 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
 
     options = {params: {exclude_location: true}}
     data = Inventory::PlantSerializer.new(plants, options).serialized_json
-    Rails.logger.debug "\t\t>>>>>> Inventory::PlantSerializer"
-    Rails.logger.debug data
     render json: data
   end
 

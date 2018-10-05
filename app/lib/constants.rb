@@ -221,4 +221,71 @@ module Constants
     {code: :yes, name: 'Yes'},
     {code: :no, name: 'No'},
   ].freeze
+
+  APP_MODULES = [
+    {
+      code: 1000,
+      name: 'Finance',
+      features: [
+        { code: 1010, name: 'Invoices' },
+        { code: 1020, name: 'Purchase Order' },
+        { code: 1030, name: 'Manifest' },
+        { code: 1040, name: 'Cost' },
+        { code: 1050, name: 'User costs' },
+        { code: 1060, name: 'Expenses' },
+        { code: 1070, name: 'Product Sales' },
+        { code: 1080, name: 'All users payroll' },
+        { code: 1090, name: 'My Direct Reports payroll' },
+        { code: 1100, name: 'My Payroll' }
+      ]
+    },
+    {
+      code: 2000,
+      name: 'Inventory',
+      features: [
+        { code: 2010, name: 'Inventory type' },
+        { code: 2020, name: 'Active plants' },
+        { code: 2030, name: 'Sales Products' },
+        { code: 2040, name: 'Non-sales items' },
+        { code: 2050, name: 'Strain type' },
+      ]
+    },
+    {
+      code: 3000,
+      name: 'Cultivation',
+      features: [
+        { code: 3010, name: 'Templates' },
+        { code: 3020, name: 'All batches' },
+        { code: 3030, name: 'Batch assigned to my direct reports' },
+        { code: 3040, name: 'Batch assigned to me' },
+        { code: 3050, name: 'Asssign tasks to all users' },
+        { code: 3060, name: 'Assign tasks only to my direct reports' },
+        { code: 3070, name: 'All Tasks' },
+        { code: 3080, name: 'Tasks assigned to my direct reports' },
+        { code: 3090, name: 'Tasks assigned to me' },
+        { code: 3100, name: 'All hours worked' },
+        { code: 3110, name: 'Hours assigned to my direct reports' },
+        { code: 3120, name: 'My hours worked' },
+      ]
+    },
+    {
+      code: 4000,
+      name: 'Issues',
+      features: [
+        { code: 4010, name: 'All issues' },
+        { code: 4020, name: 'Issues reported by my direct reports' },
+        { code: 4030, name: 'Issues reported by me' },
+        { code: 4040, name: 'Assign tasks to all issues' },
+        { code: 4050, name: 'Assign tasks to issues reported by my direct report' },
+      ]
+    }
+  ].freeze
+
+  PERMISSION = {
+    NONE: 0,
+    CREATE: 2**0,
+    READ: 2**1,
+    UPDATE: 2**2,
+    DELETE: 2**3,
+  }.freeze
 end

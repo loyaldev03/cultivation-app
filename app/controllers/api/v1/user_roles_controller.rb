@@ -5,6 +5,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       facilities: Facility.all.pluck_to_hash([:id, :code, :name]),
       roles: Common::Role.all.order(name: :asc),
       users: User.all.order(is_active: :desc, first_name: :asc),
+      modules: Constants::APP_MODULES,
     })
     data = Common::FacilityUserRoleSerializer.new(result).serialized_json
     render json: data

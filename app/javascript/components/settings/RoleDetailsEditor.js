@@ -34,7 +34,7 @@ const permission3Options = [
   { category: 'Cultivation', permission: 'Tasks assigned to me' },
   { category: 'Cultivation', permission: 'All hours worked' },
   { category: 'Cultivation', permission: 'Hours assigned to my direct reports' },
-  { category: 'Cultivation', permission: 'My hours worked ' },
+  { category: 'Cultivation', permission: 'My hours worked' },
 ]
 
 const permission4Options = [

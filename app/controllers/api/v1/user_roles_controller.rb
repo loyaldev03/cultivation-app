@@ -56,7 +56,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       :desc,
       permissions: [
         :code,
-        :value
+        :value,
       ],
     )
   end

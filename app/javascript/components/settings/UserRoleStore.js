@@ -47,9 +47,7 @@ class UserRoleStore {
   updateUser(user) {
     const found = this.users.find(x => x.id === user.id)
     if (found) {
-      this.users = this.users.map(
-        u => (u.id === user.id ? user : u)
-      )
+      this.users = this.users.map(u => (u.id === user.id ? user : u))
     } else {
       this.users.push(user)
     }
@@ -59,13 +57,10 @@ class UserRoleStore {
   updateRole(role) {
     const found = this.roles.find(x => x.id === role.id)
     if (found) {
-      this.roles = this.roles.map(
-        r => (r.id === role.id ? role : r)
-      )
+      this.roles = this.roles.map(r => (r.id === role.id ? role : r))
     } else {
       this.roles.push(role)
     }
-    console.error('NOT Implemented Exception')
   }
 
   getUser(userId) {
@@ -93,9 +88,7 @@ class UserRoleStore {
 
   getFacilityCode(facilityId) {
     if (facilityId) {
-      const facility = this.facilities.find(
-        x => x.id === facilityId
-      )
+      const facility = this.facilities.find(x => x.id === facilityId)
       return facility ? facility.code : 'Invalid Facility'
     }
   }

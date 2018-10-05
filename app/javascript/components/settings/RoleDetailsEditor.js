@@ -9,31 +9,38 @@ class RoleDetailsEditor extends React.PureComponent {
         roleId: props.role.id,
         name: props.role.name || '',
         desc: props.role.desc || '',
-        changes: []
+        permissions: props.role.permissions || []
       }
     } else {
       this.state = {
         roleId: '',
         name: '',
         desc: '',
-        changes: []
+        permissions: []
       }
     }
   }
 
-  onChangeInput = field => e => this.setState({ [field]: e.target.value })
-
-  onChangePermission = (code, value) => {
-    const found = this.state.changes.findIndex(p0 => p0.code === code)
-    const p1 = { code, value }
-    let changes = []
-    if (found > -1) {
-      changes = this.state.changes.map(p0 => p0.code === code ? p1 : p0)
-    } else {
-      changes = [...this.state.changes, p1]
-    }
-    this.setState({ changes })
+  getPermission = code => {
+    const p = this.state.permissions.find(x => x.code === code)
+    return p || { code, value: 0 }
   }
+
+  setPermission = (code, value) => {
+    const found = this.state.permissions.findIndex(p0 => p0.code === code)
+    const p1 = { code, value }
+    let permissions = []
+    if (found > -1) {
+      permissions = this.state.permissions.map(
+        p0 => (p0.code === code ? p1 : p0)
+      )
+    } else {
+      permissions = [...this.state.permissions, p1]
+    }
+    this.setState({ permissions })
+  }
+
+  onChangeInput = field => e => this.setState({ [field]: e.target.value })
 
   onSubmit = e => {
     e.preventDefault()
@@ -42,7 +49,7 @@ class RoleDetailsEditor extends React.PureComponent {
         id: this.state.roleId,
         name: this.state.name,
         desc: this.state.desc,
-        permissions: this.state.changes,
+        permissions: this.state.permissions
       }
     }
     this.props.onSave(roleDetails)
@@ -112,8 +119,8 @@ class RoleDetailsEditor extends React.PureComponent {
                           key={feat.code}
                           code={feat.code}
                           name={feat.name}
-                          value={Math.floor(Math.random() * Math.floor(15))}
-                          onChange={this.onChangePermission}
+                          value={this.getPermission(feat.code).value}
+                          onChange={this.setPermission}
                         />
                       ))}
                     </React.Fragment>

@@ -30,8 +30,6 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   def setup_simple_batch
     command = Cultivation::SetupSimpleBatch.call(current_user, params[:batch].to_unsafe_h)
     if command.success?
-      Rails.logger.debug "\t\t>>>>>> batch result"
-      Rails.logger.debug BatchSerializer.new(command.result).serialized_json
       render json: BatchSerializer.new(command.result).serialized_json
     else
       render json: params[:batch].to_unsafe_h, status: 422

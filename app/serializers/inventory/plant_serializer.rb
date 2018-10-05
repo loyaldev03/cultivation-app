@@ -72,8 +72,12 @@ module Inventory
       object.c_at.iso8601
     end
 
-    attribute :location_name do |object|
-      if object.location_type == 'room'
+    attribute :location_name do |object, params|
+      if params && params[:exclude_location] == true
+        ''
+      elsif !object.location_id
+        ''
+      elsif object.location_type == 'room'
         facility = Facility.find_by(:'rooms._id' => BSON::ObjectId(object.location_id))
         room = facility.rooms.find(object.location_id)
         room ? "#{facility.code}.#{room.code} - #{room.name}" : ''

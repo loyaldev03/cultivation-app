@@ -1,6 +1,8 @@
 import React from 'react'
 import { render } from 'react-dom'
 import TaskStore from '../stores/TaskStore'
+import UserStore from '../stores/UserStore'
+
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import Select from 'react-select'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
@@ -68,13 +70,31 @@ class AddTaskForm extends React.Component {
 
   handleSubmit = event => {
     createTask.createTask(this.state)
+    this.clearState()
+    this.props.handleReset()
+  }
+
+  clearState = event => {
+    this.setState({
+      parent_id: '',
+      name: '',
+      duration: '',
+      task_category: '',
+      instruction: '',
+      start_date: new Date(),
+      end_date: new Date(),
+      errors: '',
+      estimated_hours: '',
+      assigned_employee: []
+    })
   }
 
   render() {
+    let users = UserStore.users
     return (
       <React.Fragment>
         <div className="ph4 mt3 mb3 flex">
-          <div className="w-60">
+          <div className="w-100">
             <TextInput
               label={'Task'}
               value={this.state.name}
@@ -82,17 +102,6 @@ class AddTaskForm extends React.Component {
               fieldname="name"
               errors={this.state.errors}
               errorField="name"
-            />
-          </div>
-          <div className="w-40 pl3">
-            <TextInput
-              label={'Category'}
-              value={this.state.task_category}
-              onChange={this.handleChangeTask}
-              fieldname="task_category"
-              errors={this.state.errors}
-              errorField="task_category"
-              readOnly={true}
             />
           </div>
         </div>
@@ -104,9 +113,9 @@ class AddTaskForm extends React.Component {
               value={this.state.instruction}
               onChange={this.handleChangeTask}
               fieldname="instruction"
-              rows="5"
+              rows="2"
               className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-              placeholder="Plant0001, Tray0001&#10;Plant0002, Tray0001&#10;Plant0003, Tray0002&#10;Plant0004, Tray0002"
+              placeholder=""
             />
             <FieldError errors={this.state.errors} fieldname="instruction" />
           </div>
@@ -156,17 +165,12 @@ class AddTaskForm extends React.Component {
         </div>
 
         <div className="ph4 mt3 mb3 flex">
-          <div className="w-60">
+          <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Assigned Employees</label>
             <Select
               isMulti
               name="colors"
-              options={[
-                { value: 'Fathi', label: 'Fathi' },
-                { value: 'Andy', label: 'Andy' },
-                { value: 'Karg', label: 'Karg' },
-                { value: 'Allison', label: 'Allison' }
-              ]}
+              options={users}
               className="basic-multi-select"
               classNamePrefix="select"
               fieldname="assigned_employee"
@@ -178,7 +182,7 @@ class AddTaskForm extends React.Component {
         </div>
 
         <div className="ph4 mt3 mb3 flex">
-          <div className="w-60">
+          <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Material Suggested</label>
             <Select
               isMulti

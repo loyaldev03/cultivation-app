@@ -65,9 +65,6 @@ RSpec.describe Cultivation::IndentTask, type: :command do
       expect(result).to have_attributes(
         is_phase: phase.is_phase,
         is_category: phase.is_category,
-        name: phase.name,
-        task_category: phase.task_category,
-        phase: phase.phase
       )
     end
 
@@ -79,10 +76,7 @@ RSpec.describe Cultivation::IndentTask, type: :command do
 
       expect(result).to have_attributes(
         is_phase: true,
-        is_category: false,
-        name: nil,
-        task_category: nil,
-        phase: category.task_category
+        is_category: false
       )
     end
 
@@ -94,9 +88,7 @@ RSpec.describe Cultivation::IndentTask, type: :command do
 
       expect(result).to have_attributes(
         is_phase: false,
-        is_category: true,
-        name: nil,
-        task_category: task.name
+        is_category: true
       )
     end
   end

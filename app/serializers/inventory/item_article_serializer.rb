@@ -11,6 +11,10 @@ module Inventory
       :status,
       :plant_status
 
+    attribute :strain_id do |object|
+      object.strain_id.to_s if object.strain_id
+    end
+
     attribute :item_name do |object|
       object.item.name
     end

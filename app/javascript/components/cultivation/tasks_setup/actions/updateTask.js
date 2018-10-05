@@ -12,7 +12,7 @@ class updateTask {
       batch_id: state.batch_id,
       days_from_start_date: state.days_from_start_date,
       depend_on: state.depend_on,
-      duration: null,
+      duration: state.duration,
       end_date: state.end_date.toDateString(),
       estimated_hours: state.estimated_hours,
       expected_end_date: state.expected_end_date,

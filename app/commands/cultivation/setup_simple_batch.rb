@@ -70,14 +70,14 @@ module Cultivation
         is_active: false,
       )
 
-      clone_end_date = add_task(batch, 'clone', start_date, clone_duration)
-      veg_end_date = add_task(batch, 'veg', clone_end_date, veg_duration)
-      veg1_end_date = add_task(batch, 'veg1', clone_end_date, veg1_duration)
-      veg2_end_date = add_task(batch, 'veg2', veg1_end_date, veg2_duration)
+      clone_end_date = add_task(batch, Constants::CONST_CLONE, start_date, clone_duration)
+      veg_end_date = add_task(batch, Constants::CONST_VEG, clone_end_date, veg_duration)
+      veg1_end_date = add_task(batch, Constants::CONST_VEG1, clone_end_date, veg1_duration) if veg_duration <= 0
+      veg2_end_date = add_task(batch, Constants::CONST_VEG2, veg1_end_date, veg2_duration) if veg_duration <= 0
 
       flower_start_date = [veg_end_date, veg1_end_date, veg2_end_date].compact.max
-      flower_end_date = add_task(batch, 'flower', flower_start_date, flower_duration)
-      harvest_end_date = add_task(batch, 'harvest', flower_end_date, harvest_duration)
+      flower_end_date = add_task(batch, Constants::CONST_FLOWER, flower_start_date, flower_duration)
+      harvest_end_date = add_task(batch, Constants::CONST_HARVEST, flower_end_date, harvest_duration)
       batch
     end
 
@@ -87,7 +87,7 @@ module Cultivation
       return nil if duration == 0
 
       task = batch.tasks.create!(
-        phase: phase.upcase,
+        phase: phase,
         task_category: '',
         name: '',
         duration: duration,

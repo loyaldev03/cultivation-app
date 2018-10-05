@@ -1,7 +1,33 @@
 class Api::V1::PlantsController < Api::V1::BaseApiController
   def all
-    plants = Inventory::Plant.where(current_growth_stage: params[:current_growth_stage]).order(c_at: :desc)
+    plants = Inventory::Plant.includes(:facility_strain)
+                             .where(current_growth_stage: params[:current_growth_stage])
+                             .order(c_at: :desc)
     data = Inventory::PlantSerializer.new(plants).serialized_json
+    render json: data
+  end
+
+  def search
+    plants = Inventory::Plant.includes(:facility_strain)
+                             .where(current_growth_stage: params[:current_growth_stage])
+
+    if params[:facility_strain_id].blank?
+      plants = []
+    else
+      plants = plants.where(facility_strain_id: params[:facility_strain_id])
+
+      unless params[:search].blank?
+        search = params[:search]
+        plants = plants.where(plant_id: /^#{search}/i)
+      end
+
+      plants = plants.limit(7)
+    end
+
+    options = {params: {exclude_location: true}}
+    data = Inventory::PlantSerializer.new(plants, options).serialized_json
+    Rails.logger.debug "\t\t>>>>>> Inventory::PlantSerializer"
+    Rails.logger.debug data
     render json: data
   end
 

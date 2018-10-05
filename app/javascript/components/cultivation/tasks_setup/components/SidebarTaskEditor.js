@@ -1,6 +1,9 @@
 import React from 'react'
 import { render } from 'react-dom'
 import TaskStore from '../stores/TaskStore'
+import UserStore from '../stores/UserStore'
+import UserRoles from '../stores/UserRoleStore'
+
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import Select from 'react-select'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
@@ -13,6 +16,7 @@ class SidebarTaskEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      tabs: 'general',
       batch_id: this.props.batch_id,
       id: props.task.id,
       ...props.task.attributes,
@@ -20,8 +24,7 @@ class SidebarTaskEditor extends React.Component {
       start_date: new Date(this.props.task.attributes.start_date),
       end_date: new Date(this.props.task.attributes.end_date),
       errors: '',
-      estimated_hours: '',
-      assigned_employee: []
+      estimated_hours: ''
     }
   }
 
@@ -38,10 +41,13 @@ class SidebarTaskEditor extends React.Component {
         start_date: new Date(props.task.attributes.start_date),
         end_date: new Date(props.task.attributes.end_date),
         errors: '',
-        estimated_hours: '',
-        assigned_employee: []
+        estimated_hours: ''
       })
     }
+  }
+
+  handleChange = (key, value) => {
+    this.setState({ [key]: value })
   }
 
   handleChangeTask = event => {
@@ -77,10 +83,12 @@ class SidebarTaskEditor extends React.Component {
   }
 
   render() {
+    let users = UserStore.users
+    let roles = UserRoles.slice()
     return (
       <React.Fragment>
         <div className="ph4 mt3 mb3 flex">
-          <div className="w-60">
+          <div className="w-100">
             <TextInput
               label={'Task'}
               value={this.state.name}
@@ -90,7 +98,7 @@ class SidebarTaskEditor extends React.Component {
               errorField="name"
             />
           </div>
-          <div className="w-40 pl3">
+          {/* <div className="w-40 pl3">
             <TextInput
               label={'Category'}
               value={this.state.task_category}
@@ -99,7 +107,7 @@ class SidebarTaskEditor extends React.Component {
               errors={this.state.errors}
               errorField="task_category"
             />
-          </div>
+          </div> */}
         </div>
 
         <div className="ph4 mt3 mb3 flex">
@@ -109,9 +117,9 @@ class SidebarTaskEditor extends React.Component {
               value={this.state.instruction}
               onChange={this.handleChangeTask}
               fieldname="instruction"
-              rows="5"
+              rows="2"
               className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-              placeholder="Plant0001, Tray0001&#10;Plant0002, Tray0001&#10;Plant0003, Tray0002&#10;Plant0004, Tray0002"
+              placeholder=""
             />
             <FieldError errors={this.state.errors} fieldname="instruction" />
           </div>
@@ -159,19 +167,27 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         </div>
+        <div class="mt3 fl w-100 pt3 bt b--light-gray" />
 
         <div className="ph4 mt3 mb3 flex">
-          <div className="w-60">
+          <div className="w-30">
+            <label className="f6 fw6 db mb1 gray ttc">Roles</label>
+            <Select
+              name="colors"
+              options={roles}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              fieldname="roles"
+              value={this.state.roles}
+              styles={reactSelectStyle}
+            />
+          </div>
+          <div className="w-70 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Assigned Employees</label>
             <Select
               isMulti
               name="colors"
-              options={[
-                { value: 'Fathi', label: 'Fathi' },
-                { value: 'Andy', label: 'Andy' },
-                { value: 'Karg', label: 'Karg' },
-                { value: 'Allison', label: 'Allison' }
-              ]}
+              options={users}
               className="basic-multi-select"
               classNamePrefix="select"
               fieldname="assigned_employee"
@@ -183,8 +199,8 @@ class SidebarTaskEditor extends React.Component {
         </div>
 
         <div className="ph4 mt3 mb3 flex">
-          <div className="w-60">
-            <label className="f6 fw6 db mb1 gray ttc">Material Suggested</label>
+          <div className="w-40">
+            <label className="f6 fw6 db mb1 gray ttc">Material Name</label>
             <Select
               isMulti
               name="colors"
@@ -197,6 +213,26 @@ class SidebarTaskEditor extends React.Component {
               className="basic-multi-select"
               classNamePrefix="select"
               styles={reactSelectStyle}
+            />
+          </div>
+          <div className="w-30 pl3">
+            <NumericInput
+              label={'Quantity'}
+              value={this.state.quantity}
+              onChange={this.handleChangeTask}
+              fieldname="quantity"
+              errors={this.state.errors}
+              errorField="quantity"
+            />
+          </div>
+          <div className="w-30 pl3">
+            <TextInput
+              label={'Unit Of Measure'}
+              value={this.state.uom}
+              onChange={this.handleChangeTask}
+              fieldname="uom"
+              errors={this.state.errors}
+              errorField="uom"
             />
           </div>
         </div>

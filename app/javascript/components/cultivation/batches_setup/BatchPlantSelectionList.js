@@ -2,7 +2,7 @@ import React from 'react'
 import classNames from 'classnames'
 import { observer } from 'mobx-react'
 import plantStore from '../../inventory/plant_setup/store/PlantStore'
-import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
+import {loadPlants} from '../../inventory/plant_setup/actions/loadPlants'
 import { joinBy } from '../../utils/ArrayHelper'
 
 const QuantityField = ({ plant, onEdit }) => {
@@ -42,6 +42,7 @@ const LocationField = ({ plant, onEdit }) => {
 @observer
 class BatchPlantSelectionList extends React.Component {
   componentDidMount() {
+    console.log('loadPlants', this.props.plantType)
     loadPlants(this.props.plantType)
   }
   render() {

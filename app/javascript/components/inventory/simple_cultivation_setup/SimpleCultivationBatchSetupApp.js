@@ -59,6 +59,14 @@ const columns = [
     }
   },
   {
+    Header: 'Start date',
+    accessor: 'attributes.start_date',
+    headerStyle: { textAlign: 'left' },
+    Cell: props => {
+      return <span>{new Date(props.value).toLocaleDateString()}</span>
+    }
+  },
+  {
     Header: 'Facility',
     accessor: 'attributes.facility',
     headerStyle: { textAlign: 'left' }
@@ -143,7 +151,7 @@ class SimpleCultivationBatchSetupApp extends React.Component {
         {this.renderBatchList()}
         <BatchEditor
           facility_strains={this.props.facility_strains}
-          plants={this.props.plants}
+          batch_sources={this.props.batch_sources}
           grow_methods={this.props.grow_methods}
         />
       </React.Fragment>

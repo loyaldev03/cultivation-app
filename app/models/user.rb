@@ -10,6 +10,8 @@ class User
   field :last_name, type: String
   field :title, type: String
   field :timezone, type: String, default: 'UTC'
+  field :default_facility_id, type: BSON::ObjectId
+  field :is_active, type: Boolean, default: -> { true }
 
   ## Database authenticatable
   field :email, type: String, default: ''
@@ -29,7 +31,8 @@ class User
   field :current_sign_in_ip, type: String
   field :last_sign_in_ip, type: String
 
-  field :role, type: String
+  field :roles, type: Array, default: []
+  field :facilities, type: Array, default: []
 
   ## Confirmable
   # field :confirmation_token,   type: String
@@ -43,6 +46,10 @@ class User
   # field :locked_at,       type: Time
   #
 
+  def cultivation_tasks
+    Cultivation::Task.in(user_ids: id)
+  end
+
   def display_name
     "#{first_name} #{last_name}"
   end
@@ -50,6 +57,6 @@ class User
   # TODO: Need a flag to indicate user is developer
   # This need to be refactor
   def is_dev?
-    role == 'dev'
+    true
   end
 end

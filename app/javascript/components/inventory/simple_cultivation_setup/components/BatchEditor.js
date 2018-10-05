@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Select from 'react-select'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
@@ -9,15 +10,25 @@ class BatchEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
-
-    this.locations = this.props.locations
-    this.default_batch_source = this.props.batch_source
-    this.default_facility_strain_id = this.props.facility_strain_id
-    this.default_grow_methods = this.props.default_grow_methods
   }
 
   componentDidMount() {
-    // document.addEventListener('editor-sidebar-open', function() {})
+    document.addEventListener('editor-sidebar-open', event => {
+      // console.log(event)
+
+      if (!event.detail.data) {
+        this.setState(this.resetState())
+      } else {
+        console.log(event.detail.data.attributes)
+        const newState = {
+          ...this.resetState(),
+          ...event.detail.data.attributes,
+          start_date: new Date(event.detail.data.attributes.start_date)
+        }
+
+        this.setState(newState)
+      }
+    })
   }
 
   resetState() {
@@ -34,13 +45,11 @@ class BatchEditor extends React.Component {
       veg2_duration: '',
       flower_duration: '',
       harvest_duration: '',
-      curing_duration: '',
       errors: {}
     }
   }
 
   onChangeBatchSource = item => {
-    console.log(item)
     if (item.length === 0) {
       this.setState({ batch_source: '' })
     } else {
@@ -49,7 +58,6 @@ class BatchEditor extends React.Component {
   }
 
   onFacilityStrainSelected = item => {
-    console.log(item)
     if (item.length === 0) {
       this.setState({ facility_strain_id: '' })
     } else {
@@ -59,8 +67,8 @@ class BatchEditor extends React.Component {
     }
   }
 
-  onStartDateSelected = date => {
-    this.setState({ start_date: date })
+  onStartDateSelected = start_date => {
+    this.setState({ start_date })
   }
 
   onGrowMethodSelected = item => {
@@ -83,12 +91,9 @@ class BatchEditor extends React.Component {
     const { errors, isValid, ...payload } = this.validateAndGetValues()
 
     if (isValid) {
-      console.log(payload)
       saveCultivationBatch(payload).then(x => {
-        console.log('after save....')
-        console.log(x)
-        // toast
         this.reset()
+        window.editorSidebar.close()
       })
     }
 
@@ -167,7 +172,7 @@ class BatchEditor extends React.Component {
       ? { width: '500px' }
       : { width: '0px' }
 
-    const { plants, strains, facilities, grow_methods } = this.props
+    const { batch_sources, facility_strains, grow_methods } = this.props
 
     return (
       <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
@@ -198,10 +203,11 @@ class BatchEditor extends React.Component {
                 Select Batch Source
               </label>
               <Select
-                defaultValue={plants.find(
-                  x => x.value === this.default_batch_source
+                key={this.state.batch_source}
+                defaultValue={batch_sources.find(
+                  x => x.value === this.state.batch_source
                 )}
-                options={plants}
+                options={batch_sources}
                 onChange={this.onChangeBatchSource}
                 styles={reactSelectStyle}
               />
@@ -213,7 +219,11 @@ class BatchEditor extends React.Component {
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Select Strain</label>
               <Select
-                options={this.props.facility_strains}
+                key={this.state.facility_strain_id}
+                options={facility_strains}
+                defaultValue={facility_strains.find(
+                  x => x.value === this.state.facility_strain_id
+                )}
                 noOptionsMessage={() => 'Type to search strain...'}
                 onChange={this.onFacilityStrainSelected}
                 styles={reactSelectStyle}
@@ -234,9 +244,10 @@ class BatchEditor extends React.Component {
                 Select Grow Method
               </label>
               <Select
+                key={this.state.grow_method}
                 options={grow_methods}
                 defaultValue={grow_methods.find(
-                  x => x.value === this.default_grow_methods
+                  x => x.value === this.state.grow_method
                 )}
                 fieldname="grow_method"
                 styles={reactSelectStyle}
@@ -379,7 +390,7 @@ class BatchEditor extends React.Component {
             <a
               className="db tr pv2 bn br2 ttu tracked link dim f6 fw6 orange"
               href="#"
-              onClick={this.props.onExitCurrentEditor}
+              onClick={this.props.onSave}
             >
               Save for later
             </a>
@@ -395,6 +406,12 @@ class BatchEditor extends React.Component {
       </div>
     )
   }
+}
+
+BatchEditor.propTypes = {
+  batch_sources: PropTypes.array.isRequired,
+  facility_strains: PropTypes.array.isRequired,
+  grow_methods: PropTypes.array.isRequired
 }
 
 export default BatchEditor

@@ -90,6 +90,7 @@ Rails.application.routes.draw do
       
       resources :plants do
         get 'all/(:current_growth_stage)',    action: :all, on: :collection
+        get 'search/:current_growth_stage/(:facility_strain_id)/(:search)',    action: :search, on: :collection
         collection do
           post 'setup_mother'
           # post 'setup_clones'
@@ -106,17 +107,20 @@ Rails.application.routes.draw do
       resources :batches, only: [:index, :create] do
         post 'setup_simple_batch', on: :collection
         post 'update_locations'
-        resources :tasks, only: [:index, :update, :create] do
+        resources :tasks, only: [:index, :update, :create, :destroy] do
           put 'indent', on: :member
         end
       end
 
-      # resource :plant_setup, only: [] do
-      #   post 'setup_clones'
-      #   post 'setup_vegs'
-      #   post 'setup_harvest_yield'
-      #   post 'setup_waste'
-      # end
+      resources :users, only: [:index] do
+        get 'roles', on: :collection
+      end
+
+      resource :user_roles, only: [] do
+        get 'search'
+        post 'update_user'
+        post 'update_role_permission'
+      end
     end
   end
 end

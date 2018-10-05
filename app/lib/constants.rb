@@ -17,31 +17,32 @@ module Constants
     {code: :sativa, name: 'Sativa'},
   ].freeze
 
-  ROOM_PURPOSE = [
-    {code: :clone, name: 'Clone'}, #
-    {code: :cure, name: 'Cure'}, #
-    {code: :dry, name: 'Drying'}, #
-    {code: :flower, name: 'Flower'}, #
-    {code: :mother, name: 'Mother'}, #
-    {code: :storage, name: 'Storage'},
-    {code: :vault, name: 'Vault'},
-    {code: :trim, name: 'Trim'}, #
-    {code: :veg, name: 'Veg'}, #
-    {code: :veg1, name: 'Veg 1'},
-    {code: :veg2, name: 'Veg 2'},
-  ].freeze
+  CONST_CLONE = 'clone'
+  CONST_CURE = 'cure'
+  CONST_DRY = 'dry'
+  CONST_FLOWER = 'flower'
+  CONST_MOTHER = 'mother'
+  CONST_STORAGE = 'storage'
+  CONST_VAULT = 'vault'
+  CONST_TRIM = 'trim'
+  CONST_VEG = 'veg'
+  CONST_VEG1 = 'veg1'
+  CONST_VEG2 = 'veg2'
+  CONST_HARVEST = 'harvest'
 
-  RP_CLONE = 'clone'
-  RP_CURE = 'cure'
-  RP_DRY = 'dry'
-  RP_FLOWER = 'flower'
-  RP_MOTHER = 'mother'
-  RP_STORAGE = 'storage'
-  RP_VAULT = 'vault'
-  RP_TRIM = 'trim'
-  RP_VEG = 'veg'
-  RP_VEG1 = 'veg1'
-  RP_VEG2 = 'veg2'
+  ROOM_PURPOSE = [
+    {code: CONST_CLONE, name: 'Clone'},
+    {code: CONST_CURE, name: 'Cure'},
+    {code: CONST_DRY, name: 'Drying'},
+    {code: CONST_FLOWER, name: 'Flower'},
+    {code: CONST_MOTHER, name: 'Mother'},
+    {code: CONST_STORAGE, name: 'Storage'},
+    {code: CONST_VAULT, name: 'Vault'},
+    {code: CONST_TRIM, name: 'Trim'},
+    {code: CONST_VEG, name: 'Veg'},
+    {code: CONST_VEG1, name: 'Veg 1'},
+    {code: CONST_VEG2, name: 'Veg 2'},
+  ].freeze
 
   SECTION_PURPOSE = [
     {code: :cure, name: 'Cure'},

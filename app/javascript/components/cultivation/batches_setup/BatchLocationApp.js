@@ -162,6 +162,19 @@ class BatchLocationApp extends React.Component {
     </React.Fragment>
   )
 
+  renderClonesFromPurchased = (plantType, selectedPlants) => (
+    <React.Fragment>
+      <span className="db dark-grey mb2">Please select the clones:</span>
+      <BatchPlantSelectionList
+        onEdit={this.onClickSelectionEdit}
+        selectedPlants={selectedPlants}
+        plantType={plantType}
+        getSelected={this.getSelected}
+        onSelectPlant={this.onSelectPlant}
+      />
+    </React.Fragment>
+  )
+
   render() {
     const { plantType, batchSource } = this.props
     const {
@@ -216,6 +229,8 @@ class BatchLocationApp extends React.Component {
           </div>
           {batchSource === 'clones_from_mother' &&
             this.renderClonesFromMother(plantType, selectedPlants)}
+          {batchSource === 'clones_purchased' &&
+            this.renderClonesFromPurchased(plantType, selectedPlants)}
           <div className="pv2 w4">
             <input
               type="submit"

@@ -12,7 +12,7 @@
   <div class="flex flex-column">
     <%= react_component('inventory/simple_cultivation_setup/SimpleCultivationBatchSetupApp', {
         facility_strains: @facility_strains,
-        plants: Constants::PLANT_SOURCE_TYPES.map{|a| {value: a[:code], label: a[:name]}},
+        batch_sources: Constants::PLANT_SOURCE_TYPES.map{|a| {value: a[:code], label: a[:name]}},
         grow_methods: Constants::GROW_MEDIUM.map{|a| {value: a[:code], label: a[:name]}},
       }) %>
   </div>

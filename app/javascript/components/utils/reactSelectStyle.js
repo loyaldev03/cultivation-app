@@ -2,7 +2,7 @@ const reactSelectStyle = {
   control: (base, state) => ({
     ...base,
     fontSize: '0.875rem',
-    backgroundColor: '#fff',
+    backgroundColor: state.isDisabled ? '#eee': '#fff',
     height: '34px',
     minHeight: '34px',
     borderColor: 'rgba(0, 0, 0, 0.2)'

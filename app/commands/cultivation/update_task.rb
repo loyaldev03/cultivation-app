@@ -13,6 +13,13 @@ module Cultivation
       if @args[:type] == 'position'
         update_position(task, @args[:position])
       else
+        @args[:start_date] = @args[:start_date].to_date
+        @args[:end_date] = @args[:end_date].to_date
+
+        if task.duration != @args[:duration]
+          @args[:end_date] = @args[:start_date] + @args[:duration].to_i.send('days')
+        end
+
         update_task(task, @args)
         #check if current task end_date is beyond end_date of parent
         #update parent task and (depending task) only using => {children: false} to avoid updating children task
@@ -29,10 +36,9 @@ module Cultivation
     end
 
     def update_task(task, args, opt = {})
-      args[:start_date] = args[:start_date].to_date
-      args[:end_date] = args[:end_date].to_date
       task.update(args)
       tasks_changes = []
+      #if date is changes, start_date, end_date and duration
       find_changes(task, tasks_changes, opt) #store into temp array
       bulk_update(tasks_changes) #bulk update
       task

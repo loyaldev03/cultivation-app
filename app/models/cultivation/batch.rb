@@ -17,7 +17,7 @@ module Cultivation
     belongs_to :strain, class_name: 'Common::Strain', optional: true
 
     # KW: New fields replacing strain and plants
-    belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
+    belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
     has_many :plants, class_name: 'Inventory::Plant'
 
     def phases

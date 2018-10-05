@@ -69,6 +69,7 @@ class BatchSetupApp extends React.Component {
 
   render() {
     const { plants, strains, facilities, grow_methods } = this.props
+    console.log('plants', plants)
     return (
       <React.Fragment>
         <div id="toast" className="toast animated toast--success">
@@ -84,7 +85,7 @@ class BatchSetupApp extends React.Component {
                 className="f6 fw6 db mb1 gray ttc"
                 htmlFor="record_batch_source"
               >
-                Select Batch Source
+                Select Batch S ource
               </label>
               <Select
                 options={plants}

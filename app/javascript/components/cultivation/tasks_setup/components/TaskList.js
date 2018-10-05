@@ -5,11 +5,14 @@ import { observer, Provider } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 
 import TaskStore from '../stores/TaskStore'
+import UserStore from '../stores/UserStore'
+
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import TaskEditor from './TaskEditor'
 import updateSidebarTask from '../actions/updateSidebarTask'
 import updateTask from '../actions/updateTask'
 import indentTask from '../actions/indentTask'
+import deleteTask from '../actions/deleteTask'
 
 import ReactTable from 'react-table'
 
@@ -22,9 +25,6 @@ const styles = `
 .table-dropdown a:hover{
   background-color: #eee;
 } 
-.button-dropdown:hover{
-  background-color: #eee;
-}
 
 `
 
@@ -113,7 +113,6 @@ class TaskList extends React.Component {
 
   handleIndent = (row, action) => {
     this.clearDropdown()
-    console.log(row.row.id)
     indentTask(this.props.batch_id, row.row, action)
   }
 
@@ -127,12 +126,17 @@ class TaskList extends React.Component {
   }
 
   handleEdit = e => {
+    this.setState({ taskSelected: e.row.id })
     this.clearDropdown()
     editorSidebarHandler.open({
       width: '500px',
       data: e.row,
       action: 'update'
     })
+  }
+
+  handleDelete = row => {
+    deleteTask(this.props.batch_id, row.row)
   }
 
   clearDropdown() {
@@ -147,15 +151,47 @@ class TaskList extends React.Component {
     let handleMouseLeave = this.handleMouseLeave
     let handleIndent = this.handleIndent
     let handleAddTask = this.handleAddTask
+    let handleDelete = this.handleDelete
     return (
       <div className="flex justify-between-ns">
-        <a
-          onClick={e => {
-            handleEdit(row)
-          }}
-        >
-          {row.value}
-        </a>
+        <div className="">
+          <div className="flex">
+            <div className="w1 ml3">
+              {row.row['attributes.is_phase'] === true && (
+                <a
+                  onClick={e => {
+                    handleEdit(row)
+                  }}
+                >
+                  {row.value}
+                </a>
+              )}
+            </div>
+            <div className="w1 ml3">
+              {row.row['attributes.is_category'] === true && (
+                <a
+                  onClick={e => {
+                    handleEdit(row)
+                  }}
+                >
+                  {row.value}
+                </a>
+              )}
+            </div>
+            <div className="w1 ml3">
+              {row.row['attributes.is_phase'] === false &&
+                row.row['attributes.is_category'] === false && (
+                  <a
+                    onClick={e => {
+                      handleEdit(row)
+                    }}
+                  >
+                    {row.value}
+                  </a>
+                )}
+            </div>
+          </div>
+        </div>
 
         <Manager>
           <Reference>
@@ -213,7 +249,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        handleAddTask(row.row.id, 'top')
+                        handleAddTask(row, 'top')
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
@@ -225,7 +261,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        handleAddTask(row.row.id, 'bottom')
+                        handleAddTask(row, 'bottom')
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
@@ -246,6 +282,9 @@ class TaskList extends React.Component {
                     <a
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
+                      onClick={e => {
+                        handleDelete(row)
+                      }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
                         delete_outline
@@ -263,12 +302,17 @@ class TaskList extends React.Component {
     )
   }
 
-  handleAddTask = (task_related_id, position) => {
+  handleAddTask = (row, position) => {
+    this.setState({ taskSelected: row.row.id })
     editorSidebarHandler.open({
       width: '500px',
-      data: { task_related_id: task_related_id, position: position },
+      data: { task_related_id: row.row.id, position: position },
       action: 'add'
     })
+  }
+
+  handleReset = () => {
+    this.setState({ taskSelected: '', taskRelatedPosition: '' })
   }
 
   mountEvents() {
@@ -318,18 +362,21 @@ class TaskList extends React.Component {
 
   render() {
     let tasks = TaskStore.slice()
-
+    let users = UserStore
     return (
       <React.Fragment>
         <style> {styles} </style>
 
         <div className=" flex">
           <div className="w-40">
-            <h4 className="tl pa0 ma0 h6--font dark-grey">Task List</h4>
+            <h4 className="tl pa0 ma0 h6--font dark-grey">
+              Batch {this.state.batch.batch_no}
+            </h4>
           </div>
         </div>
         <div className="mb3 flex">
-          <div className="w-50">
+          <div className="w-30">
+            <hr />
             <div className=" flex">
               <div className="w-40">
                 <label>Batch Source</label>
@@ -340,51 +387,20 @@ class TaskList extends React.Component {
                 </div>
               </div>
             </div>
+            <hr />
             <div className=" flex">
               <div className="w-40">
                 <label>Batch Id</label>
               </div>
               <div className="w-40">
                 <div className="">
-                  <label>{this.state.batch.batch_no}</label>
+                  <label>{this.state.batch.id}</label>
                 </div>
               </div>
             </div>
+            <hr />
             <div className=" flex">
               <div className="w-40">
-                <label>Start Date</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.start_date}</label>
-                </div>
-              </div>
-            </div>
-
-            <div className=" flex">
-              <div className="w-40">
-                <label>Estimated Harvest Date</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.estimated_harvest_date}</label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="w-50">
-            <div className=" flex">
-              <div className="w-20">
-                <label>Grow Method</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.grow_method}</label>
-                </div>
-              </div>
-            </div>
-            <div className=" flex">
-              <div className="w-20">
                 <label>Strain</label>
               </div>
               <div className="w-40">
@@ -393,6 +409,92 @@ class TaskList extends React.Component {
                 </div>
               </div>
             </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-40">
+                <label>Grow Method</label>
+              </div>
+              <div className="w-40">
+                <div className="">
+                  <label>{this.state.batch.grow_method}</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+          </div>
+
+          <div className="w-30 ml5">
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Start Date </label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>{this.state.batch.start_date}</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Total Estimation Cost</label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>???</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Total Estimation Hours</label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>???</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+          </div>
+
+          <div className="w-30 ml5">
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Estimated Harvest Dat </label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>{this.state.batch.start_date}</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Total Actual Cost</label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>???</label>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div className=" flex">
+              <div className="w-50">
+                <label>Total Actual Hour</label>
+              </div>
+              <div className="w-50">
+                <div className="">
+                  <label>???</label>
+                </div>
+              </div>
+            </div>
+            <hr />
           </div>
         </div>
         <ReactTable
@@ -415,18 +517,20 @@ class TaskList extends React.Component {
               Header: 'Phase',
               accessor: 'attributes.phase',
               maxWidth: '100',
+              show: false,
               Cell: row => <div>{this.renderPhaseColumn(row)}</div>
             },
             {
               Header: 'Category',
               accessor: 'attributes.task_category',
               maxWidth: '100',
+              show: false,
               Cell: row => <div>{this.renderCategoryColumn(row)}</div>
             },
             {
-              Header: 'Name',
+              Header: 'Tasks',
               accessor: 'attributes.name',
-              maxWidth: '300',
+              maxWidth: '500',
               Cell: row => <div>{this.renderAttributesName(row)}</div>
             },
             {
@@ -442,6 +546,20 @@ class TaskList extends React.Component {
             {
               Header: 'Duration',
               accessor: 'attributes.duration',
+              maxWidth: '100'
+            },
+            {
+              Header: 'Estimated Hours',
+              accessor: 'attributes.estimated_hours',
+              maxWidth: '150'
+            },
+            {
+              Header: 'Resources',
+              accessor: 'attributes.resources',
+              maxWidth: '200'
+            },
+            {
+              Header: 'Materials',
               maxWidth: '100'
             },
             {
@@ -488,12 +606,24 @@ class TaskList extends React.Component {
           getTrProps={(state, rowInfo, column) => {
             if (rowInfo) {
               return {
+                style: {
+                  boxShadow:
+                    this.state.taskSelected === rowInfo.row.id
+                      ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
+                      : null
+                },
                 onMouseOver: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)
+                  button.parentElement.parentElement.parentElement.parentElement.style.boxShadow =
+                    '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
                   button.style.display = 'block'
                 },
                 onMouseOut: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)
+                  if (this.state.taskSelected !== rowInfo.row.id) {
+                    button.parentElement.parentElement.parentElement.parentElement.style.boxShadow =
+                      ''
+                  }
                   button.style.display = 'none'
                 }
               }
@@ -504,6 +634,7 @@ class TaskList extends React.Component {
         <TaskEditor
           onClose={this.closeSidebar}
           batch_id={this.props.batch_id}
+          handleReset={this.handleReset}
         />
       </React.Fragment>
     )

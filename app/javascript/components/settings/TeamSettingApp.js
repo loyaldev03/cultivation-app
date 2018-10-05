@@ -90,12 +90,12 @@ class TeamSetttingApp extends React.Component {
     }
   }
 
-  onAddUser = () => {
-    this.setState({ editingUser: {} })
+  onAddNew = () => {
+    this.setState({ editingUser: {}, editingRole: {} })
     this.openSidebar()
   }
 
-  onEditorSave = async userDetails => {
+  onUserSave = async userDetails => {
     this.setState({ isSaving: true })
     try {
       const response = await (await fetch('/api/v1/user_roles/update_user', {
@@ -108,7 +108,7 @@ class TeamSetttingApp extends React.Component {
         body: JSON.stringify(userDetails)
       })).json()
       if (response && response.data) {
-        store.setUser({ id: response.data.id, ...response.data.attributes })
+        store.updateUser({ id: response.data.id, ...response.data.attributes })
         toast('User updated.', 'success')
       } else {
         console.log(response)
@@ -120,8 +120,27 @@ class TeamSetttingApp extends React.Component {
   }
 
   onRoleSave = async roleDetails => {
+    this.setState({ isSaving: true })
     try {
-    } catch (error) {}
+      const response = await (await fetch('/api/v1/user_roles/update_role', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(roleDetails)
+      })).json()
+      if (response && response.data) {
+        store.updateRole({ id: response.data.id, ...response.data.attributes })
+        toast('Role updated.', 'success')
+      } else {
+        toast(`Update error: ${response.error}`, 'error')
+      }
+    } catch (error) {
+      console.error('Error while saving role', error)
+    }
+    this.setState({ isSaving: false })
   }
 
   onToggleTab = tabName => e => {
@@ -188,7 +207,7 @@ class TeamSetttingApp extends React.Component {
                     <a
                       href="#0"
                       className="dib pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
-                      onClick={this.onAddUser}
+                      onClick={this.onAddNew}
                     >
                       New User
                     </a>
@@ -259,9 +278,7 @@ class TeamSetttingApp extends React.Component {
                             ))}
                           </td>
                           <td className="tl pv2 ph3">
-                            {x.roles.map(r => (
-                              <RoleTag key={r} id={r} />
-                            ))}
+                            {x.roles.map(r => <RoleTag key={r} id={r} />)}
                           </td>
                         </tr>
                       ))}
@@ -275,7 +292,7 @@ class TeamSetttingApp extends React.Component {
                     <a
                       href="#0"
                       className="dib pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
-                      onClick={this.onAddUser}
+                      onClick={this.onAddNew}
                     >
                       New Role
                     </a>
@@ -313,7 +330,7 @@ class TeamSetttingApp extends React.Component {
               <UserDetailsEditor
                 key={editingUser.id}
                 user={editingUser}
-                onSave={this.onEditorSave}
+                onSave={this.onUserSave}
                 onClose={this.closeSidebar}
                 facilitiesOptions={facilitiesOptions}
                 rolesOptions={rolesOptions}

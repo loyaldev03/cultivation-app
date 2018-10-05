@@ -21,7 +21,14 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
     end
   end
 
-  def update_role_permission
+  def update_role
+    Rails.logger.debug "\033[31m #{role_params} \033[0m"
+    save_role_cmd = SaveRole.call(role_params)
+    if save_role_cmd.success?
+      render json: Common::FacilityRoleSerializer.new(save_role_cmd.result).serialized_json
+    else
+      render json: {error: 'Error saving user details'}
+    end
   end
 
   private
@@ -39,6 +46,18 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       :default_facility_id,
       facilities: [],
       roles: [],
+    )
+  end
+
+  def role_params
+    params.require(:role).permit(
+      :id,
+      :name,
+      :desc,
+      permissions: [
+        :code,
+        :value
+      ],
     )
   end
 end

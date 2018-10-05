@@ -7,9 +7,27 @@ const PERMISSION_CREATE = 4
 const PERMISSION_DELETE = 8
 
 class PermissionRow extends React.PureComponent {
+  constructor(props) {
+    super(props)
+    const value = props.value ? parseInt(props.value) : PERMISSION_NONE
+    this.state = {
+      value: value
+    }
+  }
+
+  onCheckboxChange = e => {
+    const value = this.state.value ^ parseInt(e.target.value)
+    this.setState({ value })
+    console.log('onCheckboxChange')
+    if (this.props.onChange) {
+      this.props.onChange(this.props.code, value)
+    }
+  }
+
   render() {
-    const { code, name, value } = this.props
-    const valueInt = parseInt(value)
+    const { name } = this.props
+    const { value } = this.state
+
     return (
       <tr>
         <td>
@@ -18,37 +36,33 @@ class PermissionRow extends React.PureComponent {
         <td className="tc">
           <input
             type="checkbox"
-            name={code}
             value={PERMISSION_READ}
-            checked={(valueInt & PERMISSION_READ) !== PERMISSION_NONE}
-            onChange={() => {}}
+            checked={(value & PERMISSION_READ) !== PERMISSION_NONE}
+            onChange={this.onCheckboxChange}
           />
         </td>
         <td className="tc">
           <input
             type="checkbox"
-            name={code}
             value={PERMISSION_UPDATE}
-            checked={(valueInt & PERMISSION_UPDATE) !== PERMISSION_NONE}
-            onChange={() => {}}
+            checked={(value & PERMISSION_UPDATE) !== PERMISSION_NONE}
+            onChange={this.onCheckboxChange}
           />
         </td>
         <td className="tc">
           <input
             type="checkbox"
-            name={code}
             value={PERMISSION_CREATE}
-            checked={(valueInt & PERMISSION_CREATE) !== PERMISSION_NONE}
-            onChange={() => {}}
+            checked={(value & PERMISSION_CREATE) !== PERMISSION_NONE}
+            onChange={this.onCheckboxChange}
           />
         </td>
         <td className="tc">
           <input
             type="checkbox"
-            name={code}
             value={PERMISSION_DELETE}
-            checked={(valueInt & PERMISSION_DELETE) !== PERMISSION_NONE}
-            onChange={() => {}}
+            checked={(value & PERMISSION_DELETE) !== PERMISSION_NONE}
+            onChange={this.onCheckboxChange}
           />
         </td>
       </tr>

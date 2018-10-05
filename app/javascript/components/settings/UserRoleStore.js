@@ -44,7 +44,7 @@ class UserRoleStore {
   }
 
   @action
-  setUser(user) {
+  updateUser(user) {
     const found = this.users.find(x => x.id === user.id)
     if (found) {
       this.users = this.users.map(
@@ -53,6 +53,19 @@ class UserRoleStore {
     } else {
       this.users.push(user)
     }
+  }
+
+  @action
+  updateRole(role) {
+    const found = this.roles.find(x => x.id === role.id)
+    if (found) {
+      this.roles = this.roles.map(
+        r => (r.id === role.id ? role : r)
+      )
+    } else {
+      this.roles.push(role)
+    }
+    console.error('NOT Implemented Exception')
   }
 
   getUser(userId) {

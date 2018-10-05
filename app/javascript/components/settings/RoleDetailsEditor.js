@@ -8,23 +8,44 @@ class RoleDetailsEditor extends React.PureComponent {
       this.state = {
         roleId: props.role.id,
         name: props.role.name || '',
-        desc: props.role.desc || ''
+        desc: props.role.desc || '',
+        changes: []
       }
     } else {
       this.state = {
         roleId: '',
         name: '',
-        desc: ''
+        desc: '',
+        changes: []
       }
     }
   }
 
   onChangeInput = field => e => this.setState({ [field]: e.target.value })
 
+  onChangePermission = (code, value) => {
+    const found = this.state.changes.findIndex(p0 => p0.code === code)
+    const p1 = { code, value }
+    let changes = []
+    if (found > -1) {
+      changes = this.state.changes.map(p0 => p0.code === code ? p1 : p0)
+    } else {
+      changes = [...this.state.changes, p1]
+    }
+    this.setState({ changes })
+  }
+
   onSubmit = e => {
     e.preventDefault()
-    console.log('Submit clicked')
-    // TODO: Call props onSave
+    const roleDetails = {
+      role: {
+        id: this.state.roleId,
+        name: this.state.name,
+        desc: this.state.desc,
+        permissions: this.state.changes,
+      }
+    }
+    this.props.onSave(roleDetails)
   }
 
   render() {
@@ -92,6 +113,7 @@ class RoleDetailsEditor extends React.PureComponent {
                           code={feat.code}
                           name={feat.name}
                           value={Math.floor(Math.random() * Math.floor(15))}
+                          onChange={this.onChangePermission}
                         />
                       ))}
                     </React.Fragment>

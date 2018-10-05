@@ -9,7 +9,7 @@ class SaveUser
 
   def call
     if args[:id]
-      user = User.find(id: args[:id])
+      user = User.find(args[:id])
       user.email = args[:email]
       user.password = args[:password]
       user.first_name = args[:first_name]

@@ -130,10 +130,13 @@ class TeamSetttingApp extends React.Component {
   }
 
   render() {
-    if (store.isLoading || !store.userRoles) {
-      return <span className="grey">Loading...</span>
+    if (store.isLoading) {
+      return <p className="orange ph4 pt3">Loading...</p>
     }
-    const { facilities, users, roles } = store.userRoles.attributes
+    if (!store.isDataLoaded) {
+      return <p className="orange ph4 pt3">No data available...</p>
+    }
+    const { facilities, users, roles } = store
     const { editingUser, editingRole, isSaving, activeTab } = this.state
     const facilitiesOptions = build_facilities_options(facilities)
     const rolesOptions = build_roles_options(roles)

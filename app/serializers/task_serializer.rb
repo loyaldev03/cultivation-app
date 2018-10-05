@@ -15,10 +15,12 @@ class TaskSerializer
     object.end_date.try(:strftime, '%m/%d/%Y')
   end
 
+  #for showing in table column resources
   attribute :resources do |object|
     object.users.map { |a| a.display_name }.join(',')
   end
 
+  #for dropdown in assigning resource
   attribute :assigned_employee do |object|
     object.users.map { |a| {'label' => a.display_name, 'value' => a.id.to_s} }
   end

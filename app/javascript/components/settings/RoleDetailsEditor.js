@@ -1,5 +1,5 @@
-import 'babel-polyfill'
 import React from 'react'
+import PermissionRow from './PermissionRow'
 
 class RoleDetailsEditor extends React.PureComponent {
   constructor(props) {
@@ -80,30 +80,19 @@ class RoleDetailsEditor extends React.PureComponent {
                     <th className="bb b--light-grey dark-gray">Delete</th>
                   </tr>
                   {modules.map(mod => (
-                    <React.Fragment>
-                      <tr key={mod.code}>
+                    <React.Fragment key={mod.code}>
+                      <tr>
                         <td colSpan="5" className="pt2">
                           <span className="underline b">{mod.name}</span>
                         </td>
                       </tr>
                       {mod.features.map(feat => (
-                        <tr key={feat.code}>
-                          <td>
-                            <span className="db ml3 pv1">{feat.name}</span>
-                          </td>
-                          <td className="tc">
-                            <input type="checkbox" />
-                          </td>
-                          <td className="tc">
-                            <input type="checkbox" />
-                          </td>
-                          <td className="tc">
-                            <input type="checkbox" />
-                          </td>
-                          <td className="tc">
-                            <input type="checkbox" />
-                          </td>
-                        </tr>
+                        <PermissionRow
+                          key={feat.code}
+                          code={feat.code}
+                          name={feat.name}
+                          value={Math.floor(Math.random() * Math.floor(15))}
+                        />
                       ))}
                     </React.Fragment>
                   ))}

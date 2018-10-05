@@ -283,9 +283,9 @@ module Constants
 
   PERMISSION = {
     NONE: 0,
-    CREATE: 2 ** 0,
-    READ: 2 ** 1,
-    UPDATE: 2 ** 2,
+    READ: 2 ** 0,
+    UPDATE: 2 ** 1,
+    CREATE: 2 ** 2,
     DELETE: 2 ** 3,
   }.freeze
 end

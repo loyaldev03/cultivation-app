@@ -19,22 +19,34 @@ const permission2Options = [
   { category: 'Inventory', permission: 'Active plants' },
   { category: 'Inventory', permission: 'Sales Products' },
   { category: 'Inventory', permission: 'Non-sales items' },
-  { category: 'Inventory', permission: 'Strain type' },
+  { category: 'Inventory', permission: 'Strain type' }
 ]
 
 const permission3Options = [
   { category: 'Cultivation', permission: 'Templates' },
   { category: 'Cultivation', permission: 'All batches' },
-  { category: 'Cultivation', permission: 'Batch assigned to my direct reports' },
+  {
+    category: 'Cultivation',
+    permission: 'Batch assigned to my direct reports'
+  },
   { category: 'Cultivation', permission: 'Batch assigned to me' },
   { category: 'Cultivation', permission: 'Asssign tasks to all users' },
-  { category: 'Cultivation', permission: 'Assign tasks only to my direct reports' },
+  {
+    category: 'Cultivation',
+    permission: 'Assign tasks only to my direct reports'
+  },
   { category: 'Cultivation', permission: 'All Tasks' },
-  { category: 'Cultivation', permission: 'Tasks assigned to my direct reports' },
+  {
+    category: 'Cultivation',
+    permission: 'Tasks assigned to my direct reports'
+  },
   { category: 'Cultivation', permission: 'Tasks assigned to me' },
   { category: 'Cultivation', permission: 'All hours worked' },
-  { category: 'Cultivation', permission: 'Hours assigned to my direct reports' },
-  { category: 'Cultivation', permission: 'My hours worked' },
+  {
+    category: 'Cultivation',
+    permission: 'Hours assigned to my direct reports'
+  },
+  { category: 'Cultivation', permission: 'My hours worked' }
 ]
 
 const permission4Options = [
@@ -42,7 +54,10 @@ const permission4Options = [
   { category: 'Issues', permission: 'Issues reported by my direct reports' },
   { category: 'Issues', permission: 'Issues reported by me' },
   { category: 'Issues', permission: 'Assign tasks to all issues' },
-  { category: 'Issues', permission: 'Assign tasks to issues reported by my direct report' },
+  {
+    category: 'Issues',
+    permission: 'Assign tasks to issues reported by my direct report'
+  }
 ]
 
 class RoleDetailsEditor extends React.PureComponent {
@@ -67,7 +82,7 @@ class RoleDetailsEditor extends React.PureComponent {
 
   onSubmit = e => {
     e.preventDefault()
-    console.log("Submit clicked")
+    console.log('Submit clicked')
     // TODO: Call props onSave
   }
 

@@ -20,7 +20,7 @@ module Common
         }
       end
     end
-    
+
     attribute :modules
 
     attribute :users do |object|

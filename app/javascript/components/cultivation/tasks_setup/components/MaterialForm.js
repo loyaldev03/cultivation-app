@@ -5,8 +5,6 @@ import Select from 'react-select'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from './../../../utils/reactSelectStyle'
 
-
-
 export default class MaterialForm extends React.Component {
   constructor(props) {
     super(props)
@@ -28,8 +26,8 @@ export default class MaterialForm extends React.Component {
     }
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <div className="ph4 mt3 mb3 flex">
         <div className="w-40">
           <label className="f6 fw6 db mb1 gray ttc">Material Name</label>
@@ -68,6 +66,6 @@ export default class MaterialForm extends React.Component {
           />
         </div>
       </div>
-      )
+    )
   }
 }

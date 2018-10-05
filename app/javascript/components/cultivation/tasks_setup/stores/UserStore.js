@@ -16,10 +16,6 @@ class UserStore {
   get userSelect() {
     this.users
   }
-
-
-
-  
 }
 
 const userStore = new UserStore()

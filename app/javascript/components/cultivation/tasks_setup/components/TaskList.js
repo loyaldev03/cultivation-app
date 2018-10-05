@@ -162,7 +162,8 @@ class TaskList extends React.Component {
           <div className="flex">
             <div className="w1 ml3">
               {row.row['attributes.is_phase'] === true && (
-                <a className="pointer"
+                <a
+                  className="pointer"
                   onClick={e => {
                     handleEdit(row)
                   }}
@@ -173,7 +174,8 @@ class TaskList extends React.Component {
             </div>
             <div className="w1 ml3">
               {row.row['attributes.is_category'] === true && (
-                <a className="pointer"
+                <a
+                  className="pointer"
                   onClick={e => {
                     handleEdit(row)
                   }}
@@ -185,7 +187,8 @@ class TaskList extends React.Component {
             <div className="w1 ml3">
               {row.row['attributes.is_phase'] === false &&
                 row.row['attributes.is_category'] === false && (
-                <a className="pointer"
+                  <a
+                    className="pointer"
                     onClick={e => {
                       handleEdit(row)
                     }}

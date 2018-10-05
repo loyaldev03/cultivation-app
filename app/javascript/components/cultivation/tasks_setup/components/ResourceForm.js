@@ -6,17 +6,15 @@ import reactSelectStyle from './../../../utils/reactSelectStyle'
 
 import LetterAvatar from '../../../utils/LetterAvatar'
 
-
 import UserRoles from '../stores/UserRoleStore'
 import UserStore from '../stores/UserStore'
-
 
 export default class ResourceForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       batch_id: this.props.batch_id,
-      id: props.task.id ,
+      id: props.task.id,
       ...props.task.attributes,
       resource_name: '',
       job_role: '',
@@ -49,20 +47,23 @@ export default class ResourceForm extends React.Component {
   }
 
   handleChangeSelect = (key, value) => {
-    this.setState({[key]: value})
-    if(key === "job_role"){
-      if(value !== null){
+    this.setState({ [key]: value })
+    if (key === 'job_role') {
+      if (value !== null) {
         let existing_user_ids = this.state.users.map(user => user.id)
-        let dropdown_users = UserStore.users.filter(user => user.attributes.roles.includes(value.value) && !existing_user_ids.includes(user.id))
+        let dropdown_users = UserStore.users.filter(
+          user =>
+            user.attributes.roles.includes(value.value) &&
+            !existing_user_ids.includes(user.id)
+        )
         dropdown_users = this.toDropdown(dropdown_users)
-        this.setState({dropdown_users: dropdown_users, resource_name: ''})
+        this.setState({ dropdown_users: dropdown_users, resource_name: '' })
       }
     }
   }
 
   handleSubmit = () => {
-    if(this.state.job_role === null || this.state.job_role === '') 
-    {
+    if (this.state.job_role === null || this.state.job_role === '') {
       alert('Please choose job role')
       return null
     }
@@ -72,7 +73,8 @@ export default class ResourceForm extends React.Component {
     }
 
     this.setState(prevState => ({
-      users: [...prevState.users,
+      users: [
+        ...prevState.users,
         {
           id: this.state.resource_name.value,
           name: this.state.resource_name.label,
@@ -81,20 +83,20 @@ export default class ResourceForm extends React.Component {
       ],
       resource_name: '',
       job_role: ''
-    })
-  )}
+    }))
+  }
 
-  handleDelete = (id) => {
+  handleDelete = id => {
     this.setState({
-      users: this.state.users.filter( user => user.id !== id)
-    });
+      users: this.state.users.filter(user => user.id !== id)
+    })
   }
 
   render() {
     let roles = this.state.dropdown_roles
     let users = this.state.dropdown_users
     let resources = this.state.users
-    return(
+    return (
       <React.Fragment>
         <div className="ba b--light-gray ml4 mr4 mt4">
           <div className="ph4 mt3 flex">
@@ -105,7 +107,7 @@ export default class ResourceForm extends React.Component {
                 options={roles}
                 classNamePrefix="select"
                 fieldname="job_role"
-                onChange={(e)=>this.handleChangeSelect('job_role', e)}
+                onChange={e => this.handleChangeSelect('job_role', e)}
                 value={this.state.job_role}
               />
             </div>
@@ -118,13 +120,18 @@ export default class ResourceForm extends React.Component {
                 options={users}
                 classNamePrefix="select"
                 fieldname="resource_name"
-                onChange={(e) => this.handleChangeSelect('resource_name', e)}
+                onChange={e => this.handleChangeSelect('resource_name', e)}
                 value={this.state.resource_name}
               />
             </div>
           </div>
           <div className="pv2 w4">
-            <input type="submit" className="pv2 ph3 ml4 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer" value="Add Resource" onClick={this.handleSubmit}/>
+            <input
+              type="submit"
+              className="pv2 ph3 ml4 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+              value="Add Resource"
+              onClick={this.handleSubmit}
+            />
           </div>
         </div>
         <div className="mt4 mr4 ml4 f6 fw6 db mb1 gray ttc">
@@ -132,32 +139,26 @@ export default class ResourceForm extends React.Component {
           <table className="w-100">
             <tbody>
               {resources.map(x => (
-                <tr
-                  key={x.id}
-                  className="pointer bb"
-                >
+                <tr key={x.id} className="pointer bb">
                   <td className="pa2 tc">
-                    <LetterAvatar
-                      firstName={x.name}
-                      size={36}
-                      radius={18}
-                    />
+                    <LetterAvatar firstName={x.name} size={36} radius={18} />
                   </td>
                   <td className="tl pv2 ph3">{x.name}</td>
+                  <td className="tl pv2 ph3">{x.role}</td>
                   <td className="tl pv2 ph3">
-                    {x.role}
-                  </td>
-                  <td className="tl pv2 ph3">
-                    <i className="material-icons red md-18 pointer dim" onClick={(e) => this.handleDelete(x.id)}>delete</i>
+                    <i
+                      className="material-icons red md-18 pointer dim"
+                      onClick={e => this.handleDelete(x.id)}
+                    >
+                      delete
+                    </i>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-
-        </React.Fragment>
-
+      </React.Fragment>
     )
   }
 }

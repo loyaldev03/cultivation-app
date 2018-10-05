@@ -168,7 +168,6 @@ class SidebarTaskEditor extends React.Component {
           </div>
         </div>
 
-      
         <div className="w-100 pa4 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
           <button
             name="commit"

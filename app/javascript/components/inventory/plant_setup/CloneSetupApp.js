@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
 import CloneEditor from './components/editor/CloneEditor'
 import plantStore from './store/PlantStore'
-import {loadPlants} from './actions/loadPlants'
+import { loadPlants } from './actions/loadPlants'
 
 const columns = [
   {
@@ -143,7 +143,7 @@ class CloneSetupApp extends React.Component {
     return (
       <React.Fragment>
         {this.renderPlantList()}
-        <CloneEditor 
+        <CloneEditor
           cultivation_batches={this.props.cultivation_batches}
           locations={this.props.locations}
         />

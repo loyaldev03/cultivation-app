@@ -18,7 +18,10 @@ class CloneEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
-    this.batches = this.props.cultivation_batches.map((x) => ({ id: x.id, ...x.attributes }))
+    this.batches = this.props.cultivation_batches.map(x => ({
+      id: x.id,
+      ...x.attributes
+    }))
     this.locations = this.props.locations
 
     // Converting to callback ref because purchase info editor is hidding and showing.
@@ -103,7 +106,7 @@ class CloneEditor extends React.Component {
       planting_date = new Date(item.start_date)
     }
 
-    this.setState({ 
+    this.setState({
       cultivation_batch_id: item.value,
       facility_id: item.facility_id,
       facility_strain_id: item.facility_strain_id,
@@ -171,7 +174,7 @@ class CloneEditor extends React.Component {
     if (plant_ids.trim().length <= 0) {
       errors = {
         ...errors,
-        plant_ids: ['Plant ID is required.'] 
+        plant_ids: ['Plant ID is required.']
       }
     }
 
@@ -192,13 +195,12 @@ class CloneEditor extends React.Component {
     if (isBought) {
       purchaseData = this.purchaseInfoEditor.getValues()
     }
-    
+
     const isValid =
-      Object.getOwnPropertyNames(errors).length == 0 &&
-      purchaseData.isValid
+      Object.getOwnPropertyNames(errors).length == 0 && purchaseData.isValid
 
     // Purchase data should have:
-    // 
+    //
     // vendor_name: '',
     // vendor_no: '',
     // address: '',
@@ -264,8 +266,8 @@ class CloneEditor extends React.Component {
     return (
       <React.Fragment>
         <div className="ph4 mt3 mb1" style={style}>
-            <span className="f6 fw6 gray">Plant IDs</span>
-          </div>
+          <span className="f6 fw6 gray">Plant IDs</span>
+        </div>
         <div className="ph4 mb2 flex" style={style}>
           <div className="w-100">
             <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
@@ -287,27 +289,24 @@ class CloneEditor extends React.Component {
   }
 
   renderBatchDetails() {
-    if (!this.state.cultivation_batch_id || this.state.cultivation_batch_id.length <= 0)
+    if (
+      !this.state.cultivation_batch_id ||
+      this.state.cultivation_batch_id.length <= 0
+    )
       return null
 
     return (
       <React.Fragment>
         <div className="ph4 mt3 flex">
           <div className="w-60">
-            <label className="f6 fw6 db mb1 gray ttc">
-              Strain
-            </label>
-            <p className="f6 mt0 mb2">
-              {this.state.strain_name}
-            </p>
+            <label className="f6 fw6 db mb1 gray ttc">Strain</label>
+            <p className="f6 mt0 mb2">{this.state.strain_name}</p>
           </div>
           <div className="w-40 pl3">
             <label className="f6 fw6 db mb1 gray ttc tr">
               Batch start date
             </label>
-            <p className="f6 mt0 mb2 tr">
-              {this.state.start_date}
-            </p>
+            <p className="f6 mt0 mb2 tr">{this.state.start_date}</p>
           </div>
         </div>
         <hr className="mt3 m b--black-10 w-100" />
@@ -315,18 +314,21 @@ class CloneEditor extends React.Component {
     )
   }
 
-  loadMothers = (inputValue) => {
+  loadMothers = inputValue => {
     if (this.state.facility_strain_id.length <= 0) {
       return new Promise(resolve => resolve([]))
     }
 
-    return searchPlants('mother', this.state.facility_strain_id, inputValue)
-      .then(data => {
-        return data.data.map(x => ({
-          label: x.attributes.plant_id,
-          value: x.id
-        }))
-      })
+    return searchPlants(
+      'mother',
+      this.state.facility_strain_id,
+      inputValue
+    ).then(data => {
+      return data.data.map(x => ({
+        label: x.attributes.plant_id,
+        value: x.id
+      }))
+    })
   }
 
   render() {
@@ -361,7 +363,9 @@ class CloneEditor extends React.Component {
                 label={'Cultivation Batch ID'}
                 options={this.batches}
                 key={this.state.cultivation_batch_id}
-                defaultValue={this.batches.find(x => x.value === this.state.cultivation_batch_id)}
+                defaultValue={this.batches.find(
+                  x => x.value === this.state.cultivation_batch_id
+                )}
                 onChange={this.onCultivationBatchIdChanged}
                 styles={reactSelectStyle}
               />
@@ -372,17 +376,17 @@ class CloneEditor extends React.Component {
             </div>
           </div>
 
-          { this.renderBatchDetails() }
-          { this.renderPlantIdTextArea() }
+          {this.renderBatchDetails()}
+          {this.renderPlantIdTextArea()}
           <div className="ph4 mt3 flex">
             <div className="w-100">
-              <LocationPicker 
+              <LocationPicker
                 key={this.state.facility_id}
-                mode="clone" 
+                mode="clone"
                 facility_id={this.state.facility_id}
                 onChange={this.onLocationChanged}
-                locations={this.locations} 
-                />
+                locations={this.locations}
+              />
             </div>
           </div>
           <div className="ph4 mt3 flex">

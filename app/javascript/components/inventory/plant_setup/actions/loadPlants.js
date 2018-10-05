@@ -40,7 +40,11 @@ function loadPlants(current_growth_stage = '', facility_strain_id = '') {
     })
 }
 
-function searchPlants(current_growth_stage = '', facility_strain_id = '', search = '') {
+function searchPlants(
+  current_growth_stage = '',
+  facility_strain_id = '',
+  search = ''
+) {
   let apiUrl = '/api/v1/plants/search'
 
   if (current_growth_stage.length > 0) {
@@ -64,15 +68,14 @@ function searchPlants(current_growth_stage = '', facility_strain_id = '', search
     headers: {
       'Content-Type': 'application/json'
     }
-  })
-    .then(response => {
-      return response.json().then(data => {
-        return {
-          status: response.status,
-          data: data.data
-        }
-      })
+  }).then(response => {
+    return response.json().then(data => {
+      return {
+        status: response.status,
+        data: data.data
+      }
     })
+  })
 }
 
 export { loadPlants, searchPlants }

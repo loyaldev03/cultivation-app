@@ -190,7 +190,8 @@ class CloneEditor extends React.Component {
       purchaseData = this.purchaseInfoEditor.getValues()
     }
 
-    const isValid = Object.getOwnPropertyNames(errors).length == 0 && purchaseData.isValid
+    const isValid =
+      Object.getOwnPropertyNames(errors).length == 0 && purchaseData.isValid
 
     // Purchase data should have:
     //

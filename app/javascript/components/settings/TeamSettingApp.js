@@ -136,7 +136,7 @@ class TeamSetttingApp extends React.Component {
     if (!store.isDataLoaded) {
       return <p className="orange ph4 pt3">No data available...</p>
     }
-    const { facilities, users, roles } = store
+    const { facilities, users, roles, modules } = store
     const { editingUser, editingRole, isSaving, activeTab } = this.state
     const facilitiesOptions = build_facilities_options(facilities)
     const rolesOptions = build_roles_options(roles)
@@ -326,6 +326,7 @@ class TeamSetttingApp extends React.Component {
                 role={editingRole}
                 onSave={this.onRoleSave}
                 onClose={this.closeSidebar}
+                modules={modules}
                 isSaving={isSaving}
               />
             )}

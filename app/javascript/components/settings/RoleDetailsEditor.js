@@ -1,65 +1,6 @@
 import 'babel-polyfill'
 import React from 'react'
 
-const permissionOptions = [
-  { category: 'Finance', permission: 'Invoices' },
-  { category: 'Finance', permission: 'Purchase Order' },
-  { category: 'Finance', permission: 'Manifest' },
-  { category: 'Finance', permission: 'Cost' },
-  { category: 'Finance', permission: 'User costs' },
-  { category: 'Finance', permission: 'Expenses' },
-  { category: 'Finance', permission: 'Product Sales' },
-  { category: 'Finance', permission: 'All users payroll' },
-  { category: 'Finance', permission: 'My Direct Reports payroll' },
-  { category: 'Finance', permission: 'My Payroll' }
-]
-
-const permission2Options = [
-  { category: 'Inventory', permission: 'Inventory type' },
-  { category: 'Inventory', permission: 'Active plants' },
-  { category: 'Inventory', permission: 'Sales Products' },
-  { category: 'Inventory', permission: 'Non-sales items' },
-  { category: 'Inventory', permission: 'Strain type' }
-]
-
-const permission3Options = [
-  { category: 'Cultivation', permission: 'Templates' },
-  { category: 'Cultivation', permission: 'All batches' },
-  {
-    category: 'Cultivation',
-    permission: 'Batch assigned to my direct reports'
-  },
-  { category: 'Cultivation', permission: 'Batch assigned to me' },
-  { category: 'Cultivation', permission: 'Asssign tasks to all users' },
-  {
-    category: 'Cultivation',
-    permission: 'Assign tasks only to my direct reports'
-  },
-  { category: 'Cultivation', permission: 'All Tasks' },
-  {
-    category: 'Cultivation',
-    permission: 'Tasks assigned to my direct reports'
-  },
-  { category: 'Cultivation', permission: 'Tasks assigned to me' },
-  { category: 'Cultivation', permission: 'All hours worked' },
-  {
-    category: 'Cultivation',
-    permission: 'Hours assigned to my direct reports'
-  },
-  { category: 'Cultivation', permission: 'My hours worked' }
-]
-
-const permission4Options = [
-  { category: 'Issues', permission: 'All issues' },
-  { category: 'Issues', permission: 'Issues reported by my direct reports' },
-  { category: 'Issues', permission: 'Issues reported by me' },
-  { category: 'Issues', permission: 'Assign tasks to all issues' },
-  {
-    category: 'Issues',
-    permission: 'Assign tasks to issues reported by my direct report'
-  }
-]
-
 class RoleDetailsEditor extends React.PureComponent {
   constructor(props) {
     super(props)
@@ -87,7 +28,7 @@ class RoleDetailsEditor extends React.PureComponent {
   }
 
   render() {
-    const { onClose, isSaving } = this.props
+    const { onClose, isSaving, modules } = this.props
     const { name, desc } = this.state
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
     return (
@@ -138,102 +79,33 @@ class RoleDetailsEditor extends React.PureComponent {
                     <th className="bb b--light-grey dark-gray">Create</th>
                     <th className="bb b--light-grey dark-gray">Delete</th>
                   </tr>
-                  <tr>
-                    <td colSpan="5" className="pt2">
-                      <span className="underline b">Finance</span>
-                    </td>
-                  </tr>
-                  {permissionOptions.map(p => (
-                    <tr key={p.permission}>
-                      <td>
-                        <span className="db ml3 pv1">{p.permission}</span>
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                    </tr>
-                  ))}
-                  <tr>
-                    <td colSpan="5" className="pt2">
-                      <span className="underline b">Inventory</span>
-                    </td>
-                  </tr>
-                  {permission2Options.map(p => (
-                    <tr key={p.permission}>
-                      <td>
-                        <span className="db ml3 pv1">{p.permission}</span>
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                    </tr>
-                  ))}
-                  <tr>
-                    <td colSpan="5" className="pt2">
-                      <span className="underline b">Cultivation</span>
-                    </td>
-                  </tr>
-                  {permission3Options.map(p => (
-                    <tr key={p.permission}>
-                      <td>
-                        <span className="db ml3 pv1">{p.permission}</span>
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                    </tr>
-                  ))}
-
-                  <tr>
-                    <td colSpan="5" className="pt2">
-                      <span className="underline b">Issues</span>
-                    </td>
-                  </tr>
-                  {permission4Options.map(p => (
-                    <tr key={p.permission}>
-                      <td>
-                        <span className="db ml3 pv1">{p.permission}</span>
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                      <td className="tc">
-                        <input type="checkbox" />
-                      </td>
-                    </tr>
+                  {modules.map(mod => (
+                    <React.Fragment>
+                      <tr key={mod.code}>
+                        <td colSpan="5" className="pt2">
+                          <span className="underline b">{mod.name}</span>
+                        </td>
+                      </tr>
+                      {mod.features.map(feat => (
+                        <tr key={feat.code}>
+                          <td>
+                            <span className="db ml3 pv1">{feat.name}</span>
+                          </td>
+                          <td className="tc">
+                            <input type="checkbox" />
+                          </td>
+                          <td className="tc">
+                            <input type="checkbox" />
+                          </td>
+                          <td className="tc">
+                            <input type="checkbox" />
+                          </td>
+                          <td className="tc">
+                            <input type="checkbox" />
+                          </td>
+                        </tr>
+                      ))}
+                    </React.Fragment>
                   ))}
                 </tbody>
               </table>

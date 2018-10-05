@@ -143,6 +143,30 @@ class TeamSetttingApp extends React.Component {
     this.setState({ isSaving: false })
   }
 
+  onRoleDelete = async roleId => {
+    this.setState({ isSaving: true })
+    try {
+      const response = await (await fetch('/api/v1/user_roles/destroy_role', {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ role: {id: roleId}})
+      })).json()
+      if (response && response.data) {
+        store.deleteRole(roleId)
+        toast('Role deleted.', 'success')
+      } else {
+        toast(`Error deleting role: ${response.error}`, 'error')
+      }
+    } catch (error) {
+      console.error('Error while deleting role', error)
+    }
+    this.setState({ isSaving: false })
+  }
+
   onToggleTab = tabName => e => {
     this.setState({ activeTab: tabName })
   }
@@ -341,6 +365,7 @@ class TeamSetttingApp extends React.Component {
                 key={editingRole.id}
                 role={editingRole}
                 onSave={this.onRoleSave}
+                onDelete={this.onRoleDelete}
                 onClose={this.closeSidebar}
                 modules={modules}
                 isSaving={isSaving}

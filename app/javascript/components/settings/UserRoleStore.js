@@ -63,6 +63,11 @@ class UserRoleStore {
     }
   }
 
+  @action
+  deleteRole(roleId) {
+    this.roles = this.roles.filter(r => r.id !== roleId)
+  }
+
   getUser(userId) {
     if (userId && this.users) {
       const user = this.users.find(x => x.id === userId)

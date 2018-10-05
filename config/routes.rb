@@ -118,6 +118,7 @@ Rails.application.routes.draw do
         get 'search'
         post 'update_user'
         post 'update_role'
+        delete 'destroy_role'
       end
     end
   end

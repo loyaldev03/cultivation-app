@@ -55,6 +55,13 @@ class RoleDetailsEditor extends React.PureComponent {
     this.props.onSave(roleDetails)
   }
 
+  onDelete = e => {
+    const result = confirm("Confirm delete this role?");
+    if (result) {
+      this.props.onDelete(this.state.roleId)
+    }
+  }
+
   render() {
     const { onClose, isSaving, modules } = this.props
     const { name, desc } = this.state
@@ -130,6 +137,7 @@ class RoleDetailsEditor extends React.PureComponent {
             </div>
           </div>
           <div className="mv3 bt fl w-100 b--light-grey pt3 ph4">
+            <a href="#0" className="fl ph3 pv2 button--font bn box--br3 ttu link dim pointer" onClick={this.onDelete}>Delete</a>
             <input
               type="submit"
               value={saveButtonText}

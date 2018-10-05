@@ -31,6 +31,15 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
     end
   end
 
+  def destroy_role
+    destroy_cmd = DestroyRole.call(role_params[:id])
+    if destroy_cmd.success?
+      render json: {data: 'Ok'}
+    else
+      render json: {error: 'Error saving user details'}
+    end
+  end
+
   private
 
   def user_params

@@ -1,10 +1,8 @@
 import { observable, action, runInAction, toJS } from 'mobx'
 
 class UserRoleStore {
-  @observable
-  isLoading = false
-  @observable
-  userRoles
+  @observable isLoading = false
+  @observable userRoles
 
   @action
   async loadUsers() {

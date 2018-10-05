@@ -2,10 +2,8 @@ import { observable, computed, action } from 'mobx'
 
 class BatchModel {
   id = Math.random()
-  @observable
-  batch_source
-  @observable
-  status = 'pending'
+  @observable batch_source
+  @observable status = 'pending'
 
   constructor() {}
 

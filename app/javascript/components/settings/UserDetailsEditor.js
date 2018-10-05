@@ -1,6 +1,9 @@
+import 'babel-polyfill'
 import React from 'react'
 import Select from 'react-select'
 import classNames from 'classnames'
+import AvatarPicker from '../utils/AvatarPicker'
+import { ReactComponent as BlankAvatar } from '../utils/BlankAvatar.svg'
 
 class UserDetailsEditor extends React.PureComponent {
   constructor(props) {
@@ -30,6 +33,8 @@ class UserDetailsEditor extends React.PureComponent {
         lastName: props.user.last_name || '',
         email: props.user.email || '',
         title: props.user.title || '',
+        photoData: props.user.photo_data,
+        photoUrl: props.user.photo_url,
         isActive: props.user.is_active || false,
         facilities,
         roles,
@@ -42,6 +47,8 @@ class UserDetailsEditor extends React.PureComponent {
         lastName: '',
         email: '',
         title: '',
+        photoData: '',
+        photoUrl: '',
         isActive: false,
         facilities: [],
         roles: [],
@@ -62,6 +69,12 @@ class UserDetailsEditor extends React.PureComponent {
     }
   }
 
+  onUploadAvatarSuccess = photoData => {
+    const photoUrl = `/uploads/${photoData.storage}/${photoData.id}`
+    console.log({ photoUrl })
+    this.setState({ photoUrl, photoData })
+  }
+
   onSubmit = e => {
     e.preventDefault()
     const roles = this.state.roles ? this.state.roles.map(x => x.value) : []
@@ -79,6 +92,7 @@ class UserDetailsEditor extends React.PureComponent {
         first_name: this.state.firstName,
         last_name: this.state.lastName,
         title: this.state.title,
+        photo_data: JSON.stringify(this.state.photoData),
         is_active: this.state.isActive || false,
         facilities,
         roles,
@@ -101,6 +115,7 @@ class UserDetailsEditor extends React.PureComponent {
       lastName,
       email,
       title,
+      photoUrl,
       isActive,
       facilities,
       roles,
@@ -130,6 +145,20 @@ class UserDetailsEditor extends React.PureComponent {
               <label className="f6 fw6 db mb0 dark-gray ttc">Basic Info</label>
             </div>
             <div className="mt2 fl w-100">
+              <div className="w-100 fl pr3">
+                <label className="f6 fw6 db mb1 gray ttc">Photo</label>
+                <div
+                  className={classNames('hide-child relative tc fl mb2', {
+                    'w4 h4 bg-black-10': !photoUrl
+                  })}
+                >
+                  <img src={photoUrl} className="fl" />
+                  <AvatarPicker
+                    key={photoUrl}
+                    onUploadSuccess={this.onUploadAvatarSuccess}
+                  />
+                </div>
+              </div>
               <div className="w-50 fl pr3">
                 <label className="f6 fw6 db mb1 gray ttc">First Name</label>
                 <input
@@ -243,28 +272,6 @@ class UserDetailsEditor extends React.PureComponent {
               <p className="gray f6 db mv1">
                 Only active user are allowed to access the system.
               </p>
-            </div>
-            <div className="mt2 fl w-100">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Recent Access Logs
-              </label>
-              <div className="grey pa1 ba bb b--light-grey f6">
-                <span className="mr1">Sign in count:</span>
-                <span>{user.sign_in_count}</span>
-                <br />
-                <span className="mr1">Current IP:</span>
-                <span>{user.current_sign_in_ip}</span>
-                <br />
-                <span className="mr1">Sign in at:</span>
-                <span>{user.current_sign_in_at}</span>
-                <br />
-                <span className="mr1">Last sign in at:</span>
-                <span>{user.last_sign_in_at}</span>
-                <br />
-                <span className="mr1">Last sign in IP:</span>
-                <span>{user.last_sign_in_ip}</span>
-                <br />
-              </div>
             </div>
           </div>
 

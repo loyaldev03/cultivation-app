@@ -33,6 +33,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       :first_name,
       :last_name,
       :title,
+      :photo_data,
       :is_active,
       :default_facility_id,
       facilities: [],

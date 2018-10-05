@@ -1,8 +1,10 @@
 import { observable, action, runInAction, toJS } from 'mobx'
 
 class UserRoleStore {
-  @observable isLoading = false
-  @observable userRoles
+  @observable
+  isLoading = false
+  @observable
+  userRoles
 
   @action
   async loadUsers() {
@@ -46,6 +48,14 @@ class UserRoleStore {
     ) {
       const user = this.userRoles.attributes.users.find(x => x.id === userId)
       return toJS(user)
+    }
+    return null
+  }
+
+  getRole(roleId) {
+    if (roleId) {
+      const role = this.userRoles.attributes.roles.find(x => x.id === roleId)
+      return toJS(role)
     }
     return null
   }

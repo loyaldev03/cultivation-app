@@ -2,8 +2,8 @@ import { observable, action, computed } from 'mobx'
 
 class UserStore {
   users = observable([])
-
-  @observable isLoading = false
+  @observable
+  isLoading = false
 
   @action
   load(newUsers) {

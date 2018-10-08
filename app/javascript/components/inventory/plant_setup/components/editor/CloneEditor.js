@@ -50,7 +50,7 @@ class CloneEditor extends React.Component {
       vendor_state_license_expiration_date: null,
       vendor_location_license_num: '',
       vendor_location_license_expiration_date: null,
-      purchase_date: '',
+      purchase_date: null,
       invoice_no: '',
 
       // UI states

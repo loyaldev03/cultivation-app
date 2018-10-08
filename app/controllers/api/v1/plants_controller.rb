@@ -1,8 +1,9 @@
 class Api::V1::PlantsController < Api::V1::BaseApiController
   def all
-    plants = Inventory::Plant.includes(:facility_strain)
+    plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch)
                              .where(current_growth_stage: params[:current_growth_stage])
                              .order(c_at: :desc)
+
     data = Inventory::PlantSerializer.new(plants).serialized_json
     render json: data
   end
@@ -24,7 +25,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
       plants = plants.limit(7)
     end
 
-    options = {params: {exclude_location: true}}
+    options = {params: {exclude_location: true, exclude_batch: true}}
     data = Inventory::PlantSerializer.new(plants, options).serialized_json
     render json: data
   end
@@ -44,7 +45,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     command = Inventory::SetupClones.call(current_user, params[:plant].to_unsafe_h)
 
     if command.success?
-      data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
+      data = Inventory::PlantSerializer.new(command.result).serialized_json
       render json: data
     else
       render json: request_with_errors(command.errors), status: 422

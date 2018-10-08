@@ -113,6 +113,7 @@ module Inventory
           plant_id: plant_id,
           facility_strain_id: facility_strain_id,
         ) do |t|
+          t.cultivation_batch_id = cultivation_batch_id
           t.current_growth_stage = 'clone'
           t.created_by = user
           t.location_id = location_id

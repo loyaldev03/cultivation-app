@@ -20,6 +20,16 @@ module Inventory
       object.created_by_id.to_s
     end
 
+    attribute :cultivation_batch do |object, params|
+      if params && params[:exclude_batch] == true
+        ''
+      elsif object.cultivation_batch.nil?
+        ''
+      else
+        "#{object.cultivation_batch.batch_no} - #{object.cultivation_batch.name}"
+      end
+    end
+
     attribute :cultivation_batch_id do |object|
       object.cultivation_batch_id.to_s
     end

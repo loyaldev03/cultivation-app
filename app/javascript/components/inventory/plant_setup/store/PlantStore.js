@@ -47,6 +47,13 @@ class PlantStore {
       .slice()
       .filter(x => x.attributes.current_growth_stage === 'mother')
   }
+
+  @computed
+  get clones() {
+    return this.plants
+      .slice()
+      .filter(x => x.attributes.current_growth_stage === 'clone')
+  }
 }
 
 const plantStore = new PlantStore()

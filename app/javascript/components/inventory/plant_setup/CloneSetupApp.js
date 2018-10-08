@@ -34,25 +34,25 @@ const columns = [
   {
     Header: 'Plant ID',
     accessor: 'attributes.plant_id',
-    headerStyle: { textAlign: 'left' }
+    headerStyle: { textAlign: 'left' },
+    width: 150
   },
   {
     Header: 'Batch',
-    accessor: 'attributes.current_growth_stage',
-    headerStyle: { textAlign: 'left' },
-    Cell: props => (
-      <span>{props.value.charAt(0).toUpperCase() + props.value.substr(1)}</span>
-    )
+    accessor: 'attributes.cultivation_batch',
+    headerStyle: { textAlign: 'left' }
   },
   {
     Header: 'Strain',
     accessor: 'attributes.strain_name',
-    headerStyle: { textAlign: 'left' }
+    headerStyle: { textAlign: 'left' },
+    width: 180
   },
   {
-    Header: 'Clone start date',
+    Header: 'Clone date',
     accessor: 'attributes.planting_date',
     headerStyle: { textAlign: 'left' },
+    width: 100,
     Cell: props => {
       const d = new Date(props.value)
       if (props.value || props.value.length > 0) {
@@ -64,11 +64,11 @@ const columns = [
       }
     }
   },
-
   {
     Header: 'Location',
     accessor: 'attributes.location_name',
-    headerStyle: { textAlign: 'left' }
+    headerStyle: { textAlign: 'left' },
+    width: 130
   },
   {
     Header: '',
@@ -126,13 +126,13 @@ class CloneSetupApp extends React.Component {
           <ReactTable
             columns={columns}
             pagination={{ position: 'top' }}
-            data={plantStore.motherPlants}
+            data={plantStore.clones}
             showPagination={false}
             pageSize={30}
             minRows={5}
             filterable
             className="f6"
-            showPagination={plantStore.plants.length > 30}
+            showPagination={plantStore.clones.length > 30}
           />
         </div>
       </React.Fragment>

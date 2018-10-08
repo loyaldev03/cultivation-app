@@ -94,6 +94,7 @@ class BatchEditor extends React.Component {
 
     if (isValid) {
       saveCultivationBatch(payload).then(x => {
+        console.log(x)
         this.reset()
         window.editorSidebar.close()
       })

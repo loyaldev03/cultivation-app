@@ -47,6 +47,27 @@ class PlantStore {
       .slice()
       .filter(x => x.attributes.current_growth_stage === 'mother')
   }
+
+  @computed
+  get clones() {
+    return this.plants
+      .slice()
+      .filter(x => x.attributes.current_growth_stage === 'clone')
+  }
+
+  @computed
+  get vegs() {
+    return this.plants
+      .slice()
+      .filter(x => x.attributes.current_growth_stage === 'veg')
+  }
+
+  @computed
+  get flowers() {
+    return this.plants
+      .slice()
+      .filter(x => x.attributes.current_growth_stage === 'flower')
+  }
 }
 
 const plantStore = new PlantStore()

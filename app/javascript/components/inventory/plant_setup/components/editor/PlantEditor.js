@@ -12,9 +12,9 @@ import LocationPicker from '../../../../utils/LocationPicker2'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import setupClones from '../../actions/setupClones'
 import reactSelectStyle from '../../../../utils/reactSelectStyle'
-import { searchPlants } from '../../actions/loadPlants'
+import { searchPlants, getPlant } from '../../actions/loadPlants'
 
-class CloneEditor extends React.Component {
+class PlantEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
@@ -30,6 +30,54 @@ class CloneEditor extends React.Component {
     this.setPurchaseInfoEditor = element => {
       this.purchaseInfoEditor = element
     }
+  }
+
+  componentDidMount() {
+    document.addEventListener('editor-sidebar-open', event => {
+      const id = event.detail.id
+      if (!id) {
+        this.setState(this.resetState())
+      } else {
+        getPlant(id).then(({ status, data }) => {
+          if (status != 200) {
+            alert('someting wrong')
+            return
+          }
+          const batch = this.batches.find(
+            x => x.id === data.attributes.cultivation_batch_id
+          )
+
+          this.setState({
+            ...this.resetState(),
+            cultivation_batch_id: batch.id,
+            facility_strain_id: batch.facility_strain_id,
+            facility_id: batch.facility_id,
+            plant_ids: data.attributes.plant_id,
+            plant_qty: 0,
+            location_id: data.attributes.location_id,
+            planting_date: new Date(data.attributes.planting_date),
+
+            // To be filled up
+            mother_id: data.attributes.mother_id,
+            vendor_name: '',
+            vendor_no: '',
+            address: '',
+            vendor_state_license_num: '',
+            vendor_state_license_expiration_date: null,
+            vendor_location_license_num: '',
+            vendor_location_license_expiration_date: null,
+            purchase_date: null,
+            invoice_no: '',
+
+            // UI states
+            strain_name: batch.strain_name,
+            start_date: new Date(batch.start_date),
+            facility: batch.facility,
+            isBought: false
+          })
+        })
+      }
+    })
   }
 
   resetState() {
@@ -50,7 +98,7 @@ class CloneEditor extends React.Component {
       vendor_state_license_expiration_date: null,
       vendor_location_license_num: '',
       vendor_location_license_expiration_date: null,
-      purchase_date: '',
+      purchase_date: null,
       invoice_no: '',
 
       // UI states
@@ -58,8 +106,8 @@ class CloneEditor extends React.Component {
       start_date: '',
       facility: '',
       isBought: false,
-      // isShowPlantIdGenerator: false,
-      errors: {}
+      errors: {},
+      motherOption: {}
     }
   }
 
@@ -105,7 +153,7 @@ class CloneEditor extends React.Component {
       facility_id: item.facility_id,
       facility_strain_id: item.facility_strain_id,
       strain_name: item.strain_name,
-      start_date: new Date(item.start_date).toLocaleDateString(),
+      start_date: new Date(item.start_date),
       facility: item.facility,
       mother_id: '',
       planting_date
@@ -113,7 +161,13 @@ class CloneEditor extends React.Component {
   }
 
   onMotherIdChanged = item => {
-    this.setState({ mother_id: item.value })
+    console.log(item)
+    if (item === []) {
+      this.setState({ motherOption: null })
+    } else {
+      this.setState({ motherOption: item })
+    }
+    this.setState({ mother_id: '' })
   }
 
   onSave = event => {
@@ -121,8 +175,8 @@ class CloneEditor extends React.Component {
     const { errors, isValid, ...payload } = data
 
     if (isValid) {
-      console.log(payload)
-      setupClones(payload).then(({ status, data }) => {
+      const growth_stage = this.props.growth_stage
+      setupClones(payload, growth_stage).then(({ status, data }) => {
         if (status >= 400) {
           this.setState({ errors: data.errors })
         } else {
@@ -136,7 +190,6 @@ class CloneEditor extends React.Component {
 
   reset() {
     this.setState(this.resetState())
-    this.strainPicker.current.reset()
   }
 
   validateAndGetValues() {
@@ -145,18 +198,11 @@ class CloneEditor extends React.Component {
       plant_ids,
       location_id,
       planting_date,
-      mother_id,
-      vendor_name,
-      vendor_no,
-      address,
-      vendor_state_license_num,
-      vendor_state_license_expiration_date,
-      vendor_location_license_num,
-      vendor_location_license_expiration_date,
-      purchase_date,
-      invoice_no,
-      isBought
+      isBought,
+      motherOption
     } = this.state
+
+    const mother_id = motherOption ? motherOption.value : ''
 
     let errors = {}
 
@@ -175,7 +221,7 @@ class CloneEditor extends React.Component {
     }
 
     if (planting_date === null) {
-      errors = { ...errors, planted_on: ['Planted on date is required.'] }
+      errors = { ...errors, planting_date: ['Planted on date is required.'] }
     }
 
     if (location_id.length === 0) {
@@ -192,18 +238,6 @@ class CloneEditor extends React.Component {
 
     const isValid =
       Object.getOwnPropertyNames(errors).length == 0 && purchaseData.isValid
-
-    // Purchase data should have:
-    //
-    // vendor_name: '',
-    // vendor_no: '',
-    // address: '',
-    // vendor_state_license_num: '',
-    // vendor_state_license_expiration_date: null,
-    // vendor_location_license_num: '',
-    // vendor_location_license_expiration_date: null,
-    // purchase_date: '',
-    // invoice_no: '',
 
     const data = {
       ...purchaseData,
@@ -270,7 +304,7 @@ class CloneEditor extends React.Component {
               placeholder="Plant0001&#10;Plant0002&#10;Plant0003"
               onChange={this.onCloneIdsChanged}
             />
-            <FieldError errors={this.state.errors} field="clone_ids" />
+            <FieldError errors={this.state.errors} field="plant_ids" />
           </div>
         </div>
       </React.Fragment>
@@ -295,7 +329,9 @@ class CloneEditor extends React.Component {
             <label className="f6 fw6 db mb1 gray ttc tr">
               Batch start date
             </label>
-            <p className="f6 mt0 mb2 tr">{this.state.start_date}</p>
+            <p className="f6 mt0 mb2 tr">
+              {this.state.start_date.toLocaleDateString()}
+            </p>
           </div>
         </div>
         <hr className="mt3 m b--black-10 w-100" />
@@ -313,11 +349,26 @@ class CloneEditor extends React.Component {
       this.state.facility_strain_id,
       inputValue
     ).then(data => {
-      return data.data.map(x => ({
+      const mothers = data.data.map(x => ({
         label: x.attributes.plant_id,
         value: x.id
       }))
+
+      const motherOption = mothers.find(x => x.value == this.state.mother_id)
+      this.setState({ motherOption })
+      return mothers
     })
+  }
+
+  renderTitle() {
+    if (this.props.growth_stage === 'clone') {
+      return 'Add Clone'
+    } else if (this.props.growth_stage === 'veg') {
+      return 'Add Vegs'
+    } else if (this.props.growth_stage === 'flower') {
+      return 'Add Flowers'
+    }
+    return ''
   }
 
   render() {
@@ -332,7 +383,9 @@ class CloneEditor extends React.Component {
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Clone</h1>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">
+              {this.renderTitle()}
+            </h1>
             <span
               className="rc-slide-panel__close-button dim"
               onClick={() => {
@@ -375,7 +428,9 @@ class CloneEditor extends React.Component {
                 facility_id={this.state.facility_id}
                 onChange={this.onLocationChanged}
                 locations={this.locations}
+                location_id={this.state.location_id}
               />
+              <FieldError errors={this.state.errors} field="location_id" />
             </div>
           </div>
           <div className="ph4 mt3 flex">
@@ -395,6 +450,7 @@ class CloneEditor extends React.Component {
                 loadOptions={this.loadMothers}
                 defaultOptions
                 onChange={this.onMotherIdChanged}
+                value={this.state.motherOption}
                 styles={reactSelectStyle}
               />
               <FieldError errors={this.state.errors} field="mother_id" />
@@ -442,9 +498,10 @@ class CloneEditor extends React.Component {
   }
 }
 
-CloneEditor.propTypes = {
+PlantEditor.propTypes = {
   cultivation_batches: PropTypes.array.isRequired,
-  locations: PropTypes.array.isRequired
+  locations: PropTypes.array.isRequired,
+  growth_stage: PropTypes.string.isRequired
 }
 
-export default CloneEditor
+export default PlantEditor

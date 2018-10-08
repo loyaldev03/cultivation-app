@@ -89,11 +89,11 @@ function openSidebar(event, id) {
 }
 
 @observer
-class CloneSetupApp extends React.Component {
+class FlowerSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadPlants('clone')
+    loadPlants('flower')
   }
 
   openSidebar() {
@@ -105,15 +105,13 @@ class CloneSetupApp extends React.Component {
       <React.Fragment>
         <div className="w-80 bg-white pa3">
           <div className="flex mb4 mt2">
-            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
-              Clones / Plantings
-            </h1>
+            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Vegs</h1>
             <div style={{ justifySelf: 'end' }}>
               <button
                 className="pv2 ph3 bg-orange white bn br2 ttc link dim f6 fw6 pointer"
                 onClick={this.openSidebar}
               >
-                Add clone/ plantings
+                Add vegs
               </button>
             </div>
           </div>
@@ -121,13 +119,13 @@ class CloneSetupApp extends React.Component {
           <ReactTable
             columns={columns}
             pagination={{ position: 'top' }}
-            data={plantStore.clones}
+            data={plantStore.flowers}
             showPagination={false}
             pageSize={30}
             minRows={5}
             filterable
             className="f6"
-            showPagination={plantStore.clones.length > 30}
+            showPagination={plantStore.flowers.length > 30}
           />
         </div>
       </React.Fragment>
@@ -139,7 +137,7 @@ class CloneSetupApp extends React.Component {
       <React.Fragment>
         {this.renderPlantList()}
         <PlantEditor
-          growth_stage="clone"
+          growth_stage="flower"
           cultivation_batches={this.props.cultivation_batches}
           locations={this.props.locations}
         />
@@ -148,4 +146,4 @@ class CloneSetupApp extends React.Component {
   }
 }
 
-export default CloneSetupApp
+export default FlowerSetupApp

@@ -51,7 +51,6 @@ function searchPlants(
     apiUrl = apiUrl + '/' + current_growth_stage
 
     if (facility_strain_id.length > 0) {
-      console.log('... has facility_strain_id')
       apiUrl = apiUrl + '/' + facility_strain_id
 
       if (search.length > 0) {
@@ -59,8 +58,6 @@ function searchPlants(
       }
     }
   }
-
-  console.log(apiUrl)
 
   return fetch(apiUrl, {
     method: 'GET',
@@ -78,4 +75,28 @@ function searchPlants(
   })
 }
 
-export { loadPlants, searchPlants }
+function getPlant(id, includeFields = '') {
+  let apiUrl = '/api/v1/plants/' + id
+
+  if (includeFields.length > 0) {
+    apiUrl = '?include=' + includeFields
+  }
+
+  return fetch(apiUrl, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(response => {
+    return response.json().then(data => {
+      console.log(data)
+      return {
+        status: response.status,
+        data: data.data
+      }
+    })
+  })
+}
+
+export { loadPlants, searchPlants, getPlant }

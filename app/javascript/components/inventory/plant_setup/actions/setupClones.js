@@ -1,7 +1,7 @@
 import plantStore from '../store/PlantStore'
 
-export default function setupClones(payload) {
-  return fetch('/api/v1/plants/setup_clones', {
+export default function setupClones(payload, growth_stage) {
+  return fetch('/api/v1/plants/setup_clones?growth_stage=' + growth_stage, {
     method: 'POST',
     credentials: 'include',
     body: JSON.stringify(payload),
@@ -10,16 +10,20 @@ export default function setupClones(payload) {
     }
   })
     .then(response => {
-      return response.json().then(data => ({
-        status: response.status,
-        data
-      }))
+      return response.json().then(data => {
+        console.log(data)
+        return {
+          status: response.status,
+          data
+        }
+      })
     })
     .then(result => {
       const { status, data } = result
       if (status == 200) {
-        const savedPlants = JSON.parse(data.data).data
-        plantStore.prepend(savedPlants)
+        console.log(data.data)
+        // const savedPlants = JSON.parse(data.data).data
+        plantStore.prepend(data.data)
       }
 
       return result

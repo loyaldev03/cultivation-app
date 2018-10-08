@@ -14,6 +14,8 @@ module Inventory
     # planting_date:"2018-08-31T16:00:00.000Z"
 
     attr_reader :user,
+      :id,
+      :growth_stage,
       :args,
       :is_draft,
       :cultivation_batch_id,
@@ -31,12 +33,12 @@ module Inventory
       :vendor_location_license_expiration_date,
       :vendor_location_license_num
 
-    def initialize(user, args)
+    def initialize(user, growth_stage, args)
       @user = user
+      @growth_stage = growth_stage
       @args = HashWithIndifferentAccess.new(args)
-      Rails.logger.debug '>>>> SetupClones'
-      Rails.logger.debug @args
 
+      @id = args[:id]
       @is_draft = false
       @cultivation_batch_id = args[:cultivation_batch_id]
       @location_id = args[:location_id]
@@ -56,13 +58,12 @@ module Inventory
 
     def call
       if valid_permission? && valid_data?
-        plants = create_clones
-
-        if is_purchased?
-          vendor = create_vendor
-          create_invoice(plants, vendor, invoice_no)
+        plants = []
+        if is_update?
+          plants = update_clones
+        else
+          plants = create_clones
         end
-
         plants
       end
     end
@@ -104,7 +105,32 @@ module Inventory
       vendor_name.present?
     end
 
+    def is_update?
+      !id.blank?
+    end
+
+    def update_clones
+      plant = Inventory::Plant.find(id)
+
+      if is_purchased?
+        invoice = Inventory::Invoice.find(plant.origin_id)
+        vendor = invoice.vendor
+        update_vendor(invoice)
+        update_invoice(vendor)
+      end
+      plant
+    end
+
     def create_clones
+      plants = create_plants
+      if is_purchased?
+        vendor = create_vendor
+        create_invoice(plants, vendor, invoice_no)
+      end
+      plants
+    end
+
+    def create_plants
       facility_strain_id = Cultivation::Batch.find(cultivation_batch_id).facility_strain_id
       plants = []
 
@@ -113,12 +139,14 @@ module Inventory
           plant_id: plant_id,
           facility_strain_id: facility_strain_id,
         ) do |t|
-          t.current_growth_stage = 'clone'
+          t.cultivation_batch_id = cultivation_batch_id
+          t.current_growth_stage = growth_stage
           t.created_by = user
           t.location_id = location_id
           t.location_type = 'tray'
           t.status = is_draft ? 'draft' : 'available'
           t.planting_date = planting_date
+          t.mother_id = mother_id
         end
         plant.save!
         plants << plant

@@ -106,3 +106,6 @@ gem 'mongoid_orderable'
 # File attachment
 gem 'shrine', '~> 2.0'
 gem 'shrine-mongoid'
+
+# Authorization
+gem 'pundit'

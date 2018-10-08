@@ -44,11 +44,11 @@ class TeamSetttingApp extends React.Component {
     await store.loadUsers()
 
     // TODO: TESTING MODE
-    this.setState({
-      activeTab: 'rolesTab',
-      editingRole: store.getRole('5bb41e1c49a9346d67fc9b19')
-    })
-    this.openSidebar()
+    // this.setState({
+    //   activeTab: 'rolesTab',
+    //   editingRole: store.getRole('5bb41e1c49a9346d67fc9b19')
+    // })
+    // this.openSidebar()
     // TODO: TESTING MODE
   }
 

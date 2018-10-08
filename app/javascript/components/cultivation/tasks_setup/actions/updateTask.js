@@ -87,14 +87,13 @@ class updateTask {
   }
 
   updateTaskResource(state) {
-
     let id = state.id
     let url = `/api/v1/batches/${state.batch_id}/tasks/${id}`
 
     let task = {
       batch_id: state.batch_id,
       user_ids: state.users.map(e => e.id),
-      id: state.id,
+      id: state.id
     }
 
     fetch(url, {
@@ -108,16 +107,14 @@ class updateTask {
       .then(response => response.json())
       .then(data => {
         if (data.data.id != null) {
-          let newTask = TaskStore.slice().find(e=> e.id === state.id)
+          let newTask = TaskStore.slice().find(e => e.id === state.id)
           newTask.attributes.user_ids = state.users.map(e => e.id) // data replaced but table data not reloaded
           loadTasks.loadbatch(state.batch_id) // reload the whole table
         } else {
           toast('Something happen', 'error')
         }
       })
-
   }
-
 }
 
 const task = new updateTask()

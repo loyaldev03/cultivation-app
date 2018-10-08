@@ -42,13 +42,15 @@ export default class ResourceForm extends React.Component {
     }
   }
 
-  generateUser(user_ids){
-    let user_filtered = UserStore.users.filter((user) => user_ids.includes(user.id))
-    let user_hashes = user_filtered.map(e => { 
+  generateUser(user_ids) {
+    let user_filtered = UserStore.users.filter(user =>
+      user_ids.includes(user.id)
+    )
+    let user_hashes = user_filtered.map(e => {
       let newHash = {}
       newHash['id'] = e.id
       newHash['name'] = e.attributes.full_name
-      newHash['role'] = "Availability Here"
+      newHash['role'] = 'Availability Here'
       return newHash
     })
     return user_hashes
@@ -91,30 +93,34 @@ export default class ResourceForm extends React.Component {
       return null
     }
 
-    this.setState(prevState => ({
-      users: [
-        ...prevState.users,
-        {
-          id: this.state.resource_name.value,
-          name: this.state.resource_name.label,
-          role: this.state.job_role.label
-        }
-      ],
-      resource_name: '',
-      job_role: ''
-    }), this.updateResource)
-
-    
+    this.setState(
+      prevState => ({
+        users: [
+          ...prevState.users,
+          {
+            id: this.state.resource_name.value,
+            name: this.state.resource_name.label,
+            role: this.state.job_role.label
+          }
+        ],
+        resource_name: '',
+        job_role: ''
+      }),
+      this.updateResource
+    )
   }
 
-  updateResource = ()=>{
+  updateResource = () => {
     updateTasks.updateTaskResource(this.state)
   }
 
   handleDelete = id => {
-    this.setState({
-      users: this.state.users.filter(user => user.id !== id)
-    }, this.updateResource)
+    this.setState(
+      {
+        users: this.state.users.filter(user => user.id !== id)
+      },
+      this.updateResource
+    )
   }
 
   render() {

@@ -1,15 +1,16 @@
 import { observable, action, runInAction, toJS } from 'mobx'
 
 class UserRoleStore {
-  @observable
-  isLoading = false
-  @observable
-  userRoles
+  @observable isLoading = false
+  @observable userRoles
 
   @action
-  async loadUsers() {
+  async loadUsers(includeInactiveUser = false) {
     this.isLoading = true
-    const url = '/api/v1/user_roles/search'
+    let url = '/api/v1/user_roles/search'
+    if (includeInactiveUser) {
+      url = url + '?include_inactive_user=1'
+    }
     try {
       const response = await (await fetch(url, {
         method: 'GET',

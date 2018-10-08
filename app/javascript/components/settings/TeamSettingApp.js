@@ -153,7 +153,7 @@ class TeamSetttingApp extends React.Component {
           Accept: 'application/json',
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ role: {id: roleId}})
+        body: JSON.stringify({ role: { id: roleId } })
       })).json()
       if (response && response.data) {
         store.deleteRole(roleId)

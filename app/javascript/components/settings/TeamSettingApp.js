@@ -195,34 +195,24 @@ class TeamSetttingApp extends React.Component {
               <p className="mt2 mb4 db body-1 grey">
                 Browses through your team's information here.
               </p>
-              <label
-                className={classNames(
-                  'mv0 f5 fw6 dark-gray dib bt bl br b--light-grey pv2 ph3',
-                  { 'bg-light-gray': activeTab !== 'usersTab' }
-                )}
+              <a
+                href="#0"
+                className={classNames('tab', {
+                  'tab--active': activeTab === 'usersTab'
+                })}
+                onClick={this.onToggleTab('usersTab')}
               >
-                <a
-                  href="#0"
-                  className="link"
-                  onClick={this.onToggleTab('usersTab')}
-                >
-                  Users
-                </a>
-              </label>
-              <label
-                className={classNames(
-                  'mv0 f5 fw6 dark-gray dib bt br b--light-grey pv2 ph3',
-                  { 'bg-light-gray': activeTab !== 'rolesTab' }
-                )}
+                Users
+              </a>
+              <a
+                href="#0"
+                className={classNames('tab', {
+                  'tab--active': activeTab === 'rolesTab'
+                })}
+                onClick={this.onToggleTab('rolesTab')}
               >
-                <a
-                  href="#0"
-                  className="link"
-                  onClick={this.onToggleTab('rolesTab')}
-                >
-                  Roles &amp; Permissions
-                </a>
-              </label>
+                Roles &amp; Permissions
+              </a>
 
               {activeTab === 'usersTab' && (
                 <div className="mt0 ba b--light-grey pa3">

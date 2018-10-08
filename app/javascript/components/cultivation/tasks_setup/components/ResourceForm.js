@@ -9,6 +9,8 @@ import LetterAvatar from '../../../utils/LetterAvatar'
 import UserRoles from '../stores/UserRoleStore'
 import UserStore from '../stores/UserStore'
 
+import updateTasks from '../actions/updateTask'
+
 export default class ResourceForm extends React.Component {
   constructor(props) {
     super(props)
@@ -20,7 +22,7 @@ export default class ResourceForm extends React.Component {
       job_role: '',
       dropdown_roles: UserRoles.slice(),
       dropdown_users: this.toDropdown(UserStore.users),
-      users: []
+      users: this.generateUser(props.task.attributes.user_ids)
     }
   }
 
@@ -30,9 +32,26 @@ export default class ResourceForm extends React.Component {
       this.setState({
         batch_id: this.props.batch_id,
         id: props.task.id,
-        ...props.task.attributes
+        ...props.task.attributes,
+        resource_name: '',
+        job_role: '',
+        dropdown_roles: UserRoles.slice(),
+        dropdown_users: this.toDropdown(UserStore.users),
+        users: this.generateUser(props.task.attributes.user_ids)
       })
     }
+  }
+
+  generateUser(user_ids){
+    let user_filtered = UserStore.users.filter((user) => user_ids.includes(user.id))
+    let user_hashes = user_filtered.map(e => { 
+      let newHash = {}
+      newHash['id'] = e.id
+      newHash['name'] = e.attributes.full_name
+      newHash['role'] = "Availability Here"
+      return newHash
+    })
+    return user_hashes
   }
 
   toDropdown(users) {
@@ -83,13 +102,19 @@ export default class ResourceForm extends React.Component {
       ],
       resource_name: '',
       job_role: ''
-    }))
+    }), this.updateResource)
+
+    
+  }
+
+  updateResource = ()=>{
+    updateTasks.updateTaskResource(this.state)
   }
 
   handleDelete = id => {
     this.setState({
       users: this.state.users.filter(user => user.id !== id)
-    })
+    }, this.updateResource)
   }
 
   render() {
@@ -138,8 +163,8 @@ export default class ResourceForm extends React.Component {
           {this.state.users.length !== 0 ? <span>Resource Added</span> : null}
           <table className="w-100">
             <tbody>
-              {resources.map(x => (
-                <tr key={x.id} className="pointer bb">
+              {resources.map((x, index) => (
+                <tr key={index} className="pointer bb">
                   <td className="pa2 tc">
                     <LetterAvatar firstName={x.name} size={36} radius={18} />
                   </td>

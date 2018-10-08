@@ -20,8 +20,12 @@ class TaskSerializer
     object.users.map { |a| a.display_name }.join(',')
   end
 
-  #for dropdown in assigning resource
-  attribute :assigned_employee do |object|
-    object.users.map { |a| {'label' => a.display_name, 'value' => a.id.to_s} }
+  # #for dropdown in assigning resource
+  # attribute :assigned_employee do |object|
+  #   object.users.map { |a| {'label' => a.display_name, 'value' => a.id.to_s} }
+  # end
+
+  attribute :user_ids do |object|
+    object.user_ids.map { |a| a.to_s }
   end
 end

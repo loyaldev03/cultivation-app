@@ -71,7 +71,6 @@ class UserDetailsEditor extends React.PureComponent {
 
   onUploadAvatarSuccess = photoData => {
     const photoUrl = `/uploads/${photoData.storage}/${photoData.id}`
-    console.log({ photoUrl })
     this.setState({ photoUrl, photoData })
   }
 

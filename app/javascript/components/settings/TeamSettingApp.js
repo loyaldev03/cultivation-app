@@ -41,7 +41,7 @@ class TeamSetttingApp extends React.Component {
     activeTab: 'usersTab'
   }
   async componentDidMount() {
-    await store.loadUsers()
+    await store.loadUsers(true)
 
     // TODO: TESTING MODE
     // this.setState({

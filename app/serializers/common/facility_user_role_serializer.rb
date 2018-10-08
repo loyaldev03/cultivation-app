@@ -27,6 +27,12 @@ module Common
     attribute :users do |object|
       object.users.map do |user|
         default_facility_id = user.default_facility_id ? user.default_facility_id.to_s : nil
+
+        if user.photo_data && user.photo_data != 'null'
+          photo_data = user.photo_data
+          photo_url = user.photo_url
+        end
+
         {
           id: user.id.to_s,
           first_name: user.first_name,
@@ -34,8 +40,8 @@ module Common
           is_active: user.is_active,
           email: user.email,
           title: user.title,
-          photo_data: user.photo_data,
-          photo_url: user.photo_url,
+          photo_data: photo_data,
+          photo_url: photo_url,
           roles: user.roles.map(&:to_s),
           facilities: user.facilities.map(&:to_s),
           default_facility_id: default_facility_id,

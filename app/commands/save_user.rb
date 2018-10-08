@@ -15,7 +15,11 @@ class SaveUser
       user.first_name = args[:first_name]
       user.last_name = args[:last_name]
       user.title = args[:title]
-      user.photo_data = args[:photo_data]
+      if args[:photo_data].nil?
+        user.photo = nil
+      else
+        user.photo_data = args[:photo_data]
+      end
       user.is_active = args[:is_active]
       user.default_facility_id = args[:default_facility_id]
       user.roles = args[:roles].map(&:to_bson_id) if args[:roles]

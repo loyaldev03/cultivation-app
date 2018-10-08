@@ -4,7 +4,6 @@ import Select from 'react-select'
 
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 
-
 const uom_dropdown = [
   { value: 'Fathi', label: 'KG' },
   { value: 'Andy', label: 'CM' },
@@ -18,7 +17,6 @@ const material_dropdown = [
   { value: 'Karg', label: 'Karg' },
   { value: 'Allison', label: 'Allison' }
 ]
-
 
 export default class MaterialForm extends React.Component {
   constructor(props) {
@@ -58,7 +56,7 @@ export default class MaterialForm extends React.Component {
     this.setState({ [key]: value.target.value })
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     this.setState(prevState => ({
       materials: [
         ...prevState.materials,
@@ -102,7 +100,6 @@ export default class MaterialForm extends React.Component {
           </div>
         </div>
         <div className="ph4 mt3 flex">
-
           <div className="w-100">
             <NumericInput
               label={'Quantity'}
@@ -134,7 +131,9 @@ export default class MaterialForm extends React.Component {
           />
         </div>
         <div className="mt4 mr4 ml4 f6 fw6 db mb1 gray ttc">
-          {this.state.materials.length !== 0 ? <span>Materials Added</span> : null}
+          {this.state.materials.length !== 0 ? (
+            <span>Materials Added</span>
+          ) : null}
           <table className="w-100">
             <tbody>
               {materials.map((x, index) => (

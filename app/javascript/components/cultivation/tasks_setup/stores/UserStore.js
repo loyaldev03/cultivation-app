@@ -6,9 +6,7 @@ class UserStore {
 
   @action
   load(newUsers) {
-    // let array_users = this.toDropdown(newUsers)
     this.users.replace(newUsers)
-    // this.dropdown_users.replace(array_users)
   }
 
   @computed

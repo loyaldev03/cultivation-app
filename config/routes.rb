@@ -120,6 +120,9 @@ Rails.application.routes.draw do
         post 'update_role'
         delete 'destroy_role'
       end
+
+      resources :items, only: [:index]
+
     end
   end
 end

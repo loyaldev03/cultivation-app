@@ -4,6 +4,8 @@ import Select from 'react-select'
 
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 
+import ItemStore from '../stores/ItemStore'
+
 const uom_dropdown = [
   { value: 'Fathi', label: 'KG' },
   { value: 'Andy', label: 'CM' },
@@ -30,7 +32,8 @@ export default class MaterialForm extends React.Component {
       uom: '',
       uom_dropdown: uom_dropdown,
       material_dropdown: material_dropdown,
-      materials: []
+      materials: [],
+      items: props.task.attributes.items
     }
   }
 
@@ -40,7 +43,13 @@ export default class MaterialForm extends React.Component {
       this.setState({
         batch_id: this.props.batch_id,
         id: props.task.id,
-        ...props.task.attributes
+        ...props.task.attributes,
+        material_name: '',
+        quantity: '',
+        uom: '',
+        uom_dropdown: uom_dropdown,
+        material_dropdown: material_dropdown,
+        materials: []
       })
     }
   }
@@ -50,9 +59,6 @@ export default class MaterialForm extends React.Component {
   }
 
   handleChange = (key, value) => {
-    console.log(key)
-
-    console.log(value)
     this.setState({ [key]: value.target.value })
   }
 
@@ -61,7 +67,8 @@ export default class MaterialForm extends React.Component {
       materials: [
         ...prevState.materials,
         {
-          material_name: this.state.material_name.value,
+          id : this.state.material_name.value,
+          material_name: this.state.material_name.label,
           quantity: this.state.quantity,
           uom: this.state.uom.label
         }
@@ -81,11 +88,12 @@ export default class MaterialForm extends React.Component {
   }
 
   render() {
-    let material_dropdown = this.state.material_dropdown
+    let material_dropdown = ItemStore.slice()
     let uom_dropdown = this.state.uom_dropdown
     let materials = this.state.materials
     let handleChange = this.handleChange
     let handleDelete = this.handleDelete
+    let items = this.state.items
     return (
       <div className="ba b--light-gray ml4 mr4 mt4">
         <div className="ph4 mt3 flex">
@@ -131,6 +139,9 @@ export default class MaterialForm extends React.Component {
           />
         </div>
         <div className="mt4 mr4 ml4 f6 fw6 db mb1 gray ttc">
+          {items.map((x)=>(
+            <div>{x.name}</div>
+          ))}
           {this.state.materials.length !== 0 ? (
             <span>Materials Added</span>
           ) : null}

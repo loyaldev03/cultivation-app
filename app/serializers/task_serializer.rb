@@ -2,7 +2,7 @@ class TaskSerializer
   include FastJsonapi::ObjectSerializer
   attributes :phase, :task_category, :name, :duration, :days_from_start_date, :position,
     :expected_start_date, :expected_end_date, :end_date, :estimated_hours, :users,
-    :time_taken, :no_of_employees, :materials, :instruction, :is_phase, :is_category, :parent_id, :depend_on
+    :time_taken, :no_of_employees, :items, :instruction, :is_phase, :is_category, :parent_id, :depend_on
 
   attributes :id do |object|
     object.id.to_s
@@ -20,10 +20,18 @@ class TaskSerializer
     object.users.map { |a| a.display_name }.join(',')
   end
 
-  # #for dropdown in assigning resource
-  # attribute :assigned_employee do |object|
-  #   object.users.map { |a| {'label' => a.display_name, 'value' => a.id.to_s} }
+  # attribute :item_display do |object|
+  #   object.items.map {|a| a.name}.join(',')
   # end
+
+  attribute :items do |object|
+    object.items.map do |item|
+      {
+        id: item.id.to_s,
+        name: item.name.to_s,
+      }
+    end
+  end
 
   attribute :user_ids do |object|
     object.user_ids.map { |a| a.to_s }

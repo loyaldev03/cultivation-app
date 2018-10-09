@@ -43,6 +43,6 @@ class Materials::ItemsController < ApplicationController
   private
 
   def record_params
-    params.require(:record).permit(:code, :name, :desc)
+    params.require(:record).permit(:name, :description, :facility)
   end
 end

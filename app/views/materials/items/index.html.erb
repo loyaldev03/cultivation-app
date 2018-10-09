@@ -24,7 +24,6 @@
       <tr>
         <th class="f6 white pv3 tl pl4 pr3">#</th>
         <th class="f6 white pv3 tl w-20">Name</th>
-        <th class="f6 white pv3 tl w-10">Code</th>
         <th class="f6 white pv3 tl w-20">Description</th>
       </tr>
     </thead>
@@ -33,9 +32,8 @@
         <tr data-toggle-right="<%= edit_materials_item_path(f.id)%>" class="pointer">
           <td class="f6 tl pl4 pr3 gray"><%= i+1 %></td>
           <td class="f6 tl"><%= blank(f.name) %></td>
-          <td class="f6 tl"><%= blank(f.code) %></td>
           <td class="f6 tl">
-            <p class="ma0 mb1"><%= f.desc %></p>
+            <p class="ma0 mb1"><%= f.description %></p>
           </td>
         </tr>
       <% end %>

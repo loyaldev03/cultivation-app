@@ -288,10 +288,9 @@ module Constants
       ]
     }
   ].freeze
-
-  PERMISSION_NONE = 0
-  PERMISSION_READ = 1
-  PERMISSION_UPDATE = 2
-  PERMISSION_CREATE = 4
-  PERMISSION_DELETE = 8
 end
+
+CAN_READ = 1
+CAN_UPDATE = 2
+CAN_CREATE = 4
+CAN_DELETE = 8

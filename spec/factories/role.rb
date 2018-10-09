@@ -1,8 +1,7 @@
-# PERMISSION_NONE = 0
-# PERMISSION_READ = 1
-# PERMISSION_UPDATE = 2
-# PERMISSION_CREATE = 4
-# PERMISSION_DELETE = 8
+# READ = 1
+# UPDATE = 2
+# CREATE = 4
+# DELETE = 8
 
 FactoryBot.define do
   factory :role, class: Common::Role do
@@ -10,12 +9,8 @@ FactoryBot.define do
 
     trait :with_permission_1010 do
       permissions {[
-        {code: 1010, value: Constants::PERMISSION_READ }, # READ Invoices
-        {code: 1020, value: (
-          Constants::PERMISSION_READ |
-          Constants::PERMISSION_UPDATE |
-          Constants::PERMISSION_CREATE )
-        },
+        {code: 1010, value: CAN_READ }, # READ Invoices
+        {code: 1020, value: (CAN_READ | CAN_UPDATE | CAN_CREATE)},
       ]}
     end
   end

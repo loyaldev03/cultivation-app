@@ -13,7 +13,7 @@ RSpec.describe "Home", :type => :request do
 
   context "when logged in" do
     before do
-      user = create(:user, :admin)
+      user = create(:user)
       login_as(user, :scope => :user)
     end
 

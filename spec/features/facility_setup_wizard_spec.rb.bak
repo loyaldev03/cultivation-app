@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.feature "Facility Setup Wizard", type: :feature do
   context "admin has logged-in" do
     before do
-      user = create(:user, :admin)
+      user = create(:user)
       login_as(user, :scope => :user)
     end
 

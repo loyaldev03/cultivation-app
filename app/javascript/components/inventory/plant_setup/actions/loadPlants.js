@@ -3,14 +3,16 @@ import plantStore from '../store/PlantStore'
 /**
  * Resets and reload list of plants
  */
-export default function loadPlants(plant_type = '', strain_id = '') {
+function loadPlants(current_growth_stage = '', facility_strain_id = '') {
   plantStore.isLoading = true
   let apiUrl = '/api/v1/plants/all'
-  if (plant_type) {
-    apiUrl = apiUrl + '?plant_status=' + plant_type
+
+  if (current_growth_stage.length > 0) {
+    apiUrl = apiUrl + '/' + current_growth_stage
   }
-  if (strain_id) {
-    apiUrl = apiUrl + '?strain_id=' + strain_id
+
+  if (facility_strain_id.length > 0) {
+    apiUrl = apiUrl + '?facility_strain_id=' + facility_strain_id
   }
 
   fetch(apiUrl, {
@@ -37,3 +39,43 @@ export default function loadPlants(plant_type = '', strain_id = '') {
       }
     })
 }
+
+function searchPlants(
+  current_growth_stage = '',
+  facility_strain_id = '',
+  search = ''
+) {
+  let apiUrl = '/api/v1/plants/search'
+
+  if (current_growth_stage.length > 0) {
+    apiUrl = apiUrl + '/' + current_growth_stage
+
+    if (facility_strain_id.length > 0) {
+      console.log('... has facility_strain_id')
+      apiUrl = apiUrl + '/' + facility_strain_id
+
+      if (search.length > 0) {
+        apiUrl = apiUrl + '/' + search
+      }
+    }
+  }
+
+  console.log(apiUrl)
+
+  return fetch(apiUrl, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(response => {
+    return response.json().then(data => {
+      return {
+        status: response.status,
+        data: data.data
+      }
+    })
+  })
+}
+
+export { loadPlants, searchPlants }

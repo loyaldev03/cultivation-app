@@ -1,22 +1,25 @@
 import React from 'react'
+import Select from 'react-select'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { NumericInput, FieldError } from '../../../../utils/FormHelpers'
-import StorageInfo from '../shared/StorageInfo'
+// import StorageInfo from '../shared/StorageInfo'
+import LocationPicker from '../../../../utils/LocationPicker2'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import setupMother from '../../actions/setupMother'
-import StrainPicker from '../shared/StrainPicker'
+import reactSelectStyle from '../../../../utils/reactSelectStyle'
 
 class MotherEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      strain: '',
-      strain_type: '',
+      strainOptions: props.facilityStrains,
+      facility_strain_id: '',
+      facility_id: '',
+      strain_name: '',
 
       // source
       plant_ids: '',
-      plant_qty: 0,
-      planted_on: null,
+      location_id: '',
 
       // Vendor/ source
       vendor_name: '',
@@ -29,14 +32,13 @@ class MotherEditor extends React.Component {
       purchase_date: null,
       invoice_no: '',
 
-      // Storage location
-      room_id: '',
-
       // UI states
-      isShowPlantQtyForm: false,
+      // isShowPlantQtyForm: false,
       isBought: false,
       errors: {}
     }
+
+    this.locations = this.props.locations
 
     // Callback ref to get instance of html DOM: https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
     // Getting a ref to textarea in order to adjust height according to content.
@@ -49,9 +51,6 @@ class MotherEditor extends React.Component {
     this.setPurchaseInfoEditor = element => {
       this.purchaseInfoEditor = element
     }
-
-    this.storageInfoEditor = React.createRef()
-    this.strainPicker = React.createRef()
   }
 
   onChangePlantIds = event => {
@@ -88,22 +87,25 @@ class MotherEditor extends React.Component {
 
   onStrainSelected = data => {
     this.setState({
-      strain: data.strain,
-      strain_type: data.strain_type
+      facility_strain_id: data.value,
+      facility_id: data.facility_id,
+      strain_name: data.label
     })
+  }
+
+  onLocationChanged = ({ location_id }) => {
+    this.setState({ location_id })
   }
 
   onIsBoughtChanged = () => {
     this.setState({ isBought: !this.state.isBought })
   }
 
-  onSave = () => {
+  onSave = event => {
     const { errors, isValid, ...payload } = this.validateAndGetValues()
 
     if (isValid) {
       setupMother(payload).then(({ status, data }) => {
-        // console.log(data)
-        // console.log(status)
         if (status >= 400) {
           this.setState({ errors: data.errors })
         } else {
@@ -117,11 +119,13 @@ class MotherEditor extends React.Component {
 
   reset() {
     this.setState({
+      facility_strain_id: '',
+      strain_name: '',
+      facility_id: '',
       plant_ids: '',
-      plant_qty: 0,
       planted_on: null,
-      room_id: '',
-      // mother_id: '',
+      location_id: '',
+      // Procurement info
       vendor_name: '',
       vendor_no: '',
       address: '',
@@ -131,33 +135,33 @@ class MotherEditor extends React.Component {
       vendor_location_license_expiration_date: null,
       purchase_date: null,
       invoice_no: '',
-      isShowPlantQtyForm: false,
+
       isBought: false,
       errors: {}
+      // isShowPlantQtyForm: false,
+      // plant_qty: 0,
     })
-
-    this.storageInfoEditor.current.reset()
-    this.strainPicker.current.reset()
   }
 
   validateAndGetValues() {
     let {
-      isShowPlantQtyForm,
-      strain,
-      strain_type,
+      facility_strain_id,
+      facility_id,
       plant_ids,
-      plant_qty,
+      // isShowPlantQtyForm,
+      // plant_qty,
       planted_on,
-      isBought
+      isBought,
+      location_id //
     } = this.state
 
     let errors = {}
 
-    if (isShowPlantQtyForm) {
-      if (parseInt(plant_qty) <= 0) {
-        errors = { ...errors, plant_qty: ['Quantity must be at least 1.'] }
-      }
-    } else if (plant_ids.length <= 0) {
+    if (facility_strain_id.length <= 0) {
+      errors = { ...errors, facility_strain_id: ['Strain is required.'] }
+    }
+
+    if (plant_ids.length <= 0) {
       errors = { ...errors, plant_ids: ['Plant ID is required.'] }
     }
 
@@ -165,31 +169,19 @@ class MotherEditor extends React.Component {
       errors = { ...errors, planted_on: ['Planted on date is required.'] }
     }
 
-    if (isShowPlantQtyForm) {
-      plant_ids = ''
-    } else {
-      plant_qty = null
-    }
+    // if (isShowPlantQtyForm) {
+    //   plant_ids = ''
+    // } else {
+    //   plant_qty = null
+    // }
 
     let purchaseData = { isValid: true }
     if (isBought) {
       purchaseData = this.purchaseInfoEditor.getValues()
     }
 
-    const locationData = this.storageInfoEditor.current.getValues()
-    // console.log(`locationData:`)
-    // console.log(locationData)
-    // console.log(`strainData.isValid: ${strainData.isValid}`)
-    // console.log(`purchaseData.isValid: ${purchaseData.isValid}`)
-    // console.log(`locationData.isValid: ${locationData.isValid}`)
-
-    const { isValid: strainValid } = this.strainPicker.current.validate()
-
     const isValid =
-      strainValid &&
-      purchaseData.isValid &&
-      locationData.isValid &&
-      Object.getOwnPropertyNames(errors).length === 0
+      purchaseData.isValid && Object.getOwnPropertyNames(errors).length === 0
 
     if (!isValid) {
       this.setState({ errors })
@@ -197,56 +189,16 @@ class MotherEditor extends React.Component {
 
     const data = {
       ...purchaseData,
-      ...locationData,
-      strain,
-      strain_type,
+      facility_strain_id,
+      facility_id,
       plant_ids,
-      plant_qty,
+      // plant_qty,
       planted_on: planted_on && planted_on.toISOString(),
+      location_id,
       isBought,
       isValid
     }
     return data
-  }
-
-  renderPlantQtyForm() {
-    if (!this.state.isShowPlantQtyForm) return null
-    return (
-      <React.Fragment>
-        <div className="ph4 mb2 flex">
-          <div className="w-40">
-            <NumericInput
-              label={'Number of plants'}
-              value={this.state.plant_qty}
-              onChange={this.onChangeGeneratorPlantQty}
-            />
-            <FieldError errors={this.state.errors} field="plant_qty" />
-          </div>
-          <div className="w-60 pl3">
-            <label className="f6 fw6 db mb1 gray">Planted On</label>
-            <DatePicker
-              value={this.state.planted_on}
-              onChange={this.onPlantedOnChanged}
-            />
-            <FieldError errors={this.state.errors} field="planted_on" />
-          </div>
-        </div>
-        <div className="ph4 mb2 flex justify-end">
-          <a
-            href="#"
-            onClick={this.onToggleGeneratePlantId}
-            className="fw4 f7 link dark-blue"
-          >
-            Cancel
-          </a>
-        </div>
-        <div className="ph4 mb2 flex">
-          <p className="w-100 ma0 f7 fw4 gray">
-            PlantID will be generated for each plant after saving.
-          </p>
-        </div>
-      </React.Fragment>
-    )
   }
 
   renderPlantIdForm() {
@@ -255,18 +207,9 @@ class MotherEditor extends React.Component {
       <React.Fragment>
         <div className="ph4 mb2 flex">
           <div className="w-100">
-            <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
+            <p className="f6 fw4 gray mt0 mb2 pa0 lh-copy">
               Each mother plant has its own <strong>Plant ID</strong>. If you
               already have them, paste Plant IDs like below.
-            </p>
-            <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
-              <a
-                href="#"
-                onClick={this.onToggleGeneratePlantId}
-                className="fw4 f7 link dark-blue"
-              >
-                Don't have Plant ID? Let us generate for you.
-              </a>
             </p>
             <textarea
               ref={this.setPlantIdsTextArea}
@@ -294,83 +237,127 @@ class MotherEditor extends React.Component {
   }
 
   render() {
+    const widthStyle = this.props.isOpened
+      ? { width: '500px' }
+      : { width: '0px' }
+
     return (
-      <React.Fragment>
-        <StrainPicker
-          ref={this.strainPicker}
-          onStrainSelected={this.onStrainSelected}
-        />
-        <hr className="mt3 m b--light-gray w-100" />
-        <div className="ph4 mt3 mb3">
-          <span className="f6 fw6 dark-gray">Plant IDs</span>
-        </div>
-
-        {this.renderPlantIdForm()}
-        {this.renderPlantQtyForm()}
-
-        <hr className="mt3 m b--light-gray w-100" />
-        <StorageInfo
-          ref={this.storageInfoEditor}
-          mode="mother"
-          locations={this.props.locations}
-          location_id={this.state.room_id}
-        />
-
-        <hr className="mt3 mb3 b--light-gray w-100" />
-        <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">Plant Origin?</span>
-        </div>
-        <div className="ph4 mb3 flex justify-between">
-          <label className="f6 fw6 db mb1 gray">
-            Mother plants are purchased
-          </label>
-          <input
-            className="toggle toggle-default"
-            type="checkbox"
-            value="1"
-            checked={this.state.isBought}
-            id="is_bought_input"
-            onChange={this.onIsBoughtChanged}
-          />
-          <label className="toggle-button" htmlFor="is_bought_input" />
-        </div>
-        {this.state.isBought && (
-          <PurchaseInfo
-            showLabel={false}
-            ref={this.setPurchaseInfoEditor}
-            vendor_name={this.state.vendor_name}
-            vendor_no={this.state.vendor_no}
-            address={this.state.address}
-            vendor_state_license_num={this.state.vendor_state_license_num}
-            vendor_state_license_expiration_date={
-              this.state.vendor_state_license_expiration_date
-            }
-            vendor_location_license_num={this.state.vendor_location_license_num}
-            vendor_location_license_expiration_date={
-              this.state.vendor_location_license_expiration_date
-            }
-            purchase_date={this.state.purchase_date}
-            invoice_no={this.state.invoice_no}
-          />
-        )}
-
-        <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
-          <a
-            className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
-            href="#"
-            onClick={this.props.onExitCurrentEditor}
+      <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
+        <div className="rc-slide-panel__body flex flex-column">
+          <div
+            className="ph4 pv2 bb b--light-gray flex items-center"
+            style={{ height: '51px' }}
           >
-            Save for later
-          </a>
-          <a
-            className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
-            href="#"
-            onClick={this.onSave}
-          >
-            Save
-          </a>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Mother</h1>
+            <span
+              className="rc-slide-panel__close-button dim"
+              onClick={() => {
+                window.editorSidebar.close()
+              }}
+            >
+              <i className="material-icons mid-gray md-18">close</i>
+            </span>
+          </div>
+
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">Select Strain</label>
+              <Select
+                options={this.state.strainOptions}
+                noOptionsMessage={() => 'Type to search strain...'}
+                onChange={this.onStrainSelected}
+                value={{
+                  label: this.state.strain_name,
+                  value: this.state.facility_strain_id
+                }}
+                styles={reactSelectStyle}
+              />
+              <FieldError
+                errors={this.state.errors}
+                field="facility_strain_id"
+              />
+            </div>
+          </div>
+          <hr className="mt3 b--light-gray w-100" />
+          <div className="ph4 mt3 mb1">
+            <span className="f6 fw6 dark-gray">Plant IDs</span>
+          </div>
+
+          {this.renderPlantIdForm()}
+
+          <hr className="mt3 m b--light-gray w-100" />
+          <div className="ph4 mt3 mb3 flex flex-column">
+            <div className="w-100">
+              <LocationPicker
+                ref={this.locationPicker}
+                mode="mother"
+                facility_id={this.state.facility_id}
+                locations={this.locations}
+                location_id={this.state.room_id}
+                onChange={this.onLocationChanged}
+              />
+              <FieldError errors={this.state.errors} field="location_id" />
+            </div>
+          </div>
+
+          <hr className="mt3 mb3 b--light-gray w-100" />
+          <div className="ph4 mb3 mt2">
+            <span className="f6 fw6 dark-gray">Plant Origin?</span>
+          </div>
+          <div className="ph4 mb3 flex justify-between">
+            <label className="f6 fw6 db mb1 gray">
+              Mother plants are purchased
+            </label>
+            <input
+              className="toggle toggle-default"
+              type="checkbox"
+              value="1"
+              checked={this.state.isBought}
+              id="is_bought_input"
+              onChange={this.onIsBoughtChanged}
+            />
+            <label className="toggle-button" htmlFor="is_bought_input" />
+          </div>
+          {this.state.isBought && (
+            <PurchaseInfo
+              showLabel={false}
+              ref={this.setPurchaseInfoEditor}
+              vendor_name={this.state.vendor_name}
+              vendor_no={this.state.vendor_no}
+              address={this.state.address}
+              vendor_state_license_num={this.state.vendor_state_license_num}
+              vendor_state_license_expiration_date={
+                this.state.vendor_state_license_expiration_date
+              }
+              vendor_location_license_num={
+                this.state.vendor_location_license_num
+              }
+              vendor_location_license_expiration_date={
+                this.state.vendor_location_license_expiration_date
+              }
+              purchase_date={this.state.purchase_date}
+              invoice_no={this.state.invoice_no}
+            />
+          )}
+
+          <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
+            <a
+              className="db tr pv2 bn br2 ttu tracked link dim f6 fw6 orange"
+              href="#"
+              onClick={this.props.onExitCurrentEditor}
+            >
+              Save for later
+            </a>
+            <a
+              className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
+              href="#"
+              onClick={this.onSave}
+            >
+              Save
+            </a>
+          </div>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }

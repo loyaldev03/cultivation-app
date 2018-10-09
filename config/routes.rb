@@ -32,7 +32,6 @@ Rails.application.routes.draw do
   post "facility_setup/duplicate_rows" => "facility_setup#duplicate_rows", as: "duplicate_rows"
 
   get "settings" => "home#settings"
-
   get "inventory/setup" => "home#inventory_setup"
 
   namespace 'materials', as: :materials do
@@ -47,8 +46,18 @@ Rails.application.routes.draw do
   end
 
   namespace 'inventory', as: :inventory do
-    resources 'plant_setup', only: [:index]
     resources 'strains', only: [:index]
+    resources 'plants', only: [:index] do 
+      collection do
+        get 'mothers'
+        get 'cultivation_batches'
+        get 'clones'
+        get 'vegs'
+        get 'flowers'
+        get 'harvests'
+        get 'harvest_batches'
+      end
+    end
   end
 
   namespace 'settings' do
@@ -83,19 +92,24 @@ Rails.application.routes.draw do
     namespace :v1 do
       
       resources :plants do
-        get 'all/(:plant_status)',    action: :all, on: :collection
-        post 'setup_mother'
-        # post 'setup_clones'
-        # post 'setup_vegs'
-        # post 'setup_harvest_yield'
-        # post 'setup_waste'
+        get 'all/(:current_growth_stage)',    action: :all, on: :collection
+        get 'search/:current_growth_stage/(:facility_strain_id)/(:search)',    action: :search, on: :collection
+        collection do
+          post 'setup_mother'
+          post 'setup_clones'
+          post 'setup_vegs'
+          # post 'setup_flowers'
+          # post 'setup_harvest_batch'
+          # post 'setup_waste'
+        end
       end
 
       resources :strains, only: [:index, :create, :show] do
         get 'suggest', on: :collection
       end
 
-      resources :batches, only: [:create] do
+      resources :batches, only: [:index, :create] do
+        post 'setup_simple_batch', on: :collection
         post 'update_locations'
         resources :tasks, only: [:index, :update, :create, :destroy] do
           put 'indent', on: :member
@@ -104,14 +118,6 @@ Rails.application.routes.draw do
 
       resources :users, only: [:index] do
         get 'roles', on: :collection
-      end
-
-      resource :plant_setup, only: [] do
-        
-        post 'setup_clones'
-        post 'setup_vegs'
-        post 'setup_harvest_yield'
-        post 'setup_waste'
       end
 
       resource :user_roles, only: [] do

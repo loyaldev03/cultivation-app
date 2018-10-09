@@ -5,7 +5,6 @@ import StrainList from './components/StrainList'
 import StrainEditor from './components/StrainEditor'
 import strainStore from './store/StrainStore'
 import loadStrains from './actions/loadStrains'
-// import addPlant from './actions/addPlant'
 
 @observer
 class StrainApp extends React.Component {
@@ -20,10 +19,6 @@ class StrainApp extends React.Component {
   }
 
   renderStrainList() {
-    if (strainStore.strains.length === 0) {
-      return null
-    }
-
     return (
       <div className="w-80 bg-white pa3">
         <div className="flex mt3 mb4">
@@ -42,35 +37,19 @@ class StrainApp extends React.Component {
     )
   }
 
-  renderFirstTime() {
-    if (strainStore.strains.length > 0) {
-      return null
-    }
-
-    return (
-      <div className="ph4 pt4 pb5 mb3 bg-white w-70">
-        <div className="w-60">
-          <h1 className="mt0 mb4 f3 fw4 dark-gray">
-            Setup strains for my facility
-          </h1>
-          <p className="mb3 lh-copy f5 grey">
-            Add strains grown at your facility.
-          </p>
-          <button
-            className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
-            onClick={this.openSidebar}
-          >
-            Add my first strain
-          </button>
-        </div>
-      </div>
-    )
-  }
-
   render() {
     return (
       <React.Fragment>
-        {this.renderFirstTime()}
+        <div className="ph4 pt4 pb4 mb3 bg-white w-80">
+          <div className="w-80">
+            <h1 className="mt0 mb3 f3 fw4 dark-gray">
+              Setup strains for my facility
+            </h1>
+            <p className="mb0 lh-copy f5 grey">
+              Register strains that are grown at your facility.
+            </p>
+          </div>
+        </div>
         {this.renderStrainList()}
         <StrainEditor isOpened={false} locations={this.props.locations} />
       </React.Fragment>

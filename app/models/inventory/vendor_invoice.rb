@@ -12,7 +12,7 @@ module Inventory
     # has_many :items
 
     belongs_to :vendor, class_name: 'Inventory::Vendor'
-    # has_many   :plants, class_name: 'Inventory::Plants'
+    # has_many   :plants, class_name: 'Inventory::Plant'
 
     # TODO: This is missing or to be added...
     # An invoice

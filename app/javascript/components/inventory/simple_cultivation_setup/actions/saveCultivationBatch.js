@@ -1,7 +1,7 @@
-import plantStore from '../store/PlantStore'
+import store from '../store/CultivationBatchStore'
 
-export default function setupMother(payload) {
-  return fetch('/api/v1/plants/setup_mother', {
+export default function saveCultivationBatch(payload) {
+  return fetch('/api/v1/batches/setup_simple_batch', {
     method: 'POST',
     credentials: 'include',
     body: JSON.stringify(payload),
@@ -18,12 +18,13 @@ export default function setupMother(payload) {
     .then(result => {
       const { status, data } = result
       if (status == 200) {
-        const savedPlants = data.data
-        console.log('savedPlants')
-        console.log(savedPlants)
-        plantStore.prepend(savedPlants)
+        const batch = data.data
+        if (payload.id) {
+          store.update(batch)
+        } else {
+          store.prepend(batch)
+        }
       }
-
       return result
     })
 }

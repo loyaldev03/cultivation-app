@@ -4,7 +4,7 @@ RSpec.describe "/purchasing", :type => :request do
   # TODO: add context for non-admin
   context "/index" do
     before do
-      user = create(:user, :admin)
+      user = create(:user)
       login_as(user, :scope => :user)
     end
 

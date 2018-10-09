@@ -1,15 +1,15 @@
 import React from 'react'
 
-const PERMISSION_NONE = 0
-const PERMISSION_READ = 1
-const PERMISSION_UPDATE = 2
-const PERMISSION_CREATE = 4
-const PERMISSION_DELETE = 8
+const CAN_NONE = 0
+const CAN_READ = 1
+const CAN_UPDATE = 2
+const CAN_CREATE = 4
+const CAN_DELETE = 8
 
 class PermissionRow extends React.PureComponent {
   constructor(props) {
     super(props)
-    const value = props.value ? parseInt(props.value) : PERMISSION_NONE
+    const value = props.value ? parseInt(props.value) : CAN_NONE
     this.state = {
       value: value
     }
@@ -36,32 +36,32 @@ class PermissionRow extends React.PureComponent {
         <td className="tc">
           <input
             type="checkbox"
-            value={PERMISSION_READ}
-            checked={(value & PERMISSION_READ) !== PERMISSION_NONE}
+            value={CAN_READ}
+            checked={(value & CAN_READ) !== CAN_NONE}
             onChange={this.onCheckboxChange}
           />
         </td>
         <td className="tc">
           <input
             type="checkbox"
-            value={PERMISSION_UPDATE}
-            checked={(value & PERMISSION_UPDATE) !== PERMISSION_NONE}
+            value={CAN_UPDATE}
+            checked={(value & CAN_UPDATE) !== CAN_NONE}
             onChange={this.onCheckboxChange}
           />
         </td>
         <td className="tc">
           <input
             type="checkbox"
-            value={PERMISSION_CREATE}
-            checked={(value & PERMISSION_CREATE) !== PERMISSION_NONE}
+            value={CAN_CREATE}
+            checked={(value & CAN_CREATE) !== CAN_NONE}
             onChange={this.onCheckboxChange}
           />
         </td>
         <td className="tc">
           <input
             type="checkbox"
-            value={PERMISSION_DELETE}
-            checked={(value & PERMISSION_DELETE) !== PERMISSION_NONE}
+            value={CAN_DELETE}
+            checked={(value & CAN_DELETE) !== CAN_NONE}
             onChange={this.onCheckboxChange}
           />
         </td>

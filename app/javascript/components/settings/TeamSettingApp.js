@@ -109,7 +109,13 @@ class TeamSetttingApp extends React.Component {
       })).json()
       if (response && response.data) {
         store.updateUser({ id: response.data.id, ...response.data.attributes })
-        toast('User updated.', 'success')
+        if (userDetails.user.id) {
+          toast('User updated.', 'success')
+        }
+        else {
+          toast('User created', 'success')
+          this.closeSidebar()
+        }
       } else {
         console.log(response)
       }
@@ -133,7 +139,13 @@ class TeamSetttingApp extends React.Component {
       })).json()
       if (response && response.data) {
         store.updateRole({ id: response.data.id, ...response.data.attributes })
-        toast('Role updated.', 'success')
+        if (roleDetails.role.id) {
+          toast('Role updated', 'success')
+        }
+        else {
+          toast('Role created', 'success')
+          this.closeSidebar()
+        }
       } else {
         toast(`Update error: ${response.error}`, 'error')
       }
@@ -158,6 +170,7 @@ class TeamSetttingApp extends React.Component {
       if (response && response.data) {
         store.deleteRole(roleId)
         toast('Role deleted.', 'success')
+        this.closeSidebar()
       } else {
         toast(`Error deleting role: ${response.error}`, 'error')
       }

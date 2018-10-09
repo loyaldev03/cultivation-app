@@ -7,7 +7,7 @@ class RoleCheck
     # CREATE = Permission 4
     # DELETE = Permission 8
 
-    # NOTE: Exception if missing required params
+    # Exception if missing required params
     raise ArgumentError.new('Missing "current_user"') if current_user.blank?
     raise ArgumentError.new('Missing "feature"') if feature.blank?
     raise ArgumentError.new('Missing "permissions"') if permissions.blank?
@@ -18,6 +18,29 @@ class RoleCheck
   end
 
   def call
-    roles = Common::Role.where(:_id.in => u.roles)
+    if @current_user&.roles.blank?
+      # Current user do not have any roles
+      return false
+    end
+
+    roles = Common::Role.where(:_id.in => @current_user.roles)
+    if roles.blank?
+      # Roles cannot be found
+      return false
+    end
+
+    permit = nil
+    roles.each do |role|
+      permit = role.permissions.detect { |p| p[:code] == @feature }
+      break if permit
+    end
+
+    if permit.nil?
+      # Required feature not assigned to any of the roles
+      return false
+    end
+
+    # NOTE: Bitwise AND operation
+    (permit[:value] & @permissions) == @permissions
   end
 end

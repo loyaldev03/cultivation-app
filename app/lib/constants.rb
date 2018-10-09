@@ -279,6 +279,14 @@ module Constants
         {code: 4050, name: 'Assign tasks to issues reported by my direct report'},
       ],
     },
+    {
+      code: 9000,
+      name: 'Settings',
+      features: [
+        {code: 9010, name: 'Team Settings / Users'},
+        {code: 9020, name: 'Team Settings / Roles'}
+      ]
+    }
   ].freeze
 
   PERMISSION_NONE = 0

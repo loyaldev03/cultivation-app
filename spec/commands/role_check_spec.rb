@@ -31,4 +31,49 @@ RSpec.describe RoleCheck do
       expect { RoleCheck.call({ id: "1" }, 1000, nil) }.to raise_error(ArgumentError, 'Missing "permissions"')
     end
   end
+
+  context "RoleCheck core logic" do
+    let!(:role) { create(:role, :with_permission_1010) }
+    let!(:current_user) {
+      res = create(:user)
+      res.roles = [role.id]
+      res
+    }
+
+    it "user can read feature 1010" do
+      cmd = RoleCheck.call(current_user, 1010, Constants::PERMISSION_READ)
+
+      expect(cmd.result).to eq true
+    end
+
+    it "user can read feature 1020" do
+      cmd = RoleCheck.call(current_user, 1020, Constants::PERMISSION_READ)
+
+      expect(cmd.result).to eq true
+    end
+
+    it "user can update feature 1020" do
+      cmd = RoleCheck.call(current_user, 1020, Constants::PERMISSION_UPDATE)
+
+      expect(cmd.result).to eq true
+    end
+
+    it "user can create feature 1020" do
+      cmd = RoleCheck.call(current_user, 1020, Constants::PERMISSION_CREATE)
+
+      expect(cmd.result).to eq true
+    end
+
+    it "user cannot delete feature 1020" do
+      cmd = RoleCheck.call(current_user, 1020, Constants::PERMISSION_DELETE)
+
+      expect(cmd.result).to eq false
+    end
+
+    it "user cannot read feature 2000" do
+      cmd = RoleCheck.call(current_user, 2000, Constants::PERMISSION_READ)
+
+      expect(cmd.result).to eq false
+    end
+  end
 end

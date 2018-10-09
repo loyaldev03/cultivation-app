@@ -281,11 +281,9 @@ module Constants
     },
   ].freeze
 
-  PERMISSION = {
-    NONE: 0,
-    READ: 2 ** 0,
-    UPDATE: 2 ** 1,
-    CREATE: 2 ** 2,
-    DELETE: 2 ** 3,
-  }.freeze
+  PERMISSION_NONE = 0
+  PERMISSION_READ = 1
+  PERMISSION_UPDATE = 2
+  PERMISSION_CREATE = 4
+  PERMISSION_DELETE = 8
 end

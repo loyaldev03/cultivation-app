@@ -67,7 +67,7 @@ export default class MaterialForm extends React.Component {
       materials: [
         ...prevState.materials,
         {
-          id : this.state.material_name.value,
+          id: this.state.material_name.value,
           material_name: this.state.material_name.label,
           quantity: this.state.quantity,
           uom: this.state.uom.label
@@ -139,9 +139,7 @@ export default class MaterialForm extends React.Component {
           />
         </div>
         <div className="mt4 mr4 ml4 f6 fw6 db mb1 gray ttc">
-          {items.map((x)=>(
-            <div>{x.name}</div>
-          ))}
+          {items.map(x => <div>{x.name}</div>)}
           {this.state.materials.length !== 0 ? (
             <span>Materials Added</span>
           ) : null}

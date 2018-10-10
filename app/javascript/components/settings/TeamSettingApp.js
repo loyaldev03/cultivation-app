@@ -21,6 +21,16 @@ const build_roles_options = roles =>
     label: `${f.name}`
   }))
 
+const TabButton = ({ title, onClick, isActive }) => (
+  <a
+    href="#0"
+    className={classNames('tab', { 'tab--active': isActive })}
+    onClick={onClick}
+  >
+    {title}
+  </a>
+)
+
 const FacilityTag = ({ id }) => (
   <span className="f7 bg-blue pv1 ph2 white ma1 dib">
     {store.getFacilityCode(id)}
@@ -38,7 +48,7 @@ class TeamSetttingApp extends React.Component {
   state = {
     editingUser: {},
     editingRole: {},
-    activeTab: 'usersTab'
+    activeTab: 'rolesTab'
   }
   async componentDidMount() {
     await store.loadUsers(true)
@@ -111,8 +121,7 @@ class TeamSetttingApp extends React.Component {
         store.updateUser({ id: response.data.id, ...response.data.attributes })
         if (userDetails.user.id) {
           toast('User updated.', 'success')
-        }
-        else {
+        } else {
           toast('User created', 'success')
           this.closeSidebar()
         }
@@ -141,8 +150,7 @@ class TeamSetttingApp extends React.Component {
         store.updateRole({ id: response.data.id, ...response.data.attributes })
         if (roleDetails.role.id) {
           toast('Role updated', 'success')
-        }
-        else {
+        } else {
           toast('Role created', 'success')
           this.closeSidebar()
         }
@@ -208,25 +216,16 @@ class TeamSetttingApp extends React.Component {
               <p className="mt2 mb4 db body-1 grey">
                 Browses through your team's information here.
               </p>
-              <a
-                href="#0"
-                className={classNames('tab', {
-                  'tab--active': activeTab === 'usersTab'
-                })}
-                onClick={this.onToggleTab('usersTab')}
-              >
-                Users
-              </a>
-              <a
-                href="#0"
-                className={classNames('tab', {
-                  'tab--active': activeTab === 'rolesTab'
-                })}
+              <TabButton
+                title="Roles & Permissions"
+                isActive={activeTab === 'rolesTab'}
                 onClick={this.onToggleTab('rolesTab')}
-              >
-                Roles &amp; Permissions
-              </a>
-
+              />
+              <TabButton
+                title="Users"
+                isActive={activeTab === 'usersTab'}
+                onClick={this.onToggleTab('usersTab')}
+              />
               {activeTab === 'usersTab' && (
                 <div className="mt0 ba b--light-grey pa3">
                   <div className="pb2 db tr">

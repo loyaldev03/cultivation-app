@@ -2,7 +2,7 @@ class RoleCheck
   prepend SimpleCommand
 
   def initialize(current_user, feature, permissions)
-    # READ = Permission 1 
+    # READ = Permission 1
     # UPDATE = Permission 2
     # CREATE = Permission 4
     # DELETE = Permission 8

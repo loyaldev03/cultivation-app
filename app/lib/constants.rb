@@ -297,9 +297,9 @@ module Constants
       name: 'Settings',
       features: [
         {code: 9010, name: 'Team Settings / Users'},
-        {code: 9020, name: 'Team Settings / Roles'}
-      ]
-    }
+        {code: 9020, name: 'Team Settings / Roles'},
+      ],
+    },
   ].freeze
 end
 

@@ -131,55 +131,60 @@ export default class MaterialForm extends React.Component {
     let handleChange = this.handleChange
     let handleDelete = this.handleDelete
     return (
-      <div className="ba b--light-gray ml4 mr4 mt4">
-        <div className="ph4 mt3 flex">
-          <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Material Name</label>
-            <Select
-              name="name"
-              options={material_dropdown}
-              onChange={e => this.handleChangeSelect('name', e)}
-              value={this.state.name}
+      <React.Fragment>
+        <div className="ba b--light-gray ml4 mr4 mt4">
+          <div className="ph4 mt3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">Material Name</label>
+              <Select
+                name="name"
+                options={material_dropdown}
+                onChange={e => this.handleChangeSelect('name', e)}
+                value={this.state.name}
+              />
+            </div>
+          </div>
+          <div className="ph4 mt3 flex">
+            <div className="w-100">
+              <NumericInput
+                label={'Quantity'}
+                value={this.state.quantity}
+                onChange={e => handleChange('quantity', e)}
+                fieldname="quantity"
+                errors={this.state.errors}
+                errorField="quantity"
+              />
+            </div>
+          </div>
+          <div className="ph4 mt3 flex mb3 ">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">Unit Of Measure</label>
+              <Select
+                name="uom"
+                options={uom_dropdown}
+                onChange={e => this.handleChangeSelect('uom', e)}
+                value={this.state.uom}
+              />
+            </div>
+          </div>
+          <div className="pv2 w4">
+            <input
+              type="submit"
+              className="pv2 ph3 ml4 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+              value="Add Material"
+              onClick={this.handleSubmit}
             />
           </div>
-        </div>
-        <div className="ph4 mt3 flex">
-          <div className="w-100">
-            <NumericInput
-              label={'Quantity'}
-              value={this.state.quantity}
-              onChange={e => handleChange('quantity', e)}
-              fieldname="quantity"
-              errors={this.state.errors}
-              errorField="quantity"
-            />
-          </div>
-        </div>
-        <div className="ph4 mt3 flex mb3 ">
-          <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Unit Of Measure</label>
-            <Select
-              name="uom"
-              options={uom_dropdown}
-              onChange={e => this.handleChangeSelect('uom', e)}
-              value={this.state.uom}
-            />
-          </div>
-        </div>
-        <div className="pv2 w4">
-          <input
-            type="submit"
-            className="pv2 ph3 ml4 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
-            value="Add Material"
-            onClick={this.handleSubmit}
-          />
         </div>
         <div className="mt4 mr4 ml4 f6 fw6 db mb1 gray ttc">
-          {this.state.materials.length !== 0 ? (
-            <span>Materials Added</span>
-          ) : null}
           <table className="w-100">
             <tbody>
+              <tr className="">
+                <th>Material Name</th>
+                <th>Quantity</th>
+                <th>Unit of Measurment</th>
+                <th></th>
+              </tr>
               {materials.map((x, index) => (
                 <tr className="pointer bb" key={index}>
                   <td className="tl pv2 ph3">{x.name}</td>
@@ -191,14 +196,15 @@ export default class MaterialForm extends React.Component {
                       onClick={e => handleDelete(x.id)}
                     >
                       delete
-                    </i>
+                      </i>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
+        </React.Fragment>
+
     )
   }
 }

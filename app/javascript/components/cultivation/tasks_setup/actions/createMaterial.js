@@ -8,8 +8,8 @@ export default async function createMaterial(state) {
   let data
   let item = {
     item: {
-      name: state.material_name.label, 
-      quantity: state.quantity, 
+      name: state.material_name.label,
+      quantity: state.quantity,
       uom: state.uom.label
     }
   }
@@ -25,7 +25,7 @@ export default async function createMaterial(state) {
     .then(response => response.json())
     .then(data => {
       if (data.data.id != null) {
-        data =  data.data
+        data = data.data
       } else {
         data = null
       }

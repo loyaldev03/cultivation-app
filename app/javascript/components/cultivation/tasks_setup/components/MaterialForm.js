@@ -80,10 +80,7 @@ export default class MaterialForm extends React.Component {
     )
   }
 
-
-  sendApiDelete = async e => {
-
-  }
+  sendApiDelete = async e => {}
 
   sendApiCreate = async e => {
     let url = `/api/v1/items?task_id=${this.state.id}`
@@ -96,38 +93,37 @@ export default class MaterialForm extends React.Component {
       }
     }
     try {
-
-    await fetch(url, {
-      method: 'POST',
-      credentials: 'include',
-      body: JSON.stringify(item),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.data.id != null) {
-          data = data.data
-          console.log(data)
-          this.setState(prevState => ({
-            items: [
-              ...prevState.items,
-              {
-                id: data.id,
-                name: data.attributes.name,
-                quantity: data.attributes.quantity,
-                uom: data.attributes.uom
-              }
-            ],
-            name: '',
-            quantity: '',
-            uom: ''
-          }))
-        } else {
-          data = null
+      await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify(item),
+        headers: {
+          'Content-Type': 'application/json'
         }
       })
+        .then(response => response.json())
+        .then(data => {
+          if (data.data.id != null) {
+            data = data.data
+            console.log(data)
+            this.setState(prevState => ({
+              items: [
+                ...prevState.items,
+                {
+                  id: data.id,
+                  name: data.attributes.name,
+                  quantity: data.attributes.quantity,
+                  uom: data.attributes.uom
+                }
+              ],
+              name: '',
+              quantity: '',
+              uom: ''
+            }))
+          } else {
+            data = null
+          }
+        })
     } catch (error) {
       console.error('Error while saving user', error)
     }

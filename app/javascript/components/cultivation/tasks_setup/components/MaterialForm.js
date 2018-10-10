@@ -12,7 +12,6 @@ import deleteMaterial from '../actions/deleteMaterial'
 
 import loadTasks from '../actions/loadTask'
 
-
 const uom_dropdown = [
   { value: 'Fathi', label: 'KG' },
   { value: 'Andy', label: 'CM' },
@@ -113,7 +112,7 @@ export default class MaterialForm extends React.Component {
               quantity: '',
               uom: ''
             }))
-            loadTasks.loadbatch(this.state.batch_id) 
+            loadTasks.loadbatch(this.state.batch_id)
           } else {
             data = null
           }

@@ -57,7 +57,7 @@ export default class StrainEditor extends React.Component {
   }
 
   resetState() {
-    return ({
+    return {
       id: '',
       strain_name: '',
       strain_type: '',
@@ -68,7 +68,7 @@ export default class StrainEditor extends React.Component {
       sativa_makeup: 0,
       testing_status: 'third_party',
       errors: {}
-    })
+    }
   }
 
   genericOnChange = event => {

@@ -13,7 +13,6 @@ export default class StrainAutoSuggest extends React.Component {
     }
   }
 
-
   // Should refactor this to ./actions
   loadStrainOptions = inputValue => {
     return fetch('/api/v1/strains/suggest?filter=' + inputValue, {
@@ -22,7 +21,7 @@ export default class StrainAutoSuggest extends React.Component {
       .then(response => response.json())
       .then(data => {
         // console.log(data.data)
-        const strains= data.data.map(x => ({
+        const strains = data.data.map(x => ({
           label: x.attributes.name,
           value: x.attributes.name,
           strain_type: x.attributes.strain_type
@@ -36,7 +35,7 @@ export default class StrainAutoSuggest extends React.Component {
     return newValue ? newValue : ''
   }
 
-  onStrainSelected = (item) => {
+  onStrainSelected = item => {
     const strain = item.label
     const strain_type = item.strain_type || this.state.strain_type
     this.setState({
@@ -48,11 +47,11 @@ export default class StrainAutoSuggest extends React.Component {
     this.props.onStrainSelected({ strain, strain_type })
   }
 
-  onChangeStrainType = (event) => {
+  onChangeStrainType = event => {
     this.setState({ strain_type: event.target.value })
-    this.props.onStrainSelected({ 
-      strain: this.state.strain, 
-      strain_type: event.target.value 
+    this.props.onStrainSelected({
+      strain: this.state.strain,
+      strain_type: event.target.value
     })
   }
 
@@ -60,14 +59,14 @@ export default class StrainAutoSuggest extends React.Component {
     this.setState({
       strain: '',
       strain_type: 'hybrid',
-      errors: {},
+      errors: {}
     })
   }
 
   validate(isDraft = false) {
     let errors = {}
     const { strain, strain_type } = this.state
-    
+
     if (!isDraft) {
       if (strain.length <= 0) {
         errors = { ...errors, strain: ['Strain is required.'] }
@@ -85,8 +84,6 @@ export default class StrainAutoSuggest extends React.Component {
     }
   }
 
-  
-
   render() {
     return (
       <div className="ph4 mt3 flex">
@@ -100,7 +97,7 @@ export default class StrainAutoSuggest extends React.Component {
             onInputChange={this.handleInputChange}
             styles={reactSelectStyle}
             placeholder=""
-            value={ { label: this.state.strain, value: this.state.strain }}
+            value={{ label: this.state.strain, value: this.state.strain }}
             onChange={this.onStrainSelected}
           />
           <FieldError errors={this.state.errors} field="strain" />

@@ -111,8 +111,7 @@ class TeamSetttingApp extends React.Component {
         store.updateUser({ id: response.data.id, ...response.data.attributes })
         if (userDetails.user.id) {
           toast('User updated.', 'success')
-        }
-        else {
+        } else {
           toast('User created', 'success')
           this.closeSidebar()
         }
@@ -141,8 +140,7 @@ class TeamSetttingApp extends React.Component {
         store.updateRole({ id: response.data.id, ...response.data.attributes })
         if (roleDetails.role.id) {
           toast('Role updated', 'success')
-        }
-        else {
+        } else {
           toast('Role created', 'success')
           this.closeSidebar()
         }

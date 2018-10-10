@@ -204,7 +204,6 @@ export default class HarvestYieldEditor extends React.Component {
   render() {
     return (
       <React.Fragment>
-        
         <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mt3 flex">
           <div className="w-50">

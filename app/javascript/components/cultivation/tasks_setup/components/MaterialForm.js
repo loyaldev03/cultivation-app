@@ -183,7 +183,7 @@ export default class MaterialForm extends React.Component {
                 <th>Material Name</th>
                 <th>Quantity</th>
                 <th>Unit of Measurment</th>
-                <th></th>
+                <th />
               </tr>
               {materials.map((x, index) => (
                 <tr className="pointer bb" key={index}>
@@ -196,15 +196,14 @@ export default class MaterialForm extends React.Component {
                       onClick={e => handleDelete(x.id)}
                     >
                       delete
-                      </i>
+                    </i>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        </React.Fragment>
-
+      </React.Fragment>
     )
   }
 }

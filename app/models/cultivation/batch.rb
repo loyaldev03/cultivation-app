@@ -4,6 +4,7 @@ module Cultivation
     include Mongoid::Timestamps::Short
 
     field :batch_no, type: String
+    field :name, type: String
     field :batch_source, type: String
     field :start_date, type: DateTime
     field :estimated_harvest_date, type: DateTime
@@ -18,10 +19,6 @@ module Cultivation
     # KW: New fields replacing strain and plants
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
     has_many :plants, class_name: 'Inventory::Plant'
-
-    def name
-      strain.name
-    end
 
     def phases
       tasks.where(is_phase: true)

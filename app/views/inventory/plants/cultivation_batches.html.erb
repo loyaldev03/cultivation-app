@@ -1,0 +1,19 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Home",root_path], 
+      ['Inventory Setup', inventory_setup_path], 
+      'Active Plant Inventory',
+      'Cultivation Batches' 
+  %>
+<% end %>
+
+<div class="pa4">
+  <%= render partial: 'setupIntro' %>
+  <%= render partial: 'setupNavigation', locals: { selected: 'cultivation_batch' } %>
+  <div class="flex flex-column">
+    <%= react_component('inventory/simple_cultivation_setup/SimpleCultivationBatchSetupApp', {
+        facility_strains: @facility_strains,
+        batch_sources: Constants::PLANT_SOURCE_TYPES.map{|a| {value: a[:code], label: a[:name]}},
+        grow_methods: Constants::GROW_MEDIUM.map{|a| {value: a[:code], label: a[:name]}},
+      }) %>
+  </div>
+</div>

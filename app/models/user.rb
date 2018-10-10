@@ -6,6 +6,16 @@ class User
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
+  def active_for_authentication?
+    # Reference: https://www.rubydoc.info/github/plataformatec/devise/Devise/Models/Authenticatable
+    super && self.is_active == true
+  end
+
+  def inactive_message
+    # Reference: https://www.rubydoc.info/github/plataformatec/devise/Devise/Models/Authenticatable
+    self.is_active == true ? super : 'Your account has been deactivated'
+  end
+
   # Information
   field :first_name, type: String
   field :last_name, type: String

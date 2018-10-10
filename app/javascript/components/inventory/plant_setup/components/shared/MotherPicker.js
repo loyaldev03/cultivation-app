@@ -82,7 +82,6 @@ class MotherPicker extends React.Component {
         <Select
           options={this.state.motherOptions}
           onChange={this.onMotherIdChanged}
-          value={this.state.mother}
           styles={reactSelectStyle}
         />
         <FieldError errors={this.state.errors} field="mother_id" />
@@ -92,17 +91,13 @@ class MotherPicker extends React.Component {
 }
 
 MotherPicker.propTypes = {
+  facility_strain_id: PropTypes.string.isRequired,
   strain: PropTypes.string.isRequired,
-  mother_id: PropTypes.string,
-  mother_label: PropTypes.string,
-  onFacilitySelected: PropTypes.func
+  value: PropTypes.string
 }
 
 MotherPicker.defaultProps = {
-  strain: '',
-  mother_id: '',
-  mother_label: '',
-  onFacilitySelected: () => {}
+  value: ''
 }
 
 export default MotherPicker

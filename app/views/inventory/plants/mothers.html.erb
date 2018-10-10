@@ -1,0 +1,19 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Home",root_path], 
+      ['Inventory Setup', inventory_setup_path], 
+      'Active Plant Inventory',
+      'Mother Plants' 
+  %>
+<% end %>
+
+
+<div class="pa4">
+  <%= render partial: 'setupIntro' %>
+  <%= render partial: 'setupNavigation', locals: { selected: 'mother' } %>
+  <div class="flex flex-column">
+    <%= react_component('inventory/plant_setup/MotherSetupApp', {
+        facility_strains: @facility_strains,
+        locations: @locations
+      }) %>
+  </div>
+</div>

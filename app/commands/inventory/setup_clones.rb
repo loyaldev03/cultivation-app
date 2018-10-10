@@ -6,17 +6,21 @@ module Inventory
   class SetupClones
     prepend SimpleCommand
 
+    # cultivation_batch_id:"5bb3a28eedfdb20fc99678ea"
+    # isBought:false
+    # location_id:"5b907c97edfdb2685648870b"
+    # mother_id:"5badf53eedfdb2b21c2cd67f"
+    # plant_ids:"p1"
+    # planting_date:"2018-08-31T16:00:00.000Z"
+
     attr_reader :user,
       :args,
-      :strain_name,
-      :strain_type,
+      :is_draft,
       :cultivation_batch_id,
       :location_id,
       :mother_id,
-      :plant_qty,
-      :clone_ids,
-      :planted_on,
-      :expected_harvested_on,
+      :plant_ids,
+      :planting_date,
       :vendor_id,
       :vendor_name,
       :vendor_no,
@@ -33,15 +37,13 @@ module Inventory
       Rails.logger.debug '>>>> SetupClones'
       Rails.logger.debug @args
 
-      @strain_name = args[:strain]
-      @strain_type = args[:strain_type]
+      @is_draft = false
       @cultivation_batch_id = args[:cultivation_batch_id]
       @location_id = args[:location_id]
       @mother_id = args[:mother_id]
-      @clone_ids = args[:clone_ids]
-      @plant_qty = args[:plant_qty]
-      @planted_on = args[:planted_on]
-      @expected_harvested_on = args[:expected_harvested_on]
+      @plant_ids = split(args[:plant_ids])
+      @planting_date = args[:planting_date]
+
       @vendor_id = args[:vendor_id]
       @vendor_name = args[:vendor_name] && args[:vendor_name].strip
       @vendor_no = args[:vendor_no]
@@ -53,27 +55,22 @@ module Inventory
     end
 
     def call
-      @clone_ids = generate_or_extract_plant_ids
-
       if valid_permission? && valid_data?
-        create_strain
-        vendor = create_vendor
-        @mother_id = nil if is_purchased?
-        clones = create_clones
-        create_invoice(clones, vendor, invoice_no) if is_purchased?
-        clones
+        plants = create_clones
+
+        if is_purchased?
+          vendor = create_vendor
+          create_invoice(plants, vendor, invoice_no)
+        end
+
+        plants
       end
     end
 
     private
 
-    def generate_or_extract_plant_ids
-      if clone_ids.strip.present?
-        clone_ids.gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
-      else
-        ids = Inventory::GeneratePlantSerialNo.call(plant_qty.to_i).result
-        ids
-      end
+    def split(ids)
+      ids.gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
     end
 
     def valid_permission?
@@ -81,16 +78,23 @@ module Inventory
     end
 
     def valid_data?
+      return true if is_draft
+
       # All serial number should be new
-      existing_records = Inventory::ItemArticle.in(serial_no: clone_ids).pluck(:serial_no)
+      existing_records = Inventory::Plant.in(plant_id: plant_ids).pluck(:plant_id)
 
       if existing_records.count > 0
-        errors.add(:clone_ids, "These plant ID #{existing_records.join(', ')} already exists in the system.")
+        errors.add(:plant_ids, "These plant ID #{existing_records.join(', ')} already exists in the system.")
       end
 
       tray = Tray.find(location_id)
-      if (tray.nil?)
+      if tray.nil?
         errors.add(:location_id, 'Tray not found.')
+      end
+
+      batch = Cultivation::Batch.find(cultivation_batch_id)
+      if batch.nil?
+        errors.add(:cultivation_batch_id, 'Batch is required.')
       end
 
       errors.empty?
@@ -100,13 +104,28 @@ module Inventory
       vendor_name.present?
     end
 
-    def create_strain
-      command = Common::SaveStrain.call(name: strain_name, strain_type: strain_type)
+    def create_clones
+      facility_strain_id = Cultivation::Batch.find(cultivation_batch_id).facility_strain_id
+      plants = []
 
-      unless command.success?
-        combine_errors(command.errors, :name, :strain)
-        combine_errors(command.errors, :strain_type, :strain_type)
+      plant_ids.each do |plant_id|
+        plant = Inventory::Plant.find_or_initialize_by(
+          plant_id: plant_id,
+          facility_strain_id: facility_strain_id,
+        ) do |t|
+          t.cultivation_batch_id = cultivation_batch_id
+          t.current_growth_stage = 'clone'
+          t.created_by = user
+          t.location_id = location_id
+          t.location_type = 'tray'
+          t.status = is_draft ? 'draft' : 'available'
+          t.planting_date = planting_date
+        end
+        plant.save!
+        plants << plant
       end
+
+      plants
     end
 
     def create_vendor
@@ -135,30 +154,6 @@ module Inventory
         combine_errors(command.errors, :vendor_location_license_expiration_date, :location_license_expiration_date)
         combine_errors(command.errors, :vendor_location_license_num, :location_license_num)
         nil
-      end
-    end
-
-    def create_clones
-      command = Inventory::CreatePlants.call(
-        status: 'available',
-        plant_ids: clone_ids,
-        strain_name: strain_name,
-        location_id: location_id,
-        location_type: 'tray',
-        planted_on: planted_on,
-        expected_harvested_on: expected_harvested_on,
-        plant_status: 'clone',
-        mother_plant_id: mother_id,
-        cultivation_batch_id: cultivation_batch_id,
-      )
-
-      if command.success?
-        command.result
-      else
-        combine_errors(command.errors, :clone_ids, :clone_ids)
-        combine_errors(command.errors, :strain_name, :strain_name)
-        combine_errors(command.errors, :location_id, :clone_ids)  # there is no field to host tray id errors, i just park all under clone_ids
-        []
       end
     end
 

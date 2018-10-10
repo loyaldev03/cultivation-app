@@ -17,18 +17,31 @@ module Constants
     {code: :sativa, name: 'Sativa'},
   ].freeze
 
+  CONST_CLONE = 'clone'
+  CONST_CURE = 'cure'
+  CONST_DRY = 'dry'
+  CONST_FLOWER = 'flower'
+  CONST_MOTHER = 'mother'
+  CONST_STORAGE = 'storage'
+  CONST_VAULT = 'vault'
+  CONST_TRIM = 'trim'
+  CONST_VEG = 'veg'
+  CONST_VEG1 = 'veg1'
+  CONST_VEG2 = 'veg2'
+  CONST_HARVEST = 'harvest'
+
   ROOM_PURPOSE = [
-    {code: :clone, name: 'Clone'}, #
-    {code: :cure, name: 'Cure'}, #
-    {code: :dry, name: 'Drying'}, #
-    {code: :flower, name: 'Flower'}, #
-    {code: :mother, name: 'Mother'}, #
-    {code: :storage, name: 'Storage'},
-    {code: :vault, name: 'Vault'},
-    {code: :trim, name: 'Trim'}, #
-    {code: :veg, name: 'Veg'}, #
-    {code: :veg1, name: 'Veg 1'},
-    {code: :veg2, name: 'Veg 2'},
+    {code: CONST_CLONE, name: 'Clone'},
+    {code: CONST_CURE, name: 'Cure'},
+    {code: CONST_DRY, name: 'Drying'},
+    {code: CONST_FLOWER, name: 'Flower'},
+    {code: CONST_MOTHER, name: 'Mother'},
+    {code: CONST_STORAGE, name: 'Storage'},
+    {code: CONST_VAULT, name: 'Vault'},
+    {code: CONST_TRIM, name: 'Trim'},
+    {code: CONST_VEG, name: 'Veg'},
+    {code: CONST_VEG1, name: 'Veg 1'},
+    {code: CONST_VEG2, name: 'Veg 2'},
   ].freeze
 
   SECTION_PURPOSE = [
@@ -279,13 +292,18 @@ module Constants
         {code: 4050, name: 'Assign tasks to issues reported by my direct report'},
       ],
     },
+    {
+      code: 9000,
+      name: 'Settings',
+      features: [
+        {code: 9010, name: 'Team Settings / Users'},
+        {code: 9020, name: 'Team Settings / Roles'}
+      ]
+    }
   ].freeze
-
-  PERMISSION = {
-    NONE: 0,
-    READ: 2 ** 0,
-    UPDATE: 2 ** 1,
-    CREATE: 2 ** 2,
-    DELETE: 2 ** 3,
-  }.freeze
 end
+
+CAN_READ = 1
+CAN_UPDATE = 2
+CAN_CREATE = 4
+CAN_DELETE = 8

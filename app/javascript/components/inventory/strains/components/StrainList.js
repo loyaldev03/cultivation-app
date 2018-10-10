@@ -48,16 +48,18 @@ const columns = [
     filterable: false,
     maxWidth: 45,
     Cell: x => (
-      <a href="#" onClick={() => openStrain(x.index)}>
+      <a href="#" onClick={event => openStrain(event, x.index)}>
         <i className="material-icons gray">more_horiz</i>
       </a>
     )
   }
 ]
 
-function openStrain(index) {
+function openStrain(event, index) {
   const id = strainStore.strains.slice()[index].id
   window.editorSidebar.open({ width: '500px', facility_strain_id: id })
+  console.log(event)
+  event.preventDefault()
 }
 
 @observer
@@ -70,7 +72,7 @@ class StrainList extends React.Component {
         data={strainStore.strains.slice()}
         showPagination={false}
         pageSize={30}
-        minRows={10}
+        minRows={5}
         filterable
         className="f6"
         showPagination={strainStore.strains.length > 30}

@@ -44,7 +44,7 @@ class QueryAllValidFacilityLocations
   private
 
   def valid_room?(room)
-    return !room.is_complete             # Do not return incomplete rooms
+    room.is_complete             # Do not return incomplete rooms
   end
 
   def add_facility(collection, facility)

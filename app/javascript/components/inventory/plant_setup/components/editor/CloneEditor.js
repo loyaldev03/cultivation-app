@@ -1,31 +1,47 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {
   TextInput,
   NumericInput,
   FieldError,
   CalendarPicker
 } from '../../../../utils/FormHelpers'
-import LocationPicker from '../../../../utils/LocationPicker'
+import Select from 'react-select'
+import AsyncSelect from 'react-select/lib/Async'
+import LocationPicker from '../../../../utils/LocationPicker2'
 import PurchaseInfo from '../shared/PurchaseInfo'
-import StrainPicker from '../shared/StrainPicker'
 import setupClones from '../../actions/setupClones'
-import MotherPicker from '../shared/MotherPicker'
+import reactSelectStyle from '../../../../utils/reactSelectStyle'
+import { searchPlants } from '../../actions/loadPlants'
 
 class CloneEditor extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      strain: '',
-      strain_type: '',
+    this.state = this.resetState()
+    this.batches = this.props.cultivation_batches.map(x => ({
+      id: x.id,
+      ...x.attributes
+    }))
+    this.locations = this.props.locations
 
-      // source
-      clone_ids: '',
+    // Converting to callback ref because purchase info editor is hidding and showing.
+    // This will cause the standard way to set ref to be broken / undefined.
+    this.purchaseInfoEditor = null
+    this.setPurchaseInfoEditor = element => {
+      this.purchaseInfoEditor = element
+    }
+  }
+
+  resetState() {
+    return {
+      cultivation_batch_id: '',
+      facility_strain_id: '',
+      facility_id: '',
+      plant_ids: '',
       plant_qty: 0,
       location_id: '',
-      planted_on: null,
-      expected_harvested_on: null,
-      cultivation_batch_id: '',
-
+      planting_date: null,
+      mother_id: '',
       // purchase info
       vendor_name: '',
       vendor_no: '',
@@ -34,44 +50,28 @@ class CloneEditor extends React.Component {
       vendor_state_license_expiration_date: null,
       vendor_location_license_num: '',
       vendor_location_license_expiration_date: null,
-      purchase_date: '',
+      purchase_date: null,
       invoice_no: '',
 
       // UI states
+      strain_name: '',
+      start_date: '',
+      facility: '',
       isBought: false,
-      isShowPlantIdGenerator: false,
+      // isShowPlantIdGenerator: false,
       errors: {}
     }
-
-    this.locations = props.locations
-
-    // Converting to callback ref because purchase info editor is hidding and showing.
-    // This will cause the standard way to set ref to be broken / undefined.
-    this.purchaseInfoEditor = null
-    this.setPurchaseInfoEditor = element => {
-      this.purchaseInfoEditor = element
-    }
-
-    this.cloneIdTextArea = null
-    // Callback ref to get instance of html DOM: https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
-    // Getting a ref to textarea in order to adjust height according to content.
-    this.setCloneIdTextArea = element => {
-      this.cloneIdTextArea = element
-    }
-
-    this.strainPicker = React.createRef()
-    this.motherPicker = React.createRef()
   }
 
   onCloneIdsChanged = event => {
-    this.setState({ clone_ids: event.target.value })
+    this.setState({ plant_ids: event.target.value })
     const lines = (event.target.value.match(/\n/g) || []).length
-    const node = this.cloneIdTextArea
+    const node = event.target
 
-    if (lines < 5) {
+    if (lines < 3) {
       node.style.height = 'auto'
       node.style.minHeight = ''
-    } else if (lines >= 5 && lines < 15) {
+    } else if (lines >= 3 && lines < 15) {
       node.style.height = 40 + lines * 25 + 'px'
       node.style.minHeight = ''
     } else {
@@ -80,51 +80,40 @@ class CloneEditor extends React.Component {
     }
   }
 
-  onChangeGeneratorPlantCount = event => {
-    this.setState({ plant_qty: event.target.value })
-    event.preventDefault()
+  onLocationChanged = event => {
+    console.log(event)
+    this.setState({ location_id: event.location_id })
   }
 
   onPlantedOnChanged = date => {
-    this.setState({ planted_on: date })
-  }
-
-  onExpectedHarvestDateChanged = date => {
-    this.setState({ expected_harvested_on: date })
+    this.setState({ planting_date: date })
   }
 
   onIsBoughtChanged = () => {
     this.setState({ isBought: !this.state.isBought })
   }
 
-  onMotherIdChanged = event => {
-    this.setState({ mother_id: event.target.value })
-  }
+  onCultivationBatchIdChanged = item => {
+    console.log(item)
+    let { planting_date } = this.state
+    if (!planting_date) {
+      planting_date = new Date(item.start_date)
+    }
 
-  onMotherLocationChanged = item => {
-    this.setState({ mother_location_id: item.rm_id })
-  }
-
-  onToggleGeneratePlantId = event => {
     this.setState({
-      isShowPlantIdGenerator: !this.state.isShowPlantIdGenerator
-    })
-    if (event) event.preventDefault()
-  }
-
-  onStrainSelected = data => {
-    this.setState({
-      strain: data.strain,
-      strain_type: data.strain_type
+      cultivation_batch_id: item.value,
+      facility_id: item.facility_id,
+      facility_strain_id: item.facility_strain_id,
+      strain_name: item.strain_name,
+      start_date: new Date(item.start_date).toLocaleDateString(),
+      facility: item.facility,
+      mother_id: '',
+      planting_date
     })
   }
 
-  onTraySelected = item => {
-    this.setState({ location_id: item.t_id })
-  }
-
-  onCultivationBatchIdChanged = event => {
-    this.setState({ cultivation_batch_id: event.target.value })
+  onMotherIdChanged = item => {
+    this.setState({ mother_id: item.value })
   }
 
   onSave = event => {
@@ -132,6 +121,7 @@ class CloneEditor extends React.Component {
     const { errors, isValid, ...payload } = data
 
     if (isValid) {
+      console.log(payload)
       setupClones(payload).then(({ status, data }) => {
         if (status >= 400) {
           this.setState({ errors: data.errors })
@@ -145,44 +135,30 @@ class CloneEditor extends React.Component {
   }
 
   reset() {
-    this.setState({
-      strain: '',
-      strain_type: '',
-      clone_ids: '',
-      plant_qty: 0,
-      location_id: '',
-      planted_on: null,
-      expected_harvested_on: null,
-      mother_id: '',
-      cultivation_batch_id: '',
-
-      // UI states
-      isShowPlantIdGenerator: false,
-      isBought: false,
-      errors: {}
-    })
-
+    this.setState(this.resetState())
     this.strainPicker.current.reset()
   }
 
   validateAndGetValues() {
-    let {
-      strain,
-      strain_type,
-      clone_ids,
-      plant_qty,
+    const {
       cultivation_batch_id,
-      isShowPlantIdGenerator,
+      plant_ids,
       location_id,
-      planted_on,
-      expected_harvested_on,
+      planting_date,
+      mother_id,
+      vendor_name,
+      vendor_no,
+      address,
+      vendor_state_license_num,
+      vendor_state_license_expiration_date,
+      vendor_location_license_num,
+      vendor_location_license_expiration_date,
+      purchase_date,
+      invoice_no,
       isBought
     } = this.state
 
     let errors = {}
-    if (planted_on === null) {
-      errors = { ...errors, planted_on: ['Planted on date is required.'] }
-    }
 
     if (cultivation_batch_id.length === 0) {
       errors = {
@@ -191,25 +167,21 @@ class CloneEditor extends React.Component {
       }
     }
 
-    if (isShowPlantIdGenerator) {
-      clone_ids = ''
-      if (parseInt(plant_qty) <= 0) {
-        errors = {
-          ...errors,
-          plant_qty: ['Number of clones must be at least 1.']
-        }
+    if (plant_ids.trim().length <= 0) {
+      errors = {
+        ...errors,
+        plant_ids: ['Plant ID is required.']
       }
+    }
 
-      if (location_id.length === 0) {
-        errors = {
-          ...errors,
-          location_id: ['Location of the clones is required.']
-        }
-      }
-    } else {
-      plant_qty = 0
-      if (clone_ids.trim().length <= 0) {
-        errors = { ...errors, clone_ids: ['Plant ID is required.'] }
+    if (planting_date === null) {
+      errors = { ...errors, planted_on: ['Planted on date is required.'] }
+    }
+
+    if (location_id.length === 0) {
+      errors = {
+        ...errors,
+        location_id: ['Location of the clones is required.']
       }
     }
 
@@ -218,25 +190,28 @@ class CloneEditor extends React.Component {
       purchaseData = this.purchaseInfoEditor.getValues()
     }
 
-    const { isValid: strainValid } = this.strainPicker.current.validate()
-    const { mother_id } = this.motherPicker.current.getValues(false)
     const isValid =
-      Object.getOwnPropertyNames(errors).length == 0 &&
-      strainValid &&
-      purchaseData.isValid
+      Object.getOwnPropertyNames(errors).length == 0 && purchaseData.isValid
+
+    // Purchase data should have:
+    //
+    // vendor_name: '',
+    // vendor_no: '',
+    // address: '',
+    // vendor_state_license_num: '',
+    // vendor_state_license_expiration_date: null,
+    // vendor_location_license_num: '',
+    // vendor_location_license_expiration_date: null,
+    // purchase_date: '',
+    // invoice_no: '',
 
     const data = {
       ...purchaseData,
-      strain,
-      strain_type,
       cultivation_batch_id,
-      clone_ids,
+      plant_ids,
       location_id,
-      plant_qty,
+      planting_date: planting_date && planting_date.toISOString(),
       mother_id,
-      planted_on: planted_on && planted_on.toISOString(),
-      expected_harvested_on:
-        expected_harvested_on && expected_harvested_on.toISOString(),
       isBought,
       errors,
       isValid
@@ -271,59 +246,26 @@ class CloneEditor extends React.Component {
     )
   }
 
-  renderPlantIdGenerator() {
-    if (!this.state.isShowPlantIdGenerator) return null
-    return (
-      <React.Fragment>
-        <div className="ph4 mb2 mt0 flex">
-          <div className="w-50">
-            <NumericInput
-              label={'Number of plants'}
-              value={this.state.plant_qty}
-              onChange={this.onChangeGeneratorPlantCount}
-            />
-            <FieldError errors={this.state.errors} field="plant_qty" />
-          </div>
-          <div className="w-50 pl3">
-            <div className="flex justify-start items-center h-100 mt2">
-              <a
-                href="#"
-                onClick={this.onToggleGeneratePlantId}
-                className="fw4 f7 link dark-blue"
-              >
-                Cancel
-              </a>
-            </div>
-          </div>
-        </div>
-      </React.Fragment>
-    )
-  }
-
   renderPlantIdTextArea() {
-    if (this.state.isShowPlantIdGenerator) return null
+    let style = {}
+    if (this.state.isShowPlantIdGenerator) {
+      style = { display: 'none' }
+    }
 
     return (
       <React.Fragment>
-        <div className="ph4 mb2 flex">
+        <div className="ph4 mt3 mb1" style={style}>
+          <span className="f6 fw6 gray">Plant IDs</span>
+        </div>
+        <div className="ph4 mb2 flex" style={style}>
           <div className="w-100">
-            <p className="f7 fw4 gray mt0 mb0 pa0 lh-copy">
+            <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
               Each clone has its own <strong>Plant ID</strong>. If you already
               have them, paste them below.
             </p>
-            <p className="f7 fw4 gray mt0 mb2 pa0 lh-copy">
-              <a
-                href="#"
-                onClick={this.onToggleGeneratePlantId}
-                className="fw4 f7 link dark-blue"
-              >
-                If you want us to generate them, click here.
-              </a>
-            </p>
             <textarea
-              ref={this.setCloneIdTextArea}
               rows="3"
-              value={this.state.clone_ids}
+              value={this.state.plant_ids}
               className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
               placeholder="Plant0001&#10;Plant0002&#10;Plant0003"
               onChange={this.onCloneIdsChanged}
@@ -335,112 +277,174 @@ class CloneEditor extends React.Component {
     )
   }
 
-  render() {
+  renderBatchDetails() {
+    if (
+      !this.state.cultivation_batch_id ||
+      this.state.cultivation_batch_id.length <= 0
+    )
+      return null
+
     return (
       <React.Fragment>
-        <StrainPicker
-          ref={this.strainPicker}
-          onStrainSelected={this.onStrainSelected}
-        />
-        <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mt3 flex">
-          <div className="w-50">
-            <TextInput
-              label={'Cultivation Batch ID'}
-              value={this.state.cultivation_batch_id}
-              onChange={this.onCultivationBatchIdChanged}
-            />
-            <FieldError
-              errors={this.state.errors}
-              field="cultivation_batch_id"
-            />
+          <div className="w-60">
+            <label className="f6 fw6 db mb1 gray ttc">Strain</label>
+            <p className="f6 mt0 mb2">{this.state.strain_name}</p>
           </div>
-          <div className="w-50 pl3">
-            <MotherPicker
-              ref={this.motherPicker}
-              strain={this.state.strain}
-              key={this.state.strain}
-            />
-          </div>
-        </div>
-
-        <div className="ph4 mt3 flex flex-column">
-          <div className="w-100">
-            <LocationPicker
-              filter_facility_id=""
-              mode="clone"
-              locations={this.locations}
-              location_id={this.state.location_id}
-              onChange={this.onTraySelected}
-            />
-            <FieldError errors={this.state.errors} field="location_id" />
-          </div>
-        </div>
-
-        <div className="ph4 mt3 mb2">
-          <span className="f6 fw6 gray">Plant IDs</span>
-        </div>
-        {this.renderPlantIdTextArea()}
-        {this.renderPlantIdGenerator()}
-
-        <div className="ph4 mt3 flex">
-          <div className="w-50">
-            <label className="f6 fw6 db mb1 gray ttc">Planted On</label>
-            <CalendarPicker
-              value={this.state.planted_on}
-              onChange={this.onPlantedOnChanged}
-            />
-            <FieldError errors={this.state.errors} field="planted_on" />
-          </div>
-          <div className="w-50 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">
-              Expected Harvest Date
+          <div className="w-40 pl3">
+            <label className="f6 fw6 db mb1 gray ttc tr">
+              Batch start date
             </label>
-            <CalendarPicker
-              value={this.state.expected_harvested_on}
-              onChange={this.onExpectedHarvestDateChanged}
-            />
+            <p className="f6 mt0 mb2 tr">{this.state.start_date}</p>
           </div>
         </div>
-
-        <hr className="mt3 m b--light-gray w-100" />
-        <div className="ph4 mb3 mt3">
-          <span className="f6 fw6 dark-gray">Plant Origin?</span>
-        </div>
-        <div className="ph4 mb3 flex justify-between">
-          <label className="f6 fw6 db mb1 gray">Clones are purchased</label>
-          <input
-            className="toggle toggle-default"
-            type="checkbox"
-            value="1"
-            id="is_bought_input"
-            checked={this.state.isBought}
-            onChange={this.onIsBoughtChanged}
-          />
-          <label className="toggle-button" htmlFor="is_bought_input" />
-        </div>
-
-        {this.renderProcurementInfo()}
-
-        <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
-          <a
-            className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
-            href="#"
-            onClick={this.props.onExitCurrentEditor}
-          >
-            Save for later
-          </a>
-          <a
-            className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
-            href="#"
-            onClick={this.onSave}
-          >
-            Save
-          </a>
-        </div>
+        <hr className="mt3 m b--black-10 w-100" />
       </React.Fragment>
     )
   }
+
+  loadMothers = inputValue => {
+    if (this.state.facility_strain_id.length <= 0) {
+      return new Promise(resolve => resolve([]))
+    }
+
+    return searchPlants(
+      'mother',
+      this.state.facility_strain_id,
+      inputValue
+    ).then(data => {
+      return data.data.map(x => ({
+        label: x.attributes.plant_id,
+        value: x.id
+      }))
+    })
+  }
+
+  render() {
+    const widthStyle = this.props.isOpened
+      ? { width: '500px' }
+      : { width: '0px' }
+
+    return (
+      <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
+        <div className="rc-slide-panel__body flex flex-column">
+          <div
+            className="ph4 pv2 bb b--light-gray flex items-center"
+            style={{ height: '51px' }}
+          >
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Clone</h1>
+            <span
+              className="rc-slide-panel__close-button dim"
+              onClick={() => {
+                window.editorSidebar.close()
+              }}
+            >
+              <i className="material-icons mid-gray md-18">close</i>
+            </span>
+          </div>
+
+          <div className="ph4 mt3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">
+                Cultivation Batch
+              </label>
+              <Select
+                label={'Cultivation Batch ID'}
+                options={this.batches}
+                key={this.state.cultivation_batch_id}
+                defaultValue={this.batches.find(
+                  x => x.value === this.state.cultivation_batch_id
+                )}
+                onChange={this.onCultivationBatchIdChanged}
+                styles={reactSelectStyle}
+              />
+              <FieldError
+                errors={this.state.errors}
+                field="cultivation_batch_id"
+              />
+            </div>
+          </div>
+
+          {this.renderBatchDetails()}
+          {this.renderPlantIdTextArea()}
+          <div className="ph4 mt3 flex">
+            <div className="w-100">
+              <LocationPicker
+                key={this.state.facility_id}
+                mode="clone"
+                facility_id={this.state.facility_id}
+                onChange={this.onLocationChanged}
+                locations={this.locations}
+              />
+            </div>
+          </div>
+          <div className="ph4 mt3 flex">
+            <div className="w-50">
+              <label className="f6 fw6 db mb1 gray ttc">Planted On</label>
+              <CalendarPicker
+                value={this.state.planting_date}
+                onChange={this.onPlantedOnChanged}
+              />
+              <FieldError errors={this.state.errors} field="planting_date" />
+            </div>
+            <div className="w-50 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">Mother Plant</label>
+              <AsyncSelect
+                isDisabled={this.state.facility_strain_id.length <= 0}
+                key={this.state.cultivation_batch_id}
+                loadOptions={this.loadMothers}
+                defaultOptions
+                onChange={this.onMotherIdChanged}
+                styles={reactSelectStyle}
+              />
+              <FieldError errors={this.state.errors} field="mother_id" />
+            </div>
+          </div>
+
+          <hr className="mt3 m b--light-gray w-100" />
+          <div className="ph4 mb3 mt3">
+            <span className="f6 fw6 dark-gray">Plant Origin?</span>
+          </div>
+          <div className="ph4 mb3 flex justify-between">
+            <label className="f6 fw6 db mb1 gray">Clones are purchased</label>
+            <input
+              className="toggle toggle-default"
+              type="checkbox"
+              value="1"
+              id="is_bought_input"
+              checked={this.state.isBought}
+              onChange={this.onIsBoughtChanged}
+            />
+            <label className="toggle-button" htmlFor="is_bought_input" />
+          </div>
+
+          {this.renderProcurementInfo()}
+
+          <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
+            <a
+              className="db tr pv2 ph3 bn br2 ttu tracked link dim f6 fw6 orange"
+              href="#"
+              onClick={this.props.onExitCurrentEditor}
+            >
+              Save for later
+            </a>
+            <a
+              className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
+              href="#"
+              onClick={this.onSave}
+            >
+              Save
+            </a>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+CloneEditor.propTypes = {
+  cultivation_batches: PropTypes.array.isRequired,
+  locations: PropTypes.array.isRequired
 }
 
 export default CloneEditor

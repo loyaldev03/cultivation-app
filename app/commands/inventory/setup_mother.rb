@@ -7,11 +7,12 @@ module Inventory
     prepend SimpleCommand
     attr_reader :user,
       :args,
-      :strain_name,
-      :strain_type,
+      :id,
+      :is_draft,
+      :user,
+      :facility_strain_id,
       :plant_ids,
-      :plant_qty,
-      :room_id,
+      :location_id,
       :planted_on,
       :vendor_id,
       :vendor_name,
@@ -26,15 +27,16 @@ module Inventory
     def initialize(user, args)
       @user = user
       @args = HashWithIndifferentAccess.new(args)
-      Rails.logger.debug '>>>> SetupMother'
-      Rails.logger.debug @args
+      # Rails.logger.debug '>>>> SetupMother'
+      # Rails.logger.debug @args
 
-      @strain_name = args[:strain]
-      @strain_type = args[:strain_type]
-      @plant_ids = args[:plant_ids]
-      @plant_qty = args[:plant_qty]
-      @room_id = args[:room_id]
+      @is_draft = false
+      @id = args[:id]
+      @facility_strain_id = args[:facility_strain_id]
+      @plant_ids = generate_or_extract_plant_ids(args[:plant_ids])
+      @location_id = args[:location_id]
       @planted_on = args[:planted_on]
+      @vendor_id = args[:vendor_id] || ''
       @vendor_name = args[:vendor_name] && args[:vendor_name].strip
       @vendor_no = args[:vendor_no]
       @address = args[:address]
@@ -45,60 +47,67 @@ module Inventory
     end
 
     def call
-      @plant_ids = generate_or_extract_plant_ids
-
       if valid_permission? && valid_data?
-        create_strain
-        vendor = create_vendor
         plants = create_mother_plants
-        create_invoice(plants, vendor, invoice_no) if is_purchased?
+
+        if is_purchased?
+          Rails.logger.debug 'save vendor called...'
+          vendor = create_vendor
+          create_invoice(plants, vendor, invoice_no)
+        end
         plants
       end
     end
 
     private
 
-    def generate_or_extract_plant_ids
-      if plant_ids.strip.present?
-        plant_ids.gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
-      else
-        ids = Inventory::GeneratePlantSerialNo.call(plant_qty.to_i).result
-      end
+    def generate_or_extract_plant_ids(ids)
+      ids.gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
     end
 
     def valid_permission?
-      true  # TODO: Check user role
+      raise 'User is missing' if user.nil?
+      errors.empty?
     end
 
     def valid_data?
-      # All serial number should be new
-      # Rails.logger.debug "args[:plant_ids].index('\\n') - #{i} " +  args[:plant_ids].gsub(/[\n\r]/, ",").split(",").to_s
-      # Rails.logger.debug "args[:plant_ids].index('\\r') - #{f}"
-      # Rails.logger.debug "args[:plant_ids].index('n') - #{g}"
-      existing_records = Inventory::ItemArticle.in(serial_no: plant_ids).pluck(:serial_no)
+      # All serial number should be new or draft.
+      # - add filter by facility strain id & status not available.
+      existing_records = Inventory::Plant.in(plant_id: plant_ids).pluck(:plant_id)
 
-      if existing_records.count > 0
-        errors.add(:plant_ids, "These plant ID #{existing_records.join(', ')} already exists in the system.")
-      end
+      errors.add(:plant_ids, "These plant ID #{existing_records.join(', ')} already exists in the system.") if existing_records.count > 0
+      errors.add(:facility_strain_id, 'Strain is required') if facility_strain_id.blank?
+      errors.add(:planted_on, 'Planted date is required') if planted_on.blank?
+      valid_location?
+      valid_vendor? if is_purchased?
       errors.empty?
+    end
+
+    def valid_location?
+      errors.add(:location_id, 'Mother room is required') if location_id.blank?
+
+      facility_strain = Inventory::FacilityStrain.find(facility_strain_id)
+      location_exists = Facility.find_by('rooms._id': BSON::ObjectId(location_id), id: facility_strain.facility_id)
+      errors.add(:location_id, 'Mother room must be within facility where you register the strain.') if location_id.present? && location_exists.nil?
+    end
+
+    def valid_vendor?
+      if vendor_id.blank?
+        errors.add(:vendor_name, 'Vendor name is required.') if vendor_name.blank?
+        errors.add(:vendor_state_license_num, 'State license number is required.') if vendor_state_license_num.blank?
+        errors.add(:vendor_state_license_expiration_date, 'State license experiation date is required.') if vendor_state_license_expiration_date.blank?
+        errors.add(:vendor_location_license_expiration_date, 'Location expiration date is required.') if vendor_location_license_expiration_date.blank?
+        errors.add(:vendor_location_license_num, 'Location license number is required.') if vendor_location_license_num.blank?
+      end
     end
 
     def is_purchased?
       vendor_name.present?
     end
 
-    def create_strain
-      command = Common::SaveStrain.call(name: strain_name, strain_type: strain_type)
-
-      unless command.success?
-        combine_errors(command.errors, :name, :strain)
-        combine_errors(command.errors, :strain_type, :strain_type)
-      end
-    end
-
     def create_vendor
-      vendor = Inventory::Vendor.find_by(name: vendor_name)
-      vendor_id = vendor ? vendor.id : nil
+      vendor = Inventory::Vendor.find(vendor_id)
+      return if vendor.present?
 
       command = Inventory::SaveVendor.call(
         id: vendor_id,
@@ -115,6 +124,9 @@ module Inventory
       if command.success?
         command.result
       else
+        Rails.logger.debug "\t\t\t>>>>>>>>>>>>>>>>>>"
+        Rails.logger.debug command.errors
+        # Maybe need to bypass this validation message mapping.
         combine_errors(command.errors, :vendor_name, :name)
         combine_errors(command.errors, :vendor_no, :vendor_no)
         combine_errors(command.errors, :address, :address)
@@ -127,32 +139,34 @@ module Inventory
     end
 
     def create_mother_plants
-      command = Inventory::CreatePlants.call(
-        status: 'available',
-        plant_ids: plant_ids,
-        strain_name: strain_name,
-        location_id: room_id,
-        location_type: 'room',
-        planted_on: planted_on,
-        plant_status: 'mother',
-      )
-
-      if command.success?
-        command.result
-      else
-        combine_errors(command.errors, :plant_ids, :plant_ids)
-        combine_errors(command.errors, :strain_name, :strain)
-        combine_errors(command.errors, :location_id, :room_id)
-        combine_errors(command.errors, :planted_on, :planted_on)
-        []
+      plants = []
+      plant_ids.each do |plant_id|
+        plant = Inventory::Plant.find_or_initialize_by(
+          plant_id: plant_id,
+          facility_strain_id: facility_strain_id,
+        ) do |t|
+          t.current_growth_stage = 'mother'
+          t.created_by = user
+          t.location_id = location_id
+          t.location_type = 'room'
+          t.status = is_draft ? 'draft' : 'available'
+          t.planting_date = planted_on
+          t.mother_date = ''
+        end
+        plant.save!
+        plants << plant
       end
+
+      plants
     end
 
     def create_invoice(plants, vendor, invoice_no)
-      command = Inventory::SaveBlankInvoice.call(nil, plants, vendor, invoice_no)
-      unless command.success?
-        combine_errors(command.errors, :errors, :plant_ids)
-      end
+      # Link plant to invoice
+      #
+      # command = Inventory::SaveBlankInvoice.call(nil, plants, vendor, invoice_no)
+      # unless command.success?
+      #   combine_errors(command.errors, :errors, :plant_ids)
+      # end
     end
 
     def combine_errors(errors_source, from_field, to_field)

@@ -1,14 +1,14 @@
 <% content_for :breadcrumb do %>
   <%= breadcrumbs ["Home",root_path], 
       ['Inventory Setup', inventory_setup_path], 
-      'Plant Inventory' 
+      'Active Plant Inventory' 
   %>
 <% end %>
 
 
 <div class="pa4">
   <div class="flex flex-column">
-    <%= react_component('inventory/plant_setup/PlantSetupApp', {
+    <%= react_component('inventory/plant_setup/MotherSetupApp', {
         strain_types: @strain_types,
         locations: @locations
       }) %>

@@ -7,10 +7,11 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
     else
       users = User.where(is_active: true).order(first_name: :asc, last_name: :asc)
     end
+
     result = OpenStruct.new({
       id: BSON::ObjectId.new,
       facilities: Facility.all.pluck_to_hash([:id, :code, :name]),
-      roles: Common::Role.all.order(name: :asc),
+      roles: Common::QueryRoles.call.result.order(name: :asc),
       users: users,
       modules: Constants::APP_MODULES,
     })

@@ -21,6 +21,16 @@ const build_roles_options = roles =>
     label: `${f.name}`
   }))
 
+const TabButton = ({ title, onClick, isActive }) => (
+  <a
+    href="#0"
+    className={classNames('tab', { 'tab--active': isActive })}
+    onClick={onClick}
+  >
+    {title}
+  </a>
+)
+
 const FacilityTag = ({ id }) => (
   <span className="f7 bg-blue pv1 ph2 white ma1 dib">
     {store.getFacilityCode(id)}
@@ -38,7 +48,7 @@ class TeamSetttingApp extends React.Component {
   state = {
     editingUser: {},
     editingRole: {},
-    activeTab: 'usersTab'
+    activeTab: 'rolesTab'
   }
   async componentDidMount() {
     await store.loadUsers(true)
@@ -206,25 +216,16 @@ class TeamSetttingApp extends React.Component {
               <p className="mt2 mb4 db body-1 grey">
                 Browses through your team's information here.
               </p>
-              <a
-                href="#0"
-                className={classNames('tab', {
-                  'tab--active': activeTab === 'usersTab'
-                })}
-                onClick={this.onToggleTab('usersTab')}
-              >
-                Users
-              </a>
-              <a
-                href="#0"
-                className={classNames('tab', {
-                  'tab--active': activeTab === 'rolesTab'
-                })}
+              <TabButton
+                title="Roles & Permissions"
+                isActive={activeTab === 'rolesTab'}
                 onClick={this.onToggleTab('rolesTab')}
-              >
-                Roles &amp; Permissions
-              </a>
-
+              />
+              <TabButton
+                title="Users"
+                isActive={activeTab === 'usersTab'}
+                onClick={this.onToggleTab('usersTab')}
+              />
               {activeTab === 'usersTab' && (
                 <div className="mt0 ba b--light-grey pa3">
                   <div className="pb2 db tr">
@@ -337,7 +338,10 @@ class TeamSetttingApp extends React.Component {
                           className={'striped--light-gray dim pointer'}
                           onClick={this.onClickRoleEdit(x.id)}
                         >
-                          <td className="tl pv2 ph3 w5">{x.name}</td>
+                          <td className="tl pv2 ph3 w5">
+                            {x.name}
+                            { x.built_in && <span className="f7 bg-light-gray gray br2 ml2 ph2">Built-In</span> }
+                          </td>
                           <td className="tl pv2 ph3">{x.desc}</td>
                         </tr>
                       ))}

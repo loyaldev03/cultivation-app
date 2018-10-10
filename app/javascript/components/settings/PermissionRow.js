@@ -25,7 +25,7 @@ class PermissionRow extends React.PureComponent {
   }
 
   render() {
-    const { name } = this.props
+    const { name, isReadOnly } = this.props
     const { value } = this.state
 
     return (
@@ -38,6 +38,7 @@ class PermissionRow extends React.PureComponent {
             type="checkbox"
             value={CAN_READ}
             checked={(value & CAN_READ) !== CAN_NONE}
+            disabled={isReadOnly}
             onChange={this.onCheckboxChange}
           />
         </td>
@@ -46,6 +47,7 @@ class PermissionRow extends React.PureComponent {
             type="checkbox"
             value={CAN_UPDATE}
             checked={(value & CAN_UPDATE) !== CAN_NONE}
+            disabled={isReadOnly}
             onChange={this.onCheckboxChange}
           />
         </td>
@@ -54,6 +56,7 @@ class PermissionRow extends React.PureComponent {
             type="checkbox"
             value={CAN_CREATE}
             checked={(value & CAN_CREATE) !== CAN_NONE}
+            disabled={isReadOnly}
             onChange={this.onCheckboxChange}
           />
         </td>
@@ -62,6 +65,7 @@ class PermissionRow extends React.PureComponent {
             type="checkbox"
             value={CAN_DELETE}
             checked={(value & CAN_DELETE) !== CAN_NONE}
+            disabled={isReadOnly}
             onChange={this.onCheckboxChange}
           />
         </td>

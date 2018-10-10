@@ -10,6 +10,7 @@ class SaveRole
   def call
     if args[:id]
       role = Common::Role.find(args[:id])
+      return role if role.readonly?
     else
       role = Common::Role.new
     end

@@ -567,6 +567,7 @@ class TaskList extends React.Component {
             },
             {
               Header: 'Materials',
+              accessor: 'attributes.item_display',
               maxWidth: '100'
             },
             {

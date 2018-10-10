@@ -13,10 +13,13 @@ import deleteMaterial from '../actions/deleteMaterial'
 import loadTasks from '../actions/loadTask'
 
 const uom_dropdown = [
-  { value: 'Fathi', label: 'KG' },
-  { value: 'Andy', label: 'CM' },
-  { value: 'Karg', label: 'Inch' },
-  { value: 'Allison', label: 'ML' }
+  { value: 'KG', label: 'KG' },
+  { value: 'CM', label: 'CM' },
+  { value: 'Inch', label: 'Inch' },
+  { value: 'ML', label: 'ML' },
+  { value: 'L', label: 'L' },
+  {value: 'Pcs', label: 'Pcs'}
+
 ]
 
 export default class MaterialForm extends React.Component {

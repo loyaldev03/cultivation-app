@@ -20,9 +20,9 @@ class TaskSerializer
     object.users.map { |a| a.display_name }.join(',')
   end
 
-  # attribute :item_display do |object|
-  #   object.items.map {|a| a.name}.join(',')
-  # end
+  attribute :item_display do |object|
+    object.items.map { |a| a.name }.join(',')
+  end
 
   attribute :items do |object|
     object.items.map do |item|

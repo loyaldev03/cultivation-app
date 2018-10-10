@@ -167,79 +167,7 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         </div>
-        <div class="mt3 fl w-100 pt3 bt b--light-gray" />
 
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-30">
-            <label className="f6 fw6 db mb1 gray ttc">Roles</label>
-            <Select
-              name="colors"
-              options={roles}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              fieldname="roles"
-              value={this.state.roles}
-              styles={reactSelectStyle}
-            />
-          </div>
-          <div className="w-70 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">Assigned Employees</label>
-            <Select
-              isMulti
-              name="colors"
-              options={users}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              fieldname="assigned_employee"
-              onChange={this.handleChangeSelect}
-              value={this.state.assigned_employee}
-              styles={reactSelectStyle}
-            />
-          </div>
-        </div>
-
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-40">
-            <label className="f6 fw6 db mb1 gray ttc">Material Name</label>
-            <Select
-              isMulti
-              name="colors"
-              options={[
-                { value: 'Fathi', label: 'Fathi' },
-                { value: 'Andy', label: 'Andy' },
-                { value: 'Karg', label: 'Karg' },
-                { value: 'Allison', label: 'Allison' }
-              ]}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              styles={reactSelectStyle}
-            />
-          </div>
-          <div className="w-30 pl3">
-            <NumericInput
-              label={'Quantity'}
-              value={this.state.quantity}
-              onChange={this.handleChangeTask}
-              fieldname="quantity"
-              errors={this.state.errors}
-              errorField="quantity"
-            />
-          </div>
-          <div className="w-30 pl3">
-            <TextInput
-              label={'Unit Of Measure'}
-              value={this.state.uom}
-              onChange={this.handleChangeTask}
-              fieldname="uom"
-              errors={this.state.errors}
-              errorField="uom"
-            />
-          </div>
-        </div>
-
-        {/* <div className="w-100 flex justify-end">
-          <a className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer" onClick={this.handleSubmit}>Submit</a>
-        </div> */}
         <div className="w-100 pa4 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
           <button
             name="commit"
@@ -248,7 +176,7 @@ class SidebarTaskEditor extends React.Component {
             className="ttu db tr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer"
             onClick={this.handleSubmit}
           >
-            Update &amp; Close
+            Update
           </button>
         </div>
       </React.Fragment>

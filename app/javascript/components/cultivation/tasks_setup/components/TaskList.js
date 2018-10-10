@@ -26,6 +26,10 @@ const styles = `
   background-color: #eee;
 } 
 
+.rt-tr-group:hover{
+  box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
+}
+
 `
 
 @observer
@@ -159,6 +163,7 @@ class TaskList extends React.Component {
             <div className="w1 ml3">
               {row.row['attributes.is_phase'] === true && (
                 <a
+                  className="pointer"
                   onClick={e => {
                     handleEdit(row)
                   }}
@@ -170,6 +175,7 @@ class TaskList extends React.Component {
             <div className="w1 ml3">
               {row.row['attributes.is_category'] === true && (
                 <a
+                  className="pointer"
                   onClick={e => {
                     handleEdit(row)
                   }}
@@ -182,6 +188,7 @@ class TaskList extends React.Component {
               {row.row['attributes.is_phase'] === false &&
                 row.row['attributes.is_category'] === false && (
                   <a
+                    className="pointer"
                     onClick={e => {
                       handleEdit(row)
                     }}
@@ -560,6 +567,7 @@ class TaskList extends React.Component {
             },
             {
               Header: 'Materials',
+              accessor: 'attributes.item_display',
               maxWidth: '100'
             },
             {
@@ -614,8 +622,8 @@ class TaskList extends React.Component {
                 },
                 onMouseOver: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)
-                  button.parentElement.parentElement.parentElement.parentElement.style.boxShadow =
-                    '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
+                  // button.parentElement.parentElement.parentElement.parentElement.style.boxShadow =
+                  //   '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
                   button.style.display = 'block'
                 },
                 onMouseOut: (e, handleOriginal) => {

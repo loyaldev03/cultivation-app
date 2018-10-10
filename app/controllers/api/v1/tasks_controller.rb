@@ -18,8 +18,8 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def update
     new_params = task_params
-    new_params = new_params.merge(user_ids: new_params[:assigned_employee].pluck(:value))
-    new_params.delete('assigned_employee')
+    # new_params = new_params.merge(user_ids: new_params[:user_ids])
+    # new_params.delete('assigned_employee')
     Cultivation::UpdateTask.call(new_params)
     options = {}
     task = Cultivation::Task.find(params[:id])
@@ -60,6 +60,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
                                  :estimated_hours, :type, :position,
                                  :task_related_id,
                                  :days_from_start_date, :expected_start_date, :start_date, :end_date, :expected_hours_taken,
-                                 :time_taken, :no_of_employees, :materials, :instruction, :id, :batch_id, assigned_employee: [:label, :value])
+                                 :time_taken, :no_of_employees, :materials, :instruction, :id, :batch_id,
+                                 assigned_employee: [:label, :value], user_ids: [])
   end
 end

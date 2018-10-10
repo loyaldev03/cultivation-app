@@ -2,10 +2,9 @@ module MaterialsForm
   class ItemForm
     include ActiveModel::Model
 
-    attr_accessor :id, :name, :code, :desc, :uom
+    attr_accessor :id, :name, :code, :description, :uom, :facility
 
     validates :name, presence: true
-    validates :code, presence: true
 
     def initialize(record_id = nil)
       set_record(record_id)
@@ -25,8 +24,7 @@ module MaterialsForm
     def map_attributes(record)
       self.id = record[:id] if record[:id]
       self.name = record[:name] if record[:name]
-      self.code = record[:code] if record[:code]
-      self.desc = record[:desc] if record[:desc]
+      self.description = record[:description] if record[:description]
       self.uom = record[:uom] if record[:uom]
     end
 

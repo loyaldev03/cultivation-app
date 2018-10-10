@@ -15,7 +15,7 @@ module Common
       if object.photo_data && object.photo_data != 'null'
         object.photo_url
       else
-        ""
+        ''
       end
     end
 

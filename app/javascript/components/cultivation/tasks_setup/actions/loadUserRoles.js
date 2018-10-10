@@ -5,7 +5,6 @@ export default function loadUsers() {
   fetch(url)
     .then(resp => resp.json()) // Transform the data into json
     .then(function(data) {
-      console.log(build_roles_options(data.data))
       UserRoleStore.replace(build_roles_options(data.data))
     })
     .catch(function(error) {

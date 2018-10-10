@@ -6,18 +6,21 @@ import TaskStore from '../stores/TaskStore'
 
 import SidebarTaskEditor from './SidebarTaskEditor'
 import AddTaskForm from './AddTaskForm'
+import MaterialForm from './MaterialForm'
+import ResourceForm from './ResourceForm'
 
 const styles = `
 
 .active{
     display: inline-block;
-  position: relative;
+    position: relative;
+    border-bottom: 3px solid var(--orange);
+    padding-bottom: 16px;
 }
 
-.active:after:after {
+.active:after {
   position: absolute;
   content: '';
-  border-bottom: 1px solid red;
   width: 70%;
   transform: translateX(-50%);
   bottom: -15px;
@@ -31,6 +34,7 @@ export default class TaskEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      tabs: 'General',
       id: '',
       strain: '',
       strain_type: '',
@@ -66,13 +70,33 @@ export default class TaskEditor extends React.Component {
     let task = TaskStore.find(e => e.id === this.state.id)
     if (this.state.action === 'update') {
       if (task === undefined) return null
-      return (
-        <SidebarTaskEditor
-          id={this.state.id}
-          task={task}
-          batch_id={this.props.batch_id}
-        />
-      )
+      if (this.state.tabs === 'General') {
+        return (
+          <SidebarTaskEditor
+            id={this.state.id}
+            task={task}
+            batch_id={this.props.batch_id}
+          />
+        )
+      }
+      if (this.state.tabs === 'Resource') {
+        return (
+          <ResourceForm
+            id={this.state.id}
+            task={task}
+            batch_id={this.props.batch_id}
+          />
+        )
+      }
+      if (this.state.tabs === 'Material') {
+        return (
+          <MaterialForm
+            id={this.state.id}
+            task={task}
+            batch_id={this.props.batch_id}
+          />
+        )
+      }
     } else {
       return (
         <AddTaskForm
@@ -130,7 +154,12 @@ export default class TaskEditor extends React.Component {
     }
   }
 
+  changeTabs = value => {
+    this.setState({ tabs: value })
+  }
+
   render() {
+    let changeTabs = this.changeTabs
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <style> {styles} </style>
@@ -139,10 +168,31 @@ export default class TaskEditor extends React.Component {
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <div className="mt3 mb3 flex">
-              <div className="w-40 ph4 active">General</div>
-              <div className="w-40 pl3 ph4">Resource</div>
-              <div className="w-40 pl3 ph4">Material</div>
+            <div className="mt3 flex">
+              <div
+                className={`w-40 ph4 pointer dim ${
+                  this.state.tabs === 'General' ? 'active' : null
+                }`}
+                onClick={() => changeTabs('General')}
+              >
+                General
+              </div>
+              <div
+                className={`w-40 pl3 ph4 pointer dim ${
+                  this.state.tabs === 'Resource' ? 'active' : null
+                }`}
+                onClick={() => changeTabs('Resource')}
+              >
+                Resource
+              </div>
+              <div
+                className={`w-40 pl3 ph4 pointer dim ${
+                  this.state.tabs === 'Material' ? 'active' : null
+                }`}
+                onClick={() => changeTabs('Material')}
+              >
+                Material
+              </div>
             </div>
             {this.renderCloseSidebar()}
           </div>

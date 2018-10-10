@@ -10,18 +10,14 @@ import ItemStore from '../stores/ItemStore'
 
 import deleteMaterial from '../actions/deleteMaterial'
 
+import loadTasks from '../actions/loadTask'
+
+
 const uom_dropdown = [
   { value: 'Fathi', label: 'KG' },
   { value: 'Andy', label: 'CM' },
   { value: 'Karg', label: 'Inch' },
   { value: 'Allison', label: 'ML' }
-]
-
-const material_dropdown = [
-  { value: 'Fathi', label: 'Fathi' },
-  { value: 'Andy', label: 'Andy' },
-  { value: 'Karg', label: 'Karg' },
-  { value: 'Allison', label: 'Allison' }
 ]
 
 export default class MaterialForm extends React.Component {
@@ -35,7 +31,6 @@ export default class MaterialForm extends React.Component {
       quantity: '',
       uom: '',
       uom_dropdown: uom_dropdown,
-      material_dropdown: material_dropdown,
       materials: [],
       items: props.task.attributes.items
     }
@@ -52,7 +47,6 @@ export default class MaterialForm extends React.Component {
         quantity: '',
         uom: '',
         uom_dropdown: uom_dropdown,
-        material_dropdown: material_dropdown,
         materials: [],
         items: props.task.attributes.items
       })
@@ -76,7 +70,7 @@ export default class MaterialForm extends React.Component {
       {
         items: this.state.items.filter(item => item.id !== id)
       },
-      deleteMaterial(this.state.id, id)
+      deleteMaterial(this.state.batch_id, this.state.id, id)
     )
   }
 
@@ -105,7 +99,6 @@ export default class MaterialForm extends React.Component {
         .then(data => {
           if (data.data.id != null) {
             data = data.data
-            console.log(data)
             this.setState(prevState => ({
               items: [
                 ...prevState.items,
@@ -120,6 +113,7 @@ export default class MaterialForm extends React.Component {
               quantity: '',
               uom: ''
             }))
+            loadTasks.loadbatch(this.state.batch_id) 
           } else {
             data = null
           }

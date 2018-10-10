@@ -19,6 +19,7 @@ class Api::V1::ItemsController < Api::V1::BaseApiController
 
   def destroy
     @item.destroy
+    render json: {result: true}
   end
 
   private

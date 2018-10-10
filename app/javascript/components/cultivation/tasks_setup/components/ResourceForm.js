@@ -115,12 +115,15 @@ export default class ResourceForm extends React.Component {
   }
 
   handleDelete = id => {
-    this.setState(
-      {
-        users: this.state.users.filter(user => user.id !== id)
-      },
-      this.updateResource
-    )
+    if (confirm('Are you sure you want to delete this material? ')) {
+
+      this.setState(
+        {
+          users: this.state.users.filter(user => user.id !== id)
+        },
+        this.updateResource
+      )
+    }
   }
 
   render() {

@@ -17,7 +17,7 @@ module Common
           id: role.id.to_s,
           name: role.name,
           desc: role.desc,
-          readonly: role.readonly?,
+          built_in: (role.built_in || false),
           permissions: role.permissions,
         }
       end

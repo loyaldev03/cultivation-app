@@ -9,19 +9,24 @@ class RoleDetailsEditor extends React.PureComponent {
         roleId: props.role.id,
         name: props.role.name || '',
         desc: props.role.desc || '',
-        permissions: props.role.permissions || []
+        permissions: props.role.permissions || [],
+        readonly: props.role.readonly
       }
     } else {
       this.state = {
         roleId: '',
         name: '',
         desc: '',
-        permissions: []
+        permissions: [],
+        readonly: false
       }
     }
   }
 
   getPermission = code => {
+    if (this.state.readonly) {
+      return { code, value: 15 }
+    }
     const p = this.state.permissions.find(x => x.code === code)
     return p || { code, value: 0 }
   }
@@ -64,7 +69,7 @@ class RoleDetailsEditor extends React.PureComponent {
 
   render() {
     const { onClose, isSaving, modules } = this.props
-    const { name, desc } = this.state
+    const { name, desc, readonly } = this.state
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
     return (
       <div className="h-100 flex flex-auto flex-column">
@@ -127,6 +132,7 @@ class RoleDetailsEditor extends React.PureComponent {
                           code={feat.code}
                           name={feat.name}
                           value={this.getPermission(feat.code).value}
+                          isReadOnly={readonly}
                           onChange={this.setPermission}
                         />
                       ))}
@@ -136,20 +142,24 @@ class RoleDetailsEditor extends React.PureComponent {
               </table>
             </div>
           </div>
-          <div className="mv3 bt fl w-100 b--light-grey pt3 ph4">
-            <a
-              href="#0"
-              className="fl ph3 pv2 button--font bn box--br3 ttu link dim pointer"
-              onClick={this.onDelete}
-            >
-              Delete
-            </a>
-            <input
-              type="submit"
-              value={saveButtonText}
-              className="fr ph3 pv2 bg-orange button--font white bn box--br3 ttu link dim pointer"
-            />
-          </div>
+          {!readonly ? (
+            <div className="mv3 bt fl w-100 b--light-grey pt3 ph4">
+              <a
+                href="#0"
+                className="fl ph3 pv2 button--font bn box--br3 ttu link dim pointer"
+                onClick={this.onDelete}
+              >
+                Delete
+              </a>
+              <input
+                type="submit"
+                value={saveButtonText}
+                className="fr ph3 pv2 bg-orange button--font white bn box--br3 ttu link dim pointer"
+              />
+            </div>
+          ) : (
+            <div className="pt4" />
+          )}
         </form>
       </div>
     )

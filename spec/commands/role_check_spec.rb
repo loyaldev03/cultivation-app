@@ -75,4 +75,31 @@ RSpec.describe RoleCheck do
       expect(cmd.result).to eq false
     end
   end
+
+  context "Super Admin" do
+    let!(:role) { create(:role, :super_admin) }
+    let!(:current_user) {
+      res = create(:user)
+      res.roles = [role.id]
+      res
+    }
+
+    it "can read feature 1010" do
+      cmd = RoleCheck.call(current_user, 1010, CAN_READ)
+
+      expect(cmd.result).to eq true
+    end
+
+    it "cannot delete feature 1020" do
+      cmd = RoleCheck.call(current_user, 1020, CAN_DELETE)
+
+      expect(cmd.result).to eq true
+    end
+
+    it "can create feature 2000" do
+      cmd = RoleCheck.call(current_user, 2000, CAN_READ)
+
+      expect(cmd.result).to eq true
+    end
+  end
 end

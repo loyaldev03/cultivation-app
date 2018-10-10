@@ -10,7 +10,7 @@ class RoleDetailsEditor extends React.PureComponent {
         name: props.role.name || '',
         desc: props.role.desc || '',
         permissions: props.role.permissions || [],
-        readonly: props.role.readonly
+        builtIn: props.role.built_in || false
       }
     } else {
       this.state = {
@@ -18,13 +18,13 @@ class RoleDetailsEditor extends React.PureComponent {
         name: '',
         desc: '',
         permissions: [],
-        readonly: false
+        builtIn: false
       }
     }
   }
 
   getPermission = code => {
-    if (this.state.readonly) {
+    if (this.state.builtIn) {
       return { code, value: 15 }
     }
     const p = this.state.permissions.find(x => x.code === code)
@@ -69,7 +69,7 @@ class RoleDetailsEditor extends React.PureComponent {
 
   render() {
     const { onClose, isSaving, modules } = this.props
-    const { name, desc, readonly } = this.state
+    const { name, desc, builtIn } = this.state
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
     return (
       <div className="h-100 flex flex-auto flex-column">
@@ -132,7 +132,7 @@ class RoleDetailsEditor extends React.PureComponent {
                           code={feat.code}
                           name={feat.name}
                           value={this.getPermission(feat.code).value}
-                          isReadOnly={readonly}
+                          isReadOnly={builtIn}
                           onChange={this.setPermission}
                         />
                       ))}
@@ -142,7 +142,7 @@ class RoleDetailsEditor extends React.PureComponent {
               </table>
             </div>
           </div>
-          {!readonly ? (
+          {!builtIn ? (
             <div className="mv3 bt fl w-100 b--light-grey pt3 ph4">
               <a
                 href="#0"

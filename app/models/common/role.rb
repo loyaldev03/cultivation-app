@@ -5,11 +5,7 @@ module Common
 
     field :name, type: String
     field :desc, type: String
+    field :built_in, type: Boolean, default: -> { false }
     field :permissions, type: Array, default: []
-
-    def readonly?
-      # Super Admin role cannot be altered
-      super || self.name == Constants::SUPER_ADMIN
-    end
   end
 end

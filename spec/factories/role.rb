@@ -13,6 +13,11 @@ FactoryBot.define do
         {code: 1020, value: (CAN_READ | CAN_UPDATE | CAN_CREATE)},
       ]}
     end
+
+    trait :super_admin do
+      name "Super Admin"
+      built_in true
+    end
   end
 end
 

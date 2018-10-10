@@ -29,8 +29,14 @@ class RoleCheck
       return false
     end
 
+
     permit = nil
     roles.each do |role|
+      # Is Super Admin
+      if role.built_in && role.name == Constants::SUPER_ADMIN
+        return true
+      end
+
       permit = role.permissions.detect { |p| p[:code] == @feature }
       break if permit
     end

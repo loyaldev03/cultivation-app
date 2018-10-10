@@ -5,6 +5,6 @@ task seed_user: :environment  do
     email: 'dev@email.com',
     password: 'password',
     password_confirmation: 'password',
-    role: 'dev'
+    roles: ['dev']
   )
 end

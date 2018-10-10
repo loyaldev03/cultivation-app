@@ -14,7 +14,7 @@ class FindItem
   private
 
   def query_record
-    record = Item.where(@args).first
+    record = Inventory::Item.where(@args).first
     if record.nil?
       errors.add :not_found, 'Record Not Found'
       nil

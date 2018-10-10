@@ -7,6 +7,7 @@ module Inventory
     field :total_amount, type: BigDecimal
     field :plants, type: Array
     field :status, type: String
+    field :purchase_date, type: DateTime
 
     # has_many :item_articles
     # has_many :items

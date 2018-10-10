@@ -1,9 +1,20 @@
 class User
   include Mongoid::Document
+  include ImageUploader::Attachment.new(:photo, store: :avatar)
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
+
+  def active_for_authentication?
+    # Reference: https://www.rubydoc.info/github/plataformatec/devise/Devise/Models/Authenticatable
+    super && self.is_active == true
+  end
+
+  def inactive_message
+    # Reference: https://www.rubydoc.info/github/plataformatec/devise/Devise/Models/Authenticatable
+    self.is_active == true ? super : 'Your account has been deactivated'
+  end
 
   # Information
   field :first_name, type: String
@@ -12,6 +23,7 @@ class User
   field :timezone, type: String, default: 'UTC'
   field :default_facility_id, type: BSON::ObjectId
   field :is_active, type: Boolean, default: -> { true }
+  field :photo_data, type: String
 
   ## Database authenticatable
   field :email, type: String, default: ''

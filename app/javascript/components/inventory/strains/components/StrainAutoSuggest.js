@@ -11,30 +11,8 @@ export default class StrainAutoSuggest extends React.Component {
       strain_type: props.strain_type || 'hybrid',
       errors: {}
     }
-    this.onStrainSelected = this.onStrainSelected.bind(this)
-    this.onChangeStrainType = this.onChangeStrainType.bind(this)
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    let hasNewState = false
-    let newState = {}
-
-    if (nextProps.strain_name !== prevState.strain) {
-      newState = { ...newState, strain: nextProps.strain_name }
-      hasNewState = true
-    }
-
-    if (nextProps.strain_type !== prevState.strain_type) {
-      newState = { ...newState, strain_type: nextProps.strain_type }
-      hasNewState = true
-    }
-
-    if (hasNewState) {
-      return newState
-    }
-
-    return null
-  }
 
   // Should refactor this to ./actions
   loadStrainOptions = inputValue => {
@@ -44,19 +22,21 @@ export default class StrainAutoSuggest extends React.Component {
       .then(response => response.json())
       .then(data => {
         // console.log(data.data)
-        return data.data.map(x => ({
+        const strains= data.data.map(x => ({
           label: x.attributes.name,
           value: x.attributes.name,
           strain_type: x.attributes.strain_type
         }))
+
+        return strains
       })
   }
 
   handleInputChange = newValue => {
-    return newValue
+    return newValue ? newValue : ''
   }
 
-  onStrainSelected(item) {
+  onStrainSelected = (item) => {
     const strain = item.label
     const strain_type = item.strain_type || this.state.strain_type
     this.setState({
@@ -68,22 +48,26 @@ export default class StrainAutoSuggest extends React.Component {
     this.props.onStrainSelected({ strain, strain_type })
   }
 
-  onChangeStrainType(event) {
+  onChangeStrainType = (event) => {
     this.setState({ strain_type: event.target.value })
+    this.props.onStrainSelected({ 
+      strain: this.state.strain, 
+      strain_type: event.target.value 
+    })
   }
 
   reset() {
     this.setState({
       strain: '',
       strain_type: 'hybrid',
-      errors: {}
+      errors: {},
     })
   }
 
   validate(isDraft = false) {
     let errors = {}
     const { strain, strain_type } = this.state
-
+    
     if (!isDraft) {
       if (strain.length <= 0) {
         errors = { ...errors, strain: ['Strain is required.'] }
@@ -101,6 +85,8 @@ export default class StrainAutoSuggest extends React.Component {
     }
   }
 
+  
+
   render() {
     return (
       <div className="ph4 mt3 flex">
@@ -108,13 +94,13 @@ export default class StrainAutoSuggest extends React.Component {
           <label className="f6 fw6 db mb1 gray ttc">Strain</label>
           <AsyncCreatableSelect
             defaultOptions
-            noOptionsMessage={() => 'Type to search strain...'}
             cacheOptions
+            noOptionsMessage={() => 'Type to search strain...'}
             loadOptions={this.loadStrainOptions}
             onInputChange={this.handleInputChange}
             styles={reactSelectStyle}
             placeholder=""
-            value={{ label: this.state.strain, value: this.state.strain }}
+            value={ { label: this.state.strain, value: this.state.strain }}
             onChange={this.onStrainSelected}
           />
           <FieldError errors={this.state.errors} field="strain" />

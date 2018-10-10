@@ -53,9 +53,6 @@ module Cultivation
     end
 
     def save_batch
-      Rails.logger.debug "\t\t>>> SetupSimpleBatch.attributes"
-      Rails.logger.debug self.as_json
-
       if id.blank?
         return create_batch
       else

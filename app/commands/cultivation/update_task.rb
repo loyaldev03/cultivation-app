@@ -13,10 +13,10 @@ module Cultivation
       if @args[:type] == 'position'
         update_position(task, @args[:position])
       else
-        @args[:start_date] = @args[:start_date].to_date
-        @args[:end_date] = @args[:end_date].to_date
+        @args[:start_date] = @args[:start_date].to_date if @args[:start_date]
+        @args[:end_date] = @args[:end_date].to_date if @args[:end_date]
 
-        if task.duration != @args[:duration]
+        if @args[:duration].present? && task.duration != @args[:duration]
           @args[:end_date] = @args[:start_date] + @args[:duration].to_i.send('days')
         end
 

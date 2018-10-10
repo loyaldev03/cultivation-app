@@ -11,7 +11,8 @@ module Inventory
 
     attr_reader :plants, :vendor, :invoice_no, :purchase_date
 
-    def initialize(plants, vendor, invoice_no, purchase_date)
+    def initialize(user, plants, vendor, invoice_no, purchase_date)
+      @user = user
       @plants = plants
       @vendor = vendor
       @invoice_no = invoice_no
@@ -22,8 +23,9 @@ module Inventory
       invoice = Inventory::VendorInvoice.find_or_create_by!(
         vendor: vendor,
         invoice_no: invoice_no,
-        purchase_date: purchase_date,
       )
+
+      invoice.purchase_date = purchase_date
 
       plants.each do |plant|
         plant.origin_id = invoice.id

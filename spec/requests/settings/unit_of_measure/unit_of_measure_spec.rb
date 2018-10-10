@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Core Settings - Unit of Measure", :type => :request do
   context "List all UoM" do
     before do
-      user = create(:user, :admin)
+      user = create(:user)
       login_as(user, :scope => :user)
     end
 

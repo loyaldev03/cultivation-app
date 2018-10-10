@@ -10,7 +10,7 @@ import Select from 'react-select'
 import AsyncSelect from 'react-select/lib/Async'
 import LocationPicker from '../../../../utils/LocationPicker2'
 import PurchaseInfo from '../shared/PurchaseInfo'
-import setupClones from '../../actions/setupClones'
+import setupPlants from '../../actions/setupPlants'
 import reactSelectStyle from '../../../../utils/reactSelectStyle'
 import { searchPlants, getPlant } from '../../actions/loadPlants'
 
@@ -156,7 +156,8 @@ class PlantEditor extends React.Component {
       start_date: new Date(item.start_date),
       facility: item.facility,
       mother_id: '',
-      planting_date
+      planting_date,
+      motherOption: null
     })
   }
 
@@ -176,7 +177,7 @@ class PlantEditor extends React.Component {
 
     if (isValid) {
       const growth_stage = this.props.growth_stage
-      setupClones(payload, growth_stage).then(({ status, data }) => {
+      setupPlants(payload, growth_stage).then(({ status, data }) => {
         if (status >= 400) {
           this.setState({ errors: data.errors })
         } else {

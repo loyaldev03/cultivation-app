@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Core Settings - Home", :type => :request do
   context "Show Core Settings Page" do
     before do
-      user = create(:user, :admin)
+      user = create(:user)
       login_as(user, :scope => :user)
     end
 

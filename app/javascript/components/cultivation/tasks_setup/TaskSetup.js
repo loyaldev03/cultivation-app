@@ -7,6 +7,7 @@ import { observer, Provider } from 'mobx-react'
 import loadTasks from './actions/loadTask'
 import loadUsers from './actions/loadUsers'
 import loadUserRoles from './actions/loadUserRoles'
+import loadItems from './actions/loadItems'
 
 import TaskList from './components/TaskList'
 
@@ -15,6 +16,7 @@ class TaskSetup extends React.Component {
     loadTasks.loadbatch(this.props.batch_id)
     loadUsers()
     loadUserRoles()
+    loadItems()
   }
 
   render() {

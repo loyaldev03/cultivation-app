@@ -1,4 +1,7 @@
-Rails.application.routes.draw do  
+Rails.application.routes.draw do
+  # Mount a POST endpoint /images/upload endpoint which accepts file multipart upload
+  mount ImageUploader.upload_endpoint(:avatar) => "/images/upload"
+
   devise_for :users
 
   get "dashboard" => "home#dashboard"
@@ -93,9 +96,7 @@ Rails.application.routes.draw do
         get 'search/:current_growth_stage/(:facility_strain_id)/(:search)',    action: :search, on: :collection
         collection do
           post 'setup_mother'
-          post 'setup_clones'
-          post 'setup_vegs'
-          # post 'setup_flowers'
+          post 'setup_plants'
           # post 'setup_harvest_batch'
           # post 'setup_waste'
         end
@@ -120,8 +121,12 @@ Rails.application.routes.draw do
       resource :user_roles, only: [] do
         get 'search'
         post 'update_user'
-        post 'update_role_permission'
+        post 'update_role'
+        delete 'destroy_role'
       end
+
+      resources :items, only: [:index, :create, :destroy]
+
     end
   end
 end

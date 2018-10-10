@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "/materials", :type => :request do
   context "/strains" do
     before do
-      user = create(:user, :admin)
+      user = create(:user)
       login_as(user, :scope => :user)
       Common::Strain.create!([
         { name: Faker::Lorem.word, desc: Faker::Lorem.sentences },

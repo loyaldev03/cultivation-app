@@ -9,21 +9,11 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def search
-    plants = Inventory::Plant.includes(:facility_strain)
-                             .where(current_growth_stage: params[:current_growth_stage])
-
-    if params[:facility_strain_id].blank?
-      plants = []
-    else
-      plants = plants.where(facility_strain_id: params[:facility_strain_id])
-
-      unless params[:search].blank?
-        search = params[:search]
-        plants = plants.where(plant_id: /^#{search}/i)
-      end
-
-      plants = plants.limit(7)
-    end
+    plants = Inventory::SearchPlants.call(
+      params[:facility_strain_id],
+      params[:current_growth_stage],
+      params[:search]
+    ).result
 
     options = {params: {exclude: [:location, :batch]}}
     data = Inventory::PlantSerializer.new(plants, options).serialized_json
@@ -46,22 +36,11 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     end
   end
 
-  def setup_clones
-    command = Inventory::SetupClones.call(current_user, params[:growth_stage], params[:plant].to_unsafe_h)
+  def setup_plants
+    command = Inventory::SetupPlants.call(current_user, params[:growth_stage], params[:plant].to_unsafe_h)
 
     if command.success?
       data = Inventory::PlantSerializer.new(command.result).serialized_json
-      render json: data
-    else
-      render json: request_with_errors(command.errors), status: 422
-    end
-  end
-
-  def setup_vegs
-    command = Inventory::SetupVegGroup.call(current_user, params[:plant].to_unsafe_h)
-
-    if command.success?
-      data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
       render json: data
     else
       render json: request_with_errors(command.errors), status: 422

@@ -15,9 +15,9 @@ class SaveItem
 
   def save_record
     if args[:id]
-      record = Item.where(id: args[:id]).update(args)
+      record = Inventory::Item.where(id: args[:id]).update(args)
     else
-      record = Item.new(args)
+      record = Inventory::Item.new(args)
       record.save!
     end
     record

@@ -1,0 +1,34 @@
+$tabFontColor: var(--gray);
+$tabFontSize: 18px;
+$tabTextHorizontalPadding: 16px;
+$tabMinWidth: 114px;
+$tabHeight: 42px;
+$tabBorderColor: var(--light-gray);
+$tabBorderActiveColor: var(--orange);
+$tabTopBorderRadius: 5px;
+
+.tab {
+  border: 1px solid $tabBorderColor;
+  border-top-right-radius: $tabTopBorderRadius;
+  border-top-left-radius: $tabTopBorderRadius;
+  padding-left: $tabTextHorizontalPadding;
+  padding-right: $tabTextHorizontalPadding;
+  margin-bottom: -1px;
+  margin-right: -1px;
+  display: inline-block;
+  color: $tabFontColor;
+  text-decoration: none;
+  text-align: center;
+  line-height: $tabHeight - 2px; // exclude top + bottom padding
+  font-size: $tabFontSize;
+  font-weight: 600;
+  min-width: $tabMinWidth;
+  height: $tabHeight;
+  position: relative;
+}
+
+.tab--active {
+  border-top: 4px solid $tabBorderActiveColor;
+  border-bottom: 1px solid white;
+  line-height: $tabHeight - 8px; // exclude top + bottom padding
+}

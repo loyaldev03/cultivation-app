@@ -7,7 +7,6 @@ import {
 } from '../../../../utils/FormHelpers'
 import LocationPicker from '../../../../utils/LocationPicker'
 import PurchaseInfo from '../shared/PurchaseInfo'
-import StrainPicker from '../shared/StrainPicker'
 import MotherPicker from '../shared/MotherPicker'
 import setupHarvestYield from '../../actions/setupHarvestYield'
 
@@ -205,10 +204,7 @@ export default class HarvestYieldEditor extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <StrainPicker
-          ref={this.strainPicker}
-          onStrainSelected={this.onStrainSelected}
-        />
+        
         <hr className="mt3 m b--light-gray w-100" />
         <div className="ph4 mt3 flex">
           <div className="w-50">

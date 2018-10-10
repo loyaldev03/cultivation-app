@@ -4,5 +4,7 @@ module Common
     include Mongoid::Timestamps::Short
 
     field :name, type: String
+    field :desc, type: String
+    field :permissions, type: Array, default: []
   end
 end

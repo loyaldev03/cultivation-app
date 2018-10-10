@@ -1,8 +1,5 @@
 module Constants
-  USER_ROLE_ADMIN = 'admin'
-  USER_ROLE_MANAGER = 'manager'
-  USER_ROLE_SUPERVISOR = 'supervisor'
-  USER_ROLE_STAFF = 'staff'
+  SUPER_ADMIN = 'Super Admin'
 
   PLANT_TYPES = [
     {code: :clone, name: 'Clone'},

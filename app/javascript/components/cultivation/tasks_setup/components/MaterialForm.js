@@ -18,8 +18,7 @@ const uom_dropdown = [
   { value: 'Inch', label: 'Inch' },
   { value: 'ML', label: 'ML' },
   { value: 'L', label: 'L' },
-  {value: 'Pcs', label: 'Pcs'}
-
+  { value: 'Pcs', label: 'Pcs' }
 ]
 
 export default class MaterialForm extends React.Component {

@@ -28,7 +28,9 @@ class TaskSerializer
     object.items.map do |item|
       {
         id: item.id.to_s,
-        name: item.name.to_s,
+        name: item.name,
+        quantity: item.quantity,
+        uom: item.uom,
       }
     end
   end

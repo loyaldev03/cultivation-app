@@ -1,3 +1,5 @@
+import 'babel-polyfill'
+
 import React from 'react'
 import { render } from 'react-dom'
 import Select from 'react-select'
@@ -5,6 +7,8 @@ import Select from 'react-select'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 
 import ItemStore from '../stores/ItemStore'
+
+import deleteMaterial from '../actions/deleteMaterial'
 
 const uom_dropdown = [
   { value: 'Fathi', label: 'KG' },
@@ -27,7 +31,7 @@ export default class MaterialForm extends React.Component {
       batch_id: this.props.batch_id,
       id: props.task.id,
       ...props.task.attributes,
-      material_name: '',
+      name: '',
       quantity: '',
       uom: '',
       uom_dropdown: uom_dropdown,
@@ -44,12 +48,13 @@ export default class MaterialForm extends React.Component {
         batch_id: this.props.batch_id,
         id: props.task.id,
         ...props.task.attributes,
-        material_name: '',
+        name: '',
         quantity: '',
         uom: '',
         uom_dropdown: uom_dropdown,
         material_dropdown: material_dropdown,
-        materials: []
+        materials: [],
+        items: props.task.attributes.items
       })
     }
   }
@@ -63,47 +68,87 @@ export default class MaterialForm extends React.Component {
   }
 
   handleSubmit = e => {
-    this.setState(prevState => ({
-      materials: [
-        ...prevState.materials,
-        {
-          id: this.state.material_name.value,
-          material_name: this.state.material_name.label,
-          quantity: this.state.quantity,
-          uom: this.state.uom.label
-        }
-      ],
-      material_name: '',
-      quantity: '',
-      uom: ''
-    }))
+    this.sendApiCreate()
   }
 
   handleDelete = id => {
-    let materials = this.state.materials
-    materials.splice(id, 1)
-    this.setState({
-      materials: materials
+    this.setState(
+      {
+        items: this.state.items.filter(item => item.id !== id)
+      },
+      deleteMaterial(this.state.id, id)
+    )
+  }
+
+
+  sendApiDelete = async e => {
+
+  }
+
+  sendApiCreate = async e => {
+    let url = `/api/v1/items?task_id=${this.state.id}`
+    let data
+    let item = {
+      item: {
+        name: this.state.name.label,
+        quantity: this.state.quantity,
+        uom: this.state.uom.label
+      }
+    }
+    try {
+
+    await fetch(url, {
+      method: 'POST',
+      credentials: 'include',
+      body: JSON.stringify(item),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
+      .then(response => response.json())
+      .then(data => {
+        if (data.data.id != null) {
+          data = data.data
+          console.log(data)
+          this.setState(prevState => ({
+            items: [
+              ...prevState.items,
+              {
+                id: data.id,
+                name: data.attributes.name,
+                quantity: data.attributes.quantity,
+                uom: data.attributes.uom
+              }
+            ],
+            name: '',
+            quantity: '',
+            uom: ''
+          }))
+        } else {
+          data = null
+        }
+      })
+    } catch (error) {
+      console.error('Error while saving user', error)
+    }
   }
 
   render() {
     let material_dropdown = ItemStore.slice()
     let uom_dropdown = this.state.uom_dropdown
-    let materials = this.state.materials
+    let materials = this.state.items
     let handleChange = this.handleChange
     let handleDelete = this.handleDelete
-    let items = this.state.items
     return (
       <div className="ba b--light-gray ml4 mr4 mt4">
         <div className="ph4 mt3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Material Name</label>
             <Select
-              name="material_name"
+              name="name"
               options={material_dropdown}
-              onChange={e => this.handleChangeSelect('material_name', e)}
-              value={this.state.material_name}
+              onChange={e => this.handleChangeSelect('name', e)}
+              value={this.state.name}
             />
           </div>
         </div>
@@ -139,7 +184,6 @@ export default class MaterialForm extends React.Component {
           />
         </div>
         <div className="mt4 mr4 ml4 f6 fw6 db mb1 gray ttc">
-          {items.map(x => <div>{x.name}</div>)}
           {this.state.materials.length !== 0 ? (
             <span>Materials Added</span>
           ) : null}
@@ -147,13 +191,13 @@ export default class MaterialForm extends React.Component {
             <tbody>
               {materials.map((x, index) => (
                 <tr className="pointer bb" key={index}>
-                  <td className="tl pv2 ph3">{x.material_name}</td>
+                  <td className="tl pv2 ph3">{x.name}</td>
                   <td className="tl pv2 ph3">{x.quantity}</td>
                   <td className="tl pv2 ph3">{x.uom}</td>
                   <td className="tl pv2 ph3">
                     <i
                       className="material-icons red md-18 pointer dim"
-                      onClick={e => handleDelete(index)}
+                      onClick={e => handleDelete(x.id)}
                     >
                       delete
                     </i>

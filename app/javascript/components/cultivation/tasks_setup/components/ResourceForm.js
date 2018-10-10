@@ -100,7 +100,7 @@ export default class ResourceForm extends React.Component {
           {
             id: this.state.resource_name.value,
             name: this.state.resource_name.label,
-            role: this.state.job_role.label
+            role: 'Availability Here'
           }
         ],
         resource_name: '',

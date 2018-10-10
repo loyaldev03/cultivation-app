@@ -121,7 +121,7 @@ Rails.application.routes.draw do
         delete 'destroy_role'
       end
 
-      resources :items, only: [:index]
+      resources :items, only: [:index, :create, :destroy]
 
     end
   end

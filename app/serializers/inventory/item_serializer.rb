@@ -2,6 +2,6 @@ module Inventory
   class ItemSerializer
     include FastJsonapi::ObjectSerializer
 
-    attributes :name, :description
+    attributes :name, :quantity, :uom
   end
 end

@@ -1,4 +1,7 @@
 class Api::V1::ItemsController < Api::V1::BaseApiController
+  before_action :set_task, only: [:create, :destroy]
+  before_action :set_item, only: [:destroy]
+
   def index
     items = Inventory::Item.all
     options = {}
@@ -8,9 +11,10 @@ class Api::V1::ItemsController < Api::V1::BaseApiController
   end
 
   def create
-    item = @task.items.new(params)
+    item = @task.items.new(item_params)
     item.save
-    render json: item.to_json
+    item_json = Inventory::ItemSerializer.new(item).serialized_json
+    render json: item_json
   end
 
   def destroy
@@ -28,5 +32,6 @@ class Api::V1::ItemsController < Api::V1::BaseApiController
   end
 
   def item_params
+    params.require(:item).permit(:name, :quantity, :uom)
   end
 end

@@ -1,8 +1,6 @@
 import React from 'react'
 import PermissionRow from './PermissionRow'
 
-const SUPER_ADMIN = 'Super Admin'
-
 class RoleDetailsEditor extends React.PureComponent {
   constructor(props) {
     super(props)
@@ -12,7 +10,7 @@ class RoleDetailsEditor extends React.PureComponent {
         name: props.role.name || '',
         desc: props.role.desc || '',
         permissions: props.role.permissions || [],
-        isSuperAdmin: props.role.name === SUPER_ADMIN
+        readonly: props.role.readonly
       }
     } else {
       this.state = {
@@ -20,13 +18,13 @@ class RoleDetailsEditor extends React.PureComponent {
         name: '',
         desc: '',
         permissions: [],
-        isSuperAdmin: false
+        readonly: false
       }
     }
   }
 
   getPermission = code => {
-    if (this.state.isSuperAdmin) {
+    if (this.state.readonly) {
       return { code, value: 15 }
     }
     const p = this.state.permissions.find(x => x.code === code)
@@ -71,7 +69,7 @@ class RoleDetailsEditor extends React.PureComponent {
 
   render() {
     const { onClose, isSaving, modules } = this.props
-    const { name, desc, isSuperAdmin } = this.state
+    const { name, desc, readonly } = this.state
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
     return (
       <div className="h-100 flex flex-auto flex-column">
@@ -134,7 +132,7 @@ class RoleDetailsEditor extends React.PureComponent {
                           code={feat.code}
                           name={feat.name}
                           value={this.getPermission(feat.code).value}
-                          isReadOnly={isSuperAdmin}
+                          isReadOnly={readonly}
                           onChange={this.setPermission}
                         />
                       ))}
@@ -144,7 +142,7 @@ class RoleDetailsEditor extends React.PureComponent {
               </table>
             </div>
           </div>
-          {!isSuperAdmin ? (
+          {!readonly ? (
             <div className="mv3 bt fl w-100 b--light-grey pt3 ph4">
               <a
                 href="#0"

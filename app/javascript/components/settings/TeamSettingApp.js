@@ -338,7 +338,10 @@ class TeamSetttingApp extends React.Component {
                           className={'striped--light-gray dim pointer'}
                           onClick={this.onClickRoleEdit(x.id)}
                         >
-                          <td className="tl pv2 ph3 w5">{x.name}</td>
+                          <td className="tl pv2 ph3 w5">
+                            {x.name}
+                            { x.readonly && <span className="f7 bg-light-gray gray br2 ml2 ph2">Built-In</span> }
+                          </td>
                           <td className="tl pv2 ph3">{x.desc}</td>
                         </tr>
                       ))}

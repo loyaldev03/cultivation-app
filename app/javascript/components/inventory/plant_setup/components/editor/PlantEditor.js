@@ -23,11 +23,18 @@ class PlantEditor extends React.Component {
 
     if (props.growth_stage === 'veg') {
       this.batches = this.props.cultivation_batches
-        .filter(x => ['veg', 'veg1', 'veg2'].indexOf(x.attributes.current_growth_stage) >= 0)
+        .filter(
+          x =>
+            ['veg', 'veg1', 'veg2'].indexOf(
+              x.attributes.current_growth_stage
+            ) >= 0
+        )
         .map(x => ({ id: x.id, ...x.attributes }))
     } else {
       this.batches = this.props.cultivation_batches
-        .filter(x => x.attributes.current_growth_stage === this.props.growth_stage)
+        .filter(
+          x => x.attributes.current_growth_stage === this.props.growth_stage
+        )
         .map(x => ({ id: x.id, ...x.attributes }))
     }
 

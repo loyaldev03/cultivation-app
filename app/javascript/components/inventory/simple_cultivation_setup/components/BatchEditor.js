@@ -291,7 +291,7 @@ class BatchEditor extends React.Component {
               />
               <FieldError field="start_date" errors={this.state.errors} />
             </div>
-            
+
             <div className="w-40">
               <label className="f6 fw6 db mb2 gray ttc">
                 Current growth phase

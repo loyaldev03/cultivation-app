@@ -63,18 +63,17 @@ export default class MaterialForm extends React.Component {
   handleChangeSelect = (key, value) => {
     this.setState({ [key]: value })
 
-    if (key === "selectedCategory"){
-      this.setState({ 
+    if (key === 'selectedCategory') {
+      this.setState({
         selectedSubCategory: '',
         selectedThirdDropdown: '',
         name: value.value
       })
     }
-    if (key === "selectedSubCategory") {
+    if (key === 'selectedSubCategory') {
       this.setState({
         selectedThirdDropdown: '',
         name: value.value
-
       })
     }
   }
@@ -150,24 +149,27 @@ export default class MaterialForm extends React.Component {
 
     let category_dropdown = groupBy(material_2, 'category')
 
-    let subcategory_dropdown 
+    let subcategory_dropdown
     let showThirdDropdown = false
-    if(this.state.selectedCategory){
-      subcategory_dropdown = category_dropdown[this.state.selectedCategory.value]
+    if (this.state.selectedCategory) {
+      subcategory_dropdown =
+        category_dropdown[this.state.selectedCategory.value]
 
       // subcategory_dropdown = groupBy(
       //     category_dropdown[this.state.selectedCategory.value],
       //     'sub_category'
-      //   )        
-      let subcategory_keys = Object.keys(groupBy(subcategory_dropdown, 'sub_category'))
-      if (subcategory_keys.length > 1){
-        subcategory_dropdown = subcategory_keys.map(f=> ({
+      //   )
+      let subcategory_keys = Object.keys(
+        groupBy(subcategory_dropdown, 'sub_category')
+      )
+      if (subcategory_keys.length > 1) {
+        subcategory_dropdown = subcategory_keys.map(f => ({
           value: f,
           label: f
         }))
         showThirdDropdown = true
-      }else{
-        subcategory_dropdown = subcategory_dropdown.map(f=> ({
+      } else {
+        subcategory_dropdown = subcategory_dropdown.map(f => ({
           value: f.name,
           label: f.name
         }))
@@ -177,15 +179,15 @@ export default class MaterialForm extends React.Component {
     if (this.state.selectedSubCategory && showThirdDropdown) {
       console.log(this.state.selectedSubCategory)
       console.log()
-      let third_level = groupBy(category_dropdown[this.state.selectedCategory.value], 'sub_category')[this.state.selectedSubCategory.value]
-      third_dropdown = third_level.map(f=> ({
+      let third_level = groupBy(
+        category_dropdown[this.state.selectedCategory.value],
+        'sub_category'
+      )[this.state.selectedSubCategory.value]
+      third_dropdown = third_level.map(f => ({
         value: f.name,
         label: f.name
       }))
-
     }
-
-
 
     category_dropdown = Object.keys(category_dropdown).map(f => ({
       value: f,
@@ -202,7 +204,7 @@ export default class MaterialForm extends React.Component {
           <div className="ph4 mt3 flex">
             <div className="w-100">
               {/* {JSON.stringify(subcategory_dropdown['Potassium'])} */}
-  
+
               {/* {JSON.stringify(this.state.selectedCategory)} */}
               {/* {JSON.stringify(category_dropdown)} */}
               {/* {JSON.stringify(category_dropdown)} */}
@@ -215,27 +217,36 @@ export default class MaterialForm extends React.Component {
               />
             </div>
           </div>
-          {subcategory_dropdown && subcategory_dropdown.length > 1 && (
-            <div className="ph4 mt3 flex">
-              <div className="w-100">
-                <label className="f6 fw6 db mb1 gray ttc">{this.state.selectedCategory.label}</label>
-                <Select
-                  name="selectedSubCategory"
-                  options={subcategory_dropdown}
-                  onChange={e => this.handleChangeSelect('selectedSubCategory', e)}
-                  value={this.state.selectedSubCategory}
-                />
+          {subcategory_dropdown &&
+            subcategory_dropdown.length > 1 && (
+              <div className="ph4 mt3 flex">
+                <div className="w-100">
+                  <label className="f6 fw6 db mb1 gray ttc">
+                    {this.state.selectedCategory.label}
+                  </label>
+                  <Select
+                    name="selectedSubCategory"
+                    options={subcategory_dropdown}
+                    onChange={e =>
+                      this.handleChangeSelect('selectedSubCategory', e)
+                    }
+                    value={this.state.selectedSubCategory}
+                  />
+                </div>
               </div>
-            </div>
-          )}
+            )}
           {third_dropdown && (
             <div className="ph4 mt3 flex">
               <div className="w-100">
-                <label className="f6 fw6 db mb1 gray ttc">{this.state.selectedSubCategory.label}</label>
+                <label className="f6 fw6 db mb1 gray ttc">
+                  {this.state.selectedSubCategory.label}
+                </label>
                 <Select
                   name="selectedThirdDropdown"
                   options={third_dropdown}
-                  onChange={e => this.handleChangeSelect('selectedThirdDropdown', e)}
+                  onChange={e =>
+                    this.handleChangeSelect('selectedThirdDropdown', e)
+                  }
                   value={this.state.selectedThirdDropdown}
                 />
               </div>

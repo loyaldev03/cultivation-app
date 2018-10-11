@@ -19,7 +19,6 @@ export default function loadItems() {
 //     label: `${f.attributes.name}`
 //   }))
 
-
 const build_items_options = items =>
   items.map(f => ({
     id: f.id,

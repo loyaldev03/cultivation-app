@@ -25,14 +25,13 @@
 
       <div class="w-100 ph0">
         <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100 mt4">
-          <thead>
+
+          <tbody>
             <tr class="striped--light-gray">
               <th class="pv2 ph3 subtitle-2 dark-grey tl ttu" width="5%">#</th>
               <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Name</th>
               <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Description</th>
             </tr>
-          </thead>
-          <tbody>
             <% @records.try(:each_with_index) do |f, i| %>
               <tr data-toggle-turbolink="<%= materials_item_path(f.id)%>" class="dim pointer striped--light-gray">
                 <td class="tl pv2 ph3 w5"><%= i+1 %></td>

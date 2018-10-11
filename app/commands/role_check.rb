@@ -29,7 +29,6 @@ class RoleCheck
       return false
     end
 
-
     permit = nil
     roles.each do |role|
       # Is Super Admin

@@ -19,6 +19,8 @@ module Inventory
     belongs_to :uom, class_name: 'Common::UnitOfMeasure', optional: true
     belongs_to :strain, class_name: 'Common::Strain', optional: true
     belongs_to :facility
+
     has_many :articles, class_name: 'Inventory::ItemArticle'
+    has_many :item_transactions, class_name: 'Inventory::ItemTransaction'
   end
 end

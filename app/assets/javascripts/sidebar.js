@@ -1,3 +1,6 @@
+//= require turbolinks/dist/turbolinks
+
+
 document.addEventListener("DOMContentLoaded", function(event) {
   $$("#toggle-sidebar").on("click", function() {
     var sidebar = $$("#sidebar")[0];
@@ -43,3 +46,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
+
+document.addEventListener("DOMContentLoaded", function (event) {
+
+  $$("[data-toggle-turbolink]").on("click", function (e) {
+    // Turbolinks.visit(this.dataset.toggleTurbolink)
+    window.location = this.dataset.toggleTurbolink
+  });
+
+});

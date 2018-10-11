@@ -17,7 +17,6 @@ module Inventory
     field :quantity, type: BigDecimal, default: 0
 
     belongs_to :uom, class_name: 'Common::UnitOfMeasure', optional: true
-    belongs_to :strain, class_name: 'Common::Strain', optional: true
     belongs_to :facility
 
     has_many :articles, class_name: 'Inventory::ItemArticle'

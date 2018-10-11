@@ -63,7 +63,11 @@ class PlantStore {
   get vegs() {
     return this.plants
       .slice()
-      .filter(x => ['veg', 'veg1', 'veg2'].indexOf(x.attributes.current_growth_stage) >= 0)
+      .filter(
+        x =>
+          ['veg', 'veg1', 'veg2'].indexOf(x.attributes.current_growth_stage) >=
+          0
+      )
   }
 
   @computed

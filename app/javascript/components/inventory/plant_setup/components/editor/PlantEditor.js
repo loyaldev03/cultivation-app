@@ -338,12 +338,13 @@ class PlantEditor extends React.Component {
       return (
         <div className="ph4 mb2 flex" style={style}>
           <div className="w-100">
-            <TextInput 
-              label="Plant ID" 
+            <TextInput
+              label="Plant ID"
               fieldname="plant_ids"
               onChange={this.onCloneIdsChanged}
               value={this.state.plant_ids}
-              errors={this.state.errors} />
+              errors={this.state.errors}
+            />
           </div>
         </div>
       )

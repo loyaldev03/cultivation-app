@@ -22,7 +22,8 @@ class BatchEditor extends React.Component {
           ...event.detail.data.attributes,
           id: event.detail.data.id,
           start_date: new Date(event.detail.data.attributes.start_date),
-          current_growth_stage_disabled: event.detail.data.attributes.plant_count > 0
+          current_growth_stage_disabled:
+            event.detail.data.attributes.plant_count > 0
         }
         this.setState(newState)
       }

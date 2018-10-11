@@ -21,7 +21,8 @@ class BatchEditor extends React.Component {
           ...this.resetState(),
           ...event.detail.data.attributes,
           id: event.detail.data.id,
-          start_date: new Date(event.detail.data.attributes.start_date)
+          start_date: new Date(event.detail.data.attributes.start_date),
+          current_growth_stage_disabled: event.detail.data.attributes.plant_count > 0
         }
         this.setState(newState)
       }
@@ -44,6 +45,7 @@ class BatchEditor extends React.Component {
       flower_duration: '',
       dry_duration: '',
       current_growth_stage: 'clone',
+      current_growth_stage_disabled: false,
       errors: {}
     }
   }
@@ -95,7 +97,6 @@ class BatchEditor extends React.Component {
 
     if (isValid) {
       saveCultivationBatch(payload).then(x => {
-        // console.log(x)
         this.reset()
         window.editorSidebar.close()
       })
@@ -298,6 +299,7 @@ class BatchEditor extends React.Component {
               </label>
               <select
                 className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 select"
+                disabled={this.state.current_growth_stage_disabled}
                 onChange={this.onCurrentGrowthPhaseSelected}
                 value={this.state.current_growth_stage}
               >

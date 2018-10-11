@@ -100,7 +100,7 @@ class VegSetupApp extends React.Component {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
-  renderPlantList() {
+  render() {
     return (
       <React.Fragment>
         <div className="w-80 bg-white pa3">
@@ -119,7 +119,7 @@ class VegSetupApp extends React.Component {
           <ReactTable
             columns={columns}
             pagination={{ position: 'top' }}
-            data={plantStore.vegs}
+            data={plantStore.bindablePlants}
             showPagination={false}
             pageSize={30}
             minRows={5}
@@ -128,14 +128,6 @@ class VegSetupApp extends React.Component {
             showPagination={plantStore.vegs.length > 30}
           />
         </div>
-      </React.Fragment>
-    )
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        {this.renderPlantList()}
         <PlantEditor
           growth_stage="veg"
           cultivation_batches={this.props.cultivation_batches}

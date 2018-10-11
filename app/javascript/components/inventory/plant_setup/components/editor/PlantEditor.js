@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {
   TextInput,
-  NumericInput,
   FieldError,
   CalendarPicker
 } from '../../../../utils/FormHelpers'
@@ -18,8 +17,6 @@ class PlantEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
-
-    console.log(props.growth_stage)
 
     if (props.growth_stage === 'veg') {
       this.batches = this.props.cultivation_batches
@@ -59,12 +56,14 @@ class PlantEditor extends React.Component {
             alert('someting wrong')
             return
           }
+
           const batch = this.batches.find(
             x => x.id === data.attributes.cultivation_batch_id
           )
 
           this.setState({
             ...this.resetState(),
+            id: data.id,
             cultivation_batch_id: batch.id,
             facility_strain_id: batch.facility_strain_id,
             facility_id: batch.facility_id,
@@ -98,6 +97,7 @@ class PlantEditor extends React.Component {
 
   resetState() {
     return {
+      id: '',
       cultivation_batch_id: '',
       facility_strain_id: '',
       facility_id: '',
@@ -181,7 +181,6 @@ class PlantEditor extends React.Component {
   }
 
   onMotherIdChanged = item => {
-    console.log(item)
     if (item === []) {
       this.setState({ motherOption: null })
     } else {
@@ -195,12 +194,12 @@ class PlantEditor extends React.Component {
     const { errors, isValid, ...payload } = data
 
     if (isValid) {
-      const growth_stage = this.props.growth_stage
       setupPlants(payload).then(({ status, data }) => {
         if (status >= 400) {
           this.setState({ errors: data.errors })
         } else {
           this.reset()
+          window.editorSidebar.close()
         }
       })
     }
@@ -214,6 +213,7 @@ class PlantEditor extends React.Component {
 
   validateAndGetValues() {
     const {
+      id,
       cultivation_batch_id,
       plant_ids,
       location_id,
@@ -261,6 +261,7 @@ class PlantEditor extends React.Component {
 
     const data = {
       ...purchaseData,
+      id,
       cultivation_batch_id,
       plant_ids,
       location_id,
@@ -331,6 +332,21 @@ class PlantEditor extends React.Component {
     let style = {}
     if (this.state.isShowPlantIdGenerator) {
       style = { display: 'none' }
+    }
+
+    if (this.state.id.length > 0) {
+      return (
+        <div className="ph4 mb2 flex" style={style}>
+          <div className="w-100">
+            <TextInput 
+              label="Plant ID" 
+              fieldname="plant_ids"
+              onChange={this.onCloneIdsChanged}
+              value={this.state.plant_ids}
+              errors={this.state.errors} />
+          </div>
+        </div>
+      )
     }
 
     return (
@@ -456,7 +472,7 @@ class PlantEditor extends React.Component {
             <div className="w-100">
               <LocationPicker
                 key={this.state.facility_id}
-                mode="clone"
+                mode={this.props.growth_stage}
                 facility_id={this.state.facility_id}
                 onChange={this.onLocationChanged}
                 locations={this.locations}

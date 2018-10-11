@@ -38,7 +38,11 @@ class PlantStore {
 
   @action
   update(plant) {
-    // find and replace...
+    const index = this.plants.findIndex(x => x.id === plant.id)
+    console.log(index)
+    if (index >= 0) {
+      this.plants[index] = plant
+    }
   }
 
   @computed
@@ -59,7 +63,7 @@ class PlantStore {
   get vegs() {
     return this.plants
       .slice()
-      .filter(x => x.attributes.current_growth_stage === 'veg')
+      .filter(x => ['veg', 'veg1', 'veg2'].indexOf(x.attributes.current_growth_stage) >= 0)
   }
 
   @computed
@@ -67,6 +71,11 @@ class PlantStore {
     return this.plants
       .slice()
       .filter(x => x.attributes.current_growth_stage === 'flower')
+  }
+
+  @computed
+  get bindablePlants() {
+    return this.plants.slice()
   }
 }
 

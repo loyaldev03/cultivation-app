@@ -23,12 +23,12 @@ module Inventory
       params = args.except(:id)
 
       unless id.blank?
-        Inventory::Vendor.find_by(id: id).update(params)
+        vendor = Inventory::Vendor.find_by(id: id)
+        vendor.update!(params)
+        vendor
       else
         Inventory::Vendor.create!(params)
       end
-      # rescue
-      #   errors.add(:error, $!.message)
     end
 
     def valid?

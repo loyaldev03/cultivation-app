@@ -106,9 +106,9 @@ module Cultivation
 
     def add_tasks(batch)
       clone_end_date = add_task(batch, Constants::CONST_CLONE, start_date, clone_duration)
-      veg_end_date = add_task(batch, Constants::CONST_VEG, clone_end_date, veg_duration)
-      veg1_end_date = add_task(batch, Constants::CONST_VEG1, clone_end_date, veg1_duration) if veg_duration <= 0
-      veg2_end_date = add_task(batch, Constants::CONST_VEG2, veg1_end_date, veg2_duration) if veg_duration <= 0
+      veg_end_date = add_task(batch, Constants::CONST_VEG, clone_end_date, veg_duration) if veg_duration > 0
+      veg1_end_date = add_task(batch, Constants::CONST_VEG1, clone_end_date, veg1_duration) if veg_duration == 0
+      veg2_end_date = add_task(batch, Constants::CONST_VEG2, veg1_end_date, veg2_duration) if veg_duration == 0
 
       flower_start_date = [veg_end_date, veg1_end_date, veg2_end_date].compact.max
       flower_end_date = add_task(batch, Constants::CONST_FLOWER, flower_start_date, flower_duration)
@@ -118,7 +118,7 @@ module Cultivation
     def add_task(batch, phase, start_date, duration)
       # Rails.logger.debug ">>>>> [phase, start_date, duration]"
       # Rails.logger.debug [phase, start_date, duration]
-      return nil if duration == 0
+      return start_date if duration == 0
 
       task = batch.tasks.create!(
         phase: phase,

@@ -1,7 +1,10 @@
 class Api::V1::PlantsController < Api::V1::BaseApiController
   def all
+    growth_stages = *params[:current_growth_stage] # convert to array
+    growth_stages = %w(veg veg1 veg2) if params[:current_growth_stage] == 'veg'
+
     plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch)
-                             .where(current_growth_stage: params[:current_growth_stage])
+                             .where(current_growth_stage: {'$in': growth_stages})
                              .order(c_at: :desc)
 
     data = Inventory::PlantSerializer.new(plants).serialized_json
@@ -37,7 +40,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def setup_plants
-    command = Inventory::SetupPlants.call(current_user, params[:growth_stage], params[:plant].to_unsafe_h)
+    command = Inventory::SetupPlants.call(current_user, params[:plant].to_unsafe_h)
 
     if command.success?
       data = Inventory::PlantSerializer.new(command.result).serialized_json

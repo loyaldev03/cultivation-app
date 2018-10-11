@@ -90,7 +90,7 @@ function getPlant(id, includeFields = '') {
     }
   }).then(response => {
     return response.json().then(data => {
-      console.log(data)
+      // console.log(data.data)
       return {
         status: response.status,
         data: data.data

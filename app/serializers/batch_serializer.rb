@@ -58,6 +58,10 @@ class BatchSerializer
     task ? task.duration : ''
   end
 
+  attribute :plant_count do |object|
+    object.plants.count
+  end
+
   attribute :value do |object|
     object.id.to_s
   end

@@ -12,8 +12,11 @@ module Inventory
     end
 
     def call
+      growth_stages = *current_growth_stage # convert to array
+      growth_stages = %w(veg veg1 veg2) if current_growth_stage == 'veg'
+
       plants = Inventory::Plant.includes(:facility_strain)
-                               .where(current_growth_stage: current_growth_stage)
+                               .where(current_growth_stage: {'$in': growth_stages})
 
       if facility_strain_id.blank?
         plants = []

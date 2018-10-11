@@ -18,10 +18,19 @@ class PlantEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
-    this.batches = this.props.cultivation_batches.map(x => ({
-      id: x.id,
-      ...x.attributes
-    }))
+
+    console.log(props.growth_stage)
+
+    if (props.growth_stage === 'veg') {
+      this.batches = this.props.cultivation_batches
+        .filter(x => ['veg', 'veg1', 'veg2'].indexOf(x.attributes.current_growth_stage) >= 0)
+        .map(x => ({ id: x.id, ...x.attributes }))
+    } else {
+      this.batches = this.props.cultivation_batches
+        .filter(x => x.attributes.current_growth_stage === this.props.growth_stage)
+        .map(x => ({ id: x.id, ...x.attributes }))
+    }
+
     this.locations = this.props.locations
 
     // Converting to callback ref because purchase info editor is hidding and showing.
@@ -73,7 +82,7 @@ class PlantEditor extends React.Component {
             strain_name: batch.strain_name,
             start_date: new Date(batch.start_date),
             facility: batch.facility,
-            isBought: false
+            isBought: batch.batch_source === 'clones_purchased'
           })
         })
       }
@@ -104,6 +113,7 @@ class PlantEditor extends React.Component {
       // UI states
       strain_name: '',
       start_date: '',
+      batch_source: '',
       facility: '',
       isBought: false,
       errors: {},
@@ -157,7 +167,9 @@ class PlantEditor extends React.Component {
       facility: item.facility,
       mother_id: '',
       planting_date,
-      motherOption: null
+      motherOption: null,
+      batch_source: item.batch_source,
+      isBought: item.batch_source === 'clones_purchased'
     })
   }
 
@@ -177,7 +189,7 @@ class PlantEditor extends React.Component {
 
     if (isValid) {
       const growth_stage = this.props.growth_stage
-      setupPlants(payload, growth_stage).then(({ status, data }) => {
+      setupPlants(payload).then(({ status, data }) => {
         if (status >= 400) {
           this.setState({ errors: data.errors })
         } else {
@@ -258,26 +270,53 @@ class PlantEditor extends React.Component {
     return data
   }
 
+  loadMothers = inputValue => {
+    if (this.state.facility_strain_id.length <= 0) {
+      return new Promise(resolve => resolve([]))
+    }
+
+    return searchPlants(
+      'mother',
+      this.state.facility_strain_id,
+      inputValue
+    ).then(data => {
+      const mothers = data.data.map(x => ({
+        label: x.attributes.plant_id,
+        value: x.id
+      }))
+
+      const motherOption = mothers.find(x => x.value == this.state.mother_id)
+      this.setState({ motherOption })
+      return mothers
+    })
+  }
+
   renderProcurementInfo() {
     if (!this.state.isBought) return null
     return (
-      <PurchaseInfo
-        ref={this.setPurchaseInfoEditor}
-        showLabel={false}
-        vendor_name={this.state.vendor_name}
-        vendor_no={this.state.vendor_no}
-        address={this.state.address}
-        vendor_state_license_num={this.state.vendor_state_license_num}
-        vendor_state_license_expiration_date={
-          this.state.vendor_state_license_expiration_date
-        }
-        vendor_location_license_num={this.state.vendor_location_license_num}
-        vendor_location_license_expiration_date={
-          this.state.vendor_location_license_expiration_date
-        }
-        purchase_date={this.state.purchase_date}
-        invoice_no={this.state.invoice_no}
-      />
+      <React.Fragment>
+        <hr className="mt3 m b--light-gray w-100" />
+        <div className="ph4 mb3 mt3">
+          <span className="f6 fw6 dark-gray">Clone Purchase Info</span>
+        </div>
+        <PurchaseInfo
+          ref={this.setPurchaseInfoEditor}
+          showLabel={false}
+          vendor_name={this.state.vendor_name}
+          vendor_no={this.state.vendor_no}
+          address={this.state.address}
+          vendor_state_license_num={this.state.vendor_state_license_num}
+          vendor_state_license_expiration_date={
+            this.state.vendor_state_license_expiration_date
+          }
+          vendor_location_license_num={this.state.vendor_location_license_num}
+          vendor_location_license_expiration_date={
+            this.state.vendor_location_license_expiration_date
+          }
+          purchase_date={this.state.purchase_date}
+          invoice_no={this.state.invoice_no}
+        />
+      </React.Fragment>
     )
   }
 
@@ -335,36 +374,21 @@ class PlantEditor extends React.Component {
             </p>
           </div>
         </div>
+        <div className="ph4 mt2 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc">Batch source</label>
+            <p className="f6 mt0 mb2">{this.state.batch_source}</p>
+          </div>
+        </div>
         <hr className="mt3 m b--black-10 w-100" />
       </React.Fragment>
     )
   }
 
-  loadMothers = inputValue => {
-    if (this.state.facility_strain_id.length <= 0) {
-      return new Promise(resolve => resolve([]))
-    }
-
-    return searchPlants(
-      'mother',
-      this.state.facility_strain_id,
-      inputValue
-    ).then(data => {
-      const mothers = data.data.map(x => ({
-        label: x.attributes.plant_id,
-        value: x.id
-      }))
-
-      const motherOption = mothers.find(x => x.value == this.state.mother_id)
-      this.setState({ motherOption })
-      return mothers
-    })
-  }
-
   renderTitle() {
     if (this.props.growth_stage === 'clone') {
       return 'Add Clone'
-    } else if (this.props.growth_stage === 'veg') {
+    } else if (['veg', 'veg1', 'veg2'].indexOf(this.props.growth_stage) >= 0) {
       return 'Add Vegs'
     } else if (this.props.growth_stage === 'flower') {
       return 'Add Flowers'
@@ -458,6 +482,7 @@ class PlantEditor extends React.Component {
             </div>
           </div>
 
+          {/*
           <hr className="mt3 m b--light-gray w-100" />
           <div className="ph4 mb3 mt3">
             <span className="f6 fw6 dark-gray">Plant Origin?</span>
@@ -473,7 +498,7 @@ class PlantEditor extends React.Component {
               onChange={this.onIsBoughtChanged}
             />
             <label className="toggle-button" htmlFor="is_bought_input" />
-          </div>
+          </div> */}
 
           {this.renderProcurementInfo()}
 

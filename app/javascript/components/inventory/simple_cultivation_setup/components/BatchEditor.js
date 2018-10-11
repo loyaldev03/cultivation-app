@@ -283,7 +283,7 @@ class BatchEditor extends React.Component {
           </div>
 
           <div className="ph4 mt3 mb2 flex">
-            <div className="w-60">
+            <div className="w-60 pr3">
               <label className="f6 fw6 db mb2 gray ttc">Batch start date</label>
               <DatePicker
                 value={this.state.start_date}
@@ -291,10 +291,8 @@ class BatchEditor extends React.Component {
               />
               <FieldError field="start_date" errors={this.state.errors} />
             </div>
-          </div>
-
-          <div className="ph4 mt3 mb2 flex">
-            <div className="w-60">
+            
+            <div className="w-40">
               <label className="f6 fw6 db mb2 gray ttc">
                 Current growth phase
               </label>

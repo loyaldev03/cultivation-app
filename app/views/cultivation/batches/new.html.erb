@@ -4,19 +4,11 @@
   </div>
 <% end %>
 
-<div class="pa4">
-  <div class="flex flex-column justify-between bg-white box--shadow">
-    <div class="pa4 min-h-500 measure">
-      <div class="fl w-100 flex flex-column">
-        <%= react_component 'cultivation/batches_setup/BatchSetupApp', 
-          {
-            plants: Constants::PLANT_SOURCE_TYPES.map{|a| {value: a[:code], label: a[:name]}},
-            strains: Common::Strain.all.map{|a| {value: a.id.to_s, label: "#{a.name} (#{a.strain_type})"}},
-            facilities: Facility.completed.map{|a| {value: a.id.to_s, label: "#{a.name} (#{a.code})" }},
-            grow_methods: Constants::GROW_MEDIUM.map{|a| {value: a[:code], label: a[:name]}},
-          } 
-        %>
-      </div>
-    </div>
-  </div>
-</div>
+<%= react_component 'cultivation/batches_setup/BatchSetupApp', 
+  {
+    plants: Constants::PLANT_SOURCE_TYPES.map{|a| {value: a[:code], label: a[:name]}},
+    strains: Common::Strain.all.map{|a| {value: a.id.to_s, label: "#{a.name} (#{a.strain_type})"}},
+    facilities: Facility.completed.map{|a| {value: a.id.to_s, label: "#{a.name} (#{a.code})" }},
+    grow_methods: Constants::GROW_MEDIUM.map{|a| {value: a[:code], label: a[:name]}},
+  } 
+%>

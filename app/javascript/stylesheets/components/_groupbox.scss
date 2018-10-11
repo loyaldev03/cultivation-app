@@ -1,0 +1,23 @@
+$groupboxPaddingVerticle: 20px;
+$groupboxPaddingTop: 24px;
+$groupboxPaddingBottom: 18px;
+
+.groupbox {
+  border: 1px solid var(--light-gray);
+  border-radius: 3px;
+  padding-top: $groupboxPaddingTop;
+  padding-bottom: $groupboxPaddingBottom;
+  padding-left: $groupboxPaddingVerticle;
+  padding-right: $groupboxPaddingVerticle;
+  position: relative;
+}
+
+.groupbox__title {
+  color: var(--gray);
+  display: inline-block;
+  background: white;
+  padding-left: 2px;
+  padding-right: 2px;
+  position: absolute;
+  top: -$groupboxPaddingTop / 2;
+}

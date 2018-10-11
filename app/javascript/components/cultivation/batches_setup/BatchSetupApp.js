@@ -4,6 +4,7 @@ import { render } from 'react-dom'
 
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import reactSelectStyle from './../../utils/reactSelectStyle'
+import { GroupBox } from './../../utils'
 import { toast } from './../../utils/toast'
 import { TextInput, NumericInput, FieldError } from './../../utils/FormHelpers'
 
@@ -71,103 +72,35 @@ class BatchSetupApp extends React.Component {
     const { plants, strains, facilities, grow_methods } = this.props
     console.log('plants', plants)
     return (
-      <React.Fragment>
-        <div id="toast" className="toast animated toast--success">
-          Row Saved
-        </div>
-
+      <div className="fl w-90 w-60-l ma4 pa4 bg-white">
+        <div id="toast" className="toast" />
         <h5 className="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
-        <p className="mt2 body-1 grey">Some cultivation setup here</p>
-        <form>
-          <div className="w-100 shelves_number_options">
-            <div className="mt3">
-              <label
-                className="f6 fw6 db mb1 gray ttc"
-                htmlFor="record_batch_source"
-              >
-                Select Batch Source
-              </label>
-              <Select
-                options={plants}
-                onChange={e => this.handleChange('plant', e.value)}
-                styles={reactSelectStyle}
-              />
-            </div>
-          </div>
-
-          <div className="w-100 shelves_number_options">
-            <div className="mt3">
-              <label
-                className="f6 fw6 db mb1 gray ttc"
-                htmlFor="record_batch_source"
-              >
-                Select Facility
-              </label>
-              <Select
-                options={facilities}
-                styles={reactSelectStyle}
-                onChange={e => this.handleChange('facility', e.value)}
-              />
-            </div>
-          </div>
-
-          <div className="w-100 shelves_number_options">
-            <div className="mt3">
-              <label
-                className="f6 fw6 db mb1 gray ttc"
-                htmlFor="record_batch_source"
-              >
-                Select Strains
-              </label>
-              <Select
-                options={strains}
-                styles={reactSelectStyle}
-                onChange={e => this.handleChange('strain', e.value)}
-              />
-            </div>
-          </div>
-
-          <div className="w-100 shelves_number_options">
-            <div className="mt3">
-              <label
-                className="f6 fw6 db mb1 gray ttc"
-                htmlFor="record_batch_source"
-              >
-                Select Grow Method
-              </label>
-              <Select
-                options={grow_methods}
-                styles={reactSelectStyle}
-                onChange={e => this.handleChange('grow_method', e.value)}
-              />
-            </div>
-          </div>
-
-          <div className="w-100 shelves_number_options">
-            <div className="mt3">
-              <label
-                className="f6 fw6 db mb1 gray ttc"
-                htmlFor="record_batch_source"
-              >
-                Select Start Date
-              </label>
-              <DatePicker
-                value={this.state.start_date}
-                onChange={e => this.handleChange('start_date', e)}
-              />
-            </div>
-          </div>
-
-          <div className="w-100 flex justify-end mt3">
-            <a
-              className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
-              onClick={this.handleSubmit}
-            >
-              {this.state.isLoading ? 'Saving...' : 'Save & Continue'}
-            </a>
-          </div>
-        </form>
-      </React.Fragment>
+        <p className="mt2 body-1 grey">Search to display available quantity on specific date.</p>
+        <GroupBox
+          title="Search"
+          className="fl w-100 cultivation-setup-container"
+          render={() => (
+            <React.Fragment>
+              <div className="fl w-50 pr3">
+                <label className="subtitle-2 grey db mb1">Batch Source</label>
+                <Select
+                  options={plants}
+                  onChange={e => this.handleChange('plant', e.value)}
+                  styles={reactSelectStyle}
+                />
+              </div>
+              <div className="fr w-50">
+                <label className="subtitle-2 grey db mb1">Date</label>
+                <Select
+                  options={plants}
+                  onChange={e => this.handleChange('plant', e.value)}
+                  styles={reactSelectStyle}
+                />
+              </div>
+            </React.Fragment>
+          )}
+        />
+      </div>
     )
   }
 }

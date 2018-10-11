@@ -74,7 +74,7 @@ const columns = [
   {
     Header: 'Current Growth Phase',
     accessor: 'attributes.current_growth_stage',
-    headerStyle: { textAlign: 'left' },
+    headerStyle: { textAlign: 'left' }
   },
   {
     Header: 'Facility',

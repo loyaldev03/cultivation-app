@@ -90,7 +90,6 @@ class BatchEditor extends React.Component {
     this.setState({ [key]: value })
   }
 
-
   onSave = event => {
     const { errors, isValid, ...payload } = this.validateAndGetValues()
 
@@ -149,7 +148,10 @@ class BatchEditor extends React.Component {
     }
 
     if (current_growth_stage.length <= 0) {
-      errors = { ...errors, current_growth_stage: ['Current growth phase is required.'] }
+      errors = {
+        ...errors,
+        current_growth_stage: ['Current growth phase is required.']
+      }
     }
 
     const isValid = Object.getOwnPropertyNames(errors).length === 0
@@ -293,7 +295,9 @@ class BatchEditor extends React.Component {
 
           <div className="ph4 mt3 mb2 flex">
             <div className="w-60">
-              <label className="f6 fw6 db mb2 gray ttc">Current growth phase</label>
+              <label className="f6 fw6 db mb2 gray ttc">
+                Current growth phase
+              </label>
               <select
                 className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 select"
                 onChange={this.onCurrentGrowthPhaseSelected}
@@ -318,7 +322,10 @@ class BatchEditor extends React.Component {
                   Dry
                 </option>
               </select>
-              <FieldError field="current_growth_stage" errors={this.state.errors} />
+              <FieldError
+                field="current_growth_stage"
+                errors={this.state.errors}
+              />
             </div>
           </div>
 

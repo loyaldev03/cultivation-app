@@ -60,7 +60,8 @@ const columns = [
   },
   {
     Header: 'Grow Method',
-    accessor: 'attributes.grow_method'
+    accessor: 'attributes.grow_method',
+    headerStyle: { textAlign: 'left' }
   },
   {
     Header: 'Start date',
@@ -69,6 +70,11 @@ const columns = [
     Cell: props => {
       return <span>{new Date(props.value).toLocaleDateString()}</span>
     }
+  },
+  {
+    Header: 'Current Growth Phase',
+    accessor: 'attributes.current_growth_stage',
+    headerStyle: { textAlign: 'left' },
   },
   {
     Header: 'Facility',

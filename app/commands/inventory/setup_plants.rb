@@ -38,7 +38,7 @@ module Inventory
       @plant_ids = split(args[:plant_ids])
       @planting_date = args[:planting_date]
       @vendor_id = args[:vendor_id]
-      @vendor_name = args[:vendor_name].strip
+      @vendor_name = args[:vendor_name]
       @vendor_no = args[:vendor_no]
       @address = args[:address]
       @vendor_state_license_num = args[:vendor_state_license_num]
@@ -114,31 +114,25 @@ module Inventory
     end
 
     def create_plants
-      plants = []
-      Inventory::Plant.with_session do |s|
-        s.start_transaction
+      facility_strain_id = Cultivation::Batch.find(cultivation_batch_id).facility_strain_id
+      plants = plant_ids.map do |plant_id|
+        Inventory::Plant.create!(
+          plant_id: plant_id,
+          facility_strain_id: facility_strain_id,
+          cultivation_batch_id: cultivation_batch_id,
+          current_growth_stage: growth_stage,
+          created_by: user,
+          location_id: location_id,
+          location_type: 'tray',
+          status: is_draft ? 'draft' : 'available',
+          planting_date: planting_date,
+          mother_id: mother_id,
+        )
+      end
 
-        plants = plant_ids.map do |plant_id|
-          Inventory::Plant.create!(
-            plant_id: plant_id,
-            facility_strain_id: facility_strain_id,
-            cultivation_batch_id: cultivation_batch_id,
-            current_growth_stage: growth_stage,
-            created_by: user,
-            location_id: location_id,
-            location_type: 'tray',
-            status: is_draft ? 'draft' : 'available',
-            planting_date: planting_date,
-            mother_id: mother_id,
-          )
-        end
-
-        if is_purchased?
-          vendor = create_vendor
-          create_invoice(user, plants, vendor, invoice_no, purchase_date)
-        end
-
-        s.commit_transaction if errors.empty?
+      if is_purchased?
+        vendor = create_vendor
+        create_invoice(user, plants, vendor, invoice_no, purchase_date)
       end
 
       plants

@@ -14,7 +14,8 @@ module Cultivation
       :veg1_duration,
       :veg2_duration,
       :flower_duration,
-      :harvest_duration
+      :dry_duration,
+      :current_growth_stage
 
     def initialize(user, args)
       @user = user
@@ -31,8 +32,8 @@ module Cultivation
       @veg1_duration = args[:veg1_duration].to_i
       @veg2_duration = args[:veg2_duration].to_i
       @flower_duration = args[:flower_duration].to_i
-      @harvest_duration = args[:harvest_duration].to_i
-      @curing_duration = args[:curing_duration].to_i
+      @dry_duration = args[:dry_duration].to_i
+      @current_growth_stage = args[:current_growth_stage]
     end
 
     def call
@@ -49,7 +50,9 @@ module Cultivation
     end
 
     def valid_data?
-      true
+      facility_strain = Inventory::FacilityStrain.find facility_strain_id
+      errors.add(:facility_strain_id, 'Stain is required.') if facility_strain.nil?
+      errors.empty?
     end
 
     def save_batch
@@ -72,6 +75,7 @@ module Cultivation
       b.facility_strain = facility_strain
       b.facility_id = facility_strain.facility_id
       b.grow_method = grow_method
+      b.current_growth_stage = current_growth_stage
       b.tasks = []
       add_tasks(b)
       b.save!
@@ -81,8 +85,8 @@ module Cultivation
     def create_batch
       facility_strain = Inventory::FacilityStrain.find facility_strain_id
       estimated_harvest_date = start_date + (clone_duration + veg_duration + veg1_duration + veg2_duration + flower_duration).days
-      batch_no = NextFacilityCode.call(:batch, Cultivation::Batch.last.batch_no).result
-      # Running no. By facility
+      last_batch = Cultivation::Batch.last.nil? ? nil : Cultivation::Batch.last.batch_no
+      batch_no = NextFacilityCode.call(:batch, last_batch).result
 
       batch = Cultivation::Batch.create!(
         batch_no: batch_no,
@@ -93,6 +97,7 @@ module Cultivation
         facility_strain: facility_strain,
         facility_id: facility_strain.facility_id,  # should be obsolete?
         grow_method: grow_method,
+        current_growth_stage: current_growth_stage,
         is_active: false,
       )
       add_tasks(batch)
@@ -107,7 +112,7 @@ module Cultivation
 
       flower_start_date = [veg_end_date, veg1_end_date, veg2_end_date].compact.max
       flower_end_date = add_task(batch, Constants::CONST_FLOWER, flower_start_date, flower_duration)
-      harvest_end_date = add_task(batch, Constants::CONST_HARVEST, flower_end_date, harvest_duration)
+      dry_end_date = add_task(batch, Constants::CONST_DRY, flower_end_date, dry_duration)
     end
 
     def add_task(batch, phase, start_date, duration)

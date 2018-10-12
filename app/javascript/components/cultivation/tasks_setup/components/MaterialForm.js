@@ -28,8 +28,9 @@ export default class MaterialForm extends React.Component {
     super(props)
     this.state = {
       batch_id: this.props.batch_id,
-      id: props.task.id,
+      task_id: props.task.id,
       ...props.task.attributes,
+      raw_material_id: '',
       name: '',
       quantity: '',
       uom: '',
@@ -67,13 +68,15 @@ export default class MaterialForm extends React.Component {
       this.setState({
         selectedSubCategory: '',
         selectedThirdDropdown: '',
-        name: value.value
+        name: value.value,
+        raw_material_id: ItemStore.slice().find(e => e.name === value.value).id
       })
     }
     if (key === 'selectedSubCategory') {
       this.setState({
         selectedThirdDropdown: '',
-        name: value.value
+        name: value.value,
+        raw_material_id: ItemStore.slice().find(e => e.name === value.value).id
       })
     }
   }
@@ -98,10 +101,11 @@ export default class MaterialForm extends React.Component {
   sendApiDelete = async e => {}
 
   sendApiCreate = async e => {
-    let url = `/api/v1/items?task_id=${this.state.id}`
+    let url = `/api/v1/items?task_id=${this.state.task_id}`
     let data
     let item = {
       item: {
+        raw_material_id: this.state.raw_material_id,
         name: this.state.name,
         quantity: this.state.quantity,
         uom: this.state.uom.label
@@ -287,7 +291,7 @@ export default class MaterialForm extends React.Component {
         <div className="mt4 mr4 ml4 f6 fw6 db mb1 gray ttc">
           <table className="w-100">
             <tbody>
-              <tr className="">
+              <tr className="bb">
                 <th>Material Name</th>
                 <th>Quantity</th>
                 <th>Unit of Measurment</th>

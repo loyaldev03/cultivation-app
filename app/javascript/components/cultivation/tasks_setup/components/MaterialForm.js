@@ -69,7 +69,7 @@ export default class MaterialForm extends React.Component {
         selectedSubCategory: '',
         selectedThirdDropdown: '',
         name: value.value,
-        raw_material_id: ItemStore.slice().find(e=> e.name === value.value).id
+        raw_material_id: ItemStore.slice().find(e => e.name === value.value).id
       })
     }
     if (key === 'selectedSubCategory') {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
-import MotherEditor from './components/editor/MotherEditor'
+import PlantEditor from './components/editor/PlantEditor'
 import plantStore from './store/PlantStore'
 import { loadPlants } from './actions/loadPlants'
 
@@ -34,25 +34,25 @@ const columns = [
   {
     Header: 'Plant ID',
     accessor: 'attributes.plant_id',
+    headerStyle: { textAlign: 'left' },
+    width: 150
+  },
+  {
+    Header: 'Batch',
+    accessor: 'attributes.cultivation_batch',
     headerStyle: { textAlign: 'left' }
   },
   {
     Header: 'Strain',
     accessor: 'attributes.strain_name',
-    headerStyle: { textAlign: 'left' }
-  },
-  {
-    Header: 'Growth stage',
-    accessor: 'attributes.current_growth_stage',
     headerStyle: { textAlign: 'left' },
-    Cell: props => (
-      <span>{props.value.charAt(0).toUpperCase() + props.value.substr(1)}</span>
-    )
+    width: 180
   },
   {
-    Header: 'Planted On',
+    Header: 'Clone date',
     accessor: 'attributes.planting_date',
     headerStyle: { textAlign: 'left' },
+    width: 100,
     Cell: props => {
       const d = new Date(props.value)
       if (props.value || props.value.length > 0) {
@@ -67,7 +67,8 @@ const columns = [
   {
     Header: 'Location',
     accessor: 'attributes.location_name',
-    headerStyle: { textAlign: 'left' }
+    headerStyle: { textAlign: 'left' },
+    width: 130
   },
   {
     Header: '',
@@ -75,25 +76,24 @@ const columns = [
     filterable: false,
     maxWidth: 45,
     Cell: x => (
-      <a href="#" onClick={event => openStrain(event, x.index)}>
+      <a href="#" onClick={event => openSidebar(event, x.original.id)}>
         <i className="material-icons gray">more_horiz</i>
       </a>
     )
   }
 ]
 
-function openStrain(event, index) {
-  // const id = plantStore.strains.slice()[index].id
-  window.editorSidebar.open({ width: '500px' })
+function openSidebar(event, id) {
+  window.editorSidebar.open({ width: '500px', id })
   event.preventDefault()
 }
 
 @observer
-class PlantSetupApp extends React.Component {
+class FlowerSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadPlants('mother')
+    loadPlants('flower')
   }
 
   openSidebar() {
@@ -105,13 +105,13 @@ class PlantSetupApp extends React.Component {
       <React.Fragment>
         <div className="w-80 bg-white pa3">
           <div className="flex mb4 mt2">
-            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Mother Plants</h1>
+            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Vegs</h1>
             <div style={{ justifySelf: 'end' }}>
               <button
-                className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
+                className="pv2 ph3 bg-orange white bn br2 ttc link dim f6 fw6 pointer"
                 onClick={this.openSidebar}
               >
-                Add mother
+                Add vegs
               </button>
             </div>
           </div>
@@ -125,17 +125,17 @@ class PlantSetupApp extends React.Component {
             minRows={5}
             filterable
             className="f6"
-            showPagination={plantStore.plants.length > 30}
+            showPagination={plantStore.flowers.length > 30}
           />
         </div>
-        <MotherEditor
-          isOpened={false}
+        <PlantEditor
+          growth_stage="flower"
+          cultivation_batches={this.props.cultivation_batches}
           locations={this.props.locations}
-          facilityStrains={this.props.facility_strains}
         />
       </React.Fragment>
     )
   }
 }
 
-export default PlantSetupApp
+export default FlowerSetupApp

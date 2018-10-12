@@ -1,6 +1,6 @@
 class BatchSerializer
   include FastJsonapi::ObjectSerializer
-  attributes :name, :batch_source, :batch_no, :is_active, :start_date, :grow_method
+  attributes :name, :batch_source, :batch_no, :is_active, :start_date, :grow_method, :current_growth_stage
   has_many :tasks, if: Proc.new { |record, params| params.nil? || params[:exclude_tasks] != true }
 
   attribute :facility do |object|
@@ -48,14 +48,18 @@ class BatchSerializer
     task ? task.duration : ''
   end
 
-  attribute :harvest_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_HARVEST)
+  attribute :dry_duration do |object|
+    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_DRY)
     task ? task.duration : ''
   end
 
   attribute :curing_duration do |object|
     task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_CURE)
     task ? task.duration : ''
+  end
+
+  attribute :plant_count do |object|
+    object.plants.count
   end
 
   attribute :value do |object|

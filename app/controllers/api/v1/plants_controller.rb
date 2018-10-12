@@ -1,7 +1,10 @@
 class Api::V1::PlantsController < Api::V1::BaseApiController
   def all
+    growth_stages = *params[:current_growth_stage] # convert to array
+    growth_stages = %w(veg veg1 veg2) if params[:current_growth_stage] == 'veg'
+
     plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch)
-                             .where(current_growth_stage: params[:current_growth_stage])
+                             .where(current_growth_stage: {'$in': growth_stages})
                              .order(c_at: :desc)
 
     data = Inventory::PlantSerializer.new(plants).serialized_json
@@ -9,25 +12,20 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def search
-    plants = Inventory::Plant.includes(:facility_strain)
-                             .where(current_growth_stage: params[:current_growth_stage])
+    plants = Inventory::SearchPlants.call(
+      params[:facility_strain_id],
+      params[:current_growth_stage],
+      params[:search]
+    ).result
 
-    if params[:facility_strain_id].blank?
-      plants = []
-    else
-      plants = plants.where(facility_strain_id: params[:facility_strain_id])
-
-      unless params[:search].blank?
-        search = params[:search]
-        plants = plants.where(plant_id: /^#{search}/i)
-      end
-
-      plants = plants.limit(7)
-    end
-
-    options = {params: {exclude_location: true, exclude_batch: true}}
+    options = {params: {exclude: [:location, :batch]}}
     data = Inventory::PlantSerializer.new(plants, options).serialized_json
     render json: data
+  end
+
+  def show
+    plant = Inventory::Plant.find(params[:id])
+    render json: Inventory::PlantSerializer.new(plant).serialized_json
   end
 
   def setup_mother
@@ -41,22 +39,11 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     end
   end
 
-  def setup_clones
-    command = Inventory::SetupClones.call(current_user, params[:plant].to_unsafe_h)
+  def setup_plants
+    command = Inventory::SetupPlants.call(current_user, params[:plant].to_unsafe_h)
 
     if command.success?
       data = Inventory::PlantSerializer.new(command.result).serialized_json
-      render json: data
-    else
-      render json: request_with_errors(command.errors), status: 422
-    end
-  end
-
-  def setup_vegs
-    command = Inventory::SetupVegGroup.call(current_user, params[:plant].to_unsafe_h)
-
-    if command.success?
-      data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
       render json: data
     else
       render json: request_with_errors(command.errors), status: 422

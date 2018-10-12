@@ -20,8 +20,8 @@ module Inventory
       object.created_by_id.to_s
     end
 
-    attribute :cultivation_batch do |object, params|
-      if params && params[:exclude_batch] == true
+    attribute :cultivation_batch do |object, params = {}|
+      if params[:exclude] && params[:exclude].include?(:batch)
         ''
       elsif object.cultivation_batch.nil?
         ''
@@ -78,12 +78,16 @@ module Inventory
       object.origin_id.to_s
     end
 
+    attribute :mother_id do |object|
+      (object.mother_id || '').to_s
+    end
+
     attribute :created_at do |object|
       object.c_at.iso8601
     end
 
-    attribute :location_name do |object, params|
-      if params && params[:exclude_location] == true
+    attribute :location_name do |object, params = {}|
+      if params[:exclude] && params[:exclude].include?(:location)
         ''
       elsif !object.location_id
         ''

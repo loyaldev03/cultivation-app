@@ -112,7 +112,7 @@ class LocationPicker extends React.Component {
 
     if (mode === 'clone') {
       _locations = locations.filter(this.isClone(facility_id))
-    } else if (mode === 'vegTray') {
+    } else if (mode === 'veg') {
       _locations = locations.filter(this.isVeg(facility_id))
     } else if (mode === 'mother') {
       _locations = locations.filter(this.isMother(facility_id))
@@ -140,7 +140,7 @@ class LocationPicker extends React.Component {
     let item = { value: '', label: '' }
     if (mode === 'mother' || mode === 'room') {
       item = locations.find(x => x.rm_id === location_id)
-    } else if (['clone', 'vegTray', 'flower', 'dry'].indexOf(mode) >= 0) {
+    } else if (['clone', 'veg', 'flower', 'dry'].indexOf(mode) >= 0) {
       item = locations.find(x => x.t_id === location_id)
     } else if (mode === 'facility') {
       item = locations.find(x => x.f_id === location_id)
@@ -156,7 +156,7 @@ class LocationPicker extends React.Component {
         location_id: selectedItem.rm_id,
         location_type: selectedItem.rm_purpose
       }
-    } else if (['clone', 'vegTray', 'flower', 'dry'].indexOf(mode) >= 0) {
+    } else if (['clone', 'veg', 'flower', 'dry'].indexOf(mode) >= 0) {
       return {
         location_id: selectedItem.t_id,
         location_type: selectedItem.rm_purpose
@@ -192,7 +192,7 @@ class LocationPicker extends React.Component {
   get label() {
     if (this.mode === 'clone') {
       return 'Tray ID'
-    } else if (this.mode === 'vegTray') {
+    } else if (this.mode === 'veg') {
       return 'Tray ID'
     } else if (this.mode === 'mother') {
       return 'Mother room ID'

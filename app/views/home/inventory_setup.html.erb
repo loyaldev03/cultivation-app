@@ -15,7 +15,7 @@
         
       </div>
 
-      <div class="fl w-60 flex flex-column mb3">
+      <div class="fl w-70 flex flex-column mb3">
         <p class="mt2 mb4 f5 fw6 dark-gray">
           Quick overview to setup your inventory:
         </p>
@@ -25,7 +25,7 @@
             <p class="ma0 pa0 mb2 fw6 dark-gray ttc">
               Register strain
             </p>
-            <p class="ma0 pa0 fw4 gray lh-copy ">
+            <p class="ma0 pa0 fw4 gray lh-copy w-80">
               Register strains that are grown at your facility.
             </p>
           </div>
@@ -37,12 +37,14 @@
             <p class="ma0 pa0 mb2 fw6 dark-gray ttc">
               Active plant inventory
             </p>
-            <p class="ma0 pa0 fw4 gray lh-copy ">
+            <p class="ma0 pa0 fw4 gray lh-copy w-80">
               These are your plant inventories such as seeds, mother plants, clones, harvest yield and waste. Plant inventory requires unique IDs for legal compliance and traceability.
             </p>
           </div>
-          <% if Inventory::FacilityStrain.count > 1 %>
+          <% if Inventory::FacilityStrain.count > 0 %>
             <%= link_to 'Start', mothers_inventory_plants_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim' %>
+          <% else %>
+            <%= link_to 'Strain is required', '', class: 'flex-none bg-black-20 link white f6 fw6 pv2 ph3 br2 dim' %>
           <% end %>
         </div>
 
@@ -52,7 +54,7 @@
             <p class="ma0 pa0 mb2 fw6 dark-gray ttc">
               Raw materials
             </p>
-            <p class="ma0 pa0 fw4 gray lh-copy ">
+            <p class="ma0 pa0 fw4 gray lh-copy w-80">
               Consumables used for production (soil, lights, nutrients, etc.)
             </p>
           </div>
@@ -65,7 +67,7 @@
             <p class="ma0 pa0 mb2 fw6 dark-gray ttc">
               Sales product
             </p>
-            <p class="ma0 pa0 fw4 gray lh-copy ">
+            <p class="ma0 pa0 fw4 gray lh-copy w-80">
               Product items ready for Sale
             </p>
           </div>
@@ -79,7 +81,7 @@
             <p class="ma0 pa0 mb2 fw6 dark-gray ttc">
               Non sales items
             </p>
-            <p class="ma0 pa0 fw4 gray lh-copy pr4">
+            <p class="ma0 pa0 fw4 gray lh-copy w-80">
               Any item that you want to keep track such as fixed assets or does not fit any category above (i.e. Office Supplies).
             </p>
           </div>

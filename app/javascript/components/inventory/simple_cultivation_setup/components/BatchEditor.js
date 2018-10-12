@@ -21,7 +21,9 @@ class BatchEditor extends React.Component {
           ...this.resetState(),
           ...event.detail.data.attributes,
           id: event.detail.data.id,
-          start_date: new Date(event.detail.data.attributes.start_date)
+          start_date: new Date(event.detail.data.attributes.start_date),
+          current_growth_stage_disabled:
+            event.detail.data.attributes.plant_count > 0
         }
         this.setState(newState)
       }
@@ -42,7 +44,9 @@ class BatchEditor extends React.Component {
       veg1_duration: '',
       veg2_duration: '',
       flower_duration: '',
-      harvest_duration: '',
+      dry_duration: '',
+      current_growth_stage: 'clone',
+      current_growth_stage_disabled: false,
       errors: {}
     }
   }
@@ -79,14 +83,14 @@ class BatchEditor extends React.Component {
     }
   }
 
+  onCurrentGrowthPhaseSelected = event => {
+    this.setState({ current_growth_stage: event.target.value })
+  }
+
   onChangeGeneric = event => {
     const key = event.target.attributes.fieldname.value
     const value = event.target.value
     this.setState({ [key]: value })
-  }
-
-  onDateSelected = (field, value) => {
-    this.setState({ [field]: value })
   }
 
   onSave = event => {
@@ -94,7 +98,6 @@ class BatchEditor extends React.Component {
 
     if (isValid) {
       saveCultivationBatch(payload).then(x => {
-        console.log(x)
         this.reset()
         window.editorSidebar.close()
       })
@@ -120,8 +123,9 @@ class BatchEditor extends React.Component {
       veg1_duration,
       veg2_duration,
       flower_duration,
-      harvest_duration,
-      curing_duration
+      dry_duration,
+      curing_duration,
+      current_growth_stage
     } = this.state
 
     let errors = {}
@@ -145,6 +149,13 @@ class BatchEditor extends React.Component {
       errors = { ...errors, start_date: ['Start date is required.'] }
     }
 
+    if (current_growth_stage.length <= 0) {
+      errors = {
+        ...errors,
+        current_growth_stage: ['Current growth phase is required.']
+      }
+    }
+
     const isValid = Object.getOwnPropertyNames(errors).length === 0
     if (!isValid) {
       this.setState({ errors })
@@ -162,8 +173,9 @@ class BatchEditor extends React.Component {
       veg1_duration,
       veg2_duration,
       flower_duration,
-      harvest_duration,
+      dry_duration,
       curing_duration,
+      current_growth_stage,
       isValid
     }
   }
@@ -273,13 +285,48 @@ class BatchEditor extends React.Component {
           </div>
 
           <div className="ph4 mt3 mb2 flex">
-            <div className="w-60">
+            <div className="w-60 pr3">
               <label className="f6 fw6 db mb2 gray ttc">Batch start date</label>
               <DatePicker
                 value={this.state.start_date}
                 onChange={this.onStartDateSelected}
               />
               <FieldError field="start_date" errors={this.state.errors} />
+            </div>
+
+            <div className="w-40">
+              <label className="f6 fw6 db mb2 gray ttc">
+                Current growth phase
+              </label>
+              <select
+                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 select"
+                disabled={this.state.current_growth_stage_disabled}
+                onChange={this.onCurrentGrowthPhaseSelected}
+                value={this.state.current_growth_stage}
+              >
+                <option value="clone" key="clone">
+                  Clone
+                </option>
+                <option value="veg" key="veg">
+                  Veg
+                </option>
+                <option value="veg1" key="veg1">
+                  Veg 1
+                </option>
+                <option value="veg2" key="veg2">
+                  Veg 2
+                </option>
+                <option value="flower" key="flower">
+                  Flower
+                </option>
+                <option value="dry" key="dry">
+                  Dry
+                </option>
+              </select>
+              <FieldError
+                field="current_growth_stage"
+                errors={this.state.errors}
+              />
             </div>
           </div>
 
@@ -378,12 +425,12 @@ class BatchEditor extends React.Component {
 
           <div className="ph4 mt3 flex items-center">
             <div className="w-50">
-              <label className="f6 fw6 db mb2 gray ttc">Harvest phase</label>
+              <label className="f6 fw6 db mb2 gray ttc">Dry phase</label>
             </div>
             <div className="w-20 flex items-center">
               <NumericInput
-                value={this.state.harvest_duration}
-                fieldname="harvest_duration"
+                value={this.state.dry_duration}
+                fieldname="dry_duration"
                 onChange={this.onChangeGeneric}
                 errors={this.state.errors}
               />

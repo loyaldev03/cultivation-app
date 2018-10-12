@@ -22,5 +22,7 @@ class QueryReadyTrays
     )
     result = cmd.result
     result ||= []
+  rescue
+    errors.add(:error, $!.message)
   end
 end

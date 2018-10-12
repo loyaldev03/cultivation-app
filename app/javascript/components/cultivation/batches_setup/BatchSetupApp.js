@@ -69,6 +69,7 @@ class BatchSetupApp extends React.Component {
   handleSearch = e => {
     console.log(
       'Search Params',
+      this.state.searchFacility,
       this.state.searchSource,
       this.state.searchMonth
     )
@@ -77,7 +78,7 @@ class BatchSetupApp extends React.Component {
   setDateValue = event => {}
 
   render() {
-    const { plantSources, strains, facilities, grow_methods } = this.props
+    const { plantSources, strains, facilities, growMethods } = this.props
     console.log('plantSources', plantSources)
     return (
       <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">

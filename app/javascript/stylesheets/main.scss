@@ -17,9 +17,11 @@
 
 /* IMPORT COMPONENTS STYLES */
 @import 'react-table/react-table.css';
+@import 'components/buttons';
 @import 'components/tabs';
 @import 'components/groupbox';
 
 .cultivation-setup-container {
-  max-width: 710px
+  max-width: 710px;
+  height: 110px;
 }

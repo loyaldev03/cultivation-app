@@ -561,7 +561,7 @@ class TaskList extends React.Component {
               maxWidth: '150'
             },
             {
-              Header: 'Resources',
+              Header: 'Assigned',
               accessor: 'attributes.resources',
               maxWidth: '200'
             },

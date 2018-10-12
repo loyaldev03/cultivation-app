@@ -15,6 +15,7 @@ class Api::V1::ItemsController < Api::V1::BaseApiController
   def create
     item = @task.items.new(item_params)
     item.save
+    Rails.logger.debug "Errors =====> #{item.errors.inspect}"
     item_json = Inventory::ItemSerializer.new(item).serialized_json
     render json: item_json
   end
@@ -35,6 +36,6 @@ class Api::V1::ItemsController < Api::V1::BaseApiController
   end
 
   def item_params
-    params.require(:item).permit(:name, :quantity, :uom)
+    params.require(:item).permit(:raw_material_id, :name, :quantity, :uom)
   end
 end

@@ -81,7 +81,7 @@ class BatchSetupApp extends React.Component {
           className="fl w-100 cultivation-setup-container"
           render={() => (
             <React.Fragment>
-              <div className="fl w-50 pr3">
+              <div className="fl w-40 pr3">
                 <label className="subtitle-2 grey db mb1">Batch Source</label>
                 <Select
                   options={plants}
@@ -89,13 +89,16 @@ class BatchSetupApp extends React.Component {
                   styles={reactSelectStyle}
                 />
               </div>
-              <div className="fr w-50">
+              <div className="fl w-40">
                 <label className="subtitle-2 grey db mb1">Date</label>
                 <Select
                   options={plants}
                   onChange={e => this.handleChange('plant', e.value)}
                   styles={reactSelectStyle}
                 />
+              </div>
+              <div className="w-20 fr mt3 tr">
+                <button className="btn btn--primary">Search</button>
               </div>
             </React.Fragment>
           )}

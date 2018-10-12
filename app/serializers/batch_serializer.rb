@@ -16,11 +16,11 @@ class BatchSerializer
   end
 
   attribute :facility_id do |object|
-    object.facility_strain.facility_id.to_s
+    object.facility_strain.try(:facility_id).to_s
   end
 
   attribute :strain_name do |object|
-    object.facility_strain.strain_name
+    object.facility_strain.try(:strain_name)
   end
 
   attribute :clone_duration do |object|
@@ -63,6 +63,6 @@ class BatchSerializer
   end
 
   attribute :label do |object|
-    "#{object.batch_no} - #{object.name}, #{object.facility_strain.strain_name}"
+    "#{object.batch_no} - #{object.name}, #{object.facility_strain.try(:strain_name)}"
   end
 end

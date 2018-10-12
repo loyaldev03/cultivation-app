@@ -20,6 +20,10 @@ class Materials::ItemsController < ApplicationController
     @record = MaterialsForm::ItemForm.new(params[:id])
   end
 
+  def show
+    @record = FindItem.call({id: params[:id]}).result
+  end
+
   def update
     form_object = MaterialsForm::ItemForm.new(params[:id])
     update_params = {id: params[:id]}.merge(record_params)

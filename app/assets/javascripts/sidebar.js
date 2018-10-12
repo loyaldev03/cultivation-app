@@ -43,3 +43,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
 
+
+document.addEventListener("DOMContentLoaded", function (event) {
+
+  $$("[data-toggle-turbolink]").on("click", function (e) {
+    window.location = this.dataset.toggleTurbolink
+  });
+
+});

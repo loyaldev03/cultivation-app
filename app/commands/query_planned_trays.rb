@@ -22,7 +22,7 @@ class QueryPlannedTrays
 
   def query_records
     # NOTE: This should be in sync with the aggregate function in
-    # QueryAvailableTrays > cultivation_tray_plans > lookup pipeline
+    # QueryAvailableTrays > cultivation_tray_plans > lookup pipeline for dates
     cond_a = Cultivation::TrayPlan.and({end_date: {"$gte": @start_date}}, {start_date: {"$lte": @end_date}}).selector
     cond_b = Cultivation::TrayPlan.and({start_date: {"$gte": @start_date}}, {start_date: {"$lte": @end_date}}).selector
     cond_c = Cultivation::TrayPlan.and({start_date: {"$lte": @start_date}}, {end_date: {"$gte": @end_date}}).selector

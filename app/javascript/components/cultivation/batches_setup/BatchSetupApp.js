@@ -77,10 +77,10 @@ class BatchSetupApp extends React.Component {
   setDateValue = event => {}
 
   render() {
-    const { plants, strains, facilities, grow_methods } = this.props
-    console.log('plants', plants)
+    const { plantSources, strains, facilities, grow_methods } = this.props
+    console.log('plantSources', plantSources)
     return (
-      <div className="fl w-100 w-60-l ma4 pa4 bg-white">
+      <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
         <div id="toast" className="toast" />
         <h5 className="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
         <p className="mt2 body-1 grey">
@@ -88,21 +88,21 @@ class BatchSetupApp extends React.Component {
         </p>
         <GroupBox
           title="Search"
-          className="mt3 fl w-100 cultivation-setup-container"
+          className="mt3 fl w-100"
           render={() => (
             <div className="fl w-100 relative">
               <div className="fl w-100">
-                <div className="fl w-30 pr3">
+                <div className="fl w-third pr2">
                   <label className="subtitle-2 grey db mb1">Facility</label>
                   <Select
                     options={facilities}
                     onChange={e => this.handleChange('searchFacility', e.value)}
                   />
                 </div>
-                <div className="fl w-third pr3">
+                <div className="fl w-third pr2">
                   <label className="subtitle-2 grey db mb1">Batch Source</label>
                   <Select
-                    options={plants}
+                    options={plantSources}
                     onChange={e => this.handleChange('searchSource', e.value)}
                   />
                 </div>

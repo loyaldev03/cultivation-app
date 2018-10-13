@@ -50,8 +50,10 @@ module Cultivation
     end
 
     def valid_data?
-      facility_strain = Inventory::FacilityStrain.find facility_strain_id
-      errors.add(:facility_strain_id, 'Stain is required.') if facility_strain.nil?
+      errors.add(:facility_strain_id, 'Stain is required.') if Inventory::FacilityStrain.find(facility_strain_id).nil?
+      errors.add(:start_date, 'Start date is required.') if start_date.blank?
+      errors.add(:grow_method, 'Grow method is required.') if grow_method.blank?
+      errors.add(:batch_source, 'Batch source is required.') if batch_source.blank?
       errors.empty?
     end
 

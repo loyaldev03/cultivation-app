@@ -6,10 +6,11 @@ module Cultivation
     field :batch_no, type: String
     field :name, type: String
     field :batch_source, type: String
+    field :grow_method, type: String
     field :start_date, type: DateTime
     field :estimated_harvest_date, type: DateTime
     field :facility_id, type: BSON::ObjectId
-    field :grow_method, type: String
+
     field :current_growth_stage, type: String
     field :is_active, type: Boolean, default: -> { false }
 

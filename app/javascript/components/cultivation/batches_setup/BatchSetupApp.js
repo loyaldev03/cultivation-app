@@ -75,26 +75,26 @@ class BatchSetupApp extends React.Component {
         'Content-Type': 'application/json'
       }
     })
-    .then(response => {
-      return response.json().then(data => {
-        return {
-          status: response.status,
-          data: data.data
+      .then(response => {
+        return response.json().then(data => {
+          return {
+            status: response.status,
+            data: data.data
+          }
+        })
+      })
+      .then(({ status, data }) => {
+        if (status >= 400) {
+          this.setState({ facility_strains: [] })
+        } else {
+          this.setState({ facility_strains: data })
         }
       })
-    })
-    .then(({ status, data }) => {
-      if (status >= 400) {
-        this.setState({ facility_strains: [] })
-      } else {
-        this.setState({ facility_strains: data })
-      }
-    })
   }
 
   render() {
     const { plants: batch_sources, grow_methods } = this.props
-    
+
     return (
       <React.Fragment>
         <div id="toast" className="toast animated toast--success">
@@ -130,18 +130,15 @@ class BatchSetupApp extends React.Component {
             <Select
               options={this.state.facility_strains}
               noOptionsMessage={() => 'Type to search strain...'}
-              getOptionLabel={option => option.attributes.label }
-              getOptionValue={option => option.attributes.id }
+              getOptionLabel={option => option.attributes.label}
+              getOptionValue={option => option.attributes.id}
               onChange={e => this.setState({ facility_strain: e })}
               value={this.state.facility_strain}
               styles={reactSelectStyle}
             />
-            <FieldError
-              errors={this.state.errors}
-              field="facility_strain_id"
-            />
+            <FieldError errors={this.state.errors} field="facility_strain_id" />
           </div>
-          
+
           <div className="w-100">
             <div className="mt3">
               <label

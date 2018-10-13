@@ -47,7 +47,7 @@ class BatchPlantSelectionList extends React.Component {
   }
   render() {
     const { isLoading, plants } = plantStore
-    
+
     const { onEdit, getSelected, onSelectPlant } = this.props
     if (isLoading) {
       return <p className="f6">Loading....</p>

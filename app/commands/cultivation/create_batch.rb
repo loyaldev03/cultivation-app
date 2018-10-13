@@ -1,30 +1,23 @@
 module Cultivation
-  class SaveBatch
+  class CreateBatch
     prepend SimpleCommand
 
-    attr_reader :args
+    attr_reader :user, :args
 
-    def initialize(args)
+    def initialize(user, args)
+      @user = user
       @args = args
     end
 
     def call
-      save_record(@args)
+      if valid_permission? && valid_data?
+        save_record(args)
+      else
+        args
+      end
     end
 
     private
-
-    Constants::CONST_CLONE = 'clone'
-    Constants::CONST_CURE = 'cure'
-    Constants::CONST_DRY = 'dry'
-    Constants::CONST_FLOWER = 'flower'
-    Constants::CONST_MOTHER = 'mother'
-    Constants::CONST_STORAGE = 'storage'
-    Constants::CONST_VAULT = 'vault'
-    Constants::CONST_TRIM = 'trim'
-    Constants::CONST_VEG = 'veg'
-    Constants::CONST_VEG1 = 'veg1'
-    Constants::CONST_VEG2 = 'veg2'
 
     def task_templates
       [
@@ -108,6 +101,8 @@ module Cultivation
         {:phase => Constants::CONST_DRY, :task_category => 'Clean', :name => 'Sweep Floors', :duration => 1, :days_from_start_date => 105, :estimated_hours => 0.5, :no_of_employees => 3, :materials => 'Gloves, Broom', :is_phase => 'false', :is_category => 'false'},
         {:phase => Constants::CONST_DRY, :task_category => 'Waiting', :name => 'Waiting', :duration => 7, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
         {:phase => Constants::CONST_DRY, :task_category => 'Waiting', :name => 'Waiting', :duration => 7, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'},
+
+        # TODO: The following does not match cultivation phases
         {:phase => Constants::CONST_TRIM, :task_category => '', :name => 'TRIM / PACKAGE', :duration => 5, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'true', :is_category => 'false'},
         {:phase => Constants::CONST_TRIM, :task_category => 'Trim', :name => 'Trim', :duration => 2, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
         {:phase => Constants::CONST_TRIM, :task_category => 'Trim', :name => 'Trim', :duration => 2, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'},
@@ -128,10 +123,25 @@ module Cultivation
       ]
     end
 
+    def valid_permission?
+      true
+    end
+
+    def valid_data?
+      errors.add(:facility_strain_id, 'Facility strain is required.') if Inventory::FacilityStrain.find(args[:facility_strain_id]).nil?
+      errors.add(:start_date, 'Start date is required.') if args[:start_date].blank?
+      errors.add(:grow_method, 'Grow method is required.') if args[:grow_method].blank?
+      errors.add(:batch_source, 'Batch source is required.') if args[:batch_source].blank?
+      errors.empty?
+    end
+
     def save_record(args)
       batch = Cultivation::Batch.new(args)
       batch.batch_no = NextFacilityCode.call(:batch, Cultivation::Batch.last.try(:batch_no)).result
+      batch.name = batch.batch_no
+      batch.current_growth_stage = Constants::CONST_CLONE
       batch.save!
+
       phase_id = nil
       category_id = nil
       task_templates.each do |task|

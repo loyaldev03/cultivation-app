@@ -1,7 +1,9 @@
 class Api::V1::StrainsController < Api::V1::BaseApiController
   def index
     strains = if params[:facility_id]
-                Inventory::FacilityStrain.where(facility_id: params[:facility_id]).order(c_at: :desc)
+                Inventory::FacilityStrain.includes(:facility)
+                                         .where(facility_id: params[:facility_id])
+                                         .order(c_at: :desc)
               else
                 Inventory::FacilityStrain.all.includes(:facility).order(c_at: :desc)
               end

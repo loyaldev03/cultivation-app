@@ -11,14 +11,14 @@
       <% if params[:step].present? %>
         <%= react_component 'cultivation/batches_setup/BatchLocationApp',
           {
-            batchId: @record.id.to_s,
-            batchSource: @record.batch_source,
+            batchId: @batch.id.to_s,
+            batchSource: @batch.batch_source,
             plantType: @plant_selection_type,
             locations: @locations
           } %>
       <% else %>
         <div class="fl w-100 flex flex-column">
-          <%= react_component 'cultivation/tasks_setup/TaskSetup', {batch_id: @record.id.to_s, batch: @batch_attributes} %>
+          <%= react_component 'cultivation/tasks_setup/TaskSetup', { batch_id: @batch.id.to_s, batch: @batch_attributes} %>
         </div>
       <% end %>
     </div>

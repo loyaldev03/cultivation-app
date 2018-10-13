@@ -1,18 +1,15 @@
 class Api::V1::BatchesController < Api::V1::BaseApiController
   def index
     batches = Cultivation::Batch.all.order(c_at: :desc)
-    batches_json = BatchSerializer.new(batches).serialized_json
-    render json: batches_json
+    render json: BatchSerializer.new(batches).serialized_json
   end
 
   def create
-    @record = Cultivation::BatchForm.new
-    @record = @record.submit(record_params)
-    if @record
-      batch_json = BatchSerializer.new(@record).serialized_json
-      render json: batch_json
+    command = Cultivation::CreateBatch.call(current_user, record_params)
+    if command.success?
+      render json: BatchSerializer.new(command.result).serialized_json
     else
-      render json: {error: 'Something wrong'}
+      render json: command_errors(record_params, command), status: 422
     end
   end
 
@@ -23,23 +20,31 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     if save_cmd.success?
       render json: {data: 'Ok'}
     else
-      render json: {error: 'Error saving tray plans'}
+      render json: command_errors(batch_params, save_cmd), status: 422
     end
   end
 
   def setup_simple_batch
-    command = Cultivation::SetupSimpleBatch.call(current_user, params[:batch].to_unsafe_h)
+    command = Cultivation::SetupSimpleBatch.call(current_user, batch_params)
     if command.success?
       render json: BatchSerializer.new(command.result).serialized_json
     else
-      render json: params[:batch].to_unsafe_h, status: 422
+      render json: command_errors(batch_params, command), status: 422
     end
   end
 
   private
 
+  def batch_params
+    params[:batch].to_unsafe_h
+  end
+
+  def command_errors(unsafe_params, command)
+    unsafe_params.merge(errors: command.errors)
+  end
+
   def record_params
-    params.require(:batch).permit(:batch_source, :strain_id, :start_date, :grow_method, :facility_id)
+    params.require(:batch).permit(:batch_source, :facility_strain_id, :start_date, :grow_method)
   end
 
   def locations_params

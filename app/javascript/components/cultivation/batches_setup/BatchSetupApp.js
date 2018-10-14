@@ -1,10 +1,9 @@
 import React from 'react'
 import Select from 'react-select'
-import { render } from 'react-dom'
 
-import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import reactSelectStyle from './../../utils/reactSelectStyle'
-import { GroupBox } from './../../utils'
+import { render } from 'react-dom'
+import { reactSelectStyleChip } from './../../utils/reactSelectStyle'
+import { GroupBox, monthsOptions } from './../../utils'
 import { toast } from './../../utils/toast'
 import { TextInput, NumericInput, FieldError } from './../../utils/FormHelpers'
 
@@ -13,7 +12,9 @@ class BatchSetupApp extends React.Component {
     super(props)
     this.state = {
       id: '',
-      plant: '',
+      searchFacility: '',
+      searchSource: '',
+      searchMonth: '',
       facility: '',
       strain: '',
       start_date: '',
@@ -59,20 +60,28 @@ class BatchSetupApp extends React.Component {
     this.setState({ [field]: value })
   }
 
-  handleChangeInput = event => {
-    // console.log(event[0].value)
-    let key = event.target.attributes.fieldname.value
-    let value = event.target.value
+  handleChangeInput = e => {
+    let key = e.target.attributes.fieldname.value
+    let value = e.target.value
     this.setState({ [key]: value })
+  }
+
+  handleSearch = e => {
+    console.log(
+      'Search Params',
+      this.state.searchFacility,
+      this.state.searchSource,
+      this.state.searchMonth
+    )
   }
 
   setDateValue = event => {}
 
   render() {
-    const { plants, strains, facilities, grow_methods } = this.props
-    console.log('plants', plants)
+    const { plantSources, strains, facilities, growMethods } = this.props
+    console.log('plantSources', plantSources)
     return (
-      <div className="fl w-90 w-60-l ma4 pa4 bg-white">
+      <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
         <div id="toast" className="toast" />
         <h5 className="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
         <p className="mt2 body-1 grey">
@@ -80,26 +89,41 @@ class BatchSetupApp extends React.Component {
         </p>
         <GroupBox
           title="Search"
-          className="fl w-100 cultivation-setup-container"
+          className="mt3 fl w-100"
           render={() => (
-            <React.Fragment>
-              <div className="fl w-50 pr3">
-                <label className="subtitle-2 grey db mb1">Batch Source</label>
-                <Select
-                  options={plants}
-                  onChange={e => this.handleChange('plant', e.value)}
-                  styles={reactSelectStyle}
-                />
+            <div className="fl w-100 relative">
+              <div className="fl w-100">
+                <div className="fl w-third pr2">
+                  <label className="subtitle-2 grey db mb1">Facility</label>
+                  <Select
+                    options={facilities}
+                    onChange={e => this.handleChange('searchFacility', e.value)}
+                  />
+                </div>
+                <div className="fl w-third pr2">
+                  <label className="subtitle-2 grey db mb1">Batch Source</label>
+                  <Select
+                    options={plantSources}
+                    onChange={e => this.handleChange('searchSource', e.value)}
+                  />
+                </div>
+                <div className="fl w-20">
+                  <label className="subtitle-2 grey db mb1">Month</label>
+                  <Select
+                    options={monthsOptions()}
+                    onChange={e => this.handleChange('searchMonth', e.value)}
+                  />
+                </div>
+                <div className="fl tr w-20 absolute right-0 bottom-0">
+                  <button
+                    className="btn btn--primary"
+                    onClick={this.handleSearch}
+                  >
+                    Search
+                  </button>
+                </div>
               </div>
-              <div className="fr w-50">
-                <label className="subtitle-2 grey db mb1">Date</label>
-                <Select
-                  options={plants}
-                  onChange={e => this.handleChange('plant', e.value)}
-                  styles={reactSelectStyle}
-                />
-              </div>
-            </React.Fragment>
+            </div>
           )}
         />
       </div>

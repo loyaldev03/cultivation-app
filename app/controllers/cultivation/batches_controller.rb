@@ -3,6 +3,10 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def new
+    @plant_sources = Constants::PLANT_SOURCE_TYPES.map { |a| {value: a[:code], label: a[:name]} }
+    @strains = Inventory::FacilityStrain.all.map { |a| {value: a.id.to_s, label: "#{a.strain_name} (#{a.strain_type})"} },
+    @facilities = Facility.completed.map { |a| {value: a.id.to_s, label: "#{a.name} (#{a.code})"} }
+    @grow_methods = Constants::GROW_MEDIUM.map { |a| {value: a[:code], label: a[:name]} }
   end
 
   # def create

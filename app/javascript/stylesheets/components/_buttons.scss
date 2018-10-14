@@ -1,0 +1,32 @@
+$orange: var(--orange);
+$darkOrange: #FF7F30;
+$white: var(--white);
+
+.btn {
+  display: inline-block;
+  cursor: pointer;
+  outline-color: $darkOrange;
+  height: 38px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.btn--primary {
+  border: 1px solid $orange;
+  background-color: $orange;
+  color: $white;
+}
+
+.btn--primary:hover {
+  background-color: $darkOrange;
+}
+
+.btn--large {
+  height: 46px;
+  font-size: 15px;
+}

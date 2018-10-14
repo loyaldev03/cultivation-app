@@ -50,6 +50,8 @@ class BatchLocationApp extends React.Component {
   }
 
   getSelected = plantId => {
+    // console.log('this.state.selectedPlants')
+    // console.log(this.state.selectedPlants)
     const found = this.state.selectedPlants.find(x => x.id === plantId)
     return found
   }

@@ -36,7 +36,9 @@ Rails.application.routes.draw do
 
   namespace 'materials', as: :materials do
     get '/' => 'materials#index'
-    resources :items, only: [:index, :edit, :update, :new, :create, :destroy]
+    resources :items, only: [:index, :edit, :update, :new, :create, :destroy, :show] do
+      resources :item_transactions, only: [:new, :create]
+    end
     resources :strains, only: [:index, :edit, :update, :new, :create, :destroy]
   end
 
@@ -91,14 +93,12 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       
-      resources :plants do
+      resources :plants, only: [:show] do
         get 'all/(:current_growth_stage)',    action: :all, on: :collection
         get 'search/:current_growth_stage/(:facility_strain_id)/(:search)',    action: :search, on: :collection
         collection do
           post 'setup_mother'
-          post 'setup_clones'
-          post 'setup_vegs'
-          # post 'setup_flowers'
+          post 'setup_plants'
           # post 'setup_harvest_batch'
           # post 'setup_waste'
         end

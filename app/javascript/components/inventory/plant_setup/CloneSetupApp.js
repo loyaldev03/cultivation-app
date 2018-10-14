@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
-import CloneEditor from './components/editor/CloneEditor'
+import PlantEditor from './components/editor/PlantEditor'
 import plantStore from './store/PlantStore'
 import { loadPlants } from './actions/loadPlants'
 
@@ -76,16 +76,15 @@ const columns = [
     filterable: false,
     maxWidth: 45,
     Cell: x => (
-      <a href="#" onClick={event => openStrain(event, x.index)}>
+      <a href="#" onClick={event => openSidebar(event, x.original.id)}>
         <i className="material-icons gray">more_horiz</i>
       </a>
     )
   }
 ]
 
-function openStrain(event, index) {
-  // const id = plantStore.strains.slice()[index].id
-  window.editorSidebar.open({ width: '500px' })
+function openSidebar(event, id) {
+  window.editorSidebar.open({ width: '500px', id })
   event.preventDefault()
 }
 
@@ -101,11 +100,7 @@ class CloneSetupApp extends React.Component {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
-  onAddPlant = () => {
-    this.openSidebar()
-  }
-
-  renderPlantList() {
+  render() {
     return (
       <React.Fragment>
         <div className="w-80 bg-white pa3">
@@ -126,7 +121,7 @@ class CloneSetupApp extends React.Component {
           <ReactTable
             columns={columns}
             pagination={{ position: 'top' }}
-            data={plantStore.clones}
+            data={plantStore.bindablePlants}
             showPagination={false}
             pageSize={30}
             minRows={5}
@@ -135,15 +130,8 @@ class CloneSetupApp extends React.Component {
             showPagination={plantStore.clones.length > 30}
           />
         </div>
-      </React.Fragment>
-    )
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        {this.renderPlantList()}
-        <CloneEditor
+        <PlantEditor
+          growth_stage="clone"
           cultivation_batches={this.props.cultivation_batches}
           locations={this.props.locations}
         />

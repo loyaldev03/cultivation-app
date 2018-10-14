@@ -1,6 +1,6 @@
 class BatchSerializer
   include FastJsonapi::ObjectSerializer
-  attributes :name, :batch_source, :batch_no, :is_active, :start_date, :grow_method
+  attributes :name, :batch_source, :batch_no, :is_active, :start_date, :grow_method, :current_growth_stage
   has_many :tasks, if: Proc.new { |record, params| params.nil? || params[:exclude_tasks] != true }
 
   attribute :facility do |object|
@@ -16,11 +16,11 @@ class BatchSerializer
   end
 
   attribute :facility_id do |object|
-    object.facility_strain.facility_id.to_s
+    object.facility_strain.try(:facility_id).to_s
   end
 
   attribute :strain_name do |object|
-    object.facility_strain.strain_name
+    object.facility_strain.try(:strain_name)
   end
 
   attribute :clone_duration do |object|
@@ -48,8 +48,8 @@ class BatchSerializer
     task ? task.duration : ''
   end
 
-  attribute :harvest_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_HARVEST)
+  attribute :dry_duration do |object|
+    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_DRY)
     task ? task.duration : ''
   end
 
@@ -58,11 +58,15 @@ class BatchSerializer
     task ? task.duration : ''
   end
 
+  attribute :plant_count do |object|
+    object.plants.count
+  end
+
   attribute :value do |object|
     object.id.to_s
   end
 
   attribute :label do |object|
-    "#{object.batch_no} - #{object.name}, #{object.facility_strain.strain_name}"
+    "#{object.batch_no} - #{object.name}, #{object.facility_strain.try(:strain_name)}"
   end
 end

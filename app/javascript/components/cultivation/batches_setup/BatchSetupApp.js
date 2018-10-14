@@ -75,7 +75,9 @@ class BatchSetupApp extends React.Component {
       <div className="fl w-90 w-60-l ma4 pa4 bg-white">
         <div id="toast" className="toast" />
         <h5 className="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
-        <p className="mt2 body-1 grey">Search to display available quantity on specific date.</p>
+        <p className="mt2 body-1 grey">
+          Search to display available quantity on specific date.
+        </p>
         <GroupBox
           title="Search"
           className="fl w-100 cultivation-setup-container"

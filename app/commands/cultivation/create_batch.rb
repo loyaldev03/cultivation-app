@@ -1,30 +1,23 @@
 module Cultivation
-  class SaveBatch
+  class CreateBatch
     prepend SimpleCommand
 
-    attr_reader :args
+    attr_reader :user, :args
 
-    def initialize(args)
+    def initialize(user, args)
+      @user = user
       @args = args
     end
 
     def call
-      save_record(@args)
+      if valid_permission? && valid_data?
+        save_record(args)
+      else
+        args
+      end
     end
 
     private
-
-    Constants::CONST_CLONE = 'clone'
-    Constants::CONST_CURE = 'cure'
-    Constants::CONST_DRY = 'dry'
-    Constants::CONST_FLOWER = 'flower'
-    Constants::CONST_MOTHER = 'mother'
-    Constants::CONST_STORAGE = 'storage'
-    Constants::CONST_VAULT = 'vault'
-    Constants::CONST_TRIM = 'trim'
-    Constants::CONST_VEG = 'veg'
-    Constants::CONST_VEG1 = 'veg1'
-    Constants::CONST_VEG2 = 'veg2'
 
     def task_templates
       [
@@ -90,24 +83,26 @@ module Cultivation
         {:phase => Constants::CONST_FLOWER, :task_category => 'Clean', :name => 'Sweep Floors', :duration => 1, :days_from_start_date => 48, :estimated_hours => 0.1, :no_of_employees => 1, :materials => 'Gloves, Broom', :is_phase => 'false', :is_category => 'false'},
         {:phase => Constants::CONST_FLOWER, :task_category => 'Waiting', :name => 'Waiting', :duration => 56, :days_from_start_date => 48, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
         {:phase => Constants::CONST_FLOWER, :task_category => 'Waiting', :name => 'Waiting', :duration => 56, :days_from_start_date => 48, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => '', :name => 'HARVEST', :duration => 7, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'true', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Cut Down', :name => 'Cut Down', :duration => 1, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Cut Down', :name => 'Cut down', :duration => 1, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Cut Down', :name => 'Remove All Leaves', :duration => 1, :days_from_start_date => 105, :estimated_hours => 3, :no_of_employees => 3, :materials => 'Gloves, Bag', :is_phase => 'false', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Cut Down', :name => 'Cut Limbs', :duration => 1, :days_from_start_date => 105, :estimated_hours => 3, :no_of_employees => 3, :materials => 'Gloves, Cutters, Bags', :is_phase => 'false', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Hang', :name => 'Hang', :duration => 1, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Hang', :name => 'Hang', :duration => 1, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Hang', :name => 'Place Limbs on lines in Dry Room', :duration => 1, :days_from_start_date => 105, :estimated_hours => 4, :no_of_employees => 3, :materials => 'Gloves', :is_phase => 'false', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Clean', :name => 'Clean', :duration => 1, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Clean', :name => 'Clean', :duration => 1, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Clean', :name => 'Discard Used Rockwool and Hosing', :duration => 1, :days_from_start_date => 105, :estimated_hours => 2, :no_of_employees => 3, :materials => 'Gloves, Cutters, Bags', :is_phase => 'false', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Clean', :name => 'Clean Drip Squares', :duration => 1, :days_from_start_date => 105, :estimated_hours => 2, :no_of_employees => 3, :materials => 'Gloves, Water, Hydrogen Peroxide', :is_phase => 'false', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Clean', :name => 'Clean Benches', :duration => 1, :days_from_start_date => 105, :estimated_hours => 2, :no_of_employees => 3, :materials => 'Gloves, Paper Towels', :is_phase => 'false', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Clean', :name => 'Clean Walls', :duration => 1, :days_from_start_date => 105, :estimated_hours => 1, :no_of_employees => 3, :materials => 'Gloves, Paper Towels', :is_phase => 'false', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Clean', :name => 'Clean Floors', :duration => 1, :days_from_start_date => 105, :estimated_hours => 1, :no_of_employees => 3, :materials => 'Gloves, Paper Towels', :is_phase => 'false', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Clean', :name => 'Sweep Floors', :duration => 1, :days_from_start_date => 105, :estimated_hours => 0.5, :no_of_employees => 3, :materials => 'Gloves, Broom', :is_phase => 'false', :is_category => 'false'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Waiting', :name => 'Waiting', :duration => 7, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
-        {:phase => Constants::CONST_HARVEST, :task_category => 'Waiting', :name => 'Waiting', :duration => 7, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => '', :name => 'HARVEST', :duration => 7, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'true', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Cut Down', :name => 'Cut Down', :duration => 1, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Cut Down', :name => 'Cut down', :duration => 1, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Cut Down', :name => 'Remove All Leaves', :duration => 1, :days_from_start_date => 105, :estimated_hours => 3, :no_of_employees => 3, :materials => 'Gloves, Bag', :is_phase => 'false', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Cut Down', :name => 'Cut Limbs', :duration => 1, :days_from_start_date => 105, :estimated_hours => 3, :no_of_employees => 3, :materials => 'Gloves, Cutters, Bags', :is_phase => 'false', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Hang', :name => 'Hang', :duration => 1, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Hang', :name => 'Hang', :duration => 1, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Hang', :name => 'Place Limbs on lines in Dry Room', :duration => 1, :days_from_start_date => 105, :estimated_hours => 4, :no_of_employees => 3, :materials => 'Gloves', :is_phase => 'false', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Clean', :name => 'Clean', :duration => 1, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Clean', :name => 'Clean', :duration => 1, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Clean', :name => 'Discard Used Rockwool and Hosing', :duration => 1, :days_from_start_date => 105, :estimated_hours => 2, :no_of_employees => 3, :materials => 'Gloves, Cutters, Bags', :is_phase => 'false', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Clean', :name => 'Clean Drip Squares', :duration => 1, :days_from_start_date => 105, :estimated_hours => 2, :no_of_employees => 3, :materials => 'Gloves, Water, Hydrogen Peroxide', :is_phase => 'false', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Clean', :name => 'Clean Benches', :duration => 1, :days_from_start_date => 105, :estimated_hours => 2, :no_of_employees => 3, :materials => 'Gloves, Paper Towels', :is_phase => 'false', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Clean', :name => 'Clean Walls', :duration => 1, :days_from_start_date => 105, :estimated_hours => 1, :no_of_employees => 3, :materials => 'Gloves, Paper Towels', :is_phase => 'false', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Clean', :name => 'Clean Floors', :duration => 1, :days_from_start_date => 105, :estimated_hours => 1, :no_of_employees => 3, :materials => 'Gloves, Paper Towels', :is_phase => 'false', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Clean', :name => 'Sweep Floors', :duration => 1, :days_from_start_date => 105, :estimated_hours => 0.5, :no_of_employees => 3, :materials => 'Gloves, Broom', :is_phase => 'false', :is_category => 'false'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Waiting', :name => 'Waiting', :duration => 7, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
+        {:phase => Constants::CONST_DRY, :task_category => 'Waiting', :name => 'Waiting', :duration => 7, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'},
+
+        # TODO: The following does not match cultivation phases
         {:phase => Constants::CONST_TRIM, :task_category => '', :name => 'TRIM / PACKAGE', :duration => 5, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'true', :is_category => 'false'},
         {:phase => Constants::CONST_TRIM, :task_category => 'Trim', :name => 'Trim', :duration => 2, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
         {:phase => Constants::CONST_TRIM, :task_category => 'Trim', :name => 'Trim', :duration => 2, :days_from_start_date => 105, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'},
@@ -128,10 +123,25 @@ module Cultivation
       ]
     end
 
+    def valid_permission?
+      true
+    end
+
+    def valid_data?
+      errors.add(:facility_strain_id, 'Facility strain is required.') if Inventory::FacilityStrain.find(args[:facility_strain_id]).nil?
+      errors.add(:start_date, 'Start date is required.') if args[:start_date].blank?
+      errors.add(:grow_method, 'Grow method is required.') if args[:grow_method].blank?
+      errors.add(:batch_source, 'Batch source is required.') if args[:batch_source].blank?
+      errors.empty?
+    end
+
     def save_record(args)
       batch = Cultivation::Batch.new(args)
       batch.batch_no = NextFacilityCode.call(:batch, Cultivation::Batch.last.try(:batch_no)).result
+      batch.name = batch.batch_no
+      batch.current_growth_stage = Constants::CONST_CLONE
       batch.save!
+
       phase_id = nil
       category_id = nil
       task_templates.each do |task|

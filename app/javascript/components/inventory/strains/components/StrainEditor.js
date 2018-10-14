@@ -8,19 +8,7 @@ import getStrain from '../actions/getStrain'
 export default class StrainEditor extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      id: '',
-      strain_name: '',
-      strain_type: '',
-      facility_id: props.facility_id || '',
-      thc: '',
-      cbd: '',
-      indica_makeup: 0,
-      sativa_makeup: 0,
-      testing_status: 'third_party',
-      errors: {}
-    }
-
+    this.state = this.resetState()
     this.strainPicker = React.createRef()
 
     if (props.facility_id && props.facility_id.length > 0) {
@@ -68,6 +56,21 @@ export default class StrainEditor extends React.Component {
     })
   }
 
+  resetState() {
+    return {
+      id: '',
+      strain_name: '',
+      strain_type: '',
+      facility_id: this.props.facility_id || '',
+      thc: '',
+      cbd: '',
+      indica_makeup: 0,
+      sativa_makeup: 0,
+      testing_status: 'third_party',
+      errors: {}
+    }
+  }
+
   genericOnChange = event => {
     const key = event.target.attributes.fieldname.value
     const value = event.target.value
@@ -100,6 +103,9 @@ export default class StrainEditor extends React.Component {
       return
     }
 
+    // console.log('payload')
+    // console.log(payload)
+
     saveStrain(payload).then(result => {
       // console.log(result)
       if (result.data.errors) {
@@ -114,18 +120,7 @@ export default class StrainEditor extends React.Component {
   }
 
   reset() {
-    this.setState({
-      id: '',
-      strain_name: '',
-      strain_type: '',
-      facility_id: this.props.facility_id || '',
-      thc: '',
-      cbd: '',
-      indica_makeup: 0,
-      sativa_makeup: 0,
-      testing_status: 'third_party',
-      errors: {}
-    })
+    this.setState(this.resetState())
   }
 
   getValues() {
@@ -180,6 +175,7 @@ export default class StrainEditor extends React.Component {
       <React.Fragment>
         <StrainAutoSuggest
           ref={this.strainPicker}
+          key={this.state.strain_name}
           strain_name={this.state.strain_name}
           strain_type={this.state.strain_type}
           onStrainSelected={this.onStrainSelected}
@@ -192,6 +188,7 @@ export default class StrainEditor extends React.Component {
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
               <LocationPicker
+                key={this.state.facility_id}
                 mode="facility"
                 locations={this.props.locations}
                 location_id={this.state.facility_id}

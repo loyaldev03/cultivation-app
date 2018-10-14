@@ -8,5 +8,7 @@ module Cultivation
     field :name, type: String
     field :quantity, type: Integer
     field :uom, type: String
+
+    belongs_to :raw_material, class_name: 'Inventory::RawMaterial'
   end
 end

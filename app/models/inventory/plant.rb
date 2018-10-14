@@ -30,9 +30,7 @@ module Inventory
 
     field :origin_id, type: BSON::ObjectId
     field :origin_type, type: String
-    # field :po_no ?
-    # field :invoice_no ?
-    # field :vendor_id ?
+    field :mother_id, type: BSON::ObjectId
 
     field :wet_weight, type: BigDecimal
     field :wet_weight_unit, type: String

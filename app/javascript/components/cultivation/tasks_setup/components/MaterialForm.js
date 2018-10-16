@@ -79,7 +79,7 @@ export default class MaterialForm extends React.Component {
         raw_material_id: ItemStore.slice().find(e => e.name === value.value).id
       })
     }
-    if (key === 'selectedThirdDropdown'){
+    if (key === 'selectedThirdDropdown') {
       this.setState({
         name: value.value,
         raw_material_id: ItemStore.slice().find(e => e.name === value.value).id

@@ -3,7 +3,10 @@ import plantStore from '../store/PlantStore'
 /**
  * Resets and reload list of plants
  */
-export default function loadPlants(current_growth_stage = '', facility_strain_id = '') {
+export default function loadPlants(
+  current_growth_stage = '',
+  facility_strain_id = ''
+) {
   plantStore.isLoading = true
   let apiUrl = '/api/v1/plants/all'
 

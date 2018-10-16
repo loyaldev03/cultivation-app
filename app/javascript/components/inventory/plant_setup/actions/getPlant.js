@@ -1,6 +1,5 @@
 export default function getPlant(id, includeFields = '') {
   let apiUrl = '/api/v1/plants/' + id
- 
 
   if (includeFields.length > 0) {
     apiUrl += '?include=' + includeFields

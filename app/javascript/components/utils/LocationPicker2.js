@@ -11,8 +11,11 @@ class LocationPicker extends React.Component {
 
     this.mode = props.mode
     const locations = this.filterLocationByFacility(props.facility_id)
-    const selectedLocation = this.findLocation(locations, props.location_id || '')
-    
+    const selectedLocation = this.findLocation(
+      locations,
+      props.location_id || ''
+    )
+
     this.state = {
       location_id: props.location_id || '',
       facility_id: props.facility_id,

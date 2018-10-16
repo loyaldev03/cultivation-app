@@ -10,7 +10,6 @@ import loadUserRoles from './actions/loadUserRoles'
 import loadItems from './actions/loadItems'
 import loadNutrientProfile from './actions/loadNutrientProfile'
 
-
 import TaskList from './components/TaskList'
 import GanttChartList from './components/GanttChartList'
 import IssuesList from './components/IssuesList'

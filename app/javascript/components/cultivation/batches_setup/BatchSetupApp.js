@@ -7,11 +7,20 @@ import { GroupBox, monthsOptions } from './../../utils'
 import { toast } from './../../utils/toast'
 import { TextInput, NumericInput, FieldError } from './../../utils/FormHelpers'
 
+const ValidationMessage = ({ enable, show, text }) => {
+  if (enable && show) {
+    return <span className="red f7 absolute">{text}</span>
+  } else {
+    return null
+  }
+}
+
 class BatchSetupApp extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       id: '',
+      showValidation: false,
       searchFacility: '',
       searchSource: '',
       searchMonth: '',
@@ -67,6 +76,7 @@ class BatchSetupApp extends React.Component {
   }
 
   handleSearch = e => {
+    this.setState({ showValidation: true })
     console.log(
       'Search Params',
       this.state.searchFacility,
@@ -99,6 +109,11 @@ class BatchSetupApp extends React.Component {
                     options={facilities}
                     onChange={e => this.handleChange('searchFacility', e.value)}
                   />
+                  <ValidationMessage
+                    text="Select Facility"
+                    enable={this.state.showValidation}
+                    show={!this.state.searchFacility}
+                  />
                 </div>
                 <div className="fl w-third pr2">
                   <label className="subtitle-2 grey db mb1">Batch Source</label>
@@ -106,12 +121,22 @@ class BatchSetupApp extends React.Component {
                     options={plantSources}
                     onChange={e => this.handleChange('searchSource', e.value)}
                   />
+                  <ValidationMessage
+                    text="Select Batch Srouce"
+                    enable={this.state.showValidation}
+                    show={!this.state.searchSource}
+                  />
                 </div>
                 <div className="fl w-20">
                   <label className="subtitle-2 grey db mb1">Month</label>
                   <Select
                     options={monthsOptions()}
                     onChange={e => this.handleChange('searchMonth', e.value)}
+                  />
+                  <ValidationMessage
+                    text="Select Month"
+                    enable={this.state.showValidation}
+                    show={!this.state.searchMonth}
                   />
                 </div>
                 <div className="fl tr w-20 absolute right-0 bottom-0">

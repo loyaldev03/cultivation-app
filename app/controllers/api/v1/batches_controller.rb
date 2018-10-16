@@ -43,7 +43,7 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def search_tray_plans
-    month_str = params['search_month'] # '10-2018'
+    month_str = params['search_month'] # E.g. '10-2018' (Format => MM-YYYY)
     if month_str.present? && month_str.length >= 6 && month_str.index('-') >= 1
       month_start, month_end = get_month_start_end_date(month_str)
       command = QueryPlannedTrays.call(

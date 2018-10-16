@@ -3,7 +3,7 @@ import Select from 'react-select'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import { render } from 'react-dom'
 import { reactSelectStyleChip } from './../../utils/reactSelectStyle'
-import { GroupBox, monthsOptions, monthOptionToString } from './../../utils'
+import { GroupBox, monthsOptions, monthOptionToString, monthStartDate } from './../../utils'
 import { toast } from './../../utils/toast'
 import { TextInput, NumericInput, FieldError } from './../../utils/FormHelpers'
 
@@ -66,6 +66,7 @@ class BatchSetupApp extends React.Component {
   }
 
   handleChange = (field, value) => {
+    console.log('value:', value)
     this.setState({ [field]: value })
   }
 
@@ -83,35 +84,32 @@ class BatchSetupApp extends React.Component {
       this.state.searchSource,
       this.state.searchMonth
     )
+
+    const { searchFacility, searchMonth, searchSource } = this.state
+
+    if (searchFacility && searchSource && searchMonth) {
+      // TODO: Performa API calls
+    } else {
+      console.log('missing param')
+    }
   }
 
   handleDatePick = date => {
     console.log('DatePicker picked', date)
   }
 
-  formatMonthYear = value => {
-    if (value) {
-      const datePart = value.split('-')
-      return new Date(datePart[1], datePart[0] - 1, 1).toString()
-    } else {
-      return ''
-    }
-  }
-
   renderDateTile = ({ date, view }) => {
     if (view === 'month' && date.getDay() === 0) {
-      return <span class="react-calendar__tile__content">168</span>
+      return <span className="react-calendar__tile__content">168</span>
     } else {
-      return <span class="react-calendar__tile__content">58</span>
+      return <span className="react-calendar__tile__content">58</span>
     }
   }
-
-  setDateValue = event => {}
 
   render() {
     const { plantSources, strains, facilities, growMethods } = this.props
     const { searchMonth } = this.state
-    console.log('plantSources', plantSources)
+    console.log('monthOptionToString', monthOptionToString(searchMonth))
     return (
       <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
         <div id="toast" className="toast" />
@@ -180,6 +178,7 @@ class BatchSetupApp extends React.Component {
                 {monthOptionToString(searchMonth)}
               </span>
               <Calendar
+                activeStartDate={monthStartDate(searchMonth)}
                 className="availabilty-calendar"
                 showNavigation={false}
                 onChange={this.handleDatePick}

@@ -68,6 +68,8 @@ class PlantEditor extends React.Component {
                 invoice_no: invoice.attributes.invoice_no,
                 purchase_order_no: invoice.attributes.purchase_order_no
               }
+
+              console.log(invoice_attr)
             }
 
             const vendor = included.find(x => x.type === 'vendor')
@@ -110,6 +112,7 @@ class PlantEditor extends React.Component {
               strain_name: batch.strain_name,
               start_date: new Date(batch.start_date),
               facility: batch.facility,
+              batch_source: batch.batch_source,
               isBought: batch.batch_source === 'clones_purchased',
 
               // relationships
@@ -356,6 +359,7 @@ class PlantEditor extends React.Component {
           }
           purchase_date={this.state.purchase_date}
           invoice_no={this.state.invoice_no}
+          purchase_order_no={this.state.purchase_order_no}
         />
       </React.Fragment>
     )
@@ -505,7 +509,7 @@ class PlantEditor extends React.Component {
           <div className="ph4 mt3 flex">
             <div className="w-100">
               <LocationPicker
-                key={this.state.location_id}
+                key={`${this.state.facility_id}.${this.state.location_id}`}
                 mode={this.props.growth_stage}
                 facility_id={this.state.facility_id}
                 onChange={this.onLocationChanged}

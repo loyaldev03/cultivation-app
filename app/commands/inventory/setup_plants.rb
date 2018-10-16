@@ -20,6 +20,7 @@ module Inventory
       :vendor_name,
       :vendor_no,
       :invoice_no,
+      :purchase_order_no,
       :address,
       :vendor_state_license_num,
       :vendor_state_license_expiration_date,
@@ -48,6 +49,7 @@ module Inventory
       @vendor_location_license_num = args[:vendor_location_license_num]
       @purchase_date = args[:purchase_date]
       @invoice_no = args[:invoice_no]
+      @purchase_order_no = args[:purchase_order_no]
       @batch = Cultivation::Batch.find(args[:cultivation_batch_id])
     end
 
@@ -130,7 +132,7 @@ module Inventory
           vendor = save_vendor(vendor_id)
 
           # Rails.logger.debug "\t\t\t\t>> Creating new invoice, vendor_id: #{vendor_id}"
-          create_invoice([plant], vendor, invoice_no, purchase_date)
+          create_invoice([plant], vendor, invoice_no, purchase_date, purchase_order_no)
         else
           invoice = Inventory::VendorInvoice.find(plant.vendor_invoice_id)
           # Rails.logger.debug "\t\t\t\t>> Updating existing invoice?: #{invoice.id.to_s}"
@@ -143,7 +145,7 @@ module Inventory
     end
 
     def update_invoice(invoice)
-      command = Inventory::SavePlantInvoice.call(user, [], invoice.vendor, invoice.invoice_no, purchase_date)
+      command = Inventory::SavePlantInvoice.call(user, [], invoice.vendor, invoice.invoice_no, purchase_date, purchase_order_no)
       unless command.success?
         combine_errors(command.errors, :errors, :plant_ids)
       end
@@ -173,7 +175,7 @@ module Inventory
         vendor_id = vendor ? vendor.id : nil
 
         vendor = save_vendor(vendor_id)
-        create_invoice(plants, vendor, invoice_no, purchase_date)
+        create_invoice(plants, vendor, invoice_no, purchase_date, purchase_order_no)
       end
 
       plants
@@ -206,8 +208,8 @@ module Inventory
       end
     end
 
-    def create_invoice(plants, vendor, invoice_no, purchase_date)
-      command = Inventory::SavePlantInvoice.call(user, plants, vendor, invoice_no, purchase_date)
+    def create_invoice(plants, vendor, invoice_no, purchase_date, purchase_order_no)
+      command = Inventory::SavePlantInvoice.call(user, plants, vendor, invoice_no, purchase_date, purchase_order_no)
       unless command.success?
         combine_errors(command.errors, :errors, :plant_ids)
       end

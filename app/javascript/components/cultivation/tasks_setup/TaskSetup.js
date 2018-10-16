@@ -221,35 +221,35 @@ class TaskSetup extends React.Component {
             onClick={e => handleChangeTabs('task_list')}
           >
             Tasks List
-                </a>
+          </a>
 
           <a
             className={renderTabsClass('gantt_chart')}
             onClick={e => handleChangeTabs('gantt_chart')}
           >
             Gantt Chart
-                </a>
+          </a>
 
           <a
             className={renderTabsClass('issues')}
             onClick={e => handleChangeTabs('issues')}
           >
             Issues
-                </a>
+          </a>
 
           <a
             className={renderTabsClass('secret_sauce')}
             onClick={e => handleChangeTabs('secret_sauce')}
           >
             Secret Sauce
-                </a>
+          </a>
 
           <a
             className={renderTabsClass('resource')}
             onClick={e => handleChangeTabs('resource')}
           >
             Resource
-                </a>
+          </a>
         </div>
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">

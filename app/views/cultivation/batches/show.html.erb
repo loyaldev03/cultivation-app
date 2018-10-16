@@ -16,6 +16,10 @@
             plantType: @plant_selection_type,
             locations: @locations
           } %>
+
+        <p>
+          <%= link_to 'Skip this (temp)', cultivation_batch_path(params[:id]), class: 'link' %>
+        </p>
       <% else %>
         <div class="fl w-100 flex flex-column">
           <%= react_component 'cultivation/tasks_setup/TaskSetup', { batch_id: @batch.id.to_s, batch: @batch_attributes} %>

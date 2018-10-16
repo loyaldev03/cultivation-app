@@ -20,7 +20,7 @@ class Cultivation::BatchesController < ApplicationController
     @batch_attributes = {
       id: @record.id.to_s,
       batch_no: @record.batch_no.to_s,
-      strain: @record.strain_id.to_s,
+      strain: Common::Strain.find(@record.strain_id.to_s).try(:name),
       batch_source: @record.batch_source,
       grow_method: @record.grow_method,
       start_date: @record.start_date.try(:strftime, '%m/%d/%Y'),

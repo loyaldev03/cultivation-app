@@ -125,7 +125,7 @@ class BatchSetupApp extends React.Component {
               className="f6 fw6 db mb1 gray ttc"
               htmlFor="record_batch_source"
             >
-              Select Facility
+              Select Strain
             </label>
             <Select
               options={this.state.facility_strains}

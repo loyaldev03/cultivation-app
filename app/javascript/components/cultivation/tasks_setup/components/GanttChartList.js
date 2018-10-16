@@ -12,15 +12,12 @@ class GanttChartList extends React.Component {
     }
   }
 
-
-  render(){
-    return(
-      <React.Fragment >
+  render() {
+    return (
+      <React.Fragment>
         <h1>Gantt Chart Here</h1>
-      </React.Fragment >
-
+      </React.Fragment>
     )
-
   }
 }
 

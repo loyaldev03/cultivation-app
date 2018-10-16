@@ -12,15 +12,12 @@ class ResourceList extends React.Component {
     }
   }
 
-
   render() {
     return (
-      <React.Fragment >
+      <React.Fragment>
         <h1>Resource List Here</h1>
-      </React.Fragment >
-
+      </React.Fragment>
     )
-
   }
 }
 

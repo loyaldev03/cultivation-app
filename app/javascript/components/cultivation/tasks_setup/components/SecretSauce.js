@@ -13,10 +13,9 @@ class SecretSauce extends React.Component {
     }
   }
 
-
   render() {
     return (
-      <React.Fragment >
+      <React.Fragment>
         <div class="ba b--light-gray pa3">
           <h4 class="gray f6">Below is the Optimal Nutrient Profile</h4>
           <div class="flex">
@@ -305,17 +304,11 @@ class SecretSauce extends React.Component {
                   />
                 </div>
               </div>
-
-              
             </div>
-
           </div>
-
         </div>
-      </React.Fragment >
-
+      </React.Fragment>
     )
-
   }
 }
 

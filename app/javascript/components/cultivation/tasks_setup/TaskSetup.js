@@ -16,7 +16,7 @@ import ResourceList from './components/ResourceList'
 import SecretSauce from './components/SecretSauce'
 
 class TaskSetup extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       batch: props.batch,
@@ -31,42 +31,54 @@ class TaskSetup extends React.Component {
     loadItems()
   }
 
-  handleChangeTabs = (value) => {
-    this.setState({tabs: value})
+  handleChangeTabs = value => {
+    this.setState({ tabs: value })
   }
 
   renderBatchInfo() {
-    if (this.state.tabs === 'task_list'){
-      return (<TaskList batch_id={this.props.batch_id} batch={this.props.batch} />)  
+    if (this.state.tabs === 'task_list') {
+      return (
+        <TaskList batch_id={this.props.batch_id} batch={this.props.batch} />
+      )
     }
     if (this.state.tabs === 'gantt_chart') {
-      return (<GanttChartList batch_id={this.props.batch_id} batch={this.props.batch} />)
+      return (
+        <GanttChartList
+          batch_id={this.props.batch_id}
+          batch={this.props.batch}
+        />
+      )
     }
     if (this.state.tabs === 'issues') {
-      return (<IssuesList batch_id={this.props.batch_id} batch={this.props.batch} />)
+      return (
+        <IssuesList batch_id={this.props.batch_id} batch={this.props.batch} />
+      )
     }
     if (this.state.tabs === 'secret_sauce') {
-      return (<SecretSauce batch_id={this.props.batch_id} batch={this.props.batch} />)
+      return (
+        <SecretSauce batch_id={this.props.batch_id} batch={this.props.batch} />
+      )
     }
     if (this.state.tabs === 'resource') {
-      return (<ResourceList batch_id={this.props.batch_id} batch={this.props.batch} />)
+      return (
+        <ResourceList batch_id={this.props.batch_id} batch={this.props.batch} />
+      )
     }
   }
 
-  renderTabsClass = (value)=>{
+  renderTabsClass = value => {
     if (this.state.tabs === value) {
-      return "link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white"
-    }else{
-      return "link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white"
+      return 'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
+    } else {
+      return 'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
     }
   }
-    
+
   render() {
     let handleChangeTabs = this.handleChangeTabs
     let renderTabsClass = this.renderTabsClass
     return (
       <React.Fragment>
-
         <div className=" flex">
           <div className="w-40">
             <h4 className="tl pa0 ma0 h6--font dark-grey">
@@ -198,36 +210,40 @@ class TaskSetup extends React.Component {
           </div>
         </div>
         <div className="flex mb3">
-          <a 
-            className={renderTabsClass('task_list')} 
-            onClick={e => handleChangeTabs('task_list')}>
+          <a
+            className={renderTabsClass('task_list')}
+            onClick={e => handleChangeTabs('task_list')}
+          >
             Tasks List
           </a>
 
-          <a 
-            className={renderTabsClass('gantt_chart')} 
-            onClick={e => handleChangeTabs('gantt_chart')}>
+          <a
+            className={renderTabsClass('gantt_chart')}
+            onClick={e => handleChangeTabs('gantt_chart')}
+          >
             Gantt Chart
           </a>
 
-          <a 
-            className={renderTabsClass('issues')} 
-            onClick={e => handleChangeTabs('issues')}>
+          <a
+            className={renderTabsClass('issues')}
+            onClick={e => handleChangeTabs('issues')}
+          >
             Issues
           </a>
 
-          <a 
-            className={renderTabsClass('secret_sauce')} 
-            onClick={e => handleChangeTabs('secret_sauce')}>
+          <a
+            className={renderTabsClass('secret_sauce')}
+            onClick={e => handleChangeTabs('secret_sauce')}
+          >
             Secret Sauce
           </a>
 
-          <a 
-            className={renderTabsClass('resource')} 
-            onClick={e => handleChangeTabs('resource')}>
+          <a
+            className={renderTabsClass('resource')}
+            onClick={e => handleChangeTabs('resource')}
+          >
             Resource
           </a>
-
         </div>
 
         {this.renderBatchInfo()}

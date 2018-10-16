@@ -79,6 +79,12 @@ export default class MaterialForm extends React.Component {
         raw_material_id: ItemStore.slice().find(e => e.name === value.value).id
       })
     }
+    if (key === 'selectedThirdDropdown'){
+      this.setState({
+        name: value.value,
+        raw_material_id: ItemStore.slice().find(e => e.name === value.value).id
+      })
+    }
   }
 
   handleChange = (key, value) => {
@@ -204,7 +210,7 @@ export default class MaterialForm extends React.Component {
     let handleDelete = this.handleDelete
     return (
       <React.Fragment>
-        <div className="ba b--light-gray ml4 mr4 mt4">
+        <div className="">
           <div className="ph4 mt3 flex">
             <div className="w-100">
               {/* {JSON.stringify(subcategory_dropdown['Potassium'])} */}

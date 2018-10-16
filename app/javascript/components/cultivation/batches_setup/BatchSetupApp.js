@@ -85,16 +85,24 @@ class BatchSetupApp extends React.Component {
     )
   }
 
-  handleDatePick = (date) => {
+  handleDatePick = date => {
     console.log('DatePicker picked', date)
   }
 
-  formatMonthYear = (value) => {
+  formatMonthYear = value => {
     if (value) {
-      const datePart = value.split("-")
-      return (new Date(datePart[1], datePart[0]-1, 1)).toString()
+      const datePart = value.split('-')
+      return new Date(datePart[1], datePart[0] - 1, 1).toString()
     } else {
-      return ""
+      return ''
+    }
+  }
+
+  renderDateTile = ({ date, view }) => {
+    if (view === 'month' && date.getDay() === 0) {
+      return <span class="react-calendar__tile__content">168</span>
+    } else {
+      return <span class="react-calendar__tile__content">58</span>
     }
   }
 
@@ -166,16 +174,19 @@ class BatchSetupApp extends React.Component {
           )}
         />
         <div className="fl w-100 mt3">
-          { this.state.searchMonth &&
+          {this.state.searchMonth && (
             <div className="fl w-100">
-              <span className="availabilty-calendar-title">{monthOptionToString(searchMonth)}</span>
+              <span className="availabilty-calendar-title">
+                {monthOptionToString(searchMonth)}
+              </span>
               <Calendar
                 className="availabilty-calendar"
                 showNavigation={false}
                 onChange={this.handleDatePick}
+                tileContent={this.renderDateTile}
               />
             </div>
-          }
+          )}
         </div>
       </div>
     )

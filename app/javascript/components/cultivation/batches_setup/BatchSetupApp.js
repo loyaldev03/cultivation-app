@@ -45,9 +45,7 @@ class BatchSetupApp extends React.Component {
       searchSource: '',
       searchMonth: '',
       selectedDate: '',
-      facility: '',
       strain: '',
-      start_date: '',
       grow_method: '',
       isLoading: false
     }
@@ -75,10 +73,10 @@ class BatchSetupApp extends React.Component {
       method: 'POST',
       credentials: 'include',
       body: JSON.stringify({
-        batch_source: this.state.plant,
-        facility_id: this.state.facility,
+        batch_source: this.state.searchSource,
+        facility_id: this.state.searchFacility,
         strain_id: this.state.strain,
-        start_date: this.state.start_date.toDateString(),
+        start_date: this.state.selectedDate.toDateString(),
         grow_method: this.state.grow_method
       }),
       headers: {
@@ -127,6 +125,7 @@ class BatchSetupApp extends React.Component {
 
   render() {
     const { plantSources, strains, facilities, growMethods } = this.props
+    console.log(facilities)
     const {
       showValidation,
       searchFacility,
@@ -216,7 +215,12 @@ class BatchSetupApp extends React.Component {
         </div>
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body h-100">
-            <BatchSetupEditor date={selectedDate} />
+            <BatchSetupEditor
+              strains={strains}
+              growMethods={growMethods}
+              date={selectedDate}
+              onChange={this.handleChange}
+            />
           </div>
         </div>
       </div>

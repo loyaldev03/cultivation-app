@@ -4,11 +4,17 @@ import Select from 'react-select'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import { render } from 'react-dom'
 import { reactSelectStyleChip } from './../../utils/reactSelectStyle'
-import { GroupBox, monthsOptions, monthOptionToString, monthStartDate } from './../../utils'
+import {
+  GroupBox,
+  monthsOptions,
+  monthOptionToString,
+  monthStartDate
+} from './../../utils'
 import { toast } from './../../utils/toast'
 import { TextInput, NumericInput, FieldError } from './../../utils/FormHelpers'
 import batchSetupStore from './BatchSetupStore'
 import { observer } from 'mobx-react'
+import BatchSetupEditor from './BatchSetupEditor'
 
 @observer
 class CapacityTile extends React.Component {
@@ -38,6 +44,7 @@ class BatchSetupApp extends React.Component {
       searchFacility: '',
       searchSource: '',
       searchMonth: '',
+      selectedDate: '',
       facility: '',
       strain: '',
       start_date: '',
@@ -47,7 +54,18 @@ class BatchSetupApp extends React.Component {
   }
 
   componentDidMount() {
-    // loadTasks.loadbatch(this.props.batch_id)
+    // Setup sidebar editor
+    window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
+  }
+
+  closeSidebar = () => {
+    window.editorSidebar.close()
+  }
+
+  handleDatePick = date => {
+    console.log('DatePicker picked', date)
+    this.setState({ selectedDate: date })
+    window.editorSidebar.open({ width: '500px' })
   }
 
   handleSubmit = event => {
@@ -105,17 +123,17 @@ class BatchSetupApp extends React.Component {
     }
   }
 
-  handleDatePick = date => {
-    console.log('DatePicker picked', date)
-  }
-
-  renderDateTile = ({ date, view }) => (
-    <CapacityTile date={date} />
-  )
+  renderDateTile = ({ date, view }) => <CapacityTile date={date} />
 
   render() {
     const { plantSources, strains, facilities, growMethods } = this.props
-    const { showValidation, searchFacility, searchSource, searchMonth } = this.state
+    const {
+      showValidation,
+      searchFacility,
+      searchSource,
+      searchMonth,
+      selectedDate
+    } = this.state
     return (
       <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
         <div id="toast" className="toast" />
@@ -157,7 +175,9 @@ class BatchSetupApp extends React.Component {
                   <label className="subtitle-2 grey db mb1">Month</label>
                   <Select
                     options={monthsOptions(new Date(2018, 1, 1), 18)}
-                    onChange={e => this.handleChangeMonth('searchMonth', e.value)}
+                    onChange={e =>
+                      this.handleChangeMonth('searchMonth', e.value)
+                    }
                   />
                   <ValidationMessage
                     text="Select Month"
@@ -178,20 +198,26 @@ class BatchSetupApp extends React.Component {
           )}
         />
         <div className="fl w-100 mt3">
-          {showValidation && searchMonth && (
-            <div className="fl w-100">
-              <span className="availabilty-calendar-title">
-                {monthOptionToString(searchMonth)}
-              </span>
-              <Calendar
-                activeStartDate={monthStartDate(searchMonth)}
-                className="availabilty-calendar"
-                showNavigation={false}
-                onChange={this.handleDatePick}
-                tileContent={this.renderDateTile}
-              />
-            </div>
-          )}
+          {showValidation &&
+            searchMonth && (
+              <div className="fl w-100">
+                <span className="availabilty-calendar-title">
+                  {monthOptionToString(searchMonth)}
+                </span>
+                <Calendar
+                  activeStartDate={monthStartDate(searchMonth)}
+                  className="availabilty-calendar"
+                  showNavigation={false}
+                  onChange={this.handleDatePick}
+                  tileContent={this.renderDateTile}
+                />
+              </div>
+            )}
+        </div>
+        <div data-role="sidebar" className="rc-slide-panel">
+          <div className="rc-slide-panel__body h-100">
+            <BatchSetupEditor date={selectedDate} />
+          </div>
         </div>
       </div>
     )

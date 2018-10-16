@@ -27,3 +27,7 @@ export const monthStartDate = monthOptionStr => {
   const datePart = monthOptionStr.split("-")
   return new Date(datePart[1], datePart[0]-1, 1)
 }
+
+export const formatDate = date => {
+  return format(date, 'MMM dd, YYYY', { awareOfUnicodeTokens: true })
+}

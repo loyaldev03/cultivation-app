@@ -3,7 +3,11 @@ class Api::V1::ItemsController < Api::V1::BaseApiController
 
   def index
     nutrient_profile = @batch.nutrient_profile
-    @nutrients = nutrient_profile.nutrients
+    nutrients = nutrient_profile.try(:nutrients)
+    options = {}
+    options[:is_collection]
+    nutrients_json = NutrientSerializer.new(nutrients, options).serialized_json
+    render json: nutrients_json
   end
 
   private

@@ -10,36 +10,37 @@ class LocationPicker extends React.Component {
     super(props)
 
     this.mode = props.mode
-    this.locations = props.locations
-    window.locs = props.locations
-
+    const locations = this.filterLocationByFacility(props.facility_id)
+    const selectedLocation = this.findLocation(locations, props.location_id || '')
+    
     this.state = {
       location_id: props.location_id || '',
       facility_id: props.facility_id,
-      locations: this.filterLocationByFacility(props.facility_id)
+      locations: locations,
+      selectedLocation: selectedLocation
     }
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    let hasNewState = false
-    let newState = {}
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   let hasNewState = false
+  //   let newState = {}
 
-    if (nextProps.location_id !== prevState.location_id) {
-      newState = { location_id: nextProps.location_id }
-      hasNewState = true
-    }
+  //   if (nextProps.location_id !== prevState.location_id) {
+  //     newState = { location_id: nextProps.location_id }
+  //     hasNewState = true
+  //   }
 
-    if (nextProps.facility_id !== prevState.facility_id) {
-      newState = { ...newState, facility_id: nextProps.facility_id }
-      hasNewState = true
-    }
+  //   if (nextProps.facility_id !== prevState.facility_id) {
+  //     newState = { ...newState, facility_id: nextProps.facility_id }
+  //     hasNewState = true
+  //   }
 
-    if (hasNewState) {
-      return newState
-    }
+  //   if (hasNewState) {
+  //     return newState
+  //   }
 
-    return null
-  }
+  //   return null
+  // }
 
   isFacilityOnly(item) {
     return item.f_id.length > 0 && item.rm_id.length <= 0
@@ -181,13 +182,9 @@ class LocationPicker extends React.Component {
     this.setState({ value: { value: item.value, label: item.label } })
   }
 
-  get selectedLocation() {
-    return this.findLocation(this.state.locations, this.state.location_id)
-  }
-
-  get filteredLocations() {
-    return this.filterLocationByFacility(this.state.facility_id)
-  }
+  // get filteredLocations() {
+  //   return this.filterLocationByFacility(this.state.facility_id)
+  // }
 
   get label() {
     if (this.mode === 'clone') {
@@ -217,9 +214,9 @@ class LocationPicker extends React.Component {
           key={this.state.facility_id}
           styles={reactSelectStyle}
           placeholder="Search location within your facility"
-          options={this.filteredLocations}
+          options={this.state.locations}
           onChange={this.onChange}
-          value={this.selectedLocation}
+          value={this.state.selectedLocation}
           filterOption={(option, input) => {
             const words = input.toLowerCase().split(/\s/)
             return words.every(x => option.label.toLowerCase().indexOf(x) >= 0)

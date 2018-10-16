@@ -47,6 +47,7 @@ module Inventory
       @vendor_location_license_expiration_date = args[:vendor_location_license_expiration_date]
       @vendor_location_license_num = args[:vendor_location_license_num]
       @purchase_date = args[:purchase_date]
+      @invoice_no = args[:invoice_no]
       @batch = Cultivation::Batch.find(args[:cultivation_batch_id])
     end
 
@@ -95,7 +96,7 @@ module Inventory
     end
 
     def is_purchased?
-      batch.current_growth_stage == 'clones_purchased'
+      batch.batch_source == 'clones_purchased'
     end
 
     def update_plant
@@ -103,7 +104,7 @@ module Inventory
       growth_stage = batch.current_growth_stage
       plant = Inventory::Plant.find(id)
 
-      plant.update!(
+      result = plant.update!(
         plant_id: plant_ids[0],
         facility_strain_id: facility_strain_id,
         cultivation_batch_id: cultivation_batch_id,
@@ -114,10 +115,28 @@ module Inventory
         mother_id: mother_id,
       )
 
+      # TODO: Section below to be replaced by invoice_id when user select existing invoice
+      # If new invoice, it may have vendor id
+      # if no vendor id, then take all fields to create vendor & invoice.
+
+      # Rails.logger.debug "\t\t\t\t>> Updating plant result: location_id: #{location_id}"
+      # Rails.logger.debug "\t\t\t\t>> Updating plant result: #{result}"
+
       if is_purchased?
-        invoice = Inventory::VendorInvoice.find(plant.origin_id)
-        save_vendor(invoice.vendor_id)
-        update_invoice(invoice)
+        if plant.vendor_invoice_id.blank?
+          # Rails.logger.debug "\t\t\t\t>> Creating new invoice: #{vendor_name}, invoice_no: #{invoice_no}"
+          vendor = Inventory::Vendor.find_by(name: vendor_name)
+          vendor_id = vendor ? vendor.id : nil
+          vendor = save_vendor(vendor_id)
+
+          # Rails.logger.debug "\t\t\t\t>> Creating new invoice, vendor_id: #{vendor_id}"
+          create_invoice([plant], vendor, invoice_no, purchase_date)
+        else
+          invoice = Inventory::VendorInvoice.find(plant.vendor_invoice_id)
+          # Rails.logger.debug "\t\t\t\t>> Updating existing invoice?: #{invoice.id.to_s}"
+          save_vendor(invoice.vendor_id)
+          update_invoice(invoice)
+        end
       end
 
       plant

@@ -5,15 +5,15 @@ module Inventory
 
     field :invoice_no, type: String
     field :total_amount, type: BigDecimal
-    field :plants, type: Array
     field :status, type: String
     field :purchase_date, type: DateTime
+    field :purchase_order_no, type: String
 
     # has_many :item_articles
     # has_many :items
 
     belongs_to :vendor, class_name: 'Inventory::Vendor'
-    # has_many   :plants, class_name: 'Inventory::Plant'
+    has_many :plants, class_name: 'Inventory::Plant'
 
     # TODO: This is missing or to be added...
     # An invoice

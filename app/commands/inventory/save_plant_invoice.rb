@@ -23,13 +23,9 @@ module Inventory
       Rails.logger.debug "\t\t\t>>> vendor: #{vendor}"
       invoice = Inventory::VendorInvoice.find_or_create_by!(vendor: vendor, invoice_no: invoice_no)
       invoice.purchase_date = purchase_date
-
-      plants.each do |plant|
-        plant.origin_id = invoice.id
-        plant.origin_type = 'Inventory::VendorInvoice'
-        plant.save!
-      end
-
+      invoice.plants.concat(plants)
+      # invoice.purchase_order_no = ''
+      invoice.save!
       invoice
     end
   end

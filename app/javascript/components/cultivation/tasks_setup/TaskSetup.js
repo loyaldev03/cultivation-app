@@ -8,6 +8,8 @@ import loadTasks from './actions/loadTask'
 import loadUsers from './actions/loadUsers'
 import loadUserRoles from './actions/loadUserRoles'
 import loadItems from './actions/loadItems'
+import loadNutrientProfile from './actions/loadNutrientProfile'
+
 
 import TaskList from './components/TaskList'
 import GanttChartList from './components/GanttChartList'
@@ -29,6 +31,7 @@ class TaskSetup extends React.Component {
     loadUsers()
     loadUserRoles()
     loadItems()
+    loadNutrientProfile(this.props.batch.nutrient_profile)
   }
 
   handleChangeTabs = value => {

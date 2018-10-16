@@ -1,4 +1,17 @@
-import { observable } from 'mobx'
+import { observable, action } from 'mobx'
 
-const nutrients = observable([])
-export default nutrients
+class NutrientProfileStore {
+  nutrients = observable([])
+  id = ''
+
+  @action
+  load(nutrientProfile) {
+    this.nutrients.replace(nutrientProfile.nutrients)
+    this.id.replace(nutrientProfile.id)
+    console.log(this.id)
+    console.log(this.nutrients)
+  }
+}
+
+const nutrientProfileStore = new NutrientProfileStore()
+export default nutrientProfileStore

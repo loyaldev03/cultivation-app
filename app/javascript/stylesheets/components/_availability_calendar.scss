@@ -1,0 +1,37 @@
+.react-calendar.availabilty-calendar {
+
+  border: solid 1px var(--light-gray);
+
+  .react-calendar__month-view__weekdays {
+    color: gray;
+    font-size: 1.1em;
+    font-weight: 600;
+  }
+
+  .react-calendar__month-view__weekdays__weekday {
+    padding: 0.6em;
+    text-align: center;
+  }
+
+  .react-calendar__tile {
+    height: 64px;
+    width: 102px;
+    border-top: solid 0.01em var(--light-gray);
+    border-left: solid 0.01em var(--light-gray);
+  }
+  .react-calendar__tile:nth-child(7n+1) {
+    border-left: none;
+  }
+
+  .react-calendar__month-view__days__day {
+    position: relative;
+    text-align: center;
+    time {
+      padding: 1px;
+      color: var(--gray);
+      position: absolute;
+      left: 2px;
+      top: 1px;
+    }
+  }
+}

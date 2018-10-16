@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-
+import Calendar from 'react-calendar/dist/entry.nostyle'
 import { render } from 'react-dom'
 import { reactSelectStyleChip } from './../../utils/reactSelectStyle'
 import { GroupBox, monthsOptions } from './../../utils'
@@ -85,6 +85,10 @@ class BatchSetupApp extends React.Component {
     )
   }
 
+  handleDatePick = (date) => {
+    console.log('DatePicker picked', date)
+  }
+
   setDateValue = event => {}
 
   render() {
@@ -151,6 +155,18 @@ class BatchSetupApp extends React.Component {
             </div>
           )}
         />
+        <div className="fl w-100 mt3">
+          { this.state.searchMonth &&
+            <div className="fl w-100">
+              <span className="w-100 f3 fw6 db tc pv2 bg-light-gray gray">{this.state.searchMonth}</span>
+              <Calendar
+                className="availabilty-calendar"
+                showNavigation={false}
+                onChange={this.handleDatePick}
+              />
+            </div>
+          }
+        </div>
       </div>
     )
   }

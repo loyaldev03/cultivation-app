@@ -293,8 +293,8 @@ export default class MaterialForm extends React.Component {
             <tbody>
               <tr className="bb">
                 <th>Material Name</th>
-                <th>Quantity</th>
-                <th>Unit of Measurment</th>
+                <th>Qty</th>
+                <th>UOM</th>
                 <th />
               </tr>
               {materials.map((x, index) => (

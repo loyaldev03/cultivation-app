@@ -162,7 +162,7 @@ export default class ResourceForm extends React.Component {
             <input
               type="submit"
               className="pv2 ph3 ml4 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
-              value="Add Resource"
+              value="Assign"
               onClick={this.handleSubmit}
             />
           </div>

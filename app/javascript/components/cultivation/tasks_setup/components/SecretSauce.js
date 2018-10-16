@@ -19,7 +19,7 @@ class SecretSauce extends React.Component {
     return (
       <React.Fragment>
         <h4 class="gray f6">Below is the Optimal Nutrient Profile</h4>
-        <div class="flex">
+        <div class="flex f6">
           <div class="w-30">
             <h4 class="gray f6">Vegetative</h4>
             <div class="flex">

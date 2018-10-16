@@ -226,7 +226,7 @@ export default class MaterialForm extends React.Component {
               <div className="ph4 mt3 flex">
                 <div className="w-100">
                   <label className="f6 fw6 db mb1 gray ttc">
-                    {this.state.selectedCategory.label}
+                    Please select {this.state.selectedCategory.label} Type
                   </label>
                   <Select
                     name="selectedSubCategory"
@@ -243,7 +243,7 @@ export default class MaterialForm extends React.Component {
             <div className="ph4 mt3 flex">
               <div className="w-100">
                 <label className="f6 fw6 db mb1 gray ttc">
-                  {this.state.selectedSubCategory.label}
+                  Please select {this.state.selectedSubCategory.label} Product
                 </label>
                 <Select
                   name="selectedThirdDropdown"

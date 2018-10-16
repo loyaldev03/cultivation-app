@@ -79,174 +79,185 @@ class TaskSetup extends React.Component {
     let renderTabsClass = this.renderTabsClass
     return (
       <React.Fragment>
-        <div className=" flex">
-          <div className="w-40">
-            <h4 className="tl pa0 ma0 h6--font dark-grey">
-              Batch {this.state.batch.batch_no}
-            </h4>
+        <div className="flex flex-column justify-between bg-white box--shadow">
+          <div className="pa4">
+            <div className="fl w-100 flex flex-column">
+              <div className=" flex">
+                <div className="w-40">
+                  <h4 className="tl pa0 ma0 h6--font dark-grey">
+                    Batch {this.state.batch.batch_no}
+                  </h4>
+                </div>
+              </div>
+              <div className="mb3 flex">
+                <div className="w-30">
+                  <hr />
+                  <div className=" flex">
+                    <div className="w-40">
+                      <label>Batch Source</label>
+                    </div>
+                    <div className="w-40">
+                      <div className="">
+                        <label>{this.state.batch.batch_source}</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className=" flex">
+                    <div className="w-40">
+                      <label>Batch Id</label>
+                    </div>
+                    <div className="w-40">
+                      <div className="">
+                        <label>{this.state.batch.id}</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className=" flex">
+                    <div className="w-40">
+                      <label>Strain</label>
+                    </div>
+                    <div className="w-40">
+                      <div className="">
+                        <label>{this.state.batch.strain}</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className=" flex">
+                    <div className="w-40">
+                      <label>Grow Method</label>
+                    </div>
+                    <div className="w-40">
+                      <div className="">
+                        <label>{this.state.batch.grow_method}</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+
+                <div className="w-30 ml5">
+                  <hr />
+                  <div className=" flex">
+                    <div className="w-50">
+                      <label>Start Date </label>
+                    </div>
+                    <div className="w-50">
+                      <div className="">
+                        <label>{this.state.batch.start_date}</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className=" flex">
+                    <div className="w-50">
+                      <label>Total Estimation Cost</label>
+                    </div>
+                    <div className="w-50">
+                      <div className="">
+                        <label>???</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className=" flex">
+                    <div className="w-50">
+                      <label>Total Estimation Hours</label>
+                    </div>
+                    <div className="w-50">
+                      <div className="">
+                        <label>???</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+
+                <div className="w-30 ml5">
+                  <hr />
+                  <div className=" flex">
+                    <div className="w-50">
+                      <label>Estimated Harvest Dat </label>
+                    </div>
+                    <div className="w-50">
+                      <div className="">
+                        <label>{this.state.batch.start_date}</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className=" flex">
+                    <div className="w-50">
+                      <label>Total Actual Cost</label>
+                    </div>
+                    <div className="w-50">
+                      <div className="">
+                        <label>???</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className=" flex">
+                    <div className="w-50">
+                      <label>Total Actual Hour</label>
+                    </div>
+                    <div className="w-50">
+                      <div className="">
+                        <label>???</label>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="mb3 flex">
-          <div className="w-30">
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Batch Source</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.batch_source}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Batch Id</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.id}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Strain</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.strain}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Grow Method</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.grow_method}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </div>
-
-          <div className="w-30 ml5">
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Start Date </label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>{this.state.batch.start_date}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Estimation Cost</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Estimation Hours</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </div>
-
-          <div className="w-30 ml5">
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Estimated Harvest Dat </label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>{this.state.batch.start_date}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Actual Cost</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Actual Hour</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </div>
-        </div>
-        <div className="flex mb3">
+        <div className="flex mt4">
           <a
             className={renderTabsClass('task_list')}
             onClick={e => handleChangeTabs('task_list')}
           >
             Tasks List
-          </a>
+                </a>
 
           <a
             className={renderTabsClass('gantt_chart')}
             onClick={e => handleChangeTabs('gantt_chart')}
           >
             Gantt Chart
-          </a>
+                </a>
 
           <a
             className={renderTabsClass('issues')}
             onClick={e => handleChangeTabs('issues')}
           >
             Issues
-          </a>
+                </a>
 
           <a
             className={renderTabsClass('secret_sauce')}
             onClick={e => handleChangeTabs('secret_sauce')}
           >
             Secret Sauce
-          </a>
+                </a>
 
           <a
             className={renderTabsClass('resource')}
             onClick={e => handleChangeTabs('resource')}
           >
             Resource
-          </a>
+                </a>
         </div>
-
-        {this.renderBatchInfo()}
+        <div className="flex flex-column justify-between bg-white box--shadow">
+          <div className="pa4">
+            <div className="fl w-100 flex flex-column">
+              {this.renderBatchInfo()}
+            </div>
+          </div>
+        </div>
 
         <div id="toast" className="toast animated toast--success">
           Row Saved

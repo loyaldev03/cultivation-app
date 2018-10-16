@@ -13,10 +13,13 @@ class SecretSauce extends React.Component {
     }
   }
 
+  handleChange = () =>{
+    
+  }
+
   render() {
     return (
       <React.Fragment>
-        <div class="ba b--light-gray pa3">
           <h4 class="gray f6">Below is the Optimal Nutrient Profile</h4>
           <div class="flex">
             <div class="w-30">
@@ -27,11 +30,11 @@ class SecretSauce extends React.Component {
                 </div>
                 <div class="w-30">
                   <TextInput
-                    value={this.state.name}
-                    onChange={this.handleChangeTask}
-                    fieldname="name"
+                    value={this.state.vegetative_nitrogen}
+                    onChange={this.handleChange}
+                    fieldname="vegetative_nitrogen"
                     errors={this.state.errors}
-                    errorField="name"
+                    errorField="vegetative_nitrogen"
                   />
                 </div>
               </div>
@@ -41,11 +44,11 @@ class SecretSauce extends React.Component {
                 </div>
                 <div class="w-30">
                   <TextInput
-                    value={this.state.name}
-                    onChange={this.handleChangeTask}
-                    fieldname="name"
+                    value={this.state.vegetative_phosphorus}
+                    onChange={this.handleChange}
+                    fieldname="vegetative_phosphorus"
                     errors={this.state.errors}
-                    errorField="name"
+                    errorField="navegetative_phosphorusme"
                   />
                 </div>
               </div>
@@ -55,11 +58,11 @@ class SecretSauce extends React.Component {
                 </div>
                 <div class="w-30">
                   <TextInput
-                    value={this.state.name}
-                    onChange={this.handleChangeTask}
-                    fieldname="name"
+                    value={this.state.vegetative_potassium}
+                    onChange={this.handleChange}
+                    fieldname="vegetative_potassium"
                     errors={this.state.errors}
-                    errorField="name"
+                    errorField="vegetative_potassium"
                   />
                 </div>
               </div>
@@ -69,11 +72,11 @@ class SecretSauce extends React.Component {
                 </div>
                 <div class="w-30">
                   <TextInput
-                    value={this.state.name}
-                    onChange={this.handleChangeTask}
-                    fieldname="name"
+                    value={this.state.vegetative_magnesium}
+                    onChange={this.handleChange}
+                    fieldname="vegetative_magnesium"
                     errors={this.state.errors}
-                    errorField="name"
+                    errorField="vegetative_magnesium"
                   />
                 </div>
               </div>
@@ -84,7 +87,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -98,7 +101,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -112,7 +115,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -126,7 +129,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -140,7 +143,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -154,7 +157,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -171,7 +174,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -185,7 +188,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -199,7 +202,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -213,7 +216,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -227,7 +230,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -241,7 +244,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -255,7 +258,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -269,7 +272,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -283,7 +286,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -297,7 +300,7 @@ class SecretSauce extends React.Component {
                 <div class="w-30">
                   <TextInput
                     value={this.state.name}
-                    onChange={this.handleChangeTask}
+                    onChange={this.handleChange}
                     fieldname="name"
                     errors={this.state.errors}
                     errorField="name"
@@ -306,7 +309,14 @@ class SecretSauce extends React.Component {
               </div>
             </div>
           </div>
+        <div class="w-30 mt4 ">
+          <a
+            className="pointer flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim mt3"
+          >
+            Save & Continue
+          </a>
         </div>
+
       </React.Fragment>
     )
   }

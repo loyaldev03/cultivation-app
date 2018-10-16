@@ -20,6 +20,8 @@ module Cultivation
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
     has_many :plants, class_name: 'Inventory::Plant'
 
+    has_one :nutrient_profile, class_name: 'Cultivation::NutrientProfile'
+
     def phases
       tasks.where(is_phase: true)
     end

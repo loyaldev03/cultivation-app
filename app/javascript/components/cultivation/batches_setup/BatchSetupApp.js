@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import React from 'react'
 import Select from 'react-select'
 import Calendar from 'react-calendar/dist/entry.nostyle'
@@ -6,6 +7,19 @@ import { reactSelectStyleChip } from './../../utils/reactSelectStyle'
 import { GroupBox, monthsOptions, monthOptionToString, monthStartDate } from './../../utils'
 import { toast } from './../../utils/toast'
 import { TextInput, NumericInput, FieldError } from './../../utils/FormHelpers'
+import batchSetupStore from './BatchSetupStore'
+import { observer } from 'mobx-react'
+
+@observer
+class CapacityTile extends React.Component {
+  render() {
+    return (
+      <span className="react-calendar__tile__content">
+        {batchSetupStore.getCapacity(this.props.date)}
+      </span>
+    )
+  }
+}
 
 const ValidationMessage = ({ enable, show, text }) => {
   if (enable && show) {
@@ -66,8 +80,15 @@ class BatchSetupApp extends React.Component {
   }
 
   handleChange = (field, value) => {
-    console.log('value:', value)
     this.setState({ [field]: value })
+  }
+
+  handleChangeMonth = (field, value) => {
+    this.setState({ [field]: value })
+    batchSetupStore.clearSearch()
+    if (this.state.searchFacility && this.state.searchMonth) {
+      batchSetupStore.search(this.state.searchFacility, value)
+    }
   }
 
   handleChangeInput = e => {
@@ -78,19 +99,9 @@ class BatchSetupApp extends React.Component {
 
   handleSearch = e => {
     this.setState({ showValidation: true })
-    console.log(
-      'Search Params',
-      this.state.searchFacility,
-      this.state.searchSource,
-      this.state.searchMonth
-    )
-
     const { searchFacility, searchMonth, searchSource } = this.state
-
     if (searchFacility && searchSource && searchMonth) {
-      // TODO: Performa API calls
-    } else {
-      console.log('missing param')
+      batchSetupStore.search(searchFacility, searchMonth)
     }
   }
 
@@ -98,18 +109,13 @@ class BatchSetupApp extends React.Component {
     console.log('DatePicker picked', date)
   }
 
-  renderDateTile = ({ date, view }) => {
-    if (view === 'month' && date.getDay() === 0) {
-      return <span className="react-calendar__tile__content">168</span>
-    } else {
-      return <span className="react-calendar__tile__content">58</span>
-    }
-  }
+  renderDateTile = ({ date, view }) => (
+    <CapacityTile date={date} />
+  )
 
   render() {
     const { plantSources, strains, facilities, growMethods } = this.props
-    const { searchMonth } = this.state
-    console.log('monthOptionToString', monthOptionToString(searchMonth))
+    const { showValidation, searchFacility, searchSource, searchMonth } = this.state
     return (
       <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
         <div id="toast" className="toast" />
@@ -131,8 +137,8 @@ class BatchSetupApp extends React.Component {
                   />
                   <ValidationMessage
                     text="Select Facility"
-                    enable={this.state.showValidation}
-                    show={!this.state.searchFacility}
+                    enable={showValidation}
+                    show={!searchFacility}
                   />
                 </div>
                 <div className="fl w-third pr2">
@@ -143,20 +149,20 @@ class BatchSetupApp extends React.Component {
                   />
                   <ValidationMessage
                     text="Select Batch Srouce"
-                    enable={this.state.showValidation}
-                    show={!this.state.searchSource}
+                    enable={showValidation}
+                    show={!searchSource}
                   />
                 </div>
                 <div className="fl w-20">
                   <label className="subtitle-2 grey db mb1">Month</label>
                   <Select
-                    options={monthsOptions()}
-                    onChange={e => this.handleChange('searchMonth', e.value)}
+                    options={monthsOptions(new Date(2018, 1, 1), 18)}
+                    onChange={e => this.handleChangeMonth('searchMonth', e.value)}
                   />
                   <ValidationMessage
                     text="Select Month"
-                    enable={this.state.showValidation}
-                    show={!this.state.searchMonth}
+                    enable={showValidation}
+                    show={!searchMonth}
                   />
                 </div>
                 <div className="fl tr w-20 absolute right-0 bottom-0">
@@ -172,7 +178,7 @@ class BatchSetupApp extends React.Component {
           )}
         />
         <div className="fl w-100 mt3">
-          {this.state.searchMonth && (
+          {showValidation && searchMonth && (
             <div className="fl w-100">
               <span className="availabilty-calendar-title">
                 {monthOptionToString(searchMonth)}

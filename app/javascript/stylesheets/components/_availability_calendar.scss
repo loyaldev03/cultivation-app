@@ -1,11 +1,28 @@
+ // w-100 f3 fw6 db tc pv2 bg-light-gray gray"
+.availabilty-calendar-title {
+  display: block;
+  background-color: var(--whiteSmoke);
+  color: var(--gray);
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  text-align: center;
+  font-size: 1.3em;
+  font-weight: 600;
+  border-left: solid 1px var(--light-gray);
+  border-right: solid 1px var(--light-gray);
+  border-top: solid 1px var(--light-gray);
+}
+
 .react-calendar.availabilty-calendar {
 
-  border: solid 1px var(--light-gray);
+  border-left: solid 1px var(--light-gray);
+  border-right: solid 1px var(--light-gray);
+  border-bottom: solid 1px var(--light-gray);
 
   .react-calendar__month-view__weekdays {
     color: gray;
     font-size: 1.1em;
-    font-weight: 600;
+    font-weight: 400;
   }
 
   .react-calendar__month-view__weekdays__weekday {

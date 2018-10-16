@@ -1,4 +1,4 @@
-import { format, addMonths } from 'date-fns'
+import { parse, format, addMonths } from 'date-fns'
 
 // Build Month Options starting from Start Date until +duration month
 export const monthsOptions = (startDate = new Date(), duration = 12) => {
@@ -11,4 +11,9 @@ export const monthsOptions = (startDate = new Date(), duration = 12) => {
     })
   }
   return options
+}
+
+export const monthOptionToString = (monthOptionStr) => {
+  const dt = parse(monthOptionStr, 'MM-YYYY', new Date(), { awareOfUnicodeTokens: true })
+  return format(dt, 'MMM YYYY', { awareOfUnicodeTokens: true })
 }

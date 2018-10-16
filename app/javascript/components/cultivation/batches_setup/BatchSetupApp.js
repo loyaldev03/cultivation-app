@@ -3,7 +3,7 @@ import Select from 'react-select'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import { render } from 'react-dom'
 import { reactSelectStyleChip } from './../../utils/reactSelectStyle'
-import { GroupBox, monthsOptions } from './../../utils'
+import { GroupBox, monthsOptions, monthOptionToString } from './../../utils'
 import { toast } from './../../utils/toast'
 import { TextInput, NumericInput, FieldError } from './../../utils/FormHelpers'
 
@@ -89,10 +89,20 @@ class BatchSetupApp extends React.Component {
     console.log('DatePicker picked', date)
   }
 
+  formatMonthYear = (value) => {
+    if (value) {
+      const datePart = value.split("-")
+      return (new Date(datePart[1], datePart[0]-1, 1)).toString()
+    } else {
+      return ""
+    }
+  }
+
   setDateValue = event => {}
 
   render() {
     const { plantSources, strains, facilities, growMethods } = this.props
+    const { searchMonth } = this.state
     console.log('plantSources', plantSources)
     return (
       <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
@@ -158,7 +168,7 @@ class BatchSetupApp extends React.Component {
         <div className="fl w-100 mt3">
           { this.state.searchMonth &&
             <div className="fl w-100">
-              <span className="w-100 f3 fw6 db tc pv2 bg-light-gray gray">{this.state.searchMonth}</span>
+              <span className="availabilty-calendar-title">{monthOptionToString(searchMonth)}</span>
               <Calendar
                 className="availabilty-calendar"
                 showNavigation={false}

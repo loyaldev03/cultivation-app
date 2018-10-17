@@ -24,6 +24,7 @@ class SaveRowByDuplicating
 
   COPY_SHELF_ATTRS = [:capacity,
                       :wz_generated,
+                      :is_complete,
                       :is_use_trays]
 
   COPY_TRAY_ATTRS = [:capacity,

@@ -2,8 +2,6 @@ import 'babel-polyfill'
 import React from 'react'
 import Select from 'react-select'
 import Calendar from 'react-calendar/dist/entry.nostyle'
-import { render } from 'react-dom'
-import { reactSelectStyleChip } from './../../utils/reactSelectStyle'
 import {
   GroupBox,
   monthsOptions,
@@ -11,7 +9,6 @@ import {
   monthStartDate
 } from './../../utils'
 import { toast } from './../../utils/toast'
-import { TextInput, NumericInput, FieldError } from './../../utils/FormHelpers'
 import batchSetupStore from './BatchSetupStore'
 import { observer } from 'mobx-react'
 import BatchSetupEditor from './BatchSetupEditor'
@@ -41,12 +38,12 @@ class BatchSetupApp extends React.Component {
     this.state = {
       id: '',
       showValidation: false,
-      searchFacility: props.defaultFacility || '',
-      searchSource: '',
+      batchFacility: props.defaultFacility || '',
+      batchSource: '',
       searchMonth: '',
-      selectedDate: '',
-      strain: '',
-      grow_method: '',
+      batchStartDate: '',
+      batchStrain: '',
+      batchGrowMethod: '',
       isLoading: false
     }
   }
@@ -62,7 +59,7 @@ class BatchSetupApp extends React.Component {
 
   handleDatePick = date => {
     console.log('DatePicker picked', date)
-    this.setState({ selectedDate: date })
+    this.setState({ batchStartDate: date })
     window.editorSidebar.open({ width: '500px' })
   }
 
@@ -73,11 +70,11 @@ class BatchSetupApp extends React.Component {
       method: 'POST',
       credentials: 'include',
       body: JSON.stringify({
-        batch_source: this.state.searchSource,
-        facility_id: this.state.searchFacility,
-        strain_id: this.state.strain,
-        start_date: this.state.selectedDate.toDateString(),
-        grow_method: this.state.grow_method
+        batch_source: this.state.batchSource,
+        facility_id: this.state.batchFacility,
+        facility_strain_id: this.state.batchStrain,
+        start_date: this.state.batchStartDate.toDateString(),
+        grow_method: this.state.batchGrowMethod
       }),
       headers: {
         'Content-Type': 'application/json'
@@ -102,8 +99,8 @@ class BatchSetupApp extends React.Component {
   handleChangeMonth = (field, value) => {
     this.setState({ [field]: value })
     batchSetupStore.clearSearch()
-    if (this.state.searchFacility && this.state.searchMonth) {
-      batchSetupStore.search(this.state.searchFacility, value)
+    if (this.state.batchFacility && this.state.searchMonth) {
+      batchSetupStore.search(this.state.batchFacility, value)
     }
   }
 
@@ -115,9 +112,9 @@ class BatchSetupApp extends React.Component {
 
   handleSearch = e => {
     this.setState({ showValidation: true })
-    const { searchFacility, searchMonth, searchSource } = this.state
-    if (searchFacility && searchSource && searchMonth) {
-      batchSetupStore.search(searchFacility, searchMonth)
+    const { batchFacility, searchMonth, batchSource } = this.state
+    if (batchFacility && batchSource && searchMonth) {
+      batchSetupStore.search(batchFacility, searchMonth)
     }
   }
 
@@ -127,13 +124,14 @@ class BatchSetupApp extends React.Component {
     const { plantSources, strains, facilities, growMethods } = this.props
     const {
       showValidation,
-      searchFacility,
-      searchSource,
+      batchFacility,
+      batchSource,
       searchMonth,
-      selectedDate
+      batchStartDate,
+      isLoading
     } = this.state
 
-    const searchFacilityValue = facilities.find(f => f.value === searchFacility)
+    const batchFacilityValue = facilities.find(f => f.value === batchFacility)
 
     return (
       <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
@@ -152,25 +150,25 @@ class BatchSetupApp extends React.Component {
                   <label className="subtitle-2 grey db mb1">Facility</label>
                   <Select
                     options={facilities}
-                    value={searchFacilityValue}
-                    onChange={e => this.handleChange('searchFacility', e.value)}
+                    value={batchFacilityValue}
+                    onChange={e => this.handleChange('batchFacility', e.value)}
                   />
                   <ValidationMessage
                     text="Select Facility"
                     enable={showValidation}
-                    show={!searchFacility}
+                    show={!batchFacility}
                   />
                 </div>
                 <div className="fl w-third pr2">
                   <label className="subtitle-2 grey db mb1">Batch Source</label>
                   <Select
                     options={plantSources}
-                    onChange={e => this.handleChange('searchSource', e.value)}
+                    onChange={e => this.handleChange('batchSource', e.value)}
                   />
                   <ValidationMessage
                     text="Select Batch Srouce"
                     enable={showValidation}
-                    show={!searchSource}
+                    show={!batchSource}
                   />
                 </div>
                 <div className="fl w-20">
@@ -221,8 +219,11 @@ class BatchSetupApp extends React.Component {
             <BatchSetupEditor
               strains={strains}
               growMethods={growMethods}
-              date={selectedDate}
+              startDate={batchStartDate}
               onChange={this.handleChange}
+              onClose={this.closeSidebar}
+              onSave={this.handleSubmit}
+              isLoading={isLoading}
             />
           </div>
         </div>

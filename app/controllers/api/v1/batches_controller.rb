@@ -34,7 +34,7 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def search_locations
-    command = QueryReadyTrays.call(params[:facility_id])
+    command = QueryReadyTrays.call(params[:facility_id], 'clone')
     if command.success?
       render json: {data: command.result}
     else

@@ -39,7 +39,6 @@ Rails.application.routes.draw do
     resources :items, only: [:index, :edit, :update, :new, :create, :destroy, :show] do
       resources :item_transactions, only: [:new, :create]
     end
-    resources :strains, only: [:index, :edit, :update, :new, :create, :destroy]
   end
 
   namespace 'purchasing', as: :purchasing do

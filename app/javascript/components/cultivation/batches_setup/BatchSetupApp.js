@@ -125,6 +125,7 @@ class BatchSetupApp extends React.Component {
     const {
       showValidation,
       batchFacility,
+      batchStrain,
       batchSource,
       searchMonth,
       batchStartDate,
@@ -132,6 +133,7 @@ class BatchSetupApp extends React.Component {
     } = this.state
 
     const batchFacilityValue = facilities.find(f => f.value === batchFacility)
+    const batchStrainValue = strains.find(f => f.value === batchStrain)
 
     return (
       <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
@@ -218,6 +220,7 @@ class BatchSetupApp extends React.Component {
           <div className="rc-slide-panel__body h-100">
             <BatchSetupEditor
               strains={strains}
+              batchStrain={batchStrainValue}
               growMethods={growMethods}
               startDate={batchStartDate}
               onChange={this.handleChange}

@@ -31,6 +31,7 @@ class Cultivation::BatchesController < ApplicationController
       grow_method: @batch.grow_method,
       start_date: @batch.start_date,
       estimated_harvest_date: @batch.estimated_harvest_date,
+      nutrient_profile: @batch.nutrient_profile,
     }
     # TODO: Use other params
     if params[:step].present?

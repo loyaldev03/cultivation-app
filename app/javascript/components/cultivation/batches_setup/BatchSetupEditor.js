@@ -7,6 +7,7 @@ class BatchSetupEditor extends React.PureComponent {
     const {
       startDate,
       strains,
+      batchStrain,
       growMethods,
       onChange,
       onClose,
@@ -46,7 +47,9 @@ class BatchSetupEditor extends React.PureComponent {
               <label className="subtitle-2 grey db mb1">Strain:</label>
               <Select
                 options={strains}
+                noOptionsMessage={() => 'Type to search strain...'}
                 onChange={e => onChange('batchStrain', e.value)}
+                value={batchStrain}
               />
             </div>
             <div className="mt2">

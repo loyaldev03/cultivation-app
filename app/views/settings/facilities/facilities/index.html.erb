@@ -4,32 +4,32 @@
 
 <%= render 'layouts/right_sidebar' %>
 
-<div class="ph4 w-100 tr pb3 pt3">
+<div class="ph4 tr pb3 pt3 bg-white ma4">
   <%= link_to "+ Add facility", facility_setup_new_path, class: 'link ba bw1 b b--blue blue pa2 ph4 br4 dib' %>
 </div>
 
-<div class="w-100 ph0">
+<div class="bg-white mv3 mh4">
   <table class="w-100 table collapse">
     <thead>
       <tr>
-        <th class="f6 white pv3 tl pl4 pr3">#</th>
-        <th class="f6 white pv3 tl w-20">Name</th>
-        <th class="f6 white pv3 tl w-10">ID</th>
-        <th class="f6 white pv3 tr w-10">Rooms</th>
-        <th class="f6 white pv3 tr w-20 pr4">Status</th>
+        <th class="f6 dark-grey pv3 tl pl4 pr3">#</th>
+        <th class="f6 dark-grey pv3 tl w-20">Name</th>
+        <th class="f6 dark-grey pv3 tl w-10">ID</th>
+        <th class="f6 dark-grey pv3 tr w-10">Rooms</th>
+        <th class="f6 dark-grey pv3 tr w-20 pr4">Status</th>
       </tr>
     </thead>
 
     <tbody>
       <% @facilities.each_with_index do |f, i| %>
-        <tr data-toggle-right="<%= edit_settings_facility_facility_url(f)%>" class="pointer">
-          <td class="f6 tl pl4 pr3 gray"><%= i+1 %></td>
-          <td class="f6 tl"><%= blank(f.name) %></td>
-          <td class="f6 tl"><%= blank(f.code) %></td>
-          <td class="f6 tr">
+        <tr data-toggle-right="<%= edit_settings_facility_facility_url(f)%>" class="pointer striped--light-gray">
+          <td class="f6 tl pv3 pl4 pr3 gray"><%= i+1 %></td>
+          <td class="f6 tl pv3 "><%= blank(f.name) %></td>
+          <td class="f6 tl pv3 "><%= blank(f.code) %></td>
+          <td class="f6 tr pv3">
             <%= f.rooms&.size %>
           </td>
-          <td class="f6 tr pr4">
+          <td class="f6 tr pv3 pr4">
             <% status = if !f.is_complete 
                         "Continue setup"
                       elsif f.is_enabled

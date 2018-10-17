@@ -77,7 +77,7 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     date_part = month_str.split('-')
     start_date = Date.new(date_part[1].to_i, date_part[0].to_i, 1)
     end_date = start_date.end_of_month
-    # Add additional 7 days before and after because the 
+    # Add additional 7 days before and after because the
     # calendar might include some dates for previous month
     start_date = start_date - 7.days
     end_date = end_date + 7.days

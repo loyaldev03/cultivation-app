@@ -107,11 +107,11 @@ class TaskSetup extends React.Component {
                   <hr />
                   <div className=" flex">
                     <div className="w-40">
-                      <label>Batch Id</label>
+                      <label>Batch Name</label>
                     </div>
                     <div className="w-40">
                       <div className="">
-                        <label>{this.state.batch.id}</label>
+                        <label>{this.state.batch.name}</label>
                       </div>
                     </div>
                   </div>

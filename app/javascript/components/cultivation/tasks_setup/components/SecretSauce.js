@@ -76,11 +76,11 @@ class SecretSauce extends React.Component {
     return (
       <React.Fragment>
         <div className="flex">
-          <div className="w-20"></div>
+          <div className="w-20" />
           <div className="w-80">
             <div className="flex">
               <a
-                className={renderTabsClass('nutrients') + ' bl-l'} 
+                className={renderTabsClass('nutrients') + ' bl-l'}
                 onClick={e => handleChangeTabs('nutrients')}
               >
                 Nutrients
@@ -105,32 +105,32 @@ class SecretSauce extends React.Component {
           <div className="w-20">
             <ul className="list mt4">
               <li className="mb2">
-                <a 
-                  className="f6 f5-ns db pa2 link dim mid-gray pointer" 
+                <a
+                  className="f6 f5-ns db pa2 link dim mid-gray pointer"
                   onClick={e => handleChangePhase('clone')}
                 >
                   Clone
                 </a>
               </li>
               <li className="mb2">
-                <a 
-                  className="f6 f5-ns db pa2 link dim mid-gray pointer" 
+                <a
+                  className="f6 f5-ns db pa2 link dim mid-gray pointer"
                   onClick={e => handleChangePhase('vegetative')}
                 >
                   Veg1
                 </a>
               </li>
               <li className="mb2">
-                <a 
-                  className="f6 f5-ns db pa2 link dim mid-gray pointer" 
+                <a
+                  className="f6 f5-ns db pa2 link dim mid-gray pointer"
                   onClick={e => handleChangePhase('vegetative')}
                 >
                   Veg2
                 </a>
               </li>
               <li className="mb2">
-                <a 
-                  className="f6 f5-ns db pa2 link dim mid-gray pointer" 
+                <a
+                  className="f6 f5-ns db pa2 link dim mid-gray pointer"
                   onClick={e => handleChangePhase('flowering')}
                 >
                   Flower
@@ -149,7 +149,9 @@ class SecretSauce extends React.Component {
                     </div>
                     <div className="w-50">
                       <TextInput
-                        value={this.findAttr(this.state.phase, 'nitrogen').value}
+                        value={
+                          this.findAttr(this.state.phase, 'nitrogen').value
+                        }
                         onChange={e =>
                           this.handleChange(
                             this.state.phase,
@@ -169,7 +171,9 @@ class SecretSauce extends React.Component {
                     </div>
                     <div className="w-50">
                       <TextInput
-                        value={this.findAttr(this.state.phase, 'phosphorus').value}
+                        value={
+                          this.findAttr(this.state.phase, 'phosphorus').value
+                        }
                         onChange={e =>
                           this.handleChange(
                             this.state.phase,
@@ -189,7 +193,9 @@ class SecretSauce extends React.Component {
                     </div>
                     <div className="w-50">
                       <TextInput
-                        value={this.findAttr(this.state.phase, 'potassium').value}
+                        value={
+                          this.findAttr(this.state.phase, 'potassium').value
+                        }
                         onChange={e =>
                           this.handleChange(
                             this.state.phase,
@@ -209,7 +215,9 @@ class SecretSauce extends React.Component {
                     </div>
                     <div className="w-50">
                       <TextInput
-                        value={this.findAttr(this.state.phase, 'magnesium').value}
+                        value={
+                          this.findAttr(this.state.phase, 'magnesium').value
+                        }
                         onChange={e =>
                           this.handleChange(
                             this.state.phase,
@@ -271,7 +279,11 @@ class SecretSauce extends React.Component {
                       <TextInput
                         value={this.findAttr(this.state.phase, 'boron').value}
                         onChange={e =>
-                          this.handleChange(this.state.phase, 'boron', e.target.value)
+                          this.handleChange(
+                            this.state.phase,
+                            'boron',
+                            e.target.value
+                          )
                         }
                         fieldname="name"
                         errors={this.state.errors}
@@ -287,7 +299,11 @@ class SecretSauce extends React.Component {
                       <TextInput
                         value={this.findAttr(this.state.phase, 'iron').value}
                         onChange={e =>
-                          this.handleChange(this.state.phase, 'iron', e.target.value)
+                          this.handleChange(
+                            this.state.phase,
+                            'iron',
+                            e.target.value
+                          )
                         }
                         fieldname="name"
                         errors={this.state.errors}
@@ -303,7 +319,11 @@ class SecretSauce extends React.Component {
                       <TextInput
                         value={this.findAttr(this.state.phase, 'zinc').value}
                         onChange={e =>
-                          this.handleChange(this.state.phase, 'zinc', e.target.value)
+                          this.handleChange(
+                            this.state.phase,
+                            'zinc',
+                            e.target.value
+                          )
                         }
                         fieldname="name"
                         errors={this.state.errors}
@@ -317,7 +337,9 @@ class SecretSauce extends React.Component {
                     </div>
                     <div className="w-50">
                       <TextInput
-                        value={this.findAttr(this.state.phase, 'molybdenum').value}
+                        value={
+                          this.findAttr(this.state.phase, 'molybdenum').value
+                        }
                         onChange={e =>
                           this.handleChange(
                             this.state.phase,
@@ -331,7 +353,7 @@ class SecretSauce extends React.Component {
                       />
                     </div>
                   </div>
-                </div>  
+                </div>
               </div>
             </div>
             <div className="flex justify-end pa2">

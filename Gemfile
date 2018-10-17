@@ -63,6 +63,9 @@ group :development do
 
   # Run app with Procfile
   gem 'foreman', '~> 0.85.0', require: false
+
+  # Quickly switch user during development
+  gem 'switch_user'
 end
 
 

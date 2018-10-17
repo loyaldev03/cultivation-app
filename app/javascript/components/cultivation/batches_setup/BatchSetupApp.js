@@ -41,7 +41,7 @@ class BatchSetupApp extends React.Component {
     this.state = {
       id: '',
       showValidation: false,
-      searchFacility: '',
+      searchFacility: props.defaultFacility || '',
       searchSource: '',
       searchMonth: '',
       selectedDate: '',
@@ -125,7 +125,6 @@ class BatchSetupApp extends React.Component {
 
   render() {
     const { plantSources, strains, facilities, growMethods } = this.props
-    console.log(facilities)
     const {
       showValidation,
       searchFacility,
@@ -133,6 +132,9 @@ class BatchSetupApp extends React.Component {
       searchMonth,
       selectedDate
     } = this.state
+
+    const searchFacilityValue = facilities.find(f => f.value === searchFacility)
+
     return (
       <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
         <div id="toast" className="toast" />
@@ -150,6 +152,7 @@ class BatchSetupApp extends React.Component {
                   <label className="subtitle-2 grey db mb1">Facility</label>
                   <Select
                     options={facilities}
+                    value={searchFacilityValue}
                     onChange={e => this.handleChange('searchFacility', e.value)}
                   />
                   <ValidationMessage

@@ -8,12 +8,9 @@ class BatchSetupEditor extends React.PureComponent {
     return (
       <div>
         <div>{formatDate(date)}</div>
-        <div></div>
+        <div />
         <div>Strain</div>
-        <Select
-          options={strains}
-          onChange={e => onChange('strain', e.value)}
-        />
+        <Select options={strains} onChange={e => onChange('strain', e.value)} />
         <Select
           options={growMethods}
           onChange={e => onChange('grow_method', e.value)}

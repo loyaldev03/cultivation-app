@@ -36,7 +36,7 @@ class BatchSetupStore {
               ...p.attributes
             }))
           }
-          this.isReady = true;
+          this.isReady = true
         })
       } catch (err) {
         console.error(err)
@@ -46,10 +46,10 @@ class BatchSetupStore {
 
   @action
   clearSearch() {
-    this.trays = [];
-    this.plans = [];
-    this.totalCapacity = 0;
-    this.isReady = false;
+    this.trays = []
+    this.plans = []
+    this.totalCapacity = 0
+    this.isReady = false
   }
 
   getCapacity(date) {

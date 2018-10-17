@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
   around_action :set_timezone, if: :current_user
   layout :layout_by_resource
 
+  helper_method :current_default_facility
+
   protected
 
   def set_rollbar_scope
@@ -44,6 +46,14 @@ class ApplicationController < ActionController::Base
       'login'
     else
       'application'
+    end
+  end
+
+  private
+
+  def current_default_facility
+    if current_user.present?
+      @current_default_facility ||= FindDefaultFacility.call(current_user).result
     end
   end
 end

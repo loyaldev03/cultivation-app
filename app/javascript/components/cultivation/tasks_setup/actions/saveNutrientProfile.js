@@ -4,10 +4,8 @@ import loadTasks from './loadTask'
 
 class saveNutrientProfile {
   saveNutrientProfile(state) {
-
-
     let url, action, nutrient_profile
-    if (state.id === "") {
+    if (state.id === '') {
       //create
       url = `/api/v1/batches/${state.batch_id}/nutrient_profiles`
       action = 'POST'
@@ -25,8 +23,6 @@ class saveNutrientProfile {
         id: state.id
       }
     }
-
-
 
     fetch(url, {
       method: action,

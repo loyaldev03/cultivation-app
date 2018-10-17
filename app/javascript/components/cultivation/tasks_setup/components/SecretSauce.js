@@ -8,7 +8,6 @@ import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import NutrientProfileStore from '../stores/NutrientProfileStore'
 import SaveNutrientProfile from '../actions/saveNutrientProfile'
 
-
 @observer
 class SecretSauce extends React.Component {
   constructor(props) {
@@ -47,19 +46,15 @@ class SecretSauce extends React.Component {
     }
   }
 
-
   handleSubmit = () => {
     SaveNutrientProfile.saveNutrientProfile(this.state)
   }
-
 
   render() {
     let handleSubmit = this.handleSubmit
     return (
       <React.Fragment>
-        <h4 class="gray f6">
-          Below is the Optimal Nutrient Profile
-        </h4>
+        <h4 class="gray f6">Below is the Optimal Nutrient Profile</h4>
         <div class="flex f6">
           <div class="w-30">
             <h4 class="gray f6">Vegetative</h4>
@@ -397,7 +392,7 @@ class SecretSauce extends React.Component {
           </div>
         </div>
         <div class="w-30 mt4 ">
-          <a 
+          <a
             className="pointer flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim mt3"
             onClick={handleSubmit}
           >

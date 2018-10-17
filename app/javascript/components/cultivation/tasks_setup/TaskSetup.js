@@ -255,7 +255,7 @@ class TaskSetup extends React.Component {
         </div>
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
-            <div className="fl w-100 flex flex-column f6">
+            <div className="fl w-100 flex flex-column">
               {this.renderBatchInfo()}
             </div>
           </div>

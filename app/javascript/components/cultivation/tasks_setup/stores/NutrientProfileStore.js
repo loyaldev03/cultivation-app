@@ -6,10 +6,10 @@ class NutrientProfileStore {
 
   @action
   load(nutrientProfile) {
-    this.nutrients.replace(nutrientProfile.nutrients)
-    this.id.replace(nutrientProfile.id)
-    console.log(this.id)
-    console.log(this.nutrients)
+    if (nutrientProfile !== null){
+      this.nutrients.replace(nutrientProfile.nutrients)
+      this.id = nutrientProfile['_id']['$oid']
+    }
   }
 }
 

@@ -6,12 +6,15 @@ import update from 'immutability-helper'
 
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import NutrientProfileStore from '../stores/NutrientProfileStore'
+import SaveNutrientProfile from '../actions/saveNutrientProfile'
+
 
 @observer
 class SecretSauce extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      batch_id: this.props.batch_id,
       batch: this.props.batch,
       nutrients: NutrientProfileStore.nutrients,
       id: NutrientProfileStore.id
@@ -19,14 +22,6 @@ class SecretSauce extends React.Component {
   }
 
   handleChange = (category, name, value) => {
-    // let oldContents = this.state.nutrients;
-    // let newContents = update(oldContents, { [key]: { $set: input } });
-    // this.handleChange('nutrients', newContents);
-    console.log(category)
-    console.log(name)
-
-    console.log(value)
-
     let index = this.state.nutrients.findIndex(
       e => e.category === category && e.name === name
     )
@@ -52,12 +47,18 @@ class SecretSauce extends React.Component {
     }
   }
 
+
+  handleSubmit = () => {
+    SaveNutrientProfile.saveNutrientProfile(this.state)
+  }
+
+
   render() {
+    let handleSubmit = this.handleSubmit
     return (
       <React.Fragment>
         <h4 class="gray f6">
-          Below is the Optimal Nutrient Profile{' '}
-          {JSON.stringify(this.state.nutrients)}
+          Below is the Optimal Nutrient Profile
         </h4>
         <div class="flex f6">
           <div class="w-30">
@@ -396,7 +397,10 @@ class SecretSauce extends React.Component {
           </div>
         </div>
         <div class="w-30 mt4 ">
-          <a className="pointer flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim mt3">
+          <a 
+            className="pointer flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim mt3"
+            onClick={handleSubmit}
+          >
             Save & Continue
           </a>
         </div>

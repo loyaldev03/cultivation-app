@@ -9,7 +9,6 @@ FactoryBot.define do
     end_date { DateTime.now + 10.days }
     capacity { 1 }
     is_active { true }
-    is_fulfilled { false }
     batch { build(:batch) }
   end
 

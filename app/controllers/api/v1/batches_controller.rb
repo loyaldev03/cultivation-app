@@ -33,6 +33,36 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     end
   end
 
+  def search_locations
+    command = QueryReadyTrays.call(params[:facility_id])
+    if command.success?
+      render json: {data: command.result}
+    else
+      render json: {error: command.errors}
+    end
+  end
+
+  def search_tray_plans
+    month_str = params['search_month'] # E.g. '10-2018' (Format => MM-YYYY)
+    if month_str.present? && month_str.length >= 6 && month_str.index('-') >= 1
+      plan_start_date, plan_end_date = get_start_end_for_month(month_str)
+      Rails.logger.debug "\033[31m plan_start_date: #{plan_start_date} \033[0m"
+      Rails.logger.debug "\033[31m plan_start_date: #{plan_end_date} \033[0m"
+      command = QueryPlannedTrays.call(
+        plan_start_date,
+        plan_end_date,
+        params[:facility_id]
+      )
+      if command.success?
+        render json: TrayLocationSerializer.new(command.result).serialized_json
+      else
+        render json: {error: command.errors}
+      end
+    else
+      render json: {error: 'Invalid Search Month'}
+    end
+  end
+
   private
 
   def batch_params
@@ -41,6 +71,17 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
 
   def command_errors(unsafe_params, command)
     unsafe_params.merge(errors: command.errors)
+  end
+
+  def get_start_end_for_month(month_str)
+    date_part = month_str.split('-')
+    start_date = Date.new(date_part[1].to_i, date_part[0].to_i, 1)
+    end_date = start_date.end_of_month
+    # Add additional 7 days before and after because the
+    # calendar might include some dates for previous month
+    start_date = start_date - 7.days
+    end_date = end_date + 7.days
+    return start_date, end_date
   end
 
   def record_params

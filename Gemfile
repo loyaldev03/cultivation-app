@@ -103,8 +103,9 @@ gem 'fast_jsonapi'
 gem 'mongoid_orderable'
 
 # File attachment
-gem 'shrine', '~> 2.0'
+gem 'shrine', '~> 2.12'
 gem 'shrine-mongoid'
+gem "aws-sdk-s3", "~> 1.2"
 
 # Authorization
 gem 'pundit'

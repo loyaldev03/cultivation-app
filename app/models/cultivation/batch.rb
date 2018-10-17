@@ -19,6 +19,8 @@ module Cultivation
     has_many :tasks, class_name: 'Cultivation::Task'
     has_many :plants, class_name: 'Inventory::Plant'
 
+    has_one :nutrient_profile, class_name: 'Cultivation::NutrientProfile'
+
     def phases
       tasks.where(is_phase: true)
     end

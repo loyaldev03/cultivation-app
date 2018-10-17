@@ -114,6 +114,7 @@ Rails.application.routes.draw do
         resources :tasks, only: [:index, :update, :create, :destroy] do
           put 'indent', on: :member
         end
+        resources :nutrient_profiles
       end
 
       resources :users, only: [:index] do

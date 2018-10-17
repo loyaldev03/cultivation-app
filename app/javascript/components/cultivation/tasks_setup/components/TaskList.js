@@ -374,136 +374,6 @@ class TaskList extends React.Component {
       <React.Fragment>
         <style> {styles} </style>
 
-        <div className=" flex">
-          <div className="w-40">
-            <h4 className="tl pa0 ma0 h6--font dark-grey">
-              Batch {this.state.batch.batch_no}
-            </h4>
-          </div>
-        </div>
-        <div className="mb3 flex">
-          <div className="w-30">
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Batch Source</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.batch_source}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Batch Id</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.id}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Strain</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.strain}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Grow Method</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.grow_method}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </div>
-
-          <div className="w-30 ml5">
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Start Date </label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>{this.state.batch.start_date}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Estimation Cost</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Estimation Hours</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </div>
-
-          <div className="w-30 ml5">
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Estimated Harvest Dat </label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>{this.state.batch.start_date}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Actual Cost</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Actual Hour</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </div>
-        </div>
         <ReactTable
           columns={[
             {
@@ -556,7 +426,7 @@ class TaskList extends React.Component {
               maxWidth: '100'
             },
             {
-              Header: 'Estimated Hours',
+              Header: 'Est Hr',
               accessor: 'attributes.estimated_hours',
               maxWidth: '150'
             },
@@ -644,6 +514,17 @@ class TaskList extends React.Component {
           batch_id={this.props.batch_id}
           handleReset={this.handleReset}
         />
+        <div class="w-30 mt4">
+          <a
+            href={
+              '/cultivation/batches/' + this.props.batch_id + '?type=active'
+            }
+            data-method="put"
+            className="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim mt3"
+          >
+            Save & Continue
+          </a>
+        </div>
       </React.Fragment>
     )
   }

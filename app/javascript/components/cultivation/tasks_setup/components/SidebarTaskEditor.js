@@ -110,7 +110,7 @@ class SidebarTaskEditor extends React.Component {
           </div> */}
         </div>
 
-        <div className="ph4 mt3 mb3 flex">
+        {/* <div className="ph4 mt3 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Instruction</label>
             <textarea
@@ -123,7 +123,7 @@ class SidebarTaskEditor extends React.Component {
             />
             <FieldError errors={this.state.errors} fieldname="instruction" />
           </div>
-        </div>
+        </div> */}
         <div className="ph4 mt3 mb3 flex">
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Start Date</label>

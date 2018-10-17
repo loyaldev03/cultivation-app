@@ -12,30 +12,30 @@ class BatchSetupApp extends React.Component {
     super(props)
     this.state = {
       id: '',
-      plant: '',
-      facility: '',
-      strain: '',
-      start_date: '',
+      batch_source: '',
+      start_date: null,
       grow_method: '',
+      facility_strains: [],
+      facility_strain: null,
+      errors: {},
       isLoading: false
     }
   }
 
   componentDidMount() {
     // loadTasks.loadbatch(this.props.batch_id)
+    this.loadFacilityStrains()
   }
 
   handleSubmit = event => {
     this.setState({ isLoading: true })
-    const url = '/api/v1/batches'
-    fetch(url, {
+    fetch('/api/v1/batches', {
       method: 'POST',
       credentials: 'include',
       body: JSON.stringify({
-        batch_source: this.state.plant,
-        facility_id: this.state.facility,
-        strain_id: this.state.strain,
-        start_date: this.state.start_date.toDateString(),
+        batch_source: this.state.batch_source,
+        facility_strain_id: this.state.facility_strain.id,
+        start_date: this.state.start_date.toISOString(),
         grow_method: this.state.grow_method
       }),
       headers: {
@@ -67,9 +67,34 @@ class BatchSetupApp extends React.Component {
 
   setDateValue = event => {}
 
+  loadFacilityStrains = () => {
+    fetch('/api/v1/strains', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        return response.json().then(data => {
+          return {
+            status: response.status,
+            data: data.data
+          }
+        })
+      })
+      .then(({ status, data }) => {
+        if (status >= 400) {
+          this.setState({ facility_strains: [] })
+        } else {
+          this.setState({ facility_strains: data })
+        }
+      })
+  }
+
   render() {
-    const { plants, strains, facilities, grow_methods } = this.props
-    console.log('plants', plants)
+    const { plants: batch_sources, grow_methods } = this.props
+
     return (
       <React.Fragment>
         <div id="toast" className="toast animated toast--success">
@@ -79,7 +104,7 @@ class BatchSetupApp extends React.Component {
         <h5 className="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
         <p className="mt2 body-1 grey">Some cultivation setup here</p>
         <form>
-          <div className="w-100 shelves_number_options">
+          <div className="w-100">
             <div className="mt3">
               <label
                 className="f6 fw6 db mb1 gray ttc"
@@ -88,46 +113,33 @@ class BatchSetupApp extends React.Component {
                 Select Batch Source
               </label>
               <Select
-                options={plants}
-                onChange={e => this.handleChange('plant', e.value)}
+                options={batch_sources}
+                onChange={e => this.handleChange('batch_source', e.value)}
                 styles={reactSelectStyle}
               />
             </div>
           </div>
 
-          <div className="w-100 shelves_number_options">
-            <div className="mt3">
-              <label
-                className="f6 fw6 db mb1 gray ttc"
-                htmlFor="record_batch_source"
-              >
-                Select Facility
-              </label>
-              <Select
-                options={facilities}
-                styles={reactSelectStyle}
-                onChange={e => this.handleChange('facility', e.value)}
-              />
-            </div>
+          <div className="w-100 mt3">
+            <label
+              className="f6 fw6 db mb1 gray ttc"
+              htmlFor="record_batch_source"
+            >
+              Select Strain
+            </label>
+            <Select
+              options={this.state.facility_strains}
+              noOptionsMessage={() => 'Type to search strain...'}
+              getOptionLabel={option => option.attributes.label}
+              getOptionValue={option => option.attributes.id}
+              onChange={e => this.setState({ facility_strain: e })}
+              value={this.state.facility_strain}
+              styles={reactSelectStyle}
+            />
+            <FieldError errors={this.state.errors} field="facility_strain_id" />
           </div>
 
-          <div className="w-100 shelves_number_options">
-            <div className="mt3">
-              <label
-                className="f6 fw6 db mb1 gray ttc"
-                htmlFor="record_batch_source"
-              >
-                Select Strains
-              </label>
-              <Select
-                options={strains}
-                styles={reactSelectStyle}
-                onChange={e => this.handleChange('strain', e.value)}
-              />
-            </div>
-          </div>
-
-          <div className="w-100 shelves_number_options">
+          <div className="w-100">
             <div className="mt3">
               <label
                 className="f6 fw6 db mb1 gray ttc"

@@ -27,8 +27,6 @@ module Inventory
     def initialize(user, args)
       @user = user
       @args = HashWithIndifferentAccess.new(args)
-      # Rails.logger.debug '>>>> SetupMother'
-      # Rails.logger.debug @args
 
       @is_draft = false
       @id = args[:id]
@@ -124,8 +122,6 @@ module Inventory
       if command.success?
         command.result
       else
-        Rails.logger.debug "\t\t\t>>>>>>>>>>>>>>>>>>"
-        Rails.logger.debug command.errors
         # Maybe need to bypass this validation message mapping.
         combine_errors(command.errors, :vendor_name, :name)
         combine_errors(command.errors, :vendor_no, :vendor_no)

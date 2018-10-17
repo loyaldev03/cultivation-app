@@ -3,17 +3,12 @@
 #   This includes: vendor, strain, inventory item
 ########################################################################
 module Inventory
-  class SetupClones
+  class SetupPlants
     prepend SimpleCommand
 
-    # cultivation_batch_id:"5bb3a28eedfdb20fc99678ea"
-    # isBought:false
-    # location_id:"5b907c97edfdb2685648870b"
-    # mother_id:"5badf53eedfdb2b21c2cd67f"
-    # plant_ids:"p1"
-    # planting_date:"2018-08-31T16:00:00.000Z"
-
     attr_reader :user,
+      :id,
+      :growth_stage,
       :args,
       :is_draft,
       :cultivation_batch_id,
@@ -29,40 +24,40 @@ module Inventory
       :vendor_state_license_num,
       :vendor_state_license_expiration_date,
       :vendor_location_license_expiration_date,
-      :vendor_location_license_num
+      :vendor_location_license_num,
+      :purchase_date,
+      :batch
 
     def initialize(user, args)
       @user = user
       @args = HashWithIndifferentAccess.new(args)
-      Rails.logger.debug '>>>> SetupClones'
-      Rails.logger.debug @args
-
+      @id = args[:id]
       @is_draft = false
       @cultivation_batch_id = args[:cultivation_batch_id]
       @location_id = args[:location_id]
       @mother_id = args[:mother_id]
       @plant_ids = split(args[:plant_ids])
       @planting_date = args[:planting_date]
-
       @vendor_id = args[:vendor_id]
-      @vendor_name = args[:vendor_name] && args[:vendor_name].strip
+      @vendor_name = args[:vendor_name]
       @vendor_no = args[:vendor_no]
       @address = args[:address]
       @vendor_state_license_num = args[:vendor_state_license_num]
       @vendor_state_license_expiration_date = args[:vendor_state_license_expiration_date]
       @vendor_location_license_expiration_date = args[:vendor_location_license_expiration_date]
       @vendor_location_license_num = args[:vendor_location_license_num]
+      @purchase_date = args[:purchase_date]
+      @batch = Cultivation::Batch.find(args[:cultivation_batch_id])
     end
 
     def call
       if valid_permission? && valid_data?
-        plants = create_clones
-
-        if is_purchased?
-          vendor = create_vendor
-          create_invoice(plants, vendor, invoice_no)
+        plants = []
+        if id.blank?
+          plants = create_plants
+        else
+          plants = update_plant
         end
-
         plants
       end
     end
@@ -83,7 +78,7 @@ module Inventory
       # All serial number should be new
       existing_records = Inventory::Plant.in(plant_id: plant_ids).pluck(:plant_id)
 
-      if existing_records.count > 0
+      if id.blank? && existing_records.count > 0
         errors.add(:plant_ids, "These plant ID #{existing_records.join(', ')} already exists in the system.")
       end
 
@@ -92,7 +87,6 @@ module Inventory
         errors.add(:location_id, 'Tray not found.')
       end
 
-      batch = Cultivation::Batch.find(cultivation_batch_id)
       if batch.nil?
         errors.add(:cultivation_batch_id, 'Batch is required.')
       end
@@ -101,36 +95,72 @@ module Inventory
     end
 
     def is_purchased?
-      vendor_name.present?
+      batch.current_growth_stage == 'clones_purchased'
     end
 
-    def create_clones
-      facility_strain_id = Cultivation::Batch.find(cultivation_batch_id).facility_strain_id
-      plants = []
+    def update_plant
+      facility_strain_id = batch.facility_strain_id
+      growth_stage = batch.current_growth_stage
+      plant = Inventory::Plant.find(id)
 
-      plant_ids.each do |plant_id|
-        plant = Inventory::Plant.find_or_initialize_by(
+      plant.update!(
+        plant_id: plant_ids[0],
+        facility_strain_id: facility_strain_id,
+        cultivation_batch_id: cultivation_batch_id,
+        current_growth_stage: growth_stage,
+        location_id: location_id,
+        status: is_draft ? 'draft' : 'available',
+        planting_date: planting_date,
+        mother_id: mother_id,
+      )
+
+      if is_purchased?
+        invoice = Inventory::VendorInvoice.find(plant.origin_id)
+        save_vendor(invoice.vendor_id)
+        update_invoice(invoice)
+      end
+
+      plant
+    end
+
+    def update_invoice(invoice)
+      command = Inventory::SavePlantInvoice.call(user, [], invoice.vendor, invoice.invoice_no, purchase_date)
+      unless command.success?
+        combine_errors(command.errors, :errors, :plant_ids)
+      end
+    end
+
+    def create_plants
+      facility_strain_id = batch.facility_strain_id
+      growth_stage = batch.current_growth_stage
+
+      plants = plant_ids.map do |plant_id|
+        Inventory::Plant.create!(
           plant_id: plant_id,
           facility_strain_id: facility_strain_id,
-        ) do |t|
-          t.cultivation_batch_id = cultivation_batch_id
-          t.current_growth_stage = 'clone'
-          t.created_by = user
-          t.location_id = location_id
-          t.location_type = 'tray'
-          t.status = is_draft ? 'draft' : 'available'
-          t.planting_date = planting_date
-        end
-        plant.save!
-        plants << plant
+          cultivation_batch_id: cultivation_batch_id,
+          current_growth_stage: growth_stage,
+          created_by: user,
+          location_id: location_id,
+          location_type: 'tray',
+          status: is_draft ? 'draft' : 'available',
+          planting_date: planting_date,
+          mother_id: mother_id,
+        )
+      end
+
+      if is_purchased?
+        vendor = Inventory::Vendor.find_by(name: vendor_name)
+        vendor_id = vendor ? vendor.id : nil
+
+        vendor = save_vendor(vendor_id)
+        create_invoice(plants, vendor, invoice_no, purchase_date)
       end
 
       plants
     end
 
-    def create_vendor
-      vendor = Inventory::Vendor.find_by(name: vendor_name)
-      vendor_id = vendor ? vendor.id : nil
+    def save_vendor(vendor_id)
       command = Inventory::SaveVendor.call(
         id: vendor_id,
         name: vendor_name,
@@ -157,8 +187,8 @@ module Inventory
       end
     end
 
-    def create_invoice(plants, vendor, invoice_no)
-      command = Inventory::SaveBlankInvoice.call(nil, plants, vendor, invoice_no)
+    def create_invoice(plants, vendor, invoice_no, purchase_date)
+      command = Inventory::SavePlantInvoice.call(user, plants, vendor, invoice_no, purchase_date)
       unless command.success?
         combine_errors(command.errors, :errors, :plant_ids)
       end

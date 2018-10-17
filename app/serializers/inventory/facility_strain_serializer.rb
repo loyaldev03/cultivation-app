@@ -21,5 +21,9 @@ module Inventory
     attribute :facility_id do |object|
       object.facility_id.to_s
     end
+
+    attribute :label do |object|
+      "#{object.strain_name} (#{object.facility.name})"
+    end
   end
 end

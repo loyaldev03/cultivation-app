@@ -110,6 +110,7 @@ class MotherEditor extends React.Component {
           this.setState({ errors: data.errors })
         } else {
           this.reset()
+          window.editorSidebar.close()
         }
       })
     }

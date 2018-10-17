@@ -35,18 +35,41 @@ const columns = [
   {
     Header: 'Batch No',
     accessor: 'attributes.batch_no',
-    headerStyle: { textAlign: 'left' },
-    width: 120
+    headerClassName: 'tl',
+    width: 70
   },
   {
     Header: 'Batch name',
     accessor: 'attributes.name',
-    headerStyle: { textAlign: 'left' }
+    headerClassName: 'tl'
+  },
+  {
+    Header: 'Start date',
+    accessor: 'attributes.start_date',
+    headerClassName: 'tc',
+    className: 'tc',
+    Cell: props => {
+      return <span>{new Date(props.value).toLocaleDateString()}</span>
+    }
+  },
+  {
+    Header: 'Phase',
+    accessor: 'attributes.current_growth_stage',
+    headerClassName: 'tc',
+    className: 'tc',
+    width: 80
+  },
+  {
+    Header: 'Plant Count',
+    accessor: 'attributes.plant_count',
+    headerClassName: 'tc',
+    className: 'tc',
+    width: 100
   },
   {
     Header: 'Batch Source',
     accessor: 'attributes.batch_source',
-    headerStyle: { textAlign: 'left' },
+    headerClassName: 'tl',
     Cell: props => {
       if (props.value) {
         return (
@@ -59,21 +82,9 @@ const columns = [
     }
   },
   {
-    Header: 'Grow Method',
-    accessor: 'attributes.grow_method'
-  },
-  {
-    Header: 'Start date',
-    accessor: 'attributes.start_date',
-    headerStyle: { textAlign: 'left' },
-    Cell: props => {
-      return <span>{new Date(props.value).toLocaleDateString()}</span>
-    }
-  },
-  {
     Header: 'Facility',
     accessor: 'attributes.facility',
-    headerStyle: { textAlign: 'left' }
+    headerClassName: 'tl'
   },
   {
     Header: '',

@@ -5,33 +5,33 @@ class Cultivation::BatchesController < ApplicationController
   def new
   end
 
-  def create
-    @record = Cultivation::BatchForm.new
-    @record = @record.submit(record_params)
-    if @record
-      redirect_to cultivation_batch_path(id: @record.id)
-    else
-      render 'new'
-    end
-  end
+  # def create
+  #   @record = Cultivation::BatchForm.new
+  #   @record = @record.submit(record_params)
+  #   if @record
+  #     redirect_to cultivation_batch_path(id: @record.id)
+  #   else
+  #     render 'new'
+  #   end
+  # end
 
   def show
-    @record = Cultivation::BatchForm.new(params[:id])
+    @batch = Cultivation::Batch.find(params[:id])
     @batch_attributes = {
-      id: @record.id.to_s,
-      batch_no: @record.batch_no.to_s,
-      strain: Common::Strain.find(@record.strain_id.to_s).try(:name),
-      batch_source: @record.batch_source,
-      grow_method: @record.grow_method,
-      start_date: @record.start_date.try(:strftime, '%m/%d/%Y'),
-      estimated_harvest_date: @record.estimated_harvest_date.try(:strftime, '%m/%d/%Y'),
-      nutrient_profile: @record.nutrient_profile,
+      id: @batch.id.to_s,
+      batch_no: @batch.batch_no.to_s,
+      strain: @batch.facility_strain.strain_name,
+      batch_source: @batch.batch_source,
+      grow_method: @batch.grow_method,
+      start_date: @batch.start_date,
+      estimated_harvest_date: @batch.estimated_harvest_date,
+      nutrient_profile: @batch.nutrient_profile,
     }
     # TODO: Use other params
     if params[:step].present?
       # Set the plantType for react BatchPlantSelectionList
-      @plant_selection_type = get_plants_selection_type(@record.batch_source)
-      @locations = get_available_locations(@record, 'Clone')
+      @plant_selection_type = get_plants_selection_type(@batch.batch_source)
+      @locations = get_available_locations(@batch, 'Clone')
     end
   end
 

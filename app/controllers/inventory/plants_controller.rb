@@ -4,7 +4,6 @@ class Inventory::PlantsController < ApplicationController
   before_action :load_locations
 
   def index
-    # Rails.logger.debug "\t\t\t >>> request.cookies.count: #{request.cookies.count}"
     @strain_types = Constants::STRAIN_TYPES
   end
 

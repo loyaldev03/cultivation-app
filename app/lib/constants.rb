@@ -25,7 +25,6 @@ module Constants
   CONST_VEG = 'veg'
   CONST_VEG1 = 'veg1'
   CONST_VEG2 = 'veg2'
-  CONST_HARVEST = 'harvest'
 
   ROOM_PURPOSE = [
     {code: CONST_CLONE, name: 'Clone'},

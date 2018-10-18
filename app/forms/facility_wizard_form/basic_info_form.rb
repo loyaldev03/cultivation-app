@@ -24,17 +24,19 @@ module FacilityWizardForm
     attr_accessor(*ATTRS)
 
     validates :name, presence: true
+    validates :code, presence: true
     validates_with UniqFacilityCodeValidator
 
-    def initialize(record_id = nil)
+    def initialize(record_id = nil, current_user = nil)
       set_record(record_id)
+      @current_user = current_user
     end
 
     # Note: params should include :id for update operation
     def submit(params)
       self.map_attrs_from_hash(ATTRS, params)
       if valid?
-        save_cmd = SaveFacility.call(self)
+        save_cmd = SaveFacility.call(self, @current_user)
         if save_cmd.success?
           map_attrs_from_model(save_cmd.result) if save_cmd.success?
         end

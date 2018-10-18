@@ -39,7 +39,6 @@ Rails.application.routes.draw do
     resources :items, only: [:index, :edit, :update, :new, :create, :destroy, :show] do
       resources :item_transactions, only: [:new, :create]
     end
-    resources :strains, only: [:index, :edit, :update, :new, :create, :destroy]
   end
 
   namespace 'purchasing', as: :purchasing do
@@ -109,6 +108,8 @@ Rails.application.routes.draw do
       end
 
       resources :batches, only: [:index, :create] do
+        get 'search_locations', on: :collection
+        get 'search_tray_plans', on: :collection
         post 'setup_simple_batch', on: :collection
         post 'update_locations'
         resources :tasks, only: [:index, :update, :create, :destroy] do

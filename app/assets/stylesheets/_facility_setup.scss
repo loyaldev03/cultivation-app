@@ -1,22 +1,6 @@
 $orange: var(--orange);
 $yellow: var(--yellow);
 
-.btn {
-  display: inline-block;
-  cursor: pointer;
-  outline: 0;
-  height: 40px;
-  padding-left: 20px;
-  padding-right: 20px;
-  text-transform: uppercase;
-}
-
-.btn--primary {
-  border: 1px solid $orange;
-  background-color: $orange;
-  color: white;
-}
-
 .fog {
   background-color: #ffffffa6;
   width: 100%; 

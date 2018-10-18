@@ -63,6 +63,9 @@ group :development do
 
   # Run app with Procfile
   gem 'foreman', '~> 0.85.0', require: false
+
+  # Quickly switch user during development
+  gem 'switch_user'
 end
 
 
@@ -103,8 +106,9 @@ gem 'fast_jsonapi'
 gem 'mongoid_orderable'
 
 # File attachment
-gem 'shrine', '~> 2.0'
+gem 'shrine', '~> 2.12'
 gem 'shrine-mongoid'
+gem "aws-sdk-s3", "~> 1.2"
 
 # Authorization
 gem 'pundit'

@@ -53,7 +53,6 @@ module Cultivation
           capacity: loc[:tray_capacity].to_i,
           phase: phase_info.phase,
           is_active: true,
-          is_fulfilled: false,
           c_at: current_time,
           u_at: current_time,
         }

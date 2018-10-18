@@ -17,4 +17,11 @@
 
 /* IMPORT COMPONENTS STYLES */
 @import 'react-table/react-table.css';
+@import 'components/buttons';
 @import 'components/tabs';
+@import 'components/groupbox';
+@import 'components/availability_calendar';
+
+.cultivation-setup-container {
+  width: 880px;
+}

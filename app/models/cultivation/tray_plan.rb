@@ -12,8 +12,7 @@ module Cultivation
     field :end_date, type: DateTime
     field :capacity, type: Integer
     field :phase, type: String                  # cultivation phase TODO: not important? coz we already know it's been booked
-    field :is_active, default: -> { true }      # indicate the record is still in-use.
-    field :is_fulfilled, default: -> { false }  # indicate the tray is currently being occupied.
+    field :is_active, default: -> { true }      # TrayPlan is active or just a draft
 
     belongs_to :batch, class_name: 'Cultivation::Batch'
   end

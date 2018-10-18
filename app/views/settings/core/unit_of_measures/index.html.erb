@@ -4,7 +4,7 @@
 
 <%= render 'layouts/right_sidebar' %>
 
-<div class="ph4 w-100 flex items-center pb3 pt3">
+<div class="ph4 bg-white ma4 flex items-center pb3 pt3">
   <div class="w-70">
     <h2 class="pa0 ma0">Unit of Measure</h2>
   </div>
@@ -15,25 +15,25 @@
   </div>
 </div>
 
-<div class="w-100 ph0">
+<div class="bg-white mv3 mh4">
   <table class="w-100 table collapse">
     <thead>
       <tr>
-        <th class="f6 white pv3 tl pl4 pr3">#</th>
-        <th class="f6 white pv3 tl w-20">Name</th>
-        <th class="f6 white pv3 tl w-10">Code</th>
-        <th class="f6 white pv3 tl w-20">Description</th>
-        <th class="f6 white pv3 tl w-20">Base UOM</th>
-        <th class="f6 white pv3 tl w-20">Base Unit</th>
-        <th class="f6 white pv3 tl w-20">Conversion</th>
+        <th class="f6 dark-grey pv3 tl pl4 pr3">#</th>
+        <th class="f6 dark-grey pv3 tl w-20">Name</th>
+        <th class="f6 dark-grey pv3 tl w-10">Code</th>
+        <th class="f6 dark-grey pv3 tl w-20">Description</th>
+        <th class="f6 dark-grey pv3 tl w-20">Base UOM</th>
+        <th class="f6 dark-grey pv3 tl w-20">Base Unit</th>
+        <th class="f6 dark-grey pv3 tl w-20">Conversion</th>
 
       </tr>
     </thead>
 
     <tbody>
       <% @list.each_with_index do |f, i| %>
-        <tr data-toggle-right="<%= edit_settings_core_unit_of_measure_path(f.id)%>" class="pointer">
-          <td class="f6 tl pl4 pr3 gray"><%= i+1 %></td>
+        <tr data-toggle-right="<%= edit_settings_core_unit_of_measure_path(f.id)%>" class="pointer striped--light-gray">
+          <td class="f6 pv3 tl pl4 pr3 gray"><%= i+1 %></td>
           <td class="f6 tl"><%= blank(f.name) %></td>
           <td class="f6 tl"><%= blank(f.code) %></td>
           <td class="f6 tl">

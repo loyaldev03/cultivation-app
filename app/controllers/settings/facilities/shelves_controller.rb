@@ -5,10 +5,8 @@ class Settings::Facilities::ShelvesController < ApplicationController
 
     facilities.each do |f|
       f.rooms.each do |r|
-        r.sections.each do |s|
-          s.rows.each do |row|
-            @shelves.concat(row.shelves)
-          end
+        r.rows.each do |row|
+          @shelves.concat(row.shelves)
         end
       end
     end

@@ -4,7 +4,7 @@ class QueryAvailableTrays
   def initialize(start_date, end_date, filter = {})
     raise ArgumentError, 'start_date' if start_date.nil?
     raise ArgumentError, 'end_date' if end_date.nil?
-    raise ArgumentError, 'start_date should be ealier than end_date' if end_date <= start_date
+    raise ArgumentError, 'start_date should be ealier than end_date' if end_date < start_date
 
     @start_date = start_date.beginning_of_day
     @end_date = end_date.end_of_day

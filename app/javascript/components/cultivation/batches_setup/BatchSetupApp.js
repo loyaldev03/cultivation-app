@@ -32,6 +32,27 @@ const ValidationMessage = ({ enable, show, text }) => {
   }
 }
 
+const PhaseDurationInput = ({ text, value, onChange }) => {
+  return (
+    <div className="fl w-70 mb2">
+      <div className="fl w-20 pa2">
+        <label className="black-50">{text}</label>
+      </div>
+      <div className="fr tr w-20 mh3">
+        <input
+          type="number"
+          min="0"
+          value={value}
+          onChange={onChange}
+          className="w-50 tr pa2 f6 black ba b--black-20 br2 outline-0"
+        />
+        <span className="ml1 gray f6">days</span>
+      </div>
+      <div className="fr w-50 pt1 mt3 b--black-10 bb bt-0 bl-0 br-0 b--dotted" />
+    </div>
+  )
+}
+
 class BatchSetupApp extends React.Component {
   constructor(props) {
     super(props)
@@ -161,32 +182,31 @@ class BatchSetupApp extends React.Component {
                     show={!batchFacility}
                   />
                 </div>
-                <div className="fl w-third pr2">
-                  <label className="subtitle-2 grey db mb1">Batch Source</label>
+                <div className="fl w-third pr2 ml3">
+                  <label className="subtitle-2 grey db mb1">Strains</label>
                   <Select
-                    options={plantSources}
-                    onChange={e => this.handleChange('batchSource', e.value)}
+                    options={strains}
+                    value={batchStrainValue}
+                    onChange={e => this.handleChange('batchStrain', e.value)}
                   />
                   <ValidationMessage
-                    text="Select Batch Srouce"
+                    text="Select Strain"
                     enable={showValidation}
-                    show={!batchSource}
+                    show={!batchStrain}
                   />
                 </div>
-                <div className="fl w-20">
-                  <label className="subtitle-2 grey db mb1">Month</label>
-                  <Select
-                    options={monthsOptions(new Date(2018, 1, 1), 18)}
-                    onChange={e =>
-                      this.handleChangeMonth('searchMonth', e.value)
-                    }
-                  />
-                  <ValidationMessage
-                    text="Select Month"
-                    enable={showValidation}
-                    show={!searchMonth}
-                  />
-                </div>
+              </div>
+              <div className="fl w-100 mt3">
+                <label className="subtitle-2 grey db mb1">
+                  Batch Durations
+                </label>
+                <PhaseDurationInput text="Close Phase" />
+                <PhaseDurationInput text="Veg Phase" />
+                <PhaseDurationInput text="Veg 1 Phase" />
+                <PhaseDurationInput text="Veg 2 Phase" />
+                <PhaseDurationInput text="Flower Phase" />
+                <PhaseDurationInput text="Dry Phase" />
+
                 <div className="fl tr w-20 absolute right-0 bottom-0">
                   <button
                     className="btn btn--primary"

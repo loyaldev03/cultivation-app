@@ -24,9 +24,10 @@ module FacilityWizardForm
     attr_accessor(*ATTRS)
 
     validates :name, presence: true
+    validates :code, presence: true
     validates_with UniqFacilityCodeValidator
 
-    def initialize(record_id = nil)
+    def initialize(record_id = nil, current_user = nil)
       set_record(record_id)
     end
 

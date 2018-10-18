@@ -16,6 +16,7 @@ class SaveFacility
     record ||= Facility.new
     map_attributes(record, form_object)
     record.save!
+    # SeedFacilityDataJob.perform_later record.id current_user.id
     record
   end
 

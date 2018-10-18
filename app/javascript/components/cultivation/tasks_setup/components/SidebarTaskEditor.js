@@ -212,8 +212,7 @@ class SidebarTaskEditor extends React.Component {
             <hr class="mt3 m b--light-gray w-100" />
 
             <div className="ph4 mt3 mb3">
-              <label className="f6 fw6 db mb1 gray ttc">Task Type</label>
-              <br />
+              <label className="f6 fw6 db mb1 ttc">Please select special task that related to daily task</label>
               <label className="f6 fw6 db mb1 gray ttc">
                 <input
                   type="checkbox"

@@ -1,13 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe SaveFacility, type: :command do
+  subject(:current_user) { create(:user) }
   context 'when params has no id' do
     it 'save as new record' do
       form_object = FacilityWizardForm::BasicInfoForm.new
       form_object.name = Faker::Lorem.word
       form_object.code = Faker::Code.asin
-      SaveFacility.call(form_object)
-      cmd = SaveFacility.call(form_object)
+      SaveFacility.call(form_object, current_user)
+      cmd = SaveFacility.call(form_object, current_user)
 
       expect(Facility.count).to eq 2
     end
@@ -33,7 +34,7 @@ RSpec.describe SaveFacility, type: :command do
     }
 
     it 'save all attributes' do
-      cmd = SaveFacility.call(form_object)
+      cmd = SaveFacility.call(form_object, current_user)
 
       saved = Facility.find_by(id: cmd.result.id)
       expect(cmd.success?).to be true
@@ -88,7 +89,7 @@ RSpec.describe SaveFacility, type: :command do
     it 'does not create new record' do
       form_object = FacilityWizardForm::BasicInfoForm.new(facility.id)
 
-      cmd = SaveFacility.call(form_object)
+      cmd = SaveFacility.call(form_object, current_user)
 
       expect(Facility.count).to eq 1
       expect(cmd.errors.empty?).to be true
@@ -97,7 +98,7 @@ RSpec.describe SaveFacility, type: :command do
     it 'does not delete timestamp attributes' do
       form_object = FacilityWizardForm::BasicInfoForm.new(facility.id.to_s)
 
-      SaveFacility.call(form_object)
+      SaveFacility.call(form_object, current_user)
 
       saved = Facility.find(facility.id)
       expect([saved.c_at.nil?, saved.u_at.nil?]).to eq [false, false]
@@ -108,7 +109,7 @@ RSpec.describe SaveFacility, type: :command do
       form_object.name = Faker::Lorem.word
       form_object.code = Faker::Number.number(2)
 
-      SaveFacility.call(form_object)
+      SaveFacility.call(form_object, current_user)
 
       saved = Facility.find(facility.id)
       expect(saved).to have_attributes(
@@ -138,8 +139,8 @@ RSpec.describe SaveFacility, type: :command do
       form_object2 = FacilityWizardForm::BasicInfoForm.new(facility.id)
       form_object2.name = Faker::Lorem.word
 
-      SaveFacility.call(form_object1)
-      SaveFacility.call(form_object2)
+      SaveFacility.call(form_object1, current_user)
+      SaveFacility.call(form_object2, current_user)
 
       saved = Facility.find(facility.id)
       expect(saved).to have_attributes(

@@ -22,6 +22,7 @@ module Cultivation
     field :is_category, type: Boolean, default: -> { false } #to identify category
     field :parent_id, type: String
     field :depend_on, type: String
+    field :task_type, type: Array, default: []
 
     has_and_belongs_to_many :users, inverse_of: nil
     belongs_to :batch, class_name: 'Cultivation::Batch'

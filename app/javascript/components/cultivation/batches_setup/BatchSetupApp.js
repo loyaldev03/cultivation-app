@@ -118,22 +118,11 @@ class BatchSetupApp extends React.Component {
     this.setState({ [field]: value })
   }
 
-  handleChangeMonth = (field, value) => {
-    this.setState({ [field]: value })
+  handleSearch() {
     batchSetupStore.clearSearch()
-    if (this.state.batchFacility && this.state.searchMonth) {
-      batchSetupStore.search(this.state.batchFacility, value)
+    if (!this.state.showValidation) {
+      this.setState({ showValidation: true })
     }
-  }
-
-  handleChangeInput = e => {
-    let key = e.target.attributes.fieldname.value
-    let value = e.target.value
-    this.setState({ [key]: value })
-  }
-
-  handleSearch = e => {
-    this.setState({ showValidation: true })
     const {
       batchFacility,
       searchMonth,
@@ -160,6 +149,7 @@ class BatchSetupApp extends React.Component {
   handleSearchMonth = increment => e => {
     const searchMonth = monthOptionAdd(this.state.searchMonth, increment)
     this.setState({ searchMonth })
+    this.handleSearch()
   }
 
   renderDateTile = ({ date, view }) => <CapacityTile date={date} />
@@ -283,7 +273,7 @@ class BatchSetupApp extends React.Component {
                 <div className="fl tr w-20 absolute right-0 bottom-0">
                   <button
                     className="btn btn--primary"
-                    onClick={this.handleSearch}
+                    onClick={e => this.handleSearch()}
                   >
                     Search
                   </button>

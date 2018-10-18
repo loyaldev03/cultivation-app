@@ -160,7 +160,11 @@ class TaskList extends React.Component {
     let handleAddTask = this.handleAddTask
     let handleDelete = this.handleDelete
     return (
-      <div className={`flex justify-between-ns ${row.row['attributes.is_phase'] === true ? '' : 'draggable' }`}>
+      <div
+        className={`flex justify-between-ns ${
+          row.row['attributes.is_phase'] === true ? '' : 'draggable'
+        }`}
+      >
         <div className="">
           <div className="flex">
             <div className="w1 ml3">
@@ -331,9 +335,8 @@ class TaskList extends React.Component {
     )
 
     headers.forEach((header, i) => {
-      let enableDrag = header.querySelector('.draggable');
-      if (enableDrag !== null){
-
+      let enableDrag = header.querySelector('.draggable')
+      if (enableDrag !== null) {
         header.setAttribute('draggable', true)
         //the dragged header
         header.ondragstart = e => {
@@ -370,8 +373,6 @@ class TaskList extends React.Component {
             updateTask.updatePosition(this.props.batch_id, i, this.dragged)
           }
         }
-
-
       }
     })
   }

@@ -4,7 +4,8 @@ import Select from 'react-select'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import {
   GroupBox,
-  monthsOptions,
+  dateToMonthOption,
+  monthOptionAdd,
   monthOptionToString,
   monthStartDate
 } from './../../utils'
@@ -32,9 +33,9 @@ const ValidationMessage = ({ enable, show, text }) => {
   }
 }
 
-const PhaseDurationInput = ({ text, value, onChange }) => {
+const PhaseDurationInput = ({ text, value, onChange, field }) => {
   return (
-    <div className="fl w-70 mb2">
+    <div className="fl w-70 mt1">
       <div className="fl w-20 pa2">
         <label className="black-50">{text}</label>
       </div>
@@ -43,7 +44,7 @@ const PhaseDurationInput = ({ text, value, onChange }) => {
           type="number"
           min="0"
           value={value}
-          onChange={onChange}
+          onChange={e => onChange(field, e.target.value)}
           className="w-50 tr pa2 f6 black ba b--black-20 br2 outline-0"
         />
         <span className="ml1 gray f6">days</span>
@@ -61,7 +62,7 @@ class BatchSetupApp extends React.Component {
       showValidation: false,
       batchFacility: props.defaultFacility || '',
       batchSource: '',
-      searchMonth: '',
+      searchMonth: dateToMonthOption(new Date()),
       batchStartDate: '',
       batchStrain: '',
       batchGrowMethod: '',
@@ -133,13 +134,54 @@ class BatchSetupApp extends React.Component {
 
   handleSearch = e => {
     this.setState({ showValidation: true })
-    const { batchFacility, searchMonth, batchSource } = this.state
-    if (batchFacility && batchSource && searchMonth) {
-      batchSetupStore.search(batchFacility, searchMonth)
+    const {
+      batchFacility,
+      searchMonth,
+      cloneDuration,
+      vegDuration,
+      veg1Duration,
+      veg2Duration,
+      flowerDuration,
+      dryDuration
+    } = this.state
+    if (batchFacility && searchMonth && this.totalDuration()) {
+      const phaseDuration = {
+        clone: cloneDuration,
+        veg: vegDuration,
+        veg1: veg1Duration,
+        veg2: veg2Duration,
+        flower: flowerDuration,
+        dry: dryDuration
+      }
+      batchSetupStore.search(batchFacility, searchMonth, phaseDuration)
     }
   }
 
+  handleSearchMonth = increment => e => {
+    const searchMonth = monthOptionAdd(this.state.searchMonth, increment)
+    this.setState({ searchMonth })
+  }
+
   renderDateTile = ({ date, view }) => <CapacityTile date={date} />
+
+  totalDuration = () => {
+    const {
+      cloneDuration,
+      vegDuration,
+      veg1Duration,
+      veg2Duration,
+      flowerDuration,
+      dryDuration
+    } = this.state
+    let total = 0
+    if (cloneDuration) total += +cloneDuration
+    if (vegDuration) total += +vegDuration
+    if (veg1Duration) total += +veg1Duration
+    if (veg2Duration) total += +veg2Duration
+    if (flowerDuration) total += +flowerDuration
+    if (dryDuration) total += +dryDuration
+    return total
+  }
 
   render() {
     const { plantSources, strains, facilities, growMethods } = this.props
@@ -200,12 +242,43 @@ class BatchSetupApp extends React.Component {
                 <label className="subtitle-2 grey db mb1">
                   Batch Durations
                 </label>
-                <PhaseDurationInput text="Close Phase" />
-                <PhaseDurationInput text="Veg Phase" />
-                <PhaseDurationInput text="Veg 1 Phase" />
-                <PhaseDurationInput text="Veg 2 Phase" />
-                <PhaseDurationInput text="Flower Phase" />
-                <PhaseDurationInput text="Dry Phase" />
+
+                <PhaseDurationInput
+                  text="Close Phase"
+                  onChange={this.handleChange}
+                  field="cloneDuration"
+                />
+                <PhaseDurationInput
+                  text="Veg Phase"
+                  onChange={this.handleChange}
+                  field="vegDuration"
+                />
+                <PhaseDurationInput
+                  text="Veg 1 Phase"
+                  onChange={this.handleChange}
+                  field="veg1Duration"
+                />
+                <PhaseDurationInput
+                  text="Veg 2 Phase"
+                  onChange={this.handleChange}
+                  field="veg2Duration"
+                />
+                <PhaseDurationInput
+                  text="Flower Phase"
+                  onChange={this.handleChange}
+                  field="flowerDuration"
+                />
+                <PhaseDurationInput
+                  text="Dry Phase"
+                  onChange={this.handleChange}
+                  field="dryDuration"
+                />
+
+                <div className="fl w-70 tr dark-gray pr3 pv1">
+                  Total Duration:{' '}
+                  <span className="w3 tr dib pa1">{this.totalDuration()}</span>{' '}
+                  days
+                </div>
 
                 <div className="fl tr w-20 absolute right-0 bottom-0">
                   <button
@@ -224,7 +297,19 @@ class BatchSetupApp extends React.Component {
             searchMonth && (
               <div className="fl w-100">
                 <span className="availabilty-calendar-title">
+                  <button
+                    onClick={this.handleSearchMonth(-1)}
+                    className="fl fw4 ph2 br4 pointer bg-white ml2"
+                  >
+                    &#171;
+                  </button>
                   {monthOptionToString(searchMonth)}
+                  <button
+                    onClick={this.handleSearchMonth(1)}
+                    className="fr fw4 ph2 br4 pointer bg-white mr2"
+                  >
+                    &#187;
+                  </button>
                 </span>
                 <Calendar
                   activeStartDate={monthStartDate(searchMonth)}

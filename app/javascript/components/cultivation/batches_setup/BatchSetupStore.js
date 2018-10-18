@@ -9,7 +9,7 @@ class BatchSetupStore {
   @observable isReady = false
 
   @action
-  async search(facilityId, monthYear) {
+  async search(facilityId, monthYear, phaseDuration) {
     if (facilityId && monthYear) {
       this.isLoading = true
       const api1Url = `/api/v1/batches/search_locations?facility_id=${facilityId}`

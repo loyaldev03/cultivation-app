@@ -15,6 +15,7 @@ import GanttChartList from './components/GanttChartList'
 import IssuesList from './components/IssuesList'
 import ResourceList from './components/ResourceList'
 import SecretSauce from './components/SecretSauce'
+import LocationList from './components/LocationList'
 
 class TaskSetup extends React.Component {
   constructor(props) {
@@ -66,6 +67,11 @@ class TaskSetup extends React.Component {
         <ResourceList batch_id={this.props.batch_id} batch={this.props.batch} />
       )
     }
+    if (this.state.tabs === 'location') {
+      return (
+        <LocationList batch_id={this.props.batch_id} batch={this.props.batch} />
+      )
+    }
   }
 
   renderTabsClass = value => {
@@ -107,11 +113,11 @@ class TaskSetup extends React.Component {
                   <hr />
                   <div className=" flex">
                     <div className="w-40">
-                      <label>Batch Id</label>
+                      <label>Batch Name</label>
                     </div>
                     <div className="w-40">
                       <div className="">
-                        <label>{this.state.batch.id}</label>
+                        <label>{this.state.batch.name}</label>
                       </div>
                     </div>
                   </div>
@@ -230,6 +236,12 @@ class TaskSetup extends React.Component {
             onClick={e => handleChangeTabs('gantt_chart')}
           >
             Gantt Chart
+          </a>
+          <a
+            className={renderTabsClass('location')}
+            onClick={e => handleChangeTabs('location')}
+          >
+            Location
           </a>
 
           <a

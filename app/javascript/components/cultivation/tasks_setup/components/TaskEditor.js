@@ -161,7 +161,10 @@ export default class TaskEditor extends React.Component {
 
   render() {
     let changeTabs = this.changeTabs
-    let isNormalTask = this.state.task && this.state.task.attributes.is_phase === false && this.state.task.attributes.is_category === false
+    let isNormalTask =
+      this.state.task &&
+      this.state.task.attributes.is_phase === false &&
+      this.state.task.attributes.is_category === false
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <style> {styles} </style>
@@ -177,7 +180,7 @@ export default class TaskEditor extends React.Component {
                 }`}
                 onClick={() => changeTabs('General')}
               >
-                General 
+                General
               </div>
               {isNormalTask ? (
                 <div
@@ -188,23 +191,17 @@ export default class TaskEditor extends React.Component {
                 >
                   Resource
                 </div>
-              ) : null 
-              }
+              ) : null}
               {isNormalTask ? (
-                
                 <div
                   className={`pl3 ph4 pointer dim ${
                     this.state.tabs === 'Material' ? 'active' : null
-                    }`}
+                  }`}
                   onClick={() => changeTabs('Material')}
                 >
                   Material
-                </div>  
-              )
-                :
-                null
-              }
-
+                </div>
+              ) : null}
             </div>
             {this.renderCloseSidebar()}
           </div>

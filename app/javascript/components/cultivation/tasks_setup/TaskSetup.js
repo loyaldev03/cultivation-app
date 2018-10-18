@@ -17,7 +17,6 @@ import ResourceList from './components/ResourceList'
 import SecretSauce from './components/SecretSauce'
 import LocationList from './components/LocationList'
 
-
 class TaskSetup extends React.Component {
   constructor(props) {
     super(props)

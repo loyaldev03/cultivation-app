@@ -102,8 +102,8 @@ module Api::V1
 
       # Note: Add additional 7 days before and after because the
       # calendar UI would include some dates for previous month
-      start_date = start_date - 7.days
-      end_date = end_date + (total_duration).days
+      start_date = start_date - 6.days
+      end_date = end_date + 6.days
       return start_date, end_date
     end
 

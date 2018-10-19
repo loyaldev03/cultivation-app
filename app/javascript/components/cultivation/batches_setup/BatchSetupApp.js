@@ -56,6 +56,29 @@ const PhaseDurationInput = ({ text, onChange }) => {
   )
 }
 
+class CalendarTitleBar extends React.PureComponent {
+  render() {
+    const { onPrev, onNext, month } = this.props
+    return (
+      <div className="availabilty-calendar-title">
+        <button
+          onClick={onPrev}
+          className="fl fw4 ph2 br4 pointer bg-white ml2"
+        >
+          &#171;
+        </button>
+        {monthOptionToString(month)}
+        <button
+          onClick={onNext}
+          className="fr fw4 ph2 br4 pointer bg-white mr2"
+        >
+          &#187;
+        </button>
+      </div>
+    )
+  }
+}
+
 @observer
 class BatchSetupApp extends React.Component {
   constructor(props) {
@@ -148,7 +171,7 @@ class BatchSetupApp extends React.Component {
       dryDuration
     } = this.state
     const totalDuration = this.calculateTotalDuration()
-    if (batchFacility && searchMonth && totalDuration) {
+    if (batchFacility && searchMonth && totalDuration > 0) {
       const searchParams = {
         facility_id: batchFacility,
         search_month: searchMonth,
@@ -278,26 +301,16 @@ class BatchSetupApp extends React.Component {
           {showValidation &&
             searchMonth && (
               <div className="fl w-100">
-                <span className="availabilty-calendar-title">
-                  <button
-                    onClick={e =>
-                      this.handleSearch(monthOptionAdd(searchMonth, -1))
-                    }
-                    className="fl fw4 ph2 br4 pointer bg-white ml2"
-                  >
-                    &#171;
-                  </button>
-                  {monthOptionToString(searchMonth)}
-                  <button
-                    onClick={e =>
-                      this.handleSearch(monthOptionAdd(searchMonth, 1))
-                    }
-                    className="fr fw4 ph2 br4 pointer bg-white mr2"
-                  >
-                    &#187;
-                  </button>
-                </span>
-                {batchSetupStore.isReady ? (
+                <CalendarTitleBar
+                  month={searchMonth}
+                  onPrev={e =>
+                    this.handleSearch(monthOptionAdd(searchMonth, -1))
+                  }
+                  onNext={e =>
+                    this.handleSearch(monthOptionAdd(searchMonth, 1))
+                  }
+                />
+                {!batchSetupStore.isLoading ? (
                   <Calendar
                     activeStartDate={monthStartDate(searchMonth)}
                     className="availabilty-calendar"
@@ -308,7 +321,9 @@ class BatchSetupApp extends React.Component {
                     )}
                   />
                 ) : (
-                  <div style={{ minHeight: '362px' }} />
+                  <div style={{ minHeight: '362px' }}>
+                    <span className="dib pa2">Searching...</span>
+                  </div>
                 )}
               </div>
             )}

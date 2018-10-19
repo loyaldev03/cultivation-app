@@ -16,3 +16,11 @@ export const joinBy = (records, field, separator = ',') => {
     return acc ? `${acc}${separator} ${obj[field] || ''}` : obj[field] || ''
   }, '')
 }
+
+export const minBy = (records, field) => {
+  if (!records) return
+  return records.reduce(
+    (min, rec) => (rec[field] < min ? rec[field] : min),
+    records[0][field]
+  )
+}

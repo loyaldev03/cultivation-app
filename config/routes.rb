@@ -91,7 +91,7 @@ Rails.application.routes.draw do
   # API for web pages
   namespace :api do
     namespace :v1 do
-      
+
       resources :plants, only: [:show] do
         get 'all/(:current_growth_stage)',    action: :all, on: :collection
         get 'search/:current_growth_stage/(:facility_strain_id)/(:search)',    action: :search, on: :collection
@@ -109,7 +109,6 @@ Rails.application.routes.draw do
 
       resources :batches, only: [:index, :create] do
         get 'search_locations', on: :collection
-        get 'search_tray_plans', on: :collection
         post 'search_batch_plans', on: :collection
         post 'setup_simple_batch', on: :collection
         post 'update_locations'

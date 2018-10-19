@@ -1,19 +1,33 @@
 import { observable, action, runInAction, toJS } from 'mobx'
-import { sumBy, httpGetOptions, httpPostOptions } from '../../utils'
+import {
+  minBy,
+  groupBy,
+  sumBy,
+  httpGetOptions,
+  httpPostOptions
+} from '../../utils'
 
 class BatchSetupStore {
   @observable isLoading = false
-  @observable trays = []
-  @observable plans = []
-  @observable totalCapacity = 0
+  @observable trays = {}
+  @observable plans = {}
+  @observable trayPurposes = []
   @observable isReady = false
 
   @action
   async search(searchParams) {
     if (searchParams.facility_id && searchParams.search_month) {
       this.isLoading = true
-      const api1Res = fetch(`/api/v1/batches/search_locations?facility_id=${searchParams.facility_id}`, httpGetOptions)
-      const api2Res = fetch(`/api/v1/batches/search_batch_plans`, httpPostOptions(searchParams))
+      const api1Res = fetch(
+        `/api/v1/batches/search_locations?facility_id=${
+          searchParams.facility_id
+        }`,
+        httpGetOptions
+      )
+      const api2Res = fetch(
+        `/api/v1/batches/search_batch_plans`,
+        httpPostOptions(searchParams)
+      )
 
       try {
         const response = await Promise.all([
@@ -22,17 +36,24 @@ class BatchSetupStore {
         ])
         runInAction(() => {
           this.isLoading = false
+          // Facility's trays
           if (response[0].data) {
-            this.trays = response[0].data
-            this.totalCapacity = sumBy(response[0].data, 'tray_capacity')
+            const traysData = groupBy(response[0].data, 'tray_purpose')
+            Object.keys(traysData).forEach(x => {
+              traysData[x].totalCapacity = sumBy(traysData[x], 'tray_capacity')
+            })
+            this.trayPurposes = Object.keys(traysData) || []
+            this.trays = traysData
           }
+          // Tray's booking plans
           if (response[1].data) {
-            this.plans = response[1].data.map(p => ({
+            const plansData = response[1].data.map(p => ({
               id: p.id,
               startDate: new Date(p.attributes.start_date),
               endDate: new Date(p.attributes.end_date),
               ...p.attributes
             }))
+            this.plans = groupBy(plansData, 'phase')
           }
           this.isReady = true
         })
@@ -44,24 +65,31 @@ class BatchSetupStore {
 
   @action
   clearSearch() {
-    this.trays = []
-    this.plans = []
-    this.totalCapacity = 0
+    this.trays = {}
+    this.plans = {}
     this.isReady = false
   }
 
-  getCapacity(date) {
-    const plansInScope = this.plans.filter(
-      p =>
-        (p.endDate >= date && p.startDate <= date) ||
-        (p.startDate >= date && p.endDate <= date) ||
-        (p.startDate <= date && p.endDate >= date)
-    )
-    if (this.isReady) {
-      return this.totalCapacity - sumBy(plansInScope, 'capacity')
+  sumCapacity(phasePlans, startDate, endDate) {
+    if (phasePlans) {
+      const plansInScope = phasePlans.filter(
+        p =>
+          (p.endDate >= startDate && p.startDate <= endDate) ||
+          (p.startDate >= startDate && p.startDate <= endDate) ||
+          (p.startDate <= startDate && p.endDate >= endDate)
+      )
+      return sumBy(plansInScope, 'capacity')
     } else {
       return '--'
     }
+  }
+
+  getCapacity(startDate, endDate) {
+    const result = this.trayPurposes.map(phase => ({
+      phase,
+      capacity: this.sumCapacity(this.plans[phase], startDate, endDate)
+    }))
+    return minBy(result, 'capacity')
   }
 }
 

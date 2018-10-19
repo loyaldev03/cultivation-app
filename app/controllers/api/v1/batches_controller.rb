@@ -35,7 +35,7 @@ module Api::V1
     end
 
     def search_locations
-      command = QueryReadyTrays.call(params[:facility_id], 'clone')
+      command = QueryReadyTrays.call(params[:facility_id])
       if command.success?
         render json: {data: command.result}
       else
@@ -43,31 +43,43 @@ module Api::V1
       end
     end
 
-    def search_tray_plans
-      month_str = params['search_month'] # E.g. '10-2018' (Format => MM-YYYY)
-      if month_str.present? && month_str.length >= 6 && month_str.index('-') >= 1
-        plan_start_date, plan_end_date = get_start_end_for_month(month_str)
-        command = QueryPlannedTrays.call(
-          plan_start_date,
-          plan_end_date,
-          params[:facility_id]
-        )
-        if command.success?
-          render json: TrayLocationSerializer.new(command.result).serialized_json
-        else
-          render json: {error: command.errors}
-        end
-      else
-        render json: {error: 'Invalid Search Month'}
-      end
-    end
+    #     NOTE: Replace with search_batch_plans
+    #     def search_tray_plans
+    #       month_str = params['search_month'] # E.g. '10-2018' (Format => MM-YYYY)
+    #       if month_str.present? && month_str.length >= 6 && month_str.index('-') >= 1
+    #         plan_start_date, plan_end_date = get_search_start_end_date(month_str)
+    #         command = QueryPlannedTrays.call(
+    #           plan_start_date,
+    #           plan_end_date,
+    #           params[:facility_id]
+    #         )
+    #         if command.success?
+    #           render json: TrayLocationSerializer.new(command.result).serialized_json
+    #         else
+    #           render json: {error: command.errors}
+    #         end
+    #       else
+    #         render json: {error: 'Invalid Search Month'}
+    #       end
+    #     end
 
     def search_batch_plans
       faciliy_id = params['facility_id']
-      month_str = params['search_month'] # E.g. '10-2018' (Format => MM-YYYY)
-      Rails.logger.debug "\033[31m faciliy_id: #{faciliy_id} \033[0m"
-      Rails.logger.debug "\033[31m month_str: #{month_str} \033[0m"
-      render json: {status: 'Ok'}
+      month_str = params['search_month']        # E.g. '10-2018' (Format => MM-YYYY)
+      total_duration = params['total_duration'] # E.g. 100
+
+      start_date, end_date = get_search_start_end_date(month_str, total_duration)
+      Rails.logger.debug "\033[35m total_duration: #{total_duration} \033[0m"
+      Rails.logger.debug "\033[35m start_date: #{start_date} \033[0m"
+      Rails.logger.debug "\033[35m end_date: #{end_date} \033[0m"
+
+      command = QueryPlannedTrays.call(start_date, end_date, faciliy_id)
+
+      if command.success?
+        render json: TrayLocationSerializer.new(command.result).serialized_json
+      else
+        render json: {error: command.errors}
+      end
     end
 
     private
@@ -80,14 +92,18 @@ module Api::V1
       unsafe_params.merge(errors: command.errors)
     end
 
-    def get_start_end_for_month(month_str)
+    # TODO: Move this logic to the UI
+    def get_search_start_end_date(month_str, total_duration)
       date_part = month_str.split('-')
       start_date = Date.new(date_part[1].to_i, date_part[0].to_i, 1)
-      end_date = start_date.end_of_month
-      # Add additional 7 days before and after because the
-      # calendar might include some dates for previous month
+      end_of_duration = start_date + (total_duration).days
+      end_of_month = start_date.end_of_month
+      end_date = end_of_duration >= end_of_month ? end_of_duration : end_of_month
+
+      # Note: Add additional 7 days before and after because the
+      # calendar UI would include some dates for previous month
       start_date = start_date - 7.days
-      end_date = end_date + 7.days
+      end_date = end_date + (total_duration).days
       return start_date, end_date
     end
 

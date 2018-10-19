@@ -40,17 +40,13 @@ class BatchSetupEditor extends React.PureComponent {
           <div className="ph4">
             <div className="mt2">
               <span className="subtitle-2 grey db mt2 mb1">
-                Planned Start Date: {formatDate(startDate)}
+                Strain: {batchStrain}
               </span>
             </div>
             <div className="mt2">
-              <label className="subtitle-2 grey db mb1">Strain:</label>
-              <Select
-                options={strains}
-                noOptionsMessage={() => 'Type to search strain...'}
-                onChange={e => onChange('batchStrain', e.value)}
-                value={batchStrain}
-              />
+              <span className="subtitle-2 grey db mt2 mb1">
+                Planned Start Date: {formatDate(startDate)}
+              </span>
             </div>
             <div className="mt2">
               <label className="subtitle-2 grey db mb1">Grow Method:</label>

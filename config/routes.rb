@@ -110,6 +110,7 @@ Rails.application.routes.draw do
       resources :batches, only: [:index, :create] do
         get 'search_locations', on: :collection
         get 'search_tray_plans', on: :collection
+        post 'search_batch_plans', on: :collection
         post 'setup_simple_batch', on: :collection
         post 'update_locations'
         resources :tasks, only: [:index, :update, :create, :destroy] do

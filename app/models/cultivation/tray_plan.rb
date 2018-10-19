@@ -11,8 +11,8 @@ module Cultivation
     field :start_date, type: DateTime
     field :end_date, type: DateTime
     field :capacity, type: Integer
-    field :phase, type: String                  # cultivation phase TODO: not important? coz we already know it's been booked
-    field :is_active, default: -> { true }      # TrayPlan is active or just a draft
+    field :phase, type: String             # To enable query for plans by Cultivation Phase
+    field :is_active, default: -> { true } # TrayPlan is active or just a draft
 
     belongs_to :batch, class_name: 'Cultivation::Batch'
   end

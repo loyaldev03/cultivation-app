@@ -47,8 +47,6 @@ module Api::V1
       month_str = params['search_month'] # E.g. '10-2018' (Format => MM-YYYY)
       if month_str.present? && month_str.length >= 6 && month_str.index('-') >= 1
         plan_start_date, plan_end_date = get_start_end_for_month(month_str)
-        Rails.logger.debug "\033[31m plan_start_date: #{plan_start_date} \033[0m"
-        Rails.logger.debug "\033[31m plan_start_date: #{plan_end_date} \033[0m"
         command = QueryPlannedTrays.call(
           plan_start_date,
           plan_end_date,
@@ -62,6 +60,14 @@ module Api::V1
       else
         render json: {error: 'Invalid Search Month'}
       end
+    end
+
+    def search_batch_plans
+      faciliy_id = params['facility_id']
+      month_str = params['search_month'] # E.g. '10-2018' (Format => MM-YYYY)
+      Rails.logger.debug "\033[31m faciliy_id: #{faciliy_id} \033[0m"
+      Rails.logger.debug "\033[31m month_str: #{month_str} \033[0m"
+      render json: {status: 'Ok'}
     end
 
     private

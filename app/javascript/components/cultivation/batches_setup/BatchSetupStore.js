@@ -1,5 +1,5 @@
 import { observable, action, runInAction, toJS } from 'mobx'
-import { sumBy, httpGetOptions } from '../../utils'
+import { sumBy, httpGetOptions, httpPostOptions } from '../../utils'
 
 class BatchSetupStore {
   @observable isLoading = false
@@ -9,13 +9,11 @@ class BatchSetupStore {
   @observable isReady = false
 
   @action
-  async search(facilityId, monthYear, phaseDuration) {
-    if (facilityId && monthYear) {
+  async search(searchParams) {
+    if (searchParams.facility_id && searchParams.search_month) {
       this.isLoading = true
-      const api1Url = `/api/v1/batches/search_locations?facility_id=${facilityId}`
-      const api2Url = `/api/v1/batches/search_tray_plans?search_month=${monthYear}`
-      const api1Res = fetch(api1Url, httpGetOptions)
-      const api2Res = fetch(api2Url, httpGetOptions)
+      const api1Res = fetch(`/api/v1/batches/search_locations?facility_id=${searchParams.facility_id}`, httpGetOptions)
+      const api2Res = fetch(`/api/v1/batches/search_batch_plans`, httpPostOptions(searchParams))
 
       try {
         const response = await Promise.all([

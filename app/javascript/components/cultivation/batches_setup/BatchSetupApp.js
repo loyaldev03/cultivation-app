@@ -134,7 +134,9 @@ class BatchSetupApp extends React.Component {
       dryDuration
     } = this.state
     if (batchFacility && searchMonth && this.totalDuration()) {
-      const phaseDuration = {
+      const searchParams = {
+        facility_id: batchFacility,
+        search_month: searchMonth,
         clone: cloneDuration,
         veg: vegDuration,
         veg1: veg1Duration,
@@ -142,7 +144,8 @@ class BatchSetupApp extends React.Component {
         flower: flowerDuration,
         dry: dryDuration
       }
-      batchSetupStore.search(batchFacility, searchMonth, phaseDuration)
+      console.log('Handle Serch', searchParams)
+      batchSetupStore.search(searchParams)
     }
   }
 

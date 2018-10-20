@@ -1,4 +1,4 @@
-class TraysBookingJob < ApplicationJob
+class UpdateTrayPlansJob < ApplicationJob
   queue_as :default
 
   def perform(*args)

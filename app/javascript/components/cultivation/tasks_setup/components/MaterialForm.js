@@ -79,6 +79,12 @@ export default class MaterialForm extends React.Component {
         raw_material_id: ItemStore.slice().find(e => e.name === value.value).id
       })
     }
+    if (key === 'selectedThirdDropdown') {
+      this.setState({
+        name: value.value,
+        raw_material_id: ItemStore.slice().find(e => e.name === value.value).id
+      })
+    }
   }
 
   handleChange = (key, value) => {
@@ -204,7 +210,7 @@ export default class MaterialForm extends React.Component {
     let handleDelete = this.handleDelete
     return (
       <React.Fragment>
-        <div className="ba b--light-gray ml4 mr4 mt4">
+        <div className="">
           <div className="ph4 mt3 flex">
             <div className="w-100">
               {/* {JSON.stringify(subcategory_dropdown['Potassium'])} */}
@@ -226,7 +232,7 @@ export default class MaterialForm extends React.Component {
               <div className="ph4 mt3 flex">
                 <div className="w-100">
                   <label className="f6 fw6 db mb1 gray ttc">
-                    {this.state.selectedCategory.label}
+                    Please select {this.state.selectedCategory.label} Type
                   </label>
                   <Select
                     name="selectedSubCategory"
@@ -243,7 +249,7 @@ export default class MaterialForm extends React.Component {
             <div className="ph4 mt3 flex">
               <div className="w-100">
                 <label className="f6 fw6 db mb1 gray ttc">
-                  {this.state.selectedSubCategory.label}
+                  Please select {this.state.selectedSubCategory.label} Product
                 </label>
                 <Select
                   name="selectedThirdDropdown"
@@ -293,8 +299,8 @@ export default class MaterialForm extends React.Component {
             <tbody>
               <tr className="bb">
                 <th>Material Name</th>
-                <th>Quantity</th>
-                <th>Unit of Measurment</th>
+                <th>Qty</th>
+                <th>UOM</th>
                 <th />
               </tr>
               {materials.map((x, index) => (

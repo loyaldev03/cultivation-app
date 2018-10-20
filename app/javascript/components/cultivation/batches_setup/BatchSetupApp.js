@@ -1,42 +1,80 @@
+import 'babel-polyfill'
 import React from 'react'
 import Select from 'react-select'
-import { render } from 'react-dom'
-
-import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import reactSelectStyle from './../../utils/reactSelectStyle'
+import Calendar from 'react-calendar/dist/entry.nostyle'
+import {
+  GroupBox,
+  monthsOptions,
+  monthOptionToString,
+  monthStartDate
+} from './../../utils'
 import { toast } from './../../utils/toast'
-import { TextInput, NumericInput, FieldError } from './../../utils/FormHelpers'
+import batchSetupStore from './BatchSetupStore'
+import { observer } from 'mobx-react'
+import BatchSetupEditor from './BatchSetupEditor'
+
+@observer
+class CapacityTile extends React.Component {
+  render() {
+    return (
+      <span className="react-calendar__tile__content">
+        {batchSetupStore.getCapacity(this.props.date)}
+      </span>
+    )
+  }
+}
+
+const ValidationMessage = ({ enable, show, text }) => {
+  if (enable && show) {
+    return <span className="red f7 absolute">{text}</span>
+  } else {
+    return null
+  }
+}
 
 class BatchSetupApp extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       id: '',
-      batch_source: '',
-      start_date: null,
-      grow_method: '',
-      facility_strains: [],
-      facility_strain: null,
-      errors: {},
+      showValidation: false,
+      batchFacility: props.defaultFacility || '',
+      batchSource: '',
+      searchMonth: '',
+      batchStartDate: '',
+      batchStrain: '',
+      batchGrowMethod: '',
       isLoading: false
     }
   }
 
   componentDidMount() {
-    // loadTasks.loadbatch(this.props.batch_id)
-    this.loadFacilityStrains()
+    // Setup sidebar editor
+    window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
+  }
+
+  closeSidebar = () => {
+    window.editorSidebar.close()
+  }
+
+  handleDatePick = date => {
+    console.log('DatePicker picked', date)
+    this.setState({ batchStartDate: date })
+    window.editorSidebar.open({ width: '500px' })
   }
 
   handleSubmit = event => {
     this.setState({ isLoading: true })
-    fetch('/api/v1/batches', {
+    const url = '/api/v1/batches'
+    fetch(url, {
       method: 'POST',
       credentials: 'include',
       body: JSON.stringify({
-        batch_source: this.state.batch_source,
-        facility_strain_id: this.state.facility_strain.id,
-        start_date: this.state.start_date.toISOString(),
-        grow_method: this.state.grow_method
+        batch_source: this.state.batchSource,
+        facility_id: this.state.batchFacility,
+        facility_strain_id: this.state.batchStrain,
+        start_date: this.state.batchStartDate.toDateString(),
+        grow_method: this.state.batchGrowMethod
       }),
       headers: {
         'Content-Type': 'application/json'
@@ -58,128 +96,141 @@ class BatchSetupApp extends React.Component {
     this.setState({ [field]: value })
   }
 
-  handleChangeInput = event => {
-    // console.log(event[0].value)
-    let key = event.target.attributes.fieldname.value
-    let value = event.target.value
+  handleChangeMonth = (field, value) => {
+    this.setState({ [field]: value })
+    batchSetupStore.clearSearch()
+    if (this.state.batchFacility && this.state.searchMonth) {
+      batchSetupStore.search(this.state.batchFacility, value)
+    }
+  }
+
+  handleChangeInput = e => {
+    let key = e.target.attributes.fieldname.value
+    let value = e.target.value
     this.setState({ [key]: value })
   }
 
-  setDateValue = event => {}
-
-  loadFacilityStrains = () => {
-    fetch('/api/v1/strains', {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        return response.json().then(data => {
-          return {
-            status: response.status,
-            data: data.data
-          }
-        })
-      })
-      .then(({ status, data }) => {
-        if (status >= 400) {
-          this.setState({ facility_strains: [] })
-        } else {
-          this.setState({ facility_strains: data })
-        }
-      })
+  handleSearch = e => {
+    this.setState({ showValidation: true })
+    const { batchFacility, searchMonth, batchSource } = this.state
+    if (batchFacility && batchSource && searchMonth) {
+      batchSetupStore.search(batchFacility, searchMonth)
+    }
   }
 
+  renderDateTile = ({ date, view }) => <CapacityTile date={date} />
+
   render() {
-    const { plants: batch_sources, grow_methods } = this.props
+    const { plantSources, strains, facilities, growMethods } = this.props
+    const {
+      showValidation,
+      batchFacility,
+      batchStrain,
+      batchSource,
+      searchMonth,
+      batchStartDate,
+      isLoading
+    } = this.state
+
+    const batchFacilityValue = facilities.find(f => f.value === batchFacility)
+    const batchStrainValue = strains.find(f => f.value === batchStrain)
 
     return (
-      <React.Fragment>
-        <div id="toast" className="toast animated toast--success">
-          Row Saved
-        </div>
-
+      <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
+        <div id="toast" className="toast" />
         <h5 className="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
-        <p className="mt2 body-1 grey">Some cultivation setup here</p>
-        <form>
-          <div className="w-100">
-            <div className="mt3">
-              <label
-                className="f6 fw6 db mb1 gray ttc"
-                htmlFor="record_batch_source"
-              >
-                Select Batch Source
-              </label>
-              <Select
-                options={batch_sources}
-                onChange={e => this.handleChange('batch_source', e.value)}
-                styles={reactSelectStyle}
-              />
+        <p className="mt2 body-1 grey">
+          Search to display available quantity on specific date.
+        </p>
+        <GroupBox
+          title="Search"
+          className="mt3 fl w-100"
+          render={() => (
+            <div className="fl w-100 relative">
+              <div className="fl w-100">
+                <div className="fl w-third pr2">
+                  <label className="subtitle-2 grey db mb1">Facility</label>
+                  <Select
+                    options={facilities}
+                    value={batchFacilityValue}
+                    onChange={e => this.handleChange('batchFacility', e.value)}
+                  />
+                  <ValidationMessage
+                    text="Select Facility"
+                    enable={showValidation}
+                    show={!batchFacility}
+                  />
+                </div>
+                <div className="fl w-third pr2">
+                  <label className="subtitle-2 grey db mb1">Batch Source</label>
+                  <Select
+                    options={plantSources}
+                    onChange={e => this.handleChange('batchSource', e.value)}
+                  />
+                  <ValidationMessage
+                    text="Select Batch Srouce"
+                    enable={showValidation}
+                    show={!batchSource}
+                  />
+                </div>
+                <div className="fl w-20">
+                  <label className="subtitle-2 grey db mb1">Month</label>
+                  <Select
+                    options={monthsOptions(new Date(2018, 1, 1), 18)}
+                    onChange={e =>
+                      this.handleChangeMonth('searchMonth', e.value)
+                    }
+                  />
+                  <ValidationMessage
+                    text="Select Month"
+                    enable={showValidation}
+                    show={!searchMonth}
+                  />
+                </div>
+                <div className="fl tr w-20 absolute right-0 bottom-0">
+                  <button
+                    className="btn btn--primary"
+                    onClick={this.handleSearch}
+                  >
+                    Search
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-
-          <div className="w-100 mt3">
-            <label
-              className="f6 fw6 db mb1 gray ttc"
-              htmlFor="record_batch_source"
-            >
-              Select Strain
-            </label>
-            <Select
-              options={this.state.facility_strains}
-              noOptionsMessage={() => 'Type to search strain...'}
-              getOptionLabel={option => option.attributes.label}
-              getOptionValue={option => option.attributes.id}
-              onChange={e => this.setState({ facility_strain: e })}
-              value={this.state.facility_strain}
-              styles={reactSelectStyle}
+          )}
+        />
+        <div className="fl w-100 mt3">
+          {showValidation &&
+            searchMonth && (
+              <div className="fl w-100">
+                <span className="availabilty-calendar-title">
+                  {monthOptionToString(searchMonth)}
+                </span>
+                <Calendar
+                  activeStartDate={monthStartDate(searchMonth)}
+                  className="availabilty-calendar"
+                  showNavigation={false}
+                  onChange={this.handleDatePick}
+                  tileContent={this.renderDateTile}
+                />
+              </div>
+            )}
+        </div>
+        <div data-role="sidebar" className="rc-slide-panel">
+          <div className="rc-slide-panel__body h-100">
+            <BatchSetupEditor
+              strains={strains}
+              batchStrain={batchStrainValue}
+              growMethods={growMethods}
+              startDate={batchStartDate}
+              onChange={this.handleChange}
+              onClose={this.closeSidebar}
+              onSave={this.handleSubmit}
+              isLoading={isLoading}
             />
-            <FieldError errors={this.state.errors} field="facility_strain_id" />
           </div>
-
-          <div className="w-100">
-            <div className="mt3">
-              <label
-                className="f6 fw6 db mb1 gray ttc"
-                htmlFor="record_batch_source"
-              >
-                Select Grow Method
-              </label>
-              <Select
-                options={grow_methods}
-                styles={reactSelectStyle}
-                onChange={e => this.handleChange('grow_method', e.value)}
-              />
-            </div>
-          </div>
-
-          <div className="w-100 shelves_number_options">
-            <div className="mt3">
-              <label
-                className="f6 fw6 db mb1 gray ttc"
-                htmlFor="record_batch_source"
-              >
-                Select Start Date
-              </label>
-              <DatePicker
-                value={this.state.start_date}
-                onChange={e => this.handleChange('start_date', e)}
-              />
-            </div>
-          </div>
-
-          <div className="w-100 flex justify-end mt3">
-            <a
-              className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer"
-              onClick={this.handleSubmit}
-            >
-              {this.state.isLoading ? 'Saving...' : 'Save & Continue'}
-            </a>
-          </div>
-        </form>
-      </React.Fragment>
+        </div>
+      </div>
     )
   }
 }

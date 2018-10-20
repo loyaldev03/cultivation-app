@@ -121,11 +121,14 @@ Rails.application.routes.draw do
       end
 
       resources :batches, only: [:index, :create] do
+        get 'search_locations', on: :collection
+        get 'search_tray_plans', on: :collection
         post 'setup_simple_batch', on: :collection
         post 'update_locations'
         resources :tasks, only: [:index, :update, :create, :destroy] do
           put 'indent', on: :member
         end
+        resources :nutrient_profiles
       end
 
       resources :users, only: [:index] do

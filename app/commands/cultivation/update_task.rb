@@ -49,12 +49,14 @@ module Cultivation
 
       if opt[:children] != false #used for avoid updating children task
         task.children.each do |child|
-          temp_child = child
-          end_date = task.start_date + child.duration.to_i.send('days')
-          temp_child.start_date = task.start_date
-          temp_child.end_date = end_date
-          array << temp_child #store inside temp_array
-          find_changes(child, array) #find childrens, pass array
+          if child.depend_on.nil?
+            temp_child = child
+            end_date = task.start_date + child.duration.to_i.send('days')
+            temp_child.start_date = task.start_date
+            temp_child.end_date = end_date
+            array << temp_child #store inside temp_array
+            find_changes(child, array) #find childrens, pass array
+          end
         end
       end
 

@@ -131,7 +131,7 @@ export default class ResourceForm extends React.Component {
     let resources = this.state.users
     return (
       <React.Fragment>
-        <div className="ba b--light-gray ml4 mr4 mt4">
+        <div className="">
           <div className="ph4 mt3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Job Role</label>
@@ -162,7 +162,7 @@ export default class ResourceForm extends React.Component {
             <input
               type="submit"
               className="pv2 ph3 ml4 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
-              value="Add Resource"
+              value="Assign"
               onClick={this.handleSubmit}
             />
           </div>

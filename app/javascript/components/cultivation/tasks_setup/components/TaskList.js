@@ -149,6 +149,9 @@ class TaskList extends React.Component {
     }))
   }
 
+  // t = {12: true, 13: false} => store this in visibility store
+  // t[12] get true display true
+
   renderAttributesName = row => {
     let id = row.row['id']
     let handleEdit = this.handleEdit
@@ -157,7 +160,11 @@ class TaskList extends React.Component {
     let handleAddTask = this.handleAddTask
     let handleDelete = this.handleDelete
     return (
-      <div className="flex justify-between-ns">
+      <div
+        className={`flex justify-between-ns ${
+          row.row['attributes.is_phase'] === true ? '' : 'draggable'
+        }`}
+      >
         <div className="">
           <div className="flex">
             <div className="w1 ml3">
@@ -328,40 +335,43 @@ class TaskList extends React.Component {
     )
 
     headers.forEach((header, i) => {
-      header.setAttribute('draggable', true)
-      //the dragged header
-      header.ondragstart = e => {
-        e.stopPropagation()
-        this.dragged = i
-      }
+      let enableDrag = header.querySelector('.draggable')
+      if (enableDrag !== null) {
+        header.setAttribute('draggable', true)
+        //the dragged header
+        header.ondragstart = e => {
+          e.stopPropagation()
+          this.dragged = i
+        }
 
-      header.ondrag = e => e.stopPropagation
+        header.ondrag = e => e.stopPropagation
 
-      header.ondragend = e => {
-        e.stopPropagation()
-        setTimeout(() => (this.dragged = null), 1000)
-      }
+        header.ondragend = e => {
+          e.stopPropagation()
+          setTimeout(() => (this.dragged = null), 1000)
+        }
 
-      //the dropped header
-      header.ondragover = e => {
-        e.preventDefault()
-      }
+        //the dropped header
+        header.ondragover = e => {
+          e.preventDefault()
+        }
 
-      header.ondragenter = e => {
-        e.target.closest('.rt-tr-group').style.borderBottomColor =
-          'rgb(255,112,67)'
-      }
+        header.ondragenter = e => {
+          e.target.closest('.rt-tr-group').style.borderBottomColor =
+            'rgb(255,112,67)'
+        }
 
-      header.ondragleave = e => {
-        e.target.closest('.rt-tr-group').style.borderBottomColor = ''
-      }
+        header.ondragleave = e => {
+          e.target.closest('.rt-tr-group').style.borderBottomColor = ''
+        }
 
-      header.ondrop = e => {
-        e.preventDefault()
-        e.target.closest('.rt-tr-group').style.borderBottomColor = ''
-        if (this.dragged !== null && i !== null) {
-          TaskStore.splice(i, 0, TaskStore.splice(this.dragged, 1)[0])
-          updateTask.updatePosition(this.props.batch_id, i, this.dragged)
+        header.ondrop = e => {
+          e.preventDefault()
+          e.target.closest('.rt-tr-group').style.borderBottomColor = ''
+          if (this.dragged !== null && i !== null) {
+            TaskStore.splice(i, 0, TaskStore.splice(this.dragged, 1)[0])
+            updateTask.updatePosition(this.props.batch_id, i, this.dragged)
+          }
         }
       }
     })
@@ -374,136 +384,6 @@ class TaskList extends React.Component {
       <React.Fragment>
         <style> {styles} </style>
 
-        <div className=" flex">
-          <div className="w-40">
-            <h4 className="tl pa0 ma0 h6--font dark-grey">
-              Batch {this.state.batch.batch_no}
-            </h4>
-          </div>
-        </div>
-        <div className="mb3 flex">
-          <div className="w-30">
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Batch Source</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.batch_source}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Batch Id</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.id}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Strain</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.strain}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Grow Method</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.grow_method}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </div>
-
-          <div className="w-30 ml5">
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Start Date </label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>{this.state.batch.start_date}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Estimation Cost</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Estimation Hours</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </div>
-
-          <div className="w-30 ml5">
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Estimated Harvest Dat </label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>{this.state.batch.start_date}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Actual Cost</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Actual Hour</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </div>
-        </div>
         <ReactTable
           columns={[
             {
@@ -556,7 +436,7 @@ class TaskList extends React.Component {
               maxWidth: '100'
             },
             {
-              Header: 'Estimated Hours',
+              Header: 'Est Hr',
               accessor: 'attributes.estimated_hours',
               maxWidth: '150'
             },
@@ -644,6 +524,17 @@ class TaskList extends React.Component {
           batch_id={this.props.batch_id}
           handleReset={this.handleReset}
         />
+        <div class="w-30 mt4">
+          <a
+            href={
+              '/cultivation/batches/' + this.props.batch_id + '?type=active'
+            }
+            data-method="put"
+            className="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim mt3"
+          >
+            Save & Continue
+          </a>
+        </div>
       </React.Fragment>
     )
   }

@@ -3,6 +3,12 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def new
+    Rails.logger.debug "\033[34m Default Facility: #{current_default_facility&.name} \033[0m"
+    @default_facility = current_default_facility&.id&.to_s
+    @plant_sources = Constants::PLANT_SOURCE_TYPES.map { |a| {value: a[:code], label: a[:name]} }
+    @strains = Inventory::FacilityStrain.all.map { |a| {value: a.id.to_s, label: "#{a.strain_name} (#{a.strain_type})"} }
+    @facilities = QueryUserFacilities.call(current_user).result.map { |a| {value: a.id.to_s, label: "#{a.name} (#{a.code})"} }
+    @grow_methods = Constants::GROW_MEDIUM.map { |a| {value: a[:code], label: a[:name]} }
   end
 
   # def create
@@ -25,6 +31,7 @@ class Cultivation::BatchesController < ApplicationController
       grow_method: @batch.grow_method,
       start_date: @batch.start_date,
       estimated_harvest_date: @batch.estimated_harvest_date,
+      nutrient_profile: @batch.nutrient_profile,
     }
     # TODO: Use other params
     if params[:step].present?

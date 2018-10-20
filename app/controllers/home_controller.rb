@@ -15,12 +15,14 @@ class HomeController < ApplicationController
   end
 
   def reset_data
-    f = Facility.find_by(code: 'F0X')
+    f = Facility.find_by(code: 'F0X') || Facility.new
     t = []
-    f.rooms.each do |r|
-      r.rows.each do |rw|
-        rw.shelves.each do |sh|
-          t.concat sh.tray_ids
+    if f.persisted?
+      f.rooms.each do |r|
+        r.rows.each do |rw|
+          rw.shelves.each do |sh|
+            t.concat sh.tray_ids
+          end
         end
       end
     end

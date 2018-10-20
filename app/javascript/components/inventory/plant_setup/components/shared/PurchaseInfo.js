@@ -177,8 +177,7 @@ class PurchaseInfo extends React.Component {
           </div>
         </div>
 
-
-        { this.props.vendorLicense && (
+        {this.props.vendorLicense && (
           <div className="ph4 mb3 flex">
             <div className="w-50">
               <TextInput
@@ -203,9 +202,7 @@ class PurchaseInfo extends React.Component {
           </div>
         )}
 
-
-        { this.props.vendorLicense && (
-
+        {this.props.vendorLicense && (
           <div className="ph4 mb3 flex">
             <div className="w-50">
               <TextInput
@@ -229,7 +226,6 @@ class PurchaseInfo extends React.Component {
             </div>
           </div>
         )}
-        
 
         <div className="ph4 mb3 flex">
           <div className="w-50">

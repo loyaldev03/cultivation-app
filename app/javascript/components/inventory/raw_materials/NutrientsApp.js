@@ -33,7 +33,7 @@ const columns = [
   {
     Header: 'Product Name',
     accessor: 'attributes.batch_no',
-    headerClassName: 'tl',
+    headerClassName: 'tl'
   },
   {
     Header: 'Nutrient Type',
@@ -45,7 +45,7 @@ const columns = [
     accessor: 'attributes.start_date',
     headerClassName: 'tl'
   },
-  { 
+  {
     Header: 'PO Number',
     accessor: 'attributes.current_growth_stage',
     headerClassName: 'tl'
@@ -95,7 +95,6 @@ class NutrientsApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    
   }
 
   openSidebar() {
@@ -143,7 +142,7 @@ class NutrientsApp extends React.Component {
     return (
       <React.Fragment>
         {this.renderNutrientList()}
-        <NutrientEditor/>
+        <NutrientEditor />
       </React.Fragment>
     )
   }

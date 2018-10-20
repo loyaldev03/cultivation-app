@@ -13,9 +13,7 @@ class NutrientEditor extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener('editor-sidebar-open', event => {
-      
-    })
+    document.addEventListener('editor-sidebar-open', event => {})
   }
 
   onChangeGeneric = event => {
@@ -27,7 +25,7 @@ class NutrientEditor extends React.Component {
   resetState() {
     return {
       id: '',
-      uom: {value: 'Bag', label: 'Bag'},
+      uom: { value: 'Bag', label: 'Bag' },
       qty_per_package: '',
       quantity: '',
       errors: {}
@@ -39,9 +37,7 @@ class NutrientEditor extends React.Component {
   }
 
   validateAndGetValues() {
-    const {
-      id
-    } = this.state
+    const { id } = this.state
 
     let errors = {}
 
@@ -61,7 +57,6 @@ class NutrientEditor extends React.Component {
       ? { width: '500px' }
       : { width: '0px' }
 
-
     return (
       <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
         <div className="rc-slide-panel__body flex flex-column">
@@ -69,9 +64,7 @@ class NutrientEditor extends React.Component {
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">
-              Add Nutrient
-            </h1>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Nutrient</h1>
             <span
               className="rc-slide-panel__close-button dim"
               onClick={() => {
@@ -93,37 +86,43 @@ class NutrientEditor extends React.Component {
             </div>
           </div>
 
-
           <div className="ph4 mb3 flex">
             <div className="w-30">
               <label className="f6 fw6 db mb1 gray ttc">Nutrient Type</label>
               <Select
-                options={['Blend', 'Nitrogen', 'Phosphate', 'Potassium'].map(x => ({ value: x, label: x}))}
+                options={['Blend', 'Nitrogen', 'Phosphate', 'Potassium'].map(
+                  x => ({ value: x, label: x })
+                )}
                 styles={reactSelectStyle}
               />
             </div>
             <div className="w-70 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">Nitrogen Products</label>
+              <label className="f6 fw6 db mb1 gray ttc">
+                Nitrogen Products
+              </label>
               <Select
-                options={['Ammonia (NH3)','Blood Meal','Cottonseed Meal', 'Fish Emulsion', 'Urea'].map(x => ({ value: x, label: x}))}
+                options={[
+                  'Ammonia (NH3)',
+                  'Blood Meal',
+                  'Cottonseed Meal',
+                  'Fish Emulsion',
+                  'Urea'
+                ].map(x => ({ value: x, label: x }))}
                 styles={reactSelectStyle}
               />
             </div>
           </div>
 
-
-           <div className="ph4 mb3 flex">
+          <div className="ph4 mb3 flex">
             <div className="w-100">
-              <TextInput
-                label="Manufacturer"
-              />
+              <TextInput label="Manufacturer" />
             </div>
           </div>
 
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Description</label>
-              <textarea className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"/>
+              <textarea className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy" />
             </div>
           </div>
 
@@ -141,35 +140,43 @@ class NutrientEditor extends React.Component {
               <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
               <Select
                 value={this.state.uom}
-                options={['Bag', 'Box', 'Pack', 'Pc', 'Unit'].map(x => ({ value: x, label: x }))}
+                options={['Bag', 'Box', 'Pack', 'Pc', 'Unit'].map(x => ({
+                  value: x,
+                  label: x
+                }))}
                 styles={reactSelectStyle}
-                onChange={x => this.setState({uom: x})}
+                onChange={x => this.setState({ uom: x })}
               />
             </div>
             <div className="w-50 pl3">
               <NumericInput
-                label={`Price per ${this.state.uom && this.state.uom.label} before tax`}
+                label={`Price per ${this.state.uom &&
+                  this.state.uom.label} before tax`}
                 fieldname="price_per_package"
                 onChange={this.onChangeGeneric}
               />
-              
-              { this.state.price_per_package && this.state.quantity && 
-                (<p className="f6 gray mb0">
-                  Total $ {(parseFloat(this.state.price_per_package) * parseFloat(this.state.quantity)).toFixed(2)}
-                </p>)
-              }
+
+              {this.state.price_per_package &&
+                this.state.quantity && (
+                  <p className="f6 gray mb0">
+                    Total ${' '}
+                    {(
+                      parseFloat(this.state.price_per_package) *
+                      parseFloat(this.state.quantity)
+                    ).toFixed(2)}
+                  </p>
+                )}
             </div>
           </div>
 
-          
-
-          { this.state.uom && (
+          {this.state.uom && (
             <React.Fragment>
               <hr className="mt3 m b--light-gray w-100" />
               <div className="ph4 mt3 mb3 flex">
                 <div className="w-100">
                   <label className="f6 fw6 db mb1 dark-gray">
-                    Amount of material in each {this.state.uom.label.toLowerCase()}
+                    Amount of material in each{' '}
+                    {this.state.uom.label.toLowerCase()}
                   </label>
                 </div>
               </div>
@@ -193,20 +200,27 @@ class NutrientEditor extends React.Component {
                   <label className="f6 fw6 db mb1 gray ttc">UoM</label>
                   <Select
                     placeholder=""
-                    options={['kg', 'g', 'lb', 'oz', 'pcs'].map(x => ({ value: x, label: x }))}
+                    options={['kg', 'g', 'lb', 'oz', 'pcs'].map(x => ({
+                      value: x,
+                      label: x
+                    }))}
                     styles={reactSelectStyle}
-                    onChange={x => this.setState({uom_per_package: x})}
+                    onChange={x => this.setState({ uom_per_package: x })}
                   />
                 </div>
                 <div className="w-50 pl4">
-                  <label className="f6 fw6 db mb1 gray ttc">Total material in {this.state.quantity} {this.state.uom.label}</label>
+                  <label className="f6 fw6 db mb1 gray ttc">
+                    Total material in {this.state.quantity}{' '}
+                    {this.state.uom.label}
+                  </label>
                   <div className="f6 pv2 fw6">
-                    { this.state.quantity && 
-                      this.state.qty_per_package && 
-                      (parseInt(this.state.quantity) * parseInt(this.state.qty_per_package))
-                    }
+                    {this.state.quantity &&
+                      this.state.qty_per_package &&
+                      parseInt(this.state.quantity) *
+                        parseInt(this.state.qty_per_package)}
                     &nbsp;
-                    { this.state.uom_per_package && this.state.uom_per_package.label }
+                    {this.state.uom_per_package &&
+                      this.state.uom_per_package.label}
                   </div>
                 </div>
               </div>
@@ -215,23 +229,21 @@ class NutrientEditor extends React.Component {
 
           <hr className="mt3 m b--light-gray w-100" />
 
-
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Where are they stored?</label>
-              <Select
-                styles={reactSelectStyle}
-              />
+              <label className="f6 fw6 db mb1 gray ttc">
+                Where are they stored?
+              </label>
+              <Select styles={reactSelectStyle} />
             </div>
           </div>
 
-         
-
           <hr className="mt3 m b--light-gray w-100" />
 
-          <PurchaseInfo label="How the nutrients are purchased?" vendorLicense={false}/>
-          
-
+          <PurchaseInfo
+            label="How the nutrients are purchased?"
+            vendorLicense={false}
+          />
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
             <a
@@ -255,9 +267,6 @@ class NutrientEditor extends React.Component {
   }
 }
 
-
-
-
 // PO Number
 // Product Name
 
@@ -273,7 +282,7 @@ class NutrientEditor extends React.Component {
 // Location
 
 // Do you use storage cabinets/shelves to store your items?
-// Is yes, please indicate Shelf/row ID: 
+// Is yes, please indicate Shelf/row ID:
 
 // NutrientEditor.propTypes = {
 //   batch_sources: PropTypes.array.isRequired,

@@ -32,11 +32,11 @@ Rails.application.routes.draw do
   post "facility_setup/duplicate_rows" => "facility_setup#duplicate_rows", as: "duplicate_rows"
 
   get "settings" => "home#settings"
-  
+  get "inventory/setup" => "home#inventory_setup"
+  post "reset_data" => "home#reset_data"
 
   namespace 'materials', as: :materials do
     get '/' => 'materials#index'
-    
 
     # resources :items, only: [:index, :edit, :update, :new, :create, :destroy, :show] do
     resources :items do

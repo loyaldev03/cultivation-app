@@ -136,5 +136,4 @@ task seed_until_po: :environment  do
   #     ref_id: item.id,
   #     ref_type: 'Inventory::VendorInvoiceItem'
   #   )
-  end
 end

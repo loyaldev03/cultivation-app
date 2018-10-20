@@ -1,4 +1,4 @@
-desc "Create dummy Supplier, 10 at a time"
+desc "Create dummy facility 1 at a time"
 task seed_facility: :environment  do
   Facility.create!(
     name: 'Facility 1',

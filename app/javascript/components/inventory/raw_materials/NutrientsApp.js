@@ -2,9 +2,7 @@ import React from 'react'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
-import store from './store/CultivationBatchStore'
-import loadCultivationBatch from './actions/loadCultivationBatch'
-import BatchEditor from './components/BatchEditor'
+import NutrientEditor from './components/NutrientEditor'
 
 const columns = [
   {
@@ -33,56 +31,37 @@ const columns = [
     }
   },
   {
-    Header: 'Batch No',
+    Header: 'Product Name',
     accessor: 'attributes.batch_no',
-    headerClassName: 'tl',
-    width: 70
+    headerClassName: 'tl'
   },
   {
-    Header: 'Batch name',
+    Header: 'Nutrient Type',
     accessor: 'attributes.name',
     headerClassName: 'tl'
   },
   {
-    Header: 'Start date',
+    Header: 'Supplier',
     accessor: 'attributes.start_date',
-    headerClassName: 'tc',
-    className: 'tc',
-    Cell: props => {
-      return <span>{new Date(props.value).toLocaleDateString()}</span>
-    }
+    headerClassName: 'tl'
   },
   {
-    Header: 'Phase',
+    Header: 'PO Number',
     accessor: 'attributes.current_growth_stage',
-    headerClassName: 'tc',
-    className: 'tc',
-    width: 80
+    headerClassName: 'tl'
   },
   {
-    Header: 'Plant Count',
+    Header: 'Quantity',
     accessor: 'attributes.plant_count',
-    headerClassName: 'tc',
-    className: 'tc',
-    width: 100
+    headerClassName: 'tr'
   },
   {
-    Header: 'Batch Source',
+    Header: 'Cost',
     accessor: 'attributes.batch_source',
-    headerClassName: 'tl',
-    Cell: props => {
-      if (props.value) {
-        return (
-          <span>
-            {props.value.charAt(0).toUpperCase() + props.value.substr(1)}
-          </span>
-        )
-      }
-      return null
-    }
+    headerClassName: 'tl'
   },
   {
-    Header: 'Facility',
+    Header: 'Location',
     accessor: 'attributes.facility',
     headerClassName: 'tl'
   },
@@ -96,7 +75,7 @@ const columns = [
         href="#"
         onClick={event => {
           const data = toJS(record.original)
-          openBatch(event, data)
+          openNutrient(event, data)
         }}
       >
         <i className="material-icons gray">more_horiz</i>
@@ -105,18 +84,17 @@ const columns = [
   }
 ]
 
-function openBatch(event, data) {
+function openNutrient(event, data) {
   console.log(data)
   window.editorSidebar.open({ width: '500px', data })
   event.preventDefault()
 }
 
 @observer
-class SimpleCultivationBatchSetupApp extends React.Component {
+class NutrientsApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadCultivationBatch()
   }
 
   openSidebar() {
@@ -127,20 +105,20 @@ class SimpleCultivationBatchSetupApp extends React.Component {
     this.openSidebar()
   }
 
-  renderBatchList() {
+  renderNutrientList() {
     return (
       <React.Fragment>
-        <div className="w-80 bg-white pa3">
+        <div className="w-100 bg-white pa3">
           <div className="flex mb4 mt2">
             <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
-              Cultivation Batches
+              Nutrients Inventory
             </h1>
             <div style={{ justifySelf: 'end' }}>
               <button
                 className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
                 onClick={this.onAddBatch}
               >
-                Add batch
+                Add nutrient
               </button>
             </div>
           </div>
@@ -148,13 +126,12 @@ class SimpleCultivationBatchSetupApp extends React.Component {
           <ReactTable
             columns={columns}
             pagination={{ position: 'top' }}
-            data={store.bindableBatches}
+            data={[]}
             showPagination={false}
             pageSize={30}
             minRows={5}
             filterable
             className="f6"
-            showPagination={store.bindableBatches.length > 30}
           />
         </div>
       </React.Fragment>
@@ -164,15 +141,11 @@ class SimpleCultivationBatchSetupApp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {this.renderBatchList()}
-        <BatchEditor
-          facility_strains={this.props.facility_strains}
-          batch_sources={this.props.batch_sources}
-          grow_methods={this.props.grow_methods}
-        />
+        {this.renderNutrientList()}
+        <NutrientEditor />
       </React.Fragment>
     )
   }
 }
 
-export default SimpleCultivationBatchSetupApp
+export default NutrientsApp

@@ -49,7 +49,6 @@ module Inventory
         plants = create_mother_plants
 
         if is_purchased?
-          Rails.logger.debug 'save vendor called...'
           vendor = create_vendor
           create_invoice(plants, vendor, invoice_no)
         end

@@ -2,7 +2,7 @@ import React from 'react'
 import classNames from 'classnames'
 import { observer } from 'mobx-react'
 import plantStore from '../../inventory/plant_setup/store/PlantStore'
-import { loadPlants } from '../../inventory/plant_setup/actions/loadPlants'
+import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 import { joinBy } from '../../utils/ArrayHelper'
 
 const QuantityField = ({ plant, onEdit }) => {

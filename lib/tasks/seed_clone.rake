@@ -30,8 +30,6 @@ task seed_purchased_clones: :environment  do
     p.mother_date = nil
     p.planting_date = 15.days.ago
     p.expected_harvest_date = Date.today + 160.days
-    p.origin_id = nil
-    p.origin_type = "purchased"
     p.purchase_info_id = nil
     p.last_metrc_update = nil
     p.save

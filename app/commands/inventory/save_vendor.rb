@@ -22,7 +22,7 @@ module Inventory
       id = args[:id]
       params = args.except(:id)
 
-      unless id.blank?
+      if !id.blank?
         vendor = Inventory::Vendor.find_by(id: id)
         vendor.update!(params)
         vendor

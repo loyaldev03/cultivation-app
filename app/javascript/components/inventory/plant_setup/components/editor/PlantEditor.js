@@ -11,7 +11,8 @@ import LocationPicker from '../../../../utils/LocationPicker2'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import setupPlants from '../../actions/setupPlants'
 import reactSelectStyle from '../../../../utils/reactSelectStyle'
-import { searchPlants, getPlant } from '../../actions/loadPlants'
+import getPlant from '../../actions/getPlant'
+import searchPlants from '../../actions/searchPlants'
 
 class PlantEditor extends React.Component {
   constructor(props) {
@@ -35,7 +36,7 @@ class PlantEditor extends React.Component {
         .map(x => ({ id: x.id, ...x.attributes }))
     }
 
-    this.locations = this.props.locations
+    this.locations = this.props.locations.filter(x => x.t_id.length > 0)
 
     // Converting to callback ref because purchase info editor is hidding and showing.
     // This will cause the standard way to set ref to be broken / undefined.
@@ -48,49 +49,78 @@ class PlantEditor extends React.Component {
   componentDidMount() {
     document.addEventListener('editor-sidebar-open', event => {
       const id = event.detail.id
+
       if (!id) {
         this.setState(this.resetState())
       } else {
-        getPlant(id).then(({ status, data }) => {
-          if (status != 200) {
-            alert('someting wrong')
-            return
+        getPlant(id, 'vendor_invoice, vendor_invoice.vendor').then(
+          ({ status, data, included }) => {
+            if (status != 200) {
+              alert('someting wrong')
+              return
+            }
+
+            const invoice = included.find(x => x.type === 'vendor_invoice')
+            let invoice_attr = {}
+            if (invoice) {
+              invoice_attr = {
+                purchase_date: new Date(invoice.attributes.purchase_date),
+                invoice_no: invoice.attributes.invoice_no,
+                purchase_order_no: invoice.attributes.purchase_order_no
+              }
+
+              console.log(invoice_attr)
+            }
+
+            const vendor = included.find(x => x.type === 'vendor')
+            let vendor_attr = {}
+            if (vendor) {
+              vendor_attr = {
+                vendor_id: vendor.id,
+                vendor_name: vendor.attributes.name,
+                vendor_no: vendor.attributes.vendor_no,
+                address: vendor.attributes.address,
+                vendor_state_license_num: vendor.attributes.state_license_num,
+                vendor_state_license_expiration_date: new Date(
+                  vendor.attributes.state_license_expiration_date
+                ),
+                vendor_location_license_num:
+                  vendor.attributes.location_license_num,
+                vendor_location_license_expiration_date: new Date(
+                  vendor.attributes.location_license_expiration_date
+                )
+              }
+            }
+
+            const batch = this.batches.find(
+              x => x.id === data.attributes.cultivation_batch_id
+            )
+
+            this.setState({
+              ...this.resetState(),
+              id: data.id,
+              cultivation_batch_id: batch.id,
+              facility_strain_id: batch.facility_strain_id,
+              facility_id: batch.facility_id,
+              plant_ids: data.attributes.plant_id,
+              plant_qty: 0,
+              location_id: data.attributes.location_id,
+              planting_date: new Date(data.attributes.planting_date),
+              mother_id: data.attributes.mother_id,
+
+              // UI states
+              strain_name: batch.strain_name,
+              start_date: new Date(batch.start_date),
+              facility: batch.facility,
+              batch_source: batch.batch_source,
+              isBought: batch.batch_source === 'clones_purchased',
+
+              // relationships
+              ...vendor_attr,
+              ...invoice_attr
+            })
           }
-
-          const batch = this.batches.find(
-            x => x.id === data.attributes.cultivation_batch_id
-          )
-
-          this.setState({
-            ...this.resetState(),
-            id: data.id,
-            cultivation_batch_id: batch.id,
-            facility_strain_id: batch.facility_strain_id,
-            facility_id: batch.facility_id,
-            plant_ids: data.attributes.plant_id,
-            plant_qty: 0,
-            location_id: data.attributes.location_id,
-            planting_date: new Date(data.attributes.planting_date),
-
-            // To be filled up
-            mother_id: data.attributes.mother_id,
-            vendor_name: '',
-            vendor_no: '',
-            address: '',
-            vendor_state_license_num: '',
-            vendor_state_license_expiration_date: null,
-            vendor_location_license_num: '',
-            vendor_location_license_expiration_date: null,
-            purchase_date: null,
-            invoice_no: '',
-
-            // UI states
-            strain_name: batch.strain_name,
-            start_date: new Date(batch.start_date),
-            facility: batch.facility,
-            isBought: batch.batch_source === 'clones_purchased'
-          })
-        })
+        )
       }
     })
   }
@@ -107,6 +137,7 @@ class PlantEditor extends React.Component {
       planting_date: null,
       mother_id: '',
       // purchase info
+      vendor_id: '',
       vendor_name: '',
       vendor_no: '',
       address: '',
@@ -115,6 +146,7 @@ class PlantEditor extends React.Component {
       vendor_location_license_num: '',
       vendor_location_license_expiration_date: null,
       purchase_date: null,
+      purchase_order_no: '',
       invoice_no: '',
 
       // UI states
@@ -146,7 +178,6 @@ class PlantEditor extends React.Component {
   }
 
   onLocationChanged = event => {
-    console.log(event)
     this.setState({ location_id: event.location_id })
   }
 
@@ -159,7 +190,6 @@ class PlantEditor extends React.Component {
   }
 
   onCultivationBatchIdChanged = item => {
-    console.log(item)
     let { planting_date } = this.state
     if (!planting_date) {
       planting_date = new Date(item.start_date)
@@ -219,7 +249,8 @@ class PlantEditor extends React.Component {
       location_id,
       planting_date,
       isBought,
-      motherOption
+      motherOption,
+      vendor_id
     } = this.state
 
     const mother_id = motherOption ? motherOption.value : ''
@@ -259,8 +290,11 @@ class PlantEditor extends React.Component {
     const isValid =
       Object.getOwnPropertyNames(errors).length == 0 && purchaseData.isValid
 
+    // const isValid = true
+
     const data = {
       ...purchaseData,
+      vendor_id,
       id,
       cultivation_batch_id,
       plant_ids,
@@ -307,7 +341,9 @@ class PlantEditor extends React.Component {
         <div className="ph4 mb3 mt3">
           <span className="f6 fw6 dark-gray">Clone Purchase Info</span>
         </div>
+
         <PurchaseInfo
+          key={this.state.id}
           ref={this.setPurchaseInfoEditor}
           showLabel={false}
           vendor_name={this.state.vendor_name}
@@ -323,6 +359,7 @@ class PlantEditor extends React.Component {
           }
           purchase_date={this.state.purchase_date}
           invoice_no={this.state.invoice_no}
+          purchase_order_no={this.state.purchase_order_no}
         />
       </React.Fragment>
     )
@@ -472,7 +509,7 @@ class PlantEditor extends React.Component {
           <div className="ph4 mt3 flex">
             <div className="w-100">
               <LocationPicker
-                key={this.state.facility_id}
+                key={`${this.state.facility_id}.${this.state.location_id}`}
                 mode={this.props.growth_stage}
                 facility_id={this.state.facility_id}
                 onChange={this.onLocationChanged}

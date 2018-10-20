@@ -15,7 +15,9 @@ const reactSelectStyle = {
     marginTop: 2
   }),
   dropdownIndicator: () => ({
-    display: 'none'
+    display: 'inline-block',
+    color: 'rgba(100,100,100, 0.2)',
+    width: '25px'
   }),
   option: (base, state) => {
     return {

@@ -25,7 +25,14 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
 
   def show
     plant = Inventory::Plant.find(params[:id])
-    render json: Inventory::PlantSerializer.new(plant).serialized_json
+    options = {}
+
+    if params[:include]
+      include_rels = params[:include].split(',').map { |x| x.strip.to_sym }
+      options = {include: include_rels}
+    end
+
+    render json: Inventory::PlantSerializer.new(plant, options).serialized_json
   end
 
   def setup_mother

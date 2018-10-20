@@ -33,7 +33,7 @@ class HomeController < ApplicationController
     CompanyInfo.destroy_all
 
     # Preserve facility F0X
-    f = Facility.find_by(code: 'F0X')
+    f = Facility.find_by(code: 'F0Xxxx')
     t = []
     if f.present?
       f.rooms.each do |r|
@@ -50,9 +50,9 @@ class HomeController < ApplicationController
       Tray.where(id: {:$not => {:$in => t}}).destroy_all
       Facility.not.where(id: f.id).destroy_all
     else
-      Inventory::FacilityStrain.destroy_all
-      Tray.destroy_all
-      Facility.destroy_all
+      Inventory::FacilityStrain.delete_all
+      Tray.delete_all
+      Facility.delete_all
     end
 
     redirect_to root_path, flash: {notice: 'Data has reset.'}

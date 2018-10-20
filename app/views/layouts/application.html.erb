@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="flex flex-row items-center">
-                  <%= switch_user_select %>
+                  <%= switch_user_select if Rails.env.development? %>
                   <i 
                     onclick="openModal()" id="notification-popup" 
                     class="material-icons grey mr3 dim md-21 pointer">

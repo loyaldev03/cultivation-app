@@ -1,8 +1,9 @@
 class SaveFacility
   prepend SimpleCommand
 
-  def initialize(basic_info_form = {})
+  def initialize(basic_info_form = {}, current_user)
     @form_object = basic_info_form
+    @current_user = current_user
   end
 
   def call
@@ -13,9 +14,17 @@ class SaveFacility
 
   def save_record(form_object)
     record = Facility.where(id: form_object.id.to_bson_id).first
-    record ||= Facility.new
+    is_new = false
+    if record.nil?
+      record = Facility.new
+      is_new = true
+    end
     map_attributes(record, form_object)
     record.save!
+
+    # Note: Seed data for new Facility
+    SeedFacilityDataJob.perform_later(record.id.to_s, @current_user.id.to_s) if is_new
+
     record
   end
 

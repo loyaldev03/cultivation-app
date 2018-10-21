@@ -31,7 +31,6 @@ module Cultivation
 
     has_and_belongs_to_many :users, inverse_of: nil
     belongs_to :batch, class_name: 'Cultivation::Batch'
-
     embeds_many :items, class_name: 'Cultivation::Item'
 
     orderable scope: :batch, base: 0

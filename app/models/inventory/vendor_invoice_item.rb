@@ -1,0 +1,16 @@
+module Inventory
+  class VendorInvoiceItem
+    include Mongoid::Document
+    include Mongoid::Timestamps::Short
+
+    field :description, type: String
+    field :quantity, type: BigDecimal, default: 0.0
+    field :price, type: BigDecimal, default: 0.0
+    field :currency, type: String
+    field :tax, type: BigDecimal, default: 0.0
+
+    belongs_to :uom, class_name: 'Common::UnitOfMeasure', optional: true
+    belongs_to :invoice, class_name: 'Inventory::VendorInvoice'
+    belongs_to :item_catalgoue, class_name: 'Inventory::ItemCatalogue'
+  end
+end

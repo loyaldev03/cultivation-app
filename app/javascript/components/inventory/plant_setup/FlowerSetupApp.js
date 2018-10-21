@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
 import PlantEditor from './components/editor/PlantEditor'
 import plantStore from './store/PlantStore'
-import { loadPlants } from './actions/loadPlants'
+import loadPlants from './actions/loadPlants'
 
 const columns = [
   {

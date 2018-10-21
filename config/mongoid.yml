@@ -165,7 +165,7 @@ test:
 production:
   clients:
     default:
-      uri: <%= Rails.application.credentials.database[:mongodb_uri] %>
+      uri: <%= ENV['MONGODB_URI'] %>
       options:
         skip_version_check: true
         safe: true

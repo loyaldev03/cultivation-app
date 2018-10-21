@@ -58,14 +58,9 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def setup_harvest_yield
+    # TODO: To be completed
     command = Inventory::SetupHarvestYield.call(current_user, params[:plant].to_unsafe_h)
-
-    if command.success?
-      data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
-      render json: data
-    else
-      render json: request_with_errors(command.errors), status: 422
-    end
+    render json: []
   end
 
   private

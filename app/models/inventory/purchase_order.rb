@@ -10,6 +10,10 @@ module Inventory
 
     belongs_to :facility
     belongs_to :vendor, class_name: 'Inventory::Vendor'
-    has_many :items, class_name: 'Inventory::PurchaseOrderItem'
+    has_many :items, class_name: 'Inventory::PurchaseOrderItem', dependent: :delete
+
+    def total_amount
+      0
+    end
   end
 end

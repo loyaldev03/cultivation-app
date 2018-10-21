@@ -40,21 +40,33 @@ module Common
     include Mongoid::Timestamps::Short
 
     field :name, type: String
-    field :code, type: String
+    field :unit, type: String
     field :desc, type: String
-    field :base_unit, type: Boolean
-    field :base_uom, type: String
+    field :is_base_unit, type: Boolean, default: false
+    field :base_unit, type: String
     field :conversion, type: BigDecimal
-    field :dimension, type: String      # { weight, volume, length, others }
+    field :dimension, type: String      # { weights, volumes, lengths, custom }
 
     scope :base_unit, -> { where(base_unit: true) }
 
     # TODO: validate combo is unique
-    # code, base_unit, dimension must be unique
+    # unit, base_unit, dimension must be unique
 
-    def to(quantity, target_uom)
-      _base_uom = UOM.find_by(code: self.base_uom, dimension: self.dimension, base_unit: true)
-      _target_uom = UOM.find_by(code: target_uom, dimension: self.dimension, base_unit: true, base_uom: self.base_uom)
+    def self.custom(unit)
+      find_by(dimension: 'custom', unit: unit)
+    end
+
+    def self.weights(unit)
+      find_by(dimension: 'weights', unit: unit)
+    end
+
+    def self.volumes(unit)
+      find_by(dimension: 'volumes', unit: unit)
+    end
+
+    def to(quantity, target_unit)
+      _base_uom = UOM.find_by(unit: self.base_unit, dimension: self.dimension, is_base_unit: true)
+      _target_uom = UOM.find_by(unit: target_unit, dimension: self.dimension, is_base_unit: true, base_unit: self.base_unit)
 
       return nil if _base_uom.nil? || _target_uom.nil?
 

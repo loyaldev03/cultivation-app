@@ -27,14 +27,14 @@ class TaskSetup extends React.Component {
   }
 
   renderBatchInfo() {
-    return (
-      <TaskList batch_id={this.props.batch_id} batch={this.props.batch} />
-    )
+    return <TaskList batch_id={this.props.batch_id} batch={this.props.batch} />
   }
 
   render() {
-    let activeTabs = "link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white"
-    let inactiveTabs = "link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white"
+    let activeTabs =
+      'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
+    let inactiveTabs =
+      'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
     return (
       <React.Fragment>
         <div className="flex flex-column justify-between bg-white box--shadow">
@@ -202,7 +202,9 @@ class TaskSetup extends React.Component {
           </a>
 
           <a
-            href={'/cultivation/batches/' + this.state.batch.id + '/secret_sauce'}
+            href={
+              '/cultivation/batches/' + this.state.batch.id + '/secret_sauce'
+            }
             className={inactiveTabs}
           >
             Secret Sauce

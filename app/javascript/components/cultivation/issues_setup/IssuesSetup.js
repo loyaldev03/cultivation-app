@@ -8,13 +8,15 @@ class IssueSetup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      batch: props.batch,
+      batch: props.batch
     }
   }
 
   render() {
-    let activeTabs = "link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white"
-    let inactiveTabs = "link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white"
+    let activeTabs =
+      'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
+    let inactiveTabs =
+      'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
     return (
       <React.Fragment>
         <div className="flex flex-column justify-between bg-white box--shadow">
@@ -182,7 +184,9 @@ class IssueSetup extends React.Component {
           </a>
 
           <a
-            href={'/cultivation/batches/' + this.state.batch.id + '/secret_sauce'}
+            href={
+              '/cultivation/batches/' + this.state.batch.id + '/secret_sauce'
+            }
             className={inactiveTabs}
           >
             Secret Sauce

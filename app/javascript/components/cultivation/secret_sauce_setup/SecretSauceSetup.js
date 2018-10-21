@@ -11,7 +11,7 @@ class SecretSauceSetup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      batch: props.batch,
+      batch: props.batch
     }
   }
 
@@ -20,8 +20,10 @@ class SecretSauceSetup extends React.Component {
   }
 
   render() {
-    let activeTabs = "link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white"
-    let inactiveTabs = "link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white"
+    let activeTabs =
+      'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
+    let inactiveTabs =
+      'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
     return (
       <React.Fragment>
         <div className="flex flex-column justify-between bg-white box--shadow">
@@ -189,7 +191,9 @@ class SecretSauceSetup extends React.Component {
           </a>
 
           <a
-            href={'/cultivation/batches/' + this.state.batch.id + '/secret_sauce'}
+            href={
+              '/cultivation/batches/' + this.state.batch.id + '/secret_sauce'
+            }
             className={activeTabs}
           >
             Secret Sauce
@@ -206,8 +210,10 @@ class SecretSauceSetup extends React.Component {
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
               <h2>Secret Sauce is here</h2>
-              <SecretSauce batch_id={this.props.batch_id} batch={this.props.batch} />
-
+              <SecretSauce
+                batch_id={this.props.batch_id}
+                batch={this.props.batch}
+              />
             </div>
           </div>
         </div>

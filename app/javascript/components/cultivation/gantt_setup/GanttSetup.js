@@ -4,32 +4,12 @@ import { render } from 'react-dom'
 import { observable } from 'mobx'
 import { observer, Provider } from 'mobx-react'
 
-import loadTasks from './actions/loadTask'
-import loadUsers from './actions/loadUsers'
-import loadUserRoles from './actions/loadUserRoles'
-import loadItems from './actions/loadItems'
-
-import TaskList from './components/TaskList'
-
-class TaskSetup extends React.Component {
+class GanttSetup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      batch: props.batch
+      batch: props.batch,
     }
-  }
-
-  componentDidMount() {
-    loadTasks.loadbatch(this.props.batch_id)
-    loadUsers()
-    loadUserRoles()
-    loadItems()
-  }
-
-  renderBatchInfo() {
-    return (
-      <TaskList batch_id={this.props.batch_id} batch={this.props.batch} />
-    )
   }
 
   render() {
@@ -175,15 +155,15 @@ class TaskSetup extends React.Component {
         </div>
         <div className="flex mt4">
           <a
-            href={'/cultivation/batches/' + this.state.batch.id}
-            className={activeTabs}
+            href={'/cultivation/batches/' + this.state.batch.id }
+            className={inactiveTabs}
           >
             Tasks List
           </a>
 
           <a
             href={'/cultivation/batches/' + this.state.batch.id + '/gantt'}
-            className={inactiveTabs}
+            className={activeTabs}
           >
             Gantt Chart
           </a>
@@ -218,7 +198,7 @@ class TaskSetup extends React.Component {
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
-              {this.renderBatchInfo()}
+              <h2>Gantt chart is here</h2>
             </div>
           </div>
         </div>
@@ -232,4 +212,4 @@ class TaskSetup extends React.Component {
   }
 }
 
-export default TaskSetup
+export default GanttSetup

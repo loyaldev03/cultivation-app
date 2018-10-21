@@ -4,32 +4,19 @@ import { render } from 'react-dom'
 import { observable } from 'mobx'
 import { observer, Provider } from 'mobx-react'
 
-import loadTasks from './actions/loadTask'
-import loadUsers from './actions/loadUsers'
-import loadUserRoles from './actions/loadUserRoles'
-import loadItems from './actions/loadItems'
+import loadNutrientProfile from './actions/loadNutrientProfile'
+import SecretSauce from './components/SecretSauce'
 
-import TaskList from './components/TaskList'
-
-class TaskSetup extends React.Component {
+class SecretSauceSetup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      batch: props.batch
+      batch: props.batch,
     }
   }
 
   componentDidMount() {
-    loadTasks.loadbatch(this.props.batch_id)
-    loadUsers()
-    loadUserRoles()
-    loadItems()
-  }
-
-  renderBatchInfo() {
-    return (
-      <TaskList batch_id={this.props.batch_id} batch={this.props.batch} />
-    )
+    loadNutrientProfile(this.props.batch.nutrient_profile)
   }
 
   render() {
@@ -176,7 +163,7 @@ class TaskSetup extends React.Component {
         <div className="flex mt4">
           <a
             href={'/cultivation/batches/' + this.state.batch.id}
-            className={activeTabs}
+            className={inactiveTabs}
           >
             Tasks List
           </a>
@@ -203,7 +190,7 @@ class TaskSetup extends React.Component {
 
           <a
             href={'/cultivation/batches/' + this.state.batch.id + '/secret_sauce'}
-            className={inactiveTabs}
+            className={activeTabs}
           >
             Secret Sauce
           </a>
@@ -218,7 +205,9 @@ class TaskSetup extends React.Component {
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
-              {this.renderBatchInfo()}
+              <h2>Secret Sauce is here</h2>
+              <SecretSauce batch_id={this.props.batch_id} batch={this.props.batch} />
+
             </div>
           </div>
         </div>
@@ -232,4 +221,4 @@ class TaskSetup extends React.Component {
   }
 }
 
-export default TaskSetup
+export default SecretSauceSetup

@@ -186,7 +186,7 @@ module Cultivation
       if task[:is_category] == 'false' and task[:is_phase] == 'false' #normal task
         parent_id = category_id
       elsif task[:is_category] == 'true' and task[:is_phase] == 'false' #category task
-        parent_id = category_id.nil? ? phase_id : nil
+        parent_id = phase_id
       elsif task[:is_category] == 'false' and task[:is_phase] == 'true' #phase task
         parent_id = nil
       end

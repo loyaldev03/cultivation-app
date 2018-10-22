@@ -149,6 +149,9 @@ class TaskList extends React.Component {
     }))
   }
 
+  // t = {12: true, 13: false} => store this in visibility store
+  // t[12] get true display true
+
   renderAttributesName = row => {
     let id = row.row['id']
     let handleEdit = this.handleEdit
@@ -157,7 +160,11 @@ class TaskList extends React.Component {
     let handleAddTask = this.handleAddTask
     let handleDelete = this.handleDelete
     return (
-      <div className="flex justify-between-ns">
+      <div
+        className={`flex justify-between-ns ${
+          row.row['attributes.is_phase'] === true ? '' : 'draggable'
+        }`}
+      >
         <div className="">
           <div className="flex">
             <div className="w1 ml3">
@@ -328,40 +335,43 @@ class TaskList extends React.Component {
     )
 
     headers.forEach((header, i) => {
-      header.setAttribute('draggable', true)
-      //the dragged header
-      header.ondragstart = e => {
-        e.stopPropagation()
-        this.dragged = i
-      }
+      let enableDrag = header.querySelector('.draggable')
+      if (enableDrag !== null) {
+        header.setAttribute('draggable', true)
+        //the dragged header
+        header.ondragstart = e => {
+          e.stopPropagation()
+          this.dragged = i
+        }
 
-      header.ondrag = e => e.stopPropagation
+        header.ondrag = e => e.stopPropagation
 
-      header.ondragend = e => {
-        e.stopPropagation()
-        setTimeout(() => (this.dragged = null), 1000)
-      }
+        header.ondragend = e => {
+          e.stopPropagation()
+          setTimeout(() => (this.dragged = null), 1000)
+        }
 
-      //the dropped header
-      header.ondragover = e => {
-        e.preventDefault()
-      }
+        //the dropped header
+        header.ondragover = e => {
+          e.preventDefault()
+        }
 
-      header.ondragenter = e => {
-        e.target.closest('.rt-tr-group').style.borderBottomColor =
-          'rgb(255,112,67)'
-      }
+        header.ondragenter = e => {
+          e.target.closest('.rt-tr-group').style.borderBottomColor =
+            'rgb(255,112,67)'
+        }
 
-      header.ondragleave = e => {
-        e.target.closest('.rt-tr-group').style.borderBottomColor = ''
-      }
+        header.ondragleave = e => {
+          e.target.closest('.rt-tr-group').style.borderBottomColor = ''
+        }
 
-      header.ondrop = e => {
-        e.preventDefault()
-        e.target.closest('.rt-tr-group').style.borderBottomColor = ''
-        if (this.dragged !== null && i !== null) {
-          TaskStore.splice(i, 0, TaskStore.splice(this.dragged, 1)[0])
-          updateTask.updatePosition(this.props.batch_id, i, this.dragged)
+        header.ondrop = e => {
+          e.preventDefault()
+          e.target.closest('.rt-tr-group').style.borderBottomColor = ''
+          if (this.dragged !== null && i !== null) {
+            TaskStore.splice(i, 0, TaskStore.splice(this.dragged, 1)[0])
+            updateTask.updatePosition(this.props.batch_id, i, this.dragged)
+          }
         }
       }
     })

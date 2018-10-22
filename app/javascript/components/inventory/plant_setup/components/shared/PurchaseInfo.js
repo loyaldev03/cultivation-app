@@ -3,7 +3,6 @@ import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import PropTypes from 'prop-types'
 import { TextInput, FieldError } from '../../../../utils/FormHelpers'
 
-// Need default props
 class PurchaseInfo extends React.Component {
   constructor(props) {
     super(props)
@@ -19,61 +18,29 @@ class PurchaseInfo extends React.Component {
         props.vendor_location_license_expiration_date,
       purchase_date: props.purchase_date,
       invoice_no: props.invoice_no,
+      purchase_order_no: props.purchase_order_no,
       errors: {}
     }
-
-    // Vendor/ source
-    this.onNameChanged = this.onNameChanged.bind(this)
-    this.onVendorNoChanged = this.onVendorNoChanged.bind(this)
-    this.onAddressChanged = this.onAddressChanged.bind(this)
-    this.onStateLicenseChanged = this.onStateLicenseChanged.bind(this)
-    this.onStateLicenseExpirationDateChanged = this.onStateLicenseExpirationDateChanged.bind(
-      this
-    )
-    this.onLocationLicenseChanged = this.onLocationLicenseChanged.bind(this)
-    this.onLocationLicenseExpirationDateChanged = this.onLocationLicenseExpirationDateChanged.bind(
-      this
-    )
-    this.onPurchaseDateChanged = this.onPurchaseDateChanged.bind(this)
-    this.onInvoiceNoChanged = this.onInvoiceNoChanged.bind(this)
   }
 
-  onNameChanged(event) {
-    this.setState({ vendor_name: event.target.value })
-  }
-
-  onVendorNoChanged(event) {
-    this.setState({ vendor_no: event.target.value })
-  }
-
-  onAddressChanged(event) {
-    this.setState({ address: event.target.value })
-  }
-
-  onStateLicenseChanged(event) {
-    this.setState({ vendor_state_license_num: event.target.value })
-  }
-
-  onStateLicenseExpirationDateChanged(date) {
+  onStateLicenseExpirationDateChanged = date => {
     this.setState({ vendor_state_license_expiration_date: date })
   }
 
-  onLocationLicenseChanged(event) {
-    this.setState({ vendor_location_license_num: event.target.value })
-  }
-
-  onLocationLicenseExpirationDateChanged(date) {
+  onLocationLicenseExpirationDateChanged = date => {
     this.setState({
       vendor_location_license_expiration_date: date
     })
   }
 
-  onPurchaseDateChanged(date) {
+  onPurchaseDateChanged = date => {
     this.setState({ purchase_date: date })
   }
 
-  onInvoiceNoChanged(event) {
-    this.setState({ invoice_no: event.target.value })
+  onChangeGeneric = event => {
+    const key = event.target.attributes.fieldname.value
+    const value = event.target.value
+    this.setState({ [key]: value })
   }
 
   getValues(isDraft = false) {
@@ -87,7 +54,8 @@ class PurchaseInfo extends React.Component {
       vendor_location_license_num,
       vendor_location_license_expiration_date,
       purchase_date,
-      invoice_no
+      invoice_no,
+      purchase_order_no
     } = this.state
 
     if (!isDraft) {
@@ -145,6 +113,7 @@ class PurchaseInfo extends React.Component {
         vendor_location_license_expiration_date: vendor_location_license_expiration_date.toISOString(),
         purchase_date,
         invoice_no,
+        purchase_order_no,
         errors,
         isValid: Object.getOwnPropertyNames(errors).length === 0
       }
@@ -160,23 +129,9 @@ class PurchaseInfo extends React.Component {
       vendor_location_license_expiration_date,
       purchase_date,
       invoice_no,
+      purchase_order_no,
       errors
     }
-  }
-
-  reset() {
-    this.setState({
-      vendor_name: this.props.vendor_name,
-      vendor_no: this.props.vendor_no,
-      address: this.props.address,
-      vendor_state_license_num: this.props.vendor_state_license_num,
-      vendor_state_license_expiration_date: null,
-      vendor_location_license_num: this.props.vendor_location_license_num,
-      vendor_location_license_expiration_date: null,
-      purchase_date: null,
-      invoice_no: this.props.invoice_no,
-      errors: {}
-    })
   }
 
   render() {
@@ -192,7 +147,7 @@ class PurchaseInfo extends React.Component {
             <TextInput
               label={'Vendor name'}
               value={this.state.vendor_name}
-              onChange={this.onNameChanged}
+              onChange={this.onChangeGeneric}
               errors={this.state.errors}
               fieldname="vendor_name"
             />
@@ -204,7 +159,7 @@ class PurchaseInfo extends React.Component {
             <TextInput
               label={'Vendor No'}
               value={this.state.vendor_no}
-              onChange={this.onVendorNoChanged}
+              onChange={this.onChangeGeneric}
               errors={this.state.errors}
               fieldname="vendor_no"
             />
@@ -214,58 +169,63 @@ class PurchaseInfo extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <TextInput
+              fieldname="address"
               label={'Address'}
               value={this.state.address}
-              onChange={this.onAddressChanged}
+              onChange={this.onChangeGeneric}
             />
           </div>
         </div>
 
-        <div className="ph4 mb3 flex">
-          <div className="w-50">
-            <TextInput
-              label={'Vendor State License #'}
-              value={this.state.vendor_state_license_num}
-              onChange={this.onStateLicenseChanged}
-              errors={this.state.errors}
-              fieldname="vendor_state_license_num"
-            />
+        {this.props.vendorLicense && (
+          <div className="ph4 mb3 flex">
+            <div className="w-50">
+              <TextInput
+                label={'Vendor State License #'}
+                value={this.state.vendor_state_license_num}
+                onChange={this.onChangeGeneric}
+                errors={this.state.errors}
+                fieldname="vendor_state_license_num"
+              />
+            </div>
+            <div className="w-50 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
+              <DatePicker
+                value={this.state.vendor_state_license_expiration_date}
+                onChange={this.onStateLicenseExpirationDateChanged}
+              />
+              <FieldError
+                errors={this.state.errors}
+                field="vendor_state_license_expiration_date"
+              />
+            </div>
           </div>
-          <div className="w-50 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
-            <DatePicker
-              value={this.state.vendor_state_license_expiration_date}
-              onChange={this.onStateLicenseExpirationDateChanged}
-            />
-            <FieldError
-              errors={this.state.errors}
-              field="vendor_state_license_expiration_date"
-            />
-          </div>
-        </div>
+        )}
 
-        <div className="ph4 mb3 flex">
-          <div className="w-50">
-            <TextInput
-              label={'Vendor location license #'}
-              value={this.state.vendor_location_license_num}
-              onChange={this.onLocationLicenseChanged}
-              errors={this.state.errors}
-              fieldname="vendor_location_license_num"
-            />
+        {this.props.vendorLicense && (
+          <div className="ph4 mb3 flex">
+            <div className="w-50">
+              <TextInput
+                label={'Vendor location license #'}
+                value={this.state.vendor_location_license_num}
+                onChange={this.onChangeGeneric}
+                errors={this.state.errors}
+                fieldname="vendor_location_license_num"
+              />
+            </div>
+            <div className="w-50 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
+              <DatePicker
+                value={this.state.vendor_location_license_expiration_date}
+                onChange={this.onLocationLicenseExpirationDateChanged}
+              />
+              <FieldError
+                errors={this.state.errors}
+                field="vendor_location_license_expiration_date"
+              />
+            </div>
           </div>
-          <div className="w-50 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
-            <DatePicker
-              value={this.state.vendor_location_license_expiration_date}
-              onChange={this.onLocationLicenseExpirationDateChanged}
-            />
-            <FieldError
-              errors={this.state.errors}
-              field="vendor_location_license_expiration_date"
-            />
-          </div>
-        </div>
+        )}
 
         <div className="ph4 mb3 flex">
           <div className="w-50">
@@ -277,9 +237,20 @@ class PurchaseInfo extends React.Component {
           </div>
           <div className="w-50 pl3">
             <TextInput
+              fieldname="purchase_order_no"
+              label={'PO Number'}
+              value={this.state.purchase_order_no}
+              onChange={this.onChangeGeneric}
+            />
+          </div>
+        </div>
+        <div className="ph4 mb3 flex">
+          <div className="w-50">
+            <TextInput
+              fieldname="invoice_no"
               label={'Invoice no'}
               value={this.state.invoice_no}
-              onChange={this.onInvoiceNoChanged}
+              onChange={this.onChangeGeneric}
             />
           </div>
         </div>
@@ -298,8 +269,10 @@ PurchaseInfo.propTypes = {
   vendor_location_license_expiration_date: PropTypes.instanceOf(Date),
   purchase_date: PropTypes.instanceOf(Date),
   invoice_no: PropTypes.string,
+  purchase_order_no: PropTypes.string,
   showLabel: PropTypes.bool,
-  label: PropTypes.string
+  label: PropTypes.string,
+  vendorLicense: PropTypes.bool
 }
 
 PurchaseInfo.defaultProps = {
@@ -307,7 +280,10 @@ PurchaseInfo.defaultProps = {
   vendor_location_license_expiration_date: null,
   purchase_date: null,
   showLabel: true,
-  label: 'Where the seeds are sourced from?'
+  purchase_order_no: '',
+  invoice_no: '',
+  label: 'Where the seeds are sourced from?',
+  vendorLicense: true
 }
 
 export default PurchaseInfo

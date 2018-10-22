@@ -117,8 +117,6 @@ class SimpleCultivationBatchSetupApp extends React.Component {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
     loadCultivationBatch()
-
-    window.batchStore = store
   }
 
   openSidebar() {

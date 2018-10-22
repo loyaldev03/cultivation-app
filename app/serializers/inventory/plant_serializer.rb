@@ -1,14 +1,13 @@
 module Inventory
   class PlantSerializer
     include FastJsonapi::ObjectSerializer
+    belongs_to :vendor_invoice
 
-    attributes :id,
-      :plant_id,
+    attributes :plant_id,
       :plant_tag,
       :location_type,
       :status,
       :current_growth_stage,
-      :origin_type,
       :wet_weight,
       :wet_weight_unit
 
@@ -72,10 +71,6 @@ module Inventory
 
     attribute :expected_harvest_date do |object|
       object.expected_harvest_date.iso8601 if object.expected_harvest_date
-    end
-
-    attribute :origin_id do |object|
-      object.origin_id.to_s
     end
 
     attribute :mother_id do |object|

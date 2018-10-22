@@ -7,8 +7,8 @@ module Inventory
     field :vendor_no, type: String
     field :address, type: String
     field :state_license_num, type: String
-    field :state_license_expiration_date, type: Date
-    field :location_license_expiration_date
+    field :state_license_expiration_date, type: DateTime
+    field :location_license_expiration_date, type: DateTime
     field :location_license_num
     field :vendor_type, type: String     # 'plant_supplier', normal
 
@@ -17,7 +17,6 @@ module Inventory
     field :notes, type: String
 
     embeds_many :addresses, as: :addressable, class_name: 'Address'
-
     has_many :invoices, class_name: 'Inventory::VendorInvoice'
   end
 end

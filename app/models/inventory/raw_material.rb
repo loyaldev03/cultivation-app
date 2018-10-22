@@ -5,7 +5,7 @@ module Inventory
 
     field :name, type: String
     field :is_active, type: Boolean
-    field :category, type: String
+    field :category, type: String             # { nutrient, grow_light, others }
     field :sub_category, type: String
   end
 end

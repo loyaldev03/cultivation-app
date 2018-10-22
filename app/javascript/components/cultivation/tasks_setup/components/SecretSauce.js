@@ -16,7 +16,9 @@ class SecretSauce extends React.Component {
       batch_id: this.props.batch_id,
       batch: this.props.batch,
       nutrients: NutrientProfileStore.nutrients,
-      id: NutrientProfileStore.id
+      id: NutrientProfileStore.id,
+      tabs: 'nutrients',
+      phase: 'clone'
     }
   }
 
@@ -50,354 +52,319 @@ class SecretSauce extends React.Component {
     SaveNutrientProfile.saveNutrientProfile(this.state)
   }
 
+  renderTabsClass = value => {
+    if (this.state.tabs === value) {
+      return 'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
+    } else {
+      return 'link bt-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
+    }
+  }
+
+  handleChangeTabs = value => {
+    this.setState({ tabs: value })
+  }
+
+  handleChangePhase = value => {
+    this.setState({ phase: value })
+  }
+
   render() {
     let handleSubmit = this.handleSubmit
+    let handleChangeTabs = this.handleChangeTabs
+    let renderTabsClass = this.renderTabsClass
+    let handleChangePhase = this.handleChangePhase
     return (
       <React.Fragment>
-        <h4 class="gray f6">Below is the Optimal Nutrient Profile</h4>
-        <div class="flex f6">
-          <div class="w-30">
-            <h4 class="gray f6">Vegetative</h4>
-            <div class="flex">
-              <div class="w-40">
-                <label>Nitrogen (N)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('vegetative', 'nitrogen').value}
-                  onChange={e =>
-                    this.handleChange('vegetative', 'nitrogen', e.target.value)
-                  }
-                  fieldname="nitrogen"
-                  errors={this.state.errors}
-                  errorField="nitrogen"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Phosphorus (P)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('vegetative', 'phosphorus').value}
-                  onChange={e =>
-                    this.handleChange(
-                      'vegetative',
-                      'phosphorus',
-                      e.target.value
-                    )
-                  }
-                  fieldname="vegetative_phosphorus"
-                  errors={this.state.errors}
-                  errorField="navegetative_phosphorusme"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Potassium (K)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('vegetative', 'potassium').value}
-                  onChange={e =>
-                    this.handleChange('vegetative', 'potassium', e.target.value)
-                  }
-                  fieldname="vegetative_potassium"
-                  errors={this.state.errors}
-                  errorField="vegetative_potassium"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Magnesium (Mg)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('vegetative', 'magnesium').value}
-                  onChange={e =>
-                    this.handleChange('vegetative', 'magnesium', e.target.value)
-                  }
-                  fieldname="vegetative_magnesium"
-                  errors={this.state.errors}
-                  errorField="vegetative_magnesium"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Calcium (Ca)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('vegetative', 'calcium').value}
-                  onChange={e =>
-                    this.handleChange('vegetative', 'calcium', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Sulfer (S)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('vegetative', 'sulfer').value}
-                  onChange={e =>
-                    this.handleChange('vegetative', 'sulfer', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Boron (B)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('vegetative', 'boron').value}
-                  onChange={e =>
-                    this.handleChange('vegetative', 'boron', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Iron (Fe)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('vegetative', 'iron').value}
-                  onChange={e =>
-                    this.handleChange('vegetative', 'iron', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Zinc (Zn)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('vegetative', 'zinc').value}
-                  onChange={e =>
-                    this.handleChange('vegetative', 'zinc', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Molybdenum (Mo)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('vegetative', 'molybdenum').value}
-                  onChange={e =>
-                    this.handleChange(
-                      'vegetative',
-                      'molybdenum',
-                      e.target.value
-                    )
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-          </div>
-          <div class="w-30">
-            <h4 class="gray f6">Flowering</h4>
-            <div class="flex">
-              <div class="w-40">
-                <label>Nitrogen (N)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('flowering', 'nitrogen').value}
-                  onChange={e =>
-                    this.handleChange('flowering', 'nitrogen', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Phosphorus (P)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('flowering', 'phosphorus').value}
-                  onChange={e =>
-                    this.handleChange('flowering', 'phosphorus', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Potassium (K)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('flowering', 'potassium').value}
-                  onChange={e =>
-                    this.handleChange('flowering', 'potassium', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Magnesium (Mg)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('flowering', 'magnesium').value}
-                  onChange={e =>
-                    this.handleChange('flowering', 'magnesium', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Calcium (Ca)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('flowering', 'calcium').value}
-                  onChange={e =>
-                    this.handleChange('flowering', 'calcium', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Sulfer (S)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('flowering', 'sulfer').value}
-                  onChange={e =>
-                    this.handleChange('flowering', 'sulfer', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Boron (B)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('flowering', 'boron').value}
-                  onChange={e =>
-                    this.handleChange('flowering', 'boron', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Iron (Fe)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('flowering', 'iron').value}
-                  onChange={e =>
-                    this.handleChange('flowering', 'iron', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Zinc (Zn)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('flowering', 'zinc').value}
-                  onChange={e =>
-                    this.handleChange('flowering', 'zinc', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
-            </div>
-            <div class="flex">
-              <div class="w-40">
-                <label>Molybdenum (Mo)</label>
-              </div>
-              <div class="w-30">
-                <TextInput
-                  value={this.findAttr('flowering', 'molybdenum').value}
-                  onChange={e =>
-                    this.handleChange('flowering', 'molybdenum', e.target.value)
-                  }
-                  fieldname="name"
-                  errors={this.state.errors}
-                  errorField="name"
-                />
-              </div>
+        <div className="flex">
+          <div className="w-20" />
+          <div className="w-80">
+            <div className="flex">
+              <a
+                className={renderTabsClass('nutrients') + ' bl-l'}
+                onClick={e => handleChangeTabs('nutrients')}
+              >
+                Nutrients
+              </a>
+              <a
+                className={renderTabsClass('light')}
+                onClick={e => handleChangeTabs('light')}
+              >
+                Light
+              </a>
+
+              <a
+                className={renderTabsClass('temp')}
+                onClick={e => handleChangeTabs('temp')}
+              >
+                Temp/ Moisture
+              </a>
             </div>
           </div>
         </div>
-        <div class="w-30 mt4 ">
-          <a
-            className="pointer flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim mt3"
-            onClick={handleSubmit}
-          >
-            Save & Continue
-          </a>
+        <div className="flex">
+          <div className="w-20">
+            <ul className="list mt4">
+              <li className="mb2">
+                <a
+                  className="f6 f5-ns db pa2 link dim mid-gray pointer"
+                  onClick={e => handleChangePhase('clone')}
+                >
+                  Clone
+                </a>
+              </li>
+              <li className="mb2">
+                <a
+                  className="f6 f5-ns db pa2 link dim mid-gray pointer"
+                  onClick={e => handleChangePhase('vegetative')}
+                >
+                  Veg1
+                </a>
+              </li>
+              <li className="mb2">
+                <a
+                  className="f6 f5-ns db pa2 link dim mid-gray pointer"
+                  onClick={e => handleChangePhase('vegetative')}
+                >
+                  Veg2
+                </a>
+              </li>
+              <li className="mb2">
+                <a
+                  className="f6 f5-ns db pa2 link dim mid-gray pointer"
+                  onClick={e => handleChangePhase('flowering')}
+                >
+                  Flower
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div className="w-60 ba b--black-10">
+            <div className="pa4">
+              <div className="flex f6 ml4">
+                <div className="w-50">
+                  <span className="f6 f5-ns db mb4">{this.state.phase}</span>
+                  <div className="flex mb2">
+                    <div className="w-50">
+                      <label>Nitrogen (N)</label>
+                    </div>
+                    <div className="w-50">
+                      <TextInput
+                        value={
+                          this.findAttr(this.state.phase, 'nitrogen').value
+                        }
+                        onChange={e =>
+                          this.handleChange(
+                            this.state.phase,
+                            'nitrogen',
+                            e.target.value
+                          )
+                        }
+                        fieldname="nitrogen"
+                        errors={this.state.errors}
+                        errorField="nitrogen"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex mb2">
+                    <div className="w-50">
+                      <label>Phosphorus (P)</label>
+                    </div>
+                    <div className="w-50">
+                      <TextInput
+                        value={
+                          this.findAttr(this.state.phase, 'phosphorus').value
+                        }
+                        onChange={e =>
+                          this.handleChange(
+                            this.state.phase,
+                            'phosphorus',
+                            e.target.value
+                          )
+                        }
+                        fieldname="vegetative_phosphorus"
+                        errors={this.state.errors}
+                        errorField="navegetative_phosphorusme"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex mb2">
+                    <div className="w-50">
+                      <label>Potassium (K)</label>
+                    </div>
+                    <div className="w-50">
+                      <TextInput
+                        value={
+                          this.findAttr(this.state.phase, 'potassium').value
+                        }
+                        onChange={e =>
+                          this.handleChange(
+                            this.state.phase,
+                            'potassium',
+                            e.target.value
+                          )
+                        }
+                        fieldname="vegetative_potassium"
+                        errors={this.state.errors}
+                        errorField="vegetative_potassium"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex mb2">
+                    <div className="w-50">
+                      <label>Magnesium (Mg)</label>
+                    </div>
+                    <div className="w-50">
+                      <TextInput
+                        value={
+                          this.findAttr(this.state.phase, 'magnesium').value
+                        }
+                        onChange={e =>
+                          this.handleChange(
+                            this.state.phase,
+                            'magnesium',
+                            e.target.value
+                          )
+                        }
+                        fieldname="vegetative_magnesium"
+                        errors={this.state.errors}
+                        errorField="vegetative_magnesium"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex mb2">
+                    <div className="w-50">
+                      <label>Calcium (Ca)</label>
+                    </div>
+                    <div className="w-50">
+                      <TextInput
+                        value={this.findAttr(this.state.phase, 'calcium').value}
+                        onChange={e =>
+                          this.handleChange(
+                            this.state.phase,
+                            'calcium',
+                            e.target.value
+                          )
+                        }
+                        fieldname="name"
+                        errors={this.state.errors}
+                        errorField="name"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex mb2">
+                    <div className="w-50">
+                      <label>Sulfer (S)</label>
+                    </div>
+                    <div className="w-50">
+                      <TextInput
+                        value={this.findAttr(this.state.phase, 'sulfer').value}
+                        onChange={e =>
+                          this.handleChange(
+                            this.state.phase,
+                            'sulfer',
+                            e.target.value
+                          )
+                        }
+                        fieldname="name"
+                        errors={this.state.errors}
+                        errorField="name"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex mb2">
+                    <div className="w-50">
+                      <label>Boron (B)</label>
+                    </div>
+                    <div className="w-50">
+                      <TextInput
+                        value={this.findAttr(this.state.phase, 'boron').value}
+                        onChange={e =>
+                          this.handleChange(
+                            this.state.phase,
+                            'boron',
+                            e.target.value
+                          )
+                        }
+                        fieldname="name"
+                        errors={this.state.errors}
+                        errorField="name"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex mb2">
+                    <div className="w-50">
+                      <label>Iron (Fe)</label>
+                    </div>
+                    <div className="w-50">
+                      <TextInput
+                        value={this.findAttr(this.state.phase, 'iron').value}
+                        onChange={e =>
+                          this.handleChange(
+                            this.state.phase,
+                            'iron',
+                            e.target.value
+                          )
+                        }
+                        fieldname="name"
+                        errors={this.state.errors}
+                        errorField="name"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex mb2">
+                    <div className="w-50">
+                      <label>Zinc (Zn)</label>
+                    </div>
+                    <div className="w-50">
+                      <TextInput
+                        value={this.findAttr(this.state.phase, 'zinc').value}
+                        onChange={e =>
+                          this.handleChange(
+                            this.state.phase,
+                            'zinc',
+                            e.target.value
+                          )
+                        }
+                        fieldname="name"
+                        errors={this.state.errors}
+                        errorField="name"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex">
+                    <div className="w-50">
+                      <label>Molybdenum (Mo)</label>
+                    </div>
+                    <div className="w-50">
+                      <TextInput
+                        value={
+                          this.findAttr(this.state.phase, 'molybdenum').value
+                        }
+                        onChange={e =>
+                          this.handleChange(
+                            this.state.phase,
+                            'molybdenum',
+                            e.target.value
+                          )
+                        }
+                        fieldname="name"
+                        errors={this.state.errors}
+                        errorField="name"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end pa2">
+              <a
+                className="pointer bg-orange link white f6 fw6 pv2 ph3 br2 dim mt3"
+                onClick={handleSubmit}
+              >
+                Save & Continue
+              </a>
+            </div>
+          </div>
         </div>
       </React.Fragment>
     )

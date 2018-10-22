@@ -5,10 +5,13 @@ module Cultivation
 
     embedded_in :task, class_name: 'Cultivation::Task'
 
-    field :name, type: String
     field :quantity, type: Integer
     field :uom, type: String
 
     belongs_to :raw_material, class_name: 'Inventory::RawMaterial'
+
+    def name
+      raw_material.name
+    end
   end
 end

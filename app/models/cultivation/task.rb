@@ -38,7 +38,7 @@ module Cultivation
     orderable scope: :batch, base: 0
 
     scope :expected_on, ->(date) {
-      all.and(:expected_start_date.lte => date, :expected_end_date.gte => date)
+      all.and(:start_date.lte => date, :end_date.gte => date)
     }
 
     def tasks_depend

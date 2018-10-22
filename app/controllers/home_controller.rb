@@ -2,8 +2,8 @@ class HomeController < ApplicationController
   def index
     @home = OpenStruct.new({
       last_facility: Facility.last,
-      has_inventories: Inventory::ItemArticle.all.any?,
-      has_batches: Cultivation::Batch.all.any?,
+      has_inventories: Facility.last.strains.count > 0,
+      has_batches: Cultivation::Batch.where(facility_id: Facility.last.id).count > 0,
     })
   end
 
@@ -22,12 +22,10 @@ class HomeController < ApplicationController
     Cultivation::NutrientProfile.destroy_all
 
     Inventory::Plant.destroy_all
-    Inventory::ItemArticle.destroy_all
     Inventory::ItemTransaction.destroy_all
     Inventory::RawMaterial.destroy_all
     Inventory::VendorInvoice.destroy_all
     Inventory::Vendor.destroy_all
-    Inventory::Item.destroy_all
     Cultivation::Batch.destroy_all
     Common::UnitOfMeasure.destroy_all
     CompanyInfo.destroy_all

@@ -3,12 +3,13 @@ module Cultivation
     include Mongoid::Document
     include Mongoid::Timestamps::Short
 
+    # field :name, type: String
+    # field :uom, type: String
+    field :quantity, type: BigDecimal
+
     embedded_in :task, class_name: 'Cultivation::Task'
 
-    field :name, type: String
-    field :quantity, type: Integer
-    field :uom, type: String
-
-    belongs_to :raw_material, class_name: 'Inventory::RawMaterial'
+    belongs_to :catalogue, class_name: 'Inventory::Catalogue'
+    belongs_to :uom, class_name: 'Common::UnitOfMeasure', inverse_of: nil
   end
 end

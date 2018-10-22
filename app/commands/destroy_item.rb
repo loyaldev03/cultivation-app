@@ -10,6 +10,6 @@ class DestroyItem
   end
 
   def call
-    @record = Inventory::Item.where(id: @record_id).delete
+    # @record = Inventory::Item.where(id: @record_id).delete
   end
 end

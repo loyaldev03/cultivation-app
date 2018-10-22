@@ -14,12 +14,13 @@ class FindItem
   private
 
   def query_record
-    record = Inventory::Item.where(@args).first
-    if record.nil?
-      errors.add :not_found, 'Record Not Found'
-      nil
-    else
-      record
-    end
+    nil
+    # record = Inventory::Item.where(@args).first
+    # if record.nil?
+    #   errors.add :not_found, 'Record Not Found'
+    #   nil
+    # else
+    #   record
+    # end
   end
 end

@@ -1,10 +1,26 @@
 desc "Create dummy facility 1 at a time"
 task seed_until_po: :environment  do
 
-  # 1. Setup facility
+  # 1. Setup facility & master data
   facility = Facility.find_or_create_by(name: 'Facility 1', code: 'F1') do |f|
     f.is_complete = true
   end
+
+  UOM =       Common::UnitOfMeasure
+  # Setup bag UOM
+  UOM.find_or_create_by(name: 'bag',
+                        unit: 'bag', 
+                        dimension: 'custom', 
+                        is_base_unit: true, 
+                        base_unit: 'bag',
+                        conversion: 1)
+  # Setup kg UOM
+  UOM.find_or_create_by(name: 'kg',
+                        unit: 'kg', 
+                        dimension: 'weights', 
+                        is_base_unit: true, 
+                        base_unit: 'kg',
+                        conversion: 1)
 
   # 1.1. Reset data
   Inventory::Catalogue.where(facility: facility).delete_all
@@ -31,6 +47,7 @@ task seed_until_po: :environment  do
                                             category: '', 
                                             sub_category: '', 
                                             key: 'nutrients',
+                                            uom_dimension: 'weights',
                                             facility: facility)
 
   potassium = Inventory::Catalogue.create!( label: 'Potassium Product', 
@@ -38,6 +55,7 @@ task seed_until_po: :environment  do
                                             category: 'nutrients', 
                                             sub_category: '', 
                                             key: 'potassium',
+                                            uom_dimension: 'weights',
                                             facility: facility)
 
   seaweed   = Inventory::Catalogue.create!( label: 'Seaweed', 
@@ -45,6 +63,7 @@ task seed_until_po: :environment  do
                                             category: 'nutrients', 
                                             sub_category: 'potassium', 
                                             key: 'seaweed', 
+                                            uom_dimension: 'weights',
                                             facility: facility)
 
   nitrogen  = Inventory::Catalogue.create!( label: 'Nitrogen Product', 
@@ -52,6 +71,7 @@ task seed_until_po: :environment  do
                                             category: 'nutrients', 
                                             sub_category: '', 
                                             key: 'nitrogen',
+                                            uom_dimension: 'weights',
                                             facility: facility)
 
   blood_meal = Inventory::Catalogue.create!(label: 'Nitrogen Product', 
@@ -59,6 +79,7 @@ task seed_until_po: :environment  do
                                             category: 'nutrients', 
                                             sub_category: 'nitrogen', 
                                             key: 'blood_meal',
+                                            uom_dimension: 'weights',
                                             facility: facility)
 
   urea      = Inventory::Catalogue.create!( label: 'Nitrogen Product', 
@@ -66,6 +87,7 @@ task seed_until_po: :environment  do
                                             category: 'nutrients', 
                                             sub_category: 'nitrogen', 
                                             key: 'urea',
+                                            uom_dimension: 'weights',
                                             facility: facility)
 
   grow_lights = Inventory::Catalogue.create!( label: 'Grow Lights',
@@ -73,6 +95,7 @@ task seed_until_po: :environment  do
                                             category: '', 
                                             sub_category: '', 
                                             key: 'grow_lights',
+                                            uom_dimension: 'weights',
                                             facility: facility)
 
   eye_drops  = Inventory::Catalogue.create!(label: 'Eye drops',
@@ -80,6 +103,7 @@ task seed_until_po: :environment  do
                                             category: '', 
                                             sub_category: '', 
                                             key: 'eye_drops',
+                                            uom_dimension: 'weights',
                                             facility: facility)
 
   plant_catalogue  = Inventory::Catalogue.create!(label: 'Plant',
@@ -87,30 +111,13 @@ task seed_until_po: :environment  do
                                             category: '', 
                                             sub_category: '', 
                                             key: 'plant',
+                                            uom_dimension: 'pieces',
                                             facility: facility)
 
   # 3. Setup vendor
   vendor =    Inventory::Vendor.find_or_create_by(name: 'vendor #1', vendor_no: 'VendOne')
 
   # 4. Setup Purchase Order
-  UOM =       Common::UnitOfMeasure
-
-  # Setup bag UOM
-  UOM.find_or_create_by(name: 'bag',
-                        unit: 'bag', 
-                        dimension: 'custom', 
-                        is_base_unit: true, 
-                        base_unit: 'bag',
-                        conversion: 1)
-
-  # Setup kg UOM
-  UOM.find_or_create_by(name: 'kg',
-                        unit: 'kg', 
-                        dimension: 'weights', 
-                        is_base_unit: true, 
-                        base_unit: 'kg',
-                        conversion: 1)
-
   po =    Inventory::PurchaseOrder.create!( purchase_order_no:  'PO001',
                                             purchase_order_date: 50.days.ago,
                                             vendor: vendor,
@@ -231,4 +238,51 @@ task seed_until_po: :environment  do
                                                 product_name: plant_po.items.first.product_name,
                                                 description: 'i can be anything')
   plant_po.update!(status: 'completed')
+
+
+
+  # TODO:
+  # 1. Task planning
+
+  batch = Cultivation::Batch.create!(
+    batch_no: 'b111',
+    name: 'batch1',
+    start_date: DateTime.now + 2.days, # future date
+    batch_source: 'clones_from_mother',
+    facility_id: facility_strain.facility_id,
+    current_growth_stage: 'clone',
+    facility_strain: facility_strain
+  )
+
+  [
+    {:phase => Constants::CONST_CLONE, :task_category => '', :name => 'Clone', :duration => 17, :days_from_start_date => 0, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'true', :is_category => 'false'},
+    {:phase => Constants::CONST_CLONE, :task_category => 'Prepare', :name => 'Prepare', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
+    {:phase => Constants::CONST_CLONE, :task_category => 'Prepare', :name => 'Prepare Sample', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'}].each do |tp|  
+
+      start_date = : DateTime.now + 2.days
+      duration = task[:duration].to_i unless task[:duration].nil?
+      prev_task = batch.tasks.count > 0 ? batch.tasks[-1].id : nil
+
+      batch.tasks.create!(phase:            tp[:phase],
+                          task_category:    tp[:task_category],
+                          name:             tp[:name],
+                          duration:         duration,
+                          start_date:       start_date + tp[:days_from_start_date].to_i.days,
+                          end_date:         start_date + tp[:days_from_start_date].to_i.days + duration.days,
+                          days_from_start_date: tp[:days_from_start_date],
+                          estimated_hours:  tp[:estimated_hours],
+                          no_of_employees:  tp[:no_of_employees],
+                          is_phase:         tp[:is_phase] == 'true',
+                          is_category:      tp[:is_category] == 'true',
+                          parent_id:        prev_task)
+  end
+
+  batch.tasks.last.items.create!(
+    uom: seaweed.uoms.first, # this is a risky area, seaweed may or may not have weight in KG
+    catalogue: seaweed,
+    quantity: 5.5
+  )
+
+  # 2. Daily consumption log
+
 end

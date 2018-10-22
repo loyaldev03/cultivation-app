@@ -37,12 +37,18 @@ module Inventory
     field :sub_category, type: String, default: ''       # If node is level 2, refer to parant using parent's key.
     field :acccount_code, type: String
     field :is_active, type: Boolean, default: true
+    field :uom_dimension, type: String
+
     belongs_to :facility
 
     scope :raw_materials, -> { where(catalogue_type: 'raw_materials') }
     scope :sales_product, -> { where(catalogue_type: 'grow_lights') }
     scope :non_sales_product, -> { where(catalogue_type: 'non_sales_product') }
     scope :active, -> { where(is_active: true) }
+
+    def uoms
+      Common::UnitOfMeasurement.send(self.uom_dimension)
+    end
 
     def children
       if category.blank?

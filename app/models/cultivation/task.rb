@@ -20,8 +20,11 @@ module Cultivation
 
     # field :time_taken, type: Float #actual time taken
 
+    # TODO: To be removed
     field :no_of_employees, type: Integer #needed
-    field :materials, type: String # later need to integrate with real material module
+
+    # TODO: To be removed
+    field :materials, type: String          # later need to integrate with real material module
     field :instruction, type: String
     field :is_phase, type: Boolean, default: -> { false } #to identify phase
     field :is_category, type: Boolean, default: -> { false } #to identify category

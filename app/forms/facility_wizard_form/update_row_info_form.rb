@@ -26,10 +26,11 @@ module FacilityWizardForm
       @is_continue = is_continue
     end
 
-    def submit(params)
+    def submit(params, current_user)
+      raise ArgumentError, 'Missing current_user' if current_user.nil?
+
       self.map_attrs_from_hash(ATTRS, params)
       if valid?
-        Rails.logger.debug '>>> UpdateRowInfoForm::submit'
         save_cmd = SaveRow.call(self)
         @result = save_cmd.result
         if save_cmd.success? && @is_continue

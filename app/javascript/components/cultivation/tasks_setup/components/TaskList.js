@@ -154,25 +154,29 @@ class TaskList extends React.Component {
     }))
   }
 
-  toggleCollapse = (id) => {
+  toggleCollapse = id => {
     let array = []
-    let children_ids = TaskStore.filter(e => e.attributes.parent_id === id).map(e => e.id)
+    let children_ids = TaskStore.filter(e => e.attributes.parent_id === id).map(
+      e => e.id
+    )
     let new_ids, old_id
-    if (this.state.collapseIds.includes(id)){
+    if (this.state.collapseIds.includes(id)) {
       let i
       let tempCollapseId = this.state.collapseIds
       old_id = DisplayTaskStore.slice()
 
       //loop through children
-      for(i =0 ; i <children_ids.length; i++){
+      for (i = 0; i < children_ids.length; i++) {
         tempCollapseId = tempCollapseId.filter(e => e !== children_ids[i])
-        let current_children_id = TaskStore.filter(e => e.attributes.parent_id === children_ids[i]).map(e => e.id)
+        let current_children_id = TaskStore.filter(
+          e => e.attributes.parent_id === children_ids[i]
+        ).map(e => e.id)
         old_id = old_id.filter(e => !current_children_id.includes(e))
       }
 
-      this.setState({ collapseIds: tempCollapseId.filter(e => e !== id)})
-      new_ids = old_id.filter(e=> !children_ids.includes(e))
-    }else{
+      this.setState({ collapseIds: tempCollapseId.filter(e => e !== id) })
+      new_ids = old_id.filter(e => !children_ids.includes(e))
+    } else {
       this.setState(prevState => ({
         collapseIds: [...prevState.collapseIds, id]
       }))
@@ -202,16 +206,15 @@ class TaskList extends React.Component {
             <div className="w1 ml3">
               {row.row['attributes.is_phase'] === true && (
                 <div>
-                  <i 
-                    className="material-icons dim grey f7 pointer" 
+                  <i
+                    className="material-icons dim grey f7 pointer"
                     style={{ fontSize: '18px' }}
-                    onClick={e=>toggleCollapse(row.row.id)}
+                    onClick={e => toggleCollapse(row.row.id)}
                   >
-                    {this.state.collapseIds.includes(row.row.id) ? 
-                      'arrow_drop_up' 
-                    : 
-                      'arrow_drop_down'}
-                  </i>         
+                    {this.state.collapseIds.includes(row.row.id)
+                      ? 'arrow_drop_up'
+                      : 'arrow_drop_down'}
+                  </i>
                   <a
                     className="pointer"
                     style={{ color: '#ff5722' }}
@@ -232,10 +235,9 @@ class TaskList extends React.Component {
                     style={{ fontSize: '18px' }}
                     onClick={e => toggleCollapse(row.row.id)}
                   >
-                    {this.state.collapseIds.includes(row.row.id) ?
-                      'arrow_drop_up'
-                      :
-                      'arrow_drop_down'}
+                    {this.state.collapseIds.includes(row.row.id)
+                      ? 'arrow_drop_up'
+                      : 'arrow_drop_down'}
                   </i>
                   <a
                     className="pointer"
@@ -437,7 +439,7 @@ class TaskList extends React.Component {
 
   filterTask = () => {
     let ids = DisplayTaskStore
-    let filteredTasks = TaskStore.slice().filter( e => ids.includes(e.id))
+    let filteredTasks = TaskStore.slice().filter(e => ids.includes(e.id))
     return filteredTasks
   }
 

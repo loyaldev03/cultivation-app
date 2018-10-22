@@ -2,13 +2,13 @@ import 'babel-polyfill'
 import React from 'react'
 import Select from 'react-select'
 import Calendar from 'react-calendar/dist/entry.nostyle'
-import { addDays } from 'date-fns'
 import {
   GroupBox,
   dateToMonthOption,
   monthOptionAdd,
   monthOptionToString,
-  monthStartDate
+  monthStartDate,
+  httpPostOptions
 } from './../../utils'
 import { toast } from './../../utils/toast'
 import batchSetupStore from './BatchSetupStore'
@@ -18,10 +18,9 @@ import { observer } from 'mobx-react'
 class CapacityTile extends React.PureComponent {
   render() {
     const { startDate, duration } = this.props
-    const endDate = addDays(startDate, duration)
     return (
       <span className="react-calendar__tile__content">
-        {batchSetupStore.getCapacity(startDate, endDate)}
+        {batchSetupStore.getCapacity(startDate, duration)}
       </span>
     )
   }
@@ -100,6 +99,21 @@ class BatchSetupApp extends React.Component {
   componentDidMount() {
     // Setup sidebar editor
     window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
+
+    // TODO: DELETE AFTER DEVELOPMENT
+    // setTimeout(() => {
+    //   this.setState({
+    //     batchStrain: '5bac2e7a49a934664ea63242',
+    //     phaseDuration: {
+    //       clone: 15,
+    //       veg1: 45,
+    //       veg2: 45,
+    //       flower: 60,
+    //       dry: 5,
+    //       cure: 2
+    //     }
+    //   })
+    // }, 300)
   }
 
   closeSidebar = () => {
@@ -107,7 +121,6 @@ class BatchSetupApp extends React.Component {
   }
 
   handleDatePick = date => {
-    console.log('DatePicker picked', date)
     this.setState({ batchStartDate: date })
     window.editorSidebar.open({ width: '500px' })
   }
@@ -115,28 +128,26 @@ class BatchSetupApp extends React.Component {
   handleSubmit = event => {
     this.setState({ isLoading: true })
     const url = '/api/v1/batches'
-    fetch(url, {
-      method: 'POST',
-      credentials: 'include',
-      body: JSON.stringify({
+    fetch(
+      url,
+      httpPostOptions({
         batch_source: this.state.batchSource,
         facility_id: this.state.batchFacility,
         facility_strain_id: this.state.batchStrain,
-        start_date: this.state.batchStartDate.toDateString(),
-        grow_method: this.state.batchGrowMethod
-      }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+        start_date: this.state.batchStartDate,
+        grow_method: this.state.batchGrowMethod,
+        phase_duration: this.state.phaseDuration,
+      })
+    )
       .then(response => response.json())
       .then(data => {
-        this.setState({ isLoading: false })
+        this.setState({ isLoading: false, errors: {} })
         if (data.data && data.data.id) {
           toast('Batch Created', 'success')
           window.location.replace(`/cultivation/batches/${data.data.id}?step=1`)
         } else {
-          toast('Error creating batch', 'error')
+          this.setState({ errors: data.errors })
+          toast('Please check the errors and try again', 'Warning')
         }
       })
   }
@@ -161,29 +172,15 @@ class BatchSetupApp extends React.Component {
     if (this.state.searchMonth !== searchMonth) {
       this.setState({ searchMonth })
     }
-    const {
-      batchFacility,
-      cloneDuration,
-      vegDuration,
-      veg1Duration,
-      veg2Duration,
-      flowerDuration,
-      dryDuration
-    } = this.state
+    const { batchFacility, phaseDuration } = this.state
     const totalDuration = this.calculateTotalDuration()
     if (batchFacility && searchMonth && totalDuration > 0) {
       const searchParams = {
         facility_id: batchFacility,
         search_month: searchMonth,
-        clone: cloneDuration,
-        veg: vegDuration,
-        veg1: veg1Duration,
-        veg2: veg2Duration,
-        flower: flowerDuration,
-        dry: dryDuration,
         total_duration: totalDuration
       }
-      batchSetupStore.search(searchParams)
+      batchSetupStore.search(searchParams, phaseDuration)
     }
   }
 
@@ -203,6 +200,7 @@ class BatchSetupApp extends React.Component {
       batchSource,
       searchMonth,
       batchStartDate,
+      errors,
       isLoading
     } = this.state
 
@@ -279,6 +277,10 @@ class BatchSetupApp extends React.Component {
                   text="Dry Phase"
                   onChange={this.handleChangeDuration('dry')}
                 />
+                <PhaseDurationInput
+                  text="Cure Phase"
+                  onChange={this.handleChangeDuration('cure')}
+                />
 
                 <div className="fl w-70 tr gray pr3 pv1">
                   Total Duration:{' '}
@@ -330,16 +332,30 @@ class BatchSetupApp extends React.Component {
         </div>
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body h-100">
-            <BatchSetupEditor
-              strains={strains}
-              batchStrain={batchStrainValue ? batchStrainValue.label : ''}
-              growMethods={growMethods}
-              startDate={batchStartDate}
-              onChange={this.handleChange}
-              onClose={this.closeSidebar}
-              onSave={this.handleSubmit}
-              isLoading={isLoading}
-            />
+            {showValidation &&
+              totalDuration &&
+              batchStartDate &&
+              batchSetupStore.isReady && (
+                <BatchSetupEditor
+                  batchStrain={batchStrainValue ? batchStrainValue.label : ''}
+                  plantSources={plantSources}
+                  growMethods={growMethods}
+                  batchSchedule={batchSetupStore.getSchedule(
+                    batchStartDate,
+                    totalDuration
+                  )}
+                  maxCapacity={batchSetupStore.getCapacity(
+                    batchStartDate,
+                    totalDuration
+                  )}
+                  startDate={batchStartDate}
+                  onChange={this.handleChange}
+                  onClose={this.closeSidebar}
+                  onSave={this.handleSubmit}
+                  isLoading={isLoading}
+                  errors={errors}
+                />
+              )}
           </div>
         </div>
       </div>

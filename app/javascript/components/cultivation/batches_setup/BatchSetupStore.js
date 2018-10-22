@@ -1,4 +1,5 @@
 import { observable, action, runInAction, toJS } from 'mobx'
+import { addDays } from 'date-fns'
 import {
   minBy,
   groupBy,
@@ -6,6 +7,9 @@ import {
   httpGetOptions,
   httpPostOptions
 } from '../../utils'
+
+// TODO: Handle veg | veg1 & veg2
+const CULTIVATION_PHASES = ['clone', 'veg1', 'veg2', 'flower', 'dry', 'cure']
 
 class BatchSetupStore {
   @observable isLoading = false
@@ -15,8 +19,7 @@ class BatchSetupStore {
   @observable isReady = false
 
   @action
-  async search(searchParams) {
-    console.log('perform search')
+  async search(searchParams, phaseDuration) {
     if (
       searchParams.facility_id &&
       searchParams.search_month &&
@@ -44,10 +47,10 @@ class BatchSetupStore {
           // Facility's trays
           if (response[0].data) {
             const traysData = groupBy(response[0].data, 'tray_purpose')
-            delete traysData.mother
-            const trayPurposes = Object.keys(traysData).map(phase => ({
+            const trayPurposes = CULTIVATION_PHASES.map(phase => ({
               phase,
-              totalCapacity: sumBy(traysData[phase], 'tray_capacity')
+              duration: phaseDuration[phase] || 0,
+              totalCapacity: sumBy(traysData[phase], 'tray_capacity') // Total capacity for the phase in facility
             }))
             this.trayPurposes = trayPurposes
             this.trays = traysData
@@ -58,15 +61,16 @@ class BatchSetupStore {
               id: p.id,
               startDate: new Date(p.attributes.start_date),
               endDate: new Date(p.attributes.end_date),
-              ...p.attributes
+              ...p.attributes,
+              phase: p.attributes['phase'].toLowerCase(),
             }))
-            // console.table(plansData)
             this.plans = groupBy(plansData, 'phase')
           }
           this.isReady = true
         })
       } catch (err) {
         this.isLoading = false
+        this.isReady = false
         console.error(err)
       }
     }
@@ -93,24 +97,35 @@ class BatchSetupStore {
     }
   }
 
-  getCapacity(startDate, endDate) {
+  getSchedule(startDate, duration) {
+    let nextDate = startDate
     const result = this.trayPurposes.map(purpose => {
+      const phaseStartDate = nextDate
+      const phaseLength = purpose.duration > 0 ? purpose.duration - 1 : 0
+      const phaseEndDate = addDays(nextDate, phaseLength)
+      nextDate = addDays(phaseEndDate, 1)
       const totalCapacity = purpose.totalCapacity
       const planCapacity = this.sumCapacity(
         this.plans[purpose.phase],
-        startDate,
-        endDate
+        phaseStartDate,
+        phaseEndDate
       )
       return {
         phase: purpose.phase,
         totalCapacity,
         planCapacity,
+        startDate: phaseStartDate,
+        endDate: phaseEndDate,
+        duration: purpose.duration,
         capacity: totalCapacity - planCapacity
       }
     })
-    const minResult = minBy(result, 'capacity')
-    // console.log({startDate})
-    // console.table(result)
+    return result
+  }
+
+  getCapacity(startDate, duration) {
+    const schedule = this.getSchedule(startDate, duration)
+    const minResult = minBy(schedule, 'capacity')
     return minResult
   }
 }

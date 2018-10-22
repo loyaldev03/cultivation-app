@@ -16,7 +16,9 @@ module FacilityWizardForm
     validates :name, presence: true
     validates :code, presence: true
 
-    def submit(params)
+    def submit(params, current_user)
+      raise ArgumentError, 'Missing current_user' if current_user.nil?
+
       self.map_attrs_from_hash(ATTRS, params)
       if valid?
         save_cmd = SaveRoom.call(self)

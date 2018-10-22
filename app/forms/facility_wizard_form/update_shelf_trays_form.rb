@@ -15,7 +15,9 @@ module FacilityWizardForm
 
     validates :code, presence: true
 
-    def submit(params)
+    def submit(params, current_user)
+      raise ArgumentError, 'Missing current_user' if current_user.nil?
+
       @facility_id = params[:facility_id]
       @room_id = params[:room_id]
       @row_id = params[:row_id]

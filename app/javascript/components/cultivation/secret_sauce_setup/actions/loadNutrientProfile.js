@@ -1,6 +1,5 @@
-import NutrientProfileStore from '../stores/NutrientProfileStore'
+import NutrientProfileStore from '../store/NutrientProfileStore'
 
 export default function loadItemsloadNutrientProfile(nutrient_profile) {
-  console.log(nutrient_profile)
   NutrientProfileStore.load(nutrient_profile)
 }

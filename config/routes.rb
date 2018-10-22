@@ -100,7 +100,15 @@ Rails.application.routes.draw do
   end
 
   namespace 'cultivation' do
-    resources :batches
+    resources :batches do
+      member do
+        get 'gantt'
+        get 'locations'
+        get 'issues'
+        get 'secret_sauce'
+        get 'resource'
+      end
+    end
   end
 
   # API for web pages

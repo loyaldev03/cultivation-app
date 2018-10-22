@@ -5,7 +5,7 @@ import { observer, Provider } from 'mobx-react'
 import update from 'immutability-helper'
 
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
-import NutrientProfileStore from '../stores/NutrientProfileStore'
+import NutrientProfileStore from '../store/NutrientProfileStore'
 import SaveNutrientProfile from '../actions/saveNutrientProfile'
 
 @observer

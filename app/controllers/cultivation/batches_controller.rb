@@ -1,4 +1,6 @@
 class Cultivation::BatchesController < ApplicationController
+  before_action :find_batch_info, only: [:show, :gantt, :locations, :issues, :secret_sauce, :resource]
+
   def index
   end
 
@@ -22,23 +24,27 @@ class Cultivation::BatchesController < ApplicationController
   # end
 
   def show
-    @batch = Cultivation::Batch.find(params[:id])
-    @batch_attributes = {
-      id: @batch.id.to_s,
-      batch_no: @batch.batch_no.to_s,
-      strain: @batch.facility_strain.strain_name,
-      batch_source: @batch.batch_source,
-      grow_method: @batch.grow_method,
-      start_date: @batch.start_date,
-      estimated_harvest_date: @batch.estimated_harvest_date,
-      nutrient_profile: @batch.nutrient_profile,
-    }
     # TODO: Use other params
     if params[:step].present?
       # Set the plantType for react BatchPlantSelectionList
       @plant_selection_type = get_plants_selection_type(@batch.batch_source)
       @locations = get_cultivation_locations(@batch)
     end
+  end
+
+  def gantt
+  end
+
+  def locations
+  end
+
+  def issues
+  end
+
+  def secret_sauce
+  end
+
+  def resource
   end
 
   private
@@ -97,6 +103,20 @@ class Cultivation::BatchesController < ApplicationController
     else
       nil
     end
+  end
+
+  def find_batch_info
+    @batch = Cultivation::Batch.find(params[:id])
+    @batch_attributes = {
+      id: @batch.id.to_s,
+      batch_no: @batch.batch_no.to_s,
+      strain: @batch.facility_strain.strain_name,
+      batch_source: @batch.batch_source,
+      grow_method: @batch.grow_method,
+      start_date: @batch.start_date,
+      estimated_harvest_date: @batch.estimated_harvest_date,
+      nutrient_profile: @batch.nutrient_profile,
+    }
   end
 
   def record_params

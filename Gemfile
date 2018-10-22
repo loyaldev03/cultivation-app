@@ -100,7 +100,7 @@ gem 'stackprof'
 # Error tracking
 gem 'rollbar'
 
-#Api Serializer
+# Api Serializer
 gem 'fast_jsonapi'
 
 gem 'mongoid_orderable'
@@ -112,3 +112,6 @@ gem "aws-sdk-s3", "~> 1.2"
 
 # Authorization
 gem 'pundit'
+
+# Model state machine
+gem 'aasm'

@@ -1,3 +1,5 @@
+import 'babel-polyfill'
+
 import React from 'react'
 import { render } from 'react-dom'
 
@@ -8,6 +10,7 @@ import loadTasks from './actions/loadTask'
 import loadUsers from './actions/loadUsers'
 import loadUserRoles from './actions/loadUserRoles'
 import loadItems from './actions/loadItems'
+import loadDisplayTaskStore from './actions/loadDisplayTaskStore'
 
 import TaskList from './components/TaskList'
 
@@ -19,8 +22,9 @@ class TaskSetup extends React.Component {
     }
   }
 
-  componentDidMount() {
-    loadTasks.loadbatch(this.props.batch_id)
+  async componentDidMount() {
+    await loadTasks.loadbatch(this.props.batch_id)
+    loadDisplayTaskStore()
     loadUsers()
     loadUserRoles()
     loadItems()

@@ -1,6 +1,6 @@
 module Cultivation
-  module WorkLog
-    class MaterialUsed
+  module TaskLog
+    class MaterialWasted
       include Mongoid::Document
       include Mongoid::Timestamps::Short
 
@@ -9,7 +9,7 @@ module Cultivation
       belongs_to :item, class_name: 'Inventory::Item'
       belongs_to :uom, class_name: 'Common::UnitOfMeasure'
 
-      embedded_in :work_log, class_name: 'Cultivation::WorkLog::Log'
+      embedded_in :work_day, class_name: 'Cultivation::WorkDay'
     end
   end
 end

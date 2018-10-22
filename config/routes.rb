@@ -63,7 +63,7 @@ Rails.application.routes.draw do
   get "inventory/setup" => "home#inventory_setup"
   namespace 'inventory', as: :inventory do
     resources 'strains', only: [:index]
-    resources 'plants', only: [:index] do 
+    resources 'plants', only: [:index] do
       collection do
         get 'mothers'
         get 'cultivation_batches'
@@ -156,6 +156,11 @@ Rails.application.routes.draw do
 
       resources :items, only: [:index, :create, :destroy]
 
+      scope :daily_tasks do
+        put ':id/start_task', to: 'daily_tasks#start_task'
+        put ':id/stop_task', to: 'daily_tasks#stop_task'
+        put ':id/add_notes', to: 'daily_tasks#add_notes'
+      end
     end
   end
 end

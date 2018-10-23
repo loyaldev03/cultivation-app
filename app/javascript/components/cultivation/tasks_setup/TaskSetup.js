@@ -51,16 +51,6 @@ class TaskSetup extends React.Component {
     document.addEventListener('mousedown', this.handleOutsideClick, false)
   }
 
-  renderBatchInfo() {
-    return (
-      <TaskList
-        batch_id={this.props.batch_id}
-        batch={this.props.batch}
-        columns={this.state.columns}
-      />
-    )
-  }
-
   onChangeFilterColumns = value => {
     this.setState({ columns: value })
   }

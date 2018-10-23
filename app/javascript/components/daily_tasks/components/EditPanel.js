@@ -55,11 +55,11 @@ class EditPanel extends React.Component {
     )
 
     return (<div>
-      <div className="ph4 pv2 mb3 bb b--light-gray flex items-center" style={{ height: '51px' }}>
+      <div className="ph3 pv2 mb3 bb b--light-gray flex items-center" style={{ height: '51px' }}>
         <style>{styles}</style>
         <div className="mt3 flex w-100 tc">
           <div className={`w-30 ph2 pointer dim ${classWhenActive(0, 'active')}`} onClick={() => this.changeTabs(0)}>Logs & Activities</div>
-          <div className={`w-50 ph2 pointer dim ${classWhenActive(1, 'active')}`} onClick={() => this.changeTabs(1)}>Material Used & Wastes</div>
+          <div className={`w-40 ph2 pointer dim ${classWhenActive(1, 'active')}`} onClick={() => this.changeTabs(1)}>Material Used & Wastes</div>
           <div className={`w-20 ph2 pointer dim ${classWhenActive(2, 'active')}`} onClick={() => this.changeTabs(2)}>Issues</div>
         </div>
         <div className="pointer" onClick={() => { DailyTasksStore.editingPanel = null }}>
@@ -110,9 +110,9 @@ class LogsAndActivities extends React.Component {
 
     return (<div className="w-100">
       <div className="mb3">
-        <div className="b">Material Used</div>
+        <div className="b">Materials Planned</div>
         {task.attributes.items.map((item, i) => (
-          <li key={i}>{item.name}: {item.qty} {item.uom}</li>
+          <li key={i}>{item.name}: {item.quantity} {item.uom}</li>
         ))}
       </div>
 

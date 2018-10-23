@@ -20,7 +20,7 @@ class WorkDashboardApp extends React.Component {
       <React.Fragment>
         <DateFormatted date={this.props.date}></DateFormatted>
         <StyledWorkPanel className="fl w-100 ma1" />
-        {DailyTasksStore.editingPanel ? <StyledEditingPanel className="outline fixed w-40 bg-white"></StyledEditingPanel> : false}
+        {DailyTasksStore.editingPanel ? <StyledEditingPanel className="b--light-gray bl bw1 fixed w-40 bg-white"></StyledEditingPanel> : false}
       </React.Fragment>
     )
   }

@@ -44,17 +44,7 @@ class TaskList extends React.Component {
     this.state = {
       isOpen: false,
       batch: this.props.batch,
-      collapseIds: [],
-      columns: this.props.columns
-    }
-  }
-
-  componentWillReceiveProps(props) {
-    this.state = {
-      isOpen: false,
-      batch: this.props.batch,
-      collapseIds: [],
-      columns: this.props.columns
+      collapseIds: []
     }
   }
 
@@ -195,6 +185,7 @@ class TaskList extends React.Component {
     }
 
     DisplayTaskStore.replace(new_ids)
+    this.mountEvents()
   }
 
   renderAttributesName = row => {
@@ -208,7 +199,7 @@ class TaskList extends React.Component {
     return (
       <div
         className={`flex justify-between-ns ${
-          row.row['attributes.is_phase'] === true ? '' : 'draggable'
+          (row.row['attributes.is_phase'] === true) || (row.row['attributes.is_category'] === true) ? '' : 'draggable'
         }`}
       >
         <div className="">

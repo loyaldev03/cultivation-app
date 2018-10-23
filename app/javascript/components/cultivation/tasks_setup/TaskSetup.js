@@ -60,7 +60,7 @@ class TaskSetup extends React.Component {
   }
 
   handleChangeCheckbox = e => {
-    let arrays = this.state.columns
+    let arrays = [...this.state.columns]
     if (e.target.checked) {
       arrays.push(e.target.value)
     } else {

@@ -2470,10 +2470,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-date-fns@^2.0.0-alpha.22:
-  version "2.0.0-alpha.22"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.0.0-alpha.22.tgz#c65f5dd7e959c59f8ea5591e458afc76a2a0d8d0"
-  integrity sha512-ovlz0I0OFhyn9bgTfqFAUvJvo8VS9mUuOxZ6cwKwBjSx42lMpXPGolcINYZoTNAG2M4YJ3QoApiQQljQEuy/Uw==
+date-fns@^2.0.0-alpha.23:
+  version "2.0.0-alpha.23"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.0.0-alpha.23.tgz#d3384f4628de78a4819fb3292286c8fa77cb175d"
+  integrity sha512-KeTgG5mbk+o9UbMXqxOvW+G46mWOWqJdjQDOP8t82E6Q28oH2ObcBvdRQbNFR55cun4QUg359PeE/KDBWJlk9g==
 
 date-now@^0.1.4:
   version "0.1.4"
@@ -3858,10 +3858,12 @@ hmac-drbg@^1.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.1"
 
-hoist-non-react-statics@^2.5.0:
-  version "2.5.5"
-  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
-  integrity sha512-rqcy4pJo55FTTLWt+bU8ukscqHeE/e9KWvsOW2b/a3afxQZhwkQdT1rPPCJ0rYXdj4vNcasY8zHTH+jF/qStxw==
+hoist-non-react-statics@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.0.1.tgz#fba3e7df0210eb9447757ca1a7cb607162f0a364"
+  integrity sha512-1kXwPsOi0OGQIZNVMPvgWJ9tSnGMiMfJdihqEzrPEXlHOBh9AAHXX/QYmAJTXztnz/K+PQ8ryCb4eGaN6HlGbQ==
+  dependencies:
+    react-is "^16.3.2"
 
 home-or-tmp@^2.0.0:
   version "2.0.0"
@@ -5160,17 +5162,17 @@ mobx-react-devtools@^6.0.2:
   integrity sha512-PY+lG6XeWaC0DFnDaVC7ImrHJQu7XVXNy4z4fmqHzWc3p+fJisKmaZNwgToO2vJGBghz98Mx2yXUBLw1Ba2mPQ==
 
 mobx-react@^5.2.5:
-  version "5.2.8"
-  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-5.2.8.tgz#059c7f29254d7cd36e103d79113103b40348d3bf"
-  integrity sha512-VAkeqkrIpdoy3VPPoqvxjdQmcTT6hi7i3TsZSwcKbSrPbSTuWc7cp1EOiX/zV1wPWEuoNAQ22bCrskQwvdYTJA==
+  version "5.3.4"
+  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-5.3.4.tgz#9e48968c42b4a8f1c64532ea94bab1c35f4da136"
+  integrity sha512-IUn7nOoPqQgutM/4H7aZYAeFwtCMqRqvMKJ9wpIqQV2XwX97BiU7VIDa/09Y/i+LrOQjkl4KJRId5MNiFYzm+A==
   dependencies:
-    hoist-non-react-statics "^2.5.0"
+    hoist-non-react-statics "^3.0.0"
     react-lifecycles-compat "^3.0.2"
 
 mobx@^5.0.3:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.5.0.tgz#a29f6a7526eed28edcd3f0e921a1edaa8bb22575"
-  integrity sha512-rD0Hsv9XtjS6axavvPX/XzWTeICRiH3bLR1L+MrJ7HOlx1hmSdWNzu8rQQ+1IkTiyJechRyGzs2tUgLRmEofJg==
+  version "5.5.1"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.5.1.tgz#cd006b46085f6e3a6c96b183583d2ee907d37525"
+  integrity sha512-mymrvbAFIMCP5k9ylspuXPy7jeEAA8ILVRziqsLmpoGIfEJc5I4YQBLF3aKJnnqtCINJPCWEijKidpsuL6TfYw==
 
 move-concurrently@^1.0.1:
   version "1.0.1"
@@ -6764,6 +6766,11 @@ react-input-autosize@^2.2.1:
   integrity sha512-3+K4CD13iE4lQQ2WlF8PuV5htfmTRLH6MDnfndHM6LuBRszuXnuyIfE7nhSKt8AzRBZ50bu0sAhkNMeS5pxQQA==
   dependencies:
     prop-types "^15.5.8"
+
+react-is@^16.3.2:
+  version "16.5.2"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.5.2.tgz#e2a7b7c3f5d48062eb769fcb123505eb928722e3"
+  integrity sha512-hSl7E6l25GTjNEZATqZIuWOgSnpXb3kD0DVCujmg46K5zLxsbiKaaT6VO9slkSBDPZfYs30lwfJwbOFOnoEnKQ==
 
 react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"

@@ -29,11 +29,12 @@ RSpec.describe QueryAvailableTrays, type: :command do
     let(:end_date) { DateTime.strptime("2018/08/17", DATE_FORMAT) }
 
     it "Condition A" do
-      skip
+      skip "Batch is not saving Line:49"
       # Prepare
       p1_start_date = DateTime.strptime("2018/07/25", DATE_FORMAT)
       p1_end_date = DateTime.strptime("2018/08/01", DATE_FORMAT)
       p1_capacity = 3
+      expect(Cultivation::TrayPlan.count).to eq 0
       p1 = create(:tray_plan,
                   facility_id: subject.id,
                   room_id: last_room.id,
@@ -44,12 +45,15 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   phase: Constants::CONST_CLONE,
                   start_date: p1_start_date,
                   end_date: p1_end_date)
+      expect(Cultivation::TrayPlan.count).to eq 1
+      expect(Cultivation::Batch.count).to eq 1
 
       query_cmd = QueryAvailableTrays.call(
         start_date,
         end_date,
-        {facility_id: subject.id, purpose: Constants::CONST_CLONE}
+        {facility_id: subject.id, purpose: [Constants::CONST_CLONE]}
       )
+      expect(query_cmd.result.to_json).to eq ""
 
       # # Validate
       expect(query_cmd.result.size).to eq 8 # 1 Room * 2 Rows * 2 Shelves * 2 Trays

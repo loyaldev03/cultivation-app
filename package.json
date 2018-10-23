@@ -15,7 +15,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-1": "^6.24.1",
     "classnames": "^2.2.6",
-    "date-fns": "^2.0.0-alpha.22",
+    "date-fns": "^2.0.0-alpha.23",
     "immutability-helper": "^2.7.1",
     "mobx": "^5.0.3",
     "mobx-react": "^5.2.5",

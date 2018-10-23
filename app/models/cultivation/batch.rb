@@ -9,6 +9,7 @@ module Cultivation
     field :grow_method, type: String
     field :start_date, type: DateTime
     field :estimated_harvest_date, type: DateTime
+    field :quantity, type: Integer # Plant quantity for the batch
     field :facility_id, type: BSON::ObjectId
 
     field :current_growth_stage, type: String

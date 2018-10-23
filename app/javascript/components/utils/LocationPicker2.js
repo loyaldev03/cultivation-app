@@ -24,27 +24,6 @@ class LocationPicker extends React.Component {
     }
   }
 
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //   let hasNewState = false
-  //   let newState = {}
-
-  //   if (nextProps.location_id !== prevState.location_id) {
-  //     newState = { location_id: nextProps.location_id }
-  //     hasNewState = true
-  //   }
-
-  //   if (nextProps.facility_id !== prevState.facility_id) {
-  //     newState = { ...newState, facility_id: nextProps.facility_id }
-  //     hasNewState = true
-  //   }
-
-  //   if (hasNewState) {
-  //     return newState
-  //   }
-
-  //   return null
-  // }
-
   isFacilityOnly(item) {
     return item.f_id.length > 0 && item.rm_id.length <= 0
   }

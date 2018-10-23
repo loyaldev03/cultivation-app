@@ -6,10 +6,13 @@ class Api::V1::TasksController < Api::V1::BaseApiController
       # tasks_json = batch.tasks.map{|a| TaskSerializer.new(a).serializable_hash}
       # batch_json = BatchSerializer.new(batch).serializable_hash
 
-      tasks = @batch.tasks.order_by(position: :asc)
-      options = {}
-      options[:is_collection]
-      task_json = TaskSerializer.new(tasks, options).serialized_json
+      tasks = Cultivation::Task.where(batch_id: @batch.id).order_by(position: :asc)
+      # tasks = @batch.tasks.order_by(position: :asc)
+      # options = {}
+      # options[:is_collection]
+      # task_json = TaskSerializer.new(tasks, options).serialized_json
+      task_json = TaskSerializer.new(tasks).serialized_json
+
       render json: task_json
     else
       render json: {data: 'Batch Not Found'}

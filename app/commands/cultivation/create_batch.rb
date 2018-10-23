@@ -181,8 +181,6 @@ module Cultivation
         end_date: (start_date + task[:days_from_start_date]) + duration.days,
         days_from_start_date: task[:days_from_start_date],
         estimated_hours: task[:estimated_hours],
-        no_of_employees: task[:no_of_employees],
-        materials: task[:materials],
         is_phase: to_boolean(task[:is_phase]),
         is_category: to_boolean(task[:is_category]),
         parent_id: parent_id,

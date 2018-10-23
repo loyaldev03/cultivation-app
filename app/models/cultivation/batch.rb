@@ -30,6 +30,7 @@ module Cultivation
       tasks.where(parent_id: '', is_phase: false, is_category: false)
     end
 
+    # TODO: is this being used?
     def generate_tree
       tasks = []
       orphan_tasks.each do |task|

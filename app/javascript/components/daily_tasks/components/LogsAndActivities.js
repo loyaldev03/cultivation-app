@@ -3,6 +3,7 @@ import { observer } from 'mobx-react'
 import moment from 'moment'
 
 import { isEmptyString } from '../../utils/StringHelper'
+import { addNotes } from '../actions/taskActions'
 
 @observer
 class LogsAndActivities extends React.Component {

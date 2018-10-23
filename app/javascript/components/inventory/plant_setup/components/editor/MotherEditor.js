@@ -39,6 +39,7 @@ class MotherEditor extends React.Component {
     }
 
     this.locations = this.props.locations
+    console.log(this.locations)
 
     // Callback ref to get instance of html DOM: https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
     // Getting a ref to textarea in order to adjust height according to content.
@@ -290,6 +291,7 @@ class MotherEditor extends React.Component {
           <div className="ph4 mt3 mb3 flex flex-column">
             <div className="w-100">
               <LocationPicker
+                key={this.state.facility_id}
                 ref={this.locationPicker}
                 mode="mother"
                 facility_id={this.state.facility_id}

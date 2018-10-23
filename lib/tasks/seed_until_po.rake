@@ -22,13 +22,19 @@ task seed_until_po: :environment  do
                         base_unit: 'kg',
                         conversion: 1)
 
+  facility_strain = Inventory::FacilityStrain.find_or_create_by(
+                        facility:     facility,
+                        strain_name:  'Acme XYZ',
+                        strain_type:  'sativa',
+                        created_by:   User.last)
+
   # 1.1. Reset data
   Inventory::Catalogue.where(facility: facility).delete_all
   Inventory::PurchaseOrder.where(facility: facility).delete_all
   Inventory::VendorInvoice.where(facility: facility).delete_all
   Inventory::ItemTransaction.where(facility: facility).delete_all
 
-  batch_ids = Cultivation::Batch.where(facility_id: facility.id).pluck(:id)
+  batch_ids = Cultivation::Batch.where(facility_id: facility.id, facility_strain: facility_strain).pluck(:id)
   Cultivation::Task.where(:batch.in => batch_ids).delete_all
   Cultivation::Batch.where(:id.in => batch_ids).delete_all
 
@@ -196,11 +202,7 @@ task seed_until_po: :environment  do
 
 
   # 10. Alt - PO for plants
-  facility_strain = Inventory::FacilityStrain.find_or_create_by(
-                        facility:     facility,
-                        strain_name:  'Acme XYZ',
-                        strain_type:  'sativa',
-                        created_by:   User.last)
+
 
   # Setup pot UOM
   UOM.find_or_create_by(name:         'Pot',

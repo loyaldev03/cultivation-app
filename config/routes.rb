@@ -115,10 +115,6 @@ Rails.application.routes.draw do
     get '/', action: 'index'
   end
 
-  namespace 'daily_tasks' do
-    get '/', action: 'index'
-  end
-
   # API for web pages
   namespace :api do
     namespace :v1 do

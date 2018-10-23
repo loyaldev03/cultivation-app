@@ -1,8 +1,22 @@
 class TaskSerializer
   include FastJsonapi::ObjectSerializer
-  attributes :phase, :task_category, :name, :duration, :days_from_start_date, :position,
-    :end_date, :estimated_hours, :users,
-    :no_of_employees, :items, :instruction, :is_phase, :is_category, :parent_id, :depend_on, :task_type
+  attributes :phase,
+    :task_category,
+    :name,
+    :duration,
+    :days_from_start_date,
+    :position,
+    :end_date,
+    :estimated_hours,
+    :users,
+    # :material_use,
+    # :instruction,
+    # :items,
+    :is_phase,
+    :is_category,
+    :parent_id,
+    :depend_on,
+    :task_type
 
   attributes :id do |object|
     object.id.to_s
@@ -22,16 +36,16 @@ class TaskSerializer
   end
 
   attribute :item_display do |object|
-    object.items.map { |a| a.name }.join(',')
+    object.material_use.map { |a| a.name }.join(',')
   end
 
   attribute :items do |object|
-    object.items.map do |item|
+    object.material_use.map do |item|
       {
         id: item.id.to_s,
         name: item.name,
         quantity: item.quantity,
-        uom: item.uom,
+        uom: item.uom.unit,
       }
     end
   end

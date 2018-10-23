@@ -6,6 +6,7 @@ module Api::V1
     end
 
     def create
+      # Rails.logger.debug "\033[35m record_params: #{record_params[:phase_duration].to_s} \033[0m"
       command = Cultivation::CreateBatch.call(current_user, record_params)
       if command.success?
         render json: BatchSerializer.new(command.result).serialized_json
@@ -88,7 +89,23 @@ module Api::V1
     end
 
     def record_params
-      params.require(:batch).permit(:batch_source, :facility_strain_id, :start_date, :grow_method)
+      params.permit(
+        :facility_id,
+        :batch_source,
+        :facility_strain_id,
+        :start_date,
+        :grow_method,
+        :quantity,
+        phase_duration: [
+          :clone,
+          :veg,
+          :veg1,
+          :veg2,
+          :flower,
+          :dry,
+          :cure
+        ],
+      )
     end
 
     def locations_params

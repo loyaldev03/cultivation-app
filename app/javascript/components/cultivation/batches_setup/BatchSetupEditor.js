@@ -67,7 +67,7 @@ class BatchSetupEditor extends React.PureComponent {
                     <th className="fw6 bb b--black-20 tl pb2 pr3 bg-white dark-grey">
                       Phase
                     </th>
-                    <th className="fw6 bb b--black-20 tl pb2 pr3 bg-white dark-grey">
+                    <th className="fw6 bb b--black-20 tc pb2 bg-white dark-grey">
                       Duration &amp; Start Dates
                     </th>
                     <th className="fw6 bb b--black-20 tl pb2 bg-white tr dark-grey w-20">
@@ -145,7 +145,7 @@ Remaining Capacity: ${x.capacity}`}
                 defaultValue={0}
                 min={1}
                 max={maxCapacity}
-                onChange={e => onChange('batchQuantity', e.value)}
+                onChange={e => onChange('batchQuantity', e.target.value)}
               />
               <span className="grey ph2">(Maximum: {maxCapacity})</span>
             </div>

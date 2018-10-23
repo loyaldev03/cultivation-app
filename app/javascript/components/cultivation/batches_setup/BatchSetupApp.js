@@ -107,6 +107,7 @@ class BatchSetupApp extends React.Component {
     //     batchStrain: '5bac2e7a49a934664ea63242',
     //     phaseDuration: {
     //       clone: 15,
+    //       veg: 90,
     //       veg1: 45,
     //       veg2: 45,
     //       flower: 60,
@@ -132,8 +133,8 @@ class BatchSetupApp extends React.Component {
     fetch(
       url,
       httpPostOptions({
-        batch_source: this.state.batchSource,
         facility_id: this.state.batchFacility,
+        batch_source: this.state.batchSource,
         facility_strain_id: this.state.batchStrain,
         start_date: this.state.batchStartDate,
         grow_method: this.state.batchGrowMethod,

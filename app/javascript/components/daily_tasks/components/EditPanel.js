@@ -6,6 +6,7 @@ import { toJS } from 'mobx'
 
 import { addNotes } from '../actions/taskActions'
 import DailyTasksStore from '../store/DailyTasksStore'
+import { isEmptyString } from '../../utils/StringHelper'
 
 
 
@@ -91,10 +92,13 @@ class LogsAndActivities extends React.Component {
   }
 
   handleLogSubmit(event) {
+    event.preventDefault();
+    if (isEmptyString(this.state.log_value)) {
+      return false;
+    }
     const { dailyTask } = this.props
     addNotes(dailyTask, this.state.log_value);
     this.setState({log_value: ''});
-    event.preventDefault();
   }
 
   render(){
@@ -108,33 +112,37 @@ class LogsAndActivities extends React.Component {
       moment(datetime).format('MMMM D, YYYY')
     )
 
-    return (<div className="w-100">
+    return (<div className="w-100 lh-copy black-60 f6">
       <div className="mb3">
-        <div className="b">Materials Planned</div>
+        <div className="b ttu">Materials Used</div>
         {task.attributes.items.map((item, i) => (
-          <li key={i}>{item.name}: {item.quantity} {item.uom}</li>
+          <li className="ml3" key={i}><span className="b">{item.name}:</span> {item.quantity} {item.uom}</li>
         ))}
       </div>
 
       <div className="mb3">
-        <div className="b">Activity Log</div>
+        <div className="b ttu">Activity Log</div>
         {dailyTask.attributes.time_logs.map((log, i) => (
-          <li key={i}>Started at {timeFormat(log.start_time)} {log.end_time && `and ended at ${timeFormat(log.end_time)}`}</li>
+          <li className="ml3" key={i}>Started at {timeFormat(log.start_time)} {log.end_time && `and ended at ${timeFormat(log.end_time)}`}</li>
         ))}
       </div>
 
       <div className="mb3">
-        <div className="b">Notes</div>
+        <div className="b ttu">Notes</div>
         {dailyTask.attributes.notes.map((note, i) => (
-          <div key={i}>
-            <strong>{dateFormat(note.created_at)}</strong> {timeFormat(note.created_at)}<br />
-            {note.notes}
+          <div className="mv2" key={i}>
+            <i className="material-icons mid-gray md-18 fl">today</i>
+            <div className="v-top fl ml2">
+              <strong>{dateFormat(note.created_at)}</strong> {timeFormat(note.created_at)}
+            </div>
+
+            <div className="cl">{note.notes}</div>
           </div>
         ))}
 
         <form className="mt3" onSubmit={this.handleLogSubmit}>
           <textarea className="w-100" placeholder="Write an update ..." rows="5" value={this.state.log_value} onChange={this.handleLogChange}></textarea>
-          <input type="submit" value="Save" />
+          <input className="ttu fr pointer pv3 ph5 bg-orange button--font white bn box--br3" type="submit" value="Save" />
         </form>
       </div>
     </div>)

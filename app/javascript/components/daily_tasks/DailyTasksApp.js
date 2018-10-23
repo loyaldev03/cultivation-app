@@ -43,7 +43,6 @@ const EditingPanel = observer((allProps) => {
   )
 })
 
-
 const StyledEditingPanel = styled(EditingPanel)`
   top: 0;
   right: 0;
@@ -51,19 +50,7 @@ const StyledEditingPanel = styled(EditingPanel)`
   min-width: 500px;
 `
 
-const NoTasksSelected = () => (
-  <div className="outline w-50 tc pa2">
-    There are no tasks selected.<br />
-    Perhaps you want to try select a task on the left?
-  </div>
-)
-
-
 const StyledWorkPanel = styled(WorkPanel)`
-  min-width: 300px;
-`
-
-const StyledNoTasksSelected = styled(NoTasksSelected)`
   min-width: 300px;
 `
 

@@ -62,7 +62,7 @@ class BatchSetupStore {
               startDate: new Date(p.attributes.start_date),
               endDate: new Date(p.attributes.end_date),
               ...p.attributes,
-              phase: p.attributes['phase'].toLowerCase(),
+              phase: p.attributes['phase'].toLowerCase()
             }))
             this.plans = groupBy(plansData, 'phase')
           }

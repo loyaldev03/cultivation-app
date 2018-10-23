@@ -139,7 +139,7 @@ class BatchSetupApp extends React.Component {
         start_date: this.state.batchStartDate,
         grow_method: this.state.batchGrowMethod,
         phase_duration: this.state.phaseDuration,
-        quantity: this.state.batchQuantity,
+        quantity: this.state.batchQuantity
       })
     )
       .then(response => response.json())

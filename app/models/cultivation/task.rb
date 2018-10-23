@@ -9,8 +9,6 @@ module Cultivation
     field :name, type: String
     field :duration, type: Integer
     field :days_from_start_date, type: Integer
-    field :expected_start_date, type: DateTime
-    field :expected_end_date, type: DateTime
     field :start_date, type: DateTime
     field :end_date, type: DateTime
     field :estimated_hours, type: Float

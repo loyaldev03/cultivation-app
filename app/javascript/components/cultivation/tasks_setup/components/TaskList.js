@@ -185,6 +185,7 @@ class TaskList extends React.Component {
     }
 
     DisplayTaskStore.replace(new_ids)
+    this.mountEvents()
   }
 
   renderAttributesName = row => {
@@ -198,7 +199,10 @@ class TaskList extends React.Component {
     return (
       <div
         className={`flex justify-between-ns ${
-          row.row['attributes.is_phase'] === true ? '' : 'draggable'
+          row.row['attributes.is_phase'] === true ||
+          row.row['attributes.is_category'] === true
+            ? ''
+            : 'draggable'
         }`}
       >
         <div className="">
@@ -443,6 +447,10 @@ class TaskList extends React.Component {
     return filteredTasks
   }
 
+  checkVisibility = value => {
+    return this.props.columns.includes(value)
+  }
+
   render() {
     let tasks = this.filterTask()
     let users = UserStore
@@ -482,37 +490,44 @@ class TaskList extends React.Component {
               Header: 'Tasks',
               accessor: 'attributes.name',
               maxWidth: '500',
+              show: this.checkVisibility('name'),
               Cell: row => <div>{this.renderAttributesName(row)}</div>
             },
             {
               Header: 'Start Date',
               accessor: 'attributes.start_date',
-              maxWidth: '100'
+              maxWidth: '100',
+              show: this.checkVisibility('start_date')
             },
             {
               Header: 'End Date',
               accessor: 'attributes.end_date',
-              maxWidth: '100'
+              maxWidth: '100',
+              show: this.checkVisibility('end_date')
             },
             {
               Header: 'Duration',
               accessor: 'attributes.duration',
-              maxWidth: '100'
+              maxWidth: '100',
+              show: this.checkVisibility('duration')
             },
             {
               Header: 'Est Hr',
               accessor: 'attributes.estimated_hours',
-              maxWidth: '150'
+              maxWidth: '150',
+              show: this.checkVisibility('estimated_hour')
             },
             {
               Header: 'Assigned',
               accessor: 'attributes.resources',
-              maxWidth: '200'
+              maxWidth: '200',
+              show: this.checkVisibility('resource_assigned')
             },
             {
               Header: 'Materials',
               accessor: 'attributes.item_display',
-              maxWidth: '100'
+              maxWidth: '100',
+              show: this.checkVisibility('materials')
             },
             {
               Header: 'Parent',
@@ -561,7 +576,7 @@ class TaskList extends React.Component {
                 style: {
                   backgroundColor:
                     rowInfo.row['attributes.is_phase'] === true
-                      ? '#fbe9e7'
+                      ? '#FAEFEE'
                       : null
                 },
                 onMouseOver: (e, handleOriginal) => {

@@ -101,11 +101,6 @@ class TaskSetup extends React.Component {
       'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
     let inactiveTabs =
       'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
-    let columnsList = [
-      { label: 'Task Name', value: 'task_name' },
-      { label: 'Start Date', value: 'start_date' },
-      { label: 'End date', value: 'end_date' }
-    ]
     return (
       <React.Fragment>
         <style>{styles}</style>

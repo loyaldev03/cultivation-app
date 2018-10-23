@@ -103,7 +103,7 @@ module Api::V1
           :veg2,
           :flower,
           :dry,
-          :cure
+          :cure,
         ],
       )
     end

@@ -15,8 +15,6 @@ class updateTask {
       duration: state.duration,
       end_date: state.end_date.toDateString(),
       estimated_hours: state.estimated_hours,
-      expected_end_date: state.expected_end_date,
-      expected_start_date: null,
       id: state.id,
       instruction: state.instruction,
       is_category: state.is_category,

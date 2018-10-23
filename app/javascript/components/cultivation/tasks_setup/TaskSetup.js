@@ -14,11 +14,31 @@ import loadDisplayTaskStore from './actions/loadDisplayTaskStore'
 
 import TaskList from './components/TaskList'
 
+import Select from 'react-select'
+import reactSelectStyle from '../../utils/reactSelectStyle'
+import { Manager, Reference, Popper, Arrow } from 'react-popper'
+
+const styles = `
+.columnDropdown{
+  z-index: 300;
+}
+`
+
 class TaskSetup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      batch: props.batch
+      batch: props.batch,
+      columns: [
+        'name',
+        'start_date',
+        'end_date',
+        'duration',
+        'estimated_hour',
+        'resource_assigned',
+        'materials'
+      ],
+      columnOpen: false
     }
   }
 
@@ -28,19 +48,52 @@ class TaskSetup extends React.Component {
     loadUsers()
     loadUserRoles()
     loadItems()
+    document.addEventListener('mousedown', this.handleOutsideClick, false)
   }
 
-  renderBatchInfo() {
-    return <TaskList batch_id={this.props.batch_id} batch={this.props.batch} />
+  onChangeFilterColumns = value => {
+    this.setState({ columns: value })
+  }
+
+  handleClick = () => {
+    this.setState({ columnOpen: !this.state.columnOpen })
+  }
+
+  handleChangeCheckbox = e => {
+    let arrays = [...this.state.columns]
+    if (e.target.checked) {
+      arrays.push(e.target.value)
+    } else {
+      arrays = arrays.filter(k => k !== e.target.value)
+    }
+    console.log(arrays)
+    this.setState({ columns: arrays })
+  }
+
+  checkboxValue = val => {
+    return this.state.columns.includes(val)
+  }
+
+  handleOutsideClick = e => {
+    if (!this.node.contains(e.target)) {
+      this.hideDropdown()
+    }
+  }
+
+  hideDropdown = () => {
+    this.setState({ columnOpen: false })
   }
 
   render() {
+    let handleChangeCheckbox = this.handleChangeCheckbox
+    let checkboxValue = this.checkboxValue
     let activeTabs =
       'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
     let inactiveTabs =
       'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
     return (
       <React.Fragment>
+        <style>{styles}</style>
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
@@ -177,54 +230,193 @@ class TaskSetup extends React.Component {
             </div>
           </div>
         </div>
-        <div className="flex mt4">
-          <a
-            href={'/cultivation/batches/' + this.state.batch.id}
-            className={activeTabs}
-          >
-            Tasks List
-          </a>
+        <div className="flex justify-between">
+          <div className="flex mt4">
+            <a
+              href={'/cultivation/batches/' + this.state.batch.id}
+              className={activeTabs}
+            >
+              Tasks List
+            </a>
 
-          <a
-            href={'/cultivation/batches/' + this.state.batch.id + '/gantt'}
-            className={inactiveTabs}
-          >
-            Gantt Chart
-          </a>
-          <a
-            href={'/cultivation/batches/' + this.state.batch.id + '/locations'}
-            className={inactiveTabs}
-          >
-            Location
-          </a>
+            <a
+              href={'/cultivation/batches/' + this.state.batch.id + '/gantt'}
+              className={inactiveTabs}
+            >
+              Gantt Chart
+            </a>
+            <a
+              href={
+                '/cultivation/batches/' + this.state.batch.id + '/locations'
+              }
+              className={inactiveTabs}
+            >
+              Location
+            </a>
 
-          <a
-            href={'/cultivation/batches/' + this.state.batch.id + '/issues'}
-            className={inactiveTabs}
-          >
-            Issues
-          </a>
+            <a
+              href={'/cultivation/batches/' + this.state.batch.id + '/issues'}
+              className={inactiveTabs}
+            >
+              Issues
+            </a>
 
-          <a
-            href={
-              '/cultivation/batches/' + this.state.batch.id + '/secret_sauce'
-            }
-            className={inactiveTabs}
-          >
-            Secret Sauce
-          </a>
+            <a
+              href={
+                '/cultivation/batches/' + this.state.batch.id + '/secret_sauce'
+              }
+              className={inactiveTabs}
+            >
+              Secret Sauce
+            </a>
 
-          <a
-            href={'/cultivation/batches/' + this.state.batch.id + '/resource'}
-            className={inactiveTabs}
-          >
-            Resource
-          </a>
+            <a
+              href={'/cultivation/batches/' + this.state.batch.id + '/resource'}
+              className={inactiveTabs}
+            >
+              Resource
+            </a>
+          </div>
+          <div className="flex mt4">
+            <div className="mr2 mt2">
+              <i className="material-icons" style={{ fontSize: '.875rem' }}>
+                filter_list
+              </i>
+              <span className="grey f6 ml2">Filter</span>
+            </div>
+            <Manager>
+              <Reference>
+                {({ ref }) => (
+                  <a
+                    className="f6 link ba b--gray ph3 pv2 mb3 dib grey pointer bg-white"
+                    ref={ref}
+                    onClick={this.handleClick}
+                  >
+                    All Collumns
+                    <i
+                      className="material-icons ml2"
+                      style={{ fontSize: '.875rem' }}
+                    >
+                      expand_more
+                    </i>
+                  </a>
+                )}
+              </Reference>
+              {this.state.columnOpen && (
+                <Popper placement="bottom" style={{ borderColor: 'red' }}>
+                  {({ ref, style, placement, arrowProps }) => (
+                    <div
+                      ref={ref}
+                      className="columnDropdown"
+                      style={style}
+                      data-placement={placement}
+                    >
+                      <div
+                        id="myDropdown"
+                        ref={node => (this.node = node)}
+                        style={{ zIndex: '30000', marginRight: '-65px' }}
+                        className="table-dropdown dropdown-content box--shadow-header show mt2"
+                      >
+                        <div className="ph4 mt3 mb3">
+                          <label className="f6 fw6 db mb1 gray ttc">
+                            <input
+                              type="checkbox"
+                              name="checkbox-1"
+                              className="mr2"
+                              value="name"
+                              onChange={handleChangeCheckbox}
+                              checked={checkboxValue('name')}
+                            />
+                            Name
+                          </label>
+
+                          <label className="f6 fw6 db mb1 gray ttc">
+                            <input
+                              type="checkbox"
+                              name="checkbox-1"
+                              className="mr2"
+                              value="start_date"
+                              onChange={handleChangeCheckbox}
+                              checked={checkboxValue('start_date')}
+                            />
+                            Start Date
+                          </label>
+
+                          <label className="f6 fw6 db mb1 gray ttc">
+                            <input
+                              type="checkbox"
+                              name="checkbox-1"
+                              className="mr2"
+                              value="end_date"
+                              onChange={handleChangeCheckbox}
+                              checked={checkboxValue('end_date')}
+                            />
+                            End Date
+                          </label>
+
+                          <label className="f6 fw6 db mb1 gray ttc">
+                            <input
+                              type="checkbox"
+                              name="checkbox-1"
+                              className="mr2"
+                              value="duration"
+                              onChange={handleChangeCheckbox}
+                              checked={checkboxValue('duration')}
+                            />
+                            Duration
+                          </label>
+
+                          <label className="f6 fw6 db mb1 gray ttc">
+                            <input
+                              type="checkbox"
+                              name="checkbox-1"
+                              className="mr2"
+                              value="estimated_hour"
+                              onChange={handleChangeCheckbox}
+                              checked={checkboxValue('estimated_hour')}
+                            />
+                            Estimated Hour
+                          </label>
+                          <label className="f6 fw6 db mb1 gray ttc">
+                            <input
+                              type="checkbox"
+                              name="checkbox-1"
+                              className="mr2"
+                              value="resource_assigned"
+                              onChange={handleChangeCheckbox}
+                              checked={checkboxValue('resource_assigned')}
+                            />
+                            Resource Assigned
+                          </label>
+                          <label className="f6 fw6 db mb1 gray ttc">
+                            <input
+                              type="checkbox"
+                              name="checkbox-1"
+                              className="mr2"
+                              value="materials"
+                              onChange={handleChangeCheckbox}
+                              checked={checkboxValue('materials')}
+                            />
+                            Materials
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </Popper>
+              )}
+            </Manager>
+          </div>
         </div>
+
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
-              {this.renderBatchInfo()}
+              <TaskList
+                batch_id={this.props.batch_id}
+                batch={this.props.batch}
+                columns={this.state.columns}
+              />
             </div>
           </div>
         </div>

@@ -199,7 +199,10 @@ class TaskList extends React.Component {
     return (
       <div
         className={`flex justify-between-ns ${
-          (row.row['attributes.is_phase'] === true) || (row.row['attributes.is_category'] === true) ? '' : 'draggable'
+          row.row['attributes.is_phase'] === true ||
+          row.row['attributes.is_category'] === true
+            ? ''
+            : 'draggable'
         }`}
       >
         <div className="">

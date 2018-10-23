@@ -1,6 +1,10 @@
 require "rails_helper"
 
 RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
+  subject(:current_user) {
+    create(:user)
+  }
+
   context ".new" do
     it "init form_object with default facility_code" do
       form_object = FacilityWizardForm::BasicInfoForm.new
@@ -46,7 +50,7 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
         company_name: Faker::Name.name
       }
 
-      form_object.submit(params)
+      form_object.submit(params, current_user)
 
       saved = Facility.find_by(code: params[:code])
       expect(form_object.valid?).to eq true
@@ -71,7 +75,7 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
         company_name: Faker::Name.name
       }
 
-      form_object.submit(params)
+      form_object.submit(params, current_user)
 
       saved = Facility.find_by(id: facility.id)
       expect(form_object.valid?).to eq true

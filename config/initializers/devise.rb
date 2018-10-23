@@ -1,3 +1,11 @@
+Warden::Manager.after_set_user do |user,auth,opts|
+  auth.cookies[:timezone] = user.timezone
+end
+
+Warden::Manager.before_logout do |user,auth,opts|
+  auth.cookies.delete :timezone
+end
+
 # frozen_string_literal: true
 
 # Use this hook to configure devise mailer, warden hooks and so forth.
@@ -10,7 +18,7 @@ Devise.setup do |config|
   # by default. You can change it below and use your own secret key.
 
   if Rails.env.production?
-    config.secret_key = ENV['SECRET_KEY_BASE']
+    config.secret_key = Rails.application.credentials.secret_key_base
   else
     config.secret_key = 'e5c146081bfe1caddabb8af7b8923353859db704d8e0af97d37a5b3de46c338aa0990a47d3afac26f0eeaaaee911ad36b75a7394dea3f6b6b853e7ba677db7b3'
   end

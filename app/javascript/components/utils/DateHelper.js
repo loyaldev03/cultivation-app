@@ -1,4 +1,7 @@
 import { parse, format, addMonths } from 'date-fns'
+import { getCookie } from './'
+
+const USER_TIMEZONE = getCookie('timezone')
 
 // Build Month Options starting from Start Date until +duration month
 export const monthsOptions = (startDate = new Date(), duration = 12) => {
@@ -6,11 +9,15 @@ export const monthsOptions = (startDate = new Date(), duration = 12) => {
   for (let i = 0; i < duration; i++) {
     const dt = addMonths(startDate, i)
     options.push({
-      value: format(dt, 'MM-YYYY', { awareOfUnicodeTokens: true }),
+      value: dateToMonthOption(dt),
       label: format(dt, 'MMM YYYY', { awareOfUnicodeTokens: true })
     })
   }
   return options
+}
+
+export const dateToMonthOption = dt => {
+  return format(dt, 'MM-YYYY', { awareOfUnicodeTokens: true })
 }
 
 export const monthOptionToString = monthOptionStr => {
@@ -26,6 +33,12 @@ export const monthOptionToString = monthOptionStr => {
 export const monthStartDate = monthOptionStr => {
   const datePart = monthOptionStr.split('-')
   return new Date(datePart[1], datePart[0] - 1, 1)
+}
+
+export const monthOptionAdd = (monthOptionStr, month) => {
+  const dt = monthStartDate(monthOptionStr)
+  const result = addMonths(dt, month)
+  return dateToMonthOption(result)
 }
 
 export const formatDate = date => {

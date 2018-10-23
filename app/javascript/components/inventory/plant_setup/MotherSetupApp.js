@@ -55,7 +55,7 @@ const columns = [
     headerStyle: { textAlign: 'left' },
     Cell: props => {
       const d = new Date(props.value)
-      if (props.value || props.value.length > 0) {
+      if (props.value) {
         return (
           <span>{`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`}</span>
         )

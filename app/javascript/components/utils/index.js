@@ -1,4 +1,5 @@
 export * from './ArrayHelper'
+export * from './BrowserHelper'
 export * from './DateHelper'
 export * from './GroupBox'
 export * from './FetchHelper'

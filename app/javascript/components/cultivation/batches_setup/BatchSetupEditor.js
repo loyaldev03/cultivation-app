@@ -145,6 +145,7 @@ Remaining Capacity: ${x.capacity}`}
                 defaultValue={0}
                 min={1}
                 max={maxCapacity}
+                onChange={e => onChange('batchQuantity', e.value)}
               />
               <span className="grey ph2">(Maximum: {maxCapacity})</span>
             </div>

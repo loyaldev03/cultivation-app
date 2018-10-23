@@ -58,7 +58,7 @@ class EditPanel extends React.Component {
         <style>{styles}</style>
         <div className="mt3 flex w-100 tc">
           <div className={`w-30 ph2 pointer dim ${classWhenActive(0, 'active')}`} onClick={() => this.changeTabs(0)}>Logs & Activities</div>
-          <div className={`w-40 ph2 pointer dim ${classWhenActive(1, 'active')}`} onClick={() => this.changeTabs(1)}>Material Used & Wastes</div>
+          <div className={`w-40 ph2 pointer dim ${classWhenActive(1, 'active')}`} onClick={() => this.changeTabs(1)}>Material Used</div>
           <div className={`w-20 ph2 pointer dim ${classWhenActive(2, 'active')}`} onClick={() => this.changeTabs(2)}>Issues</div>
         </div>
         <div className="pointer" onClick={() => { DailyTasksStore.editingPanel = null }}>

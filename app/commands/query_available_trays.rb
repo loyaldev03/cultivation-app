@@ -30,7 +30,7 @@ class QueryAvailableTrays
   end
 
   def match_purpose
-    if @purpose
+    if @purpose && @purpose.any?
       {"$match": {tray_purpose: {'$in': @purpose} }}
     else
       {"$match": {}}

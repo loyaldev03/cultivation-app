@@ -13,16 +13,6 @@ class Cultivation::BatchesController < ApplicationController
     @grow_methods = Constants::GROW_MEDIUM.map { |a| {value: a[:code], label: a[:name]} }
   end
 
-  # def create
-  #   @record = Cultivation::BatchForm.new
-  #   @record = @record.submit(record_params)
-  #   if @record
-  #     redirect_to cultivation_batch_path(id: @record.id)
-  #   else
-  #     render 'new'
-  #   end
-  # end
-
   def show
     # TODO: Use other params
     if params[:step].present?
@@ -62,7 +52,7 @@ class Cultivation::BatchesController < ApplicationController
     end
   end
 
-  def get_cultivation_locations(record, phase_type)
+  def get_cultivation_locations(batch)
     cultivation_phases = [
       Constants::CONST_CLONE,
       Constants::CONST_VEG,
@@ -70,13 +60,14 @@ class Cultivation::BatchesController < ApplicationController
       Constants::CONST_VEG2,
       Constants::CONST_FLOWER,
       Constants::CONST_DRY,
-      Constants::CONST_CURE
+      Constants::CONST_CURE,
     ]
-    # TODO: Should query for entire phase
-    phase_info = get_batch_phase(record, phase_type) # Get start_date and end_date from batch record
-    if phase_info.present?
-      filter_args = {facility_id: record.facility_id, exclude_batch_id: record.id}
-      available_trays_cmd = QueryAvailableTrays.call(phase_info.start_date, phase_info.end_date, filter_args)
+    phases_info = get_batch_phase(batch, cultivation_phases) # Get start_date and end_date from batch
+    if phases_info.any?
+      filter_args = {facility_id: batch.facility_id, exclude_batch_id: batch.id}
+      Rails.logger.debug "\033[34m get_cultivation_locations > batch start_date: #{batch&.start_date} \033[0m"
+      Rails.logger.debug "\033[34m get_cultivation_locations > batch estimated_harvest_date: #{batch&.estimated_harvest_date} \033[0m"
+      available_trays_cmd = QueryAvailableTrays.call(batch.start_date, batch.estimated_harvest_date, filter_args)
       if available_trays_cmd.success?
         available_trays_cmd.result&.select { |t| cultivation_phases.include? t.tray_purpose }
       else
@@ -96,12 +87,12 @@ class Cultivation::BatchesController < ApplicationController
 
   private
 
-  def get_batch_phase(record, phase)
-    find_phase_cmd = Cultivation::FindBatchPhase.call(record, phase)
+  def get_batch_phase(batch, phases)
+    find_phase_cmd = Cultivation::QueryBatchPhases.call(batch, phases)
     if find_phase_cmd.success?
       find_phase_cmd.result
     else
-      nil
+      []
     end
   end
 

@@ -10,21 +10,22 @@ module Cultivation
     def call
       if @batch.present? && @batch.tasks.present?
         tasks = @batch.tasks.where({is_phase: true})
-        tasks = tasks.where(:phase.in => @phases) if @phases.present? && @phases.any?
+        tasks = tasks.where(:phase.in => @phases) if @phases.any?
         tasks = tasks.order_by(start_date: :asc)
 
-        phases = tasks.each do |task|
+        phases = tasks.map { |task|
           start_date = task.start_date.beginning_of_day
           end_date = (task.end_date - 1.days).end_of_day
-          return OpenStruct.new({
-                   id: task.id,
-                   name: task.name,
-                   phase: task.phase,
-                   start_date: start_date,
-                   end_date: end_date,
-                   duration: task.duration,
-                 })
-        end
+          OpenStruct.new({
+            id: task.id,
+            name: task.name,
+            phase: task.phase,
+            start_date: start_date,
+            end_date: end_date,
+            duration: task.duration,
+          })
+        }
+        phases
       else
         errors.add(:not_found, 'Incomplete Batch Record')
         []

@@ -43,26 +43,6 @@ module Api::V1
       end
     end
 
-    #     NOTE: Replace with search_batch_plans
-    #     def search_tray_plans
-    #       month_str = params['search_month'] # E.g. '10-2018' (Format => MM-YYYY)
-    #       if month_str.present? && month_str.length >= 6 && month_str.index('-') >= 1
-    #         plan_start_date, plan_end_date = get_search_start_end_date(month_str)
-    #         command = QueryPlannedTrays.call(
-    #           plan_start_date,
-    #           plan_end_date,
-    #           params[:facility_id]
-    #         )
-    #         if command.success?
-    #           render json: TrayLocationSerializer.new(command.result).serialized_json
-    #         else
-    #           render json: {error: command.errors}
-    #         end
-    #       else
-    #         render json: {error: 'Invalid Search Month'}
-    #       end
-    #     end
-
     def search_batch_plans
       faciliy_id = params['facility_id']
       month_str = params['search_month']        # E.g. '10-2018' (Format => MM-YYYY)

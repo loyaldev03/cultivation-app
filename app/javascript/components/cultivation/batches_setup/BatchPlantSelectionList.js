@@ -2,7 +2,7 @@ import React from 'react'
 import classNames from 'classnames'
 import { observer } from 'mobx-react'
 import plantStore from '../../inventory/plant_setup/store/PlantStore'
-import { loadPlants } from '../../inventory/plant_setup/actions/loadPlants'
+import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 import { joinBy } from '../../utils/ArrayHelper'
 
 const QuantityField = ({ plant, onEdit }) => {
@@ -46,7 +46,8 @@ class BatchPlantSelectionList extends React.Component {
     loadPlants(this.props.plantType)
   }
   render() {
-    const { plants, isLoading } = plantStore
+    const { isLoading, plants } = plantStore
+
     const { onEdit, getSelected, onSelectPlant } = this.props
     if (isLoading) {
       return <p className="f6">Loading....</p>
@@ -76,11 +77,11 @@ class BatchPlantSelectionList extends React.Component {
                       <input
                         type="checkbox"
                         value={p.id}
-                        onChange={onSelectPlant(p.attributes.serial_no)}
+                        onChange={onSelectPlant(p.attributes.plant_id)}
                       />
                     </td>
-                    <td className="pv2 ph3">{p.attributes.serial_no}</td>
-                    <td className="pv2 ph3">{p.attributes.item_name}</td>
+                    <td className="pv2 ph3">{p.attributes.plant_id}</td>
+                    <td className="pv2 ph3">{p.attributes.strain_name}</td>
                     <td className="pv2 ph3">{p.attributes.status}</td>
                     {getSelected(p.id) && getSelected(p.id).quantity ? (
                       <React.Fragment>

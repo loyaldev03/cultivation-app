@@ -2,7 +2,7 @@ desc "Create basic user roles"
 task seed_roles: :environment do
   if Common::Role.count == 0
     Common::Role.create!([
-      { name: "Super Admin", built_in: true },
+      { name: Constants::SUPER_ADMIN, built_in: true },
       # { name: "Admin" },
       # { name: "Book Keeper" },
       # { name: "Business Manager" },

@@ -54,6 +54,7 @@ export default class TaskEditor extends React.Component {
     document.addEventListener('editor-sidebar-open', function(ev) {
       _this.setState({
         id: ev.detail.data.id,
+        task: TaskStore.find(e => e.id === ev.detail.data.id),
         action: ev.detail.action,
         task_related_id: ev.detail.data.task_related_id,
         position: ev.detail.data.position
@@ -160,6 +161,10 @@ export default class TaskEditor extends React.Component {
 
   render() {
     let changeTabs = this.changeTabs
+    let isNormalTask =
+      this.state.task &&
+      this.state.task.attributes.is_phase === false &&
+      this.state.task.attributes.is_category === false
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <style> {styles} </style>
@@ -168,31 +173,35 @@ export default class TaskEditor extends React.Component {
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <div className="mt3 flex">
+            <div className="mt3 flex content-stretch">
               <div
-                className={`w-40 ph4 pointer dim ${
+                className={`ph4 pointer dim ${
                   this.state.tabs === 'General' ? 'active' : null
                 }`}
                 onClick={() => changeTabs('General')}
               >
                 General
               </div>
-              <div
-                className={`w-40 pl3 ph4 pointer dim ${
-                  this.state.tabs === 'Resource' ? 'active' : null
-                }`}
-                onClick={() => changeTabs('Resource')}
-              >
-                Resource
-              </div>
-              <div
-                className={`w-40 pl3 ph4 pointer dim ${
-                  this.state.tabs === 'Material' ? 'active' : null
-                }`}
-                onClick={() => changeTabs('Material')}
-              >
-                Material
-              </div>
+              {isNormalTask ? (
+                <div
+                  className={`pl3 ph4 pointer dim ${
+                    this.state.tabs === 'Resource' ? 'active' : null
+                  }`}
+                  onClick={() => changeTabs('Resource')}
+                >
+                  Resource
+                </div>
+              ) : null}
+              {isNormalTask ? (
+                <div
+                  className={`pl3 ph4 pointer dim ${
+                    this.state.tabs === 'Material' ? 'active' : null
+                  }`}
+                  onClick={() => changeTabs('Material')}
+                >
+                  Material
+                </div>
+              ) : null}
             </div>
             {this.renderCloseSidebar()}
           </div>

@@ -1,0 +1,22 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Home",root_path], 
+      ['Inventory Setup', inventory_setup_path], 
+      'Raw Material',
+      'Grow Medium' 
+  %>
+<% end %>
+
+
+<div class="pa4">
+  <%= render partial: 'setupIntro' %>
+  <%= render partial: 'setupNavigation', locals: { selected: 'grow_medium' } %>
+  <div class="flex flex-column">
+   
+    <div class="w-80 bg-white ph3 pt2 pb4">
+      <div class="dim flex flex-row items-center pointer">
+        <i class="material-icons md-light-gray">keyboard_arrow_left</i>
+        <%= link_to "Back", inventory_setup_path, class: "db tr ttu link button--font light-grey" %>
+      </div>  
+    </div>
+  </div>
+</div>

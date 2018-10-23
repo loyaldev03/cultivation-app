@@ -12,6 +12,8 @@ module Inventory
     # belongs_to :manicure_batch,     class_name: 'Cultivation::ManicureBatch', optional: true
     # has_many :item_histories
 
+    belongs_to :vendor_invoice, class_name: 'Inventory::VendorInvoice', optional: true
+
     field :plant_id, type: String
     field :plant_tag, type: String
     field :location_id, type: BSON::ObjectId
@@ -27,12 +29,7 @@ module Inventory
     field :harvest_date, type: DateTime
     field :expected_harvest_date, type: DateTime
     field :destroyed_date, type: DateTime
-
-    field :origin_id, type: BSON::ObjectId
-    field :origin_type, type: String
-    # field :po_no ?
-    # field :invoice_no ?
-    # field :vendor_id ?
+    field :mother_id, type: BSON::ObjectId
 
     field :wet_weight, type: BigDecimal
     field :wet_weight_unit, type: String

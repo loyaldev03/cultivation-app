@@ -1,4 +1,23 @@
+# TODO, move to inventory...
 class Materials::ItemsController < ApplicationController
+  def nutrients
+  end
+
+  def grow_medium
+  end
+
+  def grow_lights
+    render plain: 'grow_lights'
+  end
+
+  def supplements
+    render plain: 'supplements'
+  end
+
+  def others
+    render plain: 'others'
+  end
+
   def index
     @records = QueryItems.call.result
   end
@@ -18,6 +37,10 @@ class Materials::ItemsController < ApplicationController
 
   def edit
     @record = MaterialsForm::ItemForm.new(params[:id])
+  end
+
+  def show
+    @record = FindItem.call({id: params[:id]}).result
   end
 
   def update

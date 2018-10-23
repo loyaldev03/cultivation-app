@@ -11,7 +11,7 @@ class FacilitySetupController < ApplicationController
   def update_basic_info
     is_draft = params[:commit] == 'draft'
     @wizard_form = FacilityWizardForm::BasicInfoForm.new(params[:facility_id])
-    if @wizard_form.submit(facility_basic_info_params)
+    if @wizard_form.submit(facility_basic_info_params, current_user)
       if is_draft
         redirect_to facility_setup_new_path(facility_id: @wizard_form.id)
       else
@@ -85,7 +85,7 @@ class FacilitySetupController < ApplicationController
     end
 
     respond_to do |format|
-      if form_object.submit(room_info_params)
+      if form_object.submit(room_info_params, current_user)
         if is_continue
           room_path = facility_setup_room_summary_path(
             facility_id: form_object.facility_id,
@@ -103,9 +103,9 @@ class FacilitySetupController < ApplicationController
   # POST update specific section info - from the right panel
   def update_section_info
     form_object = FacilityWizardForm::UpdateSectionInfoForm.new
+
     respond_to do |format|
-      res = form_object.submit(section_info_params)
-      if form_object.submit(section_info_params)
+      if form_object.submit(section_info_params, current_user)
         room_path = facility_setup_row_shelf_info_path(
           facility_id: form_object.facility_id,
           room_id: form_object.room_id,
@@ -208,20 +208,11 @@ class FacilitySetupController < ApplicationController
 
   # POST update specific row info - from right panel
   def update_row_info
-    # Rails.logger.debug '>>> update_row_info'
-    # this value should be same as the value in "Continue" button (_row_info_form)
+    # This value should be same as the value in "Continue" button (_row_info_form)
     is_continue = params[:commit] == 'continue'
     @form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
-    # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-    # Rails.logger.debug '>>>>> update_row_info >>>>>'
-    # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-    # Rails.logger.debug "facility_id: #{row_info_params[:facility_id]}"
-    # Rails.logger.debug "room_id: #{row_info_params[:room_id]}"
-    # Rails.logger.debug "row id: #{row_info_params[:id]}"
-    # Rails.logger.debug "is_continue: #{is_continue}"
-    # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>'
     respond_to do |format|
-      if @form_object.submit(row_info_params)
+      if @form_object.submit(row_info_params, current_user)
         @row_info_form = FacilityWizardForm::RowInfoForm.new(@form_object.facility_id,
                                                              @form_object.room_id,
                                                              @form_object.result)
@@ -266,14 +257,8 @@ class FacilitySetupController < ApplicationController
   end
 
   def update_shelf_trays
-    # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-    # Rails.logger.debug '>>>>> update_shelf_trays >>>>>'
-    # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
-    # Rails.logger.debug ">>> row_id: #{shelf_trays_params[:row_id]}"
-    # Rails.logger.debug ">>> shelf_id: #{shelf_trays_params[:id]}"
-    # Rails.logger.debug '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>'
     form_object = FacilityWizardForm::UpdateShelfTraysForm.new(shelf_trays_params)
-    if form_object.submit(shelf_trays_params)
+    if form_object.submit(shelf_trays_params, current_user)
       if form_object.duplicate_target.present?
         SaveShelvesByDuplicating.call(form_object.facility_id,
                                       form_object.room_id,

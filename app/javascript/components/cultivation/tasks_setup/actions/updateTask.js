@@ -29,7 +29,8 @@ class updateTask {
       position: state.position,
       start_date: state.start_date.toDateString(),
       task_category: state.task_category,
-      time_taken: state.time_taken
+      time_taken: state.time_taken,
+      task_type: state.task_type
     }
 
     fetch(url, {

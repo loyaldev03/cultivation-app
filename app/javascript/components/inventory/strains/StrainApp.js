@@ -3,7 +3,6 @@ import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
 import StrainList from './components/StrainList'
 import StrainEditor from './components/StrainEditor'
-import strainStore from './store/StrainStore'
 import loadStrains from './actions/loadStrains'
 
 @observer

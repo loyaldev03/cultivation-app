@@ -6,19 +6,20 @@ module Cultivation
     field :batch_no, type: String
     field :name, type: String
     field :batch_source, type: String
+    field :grow_method, type: String
     field :start_date, type: DateTime
     field :estimated_harvest_date, type: DateTime
     field :facility_id, type: BSON::ObjectId
-    field :grow_method, type: String
+
+    field :current_growth_stage, type: String
     field :is_active, type: Boolean, default: -> { false }
 
+    belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     has_many :tray_plans, class_name: 'Cultivation::TrayPlan'
     has_many :tasks, class_name: 'Cultivation::Task'
-    belongs_to :strain, class_name: 'Common::Strain', optional: true
-
-    # KW: New fields replacing strain and plants
-    belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
     has_many :plants, class_name: 'Inventory::Plant'
+
+    has_one :nutrient_profile, class_name: 'Cultivation::NutrientProfile'
 
     def phases
       tasks.where(is_phase: true)

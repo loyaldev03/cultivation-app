@@ -14,7 +14,12 @@ module Cultivation
     field :start_date, type: DateTime
     field :end_date, type: DateTime
     field :estimated_hours, type: Float
-    field :time_taken, type: Float #actual time taken
+    field :actual_hours, type: Float
+    field :estimated_cost, type: Float
+    field :actual_cost, type: Float
+
+    # field :time_taken, type: Float #actual time taken
+
     field :no_of_employees, type: Integer #needed
     field :materials, type: String # later need to integrate with real material module
     field :instruction, type: String
@@ -22,6 +27,7 @@ module Cultivation
     field :is_category, type: Boolean, default: -> { false } #to identify category
     field :parent_id, type: String
     field :depend_on, type: String
+    field :task_type, type: Array, default: []
 
     belongs_to :batch, class_name: 'Cultivation::Batch'
     has_and_belongs_to_many :users, inverse_of: nil
@@ -31,9 +37,9 @@ module Cultivation
 
     orderable scope: :batch, base: 0
 
-    scope :expected_on, ->(date) {
-      all.and(:expected_start_date.lte => date, :expected_end_date.gte => date)
-    }
+    scope :expected_on, -> (date) {
+            all.and(:start_date.lte => date, :end_date.gte => date)
+          }
 
     def tasks_depend
       batch.tasks.where(depend_on: self.id)

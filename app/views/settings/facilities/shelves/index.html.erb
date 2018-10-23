@@ -3,7 +3,7 @@
 <% end %>
 
 
-<div class="ph4 w-100 flex items-center pb3 pt3">
+<div class="ph4 bg-white ma4 flex items-center pb3 pt3">
   <div class="w-70">
     <div class="dropdown">
       <a class="dropbtn link ba dib bw1 b b--light-gray gray pa2 ph3 br4">
@@ -22,31 +22,26 @@
   </div>
 </div>
 
-<div class="w-100 ph0">
+<div class="bg-white mv3 mh4">
   <table class="w-100 table collapse">
     <thead>
       <tr>
-        <th class="f6 white pv3 tl pl4">#</th>
-        <th class="f6 white pv3 tl">Code</th>
-        <th class="f6 white pv3 tl w-10">Description</th>
-        <th class="f6 white pv3 tl">Capacity</th>
-        <th class="f6 white pv3 tl ">Purpose</th>
-        <th class="f6 white pv3 tl w-10">Purpose details</th>
-        <th class="f6 white pv3 tl ">Facility</th>
-        <th class="f6 white pv3 tl ">Room</th>
-        <th class="f6 white pv3 tl ">Section</th>
-        <th class="f6 white pv3 tl ">Rows</th>
+        <th class="f6 dark-grey pv3 tl pl4">#</th>
+        <th class="f6 dark-grey pv3 tl">Code</th>
+        <th class="f6 dark-grey pv3 tl">Capacity</th>
+        <th class="f6 dark-grey pv3 tl ">Purpose</th>
+        <th class="f6 dark-grey pv3 tl w-10">Purpose details</th>
+        <th class="f6 dark-grey pv3 tl ">Facility</th>
+        <th class="f6 dark-grey pv3 tl ">Room</th>
+        <th class="f6 dark-grey pv3 tl ">Rows</th>
       </tr>
     </thead>
 
     <tbody>
       <% @shelves.each_with_index do |f, i| %>
-        <tr data-toggle-right="<%= edit_settings_facility_shelf_path(f)%>" class="pointer">
-          <td class="f6 tl pl4 gray"><%= i+1 %></td>
+        <tr data-toggle-right="<%= edit_settings_facility_shelf_path(f)%>" class="pointer striped--light-gray">
+          <td class="f6 pv3 tl pl4 gray"><%= i+1 %></td>
           <td class="f6 tl"><%= blank(f.code) %></td>
-          <td class="f6 tl">
-            <p class="ma0 mb1"><%= f.desc %></p>
-          </td>
           <td class="f6 tl ">
             <%= f.capacity %>
           </td>
@@ -56,9 +51,8 @@
           <td class="f6 tl ">
             <!-- purpose details -->
           </td>
-          <td class="f6 tl "><%= f.row.section.room.facility.name %></td>
-          <td class="f6 tl "><%= f.row.section.room.name %></td>
-          <td class="f6 tl "><%= f.row.section.name %></td>
+          <td class="f6 tl "><%= f.row.room.facility.name %></td>
+          <td class="f6 tl "><%= f.row.room.name %></td>
           <td class="f6 tl "><%= f.row.name %></td>
         </tr>
       <% end %>

@@ -1,59 +1,84 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import styled from 'styled-components'
+import { toJS } from 'mobx'
 
 import { addNotes } from '../actions/taskActions'
+import DailyTasksStore from '../store/DailyTasksStore'
+import LogsAndActivities from './LogsAndActivities'
+import MaterialUsed from './MaterialUsed'
 
 @observer
 class EditPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: ''
+      selected_tab: 0
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.changeTabs = this.changeTabs.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
-  }
-
-  handleSubmit(event) {
-    const { dailyTask } = this.props
-    addNotes(dailyTask, this.state.value);
-    this.setState({value: ''});
-    event.preventDefault();
+  changeTabs(index) {
+    this.setState({selected_tab: index});
   }
 
   render () {
-    const { dailyTask } = this.props
+    const styles = `
+      .active{
+        font-weight: bold;
+        display: inline-block;
+        position: relative;
+        border-bottom: 3px solid var(--orange);
+        padding-bottom: 16px;
+      }
 
-    return (<Tabs>
-      <TabList className="f5 bb flex pl1">
-        <Tab className="dib link pv1 ph2 black pointer">Logs & Activities</Tab>
-        <Tab className="dib link pv1 ph2 black pointer">Material Used & Wastes</Tab>
-        <Tab className="dib link pv1 ph2 black pointer">Issues</Tab>
-      </TabList>
+      .active:after {
+        position: absolute;
+        content: '';
+        width: 70%;
+        transform: translateX(-50%);
+        bottom: -15px;
+        left: 50%;
+      }
+    `
 
-      <div className="f5 flex pa2">
-        <TabPanel className="w-100">
-          <div className="b">Notes</div>
-          {dailyTask.attributes.notes.map((note, i) => (
-            <div key={i}>{i+1}) {note.notes}</div>
-          ))}
+    const tabs = [
+      <LogsAndActivities {...this.props} />,
+      <MaterialUsed {...this.props} />,
+      <Issues {...this.props} />
+    ]
 
-          <form className="mt3" onSubmit={this.handleSubmit}>
-            <textarea className="w-100" placeholder="Write an update ..." rows="5" value={this.state.value} onChange={this.handleChange}></textarea>
-            <input type="submit" value="Save" />
-          </form>
-        </TabPanel>
-        <TabPanel></TabPanel>
-        <TabPanel></TabPanel>
+    const classWhenActive = (index, className) => (
+      this.state.selected_tab == index ? className : ''
+    )
+
+    return (<div>
+      <div className="ph3 pv2 mb3 bb b--light-gray flex items-center" style={{ height: '51px' }}>
+        <style>{styles}</style>
+        <div className="mt3 flex w-100 tc">
+          <div className={`w-30 ph2 pointer dim ${classWhenActive(0, 'active')}`} onClick={() => this.changeTabs(0)}>Logs & Activities</div>
+          <div className={`w-40 ph2 pointer dim ${classWhenActive(1, 'active')}`} onClick={() => this.changeTabs(1)}>Material Used</div>
+          <div className={`w-20 ph2 pointer dim ${classWhenActive(2, 'active')}`} onClick={() => this.changeTabs(2)}>Issues</div>
+        </div>
+        <div className="pointer" onClick={() => { DailyTasksStore.editingPanel = null }}>
+          <i className="material-icons mid-gray md-18">close</i>
+        </div>
       </div>
-    </Tabs>)
+
+      <ScrollableContainer className="f5 pv2 ph4">
+        {tabs[this.state.selected_tab]}
+      </ScrollableContainer>
+    </div>)
   }
 }
+
+
+const Issues = () => (<div>Issues ...</div>)
+
+const ScrollableContainer = styled.div`
+  overflow: auto;
+  height: calc(100vh - 80px);
+`
 
 export default EditPanel

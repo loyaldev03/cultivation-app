@@ -10,76 +10,91 @@
       <div class="fl w-100 flex flex-column mb3">
         <!-- <h2 class="f2 tl pa0 ma0 fw4 dark-gray">Inventory Setup</h2> -->
         <p class="mt0 f3 fw4 dark-gray">
-          Let's add the necessary inventory items for cultivation and sales.
+          Let's setup the necessary inventory for cultivation and sales.
         </p>
-        
       </div>
 
-      <div class="fl w-60 flex flex-column mb3">
-        <p class="mt2 mb4 f5 fw6 dark-gray">
-          Quick overview to setup your inventory:
-        </p>
+      <div class="fl w-70 flex flex-column mb3">
         <div class="flex flex-row justify-center items-center mb4">
-          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%"></div>
+          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%">
+            <%= image_tag "strain.svg" %>
+          </div>
           <div class="flex-auto ph3 f6">
             <p class="ma0 pa0 mb2 fw6 dark-gray ttc">
               Register strain
             </p>
-            <p class="ma0 pa0 fw4 gray lh-copy ">
+            <p class="ma0 pa0 fw4 gray lh-copy w-80">
               Register strains that are grown at your facility.
             </p>
           </div>
-          <%= link_to 'Start', inventory_strains_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim' %>
+          <%= link_to (Inventory::FacilityStrain.count > 0 ? 'Modify' : 'Start'), inventory_strains_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim' %>
         </div>
         <div class="flex flex-row justify-center items-center mb4">
-          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%"></div>
+          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%">
+            <%= image_tag "active-plant.svg" %>
+          </div>
           <div class="flex-auto ph3 f6">
             <p class="ma0 pa0 mb2 fw6 dark-gray ttc">
               Active plant inventory
             </p>
-            <p class="ma0 pa0 fw4 gray lh-copy ">
+            <p class="ma0 pa0 fw4 gray lh-copy w-80">
               These are your plant inventories such as seeds, mother plants, clones, harvest yield and waste. Plant inventory requires unique IDs for legal compliance and traceability.
             </p>
           </div>
-          <% if Inventory::FacilityStrain.count > 1 %>
+          <% if Inventory::FacilityStrain.count <= 0 %>
+            <%= link_to 'Strain is required', '', class: 'flex-none bg-black-20 link white f6 fw6 pv2 ph3 br2 dim' %>
+          <% elsif Inventory::Plant.count > 0 %>
+            <%= link_to 'Modify', mothers_inventory_plants_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim' %>
+          <% else %>
             <%= link_to 'Start', mothers_inventory_plants_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim' %>
           <% end %>
         </div>
 
         <div class="flex flex-row justify-center items-center mb4">
-          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%"></div>
+          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%">
+            <%= image_tag "raw-materials.svg" %>
+          </div>
           <div class="flex-auto ph3 f6">
             <p class="ma0 pa0 mb2 fw6 dark-gray ttc">
               Raw materials
             </p>
-            <p class="ma0 pa0 fw4 gray lh-copy ">
+            <p class="ma0 pa0 fw4 gray lh-copy w-80">
               Consumables used for production (soil, lights, nutrients, etc.)
             </p>
           </div>
-          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
+          
+          <%= link_to 'Start', nutrients_materials_items_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim' %>
         </div>
 
         <div class="flex flex-row justify-center items-center mb4">
-          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%"></div>
+          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%">
+            <%= image_tag "sales-product.svg" %>
+          </div>
           <div class="flex-auto ph3 f6">
             <p class="ma0 pa0 mb2 fw6 dark-gray ttc">
               Sales product
             </p>
-            <p class="ma0 pa0 fw4 gray lh-copy ">
+            <p class="ma0 pa0 fw4 gray lh-copy w-80">
               Product items ready for Sale
             </p>
           </div>
-          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
+          <% if Inventory::Item.count <= 0 %>
+            <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
+          <% else %>
+            <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
+          <% end %>
         </div>
 
 
         <div class="flex flex-row justify-center items-center">
-          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%"></div>
+          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%">
+            <%= image_tag "non-sales-product.svg" %>
+          </div>
           <div class="flex-auto ph3 f6">
             <p class="ma0 pa0 mb2 fw6 dark-gray ttc">
               Non sales items
             </p>
-            <p class="ma0 pa0 fw4 gray lh-copy pr4">
+            <p class="ma0 pa0 fw4 gray lh-copy w-80">
               Any item that you want to keep track such as fixed assets or does not fit any category above (i.e. Office Supplies).
             </p>
           </div>

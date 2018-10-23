@@ -2,16 +2,16 @@ class DailyTasksController < ApplicationController
   def index
     @tasks_date = Date.today
     match = current_user.cultivation_tasks.expected_on(@tasks_date).selector
-
+    # debugger
     @tasks_by_batch = Cultivation::Task.collection.aggregate(
       [
-        { "$match": match },
-        { "$group": { _id: "$batch_id", tasks: { "$push": "$_id" } } },
+        {"$match": match},
+        {"$group": {_id: '$batch_id', tasks: {"$push": '$_id'}}},
       ],
     ).map do |batch_group|
       {
-        batch: serialized_batch(batch_group["_id"]),
-        tasks: serialized_tasks(batch_group["tasks"]),
+        batch: serialized_batch(batch_group['_id']),
+        tasks: serialized_tasks(batch_group['tasks']),
       }
     end
   end
@@ -20,7 +20,7 @@ class DailyTasksController < ApplicationController
 
   def serialized_batch(id)
     batch = Cultivation::Batch.find(id)
-    BatchSerializer.new(batch, params: { exclude_tasks: true }).
+    BatchSerializer.new(batch, params: {exclude_tasks: true}).
       serializable_hash[:data].
       merge(rooms: batch_room_names(batch))
   end

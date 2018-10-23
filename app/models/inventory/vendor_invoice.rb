@@ -5,19 +5,15 @@ module Inventory
 
     field :invoice_no, type: String
     field :total_amount, type: BigDecimal
-    field :plants, type: Array
     field :status, type: String
-
-    # has_many :item_articles
-    # has_many :items
+    field :purchase_date, type: DateTime
+    field :purchase_order_no, type: String
 
     belongs_to :vendor, class_name: 'Inventory::Vendor'
-    # has_many   :plants, class_name: 'Inventory::Plant'
+    belongs_to :purchase_order, class_name: 'Inventory::PurchaseOrder'
+    belongs_to :facility
 
-    # TODO: This is missing or to be added...
-    # An invoice
-    #   has many invoice_items:
-    #     1. item price, qty, tax ---> link_to ---> item & article items[]
-    #     2. item price, qty, tax ---> link_to ---> item & article items[]
+    has_many :items, class_name: 'Inventory::VendorInvoiceItem'
+    has_many :plants, class_name: 'Inventory::Plant'        # to be revised!
   end
 end

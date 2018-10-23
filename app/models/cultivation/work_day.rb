@@ -8,7 +8,6 @@ module Cultivation
     field :date, type: Date
     field :is_done, default: -> { false } # indicate the task is done for the day
     field :duration, type: Integer, default: 0 # in seconds
-    field :timer_started_at, type: DateTime # utility field for timer
     field :aasm_state
 
     validates_presence_of :user_id, :date
@@ -50,15 +49,29 @@ module Cultivation
     private
 
     def log_timer
-      self.timer_started_at = Time.now
+      latest_active_time_log&.stop!
+      time_logs.create(start_time: Time.now)
     end
 
     def clear_timer
-      self.timer_started_at = nil
+      latest_active_time_log&.stop!
+      set_total_duration
     end
 
     def set_done
+      latest_active_time_log&.stop!
+      set_total_duration
       self.is_done = true
+      save
+    end
+
+    def latest_active_time_log
+      time_logs.find_by(end_time: nil)
+    end
+
+    def set_total_duration
+      self.duration = time_logs.map(&:duration_in_seconds).compact.sum
+      save
     end
   end
 end

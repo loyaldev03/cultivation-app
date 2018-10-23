@@ -14,7 +14,7 @@ const TasksList = observer(({ tasks }) => {
 })
 
 const HeaderRow = () => {
-  const classes = 'pa2 bg-light-silver tc b'
+  const classes = 'pa2 bg-black-05 black-50 tc b'
   return (
     <React.Fragment>
       <div className={classes}>#</div>

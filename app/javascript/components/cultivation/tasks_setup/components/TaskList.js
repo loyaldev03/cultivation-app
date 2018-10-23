@@ -5,6 +5,7 @@ import { observer, Provider } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 
 import TaskStore from '../stores/TaskStore'
+import DisplayTaskStore from '../stores/DisplayTaskStore'
 import UserStore from '../stores/UserStore'
 
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
@@ -29,6 +30,9 @@ const styles = `
 .rt-tr-group:hover{
   box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
 }
+.rt-thead{
+  background-color: #eee;
+}
 
 `
 
@@ -39,7 +43,8 @@ class TaskList extends React.Component {
     this.dragged = null
     this.state = {
       isOpen: false,
-      batch: this.props.batch
+      batch: this.props.batch,
+      collapseIds: []
     }
   }
 
@@ -149,6 +154,39 @@ class TaskList extends React.Component {
     }))
   }
 
+  toggleCollapse = id => {
+    let array = []
+    let children_ids = TaskStore.filter(e => e.attributes.parent_id === id).map(
+      e => e.id
+    )
+    let new_ids, old_id
+    if (this.state.collapseIds.includes(id)) {
+      let i
+      let tempCollapseId = this.state.collapseIds
+      old_id = DisplayTaskStore.slice()
+
+      //loop through children
+      for (i = 0; i < children_ids.length; i++) {
+        tempCollapseId = tempCollapseId.filter(e => e !== children_ids[i])
+        let current_children_id = TaskStore.filter(
+          e => e.attributes.parent_id === children_ids[i]
+        ).map(e => e.id)
+        old_id = old_id.filter(e => !current_children_id.includes(e))
+      }
+
+      this.setState({ collapseIds: tempCollapseId.filter(e => e !== id) })
+      new_ids = old_id.filter(e => !children_ids.includes(e))
+    } else {
+      this.setState(prevState => ({
+        collapseIds: [...prevState.collapseIds, id]
+      }))
+      old_id = DisplayTaskStore.slice()
+      new_ids = old_id.concat(children_ids)
+    }
+
+    DisplayTaskStore.replace(new_ids)
+  }
+
   renderAttributesName = row => {
     let id = row.row['id']
     let handleEdit = this.handleEdit
@@ -156,32 +194,61 @@ class TaskList extends React.Component {
     let handleIndent = this.handleIndent
     let handleAddTask = this.handleAddTask
     let handleDelete = this.handleDelete
+    let toggleCollapse = this.toggleCollapse
     return (
-      <div className="flex justify-between-ns">
+      <div
+        className={`flex justify-between-ns ${
+          row.row['attributes.is_phase'] === true ? '' : 'draggable'
+        }`}
+      >
         <div className="">
           <div className="flex">
             <div className="w1 ml3">
               {row.row['attributes.is_phase'] === true && (
-                <a
-                  className="pointer"
-                  onClick={e => {
-                    handleEdit(row)
-                  }}
-                >
-                  {row.value}
-                </a>
+                <div>
+                  <i
+                    className="material-icons dim grey f7 pointer"
+                    style={{ fontSize: '18px' }}
+                    onClick={e => toggleCollapse(row.row.id)}
+                  >
+                    {this.state.collapseIds.includes(row.row.id)
+                      ? 'arrow_drop_up'
+                      : 'arrow_drop_down'}
+                  </i>
+                  <a
+                    className="pointer"
+                    style={{ color: '#ff5722' }}
+                    onClick={e => {
+                      handleEdit(row)
+                    }}
+                  >
+                    {row.value}
+                  </a>
+                </div>
               )}
             </div>
             <div className="w1 ml3">
               {row.row['attributes.is_category'] === true && (
-                <a
-                  className="pointer"
-                  onClick={e => {
-                    handleEdit(row)
-                  }}
-                >
-                  {row.value}
-                </a>
+                <div>
+                  <i
+                    className="material-icons dim grey f7 pointer"
+                    style={{ fontSize: '18px' }}
+                    onClick={e => toggleCollapse(row.row.id)}
+                  >
+                    {this.state.collapseIds.includes(row.row.id)
+                      ? 'arrow_drop_up'
+                      : 'arrow_drop_down'}
+                  </i>
+                  <a
+                    className="pointer"
+                    style={{ color: '#ff5722' }}
+                    onClick={e => {
+                      handleEdit(row)
+                    }}
+                  >
+                    {row.value}
+                  </a>
+                </div>
               )}
             </div>
             <div className="w1 ml3">
@@ -328,182 +395,60 @@ class TaskList extends React.Component {
     )
 
     headers.forEach((header, i) => {
-      header.setAttribute('draggable', true)
-      //the dragged header
-      header.ondragstart = e => {
-        e.stopPropagation()
-        this.dragged = i
-      }
+      let enableDrag = header.querySelector('.draggable')
+      if (enableDrag !== null) {
+        header.setAttribute('draggable', true)
+        //the dragged header
+        header.ondragstart = e => {
+          e.stopPropagation()
+          this.dragged = i
+        }
 
-      header.ondrag = e => e.stopPropagation
+        header.ondrag = e => e.stopPropagation
 
-      header.ondragend = e => {
-        e.stopPropagation()
-        setTimeout(() => (this.dragged = null), 1000)
-      }
+        header.ondragend = e => {
+          e.stopPropagation()
+          setTimeout(() => (this.dragged = null), 1000)
+        }
 
-      //the dropped header
-      header.ondragover = e => {
-        e.preventDefault()
-      }
+        //the dropped header
+        header.ondragover = e => {
+          e.preventDefault()
+        }
 
-      header.ondragenter = e => {
-        e.target.closest('.rt-tr-group').style.borderBottomColor =
-          'rgb(255,112,67)'
-      }
+        header.ondragenter = e => {
+          e.target.closest('.rt-tr-group').style.borderBottomColor =
+            'rgb(255,112,67)'
+        }
 
-      header.ondragleave = e => {
-        e.target.closest('.rt-tr-group').style.borderBottomColor = ''
-      }
+        header.ondragleave = e => {
+          e.target.closest('.rt-tr-group').style.borderBottomColor = ''
+        }
 
-      header.ondrop = e => {
-        e.preventDefault()
-        e.target.closest('.rt-tr-group').style.borderBottomColor = ''
-        if (this.dragged !== null && i !== null) {
-          TaskStore.splice(i, 0, TaskStore.splice(this.dragged, 1)[0])
-          updateTask.updatePosition(this.props.batch_id, i, this.dragged)
+        header.ondrop = e => {
+          e.preventDefault()
+          e.target.closest('.rt-tr-group').style.borderBottomColor = ''
+          if (this.dragged !== null && i !== null) {
+            TaskStore.splice(i, 0, TaskStore.splice(this.dragged, 1)[0])
+            updateTask.updatePosition(this.props.batch_id, i, this.dragged)
+          }
         }
       }
     })
   }
 
+  filterTask = () => {
+    let ids = DisplayTaskStore
+    let filteredTasks = TaskStore.slice().filter(e => ids.includes(e.id))
+    return filteredTasks
+  }
+
   render() {
-    let tasks = TaskStore.slice()
+    let tasks = this.filterTask()
     let users = UserStore
     return (
       <React.Fragment>
         <style> {styles} </style>
-
-        <div className=" flex">
-          <div className="w-40">
-            <h4 className="tl pa0 ma0 h6--font dark-grey">
-              Batch {this.state.batch.batch_no}
-            </h4>
-          </div>
-        </div>
-        <div className="mb3 flex">
-          <div className="w-30">
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Batch Source</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.batch_source}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Batch Id</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.id}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Strain</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.strain}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-40">
-                <label>Grow Method</label>
-              </div>
-              <div className="w-40">
-                <div className="">
-                  <label>{this.state.batch.grow_method}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </div>
-
-          <div className="w-30 ml5">
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Start Date </label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>{this.state.batch.start_date}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Estimation Cost</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Estimation Hours</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </div>
-
-          <div className="w-30 ml5">
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Estimated Harvest Dat </label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>{this.state.batch.start_date}</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Actual Cost</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className=" flex">
-              <div className="w-50">
-                <label>Total Actual Hour</label>
-              </div>
-              <div className="w-50">
-                <div className="">
-                  <label>???</label>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </div>
-        </div>
         <ReactTable
           columns={[
             {
@@ -518,7 +463,6 @@ class TaskList extends React.Component {
               maxWidth: '50',
               id: 'button-column',
               show: false
-              // Cell: (row) => (<div>{this.renderAddButton(row)}</div>)
             },
             {
               Header: 'Phase',
@@ -556,12 +500,12 @@ class TaskList extends React.Component {
               maxWidth: '100'
             },
             {
-              Header: 'Estimated Hours',
+              Header: 'Est Hr',
               accessor: 'attributes.estimated_hours',
               maxWidth: '150'
             },
             {
-              Header: 'Resources',
+              Header: 'Assigned',
               accessor: 'attributes.resources',
               maxWidth: '200'
             },
@@ -615,15 +559,13 @@ class TaskList extends React.Component {
             if (rowInfo) {
               return {
                 style: {
-                  boxShadow:
-                    this.state.taskSelected === rowInfo.row.id
-                      ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
+                  backgroundColor:
+                    rowInfo.row['attributes.is_phase'] === true
+                      ? '#fbe9e7'
                       : null
                 },
                 onMouseOver: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)
-                  // button.parentElement.parentElement.parentElement.parentElement.style.boxShadow =
-                  //   '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
                   button.style.display = 'block'
                 },
                 onMouseOut: (e, handleOriginal) => {
@@ -644,6 +586,17 @@ class TaskList extends React.Component {
           batch_id={this.props.batch_id}
           handleReset={this.handleReset}
         />
+        <div className="w-30 mt4">
+          <a
+            href={
+              '/cultivation/batches/' + this.props.batch_id + '?type=active'
+            }
+            data-method="put"
+            className="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim mt3"
+          >
+            Save & Continue
+          </a>
+        </div>
       </React.Fragment>
     )
   }

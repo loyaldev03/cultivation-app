@@ -3,16 +3,19 @@ class Api::V1::ItemsController < Api::V1::BaseApiController
   before_action :set_item, only: [:destroy]
 
   def index
-    items = Inventory::Item.all
+    # items = Inventory::Item.all
+    raw_materials = Inventory::RawMaterial.all
     options = {}
     options[:is_collection]
-    item_json = Inventory::ItemSerializer.new(items, options).serialized_json
-    render json: item_json
+    raw_material_json = Inventory::RawMaterialSerializer.new(raw_materials, options).serialized_json
+    # item_json = Inventory::ItemSerializer.new(items, options).serialized_json
+    render json: raw_material_json
   end
 
   def create
     item = @task.items.new(item_params)
     item.save
+    Rails.logger.debug "Errors =====> #{item.errors.inspect}"
     item_json = Inventory::ItemSerializer.new(item).serialized_json
     render json: item_json
   end
@@ -33,6 +36,6 @@ class Api::V1::ItemsController < Api::V1::BaseApiController
   end
 
   def item_params
-    params.require(:item).permit(:name, :quantity, :uom)
+    params.require(:item).permit(:raw_material_id, :quantity, :uom)
   end
 end

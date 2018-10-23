@@ -19,6 +19,7 @@
                 </div>
 
                 <div class="flex flex-row items-center">
+                  <%= switch_user_select if Rails.env.development? %>
                   <i 
                     onclick="openModal()" id="notification-popup" 
                     class="material-icons grey mr3 dim md-21 pointer">
@@ -27,7 +28,7 @@
 
                   <%= render 'layouts/notification' %>
 
-                  <% if current_user.photo_url %>
+                  <% if current_user.photo_data && current_user.photo_data != "null" %>
                     <%= image_tag current_user.photo_url, class: "br-100 h2 w2 mr3 dib" %>
                   <% else %>
                     <%= image_tag 'blank-avatar.png', class: "br-100 h2 w2 mr3 dib" %>

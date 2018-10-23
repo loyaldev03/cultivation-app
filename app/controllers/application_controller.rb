@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
   around_action :set_timezone, if: :current_user
   layout :layout_by_resource
 
+  helper_method :current_default_facility
+
   protected
 
   def set_rollbar_scope
@@ -19,6 +21,7 @@ class ApplicationController < ActionController::Base
 
   def set_timezone(&block)
     Time.use_zone(current_user.timezone, &block)
+    Rails.logger.debug "\033[34m BaseApiController::Time.use_zone:: #{current_user.timezone} \033[0m"
   end
 
   def miniprofiler
@@ -44,6 +47,14 @@ class ApplicationController < ActionController::Base
       'login'
     else
       'application'
+    end
+  end
+
+  private
+
+  def current_default_facility
+    if current_user.present?
+      @current_default_facility ||= FindDefaultFacility.call(current_user).result
     end
   end
 end

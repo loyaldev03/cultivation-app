@@ -24,6 +24,7 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   end
 
   private
+
   def set_task
     @task = current_user.cultivation_tasks.find(params[:id])
   end
@@ -31,5 +32,4 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   def set_work_day
     @work_day = @task.work_days.find_or_initialize_by(date: params[:date], user: current_user)
   end
-
 end

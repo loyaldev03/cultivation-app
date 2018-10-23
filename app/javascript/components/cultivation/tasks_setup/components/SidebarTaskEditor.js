@@ -23,8 +23,7 @@ class SidebarTaskEditor extends React.Component {
       duration: this.props.task.attributes.duration,
       start_date: new Date(this.props.task.attributes.start_date),
       end_date: new Date(this.props.task.attributes.end_date),
-      errors: '',
-      estimated_hours: ''
+      errors: ''
     }
   }
 
@@ -40,8 +39,7 @@ class SidebarTaskEditor extends React.Component {
         end_date: new Date(),
         start_date: new Date(props.task.attributes.start_date),
         end_date: new Date(props.task.attributes.end_date),
-        errors: '',
-        estimated_hours: ''
+        errors: ''
       })
     }
   }
@@ -82,9 +80,49 @@ class SidebarTaskEditor extends React.Component {
     updateTasks.updateTask(this.state)
   }
 
+  handleChangeCheckbox = e => {
+    const item = e.target.name
+    const isChecked = e.target.checked
+    let arrays = this.state.task_type
+    if (e.target.checked) {
+      arrays.push(e.target.value)
+    } else {
+      arrays = arrays.filter(k => k !== e.target.value)
+    }
+    this.setState({ task_type: arrays })
+
+    // this.setState(prevState => ({ task_type: prevState.task_type.set(item, isChecked) }));
+  }
+
+  handleChangeCheckbox2 = e => {
+    const arrays = this.state.task_type
+    if (e.target.checked) {
+      // const selectedSubject = this.state.dsSubjects.find(e => e.id === value); // find selected subject
+      arrays.push({
+        id: selectedSubject.id,
+        code: selectedSubject.code,
+        name: selectedSubject.name
+      })
+    } else {
+      const index = arrays.findIndex(i => i.id === value)
+      arrays.splice(index, 1)
+    }
+    this.setState({ task_type: arrays })
+  }
+
+  checkboxValue = val => {
+    return this.state.task_type.includes(val)
+  }
+
   render() {
     let users = UserStore.users
     let roles = UserRoles.slice()
+    let isNormalTask =
+      this.state.is_phase === false && this.state.is_category === false
+    let isNotNormalTask =
+      this.state.is_phase === true || this.state.is_category === true
+    let handleChangeCheckbox = this.handleChangeCheckbox
+    let checkboxValue = this.checkboxValue
     return (
       <React.Fragment>
         <div className="ph4 mt3 mb3 flex">
@@ -110,7 +148,7 @@ class SidebarTaskEditor extends React.Component {
           </div> */}
         </div>
 
-        <div className="ph4 mt3 mb3 flex">
+        {/* <div className="ph4 mt3 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Instruction</label>
             <textarea
@@ -123,10 +161,10 @@ class SidebarTaskEditor extends React.Component {
             />
             <FieldError errors={this.state.errors} fieldname="instruction" />
           </div>
-        </div>
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-50">
-            <label className="f6 fw6 db mb1 gray ttc">Start Date</label>
+        </div> */}
+        <div className="ph4 flex">
+          <div className="w-40">
+            <label className="f6 fw6 db mb1 gray ttc">Start At</label>
             <DatePicker
               value={this.state.start_date}
               fieldname="start_date"
@@ -134,18 +172,15 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
 
-          <div className="w-50 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">End Date</label>
+          <div className="w-40 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">End At</label>
             <DatePicker
               value={this.state.end_date}
               fieldname="end_date"
               onChange={e => this.handleChangeDate('end_date', e)}
             />
           </div>
-        </div>
-
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-20">
+          <div className="w-20 pl3">
             <NumericInput
               label={'Duration'}
               value={this.state.duration}
@@ -155,19 +190,132 @@ class SidebarTaskEditor extends React.Component {
               errorField="duration"
             />
           </div>
-
-          <div className="w-40 pl3">
-            <NumericInput
-              label={'Estimated Hours Needed'}
-              value={this.state.estimated_hours}
-              onChange={this.handleChangeTask}
-              fieldname="estimated_hours"
-              errors={this.state.errors}
-              errorField="estimated_hours"
-            />
-          </div>
         </div>
 
+        {isNormalTask ? (
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-40">
+              <NumericInput
+                label={'Estimated Hours Needed'}
+                value={this.state.estimated_hours}
+                onChange={this.handleChangeTask}
+                fieldname="estimated_hours"
+                errors={this.state.errors}
+                errorField="estimated_hours"
+              />
+            </div>
+          </div>
+        ) : null}
+
+        {isNormalTask ? (
+          <div>
+            <hr class="mt3 m b--light-gray w-100" />
+
+            <div className="ph4 mt3 mb3">
+              <label className="f6 fw6 db mb1 ttc">
+                Please select special task that related to daily task
+              </label>
+              <label className="f6 fw6 db mb1 gray ttc">
+                <input
+                  type="checkbox"
+                  name="checkbox-1"
+                  class="mr2"
+                  value="assign_plant_id"
+                  onChange={handleChangeCheckbox}
+                  checked={checkboxValue('assign_plant_id')}
+                />
+                Assign Plant id to clippings
+              </label>
+              <label className="f6 fw6 db mb1 gray ttc">
+                <input
+                  type="checkbox"
+                  name="checkbox-1"
+                  class="mr2"
+                  value="move_plant"
+                  onChange={handleChangeCheckbox}
+                  checked={checkboxValue('move_plant')}
+                />
+                Move plant
+              </label>
+              <label className="f6 fw6 db mb1 gray ttc">
+                <input
+                  type="checkbox"
+                  name="checkbox-1"
+                  class="mr2"
+                  value="assign_plant_id_metrc"
+                  onChange={handleChangeCheckbox}
+                  checked={checkboxValue('assign_plant_id_metrc')}
+                />
+                Assign Plant ID with Metrc tag
+              </label>
+              <label className="f6 fw6 db mb1 gray ttc">
+                <input
+                  type="checkbox"
+                  name="checkbox-1"
+                  class="mr2"
+                  value="create_harvest"
+                  onChange={handleChangeCheckbox}
+                  checked={checkboxValue('create_harvest')}
+                />
+                Create harvest
+              </label>
+              <label className="f6 fw6 db mb1 gray ttc">
+                <input
+                  type="checkbox"
+                  name="checkbox-1"
+                  class="mr2"
+                  value="create_package"
+                  onChange={handleChangeCheckbox}
+                  checked={checkboxValue('create_package')}
+                />
+                Create package
+              </label>
+              <label className="f6 fw6 db mb1 gray ttc">
+                <input
+                  type="checkbox"
+                  name="checkbox-1"
+                  class="mr2"
+                  value="finish_harvest"
+                  onChange={handleChangeCheckbox}
+                  checked={checkboxValue('finish_harvest')}
+                />
+                Finish harvest
+              </label>
+            </div>
+          </div>
+        ) : null}
+
+        {isNotNormalTask ? (
+          <div className="">
+            <hr class="mt3 m b--light-gray w-100" />
+            <div className="ph4 mt3 mb3">
+              <div class="flex">
+                <div class="w-40">
+                  <label class="f6 fw6 db mb1 gray ttc">Estimated Hours</label>
+                  <label class="f6 fw6 db mb1 gray ttc">
+                    {this.state.estimated_hours}
+                  </label>
+                </div>
+                <div class="w-40 pl3">
+                  <label class="f6 fw6 db mb1 gray ttc">Actual Hours</label>
+                  <label class="f6 fw6 db mb1 gray ttc">
+                    {this.state.actual_hours}
+                  </label>
+                </div>
+              </div>
+              <div class="flex mt3">
+                <div class="w-40">
+                  <label class="f6 fw6 db mb1 gray ttc">Estimated Cost</label>
+                  <label class="f6 fw6 db mb1 gray ttc">0.0</label>
+                </div>
+                <div class="w-40 pl3">
+                  <label class="f6 fw6 db mb1 gray ttc">Actual Cost</label>
+                  <label class="f6 fw6 db mb1 gray ttc">0.0</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
         <div className="w-100 pa4 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
           <button
             name="commit"

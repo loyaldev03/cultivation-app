@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
 import MotherEditor from './components/editor/MotherEditor'
 import plantStore from './store/PlantStore'
-import { loadPlants } from './actions/loadPlants'
+import loadPlants from './actions/loadPlants'
 
 const columns = [
   {
@@ -100,11 +100,7 @@ class PlantSetupApp extends React.Component {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
-  onAddPlant = () => {
-    this.openSidebar()
-  }
-
-  renderPlantList() {
+  render() {
     return (
       <React.Fragment>
         <div className="w-80 bg-white pa3">
@@ -123,7 +119,7 @@ class PlantSetupApp extends React.Component {
           <ReactTable
             columns={columns}
             pagination={{ position: 'top' }}
-            data={plantStore.motherPlants}
+            data={plantStore.bindablePlants}
             showPagination={false}
             pageSize={30}
             minRows={5}
@@ -132,14 +128,6 @@ class PlantSetupApp extends React.Component {
             showPagination={plantStore.plants.length > 30}
           />
         </div>
-      </React.Fragment>
-    )
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        {this.renderPlantList()}
         <MotherEditor
           isOpened={false}
           locations={this.props.locations}

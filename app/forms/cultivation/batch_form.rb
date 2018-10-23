@@ -2,7 +2,7 @@ module Cultivation
   class BatchForm
     include ActiveModel::Model
 
-    attr_accessor :id, :batch_no, :facility_id, :batch_source, :strain_id, :start_date, :grow_method, :estimated_harvest_date, :tasks
+    attr_accessor :id, :batch_no, :facility_id, :batch_source, :strain_id, :start_date, :grow_method, :estimated_harvest_date, :tasks, :nutrient_profile
 
     validates :batch_source, presence: true
     validates :strain_id, presence: true
@@ -32,6 +32,7 @@ module Cultivation
       self.grow_method = record[:grow_method] if record[:grow_method]
       self.estimated_harvest_date = record[:estimated_harvest_date] if record[:estimated_harvest_date]
       self.tasks = record.try(:tasks)
+      self.nutrient_profile = record.try(:nutrient_profile)
     end
 
     def set_record(record_id)

@@ -10,36 +10,40 @@ class LocationPicker extends React.Component {
     super(props)
 
     this.mode = props.mode
-    this.locations = props.locations
-    window.locs = props.locations
+    const locations = this.filterLocationByFacility(props.facility_id)
+    const selectedLocation = this.findLocation(
+      locations,
+      props.location_id || ''
+    )
 
     this.state = {
       location_id: props.location_id || '',
       facility_id: props.facility_id,
-      locations: this.filterLocationByFacility(props.facility_id)
+      locations: locations,
+      selectedLocation: selectedLocation
     }
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    let hasNewState = false
-    let newState = {}
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   let hasNewState = false
+  //   let newState = {}
 
-    if (nextProps.location_id !== prevState.location_id) {
-      newState = { location_id: nextProps.location_id }
-      hasNewState = true
-    }
+  //   if (nextProps.location_id !== prevState.location_id) {
+  //     newState = { location_id: nextProps.location_id }
+  //     hasNewState = true
+  //   }
 
-    if (nextProps.facility_id !== prevState.facility_id) {
-      newState = { ...newState, facility_id: nextProps.facility_id }
-      hasNewState = true
-    }
+  //   if (nextProps.facility_id !== prevState.facility_id) {
+  //     newState = { ...newState, facility_id: nextProps.facility_id }
+  //     hasNewState = true
+  //   }
 
-    if (hasNewState) {
-      return newState
-    }
+  //   if (hasNewState) {
+  //     return newState
+  //   }
 
-    return null
-  }
+  //   return null
+  // }
 
   isFacilityOnly(item) {
     return item.f_id.length > 0 && item.rm_id.length <= 0
@@ -112,7 +116,7 @@ class LocationPicker extends React.Component {
 
     if (mode === 'clone') {
       _locations = locations.filter(this.isClone(facility_id))
-    } else if (mode === 'vegTray') {
+    } else if (mode === 'veg') {
       _locations = locations.filter(this.isVeg(facility_id))
     } else if (mode === 'mother') {
       _locations = locations.filter(this.isMother(facility_id))
@@ -140,7 +144,7 @@ class LocationPicker extends React.Component {
     let item = { value: '', label: '' }
     if (mode === 'mother' || mode === 'room') {
       item = locations.find(x => x.rm_id === location_id)
-    } else if (['clone', 'vegTray', 'flower', 'dry'].indexOf(mode) >= 0) {
+    } else if (['clone', 'veg', 'flower', 'dry'].indexOf(mode) >= 0) {
       item = locations.find(x => x.t_id === location_id)
     } else if (mode === 'facility') {
       item = locations.find(x => x.f_id === location_id)
@@ -156,7 +160,7 @@ class LocationPicker extends React.Component {
         location_id: selectedItem.rm_id,
         location_type: selectedItem.rm_purpose
       }
-    } else if (['clone', 'vegTray', 'flower', 'dry'].indexOf(mode) >= 0) {
+    } else if (['clone', 'veg', 'flower', 'dry'].indexOf(mode) >= 0) {
       return {
         location_id: selectedItem.t_id,
         location_type: selectedItem.rm_purpose
@@ -181,18 +185,14 @@ class LocationPicker extends React.Component {
     this.setState({ value: { value: item.value, label: item.label } })
   }
 
-  get selectedLocation() {
-    return this.findLocation(this.state.locations, this.state.location_id)
-  }
-
-  get filteredLocations() {
-    return this.filterLocationByFacility(this.state.facility_id)
-  }
+  // get filteredLocations() {
+  //   return this.filterLocationByFacility(this.state.facility_id)
+  // }
 
   get label() {
     if (this.mode === 'clone') {
       return 'Tray ID'
-    } else if (this.mode === 'vegTray') {
+    } else if (this.mode === 'veg') {
       return 'Tray ID'
     } else if (this.mode === 'mother') {
       return 'Mother room ID'
@@ -217,9 +217,9 @@ class LocationPicker extends React.Component {
           key={this.state.facility_id}
           styles={reactSelectStyle}
           placeholder="Search location within your facility"
-          options={this.filteredLocations}
+          options={this.state.locations}
           onChange={this.onChange}
-          value={this.selectedLocation}
+          value={this.state.selectedLocation}
           filterOption={(option, input) => {
             const words = input.toLowerCase().split(/\s/)
             return words.every(x => option.label.toLowerCase().indexOf(x) >= 0)

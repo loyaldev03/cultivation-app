@@ -4,10 +4,22 @@ module Cultivation
       include Mongoid::Document
       include Mongoid::Timestamps::Short
 
-      field :start, type: DateTime
-      field :end, type: DateTime
+      field :start_time, type: DateTime
+      field :end_time, type: DateTime
 
       embedded_in :work_day, class_name: 'Cultivation::WorkDay'
+
+      validates_presence_of :start_time
+
+      def stop!
+        self.end_time = Time.now
+        save
+      end
+
+      def duration_in_seconds
+        return 0 if end_time.nil?
+        end_time.to_i - start_time.to_i
+      end
     end
   end
 end

@@ -5,7 +5,7 @@
 <%= render 'layouts/right_sidebar' %>
 
 <div class="ph4 tr pb3 pt3 bg-white ma4">
-  <%= link_to "+ Add facility", facility_setup_new_path, class: 'link ba bw1 b b--blue blue pa2 ph4 br4 dib' %>
+  <%= link_to "+ Setup New Facility", facility_setup_new_path, class: 'ttu pv2 ph3 bg-orange white button--font bn box--br3 link dim pointer' %>
 </div>
 
 <div class="bg-white mv3 mh4">
@@ -16,13 +16,13 @@
         <th class="f6 dark-grey pv3 tl w-20">Name</th>
         <th class="f6 dark-grey pv3 tl w-10">ID</th>
         <th class="f6 dark-grey pv3 tr w-10">Rooms</th>
-        <th class="f6 dark-grey pv3 tr w-20 pr4">Status</th>
+        <th class="w-20"></th>
       </tr>
     </thead>
 
     <tbody>
       <% @facilities.each_with_index do |f, i| %>
-        <tr data-toggle-right="<%= edit_settings_facility_facility_url(f)%>" class="pointer striped--light-gray">
+        <tr>
           <td class="f6 tl pv3 pl4 pr3 gray"><%= i+1 %></td>
           <td class="f6 tl pv3 "><%= blank(f.name) %></td>
           <td class="f6 tl pv3 "><%= blank(f.code) %></td>
@@ -38,11 +38,7 @@
                         "disabled"
                       end
             %>
-            <% if !f.is_complete %>
-              <%= link_to "Continue setup", facility_setup_new_path(facility_id: f.id), class: "link status-bullet ba b bw1 b--blue blue pa1 ph2 br4 f7" %>
-            <% else %>
-              <span class="<%=status %> status-bullet ba b bw1 b--blue blue pa1 ph2 br4 f7"><%= status %></span>
-            <% end %>
+            <%= link_to "Configure", facility_setup_new_path(facility_id: f.id), class: "pv2 ph3 bg-orange white button--font bn box--br3 link dim pointer" %>
           </td>
         </tr>
       <% end %>

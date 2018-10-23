@@ -7,7 +7,7 @@ module Cultivation
     end
 
     def call
-      record = Cultivation::Batch.includes(:strain).where(@args)
+      record = Cultivation::Batch.includes(:facility_strain).where(@args)
     end
   end
 end

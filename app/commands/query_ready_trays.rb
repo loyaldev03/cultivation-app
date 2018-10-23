@@ -4,7 +4,7 @@ class QueryReadyTrays
   # NOTE: This query all the Trays in a Facility that are
   # ready to be use in cultivation
 
-  def initialize(facility_id, purpose = nil)
+  def initialize(facility_id, purpose = [])
     raise ArgumentError, 'facility_id' if facility_id.nil?
 
     @facility_id = facility_id

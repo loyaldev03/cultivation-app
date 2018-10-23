@@ -136,10 +136,19 @@ module Cultivation
     end
 
     def save_record(args)
-      batch = Cultivation::Batch.new(args)
+      batch = Cultivation::Batch.new
+      batch.facility_id = args[:facility_id]
+      batch.batch_source = args[:batch_source]
+      batch.facility_strain_id = args[:facility_strain_id]
+      batch.start_date = args[:start_date]
+      batch.grow_method = args[:grow_method]
+      batch.quantity = args[:quantity]
       batch.batch_no = NextFacilityCode.call(:batch, Cultivation::Batch.last.try(:batch_no)).result
       batch.name = batch.batch_no
       batch.current_growth_stage = Constants::CONST_CLONE
+
+      # TODO: UPDATE PHASE DURATION
+
       batch.save!
 
       phase_id = nil

@@ -8,7 +8,7 @@ const TasksList = observer(({ tasks }) => {
   return (
     <GridContainer>
       <HeaderRow />
-      {tasks.map((task, i) => (<TaskRow dailyTask={task} index={i} key={i} />))}
+      {tasks.map((task, i) => <TaskRow dailyTask={task} index={i} key={i} />)}
     </GridContainer>
   )
 })
@@ -19,7 +19,9 @@ const HeaderRow = () => {
     <React.Fragment>
       <div className={classes}>#</div>
       <div className={classes}>Issue</div>
-      <div className={classes} style={{textAlign: 'left'}}>Task Name</div>
+      <div className={classes} style={{ textAlign: 'left' }}>
+        Task Name
+      </div>
       <div className={classes}>Start Date</div>
       <div className={classes}>End Date</div>
       <div className={classes}>Time Spent Today</div>
@@ -28,7 +30,6 @@ const HeaderRow = () => {
     </React.Fragment>
   )
 }
-
 
 const GridContainer = styled.div`
   display: grid;

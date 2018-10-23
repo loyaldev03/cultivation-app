@@ -23,7 +23,7 @@ class BatchSetupEditor extends React.PureComponent {
       onClose,
       onSave,
       isLoading,
-      errors,
+      errors
     } = this.props
 
     const saveButtonText = isLoading ? 'Saving...' : 'Save and Continue'

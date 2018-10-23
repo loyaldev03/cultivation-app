@@ -11,19 +11,19 @@ import MaterialUsed from './MaterialUsed'
 @observer
 class EditPanel extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       selected_tab: 0
-    };
+    }
 
-    this.changeTabs = this.changeTabs.bind(this);
+    this.changeTabs = this.changeTabs.bind(this)
   }
 
   changeTabs(index) {
-    this.setState({selected_tab: index});
+    this.setState({ selected_tab: index })
   }
 
-  render () {
+  render() {
     const styles = `
       .active{
         font-weight: bold;
@@ -49,32 +49,55 @@ class EditPanel extends React.Component {
       <Issues {...this.props} />
     ]
 
-    const classWhenActive = (index, className) => (
+    const classWhenActive = (index, className) =>
       this.state.selected_tab == index ? className : ''
-    )
 
-    return (<div>
-      <div className="ph3 pv2 mb3 bb b--light-gray flex items-center" style={{ height: '51px' }}>
-        <style>{styles}</style>
-        <div className="mt3 flex w-100 tc">
-          <div className={`w-30 ph2 pointer dim ${classWhenActive(0, 'active')}`} onClick={() => this.changeTabs(0)}>Logs & Activities</div>
-          <div className={`w-40 ph2 pointer dim ${classWhenActive(1, 'active')}`} onClick={() => this.changeTabs(1)}>Material Used</div>
-          <div className={`w-20 ph2 pointer dim ${classWhenActive(2, 'active')}`} onClick={() => this.changeTabs(2)}>Issues</div>
+    return (
+      <div>
+        <div
+          className="ph3 pv2 mb3 bb b--light-gray flex items-center"
+          style={{ height: '51px' }}
+        >
+          <style>{styles}</style>
+          <div className="mt3 flex w-100 tc">
+            <div
+              className={`w-30 ph2 pointer dim ${classWhenActive(0, 'active')}`}
+              onClick={() => this.changeTabs(0)}
+            >
+              Logs & Activities
+            </div>
+            <div
+              className={`w-40 ph2 pointer dim ${classWhenActive(1, 'active')}`}
+              onClick={() => this.changeTabs(1)}
+            >
+              Material Used
+            </div>
+            <div
+              className={`w-20 ph2 pointer dim ${classWhenActive(2, 'active')}`}
+              onClick={() => this.changeTabs(2)}
+            >
+              Issues
+            </div>
+          </div>
+          <div
+            className="pointer"
+            onClick={() => {
+              DailyTasksStore.editingPanel = null
+            }}
+          >
+            <i className="material-icons mid-gray md-18">close</i>
+          </div>
         </div>
-        <div className="pointer" onClick={() => { DailyTasksStore.editingPanel = null }}>
-          <i className="material-icons mid-gray md-18">close</i>
-        </div>
+
+        <ScrollableContainer className="f5 pv2 ph4">
+          {tabs[this.state.selected_tab]}
+        </ScrollableContainer>
       </div>
-
-      <ScrollableContainer className="f5 pv2 ph4">
-        {tabs[this.state.selected_tab]}
-      </ScrollableContainer>
-    </div>)
+    )
   }
 }
 
-
-const Issues = () => (<div>Issues ...</div>)
+const Issues = () => <div>Issues ...</div>
 
 const ScrollableContainer = styled.div`
   overflow: auto;

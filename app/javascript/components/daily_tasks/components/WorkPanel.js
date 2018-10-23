@@ -5,9 +5,11 @@ import BatchesList from './BatchesList'
 
 const WorkPanel = ({ todo, done, ...props }) => (
   <Router>
-    <div {...props} >
+    <div {...props}>
       <div className="f5 flex">
-        <StyledNavLink exact to="/">To Dos</StyledNavLink>
+        <StyledNavLink exact to="/">
+          To Dos
+        </StyledNavLink>
         <StyledNavLink to="/wastes">Material Wastes</StyledNavLink>
         <StyledNavLink to="/issues">Issues</StyledNavLink>
       </div>
@@ -20,14 +22,11 @@ const WorkPanel = ({ todo, done, ...props }) => (
   </Router>
 )
 
-const Wastes = () => (<div>Wastes ...</div>)
-const Issues = () => (<div>Issues ...</div>)
+const Wastes = () => <div>Wastes ...</div>
+const Issues = () => <div>Issues ...</div>
 
-const StyledNavLink = (props) => (
-  <NavLink
-    className="bg-white tab"
-    activeClassName="tab--active"
-    {...props} >
+const StyledNavLink = props => (
+  <NavLink className="bg-white tab" activeClassName="tab--active" {...props}>
     {props.children}
   </NavLink>
 )

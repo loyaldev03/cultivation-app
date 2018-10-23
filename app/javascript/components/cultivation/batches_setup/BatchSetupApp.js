@@ -136,7 +136,7 @@ class BatchSetupApp extends React.Component {
         facility_strain_id: this.state.batchStrain,
         start_date: this.state.batchStartDate,
         grow_method: this.state.batchGrowMethod,
-        phase_duration: this.state.phaseDuration,
+        phase_duration: this.state.phaseDuration
       })
     )
       .then(response => response.json())

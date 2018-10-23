@@ -18,24 +18,30 @@ class WorkDashboardApp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <DateFormatted date={this.props.date}></DateFormatted>
+        <DateFormatted date={this.props.date} />
         <StyledWorkPanel className="fl w-100 ma1" />
-        {DailyTasksStore.editingPanel ? <StyledEditingPanel className="b--light-gray bl bw1 fixed w-40 bg-white"></StyledEditingPanel> : false}
+        {DailyTasksStore.editingPanel ? (
+          <StyledEditingPanel className="b--light-gray bl bw1 fixed w-40 bg-white" />
+        ) : (
+          false
+        )}
       </React.Fragment>
     )
   }
 }
 
 const DateFormatted = ({ date }) => {
-  const dateMoment = moment(date, "YYYY-MM-DD");
-  const dateFormatted = dateMoment.format("ddd, D MMM YYYY");
+  const dateMoment = moment(date, 'YYYY-MM-DD')
+  const dateFormatted = dateMoment.format('ddd, D MMM YYYY')
   return (
-    <h5 className="tl ph3 pv4 ma1 h5--font dark-grey ttc bg-white">{dateFormatted}</h5>
-  );
+    <h5 className="tl ph3 pv4 ma1 h5--font dark-grey ttc bg-white">
+      {dateFormatted}
+    </h5>
+  )
 }
 
-const EditingPanel = observer((allProps) => {
-  const {className, ...props} = allProps
+const EditingPanel = observer(allProps => {
+  const { className, ...props } = allProps
   return (
     <div className={className} {...props}>
       {DailyTasksStore.editingPanel}

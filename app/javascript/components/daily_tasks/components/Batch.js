@@ -8,8 +8,16 @@ const Batch = observer((props) => {
   const { batch, tasks } = props.item
   return (
     <React.Fragment>
-      <h2 className="f5" data-batch-id={batch.id}>{safeDisplay(batch.attributes.name)}</h2>
-      <div className="f7 mb2">{safeDisplay(batch.rooms.join(', '))}</div>
+      <div class="flex">
+        <div className="w-70">
+          <h2 className="f5" data-batch-id={batch.id}>{safeDisplay(batch.attributes.name)}</h2>
+          <div className="f7 mb2">{safeDisplay(batch.rooms.join(', '))}</div>
+        </div>
+        <div className="w-30">
+          <div className="outline fr pa3 ml2">Days</div>
+          <div className="outline fr pa3">Type</div>
+        </div>
+      </div>
       <TasksList tasks={tasks} />
     </React.Fragment>
   )

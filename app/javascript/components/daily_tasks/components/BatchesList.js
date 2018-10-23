@@ -6,7 +6,9 @@ import DailyTasksStore from '../store/DailyTasksStore'
 
 const BatchesList = observer(() => (
   <div className="flex flex-column">
-    {DailyTasksStore.dailyTasksByBatch.map((taskBatch, i) => (<Batch item={taskBatch} key={i} />))}
+    {DailyTasksStore.dailyTasksByBatch.map((taskBatch, i) => (
+      <Batch item={taskBatch} key={i} />
+    ))}
   </div>
 ))
 

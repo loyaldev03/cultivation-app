@@ -6,6 +6,7 @@ module Inventory
     field :invoice_no, type: String
     field :invoice_date, type: DateTime
     field :status, type: String          # {draft, submitted, paid}
+    field :terms_in_days, type: Integer, default: 0
 
     # To be removed
     # field :purchase_date,     type: DateTime

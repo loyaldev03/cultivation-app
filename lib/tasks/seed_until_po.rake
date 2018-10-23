@@ -28,6 +28,10 @@ task seed_until_po: :environment  do
   Inventory::VendorInvoice.where(facility: facility).delete_all
   Inventory::ItemTransaction.where(facility: facility).delete_all
 
+  batch_ids = Cultivation::Batch.where(facility_id: facility.id).pluck(:id)
+  Cultivation::Task.where(:batch.in => batch_ids).delete_all
+  Cultivation::Batch.where(:id.in => batch_ids).delete_all
+
   # 2. Setup the nutrient catalogue
   #     - Nutrients
   #       - Blend
@@ -106,6 +110,7 @@ task seed_until_po: :environment  do
                                             uom_dimension: 'weights',
                                             facility: facility)
 
+  # For seed and clone and plants
   plant_catalogue  = Inventory::Catalogue.create!(label: 'Plant',
                                             catalogue_type: 'plant',
                                             category: '', 
@@ -140,6 +145,7 @@ task seed_until_po: :environment  do
                                             invoice_date: 10.days.ago, 
                                             facility: po.facility,
                                             purchase_order: po,
+                                            terms_in_days: po.vendor.default_terms.to_i,
                                             vendor: po.vendor)
 
   invoice.items.create!(                    catalogue: po.items.first.catalogue,
@@ -151,6 +157,7 @@ task seed_until_po: :environment  do
                                             product_name: po.items.first.product_name,
                                             description: 'i can be anything')
 
+  invoice.update!(status: 'received') # to be decided
   po.update!(status: 'completed')
 
   # This is table of product sold by vendor. Not really needed.
@@ -164,21 +171,22 @@ task seed_until_po: :environment  do
   #   uom:          material_uom)
   
   # 6. When taking stock intake, matching with Invoice
+
   invoice.items.each do |item|
-    material_uom = UOM.weights('kg')
+    material_uom = 'kg'
     bag_to_kg = 65  # conversion rule, 1 bag = 65 kg
 
     # Stock entry record with matching to invoice item
     Inventory::ItemTransaction.create!( ref_id:           item.id,
                                         ref_type:         'Inventory::VendorInvoiceItem',
                                         event_type:       'stock_intake',         # Move to Constants
-                                        event_date:       Date.today,             # stock intake happen today
+                                        event_date:       DateTime.now,           # stock intake happen today
                                         facility:         invoice.facility,
                                         catalogue:        item.catalogue,
                                         product_name:     item.product_name,
                                         description:      item.description,
                                         manufacturer:     item.manufacturer,
-                                        uom:              material_uom,
+                                        uom:              UOM.weights('kg'),
                                         quantity:         25 * bag_to_kg,
                                         order_quantity:   25,                   # quantity inside PO and stock receive
                                         order_uom:        item.uom,               # uom inside PO and stock receive
@@ -189,19 +197,18 @@ task seed_until_po: :environment  do
 
   # 10. Alt - PO for plants
   facility_strain = Inventory::FacilityStrain.find_or_create_by(
-    facility: facility,
-    strain_name: 'Acme XYZ',
-    strain_type: 'sativa',
-    created_by: User.last)
+                        facility:     facility,
+                        strain_name:  'Acme XYZ',
+                        strain_type:  'sativa',
+                        created_by:   User.last)
 
   # Setup pot UOM
-  UOM.find_or_create_by(
-    name: 'Pot',
-    unit: 'pot', 
-    dimension: 'custom', 
-    is_base_unit: true, 
-    base_unit: 'pot',
-    conversion: 1)
+  UOM.find_or_create_by(name:         'Pot',
+                        unit:         'pot', 
+                        dimension:    'custom', 
+                        is_base_unit: true, 
+                        base_unit:    'pot',
+                        conversion:   1)
 
   plant_po = Inventory::PurchaseOrder.create!(  purchase_order_no:    'PO002', 
                                                 purchase_order_date:  50.days.ago, 
@@ -254,13 +261,14 @@ task seed_until_po: :environment  do
     facility_strain: facility_strain
   )
 
+  start_date = DateTime.now + 2.days
   [
-    {:phase => Constants::CONST_CLONE, :task_category => '', :name => 'Clone', :duration => 17, :days_from_start_date => 0, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'true', :is_category => 'false'},
-    {:phase => Constants::CONST_CLONE, :task_category => 'Prepare', :name => 'Prepare', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
-    {:phase => Constants::CONST_CLONE, :task_category => 'Prepare', :name => 'Prepare Sample', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :no_of_employees => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'}].each do |tp|  
+    {:phase => Constants::CONST_CLONE, :task_category => '', :name => 'Clone', :duration => 17, :days_from_start_date => 0, :estimated_hours => nil, :materials => nil, :is_phase => 'true', :is_category => 'false'},
+    {:phase => Constants::CONST_CLONE, :task_category => 'Prepare', :name => 'Prepare', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
+    {:phase => Constants::CONST_CLONE, :task_category => 'Prepare', :name => 'Prepare Sample', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'}].each do |tp|  
 
-      start_date = : DateTime.now + 2.days
-      duration = task[:duration].to_i unless task[:duration].nil?
+      # puts "task, tp: #{tp}"
+      duration = tp[:duration].to_i unless tp[:duration].nil?
       prev_task = batch.tasks.count > 0 ? batch.tasks[-1].id : nil
 
       batch.tasks.create!(phase:            tp[:phase],
@@ -271,18 +279,38 @@ task seed_until_po: :environment  do
                           end_date:         start_date + tp[:days_from_start_date].to_i.days + duration.days,
                           days_from_start_date: tp[:days_from_start_date],
                           estimated_hours:  tp[:estimated_hours],
-                          no_of_employees:  tp[:no_of_employees],
                           is_phase:         tp[:is_phase] == 'true',
                           is_category:      tp[:is_category] == 'true',
                           parent_id:        prev_task)
   end
 
-  batch.tasks.last.items.create!(
-    uom: seaweed.uoms.first, # this is a risky area, seaweed may or may not have weight in KG
-    catalogue: seaweed,
-    quantity: 5.5
-  )
+  batch.tasks.last.material_use.create!(
+                          uom: seaweed.uoms.first, 
+                          catalogue: seaweed,
+                          quantity: 5.5)
 
   # 2. Daily consumption log
+  wd = batch.tasks.last.work_days.create!(
+                          date: Date.today,
+                          user_id: User.last.id) 
 
+  # user has used 0.002 kg
+  mat_used = wd.materials_used.create!(
+                          quantity: 0.002,
+                          uom: seaweed.uoms.first, 
+                          catalogue: seaweed)
+
+  # Drawdown qty in inventory
+  Inventory::ItemTransaction.create!( 
+                          ref_id:           mat_used.id,
+                          ref_type:         mat_used.class.name,
+                          event_type:       'materials_used',         # Move to Constants
+                          event_date:       DateTime.now,           # stock intake happen today
+                          facility:         Facility.find(batch.facility_id),
+                          catalogue:        seaweed,
+                          product_name:     seaweed.label,
+                          description:      '',
+                          manufacturer:     '',
+                          uom:              seaweed.uoms.first, 
+                          quantity:         0.002)
 end

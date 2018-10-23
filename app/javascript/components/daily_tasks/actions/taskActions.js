@@ -1,7 +1,7 @@
 import DailyTasksStore from '../store/DailyTasksStore'
 
-export const toggleTask = (dailyTask) => {
-  switch(dailyTask.attributes.status) {
+export const toggleTask = dailyTask => {
+  switch (dailyTask.attributes.status) {
   case 'started':
     stopTask(dailyTask)
     break
@@ -13,8 +13,10 @@ export const toggleTask = (dailyTask) => {
   }
 }
 
-export const startTask = (dailyTask) => {
-  const apiUrl = `/api/v1/daily_tasks/${dailyTask.attributes.task.id}/start_task`
+export const startTask = dailyTask => {
+  const apiUrl = `/api/v1/daily_tasks/${
+    dailyTask.attributes.task.id
+  }/start_task`
 
   fetch(apiUrl, {
     method: 'PUT',
@@ -33,19 +35,21 @@ export const startTask = (dailyTask) => {
       })
     })
     .then(({ status, data }) => {
-      const batchWithTask = DailyTasksStore.dailyTasksByBatch.find(
-        function(batch) { return batch.tasks.find(
-          function(task) { return task.attributes.task.id == data.attributes.task.id }
-        )}
-      )
-      const dailyTask = batchWithTask.tasks.find(function(task) { return task.attributes.task.id == data.attributes.task.id })
+      const batchWithTask = DailyTasksStore.dailyTasksByBatch.find(function(
+        batch
+      ) {
+        return batch.tasks.find(function(task) {
+          return task.attributes.task.id == data.attributes.task.id
+        })
+      })
+      const dailyTask = batchWithTask.tasks.find(function(task) {
+        return task.attributes.task.id == data.attributes.task.id
+      })
       dailyTask.attributes = data.attributes
-
     })
 }
 
-
-export const stopTask = (dailyTask) => {
+export const stopTask = dailyTask => {
   const apiUrl = `/api/v1/daily_tasks/${dailyTask.attributes.task.id}/stop_task`
 
   fetch(apiUrl, {
@@ -65,12 +69,16 @@ export const stopTask = (dailyTask) => {
       })
     })
     .then(({ status, data }) => {
-      const batchWithTask = DailyTasksStore.dailyTasksByBatch.find(
-        function(batch) { return batch.tasks.find(
-          function(task) { return task.attributes.task.id == data.attributes.task.id }
-        )}
-      )
-      const dailyTask = batchWithTask.tasks.find(function(task) { return task.attributes.task.id == data.attributes.task.id })
+      const batchWithTask = DailyTasksStore.dailyTasksByBatch.find(function(
+        batch
+      ) {
+        return batch.tasks.find(function(task) {
+          return task.attributes.task.id == data.attributes.task.id
+        })
+      })
+      const dailyTask = batchWithTask.tasks.find(function(task) {
+        return task.attributes.task.id == data.attributes.task.id
+      })
       dailyTask.attributes = data.attributes
     })
 }
@@ -95,12 +103,16 @@ export const addNotes = (dailyTask, notes) => {
       })
     })
     .then(({ status, data }) => {
-      const batchWithTask = DailyTasksStore.dailyTasksByBatch.find(
-        function(batch) { return batch.tasks.find(
-          function(task) { return task.attributes.task.id == data.attributes.task.id }
-        )}
-      )
-      const dailyTask = batchWithTask.tasks.find(function(task) { return task.attributes.task.id == data.attributes.task.id })
+      const batchWithTask = DailyTasksStore.dailyTasksByBatch.find(function(
+        batch
+      ) {
+        return batch.tasks.find(function(task) {
+          return task.attributes.task.id == data.attributes.task.id
+        })
+      })
+      const dailyTask = batchWithTask.tasks.find(function(task) {
+        return task.attributes.task.id == data.attributes.task.id
+      })
       dailyTask.attributes = data.attributes
     })
 }

@@ -1,3 +1,5 @@
+import 'babel-polyfill'
+
 import React from 'react'
 import { render } from 'react-dom'
 
@@ -8,83 +10,35 @@ import loadTasks from './actions/loadTask'
 import loadUsers from './actions/loadUsers'
 import loadUserRoles from './actions/loadUserRoles'
 import loadItems from './actions/loadItems'
-import loadNutrientProfile from './actions/loadNutrientProfile'
+import loadDisplayTaskStore from './actions/loadDisplayTaskStore'
 
 import TaskList from './components/TaskList'
-import GanttChartList from './components/GanttChartList'
-import IssuesList from './components/IssuesList'
-import ResourceList from './components/ResourceList'
-import SecretSauce from './components/SecretSauce'
-import LocationList from './components/LocationList'
 
 class TaskSetup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      batch: props.batch,
-      tabs: 'task_list'
+      batch: props.batch
     }
   }
 
-  componentDidMount() {
-    loadTasks.loadbatch(this.props.batch_id)
+  async componentDidMount() {
+    await loadTasks.loadbatch(this.props.batch_id)
+    loadDisplayTaskStore()
     loadUsers()
     loadUserRoles()
     loadItems()
-    loadNutrientProfile(this.props.batch.nutrient_profile)
-  }
-
-  handleChangeTabs = value => {
-    this.setState({ tabs: value })
   }
 
   renderBatchInfo() {
-    if (this.state.tabs === 'task_list') {
-      return (
-        <TaskList batch_id={this.props.batch_id} batch={this.props.batch} />
-      )
-    }
-    if (this.state.tabs === 'gantt_chart') {
-      return (
-        <GanttChartList
-          batch_id={this.props.batch_id}
-          batch={this.props.batch}
-        />
-      )
-    }
-    if (this.state.tabs === 'issues') {
-      return (
-        <IssuesList batch_id={this.props.batch_id} batch={this.props.batch} />
-      )
-    }
-    if (this.state.tabs === 'secret_sauce') {
-      return (
-        <SecretSauce batch_id={this.props.batch_id} batch={this.props.batch} />
-      )
-    }
-    if (this.state.tabs === 'resource') {
-      return (
-        <ResourceList batch_id={this.props.batch_id} batch={this.props.batch} />
-      )
-    }
-    if (this.state.tabs === 'location') {
-      return (
-        <LocationList batch_id={this.props.batch_id} batch={this.props.batch} />
-      )
-    }
-  }
-
-  renderTabsClass = value => {
-    if (this.state.tabs === value) {
-      return 'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
-    } else {
-      return 'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
-    }
+    return <TaskList batch_id={this.props.batch_id} batch={this.props.batch} />
   }
 
   render() {
-    let handleChangeTabs = this.handleChangeTabs
-    let renderTabsClass = this.renderTabsClass
+    let activeTabs =
+      'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
+    let inactiveTabs =
+      'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
     return (
       <React.Fragment>
         <div className="flex flex-column justify-between bg-white box--shadow">
@@ -225,42 +179,44 @@ class TaskSetup extends React.Component {
         </div>
         <div className="flex mt4">
           <a
-            className={renderTabsClass('task_list')}
-            onClick={e => handleChangeTabs('task_list')}
+            href={'/cultivation/batches/' + this.state.batch.id}
+            className={activeTabs}
           >
             Tasks List
           </a>
 
           <a
-            className={renderTabsClass('gantt_chart')}
-            onClick={e => handleChangeTabs('gantt_chart')}
+            href={'/cultivation/batches/' + this.state.batch.id + '/gantt'}
+            className={inactiveTabs}
           >
             Gantt Chart
           </a>
           <a
-            className={renderTabsClass('location')}
-            onClick={e => handleChangeTabs('location')}
+            href={'/cultivation/batches/' + this.state.batch.id + '/locations'}
+            className={inactiveTabs}
           >
             Location
           </a>
 
           <a
-            className={renderTabsClass('issues')}
-            onClick={e => handleChangeTabs('issues')}
+            href={'/cultivation/batches/' + this.state.batch.id + '/issues'}
+            className={inactiveTabs}
           >
             Issues
           </a>
 
           <a
-            className={renderTabsClass('secret_sauce')}
-            onClick={e => handleChangeTabs('secret_sauce')}
+            href={
+              '/cultivation/batches/' + this.state.batch.id + '/secret_sauce'
+            }
+            className={inactiveTabs}
           >
             Secret Sauce
           </a>
 
           <a
-            className={renderTabsClass('resource')}
-            onClick={e => handleChangeTabs('resource')}
+            href={'/cultivation/batches/' + this.state.batch.id + '/resource'}
+            className={inactiveTabs}
           >
             Resource
           </a>

@@ -44,10 +44,11 @@ module Inventory
     scope :raw_materials, -> { where(catalogue_type: 'raw_materials') }
     scope :sales_product, -> { where(catalogue_type: 'grow_lights') }
     scope :non_sales_product, -> { where(catalogue_type: 'non_sales_product') }
+    scope :plants, -> { where(catalogue_type: 'plant') }
     scope :active, -> { where(is_active: true) }
 
     def uoms
-      Common::UnitOfMeasurement.send(self.uom_dimension)
+      Common::UnitOfMeasure.where(dimension: self.uom_dimension)
     end
 
     def children

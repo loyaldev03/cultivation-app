@@ -4,7 +4,7 @@ RSpec.describe Inventory::SetupMother, type: :command do
   context ".call" do
     let(:facility) { Facility.create!(name: Faker::Lorem.word, code: Faker::Lorem.word) }
     let(:room) { facility.rooms.create!(name: 'room 1', code: 'r1') }
-    let(:user) { nil }
+    let(:user) { create(:user) }
     let(:strain) { 'xyz'}
     let(:strain_type) { 'sativa'}
     let(:planted_on) { DateTime.now.iso8601 }

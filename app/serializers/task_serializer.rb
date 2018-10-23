@@ -7,12 +7,13 @@ class TaskSerializer
   attributes :id do |object|
     object.id.to_s
   end
+
   attribute :start_date do |object|
-    object.start_date.try(:strftime, '%m/%d/%Y')
+    object.start_date&.localtime&.strftime('%m/%d/%Y')
   end
 
   attribute :end_date do |object|
-    object.end_date.try(:strftime, '%m/%d/%Y')
+    object.end_date&.localtime&.strftime('%m/%d/%Y')
   end
 
   #for showing in table column resources

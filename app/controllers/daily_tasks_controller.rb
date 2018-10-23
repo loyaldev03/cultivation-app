@@ -2,7 +2,7 @@ class DailyTasksController < ApplicationController
   def index
     @tasks_date = Date.today
     match = current_user.cultivation_tasks.expected_on(@tasks_date).selector
-
+    # debugger
     @tasks_by_batch = Cultivation::Task.collection.aggregate(
       [
         {"$match": match},

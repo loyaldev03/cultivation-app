@@ -1,4 +1,6 @@
 class Cultivation::BatchesController < ApplicationController
+  before_action :find_batch_info, only: [:show, :gantt, :locations, :issues, :secret_sauce, :resource]
+
   def index
   end
 
@@ -22,23 +24,27 @@ class Cultivation::BatchesController < ApplicationController
   # end
 
   def show
-    @batch = Cultivation::Batch.find(params[:id])
-    @batch_attributes = {
-      id: @batch.id.to_s,
-      batch_no: @batch.batch_no.to_s,
-      strain: @batch.facility_strain.strain_name,
-      batch_source: @batch.batch_source,
-      grow_method: @batch.grow_method,
-      start_date: @batch.start_date,
-      estimated_harvest_date: @batch.estimated_harvest_date,
-      nutrient_profile: @batch.nutrient_profile,
-    }
     # TODO: Use other params
     if params[:step].present?
       # Set the plantType for react BatchPlantSelectionList
       @plant_selection_type = get_plants_selection_type(@batch.batch_source)
-      @locations = get_available_locations(@batch, 'Clone')
+      @locations = get_cultivation_locations(@batch)
     end
+  end
+
+  def gantt
+  end
+
+  def locations
+  end
+
+  def issues
+  end
+
+  def secret_sauce
+  end
+
+  def resource
   end
 
   private
@@ -56,25 +62,23 @@ class Cultivation::BatchesController < ApplicationController
     end
   end
 
-  def get_available_locations(record, phase_type)
+  def get_cultivation_locations(record, phase_type)
+    cultivation_phases = [
+      Constants::CONST_CLONE,
+      Constants::CONST_VEG,
+      Constants::CONST_VEG1,
+      Constants::CONST_VEG2,
+      Constants::CONST_FLOWER,
+      Constants::CONST_DRY,
+      Constants::CONST_CURE,
+    ]
+    # TODO: Should query for entire phase
     phase_info = get_batch_phase(record, phase_type) # Get start_date and end_date from batch record
     if phase_info.present?
-      case record.batch_source
-      when 'clones_from_mother'
-        filter_args = {facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id}
-      when 'clones_purchased'
-        # TODO: Change purpose when clones_purchased
-        filter_args = {facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id}
-      when 'seeds'
-        # TODO: Change purpose when seeds
-        filter_args = {facility_id: record.facility_id, purpose: 'clone', exclude_batch_id: record.id}
-      else
-        # return empty array if no phase task found
-        return []
-      end
+      filter_args = {facility_id: record.facility_id, exclude_batch_id: record.id}
       available_trays_cmd = QueryAvailableTrays.call(phase_info.start_date, phase_info.end_date, filter_args)
       if available_trays_cmd.success?
-        available_trays_cmd.result
+        available_trays_cmd.result&.select { |t| cultivation_phases.include? t.tray_purpose }
       else
         []
       end
@@ -99,6 +103,20 @@ class Cultivation::BatchesController < ApplicationController
     else
       nil
     end
+  end
+
+  def find_batch_info
+    @batch = Cultivation::Batch.find(params[:id])
+    @batch_attributes = {
+      id: @batch.id.to_s,
+      batch_no: @batch.batch_no.to_s,
+      strain: @batch.facility_strain.strain_name,
+      batch_source: @batch.batch_source,
+      grow_method: @batch.grow_method,
+      start_date: @batch.start_date,
+      estimated_harvest_date: @batch.estimated_harvest_date,
+      nutrient_profile: @batch.nutrient_profile,
+    }
   end
 
   def record_params

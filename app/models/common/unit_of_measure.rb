@@ -22,15 +22,18 @@
 # ====================================
 # 4. Using the conversion method. Example: Convert "1500 g" to kg
 #
-# uom = UOM.find_by(code: 'g', dimension: 'weight')
-# kg_value = uom.to('kg', 1500)
-# kg == 1.5
+#   uom = UOM.weight('g')
+#   kg_value = uom.to(1500, 'kg')
+#   kg == 1.5
 #
-# no_match = uom.to('m3')
-# no_match == nil
+#   no_match = uom.to(1500, 'm3')
+#   no_match == nil
 #
-# converted = UOM.convert(100, 'g', 'kg')
-# converted == 0.1
+# ====================================
+# 5. Future enhancement to make it more intuitive
+#
+#   bag_weight = UOM.weight(5, 'kg')
+#   bag_weight_in_gram = bag_weight.to('g')
 #
 #######################################
 
@@ -44,13 +47,12 @@ module Common
     field :desc, type: String
     field :is_base_unit, type: Boolean, default: false
     field :base_unit, type: String
-    field :conversion, type: BigDecimal
+    field :conversion, type: BigDecimal # multiplier to get to base unit
     field :dimension, type: String      # { weights, volumes, lengths, pieces, custom }
 
     scope :base_unit, -> { where(base_unit: true) }
 
-    # TODO: validate combo is unique
-    # unit, base_unit, dimension must be unique
+    validates_uniqueness_of :unit
 
     def self.custom(unit)
       find_by(dimension: 'custom', unit: unit)
@@ -68,15 +70,25 @@ module Common
       find_by(dimension: 'volumes', unit: unit)
     end
 
+    ###
+    # Usage example, convert 5kg to gram:
+    #
+    # kg_uom = UOM.weight('kg')
+    # gram_qty = kg_uom.convert(5, 'g')
+    # gram_qty == 5000
+    #
+    # Given g conversion to kg (base unit) is 0.001, then
+    # converting g to kg is:
+    # g -> kg = qty x 0.001
+    #
+    # kg to g is then:
+    # kg -> g = qty / 0.001
     def to(quantity, target_unit)
-      _base_uom = UOM.find_by(unit: self.base_unit, dimension: self.dimension, is_base_unit: true)
-      _target_uom = UOM.find_by(unit: target_unit, dimension: self.dimension, is_base_unit: true, base_unit: self.base_unit)
+      target_uom = UOM.find_by(unit: target_unit, dimension: self.dimension, base_unit: self.base_unit)
+      return nil if target_uom.nil?
 
-      return nil if _base_uom.nil? || _target_uom.nil?
-
-      _base_qty = _base_uom.conversion * quantity
-      _target_qty = _target_uom.conversion * _base_qty
-      _target_qty
+      base_qty = conversion * quantity
+      base_qty / target_uom.conversion
     end
   end
 end

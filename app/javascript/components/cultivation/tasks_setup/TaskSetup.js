@@ -85,13 +85,13 @@ class TaskSetup extends React.Component {
   }
 
   handleOutsideClick = e => {
-    if(!this.node.contains(e.target)){
+    if (!this.node.contains(e.target)) {
       this.hideDropdown()
     }
   }
 
-  hideDropdown = () =>{
-    this.setState({columnOpen: false})
+  hideDropdown = () => {
+    this.setState({ columnOpen: false })
   }
 
   render() {
@@ -328,7 +328,7 @@ class TaskSetup extends React.Component {
                     >
                       <div
                         id="myDropdown"
-                        ref={node => this.node = node}
+                        ref={node => (this.node = node)}
                         style={{ zIndex: '30000', marginRight: '-65px' }}
                         className="table-dropdown dropdown-content box--shadow-header show mt2"
                       >

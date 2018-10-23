@@ -5,15 +5,11 @@ import plantStore from '../../inventory/plant_setup/store/PlantStore'
 import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 import { joinBy } from '../../utils/ArrayHelper'
 
-const QuantityField = ({ plant, onEdit }) => {
+const QuantityField = ({ plant, onClick }) => {
   if (plant) {
     const text = plant.quantity ? plant.quantity : 'Set Quantity'
     return (
-      <a
-        href="#0"
-        className="link blue pointer"
-        onClick={() => onEdit(plant.id)}
-      >
+      <a href="#0" className="link blue pointer" onClick={onClick}>
         {text}
       </a>
     )
@@ -21,17 +17,11 @@ const QuantityField = ({ plant, onEdit }) => {
   return null
 }
 
-const LocationField = ({ plant, onEdit }) => {
+const LocationField = ({ plant, onClick }) => {
   if (plant) {
-    const text = plant.trays
-      ? joinBy(plant.trays, 'tray_code')
-      : 'Set Quantity & Location'
+    const text = plant.trays ? joinBy(plant.trays, 'tray_code') : 'Set Location'
     return (
-      <a
-        href="#0"
-        className="link blue pointer"
-        onClick={() => onEdit(plant.id)}
-      >
+      <a href="#0" className="link blue pointer" onClick={onClick}>
         {text}
       </a>
     )
@@ -47,65 +37,64 @@ class BatchPlantSelectionList extends React.Component {
   }
   render() {
     const { isLoading, plants } = plantStore
-
-    const { onEdit, getSelected, onSelectPlant } = this.props
+    const { onEdit, getSelected } = this.props
     if (isLoading) {
       return <p className="f6">Loading....</p>
     }
     if (plants && plants.length > 0) {
       return (
         <React.Fragment>
-          <table className="collapse ba br2 b--black-10 pv2 ph3 f6">
+          <table className="collapse br2 f5">
             <tbody>
-              <tr className="striped--light-gray">
-                <th className="w1 tc" />
-                <th className="pv2 ph3 tl fw6 ttu">Plant ID</th>
-                <th className="tr ttu fw6 pv2 ph3">Strain</th>
-                <th className="tr ttu fw6 pv2 ph3">Status</th>
-                <th className="tr ttu fw6 pv2 ph3 w4 tr">Quantiy</th>
-                <th className="tr ttu fw6 pv2 ph3 w4 tr">Location</th>
+              <tr className="striped--light-gray grey f5">
+                <th className="pv2 ph3">
+                  <span className="pa1 dib fw6 w4">Plant ID</span>
+                </th>
+                <th className="tr pv2 ph3 fw6 w4 tr">Quantiy</th>
+                <th className="tr pv2 ph3 fw6 w4 tr">Location</th>
+                <th className="tr pv2 ph3 fw6 w5 tr">Action</th>
               </tr>
               {plants &&
                 plants.map(p => (
                   <tr
                     key={p.id}
-                    className={classNames('striped--light-gray', {
+                    className={classNames('bb b--black-10', {
                       'black-50': !getSelected(p.id)
                     })}
                   >
-                    <td className="pv2 ph3 tc">
-                      <input
-                        type="checkbox"
-                        value={p.id}
-                        onChange={onSelectPlant(p.attributes.plant_id)}
-                      />
+                    <td className="pa2 flex justify-center items-center">
+                      <span className="w2 h2 bg-black-20 dib br4" />
+                      <span className="ml2 pa1 dib dark-grey">
+                        {p.attributes.plant_id}
+                      </span>
                     </td>
-                    <td className="pv2 ph3">{p.attributes.plant_id}</td>
-                    <td className="pv2 ph3">{p.attributes.strain_name}</td>
-                    <td className="pv2 ph3">{p.attributes.status}</td>
                     {getSelected(p.id) && getSelected(p.id).quantity ? (
                       <React.Fragment>
-                        <td className="pv2 ph3 tr">
+                        <td className=" tr">
                           <QuantityField
                             plant={getSelected(p.id)}
-                            onEdit={onEdit}
+                            onClick={e => onEdit(p)}
                           />
                         </td>
-                        <td className="pv2 ph3 tr">
+                        <td className=" tr">
                           <LocationField
                             plant={getSelected(p.id)}
-                            onEdit={onEdit}
+                            onClick={e => onEdit(p)}
                           />
                         </td>
                       </React.Fragment>
                     ) : (
-                      <td className="pv2 ph3 tr" colSpan="2">
-                        <LocationField
-                          plant={getSelected(p.id)}
-                          onEdit={onEdit}
-                        />
-                      </td>
+                      <td className=" tr" colSpan="2" />
                     )}
+                    <td className="tr pr3">
+                      <a
+                        href="#0"
+                        className="link orange"
+                        onClick={e => onEdit(p)}
+                      >
+                        Set quantity &amp; location
+                      </a>
+                    </td>
                   </tr>
                 ))}
             </tbody>

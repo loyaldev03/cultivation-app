@@ -294,6 +294,7 @@ class BatchLocationEditor extends React.PureComponent {
             e.preventDefault()
             const updatePlant = {
               id: plant.id,
+              serialNo: plant.serialNo,
               quantity: selectedTraysCapacity,
               trays: selectedTrays
             }

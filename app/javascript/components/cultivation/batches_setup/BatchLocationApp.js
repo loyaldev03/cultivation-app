@@ -1,4 +1,5 @@
 import 'babel-polyfill'
+import { toJS } from 'mobx'
 import React from 'react'
 import BatchPlantSelectionList from './BatchPlantSelectionList'
 import BatchLocationEditor from './BatchLocationEditor'
@@ -26,49 +27,50 @@ class BatchLocationApp extends React.Component {
     window.editorSidebar.close()
   }
 
-  onSelectPlant = serialNo => e => {
-    const plantId = e.target.value
-    const found = this.getSelected(plantId)
-    if (e.target.checked && !found) {
-      const plant = { id: plantId, serialNo, quantity: 0 }
+  onClickSelectionEdit = plant => {
+    console.log('onClickSelectionEdit', toJS(plant))
+    const editingPlant = this.getSelected(plant.id)
+    if (editingPlant) {
+      this.setState({ editingPlant })
+    } else {
       this.setState({
-        selectedPlants: [...this.state.selectedPlants, plant]
-      })
-    } else if (found) {
-      this.setState({
-        selectedPlants: this.state.selectedPlants.filter(x => x.id !== plantId)
+        editingPlant: {
+          id: plant.id,
+          serialNo: plant.attributes.plant_id,
+          quantity: 0
+        }
       })
     }
-    // Close the sidebar when user changing selected plant
-    this.closeSidebar()
-  }
-
-  onClickSelectionEdit = plantId => {
-    const editingPlant = this.getSelected(plantId)
-    this.setState({ editingPlant })
     window.editorSidebar.open({ width: '500px' })
   }
 
   getSelected = plantId => {
     // console.log('this.state.selectedPlants')
     // console.log(this.state.selectedPlants)
-    const found = this.state.selectedPlants.find(x => x.id === plantId)
-    return found
+    let plant = this.state.selectedPlants.find(x => x.id === plantId)
+    return plant
   }
 
   onChangeInput = field => e => this.setState({ [field]: e.target.value })
 
-  onEditorSave = plantConfig => {
-    // find and update the corresponding record in memory
-    const found = this.getSelected(plantConfig.id)
-    found.quantity = plantConfig.quantity
-    found.trays = plantConfig.trays
-    const selectedPlants = this.state.selectedPlants.map(
-      x => (x.id === found.id ? found : x)
-    )
-    this.setState({
-      selectedPlants
-    })
+  onEditorSave = editingPlant => {
+    console.log('onEditorSave.editingPlant', editingPlant)
+    // find and update the existing record
+    let plantConfig = this.getSelected(editingPlant.id)
+    if (plantConfig) {
+      plantConfig.quantity = editingPlant.quantity
+      plantConfig.trays = editingPlant.trays
+      const selectedPlants = this.state.selectedPlants.map(
+        x => (x.id === plantConfig.id ? plantConfig : x)
+      )
+      this.setState({
+        selectedPlants
+      })
+    } else {
+      this.setState({
+        selectedPlants: [...this.state.selectedPlants, editingPlant]
+      })
+    }
   }
 
   getAvailableLocations = plantId => {
@@ -151,28 +153,22 @@ class BatchLocationApp extends React.Component {
 
   renderClonesFromMother = (plantType, selectedPlants) => (
     <React.Fragment>
-      <span className="db dark-grey mb2">
-        Please select the mother plant source:
-      </span>
       <BatchPlantSelectionList
         onEdit={this.onClickSelectionEdit}
         selectedPlants={selectedPlants}
         plantType={plantType}
         getSelected={this.getSelected}
-        onSelectPlant={this.onSelectPlant}
       />
     </React.Fragment>
   )
 
   renderClonesFromPurchased = (plantType, selectedPlants) => (
     <React.Fragment>
-      <span className="db dark-grey mb2">Please select the clones:</span>
       <BatchPlantSelectionList
         onEdit={this.onClickSelectionEdit}
         selectedPlants={selectedPlants}
         plantType={plantType}
         getSelected={this.getSelected}
-        onSelectPlant={this.onSelectPlant}
       />
     </React.Fragment>
   )
@@ -185,6 +181,8 @@ class BatchLocationApp extends React.Component {
       selectedPlants,
       totalAvailableCapacity
     } = this.state
+
+    console.log('editingPlant', editingPlant)
 
     // build available locations, taking out capacity occupied by different rows
     const availableLocations = this.getAvailableLocations(editingPlant.id)
@@ -200,6 +198,29 @@ class BatchLocationApp extends React.Component {
             }
           }}
         >
+          <div className="grey mb2">
+            <span className="w5 dib">Quantity Needed</span>
+            <span className="w5 dib">Strain</span>
+            <span className="dib">Age</span>
+          </div>
+          <div className="dark-grey mb2">
+            <span className="w5 dib f2 fw6">10</span>
+            <span className="w5 dib f2 fw6">AK-47a</span>
+            <span className="dib f2 fw6">1 years 4 months</span>
+          </div>
+          {true && (
+            <div className="bg-light-yellow pa2 ba br2 b--light-yellow grey w4 tc">
+              You need to select {10} more.
+            </div>
+          )}
+
+          <div className="mt4">
+            {batchSource === 'clones_from_mother' &&
+              this.renderClonesFromMother(plantType, selectedPlants)}
+            {batchSource === 'clones_purchased' &&
+              this.renderClonesFromPurchased(plantType, selectedPlants)}
+          </div>
+
           <div className="dark-grey mb2">
             <span className="w5 dib">Available Capacity</span>
             <input
@@ -229,10 +250,6 @@ class BatchLocationApp extends React.Component {
               readOnly
             />
           </div>
-          {batchSource === 'clones_from_mother' &&
-            this.renderClonesFromMother(plantType, selectedPlants)}
-          {batchSource === 'clones_purchased' &&
-            this.renderClonesFromPurchased(plantType, selectedPlants)}
           <div className="pv2 w4">
             <input
               type="submit"

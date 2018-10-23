@@ -48,6 +48,7 @@ class TaskSetup extends React.Component {
     loadUsers()
     loadUserRoles()
     loadItems()
+    document.addEventListener('mousedown', this.handleOutsideClick, false)
   }
 
   renderBatchInfo() {
@@ -81,6 +82,16 @@ class TaskSetup extends React.Component {
 
   checkboxValue = val => {
     return this.state.columns.includes(val)
+  }
+
+  handleOutsideClick = e => {
+    if(!this.node.contains(e.target)){
+      this.hideDropdown()
+    }
+  }
+
+  hideDropdown = () =>{
+    this.setState({columnOpen: false})
   }
 
   render() {
@@ -317,6 +328,7 @@ class TaskSetup extends React.Component {
                     >
                       <div
                         id="myDropdown"
+                        ref={node => this.node = node}
                         style={{ zIndex: '30000', marginRight: '-65px' }}
                         className="table-dropdown dropdown-content box--shadow-header show mt2"
                       >

@@ -36,6 +36,6 @@ class Api::V1::ItemsController < Api::V1::BaseApiController
   end
 
   def item_params
-    params.require(:item).permit(:raw_material_id, :name, :quantity, :uom)
+    params.require(:item).permit(:raw_material_id, :quantity, :uom)
   end
 end

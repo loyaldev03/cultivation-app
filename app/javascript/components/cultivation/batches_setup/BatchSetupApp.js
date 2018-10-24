@@ -43,8 +43,7 @@ const PhaseDurationInput = ({ text, onChange }) => {
       <div className="fr tr w-20 mh3">
         <input
           type="number"
-          min="0"
-          defaultValue={0}
+          min="1"
           onChange={onChange}
           className="w-50 tr pa2 f6 black ba b--black-20 br2 outline-0"
         />
@@ -200,10 +199,8 @@ class BatchSetupApp extends React.Component {
       showValidation,
       batchFacility,
       batchStrain,
-      batchSource,
       searchMonth,
       batchStartDate,
-      batchQuantity,
       errors,
       isLoading
     } = this.state
@@ -305,7 +302,8 @@ class BatchSetupApp extends React.Component {
         />
         <div className="fl w-100 mt3">
           {showValidation &&
-            searchMonth && (
+            searchMonth &&
+            batchSetupStore.isReady && (
               <div className="fl w-100">
                 <CalendarTitleBar
                   month={searchMonth}

@@ -15,7 +15,14 @@ class Cultivation::BatchesController < ApplicationController
 
   def show
     # TODO: Use other params
-    if params[:step].present?
+    if params[:select_location].present?
+      @batch_info = OpenStruct.new({
+        id: @batch.id.to_s,
+        quantity: @batch.quantity,
+        startDate: @batch.start_date,
+        strainDisplayName: "#{@batch.facility_strain.strain_name} (#{@batch.facility_strain.strain_type})",
+        harvestDate: @batch.estimated_harvest_date
+      }).marshal_dump
       # Set the plantType for react BatchPlantSelectionList
       @plant_selection_type = get_plants_selection_type(@batch.batch_source)
       @locations = get_cultivation_locations(@batch)
@@ -97,7 +104,7 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def find_batch_info
-    @batch = Cultivation::Batch.find(params[:id])
+    @batch = Cultivation::Batch.includes(:facility_strain).find(params[:id])
     @batch_attributes = {
       id: @batch.id.to_s,
       batch_no: @batch.batch_no.to_s,

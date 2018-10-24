@@ -61,14 +61,14 @@ class CalendarTitleBar extends React.PureComponent {
       <div className="availabilty-calendar-title">
         <button
           onClick={onPrev}
-          className="fl fw4 ph2 br4 pointer bg-white ml2"
+          className="fl fw4 ph2 br-100 pointer bg-white ml2"
         >
           &#171;
         </button>
         {monthOptionToString(month)}
         <button
           onClick={onNext}
-          className="fr fw4 ph2 br4 pointer bg-white mr2"
+          className="fr fw4 ph2 br-100 pointer bg-white mr2"
         >
           &#187;
         </button>
@@ -146,7 +146,7 @@ class BatchSetupApp extends React.Component {
         this.setState({ isLoading: false, errors: {} })
         if (data.data && data.data.id) {
           toast('Batch Created', 'success')
-          window.location.replace(`/cultivation/batches/${data.data.id}?step=1`)
+          window.location.replace(`/cultivation/batches/${data.data.id}?select_location=1`)
         } else {
           this.setState({ errors: data.errors })
           toast('Please check the errors and try again', 'Warning')

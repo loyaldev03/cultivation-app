@@ -3,8 +3,28 @@ import { toJS } from 'mobx'
 import React from 'react'
 import BatchPlantSelectionList from './BatchPlantSelectionList'
 import BatchLocationEditor from './BatchLocationEditor'
-import { sumBy } from '../../utils/ArrayHelper'
+import { sumBy, formatDate, httpPostOptions } from '../../utils'
 import { toast } from './../../utils/toast'
+
+const AdjustmentMessage = ({ value, total }) => {
+  if (value >= 0 && value < total) {
+    const res = +total - +value
+    return (
+      <div className="bg-light-yellow pa2 ba br2 b--light-yellow grey w4 tc">
+        You need to select <span className="fw6 dark-grey">{res}</span> more!
+      </div>
+    )
+  }
+  if (value > 0 && value > total) {
+    const res = +value - +total
+    return (
+      <div className="bg-washed-red pa2 ba br2 b--washed-red grey w4 tc">
+        You need to remove <span className="fw6 dark-grey">{res}</span> plant.
+      </div>
+    )
+  }
+  return null
+}
 
 class BatchLocationApp extends React.Component {
   state = {
@@ -71,6 +91,7 @@ class BatchLocationApp extends React.Component {
         selectedPlants: [...this.state.selectedPlants, editingPlant]
       })
     }
+    this.closeSidebar()
   }
 
   getAvailableLocations = plantId => {
@@ -128,53 +149,41 @@ class BatchLocationApp extends React.Component {
     )
 
     try {
-      const response = await (await fetch(
+      await fetch(
         `/api/v1/batches/${this.props.batchId}/update_locations`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            locations
-          })
-        }
-      )).json()
-      console.log('onSubmit::update_locations:', response)
+        httpPostOptions(locations)
+      )
+      // navigate to next page
+      window.location.replace('/cultivation/batches/' + this.props.batchId)
     } catch (error) {
-      console.error('onSubmit::update_locations:', error)
+      console.error(error)
+    } finally {
+      this.setState({ isLoading: false })
     }
-    this.setState({ isLoading: false })
-    // TODO: Navigate to next page
-    window.location.replace('/cultivation/batches/' + this.props.batchId)
   }
 
-  renderClonesFromMother = (plantType, selectedPlants) => (
-    <React.Fragment>
-      <BatchPlantSelectionList
-        onEdit={this.onClickSelectionEdit}
-        selectedPlants={selectedPlants}
-        plantType={plantType}
-        getSelected={this.getSelected}
-      />
-    </React.Fragment>
+  renderClonesFromMother = (plantType, selectedPlants, isBalance) => (
+    <BatchPlantSelectionList
+      onEdit={this.onClickSelectionEdit}
+      selectedPlants={selectedPlants}
+      plantType={plantType}
+      getSelected={this.getSelected}
+      isBalance={isBalance}
+    />
   )
 
-  renderClonesFromPurchased = (plantType, selectedPlants) => (
-    <React.Fragment>
-      <BatchPlantSelectionList
-        onEdit={this.onClickSelectionEdit}
-        selectedPlants={selectedPlants}
-        plantType={plantType}
-        getSelected={this.getSelected}
-      />
-    </React.Fragment>
+  renderClonesFromPurchased = (plantType, selectedPlants, isBalance) => (
+    <BatchPlantSelectionList
+      onEdit={this.onClickSelectionEdit}
+      selectedPlants={selectedPlants}
+      plantType={plantType}
+      getSelected={this.getSelected}
+      isBalance={isBalance}
+    />
   )
 
   render() {
-    const { plantType, batchSource } = this.props
+    const { plantType, batchSource, batchInfo } = this.props
     const {
       isLoading,
       editingPlant,
@@ -182,13 +191,16 @@ class BatchLocationApp extends React.Component {
       totalAvailableCapacity
     } = this.state
 
+    console.log('batchInfo', batchInfo)
     console.log('editingPlant', editingPlant)
 
     // build available locations, taking out capacity occupied by different rows
     const availableLocations = this.getAvailableLocations(editingPlant.id)
-
+    const selectedCapacity = sumBy(selectedPlants, 'quantity')
+    const isBalance = batchInfo.quantity === selectedCapacity
+    console.log({ isBalance })
     return (
-      <React.Fragment>
+      <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
         <div id="toast" className="toast" />
         <form
           onSubmit={async e => {
@@ -201,62 +213,68 @@ class BatchLocationApp extends React.Component {
           <div className="grey mb2">
             <span className="w5 dib">Quantity Needed</span>
             <span className="w5 dib">Strain</span>
-            <span className="dib">Age</span>
+            <span className="dib">Estimated Harvest Date</span>
           </div>
           <div className="dark-grey mb2">
-            <span className="w5 dib f2 fw6">10</span>
-            <span className="w5 dib f2 fw6">AK-47a</span>
-            <span className="dib f2 fw6">1 years 4 months</span>
+            <span className="w5 dib f2 fw6">{batchInfo.quantity}</span>
+            <span className="w5 dib f2 fw6">{batchInfo.strainDisplayName}</span>
+            <span className="dib f2 fw6">
+              {formatDate(batchInfo.harvestDate)}
+            </span>
           </div>
-          {true && (
-            <div className="bg-light-yellow pa2 ba br2 b--light-yellow grey w4 tc">
-              You need to select {10} more.
-            </div>
-          )}
-
+          <AdjustmentMessage
+            value={selectedCapacity}
+            total={batchInfo.quantity}
+          />
           <div className="mt4">
             {batchSource === 'clones_from_mother' &&
-              this.renderClonesFromMother(plantType, selectedPlants)}
+              this.renderClonesFromMother(plantType, selectedPlants, isBalance)}
             {batchSource === 'clones_purchased' &&
-              this.renderClonesFromPurchased(plantType, selectedPlants)}
+              this.renderClonesFromPurchased(
+                plantType,
+                selectedPlants,
+                isBalance
+              )}
           </div>
 
-          <div className="dark-grey mb2">
-            <span className="w5 dib">Available Capacity</span>
-            <input
-              className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
-              type="number"
-              value={totalAvailableCapacity}
-              readOnly
-            />
-          </div>
-          <div className="dark-grey mb2">
-            <span className="w5 dib">Quantity Needed</span>
-            <input
-              className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
-              type="number"
-              onChange={this.onChangeInput('quantity')}
-              required
-              min={1}
-              max={totalAvailableCapacity}
-            />
-          </div>
-          <div className="dark-grey mb4">
-            <span className="w5 dib">Total Quantity Selected</span>
-            <input
-              className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
-              type="number"
-              value={sumBy(selectedPlants, 'quantity')}
-              readOnly
-            />
-          </div>
-          <div className="pv2 w4">
-            <input
-              type="submit"
-              className="pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
-              value={isLoading ? 'Saving...' : 'Save & Continue'}
-            />
-          </div>
+          {/*
+            <div className="dark-grey mb2">
+              <span className="w5 dib">Available Capacity</span>
+              <input
+                className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
+                type="number"
+                value={totalAvailableCapacity}
+                readOnly
+              />
+            </div>
+            <div className="dark-grey mb2">
+              <span className="w5 dib">Quantity Needed</span>
+              <input
+                className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
+                type="number"
+                onChange={this.onChangeInput('quantity')}
+                required
+                min={1}
+                max={totalAvailableCapacity}
+              />
+            </div>
+            <div className="dark-grey mb4">
+              <span className="w5 dib">Total Quantity Selected</span>
+              <input
+                className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
+                type="number"
+                value={sumBy(selectedPlants, 'quantity')}
+                readOnly
+              />
+            </div>
+            <div className="pv2 w4">
+              <input
+                type="submit"
+                className="pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+                value={isLoading ? 'Saving...' : 'Save & Continue'}
+              />
+            </div>
+            */}
         </form>
 
         <div data-role="sidebar" className="rc-slide-panel">
@@ -272,7 +290,7 @@ class BatchLocationApp extends React.Component {
             )}
           </div>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }

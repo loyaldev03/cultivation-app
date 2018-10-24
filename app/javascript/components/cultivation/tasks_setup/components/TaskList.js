@@ -44,7 +44,7 @@ class TaskList extends React.Component {
     this.state = {
       isOpen: false,
       batch: this.props.batch,
-      collapseIds: []
+      collapseIds: DisplayTaskStore
     }
   }
 
@@ -574,6 +574,10 @@ class TaskList extends React.Component {
             if (rowInfo) {
               return {
                 style: {
+                  boxShadow:
+                    this.state.taskSelected === rowInfo.row.id
+                      ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
+                      : null,
                   backgroundColor:
                     rowInfo.row['attributes.is_phase'] === true
                       ? '#FAEFEE'

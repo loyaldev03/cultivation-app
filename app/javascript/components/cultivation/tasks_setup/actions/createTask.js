@@ -1,20 +1,21 @@
 import TaskStore from '../stores/TaskStore'
 import { fadeToast, toast } from '../../../utils/toast'
 import loadTasks from './loadTask'
+import DisplayTaskStore from '../stores/DisplayTaskStore'
 
 class createTask {
   createTask(state) {
     let task = {
       batch_id: state.batch_id,
       duration: state.duration,
-      end_date: state.end_date.toDateString(),
+      end_date: state.end_date,
       estimated_hours: state.estimated_hours,
       instruction: state.instruction,
       name: state.name,
       parent_id: state.parent_id,
       parent_task: state.parent_task,
       position: state.position,
-      start_date: state.start_date.toDateString(),
+      start_date: state.start_date,
       task_category: state.task_category,
       task_related_id: state.task_related_id
     }
@@ -33,17 +34,10 @@ class createTask {
       .then(data => {
         if (data.data.id != null) {
           toast('Task Created', 'success')
-          // let task = TaskStore.find(e => e.id === data.data.id);
-          // console.log(data.data)
-          // console.log(JSON.stringify(task))
-          // console.log(JSON.stringify(task.attributes))
-
-          // TaskStore.forEach((element, index) => {
-          //   if (element.id === data.data.id) {
-          //     TaskStore[index] = data.data;
-          //   }
-          // });
           loadTasks.loadbatch(state.batch_id)
+          let old_ids = DisplayTaskStore
+          let new_ids = old_ids.concat(data.data.id)
+          DisplayTaskStore.replace(new_ids)
           window.editorSidebar.close()
         } else {
           toast('Something happen', 'error')

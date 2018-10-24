@@ -35,8 +35,6 @@ class SidebarTaskEditor extends React.Component {
         id: props.task.id,
         ...props.task.attributes,
         duration: props.task.attributes.duration,
-        start_date: new Date(),
-        end_date: new Date(),
         start_date: new Date(props.task.attributes.start_date),
         end_date: new Date(props.task.attributes.end_date),
         errors: ''

@@ -106,22 +106,8 @@ class AddTaskForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Instruction</label>
-            <textarea
-              value={this.state.instruction}
-              onChange={this.handleChangeTask}
-              fieldname="instruction"
-              rows="2"
-              className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-              placeholder=""
-            />
-            <FieldError errors={this.state.errors} fieldname="instruction" />
-          </div>
-        </div>
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-50">
+        <div className="ph4 flex">
+          <div className="w-40">
             <label className="f6 fw6 db mb1 gray ttc">Start Date</label>
             <DatePicker
               value={this.state.start_date}
@@ -130,7 +116,7 @@ class AddTaskForm extends React.Component {
             />
           </div>
 
-          <div className="w-50 pl3">
+          <div className="w-40 pl3">
             <label className="f6 fw6 db mb1 gray ttc">End Date</label>
             <DatePicker
               value={this.state.end_date}
@@ -138,10 +124,7 @@ class AddTaskForm extends React.Component {
               onChange={e => this.handleChangeDate('end_date', e)}
             />
           </div>
-        </div>
-
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-20">
+          <div className="w-20 pl3">
             <NumericInput
               label={'Duration'}
               value={this.state.duration}
@@ -151,8 +134,10 @@ class AddTaskForm extends React.Component {
               errorField="duration"
             />
           </div>
+        </div>
 
-          <div className="w-40 pl3">
+        <div className="ph4 mt3 mb3 flex">
+          <div className="w-40">
             <NumericInput
               label={'Estimated Hours Needed'}
               value={this.state.estimated_hours}
@@ -164,45 +149,6 @@ class AddTaskForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Assigned Employees</label>
-            <Select
-              isMulti
-              name="colors"
-              options={users}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              fieldname="assigned_employee"
-              onChange={this.handleChangeSelect}
-              value={this.state.assigned_employee}
-              styles={reactSelectStyle}
-            />
-          </div>
-        </div>
-
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Material Suggested</label>
-            <Select
-              isMulti
-              name="colors"
-              options={[
-                { value: 'Fathi', label: 'Fathi' },
-                { value: 'Andy', label: 'Andy' },
-                { value: 'Karg', label: 'Karg' },
-                { value: 'Allison', label: 'Allison' }
-              ]}
-              className="basic-multi-select"
-              classNamePrefix="select"
-              styles={reactSelectStyle}
-            />
-          </div>
-        </div>
-
-        {/* <div className="w-100 flex justify-end">
-          <a className="pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6 pointer" onClick={this.handleSubmit}>Submit</a>
-        </div> */}
         <div className="w-100 pa4 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
           <button
             name="commit"

@@ -1,5 +1,5 @@
 import TaskStore from '../stores/TaskStore'
-import { formatDate2} from '../../../utils/DateHelper'
+import { formatDate2 } from '../../../utils/DateHelper'
 class loadTask {
   async loadbatch(batch_id) {
     let id = batch_id
@@ -16,15 +16,14 @@ class loadTask {
       })
   }
 
-  formatData(tasks){
-    tasks.map(function(task){
+  formatData(tasks) {
+    tasks.map(function(task) {
       task.attributes.start_date = formatDate2(task.attributes.start_date)
       task.attributes.end_date = formatDate2(task.attributes.end_date)
       return task
     })
     return tasks
   }
-
 }
 
 const task = new loadTask()

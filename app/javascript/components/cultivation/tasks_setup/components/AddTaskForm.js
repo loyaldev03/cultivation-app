@@ -21,7 +21,6 @@ class AddTaskForm extends React.Component {
       name: '',
       duration: '',
       task_category: '',
-      instruction: '',
       start_date: new Date(),
       end_date: new Date(),
       errors: '',
@@ -80,7 +79,6 @@ class AddTaskForm extends React.Component {
       name: '',
       duration: '',
       task_category: '',
-      instruction: '',
       start_date: new Date(),
       end_date: new Date(),
       errors: '',
@@ -106,20 +104,7 @@ class AddTaskForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Instruction</label>
-            <textarea
-              value={this.state.instruction}
-              onChange={this.handleChangeTask}
-              fieldname="instruction"
-              rows="2"
-              className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-              placeholder=""
-            />
-            <FieldError errors={this.state.errors} fieldname="instruction" />
-          </div>
-        </div>
+        
         <div className="ph4 mt3 mb3 flex">
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Start Date</label>

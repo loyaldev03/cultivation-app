@@ -3,16 +3,8 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def index
     if @batch.present?
-      # tasks_json = batch.tasks.map{|a| TaskSerializer.new(a).serializable_hash}
-      # batch_json = BatchSerializer.new(batch).serializable_hash
-
-      tasks = Cultivation::Task.where(batch_id: @batch.id).order_by(position: :asc)
-      # tasks = @batch.tasks.order_by(position: :asc)
-      # options = {}
-      # options[:is_collection]
-      # task_json = TaskSerializer.new(tasks, options).serialized_json
+      tasks = @batch.tasks.order_by(position: :asc)
       task_json = TaskSerializer.new(tasks).serialized_json
-
       render json: task_json
     else
       render json: {data: 'Batch Not Found'}
@@ -63,7 +55,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
                                  :estimated_hours, :type, :position,
                                  :task_related_id,
                                  :days_from_start_date, :start_date, :end_date, :expected_hours_taken,
-                                 :time_taken, :no_of_employees, :materials, :instruction, :id, :batch_id,
+                                 :time_taken, :id, :batch_id,
                                  assigned_employee: [:label, :value], user_ids: [], task_type: [])
   end
 end

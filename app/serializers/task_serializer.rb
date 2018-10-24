@@ -9,9 +9,6 @@ class TaskSerializer
     :end_date,
     :estimated_hours,
     :users,
-    # :material_use,
-    # :instruction,
-    # :items,
     :is_phase,
     :is_category,
     :parent_id,
@@ -23,11 +20,11 @@ class TaskSerializer
   end
 
   attribute :start_date do |object|
-    object.start_date&.localtime&.strftime('%m/%d/%Y')
+    object.start_date&.iso8601
   end
 
   attribute :end_date do |object|
-    object.end_date&.localtime&.strftime('%m/%d/%Y')
+    object.end_date&.iso8601
   end
 
   #for showing in table column resources

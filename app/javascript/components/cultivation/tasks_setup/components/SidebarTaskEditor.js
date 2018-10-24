@@ -273,7 +273,9 @@ class SidebarTaskEditor extends React.Component {
             <div className="ph4 mt3 mb3">
               <div className="flex">
                 <div className="w-40">
-                  <label className="f6 fw6 db mb1 gray ttc">Estimated Hours</label>
+                  <label className="f6 fw6 db mb1 gray ttc">
+                    Estimated Hours
+                  </label>
                   <label className="f6 fw6 db mb1 gray ttc">
                     {this.state.estimated_hours}
                   </label>
@@ -287,7 +289,9 @@ class SidebarTaskEditor extends React.Component {
               </div>
               <div className="flex mt3">
                 <div className="w-40">
-                  <label className="f6 fw6 db mb1 gray ttc">Estimated Cost</label>
+                  <label className="f6 fw6 db mb1 gray ttc">
+                    Estimated Cost
+                  </label>
                   <label className="f6 fw6 db mb1 gray ttc">0.0</label>
                 </div>
                 <div className="w-40 pl3">

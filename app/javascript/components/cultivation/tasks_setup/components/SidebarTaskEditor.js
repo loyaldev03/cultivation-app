@@ -116,32 +116,7 @@ class SidebarTaskEditor extends React.Component {
               errorField="name"
             />
           </div>
-          {/* <div className="w-40 pl3">
-            <TextInput
-              label={'Category'}
-              value={this.state.task_category}
-              onChange={this.handleChangeTask}
-              fieldname="task_category"
-              errors={this.state.errors}
-              errorField="task_category"
-            />
-          </div> */}
         </div>
-
-        {/* <div className="ph4 mt3 mb3 flex">
-          <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Instruction</label>
-            <textarea
-              value={this.state.instruction}
-              onChange={this.handleChangeTask}
-              fieldname="instruction"
-              rows="2"
-              className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-              placeholder=""
-            />
-            <FieldError errors={this.state.errors} fieldname="instruction" />
-          </div>
-        </div> */}
         <div className="ph4 flex">
           <div className="w-40">
             <label className="f6 fw6 db mb1 gray ttc">Start At</label>

@@ -20,6 +20,7 @@ module Inventory
           category: raw_material[:category],
           sub_category: raw_material[:sub_category],
           facility_id: args[:facility_id],
+          is_active: true,
         )
       end
     end

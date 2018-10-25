@@ -42,7 +42,7 @@ module Inventory
     belongs_to :facility
 
     scope :raw_materials, -> { where(catalogue_type: 'raw_materials') }
-    scope :sales_product, -> { where(catalogue_type: 'grow_lights') }
+    scope :sales_product, -> { where(catalogue_type: 'sales_product') }
     scope :non_sales_product, -> { where(catalogue_type: 'non_sales_product') }
     scope :plants, -> { where(catalogue_type: 'plant') }
     scope :active, -> { where(is_active: true) }

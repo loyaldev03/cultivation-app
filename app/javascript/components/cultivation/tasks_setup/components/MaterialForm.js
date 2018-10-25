@@ -12,7 +12,10 @@ import deleteMaterial from '../actions/deleteMaterial'
 
 import loadTasks from '../actions/loadTask'
 
-import { groupBy } from '../../../utils/ArrayHelper'
+import {
+  groupBy,
+  httpPostOptions
+} from '../../../utils'
 
 const uom_dropdown = [
   { value: 'KG', label: 'KG' },
@@ -116,41 +119,35 @@ export default class MaterialForm extends React.Component {
         uom: this.state.uom.label
       }
     }
-    try {
-      await fetch(url, {
-        method: 'POST',
-        credentials: 'include',
-        body: JSON.stringify(item),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data.data.id != null) {
-            data = data.data
-            this.setState(prevState => ({
-              items: [
-                ...prevState.items,
-                {
-                  id: data.id,
-                  name: data.attributes.name,
-                  quantity: data.attributes.quantity,
-                  uom: data.attributes.uom
-                }
-              ],
-              name: '',
-              quantity: '',
-              uom: ''
-            }))
-            loadTasks.loadbatch(this.state.batch_id)
-          } else {
-            data = null
-          }
-        })
-    } catch (error) {
-      console.error('Error while saving user', error)
-    }
+
+    fetch(
+      url,
+      httpPostOptions(JSON.stringify(item))
+    )
+    .then(response => response.json())
+    .then(data => {
+      if (data.data.id != null) {
+        data = data.data
+        this.setState(prevState => ({
+          items: [
+            ...prevState.items,
+            {
+              id: data.id,
+              name: data.attributes.name,
+              quantity: data.attributes.quantity,
+              uom: data.attributes.uom
+            }
+          ],
+          name: '',
+          quantity: '',
+          uom: ''
+        }))
+        loadTasks.loadbatch(this.state.batch_id)
+      } else {
+        data = null
+      }
+    })
+
   }
 
   render() {

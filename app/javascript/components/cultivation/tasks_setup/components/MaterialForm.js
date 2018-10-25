@@ -111,13 +111,14 @@ export default class MaterialForm extends React.Component {
     let url = `/api/v1/items?task_id=${this.state.task_id}`
     let data
 
-    fetch(url, httpPostOptions(
-      {
+    fetch(
+      url,
+      httpPostOptions({
         catalogue_id: this.state.raw_material_id,
         quantity: this.state.quantity,
         uom: this.state.uom.label
-      }
-    ))
+      })
+    )
       .then(response => response.json())
       .then(data => {
         if (data.data.id != null) {

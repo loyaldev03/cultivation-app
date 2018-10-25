@@ -45,6 +45,8 @@ module Common
           photo_url: photo_url,
           roles: user.roles.map(&:to_s),
           facilities: user.facilities.map(&:to_s),
+          hourly_rate: user.hourly_rate,
+          overtime_hourly_rate: user.overtime_hourly_rate,
           default_facility_id: default_facility_id,
           sign_in_count: user.sign_in_count,
           current_sign_in_ip: user.current_sign_in_ip,

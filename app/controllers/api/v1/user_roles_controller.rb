@@ -61,6 +61,8 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       :photo_data,
       :is_active,
       :default_facility_id,
+      :hourly_rate,
+      :overtime_hourly_rate,
       facilities: [],
       roles: [],
     )

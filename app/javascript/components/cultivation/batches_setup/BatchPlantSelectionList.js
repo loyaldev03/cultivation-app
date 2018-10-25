@@ -3,7 +3,6 @@ import classNames from 'classnames'
 import { observer } from 'mobx-react'
 import plantStore from '../../inventory/plant_setup/store/PlantStore'
 import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
-import { joinBy } from '../../utils/ArrayHelper'
 
 const QuantityField = ({ plant, onClick }) => {
   if (plant) {
@@ -41,6 +40,7 @@ class BatchPlantSelectionList extends React.Component {
   }
   render() {
     const { isLoading, plants } = plantStore
+    console.log('BatchPlantSelectionList::plants', plants)
     const { onEdit, getSelected, isBalance = false } = this.props
     if (isLoading) {
       return <p className="f6">Loading....</p>

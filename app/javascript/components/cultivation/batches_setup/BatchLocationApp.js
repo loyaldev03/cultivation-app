@@ -6,6 +6,10 @@ import BatchLocationEditor from './BatchLocationEditor'
 import { sumBy, formatDate, httpPostOptions } from '../../utils'
 import { toast } from './../../utils/toast'
 
+const SOURCE_MOTHER = 'clones_from_mother'
+const SOURCE_PURCHASED = 'clones_purchased'
+const SOURCE_SEEDS = 'seeds'
+
 const AdjustmentMessage = ({ value, total }) => {
   if (value >= 0 && value < total) {
     const res = +total - +value
@@ -31,7 +35,6 @@ class BatchLocationApp extends React.Component {
     isLoading: false,
     selectedPlants: [],
     editingPlant: {},
-    totalAvailableCapacity: sumBy(this.props.locations, 'remaining_capacity'),
     locations: this.props.locations || []
   }
 
@@ -93,7 +96,9 @@ class BatchLocationApp extends React.Component {
     }
     this.closeSidebar()
   }
-
+  
+  
+  // Build available locations, taking out capacity occupied by different rows
   getAvailableLocations = plantId => {
     const { selectedPlants, locations } = this.state
     const allPlantsTrays = selectedPlants
@@ -182,20 +187,24 @@ class BatchLocationApp extends React.Component {
     />
   )
 
+  renderClonesFromSeeds = (plantType, selectedPlants, isBalance) => (
+    <BatchPlantSelectionList
+      onEdit={this.onClickSelectionEdit}
+      selectedPlants={selectedPlants}
+      plantType={plantType}
+      getSelected={this.getSelected}
+      isBalance={isBalance}
+    />
+  )
+
   render() {
     const { plantType, batchSource, batchInfo } = this.props
-    const {
-      isLoading,
-      editingPlant,
-      selectedPlants,
-      totalAvailableCapacity
-    } = this.state
+    const { isLoading, editingPlant, selectedPlants } = this.state
 
+    console.log('batchSource', batchSource)
     console.log('batchInfo', batchInfo)
     console.log('editingPlant', editingPlant)
 
-    // build available locations, taking out capacity occupied by different rows
-    const availableLocations = this.getAvailableLocations(editingPlant.id)
     const selectedCapacity = sumBy(selectedPlants, 'quantity')
     const isBalance = batchInfo.quantity === selectedCapacity
     console.log({ isBalance })
@@ -227,54 +236,25 @@ class BatchLocationApp extends React.Component {
             total={batchInfo.quantity}
           />
           <div className="mt4">
-            {batchSource === 'clones_from_mother' &&
+            {batchSource === SOURCE_MOTHER &&
               this.renderClonesFromMother(plantType, selectedPlants, isBalance)}
-            {batchSource === 'clones_purchased' &&
+            {batchSource === SOURCE_PURCHASED &&
               this.renderClonesFromPurchased(
                 plantType,
                 selectedPlants,
                 isBalance
               )}
+            {batchSource === SOURCE_SEEDS &&
+              this.renderClonesFromSeeds(plantType, selectedPlants, isBalance)}
           </div>
 
-          {/*
-            <div className="dark-grey mb2">
-              <span className="w5 dib">Available Capacity</span>
-              <input
-                className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
-                type="number"
-                value={totalAvailableCapacity}
-                readOnly
-              />
-            </div>
-            <div className="dark-grey mb2">
-              <span className="w5 dib">Quantity Needed</span>
-              <input
-                className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
-                type="number"
-                onChange={this.onChangeInput('quantity')}
-                required
-                min={1}
-                max={totalAvailableCapacity}
-              />
-            </div>
-            <div className="dark-grey mb4">
-              <span className="w5 dib">Total Quantity Selected</span>
-              <input
-                className="dib w4 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tr"
-                type="number"
-                value={sumBy(selectedPlants, 'quantity')}
-                readOnly
-              />
-            </div>
-            <div className="pv2 w4">
-              <input
-                type="submit"
-                className="pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
-                value={isLoading ? 'Saving...' : 'Save & Continue'}
-              />
-            </div>
-            */}
+          <div className="mt3 pv2 w4">
+            <input
+              type="submit"
+              className="pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+              value={isLoading ? 'Saving...' : 'Save & Continue'}
+            />
+          </div>
         </form>
 
         <div data-role="sidebar" className="rc-slide-panel">
@@ -283,7 +263,7 @@ class BatchLocationApp extends React.Component {
               <BatchLocationEditor
                 key={editingPlant.id}
                 plant={editingPlant}
-                locations={availableLocations}
+                locations={this.getAvailableLocations(editingPlant.id)}
                 onSave={this.onEditorSave}
                 onClose={this.closeSidebar}
               />

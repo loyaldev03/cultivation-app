@@ -30,7 +30,7 @@
                     <%= f.hidden_field :photo, value: @user.cached_photo_data %>
                     <%= f.file_field :photo, autofocus: false,
                       class: "ttc grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
-                    <%= image_tag @user.photo_url, class: "mt2" %>
+                    <%= image_tag @user.photo_url, class: "mt2" if @user.photo_url%>
                   </div>
                 </div>
 

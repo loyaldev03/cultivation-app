@@ -8,7 +8,6 @@ import {
   sumBy,
   formatDate,
   httpPostOptions,
-  BATCH_SOURCE,
   GROWTH_PHASE
 } from '../../utils'
 import { toast } from './../../utils/toast'
@@ -54,28 +53,45 @@ class BatchLocationApp extends React.Component {
     window.editorSidebar.close()
   }
 
-  onClickSelectionEdit = plant => {
-    // console.log('onClickSelectionEdit', toJS(plant))
-    const editingPlant = this.getSelected(plant.id)
+  onClickSelectionEdit = (phase, plant = null) => {
+    const editingPlant = plant ? this.getSelected(plant.id) : null
     if (editingPlant) {
       this.setState({ editingPlant })
     } else {
-      this.setState({
-        editingPlant: {
-          id: plant.id,
-          serialNo: plant.attributes.plant_id,
-          quantity: 0
-        }
-      })
+      // If plant is not previously selected. Create an object for the sidebar
+      if (plant) {
+        this.setState({
+          editingPlant: {
+            id: plant.id,
+            serialNo: plant.attributes.plant_id,
+            quantity: 0,
+            phase
+          }
+        })
+      } else {
+        const plantsInPhase = this.getBookingsByPhase(phase)
+        const plantCount = plantsInPhase.length + 1
+        const plantId = `${phase}#${plantCount}`
+        this.setState({
+          editingPlant: {
+            id: plantId, // Use phase as id
+            serialNo: plantCount,
+            quantity: 0,
+            phase
+          }
+        })
+      }
     }
-    window.editorSidebar.open({ width: '500px' })
+    window.editorSidebar.open({ width: '560px' })
   }
 
   getSelected = plantId => {
-    // console.log('this.state.selectedPlants')
-    // console.log(this.state.selectedPlants)
-    let plant = this.state.selectedPlants.find(x => x.id === plantId)
+    let plant = this.state.selectedPlants.find(b => b.id === plantId)
     return plant
+  }
+
+  getBookingsByPhase = phase => {
+    return this.state.selectedPlants.filter(b => b.phase === phase && b.quantity > 0)
   }
 
   onButtonClick = (field, value) => e => this.setState({ [field]: value })
@@ -83,7 +99,7 @@ class BatchLocationApp extends React.Component {
   onEditorSave = editingPlant => {
     console.log('onEditorSave.editingPlant', editingPlant)
     // find and update the existing record
-    let plantConfig = this.getSelected(editingPlant.id)
+    const plantConfig = this.getSelected(editingPlant.id)
     if (plantConfig) {
       plantConfig.quantity = editingPlant.quantity
       plantConfig.trays = editingPlant.trays
@@ -102,27 +118,29 @@ class BatchLocationApp extends React.Component {
   }
 
   // Build available locations, taking out capacity occupied by different rows
-  getAvailableLocations = (plantId, locationPurpose = '') => {
-    // TODO: Filter available location by purpose
+  getAvailableLocations = (plantId, phase) => {
+    // console.log('getAvailableLocations:', phase)
     const { selectedPlants, locations } = this.state
     const allPlantsTrays = selectedPlants
       .filter(p => p.id !== plantId)
       .reduce((acc, val) => acc.concat(val.trays || []), [])
-    const remainingLocations = locations.map(loc => {
-      const found = allPlantsTrays.filter(t => t.tray_id === loc.tray_id)
-      if (found && found.length > 0) {
-        const newTrayPlannedCapacity =
-          parseInt(loc.planned_capacity) + sumBy(found, 'tray_capacity')
-        const newLoc = {
-          ...loc,
-          planned_capacity: newTrayPlannedCapacity,
-          remaining_capacity:
-            parseInt(loc.tray_capacity) - newTrayPlannedCapacity
+    const remainingLocations = locations
+      .filter(loc => loc.tray_purpose === phase)
+      .map(loc => {
+        const found = allPlantsTrays.filter(t => t.tray_id === loc.tray_id)
+        if (found && found.length > 0) {
+          const newTrayPlannedCapacity =
+            parseInt(loc.planned_capacity) + sumBy(found, 'tray_capacity')
+          const newLoc = {
+            ...loc,
+            planned_capacity: newTrayPlannedCapacity,
+            remaining_capacity:
+              parseInt(loc.tray_capacity) - newTrayPlannedCapacity
+          }
+          return newLoc
         }
-        return newLoc
-      }
-      return loc
-    })
+        return loc
+      })
     return remainingLocations
   }
 
@@ -171,58 +189,36 @@ class BatchLocationApp extends React.Component {
     }
   }
 
-  renderSelectLocation = (plantType, plantPhase, selectedPlants, isBalance) => (
-    <React.Fragment>
-      <span className="dib ttu f2 fw6 pb2 dark-grey">{plantPhase}</span>
-      <BatchPlantSelectionList
-        onEdit={this.onClickSelectionEdit}
-        selectedPlants={selectedPlants}
-        plantType={plantType}
-        getSelected={this.getSelected}
-        isBalance={isBalance}
-      />
-    </React.Fragment>
-  )
-
-  renderClonesFromMother = (plantType, selectedPlants, isBalance) => (
-    <BatchPlantSelectionList
-      onEdit={this.onClickSelectionEdit}
-      selectedPlants={selectedPlants}
-      plantType={plantType}
-      getSelected={this.getSelected}
-      isBalance={isBalance}
-    />
-  )
-
-  renderClonesFromPurchased = (plantType, selectedPlants, isBalance) => (
-    <BatchPlantSelectionList
-      onEdit={this.onClickSelectionEdit}
-      selectedPlants={selectedPlants}
-      plantType={plantType}
-      getSelected={this.getSelected}
-      isBalance={isBalance}
-    />
-  )
-
-  renderClonesFromSeeds = (plantType, selectedPlants, isBalance) => (
-    <BatchPlantSelectionList
-      onEdit={this.onClickSelectionEdit}
-      selectedPlants={selectedPlants}
-      plantType={plantType}
-      getSelected={this.getSelected}
-      isBalance={isBalance}
-    />
-  )
+  renderBookingsForPhase = (
+    phase,
+    bookings,
+    isBalance,
+    quantity = 0,
+    plantType = ''
+  ) => {
+    return (
+      <React.Fragment>
+        <span className="dib ttu f2 fw6 pb2 dark-grey">{phase}</span>
+        <BatchPlantSelectionList
+          onEdit={this.onClickSelectionEdit}
+          bookings={bookings}
+          quantity={quantity}
+          plantType={plantType}
+          phase={phase}
+          getSelected={this.getSelected}
+          isBalance={isBalance}
+        />
+      </React.Fragment>
+    )
+  }
 
   render() {
     const { batchInfo } = this.props
     const { isLoading, isNotified, editingPlant, selectedPlants } = this.state
-
-    console.log('batchInfo', batchInfo)
-    console.log('editingPlant', editingPlant)
-
     const selectedCapacity = sumBy(selectedPlants, 'quantity')
     const isBalance = batchInfo.quantity === selectedCapacity
+    // console.log('batchInfo', batchInfo)
+    // console.log('editingPlant', editingPlant)
     return (
       <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
         <div id="toast" className="toast" />
@@ -253,11 +249,30 @@ class BatchLocationApp extends React.Component {
             total={batchInfo.quantity}
           />
           <div className="mt3">
-            {this.renderSelectLocation(
-              batchInfo.cloneSelectionType,
+            {this.renderBookingsForPhase(
               GROWTH_PHASE.CLONE,
-              selectedPlants,
-              isBalance
+              this.getBookingsByPhase(GROWTH_PHASE.CLONE),
+              isBalance,
+              batchInfo.quantity,
+              batchInfo.cloneSelectionType
+            )}
+          </div>
+
+          <div className="mt4">
+            {this.renderBookingsForPhase(
+              GROWTH_PHASE.VEG1,
+              this.getBookingsByPhase(GROWTH_PHASE.VEG1),
+              isBalance,
+              batchInfo.quantity
+            )}
+          </div>
+
+          <div className="mt4">
+            {this.renderBookingsForPhase(
+              GROWTH_PHASE.VEG2,
+              this.getBookingsByPhase(GROWTH_PHASE.VEG2),
+              isBalance,
+              batchInfo.quantity
             )}
           </div>
 
@@ -306,8 +321,11 @@ class BatchLocationApp extends React.Component {
             {editingPlant.id && (
               <BatchLocationEditor
                 key={editingPlant.id}
-                plant={editingPlant}
-                locations={this.getAvailableLocations(editingPlant.id)}
+                plantConfig={editingPlant}
+                locations={this.getAvailableLocations(
+                  editingPlant.id,
+                  editingPlant.phase
+                )}
                 onSave={this.onEditorSave}
                 onClose={this.closeSidebar}
               />

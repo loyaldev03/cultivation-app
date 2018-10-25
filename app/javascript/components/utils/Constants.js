@@ -1,4 +1,5 @@
 export const GROWTH_PHASE = {
+  MOTHER: 'mother',
   CLONE: 'clone',
   VEG: 'veg',
   VEG1: 'veg1',

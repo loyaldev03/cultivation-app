@@ -1,15 +1,15 @@
 import React from 'react'
 import classNames from 'classnames'
 import { observer } from 'mobx-react'
+import { BATCH_SOURCE, GROWTH_PHASE } from '../../utils'
 import plantStore from '../../inventory/plant_setup/store/PlantStore'
 import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 
 const QuantityField = ({ plant, onClick }) => {
   if (plant) {
-    const text = plant.quantity ? plant.quantity : 'Set Quantity'
     return (
       <a href="#0" className="link grey pointer" onClick={onClick}>
-        {text}
+        {plant.quantity}
       </a>
     )
   }
@@ -36,91 +36,153 @@ const LocationField = ({ plant, onClick }) => {
 @observer
 class BatchPlantSelectionList extends React.Component {
   componentDidMount() {
-    loadPlants(this.props.plantType)
+    if (this.props.plantType) {
+      loadPlants(this.props.plantType)
+    }
   }
+
+  renderMotherCloneBookingTable = (motherPlants, phase) => {
+    return (
+      <table className="collapse br2 f5">
+        <tbody>
+          <tr className="striped--light-gray grey f5">
+            <th className="pv2 ph3">
+              <span className="pa1 dib fw6 w4 tl">Plant ID</span>
+            </th>
+            <th className="tr pv2 ph3 fw6 w4">Quantiy</th>
+            <th className="tl pv2 ph3 fw6 w5">Location</th>
+            <th className="tr pv2 ph3 fw6 w5">Action</th>
+          </tr>
+          {motherPlants &&
+            motherPlants.map(p => {
+              const selectedPlant = this.props.getSelected(p.id)
+              if (this.props.isBalance && !selectedPlant) {
+                return null
+              }
+              return (
+                <tr
+                  key={p.id}
+                  className={classNames('bb b--light-gray', {
+                    'black-50': !selectedPlant
+                  })}
+                >
+                  <td className="pa2 flex justify-center items-center">
+                    <span className="w2 h2 bg-moon-gray dib br-100" />
+                    <span className="ml2 pa1 dib dark-grey">
+                      {p.attributes.plant_id}
+                    </span>
+                  </td>
+                  {selectedPlant && selectedPlant.quantity ? (
+                    <React.Fragment>
+                      <td className="tr pr3">
+                        <QuantityField
+                          plant={selectedPlant}
+                          onClick={e => this.props.onEdit(phase, p)}
+                        />
+                      </td>
+                      <td className="tl pl3">
+                        <LocationField
+                          plant={selectedPlant}
+                          onClick={e => this.props.onEdit(phase, p)}
+                        />
+                      </td>
+                    </React.Fragment>
+                  ) : (
+                    <td className="tr" colSpan="2" />
+                  )}
+                  <td className="tr pr3">
+                    {!(selectedPlant && selectedPlant.quantity) && (
+                      <a
+                        href="#0"
+                        className="link orange"
+                        onClick={e => this.props.onEdit(phase, p)}
+                      >
+                        Set quantity &amp; location
+                      </a>
+                    )}
+                  </td>
+                </tr>
+              )
+            })}
+        </tbody>
+      </table>
+    )
+  }
+
+  renderBookingTable = (bookings, phase) => {
+    return (
+      <table className="collapse br2 f5">
+        <tbody>
+          <tr className="striped--light-gray grey f5">
+            <th className="pv2 ph3">
+              <span className="pa1 dib fw6 w4 tl">#</span>
+            </th>
+            <th className="tr pv2 ph3 fw6 w4">Quantiy</th>
+            <th className="tl pv2 ph3 fw6 w5">Location</th>
+            <th className="tr pv2 ph3 fw6 w5">Action</th>
+          </tr>
+          {
+            bookings && bookings.map(x => (
+              <tr key={x.id}>
+                <td className="pa2 flex justify-center items-center">
+                  {x.serialNo}
+                </td>
+                <td className="tr pr3">
+                  <QuantityField
+                    plant={x}
+                    onClick={e => this.props.onEdit(phase, p)}
+                  />
+                </td>
+                <td className="tl pl3"></td>
+                <td></td>
+              </tr>
+            ))
+          }
+          <tr>
+            <td className="tr pr3 w4 h2" />
+            <td className="tr pr3 w4" />
+            <td className="tr pr3 w5" />
+            <td className="tr pr3 w5">
+              <a
+                href="#0"
+                className="link orange"
+                onClick={e => this.props.onEdit(phase)}
+              >
+                Set quantity &amp; location
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    )
+  }
+
   render() {
-    const { isLoading, plants } = plantStore
-    console.log('BatchPlantSelectionList::plants', plants)
-    const { onEdit, getSelected, isBalance = false } = this.props
-    if (isLoading) {
+    const { phase, plantType, bookings } = this.props
+    const { plants } = plantStore
+    console.log('bookings', bookings)
+    if (plantStore.isLoading) {
       return <p className="f6">Loading....</p>
     }
-    if (plants && plants.length > 0) {
-      return (
-        <React.Fragment>
-          <table className="collapse br2 f5">
-            <tbody>
-              <tr className="striped--light-gray grey f5">
-                <th className="pv2 ph3">
-                  <span className="pa1 dib fw6 w4">Plant ID</span>
-                </th>
-                <th className="tr pv2 ph3 fw6 w4">Quantiy</th>
-                <th className="tl pv2 ph3 fw6 w5">Location</th>
-                <th className="tr pv2 ph3 fw6 w5">Action</th>
-              </tr>
-              {plants &&
-                plants.map(p => {
-                  const selectedPlant = getSelected(p.id)
-                  if (isBalance && !selectedPlant) {
-                    return null
-                  }
-                  return (
-                    <tr
-                      key={p.id}
-                      className={classNames('bb b--light-gray', {
-                        'black-50': !selectedPlant
-                      })}
-                    >
-                      <td className="pa2 flex justify-center items-center">
-                        <span className="w2 h2 bg-moon-gray dib br-100" />
-                        <span className="ml2 pa1 dib dark-grey">
-                          {p.attributes.plant_id}
-                        </span>
-                      </td>
-                      {selectedPlant && selectedPlant.quantity ? (
-                        <React.Fragment>
-                          <td className="tr pr3">
-                            <QuantityField
-                              plant={selectedPlant}
-                              onClick={e => onEdit(p)}
-                            />
-                          </td>
-                          <td className="tl pl3">
-                            <LocationField
-                              plant={selectedPlant}
-                              onClick={e => onEdit(p)}
-                            />
-                          </td>
-                        </React.Fragment>
-                      ) : (
-                        <td className=" tr" colSpan="2" />
-                      )}
-                      <td className="tr pr3">
-                        {!(selectedPlant && selectedPlant.quantity) && (
-                          <a
-                            href="#0"
-                            className="link orange"
-                            onClick={e => onEdit(p)}
-                          >
-                            Set quantity &amp; location
-                          </a>
-                        )}
-                      </td>
-                    </tr>
-                  )
-                })}
-            </tbody>
-          </table>
-        </React.Fragment>
-      )
-    } else {
-      return (
-        <p className="f5 red">
-          Oops! It seem like you don't have the necessary plants available. You
-          can add plants to your inventory <a href="/inventory/setup">here</a>.
-        </p>
-      )
+    if (plantType === GROWTH_PHASE.MOTHER && phase === GROWTH_PHASE.CLONE) {
+      if (plants && plants.length > 0)
+        return this.renderMotherCloneBookingTable(plants, phase)
+      else {
+        return (
+          <p className="f5 red">
+            Oops! It seem like you don't have the necessary plants available.
+            You can add plants to your inventory{' '}
+            <a href="/inventory/setup">here</a>.
+          </p>
+        )
+      }
     }
+
+    if (!plantType && phase !== GROWTH_PHASE.CLONE) {
+      return this.renderBookingTable(bookings, phase)
+    }
+
+    return <div>WIP</div>
   }
 }
 

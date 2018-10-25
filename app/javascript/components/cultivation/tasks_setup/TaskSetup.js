@@ -75,10 +75,7 @@ class TaskSetup extends React.Component {
   }
 
   handleOutsideClick = e => {
-    if (
-      this.node &&
-      !this.node.contains(e.target)
-    ) {
+    if (this.node && !this.node.contains(e.target)) {
       this.hideDropdown()
     }
   }

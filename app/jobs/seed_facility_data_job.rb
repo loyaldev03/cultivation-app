@@ -4,6 +4,7 @@ class SeedFacilityDataJob < ApplicationJob
   def perform(*args)
     # Seed built-in roles
     seed_roles
+    seed_uom
     seed_raw_materials
   end
 
@@ -21,5 +22,9 @@ class SeedFacilityDataJob < ApplicationJob
 
   def seed_raw_materials
     #make a seed raw materials commands
+  end
+
+  def seed_uom
+    Common::SeedUnitOfMeasure.call
   end
 end

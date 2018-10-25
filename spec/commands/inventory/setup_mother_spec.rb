@@ -106,13 +106,13 @@ RSpec.describe Inventory::SetupMother, type: :command do
       
       # Check attribute created correctly
       expect(cmd.result[1]).to have_attributes(
-        plant_id: plant_ids.split(',').first,
+        plant_id: plant_ids.split(',').last.strip,
         facility_strain: facility_strain,
         location_id: room.id,
         location_type: 'room',
         status: 'available',
         current_growth_stage: 'mother',
-        planted_on: DateTime.parse(planted_on)
+        planting_date: DateTime.parse(planted_on)
       )
     end
 

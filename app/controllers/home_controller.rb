@@ -16,22 +16,22 @@ class HomeController < ApplicationController
 
   def reset_data
     Cultivation::TrayPlan.destroy_all
-    Inventory::RawMaterial.destroy_all
-    Cultivation::Item.destroy_all
     Cultivation::Task.destroy_all
     Cultivation::NutrientProfile.destroy_all
 
     Inventory::Plant.destroy_all
     Inventory::ItemTransaction.destroy_all
-    Inventory::RawMaterial.destroy_all
     Inventory::VendorInvoice.destroy_all
+    Inventory::PurchaseOrder.destroy_all
     Inventory::Vendor.destroy_all
     Cultivation::Batch.destroy_all
-    Common::UnitOfMeasure.destroy_all
     CompanyInfo.destroy_all
 
+    Common::UnitOfMeasure.delete_all
+    Common::SeedUnitOfMeasure.call
+
     # Preserve facility F0X
-    f = Facility.find_by(code: 'F0Xxxx')
+    f = Facility.find_by(code: 'F0X')
     t = []
     if f.present?
       f.rooms.each do |r|

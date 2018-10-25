@@ -55,11 +55,18 @@ module Inventory
 
     def call
       if valid_permission? && valid_data?
+        invoice_item = nil
+        if is_purchased?
+          vendor = create_vendor
+          purchase_order = create_purchase_order(vendor)
+          invoice_item = create_invoice(purchase_order)
+        end
+
         plants = []
         if id.blank?
-          plants = create_plants
+          plants = create_plants(invoice_item)
         else
-          plants = update_plant
+          plants = update_plant(invoice_item)
         end
         plants
       end
@@ -121,12 +128,8 @@ module Inventory
       # If new invoice, it may have vendor id
       # if no vendor id, then take all fields to create vendor & invoice.
 
-      # Rails.logger.debug "\t\t\t\t>> Updating plant result: location_id: #{location_id}"
-      # Rails.logger.debug "\t\t\t\t>> Updating plant result: #{result}"
-
       if is_purchased?
         if plant.vendor_invoice_id.blank?
-          # Rails.logger.debug "\t\t\t\t>> Creating new invoice: #{vendor_name}, invoice_no: #{invoice_no}"
           vendor = Inventory::Vendor.find_by(name: vendor_name)
           vendor_id = vendor ? vendor.id : nil
           vendor = save_vendor(vendor_id)
@@ -135,7 +138,6 @@ module Inventory
           create_invoice([plant], vendor, invoice_no, purchase_date, purchase_order_no)
         else
           invoice = Inventory::VendorInvoice.find(plant.vendor_invoice_id)
-          # Rails.logger.debug "\t\t\t\t>> Updating existing invoice?: #{invoice.id.to_s}"
           save_vendor(invoice.vendor_id)
           update_invoice(invoice)
         end
@@ -149,6 +151,15 @@ module Inventory
       unless command.success?
         combine_errors(command.errors, :errors, :plant_ids)
       end
+    end
+
+    def create_vendor
+    end
+
+    def create_purchase_order
+    end
+
+    def create_invoice
     end
 
     def create_plants

@@ -16,7 +16,7 @@ const AdjustmentMessage = ({ value, total }) => {
   if (value >= 0 && value < total) {
     const res = +total - +value
     return (
-      <div className="bg-light-yellow pa2 ba br2 b--light-yellow grey w4 tc">
+      <div className="dib bg-light-yellow ml2 pa2 ba br2 b--light-yellow grey w4 tc">
         You need to select <span className="fw6 dark-grey">{res}</span> more!
       </div>
     )
@@ -24,7 +24,7 @@ const AdjustmentMessage = ({ value, total }) => {
   if (value > 0 && value > total) {
     const res = +value - +total
     return (
-      <div className="bg-washed-red pa2 ba br2 b--washed-red grey w4 tc">
+      <div className="dib bg-washed-red ml2 pa2 ba br2 b--washed-red grey w4 tc">
         You need to remove <span className="fw6 dark-grey">{res}</span> plant.
       </div>
     )
@@ -192,13 +192,18 @@ class BatchLocationApp extends React.Component {
   renderBookingsForPhase = (
     phase,
     bookings,
-    isBalance,
     quantity = 0,
     plantType = ''
   ) => {
+    const selectedCapacity = sumBy(bookings, 'quantity')
+    const isBalance = quantity === selectedCapacity && quantity > 0
     return (
       <React.Fragment>
         <span className="dib ttu f2 fw6 pb2 dark-grey">{phase}</span>
+        <AdjustmentMessage
+          value={selectedCapacity}
+          total={quantity}
+        />
         <BatchPlantSelectionList
           onEdit={this.onClickSelectionEdit}
           bookings={bookings}
@@ -216,6 +221,7 @@ class BatchLocationApp extends React.Component {
     const { batchInfo } = this.props
     const { isLoading, isNotified, editingPlant, selectedPlants } = this.state
     const selectedCapacity = sumBy(selectedPlants, 'quantity')
+    // TODO: isBalance should be targeted to Clone location is balance
     const isBalance = batchInfo.quantity === selectedCapacity
     // console.log('batchInfo', batchInfo)
     // console.log('editingPlant', editingPlant)
@@ -244,15 +250,10 @@ class BatchLocationApp extends React.Component {
               {formatDate(batchInfo.harvestDate)}
             </span>
           </div>
-          <AdjustmentMessage
-            value={selectedCapacity}
-            total={batchInfo.quantity}
-          />
           <div className="mt3">
             {this.renderBookingsForPhase(
               GROWTH_PHASE.CLONE,
               this.getBookingsByPhase(GROWTH_PHASE.CLONE),
-              isBalance,
               batchInfo.quantity,
               batchInfo.cloneSelectionType
             )}
@@ -262,7 +263,6 @@ class BatchLocationApp extends React.Component {
             {this.renderBookingsForPhase(
               GROWTH_PHASE.VEG1,
               this.getBookingsByPhase(GROWTH_PHASE.VEG1),
-              isBalance,
               batchInfo.quantity
             )}
           </div>
@@ -271,7 +271,6 @@ class BatchLocationApp extends React.Component {
             {this.renderBookingsForPhase(
               GROWTH_PHASE.VEG2,
               this.getBookingsByPhase(GROWTH_PHASE.VEG2),
-              isBalance,
               batchInfo.quantity
             )}
           </div>

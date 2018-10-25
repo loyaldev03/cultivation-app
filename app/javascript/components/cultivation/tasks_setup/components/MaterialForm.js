@@ -12,10 +12,7 @@ import deleteMaterial from '../actions/deleteMaterial'
 
 import loadTasks from '../actions/loadTask'
 
-import {
-  groupBy,
-  httpPostOptions
-} from '../../../utils'
+import { groupBy, httpPostOptions } from '../../../utils'
 
 const uom_dropdown = [
   { value: 'KG', label: 'KG' },
@@ -120,34 +117,30 @@ export default class MaterialForm extends React.Component {
       }
     }
 
-    fetch(
-      url,
-      httpPostOptions(JSON.stringify(item))
-    )
-    .then(response => response.json())
-    .then(data => {
-      if (data.data.id != null) {
-        data = data.data
-        this.setState(prevState => ({
-          items: [
-            ...prevState.items,
-            {
-              id: data.id,
-              name: data.attributes.name,
-              quantity: data.attributes.quantity,
-              uom: data.attributes.uom
-            }
-          ],
-          name: '',
-          quantity: '',
-          uom: ''
-        }))
-        loadTasks.loadbatch(this.state.batch_id)
-      } else {
-        data = null
-      }
-    })
-
+    fetch(url, httpPostOptions(JSON.stringify(item)))
+      .then(response => response.json())
+      .then(data => {
+        if (data.data.id != null) {
+          data = data.data
+          this.setState(prevState => ({
+            items: [
+              ...prevState.items,
+              {
+                id: data.id,
+                name: data.attributes.name,
+                quantity: data.attributes.quantity,
+                uom: data.attributes.uom
+              }
+            ],
+            name: '',
+            quantity: '',
+            uom: ''
+          }))
+          loadTasks.loadbatch(this.state.batch_id)
+        } else {
+          data = null
+        }
+      })
   }
 
   render() {

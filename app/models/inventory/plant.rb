@@ -35,5 +35,7 @@ module Inventory
     field :wet_weight_unit, type: String
 
     field :last_metrc_update, type: DateTime
+    field :ref_id, type: BSON::ObjectId
+    field :ref_type, type: String
   end
 end

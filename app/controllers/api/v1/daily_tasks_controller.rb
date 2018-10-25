@@ -30,6 +30,6 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   end
 
   def set_work_day
-    @work_day = @task.work_days.find_or_initialize_by(date: params[:date], user: current_user)
+    @work_day = @task.work_days.find_or_create_by(date: params[:date], user: current_user)
   end
 end

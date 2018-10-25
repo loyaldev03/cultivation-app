@@ -1,4 +1,4 @@
-desc "Create dummy facility 1 at a time"
+desc "Create data from new facility to PO, invoice, stock receive, task planning and material use"
 task seed_until_po: :environment  do
 
   # 1. Setup facility & master data
@@ -314,5 +314,5 @@ task seed_until_po: :environment  do
                           description:      '',
                           manufacturer:     '',
                           uom:              seaweed.uoms.first, 
-                          quantity:         0.002)
+                          quantity:         -0.002)
 end

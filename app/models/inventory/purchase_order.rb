@@ -3,6 +3,12 @@ module Inventory
     include Mongoid::Document
     include Mongoid::Timestamps::Short
 
+    DRAFT = 'draft'
+    READY = 'ready'
+    APPROVED = 'approved'
+    RECEIVED_PARTIAL = 'received_partial'
+    RECEIVED_FULL = 'received_full'
+
     field :purchase_order_no, type: String
     field :purchase_order_date, type: DateTime
     field :status, type: String        # { draft, approved, completed, canceled }

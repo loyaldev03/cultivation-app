@@ -18,13 +18,14 @@ class Cultivation::BatchesController < ApplicationController
     if params[:select_location].present?
       @batch_info = OpenStruct.new({
         id: @batch.id.to_s,
+        batchSource: @batch.batch_source,
+        cloneSelectionType: get_plants_selection_type(@batch.batch_source),
         quantity: @batch.quantity,
         startDate: @batch.start_date,
         strainDisplayName: "#{@batch.facility_strain.strain_name} (#{@batch.facility_strain.strain_type})",
-        harvestDate: @batch.estimated_harvest_date
+        harvestDate: @batch.estimated_harvest_date,
       }).marshal_dump
       # Set the plantType for react BatchPlantSelectionList
-      @plant_selection_type = get_plants_selection_type(@batch.batch_source)
       @locations = get_cultivation_locations(@batch)
     end
   end

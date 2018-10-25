@@ -60,8 +60,6 @@ class PlantEditor extends React.Component {
               return
             }
 
-            console.log(data)
-
             const invoice = data.attributes.vendor_invoice
             const purchase_order = data.attributes.purchase_order
             let invoice_attr = {}
@@ -71,8 +69,6 @@ class PlantEditor extends React.Component {
                 invoice_no: invoice.invoice_no,
                 purchase_order_no: purchase_order.purchase_order_no
               }
-
-              console.log(invoice_attr)
             }
 
             const vendor = data.attributes.vendor
@@ -87,8 +83,7 @@ class PlantEditor extends React.Component {
                 vendor_state_license_expiration_date: new Date(
                   vendor.state_license_expiration_date
                 ),
-                vendor_location_license_num:
-                  vendor.location_license_num,
+                vendor_location_license_num: vendor.location_license_num,
                 vendor_location_license_expiration_date: new Date(
                   vendor.location_license_expiration_date
                 )

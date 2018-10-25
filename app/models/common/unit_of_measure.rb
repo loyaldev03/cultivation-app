@@ -70,6 +70,10 @@ module Common
       find_by(dimension: 'volumes', unit: unit)
     end
 
+    def self.lengths(unit)
+      find_by(dimension: 'lengths', unit: unit)
+    end
+
     ###
     # Usage example, convert 5kg to gram:
     #

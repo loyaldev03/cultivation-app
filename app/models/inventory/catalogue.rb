@@ -32,7 +32,7 @@ module Inventory
 
     field :label, type: String                           # For display purpose only.
     field :key, type: String
-    field :catalogue_type, type: String                  # { raw_materials, sales_product, non_sales_product }
+    field :catalogue_type, type: String                  # { raw_materials, sales_product, non_sales_product, plant }
     field :category, type: String, default: ''           # If node is level 1, refer to parent using parent's key. Posb. values: { nutrient, grow_light, supplements, grow_medium, others }
     field :sub_category, type: String, default: ''       # If node is level 2, refer to parant using parent's key.
     field :acccount_code, type: String
@@ -42,7 +42,7 @@ module Inventory
     belongs_to :facility
 
     scope :raw_materials, -> { where(catalogue_type: 'raw_materials') }
-    scope :sales_product, -> { where(catalogue_type: 'grow_lights') }
+    scope :sales_product, -> { where(catalogue_type: 'sales_product') }
     scope :non_sales_product, -> { where(catalogue_type: 'non_sales_product') }
     scope :plants, -> { where(catalogue_type: 'plant') }
     scope :active, -> { where(is_active: true) }

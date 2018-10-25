@@ -4,6 +4,7 @@ class SeedFacilityDataJob < ApplicationJob
   def perform(*args)
     # Seed built-in roles
     seed_roles
+    seed_raw_materials
   end
 
   private
@@ -16,5 +17,9 @@ class SeedFacilityDataJob < ApplicationJob
     if sa_role.nil?
       sa_role = Common::Role.create!({name: Constants::SUPER_ADMIN, built_in: true})
     end
+  end
+
+  def seed_raw_materials
+    #make a seed raw materials commands
   end
 end

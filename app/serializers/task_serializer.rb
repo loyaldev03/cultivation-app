@@ -5,6 +5,8 @@ class TaskSerializer
     :name,
     :duration,
     :days_from_start_date,
+    :start_date,
+    :end_date,
     :position,
     :end_date,
     :estimated_hours,
@@ -17,14 +19,6 @@ class TaskSerializer
 
   attributes :id do |object|
     object.id.to_s
-  end
-
-  attribute :start_date do |object|
-    object.start_date&.iso8601
-  end
-
-  attribute :end_date do |object|
-    object.end_date&.iso8601
   end
 
   #for showing in table column resources

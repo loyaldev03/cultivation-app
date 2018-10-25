@@ -14,8 +14,8 @@ module Inventory
     field :quantity, type: BigDecimal  #can be +/-
     field :order_quantity, type: BigDecimal
     field :conversion, type: BigDecimal
+    field :uom, type: String
 
-    belongs_to :uom, class_name: 'Common::UnitOfMeasure'
     belongs_to :order_uom, class_name: 'Common::UnitOfMeasure', optional: true
     belongs_to :facility, optional: true
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true

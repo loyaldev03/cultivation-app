@@ -178,7 +178,7 @@ module Inventory
       purchase_order.items.create!(
         catalogue: catalogue,
         quantity: plant_ids.count,
-        uom: Common::UnitOfMeasure.pieces('pc'),
+        uom: 'pc',
         price: 0,
         currency: 'USD',
         tax: 0,

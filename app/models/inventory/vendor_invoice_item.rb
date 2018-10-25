@@ -10,9 +10,9 @@ module Inventory
     field :price, type: BigDecimal, default: 0.0
     field :currency, type: String, default: 'USD'
     field :tax, type: BigDecimal, default: 0.0
+    field :uom, type: String
 
     belongs_to :invoice, class_name: 'Inventory::VendorInvoice'
-    belongs_to :uom, class_name: 'Common::UnitOfMeasure'
     belongs_to :catalogue, class_name: 'Inventory::Catalogue'
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true, inverse_of: nil
 

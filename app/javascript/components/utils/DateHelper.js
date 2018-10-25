@@ -44,3 +44,7 @@ export const monthOptionAdd = (monthOptionStr, month) => {
 export const formatDate = date => {
   return format(date, 'MMM dd, YYYY', { awareOfUnicodeTokens: true })
 }
+
+export const formatDate2 = date => {
+  return format(date, 'M/d/YYYY', { awareOfUnicodeTokens: true })
+}

@@ -4,13 +4,12 @@ export default function loadUsers() {
   let url = '/api/v1/uoms'
   fetch(url)
     .then(resp => resp.json()) // Transform the data into json
-    .then(function (data) {
+    .then(function(data) {
       console.log(build_uom_options(data.data))
       UomStore.replace(build_uom_options(data.data))
       console.log(UomStore)
-
     })
-    .catch(function (error) {
+    .catch(function(error) {
       console.log(error)
     })
 }

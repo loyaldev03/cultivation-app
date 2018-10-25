@@ -154,7 +154,7 @@ Rails.application.routes.draw do
       end
 
       resources :items, only: [:index, :create, :destroy]
-
+      resources :uoms, only: [:index]
       scope :daily_tasks do
         put ':id/start_task', to: 'daily_tasks#start_task'
         put ':id/stop_task', to: 'daily_tasks#stop_task'

@@ -14,6 +14,8 @@ import loadTasks from '../actions/loadTask'
 
 import { groupBy, httpPostOptions } from '../../../utils'
 
+import UomStore from '../stores/UomStore'
+
 const uom_dropdown = [
   { value: 'KG', label: 'KG' },
   { value: 'CM', label: 'CM' },
@@ -116,7 +118,7 @@ export default class MaterialForm extends React.Component {
       httpPostOptions({
         catalogue_id: this.state.raw_material_id,
         quantity: this.state.quantity,
-        uom: this.state.uom.label
+        uom: this.state.uom.value
       })
     )
       .then(response => response.json())
@@ -192,7 +194,7 @@ export default class MaterialForm extends React.Component {
       label: f
     }))
 
-    let uom_dropdown = this.state.uom_dropdown
+    let uom_dropdown = UomStore
     let materials = this.state.items
     let handleChange = this.handleChange
     let handleDelete = this.handleDelete

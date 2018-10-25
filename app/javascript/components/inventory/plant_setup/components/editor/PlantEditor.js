@@ -53,41 +53,44 @@ class PlantEditor extends React.Component {
       if (!id) {
         this.setState(this.resetState())
       } else {
-        getPlant(id, 'vendor_invoice, vendor_invoice.vendor').then(
+        getPlant(id, 'vendor_invoice, vendor, purchase_order').then(
           ({ status, data, included }) => {
             if (status != 200) {
               alert('someting wrong')
               return
             }
 
-            const invoice = included.find(x => x.type === 'vendor_invoice')
+            console.log(data)
+
+            const invoice = data.attributes.vendor_invoice
+            const purchase_order = data.attributes.purchase_order
             let invoice_attr = {}
             if (invoice) {
               invoice_attr = {
-                purchase_date: new Date(invoice.attributes.purchase_date),
-                invoice_no: invoice.attributes.invoice_no,
-                purchase_order_no: invoice.attributes.purchase_order_no
+                purchase_date: new Date(invoice.invoice_date),
+                invoice_no: invoice.invoice_no,
+                purchase_order_no: purchase_order.purchase_order_no
               }
 
               console.log(invoice_attr)
             }
 
-            const vendor = included.find(x => x.type === 'vendor')
+            const vendor = data.attributes.vendor
             let vendor_attr = {}
             if (vendor) {
               vendor_attr = {
                 vendor_id: vendor.id,
-                vendor_name: vendor.attributes.name,
-                vendor_no: vendor.attributes.vendor_no,
-                address: vendor.attributes.address,
-                vendor_state_license_num: vendor.attributes.state_license_num,
+                vendor_name: vendor.name,
+                vendor_no: vendor.vendor_no,
+                address: vendor.address,
+                vendor_state_license_num: vendor.state_license_num,
                 vendor_state_license_expiration_date: new Date(
-                  vendor.attributes.state_license_expiration_date
+                  vendor.state_license_expiration_date
                 ),
                 vendor_location_license_num:
-                  vendor.attributes.location_license_num,
+                  vendor.location_license_num,
                 vendor_location_license_expiration_date: new Date(
-                  vendor.attributes.location_license_expiration_date
+                  vendor.location_license_expiration_date
                 )
               }
             }

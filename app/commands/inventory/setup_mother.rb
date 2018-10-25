@@ -24,7 +24,8 @@ module Inventory
       :vendor_state_license_num,
       :vendor_state_license_expiration_date,
       :vendor_location_license_expiration_date,
-      :vendor_location_license_num
+      :vendor_location_license_num,
+      :catalogue
 
     def initialize(user, args)
       @user = user
@@ -47,6 +48,12 @@ module Inventory
       @invoice_no = args[:invoice_no]
       @purchase_order_no = args[:purchase_order_no]
       @invoice_date = args[:invoice_date]
+      @catalogue = Inventory::Catalogue.find_or_create_by!(label: 'Plant',
+                                                           key: 'mother',
+                                                           catalogue_type: 'plant',
+                                                           category: 'plant',
+                                                           is_active: true,
+                                                           uom_dimension: 'pieces')
     end
 
     def call
@@ -184,6 +191,7 @@ module Inventory
         tax: 0,
         description: "PO created from Mother Plant setup - #{plant_ids.join(', ')}",
         product_name: "#{facility_strain.strain_name} - Mother Plant",
+        facility_strain_id: facility_strain.id,
       )
 
       purchase_order
@@ -212,17 +220,6 @@ module Inventory
       end
 
       invoice
-    end
-
-    def catalogue
-      @catalogue ||= Inventory::Catalogue.find_or_create_by(
-        label: 'Plant',
-        key: 'mother',
-        catalogue_type: 'plant',
-        category: 'plant',
-        is_active: true,
-        uom_dimension: 'pieces',
-      )
     end
 
     def combine_errors(errors_source, from_field, to_field)

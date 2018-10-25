@@ -8,20 +8,13 @@ module Inventory
     field :status, type: String          # {draft, submitted, paid}
     field :terms_in_days, type: Integer, default: 0
 
-    # To be removed
-    # field :purchase_date,     type: DateTime
-    # field :purchase_order_no, type: String
-
     belongs_to :facility
     belongs_to :vendor, class_name: 'Inventory::Vendor'
     belongs_to :purchase_order, class_name: 'Inventory::PurchaseOrder'
-
     has_many :items, class_name: 'Inventory::VendorInvoiceItem', dependent: :delete
-    # TODO: To be moved to vendor invoice item!
-    has_many :plants, class_name: 'Inventory::Plant', dependent: :nullify
 
     def total_amount
-      0
+      items.sum { |x| x.total_amount }
     end
   end
 end

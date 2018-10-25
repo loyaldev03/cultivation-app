@@ -27,7 +27,8 @@ module Inventory
       :vendor_location_license_expiration_date,
       :vendor_location_license_num,
       :purchase_date,
-      :batch
+      :batch,
+      :catalogue
 
     def initialize(user, args)
       @user = user
@@ -39,8 +40,10 @@ module Inventory
       @mother_id = args[:mother_id]
       @plant_ids = split(args[:plant_ids])
       @planting_date = args[:planting_date]
-      @vendor_id = args[:vendor_id]
+      # @vendor_id = args[:vendor_id]
       @vendor_name = args[:vendor_name]
+      @vendor_id = Vendor.find_by(name: args[:vendor_name])&.id
+
       @vendor_no = args[:vendor_no]
       @address = args[:address]
       @vendor_state_license_num = args[:vendor_state_license_num]
@@ -51,32 +54,28 @@ module Inventory
       @invoice_no = args[:invoice_no]
       @purchase_order_no = args[:purchase_order_no]
       @batch = Cultivation::Batch.find(args[:cultivation_batch_id])
+      @catalogue = Inventory::Catalogue.find_or_create_by!(label: 'Plant',
+                                                           key: 'plant',
+                                                           catalogue_type: 'plant',
+                                                           category: 'plant',
+                                                           is_active: true,
+                                                           uom_dimension: 'pieces',
+                                                           facility: @batch.facility_strain.facility)
     end
 
     def call
       if valid_permission? && valid_data?
-        invoice_item = nil
-        if is_purchased?
-          vendor = create_vendor
-          purchase_order = create_purchase_order(vendor)
-          invoice_item = create_invoice(purchase_order)
-        end
+        invoice_item = save_purchase_info
 
-        plants = []
         if id.blank?
-          plants = create_plants(invoice_item)
+          create_plants(invoice_item)
         else
-          plants = update_plant(invoice_item)
+          update_plant(invoice_item)
         end
-        plants
       end
     end
 
     private
-
-    def split(ids)
-      ids.gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
-    end
 
     def valid_permission?
       true  # TODO: Check user role
@@ -108,12 +107,26 @@ module Inventory
       batch.batch_source == 'clones_purchased'
     end
 
-    def update_plant
+    def save_purchase_info
+      if is_purchased?
+        vendor = save_vendor
+        po_item = save_purchase_order(vendor)
+        Rails.logger.debug "\t\t\t>>>>> po_item: #{po_item}, po_item.id: #{po_item&.id}"
+        invoice_item = save_invoice(po_item)
+        invoice_item
+      else
+        nil
+      end
+    end
+
+    def update_plant(invoice_item)
       facility_strain_id = batch.facility_strain_id
       growth_stage = batch.current_growth_stage
-      plant = Inventory::Plant.find(id)
 
-      result = plant.update!(
+      plant = Inventory::Plant.find(id)
+      old_invoice_item_id = plant.ref_id
+
+      plant.update!(
         plant_id: plant_ids[0],
         facility_strain_id: facility_strain_id,
         cultivation_batch_id: cultivation_batch_id,
@@ -122,47 +135,18 @@ module Inventory
         status: is_draft ? 'draft' : 'available',
         planting_date: planting_date,
         mother_id: mother_id,
+        ref_id: invoice_item ? invoice_item.id : nil,
+        ref_type: invoice_item ? invoice_item.class.name : nil,
       )
 
-      # TODO: Section below to be replaced by invoice_id when user select existing invoice
-      # If new invoice, it may have vendor id
-      # if no vendor id, then take all fields to create vendor & invoice.
-
-      if is_purchased?
-        if plant.vendor_invoice_id.blank?
-          vendor = Inventory::Vendor.find_by(name: vendor_name)
-          vendor_id = vendor ? vendor.id : nil
-          vendor = save_vendor(vendor_id)
-
-          # Rails.logger.debug "\t\t\t\t>> Creating new invoice, vendor_id: #{vendor_id}"
-          create_invoice([plant], vendor, invoice_no, purchase_date, purchase_order_no)
-        else
-          invoice = Inventory::VendorInvoice.find(plant.vendor_invoice_id)
-          save_vendor(invoice.vendor_id)
-          update_invoice(invoice)
-        end
-      end
-
+      # if old_invoice_item_id != plant.ref_id
+      update_po_invoice_count(old_invoice_item_id)
+      update_po_invoice_count(invoice_item&.id)
+      # end
       plant
     end
 
-    def update_invoice(invoice)
-      command = Inventory::SavePlantInvoice.call(user, [], invoice.vendor, invoice.invoice_no, purchase_date, purchase_order_no)
-      unless command.success?
-        combine_errors(command.errors, :errors, :plant_ids)
-      end
-    end
-
-    def create_vendor
-    end
-
-    def create_purchase_order
-    end
-
-    def create_invoice
-    end
-
-    def create_plants
+    def create_plants(invoice_item)
       facility_strain_id = batch.facility_strain_id
       growth_stage = batch.current_growth_stage
 
@@ -178,21 +162,19 @@ module Inventory
           status: is_draft ? 'draft' : 'available',
           planting_date: planting_date,
           mother_id: mother_id,
+          ref_id: invoice_item ? invoice_item.id : nil,
+          ref_type: invoice_item ? invoice_item.class.name : nil,
         )
       end
 
-      if is_purchased?
-        vendor = Inventory::Vendor.find_by(name: vendor_name)
-        vendor_id = vendor ? vendor.id : nil
-
-        vendor = save_vendor(vendor_id)
-        create_invoice(plants, vendor, invoice_no, purchase_date, purchase_order_no)
-      end
-
+      # Rails.logger.debug("\t\t\t create plants - invoice_item: #{invoice_item}")
+      # Rails.logger.debug("\t\t\t create plants - invoice_item.nil?: #{invoice_item.nil?}")
+      # Rails.logger.debug("\t\t\t create plants - invoice_item&.id: #{invoice_item&.id}")
+      update_po_invoice_count(invoice_item&.id)
       plants
     end
 
-    def save_vendor(vendor_id)
+    def save_vendor
       command = Inventory::SaveVendor.call(
         id: vendor_id,
         name: vendor_name,
@@ -219,15 +201,76 @@ module Inventory
       end
     end
 
-    def create_invoice(plants, vendor, invoice_no, purchase_date, purchase_order_no)
-      command = Inventory::SavePlantInvoice.call(user, plants, vendor, invoice_no, purchase_date, purchase_order_no)
-      unless command.success?
-        combine_errors(command.errors, :errors, :plant_ids)
+    def save_purchase_order(vendor)
+      return nil if vendor.nil?
+
+      facility_strain = batch.facility_strain
+      Rails.logger.debug "\t\t\t>>>>> facility_strain: #{facility_strain}, facility_strain.id: #{facility_strain&.id}"
+      Rails.logger.debug "\t\t\t>>>>> vendor: #{vendor}, vendor.id: #{vendor&.id}"
+      purchase_order = Inventory::PurchaseOrder.find_or_create_by!(purchase_order_no: purchase_order_no, vendor: vendor) do |po|
+        po.purchase_order_date = purchase_date
+        po.facility = facility_strain.facility
+        po.status = Inventory::PurchaseOrder::RECEIVED_FULL
       end
+
+      if id.blank?
+        po_item = purchase_order.items.create!(
+          facility_strain_id: facility_strain.id,
+          catalogue: catalogue,
+          quantity: plant_ids.count,
+          uom: 'pc',
+          price: 0,
+          currency: 'USD',
+          tax: 0,
+          description: "PO created from plant setup - #{plant_ids.join(', ')}",
+          product_name: facility_strain.strain_name,
+        )
+        po_item
+      else
+        purchase_order.items.find_by(facility_strain_id: facility_strain.id)
+      end
+    end
+
+    def save_invoice(po_item)
+      return nil if po_item.nil?
+
+      invoice = Inventory::VendorInvoice.find_or_create_by!(
+        invoice_no: invoice_no,
+        invoice_date: purchase_date,
+        facility: po_item.purchase_order.facility,
+        purchase_order: po_item.purchase_order,
+        vendor: po_item.purchase_order.vendor,
+      )
+
+      invoice_item = invoice.items.find_or_create_by!(facility_strain_id: po_item.facility_strain_id,
+                                                      catalogue: po_item.catalogue) do |inv_item|
+        inv_item.uom = po_item.uom
+        inv_item.price = 0
+        inv_item.tax = 0
+        inv_item.description = po_item.description
+        inv_item.product_name = po_item.product_name
+      end
+      invoice_item
+    end
+
+    def update_po_invoice_count(invoice_item_id)
+      Rails.logger.debug "\t\t\t>>>>>>  invoice_item_id: #{invoice_item_id}"
+      return if invoice_item_id.nil?
+
+      invoice_item = Inventory::VendorInvoiceItem.find(invoice_item_id)
+      new_quantity = Inventory::Plant.where(ref_id: invoice_item_id, ref_type: 'Inventory::VendorInvoiceItem').count
+      invoice_item.update!(quantity: new_quantity)
+
+      po_item = invoice_item.invoice.purchase_order.items.find_by(facility_strain_id: invoice_item.facility_strain_id)
+      invoice_item.update!(quantity: new_quantity)
     end
 
     def combine_errors(errors_source, from_field, to_field)
       errors.add(to_field, errors_source[from_field]) if errors_source.key?(from_field)
+    end
+
+    def split(ids)
+      ids.gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
     end
   end
 end

@@ -18,6 +18,8 @@ module Inventory
     belongs_to :vendor, class_name: 'Inventory::Vendor'
     has_many :items, class_name: 'Inventory::PurchaseOrderItem', dependent: :delete
 
+    validates_uniqueness_of :purchase_order_no, scope: :vendor
+
     def total_amount
       0
     end

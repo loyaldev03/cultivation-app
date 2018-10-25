@@ -47,7 +47,7 @@ class TaskSetup extends React.Component {
     loadDisplayTaskStore()
     loadUsers()
     loadUserRoles()
-    loadItems()
+    loadItems(this.props.batch_id)
     document.addEventListener('mousedown', this.handleOutsideClick, false)
   }
 

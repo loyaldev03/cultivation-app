@@ -220,9 +220,7 @@ class BatchLocationApp extends React.Component {
   render() {
     const { batchInfo } = this.props
     const { isLoading, isNotified, editingPlant, selectedPlants } = this.state
-    const selectedCapacity = sumBy(selectedPlants, 'quantity')
-    // TODO: isBalance should be targeted to Clone location is balance
-    const isBalance = batchInfo.quantity === selectedCapacity
+    const isFirstBalance = isNotified ? true : (batchInfo.quantity === sumBy(this.getBookingsByPhase(GROWTH_PHASE.CLONE), 'quantity'))
     // console.log('batchInfo', batchInfo)
     // console.log('editingPlant', editingPlant)
     return (
@@ -275,7 +273,7 @@ class BatchLocationApp extends React.Component {
             )}
           </div>
 
-          {isBalance && (
+          {isFirstBalance && (
             <Modal
               show={!isNotified}
               render={() => (
@@ -295,7 +293,7 @@ class BatchLocationApp extends React.Component {
                       <a
                         href="#0"
                         onClick={this.onButtonClick('isNotified', true)}
-                        className="dib pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+                        className="mb3 dib pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
                       >
                         OK, GOT IT!
                       </a>

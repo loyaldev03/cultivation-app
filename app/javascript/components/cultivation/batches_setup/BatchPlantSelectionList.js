@@ -47,7 +47,7 @@ class BatchPlantSelectionList extends React.Component {
         <tbody>
           <tr className="striped--light-gray grey f5">
             <th className="pv2 ph3">
-              <span className="pa1 dib fw6 w4 tl">Plant ID</span>
+              <span className="pv1 dib fw6 w4 tl">Plant ID</span>
             </th>
             <th className="tr pv2 ph3 fw6 w4">Quantiy</th>
             <th className="tl pv2 ph3 fw6 w5">Location</th>
@@ -66,7 +66,7 @@ class BatchPlantSelectionList extends React.Component {
                     'black-50': !selectedPlant
                   })}
                 >
-                  <td className="pa2 flex justify-center items-center">
+                  <td className="pv2 ph3 flex items-center">
                     <span className="w2 h2 bg-moon-gray dib br-100" />
                     <span className="ml2 pa1 dib dark-grey">
                       {p.attributes.plant_id}
@@ -122,15 +122,23 @@ class BatchPlantSelectionList extends React.Component {
             <th className="tr pv2 ph3 fw6 w5">Action</th>
           </tr>
           {
-            bookings && bookings.map(x => (
-              <tr key={x.id}>
-                <td className="pa2 flex justify-center items-center">
-                  {x.serialNo}
+            bookings && bookings.map(b => (
+              <tr key={b.id}>
+                <td className="pv2 flex justify-center items-center">
+                  <span className="pa1 dib w4 tl grey">
+                    {b.serialNo}
+                  </span>
                 </td>
                 <td className="tr pr3">
                   <QuantityField
-                    plant={x}
-                    onClick={e => this.props.onEdit(phase, p)}
+                    plant={b}
+                    onClick={e => this.props.onEdit(phase, b)}
+                  />
+                </td>
+                <td className="tl pl3">
+                  <LocationField
+                    plant={b}
+                    onClick={e => this.props.onEdit(phase, b)}
                   />
                 </td>
                 <td className="tl pl3"></td>
@@ -139,13 +147,10 @@ class BatchPlantSelectionList extends React.Component {
             ))
           }
           <tr>
-            <td className="tr pr3 w4 h2" />
-            <td className="tr pr3 w4" />
-            <td className="tr pr3 w5" />
-            <td className="tr pr3 w5">
+            <td className="tr pr3 w5" colspan="4">
               <a
                 href="#0"
-                className="link orange"
+                className="pv2 dib link orange"
                 onClick={e => this.props.onEdit(phase)}
               >
                 Set quantity &amp; location

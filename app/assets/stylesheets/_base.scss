@@ -11,6 +11,7 @@
   --light-gray: #C7C7C7;
   --white: #FFFFFF;
   --whiteSmoke: #F3F5F7;
+  --silver: #979797;
 }
 
 html {
@@ -32,11 +33,6 @@ hr {
   border: none;
   border-top: 1px solid #E9E9E9;
   height: 1px;
-}
-
-a {
-  outline-width: 0;
-  outline: 0 !important;
 }
 
 textarea::-webkit-input-placeholder,

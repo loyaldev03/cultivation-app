@@ -224,7 +224,13 @@ class BatchSetupApp extends React.Component {
           title="Search"
           className="mt3 fl w-100"
           render={() => (
-            <div className="fl w-100 relative">
+            <form
+              className="fl w-100 relative"
+              onSubmit={e => {
+                e.preventDefault()
+                this.handleSearch(searchMonth)
+              }}
+            >
               <div className="fl w-100">
                 <div className="fl w-third pr2">
                   <label className="subtitle-2 grey db mb1">Facility</label>
@@ -293,15 +299,14 @@ class BatchSetupApp extends React.Component {
                 </div>
 
                 <div className="fl tr w-20 absolute right-0 bottom-0">
-                  <button
-                    className="btn btn--primary"
-                    onClick={e => this.handleSearch(searchMonth)}
-                  >
-                    Search
-                  </button>
+                  <input
+                    className="btn btn--primary btn--large"
+                    type="submit"
+                    value="Search"
+                  />
                 </div>
               </div>
-            </div>
+            </form>
           )}
         />
         <div className="fl w-100 mt3">

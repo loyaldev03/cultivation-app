@@ -121,13 +121,11 @@ class BatchPlantSelectionList extends React.Component {
             <th className="tl pv2 ph3 fw6 w5">Location</th>
             <th className="tr pv2 ph3 fw6 w5">Action</th>
           </tr>
-          {
-            bookings && bookings.map(b => (
+          {bookings &&
+            bookings.map(b => (
               <tr key={b.id}>
                 <td className="pv2 flex justify-center items-center">
-                  <span className="pa1 dib w4 tl grey">
-                    {b.serialNo}
-                  </span>
+                  <span className="pa1 dib w4 tl grey">{b.serialNo}</span>
                 </td>
                 <td className="tr pr3">
                   <QuantityField
@@ -141,11 +139,10 @@ class BatchPlantSelectionList extends React.Component {
                     onClick={e => this.props.onEdit(phase, b)}
                   />
                 </td>
-                <td className="tl pl3"></td>
-                <td></td>
+                <td className="tl pl3" />
+                <td />
               </tr>
-            ))
-          }
+            ))}
           <tr>
             <td className="tr pr3 w5" colspan="4">
               <a

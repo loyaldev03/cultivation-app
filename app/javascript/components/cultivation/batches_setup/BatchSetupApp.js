@@ -35,6 +35,7 @@ const ValidationMessage = ({ enable, show, text }) => {
 }
 
 const PhaseDurationInput = ({ text, onChange }) => {
+  // TODO: Each field is required. Show warning
   return (
     <div className="fl w-70 mt1">
       <div className="fl w-20 pa2">
@@ -45,6 +46,7 @@ const PhaseDurationInput = ({ text, onChange }) => {
           type="number"
           min="1"
           onChange={onChange}
+          required={true}
           className="w-50 tr pa2 f6 black ba b--black-20 br2 outline-0"
         />
         <span className="ml1 gray f6">days</span>

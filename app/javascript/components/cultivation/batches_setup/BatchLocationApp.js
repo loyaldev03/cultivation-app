@@ -91,7 +91,9 @@ class BatchLocationApp extends React.Component {
   }
 
   getBookingsByPhase = phase => {
-    return this.state.selectedPlants.filter(b => b.phase === phase && b.quantity > 0)
+    return this.state.selectedPlants.filter(
+      b => b.phase === phase && b.quantity > 0
+    )
   }
 
   onButtonClick = (field, value) => e => this.setState({ [field]: value })
@@ -181,7 +183,7 @@ class BatchLocationApp extends React.Component {
         httpPostOptions(locations)
       )
       // navigate to next page
-      window.location.replace('/cultivation/batches/' + this.props.batchId)
+      window.location.replace('/cultivation/batches/' + this.props.batchInfo.id)
     } catch (error) {
       console.error(error)
     } finally {
@@ -189,21 +191,14 @@ class BatchLocationApp extends React.Component {
     }
   }
 
-  renderBookingsForPhase = (
-    phase,
-    bookings,
-    quantity = 0,
-    plantType = ''
-  ) => {
+  renderBookingsForPhase = (phase, quantity = 0, plantType = '') => {
+    const bookings = this.getBookingsByPhase(phase)
     const selectedCapacity = sumBy(bookings, 'quantity')
     const isBalance = quantity === selectedCapacity && quantity > 0
     return (
       <React.Fragment>
         <span className="dib ttu f2 fw6 pb2 dark-grey">{phase}</span>
-        <AdjustmentMessage
-          value={selectedCapacity}
-          total={quantity}
-        />
+        <AdjustmentMessage value={selectedCapacity} total={quantity} />
         <BatchPlantSelectionList
           onEdit={this.onClickSelectionEdit}
           bookings={bookings}
@@ -219,8 +214,11 @@ class BatchLocationApp extends React.Component {
 
   render() {
     const { batchInfo } = this.props
-    const { isLoading, isNotified, editingPlant, selectedPlants } = this.state
-    const isFirstBalance = isNotified ? true : (batchInfo.quantity === sumBy(this.getBookingsByPhase(GROWTH_PHASE.CLONE), 'quantity'))
+    const { isLoading, isNotified, editingPlant } = this.state
+    const isFirstBalance = isNotified
+      ? true
+      : batchInfo.quantity ===
+        sumBy(this.getBookingsByPhase(GROWTH_PHASE.CLONE), 'quantity')
     // console.log('batchInfo', batchInfo)
     // console.log('editingPlant', editingPlant)
     return (
@@ -251,27 +249,49 @@ class BatchLocationApp extends React.Component {
           <div className="mt3">
             {this.renderBookingsForPhase(
               GROWTH_PHASE.CLONE,
-              this.getBookingsByPhase(GROWTH_PHASE.CLONE),
               batchInfo.quantity,
               batchInfo.cloneSelectionType
             )}
           </div>
 
-          <div className="mt4">
-            {this.renderBookingsForPhase(
-              GROWTH_PHASE.VEG1,
-              this.getBookingsByPhase(GROWTH_PHASE.VEG1),
-              batchInfo.quantity
-            )}
-          </div>
+          {isNotified && (
+            <React.Fragment>
+              <div className="mt4">
+                {this.renderBookingsForPhase(
+                  GROWTH_PHASE.VEG1,
+                  batchInfo.quantity
+                )}
+              </div>
 
-          <div className="mt4">
-            {this.renderBookingsForPhase(
-              GROWTH_PHASE.VEG2,
-              this.getBookingsByPhase(GROWTH_PHASE.VEG2),
-              batchInfo.quantity
-            )}
-          </div>
+              <div className="mt4">
+                {this.renderBookingsForPhase(
+                  GROWTH_PHASE.VEG2,
+                  batchInfo.quantity
+                )}
+              </div>
+
+              <div className="mt4">
+                {this.renderBookingsForPhase(
+                  GROWTH_PHASE.FLOWER,
+                  batchInfo.quantity
+                )}
+              </div>
+
+              <div className="mt4">
+                {this.renderBookingsForPhase(
+                  GROWTH_PHASE.DRY,
+                  batchInfo.quantity
+                )}
+              </div>
+
+              <div className="mt4">
+                {this.renderBookingsForPhase(
+                  GROWTH_PHASE.CURE,
+                  batchInfo.quantity
+                )}
+              </div>
+            </React.Fragment>
+          )}
 
           {isFirstBalance && (
             <Modal
@@ -329,6 +349,13 @@ class BatchLocationApp extends React.Component {
             )}
           </div>
         </div>
+
+        <a
+          href={`/cultivation/batches/${this.props.batchInfo.id}`}
+          className="link orange tr db ph4"
+        >
+          SKIP - TODO: REMOVE THIS
+        </a>
       </div>
     )
   }

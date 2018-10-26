@@ -297,7 +297,7 @@ class BatchLocationEditor extends React.PureComponent {
               serialNo: plantConfig.serialNo,
               quantity: selectedTraysCapacity,
               trays: selectedTrays,
-              phase: plantConfig.phase,
+              phase: plantConfig.phase
             }
             onSave(updatePlant)
           }}

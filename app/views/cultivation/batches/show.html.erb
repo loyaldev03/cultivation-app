@@ -5,26 +5,17 @@
   %>
 <% end %>
 
+<% if params[:select_location].present? %>
+  <%= react_component 'cultivation/batches_setup/BatchLocationApp',
+    {
+      batchInfo: @batch_info,
+      locations: @locations
+    }
+  %>
+<% else %>
   <div class="pa4">
-    <% if params[:step].present? %>
-        <div class="flex flex-column justify-between bg-white box--shadow">
-          <div class="pa4 min-h-600">
-            <%= react_component 'cultivation/batches_setup/BatchLocationApp',
-              {
-                batchId: @batch.id.to_s,
-                batchSource: @batch.batch_source,
-                plantType: @plant_selection_type,
-                locations: @locations
-              } %>
-
-            <p>
-              <%= link_to 'Skip this (temp)', cultivation_batch_path(params[:id]), class: 'link' %>
-            </p>
-            </div>
-          </div>
-    <% else %>
-      <div class="fl w-100 flex flex-column">
-        <%= react_component 'cultivation/tasks_setup/TaskSetup', { batch_id: @batch.id.to_s, batch: @batch_attributes} %>
-      </div>
-    <% end %>
+    <div class="fl w-100 flex flex-column">
+      <%= react_component 'cultivation/tasks_setup/TaskSetup', { batch_id: @batch.id.to_s, batch: @batch_attributes} %>
+    </div>
   </div>
+<% end %>

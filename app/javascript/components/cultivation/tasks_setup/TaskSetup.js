@@ -35,6 +35,7 @@ class TaskSetup extends React.Component {
         'end_date',
         'duration',
         'estimated_hour',
+        'estimated_cost',
         'resource_assigned',
         'materials'
       ],
@@ -176,7 +177,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>???</label>
+                        <label>$ {this.state.batch.total_estimated_cost}</label>
                       </div>
                     </div>
                   </div>
@@ -187,7 +188,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>???</label>
+                        <label>{this.state.batch.total_estimated_hour}</label>
                       </div>
                     </div>
                   </div>
@@ -380,6 +381,17 @@ class TaskSetup extends React.Component {
                               checked={checkboxValue('estimated_hour')}
                             />
                             Estimated Hour
+                          </label>
+                          <label className="f6 fw6 db mb1 gray ttc">
+                            <input
+                              type="checkbox"
+                              name="checkbox-1"
+                              className="mr2"
+                              value="estimated_cost"
+                              onChange={handleChangeCheckbox}
+                              checked={checkboxValue('estimated_cost')}
+                            />
+                            Estimated Cost
                           </label>
                           <label className="f6 fw6 db mb1 gray ttc">
                             <input

@@ -46,6 +46,10 @@ class TaskSerializer
     end
   end
 
+  attribute :estimated_cost do |object|
+    object.estimated_cost
+  end
+
   attribute :actual_hours do |object|
     if object.is_phase
       sum = 0.0

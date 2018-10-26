@@ -58,5 +58,25 @@ module Cultivation
         dependent_task(tasks, task_depend)
       end
     end
+
+    def total_estimated_hours
+      '%.2f' % tasks.sum(:estimated_hours)
+    end
+
+    def total_estimated_costs
+      #hours per day = estimated hours(5hours) / duration(5 days)
+      #hours_per_person = hours_per_day / no of resource
+      total_cost = 0.0
+      tasks.each do |task|
+        hours_per_day = task.estimated_hours.to_f / task.duration.to_i
+        hours_per_person = hours_per_day / task.users.count
+        task_cost = 0.0
+        task.users.each do |user|
+          task_cost += (user.hourly_rate * hours_per_person) * task.duration
+        end
+        total_cost += task_cost
+      end
+      total_cost
+    end
   end
 end

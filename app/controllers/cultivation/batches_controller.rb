@@ -107,6 +107,8 @@ class Cultivation::BatchesController < ApplicationController
       start_date: @batch.start_date,
       estimated_harvest_date: @batch.estimated_harvest_date,
       nutrient_profile: @batch.nutrient_profile,
+      total_estimated_hour: @batch.total_estimated_hours,
+      total_estimated_cost: @batch.total_estimated_costs,
     }
   end
 

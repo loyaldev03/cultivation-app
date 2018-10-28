@@ -1,8 +1,9 @@
 class SeedFacilityDataJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
+  def perform(args = {})
     # Seed built-in roles
+    @args = args
     seed_roles
     seed_uom
     seed_raw_materials
@@ -21,7 +22,7 @@ class SeedFacilityDataJob < ApplicationJob
   end
 
   def seed_raw_materials
-    #make a seed raw materials commands
+    Inventory::CreateRawMaterials.call({facility_id: @args[:facility_id]})
   end
 
   def seed_uom

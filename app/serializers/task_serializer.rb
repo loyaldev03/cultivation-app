@@ -36,7 +36,7 @@ class TaskSerializer
         id: item.id.to_s,
         name: item.name,
         quantity: item.quantity,
-        uom: item.uom.unit,
+        uom: item.uom,
       }
     end
   end

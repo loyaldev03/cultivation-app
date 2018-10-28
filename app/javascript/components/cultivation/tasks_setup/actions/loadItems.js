@@ -1,7 +1,7 @@
 import ItemStore from '../stores/ItemStore'
 
-export default function loadItems() {
-  let url = '/api/v1/items'
+export default function loadItems(batch_id) {
+  let url = `/api/v1/items?batch_id=${batch_id}`
   fetch(url)
     .then(resp => resp.json()) // Transform the data into json
     .then(function(data) {

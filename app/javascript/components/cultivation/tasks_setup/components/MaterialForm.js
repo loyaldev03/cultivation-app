@@ -14,6 +14,8 @@ import loadTasks from '../actions/loadTask'
 
 import { groupBy, httpPostOptions } from '../../../utils'
 
+import UomStore from '../stores/UomStore'
+
 const uom_dropdown = [
   { value: 'KG', label: 'KG' },
   { value: 'CM', label: 'CM' },
@@ -63,26 +65,27 @@ export default class MaterialForm extends React.Component {
 
   handleChangeSelect = (key, value) => {
     this.setState({ [key]: value })
+    let raw_material = ItemStore.slice().find(e => e.name === value.value)
 
     if (key === 'selectedCategory') {
       this.setState({
         selectedSubCategory: '',
         selectedThirdDropdown: '',
         name: value.value,
-        raw_material_id: ItemStore.slice().find(e => e.name === value.value).id
+        raw_material_id: raw_material ? raw_material.id : null
       })
     }
     if (key === 'selectedSubCategory') {
       this.setState({
         selectedThirdDropdown: '',
         name: value.value,
-        raw_material_id: ItemStore.slice().find(e => e.name === value.value).id
+        raw_material_id: raw_material ? raw_material.id : null
       })
     }
     if (key === 'selectedThirdDropdown') {
       this.setState({
         name: value.value,
-        raw_material_id: ItemStore.slice().find(e => e.name === value.value).id
+        raw_material_id: raw_material ? raw_material.id : null
       })
     }
   }
@@ -109,15 +112,15 @@ export default class MaterialForm extends React.Component {
   sendApiCreate = async e => {
     let url = `/api/v1/items?task_id=${this.state.task_id}`
     let data
-    let item = {
-      item: {
-        raw_material_id: this.state.raw_material_id,
-        quantity: this.state.quantity,
-        uom: this.state.uom.label
-      }
-    }
 
-    fetch(url, httpPostOptions(JSON.stringify(item)))
+    fetch(
+      url,
+      httpPostOptions({
+        catalogue_id: this.state.raw_material_id,
+        quantity: this.state.quantity,
+        uom: this.state.uom.value
+      })
+    )
       .then(response => response.json())
       .then(data => {
         if (data.data.id != null) {
@@ -176,8 +179,6 @@ export default class MaterialForm extends React.Component {
     }
     let third_dropdown
     if (this.state.selectedSubCategory && showThirdDropdown) {
-      console.log(this.state.selectedSubCategory)
-      console.log()
       let third_level = groupBy(
         category_dropdown[this.state.selectedCategory.value],
         'sub_category'
@@ -193,7 +194,7 @@ export default class MaterialForm extends React.Component {
       label: f
     }))
 
-    let uom_dropdown = this.state.uom_dropdown
+    let uom_dropdown = UomStore
     let materials = this.state.items
     let handleChange = this.handleChange
     let handleDelete = this.handleDelete

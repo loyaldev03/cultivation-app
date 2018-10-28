@@ -70,7 +70,6 @@ class PlantStore {
   //     )
   // }
 
-
   @computed
   get bindablePlants() {
     return this.plants.slice()

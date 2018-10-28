@@ -14,7 +14,7 @@ class MotherEditor extends React.Component {
     super(props)
     this.state = this.resetState()
     this.locations = this.props.locations
-    
+
     // Callback ref to get instance of html DOM: https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
     // Getting a ref to textarea in order to adjust height according to content.
     this.plantIdsTextArea = null
@@ -34,69 +34,73 @@ class MotherEditor extends React.Component {
       if (!id) {
         this.setState(this.resetState())
         return
-      } 
+      }
 
-      getPlant(event.detail.id, 'vendor_invoice, vendor, purchase_order').then(({ status, data }) => {
-        if (status != 200) {
-          alert('something wrong')
-          return
-        }
-
-        console.log(data)
-
-        const invoice = data.attributes.vendor_invoice
-        const purchase_order = data.attributes.purchase_order
-        let invoice_attr = {}
-        if (invoice) {
-          invoice_attr = {
-            purchase_date: new Date(invoice.invoice_date),
-            invoice_no: invoice.invoice_no,
-            purchase_order_no: purchase_order.purchase_order_no
+      getPlant(event.detail.id, 'vendor_invoice, vendor, purchase_order').then(
+        ({ status, data }) => {
+          if (status != 200) {
+            alert('something wrong')
+            return
           }
-        }
 
-        const vendor = data.attributes.vendor
-        let vendor_attr = {}
-        if (vendor) {
-          vendor_attr = {
-            vendor_id: vendor.id,
-            vendor_name: vendor.name,
-            vendor_no: vendor.vendor_no,
-            address: vendor.address,
-            vendor_state_license_num: vendor.state_license_num,
-            vendor_state_license_expiration_date: new Date(
-              vendor.state_license_expiration_date
-            ),
-            vendor_location_license_num: vendor.location_license_num,
-            vendor_location_license_expiration_date: new Date(
-              vendor.location_license_expiration_date
-            )
+          console.log(data)
+
+          const invoice = data.attributes.vendor_invoice
+          const purchase_order = data.attributes.purchase_order
+          let invoice_attr = {}
+          if (invoice) {
+            invoice_attr = {
+              purchase_date: new Date(invoice.invoice_date),
+              invoice_no: invoice.invoice_no,
+              purchase_order_no: purchase_order.purchase_order_no
+            }
           }
+
+          const vendor = data.attributes.vendor
+          let vendor_attr = {}
+          if (vendor) {
+            vendor_attr = {
+              vendor_id: vendor.id,
+              vendor_name: vendor.name,
+              vendor_no: vendor.vendor_no,
+              address: vendor.address,
+              vendor_state_license_num: vendor.state_license_num,
+              vendor_state_license_expiration_date: new Date(
+                vendor.state_license_expiration_date
+              ),
+              vendor_location_license_num: vendor.location_license_num,
+              vendor_location_license_expiration_date: new Date(
+                vendor.location_license_expiration_date
+              )
+            }
+          }
+
+          const attrs = data.attributes
+          const strainOption = this.props.facilityStrains.find(
+            x => x.value === attrs.facility_strain_id
+          )
+          console.log(Object.getOwnPropertyNames(vendor_attr).length > 0)
+
+          this.setState({
+            ...this.resetState(),
+            id: data.id,
+            facility_strain_id: attrs.facility_strain_id,
+            facility_id: strainOption.facility_id,
+            strain_name: strainOption.label,
+            plant_ids: attrs.plant_id,
+            location_id: attrs.location_id,
+            planted_on: new Date(attrs.planting_date),
+            isBought: Object.getOwnPropertyNames(vendor_attr).length > 0,
+            ...vendor_attr,
+            ...invoice_attr
+          })
         }
-
-        const attrs = data.attributes
-        const strainOption = this.props.facilityStrains.find(x => x.value === attrs.facility_strain_id)
-        console.log(Object.getOwnPropertyNames(vendor_attr).length > 0)
-
-        this.setState({
-          ...this.resetState(),
-          id: data.id,
-          facility_strain_id: attrs.facility_strain_id,
-          facility_id: strainOption.facility_id,
-          strain_name: strainOption.label,
-          plant_ids: attrs.plant_id,
-          location_id: attrs.location_id,
-          planted_on: new Date(attrs.planting_date),
-          isBought: Object.getOwnPropertyNames(vendor_attr).length > 0,
-          ...vendor_attr,
-          ...invoice_attr
-        })    
-      })
+      )
     })
   }
 
   resetState() {
-    return({
+    return {
       id: '',
       strainOptions: this.props.facilityStrains,
       facility_strain_id: '',
@@ -121,7 +125,7 @@ class MotherEditor extends React.Component {
       // UI states
       isBought: false,
       errors: {}
-    })
+    }
   }
 
   onChangePlantIds = event => {

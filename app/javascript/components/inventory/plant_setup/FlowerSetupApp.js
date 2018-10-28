@@ -125,7 +125,7 @@ class FlowerSetupApp extends React.Component {
             minRows={5}
             filterable
             className="f6"
-            showPagination={plantStore.flowers.length > 30}
+            showPagination={plantStore.bindablePlants.length > 30}
           />
         </div>
         <PlantEditor

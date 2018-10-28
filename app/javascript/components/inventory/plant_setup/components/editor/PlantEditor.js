@@ -54,9 +54,9 @@ class PlantEditor extends React.Component {
         this.setState(this.resetState())
       } else {
         getPlant(id, 'vendor_invoice, vendor, purchase_order').then(
-          ({ status, data, included }) => {
+          ({ status, data }) => {
             if (status != 200) {
-              alert('someting wrong')
+              alert('something wrong')
               return
             }
 
@@ -287,8 +287,6 @@ class PlantEditor extends React.Component {
 
     const isValid =
       Object.getOwnPropertyNames(errors).length == 0 && purchaseData.isValid
-
-    // const isValid = true
 
     const data = {
       ...purchaseData,

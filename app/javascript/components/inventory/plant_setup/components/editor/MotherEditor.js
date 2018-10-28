@@ -6,41 +6,15 @@ import { NumericInput, FieldError } from '../../../../utils/FormHelpers'
 import LocationPicker from '../../../../utils/LocationPicker2'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import setupMother from '../../actions/setupMother'
+import getPlant from '../../actions/getPlant'
 import reactSelectStyle from '../../../../utils/reactSelectStyle'
 
 class MotherEditor extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      strainOptions: props.facilityStrains,
-      facility_strain_id: '',
-      facility_id: '',
-      strain_name: '',
-
-      // source
-      plant_ids: '',
-      location_id: '',
-
-      // Vendor/ source
-      vendor_name: '',
-      vendor_no: '',
-      address: '',
-      vendor_state_license_num: '',
-      vendor_state_license_expiration_date: null,
-      vendor_location_license_num: '',
-      vendor_location_license_expiration_date: null,
-      purchase_date: null,
-      invoice_no: '',
-
-      // UI states
-      // isShowPlantQtyForm: false,
-      isBought: false,
-      errors: {}
-    }
-
+    this.state = this.resetState()
     this.locations = this.props.locations
-    console.log(this.locations)
-
+    
     // Callback ref to get instance of html DOM: https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
     // Getting a ref to textarea in order to adjust height according to content.
     this.plantIdsTextArea = null
@@ -52,6 +26,102 @@ class MotherEditor extends React.Component {
     this.setPurchaseInfoEditor = element => {
       this.purchaseInfoEditor = element
     }
+  }
+
+  componentDidMount() {
+    document.addEventListener('editor-sidebar-open', event => {
+      const id = event.detail.id
+      if (!id) {
+        this.setState(this.resetState())
+        return
+      } 
+
+      getPlant(event.detail.id, 'vendor_invoice, vendor, purchase_order').then(({ status, data }) => {
+        if (status != 200) {
+          alert('something wrong')
+          return
+        }
+
+        console.log(data)
+
+        const invoice = data.attributes.vendor_invoice
+        const purchase_order = data.attributes.purchase_order
+        let invoice_attr = {}
+        if (invoice) {
+          invoice_attr = {
+            purchase_date: new Date(invoice.invoice_date),
+            invoice_no: invoice.invoice_no,
+            purchase_order_no: purchase_order.purchase_order_no
+          }
+        }
+
+        const vendor = data.attributes.vendor
+        let vendor_attr = {}
+        if (vendor) {
+          vendor_attr = {
+            vendor_id: vendor.id,
+            vendor_name: vendor.name,
+            vendor_no: vendor.vendor_no,
+            address: vendor.address,
+            vendor_state_license_num: vendor.state_license_num,
+            vendor_state_license_expiration_date: new Date(
+              vendor.state_license_expiration_date
+            ),
+            vendor_location_license_num: vendor.location_license_num,
+            vendor_location_license_expiration_date: new Date(
+              vendor.location_license_expiration_date
+            )
+          }
+        }
+
+        const attrs = data.attributes
+        const strainOption = this.props.facilityStrains.find(x => x.value === attrs.facility_strain_id)
+        console.log(Object.getOwnPropertyNames(vendor_attr).length > 0)
+
+        this.setState({
+          ...this.resetState(),
+          id: data.id,
+          facility_strain_id: attrs.facility_strain_id,
+          facility_id: strainOption.facility_id,
+          strain_name: strainOption.label,
+          plant_ids: attrs.plant_id,
+          location_id: attrs.location_id,
+          planted_on: new Date(attrs.planting_date),
+          isBought: Object.getOwnPropertyNames(vendor_attr).length > 0,
+          ...vendor_attr,
+          ...invoice_attr
+        })    
+      })
+    })
+  }
+
+  resetState() {
+    return({
+      id: '',
+      strainOptions: this.props.facilityStrains,
+      facility_strain_id: '',
+      facility_id: '',
+      strain_name: '',
+      planted_on: null,
+      // source
+      plant_ids: '',
+      location_id: '',
+      // Vendor/ source
+      vendor_id: '',
+      vendor_name: '',
+      vendor_no: '',
+      address: '',
+      vendor_state_license_num: '',
+      vendor_state_license_expiration_date: null,
+      vendor_location_license_num: '',
+      vendor_location_license_expiration_date: null,
+      purchase_date: null,
+      invoice_no: '',
+      purchase_order_no: '',
+      // UI states
+      isBought: false,
+      errors: {}
+    })
   }
 
   onChangePlantIds = event => {
@@ -120,38 +190,14 @@ class MotherEditor extends React.Component {
   }
 
   reset() {
-    this.setState({
-      facility_strain_id: '',
-      strain_name: '',
-      facility_id: '',
-      plant_ids: '',
-      planted_on: null,
-      location_id: '',
-      // Procurement info
-      vendor_name: '',
-      vendor_no: '',
-      address: '',
-      vendor_state_license_num: '',
-      vendor_state_license_expiration_date: null,
-      vendor_location_license_num: '',
-      vendor_location_license_expiration_date: null,
-      purchase_date: null,
-      invoice_no: '',
-
-      isBought: false,
-      errors: {}
-      // isShowPlantQtyForm: false,
-      // plant_qty: 0,
-    })
+    this.setState(this.resetState())
   }
 
   validateAndGetValues() {
     let {
+      id,
       facility_strain_id,
-      facility_id,
       plant_ids,
-      // isShowPlantQtyForm,
-      // plant_qty,
       planted_on,
       isBought,
       location_id //
@@ -171,12 +217,6 @@ class MotherEditor extends React.Component {
       errors = { ...errors, planted_on: ['Planted on date is required.'] }
     }
 
-    // if (isShowPlantQtyForm) {
-    //   plant_ids = ''
-    // } else {
-    //   plant_qty = null
-    // }
-
     let purchaseData = { isValid: true }
     if (isBought) {
       purchaseData = this.purchaseInfoEditor.getValues()
@@ -191,8 +231,8 @@ class MotherEditor extends React.Component {
 
     const data = {
       ...purchaseData,
+      id,
       facility_strain_id,
-      facility_id,
       plant_ids,
       // plant_qty,
       planted_on: planted_on && planted_on.toISOString(),
@@ -291,12 +331,11 @@ class MotherEditor extends React.Component {
           <div className="ph4 mt3 mb3 flex flex-column">
             <div className="w-100">
               <LocationPicker
-                key={this.state.facility_id}
-                ref={this.locationPicker}
+                key={`${this.state.facility_id}.${this.state.location_id}`}
                 mode="mother"
                 facility_id={this.state.facility_id}
                 locations={this.locations}
-                location_id={this.state.room_id}
+                location_id={this.state.location_id}
                 onChange={this.onLocationChanged}
               />
               <FieldError errors={this.state.errors} field="location_id" />
@@ -323,6 +362,7 @@ class MotherEditor extends React.Component {
           </div>
           {this.state.isBought && (
             <PurchaseInfo
+              key={this.state.id}
               showLabel={false}
               ref={this.setPurchaseInfoEditor}
               vendor_name={this.state.vendor_name}
@@ -340,6 +380,7 @@ class MotherEditor extends React.Component {
               }
               purchase_date={this.state.purchase_date}
               invoice_no={this.state.invoice_no}
+              purchase_order_no={this.state.purchase_order_no}
             />
           )}
 

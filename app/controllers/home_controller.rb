@@ -1,10 +1,19 @@
 class HomeController < ApplicationController
   def index
-    @home = OpenStruct.new({
-      last_facility: Facility.last,
-      has_inventories: Facility.last.strains.count > 0,
-      has_batches: Cultivation::Batch.where(facility_id: Facility.last.id).count > 0,
-    })
+    if Facility.count == 0
+      @home = OpenStruct.new({
+        last_facility: nil,
+        has_inventories: false,
+        has_batches: false,
+      })
+    else
+      facility = Facility.last
+      @home = OpenStruct.new({
+        last_facility: facility,
+        has_inventories: facility.strains.count > 0,
+        has_batches: Cultivation::Batch.where(facility_id: facility.id).count > 0,
+      })
+    end
   end
 
   def dashboard

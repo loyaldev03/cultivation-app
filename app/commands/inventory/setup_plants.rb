@@ -166,10 +166,6 @@ module Inventory
           ref_type: invoice_item ? invoice_item.class.name : nil,
         )
       end
-
-      # Rails.logger.debug("\t\t\t create plants - invoice_item: #{invoice_item}")
-      # Rails.logger.debug("\t\t\t create plants - invoice_item.nil?: #{invoice_item.nil?}")
-      # Rails.logger.debug("\t\t\t create plants - invoice_item&.id: #{invoice_item&.id}")
       update_po_invoice_count(invoice_item&.id)
       plants
     end
@@ -212,6 +208,19 @@ module Inventory
         po.facility = facility_strain.facility
         po.status = Inventory::PurchaseOrder::RECEIVED_FULL
       end
+
+      # TODO: Try replace with following block
+      # po_item = purchase_order.items.find_or_create_by!(facility_strain_id: facility_strain.id) do |item|
+      #   item.catalogue = catalogue
+      #   item.quantity = plant_ids.count
+      #   item.uom = Common::UnitOfMeasure.pieces('pc')
+      #   item.price = 0
+      #   item.currency = 'USD'
+      #   item.tax = 0
+      #   item.description = "PO created from Mother Plant setup - #{plant_ids.join(', ')}"
+      #   item.product_name = "#{facility_strain.strain_name} - Mother Plant"
+      # end
+      # po_item
 
       if id.blank?
         po_item = purchase_order.items.create!(

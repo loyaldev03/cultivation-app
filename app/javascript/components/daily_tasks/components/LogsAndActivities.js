@@ -1,8 +1,11 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import moment from 'moment'
+import { format, differenceInSeconds, startOfDay, addSeconds } from 'date-fns'
+import { toJS } from 'mobx'
 
+import { addNotes } from '../actions/taskActions'
 import { isEmptyString } from '../../utils/StringHelper'
+import { formatUnicodeAware } from '../../utils/DateHelper'
 
 @observer
 class LogsAndActivities extends React.Component {
@@ -34,13 +37,17 @@ class LogsAndActivities extends React.Component {
     const { dailyTask } = this.props
     const task = dailyTask.attributes.task
 
-    const timeFormat = datetime => moment(datetime).format('hh:mm A')
-    const dateFormat = datetime => moment(datetime).format('MMMM D, YYYY')
+    const timeFormat = datetime => format(datetime, 'hh:mm a')
+    const durationStr = (start, end) => {
+      let temp = startOfDay(new Date())
+      temp = addSeconds(temp, parseInt(differenceInSeconds(end, start)))
+      return format(temp, "H 'hr' m 'mn'")
+    }
 
     return (
       <div className="w-100 lh-copy black-60 f6">
         <div className="mb3">
-          <div className="b ttu">Materials Used</div>
+          <div className="b ttu">Planned Materials</div>
           {task.attributes.items.map((item, i) => (
             <li className="ml3" key={i}>
               <span className="b">{item.name}:</span> {item.quantity} {item.uom}
@@ -54,6 +61,8 @@ class LogsAndActivities extends React.Component {
             <li className="ml3" key={i}>
               Started at {timeFormat(log.start_time)}{' '}
               {log.end_time && `and ended at ${timeFormat(log.end_time)}`}
+              &nbsp;
+              ({durationStr(log.start_time, log.end_time)})
             </li>
           ))}
         </div>
@@ -64,8 +73,7 @@ class LogsAndActivities extends React.Component {
             <div className="mv2" key={i}>
               <i className="material-icons mid-gray md-18 fl">today</i>
               <div className="v-top fl ml2">
-                <strong>{dateFormat(note.created_at)}</strong>{' '}
-                {timeFormat(note.created_at)}
+                {timeFormat(note.c_at)}
               </div>
 
               <div className="cl">{note.notes}</div>

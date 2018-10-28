@@ -6,7 +6,7 @@ module Cultivation
     embedded_in :task, class_name: 'Cultivation::Task'
 
     field :quantity, type: Integer
-    field :uom, type: String
+    field :uom, type: String  # TODO: this needs reference Common::UnitOfMeasure
 
     belongs_to :raw_material, class_name: 'Inventory::RawMaterial'
 

@@ -9,11 +9,11 @@ class TaskSerializer
   end
 
   attribute :start_date do |object|
-    object.start_date&.localtime&.strftime('%m/%d/%Y')
+    object.start_date&.localtime
   end
 
   attribute :end_date do |object|
-    object.end_date&.localtime&.strftime('%m/%d/%Y')
+    object.end_date&.localtime
   end
 
   #for showing in table column resources
@@ -32,6 +32,7 @@ class TaskSerializer
         name: item.name,
         quantity: item.quantity,
         uom: item.uom,
+        raw_material_id: item.raw_material_id.to_s,
       }
     end
   end

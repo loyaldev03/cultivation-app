@@ -14,6 +14,8 @@ class DailyTasksController < ApplicationController
         tasks: serialized_tasks(batch_group['tasks']),
       }
     end
+
+    @raw_materials = serialized_raw_materials
   end
 
   private
@@ -29,6 +31,10 @@ class DailyTasksController < ApplicationController
     WorkDaySerializer.new(task_ids.map do |task_id|
       Cultivation::Task.find(task_id).work_days.find_or_initialize_by(date: @tasks_date, user: current_user)
     end).serializable_hash[:data]
+  end
+
+  def serialized_raw_materials
+    Inventory::RawMaterialSerializer.new(Inventory::RawMaterial.all).serializable_hash[:data]
   end
 
   def batch_room_names(batch)

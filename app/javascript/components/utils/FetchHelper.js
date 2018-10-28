@@ -16,3 +16,13 @@ export const httpPostOptions = payload => ({
     'Content-Type': 'application/json'
   }
 })
+
+export const httpOptions = (method, payload) => ({
+  method,
+  credentials: 'include',
+  body: JSON.stringify(payload),
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
+  }
+})

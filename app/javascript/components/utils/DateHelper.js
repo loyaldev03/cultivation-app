@@ -48,3 +48,6 @@ export const formatDate = date => {
 export const formatDate2 = date => {
   return format(date, 'M/d/YYYY', { awareOfUnicodeTokens: true })
 }
+
+export const formatUnicodeAware = (date, frmt, options = {}) =>
+  format(date, frmt, Object.assign({}, { awareOfUnicodeTokens: true }, options))

@@ -1,21 +1,23 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { toJS } from 'mobx'
-import moment from 'moment'
+import { format, startOfDay, addSeconds } from 'date-fns'
 import styled from 'styled-components'
 
 import { toggleTask } from '../actions/taskActions'
 import DailyTasksStore from '../store/DailyTasksStore'
 import EditPanel from './EditPanel'
+import { formatUnicodeAware } from '../../utils/DateHelper'
 
 const TaskRow = observer(props => {
   const { dailyTask, index } = props
   const classes = 'pa2 tc black-60 lh-copy bb b--black-10'
   const task = dailyTask.attributes.task
-  const timeSpentToday = moment()
-    .startOf('day')
-    .seconds(parseInt(dailyTask.attributes.duration))
-    .format('H [hr] m [mn]')
+  const timeSpentToday = (() => {
+    let temp = startOfDay(new Date())
+    temp = addSeconds(temp, parseInt(dailyTask.attributes.duration))
+    return format(temp, "H 'hr' m 'mn'")
+  })()
+
   const taskIsStarted = dailyTask.attributes.status == 'started'
   const taskIsDone = dailyTask.attributes.status == 'done'
 
@@ -53,8 +55,8 @@ const TaskRow = observer(props => {
       >
         {task.attributes.name}
       </div>
-      <div className={classes}>{task.attributes.start_date}</div>
-      <div className={classes}>{task.attributes.end_date}</div>
+      <div className={classes}>{formatUnicodeAware(task.attributes.start_date, 'M/d/YYYY')}</div>
+      <div className={classes}>{formatUnicodeAware(task.attributes.end_date, 'M/d/YYYY')}</div>
       <div className={classes}>{timeSpentToday}</div>
       <StartEnd
         className={`${classes} pointer white`}

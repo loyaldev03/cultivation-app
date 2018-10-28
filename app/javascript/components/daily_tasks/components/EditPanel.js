@@ -1,9 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import styled from 'styled-components'
-import { toJS } from 'mobx'
 
-import { addNotes } from '../actions/taskActions'
 import DailyTasksStore from '../store/DailyTasksStore'
 import LogsAndActivities from './LogsAndActivities'
 import MaterialUsed from './MaterialUsed'

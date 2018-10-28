@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
-import { toJS } from 'mobx'
-import moment from 'moment'
+import { format } from 'date-fns'
 
+import { formatUnicodeAware } from '../utils/DateHelper'
 import DailyTasksStore from './store/DailyTasksStore'
 import WorkDayEditor from './components/WorkDayEditor'
 import WorkPanel from './components/WorkPanel'
@@ -13,6 +13,7 @@ class WorkDashboardApp extends React.Component {
   componentDidMount() {
     DailyTasksStore.dailyTasksByBatch = this.props.tasks_by_batch
     DailyTasksStore.date = this.props.date
+    DailyTasksStore.rawMaterials = this.props.raw_materials
   }
 
   render() {
@@ -31,8 +32,7 @@ class WorkDashboardApp extends React.Component {
 }
 
 const DateFormatted = ({ date }) => {
-  const dateMoment = moment(date, 'YYYY-MM-DD')
-  const dateFormatted = dateMoment.format('ddd, D MMM YYYY')
+  const dateFormatted = formatUnicodeAware(date, 'E, d MMM YYYY')
   return (
     <h5 className="tl ph3 pv4 ma1 h5--font dark-grey ttc bg-white">
       {dateFormatted}

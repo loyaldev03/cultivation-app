@@ -15,7 +15,7 @@ class BatchSetupStore {
   @observable isLoading = false
   @observable trays = {}
   @observable plans = {}
-  @observable trayPurposes = {}
+  @observable trayPurposes = []
   @observable isReady = false
 
   @action

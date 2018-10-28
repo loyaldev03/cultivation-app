@@ -15,6 +15,10 @@
   border-color: #C7C7C7;
 }
 
+.b--light-yellow {
+  border-color: var(--light-yellow);
+}
+
 .min-vh-80 { 
   min-height: 80vh; 
 }
@@ -38,6 +42,10 @@
 
 .bg-orange {
   background-color: var(--orange);
+}
+
+.bg-light-yellow {
+  background-color: var(--light-yellow);
 }
 
 .box--height {

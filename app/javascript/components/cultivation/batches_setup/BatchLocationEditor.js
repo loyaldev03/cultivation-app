@@ -89,7 +89,7 @@ const LabelWithChangeEvent = ({ isSelecting, value, onClick }) => {
 class BatchLocationEditor extends React.PureComponent {
   state = {
     locations: this.props.locations || [], // all available tray locations from database
-    selectedTrays: this.props.plant.trays || []
+    selectedTrays: this.props.plantConfig.trays || []
   }
 
   onShowAddLocation = () => {
@@ -130,7 +130,7 @@ class BatchLocationEditor extends React.PureComponent {
     const traySel = this.state.selectedTrays.find(t => t.tray_id === trayId)
     if (selectedLocation) {
       const trayObj = {
-        plant_id: this.props.plant.id,
+        plant_id: this.props.plantConfig.id,
         room_id: selectedLocation.room_id,
         row_id: selectedLocation.row_id,
         shelf_id: selectedLocation.shelf_id,
@@ -237,7 +237,7 @@ class BatchLocationEditor extends React.PureComponent {
   }
 
   render() {
-    const { plant, onSave, onClose } = this.props
+    const { plantConfig, onSave, onClose } = this.props
     const {
       locations,
       showRoomList,
@@ -293,9 +293,11 @@ class BatchLocationEditor extends React.PureComponent {
           onSubmit={e => {
             e.preventDefault()
             const updatePlant = {
-              id: plant.id,
+              id: plantConfig.id,
+              serialNo: plantConfig.serialNo,
               quantity: selectedTraysCapacity,
-              trays: selectedTrays
+              trays: selectedTrays,
+              phase: plantConfig.phase
             }
             onSave(updatePlant)
           }}
@@ -303,7 +305,7 @@ class BatchLocationEditor extends React.PureComponent {
           <div className="ph4">
             <div className="mt2">
               <span className="subtitle-2 grey db mt3 mb1">
-                PlantID: {plant.serialNo}
+                PlantID: {plantConfig.serialNo}
               </span>
 
               <label className="subtitle-2 grey db mb1">Locations:</label>

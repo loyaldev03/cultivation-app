@@ -35,8 +35,6 @@ class SidebarTaskEditor extends React.Component {
         id: props.task.id,
         ...props.task.attributes,
         duration: props.task.attributes.duration,
-        start_date: new Date(),
-        end_date: new Date(),
         start_date: new Date(props.task.attributes.start_date),
         end_date: new Date(props.task.attributes.end_date),
         errors: ''
@@ -88,24 +86,6 @@ class SidebarTaskEditor extends React.Component {
       arrays.push(e.target.value)
     } else {
       arrays = arrays.filter(k => k !== e.target.value)
-    }
-    this.setState({ task_type: arrays })
-
-    // this.setState(prevState => ({ task_type: prevState.task_type.set(item, isChecked) }));
-  }
-
-  handleChangeCheckbox2 = e => {
-    const arrays = this.state.task_type
-    if (e.target.checked) {
-      // const selectedSubject = this.state.dsSubjects.find(e => e.id === value); // find selected subject
-      arrays.push({
-        id: selectedSubject.id,
-        code: selectedSubject.code,
-        name: selectedSubject.name
-      })
-    } else {
-      const index = arrays.findIndex(i => i.id === value)
-      arrays.splice(index, 1)
     }
     this.setState({ task_type: arrays })
   }

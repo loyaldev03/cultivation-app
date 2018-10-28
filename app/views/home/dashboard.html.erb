@@ -18,7 +18,7 @@
           <% @dashboard.cultivation_batches.each do |batch| %>
             <tr class="striped--light-gray dim">
               <td class="pv2 ph3 tl ttu">
-                <%= link_to batch.name, cultivation_batch_path(batch.id), class: "link pa1 dib" %>
+                <%= link_to batch.batch_no, cultivation_batch_path(batch.id), class: "link pa1 dib" %>
               </td>
               <td class="tr pv2 ph3">
                 <%= batch.start_date.try(:strftime, '%m/%d/%Y') %>

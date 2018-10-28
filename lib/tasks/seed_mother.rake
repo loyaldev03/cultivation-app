@@ -1,5 +1,5 @@
 desc "Create 15 fake clone data"
-task seed_purchased_clones: :environment  do
+task seed_mother: :environment  do
   facility = Facility.completed.last
 
   fs = Inventory::FacilityStrain.find_or_initialize_by(
@@ -21,14 +21,14 @@ task seed_purchased_clones: :environment  do
     p = Inventory::Plant.new
     p.created_by = User.last
     p.facility_strain = fs
-    p.plant_id = "P%05d" % i
+    p.plant_id = "MO%05d" % i
     p.plant_tag = "T.#{p.plant_id}"
     p.location_id = nil
     p.location_type = "room"
     p.status = "available"
-    p.current_growth_stage = "clone"
-    p.mother_date = nil
-    p.planting_date = 15.days.ago
+    p.current_growth_stage = "mother"
+    p.mother_date = 100.days.ago
+    p.planting_date = nil
     p.expected_harvest_date = Date.today + 160.days
     p.last_metrc_update = nil
     p.save

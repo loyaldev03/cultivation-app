@@ -1,20 +1,22 @@
-$orange: var(--orange);
-$darkOrange: #FF7F30;
-$white: var(--white);
+$buttonHeight1: 38px;
+$buttonHeight2: 46px;
 
 .btn {
   display: inline-block;
   cursor: pointer;
-  outline-color: $darkOrange;
-  height: 38px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-radius: 4px;
+  outline-color: $orange;
+  height: $buttonHeight1;
+  padding: 0 2em 0 2em;
+  border-radius: 0.22em;
   font-size: 14px;
   font-weight: 600;
+  line-height: $buttonHeight1;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
 }
+
 
 .btn--primary {
   border: 1px solid $orange;
@@ -24,9 +26,31 @@ $white: var(--white);
 
 .btn--primary:hover {
   background-color: $darkOrange;
+  border: 1px solid $darkOrange;
+}
+
+.btn--secondary {
+  background-color: $white;
+  color: $grey;
+  border: 1px solid $silver;
+}
+
+.btn--secondary:hover {
+  color: $darkGrey;
 }
 
 .btn--large {
-  height: 46px;
+  height: $buttonHeight2;
+  line-height: $buttonHeight2 - 2px;
   font-size: 15px;
+}
+
+.btn:disabled,
+.btn--disabled,
+.btn--primary:disabled,
+.btn--secondary:disabled {
+  border: none;
+  background-color: #EEEEEE;
+  color: #707A8B;
+  cursor: not-allowed;
 }

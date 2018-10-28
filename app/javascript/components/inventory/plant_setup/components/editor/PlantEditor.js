@@ -13,6 +13,7 @@ import setupPlants from '../../actions/setupPlants'
 import reactSelectStyle from '../../../../utils/reactSelectStyle'
 import getPlant from '../../actions/getPlant'
 import searchPlants from '../../actions/searchPlants'
+import { BATCH_SOURCE } from '../../../../utils'
 
 class PlantEditor extends React.Component {
   constructor(props) {
@@ -113,7 +114,7 @@ class PlantEditor extends React.Component {
               start_date: new Date(batch.start_date),
               facility: batch.facility,
               batch_source: batch.batch_source,
-              isBought: batch.batch_source === 'clones_purchased',
+              isBought: batch.batch_source === BATCH_SOURCE.PURCHASED,
 
               // relationships
               ...vendor_attr,
@@ -206,7 +207,7 @@ class PlantEditor extends React.Component {
       planting_date,
       motherOption: null,
       batch_source: item.batch_source,
-      isBought: item.batch_source === 'clones_purchased'
+      isBought: item.batch_source === BATCH_SOURCE.PURCHASED
     })
   }
 

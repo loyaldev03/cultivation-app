@@ -24,6 +24,8 @@ class User
   field :default_facility_id, type: BSON::ObjectId
   field :is_active, type: Boolean, default: -> { true }
   field :photo_data, type: String
+  field :hourly_rate, type: Float
+  field :overtime_hourly_rate, type: Float
 
   ## Database authenticatable
   field :email, type: String, default: ''

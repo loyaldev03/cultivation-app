@@ -27,7 +27,11 @@
               Register strains that are grown at your facility.
             </p>
           </div>
-          <%= link_to (Inventory::FacilityStrain.count > 0 ? 'Modify' : 'Start'), inventory_strains_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim' %>
+          <% if current_default_facility.strains.count > 0 %>
+            <%= link_to 'Change', inventory_strains_path, class: 'flex-none orange link f6 fw6 pv2 br2 dim ttu' %>
+          <% else %>
+            <%= link_to 'Start', inventory_strains_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim ttu' %>
+          <% end %>
         </div>
         <div class="flex flex-row justify-center items-center mb4">
           <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%">
@@ -41,12 +45,12 @@
               These are your plant inventories such as seeds, mother plants, clones, harvest yield and waste. Plant inventory requires unique IDs for legal compliance and traceability.
             </p>
           </div>
-          <% if Inventory::FacilityStrain.count <= 0 %>
-            <%= link_to 'Strain is required', '', class: 'flex-none bg-black-20 link white f6 fw6 pv2 ph3 br2 dim' %>
+          <% if current_default_facility.strains.count <= 0 %>
+            <%= link_to 'Strain is required', '', class: 'flex-none black-20 link f6 fw6 pv2 br2 dim' %>
           <% elsif Inventory::Plant.count > 0 %>
-            <%= link_to 'Modify', mothers_inventory_plants_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim' %>
+            <%= link_to 'Change', mothers_inventory_plants_path, class: 'flex-none orange link white f6 fw6 pv2 br2 dim ttu' %>
           <% else %>
-            <%= link_to 'Start', mothers_inventory_plants_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim' %>
+            <%= link_to 'Start', mothers_inventory_plants_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim ttu' %>
           <% end %>
         </div>
 
@@ -63,7 +67,7 @@
             </p>
           </div>
           
-          <%= link_to 'Start', nutrients_materials_items_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim' %>
+          <%= link_to 'Setup', nutrients_materials_items_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim ttu' %>
         </div>
 
         <div class="flex flex-row justify-center items-center mb4">
@@ -78,7 +82,7 @@
               Product items ready for Sale
             </p>
           </div>
-          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
+          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim ttu">Setup</a>
           
         </div>
 
@@ -95,7 +99,7 @@
               Any item that you want to keep track such as fixed assets or does not fit any category above (i.e. Office Supplies).
             </p>
           </div>
-          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
+          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim ttu">Setup</a>
         </div>
 
         <!-- 

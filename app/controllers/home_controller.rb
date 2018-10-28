@@ -39,6 +39,8 @@ class HomeController < ApplicationController
     Common::UnitOfMeasure.delete_all
     Common::SeedUnitOfMeasure.call
 
+    # User.update_all(facilites: [], default_facility_id: nil)
+
     # Preserve facility F0X
     f = Facility.find_by(code: 'F0X')
     t = []

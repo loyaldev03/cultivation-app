@@ -35,6 +35,7 @@ const ValidationMessage = ({ enable, show, text }) => {
 }
 
 const PhaseDurationInput = ({ text, onChange }) => {
+  // TODO: Each field is required. Show warning
   return (
     <div className="fl w-70 mt1">
       <div className="fl w-20 pa2">
@@ -43,9 +44,9 @@ const PhaseDurationInput = ({ text, onChange }) => {
       <div className="fr tr w-20 mh3">
         <input
           type="number"
-          min="0"
-          defaultValue={0}
+          min="1"
           onChange={onChange}
+          required={true}
           className="w-50 tr pa2 f6 black ba b--black-20 br2 outline-0"
         />
         <span className="ml1 gray f6">days</span>
@@ -62,14 +63,14 @@ class CalendarTitleBar extends React.PureComponent {
       <div className="availabilty-calendar-title">
         <button
           onClick={onPrev}
-          className="fl fw4 ph2 br4 pointer bg-white ml2"
+          className="fl fw4 ph2 br-100 pointer bg-white ml2"
         >
           &#171;
         </button>
         {monthOptionToString(month)}
         <button
           onClick={onNext}
-          className="fr fw4 ph2 br4 pointer bg-white mr2"
+          className="fr fw4 ph2 br-100 pointer bg-white mr2"
         >
           &#187;
         </button>
@@ -147,7 +148,9 @@ class BatchSetupApp extends React.Component {
         this.setState({ isLoading: false, errors: {} })
         if (data.data && data.data.id) {
           toast('Batch Created', 'success')
-          window.location.replace(`/cultivation/batches/${data.data.id}?step=1`)
+          window.location.replace(
+            `/cultivation/batches/${data.data.id}?select_location=1`
+          )
         } else {
           this.setState({ errors: data.errors })
           toast('Please check the errors and try again', 'Warning')
@@ -200,10 +203,8 @@ class BatchSetupApp extends React.Component {
       showValidation,
       batchFacility,
       batchStrain,
-      batchSource,
       searchMonth,
       batchStartDate,
-      batchQuantity,
       errors,
       isLoading
     } = this.state
@@ -223,7 +224,13 @@ class BatchSetupApp extends React.Component {
           title="Search"
           className="mt3 fl w-100"
           render={() => (
-            <div className="fl w-100 relative">
+            <form
+              className="fl w-100 relative"
+              onSubmit={e => {
+                e.preventDefault()
+                this.handleSearch(searchMonth)
+              }}
+            >
               <div className="fl w-100">
                 <div className="fl w-third pr2">
                   <label className="subtitle-2 grey db mb1">Facility</label>
@@ -292,20 +299,20 @@ class BatchSetupApp extends React.Component {
                 </div>
 
                 <div className="fl tr w-20 absolute right-0 bottom-0">
-                  <button
-                    className="btn btn--primary"
-                    onClick={e => this.handleSearch(searchMonth)}
-                  >
-                    Search
-                  </button>
+                  <input
+                    className="btn btn--primary btn--large"
+                    type="submit"
+                    value="Search"
+                  />
                 </div>
               </div>
-            </div>
+            </form>
           )}
         />
         <div className="fl w-100 mt3">
           {showValidation &&
-            searchMonth && (
+            searchMonth &&
+            batchSetupStore.isReady && (
               <div className="fl w-100">
                 <CalendarTitleBar
                   month={searchMonth}

@@ -44,5 +44,15 @@ module Cultivation
     def parent
       batch.tasks.find_by(id: self.parent_id)
     end
+
+    def estimated_cost
+      hours_per_day = estimated_hours.to_f / duration.to_i
+      hours_per_person = hours_per_day / users.count
+      task_cost = 0.0
+      users.each do |user|
+        task_cost += (user.hourly_rate * hours_per_person) * duration
+      end
+      task_cost
+    end
   end
 end

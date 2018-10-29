@@ -508,14 +508,20 @@ class TaskList extends React.Component {
             {
               Header: 'Duration',
               accessor: 'attributes.duration',
-              maxWidth: '100',
+              maxWidth: '90',
               show: this.checkVisibility('duration')
             },
             {
               Header: 'Est Hr',
               accessor: 'attributes.estimated_hours',
-              maxWidth: '150',
+              maxWidth: '100',
               show: this.checkVisibility('estimated_hour')
+            },
+            {
+              Header: 'Est Cost ($)',
+              accessor: 'attributes.estimated_cost',
+              maxWidth: '100',
+              show: this.checkVisibility('estimated_cost')
             },
             {
               Header: 'Assigned',

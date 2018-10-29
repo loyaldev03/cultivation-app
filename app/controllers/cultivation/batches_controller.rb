@@ -14,7 +14,6 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def show
-    # TODO: Use other params
     if params[:select_location].present?
       @batch_info = OpenStruct.new({
         id: @batch.id.to_s,

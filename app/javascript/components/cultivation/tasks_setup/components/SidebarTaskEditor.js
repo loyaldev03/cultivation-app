@@ -64,7 +64,7 @@ class SidebarTaskEditor extends React.Component {
     console.log(JSON.stringify(a))
     if (a && a.attributes && date === 'start_date') {
       return new Date(a.attributes.start_date)
-    } 
+    }
     if (a && a.attributes && date === 'end_date') {
       return new Date(a.attributes.end_date)
     }

@@ -4,16 +4,17 @@ module Inventory
     include Mongoid::Timestamps::Short
 
     field :invoice_no, type: String
-    field :total_amount, type: BigDecimal
-    field :status, type: String
-    field :purchase_date, type: DateTime
-    field :purchase_order_no, type: String
+    field :invoice_date, type: DateTime
+    field :status, type: String          # {draft, submitted, paid}
+    field :terms_in_days, type: Integer, default: 0
 
+    belongs_to :facility
     belongs_to :vendor, class_name: 'Inventory::Vendor'
     belongs_to :purchase_order, class_name: 'Inventory::PurchaseOrder'
-    belongs_to :facility
+    has_many :items, class_name: 'Inventory::VendorInvoiceItem', dependent: :delete
 
-    has_many :items, class_name: 'Inventory::VendorInvoiceItem'
-    has_many :plants, class_name: 'Inventory::Plant'        # to be revised!
+    def total_amount
+      items.sum { |x| x.total_amount }
+    end
   end
 end

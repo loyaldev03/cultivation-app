@@ -73,4 +73,8 @@ class User
   def is_dev?
     true
   end
+
+  def cultivation_tasks
+    Cultivation::Task.in(user_ids: id)
+  end
 end

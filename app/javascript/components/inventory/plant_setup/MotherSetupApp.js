@@ -75,16 +75,15 @@ const columns = [
     filterable: false,
     maxWidth: 45,
     Cell: x => (
-      <a href="#" onClick={event => openStrain(event, x.index)}>
+      <a href="#" onClick={event => openStrain(event, x.original.id)}>
         <i className="material-icons gray">more_horiz</i>
       </a>
     )
   }
 ]
 
-function openStrain(event, index) {
-  // const id = plantStore.strains.slice()[index].id
-  window.editorSidebar.open({ width: '500px' })
+function openStrain(event, id) {
+  window.editorSidebar.open({ width: '500px', id })
   event.preventDefault()
 }
 

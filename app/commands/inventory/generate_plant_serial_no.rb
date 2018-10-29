@@ -7,8 +7,8 @@ module Inventory
     end
 
     def call
-      current_count = Inventory::ItemArticle.unscoped.where(
-        plant_status: {:$in => %w(mother clone veg veg1 veg2)},
+      current_count = Inventory::Plant.unscoped.where(
+        status: {:$in => %w(mother clone veg veg1 veg2)},
         c_at: {:$gte => DateTime.new(Date.today.year, 1, 1)},
       ).count
 

@@ -19,7 +19,7 @@ module Inventory
     field :location_id, type: BSON::ObjectId
     field :location_type, type: String
     field :status, type: String
-    field :current_growth_stage, type: String
+    field :current_growth_stage, type: String   # mother, clone, veg, veg1, veg2, flower, harvested, destroyed
     field :mother_date, type: DateTime
     field :planting_date, type: DateTime
     field :veg_date, type: DateTime
@@ -35,5 +35,7 @@ module Inventory
     field :wet_weight_unit, type: String
 
     field :last_metrc_update, type: DateTime
+    field :ref_id, type: BSON::ObjectId
+    field :ref_type, type: String
   end
 end

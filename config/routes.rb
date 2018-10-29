@@ -57,13 +57,15 @@ Rails.application.routes.draw do
   namespace 'purchasing', as: :purchasing do
     get '/' => 'purchasing#index'
     resources :vendors, only: [:index, :edit, :update, :new, :create, :destroy]
+    resources :purchase_orders, only: [:index, :show]
+    resources :vendor_invoices, only: [:index, :show]
   end
 
 
   get "inventory/setup" => "home#inventory_setup"
   namespace 'inventory', as: :inventory do
     resources 'strains', only: [:index]
-    resources 'plants', only: [:index] do 
+    resources 'plants', only: [:index] do
       collection do
         get 'mothers'
         get 'cultivation_batches'
@@ -111,10 +113,13 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace 'daily_tasks' do
+    get '/', action: 'index'
+  end
+
   # API for web pages
   namespace :api do
     namespace :v1 do
-
       resources :plants, only: [:show] do
         get 'all/(:current_growth_stage)',    action: :all, on: :collection
         get 'search/:current_growth_stage/(:facility_strain_id)/(:search)',    action: :search, on: :collection
@@ -151,7 +156,12 @@ Rails.application.routes.draw do
       end
 
       resources :items, only: [:index, :create, :destroy]
-
+      resources :uoms, only: [:index]
+      scope :daily_tasks do
+        put ':id/start_task', to: 'daily_tasks#start_task'
+        put ':id/stop_task', to: 'daily_tasks#stop_task'
+        put ':id/add_notes', to: 'daily_tasks#add_notes'
+      end
     end
   end
 end

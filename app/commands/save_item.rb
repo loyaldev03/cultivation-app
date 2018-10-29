@@ -14,14 +14,15 @@ class SaveItem
   private
 
   def save_record
-    if args[:id]
-      record = Inventory::Item.where(id: args[:id]).update(args)
-    else
-      record = Inventory::Item.new(args)
-      record.save!
-    end
-    record
-  rescue
-    errors.add(:error, $!.message)
+    nil
+    #   if args[:id]
+    #     record = Inventory::Item.where(id: args[:id]).update(args)
+    #   else
+    #     record = Inventory::Item.new(args)
+    #     record.save!
+    #   end
+    #   record
+    # rescue
+    #   errors.add(:error, $!.message)
   end
 end

@@ -279,6 +279,13 @@ class TaskSetup extends React.Component {
             >
               Resource
             </a>
+
+            <a
+              href={'/cultivation/batches/' + this.state.batch.id + '/material'}
+              className={inactiveTabs}
+            >
+              Material
+            </a>
           </div>
           <div className="flex mt4">
             <div className="mr2 mt2">

@@ -1,5 +1,5 @@
 class Cultivation::BatchesController < ApplicationController
-  before_action :find_batch_info, only: [:show, :gantt, :locations, :issues, :secret_sauce, :resource]
+  before_action :find_batch_info, only: [:show, :gantt, :locations, :issues, :secret_sauce, :resource, :material]
 
   def index
   end
@@ -44,6 +44,9 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def resource
+  end
+
+  def material
   end
 
   private
@@ -118,6 +121,7 @@ class Cultivation::BatchesController < ApplicationController
       nutrient_profile: @batch.nutrient_profile,
       total_estimated_hour: @batch.total_estimated_hours,
       total_estimated_cost: @batch.total_estimated_costs,
+      materials: @batch.material_use,
     }
   end
 

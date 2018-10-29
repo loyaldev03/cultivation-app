@@ -1,4 +1,3 @@
-# TODO, move to inventory...
 class Materials::ItemsController < ApplicationController
   def nutrients
   end

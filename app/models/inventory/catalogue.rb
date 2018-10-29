@@ -39,6 +39,8 @@ module Inventory
     field :is_active, type: Boolean, default: true
     field :uom_dimension, type: String
 
+    field :default_price, type: BigDecimal
+
     belongs_to :facility
 
     scope :raw_materials, -> { where(catalogue_type: 'raw_materials') }

@@ -61,17 +61,6 @@ module Inventory
 
     def call
       if valid_permission? && valid_data?
-        # invoice = nil
-
-        # if is_purchased?
-        #   vendor = create_vendor
-        #   purchase_order = create_purchase_order(vendor)
-        #   invoice = create_invoice(purchase_order)
-        # end
-
-        # plants = create_mother_plants(invoice)
-        # plants
-
         invoice_item = save_purchase_info
 
         if id.blank?
@@ -176,7 +165,7 @@ module Inventory
       po_item = purchase_order.items.find_or_create_by!(facility_strain_id: facility_strain.id) do |item|
         item.catalogue = catalogue
         item.quantity = plant_ids.count
-        item.uom = Common::UnitOfMeasure.pieces('pc')
+        item.uom = 'pc'
         item.price = 0
         item.currency = 'USD'
         item.tax = 0
@@ -254,7 +243,6 @@ module Inventory
     end
 
     def update_po_invoice_count(invoice_item_id)
-      Rails.logger.debug "\t\t\t>>>>>>  invoice_item_id: #{invoice_item_id}"
       return if invoice_item_id.nil?
 
       invoice_item = Inventory::VendorInvoiceItem.find(invoice_item_id)

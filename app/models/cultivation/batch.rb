@@ -79,5 +79,21 @@ module Cultivation
       end
       total_cost
     end
+
+    def material_use
+      materials = []
+      tasks.each do |task|
+        # materials += task.material_use
+        task.material_use.each do |material|
+          a = materials.find { |b| b.name == material.name }
+          if a.nil?
+            materials << material
+          else
+            a.quantity += material.quantity
+          end
+        end
+      end
+      materials
+    end
   end
 end

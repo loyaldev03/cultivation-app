@@ -121,6 +121,7 @@ class Cultivation::BatchesController < ApplicationController
       nutrient_profile: @batch.nutrient_profile,
       total_estimated_hour: @batch.total_estimated_hours,
       total_estimated_cost: @batch.total_estimated_costs,
+      materials: @batch.material_use,
     }
   end
 

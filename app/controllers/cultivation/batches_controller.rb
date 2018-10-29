@@ -1,5 +1,5 @@
 class Cultivation::BatchesController < ApplicationController
-  before_action :find_batch_info, only: [:show, :gantt, :locations, :issues, :secret_sauce, :resource]
+  before_action :find_batch_info, only: [:show, :gantt, :locations, :issues, :secret_sauce, :resource, :material]
 
   def index
   end
@@ -43,6 +43,9 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def resource
+  end
+
+  def material
   end
 
   private

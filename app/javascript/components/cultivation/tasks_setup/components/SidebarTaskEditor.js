@@ -62,9 +62,10 @@ class SidebarTaskEditor extends React.Component {
     console.log(parent_id)
     let a = TaskStore.find(e => e.id === parent_id)
     console.log(JSON.stringify(a))
-    if (a.attributes && date === 'start_date') {
+    if (a && a.attributes && date === 'start_date') {
       return new Date(a.attributes.start_date)
-    } else {
+    } 
+    if (a && a.attributes && date === 'end_date') {
       return new Date(a.attributes.end_date)
     }
   }

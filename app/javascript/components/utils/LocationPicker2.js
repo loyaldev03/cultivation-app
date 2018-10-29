@@ -5,7 +5,6 @@ import reactSelectStyle from './reactSelectStyle'
 
 const VEG_TRAY_PURPOSES = ['veg', 'veg1', 'veg2']
 
-
 class LocationPicker extends React.Component {
   isFacilityOnly(item) {
     return item.f_id.length > 0 && item.rm_id.length <= 0

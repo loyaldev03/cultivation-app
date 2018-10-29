@@ -57,6 +57,7 @@ export default class TaskEditor extends React.Component {
         task: TaskStore.find(e => e.id === ev.detail.data.id),
         action: ev.detail.action,
         task_related_id: ev.detail.data.task_related_id,
+        task_related_parent_id: ev.detail.data.task_related_id,
         position: ev.detail.data.position
       })
     })
@@ -103,6 +104,7 @@ export default class TaskEditor extends React.Component {
         <AddTaskForm
           batch_id={this.props.batch_id}
           task_related_id={this.state.task_related_id}
+          task_related_parent_id={this.state.task_related_parent_id}
           position={this.state.position}
           handleReset={this.props.handleReset}
         />

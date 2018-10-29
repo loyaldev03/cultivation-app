@@ -23,6 +23,9 @@ const styles = `
 .columnDropdown{
   z-index: 300;
 }
+button.react-calendar__tile:disabled {
+    background-color: #aaa;
+}
 `
 
 class TaskSetup extends React.Component {

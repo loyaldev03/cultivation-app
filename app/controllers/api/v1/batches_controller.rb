@@ -15,9 +15,11 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def update_locations
-    batch_id = locations_params[:batch_id]
-    locations = locations_params[:locations]
-    save_cmd = Cultivation::SaveTrayPlans.call(batch_id, locations)
+    batch_id = params[:batch_id]
+    plans = params[:plans]
+    # Rails.logger.debug "\033[34m Batch ID: #{batch_id} \033[0m"
+    # Rails.logger.debug "\033[34m Plans: #{plans} \033[0m"
+    save_cmd = Cultivation::SaveTrayPlans.call(batch_id, plans)
     if save_cmd.success?
       render json: {data: 'Ok'}
     else
@@ -110,15 +112,19 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   def locations_params
     params.permit(
       :batch_id,
-      locations: [
-        :plant_id,
-        :room_id,
-        :row_id,
-        :shelf_id,
-        :tray_id,
-        :tray_code,
-        :tray_capacity,
-      ],
+      # plans: [
+
+      # ]
+      # locations: [
+      #   :phase,
+      #   :plant_id,
+      #   :room_id,
+      #   :row_id,
+      #   :shelf_id,
+      #   :tray_id,
+      #   :tray_code,
+      #   :tray_capacity,
+      # ],
     )
   end
 end

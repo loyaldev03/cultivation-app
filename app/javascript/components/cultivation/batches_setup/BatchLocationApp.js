@@ -193,15 +193,14 @@ class BatchLocationApp extends React.Component {
 
   onSubmit = async () => {
     this.setState({ isLoading: true })
-    const locations = this.state.selectedPlants.reduce(
-      (acc, val) => acc.concat(val.trays || []),
-      []
-    )
-
+    const { id } = this.props.batchInfo
+    const payload = {
+      plans: this.state.selectedPlants
+    }
     try {
       await fetch(
-        `/api/v1/batches/${this.props.batchInfo.id}/update_locations`,
-        httpPostOptions(locations)
+        `/api/v1/batches/${id}/update_locations`,
+        httpPostOptions(payload)
       )
       // navigate to next page
       window.location.replace('/cultivation/batches/' + this.props.batchInfo.id)
@@ -356,7 +355,7 @@ class BatchLocationApp extends React.Component {
             />
             <a
               href={`/cultivation/batches/${this.props.batchInfo.id}`}
-              className="link orange tr dib pa3 ml3"
+              className="link orange tr dib pa3 fr"
             >
               SKIP - TODO: REMOVE THIS
             </a>

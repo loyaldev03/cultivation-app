@@ -46,10 +46,6 @@ class TaskSerializer
     end
   end
 
-  attribute :estimated_cost do |object|
-    object.estimated_cost
-  end
-
   attribute :actual_hours do |object|
     if object.is_phase
       sum = 0.0
@@ -68,11 +64,19 @@ class TaskSerializer
     if object.is_phase
       sum = 0.0
       object.children.each do |child|
-        sum += child.children.sum(:estimated_cost)
+        sum_category = 0.0
+        child.children.each do |a|
+          sum_category += a.estimated_cost if a.estimated_cost
+        end
+        sum += sum_category
       end
       '%.2f' % sum
     elsif object.is_category
-      '%.2f' % object.children.sum(:estimated_cost)
+      sum = 0.0
+      object.children.each do |child|
+        sum += child.estimated_cost if child.estimated_cost
+      end
+      '%.2f' % sum
     else
       '%.2f' % object.estimated_cost if object.estimated_cost
     end

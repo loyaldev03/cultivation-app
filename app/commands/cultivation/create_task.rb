@@ -17,7 +17,9 @@ module Cultivation
     def save_record(args)
       task_related = Cultivation::Task.find(args[:task_related_id])
       batch = task_related.batch
-      task = batch.tasks.create(args.except(:task_related_id, :position))
+      argument = args.except(:task_related_id, :position)
+      argument[:parent_id] = task_related.parent_id
+      task = batch.tasks.create(argument)
 
       if args[:position] == 'top'
         position = (task_related.position == 0 ? 0 : (task_related.position - 1))

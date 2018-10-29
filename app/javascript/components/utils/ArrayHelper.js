@@ -18,7 +18,7 @@ export const joinBy = (records, field, separator = ',') => {
 }
 
 export const minBy = (records, field) => {
-  if (!records) return 0
+  if (!records || records.length <= 0) return 0
   return records.reduce(
     (min, rec) => (rec[field] < min ? rec[field] : min),
     records[0][field]

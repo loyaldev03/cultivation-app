@@ -15,9 +15,17 @@ class Cultivation::BatchesController < ApplicationController
 
   def show
     # TODO: Use other params
-    if params[:step].present?
+    if params[:select_location].present?
+      @batch_info = OpenStruct.new({
+        id: @batch.id.to_s,
+        batchSource: @batch.batch_source,
+        cloneSelectionType: get_plants_selection_type(@batch.batch_source),
+        quantity: @batch.quantity,
+        startDate: @batch.start_date,
+        strainDisplayName: "#{@batch.facility_strain.strain_name} (#{@batch.facility_strain.strain_type})",
+        harvestDate: @batch.estimated_harvest_date,
+      }).marshal_dump
       # Set the plantType for react BatchPlantSelectionList
-      @plant_selection_type = get_plants_selection_type(@batch.batch_source)
       @locations = get_cultivation_locations(@batch)
     end
   end
@@ -64,12 +72,12 @@ class Cultivation::BatchesController < ApplicationController
     ]
     phases_info = get_batch_phase(batch, cultivation_phases) # Get start_date and end_date from batch
     if phases_info.any?
-      filter_args = {facility_id: batch.facility_id, exclude_batch_id: batch.id}
+      filter_args = {facility_id: batch.facility_id, purpose: cultivation_phases, exclude_batch_id: batch.id}
       Rails.logger.debug "\033[34m get_cultivation_locations > batch start_date: #{batch&.start_date} \033[0m"
       Rails.logger.debug "\033[34m get_cultivation_locations > batch estimated_harvest_date: #{batch&.estimated_harvest_date} \033[0m"
       available_trays_cmd = QueryAvailableTrays.call(batch.start_date, batch.estimated_harvest_date, filter_args)
       if available_trays_cmd.success?
-        available_trays_cmd.result&.select { |t| cultivation_phases.include? t.tray_purpose }
+        available_trays_cmd.result #&.select { |t| cultivation_phases.include? t.tray_purpose }
       else
         []
       end
@@ -97,7 +105,7 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def find_batch_info
-    @batch = Cultivation::Batch.find(params[:id])
+    @batch = Cultivation::Batch.includes(:facility_strain).find(params[:id])
     @batch_attributes = {
       id: @batch.id.to_s,
       batch_no: @batch.batch_no.to_s,

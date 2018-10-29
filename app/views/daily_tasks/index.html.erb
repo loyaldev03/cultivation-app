@@ -1,0 +1,9 @@
+<% content_for :breadcrumb do %>
+  <div class="flex items-center">
+    <%= breadcrumbs ["Home", root_path], 'Daily Tasks' %>
+  </div>
+<% end %>
+
+<div class="pa4">
+  <%= react_component 'daily_tasks/DailyTasksApp', { date: @tasks_date, tasks_by_batch: @tasks_by_batch } %>
+</div>

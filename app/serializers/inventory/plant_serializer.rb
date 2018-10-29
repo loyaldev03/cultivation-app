@@ -1,7 +1,6 @@
 module Inventory
   class PlantSerializer
     include FastJsonapi::ObjectSerializer
-    belongs_to :vendor_invoice
 
     attributes :plant_id,
       :plant_tag,
@@ -97,6 +96,48 @@ module Inventory
       else
         ''
       end
+    end
+
+    attribute :vendor_invoice,
+      if: Proc.new { |record, params|
+        params && params[:include]&.include?(:vendor_invoice) && record.ref_id.present?
+      } do |object|
+      item = Inventory::VendorInvoiceItem.find(object.ref_id)
+      {
+        id: item.invoice_id.to_s,
+        invoice_no: item.invoice.invoice_no,
+        invoice_date: item.invoice.invoice_date,
+      }
+    end
+
+    attribute :purchase_order,
+      if: Proc.new { |record, params|
+        params && params[:include]&.include?(:purchase_order) && record.ref_id.present?
+      } do |object|
+      item = Inventory::VendorInvoiceItem.find(object.ref_id)
+      po = item.invoice.purchase_order
+      {
+        id: po.id.to_s,
+        purchase_order_no: po.purchase_order_no,
+      }
+    end
+
+    attribute :vendor,
+      if: Proc.new { |record, params|
+        params && params[:include]&.include?(:vendor) && record.ref_id.present?
+      } do |object|
+      item = Inventory::VendorInvoiceItem.find(object.ref_id)
+      vendor = item.invoice.vendor
+      {
+        id: vendor.id.to_s,
+        name: vendor.name,
+        vendor_no: vendor.vendor_no,
+        address: vendor.address,
+        state_license_num: vendor.state_license_num,
+        state_license_expiration_date: vendor.state_license_expiration_date,
+        location_license_expiration_date: vendor.location_license_expiration_date,
+        location_license_num: vendor.location_license_num,
+      }
     end
   end
 end

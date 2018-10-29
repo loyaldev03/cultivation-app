@@ -46,5 +46,5 @@ export const formatDate = date => {
 }
 
 export const formatDate2 = date => {
-  return format(date, 'M/d/YYYY', { awareOfUnicodeTokens: true })
+  return format(date, 'M/DD/YYYY', { awareOfUnicodeTokens: true })
 }

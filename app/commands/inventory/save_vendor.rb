@@ -21,12 +21,17 @@ module Inventory
     def save_record
       id = args[:id]
       params = args.except(:id)
+      vendor = if id.present?
+                 Inventory::Vendor.find_by(id: id)
+               else
+                 Inventory::Vendor.find_by(name: params[:name])
+               end
 
-      if !id.blank?
-        vendor = Inventory::Vendor.find_by(id: id)
+      if vendor
         vendor.update!(params)
         vendor
       else
+        # TODO: Temporary solution!
         Inventory::Vendor.create!(params)
       end
     end

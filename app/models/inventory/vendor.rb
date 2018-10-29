@@ -9,14 +9,14 @@ module Inventory
     field :state_license_num, type: String
     field :state_license_expiration_date, type: DateTime
     field :location_license_expiration_date, type: DateTime
-    field :location_license_num
-    field :vendor_type, type: String     # 'plant_supplier', normal
-
-    field :default_terms, type: String
-    field :status, type: String
+    field :location_license_num, type: String
+    field :vendor_type, type: String, default: 'normal'     # { plant_supplier, normal }
+    field :default_terms, type: String                      # TODO: to be revised if terms are more than just 15, 30, 60, 90 days
+    field :status, type: String, default: 'draft'           # { draft, active }
     field :notes, type: String
 
     embeds_many :addresses, as: :addressable, class_name: 'Address'
+    has_many :purchase_orders, class_name: 'Inventory::PurchaseOrder'
     has_many :invoices, class_name: 'Inventory::VendorInvoice'
   end
 end

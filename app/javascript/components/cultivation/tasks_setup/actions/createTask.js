@@ -10,7 +10,6 @@ class createTask {
       duration: state.duration,
       end_date: state.end_date,
       estimated_hours: state.estimated_hours,
-      instruction: state.instruction,
       name: state.name,
       parent_id: state.parent_id,
       parent_task: state.parent_task,

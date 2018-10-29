@@ -116,32 +116,7 @@ class SidebarTaskEditor extends React.Component {
               errorField="name"
             />
           </div>
-          {/* <div className="w-40 pl3">
-            <TextInput
-              label={'Category'}
-              value={this.state.task_category}
-              onChange={this.handleChangeTask}
-              fieldname="task_category"
-              errors={this.state.errors}
-              errorField="task_category"
-            />
-          </div> */}
         </div>
-
-        {/* <div className="ph4 mt3 mb3 flex">
-          <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Instruction</label>
-            <textarea
-              value={this.state.instruction}
-              onChange={this.handleChangeTask}
-              fieldname="instruction"
-              rows="2"
-              className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-              placeholder=""
-            />
-            <FieldError errors={this.state.errors} fieldname="instruction" />
-          </div>
-        </div> */}
         <div className="ph4 flex">
           <div className="w-40">
             <label className="f6 fw6 db mb1 gray ttc">Start At</label>
@@ -189,7 +164,7 @@ class SidebarTaskEditor extends React.Component {
 
         {isNormalTask ? (
           <div>
-            <hr class="mt3 m b--light-gray w-100" />
+            <hr className="mt3 m b--light-gray w-100" />
 
             <div className="ph4 mt3 mb3">
               <label className="f6 fw6 db mb1 ttc">
@@ -199,7 +174,7 @@ class SidebarTaskEditor extends React.Component {
                 <input
                   type="checkbox"
                   name="checkbox-1"
-                  class="mr2"
+                  className="mr2"
                   value="assign_plant_id"
                   onChange={handleChangeCheckbox}
                   checked={checkboxValue('assign_plant_id')}
@@ -210,7 +185,7 @@ class SidebarTaskEditor extends React.Component {
                 <input
                   type="checkbox"
                   name="checkbox-1"
-                  class="mr2"
+                  className="mr2"
                   value="move_plant"
                   onChange={handleChangeCheckbox}
                   checked={checkboxValue('move_plant')}
@@ -221,7 +196,7 @@ class SidebarTaskEditor extends React.Component {
                 <input
                   type="checkbox"
                   name="checkbox-1"
-                  class="mr2"
+                  className="mr2"
                   value="assign_plant_id_metrc"
                   onChange={handleChangeCheckbox}
                   checked={checkboxValue('assign_plant_id_metrc')}
@@ -232,7 +207,7 @@ class SidebarTaskEditor extends React.Component {
                 <input
                   type="checkbox"
                   name="checkbox-1"
-                  class="mr2"
+                  className="mr2"
                   value="create_harvest"
                   onChange={handleChangeCheckbox}
                   checked={checkboxValue('create_harvest')}
@@ -243,7 +218,7 @@ class SidebarTaskEditor extends React.Component {
                 <input
                   type="checkbox"
                   name="checkbox-1"
-                  class="mr2"
+                  className="mr2"
                   value="create_package"
                   onChange={handleChangeCheckbox}
                   checked={checkboxValue('create_package')}
@@ -254,7 +229,7 @@ class SidebarTaskEditor extends React.Component {
                 <input
                   type="checkbox"
                   name="checkbox-1"
-                  class="mr2"
+                  className="mr2"
                   value="finish_harvest"
                   onChange={handleChangeCheckbox}
                   checked={checkboxValue('finish_harvest')}
@@ -267,30 +242,34 @@ class SidebarTaskEditor extends React.Component {
 
         {isNotNormalTask ? (
           <div className="">
-            <hr class="mt3 m b--light-gray w-100" />
+            <hr className="mt3 m b--light-gray w-100" />
             <div className="ph4 mt3 mb3">
-              <div class="flex">
-                <div class="w-40">
-                  <label class="f6 fw6 db mb1 gray ttc">Estimated Hours</label>
-                  <label class="f6 fw6 db mb1 gray ttc">
+              <div className="flex">
+                <div className="w-40">
+                  <label className="f6 fw6 db mb1 gray ttc">
+                    Estimated Hours
+                  </label>
+                  <label className="f6 fw6 db mb1 gray ttc">
                     {this.state.estimated_hours}
                   </label>
                 </div>
-                <div class="w-40 pl3">
-                  <label class="f6 fw6 db mb1 gray ttc">Actual Hours</label>
-                  <label class="f6 fw6 db mb1 gray ttc">
+                <div className="w-40 pl3">
+                  <label className="f6 fw6 db mb1 gray ttc">Actual Hours</label>
+                  <label className="f6 fw6 db mb1 gray ttc">
                     {this.state.actual_hours}
                   </label>
                 </div>
               </div>
-              <div class="flex mt3">
-                <div class="w-40">
-                  <label class="f6 fw6 db mb1 gray ttc">Estimated Cost</label>
-                  <label class="f6 fw6 db mb1 gray ttc">0.0</label>
+              <div className="flex mt3">
+                <div className="w-40">
+                  <label className="f6 fw6 db mb1 gray ttc">
+                    Estimated Cost
+                  </label>
+                  <label className="f6 fw6 db mb1 gray ttc">0.0</label>
                 </div>
-                <div class="w-40 pl3">
-                  <label class="f6 fw6 db mb1 gray ttc">Actual Cost</label>
-                  <label class="f6 fw6 db mb1 gray ttc">0.0</label>
+                <div className="w-40 pl3">
+                  <label className="f6 fw6 db mb1 gray ttc">Actual Cost</label>
+                  <label className="f6 fw6 db mb1 gray ttc">0.0</label>
                 </div>
               </div>
             </div>

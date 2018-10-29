@@ -1,10 +1,19 @@
 class HomeController < ApplicationController
   def index
-    @home = OpenStruct.new({
-      last_facility: Facility.last,
-      has_inventories: Inventory::ItemArticle.all.any?,
-      has_batches: Cultivation::Batch.all.any?,
-    })
+    if Facility.count == 0
+      @home = OpenStruct.new({
+        last_facility: nil,
+        has_inventories: false,
+        has_batches: false,
+      })
+    else
+      facility = Facility.last
+      @home = OpenStruct.new({
+        last_facility: facility,
+        has_inventories: facility.strains.count > 0,
+        has_batches: Cultivation::Batch.where(facility_id: facility.id).count > 0,
+      })
+    end
   end
 
   def dashboard
@@ -16,24 +25,24 @@ class HomeController < ApplicationController
 
   def reset_data
     Cultivation::TrayPlan.destroy_all
-    Inventory::RawMaterial.destroy_all
-    Cultivation::Item.destroy_all
     Cultivation::Task.destroy_all
     Cultivation::NutrientProfile.destroy_all
 
     Inventory::Plant.destroy_all
-    Inventory::ItemArticle.destroy_all
     Inventory::ItemTransaction.destroy_all
-    Inventory::RawMaterial.destroy_all
     Inventory::VendorInvoice.destroy_all
+    Inventory::PurchaseOrder.destroy_all
     Inventory::Vendor.destroy_all
-    Inventory::Item.destroy_all
     Cultivation::Batch.destroy_all
-    Common::UnitOfMeasure.destroy_all
     CompanyInfo.destroy_all
 
+    Common::UnitOfMeasure.delete_all
+    Common::SeedUnitOfMeasure.call
+
+    # User.update_all(facilites: [], default_facility_id: nil)
+
     # Preserve facility F0X
-    f = Facility.find_by(code: 'F0Xxxx')
+    f = Facility.find_by(code: 'F0X')
     t = []
     if f.present?
       f.rooms.each do |r|

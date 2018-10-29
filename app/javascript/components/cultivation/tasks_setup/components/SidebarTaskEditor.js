@@ -23,8 +23,14 @@ class SidebarTaskEditor extends React.Component {
       duration: this.props.task.attributes.duration,
       start_date: new Date(this.props.task.attributes.start_date),
       end_date: new Date(this.props.task.attributes.end_date),
-      parent_start_date: this.set_parent_dates(props.task.attributes.parent_id, 'start_date'),
-      parent_end_date: this.set_parent_dates(props.task.attributes.parent_id, 'end_date'),
+      parent_start_date: this.set_parent_dates(
+        props.task.attributes.parent_id,
+        'start_date'
+      ),
+      parent_end_date: this.set_parent_dates(
+        props.task.attributes.parent_id,
+        'end_date'
+      ),
       errors: ''
     }
   }
@@ -39,8 +45,14 @@ class SidebarTaskEditor extends React.Component {
         duration: props.task.attributes.duration,
         start_date: new Date(props.task.attributes.start_date),
         end_date: new Date(props.task.attributes.end_date),
-        parent_start_date: this.set_parent_dates(props.task.attributes.parent_id, 'start_date'),
-        parent_end_date: this.set_parent_dates(props.task.attributes.parent_id, 'end_date'),
+        parent_start_date: this.set_parent_dates(
+          props.task.attributes.parent_id,
+          'start_date'
+        ),
+        parent_end_date: this.set_parent_dates(
+          props.task.attributes.parent_id,
+          'end_date'
+        ),
         errors: ''
       })
     }
@@ -48,11 +60,11 @@ class SidebarTaskEditor extends React.Component {
 
   set_parent_dates = (parent_id, date) => {
     console.log(parent_id)
-    let a = TaskStore.find((e)=> e.id === parent_id)
+    let a = TaskStore.find(e => e.id === parent_id)
     console.log(JSON.stringify(a))
-    if (a.attributes && date === 'start_date'){
+    if (a.attributes && date === 'start_date') {
       return new Date(a.attributes.start_date)
-    }else{
+    } else {
       return new Date(a.attributes.end_date)
     }
   }

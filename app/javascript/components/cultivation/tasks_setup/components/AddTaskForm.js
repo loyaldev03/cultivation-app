@@ -28,8 +28,14 @@ class AddTaskForm extends React.Component {
       assigned_employee: [],
       position: props.position,
       task_related_id: props.task_related_id,
-      parent_start_date: this.set_parent_dates(props.task_related_parent_id, 'start_date'),
-      parent_end_date: this.set_parent_dates(props.task_related_parent_id, 'end_date'),
+      parent_start_date: this.set_parent_dates(
+        props.task_related_parent_id,
+        'start_date'
+      ),
+      parent_end_date: this.set_parent_dates(
+        props.task_related_parent_id,
+        'end_date'
+      )
     }
   }
 
@@ -38,17 +44,23 @@ class AddTaskForm extends React.Component {
       position: props.position,
       task_related_id: props.task_related_id,
       batch_id: props.batch_id,
-      parent_start_date: this.set_parent_dates(props.task_related_parent_id, 'start_date'),
-      parent_end_date: this.set_parent_dates(props.task_related_parent_id, 'end_date'),
+      parent_start_date: this.set_parent_dates(
+        props.task_related_parent_id,
+        'start_date'
+      ),
+      parent_end_date: this.set_parent_dates(
+        props.task_related_parent_id,
+        'end_date'
+      )
     })
   }
 
   set_parent_dates = (parent_id, date) => {
-    let a = TaskStore.find((e) => e.id === parent_id)
+    let a = TaskStore.find(e => e.id === parent_id)
     if (a && a.attributes && date === 'start_date') {
       return new Date(a.attributes.start_date)
-    } 
-    if (a && a.attributes && date === 'end_date'){
+    }
+    if (a && a.attributes && date === 'end_date') {
       return new Date(a.attributes.end_date)
     }
   }

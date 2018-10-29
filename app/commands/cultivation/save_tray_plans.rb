@@ -15,7 +15,7 @@ module Cultivation
         batch = Cultivation::Batch.find(@batch_id.to_bson_id)
         if batch.present?
           # Booking duration
-          find_phase_cmd = Cultivation::FindBatchPhase.call(batch, 'Clone')
+          find_phase_cmd = Cultivation::FindBatchPhase.call(batch, Constants::CONST_CLONE)
           if find_phase_cmd.success?
             phase_info = find_phase_cmd.result
             # Delete all existing location plans

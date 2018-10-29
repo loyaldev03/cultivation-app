@@ -162,7 +162,7 @@ class BatchPlantSelectionList extends React.Component {
   render() {
     const { phase, plantType, bookings } = this.props
     const { plants } = plantStore
-    console.log('bookings', bookings)
+    // console.log('bookings', bookings)
     if (plantStore.isLoading) {
       return <p className="f6">Loading....</p>
     }

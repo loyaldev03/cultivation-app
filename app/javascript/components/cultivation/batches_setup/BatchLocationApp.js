@@ -1,5 +1,4 @@
 import 'babel-polyfill'
-import { toJS } from 'mobx'
 import React from 'react'
 import BatchPlantSelectionList from './BatchPlantSelectionList'
 import BatchLocationEditor from './BatchLocationEditor'
@@ -12,7 +11,7 @@ import {
 } from '../../utils'
 import { toast } from './../../utils/toast'
 
-const AdjustmentMessage = ({ value, total }) => {
+const AdjustmentMessage = React.memo(({ value, total }) => {
   if (value >= 0 && value < total) {
     const res = +total - +value
     return (
@@ -30,7 +29,7 @@ const AdjustmentMessage = ({ value, total }) => {
     )
   }
   return null
-}
+})
 
 class BatchLocationApp extends React.Component {
   state = {
@@ -99,7 +98,7 @@ class BatchLocationApp extends React.Component {
   onButtonClick = (field, value) => e => this.setState({ [field]: value })
 
   onEditorSave = editingPlant => {
-    console.log('onEditorSave.editingPlant', editingPlant)
+    // console.log('onEditorSave.editingPlant', editingPlant)
     // find and update the existing record
     const plantConfig = this.getSelected(editingPlant.id)
     if (plantConfig) {
@@ -147,40 +146,61 @@ class BatchLocationApp extends React.Component {
   }
 
   isDisableNext = () => {
-    if (!this.state.quantity) {
-      // Quantity is required
-      return true
-    }
     if (!this.state.selectedPlants || !this.state.selectedPlants.length) {
-      toast('Please select plants & locations to continue.', 'warning')
+      // toast('Please select plants & locations to continue.', 'warning')
       // Plants Location & Quantity is required
       return true
     }
-    const totalSelectedQuantity = sumBy(this.state.selectedPlants, 'quantity')
-    if (parseInt(this.state.quantity) !== totalSelectedQuantity) {
-      toast(
-        '"Total Quantity Selected" does not match "Quantity Needed".',
-        'warning'
-      )
-      // Total quanty has to match with needed quantity
+
+    const { quantity } = this.props.batchInfo
+    const selectedCloneQuantity = sumBy(
+      this.getBookingsByPhase(GROWTH_PHASE.CLONE),
+      'quantity'
+    )
+    const selectedVeg1Quantity = sumBy(
+      this.getBookingsByPhase(GROWTH_PHASE.VEG1),
+      'quantity'
+    )
+    const selectedVeg2Quantity = sumBy(
+      this.getBookingsByPhase(GROWTH_PHASE.VEG2),
+      'quantity'
+    )
+    const selectedFlowerQuantity = sumBy(
+      this.getBookingsByPhase(GROWTH_PHASE.FLOWER),
+      'quantity'
+    )
+    const selectedDryQuantity = sumBy(
+      this.getBookingsByPhase(GROWTH_PHASE.DRY),
+      'quantity'
+    )
+    const selectedCureQuantity = sumBy(
+      this.getBookingsByPhase(GROWTH_PHASE.CURE),
+      'quantity'
+    )
+    if (
+      selectedCloneQuantity === quantity &&
+      selectedVeg1Quantity === quantity &&
+      selectedVeg2Quantity === quantity &&
+      selectedFlowerQuantity === quantity &&
+      selectedDryQuantity === quantity &&
+      selectedCureQuantity === quantity
+    ) {
+      return false
+    } else {
       return true
     }
-    // if there's a missing data, disable next step
-    const missed = this.state.selectedPlants.find(x => !x.quantity || !x.trays)
-    return !!missed
   }
 
   onSubmit = async () => {
     this.setState({ isLoading: true })
-    const locations = this.state.selectedPlants.reduce(
-      (acc, val) => acc.concat(val.trays || []),
-      []
-    )
-
+    const { id } = this.props.batchInfo
+    const payload = {
+      plans: this.state.selectedPlants
+    }
     try {
       await fetch(
-        `/api/v1/batches/${this.props.batchInfo.id}/update_locations`,
-        httpPostOptions(locations)
+        `/api/v1/batches/${id}/update_locations`,
+        httpPostOptions(payload)
       )
       // navigate to next page
       window.location.replace('/cultivation/batches/' + this.props.batchInfo.id)
@@ -221,13 +241,15 @@ class BatchLocationApp extends React.Component {
         sumBy(this.getBookingsByPhase(GROWTH_PHASE.CLONE), 'quantity')
     // console.log('batchInfo', batchInfo)
     // console.log('editingPlant', editingPlant)
+    // console.log('isDisabled', this.isDisableNext())
+    const isDisableSubmit = this.isDisableNext()
     return (
       <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
         <div id="toast" className="toast" />
         <form
           onSubmit={async e => {
             e.preventDefault()
-            if (!this.isDisableNext()) {
+            if (!isDisableSubmit) {
               this.onSubmit()
             }
           }}
@@ -324,12 +346,19 @@ class BatchLocationApp extends React.Component {
             />
           )}
 
-          <div className="mt3 pv2 w4">
+          <div className="pt4">
             <input
+              disabled={isDisableSubmit}
               type="submit"
-              className="pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+              className="btn btn--primary btn--large"
               value={isLoading ? 'Saving...' : 'Save & Continue'}
             />
+            <a
+              href={`/cultivation/batches/${this.props.batchInfo.id}`}
+              className="link orange tr dib pa3 fr"
+            >
+              SKIP - TODO: REMOVE THIS
+            </a>
           </div>
         </form>
 
@@ -349,13 +378,6 @@ class BatchLocationApp extends React.Component {
             )}
           </div>
         </div>
-
-        <a
-          href={`/cultivation/batches/${this.props.batchInfo.id}`}
-          className="link orange tr db ph4"
-        >
-          SKIP - TODO: REMOVE THIS
-        </a>
       </div>
     )
   }

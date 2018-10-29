@@ -287,7 +287,7 @@ class TaskSetup extends React.Component {
               className={inactiveTabs}
             >
               Material
-          </a>
+            </a>
           </div>
           <div className="flex mt4">
             <div className="mr2 mt2">

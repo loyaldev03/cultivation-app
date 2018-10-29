@@ -199,7 +199,6 @@ class IssueSetup extends React.Component {
             Resource
           </a>
 
-
           <a
             href={'/cultivation/batches/' + this.state.batch.id + '/material'}
             className={inactiveTabs}

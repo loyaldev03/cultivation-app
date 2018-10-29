@@ -1,18 +1,11 @@
 class TaskSerializer
   include FastJsonapi::ObjectSerializer
   attributes :phase, :task_category, :name, :duration, :days_from_start_date, :position,
-    :end_date, :estimated_hours, :users,
+    :end_date, :estimated_hours, :users, :start_date, :end_date,
     :no_of_employees, :items, :instruction, :is_phase, :is_category, :parent_id, :depend_on, :task_type
 
   attributes :id do |object|
     object.id.to_s
-  end
-  attribute :start_date do |object|
-    object.start_date.try(:strftime, '%m/%d/%Y')
-  end
-
-  attribute :end_date do |object|
-    object.end_date.try(:strftime, '%m/%d/%Y')
   end
 
   #for showing in table column resources
@@ -71,11 +64,19 @@ class TaskSerializer
     if object.is_phase
       sum = 0.0
       object.children.each do |child|
-        sum += child.children.sum(:estimated_cost)
+        sum_category = 0.0
+        child.children.each do |a|
+          sum_category += a.estimated_cost if a.estimated_cost
+        end
+        sum += sum_category
       end
       '%.2f' % sum
     elsif object.is_category
-      '%.2f' % object.children.sum(:estimated_cost)
+      sum = 0.0
+      object.children.each do |child|
+        sum += child.estimated_cost if child.estimated_cost
+      end
+      '%.2f' % sum
     else
       '%.2f' % object.estimated_cost if object.estimated_cost
     end

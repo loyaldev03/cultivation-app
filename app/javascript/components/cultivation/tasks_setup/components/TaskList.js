@@ -44,7 +44,7 @@ class TaskList extends React.Component {
     this.state = {
       isOpen: false,
       batch: this.props.batch,
-      collapseIds: []
+      collapseIds: DisplayTaskStore
     }
   }
 
@@ -508,14 +508,20 @@ class TaskList extends React.Component {
             {
               Header: 'Duration',
               accessor: 'attributes.duration',
-              maxWidth: '100',
+              maxWidth: '90',
               show: this.checkVisibility('duration')
             },
             {
               Header: 'Est Hr',
               accessor: 'attributes.estimated_hours',
-              maxWidth: '150',
+              maxWidth: '100',
               show: this.checkVisibility('estimated_hour')
+            },
+            {
+              Header: 'Est Cost ($)',
+              accessor: 'attributes.estimated_cost',
+              maxWidth: '100',
+              show: this.checkVisibility('estimated_cost')
             },
             {
               Header: 'Assigned',
@@ -574,6 +580,10 @@ class TaskList extends React.Component {
             if (rowInfo) {
               return {
                 style: {
+                  boxShadow:
+                    this.state.taskSelected === rowInfo.row.id
+                      ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
+                      : null,
                   backgroundColor:
                     rowInfo.row['attributes.is_phase'] === true
                       ? '#FAEFEE'

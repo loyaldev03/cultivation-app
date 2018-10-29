@@ -45,37 +45,30 @@ class PlantStore {
     }
   }
 
-  @computed
-  get motherPlants() {
-    return this.plants
-      .slice()
-      .filter(x => x.attributes.current_growth_stage === 'mother')
-  }
+  // @computed
+  // get motherPlants() {
+  //   return this.plants
+  //     .slice()
+  //     .filter(x => x.attributes.current_growth_stage === 'mother')
+  // }
 
-  @computed
-  get clones() {
-    return this.plants
-      .slice()
-      .filter(x => x.attributes.current_growth_stage === 'clone')
-  }
+  // @computed
+  // get clones() {
+  //   return this.plants
+  //     .slice()
+  //     .filter(x => x.attributes.current_growth_stage === 'clone')
+  // }
 
-  @computed
-  get vegs() {
-    return this.plants
-      .slice()
-      .filter(
-        x =>
-          ['veg', 'veg1', 'veg2'].indexOf(x.attributes.current_growth_stage) >=
-          0
-      )
-  }
-
-  @computed
-  get flowers() {
-    return this.plants
-      .slice()
-      .filter(x => x.attributes.current_growth_stage === 'flower')
-  }
+  // @computed
+  // get vegs() {
+  //   return this.plants
+  //     .slice()
+  //     .filter(
+  //       x =>
+  //         ['veg', 'veg1', 'veg2'].indexOf(x.attributes.current_growth_stage) >=
+  //         0
+  //     )
+  // }
 
   @computed
   get bindablePlants() {

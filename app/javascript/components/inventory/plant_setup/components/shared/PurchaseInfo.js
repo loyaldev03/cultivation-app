@@ -108,9 +108,13 @@ class PurchaseInfo extends React.Component {
         vendor_no,
         address,
         vendor_state_license_num,
-        vendor_state_license_expiration_date: vendor_state_license_expiration_date.toISOString(),
+        vendor_state_license_expiration_date: vendor_state_license_expiration_date
+          ? vendor_state_license_expiration_date.toISOString()
+          : null,
         vendor_location_license_num,
-        vendor_location_license_expiration_date: vendor_location_license_expiration_date.toISOString(),
+        vendor_location_license_expiration_date: vendor_location_license_expiration_date
+          ? vendor_location_license_expiration_date.toISOString()
+          : null,
         purchase_date,
         invoice_no,
         purchase_order_no,

@@ -6,45 +6,6 @@ import reactSelectStyle from './reactSelectStyle'
 const VEG_TRAY_PURPOSES = ['veg', 'veg1', 'veg2']
 
 class LocationPicker extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.mode = props.mode
-    const locations = this.filterLocationByFacility(props.facility_id)
-    const selectedLocation = this.findLocation(
-      locations,
-      props.location_id || ''
-    )
-
-    this.state = {
-      location_id: props.location_id || '',
-      facility_id: props.facility_id,
-      locations: locations,
-      selectedLocation: selectedLocation
-    }
-  }
-
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //   let hasNewState = false
-  //   let newState = {}
-
-  //   if (nextProps.location_id !== prevState.location_id) {
-  //     newState = { location_id: nextProps.location_id }
-  //     hasNewState = true
-  //   }
-
-  //   if (nextProps.facility_id !== prevState.facility_id) {
-  //     newState = { ...newState, facility_id: nextProps.facility_id }
-  //     hasNewState = true
-  //   }
-
-  //   if (hasNewState) {
-  //     return newState
-  //   }
-
-  //   return null
-  // }
-
   isFacilityOnly(item) {
     return item.f_id.length > 0 && item.rm_id.length <= 0
   }
@@ -140,7 +101,7 @@ class LocationPicker extends React.Component {
 
   /* Utility method to find item from location id & mode combination */
   findLocation(locations, location_id) {
-    const mode = this.mode
+    const { mode } = this.props
     let item = { value: '', label: '' }
     if (mode === 'mother' || mode === 'room') {
       item = locations.find(x => x.rm_id === location_id)
@@ -154,7 +115,7 @@ class LocationPicker extends React.Component {
 
   /* Utility method to extract location id & mode combination from item */
   extractLocationId(selectedItem) {
-    const mode = this.mode
+    const { mode } = this.props
     if (mode === 'mother' || mode === 'room') {
       return {
         location_id: selectedItem.rm_id,
@@ -179,30 +140,25 @@ class LocationPicker extends React.Component {
   }
 
   onChange = item => {
-    // console.log(item)
     const locationData = this.extractLocationId(item, this.props.mode)
     this.props.onChange({ ...item, ...locationData })
-    this.setState({ value: { value: item.value, label: item.label } })
   }
 
-  // get filteredLocations() {
-  //   return this.filterLocationByFacility(this.state.facility_id)
-  // }
-
   get label() {
-    if (this.mode === 'clone') {
+    const { mode } = this.props
+    if (mode === 'clone') {
       return 'Tray ID'
-    } else if (this.mode === 'veg') {
+    } else if (mode === 'veg') {
       return 'Tray ID'
-    } else if (this.mode === 'mother') {
+    } else if (mode === 'mother') {
       return 'Mother room ID'
-    } else if (this.mode === 'room') {
+    } else if (mode === 'room') {
       return 'Room ID'
-    } else if (this.mode === 'flower') {
+    } else if (mode === 'flower') {
       return 'Flower room ID'
-    } else if (this.mode === 'dry') {
+    } else if (mode === 'dry') {
       return 'Dry room ID'
-    } else if (this.mode === 'facility') {
+    } else if (mode === 'facility') {
       return 'Facility'
     } else {
       return 'Location ID'
@@ -210,16 +166,21 @@ class LocationPicker extends React.Component {
   }
 
   render() {
+    const locations = this.filterLocationByFacility(this.props.facility_id)
+    const selectedLocation = this.findLocation(
+      locations,
+      this.props.location_id || ''
+    )
+
     return (
       <React.Fragment>
         <label className="f6 fw6 db mb1 gray ttc">{this.label}</label>
         <Select
-          key={this.state.facility_id}
           styles={reactSelectStyle}
           placeholder="Search location within your facility"
-          options={this.state.locations}
+          options={locations}
           onChange={this.onChange}
-          value={this.state.selectedLocation}
+          value={selectedLocation}
           filterOption={(option, input) => {
             const words = input.toLowerCase().split(/\s/)
             return words.every(x => option.label.toLowerCase().indexOf(x) >= 0)

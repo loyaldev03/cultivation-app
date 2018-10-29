@@ -35,3 +35,4 @@ yarn-debug.log*
 .pryrc
 .idea
 .tool-versions
+.vscode

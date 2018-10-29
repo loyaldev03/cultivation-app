@@ -1,3 +1,4 @@
+# TO BE REMOVED
 module Inventory
   class ItemSerializer
     include FastJsonapi::ObjectSerializer

@@ -23,7 +23,7 @@ class SaveFacility
     record.save!
 
     # Note: Seed data for new Facility
-    SeedFacilityDataJob.perform_later(record.id.to_s, @current_user.id.to_s) if is_new
+    SeedFacilityDataJob.perform_later(facility_id: record.id.to_s, current_user_id: @current_user.id.to_s) if is_new
 
     record
   end

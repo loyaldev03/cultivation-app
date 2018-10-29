@@ -192,7 +192,7 @@ task seed_until_po: :environment  do
                                         product_name:     item.product_name,
                                         description:      item.description,
                                         manufacturer:     item.manufacturer,
-                                        uom:              UOM.weights('kg'),
+                                        uom:              'kg',
                                         quantity:         25 * bag_to_kg,
                                         order_quantity:   25,                   # quantity inside PO and stock receive
                                         order_uom:        item.uom,               # uom inside PO and stock receive
@@ -220,7 +220,7 @@ task seed_until_po: :environment  do
 
   plant_po.items.create!(                       catalogue:    plant_catalogue,
                                                 quantity:     3,
-                                                uom:          UOM.custom('pot'),
+                                                uom:          'pot',
                                                 price:        15.30,
                                                 currency:     'USD',
                                                 tax:          0,

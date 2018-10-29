@@ -19,6 +19,20 @@ module Common
                              base_unit: 'pc',
                              conversion: 12)
 
+      UOM.find_or_create_by!(name: 'each',
+                             unit: 'ea',
+                             dimension: 'pieces',
+                             is_base_unit: false,
+                             base_unit: 'pc',
+                             conversion: 1)
+
+      UOM.find_or_create_by!(name: 'bottle',
+                             unit: 'bot',
+                             dimension: 'pieces',
+                             is_base_unit: false,
+                             base_unit: 'ea',
+                             conversion: 1)
+
       ## Weight
       UOM.find_or_create_by!(name: 'kilogramme',
                              unit: 'kg',

@@ -6,6 +6,7 @@ class SeedFacilityDataJob < ApplicationJob
     @args = args
     seed_roles
     seed_uom
+    seed_plant_catalogue
     seed_raw_materials
   end
 
@@ -27,5 +28,16 @@ class SeedFacilityDataJob < ApplicationJob
 
   def seed_uom
     Common::SeedUnitOfMeasure.call
+  end
+
+  def seed_plant_catalogue
+    Inventory::Catalogue.create!(
+      catalogue_type: 'plant',
+      label: 'Plant',
+      category: 'plant',
+      facility_id: @args[:facility_id],
+      is_active: true,
+      uom_dimension: 'pieces',
+    )
   end
 end

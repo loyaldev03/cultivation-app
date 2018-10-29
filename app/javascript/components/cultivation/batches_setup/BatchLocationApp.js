@@ -1,5 +1,4 @@
 import 'babel-polyfill'
-import { toJS } from 'mobx'
 import React from 'react'
 import BatchPlantSelectionList from './BatchPlantSelectionList'
 import BatchLocationEditor from './BatchLocationEditor'
@@ -12,7 +11,7 @@ import {
 } from '../../utils'
 import { toast } from './../../utils/toast'
 
-const AdjustmentMessage = ({ value, total }) => {
+const AdjustmentMessage = React.memo(({ value, total }) => {
   if (value >= 0 && value < total) {
     const res = +total - +value
     return (
@@ -30,7 +29,7 @@ const AdjustmentMessage = ({ value, total }) => {
     )
   }
   return null
-}
+})
 
 class BatchLocationApp extends React.Component {
   state = {
@@ -324,12 +323,18 @@ class BatchLocationApp extends React.Component {
             />
           )}
 
-          <div className="mt3 pv2 w4">
+          <div className="pt4">
             <input
               type="submit"
-              className="pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+              className="btn btn--primary btn--large"
               value={isLoading ? 'Saving...' : 'Save & Continue'}
             />
+            <a
+              href={`/cultivation/batches/${this.props.batchInfo.id}`}
+              className="link orange tr dib pa3 ml3"
+            >
+              SKIP - TODO: REMOVE THIS
+            </a>
           </div>
         </form>
 
@@ -349,13 +354,6 @@ class BatchLocationApp extends React.Component {
             )}
           </div>
         </div>
-
-        <a
-          href={`/cultivation/batches/${this.props.batchInfo.id}`}
-          className="link orange tr db ph4"
-        >
-          SKIP - TODO: REMOVE THIS
-        </a>
       </div>
     )
   }

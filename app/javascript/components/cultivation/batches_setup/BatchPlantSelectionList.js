@@ -144,7 +144,7 @@ class BatchPlantSelectionList extends React.Component {
               </tr>
             ))}
           <tr>
-            <td className="tr pr3 w5" colspan="4">
+            <td className="tr pr3 w5" colSpan="4">
               <a
                 href="#0"
                 className="pv2 dib link orange"

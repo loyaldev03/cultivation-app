@@ -119,7 +119,7 @@ class Cultivation::BatchesController < ApplicationController
       estimated_harvest_date: @batch.estimated_harvest_date,
       nutrient_profile: @batch.nutrient_profile,
       total_estimated_hour: @batch.total_estimated_hours,
-      total_estimated_cost: @batch.total_estimated_costs,
+      total_estimated_cost: ActionController::Base.helpers.number_to_currency(@batch.total_estimated_costs, unit: '$'),
       materials: @batch.material_use,
     }
   end

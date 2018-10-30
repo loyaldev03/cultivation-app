@@ -156,15 +156,11 @@ export default class MaterialForm extends React.Component {
     if (this.state.selectedCategory) {
       subcategory_dropdown =
         category_dropdown[this.state.selectedCategory.value]
-
-      // subcategory_dropdown = groupBy(
-      //     category_dropdown[this.state.selectedCategory.value],
-      //     'sub_category'
-      //   )
       let subcategory_keys = Object.keys(
         groupBy(subcategory_dropdown, 'sub_category')
       )
       if (subcategory_keys.length > 1) {
+        console.log(subcategory_keys)
         subcategory_dropdown = subcategory_keys.map(f => ({
           value: f,
           label: f
@@ -191,7 +187,7 @@ export default class MaterialForm extends React.Component {
 
     category_dropdown = Object.keys(category_dropdown).map(f => ({
       value: f,
-      label: f
+      label: f.replace(/_/g, " ")
     }))
 
     let uom_dropdown = UomStore

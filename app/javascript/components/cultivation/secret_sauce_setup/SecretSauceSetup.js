@@ -6,7 +6,7 @@ import { observer, Provider } from 'mobx-react'
 
 import loadNutrientProfile from './actions/loadNutrientProfile'
 import SecretSauce from './components/SecretSauce'
-import { formatDate2 } from '../../utils/DateHelper'
+import { formatDate2 } from '../../utils'
 
 class SecretSauceSetup extends React.Component {
   constructor(props) {

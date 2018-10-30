@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 
 import { observable } from 'mobx'
 import { observer, Provider } from 'mobx-react'
-import { formatDate2 } from '../../utils/DateHelper'
+import { formatDate2 } from '../../utils'
 
 class GanttSetup extends React.Component {
   constructor(props) {

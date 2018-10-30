@@ -15,7 +15,7 @@ class DailyTasksController < ApplicationController
       }
     end
 
-    @raw_materials = serialized_raw_materials
+    @inventory_catalogue = serialized_catalogue
   end
 
   private
@@ -33,8 +33,8 @@ class DailyTasksController < ApplicationController
     end).serializable_hash[:data]
   end
 
-  def serialized_raw_materials
-    Inventory::RawMaterialSerializer.new(Inventory::RawMaterial.all).serializable_hash[:data]
+  def serialized_catalogue
+    Inventory::CatalogueSerializer.new(Inventory::Catalogue.all).serializable_hash[:data]
   end
 
   def batch_room_names(batch)

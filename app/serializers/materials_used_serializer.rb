@@ -1,14 +1,14 @@
 class MaterialsUsedSerializer
   include FastJsonapi::ObjectSerializer
 
-  attributes :item_id, :quantity, :uom
+  attributes :task_item_id, :quantity, :uom
 
   attributes :name do |object|
-    object.raw_material.name
+    object.catalogue&.label
   end
 
-  attributes :raw_material_id do |object|
-    object.raw_material_id.to_s
+  attributes :catalogue_id do |object|
+    object.catalogue_id.to_s
   end
 
   attributes :qty do |object|

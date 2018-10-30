@@ -28,10 +28,11 @@ class MaterialUsed extends React.Component {
 
     const materials = []
     // Initialize materials used data (item ID, name) from planned materials
+    console.log(toJS(task.attributes.items))
     task.attributes.items.map((item, i) => {
       materials.push({
-        item_id: item.id,
-        raw_material_id: item.raw_material_id,
+        task_item_id: item.id,
+        catalogue_id: item.catalogue_id,
         name: item.name,
         qty: '',
         uom: item.uom
@@ -40,31 +41,32 @@ class MaterialUsed extends React.Component {
     // Overwrite materials used data from store
     console.log(toJS(dailyTask.attributes.materials_used))
     dailyTask.attributes.materials_used.map((material, i) => {
-      const materialFound = this.findMaterial(material.raw_material_id, materials)
+      const materialFound = this.findMaterial(material.catalogue_id, materials)
       if (materialFound) {
-        materialFound.qty = material.qty
-        materialFound.uom = material.uom
+        materialFound.qty = material.qty || ''
+        materialFound.uom = material.uom || ''
       } else {
         materials.push({
-          raw_material_id: material.raw_material_id,
-          name: material.name,
-          qty: material.qty,
-          uom: material.uom
+          catalogue_id: material.catalogue_id,
+          name: material.name || '',
+          qty: material.qty || '',
+          uom: material.uom || ''
         })
       }
     })
 
+    console.log(materials)
     this.state = {
       materials,
       saving: false
     }
 
     // Exclude planned materials
-    this.rawMaterialsOptions = DailyTasksStore.rawMaterials
-                                .filter(rawMaterial => {
-                                  return !(this.findMaterial(rawMaterial.id, task.attributes.items))
+    this.rawMaterialsOptions = DailyTasksStore.inventoryCatalogue
+                                .filter(catalogue => {
+                                  return !(this.findMaterial(catalogue.id, task.attributes.items))
                                 })
-                                .map((item, i) => ({ value: item.id, label: item.attributes.name }))
+                                .map((catalogue, i) => ({ value: catalogue.id, label: catalogue.attributes.name }))
 
     this.handleQuantityChange = this.handleQuantityChange.bind(this)
     this.handleUomChange = this.handleUomChange.bind(this)
@@ -86,30 +88,30 @@ class MaterialUsed extends React.Component {
     this.timer = setTimeout(this.autoSave, WAIT_INTERVAL);
   }
 
-  findMaterial(itemId, store) {
+  findMaterial(catalogueId, store) {
     return store.find(
-      material => (material.raw_material_id == itemId)
+      material => (material.catalogue_id == catalogueId)
     )
   }
 
-  isPlannedMaterial(rawMaterialId) {
+  isPlannedMaterial(catalogueId) {
     const { dailyTask } = this.props
     const task = dailyTask.attributes.task
 
-    return !!(this.findMaterial(rawMaterialId, task.attributes.items))
+    return !!(this.findMaterial(catalogueId, task.attributes.items))
   }
 
   updateMaterialsUsedInStore() {
     const { dailyTask } = this.props
     this.state.materials.map((material, i) => {
-      const materialFound = this.findMaterial(material.raw_material_id, dailyTask.attributes.materials_used)
+      const materialFound = this.findMaterial(material.catalogue_id, dailyTask.attributes.materials_used)
 
       if (materialFound) {
         materialFound.qty = material.qty
         materialFound.uom = material.uom
       } else {
         dailyTask.attributes.materials_used.push({
-          raw_material_id: material.raw_material_id,
+          catalogue_id: material.catalogue_id,
           name: material.name,
           qty: material.qty,
           uom: material.uom
@@ -118,18 +120,18 @@ class MaterialUsed extends React.Component {
     })
   }
 
-  handleQuantityChange(itemId, inputQuantity) {
+  handleQuantityChange(catalogueId, inputQuantity) {
     const materials = this.state.materials
-    const currentItem = this.findMaterial(itemId, materials)
+    const currentItem = this.findMaterial(catalogueId, materials)
 
     currentItem.qty = inputQuantity
 
     this.trySync(materials)
   }
 
-  handleUomChange(itemId, selectedOption) {
+  handleUomChange(catalogueId, selectedOption) {
     const materials = this.state.materials
-    const currentItem = this.findMaterial(itemId, materials)
+    const currentItem = this.findMaterial(catalogueId, materials)
 
     currentItem.uom = selectedOption.value
 
@@ -145,18 +147,18 @@ class MaterialUsed extends React.Component {
       return false
     }
 
-    materials[index].raw_material_id = selectedOption.value
+    materials[index].catalogue_id = selectedOption.value
     materials[index].name = selectedOption.label
 
     this.trySync(materials)
   }
 
-  handleClear(itemId) {
+  handleClear(catalogueId) {
     const { dailyTask } = this.props
     const task = dailyTask.attributes.task
     const materials = this.state.materials
-    const defaultItem = this.findMaterial(itemId, task.attributes.items, 'id')
-    const currentItem = this.findMaterial(itemId, materials)
+    const defaultItem = this.findMaterial(catalogueId, task.attributes.items, 'id')
+    const currentItem = this.findMaterial(catalogueId, materials)
 
     currentItem.qty = ''
     currentItem.uom = defaultItem ? defaultItem.uom : ''
@@ -164,9 +166,9 @@ class MaterialUsed extends React.Component {
     this.trySync(materials)
   }
 
-  handleDelete(itemId) {
-    const currentItem = this.findMaterial(itemId, this.state.materials)
-    const materials = this.state.materials.filter(material => material.raw_material_id !== itemId)
+  handleDelete(catalogueId) {
+    const currentItem = this.findMaterial(catalogueId, this.state.materials)
+    const materials = this.state.materials.filter(material => material.catalogue_id !== catalogueId)
 
     this.trySync(materials)
   }
@@ -180,7 +182,7 @@ class MaterialUsed extends React.Component {
   handleAddMaterial() {
     const materials = this.state.materials
     materials.push({
-      raw_material_id: '',
+      catalogue_id: '',
       name: '',
       qty: '',
       uom: ''
@@ -214,11 +216,11 @@ class MaterialUsed extends React.Component {
               <tr className="pointer bb" key={i}>
                 <td className="tl pv2 ph3">
                 {
-                  this.isPlannedMaterial(material.raw_material_id) ? material.name :
+                  this.isPlannedMaterial(material.catalogue_id) ? material.name :
                     <Select
                       name="uom"
                       options={this.rawMaterialsOptions}
-                      value={{ value: material.raw_material_id, label: material.name }}
+                      value={{ value: material.catalogue_id, label: material.name }}
                       onChange={selectedOption =>
                         this.handleItemChange(i, selectedOption)
                       }
@@ -229,7 +231,7 @@ class MaterialUsed extends React.Component {
                   <input
                     value={material.qty}
                     onChange={e =>
-                      this.handleQuantityChange(material.raw_material_id, e.target.value)
+                      this.handleQuantityChange(material.catalogue_id, e.target.value)
                     }
                     onKeyDown={e => {
                       if (e.keyCode === ENTER_KEY) {
@@ -247,7 +249,7 @@ class MaterialUsed extends React.Component {
                     options={uom_dropdown}
                     value={{ value: material.uom, label: material.uom }}
                     onChange={selectedOption =>
-                      this.handleUomChange(material.raw_material_id, selectedOption)
+                      this.handleUomChange(material.catalogue_id, selectedOption)
                     }
                   />
                 </td>
@@ -255,8 +257,8 @@ class MaterialUsed extends React.Component {
                   <i
                     className="material-icons red md-18 pointer dim"
                     onClick={() => {
-                      this.isPlannedMaterial(material.raw_material_id) ?
-                        this.handleClear(material.raw_material_id) : this.handleDelete(material.raw_material_id)
+                      this.isPlannedMaterial(material.catalogue_id) ?
+                        this.handleClear(material.catalogue_id) : this.handleDelete(material.catalogue_id)
                     }}
                   >
                     delete

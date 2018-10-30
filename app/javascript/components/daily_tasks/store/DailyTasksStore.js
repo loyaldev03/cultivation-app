@@ -3,7 +3,7 @@ import { observable } from 'mobx'
 const store = observable({
   dailyTasksByBatch: [],
   date: null,
-  rawMaterials: [],
+  inventoryCatalogue: [],
   selectedTask: null,
   editingPanel: null
 })

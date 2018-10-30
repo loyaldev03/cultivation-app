@@ -54,8 +54,8 @@ const TaskRow = observer(props => {
       >
         {task.attributes.name}
       </div>
-      <div className={classes}>{format(task.attributes.start_date, 'M/d/YYYY')}</div>
-      <div className={classes}>{format(task.attributes.end_date, 'M/d/YYYY')}</div>
+      <div className={classes}>{format(task.attributes.start_date, 'M/DD/YYYY')}</div>
+      <div className={classes}>{format(task.attributes.end_date, 'M/DD/YYYY')}</div>
       <div className={classes}>{timeSpentToday}</div>
       <StartEnd
         className={`${classes} pointer white`}

@@ -12,12 +12,13 @@ class WorkDashboardApp extends React.Component {
   componentDidMount() {
     DailyTasksStore.dailyTasksByBatch = this.props.tasks_by_batch
     DailyTasksStore.date = this.props.date
-    DailyTasksStore.rawMaterials = this.props.raw_materials
+    DailyTasksStore.inventoryCatalogue = this.props.inventory_catalogue
   }
 
   render() {
     return (
       <React.Fragment>
+        <div id="toast" className="toast" />
         <DateFormatted date={this.props.date} />
         <StyledWorkPanel className="fl w-100 ma1" />
         {DailyTasksStore.editingPanel ? (

@@ -64,9 +64,9 @@ class PurchaseInfo extends React.Component {
       }
 
       if (
-        this.props.vendorLicense && (
-        vendor_state_license_num === undefined ||
-        vendor_state_license_num.length <= 0)
+        this.props.vendorLicense &&
+        (vendor_state_license_num === undefined ||
+          vendor_state_license_num.length <= 0)
       ) {
         errors = {
           ...errors,
@@ -74,7 +74,10 @@ class PurchaseInfo extends React.Component {
         }
       }
 
-      if (this.props.vendorLicense && vendor_state_license_expiration_date === null) {
+      if (
+        this.props.vendorLicense &&
+        vendor_state_license_expiration_date === null
+      ) {
         errors = {
           ...errors,
           vendor_state_license_expiration_date: [
@@ -84,9 +87,9 @@ class PurchaseInfo extends React.Component {
       }
 
       if (
-        this.props.vendorLicense && (
-        vendor_location_license_num === undefined ||
-        vendor_location_license_num.length <= 0)
+        this.props.vendorLicense &&
+        (vendor_location_license_num === undefined ||
+          vendor_location_license_num.length <= 0)
       ) {
         errors = {
           ...errors,
@@ -94,7 +97,10 @@ class PurchaseInfo extends React.Component {
         }
       }
 
-      if (this.props.vendorLicense && vendor_location_license_expiration_date === null) {
+      if (
+        this.props.vendorLicense &&
+        vendor_location_license_expiration_date === null
+      ) {
         errors = {
           ...errors,
           vendor_location_license_expiration_date: [

@@ -6,7 +6,7 @@ import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import PurchaseInfo from '../../plant_setup/components/shared/PurchaseInfo'
 import httpGetOptions from '../../../utils'
-import LocationPicker from '../../../utils/LocationPicker2';
+import LocationPicker from '../../../utils/LocationPicker2'
 
 class NutrientEditor extends React.Component {
   constructor(props) {
@@ -16,35 +16,35 @@ class NutrientEditor extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener('editor-sidebar-open', event => {
-      
-    })
+    document.addEventListener('editor-sidebar-open', event => {})
   }
 
-  onFacilityChanged = (item) => {
+  onFacilityChanged = item => {
     console.log(item.f_id)
     fetch(
-      `/api/v1/catalogues/raw_material_tree?facility_id=${item.f_id}&type=nutrients`,
+      `/api/v1/catalogues/raw_material_tree?facility_id=${
+        item.f_id
+      }&type=nutrients`,
       httpGetOptions
     )
-    .then(response => response.json())
-    .then(data => {
-      this.setState({
-        facility_id: item.f_id,
-        nutrientTypes: data,
-       })
-    })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          facility_id: item.f_id,
+          nutrientTypes: data
+        })
+      })
   }
 
   onNutrientTypeSelected = item => {
-    this.setState({ 
+    this.setState({
       nutrientType: item,
-      catalogue: { value: '', label: '', uoms: []}
+      catalogue: { value: '', label: '', uoms: [] }
     })
   }
 
   onNutrientProductSelected = item => {
-    this.setState({ catalogue: item})
+    this.setState({ catalogue: item })
   }
 
   onChangeGeneric = event => {
@@ -59,8 +59,8 @@ class NutrientEditor extends React.Component {
       facility_id: '',
       qty_per_package: '',
       nutrientTypes: [],
-      nutrientType: {value: '', label: '', children: []},
-      catalogue: { value: '', label: '', uoms: []},
+      nutrientType: { value: '', label: '', children: [] },
+      catalogue: { value: '', label: '', uoms: [] },
       manufacturer: '',
       description: '',
       order_quantity: 0,
@@ -88,19 +88,19 @@ class NutrientEditor extends React.Component {
     const payload = this.validateAndGetValues()
     if (payload.isValid) {
       // call API
-    } 
+    }
 
     event.preventDefault()
   }
 
   validateAndGetValues() {
-    const { 
-      id, 
+    const {
+      id,
       facility_id,
       uom: { value: uom },
       qty_per_package,
       quantity,
-      catalogue: {  value: catalogue },
+      catalogue: { value: catalogue },
       manufacturer,
       description,
       order_quantity,
@@ -110,9 +110,13 @@ class NutrientEditor extends React.Component {
 
     let errors = {}
 
-    const {isValid: purchaseIsValid, ...purchaseData } = this.purchaseInfoEditor.current.getValues()
+    const {
+      isValid: purchaseIsValid,
+      ...purchaseData
+    } = this.purchaseInfoEditor.current.getValues()
 
-    const isValid = Object.getOwnPropertyNames(errors).length === 0 && purchaseIsValid
+    const isValid =
+      Object.getOwnPropertyNames(errors).length === 0 && purchaseIsValid
     if (!isValid) {
       this.setState({ errors })
     }
@@ -140,11 +144,14 @@ class NutrientEditor extends React.Component {
       : { width: '0px' }
 
     const { locations } = this.props
-    const nutrientTypes = this.state.nutrientTypes.map(x => ({ ...x, value: x.key }))
+    const nutrientTypes = this.state.nutrientTypes.map(x => ({
+      ...x,
+      value: x.key
+    }))
     const nutrientProducts = this.state.nutrientType.children
-    const uoms = this.state.catalogue.uoms.map(x => ({value: x, label: x }))
+    const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
-    
+
     return (
       <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
         <div className="rc-slide-panel__body flex flex-column">
@@ -174,7 +181,7 @@ class NutrientEditor extends React.Component {
               <FieldError errors={this.state.errors} field="facility_id" />
             </div>
           </div>
-          
+
           <div className="ph4 mb3 flex">
             <div className="w-40">
               <label className="f6 fw6 db mb1 gray ttc">Nutrient Type</label>
@@ -185,10 +192,10 @@ class NutrientEditor extends React.Component {
                 styles={reactSelectStyle}
               />
             </div>
-            { nutrientProducts && 
+            {nutrientProducts && (
               <div className="w-60 pl3">
                 <label className="f6 fw6 db mb1 gray ttc">
-                  { this.state.nutrientType.label }&nbsp;
+                  {this.state.nutrientType.label}&nbsp;
                 </label>
                 <Select
                   key={this.state.nutrientType}
@@ -198,11 +205,11 @@ class NutrientEditor extends React.Component {
                   styles={reactSelectStyle}
                 />
               </div>
-            }
+            )}
           </div>
 
           <hr className="mt3 m b--light-gray w-100" />
-        
+
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
               <TextInput
@@ -216,21 +223,22 @@ class NutrientEditor extends React.Component {
 
           <div className="ph4 mb3 flex">
             <div className="w-100">
-              <TextInput 
-                label="Manufacturer" 
-                fieldname="manufacturer" 
-                value={this.state.manufacturer} 
-                onChange={this.onChangeGeneric} />
+              <TextInput
+                label="Manufacturer"
+                fieldname="manufacturer"
+                value={this.state.manufacturer}
+                onChange={this.onChangeGeneric}
+              />
             </div>
           </div>
 
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Description</label>
-              <textarea 
-                className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy" 
+              <textarea
+                className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
                 fieldname="description"
-                value={this.state.description} 
+                value={this.state.description}
                 onChange={this.onChangeGeneric}
               />
             </div>
@@ -319,8 +327,7 @@ class NutrientEditor extends React.Component {
                       parseInt(this.state.quantity) *
                         parseInt(this.state.qty_per_package)}
                     &nbsp;
-                    {this.state.uom &&
-                      this.state.uom.label}
+                    {this.state.uom && this.state.uom.label}
                   </div>
                 </div>
               </div>

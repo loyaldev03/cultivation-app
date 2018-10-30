@@ -142,8 +142,8 @@ class NutrientsApp extends React.Component {
     return (
       <React.Fragment>
         {this.renderNutrientList()}
-        <NutrientEditor 
-          locations={this.props.locations} 
+        <NutrientEditor
+          locations={this.props.locations}
           order_uoms={this.props.order_uoms}
         />
       </React.Fragment>

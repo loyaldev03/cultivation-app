@@ -51,7 +51,7 @@ const LocationBox = ({
   <a
     href="#0"
     className={classNames(
-      'db f6 link ba b--gray pa2 pointer relative br2 dim',
+      'db f6 link ba b--silver pa2 pointer relative br2 dim gray',
       {
         'bg-orange white bn': highlighted,
         'bg-light-gray black-50 bn': plannedCapacity == totalCapacity
@@ -60,8 +60,8 @@ const LocationBox = ({
     style={{ height: '100px' }}
     onClick={plannedCapacity == totalCapacity ? null : onClick}
   >
-    {!!name && <span className="ttc db">{name}</span>}
-    {!!code && <span className="db ttu">ID: {code} </span>}
+    {!!name && <span className="ttc db f5 fw6">{name}</span>}
+    {!!code && <span className="db f5 fw6 ttu">ID: {code} </span>}
     <span className="db">Planned: {plannedCapacity}</span>
     <span className="db">Total: {totalCapacity}</span>
 
@@ -100,12 +100,24 @@ class BatchLocationEditor extends React.PureComponent {
     )
     this.state = {
       tabIndex: 0,
-      showAddLocation: true,
+      showAddLocation: false,
       showRowList: true,
       rooms,
       selectedRoom,
       selectedLocation,
-      selectedTrays: props.plantConfig.trays || []
+      // selectedTrays: props.plantConfig.trays || []
+      // TODO: Remove afte testing
+      selectedTrays: [
+        {
+          plant_id: 'veg1#1',
+          room_id: '5bbff17849a934c35f11a025',
+          row_id: '5bbff18549a934c35f11a028',
+          shelf_id: '5bbff19649a934c35f11a02e',
+          tray_capacity: '7',
+          tray_code: 'T01',
+          tray_id: '5bbff19649a934c35f11a02d'
+        }
+      ]
     }
   }
 
@@ -268,7 +280,8 @@ class BatchLocationEditor extends React.PureComponent {
     let trays = []
 
     console.log('locations:', locations)
-    console.log({ selectedRow, selectedTrays })
+    const plannedRows = groupBy(selectedTrays, 'row_id')
+    console.log({ selectedRow, plannedRows })
 
     if (locations && locations.length > 0) {
       rooms = groupBy(locations, 'room_id')
@@ -333,65 +346,81 @@ class BatchLocationEditor extends React.PureComponent {
               const isSelectedRoom = this.isSelected(roomId, 'room')
               const firstRoom = rooms[roomId][0]
               return (
-                <TabPanel key={roomId} className="ph4">
-                  <div className="mt2">
+                <TabPanel key={roomId} className="ph4 pb4">
+                  <div className="mt2 pb3">
                     {selectedTrays &&
                       selectedTrays.length > 0 && (
-                        <table className="collapse ba br2 b--black-10 pv2 ph3 f6 w-100">
-                          <tbody>
-                            <tr className="striped--light-gray">
-                              <td className="pv2 ph3 w1">#</td>
-                              <td className="pv2 ph3">Location</td>
-                              <td className="pv2 ph3 tr">Quantity</td>
-                              <td style={{ width: '50px' }} />
-                            </tr>
-                            {selectedTrays.map((tray, index) => (
-                              <tr key={tray.tray_id}>
-                                <td className="pv2 ph3 w1">{index + 1}</td>
-                                <td className="pv2 ph3 w4">
-                                  <a
-                                    href="#0"
-                                    onClick={this.onEditLocation(tray.tray_id)}
-                                    className="link"
+                        <React.Fragment>
+                          <div className="flex flex-column bb b--light-grey pb3">
+                            <div className="flex flex-auto pv2">
+                              <span className="w-20 gray f5 fw6">#</span>
+                              <span className="w-30 gray f5 fw6">Location</span>
+                              <span className="w-20 gray f5 fw6 tr">
+                                Quantity
+                              </span>
+                              <span className="w-30 gray f5 fw6" />
+                            </div>
+                            {Object.keys(plannedRows).map((rowId, index) => {
+                              const plannedTrays = plannedRows[rowId]
+                              console.log('plannedTrays', plannedTrays)
+                              return (
+                                <React.Fragment>
+                                  <div
+                                    className="pv1 flex justify-between items-center"
+                                    key={rowId}
                                   >
-                                    {this.getLocationName('tray', tray.tray_id)}
-                                  </a>
-                                </td>
-                                <td className="pv2 ph3 tr w3">
-                                  {tray.tray_capacity}
-                                </td>
-                                <td className="tc">
-                                  {!showAddLocation && (
-                                    <a
-                                      href="#0"
-                                      onClick={this.onRemoveSelectedTray(
-                                        tray.tray_id
-                                      )}
-                                    >
-                                      Remove
-                                    </a>
-                                  )}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                          <tfoot>
-                            <tr className="bt b--light-gray">
-                              <td className="pv2 tr" colSpan={2}>
-                                Total
-                              </td>
-                              <td className="pv2 ph3 tr">
-                                {selectedTraysCapacity}
-                              </td>
-                              <td />
-                            </tr>
-                          </tfoot>
-                        </table>
+                                    <span className="f4 fw6 dib gray">
+                                      Row {index + 1}
+                                    </span>
+                                    <span className="dib pa1">XX</span>
+                                  </div>
+                                  <ul className="list pl0 ma0">
+                                    {plannedTrays.map(t => (
+                                      <li
+                                        key={t.tray_id}
+                                        className="pa0 ma0 flex"
+                                      >
+                                        <i className="w-20" />
+                                        <a
+                                          href="#0"
+                                          className="w-30 orange f5 pa1"
+                                          onClick={this.onEditLocation(
+                                            t.tray_id
+                                          )}
+                                        >
+                                          {this.getLocationName(
+                                            'tray',
+                                            t.tray_id
+                                          )}
+                                        </a>
+                                        <span className="w-20 gray f5 pa1 fw6 tr">
+                                          {t.tray_capacity}
+                                        </span>
+                                        <span className="w-20 ph3 f5 tc pa1">
+                                          {!showAddLocation && (
+                                            <a
+                                              href="#0"
+                                              onClick={this.onRemoveSelectedTray(
+                                                t.tray_id
+                                              )}
+                                            >
+                                              X
+                                            </a>
+                                          )}
+                                        </span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </React.Fragment>
+                              )
+                            })}
+                          </div>
+                        </React.Fragment>
                       )}
                     {!showAddLocation && (
                       <a
                         href="#0"
-                        className="link dib mt2 f5 fw6 orange tc"
+                        className="link dib mt3 f5 orange tc"
                         onClick={this.onShowAddLocation}
                       >
                         + Add Location
@@ -402,7 +431,6 @@ class BatchLocationEditor extends React.PureComponent {
                   {showAddLocation && (
                     <React.Fragment>
                       {/* SELECT ROW */}
-
                       <LabelWithChangeEvent
                         label={'Select Row:'}
                         isSelecting={showRowList}
@@ -518,7 +546,7 @@ class BatchLocationEditor extends React.PureComponent {
                                   href="#0"
                                   key={tray.tray_id}
                                   className={classNames(
-                                    'db f6 link ba b--gray pa2 pointer relative br2 dim',
+                                    'db f6 link ba b--silver pa2 pointer relative br2 dim gray',
                                     {
                                       'bg-orange white bn': isSelected
                                     }
@@ -529,11 +557,15 @@ class BatchLocationEditor extends React.PureComponent {
                                     show={isSelected}
                                     value={selectedCapacity}
                                   />
-                                  <span className="db">{tray.tray_code}</span>
+                                  <span className="db f5 fw6">
+                                    {tray.tray_code}
+                                  </span>
                                   <span className="db">
                                     Planned: {plannedCapacity}
                                   </span>
-                                  <span className="dib">Select Capacity:</span>
+                                  <span className="db pb1">
+                                    Select Capacity:
+                                  </span>
                                   <SelectWithRange
                                     min={0}
                                     max={tray.remaining_capacity}
@@ -549,10 +581,10 @@ class BatchLocationEditor extends React.PureComponent {
                       </div>
                       <a
                         href="#0"
-                        className="link ph2 pv1 ba bg-gray db w3 mt2 tc center f6 br2 white"
+                        className="link ph2 pv1 ba bg-gray db w3 mt3 tc center f6 br2 white"
                         onClick={this.onDoneSelectTray}
                       >
-                        Close
+                        X Close
                       </a>
                     </React.Fragment>
                   )}

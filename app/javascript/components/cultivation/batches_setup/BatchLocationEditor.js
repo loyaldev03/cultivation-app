@@ -75,22 +75,38 @@ const LocationBox = ({
   </a>
 )
 
-const LabelWithChangeEvent = ({ isSelecting, value, onClick }) => {
+const LabelWithChangeEvent = ({ isSelecting, value, onClick, label }) => {
   if (isSelecting) {
-    return null
+    return <label className="mt2 db mr2 gray fw6">{label}</label>
   } else {
     return (
-      <span className="db blue pointer f6" onClick={onClick}>
-        {value ? value : '-- Select --'}
-      </span>
+      <React.Fragment>
+        <label className="mt2 db mr2 gray fw6">{label}</label>
+        <span className="db orange pointer f5" onClick={onClick}>
+          {value ? value : '-- Select --'}
+        </span>
+      </React.Fragment>
     )
   }
 }
 
 class BatchLocationEditor extends React.PureComponent {
-  state = {
-    locations: this.props.locations || [], // all available tray locations from database
-    selectedTrays: this.props.plantConfig.trays || []
+  constructor(props) {
+    super(props)
+    const rooms = groupBy(props.locations, 'room_id')
+    const selectedRoom = Object.keys(rooms)[0]
+    const selectedLocation = props.locations.find(
+      x => x['room_id'] === selectedRoom
+    )
+    this.state = {
+      tabIndex: 0,
+      showAddLocation: true,
+      showRowList: true,
+      rooms,
+      selectedRoom,
+      selectedLocation,
+      selectedTrays: props.plantConfig.trays || []
+    }
   }
 
   onShowAddLocation = () => {
@@ -99,14 +115,11 @@ class BatchLocationEditor extends React.PureComponent {
     })
   }
 
-  onSelectRoom = value => e => {
-    this.setState({
-      selectedLocation: this.getSelectedLocation('room', value),
-      selectedRoom: value,
-      selectedRow: null,
-      selectedShelf: null,
-      showRoomList: false
-    })
+  onSelectRoomTab = tabIndex => {
+    console.log('switching tab', tabIndex)
+    const rooms = groupBy(this.props.locations, 'room_id')
+    const roomId = Object.keys(rooms)[tabIndex]
+    this.onSelectRoom(roomId)
   }
 
   onSelectRow = value => e => {
@@ -160,12 +173,10 @@ class BatchLocationEditor extends React.PureComponent {
   onEditLocation = trayId => e => {
     const loc = this.getSelectedLocation('tray', trayId)
     this.setState({
-      selectedRoom: loc.room_id,
       selectedRow: loc.row_id,
       selectedShelf: loc.shelf_id,
       selectedLocation: loc,
       showAddLocation: true,
-      showRoomList: true,
       showRowList: true,
       showShelfList: true,
       showTrayList: true
@@ -174,12 +185,10 @@ class BatchLocationEditor extends React.PureComponent {
 
   onDoneSelectTray = () => {
     this.setState({
-      selectedRoom: '',
       selectedRow: '',
       selectedShelf: '',
       selectedLocation: null,
       showAddLocation: false,
-      showRoomList: false,
       showRowList: false,
       showShelfList: false,
       showTrayList: false
@@ -204,7 +213,7 @@ class BatchLocationEditor extends React.PureComponent {
 
   getSelectedLocation = (location_type, id) => {
     if (location_type && id) {
-      const found = this.state.locations.find(
+      const found = this.props.locations.find(
         x => x[location_type + '_id'] === id
       )
       return found
@@ -214,11 +223,11 @@ class BatchLocationEditor extends React.PureComponent {
 
   getLocationName = (location_type, id) => {
     console.log('getLocationName')
-    console.log({location_type, id})
+    console.log({ location_type, id })
     if (!id || !location_type) {
       return '-- Select --'
     }
-    const found = this.state.locations.find(
+    const found = this.props.locations.find(
       x => x[location_type + '_id'] === id
     )
     console.log(found)
@@ -241,10 +250,9 @@ class BatchLocationEditor extends React.PureComponent {
   }
 
   render() {
-    const { plantConfig, onSave, onClose } = this.props
+    const { locations, plantConfig, onSave, onClose } = this.props
     const {
-      locations,
-      showRoomList,
+      tabIndex,
       showRowList,
       showShelfList,
       showTrayList,
@@ -259,8 +267,8 @@ class BatchLocationEditor extends React.PureComponent {
     let shelves = []
     let trays = []
 
-    console.log('locations:', locations);
-    console.log('selectedTrays:', selectedTrays);
+    console.log('locations:', locations)
+    console.log({ selectedRow, selectedTrays })
 
     if (locations && locations.length > 0) {
       rooms = groupBy(locations, 'room_id')
@@ -309,281 +317,252 @@ class BatchLocationEditor extends React.PureComponent {
             onSave(updatePlant)
           }}
         >
-          <Tabs>
+          <Tabs
+            className="react-tabs--primary"
+            selectedIndex={tabIndex}
+            onSelect={this.onSelectRoomTab}
+          >
             <TabList>
-              <Tab>Room 1</Tab>
-              <Tab>Room 2</Tab>
-              <Tab>Room 3</Tab>
+              {Object.keys(rooms).map(roomId => {
+                const isSelectedRoom = this.isSelected(roomId, 'room')
+                const firstRoom = rooms[roomId][0]
+                return <Tab key={roomId}>{firstRoom.room_name}</Tab>
+              })}
             </TabList>
+            {Object.keys(rooms).map(roomId => {
+              const isSelectedRoom = this.isSelected(roomId, 'room')
+              const firstRoom = rooms[roomId][0]
+              return (
+                <TabPanel key={roomId} className="ph4">
+                  <div className="mt2">
+                    {selectedTrays &&
+                      selectedTrays.length > 0 && (
+                        <table className="collapse ba br2 b--black-10 pv2 ph3 f6 w-100">
+                          <tbody>
+                            <tr className="striped--light-gray">
+                              <td className="pv2 ph3 w1">#</td>
+                              <td className="pv2 ph3">Location</td>
+                              <td className="pv2 ph3 tr">Quantity</td>
+                              <td style={{ width: '50px' }} />
+                            </tr>
+                            {selectedTrays.map((tray, index) => (
+                              <tr key={tray.tray_id}>
+                                <td className="pv2 ph3 w1">{index + 1}</td>
+                                <td className="pv2 ph3 w4">
+                                  <a
+                                    href="#0"
+                                    onClick={this.onEditLocation(tray.tray_id)}
+                                    className="link"
+                                  >
+                                    {this.getLocationName('tray', tray.tray_id)}
+                                  </a>
+                                </td>
+                                <td className="pv2 ph3 tr w3">
+                                  {tray.tray_capacity}
+                                </td>
+                                <td className="tc">
+                                  {!showAddLocation && (
+                                    <a
+                                      href="#0"
+                                      onClick={this.onRemoveSelectedTray(
+                                        tray.tray_id
+                                      )}
+                                    >
+                                      Remove
+                                    </a>
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                          <tfoot>
+                            <tr className="bt b--light-gray">
+                              <td className="pv2 tr" colSpan={2}>
+                                Total
+                              </td>
+                              <td className="pv2 ph3 tr">
+                                {selectedTraysCapacity}
+                              </td>
+                              <td />
+                            </tr>
+                          </tfoot>
+                        </table>
+                      )}
+                    {!showAddLocation && (
+                      <a
+                        href="#0"
+                        className="link dib mt2 f5 fw6 orange tc"
+                        onClick={this.onShowAddLocation}
+                      >
+                        + Add Location
+                      </a>
+                    )}
+                  </div>
 
-            <TabPanel>
-              <h2>Any content 1</h2>
-            </TabPanel>
-            <TabPanel>
-              <h2>Any content 2</h2>
-            </TabPanel>
+                  {showAddLocation && (
+                    <React.Fragment>
+                      {/* SELECT ROW */}
+
+                      <LabelWithChangeEvent
+                        label={'Select Row:'}
+                        isSelecting={showRowList}
+                        value={this.getLocationName('row', selectedRow)}
+                        onClick={this.onChange('showRowList', true)}
+                      />
+                      <div className="mt1 f6" style={gridStyles}>
+                        {showRowList && (
+                          <React.Fragment>
+                            {Object.keys(rows).map(rowId => {
+                              const firstRow = rows[rowId][0]
+                              const rowCapacity = sumBy(
+                                rows[rowId],
+                                'tray_capacity'
+                              )
+                              const plannedCapacity = sumBy(
+                                rows[rowId],
+                                'planned_capacity'
+                              )
+                              const selectedCapacity = sumBy(
+                                selectedTrays.filter(t => t.row_id === rowId),
+                                'tray_capacity'
+                              )
+                              return (
+                                <LocationBox
+                                  key={rowId}
+                                  highlighted={selectedRow === rowId}
+                                  onClick={this.onSelectRow(rowId)}
+                                  isSelected={this.isSelected(rowId, 'row')}
+                                  name={firstRow.row_name}
+                                  code={firstRow.row_code}
+                                  plannedCapacity={plannedCapacity}
+                                  selectedCapacity={selectedCapacity}
+                                  totalCapacity={rowCapacity}
+                                />
+                              )
+                            })}
+                          </React.Fragment>
+                        )}
+                      </div>
+
+                      {/* SELECT SHELF */}
+
+                      <LabelWithChangeEvent
+                        label={'Select Shelf:'}
+                        isSelecting={showShelfList}
+                        value={this.getLocationName('shelf', selectedShelf)}
+                        onClick={this.onChange('showShelfList', true)}
+                      />
+                      <div className="mt1 f6" style={gridStyles}>
+                        {showShelfList && (
+                          <React.Fragment>
+                            {Object.keys(shelves).map(shelfId => {
+                              const firstShelf = shelves[shelfId][0]
+                              const shelfCapacity = firstShelf.shelf_capacity
+                              const plannedCapacity = sumBy(
+                                shelves[shelfId],
+                                'planned_capacity'
+                              )
+                              const selectedCapacity = sumBy(
+                                selectedTrays.filter(
+                                  t => t.shelf_id === shelfId
+                                ),
+                                'tray_capacity'
+                              )
+                              return (
+                                <LocationBox
+                                  key={shelfId}
+                                  highlighted={selectedShelf === shelfId}
+                                  onClick={this.onSelectShelf(shelfId)}
+                                  isSelected={this.isSelected(shelfId, 'shelf')}
+                                  code={firstShelf.shelf_code}
+                                  plannedCapacity={plannedCapacity}
+                                  selectedCapacity={selectedCapacity}
+                                  totalCapacity={shelfCapacity}
+                                />
+                              )
+                            })}
+                          </React.Fragment>
+                        )}
+                      </div>
+
+                      {/* SELECT TRAYS */}
+
+                      <LabelWithChangeEvent
+                        label={'Select Tray:'}
+                        isSelecting={showTrayList}
+                        value={joinBy(
+                          selectedTrays.filter(
+                            t => t.shelf_id === selectedShelf
+                          ),
+                          'tray_code'
+                        )}
+                        onClick={this.onChange('showTrayList', true)}
+                      />
+                      <div className="mt1 f6" style={gridStyles}>
+                        {showTrayList && (
+                          <React.Fragment>
+                            {trays.map(tray => {
+                              const plannedCapacity = sumBy(
+                                trays,
+                                'planned_capacity'
+                              )
+                              const isSelected = this.isSelected(
+                                tray.tray_id,
+                                'tray'
+                              )
+                              const selectedCapacity = this.getSelectedTrayCapacity(
+                                tray.tray_id
+                              )
+                              return (
+                                <a
+                                  href="#0"
+                                  key={tray.tray_id}
+                                  className={classNames(
+                                    'db f6 link ba b--gray pa2 pointer relative br2 dim',
+                                    {
+                                      'bg-orange white bn': isSelected
+                                    }
+                                  )}
+                                  style={{ height: '100px' }}
+                                >
+                                  <BadgeNumber
+                                    show={isSelected}
+                                    value={selectedCapacity}
+                                  />
+                                  <span className="db">{tray.tray_code}</span>
+                                  <span className="db">
+                                    Planned: {plannedCapacity}
+                                  </span>
+                                  <span className="dib">Select Capacity:</span>
+                                  <SelectWithRange
+                                    min={0}
+                                    max={tray.remaining_capacity}
+                                    selectedValue={selectedCapacity}
+                                    onChange={this.onSelectTray(tray.tray_id)}
+                                  />
+                                  <span> / {tray.tray_capacity}</span>
+                                </a>
+                              )
+                            })}
+                          </React.Fragment>
+                        )}
+                      </div>
+                      <a
+                        href="#0"
+                        className="link ph2 pv1 ba bg-gray db w3 mt2 tc center f6 br2 white"
+                        onClick={this.onDoneSelectTray}
+                      >
+                        Close
+                      </a>
+                    </React.Fragment>
+                  )}
+                </TabPanel>
+              )
+            })}
           </Tabs>
-          <div className="ph4">
-            <div className="mt2">
-              {plantConfig.phase === GROWTH_PHASE.CLONE ? (
-                <span className="subtitle-2 grey db mt3 mb1">
-                  PlantID: {plantConfig.serialNo}
-                </span>
-              ) : (
-                <span className="subtitle-2 grey db mt3 mb1">
-                  Location: {plantConfig.phase} {plantConfig.serialNo}
-                </span>
-              )}
 
-              <label className="subtitle-2 grey db mb1">Locations:</label>
-              {selectedTrays &&
-                selectedTrays.length > 0 && (
-                  <table className="collapse ba br2 b--black-10 pv2 ph3 f6 w-100">
-                    <tbody>
-                      <tr className="striped--light-gray">
-                        <td className="pv2 ph3 w1">#</td>
-                        <td className="pv2 ph3">Location</td>
-                        <td className="pv2 ph3 tr">Quantity</td>
-                        <td style={{ width: '50px' }} />
-                      </tr>
-                      {selectedTrays.map((tray, index) => (
-                        <tr key={tray.tray_id}>
-                          <td className="pv2 ph3 w1">{index + 1}</td>
-                          <td className="pv2 ph3 w4">
-                            <a
-                              href="#0"
-                              onClick={this.onEditLocation(tray.tray_id)}
-                              className="link"
-                            >
-                              {this.getLocationName('tray', tray.tray_id)}
-                            </a>
-                          </td>
-                          <td className="pv2 ph3 tr w3">
-                            {tray.tray_capacity}
-                          </td>
-                          <td className="tc">
-                            {!showAddLocation && (
-                              <a
-                                href="#0"
-                                onClick={this.onRemoveSelectedTray(
-                                  tray.tray_id
-                                )}
-                              >
-                                Remove
-                              </a>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                    <tfoot>
-                      <tr className="bt b--light-gray">
-                        <td className="pv2 tr" colSpan={2}>
-                          Total
-                        </td>
-                        <td className="pv2 ph3 tr">{selectedTraysCapacity}</td>
-                        <td />
-                      </tr>
-                    </tfoot>
-                  </table>
-                )}
-              {!showAddLocation && (
-                <a
-                  href="#0"
-                  className="link dib mt2 f6 fw6 orange tc"
-                  onClick={this.onShowAddLocation}
-                >
-                  + Add Location
-                </a>
-              )}
-            </div>
-
-            {showAddLocation && (
-              <div className="mt2 db ba ph3 pt2 pb3 b--light-gray">
-                <label className="mt2 db mr2">Select room:</label>
-                <LabelWithChangeEvent
-                  isSelecting={showRoomList}
-                  value={this.getLocationName('room', selectedRoom)}
-                  onClick={this.onChange('showRoomList', true)}
-                />
-                <div className="mt1 f6" style={gridStyles}>
-                  {showRoomList && (
-                    <React.Fragment>
-                      {Object.keys(rooms).map(roomId => {
-                        const firstRoom = rooms[roomId][0]
-                        const roomCapacity = sumBy(
-                          rooms[roomId],
-                          'tray_capacity'
-                        )
-                        const plannedCapacity = sumBy(
-                          rooms[roomId],
-                          'planned_capacity'
-                        )
-                        const selectedCapacity = sumBy(
-                          selectedTrays.filter(t => t.room_id === roomId),
-                          'tray_capacity'
-                        )
-                        return (
-                          <LocationBox
-                            key={roomId}
-                            highlighted={roomId === selectedRoom}
-                            onClick={this.onSelectRoom(roomId)}
-                            isSelected={this.isSelected(roomId, 'room')}
-                            name={firstRoom.room_name}
-                            code={firstRoom.room_code}
-                            plannedCapacity={plannedCapacity}
-                            selectedCapacity={selectedCapacity}
-                            totalCapacity={roomCapacity}
-                          />
-                        )
-                      })}
-                    </React.Fragment>
-                  )}
-                </div>
-
-                <label className="mt2 db mr2">Select row:</label>
-                <LabelWithChangeEvent
-                  isSelecting={showRowList}
-                  value={this.getLocationName('row', selectedRow)}
-                  onClick={this.onChange('showRowList', true)}
-                />
-                <div className="mt1 f6" style={gridStyles}>
-                  {showRowList && (
-                    <React.Fragment>
-                      {Object.keys(rows).map(rowId => {
-                        const firstRow = rows[rowId][0]
-                        const rowCapacity = sumBy(rows[rowId], 'tray_capacity')
-                        const plannedCapacity = sumBy(
-                          rows[rowId],
-                          'planned_capacity'
-                        )
-                        const selectedCapacity = sumBy(
-                          selectedTrays.filter(t => t.row_id === rowId),
-                          'tray_capacity'
-                        )
-                        return (
-                          <LocationBox
-                            key={rowId}
-                            highlighted={selectedRow === rowId}
-                            onClick={this.onSelectRow(rowId)}
-                            isSelected={this.isSelected(rowId, 'row')}
-                            name={firstRow.row_name}
-                            code={firstRow.row_code}
-                            plannedCapacity={plannedCapacity}
-                            selectedCapacity={selectedCapacity}
-                            totalCapacity={rowCapacity}
-                          />
-                        )
-                      })}
-                    </React.Fragment>
-                  )}
-                </div>
-
-                <label className="mt2 dib mr2">Select shelf:</label>
-                <LabelWithChangeEvent
-                  isSelecting={showShelfList}
-                  value={this.getLocationName('shelf', selectedShelf)}
-                  onClick={this.onChange('showShelfList', true)}
-                />
-                <div className="mt1 f6" style={gridStyles}>
-                  {showShelfList && (
-                    <React.Fragment>
-                      {Object.keys(shelves).map(shelfId => {
-                        const firstShelf = shelves[shelfId][0]
-                        const shelfCapacity = firstShelf.shelf_capacity
-                        const plannedCapacity = sumBy(
-                          shelves[shelfId],
-                          'planned_capacity'
-                        )
-                        const selectedCapacity = sumBy(
-                          selectedTrays.filter(t => t.shelf_id === shelfId),
-                          'tray_capacity'
-                        )
-                        return (
-                          <LocationBox
-                            key={shelfId}
-                            highlighted={selectedShelf === shelfId}
-                            onClick={this.onSelectShelf(shelfId)}
-                            isSelected={this.isSelected(shelfId, 'shelf')}
-                            code={firstShelf.shelf_code}
-                            plannedCapacity={plannedCapacity}
-                            selectedCapacity={selectedCapacity}
-                            totalCapacity={shelfCapacity}
-                          />
-                        )
-                      })}
-                    </React.Fragment>
-                  )}
-                </div>
-
-                <label className="mt2 dib mr2">Select Tray:</label>
-                <LabelWithChangeEvent
-                  isSelecting={showTrayList}
-                  value={joinBy(
-                    selectedTrays.filter(t => t.shelf_id === selectedShelf),
-                    'tray_code'
-                  )}
-                  onClick={this.onChange('showTrayList', true)}
-                />
-                <div className="mt1 f6" style={gridStyles}>
-                  {showTrayList && (
-                    <React.Fragment>
-                      {trays.map(tray => {
-                        const plannedCapacity = sumBy(trays, 'planned_capacity')
-                        const isSelected = this.isSelected(tray.tray_id, 'tray')
-                        const selectedCapacity = this.getSelectedTrayCapacity(
-                          tray.tray_id
-                        )
-                        return (
-                          <a
-                            href="#0"
-                            key={tray.tray_id}
-                            className={classNames(
-                              'db f6 link ba b--gray pa2 pointer relative br2 dim',
-                              {
-                                'bg-orange white bn': isSelected
-                              }
-                            )}
-                            style={{ height: '100px' }}
-                          >
-                            <BadgeNumber
-                              show={isSelected}
-                              value={selectedCapacity}
-                            />
-                            <span className="db">{tray.tray_code}</span>
-                            <span className="db">
-                              Planned: {plannedCapacity}
-                            </span>
-                            <span className="dib">Select Capacity:</span>
-                            <SelectWithRange
-                              min={0}
-                              max={tray.remaining_capacity}
-                              selectedValue={selectedCapacity}
-                              onChange={this.onSelectTray(tray.tray_id)}
-                            />
-                            <span> / {tray.tray_capacity}</span>
-                          </a>
-                        )
-                      })}
-                    </React.Fragment>
-                  )}
-                </div>
-                <a
-                  href="#0"
-                  className="link ph2 pv1 ba bg-gray db w3 mt2 tc center f6 br2 white"
-                  onClick={this.onDoneSelectTray}
-                >
-                  Close
-                </a>
-              </div>
-            )}
-          </div>
           <div className="bt b--light-grey tr pv3 ph4">
-            <input
-              type="submit"
-              value="Save"
-              className="btn btn--primary"
-            />
+            <input type="submit" value="Save" className="btn btn--primary" />
           </div>
         </form>
       </div>

@@ -9,7 +9,6 @@ import {
   httpPostOptions,
   GROWTH_PHASE
 } from '../../utils'
-import { toast } from './../../utils/toast'
 
 const AdjustmentMessage = React.memo(({ value, total }) => {
   if (value >= 0 && value < total) {
@@ -323,10 +322,10 @@ class BatchLocationApp extends React.Component {
                   <div className="shadow-1 br2">
                     <div className="h5 bg-orange w-100" />
                     <div className="bg-white w-100 pa3 tc">
-                      <p className="f4 fw6 dark-grey ma3">
+                      <p className="f3 fw6 dark-grey ma3">
                         All set up on cloning stage! Just one more thing...
                       </p>
-                      <p className="grey">
+                      <p className="grey ph5">
                         Proceed to configure location for next phase. Proceed to
                         configure location for next phaseProceed to configure
                         location for next phaseProceed to configure location for
@@ -335,7 +334,7 @@ class BatchLocationApp extends React.Component {
                       <a
                         href="#0"
                         onClick={this.onButtonClick('isNotified', true)}
-                        className="mb3 dib pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+                        className="btn btn--primary btn--large"
                       >
                         OK, GOT IT!
                       </a>

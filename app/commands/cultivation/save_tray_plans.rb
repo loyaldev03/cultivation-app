@@ -35,14 +35,14 @@ module Cultivation
           batch_phases.each do |phase_info|
             # Rails.logger.debug "\033[34m each phase_info #{phase_info.phase} \033[0m"
             # New location plans
-            phase_plan = @plans.detect {|p| p['phase'] == phase_info.phase }
+            phase_plan = @plans.detect { |p| p['phase'] == phase_info.phase }
             # Rails.logger.debug "\033[34m trays for phase: \033[0m"
             locations = phase_plan['trays']
             # Build new booking record of trays
             new_plans += build_tray_plans(batch.facility_id,
-                                         batch.id,
-                                         locations,
-                                         phase_info)
+                                          batch.id,
+                                          locations,
+                                          phase_info)
             # Rails.logger.debug "\033[34m new_plans build: \033[0m"
             # Rails.logger.debug new_plans.to_json
           end

@@ -23,7 +23,10 @@ const LocationField = React.memo(({ plant, onClick }) => {
         {plant &&
           plant.trays &&
           plant.trays.map(t => (
-            <span key={t.tray_id} className="dib mr1 ph2 pv1 bg-orange white br2">
+            <span
+              key={t.tray_id}
+              className="dib mr1 ph2 pv1 bg-orange white br2"
+            >
               {t.tray_code}
             </span>
           ))}

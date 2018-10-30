@@ -1,6 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
-import { groupBy, sumBy, joinBy } from '../../utils/ArrayHelper'
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
+import { groupBy, sumBy, joinBy, GROWTH_PHASE } from '../../utils'
 
 const gridStyles = {
   display: 'grid',
@@ -212,12 +213,15 @@ class BatchLocationEditor extends React.PureComponent {
   }
 
   getLocationName = (location_type, id) => {
+    console.log('getLocationName')
+    console.log({location_type, id})
     if (!id || !location_type) {
       return '-- Select --'
     }
     const found = this.state.locations.find(
       x => x[location_type + '_id'] === id
     )
+    console.log(found)
     return found
       ? found[location_type + '_name'] || found[location_type + '_code']
       : 'Unnamed'
@@ -254,6 +258,9 @@ class BatchLocationEditor extends React.PureComponent {
     let rows = []
     let shelves = []
     let trays = []
+
+    console.log('locations:', locations);
+    console.log('selectedTrays:', selectedTrays);
 
     if (locations && locations.length > 0) {
       rooms = groupBy(locations, 'room_id')
@@ -302,11 +309,31 @@ class BatchLocationEditor extends React.PureComponent {
             onSave(updatePlant)
           }}
         >
+          <Tabs>
+            <TabList>
+              <Tab>Room 1</Tab>
+              <Tab>Room 2</Tab>
+              <Tab>Room 3</Tab>
+            </TabList>
+
+            <TabPanel>
+              <h2>Any content 1</h2>
+            </TabPanel>
+            <TabPanel>
+              <h2>Any content 2</h2>
+            </TabPanel>
+          </Tabs>
           <div className="ph4">
             <div className="mt2">
-              <span className="subtitle-2 grey db mt3 mb1">
-                PlantID: {plantConfig.serialNo}
-              </span>
+              {plantConfig.phase === GROWTH_PHASE.CLONE ? (
+                <span className="subtitle-2 grey db mt3 mb1">
+                  PlantID: {plantConfig.serialNo}
+                </span>
+              ) : (
+                <span className="subtitle-2 grey db mt3 mb1">
+                  Location: {plantConfig.phase} {plantConfig.serialNo}
+                </span>
+              )}
 
               <label className="subtitle-2 grey db mb1">Locations:</label>
               {selectedTrays &&
@@ -551,11 +578,11 @@ class BatchLocationEditor extends React.PureComponent {
               </div>
             )}
           </div>
-          <div className="bt b--light-grey pv3 ph4">
+          <div className="bt b--light-grey tr pv3 ph4">
             <input
               type="submit"
               value="Save"
-              className="fr ph3 pv2 bg-orange button--font white bn box--br3 ttu link dim pointer"
+              className="btn btn--primary"
             />
           </div>
         </form>

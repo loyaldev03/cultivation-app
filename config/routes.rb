@@ -36,21 +36,6 @@ Rails.application.routes.draw do
 
   namespace 'materials', as: :materials do
     get '/' => 'materials#index'
-
-    # resources :items, only: [:index, :edit, :update, :new, :create, :destroy, :show] do
-    resources :items do
-      collection do
-        get 'nutrients'
-        get 'grow_medium'
-        get 'grow_lights'
-        get 'supplements'
-        get 'others'
-      end
-      resources :item_transactions, only: [:new, :create]
-    end
-
-    # TODO: to be removed...
-    resources :strains, only: [:index, :edit, :update, :new, :create, :destroy]
   end
 
   namespace 'purchasing', as: :purchasing do
@@ -73,6 +58,16 @@ Rails.application.routes.draw do
         get 'flowers'
         get 'harvests'
         get 'harvest_batches'
+      end
+    end
+
+    resources :items do
+      collection do
+        get 'nutrients'
+        get 'grow_medium'
+        get 'grow_lights'
+        get 'supplements'
+        get 'others'
       end
     end
   end

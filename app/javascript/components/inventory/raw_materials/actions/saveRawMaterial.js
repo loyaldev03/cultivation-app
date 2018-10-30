@@ -1,6 +1,6 @@
 import rawMaterialStore from '../store/RawMaterialStore'
 
-export const saveRawMaterial = (payload) => {
+export const saveRawMaterial = payload => {
   return fetch('/api/v1/raw_materials/setup', {
     method: 'POST',
     credentials: 'include',

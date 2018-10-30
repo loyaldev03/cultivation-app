@@ -115,8 +115,9 @@ class NutrientEditor extends React.Component {
 
     let errors = {}
 
-    const quantity = parseFloat(this.state.order_quantity) * parseFloat(this.state.qty_per_package)
-    
+    const quantity =
+      parseFloat(this.state.order_quantity) *
+      parseFloat(this.state.qty_per_package)
 
     if (facility_id.length === 0) {
       errors = {
@@ -145,7 +146,6 @@ class NutrientEditor extends React.Component {
         order_quantity: ['Order quantity is required.']
       }
     }
-    
 
     if (parseFloat(qty_per_package) <= 0) {
       errors = {
@@ -167,7 +167,6 @@ class NutrientEditor extends React.Component {
         location_id: ['Storage location is required.']
       }
     }
-
 
     const {
       isValid: purchaseIsValid,
@@ -213,7 +212,9 @@ class NutrientEditor extends React.Component {
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
 
-    const showTotalPrice = (parseFloat(this.state.price_per_package) > 0 && parseFloat(this.state.order_quantity) > 0)
+    const showTotalPrice =
+      parseFloat(this.state.price_per_package) > 0 &&
+      parseFloat(this.state.order_quantity) > 0
 
     return (
       <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
@@ -339,14 +340,14 @@ class NutrientEditor extends React.Component {
                 onChange={this.onChangeGeneric}
               />
               {showTotalPrice && (
-                  <p className="f6 gray mb0">
-                    Total ${' '}
-                    {(
-                      parseFloat(this.state.price_per_package) *
-                      parseFloat(this.state.order_quantity)
-                    ).toFixed(2)}
-                  </p>
-                )}
+                <p className="f6 gray mb0">
+                  Total ${' '}
+                  {(
+                    parseFloat(this.state.price_per_package) *
+                    parseFloat(this.state.order_quantity)
+                  ).toFixed(2)}
+                </p>
+              )}
             </div>
           </div>
 
@@ -391,7 +392,7 @@ class NutrientEditor extends React.Component {
                     {this.state.order_quantity &&
                       this.state.qty_per_package &&
                       parseFloat(this.state.order_quantity) *
-                      parseFloat(this.state.qty_per_package)}
+                        parseFloat(this.state.qty_per_package)}
                     &nbsp;
                     {this.state.uom && this.state.uom.label}
                   </div>

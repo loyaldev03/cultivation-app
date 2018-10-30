@@ -60,7 +60,12 @@ const columns = [
   {
     Header: 'Quantity',
     headerClassName: 'tr',
-    Cell: record => <div className="tr">{record.original.attributes.order_quantity} {record.original.attributes.order_uom}</div>
+    Cell: record => (
+      <div className="tr">
+        {record.original.attributes.order_quantity}{' '}
+        {record.original.attributes.order_uom}
+      </div>
+    )
   },
   {
     Header: 'Cost',
@@ -68,8 +73,12 @@ const columns = [
     Cell: record => (
       <div className="tr">
         {record.original.attributes.vendor_invoice.item_currency} &nbsp;
-        {(parseFloat(record.original.attributes.order_quantity) * parseFloat(record.original.attributes.vendor_invoice.item_price)).toFixed(2)}
-      </div>)
+        {(
+          parseFloat(record.original.attributes.order_quantity) *
+          parseFloat(record.original.attributes.vendor_invoice.item_price)
+        ).toFixed(2)}
+      </div>
+    )
   },
   {
     Header: '',

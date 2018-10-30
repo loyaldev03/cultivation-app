@@ -160,7 +160,6 @@ export default class MaterialForm extends React.Component {
         groupBy(subcategory_dropdown, 'sub_category')
       )
       if (subcategory_keys.length > 1) {
-        console.log(subcategory_keys)
         subcategory_dropdown = subcategory_keys.map(f => ({
           value: f,
           label: f

@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 
 import { observable } from 'mobx'
 import { observer, Provider } from 'mobx-react'
-import { formatDate2} from '../../utils/DateHelper'
+import { formatDate2 } from '../../utils/DateHelper'
 class LocationsSetup extends React.Component {
   constructor(props) {
     super(props)
@@ -86,7 +86,9 @@ class LocationsSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>{formatDate2(this.state.batch.start_date)}</label>
+                        <label>
+                          {formatDate2(this.state.batch.start_date)}
+                        </label>
                       </div>
                     </div>
                   </div>
@@ -123,7 +125,9 @@ class LocationsSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>{formatDate2(this.state.batch.start_date)}</label>
+                        <label>
+                          {formatDate2(this.state.batch.start_date)}
+                        </label>
                       </div>
                     </div>
                   </div>

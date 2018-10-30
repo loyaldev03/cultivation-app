@@ -94,7 +94,9 @@ class SecretSauceSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>{formatDate2(this.state.batch.start_date)}</label>
+                        <label>
+                          {formatDate2(this.state.batch.start_date)}
+                        </label>
                       </div>
                     </div>
                   </div>
@@ -131,7 +133,9 @@ class SecretSauceSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>{formatDate2(this.state.batch.start_date)}</label>
+                        <label>
+                          {formatDate2(this.state.batch.start_date)}
+                        </label>
                       </div>
                     </div>
                   </div>

@@ -28,47 +28,13 @@ class PlantStore {
   }
 
   @action
-  add(newPlants = []) {
-    // console.log(newPlants)
-    // this.plants.concat(newPlants)
-
-    newPlants.forEach(x => this.plants.push(x))
-    // this.plants.push([{ attributes: { serial_no: 'xxx' }, id: `${this.plants.length + 1}` }].slice())
-  }
-
-  @action
   update(plant) {
     const index = this.plants.findIndex(x => x.id === plant.id)
-    console.log(index)
+    // console.log(index)
     if (index >= 0) {
       this.plants[index] = plant
     }
   }
-
-  // @computed
-  // get motherPlants() {
-  //   return this.plants
-  //     .slice()
-  //     .filter(x => x.attributes.current_growth_stage === 'mother')
-  // }
-
-  // @computed
-  // get clones() {
-  //   return this.plants
-  //     .slice()
-  //     .filter(x => x.attributes.current_growth_stage === 'clone')
-  // }
-
-  // @computed
-  // get vegs() {
-  //   return this.plants
-  //     .slice()
-  //     .filter(
-  //       x =>
-  //         ['veg', 'veg1', 'veg2'].indexOf(x.attributes.current_growth_stage) >=
-  //         0
-  //     )
-  // }
 
   @computed
   get bindablePlants() {

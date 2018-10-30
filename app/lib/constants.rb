@@ -125,6 +125,13 @@ module Constants
     {code: :vermiculite, name: 'Vermiculite'},
   ].freeze
 
+  # Constants for Catalogue's category fields
+  NUTRIENTS_KEY = 'nutrients'
+  SUPPLEMENTS_KEY = 'supplements'
+  GROW_MEDIUM_KEY = 'grow_medium'
+  GROW_LIGHT_KEY = 'grow_light'
+  OTHERS_KEY = 'others'
+
   NUTRIENT_TYPE = [
     {code: :blend, name: 'Blend'},
     {code: :nitrogen, name: 'Nitrogen'},

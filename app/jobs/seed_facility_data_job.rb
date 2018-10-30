@@ -1,9 +1,13 @@
 class SeedFacilityDataJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
+  def perform(args = {})
     # Seed built-in roles
+    @args = args
     seed_roles
+    seed_uom
+    seed_plant_catalogue
+    seed_raw_materials
   end
 
   private
@@ -16,5 +20,24 @@ class SeedFacilityDataJob < ApplicationJob
     if sa_role.nil?
       sa_role = Common::Role.create!({name: Constants::SUPER_ADMIN, built_in: true})
     end
+  end
+
+  def seed_raw_materials
+    Inventory::CreateRawMaterials.call({facility_id: @args[:facility_id]})
+  end
+
+  def seed_uom
+    Common::SeedUnitOfMeasure.call
+  end
+
+  def seed_plant_catalogue
+    Inventory::Catalogue.create!(
+      catalogue_type: 'plant',
+      label: 'Plant',
+      category: 'plant',
+      facility_id: @args[:facility_id],
+      is_active: true,
+      uom_dimension: 'pieces',
+    )
   end
 end

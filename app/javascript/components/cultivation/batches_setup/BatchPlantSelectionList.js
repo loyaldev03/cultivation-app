@@ -5,7 +5,7 @@ import { BATCH_SOURCE, GROWTH_PHASE } from '../../utils'
 import plantStore from '../../inventory/plant_setup/store/PlantStore'
 import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 
-const QuantityField = ({ plant, onClick }) => {
+const QuantityField = React.memo(({ plant, onClick }) => {
   if (plant) {
     return (
       <a href="#0" className="link grey pointer" onClick={onClick}>
@@ -14,16 +14,16 @@ const QuantityField = ({ plant, onClick }) => {
     )
   }
   return null
-}
+})
 
-const LocationField = ({ plant, onClick }) => {
+const LocationField = React.memo(({ plant, onClick }) => {
   if (plant) {
     return (
       <a href="#0" className="link" onClick={onClick}>
         {plant &&
           plant.trays &&
           plant.trays.map(t => (
-            <span key={t.tray_id} className="mr1 ph2 pv1 bg-orange white br2">
+            <span key={t.tray_id} className="dib mr1 ph2 pv1 bg-orange white br2">
               {t.tray_code}
             </span>
           ))}
@@ -31,7 +31,7 @@ const LocationField = ({ plant, onClick }) => {
     )
   }
   return null
-}
+})
 
 @observer
 class BatchPlantSelectionList extends React.Component {
@@ -144,7 +144,7 @@ class BatchPlantSelectionList extends React.Component {
               </tr>
             ))}
           <tr>
-            <td className="tr pr3 w5" colspan="4">
+            <td className="tr pr3 w5" colSpan="4">
               <a
                 href="#0"
                 className="pv2 dib link orange"
@@ -162,7 +162,7 @@ class BatchPlantSelectionList extends React.Component {
   render() {
     const { phase, plantType, bookings } = this.props
     const { plants } = plantStore
-    console.log('bookings', bookings)
+    // console.log('bookings', bookings)
     if (plantStore.isLoading) {
       return <p className="f6">Loading....</p>
     }

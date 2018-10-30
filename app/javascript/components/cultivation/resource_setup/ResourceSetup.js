@@ -198,6 +198,13 @@ class ResourceSetup extends React.Component {
           >
             Resource
           </a>
+
+          <a
+            href={'/cultivation/batches/' + this.state.batch.id + '/material'}
+            className={inactiveTabs}
+          >
+            Material
+          </a>
         </div>
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">

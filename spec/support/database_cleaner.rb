@@ -7,6 +7,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     DatabaseCleaner.strategy = :truncation
+    Common::SeedUnitOfMeasure.call
   end
 
   config.before(:each, :js => true) do

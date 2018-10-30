@@ -57,6 +57,8 @@ Rails.application.routes.draw do
   namespace 'purchasing', as: :purchasing do
     get '/' => 'purchasing#index'
     resources :vendors, only: [:index, :edit, :update, :new, :create, :destroy]
+    resources :purchase_orders, only: [:index, :show]
+    resources :vendor_invoices, only: [:index, :show]
   end
 
 
@@ -107,12 +109,9 @@ Rails.application.routes.draw do
         get 'issues'
         get 'secret_sauce'
         get 'resource'
+        get 'material'
       end
     end
-  end
-
-  namespace 'daily_tasks' do
-    get '/', action: 'index'
   end
 
   namespace 'daily_tasks' do
@@ -122,7 +121,6 @@ Rails.application.routes.draw do
   # API for web pages
   namespace :api do
     namespace :v1 do
-
       resources :plants, only: [:show] do
         get 'all/(:current_growth_stage)',    action: :all, on: :collection
         get 'search/:current_growth_stage/(:facility_strain_id)/(:search)',    action: :search, on: :collection
@@ -159,7 +157,7 @@ Rails.application.routes.draw do
       end
 
       resources :items, only: [:index, :create, :destroy]
-
+      resources :uoms, only: [:index]
       scope :daily_tasks do
         put ':id/start_task', to: 'daily_tasks#start_task'
         put ':id/stop_task', to: 'daily_tasks#stop_task'

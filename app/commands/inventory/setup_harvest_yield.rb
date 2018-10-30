@@ -51,9 +51,6 @@ module Inventory
         return harvest_yield
       end
 
-      Rails.logger.debug ">>>> valid_permission?: #{valid_permission?}"
-      Rails.logger.debug ">>>> valid_data?: #{valid_data?}"
-      Rails.logger.debug '>>>> SetupHarvestYield errors'
       Rails.logger.debug errors
       nil
     end
@@ -64,59 +61,59 @@ module Inventory
 
     def valid_data?
       # check mother, location_id & batch id are in the same facility
-      mother = Inventory::ItemArticle.find(mother_id)
-      mother_facility = get_facility_from_room(mother.location_id)
-      plant_facility = get_facility_from_tray(location_id)
+      # mother = Inventory::ItemArticle.find(mother_id)
+      # mother_facility = get_facility_from_room(mother.location_id)
+      # plant_facility = get_facility_from_tray(location_id)
 
-      if mother_facility.present? && plant_facility.present? && mother_facility != plant_facility
-        errors.add(:mother_id, 'Mother plant & harvest must be at the same facility.')
-      end
+      # if mother_facility.present? && plant_facility.present? && mother_facility != plant_facility
+      #   errors.add(:mother_id, 'Mother plant & harvest must be at the same facility.')
+      # end
 
-      validate_cultivation_batch_id(mother_facility, plant_facility, strain)
+      # validate_cultivation_batch_id(mother_facility, plant_facility, strain)
 
-      # weight is valid
-      if weight <= 0
-        errors.add(:weight, 'Weight must be more than zero.')
-      end
+      # # weight is valid
+      # if weight <= 0
+      #   errors.add(:weight, 'Weight must be more than zero.')
+      # end
 
-      # weight type, unit, yield type are valid
-      if !%w(wet dry).include? weight_type
-        errors.add(:weight_type, 'Invalid wet type')
-      end
+      # # weight type, unit, yield type are valid
+      # if !%w(wet dry).include? weight_type
+      #   errors.add(:weight_type, 'Invalid wet type')
+      # end
 
       errors.empty?
     end
 
     def create_harvest_yield
-      source_plant = Inventory::ItemArticle.find(mother_id)
-      command = Inventory::CreatePlants.call(
-        status: 'available',
-        plant_ids: [source_plant.serial_no],
-        strain_name: strain,
-        location_id: location_id,
-        location_type: 'tray',
-        planted_on: nil,
-        expected_harvested_on: nil,
-        plant_status: yield_type,
-        cultivation_batch_id: cultivation_batch_id,
-        weight: weight,
-        weight_type: weight_type,
-        weight_unit: weight_unit,
-        harvested_on: harvested_on,
-      )
+      # source_plant = Inventory::ItemArticle.find(mother_id)
+      # command = Inventory::CreatePlants.call(
+      #   status: 'available',
+      #   plant_ids: [source_plant.serial_no],
+      #   strain_name: strain,
+      #   location_id: location_id,
+      #   location_type: 'tray',
+      #   planted_on: nil,
+      #   expected_harvested_on: nil,
+      #   plant_status: yield_type,
+      #   cultivation_batch_id: cultivation_batch_id,
+      #   weight: weight,
+      #   weight_type: weight_type,
+      #   weight_unit: weight_unit,
+      #   harvested_on: harvested_on,
+      # )
 
-      if command.success?
-        result = command.result
-        Rails.logger.debug 'CreatePlant for harvest yield...'
-        Rails.logger.debug result
-        result
-      else
-        Rails.logger.debug "\t\t>>>>  CreatePlant for errors: #{command.errors}"
-        combine_errors(command.errors, :plant_ids, :veg_ids)
-        combine_errors(command.errors, :strain_name, :strain_name)
-        combine_errors(command.errors, :location_id, :clone_ids)  # there is no field to host tray id errors, i just park all under clone_ids
-        nil
-      end
+      # if command.success?
+      #   result = command.result
+      #   Rails.logger.debug 'CreatePlant for harvest yield...'
+      #   Rails.logger.debug result
+      #   result
+      # else
+      #   Rails.logger.debug "\t\t>>>>  CreatePlant for errors: #{command.errors}"
+      #   combine_errors(command.errors, :plant_ids, :veg_ids)
+      #   combine_errors(command.errors, :strain_name, :strain_name)
+      #   combine_errors(command.errors, :location_id, :clone_ids)  # there is no field to host tray id errors, i just park all under clone_ids
+      #   nil
+      # end
     end
 
     def update_plant_to_dry(harvest_yield)

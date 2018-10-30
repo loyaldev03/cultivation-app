@@ -5,10 +5,14 @@ module Cultivation
       include Mongoid::Timestamps::Short
 
       field :quantity, type: BigDecimal, default: 0
-      field :item_id, type: BSON::ObjectId  # optional when using materials not planned
+      field :item_id, type: BSON::ObjectId
+      field :item_transaction_id, type: BSON::ObjectId
       field :uom, type: String  # TODO: UOM has to be string since its hardcoded for now
-      belongs_to :raw_material, class_name: 'Inventory::RawMaterial'
 
+      # To be removed
+      # belongs_to :item, class_name: 'Inventory::Item'
+
+      belongs_to :catalogue, class_name: 'Inventory::Catalogue'
       embedded_in :work_day, class_name: 'Cultivation::WorkDay'
 
       def item

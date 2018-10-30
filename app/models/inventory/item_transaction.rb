@@ -3,10 +3,22 @@ module Inventory
     include Mongoid::Document
     include Mongoid::Timestamps::Short
 
-    field :quantity, type: Integer #can be +/-
+    field :plant_id, type: BSON::ObjectId
+    field :ref_id, type: BSON::ObjectId
+    field :ref_type, type: String
+    field :event_type, type: String
+    field :event_date, type: DateTime
+    field :product_name, type: String
+    field :description, type: String
+    field :manufacturer, type: String
+    field :quantity, type: BigDecimal  #can be +/-
     field :uom, type: String
-    field :trans_type, type: String #manual/purchase
+    field :order_quantity, type: BigDecimal
+    field :order_uom, type: String
+    field :conversion, type: BigDecimal
 
-    belongs_to :item, class_name: 'Inventory::Item', optional: true
+    belongs_to :facility, optional: true
+    belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
+    belongs_to :catalogue, class_name: 'Inventory::Catalogue'
   end
 end

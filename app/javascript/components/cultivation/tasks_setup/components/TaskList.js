@@ -384,7 +384,11 @@ class TaskList extends React.Component {
     this.setState({ taskSelected: row.row.id })
     editorSidebarHandler.open({
       width: '500px',
-      data: { task_related_id: row.row.id, position: position },
+      data: {
+        task_related_id: row.row.id,
+        position: position,
+        task_related_parent_id: row.row['attributes.parent_id']
+      },
       action: 'add'
     })
   }

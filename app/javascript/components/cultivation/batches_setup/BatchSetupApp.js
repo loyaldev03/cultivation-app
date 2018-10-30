@@ -300,7 +300,7 @@ class BatchSetupApp extends React.Component {
 
                 <div className="fl tr w-20 absolute right-0 bottom-0">
                   <input
-                    className="btn btn--primary btn--large"
+                    className="btn btn--primary"
                     type="submit"
                     value="Search"
                   />

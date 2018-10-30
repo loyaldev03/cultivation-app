@@ -29,7 +29,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
 
     if params[:include]
       include_rels = params[:include].split(',').map { |x| x.strip.to_sym }
-      options = {include: include_rels}
+      options = {params: {include: include_rels}}
     end
 
     render json: Inventory::PlantSerializer.new(plant, options).serialized_json
@@ -58,14 +58,9 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def setup_harvest_yield
+    # TODO: To be completed
     command = Inventory::SetupHarvestYield.call(current_user, params[:plant].to_unsafe_h)
-
-    if command.success?
-      data = Inventory::ItemArticleSerializer.new(command.result).serialized_json
-      render json: data
-    else
-      render json: request_with_errors(command.errors), status: 422
-    end
+    render json: []
   end
 
   private

@@ -10,7 +10,7 @@ module Inventory
       :purchase_order_no
 
     attribute :purchase_date do |object|
-      object.purchase_date.blank? ? '' : object.purchase_date.iso8601
+      object.invoice_date.blank? ? '' : object.invoice_date.iso8601
     end
   end
 end

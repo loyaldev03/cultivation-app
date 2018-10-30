@@ -16,6 +16,7 @@ module Cultivation
     embedded_in :task
     belongs_to :user
 
+    # Non batch related tasks may exists and they incure material used & waste, time used.
     embeds_many :notes, class_name: 'Cultivation::TaskLog::Note'
     embeds_many :time_logs, class_name: 'Cultivation::TaskLog::TimeLog'
     embeds_many :materials_used, class_name: 'Cultivation::TaskLog::MaterialUsed'

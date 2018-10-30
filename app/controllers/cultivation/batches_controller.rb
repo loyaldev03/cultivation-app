@@ -1,5 +1,5 @@
 class Cultivation::BatchesController < ApplicationController
-  before_action :find_batch_info, only: [:show, :gantt, :locations, :issues, :secret_sauce, :resource]
+  before_action :find_batch_info, only: [:show, :gantt, :locations, :issues, :secret_sauce, :resource, :material]
 
   def index
   end
@@ -10,11 +10,11 @@ class Cultivation::BatchesController < ApplicationController
     @plant_sources = Constants::PLANT_SOURCE_TYPES.map { |a| {value: a[:code], label: a[:name]} }
     @strains = Inventory::FacilityStrain.all.map { |a| {value: a.id.to_s, label: "#{a.strain_name} (#{a.strain_type})"} }
     @facilities = QueryUserFacilities.call(current_user).result.map { |a| {value: a.id.to_s, label: "#{a.name} (#{a.code})"} }
+    logger.debug @facilities
     @grow_methods = Constants::GROW_MEDIUM.map { |a| {value: a[:code], label: a[:name]} }
   end
 
   def show
-    # TODO: Use other params
     if params[:select_location].present?
       @batch_info = OpenStruct.new({
         id: @batch.id.to_s,
@@ -43,6 +43,9 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def resource
+  end
+
+  def material
   end
 
   private
@@ -117,6 +120,7 @@ class Cultivation::BatchesController < ApplicationController
       nutrient_profile: @batch.nutrient_profile,
       total_estimated_hour: @batch.total_estimated_hours,
       total_estimated_cost: @batch.total_estimated_costs,
+      materials: @batch.material_use,
     }
   end
 

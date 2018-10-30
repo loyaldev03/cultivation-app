@@ -21,14 +21,21 @@ class AddTaskForm extends React.Component {
       name: '',
       duration: '',
       task_category: '',
-      instruction: '',
       start_date: new Date(),
       end_date: new Date(),
       errors: '',
       estimated_hours: '',
       assigned_employee: [],
       position: props.position,
-      task_related_id: props.task_related_id
+      task_related_id: props.task_related_id,
+      parent_start_date: this.set_parent_dates(
+        props.task_related_parent_id,
+        'start_date'
+      ),
+      parent_end_date: this.set_parent_dates(
+        props.task_related_parent_id,
+        'end_date'
+      )
     }
   }
 
@@ -36,8 +43,26 @@ class AddTaskForm extends React.Component {
     this.setState({
       position: props.position,
       task_related_id: props.task_related_id,
-      batch_id: props.batch_id
+      batch_id: props.batch_id,
+      parent_start_date: this.set_parent_dates(
+        props.task_related_parent_id,
+        'start_date'
+      ),
+      parent_end_date: this.set_parent_dates(
+        props.task_related_parent_id,
+        'end_date'
+      )
     })
+  }
+
+  set_parent_dates = (parent_id, date) => {
+    let a = TaskStore.find(e => e.id === parent_id)
+    if (a && a.attributes && date === 'start_date') {
+      return new Date(a.attributes.start_date)
+    }
+    if (a && a.attributes && date === 'end_date') {
+      return new Date(a.attributes.end_date)
+    }
   }
 
   handleChangeTask = event => {
@@ -80,7 +105,6 @@ class AddTaskForm extends React.Component {
       name: '',
       duration: '',
       task_category: '',
-      instruction: '',
       start_date: new Date(),
       end_date: new Date(),
       errors: '',
@@ -112,6 +136,8 @@ class AddTaskForm extends React.Component {
             <DatePicker
               value={this.state.start_date}
               fieldname="start_date"
+              minDate={this.state.parent_start_date}
+              maxDate={this.state.parent_end_date}
               onChange={e => this.handleChangeDate('start_date', e)}
             />
           </div>
@@ -121,6 +147,8 @@ class AddTaskForm extends React.Component {
             <DatePicker
               value={this.state.end_date}
               fieldname="end_date"
+              minDate={this.state.parent_start_date}
+              maxDate={this.state.parent_end_date}
               onChange={e => this.handleChangeDate('end_date', e)}
             />
           </div>

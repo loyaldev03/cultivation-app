@@ -1,11 +1,24 @@
 module Constants
   SUPER_ADMIN = 'Super Admin'
 
+  CONST_CLONE = 'clone'
+  CONST_CURE = 'cure'
+  CONST_DRY = 'dry'
+  CONST_FLOWER = 'flower'
+  CONST_MOTHER = 'mother'
+  CONST_SEED = 'seed'
+  CONST_STORAGE = 'storage'
+  CONST_VAULT = 'vault'
+  CONST_TRIM = 'trim'
+  CONST_VEG = 'veg'
+  CONST_VEG1 = 'veg1'
+  CONST_VEG2 = 'veg2'
+
   PLANT_TYPES = [
-    {code: :clone, name: 'Clone'},
-    {code: :mother, name: 'Mother'},
-    {code: :seed, name: 'Seed'},
-    {code: :veg, name: 'Veg Group'},
+    {code: CONST_CLONE, name: 'Clone'},
+    {code: CONST_MOTHER, name: 'Mother'},
+    {code: CONST_SEED, name: 'Seed'},
+    {code: CONST_VEG, name: 'Veg Group'},
   ].freeze
 
   STRAIN_TYPES = [
@@ -13,18 +26,6 @@ module Constants
     {code: :indica, name: 'Indica'},
     {code: :sativa, name: 'Sativa'},
   ].freeze
-
-  CONST_CLONE = 'clone'
-  CONST_CURE = 'cure'
-  CONST_DRY = 'dry'
-  CONST_FLOWER = 'flower'
-  CONST_MOTHER = 'mother'
-  CONST_STORAGE = 'storage'
-  CONST_VAULT = 'vault'
-  CONST_TRIM = 'trim'
-  CONST_VEG = 'veg'
-  CONST_VEG1 = 'veg1'
-  CONST_VEG2 = 'veg2'
 
   ROOM_PURPOSE = [
     {code: CONST_CLONE, name: 'Clone'},

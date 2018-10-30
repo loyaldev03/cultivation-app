@@ -23,6 +23,14 @@ class SidebarTaskEditor extends React.Component {
       duration: this.props.task.attributes.duration,
       start_date: new Date(this.props.task.attributes.start_date),
       end_date: new Date(this.props.task.attributes.end_date),
+      parent_start_date: this.set_parent_dates(
+        props.task.attributes.parent_id,
+        'start_date'
+      ),
+      parent_end_date: this.set_parent_dates(
+        props.task.attributes.parent_id,
+        'end_date'
+      ),
       errors: ''
     }
   }
@@ -37,8 +45,28 @@ class SidebarTaskEditor extends React.Component {
         duration: props.task.attributes.duration,
         start_date: new Date(props.task.attributes.start_date),
         end_date: new Date(props.task.attributes.end_date),
+        parent_start_date: this.set_parent_dates(
+          props.task.attributes.parent_id,
+          'start_date'
+        ),
+        parent_end_date: this.set_parent_dates(
+          props.task.attributes.parent_id,
+          'end_date'
+        ),
         errors: ''
       })
+    }
+  }
+
+  set_parent_dates = (parent_id, date) => {
+    console.log(parent_id)
+    let a = TaskStore.find(e => e.id === parent_id)
+    console.log(JSON.stringify(a))
+    if (a && a.attributes && date === 'start_date') {
+      return new Date(a.attributes.start_date)
+    }
+    if (a && a.attributes && date === 'end_date') {
+      return new Date(a.attributes.end_date)
     }
   }
 
@@ -123,6 +151,8 @@ class SidebarTaskEditor extends React.Component {
             <DatePicker
               value={this.state.start_date}
               fieldname="start_date"
+              minDate={this.state.parent_start_date}
+              maxDate={this.state.parent_end_date}
               onChange={e => this.handleChangeDate('start_date', e)}
             />
           </div>
@@ -132,6 +162,8 @@ class SidebarTaskEditor extends React.Component {
             <DatePicker
               value={this.state.end_date}
               fieldname="end_date"
+              minDate={this.state.parent_start_date}
+              maxDate={this.state.parent_end_date}
               onChange={e => this.handleChangeDate('end_date', e)}
             />
           </div>

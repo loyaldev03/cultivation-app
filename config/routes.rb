@@ -103,6 +103,7 @@ Rails.application.routes.draw do
         get 'issues'
         get 'secret_sauce'
         get 'resource'
+        get 'material'
       end
     end
   end

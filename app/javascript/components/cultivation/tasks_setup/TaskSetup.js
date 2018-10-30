@@ -23,6 +23,9 @@ const styles = `
 .columnDropdown{
   z-index: 300;
 }
+button.react-calendar__tile:disabled {
+    background-color: #aaa;
+}
 `
 
 class TaskSetup extends React.Component {
@@ -278,6 +281,13 @@ class TaskSetup extends React.Component {
               className={inactiveTabs}
             >
               Resource
+            </a>
+
+            <a
+              href={'/cultivation/batches/' + this.state.batch.id + '/material'}
+              className={inactiveTabs}
+            >
+              Material
             </a>
           </div>
           <div className="flex mt4">

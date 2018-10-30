@@ -68,9 +68,9 @@ module Cultivation
       #hours per day = estimated hours(5hours) / duration(5 days)
       #hours_per_person = hours_per_day / no of resource
       total_cost = 0.0
-      tasks.each do |task|
+      tasks.includes(:users).each do |task|
         hours_per_day = task.estimated_hours.to_f / task.duration.to_i
-        hours_per_person = hours_per_day / task.users.count
+        hours_per_person = hours_per_day / task.user_ids.length
         task_cost = 0.0
         task.users.each do |user|
           task_cost += (user.hourly_rate * hours_per_person) * task.duration
@@ -78,6 +78,21 @@ module Cultivation
         total_cost += task_cost
       end
       total_cost
+    end
+
+    def material_use
+      materials = []
+      tasks.each do |task|
+        task.material_use.each do |material|
+          a = materials.find { |b| b.name == material.name }
+          if a.nil?
+            materials << material
+          else
+            a.quantity += material.quantity
+          end
+        end
+      end
+      materials
     end
   end
 end

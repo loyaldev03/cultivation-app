@@ -112,6 +112,7 @@ class Cultivation::BatchesController < ApplicationController
     @batch_attributes = {
       id: @batch.id.to_s,
       batch_no: @batch.batch_no.to_s,
+      facility_id: @batch.facility_id.to_s,
       strain: @batch.facility_strain.strain_name,
       batch_source: @batch.batch_source,
       grow_method: @batch.grow_method,

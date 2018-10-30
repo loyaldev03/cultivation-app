@@ -187,7 +187,7 @@ export default class MaterialForm extends React.Component {
 
     category_dropdown = Object.keys(category_dropdown).map(f => ({
       value: f,
-      label: f.replace(/_/g, " ")
+      label: f.replace(/_/g, ' ')
     }))
 
     let uom_dropdown = UomStore

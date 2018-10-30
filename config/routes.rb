@@ -1,13 +1,11 @@
 Rails.application.routes.draw do
   # Mount a POST endpoint /images/upload endpoint which accepts file multipart upload
   mount ImageUploader.upload_endpoint(:avatar) => "/images/upload"
-
   devise_for :users
-
-  get "dashboard" => "home#dashboard"
 
   root to: "home#index"
 
+  # TODO: Need to DRY up. Refer to daily_tasks routes
   get "facility_setup/new" => "facility_setup#new"
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"
   get "facility_setup/room_info" => "facility_setup#room_info", as: 'fetch_room_info'
@@ -31,6 +29,7 @@ Rails.application.routes.draw do
   post "facility_setup/update_shelf_trays" => "facility_setup#update_shelf_trays", as: 'update_shelf_trays'
   post "facility_setup/duplicate_rows" => "facility_setup#duplicate_rows", as: "duplicate_rows"
 
+  get "dashboard" => "home#dashboard"
   get "settings" => "home#settings"
   get "inventory/setup" => "home#inventory_setup"
   post "reset_data" => "home#reset_data"
@@ -129,6 +128,27 @@ Rails.application.routes.draw do
         end
       end
 
+
+      # scope 'inventory', as: :inventory do
+      #   resources :items, only: [:setup_raw_materials, :show, :index], controller: 'inventory_items' do
+      #     collection do
+      #       post 'setup_raw_materials'
+      #       # setup raw materials
+      #       # setup sales products
+      #       # setup other products
+      #     end
+  
+      #     member do
+      #       # update inventory - raw material, others, supplements, grow lights, grow medium
+      #     end
+      #   end
+      # end
+
+      # namespace :purchasing do
+      #   resources :purchase_orders
+      #   resources :vendor_invoices
+      # end
+
       resources :strains, only: [:index, :create, :show] do
         get 'suggest', on: :collection
       end
@@ -155,8 +175,18 @@ Rails.application.routes.draw do
         delete 'destroy_role'
       end
 
+      # TODO: items to be removed. Material used for task should be move to batches/tasks api
+      #       whereas catalogue related to facility should call catalogues.
       resources :items, only: [:index, :create, :destroy]
       resources :uoms, only: [:index]
+      resources :catalogues, only: [] do
+        collection do
+          get 'raw_material_tree'
+          get 'raw_materials'
+        end
+      end
+
+      
       scope :daily_tasks do
         put ':id/start_task', to: 'daily_tasks#start_task'
         put ':id/stop_task', to: 'daily_tasks#stop_task'

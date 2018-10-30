@@ -5,7 +5,6 @@ import { toJS } from 'mobx'
 
 import { addNotes } from '../actions/taskActions'
 import { isEmptyString } from '../../utils/StringHelper'
-import { formatUnicodeAware } from '../../utils/DateHelper'
 
 @observer
 class LogsAndActivities extends React.Component {
@@ -37,11 +36,11 @@ class LogsAndActivities extends React.Component {
     const { dailyTask } = this.props
     const task = dailyTask.attributes.task
 
-    const timeFormat = datetime => format(datetime, 'hh:mm a')
+    const timeFormat = datetime => format(datetime, 'hh:mm A')
     const durationStr = (start, end) => {
       let temp = startOfDay(new Date())
       temp = addSeconds(temp, parseInt(differenceInSeconds(end, start)))
-      return format(temp, "H 'hr' m 'mn'")
+      return format(temp, "H [hr] m [mn]")
     }
 
     return (

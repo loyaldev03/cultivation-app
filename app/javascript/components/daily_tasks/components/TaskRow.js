@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import { toggleTask } from '../actions/taskActions'
 import DailyTasksStore from '../store/DailyTasksStore'
 import EditPanel from './EditPanel'
-import { formatUnicodeAware } from '../../utils/DateHelper'
 
 const TaskRow = observer(props => {
   const { dailyTask, index } = props
@@ -15,7 +14,7 @@ const TaskRow = observer(props => {
   const timeSpentToday = (() => {
     let temp = startOfDay(new Date())
     temp = addSeconds(temp, parseInt(dailyTask.attributes.duration))
-    return format(temp, "H 'hr' m 'mn'")
+    return format(temp, "H [hr] m [mn]")
   })()
 
   const taskIsStarted = dailyTask.attributes.status == 'started'
@@ -55,8 +54,8 @@ const TaskRow = observer(props => {
       >
         {task.attributes.name}
       </div>
-      <div className={classes}>{formatUnicodeAware(task.attributes.start_date, 'M/d/YYYY')}</div>
-      <div className={classes}>{formatUnicodeAware(task.attributes.end_date, 'M/d/YYYY')}</div>
+      <div className={classes}>{format(task.attributes.start_date, 'M/d/YYYY')}</div>
+      <div className={classes}>{format(task.attributes.end_date, 'M/d/YYYY')}</div>
       <div className={classes}>{timeSpentToday}</div>
       <StartEnd
         className={`${classes} pointer white`}

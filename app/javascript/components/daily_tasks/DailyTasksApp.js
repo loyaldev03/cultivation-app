@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { observer } from 'mobx-react'
 import { format } from 'date-fns'
 
-import { formatUnicodeAware } from '../utils/DateHelper'
 import DailyTasksStore from './store/DailyTasksStore'
 import WorkDayEditor from './components/WorkDayEditor'
 import WorkPanel from './components/WorkPanel'
@@ -32,7 +31,7 @@ class WorkDashboardApp extends React.Component {
 }
 
 const DateFormatted = ({ date }) => {
-  const dateFormatted = formatUnicodeAware(date, 'E, d MMM YYYY')
+  const dateFormatted = format(date, 'ddd, D MMM YYYY')
   return (
     <h5 className="tl ph3 pv4 ma1 h5--font dark-grey ttc bg-white">
       {dateFormatted}

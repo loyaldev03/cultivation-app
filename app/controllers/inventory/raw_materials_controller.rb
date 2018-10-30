@@ -1,4 +1,4 @@
-class Inventory::ItemsController < ApplicationController
+class Inventory::RawMaterialsController < ApplicationController
   def nutrients
     @locations = QueryAllValidFacilityLocations.call().result
     @order_uoms = Common::UnitOfMeasure.where(:dimension.in => %w(pieces weights volumes)).pluck(:unit)

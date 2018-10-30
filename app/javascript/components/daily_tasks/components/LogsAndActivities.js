@@ -1,7 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { format, differenceInSeconds, startOfDay, addSeconds } from 'date-fns'
-import { toJS } from 'mobx'
 
 import { addNotes } from '../actions/taskActions'
 import { isEmptyString } from '../../utils/StringHelper'

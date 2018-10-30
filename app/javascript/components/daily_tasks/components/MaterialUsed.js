@@ -1,6 +1,5 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { toJS } from 'mobx'
 import Select from 'react-select'
 
 import DailyTasksStore from '../store/DailyTasksStore'
@@ -28,7 +27,6 @@ class MaterialUsed extends React.Component {
 
     const materials = []
     // Initialize materials used data (item ID, name) from planned materials
-    console.log(toJS(task.attributes.items))
     task.attributes.items.map((item, i) => {
       materials.push({
         task_item_id: item.id,
@@ -39,7 +37,6 @@ class MaterialUsed extends React.Component {
       })
     })
     // Overwrite materials used data from store
-    console.log(toJS(dailyTask.attributes.materials_used))
     dailyTask.attributes.materials_used.map((material, i) => {
       const materialFound = this.findMaterial(material.catalogue_id, materials)
       if (materialFound) {
@@ -55,7 +52,6 @@ class MaterialUsed extends React.Component {
       }
     })
 
-    console.log(materials)
     this.state = {
       materials,
       saving: false

@@ -3,6 +3,7 @@ import { render } from 'react-dom'
 
 import { observable } from 'mobx'
 import { observer, Provider } from 'mobx-react'
+import { formatDate2 } from '../../utils/DateHelper'
 
 class GanttSetup extends React.Component {
   constructor(props) {
@@ -86,7 +87,7 @@ class GanttSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>{this.state.batch.start_date}</label>
+                        <label>{formatDate2(this.state.batch.start_date)}</label>
                       </div>
                     </div>
                   </div>
@@ -123,7 +124,7 @@ class GanttSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>{this.state.batch.start_date}</label>
+                        <label>{formatDate2(this.state.batch.start_date)}</label>
                       </div>
                     </div>
                   </div>

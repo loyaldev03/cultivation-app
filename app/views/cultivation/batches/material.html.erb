@@ -75,7 +75,7 @@
                     </div>
                     <div class="w-50">
                       <div class="">
-                        <label><%= @batch_attributes[:start_date] %></label>
+                        <label><%= @batch_attributes[:start_date].strftime("%_m/%d/%Y") %></label>
                       </div>
                     </div>
                   </div>
@@ -108,11 +108,11 @@
                   <hr />
                   <div class=" flex">
                     <div class="w-50">
-                      <label>Estimated Harvest Dat </label>
+                      <label>Estimated Harvest Date </label>
                     </div>
                     <div class="w-50">
                       <div class="">
-                        <label><%= @batch_attributes[:start_date] %></label>
+                        <label><%= @batch_attributes[:start_date].strftime("%_m/%d/%Y") %></label>
                       </div>
                     </div>
                   </div>

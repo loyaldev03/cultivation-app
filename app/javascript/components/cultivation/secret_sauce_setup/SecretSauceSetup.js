@@ -6,6 +6,7 @@ import { observer, Provider } from 'mobx-react'
 
 import loadNutrientProfile from './actions/loadNutrientProfile'
 import SecretSauce from './components/SecretSauce'
+import { formatDate2 } from '../../utils/DateHelper'
 
 class SecretSauceSetup extends React.Component {
   constructor(props) {
@@ -93,7 +94,7 @@ class SecretSauceSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>{this.state.batch.start_date}</label>
+                        <label>{formatDate2(this.state.batch.start_date)}</label>
                       </div>
                     </div>
                   </div>
@@ -130,7 +131,7 @@ class SecretSauceSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>{this.state.batch.start_date}</label>
+                        <label>{formatDate2(this.state.batch.start_date)}</label>
                       </div>
                     </div>
                   </div>

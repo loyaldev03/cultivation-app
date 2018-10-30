@@ -12,6 +12,7 @@ import loadUserRoles from './actions/loadUserRoles'
 import loadItems from './actions/loadItems'
 import loadDisplayTaskStore from './actions/loadDisplayTaskStore'
 import loadUom from './actions/loadUom'
+import { formatDate2 } from '../../utils/DateHelper'
 
 import TaskList from './components/TaskList'
 
@@ -167,7 +168,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>{this.state.batch.start_date}</label>
+                        <label>{formatDate2(this.state.batch.start_date)}</label>
                       </div>
                     </div>
                   </div>
@@ -204,7 +205,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>{this.state.batch.start_date}</label>
+                        <label>{formatDate2(this.state.batch.start_date)}</label>
                       </div>
                     </div>
                   </div>

@@ -97,7 +97,7 @@ class ResourceSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>???</label>
+                        <label>{this.state.batch.total_estimated_cost}</label>
                       </div>
                     </div>
                   </div>

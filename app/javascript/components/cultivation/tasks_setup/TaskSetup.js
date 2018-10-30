@@ -178,7 +178,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>$ {this.state.batch.total_estimated_cost}</label>
+                        <label>{this.state.batch.total_estimated_cost}</label>
                       </div>
                     </div>
                   </div>

@@ -1,3 +1,5 @@
+import { toast } from '../utils/toast'
+
 export const httpGetOptions = {
   method: 'GET',
   credentials: 'include',
@@ -26,3 +28,10 @@ export const httpOptions = (method, payload) => ({
     'Content-Type': 'application/json'
   }
 })
+
+export const toastHttpError = (fetch) => (
+  fetch.catch(error => {
+    toast('Error has occurred', 'error')
+    console.error('Error:', error)
+  })
+)

@@ -31,7 +31,9 @@ class RawMaterialEditor extends React.Component {
             return attr
           })
           .then(attr => {
-            const catalogue = this.props.catalogues.find(x => x.id == attr.catalogue_id)
+            const catalogue = this.props.catalogues.find(
+              x => x.id == attr.catalogue_id
+            )
 
             this.setState({
               ...this.resetState(),

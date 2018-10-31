@@ -26,9 +26,15 @@ module Cultivation
 
         # TO DO should this update task be recursive ? what if parent task end_date is extended beyond its parent task ?
 
-        update_task(task.parent, {end_date: task.end_date}, {children: false}) if task.parent and (task.end_date > task.parent.end_date)
+        # update_task(task.parent, {end_date: task.end_date}, {children: false}) if task.parent and (task.end_date > task.parent.end_date)
+        update_tasks_end_date(task) if task.parent
       end
       task
+    end
+
+    def update_tasks_end_date(task)
+      update_task(task.parent, {end_date: task.end_date}, {children: false}) if task.parent and (task.end_date > task.parent.end_date)
+      update_tasks_end_date(task.parent) if task.parent
     end
 
     def update_position(task, position)

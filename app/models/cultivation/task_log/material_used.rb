@@ -13,7 +13,7 @@ module Cultivation
       embedded_in :work_day, class_name: 'Cultivation::WorkDay'
 
       def item
-        work_day.task.items.find_by(id: item_id)
+        work_day.task.items.find_by(id: task_item_id)
       end
     end
   end

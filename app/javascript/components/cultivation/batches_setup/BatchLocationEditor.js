@@ -364,11 +364,8 @@ class BatchLocationEditor extends React.PureComponent {
                               const plannedTrays = plannedRows[rowId]
                               console.log('plannedTrays', plannedTrays)
                               return (
-                                <React.Fragment>
-                                  <div
-                                    className="pv1 flex justify-between items-center"
-                                    key={rowId}
-                                  >
+                                <React.Fragment key={rowId}>
+                                  <div className="pv1 flex justify-between items-center">
                                     <span className="f4 fw6 dib gray">
                                       Row {index + 1}
                                     </span>

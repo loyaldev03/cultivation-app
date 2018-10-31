@@ -94,5 +94,33 @@ module Cultivation
       end
       materials
     end
+
+    def material_summary
+      new_materials = material_use.map { |material|
+        Rails.logger.debug "Material Details ==> #{material.inspect}"
+        Rails.logger.debug "Facility Id ==> #{facility_id}"
+        transaction = Inventory::ItemTransaction.where(facility_id: facility_id, catalogue_id: material.catalogue_id)
+        sum = 0
+        transaction.each do |a|
+          sum += a.quantity
+        end
+
+        batches = Cultivation::Batch
+        batches.each do |batch|
+          break if batch.id == id
+          item = batch.material_use.find { |b| b.name == material.name }
+          sum -= item.quantity if item
+          sum = 0 if sum < 0
+        end
+
+        OpenStruct.new({
+          name: material.name,
+          quantity: material.quantity,
+          uom: material.uom,
+          inventory_quantity: sum,
+        })
+      }
+      new_materials
+    end
   end
 end

@@ -14,7 +14,7 @@
   %>
 <% else %>
   <div class="pa4">
-    <div class="fl w-100 flex flex-column">
+    <div class="fl w-100 flex flex-column grey">
       <%= react_component 'cultivation/tasks_setup/TaskSetup', { batch_id: @batch.id.to_s, batch: @batch_attributes} %>
     </div>
   </div>

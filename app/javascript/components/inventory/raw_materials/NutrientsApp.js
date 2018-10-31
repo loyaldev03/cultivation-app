@@ -160,6 +160,7 @@ class NutrientsApp extends React.Component {
         <NutrientEditor
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}
+          catalogues={this.props.catalogues}
         />
       </React.Fragment>
     )

@@ -22,7 +22,6 @@ class NutrientEditor extends React.Component {
       const id = event.detail.id
       if (!id) {
         this.reset()
-        console.log(this.state.location_id)
       } else {
         getRawMaterial(id)
           .then(x => {
@@ -31,33 +30,19 @@ class NutrientEditor extends React.Component {
             return attr
           })
           .then(attr => {
-            return fetch(
-              `/api/v1/catalogues/raw_material_tree?facility_id=${
-                attr.facility_id
-              }&type=nutrients`,
-              httpGetOptions
-            )
-              .then(response => response.json())
-              .then(data => {
-                const catalogues = data
-                return { attr, catalogues }
-              })
-          })
-          .then(({ attr, catalogues }) => {
-            const flatten_catalogues = catalogues.reduce(
+            const flatten_catalogues = this.props.catalogues.reduce(
               (sum, val) => sum.concat(val.children || []),
               []
             )
             const catalogue = flatten_catalogues.find(
               x => x.value == attr.catalogue_id
             )
-            const nutrientType = catalogues.find(
+            const nutrientType = this.props.catalogues.find(
               x => x.key == catalogue.parent_key
             )
 
             this.setState({
               ...this.resetState(),
-              nutrientTypes: catalogues,
               nutrientType: nutrientType,
               catalogue: catalogue,
               id: id,
@@ -86,19 +71,7 @@ class NutrientEditor extends React.Component {
   }
 
   onFacilityChanged = item => {
-    fetch(
-      `/api/v1/catalogues/raw_material_tree?facility_id=${
-        item.f_id
-      }&type=nutrients`,
-      httpGetOptions
-    )
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          facility_id: item.f_id,
-          nutrientTypes: data
-        })
-      })
+    this.setState({ facility_id: item.f_id })
   }
 
   onNutrientTypeSelected = item => {
@@ -123,7 +96,6 @@ class NutrientEditor extends React.Component {
       id: '',
       facility_id: '',
       qty_per_package: '',
-      nutrientTypes: [],
       nutrientType: { value: '', label: '', children: [] },
       catalogue: { value: '', label: '', uoms: [] },
       product_name: '',
@@ -269,11 +241,7 @@ class NutrientEditor extends React.Component {
       ? { width: '500px' }
       : { width: '0px' }
 
-    const { locations } = this.props
-    const nutrientTypes = this.state.nutrientTypes.map(x => ({
-      ...x,
-      value: x.key
-    }))
+    const { locations, catalogues } = this.props
     const nutrientProducts = this.state.nutrientType.children
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
@@ -317,7 +285,7 @@ class NutrientEditor extends React.Component {
             <div className="w-40">
               <label className="f6 fw6 db mb1 gray ttc">Nutrient Type</label>
               <Select
-                options={nutrientTypes}
+                options={catalogues}
                 value={this.state.nutrientType}
                 onChange={this.onNutrientTypeSelected}
                 styles={reactSelectStyle}

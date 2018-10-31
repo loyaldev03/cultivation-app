@@ -12,7 +12,7 @@
   <%= render partial: 'setupNavigation', locals: { selected: Constants::GROW_MEDIUM_KEY } %>
   <div class="flex flex-column">
     <%= react_component('inventory/raw_materials/RawMaterialApp', { 
-      locations: @locations, order_uoms: @order_uoms, raw_material_type: Constants::GROW_MEDIUM_KEY }) %>
+      locations: @locations, order_uoms: @order_uoms, raw_material_type: Constants::GROW_MEDIUM_KEY, catalogues: @catalogues }) %>
    
     <div class="w-100 bg-white ph3 pt2 pb4">
       <div class="dim flex flex-row items-center pointer">

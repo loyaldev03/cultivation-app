@@ -19,6 +19,7 @@ module Inventory
       catalogues.each do |parent|
         item = {
           label: parent.label,
+          value: parent.id.to_s,
           key: parent.key,
           id: parent.id.to_s,
         }

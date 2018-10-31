@@ -176,6 +176,7 @@ class RawMaterialApp extends React.Component {
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}
           raw_material_type={this.props.raw_material_type}
+          catalogues={this.props.catalogues}
         />
       </React.Fragment>
     )

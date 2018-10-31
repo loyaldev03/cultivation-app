@@ -31,24 +31,10 @@ class RawMaterialEditor extends React.Component {
             return attr
           })
           .then(attr => {
-            return fetch(
-              `/api/v1/catalogues/raw_material_tree?facility_id=${
-                attr.facility_id
-              }&type=${this.props.raw_material_type}`,
-              httpGetOptions
-            )
-              .then(response => response.json())
-              .then(data => {
-                const catalogues = data
-                return { attr, catalogues }
-              })
-          })
-          .then(({ attr, catalogues }) => {
-            const catalogue = catalogues.find(x => x.id == attr.catalogue_id)
+            const catalogue = this.props.catalogues.find(x => x.id == attr.catalogue_id)
 
             this.setState({
               ...this.resetState(),
-              catalogues: catalogues,
               catalogue: catalogue,
               id: id,
               facility_id: attr.facility_id,
@@ -76,20 +62,7 @@ class RawMaterialEditor extends React.Component {
   }
 
   onFacilityChanged = item => {
-    console.log(item.f_id)
-    fetch(
-      `/api/v1/catalogues/raw_material_tree?facility_id=${item.f_id}&type=${
-        this.props.raw_material_type
-      }`,
-      httpGetOptions
-    )
-      .then(response => response.json())
-      .then(data => {
-        this.setState({
-          facility_id: item.f_id,
-          catalogues: data
-        })
-      })
+    this.setState({ facility_id: item.f_id })
   }
 
   onCatalogueSelected = item => {
@@ -110,7 +83,6 @@ class RawMaterialEditor extends React.Component {
       id: '',
       facility_id: '',
       qty_per_package: '',
-      catalogues: [],
       catalogue: { value: '', label: '', uoms: [] },
       product_name: '',
       manufacturer: '',
@@ -256,11 +228,6 @@ class RawMaterialEditor extends React.Component {
       : { width: '0px' }
 
     const { locations } = this.props
-    const catalogues = this.state.catalogues.map(x => ({
-      ...x,
-      value: x.id
-    }))
-
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
 
@@ -305,7 +272,7 @@ class RawMaterialEditor extends React.Component {
                 {this.label} Type
               </label>
               <Select
-                options={catalogues}
+                options={this.props.catalogues}
                 value={this.state.catalogue}
                 onChange={this.onCatalogueSelected}
                 styles={reactSelectStyle}

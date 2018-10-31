@@ -105,19 +105,7 @@ class BatchLocationEditor extends React.PureComponent {
       rooms,
       selectedRoom,
       selectedLocation,
-      // selectedTrays: props.plantConfig.trays || []
-      // TODO: Remove afte testing
-      selectedTrays: [
-        {
-          plant_id: 'veg1#1',
-          room_id: '5bbff17849a934c35f11a025',
-          row_id: '5bbff18549a934c35f11a028',
-          shelf_id: '5bbff19649a934c35f11a02e',
-          tray_capacity: '7',
-          tray_code: 'T01',
-          tray_id: '5bbff19649a934c35f11a02d'
-        }
-      ]
+      selectedTrays: props.plantConfig.trays || []
     }
   }
 

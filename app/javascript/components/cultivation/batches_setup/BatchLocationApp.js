@@ -202,7 +202,7 @@ class BatchLocationApp extends React.Component {
         httpPostOptions(payload)
       )
       // navigate to next page
-      window.location.replace('/cultivation/batches/' + this.props.batchInfo.id)
+      window.location.replace('/cultivation/batches/' + id)
     } catch (error) {
       console.error(error)
     } finally {
@@ -216,8 +216,10 @@ class BatchLocationApp extends React.Component {
     const isBalance = quantity === selectedCapacity && quantity > 0
     return (
       <React.Fragment>
-        <span className="dib ttu f2 fw6 pb2 dark-grey">{phase}</span>
-        <AdjustmentMessage value={selectedCapacity} total={quantity} />
+        <div className="flex items-center pb2">
+          <span className="dib ttu f2 fw6 pb2 dark-grey w4">{phase}</span>
+          <AdjustmentMessage value={selectedCapacity} total={quantity} />
+        </div>
         <BatchPlantSelectionList
           onEdit={this.onClickSelectionEdit}
           bookings={bookings}

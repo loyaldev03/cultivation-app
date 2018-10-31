@@ -46,7 +46,7 @@ class BatchPlantSelectionList extends React.Component {
 
   renderMotherCloneBookingTable = (motherPlants, phase) => {
     return (
-      <table className="collapse br2 f5">
+      <table className="collapse br2 f5 w-100">
         <tbody>
           <tr className="striped--light-gray grey f5">
             <th className="pv2 ph3">

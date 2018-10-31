@@ -151,8 +151,6 @@ class SidebarTaskEditor extends React.Component {
             <DatePicker
               value={this.state.start_date}
               fieldname="start_date"
-              minDate={this.state.parent_start_date}
-              maxDate={this.state.parent_end_date}
               onChange={e => this.handleChangeDate('start_date', e)}
             />
           </div>
@@ -163,7 +161,6 @@ class SidebarTaskEditor extends React.Component {
               value={this.state.end_date}
               fieldname="end_date"
               minDate={this.state.parent_start_date}
-              maxDate={this.state.parent_end_date}
               onChange={e => this.handleChangeDate('end_date', e)}
             />
           </div>

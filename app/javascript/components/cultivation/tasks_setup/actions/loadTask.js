@@ -1,5 +1,5 @@
 import TaskStore from '../stores/TaskStore'
-import { formatDate2 } from '../../../utils/DateHelper'
+import { formatDate2 } from '../../../utils'
 class loadTask {
   async loadbatch(batch_id) {
     let id = batch_id

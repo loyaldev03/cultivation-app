@@ -10,11 +10,12 @@ import LocationPicker from '../../../utils/LocationPicker2'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
 
-class NutrientEditor extends React.Component {
+class RawMaterialEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
     this.purchaseInfoEditor = React.createRef()
+    this.label = props.raw_material_type.replace(/[_]/g, ' ')
   }
 
   componentDidMount() {
@@ -22,7 +23,6 @@ class NutrientEditor extends React.Component {
       const id = event.detail.id
       if (!id) {
         this.reset()
-        console.log(this.state.location_id)
       } else {
         getRawMaterial(id)
           .then(x => {
@@ -34,7 +34,7 @@ class NutrientEditor extends React.Component {
             return fetch(
               `/api/v1/catalogues/raw_material_tree?facility_id=${
                 attr.facility_id
-              }&type=nutrients`,
+              }&type=${this.props.raw_material_type}`,
               httpGetOptions
             )
               .then(response => response.json())
@@ -44,21 +44,11 @@ class NutrientEditor extends React.Component {
               })
           })
           .then(({ attr, catalogues }) => {
-            const flatten_catalogues = catalogues.reduce(
-              (sum, val) => sum.concat(val.children || []),
-              []
-            )
-            const catalogue = flatten_catalogues.find(
-              x => x.value == attr.catalogue_id
-            )
-            const nutrientType = catalogues.find(
-              x => x.key == catalogue.parent_key
-            )
+            const catalogue = catalogues.find(x => x.id == attr.catalogue_id)
 
             this.setState({
               ...this.resetState(),
-              nutrientTypes: catalogues,
-              nutrientType: nutrientType,
+              catalogues: catalogues,
               catalogue: catalogue,
               id: id,
               facility_id: attr.facility_id,
@@ -86,30 +76,27 @@ class NutrientEditor extends React.Component {
   }
 
   onFacilityChanged = item => {
+    console.log(item.f_id)
     fetch(
-      `/api/v1/catalogues/raw_material_tree?facility_id=${
-        item.f_id
-      }&type=nutrients`,
+      `/api/v1/catalogues/raw_material_tree?facility_id=${item.f_id}&type=${
+        this.props.raw_material_type
+      }`,
       httpGetOptions
     )
       .then(response => response.json())
       .then(data => {
         this.setState({
           facility_id: item.f_id,
-          nutrientTypes: data
+          catalogues: data
         })
       })
   }
 
-  onNutrientTypeSelected = item => {
+  onCatalogueSelected = item => {
     this.setState({
-      nutrientType: item,
-      catalogue: { value: '', label: '', uoms: [] }
+      catalogue: item,
+      uom: { value: '', label: '' }
     })
-  }
-
-  onNutrientProductSelected = item => {
-    this.setState({ catalogue: item })
   }
 
   onChangeGeneric = event => {
@@ -123,8 +110,7 @@ class NutrientEditor extends React.Component {
       id: '',
       facility_id: '',
       qty_per_package: '',
-      nutrientTypes: [],
-      nutrientType: { value: '', label: '', children: [] },
+      catalogues: [],
       catalogue: { value: '', label: '', uoms: [] },
       product_name: '',
       manufacturer: '',
@@ -223,7 +209,7 @@ class NutrientEditor extends React.Component {
     if (catalogue.length === 0) {
       errors = {
         ...errors,
-        catalogue: ['Nutrient product is required.']
+        catalogue: [`${this.label} product is required.`]
       }
     }
 
@@ -270,11 +256,11 @@ class NutrientEditor extends React.Component {
       : { width: '0px' }
 
     const { locations } = this.props
-    const nutrientTypes = this.state.nutrientTypes.map(x => ({
+    const catalogues = this.state.catalogues.map(x => ({
       ...x,
-      value: x.key
+      value: x.id
     }))
-    const nutrientProducts = this.state.nutrientType.children
+
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
 
@@ -289,7 +275,7 @@ class NutrientEditor extends React.Component {
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Nutrient</h1>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add {this.label}</h1>
             <span
               className="rc-slide-panel__close-button dim"
               onClick={() => {
@@ -314,30 +300,18 @@ class NutrientEditor extends React.Component {
           </div>
 
           <div className="ph4 mb3 flex">
-            <div className="w-40">
-              <label className="f6 fw6 db mb1 gray ttc">Nutrient Type</label>
+            <div className="w-50">
+              <label className="f6 fw6 db mb1 gray ttc">
+                {this.label} Type
+              </label>
               <Select
-                options={nutrientTypes}
-                value={this.state.nutrientType}
-                onChange={this.onNutrientTypeSelected}
+                options={catalogues}
+                value={this.state.catalogue}
+                onChange={this.onCatalogueSelected}
                 styles={reactSelectStyle}
               />
+              <FieldError errors={this.state.errors} field="catalogue" />
             </div>
-            {nutrientProducts && (
-              <div className="w-60 pl3">
-                <label className="f6 fw6 db mb1 gray ttc">
-                  {this.state.nutrientType.label}&nbsp;
-                </label>
-                <Select
-                  key={this.state.nutrientType}
-                  options={nutrientProducts}
-                  value={this.state.catalogue}
-                  onChange={this.onNutrientProductSelected}
-                  styles={reactSelectStyle}
-                />
-                <FieldError errors={this.state.errors} field="catalogue" />
-              </div>
-            )}
           </div>
 
           <hr className="mt3 m b--light-gray w-100" />
@@ -377,15 +351,8 @@ class NutrientEditor extends React.Component {
           </div>
 
           <hr className="mt3 m b--light-gray w-100" />
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 dark-gray">
-                Purchase details
-              </label>
-            </div>
-          </div>
 
-          <div className="ph4 mb3 flex">
+          <div className="ph4 mb3 mt3 flex">
             <div className="w-30">
               <NumericInput
                 label="Quantity"
@@ -498,7 +465,7 @@ class NutrientEditor extends React.Component {
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
-            label="How the nutrients are purchased?"
+            label={`How the ${this.label} are purchased?`}
             vendorLicense={false}
             vendor_name={this.state.vendor_name}
             vendor_no={this.state.vendor_no}
@@ -512,10 +479,7 @@ class NutrientEditor extends React.Component {
             <a
               className="db tr pv2 bn br2 ttu tracked link dim f6 fw6 orange"
               href="#"
-              onClick={x => {
-                this.reset()
-                x.preventDefault()
-              }}
+              onClick={x => x.preventDefault()}
             >
               Save for later
             </a>
@@ -533,27 +497,14 @@ class NutrientEditor extends React.Component {
   }
 }
 
-// PO Number
-// Product Name
-
-// Quantity
-// Qty per unit
-// Total Quantity
-
-// Cost
-// cost per box
-// Total Cost
-
-// Supplier
-// Location
-
+// TODO:
 // Do you use storage cabinets/shelves to store your items?
 // Is yes, please indicate Shelf/row ID:
 
-// NutrientEditor.propTypes = {
-//   batch_sources: PropTypes.array.isRequired,
-//   facility_strains: PropTypes.array.isRequired,
-//   grow_methods: PropTypes.array.isRequired
-// }
+RawMaterialEditor.propTypes = {
+  locations: PropTypes.array.isRequired,
+  order_uoms: PropTypes.array.isRequired,
+  raw_material_type: PropTypes.string.isRequired
+}
 
-export default NutrientEditor
+export default RawMaterialEditor

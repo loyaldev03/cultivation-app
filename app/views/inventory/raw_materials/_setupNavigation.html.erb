@@ -1,7 +1,7 @@
 <% tabStyle = 'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white' %>
 <% selectedStyle = 'link bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white' %>
 <div class="flex">
-  <% if selected == 'nutrients' %>
+  <% if selected == Constants::NUTRIENTS_KEY %>
     <div class="<%= selectedStyle %>">
       Nutrients
     </div>
@@ -11,7 +11,7 @@
       class: tabStyle %>
   <% end %>
 
-  <% if selected == 'grow_medium' %>
+  <% if selected == Constants::GROW_MEDIUM_KEY %>
     <div class="<%= selectedStyle %>">
       Grow Medium
     </div>
@@ -21,7 +21,7 @@
       class: tabStyle %>
   <% end %>
 
-  <% if selected == 'grow_lights' %>
+  <% if selected == Constants::GROW_LIGHT_KEY %>
     <div class="<%= selectedStyle %>">
       Grow Lights
     </div>
@@ -31,7 +31,7 @@
       class: tabStyle %>
   <% end %>
 
-  <% if selected == 'supplements' %>
+  <% if selected == Constants::SUPPLEMENTS_KEY %>
     <div class="<%= selectedStyle %>">
       Supplements
     </div>
@@ -40,8 +40,29 @@
       supplements_inventory_raw_materials_path, 
       class: tabStyle %>
   <% end %>
+  
+  <% if selected == '' %>
+    <div class="<%= selectedStyle %>">
+      Seeds
+    </div>
+  <% else %>
+    <%= link_to 'Seeds',
+      '', 
+      class: tabStyle %>
+  <% end %>
 
-  <% if selected == 'others' %>
+  <% if selected == '' %>
+    <div class="<%= selectedStyle %>">
+      Purchased clones
+    </div>
+  <% else %>
+    <%= link_to 'Purchased clones',
+      '', 
+      class: tabStyle %>
+  <% end %>
+
+
+  <% if selected == Constants::OTHERS_KEY %>
     <div class="<%= selectedStyle %>">
       Others
     </div>

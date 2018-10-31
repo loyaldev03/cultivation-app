@@ -28,6 +28,12 @@ class Api::V1::RawMaterialsController < Api::V1::BaseApiController
     end
   end
 
+  def show
+    item_transaction = Inventory::ItemTransaction.find(params[:id])
+    options = {params: {include: [:vendor_invoice, :vendor, :purchase_order]}}
+    render json: Inventory::RawMaterialSerializer.new(item_transaction, options).serialized_json
+  end
+
   private
 
   def request_with_errors(errors)

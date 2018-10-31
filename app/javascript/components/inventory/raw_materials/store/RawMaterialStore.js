@@ -6,7 +6,7 @@ class RawMaterialStore {
 
   @action
   load(newMaterials) {
-    console.log(newMaterials)
+    // console.log(newMaterials)
     this.materials.replace(newMaterials)
   }
 

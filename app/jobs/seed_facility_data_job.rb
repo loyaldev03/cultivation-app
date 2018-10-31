@@ -23,7 +23,7 @@ class SeedFacilityDataJob < ApplicationJob
   end
 
   def seed_raw_materials
-    Inventory::CreateRawMaterials.call({facility_id: @args[:facility_id]})
+    Inventory::SeedRawMaterials.call({facility_id: @args[:facility_id]})
   end
 
   def seed_uom

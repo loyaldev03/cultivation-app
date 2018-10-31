@@ -3,7 +3,11 @@ module Inventory
   class RawMaterialSerializer
     include FastJsonapi::ObjectSerializer
 
-    attributes :product_name, :order_quantity, :order_uom
+    attributes :product_name, :order_quantity, :order_uom, :quantity, :uom, :manufacturer, :description, :conversion
+
+    attribute :facility_id do |object|
+      object.facility_id.to_s
+    end
 
     attribute :catalogue_id do |object|
       object.catalogue_id.to_s

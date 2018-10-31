@@ -125,7 +125,7 @@ Rails.application.routes.draw do
       end
 
 
-      resources :raw_materials, only: [:index] do
+      resources :raw_materials, only: [:index, :show] do
         post 'setup', on: :collection
       end
 

@@ -21,6 +21,7 @@ module Inventory
         item = {
           label: parent.label,
           key: parent.key,
+          id: parent.id.to_s,
         }
 
         if parent.uom_dimension.blank?

@@ -123,6 +123,10 @@ class LocationPicker extends React.Component {
     } else if (mode === 'facility') {
       item = locations.find(x => x.f_id === location_id)
     }
+
+    if (!item) {
+      return { value: '', label: '' }
+    }
     return item
   }
 

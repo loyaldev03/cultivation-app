@@ -1,5 +1,5 @@
 module Inventory
-  class CreateRawMaterials
+  class SeedRawMaterials
     prepend SimpleCommand
 
     def initialize(args)

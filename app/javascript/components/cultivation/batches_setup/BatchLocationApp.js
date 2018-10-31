@@ -7,6 +7,7 @@ import {
   sumBy,
   formatDate,
   httpPostOptions,
+  ImgPlantGrowth,
   GROWTH_PHASE
 } from '../../utils'
 
@@ -322,7 +323,9 @@ class BatchLocationApp extends React.Component {
               render={() => (
                 <div className="w-100 w-80-m w-60-l h-100 center flex flex-column items-center justify-center">
                   <div className="shadow-1 br2">
-                    <div className="h5 bg-orange w-100" />
+                    <div className="h5 bg-orange w-100 flex justify-center">
+                      <img src={ImgPlantGrowth} />
+                    </div>
                     <div className="bg-white w-100 pa3 tc">
                       <p className="f3 fw6 dark-grey ma3">
                         All set up on cloning stage! Just one more thing...

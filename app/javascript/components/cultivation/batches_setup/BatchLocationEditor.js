@@ -1,7 +1,14 @@
 import React from 'react'
 import classNames from 'classnames'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
-import { groupBy, sumBy, joinBy, GROWTH_PHASE } from '../../utils'
+import {
+  groupBy,
+  sumBy,
+  joinBy,
+  ImgAdd,
+  ImgDelete,
+  ImgTriangle
+} from '../../utils'
 
 const gridStyles = {
   display: 'grid',
@@ -23,7 +30,7 @@ const SelectWithRange = ({ min, max, onChange, selectedValue = 0 }) => {
     <select
       onChange={onChange}
       value={selectedValue}
-      className={classNames('', { white: !!selectedValue })}
+      className="bg-white b--white"
     >
       {children}
     </select>
@@ -325,17 +332,14 @@ class BatchLocationEditor extends React.PureComponent {
           >
             <TabList>
               {Object.keys(rooms).map(roomId => {
-                const isSelectedRoom = this.isSelected(roomId, 'room')
                 const firstRoom = rooms[roomId][0]
                 return <Tab key={roomId}>{firstRoom.room_name}</Tab>
               })}
             </TabList>
             {Object.keys(rooms).map(roomId => {
-              const isSelectedRoom = this.isSelected(roomId, 'room')
-              const firstRoom = rooms[roomId][0]
               return (
                 <TabPanel key={roomId} className="ph4 pb4">
-                  <div className="mt2 pb3">
+                  <div className="pb3">
                     {selectedTrays &&
                       selectedTrays.length > 0 && (
                         <React.Fragment>
@@ -350,14 +354,15 @@ class BatchLocationEditor extends React.PureComponent {
                             </div>
                             {Object.keys(plannedRows).map((rowId, index) => {
                               const plannedTrays = plannedRows[rowId]
-                              console.log('plannedTrays', plannedTrays)
                               return (
                                 <React.Fragment key={rowId}>
                                   <div className="pv1 flex justify-between items-center">
                                     <span className="f4 fw6 dib gray">
                                       Row {index + 1}
                                     </span>
-                                    <span className="dib pa1">XX</span>
+                                    <a href="#0" className="link">
+                                      <img src={ImgTriangle} className="w1" />
+                                    </a>
                                   </div>
                                   <ul className="list pl0 ma0">
                                     {plannedTrays.map(t => (
@@ -381,7 +386,7 @@ class BatchLocationEditor extends React.PureComponent {
                                         <span className="w-20 gray f5 pa1 fw6 tr">
                                           {t.tray_capacity}
                                         </span>
-                                        <span className="w-20 ph3 f5 tc pa1">
+                                        <span className="w-20 ph3 f5 tc pa1 h1">
                                           {!showAddLocation && (
                                             <a
                                               href="#0"
@@ -389,7 +394,10 @@ class BatchLocationEditor extends React.PureComponent {
                                                 t.tray_id
                                               )}
                                             >
-                                              X
+                                              <img
+                                                src={ImgDelete}
+                                                className="w1"
+                                              />
                                             </a>
                                           )}
                                         </span>
@@ -405,10 +413,13 @@ class BatchLocationEditor extends React.PureComponent {
                     {!showAddLocation && (
                       <a
                         href="#0"
-                        className="link dib mt3 f5 orange tc"
                         onClick={this.onShowAddLocation}
+                        class="flex flex-row items-center link mt3"
                       >
-                        + Add Location
+                        <i class="material-icons orange md-18">
+                          add_circle_outline
+                        </i>
+                        <span class="ml2 orange">Add Location</span>
                       </a>
                     )}
                   </div>
@@ -564,13 +575,18 @@ class BatchLocationEditor extends React.PureComponent {
                           </React.Fragment>
                         )}
                       </div>
-                      <a
-                        href="#0"
-                        className="link ph2 pv1 ba bg-gray db w3 mt3 tc center f6 br2 white"
-                        onClick={this.onDoneSelectTray}
-                      >
-                        X Close
-                      </a>
+                      <div className="pa2 mt3 tc">
+                        <a
+                          href="#0"
+                          className="link ph3 pv1 br2 grey ba b--light-grey"
+                          onClick={this.onDoneSelectTray}
+                        >
+                          <img
+                            src={ImgTriangle}
+                            className="mr2 w1 rotate-180"
+                          />Cancel
+                        </a>
+                      </div>
                     </React.Fragment>
                   )}
                 </TabPanel>

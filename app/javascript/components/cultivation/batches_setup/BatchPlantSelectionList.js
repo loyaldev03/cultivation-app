@@ -1,7 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 import { observer } from 'mobx-react'
-import { BATCH_SOURCE, GROWTH_PHASE } from '../../utils'
+import { ImgPlant, GROWTH_PHASE } from '../../utils'
 import plantStore from '../../inventory/plant_setup/store/PlantStore'
 import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 
@@ -70,7 +70,7 @@ class BatchPlantSelectionList extends React.Component {
                   })}
                 >
                   <td className="pv2 ph3 flex items-center">
-                    <span className="w2 h2 bg-moon-gray dib br-100" />
+                    <img src={ImgPlant} style={{ width: '24px' }} />
                     <span className="ml2 pa1 dib dark-grey">
                       {p.attributes.plant_id}
                     </span>

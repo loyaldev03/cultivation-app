@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
-import { format } from 'date-fns'
 
 import DailyTasksStore from './store/DailyTasksStore'
 import WorkDayEditor from './components/WorkDayEditor'
 import WorkPanel from './components/WorkPanel'
+import { formatDate3 } from '../utils/DateHelper'
 
 @observer
 class WorkDashboardApp extends React.Component {
@@ -32,7 +32,7 @@ class WorkDashboardApp extends React.Component {
 }
 
 const DateFormatted = ({ date }) => {
-  const dateFormatted = format(date, 'ddd, D MMM YYYY')
+  const dateFormatted = formatDate3(date)
   return (
     <h5 className="tl ph3 pv4 ma1 h5--font dark-grey ttc bg-white">
       {dateFormatted}

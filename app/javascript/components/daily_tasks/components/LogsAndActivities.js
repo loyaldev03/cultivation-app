@@ -1,9 +1,10 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { format, differenceInSeconds, startOfDay, addSeconds } from 'date-fns'
+import { differenceInSeconds } from 'date-fns'
 
 import { addNotes } from '../actions/taskActions'
 import { isEmptyString } from '../../utils/StringHelper'
+import { formatDuration, formatTime } from '../../utils/DateHelper'
 
 @observer
 class LogsAndActivities extends React.Component {
@@ -35,11 +36,9 @@ class LogsAndActivities extends React.Component {
     const { dailyTask } = this.props
     const task = dailyTask.attributes.task
 
-    const timeFormat = datetime => format(datetime, 'hh:mm A')
     const durationStr = (start, end) => {
-      let temp = startOfDay(new Date())
-      temp = addSeconds(temp, parseInt(differenceInSeconds(end, start)))
-      return format(temp, "H [hr] m [mn]")
+      const duration = parseInt(differenceInSeconds(end, start))
+      return formatDuration(duration)
     }
 
     return (
@@ -57,10 +56,10 @@ class LogsAndActivities extends React.Component {
           <div className="b ttu">Activity Log</div>
           {dailyTask.attributes.time_logs.map((log, i) => (
             <li className="ml3" key={i}>
-              Started at {timeFormat(log.start_time)}{' '}
-              {log.end_time && `and ended at ${timeFormat(log.end_time)}`}
+              Started at {formatTime(log.start_time)}{' '}
+              {log.end_time && `and ended at ${formatTime(log.end_time)}`}
               &nbsp;
-              ({durationStr(log.start_time, log.end_time)})
+              {log.end_time && `(${durationStr(log.start_time, log.end_time)})`}
             </li>
           ))}
         </div>
@@ -71,7 +70,7 @@ class LogsAndActivities extends React.Component {
             <div className="mv2" key={i}>
               <i className="material-icons mid-gray md-18 fl">today</i>
               <div className="v-top fl ml2">
-                {timeFormat(note.c_at)}
+                {formatTime(note.c_at)}
               </div>
 
               <div className="cl">{note.notes}</div>

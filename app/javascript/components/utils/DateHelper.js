@@ -1,4 +1,4 @@
-import { parse, format, addMonths } from 'date-fns'
+import { parse, format, addMonths, startOfDay, addSeconds } from 'date-fns'
 import { getCookie } from './'
 
 const USER_TIMEZONE = getCookie('timezone')
@@ -16,9 +16,9 @@ export const monthsOptions = (startDate = new Date(), duration = 12) => {
   return options
 }
 
-export const dateToMonthOption = dt => {
-  return format(dt, 'MM-YYYY', { awareOfUnicodeTokens: true })
-}
+export const dateToMonthOption = dt =>
+  format(dt, 'MM-YYYY', { awareOfUnicodeTokens: true })
+
 
 export const monthOptionToString = monthOptionStr => {
   if (monthOptionStr) {
@@ -41,10 +41,27 @@ export const monthOptionAdd = (monthOptionStr, month) => {
   return dateToMonthOption(result)
 }
 
-export const formatDate = date => {
-  return format(date, 'MMM dd, YYYY', { awareOfUnicodeTokens: true })
+export const formatDate = date =>
+  format(date, 'MMM dd, YYYY', { awareOfUnicodeTokens: true })
+
+
+export const formatDate2 = date =>
+  format(date, 'M/DD/YYYY', { awareOfUnicodeTokens: true })
+
+
+export const formatDate3 = date =>
+  format(date, 'ddd, D MMM YYYY')
+
+
+const durationToDate = seconds =>
+  addSeconds(startOfDay(new Date()), parseInt(seconds))
+
+export const formatDuration = seconds => {
+  if (parseInt(seconds) < 3600) {
+    return format(durationToDate(seconds), 'm [mn]')
+  }
+  return format(durationToDate(seconds), 'H [hr] m [mn]')
 }
 
-export const formatDate2 = date => {
-  return format(date, 'M/DD/YYYY', { awareOfUnicodeTokens: true })
-}
+export const formatTime = time =>
+  format(time, 'hh:mm A')

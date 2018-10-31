@@ -28,7 +28,10 @@ module Cultivation
     end
 
     def update_tasks_end_date(task)
-      update_task(task.parent, {end_date: task.end_date}, {children: false}) if task.parent and (task.end_date > task.parent.end_date)
+      args = {}
+      args[:duration] = task.parent.children.sum(:duration) if task.parent
+      args[:end_date] = task.end_date if task.parent and (task.end_date > task.parent.end_date)
+      update_task(task.parent, args, {children: false}) if task.parent
       update_tasks_end_date(task.parent) if task.parent
     end
 

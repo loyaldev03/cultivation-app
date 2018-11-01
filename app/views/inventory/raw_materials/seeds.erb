@@ -9,10 +9,10 @@
 
 <div class="pa4">
   <%= render partial: 'setupIntro' %>
-  <%= render partial: 'setupNavigation', locals: { selected: Constants::GROW_MEDIUM_KEY } %>
+  <%= render partial: 'setupNavigation', locals: { selected: Constants::SEEDS_KEY } %>
   <div class="flex flex-column">
-    <%= react_component('inventory/raw_materials/RawMaterialSetupApp', { 
-      locations: @locations, order_uoms: @order_uoms, raw_material_type: Constants::GROW_MEDIUM_KEY, catalogues: @catalogues }) %>
+    <%= react_component('inventory/raw_materials/SeedSetupApp', { 
+      locations: @locations, order_uoms: @order_uoms, facility_strains: @facility_strains }) %>
    
     <div class="w-100 bg-white ph3 pt2 pb4">
       <div class="dim flex flex-row items-center pointer">

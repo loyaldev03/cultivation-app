@@ -2,44 +2,19 @@ import React from 'react'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
-import RawMaterialEditor from './components/RawMaterialEditor'
+import SeedEditor from './components/SeedEditor'
 import rawMaterialStore from './store/RawMaterialStore'
 import loadRawMaterials from './actions/loadRawMaterials'
 
-const columns = raw_material_type_label => [
+const columns = [
   {
-    Header: '',
-    accessor: 'attributes.is_active',
-    filterable: false,
-    width: 30,
-    Cell: props => {
-      let color = 'red'
-      if (props.value === true) {
-        color = '#00cc77'
-      }
-      return (
-        <div className="flex justify-center items-center h-100">
-          <span
-            style={{
-              width: '8px',
-              height: '8px',
-              color: 'green',
-              borderRadius: '50%',
-              backgroundColor: color
-            }}
-          />
-        </div>
-      )
-    }
-  },
-  {
-    Header: raw_material_type_label,
-    accessor: 'attributes.catalogue',
+    Header: 'Strain',
+    accessor: 'attributes.facility_strain.strain_name',
     headerClassName: 'tl ttc'
   },
   {
-    Header: 'Product Name',
-    accessor: 'attributes.product_name',
+    Header: 'Facility',
+    accessor: 'attributes..facility_strain.facility',
     headerClassName: 'tl'
   },
   {
@@ -114,15 +89,7 @@ const openEditor = (event, id) => {
 }
 
 @observer
-class RawMaterialApp extends React.Component {
-  constructor(props) {
-    super(props)
-    this.label = props.raw_material_type.replace(/[_]/g, ' ')
-    this.title = this.label.endsWith('s')
-      ? this.label + ' inventory'
-      : this.label + 's inventory'
-  }
-
+class SeedSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
@@ -142,19 +109,19 @@ class RawMaterialApp extends React.Component {
       <React.Fragment>
         <div className="w-100 bg-white pa3">
           <div className="flex mb4 mt2">
-            <h1 className="mv0 f3 fw4 dark-gray flex-auto ttc">{this.title}</h1>
+            <h1 className="mv0 f3 fw4 dark-gray flex-auto ttc">Seeds Inventory</h1>
             <div style={{ justifySelf: 'end' }}>
               <button
                 className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
                 onClick={this.onAddBatch}
               >
-                Add {this.label}
+                Add Seed
               </button>
             </div>
           </div>
 
           <ReactTable
-            columns={columns(this.label)}
+            columns={columns}
             pagination={{ position: 'top' }}
             data={rawMaterialStore.bindable}
             showPagination={false}
@@ -172,15 +139,14 @@ class RawMaterialApp extends React.Component {
     return (
       <React.Fragment>
         {this.renderList()}
-        <RawMaterialEditor
+        <SeedEditor
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}
-          raw_material_type={this.props.raw_material_type}
-          catalogues={this.props.catalogues}
+          facility_strains={this.props.facility_strains}
         />
       </React.Fragment>
     )
   }
 }
 
-export default RawMaterialApp
+export default SeedSetupApp

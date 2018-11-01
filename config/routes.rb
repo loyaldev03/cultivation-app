@@ -68,6 +68,8 @@ Rails.application.routes.draw do
         get 'grow_lights'
         get 'supplements'
         get 'others'
+        get 'seeds'
+        get 'purchased_clones'
       end
     end
   end

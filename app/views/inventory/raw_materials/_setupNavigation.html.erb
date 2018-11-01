@@ -41,23 +41,23 @@
       class: tabStyle %>
   <% end %>
   
-  <% if selected == '' %>
+  <% if selected == Constants::SEEDS_KEY %>
     <div class="<%= selectedStyle %>">
       Seeds
     </div>
   <% else %>
     <%= link_to 'Seeds',
-      '', 
+      seeds_inventory_raw_materials_path, 
       class: tabStyle %>
   <% end %>
 
-  <% if selected == '' %>
+  <% if selected == Constants::PURCHASED_CLONES_KEY %>
     <div class="<%= selectedStyle %>">
       Purchased clones
     </div>
   <% else %>
     <%= link_to 'Purchased clones',
-      '', 
+      purchased_clones_inventory_raw_materials_path, 
       class: tabStyle %>
   <% end %>
 

@@ -1,14 +1,8 @@
 import rawMaterialStore from '../store/RawMaterialStore'
+import { httpPostOptions } from '../../../utils'
 
 export const saveRawMaterial = payload => {
-  return fetch('/api/v1/raw_materials/setup', {
-    method: 'POST',
-    credentials: 'include',
-    body: JSON.stringify(payload),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
+  return fetch('/api/v1/raw_materials/setup', httpPostOptions(payload))
     .then(response => {
       // console.log(response.status)
       return response.json().then(data => ({

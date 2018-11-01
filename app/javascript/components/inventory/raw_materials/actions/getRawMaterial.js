@@ -1,12 +1,7 @@
+import { httpGetOptions } from '../../../utils'
+
 export const getRawMaterial = id => {
-  return fetch(`/api/v1/raw_materials/${id}`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }).then(response => {
-    console.log(response.status)
+  return fetch(`/api/v1/raw_materials/${id}`, httpGetOptions).then(response => {
     return response.json().then(data => ({
       status: response.status,
       data

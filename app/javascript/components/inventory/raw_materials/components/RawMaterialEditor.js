@@ -320,8 +320,15 @@ class RawMaterialEditor extends React.Component {
           </div>
 
           <hr className="mt3 m b--light-gray w-100" />
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db dark-gray">
+                Purchase details
+              </label>
+            </div>
+          </div>
 
-          <div className="ph4 mb3 mt3 flex">
+          <div className="ph4 mb3 flex">
             <div className="w-30">
               <NumericInput
                 label="Quantity"
@@ -366,9 +373,9 @@ class RawMaterialEditor extends React.Component {
               <hr className="mt3 m b--light-gray w-100" />
               <div className="ph4 mt3 mb3 flex">
                 <div className="w-100">
-                  <label className="f6 fw6 db mb1 dark-gray">
+                  <label className="f6 fw6 db dark-gray">
                     Amount of material in each{' '}
-                    {this.state.uom.label.toLowerCase()}
+                    {this.state.order_uom.label.toLowerCase()}
                   </label>
                 </div>
               </div>
@@ -444,14 +451,14 @@ class RawMaterialEditor extends React.Component {
             purchase_order_no={this.state.purchase_order_no}
           />
 
-          <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
-            <a
+          <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
+            {/* <a
               className="db tr pv2 bn br2 ttu tracked link dim f6 fw6 orange"
               href="#"
               onClick={x => x.preventDefault()}
             >
               Save for later
-            </a>
+            </a> */}
             <a
               className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
               href="#"

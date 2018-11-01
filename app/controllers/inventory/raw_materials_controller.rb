@@ -1,5 +1,5 @@
 class Inventory::RawMaterialsController < ApplicationController
-  before_action :setup_editor_data, only: [:nutrients, :grow_medium, :grow_lights, :supplements, :others]
+  before_action :setup_editor_data
 
   def nutrients
     @catalogues = Inventory::QueryCatalogueTree.call('raw_materials', Constants::NUTRIENTS_KEY).result
@@ -19,6 +19,14 @@ class Inventory::RawMaterialsController < ApplicationController
 
   def others
     @catalogues = Inventory::QueryCatalogueTree.call('raw_materials', Constants::OTHERS_KEY).result
+  end
+
+  def seeds
+    @facility_strains = Inventory::QueryFacilityStrains.call.result
+  end
+
+  def purchased_clones
+    @facility_strains = Inventory::QueryFacilityStrains.call.result
   end
 
   private

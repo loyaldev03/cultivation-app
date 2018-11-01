@@ -2,40 +2,15 @@ import React from 'react'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
-import NutrientEditor from './components/NutrientEditor'
+import RawMaterialEditor from './components/RawMaterialEditor'
 import rawMaterialStore from './store/RawMaterialStore'
 import loadRawMaterials from './actions/loadRawMaterials'
 
-const columns = [
+const columns = raw_material_type_label => [
   {
-    Header: '',
-    accessor: 'attributes.is_active',
-    filterable: false,
-    width: 30,
-    Cell: props => {
-      let color = 'red'
-      if (props.value === true) {
-        color = '#00cc77'
-      }
-      return (
-        <div className="flex justify-center items-center h-100">
-          <span
-            style={{
-              width: '8px',
-              height: '8px',
-              color: 'green',
-              borderRadius: '50%',
-              backgroundColor: color
-            }}
-          />
-        </div>
-      )
-    }
-  },
-  {
-    Header: 'Grow Medium',
+    Header: raw_material_type_label,
     accessor: 'attributes.catalogue',
-    headerClassName: 'tl'
+    headerClassName: 'tl ttc'
   },
   {
     Header: 'Product Name',
@@ -58,12 +33,21 @@ const columns = [
     headerClassName: 'tl'
   },
   {
-    Header: 'Quantity',
+    Header: 'Order quantity',
     headerClassName: 'tr',
     Cell: record => (
       <div className="tr">
         {record.original.attributes.order_quantity}{' '}
         {record.original.attributes.order_uom}
+      </div>
+    )
+  },
+  {
+    Header: 'Quantity',
+    headerClassName: 'tr',
+    Cell: record => (
+      <div className="tr">
+        {record.original.attributes.quantity} {record.original.attributes.uom}
       </div>
     )
   },
@@ -90,7 +74,7 @@ const columns = [
         href="#"
         onClick={event => {
           const data = toJS(record.original.id)
-          openNutrient(event, data)
+          openEditor(event, data)
         }}
       >
         <i className="material-icons gray">more_horiz</i>
@@ -99,17 +83,25 @@ const columns = [
   }
 ]
 
-function openNutrient(event, id) {
+const openEditor = (event, id) => {
   window.editorSidebar.open({ width: '500px', id })
   event.preventDefault()
 }
 
 @observer
-class NutrientsApp extends React.Component {
+class RawMaterialSetupApp extends React.Component {
+  constructor(props) {
+    super(props)
+    this.label = props.raw_material_type.replace(/[_]/g, ' ')
+    this.title = this.label.endsWith('s')
+      ? this.label + ' inventory'
+      : this.label + 's inventory'
+  }
+
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadRawMaterials('nutrients')
+    loadRawMaterials(this.props.raw_material_type)
   }
 
   openSidebar() {
@@ -120,26 +112,24 @@ class NutrientsApp extends React.Component {
     this.openSidebar()
   }
 
-  renderNutrientList() {
+  renderList() {
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3">
           <div className="flex mb4 mt2">
-            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
-              Nutrients Inventory
-            </h1>
+            <h1 className="mv0 f3 fw4 dark-gray flex-auto ttc">{this.title}</h1>
             <div style={{ justifySelf: 'end' }}>
               <button
                 className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
                 onClick={this.onAddBatch}
               >
-                Add nutrient
+                Add {this.label}
               </button>
             </div>
           </div>
 
           <ReactTable
-            columns={columns}
+            columns={columns(this.label)}
             pagination={{ position: 'top' }}
             data={rawMaterialStore.bindable}
             showPagination={false}
@@ -156,10 +146,11 @@ class NutrientsApp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {this.renderNutrientList()}
-        <NutrientEditor
+        {this.renderList()}
+        <RawMaterialEditor
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}
+          raw_material_type={this.props.raw_material_type}
           catalogues={this.props.catalogues}
         />
       </React.Fragment>
@@ -167,4 +158,4 @@ class NutrientsApp extends React.Component {
   }
 }
 
-export default NutrientsApp
+export default RawMaterialSetupApp

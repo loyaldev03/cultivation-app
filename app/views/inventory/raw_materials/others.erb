@@ -11,7 +11,7 @@
   <%= render partial: 'setupIntro' %>
  <%= render partial: 'setupNavigation', locals: { selected: Constants::OTHERS_KEY } %>
   <div class="flex flex-column">
-    <%= react_component('inventory/raw_materials/RawMaterialApp', { 
+    <%= react_component('inventory/raw_materials/RawMaterialSetupApp', { 
       locations: @locations, order_uoms: @order_uoms, raw_material_type: Constants::OTHERS_KEY, catalogues: @catalogues }) %>
    
     <div class="w-100 bg-white ph3 pt2 pb4">

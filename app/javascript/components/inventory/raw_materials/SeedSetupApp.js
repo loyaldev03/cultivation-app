@@ -14,7 +14,7 @@ const columns = [
   },
   {
     Header: 'Facility',
-    accessor: 'attributes..facility_strain.facility',
+    accessor: 'attributes.facility_name',
     headerClassName: 'tl'
   },
   {
@@ -93,7 +93,7 @@ class SeedSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadRawMaterials(this.props.raw_material_type)
+    loadRawMaterials('seeds')
   }
 
   openSidebar() {
@@ -142,9 +142,10 @@ class SeedSetupApp extends React.Component {
       <React.Fragment>
         {this.renderList()}
         <SeedEditor
+          facility_strains={this.props.facility_strains}
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}
-          facility_strains={this.props.facility_strains}
+          uoms={this.props.uoms}
         />
       </React.Fragment>
     )

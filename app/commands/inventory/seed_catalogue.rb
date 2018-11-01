@@ -28,36 +28,36 @@ module Inventory
     end
 
     def seed_plant_catalogue!
-      Inventory::Catalogue.find_or_create_by!(catalogue_type: 'plant', key: 'plant') do |c|
-        c.label = 'Plant'
-        c.category = 'plant'
+      Inventory::Catalogue.find_or_create_by!(catalogue_type: Constants::PLANTS_KEY, key: Constants::PLANTS_KEY) do |c|
+        c.label = 'Plants'
+        c.category = Constants::PLANTS_KEY
         c.is_active = true
-        c.uom_dimension = 'plants'
+        c.uom_dimension = Constants::PLANTS_KEY
       end
 
-      Inventory::Catalogue.find_or_create_by!(catalogue_type: 'plant', key: 'seed') do |c|
-        c.label = 'Plant'
-        c.category = 'plant'
-        c.is_active = true
-        c.uom_dimension = 'plants'
-      end
+      # Inventory::Catalogue.find_or_create_by!(catalogue_type: Constants::PLANTS_KEY, key: Constants::SEEDS_KEY) do |c|
+      #   c.label = Constants::PLANTS_KEY
+      #   c.category = Constants::PLANTS_KEY
+      #   c.is_active = true
+      #   c.uom_dimension = Constants::PLANTS_KEY
+      # end
 
-      Inventory::Catalogue.find_or_create_by!(catalogue_type: 'plant', key: 'purchased_clones') do |c|
-        c.label = 'Purchased Clones'
-        c.category = 'plant'
-        c.is_active = true
-        c.uom_dimension = 'plants'
-      end
+      # Inventory::Catalogue.find_or_create_by!(catalogue_type: Constants::PLANTS_KEY, key: Constants::PURCHASED_CLONES_KEY) do |c|
+      #   c.label = 'Purchased Clones'
+      #   c.category = Constants::PLANTS_KEY
+      #   c.is_active = true
+      #   c.uom_dimension = Constants::PLANTS_KEY
+      # end
     end
 
     def seed_sales_catalogue!
       sales_template.each do |item|
-        Inventory::Catalogue.find_or_create_by!(catalogue_type: 'sales', key: item[:key]) do |c|
+        Inventory::Catalogue.find_or_create_by!(catalogue_type: Constants::SALES_KEY, key: item[:key]) do |c|
           c.label = item[:label]
           c.category = item[:category]
           c.sub_category = item[:sub_category] || ''
           c.uom_dimension = item[:uom_dimension]
-          c.uom_dimension = 'sales_product'
+          c.uom_dimension = Constants::SALES_KEY
           c.is_active = true
         end
       end
@@ -152,6 +152,10 @@ module Inventory
         {label: 'Sulfur based additives', category: Constants::SUPPLEMENTS_KEY, key: 'sulfur_based_additives', is_active: true, uom_dimension: 'weights'},
         {label: 'Vitamin', category: Constants::SUPPLEMENTS_KEY, key: 'vitamin', is_active: true, uom_dimension: 'weights'},
         {label: 'Worm Castings', category: Constants::SUPPLEMENTS_KEY, key: 'worm castings', is_active: true, uom_dimension: 'weights'},
+
+        # Purchased clones and seed
+        {label: 'Seeds', category: Constants::SEEDS_KEY, key: Constants::SEEDS_KEY, is_active: true, uom_dimension: Constants::PLANTS_KEY},
+        {label: 'Purchased clone', category: Constants::PURCHASED_CLONES_KEY, key: Constants::PURCHASED_CLONES_KEY, is_active: true, uom_dimension: Constants::PLANTS_KEY},
       ]
     end
 

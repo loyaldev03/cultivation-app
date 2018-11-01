@@ -47,11 +47,11 @@ module Inventory
     scope :active, -> { where(is_active: true) }
 
     def self.purchased_clones
-      self.find_by(catalogue_type: 'purchased_clones')
+      self.find_by(catalogue_type: 'raw_materials', key: Constants::PURCHASED_CLONES_KEY)
     end
 
     def self.seed
-      self.find_by(catalogue_type: 'seed')
+      self.find_by(catalogue_type: 'raw_materials', key: Constants::SEEDS_KEY)
     end
 
     def uoms

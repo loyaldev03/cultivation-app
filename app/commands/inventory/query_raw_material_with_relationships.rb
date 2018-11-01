@@ -28,7 +28,7 @@ module Inventory
         category: type,
       ).pluck(:id)
 
-      item_transactions = Inventory::ItemTransaction.includes(:catalogue).where(
+      item_transactions = Inventory::ItemTransaction.includes(:catalogue, :facility, :facility_strain).where(
         :event_type.in => @event_types,
         :catalogue_id.in => raw_material_ids,
       ).order(c_at: :desc)
@@ -45,7 +45,7 @@ module Inventory
     end
 
     def retrieve_one
-      item_transaction = Inventory::ItemTransaction.includes(:catalogue).find_by(
+      item_transaction = Inventory::ItemTransaction.includes(:catalogue, :facility, :facility_strain).find_by(
         id: id,
         :event_type.in => @event_types,
       )

@@ -128,7 +128,10 @@ Rails.application.routes.draw do
 
 
       resources :raw_materials, only: [:index, :show] do
-        post 'setup', on: :collection
+        collection do
+          post 'setup'
+          post 'setup_seed'
+        end
       end
 
       # namespace :purchasing do

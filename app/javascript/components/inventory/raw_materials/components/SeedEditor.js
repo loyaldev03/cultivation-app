@@ -1,13 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
-// import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import PurchaseInfo from '../../plant_setup/components/shared/PurchaseInfo'
-import httpGetOptions from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
-import { saveRawMaterial } from '../actions/saveRawMaterial'
+import { setupSeed } from '../actions/setupSeed'
 import { getRawMaterial } from '../actions/getRawMaterial'
 
 class SeedEditor extends React.Component {
@@ -23,22 +21,19 @@ class SeedEditor extends React.Component {
       if (!id) {
         this.reset()
       } else {
-        getRawMaterial(id)
+        getRawMaterial(id, 'seeds')
           .then(x => {
-            console.log(x)
             const attr = x.data.data.attributes
             return attr
           })
           .then(attr => {
-            const catalogue = this.props.catalogues.find(
-              x => x.id == attr.catalogue_id
-            )
+            console.log(attr)
 
             this.setState({
               ...this.resetState(),
-              catalogue: catalogue,
               id: id,
               facility_id: attr.facility_id,
+              facility_strain_id: attr.facility_strain.id,
               qty_per_package: attr.conversion,
               product_name: attr.product_name,
               manufacturer: attr.manufacturer,
@@ -63,7 +58,11 @@ class SeedEditor extends React.Component {
   }
 
   onFacilityStrainChanged = item => {
-    // this.setState({ facility_id: item.f_id })
+    console.log(item)
+    this.setState({
+      facility_strain_id: item.value,
+      facility_id: item.facility_id
+    })
   }
 
   onChangeGeneric = event => {
@@ -76,6 +75,8 @@ class SeedEditor extends React.Component {
   resetState() {
     return {
       id: '',
+      facility_id: '',
+      facility_strain_id: '',
       qty_per_package: '',
       product_name: '',
       manufacturer: '',
@@ -106,10 +107,10 @@ class SeedEditor extends React.Component {
     const payload = this.validateAndGetValues()
     console.log(payload)
     if (payload.isValid) {
-      // saveRawMaterial(payload).then(() => {
-      //   this.reset()
-      //   window.editorSidebar.close()
-      // })
+      setupSeed(payload).then(x => {
+        this.reset()
+        window.editorSidebar.close()
+      })
     }
 
     event.preventDefault()
@@ -118,10 +119,9 @@ class SeedEditor extends React.Component {
   validateAndGetValues() {
     const {
       id,
-      facility_id,
+      facility_strain_id,
       uom: { value: uom },
       qty_per_package,
-      catalogue: { value: catalogue },
       product_name,
       manufacturer,
       description,
@@ -137,6 +137,41 @@ class SeedEditor extends React.Component {
       parseFloat(this.state.order_quantity) *
       parseFloat(this.state.qty_per_package)
 
+    if (facility_strain_id.length === 0) {
+      errors = {
+        ...errors,
+        facility_strain_id: ['Strain is required.']
+      }
+    }
+
+    if (uom.length === 0) {
+      errors = {
+        ...errors,
+        uom: ['Unit of measure is required.']
+      }
+    }
+
+    if (order_uom.length === 0) {
+      errors = {
+        ...errors,
+        order_uom: ['Unit of measure is required.']
+      }
+    }
+
+    if (parseFloat(order_quantity) <= 0) {
+      errors = {
+        ...errors,
+        order_quantity: ['Order quantity is required.']
+      }
+    }
+
+    if (parseFloat(qty_per_package) <= 0) {
+      errors = {
+        ...errors,
+        qty_per_package: ['Quantity per package is required.']
+      }
+    }
+
     const {
       isValid: purchaseIsValid,
       ...purchaseData
@@ -144,16 +179,16 @@ class SeedEditor extends React.Component {
 
     const isValid =
       Object.getOwnPropertyNames(errors).length === 0 && purchaseIsValid
+
     if (!isValid) {
       this.setState({ errors })
     }
 
     return {
       id,
-      facility_id,
+      facility_strain_id,
       uom,
       quantity,
-      catalogue,
       product_name,
       manufacturer,
       description,
@@ -173,8 +208,11 @@ class SeedEditor extends React.Component {
       : { width: '0px' }
 
     const { locations, facility_strains } = this.props
+    let facilityStrain = facility_strains.find(
+      x => x.value === this.state.facility_strain_id
+    )
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
-    const uoms = [{ value: 'plant', label: 'plant' }]
+    const uoms = this.props.uoms.map(x => ({ value: x, label: x }))
 
     const showTotalPrice =
       parseFloat(this.state.price_per_package) > 0 &&
@@ -202,12 +240,12 @@ class SeedEditor extends React.Component {
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Select Strain</label>
               <Select
+                key={this.state.facility_strain_id}
                 options={facility_strains}
-                defaultValue={facility_strains.find(
-                  x => x.value === this.state.facility_strain_id
-                )}
                 noOptionsMessage={() => 'Type to search strain...'}
                 styles={reactSelectStyle}
+                onChange={this.onFacilityStrainChanged}
+                value={facilityStrain}
               />
               <FieldError
                 errors={this.state.errors}
@@ -253,8 +291,13 @@ class SeedEditor extends React.Component {
           </div>
 
           <hr className="mt3 m b--light-gray w-100" />
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db dark-gray">Purchase details</label>
+            </div>
+          </div>
 
-          <div className="ph4 mb3 mt3 flex">
+          <div className="ph4 mb3 flex">
             <div className="w-30">
               <NumericInput
                 label="Quantity"
@@ -301,7 +344,7 @@ class SeedEditor extends React.Component {
                 <div className="w-100">
                   <label className="f6 fw6 db mb1 dark-gray">
                     Amount of material in each{' '}
-                    {this.state.uom.label.toLowerCase()}
+                    {this.state.order_uom.label.toLowerCase()}
                   </label>
                 </div>
               </div>
@@ -352,6 +395,7 @@ class SeedEditor extends React.Component {
                 Where are they stored?
               </label>
               <LocationPicker
+                key={this.state.facility_id}
                 mode="storage"
                 locations={locations}
                 facility_id={this.state.facility_id}
@@ -404,8 +448,10 @@ class SeedEditor extends React.Component {
 // Is yes, please indicate Shelf/row ID:
 
 SeedEditor.propTypes = {
+  facility_strains: PropTypes.array.isRequired,
   locations: PropTypes.array.isRequired,
-  order_uoms: PropTypes.array.isRequired
+  order_uoms: PropTypes.array.isRequired,
+  uoms: PropTypes.array.isRequired
 }
 
 export default SeedEditor

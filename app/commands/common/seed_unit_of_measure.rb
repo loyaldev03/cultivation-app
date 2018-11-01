@@ -7,21 +7,21 @@ module Common
       ## Plants
       UOM.find_or_create_by!(name: 'plant',
                              unit: 'plant',
-                             dimension: 'plants',
+                             dimension: Constants::PLANTS_KEY,
                              is_base_unit: true,
                              base_unit: 'plant',
                              conversion: 1)
 
       UOM.find_or_create_by!(name: 'seed',
                              unit: 'seed',
-                             dimension: 'plants',
+                             dimension: Constants::PLANTS_KEY,
                              is_base_unit: false,
                              base_unit: 'plant',
                              conversion: 1)
 
       UOM.find_or_create_by!(name: 'pot',
                              unit: 'pot',
-                             dimension: 'plants',
+                             dimension: Constants::PLANTS_KEY,
                              is_base_unit: false,
                              base_unit: 'plant',
                              conversion: 1)
@@ -171,7 +171,8 @@ module Common
                              conversion: 0.9144)
 
       ## TODO: Sales uom
-
+      # Constants::SALES_KEY
+      #
       # 1/4 oz
       # 1/8 oz
       # Assorted Box

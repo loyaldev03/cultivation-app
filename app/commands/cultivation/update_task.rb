@@ -21,7 +21,6 @@ module Cultivation
         end
 
         update_task(task, @args)
-
         update_tasks_end_date(task) if task.parent #extend end date to category , and phase
       end
       task
@@ -30,7 +29,10 @@ module Cultivation
     def update_tasks_end_date(task)
       args = {}
       args[:duration] = task.parent.children.sum(:duration) if task.parent
-      args[:end_date] = task.end_date if task.parent and (task.end_date > task.parent.end_date)
+      if task.parent
+        child_max_end_date = task.parent.children.map { |h| h[:end_date] }.max #get children task maximum end_date
+        args[:end_date] = child_max_end_date if child_max_end_date > task.parent.end_date
+      end
       update_task(task.parent, args, {children: false}) if task.parent
       update_tasks_end_date(task.parent) if task.parent
     end
@@ -64,7 +66,7 @@ module Cultivation
         end
       end
 
-      if opt[:dependent] != true #used for avoid updating dependent task
+      if opt[:dependent] != false #used for avoid updating dependent task
         task.tasks_depend.each do |depend_task|
           temp_depend_task = depend_task
 

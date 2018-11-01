@@ -48,7 +48,7 @@ module Common
     field :is_base_unit, type: Boolean, default: false
     field :base_unit, type: String
     field :conversion, type: BigDecimal # multiplier to get to base unit
-    field :dimension, type: String      # { weights, volumes, lengths, pieces, custom }
+    field :dimension, type: String      # { weights, volumes, lengths, pieces, plants, custom }
 
     scope :base_unit, -> { where(base_unit: true) }
 
@@ -56,6 +56,10 @@ module Common
 
     def self.custom(unit)
       find_by(dimension: 'custom', unit: unit)
+    end
+
+    def self.plants(unit)
+      find_by(dimension: 'plants', unit: unit)
     end
 
     def self.pieces(unit)

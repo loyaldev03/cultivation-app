@@ -4,6 +4,28 @@ module Common
     UOM = Common::UnitOfMeasure
 
     def call
+      ## Plants
+      UOM.find_or_create_by!(name: 'plant',
+                             unit: 'plant',
+                             dimension: 'plants',
+                             is_base_unit: true,
+                             base_unit: 'plant',
+                             conversion: 1)
+
+      UOM.find_or_create_by!(name: 'seed',
+                             unit: 'seed',
+                             dimension: 'plants',
+                             is_base_unit: false,
+                             base_unit: 'plant',
+                             conversion: 1)
+
+      UOM.find_or_create_by!(name: 'pot',
+                             unit: 'pot',
+                             dimension: 'plants',
+                             is_base_unit: false,
+                             base_unit: 'plant',
+                             conversion: 1)
+
       ## Pieces
       UOM.find_or_create_by!(name: 'piece',
                              unit: 'pc',
@@ -30,7 +52,14 @@ module Common
                              unit: 'bot',
                              dimension: 'pieces',
                              is_base_unit: false,
-                             base_unit: 'ea',
+                             base_unit: 'pc',
+                             conversion: 1)
+
+      UOM.find_or_create_by!(name: 'bag',
+                             unit: 'bag',
+                             dimension: 'pieces',
+                             is_base_unit: false,
+                             base_unit: 'pc',
                              conversion: 1)
 
       ## Weight
@@ -140,6 +169,22 @@ module Common
                              is_base_unit: false,
                              base_unit: 'm',
                              conversion: 0.9144)
+
+      ## TODO: Sales uom
+
+      # 1/4 oz
+      # 1/8 oz
+      # Assorted Box
+      # Case 
+      # Catridge
+      # Gram
+      # Half gr.
+      # Kg
+      # Ounce
+      # Pound
+      # Quarter Lb
+      # Sumpin
+      # Unit
 
       nil
     end

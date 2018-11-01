@@ -61,13 +61,15 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :items do
+    resources :raw_materials, only: [] do
       collection do
         get 'nutrients'
         get 'grow_medium'
         get 'grow_lights'
         get 'supplements'
         get 'others'
+        get 'seeds'
+        get 'purchased_clones'
       end
     end
   end
@@ -125,20 +127,9 @@ Rails.application.routes.draw do
       end
 
 
-      # scope 'inventory', as: :inventory do
-      #   resources :items, only: [:setup_raw_materials, :show, :index], controller: 'inventory_items' do
-      #     collection do
-      #       post 'setup_raw_materials'
-      #       # setup raw materials
-      #       # setup sales products
-      #       # setup other products
-      #     end
-  
-      #     member do
-      #       # update inventory - raw material, others, supplements, grow lights, grow medium
-      #     end
-      #   end
-      # end
+      resources :raw_materials, only: [:index, :show] do
+        post 'setup', on: :collection
+      end
 
       # namespace :purchasing do
       #   resources :purchase_orders

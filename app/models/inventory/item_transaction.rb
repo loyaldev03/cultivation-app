@@ -11,11 +11,12 @@ module Inventory
     field :product_name, type: String
     field :description, type: String
     field :manufacturer, type: String
-    field :quantity, type: BigDecimal  #can be +/-
+    field :quantity, type: BigDecimal         # can be +/-
     field :uom, type: String
     field :order_quantity, type: BigDecimal
     field :order_uom, type: String
     field :conversion, type: BigDecimal
+    field :location_id, type: BSON::ObjectId
 
     belongs_to :facility, optional: true
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true

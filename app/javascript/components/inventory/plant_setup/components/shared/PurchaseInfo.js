@@ -23,6 +23,22 @@ class PurchaseInfo extends React.Component {
     }
   }
 
+  reset() {
+    this.setState({
+      vendor_name: '',
+      vendor_no: '',
+      address: '',
+      vendor_state_license_num: '',
+      vendor_state_license_expiration_date: null,
+      vendor_location_license_num: '',
+      vendor_location_license_expiration_date: null,
+      purchase_date: null,
+      invoice_no: '',
+      purchase_order_no: '',
+      errors: {}
+    })
+  }
+
   onStateLicenseExpirationDateChanged = date => {
     this.setState({ vendor_state_license_expiration_date: date })
   }

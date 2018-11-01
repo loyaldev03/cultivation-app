@@ -6,13 +6,13 @@ class RawMaterialStore {
 
   @action
   load(newMaterials) {
-    console.log(newMaterials)
+    // console.log(newMaterials)
     this.materials.replace(newMaterials)
   }
 
   @action
   prepend(newMaterial) {
-    this.plants.replace([newMaterial, ...this.materials.slice()])
+    this.materials.replace([newMaterial, ...this.materials.slice()])
   }
 
   @action

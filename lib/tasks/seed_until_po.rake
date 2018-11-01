@@ -197,6 +197,7 @@ task seed_until_po: :environment  do
                                         order_quantity:   25,                   # quantity inside PO and stock receive
                                         order_uom:        item.uom,               # uom inside PO and stock receive
                                         conversion:       bag_to_kg,              # conversion rule, 1 bag = 65 kg
+                                        location_id:      invoice.facility.rooms.first.id,
                                         facility_strain:  nil)
   end
 

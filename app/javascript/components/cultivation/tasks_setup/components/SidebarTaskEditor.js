@@ -23,9 +23,7 @@ class SidebarTaskEditor extends React.Component {
       duration: this.props.task.attributes.duration,
       start_date: new Date(this.props.task.attributes.start_date),
       end_date: new Date(this.props.task.attributes.end_date),
-      child_end_date: this.set_children_dates(
-        props.task.id,
-      ),
+      child_end_date: this.set_children_dates(props.task.id),
       errors: ''
     }
   }
@@ -40,21 +38,21 @@ class SidebarTaskEditor extends React.Component {
         duration: props.task.attributes.duration,
         start_date: new Date(props.task.attributes.start_date),
         end_date: new Date(props.task.attributes.end_date),
-        child_end_date: this.set_children_dates(
-          props.task.id,
-          ),
+        child_end_date: this.set_children_dates(props.task.id),
         errors: ''
       })
     }
   }
 
-  set_children_dates = (id) => {
+  set_children_dates = id => {
     let children = TaskStore.filter(e => e.attributes.parent_id === id)
-    if(children.length > 0){
-      let maximum = children.reduce((max, p) => p.attributes.end_date > max ? p.attributes.end_date : max, children[0].attributes.end_date)
+    if (children.length > 0) {
+      let maximum = children.reduce(
+        (max, p) => (p.attributes.end_date > max ? p.attributes.end_date : max),
+        children[0].attributes.end_date
+      )
       return new Date(maximum)
     }
-
   }
 
   handleChange = (key, value) => {

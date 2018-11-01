@@ -23,13 +23,8 @@ class SidebarTaskEditor extends React.Component {
       duration: this.props.task.attributes.duration,
       start_date: new Date(this.props.task.attributes.start_date),
       end_date: new Date(this.props.task.attributes.end_date),
-      parent_start_date: this.set_parent_dates(
-        props.task.attributes.parent_id,
-        'start_date'
-      ),
-      parent_end_date: this.set_parent_dates(
-        props.task.attributes.parent_id,
-        'end_date'
+      child_end_date: this.set_children_dates(
+        props.task.id,
       ),
       errors: ''
     }
@@ -45,29 +40,21 @@ class SidebarTaskEditor extends React.Component {
         duration: props.task.attributes.duration,
         start_date: new Date(props.task.attributes.start_date),
         end_date: new Date(props.task.attributes.end_date),
-        parent_start_date: this.set_parent_dates(
-          props.task.attributes.parent_id,
-          'start_date'
-        ),
-        parent_end_date: this.set_parent_dates(
-          props.task.attributes.parent_id,
-          'end_date'
-        ),
+        child_end_date: this.set_children_dates(
+          props.task.id,
+          ),
         errors: ''
       })
     }
   }
 
-  set_parent_dates = (parent_id, date) => {
-    console.log(parent_id)
-    let a = TaskStore.find(e => e.id === parent_id)
-    console.log(JSON.stringify(a))
-    if (a && a.attributes && date === 'start_date') {
-      return new Date(a.attributes.start_date)
+  set_children_dates = (id) => {
+    let children = TaskStore.filter(e => e.attributes.parent_id === id)
+    if(children.length > 0){
+      let maximum = children.reduce((max, p) => p.attributes.end_date > max ? p.attributes.end_date : max, children[0].attributes.end_date)
+      return new Date(maximum)
     }
-    if (a && a.attributes && date === 'end_date') {
-      return new Date(a.attributes.end_date)
-    }
+
   }
 
   handleChange = (key, value) => {
@@ -160,7 +147,7 @@ class SidebarTaskEditor extends React.Component {
             <DatePicker
               value={this.state.end_date}
               fieldname="end_date"
-              minDate={this.state.parent_start_date}
+              minDate={isNotNormalTask ? this.state.child_end_date : null}
               onChange={e => this.handleChangeDate('end_date', e)}
             />
           </div>

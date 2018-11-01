@@ -62,11 +62,24 @@ class SidebarTaskEditor extends React.Component {
   handleChangeTask = event => {
     let key = event.target.attributes.fieldname.value
     let value = event.target.value
-    this.setState({ [key]: value })
+    if(key === 'duration' && value){
+      let new_end_date = new Date(this.state.start_date)
+      new_end_date.setDate(new_end_date.getDate() + parseInt(value))
+      this.setState({ end_date: new_end_date, [key]: value})
+    }
+    else{
+      this.setState({ [key]: value })
+    }
   }
 
   handleChangeDate = (key, value) => {
-    this.setState({ [key]: value })
+    if (key === 'end_date') {
+      let one_day = 1000 * 60 * 60 * 24;
+      let duration = new Date(this.state.start_date) - new Date(value)
+      this.setState({ [key]: value, duration: -(duration / one_day) })
+    } else {
+      this.setState({ [key]: value })
+    }
   }
 
   handleChangeSelect = (value, { action, removedValue }) => {

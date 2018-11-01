@@ -16,20 +16,23 @@ const QuantityField = React.memo(({ plant, onClick }) => {
   return null
 })
 
-const LocationField = React.memo(({ plant, onClick }) => {
+const LocationField = React.memo(({ plant, locationResolver, onClick }) => {
   if (plant) {
     return (
       <a href="#0" className="link" onClick={onClick}>
         {plant &&
           plant.trays &&
-          plant.trays.map(t => (
-            <span
-              key={t.tray_id}
-              className="dib mr1 ph2 pv1 bg-orange white br2"
-            >
-              {t.tray_code}
-            </span>
-          ))}
+          plant.trays.map(t => {
+            const tray = locationResolver('tray', t.tray_id)
+            return (
+              <span
+                key={tray.tray_id}
+                className="dib mr1 ph2 pv1 bg-orange white br2"
+              >
+                {tray.row_code}.{tray.shelf_code}.{tray.tray_code}
+              </span>
+            )
+          })}
       </a>
     )
   }
@@ -86,6 +89,7 @@ class BatchPlantSelectionList extends React.Component {
                       <td className="tl pl3">
                         <LocationField
                           plant={selectedPlant}
+                          locationResolver={this.props.locationResolver}
                           onClick={e => this.props.onEdit(phase, p)}
                         />
                       </td>
@@ -139,6 +143,7 @@ class BatchPlantSelectionList extends React.Component {
                 <td className="tl pl3">
                   <LocationField
                     plant={b}
+                    locationResolver={this.props.locationResolver}
                     onClick={e => this.props.onEdit(phase, b)}
                   />
                 </td>

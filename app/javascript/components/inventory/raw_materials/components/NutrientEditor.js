@@ -346,9 +346,7 @@ class NutrientEditor extends React.Component {
           <hr className="mt3 m b--light-gray w-100" />
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db dark-gray">
-                Purchase details
-              </label>
+              <label className="f6 fw6 db dark-gray">Purchase details</label>
             </div>
           </div>
 

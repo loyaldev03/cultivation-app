@@ -109,7 +109,9 @@ class SeedSetupApp extends React.Component {
       <React.Fragment>
         <div className="w-100 bg-white pa3">
           <div className="flex mb4 mt2">
-            <h1 className="mv0 f3 fw4 dark-gray flex-auto ttc">Seeds Inventory</h1>
+            <h1 className="mv0 f3 fw4 dark-gray flex-auto ttc">
+              Seeds Inventory
+            </h1>
             <div style={{ justifySelf: 'end' }}>
               <button
                 className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"

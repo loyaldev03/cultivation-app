@@ -137,7 +137,6 @@ class SeedEditor extends React.Component {
       parseFloat(this.state.order_quantity) *
       parseFloat(this.state.qty_per_package)
 
-   
     const {
       isValid: purchaseIsValid,
       ...purchaseData
@@ -175,8 +174,7 @@ class SeedEditor extends React.Component {
 
     const { locations, facility_strains } = this.props
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
-    const uoms = [{ value: 'plant', label: 'plant'}]
-
+    const uoms = [{ value: 'plant', label: 'plant' }]
 
     const showTotalPrice =
       parseFloat(this.state.price_per_package) > 0 &&
@@ -204,7 +202,6 @@ class SeedEditor extends React.Component {
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Select Strain</label>
               <Select
-                
                 options={facility_strains}
                 defaultValue={facility_strains.find(
                   x => x.value === this.state.facility_strain_id
@@ -216,10 +213,8 @@ class SeedEditor extends React.Component {
                 errors={this.state.errors}
                 field="facility_strain_id"
               />
-              
             </div>
           </div>
-
 
           <hr className="mt3 m b--light-gray w-100" />
 

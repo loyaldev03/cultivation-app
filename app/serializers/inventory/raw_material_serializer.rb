@@ -24,8 +24,8 @@ module Inventory
     attribute :vendor,
       if: Proc.new { |record, params|
         params && params[:include]&.include?(:vendor) && record.ref_id.present?
-      } do |object|
-      item = Inventory::VendorInvoiceItem.find(object.ref_id)
+      } do |object, params|
+      item = params[:relations][:vendor_invoice_items].detect { |x| x.id == object.ref_id }
       vendor = item.invoice.vendor
       {
         id: vendor.id.to_s,
@@ -37,8 +37,8 @@ module Inventory
 
     attribute :purchase_order, if: Proc.new { |record, params|
                        params && params[:include]&.include?(:purchase_order) && record.ref_id.present?
-                     } do |object|
-      item = Inventory::VendorInvoiceItem.find(object.ref_id)
+                     } do |object, params|
+      item = params[:relations][:vendor_invoice_items].detect { |x| x.id == object.ref_id }
       po = item.invoice.purchase_order
       {
         id: po.id.to_s,
@@ -48,8 +48,8 @@ module Inventory
 
     attribute :vendor_invoice, if: Proc.new { |record, params|
                        params && params[:include]&.include?(:vendor_invoice) && record.ref_id.present?
-                     } do |object|
-      item = Inventory::VendorInvoiceItem.find(object.ref_id)
+                     } do |object, params|
+      item = params[:relations][:vendor_invoice_items].detect { |x| x.id == object.ref_id }
       {
         id: item.invoice_id.to_s,
         invoice_no: item.invoice.invoice_no,

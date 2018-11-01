@@ -123,7 +123,6 @@ class BatchLocationEditor extends React.PureComponent {
   }
 
   onSelectRoomTab = tabIndex => {
-    console.log('switching tab', tabIndex)
     const rooms = groupBy(this.props.locations, 'room_id')
     const roomId = Object.keys(rooms)[tabIndex]
     this.onSelectRoom(roomId)
@@ -229,15 +228,16 @@ class BatchLocationEditor extends React.PureComponent {
   }
 
   getLocationName = (location_type, id) => {
-    console.log('getLocationName')
-    console.log({ location_type, id })
     if (!id || !location_type) {
-      return '-- Select --'
+      return ''
     }
     const found = this.props.locations.find(
       x => x[location_type + '_id'] === id
     )
-    console.log(found)
+
+    if (found && location_type === 'tray') {
+      return `${found['shelf_code']}.${found['tray_code']}`
+    }
     return found
       ? found[location_type + '_name'] || found[location_type + '_code']
       : 'Unnamed'
@@ -414,12 +414,12 @@ class BatchLocationEditor extends React.PureComponent {
                       <a
                         href="#0"
                         onClick={this.onShowAddLocation}
-                        class="flex flex-row items-center link mt3"
+                        className="flex flex-row items-center link mt3"
                       >
-                        <i class="material-icons orange md-18">
+                        <i className="material-icons orange md-18">
                           add_circle_outline
                         </i>
-                        <span class="ml2 orange">Add Location</span>
+                        <span className="ml2 orange">Add Location</span>
                       </a>
                     )}
                   </div>

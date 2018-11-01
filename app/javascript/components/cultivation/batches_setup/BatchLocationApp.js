@@ -101,6 +101,7 @@ class BatchLocationApp extends React.Component {
     // console.log('onEditorSave.editingPlant', editingPlant)
     // find and update the existing record
     const plantConfig = this.getSelected(editingPlant.id)
+
     if (plantConfig) {
       plantConfig.quantity = editingPlant.quantity
       plantConfig.trays = editingPlant.trays
@@ -191,6 +192,14 @@ class BatchLocationApp extends React.Component {
     }
   }
 
+  locationResolver = (locationType, id) => {
+    if (!id || !locationType) {
+      return { error: 'Invalid Location Type or ID' }
+    }
+    const found = this.props.locations.find(x => x[locationType + '_id'] === id)
+    return found ? found : { error: 'Invalid Location' }
+  }
+
   onSubmit = async () => {
     this.setState({ isLoading: true })
     const { id } = this.props.batchInfo
@@ -229,6 +238,7 @@ class BatchLocationApp extends React.Component {
           phase={phase}
           getSelected={this.getSelected}
           isBalance={isBalance}
+          locationResolver={this.locationResolver}
         />
       </React.Fragment>
     )

@@ -1,29 +1,65 @@
 module Inventory
-  class CreateRawMaterials
+  class SeedCatalogue
     prepend SimpleCommand
 
-    def initialize(args)
+    def initialize(args = {})
       @args = args
     end
 
     def call
-      save_record(@args)
+      seed_raw_material_catalogue!
+      seed_plant_catalogue!
+      seed_sales_catalogue!
+      nil
     end
 
     private
 
-    def save_record(args)
+    def seed_raw_material_catalogue!
       raw_materials_template.each do |raw_material|
-        Inventory::Catalogue.find_or_create_by!(
-          catalogue_type: 'raw_materials',
-          key: raw_material[:key],
-          label: raw_material[:label],
-          category: raw_material[:category],
-          sub_category: raw_material[:sub_category] || '',
-          facility_id: args[:facility_id],
-          uom_dimension: raw_material[:uom_dimension],
-          is_active: true,
-        )
+        Inventory::Catalogue.find_or_create_by!(catalogue_type: 'raw_materials', key: raw_material[:key]) do |c|
+          c.label = raw_material[:label]
+          c.category = raw_material[:category]
+          c.sub_category = raw_material[:sub_category] || ''
+          c.uom_dimension = raw_material[:uom_dimension]
+          c.is_active = true
+        end
+      end
+    end
+
+    def seed_plant_catalogue!
+      Inventory::Catalogue.find_or_create_by!(catalogue_type: 'plant', key: 'plant') do |c|
+        c.label = 'Plant'
+        c.category = 'plant'
+        c.is_active = true
+        c.uom_dimension = 'plants'
+      end
+
+      Inventory::Catalogue.find_or_create_by!(catalogue_type: 'plant', key: 'seed') do |c|
+        c.label = 'Plant'
+        c.category = 'plant'
+        c.is_active = true
+        c.uom_dimension = 'plants'
+      end
+
+      Inventory::Catalogue.find_or_create_by!(catalogue_type: 'plant', key: 'purchased_clones') do |c|
+        c.label = 'Purchased Clones'
+        c.category = 'plant'
+        c.is_active = true
+        c.uom_dimension = 'plants'
+      end
+    end
+
+    def seed_sales_catalogue!
+      sales_template.each do |item|
+        Inventory::Catalogue.find_or_create_by!(catalogue_type: 'sales', key: item[:key]) do |c|
+          c.label = item[:label]
+          c.category = item[:category]
+          c.sub_category = item[:sub_category] || ''
+          c.uom_dimension = item[:uom_dimension]
+          c.uom_dimension = 'sales_product'
+          c.is_active = true
+        end
       end
     end
 
@@ -116,6 +152,43 @@ module Inventory
         {label: 'Sulfur based additives', category: Constants::SUPPLEMENTS_KEY, key: 'sulfur_based_additives', is_active: true, uom_dimension: 'weights'},
         {label: 'Vitamin', category: Constants::SUPPLEMENTS_KEY, key: 'vitamin', is_active: true, uom_dimension: 'weights'},
         {label: 'Worm Castings', category: Constants::SUPPLEMENTS_KEY, key: 'worm castings', is_active: true, uom_dimension: 'weights'},
+      ]
+    end
+
+    def sales_template
+      [
+        {label: 'Capsule/Tablet', category: Constants::SALES_PRODUCT_KEY, key: Constants::SALES_PRODUCT_KEY},
+        {label: 'Concentrate (liquid)', category: Constants::SALES_PRODUCT_KEY, key: 'concentrate_liquid'},
+        {label: 'Concentrate (liquid each)', category: Constants::SALES_PRODUCT_KEY, key: 'concentrate_liquid_each'},
+        {label: 'Concentrate (solid)', category: Constants::SALES_PRODUCT_KEY, key: 'concentrate_solid'},
+        {label: 'Concentrate (solid each)', category: Constants::SALES_PRODUCT_KEY, key: 'concentrate_solid each'},
+        {label: 'Edible', category: Constants::SALES_PRODUCT_KEY, key: 'edible'},
+        {label: 'Edible (each)', category: Constants::SALES_PRODUCT_KEY, key: 'edible_each'},
+        {label: 'Extract (liquid)', category: Constants::SALES_PRODUCT_KEY, key: 'extract_liquid'},
+        {label: 'Extract (liquid-each)', category: Constants::SALES_PRODUCT_KEY, key: 'extract_liquid_each'},
+        {label: 'Extract (solid)', category: Constants::SALES_PRODUCT_KEY, key: 'extract_solid'},
+        {label: 'Extract (solid-each)', category: Constants::SALES_PRODUCT_KEY, key: 'extract_solid_each'},
+        {label: 'Flower', category: Constants::SALES_PRODUCT_KEY, key: 'flower'},
+        {label: 'Fresh Cannabis Plant', category: Constants::SALES_PRODUCT_KEY, key: 'fresh_cannabis_plant'},
+        {label: 'Immature Plant', category: Constants::SALES_PRODUCT_KEY, key: 'immature_plant'},
+        {label: 'Kief', category: Constants::SALES_PRODUCT_KEY, key: 'kief'},
+        {label: 'Leaf', category: Constants::SALES_PRODUCT_KEY, key: 'leaf'},
+        {label: 'Liquid', category: Constants::SALES_PRODUCT_KEY, key: 'liquid'},
+        {label: 'Liquid (each)', category: Constants::SALES_PRODUCT_KEY, key: 'liquid_each'},
+        {label: 'Pre-Roll Flower', category: Constants::SALES_PRODUCT_KEY, key: 'pre_roll_flower'},
+        {label: 'Pre-Roll Leaf', category: Constants::SALES_PRODUCT_KEY, key: 'pre_roll_leaf'},
+        {label: 'Suppository (each)', category: Constants::SALES_PRODUCT_KEY, key: 'suppository_each'},
+        {label: 'Tincture', category: Constants::SALES_PRODUCT_KEY, key: 'tincture'},
+        {label: 'Tincture (each)', category: Constants::SALES_PRODUCT_KEY, key: 'tincture_each'},
+        {label: 'Topical', category: Constants::SALES_PRODUCT_KEY, key: 'topical'},
+        {label: 'Topical (liquid)', category: Constants::SALES_PRODUCT_KEY, key: 'topical_liquid'},
+        {label: 'Topical (liquid-each)', category: Constants::SALES_PRODUCT_KEY, key: 'topical_liquid_each'},
+        {label: 'Topical (solid)', category: Constants::SALES_PRODUCT_KEY, key: 'topical_solid'},
+        {label: 'Topical (solid-each)', category: Constants::SALES_PRODUCT_KEY, key: 'topical_solid_each'},
+        {label: 'Vape Oil', category: Constants::SALES_PRODUCT_KEY, key: 'vape_oil'},
+        {label: 'Vape Oil (each)', category: Constants::SALES_PRODUCT_KEY, key: 'vape_oil_each'},
+        {label: 'Wax', category: Constants::SALES_PRODUCT_KEY, key: 'wax'},
+        {label: 'Other', category: Constants::SALES_PRODUCT_KEY, key: 'other'},
       ]
     end
   end

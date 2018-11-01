@@ -3,9 +3,14 @@ module Inventory
     include Mongoid::Document
     include Mongoid::Timestamps::Short
 
+    DRAFT = 'draft'
+    SUBMITTED = 'submitted'
+    PAID = 'paid'
+    INVENTORY_SETUP = 'inventory_setup'
+
     field :invoice_no, type: String
     field :invoice_date, type: DateTime
-    field :status, type: String          # {draft, submitted, paid}
+    field :status, type: String          # {draft, submitted, paid, inventory_setup}
     field :terms_in_days, type: Integer, default: 0
 
     belongs_to :facility

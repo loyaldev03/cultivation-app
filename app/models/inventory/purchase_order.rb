@@ -8,6 +8,7 @@ module Inventory
     APPROVED = 'approved'
     RECEIVED_PARTIAL = 'received_partial'
     RECEIVED_FULL = 'received_full'
+    INVENTORY_SETUP = 'inventory_setup'
 
     field :purchase_order_no, type: String
     field :purchase_order_date, type: DateTime

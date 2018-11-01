@@ -25,9 +25,9 @@ class ApplicationController < ActionController::Base
   end
 
   def miniprofiler
-    # Enable mini profiler only if developer login
+    # Enable mini profiler only in development environment
     # DEBUG: Is your MongoDb Running?
-    Rack::MiniProfiler.authorize_request if current_user && current_user.is_dev?
+    Rack::MiniProfiler.authorize_request if Rails.env.development?
   end
 
   def configure_permitted_parameters

@@ -6,21 +6,22 @@
 module Inventory
   class QueryCatalogueTree
     prepend SimpleCommand
-    attr_reader :facility_id, :type, :category
+    attr_reader :type, :category
 
-    def initialize(facility_id, type, category)
-      @facility_id = facility_id
+    def initialize(type, category)
       @type = type
       @category = category
     end
 
     def call
       output = []
-      catalogues = Inventory::Catalogue.where(catalogue_type: type, category: category, sub_category: '', facility_id: facility_id)
+      catalogues = Inventory::Catalogue.where(catalogue_type: type, category: category, sub_category: '')
       catalogues.each do |parent|
         item = {
           label: parent.label,
+          value: parent.id.to_s,
           key: parent.key,
+          id: parent.id.to_s,
         }
 
         if parent.uom_dimension.blank?

@@ -7,6 +7,7 @@ import {
   sumBy,
   formatDate,
   httpPostOptions,
+  ImgPlantGrowth,
   GROWTH_PHASE
 } from '../../utils'
 
@@ -100,6 +101,7 @@ class BatchLocationApp extends React.Component {
     // console.log('onEditorSave.editingPlant', editingPlant)
     // find and update the existing record
     const plantConfig = this.getSelected(editingPlant.id)
+
     if (plantConfig) {
       plantConfig.quantity = editingPlant.quantity
       plantConfig.trays = editingPlant.trays
@@ -190,6 +192,14 @@ class BatchLocationApp extends React.Component {
     }
   }
 
+  locationResolver = (locationType, id) => {
+    if (!id || !locationType) {
+      return { error: 'Invalid Location Type or ID' }
+    }
+    const found = this.props.locations.find(x => x[locationType + '_id'] === id)
+    return found ? found : { error: 'Invalid Location' }
+  }
+
   onSubmit = async () => {
     this.setState({ isLoading: true })
     const { id } = this.props.batchInfo
@@ -228,6 +238,7 @@ class BatchLocationApp extends React.Component {
           phase={phase}
           getSelected={this.getSelected}
           isBalance={isBalance}
+          locationResolver={this.locationResolver}
         />
       </React.Fragment>
     )
@@ -322,7 +333,9 @@ class BatchLocationApp extends React.Component {
               render={() => (
                 <div className="w-100 w-80-m w-60-l h-100 center flex flex-column items-center justify-center">
                   <div className="shadow-1 br2">
-                    <div className="h5 bg-orange w-100" />
+                    <div className="h5 bg-orange w-100 flex justify-center">
+                      <img src={ImgPlantGrowth} />
+                    </div>
                     <div className="bg-white w-100 pa3 tc">
                       <p className="f3 fw6 dark-grey ma3">
                         All set up on cloning stage! Just one more thing...

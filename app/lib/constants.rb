@@ -131,6 +131,9 @@ module Constants
   GROW_MEDIUM_KEY = 'grow_medium'
   GROW_LIGHT_KEY = 'grow_light'
   OTHERS_KEY = 'others'
+  SALES_PRODUCT_KEY = 'sales_product'
+  SEEDS_KEY = 'seeds'
+  PURCHASED_CLONES_KEY = 'purchased_clones'
 
   NUTRIENT_TYPE = [
     {code: :blend, name: 'Blend'},

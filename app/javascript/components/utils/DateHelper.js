@@ -1,4 +1,3 @@
-// Warning: React version not specified in eslint-plugin-react settings. See https://github.com/yannickcr/eslint-plugin-react#configuration.
 import { parse, format, addMonths, startOfDay, addSeconds } from 'date-fns'
 import { getCookie } from './'
 

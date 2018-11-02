@@ -212,7 +212,7 @@ module Cultivation
         Constants::CONST_VEG2 => [veg2_start_date, veg2_end_date, (phase_duration[Constants::CONST_VEG2].to_i)],
         Constants::CONST_FLOWER => [flower_start_date, flower_end_date, (phase_duration[Constants::CONST_FLOWER].to_i)],
         Constants::CONST_DRY => [dry_start_date, dry_end_date, (phase_duration[Constants::CONST_DRY].to_i)],
-        Constants::CONST_CURE => [cure_start_date, cure_end_date, (phase_duration[Constants::CONST_CURE].to_i)]
+        Constants::CONST_CURE => [cure_start_date, cure_end_date, (phase_duration[Constants::CONST_CURE].to_i)],
       }
     end
 

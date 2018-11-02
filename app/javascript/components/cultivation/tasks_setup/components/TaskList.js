@@ -1,7 +1,5 @@
 import React from 'react'
-import { render } from 'react-dom'
-import { observable, toJS } from 'mobx'
-import { observer, Provider } from 'mobx-react'
+import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 
 import TaskStore from '../stores/TaskStore'
@@ -10,7 +8,6 @@ import UserStore from '../stores/UserStore'
 
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import TaskEditor from './TaskEditor'
-import updateSidebarTask from '../actions/updateSidebarTask'
 import updateTask from '../actions/updateTask'
 import indentTask from '../actions/indentTask'
 import deleteTask from '../actions/deleteTask'

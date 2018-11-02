@@ -1,5 +1,6 @@
 export * from './ArrayHelper'
 export * from './BrowserHelper'
+export * from './ComponentStyles'
 export * from './Constants'
 export * from './DateHelper'
 export * from './FetchHelper'

@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-import { formatDate } from './../../utils'
+import { formatDate, selectStyles } from './../../utils'
 
 const ValidationMessage = ({ enable, show, text }) => {
   if (enable && show) {
@@ -113,6 +113,7 @@ Remaining Capacity: ${x.capacity}`}
               <div className="w-50 pr2">
                 <label className="subtitle-2 grey db mb1">Batch Source:</label>
                 <Select
+                  styles={selectStyles}
                   options={plantSources}
                   className="w-100"
                   onChange={e => onChange('batchSource', e.value)}
@@ -126,6 +127,7 @@ Remaining Capacity: ${x.capacity}`}
               <div className="w-50 pl2">
                 <label className="subtitle-2 grey db mb1">Grow Method:</label>
                 <Select
+                  styles={selectStyles}
                   options={growMethods}
                   className="w-100"
                   onChange={e => onChange('batchGrowMethod', e.value)}

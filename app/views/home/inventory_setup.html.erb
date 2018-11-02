@@ -67,7 +67,11 @@
             </p>
           </div>
           
-          <%= link_to 'Setup', nutrients_materials_items_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim ttu' %>
+          <% if Inventory::ItemTransaction.where(facility:current_default_facility).count > 0 %>
+            <%= link_to 'Change', nutrients_inventory_raw_materials_path, class: 'flex-none orange link f6 fw6 pv2 br2 dim ttu' %>
+          <% else %>
+            <%= link_to 'Start', nutrients_inventory_raw_materials_path, class: 'flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim ttu' %>
+          <% end %>
         </div>
 
         <div class="flex flex-row justify-center items-center mb4">

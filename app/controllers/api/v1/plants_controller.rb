@@ -65,16 +65,6 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
 
   private
 
-  # def plants_params
-  #   params[:plant].to_unsafe_h
-  # end
-
-  # command_errors(plant_params, command)
-
-  # def command_errors(plant_params, command)
-  #   plant_params.merge(errors: command.errors)
-  # end
-
   def request_with_errors(errors)
     params[:plant].to_unsafe_h.merge(errors: errors)
   end

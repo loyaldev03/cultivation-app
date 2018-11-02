@@ -1,7 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 import { observer } from 'mobx-react'
-import { BATCH_SOURCE, GROWTH_PHASE } from '../../utils'
+import { ImgPlant, GROWTH_PHASE } from '../../utils'
 import plantStore from '../../inventory/plant_setup/store/PlantStore'
 import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 
@@ -16,17 +16,23 @@ const QuantityField = React.memo(({ plant, onClick }) => {
   return null
 })
 
-const LocationField = React.memo(({ plant, onClick }) => {
+const LocationField = React.memo(({ plant, locationResolver, onClick }) => {
   if (plant) {
     return (
       <a href="#0" className="link" onClick={onClick}>
         {plant &&
           plant.trays &&
-          plant.trays.map(t => (
-            <span key={t.tray_id} className="dib mr1 ph2 pv1 bg-orange white br2">
-              {t.tray_code}
-            </span>
-          ))}
+          plant.trays.map(t => {
+            const tray = locationResolver('tray', t.tray_id)
+            return (
+              <span
+                key={tray.tray_id}
+                className="dib mr1 ph2 pv1 bg-orange white br2"
+              >
+                {tray.row_code}.{tray.shelf_code}.{tray.tray_code}
+              </span>
+            )
+          })}
       </a>
     )
   }
@@ -43,7 +49,7 @@ class BatchPlantSelectionList extends React.Component {
 
   renderMotherCloneBookingTable = (motherPlants, phase) => {
     return (
-      <table className="collapse br2 f5">
+      <table className="collapse br2 f5 w-100">
         <tbody>
           <tr className="striped--light-gray grey f5">
             <th className="pv2 ph3">
@@ -67,7 +73,7 @@ class BatchPlantSelectionList extends React.Component {
                   })}
                 >
                   <td className="pv2 ph3 flex items-center">
-                    <span className="w2 h2 bg-moon-gray dib br-100" />
+                    <img src={ImgPlant} style={{ width: '24px' }} />
                     <span className="ml2 pa1 dib dark-grey">
                       {p.attributes.plant_id}
                     </span>
@@ -83,6 +89,7 @@ class BatchPlantSelectionList extends React.Component {
                       <td className="tl pl3">
                         <LocationField
                           plant={selectedPlant}
+                          locationResolver={this.props.locationResolver}
                           onClick={e => this.props.onEdit(phase, p)}
                         />
                       </td>
@@ -136,6 +143,7 @@ class BatchPlantSelectionList extends React.Component {
                 <td className="tl pl3">
                   <LocationField
                     plant={b}
+                    locationResolver={this.props.locationResolver}
                     onClick={e => this.props.onEdit(phase, b)}
                   />
                 </td>

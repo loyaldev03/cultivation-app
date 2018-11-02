@@ -2,17 +2,18 @@
   <%= breadcrumbs ["Home",root_path], 
       ['Inventory Setup', inventory_setup_path], 
       'Raw Material',
-      'Nutrients' 
+      'Grow Medium' 
   %>
 <% end %>
 
 
 <div class="pa4">
   <%= render partial: 'setupIntro' %>
-  <%= render partial: 'setupNavigation', locals: { selected: 'nutrients' } %>
+  <%= render partial: 'setupNavigation', locals: { selected: Constants::GROW_MEDIUM_KEY } %>
   <div class="flex flex-column">
-    <%= react_component('inventory/raw_materials/NutrientsApp') %>
-
+    <%= react_component('inventory/raw_materials/RawMaterialSetupApp', { 
+      locations: @locations, order_uoms: @order_uoms, raw_material_type: Constants::GROW_MEDIUM_KEY, catalogues: @catalogues }) %>
+   
     <div class="w-100 bg-white ph3 pt2 pb4">
       <div class="dim flex flex-row items-center pointer">
         <i class="material-icons md-light-gray">keyboard_arrow_left</i>

@@ -15,6 +15,7 @@ class Facility
   embeds_many :rooms
 
   has_many :strains, class_name: 'Inventory::FacilityStrain'
+  has_many :catalogue, class_name: 'Inventory::Catalogue'
 
   scope :completed, -> { where(is_complete: true) }
 end

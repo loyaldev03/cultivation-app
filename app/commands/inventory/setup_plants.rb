@@ -111,7 +111,6 @@ module Inventory
       if is_purchased?
         vendor = save_vendor
         po_item = save_purchase_order(vendor)
-        Rails.logger.debug "\t\t\t>>>>> po_item: #{po_item}, po_item.id: #{po_item&.id}"
         invoice_item = save_invoice(po_item)
         invoice_item
       else
@@ -206,7 +205,7 @@ module Inventory
       purchase_order = Inventory::PurchaseOrder.find_or_create_by!(purchase_order_no: purchase_order_no, vendor: vendor) do |po|
         po.purchase_order_date = purchase_date
         po.facility = facility_strain.facility
-        po.status = Inventory::PurchaseOrder::RECEIVED_FULL
+        po.status = Inventory::PurchaseOrder::INVENTORY_SETUP
       end
 
       # TODO: Try replace with following block
@@ -245,11 +244,13 @@ module Inventory
 
       invoice = Inventory::VendorInvoice.find_or_create_by!(
         invoice_no: invoice_no,
-        invoice_date: purchase_date,
-        facility: po_item.purchase_order.facility,
-        purchase_order: po_item.purchase_order,
         vendor: po_item.purchase_order.vendor,
-      )
+      ) do |inv|
+        inv.invoice_date = purchase_date
+        inv.facility = po_item.purchase_order.facility
+        inv.purchase_order = po_item.purchase_order
+        inv.status = Inventory::VendorInvoice::INVENTORY_SETUP
+      end
 
       invoice_item = invoice.items.find_or_create_by!(facility_strain_id: po_item.facility_strain_id,
                                                       catalogue: po_item.catalogue) do |inv_item|

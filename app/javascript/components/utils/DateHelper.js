@@ -1,3 +1,4 @@
+Warning: React version not specified in eslint-plugin-react settings. See https://github.com/yannickcr/eslint-plugin-react#configuration.
 import { parse, format, addMonths, startOfDay, addSeconds } from 'date-fns'
 import { getCookie } from './'
 
@@ -18,7 +19,6 @@ export const monthsOptions = (startDate = new Date(), duration = 12) => {
 
 export const dateToMonthOption = dt =>
   format(dt, 'MM-YYYY', { awareOfUnicodeTokens: true })
-
 
 export const monthOptionToString = monthOptionStr => {
   if (monthOptionStr) {
@@ -41,17 +41,14 @@ export const monthOptionAdd = (monthOptionStr, month) => {
   return dateToMonthOption(result)
 }
 
-export const formatDate = date =>
-  format(date, 'MMM dd, YYYY', { awareOfUnicodeTokens: true })
-
+export const formatDate = date => {
+  return format(date, 'MMM DD, YYYY', { awareOfUnicodeTokens: true })
+}
 
 export const formatDate2 = date =>
   format(date, 'M/DD/YYYY', { awareOfUnicodeTokens: true })
 
-
-export const formatDate3 = date =>
-  format(date, 'ddd, D MMM YYYY')
-
+export const formatDate3 = date => format(date, 'ddd, D MMM YYYY')
 
 const durationToDate = seconds =>
   addSeconds(startOfDay(new Date()), parseInt(seconds))
@@ -63,5 +60,4 @@ export const formatDuration = seconds => {
   return format(durationToDate(seconds), 'H [hr] m [mn]')
 }
 
-export const formatTime = time =>
-  format(time, 'hh:mm A')
+export const formatTime = time => format(time, 'hh:mm A')

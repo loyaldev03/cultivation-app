@@ -1,13 +1,11 @@
 Rails.application.routes.draw do
   # Mount a POST endpoint /images/upload endpoint which accepts file multipart upload
   mount ImageUploader.upload_endpoint(:avatar) => "/images/upload"
-
   devise_for :users
-
-  get "dashboard" => "home#dashboard"
 
   root to: "home#index"
 
+  # TODO: Need to DRY up. Refer to daily_tasks routes
   get "facility_setup/new" => "facility_setup#new"
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"
   get "facility_setup/room_info" => "facility_setup#room_info", as: 'fetch_room_info'
@@ -31,27 +29,13 @@ Rails.application.routes.draw do
   post "facility_setup/update_shelf_trays" => "facility_setup#update_shelf_trays", as: 'update_shelf_trays'
   post "facility_setup/duplicate_rows" => "facility_setup#duplicate_rows", as: "duplicate_rows"
 
+  get "dashboard" => "home#dashboard"
   get "settings" => "home#settings"
   get "inventory/setup" => "home#inventory_setup"
   post "reset_data" => "home#reset_data"
 
   namespace 'materials', as: :materials do
     get '/' => 'materials#index'
-
-    # resources :items, only: [:index, :edit, :update, :new, :create, :destroy, :show] do
-    resources :items do
-      collection do
-        get 'nutrients'
-        get 'grow_medium'
-        get 'grow_lights'
-        get 'supplements'
-        get 'others'
-      end
-      resources :item_transactions, only: [:new, :create]
-    end
-
-    # TODO: to be removed...
-    resources :strains, only: [:index, :edit, :update, :new, :create, :destroy]
   end
 
   namespace 'purchasing', as: :purchasing do
@@ -74,6 +58,18 @@ Rails.application.routes.draw do
         get 'flowers'
         get 'harvests'
         get 'harvest_batches'
+      end
+    end
+
+    resources :raw_materials, only: [] do
+      collection do
+        get 'nutrients'
+        get 'grow_medium'
+        get 'grow_lights'
+        get 'supplements'
+        get 'others'
+        get 'seeds'
+        get 'purchased_clones'
       end
     end
   end
@@ -130,6 +126,16 @@ Rails.application.routes.draw do
         end
       end
 
+
+      resources :raw_materials, only: [:index, :show] do
+        post 'setup', on: :collection
+      end
+
+      # namespace :purchasing do
+      #   resources :purchase_orders
+      #   resources :vendor_invoices
+      # end
+
       resources :strains, only: [:index, :create, :show] do
         get 'suggest', on: :collection
       end
@@ -156,8 +162,18 @@ Rails.application.routes.draw do
         delete 'destroy_role'
       end
 
+      # TODO: items to be removed. Material used for task should be move to batches/tasks api
+      #       whereas catalogue related to facility should call catalogues.
       resources :items, only: [:index, :create, :destroy]
       resources :uoms, only: [:index]
+      resources :catalogues, only: [] do
+        collection do
+          get 'raw_material_tree'
+          get 'raw_materials'
+        end
+      end
+
+      
       scope :daily_tasks do
         put ':id/start_task', to: 'daily_tasks#start_task'
         put ':id/stop_task', to: 'daily_tasks#stop_task'

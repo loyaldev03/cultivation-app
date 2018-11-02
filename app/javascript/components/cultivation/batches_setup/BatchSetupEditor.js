@@ -48,7 +48,7 @@ class BatchSetupEditor extends React.PureComponent {
             onSave(data)
           }}
         >
-          <div className="ph4">
+          <div className="ph4 pb4">
             <div className="mt2 mb1">
               <span className="subtitle-2 grey db">Strain:</span>
               <span className="subtitle-2 dark-grey">{batchStrain}</span>
@@ -150,12 +150,12 @@ Remaining Capacity: ${x.capacity}`}
               <span className="grey ph2">(Maximum: {maxCapacity})</span>
             </div>
           </div>
-          <div className="bt b--light-grey pv3 ph4">
+          <div className="bt b--light-grey pv3 ph4 tr">
             <input
               type="submit"
               disabled={isLoading}
               value={saveButtonText}
-              className="fr ph3 pv2 bg-orange button--font white bn box--br3 ttu link dim pointer"
+              className="btn btn--primary"
             />
           </div>
         </form>

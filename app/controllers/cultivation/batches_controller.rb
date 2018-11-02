@@ -112,6 +112,7 @@ class Cultivation::BatchesController < ApplicationController
     @batch_attributes = {
       id: @batch.id.to_s,
       batch_no: @batch.batch_no.to_s,
+      facility_id: @batch.facility_id.to_s,
       strain: @batch.facility_strain.strain_name,
       batch_source: @batch.batch_source,
       grow_method: @batch.grow_method,
@@ -119,8 +120,8 @@ class Cultivation::BatchesController < ApplicationController
       estimated_harvest_date: @batch.estimated_harvest_date,
       nutrient_profile: @batch.nutrient_profile,
       total_estimated_hour: @batch.total_estimated_hours,
-      total_estimated_cost: @batch.total_estimated_costs,
-      materials: @batch.material_use,
+      total_estimated_cost: ActionController::Base.helpers.number_to_currency(@batch.total_estimated_costs, unit: '$'),
+      materials: @batch.material_summary,
     }
   end
 

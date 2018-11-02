@@ -26,6 +26,7 @@ module Cultivation
     has_and_belongs_to_many :users, inverse_of: nil
     embeds_many :work_days, class_name: 'Cultivation::WorkDay'
     embeds_many :material_use, class_name: 'Cultivation::Item'
+    has_many :children, class_name: 'Cultivation::Task', foreign_key: :parent_id
 
     orderable scope: :batch, base: 0
 
@@ -37,9 +38,9 @@ module Cultivation
       batch.tasks.where(depend_on: self.id)
     end
 
-    def children
-      batch.tasks.where(parent_id: self.id)
-    end
+    # def children
+    #   batch.tasks.where(parent_id: self.id)
+    # end
 
     def parent
       batch.tasks.find_by(id: self.parent_id)

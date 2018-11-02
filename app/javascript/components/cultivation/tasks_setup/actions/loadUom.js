@@ -5,9 +5,7 @@ export default function loadUsers() {
   fetch(url)
     .then(resp => resp.json()) // Transform the data into json
     .then(function(data) {
-      console.log(build_uom_options(data.data))
       UomStore.replace(build_uom_options(data.data))
-      console.log(UomStore)
     })
     .catch(function(error) {
       console.log(error)

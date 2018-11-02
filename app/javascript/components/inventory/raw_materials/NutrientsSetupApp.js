@@ -3,67 +3,57 @@ import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
 import NutrientEditor from './components/NutrientEditor'
+import rawMaterialStore from './store/RawMaterialStore'
+import loadRawMaterials from './actions/loadRawMaterials'
 
 const columns = [
   {
-    Header: '',
-    accessor: 'attributes.is_active',
-    filterable: false,
-    width: 30,
-    Cell: props => {
-      let color = 'red'
-      if (props.value === true) {
-        color = '#00cc77'
-      }
-      return (
-        <div className="flex justify-center items-center h-100">
-          <span
-            style={{
-              width: '8px',
-              height: '8px',
-              color: 'green',
-              borderRadius: '50%',
-              backgroundColor: color
-            }}
-          />
-        </div>
-      )
-    }
-  },
-  {
-    Header: 'Product Name',
-    accessor: 'attributes.batch_no',
+    Header: 'Grow Medium',
+    accessor: 'attributes.catalogue',
     headerClassName: 'tl'
   },
   {
-    Header: 'Nutrient Type',
-    accessor: 'attributes.name',
+    Header: 'Product Name',
+    accessor: 'attributes.product_name',
     headerClassName: 'tl'
   },
   {
     Header: 'Supplier',
-    accessor: 'attributes.start_date',
+    accessor: 'attributes.vendor.name',
     headerClassName: 'tl'
   },
   {
     Header: 'PO Number',
-    accessor: 'attributes.current_growth_stage',
+    accessor: 'attributes.purchase_order.purchase_order_no',
+    headerClassName: 'tl'
+  },
+  {
+    Header: 'Invoice No',
+    accessor: 'attributes.vendor_invoice.invoice_no',
     headerClassName: 'tl'
   },
   {
     Header: 'Quantity',
-    accessor: 'attributes.plant_count',
-    headerClassName: 'tr'
+    headerClassName: 'tr',
+    Cell: record => (
+      <div className="tr">
+        {record.original.attributes.order_quantity}{' '}
+        {record.original.attributes.order_uom}
+      </div>
+    )
   },
   {
     Header: 'Cost',
-    accessor: 'attributes.batch_source',
-    headerClassName: 'tl'
-  },
-  {
-    Header: 'Location',
-    accessor: 'attributes.facility',
-    headerClassName: 'tl'
+    headerClassName: 'tr',
+    Cell: record => (
+      <div className="tr">
+        {record.original.attributes.vendor_invoice.item_currency} &nbsp;
+        {(
+          parseFloat(record.original.attributes.order_quantity) *
+          parseFloat(record.original.attributes.vendor_invoice.item_price)
+        ).toFixed(2)}
+      </div>
+    )
   },
   {
     Header: '',
@@ -74,7 +64,7 @@ const columns = [
       <a
         href="#"
         onClick={event => {
-          const data = toJS(record.original)
+          const data = toJS(record.original.id)
           openNutrient(event, data)
         }}
       >
@@ -84,17 +74,17 @@ const columns = [
   }
 ]
 
-function openNutrient(event, data) {
-  console.log(data)
-  window.editorSidebar.open({ width: '500px', data })
+function openNutrient(event, id) {
+  window.editorSidebar.open({ width: '500px', id })
   event.preventDefault()
 }
 
 @observer
-class NutrientsApp extends React.Component {
+class NutrientsSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
+    loadRawMaterials('nutrients')
   }
 
   openSidebar() {
@@ -115,7 +105,7 @@ class NutrientsApp extends React.Component {
             </h1>
             <div style={{ justifySelf: 'end' }}>
               <button
-                className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
+                className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
                 onClick={this.onAddBatch}
               >
                 Add nutrient
@@ -126,7 +116,7 @@ class NutrientsApp extends React.Component {
           <ReactTable
             columns={columns}
             pagination={{ position: 'top' }}
-            data={[]}
+            data={rawMaterialStore.bindable}
             showPagination={false}
             pageSize={30}
             minRows={5}
@@ -142,10 +132,14 @@ class NutrientsApp extends React.Component {
     return (
       <React.Fragment>
         {this.renderNutrientList()}
-        <NutrientEditor />
+        <NutrientEditor
+          locations={this.props.locations}
+          order_uoms={this.props.order_uoms}
+          catalogues={this.props.catalogues}
+        />
       </React.Fragment>
     )
   }
 }
 
-export default NutrientsApp
+export default NutrientsSetupApp

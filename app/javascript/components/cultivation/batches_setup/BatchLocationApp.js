@@ -7,9 +7,9 @@ import {
   sumBy,
   formatDate,
   httpPostOptions,
+  ImgPlantGrowth,
   GROWTH_PHASE
 } from '../../utils'
-import { toast } from './../../utils/toast'
 
 const AdjustmentMessage = React.memo(({ value, total }) => {
   if (value >= 0 && value < total) {
@@ -101,6 +101,7 @@ class BatchLocationApp extends React.Component {
     // console.log('onEditorSave.editingPlant', editingPlant)
     // find and update the existing record
     const plantConfig = this.getSelected(editingPlant.id)
+
     if (plantConfig) {
       plantConfig.quantity = editingPlant.quantity
       plantConfig.trays = editingPlant.trays
@@ -191,24 +192,30 @@ class BatchLocationApp extends React.Component {
     }
   }
 
+  locationResolver = (locationType, id) => {
+    if (!id || !locationType) {
+      return { error: 'Invalid Location Type or ID' }
+    }
+    const found = this.props.locations.find(x => x[locationType + '_id'] === id)
+    return found ? found : { error: 'Invalid Location' }
+  }
+
   onSubmit = async () => {
     this.setState({ isLoading: true })
     const { id } = this.props.batchInfo
-    const payload = {
-      plans: this.state.selectedPlants
-    }
     try {
       await fetch(
         `/api/v1/batches/${id}/update_locations`,
-        httpPostOptions(payload)
+        httpPostOptions({
+          plans: this.state.selectedPlants
+        })
       )
-      // navigate to next page
-      window.location.replace('/cultivation/batches/' + this.props.batchInfo.id)
+      // navigate to batch overview
+      window.location.replace('/cultivation/batches/' + id)
     } catch (error) {
       console.error(error)
-    } finally {
-      this.setState({ isLoading: false })
     }
+    this.setState({ isLoading: false })
   }
 
   renderBookingsForPhase = (phase, quantity = 0, plantType = '') => {
@@ -217,8 +224,10 @@ class BatchLocationApp extends React.Component {
     const isBalance = quantity === selectedCapacity && quantity > 0
     return (
       <React.Fragment>
-        <span className="dib ttu f2 fw6 pb2 dark-grey">{phase}</span>
-        <AdjustmentMessage value={selectedCapacity} total={quantity} />
+        <div className="flex items-center pb2">
+          <span className="dib ttu f2 fw6 pb2 dark-grey w4">{phase}</span>
+          <AdjustmentMessage value={selectedCapacity} total={quantity} />
+        </div>
         <BatchPlantSelectionList
           onEdit={this.onClickSelectionEdit}
           bookings={bookings}
@@ -227,6 +236,7 @@ class BatchLocationApp extends React.Component {
           phase={phase}
           getSelected={this.getSelected}
           isBalance={isBalance}
+          locationResolver={this.locationResolver}
         />
       </React.Fragment>
     )
@@ -321,12 +331,14 @@ class BatchLocationApp extends React.Component {
               render={() => (
                 <div className="w-100 w-80-m w-60-l h-100 center flex flex-column items-center justify-center">
                   <div className="shadow-1 br2">
-                    <div className="h5 bg-orange w-100" />
+                    <div className="h5 bg-orange w-100 flex justify-center">
+                      <img src={ImgPlantGrowth} />
+                    </div>
                     <div className="bg-white w-100 pa3 tc">
-                      <p className="f4 fw6 dark-grey ma3">
+                      <p className="f3 fw6 dark-grey ma3">
                         All set up on cloning stage! Just one more thing...
                       </p>
-                      <p className="grey">
+                      <p className="grey ph5">
                         Proceed to configure location for next phase. Proceed to
                         configure location for next phaseProceed to configure
                         location for next phaseProceed to configure location for
@@ -335,7 +347,7 @@ class BatchLocationApp extends React.Component {
                       <a
                         href="#0"
                         onClick={this.onButtonClick('isNotified', true)}
-                        className="mb3 dib pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+                        className="btn btn--primary btn--large"
                       >
                         OK, GOT IT!
                       </a>
@@ -357,7 +369,7 @@ class BatchLocationApp extends React.Component {
               href={`/cultivation/batches/${this.props.batchInfo.id}`}
               className="link orange tr dib pa3 fr"
             >
-              SKIP - TODO: REMOVE THIS
+              SKIP
             </a>
           </div>
         </form>

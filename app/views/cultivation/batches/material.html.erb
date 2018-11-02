@@ -75,7 +75,7 @@
                     </div>
                     <div class="w-50">
                       <div class="">
-                        <label><%= @batch_attributes[:start_date] %></label>
+                        <label><%= @batch_attributes[:start_date].strftime("%_m/%d/%Y") %></label>
                       </div>
                     </div>
                   </div>
@@ -86,7 +86,7 @@
                     </div>
                     <div class="w-50">
                       <div class="">
-                        <label>???</label>
+                        <label><%= @batch_attributes[:total_estimated_cost] %></label>
                       </div>
                     </div>
                   </div>
@@ -108,11 +108,11 @@
                   <hr />
                   <div class=" flex">
                     <div class="w-50">
-                      <label>Estimated Harvest Dat </label>
+                      <label>Estimated Harvest Date </label>
                     </div>
                     <div class="w-50">
                       <div class="">
-                        <label><%= @batch_attributes[:start_date] %></label>
+                        <label><%= @batch_attributes[:start_date].strftime("%_m/%d/%Y") %></label>
                       </div>
                     </div>
                   </div>
@@ -200,13 +200,13 @@
                   <tr class="striped--light-gray">
                     <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Material</th>
                     <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Quantity Required</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Quantity In Inventory</th>
+                    <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Quantity Available</th>
                   </tr>
                   <% @batch_attributes[:materials].each do |material| %>
-                    <tr class="striped--light-gray dim pointer">
+                    <tr class="striped--light-gray dim pointer <%= 'red' if material.quantity > material.inventory_quantity%>">
                       <td class="tl pv2 ph3 w5"><%= material.name %></td>
                       <td class="tl pv2 ph3"><%= material.quantity%> <%= material.uom%></td>
-                      <td class="tl pv2 ph3"></td>
+                      <td class="tl pv2 ph3"><%= material.inventory_quantity %> <%= material.uom%></td>
                     </tr>
                   <% end%>
                 </tbody>

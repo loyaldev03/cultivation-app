@@ -69,9 +69,7 @@ class LogsAndActivities extends React.Component {
           {dailyTask.attributes.notes.map((note, i) => (
             <div className="mv2" key={i}>
               <i className="material-icons mid-gray md-18 fl">today</i>
-              <div className="v-top fl ml2">
-                {formatTime(note.c_at)}
-              </div>
+              <div className="v-top fl ml2">{formatTime(note.c_at)}</div>
 
               <div className="cl">{note.notes}</div>
             </div>

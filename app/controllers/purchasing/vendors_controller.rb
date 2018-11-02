@@ -21,8 +21,8 @@ class Purchasing::VendorsController < ApplicationController
   end
 
   def update
-    form_object = PurchasingForm::VendorForm.new(params[:id])
-    if form_object.submit(update_params)
+    @record = PurchasingForm::VendorForm.new(params[:id])
+    if @record.submit(update_params)
       render 'layouts/hide_sidebar', layouts: nil
     else
       render 'edit', layout: nil

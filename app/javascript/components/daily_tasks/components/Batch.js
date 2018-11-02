@@ -18,10 +18,17 @@ const Batch = observer(props => {
           <div className="f7 mb2">{safeDisplay(batch.rooms.join(', '))}</div>
         </div>
         <div className="w-30 tr mt4">
-          <div className="di ph4 pv2 b--black-10 ba">{batch.attributes.current_phase}</div>
+          <div className="di ph4 pv2 b--black-10 ba">
+            {batch.attributes.current_phase}
+          </div>
           <div className="di relative ph4 pv2 ml2 b--black-10 ba">
-            <FloatingLabel className="absolute black-40 bg-white tc">Days</FloatingLabel>
-            {batch.attributes.progress_today}/{batch.attributes.estimated_total_days}</div>
+            <FloatingLabel className="absolute black-40 bg-white tc">
+              Days
+            </FloatingLabel>
+            {batch.attributes.progress_today}/{
+              batch.attributes.estimated_total_days
+            }
+          </div>
         </div>
       </div>
       <TasksList tasks={tasks} />

@@ -15,19 +15,19 @@ export const toggleTask = dailyTask => {
 }
 
 const updateTaskInStore = data => {
-  const batchWithTask = DailyTasksStore.dailyTasksByBatch.find(
-    batch => batch.tasks.find(
-      task => (task.attributes.task.id == data.attributes.task.id)
-    )
+  const batchWithTask = DailyTasksStore.dailyTasksByBatch.find(batch =>
+    batch.tasks.find(task => task.attributes.task.id == data.attributes.task.id)
   )
   const dailyTask = batchWithTask.tasks.find(
-    task => (task.attributes.task.id == data.attributes.task.id)
+    task => task.attributes.task.id == data.attributes.task.id
   )
   dailyTask.attributes = data.attributes
 }
 
 export const startTask = dailyTask => {
-  const apiUrl = `/api/v1/daily_tasks/${dailyTask.attributes.task.id}/start_task`
+  const apiUrl = `/api/v1/daily_tasks/${
+    dailyTask.attributes.task.id
+  }/start_task`
   const payload = { date: DailyTasksStore.date }
 
   return toastHttpError(
@@ -81,7 +81,9 @@ export const addNotes = (dailyTask, notes) => {
 }
 
 export const updateMaterialsUsed = (dailyTask, materials) => {
-  const apiUrl = `/api/v1/daily_tasks/${dailyTask.attributes.task.id}/update_materials_used`
+  const apiUrl = `/api/v1/daily_tasks/${
+    dailyTask.attributes.task.id
+  }/update_materials_used`
   const payload = { date: DailyTasksStore.date, materials: materials }
 
   return toastHttpError(

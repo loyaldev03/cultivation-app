@@ -33,11 +33,21 @@ $buttonHeight2: 46px;
 
 .btn--secondary {
   background-color: $white;
-  color: $grey;
-  border: 1px solid $silver;
+  color: $orange;
+  border: 1px solid $lightGrey;
 }
 
 .btn--secondary:hover {
+  color: $darkGrey;
+}
+
+.btn--lite {
+  background-color: $white;
+  color: $grey;
+  border: 1px solid $lightGrey;
+}
+
+.btn--lite:hover {
   color: $darkGrey;
 }
 
@@ -50,7 +60,8 @@ $buttonHeight2: 46px;
 .btn:disabled,
 .btn--disabled,
 .btn--primary:disabled,
-.btn--secondary:disabled {
+.btn--secondary:disabled,
+.btn--lite:disabled {
   border: none;
   background-color: #EEEEEE;
   color: #707A8B;

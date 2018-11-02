@@ -128,7 +128,9 @@ class SeedEditor extends React.Component {
 
     let errors = {}
 
-    const quantity = parseFloat(order_quantity) * parseFloat(qty_per_package)
+    const quantity =
+      parseFloat(order_quantity) *
+      parseFloat(qty_per_package)
 
     if (facility_strain_id.length === 0) {
       errors = {

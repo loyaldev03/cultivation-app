@@ -26,6 +26,13 @@ module Common
                              base_unit: 'plant',
                              conversion: 1)
 
+      UOM.find_or_create_by!(name: 'cup',
+                             unit: 'cup',
+                             dimension: Constants::PLANTS_KEY,
+                             is_base_unit: false,
+                             base_unit: 'plant',
+                             conversion: 1)
+
       ## Pieces
       UOM.find_or_create_by!(name: 'piece',
                              unit: 'pc',

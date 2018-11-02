@@ -5,7 +5,7 @@ import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import PurchaseInfo from '../../plant_setup/components/shared/PurchaseInfo'
 import LocationPicker from '../../../utils/LocationPicker2'
-import { setupSeed } from '../actions/setupSeed'
+import { setupPurchasedClones } from '../actions/setupPurchasedClones'
 import { getRawMaterial } from '../actions/getRawMaterial'
 
 class PurchasedCloneEditor extends React.Component {
@@ -30,27 +30,27 @@ class PurchasedCloneEditor extends React.Component {
             console.log(attr)
 
             this.setState({
-              ...this.resetState()
-              // id: id,
-              // facility_id: attr.facility_id,
-              // facility_strain_id: attr.facility_strain.id,
-              // qty_per_package: attr.conversion,
-              // product_name: attr.product_name,
-              // manufacturer: attr.manufacturer,
-              // description: attr.description,
-              // order_quantity: parseFloat(attr.order_quantity),
-              // price_per_package: parseFloat(attr.vendor_invoice.item_price),
-              // order_uom: { value: attr.order_uom, label: attr.order_uom },
+              ...this.resetState(),
+              id: id,
+              facility_id: attr.facility_id,
+              facility_strain_id: attr.facility_strain.id,
+
+              product_name: attr.product_name,
+              manufacturer: attr.manufacturer,
+              description: attr.description,
+              order_quantity: parseFloat(attr.order_quantity),
+              price_per_package: parseFloat(attr.vendor_invoice.item_price),
+              order_uom: { value: attr.order_uom, label: attr.order_uom },
               // uom: { value: attr.uom, label: attr.uom },
-              // location_id: attr.location_id,
+              location_id: attr.location_id,
               // // purchase info
-              // vendor_id: attr.vendor.id,
-              // vendor_name: attr.vendor.name,
-              // vendor_no: attr.vendor.vendor_no,
-              // address: attr.vendor.address,
-              // purchase_date: new Date(attr.vendor_invoice.invoice_date),
-              // purchase_order_no: attr.purchase_order.purchase_order_no,
-              // invoice_no: attr.vendor_invoice.invoice_no
+              vendor_id: attr.vendor.id,
+              vendor_name: attr.vendor.name,
+              vendor_no: attr.vendor.vendor_no,
+              address: attr.vendor.address,
+              purchase_date: new Date(attr.vendor_invoice.invoice_date),
+              purchase_order_no: attr.purchase_order.purchase_order_no,
+              invoice_no: attr.vendor_invoice.invoice_no
             })
           })
       }
@@ -104,7 +104,7 @@ class PurchasedCloneEditor extends React.Component {
     const payload = this.validateAndGetValues()
     console.log(payload)
     if (payload.isValid) {
-      setupSeed(payload).then(x => {
+      setupPurchasedClones(payload).then(x => {
         this.reset()
         window.editorSidebar.close()
       })
@@ -128,21 +128,10 @@ class PurchasedCloneEditor extends React.Component {
 
     let errors = {}
 
-    const quantity =
-      parseFloat(this.state.order_quantity) *
-      parseFloat(this.state.qty_per_package)
-
     if (facility_strain_id.length === 0) {
       errors = {
         ...errors,
         facility_strain_id: ['Strain is required.']
-      }
-    }
-
-    if (uom.length === 0) {
-      errors = {
-        ...errors,
-        uom: ['Unit of measure is required.']
       }
     }
 
@@ -157,13 +146,6 @@ class PurchasedCloneEditor extends React.Component {
       errors = {
         ...errors,
         order_quantity: ['Order quantity is required.']
-      }
-    }
-
-    if (parseFloat(qty_per_package) <= 0) {
-      errors = {
-        ...errors,
-        qty_per_package: ['Quantity per package is required.']
       }
     }
 
@@ -182,14 +164,11 @@ class PurchasedCloneEditor extends React.Component {
     return {
       id,
       facility_strain_id,
-      uom,
-      quantity,
       product_name,
       manufacturer,
       description,
       order_quantity,
       order_uom,
-      qty_per_package,
       price,
       location_id,
       ...purchaseData,
@@ -206,8 +185,7 @@ class PurchasedCloneEditor extends React.Component {
     let facilityStrain = facility_strains.find(
       x => x.value === this.state.facility_strain_id
     )
-    const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
-    const uoms = this.props.uoms.map(x => ({ value: x, label: x }))
+    const order_uoms = [{ value: 'cup', label: 'cup' }]
 
     const showTotalPrice =
       parseFloat(this.state.price_per_package) > 0 &&

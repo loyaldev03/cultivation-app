@@ -18,8 +18,27 @@ class Api::V1::RawMaterialsController < Api::V1::BaseApiController
   def setup_seed
     command = Inventory::SetupSeed.call(current_user, raw_material_params)
     if command.success?
-      id = command.result.id
-      result = material_to_serialize(catalogue_type: Constants::SEEDS_KEY, id: id, event_types: %w(inventory_setup))
+      result = material_to_serialize(
+        catalogue_type: Constants::SEEDS_KEY,
+        id: command.result.id,
+        event_types: %w(inventory_setup),
+      )
+
+      render json: Inventory::RawMaterialSerializer.new(result[:item_transactions], result[:options]).serialized_json
+    else
+      render json: request_with_errors(command.errors), status: 422
+    end
+  end
+
+  def setup_purchased_clones
+    command = Inventory::SetupPurchasedClones.call(current_user, raw_material_params)
+    if command.success?
+      result = material_to_serialize(
+        catalogue_type: Constants::PURCHASED_CLONES_KEY,
+        id: command.result.id,
+        event_types: %w(inventory_setup),
+      )
+
       render json: Inventory::RawMaterialSerializer.new(result[:item_transactions], result[:options]).serialized_json
     else
       render json: request_with_errors(command.errors), status: 422

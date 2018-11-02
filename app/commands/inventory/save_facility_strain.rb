@@ -68,7 +68,6 @@ module Inventory
       # errors.add(:cbd, 'CBD quantity is required') if facility_strain.cbd.nil?
       # errors.add(:testing_status, 'Testing status is required') if facility_strain.testing_status.empty?
 
-      # TODO: Check facility is ready?
       # TODO: Check testing status is valid
       # TODO: Check indica + sativa makesup equals 100
       errors.empty?

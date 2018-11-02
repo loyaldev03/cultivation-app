@@ -131,6 +131,7 @@ Rails.application.routes.draw do
         collection do
           post 'setup'
           post 'setup_seed'
+          post 'setup_purchased_clones'
         end
       end
 
@@ -176,7 +177,7 @@ Rails.application.routes.draw do
         end
       end
 
-      
+      # TODO: change this to resources
       scope :daily_tasks do
         put ':id/start_task', to: 'daily_tasks#start_task'
         put ':id/stop_task', to: 'daily_tasks#stop_task'

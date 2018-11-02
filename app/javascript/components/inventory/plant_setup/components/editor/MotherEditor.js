@@ -42,9 +42,6 @@ class MotherEditor extends React.Component {
             alert('something wrong')
             return
           }
-
-          console.log(data)
-
           const invoice = data.attributes.vendor_invoice
           const purchase_order = data.attributes.purchase_order
           let invoice_attr = {}
@@ -334,6 +331,7 @@ class MotherEditor extends React.Component {
           <hr className="mt3 m b--light-gray w-100" />
           <div className="ph4 mt3 mb3 flex flex-column">
             <div className="w-100">
+              {console.log('Need to change this to tray level not room.')}
               <LocationPicker
                 key={`${this.state.facility_id}.${this.state.location_id}`}
                 mode="mother"

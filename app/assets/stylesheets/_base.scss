@@ -10,13 +10,13 @@
   --gray: #707A8B;
   --light-gray: #C7C7C7;
   --white: #FFFFFF;
-  --whiteSmoke: #F3F5F7;
+  --white-smoke: #F3F5F7;
   --silver: #979797;
 }
 
 html {
   font-family: 'Source Sans Pro', sans-serif;
-  background-color: var(--whiteSmoke);
+  background-color: var(--white-smoke);
 }
 
 #root, body, html {

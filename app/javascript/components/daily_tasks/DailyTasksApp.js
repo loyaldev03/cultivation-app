@@ -1,23 +1,24 @@
 import React from 'react'
 import styled from 'styled-components'
 import { observer } from 'mobx-react'
-import { toJS } from 'mobx'
-import moment from 'moment'
 
 import DailyTasksStore from './store/DailyTasksStore'
 import WorkDayEditor from './components/WorkDayEditor'
 import WorkPanel from './components/WorkPanel'
+import { formatDate3 } from '../utils/DateHelper'
 
 @observer
 class WorkDashboardApp extends React.Component {
   componentDidMount() {
     DailyTasksStore.dailyTasksByBatch = this.props.tasks_by_batch
     DailyTasksStore.date = this.props.date
+    DailyTasksStore.inventoryCatalogue = this.props.inventory_catalogue
   }
 
   render() {
     return (
       <React.Fragment>
+        <div id="toast" className="toast" />
         <DateFormatted date={this.props.date} />
         <StyledWorkPanel className="fl w-100 ma1" />
         {DailyTasksStore.editingPanel ? (
@@ -31,8 +32,7 @@ class WorkDashboardApp extends React.Component {
 }
 
 const DateFormatted = ({ date }) => {
-  const dateMoment = moment(date, 'YYYY-MM-DD')
-  const dateFormatted = dateMoment.format('ddd, D MMM YYYY')
+  const dateFormatted = formatDate3(date)
   return (
     <h5 className="tl ph3 pv4 ma1 h5--font dark-grey ttc bg-white">
       {dateFormatted}

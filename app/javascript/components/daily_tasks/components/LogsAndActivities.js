@@ -1,9 +1,10 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import moment from 'moment'
+import { differenceInSeconds } from 'date-fns'
 
-import { isEmptyString } from '../../utils/StringHelper'
 import { addNotes } from '../actions/taskActions'
+import { isEmptyString } from '../../utils/StringHelper'
+import { formatDuration, formatTime } from '../../utils/DateHelper'
 
 @observer
 class LogsAndActivities extends React.Component {
@@ -35,13 +36,15 @@ class LogsAndActivities extends React.Component {
     const { dailyTask } = this.props
     const task = dailyTask.attributes.task
 
-    const timeFormat = datetime => moment(datetime).format('hh:mm A')
-    const dateFormat = datetime => moment(datetime).format('MMMM D, YYYY')
+    const durationStr = (start, end) => {
+      const duration = parseInt(differenceInSeconds(end, start))
+      return formatDuration(duration)
+    }
 
     return (
       <div className="w-100 lh-copy black-60 f6">
         <div className="mb3">
-          <div className="b ttu">Materials Used</div>
+          <div className="b ttu">Planned Materials</div>
           {task.attributes.items.map((item, i) => (
             <li className="ml3" key={i}>
               <span className="b">{item.name}:</span> {item.quantity} {item.uom}
@@ -53,8 +56,10 @@ class LogsAndActivities extends React.Component {
           <div className="b ttu">Activity Log</div>
           {dailyTask.attributes.time_logs.map((log, i) => (
             <li className="ml3" key={i}>
-              Started at {timeFormat(log.start_time)}{' '}
-              {log.end_time && `and ended at ${timeFormat(log.end_time)}`}
+              Started at {formatTime(log.start_time)}{' '}
+              {log.end_time && `and ended at ${formatTime(log.end_time)}`}
+              &nbsp;
+              {log.end_time && `(${durationStr(log.start_time, log.end_time)})`}
             </li>
           ))}
         </div>
@@ -65,8 +70,7 @@ class LogsAndActivities extends React.Component {
             <div className="mv2" key={i}>
               <i className="material-icons mid-gray md-18 fl">today</i>
               <div className="v-top fl ml2">
-                <strong>{dateFormat(note.created_at)}</strong>{' '}
-                {timeFormat(note.created_at)}
+                {formatTime(note.c_at)}
               </div>
 
               <div className="cl">{note.notes}</div>

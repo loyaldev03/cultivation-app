@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { observable } from 'mobx'
+import { observable, toJS } from 'mobx'
 import { observer, Provider } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 
@@ -25,7 +25,7 @@ const styles = `
 }
 .table-dropdown a:hover{
   background-color: #eee;
-} 
+}
 
 .rt-tr-group:hover{
   box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);

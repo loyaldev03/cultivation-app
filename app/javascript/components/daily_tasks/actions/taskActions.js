@@ -1,4 +1,5 @@
 import DailyTasksStore from '../store/DailyTasksStore'
+import { httpOptions, toastHttpError } from '../../utils/FetchHelper'
 
 export const toggleTask = dailyTask => {
   switch (dailyTask.attributes.status) {
@@ -13,106 +14,86 @@ export const toggleTask = dailyTask => {
   }
 }
 
-export const startTask = dailyTask => {
-  const apiUrl = `/api/v1/daily_tasks/${
-    dailyTask.attributes.task.id
-  }/start_task`
+const updateTaskInStore = data => {
+  const batchWithTask = DailyTasksStore.dailyTasksByBatch.find(
+    batch => batch.tasks.find(
+      task => (task.attributes.task.id == data.attributes.task.id)
+    )
+  )
+  const dailyTask = batchWithTask.tasks.find(
+    task => (task.attributes.task.id == data.attributes.task.id)
+  )
+  dailyTask.attributes = data.attributes
+}
 
-  fetch(apiUrl, {
-    method: 'PUT',
-    credentials: 'include',
-    body: JSON.stringify({ date: DailyTasksStore.date }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then(response => {
-      return response.json().then(data => {
-        return {
-          status: response.status,
-          data: data.data
-        }
-      })
-    })
-    .then(({ status, data }) => {
-      const batchWithTask = DailyTasksStore.dailyTasksByBatch.find(function(
-        batch
-      ) {
-        return batch.tasks.find(function(task) {
-          return task.attributes.task.id == data.attributes.task.id
+export const startTask = dailyTask => {
+  const apiUrl = `/api/v1/daily_tasks/${dailyTask.attributes.task.id}/start_task`
+  const payload = { date: DailyTasksStore.date }
+
+  return toastHttpError(
+    fetch(apiUrl, httpOptions('PUT', payload))
+      .then(response => {
+        return response.json().then(data => {
+          return {
+            status: response.status,
+            data: data.data
+          }
         })
       })
-      const dailyTask = batchWithTask.tasks.find(function(task) {
-        return task.attributes.task.id == data.attributes.task.id
-      })
-      dailyTask.attributes = data.attributes
-    })
+      .then(({ data }) => updateTaskInStore(data))
+  )
 }
 
 export const stopTask = dailyTask => {
   const apiUrl = `/api/v1/daily_tasks/${dailyTask.attributes.task.id}/stop_task`
+  const payload = { date: DailyTasksStore.date }
 
-  fetch(apiUrl, {
-    method: 'PUT',
-    credentials: 'include',
-    body: JSON.stringify({ date: DailyTasksStore.date }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then(response => {
-      return response.json().then(data => {
-        return {
-          status: response.status,
-          data: data.data
-        }
-      })
-    })
-    .then(({ status, data }) => {
-      const batchWithTask = DailyTasksStore.dailyTasksByBatch.find(function(
-        batch
-      ) {
-        return batch.tasks.find(function(task) {
-          return task.attributes.task.id == data.attributes.task.id
+  return toastHttpError(
+    fetch(apiUrl, httpOptions('PUT', payload))
+      .then(response => {
+        return response.json().then(data => {
+          return {
+            status: response.status,
+            data: data.data
+          }
         })
       })
-      const dailyTask = batchWithTask.tasks.find(function(task) {
-        return task.attributes.task.id == data.attributes.task.id
-      })
-      dailyTask.attributes = data.attributes
-    })
+      .then(({ data }) => updateTaskInStore(data))
+  )
 }
 
 export const addNotes = (dailyTask, notes) => {
   const apiUrl = `/api/v1/daily_tasks/${dailyTask.attributes.task.id}/add_notes`
+  const payload = { date: DailyTasksStore.date, notes: notes }
 
-  fetch(apiUrl, {
-    method: 'PUT',
-    credentials: 'include',
-    body: JSON.stringify({ date: DailyTasksStore.date, notes: notes }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-    .then(response => {
-      return response.json().then(data => {
-        return {
-          status: response.status,
-          data: data.data
-        }
-      })
-    })
-    .then(({ status, data }) => {
-      const batchWithTask = DailyTasksStore.dailyTasksByBatch.find(function(
-        batch
-      ) {
-        return batch.tasks.find(function(task) {
-          return task.attributes.task.id == data.attributes.task.id
+  return toastHttpError(
+    fetch(apiUrl, httpOptions('PUT', payload))
+      .then(response => {
+        return response.json().then(data => {
+          return {
+            status: response.status,
+            data: data.data
+          }
         })
       })
-      const dailyTask = batchWithTask.tasks.find(function(task) {
-        return task.attributes.task.id == data.attributes.task.id
+      .then(({ data }) => updateTaskInStore(data))
+  )
+}
+
+export const updateMaterialsUsed = (dailyTask, materials) => {
+  const apiUrl = `/api/v1/daily_tasks/${dailyTask.attributes.task.id}/update_materials_used`
+  const payload = { date: DailyTasksStore.date, materials: materials }
+
+  return toastHttpError(
+    fetch(apiUrl, httpOptions('PUT', payload))
+      .then(response => {
+        return response.json().then(data => {
+          return {
+            status: response.status,
+            data: data.data
+          }
+        })
       })
-      dailyTask.attributes = data.attributes
-    })
+      .then(({ data }) => updateTaskInStore(data))
+  )
 }

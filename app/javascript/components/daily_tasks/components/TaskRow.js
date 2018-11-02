@@ -1,21 +1,18 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { toJS } from 'mobx'
-import moment from 'moment'
 import styled from 'styled-components'
 
 import { toggleTask } from '../actions/taskActions'
 import DailyTasksStore from '../store/DailyTasksStore'
 import EditPanel from './EditPanel'
+import { formatDate2, formatDuration } from '../../utils/DateHelper'
 
 const TaskRow = observer(props => {
   const { dailyTask, index } = props
   const classes = 'pa2 tc black-60 lh-copy bb b--black-10'
   const task = dailyTask.attributes.task
-  const timeSpentToday = moment()
-    .startOf('day')
-    .seconds(parseInt(dailyTask.attributes.duration))
-    .format('H [hr] m [mn]')
+  const timeSpentToday = formatDuration(dailyTask.attributes.duration)
+
   const taskIsStarted = dailyTask.attributes.status == 'started'
   const taskIsDone = dailyTask.attributes.status == 'done'
 
@@ -53,8 +50,8 @@ const TaskRow = observer(props => {
       >
         {task.attributes.name}
       </div>
-      <div className={classes}>{task.attributes.start_date}</div>
-      <div className={classes}>{task.attributes.end_date}</div>
+      <div className={classes}>{formatDate2(task.attributes.start_date)}</div>
+      <div className={classes}>{formatDate2(task.attributes.end_date)}</div>
       <div className={classes}>{timeSpentToday}</div>
       <StartEnd
         className={`${classes} pointer white`}

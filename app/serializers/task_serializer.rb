@@ -8,7 +8,6 @@ class TaskSerializer
     :start_date,
     :end_date,
     :position,
-    :end_date,
     :estimated_hours,
     :users,
     :is_phase,
@@ -37,6 +36,7 @@ class TaskSerializer
         name: item.name,
         quantity: item.quantity,
         uom: item.uom,
+        raw_material_id: item.raw_material_id.to_s,
       }
     end
   end

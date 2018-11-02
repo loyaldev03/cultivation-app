@@ -1,7 +1,9 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { toJS } from 'mobx'
 import Select from 'react-select'
+
+import DailyTasksStore from '../store/DailyTasksStore'
+import { updateMaterialsUsed } from '../actions/taskActions'
 
 const uom_dropdown = [
   { value: 'KG', label: 'KG' },
@@ -12,6 +14,9 @@ const uom_dropdown = [
   { value: 'Pcs', label: 'Pcs' }
 ]
 
+const WAIT_INTERVAL = 1000;
+const ENTER_KEY = 13;
+
 @observer
 class MaterialUsed extends React.Component {
   constructor(props) {
@@ -19,42 +24,174 @@ class MaterialUsed extends React.Component {
     const task = dailyTask.attributes.task
 
     super(props)
-    const quantity = {}
-    const uom = {}
+
+    const materials = []
+    // Initialize materials used data (item ID, name) from planned materials
     task.attributes.items.map((item, i) => {
-      quantity[item.id] = ''
-      uom[item.id] = { value: item.uom, label: item.uom }
+      materials.push({
+        task_item_id: item.id,
+        catalogue_id: item.catalogue_id,
+        name: item.name,
+        qty: '',
+        uom: item.uom
+      })
+    })
+    // Overwrite materials used data from store
+    dailyTask.attributes.materials_used.map((material, i) => {
+      const materialFound = this.findMaterial(material.catalogue_id, materials)
+      if (materialFound) {
+        materialFound.qty = material.qty || ''
+        materialFound.uom = material.uom || ''
+      } else {
+        materials.push({
+          catalogue_id: material.catalogue_id,
+          name: material.name || '',
+          qty: material.qty || '',
+          uom: material.uom || ''
+        })
+      }
     })
 
     this.state = {
-      additional_materials_used: [],
-      quantity,
-      uom
+      materials,
+      saving: false
     }
+
+    // Exclude planned materials
+    this.rawMaterialsOptions = DailyTasksStore.inventoryCatalogue
+                                .filter(catalogue => {
+                                  return !(this.findMaterial(catalogue.id, task.attributes.items))
+                                })
+                                .map((catalogue, i) => ({ value: catalogue.id, label: catalogue.attributes.name }))
 
     this.handleQuantityChange = this.handleQuantityChange.bind(this)
     this.handleUomChange = this.handleUomChange.bind(this)
+    this.handleItemChange = this.handleItemChange.bind(this)
     this.handleClear = this.handleClear.bind(this)
+    this.autoSave = this.autoSave.bind(this)
+    this.updateMaterialsUsedInStore = this.updateMaterialsUsedInStore.bind(this)
+    this.handleAddMaterial = this.handleAddMaterial.bind(this)
+    this.isPlannedMaterial = this.isPlannedMaterial.bind(this)
+    this.trySync = this.trySync.bind(this)
   }
 
-  handleQuantityChange(itemId, inputQuantity) {
-    const quantity = this.state.quantity
-    quantity[itemId] = inputQuantity
-    this.setState({ quantity })
+  componentWillMount() {
+    this.timer = null;
   }
 
-  handleUomChange(itemId, selectedOption) {
-    const uom = this.state.uom
-    uom[itemId] = selectedOption
-    this.setState({ uom })
+  resetTimer() {
+    clearTimeout(this.timer);
+    this.timer = setTimeout(this.autoSave, WAIT_INTERVAL);
   }
 
-  handleClear(itemId) {
-    const quantity = this.state.quantity
-    const uom = this.state.uom
-    quantity[itemId] = ''
-    uom[itemId] = {}
-    this.setState({ quantity, uom })
+  findMaterial(catalogueId, store) {
+    return store.find(
+      material => (material.catalogue_id == catalogueId)
+    )
+  }
+
+  isPlannedMaterial(catalogueId) {
+    const { dailyTask } = this.props
+    const task = dailyTask.attributes.task
+
+    return !!(this.findMaterial(catalogueId, task.attributes.items))
+  }
+
+  updateMaterialsUsedInStore() {
+    const { dailyTask } = this.props
+    this.state.materials.map((material, i) => {
+      const materialFound = this.findMaterial(material.catalogue_id, dailyTask.attributes.materials_used)
+
+      if (materialFound) {
+        materialFound.qty = material.qty
+        materialFound.uom = material.uom
+      } else {
+        dailyTask.attributes.materials_used.push({
+          catalogue_id: material.catalogue_id,
+          name: material.name,
+          qty: material.qty,
+          uom: material.uom
+        })
+      }
+    })
+  }
+
+  handleQuantityChange(catalogueId, inputQuantity) {
+    const materials = this.state.materials
+    const currentItem = this.findMaterial(catalogueId, materials)
+
+    currentItem.qty = inputQuantity
+
+    this.trySync(materials)
+  }
+
+  handleUomChange(catalogueId, selectedOption) {
+    const materials = this.state.materials
+    const currentItem = this.findMaterial(catalogueId, materials)
+
+    currentItem.uom = selectedOption.value
+
+    this.trySync(materials)
+  }
+
+  handleItemChange(index, selectedOption) {
+    const materials = this.state.materials
+    const existingItem = this.findMaterial(selectedOption.value, materials)
+
+    if (existingItem) {
+      alert("Material already added into list")
+      return false
+    }
+
+    materials[index].catalogue_id = selectedOption.value
+    materials[index].name = selectedOption.label
+
+    this.trySync(materials)
+  }
+
+  handleClear(catalogueId) {
+    const { dailyTask } = this.props
+    const task = dailyTask.attributes.task
+    const materials = this.state.materials
+    const defaultItem = this.findMaterial(catalogueId, task.attributes.items, 'id')
+    const currentItem = this.findMaterial(catalogueId, materials)
+
+    currentItem.qty = ''
+    currentItem.uom = defaultItem ? defaultItem.uom : ''
+
+    this.trySync(materials)
+  }
+
+  handleDelete(catalogueId) {
+    const currentItem = this.findMaterial(catalogueId, this.state.materials)
+    const materials = this.state.materials.filter(material => material.catalogue_id !== catalogueId)
+
+    this.trySync(materials)
+  }
+
+  trySync(materials) {
+    this.setState({ materials })
+    this.updateMaterialsUsedInStore()
+    this.resetTimer()
+  }
+
+  handleAddMaterial() {
+    const materials = this.state.materials
+    materials.push({
+      catalogue_id: '',
+      name: '',
+      qty: '',
+      uom: ''
+    })
+    this.setState(materials)
+  }
+
+  autoSave() {
+    const { dailyTask } = this.props
+    this.setState({ saving: true })
+
+    updateMaterialsUsed(dailyTask, this.state.materials)
+      .then(() => this.setState({ saving: false }))
   }
 
   render() {
@@ -63,57 +200,75 @@ class MaterialUsed extends React.Component {
 
     return (
       <div className="w-100 lh-copy black-60 f6">
-        <form className="mt3" onSubmit={this.handleLogSubmit}>
-          <table className="w-100">
-            <tbody>
-              <tr className="bb">
-                <th>Material Name</th>
-                <th width="15%">Qty</th>
-                <th width="30%">UOM</th>
-                <th />
-              </tr>
-              {task.attributes.items.map((item, i) => (
-                <tr className="pointer bb" key={i}>
-                  <td className="tl pv2 ph3">{item.name}</td>
-                  <td className="tl pv2 ph3">
-                    <input
-                      value={this.state.quantity[item.id]}
-                      onChange={e =>
-                        this.handleQuantityChange(item.id, e.target.value)
-                      }
-                      className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                      type="number"
-                    />
-                  </td>
-                  <td className="tl pv2 ph3">
+        <table className="w-100">
+          <tbody>
+            <tr className="bb">
+              <th>Material Name</th>
+              <th width="20%">Qty</th>
+              <th width="30%">UOM</th>
+              <th />
+            </tr>
+            {this.state.materials.map((material, i) => (
+              <tr className="pointer bb" key={i}>
+                <td className="tl pv2 ph3">
+                {
+                  this.isPlannedMaterial(material.catalogue_id) ? material.name :
                     <Select
                       name="uom"
-                      options={uom_dropdown}
-                      value={this.state.uom[item.id]}
+                      options={this.rawMaterialsOptions}
+                      value={{ value: material.catalogue_id, label: material.name }}
                       onChange={selectedOption =>
-                        this.handleUomChange(item.id, selectedOption)
+                        this.handleItemChange(i, selectedOption)
                       }
                     />
-                  </td>
-                  <td className="tl pv2 ph3">
-                    <i
-                      className="material-icons red md-18 pointer dim"
-                      onClick={() => this.handleClear(item.id)}
-                    >
-                      delete
-                    </i>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <input
-            onClick={this.handleSave}
-            className="ttu fr pointer pv3 ph5 bg-orange button--font white bn box--br3"
-            type="submit"
-            value="Save"
-          />
-        </form>
+                }
+                </td>
+                <td className="tl pv2 ph3">
+                  <input
+                    value={material.qty}
+                    onChange={e =>
+                      this.handleQuantityChange(material.catalogue_id, e.target.value)
+                    }
+                    onKeyDown={e => {
+                      if (e.keyCode === ENTER_KEY) {
+                        this.autoSave();
+                      }
+                    }}
+                    className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
+                    type="number"
+                    step=".01"
+                  />
+                </td>
+                <td className="tl pv2 ph3">
+                  <Select
+                    name="uom"
+                    options={uom_dropdown}
+                    value={{ value: material.uom, label: material.uom }}
+                    onChange={selectedOption =>
+                      this.handleUomChange(material.catalogue_id, selectedOption)
+                    }
+                  />
+                </td>
+                <td className="tl pv2 ph3">
+                  <i
+                    className="material-icons red md-18 pointer dim"
+                    onClick={() => {
+                      this.isPlannedMaterial(material.catalogue_id) ?
+                        this.handleClear(material.catalogue_id) : this.handleDelete(material.catalogue_id)
+                    }}
+                  >
+                    delete
+                  </i>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <button
+          onClick={this.handleAddMaterial}
+          className="ttu pointer di pv3 ph5 bg-orange button--font white bn box--br3"
+        >Add Material</button>
+        {this.state.saving && <div className="di v-btm pa2">Saving ...</div>}
       </div>
     )
   }

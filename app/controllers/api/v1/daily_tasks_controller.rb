@@ -23,6 +23,23 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     render json: data
   end
 
+  def update_materials_used
+    updated_materials_used = []
+    params[:materials].each do |material|
+      material_used = @work_day.materials_used.find_or_create_by(catalogue_id: material[:catalogue_id])
+      material_used.task_item_id = material[:task_item_id]
+      material_used.quantity = material[:qty]
+      material_used.uom = material[:uom] # TODO: Should be referring to Common::UnitOfMeasure
+      material_used.save
+
+      updated_materials_used << material_used.catalogue_id
+    end
+
+    @work_day.materials_used.not_in(catalogue_id: updated_materials_used).destroy_all
+    data = WorkDaySerializer.new(@work_day).serialized_json
+    render json: data
+  end
+
   private
 
   def set_task

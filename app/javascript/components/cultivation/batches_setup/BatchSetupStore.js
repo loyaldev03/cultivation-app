@@ -26,13 +26,13 @@ class BatchSetupStore {
       searchParams.total_duration > 0
     ) {
       this.isLoading = true
-      const api1Res = fetch(
+      const api1Res = await fetch(
         `/api/v1/batches/search_locations?facility_id=${
           searchParams.facility_id
         }`,
         httpGetOptions
       )
-      const api2Res = fetch(
+      const api2Res = await fetch(
         `/api/v1/batches/search_batch_plans`,
         httpPostOptions(searchParams)
       )

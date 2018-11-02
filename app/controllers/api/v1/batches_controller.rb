@@ -5,10 +5,9 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def create
-    # Rails.logger.debug "\033[35m record_params: #{record_params[:phase_duration].to_s} \033[0m"
     command = Cultivation::CreateBatch.call(current_user, record_params)
     if command.success?
-      render json: BatchSerializer.new(command.result).serialized_json
+      render json: {data: command.result.id.to_s}
     else
       render json: command_errors(record_params, command), status: 422
     end
@@ -51,9 +50,9 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     total_duration = params['total_duration'] # E.g. 100
 
     start_date, end_date = get_search_start_end_date(month_str, total_duration)
-    Rails.logger.debug "\033[35m total_duration: #{total_duration} \033[0m"
-    Rails.logger.debug "\033[35m start_date: #{start_date} \033[0m"
-    Rails.logger.debug "\033[35m end_date: #{end_date} \033[0m"
+    # Rails.logger.debug "\033[35m total_duration: #{total_duration} \033[0m"
+    # Rails.logger.debug "\033[35m start_date: #{start_date} \033[0m"
+    # Rails.logger.debug "\033[35m end_date: #{end_date} \033[0m"
 
     command = QueryPlannedTrays.call(start_date, end_date, faciliy_id)
 

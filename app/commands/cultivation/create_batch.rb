@@ -102,6 +102,10 @@ module Cultivation
         {:phase => Constants::CONST_DRY, :task_category => 'Waiting', :name => 'Waiting', :duration => 7, :days_from_start_date => 105, :estimated_hours => nil, :is_phase => 'false', :is_category => 'true'},
         {:phase => Constants::CONST_DRY, :task_category => 'Waiting', :name => 'Waiting', :duration => 7, :days_from_start_date => 105, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},
 
+        {:phase => Constants::CONST_CURE, :task_category => '', :name => 'CURING', :duration => 7, :days_from_start_date => 105, :estimated_hours => nil, :is_phase => 'true', :is_category => 'false'},
+        {:phase => Constants::CONST_CURE, :task_category => 'Waiting', :name => 'Waiting', :duration => 7, :days_from_start_date => 105, :estimated_hours => nil, :is_phase => 'false', :is_category => 'true'},
+        {:phase => Constants::CONST_CURE, :task_category => 'Waiting', :name => 'Waiting', :duration => 7, :days_from_start_date => 105, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},
+
         # TODO: The following does not match cultivation phases
         {:phase => Constants::CONST_TRIM, :task_category => '', :name => 'TRIM / PACKAGE', :duration => 5, :days_from_start_date => 105, :estimated_hours => nil, :is_phase => 'true', :is_category => 'false'},
         {:phase => Constants::CONST_TRIM, :task_category => 'Trim', :name => 'Trim', :duration => 2, :days_from_start_date => 105, :estimated_hours => nil, :is_phase => 'false', :is_category => 'true'},
@@ -132,53 +136,111 @@ module Cultivation
       errors.add(:start_date, 'Start date is required.') if args[:start_date].blank?
       errors.add(:grow_method, 'Grow method is required.') if args[:grow_method].blank?
       errors.add(:batch_source, 'Batch source is required.') if args[:batch_source].blank?
+      errors.add(:quantity, 'Quantity is required.') if args[:quantity].blank?
+      errors.add(:facility_id, 'Facility is required.') if args[:facility_id].blank?
+      errors.add(:phase_duration, 'Phase duration is required.') if args[:phase_duration].blank?
       errors.empty?
     end
 
     def save_record(args)
+      # build a phase schedule hash
+      phase_schedule = build_phase_schedule(args[:start_date], args[:phase_duration])
+
       batch = Cultivation::Batch.new
       batch.facility_id = args[:facility_id]
       batch.batch_source = args[:batch_source]
       batch.facility_strain_id = args[:facility_strain_id]
       batch.start_date = args[:start_date]
+      batch.estimated_harvest_date = phase_schedule[Constants::CONST_DRY][0] # Start Day of Dry is the Harvest Date
       batch.grow_method = args[:grow_method]
       batch.quantity = args[:quantity]
       batch.batch_no = NextFacilityCode.call(:batch, Cultivation::Batch.last.try(:batch_no)).result
       batch.name = batch.batch_no
       batch.current_growth_stage = Constants::CONST_CLONE
 
-      # TODO: UPDATE PHASE DURATION
+      # TODO [ANDY]: UPDATE PHASE DURATION
 
       batch.save!
 
       phase_id = nil
       category_id = nil
+      new_tasks = []
+      start_date = nil
       task_templates.each do |task|
-        a = build_task(batch, task, phase_id, category_id)
+        task_id = BSON::ObjectId.new
+        new_tasks << build_task(task_id, batch, start_date, task, phase_id, category_id, phase_schedule)
         if task[:is_phase] == 'true'
-          phase_id = a['id']
+          phase_id = task_id
           category_id = nil
         end
-        category_id = a['id'] if task[:is_category] == 'true'
+        category_id = task_id if task[:is_category] == 'true'
       end
-      #update estimated finish
-      update_harvest_date(batch)
+
+      Cultivation::Task.collection.insert_many(new_tasks)
+
       batch
     end
 
-    def build_task(batch, task, phase_id, category_id)
-      start_date = batch.start_date
+    def build_phase_schedule(start_date, phase_duration)
+      b_start_date = Time.parse(start_date)
+
+      clone_start_date = b_start_date
+      clone_end_date = clone_start_date + (phase_duration[Constants::CONST_CLONE].to_i).days
+
+      veg_start_date = clone_end_date + 1
+      veg_end_date = veg_start_date + (phase_duration[Constants::CONST_VEG].to_i).days
+
+      veg1_start_date = clone_end_date + 1
+      veg1_end_date = veg1_start_date + (phase_duration[Constants::CONST_VEG1].to_i).days
+
+      veg2_start_date = veg1_end_date + 1
+      veg2_end_date = veg2_start_date + (phase_duration[Constants::CONST_VEG2].to_i).days
+
+      flower_start_date = veg2_end_date + 1
+      flower_end_date = flower_start_date + (phase_duration[Constants::CONST_FLOWER].to_i).days
+
+      dry_start_date = flower_end_date + 1
+      dry_end_date = dry_start_date + (phase_duration[Constants::CONST_DRY].to_i).days
+
+      cure_start_date = dry_end_date + 1
+      cure_end_date = cure_start_date + (phase_duration[Constants::CONST_CURE].to_i).days
+
+      {
+        Constants::CONST_CLONE => [clone_start_date, clone_end_date, phase_duration[Constants::CONST_CLONE].to_i],
+        Constants::CONST_VEG => [veg_start_date, veg_end_date, (phase_duration[Constants::CONST_VEG].to_i)],
+        Constants::CONST_VEG1 => [veg1_start_date, veg1_end_date, (phase_duration[Constants::CONST_VEG1].to_i)],
+        Constants::CONST_VEG2 => [veg2_start_date, veg2_end_date, (phase_duration[Constants::CONST_VEG2].to_i)],
+        Constants::CONST_FLOWER => [flower_start_date, flower_end_date, (phase_duration[Constants::CONST_FLOWER].to_i)],
+        Constants::CONST_DRY => [dry_start_date, dry_end_date, (phase_duration[Constants::CONST_DRY].to_i)],
+        Constants::CONST_CURE => [cure_start_date, cure_end_date, (phase_duration[Constants::CONST_CURE].to_i)]
+      }
+    end
+
+    def build_task(task_id, batch, start_date, task, phase_id, category_id, phase_schedule)
       parent_id = get_parent_id(task, phase_id, category_id)
       depend_on = get_depend_on(task, phase_id, category_id)
-      duration = task[:duration].to_i unless task[:duration].nil?
 
-      params = {
+      if to_boolean(task[:is_phase]) && phase_schedule[task[:phase]]
+        # Rails.logger.debug "\033[31m Task is_phase: #{task[:phase]} \033[0m"
+        # is_phase Tasks, use the duration that the user set
+        start_date = phase_schedule[task[:phase]][0]
+        end_date = phase_schedule[task[:phase]][1]
+        duration = phase_schedule[task[:phase]][2]
+      else
+        start_date = phase_schedule[task[:phase]][0] if phase_schedule[task[:phase]]
+        duration = nil # task[:duration].to_i unless task[:duration].nil?
+        end_date = nil
+      end
+
+      record = {
+        id: task_id,
+        batch_id: batch.id,
         phase: task[:phase],
         task_category: task[:task_category],
         name: task[:name],
         duration: duration,
-        start_date: (start_date + task[:days_from_start_date]),
-        end_date: (start_date + task[:days_from_start_date]) + duration.days,
+        start_date: start_date,
+        end_date: end_date,
         days_from_start_date: task[:days_from_start_date],
         estimated_hours: task[:estimated_hours],
         is_phase: to_boolean(task[:is_phase]),
@@ -186,7 +248,7 @@ module Cultivation
         parent_id: parent_id,
         depend_on: depend_on,
       }
-      batch.tasks.create(params)
+      record
     end
 
     def get_parent_id(task, phase_id, category_id)
@@ -217,11 +279,6 @@ module Cultivation
       else
         false
       end
-    end
-
-    def update_harvest_date(batch)
-      ##should be harvest phase end_date
-      batch.update(estimated_harvest_date: batch.tasks.last.end_date)
     end
   end
 end

@@ -15,6 +15,18 @@ import batchSetupStore from './BatchSetupStore'
 import BatchSetupEditor from './BatchSetupEditor'
 import { observer } from 'mobx-react'
 
+const customStyles = {
+  control: styles => ({
+    ...styles
+  }),
+  option: (styles, state) => ({
+    ...styles
+  }),
+  singleValue: (styles, state) => {
+    return { ...styles }
+  }
+}
+
 class CapacityTile extends React.PureComponent {
   render() {
     const { startDate, duration } = this.props
@@ -221,6 +233,7 @@ class BatchSetupApp extends React.Component {
                 <div className="fl w-third pr2">
                   <label className="subtitle-2 grey db mb1">Facility</label>
                   <Select
+                    styles={customStyles}
                     options={facilities}
                     value={batchFacilityValue}
                     onChange={e => this.handleChange('batchFacility', e.value)}

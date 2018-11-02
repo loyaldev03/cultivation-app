@@ -1,0 +1,38 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Settings", settings_path], ["Purchasing", purchasing_path], "Purchase Orders" %>
+<% end %>
+
+<%= render 'layouts/right_sidebar' %>
+
+<div class="ph4 bg-white ma4 flex items-center pb3 pt3">
+  <div class="w-70">
+    <h2 class="pa0 ma0">Purchase Orders</h2>
+  </div>
+</div>
+
+<div class="bg-white mv3 mh4">
+  <table class="w-100 table collapse">
+    <thead>
+      <tr>
+        <th class="f6 dark-grey pv3 tl pl4 pr3">#</th>
+        <th class="f6 dark-grey pv3 tl w-20">Purchase Order No</th>
+        <th class="f6 dark-grey pv3 tl w-20">Purchase Order Date</th>
+        <th class="f6 dark-grey pv3 tl w-20">Status</th>
+        <th class="f6 dark-grey pv3 tl w-20">Completed Date</th>
+        <th class="f6 dark-grey pv3 tl w-20"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @records.try(:each_with_index) do |f, i| %>
+        <tr class="pointer">
+          <td class="f6 pv3 tl pl4 pr3 gray"><%= i+1 %></td>
+          <td class="f6 tl"><%= blank(f.purchase_order_no) %></td>
+          <td class="f6 tl"><%= blank(f.purchase_order_date.try(:strftime, '%d-%m-%Y')) %></td>
+          <td class="f6 tl"><%= blank(f.status) %></td>
+          <td class="f6 tl"><%= blank(f.completed_date.try(:strftime, '%d-%m-%Y')) %></td>
+          <td class="f6 tl"></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

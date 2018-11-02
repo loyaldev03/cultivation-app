@@ -19,7 +19,7 @@ const QuantityField = React.memo(({ plant, onClick }) => {
 const LocationField = React.memo(({ plant, locationResolver, onClick }) => {
   if (plant) {
     return (
-      <a href="#0" className="link" onClick={onClick}>
+      <a href="#0" className="link dib pa1" onClick={onClick}>
         {plant &&
           plant.trays &&
           plant.trays.map(t => {
@@ -27,7 +27,7 @@ const LocationField = React.memo(({ plant, locationResolver, onClick }) => {
             return (
               <span
                 key={tray.tray_id}
-                className="dib mr1 ph2 pv1 bg-orange white br2"
+                className="dib ma1 ph2 pv1 bg-orange white br2"
               >
                 {tray.row_code}.{tray.shelf_code}.{tray.tray_code}
               </span>

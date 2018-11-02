@@ -29,9 +29,8 @@ export const httpOptions = (method, payload) => ({
   }
 })
 
-export const toastHttpError = (fetch) => (
+export const toastHttpError = fetch =>
   fetch.catch(error => {
     toast('Error has occurred', 'error')
     console.error('Error:', error)
   })
-)

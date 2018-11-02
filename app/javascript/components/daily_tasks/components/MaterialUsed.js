@@ -14,8 +14,8 @@ const uom_dropdown = [
   { value: 'Pcs', label: 'Pcs' }
 ]
 
-const WAIT_INTERVAL = 1000;
-const ENTER_KEY = 13;
+const WAIT_INTERVAL = 1000
+const ENTER_KEY = 13
 
 @observer
 class MaterialUsed extends React.Component {
@@ -59,10 +59,13 @@ class MaterialUsed extends React.Component {
 
     // Exclude planned materials
     this.rawMaterialsOptions = DailyTasksStore.inventoryCatalogue
-                                .filter(catalogue => {
-                                  return !(this.findMaterial(catalogue.id, task.attributes.items))
-                                })
-                                .map((catalogue, i) => ({ value: catalogue.id, label: catalogue.attributes.name }))
+      .filter(catalogue => {
+        return !this.findMaterial(catalogue.id, task.attributes.items)
+      })
+      .map((catalogue, i) => ({
+        value: catalogue.id,
+        label: catalogue.attributes.name
+      }))
 
     this.handleQuantityChange = this.handleQuantityChange.bind(this)
     this.handleUomChange = this.handleUomChange.bind(this)
@@ -76,31 +79,32 @@ class MaterialUsed extends React.Component {
   }
 
   componentWillMount() {
-    this.timer = null;
+    this.timer = null
   }
 
   resetTimer() {
-    clearTimeout(this.timer);
-    this.timer = setTimeout(this.autoSave, WAIT_INTERVAL);
+    clearTimeout(this.timer)
+    this.timer = setTimeout(this.autoSave, WAIT_INTERVAL)
   }
 
   findMaterial(catalogueId, store) {
-    return store.find(
-      material => (material.catalogue_id == catalogueId)
-    )
+    return store.find(material => material.catalogue_id == catalogueId)
   }
 
   isPlannedMaterial(catalogueId) {
     const { dailyTask } = this.props
     const task = dailyTask.attributes.task
 
-    return !!(this.findMaterial(catalogueId, task.attributes.items))
+    return !!this.findMaterial(catalogueId, task.attributes.items)
   }
 
   updateMaterialsUsedInStore() {
     const { dailyTask } = this.props
     this.state.materials.map((material, i) => {
-      const materialFound = this.findMaterial(material.catalogue_id, dailyTask.attributes.materials_used)
+      const materialFound = this.findMaterial(
+        material.catalogue_id,
+        dailyTask.attributes.materials_used
+      )
 
       if (materialFound) {
         materialFound.qty = material.qty
@@ -139,7 +143,7 @@ class MaterialUsed extends React.Component {
     const existingItem = this.findMaterial(selectedOption.value, materials)
 
     if (existingItem) {
-      alert("Material already added into list")
+      alert('Material already added into list')
       return false
     }
 
@@ -153,7 +157,11 @@ class MaterialUsed extends React.Component {
     const { dailyTask } = this.props
     const task = dailyTask.attributes.task
     const materials = this.state.materials
-    const defaultItem = this.findMaterial(catalogueId, task.attributes.items, 'id')
+    const defaultItem = this.findMaterial(
+      catalogueId,
+      task.attributes.items,
+      'id'
+    )
     const currentItem = this.findMaterial(catalogueId, materials)
 
     currentItem.qty = ''
@@ -164,7 +172,9 @@ class MaterialUsed extends React.Component {
 
   handleDelete(catalogueId) {
     const currentItem = this.findMaterial(catalogueId, this.state.materials)
-    const materials = this.state.materials.filter(material => material.catalogue_id !== catalogueId)
+    const materials = this.state.materials.filter(
+      material => material.catalogue_id !== catalogueId
+    )
 
     this.trySync(materials)
   }
@@ -190,8 +200,9 @@ class MaterialUsed extends React.Component {
     const { dailyTask } = this.props
     this.setState({ saving: true })
 
-    updateMaterialsUsed(dailyTask, this.state.materials)
-      .then(() => this.setState({ saving: false }))
+    updateMaterialsUsed(dailyTask, this.state.materials).then(() =>
+      this.setState({ saving: false })
+    )
   }
 
   render() {
@@ -211,27 +222,34 @@ class MaterialUsed extends React.Component {
             {this.state.materials.map((material, i) => (
               <tr className="pointer bb" key={i}>
                 <td className="tl pv2 ph3">
-                {
-                  this.isPlannedMaterial(material.catalogue_id) ? material.name :
+                  {this.isPlannedMaterial(material.catalogue_id) ? (
+                    material.name
+                  ) : (
                     <Select
                       name="uom"
                       options={this.rawMaterialsOptions}
-                      value={{ value: material.catalogue_id, label: material.name }}
+                      value={{
+                        value: material.catalogue_id,
+                        label: material.name
+                      }}
                       onChange={selectedOption =>
                         this.handleItemChange(i, selectedOption)
                       }
                     />
-                }
+                  )}
                 </td>
                 <td className="tl pv2 ph3">
                   <input
                     value={material.qty}
                     onChange={e =>
-                      this.handleQuantityChange(material.catalogue_id, e.target.value)
+                      this.handleQuantityChange(
+                        material.catalogue_id,
+                        e.target.value
+                      )
                     }
                     onKeyDown={e => {
                       if (e.keyCode === ENTER_KEY) {
-                        this.autoSave();
+                        this.autoSave()
                       }
                     }}
                     className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
@@ -245,7 +263,10 @@ class MaterialUsed extends React.Component {
                     options={uom_dropdown}
                     value={{ value: material.uom, label: material.uom }}
                     onChange={selectedOption =>
-                      this.handleUomChange(material.catalogue_id, selectedOption)
+                      this.handleUomChange(
+                        material.catalogue_id,
+                        selectedOption
+                      )
                     }
                   />
                 </td>
@@ -253,8 +274,9 @@ class MaterialUsed extends React.Component {
                   <i
                     className="material-icons red md-18 pointer dim"
                     onClick={() => {
-                      this.isPlannedMaterial(material.catalogue_id) ?
-                        this.handleClear(material.catalogue_id) : this.handleDelete(material.catalogue_id)
+                      this.isPlannedMaterial(material.catalogue_id)
+                        ? this.handleClear(material.catalogue_id)
+                        : this.handleDelete(material.catalogue_id)
                     }}
                   >
                     delete
@@ -267,7 +289,9 @@ class MaterialUsed extends React.Component {
         <button
           onClick={this.handleAddMaterial}
           className="ttu pointer di pv3 ph5 bg-orange button--font white bn box--br3"
-        >Add Material</button>
+        >
+          Add Material
+        </button>
         {this.state.saving && <div className="di v-btm pa2">Saving ...</div>}
       </div>
     )

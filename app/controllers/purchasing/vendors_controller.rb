@@ -42,7 +42,7 @@ class Purchasing::VendorsController < ApplicationController
   private
 
   def record_params
-    params.require(:record).permit(:name)
+    params.require(:record).permit(:name, :state_license_num, :state_license_expiration_date, :location_license_expiration_date, :location_license_num)
   end
 
   def update_params

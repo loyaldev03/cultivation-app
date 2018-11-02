@@ -6,10 +6,36 @@
     html: { class: 'h-100 flex flex-column justify-between' } do |f| %>
 
   <div class="pa4">
+    <div class="mb3">
     <%= f.input :name, 
       label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
-      input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      input_html: { class: 'db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
     %>
+    </div>
+    <div class="mb3">
+      <%= f.input :state_license_num, 
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+    <div class="mb3">
+      <%= f.input :state_license_expiration_date, as: :date, html5: true,
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+    <div class="mb3">
+      <%= f.input :location_license_expiration_date, as: :date, html5: true,
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+    <div class="mb3">
+      <%= f.input :location_license_num, 
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
   </div>
   
   <div class="bt b--light-grey pv3 ph4">

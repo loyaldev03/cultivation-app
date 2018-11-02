@@ -1,7 +1,7 @@
 class Api::V1::CataloguesController < Api::V1::BaseApiController
   def raw_materials
     raw_materials = Inventory::Catalogue.raw_materials
-    raw_material_json = Inventory::CatalogueSerializer.new(raw_materials, options).serialized_json
+    raw_material_json = Inventory::CatalogueSerializer.new(raw_materials).serialized_json
     render json: raw_material_json
   end
 

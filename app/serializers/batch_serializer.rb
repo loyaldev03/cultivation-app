@@ -71,7 +71,7 @@ class BatchSerializer
       batch_id: object.id,
       is_phase: true,
       :start_date.lte => Date.today,
-      :end_date.gte => Date.today
+      :end_date.gte => Date.today,
     ).first&.name
   end
 

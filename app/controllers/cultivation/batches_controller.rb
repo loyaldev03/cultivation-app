@@ -48,6 +48,15 @@ class Cultivation::BatchesController < ApplicationController
   def material
   end
 
+  def update
+    if params[:type] == 'active'
+      @batch = Cultivation::Batch.find(params[:id])
+      @batch.update(is_active: true)
+      flash[:notice] = 'Batch successfully updated to active'
+      redirect_to root_path
+    end
+  end
+
   private
 
   def get_plants_selection_type(batch_source)
@@ -86,17 +95,6 @@ class Cultivation::BatchesController < ApplicationController
       end
     end
   end
-
-  def update
-    if params[:type] == 'active'
-      @batch = Cultivation::Batch.find(params[:id])
-      @batch.update(is_active: true)
-      flash[:notice] = 'Batch successfully updated to active'
-      redirect_to root_path
-    end
-  end
-
-  private
 
   def get_batch_phase(batch, phases)
     find_phase_cmd = Cultivation::QueryBatchPhases.call(batch, phases)

@@ -35,7 +35,6 @@ const ValidationMessage = ({ enable, show, text }) => {
 }
 
 const PhaseDurationInput = ({ text, onChange }) => {
-  // TODO: Each field is required. Show warning
   return (
     <div className="fl w-70 mt1">
       <div className="fl w-20 pa2">
@@ -101,22 +100,6 @@ class BatchSetupApp extends React.Component {
   componentDidMount() {
     // Setup sidebar editor
     window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
-
-    // TODO: DELETE AFTER DEVELOPMENT
-    // setTimeout(() => {
-    //   this.setState({
-    //     batchStrain: '5bac2e7a49a934664ea63242',
-    //     phaseDuration: {
-    //       clone: 15,
-    //       veg: 90,
-    //       veg1: 45,
-    //       veg2: 45,
-    //       flower: 60,
-    //       dry: 5,
-    //       cure: 2
-    //     }
-    //   })
-    // }, 300)
   }
 
   closeSidebar = () => {
@@ -124,15 +107,35 @@ class BatchSetupApp extends React.Component {
   }
 
   handleDatePick = date => {
+    console.log({ date })
     this.setState({ batchStartDate: date })
     window.editorSidebar.open({ width: '500px' })
   }
 
-  handleSubmit = event => {
+  onSearch(searchMonth) {
+    batchSetupStore.clearSearch()
+    if (!this.state.showValidation) {
+      this.setState({ showValidation: true })
+    }
+    if (this.state.searchMonth !== searchMonth) {
+      this.setState({ searchMonth })
+    }
+    const { batchFacility, phaseDuration } = this.state
+    const totalDuration = this.calculateTotalDuration()
+    if (batchFacility && searchMonth && totalDuration > 0) {
+      const searchParams = {
+        facility_id: batchFacility,
+        search_month: searchMonth,
+        total_duration: totalDuration
+      }
+      batchSetupStore.search(searchParams, phaseDuration)
+    }
+  }
+
+  onSubmit = event => {
     this.setState({ isLoading: true })
-    const url = '/api/v1/batches'
     fetch(
-      url,
+      '/api/v1/batches',
       httpPostOptions({
         facility_id: this.state.batchFacility,
         batch_source: this.state.batchSource,
@@ -146,10 +149,13 @@ class BatchSetupApp extends React.Component {
       .then(response => response.json())
       .then(data => {
         this.setState({ isLoading: false, errors: {} })
-        if (data.data && data.data.id) {
+        if (data.data) {
           toast('Batch Created', 'success')
+          // Link to Batch Overview
+          // window.location.replace('/cultivation/batches/' + data.data)
+          // Link to Batch Location Planning
           window.location.replace(
-            `/cultivation/batches/${data.data.id}?select_location=1`
+            `/cultivation/batches/${data.data}?select_location=1`
           )
         } else {
           this.setState({ errors: data.errors })
@@ -168,26 +174,6 @@ class BatchSetupApp extends React.Component {
       [phase]: e.target.value
     }
     this.setState({ phaseDuration })
-  }
-
-  handleSearch(searchMonth) {
-    batchSetupStore.clearSearch()
-    if (!this.state.showValidation) {
-      this.setState({ showValidation: true })
-    }
-    if (this.state.searchMonth !== searchMonth) {
-      this.setState({ searchMonth })
-    }
-    const { batchFacility, phaseDuration } = this.state
-    const totalDuration = this.calculateTotalDuration()
-    if (batchFacility && searchMonth && totalDuration > 0) {
-      const searchParams = {
-        facility_id: batchFacility,
-        search_month: searchMonth,
-        total_duration: totalDuration
-      }
-      batchSetupStore.search(searchParams, phaseDuration)
-    }
   }
 
   calculateTotalDuration = () => {
@@ -228,7 +214,7 @@ class BatchSetupApp extends React.Component {
               className="fl w-100 relative"
               onSubmit={e => {
                 e.preventDefault()
-                this.handleSearch(searchMonth)
+                this.onSearch(searchMonth)
               }}
             >
               <div className="fl w-100">
@@ -316,12 +302,8 @@ class BatchSetupApp extends React.Component {
               <div className="fl w-100">
                 <CalendarTitleBar
                   month={searchMonth}
-                  onPrev={e =>
-                    this.handleSearch(monthOptionAdd(searchMonth, -1))
-                  }
-                  onNext={e =>
-                    this.handleSearch(monthOptionAdd(searchMonth, 1))
-                  }
+                  onPrev={e => this.onSearch(monthOptionAdd(searchMonth, -1))}
+                  onNext={e => this.onSearch(monthOptionAdd(searchMonth, 1))}
                 />
                 {!batchSetupStore.isLoading ? (
                   <Calendar
@@ -362,7 +344,7 @@ class BatchSetupApp extends React.Component {
                   startDate={batchStartDate}
                   onChange={this.handleChange}
                   onClose={this.closeSidebar}
-                  onSave={this.handleSubmit}
+                  onSave={this.onSubmit}
                   isLoading={isLoading}
                   errors={errors}
                 />

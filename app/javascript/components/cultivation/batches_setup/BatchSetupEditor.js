@@ -48,7 +48,7 @@ class BatchSetupEditor extends React.PureComponent {
             onSave(data)
           }}
         >
-          <div className="ph4">
+          <div className="ph4 pb4">
             <div className="mt2 mb1">
               <span className="subtitle-2 grey db">Strain:</span>
               <span className="subtitle-2 dark-grey">{batchStrain}</span>

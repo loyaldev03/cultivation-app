@@ -68,7 +68,6 @@ class SeedEditor extends React.Component {
     this.setState({ [key]: value })
   }
 
-  // TODO: To change
   resetState() {
     return {
       id: '',
@@ -131,13 +130,8 @@ class SeedEditor extends React.Component {
     let errors = {}
 
     const quantity =
-      parseFloat(this.state.order_quantity) *
-      parseFloat(this.state.qty_per_package)
-
-    // TODO: Should be the following...
-    // const quantity =
-    //   parseFloat(order_quantity) *
-    //   parseFloat(qty_per_package)
+      parseFloat(order_quantity) *
+      parseFloat(qty_per_package)
 
     if (facility_strain_id.length === 0) {
       errors = {

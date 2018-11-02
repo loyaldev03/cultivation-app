@@ -471,10 +471,6 @@ class RawMaterialEditor extends React.Component {
   }
 }
 
-// TODO:
-// Do you use storage cabinets/shelves to store your items?
-// Is yes, please indicate Shelf/row ID:
-
 RawMaterialEditor.propTypes = {
   locations: PropTypes.array.isRequired,
   order_uoms: PropTypes.array.isRequired,

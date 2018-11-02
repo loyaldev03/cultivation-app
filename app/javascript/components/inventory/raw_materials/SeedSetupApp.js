@@ -100,8 +100,8 @@ class SeedSetupApp extends React.Component {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
-  onAddBatch = () => {
-    this.openSidebar()
+  onAddRecord = () => {
+    window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
   renderList() {
@@ -115,7 +115,7 @@ class SeedSetupApp extends React.Component {
             <div style={{ justifySelf: 'end' }}>
               <button
                 className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
-                onClick={this.onAddBatch}
+                onClick={this.onAddRecord}
               >
                 Add Seed
               </button>

@@ -2,21 +2,21 @@
   <%= breadcrumbs ["Settings", settings_path], "Purchasing"%>
 <% end %> 
 
-<div class="pa4">
-  <h5 class="tl pa0 ma0 h5--font dark-grey ttc">Purchasing</h5>
-  
-  <%= link_to purchasing_vendors_path, 
-      class: 'mt4 w-20 h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
-    Vendors
-  <% end %>
+<div class="w-100 pv3 flex flex-row flex-wrap">
 
-  <%= link_to purchasing_purchase_orders_path, 
-      class: 'mt4 w-20 h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
-    Purchase Orders
-  <% end %>
-
-  <%= link_to purchasing_vendor_invoices_path, 
-      class: 'mt4 w-20 h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
-    Vendor Invoices
-  <% end %>
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <%= link_to "Vendors", purchasing_vendors_path, 
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' 
+    %>
+  </div>
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <%= link_to "Purchase Orders", purchasing_purchase_orders_path, 
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' 
+    %>
+  </div>
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <%= link_to "Company Info", purchasing_vendor_invoices_path, 
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' 
+    %>
+  </div>
 </div>

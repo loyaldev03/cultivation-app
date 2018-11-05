@@ -146,8 +146,8 @@
       <div class="mt3">
         <label class="subtitle-2 db mb1 grey">Copy shelf configuration to</label>
         <select id="shelf_trays_info_duplicate_target"
-					name="shelf_trays_info[duplicate_target]"
-					class="w-70 grey box--br3 ba b--light-grey outline-0 box--height">
+                name="shelf_trays_info[duplicate_target]"
+                class="w-70 grey box--br3 ba b--light-grey outline-0 box--height">
           <option></option>
           <option value="all">All other shelves</option>
           <% shelves.each_with_index do |shelf, i| %>
@@ -161,7 +161,10 @@
   </div>
 
   <div class="pv3 ph4 bt b--light-grey">
-    <%= f.submit "Save & Continue", 
-        class: "fr pa3 button--font bg-orange white bn box--br3 ttu link dim pointer" %>
+    <%= f.button "Save & Continue",
+      name: :commit,
+      type: :submit,
+      value: "continue",
+      class: "btn btn--primary btn--large fr" %>
   </div>
 <% end %>

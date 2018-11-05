@@ -20,7 +20,7 @@ class User
   field :first_name, type: String
   field :last_name, type: String
   field :title, type: String
-  field :timezone, type: String, default: 'UTC'
+  field :timezone, type: String, default: 'Pacific Time (US & Canada)'
   field :default_facility_id, type: BSON::ObjectId
   field :is_active, type: Boolean, default: -> { true }
   field :photo_data, type: String

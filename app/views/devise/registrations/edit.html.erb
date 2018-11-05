@@ -50,7 +50,7 @@
                   </div>
                 </div>
 
-                <div class="flex flex-row">
+                <div class="flex flex-row mb3">
                   <div class="w-40 mr4">
                     <%= f.label :email, class: "subtitle-2 grey db mb1 ttc" %>
                     <%= f.email_field :email, autofocus: true, autocomplete: "email",
@@ -61,8 +61,22 @@
                   <div class="w-40">
                     <%= f.label :title, class: "subtitle-2 grey db mb1 ttc" %>
                     <%= f.text_field :title, autofocus: false,
-                        value: @user.title,
+                        value: @user.timezone,
                         class: "ttc grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0" %>
+                  </div>
+                </div>
+                
+                <div class="flex flex-row">
+                  <div class="w-40 mr4">
+                    <%= f.label :timezone, class: "subtitle-2 grey db mb1 ttc" %>
+                    <%= f.time_zone_select :timezone,
+                        nil,
+                        {
+                          :value => @user.timezone,
+                          :default => "Pacific Time (US & Canada)"
+                        },
+                        { :class => "w-100 form-helper-select" }
+                    %>
                   </div>
                 </div>
               </div>

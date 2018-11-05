@@ -5,6 +5,7 @@ class SeedFacilityDataJob < ApplicationJob
     # Seed built-in roles
     @args = args
     seed_roles
+    seed_facility_users
     seed_uom
     seed_plant_catalogue
     seed_raw_materials
@@ -20,6 +21,10 @@ class SeedFacilityDataJob < ApplicationJob
     if sa_role.nil?
       sa_role = Common::Role.create!({name: Constants::SUPER_ADMIN, built_in: true})
     end
+  end
+
+  def seed_facility_users
+    SeedUserDefaultFacility.call(@args[:current_user_id], @args[:facility_id])
   end
 
   def seed_raw_materials

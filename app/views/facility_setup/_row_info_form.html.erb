@@ -114,7 +114,10 @@
   </div>
 
   <div class="w-100 pv3 ph4 bt b--light-grey">
-    <%= f.submit "Save Changes", class: "pv3 bg-white bn ttu button--font orange link dim pointer" %>    
-    <%= f.submit "save & continue", value: "continue", class: "fr pa3 button--font bg-orange white bn box--br3 ttu link dim pointer" %>
+    <%= f.button "Save & Continue",
+      name: :commit,
+      type: :submit,
+      value: "continue",
+      class: "btn btn--primary btn--large fr" %>
   </div>
 <% end %>

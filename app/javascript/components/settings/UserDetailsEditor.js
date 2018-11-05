@@ -285,7 +285,7 @@ class UserDetailsEditor extends React.PureComponent {
                   Default Facility
                 </label>
                 <Select
-                  options={facilities || []}
+                  options={facilitiesOptions}
                   isClearable={true}
                   onChange={opt => this.onSelectChange('default_facility', opt)}
                   value={default_facility}

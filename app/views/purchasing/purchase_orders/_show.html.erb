@@ -1,19 +1,19 @@
 <div class="ph4 pv3 bb b--light-grey">
-  <h5 class="h6--font dark-grey ma0 ttc"><%= blank(@record.invoice_no) %></h5>
+  <h5 class="h6--font dark-grey ma0 ttc"><%= blank(@record.purchase_order_no) %></h5>
 </div>
 
   
   <div class="ph4 flex mt3">
     <div class="w-100">
       <label class="f6 fw6 db mb1 gray ttc">Invoice No</label>      
-      <label class="f6 black"><%= blank(@record.invoice_no)%> </label>
+      <label class="f6 black"><%= blank(@record.purchase_order_no)%> </label>
     </div>
   </div>
 
   <div class="ph4 flex mt3">
     <div class="w-100">
       <label class="f6 fw6 db mb1 gray ttc">Invoice Date</label>      
-      <label class="f6 black"><%= blank(@record.invoice_date.try(:strftime, '%m/%d/%Y'))%> </label>
+      <label class="f6 black"><%= blank(@record.purchase_order_date.try(:strftime, '%m/%d/%Y'))%> </label>
     </div>
   </div>
 
@@ -26,8 +26,8 @@
 
   <div class="ph4 flex mt3">
     <div class="w-100">
-      <label class="f6 fw6 db mb1 gray ttc">Terms In Days</label>      
-      <label class="f6 black"><%= blank(@record.terms_in_days)%> </label>
+      <label class="f6 fw6 db mb1 gray ttc">Completed Date</label>      
+      <label class="f6 black"><%= blank(@record.completed_date.try(:strftime, '%m/%d/%Y'))%> </label>
     </div>
   </div>
 
@@ -44,14 +44,6 @@
       <label class="f6 black"><%= blank(@record.vendor.try(:name))%> </label>
     </div>
   </div>
-
-  <div class="ph4 flex mt3">
-    <div class="w-100">
-      <label class="f6 fw6 db mb1 gray ttc">Purchase Order</label>      
-      <label class="f6 black"><%= blank(@record.purchase_order.try(:purchase_order_no))%> </label>
-    </div>
-  </div>
-
 
   <div class="ph4 flex mt3">
     <div class="w-100">

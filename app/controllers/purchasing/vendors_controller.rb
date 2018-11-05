@@ -16,6 +16,10 @@ class Purchasing::VendorsController < ApplicationController
     end
   end
 
+  def show
+    @record = PurchasingForm::VendorForm.new(params[:id])
+  end
+
   def edit
     @record = PurchasingForm::VendorForm.new(params[:id])
   end

@@ -23,7 +23,7 @@
     </thead>
     <tbody>
       <% @records.try(:each_with_index) do |f, i| %>
-        <tr data-toggle-right="<%= edit_purchasing_vendor_path(f.id)%>" class="pointer">
+        <tr data-toggle-right="<%= purchasing_vendor_invoice_path(f.id)%>" class="pointer">
           <td class="f6 pv3 tl pl4 pr3 gray"><%= i+1 %></td>
           <td class="f6 tl"><%= blank(f.invoice_no) %></td>
           <td class="f6 tl"><%= blank(f.invoice_date.try(:strftime, '%d-%m-%Y')) %></td>

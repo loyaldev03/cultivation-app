@@ -40,7 +40,7 @@ Rails.application.routes.draw do
 
   namespace 'purchasing', as: :purchasing do
     get '/' => 'purchasing#index'
-    resources :vendors, only: [:index, :edit, :update, :new, :create, :destroy]
+    resources :vendors, only: [:index, :edit, :update, :new, :create, :destroy, :show]
     resources :purchase_orders, only: [:index, :show]
     resources :vendor_invoices, only: [:index, :show]
   end

@@ -42,7 +42,7 @@ class Settings::Core::UnitOfMeasuresController < ApplicationController
   private
 
   def record_params
-    params.require(:record).permit(:code, :name, :desc, :base_unit, :base_uom, :conversion)
+    params.require(:record).permit(:name, :desc, :base_unit, :base_uom, :conversion, :unit, :dimension, :is_base_unit)
   end
 
   def update_params

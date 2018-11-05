@@ -24,7 +24,7 @@
     </thead>
     <tbody>
       <% @records.try(:each_with_index) do |f, i| %>
-        <tr class="pointer">
+        <tr data-toggle-right="<%= purchasing_purchase_order_path(f.id)%>" class="pointer">
           <td class="f6 pv3 tl pl4 pr3 gray"><%= i+1 %></td>
           <td class="f6 tl"><%= blank(f.purchase_order_no) %></td>
           <td class="f6 tl"><%= blank(f.purchase_order_date.try(:strftime, '%d-%m-%Y')) %></td>

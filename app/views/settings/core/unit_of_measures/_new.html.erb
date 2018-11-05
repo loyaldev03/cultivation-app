@@ -21,46 +21,47 @@
     </div>
 
     <div class="mb3">
-      <%= f.input :code, label: 'Code',
+      <%= f.input :unit, label: 'Unit',
         label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
         input_html: { class: 'db w-30 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
       %>
     </div>
 
     <div class="mb3">
-      <%= f.input :desc, label: 'Description',
-        as: :text,
+      <%= f.input :dimension, label: 'Dimension',
         label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
-        input_html: { class: 'db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
+        readonly: true,
+        input_html: { class: 'db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5, value: 'custom' } 
       %>
     </div>
 
     <div class="">
       <span class="subtitle-2 grey">Is this a base unit?</span>
       <p class="grey caption mt2 w-90">
-              If toggle is not selected, then that means that its not a base unit.
-
+        If toggle is not selected, then that means that its not a base unit.
       </p>
 
       <div class="flex justify-end w-90">
-        <%= f.check_box :base_unit,
-          checked: @record.base_unit,
+        <%= f.check_box :is_base_unit,
+          checked: @record.is_base_unit,
           class: "toggle toggle-default",
-          data: { toggle: 'shelves_number_options' }
+          data: { toggle: 'shelves_number_options' },
+          id: 'record_is_base_unit'
         %>
-        <label class="toggle-button" for="record_base_unit"></label>
+        <label class="toggle-button" for="record_is_base_unit"></label>
       </div>
     </div>
 
-    <div class="w-100 shelves_number_options" style="display: none">
+    <div class="w-100 shelves_number_options" style="display: none" data-collapse="shelves_number_options">
       <div class="mt3">
-        <%= f.label :base_uom, "Base UOM",
+        <%= f.label :base_unit, "Base Unit",
           class: "subtitle-2 db mb1 grey"
         %>
-        <%= f.input :base_uom, label: 'Base UOM',
+        <%= f.input :base_unit, label: 'Base UOM',
           label: false,
+          as: :select,
           collection: @record.base_uom_select,
-          value_method: :code,
+          value_method: :unit,
           label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
           input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
         %>

@@ -50,7 +50,7 @@ module Common
     field :conversion, type: BigDecimal # multiplier to get to base unit
     field :dimension, type: String      # { weights, volumes, lengths, pieces, plants, custom }
 
-    scope :base_unit, -> { where(base_unit: true) }
+    scope :base_unit, -> { where(is_base_unit: true) }
 
     validates_uniqueness_of :unit
 

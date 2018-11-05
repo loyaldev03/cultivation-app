@@ -2,19 +2,19 @@ import React from 'react'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
-import RawMaterialEditor from './components/RawMaterialEditor'
+import PurchasedCloneEditor from './components/PurchasedCloneEditor'
 import rawMaterialStore from './store/RawMaterialStore'
 import loadRawMaterials from './actions/loadRawMaterials'
 
-const columns = raw_material_type_label => [
+const columns = [
   {
-    Header: raw_material_type_label,
-    accessor: 'attributes.catalogue',
+    Header: 'Strain',
+    accessor: 'attributes.facility_strain.strain_name',
     headerClassName: 'tl ttc'
   },
   {
-    Header: 'Product Name',
-    accessor: 'attributes.product_name',
+    Header: 'Facility',
+    accessor: 'attributes.facility_name',
     headerClassName: 'tl'
   },
   {
@@ -89,27 +89,15 @@ const openEditor = (event, id) => {
 }
 
 @observer
-class RawMaterialSetupApp extends React.Component {
-  constructor(props) {
-    super(props)
-    this.label = props.raw_material_type.replace(/[_]/g, ' ')
-    this.title = this.label.endsWith('s')
-      ? this.label + ' inventory'
-      : this.label + 's inventory'
-  }
-
+class PurchasedClonesSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadRawMaterials(this.props.raw_material_type)
-  }
-
-  openSidebar() {
-    window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
+    loadRawMaterials('purchased_clones')
   }
 
   onAddRecord = () => {
-    this.openSidebar()
+    window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
   renderList() {
@@ -117,19 +105,21 @@ class RawMaterialSetupApp extends React.Component {
       <React.Fragment>
         <div className="w-100 bg-white pa3">
           <div className="flex mb4 mt2">
-            <h1 className="mv0 f3 fw4 dark-gray flex-auto ttc">{this.title}</h1>
+            <h1 className="mv0 f3 fw4 dark-gray flex-auto ttc">
+              Purchased Clones Inventory
+            </h1>
             <div style={{ justifySelf: 'end' }}>
               <button
                 className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
                 onClick={this.onAddRecord}
               >
-                Add {this.label}
+                Add Purchased Clones
               </button>
             </div>
           </div>
 
           <ReactTable
-            columns={columns(this.label)}
+            columns={columns}
             pagination={{ position: 'top' }}
             data={rawMaterialStore.bindable}
             showPagination={false}
@@ -147,15 +137,15 @@ class RawMaterialSetupApp extends React.Component {
     return (
       <React.Fragment>
         {this.renderList()}
-        <RawMaterialEditor
+        <PurchasedCloneEditor
+          facility_strains={this.props.facility_strains}
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}
-          raw_material_type={this.props.raw_material_type}
-          catalogues={this.props.catalogues}
+          uoms={this.props.uoms}
         />
       </React.Fragment>
     )
   }
 }
 
-export default RawMaterialSetupApp
+export default PurchasedClonesSetupApp

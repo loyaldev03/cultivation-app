@@ -18,7 +18,7 @@ module Inventory
     field :conversion, type: BigDecimal
     field :location_id, type: BSON::ObjectId
 
-    belongs_to :facility, optional: true
+    belongs_to :facility
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
     belongs_to :catalogue, class_name: 'Inventory::Catalogue'
   end

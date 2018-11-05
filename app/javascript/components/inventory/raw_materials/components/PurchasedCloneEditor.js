@@ -5,10 +5,10 @@ import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import PurchaseInfo from '../../plant_setup/components/shared/PurchaseInfo'
 import LocationPicker from '../../../utils/LocationPicker2'
-import { setupSeed } from '../actions/setupSeed'
+import { setupPurchasedClones } from '../actions/setupPurchasedClones'
 import { getRawMaterial } from '../actions/getRawMaterial'
 
-class SeedEditor extends React.Component {
+class PurchasedCloneEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
@@ -21,27 +21,29 @@ class SeedEditor extends React.Component {
       if (!id) {
         this.reset()
       } else {
-        getRawMaterial(id, 'seeds')
+        getRawMaterial(id, 'purchased_clones')
           .then(x => {
             const attr = x.data.data.attributes
             return attr
           })
           .then(attr => {
+            console.log(attr)
+
             this.setState({
               ...this.resetState(),
               id: id,
               facility_id: attr.facility_id,
               facility_strain_id: attr.facility_strain.id,
-              qty_per_package: attr.conversion,
+
               product_name: attr.product_name,
               manufacturer: attr.manufacturer,
               description: attr.description,
               order_quantity: parseFloat(attr.order_quantity),
               price_per_package: parseFloat(attr.vendor_invoice.item_price),
               order_uom: { value: attr.order_uom, label: attr.order_uom },
-              uom: { value: attr.uom, label: attr.uom },
+              // uom: { value: attr.uom, label: attr.uom },
               location_id: attr.location_id,
-              // purchase info
+              // // purchase info
               vendor_id: attr.vendor.id,
               vendor_name: attr.vendor.name,
               vendor_no: attr.vendor.vendor_no,
@@ -74,14 +76,12 @@ class SeedEditor extends React.Component {
       id: '',
       facility_id: '',
       facility_strain_id: '',
-      qty_per_package: '',
       product_name: '',
       manufacturer: '',
       description: '',
       order_quantity: 0,
       price_per_package: 0,
       order_uom: { value: '', label: '' },
-      uom: { value: '', label: '' },
       location_id: '',
       // purchase info
       vendor_id: '',
@@ -104,7 +104,7 @@ class SeedEditor extends React.Component {
     const payload = this.validateAndGetValues()
     console.log(payload)
     if (payload.isValid) {
-      setupSeed(payload).then(x => {
+      setupPurchasedClones(payload).then(x => {
         this.reset()
         window.editorSidebar.close()
       })
@@ -117,8 +117,6 @@ class SeedEditor extends React.Component {
     const {
       id,
       facility_strain_id,
-      uom: { value: uom },
-      qty_per_package,
       product_name,
       manufacturer,
       description,
@@ -130,26 +128,10 @@ class SeedEditor extends React.Component {
 
     let errors = {}
 
-    const quantity =
-      parseFloat(this.state.order_quantity) *
-      parseFloat(this.state.qty_per_package)
-
-    // TODO: Should be the following...
-    // const quantity =
-    //   parseFloat(order_quantity) *
-    //   parseFloat(qty_per_package)
-
     if (facility_strain_id.length === 0) {
       errors = {
         ...errors,
         facility_strain_id: ['Strain is required.']
-      }
-    }
-
-    if (uom.length === 0) {
-      errors = {
-        ...errors,
-        uom: ['Unit of measure is required.']
       }
     }
 
@@ -164,13 +146,6 @@ class SeedEditor extends React.Component {
       errors = {
         ...errors,
         order_quantity: ['Order quantity is required.']
-      }
-    }
-
-    if (parseFloat(qty_per_package) <= 0) {
-      errors = {
-        ...errors,
-        qty_per_package: ['Quantity per package is required.']
       }
     }
 
@@ -189,14 +164,11 @@ class SeedEditor extends React.Component {
     return {
       id,
       facility_strain_id,
-      uom,
-      quantity,
       product_name,
       manufacturer,
       description,
       order_quantity,
       order_uom,
-      qty_per_package,
       price,
       location_id,
       ...purchaseData,
@@ -213,8 +185,7 @@ class SeedEditor extends React.Component {
     let facilityStrain = facility_strains.find(
       x => x.value === this.state.facility_strain_id
     )
-    const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
-    const uoms = this.props.uoms.map(x => ({ value: x, label: x }))
+    const order_uoms = [{ value: 'cup', label: 'cup' }]
 
     const showTotalPrice =
       parseFloat(this.state.price_per_package) > 0 &&
@@ -227,7 +198,9 @@ class SeedEditor extends React.Component {
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Seed</h1>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">
+              Add Purchased Clones
+            </h1>
             <span
               className="rc-slide-panel__close-button dim"
               onClick={() => {
@@ -338,56 +311,6 @@ class SeedEditor extends React.Component {
               )}
             </div>
           </div>
-          {console.log('Remove this.state.uom check at line 337!')}
-          {this.state.uom && (
-            <React.Fragment>
-              <hr className="mt3 m b--light-gray w-100" />
-              <div className="ph4 mt3 mb3 flex">
-                <div className="w-100">
-                  <label className="f6 fw6 db mb1 dark-gray">
-                    Amount of material in each{' '}
-                    {this.state.order_uom.label.toLowerCase()}
-                  </label>
-                </div>
-              </div>
-
-              <div className="ph4 mb3 flex">
-                <div className="w-30">
-                  <NumericInput
-                    label="Quantity"
-                    fieldname="qty_per_package"
-                    value={this.state.qty_per_package}
-                    onChange={this.onChangeGeneric}
-                    errors={this.state.errors}
-                  />
-                </div>
-                <div className="w-20 pl3">
-                  <label className="f6 fw6 db mb1 gray ttc">UoM</label>
-                  <Select
-                    value={this.state.uom}
-                    options={uoms}
-                    styles={reactSelectStyle}
-                    onChange={x => this.setState({ uom: x })}
-                  />
-                  <FieldError errors={this.state.errors} field="uom" />
-                </div>
-                <div className="w-50 pl4">
-                  <label className="f6 fw6 db mb1 gray ttc">
-                    Total material in {this.state.order_quantity}{' '}
-                    {this.state.order_uom.label}
-                  </label>
-                  <div className="f6 pv2 fw6">
-                    {this.state.order_quantity &&
-                      this.state.qty_per_package &&
-                      parseFloat(this.state.order_quantity) *
-                        parseFloat(this.state.qty_per_package)}
-                    &nbsp;
-                    {this.state.uom && this.state.uom.label}
-                  </div>
-                </div>
-              </div>
-            </React.Fragment>
-          )}
 
           <hr className="mt3 m b--light-gray w-100" />
 
@@ -445,11 +368,11 @@ class SeedEditor extends React.Component {
   }
 }
 
-SeedEditor.propTypes = {
+PurchasedCloneEditor.propTypes = {
   facility_strains: PropTypes.array.isRequired,
   locations: PropTypes.array.isRequired,
   order_uoms: PropTypes.array.isRequired,
   uoms: PropTypes.array.isRequired
 }
 
-export default SeedEditor
+export default PurchasedCloneEditor

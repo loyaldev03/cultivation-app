@@ -1,6 +1,6 @@
 class Api::V1::RawMaterialsController < Api::V1::BaseApiController
   def index
-    result = get_material_with_serializer_options(catalogue_type: params[:type], id: nil, event_types: %w(inventory_setup))
+    result = material_to_serialize(catalogue_type: params[:type], id: nil, event_types: %w(inventory_setup))
     render json: Inventory::RawMaterialSerializer.new(result[:item_transactions], result[:options]).serialized_json
   end
 
@@ -8,7 +8,37 @@ class Api::V1::RawMaterialsController < Api::V1::BaseApiController
     command = Inventory::SetupRawMaterial.call(current_user, raw_material_params)
     if command.success?
       id = command.result.id
-      result = get_material_with_serializer_options(catalogue_type: nil, id: id, event_types: %w(inventory_setup))
+      result = material_to_serialize(catalogue_type: nil, id: id, event_types: %w(inventory_setup))
+      render json: Inventory::RawMaterialSerializer.new(result[:item_transactions], result[:options]).serialized_json
+    else
+      render json: request_with_errors(command.errors), status: 422
+    end
+  end
+
+  def setup_seed
+    command = Inventory::SetupSeed.call(current_user, raw_material_params)
+    if command.success?
+      result = material_to_serialize(
+        catalogue_type: Constants::SEEDS_KEY,
+        id: command.result.id,
+        event_types: %w(inventory_setup),
+      )
+
+      render json: Inventory::RawMaterialSerializer.new(result[:item_transactions], result[:options]).serialized_json
+    else
+      render json: request_with_errors(command.errors), status: 422
+    end
+  end
+
+  def setup_purchased_clones
+    command = Inventory::SetupPurchasedClones.call(current_user, raw_material_params)
+    if command.success?
+      result = material_to_serialize(
+        catalogue_type: Constants::PURCHASED_CLONES_KEY,
+        id: command.result.id,
+        event_types: %w(inventory_setup),
+      )
+
       render json: Inventory::RawMaterialSerializer.new(result[:item_transactions], result[:options]).serialized_json
     else
       render json: request_with_errors(command.errors), status: 422
@@ -16,7 +46,7 @@ class Api::V1::RawMaterialsController < Api::V1::BaseApiController
   end
 
   def show
-    result = get_material_with_serializer_options(catalogue_type: nil, id: params[:id], event_types: %w(inventory_setup))
+    result = material_to_serialize(catalogue_type: params[:type], id: params[:id], event_types: %w(inventory_setup))
     render json: Inventory::RawMaterialSerializer.new(result[:item_transactions], result[:options]).serialized_json
   end
 
@@ -26,15 +56,19 @@ class Api::V1::RawMaterialsController < Api::V1::BaseApiController
     params[:plant].to_unsafe_h.merge(errors: errors)
   end
 
-  def get_material_with_serializer_options(catalogue_type:, id:, event_types:)
+  def material_to_serialize(catalogue_type:, id:, event_types:)
     result = Inventory::QueryRawMaterialWithRelationships.call(type: catalogue_type, id: id, event_types: event_types).result
     item_transactions = result[:item_transactions]
     vendor_invoice_items = result[:vendor_invoice_items]
+    additional_fields = [:vendor_invoice, :vendor, :purchase_order]
+
+    if catalogue_type == Constants::SEEDS_KEY || catalogue_type == Constants::PURCHASED_CLONES_KEY
+      additional_fields << :facility_strain
+    end
+
     options = {params: {
-      include: [:vendor_invoice, :vendor, :purchase_order],
-      relations: {
-        vendor_invoice_items: vendor_invoice_items,
-      },
+      include: additional_fields,
+      relations: {vendor_invoice_items: vendor_invoice_items},
     }}
 
     {

@@ -128,7 +128,11 @@ Rails.application.routes.draw do
 
 
       resources :raw_materials, only: [:index, :show] do
-        post 'setup', on: :collection
+        collection do
+          post 'setup'
+          post 'setup_seed'
+          post 'setup_purchased_clones'
+        end
       end
 
       # namespace :purchasing do
@@ -173,7 +177,7 @@ Rails.application.routes.draw do
         end
       end
 
-      
+      # TODO: change this to resources
       scope :daily_tasks do
         put ':id/start_task', to: 'daily_tasks#start_task'
         put ':id/stop_task', to: 'daily_tasks#stop_task'

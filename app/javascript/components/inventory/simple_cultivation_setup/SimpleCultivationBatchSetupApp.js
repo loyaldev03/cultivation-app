@@ -119,12 +119,8 @@ class SimpleCultivationBatchSetupApp extends React.Component {
     loadCultivationBatch()
   }
 
-  openSidebar() {
+  onAddRecord = () => {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
-  }
-
-  onAddBatch = () => {
-    this.openSidebar()
   }
 
   renderBatchList() {
@@ -138,7 +134,7 @@ class SimpleCultivationBatchSetupApp extends React.Component {
             <div style={{ justifySelf: 'end' }}>
               <button
                 className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
-                onClick={this.onAddBatch}
+                onClick={this.onAddRecord}
               >
                 Add batch
               </button>

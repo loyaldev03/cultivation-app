@@ -1,25 +1,25 @@
 module Inventory
-  class SetupRawMaterial
+  class SetupSeed
     prepend SimpleCommand
 
     attr_reader :user,
       :args,
       :is_draft,
       :id,
-      :facility_id,
+      :facility_strain,
+      :facility_strain_id,
       :facility,
-      :location_id,
       :catalogue,
-      :product_name,
-      :description,
-      :manufacturer,
-      :quantity,
       :uom,
-      :price,
+      :quantity,
+      :product_name,
+      :manufacturer,
+      :description,
       :order_quantity,
       :order_uom,
       :qty_per_package,
-      #
+      :price,
+      :location_id,
       :vendor_id,
       :vendor_name,
       :vendor_no,
@@ -31,15 +31,14 @@ module Inventory
     def initialize(user, args)
       @args = args
       @user = user
-
       @id = args[:id]
-      @facility_id = args[:facility_id]
-      @facility = Facility.find(@facility_id)
+
+      @facility_strain_id = args[:facility_strain_id]
+      @facility_strain = Inventory::FacilityStrain.find(facility_strain_id)
+      @facility = facility_strain.facility
 
       @location_id = args[:location_id]
-      @catalogue_id = args[:catalogue]
-      @catalogue = Inventory::Catalogue.find(@catalogue_id)
-
+      @catalogue = Inventory::Catalogue.seed
       @product_name = args[:product_name]
       @description = args[:description]
       @manufacturer = args[:manufacturer]
@@ -49,7 +48,6 @@ module Inventory
       @order_uom = args[:order_uom]
       @price = args[:price]
       @qty_per_package = args[:qty_per_package]
-
       @vendor_id = args[:vendor_id]
       @vendor_name = args[:vendor_name]
       @vendor_no = args[:vendor_no]
@@ -64,9 +62,9 @@ module Inventory
         invoice_item = save_purchase_info
 
         if id.blank?
-          create_raw_material(invoice_item)
+          create_seed(invoice_item)
         else
-          update_raw_material(invoice_item)
+          update_seed(invoice_item)
         end
       end
     end
@@ -93,12 +91,12 @@ module Inventory
       invoice_item
     end
 
-    def create_raw_material(invoice_item)
+    def create_seed(invoice_item)
       Inventory::ItemTransaction.create!(
         ref_id: invoice_item.id,
         ref_type: 'Inventory::VendorInvoiceItem',
-        event_type: 'inventory_setup',        # Move to Constants
-        event_date: purchase_date,            # stock intake happen today
+        event_type: 'inventory_setup',            # TODO: Move to Constants
+        event_date: purchase_date,                # stock intake happen today
         facility: facility,
         catalogue: catalogue,
         product_name: invoice_item.product_name,
@@ -106,15 +104,15 @@ module Inventory
         manufacturer: invoice_item.manufacturer,
         uom: uom,
         quantity: quantity,
-        order_quantity: order_quantity,          # quantity inside PO and stock receive
-        order_uom: order_uom,               # uom inside PO and stock receive
-        conversion: qty_per_package,         # conversion rule, 1 bag = 65 kg
-        facility_strain: nil,
+        order_quantity: order_quantity,           # quantity inside PO and stock receive
+        order_uom: order_uom,                     # uom inside PO and stock receive
+        conversion: qty_per_package,              # conversion rule, 1 bag = 65 kg
+        facility_strain: facility_strain,
         location_id: location_id,
       )
     end
 
-    def update_raw_material(ii)
+    def update_seed(ii)
     end
 
     def save_vendor
@@ -153,6 +151,7 @@ module Inventory
         description: description,
         product_name: product_name,
         manufacturer: manufacturer,
+        facility_strain: facility_strain,
       )
     end
 
@@ -179,6 +178,7 @@ module Inventory
         description: po_item.description,
         product_name: po_item.product_name,
         manufacturer: manufacturer,
+        facility_strain: facility_strain,
       )
     end
   end

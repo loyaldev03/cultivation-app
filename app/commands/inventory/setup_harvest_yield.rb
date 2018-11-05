@@ -1,14 +1,3 @@
-# cultivation_batch_id: "aasa"
-# harvested_on: "2018-08-27T16:00:00.000Z"
-# location_id: "5b9a5cd0edfdb2221dbf4578"
-# mother_id: "5b967591edfdb2f2b29540c1"
-# strain: "101OG"
-# strain_type: "sativa"
-# weight: "10"
-# weight_type: "dry"
-# weight_unit: "g"
-# yield_type: "flower"
-
 module Inventory
   class SetupHarvestYield
     prepend SimpleCommand

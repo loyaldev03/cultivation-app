@@ -14,7 +14,7 @@ const columns = [
   },
   {
     Header: 'Facility',
-    accessor: 'attributes..facility_strain.facility',
+    accessor: 'attributes.facility_name',
     headerClassName: 'tl'
   },
   {
@@ -93,15 +93,15 @@ class SeedSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadRawMaterials(this.props.raw_material_type)
+    loadRawMaterials('seeds')
   }
 
   openSidebar() {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
-  onAddBatch = () => {
-    this.openSidebar()
+  onAddRecord = () => {
+    window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
   renderList() {
@@ -115,7 +115,7 @@ class SeedSetupApp extends React.Component {
             <div style={{ justifySelf: 'end' }}>
               <button
                 className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
-                onClick={this.onAddBatch}
+                onClick={this.onAddRecord}
               >
                 Add Seed
               </button>
@@ -142,9 +142,10 @@ class SeedSetupApp extends React.Component {
       <React.Fragment>
         {this.renderList()}
         <SeedEditor
+          facility_strains={this.props.facility_strains}
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}
-          facility_strains={this.props.facility_strains}
+          uoms={this.props.uoms}
         />
       </React.Fragment>
     )

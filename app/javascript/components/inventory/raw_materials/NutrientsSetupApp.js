@@ -87,12 +87,8 @@ class NutrientsSetupApp extends React.Component {
     loadRawMaterials('nutrients')
   }
 
-  openSidebar() {
+  onAddRecord = () => {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
-  }
-
-  onAddBatch = () => {
-    this.openSidebar()
   }
 
   renderNutrientList() {
@@ -106,7 +102,7 @@ class NutrientsSetupApp extends React.Component {
             <div style={{ justifySelf: 'end' }}>
               <button
                 className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
-                onClick={this.onAddBatch}
+                onClick={this.onAddRecord}
               >
                 Add nutrient
               </button>

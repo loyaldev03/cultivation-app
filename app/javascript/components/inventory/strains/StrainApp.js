@@ -62,7 +62,7 @@ StrainApp.propTypes = {
 }
 
 StrainApp.defaultProps = {
-  facility_id: null,
+  facility_id: '',
   locations: []
 }
 

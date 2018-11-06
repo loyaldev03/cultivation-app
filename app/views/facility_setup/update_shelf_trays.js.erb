@@ -6,6 +6,8 @@ $_('<%= ".carousel__card--#{@row_info_form.id}" %>').innerHTML = ("<%= j render 
 
 <% if @row_shelves_trays_form.show_duplicate_dialog %>
   hideSlidePanel();
-  showRowSetupSuccess("<%= @row_shelves_trays_form.id %>")
+  <% if @row_shelves_trays_form.has_many_rows %>
+    showRowSetupSuccess("<%= @row_shelves_trays_form.id %>")
+  <% end %>
 <% end %>
 

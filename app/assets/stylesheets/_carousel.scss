@@ -52,8 +52,12 @@ $carouselEmptyHeight: 148px; // Height of carousel when it's empty
   background-color: #FFF;
   width: $carouselCardWidth;
   height: $carouselHeight;
-  border-width: 1px;
-  border-bottom: none;
+  border: 1px solid var(--light-gray);
+  border-radius: 0.3em;
+
+  &.checked {
+    border: none
+  }
 }
 
 .carousel__card--add {

@@ -32,7 +32,7 @@
 
     <div class="carousel__body siema">
       <% rooms.each do |room| %>
-        <div class="carousel__card relative b--light-grey box--br3 ba pa2 flex flex-column justify-between">
+        <div class="carousel__card relative ba pa2 flex flex-column justify-between">
           <div>
             <div class="">
               <%= link_to destroy_room_path(facility_id: room.facility_id, room_id: room.id),

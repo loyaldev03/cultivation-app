@@ -5,7 +5,7 @@
 
   <div class="carousel__body siema">
     <% rows.each do |row| %>
-      <div class="carousel__card carousel__card--<%= row.id %> relative b--light-grey box--br3 ba pa2 flex flex-column justify-between">
+      <div class="carousel__card carousel__card--<%= row.id %> relative pa2 flex flex-column justify-between">
         <%= render partial: "row_card_body", locals: { row: row } %>
       </div>
     <% end %>

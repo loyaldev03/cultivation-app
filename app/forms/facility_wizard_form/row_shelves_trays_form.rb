@@ -11,6 +11,7 @@ module FacilityWizardForm
 
     attr_accessor(*ATTRS)
     attr_accessor :is_last_shelf, :show_duplicate_dialog, :duplicate_target
+    attr_reader :has_many_rows
 
     def initialize(facility_id, room_id, row_id, shelf_id = nil)
       @facility_id = facility_id
@@ -42,6 +43,7 @@ module FacilityWizardForm
       facility = Facility.find(@facility_id)
       room = facility.rooms.find(@room_id)
       row = room.rows.find(@id)
+      @has_many_rows = room.rows && room.rows.size > 1
       if row.shelves.blank?
         @shelves = []
       else

@@ -121,6 +121,7 @@ class TeamSetttingApp extends React.Component {
         store.updateUser({ id: response.data.id, ...response.data.attributes })
         if (userDetails.user.id) {
           toast('User updated.', 'success')
+          this.closeSidebar()
         } else {
           toast('User created', 'success')
           this.closeSidebar()

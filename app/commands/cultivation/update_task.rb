@@ -30,7 +30,7 @@ module Cultivation
       args = {}
       args[:duration] = task.parent.children.sum(:duration) if task.parent
       if task.parent
-        child_max_end_date = task.parent.children.map { |h| h[:end_date] }.max #get children task maximum end_date
+        child_max_end_date = task.parent.children.map { |h| h[:end_date] }.compact.max #get children task maximum end_date
         args[:end_date] = child_max_end_date if child_max_end_date > task.parent.end_date
       end
       update_task(task.parent, args, {children: false}) if task.parent

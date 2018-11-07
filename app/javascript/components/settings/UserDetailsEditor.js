@@ -109,6 +109,10 @@ class UserDetailsEditor extends React.PureComponent {
     const default_facility_id = this.state.default_facility
       ? this.state.default_facility.value
       : null
+    const photo_data =
+      this.state.photoData == 'null'
+        ? this.state.photoData
+        : JSON.stringify(this.state.photoData)
     const userDetails = {
       user: {
         id: this.state.userId,
@@ -117,7 +121,7 @@ class UserDetailsEditor extends React.PureComponent {
         first_name: this.state.firstName,
         last_name: this.state.lastName,
         title: this.state.title,
-        photo_data: JSON.stringify(this.state.photoData),
+        photo_data: photo_data,
         hourly_rate: this.state.hourly_rate,
         overtime_hourly_rate: this.state.overtime_hourly_rate,
         is_active: this.state.isActive || false,

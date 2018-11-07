@@ -36,7 +36,7 @@ class TaskSerializer
         name: item.name,
         quantity: item.quantity,
         uom: item.uom,
-        raw_material_id: item.raw_material_id.to_s,
+        raw_material_id: item.try(:raw_material_id).to_s,
       }
     end
   end

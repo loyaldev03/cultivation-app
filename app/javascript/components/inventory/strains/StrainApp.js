@@ -45,7 +45,7 @@ class StrainApp extends React.Component {
               Setup strains for my facility
             </h1>
             <p className="mb0 lh-copy f5 grey">
-              Register strains that are grown at your facility.
+              Register strains grown at my facility.
             </p>
           </div>
         </div>

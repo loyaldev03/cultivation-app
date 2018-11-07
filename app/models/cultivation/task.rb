@@ -50,6 +50,7 @@ module Cultivation
       hours_per_day = estimated_hours.to_f / duration.to_i
       hours_per_person = hours_per_day / user_ids.length
       task_cost = 0.0
+      duration = self.duration || 0
       users.each do |user|
         task_cost += (user.hourly_rate.to_f * hours_per_person) * duration
       end

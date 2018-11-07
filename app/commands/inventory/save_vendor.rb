@@ -5,7 +5,7 @@ module Inventory
     attr_reader :args
 
     def initialize(args = {})
-      @args = args
+      @args = HashWithIndifferentAccess.new(args) # wrap with this so access by symbol and string works
     end
 
     def call

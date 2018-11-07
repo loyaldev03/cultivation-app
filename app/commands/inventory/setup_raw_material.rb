@@ -83,10 +83,6 @@ module Inventory
     end
 
     def save_purchase_info
-      if id.present?
-        tx = Inventory::ItemTransaction.find(id)
-      end
-
       vendor = save_vendor
       po_item = save_purchase_order(vendor)
       invoice_item = save_invoice(po_item)
@@ -180,6 +176,10 @@ module Inventory
         product_name: po_item.product_name,
         manufacturer: manufacturer,
       )
+    end
+
+    def combine_errors(errors_source, from_field, to_field)
+      errors.add(to_field, errors_source[from_field]) if errors_source.key?(from_field)
     end
   end
 end

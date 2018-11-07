@@ -69,11 +69,11 @@ module Cultivation
       #hours_per_person = hours_per_day / no of resource
       total_cost = 0.0
       tasks.includes(:users).each do |task|
-        hours_per_day = task.estimated_hours.to_f / task.duration.to_i
-        hours_per_person = hours_per_day / task.user_ids.length
+        hours_per_day = task.duration.to_i > 0 ? (task.estimated_hours.to_f / task.duration.to_i) : 0
+        hours_per_person = task.user_ids.length > 0 ? (hours_per_day / task.user_ids.length) : 0
         task_cost = 0.0
         task.users.each do |user|
-          task_cost += (user.hourly_rate.to_f * hours_per_person) * task.duration
+          task_cost += (user.hourly_rate.to_f * hours_per_person) * task.duration.to_i
         end
         total_cost += task_cost
       end

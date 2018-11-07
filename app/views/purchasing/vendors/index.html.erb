@@ -11,7 +11,7 @@
   <div class="w-30 tr">
     <a href="#0"
        data-toggle-right="<%= new_purchasing_vendor_path %>"
-       class="link ba bw1 b b--blue blue pa2 ph3 br4 dib"
+       class="btn btn--primary"
     >
       + Add New
     </a>
@@ -41,14 +41,6 @@
           <td class="f6 tl"><%= blank(f.location_license_expiration_date.try(:strftime, '%d-%m-%Y')) %></td>
           <td class="f6 tl"><%= blank(f.location_license_num) %></td>
           <td class="f6 tl">
-            <a href="<%= purchasing_vendor_path(f)%>"
-              data-remote="true"
-              data-confirm="Are you sure?"
-              data-method="delete"
-              class="link ba bw1 b b--red red pa2 ph3 br4 dib"
-            >
-              Delete
-            </a>
           </td>
         </tr>
       <% end %>

@@ -146,7 +146,7 @@ class RoleDetailsEditor extends React.PureComponent {
             <div className="mv3 bt fl w-100 b--light-grey pt3 ph4">
               <a
                 href="#0"
-                className="fl ph3 pv2 button--font bn box--br3 ttu link dim pointer"
+                className="btn btn--secondary"
                 onClick={this.onDelete}
               >
                 Delete
@@ -154,7 +154,7 @@ class RoleDetailsEditor extends React.PureComponent {
               <input
                 type="submit"
                 value={saveButtonText}
-                className="fr ph3 pv2 bg-orange button--font white bn box--br3 ttu link dim pointer"
+                className="fr btn btn--primary"
               />
             </div>
           ) : (

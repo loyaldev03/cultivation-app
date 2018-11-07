@@ -181,5 +181,9 @@ module Inventory
         facility_strain: facility_strain,
       )
     end
+
+    def combine_errors(errors_source, from_field, to_field)
+      errors.add(to_field, errors_source[from_field]) if errors_source.key?(from_field)
+    end
   end
 end

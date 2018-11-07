@@ -48,7 +48,7 @@
           <% if @strains_count <= 0 %>
             <%= link_to 'You need to register strain first.', '', class: 'flex-none black-20 link f6 fw6 pv2 br2 dim' %>
           <% elsif Inventory::Plant.count > 0 %>
-            <%= link_to 'Change', mothers_inventory_plants_path, class: 'flex-none orange link white f6 fw6 pv2 br2 dim ttu' %>
+            <%= link_to 'Change', mothers_inventory_plants_path, class: 'btn btn--secondary' %>
           <% else %>
             <%= link_to 'Start', mothers_inventory_plants_path, class: 'btn btn--primary' %>
           <% end %>

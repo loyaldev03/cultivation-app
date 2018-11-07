@@ -134,30 +134,32 @@
       </div>
     <% end %>
 
-    <div class="mt4 flex flex-row items-center justify-between">
-      <span class="subtitle-2 db mb1 grey">Duplicate this shelf?</span>
-      <div class="">
-        <input id="duplicate_shelf" type="checkbox" class="toggle toggle-default" data-toggle="duplicate_shelves_options" />
-        <label class="toggle-button" for="duplicate_shelf"></label>
+    <% if shelves && shelves.length > 1 %>
+      <div class="mt4 flex flex-row items-center justify-between">
+        <span class="subtitle-2 db mb1 grey">Duplicate this shelf?</span>
+        <div class="">
+          <input id="duplicate_shelf" type="checkbox" class="toggle toggle-default" data-toggle="duplicate_shelves_options" />
+          <label class="toggle-button" for="duplicate_shelf"></label>
+        </div>
       </div>
-    </div>
 
-    <div class="w-100" data-collapse="duplicate_shelves_options">
-      <div class="mt3">
-        <label class="subtitle-2 db mb1 grey">Copy shelf configuration to</label>
-        <select id="shelf_trays_info_duplicate_target"
-                name="shelf_trays_info[duplicate_target]"
-                class="w-70 grey box--br3 ba b--light-grey outline-0 box--height">
-          <option></option>
-          <option value="all">All other shelves</option>
-          <% shelves.each_with_index do |shelf, i| %>
-            <% if shelf.id != shelf_id %>
-              <option value="<%= shelf.id %>">Shelf <%= i+1 %></option>
+      <div class="w-100" data-collapse="duplicate_shelves_options">
+        <div class="mt3">
+          <label class="subtitle-2 db mb1 grey">Copy shelf configuration to</label>
+          <select id="shelf_trays_info_duplicate_target"
+                  name="shelf_trays_info[duplicate_target]"
+                  class="w-70 grey box--br3 ba b--light-grey outline-0 box--height">
+            <option></option>
+            <option value="all">All other shelves</option>
+            <% shelves.each_with_index do |shelf, i| %>
+              <% if shelf.id != shelf_id %>
+                <option value="<%= shelf.id %>">Shelf <%= i+1 %></option>
+              <% end %>
             <% end %>
-          <% end %>
-        </select>
+          </select>
+        </div>
       </div>
-    </div>
+    <% end %>
   </div>
 
   <div class="pv3 ph4 bt b--light-grey">

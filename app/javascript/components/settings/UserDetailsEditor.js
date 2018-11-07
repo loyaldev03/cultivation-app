@@ -366,7 +366,7 @@ class UserDetailsEditor extends React.PureComponent {
             <input
               type="submit"
               value={saveButtonText}
-              className="fr ph3 pv2 bg-orange button--font white bn box--br3 ttu link dim pointer"
+              className="fr btn btn--primary"
             />
           </div>
         </form>

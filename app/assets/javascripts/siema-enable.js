@@ -1,44 +1,48 @@
 //= require siema/dist/siema.min.js
 function clearSelection() {
-  if (window.getSelection) {window.getSelection().removeAllRanges();}
-  else if (document.selection) {document.selection.empty();}
+  if (window.getSelection) {
+    window.getSelection().removeAllRanges()
+  } else if (document.selection) {
+    document.selection.empty()
+  }
 }
 
 // Bind Carousel as pageSize card in a row (used in Rooms / Rows setup)
 function bindCarousel(gotoLast) {
-  const siemaElms = $$(".siema");
-  const siemaPageSize = 4;
+  const siemaElms = $$('.siema')
+  const siemaPageSize = 4
   const siemaOptions = {
     perPage: siemaPageSize,
-    draggable: false,
-    multipleDrag: false,
+    draggable: true,
+    multipleDrag: true,
     loop: true
   }
   if (siemaElms) {
     for (let i = 0; i < siemaElms.length; i++) {
       const siemaElm = siemaElms[i]
-      const carousel = siemaElm.closest(".carousel")
-      const cardCount = siemaElm.children.length;
+      const carousel = siemaElm.closest('.carousel')
+      const cardCount = siemaElm.children.length
       if (cardCount > siemaPageSize) {
-        const mySiema = new Siema(Object.assign(siemaOptions, { selector: siemaElm}));
+        const mySiema = new Siema(
+          Object.assign(siemaOptions, { selector: siemaElm })
+        )
         const leftBtn = carousel.children[0]
         const rightBtn = carousel.children[2]
-        leftBtn.addEventListener("click", () => mySiema.prev());
-        rightBtn.addEventListener("click", () => mySiema.next());
+        leftBtn.addEventListener('click', () => mySiema.prev())
+        rightBtn.addEventListener('click', () => mySiema.next())
         if (gotoLast) {
-          mySiema.goTo(cardCount - siemaPageSize);
+          mySiema.goTo(cardCount - siemaPageSize)
           // Note: Clear highlighted elements when added / deleting
-          setTimeout(() => clearSelection(), 300);
+          setTimeout(() => clearSelection(), 300)
         }
       } else {
         if (cardCount == 1) {
           // when the carousel is empty (only contain the "Add" card
-          carousel.classList.add("carousel--empty")
+          carousel.classList.add('carousel--empty')
         }
         // when the carousel contains less then siemaPageSize
-        siemaElm.classList.add("carousel__body--less")
+        siemaElm.classList.add('carousel__body--less')
       }
     }
   }
 }
-

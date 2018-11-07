@@ -21,7 +21,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
 
   def update_user
     # Rails.logger.debug "\033[31m #{user_params} \033[0m"
-    save_user_cmd = SaveUser.call(user_params)
+    save_user_cmd = SaveUser.call(user_params, current_user)
     if save_user_cmd.success?
       render json: Common::FacilityUserSerializer.new(save_user_cmd.result).serialized_json
     else
@@ -30,8 +30,8 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
   end
 
   def update_role
-    Rails.logger.debug "\033[31m #{role_params} \033[0m"
-    save_role_cmd = SaveRole.call(role_params)
+    # Rails.logger.debug "\033[31m #{role_params} \033[0m"
+    save_role_cmd = SaveRole.call(role_params, current_user)
     if save_role_cmd.success?
       render json: Common::FacilityRoleSerializer.new(save_role_cmd.result).serialized_json
     else
@@ -61,6 +61,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       :photo_data,
       :is_active,
       :default_facility_id,
+      :timezone,
       :hourly_rate,
       :overtime_hourly_rate,
       facilities: [],

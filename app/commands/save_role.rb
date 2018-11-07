@@ -3,7 +3,7 @@ class SaveRole
 
   attr_reader :args
 
-  def initialize(args = {})
+  def initialize(args = {}, current_user)
     @args = args
   end
 

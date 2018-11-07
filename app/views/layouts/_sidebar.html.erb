@@ -7,33 +7,7 @@
     <%= image_tag 'logo.svg' %>
   <% end %>
 
-  <% if user_signed_in? %>
-    <div class="ma3 hide truncate tc">
-      <div class="flex flex-row items-center">
-        <%= image_tag 'blank-avatar.png', class: "dib mr3 br-100 cover", style: "height: 3rem" %>
-        <div class="flex flex-column tl">
-          <% if !current_user.first_name %>
-            <span class="dark-grey subtitle-1"> <%= current_user.email %> </span>
-          <% else %>
-            <span class="dark-grey subtitle-1">
-              <%= current_user.first_name %> <%= current_user.last_name %>
-            </span>
-          <% end %>
-
-          <span class="grey overline ttc">Admin Head</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="ma3 tc show-collapsed truncate">
-      <%= image_tag 'blank-avatar.png',
-          class: "dib br-100 cover",
-          style: "height: 2.5rem; margin-top: 0.5rem;"
-      %>
-    </div>
-  <% end %>
-
-  <ul class="list pl0 hide">
+  <ul class="list pl0 mt2 hide">
     <%= link_to root_path, class: "link" do %>
       <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
         <i class="material-icons md-16 grey mr3">home</i>
@@ -90,7 +64,7 @@
     <% end %>
   </ul>
 
-  <ul class="list pl0 ma0 pa0 show-collapsed">
+  <ul class="list mt2 pa0 show-collapsed">
     <%= link_to root_path, class: "link" do %>
       <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
         <i class="material-icons md-16 grey mr3">home</i>
@@ -138,8 +112,8 @@
     <% end %>
   </ul>
 
-  <div class="tc fixed flex dim align-center justify-center left-toggle-button">
-    <a id="toggle-sidebar" href="#" class="link grey outline-0 w-100 self-center ">
+  <div class="w-100 pa3 tc absolute bottom-0">
+    <a id="toggle-sidebar" href="#" class="link grey outline-0 ph3 pv2">
       &#8677;
     </a>
   </div>

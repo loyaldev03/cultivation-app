@@ -21,12 +21,9 @@ class HomeController < ApplicationController
   end
 
   def inventory_setup
-    # if current_default_facility.present?
-    #   @strains_count = current_default_facility.strains.count
-    # else
-    #   @strains_count = 0
-    # end
     @strains_count = Inventory::FacilityStrain.count
+    raw_material_catalogues = Inventory::ItemTransaction.where(catalogue_type: 'raw_materials')
+    @raw_material_count = Inventory::ItemTransaction.in(catalogue: raw_material_catalogues).count
   end
 
   def reset_data

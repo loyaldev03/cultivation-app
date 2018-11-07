@@ -109,7 +109,10 @@ class UserDetailsEditor extends React.PureComponent {
     const default_facility_id = this.state.default_facility
       ? this.state.default_facility.value
       : null
-    const photo_data = this.state.photoData == "null" ? this.state.photoData : JSON.stringify(this.state.photoData)
+    const photo_data =
+      this.state.photoData == 'null'
+        ? this.state.photoData
+        : JSON.stringify(this.state.photoData)
     const userDetails = {
       user: {
         id: this.state.userId,

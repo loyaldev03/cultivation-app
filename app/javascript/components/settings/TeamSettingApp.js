@@ -231,7 +231,7 @@ class TeamSetttingApp extends React.Component {
                   <div className="pb2 db tr">
                     <a
                       href="#0"
-                      className="dib pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+                      className="btn btn--primary"
                       onClick={this.onAddNew}
                     >
                       New User
@@ -316,7 +316,7 @@ class TeamSetttingApp extends React.Component {
                   <div className="pb2 db tr">
                     <a
                       href="#0"
-                      className="dib pv2 ph3 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+                      className="btn btn--primary"
                       onClick={this.onAddNew}
                     >
                       New Role

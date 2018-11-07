@@ -27,7 +27,7 @@
               Register strains that are grown at your facility.
             </p>
           </div>
-          <% if current_default_facility.strains.count > 0 %>
+          <% if @strains_count > 0 %>
             <%= link_to 'Change', inventory_strains_path, class: 'btn btn--secondary' %>
           <% else %>
             <%= link_to 'Start', inventory_strains_path, class: 'btn btn--primary' %>
@@ -45,8 +45,8 @@
               These are your plant inventories such as seeds, mother plants, clones, harvest yield and waste. Plant inventory requires unique IDs for legal compliance and traceability.
             </p>
           </div>
-          <% if current_default_facility.strains.count <= 0 %>
-            <%= link_to 'Strain is required', '', class: 'flex-none black-20 link f6 fw6 pv2 br2 dim' %>
+          <% if @strains_count <= 0 %>
+            <%= link_to 'You need to register strain first.', '', class: 'flex-none black-20 link f6 fw6 pv2 br2 dim' %>
           <% elsif Inventory::Plant.count > 0 %>
             <%= link_to 'Change', mothers_inventory_plants_path, class: 'flex-none orange link white f6 fw6 pv2 br2 dim ttu' %>
           <% else %>

@@ -54,6 +54,10 @@ module Inventory
       self.find_by(catalogue_type: 'raw_materials', key: Constants::SEEDS_KEY)
     end
 
+    def self.plant
+      self.find_by(catalogue_type: Constants::PLANTS_KEY, key: Constants::PLANTS_KEY)
+    end
+
     def uoms
       Common::UnitOfMeasure.where(dimension: self.uom_dimension)
     end

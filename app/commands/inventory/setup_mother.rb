@@ -50,13 +50,7 @@ module Inventory
       @purchase_order_no = args[:purchase_order_no]
       @purchase_date = args[:purchase_date]
       facility_strain = Inventory::FacilityStrain.find(@facility_strain_id)
-      @catalogue = Inventory::Catalogue.find_or_create_by!(label: 'Plant',
-                                                           key: 'plant',
-                                                           catalogue_type: 'plant',
-                                                           category: 'plant',
-                                                           is_active: true,
-                                                           uom_dimension: 'pieces',
-                                                           facility: facility_strain.facility)
+      @catalogue = Inventory::Catalogue.plant
     end
 
     def call

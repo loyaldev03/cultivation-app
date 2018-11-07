@@ -16,7 +16,7 @@ module Inventory
     belongs_to :facility
     belongs_to :vendor, class_name: 'Inventory::Vendor'
     belongs_to :purchase_order, class_name: 'Inventory::PurchaseOrder'
-    has_many :items, class_name: 'Inventory::VendorInvoiceItem', dependent: :delete
+    has_many :items, class_name: 'Inventory::VendorInvoiceItem', dependent: :destroy
 
     def total_amount
       items.sum { |x| x.total_amount }

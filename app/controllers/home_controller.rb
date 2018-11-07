@@ -21,6 +21,12 @@ class HomeController < ApplicationController
   end
 
   def inventory_setup
+    # if current_default_facility.present?
+    #   @strains_count = current_default_facility.strains.count
+    # else
+    #   @strains_count = 0
+    # end
+    @strains_count = Inventory::FacilityStrain.count
   end
 
   def reset_data
@@ -38,8 +44,9 @@ class HomeController < ApplicationController
 
     Common::UnitOfMeasure.delete_all
     Common::SeedUnitOfMeasure.call
+    Inventory::SeedCatalogue.call
 
-    # User.update_all(facilites: [], default_facility_id: nil)
+    User.update_all(facilites: [], default_facility_id: nil)
 
     # Preserve facility F0X
     f = Facility.find_by(code: 'F0X')

@@ -14,15 +14,6 @@ import loadTasks from '../actions/loadTask'
 
 import { groupBy, httpPostOptions } from '../../../utils'
 
-const uom_dropdown = [
-  { value: 'KG', label: 'KG' },
-  { value: 'CM', label: 'CM' },
-  { value: 'Inch', label: 'Inch' },
-  { value: 'ML', label: 'ML' },
-  { value: 'L', label: 'L' },
-  { value: 'Pcs', label: 'Pcs' }
-]
-
 export default class MaterialForm extends React.Component {
   constructor(props) {
     super(props)

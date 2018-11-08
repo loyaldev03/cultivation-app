@@ -11,7 +11,6 @@ import loadUsers from './actions/loadUsers'
 import loadUserRoles from './actions/loadUserRoles'
 import loadItems from './actions/loadItems'
 import loadDisplayTaskStore from './actions/loadDisplayTaskStore'
-import loadUom from './actions/loadUom'
 import { formatDate2 } from '../../utils'
 
 import TaskList from './components/TaskList'
@@ -53,7 +52,6 @@ class TaskSetup extends React.Component {
     loadDisplayTaskStore()
     loadUsers()
     loadUserRoles()
-    loadUom()
     loadItems(this.props.batch.facility_id)
     document.addEventListener('mousedown', this.handleOutsideClick, false)
   }

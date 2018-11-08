@@ -14,8 +14,6 @@ import loadTasks from '../actions/loadTask'
 
 import { groupBy, httpPostOptions } from '../../../utils'
 
-import UomStore from '../stores/UomStore'
-
 const uom_dropdown = [
   { value: 'KG', label: 'KG' },
   { value: 'CM', label: 'CM' },
@@ -36,7 +34,6 @@ export default class MaterialForm extends React.Component {
       name: '',
       quantity: '',
       uom: '',
-      uom_dropdown: uom_dropdown,
       materials: [],
       items: props.task.attributes.items
     }
@@ -52,7 +49,6 @@ export default class MaterialForm extends React.Component {
         name: '',
         quantity: '',
         uom: '',
-        uom_dropdown: uom_dropdown,
         materials: [],
         items: props.task.attributes.items,
         selectedCategory: '',
@@ -188,8 +184,8 @@ export default class MaterialForm extends React.Component {
       value: f,
       label: f.replace(/_/g, ' ')
     }))
-
-    let uom_dropdown = UomStore
+    let catalogue = ItemStore.slice().find(e => e.id === this.state.catalogue_id)
+    let uom_dropdown = catalogue ? catalogue.uoms : [{label: '', value: ''}] 
     let materials = this.state.items
     let handleChange = this.handleChange
     let handleDelete = this.handleDelete
@@ -198,11 +194,6 @@ export default class MaterialForm extends React.Component {
         <div className="">
           <div className="ph4 mt3 flex">
             <div className="w-100">
-              {/* {JSON.stringify(subcategory_dropdown['Potassium'])} */}
-
-              {/* {JSON.stringify(this.state.selectedCategory)} */}
-              {/* {JSON.stringify(category_dropdown)} */}
-              {/* {JSON.stringify(category_dropdown)} */}
               <label className="f6 fw6 db mb1 gray ttc">Material Name</label>
               <Select
                 name="selectedCategory"

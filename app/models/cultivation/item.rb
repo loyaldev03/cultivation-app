@@ -10,7 +10,7 @@ module Cultivation
     belongs_to :catalogue, class_name: 'Inventory::Catalogue'
 
     def name
-      catalogue.label
+      catalogue.try(:label)
     end
   end
 end

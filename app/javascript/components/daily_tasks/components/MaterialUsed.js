@@ -216,10 +216,14 @@ class MaterialUsed extends React.Component {
         <table className="w-100">
           <tbody>
             <tr className="bb">
-              <th width="30%" className="tl">Material Name</th>
-              <th width="15%" className="ph2">Qty</th>
+              <th width="30%" className="tl">
+                Material Name
+              </th>
+              <th width="15%" className="ph2">
+                Qty
+              </th>
               <th width="15%">UOM</th>
-              <th width="5%"/>
+              <th width="5%" />
             </tr>
             {this.state.materials.map((material, i) => (
               <tr className="pointer bb" key={i}>

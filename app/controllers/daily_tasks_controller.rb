@@ -28,9 +28,10 @@ class DailyTasksController < ApplicationController
   end
 
   def serialized_tasks(task_ids)
-    WorkDaySerializer.new(task_ids.map do |task_id|
+    tasks = task_ids.map do |task_id|
       Cultivation::Task.find(task_id).work_days.find_or_initialize_by(date: @tasks_date, user: current_user)
-    end).serializable_hash[:data]
+    end
+    WorkDaySerializer.new(tasks).serializable_hash[:data]
   end
 
   def serialized_catalogue

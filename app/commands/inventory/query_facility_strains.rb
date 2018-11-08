@@ -1,6 +1,7 @@
 module Inventory
   class QueryFacilityStrains
     prepend SimpleCommand
+
     def initialize(facility_id = nil)
       @facility_id = facility_id
     end

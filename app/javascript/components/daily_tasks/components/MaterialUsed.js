@@ -1,5 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
+import { toJS } from 'mobx'
 import Select from 'react-select'
 
 import DailyTasksStore from '../store/DailyTasksStore'
@@ -43,6 +44,7 @@ class MaterialUsed extends React.Component {
         materialFound.qty = material.qty || ''
         materialFound.uom = material.uom || ''
       } else {
+        // console.log(toJS(material))
         materials.push({
           catalogue_id: material.catalogue_id,
           name: material.name || '',
@@ -214,14 +216,18 @@ class MaterialUsed extends React.Component {
         <table className="w-100">
           <tbody>
             <tr className="bb">
-              <th>Material Name</th>
-              <th width="20%">Qty</th>
-              <th width="30%">UOM</th>
-              <th />
+              <th width="30%" className="tl">
+                Material Name
+              </th>
+              <th width="15%" className="ph2">
+                Qty
+              </th>
+              <th width="15%">UOM</th>
+              <th width="5%" />
             </tr>
             {this.state.materials.map((material, i) => (
               <tr className="pointer bb" key={i}>
-                <td className="tl pv2 ph3">
+                <td className="tl pv2">
                   {this.isPlannedMaterial(material.catalogue_id) ? (
                     material.name
                   ) : (
@@ -238,7 +244,7 @@ class MaterialUsed extends React.Component {
                     />
                   )}
                 </td>
-                <td className="tl pv2 ph3">
+                <td className="tl pv2 ph2">
                   <input
                     value={material.qty}
                     onChange={e =>
@@ -257,7 +263,7 @@ class MaterialUsed extends React.Component {
                     step=".01"
                   />
                 </td>
-                <td className="tl pv2 ph3">
+                <td className="tl pv2 ph2">
                   <Select
                     name="uom"
                     options={uom_dropdown}
@@ -270,7 +276,7 @@ class MaterialUsed extends React.Component {
                     }
                   />
                 </td>
-                <td className="tl pv2 ph3">
+                <td className="tl pv2 pl2">
                   <i
                     className="material-icons red md-18 pointer dim"
                     onClick={() => {
@@ -288,7 +294,7 @@ class MaterialUsed extends React.Component {
         </table>
         <button
           onClick={this.handleAddMaterial}
-          className="ttu pointer di pv3 ph5 bg-orange button--font white bn box--br3"
+          className="ttu pointer di pv2 ph3 btn--primary mt3 br2"
         >
           Add Material
         </button>

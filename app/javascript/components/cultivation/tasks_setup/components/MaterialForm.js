@@ -184,8 +184,10 @@ export default class MaterialForm extends React.Component {
       value: f,
       label: f.replace(/_/g, ' ')
     }))
-    let catalogue = ItemStore.slice().find(e => e.id === this.state.catalogue_id)
-    let uom_dropdown = catalogue ? catalogue.uoms : [{label: '', value: ''}] 
+    let catalogue = ItemStore.slice().find(
+      e => e.id === this.state.catalogue_id
+    )
+    let uom_dropdown = catalogue ? catalogue.uoms : [{ label: '', value: '' }]
     let materials = this.state.items
     let handleChange = this.handleChange
     let handleDelete = this.handleDelete

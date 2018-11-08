@@ -19,14 +19,10 @@ class WorkDashboardApp extends React.Component {
       <React.Fragment>
         <div id="toast" className="toast" />
         <DateFormatted date={this.props.date} />
-    
+
         <div className="f5 flex mt4">
-          <div className="bg-white tab tab--active">
-            To Dos
-          </div>
-          <div className="bg-black-5 tab">
-            Issues
-          </div>
+          <div className="bg-white tab tab--active">To Dos</div>
+          <div className="bg-black-5 tab">Issues</div>
         </div>
         <div className="bg-white box--shadow pa4 fl w-100">
           <div className="fl w-100 ma1">
@@ -37,7 +33,7 @@ class WorkDashboardApp extends React.Component {
             </div>
           </div>
         </div>
-        
+
         {DailyTasksStore.editingPanel ? (
           <StyledEditingPanel className="b--light-gray bl bw1 fixed w-40 bg-white" />
         ) : (
@@ -72,6 +68,5 @@ const StyledEditingPanel = styled(EditingPanel)`
   height: 100%;
   min-width: 500px;
 `
-
 
 export default WorkDashboardApp

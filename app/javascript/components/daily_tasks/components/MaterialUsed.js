@@ -145,7 +145,7 @@ class MaterialUsed extends React.Component {
     this.trySync(materials)
   }
 
-  handleClear = (catalogueId) => {
+  handleClear = catalogueId => {
     const { dailyTask } = this.props
     const task = dailyTask.attributes.task
     const materials = this.state.materials
@@ -191,7 +191,6 @@ class MaterialUsed extends React.Component {
   autoSave() {
     // const { dailyTask } = this.props
     // this.setState({ saving: true })
-
     // updateMaterialsUsed(dailyTask, this.state.materials).then(() =>
     //   this.setState({ saving: false })
     // )
@@ -218,9 +217,7 @@ class MaterialUsed extends React.Component {
               <th width="45%" className="tl">
                 Material Name
               </th>
-              <th width="20%">
-                Qty
-              </th>
+              <th width="20%">Qty</th>
               <th width="20%">UOM</th>
               <th width="5%" />
             </tr>

@@ -24,17 +24,20 @@ class MaterialUsed extends React.Component {
     const { dailyTask } = props
     const task = dailyTask.attributes.task
 
+    // console.log(toJS(dailyTask))
     super(props)
 
     const materials = []
     // Initialize materials used data (item ID, name) from planned materials
     task.attributes.items.map((item, i) => {
+
       materials.push({
         task_item_id: item.id,
         catalogue_id: item.catalogue_id,
         name: item.name,
         qty: '',
-        uom: item.uom
+        uom: item.uom,
+        uoms: item.uoms.map(x => ({ value: x, label: x })),
       })
     })
     // Overwrite materials used data from store
@@ -44,12 +47,12 @@ class MaterialUsed extends React.Component {
         materialFound.qty = material.qty || ''
         materialFound.uom = material.uom || ''
       } else {
-        // console.log(toJS(material))
         materials.push({
           catalogue_id: material.catalogue_id,
           name: material.name || '',
           qty: material.qty || '',
-          uom: material.uom || ''
+          uom: material.uom || '',
+          uoms: material.uoms.map(x => ({ value: x, label: x }))
         })
       }
     })
@@ -262,7 +265,7 @@ class MaterialUsed extends React.Component {
                 <td className="tl pv2 ph2">
                   <Select
                     name="uom"
-                    options={uom_dropdown}
+                    options={material.uoms}
                     value={{ value: material.uom, label: material.uom }}
                     onChange={selectedOption =>
                       this.handleUomChange(

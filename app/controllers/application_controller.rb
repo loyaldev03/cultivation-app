@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   layout :layout_by_resource
 
   helper_method :current_default_facility
+  helper_method :current_facility
 
   protected
 
@@ -52,9 +53,14 @@ class ApplicationController < ActionController::Base
 
   private
 
+  # TODO: ANDY - Might change this to use current_facility instead.
   def current_default_facility
     if current_user.present?
       @current_default_facility ||= FindDefaultFacility.call(current_user).result
     end
+  end
+
+  def current_facility
+    @current_facility ||= FindFacility.call(id: params[:facility_id]).result if params[:facility_id].present?
   end
 end

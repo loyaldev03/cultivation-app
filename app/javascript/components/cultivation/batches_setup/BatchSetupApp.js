@@ -86,7 +86,7 @@ class BatchSetupApp extends React.Component {
     this.state = {
       id: '',
       showValidation: false,
-      batchFacility: props.defaultFacility || '',
+      facilityId: props.facilityId || '',
       batchSource: '',
       searchMonth: dateToMonthOption(new Date()),
       phaseDuration: {},
@@ -121,11 +121,11 @@ class BatchSetupApp extends React.Component {
     if (this.state.searchMonth !== searchMonth) {
       this.setState({ searchMonth })
     }
-    const { batchFacility, phaseDuration } = this.state
+    const { facilityId, phaseDuration } = this.state
     const totalDuration = this.calculateTotalDuration()
-    if (batchFacility && searchMonth && totalDuration > 0) {
+    if (facilityId && searchMonth && totalDuration > 0) {
       const searchParams = {
-        facility_id: batchFacility,
+        facility_id: facilityId,
         search_month: searchMonth,
         total_duration: totalDuration
       }
@@ -138,7 +138,7 @@ class BatchSetupApp extends React.Component {
     fetch(
       '/api/v1/batches',
       httpPostOptions({
-        facility_id: this.state.batchFacility,
+        facility_id: this.state.facilityId,
         batch_source: this.state.batchSource,
         facility_strain_id: this.state.batchStrain,
         start_date: this.state.batchStartDate,
@@ -188,7 +188,7 @@ class BatchSetupApp extends React.Component {
     const { plantSources, strains, facilities, growMethods } = this.props
     const {
       showValidation,
-      batchFacility,
+      facilityId,
       batchStrain,
       searchMonth,
       batchStartDate,
@@ -196,7 +196,7 @@ class BatchSetupApp extends React.Component {
       isLoading
     } = this.state
 
-    const batchFacilityValue = facilities.find(f => f.value === batchFacility)
+    const batchFacilityValue = facilities.find(f => f.value === facilityId)
     const batchStrainValue = strains.find(f => f.value === batchStrain)
     const totalDuration = this.calculateTotalDuration()
 
@@ -225,12 +225,12 @@ class BatchSetupApp extends React.Component {
                     styles={selectStyles}
                     options={facilities}
                     value={batchFacilityValue}
-                    onChange={e => this.handleChange('batchFacility', e.value)}
+                    onChange={e => this.handleChange('facilityId', e.value)}
                   />
                   <ValidationMessage
                     text="Select Facility"
                     enable={showValidation}
-                    show={!batchFacility}
+                    show={!facilityId}
                   />
                 </div>
                 <div className="fl w-third pr2 ml3">

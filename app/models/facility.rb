@@ -20,6 +20,8 @@ class Facility
   scope :completed, -> { where(is_complete: true) }
 
   def purposes
+    # Consolidate all purposes of rooms & sections - This is used in Batch Setup to check if specific
+    # phase / purpose room is available in the facility
     self.rooms.map { |r| r.sections.any? ? r.sections.pluck(:purpose) : r.purpose }.flatten.compact
   end
 end

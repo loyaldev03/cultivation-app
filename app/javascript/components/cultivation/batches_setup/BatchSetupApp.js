@@ -185,7 +185,13 @@ class BatchSetupApp extends React.Component {
   }
 
   render() {
-    const { plantSources, strains, facilities, growMethods } = this.props
+    const {
+      plantSources,
+      strains,
+      facilities,
+      phases,
+      growMethods
+    } = this.props
     const {
       showValidation,
       facilityId,
@@ -196,6 +202,7 @@ class BatchSetupApp extends React.Component {
       isLoading
     } = this.state
 
+    const hasVeg2phase = phases.includes('veg2')
     const batchFacilityValue = facilities.find(f => f.value === facilityId)
     const batchStrainValue = strains.find(f => f.value === batchStrain)
     const totalDuration = this.calculateTotalDuration()
@@ -257,18 +264,23 @@ class BatchSetupApp extends React.Component {
                   text="Close Phase"
                   onChange={this.handleChangeDuration('clone')}
                 />
-                <PhaseDurationInput
-                  text="Veg Phase"
-                  onChange={this.handleChangeDuration('veg')}
-                />
-                <PhaseDurationInput
-                  text="Veg 1 Phase"
-                  onChange={this.handleChangeDuration('veg1')}
-                />
-                <PhaseDurationInput
-                  text="Veg 2 Phase"
-                  onChange={this.handleChangeDuration('veg2')}
-                />
+                {hasVeg2phase ? (
+                  <React.Fragment>
+                    <PhaseDurationInput
+                      text="Veg 1 Phase"
+                      onChange={this.handleChangeDuration('veg1')}
+                    />
+                    <PhaseDurationInput
+                      text="Veg 2 Phase"
+                      onChange={this.handleChangeDuration('veg2')}
+                    />
+                  </React.Fragment>
+                ) : (
+                  <PhaseDurationInput
+                    text="Veg Phase"
+                    onChange={this.handleChangeDuration('veg')}
+                  />
+                )}
                 <PhaseDurationInput
                   text="Flower Phase"
                   onChange={this.handleChangeDuration('flower')}

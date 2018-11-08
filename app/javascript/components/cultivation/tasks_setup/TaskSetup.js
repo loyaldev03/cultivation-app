@@ -203,12 +203,12 @@ class TaskSetup extends React.Component {
                   <hr />
                   <div className=" flex">
                     <div className="w-50">
-                      <label>Estimated Harvest Dat </label>
+                      <label>Estimated Harvest Date </label>
                     </div>
                     <div className="w-50">
                       <div className="">
                         <label>
-                          {formatDate2(this.state.batch.start_date)}
+                          {formatDate2(this.state.batch.estimated_harvest_date)}
                         </label>
                       </div>
                     </div>

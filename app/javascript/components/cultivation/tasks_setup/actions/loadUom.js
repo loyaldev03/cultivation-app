@@ -1,7 +1,7 @@
 import UomStore from '../stores/UomStore'
 
 export default function loadUsers() {
-  let url = '/api/v1/uoms?catalogue_type=raw_materials'
+  let url = '/api/v1/uoms'
   fetch(url)
     .then(resp => resp.json()) // Transform the data into json
     .then(function(data) {

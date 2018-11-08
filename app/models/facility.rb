@@ -18,4 +18,8 @@ class Facility
   has_many :catalogue, class_name: 'Inventory::Catalogue'
 
   scope :completed, -> { where(is_complete: true) }
+
+  def purposes
+    self.rooms.map { |r| r.sections.any? ? r.sections.pluck(:purpose) : r.purpose }.flatten.compact
+  end
 end

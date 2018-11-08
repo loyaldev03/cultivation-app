@@ -53,7 +53,6 @@ class ApplicationController < ActionController::Base
 
   private
 
-  # TODO: ANDY - Might change this to use current_facility instead.
   def current_default_facility
     if current_user.present?
       @current_default_facility ||= FindDefaultFacility.call(current_user).result

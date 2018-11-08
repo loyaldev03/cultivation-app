@@ -8,6 +8,7 @@ class FindDefaultFacility
   end
 
   def call
+    # TODO::ANDY should only return facility that exists in the database
     default_facility = @current_user&.default_facility_id
     default_facility ||= @current_user&.facilities&.first
 

@@ -5,12 +5,12 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def new
-    Rails.logger.debug "\033[34m Default Facility: #{current_default_facility&.name} \033[0m"
-    @default_facility = current_default_facility&.id&.to_s
+    @facility_id = current_facility&.id.to_s
+    # Cultivation Phases during batch setup depends on the Facility (room & section) purposes
+    @phases = current_facility.purposes
     @plant_sources = Constants::PLANT_SOURCE_TYPES.map { |a| {value: a[:code], label: a[:name]} }
-    @strains = Inventory::FacilityStrain.all.map { |a| {value: a.id.to_s, label: "#{a.strain_name} (#{a.strain_type})"} }
+    @strains = Inventory::QueryFacilityStrains.call(@facility_id).result.map { |a| {value: a[:value], label: a[:strain_name]} }
     @facilities = QueryUserFacilities.call(current_user).result.map { |a| {value: a.id.to_s, label: "#{a.name} (#{a.code})"} }
-    logger.debug @facilities
     @grow_methods = Constants::GROW_MEDIUM.map { |a| {value: a[:code], label: a[:name]} }
   end
 

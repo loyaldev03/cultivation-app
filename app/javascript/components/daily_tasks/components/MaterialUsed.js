@@ -68,16 +68,6 @@ class MaterialUsed extends React.Component {
         value: catalogue.id,
         label: catalogue.attributes.name
       }))
-
-    this.handleQuantityChange = this.handleQuantityChange.bind(this)
-    this.handleUomChange = this.handleUomChange.bind(this)
-    this.handleItemChange = this.handleItemChange.bind(this)
-    this.handleClear = this.handleClear.bind(this)
-    this.autoSave = this.autoSave.bind(this)
-    this.updateMaterialsUsedInStore = this.updateMaterialsUsedInStore.bind(this)
-    this.handleAddMaterial = this.handleAddMaterial.bind(this)
-    this.isPlannedMaterial = this.isPlannedMaterial.bind(this)
-    this.trySync = this.trySync.bind(this)
   }
 
   componentWillMount() {
@@ -93,7 +83,7 @@ class MaterialUsed extends React.Component {
     return store.find(material => material.catalogue_id == catalogueId)
   }
 
-  isPlannedMaterial(catalogueId) {
+  isPlannedMaterial = catalogueId => {
     const { dailyTask } = this.props
     const task = dailyTask.attributes.task
 
@@ -122,7 +112,7 @@ class MaterialUsed extends React.Component {
     })
   }
 
-  handleQuantityChange(catalogueId, inputQuantity) {
+  handleQuantityChange = (catalogueId, inputQuantity) => {
     const materials = this.state.materials
     const currentItem = this.findMaterial(catalogueId, materials)
 
@@ -131,7 +121,7 @@ class MaterialUsed extends React.Component {
     this.trySync(materials)
   }
 
-  handleUomChange(catalogueId, selectedOption) {
+  handleUomChange = (catalogueId, selectedOption) => {
     const materials = this.state.materials
     const currentItem = this.findMaterial(catalogueId, materials)
 
@@ -140,7 +130,7 @@ class MaterialUsed extends React.Component {
     this.trySync(materials)
   }
 
-  handleItemChange(index, selectedOption) {
+  handleItemChange = (index, selectedOption) => {
     const materials = this.state.materials
     const existingItem = this.findMaterial(selectedOption.value, materials)
 
@@ -155,7 +145,7 @@ class MaterialUsed extends React.Component {
     this.trySync(materials)
   }
 
-  handleClear(catalogueId) {
+  handleClear = (catalogueId) => {
     const { dailyTask } = this.props
     const task = dailyTask.attributes.task
     const materials = this.state.materials
@@ -172,7 +162,7 @@ class MaterialUsed extends React.Component {
     this.trySync(materials)
   }
 
-  handleDelete(catalogueId) {
+  handleDelete = catalogueId => {
     const currentItem = this.findMaterial(catalogueId, this.state.materials)
     const materials = this.state.materials.filter(
       material => material.catalogue_id !== catalogueId
@@ -181,13 +171,13 @@ class MaterialUsed extends React.Component {
     this.trySync(materials)
   }
 
-  trySync(materials) {
+  trySync = materials => {
     this.setState({ materials })
     this.updateMaterialsUsedInStore()
     this.resetTimer()
   }
 
-  handleAddMaterial() {
+  handleAddMaterial = () => {
     const materials = this.state.materials
     materials.push({
       catalogue_id: '',
@@ -199,6 +189,15 @@ class MaterialUsed extends React.Component {
   }
 
   autoSave() {
+    // const { dailyTask } = this.props
+    // this.setState({ saving: true })
+
+    // updateMaterialsUsed(dailyTask, this.state.materials).then(() =>
+    //   this.setState({ saving: false })
+    // )
+  }
+
+  onSave = () => {
     const { dailyTask } = this.props
     this.setState({ saving: true })
 
@@ -216,18 +215,18 @@ class MaterialUsed extends React.Component {
         <table className="w-100">
           <tbody>
             <tr className="bb">
-              <th width="30%" className="tl">
+              <th width="45%" className="tl">
                 Material Name
               </th>
-              <th width="15%" className="ph2">
+              <th width="20%">
                 Qty
               </th>
-              <th width="15%">UOM</th>
+              <th width="20%">UOM</th>
               <th width="5%" />
             </tr>
             {this.state.materials.map((material, i) => (
               <tr className="pointer bb" key={i}>
-                <td className="tl pv2">
+                <td className="tl pv2 pr2">
                   {this.isPlannedMaterial(material.catalogue_id) ? (
                     material.name
                   ) : (
@@ -258,7 +257,7 @@ class MaterialUsed extends React.Component {
                         this.autoSave()
                       }
                     }}
-                    className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
+                    className="db w-100 pa2 f6 tr black ba b--black-20 br2 outline-0 no-spinner"
                     type="number"
                     step=".01"
                   />
@@ -276,7 +275,7 @@ class MaterialUsed extends React.Component {
                     }
                   />
                 </td>
-                <td className="tl pv2 pl2">
+                <td className="tr pv2">
                   <i
                     className="material-icons red md-18 pointer dim"
                     onClick={() => {
@@ -292,13 +291,21 @@ class MaterialUsed extends React.Component {
             ))}
           </tbody>
         </table>
-        <button
-          onClick={this.handleAddMaterial}
-          className="ttu pointer di pv2 ph3 btn--primary mt3 br2"
-        >
-          Add Material
-        </button>
-        {this.state.saving && <div className="di v-btm pa2">Saving ...</div>}
+        <div className="flex flex-row justify-end">
+          {this.state.saving && <div className="di v-btm pa2">Saving ...</div>}
+          <button
+            onClick={this.handleAddMaterial}
+            className="ttu pointer di pv2 ph3 btn--secondary mt3 br2"
+          >
+            Add Material
+          </button>
+          <button
+            onClick={this.onSave}
+            className="ttu pointer di pv2 ph3 btn--primary mt3 ml3 br2"
+          >
+            Save
+          </button>
+        </div>
       </div>
     )
   }

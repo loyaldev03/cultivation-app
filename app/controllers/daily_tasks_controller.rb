@@ -28,10 +28,13 @@ class DailyTasksController < ApplicationController
   end
 
   def serialized_tasks(task_ids)
-    tasks = task_ids.map do |task_id|
+    work_days = task_ids.map do |task_id|
       Cultivation::Task.find(task_id).work_days.find_or_initialize_by(date: @tasks_date, user: current_user)
     end
-    WorkDaySerializer.new(tasks).serializable_hash[:data]
+    # Rails.logger.debug "\t\t\t>>> serialized_tasks > workday.materials_used.count: #{work_days.first.materials_used.count}"
+    # Rails.logger.debug "\t\t\t>>> serialized_tasks > workday.materials_wasted.count: #{work_days.first.materials_wasted.count}"
+    # Rails.logger.debug "\t\t\t>>> serialized_tasks > workday.time_logs.count: #{work_days.first.time_logs.count}"
+    WorkDaySerializer.new(work_days).serializable_hash[:data]
   end
 
   def serialized_catalogue
@@ -39,7 +42,8 @@ class DailyTasksController < ApplicationController
   end
 
   def batch_room_names(batch)
-    batch.tray_plans.map do |tray_plan|
+    plans = batch.tray_plans.where(phase: batch.current_growth_stage).to_a
+    plans.map do |tray_plan|
       facility = Facility.where('rooms._id': BSON::ObjectId(tray_plan.room_id)).first
       facility.rooms.find(tray_plan.room_id).name
     end

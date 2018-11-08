@@ -32,7 +32,7 @@ export default class MaterialForm extends React.Component {
       batch_id: this.props.batch_id,
       task_id: props.task.id,
       ...props.task.attributes,
-      raw_material_id: '',
+      catalogue_id: '',
       name: '',
       quantity: '',
       uom: '',
@@ -72,20 +72,20 @@ export default class MaterialForm extends React.Component {
         selectedSubCategory: '',
         selectedThirdDropdown: '',
         name: value.value,
-        raw_material_id: raw_material ? raw_material.id : null
+        catalogue_id: raw_material ? raw_material.id : null
       })
     }
     if (key === 'selectedSubCategory') {
       this.setState({
         selectedThirdDropdown: '',
         name: value.value,
-        raw_material_id: raw_material ? raw_material.id : null
+        catalogue_id: raw_material ? raw_material.id : null
       })
     }
     if (key === 'selectedThirdDropdown') {
       this.setState({
         name: value.value,
-        raw_material_id: raw_material ? raw_material.id : null
+        catalogue_id: raw_material ? raw_material.id : null
       })
     }
   }
@@ -116,7 +116,7 @@ export default class MaterialForm extends React.Component {
     fetch(
       url,
       httpPostOptions({
-        catalogue_id: this.state.raw_material_id,
+        catalogue_id: this.state.catalogue_id,
         quantity: this.state.quantity,
         uom: this.state.uom.value
       })

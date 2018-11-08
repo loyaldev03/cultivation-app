@@ -30,14 +30,13 @@ class MaterialUsed extends React.Component {
     const materials = []
     // Initialize materials used data (item ID, name) from planned materials
     task.attributes.items.map((item, i) => {
-
       materials.push({
         task_item_id: item.id,
         catalogue_id: item.catalogue_id,
         name: item.name,
         qty: '',
         uom: item.uom,
-        uoms: item.uoms.map(x => ({ value: x, label: x })),
+        uoms: item.uoms.map(x => ({ value: x, label: x }))
       })
     })
     // Overwrite materials used data from store

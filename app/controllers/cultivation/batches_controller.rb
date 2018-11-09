@@ -7,7 +7,7 @@ class Cultivation::BatchesController < ApplicationController
   def new
     @facility_id = current_facility&.id.to_s
     # Cultivation Phases during batch setup depends on the Facility (room & section) purposes
-    @phases = current_facility.purposes
+    @phases = current_facility&.purposes || []
     @plant_sources = Constants::PLANT_SOURCE_TYPES.map { |a| {value: a[:code], label: a[:name]} }
     @strains = Inventory::QueryFacilityStrains.call(@facility_id).result.map { |a| {value: a[:value], label: a[:strain_name]} }
     @facilities = QueryUserFacilities.call(current_user).result.map { |a| {value: a.id.to_s, label: "#{a.name} (#{a.code})"} }

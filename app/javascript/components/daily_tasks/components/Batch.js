@@ -11,8 +11,8 @@ const Batch = observer(props => {
   return (
     <React.Fragment>
       <div className="flex">
-        <div className="w-70">
-          <h2 className="f5" data-batch-id={batch.id}>
+        <div className="w-70 mb2">
+          <h2 className="f4 mb2" data-batch-id={batch.id}>
             {safeDisplay(batch.attributes.name)}
           </h2>
           <div className="f7 mb2">{safeDisplay(batch.rooms.join(', '))}</div>

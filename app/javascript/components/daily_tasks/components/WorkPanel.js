@@ -5,6 +5,7 @@ import BatchesList from './BatchesList'
 
 const WorkPanel = ({ todo, done, ...props }) => (
   <Router>
+    <p>to be deleted...</p>
     <div {...props}>
       <div className="f5 flex">
         <StyledNavLink exact to="/">

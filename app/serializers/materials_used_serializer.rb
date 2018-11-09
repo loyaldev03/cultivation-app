@@ -14,4 +14,8 @@ class MaterialsUsedSerializer
   attributes :qty do |object|
     object.quantity
   end
+
+  attributes :uoms do |object|
+    object.catalogue_id.present? ? object.catalogue.uoms.pluck(:unit) : nil
+  end
 end

@@ -559,8 +559,7 @@ class TaskList extends React.Component {
           ]}
           data={tasks}
           className=""
-          rows={100}
-          defaultPageSize={100}
+          defaultPageSize={-1}
           getTdProps={(state, rowInfo, column, instance) => {
             if (rowInfo) {
               return {

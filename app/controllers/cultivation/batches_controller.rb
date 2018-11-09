@@ -73,9 +73,10 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def get_cultivation_locations(batch)
+    # TODO::ANDY: Need to detech from Facility
     cultivation_phases = [
       Constants::CONST_CLONE,
-      Constants::CONST_VEG,
+      # Constants::CONST_VEG,
       Constants::CONST_VEG1,
       Constants::CONST_VEG2,
       Constants::CONST_FLOWER,

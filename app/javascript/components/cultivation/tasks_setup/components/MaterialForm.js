@@ -14,17 +14,6 @@ import loadTasks from '../actions/loadTask'
 
 import { groupBy, httpPostOptions } from '../../../utils'
 
-import UomStore from '../stores/UomStore'
-
-const uom_dropdown = [
-  { value: 'KG', label: 'KG' },
-  { value: 'CM', label: 'CM' },
-  { value: 'Inch', label: 'Inch' },
-  { value: 'ML', label: 'ML' },
-  { value: 'L', label: 'L' },
-  { value: 'Pcs', label: 'Pcs' }
-]
-
 export default class MaterialForm extends React.Component {
   constructor(props) {
     super(props)
@@ -32,11 +21,10 @@ export default class MaterialForm extends React.Component {
       batch_id: this.props.batch_id,
       task_id: props.task.id,
       ...props.task.attributes,
-      raw_material_id: '',
+      catalogue_id: '',
       name: '',
       quantity: '',
       uom: '',
-      uom_dropdown: uom_dropdown,
       materials: [],
       items: props.task.attributes.items
     }
@@ -52,7 +40,6 @@ export default class MaterialForm extends React.Component {
         name: '',
         quantity: '',
         uom: '',
-        uom_dropdown: uom_dropdown,
         materials: [],
         items: props.task.attributes.items,
         selectedCategory: '',
@@ -72,20 +59,20 @@ export default class MaterialForm extends React.Component {
         selectedSubCategory: '',
         selectedThirdDropdown: '',
         name: value.value,
-        raw_material_id: raw_material ? raw_material.id : null
+        catalogue_id: raw_material ? raw_material.id : null
       })
     }
     if (key === 'selectedSubCategory') {
       this.setState({
         selectedThirdDropdown: '',
         name: value.value,
-        raw_material_id: raw_material ? raw_material.id : null
+        catalogue_id: raw_material ? raw_material.id : null
       })
     }
     if (key === 'selectedThirdDropdown') {
       this.setState({
         name: value.value,
-        raw_material_id: raw_material ? raw_material.id : null
+        catalogue_id: raw_material ? raw_material.id : null
       })
     }
   }
@@ -116,7 +103,7 @@ export default class MaterialForm extends React.Component {
     fetch(
       url,
       httpPostOptions({
-        catalogue_id: this.state.raw_material_id,
+        catalogue_id: this.state.catalogue_id,
         quantity: this.state.quantity,
         uom: this.state.uom.value
       })
@@ -188,8 +175,10 @@ export default class MaterialForm extends React.Component {
       value: f,
       label: f.replace(/_/g, ' ')
     }))
-
-    let uom_dropdown = UomStore
+    let catalogue = ItemStore.slice().find(
+      e => e.id === this.state.catalogue_id
+    )
+    let uom_dropdown = catalogue ? catalogue.uoms : [{ label: '', value: '' }]
     let materials = this.state.items
     let handleChange = this.handleChange
     let handleDelete = this.handleDelete
@@ -198,11 +187,6 @@ export default class MaterialForm extends React.Component {
         <div className="">
           <div className="ph4 mt3 flex">
             <div className="w-100">
-              {/* {JSON.stringify(subcategory_dropdown['Potassium'])} */}
-
-              {/* {JSON.stringify(this.state.selectedCategory)} */}
-              {/* {JSON.stringify(category_dropdown)} */}
-              {/* {JSON.stringify(category_dropdown)} */}
               <label className="f6 fw6 db mb1 gray ttc">Material Name</label>
               <Select
                 name="selectedCategory"

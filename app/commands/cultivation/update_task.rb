@@ -22,6 +22,11 @@ module Cultivation
 
         update_task(task, @args)
         update_tasks_end_date(task) if task.parent #extend end date to category , and phase
+
+        #update batch estimated_harvest_date
+        batch = task.batch
+        dry_phase = batch.tasks.find_by(is_phase: true, phase: 'dry')
+        batch.update(estimated_harvest_date: dry_phase.start_date) if dry_phase.start_date != batch.estimated_harvest_date
       end
       task
     end

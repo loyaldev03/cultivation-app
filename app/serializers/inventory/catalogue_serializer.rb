@@ -11,5 +11,9 @@ module Inventory
     attribute :name do |object|
       object.label
     end
+
+    attribute :uoms do |object|
+      object.uoms.map { |a| {label: a.name, value: a.name} }
+    end
   end
 end

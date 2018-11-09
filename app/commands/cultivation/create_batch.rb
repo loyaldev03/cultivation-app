@@ -152,7 +152,7 @@ module Cultivation
         {:phase => 'veg1', :task_category => '', :name => 'Check environment system', :duration => 0, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},
         {:phase => 'veg1', :task_category => '', :name => 'Monitor Daily', :duration => 13, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},
 
-        {:phase => 'veg2', :task_category => '', :name => 'veg2', :duration => 14, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'true', :is_category => 'false'},
+        {:phase => 'veg2', :task_category => '', :name => 'Veg2', :duration => 14, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'true', :is_category => 'false'},
 
         {:phase => 'veg2', :task_category => '', :name => 'Check veg 2 room for set up', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},
         {:phase => 'veg2', :task_category => '', :name => 'transfer plant to veg2 room', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},
@@ -161,7 +161,7 @@ module Cultivation
         {:phase => 'veg2', :task_category => '', :name => 'Check environment system', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},
         {:phase => 'veg2', :task_category => '', :name => 'Monitor Daily', :duration => 13, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},
 
-        {:phase => 'flower', :task_category => '', :name => 'flower', :duration => 56, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'true', :is_category => 'false'},
+        {:phase => 'flower', :task_category => '', :name => 'Flower', :duration => 56, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'true', :is_category => 'false'},
 
         {:phase => 'flower', :task_category => '', :name => 'Check Veg 2 room for set up', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},
         {:phase => 'flower', :task_category => '', :name => 'transfer plant to Veg 2 room', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},
@@ -188,7 +188,7 @@ module Cultivation
         {:phase => 'dry', :task_category => '', :name => 'Monitor dry room', :duration => 10, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},
         {:phase => 'dry', :task_category => '', :name => 'when ready, measure weight', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},
 
-        {:phase => 'trim', :task_category => '', :name => 'trim', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'true', :is_category => 'false'},
+        {:phase => 'trim', :task_category => '', :name => 'Trim', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'true', :is_category => 'false'},
 
         {:phase => 'trim', :task_category => '', :name => 'Trim', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},
         {:phase => 'trim', :task_category => '', :name => 'Trim limbs', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :is_phase => 'false', :is_category => 'false'},

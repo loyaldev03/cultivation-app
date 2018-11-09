@@ -21,8 +21,8 @@ class SidebarTaskEditor extends React.Component {
       id: props.task.id,
       ...props.task.attributes,
       duration: this.props.task.attributes.duration,
-      start_date: new Date(this.props.task.attributes.start_date),
-      end_date: new Date(this.props.task.attributes.end_date),
+      start_date: this.initialize_date(this.props.task.attributes.start_date),
+      end_date: this.initialize_date(this.props.task.attributes.end_date),
       child_end_date: this.set_children_dates(props.task.id),
       errors: ''
     }
@@ -36,11 +36,20 @@ class SidebarTaskEditor extends React.Component {
         id: props.task.id,
         ...props.task.attributes,
         duration: props.task.attributes.duration,
-        start_date: new Date(props.task.attributes.start_date),
-        end_date: new Date(props.task.attributes.end_date),
+        start_date: this.initialize_date(props.task.attributes.start_date),
+        end_date: this.initialize_date(props.task.attributes.end_date),
         child_end_date: this.set_children_dates(props.task.id),
         errors: ''
       })
+    }
+  }
+
+  initialize_date(date) {
+    console.log(date)
+    if (date) {
+      return new Date(date)
+    } else {
+      return ''
     }
   }
 

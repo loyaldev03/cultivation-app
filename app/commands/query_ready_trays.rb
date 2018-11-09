@@ -8,7 +8,7 @@ class QueryReadyTrays
   # :purpose: Cultivation Phases in includes in the schedules
   # :exclude_batch_id: Batch to ignore. Usually the batch currently updating.
   def initialize(facility_id, purpose = [], exclude_batch_id = nil)
-    raise ArgumentError, "facility_id" if facility_id.nil?
+    raise ArgumentError, 'facility_id' if facility_id.nil?
 
     @facility_id = facility_id
     @purpose = purpose

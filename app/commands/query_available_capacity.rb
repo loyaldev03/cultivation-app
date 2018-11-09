@@ -8,7 +8,7 @@ class QueryAvailableCapacity
       :phase => nil,            # String, Phase (e.g. :clone, :veg1, :flower)
       :start_date => nil,       # Date object, Start Date of phase
       :end_date => nil,         # Date object, End Date of phase
-      :quantity => 0,            # Integer, Capacity required by the Batch (Batch.quantity)
+      :quantity => 0,           # Integer, Capacity required by the Batch (Batch.quantity)
     }.merge(args)
 
     raise ArgumentError, 'facility_id' if args[:facility_id].nil?

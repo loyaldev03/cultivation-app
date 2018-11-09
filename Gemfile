@@ -97,6 +97,9 @@ gem 'memory_profiler'
 gem 'flamegraph'
 gem 'stackprof'
 
+# Producation Monitoring
+gem 'scout_apm'
+
 # Error tracking
 gem 'rollbar'
 

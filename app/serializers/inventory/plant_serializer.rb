@@ -139,5 +139,20 @@ module Inventory
         location_license_num: vendor.location_license_num,
       }
     end
+
+    attribute :mother,
+      if: Proc.new { |record, params|
+        params && params[:include]&.include?(:mother)
+      } do |object|
+      if object.mother_id.blank?
+        nil
+      else
+        mother = Inventory::Plant.find(object.mother_id)
+        {
+          id: mother.id.to_s,
+          plant_id: mother.plant_id,
+        }
+      end
+    end
   end
 end

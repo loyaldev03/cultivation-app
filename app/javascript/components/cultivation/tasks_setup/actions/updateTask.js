@@ -38,23 +38,18 @@ class updateTask {
     })
       .then(response => response.json())
       .then(data => {
-        if (data.data.id != null) {
+        if (data && data.data && data.data.id != null) {
           toast('Task Updated', 'success')
-          // let task = TaskStore.find(e => e.id === data.data.id)
-          // console.log(data.data)
-          // console.log(JSON.stringify(task))
-          // console.log(JSON.stringify(task.attributes))
-
-          // TaskStore.forEach((element, index) => {
-          //   if (element.id === data.data.id) {
-          //     TaskStore[index] = data.data
-          //   }
-          // })
-
           loadTasks.loadbatch(state.batch_id)
           window.editorSidebar.close()
         } else {
-          toast('Something happen', 'error')
+          let keys = Object.keys(data.errors)
+          console.log(data.errors[keys[0]])
+          let error_container = document.getElementById("error-container");
+          error_container.style.display = "block";
+          let error_message = document.getElementById("error-message");
+          error_message.innerHTML = data.errors[keys[0]]
+          toast(data.errors[keys[0]], 'error')
         }
       })
   }
@@ -72,7 +67,7 @@ class updateTask {
     })
       .then(response => response.json())
       .then(data => {
-        if (data.data.id != null) {
+        if (data && data.data && data.data.id != null) {
           toast('Task Moved', 'success')
 
           loadTasks.loadbatch(batch_id)
@@ -102,7 +97,7 @@ class updateTask {
     })
       .then(response => response.json())
       .then(data => {
-        if (data.data.id != null) {
+        if (data && data.data && data.data.id != null) {
           let newTask = TaskStore.slice().find(e => e.id === state.id)
           newTask.attributes.user_ids = state.users.map(e => e.id) // data replaced but table data not reloaded
           loadTasks.loadbatch(state.batch_id) // reload the whole table

@@ -51,7 +51,10 @@ module Cultivation
       tasks_changes = []
       #if date is changes, start_date, end_date and duration
       find_changes(task, tasks_changes, opt) #store into temp array
-      bulk_update(tasks_changes) #bulk update
+      if valid_data?(tasks_changes)
+        bulk_update(tasks_changes) #bulk update
+        task
+      end
       task
     end
 
@@ -97,6 +100,22 @@ module Cultivation
         }}
       end
       Cultivation::Task.collection.bulk_write(bulk_order)
+    end
+
+    def valid_data?(tasks)
+      max_date = tasks.pluck(:end_date).compact.max
+      overlap_batch = false
+      Cultivation::Batch.all.each do |batch|
+        Rails.logger.debug "Date comparison => #{max_date} > #{batch.start_date}"
+        if max_date && max_date > batch.start_date
+          overlap_batch = true
+          break
+        end
+      end
+      Rails.logger.debug "Overlap Batch ===> #{overlap_batch}"
+      errors.add(:end_date, 'Overlap Batches start date') if overlap_batch
+      Rails.logger.debug "Task Changes array  ===> #{tasks.pluck(:end_date).compact.max}"
+      errors.empty?
     end
   end
 end

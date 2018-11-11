@@ -139,6 +139,13 @@ class SidebarTaskEditor extends React.Component {
     let checkboxValue = this.checkboxValue
     return (
       <React.Fragment>
+        <div className="ph4 mt3 mb3 flex" id="error-container" style={{display: 'none'}}> 
+          <div className="w-100 ba red">
+            <label className="f6 fw6 db mb1 ttc mt3 mb3">Errors : </label>
+            <label className="f6 fw6 db mb1 ttc mt3 mb3" id="error-message"></label>
+          </div>
+        </div>
+
         <div className="ph4 mt3 mb3 flex">
           <div className="w-100">
             <TextInput
@@ -166,7 +173,7 @@ class SidebarTaskEditor extends React.Component {
             <DatePicker
               value={this.state.end_date}
               fieldname="end_date"
-              minDate={isNotNormalTask ? this.state.child_end_date : null}
+              // minDate={isNotNormalTask ? this.state.child_end_date : null}
               onChange={e => this.handleChangeDate('end_date', e)}
             />
           </div>

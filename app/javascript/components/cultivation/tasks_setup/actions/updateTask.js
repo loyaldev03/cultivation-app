@@ -45,9 +45,9 @@ class updateTask {
         } else {
           let keys = Object.keys(data.errors)
           console.log(data.errors[keys[0]])
-          let error_container = document.getElementById("error-container");
-          error_container.style.display = "block";
-          let error_message = document.getElementById("error-message");
+          let error_container = document.getElementById('error-container')
+          error_container.style.display = 'block'
+          let error_message = document.getElementById('error-message')
           error_message.innerHTML = data.errors[keys[0]]
           toast(data.errors[keys[0]], 'error')
         }

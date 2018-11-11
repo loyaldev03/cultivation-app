@@ -139,10 +139,14 @@ class SidebarTaskEditor extends React.Component {
     let checkboxValue = this.checkboxValue
     return (
       <React.Fragment>
-        <div className="ph4 mt3 mb3 flex" id="error-container" style={{display: 'none'}}> 
+        <div
+          className="ph4 mt3 mb3 flex"
+          id="error-container"
+          style={{ display: 'none' }}
+        >
           <div className="w-100 ba red">
             <label className="f6 fw6 db mb1 ttc mt3 mb3">Errors : </label>
-            <label className="f6 fw6 db mb1 ttc mt3 mb3" id="error-message"></label>
+            <label className="f6 fw6 db mb1 ttc mt3 mb3" id="error-message" />
           </div>
         </div>
 

@@ -10,7 +10,7 @@
   <% end %>
 
   <h3 class="w-100 tc h3--font dark-grey">
-    Welcome to Cannected, user.
+    Welcome to Cannected, <%= @current_user&.first_name %>
     <br/>
     Where do you want to start?
   </h3>
@@ -66,7 +66,7 @@
     <% end %>
 
 
-    <%= link_to new_cultivation_batch_path,
+    <%= link_to new_cultivation_batch_path(facility_id: current_default_facility&.id.to_s),
       style: "height: 378px; width: 300px;", 
       class: "mb0-l mb4 tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between grow link" do %>
       

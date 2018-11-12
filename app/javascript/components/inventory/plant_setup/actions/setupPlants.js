@@ -11,7 +11,7 @@ export default function setupPlants(payload) {
   })
     .then(response => {
       return response.json().then(data => {
-        console.log(data)
+        // console.log(data)
         return {
           status: response.status,
           data
@@ -21,7 +21,7 @@ export default function setupPlants(payload) {
     .then(result => {
       const { status, data } = result
       if (status == 200) {
-        console.log(data.data)
+        // console.log(data.data)
 
         if (payload.id.length > 0) {
           plantStore.update(data.data)

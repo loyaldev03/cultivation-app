@@ -2,17 +2,18 @@ import React from 'react'
 import Select from 'react-select'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { NumericInput, FieldError } from '../../../../utils/FormHelpers'
-// import StorageInfo from '../shared/StorageInfo'
 import LocationPicker from '../../../../utils/LocationPicker2'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import setupMother from '../../actions/setupMother'
 import getPlant from '../../actions/getPlant'
 import reactSelectStyle from '../../../../utils/reactSelectStyle'
+import { launchBarcodeScanner } from '../../../../utils/BarcodeScanner'
 
 class MotherEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
+    this.scanner = null
     this.locations = this.props.locations
 
     // Callback ref to get instance of html DOM: https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
@@ -29,6 +30,12 @@ class MotherEditor extends React.Component {
   }
 
   componentDidMount() {
+    document.addEventListener('editor-sidebar-close', () => {
+      if (this.scanner) {
+        this.scanner.destroy()
+      }
+    })
+
     document.addEventListener('editor-sidebar-open', event => {
       const id = event.detail.id
       if (!id) {
@@ -76,7 +83,6 @@ class MotherEditor extends React.Component {
           const strainOption = this.props.facilityStrains.find(
             x => x.value === attrs.facility_strain_id
           )
-          console.log(Object.getOwnPropertyNames(vendor_attr).length > 0)
 
           this.setState({
             ...this.resetState(),
@@ -121,14 +127,23 @@ class MotherEditor extends React.Component {
       purchase_order_no: '',
       // UI states
       isBought: false,
+      showScanner: false,
+      scannerReady: false,
       errors: {}
     }
   }
 
   onChangePlantIds = event => {
-    this.setState({ plant_ids: event.target.value })
+    this.setState({ plant_ids: event.target.value }, this.resizePlantIDTextArea)
+  }
+
+  resizePlantIDTextArea = () => {
+    const lines = (this.state.plant_ids.match(/\n/g) || []).length
     const node = this.plantIdsTextArea
-    const lines = (event.target.value.match(/\n/g) || []).length
+
+    if (!node) {
+      return
+    }
 
     if (lines < 3) {
       node.style.height = 'auto'
@@ -190,6 +205,32 @@ class MotherEditor extends React.Component {
     event.preventDefault()
   }
 
+  onShowScanner = e => {
+    this.setState(
+      { showScanner: !this.state.showScanner, scannerReady: false },
+      () => {
+        if (this.state.showScanner) {
+          launchBarcodeScanner({
+            licenseKey: this.props.scanditLicense,
+            targetId: 'scandit-barcode-picker',
+            onScan: result => {
+              this.setState({ plant_ids: result + '\n' + this.state.plant_ids })
+              this.resizePlantIDTextArea()
+            },
+            onReady: () => {
+              console.log('on ready at editor component level...')
+              this.setState({ scannerReady: true })
+            }
+          }).then(scanner => (this.scanner = scanner))
+        } else {
+          this.scanner.destroy()
+        }
+      }
+    )
+
+    e.preventDefault()
+  }
+
   reset() {
     this.setState(this.resetState())
   }
@@ -207,15 +248,15 @@ class MotherEditor extends React.Component {
     let errors = {}
 
     if (facility_strain_id.length <= 0) {
-      errors = { ...errors, facility_strain_id: ['Strain is required.'] }
+      errors.facility_strain_id = ['Strain is required.']
     }
 
     if (plant_ids.length <= 0) {
-      errors = { ...errors, plant_ids: ['Plant ID is required.'] }
+      errors.plant_ids = ['Plant ID is required.']
     }
 
     if (planted_on === null) {
-      errors = { ...errors, planted_on: ['Planted on date is required.'] }
+      errors.planted_on = ['Planted on date is required.']
     }
 
     let purchaseData = { isValid: true }
@@ -235,7 +276,6 @@ class MotherEditor extends React.Component {
       id,
       facility_strain_id,
       plant_ids,
-      // plant_qty,
       planted_on: planted_on && planted_on.toISOString(),
       location_id,
       isBought,
@@ -273,6 +313,15 @@ class MotherEditor extends React.Component {
               onChange={this.onPlantedOnChanged}
             />
             <FieldError errors={this.state.errors} field="planted_on" />
+          </div>
+          <div className="w-50 flex justify-end items-end">
+            <a
+              href=""
+              onClick={this.onShowScanner}
+              className="ph2 pv2 btn--secondary f6 link"
+            >
+              {this.state.showScanner ? 'Hide scanner' : 'Scan Plant ID'}
+            </a>
           </div>
         </div>
       </React.Fragment>
@@ -327,6 +376,22 @@ class MotherEditor extends React.Component {
           </div>
 
           {this.renderPlantIdForm()}
+
+          <div className="ph4 mt0 flex flex-column">
+            <div className="w-100">
+              <div id="scandit-barcode-picker" className="scanner" />
+            </div>
+            <div className="w-100 tc">
+              {this.state.showScanner &&
+                this.state.scannerReady && (
+                  <div className="f7 gray">Scanner is ready!</div>
+                )}
+              {this.state.showScanner &&
+                !this.state.scannerReady && (
+                  <div className="f7 gray">Loading scanner...</div>
+                )}
+            </div>
+          </div>
 
           <hr className="mt3 m b--light-gray w-100" />
           <div className="ph4 mt3 mb3 flex flex-column">

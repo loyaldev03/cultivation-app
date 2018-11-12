@@ -266,16 +266,14 @@ class TeamSetttingApp extends React.Component {
                         >
                           <td className="pa2 tc">
                             {x.photo_url ? (
-                              <div
-                                style={{
-                                  height: '36px',
-                                  borderRadius: '36px',
-                                  overflow: 'hidden'
-                                }}
-                              >
+                              <div>
                                 <img
                                   src={x.photo_url}
-                                  style={{ height: '100%' }}
+                                  style={{
+                                    width: '36px',
+                                    height: '36px',
+                                    borderRadius: '18px'
+                                  }}
                                 />
                               </div>
                             ) : (

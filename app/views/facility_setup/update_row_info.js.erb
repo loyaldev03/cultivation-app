@@ -3,3 +3,8 @@ toast('Row Saved', 'success');
 <%= render "refresh_cards" %>
 
 hideSlidePanel();
+
+<% if @show_duplicate_dialog %>
+  showRowSetupSuccess("<%= @row_info_form.id %>")
+<% end %>
+

@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+
 import {
   TextInput,
   FieldError,
@@ -14,11 +15,13 @@ import reactSelectStyle from '../../../../utils/reactSelectStyle'
 import getPlant from '../../actions/getPlant'
 import searchPlants from '../../actions/searchPlants'
 import { BATCH_SOURCE } from '../../../../utils'
+import { launchBarcodeScanner } from '../../../../utils/BarcodeScanner'
 
 class PlantEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
+    this.scanner = null
 
     if (props.growth_stage === 'veg') {
       this.batches = this.props.cultivation_batches
@@ -45,16 +48,25 @@ class PlantEditor extends React.Component {
     this.setPurchaseInfoEditor = element => {
       this.purchaseInfoEditor = element
     }
+
+    this.plantIDTextArea = React.createRef()
   }
 
   componentDidMount() {
+    document.addEventListener('editor-sidebar-close', () => {
+      if (this.scanner) {
+        this.scanner.destroy()
+      }
+      // console.log('sidebar closed')
+    })
+
     document.addEventListener('editor-sidebar-open', event => {
       const id = event.detail.id
 
       if (!id) {
         this.setState(this.resetState())
       } else {
-        getPlant(id, 'vendor_invoice, vendor, purchase_order').then(
+        getPlant(id, 'vendor_invoice, vendor, purchase_order, mother').then(
           ({ status, data }) => {
             if (status != 200) {
               alert('something wrong')
@@ -95,6 +107,14 @@ class PlantEditor extends React.Component {
               x => x.id === data.attributes.cultivation_batch_id
             )
 
+            let motherOption = null
+            if (data.attributes.mother) {
+              motherOption = {
+                value: data.attributes.mother.id,
+                label: data.attributes.mother.plant_id
+              }
+            }
+
             this.setState({
               ...this.resetState(),
               id: data.id,
@@ -105,7 +125,7 @@ class PlantEditor extends React.Component {
               plant_qty: 0,
               location_id: data.attributes.location_id,
               planting_date: new Date(data.attributes.planting_date),
-              mother_id: data.attributes.mother_id,
+              motherOption: motherOption,
 
               // UI states
               strain_name: batch.strain_name,
@@ -134,7 +154,6 @@ class PlantEditor extends React.Component {
       plant_qty: 0,
       location_id: '',
       planting_date: null,
-      mother_id: '',
       // purchase info
       vendor_id: '',
       vendor_name: '',
@@ -155,14 +174,23 @@ class PlantEditor extends React.Component {
       facility: '',
       isBought: false,
       errors: {},
-      motherOption: {}
+      motherOption: {},
+      showScanner: false,
+      scannerReady: false
     }
   }
 
   onCloneIdsChanged = event => {
-    this.setState({ plant_ids: event.target.value })
-    const lines = (event.target.value.match(/\n/g) || []).length
-    const node = event.target
+    this.setState({ plant_ids: event.target.value }, this.resizePlantIDTextArea)
+  }
+
+  resizePlantIDTextArea = () => {
+    const lines = (this.state.plant_ids.match(/\n/g) || []).length
+    const node = this.plantIDTextArea.current
+
+    if (!node) {
+      return
+    }
 
     if (lines < 3) {
       node.style.height = 'auto'
@@ -201,11 +229,11 @@ class PlantEditor extends React.Component {
       strain_name: item.strain_name,
       start_date: new Date(item.start_date),
       facility: item.facility,
-      mother_id: '',
       planting_date,
       motherOption: null,
       batch_source: item.batch_source,
-      isBought: item.batch_source === BATCH_SOURCE.PURCHASED
+      isBought: item.batch_source === BATCH_SOURCE.PURCHASED,
+      showScanner: false
     })
   }
 
@@ -215,7 +243,6 @@ class PlantEditor extends React.Component {
     } else {
       this.setState({ motherOption: item })
     }
-    this.setState({ mother_id: '' })
   }
 
   onSave = event => {
@@ -257,28 +284,19 @@ class PlantEditor extends React.Component {
     let errors = {}
 
     if (cultivation_batch_id.length === 0) {
-      errors = {
-        ...errors,
-        cultivation_batch_id: ['Cultivation batch ID is required.']
-      }
+      errors.cultivation_batch_id = ['Cultivation batch ID is required.']
     }
 
     if (plant_ids.trim().length <= 0) {
-      errors = {
-        ...errors,
-        plant_ids: ['Plant ID is required.']
-      }
+      errors.plant_ids = ['Plant ID is required.']
     }
 
     if (planting_date === null) {
-      errors = { ...errors, planting_date: ['Planted on date is required.'] }
+      errors.planting_date = ['Planted on date is required.']
     }
 
     if (location_id.length === 0) {
-      errors = {
-        ...errors,
-        location_id: ['Location of the clones is required.']
-      }
+      errors.location_id = ['Location of the clones is required.']
     }
 
     let purchaseData = { isValid: true }
@@ -324,8 +342,6 @@ class PlantEditor extends React.Component {
         value: x.id
       }))
 
-      const motherOption = mothers.find(x => x.value == this.state.mother_id)
-      this.setState({ motherOption })
       return mothers
     })
   }
@@ -397,6 +413,7 @@ class PlantEditor extends React.Component {
             </p>
             <textarea
               rows="3"
+              ref={this.plantIDTextArea}
               value={this.state.plant_ids}
               className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
               placeholder="Plant0001&#10;Plant0002&#10;Plant0003"
@@ -441,6 +458,32 @@ class PlantEditor extends React.Component {
         <hr className="mt3 m b--black-10 w-100" />
       </React.Fragment>
     )
+  }
+
+  onShowScanner = e => {
+    this.setState(
+      { showScanner: !this.state.showScanner, scannerReady: false },
+      () => {
+        if (this.state.showScanner) {
+          launchBarcodeScanner({
+            licenseKey: this.props.scanditLicense,
+            targetId: 'scandit-barcode-picker',
+            onScan: result => {
+              this.setState({ plant_ids: result + '\n' + this.state.plant_ids })
+              this.resizePlantIDTextArea()
+            },
+            onReady: () => {
+              console.log('on ready at editor component level...')
+              this.setState({ scannerReady: true })
+            }
+          }).then(scanner => (this.scanner = scanner))
+        } else {
+          this.scanner.destroy()
+        }
+      }
+    )
+
+    e.preventDefault()
   }
 
   renderTitle() {
@@ -503,6 +546,32 @@ class PlantEditor extends React.Component {
 
           {this.renderBatchDetails()}
           {this.renderPlantIdTextArea()}
+
+          <div className="ph4 mt0 flex flex-column">
+            <div className="w-100 mb2 flex justify-end">
+              <a
+                href=""
+                onClick={this.onShowScanner}
+                className="ph2 pv2 btn--secondary f6 link"
+              >
+                {this.state.showScanner ? 'Hide scanner' : 'Scan Plant ID'}
+              </a>
+            </div>
+            <div className="w-100">
+              <div id="scandit-barcode-picker" className="scanner" />
+            </div>
+            <div className="w-100 tc">
+              {this.state.showScanner &&
+                this.state.scannerReady && (
+                  <div className="f7 gray">Scanner is ready!</div>
+                )}
+              {this.state.showScanner &&
+                !this.state.scannerReady && (
+                  <div className="f7 gray">Loading scanner...</div>
+                )}
+            </div>
+          </div>
+
           <div className="ph4 mt3 flex">
             <div className="w-100">
               <LocationPicker
@@ -540,24 +609,6 @@ class PlantEditor extends React.Component {
             </div>
           </div>
 
-          {/*
-          <hr className="mt3 m b--light-gray w-100" />
-          <div className="ph4 mb3 mt3">
-            <span className="f6 fw6 dark-gray">Plant Origin?</span>
-          </div>
-          <div className="ph4 mb3 flex justify-between">
-            <label className="f6 fw6 db mb1 gray">Clones are purchased</label>
-            <input
-              className="toggle toggle-default"
-              type="checkbox"
-              value="1"
-              id="is_bought_input"
-              checked={this.state.isBought}
-              onChange={this.onIsBoughtChanged}
-            />
-            <label className="toggle-button" htmlFor="is_bought_input" />
-          </div> */}
-
           {this.renderProcurementInfo()}
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-between">
@@ -585,7 +636,8 @@ class PlantEditor extends React.Component {
 PlantEditor.propTypes = {
   cultivation_batches: PropTypes.array.isRequired,
   locations: PropTypes.array.isRequired,
-  growth_stage: PropTypes.string.isRequired
+  growth_stage: PropTypes.string.isRequired,
+  scanditLicense: PropTypes.string.isRequired
 }
 
 export default PlantEditor

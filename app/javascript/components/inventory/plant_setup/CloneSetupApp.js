@@ -134,6 +134,7 @@ class CloneSetupApp extends React.Component {
           growth_stage="clone"
           cultivation_batches={this.props.cultivation_batches}
           locations={this.props.locations}
+          scanditLicense={this.props.scanditLicense}
         />
       </React.Fragment>
     )

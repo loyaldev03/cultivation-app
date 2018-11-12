@@ -114,10 +114,17 @@
   </div>
 
   <div class="w-100 pv3 ph4 bt b--light-grey">
+    <% unless @row_info_form.wz_generated %>
+      <%= f.button "Duplicate",
+        name: :commit,
+        type: :submit,
+        value: "duplicate",
+        class: "btn btn--lite btn--slim fl" %>
+    <% end %>
     <%= f.button "Save & Continue",
       name: :commit,
       type: :submit,
       value: "continue",
-      class: "btn btn--primary btn--large fr" %>
+      class: "btn btn--primary btn--slim fr" %>
   </div>
 <% end %>

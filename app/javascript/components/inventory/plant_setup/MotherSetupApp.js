@@ -131,6 +131,7 @@ class PlantSetupApp extends React.Component {
           isOpened={false}
           locations={this.props.locations}
           facilityStrains={this.props.facility_strains}
+          scanditLicense={this.props.scanditLicense}
         />
       </React.Fragment>
     )

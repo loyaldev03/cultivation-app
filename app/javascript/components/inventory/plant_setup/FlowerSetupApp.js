@@ -132,6 +132,7 @@ class FlowerSetupApp extends React.Component {
           growth_stage="flower"
           cultivation_batches={this.props.cultivation_batches}
           locations={this.props.locations}
+          scanditLicense={this.props.scanditLicense}
         />
       </React.Fragment>
     )

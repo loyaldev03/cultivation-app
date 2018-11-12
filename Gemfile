@@ -113,8 +113,6 @@ gem 'shrine', '~> 2.12'
 gem 'shrine-mongoid'
 gem 'aws-sdk-s3', '~> 1.2'
 
-gem 'rack-cors', require: 'rack/cors'
-
 # Authorization
 gem 'pundit'
 

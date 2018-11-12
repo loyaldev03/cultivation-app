@@ -208,7 +208,6 @@ GEM
     pundit (2.0.0)
       activesupport (>= 3.0.0)
     rack (2.0.6)
-    rack-cors (1.0.2)
     rack-mini-profiler (1.0.0)
       rack (>= 1.2.0)
     rack-proxy (0.6.5)
@@ -381,7 +380,6 @@ DEPENDENCIES
   pry-byebug
   puma (~> 3.11)
   pundit
-  rack-cors
   rack-mini-profiler
   rails (~> 5.2.0)
   react-rails

@@ -27,10 +27,10 @@
                 <div class="w5 mb3">
                   <div class="db mr4">
                     <%= f.label "Photo", class: "subtitle-2 grey db mb1 ttc" %>
-                    <%= f.hidden_field :photo, value: @user.cached_photo_data, class: "upload-hidden" %>
+                    <%= f.hidden_field :photo, value: @user.cached_photo_data, class: "upload-hidden" if @user.photo_data.present? && @user.photo_data != "null"  %>
                     <%= f.file_field :photo, autofocus: false,
                       class: "ttc grey subtitle-2-regular pa2 ba b--light-grey box--br3 w-100 outline-0 upload-file" %>
-                    <%= image_tag @user.photo_url, class: "mt2" if @user.photo_url%>
+                    <%= image_tag @user.photo_url, class: "mt2" if @user.photo_data.present? && @user.photo_data != "null" && @user.photo_url%>
                     <img class="upload-preview">
                   </div>
                 </div>

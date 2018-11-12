@@ -178,3 +178,60 @@
   font-weight: 400;
   line-height: 13px;
 }
+
+/* Tab at main screen (non sidebar) that become horizontal scroll when content wider than container  */
+
+.scrollable-tab {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scrollable-tab::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollable-tab__tab {
+  background-color: rgb(255, 255, 255);
+  border-bottom-color:rgba(0, 0, 0, 0.1);
+  border-bottom-style:solid;
+  border-bottom-width:1px;
+  border-left-color:rgba(0, 0, 0, 0.1);
+  border-right-color:rgba(0, 0, 0, 0.1);
+  border-right-style:solid;
+  border-right-width:1px;
+  border-top-color:rgba(0, 0, 0, 0.1);
+  border-top-style:solid;
+  border-top-width:1px;
+  box-sizing:border-box;
+  color:rgb(119, 119, 119);
+  cursor:pointer;
+  flex: 0 0 auto;
+  flex-basis:auto;
+  flex-grow:0;
+  flex-shrink:0;
+  font-size:14px;
+  font-weight:600;
+  padding-bottom:16px;
+  padding-left:32px;
+  padding-right:32px;
+  padding-top:16px;
+  text-decoration-color:rgb(119, 119, 119);
+  text-decoration-line:none;
+  text-decoration-style:solid;
+  transition-delay:0s;
+  transition-duration:0.15s;
+  transition-property:color;
+  transition-timing-function:ease-in;
+}
+
+.scrollable-tab__tab:hover {
+  background-color: #eee;
+}
+
+.scrollable-tab__tab--active {
+  color: #333;
+  border-bottom-color: #fff;
+}

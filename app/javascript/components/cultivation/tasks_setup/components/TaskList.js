@@ -11,7 +11,7 @@ import TaskEditor from './TaskEditor'
 import updateTask from '../actions/updateTask'
 import indentTask from '../actions/indentTask'
 import deleteTask from '../actions/deleteTask'
-
+import ErrorStore from '../stores/ErrorStore'
 import ReactTable from 'react-table'
 
 const styles = `
@@ -133,6 +133,10 @@ class TaskList extends React.Component {
 
   handleEdit = e => {
     this.setState({ taskSelected: e.row.id })
+    let error_container = document.getElementById('error-container')
+    if(error_container){
+      error_container.style.display = 'none'
+    }
     this.clearDropdown()
     editorSidebarHandler.open({
       width: '500px',

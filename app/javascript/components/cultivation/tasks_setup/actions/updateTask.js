@@ -1,4 +1,5 @@
 import TaskStore from '../stores/TaskStore'
+import ErrorStore from '../stores/ErrorStore'
 import { fadeToast, toast } from '../../../utils/toast'
 import loadTasks from './loadTask'
 
@@ -49,6 +50,10 @@ class updateTask {
           error_container.style.display = 'block'
           let error_message = document.getElementById('error-message')
           error_message.innerHTML = data.errors[keys[0]]
+          // let array = []
+          // array[0] = data.errors[keys[0]]
+          // ErrorStore.replace(array)
+          // console.log(JSON.stringify(ErrorStore))
           toast(data.errors[keys[0]], 'error')
         }
       })

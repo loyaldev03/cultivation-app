@@ -11,6 +11,7 @@ import { fadeToast, toast } from '../../../utils/toast'
 import reactSelectStyle from './../../../utils/reactSelectStyle'
 import { throws } from 'assert'
 import updateTasks from '../actions/updateTask'
+import ErrorStore from '../stores/ErrorStore'
 
 class SidebarTaskEditor extends React.Component {
   constructor(props) {
@@ -137,6 +138,7 @@ class SidebarTaskEditor extends React.Component {
       this.state.is_phase === true || this.state.is_category === true
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
+    // let errorMessage = ErrorStore.slice()
     return (
       <React.Fragment>
         <div
@@ -145,8 +147,9 @@ class SidebarTaskEditor extends React.Component {
           style={{ display: 'none' }}
         >
           <div className="w-100 ba red">
-            <label className="f6 fw6 db mb1 ttc mt3 mb3">Errors : </label>
-            <label className="f6 fw6 db mb1 ttc mt3 mb3" id="error-message" />
+            <label className="f6 fw6 db mb1 ttc mt3 mb3">Errors :</label>
+            <label className="f6 fw6 db mb1 ttc mt3 mb3" id="error-message">
+            </label>
           </div>
         </div>
 

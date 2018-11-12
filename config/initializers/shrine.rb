@@ -2,7 +2,7 @@ require "shrine"
 require "shrine/storage/s3"
 require "shrine/storage/file_system"
 
-if Rails.env.development?
+if Rails.env.production?
   s3_options = {
     access_key_id:     Rails.application.credentials.aws[:access_key_id],
     secret_access_key: Rails.application.credentials.aws[:secret_access_key],

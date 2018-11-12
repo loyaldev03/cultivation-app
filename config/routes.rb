@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # Mount Shrine endpoints
-  mount ImageUploader.upload_endpoint(:avatar) => "/images/upload"
-  mount Shrine.presign_endpoint(:avatar) => "/s3/params"
+  mount ImageUploader.upload_endpoint(:cache) => "/images/upload"
+  mount Shrine.presign_endpoint(:cache) => "/s3/params"
   devise_for :users
 
   root to: "home#index"

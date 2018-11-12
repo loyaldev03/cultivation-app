@@ -169,6 +169,12 @@ class BatchSetupApp extends React.Component {
     this.setState({ [field]: value })
   }
 
+  switchFacility = facilityId => {
+    window.location.replace(
+      `/cultivation/batches/new?facility_id=${facilityId}`
+    )
+  }
+
   handleChangeDuration = phase => e => {
     const phaseDuration = {
       ...this.state.phaseDuration,
@@ -232,7 +238,7 @@ class BatchSetupApp extends React.Component {
                     styles={selectStyles}
                     options={facilities}
                     value={batchFacilityValue}
-                    onChange={e => this.handleChange('facilityId', e.value)}
+                    onChange={e => this.switchFacility(e.value)}
                   />
                   <ValidationMessage
                     text="Select Facility"

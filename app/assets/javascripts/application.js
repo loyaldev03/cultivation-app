@@ -17,3 +17,4 @@
 //= require toggle
 //= require dropdown_menu
 //= require modal-popup
+//= require direct_upload

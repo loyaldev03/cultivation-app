@@ -8,12 +8,12 @@ class User
 
   def active_for_authentication?
     # Reference: https://www.rubydoc.info/github/plataformatec/devise/Devise/Models/Authenticatable
-    super && self.is_active == true
+    super && is_active == true
   end
 
   def inactive_message
     # Reference: https://www.rubydoc.info/github/plataformatec/devise/Devise/Models/Authenticatable
-    self.is_active == true ? super : 'Your account has been deactivated'
+    is_active == true ? super : 'Your account has been deactivated'
   end
 
   # Information

@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  # Mount a POST endpoint /images/upload endpoint which accepts file multipart upload
-  mount ImageUploader.upload_endpoint(:avatar) => "/images/upload"
+  # Mount Shrine endpoints
+  mount ImageUploader.upload_endpoint(:cache) => "/images/upload"
+  mount Shrine.presign_endpoint(:cache) => "/s3/params"
   devise_for :users
 
   root to: "home#index"

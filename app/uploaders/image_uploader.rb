@@ -1,3 +1,3 @@
 class ImageUploader < Shrine
-  # plugins and uploading logic
+  # Elided - plugins and uploading logic
 end

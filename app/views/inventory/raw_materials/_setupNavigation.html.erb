@@ -1,6 +1,6 @@
-<% tabStyle = 'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white' %>
-<% selectedStyle = 'link bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white' %>
-<div class="flex">
+<% selectedStyle = 'scrollable-tab__tab scrollable-tab__tab--active' %>
+
+<div class="scrollable-tab">
   <% if selected == Constants::NUTRIENTS_KEY %>
     <div class="<%= selectedStyle %>">
       Nutrients
@@ -8,7 +8,7 @@
   <% else %>
     <%= link_to 'Nutrients',
       nutrients_inventory_raw_materials_path, 
-      class: tabStyle %>
+      class: 'scrollable-tab__tab' %>
   <% end %>
 
   <% if selected == Constants::GROW_MEDIUM_KEY %>
@@ -18,7 +18,7 @@
   <% else %>
     <%= link_to 'Grow Medium',
       grow_medium_inventory_raw_materials_path,
-      class: tabStyle %>
+      class: 'scrollable-tab__tab' %>
   <% end %>
 
   <% if selected == Constants::GROW_LIGHT_KEY %>
@@ -28,7 +28,7 @@
   <% else %>
     <%= link_to 'Grow Lights', 
       grow_lights_inventory_raw_materials_path,
-      class: tabStyle %>
+      class: 'scrollable-tab__tab' %>
   <% end %>
 
   <% if selected == Constants::SUPPLEMENTS_KEY %>
@@ -38,7 +38,7 @@
   <% else %>
     <%= link_to 'Supplements',
       supplements_inventory_raw_materials_path, 
-      class: tabStyle %>
+      class: 'scrollable-tab__tab' %>
   <% end %>
   
   <% if selected == Constants::SEEDS_KEY %>
@@ -48,7 +48,7 @@
   <% else %>
     <%= link_to 'Seeds',
       seeds_inventory_raw_materials_path, 
-      class: tabStyle %>
+      class: 'scrollable-tab__tab' %>
   <% end %>
 
   <% if selected == Constants::PURCHASED_CLONES_KEY %>
@@ -58,7 +58,7 @@
   <% else %>
     <%= link_to 'Purchased clones',
       purchased_clones_inventory_raw_materials_path, 
-      class: tabStyle %>
+      class: 'scrollable-tab__tab' %>
   <% end %>
 
 
@@ -69,6 +69,6 @@
   <% else %>
     <%= link_to 'Others',
       others_inventory_raw_materials_path,
-      class: tabStyle %>
+      class: 'scrollable-tab__tab' %>
   <% end %>
 </div>

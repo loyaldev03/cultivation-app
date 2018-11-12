@@ -208,8 +208,12 @@ class FacilitySetupController < ApplicationController
 
   # POST update specific row info - from right panel
   def update_row_info
-    # This value should be same as the value in "Continue" button (_row_info_form)
+    # This value should be same as the value in "Save & Continue"
+    # button (_row_info_form).
+    # When "continue", user will be redirec to next shelf update form
+    # of the current row
     is_continue = params[:commit] == 'continue'
+    @show_duplicate_dialog = params[:commit] == 'duplicate'
     @form_object = FacilityWizardForm::UpdateRowInfoForm.new(is_continue)
     respond_to do |format|
       if @form_object.submit(row_info_params, current_user)

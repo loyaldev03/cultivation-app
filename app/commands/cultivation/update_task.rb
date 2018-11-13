@@ -13,12 +13,12 @@ module Cultivation
       if @args[:type] == 'position'
         update_position(task, @args[:position])
       else
-        @args[:start_date] = @args[:start_date].to_date if @args[:start_date]
-        @args[:end_date] = @args[:end_date].to_date if @args[:end_date]
+        # @args[:start_date] = @args[:start_date].to_date if @args[:start_date]
+        # @args[:end_date] = @args[:end_date].to_date if @args[:end_date]
 
-        if @args[:duration].present? && task.duration != @args[:duration]
-          @args[:end_date] = @args[:start_date] + @args[:duration].to_i.send('days')
-        end
+        # if @args[:duration].present? && task.duration != @args[:duration]
+        #   @args[:end_date] = @args[:start_date] + @args[:duration].to_i.send('days')
+        # end
 
         task.assign_attributes(@args)
         update_task(task, @args)
@@ -127,14 +127,24 @@ module Cultivation
         #get all phases
         phases = batch.tasks.select { |b| b.is_phase == true }
         #find cure or dry phase
+        Rails.logger.debug "Task Min => #{min_date}"
+        Rails.logger.debug "Task Max => #{max_date}"
+
+        Rails.logger.debug "Batch Start Date => #{batch.start_date}"
+
         phase = phases.pluck(:phase).include?('cure') ? phases.detect { |b| b.phase == 'cure' } : phases.detect { |b| b.phase == 'dry' }
-        if max_date && phase && (min_date.between?(batch.start_date, phase.end_date) || max_date.between?(batch.start_date, phase.end_date))
+        Rails.logger.debug "Phase End Date => #{phase.end_date}"
+
+        if max_date && phase &&
+           ((phase.end_date >= min_date && batch.start_date <= max_date) ||
+            (batch.start_date >= min_date && batch.start_date <= max_date) ||
+            (batch.start_date <= min_date && phase.end_date >= max_date))
           overlap_batch = true
-          overlap_batch_name = batch.name
+          overlap_batch_name = batch.batch_no
           break
         end
       end
-      errors.add(:end_date, "Overlap Batches #{overlap_batch_name}") if overlap_batch
+      errors.add(:end_date, "The date overlap with batch #{overlap_batch_name}") if overlap_batch
       errors.empty?
     end
   end

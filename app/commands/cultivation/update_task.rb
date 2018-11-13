@@ -20,26 +20,43 @@ module Cultivation
           @args[:end_date] = @args[:start_date] + @args[:duration].to_i.send('days')
         end
 
+        task.assign_attributes(@args)
         update_task(task, @args)
         update_tasks_end_date(task) if task.parent #extend end date to category , and phase
+        task.save unless errors.present?
 
         #update batch estimated_harvest_date
         batch = task.batch
         dry_phase = batch.tasks.find_by(is_phase: true, phase: 'dry')
-        batch.update(estimated_harvest_date: dry_phase.start_date) if dry_phase.start_date != batch.estimated_harvest_date
+        batch.update(estimated_harvest_date: dry_phase.start_date) if dry_phase && dry_phase.start_date != batch.estimated_harvest_date
       end
       task
     end
 
     def update_tasks_end_date(task)
       args = {}
-      args[:duration] = task.parent.children.sum(:duration) if task.parent
+
       if task.parent
-        child_max_end_date = task.parent.children.map { |h| h[:end_date] }.compact.max #get children task maximum end_date
+        children = task.parent.children.not_in(:_id => task.id)
+
+        durations = children.map { |a| a['duration'] }
+        durations << task.duration
+
+        end_date = children.map { |a| a['end_date'] }
+        end_date << task.end_date
+
+        args[:duration] = durations.compact.sum
+        child_max_end_date = end_date.compact.max #get children task maximum end_date
         args[:end_date] = child_max_end_date if (child_max_end_date && child_max_end_date > task.parent.end_date)
+
+        task_parent = task.parent
+        task_parent.assign_attributes(args)
+
+        update_task(task.parent, args, {children: false})
+        update_tasks_end_date(task.parent)
+
+        task_parent.save unless errors.present?
       end
-      update_task(task.parent, args, {children: false}) if task.parent
-      update_tasks_end_date(task.parent) if task.parent
     end
 
     def update_position(task, position)
@@ -47,11 +64,13 @@ module Cultivation
     end
 
     def update_task(task, args, opt = {})
-      task.update(args)
       tasks_changes = []
       #if date is changes, start_date, end_date and duration
       find_changes(task, tasks_changes, opt) #store into temp array
-      bulk_update(tasks_changes) #bulk update
+      if valid_data?(tasks_changes)
+        bulk_update(tasks_changes) #bulk update
+        task
+      end
       task
     end
 
@@ -98,10 +117,29 @@ module Cultivation
       end
       Cultivation::Task.collection.bulk_write(bulk_order)
     end
+
+    def valid_data?(tasks)
+      max_date = tasks.pluck(:end_date).compact.max
+      min_date = tasks.pluck(:start_date).compact.min
+      overlap_batch = false
+      Cultivation::Batch.all.not_in(:_id => tasks.first.try(:batch_id)).includes(:tasks).each do |batch|
+        #get all phases
+        phases = batch.tasks.select { |b| b.is_phase == true }
+        #find cure or dry phase
+        phase = phases.pluck(:phase).include?('cure') ? phases.detect { |b| b.phase == 'cure' } : phases.detect { |b| b.phase == 'dry' }
+        if max_date && phase && (min_date.between?(batch.start_date, phase.end_date) || max_date.between?(batch.start_date, phase.end_date))
+          overlap_batch = true
+          break
+        end
+      end
+      errors.add(:end_date, 'Overlap Batches start date') if overlap_batch
+      errors.empty?
+    end
   end
 end
 
-#seperate save and update
-#assign all the tasks to a variable
-#loop and change <- update -- can test the update
-#loop and save <- save -- can test its save
+#TODO
+#right now got two bulk_update
+#top-bottom -> task and child and related task
+#bottom-top -> task parent and parent, parent, parent
+#combine top-bottom and bottom-top bulk_update

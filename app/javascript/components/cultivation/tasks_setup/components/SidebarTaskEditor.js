@@ -11,6 +11,7 @@ import { fadeToast, toast } from '../../../utils/toast'
 import reactSelectStyle from './../../../utils/reactSelectStyle'
 import { throws } from 'assert'
 import updateTasks from '../actions/updateTask'
+import ErrorStore from '../stores/ErrorStore'
 
 class SidebarTaskEditor extends React.Component {
   constructor(props) {
@@ -71,7 +72,7 @@ class SidebarTaskEditor extends React.Component {
   handleChangeTask = event => {
     let key = event.target.attributes.fieldname.value
     let value = event.target.value
-    if (key === 'duration' && value) {
+    if (key === 'duration' && value && this.state.start_date) {
       let new_end_date = new Date(this.state.start_date)
       new_end_date.setDate(new_end_date.getDate() + parseInt(value))
       this.setState({ end_date: new_end_date, [key]: value })
@@ -81,10 +82,14 @@ class SidebarTaskEditor extends React.Component {
   }
 
   handleChangeDate = (key, value) => {
-    if (key === 'end_date') {
+    if (key === 'end_date' && this.state.start_date) {
+        let one_day = 1000 * 60 * 60 * 24
+        let duration = new Date(value) - new Date(this.state.start_date)
+        this.setState({ [key]: value, duration: (duration / one_day) })
+    } else if (key === 'start_date' && this.state.end_date) {
       let one_day = 1000 * 60 * 60 * 24
-      let duration = new Date(this.state.start_date) - new Date(value)
-      this.setState({ [key]: value, duration: -(duration / one_day) })
+      let duration = new Date(this.state.end_date) - new Date(value)
+      this.setState({ [key]: value, duration: (duration / one_day) })
     } else {
       this.setState({ [key]: value })
     }
@@ -137,8 +142,21 @@ class SidebarTaskEditor extends React.Component {
       this.state.is_phase === true || this.state.is_category === true
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
+    // let errorMessage = ErrorStore.slice()
     return (
       <React.Fragment>
+        <div
+          className="ph4 mt3 mb3 flex"
+          id="error-container"
+          style={{ display: 'none' }}
+        >
+          <div className="w-100 ba red">
+            <label className="f6 fw6 db mb1 ttc mt3 mb3">Errors :</label>
+            <label className="f6 fw6 db mb1 ttc mt3 mb3" id="error-message">
+            </label>
+          </div>
+        </div>
+
         <div className="ph4 mt3 mb3 flex">
           <div className="w-100">
             <TextInput
@@ -166,7 +184,7 @@ class SidebarTaskEditor extends React.Component {
             <DatePicker
               value={this.state.end_date}
               fieldname="end_date"
-              minDate={isNotNormalTask ? this.state.child_end_date : null}
+              // minDate={isNotNormalTask ? this.state.child_end_date : null}
               onChange={e => this.handleChangeDate('end_date', e)}
             />
           </div>

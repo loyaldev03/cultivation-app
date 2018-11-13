@@ -12,14 +12,17 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def update
-    new_params = task_params
-    # new_params = new_params.merge(user_ids: new_params[:user_ids])
-    # new_params.delete('assigned_employee')
-    Cultivation::UpdateTask.call(new_params)
-    options = {}
-    task = Cultivation::Task.find(params[:id])
-    task_json = TaskSerializer.new(task, options).serialized_json
-    render json: task_json
+    a = Cultivation::UpdateTask.call(task_params)
+    if a.errors.empty?
+      options = {}
+      task = Cultivation::Task.find(params[:id])
+      task_json = TaskSerializer.new(task, options).serialized_json
+      render json: task_json
+    else
+      Rails.logger.debug "errors ===> #{a.errors}"
+      data = {errors: a.errors}
+      render json: data
+    end
   end
 
   def create

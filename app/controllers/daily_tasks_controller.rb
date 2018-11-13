@@ -2,7 +2,6 @@ class DailyTasksController < ApplicationController
   def index
     @tasks_date = Date.today
     match = current_user.cultivation_tasks.expected_on(@tasks_date).selector
-    # debugger
     @tasks_by_batch = Cultivation::Task.collection.aggregate(
       [
         {"$match": match},
@@ -31,14 +30,12 @@ class DailyTasksController < ApplicationController
     work_days = task_ids.map do |task_id|
       Cultivation::Task.find(task_id).work_days.find_or_initialize_by(date: @tasks_date, user: current_user)
     end
-    # Rails.logger.debug "\t\t\t>>> serialized_tasks > workday.materials_used.count: #{work_days.first.materials_used.count}"
-    # Rails.logger.debug "\t\t\t>>> serialized_tasks > workday.materials_wasted.count: #{work_days.first.materials_wasted.count}"
-    # Rails.logger.debug "\t\t\t>>> serialized_tasks > workday.time_logs.count: #{work_days.first.time_logs.count}"
     WorkDaySerializer.new(work_days).serializable_hash[:data]
   end
 
   def serialized_catalogue
-    Inventory::CatalogueSerializer.new(Inventory::Catalogue.all).serializable_hash[:data]
+    catalogues = Inventory::Catalogue.raw_materials.selectable.order(label: :asc)
+    Inventory::CatalogueSerializer.new(catalogues).serializable_hash[:data]
   end
 
   def batch_room_names(batch)

@@ -44,7 +44,7 @@ module Inventory
     scope :sales_product, -> { where(catalogue_type: 'sales_product', is_active: true) }
     scope :non_sales_product, -> { where(catalogue_type: 'non_sales_product', is_active: true) }
     scope :plants, -> { where(catalogue_type: 'plant', is_active: true) }
-    scope :active, -> { where(is_active: true) }
+    scope :selectable, -> { where(:uom_dimension.nin => [nil, '']) }
 
     def self.purchased_clones
       self.find_by(catalogue_type: 'raw_materials', key: Constants::PURCHASED_CLONES_KEY)

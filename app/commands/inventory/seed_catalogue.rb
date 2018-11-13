@@ -112,7 +112,7 @@ module Inventory
         # Nutrient and its child (2 level)
         {label: 'Nutrients', category: '', key: Constants::NUTRIENTS_KEY, is_active: true},
         # Blend has no child
-        {label: 'Blend', category: Constants::NUTRIENTS_KEY, key: 'blend', sub_category: '', is_active: true},
+        {label: 'Blend', category: '', key: 'blend', sub_category: '', is_active: true},
         {label: 'Blend', category: Constants::NUTRIENTS_KEY, key: 'blend_blend', sub_category: 'blend', is_active: true, uom_dimension: 'weights'},
 
         {label: 'Nitrogen Product', category: Constants::NUTRIENTS_KEY, key: 'nitrogen', sub_category: '', is_active: true},

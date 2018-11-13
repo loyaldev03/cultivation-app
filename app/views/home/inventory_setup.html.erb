@@ -67,9 +67,9 @@
           </div>
           
           <% if @raw_material_count <= 0 %>
-            <%= link_to 'Change', nutrients_inventory_raw_materials_path, class: 'btn btn--secondary' %>
-          <% else %>
             <%= link_to 'Start', nutrients_inventory_raw_materials_path, class: 'btn btn--primary' %>
+          <% else %>
+            <%= link_to 'Change', nutrients_inventory_raw_materials_path, class: 'btn btn--secondary' %>
           <% end %>
         </div>
 

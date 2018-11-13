@@ -13,6 +13,7 @@
             <th class="w4 tr ph3 ttu">Start Date</th>
             <th class="w4 tr ph3 ttu">Estimated Harvest Date</th>
             <th class="w4 tr ph3 ttu">Active</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -29,6 +30,9 @@
               </td>
               <td class="tr pv2 ph3">
                 <%= batch.is_active? ? 'Active' : 'Inactive' %>
+              </td>
+              <td>
+                <%= link_to 'DELETE',  batch,  method: :delete, data: { confirm: 'Are you sure?' }, class: "pv2 link ph3" %>
               </td>
             </tr>
           <% end %>

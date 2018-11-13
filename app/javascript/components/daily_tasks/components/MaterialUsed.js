@@ -1,19 +1,9 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { toJS } from 'mobx'
 import Select from 'react-select'
 
 import DailyTasksStore from '../store/DailyTasksStore'
 import { updateMaterialsUsed } from '../actions/taskActions'
-
-const uom_dropdown = [
-  { value: 'KG', label: 'KG' },
-  { value: 'CM', label: 'CM' },
-  { value: 'Inch', label: 'Inch' },
-  { value: 'ML', label: 'ML' },
-  { value: 'L', label: 'L' },
-  { value: 'Pcs', label: 'Pcs' }
-]
 
 const WAIT_INTERVAL = 1000
 const ENTER_KEY = 13
@@ -24,7 +14,6 @@ class MaterialUsed extends React.Component {
     const { dailyTask } = props
     const task = dailyTask.attributes.task
 
-    // console.log(toJS(dailyTask))
     super(props)
 
     const materials = []
@@ -42,6 +31,7 @@ class MaterialUsed extends React.Component {
     // Overwrite materials used data from store
     dailyTask.attributes.materials_used.map((material, i) => {
       const materialFound = this.findMaterial(material.catalogue_id, materials)
+
       if (materialFound) {
         materialFound.qty = material.qty || ''
         materialFound.uom = material.uom || ''
@@ -68,7 +58,8 @@ class MaterialUsed extends React.Component {
       })
       .map((catalogue, i) => ({
         value: catalogue.id,
-        label: catalogue.attributes.name
+        label: catalogue.attributes.name,
+        uoms: catalogue.attributes.uoms
       }))
   }
 
@@ -143,6 +134,7 @@ class MaterialUsed extends React.Component {
 
     materials[index].catalogue_id = selectedOption.value
     materials[index].name = selectedOption.label
+    materials[index].uoms = selectedOption.uoms
 
     this.trySync(materials)
   }

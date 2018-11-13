@@ -103,7 +103,7 @@ class VegSetupApp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="w-80 bg-white pa3">
+        <div className="w-100 bg-white pa3">
           <div className="flex mb4 mt2">
             <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Vegs</h1>
             <div style={{ justifySelf: 'end' }}>

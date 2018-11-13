@@ -15,7 +15,7 @@
         batch_sources: Constants::PLANT_SOURCE_TYPES.map{|a| {value: a[:code], label: a[:name]}},
         grow_methods: Constants::GROW_MEDIUM.map{|a| {value: a[:code], label: a[:name]}},
       }) %>
-    <div class="w-80 bg-white ph3 pt2 pb4">
+    <div class="w-100 bg-white ph3 pt2 pb4">
       <div class="dim flex flex-row items-center pointer">
         <i class="material-icons md-light-gray">keyboard_arrow_left</i>
         <%= link_to "Back", inventory_setup_path, class: "db tr ttu link button--font light-grey" %>

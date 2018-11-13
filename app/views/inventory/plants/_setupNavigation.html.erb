@@ -1,6 +1,6 @@
-<% tabStyle = 'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white' %>
-<% selectedStyle = 'link bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white' %>
-<div class="flex">
+<% selectedStyle = 'scrollable-tab__tab scrollable-tab__tab--active' %>
+
+<div class="scrollable-tab">
   <% if selected == 'mother' %>
     <div class="<%= selectedStyle %>">
       Mother Plants
@@ -8,7 +8,7 @@
   <% else %>
     <%= link_to 'Mother Plants',
       mothers_inventory_plants_path, 
-      class: tabStyle %>
+      class: 'scrollable-tab__tab' %>
   <% end %>
 
   <% if selected == 'cultivation_batch' %>
@@ -18,7 +18,7 @@
   <% else %>
     <%= link_to 'Cultivation Batches', 
       cultivation_batches_inventory_plants_path, 
-      class: tabStyle %>
+      class: 'scrollable-tab__tab' %>
   <% end %>
 
   <% if selected == 'clone' %>
@@ -28,7 +28,7 @@
   <% else %>
     <%= link_to 'Clones/ Plantings',
       clones_inventory_plants_path, 
-      class: tabStyle %>
+      class: 'scrollable-tab__tab' %>
   <% end %>
 
   <% if selected == 'veg' %>
@@ -38,7 +38,7 @@
   <% else %>
     <%= link_to 'Veg',
       vegs_inventory_plants_path, 
-      class: tabStyle %>
+      class: 'scrollable-tab__tab' %>
   <% end %>
 
   <% if selected == 'flower' %>
@@ -48,7 +48,7 @@
   <% else %>
     <%= link_to 'Flower',
       flowers_inventory_plants_path, 
-      class: tabStyle %>
+      class: 'scrollable-tab__tab' %>
   <% end %>
 
   <% if selected == 'harvest_batch' %>
@@ -58,6 +58,6 @@
   <% else %>
     <%= link_to 'Harvest Batches',
       harvest_batches_inventory_plants_path, 
-      class: tabStyle %>
+      class: 'scrollable-tab__tab' %>
   <% end %>
 </div>

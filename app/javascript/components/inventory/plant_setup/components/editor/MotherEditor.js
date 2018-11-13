@@ -382,14 +382,12 @@ class MotherEditor extends React.Component {
               <div id="scandit-barcode-picker" className="scanner" />
             </div>
             <div className="w-100 tc">
-              {this.state.showScanner &&
-                this.state.scannerReady && (
-                  <div className="f7 gray">Scanner is ready!</div>
-                )}
-              {this.state.showScanner &&
-                !this.state.scannerReady && (
-                  <div className="f7 gray">Loading scanner...</div>
-                )}
+              {this.state.showScanner && this.state.scannerReady && (
+                <div className="f7 gray">Scanner is ready!</div>
+              )}
+              {this.state.showScanner && !this.state.scannerReady && (
+                <div className="f7 gray">Loading scanner...</div>
+              )}
             </div>
           </div>
 

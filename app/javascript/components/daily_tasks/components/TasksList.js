@@ -8,7 +8,9 @@ const TasksList = observer(({ tasks }) => {
   return (
     <GridContainer>
       <HeaderRow />
-      {tasks.map((task, i) => <TaskRow dailyTask={task} index={i} key={i} />)}
+      {tasks.map((task, i) => (
+        <TaskRow dailyTask={task} index={i} key={i} />
+      ))}
     </GridContainer>
   )
 })

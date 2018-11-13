@@ -159,8 +159,8 @@ class BatchLocationEditor extends React.PureComponent {
         tray_capacity: e.target.value
       }
       const selectedTrays = traySel
-        ? this.state.selectedTrays.map(
-            t => (t.tray_id === trayId ? trayObj : t)
+        ? this.state.selectedTrays.map(t =>
+            t.tray_id === trayId ? trayObj : t
           )
         : this.state.selectedTrays.concat([trayObj])
       this.setState({
@@ -340,76 +340,73 @@ class BatchLocationEditor extends React.PureComponent {
               return (
                 <TabPanel key={roomId} className="ph4 pb4">
                   <div className="pb3">
-                    {selectedTrays &&
-                      selectedTrays.length > 0 && (
-                        <React.Fragment>
-                          <div className="flex flex-column bb b--light-grey pb3">
-                            <div className="flex flex-auto pv2">
-                              <span className="w-20 gray f5 fw6">#</span>
-                              <span className="w-30 gray f5 fw6">Location</span>
-                              <span className="w-20 gray f5 fw6 tr">
-                                Quantity
-                              </span>
-                              <span className="w-30 gray f5 fw6" />
-                            </div>
-                            {Object.keys(plannedRows).map((rowId, index) => {
-                              const plannedTrays = plannedRows[rowId]
-                              return (
-                                <React.Fragment key={rowId}>
-                                  <div className="pv1 flex justify-between items-center">
-                                    <span className="f4 fw6 dib gray">
-                                      Row {index + 1}
-                                    </span>
-                                    <a href="#0" className="link">
-                                      <img src={ImgTriangle} className="w1" />
-                                    </a>
-                                  </div>
-                                  <ul className="list pl0 ma0">
-                                    {plannedTrays.map(t => (
-                                      <li
-                                        key={t.tray_id}
-                                        className="pa0 ma0 flex"
-                                      >
-                                        <i className="w-20" />
-                                        <a
-                                          href="#0"
-                                          className="w-30 orange f5 pa1"
-                                          onClick={this.onEditLocation(
-                                            t.tray_id
-                                          )}
-                                        >
-                                          {this.getLocationName(
-                                            'tray',
-                                            t.tray_id
-                                          )}
-                                        </a>
-                                        <span className="w-20 gray f5 pa1 fw6 tr">
-                                          {t.tray_capacity}
-                                        </span>
-                                        <span className="w-20 ph3 f5 tc pa1 h1">
-                                          {!showAddLocation && (
-                                            <a
-                                              href="#0"
-                                              onClick={this.onRemoveSelectedTray(
-                                                t.tray_id
-                                              )}
-                                            >
-                                              <img
-                                                src={ImgDelete}
-                                                className="w1"
-                                              />
-                                            </a>
-                                          )}
-                                        </span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </React.Fragment>
-                              )
-                            })}
+                    {selectedTrays && selectedTrays.length > 0 && (
+                      <React.Fragment>
+                        <div className="flex flex-column bb b--light-grey pb3">
+                          <div className="flex flex-auto pv2">
+                            <span className="w-20 gray f5 fw6">#</span>
+                            <span className="w-30 gray f5 fw6">Location</span>
+                            <span className="w-20 gray f5 fw6 tr">
+                              Quantity
+                            </span>
+                            <span className="w-30 gray f5 fw6" />
                           </div>
-                        </React.Fragment>
-                      )}
+                          {Object.keys(plannedRows).map((rowId, index) => {
+                            const plannedTrays = plannedRows[rowId]
+                            return (
+                              <React.Fragment key={rowId}>
+                                <div className="pv1 flex justify-between items-center">
+                                  <span className="f4 fw6 dib gray">
+                                    Row {index + 1}
+                                  </span>
+                                  <a href="#0" className="link">
+                                    <img src={ImgTriangle} className="w1" />
+                                  </a>
+                                </div>
+                                <ul className="list pl0 ma0">
+                                  {plannedTrays.map(t => (
+                                    <li
+                                      key={t.tray_id}
+                                      className="pa0 ma0 flex"
+                                    >
+                                      <i className="w-20" />
+                                      <a
+                                        href="#0"
+                                        className="w-30 orange f5 pa1"
+                                        onClick={this.onEditLocation(t.tray_id)}
+                                      >
+                                        {this.getLocationName(
+                                          'tray',
+                                          t.tray_id
+                                        )}
+                                      </a>
+                                      <span className="w-20 gray f5 pa1 fw6 tr">
+                                        {t.tray_capacity}
+                                      </span>
+                                      <span className="w-20 ph3 f5 tc pa1 h1">
+                                        {!showAddLocation && (
+                                          <a
+                                            href="#0"
+                                            onClick={this.onRemoveSelectedTray(
+                                              t.tray_id
+                                            )}
+                                          >
+                                            <img
+                                              src={ImgDelete}
+                                              className="w1"
+                                            />
+                                          </a>
+                                        )}
+                                      </span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </React.Fragment>
+                            )
+                          })}
+                        </div>
+                      </React.Fragment>
+                    )}
                     {!showAddLocation && (
                       <a
                         href="#0"
@@ -584,7 +581,8 @@ class BatchLocationEditor extends React.PureComponent {
                           <img
                             src={ImgTriangle}
                             className="mr2 w1 rotate-180"
-                          />Cancel
+                          />
+                          Cancel
                         </a>
                       </div>
                     </React.Fragment>

@@ -9,7 +9,7 @@ module DashboardForm
     private
 
     def set_records
-      find_cmd = Cultivation::QueryBatch.call({is_active: true})
+      find_cmd = Cultivation::QueryBatch.call()
       if find_cmd.success?
         @cultivation_batches = find_cmd.result.order(start_date: :desc)
       else

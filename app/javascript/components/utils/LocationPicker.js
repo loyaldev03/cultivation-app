@@ -254,25 +254,24 @@ class LocationPicker extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {!this.isFacilitySet &&
-          this.mode !== 'facility' && (
-            <div className="mb3">
-              <label className="f6 fw6 db mb1 gray ttc">Facility ID</label>
-              <Select
-                styles={reactSelectStyle}
-                placeholder="Type to search facility..."
-                options={this.facilities}
-                onChange={this.onChangeFacility}
-                value={this.state.facility}
-                filterOption={(option, input) => {
-                  const words = input.toLowerCase().split(/\s/)
-                  return words.every(
-                    x => option.label.toLowerCase().indexOf(x) >= 0
-                  )
-                }}
-              />
-            </div>
-          )}
+        {!this.isFacilitySet && this.mode !== 'facility' && (
+          <div className="mb3">
+            <label className="f6 fw6 db mb1 gray ttc">Facility ID</label>
+            <Select
+              styles={reactSelectStyle}
+              placeholder="Type to search facility..."
+              options={this.facilities}
+              onChange={this.onChangeFacility}
+              value={this.state.facility}
+              filterOption={(option, input) => {
+                const words = input.toLowerCase().split(/\s/)
+                return words.every(
+                  x => option.label.toLowerCase().indexOf(x) >= 0
+                )
+              }}
+            />
+          </div>
+        )}
         <label className="f6 fw6 db mb1 gray ttc">{this.label}</label>
         <Select
           key={this.state.facility}

@@ -1,19 +1,6 @@
 class HomeController < ApplicationController
   def index
-    if Facility.count == 0
-      @home = OpenStruct.new({
-        last_facility: nil,
-        has_inventories: false,
-        has_batches: false,
-      })
-    else
-      facility = Facility.last
-      @home = OpenStruct.new({
-        last_facility: facility,
-        has_inventories: facility.strains.count > 0,
-        has_batches: Cultivation::Batch.where(facility_id: facility.id).count > 0,
-      })
-    end
+    @home = HomeSetupStatus.call(current_default_facility).result
   end
 
   def dashboard
@@ -43,7 +30,7 @@ class HomeController < ApplicationController
     Common::SeedUnitOfMeasure.call
     Inventory::SeedCatalogue.call
 
-    User.update_all(facilites: [], default_facility_id: nil)
+    User.update_all(facilities: [], default_facility_id: nil)
 
     # Preserve facility F0X
     f = Facility.find_by(code: 'F0X')

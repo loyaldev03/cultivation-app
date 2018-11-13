@@ -145,7 +145,7 @@ Remaining Capacity: ${x.capacity}`}
                 type="number"
                 className="w-50 tr pa2 f6 black ba b--black-20 br2 outline-0"
                 defaultValue={0}
-                min={1}
+                min={0}
                 max={maxCapacity}
                 onChange={e => onChange('batchQuantity', e.target.value)}
               />

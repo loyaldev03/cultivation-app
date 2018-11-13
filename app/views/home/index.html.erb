@@ -17,10 +17,10 @@
 
   <div class="flex flex-row-l flex-column items-center justify-center">
     <div>
-      <% if @home.last_facility %>
-        <%= link_to facility_setup_new_path(facility_id: @home.last_facility.id),
+      <% if @home.facility.present? %>
+        <%= link_to facility_setup_new_path(facility_id: @home.facility.id),
           style: "height: 378px; width: 300px;",
-          class: "tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between grow  link" do %>
+          class: "tc bg-white pa4 bn box--br3 shadow-4 flex flex-column justify-between grow link" do %>
           
           <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
             <%= image_tag "add-facility.svg" %>
@@ -29,7 +29,7 @@
           <div class="flex flex-column mb3">
             <h6 class="ttc mt0 mb2 h6--font dark-grey">
               Continue Setup <br/> 
-              <%= @home.last_facility.name %>
+              <%= @home.facility.name %>
             </h6>
             <p class="w-100 center body-1 grey ma0">Set up unlimited facilities, rooms and shelves for proper planning.</p>
           </div>
@@ -37,7 +37,7 @@
       <% else%>
         <%= link_to facility_setup_new_path,
           style: "height: 378px; width: 300px;", 
-          class: "tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between grow  link" do %>
+          class: "tc bg-white pa4 bn box--br3 shadow-4 flex flex-column justify-between grow link" do %>
           
           <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
             <%= image_tag "add-facility.svg" %>
@@ -51,9 +51,9 @@
       <% end %>
     </div>
 
-    <%= link_to inventory_setup_path, 
+    <%= link_to inventory_setup_path(facility_id: @home.facility&.id), 
       style: "height: 378px; width: 300px;", 
-      class: "mh3 mv0-l mv4 tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between grow  link" do %>
+      class: "mh3 mv0-l mv4 tc bg-white pa4 bn box--br3 shadow-4 flex flex-column justify-between grow link #{@home.has_facility ? '': 'o-50'}" do %>
       
       <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
         <%= image_tag "add-inventory.svg" %>
@@ -66,9 +66,9 @@
     <% end %>
 
 
-    <%= link_to new_cultivation_batch_path(facility_id: current_default_facility&.id.to_s),
+    <%= link_to new_cultivation_batch_path(facility_id: @home.facility&.id),
       style: "height: 378px; width: 300px;", 
-      class: "mb0-l mb4 tc bg-white pa4 bn box--br3 box--shadow flex flex-column justify-between grow link" do %>
+      class: "mb0-l mb4 tc bg-white pa4 bn box--br3 shadow-4 flex flex-column justify-between grow link #{@home.has_inventories ? '': 'o-50'}" do %>
       
       <div class="mv3 dim dib link bn br-100 h4 w4 flex items-center justify-center center">
         <%= image_tag "add-cultivation.svg" %>
@@ -82,7 +82,7 @@
   </div>
 
   <% if @home.has_inventories && @home.has_batches %>
-    <div class="tc mt4">
+    <div class="tc ma4">
       <%= link_to "Go to Dashboard", dashboard_path, class: 'link grey f4 dim' %>
     </div>
   <% end %>

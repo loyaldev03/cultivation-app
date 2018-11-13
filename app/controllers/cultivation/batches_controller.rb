@@ -52,7 +52,7 @@ class Cultivation::BatchesController < ApplicationController
     if params[:type] == 'active'
       @batch = Cultivation::Batch.find(params[:id])
       @batch.update(is_active: true)
-      flash[:notice] = 'Batch successfully updated to active'
+      flash[:notice] = 'Batch saved successfully.'
       redirect_to root_path
     end
   end

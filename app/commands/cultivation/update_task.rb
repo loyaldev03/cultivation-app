@@ -122,6 +122,7 @@ module Cultivation
       max_date = tasks.pluck(:end_date).compact.max
       min_date = tasks.pluck(:start_date).compact.min
       overlap_batch = false
+      overlap_batch_name = ''
       Cultivation::Batch.all.not_in(:_id => tasks.first.try(:batch_id)).includes(:tasks).each do |batch|
         #get all phases
         phases = batch.tasks.select { |b| b.is_phase == true }
@@ -129,10 +130,11 @@ module Cultivation
         phase = phases.pluck(:phase).include?('cure') ? phases.detect { |b| b.phase == 'cure' } : phases.detect { |b| b.phase == 'dry' }
         if max_date && phase && (min_date.between?(batch.start_date, phase.end_date) || max_date.between?(batch.start_date, phase.end_date))
           overlap_batch = true
+          overlap_batch_name = batch.name
           break
         end
       end
-      errors.add(:end_date, 'Overlap Batches start date') if overlap_batch
+      errors.add(:end_date, "Overlap Batches #{overlap_batch_name}") if overlap_batch
       errors.empty?
     end
   end

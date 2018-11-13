@@ -43,7 +43,7 @@ class HomeController < ApplicationController
     Common::SeedUnitOfMeasure.call
     Inventory::SeedCatalogue.call
 
-    User.update_all(facilites: [], default_facility_id: nil)
+    User.update_all(facilities: [], default_facility_id: nil)
 
     # Preserve facility F0X
     f = Facility.find_by(code: 'F0X')

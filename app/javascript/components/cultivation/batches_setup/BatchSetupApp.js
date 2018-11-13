@@ -317,32 +317,30 @@ class BatchSetupApp extends React.Component {
           )}
         />
         <div className="fl w-100 mt3">
-          {showValidation &&
-            searchMonth &&
-            batchSetupStore.isReady && (
-              <div className="fl w-100">
-                <CalendarTitleBar
-                  month={searchMonth}
-                  onPrev={e => this.onSearch(monthOptionAdd(searchMonth, -1))}
-                  onNext={e => this.onSearch(monthOptionAdd(searchMonth, 1))}
+          {showValidation && searchMonth && batchSetupStore.isReady && (
+            <div className="fl w-100">
+              <CalendarTitleBar
+                month={searchMonth}
+                onPrev={e => this.onSearch(monthOptionAdd(searchMonth, -1))}
+                onNext={e => this.onSearch(monthOptionAdd(searchMonth, 1))}
+              />
+              {!batchSetupStore.isLoading ? (
+                <Calendar
+                  activeStartDate={monthStartDate(searchMonth)}
+                  className="availabilty-calendar"
+                  showNavigation={false}
+                  onChange={this.handleDatePick}
+                  tileContent={({ date, view }) => (
+                    <CapacityTile startDate={date} duration={totalDuration} />
+                  )}
                 />
-                {!batchSetupStore.isLoading ? (
-                  <Calendar
-                    activeStartDate={monthStartDate(searchMonth)}
-                    className="availabilty-calendar"
-                    showNavigation={false}
-                    onChange={this.handleDatePick}
-                    tileContent={({ date, view }) => (
-                      <CapacityTile startDate={date} duration={totalDuration} />
-                    )}
-                  />
-                ) : (
-                  <div style={{ minHeight: '362px' }}>
-                    <span className="dib pa2">Searching...</span>
-                  </div>
-                )}
-              </div>
-            )}
+              ) : (
+                <div style={{ minHeight: '362px' }}>
+                  <span className="dib pa2">Searching...</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body h-100">

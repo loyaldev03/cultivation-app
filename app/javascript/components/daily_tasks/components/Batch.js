@@ -25,9 +25,8 @@ const Batch = observer(props => {
             <FloatingLabel className="absolute black-40 bg-white tc">
               Days
             </FloatingLabel>
-            {batch.attributes.progress_today}/{
-              batch.attributes.estimated_total_days
-            }
+            {batch.attributes.progress_today}/
+            {batch.attributes.estimated_total_days}
           </div>
         </div>
       </div>

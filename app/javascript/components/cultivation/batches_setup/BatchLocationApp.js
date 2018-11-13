@@ -105,8 +105,8 @@ class BatchLocationApp extends React.Component {
     if (plantConfig) {
       plantConfig.quantity = editingPlant.quantity
       plantConfig.trays = editingPlant.trays
-      const selectedPlants = this.state.selectedPlants.map(
-        x => (x.id === plantConfig.id ? plantConfig : x)
+      const selectedPlants = this.state.selectedPlants.map(x =>
+        x.id === plantConfig.id ? plantConfig : x
       )
       this.setState({
         selectedPlants

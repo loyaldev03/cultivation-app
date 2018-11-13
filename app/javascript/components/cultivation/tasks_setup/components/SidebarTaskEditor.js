@@ -83,13 +83,13 @@ class SidebarTaskEditor extends React.Component {
 
   handleChangeDate = (key, value) => {
     if (key === 'end_date' && this.state.start_date) {
-        let one_day = 1000 * 60 * 60 * 24
-        let duration = new Date(value) - new Date(this.state.start_date)
-        this.setState({ [key]: value, duration: (duration / one_day) })
+      let one_day = 1000 * 60 * 60 * 24
+      let duration = new Date(value) - new Date(this.state.start_date)
+      this.setState({ [key]: value, duration: duration / one_day })
     } else if (key === 'start_date' && this.state.end_date) {
       let one_day = 1000 * 60 * 60 * 24
       let duration = new Date(this.state.end_date) - new Date(value)
-      this.setState({ [key]: value, duration: (duration / one_day) })
+      this.setState({ [key]: value, duration: duration / one_day })
     } else {
       this.setState({ [key]: value })
     }
@@ -152,8 +152,7 @@ class SidebarTaskEditor extends React.Component {
         >
           <div className="w-100 ba red">
             <label className="f6 fw6 db mb1 ttc mt3 mb3">Errors :</label>
-            <label className="f6 fw6 db mb1 ttc mt3 mb3" id="error-message">
-            </label>
+            <label className="f6 fw6 db mb1 ttc mt3 mb3" id="error-message" />
           </div>
         </div>
 

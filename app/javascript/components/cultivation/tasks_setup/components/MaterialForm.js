@@ -196,24 +196,23 @@ export default class MaterialForm extends React.Component {
               />
             </div>
           </div>
-          {subcategory_dropdown &&
-            subcategory_dropdown.length > 1 && (
-              <div className="ph4 mt3 flex">
-                <div className="w-100">
-                  <label className="f6 fw6 db mb1 gray ttc">
-                    Please select {this.state.selectedCategory.label} Type
-                  </label>
-                  <Select
-                    name="selectedSubCategory"
-                    options={subcategory_dropdown}
-                    onChange={e =>
-                      this.handleChangeSelect('selectedSubCategory', e)
-                    }
-                    value={this.state.selectedSubCategory}
-                  />
-                </div>
+          {subcategory_dropdown && subcategory_dropdown.length > 1 && (
+            <div className="ph4 mt3 flex">
+              <div className="w-100">
+                <label className="f6 fw6 db mb1 gray ttc">
+                  Please select {this.state.selectedCategory.label} Type
+                </label>
+                <Select
+                  name="selectedSubCategory"
+                  options={subcategory_dropdown}
+                  onChange={e =>
+                    this.handleChangeSelect('selectedSubCategory', e)
+                  }
+                  value={this.state.selectedSubCategory}
+                />
               </div>
-            )}
+            </div>
+          )}
           {third_dropdown && (
             <div className="ph4 mt3 flex">
               <div className="w-100">

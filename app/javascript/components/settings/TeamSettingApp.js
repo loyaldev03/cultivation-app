@@ -302,7 +302,9 @@ class TeamSetttingApp extends React.Component {
                             ))}
                           </td>
                           <td className="tl pv2 ph3">
-                            {x.roles.map(r => <RoleTag key={r} id={r} />)}
+                            {x.roles.map(r => (
+                              <RoleTag key={r} id={r} />
+                            ))}
                           </td>
                         </tr>
                       ))}

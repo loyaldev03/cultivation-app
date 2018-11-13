@@ -36,8 +36,8 @@ class RoleDetailsEditor extends React.PureComponent {
     const p1 = { code, value }
     let permissions = []
     if (found > -1) {
-      permissions = this.state.permissions.map(
-        p0 => (p0.code === code ? p1 : p0)
+      permissions = this.state.permissions.map(p0 =>
+        p0.code === code ? p1 : p0
       )
     } else {
       permissions = [...this.state.permissions, p1]

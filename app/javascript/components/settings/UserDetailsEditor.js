@@ -102,32 +102,40 @@ class UserDetailsEditor extends React.PureComponent {
 
   onSubmit = e => {
     e.preventDefault()
-    const roles = this.state.roles ? this.state.roles.map(x => x.value) : []
-    const facilities = this.state.facilities
-      ? this.state.facilities.map(x => x.value)
-      : []
-    const default_facility_id = this.state.default_facility
-      ? this.state.default_facility.value
-      : null
-    const photo_data =
-      this.state.photoData == 'null'
-        ? this.state.photoData
-        : JSON.stringify(this.state.photoData)
+    const {
+      userId,
+      firstName,
+      lastName,
+      email,
+      password,
+      title,
+      facilities,
+      default_facility,
+      roles,
+      photoData,
+      hourly_rate,
+      overtime_hourly_rate,
+      isActive
+    } = this.state
+    const newRoles = roles ? roles.map(x => x.value) : []
+    const newFacilities = facilities ? facilities.map(x => x.value) : []
+    const defaultFacilityId = default_facility ? default_facility.value : null
+    const photo_data = photoData ? JSON.stringify(photoData) : null
     const userDetails = {
       user: {
-        id: this.state.userId,
-        email: this.state.email,
-        password: this.state.password,
-        first_name: this.state.firstName,
-        last_name: this.state.lastName,
-        title: this.state.title,
+        id: userId,
+        email: email,
+        password: password,
+        first_name: firstName,
+        last_name: lastName,
+        title: title,
         photo_data: photo_data,
-        hourly_rate: this.state.hourly_rate,
-        overtime_hourly_rate: this.state.overtime_hourly_rate,
-        is_active: this.state.isActive || false,
-        facilities,
-        roles,
-        default_facility_id
+        hourly_rate: hourly_rate,
+        overtime_hourly_rate: overtime_hourly_rate,
+        is_active: isActive || false,
+        facilities: newFacilities,
+        roles: newRoles,
+        default_facility_id: defaultFacilityId
       }
     }
     this.props.onSave(userDetails)

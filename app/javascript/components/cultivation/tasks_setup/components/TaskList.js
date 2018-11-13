@@ -134,7 +134,7 @@ class TaskList extends React.Component {
   handleEdit = e => {
     this.setState({ taskSelected: e.row.id })
     let error_container = document.getElementById('error-container')
-    if(error_container){
+    if (error_container) {
       error_container.style.display = 'none'
     }
     this.clearDropdown()

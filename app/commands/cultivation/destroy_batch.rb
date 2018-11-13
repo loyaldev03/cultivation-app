@@ -12,6 +12,8 @@ module Cultivation
 
     def call
       Cultivation::Batch.find(@batch_id).delete
+      Cultivation::Task.delete_all({batch_id: @batch_id})
+      Cultivation::TrayPlan.delete_all({batch_id: @batch_id})
     end
   end
 end

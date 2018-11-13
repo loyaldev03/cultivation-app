@@ -1,31 +1,36 @@
-.react-date-picker__button {
+.react-date-picker__wrapper {
   display: flex;
+
   border: 1px solid  rgba(0, 0, 0, 0.2);
   border-radius: .25rem;
-  padding-left: .5rem;
+  height: 34px;
+  align-items: center;
+  padding: 0 4px;
 
   input, button {
     outline: 0;
   }
 }
 
-.react-date-picker__button__input__input {
-  font-size: 14px;
-}
-
-.react-date-picker__button__input {
-  flex: 1;
-  align-items: center;
+.react-date-picker__inputGroup {
   display: flex;
-
-  input {
-    border: none;
-  }
+  flex: 1;
 }
 
-.react-date-picker__button__icon {
-  border: none;
-  padding: 4px;
+.react-date-picker__inputGroup__input {
+  font-size: 14px;
+  border: 0;
+  text-align: center;
+}
+
+.react-date-picker__inputGroup__input:empty {
+  min-width: 15px;
+}
+
+.react-date-picker__button {
+  background: white;
+  padding: 0 3px;
+  border: 0;
 
   svg {
     width: 13px;

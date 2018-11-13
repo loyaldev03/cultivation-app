@@ -14,7 +14,7 @@ class updateTask {
       days_from_start_date: state.days_from_start_date,
       depend_on: state.depend_on,
       duration: state.duration,
-      end_date: state.end_date.toDateString(),
+      end_date: state.end_date,
       estimated_hours: state.estimated_hours,
       id: state.id,
       is_category: state.is_category,
@@ -23,7 +23,7 @@ class updateTask {
       parent_id: state.parent_id,
       phase: state.phase,
       position: state.position,
-      start_date: state.start_date.toDateString(),
+      start_date: state.start_date,
       task_category: state.task_category,
       time_taken: state.time_taken,
       task_type: state.task_type

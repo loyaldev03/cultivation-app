@@ -27,8 +27,12 @@ module Cultivation
 
         #update batch estimated_harvest_date
         batch = task.batch
-        dry_phase = batch.tasks.find_by(is_phase: true, phase: 'dry')
-        batch.update(estimated_harvest_date: dry_phase.start_date) if dry_phase && dry_phase.start_date != batch.estimated_harvest_date
+        dry_phase = batch.tasks.find_by(is_phase: true, phase: 'dry') ### NOTE can be Cure also
+        batch_start_date = batch.tasks.first
+        args = {}
+        args[:estimated_harvest_date] = dry_phase.start_date if dry_phase && dry_phase.start_date != batch.estimated_harvest_date
+        args[:start_date] = batch_start_date.start_date if batch_start_date && batch_start_date.start_date != batch.start_date
+        batch.update(args)
       end
       task
     end
@@ -81,7 +85,7 @@ module Cultivation
         task.children.each do |child|
           if child.depend_on.nil?
             temp_child = child
-            end_date = task.start_date + child.duration.to_i.send('days')
+            end_date = task.start_date + child.duration.to_i.send('days') if task.end_date
             temp_child.start_date = task.start_date
             temp_child.end_date = end_date
             array << temp_child #store inside temp_array
@@ -95,7 +99,7 @@ module Cultivation
           temp_depend_task = depend_task
 
           start_date = task.end_date + 1.days
-          end_date = start_date + depend_task.duration.to_i.send('days')
+          end_date = start_date + depend_task.duration.to_i.send('days') if task.end_date
 
           temp_depend_task.start_date = start_date
           temp_depend_task.end_date = end_date
@@ -144,7 +148,7 @@ module Cultivation
           break
         end
       end
-      errors.add(:end_date, "The date overlap with batch #{overlap_batch_name}") if overlap_batch
+      errors.add(:end_date, "The date overlaps with batch #{overlap_batch_name}") if overlap_batch
       errors.empty?
     end
   end

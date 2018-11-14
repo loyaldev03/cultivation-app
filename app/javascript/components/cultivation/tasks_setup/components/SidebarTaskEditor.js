@@ -152,10 +152,10 @@ class SidebarTaskEditor extends React.Component {
         >
           <div class="w-100 ba br2 orange pa3">
             <label class="f6 fw6 db">
-              <b>Warning:  </b><span id="error-message"></span>
+              <b>Warning: </b>
+              <span id="error-message" />
             </label>
           </div>
-          
         </div>
 
         <div className="ph4 mt3 mb3 flex">

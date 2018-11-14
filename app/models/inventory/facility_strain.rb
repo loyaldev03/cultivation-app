@@ -9,8 +9,8 @@ module Inventory
     include Mongoid::Document
     include Mongoid::Timestamps::Short
 
-    field :thc, type: BigDecimal
-    field :cbd, type: BigDecimal
+    field :thc, type: BigDecimal # FIXME: incorrect data type
+    field :cbd, type: BigDecimal # FIXME: incorrect data type
     field :strain_name, type: String
     field :strain_type, type: String
 

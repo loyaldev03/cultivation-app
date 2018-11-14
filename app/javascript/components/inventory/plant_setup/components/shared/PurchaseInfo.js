@@ -1,3 +1,5 @@
+// TODO: Move this to common
+
 import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import PropTypes from 'prop-types'
@@ -19,6 +21,8 @@ class PurchaseInfo extends React.Component {
       purchase_date: props.purchase_date,
       invoice_no: props.invoice_no,
       purchase_order_no: props.purchase_order_no,
+      purchase_order_id: props.purchase_order_id,
+      invoice_id: props.invoice_id,
       errors: {}
     }
   }

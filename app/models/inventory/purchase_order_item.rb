@@ -12,6 +12,7 @@ module Inventory
     field :tax, type: BigDecimal, default: 0.0
     field :uom, type: String
 
+    has_one :invoice_item, class_name: 'Inventory::VendorInvoiceItem'
     belongs_to :purchase_order, class_name: 'Inventory::PurchaseOrder'
     belongs_to :catalogue, class_name: 'Inventory::Catalogue', inverse_of: nil
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true, inverse_of: nil

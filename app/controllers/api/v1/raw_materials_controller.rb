@@ -15,6 +15,17 @@ class Api::V1::RawMaterialsController < Api::V1::BaseApiController
     end
   end
 
+  def setup_v2
+    command = Inventory::SetupRawMaterialV2.call(current_user, raw_material_params)
+    if command.success?
+      id = command.result.id
+      result = material_to_serialize(catalogue_type: nil, id: id, event_types: %w(inventory_setup))
+      render json: Inventory::RawMaterialSerializer.new(result[:item_transactions], result[:options]).serialized_json
+    else
+      render json: request_with_errors(command.errors), status: 422
+    end
+  end
+
   def setup_seed
     command = Inventory::SetupSeed.call(current_user, raw_material_params)
     if command.success?

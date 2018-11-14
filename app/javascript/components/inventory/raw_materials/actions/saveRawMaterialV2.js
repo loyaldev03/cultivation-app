@@ -2,7 +2,7 @@ import rawMaterialStore from '../store/RawMaterialStore'
 import { httpPostOptions } from '../../../utils'
 
 export const saveRawMaterial = payload => {
-  return fetch('/api/v1/raw_materials/setup', httpPostOptions(payload))
+  return fetch('/api/v1/raw_materials/setup_v2', httpPostOptions(payload))
     .then(response => {
       return response.json().then(data => ({
         status: response.status,
@@ -20,6 +20,7 @@ export const saveRawMaterial = payload => {
       } else {
         rawMaterialStore.prepend(data.data)
       }
+
       return result
     })
 }

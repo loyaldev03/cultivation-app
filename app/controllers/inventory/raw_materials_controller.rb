@@ -3,6 +3,19 @@ class Inventory::RawMaterialsController < ApplicationController
 
   def nutrients
     @catalogues = Inventory::QueryCatalogueTree.call('raw_materials', Constants::NUTRIENTS_KEY).result
+    @vendors = Inventory::Vendor.all.map do |x|
+      {
+        value: x.id.to_s,
+        label: x.name,
+        vendor_no: x.vendor_no,
+        address: x.address,
+        state_license_num: x.state_license_num,
+        state_license_expiration_date: x.state_license_expiration_date&.iso8601,
+        location_license_num: x.location_license_num,
+        location_license_expiration_date: x.location_license_expiration_date&.iso8601,
+        vendor_type: x.vendor_type,
+      }
+    end
   end
 
   def grow_medium

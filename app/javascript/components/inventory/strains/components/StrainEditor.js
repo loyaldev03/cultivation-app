@@ -1,7 +1,9 @@
 import React from 'react'
 import StrainAutoSuggest from './StrainAutoSuggest'
 import { NumericInput, FieldError } from '../../../utils/FormHelpers'
-import LocationPicker from '../../../utils/LocationPicker'
+
+// TODO: Replace LocationPicker to v2 version
+import LocationPicker from '../../../utils/LocationPicker'  
 import saveStrain from '../actions/saveStrain'
 import getStrain from '../actions/getStrain'
 

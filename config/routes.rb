@@ -130,19 +130,18 @@ Rails.application.routes.draw do
         end
       end
 
-
       resources :raw_materials, only: [:index, :show] do
         collection do
           post 'setup'
+          post 'setup_v2'
           post 'setup_seed'
           post 'setup_purchased_clones'
         end
       end
 
-      # namespace :purchasing do
-      #   resources :purchase_orders
-      #   resources :vendor_invoices
-      # end
+      resources :vendors, only: [:index]
+      resources :purchase_orders, only: [:index]
+      resources :vendor_invoices, only: [:index, :show]
 
       resources :strains, only: [:index, :create, :show] do
         get 'suggest', on: :collection

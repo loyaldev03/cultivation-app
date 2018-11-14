@@ -1,14 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
+// import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import PurchaseInfo from '../../plant_setup/components/shared/PurchaseInfo'
+import PurchaseInfo from '../components/PurchaseInfoV2'
 import LocationPicker from '../../../utils/LocationPicker2'
-import { setupSeed } from '../actions/setupSeed'
+import { saveRawMaterial } from '../actions/saveRawMaterialV2'
 import { getRawMaterial } from '../actions/getRawMaterial'
 
-class SeedEditor extends React.Component {
+class NutrientEditorV2 extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
@@ -21,17 +22,29 @@ class SeedEditor extends React.Component {
       if (!id) {
         this.reset()
       } else {
-        getRawMaterial(id, 'seeds')
+        getRawMaterial(id)
           .then(x => {
             const attr = x.data.data.attributes
             return attr
           })
           .then(attr => {
+            const flatten_catalogues = this.props.catalogues.reduce(
+              (sum, val) => sum.concat(val.children || []),
+              []
+            )
+            const catalogue = flatten_catalogues.find(
+              x => x.value == attr.catalogue_id
+            )
+            const nutrientType = this.props.catalogues.find(
+              x => x.key == catalogue.parent_key
+            )
+
             this.setState({
               ...this.resetState(),
+              nutrientType: nutrientType,
+              catalogue: catalogue,
               id: id,
               facility_id: attr.facility_id,
-              facility_strain_id: attr.facility_strain.id,
               qty_per_package: attr.conversion,
               product_name: attr.product_name,
               manufacturer: attr.manufacturer,
@@ -42,24 +55,28 @@ class SeedEditor extends React.Component {
               uom: { value: attr.uom, label: attr.uom },
               location_id: attr.location_id,
               // purchase info
-              vendor_id: attr.vendor.id,
-              vendor_name: attr.vendor.name,
-              vendor_no: attr.vendor.vendor_no,
-              address: attr.vendor.address,
-              purchase_date: new Date(attr.vendor_invoice.invoice_date),
-              purchase_order_no: attr.purchase_order.purchase_order_no,
-              invoice_no: attr.vendor_invoice.invoice_no
+              vendor: attr.vendor,
+              purchase_order: attr.purchase_order,
+              vendor_invoice: attr.vendor_invoice,
             })
           })
       }
     })
   }
 
-  onFacilityStrainChanged = item => {
+  onFacilityChanged = item => {
+    this.setState({ facility_id: item.f_id })
+  }
+
+  onNutrientTypeSelected = item => {
     this.setState({
-      facility_strain_id: item.value,
-      facility_id: item.facility_id
+      nutrientType: item,
+      catalogue: { value: '', label: '', uoms: [] }
     })
+  }
+
+  onNutrientProductSelected = item => {
+    this.setState({ catalogue: item })
   }
 
   onChangeGeneric = event => {
@@ -72,8 +89,9 @@ class SeedEditor extends React.Component {
     return {
       id: '',
       facility_id: '',
-      facility_strain_id: '',
       qty_per_package: '',
+      nutrientType: { value: '', label: '', children: [] },
+      catalogue: { value: '', label: '', uoms: [] },
       product_name: '',
       manufacturer: '',
       description: '',
@@ -82,14 +100,11 @@ class SeedEditor extends React.Component {
       order_uom: { value: '', label: '' },
       uom: { value: '', label: '' },
       location_id: '',
+
       // purchase info
-      vendor_id: '',
-      vendor_name: '',
-      vendor_no: '',
-      address: '',
-      purchase_date: null,
-      purchase_order_no: '',
-      invoice_no: '',
+      vendor: null,
+      purchase_order: null,
+      vendor_invoice: null,
       errors: {}
     }
   }
@@ -102,7 +117,7 @@ class SeedEditor extends React.Component {
   onSave = event => {
     const payload = this.validateAndGetValues()
     if (payload.isValid) {
-      setupSeed(payload).then(x => {
+      saveRawMaterial(payload).then(() => {
         this.reset()
         window.editorSidebar.close()
       })
@@ -114,9 +129,10 @@ class SeedEditor extends React.Component {
   validateAndGetValues() {
     const {
       id,
-      facility_strain_id,
+      facility_id,
       uom: { value: uom },
       qty_per_package,
+      catalogue: { value: catalogue },
       product_name,
       manufacturer,
       description,
@@ -128,41 +144,36 @@ class SeedEditor extends React.Component {
 
     let errors = {}
 
-    const quantity = parseFloat(order_quantity) * parseFloat(qty_per_package)
+    const quantity =
+      parseFloat(this.state.order_quantity) *
+      parseFloat(this.state.qty_per_package)
 
-    if (facility_strain_id.length === 0) {
-      errors = {
-        ...errors,
-        facility_strain_id: ['Strain is required.']
-      }
+    if (facility_id.length === 0) {
+      errors.facility_id = ['Facility is required.']
     }
 
-    if (uom.length === 0) {
-      errors = {
-        ...errors,
-        uom: ['Unit of measure is required.']
-      }
+    if (uom.length <= 0) {
+      errors.uom = ['Unit of measure is required.']
     }
 
-    if (order_uom.length === 0) {
-      errors = {
-        ...errors,
-        order_uom: ['Unit of measure is required.']
-      }
+    if (order_uom.length <= 0) {
+      errors.order_uom = ['Unit of measure is required.']
     }
 
     if (parseFloat(order_quantity) <= 0) {
-      errors = {
-        ...errors,
-        order_quantity: ['Order quantity is required.']
-      }
+      errors.order_quantity = ['Order quantity is required.']
     }
 
     if (parseFloat(qty_per_package) <= 0) {
-      errors = {
-        ...errors,
-        qty_per_package: ['Quantity per package is required.']
-      }
+      errors.qty_per_package = ['Quantity per package is required.']
+    }
+
+    if (!catalogue) {
+      errors.catalogue = ['Nutrient product is required.']
+    }
+
+    if (location_id.length <= 0) {
+      errors.location_id = ['Storage location is required.']
     }
 
     const {
@@ -170,18 +181,20 @@ class SeedEditor extends React.Component {
       ...purchaseData
     } = this.purchaseInfoEditor.current.getValues()
 
+    console.log(purchaseData)
+
     const isValid =
       Object.getOwnPropertyNames(errors).length === 0 && purchaseIsValid
-
     if (!isValid) {
       this.setState({ errors })
     }
 
     return {
       id,
-      facility_strain_id,
+      facility_id,
       uom,
       quantity,
+      catalogue,
       product_name,
       manufacturer,
       description,
@@ -200,12 +213,10 @@ class SeedEditor extends React.Component {
       ? { width: '500px' }
       : { width: '0px' }
 
-    const { locations, facility_strains } = this.props
-    let facilityStrain = facility_strains.find(
-      x => x.value === this.state.facility_strain_id
-    )
+    const { locations, catalogues } = this.props
+    const nutrientProducts = this.state.nutrientType.children
+    const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
-    const uoms = this.props.uoms.map(x => ({ value: x, label: x }))
 
     const showTotalPrice =
       parseFloat(this.state.price_per_package) > 0 &&
@@ -218,7 +229,7 @@ class SeedEditor extends React.Component {
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Seed</h1>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Nutrient</h1>
             <span
               className="rc-slide-panel__close-button dim"
               onClick={() => {
@@ -231,20 +242,42 @@ class SeedEditor extends React.Component {
 
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Select Strain</label>
-              <Select
-                key={this.state.facility_strain_id}
-                options={facility_strains}
-                noOptionsMessage={() => 'Type to search strain...'}
-                styles={reactSelectStyle}
-                onChange={this.onFacilityStrainChanged}
-                value={facilityStrain}
+              <LocationPicker
+                mode="facility"
+                onChange={this.onFacilityChanged}
+                locations={locations}
+                facility_id={this.state.facility_id}
+                location_id={this.state.facility_id}
               />
-              <FieldError
-                errors={this.state.errors}
-                field="facility_strain_id"
+              <FieldError errors={this.state.errors} field="facility_id" />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-40">
+              <label className="f6 fw6 db mb1 gray ttc">Nutrient Type</label>
+              <Select
+                options={catalogues}
+                value={this.state.nutrientType}
+                onChange={this.onNutrientTypeSelected}
+                styles={reactSelectStyle}
               />
             </div>
+            {nutrientProducts && (
+              <div className="w-60 pl3">
+                <label className="f6 fw6 db mb1 gray ttc">
+                  {this.state.nutrientType.label}&nbsp;
+                </label>
+                <Select
+                  key={this.state.nutrientType}
+                  options={nutrientProducts}
+                  value={this.state.catalogue}
+                  onChange={this.onNutrientProductSelected}
+                  styles={reactSelectStyle}
+                />
+                <FieldError errors={this.state.errors} field="catalogue" />
+              </div>
+            )}
           </div>
 
           <hr className="mt3 m b--light-gray w-100" />
@@ -330,51 +363,55 @@ class SeedEditor extends React.Component {
             </div>
           </div>
 
-          <hr className="mt3 m b--light-gray w-100" />
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 dark-gray">
-                Amount of material in each{' '}
-                {this.state.order_uom.label.toLowerCase()}
-              </label>
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-30">
-              <NumericInput
-                label="Quantity"
-                fieldname="qty_per_package"
-                value={this.state.qty_per_package}
-                onChange={this.onChangeGeneric}
-                errors={this.state.errors}
-              />
-            </div>
-            <div className="w-20 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">UoM</label>
-              <Select
-                value={this.state.uom}
-                options={uoms}
-                styles={reactSelectStyle}
-                onChange={x => this.setState({ uom: x })}
-              />
-              <FieldError errors={this.state.errors} field="uom" />
-            </div>
-            <div className="w-50 pl4">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Total material in {this.state.order_quantity}{' '}
-                {this.state.order_uom.label}
-              </label>
-              <div className="f6 pv2 fw6">
-                {this.state.order_quantity &&
-                  this.state.qty_per_package &&
-                  parseFloat(this.state.order_quantity) *
-                    parseFloat(this.state.qty_per_package)}
-                &nbsp;
-                {this.state.uom && this.state.uom.label}
+          {this.state.uom && (
+            <React.Fragment>
+              <hr className="mt3 m b--light-gray w-100" />
+              <div className="ph4 mt3 mb3 flex">
+                <div className="w-100">
+                  <label className="f6 fw6 db dark-gray">
+                    Amount of material in each{' '}
+                    {this.state.order_uom.label.toLowerCase()}
+                  </label>
+                </div>
               </div>
-            </div>
-          </div>
+
+              <div className="ph4 mb3 flex">
+                <div className="w-30">
+                  <NumericInput
+                    label="Quantity"
+                    fieldname="qty_per_package"
+                    value={this.state.qty_per_package}
+                    onChange={this.onChangeGeneric}
+                    errors={this.state.errors}
+                  />
+                </div>
+                <div className="w-20 pl3">
+                  <label className="f6 fw6 db mb1 gray ttc">UoM</label>
+                  <Select
+                    value={this.state.uom}
+                    options={uoms}
+                    styles={reactSelectStyle}
+                    onChange={x => this.setState({ uom: x })}
+                  />
+                  <FieldError errors={this.state.errors} field="uom" />
+                </div>
+                <div className="w-50 pl4">
+                  <label className="f6 fw6 db mb1 gray ttc">
+                    Total material in {this.state.order_quantity}{' '}
+                    {this.state.order_uom.label}
+                  </label>
+                  <div className="f6 pv2 fw6">
+                    {this.state.order_quantity &&
+                      this.state.qty_per_package &&
+                      parseFloat(this.state.order_quantity) *
+                        parseFloat(this.state.qty_per_package)}
+                    &nbsp;
+                    {this.state.uom && this.state.uom.label}
+                  </div>
+                </div>
+              </div>
+            </React.Fragment>
+          )}
 
           <hr className="mt3 m b--light-gray w-100" />
 
@@ -384,7 +421,6 @@ class SeedEditor extends React.Component {
                 Where are they stored?
               </label>
               <LocationPicker
-                key={this.state.facility_id}
                 mode="storage"
                 locations={locations}
                 facility_id={this.state.facility_id}
@@ -400,24 +436,14 @@ class SeedEditor extends React.Component {
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
-            label={`How the ${this.label} are purchased?`}
-            vendorLicense={false}
-            vendor_name={this.state.vendor_name}
-            vendor_no={this.state.vendor_no}
-            address={this.state.address}
-            purchase_date={this.state.purchase_date}
-            invoice_no={this.state.invoice_no}
-            purchase_order_no={this.state.purchase_order_no}
+            label="How the nutrients are purchased?"
+            vendor={this.state.vendor}
+            purchase_order={this.state.purchase_order}
+            vendor_invoice={this.state.vendor_invoice}
+            showVendorLicense={false}
           />
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
-            {/* <a
-              className="db tr pv2 bn br2 ttu tracked link dim f6 fw6 orange"
-              href="#"
-              onClick={x => x.preventDefault()}
-            >
-              Save for later
-            </a> */}
             <a
               className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
               href="#"
@@ -432,11 +458,13 @@ class SeedEditor extends React.Component {
   }
 }
 
-SeedEditor.propTypes = {
-  facility_strains: PropTypes.array.isRequired,
-  locations: PropTypes.array.isRequired,
+NutrientEditorV2.propTypes = {
+  // batch_sources: PropTypes.array.isRequired,
+  // facility_strains: PropTypes.array.isRequired,
+  // grow_methods: PropTypes.array.isRequired,
   order_uoms: PropTypes.array.isRequired,
-  uoms: PropTypes.array.isRequired
+  catalogues: PropTypes.array.isRequired,
+  // vendors: PropTypes.object.isRequired
 }
 
-export default SeedEditor
+export default NutrientEditorV2

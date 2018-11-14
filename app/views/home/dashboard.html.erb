@@ -5,14 +5,15 @@
 <div class="ma4 bg-white">
   <div class="w-100 fl">
     <h2 class="mt3 ml4 dib">Cultivation Schedules</h2>
-    <div class="ba b--light-gray pa4">
-      <table class="collapse ba br2 b--black-10 pv2 ph3 f6">
+    <div class="ba b--light-gray pa4 bg-white">
+      <table class="ba br2 b--black-10 pv2 ph3 f6">
         <thead>
           <tr>
             <th class="w5 pv2 ph3 tl ttu">Strain</th>
             <th class="w4 tr ph3 ttu">Start Date</th>
             <th class="w4 tr ph3 ttu">Estimated Harvest Date</th>
             <th class="w4 tr ph3 ttu">Active</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -30,6 +31,9 @@
               <td class="tr pv2 ph3">
                 <%= batch.is_active? ? 'Active' : 'Inactive' %>
               </td>
+              <td>
+                <%= link_to 'DELETE',  batch,  method: :delete, data: { confirm: 'Are you sure?' }, class: "pv2 link ph3" %>
+              </td>
             </tr>
           <% end %>
         </tbody>
@@ -39,7 +43,7 @@
 
   <div class="w-50 fl">
     <h2 class="mt3 ml4 dib">Plant Inventory</h2>
-    <div class="ba b--light-gray pa4">
+    <div class="ba b--light-gray pa4 bg-white">
       <p>Summary of occupancy of each Facility</p>
       <img class="dib" src="https://i.stack.imgur.com/k7Nit.png" height="200px" />
     </div>
@@ -47,7 +51,7 @@
 
   <div class="w-50 fl">
     <h2 class="mt3 ml4 dib">Facility</h2>
-    <div class="ba b--light-gray pa4">
+    <div class="ba b--light-gray pa4 bg-white">
       <p>Summary of occupancy of each Facility</p>
       <img class="dib" src="https://help.quickbase.com/user-assistance/images/gauge_example2.png" height="200px" />
     </div>
@@ -55,7 +59,7 @@
 
   <div class="w-100 fl">
     <h2 class="mt3 ml4 dib">Resource Management</h2>
-    <div class="ba b--light-gray pa4">
+    <div class="ba b--light-gray pa4 bg-white">
       Resource Management
       <img src="https://www.pubnub.com/wp-content/uploads/2015/10/eon-javascript-live-realtime-chart.gif" />
     </div>
@@ -64,7 +68,7 @@
 
   <div class="w-50 fl">
     <h2 class="mt3 ml4 dib">Production Cost</h2>
-    <div class="ba b--light-gray pa4">
+    <div class="ba b--light-gray pa4 bg-white">
       Production Cost
       <img src="https://resources.help.salesforce.com/images/d8f6b20525f3d1d18a8610e197771cc7.png" width="500px" />
     </div>

@@ -19,7 +19,7 @@ class StrainApp extends React.Component {
 
   renderStrainList() {
     return (
-      <div className="w-80 bg-white pa3">
+      <div className="fl w-100-m w-80-l bg-white pa3">
         <div className="flex mt3 mb4">
           <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Strains</h1>
           <div style={{ justifySelf: 'end' }}>

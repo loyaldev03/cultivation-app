@@ -85,9 +85,9 @@ module Cultivation
         task.children.each do |child|
           if child.depend_on.nil?
             temp_child = child
-            end_date = task.start_date + child.duration.to_i.send('days') if task.end_date
+            end_date = (task.start_date + child.duration.to_i.send('days')) - 1.days if child.duration && task.start_date
             temp_child.start_date = task.start_date
-            temp_child.end_date = end_date
+            temp_child.end_date = end_date if end_date
             array << temp_child #store inside temp_array
             find_changes(child, array) #find childrens, pass array
           end
@@ -98,8 +98,8 @@ module Cultivation
         task.tasks_depend.each do |depend_task|
           temp_depend_task = depend_task
 
-          start_date = task.end_date + 1.days
-          end_date = start_date + depend_task.duration.to_i.send('days') if task.end_date
+          start_date = task.end_date + 1.days if task.end_date
+          end_date = (start_date + depend_task.duration.to_i.send('days')) - 1.days if start_date && depend_task.duration
 
           temp_depend_task.start_date = start_date
           temp_depend_task.end_date = end_date
@@ -139,7 +139,7 @@ module Cultivation
         phase = phases.pluck(:phase).include?('cure') ? phases.detect { |b| b.phase == 'cure' } : phases.detect { |b| b.phase == 'dry' }
         Rails.logger.debug "Phase End Date => #{phase.end_date if phase}"
 
-        if max_date && phase &&
+        if max_date && phase && phase.end_date &&
            ((phase.end_date >= min_date && batch.start_date <= max_date) ||
             (batch.start_date >= min_date && batch.start_date <= max_date) ||
             (batch.start_date <= min_date && phase.end_date >= max_date))

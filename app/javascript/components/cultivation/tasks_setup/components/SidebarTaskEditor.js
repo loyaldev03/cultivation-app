@@ -185,7 +185,7 @@ class SidebarTaskEditor extends React.Component {
             <DatePicker
               value={this.state.end_date}
               fieldname="end_date"
-              // minDate={isNotNormalTask ? this.state.child_end_date : null}
+              minDate={isNotNormalTask ? this.state.child_end_date : null}
               onChange={e => this.handleChangeDate('end_date', e)}
             />
           </div>

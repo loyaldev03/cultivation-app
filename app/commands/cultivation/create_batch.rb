@@ -313,8 +313,13 @@ module Cultivation
         duration = phase_schedule[task[:phase]][2]
       else
         start_date = phase_schedule[task[:phase]][0] if phase_schedule[task[:phase]]
-        duration = nil # task[:duration].to_i unless task[:duration].nil?
-        end_date = nil
+        if to_boolean(task[:is_phase])
+          duration = nil # task[:duration].to_i unless task[:duration].nil?
+          end_date = nil
+        else
+          duration = task[:duration].to_i if task[:duration]
+          end_date = (start_date + duration.to_i.send('days')) - 1.days if duration && start_date
+        end
       end
 
       record = {

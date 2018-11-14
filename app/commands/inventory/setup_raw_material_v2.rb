@@ -109,13 +109,10 @@ module Inventory
 
     # Update/ create necessary purchase info
     def save_purchase_info
-      resolve_po_invoice_item_ids
-
+      handle_po_invoice_switching
       vendor = save_vendor
       po_item = save_purchase_order(vendor)
       invoice_item = save_invoice(po_item)
-
-      mark_orphaned_po_invoice
 
       invoice_item
     end
@@ -152,35 +149,24 @@ module Inventory
       transaction.product_name = product_name
       transaction.description = description
       transaction.manufacturer = manufacturer
+      transaction.ref_id = invoice_item.id
       transaction.save!
       transaction
     end
 
-    def mark_orphaned_po_invoice
-      # for each old id, mark status as orphaned.
-    end
+    # If user edit existing inventory but changes to another PO or Invoice,
+    # the entry at the old PO or Invoice should be deleted.
+    def handle_po_invoice_switching
+      return if id.blank?
 
-    def resolve_po_invoice_item_ids
-      @is_same_invoice_item = false
-      @is_same_po_item = false
+      transaction = Inventory::ItemTransaction.find(id)
+      raise "Editing this record type: #{transaction.ref_type} is not supported" if transaction.ref_type != 'Inventory::VendorInvoiceItem'
 
-      # Resolve for update
-      if id.present?
-        transaction = Inventory::ItemTransaction.find(id)
-        raise 'Editing record of this type is not supported' if transaction.ref_type != 'Inventory::VendorInvoiceItem'
+      vi_item = Inventory::VendorInvoiceItem.find(transaction.ref_id)
+      po = vi_item.invoice.purchase_order
 
-        vi_item = Inventory::VendorInvoiceItem.find(transaction.ref_id)
-        if vi_item.invoice_id.to_s == invoice_id
-          @is_same_invoice_item = true
-          @invoice_item_id = transaction.ref_id
-        end
-
-        po = vi_item.invoice.purchase_order
-        if po.id.to_s == purchase_order_id
-          @is_same_po_item = true
-          @po_item_id = vi_item.purchase_order_item_id
-        end
-      end
+      vi_item.purchase_order_item.destroy! if po.id.to_s != purchase_order_id
+      vi_item.destroy! if vi_item.invoice_id.to_s != invoice_id
     end
 
     def save_vendor
@@ -261,7 +247,7 @@ module Inventory
       invoice_item = if invoice_item_id.blank?
                        invoice.items.new
                      else
-                       invoice.items.build
+                       invoice.items.find(invoice_item_id)
                      end
 
       invoice_item.catalogue = catalogue

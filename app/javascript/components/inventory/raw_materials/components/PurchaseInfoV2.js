@@ -10,6 +10,26 @@ const handleInputChange = newValue => {
   return newValue ? newValue : ''
 }
 
+// Overriding built-in ones because default one crashes when select
+// is cleared/ tap away in some
+const onValidOption = (inputValue, selectValue, selectOptions) => {
+  return !(
+    !inputValue ||
+    selectValue.some(option => {
+      return compareOption(inputValue, option)
+    }) ||
+    selectOptions.some(option => {
+      return compareOption(inputValue, option)
+    })
+  )
+}
+
+const compareOption = (i, option) => {
+  if (!i || i.length === 0) return false
+  if (!option || !option.value) return false
+  return option.value.toLowerCase() === i || option.label.toLowerCase() === i
+}
+
 class PurchaseInfoV2 extends React.Component {
   constructor(props) {
     super(props)
@@ -102,10 +122,6 @@ class PurchaseInfoV2 extends React.Component {
         credentials: 'include'
       }
     ).then(response => response.json())
-    .then(data => {
-      console.log(data)
-      return data
-    })
   }
 
   loadInvoices = inputValue => {
@@ -303,7 +319,7 @@ class PurchaseInfoV2 extends React.Component {
     } else {
       data.purchase_order = { value: item.value, label: item.label }
       if (item.purchase_order_date) {
-        data.purchase_date = new Date(item.purchase_order_date) 
+        data.purchase_date = new Date(item.purchase_order_date)
       } else {
         data.purchase_date = null
       }
@@ -322,22 +338,6 @@ class PurchaseInfoV2 extends React.Component {
         invoice: { value: item.value, label: item.label }
       })
     }
-  }
-
-  // Overriding built-in ones because default one crashes when select 
-  // is cleared/ tap away in some cases.
-  onValidOption = (inputValue, selectValue, selectOptions) => {
-    return !(!inputValue || selectValue.some(option => {
-      return this.compareOption(inputValue, option)
-    }) || selectOptions.some(option => {
-      return this.compareOption(inputValue, option)
-    }))
-  }
-
-  compareOption = (i, option) => {
-    if (!i || i.length === 0) return false
-    if (!option || !option.value) return false
-    return option.value.toLowerCase() === i || option.label.toLowerCase() === i
   }
 
   renderEditableFields() {
@@ -435,7 +435,6 @@ class PurchaseInfoV2 extends React.Component {
           <div className="w-100">
             <AsyncCreatableSelect
               defaultOptions
-              cacheOptions={false}
               noOptionsMessage={() => 'Type to search vendor...'}
               loadOptions={this.loadVendors}
               onInputChange={handleInputChange}
@@ -443,7 +442,7 @@ class PurchaseInfoV2 extends React.Component {
               placeholder=""
               value={this.state.vendor}
               onChange={this.onSelectVendor}
-              isValidNewOption={this.onValidOption}
+              isValidNewOption={onValidOption}
             />
             <FieldError field="vendor" errors={this.state.errors} />
           </div>
@@ -455,7 +454,8 @@ class PurchaseInfoV2 extends React.Component {
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">PO Number</label>
             <AsyncCreatableSelect
-              cacheOptions
+              key={this.state.vendor.value}
+              defaultOptions
               noOptionsMessage={() => 'Type to search PO...'}
               loadOptions={this.loadPOs}
               onInputChange={handleInputChange}
@@ -464,7 +464,7 @@ class PurchaseInfoV2 extends React.Component {
               value={this.state.purchase_order}
               onChange={this.onSelectPO}
               isDisabled={!vendorSelected}
-              isValidNewOption={this.onValidOption}
+              isValidNewOption={onValidOption}
             />
             <FieldError field="purchase_order" errors={this.state.errors} />
           </div>
@@ -480,7 +480,8 @@ class PurchaseInfoV2 extends React.Component {
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Invoice No</label>
             <AsyncCreatableSelect
-              cacheOptions
+              key={this.state.purchase_order.value}
+              defaultOptions
               noOptionsMessage={() => 'Type to search invoice...'}
               loadOptions={this.loadInvoices}
               onInputChange={handleInputChange}
@@ -489,7 +490,7 @@ class PurchaseInfoV2 extends React.Component {
               value={this.state.invoice}
               onChange={this.onSelectInvoice}
               isDisabled={!poSelected}
-              isValidNewOption={this.onValidOption}
+              isValidNewOption={onValidOption}
             />
             <FieldError field="invoice" errors={this.state.errors} />
           </div>

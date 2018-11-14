@@ -148,7 +148,7 @@ module Cultivation
           break
         end
       end
-      errors.add(:end_date, "The date overlap with batch #{overlap_batch_name}") if overlap_batch
+      errors.add(:end_date, "The date overlaps with batch #{overlap_batch_name}") if overlap_batch
       errors.empty?
     end
   end

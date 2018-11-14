@@ -102,6 +102,10 @@ class PurchaseInfoV2 extends React.Component {
         credentials: 'include'
       }
     ).then(response => response.json())
+    .then(data => {
+      console.log(data)
+      return data
+    })
   }
 
   loadInvoices = inputValue => {
@@ -185,7 +189,7 @@ class PurchaseInfoV2 extends React.Component {
       isValid: Object.getOwnPropertyNames(errors).length === 0
     }
 
-    console.log(data)
+    // console.log(data)
     return data
   }
 
@@ -240,7 +244,7 @@ class PurchaseInfoV2 extends React.Component {
   }
 
   onSelectVendor = item => {
-    if (!item) {
+    if (!item || item.length === 0) {
       this.setState({
         vendor: { value: '', label: item.label },
         purchase_order: { value: '', label: '' },
@@ -298,7 +302,11 @@ class PurchaseInfoV2 extends React.Component {
       data.purchase_order = { value: '', label: item.label }
     } else {
       data.purchase_order = { value: item.value, label: item.label }
-      data.purchase_date = new Date(item.purchase_order_date)
+      if (item.purchase_order_date) {
+        data.purchase_date = new Date(item.purchase_order_date) 
+      } else {
+        data.purchase_date = null
+      }
     }
 
     this.setState(data)
@@ -316,20 +324,21 @@ class PurchaseInfoV2 extends React.Component {
     }
   }
 
-  // Check this data
-  // for item tx id: 5be17569edfdb21becf3aef9
-  //
-  // address: "5, Earwood St"
-  // errors: {}
-  // invoice_id: "5bdb4031edfdb2aa8eb8a4e3"
-  // invoice_no: "IV 312"
-  // isValid: true
-  // purchase_date: Wed Nov 07 2018 00:00:00 GMT+0800 (Malaysia Time) {}
-  // purchase_order_id: "5bdb4031edfdb2aa8eb8a4e1"
-  // purchase_order_no: "po 656"
-  // vendor_id: "5bd87939edfdb269078b2269"
-  // vendor_name: "v2"
-  // vendor_no: "v2"
+  // Overriding built-in ones because default one crashes when select 
+  // is cleared/ tap away in some cases.
+  onValidOption = (inputValue, selectValue, selectOptions) => {
+    return !(!inputValue || selectValue.some(option => {
+      return this.compareOption(inputValue, option)
+    }) || selectOptions.some(option => {
+      return this.compareOption(inputValue, option)
+    }))
+  }
+
+  compareOption = (i, option) => {
+    if (!i || i.length === 0) return false
+    if (!option || !option.value) return false
+    return option.value.toLowerCase() === i || option.label.toLowerCase() === i
+  }
 
   renderEditableFields() {
     return (
@@ -426,7 +435,7 @@ class PurchaseInfoV2 extends React.Component {
           <div className="w-100">
             <AsyncCreatableSelect
               defaultOptions
-              cacheOptions
+              cacheOptions={false}
               noOptionsMessage={() => 'Type to search vendor...'}
               loadOptions={this.loadVendors}
               onInputChange={handleInputChange}
@@ -434,6 +443,7 @@ class PurchaseInfoV2 extends React.Component {
               placeholder=""
               value={this.state.vendor}
               onChange={this.onSelectVendor}
+              isValidNewOption={this.onValidOption}
             />
             <FieldError field="vendor" errors={this.state.errors} />
           </div>
@@ -454,6 +464,7 @@ class PurchaseInfoV2 extends React.Component {
               value={this.state.purchase_order}
               onChange={this.onSelectPO}
               isDisabled={!vendorSelected}
+              isValidNewOption={this.onValidOption}
             />
             <FieldError field="purchase_order" errors={this.state.errors} />
           </div>
@@ -478,6 +489,7 @@ class PurchaseInfoV2 extends React.Component {
               value={this.state.invoice}
               onChange={this.onSelectInvoice}
               isDisabled={!poSelected}
+              isValidNewOption={this.onValidOption}
             />
             <FieldError field="invoice" errors={this.state.errors} />
           </div>

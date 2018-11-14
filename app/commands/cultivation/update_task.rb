@@ -133,7 +133,7 @@ module Cultivation
         Rails.logger.debug "Batch Start Date => #{batch.start_date}"
 
         phase = phases.pluck(:phase).include?('cure') ? phases.detect { |b| b.phase == 'cure' } : phases.detect { |b| b.phase == 'dry' }
-        Rails.logger.debug "Phase End Date => #{phase.end_date}"
+        Rails.logger.debug "Phase End Date => #{phase.end_date if phase}"
 
         if max_date && phase &&
            ((phase.end_date >= min_date && batch.start_date <= max_date) ||

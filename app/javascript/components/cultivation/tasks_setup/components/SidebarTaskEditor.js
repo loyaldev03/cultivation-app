@@ -85,11 +85,11 @@ class SidebarTaskEditor extends React.Component {
     if (key === 'end_date' && this.state.start_date) {
       let one_day = 1000 * 60 * 60 * 24
       let duration = new Date(value) - new Date(this.state.start_date)
-      this.setState({ [key]: value, duration: (duration / one_day) +1 })
+      this.setState({ [key]: value, duration: duration / one_day + 1 })
     } else if (key === 'start_date' && this.state.end_date) {
       let one_day = 1000 * 60 * 60 * 24
       let duration = new Date(this.state.end_date) - new Date(value)
-      this.setState({ [key]: value, duration: (duration / one_day) +1 })
+      this.setState({ [key]: value, duration: duration / one_day + 1 })
     } else {
       this.setState({ [key]: value })
     }

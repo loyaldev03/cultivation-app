@@ -122,10 +122,6 @@ class PurchaseInfoV2 extends React.Component {
         credentials: 'include'
       }
     ).then(response => response.json())
-    .then(data => {
-      console.log(data)
-      return data
-    })
   }
 
   loadInvoices = inputValue => {

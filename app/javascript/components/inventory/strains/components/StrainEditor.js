@@ -3,7 +3,7 @@ import StrainAutoSuggest from './StrainAutoSuggest'
 import { NumericInput, FieldError } from '../../../utils/FormHelpers'
 
 // TODO: Replace LocationPicker to v2 version
-import LocationPicker from '../../../utils/LocationPicker'  
+import LocationPicker from '../../../utils/LocationPicker'
 import saveStrain from '../actions/saveStrain'
 import getStrain from '../actions/getStrain'
 

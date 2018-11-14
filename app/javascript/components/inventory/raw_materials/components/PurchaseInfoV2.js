@@ -19,12 +19,12 @@ class PurchaseInfoV2 extends React.Component {
       vendor_no: '',
       address: '',
       vendor_state_license_num: '',
-      vendor_state_license_expiration_date: null,        
+      vendor_state_license_expiration_date: null,
       vendor_location_license_num: '',
       vendor_location_license_expiration_date: null,
       purchase_date: null,
       vendor: { value: '', label: '' },
-      purchase_order: { value: '', label: ''},
+      purchase_order: { value: '', label: '' },
       invoice: { value: '', label: '' },
       errors: {}
     }
@@ -33,19 +33,34 @@ class PurchaseInfoV2 extends React.Component {
       state.vendor = { value: props.vendor.id, label: props.vendor.name }
       state.address = props.vendor.address
       state.vendor_no = props.vendor.vendor_no
-      state.vendor_state_license_num = (props.vendor.state_license_num || '')
-      state.vendor_state_license_expiration_date = (!props.vendor.state_license_expiration_date ? null : new Date(props.state_license_expiration_date))
-      state.vendor_location_license_num = (props.vendor.location_license_num || '')
-      state.vendor_location_license_expiration_date = (!props.vendor.location_license_expiration_date ? null : new Date(props.location_license_expiration_date))
+      state.vendor_state_license_num = props.vendor.state_license_num || ''
+      state.vendor_state_license_expiration_date = !props.vendor
+        .state_license_expiration_date
+        ? null
+        : new Date(props.state_license_expiration_date)
+      state.vendor_location_license_num =
+        props.vendor.location_license_num || ''
+      state.vendor_location_license_expiration_date = !props.vendor
+        .location_license_expiration_date
+        ? null
+        : new Date(props.location_license_expiration_date)
     }
 
     if (props.purchase_order) {
-      state.purchase_order = { value: props.purchase_order.id, label: props.purchase_order.purchase_order_no }
-      state.purchase_date = (!props.purchase_order.purchase_order_date ? null : new Date(props.purchase_order.purchase_order_date))
+      state.purchase_order = {
+        value: props.purchase_order.id,
+        label: props.purchase_order.purchase_order_no
+      }
+      state.purchase_date = !props.purchase_order.purchase_order_date
+        ? null
+        : new Date(props.purchase_order.purchase_order_date)
     }
 
     if (props.vendor_invoice) {
-      state.invoice = { value: props.vendor_invoice.id, label: props.vendor_invoice.invoice_no }
+      state.invoice = {
+        value: props.vendor_invoice.id,
+        label: props.vendor_invoice.invoice_no
+      }
     }
 
     this.state = state
@@ -57,13 +72,13 @@ class PurchaseInfoV2 extends React.Component {
       vendor_no: '',
       address: '',
       vendor_state_license_num: '',
-      vendor_state_license_expiration_date: null, 
+      vendor_state_license_expiration_date: null,
       vendor_location_license_num: '',
       vendor_location_license_expiration_date: null,
       purchase_date: null,
       // Should be from props
       vendor: { value: '', label: '' },
-      purchase_order: { value: '', label: ''},
+      purchase_order: { value: '', label: '' },
       invoice: { value: '', label: '' },
       errors: {}
     })
@@ -73,7 +88,7 @@ class PurchaseInfoV2 extends React.Component {
     return fetch('/api/v1/vendors?filter=' + inputValue, {
       credentials: 'include'
     }).then(response => response.json())
-  }  
+  }
 
   loadPOs = inputValue => {
     const vendor_id = this.state.vendor.value
@@ -81,9 +96,12 @@ class PurchaseInfoV2 extends React.Component {
       return Promise.resolve([])
     }
 
-    return fetch(`/api/v1/purchase_orders?vendor_id=${vendor_id}&filter=${inputValue}`, {
-      credentials: 'include'
-    }).then(response => response.json())
+    return fetch(
+      `/api/v1/purchase_orders?vendor_id=${vendor_id}&filter=${inputValue}`,
+      {
+        credentials: 'include'
+      }
+    ).then(response => response.json())
   }
 
   loadInvoices = inputValue => {
@@ -93,9 +111,12 @@ class PurchaseInfoV2 extends React.Component {
       return Promise.resolve([])
     }
 
-    return fetch(`/api/v1/vendor_invoices?purchase_order_id=${purchase_order_id}&filter=${inputValue}`, {
-      credentials: 'include'
-    }).then(response => response.json())
+    return fetch(
+      `/api/v1/vendor_invoices?purchase_order_id=${purchase_order_id}&filter=${inputValue}`,
+      {
+        credentials: 'include'
+      }
+    ).then(response => response.json())
   }
 
   onStateLicenseExpirationDateChanged = date => {
@@ -129,7 +150,7 @@ class PurchaseInfoV2 extends React.Component {
     } = this.state
 
     let errors = {}
-    
+
     if (vendor_name.length <= 0) {
       errors.vendor = ['Vendor is required.']
     }
@@ -144,12 +165,11 @@ class PurchaseInfoV2 extends React.Component {
 
     let { licenseData, errors: licenseError } = this.validateVendorLicense()
     errors = { ...errors, ...licenseError }
-    
 
     if (!isDraft) {
       this.setState({ errors })
     }
-    
+
     const data = {
       vendor_id,
       purchase_order_id,
@@ -179,7 +199,7 @@ class PurchaseInfoV2 extends React.Component {
       vendor_state_license_num,
       vendor_state_license_expiration_date,
       vendor_location_license_num,
-      vendor_location_license_expiration_date,
+      vendor_location_license_expiration_date
     } = this.state
 
     if (!vendor_state_license_num) {
@@ -187,7 +207,9 @@ class PurchaseInfoV2 extends React.Component {
     }
 
     if (!vendor_state_license_expiration_date) {
-      errors.vendor_state_license_expiration_date = ['License expiration date is required.']
+      errors.vendor_state_license_expiration_date = [
+        'License expiration date is required.'
+      ]
     }
 
     if (!vendor_location_license_num) {
@@ -195,7 +217,9 @@ class PurchaseInfoV2 extends React.Component {
     }
 
     if (!vendor_location_license_expiration_date) {
-      errors.vendor_location_license_expiration_date = ['License expiration date is required.']
+      errors.vendor_location_license_expiration_date = [
+        'License expiration date is required.'
+      ]
     }
 
     if (vendor_state_license_expiration_date) {
@@ -217,13 +241,13 @@ class PurchaseInfoV2 extends React.Component {
 
   onSelectVendor = item => {
     if (!item) {
-      this.setState({ 
+      this.setState({
         vendor: { value: '', label: item.label },
         purchase_order: { value: '', label: '' },
         invoice: { value: '', label: '' }
       })
     } else if (item.__isNew__) {
-      this.setState({ 
+      this.setState({
         vendor: { value: '', label: item.label },
         vendor_no: '',
         address: '',
@@ -239,14 +263,18 @@ class PurchaseInfoV2 extends React.Component {
       let location_license_expiration_date = null
 
       if (item.state_license_expiration_date) {
-        state_license_expiration_date = new Date(item.state_license_expiration_date)
+        state_license_expiration_date = new Date(
+          item.state_license_expiration_date
+        )
       }
 
       if (item.location_license_expiration_date) {
-        location_license_expiration_date = new Date(item.location_license_expiration_date)
+        location_license_expiration_date = new Date(
+          item.location_license_expiration_date
+        )
       }
-      
-      this.setState({ 
+
+      this.setState({
         vendor: { value: item.value, label: item.label },
         vendor_no: item.vendor_no,
         address: item.address,
@@ -260,10 +288,8 @@ class PurchaseInfoV2 extends React.Component {
     }
   }
 
-
-
   onSelectPO = item => {
-    const data = { 
+    const data = {
       invoice: { value: '', label: '' },
       purchase_order: { value: '', label: '' }
     }
@@ -289,10 +315,10 @@ class PurchaseInfoV2 extends React.Component {
       })
     }
   }
-  
+
   // Check this data
   // for item tx id: 5be17569edfdb21becf3aef9
-  // 
+  //
   // address: "5, Earwood St"
   // errors: {}
   // invoice_id: "5bdb4031edfdb2aa8eb8a4e3"
@@ -380,12 +406,14 @@ class PurchaseInfoV2 extends React.Component {
             </div>
           </div>
         )}
-      </React.Fragment>)
+      </React.Fragment>
+    )
   }
 
   render() {
     const vendorSelected = this.state.vendor.value || this.state.vendor.label
-    const poSelected = this.state.purchase_order.value || this.state.purchase_order.label
+    const poSelected =
+      this.state.purchase_order.value || this.state.purchase_order.label
 
     return (
       <React.Fragment>
@@ -410,13 +438,12 @@ class PurchaseInfoV2 extends React.Component {
             <FieldError field="vendor" errors={this.state.errors} />
           </div>
         </div>
-      
 
         {this.renderEditableFields()}
 
         <div className="ph4 mb3 flex">
           <div className="w-50">
-          <label className="f6 fw6 db mb1 gray ttc">PO Number</label>
+            <label className="f6 fw6 db mb1 gray ttc">PO Number</label>
             <AsyncCreatableSelect
               cacheOptions
               noOptionsMessage={() => 'Type to search PO...'}
@@ -466,7 +493,7 @@ PurchaseInfoV2.propTypes = {
   showVendorLicense: PropTypes.bool,
   vendor: PropTypes.object,
   purchase_order: PropTypes.object,
-  vendor_invoice: PropTypes.object,
+  vendor_invoice: PropTypes.object
 }
 
 PurchaseInfoV2.defaultProps = {
@@ -475,7 +502,7 @@ PurchaseInfoV2.defaultProps = {
   showVendorLicense: true,
   vendor: null,
   purchase_order: null,
-  vendor_invoice: null,
+  vendor_invoice: null
 }
 
 export default PurchaseInfoV2

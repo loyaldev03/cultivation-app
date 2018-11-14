@@ -85,7 +85,7 @@ module Cultivation
         task.children.each do |child|
           if child.depend_on.nil?
             temp_child = child
-            end_date = task.start_date + child.duration.to_i.send('days') if task.end_date
+            end_date = task.start_date + child.duration.to_i.send('days') if child.duration
             temp_child.start_date = task.start_date
             temp_child.end_date = end_date
             array << temp_child #store inside temp_array
@@ -98,8 +98,8 @@ module Cultivation
         task.tasks_depend.each do |depend_task|
           temp_depend_task = depend_task
 
-          start_date = task.end_date + 1.days
-          end_date = start_date + depend_task.duration.to_i.send('days') if task.end_date
+          start_date = task.end_date + 1.days if task.end_date
+          end_date = start_date + depend_task.duration.to_i.send('days') if start_date && depend_task.duration
 
           temp_depend_task.start_date = start_date
           temp_depend_task.end_date = end_date

@@ -341,6 +341,12 @@ class BatchSetupApp extends React.Component {
               )}
             </div>
           )}
+          <div class="fl w-100 mt4">
+            <div class="dim flex flex-row items-center pointer">
+              <i class="material-icons md-light-gray">keyboard_arrow_left</i>
+              <a href="/" className="db tr ttu link button--font light-grey">Back</a>
+            </div>
+          </div>
         </div>
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body h-100">

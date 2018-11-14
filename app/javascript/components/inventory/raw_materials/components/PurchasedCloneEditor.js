@@ -27,8 +27,6 @@ class PurchasedCloneEditor extends React.Component {
             return attr
           })
           .then(attr => {
-            console.log(attr)
-
             this.setState({
               ...this.resetState(),
               id: id,
@@ -102,7 +100,6 @@ class PurchasedCloneEditor extends React.Component {
 
   onSave = event => {
     const payload = this.validateAndGetValues()
-    console.log(payload)
     if (payload.isValid) {
       setupPurchasedClones(payload).then(x => {
         this.reset()

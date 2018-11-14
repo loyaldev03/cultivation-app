@@ -106,7 +106,6 @@ const columns = [
 ]
 
 function openBatch(event, data) {
-  console.log(data)
   window.editorSidebar.open({ width: '500px', data })
   event.preventDefault()
 }

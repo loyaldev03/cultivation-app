@@ -26,7 +26,6 @@ class RawMaterialEditor extends React.Component {
       } else {
         getRawMaterial(id)
           .then(x => {
-            console.log(x)
             const attr = x.data.data.attributes
             return attr
           })

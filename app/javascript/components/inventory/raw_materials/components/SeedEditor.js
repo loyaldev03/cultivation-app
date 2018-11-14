@@ -101,7 +101,6 @@ class SeedEditor extends React.Component {
 
   onSave = event => {
     const payload = this.validateAndGetValues()
-    console.log(payload)
     if (payload.isValid) {
       setupSeed(payload).then(x => {
         this.reset()
@@ -129,9 +128,7 @@ class SeedEditor extends React.Component {
 
     let errors = {}
 
-    const quantity =
-      parseFloat(order_quantity) *
-      parseFloat(qty_per_package)
+    const quantity = parseFloat(order_quantity) * parseFloat(qty_per_package)
 
     if (facility_strain_id.length === 0) {
       errors = {
@@ -333,56 +330,53 @@ class SeedEditor extends React.Component {
             </div>
           </div>
           {console.log('Remove this.state.uom check at line 337!')}
-          {this.state.uom && (
-            <React.Fragment>
-              <hr className="mt3 m b--light-gray w-100" />
-              <div className="ph4 mt3 mb3 flex">
-                <div className="w-100">
-                  <label className="f6 fw6 db mb1 dark-gray">
-                    Amount of material in each{' '}
-                    {this.state.order_uom.label.toLowerCase()}
-                  </label>
-                </div>
-              </div>
+            
+          <hr className="mt3 m b--light-gray w-100" />
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 dark-gray">
+                Amount of material in each{' '}
+                {this.state.order_uom.label.toLowerCase()}
+              </label>
+            </div>
+          </div>
 
-              <div className="ph4 mb3 flex">
-                <div className="w-30">
-                  <NumericInput
-                    label="Quantity"
-                    fieldname="qty_per_package"
-                    value={this.state.qty_per_package}
-                    onChange={this.onChangeGeneric}
-                    errors={this.state.errors}
-                  />
-                </div>
-                <div className="w-20 pl3">
-                  <label className="f6 fw6 db mb1 gray ttc">UoM</label>
-                  <Select
-                    value={this.state.uom}
-                    options={uoms}
-                    styles={reactSelectStyle}
-                    onChange={x => this.setState({ uom: x })}
-                  />
-                  <FieldError errors={this.state.errors} field="uom" />
-                </div>
-                <div className="w-50 pl4">
-                  <label className="f6 fw6 db mb1 gray ttc">
-                    Total material in {this.state.order_quantity}{' '}
-                    {this.state.order_uom.label}
-                  </label>
-                  <div className="f6 pv2 fw6">
-                    {this.state.order_quantity &&
-                      this.state.qty_per_package &&
-                      parseFloat(this.state.order_quantity) *
-                        parseFloat(this.state.qty_per_package)}
-                    &nbsp;
-                    {this.state.uom && this.state.uom.label}
-                  </div>
-                </div>
+          <div className="ph4 mb3 flex">
+            <div className="w-30">
+              <NumericInput
+                label="Quantity"
+                fieldname="qty_per_package"
+                value={this.state.qty_per_package}
+                onChange={this.onChangeGeneric}
+                errors={this.state.errors}
+              />
+            </div>
+            <div className="w-20 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">UoM</label>
+              <Select
+                value={this.state.uom}
+                options={uoms}
+                styles={reactSelectStyle}
+                onChange={x => this.setState({ uom: x })}
+              />
+              <FieldError errors={this.state.errors} field="uom" />
+            </div>
+            <div className="w-50 pl4">
+              <label className="f6 fw6 db mb1 gray ttc">
+                Total material in {this.state.order_quantity}{' '}
+                {this.state.order_uom.label}
+              </label>
+              <div className="f6 pv2 fw6">
+                {this.state.order_quantity &&
+                  this.state.qty_per_package &&
+                  parseFloat(this.state.order_quantity) *
+                    parseFloat(this.state.qty_per_package)}
+                &nbsp;
+                {this.state.uom && this.state.uom.label}
               </div>
-            </React.Fragment>
-          )}
-
+            </div>
+          </div>
+          
           <hr className="mt3 m b--light-gray w-100" />
 
           <div className="ph4 mt3 mb3 flex">

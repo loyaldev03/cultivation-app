@@ -17,11 +17,8 @@ class CultivationBatchStore {
   @action
   update(batch) {
     const index = this.batches.findIndex(x => x.id === batch.id)
-    console.log(index)
     if (index >= 0) {
       this.batches[index] = batch
-      // this.batches.remove(this.batches[index])
-      // this.prepend(batch)
     }
   }
 

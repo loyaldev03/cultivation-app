@@ -9,7 +9,7 @@ class HomeController < ApplicationController
 
   def inventory_setup
     @strains_count = Inventory::FacilityStrain.count
-    raw_material_catalogues = Inventory::ItemTransaction.where(catalogue_type: 'raw_materials')
+    raw_material_catalogues = Inventory::Catalogue.raw_materials.pluck(:id)
     @raw_material_count = Inventory::ItemTransaction.in(catalogue: raw_material_catalogues).count
   end
 

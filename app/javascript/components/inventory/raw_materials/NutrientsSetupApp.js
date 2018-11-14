@@ -125,7 +125,6 @@ class NutrientsSetupApp extends React.Component {
   }
 
   render() {
-    console.log(this.props.catalogues)
     return (
       <React.Fragment>
         {this.renderNutrientList()}

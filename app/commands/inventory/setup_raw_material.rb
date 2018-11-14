@@ -111,6 +111,7 @@ module Inventory
     end
 
     def update_raw_material(ii)
+      ii
     end
 
     def save_vendor

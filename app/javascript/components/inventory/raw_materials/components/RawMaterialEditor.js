@@ -224,10 +224,6 @@ class RawMaterialEditor extends React.Component {
   }
 
   render() {
-    const widthStyle = this.props.isOpened
-      ? { width: '500px' }
-      : { width: '0px' }
-
     const { locations } = this.props
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
@@ -237,7 +233,7 @@ class RawMaterialEditor extends React.Component {
       parseFloat(this.state.order_quantity) > 0
 
     return (
-      <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
+      <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
           <div
             className="ph4 pv2 bb b--light-gray flex items-center"

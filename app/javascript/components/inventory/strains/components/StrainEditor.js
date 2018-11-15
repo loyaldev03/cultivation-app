@@ -105,11 +105,7 @@ export default class StrainEditor extends React.Component {
       return
     }
 
-    // console.log('payload')
-    // console.log(payload)
-
     saveStrain(payload).then(result => {
-      // console.log(result)
       if (result.data.errors) {
         this.setState({ errors: result.data.errors })
       } else {
@@ -141,7 +137,7 @@ export default class StrainEditor extends React.Component {
     let errors = {}
 
     if (facility_id.trim().length == 0) {
-      errors = { ...errors, facility_id: ['Facility is required.'] }
+      errors.facility_id = ['Facility is required.']
     }
 
     const isValid =
@@ -299,12 +295,8 @@ export default class StrainEditor extends React.Component {
   }
 
   render() {
-    const widthStyle = this.props.isOpened
-      ? { width: '500px' }
-      : { width: '0px' }
-
     return (
-      <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
+      <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
           <div
             className="ph4 pv2 bb b--light-gray flex items-center"

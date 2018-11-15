@@ -42,13 +42,13 @@ class EditorSidebarHandler {
     if (data && data.width) {
       this.sidebarNode.style.width = data.width
     }
-    this.sidebarNode.style.transform ='translate(0%)';
+    this.sidebarNode.style.transform = 'translate(0%)'
   }
 
   close(data) {
     const event = new CustomEvent('editor-sidebar-close', { detail: data })
     document.dispatchEvent(event)
-    this.sidebarNode.style.transform ='translate(100%)';
+    this.sidebarNode.style.transform = 'translate(100%)'
   }
 
   setup(node) {

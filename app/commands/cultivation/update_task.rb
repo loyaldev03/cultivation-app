@@ -71,8 +71,9 @@ module Cultivation
 
     def update_task(task, args, opt = {})
       tasks_changes = []
+      tasks = task.batch.tasks
       #if date is changes, start_date, end_date and duration
-      find_changes(task, tasks_changes, opt) #store into temp array
+      find_changes(tasks, task, tasks_changes, opt) #store into temp array
       if valid_data?(tasks_changes)
         bulk_update(tasks_changes) #bulk update
         task
@@ -80,24 +81,30 @@ module Cultivation
       task
     end
 
-    def find_changes(task, array, opt = {})
-      return if (task.children.count == 0 and task.tasks_depend.count == 0)
+    def find_changes(tasks, task, array, opt = {})
+      task_children = tasks.select { |b| b.parent_id == task.id.to_s }
+      task_depend = tasks.select { |b| b.depend_on == task.id.to_s }
+      return if (task_children.count == 0 and task_depend.count == 0)
+
+      # return if (task.children.count == 0 and task.tasks_depend.count == 0)
 
       if opt[:children] != false #used for avoid updating children task
-        task.children.each do |child|
+        # task.children.each do |child|
+        task_children.each do |child|
           if child.depend_on.nil?
             temp_child = child
             end_date = (task.start_date + child.duration.to_i.send('days')) - 1.days if child.duration && task.start_date
             temp_child.start_date = task.start_date
             temp_child.end_date = end_date if end_date
             array << temp_child #store inside temp_array
-            find_changes(child, array) #find childrens, pass array
+            find_changes(tasks, child, array) #find childrens, pass array
           end
         end
       end
 
       if opt[:dependent] != false #used for avoid updating dependent task
-        task.tasks_depend.each do |depend_task|
+        # task.tasks_depend.each do |depend_task|
+        task_depend.each do |depend_task|
           temp_depend_task = depend_task
 
           start_date = task.end_date + 1.days if task.end_date
@@ -106,7 +113,7 @@ module Cultivation
           temp_depend_task.start_date = start_date
           temp_depend_task.end_date = end_date
           array << temp_depend_task #store inside temp_array
-          find_changes(depend_task, array) #find childrens, pass array
+          find_changes(tasks, depend_task, array) #find childrens, pass array
         end
       end
     end

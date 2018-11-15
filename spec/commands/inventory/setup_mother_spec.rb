@@ -47,7 +47,7 @@ RSpec.describe Inventory::SetupMother, type: :command do
           invoice_date: invoice_date
         })
       
-      expect(cmd.errors).to be {}
+      expect(cmd.errors.to_h).to eq({})
       expect(cmd.success?).to be true
       expect(cmd.result.count).to eq 1
 

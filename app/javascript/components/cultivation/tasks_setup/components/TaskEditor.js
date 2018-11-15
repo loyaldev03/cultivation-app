@@ -53,6 +53,7 @@ export default class TaskEditor extends React.Component {
     document.addEventListener('editor-sidebar-open', function(ev) {
       _this.setState({
         id: ev.detail.data.id,
+        tabs: 'General',
         task: TaskStore.find(e => e.id === ev.detail.data.id),
         action: ev.detail.action,
         task_related_id: ev.detail.data.task_related_id,

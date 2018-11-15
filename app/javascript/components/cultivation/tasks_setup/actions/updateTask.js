@@ -42,7 +42,6 @@ class updateTask {
         if (data && data.data && data.data.id != null) {
           toast('Task Updated', 'success')
           loadTasks.loadbatch(state.batch_id)
-          window.editorSidebar.close()
         } else {
           let keys = Object.keys(data.errors)
           console.log(data.errors[keys[0]])

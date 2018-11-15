@@ -6,7 +6,7 @@ import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import PurchaseInfo from '../components/PurchaseInfoV2'
 import LocationPicker from '../../../utils/LocationPicker2'
-import { saveRawMaterial } from '../actions/saveRawMaterialV2'
+import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
 
 class NutrientEditor extends React.Component {
@@ -152,19 +152,19 @@ class NutrientEditor extends React.Component {
       errors.facility_id = ['Facility is required.']
     }
 
-    if (uom.length <= 0) {
+    if (uom.length === 0) {
       errors.uom = ['Unit of measure is required.']
     }
 
-    if (order_uom.length <= 0) {
+    if (order_uom.length === 0) {
       errors.order_uom = ['Unit of measure is required.']
     }
 
-    if (parseFloat(order_quantity) <= 0) {
+    if (parseFloat(order_quantity) === 0) {
       errors.order_quantity = ['Order quantity is required.']
     }
 
-    if (parseFloat(qty_per_package) <= 0) {
+    if (parseFloat(qty_per_package) === 0) {
       errors.qty_per_package = ['Quantity per package is required.']
     }
 
@@ -172,7 +172,7 @@ class NutrientEditor extends React.Component {
       errors.catalogue = ['Nutrient product is required.']
     }
 
-    if (location_id.length <= 0) {
+    if (location_id.length === 0) {
       errors.location_id = ['Storage location is required.']
     }
 

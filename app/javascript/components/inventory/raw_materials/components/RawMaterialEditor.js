@@ -4,8 +4,7 @@ import Select from 'react-select'
 // import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import PurchaseInfo from '../../plant_setup/components/shared/PurchaseInfo'
-import httpGetOptions from '../../../utils'
+import PurchaseInfo from '../components/PurchaseInfoV2'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
@@ -25,10 +24,7 @@ class RawMaterialEditor extends React.Component {
         this.reset()
       } else {
         getRawMaterial(id)
-          .then(x => {
-            const attr = x.data.data.attributes
-            return attr
-          })
+          .then(x => x.data.data.attributes)
           .then(attr => {
             const catalogue = this.props.catalogues.find(
               x => x.id == attr.catalogue_id
@@ -49,13 +45,9 @@ class RawMaterialEditor extends React.Component {
               uom: { value: attr.uom, label: attr.uom },
               location_id: attr.location_id,
               // purchase info
-              vendor_id: attr.vendor.id,
-              vendor_name: attr.vendor.name,
-              vendor_no: attr.vendor.vendor_no,
-              address: attr.vendor.address,
-              purchase_date: new Date(attr.vendor_invoice.invoice_date),
-              purchase_order_no: attr.purchase_order.purchase_order_no,
-              invoice_no: attr.vendor_invoice.invoice_no
+              vendor: attr.vendor,
+              purchase_order: attr.purchase_order,
+              vendor_invoice: attr.vendor_invoice,
             })
           })
       }
@@ -93,14 +85,11 @@ class RawMaterialEditor extends React.Component {
       order_uom: { value: '', label: '' },
       uom: { value: '', label: '' },
       location_id: '',
+
       // purchase info
-      vendor_id: '',
-      vendor_name: '',
-      vendor_no: '',
-      address: '',
-      purchase_date: null,
-      purchase_order_no: '',
-      invoice_no: '',
+      vendor: null,
+      purchase_order: null,
+      vendor_invoice: null,
       errors: {}
     }
   }
@@ -145,52 +134,31 @@ class RawMaterialEditor extends React.Component {
       parseFloat(this.state.qty_per_package)
 
     if (facility_id.length === 0) {
-      errors = {
-        ...errors,
-        facility_id: ['Facility is required.']
-      }
+      errors.facility_id = ['Facility is required.']
     }
 
     if (uom.length === 0) {
-      errors = {
-        ...errors,
-        uom: ['Unit of measure is required.']
-      }
+      errors.uom = ['Unit of measure is required.']
     }
 
     if (order_uom.length === 0) {
-      errors = {
-        ...errors,
-        order_uom: ['Unit of measure is required.']
-      }
+      errors.order_uom = ['Unit of measure is required.']
     }
 
     if (parseFloat(order_quantity) <= 0) {
-      errors = {
-        ...errors,
-        order_quantity: ['Order quantity is required.']
-      }
+      errors.order_quantity = ['Order quantity is required.']
     }
 
     if (parseFloat(qty_per_package) <= 0) {
-      errors = {
-        ...errors,
-        qty_per_package: ['Quantity per package is required.']
-      }
+      errors.qty_per_package = ['Quantity per package is required.']
     }
 
     if (catalogue.length === 0) {
-      errors = {
-        ...errors,
-        catalogue: [`${this.label} product is required.`]
-      }
+      errors.catalogue = [`${this.label} product is required.`]
     }
 
     if (location_id.length === 0) {
-      errors = {
-        ...errors,
-        location_id: ['Storage location is required.']
-      }
+      errors.location_id = ['Storage location is required.']
     }
 
     const {
@@ -435,23 +403,13 @@ class RawMaterialEditor extends React.Component {
             key={this.state.id}
             ref={this.purchaseInfoEditor}
             label={`How the ${this.label} are purchased?`}
-            vendorLicense={false}
-            vendor_name={this.state.vendor_name}
-            vendor_no={this.state.vendor_no}
-            address={this.state.address}
-            purchase_date={this.state.purchase_date}
-            invoice_no={this.state.invoice_no}
-            purchase_order_no={this.state.purchase_order_no}
+            showVendorLicense={false}
+            vendor={this.state.vendor}
+            purchase_order={this.state.purchase_order}
+            vendor_invoice={this.state.vendor_invoice}
           />
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
-            {/* <a
-              className="db tr pv2 bn br2 ttu tracked link dim f6 fw6 orange"
-              href="#"
-              onClick={x => x.preventDefault()}
-            >
-              Save for later
-            </a> */}
             <a
               className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
               href="#"

@@ -47,7 +47,7 @@ class RawMaterialEditor extends React.Component {
               // purchase info
               vendor: attr.vendor,
               purchase_order: attr.purchase_order,
-              vendor_invoice: attr.vendor_invoice,
+              vendor_invoice: attr.vendor_invoice
             })
           })
       }

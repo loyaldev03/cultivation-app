@@ -133,7 +133,6 @@ Rails.application.routes.draw do
       resources :raw_materials, only: [:index, :show] do
         collection do
           post 'setup'
-          post 'setup_v2'
           post 'setup_seed'
           post 'setup_purchased_clones'
         end

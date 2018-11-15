@@ -150,8 +150,8 @@ class SidebarTaskEditor extends React.Component {
           id="error-container"
           style={{ display: 'none' }}
         >
-          <div class="w-100 ba br2 orange pa3">
-            <label class="f6 fw6 db">
+          <div className="w-100 ba br2 orange pa3">
+            <label className="f6 fw6 db">
               <b>Warning: </b>
               <span id="error-message" />
             </label>

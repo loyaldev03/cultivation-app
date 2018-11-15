@@ -23,10 +23,18 @@ module Inventory
       :vendor_id,
       :vendor_name,
       :vendor_no,
-      :invoice_no,
-      :purchase_order_no,
       :address,
-      :purchase_date
+      :vendor_state_license_num,
+      :vendor_state_license_expiration_date,
+      :vendor_location_license_expiration_date,
+      :vendor_location_license_num,
+      :purchase_order_no,
+      :purchase_date,
+      :invoice_no,
+      :purchase_order_id,  # For update purpose
+      :purchase_order_item_id,
+      :invoice_id,
+      :invoice_item_id
 
     def initialize(user, args)
       @args = args
@@ -48,24 +56,36 @@ module Inventory
       @order_uom = args[:order_uom]
       @price = args[:price]
       @qty_per_package = args[:qty_per_package]
+
       @vendor_id = args[:vendor_id]
       @vendor_name = args[:vendor_name]
       @vendor_no = args[:vendor_no]
-      @invoice_no = args[:invoice_no]
-      @purchase_order_no = args[:purchase_order_no]
       @address = args[:address]
+      @vendor_state_license_num = args[:vendor_state_license_num]
+      @vendor_state_license_expiration_date = args[:vendor_state_license_expiration_date]
+      @vendor_location_license_expiration_date = args[:vendor_location_license_expiration_date]
+      @vendor_location_license_num = args[:vendor_location_license_num]
+
+      @purchase_order_no = args[:purchase_order_no]
       @purchase_date = args[:purchase_date]
+      @invoice_no = args[:invoice_no]
+
+      @purchase_order_id = args[:purchase_order_id]
+      @invoice_id = args[:invoice_id]
+      @purchase_order_item_id = nil
+      @invoice_item_id = nil
     end
 
     def call
       if valid_permission? && valid_data?
         invoice_item = save_purchase_info
 
-        if id.blank?
-          create_seed(invoice_item)
-        else
-          update_seed(invoice_item)
-        end
+        raw_material = if id.blank?
+                         create_seed(invoice_item)
+                       else
+                         update_seed(invoice_item)
+                       end
+        raw_material
       end
     end
 
@@ -81,13 +101,145 @@ module Inventory
     end
 
     def save_purchase_info
-      if id.present?
-        tx = Inventory::ItemTransaction.find(id)
-      end
-
+      handle_po_invoice_switching
       vendor = save_vendor
       po_item = save_purchase_order(vendor)
       invoice_item = save_invoice(po_item)
+
+      invoice_item
+    end
+
+    # If user edit existing inventory but changes to another PO or Invoice,
+    # the entry at the old PO or Invoice should be deleted.
+    def handle_po_invoice_switching
+      return if id.blank?
+
+      transaction = Inventory::ItemTransaction.find(id)
+      raise "Editing this record type: #{transaction.ref_type} is not supported" if transaction.ref_type != 'Inventory::VendorInvoiceItem'
+
+      vi_item = Inventory::VendorInvoiceItem.find(transaction.ref_id)
+      po = vi_item.invoice.purchase_order
+
+      if po.id.to_s != purchase_order_id
+        vi_item.purchase_order_item.destroy!
+      else
+        # If user has not change to another PO then keep the PO details so it can perform
+        # necessary update.
+        @purchase_order_item_id = vi_item.purchase_order_item.id
+      end
+
+      if vi_item.invoice_id.to_s != invoice_id
+        vi_item.destroy!
+      else
+        # If user has not change to another invoice then keep the invoice details so it can perform
+        # necessary update.
+        @invoice_item_id = vi_item.id
+      end
+    end
+
+    def save_vendor
+      command = Inventory::SaveVendor.call(
+        id: vendor_id,
+        name: vendor_name,
+        vendor_no: vendor_no,
+        address: address,
+        vendor_type: 'normal',
+        state_license_num: vendor_state_license_num,
+        state_license_expiration_date: vendor_state_license_expiration_date,
+        location_license_num: vendor_location_license_num,
+        location_license_expiration_date: vendor_location_license_expiration_date,
+      )
+
+      if command.success?
+        command.result
+      else
+        combine_errors(command.errors, :vendor_name, :name)
+        combine_errors(command.errors, :vendor_no, :vendor_no)
+        combine_errors(command.errors, :address, :address)
+        combine_errors(command.errors, :state_license_num, :vendor_state_license_num)
+        combine_errors(command.errors, :state_license_num, :vendor_state_license_expiration_date)
+        combine_errors(command.errors, :location_license_num, :vendor_location_license_num)
+        combine_errors(command.errors, :location_license_expiration_date, :vendor_location_license_expiration_date)
+        nil
+      end
+    end
+
+    def save_purchase_order(vendor)
+      po = nil
+
+      if purchase_order_id.blank?
+        po = Inventory::PurchaseOrder.new
+      else
+        po = Inventory::PurchaseOrder.find(purchase_order_id)
+        raise 'PO id does not exists' if po.nil?
+      end
+
+      po.vendor = vendor
+      po.purchase_order_no = purchase_order_no
+      po.purchase_order_date = purchase_date
+      po.facility = facility
+      po.status = Inventory::PurchaseOrder::INVENTORY_SETUP
+
+      po_item = nil
+      if purchase_order_item_id.blank?
+        po_item = po.items.build
+      else
+        po_item = po.items.find(purchase_order_item_id)
+        raise 'PO id does not exists' if po_item.nil?
+      end
+
+      po_item.catalogue = catalogue
+      po_item.quantity = order_quantity
+      po_item.uom = order_uom
+      po_item.price = price
+      po_item.currency = 'USD'
+      po_item.tax = 0
+      po_item.description = description
+      po_item.product_name = product_name
+      po_item.manufacturer = manufacturer
+      po_item.facility_strain = facility_strain
+
+      po.save!
+      po_item.save!
+      po_item
+    end
+
+    def save_invoice(po_item)
+      return nil if po_item.nil?
+
+      invoice = if invoice_id.blank?
+                  Inventory::VendorInvoice.new
+                else
+                  Inventory::VendorInvoice.find(invoice_id)
+                end
+
+      invoice.invoice_no = invoice_no
+      invoice.vendor = po_item.purchase_order.vendor
+      invoice.invoice_date = purchase_date
+      invoice.facility = facility
+      invoice.purchase_order = po_item.purchase_order
+      invoice.status = Inventory::VendorInvoice::INVENTORY_SETUP
+
+      invoice_item = if invoice_item_id.blank?
+                       invoice.items.new
+                     else
+                       invoice.items.find(invoice_item_id)
+                     end
+
+      invoice_item.catalogue = catalogue
+      invoice_item.uom = po_item.uom
+      invoice_item.quantity = po_item.quantity
+      invoice_item.price = price
+      invoice_item.tax = 0
+      invoice_item.currency = po_item.currency
+      invoice_item.description = po_item.description
+      invoice_item.product_name = po_item.product_name
+      invoice_item.manufacturer = manufacturer
+      invoice_item.purchase_order_item = po_item
+      invoice_item.facility_strain = facility_strain
+
+      invoice.save!
+      invoice_item.save!
       invoice_item
     end
 
@@ -112,74 +264,27 @@ module Inventory
       )
     end
 
-    def update_seed(ii)
-    end
+    def update_seed(invoice_item)
+      transaction = Inventory::ItemTransaction.find(id)
+      transaction.ref_id = invoice_item.id
+      transaction.event_date = purchase_date
 
-    def save_vendor
-      command = Inventory::SaveVendor.call(
-        id: vendor_id,
-        name: vendor_name,
-        vendor_no: vendor_no,
-        address: address,
-        vendor_type: 'normal',
-      )
+      transaction.facility = facility
+      transaction.facility_strain = facility_strain
+      transaction.location_id = location_id
 
-      if command.success?
-        command.result
-      else
-        combine_errors(command.errors, :vendor_name, :name)
-        combine_errors(command.errors, :vendor_no, :vendor_no)
-        combine_errors(command.errors, :address, :address)
-        nil
-      end
-    end
+      transaction.order_quantity = order_quantity
+      transaction.order_uom = order_uom
+      transaction.uom = uom
+      transaction.quantity = quantity
+      transaction.conversion = qty_per_package
+      transaction.catalogue = catalogue
+      transaction.product_name = product_name
+      transaction.description = description
+      transaction.manufacturer = manufacturer
 
-    def save_purchase_order(vendor)
-      purchase_order = Inventory::PurchaseOrder.find_or_create_by!(purchase_order_no: purchase_order_no, vendor: vendor) do |po|
-        po.purchase_order_date = purchase_date
-        po.facility = facility
-        po.status = Inventory::PurchaseOrder::INVENTORY_SETUP
-      end
-
-      po_item = purchase_order.items.create!(
-        catalogue: catalogue,
-        quantity: order_quantity,
-        uom: order_uom,
-        price: price,
-        currency: 'USD',
-        tax: 0,
-        description: description,
-        product_name: product_name,
-        manufacturer: manufacturer,
-        facility_strain: facility_strain,
-      )
-    end
-
-    def save_invoice(po_item)
-      return nil if po_item.nil?
-
-      invoice = Inventory::VendorInvoice.find_or_create_by!(
-        invoice_no: invoice_no,
-        vendor: po_item.purchase_order.vendor,
-      ) do |inv|
-        inv.invoice_date = purchase_date
-        inv.facility = facility
-        inv.purchase_order = po_item.purchase_order
-        inv.status = Inventory::VendorInvoice::INVENTORY_SETUP
-      end
-
-      invoice_item = invoice.items.create!(
-        catalogue: catalogue,
-        uom: po_item.uom,
-        quantity: po_item.quantity,
-        price: price,
-        tax: 0,
-        currency: po_item.currency,
-        description: po_item.description,
-        product_name: po_item.product_name,
-        manufacturer: manufacturer,
-        facility_strain: facility_strain,
-      )
+      transaction.save!
+      transaction
     end
 
     def combine_errors(errors_source, from_field, to_field)

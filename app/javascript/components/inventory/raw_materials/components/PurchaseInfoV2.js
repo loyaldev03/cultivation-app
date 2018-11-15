@@ -50,20 +50,22 @@ class PurchaseInfoV2 extends React.Component {
     }
 
     if (props.vendor) {
-      state.vendor = { value: props.vendor.id, label: props.vendor.name }
-      state.address = props.vendor.address
-      state.vendor_no = props.vendor.vendor_no
-      state.vendor_state_license_num = props.vendor.state_license_num || ''
-      state.vendor_state_license_expiration_date = !props.vendor
-        .state_license_expiration_date
+      const { vendor } = props
+
+      state.vendor = { value: vendor.id, label: vendor.name }
+      state.address = vendor.address
+      state.vendor_no = vendor.vendor_no
+      state.vendor_state_license_num = vendor.state_license_num || ''
+
+      state.vendor_state_license_expiration_date = !vendor.state_license_expiration_date
         ? null
-        : new Date(props.state_license_expiration_date)
-      state.vendor_location_license_num =
-        props.vendor.location_license_num || ''
-      state.vendor_location_license_expiration_date = !props.vendor
-        .location_license_expiration_date
+        : new Date(vendor.state_license_expiration_date)
+
+      state.vendor_location_license_num = vendor.location_license_num || ''
+
+      state.vendor_location_license_expiration_date = !vendor.location_license_expiration_date
         ? null
-        : new Date(props.location_license_expiration_date)
+        : new Date(vendor.location_license_expiration_date)
     }
 
     if (props.purchase_order) {
@@ -182,7 +184,10 @@ class PurchaseInfoV2 extends React.Component {
       errors.invoice = ['Invoice is required.']
     }
 
-    let { licenseData, errors: licenseError } = this.validateVendorLicense()
+    let { errors: licenseError, ...licenseData } = this.getVendorLicenseData()
+    // console.group('licenseData')
+    // console.log(licenseData)
+    // console.groupEnd()
     errors = { ...errors, ...licenseError }
 
     if (!isDraft) {
@@ -206,7 +211,88 @@ class PurchaseInfoV2 extends React.Component {
     return data
   }
 
-  validateVendorLicense() {
+  onSelectVendor = item => {
+    if (!item || item.length === 0) {
+      this.setState({
+        vendor: { value: '', label: item.label },
+        purchase_order: { value: '', label: '' },
+        invoice: { value: '', label: '' }
+      })
+    } else if (item.__isNew__) {
+      this.setState({
+        vendor: { value: '', label: item.label },
+        vendor_no: '',
+        address: '',
+        vendor_state_license_num: '',
+        vendor_state_license_expiration_date: null,
+        vendor_location_license_num: '',
+        vendor_location_license_expiration_date: null,
+        purchase_order: { value: '', label: '' },
+        invoice: { value: '', label: '' }
+      })
+    } else {
+      let state_license_expiration_date = null
+      let location_license_expiration_date = null
+
+      if (item.state_license_expiration_date) {
+        state_license_expiration_date = new Date(
+          item.state_license_expiration_date
+        )
+      }
+
+      if (item.location_license_expiration_date) {
+        location_license_expiration_date = new Date(
+          item.location_license_expiration_date
+        )
+      }
+
+      this.setState({
+        vendor: { value: item.value, label: item.label },
+        vendor_no: item.vendor_no,
+        address: item.address,
+        vendor_state_license_num: item.state_license_num || '',
+        vendor_state_license_expiration_date: state_license_expiration_date,
+        vendor_location_license_num: item.location_license_num || '',
+        vendor_location_license_expiration_date: location_license_expiration_date,
+        purchase_order: { value: '', label: '' },
+        invoice: { value: '', label: '' }
+      })
+    }
+  }
+
+  onSelectPO = item => {
+    const data = {
+      invoice: { value: '', label: '' },
+      purchase_order: { value: '', label: '' }
+    }
+
+    if (item.__isNew__) {
+      data.purchase_order = { value: '', label: item.label }
+    } else {
+      data.purchase_order = { value: item.value, label: item.label }
+      if (item.purchase_order_date) {
+        data.purchase_date = new Date(item.purchase_order_date)
+      } else {
+        data.purchase_date = null
+      }
+    }
+
+    this.setState(data)
+  }
+
+  onSelectInvoice = item => {
+    if (item.__isNew__) {
+      this.setState({
+        invoice: { value: '', label: item.label }
+      })
+    } else {
+      this.setState({
+        invoice: { value: item.value, label: item.label }
+      })
+    }
+  }
+
+  getVendorLicenseData() {
     if (!this.props.showVendorLicense) {
       return {}
     }
@@ -256,162 +342,54 @@ class PurchaseInfoV2 extends React.Component {
     }
   }
 
-  onSelectVendor = item => {
-    if (!item || item.length === 0) {
-      this.setState({
-        vendor: { value: '', label: item.label },
-        purchase_order: { value: '', label: '' },
-        invoice: { value: '', label: '' }
-      })
-    } else if (item.__isNew__) {
-      this.setState({
-        vendor: { value: '', label: item.label },
-        vendor_no: '',
-        address: '',
-        vendor_state_license_num: '',
-        vendor_state_license_expiration_date: null,
-        vendor_location_license_num: '',
-        vendor_location_license_expiration_date: null,
-        purchase_order: { value: '', label: '' },
-        invoice: { value: '', label: '' }
-      })
-    } else {
-      let state_license_expiration_date = null
-      let location_license_expiration_date = null
-
-      if (item.state_license_expiration_date) {
-        state_license_expiration_date = new Date(
-          item.state_license_expiration_date
-        )
-      }
-
-      if (item.location_license_expiration_date) {
-        location_license_expiration_date = new Date(
-          item.location_license_expiration_date
-        )
-      }
-
-      this.setState({
-        vendor: { value: item.value, label: item.label },
-        vendor_no: item.vendor_no,
-        address: item.address,
-        vendor_state_license_num: item.state_license_num,
-        vendor_state_license_expiration_date: state_license_expiration_date,
-        vendor_location_license_num: item.location_license_num,
-        vendor_location_license_expiration_date: location_license_expiration_date,
-        purchase_order: { value: '', label: '' },
-        invoice: { value: '', label: '' }
-      })
-    }
-  }
-
-  onSelectPO = item => {
-    const data = {
-      invoice: { value: '', label: '' },
-      purchase_order: { value: '', label: '' }
-    }
-
-    if (item.__isNew__) {
-      data.purchase_order = { value: '', label: item.label }
-    } else {
-      data.purchase_order = { value: item.value, label: item.label }
-      if (item.purchase_order_date) {
-        data.purchase_date = new Date(item.purchase_order_date)
-      } else {
-        data.purchase_date = null
-      }
-    }
-
-    this.setState(data)
-  }
-
-  onSelectInvoice = item => {
-    if (item.__isNew__) {
-      this.setState({
-        invoice: { value: '', label: item.label }
-      })
-    } else {
-      this.setState({
-        invoice: { value: item.value, label: item.label }
-      })
-    }
-  }
-
   renderEditableFields() {
     return (
       <React.Fragment>
         <div className="ph4 mb3 flex">
           <div className="w-50">
             <TextInput
-              label={'Vendor No'}
-              value={this.state.vendor_no}
+              label={'Vendor State License #'}
+              value={this.state.vendor_state_license_num}
               onChange={this.onChangeGeneric}
               errors={this.state.errors}
-              fieldname="vendor_no"
+              fieldname="vendor_state_license_num"
+            />
+          </div>
+          <div className="w-50 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
+            <DatePicker
+              value={this.state.vendor_state_license_expiration_date}
+              onChange={this.onStateLicenseExpirationDateChanged}
+            />
+            <FieldError
+              errors={this.state.errors}
+              field="vendor_state_license_expiration_date"
             />
           </div>
         </div>
 
         <div className="ph4 mb3 flex">
-          <div className="w-100">
+          <div className="w-50">
             <TextInput
-              fieldname="address"
-              label={'Address'}
-              value={this.state.address}
+              label={'Vendor Location License #'}
+              value={this.state.vendor_location_license_num}
               onChange={this.onChangeGeneric}
+              errors={this.state.errors}
+              fieldname="vendor_location_license_num"
+            />
+          </div>
+          <div className="w-50 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
+            <DatePicker
+              value={this.state.vendor_location_license_expiration_date}
+              onChange={this.onLocationLicenseExpirationDateChanged}
+            />
+            <FieldError
+              errors={this.state.errors}
+              field="vendor_location_license_expiration_date"
             />
           </div>
         </div>
-
-        {this.props.showVendorLicense && (
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <TextInput
-                label={'Vendor State License #'}
-                value={this.state.vendor_state_license_num}
-                onChange={this.onChangeGeneric}
-                errors={this.state.errors}
-                fieldname="vendor_state_license_num"
-              />
-            </div>
-            <div className="w-50 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
-              <DatePicker
-                value={this.state.vendor_state_license_expiration_date}
-                onChange={this.onStateLicenseExpirationDateChanged}
-              />
-              <FieldError
-                errors={this.state.errors}
-                field="vendor_state_license_expiration_date"
-              />
-            </div>
-          </div>
-        )}
-
-        {this.props.showVendorLicense && (
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <TextInput
-                label={'Vendor Location License #'}
-                value={this.state.vendor_location_license_num}
-                onChange={this.onChangeGeneric}
-                errors={this.state.errors}
-                fieldname="vendor_location_license_num"
-              />
-            </div>
-            <div className="w-50 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
-              <DatePicker
-                value={this.state.vendor_location_license_expiration_date}
-                onChange={this.onLocationLicenseExpirationDateChanged}
-              />
-              <FieldError
-                errors={this.state.errors}
-                field="vendor_location_license_expiration_date"
-              />
-            </div>
-          </div>
-        )}
       </React.Fragment>
     )
   }
@@ -445,7 +423,30 @@ class PurchaseInfoV2 extends React.Component {
           </div>
         </div>
 
-        {this.renderEditableFields()}
+        <div className="ph4 mb3 flex">
+          <div className="w-50">
+            <TextInput
+              label={'Vendor No'}
+              value={this.state.vendor_no}
+              onChange={this.onChangeGeneric}
+              errors={this.state.errors}
+              fieldname="vendor_no"
+            />
+          </div>
+        </div>
+
+        <div className="ph4 mb3 flex">
+          <div className="w-100">
+            <TextInput
+              fieldname="address"
+              label={'Address'}
+              value={this.state.address}
+              onChange={this.onChangeGeneric}
+            />
+          </div>
+        </div>
+
+        {this.props.showVendorLicense && this.renderEditableFields()}
 
         <div className="ph4 mb3 flex">
           <div className="w-50">

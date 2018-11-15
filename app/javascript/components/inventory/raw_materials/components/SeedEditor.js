@@ -3,11 +3,10 @@ import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import PurchaseInfo from '../../plant_setup/components/shared/PurchaseInfo'
+import PurchaseInfo from '../components/PurchaseInfoV2'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { setupSeed } from '../actions/setupSeed'
 import { getRawMaterial } from '../actions/getRawMaterial'
-
 class SeedEditor extends React.Component {
   constructor(props) {
     super(props)
@@ -42,13 +41,9 @@ class SeedEditor extends React.Component {
               uom: { value: attr.uom, label: attr.uom },
               location_id: attr.location_id,
               // purchase info
-              vendor_id: attr.vendor.id,
-              vendor_name: attr.vendor.name,
-              vendor_no: attr.vendor.vendor_no,
-              address: attr.vendor.address,
-              purchase_date: new Date(attr.vendor_invoice.invoice_date),
-              purchase_order_no: attr.purchase_order.purchase_order_no,
-              invoice_no: attr.vendor_invoice.invoice_no
+              vendor: attr.vendor,
+              purchase_order: attr.purchase_order,
+              vendor_invoice: attr.vendor_invoice
             })
           })
       }
@@ -83,13 +78,9 @@ class SeedEditor extends React.Component {
       uom: { value: '', label: '' },
       location_id: '',
       // purchase info
-      vendor_id: '',
-      vendor_name: '',
-      vendor_no: '',
-      address: '',
-      purchase_date: null,
-      purchase_order_no: '',
-      invoice_no: '',
+      vendor: null,
+      purchase_order: null,
+      vendor_invoice: null,
       errors: {}
     }
   }
@@ -131,38 +122,23 @@ class SeedEditor extends React.Component {
     const quantity = parseFloat(order_quantity) * parseFloat(qty_per_package)
 
     if (facility_strain_id.length === 0) {
-      errors = {
-        ...errors,
-        facility_strain_id: ['Strain is required.']
-      }
+      errors.facility_strain_id = ['Strain is required.']
     }
 
     if (uom.length === 0) {
-      errors = {
-        ...errors,
-        uom: ['Unit of measure is required.']
-      }
+      errors.uom = ['Unit of measure is required.']
     }
 
     if (order_uom.length === 0) {
-      errors = {
-        ...errors,
-        order_uom: ['Unit of measure is required.']
-      }
+      errors.order_uom = ['Unit of measure is required.']
     }
 
     if (parseFloat(order_quantity) <= 0) {
-      errors = {
-        ...errors,
-        order_quantity: ['Order quantity is required.']
-      }
+      errors.order_quantity = ['Order quantity is required.']
     }
 
     if (parseFloat(qty_per_package) <= 0) {
-      errors = {
-        ...errors,
-        qty_per_package: ['Quantity per package is required.']
-      }
+      errors.qty_per_package = ['Quantity per package is required.']
     }
 
     const {
@@ -396,14 +372,11 @@ class SeedEditor extends React.Component {
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
-            label={`How the ${this.label} are purchased?`}
-            vendorLicense={false}
-            vendor_name={this.state.vendor_name}
-            vendor_no={this.state.vendor_no}
-            address={this.state.address}
-            purchase_date={this.state.purchase_date}
-            invoice_no={this.state.invoice_no}
-            purchase_order_no={this.state.purchase_order_no}
+            label="How the nutrients are purchased?"
+            vendor={this.state.vendor}
+            purchase_order={this.state.purchase_order}
+            vendor_invoice={this.state.vendor_invoice}
+            showVendorLicense
           />
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">

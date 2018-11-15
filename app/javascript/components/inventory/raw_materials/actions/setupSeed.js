@@ -13,8 +13,10 @@ export const setupSeed = payload => {
     .then(result => {
       const { status, data } = result
       console.log(data)
-      if (status == 200) {
-        // console.log(data.data)
+
+      if (payload.id) {
+        rawMaterialStore.update(data.data)
+      } else {
         rawMaterialStore.prepend(data.data)
       }
 

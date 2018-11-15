@@ -35,7 +35,7 @@ export default class MaterialForm extends React.Component {
     if (props.task !== task) {
       this.setState({
         batch_id: this.props.batch_id,
-        id: props.task.id,
+        task_id: props.task.id,
         ...props.task.attributes,
         name: '',
         quantity: '',
@@ -182,11 +182,12 @@ export default class MaterialForm extends React.Component {
     let materials = this.state.items
     let handleChange = this.handleChange
     let handleDelete = this.handleDelete
+
     return (
       <React.Fragment>
         <div className="">
           <div className="ph4 mt3 flex">
-            <div className="w-100">
+            <div className="w-100 ttc">
               <label className="f6 fw6 db mb1 gray ttc">Material Name</label>
               <Select
                 name="selectedCategory"
@@ -243,7 +244,7 @@ export default class MaterialForm extends React.Component {
             </div>
           </div>
           <div className="ph4 mt3 flex mb3 ">
-            <div className="w-100">
+            <div className="w-100 ttc">
               <label className="f6 fw6 db mb1 gray ttc">Unit Of Measure</label>
               <Select
                 name="uom"

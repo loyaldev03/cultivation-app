@@ -48,7 +48,7 @@ RSpec.describe SaveFacility, type: :command do
         site_license: form_object.site_license,
         timezone: form_object.timezone,
         is_complete: form_object.is_complete,
-        is_enabled: form_object.is_enabled
+        is_enabled: form_object.is_enabled,
       )
       expect(cmd.result.address).to_not eq nil
       expect(saved.address).to have_attributes(

@@ -17,7 +17,6 @@ class SeedFacilityDataJob < ApplicationJob
     seed_roles
     seed_facility_users
     seed_uom
-    seed_plant_catalogue
     seed_raw_materials
   rescue StandardError => error
     Rollbar.error(error)
@@ -37,10 +36,6 @@ class SeedFacilityDataJob < ApplicationJob
 
   def seed_facility_users
     SeedUserDefaultFacility.call(@current_user_id, @facility_id)
-  end
-
-  def seed_plant_catalogue
-    # FIXME
   end
 
   def seed_raw_materials

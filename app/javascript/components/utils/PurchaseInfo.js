@@ -2,9 +2,9 @@
 import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import PropTypes from 'prop-types'
-import { TextInput, FieldError } from '../../../utils/FormHelpers'
+import { TextInput, FieldError } from './FormHelpers'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
-import reactSelectStyle from '../../../utils/reactSelectStyle'
+import reactSelectStyle from './reactSelectStyle'
 
 const handleInputChange = newValue => {
   return newValue ? newValue : ''
@@ -30,7 +30,7 @@ const compareOption = (i, option) => {
   return option.value.toLowerCase() === i || option.label.toLowerCase() === i
 }
 
-class PurchaseInfoV2 extends React.Component {
+class PurchaseInfo extends React.Component {
   constructor(props) {
     super(props)
 
@@ -498,7 +498,7 @@ class PurchaseInfoV2 extends React.Component {
   }
 }
 
-PurchaseInfoV2.propTypes = {
+PurchaseInfo.propTypes = {
   showLabel: PropTypes.bool,
   label: PropTypes.string,
   showVendorLicense: PropTypes.bool,
@@ -507,7 +507,7 @@ PurchaseInfoV2.propTypes = {
   vendor_invoice: PropTypes.object
 }
 
-PurchaseInfoV2.defaultProps = {
+PurchaseInfo.defaultProps = {
   showLabel: true,
   label: 'Where the seeds are sourced from?',
   showVendorLicense: true,
@@ -516,4 +516,4 @@ PurchaseInfoV2.defaultProps = {
   vendor_invoice: null
 }
 
-export default PurchaseInfoV2
+export { PurchaseInfo }

@@ -9,7 +9,7 @@ import LocationPicker from '../../../utils/LocationPicker2'
 import { saveRawMaterial } from '../actions/saveRawMaterialV2'
 import { getRawMaterial } from '../actions/getRawMaterial'
 
-class NutrientEditorV2 extends React.Component {
+class NutrientEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
@@ -180,8 +180,6 @@ class NutrientEditorV2 extends React.Component {
       isValid: purchaseIsValid,
       ...purchaseData
     } = this.purchaseInfoEditor.current.getValues()
-
-    console.log(purchaseData)
 
     const isValid =
       Object.getOwnPropertyNames(errors).length === 0 && purchaseIsValid
@@ -454,13 +452,10 @@ class NutrientEditorV2 extends React.Component {
   }
 }
 
-NutrientEditorV2.propTypes = {
-  // batch_sources: PropTypes.array.isRequired,
-  // facility_strains: PropTypes.array.isRequired,
-  // grow_methods: PropTypes.array.isRequired,
+NutrientEditor.propTypes = {
+  locations: PropTypes.array.isRequired,
   order_uoms: PropTypes.array.isRequired,
   catalogues: PropTypes.array.isRequired
-  // vendors: PropTypes.object.isRequired
 }
 
-export default NutrientEditorV2
+export default NutrientEditor

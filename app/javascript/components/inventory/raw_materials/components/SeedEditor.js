@@ -330,7 +330,7 @@ class SeedEditor extends React.Component {
             </div>
           </div>
           {console.log('Remove this.state.uom check at line 337!')}
-            
+
           <hr className="mt3 m b--light-gray w-100" />
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
@@ -376,7 +376,7 @@ class SeedEditor extends React.Component {
               </div>
             </div>
           </div>
-          
+
           <hr className="mt3 m b--light-gray w-100" />
 
           <div className="ph4 mt3 mb3 flex">

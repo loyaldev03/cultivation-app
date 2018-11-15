@@ -91,8 +91,23 @@ module Inventory
     end
 
     def valid_data?
-      # TODO: Validate data
-      true
+      # TODO: Validate that these id are valid e.g. belong to the same facility & vendor
+      # invoice_id
+      # @invoice_item_id
+      # @invoice_id
+      # @purchase_order_id
+      # @purchase_order_item_id
+
+      errors.add(:facility_id, 'Facility is required') if facility_id.blank?
+      errors.add(:order_uom, 'Order unit of measure is required') if order_uom.blank?
+      errors.add(:order_quantity, 'Order quantity is required') if order_quantity.to_f <= 0
+      errors.add(:qty_per_package, 'Quantity per package is required') if qty_per_package.blank?
+      errors.add(:catalogue, 'Catalogue is required') if catalogue.nil?
+      errors.add(:location_id, 'Location is required') if location_id.nil?
+      errors.add(:purchase_order_no, 'Purchase order no is required') if purchase_order_no.blank?
+      errors.add(:purchase_date, 'Purchase date is required') if purchase_date.blank?
+      errors.add(:invoice_no, 'Invoice No is required') if invoice_no.blank?
+      errors.empty?
     end
 
     def save_purchase_info

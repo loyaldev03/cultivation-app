@@ -15,6 +15,9 @@ FactoryBot.define do
           build(:room, :mother, :is_complete),
           build(:room, :clone, :is_complete),
           build(:room, :veg, :is_complete),
+          build(:room, :flower, :is_complete),
+          build(:room, :dry, :is_complete),
+          build(:room, :cure, :is_complete),
         ]
       end
     end
@@ -24,19 +27,37 @@ FactoryBot.define do
     trait :mother do
       name { "Mother Room" }
       code { "Rm01" }
-      purpose { "mother" }
+      purpose { Constants::CONST_MOTHER }
     end
 
     trait :clone do
       name { "Clone Room" }
       code { "Rm02" }
-      purpose { "clone" }
+      purpose { Constants::CONST_CLONE }
     end
 
     trait :veg do
       name { "Veg Room" }
       code { "Rm03" }
-      purpose { "veg" }
+      purpose { Constants::CONST_VEG }
+    end
+
+    trait :flower do
+      name { "Flower Room" }
+      code { "Rm04" }
+      purpose { Constants::CONST_FLOWER }
+    end
+
+    trait :dry do
+      name { "Dry Room" }
+      code { "Rm05" }
+      purpose { Constants::CONST_DRY }
+    end
+
+    trait :cure do
+      name { "Cure Room" }
+      code { "Rm06" }
+      purpose { Constants::CONST_CURE }
     end
 
     trait :is_complete do

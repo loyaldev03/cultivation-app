@@ -1,7 +1,5 @@
 require "rails_helper"
 
-DATE_FORMAT = "%Y/%m/%d".freeze
-
 RSpec.describe QueryAvailableTrays, type: :command do
   subject! do
     facility = create(:facility, :is_complete)
@@ -72,8 +70,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
     it "Condition B" do
       # Prepare - Create a booking that overlaps until the end date
-      p1_start_date = DateTime.strptime("2018/07/25", DATE_FORMAT)
-      p1_end_date = DateTime.strptime("2018/08/17", DATE_FORMAT)
+      p1_start_date = Time.strptime("2018/07/25", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/08/17", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
@@ -100,8 +98,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
     it "Condition C" do
       # Prepare - Create a booking that overlaps over end date
-      p1_start_date = DateTime.strptime("2018/07/25", DATE_FORMAT)
-      p1_end_date = DateTime.strptime("2018/08/20", DATE_FORMAT)
+      p1_start_date = Time.strptime("2018/07/25", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/08/20", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
@@ -125,8 +123,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
     it "Condition D" do
       # Prepare - Create a booking that within start and end date
-      p1_start_date = DateTime.strptime("2018/08/01", DATE_FORMAT)
-      p1_end_date = DateTime.strptime("2018/08/16", DATE_FORMAT)
+      p1_start_date = Time.strptime("2018/08/01", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/08/16", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
@@ -150,8 +148,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
     it "Condition E" do
       # Prepare - Booking that ends at same end date
-      p1_start_date = DateTime.strptime("2018/08/02", DATE_FORMAT)
-      p1_end_date = DateTime.strptime("2018/08/17", DATE_FORMAT)
+      p1_start_date = Time.strptime("2018/08/02", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/08/17", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
@@ -175,8 +173,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
     it "Condition F" do
       # Prepare - Booking that start and ends on same date
-      p1_start_date = DateTime.strptime("2018/08/01", DATE_FORMAT)
-      p1_end_date = DateTime.strptime("2018/08/17", DATE_FORMAT)
+      p1_start_date = Time.strptime("2018/08/01", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/08/17", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
@@ -200,8 +198,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
     it "Condition G" do
       # Prepare - Booking start on end date
-      p1_start_date = DateTime.strptime("2018/08/17", DATE_FORMAT)
-      p1_end_date = DateTime.strptime("2018/08/22", DATE_FORMAT)
+      p1_start_date = Time.strptime("2018/08/17", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/08/22", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
@@ -225,8 +223,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
     it "Condition H" do
       # Prepare - Booking that start within start and end date
-      p1_start_date = DateTime.strptime("2018/08/03", DATE_FORMAT)
-      p1_end_date = DateTime.strptime("2018/08/15", DATE_FORMAT)
+      p1_start_date = Time.strptime("2018/08/03", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/08/15", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
@@ -250,8 +248,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
     it "Condition J" do
       # Prepare - Booking that start on same date but ends after end date
-      p1_start_date = DateTime.strptime("2018/08/01", DATE_FORMAT)
-      p1_end_date = DateTime.strptime("2018/08/19", DATE_FORMAT)
+      p1_start_date = Time.strptime("2018/08/01", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/08/19", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
@@ -275,8 +273,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
     it "Condition K" do
       # Prepare
-      p1_start_date = DateTime.strptime("2018/08/17", DATE_FORMAT)
-      p1_end_date = DateTime.strptime("2018/08/17", DATE_FORMAT)
+      p1_start_date = Time.strptime("2018/08/17", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/08/17", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
@@ -299,8 +297,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
     it "Condition L" do
       # Prepare
-      p1_start_date = DateTime.strptime("2018/08/01", DATE_FORMAT)
-      p1_end_date = DateTime.strptime("2018/08/1", DATE_FORMAT)
+      p1_start_date = Time.strptime("2018/08/01", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/08/1", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
@@ -324,8 +322,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
     it "Condition M - Consolidate 2 Tray Plans" do
       # Prepare
-      p1_start_date = DateTime.strptime("2018/08/01", DATE_FORMAT)
-      p1_end_date = DateTime.strptime("2018/08/1", DATE_FORMAT)
+      p1_start_date = Time.strptime("2018/08/01", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/08/1", DATE_FORMAT)
       p1_capacity = 3
       p1 = create(:tray_plan,
                   facility_id: subject.id,
@@ -339,8 +337,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
-      p2_start_date = DateTime.strptime("2018/08/02", DATE_FORMAT)
-      p2_end_date = DateTime.strptime("2018/08/3", DATE_FORMAT)
+      p2_start_date = Time.strptime("2018/08/02", DATE_FORMAT)
+      p2_end_date = Time.strptime("2018/08/3", DATE_FORMAT)
       p2_capacity = 10
       p2 = create(:tray_plan,
                   facility_id: subject.id,
@@ -364,8 +362,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
     it "Condition X - Not Overlapping / Before Schedule" do
       # Prepare
-      p1_start_date = DateTime.strptime("2018/07/25", DATE_FORMAT)
-      p1_end_date = DateTime.strptime("2018/07/31", DATE_FORMAT)
+      p1_start_date = Time.strptime("2018/07/25", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/07/31", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,
@@ -389,8 +387,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
     it "Condition Y - Not Overlapping / After Schedule" do
       # Prepare
-      p1_start_date = DateTime.strptime("2018/08/18", DATE_FORMAT)
-      p1_end_date = DateTime.strptime("2018/08/31", DATE_FORMAT)
+      p1_start_date = Time.strptime("2018/08/18", DATE_FORMAT)
+      p1_end_date = Time.strptime("2018/08/31", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
                   facility_id: subject.id,

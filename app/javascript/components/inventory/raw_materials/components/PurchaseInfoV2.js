@@ -170,7 +170,6 @@ class PurchaseInfoV2 extends React.Component {
     } = this.state
 
     let errors = {}
-
     if (vendor_name.length <= 0) {
       errors.vendor = ['Vendor is required.']
     }
@@ -189,7 +188,6 @@ class PurchaseInfoV2 extends React.Component {
     if (!isDraft) {
       this.setState({ errors })
     }
-
     const data = {
       vendor_id,
       purchase_order_id,
@@ -205,7 +203,6 @@ class PurchaseInfoV2 extends React.Component {
       isValid: Object.getOwnPropertyNames(errors).length === 0
     }
 
-    // console.log(data)
     return data
   }
 

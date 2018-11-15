@@ -38,11 +38,9 @@ module Inventory
       @id = args[:id]
       @facility_id = args[:facility_id]
       @facility = Facility.find(@facility_id)
-
       @location_id = args[:location_id]
       @catalogue_id = args[:catalogue]
       @catalogue = Inventory::Catalogue.find(@catalogue_id)
-
       @product_name = args[:product_name]
       @description = args[:description]
       @manufacturer = args[:manufacturer]

@@ -57,7 +57,7 @@ class NutrientEditorV2 extends React.Component {
               // purchase info
               vendor: attr.vendor,
               purchase_order: attr.purchase_order,
-              vendor_invoice: attr.vendor_invoice,
+              vendor_invoice: attr.vendor_invoice
             })
           })
       }
@@ -463,7 +463,7 @@ NutrientEditorV2.propTypes = {
   // facility_strains: PropTypes.array.isRequired,
   // grow_methods: PropTypes.array.isRequired,
   order_uoms: PropTypes.array.isRequired,
-  catalogues: PropTypes.array.isRequired,
+  catalogues: PropTypes.array.isRequired
   // vendors: PropTypes.object.isRequired
 }
 

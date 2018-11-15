@@ -138,6 +138,12 @@ module Inventory
 
     def update_raw_material(invoice_item)
       transaction = Inventory::ItemTransaction.find(id)
+      transaction.ref_id = invoice_item.id
+      transaction.event_date = purchase_date
+
+      transaction.facility = facility
+      transaction.location_id = location_id
+
       transaction.order_quantity = order_quantity
       transaction.order_uom = order_uom
       transaction.uom = uom
@@ -147,7 +153,7 @@ module Inventory
       transaction.product_name = product_name
       transaction.description = description
       transaction.manufacturer = manufacturer
-      transaction.ref_id = invoice_item.id
+
       transaction.save!
       transaction
     end
@@ -163,8 +169,21 @@ module Inventory
       vi_item = Inventory::VendorInvoiceItem.find(transaction.ref_id)
       po = vi_item.invoice.purchase_order
 
-      vi_item.purchase_order_item.destroy! if po.id.to_s != purchase_order_id
-      vi_item.destroy! if vi_item.invoice_id.to_s != invoice_id
+      if po.id.to_s != purchase_order_id
+        vi_item.purchase_order_item.destroy!
+      else
+        # If user has not change to another PO then keep the PO details so it can perform
+        # necessary update.
+        @purchase_order_item_id = vi_item.purchase_order_item.id
+      end
+
+      if vi_item.invoice_id.to_s != invoice_id
+        vi_item.destroy!
+      else
+        # If user has not change to another invoice then keep the invoice details so it can perform
+        # necessary update.
+        @invoice_item_id = vi_item.id
+      end
     end
 
     def save_vendor
@@ -226,8 +245,6 @@ module Inventory
 
     def save_invoice(po_item)
       return nil if po_item.nil?
-
-      Rails.logger.debug "\t\t\t\t>>>>>>> invoice_id: #{invoice_id}"
 
       invoice = if invoice_id.blank?
                   Inventory::VendorInvoice.new

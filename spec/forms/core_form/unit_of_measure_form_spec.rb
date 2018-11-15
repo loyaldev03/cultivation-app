@@ -13,7 +13,7 @@ RSpec.describe CoreForm::UnitOfMeasureForm, type: :form do
     subject(:record) {
       Common::UnitOfMeasure.create!(
         name: Faker::Lorem.word,
-        code: Faker::Number.number(3),
+        unit: Faker::Number.number(3),
         desc: Faker::Lorem.sentence,
       )
     }
@@ -24,7 +24,7 @@ RSpec.describe CoreForm::UnitOfMeasureForm, type: :form do
       expect(record.id.nil?).to be false
       expect(form_object).to have_attributes(
         name: record.name,
-        code: record.code,
+        unit: record.unit,
         desc: record.desc,
       )
     end

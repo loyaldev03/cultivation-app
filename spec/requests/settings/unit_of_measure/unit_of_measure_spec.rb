@@ -14,7 +14,6 @@ RSpec.describe "Core Settings - Unit of Measure", :type => :request do
         expect(response.status).to eq(200)
         expect(response.body).to include("Unit of Measure")
         expect(response.body).to include("Name")
-        expect(response.body).to include("Code")
       end
 
       it "should render Add New button" do

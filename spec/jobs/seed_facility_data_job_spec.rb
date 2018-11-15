@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe SeedFacilityDataJob, type: :job do
   include ActiveJob::TestHelper
@@ -8,17 +8,24 @@ RSpec.describe SeedFacilityDataJob, type: :job do
     clear_performed_jobs
   end
 
-  subject(:job) { described_class.perform_later(facility_id) }
-
-  let(:facility_id) { (BSON::ObjectId.new).to_s }
-
-  it 'queues the job' do
-    expect { job }.to have_enqueued_job(described_class)
-      .with(facility_id)
-      .on_queue("default")
+  let(:current_user) { create(:user) }
+  let(:params) do
+    {
+      facility_id: BSON::ObjectId.new.to_s,
+      current_user_id: current_user.id.to_s,
+    }
+  end
+  let(:job) do
+    described_class.perform_later(params)
   end
 
-  it 'executes perform' do
+  it "queues the job" do
+    expect { job }.to have_enqueued_job(described_class).
+      with(params).
+      on_queue("default")
+  end
+
+  it "executes perform" do
     perform_enqueued_jobs do
       job
 

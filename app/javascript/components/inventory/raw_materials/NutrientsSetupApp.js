@@ -2,7 +2,7 @@ import React from 'react'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
-import NutrientEditor from './components/NutrientEditorV2'
+import NutrientEditor from './components/NutrientEditor'
 import rawMaterialStore from './store/RawMaterialStore'
 import loadRawMaterials from './actions/loadRawMaterials'
 

@@ -1,14 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
+// import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import PurchaseInfo from './PurchaseInfoV2'
+import PurchaseInfo from '../components/PurchaseInfoV2'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { saveRawMaterial } from '../actions/saveRawMaterialV2'
 import { getRawMaterial } from '../actions/getRawMaterial'
 
-class NutrientEditor extends React.Component {
+class NutrientEditorV2 extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
@@ -118,7 +119,6 @@ class NutrientEditor extends React.Component {
     if (payload.isValid) {
       saveRawMaterial(payload).then(() => {
         this.reset()
-        document.getElementsByClassName('rc-slide-panel')[0].scrollTop = 0
         window.editorSidebar.close()
       })
     }
@@ -180,6 +180,8 @@ class NutrientEditor extends React.Component {
       isValid: purchaseIsValid,
       ...purchaseData
     } = this.purchaseInfoEditor.current.getValues()
+
+    console.log(purchaseData)
 
     const isValid =
       Object.getOwnPropertyNames(errors).length === 0 && purchaseIsValid
@@ -452,9 +454,13 @@ class NutrientEditor extends React.Component {
   }
 }
 
-NutrientEditor.propTypes = {
+NutrientEditorV2.propTypes = {
+  // batch_sources: PropTypes.array.isRequired,
+  // facility_strains: PropTypes.array.isRequired,
+  // grow_methods: PropTypes.array.isRequired,
   order_uoms: PropTypes.array.isRequired,
   catalogues: PropTypes.array.isRequired
+  // vendors: PropTypes.object.isRequired
 }
 
-export default NutrientEditor
+export default NutrientEditorV2

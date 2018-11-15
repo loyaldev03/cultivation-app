@@ -49,6 +49,7 @@ class EditorSidebarHandler {
     const event = new CustomEvent('editor-sidebar-close', { detail: data })
     document.dispatchEvent(event)
     this.sidebarNode.style.transform = 'translate(100%)'
+    this.sidebarNode.scrollTop = 0
   }
 
   setup(node) {

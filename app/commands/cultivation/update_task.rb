@@ -12,6 +12,8 @@ module Cultivation
       task = Cultivation::Task.find(@args[:id])
       if @args[:type] == 'position'
         update_position(task, @args[:position])
+      elsif @args[:type] == 'resource'
+        task.update(user_ids: @args[:user_ids])
       else
         # @args[:start_date] = @args[:start_date].to_date if @args[:start_date]
         # @args[:end_date] = @args[:end_date].to_date if @args[:end_date]

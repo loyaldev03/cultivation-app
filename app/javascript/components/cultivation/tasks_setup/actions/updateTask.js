@@ -88,7 +88,8 @@ class updateTask {
     let task = {
       batch_id: state.batch_id,
       user_ids: state.users.map(e => e.id),
-      id: state.id
+      id: state.id,
+      type: 'resource'
     }
 
     fetch(url, {

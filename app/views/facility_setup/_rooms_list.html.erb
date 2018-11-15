@@ -41,10 +41,14 @@
                   confirm: "Are you sure?"
                 } do
               %>
-                <i class="material-icons grey dim pointer" style="opacity: 0.3;">delete</i>
+                <i class="material-icons grey pointer o-50">delete</i>
               <% end %>
               <div class="fr">
-                <i class="material-icons <%= room.is_complete ? "green" : "yellow" %> f6 dim" style="opacity: 0.3;">info</i>
+                <% if room.is_complete %>
+                  <i class="material-icons green f6 o-50">check_circle</i>
+                <% else %>
+                  <i class="material-icons yellow f6 o-50">info</i>
+                <% end %>
               </div>
             </div>
 
@@ -122,7 +126,7 @@
                     room_id: room.id,
                   ),
                   style: "height: 38px",
-                  class: "tc w-100 bg-orange bn box--br3 ttu link button--font-s white dim flex justify-center items-center height-0 card--button"
+                  class: "tc w-100 bg-orange bn box--br3 ttu link f6 white dim flex justify-center items-center height-0 card--button"
                 %>
               <% end %>
             </div>

@@ -5,8 +5,8 @@ FactoryBot.define do
     row_id { "Row1" }
     shelf_id { "Shelf1" }
     tray_id { "Tray1" }
-    start_date { DateTime.now }
-    end_date { DateTime.now + 10.days }
+    start_date { Time.now }
+    end_date { Time.now + 10.days }
     capacity { 1 }
     is_active { true }
     batch { build(:batch) }
@@ -34,11 +34,5 @@ FactoryBot.define do
     trait :cure do
       phase { Constants::CONST_CURE }
     end
-  end
-
-  factory :batch, class: Cultivation::Batch do
-    batch_no {Faker::Number.number(4)}
-    facility_strain_id { BSON::ObjectId.new }
-    is_active { true }
   end
 end

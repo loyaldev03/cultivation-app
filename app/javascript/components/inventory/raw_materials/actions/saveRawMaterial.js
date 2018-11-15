@@ -15,7 +15,11 @@ export const saveRawMaterial = payload => {
       // console.log(data)
       if (status == 200) {
         // console.log(data.data)
-        rawMaterialStore.prepend(data.data)
+        if (payload.id) {
+          // Do nothing..
+        } else {
+          rawMaterialStore.prepend(data.data)
+        }
       }
 
       return result

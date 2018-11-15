@@ -61,12 +61,11 @@ module Inventory
 
     def call
       if valid_permission? && valid_data?
-        invoice_item = save_purchase_info
-
         if id.blank?
+          invoice_item = save_purchase_info
           create_raw_material(invoice_item)
         else
-          update_raw_material(invoice_item)
+          update_raw_material
         end
       end
     end
@@ -110,7 +109,9 @@ module Inventory
       )
     end
 
-    def update_raw_material(ii)
+    # Dummy code that does nothing
+    def update_raw_material
+      Inventory::ItemTransaction.find(id)
     end
 
     def save_vendor

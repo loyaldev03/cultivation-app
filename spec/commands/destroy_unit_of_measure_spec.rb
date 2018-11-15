@@ -5,7 +5,7 @@ RSpec.describe DestroyUnitOfMeasure, type: :command do
     it "should delete record from db" do
       record = Common::UnitOfMeasure.new(
         name: Faker::Lorem.word,
-        code: Faker::Number.number(3),
+        unit: Faker::Number.number(3),
         desc: Faker::Lorem.sentence,
       )
       record.save!

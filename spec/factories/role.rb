@@ -15,8 +15,8 @@ FactoryBot.define do
     end
 
     trait :super_admin do
-      name "Super Admin"
-      built_in true
+      name { "Super Admin" }
+      built_in { true }
     end
   end
 end

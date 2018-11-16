@@ -39,13 +39,14 @@ class updateTask {
     })
       .then(response => response.json())
       .then(data => {
+        let error_container = document.getElementById('error-container')
         if (data && data.data && data.data.id != null) {
+          error_container.style.display = 'none'
           toast('Task Updated', 'success')
           loadTasks.loadbatch(state.batch_id)
         } else {
           let keys = Object.keys(data.errors)
           console.log(data.errors[keys[0]])
-          let error_container = document.getElementById('error-container')
           error_container.style.display = 'block'
           let error_message = document.getElementById('error-message')
           error_message.innerHTML = data.errors[keys[0]]
@@ -88,7 +89,8 @@ class updateTask {
     let task = {
       batch_id: state.batch_id,
       user_ids: state.users.map(e => e.id),
-      id: state.id
+      id: state.id,
+      type: 'resource'
     }
 
     fetch(url, {

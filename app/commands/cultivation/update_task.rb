@@ -51,9 +51,9 @@ module Cultivation
         end_date = children.map { |a| a['end_date'] }
         end_date << task.end_date
 
-        args[:duration] = durations.compact.sum
         child_max_end_date = end_date.compact.max #get children task maximum end_date
         args[:end_date] = child_max_end_date if (child_max_end_date && child_max_end_date > task.parent.end_date)
+        args[:duration] = (args[:end_date].to_datetime - task.parent.start_date).to_i + 1 if args[:end_date]
 
         task_parent = task.parent
         task_parent.assign_attributes(args)

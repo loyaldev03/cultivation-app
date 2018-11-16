@@ -25,21 +25,81 @@ RSpec.describe UpdateTrayPlansJob, type: :job do
     first_shelf = first_row.shelves.first
     first_shelf.trays.last
   end
+  let(:clone_tray2) do
+    first_shelf = first_row.shelves.first
+    first_shelf.trays.first
+  end
+  let(:facility_strain) { build(:facility_strain) }
+  let(:batch) do
+    create(:batch,
+            facility_id: facility.id,
+            facility_strain: facility_strain,
+            start_date: Time.strptime("2018/08/01", DATE_FORMAT),
+            quantity: 5)
+  end
+  let!(:phase_task) do
+    # Use ! to create the task immeadiately
+    # Create a "Phase" task do set start_date & end_date of a phase.
+    # The job will need to access the dates for it to create the
+    # tray booking record.
+    create(:task, :is_phase,
+            batch: batch,
+            phase: Constants::CONST_CLONE,
+            duration: 16,
+            start_date: batch.start_date,
+            end_date: batch.start_date + 16.days)
+  end
 
-  context "after batch updated" do
-    let(:facility_strain) { build(:facility_strain) }
-    let(:batch) do
-      create(:batch,
-              facility_id: facility.id,
-              facility_strain: facility_strain,
-              start_date: Time.strptime("2018/08/01", DATE_FORMAT),
-              quantity: 5)
-      # TODO: I need to create the "Phase" task also, since that is
-      # where the start_date & end_date is stored.
-      # The job will need to access the dates for it to create the
-      # booking record correctly.
+  context "when there's no existing TrayPlan" do
+    let(:job_params) { batch.id.to_s }
+
+    subject(:job) do
+      described_class.perform_later(job_params)
     end
 
+    after do
+      clear_enqueued_jobs
+      clear_performed_jobs
+    end
+
+    it "queues the job" do
+      expect { job }.to have_enqueued_job(described_class).
+        with(job_params).
+        on_queue("default")
+    end
+
+    it "executes perform", focus: true do
+      # Prepare - Add new active clone to tray
+      create(:plant, :clone,
+                     cultivation_batch: batch,
+                     location_id: clone_tray.id,
+                     facility_strain: facility_strain)
+      create(:plant, :clone,
+                     cultivation_batch: batch,
+                     location_id: clone_tray.id,
+                     facility_strain: facility_strain)
+      create(:plant, :clone,
+                     cultivation_batch: batch,
+                     location_id: clone_tray2.id,
+                     facility_strain: facility_strain)
+
+      # Execute
+      perform_enqueued_jobs { job }
+
+      # Validate
+      plan_info = {
+        facility_id: facility.id,
+        phase: Constants::CONST_CLONE,
+        start_date: phase_task.start_date,
+        end_date: phase_task.end_date,
+      }
+
+      cmd_result = QueryAvailableCapacity.call(plan_info).result
+      expect(cmd_result).to eq(77)
+    end
+  end
+
+  context "when there's already an existing TrayPlan" do
     # let(:default_plan) do
     #   # Create a Tray booking record in the db. The other tests
     #   # would test against this plan.
@@ -56,51 +116,5 @@ RSpec.describe UpdateTrayPlansJob, type: :job do
     #               end_date: Time.strptime("2018/08/17", DATE_FORMAT))
     #   p1
     # end
-
-    let(:job_params) do
-      {
-        batch_id: batch.id.to_s,
-      }
-    end
-
-    let(:job) do
-      described_class.perform_later(job_params)
-    end
-
-    after do
-      clear_enqueued_jobs
-      clear_performed_jobs
-    end
-
-    it "queues the job" do
-      expect { job }.to have_enqueued_job(described_class).
-        with(job_params).
-        on_queue("default")
-    end
-
-    it "executes perform" do
-      # Prepare
-      # TODO: Add an new active plant to tray
-      active_plant = create(:plant, :clone,
-                            cultivation_batch: batch,
-                            location_id: clone_tray.id,
-                            facility_strain: facility_strain)
-
-      phase_start_date = Time.strptime("2018/08/01", DATE_FORMAT)
-      phase_end_date = Time.strptime("2018/08/17", DATE_FORMAT)
-
-      # Execute
-      job
-
-      # Validate
-      plan_info = {
-        facility_id: facility.id,
-        phase: Constants::CONST_CLONE,
-        start_date: phase_start_date,
-        end_date: phase_end_date,
-      }
-      cmd_result = QueryAvailableCapacity.call(plan_info).result
-      expect(cmd_result).to eq(70)
-    end
   end
 end

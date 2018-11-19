@@ -24,7 +24,7 @@ class QueryReadyTrays
       exclude_batch_id: @exclude_batch_id,
     )
     cmd.result
-  rescue
+  rescue StandardError
     errors.add(:error, $!.message)
   end
 end

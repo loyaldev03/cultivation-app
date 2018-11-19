@@ -1,18 +1,18 @@
 module Constants
-  SUPER_ADMIN = 'Super Admin'
+  SUPER_ADMIN = 'Super Admin'.freeze
 
-  CONST_CLONE = 'clone'
-  CONST_CURE = 'cure'
-  CONST_DRY = 'dry'
-  CONST_FLOWER = 'flower'
-  CONST_MOTHER = 'mother'
-  CONST_SEED = 'seed'
-  CONST_STORAGE = 'storage'
-  CONST_VAULT = 'vault'
-  CONST_TRIM = 'trim'
-  CONST_VEG = 'veg'
-  CONST_VEG1 = 'veg1'
-  CONST_VEG2 = 'veg2'
+  CONST_CLONE = 'clone'.freeze
+  CONST_CURE = 'cure'.freeze
+  CONST_DRY = 'dry'.freeze
+  CONST_FLOWER = 'flower'.freeze
+  CONST_MOTHER = 'mother'.freeze
+  CONST_SEED = 'seed'.freeze
+  CONST_STORAGE = 'storage'.freeze
+  CONST_VAULT = 'vault'.freeze
+  CONST_TRIM = 'trim'.freeze
+  CONST_VEG = 'veg'.freeze
+  CONST_VEG1 = 'veg1'.freeze
+  CONST_VEG2 = 'veg2'.freeze
 
   PLANT_TYPES = [
     {code: CONST_CLONE, name: 'Clone'},

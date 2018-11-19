@@ -32,7 +32,7 @@ module Cultivation
     end
 
     def dependent_task(tasks, task)
-      return if task.tasks_depend.count == 0
+      return if task.tasks_depend.count.zero?
       task.tasks_depend.each do |task_depend|
         tasks << task_depend
         task_depend.children.each do |children|

@@ -20,8 +20,8 @@ module Inventory
       end
 
       if @growth_stages &&
-          (@growth_stages.is_a? Array) &&
-          !@growth_stages.empty?
+         (@growth_stages.is_a? Array) &&
+         !@growth_stages.empty?
         plants = plants.where(:current_growth_stage.in => @growth_stages)
       end
       plants

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe UpdateTrayPlansJob, type: :job do
+RSpec.describe UpdateActiveTrayPlansJob, type: :job do
   include ActiveJob::TestHelper
 
   let(:current_user) { create(:user) }

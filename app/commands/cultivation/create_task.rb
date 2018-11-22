@@ -18,11 +18,15 @@ module Cultivation
       task_related = Cultivation::Task.find(args[:task_related_id])
       batch = task_related.batch
       argument = args.except(:task_related_id, :position)
-      argument[:parent_id] = task_related.parent_id
+      # FIXME: This is only valid if "Add task below"
+      argument[:parent_id] = if task_related.is_phase || task_related.is_category
+                               task_related.id
+                             else
+                               task_related.parent_id
+                             end
       task = batch.tasks.create(argument)
 
       if args[:position] == 'top'
-        position = (task_related.position == 0 ? 0 : (task_related.position - 1))
         task.move_to! task_related.position
       else
         position = (task_related.position + 1)

@@ -15,58 +15,68 @@ module Cultivation
       elsif @args[:type] == 'resource'
         task.update(user_ids: @args[:user_ids])
       else
+        Rails.logger.debug 'args >>> '
+        Rails.logger.debug args.to_yaml
         batch = Cultivation::Batch.includes(:tasks).find(task.batch_id)
         batch_tasks = batch.tasks
+        Rails.logger.debug ">>> number of tasks: #{batch_tasks.size}"
         task.assign_attributes(@args)
+        # Update start_date, end_date & duration of current task
+        set_task_dates(task, task.start_date)
         # Update child and dependents tasks's start & end dates
         update_task(task, batch_tasks)
         # Extend end date to Category and Phase
-        update_tasks_end_date(task, batch_tasks) if task.parent
+        update_tasks_end_date(task, batch_tasks)
 
+        Rails.logger.debug errors.to_yaml
+        Rails.logger.debug 'task.changes >>> '
+        Rails.logger.debug task.changes.to_yaml
         task.save unless errors.present?
 
         # Update estimated harvest date
         # FIXME: Fallback to :cure also if :dry not found
         dry_phase = batch.tasks.find_by(is_phase: true, phase: 'dry')
-        # FIXME: N+1
         batch.estimated_harvest_date = dry_phase.start_date if dry_phase
         batch.start_date = batch.tasks.first.start_date if !batch.tasks.empty?
-        batch.save unless batch.changes.empty?
+        batch.save
       end
       task
     end
 
+    # TODO: This partially working, sometime not extending parent's end_date
     def update_tasks_end_date(task, batch_tasks)
-      args = {}
+      parent = batch_tasks.detect { |t| t.id.to_s == task.parent_id.to_s }
+      if parent
+        siblings = get_siblings(task, batch_tasks)
+        # Get siblings max end_date (latest date)
+        max_end_date = siblings.map(&:end_date).compact.max
 
-      if task.parent
-        children = task.parent.children.not_in(_id: task.id)
+        if parent&.end_date
+          # Extend parent's end date if any siblings have later end_date
+          if max_end_date && max_end_date > parent.end_date
+            parent.end_date = max_end_date
+          end
 
-        durations = children.map { |a| a['duration'] }
-        durations << task.duration
-
-        end_date = children.map { |a| a['end_date'] }
-        end_date << task.end_date
-
-        # Get children task maximum end_date
-        child_max_end_date = end_date.compact.max
-        if task.parent&.end_date &&
-           child_max_end_date &&
-           child_max_end_date > task.parent.end_date
-          args[:end_date] = child_max_end_date
-        end
-        if args[:end_date]
-          args[:duration] = (args[:end_date].
-            to_datetime - task.parent.start_date).to_i + 1
+          # Re-calculate parent's duration
+          if parent&.start_date
+            parent.duration = calc_duration(parent.start_date,
+                                            parent.end_date)
+          end
         end
 
-        task_parent = task.parent
-        task_parent.assign_attributes(args)
+        update_task(parent, batch_tasks, children: false)
+        update_tasks_end_date(parent, batch_tasks)
 
-        update_task(task.parent, batch_tasks, children: false)
-        update_tasks_end_date(task.parent, batch_tasks)
+        parent.save unless errors.present?
+      end
+    end
 
-        task_parent.save unless errors.present?
+    # Find all siblings tasks
+    def get_siblings(task, batch_tasks)
+      batch_tasks.select do |t|
+        t.parent_id &&
+          # Sibling should have same parent
+          t.parent_id.to_s == task.parent_id.to_s
       end
     end
 
@@ -75,6 +85,10 @@ module Cultivation
     end
 
     def update_task(task, batch_tasks, opt = {})
+      Rails.logger.debug "`update_task method: #{task.name}`"
+      Rails.logger.debug "`start_date: #{task.start_date}`"
+      Rails.logger.debug "`end_date #{task.end_date}`"
+      Rails.logger.debug "`duration #{task.duration}`"
       # if date is changes, start_date, end_date and duration
       # Store changes into a an array for 'bulk' update later
       tasks_changes = find_changes(task, batch_tasks, opt)
@@ -93,55 +107,83 @@ module Cultivation
       start_date + duration.days - 1.days
     end
 
+    # Calculate duration between start & end date in days
+    def calc_duration(start_date, end_date)
+      raise ArgumentError, 'start_date' if start_date.nil?
+      raise ArgumentError, 'end_date' if end_date.nil?
+      raise ArgumentError, 'invalid start_date type' unless start_date.is_a? DateTime
+      raise ArgumentError, 'invalid end_date type' unless end_date.is_a? DateTime
+
+      duration = (end_date - start_date).to_i
+      duration + 1
+    end
+
     def find_changes(task, batch_tasks = [], opt = {})
+      Rails.logger.debug ">>> finding changes for #{task.name}"
       opt = {children: true, dependent: true}.merge(opt) # default options
 
       # Child task of current task & does not depend on any task
-      children = batch_tasks.select do |b|
-        b.parent_id.to_s == task.id.to_s && task.depend_on.nil?
-      end
+      children = batch_tasks.select { |b| b.parent_id.to_s == task.id.to_s }
+      Rails.logger.debug ">>> children: #{children.size}"
 
       # Tasks depends on current task
       dependents = batch_tasks.select { |b| b.depend_on.to_s == task.id.to_s }
-      new_changes = []
+      Rails.logger.debug ">>> dependents: #{dependents.size}"
 
-      # Updating child tasks
+      new_changes = []
+      # Find changed child tasks
       if !children.empty? && opt[:children]
         new_changes += find_cascaded_changes(children,
                                              batch_tasks,
                                              task.start_date)
       end
 
-      # Updating dependent tasks
+      # Find changed dependents tasks
       if !dependents.empty? && opt[:dependent]
         new_changes += find_cascaded_changes(dependents,
                                              batch_tasks,
                                              task.end_date)
       end
-
       new_changes
     end
 
     def find_cascaded_changes(cascade_tasks, batch_tasks, start_date)
       new_changes = []
-      cascade_tasks.each do |ref|
-        ref.start_date = start_date if start_date
-        if ref.start_date && ref.duration
-          ref.end_date = calc_end_date(ref.start_date, ref.duration)
-        end
-        new_changes << ref unless ref.changes.empty?
-        new_changes += find_changes(ref, batch_tasks)
+      cascade_tasks.each do |ref_task|
+        set_task_dates(ref_task, start_date)
+        new_changes << ref_task unless ref_task.changes.empty?
+        new_changes += find_changes(ref_task, batch_tasks)
+        Rails.logger.debug "# of new changes: #{new_changes.size}"
+        Rails.logger.debug "New Changes: #{new_changes.last&.name}"
+        Rails.logger.debug "Duration: #{new_changes.last&.duration}"
       end
       new_changes
     end
 
+    def set_task_dates(ref_task, start_date)
+      ref_task.start_date ||= start_date
+      if start_date && ref_task.start_date < start_date
+        # Change subtask's start date only if it's ealier than parent
+        ref_task.start_date = start_date
+      end
+      if ref_task.start_date && ref_task.duration&.positive?
+        ref_task.end_date = calc_end_date(ref_task.start_date,
+                                          ref_task.duration)
+      end
+      if ref_task.start_date && ref_task.end_date
+        ref_task.duration = calc_duration(ref_task.start_date,
+                                          ref_task.end_date)
+      end
+    end
+
     def bulk_update(array)
-      bulk_order = array.map do |arr|
+      bulk_order = array.map do |task|
         {update_one: {
-          filter: {_id: arr.id},
-          update: {:'$set' => {
-            start_date: arr.start_date,
-            end_date: arr.end_date,
+          filter: {_id: task.id},
+          update: {'$set': {
+            start_date: task.start_date,
+            end_date: task.end_date,
+            duration: task.duration,
           }},
         }}
       end

@@ -84,7 +84,7 @@
                     data: {remote: true, confirm: 'Are you sure?'},
                     class: 'grey subtitle-2 pv3 tc dim' %>
                 <% if @specials.include?(f.key) %> 
-                  <%= link_to 'Add Sub', new_settings_core_raw_material_path(parent_id: f.id),
+                  <%= link_to 'Add Subcategory', new_settings_core_raw_material_path(parent_id: f.id),
                         data: {remote: true, 'toggle-right': new_settings_core_raw_material_path(parent_id: f.id)},
                         class: 'ttc grey subtitle-2 pv3 tc dim' 
                   %>

@@ -2,8 +2,9 @@ import batchStore from '../store/HarvestBatchStore'
 import { httpPostOptions } from '../../../utils'
 
 export const setupHarvestBatch = payload => {
-  console.log('setupHarvestBatch')
+  console.group('setupHarvestBatch')
   console.log(payload)
+  console.groupEnd()
 
   return fetch('/api/v1/plants/setup_harvest_batch', httpPostOptions(payload))
     .then(response => {

@@ -125,6 +125,8 @@ export default class HarvestYieldEditor extends React.Component {
 
   onSave = event => {
     const { errors, isValid, ...payload } = this.validateAndGetValues()
+    console.log(payload)
+
     if (isValid) {
       setupHarvestBatch(payload).then(({ status, data }) => {
         if (status >= 400) {
@@ -139,6 +141,11 @@ export default class HarvestYieldEditor extends React.Component {
     event.preventDefault()
   }
 
+  validatePlants(row) {
+    return row.plant_id.length > 0 &&
+      row.wet_weight > 0
+  }
+
   validateAndGetValues() {
     const {
       id,
@@ -151,7 +158,7 @@ export default class HarvestYieldEditor extends React.Component {
       location_id
     } = this.state
 
-    let errors = {}
+    let errors = {}, cultivation_batch_id = ''
 
     if (harvest_name.length === 0) {
       errors.harvest_name = ['Harvest name/ ID is required.']
@@ -159,41 +166,53 @@ export default class HarvestYieldEditor extends React.Component {
 
     if (!cultivation_batch) {
       errors.cultivation_batch = ['Cultivation batch is required.']
+    } else {
+      cultivation_batch_id = cultivation_batch.id
     }
 
     if (!harvest_date) {
       errors.harvest_date = ['Harvest date is required.']
     }
 
-    if (!plants.length === 0) {
+    const plantsValid = plants.every(x => x.plant_id.length > 0 && x.wet_weight > 0)
+    if (!plantsValid) {
       errors.plants = ['Plant ID is required.']
     }
 
-    if (!location_id.length === 0) {
+    if (location_id.length === 0) {
       errors.location_id = ['Location ID is required.']
     }
 
-    if (!plant_uom === 0) {
-      errors.location_id = ['Weight Unit of Measure is required.']
-    }
+    
+    if (!plant_uom || !plant_uom.value) {
+      errors.plant_uom = ['Weight Unit of Measure is required.']
+    } 
 
-    const isValid = Object.getOwnPropertyNames(errors).length === 0
+    let purchaseInfo = {}, isPurchaseInfoValid = true
+    if (cultivation_batch && cultivation_batch.batch_source === 'clones_purchased') {
+      ({ isValid: isPurchaseInfoValid, ...purchaseInfo } = this.purchaseInfoEditor.current.getValues())
+    }
+    
+    const isValid = Object.getOwnPropertyNames(errors).length === 0 && isPurchaseInfoValid
 
     if (!isValid) {
       this.setState({ errors })
     }
 
-    return {
+    const d = {
       id,
       harvest_name,
-      cultivation_batch_id: cultivation_batch.id,
+      cultivation_batch_id,
       plants,
-      uom: plant_uom.value,
+      uom: plant_uom ? plant_uom.value : '',
       total_weight,
       harvest_date,
       location_id,
+      ...purchaseInfo,
       isValid
     }
+    console.log(d)
+    return d
   }
 
   renderPlantIdFields(plant, index) {
@@ -286,9 +305,7 @@ export default class HarvestYieldEditor extends React.Component {
   }
 
   renderProcurementInfo(cultivation_batch) {
-    if (!cultivation_batch) {
-      return null
-    } else if (cultivation_batch.batch_source !== 'clones_purchased') {
+    if (!cultivation_batch || cultivation_batch.batch_source !== 'clones_purchased') {
       return null
     }
 
@@ -417,6 +434,15 @@ export default class HarvestYieldEditor extends React.Component {
               </a>
             </div>
           </div>
+
+          { (this.state.errors.plants || this.state.errors.plant_uom) && (
+            <div className="ph4 mb3 flex">
+              <div className="w-100">
+                <FieldError errors={this.state.errors} field="plants" />
+                <FieldError errors={this.state.errors} field="plant_uom" />
+              </div>
+            </div>
+          )}
 
           <div className="ph4 mb3 mt2 flex">
             <div className="w-100">

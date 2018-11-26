@@ -18,6 +18,8 @@ module Inventory
       :plants,
       :planting_date,
       :weight_uom,
+      :facility,
+      :facility_strain,
 
       # For purchase info
       :vendor_id,
@@ -54,6 +56,8 @@ module Inventory
 
       @catalogue = Inventory::Catalogue.plant
       @batch = Cultivation::Batch.find(args[:cultivation_batch_id])
+      @facility = Facility.find(@batch.facility_id)
+      @facility_strain = @batch.facility_strain
 
       if args[:planting_date].present?
         @planting_date = args[:planting_date]
@@ -166,7 +170,6 @@ module Inventory
     end
 
     def update_plant(invoice_item)
-      facility_strain_id = batch.facility_strain_id
       growth_stage = batch.current_growth_stage
       updated_plants = []
 
@@ -175,7 +178,7 @@ module Inventory
         raise 'Upsert not supported for update_plant(invoice_item)'
 
         plant.plant_id = p.plant_id
-        plant.facility_strain_id = facility_strain_id
+        plant.facility_strain = facility_strain
         plant.cultivation_batch_id = cultivation_batch_id
         plant.current_growth_stage = growth_stage
         plant.location_id = location_id
@@ -196,7 +199,6 @@ module Inventory
     end
 
     def create_plants(invoice_item)
-      facility_strain_id = batch.facility_strain_id
       growth_stage = batch.current_growth_stage
       created_plants = []
 
@@ -206,7 +208,7 @@ module Inventory
       plants.each do |p|
         plant = Inventory::Plant.create!(
           plant_id: p[:plant_id],
-          facility_strain_id: facility_strain_id,
+          facility_strain_id: facility_strain.id,
           cultivation_batch_id: cultivation_batch_id,
           current_growth_stage: growth_stage,
           created_by: user,
@@ -278,14 +280,13 @@ module Inventory
       end
 
       po_item.catalogue = catalogue
-      po_item.quantity = plant_ids.count
+      po_item.quantity = plants.count
       po_item.uom = 'pc'
       po_item.price = 0
       po_item.currency = 'USD'
       po_item.tax = 0
-      po_item.description = "PO created from plant setup - #{plant_ids.join(', ')}",
+      po_item.description = "PO created from plant setup - #{plants.pluck(:plant_id).join(', ')}",
       po_item.product_name = facility_strain.strain_name
-      po_item.manufacturer = manufacturer
       po_item.facility_strain = facility_strain
 
       po.save!
@@ -318,12 +319,11 @@ module Inventory
       invoice_item.catalogue = catalogue
       invoice_item.uom = po_item.uom
       invoice_item.quantity = po_item.quantity
-      invoice_item.price = price
-      invoice_item.tax = 0
+      invoice_item.price = po_item.price
+      invoice_item.tax = po_item.tax
       invoice_item.currency = po_item.currency
       invoice_item.description = po_item.description
       invoice_item.product_name = po_item.product_name
-      invoice_item.manufacturer = manufacturer
       invoice_item.purchase_order_item = po_item
       invoice_item.facility_strain = facility_strain
 

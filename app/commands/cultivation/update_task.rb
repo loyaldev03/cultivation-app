@@ -42,13 +42,14 @@ module Cultivation
     end
 
     def update_task(task, batch_tasks, opt = {})
-      # Rails.logger.debug "`update_task method: #{task.name}`"
-      # Rails.logger.debug "`start_date: #{task.start_date}`"
-      # Rails.logger.debug "`end_date: #{task.end_date}`"
-      # Rails.logger.debug "`duration: #{task.duration}`"
-      # if date is changes, start_date, end_date and duration
-      # Store changes into a an array for 'bulk' update later
-      opt = {start_date: task.start_date}.merge(opt)
+      Rails.logger.debug "update_task task.name: `#{task.name}`"
+      Rails.logger.debug "task.start_date: `#{task.start_date.to_date}`"
+      Rails.logger.debug "task.end_date: `#{task.end_date.to_date}`"
+      # Store changed task into a an array for 'bulk' update later
+      opt = {
+        start_date: task.start_date,
+        end_date: task.end_date,
+      }.merge(opt)
       tasks_changes = find_changes(task, batch_tasks, opt)
       # Rails.logger.debug "`total changes found: #{tasks_changes.length}`"
 
@@ -94,6 +95,7 @@ module Cultivation
     def find_changes(task, batch_tasks = [], opt = {})
       opt = {
         start_date: nil,
+        end_date: nil,
         children: true,
         dependent: true,
       }.merge(opt) # default options
@@ -195,19 +197,23 @@ module Cultivation
       duration + 1
     end
 
-    def set_task_dates(ref_task, start_date)
-      ref_task.start_date ||= start_date
-      if start_date && ref_task.start_date < start_date
-        # Change subtask's start date only if it's ealier than parent
-        ref_task.start_date = start_date
+    def set_task_dates(task, start_date)
+      raise ArgumentError, 'task is required' if task.nil?
+      raise ArgumentError, 'start_date is required' if start_date.nil?
+
+      if task.start_date.nil? || task.start_date < start_date
+        # Set task's start_date if it's ealier than parent start_date
+        task.start_date = start_date
       end
-      if ref_task.start_date && ref_task.duration&.positive?
-        ref_task.end_date = calc_end_date(ref_task.start_date,
-                                          ref_task.duration)
+
+      if task.duration&.positive?
+        task.end_date = calc_end_date(task.start_date,
+                                      task.duration)
       end
-      if ref_task.start_date && ref_task.end_date
-        ref_task.duration = calc_duration(ref_task.start_date,
-                                          ref_task.end_date)
+
+      if task.end_date
+        task.duration = calc_duration(task.start_date,
+                                      task.end_date)
       end
     end
 

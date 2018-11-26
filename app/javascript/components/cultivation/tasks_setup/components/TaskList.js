@@ -324,22 +324,20 @@ class TaskList extends React.Component {
                       </i>
                       Indent Out
                     </a>
-                    {row.row['attributes.is_phase'] !== true &&
-                      (
-                        <a
-                          className="ttc pv2 tc flex pointer"
-                          style={{ display: 'flex' }}
-                          onClick={e => {
-                            handleAddTask(row, 'top')
-                          }}
-                        >
-                          <i className="material-icons md-600 md-17 ph2">
-                            vertical_align_top
-                          </i>
-                          Insert Task Above
-                        </a>
-                      )
-                    }
+                    {row.row['attributes.is_phase'] !== true && (
+                      <a
+                        className="ttc pv2 tc flex pointer"
+                        style={{ display: 'flex' }}
+                        onClick={e => {
+                          handleAddTask(row, 'top')
+                        }}
+                      >
+                        <i className="material-icons md-600 md-17 ph2">
+                          vertical_align_top
+                        </i>
+                        Insert Task Above
+                      </a>
+                    )}
 
                     <a
                       className="ttc pv2 tc flex pointer"

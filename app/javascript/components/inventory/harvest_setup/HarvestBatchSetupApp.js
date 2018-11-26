@@ -21,7 +21,7 @@ const columns = [
   {
     Header: 'Location',
     accessor: 'attributes.location_name',
-    headerStyle: { textAlign: 'left' },
+    headerStyle: { textAlign: 'left' }
   },
   {
     Header: 'Harvest date',
@@ -110,7 +110,7 @@ class FlowerSetupApp extends React.Component {
             className="f6"
           />
         </div>
-        <HarvestBatchEditor 
+        <HarvestBatchEditor
           cultivation_batches={this.props.cultivation_batches}
           locations={this.props.locations}
           uoms={this.props.uoms}

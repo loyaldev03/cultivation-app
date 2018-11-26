@@ -2,21 +2,19 @@ import React from 'react'
 import Select from 'react-select'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import {
-  TextInput,
-  NumericInput,
-  FieldError,
-} from '../../../utils/FormHelpers'
+import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { PurchaseInfo } from '../../../utils'
 import { setupHarvestBatch } from '../actions/setupHarvestBatch'
-
 
 export default class HarvestYieldEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
-    this.batches = props.cultivation_batches.map(x => ({ id: x.id, ...x.attributes }))
+    this.batches = props.cultivation_batches.map(x => ({
+      id: x.id,
+      ...x.attributes
+    }))
     this.purchaseInfoEditor = React.createRef()
   }
 
@@ -25,7 +23,9 @@ export default class HarvestYieldEditor extends React.Component {
       id: '',
       cultivation_batch: null,
       harvest_name: '',
-      plants: [{ id: '', plant_id: '', wet_weight: '', uom: '', wet_waste_weight: '' }],
+      plants: [
+        { id: '', plant_id: '', wet_weight: '', uom: '', wet_waste_weight: '' }
+      ],
       plant_uom: null,
       total_weight: 0,
       harvest_date: null,
@@ -54,7 +54,7 @@ export default class HarvestYieldEditor extends React.Component {
   onInputChanged = event => {
     const key = event.target.attributes.fieldname.value
     const value = event.target.value
-    this.setState({[key]: value})
+    this.setState({ [key]: value })
   }
 
   onLocationChanged = event => {
@@ -62,9 +62,17 @@ export default class HarvestYieldEditor extends React.Component {
   }
 
   onAddPlant = event => {
-    this.setState({ plants: [
-      ...this.state.plants,
-      { id: '', plant_id: '', wet_weight: '', uom: null, wet_waste_weight: '' } ]
+    this.setState({
+      plants: [
+        ...this.state.plants,
+        {
+          id: '',
+          plant_id: '',
+          wet_weight: '',
+          uom: null,
+          wet_waste_weight: ''
+        }
+      ]
     })
     event.preventDefault()
   }
@@ -72,13 +80,13 @@ export default class HarvestYieldEditor extends React.Component {
   onRemovePlant = event => {
     const index = event.target.attributes.index.value
     if (this.state.plants.length === 1) {
-      this.setState({ 
-        plants: [{ plant_id: '', weight: '', uom: null } ],
+      this.setState({
+        plants: [{ plant_id: '', weight: '', uom: null }],
         total_weight: this.calculateTotalWeight(this.state.plants)
       })
     } else {
       this.state.plants.splice(index, 1)
-      this.setState({ 
+      this.setState({
         plants: [...this.state.plants],
         total_weight: this.calculateTotalWeight(this.state.plants)
       })
@@ -132,15 +140,16 @@ export default class HarvestYieldEditor extends React.Component {
   }
 
   validateAndGetValues() {
-    const { 
-      id, 
+    const {
+      id,
       harvest_name,
       cultivation_batch,
       plants,
       plant_uom,
       total_weight,
       harvest_date,
-      location_id } = this.state
+      location_id
+    } = this.state
 
     let errors = {}
 
@@ -222,15 +231,18 @@ export default class HarvestYieldEditor extends React.Component {
             onChange={this.onUomChanged}
           />
         </div>
-       
+
         <div className="pl2 flex-column flex justify-end">
-          <a className="ba tc b--gray br2 link" 
+          <a
+            className="ba tc b--gray br2 link"
             index={index}
-            href='#'
-            style={{ height: '34px', width: '25px', lineHeight: '2em'}}
-            onClick={this.onRemovePlant}>-</a>
+            href="#"
+            style={{ height: '34px', width: '25px', lineHeight: '2em' }}
+            onClick={this.onRemovePlant}
+          >
+            -
+          </a>
         </div>
-        
       </div>
     )
   }
@@ -240,7 +252,11 @@ export default class HarvestYieldEditor extends React.Component {
       return null
     }
 
-    const { strain_name, start_date, batch_source} = this.state.cultivation_batch
+    const {
+      strain_name,
+      start_date,
+      batch_source
+    } = this.state.cultivation_batch
 
     return (
       <React.Fragment>
@@ -274,7 +290,7 @@ export default class HarvestYieldEditor extends React.Component {
       return null
     } else if (cultivation_batch.batch_source !== 'clones_purchased') {
       return null
-    } 
+    }
 
     return (
       <React.Fragment>
@@ -299,7 +315,8 @@ export default class HarvestYieldEditor extends React.Component {
   render() {
     const { locations } = this.props
     const { plants, cultivation_batch, total_weight, plant_uom } = this.state
-    let facility_id = '', facility_strain_id = ''
+    let facility_id = '',
+      facility_strain_id = ''
 
     if (cultivation_batch) {
       facility_id = cultivation_batch.facility_id
@@ -308,8 +325,8 @@ export default class HarvestYieldEditor extends React.Component {
 
     const uom = plant_uom ? plant_uom.label : ''
     const totalWeight = total_weight <= 0 ? '--' : total_weight
-    
-    return(
+
+    return (
       <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
           <div
@@ -345,9 +362,9 @@ export default class HarvestYieldEditor extends React.Component {
             </div>
           </div>
 
-          { this.renderBatchDetails() }
+          {this.renderBatchDetails()}
 
-           <div className="ph4 mb3 flex">
+          <div className="ph4 mb3 flex">
             <div className="w-100">
               <TextInput
                 label="Harvest Name"
@@ -370,40 +387,46 @@ export default class HarvestYieldEditor extends React.Component {
             </div>
           </div>
           <hr className="mt3 b--light-gray w-100" />
-          
+
           <div className="ph4 mt3 mb0 flex">
             <div className="w-40">
               <label className="f6 fw6 db mb1 gray">Plant ID</label>
             </div>
             <div className="w-20 pl2">
-            <label className="f6 fw6 db mb1 gray">Wet Wt</label>
+              <label className="f6 fw6 db mb1 gray">Wet Wt</label>
             </div>
             <div className="w-20 pl2">
-            <label className="f6 fw6 db mb1 gray">Waste Wt</label>
+              <label className="f6 fw6 db mb1 gray">Waste Wt</label>
             </div>
-            <div className="w-20 pl2 pr2" style={{ marginRight: '34px'}}>
+            <div className="w-20 pl2 pr2" style={{ marginRight: '34px' }}>
               <label className="f6 fw6 db mb1 gray">UoM</label>
             </div>
           </div>
 
-          { plants.map((x, index) => this.renderPlantIdFields(x, index)) }
+          {plants.map((x, index) => this.renderPlantIdFields(x, index))}
 
           <div className="ph4 mb2 mt0 flex">
             <div className="w-100 tr">
-              <a className="link orange f6" 
-                href='#'
-                style={{ height: '34px', lineHeight: '2em'}}
-                onClick={this.onAddPlant}>Add plant</a>
+              <a
+                className="link orange f6"
+                href="#"
+                style={{ height: '34px', lineHeight: '2em' }}
+                onClick={this.onAddPlant}
+              >
+                Add plant
+              </a>
             </div>
           </div>
 
           <div className="ph4 mb3 mt2 flex">
             <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Total weight</label>
-            <p className="f6 mt1 mb0">{totalWeight} {uom}</p>
+              <label className="f6 fw6 db mb1 gray ttc">Total weight</label>
+              <p className="f6 mt1 mb0">
+                {totalWeight} {uom}
+              </p>
             </div>
           </div>
-        
+
           <hr className="mt3 m b--light-gray w-100" />
 
           <div className="ph4 mt3 mb3 flex flex-column">
@@ -420,7 +443,7 @@ export default class HarvestYieldEditor extends React.Component {
             </div>
           </div>
 
-          { this.renderProcurementInfo(cultivation_batch) }
+          {this.renderProcurementInfo(cultivation_batch)}
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
             <a
@@ -434,6 +457,5 @@ export default class HarvestYieldEditor extends React.Component {
         </div>
       </div>
     )
-    
   }
 }

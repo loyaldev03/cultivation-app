@@ -1,7 +1,8 @@
 class Settings::Core::RawMaterialsController < ApplicationController
   def index
     @raw_materials = Inventory::QueryRawMaterial.call.result
-    @specials = ['others', 'grow lights', 'grow medium', 'nutrients', 'supplements']
+    @specials = ['others', 'grow_light', 'grow_medium', 'nutrients', 'supplements']
+    @second_levels = ['blend', 'nitrogen', 'phosphate', 'potassium']
     ###should standardize the name to catalogue example -> Inventory::QueryCatalogue
   end
 

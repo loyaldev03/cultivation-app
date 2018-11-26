@@ -45,18 +45,22 @@
         <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Active</th>
       </tr>
     <% @raw_materials.each_with_index do |f, i| %>
-      <tr class="pointer rt-tr-group <%= f.category if f.category != '' and f.sub_category == ''%> <%= f.sub_category if f.category != '' and f.sub_category != ''%>">
+      <tr class="pointer rt-tr-group <%= f.category if f.category != '' and f.sub_category == ''%> <%= f.sub_category if f.category != '' and f.sub_category != ''%> <%= f.category if f.category != '' and f.sub_category != ''%>">
         <td class="pv2 ph3 dark-grey tl">
           <div class="flex justify-between-ns">
             <% if f.category == '' and f.sub_category == ''%>
               <div>
-                <i class="material-icons dim grey ml2 pointer collapse-show" style="font-size: 16px;" data-category="<%= f.key%>">arrow_drop_up</i>
+                <% if @specials.include?(f.key)%>
+                  <i class="material-icons dim grey ml2 pointer collapse-show" style="font-size: 16px;" data-category="<%= f.key%>">arrow_drop_up</i>
+                <% end %>
                 <%= f.label%>
               </div>
             <% elsif f.category != '' and f.sub_category == ''%>
               <div class='ml4' data-toggle-right="<%= edit_settings_core_raw_material_path(f.id)%>">
+                <% if @second_levels.include?(f.key)%>
+                  <i class="material-icons dim grey ml2 pointer collapse-show" style="font-size: 16px;" data-category="<%= f.key%>">arrow_drop_up</i>
+                <% end %>
                 <%= f.label%>
-                <%= link_to 'Add', '' if @specials.include?(f.label.downcase)%>
               </div>
             <% elsif f.category != '' and f.sub_category != ''%>
               <div class='ml5' data-toggle-right="<%= edit_settings_core_raw_material_path(f.id)%>">
@@ -79,7 +83,7 @@
                 <%= link_to "Delete", settings_core_raw_material_path(f.id), method: :delete, 
                     data: {remote: true, confirm: 'Are you sure?'},
                     class: 'grey subtitle-2 pv3 tc dim' %>
-                <% if (f.category == '' and f.sub_category == '')%> 
+                <% if @specials.include?(f.key) %> 
                   <%= link_to 'Add Sub', new_settings_core_raw_material_path(parent_id: f.id),
                         data: {remote: true, 'toggle-right': new_settings_core_raw_material_path(parent_id: f.id)},
                         class: 'ttc grey subtitle-2 pv3 tc dim' 
@@ -129,6 +133,12 @@
   })
 
   $$('.collapse-show').on('click', function(e){
+    if(e.target.innerHTML === 'arrow_drop_up'){
+      e.target.innerHTML = 'arrow_drop_down'
+    }else{
+      e.target.innerHTML = 'arrow_drop_up'
+    }
+
     var category_class = e.target.getAttribute('data-category')
     var children = document.getElementsByClassName(category_class)
     for (var i = 0; i < children.length; i ++) {

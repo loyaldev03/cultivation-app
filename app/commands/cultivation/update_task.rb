@@ -283,7 +283,7 @@ module Cultivation
                                                   opt[:facility_id],
                                                   opt[:batch_id])
 
-          batch_names = ""
+          batch_names = ''
           # TODO: Might be overlapping with multiple batches
           if !existing_plans.empty?
             overlapping_batch = existing_plans.last.batch

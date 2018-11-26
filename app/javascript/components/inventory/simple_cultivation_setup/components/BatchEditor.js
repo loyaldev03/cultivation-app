@@ -315,6 +315,9 @@ class BatchEditor extends React.Component {
                 <option value="dry" key="dry">
                   Dry
                 </option>
+                <option value="cure" key="cure">
+                  Cure
+                </option>
               </select>
               <FieldError
                 field="current_growth_stage"

@@ -57,10 +57,14 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     end
   end
 
-  def setup_harvest_yield
-    # TODO: To be completed
-    command = Inventory::SetupHarvestYield.call(current_user, params[:plant].to_unsafe_h)
-    render json: []
+  #
+  def setup_harvest_batch
+    command = Inventory::SetupHarvestBatch.call(current_user, params[:plant].to_unsafe_h)
+    render json: [], status: 400
+  end
+
+  #
+  def manicure_batch
   end
 
   private

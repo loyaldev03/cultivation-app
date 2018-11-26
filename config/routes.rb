@@ -127,6 +127,7 @@ Rails.application.routes.draw do
         collection do
           post 'setup_mother'
           post 'setup_plants'
+          post 'setup_harvest_batch'
         end
       end
 

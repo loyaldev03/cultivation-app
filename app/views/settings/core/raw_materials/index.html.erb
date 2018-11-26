@@ -1,0 +1,144 @@
+<style>
+.dotted{display: none;}
+.rt-tr-group:hover{
+  box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
+}
+.rt-tr-group:hover .dotted{
+  display: block;
+}
+</style>
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Settings", settings_path], ["General Settings", settings_core_path], "Unit of Measure" %>
+<% end %>
+
+<%= render 'layouts/right_sidebar' %>
+<%= render 'toast' %>
+<%= simple_form_for :record, 
+    url: bulk_update_settings_core_raw_materials_path, 
+    remote: true, 
+    method: :put, 
+    html: { 
+      class: 'h-100 flex flex-column justify-between'
+    } do |f|
+  %>
+<div class="bg-white mv3 mh4 pa4">
+  <div class="w-70">
+    <h2 class="pa0 ma0">Raw Materials</h2>
+  </div>
+  <div class="tr">
+    <%= f.submit "Update", class: "btn btn--primary" %>
+
+    <a href="#0" data-toggle-right="<%= new_settings_core_raw_material_path %>" class='btn btn--primary'>
+      + Add New
+    </a>
+  </div>
+
+
+
+
+  <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100 mb2">
+    <tbody>
+      <tr class="striped--light-gray">
+        <th class="pv2 ph3 subtitle-2 dark-grey tl ttu" width="50%">Name</th>
+        <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Uom Dimension</th>
+        <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Default Price</th>
+        <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Active</th>
+      </tr>
+    <% @raw_materials.each_with_index do |f, i| %>
+      <tr class="pointer rt-tr-group <%= f.category if f.category != '' and f.sub_category == ''%> <%= f.sub_category if f.category != '' and f.sub_category != ''%>">
+        <td class="pv2 ph3 dark-grey tl">
+          <div class="flex justify-between-ns">
+            <% if f.category == '' and f.sub_category == ''%>
+              <div>
+                <i class="material-icons dim grey ml2 pointer collapse-show" style="font-size: 16px;" data-category="<%= f.key%>">arrow_drop_up</i>
+                <%= f.label%>
+              </div>
+            <% elsif f.category != '' and f.sub_category == ''%>
+              <div class='ml4' data-toggle-right="<%= edit_settings_core_raw_material_path(f.id)%>">
+                <%= f.label%>
+                <%= link_to 'Add', '' if @specials.include?(f.label.downcase)%>
+              </div>
+            <% elsif f.category != '' and f.sub_category != ''%>
+              <div class='ml5' data-toggle-right="<%= edit_settings_core_raw_material_path(f.id)%>">
+                <%= f.label%>
+              </div>
+            <% end %>
+            <i
+              class="material-icons pointer dotted" style="font-size: 16px;" data-id="<%= f.id%>"
+            >
+              more_horiz
+            </i>
+          </div>
+            <div class="dropdown f6">
+              <div id="<%= f.id%>" class="dropdown-content box--shadow-header">
+                <%= link_to 'Edit', edit_settings_core_raw_material_path(f.id),
+                      data: {remote: true, 'toggle-right': edit_settings_core_raw_material_path(f.id)},
+                      class: 'ttc grey subtitle-2 pv3 tc dim' 
+                %>
+                      
+                <%= link_to "Delete", settings_core_raw_material_path(f.id), method: :delete, 
+                    data: {remote: true, confirm: 'Are you sure?'},
+                    class: 'grey subtitle-2 pv3 tc dim' %>
+                <% if (f.category == '' and f.sub_category == '')%> 
+                  <%= link_to 'Add Sub', new_settings_core_raw_material_path(parent_id: f.id),
+                        data: {remote: true, 'toggle-right': new_settings_core_raw_material_path(parent_id: f.id)},
+                        class: 'ttc grey subtitle-2 pv3 tc dim' 
+                  %>
+                <% end %>
+              </div>
+            </div>
+        </td>
+        <td class="pv2 ph3 dark-grey tl">
+          <%= f.uom_dimension %>
+        </td>
+        <td class="pv2 ph3 dark-grey tl">
+          <%= f.default_price %>
+        </td>
+        <td class="pv2 ph3 dark-grey tl">
+          <% if f.is_active? %>
+            <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="raw_material[ids][]" checked>
+          <% else %>
+            <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="raw_material[ids][]">
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+<% end %>
+
+
+
+<script>
+
+  $$('.dotted').on('click', function(e) {
+    //hide other dropdown
+    var other_dropdown = document.getElementsByClassName('dropdown-content')
+    for (var i = 0; i < other_dropdown.length; i ++) {
+        other_dropdown[i].style.display = 'none'
+    }
+    var dropdown = document.getElementById(e.target.getAttribute('data-id'));
+    //toggle hide/show selected dropdown
+    // alert(dropdown.style.display)
+    if (dropdown.style.display === "none") {
+        dropdown.style.display = "block";
+    } else {
+        dropdown.style.display = "none";
+    }
+  })
+
+  $$('.collapse-show').on('click', function(e){
+    var category_class = e.target.getAttribute('data-category')
+    var children = document.getElementsByClassName(category_class)
+    for (var i = 0; i < children.length; i ++) {
+        if (children[i].style.display === "none") {
+            children[i].style = "";
+        } else {
+            children[i].style.display = "none";
+        }
+    }
+  });
+
+
+</script>

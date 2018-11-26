@@ -154,8 +154,8 @@ module Inventory
         {label: 'Worm Castings', category: Constants::SUPPLEMENTS_KEY, key: 'worm castings', is_active: true, uom_dimension: 'weights'},
 
         # Purchased clones and seed
-        {label: 'Seeds', category: Constants::SEEDS_KEY, key: Constants::SEEDS_KEY, is_active: true, uom_dimension: Constants::PLANTS_KEY},
-        {label: 'Purchased clone', category: Constants::PURCHASED_CLONES_KEY, key: Constants::PURCHASED_CLONES_KEY, is_active: true, uom_dimension: Constants::PLANTS_KEY},
+        {label: 'Seeds', category: '', key: Constants::SEEDS_KEY, is_active: true, uom_dimension: Constants::PLANTS_KEY},
+        {label: 'Purchased clone', category: '', key: Constants::PURCHASED_CLONES_KEY, is_active: true, uom_dimension: Constants::PLANTS_KEY},
       ]
     end
 

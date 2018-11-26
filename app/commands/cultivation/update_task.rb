@@ -18,10 +18,15 @@ module Cultivation
         batch = Cultivation::Batch.includes(:tasks).find(task.batch_id)
         batch_tasks = batch.tasks
         task.assign_attributes(@args)
+        opt = {
+          facility_id: batch.facility_id,
+          batch_id: batch.id,
+          quantity: batch.quantity,
+        }
         # Update child and dependents tasks's start & end dates
-        update_task(task, batch_tasks)
+        update_task(task, batch_tasks, opt)
         # Extend end date to Category and Phas
-        update_tasks_end_date(task, batch_tasks)
+        update_tasks_end_date(task, batch_tasks, opt)
         # Update batch
         update_batch(batch, batch_tasks&.first)
       end
@@ -42,6 +47,10 @@ module Cultivation
     end
 
     def update_task(task, batch_tasks, opt = {})
+      raise ArgumentError, 'facility_id is required' if opt[:facility_id].nil?
+      raise ArgumentError, 'batch_id is required' if opt[:batch_id].nil?
+      raise ArgumentError, 'quantity is required' if opt[:quantity].nil?
+
       Rails.logger.debug "update_task task.name: `#{task.name}`"
       Rails.logger.debug "task.start_date: `#{task.start_date.to_date}`"
       Rails.logger.debug "task.end_date: `#{task.end_date.to_date}`"
@@ -53,14 +62,17 @@ module Cultivation
       tasks_changes = find_changes(task, batch_tasks, opt)
       # Rails.logger.debug "`total changes found: #{tasks_changes.length}`"
 
-      if valid_data?(tasks_changes)
+      if valid_data?(tasks_changes, opt)
         bulk_update(tasks_changes) # bulk update
         task
       end
       task
     end
 
-    def update_tasks_end_date(task, batch_tasks)
+    def update_tasks_end_date(task, batch_tasks, opt = {})
+      raise ArgumentError, 'facility_id is required' if opt[:facility_id].nil?
+      raise ArgumentError, 'batch_id is required' if opt[:batch_id].nil?
+
       parent = batch_tasks.detect { |t| t.id.to_s == task.parent_id.to_s }
       if parent
         # Get all sibling tasks, including current task
@@ -81,8 +93,8 @@ module Cultivation
           end
         end
 
-        update_task(parent, batch_tasks, children: false)
-        update_tasks_end_date(parent, batch_tasks)
+        update_task(parent, batch_tasks, {children: false}.merge(opt))
+        update_tasks_end_date(parent, batch_tasks, opt)
 
         parent.save unless errors.present?
       end
@@ -231,32 +243,56 @@ module Cultivation
       Cultivation::Task.collection.bulk_write(bulk_order)
     end
 
-    def valid_data?(tasks)
+    def valid_data?(tasks, opt = {})
+      raise ArgumentError, 'facility_id is required' if opt[:facility_id].nil?
+      raise ArgumentError, 'batch_id is required' if opt[:batch_id].nil?
+      raise ArgumentError, 'quantity is required' if opt[:quantity].nil?
+
       max_date = tasks.pluck(:end_date).compact.max
       min_date = tasks.pluck(:start_date).compact.min
       overlap_batch = false
       overlap_batch_name = ''
-      Cultivation::Batch.all.not_in(:_id => tasks.first.try(:batch_id)).includes(:tasks).each do |batch|
-        #get all phases
-        phases = batch.tasks.select { |b| b.is_phase == true }
-        #find cure or dry phase
-        # Rails.logger.debug "Task Min => #{min_date}"
-        # Rails.logger.debug "Task Max => #{max_date}"
-        # Rails.logger.debug "Batch Start Date => #{batch.start_date}"
 
-        phase = phases.pluck(:phase).include?('cure') ? phases.detect { |b| b.phase == 'cure' } : phases.detect { |b| b.phase == 'dry' }
-        # Rails.logger.debug "Phase End Date => #{phase.end_date if phase}"
+      phase_tasks = tasks.select do |t|
+        Constants::CULTIVATION_PHASES_3V.include?(t.phase) &&
+          t.is_phase == true &&
+          t.phase
+      end
 
-        if max_date && phase && phase.end_date &&
-           ((phase.end_date >= min_date && batch.start_date <= max_date) ||
-            (batch.start_date >= min_date && batch.start_date <= max_date) ||
-            (batch.start_date <= min_date && phase.end_date >= max_date))
-          overlap_batch = true
-          overlap_batch_name = batch.batch_no
+      phase_tasks.each do |t|
+        # Rails.logger.debug ">>> phase_tasks, #{t.name} - #{t.phase}"
+        # Rails.logger.debug ">>> phase_dates, #{t.start_date} - #{t.end_date}"
+        args = {
+          facility_id: opt[:facility_id],
+          exclude_batch_id: opt[:batch_id],
+          phase: t.phase,
+          start_date: t.start_date,
+          end_date: t.end_date,
+        }
+
+        capacity_cmd = QueryAvailableCapacity.call(args)
+        # Rails.logger.debug "required capacity: #{opt[:quantity]}"
+        # Rails.logger.debug "available capacity: #{capacity_cmd.result}"
+
+        if opt[:quantity] > capacity_cmd.result
+          overlap_phase = t.phase
+          error_message = "There's not enough capacity on selected dates for #{t.name}"
+
+          existing_plans = QueryPlannedTrays.call(t.start_date,
+                                                  t.end_date,
+                                                  opt[:facility_id],
+                                                  opt[:batch_id])
+
+          batch_names = ""
+          # TODO: Might be overlapping with multiple batches
+          if !existing_plans.empty?
+            overlapping_batch = existing_plans.last.batch
+            error_message += "Overlapping tray booking with batch #{overlapping_batch.batch_no}"
+            errors.add(:end_date, error_message)
+          end
           break
         end
       end
-      errors.add(:end_date, "The date overlaps with batch #{overlap_batch_name}") if overlap_batch
       errors.empty?
     end
   end

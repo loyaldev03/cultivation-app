@@ -53,6 +53,27 @@ RSpec.describe QueryPlannedTrays, type: :command do
       expect(res.result.size).to eq 1
     end
 
+    it "should excluded trays planned with params excluded_batch_id" do
+      # Prepare
+      p1_start_date = Time.strptime("2018/07/25", DATE_FORMAT)
+      # let end_date overlaps with previously scheduled's start_date
+      p1_end_date = Time.strptime("2018/08/01", DATE_FORMAT)
+      tp = create(:tray_plan,
+              facility_id: facility.id,
+              room_id: first_room.id,
+              row_id: first_row.id,
+              shelf_id: first_shelf.id,
+              tray_id: first_tray.id,
+              start_date: p1_start_date,
+              end_date: p1_end_date)
+
+      # Perform
+      res = QueryPlannedTrays.call(schedule_start_date, schedule_end_date, facility.id, tp.batch_id)
+
+      # Validate
+      expect(res.result.size).to eq 0
+    end
+
     it "should include trays planned within schedule start & end date boundaries" do
       # Prepare
       # A tray has been booked within the schedule start_date & end_date

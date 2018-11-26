@@ -31,6 +31,9 @@ class QueryAvailableCapacity
       exclude_batch_id: @exclude_batch_id,
       purpose: [@phase],
     )
+    # Rails.logger.debug ">>> QueryAvailableTrays"
+    # Rails.logger.debug cmd.result.to_yaml
+    # Rails.logger.debug ">>>"
     cmd.result.map(&:remaining_capacity).sum
   end
 end

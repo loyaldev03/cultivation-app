@@ -287,7 +287,7 @@ module Cultivation
           if !existing_plans.empty?
             existing_plans = existing_plans.select { |p| p.phase == t.phase }
             batch_ids = existing_plans.pluck(:batch_id).uniq
-            overlapping_phase = existing_plans.pluck(:phase).uniq
+            # overlapping_phase = existing_plans.pluck(:phase).uniq
             # Rails.logger.debug batch_ids
             # Rails.logger.debug overlapping_phase
             batch_nos = Cultivation::Batch.

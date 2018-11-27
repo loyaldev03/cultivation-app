@@ -31,15 +31,17 @@ const letterColours = [
 ]
 
 const propTypes = {
-  name: PropTypes.string,
+  firstName: PropTypes.string,
+  lastName: PropTypes.string,
   size: PropTypes.number,
   radius: PropTypes.number
 }
 
 const defaultProps = {
-  name: 'X',
-  size: 50,
-  radius: 0
+  firstName: '',
+  lastName: '',
+  size: 38,
+  radius: 19,
 }
 
 const getColorCode = charA => {
@@ -79,6 +81,7 @@ class LetterAvatar extends React.PureComponent {
         lineHeight: size + 'px',
         color: 'rgba(233,233,233,0.9)',
         textAlign: 'center',
+        cursor: 'default',
         display: 'inline-block',
         borderRadius: radius
       }
@@ -94,6 +97,7 @@ class LetterAvatar extends React.PureComponent {
         lineHeight: size + 'px',
         color: 'rgba(233,233,233,0.9)',
         textAlign: 'center',
+        cursor: 'default',
         display: 'inline-block',
         borderRadius: radius
       }

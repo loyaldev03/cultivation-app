@@ -2,6 +2,9 @@ module Cultivation
   class UpdateTask
     prepend SimpleCommand
 
+    REFTYPE_CHILDREN = 'children'.freeze
+    REFTYPE_DEPENDENT = 'dependent'.freeze
+
     attr_reader :args, :task, :array
 
     def initialize(args = nil)
@@ -58,6 +61,7 @@ module Cultivation
       opt = {
         start_date: task.start_date,
         end_date: task.end_date,
+        reference_task: task,
       }.merge(opt)
       tasks_changes = find_changes(task, batch_tasks, opt)
       # Rails.logger.debug "`total changes found: #{tasks_changes.length}`"
@@ -108,13 +112,17 @@ module Cultivation
       opt = {
         start_date: nil,
         end_date: nil,
+        reference_task: nil,
         children: true,
         dependent: true,
       }.merge(opt) # default options
-      raise ArgumentError, 'start_date' if opt[:start_date].nil?
 
-      # Rails.logger.debug ">>> finding changes for #{task.name}"
-      # Rails.logger.debug ">>> start_date: #{opt[:start_date]}"
+      if opt[:start_date].nil?
+        ref_task = opt[:reference_task]
+        errors.add(:start_date,
+                   "'Start At' is required - #{ref_task&.name}")
+        return []
+      end
 
       # Array to store changed tasks for current iteration
       new_changes = []
@@ -123,38 +131,42 @@ module Cultivation
       set_task_dates(task, opt[:start_date])
       new_changes << task unless task.changes.empty?
 
-      # Child task of current task & does not depend on any task
-      children = get_children(task, batch_tasks)
-      # Rails.logger.debug ">>> children: #{children.size}"
-
-      # Tasks depends on current task, currently apply to "Phase" task that
-      # positioned after the current task
-      dependents = get_dependents(task, batch_tasks)
-      # Rails.logger.debug ">>> dependents: #{dependents.size}"
-
-      # Find changed child tasks
       if opt[:children]
+        # Child task of current task & does not depend on any task
+        children = get_children(task, batch_tasks)
+        # Find changed child tasks
         new_changes += find_cascaded_changes(children,
                                              batch_tasks,
-                                             task.start_date)
+                                             REFTYPE_CHILDREN,
+                                             task)
       end
 
-      # Find changed dependents tasks
       if opt[:dependent]
+        # Tasks depends on current task, currently apply to "Phase" task that
+        # positioned after the current task
+        dependents = get_dependents(task, batch_tasks)
+        # Find changed dependents tasks
         new_changes += find_cascaded_changes(dependents,
                                              batch_tasks,
-                                             task.end_date)
+                                             REFTYPE_DEPENDENT,
+                                             task)
       end
       new_changes
     end
 
-    def find_cascaded_changes(cascade_tasks, batch_tasks, start_date)
+    def find_cascaded_changes(cascade_tasks, batch_tasks, ref_type, ref_task)
       new_changes = []
-      cascade_tasks.each do |ref_task|
-        new_changes += find_changes(ref_task,
+
+      ref_start_date = ref_task.end_date if ref_type == REFTYPE_DEPENDENT
+      ref_start_date ||= ref_task.start_date
+
+      cascade_tasks.each do |cascade_task|
+        new_changes += find_changes(cascade_task,
                                     batch_tasks,
-                                    start_date: start_date)
+                                    start_date: ref_start_date,
+                                    reference_task: ref_task)
       end
+
       new_changes
     end
 
@@ -247,18 +259,12 @@ module Cultivation
       raise ArgumentError, 'facility_id is required' if opt[:facility_id].nil?
       raise ArgumentError, 'batch_id is required' if opt[:batch_id].nil?
       raise ArgumentError, 'quantity is required' if opt[:quantity].nil?
-
-      max_date = tasks.pluck(:end_date).compact.max
-      min_date = tasks.pluck(:start_date).compact.min
-      overlap_batch = false
-      overlap_batch_name = ''
-
-      phase_tasks = tasks.select do |t|
-        Constants::CULTIVATION_PHASES_3V.include?(t.phase) &&
-          t.is_phase == true &&
-          t.phase
-      end
-
+      # max_date = tasks.pluck(:end_date).compact.max
+      # min_date = tasks.pluck(:start_date).compact.min
+      # overlap_batch = false
+      # overlap_batch_name = ''
+      # Find "Phase" tasks that has changes
+      phase_tasks = get_phase_tasks(tasks)
       phase_tasks.each do |t|
         # Rails.logger.debug ">>> phase_tasks, #{t.name} - #{t.phase}"
         # Rails.logger.debug ">>> phase_dates, #{t.start_date} - #{t.end_date}"
@@ -269,31 +275,39 @@ module Cultivation
           start_date: t.start_date,
           end_date: t.end_date,
         }
-
-        capacity_cmd = QueryAvailableCapacity.call(args)
+        available_capacity = QueryAvailableCapacity.call(args).result
         # Rails.logger.debug "required capacity: #{opt[:quantity]}"
         # Rails.logger.debug "available capacity: #{capacity_cmd.result}"
-
-        if opt[:quantity] > capacity_cmd.result
-          overlap_phase = t.phase
-          error_message = "There's not enough capacity on selected dates for #{t.name}"
-
+        if opt[:quantity] > available_capacity
+          error_message = "Not enough capacity on selected dates (#{t.name}). "
           existing_plans = QueryPlannedTrays.call(t.start_date,
                                                   t.end_date,
                                                   opt[:facility_id],
                                                   opt[:batch_id])
-
-          batch_names = ''
-          # TODO: Might be overlapping with multiple batches
           if !existing_plans.empty?
-            overlapping_batch = existing_plans.last.batch
-            error_message += "Overlapping tray booking with batch #{overlapping_batch.batch_no}"
+            batch_ids = existing_plans.pluck(:batch_id).uniq
+            batch_nos = Cultivation::Batch.
+              where(:id.in => batch_ids).
+              pluck(:batch_no)
+            if !batch_nos.empty?
+              error_message += "Overlapping tray booking with batch: "
+              error_message += batch_nos.join(", ") if !batch_nos.empty?
+            end
             errors.add(:end_date, error_message)
           end
           break
         end
       end
       errors.empty?
+    end
+
+    def get_phase_tasks(tasks)
+      # Find "Phase" tasks only
+      tasks.select do |t|
+        Constants::CULTIVATION_PHASES_3V.include?(t.phase) &&
+          t.is_phase == true &&
+          t.phase
+      end
     end
   end
 end

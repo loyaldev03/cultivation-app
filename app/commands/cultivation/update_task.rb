@@ -277,21 +277,25 @@ module Cultivation
         }
         available_capacity = QueryAvailableCapacity.call(args).result
         # Rails.logger.debug "required capacity: #{opt[:quantity]}"
-        # Rails.logger.debug "available capacity: #{capacity_cmd.result}"
+        # Rails.logger.debug "available capacity: #{available_capacity}"
         if opt[:quantity] > available_capacity
-          error_message = "Not enough capacity on selected dates (#{t.name}). "
+          error_message = "Not enough capacity on selected dates in #{t.name}. "
           existing_plans = QueryPlannedTrays.call(t.start_date,
                                                   t.end_date,
                                                   opt[:facility_id],
-                                                  opt[:batch_id])
+                                                  opt[:batch_id]).result
           if !existing_plans.empty?
+            existing_plans = existing_plans.select { |p| p.phase == t.phase }
             batch_ids = existing_plans.pluck(:batch_id).uniq
+            overlapping_phase = existing_plans.pluck(:phase).uniq
+            # Rails.logger.debug batch_ids
+            # Rails.logger.debug overlapping_phase
             batch_nos = Cultivation::Batch.
               where(:id.in => batch_ids).
               pluck(:batch_no)
             if !batch_nos.empty?
-              error_message += "Overlapping tray booking with batch: "
-              error_message += batch_nos.join(", ") if !batch_nos.empty?
+              error_message += 'Overlapping tray planning with batch: '
+              error_message += batch_nos.join(', ') if !batch_nos.empty?
             end
             errors.add(:end_date, error_message)
           end

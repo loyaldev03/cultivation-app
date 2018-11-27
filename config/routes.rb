@@ -79,6 +79,9 @@ Rails.application.routes.draw do
     namespace 'core', as: :core do
       get '/' => 'core#index'
       resources :unit_of_measures, only: [:index, :edit, :update, :new, :create, :destroy]
+      resources :raw_materials do
+        put 'bulk_update', on: :collection
+      end
     end
 
     namespace 'company', as: :company do

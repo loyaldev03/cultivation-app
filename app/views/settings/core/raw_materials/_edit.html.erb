@@ -1,0 +1,44 @@
+<div class="ph4 pv3 bb b--light-grey">
+  <h5 class="h6--font dark-grey ma0 ttc"><%= @record.label %></h5>
+</div>
+
+<%= simple_form_for :record, 
+    url: settings_core_raw_material_path(@record), 
+    remote: true, 
+    method: :put,
+    wrapper: false,
+    html: { 
+      class: 'h-100 flex flex-column justify-between' 
+    } do |f|
+%>
+
+  <div class="pa4">
+    <div class="mb3">
+      <%= f.input :label, label: 'Name',
+        label_html: { class: 'f6 fw6 db mb1 gray ttc' }, 
+        input_html: { class: 'db w-100 pa2 f6 black ba b--black-20 br2 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :uom_dimension, label: 'Uom Dimension',
+        label_html: { class: 'f6 fw6 db mb1 gray ttc' }, 
+        input_html: { class: 'db w-100 pa2 f6 black ba b--black-20 br2 outline-0' } 
+      %>
+    </div>
+
+    <div class="mb3">
+      <%= f.input :default_price, label: 'Default Price',
+        label_html: { class: 'f6 fw6 db mb1 gray ttc' }, 
+        input_html: { class: 'db w-100 pa2 f6 black ba b--black-20 br2 outline-0' } 
+      %>
+    </div>
+
+  </div>
+
+
+
+  <div class="bt b--light-grey pv3 ph4">
+    <%= f.submit "Update", class: "fr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" %>
+  </div>
+<% end %>

@@ -51,9 +51,9 @@ module Cultivation
       raise ArgumentError, 'batch_id is required' if opt[:batch_id].nil?
       raise ArgumentError, 'quantity is required' if opt[:quantity].nil?
 
-      Rails.logger.debug "update_task task.name: `#{task.name}`"
-      Rails.logger.debug "task.start_date: `#{task.start_date.to_date}`"
-      Rails.logger.debug "task.end_date: `#{task.end_date.to_date}`"
+      # Rails.logger.debug "update_task task.name: `#{task.name}`"
+      # Rails.logger.debug "task.start_date: `#{task.start_date.to_date}`"
+      # Rails.logger.debug "task.end_date: `#{task.end_date.to_date}`"
       # Store changed task into a an array for 'bulk' update later
       opt = {
         start_date: task.start_date,

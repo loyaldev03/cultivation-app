@@ -21,11 +21,6 @@ select {
   overflow: hidden;
 }
 
-
-input:read-only {
-    background-color: rgba(0, 0, 0, 0.1);
-}
-
 $badgeSize: 16px;
 $badgeFontSize: 12px;
 

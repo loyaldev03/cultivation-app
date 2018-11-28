@@ -1,12 +1,14 @@
-class UpdateTrayPlansJob < ApplicationJob
+class UpdateActiveTrayPlansJob < ApplicationJob
   queue_as :default
 
-  # Re-create TrayPlan(s) for specific batch based on active plants.
+  # Re-create TrayPlan(s) that currently have plants. All subsequence
+  # phases' plans will not be re-created.
   # Safely assume a batch would only contain plants of specific growth stage at
   # any given point in time.
+  #
   # :batch_id: String, Cultivation Batch id
   def perform(batch_id)
-    Rails.logger.debug "\033[31m UpdateTrayPlansJob: #{batch_id} \033[0m"
+    # Rails.logger.debug "\033[31m UpdateActiveTrayPlansJob: #{batch_id} \033[0m"
     # Find the corresponding batch
     batch = Cultivation::Batch.find(batch_id)
     # Find all 'phase' tasks
@@ -24,10 +26,10 @@ class UpdateTrayPlansJob < ApplicationJob
         if !location_plants.empty?
           quantity = location_plants.length
           # Find existing TrayPlan for this location & phase
-          records = tray_plans.where(phase: phase_info.phase,
-                                     tray_id: location_id)
+          phase_plans = tray_plans.where(phase: phase_info.phase,
+                                         tray_id: location_id)
           # Delete existing Tray Plans
-          records.delete_all if !records.empty?
+          phase_plans.delete_all if !phase_plans.empty?
           # Create Tray Plan(s)
           recreate_tray_plans(batch_id, phase_info, quantity, tray)
           # Update batch's growth stage

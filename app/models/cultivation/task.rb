@@ -18,8 +18,8 @@ module Cultivation
 
     field :is_phase, type: Boolean, default: -> { false }     # to identify phase
     field :is_category, type: Boolean, default: -> { false }  # to identify category
-    field :parent_id, type: String
-    field :depend_on, type: String
+    field :parent_id, type: String # FIXME: All id needs to be save as BSON::ObjectId
+    field :depend_on, type: String # FIXME: All id needs to be save as BSON::ObjectId
     field :task_type, type: Array, default: []
 
     belongs_to :batch, class_name: 'Cultivation::Batch'

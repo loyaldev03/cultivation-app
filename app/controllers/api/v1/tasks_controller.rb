@@ -1,5 +1,5 @@
 class Api::V1::TasksController < Api::V1::BaseApiController
-  before_action :set_batch
+  before_action :set_batch, except: [:update]
 
   def index
     if @batch.present?

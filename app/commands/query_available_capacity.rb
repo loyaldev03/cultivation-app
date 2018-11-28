@@ -24,13 +24,23 @@ class QueryAvailableCapacity
 
   # Check if a cultivation phase schedule is overlaping with other batches.
   def call
-    cmd = QueryAvailableTrays.call(
+    available_trays = QueryAvailableTrays.call(
       @start_date,
       @end_date,
       facility_id: @facility_id,
       exclude_batch_id: @exclude_batch_id,
-      purpose: [@phase],
-    )
-    cmd.result.map(&:remaining_capacity).sum
+      # purpose: [@phase],
+    ).result
+
+    res = available_trays.group_by(&:tray_purpose).map do |tray_purpose, trays|
+      {
+        tray_purpose: tray_purpose,
+        remaining_capacity: trays.sum { |t| t.remaining_capacity },
+      }
+    end
+
+    # Return the lowest number of remaining capacity across all phases
+    available_capacity = res.pluck(:remaining_capacity).min
+    available_capacity
   end
 end

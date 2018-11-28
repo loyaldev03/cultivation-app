@@ -420,6 +420,11 @@ Layout/DotPosition:
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#consistent-multi-line-chains'
   EnforcedStyle: trailing
 
+Layout/SpaceInsideHashLiteralBraces:
+  Description: 'No extra space in hash literal braces'
+  Enabled: true
+  EnforcedStyle: no_space
+
 Layout/ExtraSpacing:
   Description: 'Do not use unnecessary spacing.'
   Enabled: true

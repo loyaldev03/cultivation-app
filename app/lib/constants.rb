@@ -14,6 +14,16 @@ module Constants
   CONST_VEG1 = 'veg1'.freeze
   CONST_VEG2 = 'veg2'.freeze
 
+  CULTIVATION_PHASES_3V = [
+    CONST_CLONE,
+    CONST_VEG,
+    CONST_VEG1,
+    CONST_VEG2,
+    CONST_FLOWER,
+    CONST_DRY,
+    CONST_CURE,
+  ].freeze
+
   PLANT_TYPES = [
     {code: CONST_CLONE, name: 'Clone'},
     {code: CONST_MOTHER, name: 'Mother'},

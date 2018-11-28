@@ -133,7 +133,7 @@ module Inventory
       )
 
       # Update tray bookings
-      UpdateTrayPlansJob.perform_later(cultivation_batch_id)
+      UpdateActiveTrayPlansJob.perform_later(cultivation_batch_id)
 
       # if old_invoice_item_id != plant.ref_id
       update_po_invoice_count(old_invoice_item_id)
@@ -164,7 +164,7 @@ module Inventory
       end
 
       # Update tray bookings
-      UpdateTrayPlansJob.perform_later(cultivation_batch_id)
+      UpdateActiveTrayPlansJob.perform_later(cultivation_batch_id)
 
       update_po_invoice_count(invoice_item&.id)
       plants

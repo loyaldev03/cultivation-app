@@ -1,29 +1,5 @@
-:root {
-  --orange: #F66830;
-  --red: #FF4136;
-  --blue: #357EDD;
-  --green: #19A974;
-  --yellow: #FFC600;
-  --light-yellow: #FEFFD8;
-  --black: #393939;
-  --dark-gray: #2E3B4E;
-  --gray: #707A8B;
-  --grey: #707A8B;
-  --light-gray: #C7C7C7;
-  --light-grey: #C7C7C7;
-  --white: #FFFFFF;
-  --white-smoke: #F3F5F7;
-  --silver: #979797;
-}
-
-$orange: var(--orange);
-$darkOrange: #FF7F30;
-$silver: var(--silver);
-$grey: var(--grey);
-$lightGrey: var(--light-gray);
-$darkGrey: var(--dark-gray);
-$white: var(--white);
-$whiteSmoke: var(--white-smoke);
+@import 'variables';
+@import 'base';
 
 /* NOTE: Put react stylesheets here instead of app/assets/stylesheets, since that one uses Sprockets, and this one uses Webpack */
 /* TODO: Move all app/assets/stylesheets to here and uses Webpack instead of Sprockets */

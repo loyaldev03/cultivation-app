@@ -28,11 +28,16 @@
 
                   <%= render 'layouts/notification' %>
 
-                  <% if current_user.photo_data.present? && current_user.photo_data != "null" %>
-                    <%= image_tag current_user.photo_url, class: "br-100 h2 w2 mr3 dib" %>
-                  <% else %>
-                    <%= image_tag 'blank-avatar.png', class: "br-100 h2 w2 mr3 dib" %>
-                  <% end %>
+                  <div class="ph2">
+                    <%= react_component 'utils/Avatar', {
+                      firstName: current_user&.first_name,
+                      lastName: current_user&.last_name,
+                      photoUrl: current_user&.photo_url,
+                    }, {
+                      tag: 'span'
+                    }%> 
+                  </div>
+
                   <% if !current_user.first_name %>
                     <span class="grey subtitle-2"> <%= current_user.email %> </span>
                   <% else %>

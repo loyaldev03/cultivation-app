@@ -1,0 +1,14 @@
+html {
+  font-family: 'Source Sans Pro', sans-serif;
+  background-color: var(--white-smoke);
+}
+
+#root, body, html {
+  height: 100%;
+}
+
+body {
+  width: 100%;
+  -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}

@@ -5,7 +5,7 @@ class QueryPlannedTrays
 
   attr_reader :start_date, :end_date
 
-  def initialize(start_date, end_date, facility_id = nil)
+  def initialize(start_date, end_date, facility_id = nil, exclude_batch_id = nil)
     raise ArgumentError, 'start_date' if start_date.nil?
     raise ArgumentError, 'end_date' if end_date.nil?
     raise ArgumentError, 'start_date should be ealier than end_date' if end_date <= start_date
@@ -13,6 +13,7 @@ class QueryPlannedTrays
     @start_date = start_date.beginning_of_day
     @end_date = end_date.end_of_day
     @facility_id = facility_id
+    @exclude_batch_id = exclude_batch_id
   end
 
   def call
@@ -30,6 +31,7 @@ class QueryPlannedTrays
 
     planned = Cultivation::TrayPlan.or(cond_a, cond_b, cond_c)
     planned = planned.where(facility_id: @facility_id.to_bson_id) if @facility_id
+    planned = planned.not.where(batch_id: @exclude_batch_id.to_bson_id) if @exclude_batch_id
     planned.to_a
   end
 end

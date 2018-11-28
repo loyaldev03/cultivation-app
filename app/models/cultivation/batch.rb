@@ -15,8 +15,6 @@ module Cultivation
     field :current_growth_stage, type: String
     # Active Batch would affect the capacity of the Booked Tray.
     field :is_active, type: Boolean, default: -> { false }
-    # Growth phases that this batch need to goes through
-    field :growth_stages, type: Array, default: []
     # Plant selected during batch setup. Depends on the batch_source
     # this can either the mothers' plantId or the clones' plantId
     field :selected_plants, type: Array, default: []

@@ -25,14 +25,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
 
   def show
     plant = Inventory::Plant.find(params[:id])
-    options = {}
-
-    if params[:include]
-      include_rels = params[:include].split(',').map { |x| x.strip.to_sym }
-      options = {params: {include: include_rels}}
-    end
-
-    render json: Inventory::PlantSerializer.new(plant, options).serialized_json
+    render json: Inventory::PlantSerializer.new(plant, include_options).serialized_json
   end
 
   def setup_mother
@@ -68,8 +61,13 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def harvests
-    batches = Inventory::HarvestBatch.all.order(c_at: :desc)
+    batches = Inventory::HarvestBatch.includes(:cultivation_batch, :facility_strain, :plants).all.order(c_at: :desc)
     render json: Inventory::HarvestBatchSerializer.new(batches).serialized_json
+  end
+
+  def show_harvest
+    batch = Inventory::HarvestBatch.find(params[:id])
+    render json: Inventory::HarvestBatchSerializer.new(batch, include_options).serialized_json
   end
 
   #
@@ -80,5 +78,14 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
 
   def request_with_errors(errors)
     params[:plant].to_unsafe_h.merge(errors: errors)
+  end
+
+  def include_options
+    options = {}
+    if params[:include]
+      include_rels = params[:include].split(',').map { |x| x.strip.to_sym }
+      options = {params: {include: include_rels}}
+    end
+    options
   end
 end

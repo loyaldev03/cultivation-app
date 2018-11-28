@@ -1,3 +1,4 @@
+# TODO: Change to harvest batch serializer
 class BatchSerializer
   include FastJsonapi::ObjectSerializer
   attributes :name, :batch_source, :batch_no, :is_active, :start_date, :grow_method, :current_growth_stage, :estimated_harvest_date

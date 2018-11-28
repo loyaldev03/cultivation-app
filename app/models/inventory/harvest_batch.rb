@@ -12,6 +12,6 @@ module Inventory
 
     has_many :plants, class_name: 'Inventory::Plant'
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
-    belongs_to :cultivation_batch, class_name: 'Cultivation::Batch', optional: true
+    belongs_to :cultivation_batch, class_name: 'Cultivation::Batch'
   end
 end

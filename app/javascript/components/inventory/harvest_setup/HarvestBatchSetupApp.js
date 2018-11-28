@@ -8,7 +8,7 @@ import loadHarvests from './actions/loadHarvests'
 
 const columns = [
   {
-    Header: 'Batch Name',
+    Header: 'Cultivation Batch Name',
     accessor: 'attributes.harvest_name',
     headerStyle: { textAlign: 'left' }
   },
@@ -16,7 +16,13 @@ const columns = [
     Header: 'Strain',
     accessor: 'attributes.strain_name',
     headerStyle: { textAlign: 'left' },
-    width: 200
+    width: 160
+  },
+
+  {
+    Header: 'Harvest Batch Name',
+    accessor: 'attributes.cultivation_batch_name',
+    headerStyle: { textAlign: 'left' }
   },
   {
     Header: '# of Plants',
@@ -28,7 +34,8 @@ const columns = [
   {
     Header: 'Locations',
     accessor: 'attributes.location',
-    headerStyle: { textAlign: 'left' }
+    headerStyle: { textAlign: 'left' },
+    width: 100
   },
   {
     Header: 'Harvest date',

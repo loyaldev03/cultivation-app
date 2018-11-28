@@ -126,6 +126,7 @@ Rails.application.routes.draw do
           get 'all/(:current_growth_stage)', action: :all
           get 'search/:current_growth_stage/(:facility_strain_id)/(:search)', action: :search
           get 'harvests'
+          get 'harvests/:id', action: 'show_harvest'
           post 'setup_mother'
           post 'setup_plants'
           post 'setup_harvest_batch'

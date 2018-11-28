@@ -32,8 +32,8 @@ module Inventory
     field :destroyed_date, type: DateTime
     field :mother_id, type: BSON::ObjectId
 
-    field :wet_weight, type: BigDecimal
-    field :wet_waste_weight, type: BigDecimal
+    field :wet_weight, type: BigDecimal, default: 0
+    field :wet_waste_weight, type: BigDecimal, default: 0
     field :wet_weight_uom, type: String
 
     field :last_metrc_update, type: DateTime

@@ -47,8 +47,8 @@ module Cultivation
     end
 
     def total_estimated_costs
-      #hours per day = estimated hours(5hours) / duration(5 days)
-      #hours_per_person = hours_per_day / no of resource
+      # hours per day = estimated hours(5hours) / duration(5 days)
+      # hours_per_person = hours_per_day / no of resource
       total_cost = 0.0
       tasks.includes(:users).each do |task|
         hours_per_day = task.duration.to_i > 0 ? (task.estimated_hours.to_f / task.duration.to_i) : 0

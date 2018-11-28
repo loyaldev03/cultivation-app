@@ -4,8 +4,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   def index
     if @batch.present?
       tasks = @batch.tasks.order_by(position: :asc)
-      users = User.all
-
+      users = User.active
       task_json = TaskSerializer.new(tasks,
                                      params: {tasks: tasks, users: users}).serialized_json
       render json: task_json

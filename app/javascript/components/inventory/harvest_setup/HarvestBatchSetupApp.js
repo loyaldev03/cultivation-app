@@ -28,7 +28,7 @@ const columns = [
   {
     Header: 'Locations',
     accessor: 'attributes.location',
-    headerStyle: { textAlign: 'left' },
+    headerStyle: { textAlign: 'left' }
   },
   {
     Header: 'Harvest date',

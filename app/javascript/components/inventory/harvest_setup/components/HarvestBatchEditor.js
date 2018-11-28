@@ -26,78 +26,71 @@ export default class HarvestBatchEditor extends React.Component {
         this.setState(this.resetState())
       } else {
         // getHarvestBatch(id, 'vendor_invoice, vendor, purchase_order, mother').then(
-          // ({ status, data }) => {
-          //   if (status != 200) {
-          //     alert('something wrong')
-          //     return
-          //   }
-
-          //   const invoice = data.attributes.vendor_invoice
-          //   const purchase_order = data.attributes.purchase_order
-          //   let invoice_attr = {}
-          //   if (invoice) {
-          //     invoice_attr = {
-          //       purchase_date: new Date(invoice.invoice_date),
-          //       invoice_no: invoice.invoice_no,
-          //       purchase_order_no: purchase_order.purchase_order_no
-          //     }
-          //   }
-
-          //   const vendor = data.attributes.vendor
-          //   let vendor_attr = {}
-          //   if (vendor) {
-          //     vendor_attr = {
-          //       vendor_id: vendor.id,
-          //       vendor_name: vendor.name,
-          //       vendor_no: vendor.vendor_no,
-          //       address: vendor.address,
-          //       vendor_state_license_num: vendor.state_license_num,
-          //       vendor_state_license_expiration_date: new Date(
-          //         vendor.state_license_expiration_date
-          //       ),
-          //       vendor_location_license_num: vendor.location_license_num,
-          //       vendor_location_license_expiration_date: new Date(
-          //         vendor.location_license_expiration_date
-          //       )
-          //     }
-          //   }
-
-          //   const batch = this.batches.find(
-          //     x => x.id === data.attributes.cultivation_batch_id
-          //   )
-
-          //   let motherOption = null
-          //   if (data.attributes.mother) {
-          //     motherOption = {
-          //       value: data.attributes.mother.id,
-          //       label: data.attributes.mother.plant_id
-          //     }
-          //   }
-
-          //   this.setState({
-          //     ...this.resetState(),
-          //     id: data.id,
-          //     cultivation_batch_id: batch.id,
-          //     facility_strain_id: batch.facility_strain_id,
-          //     facility_id: batch.facility_id,
-          //     plant_ids: data.attributes.plant_id,
-          //     plant_qty: 0,
-          //     location_id: data.attributes.location_id,
-          //     planting_date: new Date(data.attributes.planting_date),
-          //     motherOption: motherOption,
-
-          //     // UI states
-          //     strain_name: batch.strain_name,
-          //     start_date: new Date(batch.start_date),
-          //     facility: batch.facility,
-          //     batch_source: batch.batch_source,
-          //     isBought: batch.batch_source === BATCH_SOURCE.PURCHASED,
-
-          //     // relationships
-          //     ...vendor_attr,
-          //     ...invoice_attr
-          //   })
-          // }
+        // ({ status, data }) => {
+        //   if (status != 200) {
+        //     alert('something wrong')
+        //     return
+        //   }
+        //   const invoice = data.attributes.vendor_invoice
+        //   const purchase_order = data.attributes.purchase_order
+        //   let invoice_attr = {}
+        //   if (invoice) {
+        //     invoice_attr = {
+        //       purchase_date: new Date(invoice.invoice_date),
+        //       invoice_no: invoice.invoice_no,
+        //       purchase_order_no: purchase_order.purchase_order_no
+        //     }
+        //   }
+        //   const vendor = data.attributes.vendor
+        //   let vendor_attr = {}
+        //   if (vendor) {
+        //     vendor_attr = {
+        //       vendor_id: vendor.id,
+        //       vendor_name: vendor.name,
+        //       vendor_no: vendor.vendor_no,
+        //       address: vendor.address,
+        //       vendor_state_license_num: vendor.state_license_num,
+        //       vendor_state_license_expiration_date: new Date(
+        //         vendor.state_license_expiration_date
+        //       ),
+        //       vendor_location_license_num: vendor.location_license_num,
+        //       vendor_location_license_expiration_date: new Date(
+        //         vendor.location_license_expiration_date
+        //       )
+        //     }
+        //   }
+        //   const batch = this.batches.find(
+        //     x => x.id === data.attributes.cultivation_batch_id
+        //   )
+        //   let motherOption = null
+        //   if (data.attributes.mother) {
+        //     motherOption = {
+        //       value: data.attributes.mother.id,
+        //       label: data.attributes.mother.plant_id
+        //     }
+        //   }
+        //   this.setState({
+        //     ...this.resetState(),
+        //     id: data.id,
+        //     cultivation_batch_id: batch.id,
+        //     facility_strain_id: batch.facility_strain_id,
+        //     facility_id: batch.facility_id,
+        //     plant_ids: data.attributes.plant_id,
+        //     plant_qty: 0,
+        //     location_id: data.attributes.location_id,
+        //     planting_date: new Date(data.attributes.planting_date),
+        //     motherOption: motherOption,
+        //     // UI states
+        //     strain_name: batch.strain_name,
+        //     start_date: new Date(batch.start_date),
+        //     facility: batch.facility,
+        //     batch_source: batch.batch_source,
+        //     isBought: batch.batch_source === BATCH_SOURCE.PURCHASED,
+        //     // relationships
+        //     ...vendor_attr,
+        //     ...invoice_attr
+        //   })
+        // }
         // )
       }
     })

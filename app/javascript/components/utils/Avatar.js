@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import LetterAvatar from './LetterAvatar'
 
 const Avatar = React.memo(({ firstName = '', lastName = '', photoUrl }) => {
-  if (photoUrl && photoUrl.length >= 10) { // http://a.b
+  if (photoUrl && photoUrl.length >= 10) {
+    // http://a.b
     return (
       <img
         src={photoUrl}
@@ -31,7 +32,7 @@ const Avatar = React.memo(({ firstName = '', lastName = '', photoUrl }) => {
 Avatar.propTypes = {
   firstName: PropTypes.string,
   lastName: PropTypes.string,
-  photoUrl: PropTypes.string,
+  photoUrl: PropTypes.string
 }
 
 export default Avatar

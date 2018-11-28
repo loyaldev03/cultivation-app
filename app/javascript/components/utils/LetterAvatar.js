@@ -41,7 +41,7 @@ const defaultProps = {
   firstName: '',
   lastName: '',
   size: 38,
-  radius: 19,
+  radius: 19
 }
 
 const getColorCode = charA => {

@@ -1,7 +1,7 @@
 import batchStore from '../store/HarvestBatchStore'
 import { httpPostOptions } from '../../../utils'
 
-export const setupHarvestBatch = payload => {
+const setupHarvestBatch = payload => {
   console.group('setupHarvestBatch')
   console.log(payload)
   console.groupEnd()
@@ -30,3 +30,5 @@ export const setupHarvestBatch = payload => {
       return result
     })
 }
+
+export default setupHarvestBatch

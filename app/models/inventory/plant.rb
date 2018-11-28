@@ -8,7 +8,8 @@ module Inventory
     belongs_to :created_by, class_name: 'User'
     belongs_to :cultivation_batch, class_name: 'Cultivation::Batch', optional: true
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
-    # belongs_to :harvest_batch,      class_name: 'Cultivation::HarvestBatch',  optional: true
+    belongs_to :harvest_batch, class_name: 'Inventory::HarvestBatch', optional: true
+
     # belongs_to :manicure_batch,     class_name: 'Cultivation::ManicureBatch', optional: true
     # has_many :item_histories
 

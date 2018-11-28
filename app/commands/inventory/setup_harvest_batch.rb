@@ -73,9 +73,14 @@ module Inventory
       harvest_batch.facility_strain_id = batch.facility_strain_id
       harvest_batch.cultivation_batch_id = batch.id
       harvest_batch.total_wet_weight = plants.sum { |x| x.wet_weight }
-      harvest_batch.total_wet_waste_weight = plants.sum { |x| x.wet_waste_weight }
+      harvest_batch.total_wet_waste_weight = plants.sum { |x| x.wet_waste_weight || 0 }
       harvest_batch.uom = uom
-      harvest_batch.plants.replace(plants)
+      plants.each do |p|
+        p.harvest_batch = harvest_batch
+        p.save!
+      end
+      # harvest_batch.plants.replace(plants)
+      harvest_batch.status = 'new'
       harvest_batch.save!
       harvest_batch
     end

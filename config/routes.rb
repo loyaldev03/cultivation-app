@@ -122,9 +122,10 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :plants, only: [:show] do
-        get 'all/(:current_growth_stage)',    action: :all, on: :collection
-        get 'search/:current_growth_stage/(:facility_strain_id)/(:search)',    action: :search, on: :collection
         collection do
+          get 'all/(:current_growth_stage)', action: :all
+          get 'search/:current_growth_stage/(:facility_strain_id)/(:search)', action: :search
+          get 'harvests'
           post 'setup_mother'
           post 'setup_plants'
           post 'setup_harvest_batch'

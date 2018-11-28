@@ -18,7 +18,11 @@ module Inventory
     end
 
     attribute :location do |object|
-      Tray.find(object.location_id).code
+      Tray.in(id: object.plants.pluck(:location_id)).pluck(:code).uniq.join(', ')
+    end
+
+    attribute :plant_count do |object|
+      object.plants.count
     end
   end
 end

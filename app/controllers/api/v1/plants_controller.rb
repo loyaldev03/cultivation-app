@@ -57,7 +57,6 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     end
   end
 
-  #
   def setup_harvest_batch
     command = Inventory::SetupHarvestBatch.call(current_user, params[:plant].to_unsafe_h)
     if command.success?
@@ -66,6 +65,11 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     else
       render json: request_with_errors(command.errors), status: 422
     end
+  end
+
+  def harvests
+    batches = Inventory::HarvestBatch.all.order(c_at: :desc)
+    render json: Inventory::HarvestBatchSerializer.new(batches).serialized_json
   end
 
   #

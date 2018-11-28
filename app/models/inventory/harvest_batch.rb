@@ -10,7 +10,7 @@ module Inventory
     field :uom, type: String
     field :status, type: String                 # new, closed (when fully packaged)
 
-    has_many :plants, class_name: 'Inventory::Plant', inverse_of: nil
+    has_many :plants, class_name: 'Inventory::Plant'
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     belongs_to :cultivation_batch, class_name: 'Cultivation::Batch', optional: true
   end

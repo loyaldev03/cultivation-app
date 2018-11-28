@@ -4,24 +4,31 @@ import ReactTable from 'react-table'
 import HarvestBatchEditor from './components/HarvestBatchEditor'
 
 import harvestBatchStore from './store/HarvestBatchStore'
-// import loadPlants from './actions/loadPlants'
+import loadHarvests from './actions/loadHarvests'
 
 const columns = [
   {
     Header: 'Batch Name',
     accessor: 'attributes.harvest_name',
-    headerStyle: { textAlign: 'left' },
-    width: 150
+    headerStyle: { textAlign: 'left' }
   },
   {
     Header: 'Strain',
     accessor: 'attributes.strain_name',
-    headerStyle: { textAlign: 'left' }
+    headerStyle: { textAlign: 'left' },
+    width: 200
   },
   {
-    Header: 'Location',
-    accessor: 'attributes.location_name',
-    headerStyle: { textAlign: 'left' }
+    Header: '# of Plants',
+    accessor: 'attributes.plant_count',
+    headerStyle: { textAlign: 'right' },
+    className: 'tc',
+    width: 80
+  },
+  {
+    Header: 'Locations',
+    accessor: 'attributes.location',
+    headerStyle: { textAlign: 'left' },
   },
   {
     Header: 'Harvest date',
@@ -49,8 +56,8 @@ const columns = [
   {
     Header: 'Status',
     accessor: 'attributes.status',
-    headerStyle: { textAlign: 'right' },
-    className: 'tr',
+    headerStyle: { textAlign: 'left' },
+    className: 'tl',
     width: 130
   },
   {
@@ -72,11 +79,11 @@ function openSidebar(event, id) {
 }
 
 @observer
-class FlowerSetupApp extends React.Component {
+class HarvestbatchSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    // loadPlants('flower')
+    loadHarvests()
   }
 
   openSidebar() {
@@ -120,4 +127,4 @@ class FlowerSetupApp extends React.Component {
   }
 }
 
-export default FlowerSetupApp
+export default HarvestbatchSetupApp

@@ -8,7 +8,7 @@ module Inventory
       :status,
       :current_growth_stage,
       :wet_weight,
-      :wet_weight_unit
+      :wet_weight_uom
 
     attribute :strain_name do |object|
       object.facility_strain.strain_name

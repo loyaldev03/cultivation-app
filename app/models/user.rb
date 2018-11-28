@@ -47,7 +47,7 @@ class User
 
   field :roles, type: Array, default: []
   field :facilities, type: Array, default: []
-
+  scope :active, -> { where(is_active: true) }
   ## Confirmable
   # field :confirmation_token,   type: String
   # field :confirmed_at,         type: Time

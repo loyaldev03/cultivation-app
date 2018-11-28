@@ -21,8 +21,9 @@ class TaskSerializer
   end
 
   #for showing in table column resources
-  attribute :resources do |object|
-    object.users.map { |a| a.display_name }.join(',')
+  attribute :resources do |object, params|
+    users = params[:users].select { |a| object.user_ids.include?(a.id) }
+    users.map { |a| a.display_name }.join(',')
   end
 
   attribute :item_display do |object|
@@ -46,40 +47,46 @@ class TaskSerializer
     object.user_ids.map { |a| a.to_s }
   end
 
-  attribute :estimated_hours do |object|
+  attribute :estimated_hours do |object, params|
+    children = params[:tasks].select { |a| a.parent_id == object.id.to_s }
     if object.is_phase
       sum = 0.0
-      object.children.each do |child|
-        sum += child.children.sum(:estimated_hours)
+      children.each do |child|
+        child_children = params[:tasks].select { |a| a.parent_id == child.id.to_s }
+        sum += child_children.map { |a| a.estimated_hours.to_f }.sum
       end
       '%.2f' % sum
     elsif object.is_category
-      '%.2f' % object.children.sum(:estimated_hours)
+      '%.2f' % children.map { |a| a.estimated_hours.to_f }.sum
     else
       '%.2f' % object.estimated_hours if object.estimated_hours
     end
   end
 
-  attribute :actual_hours do |object|
+  attribute :actual_hours do |object, params|
+    children = params[:tasks].select { |a| a.parent_id == object.id.to_s }
     if object.is_phase
       sum = 0.0
-      object.children.each do |child|
-        sum += child.children.sum(:actual_hours)
+      children.each do |child|
+        child_children = params[:tasks].select { |a| a.parent_id == child.id.to_s }
+        sum += child_children.map { |a| a.actual_hours.to_f }.sum
       end
       '%.2f' % sum
     elsif object.is_category
-      '%.2f' % object.children.sum(:actual_hours)
+      '%.2f' % children.map { |a| a.actual_hours.to_f }.sum
     else
       '%.2f' % object.actual_hours if object.actual_hours
     end
   end
 
-  attribute :estimated_cost do |object|
+  attribute :estimated_cost do |object, params|
+    children = params[:tasks].select { |a| a.parent_id == object.id.to_s }
     if object.is_phase
       sum = 0.0
-      object.children.each do |child|
+      children.each do |child|
         sum_category = 0.0
-        child.children.each do |a|
+        child_children = params[:tasks].select { |a| a.parent_id == child.id.to_s }
+        child_children.each do |a|
           sum_category += a.estimated_cost if a.estimated_cost
         end
         sum += sum_category
@@ -87,7 +94,7 @@ class TaskSerializer
       '%.2f' % sum
     elsif object.is_category
       sum = 0.0
-      object.children.each do |child|
+      children.each do |child|
         sum += child.estimated_cost if child.estimated_cost
       end
       '%.2f' % sum
@@ -96,15 +103,17 @@ class TaskSerializer
     end
   end
 
-  attribute :actual_cost do |object|
+  attribute :actual_cost do |object, params|
+    children = params[:tasks].select { |a| a.parent_id == object.id.to_s }
     if object.is_phase
       sum = 0.0
-      object.children.each do |child|
-        sum += child.children.sum(:actual_cost)
+      children.each do |child|
+        child_children = params[:tasks].select { |a| a.parent_id == child.id.to_s }
+        sum += child_children.map { |a| a.actual_cost.to_f }.sum
       end
       '%.2f' % sum
     elsif object.is_category
-      '%.2f' % object.children.sum(:actual_cost)
+      '%.2f' % children.map { |a| a.actual_cost.to_f }.sum
     else
       '%.2f' % object.actual_cost if object.actual_cost
     end

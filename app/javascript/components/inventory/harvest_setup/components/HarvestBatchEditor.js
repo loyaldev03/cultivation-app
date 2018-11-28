@@ -26,7 +26,10 @@ export default class HarvestBatchEditor extends React.Component {
       if (!id) {
         this.setState(this.resetState())
       } else {
-        getHarvestBatch(id, 'plants, vendor_invoice, vendor, purchase_order').then(({status, data}) => {
+        getHarvestBatch(
+          id,
+          'plants, vendor_invoice, vendor, purchase_order'
+        ).then(({ status, data }) => {
           if (status != 200) {
             alert('Something wrong')
             return
@@ -36,11 +39,16 @@ export default class HarvestBatchEditor extends React.Component {
           console.log(attr)
 
           const uom = this.props.uoms.find(x => x == attr.uom)
-          const plants = attr.plants.length > 0 ? attr.plants: [{ id: '', plant_id: '', wet_weight: '', wet_waste_weight: '' }] 
+          const plants =
+            attr.plants.length > 0
+              ? attr.plants
+              : [{ id: '', plant_id: '', wet_weight: '', wet_waste_weight: '' }]
 
           this.setState({
             ...this.resetState(),
-            cultivation_batch: this.batches.find(x => x.id == attr.cultivation_batch_id),
+            cultivation_batch: this.batches.find(
+              x => x.id == attr.cultivation_batch_id
+            ),
             harvest_name: attr.harvest_name,
             harvest_date: new Date(attr.harvest_date),
             location_id: attr.location_id,
@@ -60,9 +68,7 @@ export default class HarvestBatchEditor extends React.Component {
       id: '',
       cultivation_batch: null,
       harvest_name: '',
-      plants: [
-        { id: '', plant_id: '', wet_weight: '', wet_waste_weight: '' }
-      ],
+      plants: [{ id: '', plant_id: '', wet_weight: '', wet_waste_weight: '' }],
       plant_uom: null,
       harvest_date: null,
       location_id: '',
@@ -82,7 +88,7 @@ export default class HarvestBatchEditor extends React.Component {
       vendor_location_license_expiration_date: null,
       purchase_date: null,
       purchase_order_no: '',
-      invoice_no: '',
+      invoice_no: ''
     }
   }
 
@@ -161,7 +167,10 @@ export default class HarvestBatchEditor extends React.Component {
   }
 
   calculateTotalWeight = plants => {
-    return plants.reduce((total, x) => total + (parseFloat(x.wet_weight) || 0), 0)
+    return plants.reduce(
+      (total, x) => total + (parseFloat(x.wet_weight) || 0),
+      0
+    )
   }
 
   onSave = event => {
@@ -390,10 +399,11 @@ export default class HarvestBatchEditor extends React.Component {
       facility_id = cultivation_batch.facility_id
       facility_strain_id = cultivation_batch.facility_strain_id
     }
-    
+
     const uom = plant_uom ? plant_uom.label : ''
     const total_weight = this.calculateTotalWeight(plants)
-    const displayTotalWeight = (total_weight <= 0 || !total_weight) ? '--' : total_weight.toFixed(3)
+    const displayTotalWeight =
+      total_weight <= 0 || !total_weight ? '--' : total_weight.toFixed(3)
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">

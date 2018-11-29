@@ -138,7 +138,7 @@ export default class HarvestBatchEditor extends React.Component {
     } else {
       const plant = this.state.plants[index]
       const delete_plants = this.state.delete_plants
-      
+
       if (plant.id !== '') {
         delete_plants.push(plant.id)
       }

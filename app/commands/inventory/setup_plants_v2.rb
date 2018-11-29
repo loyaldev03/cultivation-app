@@ -53,16 +53,15 @@ module Inventory
       @wet_weight = args[:wet_weight]
       @weight_uom = args[:weight_uom]
       @wet_waste_weight = args[:wet_waste_weight]
-
       @catalogue = Inventory::Catalogue.plant
       @batch = Cultivation::Batch.find(args[:cultivation_batch_id])
-      @facility = Facility.find(@batch.facility_id)
-      @facility_strain = @batch.facility_strain
+      @facility = Facility.find(@batch.facility_id) if @batch.present?
+      @facility_strain = @batch.facility_strain if @batch.present?
 
       if args[:planting_date].present?
         @planting_date = args[:planting_date]
       else
-        @planting_date = @batch.start_date
+        @planting_date = @batch&.start_date
       end
 
       @vendor_id = args[:vendor_id]
@@ -80,6 +79,13 @@ module Inventory
       @vendor_state_license_expiration_date = args[:vendor_state_license_expiration_date]
       @vendor_location_license_expiration_date = args[:vendor_location_license_expiration_date]
       @vendor_location_license_num = args[:vendor_location_license_num]
+    end
+
+    # Exposed this so that compound command can use this to validate
+    # before calling methods that can change data.
+    def prevalidate
+      valid_permission? && valid_data?
+      errors
     end
 
     def call
@@ -108,18 +114,21 @@ module Inventory
       if plant_id.blank?
         errors.add(:plant_id, 'Plant ID is required.')
       elsif id.blank? && existing_records.count > 0
-        errors.add(:plant_id, "These plant ID #{existing_records.join(', ')} already exists in the system.")
+        errors.add(:plant_id, "These plant ID: #{plant_id} already exists in the system.")
       end
 
-      tray = Tray.find(location_id)
-      if tray.nil?
-        errors.add(:location_id, 'Tray not found.')
+      if location_id.blank?
+        errors.add(:location_id, 'Tray is required.')
+      else
+        tray = Tray.find(location_id)
+        errors.add(:location_id, 'Tray not found.') if tray.nil?
       end
+      errors.add(:cultivation_batch_id, 'Batch is required.') if batch.nil?
 
-      if batch.nil?
-        errors.add(:cultivation_batch_id, 'Batch is required.')
+      if purchase_order_no.present?
+        duplicate_po = Inventory::PurchaseOrder.where(purchase_order_no: purchase_order_no, id: {:$ne => purchase_order_id}).present?
+        errors.add(:purchase_order_no, 'Puchase Order no already used.') if duplicate_po
       end
-
       errors.empty?
     end
 

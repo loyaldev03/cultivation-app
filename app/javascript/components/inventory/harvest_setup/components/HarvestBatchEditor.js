@@ -36,8 +36,6 @@ export default class HarvestBatchEditor extends React.Component {
           }
 
           const attr = data.data.attributes
-          console.log(attr)
-
           const uom = this.props.uoms.find(x => x == attr.uom)
           const plants =
             attr.plants.length > 0
@@ -46,6 +44,7 @@ export default class HarvestBatchEditor extends React.Component {
 
           this.setState({
             ...this.resetState(),
+            id,
             cultivation_batch: this.batches.find(
               x => x.id == attr.cultivation_batch_id
             ),
@@ -69,6 +68,7 @@ export default class HarvestBatchEditor extends React.Component {
       cultivation_batch: null,
       harvest_name: '',
       plants: [{ id: '', plant_id: '', wet_weight: '', wet_waste_weight: '' }],
+      delete_plants: [],
       plant_uom: null,
       harvest_date: null,
       location_id: '',
@@ -136,9 +136,17 @@ export default class HarvestBatchEditor extends React.Component {
         plants: [{ plant_id: '', weight: '', uom: null }]
       })
     } else {
+      const plant = this.state.plants[index]
+      const delete_plants = this.state.delete_plants
+      
+      if (plant.id !== '') {
+        delete_plants.push(plant.id)
+      }
+
       this.state.plants.splice(index, 1)
       this.setState({
-        plants: [...this.state.plants]
+        plants: [...this.state.plants],
+        delete_plants: [...delete_plants]
       })
     }
     event.preventDefault()
@@ -204,7 +212,8 @@ export default class HarvestBatchEditor extends React.Component {
       plant_uom,
       total_weight,
       harvest_date,
-      location_id
+      location_id,
+      delete_plants
     } = this.state
 
     let errors = {},
@@ -263,6 +272,7 @@ export default class HarvestBatchEditor extends React.Component {
       harvest_name,
       cultivation_batch_id,
       plants,
+      delete_plants,
       uom: plant_uom ? plant_uom.value : '',
       total_weight,
       harvest_date,

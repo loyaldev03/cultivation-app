@@ -15,8 +15,10 @@ module Inventory
       :catalogue,
       :location_id,
       :mother_id,
-      :plants,
+      :plant_id,
       :planting_date,
+      :wet_weight,
+      :wet_waste_weight,
       :weight_uom,
       :facility,
       :facility_strain,
@@ -39,20 +41,18 @@ module Inventory
       :vendor_location_license_num
 
     def initialize(user, args)
+      @is_draft = false
       @user = user
       @args = HashWithIndifferentAccess.new(args)
+
       @id = args[:id]
-      @is_draft = false
+      @plant_id = args[:plant_id]
       @cultivation_batch_id = args[:cultivation_batch_id]
       @location_id = args[:location_id]
       @mother_id = args[:mother_id]
-
-      if args[:plants].present?
-        @plants = args[:plants].map { |x| HashWithIndifferentAccess.new(x) }
-      elsif @plants = split(args[:plant_ids]).map { |x| {plant_id: x} }
-      end
-
+      @wet_weight = args[:wet_weight]
       @weight_uom = args[:weight_uom]
+      @wet_waste_weight = args[:wet_waste_weight]
 
       @catalogue = Inventory::Catalogue.plant
       @batch = Cultivation::Batch.find(args[:cultivation_batch_id])
@@ -86,12 +86,12 @@ module Inventory
       if valid_permission? && valid_data?
         invoice_item = save_purchase_info
 
-        _plants = if id.blank?
-                    create_plants(invoice_item)
-                  else
-                    update_plant(invoice_item)
-                  end
-        _plants
+        plant = if id.blank?
+                  create_plant(invoice_item)
+                else
+                  update_plant(invoice_item)
+                end
+        plant
       end
     end
 
@@ -103,15 +103,12 @@ module Inventory
 
     def valid_data?
       return true if is_draft
+      existing_records = Inventory::Plant.where(plant_id: plant_id)
 
-      # All serial number should be new
-      plant_ids = plants.pluck { |x| x[:plant_id] }
-      existing_records = Inventory::Plant.in(plant_id: plant_ids).pluck(:plant_id)
-
-      if plants.empty?
-        errors.add(:plant_ids, 'Plant ID is required.')
+      if plant_id.blank?
+        errors.add(:plant_id, 'Plant ID is required.')
       elsif id.blank? && existing_records.count > 0
-        errors.add(:plant_ids, "These plant ID #{existing_records.join(', ')} already exists in the system.")
+        errors.add(:plant_id, "These plant ID #{existing_records.join(', ')} already exists in the system.")
       end
 
       tray = Tray.find(location_id)
@@ -170,62 +167,44 @@ module Inventory
     end
 
     def update_plant(invoice_item)
-      growth_stage = batch.current_growth_stage
-      updated_plants = []
-
-      plants.each do |p|
-        plant = Inventory::Plant.find(p.id)
-        raise 'Upsert not supported for update_plant(invoice_item)'
-
-        plant.plant_id = p.plant_id
-        plant.facility_strain = facility_strain
-        plant.cultivation_batch_id = cultivation_batch_id
-        plant.current_growth_stage = growth_stage
-        plant.location_id = location_id
-        plant.status = is_draft ? 'draft' : 'available'
-        plant.planting_date = planting_date
-        plant.mother_id = mother_id
-        plant.wet_weight = p[:wet_weight] if p[:wet_weight].present?
-        plant.wet_waste_weight = p[:wet_waste_weight] if p[:wet_waste_weight].present?
-        plant.wet_weight_uom = weight_uom if weight_uom.present?
-        plant.ref_id = invoice_item.id if invoice_item.present?
-        plant.ref_type = invoice_item.class.name if invoice_item.present?
-        plant.save!
-
-        updated_plants << plant
-      end
-
-      updated_plants
+      plant = Inventory::Plant.find(id)
+      plant.plant_id = plant_id
+      plant.facility_strain = facility_strain
+      plant.cultivation_batch_id = cultivation_batch_id
+      plant.current_growth_stage = batch.current_growth_stage
+      plant.location_id = location_id
+      plant.status = is_draft ? 'draft' : 'available'
+      plant.planting_date = planting_date
+      plant.mother_id = mother_id
+      plant.wet_weight = wet_weight
+      plant.wet_waste_weight = wet_waste_weight
+      plant.wet_weight_uom = weight_uom if weight_uom.present?
+      plant.ref_id = invoice_item.id if invoice_item.present?
+      plant.ref_type = invoice_item.class.name if invoice_item.present?
+      plant.save!
+      plant
     end
 
-    def create_plants(invoice_item)
+    def create_plant(invoice_item)
       growth_stage = batch.current_growth_stage
-      created_plants = []
-
-      Rails.logger.debug "\t\t\t>>>> plants"
-      Rails.logger.debug plants.inspect
-
-      plants.each do |p|
-        plant = Inventory::Plant.create!(
-          plant_id: p[:plant_id],
-          facility_strain_id: facility_strain.id,
-          cultivation_batch_id: cultivation_batch_id,
-          current_growth_stage: growth_stage,
-          created_by: user,
-          location_id: location_id,
-          location_type: 'tray',
-          status: is_draft ? 'draft' : 'available',
-          planting_date: planting_date,
-          mother_id: mother_id,
-          wet_weight: p[:wet_weight],
-          wet_waste_weight: p[:wet_waste_weight],
-          wet_weight_uom: weight_uom.present? ? weight_uom : nil,
-          ref_id: invoice_item ? invoice_item.id : nil,
-          ref_type: invoice_item ? invoice_item.class.name : nil,
-        )
-        created_plants << plant
-      end
-      created_plants
+      plant = Inventory::Plant.create!(
+        plant_id: plant_id,
+        facility_strain_id: facility_strain.id,
+        cultivation_batch_id: cultivation_batch_id,
+        current_growth_stage: growth_stage,
+        created_by: user,
+        location_id: location_id,
+        location_type: 'tray',
+        status: is_draft ? 'draft' : 'available',
+        planting_date: planting_date,
+        mother_id: mother_id,
+        wet_weight: wet_weight,
+        wet_waste_weight: wet_waste_weight,
+        wet_weight_uom: weight_uom.present? ? weight_uom : nil,
+        ref_id: invoice_item ? invoice_item.id : nil,
+        ref_type: invoice_item ? invoice_item.class.name : nil,
+      )
+      plant
     end
 
     def save_vendor
@@ -280,12 +259,12 @@ module Inventory
       end
 
       po_item.catalogue = catalogue
-      po_item.quantity = plants.count
+      po_item.quantity = 1
       po_item.uom = 'pc'
       po_item.price = 0
       po_item.currency = 'USD'
       po_item.tax = 0
-      po_item.description = "PO created from plant setup - #{plants.pluck(:plant_id).join(', ')}",
+      po_item.description = "PO created from plant setup - #{plant_id}",
       po_item.product_name = facility_strain.strain_name
       po_item.facility_strain = facility_strain
 

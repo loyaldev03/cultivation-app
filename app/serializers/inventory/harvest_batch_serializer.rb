@@ -50,7 +50,7 @@ module Inventory
              } do |object|
       object.plants.map do |x|
         {
-          id: x.id,
+          id: x.id.to_s,
           plant_id: x.plant_id,
           wet_weight: x.wet_weight,
           wet_waste_weight: x.wet_waste_weight,

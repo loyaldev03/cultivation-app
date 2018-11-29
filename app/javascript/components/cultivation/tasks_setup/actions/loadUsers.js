@@ -7,6 +7,5 @@ export default function loadUsers() {
     .then(function(data) {
       UserStore.load(data.data)
     })
-    .catch(function(error) {
-    })
+    .catch(function(error) {})
 }

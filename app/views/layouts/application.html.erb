@@ -32,7 +32,7 @@
                     <%= react_component 'utils/Avatar', {
                       firstName: current_user&.first_name,
                       lastName: current_user&.last_name,
-                      photoUrl: current_user&.photo_url,
+                      photoUrl: current_user&.photo_data
                     }, {
                       tag: 'span'
                     }%> 

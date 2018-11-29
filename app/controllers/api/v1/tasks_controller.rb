@@ -5,8 +5,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     if @batch.present?
       tasks = @batch.tasks.order_by(position: :asc)
       users = User.active
-      task_json = TaskSerializer.new(tasks,
-                                     params: {tasks: tasks, users: users}).serialized_json
+      task_json = TaskSerializer.new(tasks, params: {tasks: tasks, users: users}).serialized_json
       render json: task_json
     else
       render json: {data: 'Batch Not Found'}
@@ -16,9 +15,10 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   def update
     a = Cultivation::UpdateTask.call(task_params)
     if a.errors.empty?
-      options = {}
       task = Cultivation::Task.find(params[:id])
-      task_json = TaskSerializer.new(task, options).serialized_json
+      tasks = task.batch.tasks.order_by(position: :asc)
+      users = User.active
+      task_json = TaskSerializer.new(task, params: {tasks: tasks, users: users}).serialized_json
       render json: task_json
     else
       Rails.logger.debug "errors ===> #{a.errors}"
@@ -29,15 +29,17 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def create
     task = Cultivation::CreateTask.call(task_params).result
-    options = {}
-    task_json = TaskSerializer.new(task, options).serialized_json
+    tasks = @batch.tasks.order_by(position: :asc)
+    users = User.active
+    task_json = TaskSerializer.new(task, params: {tasks: tasks, users: users}).serialized_json
     render json: task_json
   end
 
   def indent
     task = Cultivation::IndentTask.call(task_params).result
-    options = {}
-    task_json = TaskSerializer.new(task, options).serialized_json
+    tasks = @batch.tasks.order_by(position: :asc)
+    users = User.active
+    task_json = TaskSerializer.new(task, params: {tasks: tasks, users: users}).serialized_json
     render json: task_json
   end
 

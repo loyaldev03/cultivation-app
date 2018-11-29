@@ -9,11 +9,9 @@ import TaskStore from './TaskStore'
 
 @observer
 class GanttChart extends React.Component {
-  
   componentDidMount() {
     this.initializeGanttChart()
   }
-
 
   initializeGanttChart() {
     var ganttChartView = document.querySelector('#ganttChartView')
@@ -212,12 +210,11 @@ class GanttChart extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div id="ganttChartView"/>
+        <div id="ganttChartView" />
         {JSON.stringify(TaskStore)}
       </React.Fragment>
-    )}
-
-
+    )
+  }
 }
 
 export default GanttChart

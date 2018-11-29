@@ -21,7 +21,6 @@ class GanttSetup extends React.Component {
     await loadTasks.loadbatch(this.props.batch_id)
   }
 
-
   render() {
     let activeTabs =
       'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
@@ -223,7 +222,7 @@ class GanttSetup extends React.Component {
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
-              <GanttChart/>
+              <GanttChart />
             </div>
           </div>
         </div>

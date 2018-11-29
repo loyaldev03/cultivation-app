@@ -1,7 +1,6 @@
 import TaskStore from './TaskStore'
 import { formatDate2, httpGetOptions } from '../../utils'
 
-
 class loadTask {
   formatData = tasks => {
     tasks.map(task => {

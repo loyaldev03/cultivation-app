@@ -5,10 +5,8 @@ export default function loadUsers() {
   fetch(url)
     .then(resp => resp.json()) // Transform the data into json
     .then(function(data) {
-      console.log(data)
       UserStore.load(data.data)
     })
     .catch(function(error) {
-      console.log(error)
     })
 }

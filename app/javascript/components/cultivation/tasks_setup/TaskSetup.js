@@ -71,7 +71,6 @@ class TaskSetup extends React.Component {
     } else {
       arrays = arrays.filter(k => k !== e.target.value)
     }
-    console.log(arrays)
     this.setState({ columns: arrays })
   }
 

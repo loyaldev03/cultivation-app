@@ -218,6 +218,8 @@ class BatchLocationApp extends React.Component {
     this.setState({ isLoading: false })
   }
 
+  // plantType = the type plant for location selection
+  // when it's 'mother', let user select the mother plant during clone location selection
   renderBookingsForPhase = (phase, quantity = 0, plantType = '') => {
     const bookings = this.getBookingsByPhase(phase)
     const selectedCapacity = sumBy(bookings, 'quantity')

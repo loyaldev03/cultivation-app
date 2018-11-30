@@ -41,15 +41,15 @@ class EditorSidebarHandler {
 
     if (data && data.width) {
       this.sidebarNode.style.width = data.width
-    } else {
-      this.sidebarNode.style.width = '450px'
     }
+    this.sidebarNode.style.transform = 'translate(0%)'
   }
 
   close(data) {
     const event = new CustomEvent('editor-sidebar-close', { detail: data })
     document.dispatchEvent(event)
-    this.sidebarNode.style.width = 0
+    this.sidebarNode.style.transform = 'translate(100%)'
+    this.sidebarNode.scrollTop = 0
   }
 
   setup(node) {

@@ -1,7 +1,8 @@
 $slidePanelBgColor: #fff;
 
 .rc-slide-panel {
-  width: 0; /*500px;*/
+  width: 450px;
+  transform: translate(100%);
   position: fixed;
   top: 0;
   right: 0;

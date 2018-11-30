@@ -329,12 +329,8 @@ class MotherEditor extends React.Component {
   }
 
   render() {
-    const widthStyle = this.props.isOpened
-      ? { width: '500px' }
-      : { width: '0px' }
-
     return (
-      <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
+      <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
           <div
             className="ph4 pv2 bb b--light-gray flex items-center"

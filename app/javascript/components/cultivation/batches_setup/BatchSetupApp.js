@@ -343,9 +343,7 @@ class BatchSetupApp extends React.Component {
           )}
           <div className="fl w-100 mt4">
             <div className="dim flex flex-row items-center pointer">
-              <i className="material-icons md-light-gray">
-                keyboard_arrow_left
-              </i>
+              <i className="material-icons md-light-gray">keyboard_arrow_left</i>
               <a href="/" className="db tr ttu link button--font light-grey">
                 Back
               </a>

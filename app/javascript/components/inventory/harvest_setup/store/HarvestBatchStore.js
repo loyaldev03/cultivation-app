@@ -1,17 +1,21 @@
 import { observable, action, computed } from 'mobx'
 
-class CultivationBatchStore {
+class HarvestBatchStore {
   batches = observable([])
   @observable isLoading = false
 
   @action
-  load(newBatches) {
-    this.batches.replace(newBatches)
+  load(batches) {
+    this.batches.replace(batches)
   }
 
   @action
-  prepend(newBatch) {
-    this.batches.replace([newBatch, ...this.batches.slice()])
+  prepend(newBatch = []) {
+    if (Array.isArray(newBatch)) {
+      this.batches.replace(newBatch.concat(this.batches.slice()))
+    } else {
+      this.batches.replace([newBatch, ...this.batches.slice()])
+    }
   }
 
   @action
@@ -28,5 +32,5 @@ class CultivationBatchStore {
   }
 }
 
-const cultivationBatchStore = new CultivationBatchStore()
-export default cultivationBatchStore
+const batchestore = new HarvestBatchStore()
+export default batchestore

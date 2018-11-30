@@ -69,11 +69,11 @@ export default class StrainAutoSuggest extends React.Component {
 
     if (!isDraft) {
       if (strain.length <= 0) {
-        errors = { ...errors, strain: ['Strain is required.'] }
+        errors.strain = ['Strain is required.']
       }
 
       if (strain_type.length <= 0) {
-        errors = { ...errors, strain_type: ['Strain type is required.'] }
+        errors.strain_type = ['Strain type is required.']
       }
     }
 

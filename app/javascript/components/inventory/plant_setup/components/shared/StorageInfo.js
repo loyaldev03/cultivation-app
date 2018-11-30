@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { FieldError } from '../../../../utils/FormHelpers'
+
+// TODO: Replace LocationPicker to v2 version
 import LocationPicker from '../../../../utils/LocationPicker'
 
 class StorageInfo extends React.Component {

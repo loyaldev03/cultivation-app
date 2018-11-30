@@ -6,7 +6,6 @@ class RawMaterialStore {
 
   @action
   load(newMaterials) {
-    // console.log(newMaterials)
     this.materials.replace(newMaterials)
   }
 
@@ -18,7 +17,6 @@ class RawMaterialStore {
   @action
   update(material) {
     const index = this.materials.findIndex(x => x.id === material.id)
-    console.log(index)
     if (index >= 0) {
       this.materials[index] = material
     }

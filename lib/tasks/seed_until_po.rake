@@ -251,9 +251,7 @@ task seed_until_po: :environment  do
 
 
 
-  # TODO:
   # 1. Task planning
-
   batch = Cultivation::Batch.create!(
     batch_no: 'b111',
     name: 'batch1',

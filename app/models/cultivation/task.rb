@@ -11,15 +11,14 @@ module Cultivation
     field :days_from_start_date, type: Integer
     field :start_date, type: DateTime
     field :end_date, type: DateTime
-    field :estimated_hours, type: BigDecimal
-    field :actual_hours, type: BigDecimal
-    field :estimated_cost, type: BigDecimal
-    field :actual_cost, type: BigDecimal
-
+    field :estimated_hours, type: Float
+    field :actual_hours, type: Float
+    field :estimated_cost, type: Float
+    field :actual_cost, type: Float
     field :is_phase, type: Boolean, default: -> { false }     # to identify phase
     field :is_category, type: Boolean, default: -> { false }  # to identify category
-    field :parent_id, type: String # FIXME: All id needs to be save as BSON::ObjectId
-    field :depend_on, type: String # FIXME: All id needs to be save as BSON::ObjectId
+    field :parent_id, type: BSON::ObjectId
+    field :depend_on, type: BSON::ObjectId
     field :task_type, type: Array, default: []
 
     belongs_to :batch, class_name: 'Cultivation::Batch'

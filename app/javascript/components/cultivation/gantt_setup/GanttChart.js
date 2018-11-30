@@ -21,28 +21,24 @@ class GanttChart extends React.Component {
     // this.initializeGanttChart()
   }
 
-  getTasks(){
-    if (TaskStore.slice().length > 0){
+  getTasks() {
+    if (TaskStore.slice().length > 0) {
       let newTasks = this.mapTask(this.state.tasks)
       console.log(newTasks)
       this.initializeGanttChart(newTasks)
     }
   }
 
-  mapTask = (tasks) => {
+  mapTask = tasks => {
     console.log(JSON.parse(tasks).data)
     let new_tasks = JSON.parse(tasks).data.map(task => {
-      return (
-        {
-          content: task.attributes.name,
-          start: new Date(task.attributes.start_date),
-          finish: new Date(task.attributes.end_date),
-          indentation: this.get_indentation(task),
-        }
-      )
+      return {
+        content: task.attributes.name,
+        start: new Date(task.attributes.start_date),
+        finish: new Date(task.attributes.end_date),
+        indentation: this.get_indentation(task)
+      }
     })
-
-
 
     // let new_tasks = tasks.map(task=>{
     //   return({
@@ -62,7 +58,10 @@ class GanttChart extends React.Component {
     if (task.attributes.is_category === true) {
       return 1
     }
-    if (task.attributes.is_category === false && task.attributes.is_phase === false) {
+    if (
+      task.attributes.is_category === false &&
+      task.attributes.is_phase === false
+    ) {
       return 2
     }
   }
@@ -266,13 +265,9 @@ class GanttChart extends React.Component {
     return (
       <React.Fragment>
         <div id="ganttChartView" />
-        {
-          TaskStore.slice().length < 1 &&
-          (
-            <div class="loading"> Loading Gantt Chart ...</div>
-          )
-        }
-
+        {TaskStore.slice().length < 1 && (
+          <div class="loading"> Loading Gantt Chart ...</div>
+        )}
       </React.Fragment>
     )
   }

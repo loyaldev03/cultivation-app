@@ -4,7 +4,7 @@ import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 import LocationPicker from '../../../utils/LocationPicker2'
-import { PurchaseInfo } from '../../../utils'
+import { PurchaseInfo, formatDate } from '../../../utils'
 import setupHarvestBatch from '../actions/setupHarvestBatch'
 import getHarvestBatch from '../actions/getHarvestBatch'
 
@@ -356,7 +356,7 @@ export default class HarvestBatchEditor extends React.Component {
               Batch start date
             </label>
             <p className="f6 mt0 mb2 tr">
-              {new Date(start_date).toLocaleDateString()}
+              {formatDate(start_date)}
             </p>
           </div>
         </div>

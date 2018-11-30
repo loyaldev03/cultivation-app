@@ -28,6 +28,9 @@ module Cultivation
         }
         # Update child and dependents tasks's start & end dates
         update_task(task, batch_tasks, opt)
+        # Save other fields on Task that are not handle by bulk_update
+        task.save if errors.empty?
+        # TODO::ANDY: Estimated Hours are not calculating
         # Extend end date to Category and Phas
         update_tasks_end_date(task, batch_tasks, opt)
         # Update batch
@@ -64,11 +67,10 @@ module Cultivation
         reference_task: task,
       }.merge(opt)
       tasks_changes = find_changes(task, batch_tasks, opt)
-      # Rails.logger.debug "`total changes found: #{tasks_changes.length}`"
-
       if valid_data?(tasks_changes, opt)
         bulk_update(tasks_changes) # bulk update
-        task
+      else
+        Rails.logger.debug 'Invalid Data'
       end
       task
     end

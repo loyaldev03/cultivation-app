@@ -5,17 +5,19 @@ module Cultivation
 
     field :batch_no, type: String
     field :name, type: String
-    # TODO: [ANDY]: Need to save plants (mother / clones / seeds)
-    #               selected from BatchSetup screen
     field :batch_source, type: String
     field :grow_method, type: String
     field :start_date, type: DateTime
     field :estimated_harvest_date, type: DateTime
-    field :quantity, type: Integer # Plant quantity for the batch
+    # Planned quantity for the batch (capacity needed)
+    field :quantity, type: Integer
     field :facility_id, type: BSON::ObjectId
-
     field :current_growth_stage, type: String
+    # Active Batch would affect the capacity of the Booked Tray.
     field :is_active, type: Boolean, default: -> { false }
+    # Plant selected during batch setup. Depends on the batch_source
+    # this can either the mothers' plantId or the clones' plantId
+    field :selected_plants, type: Array, default: []
 
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     has_many :tray_plans, class_name: 'Cultivation::TrayPlan'
@@ -47,8 +49,8 @@ module Cultivation
     end
 
     def total_estimated_costs
-      #hours per day = estimated hours(5hours) / duration(5 days)
-      #hours_per_person = hours_per_day / no of resource
+      # hours per day = estimated hours(5hours) / duration(5 days)
+      # hours_per_person = hours_per_day / no of resource
       total_cost = 0.0
       tasks.includes(:users).each do |task|
         hours_per_day = task.duration.to_i > 0 ? (task.estimated_hours.to_f / task.duration.to_i) : 0

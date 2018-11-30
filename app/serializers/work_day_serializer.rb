@@ -4,7 +4,9 @@ class WorkDaySerializer
   attributes :user_id, :date, :is_done, :time_logs, :notes, :materials_wasted, :duration
 
   attributes :task do |object|
-    TaskSerializer.new(object.task).serializable_hash[:data]
+    tasks = object.task.batch.tasks.order_by(position: :asc)
+    users = User.active
+    TaskSerializer.new(object.task, params: {users: users, tasks: tasks}).serializable_hash[:data]
   end
 
   attributes :status do |object|

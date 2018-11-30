@@ -24,4 +24,13 @@ class Facility
     # phase / purpose room is available in the facility
     self.rooms.map { |r| r.sections.any? ? r.sections.pluck(:purpose) : r.purpose }.flatten.compact
   end
+
+  def growth_stages
+    # Based on whether there's Veg / Veg1 + Veg2 rooms, set the Cultivation Phases
+    if purposes.include?(Constants::CONST_VEG1) && purposes.include?(Constants::CONST_VEG2)
+      Constants::CULTIVATION_PHASES_2V
+    else
+      Constants::CULTIVATION_PHASES_1V
+    end
+  end
 end

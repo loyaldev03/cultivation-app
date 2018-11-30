@@ -229,21 +229,23 @@ module Cultivation
 
     def save_record(args)
       # build a phase schedule hash
-      phase_schedule = build_phase_schedule(args[:start_date], args[:phase_duration])
+      phase_schedule = build_phase_schedule(args[:start_date],
+                                            args[:phase_duration])
 
       batch = Cultivation::Batch.new
       batch.facility_id = args[:facility_id]
       batch.batch_source = args[:batch_source]
       batch.facility_strain_id = args[:facility_strain_id]
       batch.start_date = args[:start_date]
-      batch.estimated_harvest_date = phase_schedule[Constants::CONST_DRY][0] # Start Day of Dry is the Harvest Date
+      # Start Day of Dry is the Harvest Date
+      batch.estimated_harvest_date = phase_schedule[Constants::CONST_DRY][0]
       batch.grow_method = args[:grow_method]
       batch.quantity = args[:quantity]
-      batch.batch_no = NextFacilityCode.call(:batch, Cultivation::Batch.last.try(:batch_no)).result
+      batch.batch_no = NextFacilityCode.call(:batch,
+                                             Cultivation::Batch.
+        last.try(:batch_no)).result
       batch.name = batch.batch_no
       batch.current_growth_stage = Constants::CONST_CLONE
-
-      # TODO [ANDY]: UPDATE PHASE DURATION
 
       batch.save!
 
@@ -253,7 +255,8 @@ module Cultivation
       start_date = nil
       task_templates.each do |task|
         task_id = BSON::ObjectId.new
-        new_task = build_task(task_id, batch, start_date, task, phase_id, category_id, phase_schedule)
+        new_task = build_task(task_id, batch, start_date, task, phase_id,
+                              category_id, phase_schedule)
         new_tasks << new_task
         if task[:is_phase] == 'true'
           phase_id = task_id
@@ -266,48 +269,13 @@ module Cultivation
       batch
     end
 
-    def build_phase_schedule(start_date, phase_duration)
-      b_start_date = Time.parse(start_date)
-
-      clone_start_date = b_start_date
-      clone_end_date = clone_start_date + (phase_duration[Constants::CONST_CLONE].to_i).days
-
-      veg_start_date = clone_end_date + 1
-      veg_end_date = veg_start_date + (phase_duration[Constants::CONST_VEG].to_i).days
-
-      veg1_start_date = clone_end_date + 1
-      veg1_end_date = veg1_start_date + (phase_duration[Constants::CONST_VEG1].to_i).days
-
-      veg2_start_date = veg1_end_date + 1
-      veg2_end_date = veg2_start_date + (phase_duration[Constants::CONST_VEG2].to_i).days
-
-      flower_start_date = veg2_end_date + 1
-      flower_end_date = flower_start_date + (phase_duration[Constants::CONST_FLOWER].to_i).days
-
-      dry_start_date = flower_end_date + 1
-      dry_end_date = dry_start_date + (phase_duration[Constants::CONST_DRY].to_i).days
-
-      cure_start_date = dry_end_date + 1
-      cure_end_date = cure_start_date + (phase_duration[Constants::CONST_CURE].to_i).days
-
-      {
-        Constants::CONST_CLONE => [clone_start_date, clone_end_date, phase_duration[Constants::CONST_CLONE].to_i],
-        Constants::CONST_VEG => [veg_start_date, veg_end_date, (phase_duration[Constants::CONST_VEG].to_i)],
-        Constants::CONST_VEG1 => [veg1_start_date, veg1_end_date, (phase_duration[Constants::CONST_VEG1].to_i)],
-        Constants::CONST_VEG2 => [veg2_start_date, veg2_end_date, (phase_duration[Constants::CONST_VEG2].to_i)],
-        Constants::CONST_FLOWER => [flower_start_date, flower_end_date, (phase_duration[Constants::CONST_FLOWER].to_i)],
-        Constants::CONST_DRY => [dry_start_date, dry_end_date, (phase_duration[Constants::CONST_DRY].to_i)],
-        Constants::CONST_CURE => [cure_start_date, cure_end_date, (phase_duration[Constants::CONST_CURE].to_i)],
-      }
-    end
-
     def build_task(task_id, batch, start_date, task, phase_id, category_id, phase_schedule)
       parent_id = get_parent_id(task, phase_id, category_id)
       depend_on = get_depend_on(task, phase_id, category_id)
 
       if to_boolean(task[:is_phase]) && phase_schedule[task[:phase]]
         # Rails.logger.debug "\033[31m Task is_phase: #{task[:phase]} \033[0m"
-        # is_phase Tasks, use the duration that the user set
+        # For 'is_phase' Task, use duration provided by user
         start_date = phase_schedule[task[:phase]][0]
         end_date = phase_schedule[task[:phase]][1]
         duration = phase_schedule[task[:phase]][2]
@@ -341,36 +309,88 @@ module Cultivation
       record
     end
 
+    def build_phase_schedule(start_date, phase_duration)
+      b_start_date = Time.parse(start_date)
+
+      clone_start_date = b_start_date
+      clone_end_date = clone_start_date +
+                       phase_duration[Constants::CONST_CLONE].to_i.days
+
+      veg_start_date = clone_end_date + 1
+      veg_end_date = veg_start_date +
+                     phase_duration[Constants::CONST_VEG].to_i.days
+
+      veg1_start_date = clone_end_date + 1
+      veg1_end_date = veg1_start_date +
+                      phase_duration[Constants::CONST_VEG1].to_i.days
+
+      veg2_start_date = veg1_end_date + 1
+      veg2_end_date = veg2_start_date +
+                      phase_duration[Constants::CONST_VEG2].to_i.days
+
+      flower_start_date = veg2_end_date + 1
+      flower_end_date = flower_start_date +
+                        phase_duration[Constants::CONST_FLOWER].to_i.days
+
+      dry_start_date = flower_end_date + 1
+      dry_end_date = dry_start_date +
+                     phase_duration[Constants::CONST_DRY].to_i.days
+
+      cure_start_date = dry_end_date + 1
+      cure_end_date = cure_start_date +
+                      phase_duration[Constants::CONST_CURE].to_i.days
+
+      {
+        Constants::CONST_CLONE => [clone_start_date,
+                                   clone_end_date,
+                                   phase_duration[Constants::CONST_CLONE].to_i],
+        Constants::CONST_VEG => [veg_start_date,
+                                 veg_end_date,
+                                 phase_duration[Constants::CONST_VEG].to_i],
+        Constants::CONST_VEG1 => [veg1_start_date,
+                                  veg1_end_date,
+                                  phase_duration[Constants::CONST_VEG1].to_i],
+        Constants::CONST_VEG2 => [veg2_start_date,
+                                  veg2_end_date,
+                                  phase_duration[Constants::CONST_VEG2].to_i],
+        Constants::CONST_FLOWER => [flower_start_date,
+                                    flower_end_date,
+                                    phase_duration[Constants::CONST_FLOWER].to_i],
+        Constants::CONST_DRY => [dry_start_date,
+                                 dry_end_date,
+                                 phase_duration[Constants::CONST_DRY].to_i],
+        Constants::CONST_CURE => [cure_start_date,
+                                  cure_end_date,
+                                  phase_duration[Constants::CONST_CURE].to_i],
+      }
+    end
+
     def get_parent_id(task, phase_id, category_id)
-      if task[:is_category] == 'false' and task[:is_phase] == 'false' #normal task
+      if task[:is_category] == 'false' && task[:is_phase] == 'false' #normal task
         # [fathi] - temporary change for demo
         # parent_id = category_id
         parent_id = phase_id
-      elsif task[:is_category] == 'true' and task[:is_phase] == 'false' #category task
+      elsif task[:is_category] == 'true' && task[:is_phase] == 'false' #category task
         parent_id = phase_id
-      elsif task[:is_category] == 'false' and task[:is_phase] == 'true' #phase task
+      elsif task[:is_category] == 'false' && task[:is_phase] == 'true' #phase task
         parent_id = nil
       end
-      return parent_id
+      parent_id
     end
 
     def get_depend_on(task, phase_id, category_id)
-      if task[:is_category] == 'false' and task[:is_phase] == 'false' #normal task
+      if task[:is_category] == 'false' && task[:is_phase] == 'false' #normal task
         depend_on = nil
-      elsif task[:is_category] == 'true' and task[:is_phase] == 'false' #category task
+      elsif task[:is_category] == 'true' && task[:is_phase] == 'false' #category task
         depend_on = category_id
-      elsif task[:is_category] == 'false' and task[:is_phase] == 'true' #phase task
+      elsif task[:is_category] == 'false' && task[:is_phase] == 'true' #phase task
         depend_on = phase_id
       end
-      return depend_on
+      depend_on
     end
 
     def to_boolean(obj)
-      if obj == 'true'
-        true
-      else
-        false
-      end
+      obj == 'true'
     end
   end
 end

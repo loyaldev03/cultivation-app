@@ -58,11 +58,27 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def task_params
-    params.require(:task).permit(:parent_id, :phase, :task_category, :name, :duration, :action,
-                                 :estimated_hours, :type, :position,
+    params.require(:task).permit(:phase,
+                                 :task_category,
+                                 :name,
+                                 :duration,
+                                 :days_from_start_date,
+                                 :start_date,
+                                 :end_date,
+                                 :estimated_hours,
+                                 :estimated_cost,
+                                 :is_phase,
+                                 :is_category,
+                                 :parent_id,
+                                 :depend_on,
+                                 :task_type,
+                                 :position,
+                                 :action,
                                  :task_related_id,
-                                 :days_from_start_date, :start_date, :end_date, :expected_hours_taken,
-                                 :time_taken, :id, :batch_id,
+                                 :expected_hours_taken,
+                                 :time_taken,
+                                 :id,
+                                 :batch_id,
                                  assigned_employee: [:label, :value], user_ids: [], task_type: [])
   end
 end

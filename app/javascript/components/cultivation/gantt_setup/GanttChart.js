@@ -9,11 +9,65 @@ import TaskStore from './TaskStore'
 
 @observer
 class GanttChart extends React.Component {
-  componentDidMount() {
-    this.initializeGanttChart()
+  constructor(props) {
+    super(props)
+    this.state = {
+      tasks: props.tasks,
+      ready: false
+    }
   }
 
-  initializeGanttChart() {
+  componentDidMount() {
+    // this.initializeGanttChart()
+  }
+
+  getTasks(){
+    if (TaskStore.slice().length > 0){
+      let newTasks = this.mapTask(this.state.tasks)
+      console.log(newTasks)
+      this.initializeGanttChart(newTasks)
+    }
+  }
+
+  mapTask = (tasks) => {
+    console.log(JSON.parse(tasks).data)
+    let new_tasks = JSON.parse(tasks).data.map(task => {
+      return (
+        {
+          content: task.attributes.name,
+          start: new Date(task.attributes.start_date),
+          finish: new Date(task.attributes.end_date),
+          indentation: this.get_indentation(task),
+        }
+      )
+    })
+
+
+
+    // let new_tasks = tasks.map(task=>{
+    //   return({
+    //       content: task.attributes.name,
+    //       start: formatDate2(task.attributes.start_date),
+    //       finish: formatDate2(task.attributes.end_date),
+    //       indentation: this.get_indentation(task),
+    //   })
+    // })
+    return new_tasks
+  }
+
+  get_indentation = task => {
+    if (task.attributes.is_phase === true) {
+      return 0
+    }
+    if (task.attributes.is_category === true) {
+      return 1
+    }
+    if (task.attributes.is_category === false && task.attributes.is_phase === false) {
+      return 2
+    }
+  }
+
+  initializeGanttChart(tasks) {
     var ganttChartView = document.querySelector('#ganttChartView')
 
     var date = new Date(),
@@ -67,7 +121,6 @@ class GanttChart extends React.Component {
       }
     ]
 
-    console.log(items[0])
     items[3].predecessors = [{ item: items[0], dependencyType: 'SS' }]
     items[7].predecessors = [{ item: items[6], lag: 2 * 60 * 60 * 1000 }]
     items[8].predecessors = [{ item: items[4] }, { item: items[5] }]
@@ -123,13 +176,13 @@ class GanttChart extends React.Component {
       width: 40,
       cellTemplate: DlhSoft.Controls.GanttChartView.getIndexColumnTemplate()
     })
-    columns.splice(3 + indexOffset, 0, {
-      header: 'Effort (h)',
-      width: 80,
-      cellTemplate: DlhSoft.Controls.GanttChartView.getTotalEffortColumnTemplate(
-        64
-      )
-    })
+    // columns.splice(3 + indexOffset, 0, {
+    //   header: 'Effort (h)',
+    //   width: 80,
+    //   cellTemplate: DlhSoft.Controls.GanttChartView.getTotalEffortColumnTemplate(
+    //     64
+    //   )
+    // })
     columns.splice(4 + indexOffset, 0, {
       header: 'Duration (d)',
       width: 80,
@@ -203,15 +256,23 @@ class GanttChart extends React.Component {
     ]
 
     settings.areTaskDependencyConstraintsEnabled = true
-
-    DlhSoft.Controls.GanttChartView.initialize(ganttChartView, items, settings)
+    console.log(tasks)
+    console.log(JSON.stringify(TaskStore.slice()))
+    DlhSoft.Controls.GanttChartView.initialize(ganttChartView, tasks, settings)
   }
 
   render() {
+    let getTasks = this.getTasks()
     return (
       <React.Fragment>
         <div id="ganttChartView" />
-        {JSON.stringify(TaskStore)}
+        {
+          TaskStore.slice().length < 1 &&
+          (
+            <div class="loading"> Loading Gantt Chart ...</div>
+          )
+        }
+
       </React.Fragment>
     )
   }

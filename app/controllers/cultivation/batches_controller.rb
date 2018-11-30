@@ -31,6 +31,9 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def gantt
+    tasks = @batch.tasks.order_by(position: :asc)
+    users = User.active
+    @tasks = TaskSerializer.new(tasks, params: {tasks: tasks, users: users}).serialized_json
   end
 
   def locations

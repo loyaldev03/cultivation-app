@@ -8,12 +8,13 @@ import { observer, Provider } from 'mobx-react'
 import { formatDate2 } from '../../utils'
 import GanttChart from './GanttChart'
 import loadTasks from './loadTask'
-
+import TaskStore from './TaskStore'
 class GanttSetup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      batch: props.batch
+      batch: props.batch,
+      tasks: props.tasks
     }
   }
 
@@ -222,7 +223,7 @@ class GanttSetup extends React.Component {
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
-              <GanttChart />
+              <GanttChart tasks={this.state.tasks} />
             </div>
           </div>
         </div>

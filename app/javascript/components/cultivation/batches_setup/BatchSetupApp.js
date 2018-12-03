@@ -267,7 +267,7 @@ class BatchSetupApp extends React.Component {
                 </label>
 
                 <PhaseDurationInput
-                  text="Close Phase"
+                  text="Clone Phase"
                   onChange={this.handleChangeDuration('clone')}
                 />
                 {hasVeg2phase ? (

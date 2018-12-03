@@ -1,8 +1,12 @@
-import rawMaterialStore from '../store/RawMaterialStore'
+import batchStore from '../store/HarvestBatchStore'
 import { httpPostOptions } from '../../../utils'
 
-export const setupSeed = payload => {
-  return fetch('/api/v1/raw_materials/setup_seed', httpPostOptions(payload))
+const setupHarvestBatch = payload => {
+  console.group('setupHarvestBatch')
+  console.log(payload)
+  console.groupEnd()
+
+  return fetch('/api/v1/plants/setup_harvest_batch', httpPostOptions(payload))
     .then(response => {
       // console.log(response.status)
       return response.json().then(data => ({
@@ -11,17 +15,20 @@ export const setupSeed = payload => {
       }))
     })
     .then(result => {
+      console.log(result)
       const { status, data } = result
       if (status !== 200) {
         return result
       }
 
       if (payload.id) {
-        rawMaterialStore.update(data.data)
+        batchStore.update(data.data)
       } else {
-        rawMaterialStore.prepend(data.data)
+        batchStore.prepend(data.data)
       }
 
       return result
     })
 }
+
+export default setupHarvestBatch

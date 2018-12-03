@@ -35,6 +35,10 @@ module Inventory
         name: vendor.name,
         vendor_no: vendor.vendor_no,
         address: vendor.address,
+        state_license_num: vendor.state_license_num,
+        state_license_expiration_date: vendor.state_license_expiration_date,
+        location_license_expiration_date: vendor.location_license_expiration_date,
+        location_license_num: vendor.location_license_num,
       }
     end
 
@@ -46,6 +50,7 @@ module Inventory
       {
         id: po.id.to_s,
         purchase_order_no: po.purchase_order_no,
+        purchase_order_date: po.purchase_order_date,
       }
     end
 

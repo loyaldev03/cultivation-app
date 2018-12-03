@@ -201,26 +201,11 @@ module Inventory
       return nil if vendor.nil?
 
       facility_strain = batch.facility_strain
-      Rails.logger.debug "\t\t\t>>>>> facility_strain: #{facility_strain}, facility_strain.id: #{facility_strain&.id}"
-      Rails.logger.debug "\t\t\t>>>>> vendor: #{vendor}, vendor.id: #{vendor&.id}"
       purchase_order = Inventory::PurchaseOrder.find_or_create_by!(purchase_order_no: purchase_order_no, vendor: vendor) do |po|
         po.purchase_order_date = purchase_date
         po.facility = facility_strain.facility
         po.status = Inventory::PurchaseOrder::INVENTORY_SETUP
       end
-
-      # TODO: Try replace with following block
-      # po_item = purchase_order.items.find_or_create_by!(facility_strain_id: facility_strain.id) do |item|
-      #   item.catalogue = catalogue
-      #   item.quantity = plant_ids.count
-      #   item.uom = Common::UnitOfMeasure.pieces('pc')
-      #   item.price = 0
-      #   item.currency = 'USD'
-      #   item.tax = 0
-      #   item.description = "PO created from Mother Plant setup - #{plant_ids.join(', ')}"
-      #   item.product_name = "#{facility_strain.strain_name} - Mother Plant"
-      # end
-      # po_item
 
       if id.blank?
         po_item = purchase_order.items.create!(

@@ -8,7 +8,8 @@ module Inventory
     belongs_to :created_by, class_name: 'User'
     belongs_to :cultivation_batch, class_name: 'Cultivation::Batch', optional: true
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
-    # belongs_to :harvest_batch,      class_name: 'Cultivation::HarvestBatch',  optional: true
+    belongs_to :harvest_batch, class_name: 'Inventory::HarvestBatch', optional: true
+
     # belongs_to :manicure_batch,     class_name: 'Cultivation::ManicureBatch', optional: true
     # has_many :item_histories
 
@@ -31,8 +32,9 @@ module Inventory
     field :destroyed_date, type: DateTime
     field :mother_id, type: BSON::ObjectId
 
-    field :wet_weight, type: BigDecimal
-    field :wet_weight_unit, type: String
+    field :wet_weight, type: BigDecimal, default: 0
+    field :wet_waste_weight, type: BigDecimal, default: 0
+    field :wet_weight_uom, type: String
 
     field :last_metrc_update, type: DateTime
     field :ref_id, type: BSON::ObjectId

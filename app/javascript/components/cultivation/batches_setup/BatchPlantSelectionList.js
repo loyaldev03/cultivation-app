@@ -168,6 +168,8 @@ class BatchPlantSelectionList extends React.Component {
   }
 
   render() {
+    // plantType = the type plant for location selection
+    // when it's 'mother', let user select the mother plant during clone location selection
     const { phase, plantType, bookings } = this.props
     const { plants } = plantStore
     // console.log('bookings', bookings)
@@ -188,11 +190,7 @@ class BatchPlantSelectionList extends React.Component {
       }
     }
 
-    if (!plantType && phase !== GROWTH_PHASE.CLONE) {
-      return this.renderBookingTable(bookings, phase)
-    }
-
-    return <div>WIP</div>
+    return this.renderBookingTable(bookings, phase)
   }
 }
 

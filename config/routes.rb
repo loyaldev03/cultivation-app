@@ -122,14 +122,16 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :plants, only: [:show] do
-        get 'all/(:current_growth_stage)',    action: :all, on: :collection
-        get 'search/:current_growth_stage/(:facility_strain_id)/(:search)',    action: :search, on: :collection
         collection do
+          get 'all/(:current_growth_stage)', action: :all
+          get 'search/:current_growth_stage/(:facility_strain_id)/(:search)', action: :search
+          get 'harvests'
+          get 'harvests/:id', action: 'show_harvest'
           post 'setup_mother'
           post 'setup_plants'
+          post 'setup_harvest_batch'
         end
       end
-
 
       resources :raw_materials, only: [:index, :show] do
         collection do
@@ -139,10 +141,9 @@ Rails.application.routes.draw do
         end
       end
 
-      # namespace :purchasing do
-      #   resources :purchase_orders
-      #   resources :vendor_invoices
-      # end
+      resources :vendors, only: [:index]
+      resources :purchase_orders, only: [:index]
+      resources :vendor_invoices, only: [:index, :show]
 
       resources :strains, only: [:index, :create, :show] do
         get 'suggest', on: :collection

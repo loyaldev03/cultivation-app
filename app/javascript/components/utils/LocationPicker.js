@@ -1,4 +1,4 @@
-/** To be removed */
+// TODO: Replace caller of LocationPicker to v2 version
 import React from 'react'
 import Select from 'react-select'
 import PropTypes from 'prop-types'

@@ -130,30 +130,27 @@ class BatchEditor extends React.Component {
 
     let errors = {}
     if (name.length <= 0) {
-      errors = { ...errors, name: ['Batch name is required.'] }
+      errors.name = ['Batch name is required.']
     }
 
     if (facility_strain_id.length <= 0) {
-      errors = { ...errors, facility_strain_id: ['Strain is required.'] }
+      errors.facility_strain_id = ['Strain is required.']
     }
 
     if (batch_source.length <= 0) {
-      errors = { ...errors, batch_source: ['Batch source is required.'] }
+      errors.batch_source = ['Batch source is required.']
     }
 
     if (grow_method.length <= 0) {
-      errors = { ...errors, grow_method: ['Grow method is required.'] }
+      errors.grow_method = ['Grow method is required.']
     }
 
     if (start_date == null) {
-      errors = { ...errors, start_date: ['Start date is required.'] }
+      errors.start_date = ['Start date is required.']
     }
 
     if (current_growth_stage.length <= 0) {
-      errors = {
-        ...errors,
-        current_growth_stage: ['Current growth phase is required.']
-      }
+      errors.current_growth_stage = ['Current growth phase is required.']
     }
 
     const isValid = Object.getOwnPropertyNames(errors).length === 0
@@ -181,14 +178,10 @@ class BatchEditor extends React.Component {
   }
 
   render() {
-    const widthStyle = this.props.isOpened
-      ? { width: '500px' }
-      : { width: '0px' }
-
     const { batch_sources, facility_strains, grow_methods } = this.props
 
     return (
-      <div className="rc-slide-panel" data-role="sidebar" style={widthStyle}>
+      <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
           <div
             className="ph4 pv2 bb b--light-gray flex items-center"
@@ -321,6 +314,9 @@ class BatchEditor extends React.Component {
                 </option>
                 <option value="dry" key="dry">
                   Dry
+                </option>
+                <option value="cure" key="cure">
+                  Cure
                 </option>
               </select>
               <FieldError

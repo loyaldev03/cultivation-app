@@ -60,6 +60,7 @@ class User
   # field :locked_at,       type: Time
   #
 
+  # TODO: To remove this to a query object
   def cultivation_tasks
     Cultivation::Task.in(user_ids: id)
   end
@@ -72,9 +73,5 @@ class User
   # This need to be refactor
   def is_dev?
     true
-  end
-
-  def cultivation_tasks
-    Cultivation::Task.in(user_ids: id)
   end
 end

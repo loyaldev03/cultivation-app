@@ -1,6 +1,6 @@
 class Inventory::PlantsController < ApplicationController
   before_action :load_facility_strains, only: [:mothers, :cultivation_batches]
-  before_action :load_batches, only: [:clones, :vegs, :flowers, :harvest_batches, :manicure]
+  before_action :load_batches, only: [:clones, :vegs, :flowers, :harvest_batches]
   before_action :load_locations
   before_action :load_scandit_licence, except: [:cultivation_batches]
 
@@ -24,15 +24,12 @@ class Inventory::PlantsController < ApplicationController
   end
 
   def harvest_batches
+    cultivation_batches = Cultivation::Batch.includes(:facility_strain, :tasks).in(current_growth_stage: ['dry', 'cure'])
+    @cultivation_batches = BatchSerializer.new(cultivation_batches, params: {exclude_tasks: true}).serializable_hash[:data]
+    @uoms = Common::UnitOfMeasure.where(dimension: 'weights').map &:unit
   end
 
-  def manicure(batches)
-  end
-
-  # def waste_logs
-  # end
-
-  # def destroy_plant
+  # def manicure(batches)
   # end
 
   private

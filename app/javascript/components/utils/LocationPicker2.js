@@ -174,7 +174,7 @@ class LocationPicker extends React.Component {
     } else if (mode === 'flower') {
       return 'Flower room ID'
     } else if (mode === 'dry') {
-      return 'Dry room ID'
+      return 'Location in Dry/ Cure Room'
     } else if (mode === 'facility') {
       return 'Facility'
     } else {

@@ -16,6 +16,10 @@ module Cultivation
     private
 
     def indent(task, args)
+      if task&.indelible
+        errors.add(:id, "Cannot indent indelible task: #{task.name}")
+        return
+      end
       if args[:action] == 'in'
         #task become child
         if task.is_phase

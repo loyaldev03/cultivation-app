@@ -114,9 +114,9 @@ module Cultivation
         end_date: end_date,
         days_from_start_date: task[:days_from_start_date],
         estimated_hours: task[:estimated_hours],
-        is_phase: task[:is_phase],
-        is_category: task[:is_category],
-        indelible: task[:indelible],
+        is_phase: task[:is_phase] || false,
+        is_category: task[:is_category] || false,
+        indelible: task[:indelible] || false,
         parent_id: parent_id,
         depend_on: depend_on,
       }

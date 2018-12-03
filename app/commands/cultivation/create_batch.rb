@@ -54,12 +54,9 @@ module Cultivation
       batch.estimated_harvest_date = phase_schedule[Constants::CONST_DRY][0]
       batch.grow_method = args[:grow_method]
       batch.quantity = args[:quantity]
-      batch.batch_no = NextFacilityCode.call(:batch,
-                                             Cultivation::Batch.
-        last.try(:batch_no)).result
+      batch.batch_no = get_next_batch_no
       batch.name = batch.batch_no
       batch.current_growth_stage = Constants::CONST_CLONE
-
       batch.save!
 
       phase_id = nil
@@ -179,6 +176,11 @@ module Cultivation
                                   cure_end_date,
                                   phase_duration[Constants::CONST_CURE].to_i],
       }
+    end
+
+    def get_next_batch_no
+      last_batch_no = Cultivation::Batch.last&.batch_no
+      NextFacilityCode.call(:batch, last_batch_no).result
     end
 
     # For Phase task, parent_id is nil

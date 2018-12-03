@@ -116,6 +116,7 @@ module Cultivation
         estimated_hours: task[:estimated_hours],
         is_phase: task[:is_phase],
         is_category: task[:is_category],
+        indelible: task[:indelible],
         parent_id: parent_id,
         depend_on: depend_on,
       }

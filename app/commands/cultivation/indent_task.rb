@@ -21,14 +21,14 @@ module Cultivation
         return
       end
       if args[:action] == 'in'
-        #task become child
+        # task become child
         if task.is_phase
           params = {is_phase: false, is_category: true, task_category: task.phase}
         elsif task.is_category
           params = {is_phase: false, is_category: false, name: task.task_category}
         end
       elsif args[:action] == 'out'
-        #task become category or phase
+        # task become category or phase
         if task.is_category
           params = {is_phase: true, is_category: false, phase: task.task_category, task_category: nil}
         elsif !task.is_phase && !task.is_category

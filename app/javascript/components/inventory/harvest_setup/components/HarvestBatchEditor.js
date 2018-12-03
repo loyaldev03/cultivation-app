@@ -355,9 +355,7 @@ export default class HarvestBatchEditor extends React.Component {
             <label className="f6 fw6 db mb1 gray ttc tr">
               Batch start date
             </label>
-            <p className="f6 mt0 mb2 tr">
-              {formatDate(start_date)}
-            </p>
+            <p className="f6 mt0 mb2 tr">{formatDate(start_date)}</p>
           </div>
         </div>
         <div className="ph4 mt2 flex">

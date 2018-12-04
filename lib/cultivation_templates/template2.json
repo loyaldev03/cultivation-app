@@ -84,6 +84,8 @@
   { "phase": "trim", "name": "Send waste for disposal", "duration": 1, "days_from_start_date": 0, "is_phase": false, "is_category": false },
   { "phase": "trim", "name": "Move Plants", "duration": 1, "days_from_start_date": 0, "is_phase": false, "is_category": true, "indelible": true },
   { "phase": "trim", "name": "Move Plants to Packaging", "duration": 1, "days_from_start_date": 0, "is_phase": false, "is_category": false },
+  { "phase": "trim", "name": "Clean", "duration": 1, "days_from_start_date": 0, "is_phase": false, "is_category": true, "indelible": true },
+  { "phase": "trim", "name": "Clean Room", "duration": 1, "days_from_start_date": 0, "is_phase": false, "is_category": false },
   { "phase": "packaging", "name": "Packaging", "duration": 2, "days_from_start_date": 0, "is_phase": true, "indelible": true },
   { "phase": "packaging", "name": "Creat new package batch ID", "duration": 1, "days_from_start_date": 0, "is_phase": false, "is_category": false },
   { "phase": "packaging", "name": "Prepare sample for testing", "duration": 1, "days_from_start_date": 0, "is_phase": false, "is_category": false },

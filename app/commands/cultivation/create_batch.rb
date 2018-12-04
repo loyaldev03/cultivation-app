@@ -116,11 +116,21 @@ module Cultivation
         estimated_hours: task[:estimated_hours],
         is_phase: task[:is_phase] || false,
         is_category: task[:is_category] || false,
+        is_growing_period: task[:is_growing_period] || false,
         indelible: task[:indelible] || false,
         parent_id: parent_id,
         depend_on: depend_on,
       }
+
+      if record[:name].start_with?('Move Plants')
+        set_move_task_defaults(record)
+      end
+
       record
+    end
+
+    def set_move_task_defaults(task)
+      task[:task_type] = ['move_plant']
     end
 
     def build_phase_schedule(start_date, phase_duration)

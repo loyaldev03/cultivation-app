@@ -17,6 +17,7 @@ module Cultivation
     field :actual_cost, type: Float
     field :is_phase, type: Boolean, default: -> { false }     # to identify phase
     field :is_category, type: Boolean, default: -> { false }  # to identify category
+    field :is_growing_period, type: Boolean, default: -> { false } # tray plan is the growing period
     field :indelible, type: Boolean, default: -> { false }    # is task indelible? default false
     field :parent_id, type: BSON::ObjectId
     field :depend_on, type: BSON::ObjectId

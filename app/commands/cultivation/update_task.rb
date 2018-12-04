@@ -42,18 +42,23 @@ module Cultivation
     def map_args_to_task(task, args)
       task.phase = args[:phase]
       task.task_category = args[:task_category]
-      task.name = args[:name]
+
+      # Only allow non-indelible task change these field
+      unless task.indelible
+        task.name = args[:name] unless task&.indelible
+        task.is_phase = args[:is_phase] || false
+        task.is_category = args[:is_category] || false
+        task.parent_id = args[:parent_id].to_bson_id
+        task.depend_on = args[:depend_on].to_bson_id
+        task.task_type = args[:task_type] || []
+      end
+
       task.duration = args[:duration].to_i
       task.days_from_start_date = args[:days_from_start_date].to_i
       task.start_date = args[:start_date]
       task.end_date = args[:end_date]
       task.estimated_hours = args[:estimated_hours].to_f
       task.estimated_cost = args[:estimated_cost].to_f
-      task.is_phase = args[:is_phase] || false
-      task.is_category = args[:is_category] || false
-      task.parent_id = args[:parent_id].to_bson_id
-      task.depend_on = args[:depend_on].to_bson_id
-      task.task_type = args[:task_type] || []
     end
 
     def update_batch(batch, first_task)

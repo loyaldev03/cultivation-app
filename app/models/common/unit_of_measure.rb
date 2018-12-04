@@ -48,12 +48,13 @@ module Common
     field :is_base_unit, type: Boolean, default: false
     field :base_unit, type: String
     field :conversion, type: BigDecimal # multiplier to get to base unit
-    field :dimension, type: String      # { weights, volumes, lengths, pieces, plants, custom }
+    field :dimension, type: String      # { weight, volume, length, pieces, plants, custom }
 
     scope :base_unit, -> { where(is_base_unit: true) }
 
     validates_uniqueness_of :unit
 
+    # TODO: all self.XXX below should be removed.
     def self.custom(unit)
       find_by(dimension: 'custom', unit: unit)
     end
@@ -67,15 +68,15 @@ module Common
     end
 
     def self.weights(unit)
-      find_by(dimension: 'weights', unit: unit)
+      find_by(dimension: 'weight', unit: unit)
     end
 
     def self.volumes(unit)
-      find_by(dimension: 'volumes', unit: unit)
+      find_by(dimension: 'volume', unit: unit)
     end
 
     def self.lengths(unit)
-      find_by(dimension: 'lengths', unit: unit)
+      find_by(dimension: 'length', unit: unit)
     end
 
     ###

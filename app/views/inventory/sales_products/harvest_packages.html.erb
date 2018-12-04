@@ -1,0 +1,39 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Home",root_path], 
+      ['Inventory Setup', inventory_setup_path], 
+      'Sales Products',
+      'Harvest Packages'
+  %>
+<% end %>
+
+<div class="pa4">
+  <div class="pa4 mb4 bg-white w-80">
+    <h1 class="mt0 mb4 f3 fw4 dark-gray">
+      Setup sales products
+    </h1>
+    <p class="mb3 lh-copy f5 grey w-60"> 
+      Product items ready for Sale and harvest packages.
+    </p>
+  </div>
+
+  <div class="scrollable-tab">
+    <div class="scrollable-tab__tab scrollable-tab__tab--active">
+      Harvest Packages
+    </div>
+  </div>
+  <div class="flex flex-column">
+    <%= react_component('inventory/sales_products/HarvestPackageSetupApp', {
+      facility_strains: @facility_strains,
+      harvest_batches: @harvest_batches,
+      locations: @locations,
+      sales_catalogue: @sales_catalogue,
+      drawdown_uoms: @drawdown_uoms
+    }) %>
+    <div class="w-100 bg-white ph3 pt2 pb4">
+      <div class="dim flex flex-row items-center pointer">
+        <i class="material-icons md-light-gray">keyboard_arrow_left</i>
+        <%= link_to "Back", inventory_setup_path, class: "db tr ttu link button--font light-grey" %>
+      </div>  
+    </div>
+  </div>
+</div>

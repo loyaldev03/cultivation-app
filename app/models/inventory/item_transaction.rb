@@ -18,8 +18,15 @@ module Inventory
     field :conversion, type: BigDecimal
     field :location_id, type: BSON::ObjectId
 
+    field :drawdown_quantity, type: BigDecimal
+    field :drawdown_uom, type: String
+
     belongs_to :facility
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
     belongs_to :catalogue, class_name: 'Inventory::Catalogue'
+    belongs_to :harvest_batch, class_name: 'Inventory::HarvestBatch', optional: true
+
+    # belongs_to Inventory::Product, optional: true
+    # also other fields, package tag
   end
 end

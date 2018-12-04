@@ -73,6 +73,12 @@ Rails.application.routes.draw do
         get 'purchased_clones'
       end
     end
+
+    resources :sales_products, only: [] do
+      collection do
+        get 'harvest_packages'
+      end
+    end
   end
 
   namespace 'settings' do

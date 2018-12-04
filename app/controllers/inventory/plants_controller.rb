@@ -26,7 +26,7 @@ class Inventory::PlantsController < ApplicationController
   def harvest_batches
     cultivation_batches = Cultivation::Batch.includes(:facility_strain, :tasks).in(current_growth_stage: ['dry', 'cure'])
     @cultivation_batches = BatchSerializer.new(cultivation_batches, params: {exclude_tasks: true}).serializable_hash[:data]
-    @uoms = Common::UnitOfMeasure.where(dimension: 'weights').map &:unit
+    @uoms = Common::UnitOfMeasure.where(dimension: 'weight').map &:unit
   end
 
   # def manicure(batches)

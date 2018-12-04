@@ -41,10 +41,6 @@ module Cultivation
     end
 
     def save_record(args)
-      # build a phase schedule hash
-      phase_schedule = build_phase_schedule(args[:start_date],
-                                            args[:phase_duration])
-
       batch = Cultivation::Batch.new
       batch.facility_id = args[:facility_id]
       batch.batch_source = args[:batch_source]
@@ -75,10 +71,8 @@ module Cultivation
         if new_task[:name].start_with?('Move Plants')
           set_move_task_defaults(new_task)
         end
-
         # Collect all new tasks in an array
         new_tasks << new_task
-
         # Set the fields data for the next task in the template
         if task[:is_phase]
           phase_id = new_task_id
@@ -89,9 +83,8 @@ module Cultivation
           category_id = new_task_id
         end
       end
-
       Cultivation::Task.create(new_tasks)
-      # Start Day of Dry is the Harvest Date
+
       batch.estimated_harvest_date = get_harvest_date(new_tasks, start_date)
       batch.save!
       batch

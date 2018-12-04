@@ -9,6 +9,8 @@ import { formatDate2 } from '../../utils'
 import GanttChart from './GanttChart'
 import loadTasks from './loadTask'
 import TaskStore from './TaskStore'
+
+@observer
 class GanttSetup extends React.Component {
   constructor(props) {
     super(props)
@@ -19,10 +21,15 @@ class GanttSetup extends React.Component {
   }
 
   async componentDidMount() {
-    await loadTasks.loadbatch(this.props.batch_id)
+    // await loadTasks.loadbatch(this.props.batch_id)
+    await TaskStore.loadTasks(this.props.batch_id)
+    console.log('after await')
+    console.log(TaskStore.getTasks())
   }
 
   render() {
+    let tasks = TaskStore.getTasks()
+    console.log('setup render ', tasks)
     let activeTabs =
       'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
     let inactiveTabs =
@@ -223,7 +230,7 @@ class GanttSetup extends React.Component {
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
-              <GanttChart tasks={this.state.tasks} />
+              <GanttChart tasks={tasks} />
             </div>
           </div>
         </div>

@@ -1,4 +1,11 @@
-import { parse, format, addMonths, startOfDay, addSeconds, addDays } from 'date-fns'
+import {
+  parse,
+  format,
+  addMonths,
+  startOfDay,
+  addSeconds,
+  addDays
+} from 'date-fns'
 import { getCookie } from './'
 
 const USER_TIMEZONE = getCookie('timezone')
@@ -60,6 +67,5 @@ export const formatDuration = seconds => {
 }
 
 export const formatTime = time => format(time, 'hh:mm A')
-
 
 export const addDayToDate = (date, days) => addDays(new Date(date), days)

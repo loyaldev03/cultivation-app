@@ -1,21 +1,23 @@
 import TaskStore from './TaskStore'
-import { formatDate2, httpGetOptions } from '../../utils'
+import { formatDate2, httpGetOptions, addDayToDate } from '../../utils'
 
-class loadTask {
+class LoadTask {
   formatData = tasks => {
     tasks.map(task => {
       if (task.attributes.start_date)
         task.attributes.start_date = new Date(task.attributes.start_date)
       if (task.attributes.end_date)
-        task.attributes.end_date = new Date(task.attributes.end_date)
+        task.attributes.end_date = addDayToDate(task.attributes.end_date, 2)
       return task
     })
 
     let new_task = tasks.map(task => {
+      const {id, name, start_date, end_date} = task.attributes
       return {
-        content: task.attributes.name,
-        start: formatDate2(task.attributes.start_date),
-        finish: formatDate2(task.attributes.end_date),
+        id,
+        content: name,
+        start: start_date,
+        finish: end_date,
         indentation: this.get_indentation(task)
       }
     })
@@ -47,13 +49,15 @@ class loadTask {
     let url = `/api/v1/batches/${id}/tasks`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
-      const formated = this.formatData(response.data)
-      TaskStore.replace(formated)
+      const formatted_data = this.formatData(response.data)
+      // console.log(formatted_data)
+      // TaskStore.replace(formatted_data)
+      return formatted_data || []
     } catch (error) {
       console.error(error)
     }
   }
 }
 
-const task = new loadTask()
-export default task
+const loadTask = new LoadTask()
+export default loadTask

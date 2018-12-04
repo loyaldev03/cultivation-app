@@ -12,7 +12,7 @@ class LoadTask {
     })
 
     let new_task = tasks.map(task => {
-      const {id, name, start_date, end_date} = task.attributes
+      const { id, name, start_date, end_date } = task.attributes
       return {
         id,
         content: name,

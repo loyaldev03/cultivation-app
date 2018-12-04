@@ -13,7 +13,6 @@ class GanttChart extends React.Component {
     super(props)
   }
 
-
   getTasks() {
     if (TaskStore.isLoaded) {
       this.initializeGanttChart(this.props.tasks)
@@ -53,7 +52,6 @@ class GanttChart extends React.Component {
     var date = new Date(),
       year = date.getFullYear(),
       month = date.getMonth()
-
 
     var settings = {
       currentTime: new Date(2018, 10, 1, 12, 0, 0)
@@ -162,16 +160,18 @@ class GanttChart extends React.Component {
     var date = new Date(),
       year = date.getFullYear(),
       month = date.getMonth()
-    var item = { content: 'New task', start: new Date(year, month, 2, 8, 0, 0), finish: new Date(year, month, 4, 16, 0, 0) };
-    if (ganttChartView){
-      ganttChartView.addItem(item);
-      ganttChartView.selectItem(item);
-      ganttChartView.scrollToItem(item);
-      ganttChartView.scrollToDateTime(new Date(year, month, 1));
+    var item = {
+      content: 'New task',
+      start: new Date(year, month, 2, 8, 0, 0),
+      finish: new Date(year, month, 4, 16, 0, 0)
     }
-
+    if (ganttChartView) {
+      ganttChartView.addItem(item)
+      ganttChartView.selectItem(item)
+      ganttChartView.scrollToItem(item)
+      ganttChartView.scrollToDateTime(new Date(year, month, 1))
+    }
   }
-
 
   refreshView = () => {
     let ganttChartView = document.querySelector('#ganttChartView')
@@ -180,28 +180,34 @@ class GanttChart extends React.Component {
         currentTime: new Date(2018, 10, 1, 12, 0, 0)
       }
       let items = this.props.tasks
-      items[0].content = "whatever"
-      items[2].content = "papelah"
+      items[0].content = 'whatever'
+      items[2].content = 'papelah'
       items[2].finish = addDayToDate(items[2].finish, 50)
       //refresh
       ganttChartView.refreshGridItems(items)
-      DlhSoft.Controls.GanttChartView.initialize(ganttChartView, items, settings)
-
+      DlhSoft.Controls.GanttChartView.initialize(
+        ganttChartView,
+        items,
+        settings
+      )
     }
   }
-  
 
   render() {
     let getTasks = this.getTasks()
     let addNew = this.addNewItem
     return (
       <React.Fragment>
-        <a class="btn" onClick={addNew}>Add new</a>
-        <a class="btn" onClick={this.refreshView}>Refresh</a>
-        <div id="ganttChartView" style={{height: 388+'px'}} />
-        {!TaskStore.isLoaded &&
-          (<div class="loading"> Loading Gantt Chart ...</div>)
-        }
+        <a class="btn" onClick={addNew}>
+          Add new
+        </a>
+        <a class="btn" onClick={this.refreshView}>
+          Refresh
+        </a>
+        <div id="ganttChartView" style={{ height: 388 + 'px' }} />
+        {!TaskStore.isLoaded && (
+          <div class="loading"> Loading Gantt Chart ...</div>
+        )}
       </React.Fragment>
     )
   }

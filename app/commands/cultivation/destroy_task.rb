@@ -13,7 +13,15 @@ module Cultivation
     end
 
     def call
-      @record = Cultivation::Task.find(@record_id).delete
+      task = Cultivation::Task.find(@record_id)
+      if task&.indelible
+        errors.add(:id, "\"#{task.name}\" is indelible")
+        true
+      elsif task
+        task.delete
+      else
+        false
+      end
     end
   end
 end

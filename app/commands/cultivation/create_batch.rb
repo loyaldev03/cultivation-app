@@ -50,8 +50,6 @@ module Cultivation
       batch.batch_source = args[:batch_source]
       batch.facility_strain_id = args[:facility_strain_id]
       batch.start_date = args[:start_date]
-      # Start Day of Dry is the Harvest Date
-      batch.estimated_harvest_date = phase_schedule[Constants::CONST_DRY][0]
       batch.grow_method = args[:grow_method]
       batch.quantity = args[:quantity]
       batch.batch_no = get_next_batch_no
@@ -93,6 +91,9 @@ module Cultivation
       end
 
       Cultivation::Task.create(new_tasks)
+      # Start Day of Dry is the Harvest Date
+      batch.estimated_harvest_date = get_harvest_date(new_tasks, start_date)
+      batch.save!
       batch
     end
 
@@ -126,6 +127,20 @@ module Cultivation
         depend_on: depend_on,
       }
       record
+    end
+
+    def get_harvest_date(tasks, fallback_date)
+      harvest_task = tasks.detect do |t|
+        t[:is_phase] && t[:phase] == Constants::CONST_HARVEST
+      end
+      # Incase 'harvest' phase not found, try dry, then cure
+      harvest_task ||= tasks.detect do |t|
+        t[:is_phase] && t[:phase] == Constants::CONST_DRY
+      end
+      harvest_task ||= tasks.detect do |t|
+        t[:is_phase] && t[:phase] == Constants::CONST_CURE
+      end
+      harvest_task[:start_date] || fallback_date
     end
 
     def set_move_task_defaults(task)

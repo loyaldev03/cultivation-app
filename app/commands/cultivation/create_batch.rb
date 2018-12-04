@@ -121,7 +121,7 @@ module Cultivation
         depend_on: depend_on,
       }
 
-      if record[:name].start_with?('Move Plants')
+      if record[:name].start_with?("Move Plants")
         set_move_task_defaults(record)
       end
 

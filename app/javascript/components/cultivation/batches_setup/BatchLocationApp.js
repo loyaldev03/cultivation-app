@@ -1,4 +1,5 @@
 import 'babel-polyfill'
+import classNames from 'classnames'
 import React from 'react'
 import BatchPlantSelectionList from './BatchPlantSelectionList'
 import BatchLocationEditor from './BatchLocationEditor'
@@ -37,6 +38,7 @@ class BatchLocationApp extends React.Component {
     isNotified: false,
     selectedPlants: [],
     editingPlant: {},
+    quantity: '',
     locations: this.props.locations || []
   }
 
@@ -153,7 +155,7 @@ class BatchLocationApp extends React.Component {
       return true
     }
 
-    const { quantity } = this.props.batchInfo
+    const quantity = +this.state.quantity
     const selectedCloneQuantity = sumBy(
       this.getBookingsByPhase(GROWTH_PHASE.CLONE),
       'quantity'
@@ -226,7 +228,7 @@ class BatchLocationApp extends React.Component {
     const isBalance = quantity === selectedCapacity && quantity > 0
     return (
       <React.Fragment>
-        <div className="flex items-center pb2">
+        <div className="flex items-center pb2 w-100">
           <span className="dib ttu f2 fw6 pb2 dark-grey w4">{phase}</span>
           <AdjustmentMessage value={selectedCapacity} total={quantity} />
         </div>
@@ -246,17 +248,15 @@ class BatchLocationApp extends React.Component {
 
   render() {
     const { batchInfo } = this.props
-    const { isLoading, isNotified, editingPlant } = this.state
-    const isFirstBalance = isNotified
-      ? true
-      : batchInfo.quantity ===
-        sumBy(this.getBookingsByPhase(GROWTH_PHASE.CLONE), 'quantity')
-    // console.log('batchInfo', batchInfo)
-    // console.log('editingPlant', editingPlant)
-    // console.log('isDisabled', this.isDisableNext())
+    const { isLoading, isNotified, editingPlant, quantity } = this.state
+    const sumOfClone = sumBy(
+      this.getBookingsByPhase(GROWTH_PHASE.CLONE),
+      'quantity'
+    )
+    const isFirstBalance = isNotified ? true : +quantity === sumOfClone
     const isDisableSubmit = this.isDisableNext()
     return (
-      <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
+      <div className="fl ma4 pa4 bg-white" style={{ width: '800px' }}>
         <div id="toast" className="toast" />
         <form
           onSubmit={async e => {
@@ -268,112 +268,112 @@ class BatchLocationApp extends React.Component {
         >
           <div className="grey mb2">
             <span className="w-30 dib">Quantity Needed</span>
-            <span className="w-40 dib">Strain</span>
-            <span className="w-30 dib">Estimated Harvest Date</span>
+            <span className="w-70 dib">Strain</span>
           </div>
           <div className="dark-grey mb2">
-            <span className="w-30 dib f2 fw6">{batchInfo.quantity}</span>
-            <span className="w-40 dib f2 fw6">
+            <div className="w-30 dib fl">
+              <div
+                className={classNames('fl pv1', {
+                  'bg-orange ph1 br1': !quantity
+                })}
+              >
+                <input
+                  type="number"
+                  className="dark-grey bn f2 fw6 input w3 h2"
+                  autoFocus={true}
+                  value={quantity}
+                  onChange={e => this.setState({ quantity: e.target.value })}
+                />
+              </div>
+            </div>
+            <span className="w-70 dib f2 fw6 fl">
               {batchInfo.strainDisplayName}
             </span>
-            <span className="w-30 dib f2 fw6">
-              {formatDate(batchInfo.harvestDate)}
-            </span>
-          </div>
-          <div className="mt3">
-            {this.renderBookingsForPhase(
-              GROWTH_PHASE.CLONE,
-              batchInfo.quantity,
-              batchInfo.cloneSelectionType
-            )}
           </div>
 
-          {isNotified && (
+          {+quantity > 0 && (
             <React.Fragment>
-              <div className="mt4">
+              <div className="mt3 dib w-100">
                 {this.renderBookingsForPhase(
-                  GROWTH_PHASE.VEG1,
-                  batchInfo.quantity
+                  GROWTH_PHASE.CLONE,
+                  quantity,
+                  batchInfo.cloneSelectionType
                 )}
               </div>
 
-              <div className="mt4">
-                {this.renderBookingsForPhase(
-                  GROWTH_PHASE.VEG2,
-                  batchInfo.quantity
-                )}
-              </div>
+              {isNotified && (
+                <React.Fragment>
+                  <div className="mt4">
+                    {this.renderBookingsForPhase(GROWTH_PHASE.VEG1, quantity)}
+                  </div>
 
-              <div className="mt4">
-                {this.renderBookingsForPhase(
-                  GROWTH_PHASE.FLOWER,
-                  batchInfo.quantity
-                )}
-              </div>
+                  <div className="mt4">
+                    {this.renderBookingsForPhase(GROWTH_PHASE.VEG2, quantity)}
+                  </div>
 
-              <div className="mt4">
-                {this.renderBookingsForPhase(
-                  GROWTH_PHASE.DRY,
-                  batchInfo.quantity
-                )}
-              </div>
+                  <div className="mt4">
+                    {this.renderBookingsForPhase(GROWTH_PHASE.FLOWER, quantity)}
+                  </div>
 
-              <div className="mt4">
-                {this.renderBookingsForPhase(
-                  GROWTH_PHASE.CURE,
-                  batchInfo.quantity
-                )}
+                  <div className="mt4">
+                    {this.renderBookingsForPhase(GROWTH_PHASE.DRY, quantity)}
+                  </div>
+
+                  <div className="mt4">
+                    {this.renderBookingsForPhase(GROWTH_PHASE.CURE, quantity)}
+                  </div>
+                </React.Fragment>
+              )}
+
+              {isFirstBalance && (
+                <Modal
+                  show={!isNotified}
+                  render={() => (
+                    <div className="w-100 w-80-m w-60-l h-100 center flex flex-column items-center justify-center">
+                      <div className="shadow-1 br2">
+                        <div className="h5 bg-orange w-100 flex justify-center">
+                          <img src={ImgPlantGrowth} />
+                        </div>
+                        <div className="bg-white w-100 pa3 tc">
+                          <p className="f3 fw6 dark-grey ma3">
+                            All set up on cloning stage! Just one more thing...
+                          </p>
+                          <p className="grey ph5">
+                            Proceed to configure location for next phase.
+                            Proceed to configure location for next phaseProceed
+                            to configure location for next phaseProceed to
+                            configure location for next phase
+                          </p>
+                          <a
+                            href="#0"
+                            onClick={this.onButtonClick('isNotified', true)}
+                            className="btn btn--primary btn--large"
+                          >
+                            OK, GOT IT!
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                />
+              )}
+
+              <div className="pt4">
+                <input
+                  disabled={isDisableSubmit}
+                  type="submit"
+                  className="btn btn--primary btn--large"
+                  value={isLoading ? 'Saving...' : 'Save & Continue'}
+                />
+                <a
+                  href={`/cultivation/batches/${this.props.batchInfo.id}`}
+                  className="link orange tr dib pa3 fr"
+                >
+                  SKIP
+                </a>
               </div>
             </React.Fragment>
           )}
-
-          {isFirstBalance && (
-            <Modal
-              show={!isNotified}
-              render={() => (
-                <div className="w-100 w-80-m w-60-l h-100 center flex flex-column items-center justify-center">
-                  <div className="shadow-1 br2">
-                    <div className="h5 bg-orange w-100 flex justify-center">
-                      <img src={ImgPlantGrowth} />
-                    </div>
-                    <div className="bg-white w-100 pa3 tc">
-                      <p className="f3 fw6 dark-grey ma3">
-                        All set up on cloning stage! Just one more thing...
-                      </p>
-                      <p className="grey ph5">
-                        Proceed to configure location for next phase. Proceed to
-                        configure location for next phaseProceed to configure
-                        location for next phaseProceed to configure location for
-                        next phase
-                      </p>
-                      <a
-                        href="#0"
-                        onClick={this.onButtonClick('isNotified', true)}
-                        className="btn btn--primary btn--large"
-                      >
-                        OK, GOT IT!
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              )}
-            />
-          )}
-
-          <div className="pt4">
-            <input
-              disabled={isDisableSubmit}
-              type="submit"
-              className="btn btn--primary btn--large"
-              value={isLoading ? 'Saving...' : 'Save & Continue'}
-            />
-            <a
-              href={`/cultivation/batches/${this.props.batchInfo.id}`}
-              className="link orange tr dib pa3 fr"
-            >
-              SKIP
-            </a>
-          </div>
         </form>
 
         <div data-role="sidebar" className="rc-slide-panel">

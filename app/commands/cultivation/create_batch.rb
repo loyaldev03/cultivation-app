@@ -31,12 +31,9 @@ module Cultivation
 
     def valid_data?
       errors.add(:facility_strain_id, 'Facility strain is required.') if Inventory::FacilityStrain.find(args[:facility_strain_id]).nil?
-      errors.add(:start_date, 'Start date is required.') if args[:start_date].blank?
       errors.add(:grow_method, 'Grow method is required.') if args[:grow_method].blank?
       errors.add(:batch_source, 'Batch source is required.') if args[:batch_source].blank?
-      errors.add(:quantity, 'Quantity is required.') if args[:quantity].blank?
       errors.add(:facility_id, 'Facility is required.') if args[:facility_id].blank?
-      errors.add(:phase_duration, 'Phase duration is required.') if args[:phase_duration].blank?
       errors.empty?
     end
 
@@ -45,7 +42,7 @@ module Cultivation
       batch.facility_id = args[:facility_id]
       batch.batch_source = args[:batch_source]
       batch.facility_strain_id = args[:facility_strain_id]
-      batch.start_date = args[:start_date]
+      batch.start_date = Time.now + 1.days # Default start date to tomorrow
       batch.grow_method = args[:grow_method]
       batch.quantity = args[:quantity]
       batch.batch_no = get_next_batch_no
@@ -138,62 +135,6 @@ module Cultivation
 
     def set_move_task_defaults(task)
       task[:task_type] = ['move_plant']
-    end
-
-    def build_phase_schedule(start_date, phase_duration)
-      b_start_date = Time.parse(start_date)
-
-      clone_start_date = b_start_date
-      clone_end_date = clone_start_date +
-                       phase_duration[Constants::CONST_CLONE].to_i.days
-
-      veg_start_date = clone_end_date + 1
-      veg_end_date = veg_start_date +
-                     phase_duration[Constants::CONST_VEG].to_i.days
-
-      veg1_start_date = clone_end_date + 1
-      veg1_end_date = veg1_start_date +
-                      phase_duration[Constants::CONST_VEG1].to_i.days
-
-      veg2_start_date = veg1_end_date + 1
-      veg2_end_date = veg2_start_date +
-                      phase_duration[Constants::CONST_VEG2].to_i.days
-
-      flower_start_date = veg2_end_date + 1
-      flower_end_date = flower_start_date +
-                        phase_duration[Constants::CONST_FLOWER].to_i.days
-
-      dry_start_date = flower_end_date + 1
-      dry_end_date = dry_start_date +
-                     phase_duration[Constants::CONST_DRY].to_i.days
-
-      cure_start_date = dry_end_date + 1
-      cure_end_date = cure_start_date +
-                      phase_duration[Constants::CONST_CURE].to_i.days
-
-      {
-        Constants::CONST_CLONE => [clone_start_date,
-                                   clone_end_date,
-                                   phase_duration[Constants::CONST_CLONE].to_i],
-        Constants::CONST_VEG => [veg_start_date,
-                                 veg_end_date,
-                                 phase_duration[Constants::CONST_VEG].to_i],
-        Constants::CONST_VEG1 => [veg1_start_date,
-                                  veg1_end_date,
-                                  phase_duration[Constants::CONST_VEG1].to_i],
-        Constants::CONST_VEG2 => [veg2_start_date,
-                                  veg2_end_date,
-                                  phase_duration[Constants::CONST_VEG2].to_i],
-        Constants::CONST_FLOWER => [flower_start_date,
-                                    flower_end_date,
-                                    phase_duration[Constants::CONST_FLOWER].to_i],
-        Constants::CONST_DRY => [dry_start_date,
-                                 dry_end_date,
-                                 phase_duration[Constants::CONST_DRY].to_i],
-        Constants::CONST_CURE => [cure_start_date,
-                                  cure_end_date,
-                                  phase_duration[Constants::CONST_CURE].to_i],
-      }
     end
 
     def get_next_batch_no

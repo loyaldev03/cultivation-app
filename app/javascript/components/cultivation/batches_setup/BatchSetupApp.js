@@ -4,28 +4,11 @@ import Select from 'react-select'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import {
   GroupBox,
-  dateToMonthOption,
-  monthOptionAdd,
-  monthOptionToString,
-  monthStartDate,
   httpPostOptions,
   selectStyles
 } from './../../utils'
 import { toast } from './../../utils/toast'
-import batchSetupStore from './BatchSetupStore'
 import BatchSetupEditor from './BatchSetupEditor'
-import { observer } from 'mobx-react'
-
-class CapacityTile extends React.PureComponent {
-  render() {
-    const { startDate, duration } = this.props
-    return (
-      <span className="react-calendar__tile__content">
-        {batchSetupStore.getCapacity(startDate, duration)}
-      </span>
-    )
-  }
-}
 
 const ValidationMessage = ({ enable, show, text }) => {
   if (enable && show) {
@@ -35,51 +18,6 @@ const ValidationMessage = ({ enable, show, text }) => {
   }
 }
 
-const PhaseDurationInput = ({ text, onChange }) => {
-  return (
-    <div className="fl w-70 mt1">
-      <div className="fl w-20 pa2">
-        <label className="black-50">{text}</label>
-      </div>
-      <div className="fr tr w-20 mh3">
-        <input
-          type="number"
-          min="1"
-          onChange={onChange}
-          required={true}
-          className="w-50 tr pa2 f6 black ba b--black-20 br2 outline-0"
-        />
-        <span className="ml1 gray f6">days</span>
-      </div>
-      <div className="fr w-50 pt1 mt3 b--black-10 bb bt-0 bl-0 br-0 b--dotted" />
-    </div>
-  )
-}
-
-class CalendarTitleBar extends React.PureComponent {
-  render() {
-    const { onPrev, onNext, month } = this.props
-    return (
-      <div className="availabilty-calendar-title">
-        <button
-          onClick={onPrev}
-          className="fl fw4 ph2 br-100 pointer bg-white ml2"
-        >
-          &#171;
-        </button>
-        {monthOptionToString(month)}
-        <button
-          onClick={onNext}
-          className="fr fw4 ph2 br-100 pointer bg-white mr2"
-        >
-          &#187;
-        </button>
-      </div>
-    )
-  }
-}
-
-@observer
 class BatchSetupApp extends React.Component {
   constructor(props) {
     super(props)
@@ -88,52 +26,22 @@ class BatchSetupApp extends React.Component {
       showValidation: false,
       facilityId: props.facilityId || '',
       batchSource: '',
-      searchMonth: dateToMonthOption(new Date()),
-      phaseDuration: {},
-      batchStartDate: '',
       batchStrain: '',
       batchGrowMethod: '',
-      batchQuantity: 0,
       isLoading: false
     }
   }
 
-  componentDidMount() {
-    // Setup sidebar editor
-    window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
+  validateInputs = () => {
+    this.setState({ showValidation: true })
+    const { facilityId, batchStrain, batchSource, batchGrowMethod } = this.state
+    return (facilityId && batchStrain && batchSource && batchGrowMethod)
   }
 
-  closeSidebar = () => {
-    window.editorSidebar.close()
-  }
-
-  handleDatePick = date => {
-    console.log({ date })
-    this.setState({ batchStartDate: date })
-    window.editorSidebar.open({ width: '500px' })
-  }
-
-  onSearch(searchMonth) {
-    batchSetupStore.clearSearch()
-    if (!this.state.showValidation) {
-      this.setState({ showValidation: true })
+  handleSubmit = event => {
+    if (!this.validateInputs()) {
+      return false
     }
-    if (this.state.searchMonth !== searchMonth) {
-      this.setState({ searchMonth })
-    }
-    const { facilityId, phaseDuration } = this.state
-    const totalDuration = this.calculateTotalDuration()
-    if (facilityId && searchMonth && totalDuration > 0) {
-      const searchParams = {
-        facility_id: facilityId,
-        search_month: searchMonth,
-        total_duration: totalDuration
-      }
-      batchSetupStore.search(searchParams, phaseDuration)
-    }
-  }
-
-  onSubmit = event => {
     this.setState({ isLoading: true })
     fetch(
       '/api/v1/batches',
@@ -141,10 +49,7 @@ class BatchSetupApp extends React.Component {
         facility_id: this.state.facilityId,
         batch_source: this.state.batchSource,
         facility_strain_id: this.state.batchStrain,
-        start_date: this.state.batchStartDate,
         grow_method: this.state.batchGrowMethod,
-        phase_duration: this.state.phaseDuration,
-        quantity: this.state.batchQuantity
       })
     )
       .then(response => response.json())
@@ -159,8 +64,8 @@ class BatchSetupApp extends React.Component {
             `/cultivation/batches/${data.data}?select_location=1`
           )
         } else {
-          this.setState({ errors: data.errors })
-          toast('Please check the errors and try again', 'Warning')
+          this.setState({ isLoading: false, errors: data.errors })
+          toast('Please check the errors and try again', 'error')
         }
       })
   }
@@ -173,21 +78,6 @@ class BatchSetupApp extends React.Component {
     window.location.replace(
       `/cultivation/batches/new?facility_id=${facilityId}`
     )
-  }
-
-  handleChangeDuration = phase => e => {
-    const phaseDuration = {
-      ...this.state.phaseDuration,
-      [phase]: e.target.value
-    }
-    this.setState({ phaseDuration })
-  }
-
-  calculateTotalDuration = () => {
-    const { phaseDuration } = this.state
-    let total = 0
-    Object.keys(phaseDuration).forEach(p => (total += +phaseDuration[p]))
-    return total
   }
 
   render() {
@@ -204,8 +94,6 @@ class BatchSetupApp extends React.Component {
       batchStrain,
       batchSource,
       batchGrowMethod,
-      searchMonth,
-      batchStartDate,
       errors,
       isLoading
     } = this.state
@@ -213,7 +101,6 @@ class BatchSetupApp extends React.Component {
     const hasVeg2phase = phases.includes('veg2')
     const batchFacilityValue = facilities.find(f => f.value === facilityId)
     const batchStrainValue = strains.find(f => f.value === batchStrain)
-    const totalDuration = this.calculateTotalDuration()
 
     return (
       <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
@@ -226,7 +113,7 @@ class BatchSetupApp extends React.Component {
           className="fl w-100 relative mt3"
           onSubmit={e => {
             e.preventDefault()
-            this.onSearch(searchMonth)
+            this.handleSubmit()
           }}
         >
           {facilities.length > 1 && (
@@ -247,7 +134,7 @@ class BatchSetupApp extends React.Component {
               </div>
             </div>
           )}
-          <div className="fl w-100 mb3">
+          <div className="fl w-100 mt1 mb3">
             <label className="subtitle-2 grey fl pv2">Strains </label>
             <div className="fr w-100 measure-narrow">
               <Select
@@ -263,7 +150,7 @@ class BatchSetupApp extends React.Component {
               />
             </div>
           </div>
-          <div className="fl w-100 mb3">
+          <div className="fl w-100 mt1 mb3">
             <label className="subtitle-2 grey fl pv2">Batch Source</label>
             <div className="fr w-100 measure-narrow">
               <Select
@@ -279,7 +166,7 @@ class BatchSetupApp extends React.Component {
               />
             </div>
           </div>
-          <div className="fl w-100 mb3">
+          <div className="fl w-100 mt1 mb3">
             <label className="subtitle-2 grey fl pv2">Grow Method</label>
             <div className="fr w-100 measure-narrow">
               <Select
@@ -303,34 +190,6 @@ class BatchSetupApp extends React.Component {
             />
           </div>
         </form>
-        <div data-role="sidebar" className="rc-slide-panel">
-          <div className="rc-slide-panel__body h-100">
-            {showValidation &&
-              totalDuration &&
-              batchStartDate &&
-              batchSetupStore.isReady && (
-                <BatchSetupEditor
-                  batchStrain={batchStrainValue ? batchStrainValue.label : ''}
-                  plantSources={plantSources}
-                  growMethods={growMethods}
-                  batchSchedule={batchSetupStore.getSchedule(
-                    batchStartDate,
-                    totalDuration
-                  )}
-                  maxCapacity={batchSetupStore.getCapacity(
-                    batchStartDate,
-                    totalDuration
-                  )}
-                  startDate={batchStartDate}
-                  onChange={this.handleChange}
-                  onClose={this.closeSidebar}
-                  onSave={this.onSubmit}
-                  isLoading={isLoading}
-                  errors={errors}
-                />
-              )}
-          </div>
-        </div>
       </div>
     )
   }

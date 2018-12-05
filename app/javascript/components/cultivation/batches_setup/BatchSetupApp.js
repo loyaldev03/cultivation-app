@@ -2,11 +2,7 @@ import 'babel-polyfill'
 import React from 'react'
 import Select from 'react-select'
 import Calendar from 'react-calendar/dist/entry.nostyle'
-import {
-  GroupBox,
-  httpPostOptions,
-  selectStyles
-} from './../../utils'
+import { GroupBox, httpPostOptions, selectStyles } from './../../utils'
 import { toast } from './../../utils/toast'
 import BatchSetupEditor from './BatchSetupEditor'
 
@@ -35,7 +31,7 @@ class BatchSetupApp extends React.Component {
   validateInputs = () => {
     this.setState({ showValidation: true })
     const { facilityId, batchStrain, batchSource, batchGrowMethod } = this.state
-    return (facilityId && batchStrain && batchSource && batchGrowMethod)
+    return facilityId && batchStrain && batchSource && batchGrowMethod
   }
 
   handleSubmit = event => {
@@ -49,7 +45,7 @@ class BatchSetupApp extends React.Component {
         facility_id: this.state.facilityId,
         batch_source: this.state.batchSource,
         facility_strain_id: this.state.batchStrain,
-        grow_method: this.state.batchGrowMethod,
+        grow_method: this.state.batchGrowMethod
       })
     )
       .then(response => response.json())
@@ -101,9 +97,10 @@ class BatchSetupApp extends React.Component {
     const hasVeg2phase = phases.includes('veg2')
     const batchFacilityValue = facilities.find(f => f.value === facilityId)
     const batchStrainValue = strains.find(f => f.value === batchStrain)
+    const saveButtonText = isLoading ? 'Saving...' : 'Save and Continue'
 
     return (
-      <div className="fl w-100 ma4 pa4 bg-white cultivation-setup-container">
+      <div className="fl w-100 ma4 pa4 bg-white" style={{ width: '600px' }}>
         <div id="toast" className="toast" />
         <h5 className="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
         <p className="mt2 body-1 grey">
@@ -185,8 +182,9 @@ class BatchSetupApp extends React.Component {
           <div className="tr fl w-100">
             <input
               type="submit"
+              disabled={isLoading}
               className="btn btn--primary"
-              value="Save & Continue"
+              value={saveButtonText}
             />
           </div>
         </form>

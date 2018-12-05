@@ -1,11 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
-import Creatable from 'react-select/lib/Creatable';
-import { FieldError, NumericInput, TextInput, CalendarPicker } from '../../../utils/FormHelpers'
+import Creatable from 'react-select/lib/Creatable'
+import {
+  FieldError,
+  NumericInput,
+  TextInput,
+  CalendarPicker
+} from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import LocationPicker from '../../../utils/LocationPicker2'
-import {formatDate } from '../../../utils'
+import { formatDate } from '../../../utils'
 import { saveHarvestPackage } from '../actions/saveHarvestPackage'
 
 const coalese = option => {
@@ -33,7 +38,6 @@ class HarvestPackageEditor extends React.Component {
       //       const catalogue = this.props.catalogues.find(
       //         x => x.id == attr.catalogue_id
       //       )
-
       //       this.setState({
       //         ...this.resetState(),
       //         catalogue: catalogue,
@@ -59,18 +63,21 @@ class HarvestPackageEditor extends React.Component {
   }
 
   onChangeProduct = product => {
-
     if (coalese(product) !== null && product.__isNew__) {
       this.setState({
         product_id: '',
         product
       })
-    } else if(coalese(product) !== null) {
-      const fs = this.props.facility_strains.find(x => x.value === product.facility_strain_id)
+    } else if (coalese(product) !== null) {
+      const fs = this.props.facility_strains.find(
+        x => x.value === product.facility_strain_id
+      )
       this.setState({
         product,
         product_code: product.product_code,
-        catalogue: this.props.sales_catalogue.find(x => x.value === product.catalogue_id),
+        catalogue: this.props.sales_catalogue.find(
+          x => x.value === product.catalogue_id
+        ),
         facility_strain: fs,
         facility_id: fs.facility_id,
         harvest_batch: null
@@ -90,14 +97,15 @@ class HarvestPackageEditor extends React.Component {
   }
 
   onChangeFacilityStrain = facility_strain => {
-    this.setState({ 
-      facility_strain, 
+    this.setState({
+      facility_strain,
       facility_id: facility_strain.facility_id,
       harvest_batch: null
     })
   }
 
-  onCatalogueSelected = item => this.setState({ catalogue: item, drawdown_uom: null })
+  onCatalogueSelected = item =>
+    this.setState({ catalogue: item, drawdown_uom: null })
   onChangeUom = uom => this.setState({ uom })
   onChangeProductionDate = production_date => this.setState({ production_date })
   onChangeExpirationDate = expiration_date => this.setState({ expiration_date })
@@ -139,9 +147,7 @@ class HarvestPackageEditor extends React.Component {
   onSave = event => {
     const payload = this.validateAndGetValues()
     console.log(payload)
-    saveHarvestPackage(payload).then(({ status, result }) => {
-
-    })
+    saveHarvestPackage(payload).then(({ status, result }) => {})
     event.preventDefault()
   }
 
@@ -162,12 +168,14 @@ class HarvestPackageEditor extends React.Component {
       location_id,
       harvest_batch,
       drawdown_quantity,
-      drawdown_uom,
+      drawdown_uom
     } = this.state
 
-    const facility_strain_id = coalese(facility_strain) ? facility_strain.value : ''
+    const facility_strain_id = coalese(facility_strain)
+      ? facility_strain.value
+      : ''
     const catalogue_id = coalese(catalogue) ? catalogue.id : ''
-    let harvest_batch_id = other_harvest_batch = ''
+    let harvest_batch_id = (other_harvest_batch = '')
 
     if (!coalese(harvest_batch) && harvest_batch.__isNew__) {
       other_harvest_batch = harvest_batch.value
@@ -186,7 +194,7 @@ class HarvestPackageEditor extends React.Component {
     // console.log(`harvest_batch_id: ${harvest_batch_id}`)
     // console.groupEnd()
 
-    return  {
+    return {
       product_id,
       name,
       product_code,
@@ -203,12 +211,15 @@ class HarvestPackageEditor extends React.Component {
       harvest_batch_id,
       other_harvest_batch,
       drawdown_quantity,
-      drawdown_uom,
+      drawdown_uom
     }
   }
 
   renderBatchInfo() {
-    if (!coalese(this.state.harvest_batch) || this.state.harvest_batch.__isNew__) {
+    if (
+      !coalese(this.state.harvest_batch) ||
+      this.state.harvest_batch.__isNew__
+    ) {
       return null
     }
 
@@ -220,10 +231,10 @@ class HarvestPackageEditor extends React.Component {
             <p className="f6 mt0 mb2">{this.state.harvest_batch.strain_name}</p>
           </div>
           <div className="w-40 pl3">
-            <label className="f6 fw6 db mb1 gray ttc tr">
-              Harvest date
-            </label>
-            <p className="f6 mt0 mb2 tr">{formatDate(this.state.harvest_batch.harvest_date)}</p>
+            <label className="f6 fw6 db mb1 gray ttc tr">Harvest date</label>
+            <p className="f6 mt0 mb2 tr">
+              {formatDate(this.state.harvest_batch.harvest_date)}
+            </p>
           </div>
         </div>
         <div className="ph4 flex">
@@ -236,16 +247,30 @@ class HarvestPackageEditor extends React.Component {
     )
   }
 
-
   render() {
-    const { locations, harvest_batches, facility_strains, sales_catalogue } = this.props
-    const uoms = this.state.catalogue ? this.state.catalogue.uoms.map(x => ({ value: x, label: x })) : []
-    const drawdown_uoms = this.props.drawdown_uoms.map(x => ({ value: x, label: x }))
-    
-    const harvestOptions = harvest_batches.map(x => x.attributes)
-                                          .filter(x => x.facility.id === this.state.facility_id)
-                                          .map( x => ({ value: x.cultivation_batch_id, label: `${x.harvest_name} (${x.strain_name})`, ...x }))
-    
+    const {
+      locations,
+      harvest_batches,
+      facility_strains,
+      sales_catalogue
+    } = this.props
+    const uoms = this.state.catalogue
+      ? this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
+      : []
+    const drawdown_uoms = this.props.drawdown_uoms.map(x => ({
+      value: x,
+      label: x
+    }))
+
+    const harvestOptions = harvest_batches
+      .map(x => x.attributes)
+      .filter(x => x.facility.id === this.state.facility_id)
+      .map(x => ({
+        value: x.cultivation_batch_id,
+        label: `${x.harvest_name} (${x.strain_name})`,
+        ...x
+      }))
+
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
@@ -253,7 +278,9 @@ class HarvestPackageEditor extends React.Component {
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Harvests Package</h1>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">
+              Add Harvests Package
+            </h1>
             <span
               className="rc-slide-panel__close-button dim"
               onClick={() => {
@@ -272,15 +299,13 @@ class HarvestPackageEditor extends React.Component {
 
           <div className="ph4 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Product Name
-              </label>
+              <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
               <Creatable
                 options={[]}
                 styles={reactSelectStyle}
                 value={this.state.product}
                 onChange={this.onChangeProduct}
-                />
+              />
             </div>
           </div>
 
@@ -294,9 +319,7 @@ class HarvestPackageEditor extends React.Component {
               />
             </div>
             <div className="w-50 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Product type
-              </label>
+              <label className="f6 fw6 db mb1 gray ttc">Product type</label>
               <Select
                 options={sales_catalogue}
                 value={this.state.catalogue}
@@ -309,15 +332,13 @@ class HarvestPackageEditor extends React.Component {
 
           <div className="ph4 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Strain
-              </label>
+              <label className="f6 fw6 db mb1 gray ttc">Strain</label>
               <Creatable
                 options={facility_strains}
                 styles={reactSelectStyle}
                 value={this.state.facility_strain}
                 onChange={this.onChangeFacilityStrain}
-                />
+              />
             </div>
           </div>
 
@@ -339,7 +360,9 @@ class HarvestPackageEditor extends React.Component {
             </div>
             <div className="w-30 pl2">
               <label className="f6 fw6 db dark-gray">&nbsp;</label>
-              <a href="" className="orange btn--secondary f6 btn">Scan</a>
+              <a href="" className="orange btn--secondary f6 btn">
+                Scan
+              </a>
             </div>
           </div>
 
@@ -386,9 +409,7 @@ class HarvestPackageEditor extends React.Component {
 
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 dark-gray ttc">
-                Storage
-              </label>
+              <label className="f6 fw6 db mb1 dark-gray ttc">Storage</label>
             </div>
           </div>
 
@@ -409,17 +430,13 @@ class HarvestPackageEditor extends React.Component {
 
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 dark-gray ttc">
-                Source
-              </label>
+              <label className="f6 fw6 db mb1 dark-gray ttc">Source</label>
             </div>
           </div>
 
           <div className="ph4 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Harvest name
-              </label>
+              <label className="f6 fw6 db mb1 gray ttc">Harvest name</label>
               <Creatable
                 key={this.state.facility_id}
                 options={harvestOptions}
@@ -431,8 +448,8 @@ class HarvestPackageEditor extends React.Component {
             </div>
           </div>
 
-          { this.renderBatchInfo() }
-        
+          {this.renderBatchInfo()}
+
           <div className="ph4 mt3 mb3 flex">
             <div className="w-50">
               <NumericInput
@@ -454,7 +471,6 @@ class HarvestPackageEditor extends React.Component {
               <FieldError errors={this.state.errors} field="uom" />
             </div>
           </div>
-
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
             <a

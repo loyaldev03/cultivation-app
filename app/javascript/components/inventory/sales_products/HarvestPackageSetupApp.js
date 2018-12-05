@@ -106,7 +106,7 @@ class HarvestPackageSetupApp extends React.Component {
             filterable
             className="f6"
           />
-          <HarvestPackageEditor 
+          <HarvestPackageEditor
             facility_strains={this.props.facility_strains}
             locations={this.props.locations}
             drawdown_uoms={this.props.drawdown_uoms}
@@ -123,7 +123,6 @@ class HarvestPackageSetupApp extends React.Component {
   }
 }
 
-
 HarvestPackageSetupApp.propTypes = {
   facility_strains: PropTypes.array.isRequired,
   locations: PropTypes.array.isRequired,
@@ -131,6 +130,5 @@ HarvestPackageSetupApp.propTypes = {
   sales_catalogue: PropTypes.array.isRequired,
   drawdown_uoms: PropTypes.array.isRequired
 }
-
 
 export default HarvestPackageSetupApp

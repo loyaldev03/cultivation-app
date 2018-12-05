@@ -155,7 +155,7 @@ class BatchLocationApp extends React.Component {
       return true
     }
 
-    const { quantity } = this.state.quantity
+    const quantity = +this.state.quantity
     const selectedCloneQuantity = sumBy(
       this.getBookingsByPhase(GROWTH_PHASE.CLONE),
       'quantity'
@@ -254,10 +254,6 @@ class BatchLocationApp extends React.Component {
       'quantity'
     )
     const isFirstBalance = isNotified ? true : +quantity === sumOfClone
-    console.log({ sumOfClone, isNotified, isFirstBalance, quantity })
-    // console.log('batchInfo', batchInfo)
-    // console.log('editingPlant', editingPlant)
-    // console.log('isDisabled', this.isDisableNext())
     const isDisableSubmit = this.isDisableNext()
     return (
       <div className="fl ma4 pa4 bg-white" style={{ width: '800px' }}>
@@ -278,12 +274,13 @@ class BatchLocationApp extends React.Component {
             <div className="w-30 dib fl">
               <div
                 className={classNames('fl pv1', {
-                  'bg-yellow ph1': !quantity
+                  'bg-orange ph1 br1': !quantity
                 })}
               >
                 <input
                   type="number"
                   className="dark-grey bn f2 fw6 input w3 h2"
+                  autoFocus={true}
                   value={quantity}
                   onChange={e => this.setState({ quantity: e.target.value })}
                 />

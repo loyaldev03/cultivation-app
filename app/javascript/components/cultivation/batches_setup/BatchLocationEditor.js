@@ -274,9 +274,7 @@ class BatchLocationEditor extends React.PureComponent {
     let shelves = []
     let trays = []
 
-    console.log('locations:', locations)
     const plannedRows = groupBy(selectedTrays, 'row_id')
-    console.log({ selectedRow, plannedRows })
 
     if (locations && locations.length > 0) {
       rooms = groupBy(locations, 'room_id')

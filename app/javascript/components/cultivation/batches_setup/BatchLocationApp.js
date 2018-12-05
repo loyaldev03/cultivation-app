@@ -268,16 +268,12 @@ class BatchLocationApp extends React.Component {
         >
           <div className="grey mb2">
             <span className="w-30 dib">Quantity Needed</span>
-            <span className="w-40 dib">Strain</span>
-            <span className="w-30 dib">Estimated Harvest Date</span>
+            <span className="w-70 dib">Strain</span>
           </div>
           <div className="dark-grey mb2">
             <span className="w-30 dib f2 fw6">{batchInfo.quantity}</span>
-            <span className="w-40 dib f2 fw6">
+            <span className="w-70 dib f2 fw6">
               {batchInfo.strainDisplayName}
-            </span>
-            <span className="w-30 dib f2 fw6">
-              {formatDate(batchInfo.harvestDate)}
             </span>
           </div>
           <div className="mt3">

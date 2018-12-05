@@ -194,14 +194,16 @@ class BatchSetupApp extends React.Component {
     const {
       plantSources,
       strains,
-      facilities,
       phases,
-      growMethods
+      growMethods,
+      facilities = []
     } = this.props
     const {
       showValidation,
       facilityId,
       batchStrain,
+      batchSource,
+      batchGrowMethod,
       searchMonth,
       batchStartDate,
       errors,
@@ -218,140 +220,89 @@ class BatchSetupApp extends React.Component {
         <div id="toast" className="toast" />
         <h5 className="tl pa0 ma0 h5--font dark-grey">Cultivation Setup</h5>
         <p className="mt2 body-1 grey">
-          Search to display available quantity on specific date.
+          Select strain, batch source and grow method to begin.
         </p>
-        <GroupBox
-          title="Search"
-          className="mt3 fl w-100"
-          render={() => (
-            <form
-              className="fl w-100 relative"
-              onSubmit={e => {
-                e.preventDefault()
-                this.onSearch(searchMonth)
-              }}
-            >
-              <div className="fl w-100">
-                <div className="fl w-third pr2">
-                  <label className="subtitle-2 grey db mb1">Facility</label>
-                  <Select
-                    styles={selectStyles}
-                    options={facilities}
-                    value={batchFacilityValue}
-                    onChange={e => this.switchFacility(e.value)}
-                  />
-                  <ValidationMessage
-                    text="Select Facility"
-                    enable={showValidation}
-                    show={!facilityId}
-                  />
-                </div>
-                <div className="fl w-third pr2 ml3">
-                  <label className="subtitle-2 grey db mb1">Strains</label>
-                  <Select
-                    styles={selectStyles}
-                    options={strains}
-                    value={batchStrainValue}
-                    onChange={e => this.handleChange('batchStrain', e.value)}
-                  />
-                  <ValidationMessage
-                    text="Select Strain"
-                    enable={showValidation}
-                    show={!batchStrain}
-                  />
-                </div>
+        <form
+          className="fl w-100 relative mt3"
+          onSubmit={e => {
+            e.preventDefault()
+            this.onSearch(searchMonth)
+          }}
+        >
+          {facilities.length > 1 && (
+            <div className="fl w-100 mb3">
+              <label className="subtitle-2 grey fl pv2">Facility</label>
+              <div className="fr w-100 measure-narrow">
+                <Select
+                  styles={selectStyles}
+                  options={facilities}
+                  value={batchFacilityValue}
+                  onChange={e => this.switchFacility(e.value)}
+                />
+                <ValidationMessage
+                  text="Select Facility"
+                  enable={showValidation}
+                  show={!facilityId}
+                />
               </div>
-              <div className="fl w-100 mt3">
-                <label className="subtitle-2 grey db mb1">
-                  Batch Durations
-                </label>
-
-                <PhaseDurationInput
-                  text="Clone Phase"
-                  onChange={this.handleChangeDuration('clone')}
-                />
-                {hasVeg2phase ? (
-                  <React.Fragment>
-                    <PhaseDurationInput
-                      text="Veg 1 Phase"
-                      onChange={this.handleChangeDuration('veg1')}
-                    />
-                    <PhaseDurationInput
-                      text="Veg 2 Phase"
-                      onChange={this.handleChangeDuration('veg2')}
-                    />
-                  </React.Fragment>
-                ) : (
-                  <PhaseDurationInput
-                    text="Veg Phase"
-                    onChange={this.handleChangeDuration('veg')}
-                  />
-                )}
-                <PhaseDurationInput
-                  text="Flower Phase"
-                  onChange={this.handleChangeDuration('flower')}
-                />
-                <PhaseDurationInput
-                  text="Dry Phase"
-                  onChange={this.handleChangeDuration('dry')}
-                />
-                <PhaseDurationInput
-                  text="Cure Phase"
-                  onChange={this.handleChangeDuration('cure')}
-                />
-
-                <div className="fl w-70 tr gray pr3 pv1">
-                  Total Duration:{' '}
-                  <span className="w3 tr dib pa1">{totalDuration}</span> days
-                </div>
-
-                <div className="fl tr w-20 absolute right-0 bottom-0">
-                  <input
-                    className="btn btn--primary"
-                    type="submit"
-                    value="Search"
-                  />
-                </div>
-              </div>
-            </form>
-          )}
-        />
-        <div className="fl w-100 mt3">
-          {showValidation && searchMonth && batchSetupStore.isReady && (
-            <div className="fl w-100">
-              <CalendarTitleBar
-                month={searchMonth}
-                onPrev={e => this.onSearch(monthOptionAdd(searchMonth, -1))}
-                onNext={e => this.onSearch(monthOptionAdd(searchMonth, 1))}
-              />
-              {!batchSetupStore.isLoading ? (
-                <Calendar
-                  activeStartDate={monthStartDate(searchMonth)}
-                  className="availabilty-calendar"
-                  showNavigation={false}
-                  onChange={this.handleDatePick}
-                  tileContent={({ date, view }) => (
-                    <CapacityTile startDate={date} duration={totalDuration} />
-                  )}
-                />
-              ) : (
-                <div style={{ minHeight: '362px' }}>
-                  <span className="dib pa2">Searching...</span>
-                </div>
-              )}
             </div>
           )}
-          <div className="fl w-100 mt4">
-            <div className="dim flex flex-row items-center pointer">
-              <i className="material-icons md-light-gray">
-                keyboard_arrow_left
-              </i>
-              <a href="/" className="db tr ttu link button--font light-grey">
-                Back
-              </a>
+          <div className="fl w-100 mb3">
+            <label className="subtitle-2 grey fl pv2">Strains </label>
+            <div className="fr w-100 measure-narrow">
+              <Select
+                styles={selectStyles}
+                options={strains}
+                value={batchStrainValue}
+                onChange={e => this.handleChange('batchStrain', e.value)}
+              />
+              <ValidationMessage
+                text="Select Strain"
+                enable={showValidation}
+                show={!batchStrain}
+              />
             </div>
           </div>
-        </div>
+          <div className="fl w-100 mb3">
+            <label className="subtitle-2 grey fl pv2">Batch Source</label>
+            <div className="fr w-100 measure-narrow">
+              <Select
+                styles={selectStyles}
+                options={plantSources}
+                className="w-100"
+                onChange={e => this.handleChange('batchSource', e.value)}
+              />
+              <ValidationMessage
+                text="Select Batch Source"
+                enable={showValidation}
+                show={!batchSource}
+              />
+            </div>
+          </div>
+          <div className="fl w-100 mb3">
+            <label className="subtitle-2 grey fl pv2">Grow Method</label>
+            <div className="fr w-100 measure-narrow">
+              <Select
+                styles={selectStyles}
+                options={growMethods}
+                className="w-100"
+                onChange={e => this.handleChange('batchGrowMethod', e.value)}
+              />
+              <ValidationMessage
+                text="Select Grow Method"
+                enable={showValidation}
+                show={!batchGrowMethod}
+              />
+            </div>
+          </div>
+          <div className="tr fl w-100">
+            <input
+              type="submit"
+              className="btn btn--primary"
+              value="Save & Continue"
+            />
+          </div>
+        </form>
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body h-100">
             {showValidation &&

@@ -17,7 +17,7 @@ class TaskStore {
     return toJS(this.formatGantt(toJS(this.tasks)))
   }
 
-  getTasks(){
+  getTasks() {
     return toJS(this.tasks)
   }
 
@@ -30,7 +30,7 @@ class TaskStore {
     }
   }
 
-  deleteTask(task){
+  deleteTask(task) {
     const found = this.tasks.find(x => x.id === task.id)
     if (found) {
       this.tasks = this.tasks.map(u => u.id !== task.id)
@@ -39,9 +39,8 @@ class TaskStore {
     }
   }
 
-  formatGantt(tasks){
-    if(this.isLoaded){
-
+  formatGantt(tasks) {
+    if (this.isLoaded) {
       let formatted_tasks = tasks.map(task => {
         const { id, name, start_date, end_date, parent_id } = task.attributes
         return {
@@ -49,17 +48,17 @@ class TaskStore {
           name,
           start: start_date,
           end: end_date,
-          dependencies: task.attributes.parent_id ? task.attributes.parent_id : task.attributes.depend_on,
+          dependencies: task.attributes.parent_id
+            ? task.attributes.parent_id
+            : task.attributes.depend_on,
           progress: parseInt(Math.random() * 100, 10)
         }
       })
       return formatted_tasks
-    }else{
+    } else {
       return null
     }
   }
-
-
 }
 
 const taskStore = new TaskStore()

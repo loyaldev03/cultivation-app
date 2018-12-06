@@ -9,8 +9,7 @@ import TaskStore from './TaskStore'
 import ReactGantt from 'gantt-for-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 
-
-const styles =`
+const styles = `
 .rt-tr-group:hover{
   box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
 }
@@ -43,13 +42,13 @@ class GanttChart extends React.Component {
     }
   }
 
-  changeView = (view) => {
+  changeView = view => {
     this.setState({
       viewMode: view
     })
   }
 
-  onClickTask = (task) => {
+  onClickTask = task => {
     alert('You have selected task => ' + task.name)
   }
 
@@ -63,17 +62,16 @@ class GanttChart extends React.Component {
           <a className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2" onClick={e => this.changeView('Day')}>Day</a>
           <a className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2" onClick={e => this.changeView('Week')}>Week</a>
           <a className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2" onClick={e => this.changeView('Month')}>Month</a> */}
-
         </div>
         {TaskStore.isLoaded && (
-        <div className="flex">
-          <div className="w-30 bt br bl b--black-10">
+          <div className="flex">
+            <div className="w-30 bt br bl b--black-10">
               <table className="collapse pv2 ph3 f6 w-100 mb2">
-              <tbody>
-                <tr style={{height: 3.6+'rem'}}>
-                  <th className=" gray bb b--black-10 fw6 f6">Name</th>
-                </tr>
-                {this.props.tasks.map((task, i) => (
+                <tbody>
+                  <tr style={{ height: 3.6 + 'rem' }}>
+                    <th className=" gray bb b--black-10 fw6 f6">Name</th>
+                  </tr>
+                  {this.props.tasks.map((task, i) => (
                     <tr className="pointer rt-tr-group gantt-list">
                       <td className="pv2 ph3 dark-grey tl ttc">
                         <div className="flex justify-between-ns">
@@ -86,7 +84,7 @@ class GanttChart extends React.Component {
                                     style={{ fontSize: '18px' }}
                                     //onClick={e => toggleCollapse(row.row.id)}
                                   >
-                                  arrow_drop_down
+                                    arrow_drop_down
                                   </i>
                                   <a
                                     className="pointer"
@@ -104,29 +102,29 @@ class GanttChart extends React.Component {
                                     className="material-icons dim grey f7 pointer"
                                     style={{ fontSize: '18px' }}
                                   >
-                                  arrow_drop_down
+                                    arrow_drop_down
                                   </i>
                                   <a
                                     className="pointer"
-                                      onClick={e => this.onClickTask(task)}
+                                    onClick={e => this.onClickTask(task)}
                                   >
                                     {task.attributes.name.substring(0, 20)}
-                                  </a>                                
+                                  </a>
                                 </div>
                               )}
                             </div>
                             <div className="ml3">
-                              {task.attributes.is_phase === false && task.attributes.is_category === false && (
-                              <div>
-                                <a
-                                  className="pointer"
-                                  onClick={e => this.onClickTask(task)}
-                                >
-                                  {task.attributes.name.substring(0, 20)}
-                                </a>                              
-                              </div>
-                              )}
-
+                              {task.attributes.is_phase === false &&
+                                task.attributes.is_category === false && (
+                                  <div>
+                                    <a
+                                      className="pointer"
+                                      onClick={e => this.onClickTask(task)}
+                                    >
+                                      {task.attributes.name.substring(0, 20)}
+                                    </a>
+                                  </div>
+                                )}
                             </div>
                           </div>
 
@@ -144,7 +142,10 @@ class GanttChart extends React.Component {
                               )}
                             </Reference>
                             {this.state.idOpen === task.id && (
-                              <Popper placement="bottom" style={{ borderColor: 'red' }}>
+                              <Popper
+                                placement="bottom"
+                                style={{ borderColor: 'red' }}
+                              >
                                 {({ ref, style, placement, arrowProps }) => (
                                   <div
                                     ref={ref}
@@ -215,7 +216,9 @@ class GanttChart extends React.Component {
                                         //   handleEdit(row)
                                         // }}
                                       >
-                                        <i className="material-icons md-600 md-17 ph2">edit</i>
+                                        <i className="material-icons md-600 md-17 ph2">
+                                          edit
+                                        </i>
                                         Edit
                                       </a>
                                       <a
@@ -231,7 +234,10 @@ class GanttChart extends React.Component {
                                         Delete
                                       </a>
                                     </div>
-                                    <div ref={arrowProps.ref} style={arrowProps.style} />
+                                    <div
+                                      ref={arrowProps.ref}
+                                      style={arrowProps.style}
+                                    />
                                   </div>
                                 )}
                               </Popper>
@@ -239,24 +245,23 @@ class GanttChart extends React.Component {
                           </Manager>
                         </div>
                       </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="w-70">
-
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="w-70">
               <ReactGantt
                 tasks={TaskStore.getGanttTasks()}
                 viewMode={this.state.viewMode}
-              // onClick={this._func}
-              // onDateChange={this._func}
-              // onProgressChange={this._func}
-              // onViewChange={this._func}
-              // customPopupHtml={this._html_func}
+                // onClick={this._func}
+                // onDateChange={this._func}
+                // onProgressChange={this._func}
+                // onViewChange={this._func}
+                // customPopupHtml={this._html_func}
               />
+            </div>
           </div>
-        </div>
         )}
         {!TaskStore.isLoaded && (
           <div className="loading"> Loading Gantt Chart ...</div>

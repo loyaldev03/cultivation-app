@@ -106,8 +106,9 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def get_cultivation_locations(batch)
+    facility = Facility.find_by(id: batch.facility_id)
     # Get phases from Facility
-    cultivation_phases = batch&.facility_strain&.facility&.growth_stages,
+    cultivation_phases = batch.facility_strain.facility.growth_stages
     # Get start_date and end_date from batch
     phases_info = get_batch_phase(batch, cultivation_phases)
     if phases_info.any?

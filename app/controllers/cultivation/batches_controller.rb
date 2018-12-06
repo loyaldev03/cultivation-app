@@ -79,9 +79,10 @@ class Cultivation::BatchesController < ApplicationController
   def update
     if params[:type] == 'active'
       @batch = Cultivation::Batch.find(params[:id])
-      @batch.update(is_active: true)
+      start_date = Time.parse(params[:start_date])
+      @batch.update(is_active: true, start_date: start_date)
       flash[:notice] = 'Batch saved successfully.'
-      redirect_to root_path
+      redirect_to @batch
     end
   end
 

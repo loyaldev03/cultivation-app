@@ -46,7 +46,6 @@ class SidebarTaskEditor extends React.Component {
   }
 
   initialize_date(date) {
-    console.log(date)
     if (date) {
       return new Date(date)
     } else {

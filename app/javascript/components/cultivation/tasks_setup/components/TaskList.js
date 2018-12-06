@@ -58,7 +58,6 @@ class TaskList extends React.Component {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
     let _this = this
-
     // need to find after data react-table is loaded callback
     setTimeout(function() {
       _this.mountEvents()
@@ -141,7 +140,7 @@ class TaskList extends React.Component {
   }
 
   handleEdit = e => {
-    this.setState({ taskSelected: e.row.id })
+    this.setState({ taskSelected: e.row.id, showStartDateCalendar: false })
     let error_container = document.getElementById('error-container')
     if (error_container) {
       error_container.style.display = 'none'
@@ -394,7 +393,7 @@ class TaskList extends React.Component {
   }
 
   handleAddTask = (row, position) => {
-    this.setState({ taskSelected: row.row.id })
+    this.setState({ taskSelected: row.row.id, showStartDateCalendar: false })
     editorSidebarHandler.open({
       width: '500px',
       data: {
@@ -473,6 +472,11 @@ class TaskList extends React.Component {
       showStartDateCalendar: true
     })
     this.onSearch(this.state.searchMonth)
+    this.openSidebar()
+  }
+
+  handleDatePick = selectedDate => {
+    this.setState({ selectedStartDate: selectedDate.toISOString() })
   }
 
   calculateTotalDuration = phaseDuration => {
@@ -518,53 +522,9 @@ class TaskList extends React.Component {
   }
 
   render() {
-    if (this.state.showStartDateCalendar) {
-      const { searchMonth } = this.state
-      const phaseDuration = this.buildPhaseDuration(toJS(TaskStore))
-      const totalDuration = this.calculateTotalDuration(phaseDuration)
-      return (
-        <div className="w-100 ph6">
-          <p className="tc">Select a Start Date for the batch</p>
-
-          {!BatchSetupStore.isLoading ? (
-            <React.Fragment>
-              <CalendarTitleBar
-                month={searchMonth}
-                onPrev={e => this.onSearch(monthOptionAdd(searchMonth, -1))}
-                onNext={e => this.onSearch(monthOptionAdd(searchMonth, 1))}
-              />
-              <Calendar
-                activeStartDate={monthStartDate(searchMonth)}
-                className="availabilty-calendar"
-                showNavigation={false}
-                onChange={this.handleDatePick}
-                tileContent={({ date, view }) => (
-                  <CapacityTile startDate={date} duration={totalDuration} />
-                )}
-              />
-            </React.Fragment>
-          ) : (
-            <div style={{ minHeight: '362px' }}>
-              <span className="dib pa2">Searching...</span>
-            </div>
-          )}
-          <div className="mt2 w-100 tr">
-            <input
-              type="button"
-              className="btn btn--secondary mr2"
-              value="Cancel"
-              onClick={() => this.setState({ showStartDateCalendar: false })}
-            />
-            <input
-              type="button"
-              className="btn btn--primary"
-              value="Save & Continue"
-              onClick={() => this.setState({ showStartDateCalendar: false })}
-            />
-          </div>
-        </div>
-      )
-    }
+    const { showStartDateCalendar, searchMonth, selectedStartDate } = this.state
+    const phaseDuration = this.buildPhaseDuration(toJS(TaskStore))
+    const totalDuration = this.calculateTotalDuration(phaseDuration)
     let tasks = this.filterTask()
     let users = UserStore
     return (
@@ -672,22 +632,6 @@ class TaskList extends React.Component {
           data={tasks}
           className=""
           defaultPageSize={-1}
-          getTdProps={(state, rowInfo, column, instance) => {
-            if (rowInfo) {
-              return {
-                onClick: (e, handleOriginal) => {
-                  // if (column.id != 'button-column') {
-                  //   editorSidebarHandler.open({
-                  //     width: '500px',
-                  //     data: rowInfo.row,
-                  //     action: 'update'
-                  //   })
-                  // }
-                }
-              }
-            }
-            return {}
-          }}
           getTrProps={(state, rowInfo, column) => {
             if (rowInfo) {
               return {
@@ -718,11 +662,6 @@ class TaskList extends React.Component {
             return {}
           }}
         />
-        <TaskEditor
-          onClose={this.closeSidebar}
-          batch_id={this.props.batch_id}
-          handleReset={this.handleReset}
-        />
         <div className="mt3 tr">
           <input
             type="button"
@@ -730,6 +669,71 @@ class TaskList extends React.Component {
             value="Save & Continue"
             onClick={() => this.handleSave()}
           />
+        </div>
+
+        <div data-role="sidebar" className="rc-slide-panel">
+          <div className="rc-slide-panel__body h-100">
+            {showStartDateCalendar ? (
+              <div className="w-100 ph3">
+                <div className="ph4 pv3 h3">
+                  <a
+                    href="#0"
+                    className="slide-panel__close-button dim"
+                    onClick={() => this.closeSidebar()}
+                  >
+                    <i className="material-icons mid-gray md-18 pa1">close</i>
+                  </a>
+                </div>
+                <p className="tc">Select a Start Date for the batch</p>
+                {!BatchSetupStore.isLoading ? (
+                  <React.Fragment>
+                    <CalendarTitleBar
+                      month={searchMonth}
+                      onPrev={e =>
+                        this.onSearch(monthOptionAdd(searchMonth, -1))
+                      }
+                      onNext={e =>
+                        this.onSearch(monthOptionAdd(searchMonth, 1))
+                      }
+                    />
+                    <Calendar
+                      activeStartDate={monthStartDate(searchMonth)}
+                      className="availabilty-calendar"
+                      showNavigation={false}
+                      onChange={this.handleDatePick}
+                      tileContent={({ date, view }) => (
+                        <CapacityTile
+                          startDate={date}
+                          duration={totalDuration}
+                        />
+                      )}
+                    />
+                  </React.Fragment>
+                ) : (
+                  <div style={{ minHeight: '362px' }}>
+                    <span className="dib pa2">Searching...</span>
+                  </div>
+                )}
+                <div className="mt2 w-100 tr">
+                  <a
+                    href={`/cultivation/batches/${
+                      this.props.batch_id
+                    }?type=active&start_date=${selectedStartDate}`}
+                    data-method="put"
+                    className="btn btn--primary btn--large"
+                  >
+                    Schedule Batch
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <TaskEditor
+                onClose={this.closeSidebar}
+                batch_id={this.props.batch_id}
+                handleReset={this.handleReset}
+              />
+            )}
+          </div>
         </div>
       </React.Fragment>
     )

@@ -19,6 +19,16 @@ export const httpPostOptions = payload => ({
   }
 })
 
+export const httpPutOptions = payload => ({
+  method: 'PUT',
+  credentials: 'include',
+  body: JSON.stringify(payload),
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
+  }
+})
+
 export const httpOptions = (method, payload) => ({
   method,
   credentials: 'include',

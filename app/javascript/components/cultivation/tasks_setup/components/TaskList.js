@@ -565,6 +565,7 @@ class TaskList extends React.Component {
             }
           ]}
           data={tasks}
+          showPagination={false}
           className=""
           defaultPageSize={-1}
           getTdProps={(state, rowInfo, column, instance) => {

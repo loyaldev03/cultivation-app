@@ -12,12 +12,18 @@ class TaskSerializer
     :users,
     :is_phase,
     :is_category,
-    :parent_id,
-    :depend_on,
     :task_type
 
   attributes :id do |object|
     object.id.to_s
+  end
+
+  attributes :parent_id do |object|
+    object.parent_id.to_s
+  end
+
+  attributes :depend_on do |object|
+    object.depend_on.to_s
   end
 
   #for showing in table column resources

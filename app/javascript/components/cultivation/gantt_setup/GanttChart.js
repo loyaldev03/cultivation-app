@@ -6,207 +6,260 @@ import { observer, Provider } from 'mobx-react'
 import { formatDate2, addDayToDate } from '../../utils'
 
 import TaskStore from './TaskStore'
+import ReactGantt from 'gantt-for-react'
+import { Manager, Reference, Popper, Arrow } from 'react-popper'
+
+
+const styles =`
+.rt-tr-group:hover{
+  box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
+}
+
+.rt-tr-group:hover .button-dropdown{
+  display: block;
+}
+.button-dropdown{
+  display: none;
+  font-size: 16px;
+}
+
+.gantt-list:nth-child(odd) {
+  height: 38px;
+}
+.gantt-list:nth-child(even):not(:nth-child(2)) {
+  height: 38px;
+}
+.gantt-list:nth-child(2){
+  height: 38px;
+}
+`
 
 @observer
 class GanttChart extends React.Component {
   constructor(props) {
     super(props)
-  }
-
-  getTasks() {
-    if (TaskStore.isLoaded) {
-      this.initializeGanttChart(this.props.tasks)
+    this.state = {
+      viewMode: 'Half Day'
     }
   }
 
-  mapTask = tasks => {
-    let new_tasks = JSON.parse(tasks).data.map(task => {
-      return {
-        content: task.attributes.name,
-        start: new Date(task.attributes.start_date),
-        finish: addDayToDate(task.attributes.end_date, 2),
-        indentation: this.get_indentation(task)
-      }
+  changeView = (view) => {
+    this.setState({
+      viewMode: view
     })
-    return new_tasks
   }
 
-  get_indentation = task => {
-    if (task.attributes.is_phase === true) {
-      return 0
-    }
-    if (task.attributes.is_category === true) {
-      return 1
-    }
-    if (
-      task.attributes.is_category === false &&
-      task.attributes.is_phase === false
-    ) {
-      return 2
-    }
-  }
-
-  initializeGanttChart(tasks) {
-    var ganttChartView = document.querySelector('#ganttChartView')
-
-    var date = new Date(),
-      year = date.getFullYear(),
-      month = date.getMonth()
-
-    var settings = {
-      currentTime: new Date(2018, 10, 1, 12, 0, 0)
-    }
-    // var columns = DlhSoft.Controls.GanttChartView.getDefaultColumns(
-    //   items,
-    //   settings
-    // )
-    // var indexOffset = columns[0].isSelection ? 1 : 0
-
-    // // Optionally, configure existing columns.
-    // // columns[0 + indexOffset].header = 'Work items';
-    // // columns[0 + indexOffset].width = 240;
-    // // Optionally, add supplemental columns.
-    // columns.splice(0 + indexOffset, 0, {
-    //   header: '',
-    //   width: 40,
-    //   cellTemplate: DlhSoft.Controls.GanttChartView.getIndexColumnTemplate()
-    // })
-    // // columns.splice(3 + indexOffset, 0, {
-    // //   header: 'Effort (h)',
-    // //   width: 80,
-    // //   cellTemplate: DlhSoft.Controls.GanttChartView.getTotalEffortColumnTemplate(
-    // //     64
-    // //   )
-    // // })
-    // columns.splice(4 + indexOffset, 0, {
-    //   header: 'Duration (d)',
-    //   width: 80,
-    //   cellTemplate: DlhSoft.Controls.GanttChartView.getDurationColumnTemplate(
-    //     64,
-    //     8
-    //   )
-    // })
-    // columns.splice(8 + indexOffset, 0, {
-    //   header: '%',
-    //   width: 80,
-    //   cellTemplate: DlhSoft.Controls.GanttChartView.getCompletionColumnTemplate(
-    //     64
-    //   )
-    // })
-    // columns.splice(9 + indexOffset, 0, {
-    //   header: 'Predecessors',
-    //   width: 100,
-    //   cellTemplate: DlhSoft.Controls.GanttChartView.getPredecessorsColumnTemplate(
-    //     84
-    //   )
-    // })
-    // columns.push({
-    //   header: 'Cost ($)',
-    //   width: 100,
-    //   cellTemplate: DlhSoft.Controls.GanttChartView.getCostColumnTemplate(84)
-    // })
-    // columns.push({
-    //   header: 'Est. start',
-    //   width: 140,
-    //   cellTemplate: DlhSoft.Controls.GanttChartView.getBaselineStartColumnTemplate(
-    //     124,
-    //     true,
-    //     true,
-    //     8 * 60 * 60 * 1000
-    //   )
-    // }) // 8 AM
-    // columns.push({
-    //   header: 'Est. finish',
-    //   width: 140,
-    //   cellTemplate: DlhSoft.Controls.GanttChartView.getBaselineFinishColumnTemplate(
-    //     124,
-    //     true,
-    //     true,
-    //     16 * 60 * 60 * 1000
-    //   )
-    // }) // 4 PM
-
-    // settings.columns = columns
-
-    // Optionally, define assignable resources.
-    settings.assignableResources = [
-      'Resource 1',
-      'Resource 2',
-      'Resource 3',
-      'Material 1',
-      'Material 2'
-    ]
-    settings.autoAppendAssignableResources = true
-
-    // Optionally, define the quantity values to consider when leveling resources, indicating maximum material amounts available for use at the same time.
-    settings.resourceQuantities = [
-      { key: 'Material 1', value: 4 },
-      { key: 'Material 2', value: Infinity }
-    ]
-
-    settings.defaultResourceHourCost = 10
-    settings.specificResourceHourCosts = [
-      { key: 'Resource 1', value: 20 },
-      { key: 'Material 2', value: 0.5 }
-    ]
-
-    settings.areTaskDependencyConstraintsEnabled = true
-    // alert('initializing')
-    DlhSoft.Controls.GanttChartView.initialize(ganttChartView, tasks, settings)
-  }
-
-  addNewItem = () => {
-    var ganttChartView = document.querySelector('#ganttChartView')
-    var date = new Date(),
-      year = date.getFullYear(),
-      month = date.getMonth()
-    var item = {
-      content: 'New task',
-      start: new Date(year, month, 2, 8, 0, 0),
-      finish: new Date(year, month, 4, 16, 0, 0)
-    }
-    if (ganttChartView) {
-      ganttChartView.addItem(item)
-      ganttChartView.selectItem(item)
-      ganttChartView.scrollToItem(item)
-      ganttChartView.scrollToDateTime(new Date(year, month, 1))
-    }
-  }
-
-  refreshView = () => {
-    let ganttChartView = document.querySelector('#ganttChartView')
-    if (ganttChartView) {
-      let settings = {
-        currentTime: new Date(2018, 10, 1, 12, 0, 0)
-      }
-      let items = this.props.tasks
-      items[0].content = 'whatever'
-      items[2].content = 'papelah'
-      items[2].finish = addDayToDate(items[2].finish, 50)
-      //refresh
-      ganttChartView.refreshGridItems(items)
-      DlhSoft.Controls.GanttChartView.initialize(
-        ganttChartView,
-        items,
-        settings
-      )
-    }
+  onClickTask = (task) => {
+    alert('You have selected task => ' + task.name)
   }
 
   render() {
-    let getTasks = this.getTasks()
-    let addNew = this.addNewItem
     return (
       <React.Fragment>
-        <a class="btn" onClick={addNew}>
-          Add new
-        </a>
-        <a class="btn" onClick={this.refreshView}>
-          Refresh
-        </a>
-        <div id="ganttChartView" style={{ height: 388 + 'px' }} />
+        <style>{styles}</style>
+        <div className="w-50">
+          {/* <a className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2" onClick={ e => this.changeView('Quarter Day')}>Quarter Day</a>
+          <a className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2" onClick={e => this.changeView('Half Day')}>Half Day</a>
+          <a className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2" onClick={e => this.changeView('Day')}>Day</a>
+          <a className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2" onClick={e => this.changeView('Week')}>Week</a>
+          <a className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2" onClick={e => this.changeView('Month')}>Month</a> */}
+
+        </div>
+        {TaskStore.isLoaded && (
+        <div className="flex">
+          <div className="w-30 bt br bl b--black-10">
+              <table className="collapse pv2 ph3 f6 w-100 mb2">
+              <tbody>
+                <tr style={{height: 3.6+'rem'}}>
+                  <th className=" gray bb b--black-10 fw6 f6">Name</th>
+                </tr>
+                {this.props.tasks.map((task, i) => (
+                    <tr className="pointer rt-tr-group gantt-list">
+                      <td className="pv2 ph3 dark-grey tl ttc">
+                        <div className="flex justify-between-ns">
+                          <div className="flex">
+                            <div className="ml3">
+                              {task.attributes.is_phase === true && (
+                                <div>
+                                  <i
+                                    className="material-icons dim grey f7 pointer"
+                                    style={{ fontSize: '18px' }}
+                                    //onClick={e => toggleCollapse(row.row.id)}
+                                  >
+                                  arrow_drop_down
+                                  </i>
+                                  <a
+                                    className="pointer"
+                                    onClick={e => this.onClickTask(task)}
+                                  >
+                                    {task.attributes.name.substring(0, 20)}
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                            <div className="ml3">
+                              {task.attributes.is_category === true && (
+                                <div>
+                                  <i
+                                    className="material-icons dim grey f7 pointer"
+                                    style={{ fontSize: '18px' }}
+                                  >
+                                  arrow_drop_down
+                                  </i>
+                                  <a
+                                    className="pointer"
+                                      onClick={e => this.onClickTask(task)}
+                                  >
+                                    {task.attributes.name.substring(0, 20)}
+                                  </a>                                
+                                </div>
+                              )}
+                            </div>
+                            <div className="ml3">
+                              {task.attributes.is_phase === false && task.attributes.is_category === false && (
+                              <div>
+                                <a
+                                  className="pointer"
+                                  onClick={e => this.onClickTask(task)}
+                                >
+                                  {task.attributes.name.substring(0, 20)}
+                                </a>                              
+                              </div>
+                              )}
+
+                            </div>
+                          </div>
+
+                          <Manager>
+                            <Reference>
+                              {({ ref }) => (
+                                <i
+                                  ref={ref}
+                                  id={task.id}
+                                  // onClick={this.handleClick}
+                                  className="material-icons ml2 pointer button-dropdown"
+                                >
+                                  more_horiz
+                                </i>
+                              )}
+                            </Reference>
+                            {this.state.idOpen === task.id && (
+                              <Popper placement="bottom" style={{ borderColor: 'red' }}>
+                                {({ ref, style, placement, arrowProps }) => (
+                                  <div
+                                    ref={ref}
+                                    id={'dropdown-' + task.id}
+                                    style={style}
+                                    data-placement={placement}
+                                  >
+                                    <div
+                                      id="myDropdown"
+                                      onMouseLeave={handleMouseLeave}
+                                      className="table-dropdown dropdown-content box--shadow-header show"
+                                    >
+                                      <a
+                                        className="ttc pv2 tc flex pointer"
+                                        style={{ display: 'flex' }}
+                                        // onClick={e => {
+                                        //   handleIndent(row, 'in')
+                                        // }}
+                                      >
+                                        <i className="material-icons md-600 md-17 ph2">
+                                          format_indent_increase
+                                        </i>
+                                        Indent In
+                                      </a>
+                                      <a
+                                        className="ttc pv2 tc flex pointer"
+                                        style={{ display: 'flex' }}
+                                        // onClick={e => {
+                                        //   handleIndent(row, 'out')
+                                        // }}
+                                      >
+                                        <i className="material-icons md-600 md-17 ph2">
+                                          format_indent_decrease
+                                        </i>
+                                        Indent Out
+                                      </a>
+                                      {task.attributes.is_phase !== true && (
+                                        <a
+                                          className="ttc pv2 tc flex pointer"
+                                          style={{ display: 'flex' }}
+                                          // onClick={e => {
+                                          //   handleAddTask(row, 'top')
+                                          // }}
+                                        >
+                                          <i className="material-icons md-600 md-17 ph2">
+                                            vertical_align_top
+                                          </i>
+                                          Insert Task Above
+                                        </a>
+                                      )}
+
+                                      <a
+                                        className="ttc pv2 tc flex pointer"
+                                        style={{ display: 'flex' }}
+                                        // onClick={e => {
+                                        //   handleAddTask(row, 'bottom')
+                                        // }}
+                                      >
+                                        <i className="material-icons md-600 md-17 ph2">
+                                          vertical_align_bottom
+                                        </i>
+                                        Insert Task Below
+                                      </a>
+                                      <a
+                                        className="ttc pv2 tc flex pointer"
+                                        style={{ display: 'flex' }}
+                                        // onClick={e => {
+                                        //   handleEdit(row)
+                                        // }}
+                                      >
+                                        <i className="material-icons md-600 md-17 ph2">edit</i>
+                                        Edit
+                                      </a>
+                                      <a
+                                        className="ttc pv2 tc flex pointer"
+                                        style={{ display: 'flex' }}
+                                        // onClick={e => {
+                                        //   handleDelete(row)
+                                        // }}
+                                      >
+                                        <i className="material-icons md-600 md-17 ph2">
+                                          delete_outline
+                                        </i>
+                                        Delete
+                                      </a>
+                                    </div>
+                                    <div ref={arrowProps.ref} style={arrowProps.style} />
+                                  </div>
+                                )}
+                              </Popper>
+                            )}
+                          </Manager>
+                        </div>
+                      </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="w-70">
+
+              <ReactGantt
+                tasks={TaskStore.getGanttTasks()}
+                viewMode={this.state.viewMode}
+              // onClick={this._func}
+              // onDateChange={this._func}
+              // onProgressChange={this._func}
+              // onViewChange={this._func}
+              // customPopupHtml={this._html_func}
+              />
+          </div>
+        </div>
+        )}
         {!TaskStore.isLoaded && (
-          <div class="loading"> Loading Gantt Chart ...</div>
+          <div className="loading"> Loading Gantt Chart ...</div>
         )}
       </React.Fragment>
     )

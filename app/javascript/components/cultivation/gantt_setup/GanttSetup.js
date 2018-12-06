@@ -21,15 +21,11 @@ class GanttSetup extends React.Component {
   }
 
   async componentDidMount() {
-    // await loadTasks.loadbatch(this.props.batch_id)
     await TaskStore.loadTasks(this.props.batch_id)
-    console.log('after await')
-    console.log(TaskStore.getTasks())
   }
 
   render() {
     let tasks = TaskStore.getTasks()
-    console.log('setup render ', tasks)
     let activeTabs =
       'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
     let inactiveTabs =

@@ -10,38 +10,7 @@ class LoadTask {
         task.attributes.end_date = addDayToDate(task.attributes.end_date, 2)
       return task
     })
-
-    let new_task = tasks.map(task => {
-      const { id, name, start_date, end_date } = task.attributes
-      return {
-        id,
-        content: name,
-        start: start_date,
-        finish: end_date,
-        indentation: this.get_indentation(task)
-      }
-    })
-
-    return new_task
-  }
-
-  getEndDate = end_date => {
-    return end_date.setDate(end_date.getDate() + 1)
-  }
-
-  get_indentation = task => {
-    if (task.attributes.is_phase === true) {
-      return 0
-    }
-    if (task.attributes.is_category === true) {
-      return 1
-    }
-    if (
-      task.attributes.is_category === false &&
-      task.attributes.is_phase === false
-    ) {
-      return 2
-    }
+    return tasks
   }
 
   loadbatch = async batchId => {
@@ -50,8 +19,6 @@ class LoadTask {
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       const formatted_data = this.formatData(response.data)
-      // console.log(formatted_data)
-      // TaskStore.replace(formatted_data)
       return formatted_data || []
     } catch (error) {
       console.error(error)

@@ -79,9 +79,10 @@ class Cultivation::BatchesController < ApplicationController
   def update
     if params[:type] == 'active'
       @batch = Cultivation::Batch.find(params[:id])
-      @batch.update(is_active: true)
+      start_date = Time.parse(params[:start_date])
+      @batch.update(is_active: true, start_date: start_date)
       flash[:notice] = 'Batch saved successfully.'
-      redirect_to root_path
+      redirect_to @batch
     end
   end
 
@@ -105,16 +106,9 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def get_cultivation_locations(batch)
-    # TODO::ANDY: Need to detech from Facility
-    cultivation_phases = [
-      Constants::CONST_CLONE,
-      # Constants::CONST_VEG,
-      Constants::CONST_VEG1,
-      Constants::CONST_VEG2,
-      Constants::CONST_FLOWER,
-      Constants::CONST_DRY,
-      Constants::CONST_CURE,
-    ]
+    facility = Facility.find_by(id: batch.facility_id)
+    # Get phases from Facility
+    cultivation_phases = batch.facility_strain.facility.growth_stages
     # Get start_date and end_date from batch
     phases_info = get_batch_phase(batch, cultivation_phases)
     if phases_info.any?
@@ -143,6 +137,7 @@ class Cultivation::BatchesController < ApplicationController
 
   def find_batch_info
     @batch = Cultivation::Batch.includes(:facility_strain).find(params[:id])
+
     @batch_attributes = {
       id: @batch.id.to_s,
       batch_no: @batch.batch_no.to_s,
@@ -156,6 +151,8 @@ class Cultivation::BatchesController < ApplicationController
       total_estimated_hour: @batch.total_estimated_hours,
       total_estimated_cost: ActionController::Base.helpers.number_to_currency(@batch.total_estimated_costs, unit: '$'),
       materials: @batch.material_summary,
+      cultivation_phases: @batch&.facility_strain&.facility&.growth_stages,
+      is_active: @batch.is_active,
     }
   end
 

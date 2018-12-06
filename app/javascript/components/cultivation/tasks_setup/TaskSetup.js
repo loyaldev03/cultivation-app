@@ -5,7 +5,7 @@ import { render } from 'react-dom'
 
 import { observable } from 'mobx'
 import { observer, Provider } from 'mobx-react'
-
+import classNames from 'classnames'
 import loadTasks from './actions/loadTask'
 import loadUsers from './actions/loadUsers'
 import loadUserRoles from './actions/loadUserRoles'
@@ -101,10 +101,18 @@ class TaskSetup extends React.Component {
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
-              <div className=" flex">
-                <div className="w-40">
+              <div className="flex">
+                <div className="w5">
                   <h4 className="tl pa0 ma0 h6--font dark-grey">
-                    Batch {this.state.batch.batch_no}
+                    Batch {batch.batch_no}
+                    <span
+                      className={classNames('f7 fw4 ph2 pv1 ba br2 fr', {
+                        'grey b--grey': !batch.is_active,
+                        'bg-green b--green white': batch.is_active
+                      })}
+                    >
+                      {batch.is_active ? 'Active' : 'Draft'}
+                    </span>
                   </h4>
                 </div>
               </div>

@@ -32,7 +32,6 @@ class TaskSetup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      batch: props.batch,
       columns: [
         'name',
         'start_date',
@@ -89,6 +88,7 @@ class TaskSetup extends React.Component {
   }
 
   render() {
+    const { batch } = this.props
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
     let activeTabs =
@@ -125,7 +125,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-40">
                       <div className="">
-                        <label>{this.state.batch.batch_source}</label>
+                        <label>{batch.batch_source}</label>
                       </div>
                     </div>
                   </div>
@@ -136,7 +136,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-40">
                       <div className="">
-                        <label>{this.state.batch.name}</label>
+                        <label>{batch.name}</label>
                       </div>
                     </div>
                   </div>
@@ -147,7 +147,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-40">
                       <div className="">
-                        <label>{this.state.batch.strain}</label>
+                        <label>{batch.strain}</label>
                       </div>
                     </div>
                   </div>
@@ -158,7 +158,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-40">
                       <div className="">
-                        <label>{this.state.batch.grow_method}</label>
+                        <label>{batch.grow_method}</label>
                       </div>
                     </div>
                   </div>
@@ -173,9 +173,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>
-                          {formatDate2(this.state.batch.start_date)}
-                        </label>
+                        <label>{formatDate2(batch.start_date)}</label>
                       </div>
                     </div>
                   </div>
@@ -186,7 +184,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>{this.state.batch.total_estimated_cost}</label>
+                        <label>{batch.total_estimated_cost}</label>
                       </div>
                     </div>
                   </div>
@@ -197,7 +195,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="">
-                        <label>{this.state.batch.total_estimated_hour}</label>
+                        <label>{batch.total_estimated_hour}</label>
                       </div>
                     </div>
                   </div>
@@ -213,7 +211,7 @@ class TaskSetup extends React.Component {
                     <div className="w-50">
                       <div className="">
                         <label>
-                          {formatDate2(this.state.batch.estimated_harvest_date)}
+                          {formatDate2(batch.estimated_harvest_date)}
                         </label>
                       </div>
                     </div>
@@ -248,53 +246,46 @@ class TaskSetup extends React.Component {
         </div>
         <div className="flex justify-between">
           <div className="flex mt4">
-            <a
-              href={'/cultivation/batches/' + this.state.batch.id}
-              className={activeTabs}
-            >
+            <a href={'/cultivation/batches/' + batch.id} className={activeTabs}>
               Tasks List
             </a>
 
             <a
-              href={'/cultivation/batches/' + this.state.batch.id + '/gantt'}
+              href={'/cultivation/batches/' + batch.id + '/gantt'}
               className={inactiveTabs}
             >
               Gantt Chart
             </a>
             <a
-              href={
-                '/cultivation/batches/' + this.state.batch.id + '/locations'
-              }
+              href={'/cultivation/batches/' + batch.id + '/locations'}
               className={inactiveTabs}
             >
               Location
             </a>
 
             <a
-              href={'/cultivation/batches/' + this.state.batch.id + '/issues'}
+              href={'/cultivation/batches/' + batch.id + '/issues'}
               className={inactiveTabs}
             >
               Issues
             </a>
 
             <a
-              href={
-                '/cultivation/batches/' + this.state.batch.id + '/secret_sauce'
-              }
+              href={'/cultivation/batches/' + batch.id + '/secret_sauce'}
               className={inactiveTabs}
             >
               Secret Sauce
             </a>
 
             <a
-              href={'/cultivation/batches/' + this.state.batch.id + '/resource'}
+              href={'/cultivation/batches/' + batch.id + '/resource'}
               className={inactiveTabs}
             >
               Resource
             </a>
 
             <a
-              href={'/cultivation/batches/' + this.state.batch.id + '/material'}
+              href={'/cultivation/batches/' + batch.id + '/material'}
               className={inactiveTabs}
             >
               Material

@@ -1,7 +1,7 @@
 import React from 'react'
+import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
-
 import TaskStore from '../stores/TaskStore'
 import DisplayTaskStore from '../stores/DisplayTaskStore'
 import UserStore from '../stores/UserStore'
@@ -475,40 +475,44 @@ class TaskList extends React.Component {
     this.onSearch(this.state.searchMonth)
   }
 
-  calculateTotalDuration = () => {
-    // TODO: Culculate total number of days for all cultivation phases that
+  calculateTotalDuration = phaseDuration => {
+    // Culculate total number of days for all cultivation phases that
     // need locations booking
-    return 40
+    let total = 0
+    Object.keys(phaseDuration).forEach(key => {
+      total += phaseDuration[key]
+    })
+    return total
   }
 
-  buildPhaseDuration = () => {
-    // TODO: Build phase schedule from current Task List
-    // TODO: Remove save button on top of table
-    // TODO: Show indicator for inactive batch
-    return {
-      clone: 10,
-      veg1: 10,
-      veg2: 10,
-      flower: 20,
-      dry: 10,
-      cure: 10
-    }
+  buildPhaseDuration = tasks => {
+    // Build phase schedule from current Task List
+    const facilityPhases = this.props.batch.cultivation_phases
+    const phaseTasks = tasks.filter(
+      t =>
+        t.attributes.is_phase &&
+        facilityPhases.some(p => p === t.attributes.phase)
+    )
+    const phaseDuration = {}
+    phaseTasks.forEach(t => {
+      phaseDuration[t.attributes.phase] = t.attributes.duration
+    })
+    return phaseDuration
   }
 
   onSearch(searchMonth) {
-    console.log({ searchMonth })
     BatchSetupStore.clearSearch()
     this.setState({ searchMonth })
     const { facility_id } = this.props.batch
-    const totalDuration = this.calculateTotalDuration()
-    const phaseDuration = this.buildPhaseDuration()
+    const tasks = toJS(TaskStore)
+    const phaseDuration = this.buildPhaseDuration(tasks)
+    const totalDuration = this.calculateTotalDuration(phaseDuration)
     if (facility_id && searchMonth && totalDuration > 0) {
       const searchParams = {
         facility_id,
         search_month: searchMonth,
         total_duration: totalDuration
       }
-      console.log('BatchSetupStore search', searchParams)
       BatchSetupStore.search(searchParams, phaseDuration)
     }
   }
@@ -516,7 +520,8 @@ class TaskList extends React.Component {
   render() {
     if (this.state.showStartDateCalendar) {
       const { searchMonth } = this.state
-      const totalDuration = this.calculateTotalDuration()
+      const phaseDuration = this.buildPhaseDuration(toJS(TaskStore))
+      const totalDuration = this.calculateTotalDuration(phaseDuration)
       return (
         <div className="w-100 ph6">
           <p className="tc">Select a Start Date for the batch</p>
@@ -553,7 +558,7 @@ class TaskList extends React.Component {
             <input
               type="button"
               className="btn btn--primary"
-              value="Save & Activate Batch"
+              value="Save & Continue"
               onClick={() => this.setState({ showStartDateCalendar: false })}
             />
           </div>
@@ -565,12 +570,6 @@ class TaskList extends React.Component {
     return (
       <React.Fragment>
         <style> {styles} </style>
-        <input
-          type="button"
-          value="Save"
-          className="w3"
-          onClick={() => this.handleSave()}
-        />
         <ReactTable
           columns={[
             {

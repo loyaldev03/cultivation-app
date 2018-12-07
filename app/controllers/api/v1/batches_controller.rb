@@ -16,10 +16,11 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   def update_locations
     batch_id = params[:batch_id]
     plans = params[:plans]
+    quantity = params[:quantity]
     # TODO::ANDY - Save selected mother plants
     # Rails.logger.debug "\033[34m Batch ID: #{batch_id} \033[0m"
     # Rails.logger.debug "\033[34m Plans: #{plans} \033[0m"
-    save_cmd = Cultivation::SaveTrayPlans.call(batch_id, plans)
+    save_cmd = Cultivation::SaveTrayPlans.call(batch_id, plans, quantity)
     if save_cmd.success?
       render json: {data: 'Ok'}
     else

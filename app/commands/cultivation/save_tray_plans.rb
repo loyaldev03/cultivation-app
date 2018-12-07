@@ -4,9 +4,10 @@ module Cultivation
 
     attr_reader :batch_id, :locations
 
-    def initialize(batch_id, plans)
+    def initialize(batch_id, plans, quantity)
       @batch_id = batch_id
       @plans = plans
+      @quantity = quantity
     end
 
     def call
@@ -25,6 +26,7 @@ module Cultivation
         # Rails.logger.debug "\033[34m # of plans: #{@plans.length} \033[0m"
         batch = Cultivation::Batch.find(@batch_id.to_bson_id)
         if batch.present?
+          batch.quantity = @quantity
           # Rails.logger.debug "\033[34m Found Batch \033[0m"
           batch_phases = Cultivation::QueryBatchPhases.call(
             batch,
@@ -48,6 +50,7 @@ module Cultivation
           end
           # Rails.logger.debug "\033[34m insert_many new_plans \033[0m"
           # Save all new location plans
+          batch.save!
           Cultivation::TrayPlan.collection.insert_many(new_plans)
         end
       end

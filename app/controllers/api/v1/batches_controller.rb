@@ -27,6 +27,16 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     end
   end
 
+  def update_batch
+    if params[:actionType] == 'activate'
+      @batch = Cultivation::Batch.find_by(id: params[:batch_id])
+      @batch.update(is_active: true, start_date: params[:startDate])
+      render json: {data: 'Ok'}
+    else
+      render json: {errors: "Invalid params actionType: #{params[:actionType]}"}
+    end
+  end
+
   def setup_simple_batch
     command = Cultivation::SetupSimpleBatch.call(current_user, batch_params)
     if command.success?
@@ -93,39 +103,15 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   def record_params
     params.permit(
       :facility_id,
-      :batch_source,
       :facility_strain_id,
-      :start_date,
+      :batch_source,
       :grow_method,
-      :quantity,
-      phase_duration: [
-        :clone,
-        :veg,
-        :veg1,
-        :veg2,
-        :flower,
-        :dry,
-        :cure,
-      ],
     )
   end
 
   def locations_params
     params.permit(
       :batch_id,
-      # plans: [
-
-      # ]
-      # locations: [
-      #   :phase,
-      #   :plant_id,
-      #   :room_id,
-      #   :row_id,
-      #   :shelf_id,
-      #   :tray_id,
-      #   :tray_code,
-      #   :tray_capacity,
-      # ],
     )
   end
 end

@@ -76,16 +76,6 @@ class Cultivation::BatchesController < ApplicationController
   def material
   end
 
-  def update
-    if params[:type] == 'active'
-      @batch = Cultivation::Batch.find(params[:id])
-      start_date = Time.parse(params[:start_date])
-      @batch.update(is_active: true, start_date: start_date)
-      flash[:notice] = 'Batch saved successfully.'
-      redirect_to @batch
-    end
-  end
-
   def destroy
     Cultivation::DestroyBatch.call(params[:id])
     flash[:notice] = 'Batch deleted.'

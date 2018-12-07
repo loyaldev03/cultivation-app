@@ -10,8 +10,10 @@ import {
   monthStartDate,
   monthOptionAdd,
   monthOptionToString,
-  dateToMonthOption
+  dateToMonthOption,
+  httpPostOptions
 } from '../../../utils'
+import { toast } from '../../../utils/toast'
 import TaskEditor from './TaskEditor'
 import updateTask from '../actions/updateTask'
 import indentTask from '../actions/indentTask'
@@ -467,6 +469,7 @@ class TaskList extends React.Component {
     return this.props.columns.includes(value)
   }
 
+  // when user hit the Save and Continue button below the table
   handleSave = () => {
     this.setState({
       showStartDateCalendar: true
@@ -475,8 +478,25 @@ class TaskList extends React.Component {
     this.openSidebar()
   }
 
-  handleDatePick = selectedDate => {
-    this.setState({ selectedStartDate: selectedDate.toISOString() })
+  // when user hit the Schedule batch button from the sidebar
+  handleSubmit = async () => {
+    const response = await BatchSetupStore.activateBatch(
+      this.props.batch.id,
+      this.state.selectedStartDate
+    )
+    if (response.errors) {
+      const err1 = Object.keys(response.errors)[0]
+      toast(response.errors[err1], 'error')
+    } else {
+      toast('Batch saved successfully', 'success')
+      setTimeout(() => {
+        window.location.reload()
+      }, 800)
+    }
+  }
+
+  handleDatePick = selectedStartDate => {
+    this.setState({ selectedStartDate })
   }
 
   calculateTotalDuration = phaseDuration => {
@@ -715,15 +735,13 @@ class TaskList extends React.Component {
                   </div>
                 )}
                 <div className="mt2 w-100 tr">
-                  <a
-                    href={`/cultivation/batches/${
-                      this.props.batch_id
-                    }?type=active&start_date=${selectedStartDate}`}
-                    data-method="put"
+                  <input
+                    type="button"
+                    disabled={!selectedStartDate}
+                    value="Schedule Batch"
                     className="btn btn--primary btn--large"
-                  >
-                    Schedule Batch
-                  </a>
+                    onClick={() => this.handleSubmit()}
+                  />
                 </div>
               </div>
             ) : (

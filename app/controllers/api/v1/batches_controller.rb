@@ -16,14 +16,31 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   def update_locations
     batch_id = params[:batch_id]
     plans = params[:plans]
+    quantity = params[:quantity]
     # TODO::ANDY - Save selected mother plants
     # Rails.logger.debug "\033[34m Batch ID: #{batch_id} \033[0m"
     # Rails.logger.debug "\033[34m Plans: #{plans} \033[0m"
-    save_cmd = Cultivation::SaveTrayPlans.call(batch_id, plans)
+    save_cmd = Cultivation::SaveTrayPlans.call(batch_id, plans, quantity)
     if save_cmd.success?
       render json: {data: 'Ok'}
     else
-      render json: command_errors(batch_params, save_cmd), status: 422
+      render json: command_errors({}, save_cmd), status: 422
+    end
+  end
+
+  def update_batch
+    if params[:action_type] == 'activate'
+      update_cmd = Cultivation::UpdateBatchActivate.call(
+        batch_id: params[:batch_id],
+        start_date: params[:start_date],
+      )
+      if update_cmd.success?
+        render json: {data: 'Ok'}
+      else
+        render json: command_errors({}, update_cmd), status: 422
+      end
+    else
+      render json: {errors: "Invalid params actionType: #{params[:actionType]}"}
     end
   end
 
@@ -93,39 +110,15 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   def record_params
     params.permit(
       :facility_id,
-      :batch_source,
       :facility_strain_id,
-      :start_date,
+      :batch_source,
       :grow_method,
-      :quantity,
-      phase_duration: [
-        :clone,
-        :veg,
-        :veg1,
-        :veg2,
-        :flower,
-        :dry,
-        :cure,
-      ],
     )
   end
 
   def locations_params
     params.permit(
       :batch_id,
-      # plans: [
-
-      # ]
-      # locations: [
-      #   :phase,
-      #   :plant_id,
-      #   :room_id,
-      #   :row_id,
-      #   :shelf_id,
-      #   :tray_id,
-      #   :tray_code,
-      #   :tray_capacity,
-      # ],
     )
   end
 end

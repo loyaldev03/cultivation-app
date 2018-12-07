@@ -102,7 +102,7 @@ class TaskSetup extends React.Component {
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
               <div className="flex">
-                <div className="w5">
+                <div className="w-30">
                   <h4 className="tl pa0 ma0 h6--font dark-grey">
                     Batch {batch.batch_no}
                     <span
@@ -172,7 +172,7 @@ class TaskSetup extends React.Component {
                       <label>Start Date </label>
                     </div>
                     <div className="w-50">
-                      <div className="">
+                      <div className="tr">
                         <label>{formatDate2(batch.start_date)}</label>
                       </div>
                     </div>
@@ -183,7 +183,7 @@ class TaskSetup extends React.Component {
                       <label>Total Estimation Cost</label>
                     </div>
                     <div className="w-50">
-                      <div className="">
+                      <div className="tr">
                         <label>{batch.total_estimated_cost}</label>
                       </div>
                     </div>
@@ -194,7 +194,7 @@ class TaskSetup extends React.Component {
                       <label>Total Estimation Hours</label>
                     </div>
                     <div className="w-50">
-                      <div className="">
+                      <div className="tr">
                         <label>{batch.total_estimated_hour}</label>
                       </div>
                     </div>
@@ -209,7 +209,7 @@ class TaskSetup extends React.Component {
                       <label>Estimated Harvest Date </label>
                     </div>
                     <div className="w-50">
-                      <div className="">
+                      <div className="tr">
                         <label>
                           {formatDate2(batch.estimated_harvest_date)}
                         </label>
@@ -222,8 +222,8 @@ class TaskSetup extends React.Component {
                       <label>Total Actual Cost</label>
                     </div>
                     <div className="w-50">
-                      <div className="">
-                        <label>???</label>
+                      <div className="tr">
+                        <label>--</label>
                       </div>
                     </div>
                   </div>
@@ -233,8 +233,8 @@ class TaskSetup extends React.Component {
                       <label>Total Actual Hour</label>
                     </div>
                     <div className="w-50">
-                      <div className="">
-                        <label>???</label>
+                      <div className="tr">
+                        <label>--</label>
                       </div>
                     </div>
                   </div>

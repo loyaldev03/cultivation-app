@@ -209,7 +209,8 @@ class BatchLocationApp extends React.Component {
       await fetch(
         `/api/v1/batches/${id}/update_locations`,
         httpPostOptions({
-          plans: this.state.selectedPlants
+          plans: this.state.selectedPlants,
+          quantity: this.state.quantity
         })
       )
       // navigate to batch overview

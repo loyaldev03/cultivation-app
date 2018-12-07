@@ -77,6 +77,23 @@ class BatchSetupStore {
   }
 
   @action
+  async activateBatch(batchId, startDate) {
+    try {
+      const updateResponse = await fetch(
+        `/api/v1/batches/${batchId}/update_batch`,
+        httpPostOptions({
+          action_type: 'activate',
+          start_date: startDate
+        })
+      )
+      const updateResult = await updateResponse.json()
+      return updateResult
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  @action
   clearSearch() {
     this.trays = {}
     this.plans = {}

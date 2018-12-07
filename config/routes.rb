@@ -154,6 +154,7 @@ Rails.application.routes.draw do
         post 'search_batch_plans', on: :collection
         post 'setup_simple_batch', on: :collection
         post 'update_locations'
+        post 'update_batch'
         resources :tasks, only: [:index, :update, :create, :destroy] do
           put 'indent', on: :member
         end

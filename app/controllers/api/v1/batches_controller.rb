@@ -23,15 +23,21 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     if save_cmd.success?
       render json: {data: 'Ok'}
     else
-      render json: command_errors(batch_params, save_cmd), status: 422
+      render json: command_errors({}, save_cmd), status: 422
     end
   end
 
   def update_batch
-    if params[:actionType] == 'activate'
-      @batch = Cultivation::Batch.find_by(id: params[:batch_id])
-      @batch.update(is_active: true, start_date: params[:startDate])
-      render json: {data: 'Ok'}
+    if params[:action_type] == 'activate'
+      update_cmd = Cultivation::UpdateBatchActivate.call(
+        batch_id: params[:batch_id],
+        start_date: params[:start_date],
+      )
+      if update_cmd.success?
+        render json: {data: 'Ok'}
+      else
+        render json: command_errors({}, update_cmd), status: 422
+      end
     else
       render json: {errors: "Invalid params actionType: #{params[:actionType]}"}
     end

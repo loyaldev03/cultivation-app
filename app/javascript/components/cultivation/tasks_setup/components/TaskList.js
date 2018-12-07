@@ -13,6 +13,7 @@ import {
   dateToMonthOption,
   httpPostOptions
 } from '../../../utils'
+import { toast } from '../../../utils/toast'
 import TaskEditor from './TaskEditor'
 import updateTask from '../actions/updateTask'
 import indentTask from '../actions/indentTask'
@@ -479,18 +480,18 @@ class TaskList extends React.Component {
 
   // when user hit the Schedule batch button from the sidebar
   handleSubmit = async () => {
-    const payload = {
-      actionType: 'activate',
-      startDate: this.state.selectedStartDate
-    }
-    try {
-      const api2Res = await (await fetch(
-        `/api/v1/batches/${this.props.batch.id}/update_batch`,
-        httpPostOptions(payload)
-      )).json()
-      console.log({ api2Res })
-    } catch (error) {
-      console.error(error)
+    const response = await BatchSetupStore.activateBatch(
+      this.props.batch.id,
+      this.state.selectedStartDate
+    )
+    if (response.errors) {
+      const err1 = Object.keys(response.errors)[0]
+      toast(response.errors[err1], 'error')
+    } else {
+      toast('Batch saved successfully', 'success')
+      setTimeout(() => {
+        window.location.reload()
+      }, 800)
     }
   }
 
@@ -736,6 +737,7 @@ class TaskList extends React.Component {
                 <div className="mt2 w-100 tr">
                   <input
                     type="button"
+                    disabled={!selectedStartDate}
                     value="Schedule Batch"
                     className="btn btn--primary btn--large"
                     onClick={() => this.handleSubmit()}

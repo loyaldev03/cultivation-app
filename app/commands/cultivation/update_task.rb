@@ -18,7 +18,7 @@ module Cultivation
       elsif @args[:type] == 'resource'
         task.update(user_ids: @args[:user_ids])
       else
-        batch = Cultivation::Batch.includes(:tasks).find(task.batch_id)
+        batch = Cultivation::Batch.includes(:tasks).find_by(id: task.batch_id)
         batch_tasks = batch.tasks
         map_args_to_task(task, @args)
         opt = {

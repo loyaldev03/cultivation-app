@@ -5,6 +5,8 @@ import { formatDate2, httpGetOptions, addDayToDate } from '../../utils'
 class TaskStore {
   @observable tasks
   @observable isLoaded = false
+  @observable hidden_ids = []
+
 
   @action
   async loadTasks(batch_id) {
@@ -13,12 +15,22 @@ class TaskStore {
     this.isLoaded = true
   }
 
+  getFilteredTask(tasks){
+    tasks = toJS(tasks)
+    if (this.isLoaded) {
+      console.log(tasks.filter(u => !this.hidden_ids.includes(u.id)))
+      return tasks.filter(u => !this.hidden_ids.includes(u.id))
+    }else{
+      return []
+    }
+  }
+
   getGanttTasks() {
-    return toJS(this.formatGantt(toJS(this.tasks)))
+    return toJS(this.formatGantt(this.getFilteredTask(this.tasks)))
   }
 
   getTasks() {
-    return toJS(this.tasks)
+    return toJS(this.getFilteredTask(this.tasks))
   }
 
   updateTask(task) {
@@ -39,7 +51,24 @@ class TaskStore {
     }
   }
 
+  setHiddenIds(parent_id){
+    let parent = this.tasks.find(e => e.id === parent_id)
+    let children = this.tasks.filter(e => e.attributes.parent_id === parent.id)
+    let children_ids = children.map(e => e.id)
+    console.log(children_ids)
+    this.hidden_ids = this.hidden_ids + children_ids
+    console.log(toJS(this.hidden_ids))
+  }
+
+  clearHiddenIds(parent_id){
+    let parent = this.tasks.find(e => e.id === parent_id)
+    let children = this.tasks.filter(e => e.attributes.parent_id === parent.id)
+
+    this.hidden_ids = toJS(this.hidden_ids).map(e => children)
+  }
+
   formatGantt(tasks) {
+    tasks = toJS(tasks)
     if (this.isLoaded) {
       let formatted_tasks = tasks.map(task => {
         const { id, name, start_date, end_date, parent_id } = task.attributes
@@ -51,7 +80,7 @@ class TaskStore {
           dependencies: task.attributes.parent_id
             ? task.attributes.parent_id
             : task.attributes.depend_on,
-          progress: parseInt(Math.random() * 100, 10)
+          // progress: parseInt(Math.random() * 100, 10)
         }
       })
       return formatted_tasks

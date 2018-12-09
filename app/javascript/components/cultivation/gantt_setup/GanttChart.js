@@ -31,6 +31,15 @@ const styles = `
 .gantt-list:nth-child(2){
   height: 38px;
 }
+.table-dropdown {
+  box-shadow: 0 3px 10px 0 #00000087;
+  top: initial;
+  min-width: 200px;
+}
+.table-dropdown a:hover{
+  background-color: #eee;
+}
+
 `
 
 @observer
@@ -50,6 +59,32 @@ class GanttChart extends React.Component {
 
   onClickTask = task => {
     alert('You have selected task => ' + task.name)
+  }
+
+  handleDropdown = id => {
+    this.setState({ idOpen: id})
+  }
+
+  handleMouseLeave = row => {
+    this.setState(prevState => ({
+      idOpen: null
+    }))
+  }
+
+  toggleCollapse = task => {
+    TaskStore.setHiddenIds(task)
+
+    if (this.state.collapseIds.includes(task.id)) {
+      let tempCollapseId = this.state.collapseIds
+
+      // this.setState({ collapseIds: tempCollapseId.filter(e => e !== id) })
+
+    }else{
+      // TaskStore.setHiddenIds(task)
+      // this.setState(prevState => ({
+      //   collapseIds: [...prevState.collapseIds, id]
+      // }))
+    }
   }
 
   render() {
@@ -82,7 +117,7 @@ class GanttChart extends React.Component {
                                   <i
                                     className="material-icons dim grey f7 pointer"
                                     style={{ fontSize: '18px' }}
-                                    //onClick={e => toggleCollapse(row.row.id)}
+                                    onClick={e => this.toggleCollapse(task.id)}
                                   >
                                     arrow_drop_down
                                   </i>
@@ -134,7 +169,7 @@ class GanttChart extends React.Component {
                                 <i
                                   ref={ref}
                                   id={task.id}
-                                  // onClick={this.handleClick}
+                                  onClick={e => this.handleDropdown(task.id)}
                                   className="material-icons ml2 pointer button-dropdown"
                                 >
                                   more_horiz
@@ -155,7 +190,7 @@ class GanttChart extends React.Component {
                                   >
                                     <div
                                       id="myDropdown"
-                                      onMouseLeave={handleMouseLeave}
+                                      onMouseLeave={this.handleMouseLeave}
                                       className="table-dropdown dropdown-content box--shadow-header show"
                                     >
                                       <a

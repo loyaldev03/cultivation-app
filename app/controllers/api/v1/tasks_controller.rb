@@ -21,7 +21,6 @@ class Api::V1::TasksController < Api::V1::BaseApiController
       task_json = TaskSerializer.new(task, params: {tasks: tasks, users: users}).serialized_json
       render json: task_json
     else
-      Rails.logger.debug "errors ===> #{a.errors}"
       data = {errors: a.errors}
       render json: data
     end
@@ -43,12 +42,9 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     render json: task_json
   end
 
-  def strains
-  end
-
   def destroy
-    result = Cultivation::DestroyTask.call(params[:id]).result
-    render json: {result: result}
+    delete_cmd = Cultivation::DestroyTask.call(params[:id])
+    render json: {errors: delete_cmd.errors}
   end
 
   private

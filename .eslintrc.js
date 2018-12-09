@@ -8,6 +8,12 @@ module.exports = {
         "eslint:recommended",
         "plugin:react/recommended"
     ],
+    "settings": {
+        "react": {
+          "pragma": "React",
+          "version": "16.6.3",
+        },
+    },
     "parserOptions": {
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,

@@ -4,7 +4,7 @@ module Cultivation
 
     def initialize(batch, phases = [])
       @batch = batch
-      @phases = phases
+      @phases = phases || []
     end
 
     def call

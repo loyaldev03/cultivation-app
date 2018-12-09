@@ -49,9 +49,20 @@ export default class TaskEditor extends React.Component {
   }
 
   componentDidMount() {
-    const _this = this
-    document.addEventListener('editor-sidebar-open', function(ev) {
-      _this.setState({
+    document.addEventListener('editor-sidebar-open', this.onOpen)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('editor-sidebar-open', this.onOpen)
+  }
+
+  onChangeHandler(attr, value) {
+    sidebarTask[attr] = value.persist()
+  }
+
+  onOpen = ev => {
+    if (ev.detail && ev.detail.data) {
+      this.setState({
         id: ev.detail.data.id,
         tabs: 'General',
         task: TaskStore.find(e => e.id === ev.detail.data.id),
@@ -60,11 +71,7 @@ export default class TaskEditor extends React.Component {
         task_related_parent_id: ev.detail.data.task_related_id,
         position: ev.detail.data.position
       })
-    })
-  }
-
-  onChangeHandler(attr, value) {
-    sidebarTask[attr] = value.persist()
+    }
   }
 
   renderSidebarTaskEditor() {
@@ -168,48 +175,45 @@ export default class TaskEditor extends React.Component {
       this.state.task.attributes.is_phase === false &&
       this.state.task.attributes.is_category === false
     return (
-      <div className="rc-slide-panel" data-role="sidebar">
+      <div className="flex flex-column">
         <style> {styles} </style>
-        <div className="rc-slide-panel__body flex flex-column">
-          <div
-            className="ph4 pv2 bb b--light-gray flex items-center"
-            style={{ height: '51px' }}
-          >
-            <div className="mt3 flex content-stretch">
-              <div
-                className={`ph4 pointer dim ${
-                  this.state.tabs === 'General' ? 'active' : null
-                }`}
-                onClick={() => changeTabs('General')}
-              >
-                General
-              </div>
-              {isNormalTask ? (
-                <div
-                  className={`pl3 ph4 pointer dim ${
-                    this.state.tabs === 'Resource' ? 'active' : null
-                  }`}
-                  onClick={() => changeTabs('Resource')}
-                >
-                  Resource
-                </div>
-              ) : null}
-              {isNormalTask ? (
-                <div
-                  className={`pl3 ph4 pointer dim ${
-                    this.state.tabs === 'Material' ? 'active' : null
-                  }`}
-                  onClick={() => changeTabs('Material')}
-                >
-                  Material
-                </div>
-              ) : null}
+        <div
+          className="ph4 pv2 bb b--light-gray flex items-center"
+          style={{ height: '51px' }}
+        >
+          <div className="mt3 flex content-stretch">
+            <div
+              className={`ph4 pointer dim ${
+                this.state.tabs === 'General' ? 'active' : null
+              }`}
+              onClick={() => changeTabs('General')}
+            >
+              General
             </div>
-            {this.renderCloseSidebar()}
+            {isNormalTask ? (
+              <div
+                className={`pl3 ph4 pointer dim ${
+                  this.state.tabs === 'Resource' ? 'active' : null
+                }`}
+                onClick={() => changeTabs('Resource')}
+              >
+                Resource
+              </div>
+            ) : null}
+            {isNormalTask ? (
+              <div
+                className={`pl3 ph4 pointer dim ${
+                  this.state.tabs === 'Material' ? 'active' : null
+                }`}
+                onClick={() => changeTabs('Material')}
+              >
+                Material
+              </div>
+            ) : null}
           </div>
-
-          {this.renderSidebarTaskEditor()}
+          {this.renderCloseSidebar()}
         </div>
+        {this.renderSidebarTaskEditor()}
       </div>
     )
   }

@@ -17,6 +17,8 @@ module Cultivation
     field :actual_cost, type: Float
     field :is_phase, type: Boolean, default: -> { false }     # to identify phase
     field :is_category, type: Boolean, default: -> { false }  # to identify category
+    field :is_growing_period, type: Boolean, default: -> { false } # tray plan is the growing period
+    field :indelible, type: Boolean, default: -> { false }    # is task indelible? default false
     field :parent_id, type: BSON::ObjectId
     field :depend_on, type: BSON::ObjectId
     field :task_type, type: Array, default: []
@@ -46,12 +48,20 @@ module Cultivation
     end
 
     def estimated_cost
-      hours_per_day = estimated_hours.to_f / duration.to_i
-      hours_per_person = hours_per_day / user_ids.length
+      if estimated_hours && duration
+        hours_per_day = estimated_hours.to_f / duration.to_i
+      end
+
+      if hours_per_day && !user_ids.empty?
+        hours_per_person = hours_per_day / user_ids.length
+      end
+
       task_cost = 0.0
-      duration = self.duration || 0
-      users.each do |user|
-        task_cost += (user.hourly_rate.to_f * hours_per_person) * duration
+      duration ||= 0
+      if hours_per_person && !users.empty?
+        users.each do |user|
+          task_cost += (user&.hourly_rate.to_f * hours_per_person) * duration
+        end
       end
       task_cost
     end

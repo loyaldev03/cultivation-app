@@ -5,7 +5,7 @@ import { render } from 'react-dom'
 
 import { observable } from 'mobx'
 import { observer, Provider } from 'mobx-react'
-
+import classNames from 'classnames'
 import loadTasks from './actions/loadTask'
 import loadUsers from './actions/loadUsers'
 import loadUserRoles from './actions/loadUserRoles'
@@ -32,7 +32,6 @@ class TaskSetup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      batch: props.batch,
       columns: [
         'name',
         'start_date',
@@ -89,6 +88,7 @@ class TaskSetup extends React.Component {
   }
 
   render() {
+    const { batch } = this.props
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
     let activeTabs =
@@ -101,10 +101,18 @@ class TaskSetup extends React.Component {
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
-              <div className=" flex">
-                <div className="w-40">
+              <div className="flex">
+                <div className="w-30">
                   <h4 className="tl pa0 ma0 h6--font dark-grey">
-                    Batch {this.state.batch.batch_no}
+                    Batch {batch.batch_no}
+                    <span
+                      className={classNames('f7 fw4 ph2 pv1 ba br2 fr', {
+                        'grey b--grey': !batch.is_active,
+                        'bg-green b--green white': batch.is_active
+                      })}
+                    >
+                      {batch.is_active ? 'Active' : 'Draft'}
+                    </span>
                   </h4>
                 </div>
               </div>
@@ -117,7 +125,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-40">
                       <div className="">
-                        <label>{this.state.batch.batch_source}</label>
+                        <label>{batch.batch_source}</label>
                       </div>
                     </div>
                   </div>
@@ -128,7 +136,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-40">
                       <div className="">
-                        <label>{this.state.batch.name}</label>
+                        <label>{batch.name}</label>
                       </div>
                     </div>
                   </div>
@@ -139,7 +147,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-40">
                       <div className="">
-                        <label>{this.state.batch.strain}</label>
+                        <label>{batch.strain}</label>
                       </div>
                     </div>
                   </div>
@@ -150,7 +158,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-40">
                       <div className="">
-                        <label>{this.state.batch.grow_method}</label>
+                        <label>{batch.grow_method}</label>
                       </div>
                     </div>
                   </div>
@@ -164,10 +172,8 @@ class TaskSetup extends React.Component {
                       <label>Start Date </label>
                     </div>
                     <div className="w-50">
-                      <div className="">
-                        <label>
-                          {formatDate2(this.state.batch.start_date)}
-                        </label>
+                      <div className="tr">
+                        <label>{formatDate2(batch.start_date)}</label>
                       </div>
                     </div>
                   </div>
@@ -177,8 +183,8 @@ class TaskSetup extends React.Component {
                       <label>Total Estimation Cost</label>
                     </div>
                     <div className="w-50">
-                      <div className="">
-                        <label>{this.state.batch.total_estimated_cost}</label>
+                      <div className="tr">
+                        <label>{batch.total_estimated_cost}</label>
                       </div>
                     </div>
                   </div>
@@ -188,8 +194,8 @@ class TaskSetup extends React.Component {
                       <label>Total Estimation Hours</label>
                     </div>
                     <div className="w-50">
-                      <div className="">
-                        <label>{this.state.batch.total_estimated_hour}</label>
+                      <div className="tr">
+                        <label>{batch.total_estimated_hour}</label>
                       </div>
                     </div>
                   </div>
@@ -203,9 +209,9 @@ class TaskSetup extends React.Component {
                       <label>Estimated Harvest Date </label>
                     </div>
                     <div className="w-50">
-                      <div className="">
+                      <div className="tr">
                         <label>
-                          {formatDate2(this.state.batch.estimated_harvest_date)}
+                          {formatDate2(batch.estimated_harvest_date)}
                         </label>
                       </div>
                     </div>
@@ -216,8 +222,8 @@ class TaskSetup extends React.Component {
                       <label>Total Actual Cost</label>
                     </div>
                     <div className="w-50">
-                      <div className="">
-                        <label>???</label>
+                      <div className="tr">
+                        <label>--</label>
                       </div>
                     </div>
                   </div>
@@ -227,8 +233,8 @@ class TaskSetup extends React.Component {
                       <label>Total Actual Hour</label>
                     </div>
                     <div className="w-50">
-                      <div className="">
-                        <label>???</label>
+                      <div className="tr">
+                        <label>--</label>
                       </div>
                     </div>
                   </div>
@@ -240,53 +246,46 @@ class TaskSetup extends React.Component {
         </div>
         <div className="flex justify-between">
           <div className="flex mt4">
-            <a
-              href={'/cultivation/batches/' + this.state.batch.id}
-              className={activeTabs}
-            >
+            <a href={'/cultivation/batches/' + batch.id} className={activeTabs}>
               Tasks List
             </a>
 
             <a
-              href={'/cultivation/batches/' + this.state.batch.id + '/gantt'}
+              href={'/cultivation/batches/' + batch.id + '/gantt'}
               className={inactiveTabs}
             >
               Gantt Chart
             </a>
             <a
-              href={
-                '/cultivation/batches/' + this.state.batch.id + '/locations'
-              }
+              href={'/cultivation/batches/' + batch.id + '/locations'}
               className={inactiveTabs}
             >
               Location
             </a>
 
             <a
-              href={'/cultivation/batches/' + this.state.batch.id + '/issues'}
+              href={'/cultivation/batches/' + batch.id + '/issues'}
               className={inactiveTabs}
             >
               Issues
             </a>
 
             <a
-              href={
-                '/cultivation/batches/' + this.state.batch.id + '/secret_sauce'
-              }
+              href={'/cultivation/batches/' + batch.id + '/secret_sauce'}
               className={inactiveTabs}
             >
               Secret Sauce
             </a>
 
             <a
-              href={'/cultivation/batches/' + this.state.batch.id + '/resource'}
+              href={'/cultivation/batches/' + batch.id + '/resource'}
               className={inactiveTabs}
             >
               Resource
             </a>
 
             <a
-              href={'/cultivation/batches/' + this.state.batch.id + '/material'}
+              href={'/cultivation/batches/' + batch.id + '/material'}
               className={inactiveTabs}
             >
               Material

@@ -7,8 +7,9 @@ module Cultivation
 
     attr_reader :args, :task, :array
 
-    def initialize(args = nil)
+    def initialize(args = nil, activate_batch = false)
       @args = args
+      @activate_batch = activate_batch
     end
 
     def call
@@ -18,8 +19,8 @@ module Cultivation
       elsif @args[:type] == 'resource'
         task.update(user_ids: @args[:user_ids])
       else
-        batch = Cultivation::Batch.includes(:tasks).find(task.batch_id)
-        batch_tasks = batch.tasks
+        batch = Cultivation::Batch.includes(:tasks).find_by(id: task.batch_id)
+        batch.is_active = true if @activate_batch
         map_args_to_task(task, @args)
         opt = {
           facility_id: batch.facility_id,
@@ -27,14 +28,14 @@ module Cultivation
           quantity: batch.quantity,
         }
         # Update child and dependents tasks's start & end dates
-        update_task(task, batch_tasks, opt)
+        update_task(task, batch.tasks, opt)
         # Save other fields on Task that are not handle by bulk_update
         task.save if errors.empty?
         # TODO::ANDY: Estimated Hours are not calculating
         # Extend end date to Category and Phas
-        update_tasks_end_date(task, batch_tasks, opt)
+        update_tasks_end_date(task, batch.tasks, opt)
         # Update batch
-        update_batch(batch, batch_tasks&.first)
+        update_batch(batch, batch.tasks&.first)
       end
       task
     end
@@ -42,18 +43,23 @@ module Cultivation
     def map_args_to_task(task, args)
       task.phase = args[:phase]
       task.task_category = args[:task_category]
-      task.name = args[:name]
+
+      # Only allow non-indelible task change these field
+      unless task.indelible
+        task.name = args[:name] unless task&.indelible
+        task.is_phase = args[:is_phase] || false
+        task.is_category = args[:is_category] || false
+        task.parent_id = args[:parent_id].to_bson_id
+        task.depend_on = args[:depend_on].to_bson_id
+        task.task_type = args[:task_type] || []
+      end
+
       task.duration = args[:duration].to_i
       task.days_from_start_date = args[:days_from_start_date].to_i
       task.start_date = args[:start_date]
       task.end_date = args[:end_date]
       task.estimated_hours = args[:estimated_hours].to_f
       task.estimated_cost = args[:estimated_cost].to_f
-      task.is_phase = args[:is_phase] || false
-      task.is_category = args[:is_category] || false
-      task.parent_id = args[:parent_id].to_bson_id
-      task.depend_on = args[:depend_on].to_bson_id
-      task.task_type = args[:task_type] || []
     end
 
     def update_batch(batch, first_task)
@@ -66,17 +72,13 @@ module Cultivation
                             Constants::CONST_CURE]).first
       batch.estimated_harvest_date = harvest_phase.start_date if harvest_phase
       batch.start_date = first_task.start_date if first_task
-      batch.save
+      batch.save!
     end
 
     def update_task(task, batch_tasks, opt = {})
       raise ArgumentError, 'facility_id is required' if opt[:facility_id].nil?
       raise ArgumentError, 'batch_id is required' if opt[:batch_id].nil?
       raise ArgumentError, 'quantity is required' if opt[:quantity].nil?
-
-      # Rails.logger.debug "update_task task.name: `#{task.name}`"
-      # Rails.logger.debug "task.start_date: `#{task.start_date.to_date}`"
-      # Rails.logger.debug "task.end_date: `#{task.end_date.to_date}`"
       # Store changed task into a an array for 'bulk' update later
       opt = {
         start_date: task.start_date,
@@ -95,14 +97,12 @@ module Cultivation
     def update_tasks_end_date(task, batch_tasks, opt = {})
       raise ArgumentError, 'facility_id is required' if opt[:facility_id].nil?
       raise ArgumentError, 'batch_id is required' if opt[:batch_id].nil?
-
       parent = batch_tasks.detect { |t| t.id.to_s == task.parent_id.to_s }
       if parent
         # Get all sibling tasks, including current task
         siblings = get_siblings(task, batch_tasks)
         # Get siblings max end_date (latest date)
         max_end_date = siblings.map(&:end_date).compact.max
-
         if parent&.end_date
           # Extend parent's end date if any siblings have later end_date
           if max_end_date && max_end_date > parent.end_date
@@ -115,10 +115,8 @@ module Cultivation
                                             parent.end_date)
           end
         end
-
         update_task(parent, batch_tasks, {children: false}.merge(opt))
         update_tasks_end_date(parent, batch_tasks, opt)
-
         parent.save unless errors.present?
       end
     end

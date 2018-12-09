@@ -1,17 +1,45 @@
 class Cultivation::BatchesController < ApplicationController
-  before_action :find_batch_info, only: [:show, :gantt, :locations, :issues, :secret_sauce, :resource, :material]
+  before_action :find_batch_info, only: [:show,
+                                         :gantt,
+                                         :locations,
+                                         :issues,
+                                         :secret_sauce,
+                                         :resource,
+                                         :material]
 
   def index
   end
 
   def new
     @facility_id = current_facility&.id.to_s
-    # Cultivation Phases during batch setup depends on the Facility (room & section) purposes
+    # Cultivation Phases during batch setup depends on the
+    # Facility's (room & section) purposes
     @phases = current_facility&.purposes || []
-    @plant_sources = Constants::PLANT_SOURCE_TYPES.map { |a| {value: a[:code], label: a[:name]} }
-    @strains = Inventory::QueryFacilityStrains.call(@facility_id).result.map { |a| {value: a[:value], label: a[:strain_name]} }
-    @facilities = QueryUserFacilities.call(current_user).result.map { |a| {value: a.id.to_s, label: "#{a.name} (#{a.code})"} }
-    @grow_methods = Constants::GROW_MEDIUM.map { |a| {value: a[:code], label: a[:name]} }
+    @plant_sources = Constants::PLANT_SOURCE_TYPES.map do |a|
+      {
+        value: a[:code],
+        label: a[:name],
+      }
+    end
+    facility_strains = Inventory::QueryFacilityStrains.call(@facility_id).result
+    @strains = facility_strains.map do |a|
+      {
+        value: a[:value],
+        label: a[:strain_name],
+      }
+    end
+    @facilities = QueryUserFacilities.call(current_user).result.map do |a|
+      {
+        value: a.id.to_s,
+        label: "#{a.name} (#{a.code})",
+      }
+    end
+    @grow_methods = Constants::GROW_MEDIUM.map do |a|
+      {
+        value: a[:code],
+        label: a[:name],
+      }
+    end
   end
 
   def show
@@ -48,15 +76,6 @@ class Cultivation::BatchesController < ApplicationController
   def material
   end
 
-  def update
-    if params[:type] == 'active'
-      @batch = Cultivation::Batch.find(params[:id])
-      @batch.update(is_active: true)
-      flash[:notice] = 'Batch saved successfully.'
-      redirect_to root_path
-    end
-  end
-
   def destroy
     Cultivation::DestroyBatch.call(params[:id])
     flash[:notice] = 'Batch deleted.'
@@ -73,30 +92,24 @@ class Cultivation::BatchesController < ApplicationController
       'clone'
     when 'seeds'
       'seed'
-    else
-      nil
     end
   end
 
   def get_cultivation_locations(batch)
-    # TODO::ANDY: Need to detech from Facility
-    cultivation_phases = [
-      Constants::CONST_CLONE,
-      # Constants::CONST_VEG,
-      Constants::CONST_VEG1,
-      Constants::CONST_VEG2,
-      Constants::CONST_FLOWER,
-      Constants::CONST_DRY,
-      Constants::CONST_CURE,
-    ]
-    phases_info = get_batch_phase(batch, cultivation_phases) # Get start_date and end_date from batch
+    facility = Facility.find_by(id: batch.facility_id)
+    # Get phases from Facility
+    cultivation_phases = batch.facility_strain.facility.growth_stages
+    # Get start_date and end_date from batch
+    phases_info = get_batch_phase(batch, cultivation_phases)
     if phases_info.any?
-      filter_args = {facility_id: batch.facility_id, purpose: cultivation_phases, exclude_batch_id: batch.id}
-      Rails.logger.debug "\033[34m get_cultivation_locations > batch start_date: #{batch&.start_date} \033[0m"
-      Rails.logger.debug "\033[34m get_cultivation_locations > batch estimated_harvest_date: #{batch&.estimated_harvest_date} \033[0m"
-      available_trays_cmd = QueryAvailableTrays.call(batch.start_date, batch.estimated_harvest_date, filter_args)
+      filter_args = {facility_id: batch.facility_id,
+                     purpose: cultivation_phases,
+                     exclude_batch_id: batch.id}
+      available_trays_cmd = QueryAvailableTrays.call(batch.start_date,
+                                                     batch.estimated_harvest_date,
+                                                     filter_args)
       if available_trays_cmd.success?
-        available_trays_cmd.result #&.select { |t| cultivation_phases.include? t.tray_purpose }
+        available_trays_cmd.result
       else
         []
       end
@@ -114,6 +127,7 @@ class Cultivation::BatchesController < ApplicationController
 
   def find_batch_info
     @batch = Cultivation::Batch.includes(:facility_strain).find(params[:id])
+
     @batch_attributes = {
       id: @batch.id.to_s,
       batch_no: @batch.batch_no.to_s,
@@ -127,6 +141,8 @@ class Cultivation::BatchesController < ApplicationController
       total_estimated_hour: @batch.total_estimated_hours,
       total_estimated_cost: ActionController::Base.helpers.number_to_currency(@batch.total_estimated_costs, unit: '$'),
       materials: @batch.material_summary,
+      cultivation_phases: @batch&.facility_strain&.facility&.growth_stages,
+      is_active: @batch.is_active,
     }
   end
 

@@ -2,8 +2,12 @@ desc "Create data from new facility to PO, invoice, stock receive, task planning
 task seed_until_po: :environment  do
 
   # 1. Setup facility & master data
-  facility = Facility.find_or_create_by(name: 'Facility 1', code: 'F1') do |f|
+  facility = Facility.find_or_create_by!(name: 'Facility 1', code: 'F1') do |f|
     f.is_complete = true
+  end
+
+  if facility.rooms.empty?
+    facility.rooms.create!(name: 'r1', code: 'r1', purpose: 'clone', is_complete: true)
   end
 
   UOM =       Common::UnitOfMeasure
@@ -29,7 +33,7 @@ task seed_until_po: :environment  do
                         created_by:   User.last)
 
   # 1.1. Reset data
-  Inventory::Catalogue.where(facility: facility).delete_all
+  Inventory::Catalogue.delete_all
   Inventory::PurchaseOrder.where(facility: facility).delete_all
   Inventory::VendorInvoice.where(facility: facility).delete_all
   Inventory::ItemTransaction.where(facility: facility).delete_all
@@ -57,64 +61,56 @@ task seed_until_po: :environment  do
                                             category: '', 
                                             sub_category: '', 
                                             key: 'nutrients',
-                                            uom_dimension: 'weights',
-                                            facility: facility)
+                                            uom_dimension: 'weights')
 
   potassium = Inventory::Catalogue.create!( label: 'Potassium Product', 
                                             catalogue_type: 'raw_materials',
                                             category: 'nutrients', 
                                             sub_category: '', 
                                             key: 'potassium',
-                                            uom_dimension: 'weights',
-                                            facility: facility)
+                                            uom_dimension: 'weights')
 
   seaweed   = Inventory::Catalogue.create!( label: 'Seaweed', 
                                             catalogue_type: 'raw_materials',
                                             category: 'nutrients', 
                                             sub_category: 'potassium', 
                                             key: 'seaweed', 
-                                            uom_dimension: 'weights',
-                                            facility: facility)
+                                            uom_dimension: 'weights')
 
   nitrogen  = Inventory::Catalogue.create!( label: 'Nitrogen Product', 
                                             catalogue_type: 'raw_materials',
                                             category: 'nutrients', 
                                             sub_category: '', 
                                             key: 'nitrogen',
-                                            uom_dimension: 'weights',
-                                            facility: facility)
+                                            uom_dimension: 'weights')
 
   blood_meal = Inventory::Catalogue.create!(label: 'Nitrogen Product', 
                                             catalogue_type: 'raw_materials',
                                             category: 'nutrients', 
                                             sub_category: 'nitrogen', 
                                             key: 'blood_meal',
-                                            uom_dimension: 'weights',
-                                            facility: facility)
+                                            uom_dimension: 'weights')
 
   urea      = Inventory::Catalogue.create!( label: 'Nitrogen Product', 
                                             catalogue_type: 'raw_materials',
                                             category: 'nutrients', 
                                             sub_category: 'nitrogen', 
                                             key: 'urea',
-                                            uom_dimension: 'weights',
-                                            facility: facility)
+                                            uom_dimension: 'weights')
 
   grow_lights = Inventory::Catalogue.create!( label: 'Grow Lights',
                                             catalogue_type: 'raw_materials',
                                             category: '', 
                                             sub_category: '', 
                                             key: 'grow_lights',
-                                            uom_dimension: 'weights',
-                                            facility: facility)
+                                            uom_dimension: 'weights')
 
   eye_drops  = Inventory::Catalogue.create!(label: 'Eye drops',
                                             catalogue_type: 'raw_materials',
                                             category: '', 
                                             sub_category: '', 
                                             key: 'eye_drops',
-                                            uom_dimension: 'weights',
-                                            facility: facility)
+                                            uom_dimension: 'weights')
 
   # For seed and clone and plants
   plant_catalogue  = Inventory::Catalogue.create!(label: 'Plant',
@@ -122,8 +118,7 @@ task seed_until_po: :environment  do
                                             category: '', 
                                             sub_category: '', 
                                             key: 'plant',
-                                            uom_dimension: 'pieces',
-                                            facility: facility)
+                                            uom_dimension: 'pieces')
 
   # 3. Setup vendor
   vendor =    Inventory::Vendor.find_or_create_by(name: 'vendor #1', vendor_no: 'VendOne')
@@ -166,7 +161,7 @@ task seed_until_po: :environment  do
   invoice.update!(status: 'received') # to be decided
   po.update!(status: 'completed')
 
-  # This is table of product sold by vendor. Not really needed.
+  # This is table of product sold by vendor. Not needed at the moment.
   # Inventory::VendorProduct.find_or_create_by!(
   #   vendor:       vendor,
   #   catalogue:    seaweed,
@@ -176,7 +171,7 @@ task seed_until_po: :environment  do
   #   conversion:   bag_to_kg,              # conversion rule, 1 bag = 65 kg
   #   uom:          material_uom)
   
-  # 6. When taking stock intake, matching with Invoice
+  # 6. When taking stock intake, match items with Invoice
 
   invoice.items.each do |item|
     material_uom = 'kg'
@@ -202,13 +197,13 @@ task seed_until_po: :environment  do
   end
 
 
-  # 10. Alt - PO for plants
+  # 10. TODO PO for buying clones
 
 
   # Setup pot UOM
   UOM.find_or_create_by(name:         'Pot',
                         unit:         'pot', 
-                        dimension:    'custom', 
+                        dimension:    'plants', 
                         is_base_unit: true, 
                         base_unit:    'pot',
                         conversion:   1)
@@ -306,7 +301,7 @@ task seed_until_po: :environment  do
                           ref_id:           mat_used.id,
                           ref_type:         mat_used.class.name,
                           event_type:       'materials_used',         # Move to Constants
-                          event_date:       DateTime.now,           # stock intake happen today
+                          event_date:       DateTime.now,             # stock intake happen today
                           facility:         Facility.find(batch.facility_id),
                           catalogue:        seaweed,
                           product_name:     seaweed.label,

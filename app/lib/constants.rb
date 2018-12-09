@@ -13,6 +13,7 @@ module Constants
   CONST_VEG = 'veg'.freeze
   CONST_VEG1 = 'veg1'.freeze
   CONST_VEG2 = 'veg2'.freeze
+  CONST_HARVEST = 'harvest'.freeze
 
   CULTIVATION_PHASES_1V = [
     CONST_CLONE,

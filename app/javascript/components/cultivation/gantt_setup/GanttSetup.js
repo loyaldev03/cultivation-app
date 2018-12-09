@@ -1,19 +1,31 @@
+import 'babel-polyfill'
+
 import React from 'react'
 import { render } from 'react-dom'
 
 import { observable } from 'mobx'
 import { observer, Provider } from 'mobx-react'
 import { formatDate2 } from '../../utils'
+import GanttChart from './GanttChart'
+import loadTasks from './loadTask'
+import TaskStore from './TaskStore'
 
+@observer
 class GanttSetup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      batch: props.batch
+      batch: props.batch,
+      tasks: props.tasks
     }
   }
 
+  async componentDidMount() {
+    await TaskStore.loadTasks(this.props.batch_id)
+  }
+
   render() {
+    let tasks = TaskStore.getTasks()
     let activeTabs =
       'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
     let inactiveTabs =
@@ -214,7 +226,7 @@ class GanttSetup extends React.Component {
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
-              <h2>Gantt chart is here</h2>
+              <GanttChart tasks={tasks} />
             </div>
           </div>
         </div>

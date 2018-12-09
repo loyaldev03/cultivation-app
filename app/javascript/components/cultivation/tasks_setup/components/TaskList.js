@@ -650,6 +650,7 @@ class TaskList extends React.Component {
             }
           ]}
           data={tasks}
+          showPagination={false}
           className=""
           defaultPageSize={-1}
           getTrProps={(state, rowInfo, column) => {

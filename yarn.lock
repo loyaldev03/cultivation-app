@@ -3447,6 +3447,11 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
+frappe-gantt@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/frappe-gantt/-/frappe-gantt-0.2.0.tgz#6512816557f47c0718349add38366d27425a74ba"
+  integrity sha1-ZRKBZVf0fAcYNJrdODZtJ0JadLo=
+
 fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
@@ -3520,6 +3525,14 @@ functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
+
+gantt-for-react@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/gantt-for-react/-/gantt-for-react-0.2.0.tgz#d6ec44cf3f033566ad539019615d683fe2e7abd3"
+  integrity sha512-OweNBF2ledGig7CEShe1WXcrfkrfjBdWgdEENmfynUQeReB6zjQCWvadE+jFRGKbdxySquVFee2HNhdlAJ2ufQ==
+  dependencies:
+    frappe-gantt "^0.2.0"
+    size-sensor "^0.2.0"
 
 gauge@~2.7.3:
   version "2.7.4"
@@ -7502,6 +7515,11 @@ simple-swizzle@^0.2.2:
   integrity sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=
   dependencies:
     is-arrayish "^0.3.1"
+
+size-sensor@^0.2.0:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/size-sensor/-/size-sensor-0.2.2.tgz#aa416d86d019a4fbb8e606780ce37820f0172022"
+  integrity sha512-dL/IdBhGDvCHlxQgxryqJNEnSWQz4xvKntsW028CgaJLBLSw8rpi7oUVSM4+xnaHbH+BFkXz6H5aMStfH8v2Pg==
 
 slash@^1.0.0:
   version "1.0.0"

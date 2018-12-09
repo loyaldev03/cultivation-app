@@ -62,7 +62,7 @@ class GanttChart extends React.Component {
   }
 
   handleDropdown = id => {
-    this.setState({ idOpen: id})
+    this.setState({ idOpen: id })
   }
 
   handleMouseLeave = row => {
@@ -78,8 +78,7 @@ class GanttChart extends React.Component {
       let tempCollapseId = this.state.collapseIds
 
       // this.setState({ collapseIds: tempCollapseId.filter(e => e !== id) })
-
-    }else{
+    } else {
       // TaskStore.setHiddenIds(task)
       // this.setState(prevState => ({
       //   collapseIds: [...prevState.collapseIds, id]

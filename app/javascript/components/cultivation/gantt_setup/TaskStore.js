@@ -7,7 +7,6 @@ class TaskStore {
   @observable isLoaded = false
   @observable hidden_ids = []
 
-
   @action
   async loadTasks(batch_id) {
     let tasks = await loadTask.loadbatch(batch_id)
@@ -15,12 +14,12 @@ class TaskStore {
     this.isLoaded = true
   }
 
-  getFilteredTask(tasks){
+  getFilteredTask(tasks) {
     tasks = toJS(tasks)
     if (this.isLoaded) {
       console.log(tasks.filter(u => !this.hidden_ids.includes(u.id)))
       return tasks.filter(u => !this.hidden_ids.includes(u.id))
-    }else{
+    } else {
       return []
     }
   }
@@ -51,7 +50,7 @@ class TaskStore {
     }
   }
 
-  setHiddenIds(parent_id){
+  setHiddenIds(parent_id) {
     let parent = this.tasks.find(e => e.id === parent_id)
     let children = this.tasks.filter(e => e.attributes.parent_id === parent.id)
     let children_ids = children.map(e => e.id)
@@ -60,7 +59,7 @@ class TaskStore {
     console.log(toJS(this.hidden_ids))
   }
 
-  clearHiddenIds(parent_id){
+  clearHiddenIds(parent_id) {
     let parent = this.tasks.find(e => e.id === parent_id)
     let children = this.tasks.filter(e => e.attributes.parent_id === parent.id)
 
@@ -79,7 +78,7 @@ class TaskStore {
           end: end_date,
           dependencies: task.attributes.parent_id
             ? task.attributes.parent_id
-            : task.attributes.depend_on,
+            : task.attributes.depend_on
           // progress: parseInt(Math.random() * 100, 10)
         }
       })

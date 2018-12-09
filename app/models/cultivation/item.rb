@@ -9,6 +9,9 @@ module Cultivation
     embedded_in :task, class_name: 'Cultivation::Task'
     belongs_to :catalogue, class_name: 'Inventory::Catalogue'
 
+    # need facility strain field to cater for seed/ purchase clone to be used to start the batch
+    #
+
     def name
       catalogue.try(:label)
     end

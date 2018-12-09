@@ -11,11 +11,11 @@ import {
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { formatDate } from '../../../utils'
-import { saveHarvestPackage } from '../actions/saveHarvestPackage'
+import { saveHarvestPackage } from '../actions/setupHarvestPackage'
 
 const coalese = option => {
-  if (!option || option.length <= 0) {
-    return null
+  if (option === null || option.length <= 0) {
+    return false
   }
   return option
 }
@@ -158,7 +158,6 @@ class HarvestPackageEditor extends React.Component {
       product_code,
       catalogue,
       facility_strain,
-      facility_id,
       id,
       package_tag,
       quantity,
@@ -167,6 +166,7 @@ class HarvestPackageEditor extends React.Component {
       expiration_date,
       location_id,
       harvest_batch,
+      other_harvest_batch,
       drawdown_quantity,
       drawdown_uom
     } = this.state
@@ -176,6 +176,9 @@ class HarvestPackageEditor extends React.Component {
       : ''
     const catalogue_id = coalese(catalogue) ? catalogue.id : ''
     let harvest_batch_id = (other_harvest_batch = '')
+
+    console.log(harvest_batch)
+    console.log(!coalese(harvest_batch))
 
     if (!coalese(harvest_batch) && harvest_batch.__isNew__) {
       other_harvest_batch = harvest_batch.value
@@ -200,7 +203,6 @@ class HarvestPackageEditor extends React.Component {
       product_code,
       catalogue_id,
       facility_strain_id,
-      facility_id,
       id,
       package_tag,
       quantity,
@@ -469,6 +471,12 @@ class HarvestPackageEditor extends React.Component {
                 onChange={this.onChangeDrawdownUom}
               />
               <FieldError errors={this.state.errors} field="uom" />
+            </div>
+          </div>
+
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <p className="gray f6 i">Cost info coming soon...</p>
             </div>
           </div>
 

@@ -147,6 +147,14 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :sales_products, only: [:index, :show] do
+        collection do
+          get 'products'
+          post 'setup_harvest_package'
+          post 'setup_sales_product'
+        end
+      end
+
       resources :vendors, only: [:index]
       resources :purchase_orders, only: [:index]
       resources :vendor_invoices, only: [:index, :show]

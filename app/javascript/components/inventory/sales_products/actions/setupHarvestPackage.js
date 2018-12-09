@@ -1,7 +1,10 @@
 import { httpPostOptions } from '../../../utils'
 
 export const saveHarvestPackage = payload => {
-  return fetch('/api/v1/sales_products/setup_harvest_package', httpPostOptions(payload))
+  return fetch(
+    '/api/v1/sales_products/setup_harvest_package',
+    httpPostOptions(payload)
+  )
     .then(response => {
       // console.log(response.status)
       return response.json().then(data => ({

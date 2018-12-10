@@ -47,7 +47,8 @@ class GanttChart extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      viewMode: 'Half Day'
+      viewMode: 'Half Day',
+      collapseIds: []
     }
   }
 
@@ -58,7 +59,7 @@ class GanttChart extends React.Component {
   }
 
   onClickTask = task => {
-    alert('You have selected task => ' + task.name)
+    alert('You have selected task => ' + task.attributes.name)
   }
 
   handleDropdown = id => {
@@ -71,18 +72,16 @@ class GanttChart extends React.Component {
     }))
   }
 
-  toggleCollapse = task => {
-    TaskStore.setHiddenIds(task)
-
-    if (this.state.collapseIds.includes(task.id)) {
+  toggleCollapse = task_id => {
+    if (this.state.collapseIds.includes(task_id)) {
       let tempCollapseId = this.state.collapseIds
-
-      // this.setState({ collapseIds: tempCollapseId.filter(e => e !== id) })
+      TaskStore.clearHiddenIds(task_id)
+      this.setState({ collapseIds: tempCollapseId.filter(e => e !== task_id) })
     } else {
-      // TaskStore.setHiddenIds(task)
-      // this.setState(prevState => ({
-      //   collapseIds: [...prevState.collapseIds, id]
-      // }))
+      TaskStore.setHiddenIds(task_id)
+      this.setState(prevState => ({
+        collapseIds: [...prevState.collapseIds, task_id]
+      }))
     }
   }
 

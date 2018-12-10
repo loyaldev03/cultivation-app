@@ -54,16 +54,16 @@ class TaskStore {
     let parent = this.tasks.find(e => e.id === parent_id)
     let children = this.tasks.filter(e => e.attributes.parent_id === parent.id)
     let children_ids = children.map(e => e.id)
-    console.log(children_ids)
-    this.hidden_ids = this.hidden_ids + children_ids
-    console.log(toJS(this.hidden_ids))
+    this.hidden_ids = this.hidden_ids.concat(children_ids)
   }
 
   clearHiddenIds(parent_id) {
     let parent = this.tasks.find(e => e.id === parent_id)
-    let children = this.tasks.filter(e => e.attributes.parent_id === parent.id)
-
-    this.hidden_ids = toJS(this.hidden_ids).map(e => children)
+    let children = this.tasks
+      .filter(e => e.attributes.parent_id === parent.id)
+      .map(e => e.id)
+    let new_ids = toJS(this.hidden_ids).filter(e => !children.includes(e))
+    this.hidden_ids = new_ids
   }
 
   formatGantt(tasks) {

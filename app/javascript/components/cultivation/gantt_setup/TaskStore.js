@@ -59,7 +59,9 @@ class TaskStore {
 
   clearHiddenIds(parent_id) {
     let parent = this.tasks.find(e => e.id === parent_id)
-    let children = this.tasks.filter(e => e.attributes.parent_id === parent.id).map(e => e.id)
+    let children = this.tasks
+      .filter(e => e.attributes.parent_id === parent.id)
+      .map(e => e.id)
     let new_ids = toJS(this.hidden_ids).filter(e => !children.includes(e))
     this.hidden_ids = new_ids
   }

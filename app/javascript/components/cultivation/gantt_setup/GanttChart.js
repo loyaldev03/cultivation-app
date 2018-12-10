@@ -59,7 +59,7 @@ class GanttChart extends React.Component {
   }
 
   onClickTask = task => {
-    alert('You have selected task => ' + task.name)
+    alert('You have selected task => ' + task.attributes.name)
   }
 
   handleDropdown = id => {

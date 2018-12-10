@@ -147,7 +147,7 @@ class TaskList extends React.Component {
     if (error_container) {
       error_container.style.display = 'none'
     }
-    this.clearDropdown()
+    this.clearDropdown()  
     editorSidebarHandler.open({
       width: '500px',
       data: e.row,

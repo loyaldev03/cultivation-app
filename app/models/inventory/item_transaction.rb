@@ -33,3 +33,9 @@ module Inventory
     belongs_to :product, class_name: 'Inventory::Product', optional: true
   end
 end
+
+# ---------------------------------------------
+# catalogue,    qty, uom, event_type,   date
+# ---------------------------------------------
+# small-table,   5,  ea,  stock_intake, 1 dec
+# small-table,  -1,  ea,  damaged,      25 dec

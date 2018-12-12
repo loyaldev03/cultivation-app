@@ -7,12 +7,12 @@ module Inventory
     include Mongoid::Timestamps::Short
 
     field :name, type: String
-    field :product_code, type: String
-    field :facility_id, type: BSON::ObjectId
-    field :status, type: String
+    field :sku, type: String
+    field :status, type: String    # available, draft
 
     has_many :packages, class_name: 'Inventory::ItemTransaction'
+    belongs_to :catalogue, class_name: 'Inventory::Catalogue'
+    belongs_to :facility, class_name: 'Facility'
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
-    belongs_to :catalogue, class_name: 'Common::Catalogue'
   end
 end

@@ -11,7 +11,8 @@ import {
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { formatDate } from '../../../utils'
-import { saveHarvestPackage } from '../actions/setupHarvestPackage'
+import saveHarvestPackage from '../actions/setupHarvestPackage'
+import getHarvestPackage from '../actions/getHarvestPackage'
 
 const coalese = option => {
   if (option === null || option.length <= 0) {
@@ -28,13 +29,50 @@ class HarvestPackageEditor extends React.Component {
 
   componentDidMount() {
     document.addEventListener('editor-sidebar-open', event => {
-      // const id = event.detail.id
-      // if (!id) {
-      //   this.reset()
-      // } else {
-      //   getRawMaterial(id)
-      //     .then(x => x.data.data.attributes)
-      //     .then(attr => {
+      const id = event.detail.id
+      console.log(id)
+      if (!id) {
+        this.setState(this.resetState())
+      } else {
+        getHarvestPackage(id)
+          .then(x => ({
+            id: x.data.data.id,
+            ...x.data.data.attributes
+          }))
+          .then(attr => {
+            console.log(attr)
+
+            const fs = this.props.facility_strains.find(
+              x => x.value === attr.product.facility_strain_id
+            )
+
+            console.log(fs)
+
+            const catalogue = this.props.sales_catalogue.find(
+              x => x.value == attr.catalogue.id 
+            )
+
+            this.setState({
+              ...this.resetState(),
+              product_id: attr.product.id,
+              product: { value: attr.product.id , label: attr.product.name },
+              sku: attr.product.sku,
+              catalogue: catalogue,
+              facility_strain: fs,
+              facility_id: fs.facility_id,
+              id: attr.id,
+              package_tag: attr.package_tag,
+              quantity: attr.quantity,
+              uom: attr.uom,
+              production_date: attr.production_date,
+              expiration_date: attr.expiration_date,
+              location_id: attr.location_id,
+              harvest_batch: null,
+              other_harvest_batch: '',
+              drawdown_quantity: attr.drawdown_quantity,
+              drawdown_uom: attr.drawdown_uom
+            })
+          })
       //       const catalogue = this.props.catalogues.find(
       //         x => x.id == attr.catalogue_id
       //       )
@@ -58,7 +96,8 @@ class HarvestPackageEditor extends React.Component {
       //         vendor_invoice: attr.vendor_invoice
       //       })
       //     })
-      // }
+      // })
+      }
     })
   }
 
@@ -74,7 +113,7 @@ class HarvestPackageEditor extends React.Component {
       )
       this.setState({
         product,
-        product_code: product.product_code,
+        sku: product.sku,
         catalogue: this.props.sales_catalogue.find(
           x => x.value === product.catalogue_id
         ),
@@ -84,7 +123,7 @@ class HarvestPackageEditor extends React.Component {
       })
     } else {
       this.setState({
-        product_code: '',
+        sku: '',
         product: null
       })
     }
@@ -110,7 +149,10 @@ class HarvestPackageEditor extends React.Component {
   onChangeProductionDate = production_date => this.setState({ production_date })
   onChangeExpirationDate = expiration_date => this.setState({ expiration_date })
   onRoomChanged = item => this.setState({ location_id: item.rm_id })
-  onHarvestBatchChanged = harvest_batch => this.setState({ harvest_batch })
+  onHarvestBatchChanged = harvest_batch => { 
+    console.log(harvest_batch)
+    this.setState({ harvest_batch }) 
+  }
   onChangeDrawdownUom = drawdown_uom => this.setState({ drawdown_uom })
 
   resetState() {
@@ -118,7 +160,7 @@ class HarvestPackageEditor extends React.Component {
       // Product details
       product_id: '',
       product: null,
-      product_code: '',
+      sku: '',
       catalogue: null,
       facility_strain: '',
       facility_id: '',
@@ -139,11 +181,6 @@ class HarvestPackageEditor extends React.Component {
     }
   }
 
-  reset() {
-    this.setState(this.resetState())
-    this.purchaseInfoEditor.current.reset()
-  }
-
   onSave = event => {
     const payload = this.validateAndGetValues()
     console.log(payload)
@@ -153,9 +190,8 @@ class HarvestPackageEditor extends React.Component {
 
   validateAndGetValues() {
     let {
-      product_id,
-      name,
-      product_code,
+      product,
+      sku,
       catalogue,
       facility_strain,
       id,
@@ -177,8 +213,8 @@ class HarvestPackageEditor extends React.Component {
     const catalogue_id = coalese(catalogue) ? catalogue.id : ''
     let harvest_batch_id = (other_harvest_batch = '')
 
-    console.log(harvest_batch)
-    console.log(!coalese(harvest_batch))
+    // console.log(harvest_batch)
+    // console.log(!coalese(harvest_batch))
 
     if (!coalese(harvest_batch) && harvest_batch.__isNew__) {
       other_harvest_batch = harvest_batch.value
@@ -190,8 +226,20 @@ class HarvestPackageEditor extends React.Component {
     expiration_date = expiration_date ? expiration_date.toISOString() : ''
     uom = coalese(uom) ? uom.value : ''
     drawdown_uom = coalese(drawdown_uom) ? drawdown_uom.value : ''
+    
+    let name, product_id = ''
+    product = coalese(product)
 
+    if (product !== null) {
+      name = product.label
+      if (!product.__isNew__) {
+        product_id = product.value
+      }  
+    }
+    
     // console.group('onsave')
+    // console.log(name)
+    // console.log(product_id)
     // console.log(`facility_strain_id: ${facility_strain_id}`)
     // console.log(`catalogue_id: ${catalogue_id}`)
     // console.log(`harvest_batch_id: ${harvest_batch_id}`)
@@ -200,7 +248,7 @@ class HarvestPackageEditor extends React.Component {
     return {
       product_id,
       name,
-      product_code,
+      sku,
       catalogue_id,
       facility_strain_id,
       id,
@@ -265,10 +313,10 @@ class HarvestPackageEditor extends React.Component {
     }))
 
     const harvestOptions = harvest_batches
-      .map(x => x.attributes)
+      .map(x => ({id: x.id, ...x.attributes }))
       .filter(x => x.facility.id === this.state.facility_id)
       .map(x => ({
-        value: x.cultivation_batch_id,
+        value: x.id,
         label: `${x.harvest_name} (${x.strain_name})`,
         ...x
       }))
@@ -315,8 +363,8 @@ class HarvestPackageEditor extends React.Component {
             <div className="w-50">
               <TextInput
                 label="Product code/ SKU"
-                fieldname="product_code"
-                value={this.state.product_code}
+                fieldname="sku"
+                value={this.state.sku}
                 onChange={this.onChangeGeneric}
               />
             </div>
@@ -456,8 +504,8 @@ class HarvestPackageEditor extends React.Component {
             <div className="w-50">
               <NumericInput
                 label="Qty used (dry weight)"
-                fieldname="quantity"
-                value={this.state.order_quantity}
+                fieldname="drawdown_quantity"
+                value={this.state.drawdown_quantity}
                 onChange={this.onChangeGeneric}
                 errors={this.state.errors}
               />

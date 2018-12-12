@@ -1,12 +1,12 @@
 import { httpPostOptions } from '../../../utils'
+import harvestPackageStore from '../store/HarvestPackageStore'
 
-export const saveHarvestPackage = payload => {
+const saveHarvestPackage = payload => {
   return fetch(
     '/api/v1/sales_products/setup_harvest_package',
     httpPostOptions(payload)
   )
     .then(response => {
-      // console.log(response.status)
       return response.json().then(data => ({
         status: response.status,
         data
@@ -20,12 +20,14 @@ export const saveHarvestPackage = payload => {
       }
 
       console.log(result)
-      // if (payload.id) {
-      //   rawMaterialStore.update(data.data)
-      // } else {
-      //   rawMaterialStore.prepend(data.data)
-      // }
+      if (payload.id) {
+        harvestPackageStore.update(data.data)
+      } else {
+        harvestPackageStore.prepend(data.data)
+      }
 
       return result
     })
 }
+
+export default saveHarvestPackage

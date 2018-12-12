@@ -4,7 +4,7 @@ module Inventory
     attr_reader :user,
       :product_id,
       :name,
-      :product_code,
+      :sku,
       :catalogue_id,
       :facility_strain_id,
       :facility_strain,
@@ -25,7 +25,7 @@ module Inventory
       @user = user
       @product_id = args[:product_id]
       @name = args[:name]
-      @product_code = args[:product_code]
+      @sku = args[:sku]
       @catalogue_id = args[:catalogue_id]
 
       @facility_strain_id = args[:facility_strain_id]
@@ -70,20 +70,25 @@ module Inventory
       if product_id.blank?
         return Inventory::Product.create!(
                  name: name,
-                 product_code: product_code,
+                 sku: sku,
                  catalogue_id: catalogue_id,
                  facility_strain_id: facility_strain_id,
                  facility_id: facility_id,
+                 status: 'available',
                )
       else
         return Inventory::Product.find(product_id)
       end
     end
 
-    def save_package(product)
+    def save_package!(product)
       package = nil
       if id.blank?
-        package = product.packages.build
+        package = product.packages.build(
+          facility_id: facility_id,
+          facility_strain_id: facility_strain_id,
+          catalogue_id: catalogue_id,
+        )
       else
         package = product.packages.find(id)
       end

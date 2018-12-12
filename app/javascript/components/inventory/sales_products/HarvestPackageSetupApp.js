@@ -3,44 +3,78 @@ import PropTypes from 'prop-types'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
+import { formatDate } from '../../utils/DateHelper'
 import HarvestPackageEditor from './components/HarvestPackageEditor'
+import harvestPackageStore from './store/HarvestPackageStore'
+import loadHarvestPackages from './actions/loadHarvestPackages'
 
-const columns = [
+const columns = (locations) => [
   {
     Header: 'Package Tag',
-    accessor: 'attributes.catalogue',
+    accessor: 'attributes.package_tag',
     headerClassName: 'tl'
   },
   {
     Header: 'Name',
-    accessor: 'attributes.vendor.name',
+    accessor: 'attributes.product.name',
+    headerClassName: 'tl'
+  },
+  {
+    Header: 'Product code/ SKU',
+    accessor: 'attributes.product.sku',
     headerClassName: 'tl'
   },
   {
     Header: 'Item/ Type',
-    accessor: 'attributes.product_name',
+    accessor: 'attributes.catalogue.label',
     headerClassName: 'tl'
   },
   {
     Header: 'Quantity',
-    accessor: 'attributes.purchase_order.purchase_order_no',
     headerClassName: 'tr',
     Cell: record => (
       <div className="tr">
-        {record.original.attributes.order_quantity}{' '}
-        {record.original.attributes.order_uom}
+        {record.original.attributes.quantity}{' '}
+        {record.original.attributes.uom}
       </div>
     )
   },
   {
-    Header: 'Harvest name',
-    accessor: 'attributes.vendor_invoice.invoice_no',
-    headerClassName: 'tl'
+    Header: 'Location',
+    headerClassName: 'tl',
+    Cell: record => (
+      <div className="tl">
+        { locations.find(x => x.rm_id == record.original.attributes.location_id).rm_name }
+      </div>
+    )
   },
   {
-    Header: 'Price',
+    Header: 'Harvest batch',
+    accessor: 'attributes.harvest_batch_id',
+    headerClassName: 'tl',
+    Cell: record => (
+      <div className="tl">
+        {record.original.attributes.harvest_batch.harvest_name}
+      </div>
+    )
+  },
+  {
+    Header: 'Production',
     headerClassName: 'tr',
-    accessor: 'attributes.vendor_invoice.price'
+    Cell: record => (
+      <div className="tr">
+        {formatDate(record.original.attributes.production_date)}
+      </div>
+    )
+  },
+  {
+    Header: 'Expiration',
+    headerClassName: 'tr',
+    Cell: record => (
+      <div className="tr">
+        {formatDate(record.original.attributes.expiration_date)}
+      </div>
+    )
   },
   {
     Header: '',
@@ -52,7 +86,7 @@ const columns = [
         href="#"
         onClick={event => {
           const data = toJS(record.original.id)
-          openNutrient(event, data)
+          openHarvestPackage(event, data)
         }}
       >
         <i className="material-icons gray">more_horiz</i>
@@ -61,7 +95,7 @@ const columns = [
   }
 ]
 
-function openNutrient(event, id) {
+function openHarvestPackage(event, id) {
   window.editorSidebar.open({ width: '500px', id })
   event.preventDefault()
 }
@@ -71,7 +105,7 @@ class HarvestPackageSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    // loadRawMaterials('nutrients')
+    loadHarvestPackages()
   }
 
   onAddRecord = () => {
@@ -97,9 +131,9 @@ class HarvestPackageSetupApp extends React.Component {
           </div>
 
           <ReactTable
-            columns={columns}
+            columns={columns(this.props.locations)}
             pagination={{ position: 'top' }}
-            data={[]}
+            data={harvestPackageStore.bindable}
             showPagination={false}
             pageSize={30}
             minRows={5}

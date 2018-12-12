@@ -147,9 +147,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :sales_products, only: [:index, :show] do
+      resources :sales_products, only: [:index] do
         collection do
+          get 'harvest_package/:id', action: :harvest_package
           get 'products'
+          get 'harvest_packages'
           post 'setup_harvest_package'
           post 'setup_sales_product'
         end

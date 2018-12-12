@@ -11,7 +11,10 @@ class HarvestPackageStore {
 
   @action
   prepend(harvestPackage) {
-    this.harvestPackages.replace([harvestPackage, ...this.harvestPackages.slice()])
+    this.harvestPackages.replace([
+      harvestPackage,
+      ...this.harvestPackages.slice()
+    ])
   }
 
   @action

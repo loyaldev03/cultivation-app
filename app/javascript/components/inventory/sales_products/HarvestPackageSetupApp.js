@@ -8,7 +8,7 @@ import HarvestPackageEditor from './components/HarvestPackageEditor'
 import harvestPackageStore from './store/HarvestPackageStore'
 import loadHarvestPackages from './actions/loadHarvestPackages'
 
-const columns = (locations) => [
+const columns = locations => [
   {
     Header: 'Package Tag',
     accessor: 'attributes.package_tag',
@@ -34,8 +34,7 @@ const columns = (locations) => [
     headerClassName: 'tr',
     Cell: record => (
       <div className="tr">
-        {record.original.attributes.quantity}{' '}
-        {record.original.attributes.uom}
+        {record.original.attributes.quantity} {record.original.attributes.uom}
       </div>
     )
   },
@@ -44,7 +43,10 @@ const columns = (locations) => [
     headerClassName: 'tl',
     Cell: record => (
       <div className="tl">
-        { locations.find(x => x.rm_id == record.original.attributes.location_id).rm_name }
+        {
+          locations.find(x => x.rm_id == record.original.attributes.location_id)
+            .rm_name
+        }
       </div>
     )
   },

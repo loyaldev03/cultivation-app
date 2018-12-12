@@ -49,13 +49,13 @@ class HarvestPackageEditor extends React.Component {
             console.log(fs)
 
             const catalogue = this.props.sales_catalogue.find(
-              x => x.value == attr.catalogue.id 
+              x => x.value == attr.catalogue.id
             )
 
             this.setState({
               ...this.resetState(),
               product_id: attr.product.id,
-              product: { value: attr.product.id , label: attr.product.name },
+              product: { value: attr.product.id, label: attr.product.name },
               sku: attr.product.sku,
               catalogue: catalogue,
               facility_strain: fs,
@@ -73,30 +73,30 @@ class HarvestPackageEditor extends React.Component {
               drawdown_uom: attr.drawdown_uom
             })
           })
-      //       const catalogue = this.props.catalogues.find(
-      //         x => x.id == attr.catalogue_id
-      //       )
-      //       this.setState({
-      //         ...this.resetState(),
-      //         catalogue: catalogue,
-      //         id: id,
-      //         facility_id: attr.facility_id,
-      //         qty_per_package: attr.conversion,
-      //         product_name: attr.product_name,
-      //         manufacturer: attr.manufacturer,
-      //         description: attr.description,
-      //         order_quantity: parseFloat(attr.order_quantity),
-      //         price_per_package: parseFloat(attr.vendor_invoice.item_price),
-      //         order_uom: { value: attr.order_uom, label: attr.order_uom },
-      //         uom: { value: attr.uom, label: attr.uom },
-      //         location_id: attr.location_id,
-      //         // purchase info
-      //         vendor: attr.vendor,
-      //         purchase_order: attr.purchase_order,
-      //         vendor_invoice: attr.vendor_invoice
-      //       })
-      //     })
-      // })
+        //       const catalogue = this.props.catalogues.find(
+        //         x => x.id == attr.catalogue_id
+        //       )
+        //       this.setState({
+        //         ...this.resetState(),
+        //         catalogue: catalogue,
+        //         id: id,
+        //         facility_id: attr.facility_id,
+        //         qty_per_package: attr.conversion,
+        //         product_name: attr.product_name,
+        //         manufacturer: attr.manufacturer,
+        //         description: attr.description,
+        //         order_quantity: parseFloat(attr.order_quantity),
+        //         price_per_package: parseFloat(attr.vendor_invoice.item_price),
+        //         order_uom: { value: attr.order_uom, label: attr.order_uom },
+        //         uom: { value: attr.uom, label: attr.uom },
+        //         location_id: attr.location_id,
+        //         // purchase info
+        //         vendor: attr.vendor,
+        //         purchase_order: attr.purchase_order,
+        //         vendor_invoice: attr.vendor_invoice
+        //       })
+        //     })
+        // })
       }
     })
   }
@@ -149,9 +149,9 @@ class HarvestPackageEditor extends React.Component {
   onChangeProductionDate = production_date => this.setState({ production_date })
   onChangeExpirationDate = expiration_date => this.setState({ expiration_date })
   onRoomChanged = item => this.setState({ location_id: item.rm_id })
-  onHarvestBatchChanged = harvest_batch => { 
+  onHarvestBatchChanged = harvest_batch => {
     console.log(harvest_batch)
-    this.setState({ harvest_batch }) 
+    this.setState({ harvest_batch })
   }
   onChangeDrawdownUom = drawdown_uom => this.setState({ drawdown_uom })
 
@@ -226,17 +226,18 @@ class HarvestPackageEditor extends React.Component {
     expiration_date = expiration_date ? expiration_date.toISOString() : ''
     uom = coalese(uom) ? uom.value : ''
     drawdown_uom = coalese(drawdown_uom) ? drawdown_uom.value : ''
-    
-    let name, product_id = ''
+
+    let name,
+      product_id = ''
     product = coalese(product)
 
     if (product !== null) {
       name = product.label
       if (!product.__isNew__) {
         product_id = product.value
-      }  
+      }
     }
-    
+
     // console.group('onsave')
     // console.log(name)
     // console.log(product_id)
@@ -313,7 +314,7 @@ class HarvestPackageEditor extends React.Component {
     }))
 
     const harvestOptions = harvest_batches
-      .map(x => ({id: x.id, ...x.attributes }))
+      .map(x => ({ id: x.id, ...x.attributes }))
       .filter(x => x.facility.id === this.state.facility_id)
       .map(x => ({
         value: x.id,

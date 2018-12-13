@@ -81,6 +81,8 @@ Rails.application.routes.draw do
         get 'product_info'
       end
     end
+
+    resources :non_sales_items, only: [:index]
   end
 
   namespace 'settings' do

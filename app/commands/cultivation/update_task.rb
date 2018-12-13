@@ -49,8 +49,8 @@ module Cultivation
         task.name = args[:name] unless task&.indelible
         task.is_phase = args[:is_phase] || false
         task.is_category = args[:is_category] || false
-        task.parent_id = args[:parent_id].to_bson_id
-        task.depend_on = args[:depend_on].to_bson_id
+        task.parent_id = args[:parent_id].to_bson_id if args[:parent_id] and !args[:parent_id].empty?
+        task.depend_on = args[:depend_on].to_bson_id if args[:depend_on] and !args[:depend_on].empty?
         task.task_type = args[:task_type] || []
       end
 

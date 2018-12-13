@@ -1,6 +1,6 @@
 <% content_for :breadcrumb do %>
   <%= breadcrumbs ["Home",root_path],
-      ['Inventory Setup', inventory_setup_path], 'Non Sales Items'
+      ['Inventory Setup', inventory_setup_path], 'Non-Sales Item'
   %>
 <% end %>
 
@@ -8,7 +8,7 @@
 <div class="pa4">
   <%= render partial: 'setupIntro' %>
   <div class="flex flex-column">
-    <%= react_component('inventory/raw_materials/NutrientsSetupApp',
+    <%= react_component('inventory/non_sales_items/NonSalesItemsSetupApp',
     { locations: @locations, order_uoms: @order_uoms, catalogues: @catalogues }) %>
 
     <div class="w-100 bg-white ph3 pt2 pb4">

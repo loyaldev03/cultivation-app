@@ -13,8 +13,8 @@ class HomeController < ApplicationController
     @raw_material_count = Inventory::ItemTransaction.in(catalogue: raw_material_catalogues).count
 
     # Only check count on sales product derived directly from plant w/o mixing with other products/ ingredients
-    sales_product_catalogues = Inventory::Catalogue.sales_product.where(sub_category: 'raw_sales_product').pluck(:id)
-    @sales_product_count = Inventory::ItemTransaction.in(catalogue: sales_product_catalogues).count
+    sales_catalogue = Inventory::QueryCatalogueTree.call(Constants::SALES_KEY, 'raw_sales_product').result.pluck(:value)
+    @sales_product_count = Inventory::ItemTransaction.in(catalogue: sales_catalogue).count
   end
 
   def reset_data

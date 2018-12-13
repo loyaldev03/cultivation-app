@@ -77,7 +77,14 @@ module Inventory
                  status: 'available',
                )
       else
-        return Inventory::Product.find(product_id)
+        product = Inventory::Product.find(product_id)
+        product.name = name
+        product.sku = sku
+        product.catalogue_id = catalogue_id
+        product.facility_strain_id = facility_strain_id
+        product.facility_id = facility_id
+        product.save!
+        product
       end
     end
 

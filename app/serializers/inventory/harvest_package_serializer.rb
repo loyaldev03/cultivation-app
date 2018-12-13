@@ -37,20 +37,6 @@ module Inventory
       {name: ''}
     end
 
-    attribute :harvest_batch do |object|
-      if object.harvest_batch.nil?
-        {
-          id: '',
-          harvest_name: object.other_harvest_batch,
-        }
-      else
-        {
-          id: object.harvest_batch_id.to_s,
-          harvest_name: object.harvest_batch.harvest_name,
-        }
-      end
-    end
-
     attribute :product do |object|
       product = object.product
       {

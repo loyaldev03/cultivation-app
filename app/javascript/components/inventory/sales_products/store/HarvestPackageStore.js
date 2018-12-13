@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, toJS } from 'mobx'
 
 class HarvestPackageStore {
   harvestPackages = observable([])
@@ -20,9 +20,11 @@ class HarvestPackageStore {
   @action
   update(harvestPackage) {
     const index = this.harvestPackages.findIndex(
-      x => x.attributes.id === harvestPackage.id
+      x => x.id === harvestPackage.id
     )
-    this.harvestPackages[index] = harvestPackage
+    if (index >= 0) {
+      this.harvestPackages[index] = harvestPackage
+    }
   }
 
   @computed

@@ -19,7 +19,7 @@ const saveHarvestPackage = payload => {
         return result
       }
 
-      console.log(result)
+      // console.log(result)
       if (payload.id) {
         harvestPackageStore.update(data.data)
       } else {

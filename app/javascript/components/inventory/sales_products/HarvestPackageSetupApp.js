@@ -8,24 +8,38 @@ import HarvestPackageEditor from './components/HarvestPackageEditor'
 import harvestPackageStore from './store/HarvestPackageStore'
 import loadHarvestPackages from './actions/loadHarvestPackages'
 
-const columns = locations => [
+const resolveBatchName = (harvest_batch_id, other_harvest_batch, batches) => {
+  if (harvest_batch_id.length > 0) {
+    const result = batches.find(x => x.id === harvest_batch_id)
+    if (result) {
+      return `${result.attributes.harvest_name} (${
+        result.attributes.strain_name
+      })`
+    } else {
+      return 'N/A'
+    }
+  } else {
+    return other_harvest_batch
+  }
+}
+const columns = (locations, harvest_batches) => [
   {
     Header: 'Package Tag',
     accessor: 'attributes.package_tag',
     headerClassName: 'tl'
   },
   {
-    Header: 'Name',
+    Header: 'Product Name',
     accessor: 'attributes.product.name',
     headerClassName: 'tl'
   },
   {
-    Header: 'Product code/ SKU',
+    Header: 'Product Code/ SKU',
     accessor: 'attributes.product.sku',
     headerClassName: 'tl'
   },
   {
-    Header: 'Item/ Type',
+    Header: 'Product Type',
     accessor: 'attributes.catalogue.label',
     headerClassName: 'tl'
   },
@@ -52,11 +66,14 @@ const columns = locations => [
   },
   {
     Header: 'Harvest batch',
-    accessor: 'attributes.harvest_batch_id',
     headerClassName: 'tl',
     Cell: record => (
       <div className="tl">
-        {record.original.attributes.harvest_batch.harvest_name}
+        {resolveBatchName(
+          record.original.attributes.harvest_batch_id,
+          record.original.attributes.other_harvest_batch,
+          harvest_batches
+        )}
       </div>
     )
   },
@@ -133,7 +150,7 @@ class HarvestPackageSetupApp extends React.Component {
           </div>
 
           <ReactTable
-            columns={columns(this.props.locations)}
+            columns={columns(this.props.locations, this.props.harvest_batches)}
             pagination={{ position: 'top' }}
             data={harvestPackageStore.bindable}
             showPagination={false}

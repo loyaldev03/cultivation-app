@@ -1,23 +1,25 @@
 import { observable, action, runInAction, toJS } from 'mobx'
 import loadTask from './loadTask'
-import { formatDate2, httpGetOptions, addDayToDate } from '../../utils'
+import { formatDate2, httpGetOptions, addDayToDate, toast } from '../../utils'
 
 class TaskStore {
   @observable tasks
+  @observable batch_id
   @observable isLoaded = false
   @observable hidden_ids = []
-
+  @observable processing = false
   @action
   async loadTasks(batch_id) {
     let tasks = await loadTask.loadbatch(batch_id)
     this.tasks = tasks || []
     this.isLoaded = true
+    this.batch_id = batch_id
   }
 
   getFilteredTask(tasks) {
     tasks = toJS(tasks)
     if (this.isLoaded) {
-      console.log(tasks.filter(u => !this.hidden_ids.includes(u.id)))
+      // console.log(tasks.filter(u => !this.hidden_ids.includes(u.id)))
       return tasks.filter(u => !this.hidden_ids.includes(u.id))
     } else {
       return []
@@ -32,10 +34,72 @@ class TaskStore {
     return toJS(this.getFilteredTask(this.tasks))
   }
 
+  getProcessing() {
+    return toJS(this.processing)
+  }
+
   updateTask(task) {
-    const found = this.tasks.find(x => x.id === task.id)
+    this.processing = true
+    let new_task = task
+    let id = task.id
+    let end_date = task['_end']
+    let start_date = task['_start']
+    const found = toJS(this.tasks.find(x => x.id === task.id))
     if (found) {
-      this.tasks = this.tasks.map(u => (u.id === task.id ? task : u))
+      // this.tasks = this.tasks.map(u => (u.id === task.id ? task : u))
+
+      let url = `/api/v1/batches/${this.batch_id}/tasks/${id}`
+      let task = {
+        assigned_employee: found.attributes.assigned_employee,
+        batch_id: found.attributes.batch_id,
+        days_from_start_date: found.attributes.days_from_start_date,
+        depend_on: found.attributes.depend_on,
+        duration: found.attributes.duration,
+        end_date: end_date,
+        start_date: start_date,
+        estimated_hours: found.attributes.estimated_hours,
+        id: id,
+        is_category: found.attributes.is_category,
+        is_phase: found.attributes.is_phase,
+        name: found.attributes.name,
+        parent_id: found.attributes.parent_id,
+        phase: found.attributes.phase,
+        position: found.attributes.position,
+        task_category: found.attributes.task_category,
+        time_taken: found.attributes.time_taken,
+        task_type: found.attributes.task_type
+      }
+
+      fetch(url, {
+        method: 'PUT',
+        credentials: 'include',
+        body: JSON.stringify({ task: task }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          // let error_container = document.getElementById('error-container')
+          if (data && data.data && data.data.id != null) {
+            // error_container.style.display = 'none'
+            toast('Task Updated', 'success')
+            this.loadTasks(this.batch_id)
+            this.processing = false
+            // loadTasks.loadbatch(state.batch_id)
+          } else {
+            // let keys = Object.keys(data.errors)
+            // console.log(data.errors[keys[0]])
+            // error_container.style.display = 'block'
+            // let error_message = document.getElementById('error-message')
+            // error_message.innerHTML = data.errors[keys[0]]
+            // let array = []
+            // array[0] = data.errors[keys[0]]
+            // ErrorStore.replace(array)
+            // console.log(JSON.stringify(ErrorStore))
+            toast(data.errors, 'error')
+          }
+        })
     } else {
       this.tasks.push(task)
     }

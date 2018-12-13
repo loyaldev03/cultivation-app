@@ -6,7 +6,7 @@ import { observer, Provider } from 'mobx-react'
 import { formatDate2, addDayToDate } from '../../utils'
 
 import TaskStore from './TaskStore'
-import ReactGantt from 'gantt-for-react'
+import ReactGantt from './ReactGantt'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 
 const styles = `
@@ -47,8 +47,9 @@ class GanttChart extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      viewMode: 'Half Day',
-      collapseIds: []
+      viewMode: 'Day',
+      collapseIds: [],
+      updateTask: true
     }
   }
 
@@ -59,6 +60,7 @@ class GanttChart extends React.Component {
   }
 
   onClickTask = task => {
+    console.log(task)
     alert('You have selected task => ' + task.attributes.name)
   }
 
@@ -85,16 +87,55 @@ class GanttChart extends React.Component {
     }
   }
 
+  onDateChange = async task => {
+    if (!TaskStore.getProcessing()) {
+      console.log('do something')
+      TaskStore.updateTask(task)
+    } else {
+      console.log('dont do something')
+    }
+
+    // if (this.state.updateTask){
+    //   this.setState({updateTask: false})
+    //   await TaskStore.updateTask(task)
+    //   this.setState({ updateTask: true })
+    // }
+  }
   render() {
     return (
       <React.Fragment>
         <style>{styles}</style>
         <div className="w-50">
-          {/* <a className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2" onClick={ e => this.changeView('Quarter Day')}>Quarter Day</a>
-          <a className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2" onClick={e => this.changeView('Half Day')}>Half Day</a>
-          <a className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2" onClick={e => this.changeView('Day')}>Day</a>
-          <a className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2" onClick={e => this.changeView('Week')}>Week</a>
-          <a className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2" onClick={e => this.changeView('Month')}>Month</a> */}
+          <a
+            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
+            onClick={e => this.changeView('Quarter Day')}
+          >
+            Quarter Day
+          </a>
+          <a
+            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
+            onClick={e => this.changeView('Half Day')}
+          >
+            Half Day
+          </a>
+          <a
+            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
+            onClick={e => this.changeView('Day')}
+          >
+            Day
+          </a>
+          <a
+            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
+            onClick={e => this.changeView('Week')}
+          >
+            Week
+          </a>
+          <a
+            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
+            onClick={e => this.changeView('Month')}
+          >
+            Month
+          </a>
         </div>
         {TaskStore.isLoaded && (
           <div className="flex">
@@ -154,7 +195,9 @@ class GanttChart extends React.Component {
                                       className="pointer"
                                       onClick={e => this.onClickTask(task)}
                                     >
-                                      {task.attributes.name.substring(0, 20)}
+                                      {task.attributes.name
+                                        ? task.attributes.name.substring(0, 20)
+                                        : null}
                                     </a>
                                   </div>
                                 )}
@@ -288,7 +331,7 @@ class GanttChart extends React.Component {
                 tasks={TaskStore.getGanttTasks()}
                 viewMode={this.state.viewMode}
                 // onClick={this._func}
-                // onDateChange={this._func}
+                onDateChange={this.onDateChange}
                 // onProgressChange={this._func}
                 // onViewChange={this._func}
                 // customPopupHtml={this._html_func}

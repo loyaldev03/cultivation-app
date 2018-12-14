@@ -19,7 +19,9 @@ module Inventory
       :harvest_batch_id,
       :other_harvest_batch,
       :drawdown_quantity,
-      :drawdown_uom
+      :drawdown_uom,
+      :cost_per_unit,
+      :transaction_limit
 
     def initialize(user, args)
       @user = user
@@ -43,6 +45,8 @@ module Inventory
       @other_harvest_batch = args[:other_harvest_batch]
       @drawdown_quantity = args[:drawdown_quantity]
       @drawdown_uom = args[:drawdown_uom]
+      @cost_per_unit = args[:cost_per_unit]
+      @transaction_limit = args[:transaction_limit]
     end
 
     def call
@@ -83,6 +87,7 @@ module Inventory
         product.catalogue_id = catalogue_id
         product.facility_strain_id = facility_strain_id
         product.facility_id = facility_id
+        product.transaction_limit = transaction_limit
         product.save!
         product
       end
@@ -110,6 +115,7 @@ module Inventory
       package.other_harvest_batch = other_harvest_batch
       package.drawdown_quantity = drawdown_quantity
       package.drawdown_uom = drawdown_uom
+      package.cost_per_unit = cost_per_unit
       package.ref_id = harvest_batch_id
       package.ref_type = 'Inventory::HarvestBatch'
       package.save!

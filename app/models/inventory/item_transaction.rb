@@ -25,6 +25,7 @@ module Inventory
     field :other_harvest_batch, type: String    # for package which harvest no longer available
     field :drawdown_quantity, type: BigDecimal  # how much was taken from harvest
     field :drawdown_uom, type: String
+    field :cost_per_unit, type: BigDecimal      # this cost per unit is cost for each quantity
 
     belongs_to :facility
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true

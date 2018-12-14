@@ -27,6 +27,34 @@ class HarvestPackageEditor extends React.Component {
     this.state = this.resetState()
   }
 
+  resetState() {
+    return {
+      // Product details
+      product_id: '',
+      product: null,
+      sku: '',
+      catalogue: null,
+      facility_strain: '',
+      facility_id: '',
+      // Package details
+      id: '',
+      package_tag: '',
+      quantity: 0,
+      uom: null,
+      production_date: null,
+      expiration_date: null,
+      location_id: '',
+      // Harvest info
+      harvest_batch: null,
+      other_harvest_batch: '',
+      drawdown_quantity: 0,
+      drawdown_uom: null,
+      cost_per_unit: '',
+      transaction_limit: '',
+      errors: {}
+    }
+  }
+
   componentDidMount() {
     document.addEventListener('editor-sidebar-open', event => {
       const id = event.detail.id
@@ -39,6 +67,8 @@ class HarvestPackageEditor extends React.Component {
             ...x.data.data.attributes
           }))
           .then(attr => {
+            console.log(attr)
+
             const fs = this.props.facility_strains.find(
               x => x.value === attr.product.facility_strain_id
             )
@@ -88,6 +118,7 @@ class HarvestPackageEditor extends React.Component {
               product_id: attr.product.id,
               product: { value: attr.product.id, label: attr.product.name },
               sku: attr.product.sku,
+              transaction_limit: attr.product.transaction_limit || '',
               catalogue: catalogue,
               facility_strain: fs,
               facility_id: fs.facility_id,
@@ -101,7 +132,8 @@ class HarvestPackageEditor extends React.Component {
               harvest_batch: harvest_batch,
               other_harvest_batch: attr.other_harvest_batch,
               drawdown_quantity: attr.drawdown_quantity,
-              drawdown_uom
+              drawdown_uom,
+              cost_per_unit: attr.cost_per_unit || ''
             })
           })
       }
@@ -171,31 +203,6 @@ class HarvestPackageEditor extends React.Component {
   }
   onChangeDrawdownUom = drawdown_uom => this.setState({ drawdown_uom })
 
-  resetState() {
-    return {
-      // Product details
-      product_id: '',
-      product: null,
-      sku: '',
-      catalogue: null,
-      facility_strain: '',
-      facility_id: '',
-      // Package details
-      id: '',
-      package_tag: '',
-      quantity: 0,
-      uom: null,
-      production_date: null,
-      expiration_date: null,
-      location_id: '',
-      // Harvest info
-      harvest_batch: null,
-      other_harvest_batch: '',
-      drawdown_quantity: 0,
-      drawdown_uom: null,
-      errors: {}
-    }
-  }
 
   onSave = event => {
     const payload = this.validateAndGetValues()
@@ -227,7 +234,9 @@ class HarvestPackageEditor extends React.Component {
       harvest_batch,
       other_harvest_batch,
       drawdown_quantity,
-      drawdown_uom
+      drawdown_uom,
+      cost_per_unit,
+      transaction_limit
     } = this.state
 
     const facility_strain_id = coalese(facility_strain)
@@ -275,7 +284,9 @@ class HarvestPackageEditor extends React.Component {
       harvest_batch_id,
       other_harvest_batch,
       drawdown_quantity,
-      drawdown_uom
+      drawdown_uom,
+      cost_per_unit,
+      transaction_limit
     }
   }
 
@@ -451,7 +462,7 @@ class HarvestPackageEditor extends React.Component {
               />
             </div>
             <div className="w-20 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+              <label className="f6 fw6 db mb1 gray ttc">Unit</label>
               <Select
                 options={uoms}
                 value={this.state.uom}
@@ -528,7 +539,7 @@ class HarvestPackageEditor extends React.Component {
           <div className="ph4 mt3 mb3 flex">
             <div className="w-50">
               <NumericInput
-                label="Qty used (dry weight)"
+                label="Qty used, dry weight"
                 fieldname="drawdown_quantity"
                 value={this.state.drawdown_quantity}
                 onChange={this.onChangeGeneric}
@@ -536,7 +547,7 @@ class HarvestPackageEditor extends React.Component {
               />
             </div>
             <div className="w-20 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+              <label className="f6 fw6 db mb1 gray ttc">Unit</label>
               <Select
                 value={this.state.drawdown_uom}
                 options={drawdown_uoms}
@@ -547,11 +558,51 @@ class HarvestPackageEditor extends React.Component {
             </div>
           </div>
 
+          <hr className="mt3 m b--light-gray w-100" />
+
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
-              <p className="gray f6 i">Cost info coming soon...</p>
+              <label className="f6 fw6 db mb1 dark-gray ttc">Cost</label>
             </div>
           </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-50">
+              <NumericInput
+                label="Cost per unit, $"
+                fieldname="cost_per_unit"
+                value={this.state.cost_per_unit}
+                onChange={this.onChangeGeneric}
+                errors={this.state.errors}
+              />
+            </div>
+            <div className="w-50 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+              <p className="f6 black">Total Cost, ${(this.state.cost_per_unit * this.state.quantity).toFixed(2)}</p>
+            </div>
+          </div>
+
+          <hr className="mt3 m b--light-gray w-100" />
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 dark-gray">Is there a transaction limit on this item?</label>
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-60">
+              <NumericInput
+                label="If Yes, please provide transaction limit"
+                fieldname="transaction_limit"
+                value={this.state.transaction_limit}
+                onChange={this.onChangeGeneric}
+                errors={this.state.errors}
+              />
+            </div>
+          </div>
+
+
+
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
             <a

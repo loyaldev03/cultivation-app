@@ -2,7 +2,7 @@ import React from 'react'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
-// import NonSalesItemEditor from './components/NonSalesItemEditor'
+import NonSalesItemEditor from './components/NonSalesItemEditor'
 import nonSalesItemStore from './store/NonSalesItemStore'
 // import loadNonSalesItems from './actions/loadNonSalesItems'
 
@@ -133,13 +133,11 @@ class NonSalesItemsSetupApp extends React.Component {
     return (
       <React.Fragment>
         {this.renderNonSalesItemsList()}
-        {/*
         <NonSalesItemEditor
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}
           catalogues={this.props.catalogues}
         />
-        */}
       </React.Fragment>
     )
   }

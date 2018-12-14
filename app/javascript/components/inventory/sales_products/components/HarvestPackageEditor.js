@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
 import Creatable from 'react-select/lib/Creatable'
+import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 import {
   FieldError,
   NumericInput,
@@ -472,7 +473,6 @@ class HarvestPackageEditor extends React.Component {
             </div>
           </div>
           <div className="ph4 mb3 flex">
-            
             <div className="w-50">
               <NumericInput
                 label="Cost per unit, $"

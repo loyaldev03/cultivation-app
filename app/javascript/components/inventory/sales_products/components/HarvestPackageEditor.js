@@ -203,7 +203,6 @@ class HarvestPackageEditor extends React.Component {
   }
   onChangeDrawdownUom = drawdown_uom => this.setState({ drawdown_uom })
 
-
   onSave = event => {
     const payload = this.validateAndGetValues()
     // console.log(payload)
@@ -472,6 +471,25 @@ class HarvestPackageEditor extends React.Component {
               <FieldError errors={this.state.errors} field="uom" />
             </div>
           </div>
+          <div className="ph4 mb3 flex">
+            
+            <div className="w-50">
+              <NumericInput
+                label="Cost per unit, $"
+                fieldname="cost_per_unit"
+                value={this.state.cost_per_unit}
+                onChange={this.onChangeGeneric}
+                errors={this.state.errors}
+              />
+            </div>
+            <div className="w-50 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+              <p className="f6 black mt2 mb0">
+                Total Cost, $
+                {(this.state.cost_per_unit * this.state.quantity).toFixed(2)}
+              </p>
+            </div>
+          </div>
 
           <div className="ph4 mb3 flex">
             <div className="w-50">
@@ -559,33 +577,11 @@ class HarvestPackageEditor extends React.Component {
           </div>
 
           <hr className="mt3 m b--light-gray w-100" />
-
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 dark-gray ttc">Cost</label>
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <NumericInput
-                label="Cost per unit, $"
-                fieldname="cost_per_unit"
-                value={this.state.cost_per_unit}
-                onChange={this.onChangeGeneric}
-                errors={this.state.errors}
-              />
-            </div>
-            <div className="w-50 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
-              <p className="f6 black">Total Cost, ${(this.state.cost_per_unit * this.state.quantity).toFixed(2)}</p>
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 dark-gray">Is there a transaction limit on this item?</label>
+              <label className="f6 fw6 db mb1 dark-gray">
+                Is there a transaction limit on this item?
+              </label>
             </div>
           </div>
 
@@ -600,9 +596,6 @@ class HarvestPackageEditor extends React.Component {
               />
             </div>
           </div>
-
-
-
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
             <a

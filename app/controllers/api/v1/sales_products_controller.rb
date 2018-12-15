@@ -12,7 +12,12 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
   end
 
   def products
-    products = Inventory::Product.in(catalogue: sales_catalogue_ids).order(c_at: :desc)
+    products = []
+    if params[:filter].blank?
+      products = Inventory::Product.in(catalogue: sales_catalogue_ids).limit(7).order(name: :asc)
+    else
+      products = Inventory::Product.in(catalogue: sales_catalogue_ids).where(:name => /^#{params[:filter]}/i).limit(7).order(name: :asc)
+    end
     render json: Inventory::ProductSerializer.new(products).serialized_json
   end
 
@@ -34,7 +39,7 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
   private
 
   def sales_catalogue_ids
-    sales_catalogue = Inventory::QueryCatalogueTree.call(Constants::SALES_KEY, 'raw_sales_product').result.pluck(:value)
+    Inventory::QueryCatalogueTree.call(Constants::SALES_KEY, 'raw_sales_product').result.pluck(:value)
   end
 
   def request_with_errors(errors)

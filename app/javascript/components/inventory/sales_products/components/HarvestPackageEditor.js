@@ -15,12 +15,37 @@ import { formatDate } from '../../../utils'
 import saveHarvestPackage from '../actions/setupHarvestPackage'
 import getHarvestPackage from '../actions/getHarvestPackage'
 
+// TODO: this function need to re-evaluate if it is still useful
 const coalese = option => {
   if (option === undefined || option === null || option.length <= 0) {
     return false
   }
   return option
 }
+
+const handleInputChange = newValue => {
+  return newValue ? newValue : ''
+}
+
+const loadProducts = inputValue => {
+  inputValue = inputValue || ''
+  
+  return fetch('/api/v1/sales_products/products?filter=' + inputValue, {
+    credentials: 'include'
+  })
+    .then(response => response.json())
+    .then(data => {
+      // console.log(data.data)
+      const products = data.data.map(x => ({
+        label: x.attributes.name,
+        value: x.attributes.id,
+        ...x.attributes
+      }))
+
+      return products
+    })
+}
+
 
 class HarvestPackageEditor extends React.Component {
   constructor(props) {
@@ -142,16 +167,25 @@ class HarvestPackageEditor extends React.Component {
   }
 
   onChangeProduct = product => {
-    if (coalese(product) !== null && product.__isNew__) {
+    console.log(product)
+
+    if (coalese(product) !== false && product.__isNew__) {
       this.setState({
         product_id: '',
-        product
+        product,
+        facility_strain: null,
+        facility_id: '',
+        harvest_batch: null,
+        other_harvest_batch: '',
+        drawdown_quantity: '',
+        drawdown_uom: ''
       })
-    } else if (coalese(product) !== null) {
+    } else if (coalese(product) !== false) {
       const fs = this.props.facility_strains.find(
         x => x.value === product.facility_strain_id
       )
       this.setState({
+        product_id: product.id,
         product,
         sku: product.sku,
         catalogue: this.props.sales_catalogue.find(
@@ -159,12 +193,15 @@ class HarvestPackageEditor extends React.Component {
         ),
         facility_strain: fs,
         facility_id: fs.facility_id,
-        harvest_batch: null
+        harvest_batch: null,
+        transaction_limit: product.transaction_limit || ''
       })
     } else {
       this.setState({
         sku: '',
-        product: null
+        product: null,
+        product_id: '',
+        transaction_limit: ''
       })
     }
   }
@@ -257,15 +294,14 @@ class HarvestPackageEditor extends React.Component {
     uom = coalese(uom) ? uom.value : ''
     drawdown_uom = coalese(drawdown_uom) ? drawdown_uom.value : ''
 
-    let name,
-      product_id = ''
+    let name = ''
     product = coalese(product)
 
     if (product !== null) {
       name = product.label
-      if (!product.__isNew__) {
-        product_id = product.value
-      }
+      // if (!product.__isNew__) {
+      //   product_id = product.value
+      // }
     }
 
     return {
@@ -355,6 +391,8 @@ class HarvestPackageEditor extends React.Component {
         ...x
       }))
 
+    const hasProductId = this.state.product && this.state.product.id != ''
+
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
@@ -384,9 +422,14 @@ class HarvestPackageEditor extends React.Component {
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
-              <Creatable
+              <AsyncCreatableSelect
+                defaultOptions
+                cacheOptions
                 isClearable
-                options={[]}
+                noOptionsMessage={() => 'Type to search product...'}
+                placeholder="Search..."
+                loadOptions={loadProducts}
+                onInputChange={handleInputChange}
                 styles={reactSelectStyle}
                 value={this.state.product}
                 onChange={this.onChangeProduct}
@@ -401,6 +444,7 @@ class HarvestPackageEditor extends React.Component {
                 fieldname="sku"
                 value={this.state.sku}
                 onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
               />
             </div>
             <div className="w-50 pl3">
@@ -410,6 +454,7 @@ class HarvestPackageEditor extends React.Component {
                 value={this.state.catalogue}
                 onChange={this.onCatalogueSelected}
                 styles={reactSelectStyle}
+                isDisabled={hasProductId}
               />
               <FieldError errors={this.state.errors} field="catalogue" />
             </div>
@@ -423,6 +468,7 @@ class HarvestPackageEditor extends React.Component {
                 styles={reactSelectStyle}
                 value={this.state.facility_strain}
                 onChange={this.onChangeFacilityStrain}
+                isDisabled={hasProductId}
               />
             </div>
           </div>
@@ -593,6 +639,7 @@ class HarvestPackageEditor extends React.Component {
                 value={this.state.transaction_limit}
                 onChange={this.onChangeGeneric}
                 errors={this.state.errors}
+                isDisabled={hasProductId}
               />
             </div>
           </div>

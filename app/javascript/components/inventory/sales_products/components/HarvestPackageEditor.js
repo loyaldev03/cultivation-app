@@ -29,7 +29,7 @@ const handleInputChange = newValue => {
 
 const loadProducts = inputValue => {
   inputValue = inputValue || ''
-  
+
   return fetch('/api/v1/sales_products/products?filter=' + inputValue, {
     credentials: 'include'
   })
@@ -45,7 +45,6 @@ const loadProducts = inputValue => {
       return products
     })
 }
-
 
 class HarvestPackageEditor extends React.Component {
   constructor(props) {

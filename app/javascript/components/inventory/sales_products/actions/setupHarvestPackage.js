@@ -16,17 +16,15 @@ const saveHarvestPackage = payload => {
       const { status, data } = result
       if (status !== 200) {
         console.log(result)
-        return result
-      }
-
-      // console.log(result)
-      if (payload.id) {
-        harvestPackageStore.update(data.data)
       } else {
-        harvestPackageStore.prepend(data.data)
+        if (payload.id) {
+          harvestPackageStore.update(data.data)
+        } else {
+          harvestPackageStore.prepend(data.data)
+        }
       }
 
-      return result
+      return { status, data }
     })
 }
 

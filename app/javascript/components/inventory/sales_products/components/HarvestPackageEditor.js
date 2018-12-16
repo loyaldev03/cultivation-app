@@ -12,7 +12,7 @@ import {
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { formatDate } from '../../../utils'
-import saveHarvestPackage from '../actions/setupHarvestPackage'
+import setupHarvestPackage from '../actions/setupHarvestPackage'
 import getHarvestPackage from '../actions/getHarvestPackage'
 
 // TODO: this function need to re-evaluate if it is still useful
@@ -242,8 +242,7 @@ class HarvestPackageEditor extends React.Component {
 
   onSave = event => {
     const payload = this.validateAndGetValues()
-    // console.log(payload)
-    saveHarvestPackage(payload).then(({ status, result }) => {
+    setupHarvestPackage(payload).then(({ status, data }) => {
       if (status >= 400) {
         this.setState({ errors: data.errors })
       } else {
@@ -435,6 +434,7 @@ class HarvestPackageEditor extends React.Component {
                 value={this.state.product}
                 onChange={this.onChangeProduct}
               />
+              <FieldError errors={this.state.errors} field="product" />
             </div>
           </div>
 
@@ -446,6 +446,7 @@ class HarvestPackageEditor extends React.Component {
                 value={this.state.sku}
                 onChange={this.onChangeGeneric}
                 readOnly={hasProductId}
+                errors={this.state.errors}
               />
             </div>
             <div className="w-50 pl3">
@@ -457,7 +458,7 @@ class HarvestPackageEditor extends React.Component {
                 styles={reactSelectStyle}
                 isDisabled={hasProductId}
               />
-              <FieldError errors={this.state.errors} field="catalogue" />
+              <FieldError errors={this.state.errors} field="catalogue_id" />
             </div>
           </div>
 
@@ -470,6 +471,10 @@ class HarvestPackageEditor extends React.Component {
                 value={this.state.facility_strain}
                 onChange={this.onChangeFacilityStrain}
                 isDisabled={hasProductId}
+              />
+              <FieldError
+                errors={this.state.errors}
+                field="facility_strain_id"
               />
             </div>
           </div>
@@ -488,6 +493,7 @@ class HarvestPackageEditor extends React.Component {
                 fieldname="package_tag"
                 value={this.state.package_tag}
                 onChange={this.onChangeGeneric}
+                errors={this.state.errors}
               />
             </div>
             <div className="w-30 pl2">
@@ -545,6 +551,7 @@ class HarvestPackageEditor extends React.Component {
                 value={this.state.production_date}
                 onChange={this.onChangeProductionDate}
               />
+              <FieldError errors={this.state.errors} field="production_date" />
             </div>
             <div className="w-50 pl3">
               <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
@@ -552,6 +559,7 @@ class HarvestPackageEditor extends React.Component {
                 value={this.state.expiration_date}
                 onChange={this.onChangeExpirationDate}
               />
+              <FieldError errors={this.state.errors} field="expiration_date" />
             </div>
           </div>
 
@@ -572,7 +580,7 @@ class HarvestPackageEditor extends React.Component {
                 facility_id={this.state.facility_id}
                 location_id={this.state.location_id}
               />
-              <FieldError errors={this.state.errors} field="facility_id" />
+              <FieldError errors={this.state.errors} field="location_id" />
             </div>
           </div>
 
@@ -595,7 +603,7 @@ class HarvestPackageEditor extends React.Component {
                 onChange={this.onHarvestBatchChanged}
                 styles={reactSelectStyle}
               />
-              <FieldError errors={this.state.errors} field="catalogue" />
+              <FieldError errors={this.state.errors} field="harvest_batch" />
             </div>
           </div>
 
@@ -619,7 +627,7 @@ class HarvestPackageEditor extends React.Component {
                 styles={reactSelectStyle}
                 onChange={this.onChangeDrawdownUom}
               />
-              <FieldError errors={this.state.errors} field="uom" />
+              <FieldError errors={this.state.errors} field="drawdown_uom" />
             </div>
           </div>
 

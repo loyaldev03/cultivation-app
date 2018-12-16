@@ -32,7 +32,7 @@ module Inventory
 
       @facility_strain_id = args[:facility_strain_id]
       @facility_strain = Inventory::FacilityStrain.find(facility_strain_id)
-      @facility_id = facility_strain.facility_id
+      @facility_id = facility_strain.present? ? facility_strain.facility_id : nil
 
       @id = args[:id]
       @package_tag = args[:package_tag]
@@ -63,11 +63,60 @@ module Inventory
 
     def valid_data?
       tx = Inventory::ItemTransaction.find_by(package_tag: package_tag)
-      if tx.nil? || tx.id != id
-        # no problem
+
+      # 1. Check package id is not duplicate unless its an update
+      if package_tag.blank?
+        errors.add(:package_tag, 'Tag is required.')
+      else
+        errors.add(:package_tag, 'Tag is already taken.') if Inventory::ItemTransaction.
+          in(catalogue_id: sales_catalogue_ids).
+          where(package_tag: package_tag, id: {:$not => {:$eq => id}}).
+          exists?
+      end
+
+      # 2. Quantity should be > 0
+      errors.add(:quantity, 'Quantity must be more than zero.') if quantity.to_f <= 0
+
+      # 3. UOM should not be empty
+      errors.add(:uom, 'Unit is required.') if uom.blank?
+
+      # 4. Cost should be > 0
+      errors.add(:cost_per_unit, 'Cost must be more than zero.') if cost_per_unit.to_f <= 0
+
+      # 5. production date < expiration date
+      if production_date.blank?
+        errors.add(:production_date, 'Production date is required.') if production_date.blank?
+      end
+
+      if expiration_date.blank?
+        errors.add(:expiration_date, 'Expiration date is required.') if expiration_date.blank?
+      end
+
+      if !expiration_date.blank? && !production_date.blank?
+        errors.add(:expiration_date, 'Expiration date should be after production date.') if expiration_date.to_date <= production_date.to_date
+      end
+
+      # 6. if product is new,  product name, catalogue, strain should exist
+      if product_id.blank?
+        errors.add(:name, 'Product name is required') if name.blank?
+        errors.add(:catalogue_id, 'Product type is required') if catalogue_id.blank?
+        errors.add(:facility_strain_id, 'Strain is required') if facility_strain_id.blank?
+      end
+
+      # 8. location should not be empty
+      errors.add(:location_id, 'Stored location is required') if location_id.blank?
+
+      # 9. if there is harvest, qty used and uom should not be empty.
+      if !harvest_batch_id.blank? || !other_harvest_batch.blank?
+        errors.add(:drawdown_quantity, 'Quantity is required') if drawdown_quantity.to_f <= 0
+        errors.add(:drawdown_uom, 'Unit is required') if drawdown_uom.blank?
       end
 
       errors.empty?
+    end
+
+    def sales_catalogue_ids
+      Inventory::QueryCatalogueTree.call(Constants::SALES_KEY, 'raw_sales_product').result.pluck(:value)
     end
 
     # Product should not be editable from setup procedure as it can inadvertently

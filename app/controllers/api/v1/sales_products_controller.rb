@@ -4,7 +4,7 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
     if command.success?
       render json: Inventory::HarvestPackageSerializer.new(command.result).serialized_json
     else
-      render json: request_with_errors(errors), status: 422
+      render json: request_with_errors(command.errors), status: 422
     end
   end
 
@@ -43,6 +43,6 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
   end
 
   def request_with_errors(errors)
-    params[:plant].to_unsafe_h.merge(errors: errors)
+    params[:sales_product].to_unsafe_h.merge(errors: errors)
   end
 end

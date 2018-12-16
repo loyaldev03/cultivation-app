@@ -45,3 +45,9 @@ $badgeFontSize: 12px;
   background: var(--green);
   color: #FFFFFF;
 }
+
+
+input[readonly] {
+  background-color: #eee;
+  color: rgb(153, 153, 153);
+}

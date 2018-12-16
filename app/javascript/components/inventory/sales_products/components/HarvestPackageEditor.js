@@ -293,14 +293,15 @@ class HarvestPackageEditor extends React.Component {
     uom = coalese(uom) ? uom.value : ''
     drawdown_uom = coalese(drawdown_uom) ? drawdown_uom.value : ''
 
-    let name = ''
+    let name = '',
+      product_id = ''
     product = coalese(product)
 
-    if (product !== null) {
+    if (product !== false) {
       name = product.label
-      // if (!product.__isNew__) {
-      //   product_id = product.value
-      // }
+      if (!product.__isNew__) {
+        product_id = product.value
+      }
     }
 
     return {
@@ -390,7 +391,9 @@ class HarvestPackageEditor extends React.Component {
         ...x
       }))
 
-    const hasProductId = this.state.product && this.state.product.id != ''
+    const hasProductId = this.state.product && this.state.product_id.length > 0
+
+    console.log(`this.state.product.id: ${this.state.product_id}`)
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -423,7 +426,6 @@ class HarvestPackageEditor extends React.Component {
               <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
               <AsyncCreatableSelect
                 defaultOptions
-                cacheOptions
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
                 placeholder="Search..."
@@ -638,7 +640,7 @@ class HarvestPackageEditor extends React.Component {
                 value={this.state.transaction_limit}
                 onChange={this.onChangeGeneric}
                 errors={this.state.errors}
-                isDisabled={hasProductId}
+                readOnly={hasProductId}
               />
             </div>
           </div>

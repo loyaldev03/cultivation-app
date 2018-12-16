@@ -70,27 +70,26 @@ module Inventory
       errors.empty?
     end
 
+    # Product should not be editable from setup procedure as it can inadvertently
+    # affect too many packages (ItemTransaction). User has to be very clear on
+    # the impact before making the change.
     def save_product!
+      product = nil
       if product_id.blank?
-        return Inventory::Product.create!(
-                 name: name,
-                 sku: sku,
-                 catalogue_id: catalogue_id,
-                 facility_strain_id: facility_strain_id,
-                 facility_id: facility_id,
-                 status: 'available',
-               )
-      else
-        product = Inventory::Product.find(product_id)
+        product = Inventory::Product.new
         product.name = name
         product.sku = sku
         product.catalogue_id = catalogue_id
         product.facility_strain_id = facility_strain_id
         product.facility_id = facility_id
         product.transaction_limit = transaction_limit
+        product.status = 'available'
         product.save!
-        product
+      else
+        product = Inventory::Product.find(product_id)
       end
+
+      product
     end
 
     def save_package!(product)

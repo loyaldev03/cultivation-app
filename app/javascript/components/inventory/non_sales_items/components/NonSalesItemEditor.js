@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
-// import DatePicker from 'react-date-picker/dist/entry.nostyle'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { PurchaseInfo } from '../../../utils'
@@ -215,14 +215,12 @@ class NonSalesItemEditor extends React.Component {
               <label className="f6 fw6 db mb1 gray ttc">
                 Non-sales Item Type
               </label>
-              {/*
               <Select
                 options={catalogues}
                 value={this.state.nonSalesItemType}
                 onChange={this.onNonSalesItemTypeSelected}
                 styles={reactSelectStyle}
               />
-              */}
             </div>
             {nonSalesItemProducts && (
               <div className="w-60 pl3">
@@ -298,14 +296,12 @@ class NonSalesItemEditor extends React.Component {
             </div>
             <div className="w-20 pl3">
               <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
-              {/*
               <Select
                 value={this.state.order_uom}
                 options={order_uoms}
                 styles={reactSelectStyle}
                 onChange={x => this.setState({ order_uom: x })}
               />
-              */}
               <FieldError errors={this.state.errors} field="order_uom" />
             </div>
             <div className="w-50 pl3">
@@ -352,14 +348,12 @@ class NonSalesItemEditor extends React.Component {
                 </div>
                 <div className="w-20 pl3">
                   <label className="f6 fw6 db mb1 gray ttc">UoM</label>
-                  {/*
                   <Select
                     value={this.state.uom}
                     options={uoms}
                     styles={reactSelectStyle}
                     onChange={x => this.setState({ uom: x })}
                   />
-                  */}
                   <FieldError errors={this.state.errors} field="uom" />
                 </div>
                 <div className="w-50 pl4">

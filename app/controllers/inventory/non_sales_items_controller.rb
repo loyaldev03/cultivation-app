@@ -2,6 +2,7 @@ class Inventory::NonSalesItemsController < ApplicationController
   before_action :setup_editor_data
 
   def index
+    @catalogues = Inventory::Catalogue.where(catalogue_type: 'non_sales_product')
   end
 
   private

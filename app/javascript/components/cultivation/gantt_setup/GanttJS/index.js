@@ -598,12 +598,13 @@ export default class Gantt {
     let y_on_start = 0
     let is_resizing_left = false
     let is_resizing_right = false
+    let is_dragging_mid = false
     let parent_bar_id = null
     let bars = [] // instanceof Bar
     this.bar_being_dragged = null
 
     function action_in_progress() {
-      return is_dragging || is_resizing_left || is_resizing_right
+      return is_dragging || is_resizing_left || is_resizing_right || is_dragging_mid
     }
 
     $.on(this.$svg, 'mousedown', '.bar-wrapper, .handle', (e, element) => {
@@ -615,6 +616,10 @@ export default class Gantt {
         is_resizing_right = true
       } else if (element.classList.contains('bar-wrapper')) {
         is_dragging = true
+      } else if (element.classList.contains('mid')) {
+        // alert('dragging mid')
+        console.log('dragging mid')
+        is_dragging_mid = true
       }
 
       bar_wrapper.classList.add('active')
@@ -644,7 +649,6 @@ export default class Gantt {
       if (!action_in_progress()) return
       const dx = e.offsetX - x_on_start
       const dy = e.offsetY - y_on_start
-
       bars.forEach(bar => {
         const $bar = bar.$bar
         $bar.finaldx = this.get_snap_position(dx)
@@ -668,6 +672,8 @@ export default class Gantt {
           }
         } else if (is_dragging) {
           bar.update_bar_position({ x: $bar.ox + $bar.finaldx })
+        } else if (is_dragging_mid){
+          bar.update_line({ x2: e.offsetX, y2: e.offsetY})
         }
       })
     })
@@ -680,6 +686,7 @@ export default class Gantt {
       is_dragging = false
       is_resizing_left = false
       is_resizing_right = false
+      is_dragging_mid = false
     })
 
     $.on(this.$svg, 'mouseup', e => {
@@ -689,6 +696,21 @@ export default class Gantt {
         if (!$bar.finaldx) return
         bar.date_changed()
         bar.set_action_completed()
+        if(is_dragging_mid){
+          console.log('release !')
+          console.log(e.target.className.baseVal === 'bar')
+          if (e.target.className.baseVal === 'bar' || e.target.className.baseVal === 'bar-label'){
+            let target_id = e.target.parentElement.parentElement.getAttribute("data-id")
+            console.log(target_id)
+            //update relationship
+          }else{
+            console.log(bar)
+            bar.clear_line()
+          }
+
+          //e.target.parent.parent.attributes.data-id.value
+          // console.log(e.target.parent.parent.attributes)
+        }
       })
     })
 

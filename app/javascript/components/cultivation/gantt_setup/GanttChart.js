@@ -24,7 +24,18 @@ const styles = `
   height: 10;
 }
 
+rect.handle.mid {
+  fill: transparent;
+    cursor: pointer;
+    opacity: initial;
+    visibility: visible;
+    -webkit-transition: opacity .3s ease;
+    transition: opacity .3s ease;
+}
 
+rect.handle.mid:hover {
+  fill: #ddd;
+}
 
 .rt-tr-group:hover{
   box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);

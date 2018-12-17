@@ -148,6 +148,31 @@ export default class Bar {
       append_to: this.handle_group
     })
 
+    createSVG('rect', {
+      x: bar.getX() + bar.getWidth() - 9 + 20,
+      y: bar.getY() + 1 + 7,
+      width: handle_width,
+      height: 5,
+      rx: this.corner_radius,
+      ry: this.corner_radius,
+      class: 'handle mid',
+      append_to: this.handle_group
+    })
+
+    createSVG('line', {
+      x1: bar.getX() + bar.getWidth() - 9 + 20,
+      y1: bar.getY() + 1 + 7,
+      x2: bar.getX() + bar.getWidth() - 9 + 20,
+      y2: bar.getY() + 1 + 7,
+      stroke: '#4A4A4A',
+      class: 'line',
+      append_to: this.handle_group
+    })
+
+
+
+
+
     if (this.task.progress && this.task.progress < 100) {
       this.$handle_progress = createSVG('polygon', {
         points: this.get_progress_polygon_points().join(','),
@@ -234,6 +259,21 @@ export default class Bar {
     this.update_handle_position()
     this.update_progressbar_position()
     this.update_arrow_position()
+  }
+
+  update_line({x2 = null, y2 = null}){
+    console.log(x2 + ', ' + y2)
+    console.log('updating line')
+    const line = this.handle_group.lastChild
+    console.log(this.handle_group.lastChild)
+    this.update_attr(line, 'x2', x2)
+    this.update_attr(line, 'y2', y2)
+  }
+
+  clear_line(){
+    const line = this.handle_group.lastChild
+    this.update_attr(line, 'x2', line.getAttribute("x1"))
+    this.update_attr(line, 'y2', line.getAttribute("y1"))
   }
 
   date_changed() {
@@ -390,6 +430,9 @@ export default class Bar {
     this.handle_group
       .querySelector('.handle.right')
       .setAttribute('x', bar.getEndX() - 9)
+    this.handle_group
+      .querySelector('.handle.mid')
+      .setAttribute('x', bar.getEndX() - 9 + 10)
     const handle = this.group.querySelector('.handle.progress')
     handle && handle.setAttribute('points', this.get_progress_polygon_points())
   }

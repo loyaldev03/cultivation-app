@@ -29,23 +29,21 @@ module Cultivation
           ).result
           # Delete all existing location plans
           batch.tray_plans.delete_all
+          phase_trays = consolidate_phase_trays(@plans)
           new_plans = []
           batch_phases.each do |phase_info|
             # New location plans
-            phase_plan = @plans.detect { |p| p[:phase] == phase_info.phase }
+            phase_plan = phase_trays.detect { |p| p[:phase] == phase_info.phase }
             # Rails.logger.debug "\033[34m trays for phase: \033[0m"
-            locations = phase_plan['trays']
+            locations = phase_plan[:trays]
             # Build new booking record of trays
             new_plans += build_tray_plans(batch.facility_id,
                                           batch.id,
                                           phase_info,
                                           locations)
-            # Rails.logger.debug "\033[34m new_plans build: \033[0m"
-            # Rails.logger.debug new_plans.to_json
           end
-          # Rails.logger.debug "\033[34m insert_many new_plans \033[0m"
-          # Save all new location plans
           batch.save!
+          # Save all tray plans
           Cultivation::TrayPlan.collection.insert_many(new_plans)
         end
       end
@@ -85,8 +83,25 @@ module Cultivation
       selected_plants
     end
 
+    # Consolidate trays of the same phase
+    def consolidate_phase_trays(plans)
+      tray_plans = []
+      plans.each do |p|
+        tp = tray_plans.detect { |x| x[:phase] == p[:phase] }
+        if tp
+          tp[:quantity] += p[:quantity]
+          tp[:trays] += p[:trays]
+        else
+          tray_plans << p
+        end
+      end
+      tray_plans
+    end
+
     def build_tray_plans(facility_id, batch_id, phase_info, locations = [])
       current_time = Time.now
+      # Important: Must save capacity as integer for
+      # QueryAvailableTrays commands to work.
       locations.map do |loc|
         {
           facility_id: facility_id.to_bson_id,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import GanttJS from 'frappe-gantt'
+import GanttJS from './GanttJS/index'
 import { bind, clear } from 'size-sensor'
 import { noop } from './helper'
 

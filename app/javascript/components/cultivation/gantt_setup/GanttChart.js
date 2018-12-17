@@ -10,6 +10,22 @@ import ReactGantt from './ReactGantt'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 
 const styles = `
+
+.task .bar-group .bar {
+  fill: #0097a7;
+}
+
+.category .bar-group .bar{
+  fill: #d32f2f;
+}
+
+.phase .bar-group .bar{
+  fill: #039be5;
+  height: 10;
+}
+
+
+
 .rt-tr-group:hover{
   box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
 }

@@ -17,6 +17,10 @@ module Cultivation
         batch = Cultivation::Batch.find_by(id: @batch_id.to_bson_id)
         if batch.present?
           facility = Facility.find_by(id: batch.facility_id)
+          # Save selected mother plants
+          batch.selected_plants = get_selected_plants(
+            batch.batch_source, @plans
+          )
           batch.quantity = @quantity
           # Rails.logger.debug "\033[34m Found Batch \033[0m"
           batch_phases = Cultivation::QueryBatchPhases.call(
@@ -28,7 +32,7 @@ module Cultivation
           new_plans = []
           batch_phases.each do |phase_info|
             # New location plans
-            phase_plan = @plans.detect { |p| p['phase'] == phase_info.phase }
+            phase_plan = @plans.detect { |p| p[:phase] == phase_info.phase }
             # Rails.logger.debug "\033[34m trays for phase: \033[0m"
             locations = phase_plan['trays']
             # Build new booking record of trays
@@ -48,6 +52,38 @@ module Cultivation
     end
 
     private
+
+    def get_selected_plants(batch_source, plans)
+      selected_plants = []
+      if batch_source == 'clones_from_mother'
+        clone_plans = plans.select do |p|
+          p[:phase] == Constants::CONST_CLONE
+        end
+        # Rails.logger.debug "\033[31m Clone Plans \033[0m"
+        # Rails.logger.debug clone_plans.to_yaml
+        mother_plants = clone_plans.map do |p|
+          p[:trays]
+        end
+        mother_plants = mother_plants.flatten
+        # Rails.logger.debug "\033[31m Mother Plans Flatten \033[0m"
+        # Rails.logger.debug mother_plants.to_yaml
+        mother_plants.each do |p|
+          sp = selected_plants.detect { |x| x[:plant_id] == p[:plant_id] }
+          if sp
+            sp[:quantity] += p[:tray_capacity].to_i
+          else
+            sp = {
+              plant_id: p[:plant_id],
+              quantity: p[:tray_capacity].to_i,
+            }
+            selected_plants << sp
+          end
+        end
+        # Rails.logger.debug "\033[31m Selected Plants \033[0m"
+        # Rails.logger.debug selected_plants.to_yaml
+      end
+      selected_plants
+    end
 
     def build_tray_plans(facility_id, batch_id, phase_info, locations = [])
       current_time = Time.now

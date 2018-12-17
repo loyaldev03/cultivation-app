@@ -11,26 +11,17 @@ module Cultivation
     end
 
     def call
-      cultivation_phases = [
-        Constants::CONST_CLONE,
-        Constants::CONST_VEG,
-        Constants::CONST_VEG1,
-        Constants::CONST_VEG2,
-        Constants::CONST_FLOWER,
-        Constants::CONST_DRY,
-        Constants::CONST_CURE,
-      ]
-
       if @batch_id.present? && @plans.any?
         # Rails.logger.debug "\033[34m Find Batch: #{@batch_id} \033[0m"
         # Rails.logger.debug "\033[34m # of plans: #{@plans.length} \033[0m"
-        batch = Cultivation::Batch.find(@batch_id.to_bson_id)
+        batch = Cultivation::Batch.find_by(id: @batch_id.to_bson_id)
         if batch.present?
+          facility = Facility.find_by(id: batch.facility_id)
           batch.quantity = @quantity
           # Rails.logger.debug "\033[34m Found Batch \033[0m"
           batch_phases = Cultivation::QueryBatchPhases.call(
             batch,
-            cultivation_phases,
+            facility.growth_stages,
           ).result
           # Delete all existing location plans
           batch.tray_plans.delete_all

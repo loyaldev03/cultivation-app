@@ -710,6 +710,7 @@ export default class Gantt {
             )
             console.log(target_id)
             //update relationship
+            this.trigger_event('drag_relationship', [target_id])
           } else {
             console.log(bar)
             bar.clear_line()
@@ -866,6 +867,7 @@ export default class Gantt {
 
   trigger_event(event, args) {
     if (this.options['on_' + event]) {
+      console.log(this.options['on_' + event])
       this.options['on_' + event].apply(null, args)
     }
   }

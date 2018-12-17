@@ -128,6 +128,12 @@ class GanttChart extends React.Component {
     //   this.setState({ updateTask: true })
     // }
   }
+
+  onDragRelationShip = e => {
+    console.log(e)
+    console.log('drag in react now')
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -358,6 +364,7 @@ class GanttChart extends React.Component {
                 tasks={TaskStore.getGanttTasks()}
                 viewMode={this.state.viewMode}
                 // onClick={this._func}
+                onDragRelationShip={this.onDragRelationShip}
                 onDateChange={this.onDateChange}
                 // onProgressChange={this._func}
                 // onViewChange={this._func}

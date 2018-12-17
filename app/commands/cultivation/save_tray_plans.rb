@@ -63,7 +63,6 @@ module Cultivation
           end_date: phase_info.end_date,
           capacity: loc[:tray_capacity].to_i,
           phase: phase_info.phase,
-          is_active: true,
           c_at: current_time,
           u_at: current_time,
         }

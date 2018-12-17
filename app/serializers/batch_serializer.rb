@@ -81,6 +81,10 @@ class BatchSerializer
   end
 
   attribute :estimated_total_days do |object|
-    (object.estimated_harvest_date - object.start_date).round
+    if object.estimated_harvest_date && object.start_date
+      (object.estimated_harvest_date - object.start_date).round
+    else
+      ''
+    end
   end
 end

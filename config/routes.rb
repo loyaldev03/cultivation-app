@@ -73,6 +73,12 @@ Rails.application.routes.draw do
         get 'purchased_clones'
       end
     end
+
+    resources :sales_products, only: [] do
+      collection do
+        get 'harvest_packages'
+      end
+    end
   end
 
   namespace 'settings' do
@@ -138,6 +144,16 @@ Rails.application.routes.draw do
           post 'setup'
           post 'setup_seed'
           post 'setup_purchased_clones'
+        end
+      end
+
+      resources :sales_products, only: [:index] do
+        collection do
+          get 'harvest_package/:id', action: :harvest_package
+          get 'products'
+          get 'harvest_packages'
+          post 'setup_harvest_package'
+          post 'setup_sales_product'
         end
       end
 

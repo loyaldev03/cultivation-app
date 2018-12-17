@@ -18,6 +18,7 @@ module Cultivation
     field :is_phase, type: Boolean, default: -> { false }     # to identify phase
     field :is_category, type: Boolean, default: -> { false }  # to identify category
     field :is_growing_period, type: Boolean, default: -> { false } # tray plan is the growing period
+    field :is_unbound, type: Boolean, default: -> { false }   # unbound task are to tied to parent's dates
     field :indelible, type: Boolean, default: -> { false }    # is task indelible? default false
     field :parent_id, type: BSON::ObjectId
     field :depend_on, type: BSON::ObjectId

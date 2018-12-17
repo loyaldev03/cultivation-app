@@ -112,6 +112,7 @@ module Cultivation
         is_phase: task[:is_phase] || false,
         is_category: task[:is_category] || false,
         is_growing_period: task[:is_growing_period] || false,
+        is_unbound: task[:is_unbound] || false,
         indelible: task[:indelible] || false,
         parent_id: parent_id,
         depend_on: depend_on,

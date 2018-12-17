@@ -27,8 +27,10 @@ module Cultivation
           batch_id: batch.id,
           quantity: batch.quantity,
         }
-        # Update child and dependents tasks's start & end dates
-        update_task(task, batch.tasks, opt)
+        # Update child and dependents tasks's start & end dates>
+        # Except when task is bound (is_unbound = false; e.g. Clean)
+        # - which doesn't effect parent or dependent tasks
+        update_task(task, batch.tasks, opt) unless task.is_unbound
         # Save other fields on Task that are not handle by bulk_update
         task.save if errors.empty?
         # TODO::ANDY: Estimated Hours are not calculating

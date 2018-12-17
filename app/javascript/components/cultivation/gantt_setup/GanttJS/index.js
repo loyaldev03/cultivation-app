@@ -604,7 +604,9 @@ export default class Gantt {
     this.bar_being_dragged = null
 
     function action_in_progress() {
-      return is_dragging || is_resizing_left || is_resizing_right || is_dragging_mid
+      return (
+        is_dragging || is_resizing_left || is_resizing_right || is_dragging_mid
+      )
     }
 
     $.on(this.$svg, 'mousedown', '.bar-wrapper, .handle', (e, element) => {
@@ -672,8 +674,8 @@ export default class Gantt {
           }
         } else if (is_dragging) {
           bar.update_bar_position({ x: $bar.ox + $bar.finaldx })
-        } else if (is_dragging_mid){
-          bar.update_line({ x2: e.offsetX, y2: e.offsetY})
+        } else if (is_dragging_mid) {
+          bar.update_line({ x2: e.offsetX, y2: e.offsetY })
         }
       })
     })
@@ -696,14 +698,19 @@ export default class Gantt {
         if (!$bar.finaldx) return
         bar.date_changed()
         bar.set_action_completed()
-        if(is_dragging_mid){
+        if (is_dragging_mid) {
           console.log('release !')
           console.log(e.target.className.baseVal === 'bar')
-          if (e.target.className.baseVal === 'bar' || e.target.className.baseVal === 'bar-label'){
-            let target_id = e.target.parentElement.parentElement.getAttribute("data-id")
+          if (
+            e.target.className.baseVal === 'bar' ||
+            e.target.className.baseVal === 'bar-label'
+          ) {
+            let target_id = e.target.parentElement.parentElement.getAttribute(
+              'data-id'
+            )
             console.log(target_id)
             //update relationship
-          }else{
+          } else {
             console.log(bar)
             bar.clear_line()
           }

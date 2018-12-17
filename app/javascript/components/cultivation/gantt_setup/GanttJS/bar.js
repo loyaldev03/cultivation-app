@@ -169,10 +169,6 @@ export default class Bar {
       append_to: this.handle_group
     })
 
-
-
-
-
     if (this.task.progress && this.task.progress < 100) {
       this.$handle_progress = createSVG('polygon', {
         points: this.get_progress_polygon_points().join(','),
@@ -261,7 +257,7 @@ export default class Bar {
     this.update_arrow_position()
   }
 
-  update_line({x2 = null, y2 = null}){
+  update_line({ x2 = null, y2 = null }) {
     console.log(x2 + ', ' + y2)
     console.log('updating line')
     const line = this.handle_group.lastChild
@@ -270,10 +266,10 @@ export default class Bar {
     this.update_attr(line, 'y2', y2)
   }
 
-  clear_line(){
+  clear_line() {
     const line = this.handle_group.lastChild
-    this.update_attr(line, 'x2', line.getAttribute("x1"))
-    this.update_attr(line, 'y2', line.getAttribute("y1"))
+    this.update_attr(line, 'x2', line.getAttribute('x1'))
+    this.update_attr(line, 'y2', line.getAttribute('y1'))
   }
 
   date_changed() {

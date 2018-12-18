@@ -118,14 +118,32 @@ class TaskStore {
     let parent = this.tasks.find(e => e.id === parent_id)
     let children = this.tasks.filter(e => e.attributes.parent_id === parent.id)
     let children_ids = children.map(e => e.id)
-    this.hidden_ids = this.hidden_ids.concat(children_ids)
+    let children_2_ids = this.tasks
+      .filter(e => children_ids.includes(e.attributes.parent_id))
+      .map(e => e.id)
+    console.log(children_ids)
+    console.log(children_2_ids)
+    this.hidden_ids = this.hidden_ids.concat(
+      children_ids.concat(children_2_ids)
+    )
   }
+
+  // setHiddenChildrenIds(parent_id){
+  //   let parent = this.tasks.find(e => e.id === parent_id)
+  //   let children = this.tasks.filter(e => e.attributes.parent_id === parent.id)
+  //   let children_ids = children.map(e => e.id)
+  //   return children_ids
+  // }
 
   clearHiddenIds(parent_id) {
     let parent = this.tasks.find(e => e.id === parent_id)
     let children = this.tasks
       .filter(e => e.attributes.parent_id === parent.id)
       .map(e => e.id)
+    let children2 = this.tasks
+      .filter(e => children.includes(e.attributes.parent_id))
+      .map(e => e.id)
+    children = children.concat(children2)
     let new_ids = toJS(this.hidden_ids).filter(e => !children.includes(e))
     this.hidden_ids = new_ids
   }
@@ -140,9 +158,8 @@ class TaskStore {
           name,
           start: start_date,
           end: end_date,
-          dependencies: task.attributes.parent_id
-            ? task.attributes.parent_id
-            : task.attributes.depend_on
+          custom_class: this.getCustomClass(task),
+          dependencies: this.getDependencies(task)
           // progress: parseInt(Math.random() * 100, 10)
         }
       })
@@ -150,6 +167,31 @@ class TaskStore {
     } else {
       return null
     }
+  }
+
+  getCustomClass(task) {
+    if (task.attributes.is_phase === true) {
+      return 'phase'
+    }
+    if (task.attributes.is_category === true) {
+      return 'category'
+    }
+    if (
+      task.attributes.is_category === false &&
+      task.attributes.is_phase === false
+    ) {
+      return 'task'
+    }
+  }
+
+  getDependencies(task) {
+    // if (task.id === '5c0f63a1fb83872228537c91') {
+    //   return '5c0f63a1fb83872228537c8b'
+    // } else {
+      return task.attributes.parent_id
+        ? task.attributes.parent_id
+        : task.attributes.depend_on
+    // }
   }
 }
 

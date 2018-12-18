@@ -675,7 +675,7 @@ export default class Gantt {
         } else if (is_dragging) {
           bar.update_bar_position({ x: $bar.ox + $bar.finaldx })
         } else if (is_dragging_mid) {
-          if(bars[0] === bar){
+          if (bars[0] === bar) {
             bar.update_line({ x2: e.offsetX, y2: e.offsetY })
           }
         }

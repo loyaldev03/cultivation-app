@@ -11,6 +11,9 @@ module Inventory
     field :status, type: String                 # new, closed (when fully packaged)
 
     has_many :plants, class_name: 'Inventory::Plant'
+    has_many :packages, class_name: 'Inventory::ItemTransaction'  # These are packages created from harvest after it has done drying & curing.
+                                                                  # For now, it has some edge cases, immature plant and grown plants to be sold are also parked here.
+
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     belongs_to :cultivation_batch, class_name: 'Cultivation::Batch'
   end

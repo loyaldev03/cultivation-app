@@ -14,9 +14,7 @@ module Cultivation
 
     def call
       task = Cultivation::Task.find(@args[:id])
-      if @args[:type] == 'position'
-        update_position(task, @args[:position])
-      elsif @args[:type] == 'resource'
+      if @args[:type] == 'resource'
         task.update(user_ids: @args[:user_ids])
       else
         batch = Cultivation::Batch.includes(:tasks).find_by(id: task.batch_id)
@@ -27,8 +25,10 @@ module Cultivation
           batch_id: batch.id,
           quantity: batch.quantity,
         }
-        # Update child and dependents tasks's start & end dates
-        update_task(task, batch.tasks, opt)
+        # Update child and dependents tasks's start & end dates>
+        # Except when task is bound (is_unbound = false; e.g. Clean)
+        # - which doesn't effect parent or dependent tasks
+        update_task(task, batch.tasks, opt) unless task.is_unbound
         # Save other fields on Task that are not handle by bulk_update
         task.save if errors.empty?
         # TODO::ANDY: Estimated Hours are not calculating

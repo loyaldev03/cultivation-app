@@ -11,6 +11,10 @@ class HomeController < ApplicationController
     @strains_count = Inventory::FacilityStrain.count
     raw_material_catalogues = Inventory::Catalogue.raw_materials.pluck(:id)
     @raw_material_count = Inventory::ItemTransaction.in(catalogue: raw_material_catalogues).count
+
+    # Only check count on sales product derived directly from plant w/o mixing with other products/ ingredients
+    sales_catalogue = Inventory::QueryCatalogueTree.call(Constants::SALES_KEY, 'raw_sales_product').result.pluck(:value)
+    @sales_product_count = Inventory::ItemTransaction.in(catalogue: sales_catalogue).count
   end
 
   def reset_data

@@ -97,7 +97,6 @@ class UpdateActiveTrayPlansJob < ApplicationJob
       end_date: phase_info.end_date,
       phase: phase_info.phase,
       capacity: capacity,
-      is_active: true,
       c_at: current_time,
       u_at: current_time,
     }

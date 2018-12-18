@@ -11,46 +11,39 @@ module Cultivation
     end
 
     def call
-      cultivation_phases = [
-        Constants::CONST_CLONE,
-        Constants::CONST_VEG,
-        Constants::CONST_VEG1,
-        Constants::CONST_VEG2,
-        Constants::CONST_FLOWER,
-        Constants::CONST_DRY,
-        Constants::CONST_CURE,
-      ]
-
       if @batch_id.present? && @plans.any?
         # Rails.logger.debug "\033[34m Find Batch: #{@batch_id} \033[0m"
         # Rails.logger.debug "\033[34m # of plans: #{@plans.length} \033[0m"
-        batch = Cultivation::Batch.find(@batch_id.to_bson_id)
+        batch = Cultivation::Batch.find_by(id: @batch_id.to_bson_id)
         if batch.present?
+          facility = Facility.find_by(id: batch.facility_id)
+          # Save selected mother plants
+          batch.selected_plants = get_selected_plants(
+            batch.batch_source, @plans
+          )
           batch.quantity = @quantity
           # Rails.logger.debug "\033[34m Found Batch \033[0m"
           batch_phases = Cultivation::QueryBatchPhases.call(
             batch,
-            cultivation_phases,
+            facility.growth_stages,
           ).result
           # Delete all existing location plans
           batch.tray_plans.delete_all
+          phase_trays = consolidate_phase_trays(@plans)
           new_plans = []
           batch_phases.each do |phase_info|
             # New location plans
-            phase_plan = @plans.detect { |p| p['phase'] == phase_info.phase }
+            phase_plan = phase_trays.detect { |p| p[:phase] == phase_info.phase }
             # Rails.logger.debug "\033[34m trays for phase: \033[0m"
-            locations = phase_plan['trays']
+            locations = phase_plan[:trays]
             # Build new booking record of trays
             new_plans += build_tray_plans(batch.facility_id,
                                           batch.id,
                                           phase_info,
                                           locations)
-            # Rails.logger.debug "\033[34m new_plans build: \033[0m"
-            # Rails.logger.debug new_plans.to_json
           end
-          # Rails.logger.debug "\033[34m insert_many new_plans \033[0m"
-          # Save all new location plans
           batch.save!
+          # Save all tray plans
           Cultivation::TrayPlan.collection.insert_many(new_plans)
         end
       end
@@ -58,8 +51,57 @@ module Cultivation
 
     private
 
+    def get_selected_plants(batch_source, plans)
+      selected_plants = []
+      if batch_source == 'clones_from_mother'
+        clone_plans = plans.select do |p|
+          p[:phase] == Constants::CONST_CLONE
+        end
+        # Rails.logger.debug "\033[31m Clone Plans \033[0m"
+        # Rails.logger.debug clone_plans.to_yaml
+        mother_plants = clone_plans.map do |p|
+          p[:trays]
+        end
+        mother_plants = mother_plants.flatten
+        # Rails.logger.debug "\033[31m Mother Plans Flatten \033[0m"
+        # Rails.logger.debug mother_plants.to_yaml
+        mother_plants.each do |p|
+          sp = selected_plants.detect { |x| x[:plant_id] == p[:plant_id] }
+          if sp
+            sp[:quantity] += p[:tray_capacity].to_i
+          else
+            sp = {
+              plant_id: p[:plant_id],
+              quantity: p[:tray_capacity].to_i,
+            }
+            selected_plants << sp
+          end
+        end
+        # Rails.logger.debug "\033[31m Selected Plants \033[0m"
+        # Rails.logger.debug selected_plants.to_yaml
+      end
+      selected_plants
+    end
+
+    # Consolidate trays of the same phase
+    def consolidate_phase_trays(plans)
+      tray_plans = []
+      plans.each do |p|
+        tp = tray_plans.detect { |x| x[:phase] == p[:phase] }
+        if tp
+          tp[:quantity] += p[:quantity]
+          tp[:trays] += p[:trays]
+        else
+          tray_plans << p
+        end
+      end
+      tray_plans
+    end
+
     def build_tray_plans(facility_id, batch_id, phase_info, locations = [])
       current_time = Time.now
+      # Important: Must save capacity as integer for
+      # QueryAvailableTrays commands to work.
       locations.map do |loc|
         {
           facility_id: facility_id.to_bson_id,
@@ -72,7 +114,6 @@ module Cultivation
           end_date: phase_info.end_date,
           capacity: loc[:tray_capacity].to_i,
           phase: phase_info.phase,
-          is_active: true,
           c_at: current_time,
           u_at: current_time,
         }

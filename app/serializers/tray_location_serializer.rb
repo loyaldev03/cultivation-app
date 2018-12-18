@@ -20,5 +20,5 @@ class TrayLocationSerializer
     object.shelf_id.to_s
   end
 
-  attributes :is_active, :phase, :capacity, :start_date, :end_date
+  attributes :phase, :capacity, :start_date, :end_date
 end

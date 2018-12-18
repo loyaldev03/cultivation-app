@@ -73,6 +73,12 @@ Rails.application.routes.draw do
         get 'purchased_clones'
       end
     end
+
+    resources :sales_products, only: [] do
+      collection do
+        get 'harvest_packages'
+      end
+    end
   end
 
   namespace 'settings' do
@@ -141,6 +147,16 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :sales_products, only: [:index] do
+        collection do
+          get 'harvest_package/:id', action: :harvest_package
+          get 'products'
+          get 'harvest_packages'
+          post 'setup_harvest_package'
+          post 'setup_sales_product'
+        end
+      end
+
       resources :vendors, only: [:index]
       resources :purchase_orders, only: [:index]
       resources :vendor_invoices, only: [:index, :show]
@@ -157,6 +173,7 @@ Rails.application.routes.draw do
         post 'update_batch'
         resources :tasks, only: [:index, :update, :create, :destroy] do
           put 'indent', on: :member
+          post 'update_position', on: :member
         end
         resources :nutrient_profiles
       end

@@ -85,7 +85,11 @@
               Product items ready for Sale
             </p>
           </div>
-          <a href="#" class="btn btn--primary">Start</a>
+          <% if @sales_product_count <= 0 %>
+            <%= link_to 'Start', harvest_packages_inventory_sales_products_path, class: 'btn btn--primary' %>
+          <% else %>
+            <%= link_to 'Change', harvest_packages_inventory_sales_products_path, class: 'btn btn--secondary' %>
+          <% end %>
         </div>
 
 

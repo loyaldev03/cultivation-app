@@ -41,6 +41,15 @@ module Inventory
       object.facility_strain_id.to_s
     end
 
+    attribute :facility, if: Proc.new { |record, params|
+                 params && params[:include]&.include?(:facility)
+               } do |object|
+      {
+        id: object.facility_strain.facility_id.to_s,
+        name: object.facility_strain.facility.name,
+      }
+    end
+
     attribute :cultivation_batch_id do |object|
       object.cultivation_batch_id.to_s
     end

@@ -159,7 +159,6 @@ export default class Bar {
       append_to: this.handle_group
     })
 
-
     createSVG('defs', {
       innerHTML: `<marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5"
                     markerWidth="6" markerHeight="6"
@@ -169,7 +168,6 @@ export default class Bar {
       append_to: this.handle_group
     })
 
-
     let path = `
             M ${bar.getX() + bar.getWidth() - 9 + 20} ${bar.getY() + 1 + 7}
             L ${bar.getX() + bar.getWidth() - 9 + 20} ${bar.getY() + 1 + 7}
@@ -177,13 +175,12 @@ export default class Bar {
 
     createSVG('path', {
       d: path,
-      append_to: this.handle_group, 
+      append_to: this.handle_group,
       class: 'arrow',
       'marker-end': 'url(#arrow)',
-      x: bar.getX() + bar.getWidth() - 9 + 20 ,
-      y: bar.getY() + 1 + 7 
+      x: bar.getX() + bar.getWidth() - 9 + 20,
+      y: bar.getY() + 1 + 7
     })
-
 
     // createSVG('line', {
     //   x1: bar.getX() + bar.getWidth() - 9 + 20,
@@ -205,12 +202,9 @@ export default class Bar {
             l 5 5
             l -5 5`
 
-//     this.element = createSVG('path', {
-//       d: path,      append_to: this.handle_group, class: 'arrow'
-//  })
-
-
-
+    //     this.element = createSVG('path', {
+    //       d: path,      append_to: this.handle_group, class: 'arrow'
+    //  })
 
     if (this.task.progress && this.task.progress < 100) {
       this.$handle_progress = createSVG('polygon', {

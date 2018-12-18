@@ -68,28 +68,30 @@ module Cultivation
 
       # Loop through each task from template
       template_tasks.each do |task|
-        new_task_id = BSON::ObjectId.new
-        new_task = build_task(new_task_id,
-                              batch,
-                              start_date,
+        new_task = build_task(start_date,
                               end_date,
                               task,
                               phase_id,
                               category_id)
+        new_task[:id] = BSON::ObjectId.new
+        new_task[:batch_id] = batch.id
+
         # Set a default task_type for Moving Plants task
         if new_task[:name].start_with?('Move Plants')
           set_move_task_defaults(new_task)
         end
+
         # Collect all new tasks in an array
         new_tasks << new_task
+
         # Set the fields data for the next task in the template
         if task[:is_phase]
-          phase_id = new_task_id
+          phase_id = new_task[:id]
           category_id = nil
           start_date = new_task[:start_date]
           end_date = new_task[:end_date]
         elsif task[:is_category]
-          category_id = new_task_id
+          category_id = new_task[:id]
         end
       end
 
@@ -108,7 +110,11 @@ module Cultivation
       JSON.parse(File.read(template_path), symbolize_names: true)
     end
 
-    def build_task(task_id, batch, phase_start_date, phase_end_date, task, phase_id, category_id)
+    def build_task(phase_start_date,
+                   phase_end_date,
+                   task,
+                   phase_id,
+                   category_id)
       raise ArgumentError, 'start_date is required' if phase_start_date.nil?
       parent_id = get_parent_id(task, phase_id, category_id)
       depend_on = get_depend_on(task, phase_id, category_id)
@@ -120,8 +126,6 @@ module Cultivation
                         end
       end_date = task_start_date + (duration - 1).days
       record = {
-        id: task_id,
-        batch_id: batch.id,
         phase: task[:phase],
         task_category: task[:task_category],
         name: task[:name],
@@ -135,6 +139,7 @@ module Cultivation
         is_growing_period: task[:is_growing_period] || false,
         is_unbound: task[:is_unbound] || false,
         indelible: task[:indelible] || false,
+        wbs: task[:wbs],
         parent_id: parent_id,
         depend_on: depend_on,
       }

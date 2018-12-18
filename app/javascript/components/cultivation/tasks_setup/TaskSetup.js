@@ -337,6 +337,18 @@ class TaskSetup extends React.Component {
                               type="checkbox"
                               name="checkbox-1"
                               className="mr2"
+                              value="wbs"
+                              onChange={handleChangeCheckbox}
+                              checked={checkboxValue('wbs')}
+                            />
+                            WBS
+                          </label>
+
+                          <label className="f6 fw6 db mb1 gray ttc">
+                            <input
+                              type="checkbox"
+                              name="checkbox-1"
+                              className="mr2"
                               value="name"
                               onChange={handleChangeCheckbox}
                               checked={checkboxValue('name')}

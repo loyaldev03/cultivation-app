@@ -10,6 +10,7 @@ class TaskSerializer
     :position,
     :estimated_hours,
     :users,
+    :wbs,
     :is_phase,
     :is_category,
     :task_type

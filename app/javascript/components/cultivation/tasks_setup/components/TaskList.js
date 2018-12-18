@@ -567,6 +567,12 @@ class TaskList extends React.Component {
               show: false
             },
             {
+              Header: 'WBS',
+              accessor: 'attributes.wbs',
+              maxWidth: '80',
+              show: this.checkVisibility('wbs')
+            },
+            {
               Header: 'Phase',
               accessor: 'attributes.phase',
               maxWidth: '100',
@@ -591,30 +597,35 @@ class TaskList extends React.Component {
               Header: 'Start Date',
               accessor: 'attributes.start_date',
               maxWidth: '100',
+              className: 'tr',
               show: this.checkVisibility('start_date')
             },
             {
               Header: 'End Date',
               accessor: 'attributes.end_date',
               maxWidth: '100',
+              className: 'tr',
               show: this.checkVisibility('end_date')
             },
             {
               Header: 'Duration',
               accessor: 'attributes.duration',
               maxWidth: '90',
+              className: 'tr',
               show: this.checkVisibility('duration')
             },
             {
               Header: 'Est Hr',
               accessor: 'attributes.estimated_hours',
               maxWidth: '100',
+              className: 'tr',
               show: this.checkVisibility('estimated_hour')
             },
             {
               Header: 'Est Cost ($)',
               accessor: 'attributes.estimated_cost',
               maxWidth: '100',
+              className: 'tr',
               show: this.checkVisibility('estimated_cost')
             },
             {

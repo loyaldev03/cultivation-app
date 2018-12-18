@@ -10,7 +10,12 @@ import ReactGantt from './ReactGantt'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 
 const styles = `
-
+path.arrow{
+  display: none;
+}
+line.line{
+  stroke-width: 2.4;
+}
 .task .bar-group .bar {
   fill: #0097a7;
 }
@@ -34,7 +39,7 @@ rect.handle.mid {
 }
 
 rect.handle.mid:hover {
-  fill: #ddd;
+  fill: #666;
 }
 
 .rt-tr-group:hover{

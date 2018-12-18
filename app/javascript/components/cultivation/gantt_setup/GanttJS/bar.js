@@ -159,15 +159,58 @@ export default class Bar {
       append_to: this.handle_group
     })
 
-    createSVG('line', {
-      x1: bar.getX() + bar.getWidth() - 9 + 20,
-      y1: bar.getY() + 1 + 7,
-      x2: bar.getX() + bar.getWidth() - 9 + 20,
-      y2: bar.getY() + 1 + 7,
-      stroke: '#4A4A4A',
-      class: 'line',
+
+    createSVG('defs', {
+      innerHTML: `<marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5"
+                    markerWidth="6" markerHeight="6"
+                    orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10" fill="#666" />
+                  </marker>`,
       append_to: this.handle_group
     })
+
+
+    let path = `
+            M ${bar.getX() + bar.getWidth() - 9 + 20} ${bar.getY() + 1 + 7}
+            L ${bar.getX() + bar.getWidth() - 9 + 20} ${bar.getY() + 1 + 7}
+            `
+
+    createSVG('path', {
+      d: path,
+      append_to: this.handle_group, 
+      class: 'arrow',
+      'marker-end': 'url(#arrow)',
+      x: bar.getX() + bar.getWidth() - 9 + 20 ,
+      y: bar.getY() + 1 + 7 
+    })
+
+
+    // createSVG('line', {
+    //   x1: bar.getX() + bar.getWidth() - 9 + 20,
+    //   y1: bar.getY() + 1 + 7,
+    //   x2: bar.getX() + bar.getWidth() - 9 + 20,
+    //   y2: bar.getY() + 1 + 7,
+    //   stroke: '#666',
+    //   class: 'line',
+    //   markerEnd: "url(#arrowhead)",
+    //   append_to: this.handle_group
+    // })
+
+    let path2 = `
+            M 1265 88
+            V 187
+            a 5 5 0 0 0 5 5
+            L 1283 192
+            m -5 -5
+            l 5 5
+            l -5 5`
+
+//     this.element = createSVG('path', {
+//       d: path,      append_to: this.handle_group, class: 'arrow'
+//  })
+
+
+
 
     if (this.task.progress && this.task.progress < 100) {
       this.$handle_progress = createSVG('polygon', {
@@ -261,15 +304,27 @@ export default class Bar {
     console.log(x2 + ', ' + y2)
     console.log('updating line')
     const line = this.handle_group.lastChild
+    let x = line.getAttribute('x')
+    let y = line.getAttribute('y')
+    let path = `
+            M ${x} ${y}
+            L ${x2} ${y2}`
+    console.log(path)
     console.log(this.handle_group.lastChild)
-    this.update_attr(line, 'x2', x2)
-    this.update_attr(line, 'y2', y2)
+    line.style.display = 'block'
+    line.setAttribute('d', path)
+    // this.update_attr(line, 'd', path)
   }
 
   clear_line() {
     const line = this.handle_group.lastChild
-    this.update_attr(line, 'x2', line.getAttribute('x1'))
-    this.update_attr(line, 'y2', line.getAttribute('y1'))
+    let x = line.getAttribute('x')
+    let y = line.getAttribute('y')
+    let path = `
+            M ${x} ${y}
+            L ${x} ${y}`
+    line.style.display = 'none'
+    line.setAttribute('d', path)
   }
 
   date_changed() {

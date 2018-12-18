@@ -157,6 +157,7 @@ Rails.application.routes.draw do
         post 'update_batch'
         resources :tasks, only: [:index, :update, :create, :destroy] do
           put 'indent', on: :member
+          post 'update_position', on: :member
         end
         resources :nutrient_profiles
       end

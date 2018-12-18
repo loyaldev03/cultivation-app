@@ -26,6 +26,19 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     end
   end
 
+  def update_position
+    update_cmd = Cultivation::UpdateTaskPosition.call(
+      params[:id],
+      task_params[:position],
+      current_user
+    )
+    if update_cmd.success?
+      render json: {data: {id: update_cmd.result.id.to_s}}
+    else
+      render json: {errors: update_cmd.errors}
+    end
+  end
+
   def create
     task = Cultivation::CreateTask.call(task_params).result
     tasks = @batch.tasks.order_by(position: :asc)

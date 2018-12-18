@@ -59,29 +59,6 @@ class updateTask {
       })
   }
 
-  updatePosition(batch_id, a, b) {
-    let id = TaskStore[a].attributes.id
-    let url = `/api/v1/batches/${batch_id}/tasks/${id}`
-    fetch(url, {
-      method: 'PUT',
-      credentials: 'include',
-      body: JSON.stringify({ task: { id: id, position: a, type: 'position' } }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.data && data.data.id != null) {
-          toast('Task Moved', 'success')
-
-          loadTasks.loadbatch(batch_id)
-        } else {
-          toast('Something happen', 'error')
-        }
-      })
-  }
-
   updateTaskResource(state) {
     let id = state.id
     let url = `/api/v1/batches/${state.batch_id}/tasks/${id}`

@@ -10,14 +10,14 @@ import {
   monthStartDate,
   monthOptionAdd,
   monthOptionToString,
-  dateToMonthOption,
-  httpPostOptions
+  dateToMonthOption
 } from '../../../utils'
 import { toast } from '../../../utils/toast'
 import TaskEditor from './TaskEditor'
 import updateTask from '../actions/updateTask'
 import indentTask from '../actions/indentTask'
 import deleteTask from '../actions/deleteTask'
+import updateTaskPosition from '../actions/updateTaskPosition'
 import ReactTable from 'react-table'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import BatchSetupStore from '../../batches_setup/BatchSetupStore'
@@ -147,7 +147,7 @@ class TaskList extends React.Component {
     if (error_container) {
       error_container.style.display = 'none'
     }
-    this.clearDropdown()  
+    this.clearDropdown()
     editorSidebarHandler.open({
       width: '500px',
       data: e.row,
@@ -417,8 +417,8 @@ class TaskList extends React.Component {
     )
 
     headers.forEach((header, i) => {
-      let enableDrag = header.querySelector('.draggable')
-      if (enableDrag !== null) {
+      const enableDrag = header.querySelector('.draggable')
+      if (enableDrag) {
         header.setAttribute('draggable', true)
         //the dragged header
         header.ondragstart = e => {
@@ -451,8 +451,9 @@ class TaskList extends React.Component {
           e.preventDefault()
           e.target.closest('.rt-tr-group').style.borderBottomColor = ''
           if (this.dragged !== null && i !== null) {
-            TaskStore.splice(i, 0, TaskStore.splice(this.dragged, 1)[0])
-            updateTask.updatePosition(this.props.batch_id, i, this.dragged)
+            const taskDragged = toJS(TaskStore)[this.dragged]
+            const newPosition = i + 1
+            updateTaskPosition(this.props.batch_id, taskDragged, newPosition)
           }
         }
       }

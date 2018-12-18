@@ -14,9 +14,7 @@ module Cultivation
 
     def call
       task = Cultivation::Task.find(@args[:id])
-      if @args[:type] == 'position'
-        update_position(task, @args[:position])
-      elsif @args[:type] == 'resource'
+      if @args[:type] == 'resource'
         task.update(user_ids: @args[:user_ids])
       else
         batch = Cultivation::Batch.includes(:tasks).find_by(id: task.batch_id)

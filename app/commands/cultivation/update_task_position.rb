@@ -10,12 +10,24 @@ module Cultivation
 
     def call
       task = Cultivation::Task.find_by(id: @task_id)
-      if task
+      if task.nil?
+        errors.add(:error, 'Task Not Found')
+        return
+      end
+      if can_move? task
         task.move_to! @move_to_position
         task
-      else
-        errors.add(:error, 'Task Not Found')
       end
+    end
+
+    private
+
+    def can_move?(task)
+      if task.indelible
+        errors.add(:error, "Task '(#{task.name})'' cannot be moved.")
+        return false
+      end
+      true
     end
   end
 end

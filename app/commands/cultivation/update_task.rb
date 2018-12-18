@@ -121,6 +121,7 @@ module Cultivation
       end
     end
 
+    # FIXME: This should be obsolete - remove after confirm
     def update_position(task, position)
       task.move_to! position
     end

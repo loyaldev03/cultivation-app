@@ -2,16 +2,18 @@ module Cultivation
   class CreateBatch
     prepend SimpleCommand
 
-    attr_reader :user, :args
+    attr_reader :args
 
-    def initialize(user, args)
-      @user = user
+    def initialize(current_user, args)
+      @current_user = current_user
       @args = args
     end
 
     def call
       if valid_permission? && valid_data?
-        save_record(args)
+        batch = create_new_batch(args)
+        create_tasks_from_template(batch, get_tasks_from_template)
+        batch
       else
         args
       end
@@ -19,43 +21,53 @@ module Cultivation
 
     private
 
-    def task_templates
-      template_path = 'lib/cultivation_templates/template2.json'
-      JSON.parse(File.read(template_path), symbolize_names: true)
-    end
-
     def valid_permission?
-      # TODO: Add user permission check
+      # TODO: Add current_user permission check
       true
     end
 
     def valid_data?
-      errors.add(:facility_strain_id, 'Facility strain is required.') if Inventory::FacilityStrain.find(args[:facility_strain_id]).nil?
-      errors.add(:grow_method, 'Grow method is required.') if args[:grow_method].blank?
-      errors.add(:batch_source, 'Batch source is required.') if args[:batch_source].blank?
-      errors.add(:facility_id, 'Facility is required.') if args[:facility_id].blank?
+      if Inventory::FacilityStrain.find(args[:facility_strain_id]).nil?
+        errors.add(:facility_strain_id, 'Facility strain is required.')
+      end
+      if args[:grow_method].blank?
+        errors.add(:grow_method, 'Grow method is required.')
+      end
+      if args[:batch_source].blank?
+        errors.add(:batch_source, 'Batch source is required.')
+      end
+      if args[:facility_id].blank?
+        errors.add(:facility_id, 'Facility is required.')
+      end
       errors.empty?
     end
 
-    def save_record(args)
+    def create_new_batch(args)
       batch = Cultivation::Batch.new
       batch.facility_id = args[:facility_id]
       batch.batch_source = args[:batch_source]
       batch.facility_strain_id = args[:facility_strain_id]
-      batch.start_date = Time.now + 1.days # Default start date to tomorrow
+      # Default start_date to tomorrow
+      batch.start_date = Time.now + 1.days
       batch.grow_method = args[:grow_method]
       batch.quantity = args[:quantity]
       batch.batch_no = get_next_batch_no
       batch.name = batch.batch_no
       batch.current_growth_stage = Constants::CONST_CLONE
       batch.save!
+      batch
+    end
 
+    def create_tasks_from_template(batch, template_tasks)
+      # Temporary variables
       phase_id = nil
       category_id = nil
       new_tasks = []
       start_date = batch.start_date
       end_date = nil
-      task_templates.each do |task|
+
+      # Loop through each task from template
+      template_tasks.each do |task|
         new_task_id = BSON::ObjectId.new
         new_task = build_task(new_task_id,
                               batch,
@@ -80,11 +92,20 @@ module Cultivation
           category_id = new_task_id
         end
       end
+
+      # TODO: Use insert_many to create multiple task with a single db call.
+      # But this only works with auto-generated ObjectId
+      # E.g. Cultivation::Task.collection.insert_many(new_tasks)
       Cultivation::Task.create(new_tasks)
 
       batch.estimated_harvest_date = get_harvest_date(new_tasks, start_date)
       batch.save!
       batch
+    end
+
+    def get_tasks_from_template
+      template_path = 'lib/cultivation_templates/template2.json'
+      JSON.parse(File.read(template_path), symbolize_names: true)
     end
 
     def build_task(task_id, batch, phase_start_date, phase_end_date, task, phase_id, category_id)
@@ -149,14 +170,13 @@ module Cultivation
     def get_parent_id(task, phase_id, category_id)
       if task[:is_phase]
         # Phase task
-        parent_id = nil
+        nil
       elsif task[:is_category]
         # Category task
-        parent_id = phase_id
+        phase_id
       else
         # Normal task
-        parent_id = category_id
-        parent_id ||= phase_id
+        category_id || phase_id
       end
     end
 
@@ -166,23 +186,11 @@ module Cultivation
     def get_depend_on(task, phase_id, category_id)
       if task[:is_phase]
         # Phase task
-        depend_on = phase_id
+        phase_id
       elsif task[:is_category]
         # Category task
-        depend_on = category_id
-      else
-        # Normal Task
-        depend_on = nil
+        category_id
       end
     end
   end
 end
-
-# phase(parent) is depending on other phase(parent)
-# if start_date of parent change, child will change
-# parallel task only depend on parent
-
-#Phase has many category
-#Category has many children task
-#Some task depend on other task
-#If some children task extend or reduce duration, it will affect category date, will affect other date too

@@ -188,9 +188,9 @@ class TaskStore {
     // if (task.id === '5c0f63a1fb83872228537c91') {
     //   return '5c0f63a1fb83872228537c8b'
     // } else {
-      return task.attributes.parent_id
-        ? task.attributes.parent_id
-        : task.attributes.depend_on
+    return task.attributes.parent_id
+      ? task.attributes.parent_id
+      : task.attributes.depend_on
     // }
   }
 }

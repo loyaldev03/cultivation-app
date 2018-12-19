@@ -1,3 +1,4 @@
+# TODO: Is this still relevant?
 module Inventory
   class RawMaterial
     include Mongoid::Document

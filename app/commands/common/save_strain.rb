@@ -1,3 +1,4 @@
+# TODO: To be reviewed.
 module Common
   class SaveStrain
     prepend SimpleCommand

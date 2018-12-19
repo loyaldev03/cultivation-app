@@ -166,6 +166,7 @@ module Inventory
       package.cost_per_unit = cost_per_unit
       package.ref_id = harvest_batch_id
       package.ref_type = 'Inventory::HarvestBatch'
+      package.event_type = 'create_package'
       package.save!
       package
     end

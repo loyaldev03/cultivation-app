@@ -11,7 +11,7 @@ import loadUsers from './actions/loadUsers'
 import loadUserRoles from './actions/loadUserRoles'
 import loadItems from './actions/loadItems'
 import loadDisplayTaskStore from './actions/loadDisplayTaskStore'
-import { formatDate2 } from '../../utils'
+import { formatDate2, ActiveBadge } from '../../utils'
 
 import TaskList from './components/TaskList'
 
@@ -105,14 +105,7 @@ class TaskSetup extends React.Component {
                 <div className="w-30">
                   <h4 className="tl pa0 ma0 h6--font dark-grey">
                     Batch {batch.batch_no}
-                    <span
-                      className={classNames('f7 fw4 ph2 pv1 ba br2 fr', {
-                        'grey b--grey': !batch.is_active,
-                        'bg-green b--green white': batch.is_active
-                      })}
-                    >
-                      {batch.is_active ? 'Active' : 'Draft'}
-                    </span>
+                    <ActiveBadge className="fr" isActive={batch.is_active} />
                   </h4>
                 </div>
               </div>

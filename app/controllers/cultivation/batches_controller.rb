@@ -8,6 +8,7 @@ class Cultivation::BatchesController < ApplicationController
                                          :material]
 
   def index
+    @dashboard = DashboardForm::DashboardForm.new
   end
 
   def new

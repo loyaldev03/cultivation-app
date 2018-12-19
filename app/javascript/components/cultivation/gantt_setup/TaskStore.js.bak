@@ -159,7 +159,7 @@ class TaskStore {
           start: start_date,
           end: end_date,
           custom_class: this.getCustomClass(task),
-          dependencies: this.getDependencies(task)
+          dependencies: this.doSomething(task)
           // progress: parseInt(Math.random() * 100, 10)
         }
       })
@@ -168,7 +168,7 @@ class TaskStore {
       return null
     }
   }
-
+  // 55143595 - puan latifah
   getCustomClass(task) {
     if (task.attributes.is_phase === true) {
       return 'phase'
@@ -184,14 +184,14 @@ class TaskStore {
     }
   }
 
-  getDependencies(task) {
-    // if (task.id === '5c0f63a1fb83872228537c91') {
-    //   return '5c0f63a1fb83872228537c8b'
-    // } else {
-    return task.attributes.parent_id
-      ? task.attributes.parent_id
-      : task.attributes.depend_on
-    // }
+  doSomething(task) {
+    if (task.id === '5c0f63a1fb83872228537c91') {
+      return '5c0f63a1fb83872228537c8b'
+    } else {
+      return task.attributes.parent_id
+        ? task.attributes.parent_id
+        : task.attributes.depend_on
+    }
   }
 }
 

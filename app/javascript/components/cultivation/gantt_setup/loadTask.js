@@ -7,7 +7,7 @@ class LoadTask {
       if (task.attributes.start_date)
         task.attributes.start_date = new Date(task.attributes.start_date)
       if (task.attributes.end_date)
-        task.attributes.end_date = addDayToDate(task.attributes.end_date, 2)
+        task.attributes.end_date = addDayToDate(task.attributes.end_date, 1)
       return task
     })
     return tasks

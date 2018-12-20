@@ -1,7 +1,7 @@
 class TaskSerializer
   include FastJsonapi::ObjectSerializer
   attributes :phase,
-    :task_category,
+    :task_category, # TODO: Remove
     :name,
     :duration,
     :days_from_start_date,
@@ -11,8 +11,9 @@ class TaskSerializer
     :estimated_hours,
     :users,
     :wbs,
-    :is_phase,
-    :is_category,
+    :indent,
+    :is_phase,      # TODO: Remove
+    :is_category,   # TODO: Remove
     :task_type
 
   attributes :id do |object|

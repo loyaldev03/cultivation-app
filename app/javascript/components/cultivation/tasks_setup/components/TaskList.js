@@ -1,4 +1,5 @@
 import React from 'react'
+import classNames from 'classnames'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
@@ -93,7 +94,7 @@ class TaskList extends React.Component {
 
   renderPhaseColumn = row => {
     let handleEdit = this.handleEdit
-    if (row.row['attributes.is_phase'] == true) {
+    if (row.row['attributes.indent'] === 0) {
       return (
         <a
           onClick={e => {
@@ -108,7 +109,7 @@ class TaskList extends React.Component {
 
   renderCategoryColumn = row => {
     let handleEdit = this.handleEdit
-    if (row.row['attributes.is_category'] == true) {
+    if (row.row['attributes.indent'] === 1) {
       return (
         <a
           onClick={e => {
@@ -199,6 +200,17 @@ class TaskList extends React.Component {
     this.mountEvents()
   }
 
+  renderTaskNameCell = row => {
+    const indent = row.row['attributes.indent']
+    return (
+      <div className="flex justify-between-ns">
+        <span className={classNames({"orange": indent === 0})}>
+          {row.value}
+        </span>
+      </div>
+    )
+  }
+
   renderAttributesName = row => {
     let id = row.row['id']
     let handleEdit = this.handleEdit
@@ -210,8 +222,8 @@ class TaskList extends React.Component {
     return (
       <div
         className={`flex justify-between-ns ${
-          row.row['attributes.is_phase'] === true ||
-          row.row['attributes.is_category'] === true
+          row.row['attributes.indent'] === 0 ||
+          row.row['attributes.indent'] === 1
             ? ''
             : 'draggable'
         }`}
@@ -219,7 +231,7 @@ class TaskList extends React.Component {
         <div className="">
           <div className="flex">
             <div className="w1 ml3">
-              {row.row['attributes.is_phase'] === true && (
+              {row.row['attributes.indent'] === 0 && (
                 <div>
                   <i
                     className="material-icons dim grey f7 pointer"
@@ -243,7 +255,7 @@ class TaskList extends React.Component {
               )}
             </div>
             <div className="w1 ml3">
-              {row.row['attributes.is_category'] === true && (
+              {row.row['attributes.indent'] === 1 && (
                 <div>
                   <i
                     className="material-icons dim grey f7 pointer"
@@ -267,8 +279,8 @@ class TaskList extends React.Component {
               )}
             </div>
             <div className="w1 ml3">
-              {row.row['attributes.is_phase'] === false &&
-                row.row['attributes.is_category'] === false && (
+              {row.row['attributes.indent'] === 0 &&
+                row.row['attributes.indent'] === 0 && (
                   <a
                     className="pointer"
                     onClick={e => {
@@ -334,7 +346,7 @@ class TaskList extends React.Component {
                       </i>
                       Indent Out
                     </a>
-                    {row.row['attributes.is_phase'] !== true && (
+                    {row.row['attributes.indent'] > 0 && (
                       <a
                         className="ttc pv2 tc flex pointer"
                         style={{ display: 'flex' }}
@@ -515,7 +527,7 @@ class TaskList extends React.Component {
     const facilityPhases = this.props.batch.cultivation_phases
     const phaseTasks = tasks.filter(
       t =>
-        t.attributes.is_phase &&
+        (t.attributes.indent > 0) &&
         facilityPhases.some(p => p === t.attributes.phase)
     )
     const phaseDuration = {}
@@ -556,42 +568,25 @@ class TaskList extends React.Component {
             {
               Header: 'Id',
               accessor: 'id',
-              maxWidth: '100',
-              show: false
-            },
-            {
-              Header: '',
-              accessor: 'attributes.is_category',
-              maxWidth: '50',
-              id: 'button-column',
               show: false
             },
             {
               Header: 'WBS',
               accessor: 'attributes.wbs',
-              maxWidth: '80',
+              maxWidth: '60',
               show: this.checkVisibility('wbs')
             },
             {
-              Header: 'Phase',
-              accessor: 'attributes.phase',
-              maxWidth: '100',
-              show: false,
-              Cell: row => <div>{this.renderPhaseColumn(row)}</div>
-            },
-            {
-              Header: 'Category',
-              accessor: 'attributes.task_category',
-              maxWidth: '100',
-              show: false,
-              Cell: row => <div>{this.renderCategoryColumn(row)}</div>
+              Header: 'Indent',
+              accessor: 'attributes.indent',
+              show: false
             },
             {
               Header: 'Tasks',
               accessor: 'attributes.name',
               maxWidth: '500',
               show: this.checkVisibility('name'),
-              Cell: row => <div>{this.renderAttributesName(row)}</div>
+              Cell: this.renderTaskNameCell,
             },
             {
               Header: 'Start Date',
@@ -649,16 +644,6 @@ class TaskList extends React.Component {
               Header: 'Depend On',
               accessor: 'attributes.depend_on',
               show: false
-            },
-            {
-              Header: 'Category?',
-              accessor: 'attributes.is_category',
-              show: false
-            },
-            {
-              Header: 'Phase?',
-              accessor: 'attributes.is_phase',
-              show: false
             }
           ]}
           data={tasks}
@@ -674,7 +659,7 @@ class TaskList extends React.Component {
                       ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
                       : null,
                   backgroundColor:
-                    rowInfo.row['attributes.is_phase'] === true
+                    rowInfo.row['attributes.indent'] === 0
                       ? '#FAEFEE'
                       : null
                 },

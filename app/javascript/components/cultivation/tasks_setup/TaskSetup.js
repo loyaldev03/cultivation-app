@@ -33,6 +33,7 @@ class TaskSetup extends React.Component {
     super(props)
     this.state = {
       columns: [
+        'wbs',
         'name',
         'start_date',
         'end_date',

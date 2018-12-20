@@ -148,13 +148,11 @@ export default class Bar {
       append_to: this.handle_group
     })
 
-    createSVG('rect', {
-      x: bar.getX() + bar.getWidth() - 9 + 20,
-      y: bar.getY() + 1 + 7,
-      width: handle_width,
-      height: 5,
-      rx: this.corner_radius,
-      ry: this.corner_radius,
+    createSVG('circle', {
+      cx: bar.getX() + bar.getWidth() - 9 + 20,
+      cy: bar.getY() + 10,
+      r: 8,
+      fill: 'red',
       class: 'handle mid',
       append_to: this.handle_group
     })

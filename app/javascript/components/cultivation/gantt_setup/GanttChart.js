@@ -29,7 +29,7 @@ line.line{
   height: 10;
 }
 
-rect.handle.mid {
+circle.handle.mid {
   fill: transparent;
     cursor: pointer;
     opacity: initial;
@@ -38,7 +38,7 @@ rect.handle.mid {
     transition: opacity .3s ease;
 }
 
-rect.handle.mid:hover {
+circle.handle.mid:hover {
   fill: #666;
 }
 

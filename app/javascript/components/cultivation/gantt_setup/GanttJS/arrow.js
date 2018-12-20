@@ -83,7 +83,8 @@ export default class Arrow {
     this.element = createSVG('path', {
       d: this.path,
       'data-from': this.from_task.task.id,
-      'data-to': this.to_task.task.id
+      'data-to': this.to_task.task.id,
+      class: 'handle-arrow'
     })
   }
 
@@ -91,4 +92,21 @@ export default class Arrow {
     this.calculate_path()
     this.element.setAttribute('d', this.path)
   }
+
+  update_arrow(x, y){
+    let start_x =
+      this.from_task.$bar.getX() + this.from_task.$bar.getWidth() / 2
+    const start_y =
+      this.gantt.options.header_height +
+      this.gantt.options.bar_height +
+      (this.gantt.options.padding + this.gantt.options.bar_height) *
+      this.from_task.task._index +
+      this.gantt.options.padding
+
+    let path = `
+            M ${start_x} ${start_y}
+            L ${x} ${y}`
+    this.element.setAttribute('d', path)
+  }
+
 }

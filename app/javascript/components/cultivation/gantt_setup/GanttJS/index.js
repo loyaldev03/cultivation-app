@@ -599,19 +599,26 @@ export default class Gantt {
     let is_resizing_left = false
     let is_resizing_right = false
     let is_dragging_mid = false
+    let drag_line = false
     let parent_bar_id = null
     let bars = [] // instanceof Bar
+    let arrow
     this.bar_being_dragged = null
 
     function action_in_progress() {
       return (
-        is_dragging || is_resizing_left || is_resizing_right || is_dragging_mid
+        is_dragging || is_resizing_left || is_resizing_right || is_dragging_mid || drag_line
       )
     }
+    $.on(this.$svg, 'mousedown', '.arrow, .handle-arrow', (e, element) => {
+      let path = element.getAttribute('d')
+      arrow = this.arrows.find((e) => e.path === path)
+      arrow.update_arrow(e.offsetX, e.offsetY)
+      drag_line = true
+    })
 
     $.on(this.$svg, 'mousedown', '.bar-wrapper, .handle', (e, element) => {
       const bar_wrapper = $.closest('.bar-wrapper', element)
-
       if (element.classList.contains('left')) {
         is_resizing_left = true
       } else if (element.classList.contains('right')) {
@@ -652,7 +659,6 @@ export default class Gantt {
       bars.forEach(bar => {
         const $bar = bar.$bar
         $bar.finaldx = this.get_snap_position(dx)
-
         if (is_resizing_left) {
           if (parent_bar_id === bar.task.id) {
             bar.update_bar_position({
@@ -678,6 +684,9 @@ export default class Gantt {
           }
         }
       })
+      if (drag_line) {
+        arrow.update_arrow(e.offsetX, e.offsetY)
+      }
     })
 
     document.addEventListener('mouseup', e => {
@@ -689,6 +698,7 @@ export default class Gantt {
       is_resizing_left = false
       is_resizing_right = false
       is_dragging_mid = false
+      drag_line = false
     })
 
     $.on(this.$svg, 'mouseup', e => {
@@ -702,14 +712,15 @@ export default class Gantt {
             e.target.className.baseVal === 'bar-progress'
           ) {
             if (bars[0] === bar) {
-              let target_id = e.target.parentElement.parentElement.getAttribute(
+
+              let source_id = bar.task.id
+              let destination_id = e.target.parentElement.parentElement.getAttribute(
                 'data-id'
               )
-              let destination_id = bar.task.id
-              //update relationship
+
               this.trigger_event('drag_relationship', [
-                destination_id,
-                target_id
+                source_id,
+                destination_id
               ])
             }
           } else {
@@ -720,6 +731,28 @@ export default class Gantt {
         bar.date_changed()
         bar.set_action_completed()
       })
+      if (drag_line){
+        if (
+          e.target.className.baseVal === 'bar' ||
+          e.target.className.baseVal === 'bar-label' ||
+          e.target.className.baseVal === 'bar-progress'
+        ) {
+
+          let source_id = arrow.from_task.task.id
+          let destination_id = e.target.parentElement.parentElement.getAttribute(
+            'data-id'
+          )
+
+          this.trigger_event('drag_relationship', [
+            source_id,
+            destination_id
+          ])
+
+
+        }else{
+          arrow.update()
+        }
+      }
     })
 
     this.bind_bar_progress()

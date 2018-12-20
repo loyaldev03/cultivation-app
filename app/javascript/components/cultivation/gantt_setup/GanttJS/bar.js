@@ -163,7 +163,7 @@ export default class Bar {
       innerHTML: `<marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5"
                     markerWidth="6" markerHeight="6"
                     orient="auto-start-reverse">
-                    <path d="M 0 0 L 10 5 L 0 10" fill="#666" />
+                    <path d="M 0 0 L 10 5 L 0 10" stroke="#666" fill="none" stroke-width="1.4" />
                   </marker>`,
       append_to: this.handle_group
     })
@@ -277,7 +277,7 @@ export default class Bar {
       })
       // child task must not go before parent
       const valid_x = xs.reduce((prev, curr) => {
-        return x >= curr
+        return x > curr
       }, x)
       if (!valid_x) {
         width = null

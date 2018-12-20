@@ -619,8 +619,6 @@ export default class Gantt {
       } else if (element.classList.contains('bar-wrapper')) {
         is_dragging = true
       } else if (element.classList.contains('mid')) {
-        // alert('dragging mid')
-        console.log('dragging mid')
         is_dragging_mid = true
       }
 
@@ -697,30 +695,30 @@ export default class Gantt {
       this.bar_being_dragged = null
       bars.forEach(bar => {
         const $bar = bar.$bar
+        if (is_dragging_mid) {
+          if (
+            e.target.className.baseVal === 'bar' ||
+            e.target.className.baseVal === 'bar-label' ||
+            e.target.className.baseVal === 'bar-progress'
+          ) {
+            if (bars[0] === bar) {
+              let target_id = e.target.parentElement.parentElement.getAttribute(
+                'data-id'
+              )
+              let destination_id = bar.task.id
+              //update relationship
+              this.trigger_event('drag_relationship', [
+                destination_id,
+                target_id
+              ])
+            }
+          } else {
+            bar.clear_line()
+          }
+        }
         if (!$bar.finaldx) return
         bar.date_changed()
         bar.set_action_completed()
-        if (is_dragging_mid) {
-          console.log('release !')
-          console.log(e.target.className.baseVal === 'bar')
-          if (
-            e.target.className.baseVal === 'bar' ||
-            e.target.className.baseVal === 'bar-label'
-          ) {
-            let target_id = e.target.parentElement.parentElement.getAttribute(
-              'data-id'
-            )
-            console.log(target_id)
-            //update relationship
-            this.trigger_event('drag_relationship', [target_id])
-          } else {
-            console.log(bar)
-            bar.clear_line()
-          }
-
-          //e.target.parent.parent.attributes.data-id.value
-          // console.log(e.target.parent.parent.attributes)
-        }
       })
     })
 
@@ -869,7 +867,6 @@ export default class Gantt {
 
   trigger_event(event, args) {
     if (this.options['on_' + event]) {
-      console.log(this.options['on_' + event])
       this.options['on_' + event].apply(null, args)
     }
   }

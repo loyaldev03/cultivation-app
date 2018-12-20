@@ -42,7 +42,10 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   def update_dependency
     task = Cultivation::Task.find(params[:source_id])
     if task.present?
-      task.update(depend_on: params[:destination_id])
+      depend_on_task = Cultivation::Task.find(params[:destination_id])
+      start_date = depend_on_task.start_date + 1.days
+      end_date = start_date + depend_on_task.duration.days - 1.days
+      task.update(depend_on: params[:destination_id], start_date: start_date, end_date: end_date)
       render json: {data: {id: task.id}}
     else
       render json: {errors: 'Update failed'}

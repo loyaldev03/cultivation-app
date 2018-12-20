@@ -164,13 +164,6 @@ class TaskStore {
     )
   }
 
-  // setHiddenChildrenIds(parent_id){
-  //   let parent = this.tasks.find(e => e.id === parent_id)
-  //   let children = this.tasks.filter(e => e.attributes.parent_id === parent.id)
-  //   let children_ids = children.map(e => e.id)
-  //   return children_ids
-  // }
-
   clearHiddenIds(parent_id) {
     let parent = this.tasks.find(e => e.id === parent_id)
     let children = this.tasks

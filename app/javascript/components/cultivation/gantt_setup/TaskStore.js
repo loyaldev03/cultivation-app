@@ -38,9 +38,10 @@ class TaskStore {
     return toJS(this.processing)
   }
 
-  updateDependency(source_id, destination_id){
-    let url = `/api/v1/batches/${this.batch_id}/tasks/${source_id}/update_dependency?source_id=${source_id}&destination_id=${destination_id}`
-
+  updateDependency(source_id, destination_id) {
+    let url = `/api/v1/batches/${
+      this.batch_id
+    }/tasks/${source_id}/update_dependency?source_id=${source_id}&destination_id=${destination_id}`
 
     fetch(url, {
       method: 'PUT',
@@ -71,10 +72,7 @@ class TaskStore {
           toast(data.errors, 'error')
         }
       })
-
-
   }
-
 
   updateTask(task) {
     this.processing = true
@@ -227,8 +225,8 @@ class TaskStore {
     //   return '5c0f63a1fb83872228537c8b'
     // } else {
     return task.attributes.depend_on
-      // ? task.attributes.depend_on
-      // : task.attributes.parent_id
+    // ? task.attributes.depend_on
+    // : task.attributes.parent_id
     // }
   }
 }

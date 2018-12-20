@@ -607,12 +607,16 @@ export default class Gantt {
 
     function action_in_progress() {
       return (
-        is_dragging || is_resizing_left || is_resizing_right || is_dragging_mid || drag_line
+        is_dragging ||
+        is_resizing_left ||
+        is_resizing_right ||
+        is_dragging_mid ||
+        drag_line
       )
     }
     $.on(this.$svg, 'mousedown', '.arrow, .handle-arrow', (e, element) => {
       let path = element.getAttribute('d')
-      arrow = this.arrows.find((e) => e.path === path)
+      arrow = this.arrows.find(e => e.path === path)
       arrow.update_arrow(e.offsetX, e.offsetY)
       drag_line = true
     })
@@ -712,7 +716,6 @@ export default class Gantt {
             e.target.className.baseVal === 'bar-progress'
           ) {
             if (bars[0] === bar) {
-
               let source_id = bar.task.id
               let destination_id = e.target.parentElement.parentElement.getAttribute(
                 'data-id'
@@ -731,25 +734,19 @@ export default class Gantt {
         bar.date_changed()
         bar.set_action_completed()
       })
-      if (drag_line){
+      if (drag_line) {
         if (
           e.target.className.baseVal === 'bar' ||
           e.target.className.baseVal === 'bar-label' ||
           e.target.className.baseVal === 'bar-progress'
         ) {
-
           let source_id = arrow.from_task.task.id
           let destination_id = e.target.parentElement.parentElement.getAttribute(
             'data-id'
           )
 
-          this.trigger_event('drag_relationship', [
-            source_id,
-            destination_id
-          ])
-
-
-        }else{
+          this.trigger_event('drag_relationship', [source_id, destination_id])
+        } else {
           arrow.update()
         }
       }

@@ -93,14 +93,14 @@ export default class Arrow {
     this.element.setAttribute('d', this.path)
   }
 
-  update_arrow(x, y){
+  update_arrow(x, y) {
     let start_x =
       this.from_task.$bar.getX() + this.from_task.$bar.getWidth() / 2
     const start_y =
       this.gantt.options.header_height +
       this.gantt.options.bar_height +
       (this.gantt.options.padding + this.gantt.options.bar_height) *
-      this.from_task.task._index +
+        this.from_task.task._index +
       this.gantt.options.padding
 
     let path = `
@@ -108,5 +108,4 @@ export default class Arrow {
             L ${x} ${y}`
     this.element.setAttribute('d', path)
   }
-
 }

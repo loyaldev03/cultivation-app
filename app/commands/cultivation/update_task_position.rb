@@ -23,8 +23,8 @@ module Cultivation
     private
 
     def can_move?(task)
-      if task.indelible
-        errors.add(:error, "Task '(#{task.name})'' cannot be moved.")
+      if task.indelible.present?
+        errors.add(:error, "Task '(#{task.name})' cannot be moved.")
         return false
       end
       true

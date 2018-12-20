@@ -12,7 +12,7 @@ module Cultivation
     def call
       if valid_permission? && valid_data?
         batch = create_new_batch(args)
-        GenerateTasksFromTemplateJob.perform_later(batch.id.to_s)
+        GenerateTasksFromTemplateJob.perform_now(batch.id.to_s)
         batch
       else
         args

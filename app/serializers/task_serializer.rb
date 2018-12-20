@@ -27,6 +27,10 @@ class TaskSerializer
     object.depend_on.to_s
   end
 
+  attributes :wbs do |object|
+    object.wbs
+  end
+
   #for showing in table column resources
   attribute :resources do |object, params|
     users = params[:users].select { |a| object.user_ids.include?(a.id) }

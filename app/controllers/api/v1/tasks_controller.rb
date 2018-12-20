@@ -1,9 +1,9 @@
 class Api::V1::TasksController < Api::V1::BaseApiController
-  before_action :set_batch, except: [:update]
+  before_action :set_batch, except: [:update, :update_position]
 
   def index
     if @batch.present?
-      tasks = @batch.tasks.order_by(position: :asc)
+      tasks = get_all_tasks
       users = User.active
       task_json = TaskSerializer.new(tasks, params: {tasks: tasks, users: users}).serialized_json
       render json: task_json
@@ -16,7 +16,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     a = Cultivation::UpdateTask.call(task_params)
     if a.errors.empty?
       task = Cultivation::Task.find(params[:id])
-      tasks = task.batch.tasks.order_by(position: :asc)
+      tasks = get_all_tasks
       users = User.active
       task_json = TaskSerializer.new(task, params: {tasks: tasks, users: users}).serialized_json
       render json: task_json
@@ -41,7 +41,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def create
     task = Cultivation::CreateTask.call(task_params).result
-    tasks = @batch.tasks.order_by(position: :asc)
+    tasks = get_all_tasks
     users = User.active
     task_json = TaskSerializer.new(task, params: {tasks: tasks, users: users}).serialized_json
     render json: task_json
@@ -49,7 +49,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def indent
     task = Cultivation::IndentTask.call(task_params).result
-    tasks = @batch.tasks.order_by(position: :asc)
+    tasks = get_all_tasks
     users = User.active
     task_json = TaskSerializer.new(task, params: {tasks: tasks, users: users}).serialized_json
     render json: task_json
@@ -63,7 +63,20 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   private
 
   def set_batch
-    @batch = Cultivation::Batch.find(params[:batch_id])
+    @batch = Cultivation::Batch.includes(:tasks).find_by(id: params[:batch_id])
+  end
+
+  def get_all_tasks
+    tasks = @batch.tasks.order_by(position: :asc).to_a
+    map_tasks_wbs(tasks)
+  end
+
+  def map_tasks_wbs(tasks)
+    wbs_list = GenerateWbs.generate(tasks)
+    tasks.each_with_index do |t, i|
+      t.wbs = wbs_list[i][:wbs]
+    end
+    tasks
   end
 
   def task_params

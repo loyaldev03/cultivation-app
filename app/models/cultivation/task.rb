@@ -4,6 +4,8 @@ module Cultivation
     include Mongoid::Timestamps::Short
     include Mongoid::Orderable
 
+    attr_accessor :wbs
+
     field :phase, type: String
     # FIXME: Remove
     field :task_category, type: String

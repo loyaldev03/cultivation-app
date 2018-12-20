@@ -9,9 +9,8 @@ class GenerateTasksFromTemplateJob < ApplicationJob
     Cultivation::Task.create(new_tasks)
 
     # Set harvest date
-    batch.estimated_harvest_date = get_harvest_date(template_tasks)
+    batch.estimated_harvest_date = get_harvest_date(new_tasks)
     batch.save!
-    batch
   end
 
   private
@@ -80,7 +79,7 @@ class GenerateTasksFromTemplateJob < ApplicationJob
 
     indent = task[:wbs].split('.').length - 1
     duration = task[:duration].present? ? task[:duration].to_i : 1
-    task_start_date = if indent == 1
+    task_start_date = if indent.zero?
                         parent_end_date || parent_start_date
                       else
                         parent_start_date
@@ -99,16 +98,10 @@ class GenerateTasksFromTemplateJob < ApplicationJob
   end
 
   def get_harvest_date(tasks)
-    harvest_task = tasks.detect do |t|
-      t[:phase] == Constants::CONST_HARVEST
-    end
+    harvest_task = tasks.detect { |t| t[:phase] == Constants::CONST_HARVEST }
     # Incase 'harvest' phase not found, fallback to :dry then :cure
-    harvest_task ||= tasks.detect do |t|
-      t[:phase] == Constants::CONST_DRY
-    end
-    harvest_task ||= tasks.detect do |t|
-      t[:phase] == Constants::CONST_CURE
-    end
+    harvest_task ||= tasks.detect { |t| t[:phase] == Constants::CONST_DRY }
+    harvest_task ||= tasks.detect { |t| t[:phase] == Constants::CONST_CURE }
     harvest_task[:start_date]
   end
 end

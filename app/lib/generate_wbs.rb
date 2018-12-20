@@ -17,7 +17,7 @@ class GenerateWbs
 
         {
           id: t.id.to_s,
-          wbs: nodes.reject(&:zero?).join("."),
+          wbs: nodes.reject(&:zero?).join('.'),
         }
       end
     end

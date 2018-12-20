@@ -56,6 +56,8 @@ class Cultivation::BatchesController < ApplicationController
       }).marshal_dump
       # Set the plantType for react BatchPlantSelectionList
       @locations = get_cultivation_locations(@batch)
+      Rails.logger.debug "\033[31m BatchId: #{@batch.id} \033[0m"
+      Rails.logger.debug "\033[31m Locations: #{@locations} \033[0m"
     end
   end
 
@@ -97,11 +99,12 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def get_cultivation_locations(batch)
-    facility = Facility.find_by(id: batch.facility_id)
     # Get phases from Facility
     cultivation_phases = batch.facility_strain.facility.growth_stages
     # Get start_date and end_date from batch
     phases_info = get_batch_phase(batch, cultivation_phases)
+    Rails.logger.debug '>>>'
+    Rails.logger.debug phases_info.to_yaml
     if phases_info.any?
       filter_args = {facility_id: batch.facility_id,
                      purpose: cultivation_phases,

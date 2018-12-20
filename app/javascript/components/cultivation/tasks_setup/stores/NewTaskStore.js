@@ -1,6 +1,11 @@
 import { observable, action, runInAction, toJS } from 'mobx'
 import loadTask from '../actions/loadTask'
-import { formatDate2, httpGetOptions, addDayToDate, toast } from '../../../utils'
+import {
+  formatDate2,
+  httpGetOptions,
+  addDayToDate,
+  toast
+} from '../../../utils'
 
 class TaskStore {
   @observable tasks
@@ -41,7 +46,7 @@ class TaskStore {
   updateDependency(source_id, destination_id) {
     let url = `/api/v1/batches/${
       this.batch_id
-      }/tasks/${source_id}/update_dependency?source_id=${source_id}&destination_id=${destination_id}`
+    }/tasks/${source_id}/update_dependency?source_id=${source_id}&destination_id=${destination_id}`
 
     fetch(url, {
       method: 'PUT',

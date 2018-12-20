@@ -78,7 +78,7 @@ class GenerateTasksFromTemplateJob < ApplicationJob
   def build_task(task, parent_start_date, parent_end_date)
     raise ArgumentError, 'start_date is required' if parent_start_date.nil?
 
-    indent = task[:wbs].split(".").length - 1
+    indent = task[:wbs].split('.').length - 1
     duration = task[:duration].present? ? task[:duration].to_i : 1
     task_start_date = if indent == 1
                         parent_end_date || parent_start_date

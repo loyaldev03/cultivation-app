@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Home", :type => :request do
+RSpec.describe "Home", type: :request do
   context "when logged out" do
     describe "GET index" do
       it "should redirect to login page" do
@@ -14,7 +14,7 @@ RSpec.describe "Home", :type => :request do
   context "when logged in" do
     before do
       user = create(:user)
-      login_as(user, :scope => :user)
+      login_as(user, scope: :user)
     end
 
     describe "GET index" do

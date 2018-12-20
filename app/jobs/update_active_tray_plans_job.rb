@@ -10,7 +10,7 @@ class UpdateActiveTrayPlansJob < ApplicationJob
   def perform(batch_id)
     # Rails.logger.debug "\033[31m UpdateActiveTrayPlansJob: #{batch_id} \033[0m"
     # Find the corresponding batch
-    batch = cultivation::batch.find(batch_id)
+    batch = Cultivation::Batch.find(batch_id)
     # Find all 'phase' tasks
     phases = Cultivation::QueryBatchPhases.call(batch).result
     # Find all tray locations in database

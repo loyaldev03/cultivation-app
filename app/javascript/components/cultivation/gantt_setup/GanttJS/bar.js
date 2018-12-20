@@ -295,16 +295,12 @@ export default class Bar {
   }
 
   update_line({ x2 = null, y2 = null }) {
-    console.log(x2 + ', ' + y2)
-    console.log('updating line')
     const line = this.handle_group.lastChild
     let x = line.getAttribute('x')
     let y = line.getAttribute('y')
     let path = `
             M ${x} ${y}
             L ${x2} ${y2}`
-    console.log(path)
-    console.log(this.handle_group.lastChild)
     line.style.display = 'block'
     line.setAttribute('d', path)
     // this.update_attr(line, 'd', path)

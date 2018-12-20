@@ -134,9 +134,10 @@ class GanttChart extends React.Component {
     // }
   }
 
-  onDragRelationShip = e => {
-    console.log(e)
-    console.log('drag in react now')
+  onDragRelationShip = (source_id, destination_id) => {
+    console.log(source_id)
+    console.log(destination_id)
+    TaskStore.updateDependency(destination_id, source_id)
   }
 
   render() {

@@ -39,6 +39,16 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     end
   end
 
+  def update_dependency
+    task = Cultivation::Task.find(params[:source_id])
+    if task.present?
+      task.update(depend_on: params[:destination_id])
+      render json: {data: {id: task.id}}
+    else
+      render json: {errors: 'Update failed'}
+    end
+  end
+
   def create
     task = Cultivation::CreateTask.call(task_params).result
     tasks = @batch.tasks.order_by(position: :asc)

@@ -38,6 +38,44 @@ class TaskStore {
     return toJS(this.processing)
   }
 
+  updateDependency(source_id, destination_id){
+    let url = `/api/v1/batches/${this.batch_id}/tasks/${source_id}/update_dependency?source_id=${source_id}&destination_id=${destination_id}`
+
+
+    fetch(url, {
+      method: 'PUT',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        // let error_container = document.getElementById('error-container')
+        if (data && data.data && data.data.id != null) {
+          // error_container.style.display = 'none'
+          toast('Task Updated', 'success')
+          this.loadTasks(this.batch_id)
+          this.processing = false
+          // loadTasks.loadbatch(state.batch_id)
+        } else {
+          // let keys = Object.keys(data.errors)
+          // console.log(data.errors[keys[0]])
+          // error_container.style.display = 'block'
+          // let error_message = document.getElementById('error-message')
+          // error_message.innerHTML = data.errors[keys[0]]
+          // let array = []
+          // array[0] = data.errors[keys[0]]
+          // ErrorStore.replace(array)
+          // console.log(JSON.stringify(ErrorStore))
+          toast(data.errors, 'error')
+        }
+      })
+
+
+  }
+
+
   updateTask(task) {
     this.processing = true
     let new_task = task
@@ -188,9 +226,9 @@ class TaskStore {
     // if (task.id === '5c0f63a1fb83872228537c91') {
     //   return '5c0f63a1fb83872228537c8b'
     // } else {
-    return task.attributes.parent_id
-      ? task.attributes.parent_id
-      : task.attributes.depend_on
+    return task.attributes.depend_on
+      // ? task.attributes.depend_on
+      // : task.attributes.parent_id
     // }
   }
 }

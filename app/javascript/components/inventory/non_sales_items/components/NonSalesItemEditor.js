@@ -6,8 +6,8 @@ import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { PurchaseInfo } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
-// import { saveRawMaterial } from '../actions/saveRawMaterial'
-// import { getRawMaterial } from '../actions/getRawMaterial'
+import { saveNonSalesItem } from '../actions/saveNonSalesItem'
+// import { getNonSalesItem } from '../actions/getNonSalesItem'
 
 class NonSalesItemEditor extends React.Component {
   constructor(props) {
@@ -79,11 +79,14 @@ class NonSalesItemEditor extends React.Component {
 
   onSave = event => {
     const payload = this.validateAndGetValues()
+    console.log(payload.isValid)
+    console.log(payload)
+    console.log(this.state.errors)
     if (payload.isValid) {
-      // saveRawMaterial(payload).then(() => {
-      //   this.reset()
-      //   window.editorSidebar.close()
-      // })
+      saveNonSalesItem(payload).then(() => {
+        this.reset()
+        window.editorSidebar.close()
+      })
     }
 
     event.preventDefault()
@@ -172,7 +175,8 @@ class NonSalesItemEditor extends React.Component {
   render() {
     const { locations, catalogues } = this.props
     const nonSalesItemProducts = this.state.nonSalesItemType.children
-    const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
+    // const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
+    const uoms = [this.state.order_uom]
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
 
     const showTotalPrice =

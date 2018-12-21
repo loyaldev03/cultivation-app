@@ -163,6 +163,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :non_sales_items, only: [:index, :show] do
+        collection do
+          post 'setup'
+        end
+      end
+
       resources :vendors, only: [:index]
       resources :purchase_orders, only: [:index]
       resources :vendor_invoices, only: [:index, :show]

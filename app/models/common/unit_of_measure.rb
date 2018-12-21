@@ -64,7 +64,7 @@ module Common
     end
 
     def self.pieces(unit)
-      find_by(dimension: 'pieces', unit: unit)
+      find_by(dimension: 'piece', unit: unit)
     end
 
     def self.weights(unit)

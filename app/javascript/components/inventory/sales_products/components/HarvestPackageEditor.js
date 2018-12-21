@@ -30,7 +30,7 @@ const handleInputChange = newValue => {
 const loadProducts = inputValue => {
   inputValue = inputValue || ''
 
-  return fetch('/api/v1/sales_products/products?filter=' + inputValue, {
+  return fetch('/api/v1/sales_products/products?type=raw_sales_product&filter=' + inputValue, {
     credentials: 'include'
   })
     .then(response => response.json())

@@ -9,4 +9,15 @@ class Inventory::SalesProductsController < ApplicationController
     options = {params: {include: [:facility]}}
     @harvest_batches = Inventory::HarvestBatchSerializer.new(harvest_batches, options).serializable_hash[:data]
   end
+
+  def convert_products
+    @sales_catalogue = Inventory::QueryCatalogueTree.call(Constants::SALES_KEY, Constants::SALES_PRODUCT_KEY).result
+    @locations = QueryAllValidFacilityLocations.call.result
+    @breakdown_uoms = Common::UnitOfMeasure.where(dimension: 'piece').
+      pluck(:unit).concat(Common::UnitOfMeasure.where(dimension: 'weight').pluck(:unit))
+  end
+
+  def product_info
+    render plain: 'product_info'
+  end
 end

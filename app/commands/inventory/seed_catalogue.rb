@@ -160,7 +160,7 @@ module Inventory
 
     def sales_template
       [
-        {label: 'Capsule/Tablet', category: Constants::SALES_PRODUCT_KEY, key: Constants::SALES_PRODUCT_KEY, uom_dimension: 'weight'},
+        {label: 'Capsule/Tablet', category: Constants::SALES_PRODUCT_KEY, key: 'capsule_tablet', uom_dimension: 'weight'},
         {label: 'Concentrate (liquid)', category: Constants::SALES_PRODUCT_KEY, key: 'concentrate_liquid', uom_dimension: 'volume'},
         {label: 'Concentrate (liquid each)', category: Constants::SALES_PRODUCT_KEY, key: 'concentrate_liquid_each', uom_dimension: 'volume'},
         {label: 'Concentrate (solid)', category: Constants::SALES_PRODUCT_KEY, key: 'concentrate_solid', uom_dimension: 'volume'},

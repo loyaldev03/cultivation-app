@@ -1,0 +1,33 @@
+<% selected_style = 'scrollable-tab__tab scrollable-tab__tab--active' %>
+
+<div class="scrollable-tab">    
+  <% if selected == 'harvest_package' %>
+    <div class="<%= selected_style %>">
+      Harvest Packages
+    </div>
+  <% else %>
+    <%= link_to 'Harvest Packages',
+      harvest_packages_inventory_sales_products_path, 
+      class: 'scrollable-tab__tab' %>
+  <% end %>
+
+  <% if selected == 'convert_products' %>
+    <div class="<%= selected_style %>">
+      Convert Products
+    </div>
+  <% else %>
+    <%= link_to 'Convert Products',
+      convert_products_inventory_sales_products_path, 
+      class: 'scrollable-tab__tab' %>
+  <% end %>
+
+  <% if selected == 'product_info' %>
+    <div class="<%= selected_style %>">
+      Product Info
+    </div>
+  <% else %>
+    <%= link_to 'Product Info',
+      product_info_inventory_sales_products_path, 
+      class: 'scrollable-tab__tab' %>
+  <% end %>
+</div>

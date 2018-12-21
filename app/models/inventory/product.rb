@@ -14,6 +14,9 @@ module Inventory
     has_many :packages, class_name: 'Inventory::ItemTransaction'
     belongs_to :catalogue, class_name: 'Inventory::Catalogue'
     belongs_to :facility, class_name: 'Facility'
-    belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
+
+    # Strain is optional because a product that is a combination of multiple product has more
+    # than one strain.
+    belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
   end
 end

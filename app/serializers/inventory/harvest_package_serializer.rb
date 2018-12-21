@@ -33,11 +33,6 @@ module Inventory
       }
     end
 
-    attribute :location do |object|
-      # TODO: Find rooom
-      {name: ''}
-    end
-
     attribute :product do |object|
       product = object.product
       {
@@ -45,7 +40,7 @@ module Inventory
         name: product.name,
         sku: product.sku,
         catalogue_id: product.catalogue_id.to_s,
-        facility_strain_id: product.facility_strain_id.to_s,
+        facility_strain_id: product.facility_strain_id&.to_s,
         transaction_limit: product.transaction_limit,
       }
     end

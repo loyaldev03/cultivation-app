@@ -8,9 +8,12 @@ module Inventory
     field :ref_type, type: String
     field :event_type, type: String             # stock_intake, materials_used
     field :event_date, type: DateTime
+
+    #
     field :product_name, type: String
     field :description, type: String
     field :manufacturer, type: String
+
     field :quantity, type: BigDecimal           # can be +/-
     field :uom, type: String
     field :order_quantity, type: BigDecimal

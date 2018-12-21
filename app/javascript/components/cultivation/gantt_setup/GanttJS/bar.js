@@ -148,13 +148,11 @@ export default class Bar {
       append_to: this.handle_group
     })
 
-    createSVG('rect', {
-      x: bar.getX() + bar.getWidth() - 9 + 20,
-      y: bar.getY() + 1 + 7,
-      width: handle_width,
-      height: 5,
-      rx: this.corner_radius,
-      ry: this.corner_radius,
+    createSVG('circle', {
+      cx: bar.getX() + bar.getWidth() - 9 + 20,
+      cy: bar.getY() + 10,
+      r: 8,
+      fill: 'red',
       class: 'handle mid',
       append_to: this.handle_group
     })
@@ -163,7 +161,7 @@ export default class Bar {
       innerHTML: `<marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5"
                     markerWidth="6" markerHeight="6"
                     orient="auto-start-reverse">
-                    <path d="M 0 0 L 10 5 L 0 10" fill="#666" />
+                    <path d="M 0 0 L 10 5 L 0 10" stroke="#666" fill="none" stroke-width="1.4" />
                   </marker>`,
       append_to: this.handle_group
     })
@@ -277,7 +275,7 @@ export default class Bar {
       })
       // child task must not go before parent
       const valid_x = xs.reduce((prev, curr) => {
-        return x >= curr
+        return x > curr
       }, x)
       if (!valid_x) {
         width = null
@@ -295,16 +293,12 @@ export default class Bar {
   }
 
   update_line({ x2 = null, y2 = null }) {
-    console.log(x2 + ', ' + y2)
-    console.log('updating line')
     const line = this.handle_group.lastChild
     let x = line.getAttribute('x')
     let y = line.getAttribute('y')
     let path = `
             M ${x} ${y}
             L ${x2} ${y2}`
-    console.log(path)
-    console.log(this.handle_group.lastChild)
     line.style.display = 'block'
     line.setAttribute('d', path)
     // this.update_attr(line, 'd', path)

@@ -29,7 +29,7 @@ line.line{
   height: 10;
 }
 
-rect.handle.mid {
+circle.handle.mid {
   fill: transparent;
     cursor: pointer;
     opacity: initial;
@@ -38,7 +38,7 @@ rect.handle.mid {
     transition: opacity .3s ease;
 }
 
-rect.handle.mid:hover {
+circle.handle.mid:hover {
   fill: #666;
 }
 
@@ -134,9 +134,10 @@ class GanttChart extends React.Component {
     // }
   }
 
-  onDragRelationShip = e => {
-    console.log(e)
-    console.log('drag in react now')
+  onDragRelationShip = (source_id, destination_id) => {
+    console.log(source_id)
+    console.log(destination_id)
+    TaskStore.updateDependency(destination_id, source_id)
   }
 
   render() {

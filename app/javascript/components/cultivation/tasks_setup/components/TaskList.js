@@ -92,36 +92,6 @@ class TaskList extends React.Component {
     }
   }
 
-  renderPhaseColumn = row => {
-    let handleEdit = this.handleEdit
-    if (row.row['attributes.indent'] === 0) {
-      return (
-        <a
-          onClick={e => {
-            handleEdit(row)
-          }}
-        >
-          {row.value}
-        </a>
-      )
-    }
-  }
-
-  renderCategoryColumn = row => {
-    let handleEdit = this.handleEdit
-    if (row.row['attributes.indent'] === 1) {
-      return (
-        <a
-          onClick={e => {
-            handleEdit(row)
-          }}
-        >
-          {row.value}
-        </a>
-      )
-    }
-  }
-
   handleMouseLeave = row => {
     this.setState(prevState => ({
       idOpen: null
@@ -200,17 +170,6 @@ class TaskList extends React.Component {
     this.mountEvents()
   }
 
-  renderTaskNameCell = row => {
-    const indent = row.row['attributes.indent']
-    return (
-      <div className="flex justify-between-ns">
-        <span className={classNames({"orange": indent === 0})}>
-          {row.value}
-        </span>
-      </div>
-    )
-  }
-
   renderAttributesName = row => {
     let id = row.row['id']
     let handleEdit = this.handleEdit
@@ -219,19 +178,13 @@ class TaskList extends React.Component {
     let handleAddTask = this.handleAddTask
     let handleDelete = this.handleDelete
     let toggleCollapse = this.toggleCollapse
+    let indent = row.row['attributes.indent']
     return (
-      <div
-        className={`flex justify-between-ns ${
-          row.row['attributes.indent'] === 0 ||
-          row.row['attributes.indent'] === 1
-            ? ''
-            : 'draggable'
-        }`}
-      >
+      <div className="flex justify-between-ns draggable">
         <div className="">
           <div className="flex">
             <div className="w1 ml3">
-              {row.row['attributes.indent'] === 0 && (
+              {indent === 0 && (
                 <div>
                   <i
                     className="material-icons dim grey f7 pointer"
@@ -243,8 +196,7 @@ class TaskList extends React.Component {
                       : 'arrow_drop_down'}
                   </i>
                   <a
-                    className="pointer"
-                    style={{ color: '#ff5722' }}
+                    className="pointer orange"
                     onClick={e => {
                       handleEdit(row)
                     }}
@@ -255,7 +207,7 @@ class TaskList extends React.Component {
               )}
             </div>
             <div className="w1 ml3">
-              {row.row['attributes.indent'] === 1 && (
+              {indent === 1 && (
                 <div>
                   <i
                     className="material-icons dim grey f7 pointer"
@@ -267,8 +219,7 @@ class TaskList extends React.Component {
                       : 'arrow_drop_down'}
                   </i>
                   <a
-                    className="pointer"
-                    style={{ color: '#ff5722' }}
+                    className="pointer orange"
                     onClick={e => {
                       handleEdit(row)
                     }}
@@ -279,17 +230,15 @@ class TaskList extends React.Component {
               )}
             </div>
             <div className="w1 ml3">
-              {row.row['attributes.indent'] === 0 &&
-                row.row['attributes.indent'] === 0 && (
-                  <a
-                    className="pointer"
-                    onClick={e => {
-                      handleEdit(row)
-                    }}
-                  >
-                    {row.value}
-                  </a>
-                )}
+              {indent > 1 && (
+                <a className="pointer"
+                  onClick={e => {
+                    handleEdit(row)
+                  }}
+                >
+                  {row.value}
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -527,7 +476,7 @@ class TaskList extends React.Component {
     const facilityPhases = this.props.batch.cultivation_phases
     const phaseTasks = tasks.filter(
       t =>
-        (t.attributes.indent > 0) &&
+        t.attributes.indent > 0 &&
         facilityPhases.some(p => p === t.attributes.phase)
     )
     const phaseDuration = {}
@@ -573,7 +522,7 @@ class TaskList extends React.Component {
             {
               Header: 'WBS',
               accessor: 'attributes.wbs',
-              maxWidth: '60',
+              maxWidth: '70',
               show: this.checkVisibility('wbs')
             },
             {
@@ -586,7 +535,7 @@ class TaskList extends React.Component {
               accessor: 'attributes.name',
               maxWidth: '500',
               show: this.checkVisibility('name'),
-              Cell: this.renderTaskNameCell,
+              Cell: this.renderAttributesName
             },
             {
               Header: 'Start Date',
@@ -659,9 +608,7 @@ class TaskList extends React.Component {
                       ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
                       : null,
                   backgroundColor:
-                    rowInfo.row['attributes.indent'] === 0
-                      ? '#FAEFEE'
-                      : null
+                    rowInfo.row['attributes.indent'] === 0 ? '#FAEFEE' : null
                 },
                 onMouseOver: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)

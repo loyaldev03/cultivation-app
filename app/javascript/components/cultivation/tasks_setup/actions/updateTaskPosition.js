@@ -7,11 +7,15 @@ export default function updateTaskPosition(batch_id, task, position) {
   fetch(url, httpPostOptions({ task: { position } }))
     .then(response => response.json())
     .then(data => {
-      if (data.data.id != null) {
+      if (data && data.data) {
         toast('Task Updated', 'success')
         loadTasks.loadbatch(batch_id)
       } else {
-        toast('Something happen', 'error')
+        if (data.errors && data.errors.error) {
+          toast(data.errors.error[0], 'error')
+        } else {
+          toast('Something happen', 'error')
+        }
       }
     })
 }

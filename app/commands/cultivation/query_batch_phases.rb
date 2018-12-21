@@ -9,7 +9,7 @@ module Cultivation
 
     def call
       if @batch.present? && @batch.tasks.present?
-        tasks = @batch.tasks.where(is_phase: true)
+        tasks = @batch.tasks.where(indent: 0)
         tasks = tasks.where(:phase.in => @phases) unless @phases.empty?
         tasks = tasks.order_by(start_date: :asc)
 

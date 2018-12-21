@@ -4,9 +4,13 @@ module Cultivation
     include Mongoid::Timestamps::Short
     include Mongoid::Orderable
 
+    attr_accessor :wbs
+
     field :phase, type: String
+    # FIXME: Remove
     field :task_category, type: String
     field :name, type: String
+    field :indent, type: Integer, default: -> { 0 }
     field :duration, type: Integer
     field :days_from_start_date, type: Integer
     field :start_date, type: DateTime
@@ -16,18 +20,13 @@ module Cultivation
     field :estimated_cost, type: Float
     field :actual_cost, type: Float
     # Indicate a top most task
+    # FIXME: Remove
     field :is_phase, type: Boolean, default: -> { false }
     # Indicate a Category task (2nd level task)
+    # FIXME: Remove
     field :is_category, type: Boolean, default: -> { false }
-    # Indicate a Growing Period task,  Trays are booked based on duration of
-    # this task duration
-    field :is_growing_period, type: Boolean, default: -> { false }
-    # Unbound task are not bound by parent task's duration
-    field :is_unbound, type: Boolean, default: -> { false }
     # Indelible task cannot be remove
-    field :indelible, type: Boolean, default: -> { false }
-    # Work Breakdown Structure
-    field :wbs, type: String
+    field :indelible, type: String
     # Parent task
     field :parent_id, type: BSON::ObjectId
     # Predecessor task

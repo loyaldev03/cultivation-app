@@ -53,16 +53,16 @@ class BatchSetupApp extends React.Component {
         this.setState({ isLoading: false, errors: {} })
         if (data.data) {
           toast('Batch Created', 'success')
-          // Link to Batch Overview
-          // window.location.replace('/cultivation/batches/' + data.data)
-          // Link to Batch Location Planning
-          window.location.replace(
-            `/cultivation/batches/${data.data}?select_location=1`
-          )
+          // Redirect to Batch Location Planning
+          window.location.replace(`/cultivation/batches/${data.data}?select_location=1`)
         } else {
           this.setState({ isLoading: false, errors: data.errors })
           toast('Please check the errors and try again', 'error')
         }
+      })
+      .catch(error => {
+        console.error('catch:', error)
+        this.setState({ isLoading: false })
       })
   }
 

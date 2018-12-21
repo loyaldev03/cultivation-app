@@ -26,9 +26,9 @@ module Cultivation
           quantity: batch.quantity,
         }
         # Update child and dependents tasks's start & end dates>
-        # Except when task is bound (is_unbound = false; e.g. Clean)
+        # Except when task is Clean
         # - which doesn't effect parent or dependent tasks
-        update_task(task, batch.tasks, opt) unless task.is_unbound
+        update_task(task, batch.tasks, opt) unless task.indelible == 'cleaning' # TODO: Change this to Constants, same as string in template3
         # Save other fields on Task that are not handle by bulk_update
         task.save if errors.empty?
         # TODO::ANDY: Estimated Hours are not calculating

@@ -6,7 +6,7 @@ import ReactTable from 'react-table'
 import { formatDate } from '../../utils/DateHelper'
 import ConvertProductEditor from './components/ConvertProductEditor'
 
-const columns = (locations) => [
+const columns = locations => [
   {
     Header: 'Package Tag',
     accessor: 'attributes.package_tag',
@@ -39,7 +39,7 @@ const columns = (locations) => [
       </div>
     )
   },
-  
+
   {
     Header: 'Production',
     headerClassName: 'tr',
@@ -97,9 +97,7 @@ class ConvertProductSetupApp extends React.Component {
     return (
       <div className="w-100 bg-white pa3">
         <div className="flex mb4 mt2">
-          <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
-            Record Product
-          </h1>
+          <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Record Product</h1>
           <div style={{ justifySelf: 'end' }}>
             <button
               className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
@@ -120,7 +118,7 @@ class ConvertProductSetupApp extends React.Component {
           filterable
           className="f6"
         />
-        <ConvertProductEditor 
+        <ConvertProductEditor
           locations={this.props.locations}
           sales_catalogue={this.props.sales_catalogue}
           breakdown_uoms={this.props.breakdown_uoms}

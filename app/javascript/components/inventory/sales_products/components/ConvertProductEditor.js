@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Select from 'react-select'
 import Creatable from 'react-select/lib/Creatable'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
-import AsyncSelect from 'react-select/lib/Async';
+import AsyncSelect from 'react-select/lib/Async'
 import {
   FieldError,
   NumericInput,
@@ -27,10 +27,14 @@ const handleInputChange = newValue => {
 
 const loadProducts = inputValue => {
   inputValue = inputValue || ''
-  
-  return fetch('/api/v1/sales_products/products?type=converted_products&filter=' + inputValue, {
-    credentials: 'include'
-  })
+
+  return fetch(
+    '/api/v1/sales_products/products?type=converted_products&filter=' +
+      inputValue,
+    {
+      credentials: 'include'
+    }
+  )
     .then(response => response.json())
     .then(data => {
       // console.log(data.data)
@@ -75,7 +79,7 @@ class ConvertProductEditor extends React.Component {
       errors: {}
     }
   }
-  
+
   onChangeGeneric = event => {
     const key = event.target.attributes.fieldname.value
     const value = event.target.value
@@ -87,7 +91,7 @@ class ConvertProductEditor extends React.Component {
       this.setState({
         product_id: '',
         product,
-        facility_id: '',
+        facility_id: ''
       })
     } else if (coalese(product) !== false) {
       const fs = this.props.facility_strains.find(
@@ -113,31 +117,37 @@ class ConvertProductEditor extends React.Component {
     }
   }
 
-  onCatalogueSelected = item =>this.setState({ catalogue: item })
-  onFacilityChanged = item => this.setState({ facility_id: item.f_id})
+  onCatalogueSelected = item => this.setState({ catalogue: item })
+  onFacilityChanged = item => this.setState({ facility_id: item.f_id })
   onRoomChanged = item => this.setState({ location_id: item.rm_id })
-  onToggleIsMultiPackage = () => { this.setState({isMultiPackage: !this.state.isMultiPackage}) }
+  onToggleIsMultiPackage = () => {
+    this.setState({ isMultiPackage: !this.state.isMultiPackage })
+  }
   onChangeUom = uom => this.setState({ uom })
   onChangeProductionDate = production_date => this.setState({ production_date })
   onChangeExpirationDate = expiration_date => this.setState({ expiration_date })
-  
-  onAddBreakdown = event => { 
+
+  onAddBreakdown = event => {
     const { breakdowns } = this.state
     const index = parseInt(event.target.attributes.index.value) + 1
-    this.setState({ breakdowns: [
-      ...breakdowns.slice(0, index), 
-      { package_tag: '', uom: null, quantity: '' },
-      ...breakdowns.slice(index)
-    ] })
+    this.setState({
+      breakdowns: [
+        ...breakdowns.slice(0, index),
+        { package_tag: '', uom: null, quantity: '' },
+        ...breakdowns.slice(index)
+      ]
+    })
   }
 
   onRemoveBreakdown = event => {
     const { breakdowns } = this.state
     const index = parseInt(event.target.attributes.index.value)
-    this.setState({ breakdowns: [
-      ...breakdowns.slice(0, index), 
-      ...breakdowns.slice(index + 1)
-    ] })
+    this.setState({
+      breakdowns: [
+        ...breakdowns.slice(0, index),
+        ...breakdowns.slice(index + 1)
+      ]
+    })
   }
 
   onChangeBreakdownField = event => {
@@ -147,15 +157,15 @@ class ConvertProductEditor extends React.Component {
     const index = matchedString.slice(1, matchedString.length - 1)
     const fieldname = fieldAttr.slice(0, match.index)
     const { breakdowns } = this.state
-    
+
     breakdowns[index][fieldname] = event.target.value
-    this.setState({ breakdowns: [...breakdowns]})
+    this.setState({ breakdowns: [...breakdowns] })
   }
 
   onBreakdownUomChanged = option => {
     const { breakdowns } = this.state
     breakdowns[option.index].uom = option
-    this.setState({ breakdowns: [...breakdowns]})
+    this.setState({ breakdowns: [...breakdowns] })
   }
 
   onSave = event => {
@@ -191,7 +201,8 @@ class ConvertProductEditor extends React.Component {
     } = this.state
 
     let { product, product_id, end_package_tag, breakdowns } = this.state
-    let name = '', errors = {}
+    let name = '',
+      errors = {}
     const catalogue_id = catalogue ? catalogue.value : ''
 
     if (isMultiPackage) {
@@ -206,7 +217,11 @@ class ConvertProductEditor extends React.Component {
     }
 
     breakdowns.forEach((item, index) => {
-      if (item.package_tag.length === 0 && item.quantity.length <= 0 && !item.uom) {
+      if (
+        item.package_tag.length === 0 &&
+        item.quantity.length <= 0 &&
+        !item.uom
+      ) {
         return
       }
 
@@ -230,12 +245,15 @@ class ConvertProductEditor extends React.Component {
       this.setState({ errors })
     } else {
       breakdowns = breakdowns
-      .filter(item => (item.package_tag.length > 0 && item.quantity.length > 0 && item.uom))
-      .map(item => ({
-        package_tag: item.package_tag,
-        quantity: item.quantity,
-        uom: item.uom.value
-      }))
+        .filter(
+          item =>
+            item.package_tag.length > 0 && item.quantity.length > 0 && item.uom
+        )
+        .map(item => ({
+          package_tag: item.package_tag,
+          quantity: item.quantity,
+          uom: item.uom.value
+        }))
     }
 
     return {
@@ -263,35 +281,59 @@ class ConvertProductEditor extends React.Component {
     const uoms = this.props.breakdown_uoms.map(x => ({ value: x, label: x }))
 
     const inputs = this.state.breakdowns.map((item, index) => {
-      const isLast = (index === this.state.breakdowns.length - 1)
+      const isLast = index === this.state.breakdowns.length - 1
       if (index === 0) {
-        return this.renderBreakdown(true, "Package Tag/ ID", item, uoms, index, isLast) 
+        return this.renderBreakdown(
+          true,
+          'Package Tag/ ID',
+          item,
+          uoms,
+          index,
+          isLast
+        )
       } else {
-        return this.renderBreakdown(false, "Package Tag/ ID", item, uoms, index, isLast) 
+        return this.renderBreakdown(
+          false,
+          'Package Tag/ ID',
+          item,
+          uoms,
+          index,
+          isLast
+        )
       }
     })
     return inputs
   }
 
-  renderBreakdown= (showLabel = true, productLabel, item, uoms, index, isLast) =>  {
+  renderBreakdown = (
+    showLabel = true,
+    productLabel,
+    item,
+    uoms,
+    index,
+    isLast
+  ) => {
     productLabel = showLabel ? productLabel : ''
-    uoms = uoms.map(x => ({index: index, ...x }))
+    uoms = uoms.map(x => ({ index: index, ...x }))
 
     return (
       <div className="ph4 mb2 flex" key={`breakdown_${index}`}>
         <div className="w-50">
-          <TextInput 
+          <TextInput
             label={productLabel}
             fieldname={`package_tag[${index}]`}
             value={item.package_tag}
             onChange={this.onChangeBreakdownField}
           />
-          <FieldError errors={this.state.errors} field={`package_tag[${index}]`} />
+          <FieldError
+            errors={this.state.errors}
+            field={`package_tag[${index}]`}
+          />
         </div>
-      
+
         <div className="w-20 pl3">
           <NumericInput
-            label={showLabel && "Qty" }
+            label={showLabel && 'Qty'}
             fieldname={`quantity[${index}]`}
             value={item.quantity}
             onChange={this.onChangeBreakdownField}
@@ -300,7 +342,7 @@ class ConvertProductEditor extends React.Component {
         </div>
 
         <div className="w-20 pl3">
-          { showLabel && <label className="f6 fw6 db mb1 gray ttc">Unit</label> }
+          {showLabel && <label className="f6 fw6 db mb1 gray ttc">Unit</label>}
           <Select
             value={item.uom}
             options={uoms}
@@ -311,23 +353,35 @@ class ConvertProductEditor extends React.Component {
           <FieldError errors={this.state.errors} field={`uom[${index}]`} />
         </div>
 
-        { isLast && (
+        {isLast && (
           <div className="w-10 pl3">
-            { showLabel && <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label> }
-            <a href="#" 
-              index={index} 
+            {showLabel && (
+              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+            )}
+            <a
+              href="#"
+              index={index}
               onClick={this.onAddBreakdown}
-              className="f6 flex justify-center pa2 btn--secondary link">+</a>
+              className="f6 flex justify-center pa2 btn--secondary link"
+            >
+              +
+            </a>
           </div>
         )}
 
-        { !isLast && (
+        {!isLast && (
           <div className="w-10 pl3">
-            { showLabel && <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label> }
-            <a href="#" 
-              index={index} 
+            {showLabel && (
+              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+            )}
+            <a
+              href="#"
+              index={index}
               onClick={this.onRemoveBreakdown}
-              className="f6 flex justify-center pa2 btn--secondary link">-</a>
+              className="f6 flex justify-center pa2 btn--secondary link"
+            >
+              -
+            </a>
           </div>
         )}
       </div>
@@ -376,17 +430,14 @@ class ConvertProductEditor extends React.Component {
   }
 
   render() {
-    const {
-      locations,
-      sales_catalogue
-    } = this.props
+    const { locations, sales_catalogue } = this.props
 
     const uoms = this.state.catalogue
       ? this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
       : []
 
     const hasProductId = this.state.product && this.state.product_id.length > 0
-    
+
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
@@ -491,7 +542,7 @@ class ConvertProductEditor extends React.Component {
             <label className="toggle-button" htmlFor="is_bought_input" />
           </div>
 
-          { this.renderPackageTag() }
+          {this.renderPackageTag()}
 
           <div className="ph4 mb3 flex">
             <div className="w-30">
@@ -547,11 +598,16 @@ class ConvertProductEditor extends React.Component {
 
           <div className="ph4 mt3 mb1 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb3 dark-gray ttc">Package breakdown</label>
-              <p className="f6 fw6 db mt0 mb3 gray">Report breakdown if this package composes from other tagged package.</p>
+              <label className="f6 fw6 db mb3 dark-gray ttc">
+                Package breakdown
+              </label>
+              <p className="f6 fw6 db mt0 mb3 gray">
+                Report breakdown if this package composes from other tagged
+                package.
+              </p>
             </div>
           </div>
-          { this.renderPackageBreakdowns() }
+          {this.renderPackageBreakdowns()}
 
           <hr className="mt3 m b--light-gray w-100" />
 
@@ -610,6 +666,5 @@ class ConvertProductEditor extends React.Component {
     )
   }
 }
-
 
 export default ConvertProductEditor

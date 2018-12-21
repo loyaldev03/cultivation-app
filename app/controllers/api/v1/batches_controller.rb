@@ -1,7 +1,9 @@
 class Api::V1::BatchesController < Api::V1::BaseApiController
   def index
     batches = Cultivation::Batch.all.order(c_at: :desc)
-    render json: BatchSerializer.new(batches).serialized_json
+    exclude_tasks = params[:exclude_tasks] == "true" || false
+    render json: BatchSerializer.new(batches,
+                                     params: {exclude_tasks: exclude_tasks}).serialized_json
   end
 
   def create

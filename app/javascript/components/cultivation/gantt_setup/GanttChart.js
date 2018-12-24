@@ -10,6 +10,9 @@ import ReactGantt from './ReactGantt'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 
 const styles = `
+path.handle-arrow {
+  cursor: pointer;
+}
 path.arrow{
   display: none;
 }
@@ -126,9 +129,7 @@ class GanttChart extends React.Component {
     // }
   }
 
-  onDragRelationShip = (source_id, destination_id) => {
-    console.log(source_id)
-    console.log(destination_id)
+  onDragRelationShip = (destination_id, source_id) => {
     TaskStore.updateDependency(destination_id, source_id)
   }
 

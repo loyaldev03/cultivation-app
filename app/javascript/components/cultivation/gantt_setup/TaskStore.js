@@ -38,10 +38,10 @@ class TaskStore {
     return toJS(this.processing)
   }
 
-  updateDependency(source_id, destination_id) {
+  updateDependency(destination_id, source_id) {
     let url = `/api/v1/batches/${
       this.batch_id
-    }/tasks/${source_id}/update_dependency?source_id=${source_id}&destination_id=${destination_id}`
+    }/tasks/${destination_id}/update_dependency?destination_id=${destination_id}&source_id=${source_id}`
 
     fetch(url, {
       method: 'PUT',

@@ -3,14 +3,15 @@ import classNames from 'classnames'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
-import TaskStore from '../stores/TaskStore'
 import DisplayTaskStore from '../stores/DisplayTaskStore'
+import TaskStore from '../stores/NewTaskListStore'
 import UserStore from '../stores/UserStore'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import {
   monthStartDate,
   monthOptionAdd,
   monthOptionToString,
+  formatDate2,
   dateToMonthOption
 } from '../../../utils'
 import { toast } from '../../../utils/toast'
@@ -51,13 +52,13 @@ class TaskList extends React.Component {
     this.state = {
       isOpen: false,
       batch: this.props.batch,
-      collapseIds: DisplayTaskStore,
       showStartDateCalendar: false,
       searchMonth: dateToMonthOption(batchStartDate)
     }
   }
 
   componentDidMount() {
+    TaskStore.loadTasks(this.props.batch.id)
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
     let _this = this
@@ -100,7 +101,7 @@ class TaskList extends React.Component {
 
   handleIndent = (row, action) => {
     this.clearDropdown()
-    indentTask(this.props.batch_id, row.row, action)
+    indentTask(this.props.batch.id, row.row, action)
   }
 
   handleClick = e => {
@@ -127,7 +128,7 @@ class TaskList extends React.Component {
   }
 
   handleDelete = row => {
-    deleteTask(this.props.batch_id, row.row)
+    deleteTask(this.props.batch.id, row.row)
   }
 
   clearDropdown() {
@@ -136,120 +137,35 @@ class TaskList extends React.Component {
     }))
   }
 
-  toggleCollapse = id => {
-    let array = []
-    let children_ids = TaskStore.filter(e => e.attributes.parent_id === id).map(
-      e => e.id
-    )
-    let new_ids, old_id
-    if (this.state.collapseIds.includes(id)) {
-      let i
-      let tempCollapseId = this.state.collapseIds
-      old_id = DisplayTaskStore.slice()
-
-      //loop through children
-      for (i = 0; i < children_ids.length; i++) {
-        tempCollapseId = tempCollapseId.filter(e => e !== children_ids[i])
-        let current_children_id = TaskStore.filter(
-          e => e.attributes.parent_id === children_ids[i]
-        ).map(e => e.id)
-        old_id = old_id.filter(e => !current_children_id.includes(e))
-      }
-
-      this.setState({ collapseIds: tempCollapseId.filter(e => e !== id) })
-      new_ids = old_id.filter(e => !children_ids.includes(e))
-    } else {
-      this.setState(prevState => ({
-        collapseIds: [...prevState.collapseIds, id]
-      }))
-      old_id = DisplayTaskStore.slice()
-      new_ids = old_id.concat(children_ids)
-    }
-
-    DisplayTaskStore.replace(new_ids)
-    this.mountEvents()
+  renderDateColumn = field => data => {
+    return (formatDate2(data.row[field]))
   }
 
-  renderAttributesName = row => {
-    let id = row.row['id']
-    let handleEdit = this.handleEdit
-    let handleMouseLeave = this.handleMouseLeave
-    let handleIndent = this.handleIndent
-    let handleAddTask = this.handleAddTask
-    let handleDelete = this.handleDelete
-    let toggleCollapse = this.toggleCollapse
-    let indent = row.row['attributes.indent']
+  renderTaskNameColumn = data => {
+    const { id, wbs, indent } = data.row
     return (
-      <div className="flex justify-between-ns draggable">
-        <div className="">
-          <div className="flex">
-            <div className="w1 ml3">
-              {indent === 0 && (
-                <div>
-                  <i
-                    className="material-icons dim grey f7 pointer"
-                    style={{ fontSize: '18px' }}
-                    onClick={e => toggleCollapse(row.row.id)}
-                  >
-                    {this.state.collapseIds.includes(row.row.id)
-                      ? 'arrow_drop_up'
-                      : 'arrow_drop_down'}
-                  </i>
-                  <a
-                    className="pointer orange"
-                    onClick={e => {
-                      handleEdit(row)
-                    }}
-                  >
-                    {row.value}
-                  </a>
-                </div>
-              )}
-            </div>
-            <div className="w1 ml3">
-              {indent === 1 && (
-                <div>
-                  <i
-                    className="material-icons dim grey f7 pointer"
-                    style={{ fontSize: '18px' }}
-                    onClick={e => toggleCollapse(row.row.id)}
-                  >
-                    {this.state.collapseIds.includes(row.row.id)
-                      ? 'arrow_drop_up'
-                      : 'arrow_drop_down'}
-                  </i>
-                  <a
-                    className="pointer orange"
-                    onClick={e => {
-                      handleEdit(row)
-                    }}
-                  >
-                    {row.value}
-                  </a>
-                </div>
-              )}
-            </div>
-            <div className="w1 ml3">
-              {indent > 1 && (
-                <a
-                  className="pointer"
-                  onClick={e => {
-                    handleEdit(row)
-                  }}
-                >
-                  {row.value}
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-
+      <div className="flex justify-between items-center draggable">
+        <span
+          className={classNames(`dib flex items-center indent--${indent}`, {
+            orange: TaskStore.hasChildNode(wbs)
+          })}
+        >
+          {TaskStore.hasChildNode(wbs) && (
+            <i
+              className="material-icons dim grey f7 pointer"
+              onClick={e => TaskStore.toggleCollapseNode(wbs)}
+            >
+              {TaskStore.isCollapsed(wbs) ? 'arrow_right' : 'arrow_drop_down'}
+            </i>
+          )}
+          {data.value}
+        </span>
         <Manager>
           <Reference>
             {({ ref }) => (
               <i
                 ref={ref}
-                id={row.row['id']}
+                id={id}
                 onClick={this.handleClick}
                 className="material-icons ml2 pointer button-dropdown"
                 style={{ display: 'none', fontSize: '18px' }}
@@ -263,20 +179,20 @@ class TaskList extends React.Component {
               {({ ref, style, placement, arrowProps }) => (
                 <div
                   ref={ref}
-                  id={'dropdown-' + row.row['id']}
+                  id={'dropdown-' + id}
                   style={style}
                   data-placement={placement}
                 >
                   <div
                     id="myDropdown"
-                    onMouseLeave={handleMouseLeave}
+                    onMouseLeave={this.handleMouseLeave}
                     className="table-dropdown dropdown-content box--shadow-header show"
                   >
                     <a
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        handleIndent(row, 'in')
+                        this.handleIndent(data, 'in')
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
@@ -288,7 +204,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        handleIndent(row, 'out')
+                        this.handleIndent(data, 'out')
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
@@ -296,12 +212,12 @@ class TaskList extends React.Component {
                       </i>
                       Indent Out
                     </a>
-                    {row.row['attributes.indent'] > 0 && (
+                    {indent > 0 && (
                       <a
                         className="ttc pv2 tc flex pointer"
                         style={{ display: 'flex' }}
                         onClick={e => {
-                          handleAddTask(row, 'top')
+                          this.handleAddTask(data, 'top')
                         }}
                       >
                         <i className="material-icons md-600 md-17 ph2">
@@ -315,7 +231,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        handleAddTask(row, 'bottom')
+                        this.handleAddTask(data, 'bottom')
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
@@ -327,7 +243,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        handleEdit(row)
+                        this.handleEdit(data)
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">edit</i>
@@ -337,7 +253,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        handleDelete(row)
+                        this.handleDelete(data)
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
@@ -356,14 +272,16 @@ class TaskList extends React.Component {
     )
   }
 
-  handleAddTask = (row, position) => {
-    this.setState({ taskSelected: row.row.id, showStartDateCalendar: false })
+  handleAddTask = (data, position) => {
+    const { id, parent_id } = data.row
+    console.log({ action: 'handleAddTask', id, parent_id })
+    this.setState({ taskSelected: id, showStartDateCalendar: false })
     editorSidebarHandler.open({
       width: '500px',
       data: {
-        task_related_id: row.row.id,
+        task_related_id: id,
         position: position,
-        task_related_parent_id: row.row['attributes.parent_id']
+        task_related_parent_id: parent_id
       },
       action: 'add'
     })
@@ -392,7 +310,7 @@ class TaskList extends React.Component {
 
         header.ondragend = e => {
           e.stopPropagation()
-          setTimeout(() => (this.dragged = null), 1000)
+          setTimeout(() => (this.dragged = null), 300)
         }
 
         //the dropped header
@@ -409,13 +327,20 @@ class TaskList extends React.Component {
           e.target.closest('.rt-tr-group').style.borderBottomColor = ''
         }
 
-        header.ondrop = e => {
+        header.ondrop = async e => {
           e.preventDefault()
           e.target.closest('.rt-tr-group').style.borderBottomColor = ''
           if (this.dragged !== null && i !== null) {
-            const taskDragged = toJS(TaskStore)[this.dragged]
-            const newPosition = i + 1
-            updateTaskPosition(this.props.batch_id, taskDragged, newPosition)
+            const taskDragged = TaskStore.taskList[this.dragged]
+            const dropPosition = +TaskStore.taskList[i].position
+            const newPos = this.dragged <= i ? dropPosition : dropPosition + 1
+            await TaskStore.updateTaskPosition(
+              this.props.batch.id,
+              taskDragged.id,
+              newPos
+            )
+            // console.log({id: taskDragged.id, position: taskDragged.position, name: taskDragged.name})
+            // console.log({id: taskDropped.id, position: taskDropped.position, name: taskDropped.name})
           }
         }
       }
@@ -472,17 +397,15 @@ class TaskList extends React.Component {
     return total
   }
 
-  buildPhaseDuration = tasks => {
+  buildPhaseDuration = (tasks = []) => {
     // Build phase schedule from current Task List
     const facilityPhases = this.props.batch.cultivation_phases
     const phaseTasks = tasks.filter(
-      t =>
-        t.attributes.indent > 0 &&
-        facilityPhases.some(p => p === t.attributes.phase)
+      t => t.indent > 0 && facilityPhases.some(p => p === t.phase)
     )
     const phaseDuration = {}
     phaseTasks.forEach(t => {
-      phaseDuration[t.attributes.phase] = t.attributes.duration
+      phaseDuration[t.phase] = t.duration
     })
     return phaseDuration
   }
@@ -491,8 +414,7 @@ class TaskList extends React.Component {
     BatchSetupStore.clearSearch()
     this.setState({ searchMonth })
     const { facility_id } = this.props.batch
-    const tasks = toJS(TaskStore)
-    const phaseDuration = this.buildPhaseDuration(tasks)
+    const phaseDuration = this.buildPhaseDuration(TaskStore.tasks)
     const totalDuration = this.calculateTotalDuration(phaseDuration)
     if (facility_id && searchMonth && totalDuration > 0) {
       const searchParams = {
@@ -504,102 +426,102 @@ class TaskList extends React.Component {
     }
   }
 
+  columnsConfig = () => [
+    {
+      accessor: 'id',
+      show: false
+    },
+    {
+      accessor: 'indent',
+      show: false
+    },
+    {
+      accessor: 'parent_id',
+      show: false
+    },
+    {
+      accessor: 'depend_on',
+      show: false
+    },
+    {
+      Header: 'WBS',
+      accessor: 'wbs',
+      maxWidth: '70',
+      show: this.checkVisibility('wbs')
+    },
+    {
+      Header: 'Tasks',
+      accessor: 'name',
+      maxWidth: '400',
+      show: this.checkVisibility('name'),
+      Cell: this.renderTaskNameColumn
+    },
+    {
+      Header: 'Start Date',
+      accessor: 'start_date',
+      maxWidth: '100',
+      className: 'tr',
+      show: this.checkVisibility('start_date'),
+      Cell: this.renderDateColumn('start_date')
+    },
+    {
+      Header: 'End Date',
+      accessor: 'end_date',
+      maxWidth: '100',
+      className: 'tr',
+      show: this.checkVisibility('end_date'),
+      Cell: this.renderDateColumn('end_date')
+    },
+    {
+      Header: 'Duration',
+      accessor: 'duration',
+      maxWidth: '90',
+      className: 'tr',
+      show: this.checkVisibility('duration')
+    },
+    {
+      Header: 'Est Hr',
+      accessor: 'estimated_hours',
+      maxWidth: '100',
+      className: 'tr',
+      show: this.checkVisibility('estimated_hour')
+    },
+    {
+      Header: 'Est Cost ($)',
+      accessor: 'estimated_cost',
+      maxWidth: '100',
+      className: 'tr',
+      show: this.checkVisibility('estimated_cost')
+    },
+    {
+      Header: 'Assigned',
+      accessor: 'resources',
+      maxWidth: '200',
+      show: this.checkVisibility('resource_assigned')
+    },
+    {
+      Header: 'Materials',
+      accessor: 'item_display',
+      maxWidth: '100',
+      show: this.checkVisibility('materials')
+    }
+  ]
+
   render() {
     const { showStartDateCalendar, searchMonth, selectedStartDate } = this.state
-    const phaseDuration = this.buildPhaseDuration(toJS(TaskStore))
+    const phaseDuration = this.buildPhaseDuration(TaskStore.tasks)
     const totalDuration = this.calculateTotalDuration(phaseDuration)
-    let tasks = this.filterTask()
     let users = UserStore
     return (
       <React.Fragment>
-        <style> {styles} </style>
         <ReactTable
-          columns={[
-            {
-              Header: 'Id',
-              accessor: 'id',
-              show: false
-            },
-            {
-              Header: 'WBS',
-              accessor: 'attributes.wbs',
-              maxWidth: '70',
-              show: this.checkVisibility('wbs')
-            },
-            {
-              Header: 'Indent',
-              accessor: 'attributes.indent',
-              show: false
-            },
-            {
-              Header: 'Tasks',
-              accessor: 'attributes.name',
-              maxWidth: '500',
-              show: this.checkVisibility('name'),
-              Cell: this.renderAttributesName
-            },
-            {
-              Header: 'Start Date',
-              accessor: 'attributes.start_date',
-              maxWidth: '100',
-              className: 'tr',
-              show: this.checkVisibility('start_date')
-            },
-            {
-              Header: 'End Date',
-              accessor: 'attributes.end_date',
-              maxWidth: '100',
-              className: 'tr',
-              show: this.checkVisibility('end_date')
-            },
-            {
-              Header: 'Duration',
-              accessor: 'attributes.duration',
-              maxWidth: '90',
-              className: 'tr',
-              show: this.checkVisibility('duration')
-            },
-            {
-              Header: 'Est Hr',
-              accessor: 'attributes.estimated_hours',
-              maxWidth: '100',
-              className: 'tr',
-              show: this.checkVisibility('estimated_hour')
-            },
-            {
-              Header: 'Est Cost ($)',
-              accessor: 'attributes.estimated_cost',
-              maxWidth: '100',
-              className: 'tr',
-              show: this.checkVisibility('estimated_cost')
-            },
-            {
-              Header: 'Assigned',
-              accessor: 'attributes.resources',
-              maxWidth: '200',
-              show: this.checkVisibility('resource_assigned')
-            },
-            {
-              Header: 'Materials',
-              accessor: 'attributes.item_display',
-              maxWidth: '100',
-              show: this.checkVisibility('materials')
-            },
-            {
-              Header: 'Parent',
-              accessor: 'attributes.parent_id',
-              show: false
-            },
-            {
-              Header: 'Depend On',
-              accessor: 'attributes.depend_on',
-              show: false
-            }
-          ]}
-          data={tasks}
+          columns={this.columnsConfig()}
+          data={TaskStore.taskList}
+          loading={TaskStore.isLoading}
           showPagination={false}
-          className=""
-          defaultPageSize={-1}
+          sortable={false}
+          className="-highlight"
+          pageSize={TaskStore.taskList.length}
           getTrProps={(state, rowInfo, column) => {
             if (rowInfo) {
               return {
@@ -609,7 +531,7 @@ class TaskList extends React.Component {
                       ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
                       : null,
                   backgroundColor:
-                    rowInfo.row['attributes.indent'] === 0 ? '#FAEFEE' : null
+                    rowInfo.row['indent'] === 0 ? '#FAEFEE' : null
                 },
                 onMouseOver: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)
@@ -636,7 +558,6 @@ class TaskList extends React.Component {
             onClick={() => this.handleSave()}
           />
         </div>
-
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body h-100">
             {showStartDateCalendar ? (
@@ -693,7 +614,7 @@ class TaskList extends React.Component {
             ) : (
               <TaskEditor
                 onClose={this.closeSidebar}
-                batch_id={this.props.batch_id}
+                batch_id={this.props.batch.id}
                 handleReset={this.handleReset}
               />
             )}

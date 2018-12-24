@@ -134,9 +134,9 @@ class NonSalesItemEditor extends React.Component {
       errors.qty_per_package = ['Quantity per package is required.']
     }
 
-    if (!catalogue) {
-      errors.catalogue = ['Non-sales item product is required.']
-    }
+    // if (!catalogue) {
+    //   errors.catalogue = ['Non-sales item product is required.']
+    // }
 
     if (location_id.length === 0) {
       errors.location_id = ['Storage location is required.']
@@ -149,6 +149,7 @@ class NonSalesItemEditor extends React.Component {
 
     const isValid =
       Object.getOwnPropertyNames(errors).length === 0 && purchaseIsValid
+
     if (!isValid) {
       this.setState({ errors })
     }

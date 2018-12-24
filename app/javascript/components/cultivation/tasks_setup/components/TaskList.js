@@ -231,7 +231,8 @@ class TaskList extends React.Component {
             </div>
             <div className="w1 ml3">
               {indent > 1 && (
-                <a className="pointer"
+                <a
+                  className="pointer"
                   onClick={e => {
                     handleEdit(row)
                   }}

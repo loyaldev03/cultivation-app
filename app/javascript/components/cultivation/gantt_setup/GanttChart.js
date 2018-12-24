@@ -10,23 +10,18 @@ import ReactGantt from './ReactGantt'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 
 const styles = `
+path.handle-arrow {
+  cursor: pointer;
+}
 path.arrow{
   display: none;
 }
 line.line{
   stroke-width: 2.4;
 }
-.task .bar-group .bar {
-  fill: #0097a7;
-}
 
-.category .bar-group .bar{
-  fill: #d32f2f;
-}
-
-.phase .bar-group .bar{
+.bar-group .bar{
   fill: #039be5;
-  height: 10;
 }
 
 circle.handle.mid {
@@ -93,7 +88,7 @@ class GanttChart extends React.Component {
 
   onClickTask = task => {
     console.log(task)
-    alert('You have selected task => ' + task.attributes.name)
+    alert('You have selected task => ' + task.name)
   }
 
   handleDropdown = id => {
@@ -134,9 +129,7 @@ class GanttChart extends React.Component {
     // }
   }
 
-  onDragRelationShip = (source_id, destination_id) => {
-    console.log(source_id)
-    console.log(destination_id)
+  onDragRelationShip = (destination_id, source_id) => {
     TaskStore.updateDependency(destination_id, source_id)
   }
 
@@ -190,7 +183,7 @@ class GanttChart extends React.Component {
                         <div className="flex justify-between-ns">
                           <div className="flex">
                             <div className="ml3">
-                              {task.attributes.is_phase === true && (
+                              {task.is_phase === true && (
                                 <div>
                                   <i
                                     className="material-icons dim grey f7 pointer"
@@ -203,13 +196,13 @@ class GanttChart extends React.Component {
                                     className="pointer"
                                     onClick={e => this.onClickTask(task)}
                                   >
-                                    {task.attributes.name.substring(0, 20)}
+                                    {task.name.substring(0, 20)}
                                   </a>
                                 </div>
                               )}
                             </div>
                             <div className="ml3">
-                              {task.attributes.is_category === true && (
+                              {task.is_category === true && (
                                 <div>
                                   <i
                                     className="material-icons dim grey f7 pointer"
@@ -221,21 +214,21 @@ class GanttChart extends React.Component {
                                     className="pointer"
                                     onClick={e => this.onClickTask(task)}
                                   >
-                                    {task.attributes.name.substring(0, 20)}
+                                    {task.name.substring(0, 20)}
                                   </a>
                                 </div>
                               )}
                             </div>
                             <div className="ml3">
-                              {task.attributes.is_phase === false &&
-                                task.attributes.is_category === false && (
+                              {task.is_phase === false &&
+                                task.is_category === false && (
                                   <div>
                                     <a
                                       className="pointer"
                                       onClick={e => this.onClickTask(task)}
                                     >
-                                      {task.attributes.name
-                                        ? task.attributes.name.substring(0, 20)
+                                      {task.name
+                                        ? task.name.substring(0, 20)
                                         : null}
                                     </a>
                                   </div>
@@ -297,7 +290,7 @@ class GanttChart extends React.Component {
                                         </i>
                                         Indent Out
                                       </a>
-                                      {task.attributes.is_phase !== true && (
+                                      {task.is_phase !== true && (
                                         <a
                                           className="ttc pv2 tc flex pointer"
                                           style={{ display: 'flex' }}

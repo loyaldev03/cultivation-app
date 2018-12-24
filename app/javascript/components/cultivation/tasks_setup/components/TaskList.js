@@ -11,6 +11,7 @@ import {
   monthStartDate,
   monthOptionAdd,
   monthOptionToString,
+  formatDate2,
   dateToMonthOption
 } from '../../../utils'
 import { toast } from '../../../utils/toast'
@@ -64,7 +65,7 @@ class TaskList extends React.Component {
     // need to find after data react-table is loaded callback
     setTimeout(function() {
       _this.mountEvents()
-    }, 3000)
+    }, 5000)
   }
 
   openSidebar = () => {
@@ -136,39 +137,8 @@ class TaskList extends React.Component {
     }))
   }
 
-  toggleCollapse = wbs => {
-    /*
-     * *
-    let array = []
-    let children_ids = TaskStore.filter(e => e.parent_id === id).map(e => e.id)
-    let new_ids, old_id
-    if (this.state.collapseIds.includes(id)) {
-      let i
-      let tempCollapseId = this.state.collapseIds
-      old_id = DisplayTaskStore.slice()
-
-      //loop through children
-      for (i = 0; i < children_ids.length; i++) {
-        tempCollapseId = tempCollapseId.filter(e => e !== children_ids[i])
-        let current_children_id = TaskStore.filter(
-          e => e.parent_id === children_ids[i]
-        ).map(e => e.id)
-        old_id = old_id.filter(e => !current_children_id.includes(e))
-      }
-
-      this.setState({ collapseIds: tempCollapseId.filter(e => e !== id) })
-      new_ids = old_id.filter(e => !children_ids.includes(e))
-    } else {
-      this.setState(prevState => ({
-        collapseIds: [...prevState.collapseIds, id]
-      }))
-      old_id = DisplayTaskStore.slice()
-      new_ids = old_id.concat(children_ids)
-    }
-
-    DisplayTaskStore.replace(new_ids)
-    this.mountEvents()
-    */
+  renderDateColumn = field => data => {
+    return (formatDate2(data.row[field]))
   }
 
   renderTaskNameColumn = data => {
@@ -340,7 +310,7 @@ class TaskList extends React.Component {
 
         header.ondragend = e => {
           e.stopPropagation()
-          setTimeout(() => (this.dragged = null), 1000)
+          setTimeout(() => (this.dragged = null), 300)
         }
 
         //the dropped header
@@ -491,14 +461,16 @@ class TaskList extends React.Component {
       accessor: 'start_date',
       maxWidth: '100',
       className: 'tr',
-      show: this.checkVisibility('start_date')
+      show: this.checkVisibility('start_date'),
+      Cell: this.renderDateColumn('start_date')
     },
     {
       Header: 'End Date',
       accessor: 'end_date',
       maxWidth: '100',
       className: 'tr',
-      show: this.checkVisibility('end_date')
+      show: this.checkVisibility('end_date'),
+      Cell: this.renderDateColumn('end_date')
     },
     {
       Header: 'Duration',

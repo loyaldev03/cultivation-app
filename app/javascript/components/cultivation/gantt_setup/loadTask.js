@@ -3,14 +3,10 @@ import { formatDate2, httpGetOptions, addDayToDate } from '../../utils'
 
 class LoadTask {
   formatData = tasks => {
-    tasks.map(task => {
-      if (task.attributes.start_date)
-        task.attributes.start_date = new Date(task.attributes.start_date)
-      if (task.attributes.end_date)
-        task.attributes.end_date = addDayToDate(task.attributes.end_date, 1)
-      return task
+    let new_tasks = tasks.map(task => {
+      return {...task.attributes}
     })
-    return tasks
+    return new_tasks
   }
 
   loadbatch = async batchId => {

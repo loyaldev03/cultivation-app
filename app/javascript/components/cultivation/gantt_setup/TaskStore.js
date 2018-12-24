@@ -19,7 +19,6 @@ class TaskStore {
   getFilteredTask(tasks) {
     tasks = toJS(tasks)
     if (this.isLoaded) {
-      // console.log(tasks.filter(u => !this.hidden_ids.includes(u.id)))
       return tasks.filter(u => !this.hidden_ids.includes(u.id))
     } else {
       return []
@@ -52,23 +51,11 @@ class TaskStore {
     })
       .then(response => response.json())
       .then(data => {
-        // let error_container = document.getElementById('error-container')
         if (data && data.data && data.data.id != null) {
-          // error_container.style.display = 'none'
           toast('Task Updated', 'success')
           this.loadTasks(this.batch_id)
           this.processing = false
-          // loadTasks.loadbatch(state.batch_id)
         } else {
-          // let keys = Object.keys(data.errors)
-          // console.log(data.errors[keys[0]])
-          // error_container.style.display = 'block'
-          // let error_message = document.getElementById('error-message')
-          // error_message.innerHTML = data.errors[keys[0]]
-          // let array = []
-          // array[0] = data.errors[keys[0]]
-          // ErrorStore.replace(array)
-          // console.log(JSON.stringify(ErrorStore))
           toast(data.errors, 'error')
         }
       })
@@ -86,24 +73,24 @@ class TaskStore {
 
       let url = `/api/v1/batches/${this.batch_id}/tasks/${id}`
       let task = {
-        assigned_employee: found.attributes.assigned_employee,
-        batch_id: found.attributes.batch_id,
-        days_from_start_date: found.attributes.days_from_start_date,
-        depend_on: found.attributes.depend_on,
-        duration: found.attributes.duration,
+        assigned_employee: found.assigned_employee,
+        batch_id: found.batch_id,
+        days_from_start_date: found.days_from_start_date,
+        depend_on: found.depend_on,
+        duration: found.duration,
         end_date: end_date,
         start_date: start_date,
-        estimated_hours: found.attributes.estimated_hours,
+        estimated_hours: found.estimated_hours,
         id: id,
-        is_category: found.attributes.is_category,
-        is_phase: found.attributes.is_phase,
-        name: found.attributes.name,
-        parent_id: found.attributes.parent_id,
-        phase: found.attributes.phase,
-        position: found.attributes.position,
-        task_category: found.attributes.task_category,
-        time_taken: found.attributes.time_taken,
-        task_type: found.attributes.task_type
+        is_category: found.is_category,
+        is_phase: found.is_phase,
+        name: found.name,
+        parent_id: found.parent_id,
+        phase: found.phase,
+        position: found.position,
+        task_category: found.task_category,
+        time_taken: found.time_taken,
+        task_type: found.task_type
       }
 
       fetch(url, {
@@ -116,23 +103,11 @@ class TaskStore {
       })
         .then(response => response.json())
         .then(data => {
-          // let error_container = document.getElementById('error-container')
           if (data && data.data && data.data.id != null) {
-            // error_container.style.display = 'none'
             toast('Task Updated', 'success')
             this.loadTasks(this.batch_id)
             this.processing = false
-            // loadTasks.loadbatch(state.batch_id)
           } else {
-            // let keys = Object.keys(data.errors)
-            // console.log(data.errors[keys[0]])
-            // error_container.style.display = 'block'
-            // let error_message = document.getElementById('error-message')
-            // error_message.innerHTML = data.errors[keys[0]]
-            // let array = []
-            // array[0] = data.errors[keys[0]]
-            // ErrorStore.replace(array)
-            // console.log(JSON.stringify(ErrorStore))
             toast(data.errors, 'error')
           }
         })
@@ -152,13 +127,11 @@ class TaskStore {
 
   setHiddenIds(parent_id) {
     let parent = this.tasks.find(e => e.id === parent_id)
-    let children = this.tasks.filter(e => e.attributes.parent_id === parent.id)
+    let children = this.tasks.filter(e => e.parent_id === parent.id)
     let children_ids = children.map(e => e.id)
     let children_2_ids = this.tasks
-      .filter(e => children_ids.includes(e.attributes.parent_id))
+      .filter(e => children_ids.includes(e.parent_id))
       .map(e => e.id)
-    console.log(children_ids)
-    console.log(children_2_ids)
     this.hidden_ids = this.hidden_ids.concat(
       children_ids.concat(children_2_ids)
     )
@@ -167,10 +140,10 @@ class TaskStore {
   clearHiddenIds(parent_id) {
     let parent = this.tasks.find(e => e.id === parent_id)
     let children = this.tasks
-      .filter(e => e.attributes.parent_id === parent.id)
+      .filter(e => e.parent_id === parent.id)
       .map(e => e.id)
     let children2 = this.tasks
-      .filter(e => children.includes(e.attributes.parent_id))
+      .filter(e => children.includes(e.parent_id))
       .map(e => e.id)
     children = children.concat(children2)
     let new_ids = toJS(this.hidden_ids).filter(e => !children.includes(e))
@@ -181,7 +154,7 @@ class TaskStore {
     tasks = toJS(tasks)
     if (this.isLoaded) {
       let formatted_tasks = tasks.map(task => {
-        const { id, name, start_date, end_date, parent_id } = task.attributes
+        const { id, name, start_date, end_date, parent_id } = task
         return {
           id,
           name,
@@ -199,15 +172,15 @@ class TaskStore {
   }
 
   getCustomClass(task) {
-    if (task.attributes.is_phase === true) {
+    if (task.is_phase === true) {
       return 'phase'
     }
-    if (task.attributes.is_category === true) {
+    if (task.is_category === true) {
       return 'category'
     }
     if (
-      task.attributes.is_category === false &&
-      task.attributes.is_phase === false
+      task.is_category === false &&
+      task.is_phase === false
     ) {
       return 'task'
     }
@@ -217,9 +190,9 @@ class TaskStore {
     // if (task.id === '5c0f63a1fb83872228537c91') {
     //   return '5c0f63a1fb83872228537c8b'
     // } else {
-    return task.attributes.depend_on
-    // ? task.attributes.depend_on
-    // : task.attributes.parent_id
+    return task.depend_on
+    // ? task.depend_on
+    // : task.parent_id
     // }
   }
 }

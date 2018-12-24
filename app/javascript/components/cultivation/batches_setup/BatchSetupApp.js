@@ -54,7 +54,9 @@ class BatchSetupApp extends React.Component {
         if (data.data) {
           toast('Batch Created', 'success')
           // Redirect to Batch Location Planning
-          window.location.replace(`/cultivation/batches/${data.data}?select_location=1`)
+          window.location.replace(
+            `/cultivation/batches/${data.data}?select_location=1`
+          )
         } else {
           this.setState({ isLoading: false, errors: data.errors })
           toast('Please check the errors and try again', 'error')

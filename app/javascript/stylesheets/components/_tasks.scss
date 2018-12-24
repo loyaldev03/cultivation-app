@@ -1,0 +1,26 @@
+$indentWidth: 14px;
+$indentArrowWidth: 10px;
+
+.indent-arrow {
+  width: 11px;
+}
+
+.indent--1 {
+  margin-left: $indentWidth + $indentArrowWidth;
+}
+
+.indent--2 {
+  margin-left: $indentWidth * 2 + ($indentArrowWidth * 2);
+}
+
+.indent--3 {
+  margin-left: ($indentWidth * 3) + ($indentArrowWidth * 3);
+}
+
+.indent--4 {
+  margin-left: ($indentWidth * 4) + ($indentArrowWidth * 4);
+}
+
+.indent--5 {
+  margin-left: ($indentWidth * 5) + ($indentArrowWidth * 5);
+}

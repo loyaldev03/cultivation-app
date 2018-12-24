@@ -1,10 +1,6 @@
 import 'babel-polyfill'
-
 import React from 'react'
-import { render } from 'react-dom'
-
-import { observable } from 'mobx'
-import { observer, Provider } from 'mobx-react'
+import { observer } from 'mobx-react'
 import classNames from 'classnames'
 import loadTasks from './actions/loadTask'
 import loadUsers from './actions/loadUsers'
@@ -12,12 +8,11 @@ import loadUserRoles from './actions/loadUserRoles'
 import loadItems from './actions/loadItems'
 import loadDisplayTaskStore from './actions/loadDisplayTaskStore'
 import { formatDate2, ActiveBadge } from '../../utils'
-
 import TaskList from './components/TaskList'
-
 import Select from 'react-select'
 import reactSelectStyle from '../../utils/reactSelectStyle'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
+import TaskStore from './stores/NewTaskListStore'
 
 const styles = `
 .columnDropdown{
@@ -28,6 +23,7 @@ button.react-calendar__tile:disabled {
 }
 `
 
+@observer
 class TaskSetup extends React.Component {
   constructor(props) {
     super(props)
@@ -48,12 +44,12 @@ class TaskSetup extends React.Component {
   }
 
   async componentDidMount() {
-    await loadTasks.loadbatch(this.props.batch_id)
-    loadDisplayTaskStore()
-    loadUsers()
-    loadUserRoles()
-    loadItems(this.props.batch.facility_id)
-    document.addEventListener('mousedown', this.handleOutsideClick, false)
+    // await loadTasks.loadbatch(this.props.batch_id)
+    // loadDisplayTaskStore()
+    // loadUsers()
+    // loadUserRoles()
+    // loadItems(this.props.batch.facility_id)
+    // document.addEventListener('mousedown', this.handleOutsideClick, false)
   }
 
   onChangeFilterColumns = value => {
@@ -444,7 +440,6 @@ class TaskSetup extends React.Component {
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
               <TaskList
-                batch_id={this.props.batch_id}
                 batch={this.props.batch}
                 columns={this.state.columns}
               />

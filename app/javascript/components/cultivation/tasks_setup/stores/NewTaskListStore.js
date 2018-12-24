@@ -1,8 +1,9 @@
-import { observable, action, runInAction, toJS } from 'mobx'
+import { observable, action, runInAction, toJS, computed } from 'mobx'
 import loadTask from '../actions/loadTask'
 import {
   formatDate2,
   httpGetOptions,
+  httpPostOptions,
   addDayToDate,
   toast
 } from '../../../utils'
@@ -10,17 +11,71 @@ import {
 class TaskStore {
   @observable isLoading = false
   @observable isDataLoaded = false
-  @observable tasks
+  @observable collapsedNodes = []
+  @observable tasks = []
 
   @action
-  async loadTasks(batch_id) {
-    const url = `/api/v1/batches/${batch_id}/tasks`
+  async loadTasks(batchId) {
+    this.isLoading = true
+    const url = `/api/v1/batches/${batchId}/tasks`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
-      console.log('>> load tasks from NewTaskListStore')
-      console.log(response)
+      this.isLoading = false
+      this.tasks = response.data.map(res => {
+        return {
+          ...res.attributes
+        }
+      })
+      this.isDataLoaded = true
+    } catch (error) {
+      this.isDataLoaded = false
+      console.error(error)
+    }
+  }
+
+  @action
+  async updateTaskPosition(batchId, taskId, position) {
+    this.isLoading = true
+    const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_position`
+    try {
+      const response = await fetch(url, httpPostOptions({ task: { position } }))
+      this.loadTasks(batchId)
     } catch (error) {
       console.error(error)
+    }
+  }
+
+  isCollapsed(wbs) {
+    const found = this.collapsedNodes.find(x => x === wbs)
+    return !!found
+  }
+
+  hasChildNode(wbs) {
+    const childNodeFormat = wbs + "."
+    const found = this.tasks.find(t => t.wbs.startsWith(childNodeFormat) && t.wbs !== wbs)
+    return !!found
+  }
+
+  @computed get taskList() {
+    if (this.isDataLoaded) {
+      return this.tasks.filter(t => {
+        const found = this.collapsedNodes.find(
+          x => t.wbs.startsWith(x) && t.wbs !== x
+        )
+        return !found
+      })
+    } else {
+      return []
+    }
+  }
+
+  @action
+  toggleCollapseNode(wbs) {
+    const found = this.collapsedNodes.find(i => i === wbs)
+    if (found) {
+      this.collapsedNodes = this.collapsedNodes.filter(i => i !== wbs)
+    } else {
+      this.collapsedNodes.push(wbs)
     }
   }
 

@@ -178,10 +178,7 @@ class TaskStore {
     if (task.is_category === true) {
       return 'category'
     }
-    if (
-      task.is_category === false &&
-      task.is_phase === false
-    ) {
+    if (task.is_category === false && task.is_phase === false) {
       return 'task'
     }
   }

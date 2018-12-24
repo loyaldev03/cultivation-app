@@ -4,7 +4,7 @@ import { formatDate2, httpGetOptions, addDayToDate } from '../../utils'
 class LoadTask {
   formatData = tasks => {
     let new_tasks = tasks.map(task => {
-      return {...task.attributes}
+      return { ...task.attributes }
     })
     return new_tasks
   }

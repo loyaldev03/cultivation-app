@@ -227,7 +227,7 @@ class TaskStore {
     // : task.attributes.parent_id
     // }
   }
-} 
+}
 
 const taskStore = new TaskStore()
 

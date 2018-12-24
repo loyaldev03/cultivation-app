@@ -16,17 +16,9 @@ path.arrow{
 line.line{
   stroke-width: 2.4;
 }
-.task .bar-group .bar {
-  fill: #0097a7;
-}
 
-.category .bar-group .bar{
-  fill: #d32f2f;
-}
-
-.phase .bar-group .bar{
+.bar-group .bar{
   fill: #039be5;
-  height: 10;
 }
 
 circle.handle.mid {

@@ -19,7 +19,7 @@ class ConvertedProductStore {
 
   @action
   update(convertedProduct) {
-    const index = this.convertedProduct.findIndex(
+    const index = this.convertedProducts.findIndex(
       x => x.id === convertedProduct.id
     )
     if (index >= 0) {

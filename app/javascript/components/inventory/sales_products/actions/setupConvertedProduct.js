@@ -14,16 +14,16 @@ const setupConvertedProduct = payload => {
     })
     .then(result => {
       const { status, data } = result
-      if (status !== 200) {
-        console.log(result)
-      } else {
-        if (payload.id) {
-          convertedProductStore.update(data.data)
-        } else {
-          convertedProductStore.prepend(data.data)
-        }
+      console.log(result)
+      if (status === 200) {
+        data.data.forEach(item => {
+          if (payload.id) {
+            convertedProductStore.update(item)
+          } else {
+            convertedProductStore.prepend(item)
+          } 
+        })
       }
-
       return { status, data }
     })
 }

@@ -30,6 +30,8 @@ module Inventory
     field :drawdown_uom, type: String
     field :cost_per_unit, type: BigDecimal      # this cost per unit is cost for each quantity
 
+    field :breakdowns, type: Array
+
     belongs_to :facility
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
     belongs_to :catalogue, class_name: 'Inventory::Catalogue'

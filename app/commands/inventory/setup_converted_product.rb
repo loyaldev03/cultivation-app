@@ -9,8 +9,7 @@ module Inventory
       :sku,
       :catalogue_id,
       :facility_id,
-      :start_package_tag,
-      :end_package_tag,
+      :package_tags,
       :quantity,
       :uom,
       :production_date,
@@ -28,8 +27,7 @@ module Inventory
       @sku = args[:sku]
       @catalogue_id = args[:catalogue_id]
       @facility_id = args[:facility_id]
-      @start_package_tag = args[:start_package_tag]
-      @end_package_tag = args[:end_package_tag]
+      @package_tags = args[:package_tags]
       @quantity = args[:quantity]
       @uom = args[:uom]
       @production_date = args[:production_date]
@@ -56,7 +54,7 @@ module Inventory
 
     def valid_data?
       # 1. Check package id is not duplicate unless its an update
-      tags = resolve_tags
+      tags = split(package_tags)
 
       if tags.blank?
         errors.add(:package_tag, 'Tag is required.')
@@ -64,7 +62,7 @@ module Inventory
         tags.each do |tag|
           if Inventory::ItemTransaction.in(catalogue_id: catalogue_ids).
             where(package_tag: tag, id: {:$not => {:$eq => id}}).exists?
-            errors.add(:start_package_tag, 'Tag is already taken.')
+            errors.add(:package_tags, 'Tag is already taken.')
             next
           end
         end
@@ -133,7 +131,7 @@ module Inventory
     end
 
     def create_packages!(product)
-      tags = resolve_tags
+      tags = split(package_tags)
       packages = []
       tags.each do |tag|
         package = product.packages.create!(
@@ -147,6 +145,7 @@ module Inventory
           location_id: location_id,
           cost_per_unit: cost_per_unit,
           event_type: 'create_converted_product',
+          breakdowns: breakdowns,
         )
         packages << package
       end
@@ -154,20 +153,27 @@ module Inventory
     end
 
     def update_package!(product)
-      []
-    end
-
-    def resolve_tags
-      if start_package_tag === end_package_tag
-        [start_package_tag].select { |x| !x.blank? }
-      else
-        [start_package_tag, end_package_tag].select { |x| !x.blank? }
-      end
+      package = product.packages.find(id)
+      package.facility_id = facility_id
+      package.catalogue_id = catalogue_id
+      package.package_tag = package_tags.strip
+      package.quantity = quantity
+      package.uom = uom
+      package.production_date = production_date
+      package.expiration_date = expiration_date
+      package.location_id = location_id
+      package.cost_per_unit = cost_per_unit
+      package.breakdowns = breakdowns
+      package.save!
+      [package]
     end
 
     def catalogue_ids
-      # TODO: Should be calling a flatten out list one - not this one.
-      Inventory::QueryCatalogueTree.call(Constants::SALES_KEY, Constants::SALES_PRODUCT_KEY).result.pluck(:value)
+      Inventory::Catalogue.where(catalogue_type: Constants::SALES_KEY, category: Constants::CONVERTED_PRODUCT_KEY).map { |x| x.id.to_s }
+    end
+
+    def split(tags)
+      tags.gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
     end
   end
 end

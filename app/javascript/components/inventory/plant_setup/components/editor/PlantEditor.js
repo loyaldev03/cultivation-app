@@ -69,7 +69,6 @@ class PlantEditor extends React.Component {
         getPlant(id, 'vendor_invoice, vendor, purchase_order, mother').then(
           ({ status, data }) => {
             if (status != 200) {
-              alert('something wrong')
               return
             }
 

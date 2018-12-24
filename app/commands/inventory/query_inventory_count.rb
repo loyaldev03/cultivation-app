@@ -14,7 +14,7 @@ module Inventory
       catalogue_ids = Inventory::Catalogue.where(
         uom_dimension: {"$nin": ['', nil]},
         category: {"$in": [
-          Constants::SALES_PRODUCT_KEY,
+          Constants::CONVERTED_PRODUCT_KEY,
           'raw_sales_product',
           Constants::SUPPLEMENTS_KEY,
           Constants::NUTRIENTS_KEY,

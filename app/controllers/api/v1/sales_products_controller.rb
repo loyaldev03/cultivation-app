@@ -37,7 +37,7 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
 
   def converted_products
     items = Inventory::ItemTransaction.includes(:product, :catalogue).
-      in(catalogue: sales_catalogue_ids(Constants::SALES_PRODUCT_KEY)).
+      in(catalogue: sales_catalogue_ids(Constants::CONVERTED_PRODUCT_KEY)).
       order(c_at: :desc)
     render json: Inventory::HarvestPackageSerializer.new(items).serialized_json
   end
@@ -52,6 +52,14 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
   def harvest_package
     items = Inventory::ItemTransaction.includes(:product, :catalogue, :harvest_batch).
       in(catalogue: sales_catalogue_ids('raw_sales_product')).
+      where(id: params[:id]).
+      first
+    render json: Inventory::HarvestPackageSerializer.new(items).serialized_json
+  end
+
+  def converted_product
+    items = Inventory::ItemTransaction.includes(:product, :catalogue).
+      in(catalogue: sales_catalogue_ids(Constants::CONVERTED_PRODUCT_KEY)).
       where(id: params[:id]).
       first
     render json: Inventory::HarvestPackageSerializer.new(items).serialized_json

@@ -12,7 +12,9 @@ import {
 } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import LocationPicker from '../../../utils/LocationPicker2'
+import { launchBarcodeScanner } from '../../../utils/BarcodeScanner'
 import setupConvertedProduct from '../actions/setupConvertedProduct'
+import getConvertedProduct from '../actions/getConvertedProduct'
 
 const coalese = option => {
   if (option === undefined || option === null || option.length <= 0) {
@@ -29,7 +31,7 @@ const loadProducts = inputValue => {
   inputValue = inputValue || ''
 
   return fetch(
-    '/api/v1/sales_products/products?type=converted_products&filter=' +
+    '/api/v1/sales_products/products?type=converted_product&filter=' +
       inputValue,
     {
       credentials: 'include'
@@ -51,7 +53,9 @@ const loadProducts = inputValue => {
 class ConvertProductEditor extends React.Component {
   constructor(props) {
     super(props)
+    this.packageIdTextArea = React.createRef()
     this.state = this.resetState()
+    this.scanner = null
   }
 
   resetState() {
@@ -65,8 +69,7 @@ class ConvertProductEditor extends React.Component {
       facility_id: '',
       // Package details
       id: '',
-      start_package_tag: '',
-      end_package_tag: '',
+      package_tags: '',
       quantity: 0,
       uom: null,
       production_date: null,
@@ -76,8 +79,68 @@ class ConvertProductEditor extends React.Component {
       transaction_limit: '',
       isMultiPackage: false,
       breakdowns: [{ package_tag: '', uom: null, quantity: '' }],
-      errors: {}
+      errors: {},
+      showScanner: false,
+      scannerReady: false
     }
+  }
+
+  componentDidMount() {
+    document.addEventListener('editor-sidebar-close', () => {
+      if (this.scanner) {
+        this.scanner.destroy()
+      }
+    })
+
+    document.addEventListener('editor-sidebar-open', event => {
+      const id = event.detail.id
+      if (!id) {
+        this.setState(this.resetState())
+      } else {
+        
+
+      getConvertedProduct(id)
+        .then(x => {
+          console.log(x)
+          return ({
+            id: x.data.data.id,
+            ...x.data.data.attributes
+          })
+        })
+        .then(attr => {
+          const catalogue = this.props.sales_catalogue.find(
+            x => x.value == attr.catalogue.id
+          )
+
+          let uom = null
+          if (attr.uom) {
+            uom = { value: attr.uom, label: attr.uom }
+          }
+          
+          this.setState({
+            ...this.resetState(),
+            id: attr.id,
+            product_id: attr.product.id,
+            product: { value: attr.product.id, label: attr.product.name },
+            sku: attr.product.sku,
+            transaction_limit: attr.product.transaction_limit || '',
+            catalogue: catalogue,
+            facility_id: attr.product.facility_id,
+            package_tags: attr.package_tag,
+            quantity: attr.quantity,
+            uom: uom,
+            production_date: new Date(attr.production_date),
+            expiration_date: new Date(attr.expiration_date),
+            location_id: attr.location_id,
+            cost_per_unit: attr.cost_per_unit || '',
+            breakdowns: attr.breakdowns.map(x => ({ 
+              ...x, 
+              uom: { value: x.uom, label: x.uom }
+            }))
+          })
+        })
+      }
+    })
   }
 
   onChangeGeneric = event => {
@@ -87,6 +150,8 @@ class ConvertProductEditor extends React.Component {
   }
 
   onChangeProduct = product => {
+    console.log(product)
+
     if (coalese(product) !== false && product.__isNew__) {
       this.setState({
         product_id: '',
@@ -94,9 +159,7 @@ class ConvertProductEditor extends React.Component {
         facility_id: ''
       })
     } else if (coalese(product) !== false) {
-      const fs = this.props.facility_strains.find(
-        x => x.value === product.facility_strain_id
-      )
+      
       this.setState({
         product_id: product.id,
         product,
@@ -104,7 +167,7 @@ class ConvertProductEditor extends React.Component {
         catalogue: this.props.sales_catalogue.find(
           x => x.value === product.catalogue_id
         ),
-        facility_id: fs.facility_id,
+        facility_id: product.facility_id,
         transaction_limit: product.transaction_limit || ''
       })
     } else {
@@ -127,6 +190,31 @@ class ConvertProductEditor extends React.Component {
   onChangeProductionDate = production_date => this.setState({ production_date })
   onChangeExpirationDate = expiration_date => this.setState({ expiration_date })
 
+  onShowScanner = e => {
+    this.setState(
+      { showScanner: !this.state.showScanner, scannerReady: false },
+      () => {
+        if (this.state.showScanner) {
+          launchBarcodeScanner({
+            licenseKey: this.props.scanditLicense,
+            targetId: 'scandit-barcode-picker',
+            onScan: result => {
+              this.setState({ package_tags: result + '\n' + this.state.package_tags })
+              this.resizePackageIdTextArea()
+            },
+            onReady: () => {
+              console.log('on ready at editor component level...')
+              this.setState({ scannerReady: true })
+            }
+          }).then(scanner => (this.scanner = scanner))
+        } else {
+          this.scanner.destroy()
+        }
+      }
+    )
+    e.preventDefault()
+  }
+
   onAddBreakdown = event => {
     const { breakdowns } = this.state
     const index = parseInt(event.target.attributes.index.value) + 1
@@ -137,6 +225,7 @@ class ConvertProductEditor extends React.Component {
         ...breakdowns.slice(index)
       ]
     })
+    event.preventDefault()
   }
 
   onRemoveBreakdown = event => {
@@ -148,6 +237,7 @@ class ConvertProductEditor extends React.Component {
         ...breakdowns.slice(index + 1)
       ]
     })
+    event.preventDefault()
   }
 
   onChangeBreakdownField = event => {
@@ -168,6 +258,31 @@ class ConvertProductEditor extends React.Component {
     this.setState({ breakdowns: [...breakdowns] })
   }
 
+
+  onChangePackageTags = event => {
+    this.setState({ package_tags: event.target.value }, this.resizePackageIdTextArea)
+  }
+
+  resizePackageIdTextArea = () => {
+    const lines = (this.state.package_tags.match(/\n/g) || []).length
+    const node = this.packageIdTextArea.current
+
+    if (!node) {
+      return
+    }
+
+    if (lines < 3) {
+      node.style.height = 'auto'
+      node.style.minHeight = ''
+    } else if (lines >= 1 && lines < 15) {
+      node.style.height = 40 + lines * 25 + 'px'
+      node.style.minHeight = ''
+    } else {
+      node.style.minHeight = 40 + 15 * 25 + 'px'
+      node.style.height = 'auto'
+    }
+  }
+
   onSave = event => {
     const { isValid, ...payload } = this.validateAndGetValues()
     if (isValid) {
@@ -179,8 +294,8 @@ class ConvertProductEditor extends React.Component {
           window.editorSidebar.close()
         }
       })
-      event.preventDefault()
     }
+    event.preventDefault()
   }
 
   validateAndGetValues = () => {
@@ -189,9 +304,8 @@ class ConvertProductEditor extends React.Component {
       sku,
       catalogue,
       facility_id,
-      start_package_tag,
+      package_tags,
       quantity,
-      uom,
       production_date,
       expiration_date,
       location_id,
@@ -200,14 +314,10 @@ class ConvertProductEditor extends React.Component {
       isMultiPackage
     } = this.state
 
-    let { product, product_id, end_package_tag, breakdowns } = this.state
+    let { product, product_id, end_package_tag, breakdowns, uom } = this.state
     let name = '',
       errors = {}
     const catalogue_id = catalogue ? catalogue.value : ''
-
-    if (isMultiPackage) {
-      end_package_tag = start_package_tag
-    }
 
     if (coalese(product) !== false) {
       name = product.label
@@ -215,6 +325,8 @@ class ConvertProductEditor extends React.Component {
         product_id = product.value
       }
     }
+
+    uom = uom ? uom.value : ''
 
     breakdowns.forEach((item, index) => {
       if (
@@ -238,24 +350,25 @@ class ConvertProductEditor extends React.Component {
       }
     })
 
-    alert('product must have at least one component product tag!')
+    breakdowns = breakdowns
+      .filter(
+        item =>
+          item.package_tag.length > 0 && item.quantity.length > 0 && item.uom
+      )
+      .map(item => ({
+        package_tag: item.package_tag,
+        quantity: item.quantity,
+        uom: item.uom.value
+      }))
+
+    if (breakdowns.length == 0) {
+      errors['breakdowns'] = ['At least one package is required.']
+    }
 
     const isValid = Object.getOwnPropertyNames(errors).length === 0
     if (!isValid) {
       this.setState({ errors })
-    } else {
-      breakdowns = breakdowns
-        .filter(
-          item =>
-            item.package_tag.length > 0 && item.quantity.length > 0 && item.uom
-        )
-        .map(item => ({
-          package_tag: item.package_tag,
-          quantity: item.quantity,
-          uom: item.uom.value
-        }))
-    }
-
+    } 
     return {
       id,
       product_id,
@@ -263,8 +376,7 @@ class ConvertProductEditor extends React.Component {
       sku,
       catalogue_id,
       facility_id,
-      start_package_tag,
-      end_package_tag,
+      package_tags,
       quantity,
       uom,
       production_date,
@@ -302,7 +414,14 @@ class ConvertProductEditor extends React.Component {
         )
       }
     })
-    return inputs
+    return (
+      <React.Fragment>
+        { inputs }
+        <div className="ph4">
+          <FieldError errors={this.state.errors} field="breakdowns" />
+        </div>
+      </React.Fragment>
+    )
   }
 
   renderBreakdown = (
@@ -389,54 +508,38 @@ class ConvertProductEditor extends React.Component {
   }
 
   renderPackageTag() {
-    if (this.state.isMultiPackage) {
+    if (this.state.id.length > 0) {
       return (
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-50">
-            <TextInput
-              label="METRC Start Tag"
-              fieldname="start_package_tag"
-              value={this.state.start_package_tag}
-              onChange={this.onChangeGeneric}
-              errors={this.state.errors}
-            />
-          </div>
-          <div className="w-50 pl3">
-            <TextInput
-              label="METRC End Tag"
-              fieldname="end_package_tag"
-              value={this.state.end_package_tag}
-              onChange={this.onChangeGeneric}
-              errors={this.state.errors}
-            />
-          </div>
-        </div>
-      )
-    } else {
-      return (
-        <div className="ph4 mt3 mb3 flex">
-          <div className="w-100">
-            <TextInput
-              label="METRC Tag"
-              fieldname="start_package_tag"
-              value={this.state.start_package_tag}
-              onChange={this.onChangeGeneric}
-              errors={this.state.errors}
-            />
-          </div>
-        </div>
+        <TextInput
+          label=""
+          fieldname="package_tags"
+          value={this.state.package_tags}
+          onChange={this.onChangePackageTags}
+          placeholder="Key/ scan in one or more METRC tag of the same product."
+          errors={this.state.errors}
+        />
       )
     }
+    return (
+      <textarea
+        rows="3"
+        ref={this.packageIdTextArea}
+        value={this.state.package_tags}
+        className="db w-100 pa2 f6 black ba b--black-20 br2 mt1 mb0 outline-0 lh-copy"
+        placeholder="Key/ scan in one or more METRC tag of the same product."
+        onChange={this.onChangePackageTags}
+      />
+    )
   }
 
   render() {
     const { locations, sales_catalogue } = this.props
-
     const uoms = this.state.catalogue
       ? this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
       : []
 
     const hasProductId = this.state.product && this.state.product_id.length > 0
+    const scan_tag = this.state.id.length > 0 ? 'Scan Tag' : 'Scan Tags'
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -511,6 +614,7 @@ class ConvertProductEditor extends React.Component {
               <LocationPicker
                 mode="facility"
                 onChange={this.onFacilityChanged}
+                isDisabled={hasProductId}
                 locations={locations}
                 facility_id={this.state.facility_id}
                 location_id={this.state.facility_id}
@@ -526,23 +630,35 @@ class ConvertProductEditor extends React.Component {
               <label className="f6 fw6 db dark-gray">Package Details</label>
             </div>
           </div>
-
-          <div className="ph4 mb3 flex justify-between">
-            <label className="f6 fw6 db mb1 gray">
-              I am adding more than one package with the same information.
-            </label>
-            <input
-              className="toggle toggle-default"
-              type="checkbox"
-              value="1"
-              checked={this.state.isMultiPackage}
-              id="is_bought_input"
-              onChange={this.onToggleIsMultiPackage}
-            />
-            <label className="toggle-button" htmlFor="is_bought_input" />
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+            <label className="f6 fw6 db mb1 gray">Product Tag(s)</label>
+              { this.renderPackageTag() }
+            </div>
           </div>
 
-          {this.renderPackageTag()}
+          <div className="ph4 mt0 mb3 flex flex-column">
+            <div className="w-100 mb2 flex justify-end">
+              <a
+                href=""
+                onClick={this.onShowScanner}
+                className="ph2 pv2 btn--secondary f6 link"
+              >
+                {this.state.showScanner ? 'Hide scanner' : scan_tag}
+              </a>
+            </div>
+            <div className="w-100">
+              <div id="scandit-barcode-picker" className="scanner" />
+            </div>
+            <div className="w-100 tc">
+              {this.state.showScanner && this.state.scannerReady && (
+                <div className="f7 gray">Scanner is ready!</div>
+              )}
+              {this.state.showScanner && !this.state.scannerReady && (
+                <div className="f7 gray">Loading scanner...</div>
+              )}
+            </div>
+          </div>
 
           <div className="ph4 mb3 flex">
             <div className="w-30">

@@ -1,5 +1,5 @@
 class Api::V1::TasksController < Api::V1::BaseApiController
-  before_action :set_batch, except: [:update, :update_position]
+  before_action :set_batch, except: [:update_position]
 
   def index
     if @batch.present?
@@ -40,13 +40,13 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def update_dependency
-    task = Cultivation::Task.find(params[:source_id])
-    if task.present?
-      depend_on_task = Cultivation::Task.find(params[:destination_id])
-      start_date = depend_on_task.start_date + 1.days
-      end_date = start_date + depend_on_task.duration.days - 1.days
-      task.update(depend_on: params[:destination_id], start_date: start_date, end_date: end_date)
-      render json: {data: {id: task.id}}
+    destination_task = Cultivation::Task.find(params[:destination_id])
+    if destination_task.present?
+      source_task = Cultivation::Task.find(params[:source_id])
+      start_date = source_task.end_date + 1.days
+      end_date = start_date + destination_task.duration.days
+      destination_task.update(depend_on: params[:source_id], start_date: start_date, end_date: end_date)
+      render json: {data: {id: destination_task.id}}
     else
       render json: {errors: 'Update failed'}
     end

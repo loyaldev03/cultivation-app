@@ -722,8 +722,8 @@ export default class Gantt {
               )
 
               this.trigger_event('drag_relationship', [
-                source_id,
-                destination_id
+                destination_id,
+                source_id
               ])
             }
           } else {

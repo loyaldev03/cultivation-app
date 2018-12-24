@@ -275,7 +275,7 @@ export default class Bar {
       })
       // child task must not go before parent
       const valid_x = xs.reduce((prev, curr) => {
-        return x > curr
+        return x >= curr
       }, x)
       if (!valid_x) {
         width = null

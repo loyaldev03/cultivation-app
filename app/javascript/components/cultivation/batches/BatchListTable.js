@@ -18,10 +18,7 @@ class BatchListTable extends React.Component {
           {batches.map(b => (
             <tr className="dim" key={b.batch_no}>
               <td className="pv2 ph3 tl ttu">
-                <a
-                  className="link"
-                  href={`/cultivation/batches/${b.id}`}
-                >
+                <a className="link" href={`/cultivation/batches/${b.id}`}>
                   {b.batch_no}
                 </a>
               </td>

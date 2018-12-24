@@ -58,7 +58,6 @@ const columns = [
 function openStrain(event, index) {
   const id = strainStore.strains.slice()[index].id
   window.editorSidebar.open({ width: '500px', facility_strain_id: id })
-  console.log(event)
   event.preventDefault()
 }
 

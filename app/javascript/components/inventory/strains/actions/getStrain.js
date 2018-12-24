@@ -6,7 +6,6 @@ export default function getStrain(id) {
     }
   }).then(response => {
     return response.json().then(data => {
-      // console.log(data)
       return {
         status: response.status,
         data: data.data

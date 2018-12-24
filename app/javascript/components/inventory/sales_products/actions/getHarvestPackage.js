@@ -5,7 +5,6 @@ const getHarvestPackage = id => {
     `/api/v1/sales_products/harvest_package/${id}`,
     httpGetOptions
   ).then(response => {
-    // console.log(response.status)
     return response.json().then(data => ({
       status: response.status,
       data

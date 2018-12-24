@@ -7,7 +7,6 @@ export const setupPurchasedClones = payload => {
     httpPostOptions(payload)
   )
     .then(response => {
-      // console.log(response.status)
       return response.json().then(data => ({
         status: response.status,
         data

@@ -42,11 +42,6 @@ const launchBarcodeScanner = (options = {}) => {
 
       barcodePicker.onScan(scanResult => {
         const data = scanResult.barcodes.reduce((string, barcode) => {
-          console.log(
-            ScanditSDK.Barcode.Symbology.toHumanizedName(barcode.symbology) +
-              ': ' +
-              barcode.data
-          )
           return barcode.data
         }, '')
 

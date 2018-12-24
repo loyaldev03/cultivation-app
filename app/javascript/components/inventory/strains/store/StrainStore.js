@@ -6,7 +6,6 @@ class StrainStore {
 
   @action
   load(strains) {
-    // console.log(newPlants)
     this.strains.replace(strains)
   }
 

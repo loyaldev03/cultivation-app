@@ -57,7 +57,6 @@ class PlantEditor extends React.Component {
       if (this.scanner) {
         this.scanner.destroy()
       }
-      // console.log('sidebar closed')
     })
 
     document.addEventListener('editor-sidebar-open', event => {
@@ -472,7 +471,6 @@ class PlantEditor extends React.Component {
               this.resizePlantIDTextArea()
             },
             onReady: () => {
-              console.log('on ready at editor component level...')
               this.setState({ scannerReady: true })
             }
           }).then(scanner => (this.scanner = scanner))

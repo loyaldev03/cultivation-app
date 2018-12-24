@@ -39,7 +39,6 @@ const loadProducts = inputValue => {
   )
     .then(response => response.json())
     .then(data => {
-      // console.log(data.data)
       const products = data.data.map(x => ({
         label: x.attributes.name,
         value: x.attributes.id,
@@ -97,48 +96,45 @@ class ConvertProductEditor extends React.Component {
       if (!id) {
         this.setState(this.resetState())
       } else {
-        
-
-      getConvertedProduct(id)
-        .then(x => {
-          console.log(x)
-          return ({
-            id: x.data.data.id,
-            ...x.data.data.attributes
+        getConvertedProduct(id)
+          .then(x => {
+            return {
+              id: x.data.data.id,
+              ...x.data.data.attributes
+            }
           })
-        })
-        .then(attr => {
-          const catalogue = this.props.sales_catalogue.find(
-            x => x.value == attr.catalogue.id
-          )
+          .then(attr => {
+            const catalogue = this.props.sales_catalogue.find(
+              x => x.value == attr.catalogue.id
+            )
 
-          let uom = null
-          if (attr.uom) {
-            uom = { value: attr.uom, label: attr.uom }
-          }
-          
-          this.setState({
-            ...this.resetState(),
-            id: attr.id,
-            product_id: attr.product.id,
-            product: { value: attr.product.id, label: attr.product.name },
-            sku: attr.product.sku,
-            transaction_limit: attr.product.transaction_limit || '',
-            catalogue: catalogue,
-            facility_id: attr.product.facility_id,
-            package_tags: attr.package_tag,
-            quantity: attr.quantity,
-            uom: uom,
-            production_date: new Date(attr.production_date),
-            expiration_date: new Date(attr.expiration_date),
-            location_id: attr.location_id,
-            cost_per_unit: attr.cost_per_unit || '',
-            breakdowns: attr.breakdowns.map(x => ({ 
-              ...x, 
-              uom: { value: x.uom, label: x.uom }
-            }))
+            let uom = null
+            if (attr.uom) {
+              uom = { value: attr.uom, label: attr.uom }
+            }
+
+            this.setState({
+              ...this.resetState(),
+              id: attr.id,
+              product_id: attr.product.id,
+              product: { value: attr.product.id, label: attr.product.name },
+              sku: attr.product.sku,
+              transaction_limit: attr.product.transaction_limit || '',
+              catalogue: catalogue,
+              facility_id: attr.product.facility_id,
+              package_tags: attr.package_tag,
+              quantity: attr.quantity,
+              uom: uom,
+              production_date: new Date(attr.production_date),
+              expiration_date: new Date(attr.expiration_date),
+              location_id: attr.location_id,
+              cost_per_unit: attr.cost_per_unit || '',
+              breakdowns: attr.breakdowns.map(x => ({
+                ...x,
+                uom: { value: x.uom, label: x.uom }
+              }))
+            })
           })
-        })
       }
     })
   }
@@ -150,8 +146,6 @@ class ConvertProductEditor extends React.Component {
   }
 
   onChangeProduct = product => {
-    console.log(product)
-
     if (coalese(product) !== false && product.__isNew__) {
       this.setState({
         product_id: '',
@@ -159,7 +153,6 @@ class ConvertProductEditor extends React.Component {
         facility_id: ''
       })
     } else if (coalese(product) !== false) {
-      
       this.setState({
         product_id: product.id,
         product,
@@ -199,11 +192,12 @@ class ConvertProductEditor extends React.Component {
             licenseKey: this.props.scanditLicense,
             targetId: 'scandit-barcode-picker',
             onScan: result => {
-              this.setState({ package_tags: result + '\n' + this.state.package_tags })
+              this.setState({
+                package_tags: result + '\n' + this.state.package_tags
+              })
               this.resizePackageIdTextArea()
             },
             onReady: () => {
-              console.log('on ready at editor component level...')
               this.setState({ scannerReady: true })
             }
           }).then(scanner => (this.scanner = scanner))
@@ -258,9 +252,11 @@ class ConvertProductEditor extends React.Component {
     this.setState({ breakdowns: [...breakdowns] })
   }
 
-
   onChangePackageTags = event => {
-    this.setState({ package_tags: event.target.value }, this.resizePackageIdTextArea)
+    this.setState(
+      { package_tags: event.target.value },
+      this.resizePackageIdTextArea
+    )
   }
 
   resizePackageIdTextArea = () => {
@@ -368,7 +364,7 @@ class ConvertProductEditor extends React.Component {
     const isValid = Object.getOwnPropertyNames(errors).length === 0
     if (!isValid) {
       this.setState({ errors })
-    } 
+    }
     return {
       id,
       product_id,
@@ -416,7 +412,7 @@ class ConvertProductEditor extends React.Component {
     })
     return (
       <React.Fragment>
-        { inputs }
+        {inputs}
         <div className="ph4">
           <FieldError errors={this.state.errors} field="breakdowns" />
         </div>
@@ -632,8 +628,8 @@ class ConvertProductEditor extends React.Component {
           </div>
           <div className="ph4 mb3 flex">
             <div className="w-100">
-            <label className="f6 fw6 db mb1 gray">Product Tag(s)</label>
-              { this.renderPackageTag() }
+              <label className="f6 fw6 db mb1 gray">Product Tag(s)</label>
+              {this.renderPackageTag()}
             </div>
           </div>
 

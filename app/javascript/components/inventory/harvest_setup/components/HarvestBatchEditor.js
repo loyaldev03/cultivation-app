@@ -183,7 +183,6 @@ export default class HarvestBatchEditor extends React.Component {
 
   onSave = event => {
     const { errors, isValid, ...payload } = this.validateAndGetValues()
-    console.log(payload)
 
     if (isValid) {
       setupHarvestBatch(payload).then(({ status, data }) => {

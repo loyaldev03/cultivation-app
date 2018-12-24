@@ -218,7 +218,6 @@ class MotherEditor extends React.Component {
               this.resizePlantIDTextArea()
             },
             onReady: () => {
-              console.log('on ready at editor component level...')
               this.setState({ scannerReady: true })
             }
           }).then(scanner => (this.scanner = scanner))

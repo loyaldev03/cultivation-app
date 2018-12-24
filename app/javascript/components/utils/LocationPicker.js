@@ -138,7 +138,6 @@ class LocationPicker extends React.Component {
 
     let _locations = []
     const { mode, locations } = this.props
-    // console.log(locations)
 
     if (mode === 'clone') {
       _locations = locations.filter(this.isClone(facility_id))
@@ -217,7 +216,6 @@ class LocationPicker extends React.Component {
   }
 
   onChange = item => {
-    // console.log(item)
     const locationData = this.extractLocationId(item, this.props.mode)
     this.props.onChange({ ...item, ...locationData })
     this.setState({ value: { value: item.value, label: item.label } })

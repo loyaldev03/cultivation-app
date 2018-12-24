@@ -15,7 +15,6 @@ const setupHarvestBatch = payload => {
       }))
     })
     .then(result => {
-      console.log(result)
       const { status, data } = result
       if (status !== 200) {
         return result

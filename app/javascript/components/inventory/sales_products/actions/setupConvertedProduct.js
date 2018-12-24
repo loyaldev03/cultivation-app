@@ -14,14 +14,13 @@ const setupConvertedProduct = payload => {
     })
     .then(result => {
       const { status, data } = result
-      console.log(result)
       if (status === 200) {
         data.data.forEach(item => {
           if (payload.id) {
             convertedProductStore.update(item)
           } else {
             convertedProductStore.prepend(item)
-          } 
+          }
         })
       }
       return { status, data }

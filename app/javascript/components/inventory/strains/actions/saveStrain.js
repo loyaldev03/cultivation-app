@@ -11,7 +11,6 @@ export default function saveStrain(payload) {
   })
     .then(response => {
       return response.json().then(data => {
-        // console.log(data)
         return {
           status: response.status,
           data
@@ -21,7 +20,6 @@ export default function saveStrain(payload) {
     .then(result => {
       const { status, data } = result
       if (status == 200) {
-        // console.log(data)
         if (payload.id) {
           strainStore.update(data.data)
         } else {

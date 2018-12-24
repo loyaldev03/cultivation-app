@@ -136,7 +136,7 @@ ConvertProductSetupApp.propTypes = {
   locations: PropTypes.array.isRequired,
   sales_catalogue: PropTypes.array.isRequired,
   breakdown_uoms: PropTypes.array.isRequired,
-  scanditLicense: PropTypes.string.isRequired 
+  scanditLicense: PropTypes.string.isRequired
 }
 
 export default ConvertProductSetupApp

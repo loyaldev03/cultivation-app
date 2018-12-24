@@ -39,7 +39,6 @@ const loadProducts = inputValue => {
   )
     .then(response => response.json())
     .then(data => {
-      // console.log(data.data)
       const products = data.data.map(x => ({
         label: x.attributes.name,
         value: x.attributes.id,
@@ -96,8 +95,6 @@ class HarvestPackageEditor extends React.Component {
             ...x.data.data.attributes
           }))
           .then(attr => {
-            console.log(attr)
-
             const fs = this.props.facility_strains.find(
               x => x.value === attr.product.facility_strain_id
             )
@@ -170,8 +167,6 @@ class HarvestPackageEditor extends React.Component {
   }
 
   onChangeProduct = product => {
-    console.log(product)
-
     if (coalese(product) !== false && product.__isNew__) {
       this.setState({
         product_id: '',
@@ -395,8 +390,6 @@ class HarvestPackageEditor extends React.Component {
       }))
 
     const hasProductId = this.state.product && this.state.product_id.length > 0
-
-    console.log(`this.state.product.id: ${this.state.product_id}`)
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">

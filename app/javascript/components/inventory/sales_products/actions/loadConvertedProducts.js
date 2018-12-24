@@ -1,8 +1,8 @@
 import { httpGetOptions } from '../../../utils'
-import harvestPackageStore from '../store/HarvestPackageStore'
+import convertedProductStore from '../store/ConvertedProductStore'
 
 const loadHarvestPackages = () => {
-  return fetch('/api/v1/sales_products/harvest_packages', httpGetOptions)
+  return fetch('/api/v1/sales_products/converted_products', httpGetOptions)
     .then(response => {
       return response.json().then(data => ({
         status: response.status,
@@ -14,7 +14,7 @@ const loadHarvestPackages = () => {
       if (status !== 200) {
         return result
       }
-      harvestPackageStore.load(data.data)
+      convertedProductStore.load(data.data)
     })
 }
 

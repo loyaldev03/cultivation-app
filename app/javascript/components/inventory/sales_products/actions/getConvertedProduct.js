@@ -1,8 +1,8 @@
 import { httpGetOptions } from '../../../utils'
 
-const getHarvestPackage = id => {
+const getConvertedProduct = id => {
   return fetch(
-    `/api/v1/sales_products/harvest_package/${id}`,
+    `/api/v1/sales_products/converted_product/${id}`,
     httpGetOptions
   ).then(response => {
     return response.json().then(data => ({
@@ -12,4 +12,4 @@ const getHarvestPackage = id => {
   })
 }
 
-export default getHarvestPackage
+export default getConvertedProduct

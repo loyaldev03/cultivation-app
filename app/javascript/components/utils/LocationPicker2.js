@@ -189,10 +189,13 @@ class LocationPicker extends React.Component {
       this.props.location_id || ''
     )
 
+    const isDisabled = this.props.isDisabled || false
+
     return (
       <React.Fragment>
         <label className="f6 fw6 db mb1 gray ttc">{this.label}</label>
         <Select
+          isDisabled={isDisabled}
           styles={reactSelectStyle}
           placeholder="Search location within your facility"
           options={locations}

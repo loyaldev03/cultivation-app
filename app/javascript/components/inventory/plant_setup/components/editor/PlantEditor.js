@@ -57,7 +57,6 @@ class PlantEditor extends React.Component {
       if (this.scanner) {
         this.scanner.destroy()
       }
-      // console.log('sidebar closed')
     })
 
     document.addEventListener('editor-sidebar-open', event => {
@@ -69,7 +68,6 @@ class PlantEditor extends React.Component {
         getPlant(id, 'vendor_invoice, vendor, purchase_order, mother').then(
           ({ status, data }) => {
             if (status != 200) {
-              alert('something wrong')
               return
             }
 
@@ -473,7 +471,6 @@ class PlantEditor extends React.Component {
               this.resizePlantIDTextArea()
             },
             onReady: () => {
-              console.log('on ready at editor component level...')
               this.setState({ scannerReady: true })
             }
           }).then(scanner => (this.scanner = scanner))

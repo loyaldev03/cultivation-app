@@ -8,9 +8,12 @@ module Inventory
     field :ref_type, type: String
     field :event_type, type: String             # stock_intake, materials_used
     field :event_date, type: DateTime
+
+    #
     field :product_name, type: String
     field :description, type: String
     field :manufacturer, type: String
+
     field :quantity, type: BigDecimal           # can be +/-
     field :uom, type: String
     field :order_quantity, type: BigDecimal
@@ -26,6 +29,8 @@ module Inventory
     field :drawdown_quantity, type: BigDecimal  # how much was taken from harvest
     field :drawdown_uom, type: String
     field :cost_per_unit, type: BigDecimal      # this cost per unit is cost for each quantity
+
+    field :breakdowns, type: Array
 
     belongs_to :facility
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true

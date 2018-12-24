@@ -8,7 +8,8 @@ module Inventory
       :other_harvest_batch,
       :drawdown_quantity,
       :drawdown_uom,
-      :cost_per_unit
+      :cost_per_unit,
+      :breakdowns
 
     attribute :harvest_batch_id do |object|
       object.harvest_batch_id.to_s
@@ -33,11 +34,6 @@ module Inventory
       }
     end
 
-    attribute :location do |object|
-      # TODO: Find rooom
-      {name: ''}
-    end
-
     attribute :product do |object|
       product = object.product
       {
@@ -45,7 +41,8 @@ module Inventory
         name: product.name,
         sku: product.sku,
         catalogue_id: product.catalogue_id.to_s,
-        facility_strain_id: product.facility_strain_id.to_s,
+        facility_strain_id: product.facility_strain_id&.to_s,
+        facility_id: product.facility_id.to_s,
         transaction_limit: product.transaction_limit,
       }
     end

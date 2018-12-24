@@ -1,77 +1,71 @@
 module Inventory
-  class SetupHarvestPackage
+  class SetupConvertedProduct
     prepend SimpleCommand
+
     attr_reader :user,
+      :id,
       :product_id,
       :name,
       :sku,
       :catalogue_id,
-      :facility_strain_id,
-      :facility_strain,
       :facility_id,
-      :id,
-      :package_tag,
+      :package_tags,
       :quantity,
       :uom,
       :production_date,
       :expiration_date,
       :location_id,
-      :harvest_batch_id,
-      :other_harvest_batch,
-      :drawdown_quantity,
-      :drawdown_uom,
       :cost_per_unit,
-      :transaction_limit
+      :transaction_limit,
+      :breakdowns
 
     def initialize(user, args)
       @user = user
+      @id = args[:id]
       @product_id = args[:product_id]
       @name = args[:name]
       @sku = args[:sku]
       @catalogue_id = args[:catalogue_id]
-
-      @facility_strain_id = args[:facility_strain_id]
-      @facility_strain = Inventory::FacilityStrain.find(facility_strain_id)
-      @facility_id = facility_strain.present? ? facility_strain.facility_id : nil
-
-      @id = args[:id]
-      @package_tag = args[:package_tag]
+      @facility_id = args[:facility_id]
+      @package_tags = args[:package_tags]
       @quantity = args[:quantity]
       @uom = args[:uom]
       @production_date = args[:production_date]
       @expiration_date = args[:expiration_date]
       @location_id = args[:location_id]
-      @harvest_batch_id = args[:harvest_batch_id]
-      @other_harvest_batch = args[:other_harvest_batch]
-      @drawdown_quantity = args[:drawdown_quantity]
-      @drawdown_uom = args[:drawdown_uom]
       @cost_per_unit = args[:cost_per_unit]
       @transaction_limit = args[:transaction_limit]
+      @breakdowns = args[:breakdowns]
     end
 
     def call
       if valid_user? && valid_data?
         product = save_product!
-        package = save_package!(product)
-        package
+        packages = save_packages!(product)
+        packages
       end
     end
+
+    private
 
     def valid_user?
       true
     end
 
     def valid_data?
-      tx = Inventory::ItemTransaction.find_by(package_tag: package_tag)
-
       # 1. Check package id is not duplicate unless its an update
-      if package_tag.blank?
+      tags = split(package_tags)
+
+      if tags.blank?
         errors.add(:package_tag, 'Tag is required.')
       else
-        errors.add(:package_tag, 'Tag is already taken.') if Inventory::ItemTransaction.
-          in(catalogue_id: sales_catalogue_ids).
-          where(package_tag: package_tag, id: {:$not => {:$eq => id}}).
-          exists?
+        tags.each do |tag|
+          if Inventory::ItemTransaction.in(catalogue_id: catalogue_ids).
+            where(package_tag: tag, id: {:$not => {:$eq => id}}).exists?
+            errors.add(:package_tags, 'Tag is already taken.')
+            next
+          end
+        end
       end
 
       # 2. Quantity should be > 0
@@ -100,23 +94,11 @@ module Inventory
       if product_id.blank?
         errors.add(:name, 'Product name is required') if name.blank?
         errors.add(:catalogue_id, 'Product type is required') if catalogue_id.blank?
-        errors.add(:facility_strain_id, 'Strain is required') if facility_strain_id.blank?
+        errors.add(:facility_id, 'Facility is required') if facility_id.blank?
       end
 
-      # 8. location should not be empty
       errors.add(:location_id, 'Stored location is required') if location_id.blank?
-
-      # 9. if there is harvest, qty used and uom should not be empty.
-      if !harvest_batch_id.blank? || !other_harvest_batch.blank?
-        errors.add(:drawdown_quantity, 'Quantity is required') if drawdown_quantity.to_f <= 0
-        errors.add(:drawdown_uom, 'Unit is required') if drawdown_uom.blank?
-      end
-
-      errors.empty?
-    end
-
-    def sales_catalogue_ids
-      Inventory::QueryCatalogueTree.call(Constants::SALES_KEY, 'raw_sales_product').result.pluck(:value)
+      true
     end
 
     # Product should not be editable from setup procedure as it can inadvertently
@@ -129,7 +111,6 @@ module Inventory
         product.name = name
         product.sku = sku
         product.catalogue_id = catalogue_id
-        product.facility_strain_id = facility_strain_id
         product.facility_id = facility_id
         product.transaction_limit = transaction_limit
         product.status = 'available'
@@ -141,34 +122,58 @@ module Inventory
       product
     end
 
-    def save_package!(product)
-      package = nil
+    def save_packages!(product)
       if id.blank?
-        package = product.packages.build(
-          facility_id: facility_id,
-          facility_strain_id: facility_strain_id,
-          catalogue_id: catalogue_id,
-        )
+        packages = create_packages!(product)
       else
-        package = product.packages.find(id)
+        packages = update_package!(product)
       end
+    end
 
-      package.package_tag = package_tag
+    def create_packages!(product)
+      tags = split(package_tags)
+      packages = []
+      tags.each do |tag|
+        package = product.packages.create!(
+          facility_id: facility_id,
+          catalogue_id: catalogue_id,
+          package_tag: tag,
+          quantity: quantity,
+          uom: uom,
+          production_date: production_date,
+          expiration_date: expiration_date,
+          location_id: location_id,
+          cost_per_unit: cost_per_unit,
+          event_type: 'create_converted_product',
+          breakdowns: breakdowns,
+        )
+        packages << package
+      end
+      packages
+    end
+
+    def update_package!(product)
+      package = product.packages.find(id)
+      package.facility_id = facility_id
+      package.catalogue_id = catalogue_id
+      package.package_tag = package_tags.strip
       package.quantity = quantity
       package.uom = uom
       package.production_date = production_date
       package.expiration_date = expiration_date
       package.location_id = location_id
-      package.harvest_batch_id = harvest_batch_id
-      package.other_harvest_batch = other_harvest_batch
-      package.drawdown_quantity = drawdown_quantity
-      package.drawdown_uom = drawdown_uom
       package.cost_per_unit = cost_per_unit
-      package.ref_id = harvest_batch_id
-      package.ref_type = 'Inventory::HarvestBatch'
-      package.event_type = 'create_package'
+      package.breakdowns = breakdowns
       package.save!
-      package
+      [package]
+    end
+
+    def catalogue_ids
+      Inventory::Catalogue.where(catalogue_type: Constants::SALES_KEY, category: Constants::CONVERTED_PRODUCT_KEY).map { |x| x.id.to_s }
+    end
+
+    def split(tags)
+      tags.gsub(/[\n\r]/, ',').split(',').reject { |x| x.empty? }.map(&:strip)
     end
   end
 end

@@ -185,9 +185,6 @@ class PurchaseInfo extends React.Component {
     }
 
     let { errors: licenseError, ...licenseData } = this.getVendorLicenseData()
-    // console.group('licenseData')
-    // console.log(licenseData)
-    // console.groupEnd()
     errors = { ...errors, ...licenseError }
 
     if (!isDraft) {

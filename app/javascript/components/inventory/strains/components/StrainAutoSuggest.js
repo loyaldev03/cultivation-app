@@ -20,7 +20,6 @@ export default class StrainAutoSuggest extends React.Component {
     })
       .then(response => response.json())
       .then(data => {
-        // console.log(data.data)
         const strains = data.data.map(x => ({
           label: x.attributes.name,
           value: x.attributes.name,

@@ -14,9 +14,7 @@ const saveHarvestPackage = payload => {
     })
     .then(result => {
       const { status, data } = result
-      if (status !== 200) {
-        console.log(result)
-      } else {
+      if (status === 200) {
         if (payload.id) {
           harvestPackageStore.update(data.data)
         } else {

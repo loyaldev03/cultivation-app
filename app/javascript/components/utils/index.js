@@ -1,3 +1,4 @@
+export * from './ActiveBadge'
 export * from './ArrayHelper'
 export * from './BrowserHelper'
 export * from './ComponentStyles'

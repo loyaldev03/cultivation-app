@@ -1,31 +1,31 @@
 class Sequence
   class << self
     def facility_code_format
-      return 'F%02d'
+      'F%02d'
     end
 
     def room_code_format
-      return 'M%02d'
+      'M%02d'
     end
 
     def section_code_format
-      return 'SEC%02d'
+      'SEC%02d'
     end
 
     def row_code_format
-      return 'R%02d'
+      'R%02d'
     end
 
     def shelf_code_format
-      return 'S%02d'
+      'S%02d'
     end
 
     def tray_code_format
-      return 'T%02d'
+      'T%02d'
     end
 
     def batch_code_format
-      return 'B%02d'
+      'B%02d'
     end
   end
 end

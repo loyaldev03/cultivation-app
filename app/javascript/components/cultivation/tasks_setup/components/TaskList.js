@@ -1,4 +1,5 @@
 import React from 'react'
+import classNames from 'classnames'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
@@ -91,36 +92,6 @@ class TaskList extends React.Component {
     }
   }
 
-  renderPhaseColumn = row => {
-    let handleEdit = this.handleEdit
-    if (row.row['attributes.is_phase'] == true) {
-      return (
-        <a
-          onClick={e => {
-            handleEdit(row)
-          }}
-        >
-          {row.value}
-        </a>
-      )
-    }
-  }
-
-  renderCategoryColumn = row => {
-    let handleEdit = this.handleEdit
-    if (row.row['attributes.is_category'] == true) {
-      return (
-        <a
-          onClick={e => {
-            handleEdit(row)
-          }}
-        >
-          {row.value}
-        </a>
-      )
-    }
-  }
-
   handleMouseLeave = row => {
     this.setState(prevState => ({
       idOpen: null
@@ -207,19 +178,13 @@ class TaskList extends React.Component {
     let handleAddTask = this.handleAddTask
     let handleDelete = this.handleDelete
     let toggleCollapse = this.toggleCollapse
+    let indent = row.row['attributes.indent']
     return (
-      <div
-        className={`flex justify-between-ns ${
-          row.row['attributes.is_phase'] === true ||
-          row.row['attributes.is_category'] === true
-            ? ''
-            : 'draggable'
-        }`}
-      >
+      <div className="flex justify-between-ns draggable">
         <div className="">
           <div className="flex">
             <div className="w1 ml3">
-              {row.row['attributes.is_phase'] === true && (
+              {indent === 0 && (
                 <div>
                   <i
                     className="material-icons dim grey f7 pointer"
@@ -231,8 +196,7 @@ class TaskList extends React.Component {
                       : 'arrow_drop_down'}
                   </i>
                   <a
-                    className="pointer"
-                    style={{ color: '#ff5722' }}
+                    className="pointer orange"
                     onClick={e => {
                       handleEdit(row)
                     }}
@@ -243,7 +207,7 @@ class TaskList extends React.Component {
               )}
             </div>
             <div className="w1 ml3">
-              {row.row['attributes.is_category'] === true && (
+              {indent === 1 && (
                 <div>
                   <i
                     className="material-icons dim grey f7 pointer"
@@ -255,8 +219,7 @@ class TaskList extends React.Component {
                       : 'arrow_drop_down'}
                   </i>
                   <a
-                    className="pointer"
-                    style={{ color: '#ff5722' }}
+                    className="pointer orange"
                     onClick={e => {
                       handleEdit(row)
                     }}
@@ -267,17 +230,15 @@ class TaskList extends React.Component {
               )}
             </div>
             <div className="w1 ml3">
-              {row.row['attributes.is_phase'] === false &&
-                row.row['attributes.is_category'] === false && (
-                  <a
-                    className="pointer"
-                    onClick={e => {
-                      handleEdit(row)
-                    }}
-                  >
-                    {row.value}
-                  </a>
-                )}
+              {indent > 1 && (
+                <a className="pointer"
+                  onClick={e => {
+                    handleEdit(row)
+                  }}
+                >
+                  {row.value}
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -334,7 +295,7 @@ class TaskList extends React.Component {
                       </i>
                       Indent Out
                     </a>
-                    {row.row['attributes.is_phase'] !== true && (
+                    {row.row['attributes.indent'] > 0 && (
                       <a
                         className="ttc pv2 tc flex pointer"
                         style={{ display: 'flex' }}
@@ -515,7 +476,7 @@ class TaskList extends React.Component {
     const facilityPhases = this.props.batch.cultivation_phases
     const phaseTasks = tasks.filter(
       t =>
-        t.attributes.is_phase &&
+        t.attributes.indent > 0 &&
         facilityPhases.some(p => p === t.attributes.phase)
     )
     const phaseDuration = {}
@@ -556,65 +517,59 @@ class TaskList extends React.Component {
             {
               Header: 'Id',
               accessor: 'id',
-              maxWidth: '100',
               show: false
             },
             {
-              Header: '',
-              accessor: 'attributes.is_category',
-              maxWidth: '50',
-              id: 'button-column',
+              Header: 'WBS',
+              accessor: 'attributes.wbs',
+              maxWidth: '70',
+              show: this.checkVisibility('wbs')
+            },
+            {
+              Header: 'Indent',
+              accessor: 'attributes.indent',
               show: false
-            },
-            {
-              Header: 'Phase',
-              accessor: 'attributes.phase',
-              maxWidth: '100',
-              show: false,
-              Cell: row => <div>{this.renderPhaseColumn(row)}</div>
-            },
-            {
-              Header: 'Category',
-              accessor: 'attributes.task_category',
-              maxWidth: '100',
-              show: false,
-              Cell: row => <div>{this.renderCategoryColumn(row)}</div>
             },
             {
               Header: 'Tasks',
               accessor: 'attributes.name',
               maxWidth: '500',
               show: this.checkVisibility('name'),
-              Cell: row => <div>{this.renderAttributesName(row)}</div>
+              Cell: this.renderAttributesName
             },
             {
               Header: 'Start Date',
               accessor: 'attributes.start_date',
               maxWidth: '100',
+              className: 'tr',
               show: this.checkVisibility('start_date')
             },
             {
               Header: 'End Date',
               accessor: 'attributes.end_date',
               maxWidth: '100',
+              className: 'tr',
               show: this.checkVisibility('end_date')
             },
             {
               Header: 'Duration',
               accessor: 'attributes.duration',
               maxWidth: '90',
+              className: 'tr',
               show: this.checkVisibility('duration')
             },
             {
               Header: 'Est Hr',
               accessor: 'attributes.estimated_hours',
               maxWidth: '100',
+              className: 'tr',
               show: this.checkVisibility('estimated_hour')
             },
             {
               Header: 'Est Cost ($)',
               accessor: 'attributes.estimated_cost',
               maxWidth: '100',
+              className: 'tr',
               show: this.checkVisibility('estimated_cost')
             },
             {
@@ -638,16 +593,6 @@ class TaskList extends React.Component {
               Header: 'Depend On',
               accessor: 'attributes.depend_on',
               show: false
-            },
-            {
-              Header: 'Category?',
-              accessor: 'attributes.is_category',
-              show: false
-            },
-            {
-              Header: 'Phase?',
-              accessor: 'attributes.is_phase',
-              show: false
             }
           ]}
           data={tasks}
@@ -663,9 +608,7 @@ class TaskList extends React.Component {
                       ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
                       : null,
                   backgroundColor:
-                    rowInfo.row['attributes.is_phase'] === true
-                      ? '#FAEFEE'
-                      : null
+                    rowInfo.row['attributes.indent'] === 0 ? '#FAEFEE' : null
                 },
                 onMouseOver: (e, handleOriginal) => {
                   let button = document.getElementById(rowInfo.row.id)

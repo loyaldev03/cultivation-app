@@ -1,15 +1,23 @@
 class Api::V1::BatchesController < Api::V1::BaseApiController
   def index
     batches = Cultivation::Batch.all.order(c_at: :desc)
-    render json: BatchSerializer.new(batches).serialized_json
+    exclude_tasks = params[:exclude_tasks] == 'true' || false
+    render json: BatchSerializer.new(batches,
+                                     params: {exclude_tasks: exclude_tasks}).serialized_json
   end
 
   def create
-    command = Cultivation::CreateBatch.call(current_user, record_params)
+    args = {
+      facility_id: params[:facility_id],
+      facility_strain_id: params[:facility_strain_id],
+      batch_source: params[:batch_source],
+      grow_method: params[:grow_method],
+    }
+    command = Cultivation::CreateBatch.call(current_user, args)
     if command.success?
       render json: {data: command.result.id.to_s}
     else
-      render json: command_errors(record_params, command), status: 422
+      render json: command_errors(args, command), status: 422
     end
   end
 
@@ -102,20 +110,5 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     start_date = start_date - 6.days
     end_date = end_date + 6.days
     return start_date, end_date
-  end
-
-  def record_params
-    params.permit(
-      :facility_id,
-      :facility_strain_id,
-      :batch_source,
-      :grow_method,
-    )
-  end
-
-  def locations_params
-    params.permit(
-      :batch_id,
-    )
   end
 end

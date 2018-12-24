@@ -4,9 +4,13 @@ module Cultivation
     include Mongoid::Timestamps::Short
     include Mongoid::Orderable
 
+    attr_accessor :wbs
+
     field :phase, type: String
+    # FIXME: Remove
     field :task_category, type: String
     field :name, type: String
+    field :indent, type: Integer, default: -> { 0 }
     field :duration, type: Integer
     field :days_from_start_date, type: Integer
     field :start_date, type: DateTime
@@ -15,12 +19,17 @@ module Cultivation
     field :actual_hours, type: Float
     field :estimated_cost, type: Float
     field :actual_cost, type: Float
-    field :is_phase, type: Boolean, default: -> { false }     # to identify phase
-    field :is_category, type: Boolean, default: -> { false }  # to identify category
-    field :is_growing_period, type: Boolean, default: -> { false } # tray plan is the growing period
-    field :is_unbound, type: Boolean, default: -> { false }   # unbound task are to tied to parent's dates
-    field :indelible, type: Boolean, default: -> { false }    # is task indelible? default false
+    # Indicate a top most task
+    # FIXME: Remove
+    field :is_phase, type: Boolean, default: -> { false }
+    # Indicate a Category task (2nd level task)
+    # FIXME: Remove
+    field :is_category, type: Boolean, default: -> { false }
+    # Indelible task cannot be remove
+    field :indelible, type: String
+    # Parent task
     field :parent_id, type: BSON::ObjectId
+    # Predecessor task
     field :depend_on, type: BSON::ObjectId
     field :task_type, type: Array, default: []
 
@@ -37,7 +46,7 @@ module Cultivation
           }
 
     def tasks_depend
-      batch.tasks.where(depend_on: self.id)
+      batch.tasks.where(depend_on: id)
     end
 
     # def children
@@ -45,7 +54,7 @@ module Cultivation
     # end
 
     def parent
-      batch.tasks.find_by(id: self.parent_id)
+      batch.tasks.find_by(id: parent_id)
     end
 
     def estimated_cost

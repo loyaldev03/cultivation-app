@@ -1,6 +1,5 @@
-import TaskStore from '../stores/TaskStore'
+import TaskStore from '../stores/NewTaskStore'
 import { fadeToast, toast } from '../../../utils/toast'
-import loadTasks from './loadTask'
 
 export default function indentTask(batch_id, row, action) {
   console.log(action)
@@ -20,7 +19,7 @@ export default function indentTask(batch_id, row, action) {
       if (data.data.id != null) {
         toast(`Task Indented ${action}`, 'success')
 
-        loadTasks.loadbatch(batch_id)
+        TaskStore.loadTasks(batch_id)
       } else {
         toast('Something happen', 'error')
       }

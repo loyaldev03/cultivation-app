@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer, Provider } from 'mobx-react'
 
-import TaskStore from '../stores/TaskStore'
+import TaskStore from '../stores/NewTaskStore'
 
 import SidebarTaskEditor from './SidebarTaskEditor'
 import AddTaskForm from './AddTaskForm'
@@ -65,7 +65,7 @@ export default class TaskEditor extends React.Component {
       this.setState({
         id: ev.detail.data.id,
         tabs: 'General',
-        task: TaskStore.find(e => e.id === ev.detail.data.id),
+        task: TaskStore.getTaskById(ev.detail.data.id),
         action: ev.detail.action,
         task_related_id: ev.detail.data.task_related_id,
         task_related_parent_id: ev.detail.data.task_related_id,
@@ -76,7 +76,7 @@ export default class TaskEditor extends React.Component {
 
   renderSidebarTaskEditor() {
     //find task here and send
-    let task = TaskStore.find(e => e.id === this.state.id)
+    let task = TaskStore.getTaskById(this.state.id)
     if (this.state.action === 'update') {
       if (task === undefined) return null
       if (this.state.tabs === 'General') {

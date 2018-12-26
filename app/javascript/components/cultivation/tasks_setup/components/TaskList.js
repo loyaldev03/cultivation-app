@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
-import TaskStore from '../stores/NewTaskListStore'
+import TaskStore from '../stores/NewTaskStore'
 import UserStore from '../stores/UserStore'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import {

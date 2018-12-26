@@ -10,8 +10,7 @@ import ItemStore from '../stores/ItemStore'
 
 import deleteMaterial from '../actions/deleteMaterial'
 
-import loadTasks from '../actions/loadTask'
-
+import TaskStore from '../stores/NewTaskStore'
 import { groupBy, httpPostOptions } from '../../../utils'
 
 export default class MaterialForm extends React.Component {
@@ -126,7 +125,7 @@ export default class MaterialForm extends React.Component {
             quantity: '',
             uom: ''
           }))
-          loadTasks.loadbatch(this.state.batch_id)
+          TaskStore.loadTasks(this.state.batch_id)
         } else {
           data = null
         }

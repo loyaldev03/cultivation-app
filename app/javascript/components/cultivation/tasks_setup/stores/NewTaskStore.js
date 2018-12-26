@@ -113,17 +113,19 @@ class TaskStore {
     let id = task.id
     let end_date = task['_end']
     let start_date = task['_start']
+
+    let timeDiff = new Date(end_date).getTime() - new Date(start_date).getTime()
+    let duration = timeDiff / (1000 * 3600 * 24)
+
     const found = toJS(this.tasks.find(x => x.id === task.id))
     if (found) {
-      // this.tasks = this.tasks.map(u => (u.id === task.id ? task : u))
-
       let url = `/api/v1/batches/${batch_id}/tasks/${id}`
       let task = {
         assigned_employee: found.assigned_employee,
         batch_id: found.batch_id,
         days_from_start_date: found.days_from_start_date,
         depend_on: found.depend_on,
-        duration: found.duration,
+        duration: duration,
         end_date: end_date,
         start_date: start_date,
         estimated_hours: found.estimated_hours,

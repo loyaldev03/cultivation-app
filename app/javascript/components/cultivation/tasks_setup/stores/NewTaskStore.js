@@ -17,7 +17,6 @@ class TaskStore {
 
   @action
   async loadTasks(batchId) {
-
     this.isLoading = true
     const url = `/api/v1/batches/${batchId}/tasks`
     try {
@@ -86,19 +85,18 @@ class TaskStore {
   getGanttTasks() {
     return toJS(this.formatGantt(this.taskList))
   }
-  
+
   @action
   async updateDependency(batch_id, destination_id, source_id) {
     this.isLoading = true
 
     const url = `/api/v1/batches/${batch_id}/tasks/${destination_id}/update_dependency`
-    const payload = { destination_id, source_id}
-    try{
+    const payload = { destination_id, source_id }
+    try {
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       await this.loadTasks(batch_id)
       this.isLoading = false
-    }
-    catch(error){
+    } catch (error) {
       console.log(error)
     }
   }

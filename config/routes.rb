@@ -178,7 +178,7 @@ Rails.application.routes.draw do
         resources :tasks, only: [:index, :update, :create, :destroy] do
           put 'indent', on: :member
           post 'update_position', on: :member
-          put 'update_dependency', on: :member
+          post 'update_dependency', on: :member
         end
         resources :nutrient_profiles
       end

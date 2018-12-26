@@ -5,9 +5,10 @@ import { observable, toJS } from 'mobx'
 import { observer, Provider } from 'mobx-react'
 import { formatDate2, addDayToDate } from '../../utils'
 
-import TaskStore from './TaskStore'
+import TaskStore from '../tasks_setup/stores/NewTaskStore'
 import ReactGantt from './ReactGantt'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
+import classNames from 'classnames'
 
 const styles = `
 path.handle-arrow {
@@ -101,36 +102,32 @@ class GanttChart extends React.Component {
     }))
   }
 
-  toggleCollapse = task_id => {
-    if (this.state.collapseIds.includes(task_id)) {
-      let tempCollapseId = this.state.collapseIds
-      TaskStore.clearHiddenIds(task_id)
-      this.setState({ collapseIds: tempCollapseId.filter(e => e !== task_id) })
-    } else {
-      TaskStore.setHiddenIds(task_id)
-      this.setState(prevState => ({
-        collapseIds: [...prevState.collapseIds, task_id]
-      }))
-    }
-  }
-
   onDateChange = async task => {
-    if (!TaskStore.getProcessing()) {
+    if (TaskStore.isDataLoaded) {
       console.log('do something')
-      TaskStore.updateTask(task)
+      TaskStore.updateTask(this.props.batch_id, task)
     } else {
       console.log('dont do something')
     }
-
-    // if (this.state.updateTask){
-    //   this.setState({updateTask: false})
-    //   await TaskStore.updateTask(task)
-    //   this.setState({ updateTask: true })
-    // }
   }
 
-  onDragRelationShip = (destination_id, source_id) => {
-    TaskStore.updateDependency(destination_id, source_id)
+  onDragRelationShip = async (destination_id, source_id) => {
+    let el = document.querySelector('.gantt-container')
+    let scrollLeft = el.scrollLeft
+    let scrollTop = el.scrollTop
+
+    await TaskStore.updateDependency(
+      this.props.batch_id,
+      destination_id,
+      source_id
+    )
+    el.scrollLeft = scrollLeft
+    el.scrollTop = scrollTop
+  }
+
+  maintainScrollPosition = () => {
+    var el = document.querySelector('.gantt-container')
+    console.log(el.scrollLeft, el.scrollTop)
   }
 
   render() {
@@ -169,72 +166,47 @@ class GanttChart extends React.Component {
             Month
           </a>
         </div>
-        {TaskStore.isLoaded && (
+        {TaskStore.isDataLoaded && (
           <div className="flex">
             <div className="w-30 bt br bl b--black-10">
               <table className="collapse pv2 ph3 f6 w-100 mb2">
                 <tbody>
                   <tr style={{ height: 3.6 + 'rem' }}>
+                    <th className=" gray bb b--black-10 fw6 f6" width="10">
+                      WBS
+                    </th>
                     <th className=" gray bb b--black-10 fw6 f6">Name</th>
                   </tr>
-                  {this.props.tasks.map((task, i) => (
-                    <tr className="pointer rt-tr-group gantt-list">
+                  {TaskStore.taskList.map((task, i) => (
+                    <tr
+                      className="pointer rt-tr-group gantt-list"
+                      key={task.id}
+                    >
+                      <td className="pv2 ph3 dark-grey tl ttc">{task.wbs}</td>
                       <td className="pv2 ph3 dark-grey tl ttc">
                         <div className="flex justify-between-ns">
-                          <div className="flex">
-                            <div className="ml3">
-                              {task.is_phase === true && (
-                                <div>
-                                  <i
-                                    className="material-icons dim grey f7 pointer"
-                                    style={{ fontSize: '18px' }}
-                                    onClick={e => this.toggleCollapse(task.id)}
-                                  >
-                                    arrow_drop_down
-                                  </i>
-                                  <a
-                                    className="pointer"
-                                    onClick={e => this.onClickTask(task)}
-                                  >
-                                    {task.name.substring(0, 20)}
-                                  </a>
-                                </div>
-                              )}
-                            </div>
-                            <div className="ml3">
-                              {task.is_category === true && (
-                                <div>
-                                  <i
-                                    className="material-icons dim grey f7 pointer"
-                                    style={{ fontSize: '18px' }}
-                                  >
-                                    arrow_drop_down
-                                  </i>
-                                  <a
-                                    className="pointer"
-                                    onClick={e => this.onClickTask(task)}
-                                  >
-                                    {task.name.substring(0, 20)}
-                                  </a>
-                                </div>
-                              )}
-                            </div>
-                            <div className="ml3">
-                              {task.is_phase === false &&
-                                task.is_category === false && (
-                                  <div>
-                                    <a
-                                      className="pointer"
-                                      onClick={e => this.onClickTask(task)}
-                                    >
-                                      {task.name
-                                        ? task.name.substring(0, 20)
-                                        : null}
-                                    </a>
-                                  </div>
-                                )}
-                            </div>
-                          </div>
+                          <span
+                            className={classNames(
+                              `dib flex items-center indent--${task.indent}`,
+                              {
+                                orange: TaskStore.hasChildNode(task.wbs)
+                              }
+                            )}
+                          >
+                            {TaskStore.hasChildNode(task.wbs) && (
+                              <i
+                                className="material-icons dim grey f7 pointer"
+                                onClick={e =>
+                                  TaskStore.toggleCollapseNode(task.wbs)
+                                }
+                              >
+                                {TaskStore.isCollapsed(task.wbs)
+                                  ? 'arrow_right'
+                                  : 'arrow_drop_down'}
+                              </i>
+                            )}
+                            {task.name}
+                          </span>
 
                           <Manager>
                             <Reference>
@@ -372,7 +344,7 @@ class GanttChart extends React.Component {
             </div>
           </div>
         )}
-        {!TaskStore.isLoaded && (
+        {!TaskStore.isDataLoaded && (
           <div className="loading"> Loading Gantt Chart ...</div>
         )}
       </React.Fragment>

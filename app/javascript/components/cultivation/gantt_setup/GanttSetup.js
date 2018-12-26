@@ -8,7 +8,7 @@ import { observer, Provider } from 'mobx-react'
 import { formatDate2 } from '../../utils'
 import GanttChart from './GanttChart'
 import loadTasks from './loadTask'
-import TaskStore from './TaskStore'
+import TaskStore from '../tasks_setup/stores/NewTaskStore'
 
 @observer
 class GanttSetup extends React.Component {
@@ -25,7 +25,6 @@ class GanttSetup extends React.Component {
   }
 
   render() {
-    let tasks = TaskStore.getTasks()
     let activeTabs =
       'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
     let inactiveTabs =
@@ -226,7 +225,7 @@ class GanttSetup extends React.Component {
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
-              <GanttChart tasks={tasks} />
+              <GanttChart batch_id={this.props.batch_id} />
             </div>
           </div>
         </div>

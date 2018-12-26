@@ -52,8 +52,10 @@ class TaskStore {
   }
 
   hasChildNode(wbs) {
-    const childNodeFormat = wbs + "."
-    const found = this.tasks.find(t => t.wbs.startsWith(childNodeFormat) && t.wbs !== wbs)
+    const childNodeFormat = wbs + '.'
+    const found = this.tasks.find(
+      t => t.wbs.startsWith(childNodeFormat) && t.wbs !== wbs
+    )
     return !!found
   }
 

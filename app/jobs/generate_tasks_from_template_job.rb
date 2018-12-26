@@ -47,9 +47,10 @@ class GenerateTasksFromTemplateJob < ApplicationJob
         new_task[:parent_id] = parent[new_task[:indent] - 1]
       end
 
-      # Set predecessor
+      # Set predecessor using wbs
       if task[:predecessor].present?
-        new_task[:depend_on] = get_task_id_by_wbs(template_tasks, task[:wbs])
+        new_task[:depend_on] = get_task_id_by_wbs(template_tasks,
+                                                  task[:predecessor])
       end
 
       # Reset start & end date when indent level is 0
@@ -65,8 +66,8 @@ class GenerateTasksFromTemplateJob < ApplicationJob
     new_tasks
   end
 
-  def get_task_id_by_wbs(template_tasks, wbs)
-    predecessor = template_tasks.detect { |t| t[:wbs] == wbs }
+  def get_task_id_by_wbs(template_tasks, predecessor_wbs)
+    predecessor = template_tasks.detect { |t| t[:wbs] == predecessor_wbs }
     predecessor[:id] if predecessor.present?
   end
 

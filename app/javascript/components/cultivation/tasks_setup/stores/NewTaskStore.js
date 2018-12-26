@@ -1,52 +1,92 @@
-import { observable, action, runInAction, toJS } from 'mobx'
+import { observable, action, runInAction, toJS, computed } from 'mobx'
 import loadTask from '../actions/loadTask'
 import {
   formatDate2,
   httpGetOptions,
+  httpPostOptions,
   addDayToDate,
   toast
 } from '../../../utils'
 
 class TaskStore {
-  @observable tasks
-  @observable batch_id
-  @observable isLoaded = false
-  @observable hidden_ids = []
-  @observable processing = false
+  @observable isLoading = false
+  @observable isDataLoaded = false
+  @observable collapsedNodes = []
+  @observable tasks = []
+
   @action
-  async loadTasks(batch_id) {
-    let tasks = await loadTask.loadbatch(batch_id)
-    this.tasks = tasks || []
-    this.isLoaded = true
-    this.batch_id = batch_id
+  async loadTasks(batchId) {
+    this.isLoading = true
+    const url = `/api/v1/batches/${batchId}/tasks`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      this.isLoading = false
+      this.tasks = response.data.map(res => {
+        return {
+          ...res.attributes
+        }
+      })
+      this.isDataLoaded = true
+    } catch (error) {
+      this.isDataLoaded = false
+      console.error(error)
+    }
   }
 
-  getFilteredTask(tasks) {
-    tasks = toJS(tasks)
-    if (this.isLoaded) {
-      // console.log(tasks.filter(u => !this.hidden_ids.includes(u.id)))
-      return tasks.filter(u => !this.hidden_ids.includes(u.id))
+  @action
+  async updateTaskPosition(batchId, taskId, position) {
+    this.isLoading = true
+    const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_position`
+    try {
+      const response = await fetch(url, httpPostOptions({ task: { position } }))
+      this.loadTasks(batchId)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  isCollapsed(wbs) {
+    const found = this.collapsedNodes.find(x => x === wbs)
+    return !!found
+  }
+
+  hasChildNode(wbs) {
+    const childNodeFormat = wbs + "."
+    const found = this.tasks.find(t => t.wbs.startsWith(childNodeFormat) && t.wbs !== wbs)
+    return !!found
+  }
+
+  @computed get taskList() {
+    if (this.isDataLoaded) {
+      return this.tasks.filter(t => {
+        const found = this.collapsedNodes.find(
+          x => t.wbs.startsWith(x) && t.wbs !== x
+        )
+        return !found
+      })
     } else {
       return []
     }
   }
 
+  @action
+  toggleCollapseNode(wbs) {
+    const found = this.collapsedNodes.find(i => i === wbs)
+    if (found) {
+      this.collapsedNodes = this.collapsedNodes.filter(i => i !== wbs)
+    } else {
+      this.collapsedNodes.push(wbs)
+    }
+  }
+
   getGanttTasks() {
-    return toJS(this.formatGantt(this.getFilteredTask(this.tasks)))
+    return toJS(this.formatGantt(this.taskList))
   }
 
-  getTasks() {
-    return toJS(this.getFilteredTask(this.tasks))
-  }
-
-  getProcessing() {
-    return toJS(this.processing)
-  }
-
-  updateDependency(source_id, destination_id) {
+  updateDependency(batch_id, destination_id, source_id) {
     let url = `/api/v1/batches/${
-      this.batch_id
-    }/tasks/${source_id}/update_dependency?source_id=${source_id}&destination_id=${destination_id}`
+      batch_id
+      }/tasks/${destination_id}/update_dependency?destination_id=${destination_id}&source_id=${source_id}`
 
     fetch(url, {
       method: 'PUT',
@@ -57,29 +97,17 @@ class TaskStore {
     })
       .then(response => response.json())
       .then(data => {
-        // let error_container = document.getElementById('error-container')
         if (data && data.data && data.data.id != null) {
-          // error_container.style.display = 'none'
           toast('Task Updated', 'success')
-          this.loadTasks(this.batch_id)
+          this.loadTasks(batch_id)
           this.processing = false
-          // loadTasks.loadbatch(state.batch_id)
         } else {
-          // let keys = Object.keys(data.errors)
-          // console.log(data.errors[keys[0]])
-          // error_container.style.display = 'block'
-          // let error_message = document.getElementById('error-message')
-          // error_message.innerHTML = data.errors[keys[0]]
-          // let array = []
-          // array[0] = data.errors[keys[0]]
-          // ErrorStore.replace(array)
-          // console.log(JSON.stringify(ErrorStore))
           toast(data.errors, 'error')
         }
       })
   }
 
-  updateTask(task) {
+  updateTask(batch_id, task) {
     this.processing = true
     let new_task = task
     let id = task.id
@@ -89,26 +117,26 @@ class TaskStore {
     if (found) {
       // this.tasks = this.tasks.map(u => (u.id === task.id ? task : u))
 
-      let url = `/api/v1/batches/${this.batch_id}/tasks/${id}`
+      let url = `/api/v1/batches/${batch_id}/tasks/${id}`
       let task = {
-        assigned_employee: found.attributes.assigned_employee,
-        batch_id: found.attributes.batch_id,
-        days_from_start_date: found.attributes.days_from_start_date,
-        depend_on: found.attributes.depend_on,
-        duration: found.attributes.duration,
+        assigned_employee: found.assigned_employee,
+        batch_id: found.batch_id,
+        days_from_start_date: found.days_from_start_date,
+        depend_on: found.depend_on,
+        duration: found.duration,
         end_date: end_date,
         start_date: start_date,
-        estimated_hours: found.attributes.estimated_hours,
+        estimated_hours: found.estimated_hours,
         id: id,
-        is_category: found.attributes.is_category,
-        is_phase: found.attributes.is_phase,
-        name: found.attributes.name,
-        parent_id: found.attributes.parent_id,
-        phase: found.attributes.phase,
-        position: found.attributes.position,
-        task_category: found.attributes.task_category,
-        time_taken: found.attributes.time_taken,
-        task_type: found.attributes.task_type
+        is_category: found.is_category,
+        is_phase: found.is_phase,
+        name: found.name,
+        parent_id: found.parent_id,
+        phase: found.phase,
+        position: found.position,
+        task_category: found.task_category,
+        time_taken: found.time_taken,
+        task_type: found.task_type
       }
 
       fetch(url, {
@@ -121,23 +149,11 @@ class TaskStore {
       })
         .then(response => response.json())
         .then(data => {
-          // let error_container = document.getElementById('error-container')
           if (data && data.data && data.data.id != null) {
-            // error_container.style.display = 'none'
             toast('Task Updated', 'success')
-            this.loadTasks(this.batch_id)
+            this.loadTasks(batch_id)
             this.processing = false
-            // loadTasks.loadbatch(state.batch_id)
           } else {
-            // let keys = Object.keys(data.errors)
-            // console.log(data.errors[keys[0]])
-            // error_container.style.display = 'block'
-            // let error_message = document.getElementById('error-message')
-            // error_message.innerHTML = data.errors[keys[0]]
-            // let array = []
-            // array[0] = data.errors[keys[0]]
-            // ErrorStore.replace(array)
-            // console.log(JSON.stringify(ErrorStore))
             toast(data.errors, 'error')
           }
         })
@@ -155,38 +171,11 @@ class TaskStore {
     }
   }
 
-  setHiddenIds(parent_id) {
-    let parent = this.tasks.find(e => e.id === parent_id)
-    let children = this.tasks.filter(e => e.attributes.parent_id === parent.id)
-    let children_ids = children.map(e => e.id)
-    let children_2_ids = this.tasks
-      .filter(e => children_ids.includes(e.attributes.parent_id))
-      .map(e => e.id)
-    console.log(children_ids)
-    console.log(children_2_ids)
-    this.hidden_ids = this.hidden_ids.concat(
-      children_ids.concat(children_2_ids)
-    )
-  }
-
-  clearHiddenIds(parent_id) {
-    let parent = this.tasks.find(e => e.id === parent_id)
-    let children = this.tasks
-      .filter(e => e.attributes.parent_id === parent.id)
-      .map(e => e.id)
-    let children2 = this.tasks
-      .filter(e => children.includes(e.attributes.parent_id))
-      .map(e => e.id)
-    children = children.concat(children2)
-    let new_ids = toJS(this.hidden_ids).filter(e => !children.includes(e))
-    this.hidden_ids = new_ids
-  }
-
   formatGantt(tasks) {
     tasks = toJS(tasks)
-    if (this.isLoaded) {
+    if (this.isDataLoaded) {
       let formatted_tasks = tasks.map(task => {
-        const { id, name, start_date, end_date, parent_id } = task.attributes
+        const { id, name, start_date, end_date, parent_id } = task
         return {
           id,
           name,
@@ -204,28 +193,22 @@ class TaskStore {
   }
 
   getCustomClass(task) {
-    if (task.attributes.is_phase === true) {
+    if (task.is_phase === true) {
       return 'phase'
     }
-    if (task.attributes.is_category === true) {
+    if (task.is_category === true) {
       return 'category'
     }
     if (
-      task.attributes.is_category === false &&
-      task.attributes.is_phase === false
+      task.is_category === false &&
+      task.is_phase === false
     ) {
       return 'task'
     }
   }
 
   getDependencies(task) {
-    // if (task.id === '5c0f63a1fb83872228537c91') {
-    //   return '5c0f63a1fb83872228537c8b'
-    // } else {
-    return task.attributes.depend_on
-    // ? task.attributes.depend_on
-    // : task.attributes.parent_id
-    // }
+    return task.depend_on
   }
 }
 

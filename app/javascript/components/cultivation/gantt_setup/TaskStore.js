@@ -8,6 +8,8 @@ class TaskStore {
   @observable isLoaded = false
   @observable hidden_ids = []
   @observable processing = false
+  @observable collapsedNodes = []
+
   @action
   async loadTasks(batch_id) {
     let tasks = await loadTask.loadbatch(batch_id)
@@ -15,6 +17,16 @@ class TaskStore {
     this.isLoaded = true
     this.batch_id = batch_id
   }
+
+  @action
+  toggleCollapseNode(wbs) {
+    const found = this.collapsedNodes.find(i => i === wbs)
+    if (found) {
+      this.collapsedNodes = this.collapsedNodes.filter(i => i !== wbs)
+    } else {
+      this.collapsedNodes.push(wbs)
+    }
+  } 
 
   getFilteredTask(tasks) {
     tasks = toJS(tasks)
@@ -60,6 +72,19 @@ class TaskStore {
         }
       })
   }
+
+  isCollapsed(wbs) {
+    const found = this.collapsedNodes.find(x => x === wbs)
+    return !!found
+  }
+
+  hasChildNode(wbs) {
+    const childNodeFormat = wbs + "."
+    const found = this.tasks.find(t => t.wbs.startsWith(childNodeFormat) && t.wbs !== wbs)
+    return !!found
+  }
+
+
 
   updateTask(task) {
     this.processing = true

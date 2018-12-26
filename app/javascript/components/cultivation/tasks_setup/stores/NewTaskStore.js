@@ -181,26 +181,12 @@ class TaskStore {
           name,
           start: start_date,
           end: end_date,
-          custom_class: this.getCustomClass(task),
           dependencies: this.getDependencies(task)
-          // progress: parseInt(Math.random() * 100, 10)
         }
       })
       return formatted_tasks
     } else {
       return null
-    }
-  }
-
-  getCustomClass(task) {
-    if (task.is_phase === true) {
-      return 'phase'
-    }
-    if (task.is_category === true) {
-      return 'category'
-    }
-    if (task.is_category === false && task.is_phase === false) {
-      return 'task'
     }
   }
 

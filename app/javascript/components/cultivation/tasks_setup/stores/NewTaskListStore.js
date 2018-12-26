@@ -34,11 +34,12 @@ class TaskStore {
   }
 
   @action
-  async updateTaskPosition(batchId, taskId, position) {
+  async updateTaskPosition(batchId, taskId, targetPositionTaskId) {
     this.isLoading = true
     const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_position`
     try {
-      const response = await fetch(url, httpPostOptions({ task: { position } }))
+      const payload = { target_position_task_id: targetPositionTaskId }
+      const response = await fetch(url, httpPostOptions(payload))
       this.loadTasks(batchId)
     } catch (error) {
       console.error(error)

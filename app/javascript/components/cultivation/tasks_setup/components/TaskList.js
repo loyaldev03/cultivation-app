@@ -3,7 +3,6 @@ import classNames from 'classnames'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
-import DisplayTaskStore from '../stores/DisplayTaskStore'
 import TaskStore from '../stores/NewTaskListStore'
 import UserStore from '../stores/UserStore'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
@@ -19,7 +18,6 @@ import TaskEditor from './TaskEditor'
 import updateTask from '../actions/updateTask'
 import indentTask from '../actions/indentTask'
 import deleteTask from '../actions/deleteTask'
-import updateTaskPosition from '../actions/updateTaskPosition'
 import ReactTable from 'react-table'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import BatchSetupStore from '../../batches_setup/BatchSetupStore'
@@ -331,26 +329,15 @@ class TaskList extends React.Component {
           e.preventDefault()
           e.target.closest('.rt-tr-group').style.borderBottomColor = ''
           if (this.dragged !== null && i !== null) {
-            const taskDragged = TaskStore.taskList[this.dragged]
-            const dropPosition = +TaskStore.taskList[i].position
-            const newPos = this.dragged <= i ? dropPosition : dropPosition + 1
             await TaskStore.updateTaskPosition(
               this.props.batch.id,
-              taskDragged.id,
-              newPos
+              TaskStore.taskList[this.dragged].id,
+              TaskStore.taskList[i].id
             )
-            // console.log({id: taskDragged.id, position: taskDragged.position, name: taskDragged.name})
-            // console.log({id: taskDropped.id, position: taskDropped.position, name: taskDropped.name})
           }
         }
       }
     })
-  }
-
-  filterTask = () => {
-    let ids = DisplayTaskStore
-    let filteredTasks = TaskStore.slice().filter(e => ids.includes(e.id))
-    return filteredTasks
   }
 
   checkVisibility = value => {

@@ -178,7 +178,10 @@ class GanttChart extends React.Component {
                     <th className=" gray bb b--black-10 fw6 f6">Name</th>
                   </tr>
                   {TaskStore.taskList.map((task, i) => (
-                    <tr className="pointer rt-tr-group gantt-list" key={task.id}>
+                    <tr
+                      className="pointer rt-tr-group gantt-list"
+                      key={task.id}
+                    >
                       <td className="pv2 ph3 dark-grey tl ttc">{task.wbs}</td>
                       <td className="pv2 ph3 dark-grey tl ttc">
                         <div className="flex justify-between-ns">

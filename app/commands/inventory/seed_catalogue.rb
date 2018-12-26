@@ -10,6 +10,7 @@ module Inventory
       seed_raw_material_catalogue!
       seed_plant_catalogue!
       seed_sales_catalogue!
+      seed_non_sales_catalogue!
       nil
     end
 
@@ -57,6 +58,24 @@ module Inventory
           c.category = item[:category]
           c.sub_category = item[:sub_category] || ''
           c.uom_dimension = item[:uom_dimension]
+          c.is_active = true
+        end
+      end
+    end
+
+    def seed_non_sales_catalogue!
+      Inventory::Catalogue.find_or_create_by!(catalogue_type: Constants::NON_SALES_KEY, key: Constants::NON_SALES_KEY) do |c|
+        c.label = 'Non Sales Product'
+        c.is_active = true
+      end
+
+      keys = ['vacumn_sealer', 'pos', 'desktop', 'workdesk', 'stationery']
+      keys.each do |key|
+        Inventory::Catalogue.find_or_create_by!(catalogue_type: Constants::NON_SALES_KEY, key: key) do |c|
+          c.label = key.titleize
+          c.category = Constants::NON_SALES_KEY
+          c.sub_category = ''
+          c.uom_dimension = 'piece'
           c.is_active = true
         end
       end

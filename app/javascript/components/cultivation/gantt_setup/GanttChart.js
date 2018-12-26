@@ -111,8 +111,20 @@ class GanttChart extends React.Component {
     }
   }
 
-  onDragRelationShip = (destination_id, source_id) => {
-    TaskStore.updateDependency(this.props.batch_id, destination_id, source_id)
+  onDragRelationShip = async (destination_id, source_id) => {
+    let el = document.querySelector('.gantt-container')
+    let scrollLeft = el.scrollLeft
+    let scrollTop = el.scrollTop
+
+    await TaskStore.updateDependency(this.props.batch_id, destination_id, source_id)
+    el.scrollLeft = scrollLeft
+    el.scrollTop = scrollTop
+  }
+
+  maintainScrollPosition =()=>{
+    var el = document.querySelector('.gantt-container')
+    console.log(el.scrollLeft, el.scrollTop);
+
   }
 
   render() {

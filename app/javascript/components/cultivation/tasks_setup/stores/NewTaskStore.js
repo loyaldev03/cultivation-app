@@ -2,6 +2,7 @@ import { observable, action, runInAction, toJS, computed } from 'mobx'
 import loadTask from '../actions/loadTask'
 import {
   formatDate2,
+  httpPutOptions,
   httpGetOptions,
   httpPostOptions,
   addDayToDate,
@@ -16,6 +17,7 @@ class TaskStore {
 
   @action
   async loadTasks(batchId) {
+
     this.isLoading = true
     const url = `/api/v1/batches/${batchId}/tasks`
     try {
@@ -84,31 +86,25 @@ class TaskStore {
   getGanttTasks() {
     return toJS(this.formatGantt(this.taskList))
   }
+  
+  @action
+  async updateDependency(batch_id, destination_id, source_id) {
+    this.isLoading = true
 
-  updateDependency(batch_id, destination_id, source_id) {
-    let url = `/api/v1/batches/${batch_id}/tasks/${destination_id}/update_dependency?destination_id=${destination_id}&source_id=${source_id}`
-
-    fetch(url, {
-      method: 'PUT',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.data && data.data.id != null) {
-          toast('Task Updated', 'success')
-          this.loadTasks(batch_id)
-          this.processing = false
-        } else {
-          toast(data.errors, 'error')
-        }
-      })
+    const url = `/api/v1/batches/${batch_id}/tasks/${destination_id}/update_dependency`
+    const payload = { destination_id, source_id}
+    try{
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      await this.loadTasks(batch_id)
+      this.isLoading = false
+    }
+    catch(error){
+      console.log(error)
+    }
   }
 
   updateTask(batch_id, task) {
-    this.processing = true
+    this.isLoading = true
     let new_task = task
     let id = task.id
     let end_date = task['_end']
@@ -154,7 +150,7 @@ class TaskStore {
           if (data && data.data && data.data.id != null) {
             toast('Task Updated', 'success')
             this.loadTasks(batch_id)
-            this.processing = false
+            this.isLoading = false
           } else {
             toast(data.errors, 'error')
           }

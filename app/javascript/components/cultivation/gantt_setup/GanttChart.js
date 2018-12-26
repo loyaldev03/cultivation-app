@@ -157,31 +157,38 @@ class GanttChart extends React.Component {
               <table className="collapse pv2 ph3 f6 w-100 mb2">
                 <tbody>
                   <tr style={{ height: 3.6 + 'rem' }}>
-                    <th className=" gray bb b--black-10 fw6 f6" width="10">WBS</th>
+                    <th className=" gray bb b--black-10 fw6 f6" width="10">
+                      WBS
+                    </th>
                     <th className=" gray bb b--black-10 fw6 f6">Name</th>
                   </tr>
                   {TaskStore.taskList.map((task, i) => (
                     <tr className="pointer rt-tr-group gantt-list">
-                      <td className="pv2 ph3 dark-grey tl ttc">
-                        {task.wbs}
-                      </td>
+                      <td className="pv2 ph3 dark-grey tl ttc">{task.wbs}</td>
                       <td className="pv2 ph3 dark-grey tl ttc">
                         <div className="flex justify-between-ns">
-                        <span
-                          className={classNames(`dib flex items-center indent--${task.indent}`, {
-                            orange: TaskStore.hasChildNode(task.wbs)
-                          })}
-                        >
-                          {TaskStore.hasChildNode(task.wbs) && (
-                            <i
-                              className="material-icons dim grey f7 pointer"
-                              onClick={e => TaskStore.toggleCollapseNode(task.wbs)}
-                            >
-                              {TaskStore.isCollapsed(task.wbs) ? 'arrow_right' : 'arrow_drop_down'}
-                            </i>
-                          )}
-                          {task.name}
-                        </span>
+                          <span
+                            className={classNames(
+                              `dib flex items-center indent--${task.indent}`,
+                              {
+                                orange: TaskStore.hasChildNode(task.wbs)
+                              }
+                            )}
+                          >
+                            {TaskStore.hasChildNode(task.wbs) && (
+                              <i
+                                className="material-icons dim grey f7 pointer"
+                                onClick={e =>
+                                  TaskStore.toggleCollapseNode(task.wbs)
+                                }
+                              >
+                                {TaskStore.isCollapsed(task.wbs)
+                                  ? 'arrow_right'
+                                  : 'arrow_drop_down'}
+                              </i>
+                            )}
+                            {task.name}
+                          </span>
 
                           <Manager>
                             <Reference>

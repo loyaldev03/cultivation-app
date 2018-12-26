@@ -439,10 +439,7 @@ class TaskSetup extends React.Component {
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
-              <TaskList
-                batch={this.props.batch}
-                columns={this.state.columns}
-              />
+              <TaskList batch={this.props.batch} columns={this.state.columns} />
             </div>
           </div>
         </div>

@@ -138,7 +138,7 @@ class TaskList extends React.Component {
   }
 
   renderDateColumn = field => data => {
-    return (formatDate2(data.row[field]))
+    return formatDate2(data.row[field])
   }
 
   renderTaskNameColumn = data => {

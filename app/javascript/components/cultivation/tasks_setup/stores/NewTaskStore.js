@@ -51,8 +51,10 @@ class TaskStore {
   }
 
   hasChildNode(wbs) {
-    const childNodeFormat = wbs + "."
-    const found = this.tasks.find(t => t.wbs.startsWith(childNodeFormat) && t.wbs !== wbs)
+    const childNodeFormat = wbs + '.'
+    const found = this.tasks.find(
+      t => t.wbs.startsWith(childNodeFormat) && t.wbs !== wbs
+    )
     return !!found
   }
 
@@ -84,9 +86,7 @@ class TaskStore {
   }
 
   updateDependency(batch_id, destination_id, source_id) {
-    let url = `/api/v1/batches/${
-      batch_id
-      }/tasks/${destination_id}/update_dependency?destination_id=${destination_id}&source_id=${source_id}`
+    let url = `/api/v1/batches/${batch_id}/tasks/${destination_id}/update_dependency?destination_id=${destination_id}&source_id=${source_id}`
 
     fetch(url, {
       method: 'PUT',
@@ -199,10 +199,7 @@ class TaskStore {
     if (task.is_category === true) {
       return 'category'
     }
-    if (
-      task.is_category === false &&
-      task.is_phase === false
-    ) {
+    if (task.is_category === false && task.is_phase === false) {
       return 'task'
     }
   }

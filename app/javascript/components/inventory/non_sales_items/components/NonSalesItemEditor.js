@@ -7,7 +7,7 @@ import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { PurchaseInfo } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { saveNonSalesItem } from '../actions/saveNonSalesItem'
-// import { getNonSalesItem } from '../actions/getNonSalesItem'
+import { getNonSalesItem } from '../actions/getNonSalesItem'
 
 class NonSalesItemEditor extends React.Component {
   constructor(props) {
@@ -22,7 +22,42 @@ class NonSalesItemEditor extends React.Component {
       if (!id) {
         this.reset()
       } else {
-        // get data
+        getNonSalesItem(id)
+          .then(x => {
+            const attr = x.data.data.attributes
+            return attr
+          })
+          .then(attr => {
+            debugger
+
+            const flatten_catalogues = this.props.catalogues.reduce(
+              (sum, val) => sum.concat(val.children || []),
+              []
+            )
+            const catalogue = flatten_catalogues.find(
+              x => x.value == attr.catalogue_id
+            )
+
+            this.setState({
+              ...this.resetState(),
+              catalogue: catalogue,
+              id: id,
+              facility_id: attr.facility_id,
+              qty_per_package: attr.conversion,
+              product_name: attr.product_name,
+              manufacturer: attr.manufacturer,
+              description: attr.description,
+              order_quantity: parseFloat(attr.order_quantity),
+              price_per_package: parseFloat(attr.vendor_invoice.item_price),
+              order_uom: { value: attr.order_uom, label: attr.order_uom },
+              uom: { value: attr.uom, label: attr.uom },
+              location_id: attr.location_id,
+              // purchase info
+              vendor: attr.vendor,
+              purchase_order: attr.purchase_order,
+              vendor_invoice: attr.vendor_invoice
+            })
+          })
       }
     })
   }

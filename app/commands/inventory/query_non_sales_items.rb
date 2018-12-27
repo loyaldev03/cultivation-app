@@ -19,7 +19,22 @@ module Inventory
     end
 
     def retrieve_collection
-      ## TODO: Retrieve Collection query for non sales items
+      non_sales_item_ids = Inventory::Catalogue.non_sales.where(:uom_dimension.nin => [nil, '']).pluck(:id)
+
+      item_transactions = Inventory::ItemTransaction.includes(:catalogue, :facility, :facility_strain).where(
+        :event_type.in => @event_types,
+        :catalogue_id.in => non_sales_item_ids,
+      ).order(c_at: :desc)
+
+      vi_item_ids = item_transactions.where(ref_type: 'Inventory::VendorInvoiceItem').pluck(:ref_id)
+      vendor_invoice_items = Inventory::VendorInvoiceItem.includes(
+        :invoice, {invoice: :purchase_order, invoice: :vendor}
+      ).in(id: vi_item_ids)
+
+      {
+        item_transactions: item_transactions,
+        vendor_invoice_items: vendor_invoice_items.to_a,
+      }
     end
 
     def retrieve_one

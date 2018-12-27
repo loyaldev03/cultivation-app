@@ -1,16 +1,23 @@
 class Api::V1::NonSalesItemsController < Api::V1::BaseApiController
-  def setup
-    Rails.logger.info params
+  def index
+    result = item_to_serialize(catalogue_type: params[:type], id: nil, event_types: %w(inventory_setup))
+    render json: Inventory::NonSalesItemSerializer.new(result[:item_transactions], result[:options]).serialized_json
+  end
 
+  def setup
     command = Inventory::SetupNonSalesItem.call(current_user, non_sales_item_params)
     if command.success?
       id = command.result.id
       result = item_to_serialize(catalogue_type: nil, id: id, event_types: %w(inventory_setup))
       render json: Inventory::NonSalesItemSerializer.new(result[:item_transactions], result[:options]).serialized_json
     else
-      Rails.logger.info command.errors.inspect
       render json: request_with_errors(command.errors), status: 422
     end
+  end
+
+  def show
+    result = item_to_serialize(catalogue_type: params[:type], id: params[:id], event_types: %w(inventory_setup))
+    render json: Inventory::NonSalesItemSerializer.new(result[:item_transactions], result[:options]).serialized_json
   end
 
   private

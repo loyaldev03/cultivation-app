@@ -4,7 +4,7 @@ import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
 import NonSalesItemEditor from './components/NonSalesItemEditor'
 import nonSalesItemStore from './store/NonSalesItemStore'
-// import loadNonSalesItems from './actions/loadNonSalesItems'
+import loadNonSalesItems from './actions/loadNonSalesItems'
 
 const columns = [
   {
@@ -89,7 +89,7 @@ class NonSalesItemsSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    // loadNonSalesItems
+    loadNonSalesItems()
   }
 
   onAddRecord = () => {

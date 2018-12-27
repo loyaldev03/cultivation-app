@@ -1,13 +1,10 @@
 import React from 'react'
-import { render } from 'react-dom'
-import TaskStore from '../stores/TaskStore'
 import UserStore from '../stores/UserStore'
 import UserRoles from '../stores/UserRoleStore'
 
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import Select from 'react-select'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
-import { fadeToast, toast } from '../../../utils/toast'
 import reactSelectStyle from './../../../utils/reactSelectStyle'
 import { throws } from 'assert'
 import updateTasks from '../actions/updateTask'
@@ -24,7 +21,6 @@ class SidebarTaskEditor extends React.Component {
       duration: this.props.task.attributes.duration,
       start_date: this.initialize_date(this.props.task.attributes.start_date),
       end_date: this.initialize_date(this.props.task.attributes.end_date),
-      child_end_date: this.set_children_dates(props.task.id),
       errors: ''
     }
   }
@@ -39,7 +35,6 @@ class SidebarTaskEditor extends React.Component {
         duration: props.task.attributes.duration,
         start_date: this.initialize_date(props.task.attributes.start_date),
         end_date: this.initialize_date(props.task.attributes.end_date),
-        child_end_date: this.set_children_dates(props.task.id),
         errors: ''
       })
     }
@@ -50,17 +45,6 @@ class SidebarTaskEditor extends React.Component {
       return new Date(date)
     } else {
       return ''
-    }
-  }
-
-  set_children_dates = id => {
-    let children = TaskStore.filter(e => e.attributes.parent_id === id)
-    if (children.length > 0) {
-      let maximum = children.reduce(
-        (max, p) => (p.attributes.end_date > max ? p.attributes.end_date : max),
-        children[0].attributes.end_date
-      )
-      return new Date(maximum)
     }
   }
 
@@ -184,7 +168,6 @@ class SidebarTaskEditor extends React.Component {
             <DatePicker
               value={this.state.end_date}
               fieldname="end_date"
-              // minDate={isNotNormalTask ? this.state.child_end_date : null}
               onChange={e => this.handleChangeDate('end_date', e)}
             />
           </div>

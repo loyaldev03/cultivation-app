@@ -1,7 +1,5 @@
-import TaskStore from '../stores/TaskStore'
 import { fadeToast, toast } from '../../../utils/toast'
-import loadTasks from './loadTask'
-import DisplayTaskStore from '../stores/DisplayTaskStore'
+import TaskStore from '../stores/NewTaskStore'
 
 class createTask {
   createTask(state) {
@@ -33,10 +31,7 @@ class createTask {
       .then(data => {
         if (data.data.id != null) {
           toast('Task Created', 'success')
-          loadTasks.loadbatch(state.batch_id)
-          let old_ids = DisplayTaskStore
-          let new_ids = old_ids.concat(data.data.id)
-          DisplayTaskStore.replace(new_ids)
+          TaskStore.loadTasks(state.batch_id)
           window.editorSidebar.close()
         } else {
           toast('Something happen', 'error')

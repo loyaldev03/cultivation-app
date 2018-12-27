@@ -2,17 +2,14 @@ import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
 import classNames from 'classnames'
-import loadTasks from './actions/loadTask'
 import loadUsers from './actions/loadUsers'
 import loadUserRoles from './actions/loadUserRoles'
 import loadItems from './actions/loadItems'
-import loadDisplayTaskStore from './actions/loadDisplayTaskStore'
 import { formatDate2, ActiveBadge } from '../../utils'
 import TaskList from './components/TaskList'
 import Select from 'react-select'
 import reactSelectStyle from '../../utils/reactSelectStyle'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
-import TaskStore from './stores/NewTaskListStore'
 
 const styles = `
 .columnDropdown{

@@ -1,7 +1,6 @@
-import TaskStore from '../stores/TaskStore'
+import TaskStore from '../stores/NewTaskStore'
 import ErrorStore from '../stores/ErrorStore'
 import { fadeToast, toast } from '../../../utils/toast'
-import loadTasks from './loadTask'
 
 class updateTask {
   updateTask(state) {
@@ -43,7 +42,7 @@ class updateTask {
         if (data && data.data && data.data.id != null) {
           error_container.style.display = 'none'
           toast('Task Updated', 'success')
-          loadTasks.loadbatch(state.batch_id)
+          TaskStore.loadTasks(state.batch_id)
         } else {
           let keys = Object.keys(data.errors)
           console.log(data.errors[keys[0]])
@@ -81,7 +80,7 @@ class updateTask {
       .then(response => response.json())
       .then(data => {
         if (data && data.data && data.data.id != null) {
-          let newTask = TaskStore.slice().find(e => e.id === state.id)
+          let newTask = TaskStore.getTaskById(state.id)
           newTask.attributes.user_ids = state.users.map(e => e.id) // data replaced but table data not reloaded
           loadTasks.loadbatch(state.batch_id) // reload the whole table
         } else {

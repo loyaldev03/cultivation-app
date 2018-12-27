@@ -1,7 +1,6 @@
 import 'babel-polyfill'
 
 import { fadeToast, toast } from '../../../utils/toast'
-// import loadTasks from './loadTask'
 
 export default async function createMaterial(state) {
   let url = `/api/v1/items?task_id=${state.id}`

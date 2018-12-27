@@ -1,6 +1,6 @@
 import { fadeToast, toast } from '../../../utils/toast'
 import { httpOptions } from '../../../utils'
-import loadTasks from './loadTask'
+import TaskStore from '../stores/NewTaskStore'
 
 export default function deleteTask(batch_id, row, action) {
   if (confirm('Are you sure you want to delete this task? ')) {
@@ -13,7 +13,7 @@ export default function deleteTask(batch_id, row, action) {
           toast(data.errors.id, 'error')
         } else {
           toast('Task has been deleted', 'success')
-          loadTasks.loadbatch(batch_id)
+          TaskStore.loadTasks(batch_id)
         }
       })
   } else {

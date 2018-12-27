@@ -1,5 +1,5 @@
 import { fadeToast, toast } from '../../../utils/toast'
-import loadTasks from './loadTask'
+import TaskStore from '../stores/NewTaskStore'
 
 export default function deleteMaterial(batch_id, task_id, id) {
   if (confirm('Are you sure you want to delete this material? ')) {
@@ -17,7 +17,7 @@ export default function deleteMaterial(batch_id, task_id, id) {
         if (data.result === true) {
           toast('Material Deleted', 'success')
 
-          loadTasks.loadbatch(batch_id)
+          TaskStore.loadTasks(batch_id)
         } else {
           toast('Something happen', 'error')
         }

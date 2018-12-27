@@ -7,7 +7,6 @@ import { observable } from 'mobx'
 import { observer, Provider } from 'mobx-react'
 import { formatDate2 } from '../../utils'
 import GanttChart from './GanttChart'
-import loadTasks from './loadTask'
 import TaskStore from '../tasks_setup/stores/NewTaskStore'
 
 @observer

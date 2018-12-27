@@ -196,6 +196,7 @@ class GanttChart extends React.Component {
                             {TaskStore.hasChildNode(task.wbs) && (
                               <i
                                 className="material-icons dim grey f7 pointer"
+                                style={{fontSize: 16+'px'}}
                                 onClick={e =>
                                   TaskStore.toggleCollapseNode(task.wbs)
                                 }
@@ -205,7 +206,7 @@ class GanttChart extends React.Component {
                                   : 'arrow_drop_down'}
                               </i>
                             )}
-                            {task.name}
+                            {task.name.substring(0, 20)}
                           </span>
 
                           <Manager>

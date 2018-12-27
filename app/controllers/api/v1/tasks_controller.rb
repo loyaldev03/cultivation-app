@@ -6,7 +6,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
       tasks = get_all_tasks
       users = User.active
       task_json = TaskSerializer.new(
-        tasks, params: {tasks: tasks, users: users}
+        tasks, params: {tasks: tasks, users: users},
       ).serialized_json
       render json: task_json
     else
@@ -21,7 +21,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
       tasks = get_all_tasks
       users = User.active
       task_json = TaskSerializer.new(
-        task, params: {tasks: tasks, users: users}
+        task, params: {tasks: tasks, users: users},
       ).serialized_json
       render json: task_json
     else

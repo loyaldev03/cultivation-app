@@ -1,5 +1,4 @@
 @import 'variables';
-@import 'base';
 
 /* NOTE: Put react stylesheets here instead of app/assets/stylesheets, since that one uses Sprockets, and this one uses Webpack */
 /* TODO: Move all app/assets/stylesheets to here and uses Webpack instead of Sprockets */
@@ -17,7 +16,3 @@
 
 /* IMPORT Page Specific STYLES */
 @import 'components/tasks';
-
-.cultivation-setup-container {
-  width: 800px;
-}

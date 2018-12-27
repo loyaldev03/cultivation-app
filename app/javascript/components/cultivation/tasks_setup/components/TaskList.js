@@ -147,13 +147,15 @@ class TaskList extends React.Component {
             orange: TaskStore.hasChildNode(wbs)
           })}
         >
-          {TaskStore.hasChildNode(wbs) && (
+          {TaskStore.hasChildNode(wbs) ? (
             <i
               className="material-icons dim grey f7 pointer"
               onClick={e => TaskStore.toggleCollapseNode(wbs)}
             >
               {TaskStore.isCollapsed(wbs) ? 'arrow_right' : 'arrow_drop_down'}
             </i>
+          ) : (
+            <span className="dib indent--1" />
           )}
           {data.value}
         </span>

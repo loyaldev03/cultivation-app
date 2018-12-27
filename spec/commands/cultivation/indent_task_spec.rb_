@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Cultivation::IndentTask, type: :command do
+RSpec.describe Cultivation::UpdateTaskIndent, type: :command do
   subject {
     strain = Common::Strain.create(name: 'Zkittles', strain_type: 'indica')
     params ={
@@ -18,7 +18,7 @@ RSpec.describe Cultivation::IndentTask, type: :command do
       phase = subject.first #first task is phase
       params = {id: phase.id, action: 'in'}
 
-      result = Cultivation::IndentTask.call(params).result
+      result = Cultivation::UpdateTaskIndent.call(params).result
 
       expect(result).to have_attributes(
         is_phase: false,
@@ -31,7 +31,7 @@ RSpec.describe Cultivation::IndentTask, type: :command do
       category = subject.second #second task is category
       params = {id: category.id, action: 'in'}
 
-      result = Cultivation::IndentTask.call(params).result
+      result = Cultivation::UpdateTaskIndent.call(params).result
 
       expect(result).to have_attributes(
         is_phase: false,
@@ -44,7 +44,7 @@ RSpec.describe Cultivation::IndentTask, type: :command do
       task = subject.third #second task is category
       params = {id: task.id, action: 'in'}
 
-      result = Cultivation::IndentTask.call(params).result
+      result = Cultivation::UpdateTaskIndent.call(params).result
 
       expect(result).to have_attributes(
         is_phase: task.is_phase,
@@ -60,7 +60,7 @@ RSpec.describe Cultivation::IndentTask, type: :command do
       phase = subject.first #second phase is category
       params = {id: phase.id, action: 'out'}
 
-      result = Cultivation::IndentTask.call(params).result
+      result = Cultivation::UpdateTaskIndent.call(params).result
 
       expect(result).to have_attributes(
         is_phase: phase.is_phase,
@@ -72,7 +72,7 @@ RSpec.describe Cultivation::IndentTask, type: :command do
       category = subject.second #second category is category
       params = {id: category.id, action: 'out'}
 
-      result = Cultivation::IndentTask.call(params).result
+      result = Cultivation::UpdateTaskIndent.call(params).result
 
       expect(result).to have_attributes(
         is_phase: true,
@@ -84,7 +84,7 @@ RSpec.describe Cultivation::IndentTask, type: :command do
       task = subject.third #second task is category
       params = {id: task.id, action: 'out'}
 
-      result = Cultivation::IndentTask.call(params).result
+      result = Cultivation::UpdateTaskIndent.call(params).result
 
       expect(result).to have_attributes(
         is_phase: false,

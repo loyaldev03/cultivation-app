@@ -16,7 +16,6 @@ import {
 import { toast } from '../../../utils/toast'
 import TaskEditor from './TaskEditor'
 import updateTask from '../actions/updateTask'
-import indentTask from '../actions/indentTask'
 import deleteTask from '../actions/deleteTask'
 import ReactTable from 'react-table'
 import Calendar from 'react-calendar/dist/entry.nostyle'
@@ -97,9 +96,9 @@ class TaskList extends React.Component {
     }))
   }
 
-  handleIndent = (row, action) => {
+  handleIndent = (taskId, indentAction) => {
     this.clearDropdown()
-    indentTask(this.props.batch.id, row.row, action)
+    TaskStore.updateTaskIndent(this.props.batch.id, taskId, indentAction)
   }
 
   handleClick = e => {
@@ -190,7 +189,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        this.handleIndent(data, 'in')
+                        this.handleIndent(id, 'in')
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
@@ -202,7 +201,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        this.handleIndent(data, 'out')
+                        this.handleIndent(id, 'out')
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">

@@ -1,26 +1,42 @@
-$indentWidth: 14px;
-$indentArrowWidth: 10px;
+// Same as the width of the collapse / expand arrow
+$indentWidth: 24px;
 
-.indent-arrow {
-  width: 11px;
+.indent--0 {
+  margin-left: $indentWidth * 0;
 }
 
 .indent--1 {
-  margin-left: $indentWidth + $indentArrowWidth;
+  margin-left: $indentWidth * 1;
 }
 
 .indent--2 {
-  margin-left: $indentWidth * 2 + ($indentArrowWidth * 2);
+  margin-left: $indentWidth * 2;
 }
 
 .indent--3 {
-  margin-left: ($indentWidth * 3) + ($indentArrowWidth * 3);
+  margin-left: $indentWidth * 3;
 }
 
 .indent--4 {
-  margin-left: ($indentWidth * 4) + ($indentArrowWidth * 4);
+  margin-left: $indentWidth * 4;
 }
 
 .indent--5 {
-  margin-left: ($indentWidth * 5) + ($indentArrowWidth * 5);
+  margin-left: $indentWidth * 5;
+}
+
+.indent--6 {
+  margin-left: $indentWidth * 6;
+}
+
+.indent--7 {
+  margin-left: $indentWidth * 7;
+}
+
+.indent--8 {
+  margin-left: $indentWidth * 8;
+}
+
+.indent--9 {
+  margin-left: $indentWidth * 9;
 }

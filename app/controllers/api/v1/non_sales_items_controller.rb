@@ -8,6 +8,7 @@ class Api::V1::NonSalesItemsController < Api::V1::BaseApiController
       result = item_to_serialize(catalogue_type: nil, id: id, event_types: %w(inventory_setup))
       render json: Inventory::NonSalesItemSerializer.new(result[:item_transactions], result[:options]).serialized_json
     else
+      Rails.logger.info command.errors.inspect
       render json: request_with_errors(command.errors), status: 422
     end
   end

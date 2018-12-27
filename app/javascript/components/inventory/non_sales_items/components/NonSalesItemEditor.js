@@ -32,13 +32,6 @@ class NonSalesItemEditor extends React.Component {
   }
 
   onNonSalesItemTypeSelected = item => {
-    this.setState({
-      nonSalesItemType: item,
-      catalogue: { value: '', label: '', uoms: [] }
-    })
-  }
-
-  onNonSalesItemProductSelected = item => {
     this.setState({ catalogue: item })
   }
 
@@ -79,9 +72,6 @@ class NonSalesItemEditor extends React.Component {
 
   onSave = event => {
     const payload = this.validateAndGetValues()
-    console.log(payload.isValid)
-    console.log(payload)
-    console.log(this.state.errors)
     if (payload.isValid) {
       saveNonSalesItem(payload).then(() => {
         this.reset()
@@ -175,9 +165,8 @@ class NonSalesItemEditor extends React.Component {
 
   render() {
     const { locations, catalogues } = this.props
-    const nonSalesItemProducts = this.state.nonSalesItemType.children
-    // const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
-    const uoms = [this.state.order_uom]
+    const catalogueOptions = catalogues.result.map(x => ({ value: x.value, label: x.label, uoms: x.uoms }))
+    const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
 
     const showTotalPrice =
@@ -221,29 +210,12 @@ class NonSalesItemEditor extends React.Component {
                 Non-sales Item Type
               </label>
               <Select
-                options={catalogues}
-                value={this.state.nonSalesItemType}
+                options={catalogueOptions}
+                value={this.state.catalogue}
                 onChange={this.onNonSalesItemTypeSelected}
                 styles={reactSelectStyle}
               />
             </div>
-            {nonSalesItemProducts && (
-              <div className="w-60 pl3">
-                <label className="f6 fw6 db mb1 gray ttc">
-                  {this.state.nonSalesItemType.label}&nbsp;
-                </label>
-                {/*
-                <Select
-                  key={this.state.nonSalesItemType}
-                  options={nonSalesItemProducts}
-                  value={this.state.catalogue}
-                  onChange={this.onNonSalesItemProductSelected}
-                  styles={reactSelectStyle}
-                />
-                */}
-                <FieldError errors={this.state.errors} field="catalogue" />
-              </div>
-            )}
           </div>
 
           <hr className="mt3 m b--light-gray w-100" />

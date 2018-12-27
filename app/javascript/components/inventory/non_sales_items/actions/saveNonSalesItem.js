@@ -16,12 +16,11 @@ export const saveNonSalesItem = payload => {
       }
 
       if (payload.id) {
-        rawMaterialStore.update(data.data)
+        nonSalesItemStore.update(data.data)
       } else {
-        rawMaterialStore.prepend(data.data)
+        nonSalesItemStore.prepend(data.data)
       }
 
       return result
     })
 }
-

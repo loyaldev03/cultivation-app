@@ -165,7 +165,11 @@ class NonSalesItemEditor extends React.Component {
 
   render() {
     const { locations, catalogues } = this.props
-    const catalogueOptions = catalogues.result.map(x => ({ value: x.value, label: x.label, uoms: x.uoms }))
+    const catalogueOptions = catalogues.result.map(x => ({
+      value: x.value,
+      label: x.label,
+      uoms: x.uoms
+    }))
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
 

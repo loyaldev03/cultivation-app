@@ -23,7 +23,20 @@ class Api::V1::NonSalesItemsController < Api::V1::BaseApiController
     params[:non_sales_item].to_unsafe_h.merge(errors: errors)
   end
 
-  def item_to_serialize
-    ## TODO: serialize item
+  def item_to_serialize(catalogue_type:, id:, event_types:)
+    result = Inventory::QueryNonSalesItems.call(type: catalogue_type, id: id, event_types: event_types).result
+    item_transactions = result[:item_transactions]
+    vendor_invoice_items = result[:vendor_invoice_items]
+    additional_fields = [:vendor_invoice, :vendor, :purchase_order]
+
+    options = {params: {
+      include: additional_fields,
+      relations: {vendor_invoice_items: vendor_invoice_items},
+    }}
+
+    {
+      item_transactions: item_transactions,
+      options: options,
+    }
   end
 end

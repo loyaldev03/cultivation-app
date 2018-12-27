@@ -5,7 +5,9 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     if @batch.present?
       tasks = get_all_tasks
       users = User.active
-      task_json = TaskSerializer.new(tasks, params: {tasks: tasks, users: users}).serialized_json
+      task_json = TaskSerializer.new(
+        tasks, params: {tasks: tasks, users: users}
+      ).serialized_json
       render json: task_json
     else
       render json: {data: 'Batch Not Found'}
@@ -13,15 +15,17 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def update
-    a = Cultivation::UpdateTask.call(task_params)
+    update_cmd = Cultivation::UpdateTask.call(task_params)
     if a.errors.empty?
       task = Cultivation::Task.find(params[:id])
       tasks = get_all_tasks
       users = User.active
-      task_json = TaskSerializer.new(task, params: {tasks: tasks, users: users}).serialized_json
+      task_json = TaskSerializer.new(
+        task, params: {tasks: tasks, users: users}
+      ).serialized_json
       render json: task_json
     else
-      data = {errors: a.errors}
+      data = {errors: update_cmd.errors}
       render json: data
     end
   end
@@ -36,6 +40,23 @@ class Api::V1::TasksController < Api::V1::BaseApiController
       render json: {data: {id: update_cmd.result.id.to_s}}
     else
       render json: {errors: update_cmd.errors}
+    end
+  end
+
+  def update_indent
+    Rails.logger.debug "\033[31m id: #{params[:id]} \033[0m"
+    Rails.logger.debug "\033[31m indent_action: #{params[:indent_action]} \033[0m"
+    indent_cmd = Cultivation::UpdateTaskIndent.call(
+      params[:id],
+      params[:indent_action],
+      current_user,
+    )
+    if indent_cmd.success?
+      Rails.logger.debug "\033[31m indent_action: success \033[0m"
+      render json: {data: {id: indent_cmd.result.id.to_s}}
+    else
+      Rails.logger.debug "\033[31m indent_action: errors \033[0m"
+      render json: {errors: indent_cmd.errors}
     end
   end
 
@@ -54,14 +75,6 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def create
     task = Cultivation::CreateTask.call(task_params).result
-    tasks = get_all_tasks
-    users = User.active
-    task_json = TaskSerializer.new(task, params: {tasks: tasks, users: users}).serialized_json
-    render json: task_json
-  end
-
-  def indent
-    task = Cultivation::IndentTask.call(task_params).result
     tasks = get_all_tasks
     users = User.active
     task_json = TaskSerializer.new(task, params: {tasks: tasks, users: users}).serialized_json

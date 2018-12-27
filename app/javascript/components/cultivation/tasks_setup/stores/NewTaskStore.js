@@ -39,10 +39,37 @@ class TaskStore {
     const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_position`
     try {
       const payload = { target_position_task_id: targetPositionTaskId }
-      const response = await fetch(url, httpPostOptions(payload))
-      this.loadTasks(batchId)
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      if (response.data) {
+        console.log('reorder response has data')
+        this.loadTasks(batchId)
+      } else {
+        console.error(response.errors)
+      }
     } catch (error) {
       console.error(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  @action
+  async updateTaskIndent(batchId, taskId, indentInOut) {
+    this.isLoading = true
+    const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_indent`
+    try {
+      const payload = { indent_action: indentInOut }
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      if (response.data) {
+        console.log('indent response has data')
+        this.loadTasks(batchId)
+      } else {
+        console.error(response.errors)
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.isLoading = false
     }
   }
 

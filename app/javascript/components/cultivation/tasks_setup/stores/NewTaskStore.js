@@ -41,7 +41,6 @@ class TaskStore {
       const payload = { target_position_task_id: targetPositionTaskId }
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {
-        console.log('reorder response has data')
         this.loadTasks(batchId)
       } else {
         console.error(response.errors)
@@ -61,7 +60,6 @@ class TaskStore {
       const payload = { indent_action: indentInOut }
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {
-        console.log('indent response has data')
         this.loadTasks(batchId)
       } else {
         console.error(response.errors)

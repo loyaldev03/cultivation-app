@@ -164,7 +164,7 @@ class GanttChart extends React.Component {
             TaskStore.taskList[i].id
           )
           el.scrollLeft = scrollLeft
-          el.scrollTop = scrollTop  
+          el.scrollTop = scrollTop
           console.log('fix the scroll')
         }
       }

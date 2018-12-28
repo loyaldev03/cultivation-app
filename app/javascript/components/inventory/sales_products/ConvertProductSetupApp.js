@@ -100,13 +100,13 @@ class ConvertProductSetupApp extends React.Component {
     return (
       <div className="w-100 bg-white pa3">
         <div className="flex mb4 mt2">
-          <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Record Product</h1>
+          <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Converted Product</h1>
           <div style={{ justifySelf: 'end' }}>
             <button
               className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
               onClick={this.onAddRecord}
             >
-              Convert Product
+              Add Converted Product
             </button>
           </div>
         </div>

@@ -16,7 +16,6 @@ import {
 import { toast } from '../../../utils/toast'
 import TaskEditor from './TaskEditor'
 import updateTask from '../actions/updateTask'
-import indentTask from '../actions/indentTask'
 import deleteTask from '../actions/deleteTask'
 import ReactTable from 'react-table'
 import Calendar from 'react-calendar/dist/entry.nostyle'
@@ -55,15 +54,12 @@ class TaskList extends React.Component {
     }
   }
 
-  componentDidMount() {
-    TaskStore.loadTasks(this.props.batch.id)
+  async componentDidMount() {
+    await TaskStore.loadTasks(this.props.batch.id)
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    let _this = this
     // need to find after data react-table is loaded callback
-    setTimeout(function() {
-      _this.mountEvents()
-    }, 5000)
+    setTimeout(() => this.mountEvents(), 100)
   }
 
   openSidebar = () => {
@@ -97,9 +93,9 @@ class TaskList extends React.Component {
     }))
   }
 
-  handleIndent = (row, action) => {
+  handleIndent = (taskId, indentAction) => {
     this.clearDropdown()
-    indentTask(this.props.batch.id, row.row, action)
+    TaskStore.updateTaskIndent(this.props.batch.id, taskId, indentAction)
   }
 
   handleClick = e => {
@@ -142,19 +138,21 @@ class TaskList extends React.Component {
   renderTaskNameColumn = data => {
     const { id, wbs, indent } = data.row
     return (
-      <div className="flex justify-between items-center draggable">
+      <div className="flex justify-between items-center" draggable={true}>
         <span
           className={classNames(`dib flex items-center indent--${indent}`, {
             orange: TaskStore.hasChildNode(wbs)
           })}
         >
-          {TaskStore.hasChildNode(wbs) && (
+          {TaskStore.hasChildNode(wbs) ? (
             <i
               className="material-icons dim grey f7 pointer"
               onClick={e => TaskStore.toggleCollapseNode(wbs)}
             >
               {TaskStore.isCollapsed(wbs) ? 'arrow_right' : 'arrow_drop_down'}
             </i>
+          ) : (
+            <span className="dib indent--1" />
           )}
           {data.value}
         </span>
@@ -190,7 +188,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        this.handleIndent(data, 'in')
+                        this.handleIndent(id, 'in')
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
@@ -202,7 +200,7 @@ class TaskList extends React.Component {
                       className="ttc pv2 tc flex pointer"
                       style={{ display: 'flex' }}
                       onClick={e => {
-                        this.handleIndent(data, 'out')
+                        this.handleIndent(id, 'out')
                       }}
                     >
                       <i className="material-icons md-600 md-17 ph2">
@@ -289,53 +287,56 @@ class TaskList extends React.Component {
     this.setState({ taskSelected: '', taskRelatedPosition: '' })
   }
 
+  onDragStart = index => e => {
+    this.dragged = index
+  }
+
+  onDragEnd = e => {
+    setTimeout(() => (this.dragged = null), 0)
+  }
+
+  onDragOver = e => {
+    e.preventDefault()
+  }
+
+  onDragEnter = e => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  onDragLeave = e => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  onDragDrop = index => async e => {
+    e.preventDefault()
+    // e.target.closest('.rt-tr').classList.remove('bb', 'b--orange')
+    if (this.dragged !== null && index !== null) {
+      await TaskStore.updateTaskPosition(
+        this.props.batch.id,
+        TaskStore.taskList[this.dragged].id,
+        TaskStore.taskList[index].id
+      )
+    }
+  }
+
   mountEvents() {
     const headers = Array.prototype.slice.call(
       document.querySelectorAll('.rt-tr-group')
     )
 
-    headers.forEach((header, i) => {
-      const enableDrag = header.querySelector('.draggable')
+    headers.forEach((header, index) => {
+      const enableDrag = header.querySelector("div[draggable='true']")
       if (enableDrag) {
-        header.setAttribute('draggable', true)
         //the dragged header
-        header.ondragstart = e => {
-          e.stopPropagation()
-          this.dragged = i
-        }
-
-        header.ondrag = e => e.stopPropagation
-
-        header.ondragend = e => {
-          e.stopPropagation()
-          setTimeout(() => (this.dragged = null), 300)
-        }
-
-        //the dropped header
-        header.ondragover = e => {
-          e.preventDefault()
-        }
-
-        header.ondragenter = e => {
-          e.target.closest('.rt-tr-group').style.borderBottomColor =
-            'rgb(255,112,67)'
-        }
-
-        header.ondragleave = e => {
-          e.target.closest('.rt-tr-group').style.borderBottomColor = ''
-        }
-
-        header.ondrop = async e => {
-          e.preventDefault()
-          e.target.closest('.rt-tr-group').style.borderBottomColor = ''
-          if (this.dragged !== null && i !== null) {
-            await TaskStore.updateTaskPosition(
-              this.props.batch.id,
-              TaskStore.taskList[this.dragged].id,
-              TaskStore.taskList[i].id
-            )
-          }
-        }
+        // header.ondrag = e => e.stopPropagation
+        header.ondragstart = this.onDragStart(index)
+        header.ondragend = this.onDragEnd
+        header.ondragover = this.onDragOver
+        header.ondragenter = this.onDragEnter
+        header.ondragleave = this.onDragLeave
+        header.ondrop = this.onDragDrop(index)
       }
     })
   }

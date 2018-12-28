@@ -164,6 +164,7 @@ module Constants
   SEEDS_KEY = 'seeds'
   PURCHASED_CLONES_KEY = 'purchased_clones'
   SALES_KEY = 'sales_products'
+  NON_SALES_KEY = 'non_sales'
 
   NUTRIENT_TYPE = [
     {code: :blend, name: 'Blend'},
@@ -227,6 +228,7 @@ module Constants
     {code: :other, name: 'Other'},
   ].freeze
 
+  # TODO: To be removed
   SALES_PRODUCT_TYPE = [
     {code: :blunt, name: 'Blunt'},
     {code: :tinctures, name: 'Tinctures'},

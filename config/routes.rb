@@ -176,7 +176,7 @@ Rails.application.routes.draw do
         post 'update_locations'
         post 'update_batch'
         resources :tasks, only: [:index, :update, :create, :destroy] do
-          put 'indent', on: :member
+          post 'update_indent', on: :member
           post 'update_position', on: :member
           post 'update_dependency', on: :member
         end

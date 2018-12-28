@@ -126,7 +126,6 @@ class TaskList extends React.Component {
   }
 
   handleMouseLeave = row => {
-    console.log('leaving row', row)
     this.setState({ idOpen: null })
   }
 

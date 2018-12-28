@@ -152,19 +152,21 @@ class GanttChart extends React.Component {
       header.ondragleave = e => {}
 
       header.ondrop = async e => {
-        console.log(e)
-        console.log(this.dragged)
-        console.log(toJS(TaskStore.taskList[this.dragged]))
-        console.log(i)
-        // e.preventDefault()
+        e.preventDefault()
         // e.target.closest('.rt-tr-group').style.borderBottomColor = ''
-        // if (this.dragged !== null && i !== null) {
-        //   await TaskStore.updateTaskPosition(
-        //     this.props.batch.id,
-        //     TaskStore.taskList[this.dragged].id,
-        //     TaskStore.taskList[i].id
-        //   )
-        // }
+        if (this.dragged !== null && i !== null) {
+          let el = document.querySelector('.gantt-container')
+          const scrollLeft = el.scrollLeft
+          const scrollTop = el.scrollTop
+          await TaskStore.updateTaskPosition(
+            this.props.batch_id,
+            TaskStore.taskList[this.dragged].id,
+            TaskStore.taskList[i].id
+          )
+          el.scrollLeft = scrollLeft
+          el.scrollTop = scrollTop  
+          console.log('fix the scroll')
+        }
       }
       // }
     })

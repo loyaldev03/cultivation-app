@@ -41,7 +41,7 @@ class TaskStore {
       const payload = { target_position_task_id: targetPositionTaskId }
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {
-        this.loadTasks(batchId)
+        await this.loadTasks(batchId)
       } else {
         console.error(response.errors)
       }

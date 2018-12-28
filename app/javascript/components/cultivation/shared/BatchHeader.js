@@ -70,9 +70,7 @@ const batchHeader = ({ batch }) => {
                 </div>
                 <div className="w-50">
                   <div className="">
-                    <label>
-                      {formatDate2(batch.start_date)}
-                    </label>
+                    <label>{formatDate2(batch.start_date)}</label>
                   </div>
                 </div>
               </div>
@@ -109,9 +107,7 @@ const batchHeader = ({ batch }) => {
                 </div>
                 <div className="w-50">
                   <div className="">
-                    <label>
-                      {formatDate2(batch.start_date)}
-                    </label>
+                    <label>{formatDate2(batch.start_date)}</label>
                   </div>
                 </div>
               </div>

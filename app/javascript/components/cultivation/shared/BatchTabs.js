@@ -11,7 +11,7 @@ const resolveActive = (tab, currentTab) => {
   return inactiveTabs
 }
 
-const batchTabs = ({batch, currentTab=''}) => {
+const batchTabs = ({ batch, currentTab = '' }) => {
   return (
     <div className="flex mt4">
       <a
@@ -42,9 +42,7 @@ const batchTabs = ({batch, currentTab=''}) => {
       </a>
 
       <a
-        href={
-          '/cultivation/batches/' + batch.id + '/secret_sauce'
-        }
+        href={'/cultivation/batches/' + batch.id + '/secret_sauce'}
         className={resolveActive('secretSauce', currentTab)}
       >
         Secret Sauce

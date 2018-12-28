@@ -6,7 +6,6 @@ import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
 import ReactTable from 'react-table'
 
-
 const columns = [
   {
     Header: 'ID',
@@ -29,8 +28,7 @@ const columns = [
   {
     Header: 'Title',
     accessor: 'attributes.planting_date',
-    headerStyle: { textAlign: 'left' },
-    
+    headerStyle: { textAlign: 'left' }
   },
   {
     Header: 'Reported',
@@ -70,10 +68,7 @@ class BatchIssues extends React.Component {
       <React.Fragment>
         <div className="w-100 bg-white pa3 ">
           <div className="flex mb3 justify-end">
-            <button
-              className="btn btn--primary"
-              onClick={this.openSidebar}
-            >
+            <button className="btn btn--primary" onClick={this.openSidebar}>
               Submit an issue
             </button>
           </div>
@@ -97,16 +92,12 @@ class BatchIssues extends React.Component {
   }
 
   render() {
-    
     return (
       <React.Fragment>
         <BatchHeader batch={this.props.batch} />
         <BatchTabs batch={this.props.batch} currentTab="issues" />
-        
 
-        
-        { this.renderContent() }
-
+        {this.renderContent()}
 
         <div id="toast" className="toast animated toast--success">
           Row Saved

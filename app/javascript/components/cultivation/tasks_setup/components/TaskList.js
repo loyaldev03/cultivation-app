@@ -40,7 +40,7 @@ const styles = `
 
 `
 
-const TaskNameField = React.memo(({ id, wbs, indent, text }) => {
+const TaskNameField = ({ id, wbs, indent, text }) => {
   return (
     <span
       className={classNames(`dib flex items-center indent--${indent}`, {
@@ -60,7 +60,7 @@ const TaskNameField = React.memo(({ id, wbs, indent, text }) => {
       {text}
     </span>
   )
-})
+}
 
 @observer
 class TaskList extends React.Component {
@@ -120,13 +120,8 @@ class TaskList extends React.Component {
     TaskStore.updateTaskIndent(this.props.batch.id, taskId, indentAction)
   }
 
-  handleClick = e => {
-    e.persist()
-    if (e.target && e.target !== null) {
-      this.setState(prevState => ({
-        idOpen: e.target.id
-      }))
-    }
+  handleEllipsisClick = taskId => e => {
+    this.setState({ idOpen: taskId })
   }
 
   handleEdit = e => {
@@ -168,7 +163,7 @@ class TaskList extends React.Component {
               <i
                 ref={ref}
                 id={id}
-                onClick={this.handleClick}
+                onClick={this.handleEllipsisClick(id)}
                 className="material-icons child ml2 pointer button-dropdown"
                 style={{ fontSize: '18px' }}
               >

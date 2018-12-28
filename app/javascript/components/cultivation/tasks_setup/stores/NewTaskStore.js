@@ -105,7 +105,7 @@ class TaskStore {
     }
   }
 
-  updateTask(batch_id, task) {
+  async updateTask(batch_id, task) {
     this.isLoading = true
     let new_task = task
     let id = task.id
@@ -118,7 +118,7 @@ class TaskStore {
     const found = toJS(this.tasks.find(x => x.id === task.id))
     if (found) {
       let url = `/api/v1/batches/${batch_id}/tasks/${id}`
-      let task = {
+      let payload = {
         assigned_employee: found.assigned_employee,
         batch_id: found.batch_id,
         days_from_start_date: found.days_from_start_date,
@@ -139,26 +139,14 @@ class TaskStore {
         task_type: found.task_type
       }
 
-      fetch(url, {
-        method: 'PUT',
-        credentials: 'include',
-        body: JSON.stringify({ task: task }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => response.json())
-        .then(data => {
-          if (data && data.data && data.data.id != null) {
-            toast('Task Updated', 'success')
-            this.loadTasks(batch_id)
-            this.isLoading = false
-          } else {
-            toast(data.errors, 'error')
-          }
-        })
-    } else {
-      this.tasks.push(task)
+      try {
+        const response = await(await fetch(url, httpPutOptions(payload))).json()
+        await this.loadTasks(batch_id)
+        this.isLoading = false
+        toast('Task Updated', 'success')
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 

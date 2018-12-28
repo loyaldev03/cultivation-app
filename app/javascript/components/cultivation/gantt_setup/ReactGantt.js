@@ -6,8 +6,11 @@ import { noop } from './helper'
 export default class ReactGantt extends Component {
   ganttRef = undefined
 
-  componentDidMount() {
-    this.renderFrappeGanttDOM()
+  async componentDidMount() {
+    await this.renderFrappeGanttDOM()
+    if(this.props.onLoad){
+      this.props.onLoad () || noop
+    }
   }
 
   // redraw the gantt when update. now change the viewMode

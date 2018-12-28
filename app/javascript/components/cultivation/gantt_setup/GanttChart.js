@@ -88,8 +88,15 @@ class GanttChart extends React.Component {
   }
 
   onClickTask = task => {
-    console.log(task)
+    console.log(toJS(task))
     alert('You have selected task => ' + task.name)
+    let bar = document.getElementById(task.id)
+    console.log(bar)
+    console.log(bar.offsetTop)
+    console.log(bar.offsetLeft)
+    let el = document.querySelector('.gantt-container')
+    el.scrollLeft = bar.offsetLeft
+    el.scrollTop = bar.offsetTop
   }
 
   handleDropdown = id => {
@@ -103,12 +110,67 @@ class GanttChart extends React.Component {
   }
 
   onDateChange = async task => {
-    if (TaskStore.isDataLoaded) {
-      console.log('do something')
-      TaskStore.updateTask(this.props.batch_id, task)
-    } else {
-      console.log('dont do something')
-    }
+    let el = document.querySelector('.gantt-container')
+    let scrollLeft = el.scrollLeft
+    let scrollTop = el.scrollTop
+    await TaskStore.updateTask(this.props.batch_id, task)
+    el.scrollLeft = scrollLeft
+    el.scrollTop = scrollTop
+  }
+
+  onLoad = (e) => {
+    console.log('gantt chart loaded ')
+
+    const headers = Array.prototype.slice.call(
+      document.querySelectorAll('.rt-tr-group')
+    )
+
+    headers.forEach((header, i) => {
+      const enableDrag = header.querySelector('.draggable')
+      // if (enableDrag) {
+        header.setAttribute('draggable', true)
+        //the dragged header
+        header.ondragstart = e => {
+          e.stopPropagation()
+          this.dragged = i
+        }
+
+        header.ondrag = e => e.stopPropagation
+
+        header.ondragend = e => {
+          e.stopPropagation()
+          setTimeout(() => (this.dragged = null), 300)
+        }
+
+        //the dropped header
+        header.ondragover = e => {
+          e.preventDefault()
+        }
+
+        header.ondragenter = e => {
+        }
+
+        header.ondragleave = e => {
+        }
+
+        header.ondrop = async e => {
+          console.log(e)
+          console.log(this.dragged)
+          console.log(toJS(TaskStore.taskList[this.dragged]))
+          console.log(i)
+          // e.preventDefault()
+          // e.target.closest('.rt-tr-group').style.borderBottomColor = ''
+          // if (this.dragged !== null && i !== null) {
+          //   await TaskStore.updateTaskPosition(
+          //     this.props.batch.id,
+          //     TaskStore.taskList[this.dragged].id,
+          //     TaskStore.taskList[i].id
+          //   )
+          // }
+        }
+      // }
+    })
+
   }
 
   onDragRelationShip = async (destination_id, source_id) => {
@@ -123,11 +185,6 @@ class GanttChart extends React.Component {
     )
     el.scrollLeft = scrollLeft
     el.scrollTop = scrollTop
-  }
-
-  maintainScrollPosition = () => {
-    var el = document.querySelector('.gantt-container')
-    console.log(el.scrollLeft, el.scrollTop)
   }
 
   render() {
@@ -181,6 +238,7 @@ class GanttChart extends React.Component {
                     <tr
                       className="pointer rt-tr-group gantt-list"
                       key={task.id}
+                      // onClick={(e) => this.onClickTask(task)}
                     >
                       <td className="pv2 ph3 dark-grey tl ttc">{task.wbs}</td>
                       <td className="pv2 ph3 dark-grey tl ttc">
@@ -336,6 +394,7 @@ class GanttChart extends React.Component {
                 tasks={TaskStore.getGanttTasks()}
                 viewMode={this.state.viewMode}
                 // onClick={this._func}
+                onLoad={this.onLoad}
                 onDragRelationShip={this.onDragRelationShip}
                 onDateChange={this.onDateChange}
                 // onProgressChange={this._func}

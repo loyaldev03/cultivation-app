@@ -40,6 +40,40 @@ const styles = `
 
 `
 
+const TaskNameField = ({ id, wbs, indent, text }) => {
+  return (
+    <span
+      className={classNames(`dib flex items-center indent--${indent}`, {
+        orange: TaskStore.hasChildNode(wbs)
+      })}
+    >
+      {TaskStore.hasChildNode(wbs) ? (
+        <i
+          className="material-icons dim grey f7 pointer"
+          onClick={e => TaskStore.toggleCollapseNode(wbs)}
+        >
+          {TaskStore.isCollapsed(wbs) ? 'arrow_right' : 'arrow_drop_down'}
+        </i>
+      ) : (
+        <span className="dib indent--1" />
+      )}
+      {text}
+    </span>
+  )
+}
+
+const MenuButton = ({ icon, text, onClick, className = '' }) => {
+  return (
+    <a
+      className={`pa2 flex link dim pointer items-center ${className}`}
+      onClick={onClick}
+    >
+      <i className="material-icons md-17 pr2">{icon}</i>
+      <span className="pr2">{text}</span>
+    </a>
+  )
+}
+
 @observer
 class TaskList extends React.Component {
   constructor(props) {
@@ -87,24 +121,17 @@ class TaskList extends React.Component {
     }
   }
 
+  handleEllipsisClick = taskId => e => {
+    this.setState({ idOpen: taskId })
+  }
+
   handleMouseLeave = row => {
-    this.setState(prevState => ({
-      idOpen: null
-    }))
+    this.setState({ idOpen: null })
   }
 
   handleIndent = (taskId, indentAction) => {
     this.clearDropdown()
     TaskStore.updateTaskIndent(this.props.batch.id, taskId, indentAction)
-  }
-
-  handleClick = e => {
-    e.persist()
-    if (e.target && e.target !== null) {
-      this.setState(prevState => ({
-        idOpen: e.target.id
-      }))
-    }
   }
 
   handleEdit = e => {
@@ -139,124 +166,63 @@ class TaskList extends React.Component {
     const { id, wbs, indent } = data.row
     return (
       <div className="flex justify-between items-center" draggable={true}>
-        <span
-          className={classNames(`dib flex items-center indent--${indent}`, {
-            orange: TaskStore.hasChildNode(wbs)
-          })}
-        >
-          {TaskStore.hasChildNode(wbs) ? (
-            <i
-              className="material-icons dim grey f7 pointer"
-              onClick={e => TaskStore.toggleCollapseNode(wbs)}
-            >
-              {TaskStore.isCollapsed(wbs) ? 'arrow_right' : 'arrow_drop_down'}
-            </i>
-          ) : (
-            <span className="dib indent--1" />
-          )}
-          {data.value}
-        </span>
+        <TaskNameField id={id} wbs={wbs} indent={indent} text={data.value} />
         <Manager>
           <Reference>
             {({ ref }) => (
               <i
                 ref={ref}
-                id={id}
-                onClick={this.handleClick}
-                className="material-icons ml2 pointer button-dropdown"
-                style={{ display: 'none', fontSize: '18px' }}
+                onClick={this.handleEllipsisClick(id)}
+                className="material-icons ml2 pointer button-dropdown child"
               >
                 more_horiz
               </i>
             )}
           </Reference>
           {this.state.idOpen === id && (
-            <Popper placement="bottom" style={{ borderColor: 'red' }}>
+            <Popper placement="right-end">
               {({ ref, style, placement, arrowProps }) => (
                 <div
                   ref={ref}
-                  id={'dropdown-' + id}
                   style={style}
                   data-placement={placement}
+                  className="bg-white f6 flex"
+                  onMouseLeave={this.handleMouseLeave}
                 >
                   <div
-                    id="myDropdown"
-                    onMouseLeave={this.handleMouseLeave}
-                    className="table-dropdown dropdown-content box--shadow-header show"
+                    className="db shadow-4"
                   >
-                    <a
-                      className="ttc pv2 tc flex pointer"
-                      style={{ display: 'flex' }}
-                      onClick={e => {
-                        this.handleIndent(id, 'in')
-                      }}
-                    >
-                      <i className="material-icons md-600 md-17 ph2">
-                        format_indent_increase
-                      </i>
-                      Indent In
-                    </a>
-                    <a
-                      className="ttc pv2 tc flex pointer"
-                      style={{ display: 'flex' }}
-                      onClick={e => {
-                        this.handleIndent(id, 'out')
-                      }}
-                    >
-                      <i className="material-icons md-600 md-17 ph2">
-                        format_indent_decrease
-                      </i>
-                      Indent Out
-                    </a>
-                    {indent > 0 && (
-                      <a
-                        className="ttc pv2 tc flex pointer"
-                        style={{ display: 'flex' }}
-                        onClick={e => {
-                          this.handleAddTask(data, 'top')
-                        }}
-                      >
-                        <i className="material-icons md-600 md-17 ph2">
-                          vertical_align_top
-                        </i>
-                        Insert Task Above
-                      </a>
-                    )}
-
-                    <a
-                      className="ttc pv2 tc flex pointer"
-                      style={{ display: 'flex' }}
-                      onClick={e => {
-                        this.handleAddTask(data, 'bottom')
-                      }}
-                    >
-                      <i className="material-icons md-600 md-17 ph2">
-                        vertical_align_bottom
-                      </i>
-                      Insert Task Below
-                    </a>
-                    <a
-                      className="ttc pv2 tc flex pointer"
-                      style={{ display: 'flex' }}
-                      onClick={e => {
-                        this.handleEdit(data)
-                      }}
-                    >
-                      <i className="material-icons md-600 md-17 ph2">edit</i>
-                      Edit
-                    </a>
-                    <a
-                      className="ttc pv2 tc flex pointer"
-                      style={{ display: 'flex' }}
-                      onClick={e => {
-                        this.handleDelete(data)
-                      }}
-                    >
-                      <i className="material-icons md-600 md-17 ph2">
-                        delete_outline
-                      </i>
-                      Delete
-                    </a>
+                    <MenuButton
+                      icon="format_indent_increase"
+                      text="Indent In"
+                      onClick={e => this.handleIndent(id, 'in')}
+                    />
+                    <MenuButton
+                      icon="format_indent_decrease"
+                      text="Indent Out"
+                      onClick={e => this.handleIndent(id, 'out')}
+                    />
+                    <MenuButton
+                      icon="vertical_align_top"
+                      text="Insert Task Above"
+                      onClick={e => this.handleAddTask(data, 'top')}
+                    />
+                    <MenuButton
+                      icon="vertical_align_bottom"
+                      text="Insert Task Below"
+                      onClick={e => this.handleAddTask(data, 'bottom')}
+                    />
+                    <MenuButton
+                      icon="edit"
+                      text="Edit Task Details"
+                      onClick={e => this.handleEdit(data)}
+                    />
+                    <MenuButton
+                      icon="delete_outline"
+                      text="Delete Task"
+                      className="red"
+                      onClick={e => this.handleDelete(data)}
+                    />
                   </div>
                   <div ref={arrowProps.ref} style={arrowProps.style} />
                 </div>
@@ -511,31 +477,19 @@ class TaskList extends React.Component {
           className="-highlight"
           pageSize={TaskStore.taskList.length}
           getTrProps={(state, rowInfo, column) => {
-            if (rowInfo) {
-              return {
-                style: {
-                  boxShadow:
-                    this.state.taskSelected === rowInfo.row.id
-                      ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
-                      : null,
-                  backgroundColor:
-                    rowInfo.row['indent'] === 0 ? '#FAEFEE' : null
-                },
-                onMouseOver: (e, handleOriginal) => {
-                  let button = document.getElementById(rowInfo.row.id)
-                  button.style.display = 'block'
-                },
-                onMouseOut: (e, handleOriginal) => {
-                  let button = document.getElementById(rowInfo.row.id)
-                  if (this.state.taskSelected !== rowInfo.row.id) {
-                    button.parentElement.parentElement.parentElement.parentElement.style.boxShadow =
-                      ''
-                  }
-                  button.style.display = 'none'
-                }
+            const trProps = {
+              className: 'hide-child'
+            }
+            if (this.state.taskSelected && rowInfo.row) {
+              trProps.stype = {
+                boxShadow:
+                  this.state.taskSelected === rowInfo.row.id
+                    ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
+                    : null,
+                backgroundColor: rowInfo.row['indent'] === 0 ? '#FAEFEE' : null
               }
             }
-            return {}
+            return trProps
           }}
         />
         <div className="mt3 tr">

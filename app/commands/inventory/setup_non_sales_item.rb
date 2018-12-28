@@ -74,7 +74,7 @@ module Inventory
         non_sales_item = if id.blank?
                            create_non_sales_item(invoice_item)
                          else
-                           ## Update Non-sales Item
+                           update_non_sales_item(invoice_item)
                          end
         non_sales_item
       end
@@ -261,6 +261,28 @@ module Inventory
 
     def combine_errors(errors_source, from_field, to_field)
       errors.add(to_field, errors_source[from_field]) if errors_source.key?(from_field)
+    end
+
+    def update_non_sales_item(invoice_item)
+      transaction = Inventory::ItemTransaction.find(id)
+      transaction.ref_id = invoice_item.id
+      transaction.event_date = purchase_date
+
+      transaction.facility = facility
+      transaction.location_id = location_id
+
+      transaction.order_quantity = order_quantity
+      transaction.order_uom = order_uom
+      transaction.uom = uom
+      transaction.quantity = quantity
+      transaction.conversion = qty_per_package
+      transaction.catalogue = catalogue
+      transaction.product_name = product_name
+      transaction.description = description
+      transaction.manufacturer = manufacturer
+
+      transaction.save!
+      transaction
     end
   end
 end

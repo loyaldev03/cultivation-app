@@ -15,7 +15,7 @@ class NonSalesItemStore {
   }
 
   @action
-  update(items) {
+  update(item) {
     const index = this.items.findIndex(x => x.id === item.id)
     if (index >= 0) {
       this.items[index] = item

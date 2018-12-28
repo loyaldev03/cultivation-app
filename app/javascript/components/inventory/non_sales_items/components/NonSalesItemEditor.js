@@ -28,13 +28,13 @@ class NonSalesItemEditor extends React.Component {
             return attr
           })
           .then(attr => {
-            debugger
+            const catalogueOptions = this.props.catalogues.result.map(x => ({
+              value: x.value,
+              label: x.label,
+              uoms: x.uoms
+            }))
 
-            const flatten_catalogues = this.props.catalogues.reduce(
-              (sum, val) => sum.concat(val.children || []),
-              []
-            )
-            const catalogue = flatten_catalogues.find(
+            const catalogue = catalogueOptions.find(
               x => x.value == attr.catalogue_id
             )
 

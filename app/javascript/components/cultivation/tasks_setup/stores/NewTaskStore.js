@@ -140,7 +140,10 @@ class TaskStore {
       }
 
       try {
-        const response = await(await fetch(url, httpPutOptions(payload))).json()
+        const response = await (await fetch(
+          url,
+          httpPutOptions(payload)
+        )).json()
         await this.loadTasks(batch_id)
         this.isLoading = false
         toast('Task Updated', 'success')

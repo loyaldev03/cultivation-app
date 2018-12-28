@@ -118,7 +118,7 @@ class GanttChart extends React.Component {
     el.scrollTop = scrollTop
   }
 
-  onLoad = (e) => {
+  onLoad = e => {
     console.log('gantt chart loaded ')
 
     const headers = Array.prototype.slice.call(
@@ -128,49 +128,46 @@ class GanttChart extends React.Component {
     headers.forEach((header, i) => {
       const enableDrag = header.querySelector('.draggable')
       // if (enableDrag) {
-        header.setAttribute('draggable', true)
-        //the dragged header
-        header.ondragstart = e => {
-          e.stopPropagation()
-          this.dragged = i
-        }
+      header.setAttribute('draggable', true)
+      //the dragged header
+      header.ondragstart = e => {
+        e.stopPropagation()
+        this.dragged = i
+      }
 
-        header.ondrag = e => e.stopPropagation
+      header.ondrag = e => e.stopPropagation
 
-        header.ondragend = e => {
-          e.stopPropagation()
-          setTimeout(() => (this.dragged = null), 300)
-        }
+      header.ondragend = e => {
+        e.stopPropagation()
+        setTimeout(() => (this.dragged = null), 300)
+      }
 
-        //the dropped header
-        header.ondragover = e => {
-          e.preventDefault()
-        }
+      //the dropped header
+      header.ondragover = e => {
+        e.preventDefault()
+      }
 
-        header.ondragenter = e => {
-        }
+      header.ondragenter = e => {}
 
-        header.ondragleave = e => {
-        }
+      header.ondragleave = e => {}
 
-        header.ondrop = async e => {
-          console.log(e)
-          console.log(this.dragged)
-          console.log(toJS(TaskStore.taskList[this.dragged]))
-          console.log(i)
-          // e.preventDefault()
-          // e.target.closest('.rt-tr-group').style.borderBottomColor = ''
-          // if (this.dragged !== null && i !== null) {
-          //   await TaskStore.updateTaskPosition(
-          //     this.props.batch.id,
-          //     TaskStore.taskList[this.dragged].id,
-          //     TaskStore.taskList[i].id
-          //   )
-          // }
-        }
+      header.ondrop = async e => {
+        console.log(e)
+        console.log(this.dragged)
+        console.log(toJS(TaskStore.taskList[this.dragged]))
+        console.log(i)
+        // e.preventDefault()
+        // e.target.closest('.rt-tr-group').style.borderBottomColor = ''
+        // if (this.dragged !== null && i !== null) {
+        //   await TaskStore.updateTaskPosition(
+        //     this.props.batch.id,
+        //     TaskStore.taskList[this.dragged].id,
+        //     TaskStore.taskList[i].id
+        //   )
+        // }
+      }
       // }
     })
-
   }
 
   onDragRelationShip = async (destination_id, source_id) => {

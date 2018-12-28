@@ -8,8 +8,8 @@ export default class ReactGantt extends Component {
 
   async componentDidMount() {
     await this.renderFrappeGanttDOM()
-    if(this.props.onLoad){
-      this.props.onLoad () || noop
+    if (this.props.onLoad) {
+      this.props.onLoad() || noop
     }
   }
 

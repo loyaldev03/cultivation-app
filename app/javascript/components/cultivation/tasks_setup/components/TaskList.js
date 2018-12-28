@@ -40,6 +40,28 @@ const styles = `
 
 `
 
+const TaskNameField = React.memo(({ id, wbs, indent, text }) => {
+  return (
+    <span
+      className={classNames(`dib flex items-center indent--${indent}`, {
+        orange: TaskStore.hasChildNode(wbs)
+      })}
+    >
+      {TaskStore.hasChildNode(wbs) ? (
+        <i
+          className="material-icons dim grey f7 pointer"
+          onClick={e => TaskStore.toggleCollapseNode(wbs)}
+        >
+          {TaskStore.isCollapsed(wbs) ? 'arrow_right' : 'arrow_drop_down'}
+        </i>
+      ) : (
+        <span className="dib indent--1" />
+      )}
+      {text}
+    </span>
+  )
+})
+
 @observer
 class TaskList extends React.Component {
   constructor(props) {
@@ -139,23 +161,7 @@ class TaskList extends React.Component {
     const { id, wbs, indent } = data.row
     return (
       <div className="flex justify-between items-center" draggable={true}>
-        <span
-          className={classNames(`dib flex items-center indent--${indent}`, {
-            orange: TaskStore.hasChildNode(wbs)
-          })}
-        >
-          {TaskStore.hasChildNode(wbs) ? (
-            <i
-              className="material-icons dim grey f7 pointer"
-              onClick={e => TaskStore.toggleCollapseNode(wbs)}
-            >
-              {TaskStore.isCollapsed(wbs) ? 'arrow_right' : 'arrow_drop_down'}
-            </i>
-          ) : (
-            <span className="dib indent--1" />
-          )}
-          {data.value}
-        </span>
+        <TaskNameField id={id} wbs={wbs} indent={indent} text={data.value} />
         <Manager>
           <Reference>
             {({ ref }) => (
@@ -163,8 +169,8 @@ class TaskList extends React.Component {
                 ref={ref}
                 id={id}
                 onClick={this.handleClick}
-                className="material-icons ml2 pointer button-dropdown"
-                style={{ display: 'none', fontSize: '18px' }}
+                className="material-icons child ml2 pointer button-dropdown"
+                style={{ fontSize: '18px' }}
               >
                 more_horiz
               </i>
@@ -511,31 +517,19 @@ class TaskList extends React.Component {
           className="-highlight"
           pageSize={TaskStore.taskList.length}
           getTrProps={(state, rowInfo, column) => {
-            if (rowInfo) {
-              return {
-                style: {
-                  boxShadow:
-                    this.state.taskSelected === rowInfo.row.id
-                      ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
-                      : null,
-                  backgroundColor:
-                    rowInfo.row['indent'] === 0 ? '#FAEFEE' : null
-                },
-                onMouseOver: (e, handleOriginal) => {
-                  let button = document.getElementById(rowInfo.row.id)
-                  button.style.display = 'block'
-                },
-                onMouseOut: (e, handleOriginal) => {
-                  let button = document.getElementById(rowInfo.row.id)
-                  if (this.state.taskSelected !== rowInfo.row.id) {
-                    button.parentElement.parentElement.parentElement.parentElement.style.boxShadow =
-                      ''
-                  }
-                  button.style.display = 'none'
-                }
+            const trProps = {
+              className: 'hide-child'
+            }
+            if (this.state.taskSelected && rowInfo.row) {
+              trProps.stype = {
+                boxShadow:
+                  this.state.taskSelected === rowInfo.row.id
+                    ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
+                    : null,
+                backgroundColor: rowInfo.row['indent'] === 0 ? '#FAEFEE' : null
               }
             }
-            return {}
+            return trProps
           }}
         />
         <div className="mt3 tr">

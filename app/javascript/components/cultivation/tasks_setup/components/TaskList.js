@@ -122,11 +122,12 @@ class TaskList extends React.Component {
   }
 
   handleEllipsisClick = taskId => e => {
+    console.log({ taskId })
     this.setState({ idOpen: taskId })
   }
 
   handleMouseLeave = row => {
-    this.setState({ idOpen: null })
+    this.clearDropdown()
   }
 
   handleIndent = (taskId, indentAction) => {
@@ -134,8 +135,8 @@ class TaskList extends React.Component {
     TaskStore.updateTaskIndent(this.props.batch.id, taskId, indentAction)
   }
 
-  handleEdit = e => {
-    this.setState({ taskSelected: e.row.id, showStartDateCalendar: false })
+  handleEdit = taskId => {
+    this.setState({ taskSelected: taskId, showStartDateCalendar: false })
     let error_container = document.getElementById('error-container')
     if (error_container) {
       error_container.style.display = 'none'
@@ -143,7 +144,7 @@ class TaskList extends React.Component {
     this.clearDropdown()
     editorSidebarHandler.open({
       width: '500px',
-      data: e.row,
+      taskId: taskId,
       action: 'update'
     })
   }
@@ -153,9 +154,7 @@ class TaskList extends React.Component {
   }
 
   clearDropdown() {
-    this.setState(prevState => ({
-      idOpen: null
-    }))
+    this.setState({ idOpen: null })
   }
 
   renderDateColumn = field => data => {
@@ -165,32 +164,38 @@ class TaskList extends React.Component {
   renderTaskNameColumn = data => {
     const { id, wbs, indent } = data.row
     return (
-      <div className="flex justify-between items-center" draggable={true}>
+      <div className="flex justify-between items-center h-100" draggable={true}>
         <TaskNameField id={id} wbs={wbs} indent={indent} text={data.value} />
         <Manager>
           <Reference>
-            {({ ref }) => (
-              <i
-                ref={ref}
-                onClick={this.handleEllipsisClick(id)}
-                className="material-icons ml2 pointer button-dropdown child"
-              >
-                more_horiz
-              </i>
-            )}
+            {({ ref }) => {
+              const childState = !this.state.idOpen || this.state.idOpen === id
+              return (
+                <i
+                  ref={ref}
+                  onClick={this.handleEllipsisClick(id)}
+                  className={classNames(
+                    'ml2 pointer material-icons show-on-hover',
+                    {}
+                  )}
+                >
+                  more_horiz
+                </i>
+              )
+            }}
           </Reference>
           {this.state.idOpen === id && (
-            <Popper placement="right-end">
+            <Popper placement="bottom-start">
               {({ ref, style, placement, arrowProps }) => (
                 <div
                   ref={ref}
                   style={style}
                   data-placement={placement}
                   className="bg-white f6 flex"
-                  onMouseLeave={this.handleMouseLeave}
                 >
                   <div
                     className="db shadow-4"
+                    onMouseLeave={this.handleMouseLeave}
                   >
                     <MenuButton
                       icon="format_indent_increase"
@@ -215,7 +220,7 @@ class TaskList extends React.Component {
                     <MenuButton
                       icon="edit"
                       text="Edit Task Details"
-                      onClick={e => this.handleEdit(data)}
+                      onClick={e => this.handleEdit(id)}
                     />
                     <MenuButton
                       icon="delete_outline"
@@ -478,7 +483,7 @@ class TaskList extends React.Component {
           pageSize={TaskStore.taskList.length}
           getTrProps={(state, rowInfo, column) => {
             const trProps = {
-              className: 'hide-child'
+              className: 'task-row'
             }
             if (this.state.taskSelected && rowInfo.row) {
               trProps.stype = {

@@ -19,13 +19,13 @@ export default class MaterialForm extends React.Component {
     this.state = {
       batch_id: this.props.batch_id,
       task_id: props.task.id,
-      ...props.task.attributes,
+      ...props.task,
       catalogue_id: '',
       name: '',
       quantity: '',
       uom: '',
       materials: [],
-      items: props.task.attributes.items
+      items: props.task.items
     }
   }
 
@@ -35,12 +35,12 @@ export default class MaterialForm extends React.Component {
       this.setState({
         batch_id: this.props.batch_id,
         task_id: props.task.id,
-        ...props.task.attributes,
+        ...props.task,
         name: '',
         quantity: '',
         uom: '',
         materials: [],
-        items: props.task.attributes.items,
+        items: props.task.items,
         selectedCategory: '',
         selectedSubCategory: '',
         selectedThirdDropdown: '',
@@ -116,9 +116,9 @@ export default class MaterialForm extends React.Component {
               ...prevState.items,
               {
                 id: data.id,
-                name: data.attributes.name,
-                quantity: data.attributes.quantity,
-                uom: data.attributes.uom
+                name: data.name,
+                quantity: data.quantity,
+                uom: data.uom
               }
             ],
             name: '',

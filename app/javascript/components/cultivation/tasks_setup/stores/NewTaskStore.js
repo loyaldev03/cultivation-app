@@ -98,7 +98,7 @@ class TaskStore {
   }
 
   getTaskById(id) {
-    return this.tasks.find(x => x.id === id)
+    return toJS(this.tasks.find(x => x.id === id))
   }
 
   @action

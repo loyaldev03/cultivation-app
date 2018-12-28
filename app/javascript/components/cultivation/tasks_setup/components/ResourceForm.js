@@ -17,12 +17,12 @@ export default class ResourceForm extends React.Component {
     this.state = {
       batch_id: this.props.batch_id,
       id: props.task.id,
-      ...props.task.attributes,
+      ...props.task,
       resource_name: '',
       job_role: '',
       dropdown_roles: UserRoles.slice(),
       dropdown_users: this.toDropdown(UserStore.users),
-      users: this.generateUser(props.task.attributes.user_ids)
+      users: this.generateUser(props.task.user_ids)
     }
   }
 
@@ -32,12 +32,12 @@ export default class ResourceForm extends React.Component {
       this.setState({
         batch_id: this.props.batch_id,
         id: props.task.id,
-        ...props.task.attributes,
+        ...props.task,
         resource_name: '',
         job_role: '',
         dropdown_roles: UserRoles.slice(),
         dropdown_users: this.toDropdown(UserStore.users),
-        users: this.generateUser(props.task.attributes.user_ids)
+        users: this.generateUser(props.task.user_ids)
       })
     }
   }
@@ -49,7 +49,7 @@ export default class ResourceForm extends React.Component {
     let user_hashes = user_filtered.map(e => {
       let newHash = {}
       newHash['id'] = e.id
-      newHash['name'] = e.attributes.full_name
+      newHash['name'] = e.full_name
       newHash['role'] = 'Availability Here'
       return newHash
     })
@@ -61,7 +61,7 @@ export default class ResourceForm extends React.Component {
     for (var i = 0; i < users.length; i++) {
       array_users.push({
         value: users[i].id,
-        label: users[i].attributes.full_name
+        label: users[i].full_name
       })
     }
     return array_users
@@ -74,7 +74,7 @@ export default class ResourceForm extends React.Component {
         let existing_user_ids = this.state.users.map(user => user.id)
         let dropdown_users = UserStore.users.filter(
           user =>
-            user.attributes.roles.includes(value.value) &&
+            user.roles.includes(value.value) &&
             !existing_user_ids.includes(user.id)
         )
         dropdown_users = this.toDropdown(dropdown_users)

@@ -40,3 +40,17 @@ $indentWidth: 24px;
 .indent--9 {
   margin-left: $indentWidth * 9;
 }
+
+.task-row {
+  height: 32px;
+  font-size: 14px;
+  .show-on-hover {
+    display: none;
+  }
+}
+
+.task-row:hover {
+  .show-on-hover {
+    display: block;
+  }
+}

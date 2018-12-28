@@ -81,6 +81,8 @@ Rails.application.routes.draw do
         get 'product_info'
       end
     end
+
+    resources :non_sales_items, only: [:index]
   end
 
   namespace 'settings' do
@@ -158,6 +160,12 @@ Rails.application.routes.draw do
           get 'converted_products'
           post 'setup_harvest_package'
           post 'setup_converted_product'
+        end
+      end
+
+      resources :non_sales_items, only: [:index, :show] do
+        collection do
+          post 'setup'
         end
       end
 

@@ -1,10 +1,10 @@
 import React from 'react'
-import { observable } from 'mobx'
-import { observer, Provider } from 'mobx-react'
+import { observer } from 'mobx-react'
 import { formatDate2 } from '../../utils'
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
 import ReactTable from 'react-table'
+import IssueSidebar from '../../issues/IssueSidebar'
 
 const columns = [
   {
@@ -50,7 +50,8 @@ const columns = [
   }
 ]
 
-function openSidebar(event, id) {
+const openSidebar = (event, id = null) => {
+  console.log(event)
   window.editorSidebar.open({ width: '500px', id })
   event.preventDefault()
 }
@@ -63,12 +64,16 @@ class BatchIssues extends React.Component {
     }
   }
 
+  componentDidMount() {
+    window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
+  }
+
   renderContent() {
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3 ">
           <div className="flex mb3 justify-end">
-            <button className="btn btn--primary" onClick={this.openSidebar}>
+            <button className="btn btn--primary" onClick={openSidebar}>
               Submit an issue
             </button>
           </div>
@@ -83,8 +88,8 @@ class BatchIssues extends React.Component {
               minRows={5}
               filterable
               className="f6 w-100"
-              showPagination={false}
             />
+            <IssueSidebar />
           </div>
         </div>
       </React.Fragment>

@@ -221,6 +221,12 @@ Rails.application.routes.draw do
         put ':id/add_notes', to: 'daily_tasks#add_notes'
         put ':id/update_materials_used', to: 'daily_tasks#update_materials_used'
       end
+
+      resources :issues do
+        collection do
+          get 'batch_issues/:batch_id', action: 'batch_issues'
+        end
+      end
     end
   end
 end

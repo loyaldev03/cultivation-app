@@ -5,7 +5,7 @@ module Issues
 
     field :message, type: String
     field :quote, type: String
-    field :task_id, BSON::ObjectId
+    field :task_id, type: BSON::ObjectId                  # For issue/ comment that is converted to a task
     field :resolved, type: Boolean, default: false
     belongs_to :created_by, class_name: 'User'
 

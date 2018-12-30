@@ -106,7 +106,11 @@
             </p>
           </div>
 
-          <%= link_to 'Start', inventory_non_sales_items_path, class: 'btn btn--primary' %>
+          <% if @non_sales_product_count <= 0 %>
+            <%= link_to 'Start', inventory_non_sales_items_path, class: 'btn btn--primary' %>
+          <% else %>
+            <%= link_to 'Change', inventory_non_sales_items_path, class: 'btn btn--secondary' %>
+          <% end %>
         </div>
 
         <!-- 

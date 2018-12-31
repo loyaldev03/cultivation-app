@@ -39,7 +39,6 @@ export const httpDeleteOptions = payload => ({
   }
 })
 
-
 export const httpOptions = (method, payload) => ({
   method,
   credentials: 'include',

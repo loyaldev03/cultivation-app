@@ -63,7 +63,7 @@ export default class TaskEditor extends React.Component {
   onOpen = ev => {
     if (ev.detail && ev.detail.taskId) {
       const { taskId, action } = ev.detail
-      const task =  TaskStore.getTaskById(taskId)
+      const task = TaskStore.getTaskById(taskId)
       this.setState({
         tabs: 'General',
         id: task.id,
@@ -83,31 +83,13 @@ export default class TaskEditor extends React.Component {
     if (action === 'update') {
       if (!task) return null
       if (tabs === 'General') {
-        return (
-          <SidebarTaskEditor
-            id={id}
-            task={task}
-            batch_id={batch_id}
-          />
-        )
+        return <SidebarTaskEditor id={id} task={task} batch_id={batch_id} />
       }
       if (tabs === 'Resource') {
-        return (
-          <ResourceForm
-            id={id}
-            task={task}
-            batch_id={batch_id}
-          />
-        )
+        return <ResourceForm id={id} task={task} batch_id={batch_id} />
       }
       if (tabs === 'Material') {
-        return (
-          <MaterialForm
-            id={id}
-            task={task}
-            batch_id={batch_id}
-          />
-        )
+        return <MaterialForm id={id} task={task} batch_id={batch_id} />
       }
     } else {
       return (
@@ -174,10 +156,10 @@ export default class TaskEditor extends React.Component {
   render() {
     let changeTabs = this.changeTabs
     let isNormalTask = true
-      // TODO: Need to switch to wbs
-      // this.state.task &&
-      // this.state.task.attributes.is_phase === false &&
-      // this.state.task.attributes.is_category === false
+    // TODO: Need to switch to wbs
+    // this.state.task &&
+    // this.state.task.attributes.is_phase === false &&
+    // this.state.task.attributes.is_category === false
     return (
       <div className="flex flex-column">
         <style> {styles} </style>

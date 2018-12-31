@@ -4,6 +4,7 @@ import {
   httpPutOptions,
   httpGetOptions,
   httpPostOptions,
+  httpDeleteOptions,
   addDayToDate,
   toast
 } from '../../../utils'
@@ -70,6 +71,27 @@ class TaskStore {
       this.isLoading = false
     }
   }
+  
+  @action
+  async deleteTask(batchId, id) {
+    console.log('delete task')
+    const url = `/api/v1/batches/${batchId}/tasks/${id}`
+      try {
+        const response = await (await fetch(url, httpDeleteOptions())).json()
+        if (response.errors && response.errors.id) {
+          toast(data.errors.id, 'error')
+        } else {
+          toast('Task has been deleted', 'success')
+          this.loadTasks(batchId)
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.isLoading = false
+      }
+  }
+
+
 
   isCollapsed(wbs) {
     const found = this.collapsedNodes.find(x => x === wbs)
@@ -175,15 +197,6 @@ class TaskStore {
       } catch (error) {
         console.log(error)
       }
-    }
-  }
-
-  deleteTask(task) {
-    const found = this.tasks.find(x => x.id === task.id)
-    if (found) {
-      this.tasks = this.tasks.map(u => u.id !== task.id)
-    } else {
-      this.tasks.push(task)
     }
   }
 

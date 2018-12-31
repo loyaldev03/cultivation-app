@@ -29,6 +29,17 @@ export const httpPutOptions = payload => ({
   }
 })
 
+export const httpDeleteOptions = payload => ({
+  method: 'DELETE',
+  credentials: 'include',
+  // body: JSON.stringify(payload),
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
+  }
+})
+
+
 export const httpOptions = (method, payload) => ({
   method,
   credentials: 'include',

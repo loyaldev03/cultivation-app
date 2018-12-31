@@ -255,6 +255,8 @@ export default class Gantt {
     this.map_arrows_on_bars()
     this.set_width()
     this.set_scroll_position()
+    this.make_weekend_highlights()
+
   }
 
   setup_layers() {
@@ -404,6 +406,55 @@ export default class Gantt {
         append_to: this.layers.grid
       })
     }
+  }
+
+  getDates(startDate, endDate){
+    var dates = [],
+      currentDate = startDate,
+      addDays = function (days) {
+        var date = new Date(this.valueOf());
+        date.setDate(date.getDate() + days);
+        return date;
+      };
+    while (currentDate <= endDate) {
+      dates.push(currentDate);
+      currentDate = addDays.call(currentDate, 1);
+    }
+    return dates;
+  }
+
+
+  make_weekend_highlights(){
+    const start_date = this.gantt_start
+    const date_now = start_date
+    const options = this.options
+    const tasks = this.tasks
+    const layers = this.layers
+    let dates = this.getDates(this.gantt_start, this.gantt_end);
+    dates.forEach(function (date) {
+      if (date.getDay() == 6 || date.getDay() == 0) { //if weekend , saturday or sunday
+        const x =
+          (date_utils.diff(date, start_date, 'hour') /
+            options.step) *
+          options.column_width
+        const y = 0
+
+        const width = options.column_width
+        const height =
+          (options.bar_height + options.padding) * tasks.length +
+          options.header_height +
+          options.padding / 2
+
+        createSVG('rect', {
+          x,
+          y,
+          width,
+          height,
+          class: 'weekend-highlight',
+          append_to: layers.grid
+        })
+      }
+    });
   }
 
   make_dates() {

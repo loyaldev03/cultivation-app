@@ -93,16 +93,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def get_all_tasks
-    tasks = @batch.tasks.order_by(position: :asc).to_a
-    map_tasks_wbs(tasks)
-  end
-
-  def map_tasks_wbs(tasks)
-    wbs_list = GenerateWbs.generate(tasks)
-    tasks.each_with_index do |t, i|
-      t.wbs = wbs_list[i][:wbs]
-    end
-    tasks
+    Cultivation::QueryTasks.call(@batch).result
   end
 
   def task_params

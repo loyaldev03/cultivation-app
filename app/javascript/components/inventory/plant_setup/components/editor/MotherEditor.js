@@ -263,6 +263,10 @@ class MotherEditor extends React.Component {
       purchaseData = this.purchaseInfoEditor.getValues()
     }
 
+    if (!location_id) {
+      errors.location_id = ['Please select location of the mother plant.']
+    }
+
     const isValid =
       purchaseData.isValid && Object.getOwnPropertyNames(errors).length === 0
 

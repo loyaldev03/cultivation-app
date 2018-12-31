@@ -17,10 +17,10 @@ class SidebarTaskEditor extends React.Component {
       tabs: 'general',
       batch_id: this.props.batch_id,
       id: props.task.id,
-      ...props.task.attributes,
-      duration: this.props.task.attributes.duration,
-      start_date: this.initialize_date(this.props.task.attributes.start_date),
-      end_date: this.initialize_date(this.props.task.attributes.end_date),
+      ...props.task,
+      duration: this.props.task.duration,
+      start_date: this.initialize_date(this.props.task.start_date),
+      end_date: this.initialize_date(this.props.task.end_date),
       errors: ''
     }
   }
@@ -32,9 +32,9 @@ class SidebarTaskEditor extends React.Component {
         batch_id: this.props.batch_id,
         id: props.task.id,
         ...props.task.attributes,
-        duration: props.task.attributes.duration,
-        start_date: this.initialize_date(props.task.attributes.start_date),
-        end_date: this.initialize_date(props.task.attributes.end_date),
+        duration: props.task.duration,
+        start_date: this.initialize_date(props.task.start_date),
+        end_date: this.initialize_date(props.task.end_date),
         errors: ''
       })
     }
@@ -53,7 +53,7 @@ class SidebarTaskEditor extends React.Component {
   }
 
   handleChangeTask = event => {
-    let key = event.target.attributes.fieldname.value
+    let key = event.target.fieldname.value
     let value = event.target.value
     if (key === 'duration' && value && this.state.start_date) {
       let new_end_date = new Date(this.state.start_date)

@@ -61,58 +61,61 @@ export default class TaskEditor extends React.Component {
   }
 
   onOpen = ev => {
-    if (ev.detail && ev.detail.data) {
+    if (ev.detail && ev.detail.taskId) {
+      const { taskId, action } = ev.detail
+      const task =  TaskStore.getTaskById(taskId)
       this.setState({
-        id: ev.detail.data.id,
         tabs: 'General',
-        task: TaskStore.getTaskById(ev.detail.data.id),
-        action: ev.detail.action,
-        task_related_id: ev.detail.data.task_related_id,
-        task_related_parent_id: ev.detail.data.task_related_id,
-        position: ev.detail.data.position
+        id: task.id,
+        action: action,
+        task: task,
+        task_related_id: task.task_related_id,
+        task_related_parent_id: task.task_related_id,
+        position: task.position
       })
     }
   }
 
   renderSidebarTaskEditor() {
     //find task here and send
-    let task = TaskStore.getTaskById(this.state.id)
-    if (this.state.action === 'update') {
-      if (task === undefined) return null
-      if (this.state.tabs === 'General') {
+    const { batch_id } = this.props
+    const { id, action, tabs, task, position } = this.state
+    if (action === 'update') {
+      if (!task) return null
+      if (tabs === 'General') {
         return (
           <SidebarTaskEditor
-            id={this.state.id}
+            id={id}
             task={task}
-            batch_id={this.props.batch_id}
+            batch_id={batch_id}
           />
         )
       }
-      if (this.state.tabs === 'Resource') {
+      if (tabs === 'Resource') {
         return (
           <ResourceForm
-            id={this.state.id}
+            id={id}
             task={task}
-            batch_id={this.props.batch_id}
+            batch_id={batch_id}
           />
         )
       }
-      if (this.state.tabs === 'Material') {
+      if (tabs === 'Material') {
         return (
           <MaterialForm
-            id={this.state.id}
+            id={id}
             task={task}
-            batch_id={this.props.batch_id}
+            batch_id={batch_id}
           />
         )
       }
     } else {
       return (
         <AddTaskForm
-          batch_id={this.props.batch_id}
+          batch_id={batch_id}
           task_related_id={this.state.task_related_id}
           task_related_parent_id={this.state.task_related_parent_id}
-          position={this.state.position}
+          position={position}
           handleReset={this.props.handleReset}
         />
       )
@@ -170,10 +173,11 @@ export default class TaskEditor extends React.Component {
 
   render() {
     let changeTabs = this.changeTabs
-    let isNormalTask =
-      this.state.task &&
-      this.state.task.attributes.is_phase === false &&
-      this.state.task.attributes.is_category === false
+    let isNormalTask = true
+      // TODO: Need to switch to wbs
+      // this.state.task &&
+      // this.state.task.attributes.is_phase === false &&
+      // this.state.task.attributes.is_category === false
     return (
       <div className="flex flex-column">
         <style> {styles} </style>

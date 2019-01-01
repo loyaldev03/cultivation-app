@@ -154,7 +154,9 @@ class RawMaterialEditor extends React.Component {
     }
 
     if (parseFloat(qty_per_package) <= 0) {
-      errors.qty_per_package = ['Quantity per package should be more than zero.']
+      errors.qty_per_package = [
+        'Quantity per package should be more than zero.'
+      ]
     }
 
     if (catalogue.length === 0) {

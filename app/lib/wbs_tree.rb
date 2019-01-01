@@ -24,14 +24,14 @@ class WbsTree
       end
     end
 
-    def children(tasks_with_wbs = [], node_wbs = "")
-      child_wbs = node_wbs + "."
+    def children(tasks_with_wbs = [], node_wbs = '')
+      child_wbs = node_wbs + '.'
       tasks_with_wbs.select { |t| t.wbs.starts_with? child_wbs }
     end
 
-    def parent(tasks_with_wbs = [], node_wbs = "")
+    def parent(tasks_with_wbs = [], node_wbs = '')
       if !node_wbs.blank? && !tasks_with_wbs.blank?
-        last_index = node_wbs.rindex(".")
+        last_index = node_wbs.rindex('.')
         if last_index.nil?
           nil
         else

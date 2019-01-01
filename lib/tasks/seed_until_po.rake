@@ -112,6 +112,13 @@ task seed_until_po: :environment  do
                                             key: 'eye_drops',
                                             uom_dimension: 'weight')
 
+  _desk      = Inventory::Catalogue.create!(label: 'Desk',
+                                            catalogue_type: 'non_sales_product',
+                                            category: '',
+                                            sub_category: '',
+                                            key: 'desk',
+                                            uom_dimension: 'pc')
+
   # For seed and clone and plants
   plant_catalogue  = Inventory::Catalogue.create!(label: 'Plant',
                                             catalogue_type: 'plant',

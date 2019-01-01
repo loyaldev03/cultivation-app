@@ -1,20 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
-// import DatePicker from 'react-date-picker/dist/entry.nostyle'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { PurchaseInfo } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
-import { saveRawMaterial } from '../actions/saveRawMaterial'
-import { getRawMaterial } from '../actions/getRawMaterial'
+import { saveNonSalesItem } from '../actions/saveNonSalesItem'
+import { getNonSalesItem } from '../actions/getNonSalesItem'
 
-class RawMaterialEditor extends React.Component {
+class NonSalesItemEditor extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
     this.purchaseInfoEditor = React.createRef()
-    this.label = props.raw_material_type.replace(/[_]/g, ' ')
   }
 
   componentDidMount() {
@@ -23,11 +22,20 @@ class RawMaterialEditor extends React.Component {
       if (!id) {
         this.reset()
       } else {
-        getRawMaterial(id)
-          .then(x => x.data.data.attributes)
+        getNonSalesItem(id)
+          .then(x => {
+            const attr = x.data.data.attributes
+            return attr
+          })
           .then(attr => {
-            const catalogue = this.props.catalogues.find(
-              x => x.id == attr.catalogue_id
+            const catalogueOptions = this.props.catalogues.result.map(x => ({
+              value: x.value,
+              label: x.label,
+              uoms: x.uoms
+            }))
+
+            const catalogue = catalogueOptions.find(
+              x => x.value == attr.catalogue_id
             )
 
             this.setState({
@@ -58,11 +66,8 @@ class RawMaterialEditor extends React.Component {
     this.setState({ facility_id: item.f_id })
   }
 
-  onCatalogueSelected = item => {
-    this.setState({
-      catalogue: item,
-      uom: { value: '', label: '' }
-    })
+  onNonSalesItemTypeSelected = item => {
+    this.setState({ catalogue: item })
   }
 
   onChangeGeneric = event => {
@@ -76,6 +81,7 @@ class RawMaterialEditor extends React.Component {
       id: '',
       facility_id: '',
       qty_per_package: '',
+      nonSalesItemType: { value: '', label: '', children: [] },
       catalogue: { value: '', label: '', uoms: [] },
       product_name: '',
       manufacturer: '',
@@ -102,8 +108,9 @@ class RawMaterialEditor extends React.Component {
   onSave = event => {
     const payload = this.validateAndGetValues()
     if (payload.isValid) {
-      saveRawMaterial(payload).then(({ status, data }) => {
+      saveNonSalesItem(payload).then(({ status, data }) => {
         if (status >= 400) {
+          console.log(data)
           this.setState({ errors: data.errors })
         } else {
           this.reset()
@@ -159,9 +166,9 @@ class RawMaterialEditor extends React.Component {
       ]
     }
 
-    if (catalogue.length === 0) {
-      errors.catalogue = [`${this.label} product is required.`]
-    }
+    // if (!catalogue) {
+    //   errors.catalogue = ['Non-sales item product is required.']
+    // }
 
     if (location_id.length === 0) {
       errors.location_id = ['Storage location is required.']
@@ -174,6 +181,7 @@ class RawMaterialEditor extends React.Component {
 
     const isValid =
       Object.getOwnPropertyNames(errors).length === 0 && purchaseIsValid
+
     if (!isValid) {
       this.setState({ errors })
     }
@@ -198,7 +206,12 @@ class RawMaterialEditor extends React.Component {
   }
 
   render() {
-    const { locations } = this.props
+    const { locations, catalogues } = this.props
+    const catalogueOptions = catalogues.result.map(x => ({
+      value: x.value,
+      label: x.label,
+      uoms: x.uoms
+    }))
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
 
@@ -213,7 +226,7 @@ class RawMaterialEditor extends React.Component {
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add {this.label}</h1>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Item</h1>
             <span
               className="rc-slide-panel__close-button dim"
               onClick={() => {
@@ -238,17 +251,16 @@ class RawMaterialEditor extends React.Component {
           </div>
 
           <div className="ph4 mb3 flex">
-            <div className="w-50">
+            <div className="w-40">
               <label className="f6 fw6 db mb1 gray ttc">
-                {this.label} Type
+                Non-sales Item Type
               </label>
               <Select
-                options={this.props.catalogues}
+                options={catalogueOptions}
                 value={this.state.catalogue}
-                onChange={this.onCatalogueSelected}
+                onChange={this.onNonSalesItemTypeSelected}
                 styles={reactSelectStyle}
               />
-              <FieldError errors={this.state.errors} field="catalogue" />
             </div>
           </div>
 
@@ -408,11 +420,11 @@ class RawMaterialEditor extends React.Component {
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
-            label={`How the ${this.label} are purchased?`}
-            showVendorLicense={false}
+            label="How the items are purchased?"
             vendor={this.state.vendor}
             purchase_order={this.state.purchase_order}
             vendor_invoice={this.state.vendor_invoice}
+            showVendorLicense={false}
           />
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
@@ -430,10 +442,4 @@ class RawMaterialEditor extends React.Component {
   }
 }
 
-RawMaterialEditor.propTypes = {
-  locations: PropTypes.array.isRequired,
-  order_uoms: PropTypes.array.isRequired,
-  raw_material_type: PropTypes.string.isRequired
-}
-
-export default RawMaterialEditor
+export default NonSalesItemEditor

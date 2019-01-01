@@ -87,9 +87,14 @@ class PurchasedCloneEditor extends React.Component {
   onSave = event => {
     const payload = this.validateAndGetValues()
     if (payload.isValid) {
-      setupPurchasedClones(payload).then(x => {
-        this.reset()
-        window.editorSidebar.close()
+      setupPurchasedClones(payload).then(({ status, data }) => {
+        if (status >= 400) {
+          console.log(data)
+          this.setState({ errors: data.errors })
+        } else {
+          this.reset()
+          window.editorSidebar.close()
+        }
       })
     }
     event.preventDefault()
@@ -119,7 +124,7 @@ class PurchasedCloneEditor extends React.Component {
     }
 
     if (parseFloat(order_quantity) <= 0) {
-      errors.order_quantity = ['Order quantity is required.']
+      errors.order_quantity = ['Order quantity should be more than zero.']
     }
 
     const {

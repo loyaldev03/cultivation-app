@@ -93,9 +93,13 @@ class SeedEditor extends React.Component {
   onSave = event => {
     const payload = this.validateAndGetValues()
     if (payload.isValid) {
-      setupSeed(payload).then(x => {
-        this.reset()
-        window.editorSidebar.close()
+      setupSeed(payload).then(({ status, data }) => {
+        if (status >= 400) {
+          this.setState({ errors: data.errors })
+        } else {
+          this.reset()
+          window.editorSidebar.close()
+        }
       })
     }
 
@@ -134,7 +138,7 @@ class SeedEditor extends React.Component {
     }
 
     if (parseFloat(order_quantity) <= 0) {
-      errors.order_quantity = ['Order quantity is required.']
+      errors.order_quantity = ['Order quantity should be more than zero.']
     }
 
     if (parseFloat(qty_per_package) <= 0) {

@@ -1,52 +1,48 @@
 module Inventory
-  class SetupSeed
+  class SetupNonSalesItem
     prepend SimpleCommand
 
     attr_reader :user,
-      :args,
-      :is_draft,
-      :id,
-      :facility_strain,
-      :facility_strain_id,
-      :facility,
-      :catalogue,
-      :uom,
-      :quantity,
-      :product_name,
-      :manufacturer,
-      :description,
-      :order_quantity,
-      :order_uom,
-      :qty_per_package,
-      :price,
-      :location_id,
-      :vendor_id,
-      :vendor_name,
-      :vendor_no,
-      :address,
-      :vendor_state_license_num,
-      :vendor_state_license_expiration_date,
-      :vendor_location_license_expiration_date,
-      :vendor_location_license_num,
-      :purchase_order_no,
-      :purchase_date,
-      :invoice_no,
-      :purchase_order_id,  # For update purpose
-      :purchase_order_item_id,
-      :invoice_id,
-      :invoice_item_id
+                :args,
+                :is_draft,
+                :id,
+                :facility_id,
+                :facility,
+                :location_id,
+                :catalogue,
+                :product_name,
+                :description,
+                :manufacturer,
+                :quantity,
+                :uom,
+                :price,
+                :order_quantity,
+                :order_uom,
+                :qty_per_package,
+                :vendor_id,
+                :vendor_name,
+                :vendor_no,
+                :invoice_no,
+                :purchase_order_no,
+                :address,
+                :purchase_date,
+                :purchase_order_id,
+                :purchase_order_item_id,
+                :invoice_id,
+                :invoice_item_id
 
     def initialize(user, args)
       @args = args
       @user = user
-      @id = args[:id]
 
-      @facility_strain_id = args[:facility_strain_id]
-      @facility_strain = Inventory::FacilityStrain.find(facility_strain_id)
-      @facility = facility_strain.facility
+      @id = args[:id]
+      @facility_id = args[:facility_id]
+      @facility = Facility.find(@facility_id)
 
       @location_id = args[:location_id]
-      @catalogue = Inventory::Catalogue.seed
+      @catalogue_id = args[:catalogue]
+      @catalogue = Inventory::Catalogue.find(@catalogue_id)
+
       @product_name = args[:product_name]
       @description = args[:description]
       @manufacturer = args[:manufacturer]
@@ -60,15 +56,10 @@ module Inventory
       @vendor_id = args[:vendor_id]
       @vendor_name = args[:vendor_name]
       @vendor_no = args[:vendor_no]
-      @address = args[:address]
-      @vendor_state_license_num = args[:vendor_state_license_num]
-      @vendor_state_license_expiration_date = args[:vendor_state_license_expiration_date]
-      @vendor_location_license_expiration_date = args[:vendor_location_license_expiration_date]
-      @vendor_location_license_num = args[:vendor_location_license_num]
-
-      @purchase_order_no = args[:purchase_order_no]
-      @purchase_date = args[:purchase_date]
       @invoice_no = args[:invoice_no]
+      @purchase_order_no = args[:purchase_order_no]
+      @address = args[:address]
+      @purchase_date = args[:purchase_date]
 
       @purchase_order_id = args[:purchase_order_id]
       @invoice_id = args[:invoice_id]
@@ -80,12 +71,12 @@ module Inventory
       if valid_permission? && valid_data?
         invoice_item = save_purchase_info
 
-        raw_material = if id.blank?
-                         create_seed(invoice_item)
-                       else
-                         update_seed(invoice_item)
-                       end
-        raw_material
+        non_sales_item = if id.blank?
+                           create_non_sales_item(invoice_item)
+                         else
+                           update_non_sales_item(invoice_item)
+                         end
+        non_sales_item
       end
     end
 
@@ -103,11 +94,11 @@ module Inventory
       # @purchase_order_id
       # @purchase_order_item_id
 
-      errors.add(:facility_strain_id, 'Strain is required') if facility_strain_id.blank?
+      errors.add(:facility_id, 'Facility is required') if facility_id.blank?
       errors.add(:uom, 'Unit of measure is required') if uom.blank?
       errors.add(:order_uom, 'Order unit of measure is required') if order_uom.blank?
       errors.add(:order_quantity, 'Order quantity should be more than zero') if order_quantity.to_f <= 0
-      errors.add(:quantity, 'Quantity should be more than zero') if quantity.to_f <= 0
+      errors.add(:quantity, 'Quantity is required') if quantity.to_f <= 0
       errors.add(:qty_per_package, 'Quantity per package is required') if qty_per_package.blank?
       errors.add(:catalogue, 'Catalogue is required') if catalogue.nil?
       errors.add(:location_id, 'Location is required') if location_id.nil?
@@ -126,8 +117,27 @@ module Inventory
       invoice_item
     end
 
-    # If user edit existing inventory but changes to another PO or Invoice,
-    # the entry at the old PO or Invoice should be deleted.
+    def create_non_sales_item(invoice_item)
+      Inventory::ItemTransaction.create!(
+        ref_id: invoice_item.id,
+        ref_type: 'Inventory::VendorInvoiceItem',
+        event_type: 'inventory_setup',        # Move to Constants
+        event_date: purchase_date,            # stock intake happen today
+        facility: facility,
+        catalogue: catalogue,
+        product_name: invoice_item.product_name,
+        description: invoice_item.description,
+        manufacturer: invoice_item.manufacturer,
+        uom: uom,
+        quantity: quantity,
+        order_quantity: order_quantity,          # quantity inside PO and stock receive
+        order_uom: order_uom,               # uom inside PO and stock receive
+        conversion: qty_per_package,         # conversion rule, 1 bag = 65 kg
+        facility_strain: nil,
+        location_id: location_id,
+      )
+    end
+
     def handle_po_invoice_switching
       return if id.blank?
 
@@ -161,10 +171,6 @@ module Inventory
         vendor_no: vendor_no,
         address: address,
         vendor_type: 'normal',
-        state_license_num: vendor_state_license_num,
-        state_license_expiration_date: vendor_state_license_expiration_date,
-        location_license_num: vendor_location_license_num,
-        location_license_expiration_date: vendor_location_license_expiration_date,
       )
 
       if command.success?
@@ -173,17 +179,12 @@ module Inventory
         combine_errors(command.errors, :vendor_name, :name)
         combine_errors(command.errors, :vendor_no, :vendor_no)
         combine_errors(command.errors, :address, :address)
-        combine_errors(command.errors, :state_license_num, :vendor_state_license_num)
-        combine_errors(command.errors, :state_license_num, :vendor_state_license_expiration_date)
-        combine_errors(command.errors, :location_license_num, :vendor_location_license_num)
-        combine_errors(command.errors, :location_license_expiration_date, :vendor_location_license_expiration_date)
         nil
       end
     end
 
     def save_purchase_order(vendor)
       po = nil
-
       if purchase_order_id.blank?
         po = Inventory::PurchaseOrder.new
       else
@@ -214,7 +215,6 @@ module Inventory
       po_item.description = description
       po_item.product_name = product_name
       po_item.manufacturer = manufacturer
-      po_item.facility_strain = facility_strain
 
       po.save!
       po_item.save!
@@ -253,41 +253,22 @@ module Inventory
       invoice_item.product_name = po_item.product_name
       invoice_item.manufacturer = manufacturer
       invoice_item.purchase_order_item = po_item
-      invoice_item.facility_strain = facility_strain
 
       invoice.save!
       invoice_item.save!
       invoice_item
     end
 
-    def create_seed(invoice_item)
-      Inventory::ItemTransaction.create!(
-        ref_id: invoice_item.id,
-        ref_type: 'Inventory::VendorInvoiceItem',
-        event_type: 'inventory_setup',            # TODO: Move to Constants
-        event_date: purchase_date,                # stock intake happen today
-        facility: facility,
-        catalogue: catalogue,
-        product_name: invoice_item.product_name,
-        description: invoice_item.description,
-        manufacturer: invoice_item.manufacturer,
-        uom: uom,
-        quantity: quantity,
-        order_quantity: order_quantity,           # quantity inside PO and stock receive
-        order_uom: order_uom,                     # uom inside PO and stock receive
-        conversion: qty_per_package,              # conversion rule, 1 bag = 65 kg
-        facility_strain: facility_strain,
-        location_id: location_id,
-      )
+    def combine_errors(errors_source, from_field, to_field)
+      errors.add(to_field, errors_source[from_field]) if errors_source.key?(from_field)
     end
 
-    def update_seed(invoice_item)
+    def update_non_sales_item(invoice_item)
       transaction = Inventory::ItemTransaction.find(id)
       transaction.ref_id = invoice_item.id
       transaction.event_date = purchase_date
 
       transaction.facility = facility
-      transaction.facility_strain = facility_strain
       transaction.location_id = location_id
 
       transaction.order_quantity = order_quantity
@@ -302,10 +283,6 @@ module Inventory
 
       transaction.save!
       transaction
-    end
-
-    def combine_errors(errors_source, from_field, to_field)
-      errors.add(to_field, errors_source[from_field]) if errors_source.key?(from_field)
     end
   end
 end

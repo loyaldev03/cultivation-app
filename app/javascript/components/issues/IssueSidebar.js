@@ -1,30 +1,52 @@
 import React from 'react'
+import IssueForm from './IssueForm.js'
 
 class IssueSidebar extends React.Component {
-  renderTitle() {
-    return 'Issue details - to be replaced'
+  constructor(props) {
+    super(props)
+    this.state = this.resetState()
   }
+
+  componentDidMount() {
+    document.addEventListener('editor-sidebar-open', event => {
+      const id = event.detail.id
+      if (!id) {
+        
+      } else {
+        this.setState({ id })
+        // Load issue 
+      }
+    })
+  }
+
+  resetState() {
+    return ({
+      id: '',
+      mode: 'create'
+    })
+  }
+
+  onClose = () => {
+    window.editorSidebar.close()
+  }
+
+  renderBody() {
+    if (this.props.mode === 'details') {
+      return (
+        // TODO: Show details page
+        null
+      )
+    } else {
+      return <IssueForm onClose={this.onClose} mode={this.state.mode}/>
+    }
+  }
+
 
   render() {
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
-          <div
-            className="ph4 pv2 b--light-gray flex items-center"
-            style={{ height: '51px' }}
-          >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">
-              {this.renderTitle()}
-            </h1>
-            <span
-              className="rc-slide-panel__close-button dim"
-              onClick={() => {
-                window.editorSidebar.close()
-              }}
-            >
-              <i className="material-icons mid-gray md-18">close</i>
-            </span>
-          </div>
+          { this.renderBody() }
         </div>
       </div>
     )

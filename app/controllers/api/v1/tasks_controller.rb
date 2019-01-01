@@ -16,7 +16,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def update
     update_cmd = Cultivation::UpdateTask.call(task_params)
-    if a.errors.empty?
+    if update_cmd.errors.empty?
       task = Cultivation::Task.find(params[:id])
       tasks = get_all_tasks
       users = User.active

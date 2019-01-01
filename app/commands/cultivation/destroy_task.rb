@@ -14,7 +14,7 @@ module Cultivation
 
     def call
       task = Cultivation::Task.find(@record_id)
-      if task&.indelible
+      if task&.indelible.present?
         errors.add(:id, "\"#{task.name}\" is indelible")
         true
       elsif task

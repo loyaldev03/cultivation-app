@@ -4,7 +4,6 @@ import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 import TaskStore from '../stores/NewTaskStore'
-import UserStore from '../stores/UserStore'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import {
   monthStartDate,
@@ -15,8 +14,6 @@ import {
 } from '../../../utils'
 import { toast } from '../../../utils/toast'
 import TaskEditor from './TaskEditor'
-import updateTask from '../actions/updateTask'
-import deleteTask from '../actions/deleteTask'
 import ReactTable from 'react-table'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import BatchSetupStore from '../../batches_setup/BatchSetupStore'
@@ -149,8 +146,10 @@ class TaskList extends React.Component {
     })
   }
 
-  handleDelete = row => {
-    deleteTask(this.props.batch.id, row.row)
+  handleDelete = async row => {
+    if (confirm('Are you sure you want to delete this task? ')) {
+      await TaskStore.deleteTask(this.props.batch.id, row.row.id)
+    }
   }
 
   clearDropdown() {
@@ -470,7 +469,6 @@ class TaskList extends React.Component {
     const { showStartDateCalendar, searchMonth, selectedStartDate } = this.state
     const phaseDuration = this.buildPhaseDuration(TaskStore.tasks)
     const totalDuration = this.calculateTotalDuration(phaseDuration)
-    let users = UserStore
     return (
       <React.Fragment>
         <ReactTable

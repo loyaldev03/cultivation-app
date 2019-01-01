@@ -4,15 +4,14 @@ import { TextInput } from '../utils/FormHelpers'
 import reactSelectStyle from '../utils/reactSelectStyle'
 
 const severityOptions = [
-  { value: 'low', label: 'Low'},
-  { value: 'normal', label: 'Normal'},
-  { value: 'high', label: 'High'}
+  { value: 'low', label: 'Low' },
+  { value: 'normal', label: 'Normal' },
+  { value: 'high', label: 'High' }
 ]
 const taskTypeOptions = [
-  {value: 'planning', label: 'Planning'}, 
-  {value: 'daily_task', label: 'Daily Task'}
+  { value: 'planning', label: 'Planning' },
+  { value: 'daily_task', label: 'Daily Task' }
 ]
-  
 
 class IssueForm extends React.Component {
   constructor(props) {
@@ -21,12 +20,10 @@ class IssueForm extends React.Component {
   }
 
   resetState = () => {
-    return (
-      {
-        title: '',
-        description: ''
-      }
-    )
+    return {
+      title: '',
+      description: ''
+    }
   }
 
   onChangeGeneric = event => {
@@ -35,14 +32,9 @@ class IssueForm extends React.Component {
     this.setState({ [key]: value })
   }
 
-  onSave = event => {
-
-  }
-
+  onSave = event => {}
 
   render() {
-    
-    
     return (
       <React.Fragment>
         <div
@@ -52,7 +44,8 @@ class IssueForm extends React.Component {
           <h1 className="f4 fw6 ma0 flex flex-auto ttc">Submit an issue</h1>
           <span
             className="rc-slide-panel__close-button dim"
-            onClick={this.props.onClose}>
+            onClick={this.props.onClose}
+          >
             <i className="material-icons mid-gray md-18">close</i>
           </span>
         </div>
@@ -70,88 +63,62 @@ class IssueForm extends React.Component {
 
         <div className="ph4 mb3 flex">
           <div className="w-50">
-            <label className="f6 fw6 db mb1 gray ttc">
-              Severity
-            </label>
-            <Select options={severityOptions}
-            styles={reactSelectStyle}
-            />
+            <label className="f6 fw6 db mb1 gray ttc">Severity</label>
+            <Select options={severityOptions} styles={reactSelectStyle} />
           </div>
           <div className="w-50 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">
-              Status
-            </label>
+            <label className="f6 fw6 db mb1 gray ttc">Status</label>
             <span className="f6 green flex f6 green pt2 fw6">Open</span>
           </div>
         </div>
 
         <div className="ph4 mb3 flex">
           <div className="w-50">
-            <label className="f6 fw6 db mb1 gray ttc">
-              Issue type
-            </label>
-            <Select options={taskTypeOptions}
-            styles={reactSelectStyle}
-            />
+            <label className="f6 fw6 db mb1 gray ttc">Issue type</label>
+            <Select options={taskTypeOptions} styles={reactSelectStyle} />
           </div>
           <div className="w-50 pl3">
-            <label className="f6 fw6 db mb1 gray ttc">
-              Reported at
-            </label>
+            <label className="f6 fw6 db mb1 gray ttc">Reported at</label>
             <span className="f6 green flex f6 green pt2 fw6">Today</span>
           </div>
         </div>
 
         <div className="ph4 mb3 flex">
           <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">
-              Task
-            </label>
-            <Select options={[]}
-              styles={reactSelectStyle}
-            />
+            <label className="f6 fw6 db mb1 gray ttc">Task</label>
+            <Select options={[]} styles={reactSelectStyle} />
           </div>
         </div>
 
         <div className="ph4 mb3 flex">
           <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">
-              Location
-            </label>
-            <Select options={[]}
-              styles={reactSelectStyle}
-              />
+            <label className="f6 fw6 db mb1 gray ttc">Location</label>
+            <Select options={[]} styles={reactSelectStyle} />
           </div>
         </div>
 
         <div className="ph4 mb3 flex">
           <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">
-              Assign to
-            </label>
-            <Select 
-              options={[]}
-              styles={reactSelectStyle}
-            />
+            <label className="f6 fw6 db mb1 gray ttc">Assign to</label>
+            <Select options={[]} styles={reactSelectStyle} />
           </div>
         </div>
 
         <div className="ph4 mb3 flex">
           <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">
-              Details
-            </label>
-            <textarea className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-            />
+            <label className="f6 fw6 db mb1 gray ttc">Details</label>
+            <textarea className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy" />
           </div>
         </div>
 
         <div className="ph4 mb3 flex">
           <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">
-              Attachments
-            </label>
-            <a href="#" style={{ width: 50, height: 50}} className="bg-black-20 white flex justify-center items-center link">
+            <label className="f6 fw6 db mb1 gray ttc">Attachments</label>
+            <a
+              href="#"
+              style={{ width: 50, height: 50 }}
+              className="bg-black-20 white flex justify-center items-center link"
+            >
               <i className="material-icons white f3">attach_file</i>
             </a>
           </div>

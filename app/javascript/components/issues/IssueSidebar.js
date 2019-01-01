@@ -11,19 +11,18 @@ class IssueSidebar extends React.Component {
     document.addEventListener('editor-sidebar-open', event => {
       const id = event.detail.id
       if (!id) {
-        
       } else {
         this.setState({ id })
-        // Load issue 
+        // Load issue
       }
     })
   }
 
   resetState() {
-    return ({
+    return {
       id: '',
       mode: 'create'
-    })
+    }
   }
 
   onClose = () => {
@@ -37,16 +36,15 @@ class IssueSidebar extends React.Component {
         null
       )
     } else {
-      return <IssueForm onClose={this.onClose} mode={this.state.mode}/>
+      return <IssueForm onClose={this.onClose} mode={this.state.mode} />
     }
   }
-
 
   render() {
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
-          { this.renderBody() }
+          {this.renderBody()}
         </div>
       </div>
     )

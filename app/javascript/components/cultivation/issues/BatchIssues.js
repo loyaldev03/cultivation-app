@@ -104,9 +104,7 @@ class BatchIssues extends React.Component {
             className="ph4 pv2 b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">
-              dummy sidebar
-            </h1>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">dummy sidebar</h1>
             <span
               className="rc-slide-panel__close-button dim"
               onClick={() => {
@@ -128,7 +126,7 @@ class BatchIssues extends React.Component {
         <BatchTabs batch={this.props.batch} currentTab="issues" />
 
         {this.renderContent()}
-        { this.renderDummySidebar() }
+        {this.renderDummySidebar()}
 
         <div id="toast" className="toast animated toast--success">
           Row Saved

@@ -68,18 +68,19 @@ group :development do
   gem 'switch_user'
 end
 
-
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # Frontend
-gem 'webpacker', '~> 3.5' # Use in-conjunction with webpack-dev-server v2.11
 gem 'react-rails'
-gem 'simple_form'
+gem 'webpacker', '~> 3.5' # Use in-conjunction with webpack-dev-server v2.11
+
 gem 'country_select'
+gem 'simple_form'
 
 # Database
 gem 'mongoid', '~> 6.4.1'
+gem 'mongoid_rails_migrations'
 
 # User authentication
 gem 'devise'
@@ -111,6 +112,7 @@ gem 'mongoid_orderable'
 # File attachment
 gem 'shrine', '~> 2.12'
 gem 'shrine-mongoid'
+
 gem 'aws-sdk-s3', '~> 1.2'
 
 # Authorization

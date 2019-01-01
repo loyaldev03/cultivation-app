@@ -24,11 +24,11 @@ class SaveShelf
     # Rails.logger.debug ">>> save_shelf row: #{row.id}"
     # Rails.logger.debug ">>> save_shelf shelf: #{shelf.id}"
     # Rails.logger.debug ">>> save_shelf trays: #{args[:trays]}"
-    if args.try(:trays) || args[:trays].any?
+    if args[:trays]&.present?
       # Rails.logger.debug ">>> save_shelf update capacity: #{args[:trays]}"
       shelf.capacity = calculate_capacity(args[:trays])
+      shelf.is_complete = get_is_complete(args[:trays])
     end
-    shelf.is_complete = get_is_complete(args[:trays])
     shelf.wz_generated = false
     shelf.save!
 
@@ -53,7 +53,9 @@ class SaveShelf
   end
 
   def get_is_complete(trays)
-    have_blank = trays.detect { |t| t[:capacity].blank? || t[:capacity_type].blank? }
-    return !have_blank
+    have_blank = trays.detect do |t|
+      t[:capacity].blank? || t[:capacity_type].blank?
+    end
+    !have_blank
   end
 end

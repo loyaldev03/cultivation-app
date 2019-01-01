@@ -15,7 +15,6 @@ module Inventory
       :description,
       :order_quantity,
       :order_uom,
-      :qty_per_package,
       :price,
       :location_id,
       :vendor_id,
@@ -98,10 +97,9 @@ module Inventory
       # @purchase_order_id
       # @purchase_order_item_id
 
-      errors.add(:facility_id, 'Facility is required') if facility_id.blank?
+      errors.add(:facility_strain_id, 'Strain does not belong to any facility') if facility.nil?
       errors.add(:order_uom, 'Order unit of measure is required') if order_uom.blank?
-      errors.add(:order_quantity, 'Order quantity is required') if order_quantity.to_f <= 0
-      errors.add(:qty_per_package, 'Quantity per package is required') if qty_per_package.blank?
+      errors.add(:order_quantity, 'Order quantity should be more than zero') if order_quantity.to_f <= 0
       errors.add(:catalogue, 'Catalogue is required') if catalogue.nil?
       errors.add(:location_id, 'Location is required') if location_id.nil?
       errors.add(:purchase_order_no, 'Purchase order no is required') if purchase_order_no.blank?
@@ -286,7 +284,7 @@ module Inventory
       transaction.order_uom = order_uom
       transaction.uom = order_uom
       transaction.quantity = order_quantity
-      transaction.conversion = qty_per_package
+      transaction.conversion = 1
       transaction.catalogue = catalogue
       transaction.product_name = product_name
       transaction.description = description

@@ -97,7 +97,7 @@ module Inventory
       errors.add(:facility_id, 'Facility is required') if facility_id.blank?
       errors.add(:uom, 'Unit of measure is required') if uom.blank?
       errors.add(:order_uom, 'Order unit of measure is required') if order_uom.blank?
-      errors.add(:order_quantity, 'Order quantity is required') if order_quantity.to_f <= 0
+      errors.add(:order_quantity, 'Order quantity should be more than zero') if order_quantity.to_f <= 0
       errors.add(:quantity, 'Quantity is required') if quantity.to_f <= 0
       errors.add(:qty_per_package, 'Quantity per package is required') if qty_per_package.blank?
       errors.add(:catalogue, 'Catalogue is required') if catalogue.nil?

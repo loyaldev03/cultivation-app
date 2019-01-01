@@ -108,9 +108,14 @@ class NonSalesItemEditor extends React.Component {
   onSave = event => {
     const payload = this.validateAndGetValues()
     if (payload.isValid) {
-      saveNonSalesItem(payload).then(() => {
-        this.reset()
-        window.editorSidebar.close()
+      saveNonSalesItem(payload).then(({ status, data }) => {
+        if (status >= 400) {
+          console.log(data)
+          this.setState({ errors: data.errors })
+        } else {
+          this.reset()
+          window.editorSidebar.close()
+        }
       })
     }
 
@@ -151,12 +156,14 @@ class NonSalesItemEditor extends React.Component {
       errors.order_uom = ['Unit of measure is required.']
     }
 
-    if (parseFloat(order_quantity) === 0) {
-      errors.order_quantity = ['Order quantity is required.']
+    if (parseFloat(order_quantity) <= 0) {
+      errors.order_quantity = ['Order quantity should be more than zero.']
     }
 
-    if (parseFloat(qty_per_package) === 0) {
-      errors.qty_per_package = ['Quantity per package is required.']
+    if (parseFloat(qty_per_package) <= 0) {
+      errors.qty_per_package = [
+        'Quantity per package should be more than zero.'
+      ]
     }
 
     // if (!catalogue) {

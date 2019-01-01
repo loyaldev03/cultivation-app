@@ -157,14 +157,14 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
-    t_droped = updated_tasks.detect { |t| t.id == drop_at_task.id }
+    t_dropped = updated_tasks.detect { |t| t.id == drop_at_task.id }
     t_follow = updated_tasks.detect { |t| t.id == tasks[2].id }
 
     expect(cmd.success?).to eq true
     expect(t_moved.wbs).to eq "1.3"
     expect(t_moved.position).to eq 3
     expect(t_follow.wbs).to eq "1.1"
-    expect(t_droped.wbs).to eq "1.2"
+    expect(t_dropped.wbs).to eq "1.2"
   end
 
   it "Cond B - Drop task 1.3 on 1.1 to reorder" do
@@ -177,7 +177,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     # Verify position has been moved
     updated_tasks = Cultivation::QueryTasks.call(t1_3.batch).result
     t_moved = updated_tasks.detect { |t| t.id == t1_3.id }
-    t_droped = updated_tasks.detect { |t| t.id == t1_1.id }
+    t_dropped = updated_tasks.detect { |t| t.id == t1_1.id }
     t_follow = updated_tasks.detect { |t| t.id == t1_2.id }
 
     expect(cmd.success?).to eq true
@@ -185,7 +185,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_moved.position).to eq 2
     expect(t_follow.wbs).to eq "1.3"
     expect(t_follow.position).to eq 3
-    expect(t_droped.wbs).to eq "1.1"
+    expect(t_dropped.wbs).to eq "1.1"
     expect(cmd.result.indent).to eq 1
     expect(cmd.result.parent_id).to eq tasks[0].id
   end
@@ -200,14 +200,14 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
-    t_droped = updated_tasks.detect { |t| t.id == drop_at_task.id }
+    t_dropped = updated_tasks.detect { |t| t.id == drop_at_task.id }
     t_follow = updated_tasks.detect { |t| t.id == tasks[8].id }
 
     expect(t_moved.wbs).to eq "2.3.1"
     expect(t_follow.wbs).to eq "2.3.2"
-    expect(t_droped.wbs).to eq "2.3"
+    expect(t_dropped.wbs).to eq "2.3"
     expect(cmd.result.indent).to eq 2
-    expect(cmd.result.parent_id).to eq t_droped.id
+    expect(cmd.result.parent_id).to eq t_dropped.id
   end
 
   it "Cond D - Drop task 2.3.2 on 1" do
@@ -221,16 +221,16 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
     t_child = updated_tasks.detect { |t| t.id == tasks[10].id }
-    t_droped = updated_tasks.detect { |t| t.id == drop_at_task.id }
+    t_dropped = updated_tasks.detect { |t| t.id == drop_at_task.id }
     t_follow = updated_tasks.detect { |t| t.id == tasks[1].id }
 
     expect(t_moved.wbs).to eq "1.1"
     expect(t_follow.wbs).to eq "1.2"
-    expect(t_droped.wbs).to eq "1"
+    expect(t_dropped.wbs).to eq "1"
     expect(t_child.wbs).to eq "1.1.1"
     expect(t_child.indent).to eq 2
     expect(cmd.result.indent).to eq 1
-    expect(cmd.result.parent_id).to eq t_droped.id
+    expect(cmd.result.parent_id).to eq t_dropped.id
   end
 
   it "Cond E - Drop task 2.3.2.1 on 3" do
@@ -243,12 +243,12 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
-    t_droped = updated_tasks.detect { |t| t.id == drop_at_task.id }
+    t_dropped = updated_tasks.detect { |t| t.id == drop_at_task.id }
     t_follow = updated_tasks.detect { |t| t.id == tasks[12].id }
 
     expect(t_moved.wbs).to eq "3.1"
     expect(t_moved.indent).to eq 1
-    expect(t_droped.wbs).to eq "3"
+    expect(t_dropped.wbs).to eq "3"
     expect(t_follow.wbs).to eq "4"
   end
 
@@ -262,12 +262,12 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
-    t_droped = updated_tasks.detect { |t| t.id == drop_at_task.id }
+    t_dropped = updated_tasks.detect { |t| t.id == drop_at_task.id }
 
     expect(t_moved.wbs).to eq "2.3.2"
     expect(t_moved.indent).to eq 2
-    expect(t_droped.wbs).to eq "2.3.1"
-    expect(t_droped.indent).to eq 2
+    expect(t_dropped.wbs).to eq "2.3.1"
+    expect(t_dropped.indent).to eq 2
   end
 
   it "Cond G - Drop task 2.3.1 to 2.3.2" do
@@ -280,13 +280,13 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
-    t_droped = updated_tasks.detect { |t| t.id == drop_at_task.id }
+    t_dropped = updated_tasks.detect { |t| t.id == drop_at_task.id }
     t_follow = updated_tasks.detect { |t| t.id == tasks[10].id }
 
     expect(t_moved.wbs).to eq "2.3.2"
     expect(t_moved.indent).to eq 2
     expect(t_moved.position).to eq 10
-    expect(t_droped.wbs).to eq "2.3.1"
+    expect(t_dropped.wbs).to eq "2.3.1"
     expect(t_follow.wbs).to eq "2.3.1.1"
     expect(t_follow.position).to eq 9
   end
@@ -301,16 +301,16 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
-    t_droped = updated_tasks.detect { |t| t.id == drop_at_task.id }
+    t_dropped = updated_tasks.detect { |t| t.id == drop_at_task.id }
     t_follow = updated_tasks.detect { |t| t.id == tasks[10].id }
 
     expect(t_moved.wbs).to eq "2.2.1"
     expect(t_moved.position).to eq 7
-    expect(t_droped.wbs).to eq "2.2"
+    expect(t_dropped.wbs).to eq "2.2"
     expect(t_follow.wbs).to eq "2.2.1.1"
     expect(t_follow.position).to eq 8
     expect(cmd.result.indent).to eq 2
-    expect(cmd.result.parent_id).to eq t_droped.id
+    expect(cmd.result.parent_id).to eq t_dropped.id
   end
 
   it "Cond I - Drop task 3 on 2.3.2.1" do
@@ -323,10 +323,10 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
-    t_droped = updated_tasks.detect { |t| t.id == drop_at_task.id }
+    t_dropped = updated_tasks.detect { |t| t.id == drop_at_task.id }
 
     expect(t_moved.wbs).to eq "3"
-    expect(t_droped.wbs).to eq "2.3.2.1"
+    expect(t_dropped.wbs).to eq "2.3.2.1"
     expect(cmd.result.indent).to eq 0
   end
 
@@ -370,13 +370,52 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
-    t_droped = updated_tasks.detect { |t| t.id == drop_at_task.id }
+    t_dropped = updated_tasks.detect { |t| t.id == drop_at_task.id }
     t_follow = updated_tasks.detect { |t| t.id == tasks[10].id }
 
     expect(t_moved.wbs).to eq "3.1"
     expect(t_moved.position).to eq 8
-    expect(t_droped.wbs).to eq "3"
-    expect(t_droped.position).to eq 7
+    expect(t_dropped.wbs).to eq "3"
+    expect(t_dropped.position).to eq 7
     expect(t_follow.wbs).to eq "3.1.2.1"
+  end
+
+  it "Cond M - Drop 2 on 3" do
+    task_to_move = tasks[4]  # 2
+    drop_at_task = tasks[11] # 3
+
+    Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
+                                         drop_at_task.id,
+                                         current_user)
+
+    updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
+    t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
+    t_dropped = updated_tasks.detect { |t| t.id == drop_at_task.id }
+    t_follow = updated_tasks.detect { |t| t.id == tasks[7].id }
+
+    expect(t_moved.wbs).to eq "3"
+    expect(t_moved.position).to eq 5
+    expect(t_dropped.wbs).to eq "2"
+    expect(t_dropped.position).to eq 4
+    expect(t_follow.wbs).to eq "3.3"
+    expect(t_follow.position).to eq 8
+  end
+
+  it "Cond N - Drop 2.3 on 1" do
+    task_to_move = tasks[7]  # 2.3
+    drop_at_task = tasks[0]  # 1
+
+    Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
+                                         drop_at_task.id,
+                                         current_user)
+
+    updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
+    t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
+    t_follow = updated_tasks.detect { |t| t.id == tasks[1].id }
+
+    expect(t_moved.wbs).to eq "1.1"
+    expect(t_moved.position).to eq 1
+    expect(t_follow.wbs).to eq "1.2"
+    expect(t_follow.position).to eq 5
   end
 end

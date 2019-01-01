@@ -9,42 +9,37 @@ module Cultivation
     end
 
     def call
-      if valid_params?
-        if task_to_move.nil?
-          errors.add(:error, 'Task Not Found')
-          return
-        end
-        if can_move? task_to_move
-          tasks = get_tasks(task_to_move.batch)
-          @task_to_move = get_task(tasks, @task_id)
-          drop_on = get_task(tasks, @drop_on_id)
-          move_node(task_to_move, drop_on)
+      if valid_params? && can_move?
+        tasks = get_tasks(task_to_move.batch)
+        @task_to_move = get_task(tasks, @task_id)
+        drop_on = get_task(tasks, @drop_on_id)
+        move_node(task_to_move, drop_on)
 
-          task_children = WbsTree.children(tasks, task_to_move.wbs)
-          move_children(task_children, task_to_move)
-          task_to_move
-        end
+        children = get_children(tasks, task_to_move.wbs)
+        move_children(children, task_to_move)
+        task_to_move
       end
     end
 
     private
 
     def move_node(task, drop_on)
-      pp "Moving #{task.name} -> #{drop_on.name} | #{drop_on.position}"
+      # pp "Moving #{task.name} -> #{drop_on.name} | #{drop_on.position}"
       if task.indent > drop_on.indent
-        pp '       drop as child node:'
+        # pp '       drop as child node:'
         task.indent = drop_on.indent + 1
         task.parent_id = drop_on.id
         new_position = get_new_position(task.position, drop_on.position)
       else
         tasks = get_tasks(drop_on.batch)
-        drop_on_children = WbsTree.children(tasks, drop_on.wbs)
+        drop_on = get_task(tasks, drop_on.id)
+        drop_on_children = get_children(tasks, drop_on.wbs)
         if drop_on_children&.any?
-          pp '       drop on tree parent'
+          # pp '       drop on tree parent'
           new_position = get_new_position(task.position,
                                           drop_on_children.last.position)
         else
-          pp '       drop on sibling node'
+          # pp '       drop on sibling node'
           new_position = get_new_position(task.position, drop_on.position)
         end
       end
@@ -59,7 +54,7 @@ module Cultivation
       children.each do |t|
         t = Cultivation::Task.find(t.id)
         move_node(t, ref_node)
-        ref_node = get_tasks(t.batch).detect { |x| x.id == t.id }
+        ref_node = t
       end
     end
 
@@ -75,6 +70,10 @@ module Cultivation
       @task_to_move ||= Cultivation::Task.includes(:batch).find_by(id: @task_id)
     end
 
+    def get_children(batch_tasks, task_wbs)
+      WbsTree.children(batch_tasks, task_wbs)
+    end
+
     def get_task(batch_tasks, task_id)
       batch_tasks.detect { |t| t.id == task_id }
     end
@@ -84,7 +83,7 @@ module Cultivation
     end
 
     def print_current_order(batch)
-      res = Cultivation::QueryTasks.call(batch).result
+      res = get_tasks(batch)
       output = res.map do |rec|
         {
           name: rec.name,
@@ -108,9 +107,13 @@ module Cultivation
       true
     end
 
-    def can_move?(task)
-      if task.indelible.present?
-        errors.add(:error, "Task '#{task.name}' cannot be moved.")
+    def can_move?
+      if task_to_move.nil?
+        errors.add(:error, 'Task Not Found')
+        return false
+      end
+      if task_to_move.indelible
+        errors.add(:error, "Task '#{task_to_move.name}' cannot be moved.")
         return false
       end
       true

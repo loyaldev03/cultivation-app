@@ -53,7 +53,7 @@ class Api::V1::RawMaterialsController < Api::V1::BaseApiController
   private
 
   def request_with_errors(errors)
-    params[:plant].to_unsafe_h.merge(errors: errors)
+    params[:raw_material].to_unsafe_h.merge(errors: errors)
   end
 
   def material_to_serialize(catalogue_type:, id:, event_types:)

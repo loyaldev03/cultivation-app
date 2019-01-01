@@ -117,9 +117,13 @@ class NutrientEditor extends React.Component {
   onSave = event => {
     const payload = this.validateAndGetValues()
     if (payload.isValid) {
-      saveRawMaterial(payload).then(() => {
-        this.reset()
-        window.editorSidebar.close()
+      saveRawMaterial(payload).then(({ status, data }) => {
+        if (status >= 400) {
+          this.setState({ errors: data.errors })
+        } else {
+          this.reset()
+          window.editorSidebar.close()
+        }
       })
     }
 
@@ -160,12 +164,12 @@ class NutrientEditor extends React.Component {
       errors.order_uom = ['Unit of measure is required.']
     }
 
-    if (parseFloat(order_quantity) === 0) {
-      errors.order_quantity = ['Order quantity is required.']
+    if (parseFloat(order_quantity) <= 0) {
+      errors.order_quantity = ['Order quantity should be more than zero.']
     }
 
-    if (parseFloat(qty_per_package) === 0) {
-      errors.qty_per_package = ['Quantity per package is required.']
+    if (parseFloat(qty_per_package) <= 0) {
+      errors.qty_per_package = ['Quantity per package should be more than zero.']
     }
 
     if (!catalogue) {

@@ -97,9 +97,13 @@ class BatchEditor extends React.Component {
     const { errors, isValid, ...payload } = this.validateAndGetValues()
 
     if (isValid) {
-      saveCultivationBatch(payload).then(x => {
-        this.reset()
-        window.editorSidebar.close()
+      saveCultivationBatch(payload).then(({ status, data }) => {
+        if (status >= 400) {
+          this.setState({ errors: data.errors })
+        } else {
+          this.reset()
+          window.editorSidebar.close()
+        }
       })
     }
 

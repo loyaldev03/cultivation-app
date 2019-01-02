@@ -39,7 +39,7 @@ module Cultivation
     private
 
     def can_indent_in?
-      @indent_action == 'in' && !task_to_indent.wbs.ends_with?(".1")
+      @indent_action == 'in' && !task_to_indent.wbs.ends_with?('.1')
     end
 
     def can_indent_out?

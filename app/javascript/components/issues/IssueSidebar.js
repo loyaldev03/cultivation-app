@@ -1,7 +1,6 @@
 import React from 'react'
 import IssueForm from './components/IssueForm.js'
 
-
 class IssueSidebar extends React.Component {
   constructor(props) {
     super(props)
@@ -37,7 +36,13 @@ class IssueSidebar extends React.Component {
         null
       )
     } else {
-      return <IssueForm onClose={this.onClose} mode={this.state.mode} />
+      return (
+        <IssueForm
+          onClose={this.onClose}
+          mode={this.state.mode}
+          batch_id={this.props.batch_id}
+        />
+      )
     }
   }
 

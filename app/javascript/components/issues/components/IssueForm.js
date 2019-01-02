@@ -2,6 +2,7 @@ import React from 'react'
 import Select from 'react-select'
 import { TextInput } from '../../utils/FormHelpers'
 import reactSelectStyle from '../../utils/reactSelectStyle'
+import { saveIssue } from '../actions/saveIssue'
 
 const severityOptions = [
   { value: 'low', label: 'Low' },
@@ -19,10 +20,28 @@ class IssueForm extends React.Component {
     this.state = this.resetState()
   }
 
+  componentDidMount() {
+    document.addEventListener('editor-sidebar-open', event => {
+      const id = event.detail.id
+      if (id) {
+        // TODO: Load data for editing here
+      }
+    })
+  }
+
   resetState = () => {
     return {
       title: '',
-      description: ''
+      description: '',
+      severity: '',
+      status: '',
+      issue_type: '',
+      location_id: '',
+      location_type: '',
+      resolution_notes: '',
+      reason: '',
+      resolved_at: '',
+      errors: {}
     }
   }
 
@@ -32,7 +51,57 @@ class IssueForm extends React.Component {
     this.setState({ [key]: value })
   }
 
-  onSave = event => {}
+  onSave = event => {
+    const payload = this.validateAndGetValues()
+
+    if (payload.isValid) {
+      saveIssue(payload).then(({ status, data }) => {
+        if (status >= 400) {
+          this.setState({ errors: data.errors })
+        } else {
+          this.reset()
+          window.editorSidebar.close()
+        }
+      })
+    }
+
+    event.preventDefault()
+  }
+
+  validateAndGetValues() {
+    const {
+      title,
+      description,
+      severity,
+      status,
+      issue_type,
+      location_id,
+      location_type,
+      resolution_notes,
+      reason,
+      resolved_at
+    } = this.state
+
+    const { batch_id } = this.props
+
+    // TODO: Do validation here
+    const isValid = true
+
+    return {
+      title,
+      description,
+      severity,
+      status,
+      issue_type,
+      location_id,
+      location_type,
+      resolution_notes,
+      reason,
+      resolved_at,
+      batch_id,
+      isValid
+    }
+  }
 
   render() {
     return (

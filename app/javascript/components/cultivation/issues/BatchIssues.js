@@ -10,33 +10,30 @@ import issueStore from '../../issues/store/IssueStore'
 
 const renderUser = user => {
   if (user) {
-    return (
-      <div className="tl grey">
-        {user.display_name}
-      </div>
-    )
-  } return null
+    return <div className="tl grey">{user.display_name}</div>
+  }
+  return null
 }
 
 const renderHumanize = value => {
-  return (
-    <div className="tl ttc grey">
-      {value.replace(/[_]/g, ' ')}
-    </div>
-  )
+  return <div className="tl ttc grey">{value.replace(/[_]/g, ' ')}</div>
 }
 
 const renderSeverity = value => {
   if (value === 'high') {
     return (
       <div className="tc ttc">
-        <i className="material-icons red" style={{fontSize: '18px' }}>error</i>
+        <i className="material-icons red" style={{ fontSize: '18px' }}>
+          error
+        </i>
       </div>
     )
   } else if (value === 'medium') {
     return (
       <div className="tc ttc">
-        <i className="material-icons gold" style={{fontSize: '18px' }}>warning</i>
+        <i className="material-icons gold" style={{ fontSize: '18px' }}>
+          warning
+        </i>
       </div>
     )
   } else {
@@ -50,7 +47,11 @@ const renderSeverity = value => {
 
 const renderOpenIssue = record => {
   return (
-    <a href="#" className="link flex w-100 grey" onClick={event => openSidebar(event, record.original.id)}>
+    <a
+      href="#"
+      className="link flex w-100 grey"
+      onClick={event => openSidebar(event, record.original.id)}
+    >
       {record.original.attributes.issue_no}
     </a>
   )
@@ -143,7 +144,7 @@ class BatchIssues extends React.Component {
               filterable
               className="f6 w-100 grey"
             />
-            <IssueSidebar />
+            <IssueSidebar batch_id={this.props.batch_id} />
           </div>
         </div>
       </React.Fragment>

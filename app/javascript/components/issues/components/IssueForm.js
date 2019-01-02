@@ -1,11 +1,11 @@
 import React from 'react'
 import Select from 'react-select'
-import { TextInput } from '../utils/FormHelpers'
-import reactSelectStyle from '../utils/reactSelectStyle'
+import { TextInput } from '../../utils/FormHelpers'
+import reactSelectStyle from '../../utils/reactSelectStyle'
 
 const severityOptions = [
   { value: 'low', label: 'Low' },
-  { value: 'normal', label: 'Normal' },
+  { value: 'medium', label: 'Medium' },
   { value: 'high', label: 'High' }
 ]
 const taskTypeOptions = [

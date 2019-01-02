@@ -5,57 +5,110 @@ import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
 import ReactTable from 'react-table'
 import IssueSidebar from '../../issues/IssueSidebar'
+import loadBatchIssues from '../../issues/actions/loadBatchIssues'
+import issueStore from '../../issues/store/IssueStore'
+
+const renderUser = user => {
+  if (user) {
+    return (
+      <div className="tl grey">
+        {user.display_name}
+      </div>
+    )
+  } return null
+}
+
+const renderHumanize = value => {
+  return (
+    <div className="tl ttc grey">
+      {value.replace(/[_]/g, ' ')}
+    </div>
+  )
+}
+
+const renderSeverity = value => {
+  if (value === 'high') {
+    return (
+      <div className="tc ttc">
+        <i className="material-icons red" style={{fontSize: '18px' }}>error</i>
+      </div>
+    )
+  } else if (value === 'medium') {
+    return (
+      <div className="tc ttc">
+        <i className="material-icons gold" style={{fontSize: '18px' }}>warning</i>
+      </div>
+    )
+  } else {
+    return (
+      <div className="tc ttc">
+        <span className="f6 fw4 purple">FYI</span>
+      </div>
+    )
+  }
+}
+
+const renderOpenIssue = record => {
+  return (
+    <a href="#" className="link flex w-100 grey" onClick={event => openSidebar(event, record.original.id)}>
+      {record.original.attributes.issue_no}
+    </a>
+  )
+}
 
 const columns = [
   {
     Header: 'ID',
-    accessor: 'attributes.plant_id',
+    accessor: 'attributes.issue_no',
     headerStyle: { textAlign: 'left' },
-    width: 100
+    width: 100,
+    Cell: record => renderOpenIssue(record)
   },
   {
     Header: 'Type',
-    accessor: 'attributes.cultivation_batch',
     headerStyle: { textAlign: 'left' },
-    width: 150
+    width: 150,
+    Cell: record => renderHumanize(record.original.attributes.issue_type)
   },
   {
     Header: 'Severity',
-    accessor: 'attributes.strain_name',
-    headerStyle: { textAlign: 'left' },
-    width: 100
+    headerStyle: { textAlign: 'center' },
+    width: 70,
+    Cell: record => renderSeverity(record.original.attributes.severity)
   },
   {
     Header: 'Title',
-    accessor: 'attributes.planting_date',
+    accessor: 'attributes.title',
     headerStyle: { textAlign: 'left' }
   },
   {
     Header: 'Reported',
-    accessor: 'attributes.location_name',
     headerStyle: { textAlign: 'left' },
-    width: 100
+    width: 100,
+    Cell: record => renderUser(record.original.attributes.reported_by)
   },
   {
     Header: 'Assigned',
-    accessor: 'attributes.location_name',
     headerStyle: { textAlign: 'left' },
-    width: 100
+    width: 100,
+    Cell: record => renderUser(record.original.attributes.assigned_to)
   },
   {
-    Header: 'Resolution',
-    accessor: 'attributes.location_name',
+    Header: 'Status',
     headerStyle: { textAlign: 'left' },
-    width: 150
+    width: 150,
+    Cell: record => renderHumanize(record.original.attributes.status)
   }
 ]
 
 const openSidebar = (event, id = null) => {
   console.log(event)
+  console.log(id)
   window.editorSidebar.open({ width: '500px', id })
   event.preventDefault()
 }
 
+@observer
 class BatchIssues extends React.Component {
   constructor(props) {
     super(props)
@@ -66,6 +119,7 @@ class BatchIssues extends React.Component {
 
   componentDidMount() {
     window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
+    loadBatchIssues(this.props.batch_id)
   }
 
   renderContent() {
@@ -82,12 +136,12 @@ class BatchIssues extends React.Component {
             <ReactTable
               columns={columns}
               pagination={{ position: 'top' }}
-              data={[]}
+              data={issueStore.bindable}
               showPagination={false}
               pageSize={30}
               minRows={5}
               filterable
-              className="f6 w-100"
+              className="f6 w-100 grey"
             />
             <IssueSidebar />
           </div>

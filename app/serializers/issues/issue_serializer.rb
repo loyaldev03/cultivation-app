@@ -6,6 +6,10 @@ module Issues
                :status, :issue_type, :location_id, :location_type,
                :resolution_notes, :reason
 
+    attribute :id do |object|
+      object.id.to_s
+    end
+
     attribute :task do |object|
       if object.task.present?
         {
@@ -18,11 +22,11 @@ module Issues
     end
 
     attribute :attachments do |object|
-      []
+      nil
     end
 
     attribute :comments do |object|
-      []
+      nil
     end
 
     attribute :cultivation_batch do |object|

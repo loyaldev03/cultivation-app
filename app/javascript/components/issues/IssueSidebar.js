@@ -1,5 +1,6 @@
 import React from 'react'
-import IssueForm from './IssueForm.js'
+import IssueForm from './components/IssueForm.js'
+
 
 class IssueSidebar extends React.Component {
   constructor(props) {

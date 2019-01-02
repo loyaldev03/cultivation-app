@@ -224,7 +224,7 @@ Rails.application.routes.draw do
 
       resources :issues do
         collection do
-          get 'batch_issues/:batch_id', action: 'batch_issues'
+          get 'by_batch/:batch_id', action: 'by_batch'
         end
       end
     end

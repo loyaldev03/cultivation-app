@@ -37,7 +37,13 @@ class IssueSidebar extends React.Component {
         null
       )
     } else {
-      return <IssueForm onClose={this.onClose} mode={this.state.mode} batchId={batchId} />
+      return (
+        <IssueForm
+          onClose={this.onClose}
+          mode={this.state.mode}
+          batchId={batchId}
+        />
+      )
     }
   }
 

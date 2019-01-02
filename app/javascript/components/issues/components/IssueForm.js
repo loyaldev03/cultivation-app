@@ -26,7 +26,7 @@ const uppy = Uppy({
 })
 uppy.use(Webcam)
 uppy.use(Dropbox, { serverUrl: 'https://companion.uppy.io/' })
-uppy.on('complete', (result) => {
+uppy.on('complete', result => {
   const url = result.successful[0].uploadURL
   console.log(url)
 })
@@ -40,7 +40,7 @@ class IssueForm extends React.Component {
 
   componentDidMount() {
     loadTasks(this.props.batchId).then(({ data }) => {
-      const tasks = data.data.map( x => ({
+      const tasks = data.data.map(x => ({
         value: x.attributes.id,
         label: `${x.attributes.wbs} ${x.attributes.name}`,
         ...x.attributes
@@ -76,12 +76,13 @@ class IssueForm extends React.Component {
     this.setState({ [key]: value })
   }
 
-  onTaskChanged = option => {
-
-  }
+  onTaskChanged = option => {}
 
   onDescriptionChanged = event => {
-    this.setState({ description: event.target.value }, this.resizeDescriptionInput)
+    this.setState(
+      { description: event.target.value },
+      this.resizeDescriptionInput
+    )
   }
 
   resizeDescriptionInput = () => {
@@ -110,20 +111,11 @@ class IssueForm extends React.Component {
 
   onSave = event => {}
 
-  loadTasks = (inputValue = '') => {
-    
-  }
+  loadTasks = (inputValue = '') => {}
 
   render() {
-    const {
-      severity,
-      task_id,
-      location_id,
-      assigned_to_id,
-      tasks
-    } = this.state
+    const { severity, task_id, location_id, assigned_to_id, tasks } = this.state
 
-    
     const task = tasks.find(x => x.id === task_id)
 
     return (
@@ -155,12 +147,12 @@ class IssueForm extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-30">
             <label className="f6 fw6 db mb1 gray ttc">Severity</label>
-            <Select 
-              options={severityOptions} 
-              styles={reactSelectStyle} 
+            <Select
+              options={severityOptions}
+              styles={reactSelectStyle}
               onChange={this.onSeverityChanged}
               value={severity}
-              />
+            />
           </div>
           <div className="w-30 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Status</label>
@@ -201,8 +193,8 @@ class IssueForm extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Details</label>
-            <textarea 
-              className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy" 
+            <textarea
+              className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
               ref={this.descriptionInput}
               onChange={this.onDescriptionChanged}
             />
@@ -222,7 +214,6 @@ class IssueForm extends React.Component {
             </a>
           </div>
         </div>
-
 
         <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
           <a

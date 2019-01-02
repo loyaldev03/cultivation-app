@@ -584,13 +584,31 @@ export default class Gantt {
           )
           this.layers.arrow.appendChild(arrow.element)
           console.log(arrow.getCoordinate())
+
+          const g = createSVG('g', {
+            append_to: this.layers.arrow,
+            class: 'hidden',
+
+           })
+
           createSVG('circle', {
             cx: arrow.getCoordinate().start_x,
             cy: arrow.getCoordinate().end_y,
             r: 5,
+            class: 'button-delete',
             fill: 'red',
-            class: 'hidden',
-            append_to: this.layers.arrow
+            append_to: g
+          })
+
+          createSVG('text', {
+            x: arrow.getCoordinate().start_x,
+            y: arrow.getCoordinate().end_y,
+            'text-anchor': 'middle',
+            fill: 'white',
+            'font-size': '20px',
+            // class: 'hidden',
+            dy: '.3em',
+            append_to: g
           })
 
           return arrow
@@ -810,7 +828,9 @@ export default class Gantt {
 
           this.trigger_event('drag_relationship', [source_id, destination_id])
         } else {
-          arrow.update()
+          if(arrow){
+            arrow.update()
+          }
         }
       }
     })

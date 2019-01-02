@@ -108,11 +108,12 @@ module Cultivation
     end
 
     def can_move?
+      # Rails.logger.debug "\033[31m indelible: #{task_to_move.indelible? ? "Indelible" : "Not Indelible"} \033[0m"
       if task_to_move.nil?
         errors.add(:error, 'Task Not Found')
         return false
       end
-      if task_to_move.indelible
+      if task_to_move.indelible?
         errors.add(:error, "Task '#{task_to_move.name}' cannot be moved.")
         return false
       end

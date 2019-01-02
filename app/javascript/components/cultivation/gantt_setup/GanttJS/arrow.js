@@ -54,7 +54,7 @@ export default class Arrow {
             m -5 -5
             l 5 5
             l -5 5`
-    this.start_x = start_x -10
+    this.start_x = start_x - 10
     this.start_y = start_y
     this.end_y = end_y
     this.end_x = end_x
@@ -79,16 +79,20 @@ export default class Arrow {
                 m -5 -5
                 l 5 5
                 l -5 5`
-      this.start_x = start_x -50
+      this.start_x = start_x - 50
       this.start_y = start_y
       this.end_y = end_y
       this.end_x = end_x
     }
-
   }
 
-  getCoordinate(){
-    return { start_x: this.start_x, start_y: this.start_y, end_x: this.end_x, end_y: this.end_y}
+  getCoordinate() {
+    return {
+      start_x: this.start_x,
+      start_y: this.start_y,
+      end_x: this.end_x,
+      end_y: this.end_y
+    }
   }
 
   draw() {

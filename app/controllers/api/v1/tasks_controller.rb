@@ -44,18 +44,14 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def update_indent
-    Rails.logger.debug "\033[31m id: #{params[:id]} \033[0m"
-    Rails.logger.debug "\033[31m indent_action: #{params[:indent_action]} \033[0m"
     indent_cmd = Cultivation::UpdateTaskIndent.call(
-      params[:id],
-      params[:indent_action],
+      params[:id],            # task.id
+      params[:indent_action], # in / out
       current_user,
     )
     if indent_cmd.success?
-      Rails.logger.debug "\033[31m indent_action: success \033[0m"
       render json: {data: {id: indent_cmd.result.id.to_s}}
     else
-      Rails.logger.debug "\033[31m indent_action: errors \033[0m"
       render json: {errors: indent_cmd.errors}
     end
   end

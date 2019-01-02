@@ -119,7 +119,6 @@ class TaskList extends React.Component {
   }
 
   handleEllipsisClick = taskId => e => {
-    console.log({ taskId })
     this.setState({ idOpen: taskId })
   }
 

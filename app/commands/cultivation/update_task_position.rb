@@ -28,7 +28,6 @@ module Cultivation
       if task.indent > drop_on.indent
         # pp '       drop as child node:'
         task.indent = drop_on.indent + 1
-        task.parent_id = drop_on.id
         new_position = get_new_position(task.position, drop_on.position)
       else
         tasks = get_tasks(drop_on.batch)

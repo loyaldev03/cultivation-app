@@ -37,14 +37,11 @@ const styles = `
 
 `
 
-const TaskNameField = ({ id, wbs, indent, text }) => {
+const TaskNameField = ({ id, wbs, indent, text, onClick }) => {
+  const hasChild = TaskStore.hasChildNode(wbs)
   return (
-    <span
-      className={classNames(`dib flex items-center indent--${indent}`, {
-        orange: TaskStore.hasChildNode(wbs)
-      })}
-    >
-      {TaskStore.hasChildNode(wbs) ? (
+    <span className={`dib flex items-center indent--${indent}`}>
+      {hasChild ? (
         <i
           className="material-icons dim grey f7 pointer"
           onClick={e => TaskStore.toggleCollapseNode(wbs)}
@@ -54,7 +51,16 @@ const TaskNameField = ({ id, wbs, indent, text }) => {
       ) : (
         <span className="dib indent--1" />
       )}
-      {text}
+      <a
+        href="#0"
+        className={classNames('link', {
+          orange: hasChild,
+          grey: !hasChild
+        })}
+        onClick={onClick}
+      >
+        {text}
+      </a>
     </span>
   )
 }
@@ -163,7 +169,13 @@ class TaskList extends React.Component {
     const { id, wbs, indent } = data.row
     return (
       <div className="flex justify-between items-center h-100" draggable={true}>
-        <TaskNameField id={id} wbs={wbs} indent={indent} text={data.value} />
+        <TaskNameField
+          id={id}
+          wbs={wbs}
+          indent={indent}
+          text={data.value}
+          onClick={e => this.handleEdit(id)}
+        />
         <Manager>
           <Reference>
             {({ ref }) => {
@@ -239,7 +251,6 @@ class TaskList extends React.Component {
 
   handleAddTask = (data, position) => {
     const { id, parent_id } = data.row
-    console.log({ action: 'handleAddTask', id, parent_id })
     this.setState({ taskSelected: id, showStartDateCalendar: false })
     editorSidebarHandler.open({
       width: '500px',
@@ -479,19 +490,17 @@ class TaskList extends React.Component {
           className="-highlight"
           pageSize={TaskStore.taskList.length}
           getTrProps={(state, rowInfo, column) => {
-            const trProps = {
-              className: 'task-row'
+            let className = 'task-row'
+            if (
+              rowInfo.row &&
+              this.state.taskSelected &&
+              this.state.taskSelected === rowInfo.row.id
+            ) {
+              className = 'task-row shadow-1'
             }
-            if (this.state.taskSelected && rowInfo.row) {
-              trProps.stype = {
-                boxShadow:
-                  this.state.taskSelected === rowInfo.row.id
-                    ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
-                    : null,
-                backgroundColor: rowInfo.row['indent'] === 0 ? '#FAEFEE' : null
-              }
+            return {
+              className
             }
-            return trProps
           }}
         />
         <div className="mt3 tr">

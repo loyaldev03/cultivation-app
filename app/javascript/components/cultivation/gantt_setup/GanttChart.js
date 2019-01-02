@@ -14,6 +14,9 @@ const styles = `
 path.handle-arrow {
   cursor: pointer;
 }
+path.handle-arrow.on {
+  stroke: red;
+}
 path.arrow{
   display: none;
 }

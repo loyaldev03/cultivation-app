@@ -583,6 +583,16 @@ export default class Gantt {
             this.bars[task._index] // to_task
           )
           this.layers.arrow.appendChild(arrow.element)
+          console.log(arrow.getCoordinate())
+          createSVG('circle', {
+            cx: arrow.getCoordinate().start_x,
+            cy: arrow.getCoordinate().end_y,
+            r: 5,
+            fill: 'red',
+            class: 'hidden',
+            append_to: this.layers.arrow
+          })
+
           return arrow
         })
         .filter(Boolean) // filter falsy values
@@ -665,8 +675,12 @@ export default class Gantt {
     }
     $.on(this.$svg, 'mousedown', '.arrow, .handle-arrow', (e, element) => {
       let path = element.getAttribute('d')
+      element.classList.add('on')
       arrow = this.arrows.find(e => e.path === path)
-      arrow.update_arrow(e.offsetX, e.offsetY)
+      console.log(element.nextSibling)
+      element.nextSibling.classList.remove('hidden')
+      console.log('added path class on ')
+      // arrow.update_arrow(e.offsetX, e.offsetY)
       drag_line = true
     })
 

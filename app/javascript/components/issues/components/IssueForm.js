@@ -1,29 +1,73 @@
 import React from 'react'
 import Select from 'react-select'
+import AsyncSelect from 'react-select/lib/Async'
 import { TextInput } from '../../utils/FormHelpers'
 import reactSelectStyle from '../../utils/reactSelectStyle'
+import loadTasks from '../actions/loadTasks'
+
+import Uppy from '@uppy/core'
+import DashboardModal from '@uppy/react/lib/DashboardModal'
+import Webcam from '@uppy/webcam'
+import Dropbox from '@uppy/dropbox'
+import '@uppy/core/dist/style.css'
+import '@uppy/dashboard/dist/style.css'
+import '@uppy/webcam/dist/style.css'
 
 const severityOptions = [
   { value: 'low', label: 'Low' },
   { value: 'medium', label: 'Medium' },
   { value: 'high', label: 'High' }
 ]
-const taskTypeOptions = [
-  { value: 'planning', label: 'Planning' },
-  { value: 'daily_task', label: 'Daily Task' }
-]
+
+const uppy = Uppy({
+  meta: { type: 'avatar' },
+  restrictions: { maxNumberOfFiles: 1 },
+  autoProceed: true
+})
+uppy.use(Webcam)
+uppy.use(Dropbox, { serverUrl: 'https://companion.uppy.io/' })
+uppy.on('complete', (result) => {
+  const url = result.successful[0].uploadURL
+  console.log(url)
+})
 
 class IssueForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.resetState()
+    this.descriptionInput = React.createRef()
+  }
+
+  componentDidMount() {
+    loadTasks(this.props.batchId).then(({ data }) => {
+      const tasks = data.data.map( x => ({
+        value: x.attributes.id,
+        label: `${x.attributes.wbs} ${x.attributes.name}`,
+        ...x.attributes
+      }))
+      this.setState({ tasks })
+    })
   }
 
   resetState = () => {
     return {
       title: '',
-      description: ''
+      severity: null,
+      task_id: '',
+      location_id: '',
+      assigned_to_id: '',
+      description: '',
+      tasks: [],
+      modalOpen: false
     }
+  }
+
+  onUppyOpen = () => {
+    this.setState({ modalOpen: !this.state.modalOpen })
+  }
+
+  onUppyClose = () => {
+    this.setState({ modalOpen: false })
   }
 
   onChangeGeneric = event => {
@@ -32,9 +76,56 @@ class IssueForm extends React.Component {
     this.setState({ [key]: value })
   }
 
+  onTaskChanged = option => {
+
+  }
+
+  onDescriptionChanged = event => {
+    this.setState({ description: event.target.value }, this.resizeDescriptionInput)
+  }
+
+  resizeDescriptionInput = () => {
+    const lines = (this.state.description.match(/\n/g) || []).length
+    const node = this.descriptionInput.current
+
+    if (!node) {
+      return
+    }
+
+    if (lines < 3) {
+      node.style.height = 'auto'
+      node.style.minHeight = ''
+    } else if (lines >= 3 && lines < 15) {
+      node.style.height = 40 + lines * 25 + 'px'
+      node.style.minHeight = ''
+    } else {
+      node.style.minHeight = 40 + 15 * 25 + 'px'
+      node.style.height = 'auto'
+    }
+  }
+
+  onSeverityChanged = severity => {
+    this.setState({ severity })
+  }
+
   onSave = event => {}
 
+  loadTasks = (inputValue = '') => {
+    
+  }
+
   render() {
+    const {
+      severity,
+      task_id,
+      location_id,
+      assigned_to_id,
+      tasks
+    } = this.state
+
+    
+    const task = tasks.find(x => x.id === task_id)
+
     return (
       <React.Fragment>
         <div
@@ -54,7 +145,7 @@ class IssueForm extends React.Component {
           <div className="w-100">
             <TextInput
               label="Title"
-              fieldname="product_name"
+              fieldname="title"
               value={this.state.title}
               onChange={this.onChangeGeneric}
             />
@@ -62,22 +153,20 @@ class IssueForm extends React.Component {
         </div>
 
         <div className="ph4 mb3 flex">
-          <div className="w-50">
+          <div className="w-30">
             <label className="f6 fw6 db mb1 gray ttc">Severity</label>
-            <Select options={severityOptions} styles={reactSelectStyle} />
+            <Select 
+              options={severityOptions} 
+              styles={reactSelectStyle} 
+              onChange={this.onSeverityChanged}
+              value={severity}
+              />
           </div>
-          <div className="w-50 pl3">
+          <div className="w-30 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Status</label>
             <span className="f6 green flex f6 green pt2 fw6">Open</span>
           </div>
-        </div>
-
-        <div className="ph4 mb3 flex">
-          <div className="w-50">
-            <label className="f6 fw6 db mb1 gray ttc">Issue type</label>
-            <Select options={taskTypeOptions} styles={reactSelectStyle} />
-          </div>
-          <div className="w-50 pl3">
+          <div className="w-40 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Reported at</label>
             <span className="f6 green flex f6 green pt2 fw6">Today</span>
           </div>
@@ -86,7 +175,12 @@ class IssueForm extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Task</label>
-            <Select options={[]} styles={reactSelectStyle} />
+            <Select
+              options={tasks}
+              onChange={this.onTaskChanged}
+              value={task}
+              styles={reactSelectStyle}
+            />
           </div>
         </div>
 
@@ -107,7 +201,11 @@ class IssueForm extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Details</label>
-            <textarea className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy" />
+            <textarea 
+              className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy" 
+              ref={this.descriptionInput}
+              onChange={this.onDescriptionChanged}
+            />
           </div>
         </div>
 
@@ -118,11 +216,13 @@ class IssueForm extends React.Component {
               href="#"
               style={{ width: 50, height: 50 }}
               className="bg-black-20 white flex justify-center items-center link"
+              onClick={this.onUppyOpen}
             >
               <i className="material-icons white f3">attach_file</i>
             </a>
           </div>
         </div>
+
 
         <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
           <a
@@ -133,6 +233,13 @@ class IssueForm extends React.Component {
             Save
           </a>
         </div>
+        <DashboardModal
+          uppy={uppy}
+          closeModalOnClickOutside
+          open={this.state.modalOpen}
+          onRequestClose={this.onUppyClose}
+          plugins={['Webcam', 'Dropbox']}
+        />
       </React.Fragment>
     )
   }

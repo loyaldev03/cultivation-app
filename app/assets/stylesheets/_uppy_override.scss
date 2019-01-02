@@ -1,0 +1,17 @@
+@media only screen and (min-width: 820px) {
+  .rc-slide-panel {
+    .uppy-Dashboard-close {
+      font-size: 28px !important;
+      top: 3px !important;
+      right: 10px !important; 
+
+      span {
+        color: #777;
+      }
+    } 
+
+    .uppy-Dashboard-inner {
+      width: 450px;
+    }
+  }
+}

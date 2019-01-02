@@ -54,7 +54,7 @@ class IssueForm extends React.Component {
           <div className="w-100">
             <TextInput
               label="Title"
-              fieldname="product_name"
+              fieldname="title"
               value={this.state.title}
               onChange={this.onChangeGeneric}
             />

@@ -587,9 +587,8 @@ export default class Gantt {
 
           const g = createSVG('g', {
             append_to: this.layers.arrow,
-            class: 'hidden',
-
-           })
+            class: 'hidden'
+          })
 
           createSVG('circle', {
             cx: arrow.getCoordinate().start_x,
@@ -828,7 +827,7 @@ export default class Gantt {
 
           this.trigger_event('drag_relationship', [source_id, destination_id])
         } else {
-          if(arrow){
+          if (arrow) {
             arrow.update()
           }
         }

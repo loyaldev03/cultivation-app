@@ -30,6 +30,7 @@ class IssueSidebar extends React.Component {
   }
 
   renderBody() {
+    const { batchId } = this.props
     if (this.props.mode === 'details') {
       return (
         // TODO: Show details page
@@ -40,7 +41,7 @@ class IssueSidebar extends React.Component {
         <IssueForm
           onClose={this.onClose}
           mode={this.state.mode}
-          batch_id={this.props.batch_id}
+          batchId={batchId}
         />
       )
     }

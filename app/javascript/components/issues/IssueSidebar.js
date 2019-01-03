@@ -1,5 +1,6 @@
 import React from 'react'
 import IssueForm from './components/IssueForm.js'
+import IssueDetails from './components/IssueDetails.js'
 
 class IssueSidebar extends React.Component {
   constructor(props) {
@@ -10,9 +11,14 @@ class IssueSidebar extends React.Component {
   componentDidMount() {
     document.addEventListener('editor-sidebar-open', event => {
       const id = event.detail.id
-      if (!id) {
+      const mode = event.detail.mode
+
+      if (mode === 'details') {
+        this.setState({ mode })
+      } else if (!id) {
+        this.setState({ mode: 'edit' })
       } else {
-        this.setState({ id })
+        this.setState({ id, mode: 'create' })
         // Load issue
       }
     })
@@ -31,19 +37,12 @@ class IssueSidebar extends React.Component {
 
   renderBody() {
     const { batchId } = this.props
-    if (this.props.mode === 'details') {
-      return (
-        // TODO: Show details page
-        null
-      )
+    const { mode } = this.state
+
+    if (mode === 'details') {
+      return <IssueDetails onClose={this.onClose} batchId={batchId} />
     } else {
-      return (
-        <IssueForm
-          onClose={this.onClose}
-          mode={this.state.mode}
-          batchId={batchId}
-        />
-      )
+      return <IssueForm onClose={this.onClose} mode={mode} batchId={batchId} />
     }
   }
 

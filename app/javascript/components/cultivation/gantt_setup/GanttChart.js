@@ -185,13 +185,11 @@ class GanttChart extends React.Component {
     el.scrollTop = scrollTop
   }
 
-
   onDeleteRelationship = async (destination_id, source_id) => {
     console.log('destination id => ' + destination_id)
     console.log(source_id)
     console.log('delete that relationship !')
   }
-
 
   render() {
     return (

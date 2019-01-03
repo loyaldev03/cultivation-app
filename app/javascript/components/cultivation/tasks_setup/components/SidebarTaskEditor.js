@@ -103,9 +103,11 @@ class SidebarTaskEditor extends React.Component {
       estimated_hours,
       task_type
     } = this.state
+    const { taskAction, batchId, task } = this.props
     const changedTask = {
-      ...this.props.task,
-      batch_id: this.props.batchId,
+      ...task,
+      action: taskAction,
+      batch_id: batchId,
       name,
       start_date,
       end_date,

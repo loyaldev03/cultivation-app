@@ -36,9 +36,7 @@ export default class TaskEditor extends React.Component {
       facility_id: '',
       stockEditor: '',
       source: '',
-      action: '',
-      task_related_id: '',
-      position: ''
+      action: ''
     } // or set from props
     this.onResetEditor = this.onResetEditor.bind(this)
     this.onClose = this.onClose.bind(this)
@@ -47,42 +45,38 @@ export default class TaskEditor extends React.Component {
   componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):
     const { taskId, taskAction } = this.props
-    if (taskId && taskId !== prevProps.taskId) {
+    if (
+      taskId &&
+      taskAction &&
+      (taskId !== prevProps.taskId || taskAction !== prevProps.taskAction)
+    ) {
       if (taskAction === 'update') {
         const task = TaskStore.getTaskById(taskId)
         this.setState({
           tabs: 'General',
           id: taskId,
           action: taskAction,
-          task: task
+          task: task,
+          relativeTaskId: null
+        })
+      }
+      if (taskAction === 'add-above' || taskAction === 'add-below') {
+        this.setState({
+          tabs: 'General',
+          action: taskAction,
+          task: null,
+          relativeTaskId: taskId
         })
       }
     }
   }
 
-  onOpen = ev => {
-    if (ev.detail && ev.detail.taskId) {
-      const { taskId, action } = ev.detail
-      const task = TaskStore.getTaskById(taskId)
-      this.setState({
-        tabs: 'General',
-        id: task.id,
-        action: action,
-        task: task,
-        task_related_id: task.task_related_id,
-        task_related_parent_id: task.task_related_id,
-        position: task.position
-      })
-    }
-  }
-
-  renderSidebarTaskEditor() {
+  renderSidebarTaskEditor(haveChildren) {
     //find task here and send
     const { batchId } = this.props
-    const { id, action, tabs, task, position } = this.state
+    const { id, relativeTaskId, action, tabs, task } = this.state
     if (action === 'update') {
       if (!task) return null
-      const haveChildren = TaskStore.haveChildren(task.wbs)
       if (tabs === 'General') {
         return (
           <SidebarTaskEditor
@@ -102,15 +96,22 @@ export default class TaskEditor extends React.Component {
       }
     } else {
       return (
-        <AddTaskForm
-          key={id}
-          batch_id={batchId}
-          task_related_id={this.state.task_related_id}
-          task_related_parent_id={this.state.task_related_parent_id}
-          position={position}
-          handleReset={this.props.handleReset}
+        <SidebarTaskEditor
+          key={relativeTaskId + action}
+          task={task}
+          batchId={batchId}
+          showEstimatedHoursField={true}
         />
       )
+      // return (
+      //   <AddTaskForm
+      //     key={id + action}
+      //     batchId={batchId}
+      //     relativeTaskId={relativeTaskId}
+      //     action={action}
+      //     handleReset={this.props.handleReset}
+      //   />
+      // )
     }
   }
 
@@ -164,11 +165,9 @@ export default class TaskEditor extends React.Component {
   }
 
   render() {
-    let isNormalTask = true
-    // TODO: Need to switch to wbs
-    // this.state.task &&
-    // this.state.task.attributes.is_phase === false &&
-    // this.state.task.attributes.is_category === false
+    const { task, tabs } = this.state
+    const haveChildren =
+      task && task.wbs ? TaskStore.haveChildren(task.wbs) : false
     return (
       <div className="flex flex-column">
         <style> {styles} </style>
@@ -179,26 +178,26 @@ export default class TaskEditor extends React.Component {
           <div className="mt3 flex content-stretch">
             <div
               className={`ph4 pointer dim ${
-                this.state.tabs === 'General' ? 'active' : null
+                tabs === 'General' ? 'active' : null
               }`}
               onClick={this.changeTabs('General')}
             >
               General
             </div>
-            {isNormalTask ? (
+            {!haveChildren ? (
               <div
                 className={`pl3 ph4 pointer dim ${
-                  this.state.tabs === 'Resource' ? 'active' : null
+                  tabs === 'Resource' ? 'active' : null
                 }`}
                 onClick={this.changeTabs('Resource')}
               >
                 Resource
               </div>
             ) : null}
-            {isNormalTask ? (
+            {!haveChildren ? (
               <div
                 className={`pl3 ph4 pointer dim ${
-                  this.state.tabs === 'Material' ? 'active' : null
+                  tabs === 'Material' ? 'active' : null
                 }`}
                 onClick={this.changeTabs('Material')}
               >
@@ -208,7 +207,7 @@ export default class TaskEditor extends React.Component {
           </div>
           {this.renderCloseSidebar()}
         </div>
-        {this.renderSidebarTaskEditor()}
+        {this.renderSidebarTaskEditor(haveChildren)}
       </div>
     )
   }

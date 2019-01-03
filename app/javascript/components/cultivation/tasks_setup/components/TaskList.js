@@ -18,25 +18,6 @@ import ReactTable from 'react-table'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import BatchSetupStore from '../../batches_setup/BatchSetupStore'
 
-const styles = `
-.table-dropdown {
-  box-shadow: 0 3px 10px 0 #00000087;
-  top: initial;
-  min-width: 200px;
-}
-.table-dropdown a:hover{
-  background-color: #eee;
-}
-
-.rt-tr-group:hover{
-  box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
-}
-.rt-thead{
-  background-color: #eee;
-}
-
-`
-
 const TaskNameField = ({ id, wbs, indent, text, onClick }) => {
   const hasChild = TaskStore.hasChildNode(wbs)
   return (
@@ -222,12 +203,12 @@ class TaskList extends React.Component {
                     <MenuButton
                       icon="vertical_align_top"
                       text="Insert Task Above"
-                      onClick={e => this.handleAddTask(data, 'top')}
+                      onClick={e => this.handleAddTask(id, 'add-above')}
                     />
                     <MenuButton
                       icon="vertical_align_bottom"
                       text="Insert Task Below"
-                      onClick={e => this.handleAddTask(data, 'bottom')}
+                      onClick={e => this.handleAddTask(id, 'add-below')}
                     />
                     <MenuButton
                       icon="edit"
@@ -251,21 +232,16 @@ class TaskList extends React.Component {
     )
   }
 
-  handleAddTask = (data, position) => {
-    const { id, parent_id } = data.row
+  handleAddTask = (taskId, action) => {
     this.setState({
-      taskSelected: id,
-      taskAction: 'add',
+      taskAction: action,
+      taskSelected: taskId,
       showStartDateCalendar: false
     })
     editorSidebarHandler.open({
       width: '500px',
-      data: {
-        task_related_id: id,
-        position: position,
-        task_related_parent_id: parent_id
-      },
-      action: 'add'
+      taskId: taskId,
+      action: action
     })
   }
 

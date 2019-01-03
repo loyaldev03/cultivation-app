@@ -16,17 +16,10 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def update
     update_cmd = Cultivation::UpdateTask.call(task_params)
-    if update_cmd.errors.empty?
-      task = Cultivation::Task.find(params[:id])
-      tasks = get_all_tasks
-      users = User.active
-      task_json = TaskSerializer.new(
-        task, params: {tasks: tasks, users: users},
-      ).serialized_json
-      render json: task_json
+    if update_cmd.success?
+      render json: {data: {id: update_cmd.result.id.to_s}}
     else
-      data = {errors: update_cmd.errors}
-      render json: data
+      render json: {errors: update_cmd.errors}
     end
   end
 
@@ -44,18 +37,14 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def update_indent
-    Rails.logger.debug "\033[31m id: #{params[:id]} \033[0m"
-    Rails.logger.debug "\033[31m indent_action: #{params[:indent_action]} \033[0m"
     indent_cmd = Cultivation::UpdateTaskIndent.call(
-      params[:id],
-      params[:indent_action],
+      params[:id],            # task.id
+      params[:indent_action], # in / out
       current_user,
     )
     if indent_cmd.success?
-      Rails.logger.debug "\033[31m indent_action: success \033[0m"
       render json: {data: {id: indent_cmd.result.id.to_s}}
     else
-      Rails.logger.debug "\033[31m indent_action: errors \033[0m"
       render json: {errors: indent_cmd.errors}
     end
   end

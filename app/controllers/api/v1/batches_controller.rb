@@ -6,6 +6,11 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
                                      params: {exclude_tasks: exclude_tasks}).serialized_json
   end
 
+  def list_infos
+    batches = Cultivation::Batch.all.order(c_at: :desc)
+    render json: BatchInfoSerializer.new(batches).serialized_json
+  end
+
   def create
     args = {
       facility_id: params[:facility_id],

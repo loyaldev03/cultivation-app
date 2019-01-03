@@ -25,7 +25,7 @@ module Cultivation
     # Indicate a Category task (2nd level task)
     # FIXME: Remove
     field :is_category, type: Boolean, default: -> { false }
-    # Indelible task cannot be remove
+    # Indelible task cannot be remove, possible values: 'cleaning', 'moving'
     field :indelible, type: String
     # Parent task
     field :parent_id, type: BSON::ObjectId
@@ -55,6 +55,10 @@ module Cultivation
 
     def parent
       batch.tasks.find_by(id: parent_id)
+    end
+
+    def indelible?
+      !indelible.nil? && !indelible.blank?
     end
 
     def estimated_cost

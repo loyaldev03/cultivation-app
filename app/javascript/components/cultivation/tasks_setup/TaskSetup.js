@@ -34,7 +34,8 @@ class TaskSetup extends React.Component {
         'estimated_hour',
         'estimated_cost',
         'resource_assigned',
-        'materials'
+        'materials',
+        'depend_on',
       ],
       columnOpen: false
     }
@@ -83,6 +84,10 @@ class TaskSetup extends React.Component {
 
   render() {
     const { batch } = this.props
+    const batchSource = batch.batch_source
+      ? batch.batch_source.replace(/_/g, ' ')
+      : ''
+    const batchQuantity = batch.quantity ? batch.quantity : 0
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
     let activeTabs =
@@ -111,22 +116,33 @@ class TaskSetup extends React.Component {
                       <label>Batch Source</label>
                     </div>
                     <div className="w-40">
-                      <div className="">
-                        <label>{batch.batch_source}</label>
+                      <div className="ttc">
+                        <label>{batchSource}</label>
                       </div>
                     </div>
                   </div>
                   <hr />
-                  <div className=" flex">
-                    <div className="w-40">
-                      <label>Batch Name</label>
-                    </div>
-                    <div className="w-40">
-                      <div className="">
-                        <label>{batch.name}</label>
+                  {batchQuantity > 0 ? (
+                    <div className="flex">
+                      <div className="w-40">
+                        <label>Batch Name</label>
+                      </div>
+                      <div className="w-40">
+                        <div className="">
+                          <label>{batch.name}</label>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="flex">
+                      <div className="w-40">Missing Quantity</div>
+                      <div className="w-40">
+                        <a href={`/cultivation/batches/${batch.id}?select_location=1`}className="link red">
+                          Set location &amp; quantity
+                        </a>
+                      </div>
+                    </div>
+                  )}
                   <hr />
                   <div className=" flex">
                     <div className="w-40">

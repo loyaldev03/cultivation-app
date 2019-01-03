@@ -40,6 +40,7 @@ group :development, :test do
   # Automatically re-run rspec tests
   gem 'spring-commands-rspec'
   gem 'guard-rspec', require: false
+  gem 'terminal-notifier-guard'
 end
 
 group :test do

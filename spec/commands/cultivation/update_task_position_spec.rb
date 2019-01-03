@@ -418,4 +418,26 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_follow.wbs).to eq "1.2"
     expect(t_follow.position).to eq 5
   end
+
+  it "Cond O - Drop 2.1 on 2.3.2" do
+    task_to_move = tasks[5]
+    drop_at_task = tasks[9]
+
+    cmd = Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
+                                               drop_at_task.id,
+                                               current_user)
+
+    updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
+    t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
+    t_dropped = updated_tasks.detect { |t| t.id == drop_at_task.id }
+    t_follow = updated_tasks.detect { |t| t.id == tasks[6].id }
+
+    expect(cmd.success?).to be true
+    expect(t_moved.wbs).to eq "2.3"
+    expect(t_moved.position).to eq 10
+    expect(t_follow.wbs).to eq "2.1"
+    expect(t_follow.position).to eq 5
+    expect(t_dropped.wbs).to eq "2.2.2"
+    expect(t_dropped.position).to eq 8
+  end
 end

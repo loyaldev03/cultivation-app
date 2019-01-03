@@ -18,48 +18,53 @@ module Cultivation
         task.update(user_ids: @args[:user_ids])
       else
         batch = Cultivation::Batch.includes(:tasks).find_by(id: task.batch_id)
-        batch.is_active = true if @activate_batch
-        map_args_to_task(task, @args)
-        opt = {
-          facility_id: batch.facility_id,
-          batch_id: batch.id,
-          quantity: batch.quantity,
-        }
-        # Update child and dependents tasks's start & end dates>
-        # Except when task is Clean
-        # - which doesn't effect parent or dependent tasks
-        update_task(task, batch.tasks, opt) unless task.indelible == 'cleaning' # TODO: Change this to Constants, same as string in template3
-        # Save other fields on Task that are not handle by bulk_update
-        task.save if errors.empty?
-        # TODO::ANDY: Estimated Hours are not calculating
-        # Extend end date to Category and Phas
-        update_tasks_end_date(task, batch.tasks, opt)
-        # Update batch
-        update_batch(batch, batch.tasks&.first)
+        if valid_batch? batch
+          batch.is_active = true if @activate_batch
+          task = map_args_to_task(task, @args)
+          opt = {
+            facility_id: batch.facility_id,
+            batch_id: batch.id,
+            quantity: batch.quantity,
+          }
+
+          if cascade_changes? task
+            update_task(task, batch.tasks, opt)
+          end
+
+          # Save other fields on Task that are not handle by bulk_update
+          saved = task.save! if errors.empty?
+          # TODO::ANDY: Estimated Hours are not calculating
+          # Extend end date to Category and Phas
+          update_tasks_end_date(task, batch.tasks, opt)
+          # Update batch
+          update_batch(batch, batch.tasks&.first)
+        end
       end
       task
     end
 
-    def map_args_to_task(task, args)
-      task.phase = args[:phase]
-      task.task_category = args[:task_category]
+    def cascade_changes?(task)
+      # Update child and dependents tasks's start & end dates except
+      # when task is Clean - doesn't effect parent or dependent tasks
+      task.indelible != 'cleaning'
+    end
 
+    def map_args_to_task(task, args)
       # Only allow non-indelible task change these field
-      unless task.indelible
-        task.name = args[:name] unless task&.indelible
-        task.is_phase = args[:is_phase] || false
-        task.is_category = args[:is_category] || false
-        task.parent_id = args[:parent_id].to_bson_id if args[:parent_id] and !args[:parent_id].empty?
-        task.depend_on = args[:depend_on].to_bson_id if args[:depend_on] and !args[:depend_on].empty?
+      if !task.indelible?
+        task.name = args[:name]
+        task.depend_on = args[:depend_on].to_bson_id if args[:depend_on].present?
         task.task_type = args[:task_type] || []
       end
 
-      task.duration = args[:duration].to_i
-      task.days_from_start_date = args[:days_from_start_date].to_i
       task.start_date = args[:start_date]
+      task.duration = args[:duration].to_i
+      # TODO: Calculate end_date from start_date + duration
       task.end_date = args[:end_date]
       task.estimated_hours = args[:estimated_hours].to_f
-      task.estimated_cost = args[:estimated_cost].to_f
+      # TODO: Calc estimated cost
+      # task.estimated_cost = args[:estimated_cost].to_f
+      task
     end
 
     def update_batch(batch, first_task)
@@ -76,9 +81,6 @@ module Cultivation
     end
 
     def update_task(task, batch_tasks, opt = {})
-      raise ArgumentError, 'facility_id is required' if opt[:facility_id].nil?
-      raise ArgumentError, 'batch_id is required' if opt[:batch_id].nil?
-      raise ArgumentError, 'quantity is required' if opt[:quantity].nil?
       # Store changed task into a an array for 'bulk' update later
       opt = {
         start_date: task.start_date,
@@ -273,10 +275,17 @@ module Cultivation
       Cultivation::Task.collection.bulk_write(bulk_order)
     end
 
+    def valid_batch?(batch)
+      if batch.facility_id.nil?
+        errors.add(:facility_id, 'Missing Facility in Batch')
+      end
+      if batch.quantity.nil?
+        errors.add(:quantity, 'Missing Quantity in Batch. Did you skipped quanity location selection?')
+      end
+      errors.empty? # No Errors => Valid
+    end
+
     def valid_data?(tasks, opt = {})
-      raise ArgumentError, 'facility_id is required' if opt[:facility_id].nil?
-      raise ArgumentError, 'batch_id is required' if opt[:batch_id].nil?
-      raise ArgumentError, 'quantity is required' if opt[:quantity].nil?
       # max_date = tasks.pluck(:end_date).compact.max
       # min_date = tasks.pluck(:start_date).compact.min
       # overlap_batch = false

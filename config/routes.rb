@@ -178,6 +178,7 @@ Rails.application.routes.draw do
       end
 
       resources :batches, only: [:index, :create] do
+        get 'list_infos', on: :collection
         get 'search_locations', on: :collection
         post 'search_batch_plans', on: :collection
         post 'setup_simple_batch', on: :collection

@@ -28,7 +28,6 @@ module Cultivation
       if task.indent > drop_on.indent
         # pp '       drop as child node:'
         task.indent = drop_on.indent + 1
-        task.parent_id = drop_on.id
         new_position = get_new_position(task.position, drop_on.position)
       else
         tasks = get_tasks(drop_on.batch)
@@ -108,11 +107,12 @@ module Cultivation
     end
 
     def can_move?
+      # Rails.logger.debug "\033[31m indelible: #{task_to_move.indelible? ? "Indelible" : "Not Indelible"} \033[0m"
       if task_to_move.nil?
         errors.add(:error, 'Task Not Found')
         return false
       end
-      if task_to_move.indelible
+      if task_to_move.indelible?
         errors.add(:error, "Task '#{task_to_move.name}' cannot be moved.")
         return false
       end

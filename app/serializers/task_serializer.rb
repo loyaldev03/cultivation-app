@@ -4,7 +4,7 @@ class TaskSerializer
     :task_category, # TODO: Remove
     :name,
     :duration,
-    :days_from_start_date,
+    :days_from_start_date, # TODO: Remove
     :start_date,
     :end_date,
     :position,

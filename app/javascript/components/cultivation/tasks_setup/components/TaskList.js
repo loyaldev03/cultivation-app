@@ -37,14 +37,11 @@ const styles = `
 
 `
 
-const TaskNameField = ({ id, wbs, indent, text }) => {
+const TaskNameField = ({ id, wbs, indent, text, onClick }) => {
+  const hasChild = TaskStore.hasChildNode(wbs)
   return (
-    <span
-      className={classNames(`dib flex items-center indent--${indent}`, {
-        orange: TaskStore.hasChildNode(wbs)
-      })}
-    >
-      {TaskStore.hasChildNode(wbs) ? (
+    <span className={`dib flex items-center indent--${indent}`}>
+      {hasChild ? (
         <i
           className="material-icons dim grey f7 pointer"
           onClick={e => TaskStore.toggleCollapseNode(wbs)}
@@ -54,7 +51,16 @@ const TaskNameField = ({ id, wbs, indent, text }) => {
       ) : (
         <span className="dib indent--1" />
       )}
-      {text}
+      <a
+        href="#0"
+        className={classNames('link', {
+          orange: hasChild,
+          grey: !hasChild
+        })}
+        onClick={onClick}
+      >
+        {text}
+      </a>
     </span>
   )
 }
@@ -119,8 +125,7 @@ class TaskList extends React.Component {
   }
 
   handleEllipsisClick = taskId => e => {
-    console.log({ taskId })
-    this.setState({ idOpen: taskId })
+    this.setState({ idOpen: taskId, taskSelected: taskId })
   }
 
   handleMouseLeave = row => {
@@ -133,7 +138,11 @@ class TaskList extends React.Component {
   }
 
   handleEdit = taskId => {
-    this.setState({ taskSelected: taskId, showStartDateCalendar: false })
+    this.setState({
+      taskSelected: taskId,
+      taskAction: 'update',
+      showStartDateCalendar: false
+    })
     let error_container = document.getElementById('error-container')
     if (error_container) {
       error_container.style.display = 'none'
@@ -164,19 +173,23 @@ class TaskList extends React.Component {
     const { id, wbs, indent } = data.row
     return (
       <div className="flex justify-between items-center h-100" draggable={true}>
-        <TaskNameField id={id} wbs={wbs} indent={indent} text={data.value} />
+        <TaskNameField
+          id={id}
+          wbs={wbs}
+          indent={indent}
+          text={data.value}
+          onClick={e => this.handleEdit(id)}
+        />
         <Manager>
           <Reference>
             {({ ref }) => {
-              const childState = !this.state.idOpen || this.state.idOpen === id
               return (
                 <i
                   ref={ref}
                   onClick={this.handleEllipsisClick(id)}
-                  className={classNames(
-                    'ml2 pointer material-icons show-on-hover',
-                    {}
-                  )}
+                  className={classNames('ml2 pointer material-icons', {
+                    'show-on-hover': this.state.taskSelected !== id
+                  })}
                 >
                   more_horiz
                 </i>
@@ -240,8 +253,11 @@ class TaskList extends React.Component {
 
   handleAddTask = (data, position) => {
     const { id, parent_id } = data.row
-    console.log({ action: 'handleAddTask', id, parent_id })
-    this.setState({ taskSelected: id, showStartDateCalendar: false })
+    this.setState({
+      taskSelected: id,
+      taskAction: 'add',
+      showStartDateCalendar: false
+    })
     editorSidebarHandler.open({
       width: '500px',
       data: {
@@ -398,10 +414,6 @@ class TaskList extends React.Component {
       show: false
     },
     {
-      accessor: 'depend_on',
-      show: false
-    },
-    {
       Header: 'WBS',
       accessor: 'wbs',
       maxWidth: '70',
@@ -413,6 +425,18 @@ class TaskList extends React.Component {
       maxWidth: '400',
       show: this.checkVisibility('name'),
       Cell: this.renderTaskNameColumn
+    },
+    {
+      Header: 'Predecessor',
+      accessor: 'depend_on',
+      maxWidth: '110',
+      show: this.checkVisibility('depend_on'),
+      Cell: data => {
+        if (data.row.depend_on) {
+          const dependOnTask = TaskStore.getTaskById(data.row.depend_on)
+          return dependOnTask ? dependOnTask.wbs : ''
+        }
+      }
     },
     {
       Header: 'Start Date',
@@ -480,19 +504,17 @@ class TaskList extends React.Component {
           className="-highlight"
           pageSize={TaskStore.taskList.length}
           getTrProps={(state, rowInfo, column) => {
-            const trProps = {
-              className: 'task-row'
+            let className = 'task-row'
+            if (
+              rowInfo.row &&
+              this.state.taskSelected &&
+              this.state.taskSelected === rowInfo.row.id
+            ) {
+              className = 'task-row shadow-1'
             }
-            if (this.state.taskSelected && rowInfo.row) {
-              trProps.stype = {
-                boxShadow:
-                  this.state.taskSelected === rowInfo.row.id
-                    ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
-                    : null,
-                backgroundColor: rowInfo.row['indent'] === 0 ? '#FAEFEE' : null
-              }
+            return {
+              className
             }
-            return trProps
           }}
         />
         <div className="mt3 tr">
@@ -559,7 +581,9 @@ class TaskList extends React.Component {
             ) : (
               <TaskEditor
                 onClose={this.closeSidebar}
-                batch_id={this.props.batch.id}
+                taskId={this.state.taskSelected}
+                taskAction={this.state.taskAction}
+                batchId={this.props.batch.id}
                 handleReset={this.handleReset}
               />
             )}

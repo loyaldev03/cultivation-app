@@ -17,8 +17,8 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   def update
     update_cmd = Cultivation::UpdateTask.call(task_params)
     if update_cmd.errors.empty?
-      task = Cultivation::Task.find(params[:id])+
-      tasks = get_all_tasks
+      task = Cultivation::Task.find(params[:id]) +
+             tasks = get_all_tasks
       users = User.active
       task_json = TaskSerializer.new(
         task, params: {tasks: tasks, users: users},
@@ -86,7 +86,6 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     render json: {errors: delete_cmd.errors}
   end
 
-
   def delete_relationship
     destination_task = Cultivation::Task.find(params[:destination_id])
     if destination_task.present?
@@ -96,7 +95,6 @@ class Api::V1::TasksController < Api::V1::BaseApiController
       render json: {errors: 'Task Not Found'}
     end
   end
-
 
   private
 

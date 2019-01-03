@@ -185,16 +185,11 @@ class GanttChart extends React.Component {
     el.scrollTop = scrollTop
   }
 
-
   onDeleteRelationship = async (destination_id, source_id) => {
     if (confirm('Are you sure you want to delete this relationship? ')) {
-      await TaskStore.deleteRelationship(
-        this.props.batch_id,
-        destination_id
-      )
+      await TaskStore.deleteRelationship(this.props.batch_id, destination_id)
     }
   }
-
 
   render() {
     return (

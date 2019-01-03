@@ -208,11 +208,11 @@ class TaskStore {
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       await this.loadTasks(batch_id)
       this.isLoading = false
+      toast('Task Relationship Deleted', 'success')
     } catch (error) {
       console.log(error)
     }
   }
-
 
   formatGantt(tasks) {
     tasks = toJS(tasks)

@@ -5,9 +5,7 @@ import updateTasks from '../actions/updateTask'
 import { addDays, differenceInCalendarDays, parse } from 'date-fns'
 import ErrorStore from '../stores/ErrorStore'
 
-const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000
-
-class SidebarTaskEditor extends React.PureComponent {
+class SidebarTaskEditor extends React.Component {
   constructor(props) {
     super(props)
     if (props.task) {
@@ -118,30 +116,33 @@ class SidebarTaskEditor extends React.PureComponent {
     updateTasks.updateTask(changedTask)
   }
 
-  handleChangeCheckbox = e => {
-    const item = e.target.name
-    const isChecked = e.target.checked
-    let arrays = this.state.task_type
+  handleChangeCheckbox = fieldName => e => {
+    let { task_type } = this.state
     if (e.target.checked) {
-      arrays.push(e.target.value)
+      task_type.push(fieldName)
     } else {
-      arrays = arrays.filter(k => k !== e.target.value)
+      task_type = task_type.filter(k => k !== fieldName)
     }
-    this.setState({ task_type: arrays })
+    this.setState({ task_type })
   }
 
-  checkboxValue = val => {
-    return this.state.task_type.includes(val)
+  checkboxValue = field => {
+    return this.state.task_type.includes(field)
   }
 
   render() {
     const { showEstimatedHoursField } = this.props
-    // let isNotNormalTask =
-    //   this.state.is_phase === true || this.state.is_category === true
-    let handleChangeCheckbox = this.handleChangeCheckbox
-    let checkboxValue = this.checkboxValue
     // let errorMessage = ErrorStore.slice()
-    const { name } = this.state
+    const {
+      name,
+      start_date,
+      end_date,
+      duration,
+      estimated_hours,
+      actual_hours,
+      task_type,
+      errors
+    } = this.state
     return (
       <React.Fragment>
         <div
@@ -161,9 +162,9 @@ class SidebarTaskEditor extends React.PureComponent {
           <div className="w-100">
             <TextInput
               label={'Task'}
-              value={this.state.name}
+              value={name}
               onChange={this.handleChangeText('name')}
-              errors={this.state.errors}
+              errors={errors}
               errorField="name"
             />
           </div>
@@ -172,7 +173,7 @@ class SidebarTaskEditor extends React.PureComponent {
           <div className="w-40">
             <label className="f6 fw6 db mb1 gray ttc">Start At</label>
             <DatePicker
-              value={this.state.start_date}
+              value={start_date}
               fieldname="start_date"
               onChange={value => this.handleChangeDate('start_date', value)}
             />
@@ -181,7 +182,7 @@ class SidebarTaskEditor extends React.PureComponent {
           <div className="w-40 pl3">
             <label className="f6 fw6 db mb1 gray ttc">End At</label>
             <DatePicker
-              value={this.state.end_date}
+              value={end_date}
               fieldname="end_date"
               onChange={value => this.handleChangeDate('end_date', value)}
             />
@@ -190,9 +191,9 @@ class SidebarTaskEditor extends React.PureComponent {
             <NumericInput
               label={'Duration'}
               min="1"
-              value={this.state.duration}
+              value={duration}
               onChange={this.handleChangeText('duration')}
-              errors={this.state.errors}
+              errors={errors}
               errorField="duration"
             />
           </div>
@@ -204,9 +205,9 @@ class SidebarTaskEditor extends React.PureComponent {
               <NumericInput
                 label={'Estimated Hours Needed'}
                 min="0"
-                value={this.state.estimated_hours}
+                value={estimated_hours}
                 onChange={this.handleChangeText('estimated_hours')}
-                errors={this.state.errors}
+                errors={errors}
                 errorField="estimated_hours"
               />
             </div>
@@ -224,66 +225,54 @@ class SidebarTaskEditor extends React.PureComponent {
               <label className="f6 fw6 db mb1 gray ttc">
                 <input
                   type="checkbox"
-                  name="checkbox-1"
                   className="mr2"
-                  value="assign_plant_id"
-                  onChange={handleChangeCheckbox}
-                  checked={checkboxValue('assign_plant_id')}
+                  onChange={this.handleChangeCheckbox('assign_plant_id')}
+                  checked={this.checkboxValue('assign_plant_id')}
                 />
                 Assign Plant id to clippings
               </label>
               <label className="f6 fw6 db mb1 gray ttc">
                 <input
                   type="checkbox"
-                  name="checkbox-1"
                   className="mr2"
-                  value="move_plant"
-                  onChange={handleChangeCheckbox}
-                  checked={checkboxValue('move_plant')}
+                  onChange={this.handleChangeCheckbox('move_plant')}
+                  checked={this.checkboxValue('move_plant')}
                 />
                 Move plant
               </label>
               <label className="f6 fw6 db mb1 gray ttc">
                 <input
                   type="checkbox"
-                  name="checkbox-1"
                   className="mr2"
-                  value="assign_plant_id_metrc"
-                  onChange={handleChangeCheckbox}
-                  checked={checkboxValue('assign_plant_id_metrc')}
+                  onChange={this.handleChangeCheckbox('assign_plant_id_metrc')}
+                  checked={this.checkboxValue('assign_plant_id_metrc')}
                 />
                 Assign Plant ID with Metrc tag
               </label>
               <label className="f6 fw6 db mb1 gray ttc">
                 <input
                   type="checkbox"
-                  name="checkbox-1"
                   className="mr2"
-                  value="create_harvest"
-                  onChange={handleChangeCheckbox}
-                  checked={checkboxValue('create_harvest')}
+                  onChange={this.handleChangeCheckbox('create_harvest')}
+                  checked={this.checkboxValue('create_harvest')}
                 />
                 Create harvest
               </label>
               <label className="f6 fw6 db mb1 gray ttc">
                 <input
                   type="checkbox"
-                  name="checkbox-1"
                   className="mr2"
-                  value="create_package"
-                  onChange={handleChangeCheckbox}
-                  checked={checkboxValue('create_package')}
+                  onChange={this.handleChangeCheckbox('create_package')}
+                  checked={this.checkboxValue('create_package')}
                 />
                 Create package
               </label>
               <label className="f6 fw6 db mb1 gray ttc">
                 <input
                   type="checkbox"
-                  name="checkbox-1"
                   className="mr2"
-                  value="finish_harvest"
-                  onChange={handleChangeCheckbox}
-                  checked={checkboxValue('finish_harvest')}
+                  onChange={this.handleChangeCheckbox('finish_harvest')}
+                  checked={this.checkboxValue('finish_harvest')}
                 />
                 Finish harvest
               </label>
@@ -301,13 +290,13 @@ class SidebarTaskEditor extends React.PureComponent {
                     Estimated Hours
                   </label>
                   <label className="f6 fw6 db mb1 gray ttc">
-                    {this.state.estimated_hours}
+                    {estimated_hours}
                   </label>
                 </div>
                 <div className="w-40 pl3">
                   <label className="f6 fw6 db mb1 gray ttc">Actual Hours</label>
                   <label className="f6 fw6 db mb1 gray ttc">
-                    {this.state.actual_hours}
+                    {actual_hours}
                   </label>
                 </div>
               </div>

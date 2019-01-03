@@ -125,7 +125,7 @@ class TaskList extends React.Component {
   }
 
   handleEllipsisClick = taskId => e => {
-    this.setState({ idOpen: taskId })
+    this.setState({ idOpen: taskId, taskSelected: taskId })
   }
 
   handleMouseLeave = row => {
@@ -183,15 +183,13 @@ class TaskList extends React.Component {
         <Manager>
           <Reference>
             {({ ref }) => {
-              const childState = !this.state.idOpen || this.state.idOpen === id
               return (
                 <i
                   ref={ref}
                   onClick={this.handleEllipsisClick(id)}
-                  className={classNames(
-                    'ml2 pointer material-icons show-on-hover',
-                    {}
-                  )}
+                  className={classNames('ml2 pointer material-icons', {
+                    'show-on-hover': this.state.taskSelected !== id
+                  })}
                 >
                   more_horiz
                 </i>
@@ -435,7 +433,8 @@ class TaskList extends React.Component {
       show: this.checkVisibility('depend_on'),
       Cell: data => {
         if (data.row.depend_on) {
-          return TaskStore.getTaskById(data.row.depend_on).wbs
+          const dependOnTask = TaskStore.getTaskById(data.row.depend_on)
+          return dependOnTask ? dependOnTask.wbs : ''
         }
       }
     },

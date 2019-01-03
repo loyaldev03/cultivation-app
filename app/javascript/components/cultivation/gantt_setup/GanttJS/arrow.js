@@ -54,7 +54,7 @@ export default class Arrow {
             m -5 -5
             l 5 5
             l -5 5`
-    this.start_x = start_x - 10
+    this.start_x = start_x - 20
     this.start_y = start_y
     this.end_y = end_y
     this.end_x = end_x

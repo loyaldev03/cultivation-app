@@ -583,17 +583,16 @@ export default class Gantt {
             this.bars[task._index] // to_task
           )
           this.layers.arrow.appendChild(arrow.element)
-          console.log(arrow.getCoordinate())
-
           const g = createSVG('g', {
             append_to: this.layers.arrow,
             class: 'hidden'
           })
-
           createSVG('circle', {
             cx: arrow.getCoordinate().start_x,
             cy: arrow.getCoordinate().end_y,
             r: 5,
+            'data-from': dependency.id,
+            'data-to': task.id,
             class: 'button-delete',
             fill: 'red',
             append_to: g
@@ -690,14 +689,20 @@ export default class Gantt {
         drag_line
       )
     }
+
+    $.on(this.$svg, 'mousedown', '.button-delete', (e, element) => {
+      console.log('delete button clicked!')
+      this.trigger_event('delete_relationship', [
+        element.getAttribute('data-to'),
+        element.getAttribute('data-from')
+      ])
+    })
+
     $.on(this.$svg, 'mousedown', '.arrow, .handle-arrow', (e, element) => {
       let path = element.getAttribute('d')
       element.classList.add('on')
       arrow = this.arrows.find(e => e.path === path)
-      console.log(element.nextSibling)
       element.nextSibling.classList.remove('hidden')
-      console.log('added path class on ')
-      // arrow.update_arrow(e.offsetX, e.offsetY)
       drag_line = true
     })
 
@@ -768,7 +773,7 @@ export default class Gantt {
           }
         }
       })
-      if (drag_line) {
+      if (drag_line && arrow) {
         arrow.update_arrow(e.offsetX, e.offsetY)
       }
     })

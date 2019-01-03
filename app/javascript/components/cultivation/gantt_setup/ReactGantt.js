@@ -44,6 +44,7 @@ export default class ReactGantt extends Component {
       onViewChange,
       customPopupHtml,
       onDragRelationShip,
+      onDeleteRelationship,
       tasks,
       viewMode
     } = this.props
@@ -62,7 +63,8 @@ export default class ReactGantt extends Component {
       on_progress_change: onProgressChange || noop,
       on_view_change: onViewChange || noop,
       custom_popup_html: customPopupHtml || null,
-      on_drag_relationship: onDragRelationShip || noop
+      on_drag_relationship: onDragRelationShip || noop,
+      on_delete_relationship: onDeleteRelationship || noop
     })
     // change view mode
     this.ganttInst.change_view_mode(viewMode)

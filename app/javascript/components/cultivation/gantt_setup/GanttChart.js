@@ -185,6 +185,14 @@ class GanttChart extends React.Component {
     el.scrollTop = scrollTop
   }
 
+
+  onDeleteRelationship = async (destination_id, source_id) => {
+    console.log('destination id => ' + destination_id)
+    console.log(source_id)
+    console.log('delete that relationship !')
+  }
+
+
   render() {
     return (
       <React.Fragment>
@@ -395,6 +403,7 @@ class GanttChart extends React.Component {
                 onLoad={this.onLoad}
                 onDragRelationShip={this.onDragRelationShip}
                 onDateChange={this.onDateChange}
+                onDeleteRelationship={this.onDeleteRelationship}
                 // onProgressChange={this._func}
                 // onViewChange={this._func}
                 // customPopupHtml={this._html_func}

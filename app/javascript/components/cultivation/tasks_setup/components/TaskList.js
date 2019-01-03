@@ -416,10 +416,6 @@ class TaskList extends React.Component {
       show: false
     },
     {
-      accessor: 'depend_on',
-      show: false
-    },
-    {
       Header: 'WBS',
       accessor: 'wbs',
       maxWidth: '70',
@@ -431,6 +427,17 @@ class TaskList extends React.Component {
       maxWidth: '400',
       show: this.checkVisibility('name'),
       Cell: this.renderTaskNameColumn
+    },
+    {
+      Header: 'Predecessor',
+      accessor: 'depend_on',
+      maxWidth: '110',
+      show: this.checkVisibility('depend_on'),
+      Cell: data => {
+        if (data.row.depend_on) {
+          return TaskStore.getTaskById(data.row.depend_on).wbs
+        }
+      }
     },
     {
       Header: 'Start Date',

@@ -34,7 +34,8 @@ class TaskSetup extends React.Component {
         'estimated_hour',
         'estimated_cost',
         'resource_assigned',
-        'materials'
+        'materials',
+        'depend_on',
       ],
       columnOpen: false
     }

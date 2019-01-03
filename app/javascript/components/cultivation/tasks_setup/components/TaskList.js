@@ -138,7 +138,11 @@ class TaskList extends React.Component {
   }
 
   handleEdit = taskId => {
-    this.setState({ taskSelected: taskId, showStartDateCalendar: false })
+    this.setState({
+      taskSelected: taskId,
+      taskAction: 'update',
+      showStartDateCalendar: false
+    })
     let error_container = document.getElementById('error-container')
     if (error_container) {
       error_container.style.display = 'none'
@@ -251,7 +255,11 @@ class TaskList extends React.Component {
 
   handleAddTask = (data, position) => {
     const { id, parent_id } = data.row
-    this.setState({ taskSelected: id, showStartDateCalendar: false })
+    this.setState({
+      taskSelected: id,
+      taskAction: 'add',
+      showStartDateCalendar: false
+    })
     editorSidebarHandler.open({
       width: '500px',
       data: {
@@ -567,7 +575,9 @@ class TaskList extends React.Component {
             ) : (
               <TaskEditor
                 onClose={this.closeSidebar}
-                batch_id={this.props.batch.id}
+                taskId={this.state.taskSelected}
+                taskAction={this.state.taskAction}
+                batchId={this.props.batch.id}
                 handleReset={this.handleReset}
               />
             )}

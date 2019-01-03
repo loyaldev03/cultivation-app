@@ -1,8 +1,5 @@
 import React from 'react'
-import { observer, Provider } from 'mobx-react'
-
 import TaskStore from '../stores/NewTaskStore'
-
 import SidebarTaskEditor from './SidebarTaskEditor'
 import AddTaskForm from './AddTaskForm'
 import MaterialForm from './MaterialForm'
@@ -28,7 +25,6 @@ const styles = `
 
 `
 
-@observer
 export default class TaskEditor extends React.Component {
   constructor(props) {
     super(props)
@@ -48,16 +44,20 @@ export default class TaskEditor extends React.Component {
     this.onClose = this.onClose.bind(this)
   }
 
-  componentDidMount() {
-    document.addEventListener('editor-sidebar-open', this.onOpen)
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('editor-sidebar-open', this.onOpen)
-  }
-
-  onChangeHandler(attr, value) {
-    sidebarTask[attr] = value.persist()
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    const { taskId, taskAction } = this.props
+    if (taskId && taskId !== prevProps.taskId) {
+      if (taskAction === 'update') {
+        const task = TaskStore.getTaskById(taskId)
+        this.setState({
+          tabs: 'General',
+          id: taskId,
+          action: taskAction,
+          task: task
+        })
+      }
+    }
   }
 
   onOpen = ev => {
@@ -78,23 +78,33 @@ export default class TaskEditor extends React.Component {
 
   renderSidebarTaskEditor() {
     //find task here and send
-    const { batch_id } = this.props
+    const { batchId } = this.props
     const { id, action, tabs, task, position } = this.state
     if (action === 'update') {
       if (!task) return null
+      const haveChildren = TaskStore.haveChildren(task.wbs)
       if (tabs === 'General') {
-        return <SidebarTaskEditor id={id} task={task} batch_id={batch_id} />
+        return (
+          <SidebarTaskEditor
+            key={id}
+            id={id}
+            task={task}
+            batchId={batchId}
+            showEstimatedHoursField={!haveChildren}
+          />
+        )
       }
       if (tabs === 'Resource') {
-        return <ResourceForm id={id} task={task} batch_id={batch_id} />
+        return <ResourceForm key={id} id={id} task={task} batch_id={batchId} />
       }
       if (tabs === 'Material') {
-        return <MaterialForm id={id} task={task} batch_id={batch_id} />
+        return <MaterialForm key={id} id={id} task={task} batch_id={batchId} />
       }
     } else {
       return (
         <AddTaskForm
-          batch_id={batch_id}
+          key={id}
+          batch_id={batchId}
           task_related_id={this.state.task_related_id}
           task_related_parent_id={this.state.task_related_parent_id}
           position={position}
@@ -149,12 +159,11 @@ export default class TaskEditor extends React.Component {
     }
   }
 
-  changeTabs = value => {
+  changeTabs = value => e => {
     this.setState({ tabs: value })
   }
 
   render() {
-    let changeTabs = this.changeTabs
     let isNormalTask = true
     // TODO: Need to switch to wbs
     // this.state.task &&
@@ -172,7 +181,7 @@ export default class TaskEditor extends React.Component {
               className={`ph4 pointer dim ${
                 this.state.tabs === 'General' ? 'active' : null
               }`}
-              onClick={() => changeTabs('General')}
+              onClick={this.changeTabs('General')}
             >
               General
             </div>
@@ -181,7 +190,7 @@ export default class TaskEditor extends React.Component {
                 className={`pl3 ph4 pointer dim ${
                   this.state.tabs === 'Resource' ? 'active' : null
                 }`}
-                onClick={() => changeTabs('Resource')}
+                onClick={this.changeTabs('Resource')}
               >
                 Resource
               </div>
@@ -191,7 +200,7 @@ export default class TaskEditor extends React.Component {
                 className={`pl3 ph4 pointer dim ${
                   this.state.tabs === 'Material' ? 'active' : null
                 }`}
-                onClick={() => changeTabs('Material')}
+                onClick={this.changeTabs('Material')}
               >
                 Material
               </div>

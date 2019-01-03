@@ -16,17 +16,10 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def update
     update_cmd = Cultivation::UpdateTask.call(task_params)
-    if update_cmd.errors.empty?
-      task = Cultivation::Task.find(params[:id])
-      tasks = get_all_tasks
-      users = User.active
-      task_json = TaskSerializer.new(
-        task, params: {tasks: tasks, users: users},
-      ).serialized_json
-      render json: task_json
+    if update_cmd.success?
+      render json: {data: {id: update_cmd.result.id.to_s}}
     else
-      data = {errors: update_cmd.errors}
-      render json: data
+      render json: {errors: update_cmd.errors}
     end
   end
 

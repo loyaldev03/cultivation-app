@@ -121,6 +121,16 @@ class TaskStore {
     return toJS(this.tasks.find(x => x.id === id))
   }
 
+  getChildren(nodeWbs) {
+    const childWbs = nodeWbs + '.'
+    return this.tasks.filter(t => t.wbs.startsWith(childWbs))
+  }
+
+  haveChildren(nodeWbs) {
+    const childWbs = nodeWbs + '.'
+    return this.tasks.some(t => t.wbs.startsWith(childWbs))
+  }
+
   @action
   toggleCollapseNode(wbs) {
     const found = this.collapsedNodes.find(i => i === wbs)

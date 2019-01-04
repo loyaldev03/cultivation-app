@@ -590,11 +590,13 @@ export default class Gantt {
           createSVG('circle', {
             cx: arrow.getCoordinate().start_x,
             cy: arrow.getCoordinate().end_y,
-            r: 5,
+            r: 10,
             'data-from': dependency.id,
             'data-to': task.id,
             class: 'button-delete',
-            fill: 'red',
+            stroke: '#f5f5f5',
+            fill: '#f5f5f5',
+            innerHTML: "<i class='material-icons'>delete</i>",
             append_to: g
           })
 
@@ -602,9 +604,10 @@ export default class Gantt {
             x: arrow.getCoordinate().start_x,
             y: arrow.getCoordinate().end_y,
             'text-anchor': 'middle',
-            fill: 'white',
-            'font-size': '20px',
-            // class: 'hidden',
+            'font-size': '10px',
+            stroke: 'red',
+            innerHTML: '&#128465;',
+            class: '',
             dy: '.3em',
             append_to: g
           })

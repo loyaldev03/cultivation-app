@@ -23,7 +23,7 @@ class AddTaskForm extends React.Component {
       duration: '',
       estimated_hours: '',
       assigned_employee: [],
-      errors: '',
+      errors: ''
     }
   }
 
@@ -106,7 +106,14 @@ class AddTaskForm extends React.Component {
   render() {
     let users = UserStore.users
     const relativeTask = TaskStore.getTaskById(this.props.relativeTaskId)
-    const { name, start_date, end_date, duration, estimated_hours, errors } = this.state
+    const {
+      name,
+      start_date,
+      end_date,
+      duration,
+      estimated_hours,
+      errors
+    } = this.state
     return (
       <React.Fragment>
         <div className="ph4 mt3 mb3 flex">

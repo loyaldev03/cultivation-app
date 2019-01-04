@@ -18,8 +18,9 @@ module Cultivation
       task_related = Cultivation::Task.find_by(id: args[:task_related_id])
       tasks = Cultivation::QueryTasks.call(task_related.batch).result
       argument = args.except(:task_related_id, :position, :action)
-      argument[:indent] = task_related.indent
       argument[:batch_id] = task_related.batch_id
+      argument[:phase] = task_related.phase
+      argument[:indent] = task_related.indent
       argument[:indelible] = nil
       new_task = Cultivation::Task.create(argument)
       if args[:action] == 'add-above'

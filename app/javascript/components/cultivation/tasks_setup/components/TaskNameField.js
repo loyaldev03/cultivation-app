@@ -9,10 +9,20 @@ export default class TaskNameField extends React.PureComponent {
     this.setState({ isEdit: true })
   }
   switchViewMode = e => {
-    const { onDoneClick } = this.props
+    const { onDoneClick, text } = this.props
     this.setState({ isEdit: false })
-    if (onDoneClick) {
-      onDoneClick(this.textInput.value)
+    const { value } = this.textInput
+    if (onDoneClick && text !== value) {
+      onDoneClick(value)
+    }
+  }
+  restoreDefault = () => {
+    this.textInput.value = this.props.text
+    this.setState({ isEdit: false })
+  }
+  handleKeyPress = e => {
+    if (e.key === 'Enter') {
+      this.switchViewMode(e)
     }
   }
   render() {
@@ -47,6 +57,7 @@ export default class TaskNameField extends React.PureComponent {
                 orange: hasChild,
                 grey: !hasChild
               })}
+              onKeyPress={this.handleKeyPress}
               type="text"
               defaultValue={text}
             />

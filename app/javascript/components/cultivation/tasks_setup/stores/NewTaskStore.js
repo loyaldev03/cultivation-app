@@ -161,42 +161,30 @@ class TaskStore {
   }
 
   @action
-  updateSingleTask(batchId, taskId, updateObj) {
-    let url = `/api/v1/batches/${batchId}/tasks/${taskId}`
-
-    let task = {
-      assigned_employee: state.assigned_employee,
-      batch_id: state.batch_id,
-      days_from_start_date: state.days_from_start_date,
-      depend_on: state.depend_on,
-      duration: state.duration,
-      end_date: state.end_date,
-      estimated_hours: state.estimated_hours,
-      id: state.id,
-      is_category: state.is_category,
-      is_phase: state.is_phase,
-      name: state.name,
-      parent_id: state.parent_id,
-      phase: state.phase,
-      position: state.position,
-      start_date: state.start_date,
-      task_category: state.task_category,
-      time_taken: state.time_taken,
-      task_type: state.task_type
-    }
-
-    fetch(url, httpPutOptions({ task }))
-      .then(response => response.json())
-      .then(data => {
-        let error_container = document.getElementById('error-container')
-        if (data && data.data && data.data.id != null) {
-          error_container.style.display = 'none'
-          toast('Saved', 'success')
-          TaskStore.loadTasks(state.batch_id)
-        } else {
-          console.log(data.errors)
-        }
+  async editTask(batchId, taskId, updateObj) {
+    this.isLoading = true
+    const task = this.tasks.find(x => x.id === taskId)
+    const url = `/api/v1/batches/${batchId}/tasks/${taskId}`
+    const payload = Object.assign({}, toJS(task), updateObj)
+    try {
+      // Optimistic update
+      this.tasks = this.tasks.map(t => {
+        return t.id === taskId ? payload : t
       })
+      const response = await (await fetch(url, httpPutOptions(payload))).json()
+      // Replace optimistic update with actual response
+      if (response.data) {
+        this.tasks = this.tasks.map(t => {
+          return t.id === taskId ? response.data.attributes : t
+        })
+      } else {
+        console.error(response.errors)
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      this.isLoading = false
+    }
   }
 
   async updateTask(batch_id, task) {

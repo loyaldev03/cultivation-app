@@ -125,6 +125,7 @@ class TaskList extends React.Component {
 
   renderTaskNameColumn = data => {
     const { id, wbs, indent } = data.row
+    const batchId = this.props.batch.id
     const hasChild = TaskStore.hasChildNode(wbs)
     const isCollapsed = TaskStore.isCollapsed(wbs)
     return (
@@ -139,7 +140,7 @@ class TaskList extends React.Component {
           isCollapsed={isCollapsed}
           onClick={e => this.handleShowSidebar(id)}
           onDoneClick={value => {
-            console.log('done', value)
+            TaskStore.editTask(batchId, id, { name: value })
           }}
         />
         <Manager>

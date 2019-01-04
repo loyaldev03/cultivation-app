@@ -17,34 +17,7 @@ import TaskEditor from './TaskEditor'
 import ReactTable from 'react-table'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import BatchSetupStore from '../../batches_setup/BatchSetupStore'
-
-const TaskNameField = ({ id, wbs, indent, text, onClick }) => {
-  const hasChild = TaskStore.hasChildNode(wbs)
-  return (
-    <span className={`dib flex items-center indent--${indent}`}>
-      {hasChild ? (
-        <i
-          className="material-icons dim grey f7 pointer"
-          onClick={e => TaskStore.toggleCollapseNode(wbs)}
-        >
-          {TaskStore.isCollapsed(wbs) ? 'arrow_right' : 'arrow_drop_down'}
-        </i>
-      ) : (
-        <span className="dib indent--1" />
-      )}
-      <a
-        href="#0"
-        className={classNames('link', {
-          orange: hasChild,
-          grey: !hasChild
-        })}
-        onClick={onClick}
-      >
-        {text}
-      </a>
-    </span>
-  )
-}
+import TaskNameField from './TaskNameField'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -118,7 +91,7 @@ class TaskList extends React.Component {
     TaskStore.updateTaskIndent(this.props.batch.id, taskId, indentAction)
   }
 
-  handleEdit = taskId => {
+  handleShowSidebar = taskId => {
     this.setState({
       taskSelected: taskId,
       taskAction: 'update',
@@ -152,14 +125,22 @@ class TaskList extends React.Component {
 
   renderTaskNameColumn = data => {
     const { id, wbs, indent } = data.row
+    const hasChild = TaskStore.hasChildNode(wbs)
+    const isCollapsed = TaskStore.isCollapsed(wbs)
     return (
-      <div className="flex justify-between items-center h-100" draggable={true}>
+      <div
+        className="flex justify-between items-center h-100 hide-child"
+        draggable={true}
+      >
         <TaskNameField
-          id={id}
-          wbs={wbs}
           indent={indent}
           text={data.value}
-          onClick={e => this.handleEdit(id)}
+          hasChild={hasChild}
+          isCollapsed={isCollapsed}
+          onClick={e => this.handleShowSidebar(id)}
+          onDoneClick={value => {
+            console.log('done', value)
+          }}
         />
         <Manager>
           <Reference>
@@ -168,7 +149,7 @@ class TaskList extends React.Component {
                 <i
                   ref={ref}
                   onClick={this.handleEllipsisClick(id)}
-                  className={classNames('ml2 pointer material-icons', {
+                  className={classNames('pointer material-icons', {
                     'show-on-hover': this.state.taskSelected !== id
                   })}
                 >
@@ -213,7 +194,7 @@ class TaskList extends React.Component {
                     <MenuButton
                       icon="edit"
                       text="Edit Task Details"
-                      onClick={e => this.handleEdit(id)}
+                      onClick={e => this.handleShowSidebar(id)}
                     />
                     <MenuButton
                       icon="delete_outline"
@@ -487,6 +468,15 @@ class TaskList extends React.Component {
               this.state.taskSelected === rowInfo.row.id
             ) {
               className = 'task-row shadow-1'
+            }
+            return {
+              className
+            }
+          }}
+          getTdProps={(state, rowInfo, column, instance) => {
+            let className = ''
+            if (column && column.id === 'name') {
+              className = 'task-row__task-name'
             }
             return {
               className

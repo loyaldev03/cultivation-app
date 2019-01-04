@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from 'react-dom'
 import UserStore from '../stores/UserStore'
-
+import TaskStore from '../stores/NewTaskStore'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import Select from 'react-select'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
@@ -9,42 +9,59 @@ import { fadeToast, toast } from '../../../utils/toast'
 import reactSelectStyle from './../../../utils/reactSelectStyle'
 import { throws } from 'assert'
 import createTask from '../actions/createTask'
+import { addDays, differenceInCalendarDays, parse } from 'date-fns'
 
 class AddTaskForm extends React.Component {
   constructor(props) {
     super(props)
+    const today = new Date()
+    const tomorrow = addDays(today, 1)
     this.state = {
-      batch_id: this.props.batch_id,
-      parent_task: props.parent_task,
-      parent_id: '',
       name: '',
+      start_date: today,
+      end_date: tomorrow,
       duration: '',
-      task_category: '',
-      start_date: new Date(),
-      end_date: new Date(),
-      errors: '',
       estimated_hours: '',
       assigned_employee: [],
-      position: props.position,
-      task_related_id: props.task_related_id
+      errors: ''
     }
   }
 
-  componentWillReceiveProps(props) {
+  handleChangeText = fieldName => e => {
+    if (fieldName === 'duration') {
+      this.setState({
+        end_date: addDays(this.state.start_date, e.target.value),
+        [fieldName]: e.target.value
+      })
+      return
+    }
     this.setState({
-      position: props.position,
-      task_related_id: props.task_related_id,
-      batch_id: props.batch_id
+      [fieldName]: e.target.value
     })
+  }
+
+  handleChangeDate = (fieldName, value) => {
+    if (fieldName === 'end_date' && this.state.start_date) {
+      this.setState({
+        duration: differenceInCalendarDays(value, this.state.start_date),
+        [fieldName]: value
+      })
+      return
+    }
+    if (fieldName === 'start_date' && this.state.end_date) {
+      this.setState({
+        duration: differenceInCalendarDays(this.state.start_date, value),
+        [fieldName]: value
+      })
+      return
+    } else {
+      this.setState({ [fieldName]: value })
+    }
   }
 
   handleChangeTask = event => {
     let key = event.target.attributes.fieldname.value
     let value = event.target.value
-    this.setState({ [key]: value })
-  }
-
-  handleChangeDate = (key, value) => {
     this.setState({ [key]: value })
   }
 
@@ -88,16 +105,24 @@ class AddTaskForm extends React.Component {
 
   render() {
     let users = UserStore.users
+    const relativeTask = TaskStore.getTaskById(this.props.relativeTaskId)
+    const {
+      name,
+      start_date,
+      end_date,
+      duration,
+      estimated_hours,
+      errors
+    } = this.state
     return (
       <React.Fragment>
         <div className="ph4 mt3 mb3 flex">
           <div className="w-100">
             <TextInput
               label={'Task'}
-              value={this.state.name}
-              onChange={this.handleChangeTask}
-              fieldname="name"
-              errors={this.state.errors}
+              value={name}
+              onChange={this.handleChangeText('name')}
+              errors={errors}
               errorField="name"
             />
           </div>
@@ -107,7 +132,7 @@ class AddTaskForm extends React.Component {
           <div className="w-40">
             <label className="f6 fw6 db mb1 gray ttc">Start Date</label>
             <DatePicker
-              value={this.state.start_date}
+              value={start_date}
               fieldname="start_date"
               onChange={e => this.handleChangeDate('start_date', e)}
             />
@@ -116,7 +141,7 @@ class AddTaskForm extends React.Component {
           <div className="w-40 pl3">
             <label className="f6 fw6 db mb1 gray ttc">End Date</label>
             <DatePicker
-              value={this.state.end_date}
+              value={end_date}
               fieldname="end_date"
               onChange={e => this.handleChangeDate('end_date', e)}
             />
@@ -124,10 +149,10 @@ class AddTaskForm extends React.Component {
           <div className="w-20 pl3">
             <NumericInput
               label={'Duration'}
-              value={this.state.duration}
-              onChange={this.handleChangeTask}
-              fieldname="duration"
-              errors={this.state.errors}
+              min="1"
+              value={duration}
+              onChange={this.handleChangeText('duration')}
+              errors={errors}
               errorField="duration"
             />
           </div>
@@ -137,10 +162,10 @@ class AddTaskForm extends React.Component {
           <div className="w-40">
             <NumericInput
               label={'Estimated Hours Needed'}
-              value={this.state.estimated_hours}
-              onChange={this.handleChangeTask}
-              fieldname="estimated_hours"
-              errors={this.state.errors}
+              min="0"
+              value={estimated_hours}
+              onChange={this.handleChangeText('estimated_hours')}
+              errors={errors}
               errorField="estimated_hours"
             />
           </div>
@@ -151,10 +176,10 @@ class AddTaskForm extends React.Component {
             name="commit"
             type="submit"
             value="continue"
-            className="ttu db tr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer"
+            className="btn btn--primary btn--large"
             onClick={this.handleSubmit}
           >
-            Create &amp; Close
+            Save
           </button>
         </div>
       </React.Fragment>

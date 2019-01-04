@@ -17,53 +17,7 @@ import TaskEditor from './TaskEditor'
 import ReactTable from 'react-table'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import BatchSetupStore from '../../batches_setup/BatchSetupStore'
-
-const styles = `
-.table-dropdown {
-  box-shadow: 0 3px 10px 0 #00000087;
-  top: initial;
-  min-width: 200px;
-}
-.table-dropdown a:hover{
-  background-color: #eee;
-}
-
-.rt-tr-group:hover{
-  box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
-}
-.rt-thead{
-  background-color: #eee;
-}
-
-`
-
-const TaskNameField = ({ id, wbs, indent, text, onClick }) => {
-  const hasChild = TaskStore.hasChildNode(wbs)
-  return (
-    <span className={`dib flex items-center indent--${indent}`}>
-      {hasChild ? (
-        <i
-          className="material-icons dim grey f7 pointer"
-          onClick={e => TaskStore.toggleCollapseNode(wbs)}
-        >
-          {TaskStore.isCollapsed(wbs) ? 'arrow_right' : 'arrow_drop_down'}
-        </i>
-      ) : (
-        <span className="dib indent--1" />
-      )}
-      <a
-        href="#0"
-        className={classNames('link', {
-          orange: hasChild,
-          grey: !hasChild
-        })}
-        onClick={onClick}
-      >
-        {text}
-      </a>
-    </span>
-  )
-}
+import TaskNameField from './TaskNameField'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -137,7 +91,7 @@ class TaskList extends React.Component {
     TaskStore.updateTaskIndent(this.props.batch.id, taskId, indentAction)
   }
 
-  handleEdit = taskId => {
+  handleShowSidebar = taskId => {
     this.setState({
       taskSelected: taskId,
       taskAction: 'update',
@@ -171,14 +125,23 @@ class TaskList extends React.Component {
 
   renderTaskNameColumn = data => {
     const { id, wbs, indent } = data.row
+    const batchId = this.props.batch.id
+    const hasChild = TaskStore.hasChildNode(wbs)
+    const isCollapsed = TaskStore.isCollapsed(wbs)
     return (
-      <div className="flex justify-between items-center h-100" draggable={true}>
+      <div
+        className="flex justify-between items-center h-100 hide-child"
+        draggable={true}
+      >
         <TaskNameField
-          id={id}
-          wbs={wbs}
           indent={indent}
           text={data.value}
-          onClick={e => this.handleEdit(id)}
+          hasChild={hasChild}
+          isCollapsed={isCollapsed}
+          onClick={e => this.handleShowSidebar(id)}
+          onDoneClick={value => {
+            TaskStore.editTask(batchId, id, { name: value })
+          }}
         />
         <Manager>
           <Reference>
@@ -187,7 +150,7 @@ class TaskList extends React.Component {
                 <i
                   ref={ref}
                   onClick={this.handleEllipsisClick(id)}
-                  className={classNames('ml2 pointer material-icons', {
+                  className={classNames('pointer material-icons', {
                     'show-on-hover': this.state.taskSelected !== id
                   })}
                 >
@@ -222,17 +185,17 @@ class TaskList extends React.Component {
                     <MenuButton
                       icon="vertical_align_top"
                       text="Insert Task Above"
-                      onClick={e => this.handleAddTask(data, 'top')}
+                      onClick={e => this.handleAddTask(id, 'add-above')}
                     />
                     <MenuButton
                       icon="vertical_align_bottom"
                       text="Insert Task Below"
-                      onClick={e => this.handleAddTask(data, 'bottom')}
+                      onClick={e => this.handleAddTask(id, 'add-below')}
                     />
                     <MenuButton
                       icon="edit"
                       text="Edit Task Details"
-                      onClick={e => this.handleEdit(id)}
+                      onClick={e => this.handleShowSidebar(id)}
                     />
                     <MenuButton
                       icon="delete_outline"
@@ -251,21 +214,16 @@ class TaskList extends React.Component {
     )
   }
 
-  handleAddTask = (data, position) => {
-    const { id, parent_id } = data.row
+  handleAddTask = (taskId, action) => {
     this.setState({
-      taskSelected: id,
-      taskAction: 'add',
+      taskAction: action,
+      taskSelected: taskId,
       showStartDateCalendar: false
     })
     editorSidebarHandler.open({
       width: '500px',
-      data: {
-        task_related_id: id,
-        position: position,
-        task_related_parent_id: parent_id
-      },
-      action: 'add'
+      taskId: taskId,
+      action: action
     })
   }
 
@@ -511,6 +469,15 @@ class TaskList extends React.Component {
               this.state.taskSelected === rowInfo.row.id
             ) {
               className = 'task-row shadow-1'
+            }
+            return {
+              className
+            }
+          }}
+          getTdProps={(state, rowInfo, column, instance) => {
+            let className = ''
+            if (column && column.id === 'name') {
+              className = 'task-row__task-name'
             }
             return {
               className

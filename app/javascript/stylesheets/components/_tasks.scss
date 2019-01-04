@@ -44,8 +44,13 @@ $indentWidth: 24px;
 .task-row {
   height: 32px;
   font-size: 14px;
+
   .show-on-hover {
     display: none;
+  }
+
+  .material-icons--small {
+    font-size: 16px;
   }
 }
 
@@ -53,4 +58,8 @@ $indentWidth: 24px;
   .show-on-hover {
     display: block;
   }
+}
+
+.rt-td.task-row__task-name {
+  padding: 0 5px;
 }

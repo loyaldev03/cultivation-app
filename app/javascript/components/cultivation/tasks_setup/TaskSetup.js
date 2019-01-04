@@ -35,7 +35,7 @@ class TaskSetup extends React.Component {
         'estimated_cost',
         'resource_assigned',
         'materials',
-        'depend_on',
+        'depend_on'
       ],
       columnOpen: false
     }
@@ -137,7 +137,12 @@ class TaskSetup extends React.Component {
                     <div className="flex">
                       <div className="w-40">Missing Quantity</div>
                       <div className="w-40">
-                        <a href={`/cultivation/batches/${batch.id}?select_location=1`}className="link red">
+                        <a
+                          href={`/cultivation/batches/${
+                            batch.id
+                          }?select_location=1`}
+                          className="link red"
+                        >
                           Set location &amp; quantity
                         </a>
                       </div>

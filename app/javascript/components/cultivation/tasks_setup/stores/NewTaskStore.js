@@ -160,6 +160,33 @@ class TaskStore {
     }
   }
 
+  @action
+  async editTask(batchId, taskId, updateObj) {
+    this.isLoading = true
+    const task = this.tasks.find(x => x.id === taskId)
+    const url = `/api/v1/batches/${batchId}/tasks/${taskId}`
+    const payload = Object.assign({}, toJS(task), updateObj)
+    try {
+      // Optimistic update
+      this.tasks = this.tasks.map(t => {
+        return t.id === taskId ? payload : t
+      })
+      const response = await (await fetch(url, httpPutOptions(payload))).json()
+      // Replace optimistic update with actual response
+      if (response.data) {
+        this.tasks = this.tasks.map(t => {
+          return t.id === taskId ? response.data.attributes : t
+        })
+      } else {
+        console.error(response.errors)
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
   async updateTask(batch_id, task) {
     this.isLoading = true
     let new_task = task

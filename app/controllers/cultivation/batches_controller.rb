@@ -103,8 +103,6 @@ class Cultivation::BatchesController < ApplicationController
     cultivation_phases = batch.facility_strain.facility.growth_stages
     # Get start_date and end_date from batch
     phases_info = get_batch_phase(batch, cultivation_phases)
-    Rails.logger.debug '>>>'
-    Rails.logger.debug phases_info.to_yaml
     if phases_info.any?
       filter_args = {facility_id: batch.facility_id,
                      purpose: cultivation_phases,

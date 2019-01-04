@@ -2,6 +2,7 @@ import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import updateTasks from '../actions/updateTask'
+import createTask from '../actions/createTask'
 import { addDays, differenceInCalendarDays, parse } from 'date-fns'
 import ErrorStore from '../stores/ErrorStore'
 
@@ -96,6 +97,7 @@ class SidebarTaskEditor extends React.Component {
 
   handleSubmit = event => {
     const {
+      id,
       name,
       start_date,
       end_date,
@@ -103,9 +105,13 @@ class SidebarTaskEditor extends React.Component {
       estimated_hours,
       task_type
     } = this.state
+    const { action, batchId, task, relativeTaskId } = this.props
+    console.log({ relativeTaskId, action })
     const changedTask = {
-      ...this.props.task,
-      batch_id: this.props.batchId,
+      ...task,
+      task_related_id: relativeTaskId,
+      action: action,
+      batch_id: batchId,
       name,
       start_date,
       end_date,
@@ -113,7 +119,11 @@ class SidebarTaskEditor extends React.Component {
       estimated_hours,
       task_type
     }
-    updateTasks.updateTask(changedTask)
+    if (id) {
+      updateTasks.updateTask(changedTask)
+    } else {
+      createTask.createTask(changedTask)
+    }
   }
 
   handleChangeCheckbox = fieldName => e => {

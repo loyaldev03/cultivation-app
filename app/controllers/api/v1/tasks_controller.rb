@@ -15,9 +15,12 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def update
-    update_cmd = Cultivation::UpdateTask.call(task_params)
+    update_cmd = Cultivation::UpdateTask.call(
+      task_params,
+      current_user,
+    )
     if update_cmd.success?
-      render json: {data: {id: update_cmd.result.id.to_s}}
+      render json: TaskSerializer.new(update_cmd.result)
     else
       render json: {errors: update_cmd.errors}
     end
@@ -55,7 +58,9 @@ class Api::V1::TasksController < Api::V1::BaseApiController
       source_task = Cultivation::Task.find(params[:source_id])
       start_date = source_task.end_date + 1.days
       end_date = start_date + destination_task.duration.days
-      destination_task.update(depend_on: params[:source_id], start_date: start_date, end_date: end_date)
+      destination_task.update(depend_on: params[:source_id],
+                              start_date: start_date,
+                              end_date: end_date)
       render json: {data: {id: destination_task.id}}
     else
       render json: {errors: 'Update failed'}
@@ -63,11 +68,12 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def create
-    task = Cultivation::CreateTask.call(task_params).result
-    tasks = get_all_tasks
-    users = User.active
-    task_json = TaskSerializer.new(task, params: {tasks: tasks, users: users}).serialized_json
-    render json: task_json
+    create_cmd = Cultivation::CreateTask.call(task_params)
+    if create_cmd.success?
+      render json: {data: {id: create_cmd.result.id.to_s}}
+    else
+      render json: {errors: create_cmd.errors}
+    end
   end
 
   def destroy

@@ -7,17 +7,20 @@ module Cultivation
 
     attr_reader :args, :task, :array
 
-    def initialize(args = nil, activate_batch = false)
+    def initialize(args = nil, current_user = nil, activate_batch = false)
       @args = args
+      @current_user = current_user
       @activate_batch = activate_batch
     end
 
     def call
-      task = Cultivation::Task.find(@args[:id])
+      task = Cultivation::Task.includes(:batch).find(@args[:id])
       if @args[:type] == 'resource'
         task.update(user_ids: @args[:user_ids])
       else
-        batch = Cultivation::Batch.includes(:tasks).find_by(id: task.batch_id)
+        batch = task.batch
+        batch_tasks = Cultivation::QueryTasks.call(batch).result
+        task = batch_tasks.detect { |t| t.id == task.id }
         if valid_batch? batch
           batch.is_active = true if @activate_batch
           task = map_args_to_task(task, @args)
@@ -28,16 +31,16 @@ module Cultivation
           }
 
           if cascade_changes? task
-            update_task(task, batch.tasks, opt)
+            update_task(task, batch_tasks, opt)
           end
 
           # Save other fields on Task that are not handle by bulk_update
-          saved = task.save! if errors.empty?
+          task.save! if errors.empty?
           # TODO::ANDY: Estimated Hours are not calculating
           # Extend end date to Category and Phas
-          update_tasks_end_date(task, batch.tasks, opt)
+          update_tasks_end_date(task, batch_tasks, opt)
           # Update batch
-          update_batch(batch, batch.tasks&.first)
+          update_batch(batch, batch_tasks&.first)
         end
       end
       task
@@ -56,14 +59,16 @@ module Cultivation
         task.depend_on = args[:depend_on].to_bson_id if args[:depend_on].present?
         task.task_type = args[:task_type] || []
       end
-
       task.start_date = args[:start_date]
-      task.duration = args[:duration].to_i
-      # TODO: Calculate end_date from start_date + duration
-      task.end_date = args[:end_date]
+      task.duration = args[:duration] ? args[:duration].to_i : 0
+      task.end_date = task.start_date + task.duration.days
+      # Rails.logger.debug "\033[31m 1 #{task.start_date} \033[0m"
+      # Rails.logger.debug "\033[31m 2 #{task.duration} \033[0m"
+      # Rails.logger.debug "\033[31m 3 #{task.end_date} \033[0m"
+      # TODO: Calc estimated hours
       task.estimated_hours = args[:estimated_hours].to_f
       # TODO: Calc estimated cost
-      # task.estimated_cost = args[:estimated_cost].to_f
+      task.estimated_cost = args[:estimated_cost].to_f
       task
     end
 

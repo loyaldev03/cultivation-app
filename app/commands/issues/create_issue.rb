@@ -57,7 +57,7 @@ module Issues
 
     def create_issue
       Issues::Issue.create!(
-        issue_no: Issues::Issue.count + 1,
+        issue_no: Issues::Issue.count + 1,  # Need to be formatted as '0001'
         title: title,
         description: description,
         cultivation_batch: cultivation_batch,
@@ -66,9 +66,9 @@ module Issues
         issue_type: issue_type,
         location_id: location_id,
         location_type: location_type,
-        resolution_notes: resolution_notes,
-        reason: reason,
-        resolved_at: resolved_at,
+        # resolution_notes: resolution_notes,
+        # reason: reason,
+        # resolved_at: resolved_at,
         reported_by: user,
       )
     end

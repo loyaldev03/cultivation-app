@@ -1,11 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
 import AsyncSelect from 'react-select/lib/Async'
-import { TextInput } from '../../utils/FormHelpers'
-import reactSelectStyle from '../../utils/reactSelectStyle'
-import { saveIssue } from '../actions/saveIssue'
-import loadTasks from '../actions/loadTasks'
-
 import Uppy from '@uppy/core'
 import DashboardModal from '@uppy/react/lib/DashboardModal'
 import Webcam from '@uppy/webcam'
@@ -13,6 +8,12 @@ import Dropbox from '@uppy/dropbox'
 import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
+
+import { TextInput } from '../../utils/FormHelpers'
+import reactSelectStyle from '../../utils/reactSelectStyle'
+import { saveIssue } from '../actions/saveIssue'
+import loadTasks from '../actions/loadTasks'
+import LocationPicker from '../../utils/LocationPicker2'
 
 const severityOptions = [
   { value: 'low', label: 'Low' },
@@ -40,17 +41,17 @@ class IssueForm extends React.Component {
   }
 
   componentDidMount() {
-    loadTasks(this.props.batchId).then(({ data }) => {
+    loadTasks(this.props.batch.id).then(({ data }) => {
       const tasks = data.data.map(x => ({
         value: x.attributes.id,
-        label: `${x.attributes.wbs} ${x.attributes.name}`,
+        label: `${'. '.repeat(x.attributes.indent)} ${x.attributes.wbs}  ${
+          x.attributes.name
+        }`,
         ...x.attributes
       }))
       this.setState({ tasks })
     })
-  }
 
-  componentDidMount() {
     document.addEventListener('editor-sidebar-open', event => {
       const id = event.detail.id
       if (id) {
@@ -125,7 +126,7 @@ class IssueForm extends React.Component {
       resolved_at
     } = this.state
 
-    const batch_id = this.props.batchId
+    const batch_id = this.props.batch.id
 
     // TODO: Do validation here
     const isValid = true
@@ -167,10 +168,10 @@ class IssueForm extends React.Component {
       node.style.height = 'auto'
       node.style.minHeight = ''
     } else if (lines >= 3 && lines < 15) {
-      node.style.height = 40 + lines * 25 + 'px'
+      node.style.height = 40 + lines * 20 + 'px'
       node.style.minHeight = ''
     } else {
-      node.style.minHeight = 40 + 15 * 25 + 'px'
+      node.style.minHeight = 40 + 15 * 20 + 'px'
       node.style.height = 'auto'
     }
   }
@@ -179,11 +180,8 @@ class IssueForm extends React.Component {
     this.setState({ severity })
   }
 
-  loadTasks = (inputValue = '') => {}
-
   render() {
     const { severity, task_id, location_id, assigned_to_id, tasks } = this.state
-
     const task = tasks.find(x => x.id === task_id)
 
     return (
@@ -247,7 +245,12 @@ class IssueForm extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Location</label>
-            <Select options={[]} styles={reactSelectStyle} />
+            {/* <Select options={[]} styles={reactSelectStyle} /> */}
+            <LocationPicker
+              facility_id={this.props.batch.facility_id}
+              location_id=""
+              onChange={x => console.log(x)}
+            />
           </div>
         </div>
 

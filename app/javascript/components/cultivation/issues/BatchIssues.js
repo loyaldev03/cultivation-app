@@ -144,33 +144,10 @@ class BatchIssues extends React.Component {
               filterable
               className="f6 w-100 grey"
             />
-            <IssueSidebar batchId={this.props.batch_id} />
+            <IssueSidebar batch={this.props.batch} />
           </div>
         </div>
       </React.Fragment>
-    )
-  }
-
-  renderDummySidebar() {
-    return (
-      <div className="rc-slide-panel" data-role="sidebar">
-        <div className="rc-slide-panel__body flex flex-column">
-          <div
-            className="ph4 pv2 b--light-gray flex items-center"
-            style={{ height: '51px' }}
-          >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">dummy sidebar</h1>
-            <span
-              className="rc-slide-panel__close-button dim"
-              onClick={() => {
-                window.editorSidebar.close()
-              }}
-            >
-              <i className="material-icons mid-gray md-18">close</i>
-            </span>
-          </div>
-        </div>
-      </div>
     )
   }
 
@@ -181,7 +158,6 @@ class BatchIssues extends React.Component {
         <BatchTabs batch={this.props.batch} currentTab="issues" />
 
         {this.renderContent()}
-        {this.renderDummySidebar()}
 
         <div id="toast" className="toast animated toast--success">
           Row Saved

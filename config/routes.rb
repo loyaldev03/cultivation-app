@@ -132,6 +132,12 @@ Rails.application.routes.draw do
   # API for web pages
   namespace :api do
     namespace :v1 do
+      resources :facilities, only: [] do
+        collection do 
+          get 'search_locations'
+        end
+      end
+
       resources :plants, only: [:show] do
         collection do
           get 'all/(:current_growth_stage)', action: :all

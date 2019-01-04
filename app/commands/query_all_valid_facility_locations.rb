@@ -1,8 +1,9 @@
 class QueryAllValidFacilityLocations
   prepend SimpleCommand
 
-  def initialize(facility_only: false)
+  def initialize(facility_only: false, facility_id: nil)
     @facility_only = facility_only
+    @facility_id = facility_id
   end
 
   def call
@@ -13,7 +14,7 @@ class QueryAllValidFacilityLocations
     shelf_list = []
     tray_list = []
 
-    Facility.completed.each do |facility|
+    facilities.each do |facility|
       add_facility(facility_list, facility)
 
       facility.rooms.each do |room|
@@ -42,6 +43,14 @@ class QueryAllValidFacilityLocations
   end
 
   private
+
+  def facilities
+    if @facility_id.present?
+      Facility.completed
+    else
+      [Facility.find(@facility_id)]
+    end
+  end
 
   def valid_room?(room)
     room.is_complete             # Do not return incomplete rooms
@@ -133,6 +142,18 @@ class QueryAllValidFacilityLocations
     search.push "Tray #{tray.code}" if tray
     search_string = search.join(', ')
 
-    item.merge!({value: search_string, label: search_string})
+    id = if tray
+           tray.id.to_s
+         elsif row
+           row.id.to_s
+         elsif section
+           section.id.to_s
+         elsif room
+           room.id.to_s
+         else
+           facility.id.to_s
+         end
+
+    item.merge!({value: search_string, label: search_string, id: id})
   end
 end

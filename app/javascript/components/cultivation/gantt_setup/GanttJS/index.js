@@ -596,7 +596,7 @@ export default class Gantt {
             class: 'button-delete',
             stroke: '#f5f5f5',
             fill: '#f5f5f5',
-            innerHTML: "<i class='material-icons'>delete</i>",
+            innerHTML: '<i class=\'material-icons\'>delete</i>',
             append_to: g
           })
 

@@ -7,6 +7,9 @@ export default class TaskNameField extends React.PureComponent {
   }
   switchEditMode = e => {
     this.setState({ isEdit: true })
+    if (this.props.onHighlight) {
+      this.props.onHighlight()
+    }
   }
   switchViewMode = e => {
     const { onDoneClick, text } = this.props
@@ -14,6 +17,9 @@ export default class TaskNameField extends React.PureComponent {
     const { value } = this.textInput
     if (onDoneClick && text !== value) {
       onDoneClick(value)
+    }
+    if (this.props.onHighlight) {
+      this.props.onHighlight()
     }
   }
   restoreDefault = () => {

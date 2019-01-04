@@ -73,15 +73,17 @@ class TaskStore {
   }
 
   @action
-  async deleteTask(batchId, id) {
-    console.log('delete task')
-    const url = `/api/v1/batches/${batchId}/tasks/${id}`
+  async deleteTask(batchId, taskId) {
+    this.isLoading = true
+    // Optimistic update
+    this.tasks = this.tasks.filter(t => t.id !== taskId)
+    const url = `/api/v1/batches/${batchId}/tasks/${taskId}`
     try {
       const response = await (await fetch(url, httpDeleteOptions())).json()
       if (response.errors && response.errors.id) {
         toast(data.errors.id, 'error')
       } else {
-        toast('Task has been deleted', 'success')
+        toast('Task deleted', 'success')
         this.loadTasks(batchId)
       }
     } catch (error) {
@@ -164,16 +166,17 @@ class TaskStore {
   async editTask(batchId, taskId, updateObj) {
     this.isLoading = true
     const task = this.tasks.find(x => x.id === taskId)
-    const url = `/api/v1/batches/${batchId}/tasks/${taskId}`
     const payload = Object.assign({}, toJS(task), updateObj)
+    // Optimistic update
+    this.tasks = this.tasks.map(t => {
+      return t.id === taskId ? payload : t
+    })
+    const url = `/api/v1/batches/${batchId}/tasks/${taskId}`
     try {
-      // Optimistic update
-      this.tasks = this.tasks.map(t => {
-        return t.id === taskId ? payload : t
-      })
       const response = await (await fetch(url, httpPutOptions(payload))).json()
       // Replace optimistic update with actual response
       if (response.data) {
+        toast('Task saved', 'success')
         this.tasks = this.tasks.map(t => {
           return t.id === taskId ? response.data.attributes : t
         })

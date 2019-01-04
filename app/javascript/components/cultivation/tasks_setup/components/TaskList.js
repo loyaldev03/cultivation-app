@@ -139,6 +139,7 @@ class TaskList extends React.Component {
           hasChild={hasChild}
           isCollapsed={isCollapsed}
           onClick={e => this.handleShowSidebar(id)}
+          onHighlight={() => this.setState({ taskSelected: id })}
           onDoneClick={value => {
             TaskStore.editTask(batchId, id, { name: value })
           }}

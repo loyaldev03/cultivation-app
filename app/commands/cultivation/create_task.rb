@@ -16,7 +16,6 @@ module Cultivation
 
     def save_record(args)
       task_related = Cultivation::Task.find_by(id: args[:task_related_id])
-      tasks = Cultivation::QueryTasks.call(task_related.batch).result
       argument = args.except(:task_related_id, :position, :action)
       argument[:batch_id] = task_related.batch_id
       argument[:phase] = task_related.phase
@@ -26,9 +25,17 @@ module Cultivation
       if args[:action] == 'add-above'
         new_task.move_to! task_related.position
       else
+        tasks = Cultivation::QueryTasks.call(task_related.batch).result
+        task_related = tasks.detect { |t| t.id == task_related.id }
+        have_children = get_children(tasks, task_related.wbs).any?
+        new_task.indent = task_related.indent + 1 if have_children
         new_task.move_to! task_related.position + 1
       end
       new_task
+    end
+
+    def get_children(batch_tasks, task_wbs)
+      WbsTree.children(batch_tasks, task_wbs)
     end
   end
 end

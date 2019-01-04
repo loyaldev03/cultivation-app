@@ -98,7 +98,8 @@ export default class TaskEditor extends React.Component {
       return (
         <SidebarTaskEditor
           key={relativeTaskId + action}
-          task={task}
+          action={action}
+          relativeTaskId={relativeTaskId}
           batchId={batchId}
           showEstimatedHoursField={true}
         />

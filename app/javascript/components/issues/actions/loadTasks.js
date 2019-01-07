@@ -1,5 +1,4 @@
 import { httpGetOptions } from '../../utils/FetchHelper'
-import taskStore from '../store/TaskStore'
 
 const loadTasks = batchId => {
   return fetch(` /api/v1/batches/${batchId}/tasks`, httpGetOptions)
@@ -12,17 +11,14 @@ const loadTasks = batchId => {
     .then(({ status, data }) => {
       console.log(data)
       if (status >= 400) {
-        taskStore.load([])
+        return []
       } else {
         const options = data.data.map(x => ({
           value: x.attributes.id,
-          label: `${'. '.repeat(x.attributes.indent)} ${x.attributes.wbs}  ${
-            x.attributes.name
-          }`,
+          label: `${x.attributes.wbs}.  ${x.attributes.name}`,
           ...x.attributes
         }))
-
-        taskStore.load(options)
+        return options
       }
     })
 }

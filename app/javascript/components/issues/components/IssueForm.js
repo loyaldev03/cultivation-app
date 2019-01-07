@@ -1,8 +1,6 @@
 import React from 'react'
 import Select, { components } from 'react-select'
-import AsyncSelect from 'react-select/lib/Async'
 
-import { observer } from 'mobx-react'
 import Uppy from '@uppy/core'
 import DashboardModal from '@uppy/react/lib/DashboardModal'
 import Webcam from '@uppy/webcam'
@@ -11,12 +9,14 @@ import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
 
-import { httpGetOptions } from '../../utils/FetchHelper'
 import { TextInput } from '../../utils/FormHelpers'
 import reactSelectStyle from '../../utils/reactSelectStyle'
 import { saveIssue } from '../actions/saveIssue'
 import loadTasks from '../actions/loadTasks'
-import taskStore from '../store/TaskStore'
+import TaskOption from './TaskOption'
+import LocationOption from './LocationOption'
+import LocationSingleValue from './LocationSingleValue'
+import UserOption from './UserOption'
 
 const severityOptions = [
   { value: 'low', label: 'Low' },
@@ -36,7 +36,6 @@ uppy.on('complete', result => {
   console.log(url)
 })
 
-@observer
 class IssueForm extends React.Component {
   constructor(props) {
     super(props)
@@ -45,8 +44,9 @@ class IssueForm extends React.Component {
   }
 
   componentDidMount() {
-    loadTasks(this.props.batch.id)
+    loadTasks(this.props.batch.id).then(tasks => this.setState({ tasks }))
     this.loadUsers()
+    this.loadLocations()
 
     document.addEventListener('editor-sidebar-open', event => {
       const id = event.detail.id
@@ -189,8 +189,8 @@ class IssueForm extends React.Component {
     )
       .then(response => response.json())
       .then(data => {
+        // console.log(data.data)
         this.setState({ locations: data.data })
-        return data.data
       })
   }
 
@@ -205,10 +205,7 @@ class IssueForm extends React.Component {
     )
       .then(response => response.json())
       .then(data => {
-        console.log(data)
-        console.log(data.data)
         this.setState({ users: data.data })
-        return data.data
       })
   }
 
@@ -266,10 +263,11 @@ class IssueForm extends React.Component {
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Task</label>
             <Select
-              options={taskStore.bindable}
+              options={this.state.tasks}
               onChange={this.onTaskChanged}
               value={task}
               styles={reactSelectStyle}
+              components={{ Option: TaskOption }}
             />
           </div>
         </div>
@@ -277,11 +275,17 @@ class IssueForm extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Location</label>
-            <AsyncSelect
+            <Select
               isSearchable
-              onInputChange={handleInputChange}
-              loadOptions={this.loadLocations}
+              options={this.state.locations}
               styles={reactSelectStyle}
+              components={{ Option: LocationOption, SingleValue: LocationSingleValue }}
+              filterOption={(option, input) => {
+                const words = input.toLowerCase().split(/\s/)
+                return words.every(
+                  x => option.label.toLowerCase().indexOf(x) >= 0
+                )
+              }}
             />
           </div>
         </div>
@@ -289,40 +293,10 @@ class IssueForm extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Assign to</label>
-            <AsyncSelect
-              isSearchable
-              onInputChange={handleInputChange}
-              loadOptions={this.loadUsers}
-              components={{ Option: UserOption }}
-              styles={reactSelectStyle}
-            />
-          </div>
-        </div>
-
-        <div className="ph4 mb3 flex">
-          <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Assign to 2</label>
             <Select
               options={this.state.users}
               styles={reactSelectStyle}
               components={{ Option: UserOption }}
-            />
-          </div>
-        </div>
-
-        <div className="ph4 mb3 flex">
-          <div className="w-100">
-            <label className="f6 fw6 db mb1 gray ttc">Location 2</label>
-            <Select
-              isSearchable
-              options={this.state.locations}
-              styles={reactSelectStyle}
-              filterOption={(option, input) => {
-                const words = input.toLowerCase().split(/\s/)
-                return words.every(
-                  x => option.label.toLowerCase().indexOf(x) >= 0
-                )
-              }}
             />
           </div>
         </div>
@@ -373,46 +347,5 @@ class IssueForm extends React.Component {
   }
 }
 
-const handleInputChange = newValue => {
-  return newValue ? newValue : ''
-}
-
-const UserOption = ({ children, ...props }) => (
-  <components.Option {...props}>
-    {console.log(props)}
-    <div className="flex flex-row items-center">
-      {props.data.photo && (
-        <img
-          src={props.data.photo}
-          className="white bg-black-70 tc mr2 flex flex-none justify-center items-center"
-        />
-      )}
-      {!props.data.photo && (
-        <span
-          className="white bg-black-70 tc mr2 flex flex-none justify-center items-center"
-          style={{
-            width: 18,
-            height: 18,
-            borderRadius: 9,
-            flexShrink: 0
-          }}
-        >
-          {props.data.fallback_photo}
-        </span>
-      )}
-      <span>{children}</span>
-    </div>
-  </components.Option>
-)
-
-// const Option = props => {
-//   // const { innerProps, innerRef } = props;
-//   return (
-//     <article  className="custom-option">
-//       <h4>{props}</h4>
-//       <div className="sub">sub </div>
-//     </article>
-//   );
-// };
 
 export default IssueForm

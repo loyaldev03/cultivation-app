@@ -10,6 +10,7 @@ module Inventory
     field :sku, type: String
     field :status, type: String    # available, draft
     field :transaction_limit, type: BigDecimal
+    field :description, type: String
 
     has_many :packages, class_name: 'Inventory::ItemTransaction'
     belongs_to :catalogue, class_name: 'Inventory::Catalogue'

@@ -10,4 +10,19 @@ class Api::V1::UsersController < Api::V1::BaseApiController
     roles_json = RolesSerializer.new(roles).serialized_json
     render json: roles_json
   end
+
+  def by_facility
+    facility_id = BSON::ObjectId(params[:facility_id])
+    filter = params[:filter] || ''
+    users = User.in(facilities: facility_id).any_of({last_name: /^#{filter}/i}, {first_name: /^#{filter}/i}).map do |x|
+      {
+        value: x.id.to_s,
+        label: "#{x.display_name} - #{x.email}",
+        photo: x.photo&.url,
+        fallback_photo: "#{x.first_name[0]}#{x.last_name[0]}".upcase,
+      }
+    end
+
+    render json: {data: users, status: 200}
+  end
 end

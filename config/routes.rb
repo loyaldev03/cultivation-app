@@ -133,7 +133,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :facilities, only: [] do
-        collection do 
+        member do 
           get 'search_locations'
         end
       end
@@ -199,7 +199,10 @@ Rails.application.routes.draw do
       end
 
       resources :users, only: [:index] do
-        get 'roles', on: :collection
+        collection do
+          get 'roles'
+          get 'by_facility/:facility_id', action: 'by_facility'
+        end
       end
 
       resource :user_roles, only: [] do

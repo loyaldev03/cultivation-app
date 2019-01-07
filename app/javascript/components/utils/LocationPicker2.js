@@ -1,19 +1,11 @@
 import React from 'react'
 import Select from 'react-select'
-import { httpGetOptions } from './FetchHelper'
 import PropTypes from 'prop-types'
 import reactSelectStyle from './reactSelectStyle'
 
 const VEG_TRAY_PURPOSES = ['veg', 'veg1', 'veg2']
 
 class LocationPicker extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      locations: []
-    }
-  }
-
   isFacilityOnly(item) {
     return item.f_id.length > 0 && item.rm_id.length <= 0
   }
@@ -79,25 +71,9 @@ class LocationPicker extends React.Component {
     return () => false
   }
 
-  isStorage(facility_id) {
-    if (facility_id) {
-      return item =>
-        item.rm_id.length > 0 &&
-        item.rw_id.length === 0 &&
-        item.rm_purpose === 'storage' &&
-        item.f_id === facility_id
-    }
-    return () => false
-  }
-
-  isAll() {
-    return true
-  }
-
   filterLocationByFacility = facility_id => {
     let _locations = []
-    const { mode } = this.props
-    const { locations } = this.state
+    const { mode, locations } = this.props
 
     if (mode === 'clone') {
       _locations = locations.filter(this.isClone(facility_id))
@@ -111,8 +87,6 @@ class LocationPicker extends React.Component {
       _locations = locations.filter(this.isFlower(facility_id))
     } else if (mode === 'dry') {
       _locations = locations.filter(this.isDry(facility_id))
-    } else if (mode === 'storage') {
-      _locations = locations.filter(this.isStorage(facility_id))
     } else if (mode === 'facility') {
       _locations = locations.filter(this.isFacilityOnly).map(x => ({
         ...x,
@@ -122,7 +96,6 @@ class LocationPicker extends React.Component {
     } else {
       _locations = locations
     }
-    console.log(_locations)
     return _locations
   }
 
@@ -130,18 +103,12 @@ class LocationPicker extends React.Component {
   findLocation(locations, location_id) {
     const { mode } = this.props
     let item = { value: '', label: '' }
-    if (mode === 'mother' || mode === 'room' || mode === 'storage') {
+    if (mode === 'mother' || mode === 'room') {
       item = locations.find(x => x.rm_id === location_id)
     } else if (['clone', 'veg', 'flower', 'dry'].indexOf(mode) >= 0) {
       item = locations.find(x => x.t_id === location_id)
     } else if (mode === 'facility') {
       item = locations.find(x => x.f_id === location_id)
-    } else if (mode === 'all') {
-      item = locations.find(x => x.id === location_id) //
-    }
-
-    if (!item) {
-      return { value: '', label: '' }
     }
     return item
   }
@@ -190,7 +157,7 @@ class LocationPicker extends React.Component {
     } else if (mode === 'flower') {
       return 'Flower room ID'
     } else if (mode === 'dry') {
-      return 'Location in Dry/ Cure Room'
+      return 'Dry room ID'
     } else if (mode === 'facility') {
       return 'Facility'
     } else {
@@ -198,37 +165,19 @@ class LocationPicker extends React.Component {
     }
   }
 
-  componentDidMount() {
-    fetch(
-      `/api/v1/facilities/search_locations?facility_id=${
-        this.props.facility_id
-      }`,
-      httpGetOptions
-    ).then(response => {
-      return response.json().then(locations => {
-        console.log(locations)
-        this.setState({ locations })
-      })
-    })
-  }
-
   render() {
-    // const locations = this.filterLocationByFacility(this.props.facility_id)
-    const locations = this.state.locations
+    const locations = this.filterLocationByFacility(this.props.facility_id)
     const selectedLocation = this.findLocation(
       locations,
       this.props.location_id || ''
     )
 
-    const isDisabled = this.props.isDisabled || false
-
     return (
       <React.Fragment>
         <label className="f6 fw6 db mb1 gray ttc">{this.label}</label>
         <Select
-          isDisabled={isDisabled}
           styles={reactSelectStyle}
-          placeholder="Search location within the facility"
+          placeholder="Search location within your facility"
           options={locations}
           onChange={this.onChange}
           value={selectedLocation}
@@ -237,19 +186,6 @@ class LocationPicker extends React.Component {
             return words.every(x => option.label.toLowerCase().indexOf(x) >= 0)
           }}
         />
-        {/* <AsyncSelect
-          isDisabled={isDisabled}
-          loadOptions={this.loadLocations}
-          defaultOptions
-          placeholder="Search location within the facility"
-          onChange={this.onChange}
-          value={selectedLocation}
-          styles={reactSelectStyle}
-          filterOption={(option, input) => {
-            const words = input.toLowerCase().split(/\s/)
-            return words.every(x => option.label.toLowerCase().indexOf(x) >= 0)
-          }}
-        /> */}
       </React.Fragment>
     )
   }
@@ -257,7 +193,7 @@ class LocationPicker extends React.Component {
 
 LocationPicker.propTypes = {
   mode: PropTypes.string.isRequired,
-  // locations: PropTypes.array.isRequired,
+  locations: PropTypes.array.isRequired,
   onChange: PropTypes.func.isRequired,
   location_id: PropTypes.string,
   facility_id: PropTypes.string
@@ -266,8 +202,7 @@ LocationPicker.propTypes = {
 LocationPicker.defaultProps = {
   mode: 'tray',
   location_id: '',
-  facility_id: null,
-  locations: []
+  facility_id: null
 }
 
 export default LocationPicker

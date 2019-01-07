@@ -50,7 +50,7 @@ const renderOpenIssue = record => {
     <a
       href="#"
       className="link flex w-100 grey"
-      onClick={event => openSidebar(event, record.original.id)}
+      onClick={event => openSidebar(event, record.original.id, 'details')}
     >
       {record.original.attributes.issue_no}
     </a>
@@ -102,10 +102,8 @@ const columns = [
   }
 ]
 
-const openSidebar = (event, id = null) => {
-  console.log(event)
-  console.log(id)
-  window.editorSidebar.open({ width: '500px', id })
+const openSidebar = (event, id = null, mode = null) => {
+  window.editorSidebar.open({ width: '500px', id, mode })
   event.preventDefault()
 }
 
@@ -120,7 +118,7 @@ class BatchIssues extends React.Component {
 
   componentDidMount() {
     window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
-    loadBatchIssues(this.props.batch_id)
+    loadBatchIssues(this.props.batch.id)
   }
 
   renderContent() {
@@ -144,7 +142,10 @@ class BatchIssues extends React.Component {
               filterable
               className="f6 w-100 grey"
             />
-            <IssueSidebar batch={this.props.batch} />
+            <IssueSidebar
+              batch={this.props.batch}
+              mode={this.state.mode}
+            />
           </div>
         </div>
       </React.Fragment>

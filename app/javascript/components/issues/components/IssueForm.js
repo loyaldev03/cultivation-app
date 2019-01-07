@@ -1,6 +1,8 @@
 import React from 'react'
-import Select from 'react-select'
+import Select, { components } from 'react-select'
 import AsyncSelect from 'react-select/lib/Async'
+
+import { observer } from 'mobx-react'
 import Uppy from '@uppy/core'
 import DashboardModal from '@uppy/react/lib/DashboardModal'
 import Webcam from '@uppy/webcam'
@@ -9,11 +11,12 @@ import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
 
+import { httpGetOptions } from '../../utils/FetchHelper'
 import { TextInput } from '../../utils/FormHelpers'
 import reactSelectStyle from '../../utils/reactSelectStyle'
 import { saveIssue } from '../actions/saveIssue'
 import loadTasks from '../actions/loadTasks'
-import LocationPicker from '../../utils/LocationPicker2'
+import taskStore from '../store/TaskStore'
 
 const severityOptions = [
   { value: 'low', label: 'Low' },
@@ -33,6 +36,7 @@ uppy.on('complete', result => {
   console.log(url)
 })
 
+@observer
 class IssueForm extends React.Component {
   constructor(props) {
     super(props)
@@ -41,16 +45,9 @@ class IssueForm extends React.Component {
   }
 
   componentDidMount() {
-    loadTasks(this.props.batch.id).then(({ data }) => {
-      const tasks = data.data.map(x => ({
-        value: x.attributes.id,
-        label: `${'. '.repeat(x.attributes.indent)} ${x.attributes.wbs}  ${
-          x.attributes.name
-        }`,
-        ...x.attributes
-      }))
-      this.setState({ tasks })
-    })
+    
+    loadTasks(this.props.batch.id)
+    this.loadUsers()
 
     document.addEventListener('editor-sidebar-open', event => {
       const id = event.detail.id
@@ -77,6 +74,8 @@ class IssueForm extends React.Component {
       assigned_to_id: '',
       description: '',
       tasks: [],
+      users: [],
+      locations: [],
       modalOpen: false
     }
   }
@@ -180,6 +179,36 @@ class IssueForm extends React.Component {
     this.setState({ severity })
   }
 
+  loadLocations = inputValue => {
+    inputValue = inputValue || ''
+  
+    return fetch(
+      `/api/v1/facilities/${this.props.batch.facility_id}/search_locations?filter=${inputValue}`,
+      { credentials: 'include' }
+    )
+    .then(response => response.json())
+    .then(data => {
+      this.setState({ locations: data.data })
+      return data.data
+    })
+  }
+
+  loadUsers = inputValue => {
+    inputValue = inputValue || ''
+  
+    return fetch(
+      `/api/v1/users/by_facility/${this.props.batch.facility_id}?filter=${inputValue}`,
+      { credentials: 'include' }
+    )
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      console.log(data.data)
+      this.setState({ users: data.data })
+      return data.data
+    })
+  }
+
   render() {
     const { severity, task_id, location_id, assigned_to_id, tasks } = this.state
     const task = tasks.find(x => x.id === task_id)
@@ -234,7 +263,7 @@ class IssueForm extends React.Component {
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Task</label>
             <Select
-              options={tasks}
+              options={taskStore.bindable}
               onChange={this.onTaskChanged}
               value={task}
               styles={reactSelectStyle}
@@ -245,11 +274,11 @@ class IssueForm extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Location</label>
-            {/* <Select options={[]} styles={reactSelectStyle} /> */}
-            <LocationPicker
-              facility_id={this.props.batch.facility_id}
-              location_id=""
-              onChange={x => console.log(x)}
+           <AsyncSelect
+              isSearchable
+              onInputChange={handleInputChange}
+              loadOptions={this.loadLocations}
+              styles={reactSelectStyle}
             />
           </div>
         </div>
@@ -257,7 +286,39 @@ class IssueForm extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Assign to</label>
-            <Select options={[]} styles={reactSelectStyle} />
+            <AsyncSelect 
+              isSearchable
+              onInputChange={handleInputChange}
+              loadOptions={this.loadUsers}
+              components={{ Option: UserOption }}
+              styles={reactSelectStyle} />
+          </div>
+        </div>
+
+
+        <div className="ph4 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc">Assign to 2</label>
+            <Select
+              options={this.state.users}
+              styles={reactSelectStyle}
+              components={{ Option: UserOption }}
+            />
+          </div>
+        </div>
+
+        <div className="ph4 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc">Location 2</label>
+            <Select
+              isSearchable
+              options={this.state.locations}
+              styles={reactSelectStyle}
+              filterOption={(option, input) => {
+                const words = input.toLowerCase().split(/\s/)
+                return words.every(x => option.label.toLowerCase().indexOf(x) >= 0)
+              }}
+            />
           </div>
         </div>
 
@@ -305,6 +366,51 @@ class IssueForm extends React.Component {
       </React.Fragment>
     )
   }
+
 }
 
+const handleInputChange = newValue => {
+  return newValue ? newValue : ''
+}
+
+const UserOption = ({ children, ...props }) => (
+  <components.Option {...props}>
+    { console.log(props) }
+    <div className="flex flex-row items-center">
+      { 
+        props.data.photo && (
+          <img src={props.data.photo} className="white bg-black-70 tc mr2 flex flex-none justify-center items-center" />
+        )
+      }
+      {
+        !props.data.photo && (
+          <span className="white bg-black-70 tc mr2 flex flex-none justify-center items-center" style={{
+              width: 18, 
+              height: 18,
+              borderRadius: 9,
+              flexShrink: 0,
+            }}>{props.data.fallback_photo}</span>
+        )
+      }
+      <span>{children}</span>
+    </div>
+  </components.Option>
+);
+
+
+// const Option = props => {
+//   // const { innerProps, innerRef } = props;
+//   return (
+//     <article  className="custom-option">
+//       <h4>{props}</h4>
+//       <div className="sub">sub </div>
+//     </article>
+//   );
+// };
+
+
+
 export default IssueForm
+
+
+

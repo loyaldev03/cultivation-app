@@ -1,9 +1,9 @@
 class QueryAllValidFacilityLocations
   prepend SimpleCommand
 
-  def initialize(facility_only: false, facility_id: nil)
-    @facility_only = facility_only
+  def initialize(facility_id: nil, filter: nil)
     @facility_id = facility_id
+    @filter = filter
   end
 
   def call
@@ -18,7 +18,7 @@ class QueryAllValidFacilityLocations
       add_facility(facility_list, facility)
 
       facility.rooms.each do |room|
-        next if (!valid_room?(room) || @facility_only)
+        next if !valid_room?(room)
 
         add_room(room_list, facility, room)
         add_sections(section_list, facility, room)
@@ -46,9 +46,9 @@ class QueryAllValidFacilityLocations
 
   def facilities
     if @facility_id.present?
-      Facility.completed
-    else
       [Facility.find(@facility_id)]
+    else
+      Facility.completed
     end
   end
 
@@ -56,22 +56,31 @@ class QueryAllValidFacilityLocations
     room.is_complete             # Do not return incomplete rooms
   end
 
+  # skip filter if no filter string provided
+  def partially_matched?(item)
+    if @filter.blank?
+      true
+    else
+      item[:value].include?(@filter)
+    end
+  end
+
   def add_facility(collection, facility)
     item = transform(facility)
-    collection.push(item)
+    collection.push(item) if partially_matched?(item)
   end
 
   def add_room(collection, facility, room)
     if room.is_complete
       item = transform(facility, room)
-      collection.push(item)
+      collection.push(item) if partially_matched?(item)
     end
   end
 
   def add_sections(collection, facility, room)
     room.sections.each do |section|
       item = transform(facility, room, section)
-      collection.push(item)
+      collection.push(item) if partially_matched?(item)
     end
   end
 
@@ -80,7 +89,7 @@ class QueryAllValidFacilityLocations
       if row.is_complete
         section = get_section(row)
         item = transform(facility, room, section, row)
-        collection.push(item)
+        collection.push(item) if partially_matched?(item)
       end
     end
   end
@@ -89,7 +98,7 @@ class QueryAllValidFacilityLocations
     section = get_section(row)
     shelves.each do |shelf|
       item = transform(facility, room, section, row, shelf)
-      collection.push(item)
+      collection.push(item) if partially_matched?(item)
     end
   end
 
@@ -97,7 +106,7 @@ class QueryAllValidFacilityLocations
     section = get_section(row)
     trays.each do |tray|
       item = transform(facility, room, section, row, shelf, tray)
-      collection.push(item)
+      collection.push(item) if partially_matched?(item)
     end
   end
 
@@ -135,6 +144,7 @@ class QueryAllValidFacilityLocations
 
     # search = ["Facility #{facility.code}"]
     search = []
+    search.push "#{facility.name} - #{facility.code}" if room.nil?
     search.push "#{room.name} - #{room.code}" if room
     search.push "Section - #{section.code}" if section
     search.push "#{row.name} - #{row.code}" if row
@@ -154,6 +164,6 @@ class QueryAllValidFacilityLocations
            facility.id.to_s
          end
 
-    item.merge!({value: search_string, label: search_string, id: id})
+    item.merge!({value: search_string.downcase, label: search_string, id: id})
   end
 end

@@ -27,17 +27,30 @@ export default class InlineEditTextField extends React.PureComponent {
       this.switchViewMode(e)
     }
   }
+  componentDidUpdate(prevProps) {
+    if (this.textInput && this.state.isEdit) {
+      this.textInput.select()
+    }
+  }
   render() {
-    const { text, className, renderInput, min, type = 'text' } = this.props
+    const {
+      text,
+      className,
+      renderInput,
+      min,
+      step = '1',
+      type = 'text'
+    } = this.props
     const isAlignRight = type === 'number'
     return (
       <div className={`flex flex-auto items-center ${className}`}>
         {this.state.isEdit ? (
           <React.Fragment>
             <input
+              autoFocus
               type={type}
               min={min}
-              autoFocus
+              step={step}
               ref={input => (this.textInput = input)}
               className={classNames('flex-auto b--grey link', {
                 tr: isAlignRight

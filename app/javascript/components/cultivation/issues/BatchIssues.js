@@ -142,10 +142,7 @@ class BatchIssues extends React.Component {
               filterable
               className="f6 w-100 grey"
             />
-            <IssueSidebar
-              batch={this.props.batch}
-              mode={this.state.mode}
-            />
+            <IssueSidebar batch={this.props.batch} mode={this.state.mode} />
           </div>
         </div>
       </React.Fragment>

@@ -36,18 +36,19 @@ class IssueSidebar extends React.Component {
   }
 
   renderBody() {
-
     const { batch } = this.props
     const { mode } = this.state
 
     if (mode === 'details') {
       return <IssueDetails onClose={this.onClose} batchId={batch.id} />
     } else {
-      return <IssueForm
-        onClose={this.onClose}
-        mode={this.state.mode}
-        batch={batch}
-      />
+      return (
+        <IssueForm
+          onClose={this.onClose}
+          mode={this.state.mode}
+          batch={batch}
+        />
+      )
     }
   }
 

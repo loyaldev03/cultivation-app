@@ -2,7 +2,7 @@ import { observable, action, computed } from 'mobx'
 
 class TaskStore {
   tasks = observable([])
-  
+
   @action
   load(tasks) {
     this.tasks.replace(tasks)

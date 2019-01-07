@@ -45,7 +45,6 @@ class IssueForm extends React.Component {
   }
 
   componentDidMount() {
-    
     loadTasks(this.props.batch.id)
     this.loadUsers()
 
@@ -181,32 +180,36 @@ class IssueForm extends React.Component {
 
   loadLocations = inputValue => {
     inputValue = inputValue || ''
-  
+
     return fetch(
-      `/api/v1/facilities/${this.props.batch.facility_id}/search_locations?filter=${inputValue}`,
+      `/api/v1/facilities/${
+        this.props.batch.facility_id
+      }/search_locations?filter=${inputValue}`,
       { credentials: 'include' }
     )
-    .then(response => response.json())
-    .then(data => {
-      this.setState({ locations: data.data })
-      return data.data
-    })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({ locations: data.data })
+        return data.data
+      })
   }
 
   loadUsers = inputValue => {
     inputValue = inputValue || ''
-  
+
     return fetch(
-      `/api/v1/users/by_facility/${this.props.batch.facility_id}?filter=${inputValue}`,
+      `/api/v1/users/by_facility/${
+        this.props.batch.facility_id
+      }?filter=${inputValue}`,
       { credentials: 'include' }
     )
-    .then(response => response.json())
-    .then(data => {
-      console.log(data)
-      console.log(data.data)
-      this.setState({ users: data.data })
-      return data.data
-    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        console.log(data.data)
+        this.setState({ users: data.data })
+        return data.data
+      })
   }
 
   render() {
@@ -274,7 +277,7 @@ class IssueForm extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Location</label>
-           <AsyncSelect
+            <AsyncSelect
               isSearchable
               onInputChange={handleInputChange}
               loadOptions={this.loadLocations}
@@ -286,15 +289,15 @@ class IssueForm extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Assign to</label>
-            <AsyncSelect 
+            <AsyncSelect
               isSearchable
               onInputChange={handleInputChange}
               loadOptions={this.loadUsers}
               components={{ Option: UserOption }}
-              styles={reactSelectStyle} />
+              styles={reactSelectStyle}
+            />
           </div>
         </div>
-
 
         <div className="ph4 mb3 flex">
           <div className="w-100">
@@ -316,7 +319,9 @@ class IssueForm extends React.Component {
               styles={reactSelectStyle}
               filterOption={(option, input) => {
                 const words = input.toLowerCase().split(/\s/)
-                return words.every(x => option.label.toLowerCase().indexOf(x) >= 0)
+                return words.every(
+                  x => option.label.toLowerCase().indexOf(x) >= 0
+                )
               }}
             />
           </div>
@@ -366,7 +371,6 @@ class IssueForm extends React.Component {
       </React.Fragment>
     )
   }
-
 }
 
 const handleInputChange = newValue => {
@@ -375,28 +379,31 @@ const handleInputChange = newValue => {
 
 const UserOption = ({ children, ...props }) => (
   <components.Option {...props}>
-    { console.log(props) }
+    {console.log(props)}
     <div className="flex flex-row items-center">
-      { 
-        props.data.photo && (
-          <img src={props.data.photo} className="white bg-black-70 tc mr2 flex flex-none justify-center items-center" />
-        )
-      }
-      {
-        !props.data.photo && (
-          <span className="white bg-black-70 tc mr2 flex flex-none justify-center items-center" style={{
-              width: 18, 
-              height: 18,
-              borderRadius: 9,
-              flexShrink: 0,
-            }}>{props.data.fallback_photo}</span>
-        )
-      }
+      {props.data.photo && (
+        <img
+          src={props.data.photo}
+          className="white bg-black-70 tc mr2 flex flex-none justify-center items-center"
+        />
+      )}
+      {!props.data.photo && (
+        <span
+          className="white bg-black-70 tc mr2 flex flex-none justify-center items-center"
+          style={{
+            width: 18,
+            height: 18,
+            borderRadius: 9,
+            flexShrink: 0
+          }}
+        >
+          {props.data.fallback_photo}
+        </span>
+      )}
       <span>{children}</span>
     </div>
   </components.Option>
-);
-
+)
 
 // const Option = props => {
 //   // const { innerProps, innerRef } = props;
@@ -408,9 +415,4 @@ const UserOption = ({ children, ...props }) => (
 //   );
 // };
 
-
-
 export default IssueForm
-
-
-

@@ -1,8 +1,16 @@
 import TaskStore from '../stores/NewTaskStore'
 import ErrorStore from '../stores/ErrorStore'
 import { fadeToast, toast } from '../../../utils/toast'
+import { httpPutOptions } from '../../../utils'
 
 class updateTask {
+  /**
+   * state = {
+   *  id: '<Task ID>'
+   *  name
+   *  duration....
+   * }
+   */
   updateTask(state) {
     let id = state.id
     let url = `/api/v1/batches/${state.batch_id}/tasks/${id}`
@@ -28,14 +36,7 @@ class updateTask {
       task_type: state.task_type
     }
 
-    fetch(url, {
-      method: 'PUT',
-      credentials: 'include',
-      body: JSON.stringify({ task: task }),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
+    fetch(url, httpPutOptions({ task }))
       .then(response => response.json())
       .then(data => {
         let error_container = document.getElementById('error-container')

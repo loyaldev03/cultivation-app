@@ -9,16 +9,7 @@ import { formatDate2, ActiveBadge } from '../../utils'
 import TaskList from './components/TaskList'
 import Select from 'react-select'
 import reactSelectStyle from '../../utils/reactSelectStyle'
-import { Manager, Reference, Popper, Arrow } from 'react-popper'
-
-const styles = `
-.columnDropdown{
-  z-index: 300;
-}
-button.react-calendar__tile:disabled {
-    background-color: #aaa;
-}
-`
+import { Manager, Reference, Popper } from 'react-popper'
 
 @observer
 class TaskSetup extends React.Component {
@@ -34,7 +25,8 @@ class TaskSetup extends React.Component {
         'estimated_hour',
         'estimated_cost',
         'resource_assigned',
-        'materials'
+        'materials',
+        'depend_on'
       ],
       columnOpen: false
     }
@@ -83,6 +75,10 @@ class TaskSetup extends React.Component {
 
   render() {
     const { batch } = this.props
+    const batchSource = batch.batch_source
+      ? batch.batch_source.replace(/_/g, ' ')
+      : ''
+    const batchQuantity = batch.quantity ? batch.quantity : 0
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
     let activeTabs =
@@ -91,7 +87,6 @@ class TaskSetup extends React.Component {
       'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
     return (
       <React.Fragment>
-        <style>{styles}</style>
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">
@@ -111,22 +106,38 @@ class TaskSetup extends React.Component {
                       <label>Batch Source</label>
                     </div>
                     <div className="w-40">
-                      <div className="">
-                        <label>{batch.batch_source}</label>
+                      <div className="ttc">
+                        <label>{batchSource}</label>
                       </div>
                     </div>
                   </div>
                   <hr />
-                  <div className=" flex">
-                    <div className="w-40">
-                      <label>Batch Name</label>
-                    </div>
-                    <div className="w-40">
-                      <div className="">
-                        <label>{batch.name}</label>
+                  {batchQuantity > 0 ? (
+                    <div className="flex">
+                      <div className="w-40">
+                        <label>Batch Name</label>
+                      </div>
+                      <div className="w-40">
+                        <div className="">
+                          <label>{batch.name}</label>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="flex">
+                      <div className="w-40">Missing Quantity</div>
+                      <div className="w-40">
+                        <a
+                          href={`/cultivation/batches/${
+                            batch.id
+                          }?select_location=1`}
+                          className="link red"
+                        >
+                          Set location &amp; quantity
+                        </a>
+                      </div>
+                    </div>
+                  )}
                   <hr />
                   <div className=" flex">
                     <div className="w-40">
@@ -278,48 +289,44 @@ class TaskSetup extends React.Component {
               Material
             </a>
           </div>
-          <div className="flex mt4">
-            <div className="mr2 mt2">
-              <i className="material-icons" style={{ fontSize: '.875rem' }}>
-                filter_list
-              </i>
-              <span className="grey f6 ml2">Filter</span>
-            </div>
-            <Manager>
+          <Manager>
+            <div className="flex mt4">
+              <div className="mr2 mt2">
+                <i className="material-icons material-icons--small">
+                  filter_list
+                </i>
+                <span className="grey f6 ml2">Filter</span>
+              </div>
               <Reference>
                 {({ ref }) => (
                   <a
-                    className="f6 link ba b--gray ph3 pv2 mb3 dib grey pointer bg-white"
+                    className="f6 link ba b--light-grey ph3 pv2 mb3 flex justify-center dib grey pointer"
                     ref={ref}
                     onClick={this.handleClick}
                   >
-                    All Collumns
-                    <i
-                      className="material-icons ml2"
-                      style={{ fontSize: '.875rem' }}
-                    >
+                    Show Columns
+                    <i className="material-icons material-icons--small ml2">
                       expand_more
                     </i>
                   </a>
                 )}
               </Reference>
               {this.state.columnOpen && (
-                <Popper placement="bottom" style={{ borderColor: 'red' }}>
+                <Popper placement="bottom-end">
                   {({ ref, style, placement, arrowProps }) => (
                     <div
                       ref={ref}
-                      className="columnDropdown"
+                      className="z-1"
                       style={style}
                       data-placement={placement}
                     >
                       <div
                         id="myDropdown"
                         ref={node => (this.node = node)}
-                        style={{ zIndex: '30000', marginRight: '-65px' }}
-                        className="table-dropdown dropdown-content box--shadow-header show mt2"
+                        className="pa2 bg-white ba b--light-grey br1"
                       >
-                        <div className="ph4 mt3 mb3">
-                          <label className="f6 fw6 db mb1 gray ttc">
+                        <div className="">
+                          <label className="dim f6 fw6 db pv1 gray ttc">
                             <input
                               type="checkbox"
                               name="checkbox-1"
@@ -331,7 +338,7 @@ class TaskSetup extends React.Component {
                             WBS
                           </label>
 
-                          <label className="f6 fw6 db mb1 gray ttc">
+                          <label className="dim f6 fw6 db pv1 gray ttc">
                             <input
                               type="checkbox"
                               name="checkbox-1"
@@ -343,7 +350,19 @@ class TaskSetup extends React.Component {
                             Name
                           </label>
 
-                          <label className="f6 fw6 db mb1 gray ttc">
+                          <label className="dim f6 fw6 db pv1 gray ttc">
+                            <input
+                              type="checkbox"
+                              name="checkbox-1"
+                              className="mr2"
+                              value="depend_on"
+                              onChange={handleChangeCheckbox}
+                              checked={checkboxValue('depend_on')}
+                            />
+                            Predecessor
+                          </label>
+
+                          <label className="dim f6 fw6 db pv1 gray ttc">
                             <input
                               type="checkbox"
                               name="checkbox-1"
@@ -355,7 +374,7 @@ class TaskSetup extends React.Component {
                             Start Date
                           </label>
 
-                          <label className="f6 fw6 db mb1 gray ttc">
+                          <label className="dim f6 fw6 db pv1 gray ttc">
                             <input
                               type="checkbox"
                               name="checkbox-1"
@@ -367,7 +386,7 @@ class TaskSetup extends React.Component {
                             End Date
                           </label>
 
-                          <label className="f6 fw6 db mb1 gray ttc">
+                          <label className="dim f6 fw6 db pv1 gray ttc">
                             <input
                               type="checkbox"
                               name="checkbox-1"
@@ -379,7 +398,7 @@ class TaskSetup extends React.Component {
                             Duration
                           </label>
 
-                          <label className="f6 fw6 db mb1 gray ttc">
+                          <label className="dim f6 fw6 db pv1 gray ttc">
                             <input
                               type="checkbox"
                               name="checkbox-1"
@@ -390,7 +409,7 @@ class TaskSetup extends React.Component {
                             />
                             Estimated Hour
                           </label>
-                          <label className="f6 fw6 db mb1 gray ttc">
+                          <label className="dim f6 fw6 db pv1 gray ttc">
                             <input
                               type="checkbox"
                               name="checkbox-1"
@@ -401,7 +420,7 @@ class TaskSetup extends React.Component {
                             />
                             Estimated Cost
                           </label>
-                          <label className="f6 fw6 db mb1 gray ttc">
+                          <label className="dim f6 fw6 db pv1 gray ttc">
                             <input
                               type="checkbox"
                               name="checkbox-1"
@@ -412,7 +431,7 @@ class TaskSetup extends React.Component {
                             />
                             Resource Assigned
                           </label>
-                          <label className="f6 fw6 db mb1 gray ttc">
+                          <label className="dim f6 fw6 db pv1 gray ttc">
                             <input
                               type="checkbox"
                               name="checkbox-1"
@@ -429,8 +448,8 @@ class TaskSetup extends React.Component {
                   )}
                 </Popper>
               )}
-            </Manager>
-          </div>
+            </div>
+          </Manager>
         </div>
 
         <div className="flex flex-column justify-between bg-white box--shadow">

@@ -17,47 +17,7 @@ import TaskEditor from './TaskEditor'
 import ReactTable from 'react-table'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import BatchSetupStore from '../../batches_setup/BatchSetupStore'
-
-const styles = `
-.table-dropdown {
-  box-shadow: 0 3px 10px 0 #00000087;
-  top: initial;
-  min-width: 200px;
-}
-.table-dropdown a:hover{
-  background-color: #eee;
-}
-
-.rt-tr-group:hover{
-  box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
-}
-.rt-thead{
-  background-color: #eee;
-}
-
-`
-
-const TaskNameField = ({ id, wbs, indent, text }) => {
-  return (
-    <span
-      className={classNames(`dib flex items-center indent--${indent}`, {
-        orange: TaskStore.hasChildNode(wbs)
-      })}
-    >
-      {TaskStore.hasChildNode(wbs) ? (
-        <i
-          className="material-icons dim grey f7 pointer"
-          onClick={e => TaskStore.toggleCollapseNode(wbs)}
-        >
-          {TaskStore.isCollapsed(wbs) ? 'arrow_right' : 'arrow_drop_down'}
-        </i>
-      ) : (
-        <span className="dib indent--1" />
-      )}
-      {text}
-    </span>
-  )
-}
+import TaskNameField from './TaskNameField'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -119,8 +79,7 @@ class TaskList extends React.Component {
   }
 
   handleEllipsisClick = taskId => e => {
-    console.log({ taskId })
-    this.setState({ idOpen: taskId })
+    this.setState({ idOpen: taskId, taskSelected: taskId })
   }
 
   handleMouseLeave = row => {
@@ -132,8 +91,12 @@ class TaskList extends React.Component {
     TaskStore.updateTaskIndent(this.props.batch.id, taskId, indentAction)
   }
 
-  handleEdit = taskId => {
-    this.setState({ taskSelected: taskId, showStartDateCalendar: false })
+  handleShowSidebar = taskId => {
+    this.setState({
+      taskSelected: taskId,
+      taskAction: 'update',
+      showStartDateCalendar: false
+    })
     let error_container = document.getElementById('error-container')
     if (error_container) {
       error_container.style.display = 'none'
@@ -162,21 +125,35 @@ class TaskList extends React.Component {
 
   renderTaskNameColumn = data => {
     const { id, wbs, indent } = data.row
+    const batchId = this.props.batch.id
+    const hasChild = TaskStore.hasChildNode(wbs)
+    const isCollapsed = TaskStore.isCollapsed(wbs)
     return (
-      <div className="flex justify-between items-center h-100" draggable={true}>
-        <TaskNameField id={id} wbs={wbs} indent={indent} text={data.value} />
+      <div
+        className="flex justify-between items-center h-100 hide-child"
+        draggable={true}
+      >
+        <TaskNameField
+          indent={indent}
+          text={data.value}
+          hasChild={hasChild}
+          isCollapsed={isCollapsed}
+          onClick={e => this.handleShowSidebar(id)}
+          onHighlight={() => this.setState({ taskSelected: id })}
+          onDoneClick={value => {
+            TaskStore.editTask(batchId, id, { name: value })
+          }}
+        />
         <Manager>
           <Reference>
             {({ ref }) => {
-              const childState = !this.state.idOpen || this.state.idOpen === id
               return (
                 <i
                   ref={ref}
                   onClick={this.handleEllipsisClick(id)}
-                  className={classNames(
-                    'ml2 pointer material-icons show-on-hover',
-                    {}
-                  )}
+                  className={classNames('pointer material-icons', {
+                    'show-on-hover': this.state.taskSelected !== id
+                  })}
                 >
                   more_horiz
                 </i>
@@ -209,17 +186,17 @@ class TaskList extends React.Component {
                     <MenuButton
                       icon="vertical_align_top"
                       text="Insert Task Above"
-                      onClick={e => this.handleAddTask(data, 'top')}
+                      onClick={e => this.handleAddTask(id, 'add-above')}
                     />
                     <MenuButton
                       icon="vertical_align_bottom"
                       text="Insert Task Below"
-                      onClick={e => this.handleAddTask(data, 'bottom')}
+                      onClick={e => this.handleAddTask(id, 'add-below')}
                     />
                     <MenuButton
                       icon="edit"
                       text="Edit Task Details"
-                      onClick={e => this.handleEdit(id)}
+                      onClick={e => this.handleShowSidebar(id)}
                     />
                     <MenuButton
                       icon="delete_outline"
@@ -238,18 +215,16 @@ class TaskList extends React.Component {
     )
   }
 
-  handleAddTask = (data, position) => {
-    const { id, parent_id } = data.row
-    console.log({ action: 'handleAddTask', id, parent_id })
-    this.setState({ taskSelected: id, showStartDateCalendar: false })
+  handleAddTask = (taskId, action) => {
+    this.setState({
+      taskAction: action,
+      taskSelected: taskId,
+      showStartDateCalendar: false
+    })
     editorSidebarHandler.open({
       width: '500px',
-      data: {
-        task_related_id: id,
-        position: position,
-        task_related_parent_id: parent_id
-      },
-      action: 'add'
+      taskId: taskId,
+      action: action
     })
   }
 
@@ -398,10 +373,6 @@ class TaskList extends React.Component {
       show: false
     },
     {
-      accessor: 'depend_on',
-      show: false
-    },
-    {
       Header: 'WBS',
       accessor: 'wbs',
       maxWidth: '70',
@@ -413,6 +384,18 @@ class TaskList extends React.Component {
       maxWidth: '400',
       show: this.checkVisibility('name'),
       Cell: this.renderTaskNameColumn
+    },
+    {
+      Header: 'Predecessor',
+      accessor: 'depend_on',
+      maxWidth: '110',
+      show: this.checkVisibility('depend_on'),
+      Cell: data => {
+        if (data.row.depend_on) {
+          const dependOnTask = TaskStore.getTaskById(data.row.depend_on)
+          return dependOnTask ? dependOnTask.wbs : ''
+        }
+      }
     },
     {
       Header: 'Start Date',
@@ -480,19 +463,26 @@ class TaskList extends React.Component {
           className="-highlight"
           pageSize={TaskStore.taskList.length}
           getTrProps={(state, rowInfo, column) => {
-            const trProps = {
-              className: 'task-row'
+            let className = 'task-row'
+            if (
+              rowInfo.row &&
+              this.state.taskSelected &&
+              this.state.taskSelected === rowInfo.row.id
+            ) {
+              className = 'task-row shadow-1'
             }
-            if (this.state.taskSelected && rowInfo.row) {
-              trProps.stype = {
-                boxShadow:
-                  this.state.taskSelected === rowInfo.row.id
-                    ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
-                    : null,
-                backgroundColor: rowInfo.row['indent'] === 0 ? '#FAEFEE' : null
-              }
+            return {
+              className
             }
-            return trProps
+          }}
+          getTdProps={(state, rowInfo, column, instance) => {
+            let className = ''
+            if (column && column.id === 'name') {
+              className = 'task-row__task-name'
+            }
+            return {
+              className
+            }
           }}
         />
         <div className="mt3 tr">
@@ -559,7 +549,9 @@ class TaskList extends React.Component {
             ) : (
               <TaskEditor
                 onClose={this.closeSidebar}
-                batch_id={this.props.batch.id}
+                taskId={this.state.taskSelected}
+                taskAction={this.state.taskAction}
+                batchId={this.props.batch.id}
                 handleReset={this.handleReset}
               />
             )}

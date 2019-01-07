@@ -32,32 +32,35 @@ export default class InlineEditTextField extends React.PureComponent {
       this.textInput.select()
     }
   }
-  render() {
-    const {
-      text,
-      className,
-      renderInput,
-      min,
-      step = '1',
-      type = 'text'
-    } = this.props
-    const isAlignRight = type === 'number'
+  renderView() {
     return (
-      <div className={`flex flex-auto items-center ${className}`}>
+      <a
+        href="#0"
+        className="link grey flex-auto h1"
+        onClick={this.switchEditMode}
+      >
+        {this.props.text}
+      </a>
+    )
+  }
+  renderEdit() {
+    return (
+      <input
+        autoFocus
+        type="text"
+        ref={input => (this.textInput = input)}
+        className="flex-auto b--grey link"
+        onKeyPress={this.handleKeyPress}
+        defaultValue={this.props.text}
+      />
+    )
+  }
+  render() {
+    return (
+      <div className={`flex flex-auto items-center pa1`}>
         {this.state.isEdit ? (
           <React.Fragment>
-            <input
-              autoFocus
-              type={type}
-              min={min}
-              step={step}
-              ref={input => (this.textInput = input)}
-              className={classNames('flex-auto b--grey link', {
-                tr: isAlignRight
-              })}
-              onKeyPress={this.handleKeyPress}
-              defaultValue={text}
-            />
+            {this.renderEdit()}
             <i
               className="material-icons green material-icons--small pa1 pointer"
               onClick={this.switchViewMode}
@@ -66,17 +69,7 @@ export default class InlineEditTextField extends React.PureComponent {
             </i>
           </React.Fragment>
         ) : (
-          <React.Fragment>
-            <a
-              href="#0"
-              className={classNames('link grey flex-auto h1', {
-                tr: isAlignRight
-              })}
-              onClick={this.switchEditMode}
-            >
-              {text}
-            </a>
-          </React.Fragment>
+          this.renderView()
         )}
       </div>
     )

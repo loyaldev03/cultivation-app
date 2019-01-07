@@ -2,7 +2,7 @@ import React from 'react'
 import classNames from 'classnames'
 import InlineEditTextField from './InlineEditTextField'
 
-export default class TaskNameField extends InlineEditTextField {
+export default class InlineEditTaskNameField extends InlineEditTextField {
   render() {
     const {
       indent,
@@ -14,7 +14,7 @@ export default class TaskNameField extends InlineEditTextField {
     } = this.props
     return (
       <div
-        className={`h-100 w-100 pa1 flex items-center indent--${indent}`}
+        className={`pa1 flex flex-auto items-center indent--${indent}`}
       >
         {hasChild ? (
           <i
@@ -31,7 +31,7 @@ export default class TaskNameField extends InlineEditTextField {
             <input
               autoFocus
               ref={input => (this.textInput = input)}
-              className={classNames('h-100 w-100 b--grey link ph1', {
+              className={classNames('flex-auto b--grey link ph1', {
                 orange: hasChild,
                 grey: !hasChild
               })}

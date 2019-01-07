@@ -17,8 +17,10 @@ import TaskEditor from './TaskEditor'
 import ReactTable from 'react-table'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import BatchSetupStore from '../../batches_setup/BatchSetupStore'
-import TaskNameField from './TaskNameField'
+import InlineEditTaskNameField from './InlineEditTaskNameField'
 import InlineEditTextField from './InlineEditTextField'
+import InlineEditNumberField from './InlineEditNumberField'
+import InlineEditDateField from './InlineEditDateField'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -134,9 +136,9 @@ class TaskList extends React.Component {
         className="flex flex-auto justify-between items-center h-100 hide-child"
         draggable={true}
       >
-        <TaskNameField
-          indent={indent}
+        <InlineEditTaskNameField
           text={data.value}
+          indent={indent}
           hasChild={hasChild}
           isCollapsed={isCollapsed}
           onClick={e => this.handleShowSidebar(id)}
@@ -400,7 +402,6 @@ class TaskList extends React.Component {
         }
         return (
           <InlineEditTextField
-            className="pa1"
             text={taskWbs}
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
@@ -421,7 +422,18 @@ class TaskList extends React.Component {
       maxWidth: '100',
       className: 'tr',
       show: this.checkVisibility('start_date'),
-      Cell: this.renderDateColumn('start_date')
+      Cell: data => {
+        const { id, start_date } = data.row
+        return (
+          <InlineEditDateField
+            text={start_date}
+            onHighlight={() => this.setState({ taskSelected: id })}
+            onDoneClick={value => {
+              TaskStore.editTask(batchId, id, { start_date: value })
+            }}
+          />
+        )
+      }
     },
     {
       Header: 'End Date',
@@ -440,11 +452,10 @@ class TaskList extends React.Component {
       Cell: data => {
         const { id, duration } = data.row
         return (
-          <InlineEditTextField
-            className="pa1"
-            type="number"
-            min="1"
+          <InlineEditNumberField
             text={duration}
+            min="1"
+            step="1"
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
               TaskStore.editTask(batchId, id, { duration: value })
@@ -462,12 +473,10 @@ class TaskList extends React.Component {
       Cell: data => {
         const { id, estimated_hours } = data.row
         return (
-          <InlineEditTextField
-            className="pa1"
-            type="number"
-            min="0"
-            step=".01"
+          <InlineEditNumberField
             text={estimated_hours}
+            min="0"
+            step=".25"
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
               TaskStore.editTask(batchId, id, { estimated_hours: value })

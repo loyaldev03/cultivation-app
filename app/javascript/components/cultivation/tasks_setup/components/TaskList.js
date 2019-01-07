@@ -458,7 +458,23 @@ class TaskList extends React.Component {
       accessor: 'estimated_hours',
       maxWidth: '100',
       className: 'tr',
-      show: this.checkVisibility('estimated_hour')
+      show: this.checkVisibility('estimated_hours'),
+      Cell: data => {
+        const { id, estimated_hours } = data.row
+        return (
+          <InlineEditTextField
+            className="pa1"
+            type="number"
+            min="0"
+            step=".01"
+            text={estimated_hours}
+            onHighlight={() => this.setState({ taskSelected: id })}
+            onDoneClick={value => {
+              TaskStore.editTask(batchId, id, { estimated_hours: value })
+            }}
+          />
+        )
+      }
     },
     {
       Header: 'Est Cost ($)',

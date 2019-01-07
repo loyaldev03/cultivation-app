@@ -1,36 +1,8 @@
 import React from 'react'
 import classNames from 'classnames'
+import InlineEditTextField from './InlineEditTextField'
 
-export default class TaskNameField extends React.PureComponent {
-  state = {
-    isEdit: false
-  }
-  switchEditMode = e => {
-    this.setState({ isEdit: true })
-    if (this.props.onHighlight) {
-      this.props.onHighlight()
-    }
-  }
-  switchViewMode = e => {
-    const { onDoneClick, text } = this.props
-    this.setState({ isEdit: false })
-    const { value } = this.textInput
-    if (onDoneClick && text !== value) {
-      onDoneClick(value)
-    }
-    if (this.props.onHighlight) {
-      this.props.onHighlight()
-    }
-  }
-  restoreDefault = () => {
-    this.textInput.value = this.props.text
-    this.setState({ isEdit: false })
-  }
-  handleKeyPress = e => {
-    if (e.key === 'Enter') {
-      this.switchViewMode(e)
-    }
-  }
+export default class TaskNameField extends InlineEditTextField {
   render() {
     const {
       indent,

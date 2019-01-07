@@ -583,6 +583,35 @@ export default class Gantt {
             this.bars[task._index] // to_task
           )
           this.layers.arrow.appendChild(arrow.element)
+          const g = createSVG('g', {
+            append_to: this.layers.arrow,
+            class: 'hidden'
+          })
+          createSVG('circle', {
+            cx: arrow.getCoordinate().start_x,
+            cy: arrow.getCoordinate().end_y,
+            r: 10,
+            'data-from': dependency.id,
+            'data-to': task.id,
+            class: 'button-delete',
+            stroke: '#f5f5f5',
+            fill: '#f5f5f5',
+            innerHTML: '<i class=\'material-icons\'>delete</i>',
+            append_to: g
+          })
+
+          createSVG('text', {
+            x: arrow.getCoordinate().start_x,
+            y: arrow.getCoordinate().end_y,
+            'text-anchor': 'middle',
+            'font-size': '10px',
+            stroke: 'red',
+            innerHTML: '&#128465;',
+            class: '',
+            dy: '.3em',
+            append_to: g
+          })
+
           return arrow
         })
         .filter(Boolean) // filter falsy values
@@ -663,10 +692,20 @@ export default class Gantt {
         drag_line
       )
     }
+
+    $.on(this.$svg, 'mousedown', '.button-delete', (e, element) => {
+      console.log('delete button clicked!')
+      this.trigger_event('delete_relationship', [
+        element.getAttribute('data-to'),
+        element.getAttribute('data-from')
+      ])
+    })
+
     $.on(this.$svg, 'mousedown', '.arrow, .handle-arrow', (e, element) => {
       let path = element.getAttribute('d')
+      element.classList.add('on')
       arrow = this.arrows.find(e => e.path === path)
-      arrow.update_arrow(e.offsetX, e.offsetY)
+      element.nextSibling.classList.remove('hidden')
       drag_line = true
     })
 
@@ -737,7 +776,7 @@ export default class Gantt {
           }
         }
       })
-      if (drag_line) {
+      if (drag_line && arrow) {
         arrow.update_arrow(e.offsetX, e.offsetY)
       }
     })
@@ -796,7 +835,9 @@ export default class Gantt {
 
           this.trigger_event('drag_relationship', [source_id, destination_id])
         } else {
-          arrow.update()
+          if (arrow) {
+            arrow.update()
+          }
         }
       }
     })

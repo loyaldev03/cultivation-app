@@ -10,12 +10,13 @@ import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 
-
-const loadProducts = (inputValue, nutrientType )=> {
+const loadProducts = (inputValue, nutrientType) => {
   inputValue = inputValue || ''
   console.log(nutrientType)
   return fetch(
-    `/api/v1/products?type=raw_materials&category=nutrients&sub_category=${nutrientType.key}&filter=${inputValue}`,
+    `/api/v1/products?type=raw_materials&category=nutrients&sub_category=${
+      nutrientType.key
+    }&filter=${inputValue}`,
     {
       credentials: 'include'
     }
@@ -317,7 +318,7 @@ class NutrientEditor extends React.Component {
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
                 placeholder="Search..."
-                loadOptions={(e) => loadProducts(e, this.state.nutrientType)}
+                loadOptions={e => loadProducts(e, this.state.nutrientType)}
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
                 value={this.state.product}

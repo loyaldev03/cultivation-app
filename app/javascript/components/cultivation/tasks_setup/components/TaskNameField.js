@@ -41,9 +41,7 @@ export default class TaskNameField extends React.PureComponent {
       onCollapseClick
     } = this.props
     return (
-      <div
-        className={`h-100 w-100 pa1 flex items-center indent--${indent}`}
-      >
+      <div className={`h-100 w-100 pa1 flex items-center indent--${indent}`}>
         {hasChild ? (
           <i
             className="material-icons dim grey f7 pointer"

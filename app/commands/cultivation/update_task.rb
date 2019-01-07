@@ -56,7 +56,7 @@ module Cultivation
       # Only allow non-indelible task change these field
       if !task.indelible?
         task.name = args[:name]
-        task.depend_on = args[:depend_on].to_bson_id if args[:depend_on].present?
+        task.depend_on = args[:depend_on].present? ? args[:depend_on].to_bson_id : nil
         task.task_type = args[:task_type] || []
       end
       task.start_date = args[:start_date]

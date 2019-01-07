@@ -18,6 +18,7 @@ import ReactTable from 'react-table'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import BatchSetupStore from '../../batches_setup/BatchSetupStore'
 import TaskNameField from './TaskNameField'
+import InlineEditTextField from './InlineEditTextField'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -130,7 +131,7 @@ class TaskList extends React.Component {
     const isCollapsed = TaskStore.isCollapsed(wbs)
     return (
       <div
-        className="flex justify-between items-center h-100 hide-child"
+        className="flex flex-auto justify-between items-center h-100 hide-child"
         draggable={true}
       >
         <TaskNameField
@@ -359,7 +360,7 @@ class TaskList extends React.Component {
     }
   }
 
-  columnsConfig = () => [
+  columnsConfig = batchId => [
     {
       accessor: 'id',
       show: false
@@ -391,10 +392,27 @@ class TaskList extends React.Component {
       maxWidth: '110',
       show: this.checkVisibility('depend_on'),
       Cell: data => {
-        if (data.row.depend_on) {
-          const dependOnTask = TaskStore.getTaskById(data.row.depend_on)
-          return dependOnTask ? dependOnTask.wbs : ''
+        const { id, depend_on } = data.row
+        let taskWbs = ''
+        if (depend_on) {
+          const dependOnTask = TaskStore.getTaskById(depend_on)
+          taskWbs = dependOnTask ? dependOnTask.wbs : ''
         }
+        return (
+          <InlineEditTextField
+            className="pa1"
+            text={taskWbs}
+            onHighlight={() => this.setState({ taskSelected: id })}
+            onDoneClick={value => {
+              const selectedTask = TaskStore.getTaskByWbs(value)
+              if (selectedTask) {
+                TaskStore.editTask(batchId, id, { depend_on: selectedTask.id })
+              } else {
+                TaskStore.editTask(batchId, id, { depend_on: null })
+              }
+            }}
+          />
+        )
       }
     },
     {
@@ -418,7 +436,22 @@ class TaskList extends React.Component {
       accessor: 'duration',
       maxWidth: '90',
       className: 'tr',
-      show: this.checkVisibility('duration')
+      show: this.checkVisibility('duration'),
+      Cell: data => {
+        const { id, duration } = data.row
+        return (
+          <InlineEditTextField
+            className="pa1"
+            type="number"
+            min="1"
+            text={duration}
+            onHighlight={() => this.setState({ taskSelected: id })}
+            onDoneClick={value => {
+              TaskStore.editTask(batchId, id, { duration: value })
+            }}
+          />
+        )
+      }
     },
     {
       Header: 'Est Hr',
@@ -450,12 +483,13 @@ class TaskList extends React.Component {
 
   render() {
     const { showStartDateCalendar, searchMonth, selectedStartDate } = this.state
+    const batchId = this.props.batch.id
     const phaseDuration = this.buildPhaseDuration(TaskStore.tasks)
     const totalDuration = this.calculateTotalDuration(phaseDuration)
     return (
       <React.Fragment>
         <ReactTable
-          columns={this.columnsConfig()}
+          columns={this.columnsConfig(batchId)}
           data={TaskStore.taskList}
           loading={TaskStore.isLoading}
           showPagination={false}
@@ -470,15 +504,6 @@ class TaskList extends React.Component {
               this.state.taskSelected === rowInfo.row.id
             ) {
               className = 'task-row shadow-1'
-            }
-            return {
-              className
-            }
-          }}
-          getTdProps={(state, rowInfo, column, instance) => {
-            let className = ''
-            if (column && column.id === 'name') {
-              className = 'task-row__task-name'
             }
             return {
               className

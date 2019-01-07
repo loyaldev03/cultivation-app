@@ -29,5 +29,4 @@ const UserOption = ({ children, ...props }) => (
   </components.Option>
 )
 
-
 export default UserOption

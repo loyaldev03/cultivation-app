@@ -279,7 +279,10 @@ class IssueForm extends React.Component {
               isSearchable
               options={this.state.locations}
               styles={reactSelectStyle}
-              components={{ Option: LocationOption, SingleValue: LocationSingleValue }}
+              components={{
+                Option: LocationOption,
+                SingleValue: LocationSingleValue
+              }}
               filterOption={(option, input) => {
                 const words = input.toLowerCase().split(/\s/)
                 return words.every(
@@ -346,6 +349,5 @@ class IssueForm extends React.Component {
     )
   }
 }
-
 
 export default IssueForm

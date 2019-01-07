@@ -8,6 +8,33 @@ import { PurchaseInfo } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
+import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
+
+
+const loadProducts = (inputValue, nutrientType )=> {
+  inputValue = inputValue || ''
+  console.log(nutrientType)
+  return fetch(
+    `/api/v1/products?type=raw_materials&category=nutrients&sub_category=${nutrientType.key}&filter=${inputValue}`,
+    {
+      credentials: 'include'
+    }
+  )
+    .then(response => response.json())
+    .then(data => {
+      const products = data.data.map(x => ({
+        label: x.attributes.name,
+        value: x.attributes.id,
+        ...x.attributes
+      }))
+
+      return products
+    })
+}
+
+const handleInputChange = newValue => {
+  return newValue ? newValue : ''
+}
 
 class NutrientEditor extends React.Component {
   constructor(props) {
@@ -69,6 +96,7 @@ class NutrientEditor extends React.Component {
   }
 
   onNutrientTypeSelected = item => {
+    console.log(item)
     this.setState({
       nutrientType: item,
       catalogue: { value: '', label: '', uoms: [] }
@@ -281,7 +309,23 @@ class NutrientEditor extends React.Component {
           </div>
 
           <hr className="mt3 m b--light-gray w-100" />
-
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
+              <AsyncCreatableSelect
+                defaultOptions
+                isClearable
+                noOptionsMessage={() => 'Type to search product...'}
+                placeholder="Search..."
+                loadOptions={(e) => loadProducts(e, this.state.nutrientType)}
+                onInputChange={handleInputChange}
+                styles={reactSelectStyle}
+                value={this.state.product}
+                onChange={this.onChangeProduct}
+              />
+              <FieldError errors={this.state.errors} field="product" />
+            </div>
+          </div>
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
               <TextInput

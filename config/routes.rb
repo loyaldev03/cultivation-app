@@ -148,6 +148,7 @@ Rails.application.routes.draw do
           post 'setup'
           post 'setup_seed'
           post 'setup_purchased_clones'
+          get 'products'
         end
       end
 
@@ -172,6 +173,8 @@ Rails.application.routes.draw do
       resources :vendors, only: [:index]
       resources :purchase_orders, only: [:index]
       resources :vendor_invoices, only: [:index, :show]
+
+      resources :products, only: [:index]
 
       resources :strains, only: [:index, :create, :show] do
         get 'suggest', on: :collection

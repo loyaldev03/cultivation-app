@@ -111,6 +111,7 @@ module Inventory
     # Update/ create necessary purchase info
     def save_purchase_info
       handle_po_invoice_switching
+      save_product
       vendor = save_vendor
       po_item = save_purchase_order(vendor)
       invoice_item = save_invoice(po_item)
@@ -282,6 +283,16 @@ module Inventory
       invoice.save!
       invoice_item.save!
       invoice_item
+    end
+
+    def save_product
+      Inventory::Product.create!(
+        name: product_name,
+        manufacturer: manufacturer,
+        description: description,
+        catalogue: catalogue,
+        facility: facility,
+      )
     end
 
     def combine_errors(errors_source, from_field, to_field)

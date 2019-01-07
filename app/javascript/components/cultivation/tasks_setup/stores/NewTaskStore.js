@@ -123,6 +123,10 @@ class TaskStore {
     return toJS(this.tasks.find(x => x.id === id))
   }
 
+  getTaskByWbs(wbs) {
+    return toJS(this.tasks.find(x => x.wbs && x.wbs === wbs))
+  }
+
   getChildren(nodeWbs) {
     const childWbs = nodeWbs + '.'
     return this.tasks.filter(t => t.wbs.startsWith(childWbs))

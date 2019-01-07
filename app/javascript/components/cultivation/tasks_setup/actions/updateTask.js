@@ -46,7 +46,6 @@ class updateTask {
           TaskStore.loadTasks(state.batch_id)
         } else {
           let keys = Object.keys(data.errors)
-          console.log(data.errors[keys[0]])
           error_container.style.display = 'block'
           let error_message = document.getElementById('error-message')
           error_message.innerHTML = data.errors[keys[0]]

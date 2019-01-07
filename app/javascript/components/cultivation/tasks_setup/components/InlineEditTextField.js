@@ -29,6 +29,7 @@ export default class InlineEditTextField extends React.PureComponent {
   }
   render() {
     const { text, className, renderInput, min, type = 'text' } = this.props
+    const isAlignRight = type === 'number'
     return (
       <div className={`flex flex-auto items-center ${className}`}>
         {this.state.isEdit ? (
@@ -38,7 +39,9 @@ export default class InlineEditTextField extends React.PureComponent {
               min={min}
               autoFocus
               ref={input => (this.textInput = input)}
-              className="flex-auto b--grey link"
+              className={classNames('flex-auto b--grey link', {
+                tr: isAlignRight
+              })}
               onKeyPress={this.handleKeyPress}
               defaultValue={text}
             />
@@ -53,7 +56,9 @@ export default class InlineEditTextField extends React.PureComponent {
           <React.Fragment>
             <a
               href="#0"
-              className="link flex-auto h1"
+              className={classNames('link grey flex-auto h1', {
+                tr: isAlignRight
+              })}
               onClick={this.switchEditMode}
             >
               {text}

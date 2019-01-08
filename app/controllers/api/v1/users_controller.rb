@@ -19,7 +19,8 @@ class Api::V1::UsersController < Api::V1::BaseApiController
         value: x.id.to_s,
         label: "#{x.display_name} - #{x.email}",
         photo: x.photo&.url,
-        fallback_photo: "#{x.first_name[0]}#{x.last_name[0]}".upcase,
+        first_name: x.first_name,
+        last_name: x.last_name,
       }
     end
 

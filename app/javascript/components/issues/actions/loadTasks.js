@@ -9,7 +9,6 @@ const loadTasks = batchId => {
       }))
     })
     .then(({ status, data }) => {
-      console.log(data)
       if (status >= 400) {
         return []
       } else {

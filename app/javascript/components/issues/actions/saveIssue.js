@@ -1,7 +1,7 @@
 import issueStore from '../store/IssueStore'
 import { httpPostOptions } from '../../utils'
 
-export const saveIssue = payload => {
+const saveIssue = payload => {
   return fetch('/api/v1/issues', httpPostOptions(payload))
     .then(response => {
       return response.json().then(data => ({
@@ -15,12 +15,16 @@ export const saveIssue = payload => {
         return result
       }
 
+      console.log(data.data)
+      // console.log(data.data)
+
       if (payload.id) {
         issueStore.update(data.data)
       } else {
         issueStore.prepend(data.data)
       }
-
       return result
     })
 }
+
+export default saveIssue

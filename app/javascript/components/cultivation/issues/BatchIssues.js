@@ -1,6 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { formatDate2 } from '../../utils'
+import Avatar from '../../utils/Avatar'
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
 import ReactTable from 'react-table'
@@ -10,7 +11,12 @@ import issueStore from '../../issues/store/IssueStore'
 
 const renderUser = user => {
   if (user) {
-    return <div className="tl grey">{user.display_name}</div>
+    return <Avatar 
+      firstName={user.first_name}
+      lastName={user.last_name}
+      photoUrl={user.photo}
+      size='20px'
+    />
   }
   return null
 }
@@ -52,7 +58,7 @@ const renderOpenIssue = record => {
       className="link flex w-100 grey"
       onClick={event => openSidebar(event, record.original.id, 'details')}
     >
-      {record.original.attributes.issue_no}
+      {record.original.attributes.issue_no.toString().padStart(5, '0')}
     </a>
   )
 }
@@ -60,7 +66,6 @@ const renderOpenIssue = record => {
 const columns = [
   {
     Header: 'ID',
-    accessor: 'attributes.issue_no',
     headerStyle: { textAlign: 'left' },
     width: 100,
     Cell: record => renderOpenIssue(record)
@@ -84,13 +89,13 @@ const columns = [
   },
   {
     Header: 'Reported',
-    headerStyle: { textAlign: 'left' },
+    headerStyle: { textAlign: 'center' },
     width: 100,
     Cell: record => renderUser(record.original.attributes.reported_by)
   },
   {
     Header: 'Assigned',
-    headerStyle: { textAlign: 'left' },
+    headerStyle: { textAlign: 'center' },
     width: 100,
     Cell: record => renderUser(record.original.attributes.assigned_to)
   },
@@ -126,7 +131,7 @@ class BatchIssues extends React.Component {
       <React.Fragment>
         <div className="w-100 bg-white pa3 ">
           <div className="flex mb3 justify-end">
-            <button className="btn btn--primary" onClick={openSidebar}>
+            <button className="btn btn--primary" onClick={() => openSidebar({id: null, mode: 'create' })}>
               Submit an issue
             </button>
           </div>

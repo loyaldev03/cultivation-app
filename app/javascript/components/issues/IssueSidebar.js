@@ -10,24 +10,31 @@ class IssueSidebar extends React.Component {
 
   componentDidMount() {
     document.addEventListener('editor-sidebar-open', event => {
-      const id = event.detail.id
+      const issueId = event.detail.id
       const mode = event.detail.mode
 
       if (mode === 'details') {
-        this.setState({ mode })
-      } else if (!id) {
-        this.setState({ mode: 'edit' })
+        this.setState({ mode, issueId })
+      } else if (!issueId) {
+        this.setState({ mode: 'create' })
       } else {
-        this.setState({ id, mode: 'create' })
-        // Load issue
+        this.setState({ mode: 'edit', issueId })
       }
     })
   }
 
   resetState() {
     return {
-      id: '',
+      issueId: '',
       mode: 'create'
+    }
+  }
+
+  onToggleMode = () => { 
+    if (this.state.mode === 'details') {
+      this.setState({ mode: 'edit' })
+    } else {
+      this.setState({ mode: 'details' })
     }
   }
 
@@ -40,13 +47,21 @@ class IssueSidebar extends React.Component {
     const { mode } = this.state
 
     if (mode === 'details') {
-      return <IssueDetails onClose={this.onClose} batchId={batch.id} />
+      return (
+        <IssueDetails 
+          onClose={this.onClose} 
+          onToggleMode={this.onToggleMode}
+          batchId={batch.id} />
+      )
     } else {
       return (
         <IssueForm
           onClose={this.onClose}
+          onToggleMode={this.onToggleMode}
           mode={this.state.mode}
-          batch={batch}
+          issueId={this.state.issueId}
+          batchId={batch.id}
+          facilityId={batch.facility_id}
         />
       )
     }

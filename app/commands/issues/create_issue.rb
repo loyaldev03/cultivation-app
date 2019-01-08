@@ -6,14 +6,12 @@ module Issues
                 :title,
                 :description,
                 :severity,
-                :status,
                 :issue_type,
+                :task,
                 :location_id,
                 :location_type,
-                :resolution_notes,
-                :reason,
-                :resolved_at,
                 :cultivation_batch,
+                :assigned_to,
                 :user
 
     def initialize(user, args)
@@ -24,14 +22,17 @@ module Issues
       @title = args[:title]
       @description = args[:description]
       @severity = args[:severity]
-      @status = args[:status]
+
       @issue_type = args[:issue_type]
       @location_id = args[:location_id]
       @location_type = args[:location_type]
       @resolution_notes = args[:resolution_notes]
       @reason = args[:reason]
       @resolved_at = args[:resolved_at]
-      @cultivation_batch = args[:cultivation_batch]
+
+      @cultivation_batch = Cultivation::Batch.find(args[:cultivation_batch_id])
+      @task = Cultivation::Task.find(args[:task_id])
+      @assigned_to = User.find(args[:assigned_to_id])
     end
 
     def call
@@ -57,19 +58,17 @@ module Issues
 
     def create_issue
       Issues::Issue.create!(
-        issue_no: Issues::Issue.count + 1,  # Need to be formatted as '0001'
+        issue_no: Issues::Issue.count + 1,
         title: title,
         description: description,
         cultivation_batch: cultivation_batch,
         severity: severity,
-        status: status,
-        issue_type: issue_type,
+        status: 'open',
+        issue_type: issue_type || 'daily_task',
         location_id: location_id,
         location_type: location_type,
-        # resolution_notes: resolution_notes,
-        # reason: reason,
-        # resolved_at: resolved_at,
         reported_by: user,
+        assigned_to: assigned_to,
       )
     end
 

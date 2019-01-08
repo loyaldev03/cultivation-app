@@ -56,31 +56,22 @@ class QueryAllValidFacilityLocations
     room.is_complete             # Do not return incomplete rooms
   end
 
-  # skip filter if no filter string provided
-  def partially_matched?(item)
-    if @filter.blank?
-      true
-    else
-      item[:value].include?(@filter)
-    end
-  end
-
   def add_facility(collection, facility)
     item = transform(facility)
-    collection.push(item) if partially_matched?(item)
+    collection.push(item)
   end
 
   def add_room(collection, facility, room)
     if room.is_complete
       item = transform(facility, room)
-      collection.push(item) if partially_matched?(item)
+      collection.push(item)
     end
   end
 
   def add_sections(collection, facility, room)
     room.sections.each do |section|
       item = transform(facility, room, section)
-      collection.push(item) if partially_matched?(item)
+      collection.push(item)
     end
   end
 
@@ -89,7 +80,7 @@ class QueryAllValidFacilityLocations
       if row.is_complete
         section = get_section(row)
         item = transform(facility, room, section, row)
-        collection.push(item) if partially_matched?(item)
+        collection.push(item)
       end
     end
   end
@@ -98,7 +89,7 @@ class QueryAllValidFacilityLocations
     section = get_section(row)
     shelves.each do |shelf|
       item = transform(facility, room, section, row, shelf)
-      collection.push(item) if partially_matched?(item)
+      collection.push(item)
     end
   end
 
@@ -106,7 +97,7 @@ class QueryAllValidFacilityLocations
     section = get_section(row)
     trays.each do |tray|
       item = transform(facility, room, section, row, shelf, tray)
-      collection.push(item) if partially_matched?(item)
+      collection.push(item)
     end
   end
 

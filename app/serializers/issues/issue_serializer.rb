@@ -3,7 +3,7 @@ module Issues
     include FastJsonapi::ObjectSerializer
 
     attributes :issue_no, :title, :description, :severity,
-               :status, :issue_type, :location_id, :location_type,
+               :status, :issue_type, :location_type,
                :resolution_notes, :reason
 
     attribute :id do |object|
@@ -19,6 +19,10 @@ module Issues
       else
         nil
       end
+    end
+
+    attribute :location_id do |object|
+      object.location_id.to_s
     end
 
     attribute :attachments do |object|
@@ -41,14 +45,20 @@ module Issues
       {
         id: object.reported_by_id.to_s,
         display_name: object.reported_by.display_name,
+        photo: object.reported_by.photo.url,
+        first_name: object.reported_by.first_name,
+        last_name: object.reported_by.last_name,
       }
     end
 
     attribute :assigned_to do |object|
       if object.assigned_to.present?
         {
-          id: object.reported_by_id.to_s,
-          display_name: object.reported_by.display_name,
+          id: object.assigned_to_id.to_s,
+          display_name: object.assigned_to.display_name,
+          photo: object.assigned_to.photo.url,
+          first_name: object.assigned_to.first_name,
+          last_name: object.assigned_to.last_name,
         }
       else
         nil
@@ -64,10 +74,17 @@ module Issues
         {
           id: object.resolved_by_id.to_s,
           display_name: object.resolved_by.display_name,
+          photo: object.resolved_by.photo.url,
+          first_name: object.resolved_by.first_name,
+          last_name: object.resolved_by.last_name,
         }
       else
         nil
       end
+    end
+
+    attribute :created_at do |object|
+      object.c_at.iso8601
     end
   end
 end

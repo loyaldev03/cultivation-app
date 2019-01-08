@@ -141,6 +141,7 @@ class TaskList extends React.Component {
           indent={indent}
           hasChild={hasChild}
           isCollapsed={isCollapsed}
+          onCollapseClick={() => TaskStore.toggleCollapseNode(wbs)}
           onClick={e => this.handleShowSidebar(id)}
           onHighlight={() => this.setState({ taskSelected: id })}
           onDoneClick={value => {

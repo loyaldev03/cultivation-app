@@ -24,6 +24,11 @@ module Cultivation
         if valid_batch? batch
           batch.is_active = true if @activate_batch
           task = map_args_to_task(task, @args)
+          children = get_children(batch_tasks, task.wbs)
+
+          # Save if no errors
+          task.save! if errors.empty?
+
           # opt = {
           #   facility_id: batch.facility_id,
           #   batch_id: batch.id,
@@ -36,9 +41,6 @@ module Cultivation
           # if cascade_changes? task
           #   update_task(task, batch_tasks, opt)
           # end
-
-          # Save other fields on Task that are not handle by bulk_update
-          task.save! if errors.empty?
 
           # TODO::ANDY: Estimated Hours are not calculating
           # Extend end date to Category and Phas
@@ -162,7 +164,7 @@ module Cultivation
 
       if opt[:children]
         # Child task of current task & does not depend on any task
-        children = get_children(task, batch_tasks)
+        children = get_children(batch_tasks, task.wbs)
         # Find changed child tasks
         new_changes += find_cascaded_changes(children,
                                              batch_tasks,
@@ -200,12 +202,8 @@ module Cultivation
     end
 
     # Find all subtasks
-    def get_children(task, batch_tasks)
-      batch_tasks.select do |t|
-        t.parent_id &&
-          # Sub-tasks should have parent set to current task
-          t.parent_id.to_s == task.id.to_s
-      end
+    def get_children(batch_tasks, task_wbs)
+      WbsTree.children(batch_tasks, task_wbs)
     end
 
     # Find all subtasks

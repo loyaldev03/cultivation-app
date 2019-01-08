@@ -59,12 +59,15 @@ module Cultivation
         task.depend_on = args[:depend_on].present? ? args[:depend_on].to_bson_id : nil
         task.task_type = args[:task_type] || []
       end
+      Rails.logger.debug "\033[31m args:start_date #{args[:start_date]} \033[0m"
+      Rails.logger.debug "\033[31m args:duration #{args[:duration]} \033[0m"
+      Rails.logger.debug "\033[31m args:end_date #{args[:end_date]} \033[0m"
       task.start_date = args[:start_date]
       task.duration = args[:duration] ? args[:duration].to_i : 0
       task.end_date = task.start_date + task.duration.days
-      # Rails.logger.debug "\033[31m 1 #{task.start_date} \033[0m"
-      # Rails.logger.debug "\033[31m 2 #{task.duration} \033[0m"
-      # Rails.logger.debug "\033[31m 3 #{task.end_date} \033[0m"
+      Rails.logger.debug "\033[32m task.start_date #{task.start_date} \033[0m"
+      Rails.logger.debug "\033[32m task.duration #{task.duration} \033[0m"
+      Rails.logger.debug "\033[32m task.end_date #{task.end_date} \033[0m"
       # TODO: Calc estimated hours
       task.estimated_hours = args[:estimated_hours].to_f
       # TODO: Calc estimated cost

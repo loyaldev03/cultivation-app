@@ -391,7 +391,7 @@ class TaskList extends React.Component {
     {
       Header: 'Predecessor',
       accessor: 'depend_on',
-      maxWidth: '110',
+      maxWidth: '100',
       show: this.checkVisibility('depend_on'),
       Cell: data => {
         const { id, depend_on } = data.row
@@ -419,7 +419,7 @@ class TaskList extends React.Component {
     {
       Header: 'Start Date',
       accessor: 'start_date',
-      maxWidth: '100',
+      maxWidth: '200',
       className: 'tr',
       show: this.checkVisibility('start_date'),
       Cell: data => {
@@ -429,7 +429,7 @@ class TaskList extends React.Component {
             text={start_date}
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
-              TaskStore.editTask(batchId, id, { start_date: value })
+              TaskStore.editStartDate(batchId, id, value)
             }}
           />
         )
@@ -438,7 +438,7 @@ class TaskList extends React.Component {
     {
       Header: 'End Date',
       accessor: 'end_date',
-      maxWidth: '100',
+      maxWidth: '200',
       className: 'tr',
       show: this.checkVisibility('end_date'),
       Cell: data => {
@@ -448,7 +448,7 @@ class TaskList extends React.Component {
             text={end_date}
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
-              TaskStore.editTask(batchId, id, { end_date: value })
+              TaskStore.editEndDate(batchId, id, value)
             }}
           />
         )
@@ -469,7 +469,7 @@ class TaskList extends React.Component {
             step="1"
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
-              TaskStore.editTask(batchId, id, { duration: value })
+              TaskStore.editDuration(batchId, id, value)
             }}
           />
         )

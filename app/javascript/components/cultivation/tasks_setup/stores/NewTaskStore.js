@@ -8,6 +8,18 @@ import {
   addDayToDate,
   toast
 } from '../../../utils'
+import { addDays, differenceInCalendarDays, parse } from 'date-fns'
+
+function parseTask(taskAttributes) {
+  const { start_date, duration } = taskAttributes
+  const startDate = parse(start_date)
+  const endDate = addDays(startDate, duration)
+  return Object.assign(taskAttributes, {
+    start_date: startDate,
+    duration: duration,
+    end_date: endDate
+  })
+}
 
 class TaskStore {
   @observable isLoading = false
@@ -21,16 +33,13 @@ class TaskStore {
     const url = `/api/v1/batches/${batchId}/tasks`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
-      this.isLoading = false
-      this.tasks = response.data.map(res => {
-        return {
-          ...res.attributes
-        }
-      })
+      this.tasks = response.data.map(res => parseTask(res.attributes))
       this.isDataLoaded = true
     } catch (error) {
       this.isDataLoaded = false
       console.error(error)
+    } finally {
+      this.isLoading = false
     }
   }
 
@@ -169,8 +178,8 @@ class TaskStore {
   @action
   async editTask(batchId, taskId, updateObj) {
     this.isLoading = true
-    const task = this.tasks.find(x => x.id === taskId)
-    const payload = Object.assign({}, toJS(task), updateObj)
+    const task = this.getTaskById(taskId)
+    const payload = Object.assign({}, task, updateObj)
     // Optimistic update
     this.tasks = this.tasks.map(t => {
       return t.id === taskId ? payload : t
@@ -181,8 +190,10 @@ class TaskStore {
       // Replace optimistic update with actual response
       if (response.data) {
         toast('Task saved', 'success')
+        const updated = parseTask(response.data.attributes)
+        console.log('Updated task response:', updated)
         this.tasks = this.tasks.map(t => {
-          return t.id === taskId ? response.data.attributes : t
+          return t.id === taskId ? updated : t
         })
       } else {
         console.error(response.errors)
@@ -191,6 +202,60 @@ class TaskStore {
       console.log(error)
     } finally {
       this.isLoading = false
+    }
+  }
+
+  @action
+  async editStartDate(batchId, taskId, startDate) {
+    const task = this.getTaskById(taskId)
+    if (startDate && task.end_date) {
+      const endDate = parse(task.end_date)
+      const duration = differenceInCalendarDays(endDate, startDate)
+      const updateObj = {
+        start_date: startDate,
+        end_date: endDate,
+        duration
+      }
+      await this.editTask(batchId, taskId, updateObj)
+    }
+  }
+
+  @action
+  async editEndDate(batchId, taskId, endDate) {
+    const task = this.getTaskById(taskId)
+    if (endDate && task.start_date) {
+      let startDate = parse(task.start_date)
+      if (endDate <= startDate) {
+        // This would push the start date back by duration
+        startDate = addDays(endDate, task.duration * -1)
+        await this.editTask(batchId, taskId, {
+          start_date: startDate,
+          end_date: endDate,
+          duration: task.duration
+        })
+      } else {
+        const duration = differenceInCalendarDays(endDate, startDate)
+        await this.editTask(batchId, taskId, {
+          start_date: startDate,
+          end_date: endDate,
+          duration
+        })
+      }
+    }
+  }
+
+  @action
+  async editDuration(batchId, taskId, duration) {
+    const task = this.getTaskById(taskId)
+    if (duration && task.start_date) {
+      const startDate = parse(task.start_date)
+      const endDate = addDays(startDate, duration)
+      const updateObj = {
+        start_date: startDate,
+        end_date: endDate,
+        duration
+      }
+      await this.editTask(batchId, taskId, updateObj)
     }
   }
 

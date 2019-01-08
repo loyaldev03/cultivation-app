@@ -40,7 +40,7 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
               defaultValue={text}
             />
             <i
-              className="material-icons green material-icons--small pa1 pointer"
+              className="material-icons green icon--small icon--btn"
               onClick={this.switchViewMode}
             >
               done
@@ -59,7 +59,7 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
               {text}
             </a>
             <i
-              className="material-icons material-icons--small pa1 pointer child"
+              className="material-icons icon--small icon--btn child"
               onClick={this.switchEditMode}
             >
               edit

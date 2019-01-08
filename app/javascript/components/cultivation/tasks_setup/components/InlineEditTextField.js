@@ -1,6 +1,5 @@
 import React from 'react'
 import classNames from 'classnames'
-import { ErrorBoundary } from '../../../utils'
 
 export default class InlineEditTextField extends React.PureComponent {
   state = {
@@ -13,14 +12,14 @@ export default class InlineEditTextField extends React.PureComponent {
     }
   }
   switchViewMode = e => {
-    const { onDoneClick, text } = this.props
-    this.setState({ isEdit: false })
+    const { onDoneClick, onHighlight, text } = this.props
     const { value } = this.textInput
+    this.setState({ isEdit: false })
     if (onDoneClick && text !== value) {
       onDoneClick(value)
     }
-    if (this.props.onHighlight) {
-      this.props.onHighlight()
+    if (onHighlight) {
+      onHighlight()
     }
   }
   handleKeyPress = e => {
@@ -33,18 +32,13 @@ export default class InlineEditTextField extends React.PureComponent {
       this.textInput.select()
     }
   }
-  renderView() {
-    return (
-      <a
-        href="#0"
-        className="link grey flex-auto h1"
-        onClick={this.switchEditMode}
-      >
-        {this.props.text}
-      </a>
-    )
+  getViewClassName() {
+    return 'link grey flex-auto h1'
   }
-  renderEdit() {
+  getViewText(text) {
+    return text
+  }
+  renderEdit(text) {
     return (
       <input
         autoFocus
@@ -52,27 +46,34 @@ export default class InlineEditTextField extends React.PureComponent {
         ref={input => (this.textInput = input)}
         className="flex-auto b--grey link"
         onKeyPress={this.handleKeyPress}
-        defaultValue={this.props.text}
+        defaultValue={text}
       />
     )
   }
   render() {
+    const { text } = this.props
+    const { isEdit } = this.state
+    if (isEdit) {
+      return (
+        <React.Fragment>
+          {this.renderEdit(text)}
+          <i
+            className="material-icons green icon--small icon--btn"
+            onClick={this.switchViewMode}
+          >
+            done
+          </i>
+        </React.Fragment>
+      )
+    }
     return (
-      <ErrorBoundary>
-        {this.state.isEdit ? (
-          <React.Fragment>
-            {this.renderEdit()}
-            <i
-              className="material-icons green material-icons--small pa1 pointer"
-              onClick={this.switchViewMode}
-            >
-              done
-            </i>
-          </React.Fragment>
-        ) : (
-          this.renderView()
-        )}
-      </ErrorBoundary>
+      <a
+        href="#0"
+        className={this.getViewClassName()}
+        onClick={this.switchEditMode}
+      >
+        {this.getViewText(text)}
+      </a>
     )
   }
 }

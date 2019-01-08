@@ -2,29 +2,40 @@ import React from 'react'
 import InlineEditTextField from './InlineEditTextField'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { formatDate2 } from '../../../utils'
-import { parse } from 'date-fns'
 
 export default class InlineEditDateField extends InlineEditTextField {
-  renderView() {
-    return (
-      <a
-        href="#0"
-        className="link grey flex-auto h1 tr"
-        onClick={this.switchEditMode}
-      >
-        {formatDate2(this.props.text)}
-      </a>
-    )
+  state = {
+    value: this.props.text,
+    isEdit: false
   }
-  renderEdit() {
-    const { text } = this.props
-    const dateValue = parse(text) || new Date()
+  onChange = value => this.setState({ value })
+  switchViewMode = e => {
+    const { onDoneClick, onHighlight } = this.props
+    this.setState({ isEdit: false })
+    if (onDoneClick) {
+      onDoneClick(this.state.value)
+    }
+    if (onHighlight) {
+      onHighlight()
+    }
+  }
+  getViewClassName() {
+    return 'link grey flex-auto h1 tr'
+  }
+  getViewText(dateText) {
+    return formatDate2(dateText)
+  }
+  renderEdit(text) {
+    const { value } = this.state
+    // text is Date Object from Task Store
     return (
       <DatePicker
         className="absolute"
         calendarIcon={null}
         clearIcon={null}
-        value={dateValue}
+        value={value}
+        onKeyPress={this.handleKeyPress}
+        onChange={this.onChange}
       />
     )
   }

@@ -2,19 +2,8 @@ import React from 'react'
 import InlineEditTextField from './InlineEditTextField'
 
 export default class InlineEditNumberField extends InlineEditTextField {
-  renderView() {
-    return (
-      <a
-        href="#0"
-        className="link grey flex-auto h1 tr"
-        onClick={this.switchEditMode}
-      >
-        {this.props.text}
-      </a>
-    )
-  }
-  renderEdit() {
-    const { text, min, step } = this.props
+  renderEdit(text) {
+    const { min, step } = this.props
     return (
       <input
         autoFocus

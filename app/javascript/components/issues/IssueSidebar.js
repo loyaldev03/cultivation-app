@@ -30,7 +30,7 @@ class IssueSidebar extends React.Component {
     }
   }
 
-  onToggleMode = () => { 
+  onToggleMode = () => {
     if (this.state.mode === 'details') {
       this.setState({ mode: 'edit' })
     } else {
@@ -48,10 +48,11 @@ class IssueSidebar extends React.Component {
 
     if (mode === 'details') {
       return (
-        <IssueDetails 
-          onClose={this.onClose} 
+        <IssueDetails
+          onClose={this.onClose}
           onToggleMode={this.onToggleMode}
-          batchId={batch.id} />
+          batchId={batch.id}
+        />
       )
     } else {
       return (

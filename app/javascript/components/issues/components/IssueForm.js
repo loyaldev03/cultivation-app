@@ -84,7 +84,7 @@ class IssueForm extends React.Component {
           description: attr.description,
           severity: attr.severity,
           task_id: attr.task ? attr.task.id : '',
-          location_id: attr.location_id, 
+          location_id: attr.location_id,
           location_type: attr.location_type,
           assigned_to_id: attr.assigned_to ? attr.assigned_to.id : '',
           status: attr.status,
@@ -101,9 +101,7 @@ class IssueForm extends React.Component {
     inputValue = inputValue || ''
 
     return fetch(
-      `/api/v1/facilities/${
-        this.props.facilityId
-      }/search_locations`,
+      `/api/v1/facilities/${this.props.facilityId}/search_locations`,
       { credentials: 'include' }
     )
       .then(response => response.json())
@@ -117,9 +115,7 @@ class IssueForm extends React.Component {
     inputValue = inputValue || ''
 
     return fetch(
-      `/api/v1/users/by_facility/${
-        this.props.facilityId
-      }?filter=${inputValue}`,
+      `/api/v1/users/by_facility/${this.props.facilityId}?filter=${inputValue}`,
       { credentials: 'include' }
     )
       .then(response => response.json())
@@ -134,8 +130,8 @@ class IssueForm extends React.Component {
       description: '',
       severity: '',
       task_id: '',
-      location_id: '', 
-      location_type: '',     
+      location_id: '',
+      location_type: '',
       assigned_to_id: '',
       // read only
       status: '',
@@ -143,7 +139,7 @@ class IssueForm extends React.Component {
       reported_by: null,
       // UI states
       uppyOpen: false,
-      errors: {},
+      errors: {}
     }
   }
 
@@ -160,10 +156,21 @@ class IssueForm extends React.Component {
     const value = event.target.value
     this.setState({ [key]: value })
   }
-  onTaskChanged = task  => { this.setState({ task_id: task.value }) }
-  onSeverityChanged = severity => { this.setState({ severity: severity.value }) }
-  onAssignedChanged = user => { this.setState({ assigned_to_id: user.value }) }
-  onLocationChanged = location => { this.setState({ location_id: location.id, location_type: resolveLocationType(location) })}
+  onTaskChanged = task => {
+    this.setState({ task_id: task.value })
+  }
+  onSeverityChanged = severity => {
+    this.setState({ severity: severity.value })
+  }
+  onAssignedChanged = user => {
+    this.setState({ assigned_to_id: user.value })
+  }
+  onLocationChanged = location => {
+    this.setState({
+      location_id: location.id,
+      location_type: resolveLocationType(location)
+    })
+  }
 
   onDescriptionChanged = event => {
     this.setState(
@@ -284,16 +291,30 @@ class IssueForm extends React.Component {
   }
 
   render() {
-    const { severity, task_id, location_id, assigned_to_id, description} = this.state
-    const task = task_id ? this.state.tasks.find(x => x.value === task_id) : null
-    const location = location_id ? this.state.locations.find(x => x.id === location_id) : null
-    const assigned_to = assigned_to_id ? this.state.users.find(x => x.value === assigned_to_id) : null
-    const severityOption = severity ? severityOptions.find(x => x.value === severity) : null
+    const {
+      severity,
+      task_id,
+      location_id,
+      assigned_to_id,
+      description
+    } = this.state
+    const task = task_id
+      ? this.state.tasks.find(x => x.value === task_id)
+      : null
+    const location = location_id
+      ? this.state.locations.find(x => x.id === location_id)
+      : null
+    const assigned_to = assigned_to_id
+      ? this.state.users.find(x => x.value === assigned_to_id)
+      : null
+    const severityOption = severity
+      ? severityOptions.find(x => x.value === severity)
+      : null
 
     return (
       <React.Fragment>
-        { this.renderTitle() }
-        
+        {this.renderTitle()}
+
         <div className="ph4 mt3 mb3 flex">
           <div className="w-100">
             <TextInput

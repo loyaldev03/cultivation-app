@@ -11,12 +11,14 @@ import issueStore from '../../issues/store/IssueStore'
 
 const renderUser = user => {
   if (user) {
-    return <Avatar 
-      firstName={user.first_name}
-      lastName={user.last_name}
-      photoUrl={user.photo}
-      size='20px'
-    />
+    return (
+      <Avatar
+        firstName={user.first_name}
+        lastName={user.last_name}
+        photoUrl={user.photo}
+        size="20px"
+      />
+    )
   }
   return null
 }
@@ -131,7 +133,10 @@ class BatchIssues extends React.Component {
       <React.Fragment>
         <div className="w-100 bg-white pa3 ">
           <div className="flex mb3 justify-end">
-            <button className="btn btn--primary" onClick={() => openSidebar({id: null, mode: 'create' })}>
+            <button
+              className="btn btn--primary"
+              onClick={() => openSidebar({ id: null, mode: 'create' })}
+            >
               Submit an issue
             </button>
           </div>

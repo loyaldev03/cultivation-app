@@ -11,7 +11,9 @@ class IssueDetails extends Component {
     return (
       <React.Fragment>
         <div className="ph4 flex">
-          <a href="#" onClick={this.toggleEdit} className="orange f6 link mt3">Temp Edit toggle</a>
+          <a href="#" onClick={this.toggleEdit} className="orange f6 link mt3">
+            Temp Edit toggle
+          </a>
         </div>
         <div
           className="ph4 pv2 b--light-gray flex items-center"
@@ -34,7 +36,7 @@ class IssueDetails extends Component {
             <i className="material-icons mid-gray md-18">close</i>
           </span>
         </div>
-        
+
         <div className="ph4">
           <div className="flex w-100">
             <div className="w-auto pv3 mr2">

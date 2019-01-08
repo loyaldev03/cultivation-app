@@ -8,7 +8,7 @@ const LocationOption = ({ children, ...props }) => (
         <span className="f7 fw6 bg-light-blue dark-blue ph2 pv1 ttu br2">
           {props.data.f_name} - {props.data.f_code}
         </span>
-      )} 
+      )}
       {props.data.rm_id && (
         <span className="f7 fw6 bg-light-green dark-gray ph2 pv1 ttu br2">
           {props.data.rm_name} - {props.data.rm_code}

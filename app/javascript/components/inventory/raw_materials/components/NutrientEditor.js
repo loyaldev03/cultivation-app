@@ -246,9 +246,36 @@ class NutrientEditor extends React.Component {
           value: x.attributes.id,
           ...x.attributes
         }))
-        this.setState({ defaultProduct: products })
+        if (inputValue === '') {
+          this.setState({ defaultProduct: products })
+        }
         return products
       })
+  }
+
+  onChangeProduct = product => {
+    if (product) {
+      if (product.__isNew__) {
+        this.setState({
+          product_name: product.value,
+          product_id: '',
+          manufacturer: '',
+          description: ''
+        })
+      } else {
+        this.setState({
+          product_id: product.id,
+          manufacturer: product.manufacturer,
+          description: product.description
+        })
+      }
+    } else {
+      this.setState({
+        product_id: '',
+        manufacturer: '',
+        description: ''
+      })
+    }
   }
 
   render() {
@@ -260,6 +287,8 @@ class NutrientEditor extends React.Component {
     const showTotalPrice =
       parseFloat(this.state.price_per_package) > 0 &&
       parseFloat(this.state.order_quantity) > 0
+
+    const hasProductId = this.state.product_id
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -344,17 +373,6 @@ class NutrientEditor extends React.Component {
               <FieldError errors={this.state.errors} field="product" />
             </div>
           </div>
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <TextInput
-                label="Product Name"
-                fieldname="product_name"
-                value={this.state.product_name}
-                onChange={this.onChangeGeneric}
-              />
-            </div>
-          </div>
-
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <TextInput
@@ -362,6 +380,7 @@ class NutrientEditor extends React.Component {
                 fieldname="manufacturer"
                 value={this.state.manufacturer}
                 onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
               />
             </div>
           </div>
@@ -374,6 +393,7 @@ class NutrientEditor extends React.Component {
                 fieldname="description"
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
               />
             </div>
           </div>

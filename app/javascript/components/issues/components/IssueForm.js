@@ -264,9 +264,7 @@ class IssueForm extends React.Component {
               <LetterAvatar firstName="John" lastName="Doe" size={25} />
             </div>
             <div className="f7 fw6 gray w-auto ph2 mr1">ISSUE #002</div>
-            <div className="f7 fw6 green flex f6 green fw6 w-auto">
-              OPEN
-            </div>
+            <div className="f7 fw6 green flex f6 green fw6 w-auto">OPEN</div>
             <span
               className="rc-slide-panel__close-button dim"
               onClick={this.props.onClose}
@@ -275,7 +273,13 @@ class IssueForm extends React.Component {
             </span>
           </div>
           <div className="flex w-100 ph4 mt4 mb2">
-            <a href="#" onClick={this.props.onToggleMode} className="link orange f6">&lt; Back</a>
+            <a
+              href="#"
+              onClick={this.props.onToggleMode}
+              className="link orange f6"
+            >
+              &lt; Back
+            </a>
           </div>
         </React.Fragment>
       )

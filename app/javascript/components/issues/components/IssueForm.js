@@ -259,14 +259,23 @@ class IssueForm extends React.Component {
     if (this.props.mode === 'edit') {
       return (
         <React.Fragment>
-          <div className="flex w-100 ph4">
-            <div className="w-auto pv3">
+          <div className="flex w-100 ph4 items-center pt3">
+            <div className="w-auto">
               <LetterAvatar firstName="John" lastName="Doe" size={25} />
             </div>
-            <div className="f7 fw6 gray w-auto pv3 ph2 mt1 mr2">ISSUE #002</div>
-            <div className="f7 fw6 green flex f6 green fw6 w-auto pv3 mt1 mr2">
+            <div className="f7 fw6 gray w-auto ph2 mr1">ISSUE #002</div>
+            <div className="f7 fw6 green flex f6 green fw6 w-auto">
               OPEN
             </div>
+            <span
+              className="rc-slide-panel__close-button dim"
+              onClick={this.props.onClose}
+            >
+              <i className="material-icons mid-gray md-18">close</i>
+            </span>
+          </div>
+          <div className="flex w-100 ph4 mt4 mb2">
+            <a href="#" onClick={this.props.onToggleMode} className="link orange f6">&lt; Back</a>
           </div>
         </React.Fragment>
       )

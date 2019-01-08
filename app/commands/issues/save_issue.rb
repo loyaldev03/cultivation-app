@@ -1,5 +1,5 @@
 module Issues
-  class CreateIssue
+  class SaveIssue
     prepend SimpleCommand
 
     attr_reader :id,
@@ -69,11 +69,22 @@ module Issues
         location_type: location_type,
         reported_by: user,
         assigned_to: assigned_to,
+        task: task,
       )
     end
 
     def update_issue
-      ## TODO: Update here
+      issue = Issues::Issue.find(id)
+      issue.update!(
+        title: title,
+        description: description,
+        severity: severity,
+        location_id: location_id,
+        location_type: location_type,
+        assigned_to: assigned_to,
+        task: task,
+      )
+      issue
     end
   end
 end

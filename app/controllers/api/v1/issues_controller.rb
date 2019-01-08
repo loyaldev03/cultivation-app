@@ -10,7 +10,7 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
   end
 
   def create
-    command = Issues::CreateIssue.call(current_user, params.to_unsafe_h)
+    command = Issues::SaveIssue.call(current_user, params.to_unsafe_h)
     if command.success?
       render json: Issues::IssueSerializer.new(command.result).serialized_json
     else

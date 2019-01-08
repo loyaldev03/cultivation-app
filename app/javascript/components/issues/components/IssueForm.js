@@ -10,7 +10,7 @@ import '@uppy/webcam/dist/style.css'
 
 import { TextInput } from '../../utils/FormHelpers'
 import reactSelectStyle from '../../utils/reactSelectStyle'
-import LetterAvatar from '../../utils/LetterAvatar'
+import Avatar from '../../utils/Avatar'
 
 import saveIssue from '../actions/saveIssue'
 import getIssue from '../actions/getIssue'
@@ -68,8 +68,6 @@ class IssueForm extends React.Component {
 
   // TODO; replace props.batch with props.batch_id and props.facility_id
   componentDidMount() {
-    console.log('component did mount')
-
     // Todo: accumulate all with Promise.all then call setState once
     loadTasks(this.props.batchId).then(tasks => this.setState({ tasks }))
     this.loadUsers()
@@ -78,6 +76,7 @@ class IssueForm extends React.Component {
     if (this.props.issueId) {
       getIssue(this.props.issueId).then(({ data, status }) => {
         const attr = data.data.attributes
+        console.log(attr)
         this.setState({
           ...this.resetState(),
           title: attr.title,
@@ -89,7 +88,8 @@ class IssueForm extends React.Component {
           assigned_to_id: attr.assigned_to ? attr.assigned_to.id : '',
           status: attr.status,
           created_at: attr.created_at,
-          reported_by: attr.reported_by
+          reported_by: attr.reported_by,
+          issue_no: attr.issue_no
         })
       })
     } else {
@@ -136,7 +136,8 @@ class IssueForm extends React.Component {
       // read only
       status: '',
       created_at: null,
-      reported_by: null,
+      reported_by: {first_name: 'J', lastName: 'D', photo: null },
+      issue_no: '',
       // UI states
       uppyOpen: false,
       errors: {}
@@ -261,9 +262,13 @@ class IssueForm extends React.Component {
         <React.Fragment>
           <div className="flex w-100 ph4 items-center pt3">
             <div className="w-auto">
-              <LetterAvatar firstName="John" lastName="Doe" size={25} />
+            <Avatar 
+              firstName={this.state.reported_by.first_name} 
+              lastName={this.state.reported_by.last_name} 
+              photoUrl={this.state.reported_by.photo}
+              size={25} />
             </div>
-            <div className="f7 fw6 gray w-auto ph2 mr1">ISSUE #002</div>
+            <div className="f7 fw6 gray w-auto ph2 mr1">ISSUE #{this.state.issue_no.toString().padStart(5, '0')}</div>
             <div className="f7 fw6 green flex f6 green fw6 w-auto">OPEN</div>
             <span
               className="rc-slide-panel__close-button dim"

@@ -11,7 +11,6 @@ const loadBatchIssues = batchId => {
     })
     .then(result => {
       const { status, data } = result
-      console.log(data)
       if (status == 200) {
         issueStore.load(data.data)
       }

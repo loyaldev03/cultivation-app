@@ -24,21 +24,27 @@ module Cultivation
         if valid_batch? batch
           batch.is_active = true if @activate_batch
           task = map_args_to_task(task, @args)
-          opt = {
-            facility_id: batch.facility_id,
-            batch_id: batch.id,
-            quantity: batch.quantity,
-          }
+          # opt = {
+          #   facility_id: batch.facility_id,
+          #   batch_id: batch.id,
+          #   quantity: batch.quantity,
+          # }
 
-          if cascade_changes? task
-            update_task(task, batch_tasks, opt)
-          end
+          # TODO::ANDY - valid_data when updating tasks
+
+          # TODO::ANDY cascade changes? how?
+          # if cascade_changes? task
+          #   update_task(task, batch_tasks, opt)
+          # end
 
           # Save other fields on Task that are not handle by bulk_update
           task.save! if errors.empty?
+
           # TODO::ANDY: Estimated Hours are not calculating
           # Extend end date to Category and Phas
-          update_tasks_end_date(task, batch_tasks, opt)
+
+          # TODO::Andy do we need to update parent task's end date?
+          # update_tasks_end_date(task, batch_tasks, opt)
           # Update batch
           update_batch(batch, batch_tasks&.first)
         end
@@ -59,15 +65,15 @@ module Cultivation
         task.depend_on = args[:depend_on].present? ? args[:depend_on].to_bson_id : nil
         task.task_type = args[:task_type] || []
       end
-      Rails.logger.debug "\033[31m args:start_date #{args[:start_date]} \033[0m"
-      Rails.logger.debug "\033[31m args:duration #{args[:duration]} \033[0m"
-      Rails.logger.debug "\033[31m args:end_date #{args[:end_date]} \033[0m"
+      # Rails.logger.debug "\033[31m args:start_date #{args[:start_date]} \033[0m"
+      # Rails.logger.debug "\033[31m args:duration #{args[:duration]} \033[0m"
+      # Rails.logger.debug "\033[31m args:end_date #{args[:end_date]} \033[0m"
       task.start_date = args[:start_date]
-      task.duration = args[:duration] ? args[:duration].to_i : 0
+      task.duration = args[:duration] ? args[:duration].to_i : 1
       task.end_date = task.start_date + task.duration.days
-      Rails.logger.debug "\033[32m task.start_date #{task.start_date} \033[0m"
-      Rails.logger.debug "\033[32m task.duration #{task.duration} \033[0m"
-      Rails.logger.debug "\033[32m task.end_date #{task.end_date} \033[0m"
+      # Rails.logger.debug "\033[32m task.start_date #{task.start_date} \033[0m"
+      # Rails.logger.debug "\033[32m task.duration #{task.duration} \033[0m"
+      # Rails.logger.debug "\033[32m task.end_date #{task.end_date} \033[0m"
       # TODO: Calc estimated hours
       task.estimated_hours = args[:estimated_hours].to_f
       # TODO: Calc estimated cost
@@ -343,16 +349,8 @@ module Cultivation
     def get_phase_tasks(tasks)
       # Find "Phase" tasks only
       tasks.select do |t|
-        Constants::CULTIVATION_PHASES_3V.include?(t.phase) &&
-          t.is_phase == true &&
-          t.phase
+        t.phase && Constants::CULTIVATION_PHASES_3V.include?(t.phase)
       end
     end
   end
 end
-
-#TODO
-#right now got two bulk_update
-#top-bottom -> task and child and related task
-#bottom-top -> task parent and parent, parent, parent
-#combine top-bottom and bottom-top bulk_update

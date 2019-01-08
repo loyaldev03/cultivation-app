@@ -10,29 +10,6 @@ import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 
-const loadProducts = (inputValue, nutrientType) => {
-  inputValue = inputValue || ''
-  console.log(nutrientType)
-  return fetch(
-    `/api/v1/products?type=raw_materials&category=nutrients&sub_category=${
-      nutrientType.key
-    }&filter=${inputValue}`,
-    {
-      credentials: 'include'
-    }
-  )
-    .then(response => response.json())
-    .then(data => {
-      const products = data.data.map(x => ({
-        label: x.attributes.name,
-        value: x.attributes.id,
-        ...x.attributes
-      }))
-
-      return products
-    })
-}
-
 const handleInputChange = newValue => {
   return newValue ? newValue : ''
 }
@@ -105,7 +82,10 @@ class NutrientEditor extends React.Component {
   }
 
   onNutrientProductSelected = item => {
-    this.setState({ catalogue: item })
+    this.setState({ catalogue: item },
+      () => {
+        this.loadProducts('', this.state.nutrientType, this.state.catalogue, this.state.facility_id)
+      })
   }
 
   onChangeGeneric = event => {
@@ -241,6 +221,31 @@ class NutrientEditor extends React.Component {
     }
   }
 
+  loadProducts = (inputValue, nutrientType, nutrientProduct, facility_id) => {
+    inputValue = inputValue || ''
+    console.log(nutrientProduct)
+    console.log(nutrientType)
+    return fetch(
+      `/api/v1/products?type=raw_materials&category=nutrients&sub_category=${
+      nutrientType.key
+      }&key=${nutrientProduct.label}&facility_id=${facility_id}&filter=${inputValue}`,
+      {
+        credentials: 'include'
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        const products = data.data.map(x => ({
+          label: x.attributes.name,
+          value: x.attributes.id,
+          ...x.attributes
+        }))
+        this.setState({ defaultProduct: products})
+        return products
+      })
+  }
+
+
   render() {
     const { locations, catalogues } = this.props
     const nutrientProducts = this.state.nutrientType.children
@@ -314,11 +319,11 @@ class NutrientEditor extends React.Component {
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
               <AsyncCreatableSelect
-                defaultOptions
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
                 placeholder="Search..."
-                loadOptions={e => loadProducts(e, this.state.nutrientType)}
+                defaultOptions={this.state.defaultProduct}
+                loadOptions={e => this.loadProducts(e, this.state.nutrientType, this.state.catalogue, this.state.facility_id)}
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
                 value={this.state.product}

@@ -3,8 +3,9 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     type = params[:type]
     category = params[:category]
     sub_category = params[:sub_category]
-
-    catalogue_ids = catalogue_ids(get_type(type), category, sub_category)
+    key = params[:key]
+    facility_id = params[:facility_id]
+    catalogue_ids = catalogue_ids(get_type(type), category, sub_category, key)
     products = []
 
     if category.blank? || type.blank?
@@ -13,17 +14,17 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     end
 
     if params[:filter].blank?
-      products = Inventory::Product.in(catalogue: catalogue_ids).limit(7).order(name: :asc)
+      products = Inventory::Product.in(catalogue: catalogue_ids).where(facility_id: facility_id).limit(7).order(name: :asc)
     else
-      products = Inventory::Product.in(catalogue: catalogue_ids).where(:name => /^#{params[:filter]}/i).limit(7).order(name: :asc)
+      products = Inventory::Product.in(catalogue: catalogue_ids).where(facility_id: facility_id, name: /^#{params[:filter]}/i).limit(7).order(name: :asc)
     end
     render json: Inventory::ProductSerializer.new(products).serialized_json
   end
 
   private
 
-  def catalogue_ids(type, category, sub_category)
-    Inventory::QueryCatalogueTree.call(type, category, sub_category).result.pluck(:value)
+  def catalogue_ids(type, category, sub_category, key)
+    Inventory::QueryCatalogueTree.call(type, category, sub_category, key).result.pluck(:value)
   end
 
   def get_type(type)

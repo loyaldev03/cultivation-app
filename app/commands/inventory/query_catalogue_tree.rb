@@ -8,15 +8,17 @@ module Inventory
     prepend SimpleCommand
     attr_reader :type, :category
 
-    def initialize(type, category, sub_category = '')
+    def initialize(type, category, sub_category = '', label = nil)
       @type = type
       @category = category
       @sub_category = sub_category
+      @label = label
     end
 
     def call
       output = []
       catalogues = Inventory::Catalogue.where(catalogue_type: type, category: category, sub_category: @sub_category)
+      catalogues = catalogues.where(label: @label) if @label
       catalogues.each do |parent|
         item = {
           label: parent.label,

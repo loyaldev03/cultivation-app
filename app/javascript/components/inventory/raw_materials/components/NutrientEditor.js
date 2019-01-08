@@ -150,6 +150,7 @@ class NutrientEditor extends React.Component {
       uom: { value: uom },
       qty_per_package,
       catalogue: { value: catalogue },
+      product_id,
       product_name,
       manufacturer,
       description,
@@ -212,6 +213,7 @@ class NutrientEditor extends React.Component {
       uom,
       quantity,
       catalogue,
+      product_id,
       product_name,
       manufacturer,
       description,
@@ -265,6 +267,7 @@ class NutrientEditor extends React.Component {
       } else {
         this.setState({
           product_id: product.id,
+          product_name: product.name,
           manufacturer: product.manufacturer,
           description: product.description
         })

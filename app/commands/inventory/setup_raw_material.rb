@@ -10,6 +10,7 @@ module Inventory
                 :facility,
                 :location_id,
                 :catalogue,
+                :product_id,
                 :product_name,
                 :description,
                 :manufacturer,
@@ -43,6 +44,7 @@ module Inventory
       @catalogue_id = args[:catalogue]
       @catalogue = Inventory::Catalogue.find(@catalogue_id)
 
+      @product_id = args[:product_id]
       @product_name = args[:product_name]
       @description = args[:description]
       @manufacturer = args[:manufacturer]
@@ -111,7 +113,6 @@ module Inventory
     # Update/ create necessary purchase info
     def save_purchase_info
       handle_po_invoice_switching
-      save_product
       vendor = save_vendor
       po_item = save_purchase_order(vendor)
       invoice_item = save_invoice(po_item)
@@ -120,6 +121,7 @@ module Inventory
     end
 
     def create_raw_material(invoice_item)
+      product = save_product
       Inventory::ItemTransaction.create!(
         ref_id: invoice_item.id,
         ref_type: 'Inventory::VendorInvoiceItem',
@@ -137,6 +139,7 @@ module Inventory
         conversion: qty_per_package,         # conversion rule, 1 bag = 65 kg
         facility_strain: nil,
         location_id: location_id,
+        product_id: product.id,
       )
     end
 
@@ -286,13 +289,17 @@ module Inventory
     end
 
     def save_product
-      Inventory::Product.create!(
-        name: product_name,
-        manufacturer: manufacturer,
-        description: description,
-        catalogue: catalogue,
-        facility: facility,
-      )
+      if product_id.present?
+        return Inventory::Product.find(product_id)
+      else
+        return Inventory::Product.create!(
+                 name: product_name,
+                 manufacturer: manufacturer,
+                 description: description,
+                 catalogue: catalogue,
+                 facility: facility,
+               )
+      end
     end
 
     def combine_errors(errors_source, from_field, to_field)

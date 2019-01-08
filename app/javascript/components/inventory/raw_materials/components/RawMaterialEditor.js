@@ -8,7 +8,10 @@ import { PurchaseInfo } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
-
+import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
+const handleInputChange = newValue => {
+  return newValue ? newValue : ''
+}
 class RawMaterialEditor extends React.Component {
   constructor(props) {
     super(props)
@@ -59,10 +62,19 @@ class RawMaterialEditor extends React.Component {
   }
 
   onCatalogueSelected = item => {
+    console.log(this.props.raw_material_type)
     this.setState({
       catalogue: item,
       uom: { value: '', label: '' }
-    })
+    },
+      () => {
+        this.loadProducts(
+          '',
+          this.state.catalogue,
+          this.state.facility_id
+        )
+      }
+    )
   }
 
   onChangeGeneric = event => {
@@ -122,6 +134,7 @@ class RawMaterialEditor extends React.Component {
       uom: { value: uom },
       qty_per_package,
       catalogue: { value: catalogue },
+      product_id,
       product_name,
       manufacturer,
       description,
@@ -184,6 +197,7 @@ class RawMaterialEditor extends React.Component {
       uom,
       quantity,
       catalogue,
+      product_id,
       product_name,
       manufacturer,
       description,
@@ -197,6 +211,60 @@ class RawMaterialEditor extends React.Component {
     }
   }
 
+  loadProducts = (inputValue, catalogue, facility_id) => {
+    inputValue = inputValue || ''
+    console.log(catalogue)
+    return fetch(
+      `/api/v1/products?type=raw_materials&category=${this.props.raw_material_type}&sub_category=${
+      ''
+      }&key=${
+      catalogue.label
+      }&facility_id=${facility_id}&filter=${inputValue}`,
+      {
+        credentials: 'include'
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        const products = data.data.map(x => ({
+          label: x.attributes.name,
+          value: x.attributes.id,
+          ...x.attributes
+        }))
+        if (inputValue === '') {
+          this.setState({ defaultProduct: products })
+        }
+        return products
+      })
+  }
+
+  onChangeProduct = product => {
+    if (product) {
+      if (product.__isNew__) {
+        this.setState({
+          product_name: product.value,
+          product_id: '',
+          manufacturer: '',
+          description: ''
+        })
+      } else {
+        this.setState({
+          product_id: product.id,
+          product_name: product.name,
+          manufacturer: product.manufacturer,
+          description: product.description
+        })
+      }
+    } else {
+      this.setState({
+        product_id: '',
+        manufacturer: '',
+        description: ''
+      })
+    }
+  }
+
+
   render() {
     const { locations } = this.props
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
@@ -205,6 +273,7 @@ class RawMaterialEditor extends React.Component {
     const showTotalPrice =
       parseFloat(this.state.price_per_package) > 0 &&
       parseFloat(this.state.order_quantity) > 0
+    const hasProductId = this.state.product_id
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -253,15 +322,27 @@ class RawMaterialEditor extends React.Component {
           </div>
 
           <hr className="mt3 m b--light-gray w-100" />
-
-          <div className="ph4 mt3 mb3 flex">
+          <div className="ph4 mb3 flex">
             <div className="w-100">
-              <TextInput
-                label="Product Name"
-                fieldname="product_name"
-                value={this.state.product_name}
-                onChange={this.onChangeGeneric}
+              <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
+              <AsyncCreatableSelect
+                isClearable
+                noOptionsMessage={() => 'Type to search product...'}
+                placeholder="Search..."
+                defaultOptions={this.state.defaultProduct}
+                loadOptions={e =>
+                  this.loadProducts(
+                    e,
+                    this.state.catalogue,
+                    this.state.facility_id
+                  )
+                }
+                onInputChange={handleInputChange}
+                styles={reactSelectStyle}
+                value={this.state.product}
+                onChange={this.onChangeProduct}
               />
+              <FieldError errors={this.state.errors} field="product" />
             </div>
           </div>
 
@@ -272,6 +353,7 @@ class RawMaterialEditor extends React.Component {
                 fieldname="manufacturer"
                 value={this.state.manufacturer}
                 onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
               />
             </div>
           </div>
@@ -284,6 +366,7 @@ class RawMaterialEditor extends React.Component {
                 fieldname="description"
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
               />
             </div>
           </div>

@@ -63,16 +63,13 @@ class RawMaterialEditor extends React.Component {
 
   onCatalogueSelected = item => {
     console.log(this.props.raw_material_type)
-    this.setState({
-      catalogue: item,
-      uom: { value: '', label: '' }
-    },
+    this.setState(
+      {
+        catalogue: item,
+        uom: { value: '', label: '' }
+      },
       () => {
-        this.loadProducts(
-          '',
-          this.state.catalogue,
-          this.state.facility_id
-        )
+        this.loadProducts('', this.state.catalogue, this.state.facility_id)
       }
     )
   }
@@ -215,10 +212,10 @@ class RawMaterialEditor extends React.Component {
     inputValue = inputValue || ''
     console.log(catalogue)
     return fetch(
-      `/api/v1/products?type=raw_materials&category=${this.props.raw_material_type}&sub_category=${
-      ''
-      }&key=${
-      catalogue.label
+      `/api/v1/products?type=raw_materials&category=${
+        this.props.raw_material_type
+      }&sub_category=${''}&key=${
+        catalogue.label
       }&facility_id=${facility_id}&filter=${inputValue}`,
       {
         credentials: 'include'
@@ -263,7 +260,6 @@ class RawMaterialEditor extends React.Component {
       })
     }
   }
-
 
   render() {
     const { locations } = this.props

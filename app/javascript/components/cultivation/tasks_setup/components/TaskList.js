@@ -419,7 +419,7 @@ class TaskList extends React.Component {
     {
       Header: 'Start Date',
       accessor: 'start_date',
-      maxWidth: '200',
+      maxWidth: '100',
       className: 'tr',
       show: this.checkVisibility('start_date'),
       Cell: data => {
@@ -438,7 +438,7 @@ class TaskList extends React.Component {
     {
       Header: 'End Date',
       accessor: 'end_date',
-      maxWidth: '200',
+      maxWidth: '100',
       className: 'tr',
       show: this.checkVisibility('end_date'),
       Cell: data => {

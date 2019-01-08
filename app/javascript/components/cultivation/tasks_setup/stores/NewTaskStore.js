@@ -191,7 +191,6 @@ class TaskStore {
       if (response.data) {
         toast('Task saved', 'success')
         const updated = parseTask(response.data.attributes)
-        console.log('Updated task response:', updated)
         this.tasks = this.tasks.map(t => {
           return t.id === taskId ? updated : t
         })
@@ -209,12 +208,11 @@ class TaskStore {
   async editStartDate(batchId, taskId, startDate) {
     const task = this.getTaskById(taskId)
     if (startDate && task.end_date) {
-      const endDate = parse(task.end_date)
-      const duration = differenceInCalendarDays(endDate, startDate)
+      const endDate = addDays(startDate, task.duration)
       const updateObj = {
         start_date: startDate,
         end_date: endDate,
-        duration
+        duration: task.duration
       }
       await this.editTask(batchId, taskId, updateObj)
     }

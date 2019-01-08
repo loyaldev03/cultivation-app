@@ -1,5 +1,6 @@
 import React from 'react'
 import classNames from 'classnames'
+import { ErrorBoundary } from '../../../utils'
 
 export default class InlineEditTextField extends React.PureComponent {
   state = {
@@ -57,7 +58,7 @@ export default class InlineEditTextField extends React.PureComponent {
   }
   render() {
     return (
-      <div className={`flex flex-auto items-center pa1`}>
+      <ErrorBoundary>
         {this.state.isEdit ? (
           <React.Fragment>
             {this.renderEdit()}
@@ -71,7 +72,7 @@ export default class InlineEditTextField extends React.PureComponent {
         ) : (
           this.renderView()
         )}
-      </div>
+      </ErrorBoundary>
     )
   }
 }

@@ -441,7 +441,18 @@ class TaskList extends React.Component {
       maxWidth: '100',
       className: 'tr',
       show: this.checkVisibility('end_date'),
-      Cell: this.renderDateColumn('end_date')
+      Cell: data => {
+        const { id, end_date } = data.row
+        return (
+          <InlineEditDateField
+            text={end_date}
+            onHighlight={() => this.setState({ taskSelected: id })}
+            onDoneClick={value => {
+              TaskStore.editTask(batchId, id, { end_date: value })
+            }}
+          />
+        )
+      }
     },
     {
       Header: 'Duration',

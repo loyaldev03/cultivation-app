@@ -1,6 +1,8 @@
 import React from 'react'
 import InlineEditTextField from './InlineEditTextField'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { formatDate2 } from '../../../utils'
+import { parse } from 'date-fns'
 
 export default class InlineEditDateField extends InlineEditTextField {
   renderView() {
@@ -16,14 +18,13 @@ export default class InlineEditDateField extends InlineEditTextField {
   }
   renderEdit() {
     const { text } = this.props
+    const dateValue = parse(text) || new Date()
     return (
-      <input
-        autoFocus
-        type="text"
-        ref={input => (this.textInput = input)}
-        className="flex-auto b--grey link tr"
-        onKeyPress={this.handleKeyPress}
-        defaultValue={text}
+      <DatePicker
+        className="absolute"
+        calendarIcon={null}
+        clearIcon={null}
+        value={dateValue}
       />
     )
   }

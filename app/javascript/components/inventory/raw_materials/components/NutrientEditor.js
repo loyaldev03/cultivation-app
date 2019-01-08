@@ -82,10 +82,14 @@ class NutrientEditor extends React.Component {
   }
 
   onNutrientProductSelected = item => {
-    this.setState({ catalogue: item },
-      () => {
-        this.loadProducts('', this.state.nutrientType, this.state.catalogue, this.state.facility_id)
-      })
+    this.setState({ catalogue: item }, () => {
+      this.loadProducts(
+        '',
+        this.state.nutrientType,
+        this.state.catalogue,
+        this.state.facility_id
+      )
+    })
   }
 
   onChangeGeneric = event => {
@@ -227,8 +231,10 @@ class NutrientEditor extends React.Component {
     console.log(nutrientType)
     return fetch(
       `/api/v1/products?type=raw_materials&category=nutrients&sub_category=${
-      nutrientType.key
-      }&key=${nutrientProduct.label}&facility_id=${facility_id}&filter=${inputValue}`,
+        nutrientType.key
+      }&key=${
+        nutrientProduct.label
+      }&facility_id=${facility_id}&filter=${inputValue}`,
       {
         credentials: 'include'
       }
@@ -240,11 +246,10 @@ class NutrientEditor extends React.Component {
           value: x.attributes.id,
           ...x.attributes
         }))
-        this.setState({ defaultProduct: products})
+        this.setState({ defaultProduct: products })
         return products
       })
   }
-
 
   render() {
     const { locations, catalogues } = this.props
@@ -323,7 +328,14 @@ class NutrientEditor extends React.Component {
                 noOptionsMessage={() => 'Type to search product...'}
                 placeholder="Search..."
                 defaultOptions={this.state.defaultProduct}
-                loadOptions={e => this.loadProducts(e, this.state.nutrientType, this.state.catalogue, this.state.facility_id)}
+                loadOptions={e =>
+                  this.loadProducts(
+                    e,
+                    this.state.nutrientType,
+                    this.state.catalogue,
+                    this.state.facility_id
+                  )
+                }
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
                 value={this.state.product}

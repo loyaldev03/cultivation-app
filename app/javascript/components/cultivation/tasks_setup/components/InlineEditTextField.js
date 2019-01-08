@@ -12,14 +12,14 @@ export default class InlineEditTextField extends React.PureComponent {
     }
   }
   switchViewMode = e => {
-    const { onDoneClick, text } = this.props
-    this.setState({ isEdit: false })
+    const { onDoneClick, onHighlight, text } = this.props
     const { value } = this.textInput
+    this.setState({ isEdit: false })
     if (onDoneClick && text !== value) {
       onDoneClick(value)
     }
-    if (this.props.onHighlight) {
-      this.props.onHighlight()
+    if (onHighlight) {
+      onHighlight()
     }
   }
   handleKeyPress = e => {
@@ -32,53 +32,48 @@ export default class InlineEditTextField extends React.PureComponent {
       this.textInput.select()
     }
   }
-  render() {
-    const {
-      text,
-      className,
-      renderInput,
-      min,
-      step = '1',
-      type = 'text'
-    } = this.props
-    const isAlignRight = type === 'number'
+  getViewClassName() {
+    return 'link grey flex-auto h1'
+  }
+  getViewText(text) {
+    return text
+  }
+  renderEdit(text) {
     return (
-      <div className={`flex flex-auto items-center ${className}`}>
-        {this.state.isEdit ? (
-          <React.Fragment>
-            <input
-              autoFocus
-              type={type}
-              min={min}
-              step={step}
-              ref={input => (this.textInput = input)}
-              className={classNames('flex-auto b--grey link', {
-                tr: isAlignRight
-              })}
-              onKeyPress={this.handleKeyPress}
-              defaultValue={text}
-            />
-            <i
-              className="material-icons green material-icons--small pa1 pointer"
-              onClick={this.switchViewMode}
-            >
-              done
-            </i>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            <a
-              href="#0"
-              className={classNames('link grey flex-auto h1', {
-                tr: isAlignRight
-              })}
-              onClick={this.switchEditMode}
-            >
-              {text}
-            </a>
-          </React.Fragment>
-        )}
-      </div>
+      <input
+        autoFocus
+        type="text"
+        ref={input => (this.textInput = input)}
+        className="flex-auto b--grey link"
+        onKeyPress={this.handleKeyPress}
+        defaultValue={text}
+      />
+    )
+  }
+  render() {
+    const { text } = this.props
+    const { isEdit } = this.state
+    if (isEdit) {
+      return (
+        <React.Fragment>
+          {this.renderEdit(text)}
+          <i
+            className="material-icons green icon--small icon--btn"
+            onClick={this.switchViewMode}
+          >
+            done
+          </i>
+        </React.Fragment>
+      )
+    }
+    return (
+      <a
+        href="#0"
+        className={this.getViewClassName()}
+        onClick={this.switchEditMode}
+      >
+        {this.getViewText(text)}
+      </a>
     )
   }
 }

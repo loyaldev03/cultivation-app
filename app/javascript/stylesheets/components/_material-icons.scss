@@ -1,5 +1,9 @@
 .material-icons {
-  &.material-icons--small {
+  &.icon--small {
     font-size: 15px;
+  }
+  &.icon--btn {
+    cursor: pointer;
+    padding: 4px;
   }
 }

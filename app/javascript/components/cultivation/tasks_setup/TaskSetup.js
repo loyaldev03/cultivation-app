@@ -292,7 +292,7 @@ class TaskSetup extends React.Component {
           <Manager>
             <div className="flex mt4">
               <div className="mr2 mt2">
-                <i className="material-icons material-icons--small">
+                <i className="material-icons icon--small pointer">
                   filter_list
                 </i>
                 <span className="grey f6 ml2">Filter</span>
@@ -305,7 +305,7 @@ class TaskSetup extends React.Component {
                     onClick={this.handleClick}
                   >
                     Show Columns
-                    <i className="material-icons material-icons--small ml2">
+                    <i className="material-icons icon--small pointer ml2">
                       expand_more
                     </i>
                   </a>

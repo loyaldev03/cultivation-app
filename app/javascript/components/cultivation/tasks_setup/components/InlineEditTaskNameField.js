@@ -2,7 +2,7 @@ import React from 'react'
 import classNames from 'classnames'
 import InlineEditTextField from './InlineEditTextField'
 
-export default class TaskNameField extends InlineEditTextField {
+export default class InlineEditTaskNameField extends InlineEditTextField {
   render() {
     const {
       indent,
@@ -13,9 +13,7 @@ export default class TaskNameField extends InlineEditTextField {
       onCollapseClick
     } = this.props
     return (
-      <div
-        className={`h-100 w-100 pa1 flex items-center indent--${indent}`}
-      >
+      <div className={`pa1 flex flex-auto items-center indent--${indent}`}>
         {hasChild ? (
           <i
             className="material-icons dim grey f7 pointer"
@@ -31,7 +29,7 @@ export default class TaskNameField extends InlineEditTextField {
             <input
               autoFocus
               ref={input => (this.textInput = input)}
-              className={classNames('h-100 w-100 b--grey link ph1', {
+              className={classNames('flex-auto b--grey link ph1', {
                 orange: hasChild,
                 grey: !hasChild
               })}
@@ -40,7 +38,7 @@ export default class TaskNameField extends InlineEditTextField {
               defaultValue={text}
             />
             <i
-              className="material-icons green material-icons--small pa1 pointer"
+              className="material-icons green icon--small icon--btn"
               onClick={this.switchViewMode}
             >
               done
@@ -59,7 +57,7 @@ export default class TaskNameField extends InlineEditTextField {
               {text}
             </a>
             <i
-              className="material-icons material-icons--small pa1 pointer child"
+              className="material-icons icon--small icon--btn child"
               onClick={this.switchEditMode}
             >
               edit

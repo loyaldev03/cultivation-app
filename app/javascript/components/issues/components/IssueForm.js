@@ -136,7 +136,7 @@ class IssueForm extends React.Component {
       // read only
       status: '',
       created_at: null,
-      reported_by: {first_name: 'J', lastName: 'D', photo: null },
+      reported_by: { first_name: 'J', lastName: 'D', photo: null },
       issue_no: '',
       // UI states
       uppyOpen: false,
@@ -262,13 +262,16 @@ class IssueForm extends React.Component {
         <React.Fragment>
           <div className="flex w-100 ph4 items-center pt3">
             <div className="w-auto">
-            <Avatar 
-              firstName={this.state.reported_by.first_name} 
-              lastName={this.state.reported_by.last_name} 
-              photoUrl={this.state.reported_by.photo}
-              size={25} />
+              <Avatar
+                firstName={this.state.reported_by.first_name}
+                lastName={this.state.reported_by.last_name}
+                photoUrl={this.state.reported_by.photo}
+                size={25}
+              />
             </div>
-            <div className="f7 fw6 gray w-auto ph2 mr1">ISSUE #{this.state.issue_no.toString().padStart(5, '0')}</div>
+            <div className="f7 fw6 gray w-auto ph2 mr1">
+              ISSUE #{this.state.issue_no.toString().padStart(5, '0')}
+            </div>
             <div className="f7 fw6 green flex f6 green fw6 w-auto">OPEN</div>
             <span
               className="rc-slide-panel__close-button dim"

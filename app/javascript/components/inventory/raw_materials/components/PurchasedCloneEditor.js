@@ -52,10 +52,11 @@ class PurchasedCloneEditor extends React.Component {
   }
 
   onFacilityStrainChanged = item => {
-    this.setState({
-      facility_strain_id: item.value,
-      facility_id: item.facility_id
-    },
+    this.setState(
+      {
+        facility_strain_id: item.value,
+        facility_id: item.facility_id
+      },
       () => {
         this.loadProducts('')
       }
@@ -169,9 +170,9 @@ class PurchasedCloneEditor extends React.Component {
     inputValue = inputValue || ''
     return fetch(
       `/api/v1/products?type=raw_materials&category=${''}&sub_category=${''}&key=${'Purchased clone'}&facility_id=${
-      this.state.facility_id
+        this.state.facility_id
       }&facility_strain_id=${
-      this.state.facility_strain_id
+        this.state.facility_strain_id
       }&filter=${inputValue}`,
       {
         credentials: 'include'

@@ -50,13 +50,16 @@ module Cultivation
 
     def children(batch_tasks)
       if wbs.empty?
-        raise ArgumentError, 'Missing :wbs. Use Task retrieve via QueryTasks.'
+        raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
       end
       WbsTree.children(batch_tasks, wbs)
     end
 
-    def parent
-      batch.tasks.find_by(id: parent_id)
+    def parent(batch_tasks)
+      if wbs.empty?
+        raise ArgumentError, 'Missing :wbs when calling parent. Use Task retrieve via QueryTasks.'
+      end
+      WbsTree.parent(batch_tasks, wbs)
     end
 
     def indelible?

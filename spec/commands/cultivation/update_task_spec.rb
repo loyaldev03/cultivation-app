@@ -88,8 +88,9 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
                     batch: t2.batch,
                     name: "Task 2.3.2",
                     duration: 1,
-                    start_date: t2_3_1.start_date,
-                    end_date: t2_3_1.start_date + 1.days,
+                    start_date: t2_3_1.end_date,
+                    end_date: t2_3_1.end_date + 2.days,
+                    depend_on: t2_3_1.id,
                     parent_id: t2_3.id,
                     indent: 2)
 
@@ -109,6 +110,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
                 duration: 10,
                 start_date: t2.end_date,
                 end_date: t2.end_date + 10.days,
+                depend_on: t2_3_2_1.id,
                 indent: 0)
     # wbs: 4
     t4 = create(:task,
@@ -220,6 +222,18 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
       expect(cmd.success?).to be true
       expect(cmd.result.depend_on).to eq t1.id
+    end
+
+    it "remove depend_on" do
+      args = {
+        id: t3.id.to_s,
+        depend_on: nil,
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      expect(cmd.success?).to be true
+      expect(cmd.result.depend_on).to be nil
     end
 
     it "cascade start_date changes to sub-tasks", focus: true do

@@ -34,6 +34,7 @@ class PurchasedCloneEditor extends React.Component {
               id: id,
               facility_id: attr.facility_id,
               facility_strain_id: attr.facility_strain.id,
+              product_id: attr.product_id,
               product_name: attr.product_name,
               manufacturer: attr.manufacturer,
               description: attr.description,
@@ -277,7 +278,7 @@ class PurchasedCloneEditor extends React.Component {
               <AsyncCreatableSelect
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
-                placeholder="Search..."
+                placeholder={this.state.product_name ? this.state.product_name : "Search..."}
                 defaultOptions={this.state.defaultProduct}
                 loadOptions={e => this.loadProducts(e)}
                 onInputChange={handleInputChange}

@@ -9,6 +9,10 @@ module Inventory
       object.product.name if object.product
     end
 
+    attribute :product_id do |object|
+      object.product.id.to_s if object.product
+    end
+
     attribute :description do |object|
       object.product.description if object.product
     end

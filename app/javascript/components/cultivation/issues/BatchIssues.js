@@ -110,7 +110,7 @@ const columns = [
 ]
 
 const openSidebar = (event, id = null, mode = null) => {
-  window.editorSidebar.open({ width: '500px', id, mode })
+  window.editorSidebar.open({id, mode })
   event.preventDefault()
 }
 
@@ -135,7 +135,7 @@ class BatchIssues extends React.Component {
           <div className="flex mb3 justify-end">
             <button
               className="btn btn--primary"
-              onClick={() => openSidebar({ id: null, mode: 'create' })}
+              onClick={event => openSidebar(event, null, 'create')}
             >
               Submit an issue
             </button>

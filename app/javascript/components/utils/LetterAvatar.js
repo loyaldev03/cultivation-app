@@ -34,7 +34,7 @@ const propTypes = {
   firstName: PropTypes.string,
   lastName: PropTypes.string,
   size: PropTypes.number,
-  radius: PropTypes.number
+  radius: PropTypes.any
 }
 
 const defaultProps = {

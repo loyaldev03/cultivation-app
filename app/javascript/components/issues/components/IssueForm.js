@@ -15,6 +15,8 @@ import Avatar from '../../utils/Avatar'
 import saveIssue from '../actions/saveIssue'
 import getIssue from '../actions/getIssue'
 import loadTasks from '../actions/loadTasks'
+import loadUsers from '../actions/loadUsers'
+import loadLocations from '../actions/loadLocations'
 
 import TaskOption from './TaskOption'
 import LocationOption from './LocationOption'
@@ -66,19 +68,40 @@ class IssueForm extends React.Component {
     this.descriptionInput = React.createRef()
   }
 
-  // TODO; replace props.batch with props.batch_id and props.facility_id
   componentDidMount() {
-    // Todo: accumulate all with Promise.all then call setState once
-    loadTasks(this.props.batchId).then(tasks => this.setState({ tasks }))
-    this.loadUsers()
-    this.loadLocations()
+    // Call setState only once
+    Promise.all([
+      loadTasks(this.props.batchId),
+      loadUsers(this.props.facilityId),
+      loadLocations(this.props.facilityId) // to be rewritten to pass in selected task id
+    ]).then(result => {
+        const tasks = result[0]
+        const users = result[1].data
+        const locations = result[2].data
 
-    if (this.props.issueId) {
-      getIssue(this.props.issueId).then(({ data, status }) => {
+        this.setState({
+          tasks,
+          users,
+          locations
+        })
+      })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // Comparing state.id to workaround this component that is initialized with 
+    // an issueId, which in this case prevProp.issueId same as this.props.issueId.
+    // 
+    // To solve this problem, the code needs to check if new issueId has been assigned to state.id
+    // If it is the same then it is assumed the component has loaded the issue.
+    if(prevProps.issueId === this.props.issueId && this.props.issueId === this.state.id){
+      return
+    }
+    else if (this.props.issueId.length > 0 && this.state.id !== this.props.issueId) {
+      getIssue(this.props.issueId).then(({ data }) => {
         const attr = data.data.attributes
-        console.log(attr)
         this.setState({
           ...this.resetState(),
+          id: this.props.issueId,
           title: attr.title,
           description: attr.description,
           severity: attr.severity,
@@ -93,39 +116,14 @@ class IssueForm extends React.Component {
         })
       })
     } else {
+      // console.log('should reset here')
       this.setState(this.resetState())
     }
   }
 
-  loadLocations = inputValue => {
-    inputValue = inputValue || ''
-
-    return fetch(
-      `/api/v1/facilities/${this.props.facilityId}/search_locations`,
-      { credentials: 'include' }
-    )
-      .then(response => response.json())
-      .then(data => {
-        // console.log(data.data)
-        this.setState({ locations: data.data })
-      })
-  }
-
-  loadUsers = inputValue => {
-    inputValue = inputValue || ''
-
-    return fetch(
-      `/api/v1/users/by_facility/${this.props.facilityId}?filter=${inputValue}`,
-      { credentials: 'include' }
-    )
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ users: data.data })
-      })
-  }
-
   resetState = () => {
     return {
+      id: '',
       title: '',
       description: '',
       severity: '',
@@ -312,6 +310,7 @@ class IssueForm extends React.Component {
   }
 
   render() {
+    console.log(`this.props.issueId: ${this.props.issueId}`)
     const {
       severity,
       task_id,

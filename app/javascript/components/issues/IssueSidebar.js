@@ -12,11 +12,12 @@ class IssueSidebar extends React.Component {
     document.addEventListener('editor-sidebar-open', event => {
       const issueId = event.detail.id
       const mode = event.detail.mode
+      console.log(event.detail)
 
       if (mode === 'details') {
         this.setState({ mode, issueId })
       } else if (!issueId) {
-        this.setState({ mode: 'create' })
+        this.setState({ mode: 'create', issueId: ''})
       } else {
         this.setState({ mode: 'edit', issueId })
       }
@@ -45,7 +46,7 @@ class IssueSidebar extends React.Component {
   renderBody() {
     const { batch } = this.props
     const { mode } = this.state
-
+    
     if (mode === 'details') {
       return (
         <IssueDetails
@@ -55,6 +56,8 @@ class IssueSidebar extends React.Component {
         />
       )
     } else {
+
+      console.log(this.state)
       return (
         <IssueForm
           onClose={this.onClose}

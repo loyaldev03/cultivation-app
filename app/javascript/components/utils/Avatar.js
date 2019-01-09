@@ -25,17 +25,15 @@ const Avatar = React.memo(
         />
       )
     }
-    if (firstName && lastName) {
-      return (
-        <LetterAvatar
-          firstName={firstName}
-          lastName={lastName}
-          size={36}
-          radius={18}
-        />
-      )
-    }
-    return <span>Show blank avatar</span>
+
+    return (
+      <LetterAvatar
+        firstName={firstName}
+        lastName={lastName}
+        size={size}
+        radius='50%'
+      />
+    )
   }
 )
 

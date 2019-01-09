@@ -70,7 +70,14 @@ class NutrientEditor extends React.Component {
   }
 
   onFacilityChanged = item => {
-    this.setState({ facility_id: item.f_id })
+    this.setState({ facility_id: item.f_id }, () => {
+      this.loadProducts(
+        '',
+        this.state.nutrientType,
+        this.state.catalogue,
+        this.state.facility_id
+      )
+    })
   }
 
   onNutrientTypeSelected = item => {

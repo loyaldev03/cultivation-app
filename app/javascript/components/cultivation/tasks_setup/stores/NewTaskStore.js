@@ -176,7 +176,7 @@ class TaskStore {
   }
 
   @action
-  async editTask(batchId, taskId, updateObj) {
+  async editTask(batchId, taskId, updateObj, isReload = false) {
     this.isLoading = true
     const task = this.getTaskById(taskId)
     const payload = Object.assign({}, task, updateObj)
@@ -190,10 +190,14 @@ class TaskStore {
       // Replace optimistic update with actual response
       if (response.data) {
         toast('Task saved', 'success')
-        const updated = parseTask(response.data.attributes)
-        this.tasks = this.tasks.map(t => {
-          return t.id === taskId ? updated : t
-        })
+        if (isReload) {
+          this.loadTasks(batchId)
+        } else {
+          const updated = parseTask(response.data.attributes)
+          this.tasks = this.tasks.map(t => {
+            return t.id === taskId ? updated : t
+          })
+        }
       } else {
         console.error(response.errors)
       }
@@ -214,7 +218,7 @@ class TaskStore {
         end_date: endDate,
         duration: task.duration
       }
-      await this.editTask(batchId, taskId, updateObj)
+      await this.editTask(batchId, taskId, updateObj, true)
     }
   }
 
@@ -226,18 +230,20 @@ class TaskStore {
       if (endDate <= startDate) {
         // This would push the start date back by duration
         startDate = addDays(endDate, task.duration * -1)
-        await this.editTask(batchId, taskId, {
+        const updateObj = {
           start_date: startDate,
           end_date: endDate,
           duration: task.duration
-        })
+        }
+        await this.editTask(batchId, taskId, updateObj, true)
       } else {
         const duration = differenceInCalendarDays(endDate, startDate)
-        await this.editTask(batchId, taskId, {
+        const updateObj = {
           start_date: startDate,
           end_date: endDate,
-          duration
-        })
+          duration: duration
+        }
+        await this.editTask(batchId, taskId, updateObj, true)
       }
     }
   }
@@ -253,7 +259,7 @@ class TaskStore {
         end_date: endDate,
         duration
       }
-      await this.editTask(batchId, taskId, updateObj)
+      await this.editTask(batchId, taskId, updateObj, false)
     }
   }
 

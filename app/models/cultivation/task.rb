@@ -13,8 +13,8 @@ module Cultivation
     field :indent, type: Integer, default: -> { 0 }
     field :duration, type: Integer
     field :days_from_start_date, type: Integer
-    field :start_date, type: DateTime
-    field :end_date, type: DateTime
+    field :start_date, type: Time
+    field :end_date, type: Time
     field :estimated_hours, type: Float
     field :actual_hours, type: Float
     field :estimated_cost, type: Float

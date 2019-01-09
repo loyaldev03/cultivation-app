@@ -75,28 +75,33 @@ class IssueForm extends React.Component {
       loadUsers(this.props.facilityId),
       loadLocations(this.props.facilityId) // to be rewritten to pass in selected task id
     ]).then(result => {
-        const tasks = result[0]
-        const users = result[1].data
-        const locations = result[2].data
+      const tasks = result[0]
+      const users = result[1].data
+      const locations = result[2].data
 
-        this.setState({
-          tasks,
-          users,
-          locations
-        })
+      this.setState({
+        tasks,
+        users,
+        locations
       })
+    })
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // Comparing state.id to workaround this component that is initialized with 
+    // Comparing state.id to workaround this component that is initialized with
     // an issueId, which in this case prevProp.issueId same as this.props.issueId.
-    // 
+    //
     // To solve this problem, the code needs to check if new issueId has been assigned to state.id
     // If it is the same then it is assumed the component has loaded the issue.
-    if(prevProps.issueId === this.props.issueId && this.props.issueId === this.state.id){
+    if (
+      prevProps.issueId === this.props.issueId &&
+      this.props.issueId === this.state.id
+    ) {
       return
-    }
-    else if (this.props.issueId.length > 0 && this.state.id !== this.props.issueId) {
+    } else if (
+      this.props.issueId.length > 0 &&
+      this.state.id !== this.props.issueId
+    ) {
       getIssue(this.props.issueId).then(({ data }) => {
         const attr = data.data.attributes
         this.setState({

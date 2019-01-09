@@ -31,7 +31,7 @@ const Avatar = React.memo(
         firstName={firstName}
         lastName={lastName}
         size={size}
-        radius='50%'
+        radius="50%"
       />
     )
   }

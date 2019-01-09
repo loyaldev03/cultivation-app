@@ -22,12 +22,20 @@ module Cultivation
         batch_tasks = Cultivation::QueryTasks.call(batch).result
         task = batch_tasks.detect { |t| t.id == task.id }
         if valid_batch? batch
+          # Rails.logger.debug "\033[31m ori start_date: #{task.start_date} \033[0m"
+          # Rails.logger.debug "\033[31m ori duration: #{task.duration} \033[0m"
           original_start_date = task.start_date
           batch.is_active = true if @activate_batch
           # Update task with args and re-calculate end_date
-          task = map_args_to_task(task, @args)
+          # Rails.logger.debug "\033[31m args start_date: #{args[:start_date]} \033[0m"
+          # Rails.logger.debug "\033[31m args duration: #{args[:duration]} \033[0m"
+          task = map_args_to_task(task, batch_tasks, @args)
+          # Rails.logger.debug "\033[31m task.start_date (after map args): #{task.start_date} \033[0m"
+          # Rails.logger.debug "\033[31m task.duration (after map args): #{task.duration} \033[0m"
+
           # Move subtasks's start date
           days_diff = (task.start_date - original_start_date) / 1.day
+          # Rails.logger.debug "\033[31m days_diff: #{days_diff} \033[0m"
           children = task.children(batch_tasks)
           move_start_date(children, days_diff)
 
@@ -70,23 +78,41 @@ module Cultivation
       task.indelible != 'cleaning'
     end
 
-    def map_args_to_task(task, args)
+    def map_args_to_task(task, batch_tasks, args)
       # Only allow non-indelible task change these field
       if !task.indelible?
         task.name = args[:name]
-        # This should remove depend_on when it's not available in args
         task.depend_on = args[:depend_on].present? ? args[:depend_on].to_bson_id : nil
         task.task_type = args[:task_type] || []
       end
-      task.start_date = args[:start_date] if args[:start_date].present?
-      task.duration = args[:duration].to_i if args[:duration].present?
-      task.duration ||= 1
+      task.start_date = decide_start_date(task, batch_tasks, args[:start_date])
+      task.duration = args[:duration].present? ? args[:duration].to_i : 1
       task.end_date = task.start_date + task.duration.days
       # TODO: Calc estimated hours
       task.estimated_hours = args[:estimated_hours].to_f
       # TODO: Calc estimated cost
       task.estimated_cost = args[:estimated_cost].to_f
       task
+    end
+
+    def decide_start_date(task, batch_tasks, args_start_date)
+      parent = task.parent(batch_tasks)
+
+      # Rule: First subtask should have same start_date as parent task
+      if task.first_child?
+        return parent.start_date
+      end
+
+      # Rule: Subtask should be be set ealier than parent start_date
+      if args_start_date
+        if parent && args_start_date < parent.start_date
+          return parent.start_date
+        end
+        return args_start_date
+      end
+
+      # Rule: Use parent start date if not available
+      task.start_date || parent.start_date
     end
 
     def move_start_date(tasks = [], number_of_days = 0)
@@ -108,7 +134,7 @@ module Cultivation
               :phase.in => [Constants::CONST_DRY,
                             Constants::CONST_CURE]).first
       batch.estimated_harvest_date = harvest_phase.start_date if harvest_phase
-      batch.start_date = first_task.start_date if first_task
+      batch.start_date = first_task.start_date if first_task.start_date
       batch.save!
     end
 

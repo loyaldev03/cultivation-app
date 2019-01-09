@@ -55,6 +55,13 @@ module Cultivation
       WbsTree.children(batch_tasks, wbs)
     end
 
+    def first_child?
+      if wbs.empty?
+        raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
+      end
+      wbs.ends_with? '.1'
+    end
+
     def parent(batch_tasks)
       if wbs.empty?
         raise ArgumentError, 'Missing :wbs when calling parent. Use Task retrieve via QueryTasks.'

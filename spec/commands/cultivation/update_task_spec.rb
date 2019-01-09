@@ -258,38 +258,69 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
       saved11 = Cultivation::Task.find(t1_1.id)
       saved12 = Cultivation::Task.find(t1_2.id)
-
       expect(cmd.success?).to be true
       expect(saved11.start_date).to eq cmd.result.start_date
       expect(saved12.start_date).to eq cmd.result.start_date
     end
 
-    it "cascade start_date backward changes to sub-tasks" do
+    it "cascade start_date backward changes to subtasks" do
       args = {
         id: t2.id.to_s,
         start_date: Time.parse("22/12/2018"),
       }
 
-      day_diff = (args[:start_date] - t2.start_date) / 1.day
       cmd = Cultivation::UpdateTask.call(args, current_user)
 
       result = Cultivation::Task.find(t2_3_1.id)
+      day_diff = (args[:start_date] - t2.start_date) / 1.day
       expected = (t2_3_1.start_date + day_diff.days)
-
       expect(cmd.success?).to be true
       expect(result.start_date.to_date).to eq expected.to_date
     end
+
+    it "cannot update first subtask start_date (follow parent)" do
+      new_start_date = t2.start_date + Faker::Number.number(1).to_i.days
+      args = {
+        id: t2_1.id.to_s,
+        start_date: new_start_date,
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      result = Cultivation::Task.find(t2_1.id)
+      expect(cmd.success?).to be true
+      expect(result.start_date.to_i).to eq t2.start_date.to_i
+    end
+
+    it "can update second subtask start_date" do
+      new_start_date = t2.start_date + Faker::Number.number(1).to_i.days
+      args = {
+        id: t2_2.id.to_s,
+        start_date: new_start_date,
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      result = Cultivation::Task.find(t2_2.id)
+      expect(cmd.success?).to be true
+      expect(result.start_date.to_i).to eq new_start_date.to_i
+    end
+
+    it "subtask start_date cannot be updated to ealier than parent" do
+      new_start_date = t2.start_date - Faker::Number.number(1).to_i.days
+      args = {
+        id: t2_3.id.to_s,
+        start_date: new_start_date,
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      result = Cultivation::Task.find(t2_3.id)
+      expect(cmd.success?).to be true
+      expect(result.start_date.to_date).to eq t2.start_date.to_date
+    end
   end
 end
-    # task_to_move = tasks[1] # 1.1
-    # drop_at_task = tasks[3] # 1.3
-    # cmd = Cultivation::UpdateTaskPosition.call(task_to_move.id,
-    #                                            drop_at_task.id,
-    #                                            current_user)
-    # updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
-    # t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
-    # t_dropped = updated_tasks.detect { |t| t.id == drop_at_task.id }
-    # t_follow = updated_tasks.detect { |t| t.id == tasks[2].id }
     # [t1,
     #  t1_1,
     #  t1_2,
@@ -303,8 +334,3 @@ end
     #  t2_3_2_1,
     #  t3,
     #  t4]
-    # expect(cmd.success?).to eq true
-    # expect(t_moved.wbs).to eq "1.3"
-    # expect(t_moved.position).to eq 3
-    # expect(t_follow.wbs).to eq "1.1"
-    # expect(t_dropped.wbs).to eq "1.2"

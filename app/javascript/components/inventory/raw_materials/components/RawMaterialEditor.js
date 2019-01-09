@@ -327,7 +327,11 @@ class RawMaterialEditor extends React.Component {
               <AsyncCreatableSelect
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
-                placeholder={this.state.product_name ? this.state.product_name : "Search..."}
+                placeholder={
+                  this.state.product_name
+                    ? this.state.product_name
+                    : 'Search...'
+                }
                 defaultOptions={this.state.defaultProduct}
                 loadOptions={e =>
                   this.loadProducts(

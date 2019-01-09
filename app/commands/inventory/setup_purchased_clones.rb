@@ -277,6 +277,8 @@ module Inventory
     end
 
     def update_clones(invoice_item)
+      product = save_product
+
       transaction = Inventory::ItemTransaction.find(id)
       transaction.ref_id = invoice_item.id
       transaction.event_date = purchase_date
@@ -294,6 +296,7 @@ module Inventory
       transaction.product_name = product_name
       transaction.description = description
       transaction.manufacturer = manufacturer
+      transaction.product_id = product.id
 
       transaction.save!
       transaction

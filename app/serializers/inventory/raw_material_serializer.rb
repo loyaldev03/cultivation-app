@@ -6,15 +6,15 @@ module Inventory
     attributes :order_quantity, :order_uom, :quantity, :uom, :manufacturer, :description, :conversion
 
     attribute :product_name do |object|
-      object.product.name
+      object.product.name if object.product
     end
 
     attribute :description do |object|
-      object.product.description
+      object.product.description if object.product
     end
 
     attribute :manufacturer do |object|
-      object.product.manufacturer
+      object.product.manufacturer.to_s if object.product
     end
 
     attribute :facility_id do |object|

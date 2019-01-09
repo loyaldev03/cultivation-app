@@ -32,28 +32,31 @@ class SeedEditor extends React.Component {
             return attr
           })
           .then(attr => {
-            this.setState({
-              ...this.resetState(),
-              id: id,
-              facility_id: attr.facility_id,
-              facility_strain_id: attr.facility_strain.id,
-              qty_per_package: attr.conversion,
-              product_id: attr.product_id,
-              product_name: attr.product_name,
-              manufacturer: attr.manufacturer,
-              description: attr.description,
-              order_quantity: parseFloat(attr.order_quantity),
-              price_per_package: parseFloat(attr.vendor_invoice.item_price),
-              order_uom: { value: attr.order_uom, label: attr.order_uom },
-              uom: { value: attr.uom, label: attr.uom },
-              location_id: attr.location_id,
-              // purchase info
-              vendor: attr.vendor,
-              purchase_order: attr.purchase_order,
-              vendor_invoice: attr.vendor_invoice
-            }, () => {
+            this.setState(
+              {
+                ...this.resetState(),
+                id: id,
+                facility_id: attr.facility_id,
+                facility_strain_id: attr.facility_strain.id,
+                qty_per_package: attr.conversion,
+                product_id: attr.product_id,
+                product_name: attr.product_name,
+                manufacturer: attr.manufacturer,
+                description: attr.description,
+                order_quantity: parseFloat(attr.order_quantity),
+                price_per_package: parseFloat(attr.vendor_invoice.item_price),
+                order_uom: { value: attr.order_uom, label: attr.order_uom },
+                uom: { value: attr.uom, label: attr.uom },
+                location_id: attr.location_id,
+                // purchase info
+                vendor: attr.vendor,
+                purchase_order: attr.purchase_order,
+                vendor_invoice: attr.vendor_invoice
+              },
+              () => {
                 this.loadProducts('')
-            })
+              }
+            )
           })
       }
     })
@@ -306,9 +309,7 @@ class SeedEditor extends React.Component {
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
                 placeholder={
-                  this.state.product_id
-                    ? this.state.product_name
-                    : 'Search...'
+                  this.state.product_id ? this.state.product_name : 'Search...'
                 }
                 defaultOptions={this.state.defaultProduct}
                 loadOptions={e => this.loadProducts(e)}

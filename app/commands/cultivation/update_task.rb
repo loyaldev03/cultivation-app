@@ -37,7 +37,7 @@ module Cultivation
           days_diff = (task.start_date - original_start_date) / 1.day
           # Rails.logger.debug "\033[31m days_diff: #{days_diff} \033[0m"
           children = task.children(batch_tasks)
-          move_start_date(children, days_diff)
+          move_children(children, batch_tasks, days_diff)
 
           # Save all changes to subtasks
           children.each(&:save)
@@ -115,10 +115,11 @@ module Cultivation
       task.start_date || parent.start_date
     end
 
-    def move_start_date(tasks = [], number_of_days = 0)
+    def move_children(tasks, batch_tasks, number_of_days = 0)
       if tasks.present? && number_of_days != 0
         tasks.each do |t|
-          t.start_date = t.start_date + number_of_days.days
+          new_start_date = t.start_date + number_of_days.days
+          t.start_date = decide_start_date(t, batch_tasks, new_start_date)
           t.duration ||= 1
           t.end_date = t.start_date + t.duration.days
         end

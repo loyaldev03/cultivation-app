@@ -316,8 +316,10 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       cmd = Cultivation::UpdateTask.call(args, current_user)
 
       result = Cultivation::Task.find(t2_3.id)
+      result231 = Cultivation::Task.find(t2_3_1.id)
       expect(cmd.success?).to be true
       expect(result.start_date.to_date).to eq t2.start_date.to_date
+      expect(result231.start_date.to_date).to eq result.start_date.to_date
     end
   end
 end

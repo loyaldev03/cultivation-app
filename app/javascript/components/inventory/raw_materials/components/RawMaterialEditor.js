@@ -52,6 +52,8 @@ class RawMaterialEditor extends React.Component {
               vendor: attr.vendor,
               purchase_order: attr.purchase_order,
               vendor_invoice: attr.vendor_invoice
+            }, () => {
+                this.loadProducts('', this.state.catalogue, this.state.facility_id)
             })
           })
       }
@@ -89,6 +91,7 @@ class RawMaterialEditor extends React.Component {
       facility_id: '',
       qty_per_package: '',
       catalogue: { value: '', label: '', uoms: [] },
+      product_id: '',
       product_name: '',
       manufacturer: '',
       description: '',
@@ -328,7 +331,7 @@ class RawMaterialEditor extends React.Component {
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
                 placeholder={
-                  this.state.product_name
+                  this.state.product_id
                     ? this.state.product_name
                     : 'Search...'
                 }
@@ -342,7 +345,7 @@ class RawMaterialEditor extends React.Component {
                 }
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
-                value={this.state.product}
+                value={this.state.product_name}
                 onChange={this.onChangeProduct}
               />
               <FieldError errors={this.state.errors} field="product" />

@@ -57,14 +57,15 @@ class SeedEditor extends React.Component {
   }
 
   onFacilityStrainChanged = item => {
-    this.setState({
-      facility_strain_id: item.value,
-      facility_id: item.facility_id,
-      product_name: '',
-      manufacturer: '',
-      description: '',
-      product_id: ''
-    },
+    this.setState(
+      {
+        facility_strain_id: item.value,
+        facility_id: item.facility_id,
+        product_name: '',
+        manufacturer: '',
+        description: '',
+        product_id: ''
+      },
       () => {
         this.loadProducts('')
       }
@@ -191,10 +192,14 @@ class SeedEditor extends React.Component {
     }
   }
 
-  loadProducts = (inputValue) => {
+  loadProducts = inputValue => {
     inputValue = inputValue || ''
     return fetch(
-      `/api/v1/products?type=raw_materials&category=${''}&sub_category=${''}&key=${'Seeds'}&facility_id=${this.state.facility_id}&facility_strain_id=${this.state.facility_strain_id}&filter=${inputValue}`,
+      `/api/v1/products?type=raw_materials&category=${''}&sub_category=${''}&key=${'Seeds'}&facility_id=${
+        this.state.facility_id
+      }&facility_strain_id=${
+        this.state.facility_strain_id
+      }&filter=${inputValue}`,
       {
         credentials: 'include'
       }
@@ -298,9 +303,7 @@ class SeedEditor extends React.Component {
                 noOptionsMessage={() => 'Type to search product...'}
                 placeholder="Search..."
                 defaultOptions={this.state.defaultProduct}
-                loadOptions={e =>
-                  this.loadProducts(e)
-                }
+                loadOptions={e => this.loadProducts(e)}
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
                 value={this.state.product}

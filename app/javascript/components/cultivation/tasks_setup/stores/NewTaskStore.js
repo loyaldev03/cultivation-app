@@ -259,7 +259,7 @@ class TaskStore {
         end_date: endDate,
         duration
       }
-      await this.editTask(batchId, taskId, updateObj, false)
+      await this.editTask(batchId, taskId, updateObj, true)
     }
   }
 

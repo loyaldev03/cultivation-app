@@ -43,7 +43,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
     t2 = create(:task,
                 batch: t1.batch,
                 name: "Task 2",
-                duration: 5,
+                duration: 15,
                 start_date: t1.end_date,
                 end_date: t1.end_date + 5.days,
                 indent: 0)
@@ -164,10 +164,22 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       expect(cmd.result.name).not_to eq t1.name
     end
 
-    it "update start_date" do
+    it "update start_date forward" do
       args = {
         id: t2.id.to_s,
         start_date: Time.parse("02/02/2019"),
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      expect(cmd.errors.empty?).to be true
+      expect(cmd.result.start_date).not_to eq t2.start_date
+    end
+
+    it "update start_date backward" do
+      args = {
+        id: t2.id.to_s,
+        start_date: Time.parse("22/12/2018"),
       }
 
       cmd = Cultivation::UpdateTask.call(args, current_user)
@@ -236,7 +248,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       expect(cmd.result.depend_on).to be nil
     end
 
-    it "cascade start_date changes to sub-tasks", focus: true do
+    it "cascade start_date forward changes to sub-tasks" do
       args = {
         id: t1.id.to_s,
         start_date: Time.parse("03/02/2019"),
@@ -250,6 +262,22 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       expect(cmd.success?).to be true
       expect(saved11.start_date).to eq cmd.result.start_date
       expect(saved12.start_date).to eq cmd.result.start_date
+    end
+
+    it "cascade start_date backward changes to sub-tasks" do
+      args = {
+        id: t2.id.to_s,
+        start_date: Time.parse("22/12/2018"),
+      }
+
+      day_diff = (args[:start_date] - t2.start_date) / 1.day
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      result = Cultivation::Task.find(t2_3_1.id)
+      expected = (t2_3_1.start_date + day_diff.days)
+
+      expect(cmd.success?).to be true
+      expect(result.start_date.to_date).to eq expected.to_date
     end
   end
 end

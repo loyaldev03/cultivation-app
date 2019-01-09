@@ -22,9 +22,17 @@ module Cultivation
         batch_tasks = Cultivation::QueryTasks.call(batch).result
         task = batch_tasks.detect { |t| t.id == task.id }
         if valid_batch? batch
+          original_start_date = task.start_date
           batch.is_active = true if @activate_batch
+          # Update task with args and re-calculate end_date
           task = map_args_to_task(task, @args)
+          # Move subtasks's start date
+          days_diff = (task.start_date - original_start_date) / 1.day
           children = task.children(batch_tasks)
+          move_start_date(children, days_diff)
+
+          # Save all changes to subtasks
+          children.each(&:save)
 
           # Save if no errors
           task.save! if errors.empty?
@@ -54,6 +62,8 @@ module Cultivation
       task
     end
 
+    private
+
     def cascade_changes?(task)
       # Update child and dependents tasks's start & end dates except
       # when task is Clean - doesn't effect parent or dependent tasks
@@ -65,7 +75,7 @@ module Cultivation
       if !task.indelible?
         task.name = args[:name]
         # This should remove depend_on when it's not available in args
-        task.depend_on = args[:depend_on].to_bson_id
+        task.depend_on = args[:depend_on].present? ? args[:depend_on].to_bson_id : nil
         task.task_type = args[:task_type] || []
       end
       task.start_date = args[:start_date] if args[:start_date].present?
@@ -77,6 +87,16 @@ module Cultivation
       # TODO: Calc estimated cost
       task.estimated_cost = args[:estimated_cost].to_f
       task
+    end
+
+    def move_start_date(tasks = [], number_of_days = 0)
+      if tasks.present? && number_of_days != 0
+        tasks.each do |t|
+          t.start_date = t.start_date + number_of_days.days
+          t.duration ||= 1
+          t.end_date = t.start_date + t.duration.days
+        end
+      end
     end
 
     def update_batch(batch, first_task)

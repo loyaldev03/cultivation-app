@@ -23,10 +23,20 @@ module Inventory
 
     # TODO: Change this to $aggregate and $unwrap to reduce number of N + 1 query
     def retrieve_collection
-      raw_material_ids = Inventory::Catalogue.raw_materials.where(
-        :uom_dimension.nin => [nil, ''],
-        category: type,
-      ).pluck(:id)
+      special_type = ['seeds', 'purchased_clones']
+
+      if (special_type.include?(type))
+        Rails.logger.debug 'Special Case !'
+        raw_material_ids = Inventory::Catalogue.raw_materials.where(
+          :uom_dimension.nin => [nil, ''],
+          key: type,
+        ).pluck(:id)
+      else
+        raw_material_ids = Inventory::Catalogue.raw_materials.where(
+          :uom_dimension.nin => [nil, ''],
+          category: type,
+        ).pluck(:id)
+      end
 
       item_transactions = Inventory::ItemTransaction.includes(:catalogue, :facility, :facility_strain).where(
         :event_type.in => @event_types,

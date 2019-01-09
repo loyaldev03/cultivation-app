@@ -24,7 +24,7 @@ module Cultivation
         if valid_batch? batch
           batch.is_active = true if @activate_batch
           task = map_args_to_task(task, @args)
-          children = get_children(batch_tasks, task.wbs)
+          children = task.children(batch_tasks)
 
           # Save if no errors
           task.save! if errors.empty?
@@ -64,7 +64,8 @@ module Cultivation
       # Only allow non-indelible task change these field
       if !task.indelible?
         task.name = args[:name]
-        task.depend_on = args[:depend_on].present? ? args[:depend_on].to_bson_id : nil
+        # This should remove depend_on when it's not available in args
+        task.depend_on = args[:depend_on].to_bson_id
         task.task_type = args[:task_type] || []
       end
       task.start_date = args[:start_date] if args[:start_date].present?
@@ -164,7 +165,7 @@ module Cultivation
 
       if opt[:children]
         # Child task of current task & does not depend on any task
-        children = get_children(batch_tasks, task.wbs)
+        children = task.children(batch_tasks)
         # Find changed child tasks
         new_changes += find_cascaded_changes(children,
                                              batch_tasks,
@@ -199,11 +200,6 @@ module Cultivation
       end
 
       new_changes
-    end
-
-    # Find all subtasks
-    def get_children(batch_tasks, task_wbs)
-      WbsTree.children(batch_tasks, task_wbs)
     end
 
     # Find all subtasks

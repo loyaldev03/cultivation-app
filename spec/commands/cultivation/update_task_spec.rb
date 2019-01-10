@@ -187,7 +187,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       expect(cmd.result.start_date).not_to eq t2.start_date
     end
 
-    it "update duration" do
+    it "update duration of parent should remain same" do
       args = {
         id: t2.id.to_s,
         duration: Faker::Number.number(1),
@@ -196,7 +196,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       cmd = Cultivation::UpdateTask.call(args, current_user)
 
       expect(cmd.errors.empty?).to be true
-      expect(cmd.result.duration).not_to eq t2.duration
+      expect(cmd.result.duration).to eq t2.duration
     end
 
     it "update indelible task" do
@@ -343,7 +343,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       expect(grand_parent.end_date.to_date).to eq new_end_date.to_date
     end
 
-    it "subtask end ealier than parent task should contract parent" do
+    it "subtask end ealier than parent task should contract parent 1" do
       target = t2_3_2_1
       new_end_date = target.end_date - 2.days
       new_duration = (new_end_date - target.start_date) / 1.day
@@ -379,6 +379,19 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       expect(cmd.result.end_date.to_i).to eq (target.start_date + 3.days).to_i
       expect(parent.duration).to eq 20
       expect(parent.end_date.to_datetime).to eq t1_3.end_date.to_datetime
+    end
+
+    it "update parent task end_date would have no effect" do
+      args = {
+        id: t1.id.to_s,
+        duration: 3,
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      expect(cmd.success?).to be true
+      expect(cmd.result.end_date.to_datetime).to eq t1.end_date.to_datetime
+      expect(cmd.result.duration).to eq t1.duration
     end
   end
 end

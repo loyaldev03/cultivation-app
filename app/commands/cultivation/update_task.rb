@@ -69,8 +69,12 @@ module Cultivation
         task.task_type = args[:task_type] || []
       end
       task.start_date = decide_start_date(task, batch_tasks, args[:start_date])
-      task.duration = args[:duration].present? ? args[:duration].to_i : 1
+      if !task.have_children?(batch_tasks)
+        # Parent task duration should derived from sub-tasks
+        task.duration = args[:duration].present? ? args[:duration].to_i : 1
+      end
       task.end_date = task.start_date + task.duration.days
+
       # TODO: Calc estimated hours
       task.estimated_hours = args[:estimated_hours].to_f
       # TODO: Calc estimated cost

@@ -52,6 +52,17 @@ $indentWidth: 24px;
   .show-on-hover {
     display: none;
   }
+
+  .react-date-picker__wrapper {
+    border: solid 1px $lightGrey;
+    min-width: 84px;
+    height: 24px;
+    border-radius: 0;
+
+    .react-date-picker__inputGroup__year {
+      width: 30px !important;
+    }
+  }
 }
 
 .task-row:hover {

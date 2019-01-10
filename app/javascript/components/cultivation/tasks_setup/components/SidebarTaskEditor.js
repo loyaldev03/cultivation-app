@@ -106,7 +106,6 @@ class SidebarTaskEditor extends React.Component {
       task_type
     } = this.state
     const { action, batchId, task, relativeTaskId } = this.props
-    console.log({ relativeTaskId, action })
     const changedTask = {
       ...task,
       task_related_id: relativeTaskId,

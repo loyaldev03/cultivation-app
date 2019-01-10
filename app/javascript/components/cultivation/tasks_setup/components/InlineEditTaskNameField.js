@@ -1,36 +1,8 @@
 import React from 'react'
 import classNames from 'classnames'
+import InlineEditTextField from './InlineEditTextField'
 
-export default class TaskNameField extends React.PureComponent {
-  state = {
-    isEdit: false
-  }
-  switchEditMode = e => {
-    this.setState({ isEdit: true })
-    if (this.props.onHighlight) {
-      this.props.onHighlight()
-    }
-  }
-  switchViewMode = e => {
-    const { onDoneClick, text } = this.props
-    this.setState({ isEdit: false })
-    const { value } = this.textInput
-    if (onDoneClick && text !== value) {
-      onDoneClick(value)
-    }
-    if (this.props.onHighlight) {
-      this.props.onHighlight()
-    }
-  }
-  restoreDefault = () => {
-    this.textInput.value = this.props.text
-    this.setState({ isEdit: false })
-  }
-  handleKeyPress = e => {
-    if (e.key === 'Enter') {
-      this.switchViewMode(e)
-    }
-  }
+export default class InlineEditTaskNameField extends InlineEditTextField {
   render() {
     const {
       indent,
@@ -41,7 +13,7 @@ export default class TaskNameField extends React.PureComponent {
       onCollapseClick
     } = this.props
     return (
-      <div className={`h-100 w-100 pa1 flex items-center indent--${indent}`}>
+      <div className={`pa1 flex flex-auto items-center indent--${indent}`}>
         {hasChild ? (
           <i
             className="material-icons dim grey f7 pointer"
@@ -57,7 +29,7 @@ export default class TaskNameField extends React.PureComponent {
             <input
               autoFocus
               ref={input => (this.textInput = input)}
-              className={classNames('h-100 w-100 b--grey link ph1', {
+              className={classNames('flex-auto b--grey link ph1', {
                 orange: hasChild,
                 grey: !hasChild
               })}
@@ -66,7 +38,7 @@ export default class TaskNameField extends React.PureComponent {
               defaultValue={text}
             />
             <i
-              className="material-icons green material-icons--small pa1 pointer"
+              className="material-icons green icon--small icon--btn"
               onClick={this.switchViewMode}
             >
               done
@@ -85,7 +57,7 @@ export default class TaskNameField extends React.PureComponent {
               {text}
             </a>
             <i
-              className="material-icons material-icons--small pa1 pointer child"
+              className="material-icons icon--small icon--btn child"
               onClick={this.switchEditMode}
             >
               edit

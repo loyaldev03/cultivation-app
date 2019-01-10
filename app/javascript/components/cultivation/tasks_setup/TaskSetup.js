@@ -22,7 +22,7 @@ class TaskSetup extends React.Component {
         'start_date',
         'end_date',
         'duration',
-        'estimated_hour',
+        'estimated_hours',
         'estimated_cost',
         'resource_assigned',
         'materials',
@@ -292,7 +292,7 @@ class TaskSetup extends React.Component {
           <Manager>
             <div className="flex mt4">
               <div className="mr2 mt2">
-                <i className="material-icons material-icons--small">
+                <i className="material-icons icon--small pointer">
                   filter_list
                 </i>
                 <span className="grey f6 ml2">Filter</span>
@@ -305,7 +305,7 @@ class TaskSetup extends React.Component {
                     onClick={this.handleClick}
                   >
                     Show Columns
-                    <i className="material-icons material-icons--small ml2">
+                    <i className="material-icons icon--small pointer ml2">
                       expand_more
                     </i>
                   </a>
@@ -403,9 +403,9 @@ class TaskSetup extends React.Component {
                               type="checkbox"
                               name="checkbox-1"
                               className="mr2"
-                              value="estimated_hour"
+                              value="estimated_hours"
                               onChange={handleChangeCheckbox}
-                              checked={checkboxValue('estimated_hour')}
+                              checked={checkboxValue('estimated_hours')}
                             />
                             Estimated Hour
                           </label>

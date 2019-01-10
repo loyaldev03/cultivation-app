@@ -43,32 +43,35 @@ class NonSalesItemEditor extends React.Component {
               x => x.value == attr.catalogue_id
             )
 
-            this.setState({
-              ...this.resetState(),
-              catalogue: catalogue,
-              id: id,
-              facility_id: attr.facility_id,
-              qty_per_package: attr.conversion,
-              product_id: attr.product_id,
-              product_name: attr.product_name,
-              manufacturer: attr.manufacturer,
-              description: attr.description,
-              order_quantity: parseFloat(attr.order_quantity),
-              price_per_package: parseFloat(attr.vendor_invoice.item_price),
-              order_uom: { value: attr.order_uom, label: attr.order_uom },
-              uom: { value: attr.uom, label: attr.uom },
-              location_id: attr.location_id,
-              // purchase info
-              vendor: attr.vendor,
-              purchase_order: attr.purchase_order,
-              vendor_invoice: attr.vendor_invoice
-            }, () => {
+            this.setState(
+              {
+                ...this.resetState(),
+                catalogue: catalogue,
+                id: id,
+                facility_id: attr.facility_id,
+                qty_per_package: attr.conversion,
+                product_id: attr.product_id,
+                product_name: attr.product_name,
+                manufacturer: attr.manufacturer,
+                description: attr.description,
+                order_quantity: parseFloat(attr.order_quantity),
+                price_per_package: parseFloat(attr.vendor_invoice.item_price),
+                order_uom: { value: attr.order_uom, label: attr.order_uom },
+                uom: { value: attr.uom, label: attr.uom },
+                location_id: attr.location_id,
+                // purchase info
+                vendor: attr.vendor,
+                purchase_order: attr.purchase_order,
+                vendor_invoice: attr.vendor_invoice
+              },
+              () => {
                 this.loadProducts(
                   '',
                   this.state.catalogue,
                   this.state.facility_id
                 )
-              })
+              }
+            )
           })
       }
     })
@@ -229,7 +232,7 @@ class NonSalesItemEditor extends React.Component {
     console.log(catalogue)
     return fetch(
       `/api/v1/products?type=non_sales&category=non_sales&sub_category=${''}&key=${
-      catalogue.label
+        catalogue.label
       }&facility_id=${facility_id}&filter=${inputValue}`,
       {
         credentials: 'include'
@@ -275,7 +278,6 @@ class NonSalesItemEditor extends React.Component {
     }
   }
 
-
   render() {
     const { locations, catalogues } = this.props
     const catalogueOptions = catalogues.result.map(x => ({
@@ -291,7 +293,6 @@ class NonSalesItemEditor extends React.Component {
       parseFloat(this.state.order_quantity) > 0
 
     const hasProductId = this.state.product_id
-
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">

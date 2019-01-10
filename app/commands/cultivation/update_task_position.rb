@@ -15,7 +15,7 @@ module Cultivation
         drop_on = get_task(tasks, @drop_on_id)
         move_node(task_to_move, drop_on)
 
-        children = get_children(tasks, task_to_move.wbs)
+        children = task_to_move.children(tasks)
         move_children(children, task_to_move)
         task_to_move
       end
@@ -28,11 +28,12 @@ module Cultivation
       if task.indent > drop_on.indent
         # pp '       drop as child node:'
         task.indent = drop_on.indent + 1
+        task.parent_id = drop_on.id
         new_position = get_new_position(task.position, drop_on.position)
       else
         tasks = get_tasks(drop_on.batch)
         drop_on = get_task(tasks, drop_on.id)
-        drop_on_children = get_children(tasks, drop_on.wbs)
+        drop_on_children = drop_on.children(tasks)
         if drop_on_children&.any?
           # pp '       drop on tree parent'
           new_position = get_new_position(task.position,
@@ -67,10 +68,6 @@ module Cultivation
 
     def task_to_move
       @task_to_move ||= Cultivation::Task.includes(:batch).find_by(id: @task_id)
-    end
-
-    def get_children(batch_tasks, task_wbs)
-      WbsTree.children(batch_tasks, task_wbs)
     end
 
     def get_task(batch_tasks, task_id)

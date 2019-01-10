@@ -205,5 +205,15 @@ RSpec.describe "WbsTree", type: :lib do
       expect(parent5&.wbs).to be nil
       expect(parent6&.wbs).to be nil
     end
+
+    it ".have_children should return boolean" do
+      saved_tasks = Cultivation::QueryTasks.call(tasks[0].batch).result
+
+      res1 = WbsTree.have_children(saved_tasks, saved_tasks[0].wbs)
+      res2 = WbsTree.have_children(saved_tasks, saved_tasks[1].wbs)
+
+      expect(res1).to be true
+      expect(res2).to be false
+    end
   end
 end

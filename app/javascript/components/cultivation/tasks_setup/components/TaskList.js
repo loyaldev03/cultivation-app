@@ -491,7 +491,7 @@ class TaskList extends React.Component {
             step=".25"
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
-              TaskStore.editTask(batchId, id, { estimated_hours: value })
+              TaskStore.editEstimatedHours(batchId, id, value)
             }}
           />
         )

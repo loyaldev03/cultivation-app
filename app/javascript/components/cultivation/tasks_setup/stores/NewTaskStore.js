@@ -263,6 +263,17 @@ class TaskStore {
     }
   }
 
+  @action
+  async editEstimatedHours(batchId, taskId, estimatedHours = 0) {
+    const task = this.getTaskById(taskId)
+    if (estimatedHours) {
+      const updateObj = {
+        estimated_hours: estimatedHours
+      }
+      await this.editTask(batchId, taskId, updateObj, true)
+    }
+  }
+
   async updateTask(batch_id, task) {
     this.isLoading = true
     let new_task = task

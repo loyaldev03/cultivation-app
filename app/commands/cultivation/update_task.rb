@@ -70,36 +70,53 @@ module Cultivation
       end
       task.start_date = decide_start_date(task, batch_tasks, args[:start_date])
       if !task.have_children?(batch_tasks)
-        # Parent task duration should derived from sub-tasks
+        # Parent duration should derived from sub-tasks
         task.duration = args[:duration].present? ? args[:duration].to_i : 1
+        # Parent estimated_hours should derived from sub-tasks
+        task.estimated_hours = args[:estimated_hours].to_f
+        # TODO: Calc estimated cost
+        task.estimated_cost = args[:estimated_cost].to_f
       end
       task.end_date = task.start_date + task.duration.days
-
-      # TODO: Calc estimated hours
-      task.estimated_hours = args[:estimated_hours].to_f
-      # TODO: Calc estimated cost
-      task.estimated_cost = args[:estimated_cost].to_f
       task
     end
 
     def decide_start_date(task, batch_tasks, args_start_date)
       parent = task.parent(batch_tasks)
-
-      # Rule: First subtask should have same start_date as parent task
+      # First subtask should have same start_date as parent task
       if task.first_child?
         return parent.start_date
       end
-
-      # Rule: Subtask should be be set ealier than parent start_date
+      # Subtask should be be set ealier than parent start_date
       if args_start_date
         if parent && args_start_date < parent.start_date
           return parent.start_date
         end
         return args_start_date
       end
-
-      # Rule: Use parent start date if not available
+      # Use parent start date if not available
       task.start_date || parent.start_date
+    end
+
+    def decide_duration(task, parent, children)
+      if parent.end_date < task.end_date
+        # Extend parent duration / end_date
+        (task.end_date - parent.start_date) / 1.day
+      else
+        # Contract parent duration / end_date
+        max_child_date = children.map(&:end_date).compact.max
+        (max_child_date - parent.start_date) / 1.day
+      end
+    end
+
+    def decide_estimated_hours(children, batch_tasks)
+      children.reduce(0) do |sum, e|
+        if !e.have_children?(batch_tasks) && e.estimated_hours
+          sum + e.estimated_hours
+        else
+          sum
+        end
+      end
     end
 
     def adjust_children_dates(task, batch_tasks, original_start_date)
@@ -112,18 +129,10 @@ module Cultivation
     def adjust_parent_dates(task, batch_tasks)
       parent = task.parent(batch_tasks)
       while parent.present?
-        if parent.end_date < task.end_date
-          # Extend parent duration / end_date
-          duration = (task.end_date - parent.start_date) / 1.day
-          parent.duration = duration
-          parent.end_date = parent.start_date + duration.days
-        else
-          # Contract parent duration / end_date
-          max_child_date = parent.children(batch_tasks).map(&:end_date).compact.max
-          duration = (max_child_date - parent.start_date) / 1.day
-          parent.duration = duration
-          parent.end_date = parent.start_date + duration.days
-        end
+        children = parent.children(batch_tasks)
+        parent.estimated_hours = decide_estimated_hours(children, batch_tasks)
+        parent.duration = decide_duration(task, parent, children)
+        parent.end_date = parent.start_date + parent.duration.days
         parent.save
         parent = parent.parent(batch_tasks)
       end

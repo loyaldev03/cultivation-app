@@ -136,21 +136,52 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
      t4]
   end
 
-  context ".call" do
-    let(:t1) { tasks[0] }
-    let(:t1_1) { tasks[1] }
-    let(:t1_2) { tasks[2] }
-    let(:t1_3) { tasks[3] }
-    let(:t2) { tasks[4] }
-    let(:t2_1) { tasks[5] }
-    let(:t2_2) { tasks[6] }
-    let(:t2_3) { tasks[7] }
-    let(:t2_3_1) { tasks[8] }
-    let(:t2_3_2) { tasks[9] }
-    let(:t2_3_2_1) { tasks[10] }
-    let(:t3) { tasks[11] }
-    let(:t4) { tasks[12] }
+  let(:t1) { tasks[0] }
+  let(:t1_1) { tasks[1] }
+  let(:t1_2) { tasks[2] }
+  let(:t1_3) { tasks[3] }
+  let(:t2) { tasks[4] }
+  let(:t2_1) { tasks[5] }
+  let(:t2_2) { tasks[6] }
+  let(:t2_3) { tasks[7] }
+  let(:t2_3_1) { tasks[8] }
+  let(:t2_3_2) { tasks[9] }
+  let(:t2_3_2_1) { tasks[10] }
+  let(:t3) { tasks[11] }
+  let(:t4) { tasks[12] }
 
+  context ".call - updating estimated hours / cost", focus: true do
+    it "update subtask estimated hours should rollup to parent" do
+      target = t2_3_2_1
+      args = {
+        id: target.id.to_s,
+        estimated_hours: Faker::Number.number(2).to_f,
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      parent = Cultivation::Task.find(t2_3_2.id)
+      expect(cmd.errors.empty?).to be true
+      expect(cmd.result.estimated_hours).to eq args[:estimated_hours]
+      expect(parent.estimated_hours).to eq args[:estimated_hours]
+    end
+
+    it "update parent task estimated hours hours should not have effect" do
+      target1 = t2_3_2_1
+      target2 = t2_3_1
+      args1 = {id: target1.id, estimated_hours: Faker::Number.number(2).to_f}
+      args2 = {id: target2.id, estimated_hours: Faker::Number.number(2).to_f}
+
+      Cultivation::UpdateTask.call(args1, current_user)
+      Cultivation::UpdateTask.call(args2, current_user)
+
+      parent = Cultivation::Task.find(t2_3.id)
+      expected = args1[:estimated_hours] + args2[:estimated_hours]
+      expect(parent.estimated_hours).to eq expected
+    end
+  end
+
+  context ".call - updating dates" do
     it "update task name" do
       args = {
         id: t1.id.to_s,

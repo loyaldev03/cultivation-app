@@ -44,6 +44,7 @@ module Cultivation
       end
     end
 
+    # FIXME: Not correct. Only sum tasks with no child task
     def total_estimated_hours
       '%.2f' % tasks.sum(:estimated_hours)
     end

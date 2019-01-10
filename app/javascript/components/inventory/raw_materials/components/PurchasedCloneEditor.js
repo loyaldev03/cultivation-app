@@ -285,7 +285,7 @@ class PurchasedCloneEditor extends React.Component {
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
                 placeholder={
-                  this.state.product_id ? this.state.product_name : 'Search...'
+                  this.state.product_name ? this.state.product_name : 'Search...'
                 }
                 defaultOptions={this.state.defaultProduct}
                 loadOptions={e => this.loadProducts(e)}
@@ -295,17 +295,6 @@ class PurchasedCloneEditor extends React.Component {
                 onChange={this.onChangeProduct}
               />
               <FieldError errors={this.state.errors} field="product" />
-            </div>
-          </div>
-
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <TextInput
-                label="Product Name"
-                fieldname="product_name"
-                value={this.state.product_name}
-                onChange={this.onChangeGeneric}
-              />
             </div>
           </div>
 

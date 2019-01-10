@@ -501,6 +501,7 @@ class TaskList extends React.Component {
       Header: 'Est Cost ($)',
       accessor: 'estimated_cost',
       maxWidth: '100',
+      className: 'justify-end',
       className: 'tr',
       show: this.checkVisibility('estimated_cost')
     },

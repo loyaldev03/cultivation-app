@@ -229,7 +229,9 @@ class RawMaterialEditor extends React.Component {
     return fetch(
       `/api/v1/products?type=raw_materials&category=${
         this.props.raw_material_type
-      }&catalogue_id=${catalogue.value}&facility_id=${facility_id}&filter=${inputValue}`,
+      }&catalogue_id=${
+        catalogue.value
+      }&facility_id=${facility_id}&filter=${inputValue}`,
       {
         credentials: 'include'
       }

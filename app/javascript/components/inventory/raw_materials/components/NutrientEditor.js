@@ -251,7 +251,9 @@ class NutrientEditor extends React.Component {
   loadProducts = (inputValue, nutrientType, catalogue, facility_id) => {
     inputValue = inputValue || ''
     return fetch(
-      `/api/v1/products?type=raw_materials&category=nutrients&catalogue_id=${catalogue.value}&facility_id=${facility_id}&filter=${inputValue}`,
+      `/api/v1/products?type=raw_materials&category=nutrients&catalogue_id=${
+        catalogue.value
+      }&facility_id=${facility_id}&filter=${inputValue}`,
       {
         credentials: 'include'
       }

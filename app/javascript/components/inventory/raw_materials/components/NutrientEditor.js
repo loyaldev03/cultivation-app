@@ -52,6 +52,7 @@ class NutrientEditor extends React.Component {
                 id: id,
                 facility_id: attr.facility_id,
                 qty_per_package: attr.conversion,
+                product: { value: attr.product.id, label: attr.product.name },
                 product_id: attr.product_id,
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer,
@@ -123,6 +124,7 @@ class NutrientEditor extends React.Component {
       qty_per_package: '',
       nutrientType: { value: '', label: '', children: [] },
       catalogue: { value: '', label: '', uoms: [] },
+      product: { value: '', label: '' },
       product_id: '',
       product_name: '',
       manufacturer: '',
@@ -377,11 +379,7 @@ class NutrientEditor extends React.Component {
               <AsyncCreatableSelect
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
-                placeholder={
-                  this.state.product_name
-                    ? this.state.product_name
-                    : 'Search...'
-                }
+                placeholder={'Search...'}
                 defaultOptions={this.state.defaultProduct}
                 loadOptions={e =>
                   this.loadProducts(
@@ -393,7 +391,7 @@ class NutrientEditor extends React.Component {
                 }
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
-                value={this.state.product_name}
+                value={this.state.product}
                 onChange={this.onChangeProduct}
               />
               <FieldError errors={this.state.errors} field="product" />

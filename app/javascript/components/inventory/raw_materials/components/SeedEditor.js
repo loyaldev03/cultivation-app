@@ -41,6 +41,7 @@ class SeedEditor extends React.Component {
                 qty_per_package: attr.conversion,
                 product_id: attr.product_id,
                 product_name: attr.product_name,
+                product: { value: attr.product.id, label: attr.product.name },
                 manufacturer: attr.manufacturer,
                 description: attr.description,
                 order_quantity: parseFloat(attr.order_quantity),
@@ -92,6 +93,7 @@ class SeedEditor extends React.Component {
       qty_per_package: '',
       product_id: '',
       product_name: '',
+      product: { value: '', label: '' },
       manufacturer: '',
       description: '',
       order_quantity: 0,
@@ -308,16 +310,12 @@ class SeedEditor extends React.Component {
               <AsyncCreatableSelect
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
-                placeholder={
-                  this.state.product_name
-                    ? this.state.product_name
-                    : 'Search...'
-                }
+                placeholder={'Search...'}
                 defaultOptions={this.state.defaultProduct}
                 loadOptions={e => this.loadProducts(e)}
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
-                value={this.state.product_name}
+                value={this.state.product}
                 onChange={this.onChangeProduct}
               />
               <FieldError errors={this.state.errors} field="product" />

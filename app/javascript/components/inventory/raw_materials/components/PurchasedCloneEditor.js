@@ -35,6 +35,7 @@ class PurchasedCloneEditor extends React.Component {
                 id: id,
                 facility_id: attr.facility_id,
                 facility_strain_id: attr.facility_strain.id,
+                product: { value: attr.product.id, label: attr.product.name },
                 product_id: attr.product_id,
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer,
@@ -82,6 +83,7 @@ class PurchasedCloneEditor extends React.Component {
       facility_strain_id: '',
       product_id: '',
       product_name: '',
+      product: { value: '', label: '' },
       manufacturer: '',
       description: '',
       order_quantity: 0,
@@ -284,16 +286,12 @@ class PurchasedCloneEditor extends React.Component {
               <AsyncCreatableSelect
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
-                placeholder={
-                  this.state.product_name
-                    ? this.state.product_name
-                    : 'Search...'
-                }
+                placeholder={'Search...'}
                 defaultOptions={this.state.defaultProduct}
                 loadOptions={e => this.loadProducts(e)}
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
-                value={this.state.product_name}
+                value={this.state.product}
                 onChange={this.onChangeProduct}
               />
               <FieldError errors={this.state.errors} field="product" />
@@ -307,6 +305,7 @@ class PurchasedCloneEditor extends React.Component {
                 fieldname="manufacturer"
                 value={this.state.manufacturer}
                 onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
               />
             </div>
           </div>
@@ -319,6 +318,7 @@ class PurchasedCloneEditor extends React.Component {
                 fieldname="description"
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
               />
             </div>
           </div>

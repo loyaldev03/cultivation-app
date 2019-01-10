@@ -42,6 +42,7 @@ class RawMaterialEditor extends React.Component {
                 qty_per_package: attr.conversion,
                 product_id: attr.product_id,
                 product_name: attr.product_name,
+                product: { value: attr.product.id, label: attr.product.name },
                 manufacturer: attr.manufacturer,
                 description: attr.description,
                 order_quantity: parseFloat(attr.order_quantity),
@@ -98,6 +99,7 @@ class RawMaterialEditor extends React.Component {
       facility_id: '',
       qty_per_package: '',
       catalogue: { value: '', label: '', uoms: [] },
+      product: { value: '', label: '' },
       product_id: '',
       product_name: '',
       manufacturer: '',
@@ -337,11 +339,7 @@ class RawMaterialEditor extends React.Component {
               <AsyncCreatableSelect
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
-                placeholder={
-                  this.state.product_name
-                    ? this.state.product_name
-                    : 'Search...'
-                }
+                placeholder={'Search...'}
                 defaultOptions={this.state.defaultProduct}
                 loadOptions={e =>
                   this.loadProducts(
@@ -352,7 +350,7 @@ class RawMaterialEditor extends React.Component {
                 }
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
-                value={this.state.product_name}
+                value={this.state.product}
                 onChange={this.onChangeProduct}
               />
               <FieldError errors={this.state.errors} field="product" />

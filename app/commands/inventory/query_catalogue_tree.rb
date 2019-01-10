@@ -11,8 +11,6 @@ module Inventory
     def initialize(type, category)
       @type = type
       @category = category
-      @sub_category = sub_category
-      @label = label
     end
 
     def call

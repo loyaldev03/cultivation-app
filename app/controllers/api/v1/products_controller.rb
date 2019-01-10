@@ -32,6 +32,8 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     case type
     when 'raw_materials'
       return Constants::RAW_MATERIALS_KEY
+    when 'non_sales'
+      return Constants::NON_SALES_KEY
     else
       return Constants::RAW_MATERIALS_KEY
     end

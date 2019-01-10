@@ -34,6 +34,12 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
   )
 }
 
+const moneyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 2
+})
+
 @observer
 class TaskList extends React.Component {
   constructor(props) {
@@ -502,8 +508,8 @@ class TaskList extends React.Component {
       accessor: 'estimated_cost',
       maxWidth: '100',
       className: 'justify-end',
-      className: 'tr',
-      show: this.checkVisibility('estimated_cost')
+      show: this.checkVisibility('estimated_cost'),
+      Cell: data => moneyFormatter.format(data.row.estimated_cost)
     },
     {
       Header: 'Assigned',

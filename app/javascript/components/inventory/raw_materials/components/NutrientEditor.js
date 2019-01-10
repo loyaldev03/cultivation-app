@@ -378,7 +378,9 @@ class NutrientEditor extends React.Component {
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
                 placeholder={
-                  this.state.product_name ? this.state.product_name : 'Search...'
+                  this.state.product_name
+                    ? this.state.product_name
+                    : 'Search...'
                 }
                 defaultOptions={this.state.defaultProduct}
                 loadOptions={e =>

@@ -8,6 +8,11 @@ import { PurchaseInfo } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { saveNonSalesItem } from '../actions/saveNonSalesItem'
 import { getNonSalesItem } from '../actions/getNonSalesItem'
+import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
+
+const handleInputChange = newValue => {
+  return newValue ? newValue : ''
+}
 
 class NonSalesItemEditor extends React.Component {
   constructor(props) {
@@ -38,36 +43,50 @@ class NonSalesItemEditor extends React.Component {
               x => x.value == attr.catalogue_id
             )
 
-            this.setState({
-              ...this.resetState(),
-              catalogue: catalogue,
-              id: id,
-              facility_id: attr.facility_id,
-              qty_per_package: attr.conversion,
-              product_name: attr.product_name,
-              manufacturer: attr.manufacturer,
-              description: attr.description,
-              order_quantity: parseFloat(attr.order_quantity),
-              price_per_package: parseFloat(attr.vendor_invoice.item_price),
-              order_uom: { value: attr.order_uom, label: attr.order_uom },
-              uom: { value: attr.uom, label: attr.uom },
-              location_id: attr.location_id,
-              // purchase info
-              vendor: attr.vendor,
-              purchase_order: attr.purchase_order,
-              vendor_invoice: attr.vendor_invoice
-            })
+            this.setState(
+              {
+                ...this.resetState(),
+                catalogue: catalogue,
+                id: id,
+                facility_id: attr.facility_id,
+                qty_per_package: attr.conversion,
+                product_id: attr.product_id,
+                product_name: attr.product_name,
+                manufacturer: attr.manufacturer,
+                description: attr.description,
+                order_quantity: parseFloat(attr.order_quantity),
+                price_per_package: parseFloat(attr.vendor_invoice.item_price),
+                order_uom: { value: attr.order_uom, label: attr.order_uom },
+                uom: { value: attr.uom, label: attr.uom },
+                location_id: attr.location_id,
+                // purchase info
+                vendor: attr.vendor,
+                purchase_order: attr.purchase_order,
+                vendor_invoice: attr.vendor_invoice
+              },
+              () => {
+                this.loadProducts(
+                  '',
+                  this.state.catalogue,
+                  this.state.facility_id
+                )
+              }
+            )
           })
       }
     })
   }
 
   onFacilityChanged = item => {
-    this.setState({ facility_id: item.f_id })
+    this.setState({ facility_id: item.f_id }, () => {
+      this.loadProducts('', this.state.catalogue, this.state.facility_id)
+    })
   }
 
   onNonSalesItemTypeSelected = item => {
-    this.setState({ catalogue: item })
+    this.setState({ catalogue: item }, () => {
+      this.loadProducts('', this.state.catalogue, this.state.facility_id)
+    })
   }
 
   onChangeGeneric = event => {
@@ -83,6 +102,7 @@ class NonSalesItemEditor extends React.Component {
       qty_per_package: '',
       nonSalesItemType: { value: '', label: '', children: [] },
       catalogue: { value: '', label: '', uoms: [] },
+      product_id: '',
       product_name: '',
       manufacturer: '',
       description: '',
@@ -129,6 +149,7 @@ class NonSalesItemEditor extends React.Component {
       uom: { value: uom },
       qty_per_package,
       catalogue: { value: catalogue },
+      product_id,
       product_name,
       manufacturer,
       description,
@@ -192,6 +213,7 @@ class NonSalesItemEditor extends React.Component {
       uom,
       quantity,
       catalogue,
+      product_id,
       product_name,
       manufacturer,
       description,
@@ -202,6 +224,57 @@ class NonSalesItemEditor extends React.Component {
       location_id,
       ...purchaseData,
       isValid
+    }
+  }
+
+  loadProducts = (inputValue, catalogue, facility_id) => {
+    inputValue = inputValue || ''
+    console.log(catalogue)
+    return fetch(
+      `/api/v1/products?type=non_sales&category=non_sales&sub_category=${''}&key=${
+        catalogue.label
+      }&facility_id=${facility_id}&filter=${inputValue}`,
+      {
+        credentials: 'include'
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        const products = data.data.map(x => ({
+          label: x.attributes.name,
+          value: x.attributes.id,
+          ...x.attributes
+        }))
+        if (inputValue === '') {
+          this.setState({ defaultProduct: products })
+        }
+        return products
+      })
+  }
+
+  onChangeProduct = product => {
+    if (product) {
+      if (product.__isNew__) {
+        this.setState({
+          product_name: product.value,
+          product_id: '',
+          manufacturer: '',
+          description: ''
+        })
+      } else {
+        this.setState({
+          product_id: product.id,
+          product_name: product.name,
+          manufacturer: product.manufacturer,
+          description: product.description
+        })
+      }
+    } else {
+      this.setState({
+        product_id: '',
+        manufacturer: '',
+        description: ''
+      })
     }
   }
 
@@ -218,6 +291,8 @@ class NonSalesItemEditor extends React.Component {
     const showTotalPrice =
       parseFloat(this.state.price_per_package) > 0 &&
       parseFloat(this.state.order_quantity) > 0
+
+    const hasProductId = this.state.product_id
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -266,14 +341,31 @@ class NonSalesItemEditor extends React.Component {
 
           <hr className="mt3 m b--light-gray w-100" />
 
-          <div className="ph4 mt3 mb3 flex">
+          <div className="ph4 mb3 flex">
             <div className="w-100">
-              <TextInput
-                label="Product Name"
-                fieldname="product_name"
+              <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
+              <AsyncCreatableSelect
+                isClearable
+                noOptionsMessage={() => 'Type to search product...'}
+                placeholder={
+                  this.state.product_name
+                    ? this.state.product_name
+                    : 'Search...'
+                }
+                defaultOptions={this.state.defaultProduct}
+                loadOptions={e =>
+                  this.loadProducts(
+                    e,
+                    this.state.catalogue,
+                    this.state.facility_id
+                  )
+                }
+                onInputChange={handleInputChange}
+                styles={reactSelectStyle}
                 value={this.state.product_name}
-                onChange={this.onChangeGeneric}
+                onChange={this.onChangeProduct}
               />
+              <FieldError errors={this.state.errors} field="product" />
             </div>
           </div>
 
@@ -284,6 +376,7 @@ class NonSalesItemEditor extends React.Component {
                 fieldname="manufacturer"
                 value={this.state.manufacturer}
                 onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
               />
             </div>
           </div>
@@ -296,6 +389,7 @@ class NonSalesItemEditor extends React.Component {
                 fieldname="description"
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
               />
             </div>
           </div>

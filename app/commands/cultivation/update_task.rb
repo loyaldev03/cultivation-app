@@ -30,6 +30,11 @@ module Cultivation
           # Rails.logger.debug "\033[31m args start_date: #{args[:start_date]} \033[0m"
           # Rails.logger.debug "\033[31m args duration: #{args[:duration]} \033[0m"
           task = map_args_to_task(task, batch_tasks, @args)
+
+          # TODO::Andy do we need to update parent task's end date?
+          # Obsolete: update_tasks_end_date(task, batch_tasks, opt)
+          extend_parent_end_date(task, batch_tasks)
+
           # Rails.logger.debug "\033[31m task.start_date (after map args): #{task.start_date} \033[0m"
           # Rails.logger.debug "\033[31m task.duration (after map args): #{task.duration} \033[0m"
 
@@ -61,8 +66,6 @@ module Cultivation
           # TODO::ANDY: Estimated Hours are not calculating
           # Extend end date to Category and Phas
 
-          # TODO::Andy do we need to update parent task's end date?
-          # update_tasks_end_date(task, batch_tasks, opt)
           # Update batch
           update_batch(batch, batch_tasks&.first)
         end
@@ -113,6 +116,19 @@ module Cultivation
 
       # Rule: Use parent start date if not available
       task.start_date || parent.start_date
+    end
+
+    def extend_parent_end_date(task, batch_tasks)
+      parent = task.parent(batch_tasks)
+      while parent.present?
+        if parent.end_date < task.end_date
+          duration = (task.end_date - parent.start_date) / 1.day
+          parent.duration = duration
+          parent.end_date = parent.start_date + duration.days
+        end
+        parent.save
+        parent = parent.parent(batch_tasks)
+      end
     end
 
     def move_children(tasks, batch_tasks, number_of_days = 0)

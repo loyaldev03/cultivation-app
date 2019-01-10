@@ -9,35 +9,34 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
     # wbs: 1
     t1 = create(:task,
                 batch: batch,
+                duration: 30,
                 start_date: batch.start_date,
+                end_date: batch.start_date + 30.days,
                 name: "Task 1",
                 indent: 0)
     # wbs: 1.1
     t1_1 = create(:task,
                   batch: t1.batch,
                   name: "Task 1.1",
-                  duration: 1,
+                  duration: 10,
                   start_date: t1.start_date,
-                  end_date: t1.start_date + 1.days,
-                  parent_id: t1.id,
+                  end_date: t1.start_date + 10.days,
                   indent: 1)
     # wbs: 1.2
     t1_2 = create(:task,
                   batch: t1.batch,
                   name: "Task 1.2",
-                  duration: 2,
-                  start_date: t1.start_date,
-                  end_date: t1.start_date + 2.days,
-                  parent_id: t1.id,
+                  duration: 20,
+                  start_date: t1.start_date + 10.days,
+                  end_date: t1.start_date + 30.days,
                   indent: 1)
     # wbs: 1.3
     t1_3 = create(:task,
                   batch: t1.batch,
                   name: "Task 1.3",
-                  duration: 1,
-                  start_date: t1_2.start_date,
-                  end_date: t1_2.start_date + 1.days,
-                  parent_id: t1.id,
+                  duration: 15,
+                  start_date: t1.start_date + 5.days,
+                  end_date: t1.start_date + 20.days,
                   indent: 1)
     # wbs: 2
     t2 = create(:task,
@@ -69,27 +68,27 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
     t2_3 = create(:task,
                   batch: t2.batch,
                   name: "Task 2.3",
-                  duration: 2,
+                  duration: 10,
                   start_date: t2_1.end_date,
-                  end_date: t2_1.end_date + 2.days,
+                  end_date: t2_1.end_date + 10.days,
                   parent_id: t2.id,
                   indent: 1)
     # wbs: 2.3.1
     t2_3_1 = create(:task,
                     batch: t2.batch,
                     name: "Task 2.3.1",
-                    duration: 1,
+                    duration: 3,
                     start_date: t2_3.start_date,
-                    end_date: t2_3.start_date + 1.days,
+                    end_date: t2_3.start_date + 3.days,
                     parent_id: t2_3.id,
                     indent: 2)
     # wbs: 2.3.2
     t2_3_2 = create(:task,
                     batch: t2.batch,
                     name: "Task 2.3.2",
-                    duration: 1,
+                    duration: 7,
                     start_date: t2_3_1.end_date,
-                    end_date: t2_3_1.end_date + 2.days,
+                    end_date: t2_3_1.end_date + 7.days,
                     depend_on: t2_3_1.id,
                     parent_id: t2_3.id,
                     indent: 2)
@@ -98,9 +97,9 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
     t2_3_2_1 = create(:task,
                      batch: t2.batch,
                      name: "Task 2.3.2.1",
-                     duration: 1,
+                     duration: 7,
                      start_date: t2_3_2.start_date,
-                     end_date: t2_3_2.start_date + 1.days,
+                     end_date: t2_3_2.start_date + 7.days,
                      parent_id: t2_3_2.id,
                      indent: 3)
     # wbs: 3
@@ -257,10 +256,8 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       cmd = Cultivation::UpdateTask.call(args, current_user)
 
       saved11 = Cultivation::Task.find(t1_1.id)
-      saved12 = Cultivation::Task.find(t1_2.id)
       expect(cmd.success?).to be true
       expect(saved11.start_date).to eq cmd.result.start_date
-      expect(saved12.start_date).to eq cmd.result.start_date
     end
 
     it "cascade start_date backward changes to subtasks" do
@@ -319,27 +316,16 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
       cmd = Cultivation::UpdateTask.call(args, current_user)
 
-      result = Cultivation::Task.find(t2_3.id)
       result231 = Cultivation::Task.find(t2_3_1.id)
       expect(cmd.success?).to be true
-      expect(result.start_date.to_date).to eq t2.start_date.to_date
-      expect(result231.start_date.to_date).to eq result.start_date.to_date
-      # pp "result.start_date: #{result.start_date}"
-      # pp "result231.start_date: #{result231.start_date}"
+      expect(cmd.result.start_date.to_date).to eq t2.start_date.to_date
+      expect(result231.start_date.to_date).to eq cmd.result.start_date.to_date
     end
 
-    it "subtask end later than parent task should extend parent", focus: true do
+    it "subtask end later than parent task should extend parent" do
       target = t2_3_2_1
-      parent = t2_3_2
       new_end_date = target.end_date + Faker::Number.number(2).to_i.days
       new_duration = (new_end_date - target.start_date) / 1.day
-
-      pp "target parent end_date #{parent.end_date}"
-      pp "target ori end_date: #{target.end_date}"
-      pp "target new end_date: #{new_end_date}"
-      pp "target start_date: #{target.start_date}"
-      pp "target ori duration: #{target.duration}"
-      pp "target new_duration: #{new_duration}"
 
       args = {
         id: target.id.to_s,
@@ -347,27 +333,52 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       }
 
       cmd = Cultivation::UpdateTask.call(args, current_user)
-      parent = Cultivation::Task.find(parent.id)
 
+      parent = Cultivation::Task.find(t2_3_2.id)
+      grand_parent = Cultivation::Task.find(t2_3.id)
       expect(cmd.success?).to be true
       expect(cmd.result.duration).to eq new_duration
       expect(cmd.result.end_date.to_date).to eq new_end_date.to_date
       expect(parent.end_date.to_date).to eq new_end_date.to_date
-      # expect(target.end_date).to eq new_end_date
-      # expect(parent_saved.end_date).to eq target.end_date
+      expect(grand_parent.end_date.to_date).to eq new_end_date.to_date
+    end
+
+    it "subtask end ealier than parent task should contract parent" do
+      target = t2_3_2_1
+      new_end_date = target.end_date - 2.days
+      new_duration = (new_end_date - target.start_date) / 1.day
+
+      args = {
+        id: target.id.to_s,
+        duration: new_duration,
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      parent = Cultivation::Task.find(t2_3_2.id)
+      grand_parent = Cultivation::Task.find(t2_3.id)
+      expect(cmd.success?).to be true
+      expect(cmd.result.duration).to be 5 # originally this is 7
+      expect(cmd.result.end_date.to_date).to eq new_end_date.to_date
+      expect(parent.end_date.to_date).to eq new_end_date.to_date
+      expect(grand_parent.end_date.to_date).to eq new_end_date.to_date
+    end
+
+    it "subtask end ealier than parent task should contract parent 2" do
+      target = t1_2
+      
+      args = {
+        id: target.id.to_s,
+        duration: 3,
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+      
+      parent = Cultivation::Task.find(t1.id)
+      expect(cmd.success?).to be true
+      expect(cmd.result.end_date.to_i).to eq (target.start_date + 3.days).to_i
+      expect(parent.duration).to eq 20
+      expect(parent.end_date.to_datetime).to eq t1_3.end_date.to_datetime
     end
   end
 end
-    # [t1,
-    #  t1_1,
-    #  t1_2,
-    #  t1_3,
-    #  t2,
-    #  t2_1,
-    #  t2_2,
-    #  t2_3,
-    #  t2_3_1,
-    #  t2_3_2,
-    #  t2_3_2_1,
-    #  t3,
-    #  t4]

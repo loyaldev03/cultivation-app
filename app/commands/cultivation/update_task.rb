@@ -22,31 +22,16 @@ module Cultivation
         batch_tasks = Cultivation::QueryTasks.call(batch).result
         task = batch_tasks.detect { |t| t.id == task.id }
         if valid_batch? batch
-          # Rails.logger.debug "\033[31m ori start_date: #{task.start_date} \033[0m"
-          # Rails.logger.debug "\033[31m ori duration: #{task.duration} \033[0m"
+          # Remember original start_date
           original_start_date = task.start_date
+          # Set batch to active
           batch.is_active = true if @activate_batch
           # Update task with args and re-calculate end_date
-          # Rails.logger.debug "\033[31m args start_date: #{args[:start_date]} \033[0m"
-          # Rails.logger.debug "\033[31m args duration: #{args[:duration]} \033[0m"
           task = map_args_to_task(task, batch_tasks, @args)
-
-          # TODO::Andy do we need to update parent task's end date?
-          # Obsolete: update_tasks_end_date(task, batch_tasks, opt)
-          extend_parent_end_date(task, batch_tasks)
-
-          # Rails.logger.debug "\033[31m task.start_date (after map args): #{task.start_date} \033[0m"
-          # Rails.logger.debug "\033[31m task.duration (after map args): #{task.duration} \033[0m"
-
-          # Move subtasks's start date
-          days_diff = (task.start_date - original_start_date) / 1.day
-          # Rails.logger.debug "\033[31m days_diff: #{days_diff} \033[0m"
-          children = task.children(batch_tasks)
-          move_children(children, batch_tasks, days_diff)
-
-          # Save all changes to subtasks
-          children.each(&:save)
-
+          # Move subtasks's start date & save changes
+          adjust_children_dates(task, batch_tasks, original_start_date)
+          # Extend / contract parent duration & end_date
+          adjust_parent_dates(task, batch_tasks)
           # Save if no errors
           task.save! if errors.empty?
 
@@ -57,11 +42,6 @@ module Cultivation
           # }
 
           # TODO::ANDY - valid_data when updating tasks
-
-          # TODO::ANDY cascade changes? how?
-          # if cascade_changes? task
-          #   update_task(task, batch_tasks, opt)
-          # end
 
           # TODO::ANDY: Estimated Hours are not calculating
           # Extend end date to Category and Phas
@@ -118,11 +98,25 @@ module Cultivation
       task.start_date || parent.start_date
     end
 
-    def extend_parent_end_date(task, batch_tasks)
+    def adjust_children_dates(task, batch_tasks, original_start_date)
+      days_diff = (task.start_date - original_start_date) / 1.day
+      children = task.children(batch_tasks)
+      move_children(children, batch_tasks, days_diff)
+      children.each(&:save)
+    end
+
+    def adjust_parent_dates(task, batch_tasks)
       parent = task.parent(batch_tasks)
       while parent.present?
         if parent.end_date < task.end_date
+          # Extend parent duration / end_date
           duration = (task.end_date - parent.start_date) / 1.day
+          parent.duration = duration
+          parent.end_date = parent.start_date + duration.days
+        else
+          # Contract parent duration / end_date
+          max_child_date = parent.children(batch_tasks).map(&:end_date).compact.max
+          duration = (max_child_date - parent.start_date) / 1.day
           parent.duration = duration
           parent.end_date = parent.start_date + duration.days
         end
@@ -155,116 +149,6 @@ module Cultivation
       batch.save!
     end
 
-    def update_task(task, batch_tasks, opt = {})
-      # Store changed task into a an array for 'bulk' update later
-      opt = {
-        start_date: task.start_date,
-        end_date: task.end_date,
-        reference_task: task,
-      }.merge(opt)
-      tasks_changes = find_changes(task, batch_tasks, opt)
-      if valid_data?(tasks_changes, opt)
-        bulk_update(tasks_changes) # bulk update
-      else
-        Rails.logger.debug 'Invalid Data'
-      end
-      task
-    end
-
-    def update_tasks_end_date(task, batch_tasks, opt = {})
-      raise ArgumentError, 'facility_id is required' if opt[:facility_id].nil?
-      raise ArgumentError, 'batch_id is required' if opt[:batch_id].nil?
-      parent = batch_tasks.detect { |t| t.id.to_s == task.parent_id.to_s }
-      if parent
-        # Get all sibling tasks, including current task
-        siblings = get_siblings(task, batch_tasks)
-        # Get siblings max end_date (latest date)
-        max_end_date = siblings.map(&:end_date).compact.max
-        if parent&.end_date
-          # Extend parent's end date if any siblings have later end_date
-          if max_end_date && max_end_date > parent.end_date
-            parent.end_date = max_end_date
-          end
-
-          # Re-calculate parent's duration
-          if parent&.start_date
-            parent.duration = calc_duration(parent.start_date,
-                                            parent.end_date)
-          end
-        end
-        update_task(parent, batch_tasks, {children: false}.merge(opt))
-        update_tasks_end_date(parent, batch_tasks, opt)
-        parent.save unless errors.present?
-      end
-    end
-
-    # FIXME: This should be obsolete - remove after confirm
-    def update_position(task, position)
-      task.move_to! position
-    end
-
-    def find_changes(task, batch_tasks = [], opt = {})
-      opt = {
-        start_date: nil,
-        end_date: nil,
-        reference_task: nil,
-        children: true,
-        dependent: true,
-      }.merge(opt) # default options
-
-      if opt[:start_date].nil?
-        ref_task = opt[:reference_task]
-        errors.add(:start_date,
-                   "'Start At' is required - #{ref_task&.name}")
-        return []
-      end
-
-      # Array to store changed tasks for current iteration
-      new_changes = []
-
-      # Update start_date, end_date & duration of current task
-      set_task_dates(task, opt[:start_date])
-      new_changes << task unless task.changes.empty?
-
-      if opt[:children]
-        # Child task of current task & does not depend on any task
-        children = task.children(batch_tasks)
-        # Find changed child tasks
-        new_changes += find_cascaded_changes(children,
-                                             batch_tasks,
-                                             REFTYPE_CHILDREN,
-                                             task)
-      end
-
-      if opt[:dependent]
-        # Tasks depends on current task, currently apply to "Phase" task that
-        # positioned after the current task
-        dependents = get_dependents(task, batch_tasks)
-        # Find changed dependents tasks
-        new_changes += find_cascaded_changes(dependents,
-                                             batch_tasks,
-                                             REFTYPE_DEPENDENT,
-                                             task)
-      end
-      new_changes
-    end
-
-    def find_cascaded_changes(cascade_tasks, batch_tasks, ref_type, ref_task)
-      new_changes = []
-
-      ref_start_date = ref_task.end_date if ref_type == REFTYPE_DEPENDENT
-      ref_start_date ||= ref_task.start_date
-
-      cascade_tasks.each do |cascade_task|
-        new_changes += find_changes(cascade_task,
-                                    batch_tasks,
-                                    start_date: ref_start_date,
-                                    reference_task: ref_task)
-      end
-
-      new_changes
-    end
-
     # Find all subtasks
     def get_dependents(task, batch_tasks)
       batch_tasks.select do |t|
@@ -272,73 +156,6 @@ module Cultivation
           # Dependent tasks should have depends on set to current task
           t.depend_on.to_s == task.id.to_s
       end
-    end
-
-    # Find all siblings tasks
-    def get_siblings(task, batch_tasks)
-      result = batch_tasks.select do |t|
-        t.parent_id &&
-          # Sibling tasks should have same parent as current task
-          t.parent_id.to_s == task.parent_id.to_s &&
-          # Exclude current task since it might have updated value
-          # from current iteration
-          t.id.to_s != task.id.to_s
-      end
-      # Add back the updated version of current task
-      result << task
-    end
-
-    # Calculate end_date based on start_date + duration
-    def calc_end_date(start_date, duration = 0)
-      raise ArgumentError, 'start_date' if start_date.nil?
-      raise ArgumentError, 'duration' unless duration.is_a? Integer
-      # Calculate end_date based on start_date + duration
-      start_date + duration.days - 1.days
-    end
-
-    # Calculate duration between start & end date in days
-    def calc_duration(start_date, end_date)
-      raise ArgumentError, 'start_date' if start_date.nil?
-      raise ArgumentError, 'end_date' if end_date.nil?
-      raise ArgumentError, 'invalid start_date type' unless start_date.is_a? DateTime
-      raise ArgumentError, 'invalid end_date type' unless end_date.is_a? DateTime
-
-      duration = (end_date - start_date).to_i
-      duration + 1
-    end
-
-    def set_task_dates(task, start_date)
-      raise ArgumentError, 'task is required' if task.nil?
-      raise ArgumentError, 'start_date is required' if start_date.nil?
-
-      if task.start_date.nil? || task.start_date < start_date
-        # Set task's start_date if it's ealier than parent start_date
-        task.start_date = start_date
-      end
-
-      if task.duration&.positive?
-        task.end_date = calc_end_date(task.start_date,
-                                      task.duration)
-      end
-
-      if task.end_date
-        task.duration = calc_duration(task.start_date,
-                                      task.end_date)
-      end
-    end
-
-    def bulk_update(array)
-      bulk_order = array.map do |task|
-        {update_one: {
-          filter: {_id: task.id},
-          update: {'$set': {
-            start_date: task.start_date,
-            end_date: task.end_date,
-            duration: task.duration,
-          }},
-        }}
-      end
-      Cultivation::Task.collection.bulk_write(bulk_order)
     end
 
     def valid_batch?(batch)

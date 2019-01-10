@@ -1,7 +1,6 @@
 import React from 'react'
 import TaskStore from '../stores/NewTaskStore'
 import SidebarTaskEditor from './SidebarTaskEditor'
-import AddTaskForm from './AddTaskForm'
 import MaterialForm from './MaterialForm'
 import ResourceForm from './ResourceForm'
 

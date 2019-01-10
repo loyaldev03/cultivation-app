@@ -27,7 +27,7 @@ module Cultivation
     field :is_category, type: Boolean, default: -> { false }
     # Indelible task cannot be remove, possible values: 'cleaning', 'moving'
     field :indelible, type: String
-    # Parent task
+    # FIXME: Remove - Parent task
     field :parent_id, type: BSON::ObjectId
     # Predecessor task
     field :depend_on, type: BSON::ObjectId
@@ -67,6 +67,15 @@ module Cultivation
         raise ArgumentError, 'Missing :wbs when calling parent. Use Task retrieve via QueryTasks.'
       end
       WbsTree.parent(batch_tasks, wbs)
+    end
+
+    # Find tasks that depends on current task
+    def dependents(batch_tasks)
+      batch_tasks.select do |t|
+        t.depend_on &&
+          # Dependent tasks should have depends on set to current task
+          t.depend_on.to_s == id.to_s
+      end
     end
 
     def indelible?

@@ -204,7 +204,7 @@ class SeedEditor extends React.Component {
   loadProducts = inputValue => {
     inputValue = inputValue || ''
     return fetch(
-      `/api/v1/products?type=raw_materials&category=${''}&sub_category=${''}&key=${'Seeds'}&facility_id=${
+      `/api/v1/products?type=raw_materials&category=seeds&facility_id=${
         this.state.facility_id
       }&facility_strain_id=${
         this.state.facility_strain_id
@@ -238,6 +238,7 @@ class SeedEditor extends React.Component {
         })
       } else {
         this.setState({
+          product: { value: product.id, label: product.name },
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,
@@ -246,6 +247,7 @@ class SeedEditor extends React.Component {
       }
     } else {
       this.setState({
+        product: { value: '', label: '' },
         product_id: '',
         manufacturer: '',
         description: ''

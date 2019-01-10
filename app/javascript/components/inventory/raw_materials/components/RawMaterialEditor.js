@@ -229,9 +229,7 @@ class RawMaterialEditor extends React.Component {
     return fetch(
       `/api/v1/products?type=raw_materials&category=${
         this.props.raw_material_type
-      }&sub_category=${''}&key=${
-        catalogue.label
-      }&facility_id=${facility_id}&filter=${inputValue}`,
+      }&catalogue_id=${catalogue.value}&facility_id=${facility_id}&filter=${inputValue}`,
       {
         credentials: 'include'
       }
@@ -261,6 +259,7 @@ class RawMaterialEditor extends React.Component {
         })
       } else {
         this.setState({
+          product: { value: product.id, label: product.name },
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,
@@ -269,6 +268,7 @@ class RawMaterialEditor extends React.Component {
       }
     } else {
       this.setState({
+        product: { value: '', label: '' },
         product_id: '',
         manufacturer: '',
         description: ''

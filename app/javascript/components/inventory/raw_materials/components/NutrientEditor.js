@@ -248,16 +248,10 @@ class NutrientEditor extends React.Component {
     }
   }
 
-  loadProducts = (inputValue, nutrientType, nutrientProduct, facility_id) => {
+  loadProducts = (inputValue, nutrientType, catalogue, facility_id) => {
     inputValue = inputValue || ''
-    console.log(nutrientProduct)
-    console.log(nutrientType)
     return fetch(
-      `/api/v1/products?type=raw_materials&category=nutrients&sub_category=${
-        nutrientType.key
-      }&key=${
-        nutrientProduct.label
-      }&facility_id=${facility_id}&filter=${inputValue}`,
+      `/api/v1/products?type=raw_materials&category=nutrients&catalogue_id=${catalogue.value}&facility_id=${facility_id}&filter=${inputValue}`,
       {
         credentials: 'include'
       }
@@ -287,6 +281,7 @@ class NutrientEditor extends React.Component {
         })
       } else {
         this.setState({
+          product: { value: product.id, label: product.name },
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,
@@ -295,6 +290,7 @@ class NutrientEditor extends React.Component {
       }
     } else {
       this.setState({
+        product: { value: '', label: '' },
         product_id: '',
         manufacturer: '',
         description: ''

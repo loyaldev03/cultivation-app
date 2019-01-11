@@ -1,11 +1,12 @@
 import { httpGetOptions } from '../../utils/FetchHelper'
 
-const loadLocations = (facilityId, taskId) => {
-  if (!facilityId) {
+const loadLocations = (batchId, taskId) => {
+  if (!batchId || !taskId) {
     return Promise.resolve([])
   }
+
   return fetch(
-    `/api/v1/facilities/${facilityId}/search_locations`,
+    `/api/v1/batches/${batchId}/tasks/${taskId}/locations`,
     httpGetOptions
   ).then(response => response.json())
 }

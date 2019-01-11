@@ -14,13 +14,14 @@ class Api::V1::UsersController < Api::V1::BaseApiController
   def by_facility
     facility_id = BSON::ObjectId(params[:facility_id])
     filter = params[:filter] || ''
-    users = User.in(facilities: facility_id).any_of({last_name: /^#{filter}/i}, {first_name: /^#{filter}/i}).map do |x|
+    users = User.in(facilities: facility_id).any_of({last_name: /^#{filter}/i}, {first_name: /^#{filter}/i}).map do |u|
       {
-        value: x.id.to_s,
-        label: "#{x.display_name} - #{x.email}",
-        photo: x.photo&.url,
-        first_name: x.first_name,
-        last_name: x.last_name,
+        value: u.id.to_s,
+        label: u.display_name,
+        photo: u.photo&.url,
+        first_name: u.first_name,
+        last_name: u.last_name,
+        roles: Common::Role.in(id: u.roles).map(&:name),
       }
     end
 

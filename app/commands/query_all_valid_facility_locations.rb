@@ -1,9 +1,8 @@
 class QueryAllValidFacilityLocations
   prepend SimpleCommand
 
-  def initialize(facility_id: nil, filter: nil)
+  def initialize(facility_id: nil)
     @facility_id = facility_id
-    @filter = filter
   end
 
   def call

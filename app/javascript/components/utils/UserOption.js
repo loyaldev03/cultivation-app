@@ -1,6 +1,6 @@
 import React from 'react'
 import { components } from 'react-select'
-import Avatar from '../../utils/Avatar'
+import Avatar from './Avatar'
 
 const UserOption = ({ children, ...props }) => (
   <components.Option {...props}>
@@ -12,7 +12,15 @@ const UserOption = ({ children, ...props }) => (
         size="18px"
         backgroundColor="#ccc"
       />
-      <span className="ml2">{children}</span>
+      <span className="mh2">{children}</span>
+      <span className="f7 fw6 mh1 gray">&#183;</span>
+      {
+        props.data.roles.map(x => (
+          <span className="f7 fw6 bg-light-blue dark-blue pa--tag ttu br2" key={x}>
+            {x}
+          </span>
+        ))
+      }
     </div>
   </components.Option>
 )

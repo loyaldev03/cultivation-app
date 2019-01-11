@@ -1,3 +1,5 @@
+import 'babel-polyfill'
+
 import React from 'react'
 import Select, { components } from 'react-select'
 import Uppy from '@uppy/core'
@@ -11,6 +13,7 @@ import '@uppy/webcam/dist/style.css'
 import { TextInput } from '../../utils/FormHelpers'
 import reactSelectStyle from '../../utils/reactSelectStyle'
 import Avatar from '../../utils/Avatar'
+import UserPicker from '../../utils/UserPicker'
 
 import saveIssue from '../actions/saveIssue'
 import getIssue from '../actions/getIssue'
@@ -21,7 +24,7 @@ import loadLocations from '../actions/loadLocations'
 import TaskOption from './TaskOption'
 import LocationOption from './LocationOption'
 import LocationSingleValue from './LocationSingleValue'
-import UserOption from './UserOption'
+
 
 const severityOptions = [
   { value: 'low', label: 'Low' },
@@ -41,21 +44,6 @@ uppy.on('complete', result => {
   console.log(url)
 })
 
-const resolveLocationType = location => {
-  if (location.t_id.length > 0) {
-    return 'Tray'
-  } else if (location.sf_id.length > 0) {
-    return 'Shelf'
-  } else if (location.rw_id.length > 0) {
-    return 'Row'
-  } else if (location.s_id.length > 0) {
-    return 'Section'
-  } else if (location.rm_id.length > 0) {
-    return 'Room'
-  } else if (location.f_id.length > 0) {
-    return 'Facility'
-  }
-}
 class IssueForm extends React.Component {
   constructor(props) {
     super(props)
@@ -73,21 +61,18 @@ class IssueForm extends React.Component {
     Promise.all([
       loadTasks(this.props.batchId),
       loadUsers(this.props.facilityId),
-      loadLocations(this.props.facilityId) // to be rewritten to pass in selected task id
+      
     ]).then(result => {
       const tasks = result[0]
       const users = result[1].data
-      const locations = result[2].data
-
       this.setState({
         tasks,
-        users,
-        locations
+        users
       })
     })
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps) {
     // Comparing state.id to workaround this component that is initialized with
     // an issueId, which in this case prevProp.issueId same as this.props.issueId.
     //
@@ -102,28 +87,38 @@ class IssueForm extends React.Component {
       this.props.issueId.length > 0 &&
       this.state.id !== this.props.issueId
     ) {
-      getIssue(this.props.issueId).then(({ data }) => {
-        const attr = data.data.attributes
-        this.setState({
-          ...this.resetState(),
-          id: this.props.issueId,
-          title: attr.title,
-          description: attr.description,
-          severity: attr.severity,
-          task_id: attr.task ? attr.task.id : '',
-          location_id: attr.location_id,
-          location_type: attr.location_type,
-          assigned_to_id: attr.assigned_to ? attr.assigned_to.id : '',
-          status: attr.status,
-          created_at: attr.created_at,
-          reported_by: attr.reported_by,
-          issue_no: attr.issue_no
-        })
-      })
+      this.loadIssue()
     } else {
       // console.log('should reset here')
       this.setState(this.resetState())
     }
+  }
+
+  async loadIssue() {
+    const { data } = await getIssue(this.props.issueId)
+    const attr = data.data.attributes
+    let locations = []
+    
+    if (attr.task) {
+      locations = await loadLocations(this.props.batchId, attr.task.id)
+    }
+
+    this.setState({
+      ...this.resetState(),
+      id: this.props.issueId,
+      title: attr.title,
+      description: attr.description,
+      severity: attr.severity,
+      task_id: attr.task ? attr.task.id : '',
+      locations,
+      location_id: attr.location_id,
+      location_type: attr.location_type,
+      assigned_to_id: attr.assigned_to ? attr.assigned_to.id : '',
+      status: attr.status,
+      created_at: attr.created_at,
+      reported_by: attr.reported_by,
+      issue_no: attr.issue_no
+    })
   }
 
   resetState = () => {
@@ -160,20 +155,46 @@ class IssueForm extends React.Component {
     const value = event.target.value
     this.setState({ [key]: value })
   }
+
   onTaskChanged = task => {
-    this.setState({ task_id: task.value })
+    if (!task) {
+      this.setState({ 
+        task_id: '',
+        location_id: '',
+        location_type: '',
+        locations: []
+      })
+    } else {
+      loadLocations(this.props.batchId, task.value).then( result => {
+        console.log(result)
+        this.setState({ 
+          task_id: task.value,
+          locations: result,
+          location_id: '',
+          location_type: '',
+        })
+      })
+    }
   }
   onSeverityChanged = severity => {
     this.setState({ severity: severity.value })
   }
   onAssignedChanged = user => {
-    this.setState({ assigned_to_id: user.value })
+    if (!user) {
+      this.setState({ assigned_to_id: '' })
+    } else {
+      this.setState({ assigned_to_id: user.value })
+    }
   }
   onLocationChanged = location => {
-    this.setState({
-      location_id: location.id,
-      location_type: resolveLocationType(location)
-    })
+    if (!location) {
+      this.setState({ location_id: '', location_type: '' })
+    } else {
+      this.setState({
+        location_id: location.id,
+        location_type: location.location_type
+      })
+    }
   }
 
   onDescriptionChanged = event => {
@@ -315,7 +336,6 @@ class IssueForm extends React.Component {
   }
 
   render() {
-    console.log(`this.props.issueId: ${this.props.issueId}`)
     const {
       severity,
       task_id,
@@ -375,6 +395,8 @@ class IssueForm extends React.Component {
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Task</label>
             <Select
+              isClearable
+              isSearchable
               options={this.state.tasks}
               onChange={this.onTaskChanged}
               value={task}
@@ -389,10 +411,13 @@ class IssueForm extends React.Component {
             <label className="f6 fw6 db mb1 gray ttc">Location</label>
             <Select
               isSearchable
+              isClearable
               options={this.state.locations}
               onChange={this.onLocationChanged}
               value={location}
               styles={reactSelectStyle}
+              getOptionLabel={x => x.searchable}
+              getOptionValue={x => x.id}
               components={{
                 Option: LocationOption,
                 SingleValue: LocationSingleValue
@@ -400,7 +425,7 @@ class IssueForm extends React.Component {
               filterOption={(option, input) => {
                 const words = input.toLowerCase().split(/\s/)
                 return words.every(
-                  x => option.label.toLowerCase().indexOf(x) >= 0
+                  x => option.data.searchable.toLowerCase().indexOf(x) >= 0
                 )
               }}
             />
@@ -410,13 +435,10 @@ class IssueForm extends React.Component {
         <div className="ph4 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Assign to</label>
-            <Select
-              isSearchable
-              options={this.state.users}
+            <UserPicker
               onChange={this.onAssignedChanged}
-              value={assigned_to}
-              styles={reactSelectStyle}
-              components={{ Option: UserOption }}
+              users={this.state.users}
+              userId={assigned_to_id}
             />
           </div>
         </div>

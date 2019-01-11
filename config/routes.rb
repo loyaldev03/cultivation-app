@@ -190,10 +190,14 @@ Rails.application.routes.draw do
         post 'setup_simple_batch', on: :collection
         post 'update_locations'
         post 'update_batch'
+
         resources :tasks, only: [:index, :update, :create, :destroy] do
-          post 'update_indent', on: :member
-          post 'update_position', on: :member
-          post 'update_dependency', on: :member
+          member do
+            post 'update_indent'
+            post 'update_position'
+            post 'update_dependency'
+            get 'locations'
+          end
         end
         resources :nutrient_profiles
       end

@@ -14,6 +14,7 @@ import { TextInput } from '../../utils/FormHelpers'
 import reactSelectStyle from '../../utils/reactSelectStyle'
 import Avatar from '../../utils/Avatar'
 import UserPicker from '../../utils/UserPicker'
+import {formatDate, formatTime } from '../../utils/DateHelper'
 
 import saveIssue from '../actions/saveIssue'
 import getIssue from '../actions/getIssue'
@@ -331,6 +332,14 @@ class IssueForm extends React.Component {
     }
   }
 
+  renderReportedAt() {
+    if (this.state.id.length > 0) {
+      return `${formatDate(this.state.created_at)}, ${formatTime(this.state.created_at)}`
+    } else {
+      return 'Today'
+    }
+  }
+
   render() {
     const {
       severity,
@@ -379,11 +388,13 @@ class IssueForm extends React.Component {
           </div>
           <div className="w-30 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Status</label>
-            <span className="f6 green flex f6 green pt2 fw6">Open</span>
+            <span className="f6 green flex f6 green pt2 fw6 ttc">{this.state.status || 'Open'}</span>
           </div>
           <div className="w-40 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Reported at</label>
-            <span className="f6 green flex f6 green pt2 fw6">Today</span>
+            <span className="f6 green flex f6 green pt2 fw6">
+              { this.renderReportedAt() }
+            </span>
           </div>
         </div>
 

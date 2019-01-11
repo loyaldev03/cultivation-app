@@ -5,7 +5,7 @@ import LetterAvatar from './LetterAvatar'
 const Avatar = React.memo(
   ({ firstName = '', lastName = '', photoUrl, size = 36 }) => {
     if (photoUrl && photoUrl.length >= 10) {
-      const width = size + 'px'
+      const width = size
       // http://a.b
       return (
         <img
@@ -13,7 +13,7 @@ const Avatar = React.memo(
           style={{
             width,
             height: width,
-            borderRadius: `${size / 2}px`
+            borderRadius: size / 2
           }}
         />
       )

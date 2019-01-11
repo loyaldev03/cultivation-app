@@ -34,7 +34,7 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
   )
 }
 
-const moneyFormatter = new Intl.NumberFormat('en-US', {
+const MoneyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
   minimumFractionDigits: 2
@@ -483,7 +483,7 @@ class TaskList extends React.Component {
       }
     },
     {
-      Header: 'Est Hr',
+      Header: 'Est. Hr',
       accessor: 'estimated_hours',
       maxWidth: '100',
       className: 'tr',
@@ -504,18 +504,34 @@ class TaskList extends React.Component {
       }
     },
     {
-      Header: 'Est Cost ($)',
+      Header: 'Est. Cost',
       accessor: 'estimated_cost',
       maxWidth: '100',
       className: 'justify-end',
       show: this.checkVisibility('estimated_cost'),
-      Cell: data => moneyFormatter.format(data.row.estimated_cost)
+      Cell: data => MoneyFormatter.format(data.row.estimated_cost)
     },
     {
       Header: 'Assigned',
       accessor: 'resources',
       maxWidth: '200',
-      show: this.checkVisibility('resource_assigned')
+      className: 'justify-center',
+      show: this.checkVisibility('resource_assigned'),
+      Cell: data => {
+        const { id, users } = data.row
+        return (
+          <i
+            className={classNames(
+              'pointer material-icons icon--medium icon--rounded',
+              {
+                'show-on-hover': this.state.taskSelected !== id
+              }
+            )}
+          >
+            person_add
+          </i>
+        )
+      }
     },
     {
       Header: 'Materials',

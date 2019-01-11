@@ -274,6 +274,21 @@ class TaskStore {
     }
   }
 
+  @action
+  async editAssignedUsers(batchId, taskId, users) {
+    const task = this.getTaskById(taskId)
+    if (users) {
+      task.user_ids = users
+      this.tasks = this.tasks.map(t => {
+        return t.id === taskId ? task : t
+      })
+      // TODO: Call editTask to update to backend
+      // this.tasks = this.tasks.map(t => {
+      //   return t.id === taskId ? payload : t
+      // })
+    }
+  }
+
   async updateTask(batch_id, task) {
     this.isLoading = true
     let new_task = task

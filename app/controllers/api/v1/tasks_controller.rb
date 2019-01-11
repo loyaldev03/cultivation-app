@@ -5,6 +5,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     if @batch.present?
       tasks = get_all_tasks
       users = User.active
+      Rails.logger.debug "\033[31m #{users.length} \033[0m"
       task_json = TaskSerializer.new(
         tasks, params: {tasks: tasks, users: users},
       ).serialized_json

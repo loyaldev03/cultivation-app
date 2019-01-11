@@ -5,12 +5,15 @@ import ReactTable from 'react-table'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 import TaskStore from '../stores/NewTaskStore'
+import UserStore from '../stores/NewUserStore'
 import TaskEditor from './TaskEditor'
 import BatchSetupStore from '../../batches_setup/BatchSetupStore'
 import InlineEditTaskNameField from './InlineEditTaskNameField'
 import InlineEditTextField from './InlineEditTextField'
 import InlineEditNumberField from './InlineEditNumberField'
 import InlineEditDateField from './InlineEditDateField'
+import AssignResourceForm from './AssignResourceForm'
+import Avatar from '../../../utils/Avatar'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import { toast } from '../../../utils/toast'
 import {
@@ -50,6 +53,7 @@ class TaskList extends React.Component {
       isOpen: false,
       batch: this.props.batch,
       showStartDateCalendar: false,
+      showAssignResourcePanel: false,
       searchMonth: dateToMonthOption(batchStartDate)
     }
   }
@@ -115,6 +119,14 @@ class TaskList extends React.Component {
       width: '500px',
       taskId: taskId,
       action: 'update'
+    })
+  }
+
+  handleShowAssignForm = (taskId, users) => {
+    this.assignResouceForm.setSelectedUsers(users)
+    this.setState({
+      taskSelected: taskId,
+      showAssignResourcePanel: !this.state.showAssignResourcePanel
     })
   }
 
@@ -513,29 +525,29 @@ class TaskList extends React.Component {
     },
     {
       Header: 'Assigned',
-      accessor: 'resources',
+      accessor: 'user_ids',
       maxWidth: '200',
       className: 'justify-center',
       show: this.checkVisibility('resource_assigned'),
       Cell: data => {
-        const { id, users } = data.row
+        const { id, user_ids } = data.row
         return (
-          <i
-            onClick={() =>
-              this.setState({
-                taskSelected: id,
-                showAssignResourcePanel: !this.state.showAssignResourcePanel
-              })
-            }
-            className={classNames(
-              'pointer material-icons icon--medium icon--rounded',
-              {
-                'show-on-hover': this.state.taskSelected !== id
-              }
-            )}
-          >
-            person_add
-          </i>
+            <div className="flex pointer" onClick={() => this.handleShowAssignForm(id, user_ids)}>
+              {user_ids &&
+                user_ids.map(u => {
+                  const user = UserStore.getUserById(u)
+                  return (
+                    <Avatar
+                      size={24}
+                      key={user.id}
+                      firstName={user.first_name}
+                      lastName={user.last_name}
+                      photoUrl={user.photo_url}
+                    />
+                  )
+                })}
+                <i className='ml2 material-icons icon--medium icon--rounded'>person_add</i>
+            </div>
         )
       }
     },
@@ -563,31 +575,15 @@ class TaskList extends React.Component {
           width="500px"
           show={showAssignResourcePanel}
           renderBody={props => (
-            <React.Fragment>
-              <div className="ph4 pv3 bb b--light-grey">
-                <h1 className="h6--font dark-grey ma0">Assign Resources</h1>
-              </div>
-              <a
-                href="#0"
-                className="slide-panel__close-button dim"
-                onClick={() =>
-                  this.setState({ showAssignResourcePanel: false })
-                }
-              >
-                <i className="material-icons mid-gray md-18 pa1">close</i>
-              </a>
-              <div className="pa2 flex flex-column">
-                <input
-                  autoFocus
-                  className="w-100 pa2"
-                  type="search"
-                  placeholder="Search by name, role, skill..."
-                />
-                <div className="mt3 bg-yellow">
-                  Search Result
-                </div>
-              </div>
-            </React.Fragment>
+            <AssignResourceForm
+              ref={form => (this.assignResouceForm = form)}
+              onClose={() => this.setState({ showAssignResourcePanel: false })}
+              onSave={users => {
+                const taskId = this.state.taskSelected
+                TaskStore.editAssignedUsers(batchId, taskId, users)
+                this.setState({ showAssignResourcePanel: false })
+              }}
+            />
           )}
         />
         <ReactTable

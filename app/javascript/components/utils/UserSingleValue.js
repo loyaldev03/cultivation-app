@@ -4,7 +4,7 @@ import Avatar from './Avatar'
 
 const UserOption = ({ children, ...props }) => (
   <components.SingleValue {...props}>
-    <div className="flex flex-row items-center" style={{height: '26px'}}>
+    <div className="flex flex-row items-center" style={{ height: '26px' }}>
       <Avatar
         firstName={props.data.first_name}
         lastName={props.data.last_name}
@@ -13,13 +13,14 @@ const UserOption = ({ children, ...props }) => (
         backgroundColor="#ccc"
       />
       <span className="mh2">{children}</span>
-      {
-        props.data.roles.map(x => (
-          <span className="f7 fw6 bg-light-blue dark-blue pa--tag ttu br2" key={x}>
-            {x}
-          </span>
-        ))
-      }
+      {props.data.roles.map(x => (
+        <span
+          className="f7 fw6 bg-light-blue dark-blue pa--tag ttu br2"
+          key={x}
+        >
+          {x}
+        </span>
+      ))}
     </div>
   </components.SingleValue>
 )

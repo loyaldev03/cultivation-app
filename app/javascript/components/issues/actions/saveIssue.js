@@ -15,9 +15,6 @@ const saveIssue = payload => {
         return result
       }
 
-      console.log(data.data)
-      // console.log(data.data)
-
       if (payload.id) {
         issueStore.update(data.data)
       } else {

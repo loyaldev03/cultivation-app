@@ -13,6 +13,7 @@ module Cultivation
       # 1. get availale trays
       task = cultivation_batch.tasks.find(task_id)
 
+      # TODO: Duplicate & expand QueryAvailableTrays to retrieve all locations.
       available_trays = QueryAvailableTrays.call(
         Time.new(1901, 1, 1),
         Time.new(1901, 1, 1),
@@ -21,7 +22,6 @@ module Cultivation
           purpose: task.phase,
         }
       ).call.result
-      Rails.logger.debug "\t\t\t>>> available_trays: \n#{available_trays.inspect}"
 
       # 2. filter from available to trays used in this batch.
       # TODO: add tray_ids filter into QueryAvailableTray
@@ -30,18 +30,13 @@ module Cultivation
         tray_ids.include? tray.tray_id
       end
 
-      Rails.logger.debug "\t\t\t>>> available_trays after filter: \n#{available_trays.inspect}"
-
       # 3. retrieve upward from tray until room
       list = Hash.new { |hash, key| hash[key] = [] }
       available_trays.each do |tp|
         explode(list, tp)
       end
 
-      Rails.logger.debug "\t\t\t>>> list: \n#{list.inspect}"
       locations = merge(list)
-
-      Rails.logger.debug "\t\t\t>>> final locations: \n#{locations.inspect}"
       locations
     end
 

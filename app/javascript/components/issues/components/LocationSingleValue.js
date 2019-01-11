@@ -3,7 +3,7 @@ import { components } from 'react-select'
 
 const LocationSingleValue = ({ children, ...props }) => (
   <components.SingleValue {...props}>
-    <div className="flex flex-row items-center" style={{ height: '26px'}}>
+    <div className="flex flex-row items-center" style={{ height: '26px' }}>
       {props.data.facility_id && props.data.room_id.length <= 0 && (
         <span className="f7 fw6 bg-light-blue dark-blue pa--tag ttu br2">
           {props.data.facility_name} - {props.data.facility_code}

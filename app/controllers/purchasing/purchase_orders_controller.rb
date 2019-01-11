@@ -5,6 +5,5 @@ class Purchasing::PurchaseOrdersController < ApplicationController
 
   def show
     @record = PurchasingForm::PurchaseOrderForm.new(params[:id])
-    Rails.logger.debug "#{@record.inspect}"
   end
 end

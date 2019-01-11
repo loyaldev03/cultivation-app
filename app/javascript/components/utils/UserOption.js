@@ -14,13 +14,14 @@ const UserOption = ({ children, ...props }) => (
       />
       <span className="mh2">{children}</span>
       <span className="f7 fw6 mh1 gray">&#183;</span>
-      {
-        props.data.roles.map(x => (
-          <span className="f7 fw6 bg-light-blue dark-blue pa--tag ttu br2" key={x}>
-            {x}
-          </span>
-        ))
-      }
+      {props.data.roles.map(x => (
+        <span
+          className="f7 fw6 bg-light-blue dark-blue pa--tag ttu br2"
+          key={x}
+        >
+          {x}
+        </span>
+      ))}
     </div>
   </components.Option>
 )

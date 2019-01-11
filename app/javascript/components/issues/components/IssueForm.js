@@ -25,7 +25,6 @@ import TaskOption from './TaskOption'
 import LocationOption from './LocationOption'
 import LocationSingleValue from './LocationSingleValue'
 
-
 const severityOptions = [
   { value: 'low', label: 'Low' },
   { value: 'medium', label: 'Medium' },
@@ -60,8 +59,7 @@ class IssueForm extends React.Component {
     // Call setState only once
     Promise.all([
       loadTasks(this.props.batchId),
-      loadUsers(this.props.facilityId),
-      
+      loadUsers(this.props.facilityId)
     ]).then(result => {
       const tasks = result[0]
       const users = result[1].data
@@ -89,7 +87,6 @@ class IssueForm extends React.Component {
     ) {
       this.loadIssue()
     } else {
-      // console.log('should reset here')
       this.setState(this.resetState())
     }
   }
@@ -98,7 +95,7 @@ class IssueForm extends React.Component {
     const { data } = await getIssue(this.props.issueId)
     const attr = data.data.attributes
     let locations = []
-    
+
     if (attr.task) {
       locations = await loadLocations(this.props.batchId, attr.task.id)
     }
@@ -158,20 +155,19 @@ class IssueForm extends React.Component {
 
   onTaskChanged = task => {
     if (!task) {
-      this.setState({ 
+      this.setState({
         task_id: '',
         location_id: '',
         location_type: '',
         locations: []
       })
     } else {
-      loadLocations(this.props.batchId, task.value).then( result => {
-        console.log(result)
-        this.setState({ 
+      loadLocations(this.props.batchId, task.value).then(result => {
+        this.setState({
           task_id: task.value,
           locations: result,
           location_id: '',
-          location_type: '',
+          location_type: ''
         })
       })
     }

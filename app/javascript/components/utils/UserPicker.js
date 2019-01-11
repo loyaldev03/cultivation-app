@@ -19,7 +19,8 @@ class UserPicker extends React.Component {
         value={user}
         styles={reactSelectStyle}
         components={{ Option: UserOption, SingleValue: UserSingleValue }}
-      />)
+      />
+    )
   }
 }
 

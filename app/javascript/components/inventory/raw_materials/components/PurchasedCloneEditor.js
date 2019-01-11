@@ -108,7 +108,6 @@ class PurchasedCloneEditor extends React.Component {
     if (payload.isValid) {
       setupPurchasedClones(payload).then(({ status, data }) => {
         if (status >= 400) {
-          console.log(data)
           this.setState({ errors: data.errors })
         } else {
           this.reset()

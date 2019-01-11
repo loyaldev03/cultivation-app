@@ -1,0 +1,2 @@
+class IssueAttachmentUploader < Shrine
+end

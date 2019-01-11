@@ -91,6 +91,15 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     end
   end
 
+  def locations
+    command = Cultivation::QueryTrayPlanOfTask.call(params[:batch_id], params[:id])
+    if command.success?
+      render json: command.result
+    else
+      render json: {error: command.errors}
+    end
+  end
+
   private
 
   def set_batch

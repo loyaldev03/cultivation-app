@@ -1,9 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
-import Creatable from 'react-select/lib/Creatable'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
-import AsyncSelect from 'react-select/lib/Async'
 import {
   FieldError,
   NumericInput,

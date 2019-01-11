@@ -14,6 +14,9 @@ const styles = `
 path.handle-arrow {
   cursor: pointer;
 }
+path.handle-arrow.on {
+  stroke: red;
+}
 path.arrow{
   display: none;
 }
@@ -88,15 +91,11 @@ class GanttChart extends React.Component {
   }
 
   onClickTask = task => {
-    console.log(toJS(task))
-    alert('You have selected task => ' + task.name)
-    let bar = document.getElementById(task.id)
-    console.log(bar)
-    console.log(bar.offsetTop)
-    console.log(bar.offsetLeft)
+    const bar = document.querySelector(`g[data-id="${task.id}"]`)
+    const position = bar.getBBox()
     let el = document.querySelector('.gantt-container')
-    el.scrollLeft = bar.offsetLeft
-    el.scrollTop = bar.offsetTop
+    el.scrollLeft = position.x - 400
+    el.scrollTop = position.top
   }
 
   handleDropdown = id => {
@@ -186,6 +185,12 @@ class GanttChart extends React.Component {
     el.scrollTop = scrollTop
   }
 
+  onDeleteRelationship = async (destination_id, source_id) => {
+    if (confirm('Are you sure you want to delete this relationship? ')) {
+      await TaskStore.deleteRelationship(this.props.batch_id, destination_id)
+    }
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -237,7 +242,7 @@ class GanttChart extends React.Component {
                     <tr
                       className="pointer rt-tr-group gantt-list"
                       key={task.id}
-                      // onClick={(e) => this.onClickTask(task)}
+                      onClick={e => this.onClickTask(task)}
                     >
                       <td className="pv2 ph3 dark-grey tl ttc">{task.wbs}</td>
                       <td className="pv2 ph3 dark-grey tl ttc">
@@ -396,6 +401,7 @@ class GanttChart extends React.Component {
                 onLoad={this.onLoad}
                 onDragRelationShip={this.onDragRelationShip}
                 onDateChange={this.onDateChange}
+                onDeleteRelationship={this.onDeleteRelationship}
                 // onProgressChange={this._func}
                 // onViewChange={this._func}
                 // customPopupHtml={this._html_func}

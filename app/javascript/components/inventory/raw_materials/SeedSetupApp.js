@@ -18,6 +18,11 @@ const columns = [
     headerClassName: 'tl'
   },
   {
+    Header: 'Product Name',
+    accessor: 'attributes.product_name',
+    headerClassName: 'tl'
+  },
+  {
     Header: 'Supplier',
     accessor: 'attributes.vendor.name',
     headerClassName: 'tl'

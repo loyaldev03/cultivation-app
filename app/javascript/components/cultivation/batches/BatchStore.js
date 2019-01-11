@@ -9,7 +9,7 @@ class BatchStore {
   @action
   async loadBatches() {
     this.isLoading = true
-    const url = '/api/v1/batches?exclude_tasks=true'
+    const url = '/api/v1/batches/list_infos'
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       runInAction(() => {

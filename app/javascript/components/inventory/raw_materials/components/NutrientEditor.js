@@ -8,6 +8,11 @@ import { PurchaseInfo } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
+import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
+
+const handleInputChange = newValue => {
+  return newValue ? newValue : ''
+}
 
 class NutrientEditor extends React.Component {
   constructor(props) {
@@ -39,36 +44,56 @@ class NutrientEditor extends React.Component {
               x => x.key == catalogue.parent_key
             )
 
-            this.setState({
-              ...this.resetState(),
-              nutrientType: nutrientType,
-              catalogue: catalogue,
-              id: id,
-              facility_id: attr.facility_id,
-              qty_per_package: attr.conversion,
-              product_name: attr.product_name,
-              manufacturer: attr.manufacturer,
-              description: attr.description,
-              order_quantity: parseFloat(attr.order_quantity),
-              price_per_package: parseFloat(attr.vendor_invoice.item_price),
-              order_uom: { value: attr.order_uom, label: attr.order_uom },
-              uom: { value: attr.uom, label: attr.uom },
-              location_id: attr.location_id,
-              // purchase info
-              vendor: attr.vendor,
-              purchase_order: attr.purchase_order,
-              vendor_invoice: attr.vendor_invoice
-            })
+            this.setState(
+              {
+                ...this.resetState(),
+                nutrientType: nutrientType,
+                catalogue: catalogue,
+                id: id,
+                facility_id: attr.facility_id,
+                qty_per_package: attr.conversion,
+                product: { value: attr.product.id, label: attr.product.name },
+                product_id: attr.product_id,
+                product_name: attr.product_name,
+                manufacturer: attr.manufacturer,
+                description: attr.description,
+                order_quantity: parseFloat(attr.order_quantity),
+                price_per_package: parseFloat(attr.vendor_invoice.item_price),
+                order_uom: { value: attr.order_uom, label: attr.order_uom },
+                uom: { value: attr.uom, label: attr.uom },
+                location_id: attr.location_id,
+                // purchase info
+                vendor: attr.vendor,
+                purchase_order: attr.purchase_order,
+                vendor_invoice: attr.vendor_invoice
+              },
+              () => {
+                this.loadProducts(
+                  '',
+                  this.state.nutrientType,
+                  this.state.catalogue,
+                  this.state.facility_id
+                )
+              }
+            )
           })
       }
     })
   }
 
   onFacilityChanged = item => {
-    this.setState({ facility_id: item.f_id })
+    this.setState({ facility_id: item.f_id }, () => {
+      this.loadProducts(
+        '',
+        this.state.nutrientType,
+        this.state.catalogue,
+        this.state.facility_id
+      )
+    })
   }
 
   onNutrientTypeSelected = item => {
+    console.log(item)
     this.setState({
       nutrientType: item,
       catalogue: { value: '', label: '', uoms: [] }
@@ -76,7 +101,14 @@ class NutrientEditor extends React.Component {
   }
 
   onNutrientProductSelected = item => {
-    this.setState({ catalogue: item })
+    this.setState({ catalogue: item }, () => {
+      this.loadProducts(
+        '',
+        this.state.nutrientType,
+        this.state.catalogue,
+        this.state.facility_id
+      )
+    })
   }
 
   onChangeGeneric = event => {
@@ -92,6 +124,8 @@ class NutrientEditor extends React.Component {
       qty_per_package: '',
       nutrientType: { value: '', label: '', children: [] },
       catalogue: { value: '', label: '', uoms: [] },
+      product: { value: '', label: '' },
+      product_id: '',
       product_name: '',
       manufacturer: '',
       description: '',
@@ -137,6 +171,7 @@ class NutrientEditor extends React.Component {
       uom: { value: uom },
       qty_per_package,
       catalogue: { value: catalogue },
+      product_id,
       product_name,
       manufacturer,
       description,
@@ -199,6 +234,7 @@ class NutrientEditor extends React.Component {
       uom,
       quantity,
       catalogue,
+      product_id,
       product_name,
       manufacturer,
       description,
@@ -212,6 +248,58 @@ class NutrientEditor extends React.Component {
     }
   }
 
+  loadProducts = (inputValue, nutrientType, catalogue, facility_id) => {
+    inputValue = inputValue || ''
+    return fetch(
+      `/api/v1/products?type=raw_materials&category=nutrients&catalogue_id=${
+        catalogue.value
+      }&facility_id=${facility_id}&filter=${inputValue}`,
+      {
+        credentials: 'include'
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        const products = data.data.map(x => ({
+          label: x.attributes.name,
+          value: x.attributes.id,
+          ...x.attributes
+        }))
+        if (inputValue === '') {
+          this.setState({ defaultProduct: products })
+        }
+        return products
+      })
+  }
+
+  onChangeProduct = product => {
+    if (product) {
+      if (product.__isNew__) {
+        this.setState({
+          product_name: product.value,
+          product_id: '',
+          manufacturer: '',
+          description: ''
+        })
+      } else {
+        this.setState({
+          product: { value: product.id, label: product.name },
+          product_id: product.id,
+          product_name: product.name,
+          manufacturer: product.manufacturer,
+          description: product.description
+        })
+      }
+    } else {
+      this.setState({
+        product: { value: '', label: '' },
+        product_id: '',
+        manufacturer: '',
+        description: ''
+      })
+    }
+  }
+
   render() {
     const { locations, catalogues } = this.props
     const nutrientProducts = this.state.nutrientType.children
@@ -221,6 +309,8 @@ class NutrientEditor extends React.Component {
     const showTotalPrice =
       parseFloat(this.state.price_per_package) > 0 &&
       parseFloat(this.state.order_quantity) > 0
+
+    const hasProductId = this.state.product_id
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -281,18 +371,30 @@ class NutrientEditor extends React.Component {
           </div>
 
           <hr className="mt3 m b--light-gray w-100" />
-
-          <div className="ph4 mt3 mb3 flex">
+          <div className="ph4 mb3 flex">
             <div className="w-100">
-              <TextInput
-                label="Product Name"
-                fieldname="product_name"
-                value={this.state.product_name}
-                onChange={this.onChangeGeneric}
+              <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
+              <AsyncCreatableSelect
+                isClearable
+                noOptionsMessage={() => 'Type to search product...'}
+                placeholder={'Search...'}
+                defaultOptions={this.state.defaultProduct}
+                loadOptions={e =>
+                  this.loadProducts(
+                    e,
+                    this.state.nutrientType,
+                    this.state.catalogue,
+                    this.state.facility_id
+                  )
+                }
+                onInputChange={handleInputChange}
+                styles={reactSelectStyle}
+                value={this.state.product}
+                onChange={this.onChangeProduct}
               />
+              <FieldError errors={this.state.errors} field="product" />
             </div>
           </div>
-
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <TextInput
@@ -300,6 +402,7 @@ class NutrientEditor extends React.Component {
                 fieldname="manufacturer"
                 value={this.state.manufacturer}
                 onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
               />
             </div>
           </div>
@@ -312,6 +415,7 @@ class NutrientEditor extends React.Component {
                 fieldname="description"
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
               />
             </div>
           </div>

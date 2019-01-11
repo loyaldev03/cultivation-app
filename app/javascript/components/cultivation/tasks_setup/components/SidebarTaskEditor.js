@@ -1,80 +1,79 @@
 import React from 'react'
-import UserStore from '../stores/UserStore'
-import UserRoles from '../stores/UserRoleStore'
-
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import Select from 'react-select'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
-import reactSelectStyle from './../../../utils/reactSelectStyle'
-import { throws } from 'assert'
 import updateTasks from '../actions/updateTask'
+import createTask from '../actions/createTask'
+import { addDays, differenceInCalendarDays, parse } from 'date-fns'
 import ErrorStore from '../stores/ErrorStore'
 
 class SidebarTaskEditor extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      tabs: 'general',
-      batch_id: this.props.batch_id,
-      id: props.task.id,
-      ...props.task,
-      duration: this.props.task.duration,
-      start_date: this.initialize_date(this.props.task.start_date),
-      end_date: this.initialize_date(this.props.task.end_date),
-      errors: ''
+    if (props.task) {
+      const {
+        id,
+        name,
+        start_date,
+        end_date,
+        duration,
+        estimated_hours,
+        task_type
+      } = props.task
+      this.state = {
+        id,
+        name,
+        start_date: start_date ? parse(start_date) : '',
+        end_date: end_date ? parse(end_date) : '',
+        duration,
+        estimated_hours: estimated_hours || '',
+        task_type: task_type || [],
+        tabs: 'general'
+      }
+    } else {
+      const today = new Date()
+      const tomorrow = addDays(today, 1)
+      this.state = {
+        id: '',
+        name: '',
+        duration: '',
+        start_date: today,
+        end_date: tomorrow,
+        estimated_hours: '',
+        task_type: [],
+        tabs: 'general'
+      }
     }
   }
 
-  componentWillReceiveProps(props) {
-    const { task } = this.props
-    if (props.task !== task) {
+  handleChangeText = fieldName => e => {
+    if (fieldName === 'duration') {
       this.setState({
-        batch_id: this.props.batch_id,
-        id: props.task.id,
-        ...props.task.attributes,
-        duration: props.task.duration,
-        start_date: this.initialize_date(props.task.start_date),
-        end_date: this.initialize_date(props.task.end_date),
-        errors: ''
+        end_date: addDays(this.state.start_date, e.target.value),
+        [fieldName]: e.target.value
       })
+      return
     }
+    this.setState({
+      [fieldName]: e.target.value
+    })
   }
 
-  initialize_date(date) {
-    if (date) {
-      return new Date(date)
-    } else {
-      return ''
+  handleChangeDate = (fieldName, value) => {
+    if (fieldName === 'end_date' && this.state.start_date) {
+      this.setState({
+        duration: differenceInCalendarDays(value, this.state.start_date),
+        [fieldName]: value
+      })
+      return
     }
-  }
-
-  handleChange = (key, value) => {
-    this.setState({ [key]: value })
-  }
-
-  handleChangeTask = event => {
-    let key = event.target.fieldname.value
-    let value = event.target.value
-    if (key === 'duration' && value && this.state.start_date) {
-      let new_end_date = new Date(this.state.start_date)
-      new_end_date.setDate(new_end_date.getDate() + parseInt(value) - 1)
-      this.setState({ end_date: new_end_date, [key]: value })
+    if (fieldName === 'start_date' && this.state.end_date) {
+      this.setState({
+        duration: differenceInCalendarDays(this.state.start_date, value),
+        [fieldName]: value
+      })
+      return
     } else {
-      this.setState({ [key]: value })
-    }
-  }
-
-  handleChangeDate = (key, value) => {
-    if (key === 'end_date' && this.state.start_date) {
-      let one_day = 1000 * 60 * 60 * 24
-      let duration = new Date(value) - new Date(this.state.start_date)
-      this.setState({ [key]: value, duration: duration / one_day + 1 })
-    } else if (key === 'start_date' && this.state.end_date) {
-      let one_day = 1000 * 60 * 60 * 24
-      let duration = new Date(this.state.end_date) - new Date(value)
-      this.setState({ [key]: value, duration: duration / one_day + 1 })
-    } else {
-      this.setState({ [key]: value })
+      this.setState({ [fieldName]: value })
     }
   }
 
@@ -97,35 +96,62 @@ class SidebarTaskEditor extends React.Component {
   }
 
   handleSubmit = event => {
-    updateTasks.updateTask(this.state)
-  }
-
-  handleChangeCheckbox = e => {
-    const item = e.target.name
-    const isChecked = e.target.checked
-    let arrays = this.state.task_type
-    if (e.target.checked) {
-      arrays.push(e.target.value)
-    } else {
-      arrays = arrays.filter(k => k !== e.target.value)
+    const {
+      id,
+      name,
+      start_date,
+      end_date,
+      duration,
+      estimated_hours,
+      task_type
+    } = this.state
+    const { action, batchId, task, relativeTaskId } = this.props
+    const changedTask = {
+      ...task,
+      task_related_id: relativeTaskId,
+      action: action,
+      batch_id: batchId,
+      name,
+      start_date,
+      end_date,
+      duration,
+      estimated_hours,
+      task_type
     }
-    this.setState({ task_type: arrays })
+    if (id) {
+      updateTasks.updateTask(changedTask)
+    } else {
+      createTask.createTask(changedTask)
+    }
   }
 
-  checkboxValue = val => {
-    return this.state.task_type.includes(val)
+  handleChangeCheckbox = fieldName => e => {
+    let { task_type } = this.state
+    if (e.target.checked) {
+      task_type.push(fieldName)
+    } else {
+      task_type = task_type.filter(k => k !== fieldName)
+    }
+    this.setState({ task_type })
+  }
+
+  checkboxValue = field => {
+    return this.state.task_type.includes(field)
   }
 
   render() {
-    let users = UserStore.users
-    let roles = UserRoles.slice()
-    let isNormalTask =
-      this.state.is_phase === false && this.state.is_category === false
-    let isNotNormalTask =
-      this.state.is_phase === true || this.state.is_category === true
-    let handleChangeCheckbox = this.handleChangeCheckbox
-    let checkboxValue = this.checkboxValue
+    const { showEstimatedHoursField } = this.props
     // let errorMessage = ErrorStore.slice()
+    const {
+      name,
+      start_date,
+      end_date,
+      duration,
+      estimated_hours,
+      actual_hours,
+      task_type,
+      errors
+    } = this.state
     return (
       <React.Fragment>
         <div
@@ -145,10 +171,9 @@ class SidebarTaskEditor extends React.Component {
           <div className="w-100">
             <TextInput
               label={'Task'}
-              value={this.state.name}
-              onChange={this.handleChangeTask}
-              fieldname="name"
-              errors={this.state.errors}
+              value={name}
+              onChange={this.handleChangeText('name')}
+              errors={errors}
               errorField="name"
             />
           </div>
@@ -157,48 +182,48 @@ class SidebarTaskEditor extends React.Component {
           <div className="w-40">
             <label className="f6 fw6 db mb1 gray ttc">Start At</label>
             <DatePicker
-              value={this.state.start_date}
+              value={start_date}
               fieldname="start_date"
-              onChange={e => this.handleChangeDate('start_date', e)}
+              onChange={value => this.handleChangeDate('start_date', value)}
             />
           </div>
 
           <div className="w-40 pl3">
             <label className="f6 fw6 db mb1 gray ttc">End At</label>
             <DatePicker
-              value={this.state.end_date}
+              value={end_date}
               fieldname="end_date"
-              onChange={e => this.handleChangeDate('end_date', e)}
+              onChange={value => this.handleChangeDate('end_date', value)}
             />
           </div>
           <div className="w-20 pl3">
             <NumericInput
               label={'Duration'}
-              value={this.state.duration}
-              onChange={this.handleChangeTask}
-              fieldname="duration"
-              errors={this.state.errors}
+              min="1"
+              value={duration}
+              onChange={this.handleChangeText('duration')}
+              errors={errors}
               errorField="duration"
             />
           </div>
         </div>
 
-        {isNormalTask ? (
+        {showEstimatedHoursField ? (
           <div className="ph4 mt3 mb3 flex">
             <div className="w-40">
               <NumericInput
                 label={'Estimated Hours Needed'}
-                value={this.state.estimated_hours}
-                onChange={this.handleChangeTask}
-                fieldname="estimated_hours"
-                errors={this.state.errors}
+                min="0"
+                value={estimated_hours}
+                onChange={this.handleChangeText('estimated_hours')}
+                errors={errors}
                 errorField="estimated_hours"
               />
             </div>
           </div>
         ) : null}
 
-        {isNormalTask ? (
+        {showEstimatedHoursField ? (
           <div>
             <hr className="mt3 m b--light-gray w-100" />
 
@@ -209,66 +234,54 @@ class SidebarTaskEditor extends React.Component {
               <label className="f6 fw6 db mb1 gray ttc">
                 <input
                   type="checkbox"
-                  name="checkbox-1"
                   className="mr2"
-                  value="assign_plant_id"
-                  onChange={handleChangeCheckbox}
-                  checked={checkboxValue('assign_plant_id')}
+                  onChange={this.handleChangeCheckbox('assign_plant_id')}
+                  checked={this.checkboxValue('assign_plant_id')}
                 />
                 Assign Plant id to clippings
               </label>
               <label className="f6 fw6 db mb1 gray ttc">
                 <input
                   type="checkbox"
-                  name="checkbox-1"
                   className="mr2"
-                  value="move_plant"
-                  onChange={handleChangeCheckbox}
-                  checked={checkboxValue('move_plant')}
+                  onChange={this.handleChangeCheckbox('move_plant')}
+                  checked={this.checkboxValue('move_plant')}
                 />
                 Move plant
               </label>
               <label className="f6 fw6 db mb1 gray ttc">
                 <input
                   type="checkbox"
-                  name="checkbox-1"
                   className="mr2"
-                  value="assign_plant_id_metrc"
-                  onChange={handleChangeCheckbox}
-                  checked={checkboxValue('assign_plant_id_metrc')}
+                  onChange={this.handleChangeCheckbox('assign_plant_id_metrc')}
+                  checked={this.checkboxValue('assign_plant_id_metrc')}
                 />
                 Assign Plant ID with Metrc tag
               </label>
               <label className="f6 fw6 db mb1 gray ttc">
                 <input
                   type="checkbox"
-                  name="checkbox-1"
                   className="mr2"
-                  value="create_harvest"
-                  onChange={handleChangeCheckbox}
-                  checked={checkboxValue('create_harvest')}
+                  onChange={this.handleChangeCheckbox('create_harvest')}
+                  checked={this.checkboxValue('create_harvest')}
                 />
                 Create harvest
               </label>
               <label className="f6 fw6 db mb1 gray ttc">
                 <input
                   type="checkbox"
-                  name="checkbox-1"
                   className="mr2"
-                  value="create_package"
-                  onChange={handleChangeCheckbox}
-                  checked={checkboxValue('create_package')}
+                  onChange={this.handleChangeCheckbox('create_package')}
+                  checked={this.checkboxValue('create_package')}
                 />
                 Create package
               </label>
               <label className="f6 fw6 db mb1 gray ttc">
                 <input
                   type="checkbox"
-                  name="checkbox-1"
                   className="mr2"
-                  value="finish_harvest"
-                  onChange={handleChangeCheckbox}
-                  checked={checkboxValue('finish_harvest')}
+                  onChange={this.handleChangeCheckbox('finish_harvest')}
+                  checked={this.checkboxValue('finish_harvest')}
                 />
                 Finish harvest
               </label>
@@ -276,8 +289,8 @@ class SidebarTaskEditor extends React.Component {
           </div>
         ) : null}
 
-        {isNotNormalTask ? (
-          <div className="">
+        {!showEstimatedHoursField ? (
+          <div className="mt3">
             <hr className="mt3 m b--light-gray w-100" />
             <div className="ph4 mt3 mb3">
               <div className="flex">
@@ -286,13 +299,13 @@ class SidebarTaskEditor extends React.Component {
                     Estimated Hours
                   </label>
                   <label className="f6 fw6 db mb1 gray ttc">
-                    {this.state.estimated_hours}
+                    {estimated_hours}
                   </label>
                 </div>
                 <div className="w-40 pl3">
                   <label className="f6 fw6 db mb1 gray ttc">Actual Hours</label>
                   <label className="f6 fw6 db mb1 gray ttc">
-                    {this.state.actual_hours}
+                    {actual_hours}
                   </label>
                 </div>
               </div>
@@ -316,10 +329,10 @@ class SidebarTaskEditor extends React.Component {
             name="commit"
             type="submit"
             value="continue"
-            className="ttu db tr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer"
+            className="btn btn--primary btn--large"
             onClick={this.handleSubmit}
           >
-            Update
+            Save
           </button>
         </div>
       </React.Fragment>

@@ -1,7 +1,6 @@
 import 'babel-polyfill'
 import React from 'react'
 import Select from 'react-select'
-import Calendar from 'react-calendar/dist/entry.nostyle'
 import { GroupBox, httpPostOptions, selectStyles } from './../../utils'
 import { toast } from './../../utils/toast'
 import BatchSetupEditor from './BatchSetupEditor'

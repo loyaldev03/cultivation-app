@@ -13,8 +13,8 @@ module Cultivation
     field :indent, type: Integer, default: -> { 0 }
     field :duration, type: Integer
     field :days_from_start_date, type: Integer
-    field :start_date, type: DateTime
-    field :end_date, type: DateTime
+    field :start_date, type: Time
+    field :end_date, type: Time
     field :estimated_hours, type: Float
     field :actual_hours, type: Float
     field :estimated_cost, type: Float
@@ -25,9 +25,9 @@ module Cultivation
     # Indicate a Category task (2nd level task)
     # FIXME: Remove
     field :is_category, type: Boolean, default: -> { false }
-    # Indelible task cannot be remove
+    # Indelible task cannot be remove, possible values: 'cleaning', 'moving'
     field :indelible, type: String
-    # Parent task
+    # FIXME: Remove - Parent task
     field :parent_id, type: BSON::ObjectId
     # Predecessor task
     field :depend_on, type: BSON::ObjectId
@@ -37,7 +37,6 @@ module Cultivation
     has_and_belongs_to_many :users, inverse_of: nil
     embeds_many :work_days, class_name: 'Cultivation::WorkDay'
     embeds_many :material_use, class_name: 'Cultivation::Item'
-    has_many :children, class_name: 'Cultivation::Task', foreign_key: :parent_id
 
     orderable scope: :batch, base: 0
 
@@ -49,12 +48,45 @@ module Cultivation
       batch.tasks.where(depend_on: id)
     end
 
-    # def children
-    #   batch.tasks.where(parent_id: self.id)
-    # end
+    def have_children?(batch_tasks)
+      if wbs.empty?
+        raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
+      end
+      WbsTree.have_children(batch_tasks, wbs)
+    end
 
-    def parent
-      batch.tasks.find_by(id: parent_id)
+    def children(batch_tasks)
+      if wbs.empty?
+        raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
+      end
+      WbsTree.children(batch_tasks, wbs)
+    end
+
+    def first_child?
+      if wbs.empty?
+        raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
+      end
+      wbs.ends_with? '.1'
+    end
+
+    def parent(batch_tasks)
+      if wbs.empty?
+        raise ArgumentError, 'Missing :wbs when calling parent. Use Task retrieve via QueryTasks.'
+      end
+      WbsTree.parent(batch_tasks, wbs)
+    end
+
+    # Find tasks that depends on current task
+    def dependents(batch_tasks)
+      batch_tasks.select do |t|
+        t.depend_on &&
+          # Dependent tasks should have depends on set to current task
+          t.depend_on.to_s == id.to_s
+      end
+    end
+
+    def indelible?
+      !indelible.nil? && !indelible.blank?
     end
 
     def estimated_cost

@@ -250,7 +250,6 @@ module Inventory
     end
 
     def update_po_invoice_count(invoice_item_id)
-      Rails.logger.debug "\t\t\t>>>>>>  invoice_item_id: #{invoice_item_id}"
       return if invoice_item_id.nil?
 
       invoice_item = Inventory::VendorInvoiceItem.find(invoice_item_id)

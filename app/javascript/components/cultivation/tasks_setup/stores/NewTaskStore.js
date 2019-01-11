@@ -4,9 +4,22 @@ import {
   httpPutOptions,
   httpGetOptions,
   httpPostOptions,
+  httpDeleteOptions,
   addDayToDate,
   toast
 } from '../../../utils'
+import { addDays, differenceInCalendarDays, parse } from 'date-fns'
+
+function parseTask(taskAttributes) {
+  const { start_date, duration } = taskAttributes
+  const startDate = parse(start_date)
+  const endDate = addDays(startDate, duration)
+  return Object.assign(taskAttributes, {
+    start_date: startDate,
+    duration: duration,
+    end_date: endDate
+  })
+}
 
 class TaskStore {
   @observable isLoading = false
@@ -20,16 +33,13 @@ class TaskStore {
     const url = `/api/v1/batches/${batchId}/tasks`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
-      this.isLoading = false
-      this.tasks = response.data.map(res => {
-        return {
-          ...res.attributes
-        }
-      })
+      this.tasks = response.data.map(res => parseTask(res.attributes))
       this.isDataLoaded = true
     } catch (error) {
       this.isDataLoaded = false
       console.error(error)
+    } finally {
+      this.isLoading = false
     }
   }
 
@@ -71,6 +81,27 @@ class TaskStore {
     }
   }
 
+  @action
+  async deleteTask(batchId, taskId) {
+    this.isLoading = true
+    // Optimistic update
+    this.tasks = this.tasks.filter(t => t.id !== taskId)
+    const url = `/api/v1/batches/${batchId}/tasks/${taskId}`
+    try {
+      const response = await (await fetch(url, httpDeleteOptions())).json()
+      if (response.errors && response.errors.id) {
+        toast(data.errors.id, 'error')
+      } else {
+        toast('Task deleted', 'success')
+        this.loadTasks(batchId)
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
   isCollapsed(wbs) {
     const found = this.collapsedNodes.find(x => x === wbs)
     return !!found
@@ -101,6 +132,20 @@ class TaskStore {
     return toJS(this.tasks.find(x => x.id === id))
   }
 
+  getTaskByWbs(wbs) {
+    return toJS(this.tasks.find(x => x.wbs && x.wbs === wbs))
+  }
+
+  getChildren(nodeWbs) {
+    const childWbs = nodeWbs + '.'
+    return this.tasks.filter(t => t.wbs.startsWith(childWbs))
+  }
+
+  haveChildren(nodeWbs) {
+    const childWbs = nodeWbs + '.'
+    return this.tasks.some(t => t.wbs.startsWith(childWbs))
+  }
+
   @action
   toggleCollapseNode(wbs) {
     const found = this.collapsedNodes.find(i => i === wbs)
@@ -127,6 +172,105 @@ class TaskStore {
       this.isLoading = false
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  @action
+  async editTask(batchId, taskId, updateObj, isReload = false) {
+    this.isLoading = true
+    const task = this.getTaskById(taskId)
+    const payload = Object.assign({}, task, updateObj)
+    // Optimistic update
+    this.tasks = this.tasks.map(t => {
+      return t.id === taskId ? payload : t
+    })
+    const url = `/api/v1/batches/${batchId}/tasks/${taskId}`
+    try {
+      const response = await (await fetch(url, httpPutOptions(payload))).json()
+      // Replace optimistic update with actual response
+      if (response.data) {
+        toast('Task saved', 'success')
+        if (isReload) {
+          this.loadTasks(batchId)
+        } else {
+          const updated = parseTask(response.data.attributes)
+          this.tasks = this.tasks.map(t => {
+            return t.id === taskId ? updated : t
+          })
+        }
+      } else {
+        console.error(response.errors)
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  @action
+  async editStartDate(batchId, taskId, startDate) {
+    const task = this.getTaskById(taskId)
+    if (startDate && task.end_date) {
+      const endDate = addDays(startDate, task.duration)
+      const updateObj = {
+        start_date: startDate,
+        end_date: endDate,
+        duration: task.duration
+      }
+      await this.editTask(batchId, taskId, updateObj, true)
+    }
+  }
+
+  @action
+  async editEndDate(batchId, taskId, endDate) {
+    const task = this.getTaskById(taskId)
+    if (endDate && task.start_date) {
+      let startDate = parse(task.start_date)
+      if (endDate <= startDate) {
+        // This would push the start date back by duration
+        startDate = addDays(endDate, task.duration * -1)
+        const updateObj = {
+          start_date: startDate,
+          end_date: endDate,
+          duration: task.duration
+        }
+        await this.editTask(batchId, taskId, updateObj, true)
+      } else {
+        const duration = differenceInCalendarDays(endDate, startDate)
+        const updateObj = {
+          start_date: startDate,
+          end_date: endDate,
+          duration: duration
+        }
+        await this.editTask(batchId, taskId, updateObj, true)
+      }
+    }
+  }
+
+  @action
+  async editDuration(batchId, taskId, duration) {
+    const task = this.getTaskById(taskId)
+    if (duration && task.start_date) {
+      const startDate = parse(task.start_date)
+      const endDate = addDays(startDate, duration)
+      const updateObj = {
+        start_date: startDate,
+        end_date: endDate,
+        duration
+      }
+      await this.editTask(batchId, taskId, updateObj, true)
+    }
+  }
+
+  @action
+  async editEstimatedHours(batchId, taskId, estimatedHours = 0) {
+    const task = this.getTaskById(taskId)
+    if (estimatedHours) {
+      const updateObj = {
+        estimated_hours: estimatedHours
+      }
+      await this.editTask(batchId, taskId, updateObj, true)
     }
   }
 
@@ -178,12 +322,19 @@ class TaskStore {
     }
   }
 
-  deleteTask(task) {
-    const found = this.tasks.find(x => x.id === task.id)
-    if (found) {
-      this.tasks = this.tasks.map(u => u.id !== task.id)
-    } else {
-      this.tasks.push(task)
+  @action
+  async deleteRelationship(batch_id, destination_id) {
+    this.isLoading = true
+
+    const url = `/api/v1/batches/${batch_id}/tasks/${destination_id}/delete_relationship`
+    const payload = { destination_id }
+    try {
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      await this.loadTasks(batch_id)
+      this.isLoading = false
+      toast('Task Relationship Deleted', 'success')
+    } catch (error) {
+      console.log(error)
     }
   }
 

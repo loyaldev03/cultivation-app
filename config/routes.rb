@@ -155,6 +155,7 @@ Rails.application.routes.draw do
           post 'setup'
           post 'setup_seed'
           post 'setup_purchased_clones'
+          get 'products'
         end
       end
 
@@ -180,11 +181,14 @@ Rails.application.routes.draw do
       resources :purchase_orders, only: [:index]
       resources :vendor_invoices, only: [:index, :show]
 
+      resources :products, only: [:index]
+
       resources :strains, only: [:index, :create, :show] do
         get 'suggest', on: :collection
       end
 
       resources :batches, only: [:index, :create] do
+        get 'list_infos', on: :collection
         get 'search_locations', on: :collection
         post 'search_batch_plans', on: :collection
         post 'setup_simple_batch', on: :collection
@@ -197,6 +201,7 @@ Rails.application.routes.draw do
             post 'update_position'
             post 'update_dependency'
             get 'locations'
+            post 'delete_relationship'
           end
         end
         resources :nutrient_profiles

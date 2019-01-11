@@ -4,7 +4,6 @@ import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 import TaskStore from '../stores/NewTaskStore'
-import UserStore from '../stores/UserStore'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import {
   monthStartDate,
@@ -15,52 +14,13 @@ import {
 } from '../../../utils'
 import { toast } from '../../../utils/toast'
 import TaskEditor from './TaskEditor'
-import updateTask from '../actions/updateTask'
-import deleteTask from '../actions/deleteTask'
 import ReactTable from 'react-table'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import BatchSetupStore from '../../batches_setup/BatchSetupStore'
-
-const styles = `
-.table-dropdown {
-  box-shadow: 0 3px 10px 0 #00000087;
-  top: initial;
-  min-width: 200px;
-}
-.table-dropdown a:hover{
-  background-color: #eee;
-}
-
-.rt-tr-group:hover{
-  box-shadow: 0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
-}
-.rt-thead{
-  background-color: #eee;
-}
-
-`
-
-const TaskNameField = ({ id, wbs, indent, text }) => {
-  return (
-    <span
-      className={classNames(`dib flex items-center indent--${indent}`, {
-        orange: TaskStore.hasChildNode(wbs)
-      })}
-    >
-      {TaskStore.hasChildNode(wbs) ? (
-        <i
-          className="material-icons dim grey f7 pointer"
-          onClick={e => TaskStore.toggleCollapseNode(wbs)}
-        >
-          {TaskStore.isCollapsed(wbs) ? 'arrow_right' : 'arrow_drop_down'}
-        </i>
-      ) : (
-        <span className="dib indent--1" />
-      )}
-      {text}
-    </span>
-  )
-}
+import InlineEditTaskNameField from './InlineEditTaskNameField'
+import InlineEditTextField from './InlineEditTextField'
+import InlineEditNumberField from './InlineEditNumberField'
+import InlineEditDateField from './InlineEditDateField'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -122,8 +82,7 @@ class TaskList extends React.Component {
   }
 
   handleEllipsisClick = taskId => e => {
-    console.log({ taskId })
-    this.setState({ idOpen: taskId })
+    this.setState({ idOpen: taskId, taskSelected: taskId })
   }
 
   handleMouseLeave = row => {
@@ -135,8 +94,12 @@ class TaskList extends React.Component {
     TaskStore.updateTaskIndent(this.props.batch.id, taskId, indentAction)
   }
 
-  handleEdit = taskId => {
-    this.setState({ taskSelected: taskId, showStartDateCalendar: false })
+  handleShowSidebar = taskId => {
+    this.setState({
+      taskSelected: taskId,
+      taskAction: 'update',
+      showStartDateCalendar: false
+    })
     let error_container = document.getElementById('error-container')
     if (error_container) {
       error_container.style.display = 'none'
@@ -149,8 +112,10 @@ class TaskList extends React.Component {
     })
   }
 
-  handleDelete = row => {
-    deleteTask(this.props.batch.id, row.row)
+  handleDelete = async row => {
+    if (confirm('Are you sure you want to delete this task? ')) {
+      await TaskStore.deleteTask(this.props.batch.id, row.row.id)
+    }
   }
 
   clearDropdown() {
@@ -163,21 +128,36 @@ class TaskList extends React.Component {
 
   renderTaskNameColumn = data => {
     const { id, wbs, indent } = data.row
+    const batchId = this.props.batch.id
+    const hasChild = TaskStore.hasChildNode(wbs)
+    const isCollapsed = TaskStore.isCollapsed(wbs)
     return (
-      <div className="flex justify-between items-center h-100" draggable={true}>
-        <TaskNameField id={id} wbs={wbs} indent={indent} text={data.value} />
+      <div
+        className="flex flex-auto justify-between items-center h-100 hide-child"
+        draggable={true}
+      >
+        <InlineEditTaskNameField
+          text={data.value}
+          indent={indent}
+          hasChild={hasChild}
+          isCollapsed={isCollapsed}
+          onCollapseClick={() => TaskStore.toggleCollapseNode(wbs)}
+          onClick={e => this.handleShowSidebar(id)}
+          onHighlight={() => this.setState({ taskSelected: id })}
+          onDoneClick={value => {
+            TaskStore.editTask(batchId, id, { name: value })
+          }}
+        />
         <Manager>
           <Reference>
             {({ ref }) => {
-              const childState = !this.state.idOpen || this.state.idOpen === id
               return (
                 <i
                   ref={ref}
                   onClick={this.handleEllipsisClick(id)}
-                  className={classNames(
-                    'ml2 pointer material-icons show-on-hover',
-                    {}
-                  )}
+                  className={classNames('pointer material-icons', {
+                    'show-on-hover': this.state.taskSelected !== id
+                  })}
                 >
                   more_horiz
                 </i>
@@ -210,17 +190,17 @@ class TaskList extends React.Component {
                     <MenuButton
                       icon="vertical_align_top"
                       text="Insert Task Above"
-                      onClick={e => this.handleAddTask(data, 'top')}
+                      onClick={e => this.handleAddTask(id, 'add-above')}
                     />
                     <MenuButton
                       icon="vertical_align_bottom"
                       text="Insert Task Below"
-                      onClick={e => this.handleAddTask(data, 'bottom')}
+                      onClick={e => this.handleAddTask(id, 'add-below')}
                     />
                     <MenuButton
                       icon="edit"
                       text="Edit Task Details"
-                      onClick={e => this.handleEdit(id)}
+                      onClick={e => this.handleShowSidebar(id)}
                     />
                     <MenuButton
                       icon="delete_outline"
@@ -239,18 +219,16 @@ class TaskList extends React.Component {
     )
   }
 
-  handleAddTask = (data, position) => {
-    const { id, parent_id } = data.row
-    console.log({ action: 'handleAddTask', id, parent_id })
-    this.setState({ taskSelected: id, showStartDateCalendar: false })
+  handleAddTask = (taskId, action) => {
+    this.setState({
+      taskAction: action,
+      taskSelected: taskId,
+      showStartDateCalendar: false
+    })
     editorSidebarHandler.open({
       width: '500px',
-      data: {
-        task_related_id: id,
-        position: position,
-        task_related_parent_id: parent_id
-      },
-      action: 'add'
+      taskId: taskId,
+      action: action
     })
   }
 
@@ -385,7 +363,7 @@ class TaskList extends React.Component {
     }
   }
 
-  columnsConfig = () => [
+  columnsConfig = batchId => [
     {
       accessor: 'id',
       show: false
@@ -396,10 +374,6 @@ class TaskList extends React.Component {
     },
     {
       accessor: 'parent_id',
-      show: false
-    },
-    {
-      accessor: 'depend_on',
       show: false
     },
     {
@@ -416,12 +390,51 @@ class TaskList extends React.Component {
       Cell: this.renderTaskNameColumn
     },
     {
+      Header: 'Predecessor',
+      accessor: 'depend_on',
+      maxWidth: '100',
+      show: this.checkVisibility('depend_on'),
+      Cell: data => {
+        const { id, depend_on } = data.row
+        let taskWbs = ''
+        if (depend_on) {
+          const dependOnTask = TaskStore.getTaskById(depend_on)
+          taskWbs = dependOnTask ? dependOnTask.wbs : ''
+        }
+        return (
+          <InlineEditTextField
+            text={taskWbs}
+            onHighlight={() => this.setState({ taskSelected: id })}
+            onDoneClick={value => {
+              const selectedTask = TaskStore.getTaskByWbs(value)
+              if (selectedTask) {
+                TaskStore.editTask(batchId, id, { depend_on: selectedTask.id })
+              } else {
+                TaskStore.editTask(batchId, id, { depend_on: null })
+              }
+            }}
+          />
+        )
+      }
+    },
+    {
       Header: 'Start Date',
       accessor: 'start_date',
       maxWidth: '100',
       className: 'tr',
       show: this.checkVisibility('start_date'),
-      Cell: this.renderDateColumn('start_date')
+      Cell: data => {
+        const { id, start_date } = data.row
+        return (
+          <InlineEditDateField
+            text={start_date}
+            onHighlight={() => this.setState({ taskSelected: id })}
+            onDoneClick={value => {
+              TaskStore.editStartDate(batchId, id, value)
+            }}
+          />
+        )
+      }
     },
     {
       Header: 'End Date',
@@ -429,21 +442,60 @@ class TaskList extends React.Component {
       maxWidth: '100',
       className: 'tr',
       show: this.checkVisibility('end_date'),
-      Cell: this.renderDateColumn('end_date')
+      Cell: data => {
+        const { id, end_date } = data.row
+        return (
+          <InlineEditDateField
+            text={end_date}
+            onHighlight={() => this.setState({ taskSelected: id })}
+            onDoneClick={value => {
+              TaskStore.editEndDate(batchId, id, value)
+            }}
+          />
+        )
+      }
     },
     {
       Header: 'Duration',
       accessor: 'duration',
       maxWidth: '90',
       className: 'tr',
-      show: this.checkVisibility('duration')
+      show: this.checkVisibility('duration'),
+      Cell: data => {
+        const { id, duration } = data.row
+        return (
+          <InlineEditNumberField
+            text={duration}
+            min="1"
+            step="1"
+            onHighlight={() => this.setState({ taskSelected: id })}
+            onDoneClick={value => {
+              TaskStore.editDuration(batchId, id, value)
+            }}
+          />
+        )
+      }
     },
     {
       Header: 'Est Hr',
       accessor: 'estimated_hours',
       maxWidth: '100',
       className: 'tr',
-      show: this.checkVisibility('estimated_hour')
+      show: this.checkVisibility('estimated_hours'),
+      Cell: data => {
+        const { id, estimated_hours } = data.row
+        return (
+          <InlineEditNumberField
+            text={estimated_hours}
+            min="0"
+            step=".25"
+            onHighlight={() => this.setState({ taskSelected: id })}
+            onDoneClick={value => {
+              TaskStore.editEstimatedHours(batchId, id, value)
+            }}
+          />
+        )
+      }
     },
     {
       Header: 'Est Cost ($)',
@@ -468,13 +520,13 @@ class TaskList extends React.Component {
 
   render() {
     const { showStartDateCalendar, searchMonth, selectedStartDate } = this.state
+    const batchId = this.props.batch.id
     const phaseDuration = this.buildPhaseDuration(TaskStore.tasks)
     const totalDuration = this.calculateTotalDuration(phaseDuration)
-    let users = UserStore
     return (
       <React.Fragment>
         <ReactTable
-          columns={this.columnsConfig()}
+          columns={this.columnsConfig(batchId)}
           data={TaskStore.taskList}
           loading={TaskStore.isLoading}
           showPagination={false}
@@ -482,19 +534,17 @@ class TaskList extends React.Component {
           className="-highlight"
           pageSize={TaskStore.taskList.length}
           getTrProps={(state, rowInfo, column) => {
-            const trProps = {
-              className: 'task-row'
+            let className = 'task-row'
+            if (
+              rowInfo.row &&
+              this.state.taskSelected &&
+              this.state.taskSelected === rowInfo.row.id
+            ) {
+              className = 'task-row shadow-1'
             }
-            if (this.state.taskSelected && rowInfo.row) {
-              trProps.stype = {
-                boxShadow:
-                  this.state.taskSelected === rowInfo.row.id
-                    ? '0 0 4px 0 rgba(0,0,0,.14), 0 3px 4px 0 rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2)'
-                    : null,
-                backgroundColor: rowInfo.row['indent'] === 0 ? '#FAEFEE' : null
-              }
+            return {
+              className
             }
-            return trProps
           }}
         />
         <div className="mt3 tr">
@@ -561,7 +611,9 @@ class TaskList extends React.Component {
             ) : (
               <TaskEditor
                 onClose={this.closeSidebar}
-                batch_id={this.props.batch.id}
+                taskId={this.state.taskSelected}
+                taskAction={this.state.taskAction}
+                batchId={this.props.batch.id}
                 handleReset={this.handleReset}
               />
             )}

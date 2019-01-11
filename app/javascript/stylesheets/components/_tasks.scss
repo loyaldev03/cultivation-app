@@ -44,8 +44,24 @@ $indentWidth: 24px;
 .task-row {
   height: 32px;
   font-size: 14px;
+  .rt-td {
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+  }
   .show-on-hover {
     display: none;
+  }
+
+  .react-date-picker__wrapper {
+    border: solid 1px $lightGrey;
+    min-width: 84px;
+    height: 24px;
+    border-radius: 0;
+
+    .react-date-picker__inputGroup__year {
+      width: 30px !important;
+    }
   }
 }
 
@@ -54,3 +70,4 @@ $indentWidth: 24px;
     display: block;
   }
 }
+

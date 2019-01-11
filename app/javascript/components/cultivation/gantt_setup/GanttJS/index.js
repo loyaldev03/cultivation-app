@@ -255,6 +255,7 @@ export default class Gantt {
     this.map_arrows_on_bars()
     this.set_width()
     this.set_scroll_position()
+    this.make_weekend_highlights()
   }
 
   setup_layers() {
@@ -406,6 +407,54 @@ export default class Gantt {
     }
   }
 
+  getDates(startDate, endDate) {
+    var dates = [],
+      currentDate = startDate,
+      addDays = function(days) {
+        var date = new Date(this.valueOf())
+        date.setDate(date.getDate() + days)
+        return date
+      }
+    while (currentDate <= endDate) {
+      dates.push(currentDate)
+      currentDate = addDays.call(currentDate, 1)
+    }
+    return dates
+  }
+
+  make_weekend_highlights() {
+    const start_date = this.gantt_start
+    const date_now = start_date
+    const options = this.options
+    const tasks = this.tasks
+    const layers = this.layers
+    let dates = this.getDates(this.gantt_start, this.gantt_end)
+    dates.forEach(function(date) {
+      if (date.getDay() == 6 || date.getDay() == 0) {
+        //if weekend , saturday or sunday
+        const x =
+          (date_utils.diff(date, start_date, 'hour') / options.step) *
+          options.column_width
+        const y = 0
+
+        const width = options.column_width
+        const height =
+          (options.bar_height + options.padding) * tasks.length +
+          options.header_height +
+          options.padding / 2
+
+        createSVG('rect', {
+          x,
+          y,
+          width,
+          height,
+          class: 'weekend-highlight',
+          append_to: layers.grid
+        })
+      }
+    })
+  }
+
   make_dates() {
     for (let date of this.get_dates_to_draw()) {
       createSVG('text', {
@@ -534,6 +583,35 @@ export default class Gantt {
             this.bars[task._index] // to_task
           )
           this.layers.arrow.appendChild(arrow.element)
+          const g = createSVG('g', {
+            append_to: this.layers.arrow,
+            class: 'hidden'
+          })
+          createSVG('circle', {
+            cx: arrow.getCoordinate().start_x,
+            cy: arrow.getCoordinate().end_y,
+            r: 10,
+            'data-from': dependency.id,
+            'data-to': task.id,
+            class: 'button-delete',
+            stroke: '#f5f5f5',
+            fill: '#f5f5f5',
+            innerHTML: '<i class=\'material-icons\'>delete</i>',
+            append_to: g
+          })
+
+          createSVG('text', {
+            x: arrow.getCoordinate().start_x,
+            y: arrow.getCoordinate().end_y,
+            'text-anchor': 'middle',
+            'font-size': '10px',
+            stroke: 'red',
+            innerHTML: '&#128465;',
+            class: '',
+            dy: '.3em',
+            append_to: g
+          })
+
           return arrow
         })
         .filter(Boolean) // filter falsy values
@@ -614,10 +692,20 @@ export default class Gantt {
         drag_line
       )
     }
+
+    $.on(this.$svg, 'mousedown', '.button-delete', (e, element) => {
+      console.log('delete button clicked!')
+      this.trigger_event('delete_relationship', [
+        element.getAttribute('data-to'),
+        element.getAttribute('data-from')
+      ])
+    })
+
     $.on(this.$svg, 'mousedown', '.arrow, .handle-arrow', (e, element) => {
       let path = element.getAttribute('d')
+      element.classList.add('on')
       arrow = this.arrows.find(e => e.path === path)
-      arrow.update_arrow(e.offsetX, e.offsetY)
+      element.nextSibling.classList.remove('hidden')
       drag_line = true
     })
 
@@ -688,7 +776,7 @@ export default class Gantt {
           }
         }
       })
-      if (drag_line) {
+      if (drag_line && arrow) {
         arrow.update_arrow(e.offsetX, e.offsetY)
       }
     })
@@ -747,7 +835,9 @@ export default class Gantt {
 
           this.trigger_event('drag_relationship', [source_id, destination_id])
         } else {
-          arrow.update()
+          if (arrow) {
+            arrow.update()
+          }
         }
       }
     })

@@ -12,6 +12,7 @@ module Inventory
       :catalogue,
       :uom,
       :quantity,
+      :product_id,
       :product_name,
       :manufacturer,
       :description,
@@ -47,6 +48,7 @@ module Inventory
 
       @location_id = args[:location_id]
       @catalogue = Inventory::Catalogue.seed
+      @product_id = args[:product_id]
       @product_name = args[:product_name]
       @description = args[:description]
       @manufacturer = args[:manufacturer]
@@ -261,6 +263,8 @@ module Inventory
     end
 
     def create_seed(invoice_item)
+      product = save_product
+
       Inventory::ItemTransaction.create!(
         ref_id: invoice_item.id,
         ref_type: 'Inventory::VendorInvoiceItem',
@@ -278,10 +282,13 @@ module Inventory
         conversion: qty_per_package,              # conversion rule, 1 bag = 65 kg
         facility_strain: facility_strain,
         location_id: location_id,
+        product_id: product.id,
       )
     end
 
     def update_seed(invoice_item)
+      product = save_product
+
       transaction = Inventory::ItemTransaction.find(id)
       transaction.ref_id = invoice_item.id
       transaction.event_date = purchase_date
@@ -299,6 +306,7 @@ module Inventory
       transaction.product_name = product_name
       transaction.description = description
       transaction.manufacturer = manufacturer
+      transaction.product_id = product.id
 
       transaction.save!
       transaction
@@ -306,6 +314,21 @@ module Inventory
 
     def combine_errors(errors_source, from_field, to_field)
       errors.add(to_field, errors_source[from_field]) if errors_source.key?(from_field)
+    end
+
+    def save_product
+      if product_id.present?
+        return Inventory::Product.find(product_id)
+      else
+        return Inventory::Product.create!(
+                 name: product_name,
+                 manufacturer: manufacturer,
+                 description: description,
+                 catalogue: catalogue,
+                 facility: facility,
+                 facility_strain: facility_strain,
+               )
+      end
     end
   end
 end

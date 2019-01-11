@@ -54,6 +54,10 @@ export default class Arrow {
             m -5 -5
             l 5 5
             l -5 5`
+    this.start_x = start_x - 20
+    this.start_y = start_y
+    this.end_y = end_y
+    this.end_x = end_x
 
     if (
       this.to_task.$bar.getX() <
@@ -63,7 +67,6 @@ export default class Arrow {
       const down_2 =
         this.to_task.$bar.getY() + this.to_task.$bar.getHeight() / 2 - curve_y
       const left = this.to_task.$bar.getX() - this.gantt.options.padding
-
       this.path = `
                 M ${start_x} ${start_y}
                 v ${down_1}
@@ -76,6 +79,19 @@ export default class Arrow {
                 m -5 -5
                 l 5 5
                 l -5 5`
+      this.start_x = start_x - 50
+      this.start_y = start_y
+      this.end_y = end_y
+      this.end_x = end_x
+    }
+  }
+
+  getCoordinate() {
+    return {
+      start_x: this.start_x,
+      start_y: this.start_y,
+      end_x: this.end_x,
+      end_y: this.end_y
     }
   }
 
@@ -90,6 +106,7 @@ export default class Arrow {
 
   update() {
     this.calculate_path()
+    // this.element.classList.remove('on')
     this.element.setAttribute('d', this.path)
   }
 

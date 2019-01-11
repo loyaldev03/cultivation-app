@@ -14,6 +14,9 @@ const styles = `
 path.handle-arrow {
   cursor: pointer;
 }
+path.handle-arrow.on {
+  stroke: red;
+}
 path.arrow{
   display: none;
 }
@@ -180,6 +183,12 @@ class GanttChart extends React.Component {
     )
     el.scrollLeft = scrollLeft
     el.scrollTop = scrollTop
+  }
+
+  onDeleteRelationship = async (destination_id, source_id) => {
+    if (confirm('Are you sure you want to delete this relationship? ')) {
+      await TaskStore.deleteRelationship(this.props.batch_id, destination_id)
+    }
   }
 
   render() {
@@ -392,6 +401,7 @@ class GanttChart extends React.Component {
                 onLoad={this.onLoad}
                 onDragRelationShip={this.onDragRelationShip}
                 onDateChange={this.onDateChange}
+                onDeleteRelationship={this.onDeleteRelationship}
                 // onProgressChange={this._func}
                 // onViewChange={this._func}
                 // customPopupHtml={this._html_func}

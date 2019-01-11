@@ -322,6 +322,22 @@ class TaskStore {
     }
   }
 
+  @action
+  async deleteRelationship(batch_id, destination_id) {
+    this.isLoading = true
+
+    const url = `/api/v1/batches/${batch_id}/tasks/${destination_id}/delete_relationship`
+    const payload = { destination_id }
+    try {
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      await this.loadTasks(batch_id)
+      this.isLoading = false
+      toast('Task Relationship Deleted', 'success')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   formatGantt(tasks) {
     tasks = toJS(tasks)
     if (this.isDataLoaded) {

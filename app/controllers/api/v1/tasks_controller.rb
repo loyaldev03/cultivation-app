@@ -81,6 +81,16 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     render json: {errors: delete_cmd.errors}
   end
 
+  def delete_relationship
+    destination_task = Cultivation::Task.find(params[:destination_id])
+    if destination_task.present?
+      destination_task.update(depend_on: nil)
+      render json: {data: {id: destination_task.id}}
+    else
+      render json: {errors: 'Task Not Found'}
+    end
+  end
+
   private
 
   def set_batch

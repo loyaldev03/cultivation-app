@@ -165,6 +165,7 @@ module Constants
   PURCHASED_CLONES_KEY = 'purchased_clones'
   SALES_KEY = 'sales_products'
   NON_SALES_KEY = 'non_sales'
+  RAW_MATERIALS_KEY = 'raw_materials'
 
   NUTRIENT_TYPE = [
     {code: :blend, name: 'Blend'},

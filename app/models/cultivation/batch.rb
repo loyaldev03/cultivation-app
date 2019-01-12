@@ -20,6 +20,7 @@ module Cultivation
     field :selected_plants, type: Array, default: []
 
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
+    belongs_to :facility, class_name: 'Facility'
     has_many :tray_plans, class_name: 'Cultivation::TrayPlan'
     has_many :tasks, class_name: 'Cultivation::Task'
     has_many :plants, class_name: 'Inventory::Plant'

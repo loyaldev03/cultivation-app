@@ -13,6 +13,13 @@ import deleteMaterial from '../actions/deleteMaterial'
 import TaskStore from '../stores/NewTaskStore'
 import { groupBy, httpPostOptions } from '../../../utils'
 
+import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
+import reactSelectStyle from '../../../utils/reactSelectStyle'
+
+const handleInputChange = newValue => {
+  return newValue ? newValue : ''
+}
+
 export default class MaterialForm extends React.Component {
   constructor(props) {
     super(props)
@@ -27,6 +34,7 @@ export default class MaterialForm extends React.Component {
       materials: [],
       items: props.task.items
     }
+    this.loadProducts(this.state.batch_id)
   }
 
   componentWillReceiveProps(props) {
@@ -132,6 +140,42 @@ export default class MaterialForm extends React.Component {
       })
   }
 
+  loadProducts = (batch_id) => {
+    // console.log(catalogue)
+    return fetch(
+      `/api/v1/products?batch_id=${batch_id}`,
+      {
+        credentials: 'include'
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        const products = data.data.map(x => ({
+          label: x.attributes.name,
+          value: x.attributes.id,
+          ...x.attributes
+        }))
+        this.setState({ defaultProduct: products })
+        return products
+      })
+  }
+
+  onChangeProduct = (product) => {
+    console.log(product)
+    this.setState({
+      product: { value: product.id, label: product.name, ...product }
+    })
+  }
+
+  onSave = () => {
+    console.log('saving')
+    this.setState(previousState => ({
+      materials: [...previousState.materials, this.state.product],
+      product: { value: '', label: '' }
+    }));
+  }
+
+
   render() {
     let material_2 = ItemStore.slice()
 
@@ -178,14 +222,14 @@ export default class MaterialForm extends React.Component {
       e => e.id === this.state.catalogue_id
     )
     let uom_dropdown = catalogue ? catalogue.uoms : [{ label: '', value: '' }]
-    let materials = this.state.items
+    let materials = this.state.materials
     let handleChange = this.handleChange
     let handleDelete = this.handleDelete
 
     return (
       <React.Fragment>
         <div className="">
-          <div className="ph4 mt3 flex">
+          {/* <div className="ph4 mt3 flex">
             <div className="w-100 ttc">
               <label className="f6 fw6 db mb1 gray ttc">Material Name</label>
               <Select
@@ -229,8 +273,26 @@ export default class MaterialForm extends React.Component {
                 />
               </div>
             </div>
-          )}
+          )} */}
+
           <div className="ph4 mt3 flex">
+            <div className="w-80">
+              <Select
+                isClearable
+                placeholder={'Search Product ...'}
+                options={this.state.defaultProduct}
+                onInputChange={handleInputChange}
+                styles={reactSelectStyle}
+                value={this.state.product}
+                onChange={this.onChangeProduct}
+              />
+              {/* <FieldError errors={this.state.errors} field="product" /> */}
+            </div>
+            <div className="w-20">
+              <i className="material-icons icon--btn child orange ml3" onClick={this.onSave}>add</i>
+            </div>
+          </div>
+          {/* <div className="ph4 mt3 flex">
             <div className="w-100">
               <NumericInput
                 label={'Quantity'}
@@ -252,29 +314,34 @@ export default class MaterialForm extends React.Component {
                 value={this.state.uom}
               />
             </div>
-          </div>
-          <div className="pv2 w4">
+          </div> */}
+          {/* <div className="pv2 w4">
             <input
               type="submit"
               className="pv2 ph3 ml4 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
               value="Add Material"
               onClick={this.handleSubmit}
             />
-          </div>
+          </div> */}
         </div>
-        <div className="mt4 mr4 ml4 f6 fw6 db mb1 gray ttc">
+        <div className="ph4 mt3 flex f6 fw6 db mb1 gray ttc">
           <table className="w-100">
             <tbody>
               <tr className="bb">
-                <th>Material Name</th>
-                <th>Qty</th>
+                <th align='left' width="90%">Product Name</th>
+                <th>Category</th>
+                <th width="10%">Qty</th>
                 <th>UOM</th>
                 <th />
               </tr>
               {materials.map((x, index) => (
                 <tr className="pointer bb" key={index}>
-                  <td className="tl pv2 ph3">{x.name}</td>
-                  <td className="tl pv2 ph3">{x.quantity}</td>
+                  <td className="tl pv2 ph3" width="90%" align='left'>{x.name}</td>
+                  <td className="tl pv2 ph3">{x.catalogue.category}</td>
+                  <td className="tl pv2 ph3" width="10%">
+                    {/* <input type="text" class="flex-auto b--grey link" value="" maxlength="5" size="5"></input> */}
+                    <input type="text" name="pin" maxlength="4" size="4"></input>
+                  </td>
                   <td className="tl pv2 ph3">{x.uom}</td>
                   <td className="tl pv2 ph3">
                     <i
@@ -288,6 +355,17 @@ export default class MaterialForm extends React.Component {
               ))}
             </tbody>
           </table>
+        </div>
+        <div class="mt3 tr mr3">
+          <input
+            type="submit"
+            className="pv2 ph3 ml4 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+            value="Save"
+          // onClick={this.handleSubmit}
+          />
+        </div>
+        <div class="w-100 pa4 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
+          <button name="commit" type="submit" value="continue" class="pv2 ph3 ml4 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer">Save</button>
         </div>
       </React.Fragment>
     )

@@ -12,6 +12,10 @@ module Inventory
       object.catalogue_id.to_s
     end
 
+    attribute :catalogue do |object|
+      object.catalogue if object.catalogue
+    end
+
     attribute :facility_id do |object|
       object.facility_id.to_s
     end

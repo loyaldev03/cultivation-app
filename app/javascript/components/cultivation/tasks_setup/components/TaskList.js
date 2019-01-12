@@ -1,7 +1,5 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import classNames from 'classnames'
-import Calendar from 'react-calendar/dist/entry.nostyle'
-import ReactTable from 'react-table'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 import TaskStore from '../stores/NewTaskStore'
@@ -12,7 +10,6 @@ import InlineEditTaskNameField from './InlineEditTaskNameField'
 import InlineEditTextField from './InlineEditTextField'
 import InlineEditNumberField from './InlineEditNumberField'
 import InlineEditDateField from './InlineEditDateField'
-import AssignResourceForm from './AssignResourceForm'
 import Avatar from '../../../utils/Avatar'
 import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
 import { toast } from '../../../utils/toast'
@@ -24,7 +21,9 @@ import {
   dateToMonthOption,
   SlidePanel
 } from '../../../utils'
-
+const Calendar = lazy(() => import('react-calendar/dist/entry.nostyle'))
+const ReactTable = lazy(() => import('react-table'))
+const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
     <a
@@ -532,22 +531,27 @@ class TaskList extends React.Component {
       Cell: data => {
         const { id, user_ids } = data.row
         return (
-            <div className="flex pointer" onClick={() => this.handleShowAssignForm(id, user_ids)}>
-              {user_ids &&
-                user_ids.map(u => {
-                  const user = UserStore.getUserById(u)
-                  return (
-                    <Avatar
-                      size={24}
-                      key={user.id}
-                      firstName={user.first_name}
-                      lastName={user.last_name}
-                      photoUrl={user.photo_url}
-                    />
-                  )
-                })}
-                <i className='ml2 material-icons icon--medium icon--rounded'>person_add</i>
-            </div>
+          <div
+            className="flex pointer"
+            onClick={() => this.handleShowAssignForm(id, user_ids)}
+          >
+            {user_ids &&
+              user_ids.map(u => {
+                const user = UserStore.getUserById(u)
+                return (
+                  <Avatar
+                    size={24}
+                    key={user.id}
+                    firstName={user.first_name}
+                    lastName={user.last_name}
+                    photoUrl={user.photo_url}
+                  />
+                )
+              })}
+            <i className="ml2 material-icons icon--medium icon--rounded">
+              person_add
+            </i>
+          </div>
         )
       }
     },
@@ -575,39 +579,45 @@ class TaskList extends React.Component {
           width="500px"
           show={showAssignResourcePanel}
           renderBody={props => (
-            <AssignResourceForm
-              ref={form => (this.assignResouceForm = form)}
-              onClose={() => this.setState({ showAssignResourcePanel: false })}
-              onSave={users => {
-                const taskId = this.state.taskSelected
-                TaskStore.editAssignedUsers(batchId, taskId, users)
-                this.setState({ showAssignResourcePanel: false })
-              }}
-            />
+            <Suspense fallback={<div />}>
+              <AssignResourceForm
+                ref={form => (this.assignResouceForm = form)}
+                onClose={() =>
+                  this.setState({ showAssignResourcePanel: false })
+                }
+                onSave={users => {
+                  const taskId = this.state.taskSelected
+                  TaskStore.editAssignedUsers(batchId, taskId, users)
+                  this.setState({ showAssignResourcePanel: false })
+                }}
+              />
+            </Suspense>
           )}
         />
-        <ReactTable
-          columns={this.columnsConfig(batchId)}
-          data={TaskStore.taskList}
-          loading={TaskStore.isLoading}
-          showPagination={false}
-          sortable={false}
-          className="-highlight"
-          pageSize={TaskStore.taskList.length}
-          getTrProps={(state, rowInfo, column) => {
-            let className = 'task-row'
-            if (
-              rowInfo.row &&
-              this.state.taskSelected &&
-              this.state.taskSelected === rowInfo.row.id
-            ) {
-              className = 'task-row shadow-1'
-            }
-            return {
-              className
-            }
-          }}
-        />
+        <Suspense fallback={<div />}>
+          <ReactTable
+            columns={this.columnsConfig(batchId)}
+            data={TaskStore.taskList}
+            loading={TaskStore.isLoading}
+            showPagination={false}
+            sortable={false}
+            className="-highlight"
+            pageSize={TaskStore.taskList.length}
+            getTrProps={(state, rowInfo, column) => {
+              let className = 'task-row'
+              if (
+                rowInfo.row &&
+                this.state.taskSelected &&
+                this.state.taskSelected === rowInfo.row.id
+              ) {
+                className = 'task-row shadow-1'
+              }
+              return {
+                className
+              }
+            }}
+          />
+        </Suspense>
         <div className="mt3 tr">
           <input
             type="button"
@@ -641,18 +651,20 @@ class TaskList extends React.Component {
                         this.onSearch(monthOptionAdd(searchMonth, 1))
                       }
                     />
-                    <Calendar
-                      activeStartDate={monthStartDate(searchMonth)}
-                      className="availabilty-calendar"
-                      showNavigation={false}
-                      onChange={this.handleDatePick}
-                      tileContent={({ date, view }) => (
-                        <CapacityTile
-                          startDate={date}
-                          duration={totalDuration}
-                        />
-                      )}
-                    />
+                    <Suspense fallback={<div />}>
+                      <Calendar
+                        activeStartDate={monthStartDate(searchMonth)}
+                        className="availabilty-calendar"
+                        showNavigation={false}
+                        onChange={this.handleDatePick}
+                        tileContent={({ date, view }) => (
+                          <CapacityTile
+                            startDate={date}
+                            duration={totalDuration}
+                          />
+                        )}
+                      />
+                    </Suspense>
                   </React.Fragment>
                 ) : (
                   <div style={{ minHeight: '362px' }}>

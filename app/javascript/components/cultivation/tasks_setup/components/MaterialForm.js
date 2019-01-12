@@ -140,14 +140,11 @@ export default class MaterialForm extends React.Component {
       })
   }
 
-  loadProducts = (batch_id) => {
+  loadProducts = batch_id => {
     // console.log(catalogue)
-    return fetch(
-      `/api/v1/products?batch_id=${batch_id}`,
-      {
-        credentials: 'include'
-      }
-    )
+    return fetch(`/api/v1/products?batch_id=${batch_id}`, {
+      credentials: 'include'
+    })
       .then(response => response.json())
       .then(data => {
         const products = data.data.map(x => ({
@@ -160,7 +157,7 @@ export default class MaterialForm extends React.Component {
       })
   }
 
-  onChangeProduct = (product) => {
+  onChangeProduct = product => {
     console.log(product)
     this.setState({
       product: { value: product.id, label: product.name, ...product }
@@ -172,9 +169,8 @@ export default class MaterialForm extends React.Component {
     this.setState(previousState => ({
       materials: [...previousState.materials, this.state.product],
       product: { value: '', label: '' }
-    }));
+    }))
   }
-
 
   render() {
     let material_2 = ItemStore.slice()
@@ -289,7 +285,12 @@ export default class MaterialForm extends React.Component {
               {/* <FieldError errors={this.state.errors} field="product" /> */}
             </div>
             <div className="w-20">
-              <i className="material-icons icon--btn child orange ml3" onClick={this.onSave}>add</i>
+              <i
+                className="material-icons icon--btn child orange ml3"
+                onClick={this.onSave}
+              >
+                add
+              </i>
             </div>
           </div>
           {/* <div className="ph4 mt3 flex">
@@ -328,7 +329,9 @@ export default class MaterialForm extends React.Component {
           <table className="w-100">
             <tbody>
               <tr className="bb">
-                <th align='left' width="90%">Product Name</th>
+                <th align="left" width="90%">
+                  Product Name
+                </th>
                 <th>Category</th>
                 <th width="10%">Qty</th>
                 <th>UOM</th>
@@ -336,11 +339,13 @@ export default class MaterialForm extends React.Component {
               </tr>
               {materials.map((x, index) => (
                 <tr className="pointer bb" key={index}>
-                  <td className="tl pv2 ph3" width="90%" align='left'>{x.name}</td>
+                  <td className="tl pv2 ph3" width="90%" align="left">
+                    {x.name}
+                  </td>
                   <td className="tl pv2 ph3">{x.catalogue.category}</td>
                   <td className="tl pv2 ph3" width="10%">
                     {/* <input type="text" class="flex-auto b--grey link" value="" maxlength="5" size="5"></input> */}
-                    <input type="text" name="pin" maxlength="4" size="4"></input>
+                    <input type="text" name="pin" maxlength="4" size="4" />
                   </td>
                   <td className="tl pv2 ph3">{x.uom}</td>
                   <td className="tl pv2 ph3">
@@ -361,11 +366,18 @@ export default class MaterialForm extends React.Component {
             type="submit"
             className="pv2 ph3 ml4 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
             value="Save"
-          // onClick={this.handleSubmit}
+            // onClick={this.handleSubmit}
           />
         </div>
         <div class="w-100 pa4 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
-          <button name="commit" type="submit" value="continue" class="pv2 ph3 ml4 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer">Save</button>
+          <button
+            name="commit"
+            type="submit"
+            value="continue"
+            class="pv2 ph3 ml4 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
+          >
+            Save
+          </button>
         </div>
       </React.Fragment>
     )

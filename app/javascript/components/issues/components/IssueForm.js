@@ -34,7 +34,6 @@ const severityOptions = [
 ]
 
 class IssueForm extends React.Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -53,23 +52,23 @@ class IssueForm extends React.Component {
       restrictions: { maxNumberOfFiles: 1 },
       autoProceed: true
     })
-  
+
     this.uppy.use(Webcam)
-    this.uppy.use(Dropbox, { 
+    this.uppy.use(Dropbox, {
       serverUrl: location.protocol + '//' + location.host
     })
-  
+
     this.uppy.use(AwsS3, {
       serverUrl: location.protocol + '//' + location.host
     })
-  
+
     this.uppy.on('complete', result => {
       console.log(result)
-  
+
       if (result.successful) {
         let photos = this.state.photos
-        const newPhotos = result.successful.map( file => {
-          return ({
+        const newPhotos = result.successful.map(file => {
+          return {
             metaKey: file.meta.key,
             filename: file.meta.name,
             preview: file.preview,
@@ -78,19 +77,18 @@ class IssueForm extends React.Component {
               id: file.meta.key.match(/^cache\/(.+)/)[1],
               storage: 'cache',
               metadata: {
-                size:      file.size,
-                filename:  file.name,
-                mime_type: file.type,
+                size: file.size,
+                filename: file.name,
+                mime_type: file.type
               }
             })
-          })
+          }
         })
         photos = [...photos, ...newPhotos]
         this.setState({ photos })
       }
     })
   }
-  
 
   componentDidMount() {
     // Call setState only once
@@ -375,31 +373,35 @@ class IssueForm extends React.Component {
     const photos = this.state.photos.map(x => {
       if (x.content_type.startsWith('video/')) {
         return (
-          <div src='/' 
-            key={x.metaKey} 
+          <div
+            src="/"
+            key={x.metaKey}
             style={{ width: 50, height: 50 }}
-            content_type={x.content_type} 
-            className="bg-black-30 white mr1 f7">
+            content_type={x.content_type}
+            className="bg-black-30 white mr1 f7"
+          >
             VID - {x.metaKey}
           </div>
         )
-      } 
+      }
       return (
-        <img src='/' 
-          key={x.metaKey} 
+        <img
+          src="/"
+          key={x.metaKey}
           file={x.metaKey}
           content_type={x.content_type}
-          style={{ width: 50, height: 50 }} 
+          style={{ width: 50, height: 50 }}
           src={x.preview}
-          className="mr1"/>
+          className="mr1"
+        />
       )
     })
 
     return (
       <React.Fragment>
-        { photos }
+        {photos}
         <a
-          key='add'
+          key="add"
           href="#"
           style={{ width: 50, height: 50 }}
           className="bg-black-20 white flex justify-center items-center link"
@@ -410,7 +412,6 @@ class IssueForm extends React.Component {
       </React.Fragment>
     )
   }
-   
 
   renderReportedAt() {
     if (this.state.id.length > 0) {
@@ -552,9 +553,7 @@ class IssueForm extends React.Component {
           </div>
         </div>
         <div className="ph4 mb3 flex">
-          <div className="w-100 flex flex-wrap">
-            { this.renderPhotos() }
-          </div>
+          <div className="w-100 flex flex-wrap">{this.renderPhotos()}</div>
         </div>
 
         <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">

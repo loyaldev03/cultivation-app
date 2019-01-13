@@ -57,7 +57,7 @@ module Issues
     end
 
     def create_issue
-      Issues::Issue.create!(
+      issue = Issues::Issue.create!(
         issue_no: Issues::Issue.count + 1,
         title: title,
         description: description,
@@ -71,6 +71,8 @@ module Issues
         assigned_to: assigned_to,
         task: task,
       )
+      update_attachments(issue, args)
+      issue
     end
 
     def update_issue
@@ -84,7 +86,25 @@ module Issues
         assigned_to: assigned_to,
         task: task,
       )
+      update_attachments(issue, args)
       issue
+    end
+
+    # TODO: Not complete yet, debug!
+    def update_attachments(issue, args)
+      # if issue.persisted?
+      #   delete_ids = args[:delete_attachments]
+      #   issue.attachments.in(id: delete_ids).update_all(deleted: true)
+      # end
+
+      # args[:attachments].each do |attachment|
+      #   if attachment[:id].blank?
+      #     # New image if id.blank,
+      #     new_file = issues.attachments.build
+      #     new_file.file = attachment[:data] # <json string>
+      #     new_file.save!
+      #   end
+      # end
     end
   end
 end

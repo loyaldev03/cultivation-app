@@ -6,6 +6,7 @@ import Uppy from '@uppy/core'
 import DashboardModal from '@uppy/react/lib/DashboardModal'
 import Webcam from '@uppy/webcam'
 import Dropbox from '@uppy/dropbox'
+import AwsS3 from '@uppy/aws-s3'
 import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
@@ -14,7 +15,7 @@ import { TextInput } from '../../utils/FormHelpers'
 import reactSelectStyle from '../../utils/reactSelectStyle'
 import Avatar from '../../utils/Avatar'
 import UserPicker from '../../utils/UserPicker'
-import {formatDate, formatTime } from '../../utils/DateHelper'
+import { formatDate, formatTime } from '../../utils/DateHelper'
 
 import saveIssue from '../actions/saveIssue'
 import getIssue from '../actions/getIssue'
@@ -32,19 +33,8 @@ const severityOptions = [
   { value: 'high', label: 'High' }
 ]
 
-const uppy = Uppy({
-  meta: { type: 'avatar' },
-  restrictions: { maxNumberOfFiles: 1 },
-  autoProceed: true
-})
-uppy.use(Webcam)
-uppy.use(Dropbox, { serverUrl: 'https://companion.uppy.io/' })
-uppy.on('complete', result => {
-  const url = result.successful[0].uploadURL
-  console.log(url)
-})
-
 class IssueForm extends React.Component {
+
   constructor(props) {
     super(props)
     this.state = {
@@ -53,8 +43,54 @@ class IssueForm extends React.Component {
       users: [],
       locations: []
     }
+    this.setupUppy()
     this.descriptionInput = React.createRef()
   }
+
+  setupUppy() {
+    this.uppy = Uppy({
+      meta: { type: 'avatar' },
+      restrictions: { maxNumberOfFiles: 1 },
+      autoProceed: true
+    })
+  
+    this.uppy.use(Webcam)
+    this.uppy.use(Dropbox, { 
+      serverUrl: location.protocol + '//' + location.host
+    })
+  
+    this.uppy.use(AwsS3, {
+      serverUrl: location.protocol + '//' + location.host
+    })
+  
+    this.uppy.on('complete', result => {
+      console.log(result)
+  
+      if (result.successful) {
+        let photos = this.state.photos
+        const newPhotos = result.successful.map( file => {
+          return ({
+            metaKey: file.meta.key,
+            filename: file.meta.name,
+            preview: file.preview,
+            content_type: file.type,
+            data: JSON.stringify({
+              id: file.meta.key.match(/^cache\/(.+)/)[1],
+              storage: 'cache',
+              metadata: {
+                size:      file.size,
+                filename:  file.name,
+                mime_type: file.type,
+              }
+            })
+          })
+        })
+        photos = [...photos, ...newPhotos]
+        this.setState({ photos })
+      }
+    })
+  }
+  
 
   componentDidMount() {
     // Call setState only once
@@ -136,16 +172,19 @@ class IssueForm extends React.Component {
       issue_no: '',
       // UI states
       uppyOpen: false,
+      photos: [],
       errors: {}
     }
   }
 
   onUppyOpen = () => {
+    window.editorSidebar.scrollToTop()
     this.setState({ uppyOpen: !this.state.uppyOpen })
   }
 
   onUppyClose = () => {
     this.setState({ uppyOpen: false })
+    this.uppy.reset()
   }
 
   onChangeGeneric = event => {
@@ -332,9 +371,52 @@ class IssueForm extends React.Component {
     }
   }
 
+  renderPhotos() {
+    const photos = this.state.photos.map(x => {
+      if (x.content_type.startsWith('video/')) {
+        return (
+          <div src='/' 
+            key={x.metaKey} 
+            style={{ width: 50, height: 50 }}
+            content_type={x.content_type} 
+            className="bg-black-30 white mr1 f7">
+            VID - {x.metaKey}
+          </div>
+        )
+      } 
+      return (
+        <img src='/' 
+          key={x.metaKey} 
+          file={x.metaKey}
+          content_type={x.content_type}
+          style={{ width: 50, height: 50 }} 
+          src={x.preview}
+          className="mr1"/>
+      )
+    })
+
+    return (
+      <React.Fragment>
+        { photos }
+        <a
+          key='add'
+          href="#"
+          style={{ width: 50, height: 50 }}
+          className="bg-black-20 white flex justify-center items-center link"
+          onClick={this.onUppyOpen}
+        >
+          <i className="material-icons white f3">attach_file</i>
+        </a>
+      </React.Fragment>
+    )
+  }
+   
+
   renderReportedAt() {
     if (this.state.id.length > 0) {
-      return `${formatDate(this.state.created_at)}, ${formatTime(this.state.created_at)}`
+      return `${formatDate(this.state.created_at)}, ${formatTime(
+        this.state.created_at
+      )}`
     } else {
       return 'Today'
     }
@@ -388,12 +470,14 @@ class IssueForm extends React.Component {
           </div>
           <div className="w-30 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Status</label>
-            <span className="f6 green flex f6 green pt2 fw6 ttc">{this.state.status || 'Open'}</span>
+            <span className="f6 green flex f6 green pt2 fw6 ttc">
+              {this.state.status || 'Open'}
+            </span>
           </div>
           <div className="w-40 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Reported at</label>
             <span className="f6 green flex f6 green pt2 fw6">
-              { this.renderReportedAt() }
+              {this.renderReportedAt()}
             </span>
           </div>
         </div>
@@ -462,17 +546,14 @@ class IssueForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mb3 flex">
+        <div className="ph4 mb1 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Attachments</label>
-            <a
-              href="#"
-              style={{ width: 50, height: 50 }}
-              className="bg-black-20 white flex justify-center items-center link"
-              onClick={this.onUppyOpen}
-            >
-              <i className="material-icons white f3">attach_file</i>
-            </a>
+          </div>
+        </div>
+        <div className="ph4 mb3 flex">
+          <div className="w-100 flex flex-wrap">
+            { this.renderPhotos() }
           </div>
         </div>
 
@@ -486,11 +567,13 @@ class IssueForm extends React.Component {
           </a>
         </div>
         <DashboardModal
-          uppy={uppy}
+          uppy={this.uppy}
           closeModalOnClickOutside
           open={this.state.uppyOpen}
+          allowMultipleUploads={true}
           onRequestClose={this.onUppyClose}
-          plugins={['Webcam', 'Dropbox']}
+          proudlyDisplayPoweredByUppy={false}
+          plugins={['Webcam', 'Dropbox', 'AwsS3']}
         />
       </React.Fragment>
     )

@@ -7,6 +7,7 @@ const Avatar = React.memo(
     firstName = '',
     lastName = '',
     photoUrl,
+    className,
     size = 36,
     backgroundColor = '#eee'
   }) => {
@@ -14,6 +15,7 @@ const Avatar = React.memo(
       // http://a.b
       return (
         <div
+          className={className}
           style={{
             background: `url(${photoUrl}) no-repeat center center`,
             backgroundColor,

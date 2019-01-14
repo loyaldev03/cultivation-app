@@ -48,11 +48,12 @@ SlidePanelFooter.propTypes = {
 
 class SlidePanel extends React.Component {
   render() {
-    const { show, renderBody } = this.props
+    const { show, width = '450px', renderBody } = this.props
     return (
       <div
         style={{
-          overflowY: 'auto'
+          overflowY: 'auto',
+          width: width
         }}
         className={classNames('rc-slide-panel', {
           'rc-slide-panel--open': show

@@ -63,6 +63,7 @@ class TaskList extends React.Component {
 
   async componentDidMount() {
     await TaskStore.loadTasks(this.props.batch.id)
+    await UserStore.loadUsers()
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
     // need to find after data react-table is loaded callback
@@ -600,10 +601,13 @@ class TaskList extends React.Component {
     const batchId = this.props.batch.id
     const phaseDuration = this.buildPhaseDuration(TaskStore.tasks)
     const totalDuration = this.calculateTotalDuration(phaseDuration)
+    if (!TaskStore.isDataLoaded || !UserStore.isDataLoaded) {
+      return <div>Loading...</div>
+    }
     return (
       <React.Fragment>
         <SlidePanel
-          width="500px"
+          width="600px"
           show={showAssignResourcePanel}
           renderBody={props => (
             <Suspense fallback={<div />}>
@@ -613,9 +617,12 @@ class TaskList extends React.Component {
                   this.setState({ showAssignResourcePanel: false })
                 }
                 onSave={users => {
-                  const taskId = this.state.taskSelected
-                  TaskStore.editAssignedUsers(batchId, taskId, users)
                   this.setState({ showAssignResourcePanel: false })
+                  TaskStore.editAssignedUsers(
+                    batchId,
+                    this.state.taskSelected,
+                    users
+                  )
                 }}
               />
             </Suspense>

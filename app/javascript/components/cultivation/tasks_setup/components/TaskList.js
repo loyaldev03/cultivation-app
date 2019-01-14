@@ -576,7 +576,7 @@ class TaskList extends React.Component {
     return (
       <React.Fragment>
         <SlidePanel
-          width="500px"
+          width="600px"
           show={showAssignResourcePanel}
           renderBody={props => (
             <Suspense fallback={<div />}>

@@ -49,7 +49,11 @@ class IssueDetails extends Component {
             <div className="w-auto pv3 mr2">
               <Avatar firstName="John" lastName="Doe" size={25} />
             </div>
-            <div className="f6 gray w-auto pv3 ph2 mt1 mr2">ISSUE #002</div>
+            <div className="f6 gray w-auto pv3 ph2 mt1 mr2">
+              ISSUE #002
+              <div className="f7">Dec 12, 4:01pm</div>
+            </div>
+            <div className="f6 gray w-auto pv3 ph2 mt1 mr2">&bull;</div>
             <div className="f6 green flex f6 green fw6 w-auto pv3 mt1 mr2">
               OPEN
             </div>

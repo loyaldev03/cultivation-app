@@ -45,7 +45,7 @@ module Issues
       {
         id: object.reported_by_id.to_s,
         display_name: object.reported_by.display_name,
-        photo: object.reported_by.photo.url,
+        photo: object.reported_by.photo&.url,
         first_name: object.reported_by.first_name,
         last_name: object.reported_by.last_name,
       }
@@ -56,7 +56,7 @@ module Issues
         {
           id: object.assigned_to_id.to_s,
           display_name: object.assigned_to.display_name,
-          photo: object.assigned_to.photo.url,
+          photo: object.assigned_to.photo&.url,
           first_name: object.assigned_to.first_name,
           last_name: object.assigned_to.last_name,
         }

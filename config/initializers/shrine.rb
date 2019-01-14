@@ -60,3 +60,7 @@ Shrine.plugin :restore_cached_data
 
 # Determines MIME type from file content
 Shrine.plugin :determine_mime_type
+
+# Save files metadata so easy to extract instead of trying to convert from
+# N_data string.
+Shrine.plugin :metadata_attributes, :size => :size, :mime_type => :mime_type, :filename => :filename

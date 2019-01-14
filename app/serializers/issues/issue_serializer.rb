@@ -86,5 +86,17 @@ module Issues
     attribute :created_at do |object|
       object.c_at.iso8601
     end
+
+    attribute :attachments do |object|
+      object.attachments.active.map do |attachment|
+        {
+          id: attachment.id.to_s,
+          key: attachment.id.to_s,
+          url: attachment.file_url(expires_in: 3600),
+          mime_type: attachment.file_mime_type,
+          data: attachment.file_data,
+        }
+      end
+    end
   end
 end

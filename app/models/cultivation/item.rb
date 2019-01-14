@@ -12,8 +12,8 @@ module Cultivation
     # need facility strain field to cater for seed/ purchase clone to be used to start the batch
     #
 
-    def name
-      catalogue.try(:label)
-    end
+    # def name
+    #   catalogue.try(:label)
+    # end
   end
 end

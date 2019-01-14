@@ -375,6 +375,34 @@ class TaskStore {
   getDependencies(task) {
     return task.depend_on
   }
+
+  @action
+  async editAssignedMaterial(batchId, taskId, items) {
+    console.log(batchId)
+    console.log(taskId)
+    console.log(items)
+    const task = this.getTaskById(taskId)
+    console.log(toJS(task))
+    if (items) {
+      task.items = items
+      console.log(toJS(task))
+      this.tasks = this.tasks.map(t => {
+        // return t.id === taskId ? task : t
+        if(t.id === taskId){
+          console.log(toJS(t))
+          return task
+        }else{
+          return t
+        }
+      })
+      // TODO: Call editTask to update to backend
+      // this.tasks = this.tasks.map(t => {
+      //   return t.id === taskId ? payload : t
+      // })
+    }
+  }
+
+
 }
 
 const taskStore = new TaskStore()

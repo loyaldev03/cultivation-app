@@ -393,7 +393,7 @@ export default class MaterialForm extends React.Component {
             Save
           </button>
         </div> */}
-      </React.Fragment>
+    </React.Fragment>
     )
   }
 }

@@ -17,8 +17,8 @@ class QueryReadyTrays
 
   def call
     cmd = QueryAvailableTrays.call(
-      Date.new(2018, 1, 1),
-      Date.new(2018, 1, 1),
+      Date.new(1900, 1, 1),
+      Date.new(1900, 1, 1),
       facility_id: @facility_id,
       purpose: @purpose,
       exclude_batch_id: @exclude_batch_id,

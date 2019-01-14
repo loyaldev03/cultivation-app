@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   # Mount Shrine endpoints
   mount ImageUploader.upload_endpoint(:cache) => "/images/upload"
+  mount IssueAttachmentUploader.upload_endpoint(:cache) => "issues/attachment/upload"
   mount Shrine.presign_endpoint(:cache) => "/s3/params"
   devise_for :users
 
@@ -131,6 +132,12 @@ Rails.application.routes.draw do
   # API for web pages
   namespace :api do
     namespace :v1 do
+      resources :facilities, only: [] do
+        member do 
+          get 'search_locations'
+        end
+      end
+
       resources :plants, only: [:show] do
         collection do
           get 'all/(:current_growth_stage)', action: :all
@@ -187,11 +194,13 @@ Rails.application.routes.draw do
         post 'setup_simple_batch', on: :collection
         post 'update_locations'
         post 'update_batch'
+
         resources :tasks, only: [:index, :update, :create, :destroy] do
           member do
             post 'update_indent'
             post 'update_position'
             post 'update_dependency'
+            get 'locations'
             post 'delete_relationship'
           end
         end
@@ -199,7 +208,10 @@ Rails.application.routes.draw do
       end
 
       resources :users, only: [:index] do
-        get 'roles', on: :collection
+        collection do
+          get 'roles'
+          get 'by_facility/:facility_id', action: 'by_facility'
+        end
       end
 
       resource :user_roles, only: [] do
@@ -226,6 +238,12 @@ Rails.application.routes.draw do
         put ':id/stop_task', to: 'daily_tasks#stop_task'
         put ':id/add_notes', to: 'daily_tasks#add_notes'
         put ':id/update_materials_used', to: 'daily_tasks#update_materials_used'
+      end
+
+      resources :issues, only: [:create, :by_batch, :show] do
+        collection do
+          get 'by_batch/:batch_id', action: 'by_batch'
+        end
       end
     end
   end

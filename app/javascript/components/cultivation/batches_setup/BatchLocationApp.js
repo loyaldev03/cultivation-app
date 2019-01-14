@@ -248,8 +248,6 @@ class BatchLocationApp extends React.Component {
   }
 
   render() {
-    console.log('this is the locations')
-    console.table(this.props.locations)
     const { batchInfo } = this.props
     const { isLoading, isNotified, editingPlant, quantity } = this.state
     const sumOfClone = sumBy(

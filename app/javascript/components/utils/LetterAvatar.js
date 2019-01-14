@@ -3,23 +3,23 @@ import PropTypes from 'prop-types'
 
 const letterColours = [
   [226, 95, 81], // A
-  [242, 96, 145], // B
-  [187, 101, 202], // C
-  [149, 114, 207], // D
+  [93, 188, 210], // B
+  [252, 114, 68], // C
+  [206, 68, 252], // D
   [120, 132, 205], // E
   [91, 149, 249], // F
   [72, 194, 249], // G
-  [69, 208, 226], // H
+  [201, 62, 109], // H
   [72, 182, 172], // I
-  [82, 188, 137], // J
+  [222, 116, 55], // J
   [155, 206, 95], // K
-  [212, 227, 74], // L
-  [254, 218, 16], // M
+  [219, 174, 39], // L
+  [100, 204, 65], // M
   [247, 192, 0], // N
   [255, 168, 0], // O
   [255, 138, 96], // P
-  [194, 194, 194], // Q
-  [143, 164, 175], // R
+  [38, 168, 220], // Q
+  [5, 51, 111], // R
   [162, 136, 126], // S
   [63, 163, 163], // T
   [175, 181, 226], // U
@@ -34,7 +34,7 @@ const propTypes = {
   firstName: PropTypes.string,
   lastName: PropTypes.string,
   size: PropTypes.number,
-  radius: PropTypes.number
+  radius: PropTypes.any
 }
 
 const defaultProps = {
@@ -63,13 +63,11 @@ class LetterAvatar extends React.PureComponent {
       let bgColor
       if (lastName) {
         initials = initials + lastName[0]
-        bgColor = getColorCode(initials)
+        bgColor = getColorCode(lastName[0])
       }
       if (firstName) {
         initials = firstName[0] + initials
-        if (!bgColor) {
-          bgColor = getColorCode(firstName[0])
-        }
+        bgColor = getColorCode(firstName[0])
       }
 
       const style = {

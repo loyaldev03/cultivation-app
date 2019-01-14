@@ -3,32 +3,37 @@ import PropTypes from 'prop-types'
 import LetterAvatar from './LetterAvatar'
 
 const Avatar = React.memo(
-  ({ firstName = '', lastName = '', photoUrl, size = 36 }) => {
+  ({
+    firstName = '',
+    lastName = '',
+    photoUrl,
+    size = 36,
+    backgroundColor = '#eee'
+  }) => {
     if (photoUrl && photoUrl.length >= 10) {
-      const width = size
       // http://a.b
       return (
-        <img
-          src={photoUrl}
+        <div
           style={{
-            width,
-            height: width,
-            borderRadius: size / 2
+            background: `url(${photoUrl}) no-repeat center center`,
+            backgroundColor,
+            width: size,
+            height: size,
+            backgroundSize: 'cover',
+            borderRadius: '50%'
           }}
         />
       )
     }
-    if (firstName && lastName) {
-      return (
-        <LetterAvatar
-          firstName={firstName}
-          lastName={lastName}
-          size={size}
-          radius={size / 2}
-        />
-      )
-    }
-    return <span>Show blank avatar</span>
+
+    return (
+      <LetterAvatar
+        firstName={firstName}
+        lastName={lastName}
+        size={size}
+        radius="50%"
+      />
+    )
   }
 )
 

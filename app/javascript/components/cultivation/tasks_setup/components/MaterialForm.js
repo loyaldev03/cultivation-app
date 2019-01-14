@@ -155,33 +155,35 @@ export default class MaterialForm extends React.Component {
   }
 
   onChangeProduct = product => {
-    if(product){
+    if (product) {
       this.setState({
         product: { value: product.id, label: product.name, ...product }
       })
     }
-
   }
 
   onSave = () => {
     if (this.state.product && this.state.product.value) {
-      if (this.state.materials.map(e => e.value).includes(this.state.product.value)){ // compare if same id existed no need to re-insert to material array
+      if (
+        this.state.materials
+          .map(e => e.value)
+          .includes(this.state.product.value)
+      ) {
+        // compare if same id existed no need to re-insert to material array
         console.log('Id Existed')
-      }else{
-          this.setState(previousState => ({
-            materials: [...previousState.materials, this.state.product],
-            product: { value: '', label: '' }
-          }))
+      } else {
+        this.setState(previousState => ({
+          materials: [...previousState.materials, this.state.product],
+          product: { value: '', label: '' }
+        }))
       }
     }
-
   }
 
-  onDeleteMaterial = (value) => {
-    this.setState(
-      {
-        materials: this.state.materials.filter(item => item.value !== value)
-      })
+  onDeleteMaterial = value => {
+    this.setState({
+      materials: this.state.materials.filter(item => item.value !== value)
+    })
   }
 
   render() {

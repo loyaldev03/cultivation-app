@@ -2,10 +2,6 @@ import batchStore from '../store/HarvestBatchStore'
 import { httpPostOptions } from '../../../utils'
 
 const setupHarvestBatch = payload => {
-  console.group('setupHarvestBatch')
-  console.log(payload)
-  console.groupEnd()
-
   return fetch('/api/v1/plants/setup_harvest_batch', httpPostOptions(payload))
     .then(response => {
       // console.log(response.status)

@@ -24,6 +24,11 @@ class WbsTree
       end
     end
 
+    def have_children(tasks_with_wbs = [], node_wbs = '')
+      child_wbs = node_wbs + '.'
+      tasks_with_wbs.any? { |t| t.wbs.starts_with? child_wbs }
+    end
+
     def children(tasks_with_wbs = [], node_wbs = '')
       child_wbs = node_wbs + '.'
       tasks_with_wbs.select { |t| t.wbs.starts_with? child_wbs }

@@ -3,10 +3,13 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "3.5",
+    "@uppy/aws-s3": "^0.29.0",
     "@uppy/core": "^0.29.0",
     "@uppy/drag-drop": "^0.29.0",
+    "@uppy/dropbox": "^0.29.0",
     "@uppy/file-input": "^0.29.0",
     "@uppy/react": "^0.29.0",
+    "@uppy/webcam": "^0.29.0",
     "@uppy/xhr-upload": "^0.29.0",
     "animate.css": "^3.7.0",
     "babel-core": "^6.26.3",

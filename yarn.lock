@@ -96,6 +96,16 @@
     webpack "^3.12.0"
     webpack-manifest-plugin "^1.3.2"
 
+"@uppy/aws-s3@^0.29.0":
+  version "0.29.0"
+  resolved "https://registry.yarnpkg.com/@uppy/aws-s3/-/aws-s3-0.29.0.tgz#64b44649bcac567f82dda49878a0dd7cf3ee1460"
+  integrity sha512-p9NZsIi5Usz60IUO6OUNb/wGiPoY872TTJw9AWsE9J34ptoge7je6ikhyNTjKrzed3Pn8IfqVyqVJiB6RyR7Qw==
+  dependencies:
+    "@uppy/companion-client" "0.27.2"
+    "@uppy/utils" "0.29.0"
+    "@uppy/xhr-upload" "0.29.0"
+    resolve-url "^0.2.1"
+
 "@uppy/companion-client@0.27.2":
   version "0.27.2"
   resolved "https://registry.yarnpkg.com/@uppy/companion-client/-/companion-client-0.27.2.tgz#526572b5129d7786c06368e8def5bc46c5980048"
@@ -142,6 +152,16 @@
   dependencies:
     "@uppy/utils" "0.29.0"
     drag-drop "2.13.3"
+    preact "^8.2.9"
+
+"@uppy/dropbox@^0.29.0":
+  version "0.29.0"
+  resolved "https://registry.yarnpkg.com/@uppy/dropbox/-/dropbox-0.29.0.tgz#6f6481e3dcea74714b26ccf2403634e1fd9dda06"
+  integrity sha512-nm23lYV1TKbwMhncE8qSWeQEBOJxLwdN+7Pi2QWRHBCIg7Dn6/ODFhomGvTBvVeTRXkQjKOid0SA+fVOeol5Vw==
+  dependencies:
+    "@uppy/companion-client" "0.27.2"
+    "@uppy/provider-views" "0.29.0"
+    "@uppy/utils" "0.29.0"
     preact "^8.2.9"
 
 "@uppy/file-input@^0.29.0":
@@ -219,7 +239,15 @@
   dependencies:
     lodash.throttle "^4.1.1"
 
-"@uppy/xhr-upload@^0.29.0":
+"@uppy/webcam@^0.29.0":
+  version "0.29.0"
+  resolved "https://registry.yarnpkg.com/@uppy/webcam/-/webcam-0.29.0.tgz#37dcfdd0496591a4ebd4e953e754f3832c6e343b"
+  integrity sha512-U3U3C/TxqejMc9qi3WnnGQ+zd5zDNX1MOu74M4LqLYZBA2HdJZMJczKJiuovKJTAQxQE/cUhj/8mHK7fb7oHsQ==
+  dependencies:
+    "@uppy/utils" "0.29.0"
+    preact "^8.2.9"
+
+"@uppy/xhr-upload@0.29.0", "@uppy/xhr-upload@^0.29.0":
   version "0.29.0"
   resolved "https://registry.yarnpkg.com/@uppy/xhr-upload/-/xhr-upload-0.29.0.tgz#cce6c5119c8781676baab15132b203c784ec78a0"
   integrity sha512-aXKjdjHj6ptVkv8V62Yf8Ps7hPQicu5EjlVmzfHDMrTT4+QkSNnqV1IyiTSzDxiubuN0CRkrc/bY68d7vPiAJQ==
@@ -2176,9 +2204,9 @@ create-ecdh@^4.0.0:
     elliptic "^6.0.0"
 
 create-emotion@^10.0.4:
-  version "10.0.5"
-  resolved "https://registry.yarnpkg.com/create-emotion/-/create-emotion-10.0.5.tgz#22487f19b59a7ed10144f808289eadffebcfab06"
-  integrity sha512-MIOSeFiMtPrAULEtd2GFYGZEzeN2xnCFoiHrjvUYjxruYCJfGqUOBmh4YEN1yU+Ww5yXr+DIZibFl7FEOP57iA==
+  version "10.0.6"
+  resolved "https://registry.yarnpkg.com/create-emotion/-/create-emotion-10.0.6.tgz#a431a4181b3f333b5deae30985efdc5971774f94"
+  integrity sha512-pfaSo7swLlmHxizPYF5Oi09e1uPseueX/CirE6mZpPeeoH1Yb4I2cmx0VCN6KlCRko4yKFTErorect9y0+ARZQ==
   dependencies:
     "@emotion/cache" "10.0.0"
     "@emotion/serialize" "^0.11.3"
@@ -6721,11 +6749,6 @@ react@^16.7.0:
   version "16.7.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.7.0.tgz#b674ec396b0a5715873b350446f7ea0802ab6381"
   integrity sha512-StCz3QY8lxTb5cl2HJxjwLFOXPIFQp+p+hxQfc8WE0QiLfCtIlKj8/+5tjjKm8uSTlAW+fCPaavGFS06V9Ar3A==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-    scheduler "^0.12.0"
 
 react_ujs@^2.4.4:
   version "2.4.4"

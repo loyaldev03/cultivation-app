@@ -2,23 +2,31 @@ require "shrine"
 require "shrine/storage/s3"
 require "shrine/storage/file_system"
 
-if Rails.env.production?
+if !Rails.env.production?
+  s3_options = {
+    access_key_id:     'AKIAJ45K32YD37C47NJA',
+    secret_access_key: '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',
+    bucket:            'cannected-dev',
+    region:            'ap-southeast-1',
+  }
+
+  Shrine.storages = {
+    avatar: Shrine::Storage::S3.new(prefix: "avatar", **s3_options),
+    cache: Shrine::Storage::S3.new(prefix: "cache", **s3_options),
+    store: Shrine::Storage::S3.new(**s3_options),
+  }
+else 
   s3_options = {
     access_key_id:     Rails.application.credentials.aws[:access_key_id],
     secret_access_key: Rails.application.credentials.aws[:secret_access_key],
     bucket:            Rails.application.credentials.aws[:bucket],
     region:            Rails.application.credentials.aws[:region],
   }
+
   Shrine.storages = {
     avatar: Shrine::Storage::S3.new(prefix: "avatar", **s3_options),
     cache: Shrine::Storage::S3.new(prefix: "cache", **s3_options),
     store: Shrine::Storage::S3.new(**s3_options),
-  }
-else
-  Shrine.storages = {
-    avatar: Shrine::Storage::FileSystem.new("public", prefix: "uploads/avatar"),
-    cache: Shrine::Storage::FileSystem.new("public", prefix: "uploads/cache"),
-    store: Shrine::Storage::FileSystem.new("public", prefix: "uploads/store"),
   }
 end
 
@@ -36,10 +44,11 @@ Shrine.plugin :presign_endpoint, presign_options: ->(request) {
   {
     # Set download filename
     content_disposition:    "inline; filename=\"#{filename}\"",
+    # OR content_disposition:    ContentDisposition.inline(filename),
     # Set content type (defaults to "application/octet-stream")
     content_type:           type,
-    # Limit upload size to 10 MB
-    content_length_range:   0..(10 * 1024 * 1024),
+    # Limit upload size to 80 MB
+    content_length_range:   0..(80 * 1024 * 1024),
   }
 }
 

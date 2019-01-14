@@ -141,6 +141,7 @@ class TaskList extends React.Component {
           indent={indent}
           hasChild={hasChild}
           isCollapsed={isCollapsed}
+          onCollapseClick={() => TaskStore.toggleCollapseNode(wbs)}
           onClick={e => this.handleShowSidebar(id)}
           onHighlight={() => this.setState({ taskSelected: id })}
           onDoneClick={value => {
@@ -490,7 +491,7 @@ class TaskList extends React.Component {
             step=".25"
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
-              TaskStore.editTask(batchId, id, { estimated_hours: value })
+              TaskStore.editEstimatedHours(batchId, id, value)
             }}
           />
         )

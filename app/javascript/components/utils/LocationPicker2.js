@@ -71,17 +71,6 @@ class LocationPicker extends React.Component {
     return () => false
   }
 
-  isStorage(facility_id) {
-    if (facility_id) {
-      return item =>
-        item.rm_id.length > 0 &&
-        item.rw_id.length === 0 &&
-        item.rm_purpose === 'storage' &&
-        item.f_id === facility_id
-    }
-    return () => false
-  }
-
   filterLocationByFacility = facility_id => {
     let _locations = []
     const { mode, locations } = this.props
@@ -98,8 +87,6 @@ class LocationPicker extends React.Component {
       _locations = locations.filter(this.isFlower(facility_id))
     } else if (mode === 'dry') {
       _locations = locations.filter(this.isDry(facility_id))
-    } else if (mode === 'storage') {
-      _locations = locations.filter(this.isStorage(facility_id))
     } else if (mode === 'facility') {
       _locations = locations.filter(this.isFacilityOnly).map(x => ({
         ...x,
@@ -116,16 +103,12 @@ class LocationPicker extends React.Component {
   findLocation(locations, location_id) {
     const { mode } = this.props
     let item = { value: '', label: '' }
-    if (mode === 'mother' || mode === 'room' || mode === 'storage') {
+    if (mode === 'mother' || mode === 'room') {
       item = locations.find(x => x.rm_id === location_id)
     } else if (['clone', 'veg', 'flower', 'dry'].indexOf(mode) >= 0) {
       item = locations.find(x => x.t_id === location_id)
     } else if (mode === 'facility') {
       item = locations.find(x => x.f_id === location_id)
-    }
-
-    if (!item) {
-      return { value: '', label: '' }
     }
     return item
   }
@@ -174,7 +157,7 @@ class LocationPicker extends React.Component {
     } else if (mode === 'flower') {
       return 'Flower room ID'
     } else if (mode === 'dry') {
-      return 'Location in Dry/ Cure Room'
+      return 'Dry room ID'
     } else if (mode === 'facility') {
       return 'Facility'
     } else {
@@ -189,13 +172,10 @@ class LocationPicker extends React.Component {
       this.props.location_id || ''
     )
 
-    const isDisabled = this.props.isDisabled || false
-
     return (
       <React.Fragment>
         <label className="f6 fw6 db mb1 gray ttc">{this.label}</label>
         <Select
-          isDisabled={isDisabled}
           styles={reactSelectStyle}
           placeholder="Search location within your facility"
           options={locations}

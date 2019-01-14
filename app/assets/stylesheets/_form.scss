@@ -46,13 +46,12 @@ $badgeFontSize: 12px;
   color: #FFFFFF;
 }
 
-
-input[readonly] {
+input[readonly], 
+textarea[readonly] {
   background-color: #eee;
   color: rgb(153, 153, 153);
 }
 
-textarea[readonly] {
-    background-color: #eee;
-    color: #999999;
+.pa--tag {
+  padding: 0.15rem 0.5rem;
 }

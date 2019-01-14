@@ -55,6 +55,10 @@ class EditorSidebarHandler {
   setup(node) {
     this.sidebarNode = node
   }
+
+  scrollToTop() {
+    this.sidebarNode.scrollTop = 0
+  }
 }
 
 const editorSidebarHandler = new EditorSidebarHandler()

@@ -130,7 +130,6 @@ class NonSalesItemEditor extends React.Component {
     if (payload.isValid) {
       saveNonSalesItem(payload).then(({ status, data }) => {
         if (status >= 400) {
-          console.log(data)
           this.setState({ errors: data.errors })
         } else {
           this.reset()

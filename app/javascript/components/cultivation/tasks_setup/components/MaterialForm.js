@@ -101,8 +101,6 @@ export default class MaterialForm extends React.Component {
     )
   }
 
-  sendApiDelete = async e => {}
-
   sendApiCreate = async e => {
     let url = `/api/v1/items?task_id=${this.state.task_id}`
     let data
@@ -141,7 +139,6 @@ export default class MaterialForm extends React.Component {
   }
 
   loadProducts = batch_id => {
-    // console.log(catalogue)
     return fetch(`/api/v1/products?batch_id=${batch_id}`, {
       credentials: 'include'
     })
@@ -158,18 +155,33 @@ export default class MaterialForm extends React.Component {
   }
 
   onChangeProduct = product => {
-    console.log(product)
-    this.setState({
-      product: { value: product.id, label: product.name, ...product }
-    })
+    if(product){
+      this.setState({
+        product: { value: product.id, label: product.name, ...product }
+      })
+    }
+
   }
 
   onSave = () => {
-    console.log('saving')
-    this.setState(previousState => ({
-      materials: [...previousState.materials, this.state.product],
-      product: { value: '', label: '' }
-    }))
+    if (this.state.product && this.state.product.value) {
+      if (this.state.materials.map(e => e.value).includes(this.state.product.value)){ // compare if same id existed no need to re-insert to material array
+        console.log('Id Existed')
+      }else{
+          this.setState(previousState => ({
+            materials: [...previousState.materials, this.state.product],
+            product: { value: '', label: '' }
+          }))
+      }
+    }
+
+  }
+
+  onDeleteMaterial = (value) => {
+    this.setState(
+      {
+        materials: this.state.materials.filter(item => item.value !== value)
+      })
   }
 
   render() {
@@ -345,13 +357,13 @@ export default class MaterialForm extends React.Component {
                   <td className="tl pv2 ph3">{x.catalogue.category}</td>
                   <td className="tl pv2 ph3" width="10%">
                     {/* <input type="text" class="flex-auto b--grey link" value="" maxlength="5" size="5"></input> */}
-                    <input type="text" name="pin" maxlength="4" size="4" />
+                    <input type="text" name="pin" maxLength="4" size="4" />
                   </td>
                   <td className="tl pv2 ph3">{x.uom}</td>
                   <td className="tl pv2 ph3">
                     <i
                       className="material-icons red md-18 pointer dim"
-                      onClick={e => handleDelete(x.id)}
+                      onClick={e => this.onDeleteMaterial(x.value)}
                     >
                       delete
                     </i>
@@ -361,7 +373,7 @@ export default class MaterialForm extends React.Component {
             </tbody>
           </table>
         </div>
-        <div class="mt3 tr mr3">
+        <div className="mt3 tr mr3">
           <input
             type="submit"
             className="pv2 ph3 ml4 bg-orange white bn br2 ttu tc tracked link dim f6 fw6 pointer"
@@ -369,7 +381,7 @@ export default class MaterialForm extends React.Component {
             // onClick={this.handleSubmit}
           />
         </div>
-        <div class="w-100 pa4 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
+        {/* <div class="w-100 pa4 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
           <button
             name="commit"
             type="submit"
@@ -378,7 +390,7 @@ export default class MaterialForm extends React.Component {
           >
             Save
           </button>
-        </div>
+        </div> */}
       </React.Fragment>
     )
   }

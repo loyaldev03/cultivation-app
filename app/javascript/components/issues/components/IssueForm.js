@@ -193,7 +193,7 @@ class IssueForm extends React.Component {
     const result = confirm('Remove attachment?')
     if (result) {
       const attachment = this.state.attachments.find(x => x.key == key)
-      this.setState({ 
+      this.setState({
         attachments: this.state.attachments.filter(x => x.key != key),
         delete_attachments: [...this.state.delete_attachments, key]
       })
@@ -401,12 +401,20 @@ class IssueForm extends React.Component {
             className="bg-black-30 white mr1 f7 relative hover-photo"
           >
             VID - {x.metaKey}
-            <div className='zoom-btn' style={{ width: 50, height: 50 }}>
+            <div className="zoom-btn" style={{ width: 50, height: 50 }}>
               <i className="material-icons absolute">search</i>
             </div>
-            <p style={{ width: 50, bottom: -10, fontSize: '12px' }} 
-              className="tc mt1 mb0 delete-btn">
-              <a href="#" className="link gray" onClick={() => this.onDeleteAttachment(x.key)}>Delete</a>
+            <p
+              style={{ width: 50, bottom: -10, fontSize: '12px' }}
+              className="tc mt1 mb0 delete-btn"
+            >
+              <a
+                href="#"
+                className="link gray"
+                onClick={() => this.onDeleteAttachment(x.key)}
+              >
+                Delete
+              </a>
             </p>
           </div>
         )
@@ -419,15 +427,28 @@ class IssueForm extends React.Component {
           style={{ width: 50, height: 70 }}
           className="mr1 overflow-hidden relative hover-photo"
         >
-          <div style={{ width: 50, height: 50, background: `url(${x.url}) no-repeat center center`, backgroundSize: 'cover' }}>
-
+          <div
+            style={{
+              width: 50,
+              height: 50,
+              background: `url(${x.url}) no-repeat center center`,
+              backgroundSize: 'cover'
+            }}
+          />
+          <div className="zoom-btn" style={{ width: 50, height: 50 }}>
+            <i className="material-icons absolute">search</i>
           </div>
-          <div className='zoom-btn' style={{ width: 50, height: 50 }}>
-            <i className="material-icons absolute">search</i> 
-          </div>
-          <p style={{ width: 50, bottom: -10, fontSize: '12px' }} 
-            className="tc mt1 mb0 delete-btn">
-            <a href="#" className="link gray" onClick={() => this.onDeleteAttachment(x.key)}>Delete</a>
+          <p
+            style={{ width: 50, bottom: -10, fontSize: '12px' }}
+            className="tc mt1 mb0 delete-btn"
+          >
+            <a
+              href="#"
+              className="link gray"
+              onClick={() => this.onDeleteAttachment(x.key)}
+            >
+              Delete
+            </a>
           </p>
         </div>
       )

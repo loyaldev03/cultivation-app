@@ -45,23 +45,27 @@ class IssueDetails extends Component {
           className="ph4 pv2 b--light-gray flex items-center"
           style={{ height: '51px' }}
         >
-          <div className="flex w-100">
-            <div className="w-auto pv3 mr2">
-              <Avatar firstName="John" lastName="Doe" size={25} />
+          <div className="flex w-100 ph0 items-center pt3">
+            <div className="w-auto">
+              <Avatar
+                firstName="Sample"
+                lastName="User"
+                photoUrl=""
+                size={25}
+              />
             </div>
-            <div className="f6 gray w-auto pv3 ph2 mt1 mr2">
-              ISSUE #002
-              <div className="f7">Dec 12, 4:01pm</div>
+            <div className="f7 fw6 gray w-auto ph2 mr1">
+              ISSUE #001
+              <div style={{ fontSize: '10px' }} className="pt1">
+                Dec 12, 4:01pm
+              </div>
             </div>
-            <div className="f6 gray w-auto pv3 ph2 mt1 mr2">&bull;</div>
-            <div className="f6 green flex f6 green fw6 w-auto pv3 mt1 mr2">
-              OPEN
-            </div>
-            <div className="f6 flex f6 green fw6 w-auto pv3 mt1 mr2">
+            <div className="f6 fw6 gray w-auto mr1 self-start pt1">&bull;</div>
+            <div className="f7 fw6 green w-auto self-start pt1 ph1">OPEN</div>
+            <div className="f6 fw6 gray w-auto ph1 self-start pt1">
               {renderSeverity('high')}
             </div>
           </div>
-
           <span
             className="rc-slide-panel__close-button dim"
             onClick={this.props.onClose}
@@ -71,13 +75,65 @@ class IssueDetails extends Component {
         </div>
 
         <div className="ph4">
+          <div
+            style={{
+              borderLeft: '2px solid #e8e8e8',
+              height: '25px',
+              marginLeft: '11px'
+            }}
+          />
+        </div>
+
+        <div className="ph4">
           <div className="flex w-100">
-            <div className="w-auto pv3 mr2">
+            <div className="w-auto pv2 mr2">
               <Avatar firstName="Michael" lastName="Doe" size={25} />
             </div>
-            <div className="f5 dark-gray w-auto pv3 ph2 lh-title">
-              Batch needs additional 25 clone kits because we are going to
-              finish them today.
+            <div className="flex flex-column">
+              <div className="f6 b gray w-auto pv2 lh-title">
+                Batch needs additional 25 clone kits because we are going to
+                finish them today.
+              </div>
+              <div className="f6 gray w-auto pv2 lh-title">
+                Maybe we can order from Joe as the last batch quality was quite
+                good
+              </div>
+              <div className="flex">
+                {/* Attachment Placeholder */}
+                <div
+                  className="mr2"
+                  style={{
+                    width: '30px',
+                    height: '30px',
+                    backgroundColor: '#bbbbbb',
+                    borderRadius: '3px'
+                  }}
+                />
+                <div
+                  className="mr2"
+                  style={{
+                    width: '30px',
+                    height: '30px',
+                    backgroundColor: '#bbbbbb',
+                    borderRadius: '3px'
+                  }}
+                />
+                <div
+                  className="mr2"
+                  style={{
+                    width: '30px',
+                    height: '30px',
+                    backgroundColor: '#bbbbbb',
+                    borderRadius: '3px'
+                  }}
+                />
+                {/* Attachment Placeholder End */}
+              </div>
+              <div className="mt3">
+                <a href="#" className="orange f6 link mt3">
+                  Show more
+                </a>
+              </div>
             </div>
           </div>
         </div>

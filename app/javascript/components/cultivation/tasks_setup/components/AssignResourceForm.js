@@ -94,7 +94,9 @@ class AssignResourceForm extends React.Component {
     }
   }
   componentDidMount() {
-    UserStore.loadUsers()
+    if (!UserStore.isDataLoaded) {
+      UserStore.loadUsers()
+    }
   }
   setSelectedUsers(users = []) {
     this.setState({

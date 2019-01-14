@@ -78,6 +78,11 @@ module Cultivation
         task.estimated_cost = args[:estimated_cost].to_f
       end
       task.end_date = task.start_date + task.duration.days
+      task.user_ids = if args[:user_ids].present?
+                        args[:user_ids].map(&:to_bson_id)
+                      else
+                        []
+                      end
       task
     end
 

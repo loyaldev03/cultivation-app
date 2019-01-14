@@ -1,5 +1,31 @@
 import React, { Component } from 'react'
-import LetterAvatar from '../../utils/LetterAvatar.js'
+import Avatar from '../../utils/Avatar.js'
+
+const renderSeverity = value => {
+  if (value === 'high') {
+    return (
+      <div className="tc ttc">
+        <i className="material-icons red" style={{ fontSize: '18px' }}>
+          error
+        </i>
+      </div>
+    )
+  } else if (value === 'medium') {
+    return (
+      <div className="tc ttc">
+        <i className="material-icons gold" style={{ fontSize: '18px' }}>
+          warning
+        </i>
+      </div>
+    )
+  } else {
+    return (
+      <div className="tc ttc">
+        <span className="f6 fw4 purple">FYI</span>
+      </div>
+    )
+  }
+}
 
 class IssueDetails extends Component {
   toggleEdit = event => {
@@ -21,11 +47,18 @@ class IssueDetails extends Component {
         >
           <div className="flex w-100">
             <div className="w-auto pv3 mr2">
-              <LetterAvatar firstName="John" lastName="Doe" size={25} />
+              <Avatar firstName="John" lastName="Doe" size={25} />
             </div>
-            <div className="f6 gray w-auto pv3 ph2 mt1 mr2">ISSUE #002</div>
+            <div className="f6 gray w-auto pv3 ph2 mt1 mr2">
+              ISSUE #002
+              <div className="f7">Dec 12, 4:01pm</div>
+            </div>
+            <div className="f6 gray w-auto pv3 ph2 mt1 mr2">&bull;</div>
             <div className="f6 green flex f6 green fw6 w-auto pv3 mt1 mr2">
               OPEN
+            </div>
+            <div className="f6 flex f6 green fw6 w-auto pv3 mt1 mr2">
+              {renderSeverity('high')}
             </div>
           </div>
 
@@ -40,7 +73,7 @@ class IssueDetails extends Component {
         <div className="ph4">
           <div className="flex w-100">
             <div className="w-auto pv3 mr2">
-              <LetterAvatar firstName="Michael" lastName="Doe" size={25} />
+              <Avatar firstName="Michael" lastName="Doe" size={25} />
             </div>
             <div className="f5 dark-gray w-auto pv3 ph2 lh-title">
               Batch needs additional 25 clone kits because we are going to

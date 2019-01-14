@@ -388,10 +388,10 @@ class TaskStore {
       console.log(toJS(task))
       this.tasks = this.tasks.map(t => {
         // return t.id === taskId ? task : t
-        if(t.id === taskId){
+        if (t.id === taskId) {
           console.log(toJS(t))
           return task
-        }else{
+        } else {
           return t
         }
       })
@@ -401,8 +401,6 @@ class TaskStore {
       // })
     }
   }
-
-
 }
 
 const taskStore = new TaskStore()

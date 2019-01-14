@@ -66,14 +66,15 @@ export default class MaterialForm extends React.Component {
       } else {
         console.log(this.state.product)
         this.setState(previousState => ({
-          materials: [...previousState.materials, 
-                      { 
-                        product_name: this.state.product.name,
-                        product_id: this.state.product.id,
-                        category: this.state.product.catalogue.category,
-                        quantity: ''
-                      },
-                    ],
+          materials: [
+            ...previousState.materials,
+            {
+              product_name: this.state.product.name,
+              product_id: this.state.product.id,
+              category: this.state.product.catalogue.category,
+              quantity: ''
+            }
+          ],
           product: { value: '', label: '' }
         }))
       }
@@ -83,7 +84,6 @@ export default class MaterialForm extends React.Component {
   onSave = () => {
     this.props.onSave(this.state.materials)
   }
-
 
   onDeleteMaterial = value => {
     this.setState({
@@ -115,7 +115,7 @@ export default class MaterialForm extends React.Component {
     return (
       <React.Fragment>
         <div className="flex flex-column h-100">
-          <SlidePanelHeader onClose={onClose} title="Assign Materials" />       
+          <SlidePanelHeader onClose={onClose} title="Assign Materials" />
           <div className="ph4 mt3 flex">
             <div className="w-80">
               <Select
@@ -138,7 +138,6 @@ export default class MaterialForm extends React.Component {
             </div>
           </div>
           <div className="flex flex-column flex-auto justify-between">
-
             <div className="ph4 mt3 flex f6 fw6 db mb1 gray ttc">
               <table className="w-100">
                 <tbody>
@@ -158,7 +157,18 @@ export default class MaterialForm extends React.Component {
                       </td>
                       <td className="tl pv2 ph3">{x.category}</td>
                       <td className="tl pv2 ph3" width="10%">
-                        <input type="text" name="pin" maxLength="4" size="4" onChange={e => this.handleChangeQuantity(x.product_id, e.target.value)} />
+                        <input
+                          type="text"
+                          name="pin"
+                          maxLength="4"
+                          size="4"
+                          onChange={e =>
+                            this.handleChangeQuantity(
+                              x.product_id,
+                              e.target.value
+                            )
+                          }
+                        />
                       </td>
                       <td className="tl pv2 ph3">{x.uom}</td>
                       <td className="tl pv2 ph3">
@@ -177,8 +187,6 @@ export default class MaterialForm extends React.Component {
             <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
           </div>
         </div>
-
-        
       </React.Fragment>
     )
   }

@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react'
 import classNames from 'classnames'
-import { toJS} from 'mobx'
-import { observer} from 'mobx-react'
+import { toJS } from 'mobx'
+import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 import TaskStore from '../stores/NewTaskStore'
 import UserStore from '../stores/NewUserStore'
@@ -140,7 +140,6 @@ class TaskList extends React.Component {
       showAssignMaterialPanel: !this.state.showAssignMaterialPanel
     })
   }
-
 
   handleDelete = async row => {
     if (confirm('Are you sure you want to delete this task? ')) {
@@ -582,12 +581,8 @@ class TaskList extends React.Component {
             className="flex pointer items-center"
             onClick={() => this.handleShowMaterialForm(id, items)}
           >
-            {items &&
-              <span className="pa1">{items.length}</span>
-              }
-            <i className="ml2 material-icons icon--medium icon--rounded">
-              add
-            </i>
+            {items && <span className="pa1">{items.length}</span>}
+            <i className="ml2 material-icons icon--medium icon--rounded">add</i>
           </div>
         )
       }

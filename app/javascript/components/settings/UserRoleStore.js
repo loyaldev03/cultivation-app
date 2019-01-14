@@ -1,4 +1,5 @@
 import { observable, action, runInAction, toJS } from 'mobx'
+import { httpGetOptions } from '../utils'
 
 class UserRoleStore {
   @observable isLoading = false
@@ -16,16 +17,8 @@ class UserRoleStore {
       url = url + '?include_inactive_user=1'
     }
     try {
-      const response = await (await fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })).json()
+      const response = await (await fetch(url, httpGetOptions)).json()
       runInAction(() => {
-        this.isLoading = false
         if (response.data && response.data.attributes) {
           const { facilities, users, roles, modules } = response.data.attributes
           this.isDataLoaded = true
@@ -43,6 +36,8 @@ class UserRoleStore {
       })
     } catch (err) {
       console.error(err)
+    } finally {
+      this.isLoading = false
     }
   }
 

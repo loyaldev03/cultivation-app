@@ -7,7 +7,7 @@ const Avatar = React.memo(
     firstName = '',
     lastName = '',
     photoUrl,
-    size = '36px',
+    size = 36,
     backgroundColor = '#eee'
   }) => {
     if (photoUrl && photoUrl.length >= 10) {

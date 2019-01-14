@@ -7,8 +7,8 @@ module Cultivation
     field :name, type: String
     field :batch_source, type: String
     field :grow_method, type: String
-    field :start_date, type: DateTime
-    field :estimated_harvest_date, type: DateTime
+    field :start_date, type: Time
+    field :estimated_harvest_date, type: Time
     # Planned quantity for the batch (capacity needed)
     field :quantity, type: Integer
     field :facility_id, type: BSON::ObjectId
@@ -45,6 +45,7 @@ module Cultivation
       end
     end
 
+    # FIXME: Not correct. Only sum tasks with no child task
     def total_estimated_hours
       '%.2f' % tasks.sum(:estimated_hours)
     end

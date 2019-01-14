@@ -1,27 +1,29 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import classNames from 'classnames'
-import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 import TaskStore from '../stores/NewTaskStore'
-import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
-import {
-  monthStartDate,
-  monthOptionAdd,
-  monthOptionToString,
-  formatDate2,
-  dateToMonthOption
-} from '../../../utils'
-import { toast } from '../../../utils/toast'
+import UserStore from '../stores/NewUserStore'
 import TaskEditor from './TaskEditor'
-import ReactTable from 'react-table'
-import Calendar from 'react-calendar/dist/entry.nostyle'
 import BatchSetupStore from '../../batches_setup/BatchSetupStore'
 import InlineEditTaskNameField from './InlineEditTaskNameField'
 import InlineEditTextField from './InlineEditTextField'
 import InlineEditNumberField from './InlineEditNumberField'
 import InlineEditDateField from './InlineEditDateField'
-
+import Avatar from '../../../utils/Avatar'
+import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
+import { toast } from '../../../utils/toast'
+import {
+  monthStartDate,
+  monthOptionAdd,
+  monthOptionToString,
+  formatDate2,
+  dateToMonthOption,
+  SlidePanel
+} from '../../../utils'
+const Calendar = lazy(() => import('react-calendar/dist/entry.nostyle'))
+const ReactTable = lazy(() => import('react-table'))
+const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
     <a
@@ -34,6 +36,12 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
   )
 }
 
+const MoneyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 2
+})
+
 @observer
 class TaskList extends React.Component {
   constructor(props) {
@@ -44,6 +52,7 @@ class TaskList extends React.Component {
       isOpen: false,
       batch: this.props.batch,
       showStartDateCalendar: false,
+      showAssignResourcePanel: false,
       searchMonth: dateToMonthOption(batchStartDate)
     }
   }
@@ -109,6 +118,14 @@ class TaskList extends React.Component {
       width: '500px',
       taskId: taskId,
       action: 'update'
+    })
+  }
+
+  handleShowAssignForm = (taskId, users) => {
+    this.assignResouceForm.setSelectedUsers(users)
+    this.setState({
+      taskSelected: taskId,
+      showAssignResourcePanel: !this.state.showAssignResourcePanel
     })
   }
 
@@ -477,7 +494,7 @@ class TaskList extends React.Component {
       }
     },
     {
-      Header: 'Est Hr',
+      Header: 'Est. Hr',
       accessor: 'estimated_hours',
       maxWidth: '100',
       className: 'tr',
@@ -498,17 +515,45 @@ class TaskList extends React.Component {
       }
     },
     {
-      Header: 'Est Cost ($)',
+      Header: 'Est. Cost',
       accessor: 'estimated_cost',
       maxWidth: '100',
-      className: 'tr',
-      show: this.checkVisibility('estimated_cost')
+      className: 'justify-end',
+      show: this.checkVisibility('estimated_cost'),
+      Cell: data => MoneyFormatter.format(data.row.estimated_cost)
     },
     {
       Header: 'Assigned',
-      accessor: 'resources',
+      accessor: 'user_ids',
       maxWidth: '200',
-      show: this.checkVisibility('resource_assigned')
+      className: 'justify-center',
+      show: this.checkVisibility('resource_assigned'),
+      Cell: data => {
+        const { id, user_ids } = data.row
+        return (
+          <div
+            className="flex pointer"
+            onClick={() => this.handleShowAssignForm(id, user_ids)}
+          >
+            {user_ids &&
+              user_ids.map(u => {
+                const user = UserStore.getUserById(u)
+                return (
+                  <Avatar
+                    size={24}
+                    key={user.id}
+                    firstName={user.first_name}
+                    lastName={user.last_name}
+                    photoUrl={user.photo_url}
+                  />
+                )
+              })}
+            <i className="ml2 material-icons icon--medium icon--rounded">
+              person_add
+            </i>
+          </div>
+        )
+      }
     },
     {
       Header: 'Materials',
@@ -519,34 +564,60 @@ class TaskList extends React.Component {
   ]
 
   render() {
-    const { showStartDateCalendar, searchMonth, selectedStartDate } = this.state
+    const {
+      showStartDateCalendar,
+      showAssignResourcePanel,
+      searchMonth,
+      selectedStartDate
+    } = this.state
     const batchId = this.props.batch.id
     const phaseDuration = this.buildPhaseDuration(TaskStore.tasks)
     const totalDuration = this.calculateTotalDuration(phaseDuration)
     return (
       <React.Fragment>
-        <ReactTable
-          columns={this.columnsConfig(batchId)}
-          data={TaskStore.taskList}
-          loading={TaskStore.isLoading}
-          showPagination={false}
-          sortable={false}
-          className="-highlight"
-          pageSize={TaskStore.taskList.length}
-          getTrProps={(state, rowInfo, column) => {
-            let className = 'task-row'
-            if (
-              rowInfo.row &&
-              this.state.taskSelected &&
-              this.state.taskSelected === rowInfo.row.id
-            ) {
-              className = 'task-row shadow-1'
-            }
-            return {
-              className
-            }
-          }}
+        <SlidePanel
+          width="500px"
+          show={showAssignResourcePanel}
+          renderBody={props => (
+            <Suspense fallback={<div />}>
+              <AssignResourceForm
+                ref={form => (this.assignResouceForm = form)}
+                onClose={() =>
+                  this.setState({ showAssignResourcePanel: false })
+                }
+                onSave={users => {
+                  const taskId = this.state.taskSelected
+                  TaskStore.editAssignedUsers(batchId, taskId, users)
+                  this.setState({ showAssignResourcePanel: false })
+                }}
+              />
+            </Suspense>
+          )}
         />
+        <Suspense fallback={<div />}>
+          <ReactTable
+            columns={this.columnsConfig(batchId)}
+            data={TaskStore.taskList}
+            loading={TaskStore.isLoading}
+            showPagination={false}
+            sortable={false}
+            className="-highlight"
+            pageSize={TaskStore.taskList.length}
+            getTrProps={(state, rowInfo, column) => {
+              let className = 'task-row'
+              if (
+                rowInfo.row &&
+                this.state.taskSelected &&
+                this.state.taskSelected === rowInfo.row.id
+              ) {
+                className = 'task-row shadow-1'
+              }
+              return {
+                className
+              }
+            }}
+          />
+        </Suspense>
         <div className="mt3 tr">
           <input
             type="button"
@@ -580,18 +651,20 @@ class TaskList extends React.Component {
                         this.onSearch(monthOptionAdd(searchMonth, 1))
                       }
                     />
-                    <Calendar
-                      activeStartDate={monthStartDate(searchMonth)}
-                      className="availabilty-calendar"
-                      showNavigation={false}
-                      onChange={this.handleDatePick}
-                      tileContent={({ date, view }) => (
-                        <CapacityTile
-                          startDate={date}
-                          duration={totalDuration}
-                        />
-                      )}
-                    />
+                    <Suspense fallback={<div />}>
+                      <Calendar
+                        activeStartDate={monthStartDate(searchMonth)}
+                        className="availabilty-calendar"
+                        showNavigation={false}
+                        onChange={this.handleDatePick}
+                        tileContent={({ date, view }) => (
+                          <CapacityTile
+                            startDate={date}
+                            duration={totalDuration}
+                          />
+                        )}
+                      />
+                    </Suspense>
                   </React.Fragment>
                 ) : (
                   <div style={{ minHeight: '362px' }}>

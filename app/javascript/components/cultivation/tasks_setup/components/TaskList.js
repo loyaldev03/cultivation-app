@@ -59,7 +59,7 @@ class TaskList extends React.Component {
 
   async componentDidMount() {
     await TaskStore.loadTasks(this.props.batch.id)
-    await UserStore.loadUsers()
+    await UserStore.loadUsers(this.props.batch.facility_id)
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
     // need to find after data react-table is loaded callback
@@ -539,15 +539,19 @@ class TaskList extends React.Component {
             {user_ids &&
               user_ids.map(u => {
                 const user = UserStore.getUserById(u)
-                return (
-                  <Avatar
-                    size={24}
-                    key={user.id}
-                    firstName={user.first_name}
-                    lastName={user.last_name}
-                    photoUrl={user.photo_url}
-                  />
-                )
+                if (user) {
+                  return (
+                    <Avatar
+                      size={24}
+                      key={user.id}
+                      firstName={user.first_name}
+                      lastName={user.last_name}
+                      photoUrl={user.photo_url}
+                    />
+                  )
+                } else {
+                  return null
+                }
               })}
             <i className="ml2 material-icons icon--medium icon--rounded">
               person_add

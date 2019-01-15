@@ -119,8 +119,8 @@ class AssignResourceForm extends React.Component {
       this.setState({ selectedUsers })
     }
   }
-  onSave = () => {
-    this.props.onSave(this.state.selectedUsers)
+  onSave = async () => {
+    await this.props.onSave(this.state.selectedUsers)
   }
 
   render() {

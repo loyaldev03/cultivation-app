@@ -9,7 +9,6 @@ class TaskSerializer
     :end_date,
     :position,
     :estimated_hours,
-    :users,
     :wbs,
     :indent,
     :is_phase,      # TODO: Remove
@@ -30,15 +29,6 @@ class TaskSerializer
 
   attributes :wbs do |object|
     object.wbs
-  end
-
-  # TODO: Move to UI
-  # for showing in table column resources
-  attribute :resources do |object, params|
-    # users = params[:users].select { |a| object.user_ids.include?(a.id) }
-    # TODO: Move to UI
-    object.user_ids
-    # users.map { |a| a.display_name }.join(',')
   end
 
   attribute :item_display do |object|

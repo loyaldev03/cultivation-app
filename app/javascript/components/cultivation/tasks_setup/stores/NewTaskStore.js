@@ -274,6 +274,15 @@ class TaskStore {
     }
   }
 
+  @action
+  async editAssignedUsers(batchId, taskId, user_ids = []) {
+    const task = this.getTaskById(taskId)
+    const updateObj = {
+      user_ids
+    }
+    await this.editTask(batchId, taskId, updateObj)
+  }
+
   async updateTask(batch_id, task) {
     this.isLoading = true
     let new_task = task

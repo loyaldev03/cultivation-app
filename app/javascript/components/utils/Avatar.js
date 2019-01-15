@@ -7,13 +7,15 @@ const Avatar = React.memo(
     firstName = '',
     lastName = '',
     photoUrl,
-    size = '36px',
+    className,
+    size = 36,
     backgroundColor = '#eee'
   }) => {
     if (photoUrl && photoUrl.length >= 10) {
       // http://a.b
       return (
         <div
+          className={className}
           style={{
             background: `url(${photoUrl}) no-repeat center center`,
             backgroundColor,

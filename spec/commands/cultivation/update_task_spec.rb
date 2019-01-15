@@ -150,7 +150,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
   let(:t3) { tasks[11] }
   let(:t4) { tasks[12] }
 
-  context ".call - updating estimated hours / cost", focus: true do
+  context ".call - updating estimated hours / cost" do
     it "update subtask estimated hours should rollup to parent" do
       target = t2_3_2_1
       args = {
@@ -251,7 +251,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       cmd = Cultivation::UpdateTask.call(args, current_user)
 
       expect(cmd.errors.empty?).to be true
-      expect(cmd.result.estimated_hours.to_f).to eq args[:estimated_hours].to_f
+      expect(cmd.result.estimated_hours).to eq t1.estimated_hours
     end
 
     it "update depend_on" do

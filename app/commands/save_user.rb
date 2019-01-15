@@ -24,15 +24,33 @@ class SaveUser
       user.is_active = args[:is_active]
       user.hourly_rate = args[:hourly_rate]
       user.overtime_hourly_rate = args[:overtime_hourly_rate]
-      user.default_facility_id = args[:default_facility_id]
-      user.roles = args[:roles].map(&:to_bson_id) if args[:roles]
-      user.facilities = args[:facilities].map(&:to_bson_id) if args[:facilities]
+      user.default_facility_id = if args[:default_facility_id]
+                                   args[:default_facility_id].to_bson_id
+                                 end
+      user.roles = if args[:roles]
+                     args[:roles].map(&:to_bson_id)
+                   else
+                     []
+                   end
+      user.facilities = if args[:facilities]
+                          args[:facilities].map(&:to_bson_id)
+                        else
+                          []
+                        end
       user.timezone = get_timezone(user, @current_user)
-      user.save!
     else
+      if args[:default_facility_id].present?
+        args[:default_facility_id] = args[:default_facility_id].to_bson_id
+      end
+      if args[:facilities].present?
+        args[:facilities] = args[:facilities].map(&:to_bson_id)
+      end
+      if args[:roles].present?
+        args[:roles] = args[:roles].map(&:to_bson_id)
+      end
       user = User.new(args)
-      user.save!
     end
+    user.save!
     user
   end
 

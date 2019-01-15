@@ -4,11 +4,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import Select from 'react-select'
 import { toJS } from 'mobx'
-
-// import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
-
 import { groupBy, httpPostOptions } from '../../../utils'
-
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { SlidePanelHeader, SlidePanelFooter } from '../../../utils'
 

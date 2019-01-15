@@ -1,2 +1,2 @@
 webpack: yarn install && bin/webpack-dev-server
-web: bundle install && ENABLE_DATA_RESET=yes PORT=3000 bundle exec rails server
+web: bundle install && bin/rails db:migrate && ENABLE_DATA_RESET=yes PORT=3000 bundle exec rails server

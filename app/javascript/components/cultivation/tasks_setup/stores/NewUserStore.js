@@ -10,9 +10,10 @@ class UserStore {
   @observable users
 
   @action
-  async loadUsers() {
+  async loadUsers(facilityId) {
     this.isLoading = true
-    const url = '/api/v1/users'
+    let url = '/api/v1/users?1=1'
+    if (facilityId) url += `&facility_id=${facilityId}`
     try {
       const res = await (await fetch(url, httpGetOptions)).json()
       runInAction(() => {

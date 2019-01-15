@@ -66,13 +66,14 @@ class IssueForm extends React.Component {
       console.log(result)
 
       if (result.successful) {
-        let photos = this.state.photos
-        const newPhotos = result.successful.map(file => {
+        let attachments = this.state.attachments
+        const newAttachments = result.successful.map(file => {
           return {
-            metaKey: file.meta.key,
+            id: '',
+            key: file.meta.key,
             filename: file.meta.name,
-            preview: file.preview,
-            content_type: file.type,
+            url: file.preview,
+            mime_type: file.type,
             data: JSON.stringify({
               id: file.meta.key.match(/^cache\/(.+)/)[1],
               storage: 'cache',
@@ -84,8 +85,8 @@ class IssueForm extends React.Component {
             })
           }
         })
-        photos = [...photos, ...newPhotos]
-        this.setState({ photos })
+        attachments = [...attachments, ...newAttachments]
+        this.setState({ attachments })
       }
     })
   }
@@ -149,7 +150,8 @@ class IssueForm extends React.Component {
       status: attr.status,
       created_at: attr.created_at,
       reported_by: attr.reported_by,
-      issue_no: attr.issue_no
+      issue_no: attr.issue_no,
+      attachments: attr.attachments
     })
   }
 
@@ -170,7 +172,8 @@ class IssueForm extends React.Component {
       issue_no: '',
       // UI states
       uppyOpen: false,
-      photos: [],
+      attachments: [],
+      delete_attachments: [],
       errors: {}
     }
   }
@@ -183,6 +186,18 @@ class IssueForm extends React.Component {
   onUppyClose = () => {
     this.setState({ uppyOpen: false })
     this.uppy.reset()
+  }
+
+  onDeleteAttachment = key => {
+    console.log(key)
+    const result = confirm('Remove attachment?')
+    if (result) {
+      const attachment = this.state.attachments.find(x => x.key == key)
+      this.setState({
+        attachments: this.state.attachments.filter(x => x.key != key),
+        delete_attachments: [...this.state.delete_attachments, key]
+      })
+    }
   }
 
   onChangeGeneric = event => {
@@ -283,7 +298,9 @@ class IssueForm extends React.Component {
       task_id,
       location_id,
       location_type,
-      assigned_to_id
+      assigned_to_id,
+      attachments,
+      delete_attachments
     } = this.state
 
     const errors = {}
@@ -308,6 +325,8 @@ class IssueForm extends React.Component {
       location_id,
       location_type,
       assigned_to_id,
+      attachments,
+      delete_attachments,
       cultivation_batch_id: this.props.batchId,
       id: this.props.issueId,
       isValid
@@ -369,37 +388,75 @@ class IssueForm extends React.Component {
     }
   }
 
-  renderPhotos() {
-    const photos = this.state.photos.map(x => {
-      if (x.content_type.startsWith('video/')) {
+  renderAttachments() {
+    console.log(this.state.attachments)
+    const attachments = this.state.attachments.map(x => {
+      if (x.mime_type.startsWith('video/')) {
         return (
           <div
             src="/"
-            key={x.metaKey}
+            key={x.key}
             style={{ width: 50, height: 50 }}
-            content_type={x.content_type}
-            className="bg-black-30 white mr1 f7"
+            mime_type={x.mime_type}
+            className="bg-black-30 white mr1 f7 relative hover-photo"
           >
             VID - {x.metaKey}
+            <div className="zoom-btn" style={{ width: 50, height: 50 }}>
+              <i className="material-icons absolute">search</i>
+            </div>
+            <p
+              style={{ width: 50, bottom: -10, fontSize: '12px' }}
+              className="tc mt1 mb0 delete-btn"
+            >
+              <a
+                href="#"
+                className="link gray"
+                onClick={() => this.onDeleteAttachment(x.key)}
+              >
+                Delete
+              </a>
+            </p>
           </div>
         )
       }
       return (
-        <img
+        <div
           src="/"
-          key={x.metaKey}
-          file={x.metaKey}
-          content_type={x.content_type}
-          style={{ width: 50, height: 50 }}
-          src={x.preview}
-          className="mr1"
-        />
+          key={x.key}
+          mime_type={x.mime_type}
+          style={{ width: 50, height: 70 }}
+          className="mr1 overflow-hidden relative hover-photo"
+        >
+          <div
+            style={{
+              width: 50,
+              height: 50,
+              background: `url(${x.url}) no-repeat center center`,
+              backgroundSize: 'cover'
+            }}
+          />
+          <div className="zoom-btn" style={{ width: 50, height: 50 }}>
+            <i className="material-icons absolute">search</i>
+          </div>
+          <p
+            style={{ width: 50, bottom: -10, fontSize: '12px' }}
+            className="tc mt1 mb0 delete-btn"
+          >
+            <a
+              href="#"
+              className="link gray"
+              onClick={() => this.onDeleteAttachment(x.key)}
+            >
+              Delete
+            </a>
+          </p>
+        </div>
       )
     })
 
     return (
       <React.Fragment>
-        {photos}
+        {attachments}
         <a
           key="add"
           href="#"
@@ -553,7 +610,7 @@ class IssueForm extends React.Component {
           </div>
         </div>
         <div className="ph4 mb3 flex">
-          <div className="w-100 flex flex-wrap">{this.renderPhotos()}</div>
+          <div className="w-100 flex flex-wrap">{this.renderAttachments()}</div>
         </div>
 
         <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">

@@ -41,6 +41,7 @@ class TaskSerializer
         id: item.id.to_s,
         product_name: item.product.try(:name),
         product_id: item.product.try(:id).to_s,
+        category: item.product.try(:catalogue).try(:category),
         quantity: item.quantity,
         uom: item.uom,
         catalogue_id: item&.catalogue_id&.to_s,

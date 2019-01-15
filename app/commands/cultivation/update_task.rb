@@ -28,24 +28,17 @@ module Cultivation
           batch.is_active = true if @activate_batch
           # Update task with args and re-calculate end_date
           task = map_args_to_task(task, batch_tasks, @args)
+          facility_users = get_facility_users(batch.facility_id)
           # Move subtasks's start date & save changes
           adjust_children_dates(task, batch_tasks, original_start_date)
+          # Update estimated cost
+          update_estimated_cost(task, batch_tasks, facility_users)
           # Extend / contract parent duration & end_date
           adjust_parent_dates(task, batch_tasks)
           # Save if no errors
           task.save! if errors.empty?
 
-          # opt = {
-          #   facility_id: batch.facility_id,
-          #   batch_id: batch.id,
-          #   quantity: batch.quantity,
-          # }
-
           # TODO::ANDY - valid_data when updating tasks
-
-          # TODO::ANDY: Estimated Hours are not calculating
-          # Extend end date to Category and Phas
-
           # Update batch
           update_batch(batch, batch_tasks&.first)
         end
@@ -72,18 +65,23 @@ module Cultivation
       if !task.have_children?(batch_tasks)
         # Parent duration should derived from sub-tasks
         task.duration = args[:duration].present? ? args[:duration].to_i : 1
+        task.user_ids = decide_assigned_users(args[:user_ids])
         # Parent estimated_hours should derived from sub-tasks
         task.estimated_hours = args[:estimated_hours].to_f
-        # TODO: Calc estimated cost
-        task.estimated_cost = args[:estimated_cost].to_f
+      else
+        # Clear data not relevant to parent task
+        task.user_ids = []
       end
       task.end_date = task.start_date + task.duration.days
-      task.user_ids = if args[:user_ids].present?
-                        args[:user_ids].map(&:to_bson_id)
-                      else
-                        []
-                      end
       task
+    end
+
+    def decide_assigned_users(args_user_ids)
+      if args_user_ids.present?
+        args_user_ids.map(&:to_bson_id)
+      else
+        []
+      end
     end
 
     def decide_start_date(task, batch_tasks, args_start_date)
@@ -121,6 +119,20 @@ module Cultivation
         else
           sum
         end
+      end
+    end
+
+    def update_estimated_cost(task, batch_tasks, users)
+      if task.estimated_hours && task.duration && task.user_ids.present?
+        hours_per_day = task.estimated_hours.to_f / duration.to_i
+        hours_per_person = hours_per_day / task.user_ids.length
+        task.estimated_cost = 0.00
+        task.user_ids.each do |user_id|
+          user = users.detect { |u| u.id == user_id }
+          task.estimated_cost += user.hourly_rate * hours_per_person
+        end
+      else
+        task.estimated_cost = 0
       end
     end
 
@@ -238,6 +250,10 @@ module Cultivation
       tasks.select do |t|
         t.phase && Constants::CULTIVATION_PHASES_3V.include?(t.phase)
       end
+    end
+
+    def get_facility_users(facility)
+      User.in(facilities: facility).where(is_active: true).to_a
     end
   end
 end

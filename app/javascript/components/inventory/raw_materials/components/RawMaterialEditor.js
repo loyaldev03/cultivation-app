@@ -69,17 +69,17 @@ class RawMaterialEditor extends React.Component {
   }
 
   onFacilityChanged = item => {
-    let changes = { facility_id: item.f_id, defaultProduct: []}
+    let changes = { facility_id: item.f_id, defaultProduct: [] }
     // When facility changed, current selected product should not be valid
     // because that product belongs to another facility.
     if (this.state.product_id.length > 0) {
-      changes = { 
-        ...changes, 
+      changes = {
+        ...changes,
         product: null,
         manufacturer: '',
         description: '',
-        product_id: '', 
-        product_name: '', 
+        product_id: '',
+        product_name: ''
       }
     }
 
@@ -89,30 +89,28 @@ class RawMaterialEditor extends React.Component {
   }
 
   onCatalogueSelected = item => {
-    let changes = { 
+    let changes = {
       catalogue: item,
-      uom: { value: '', label: '' }, 
+      uom: { value: '', label: '' },
       defaultProduct: []
     }
 
     // When catalogue changed, current selected product should not be valid
     // because that product belongs to another catalogue.
     if (this.state.product_id.length > 0) {
-      changes = { 
-        ...changes, 
+      changes = {
+        ...changes,
         product: null,
         manufacturer: '',
         description: '',
-        product_id: '', 
-        product_name: '', 
+        product_id: '',
+        product_name: ''
       }
     }
 
-    this.setState(
-      changes, () => {
-        this.loadProducts('', this.state.catalogue, this.state.facility_id)
-      }
-    )
+    this.setState(changes, () => {
+      this.loadProducts('', this.state.catalogue, this.state.facility_id)
+    })
   }
 
   onChangeGeneric = event => {
@@ -323,7 +321,8 @@ class RawMaterialEditor extends React.Component {
       parseFloat(this.state.price_per_package) > 0 &&
       parseFloat(this.state.order_quantity) > 0
     const hasProductId = this.state.product_id
-    const canSelectProduct = this.state.facility_id.length > 0 && this.state.catalogue
+    const canSelectProduct =
+      this.state.facility_id.length > 0 && this.state.catalogue
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">

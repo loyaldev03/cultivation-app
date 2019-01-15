@@ -204,6 +204,7 @@ class PurchasedCloneEditor extends React.Component {
     if (product) {
       if (product.__isNew__) {
         this.setState({
+          product: product,
           product_name: product.value,
           product_id: '',
           manufacturer: '',

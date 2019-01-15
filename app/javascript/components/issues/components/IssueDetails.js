@@ -138,7 +138,7 @@ class IssueDetails extends Component {
             </div>
           </div>
         </div>
-        <hr className="w-100"></hr>
+        <hr className="w-100" />
         <Comments />
       </React.Fragment>
     )

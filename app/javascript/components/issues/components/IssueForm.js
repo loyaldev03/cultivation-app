@@ -336,8 +336,8 @@ class IssueForm extends React.Component {
     }
   }
 
-  onTogglePreview = (url='', type = '') => {
-    this.setState({ 
+  onTogglePreview = (url = '', type = '') => {
+    this.setState({
       previewOpen: !this.state.previewOpen,
       previewUrl: url,
       previewType: type
@@ -411,15 +411,20 @@ class IssueForm extends React.Component {
             mime_type={x.mime_type}
             className="white mr1 relative hover-photo"
           >
-            <div className="gray overflow-hidden   f7" style={{
-              width: 50,
-              height: 50 }}>
+            <div
+              className="gray overflow-hidden   f7"
+              style={{
+                width: 50,
+                height: 50
+              }}
+            >
               VID - {x.filename}
             </div>
-            <div 
-              className="zoom-btn" 
-              style={{ width: 50, height: 50 }} 
-              onClick={() => this.onTogglePreview(x.url, x.mime_type)}>
+            <div
+              className="zoom-btn"
+              style={{ width: 50, height: 50 }}
+              onClick={() => this.onTogglePreview(x.url, x.mime_type)}
+            >
               <i className="material-icons absolute">search</i>
             </div>
             <p
@@ -453,10 +458,11 @@ class IssueForm extends React.Component {
               backgroundSize: 'cover'
             }}
           />
-          <div 
-            className="zoom-btn" 
-            style={{ width: 50, height: 50 }} 
-            onClick={() => this.onTogglePreview(x.url, x.mime_type)}>
+          <div
+            className="zoom-btn"
+            style={{ width: 50, height: 50 }}
+            onClick={() => this.onTogglePreview(x.url, x.mime_type)}
+          >
             <i className="material-icons absolute">search</i>
           </div>
           <p
@@ -495,19 +501,14 @@ class IssueForm extends React.Component {
     if (this.state.id.length > 0) {
       return (
         <span className="f6 grey flex f6 pt2 fw4">
-          {formatDate(this.state.created_at)}, {formatTime(this.state.created_at)}
+          {formatDate(this.state.created_at)},{' '}
+          {formatTime(this.state.created_at)}
         </span>
       )
     } else {
-      return (
-        <span className="f6 green flex f6 green pt2 fw6">
-          Today
-        </span>
-      )
+      return <span className="f6 green flex f6 green pt2 fw6">Today</span>
     }
   }
-
-  
 
   render() {
     const {
@@ -658,7 +659,7 @@ class IssueForm extends React.Component {
           proudlyDisplayPoweredByUppy={false}
           plugins={['Webcam', 'Dropbox', 'AwsS3']}
         />
-        <AttachmentPreview 
+        <AttachmentPreview
           open={this.state.previewOpen}
           key={this.state.previewUrl}
           url={this.state.previewUrl}

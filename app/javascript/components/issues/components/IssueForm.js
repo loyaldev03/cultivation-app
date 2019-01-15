@@ -26,6 +26,7 @@ import loadLocations from '../actions/loadLocations'
 import TaskOption from './TaskOption'
 import LocationOption from './LocationOption'
 import LocationSingleValue from './LocationSingleValue'
+import AttachmentPreview from './AttachmentPreview'
 
 const severityOptions = [
   { value: 'low', label: 'Low' },
@@ -171,6 +172,9 @@ class IssueForm extends React.Component {
       reported_by: { first_name: 'J', lastName: 'D', photo: null },
       issue_no: '',
       // UI states
+      previewOpen: false,
+      previewUrl: '',
+      previewType: '',
       uppyOpen: false,
       attachments: [],
       delete_attachments: [],
@@ -333,6 +337,15 @@ class IssueForm extends React.Component {
     }
   }
 
+  onTogglePreview = (url='', type = '') => {
+    console.log('preview')
+    this.setState({ 
+      previewOpen: !this.state.previewOpen,
+      previewUrl: url,
+      previewType: type
+    })
+  }
+
   renderTitle() {
     if (this.props.mode === 'edit') {
       return (
@@ -398,10 +411,17 @@ class IssueForm extends React.Component {
             key={x.key}
             style={{ width: 50, height: 50 }}
             mime_type={x.mime_type}
-            className="bg-black-30 white mr1 f7 relative hover-photo"
+            className="white mr1 relative hover-photo"
           >
-            VID - {x.metaKey}
-            <div className="zoom-btn" style={{ width: 50, height: 50 }}>
+            <div className="gray overflow-hidden   f7" style={{
+              width: 50,
+              height: 50 }}>
+              VID - {x.filename}
+            </div>
+            <div 
+              className="zoom-btn" 
+              style={{ width: 50, height: 50 }} 
+              onClick={() => this.onTogglePreview(x.url, x.mime_type)}>
               <i className="material-icons absolute">search</i>
             </div>
             <p
@@ -435,7 +455,10 @@ class IssueForm extends React.Component {
               backgroundSize: 'cover'
             }}
           />
-          <div className="zoom-btn" style={{ width: 50, height: 50 }}>
+          <div 
+            className="zoom-btn" 
+            style={{ width: 50, height: 50 }} 
+            onClick={() => this.onTogglePreview(x.url, x.mime_type)}>
             <i className="material-icons absolute">search</i>
           </div>
           <p
@@ -472,13 +495,21 @@ class IssueForm extends React.Component {
 
   renderReportedAt() {
     if (this.state.id.length > 0) {
-      return `${formatDate(this.state.created_at)}, ${formatTime(
-        this.state.created_at
-      )}`
+      return (
+        <span className="f6 grey flex f6 pt2 fw4">
+          {formatDate(this.state.created_at)}, {formatTime(this.state.created_at)}
+        </span>
+      )
     } else {
-      return 'Today'
+      return (
+        <span className="f6 green flex f6 green pt2 fw6">
+          Today
+        </span>
+      )
     }
   }
+
+  
 
   render() {
     const {
@@ -534,9 +565,7 @@ class IssueForm extends React.Component {
           </div>
           <div className="w-40 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Reported at</label>
-            <span className="f6 green flex f6 green pt2 fw6">
-              {this.renderReportedAt()}
-            </span>
+            {this.renderReportedAt()}
           </div>
         </div>
 
@@ -630,6 +659,13 @@ class IssueForm extends React.Component {
           onRequestClose={this.onUppyClose}
           proudlyDisplayPoweredByUppy={false}
           plugins={['Webcam', 'Dropbox', 'AwsS3']}
+        />
+        <AttachmentPreview 
+          open={this.state.previewOpen}
+          key={this.state.previewUrl}
+          url={this.state.previewUrl}
+          type={this.state.previewType}
+          onClose={this.onTogglePreview}
         />
       </React.Fragment>
     )

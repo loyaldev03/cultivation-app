@@ -16,8 +16,7 @@ class Api::V1::UsersController < Api::V1::BaseApiController
 
   def by_facility
     facility_id = BSON::ObjectId(params[:facility_id])
-    filter = params[:filter] || ''
-    users = User.in(facilities: facility_id).any_of({last_name: /^#{filter}/i}, {first_name: /^#{filter}/i}).map do |u|
+    users = User.in(facilities: facility_id).map do |u|
       {
         value: u.id.to_s,
         label: u.display_name,

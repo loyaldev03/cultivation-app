@@ -2,33 +2,27 @@ require "shrine"
 require "shrine/storage/s3"
 require "shrine/storage/file_system"
 
-# if !Rails.env.production?
-  s3_options = {
-    access_key_id:     'AKIAJ45K32YD37C47NJA',
-    secret_access_key: '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',
-    bucket:            'cannected-dev',
-    region:            'ap-southeast-1',
-  }
+s3_general_options = {
+  access_key_id:     ENV['AWS_ACCESS_KEY_ID'],
+  secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
+  bucket:            ENV['AWS_BUCKET'],
+  region:            ENV['AWS_REGION']
+}
 
-  Shrine.storages = {
-    avatar: Shrine::Storage::S3.new(prefix: "avatar", **s3_options),
-    cache: Shrine::Storage::S3.new(prefix: "cache", **s3_options),
-    store: Shrine::Storage::S3.new(**s3_options),
-  }
-# else 
-#   s3_options = {
-#     access_key_id:     Rails.application.credentials.aws[:access_key_id],
-#     secret_access_key: Rails.application.credentials.aws[:secret_access_key],
-#     bucket:            Rails.application.credentials.aws[:bucket],
-#     region:            Rails.application.credentials.aws[:region],
-#   }
+# Avatar would allow public access without signed url
+s3_public_options = {
+  access_key_id:     ENV['AWS_ACCESS_KEY_ID'],
+  secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
+  bucket:            ENV['AWS_PUBLIC_BUCKET'],
+  region:            ENV['AWS_REGION']
+}
 
-#   Shrine.storages = {
-#     avatar: Shrine::Storage::S3.new(prefix: "avatar", **s3_options),
-#     cache: Shrine::Storage::S3.new(prefix: "cache", **s3_options),
-#     store: Shrine::Storage::S3.new(**s3_options),
-#   }
-# end
+Shrine.storages = {
+  avatar: Shrine::Storage::S3.new(prefix: "avatar", public: true, **s3_public_options),
+  cache: Shrine::Storage::S3.new(prefix: "cache", **s3_general_options),
+  store: Shrine::Storage::S3.new(**s3_general_options),
+}
+
 
 # Mongoid Support - https://github.com/shrinerb/shrine-mongoid
 Shrine.plugin :mongoid

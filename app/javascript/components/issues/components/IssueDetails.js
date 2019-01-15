@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import Avatar from '../../utils/Avatar.js'
+import Comments from './Comments'
 
 const renderSeverity = value => {
   if (value === 'high') {
@@ -60,7 +61,7 @@ class IssueDetails extends Component {
                 Dec 12, 4:01pm
               </div>
             </div>
-            <div className="f6 fw6 gray w-auto mr1 self-start pt1">&bull;</div>
+            <div className="f7 fw6 gray w-auto mr1 self-start pt1">&bull;</div>
             <div className="f7 fw6 green w-auto self-start pt1 ph1">OPEN</div>
             <div className="f6 fw6 gray w-auto ph1 self-start pt1">
               {renderSeverity('high')}
@@ -137,6 +138,8 @@ class IssueDetails extends Component {
             </div>
           </div>
         </div>
+        <hr className="w-100"></hr>
+        <Comments />
       </React.Fragment>
     )
   }

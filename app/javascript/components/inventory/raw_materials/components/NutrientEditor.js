@@ -28,10 +28,7 @@ class NutrientEditor extends React.Component {
         this.reset()
       } else {
         getRawMaterial(id)
-          .then(x => {
-            const attr = x.data.data.attributes
-            return attr
-          })
+          .then(x => x.data.data.attributes)
           .then(attr => {
             const flatten_catalogues = this.props.catalogues.reduce(
               (sum, val) => sum.concat(val.children || []),
@@ -82,7 +79,23 @@ class NutrientEditor extends React.Component {
   }
 
   onFacilityChanged = item => {
-    this.setState({ facility_id: item.f_id }, () => {
+    let changes = {
+      facility_id: item.f_id,
+      defaultProduct: [],
+    }
+
+    if (this.state.product_id.length > 0) {
+      changes = { 
+        ...changes, 
+        product: null,
+        product_id: '',
+        product_name: '',
+        manufacturer: '',
+        description: '',
+      }
+    }
+    
+    this.setState(changes, () => {
       this.loadProducts(
         '',
         this.state.nutrientType,
@@ -93,7 +106,6 @@ class NutrientEditor extends React.Component {
   }
 
   onNutrientTypeSelected = item => {
-    console.log(item)
     this.setState({
       nutrientType: item,
       catalogue: { value: '', label: '', uoms: [] }
@@ -101,7 +113,23 @@ class NutrientEditor extends React.Component {
   }
 
   onNutrientProductSelected = item => {
-    this.setState({ catalogue: item }, () => {
+    let changes = {
+      catalogue: item,
+      defaultProduct: []
+    }
+
+    if (this.state.product_id.length > 0) {
+      changes = { 
+        ...changes, 
+        product: null,
+        product_id: '',
+        product_name: '',
+        manufacturer: '',
+        description: '',
+      }
+    }
+
+    this.setState(changes, () => {
       this.loadProducts(
         '',
         this.state.nutrientType,
@@ -129,6 +157,7 @@ class NutrientEditor extends React.Component {
       product_name: '',
       manufacturer: '',
       description: '',
+      defaultProduct: [],
       order_quantity: 0,
       price_per_package: 0,
       order_uom: { value: '', label: '' },
@@ -149,8 +178,8 @@ class NutrientEditor extends React.Component {
   }
 
   onSave = event => {
-    const payload = this.validateAndGetValues()
-    if (payload.isValid) {
+    const { isValid, errors, ...payload } = this.validateAndGetValues()
+    if (isValid) {
       saveRawMaterial(payload).then(({ status, data }) => {
         if (status >= 400) {
           this.setState({ errors: data.errors })
@@ -217,6 +246,10 @@ class NutrientEditor extends React.Component {
       errors.location_id = ['Storage location is required.']
     }
 
+    if (product_name.length === 0) {
+      errors.product = ['Product is required.']
+    }
+
     const {
       isValid: purchaseIsValid,
       ...purchaseData
@@ -276,6 +309,7 @@ class NutrientEditor extends React.Component {
     if (product) {
       if (product.__isNew__) {
         this.setState({
+          product,
           product_name: product.value,
           product_id: '',
           manufacturer: '',
@@ -283,7 +317,7 @@ class NutrientEditor extends React.Component {
         })
       } else {
         this.setState({
-          product: { value: product.id, label: product.name },
+          product,
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,
@@ -294,6 +328,7 @@ class NutrientEditor extends React.Component {
       this.setState({
         product: { value: '', label: '' },
         product_id: '',
+        product_name: '',
         manufacturer: '',
         description: ''
       })
@@ -311,6 +346,8 @@ class NutrientEditor extends React.Component {
       parseFloat(this.state.order_quantity) > 0
 
     const hasProductId = this.state.product_id
+    const canSelectProduct =
+      this.state.facility_id.length > 0 && this.state.catalogue
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -333,6 +370,7 @@ class NutrientEditor extends React.Component {
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
               <LocationPicker
+                key={this.state.facility_id}
                 mode="facility"
                 onChange={this.onFacilityChanged}
                 locations={locations}
@@ -525,6 +563,7 @@ class NutrientEditor extends React.Component {
                 Where are they stored?
               </label>
               <LocationPicker
+                key={this.state.facility_id}
                 mode="storage"
                 locations={locations}
                 facility_id={this.state.facility_id}

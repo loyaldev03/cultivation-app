@@ -498,7 +498,7 @@ class NonSalesItemEditor extends React.Component {
                 Where are they stored?
               </label>
               <LocationPicker
-                mode="storage"
+                mode="sales"
                 locations={locations}
                 facility_id={this.state.facility_id}
                 onChange={x => this.setState({ location_id: x.rm_id })}

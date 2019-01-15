@@ -400,7 +400,7 @@ class TaskList extends React.Component {
     },
     {
       accessor: 'haveChildren',
-      show: false,
+      show: false
     },
     {
       accessor: 'indent',

@@ -119,8 +119,8 @@ export default class MaterialForm extends React.Component {
           <div className="ph4 mt3 flex">
             <div className="w-80">
               <Select
-                isClearable='true'
-                placeholder='Search Product ...'
+                isClearable="true"
+                placeholder="Search Product ..."
                 options={this.state.defaultProduct}
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}

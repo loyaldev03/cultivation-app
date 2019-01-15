@@ -3,6 +3,7 @@ import 'babel-polyfill'
 import React from 'react'
 import { render } from 'react-dom'
 import Select from 'react-select'
+import { toJS } from 'mobx'
 
 // import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 
@@ -92,7 +93,6 @@ export default class MaterialForm extends React.Component {
   }
 
   setSelectedItems(batch_id, task_id, items) {
-    console.log('select task id')
     this.setState({
       task_id: task_id,
       batch_id: batch_id,
@@ -162,6 +162,7 @@ export default class MaterialForm extends React.Component {
                           name="pin"
                           maxLength="4"
                           size="4"
+                          defaultValue={x.quantity}
                           onChange={e =>
                             this.handleChangeQuantity(
                               x.product_id,

@@ -381,18 +381,31 @@ class TaskStore {
       task.items = items
       console.log(toJS(task))
       this.tasks = this.tasks.map(t => {
-        // return t.id === taskId ? task : t
-        if (t.id === taskId) {
-          console.log(toJS(t))
-          return task
-        } else {
-          return t
-        }
+        return t.id === taskId ? task : t
       })
-      // TODO: Call editTask to update to backend
-      // this.tasks = this.tasks.map(t => {
-      //   return t.id === taskId ? payload : t
-      // })
+
+      const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_material_use`
+
+      const payload = {
+        items: task.items.map(e => ({
+          product_id: e.product_id,
+          quantity: e.quantity
+        }))
+      }
+
+      try {
+        const response = await (await fetch(
+          url,
+          httpPostOptions(payload)
+        )).json()
+        const updated = parseTask(response.data.attributes)
+        this.tasks = this.tasks.map(t => {
+          return t.id === taskId ? updated : t
+        })
+        toast('Task Relationship Deleted', 'success')
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 }

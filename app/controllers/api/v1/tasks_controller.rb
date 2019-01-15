@@ -102,7 +102,11 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def update_material_use
     command = Cultivation::SaveMaterialUse.call(params[:id], params[:items])
-    render json: {data: {task_id: params[:id]}}
+    if command.success?
+      render json: {data: {task_id: TaskSerializer.new(command.result)}}
+    else
+      render json: {error: command.errors}
+    end
   end
 
   private

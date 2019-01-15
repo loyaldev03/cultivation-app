@@ -69,6 +69,7 @@ module Cultivation
     def material_use
       materials = []
       tasks.each do |task|
+        ## BROKEN
         # task.material_use.each do |material|
         #   a = materials.find { |b| b.name == material.name }
         #   if a.nil?

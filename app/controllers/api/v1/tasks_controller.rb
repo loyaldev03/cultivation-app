@@ -141,6 +141,6 @@ class Api::V1::TasksController < Api::V1::BaseApiController
                                  :time_taken,
                                  :id,
                                  :batch_id,
-                                 assigned_employee: [:label, :value], user_ids: [], task_type: [], items: [:product_id, :quantity])
+                                 assigned_employee: [:label, :value], user_ids: [], task_type: [])
   end
 end

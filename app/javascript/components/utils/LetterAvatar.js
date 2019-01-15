@@ -79,7 +79,7 @@ class LetterAvatar extends React.PureComponent {
         lineHeight: size + 'px',
         color: 'rgba(233,233,233,0.9)',
         textAlign: 'center',
-        cursor: 'default',
+        cursor: 'inherit',
         display: 'inline-block',
         borderRadius: radius
       }
@@ -95,7 +95,7 @@ class LetterAvatar extends React.PureComponent {
         lineHeight: size + 'px',
         color: 'rgba(233,233,233,0.9)',
         textAlign: 'center',
-        cursor: 'default',
+        cursor: 'inherit',
         display: 'inline-block',
         borderRadius: radius
       }

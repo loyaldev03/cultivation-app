@@ -387,6 +387,10 @@ class TaskList extends React.Component {
       show: false
     },
     {
+      accessor: 'haveChildren',
+      show: false,
+    },
+    {
       accessor: 'indent',
       show: false
     },
@@ -461,9 +465,10 @@ class TaskList extends React.Component {
       className: 'tr',
       show: this.checkVisibility('end_date'),
       Cell: data => {
-        const { id, end_date } = data.row
+        const { id, end_date, haveChildren } = data.row
         return (
           <InlineEditDateField
+            editable={!haveChildren}
             text={end_date}
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
@@ -480,9 +485,10 @@ class TaskList extends React.Component {
       className: 'tr',
       show: this.checkVisibility('duration'),
       Cell: data => {
-        const { id, duration } = data.row
+        const { id, duration, haveChildren } = data.row
         return (
           <InlineEditNumberField
+            editable={!haveChildren}
             text={duration}
             min="1"
             step="1"
@@ -501,9 +507,10 @@ class TaskList extends React.Component {
       className: 'tr',
       show: this.checkVisibility('estimated_hours'),
       Cell: data => {
-        const { id, estimated_hours } = data.row
+        const { id, estimated_hours, haveChildren } = data.row
         return (
           <InlineEditNumberField
+            editable={!haveChildren}
             text={estimated_hours}
             min="0"
             step=".25"
@@ -530,7 +537,10 @@ class TaskList extends React.Component {
       className: 'justify-center',
       show: this.checkVisibility('resource_assigned'),
       Cell: data => {
-        const { id, user_ids } = data.row
+        const { id, user_ids, wbs, haveChildren } = data.row
+        if (haveChildren) {
+          return null
+        }
         return (
           <div
             className="flex pointer"

@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Cultivation::UpdateTask, type: :command do
-  let(:current_user) { create(:user) }
   let(:facility) { create(:facility, :is_complete) }
+  let(:current_user) { create(:user, facilities: [facility.id]) }
   let(:start_date) { Time.parse("01/01/2019") }
   let(:batch) { create(:batch, facility_id: facility.id, start_date: start_date) }
   let!(:tasks) do
@@ -151,6 +151,10 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
   let(:t4) { tasks[12] }
 
   context ".call - updating estimated hours / cost" do
+    let(:worker10) { create(:user, facilities: [facility.id], hourly_rate: 10) }
+    let(:worker8) { create(:user, facilities: [facility.id], hourly_rate: 8) }
+    let(:worker_invalid) { create(:user, hourly_rate: 10) }
+
     it "update subtask estimated hours should rollup to parent" do
       target = t2_3_2_1
       args = {
@@ -178,6 +182,59 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       parent = Cultivation::Task.find(t2_3.id)
       expected = args1[:estimated_hours] + args2[:estimated_hours]
       expect(parent.estimated_hours).to eq expected
+    end
+
+    it "update assigned users" do
+      target = t2_3_2_1
+      args = {id: target.id, user_ids: [
+        worker10.id,
+        worker10.id,
+        worker8.id,
+        worker_invalid.id,
+      ]}
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      expect(cmd.success?).to be true
+      expect(cmd.result.user_ids.length).to eq 2
+      expect(cmd.result.user_ids[0]).to eq worker10.id
+      expect(cmd.result.user_ids[1]).to eq worker8.id
+    end
+
+    it "update estimated hours & assigned user should update estimated_cost" do
+      target = t2_3_2_1
+      args = {
+        id: target.id,
+        estimated_hours: 10,
+        user_ids: [worker10.id, worker8.id],
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      expected = (5 * worker10.hourly_rate) + (5 * worker8.hourly_rate)
+      expect(cmd.success?).to be true
+      expect(cmd.result.user_ids.length).to eq 2
+      expect(cmd.result.estimated_hours).to eq 10
+      expect(cmd.result.estimated_cost).to eq expected
+    end
+
+    it "update estimated hours should update parent task" do
+      target = t2_3_2_1
+      args = {
+        id: target.id,
+        estimated_hours: 10,
+        user_ids: [worker10.id, worker8.id],
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      parent = Cultivation::Task.find(t2_3_2.id)
+      grand_parent = Cultivation::Task.find(t2_3.id)
+
+      total_cost = (5 * worker10.hourly_rate) + (5 * worker8.hourly_rate)
+      expect(cmd.success?).to be true
+      expect(parent.estimated_cost).to eq total_cost
+      expect(grand_parent.estimated_cost).to eq total_cost
     end
   end
 

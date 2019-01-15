@@ -51,8 +51,15 @@ export default class InlineEditTextField extends React.PureComponent {
     )
   }
   render() {
-    const { text } = this.props
+    const { text, editable = true } = this.props
     const { isEdit } = this.state
+    if (!editable) {
+      return (
+        <span className={this.getViewClassName()}>
+          {this.getViewText(text)}
+        </span>
+      )
+    }
     if (isEdit) {
       return (
         <React.Fragment>

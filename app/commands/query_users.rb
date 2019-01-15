@@ -3,12 +3,15 @@ class QueryUsers
 
   def initialize(current_user, facility_id)
     @current_user = current_user
-    @facility_id = facility_id
+    @facility_id = facility_id.to_bson_id if facility_id
   end
 
   def call
     if valid?
-      users = User.in(facilities: @facility_id).where(is_active: true).to_a
+      users = User.where(
+        facilities: [@facility_id],
+        is_active: true,
+      ).order_by(first_name: :asc).to_a
       role_ids = users.pluck(:roles).flatten
       roles = Common::Role.where(:id.in => role_ids).to_a
       users.each do |u|

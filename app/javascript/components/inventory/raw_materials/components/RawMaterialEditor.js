@@ -251,6 +251,7 @@ class RawMaterialEditor extends React.Component {
   }
 
   onChangeProduct = product => {
+    console.log(product)
     if (product) {
       if (product.__isNew__) {
         this.setState({
@@ -338,6 +339,7 @@ class RawMaterialEditor extends React.Component {
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
+              { console.log(this.state.product) }
               <AsyncCreatableSelect
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}

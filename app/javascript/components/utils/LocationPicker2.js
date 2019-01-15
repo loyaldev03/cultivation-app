@@ -10,6 +10,28 @@ class LocationPicker extends React.Component {
     return item.f_id.length > 0 && item.rm_id.length <= 0
   }
 
+  isStorage(facility_id) {
+    if (facility_id) {
+      return item =>
+        item.rm_id.length > 0 &&
+        item.rw_id.length === 0 &&
+        item.rm_purpose === 'storage' &&
+        item.f_id === facility_id
+    }
+    return () => false
+  }
+
+  isSalesInventory(facility_id) {
+    if (facility_id) {
+      return item =>
+        item.rm_id.length > 0 &&
+        item.rw_id.length === 0 &&
+        (item.rm_purpose === 'storage' || item.rm_purpose === 'vault') &&
+        item.f_id === facility_id
+    }
+    return () => false
+  }
+
   isClone(facility_id) {
     if (facility_id) {
       return item =>
@@ -87,6 +109,10 @@ class LocationPicker extends React.Component {
       _locations = locations.filter(this.isFlower(facility_id))
     } else if (mode === 'dry') {
       _locations = locations.filter(this.isDry(facility_id))
+    } else if (mode === 'storage') {
+      _locations = locations.filter(this.isStorage(facility_id))
+    } else if (mode === 'sales') {
+      _locations = locations.filter(this.isSalesInventory(facility_id))
     } else if (mode === 'facility') {
       _locations = locations.filter(this.isFacilityOnly).map(x => ({
         ...x,
@@ -103,7 +129,7 @@ class LocationPicker extends React.Component {
   findLocation(locations, location_id) {
     const { mode } = this.props
     let item = { value: '', label: '' }
-    if (mode === 'mother' || mode === 'room') {
+    if (['mother', 'room', 'sales', 'storage'].indexOf(mode) >= 0) {
       item = locations.find(x => x.rm_id === location_id)
     } else if (['clone', 'veg', 'flower', 'dry'].indexOf(mode) >= 0) {
       item = locations.find(x => x.t_id === location_id)
@@ -116,7 +142,7 @@ class LocationPicker extends React.Component {
   /* Utility method to extract location id & mode combination from item */
   extractLocationId(selectedItem) {
     const { mode } = this.props
-    if (mode === 'mother' || mode === 'room') {
+    if (['mother', 'room', 'sales', 'storage'].indexOf(mode) >= 0) {
       return {
         location_id: selectedItem.rm_id,
         location_type: selectedItem.rm_purpose
@@ -158,6 +184,8 @@ class LocationPicker extends React.Component {
       return 'Flower room ID'
     } else if (mode === 'dry') {
       return 'Dry room ID'
+    } else if (mode === 'storage' || mode === 'sales') {
+      return 'Storage room ID'
     } else if (mode === 'facility') {
       return 'Facility'
     } else {

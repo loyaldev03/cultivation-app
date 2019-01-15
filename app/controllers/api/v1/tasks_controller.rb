@@ -100,6 +100,11 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     end
   end
 
+  def update_material_use
+    command = Cultivation::SaveMaterialUse.call(params[:id], params[:items])
+    render json: {data: {task_id: params[:id]}}
+  end
+
   private
 
   def set_batch
@@ -132,6 +137,6 @@ class Api::V1::TasksController < Api::V1::BaseApiController
                                  :time_taken,
                                  :id,
                                  :batch_id,
-                                 assigned_employee: [:label, :value], user_ids: [], task_type: [])
+                                 assigned_employee: [:label, :value], user_ids: [], task_type: [], items: [:product_id, :quantity])
   end
 end

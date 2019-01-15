@@ -69,14 +69,14 @@ module Cultivation
     def material_use
       materials = []
       tasks.each do |task|
-        task.material_use.each do |material|
-          a = materials.find { |b| b.name == material.name }
-          if a.nil?
-            materials << material
-          else
-            a.quantity += material.quantity
-          end
-        end
+        # task.material_use.each do |material|
+        #   a = materials.find { |b| b.name == material.name }
+        #   if a.nil?
+        #     materials << material
+        #   else
+        #     a.quantity += material.quantity
+        #   end
+        # end
       end
       materials
     end

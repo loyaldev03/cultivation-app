@@ -32,14 +32,15 @@ class TaskSerializer
   end
 
   attribute :item_display do |object|
-    object.material_use.map { |a| a.name }.join(',')
+    # object.material_use.map { |a| a.name }.join(',')
   end
 
   attribute :items do |object|
     object.material_use.map do |item|
       {
         id: item.id.to_s,
-        name: item.name,
+        product_name: item.product.try(:name),
+        product_id: item.product.try(:id).to_s,
         quantity: item.quantity,
         uom: item.uom,
         catalogue_id: item&.catalogue_id&.to_s,

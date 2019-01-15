@@ -590,7 +590,10 @@ class TaskList extends React.Component {
       className: 'justify-center',
       Cell: data => {
         // console.log(toJS(data.row.items))
-        const { id, items } = data.row
+        const { id, items, haveChildren } = data.row
+        if (haveChildren) {
+          return null
+        }
         return (
           <div
             className="flex pointer items-center"

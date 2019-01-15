@@ -7,16 +7,15 @@ class Api::V1::BaseApiController < ActionController::API
   protected
 
   def set_rollbar_scope
-    Rollbar.scope!(:person => {
-                     :id => current_user.id.to_s,
-                     :email => current_user.email,
-                     :username => current_user.display_name,
-                     :timezone => current_user.timezone,
+    Rollbar.scope!(person: {
+                     id: current_user.id.to_s,
+                     email: current_user.email,
+                     username: current_user.display_name,
+                     timezone: current_user.timezone,
                    })
   end
 
   def set_timezone(&block)
     Time.use_zone(current_user.timezone, &block)
-    # Rails.logger.debug "\033[34m BaseApiController::Time.use_zone:: #{current_user&.timezone} \033[0m"
   end
 end

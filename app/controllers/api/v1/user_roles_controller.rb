@@ -20,7 +20,6 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
   end
 
   def update_user
-    # Rails.logger.debug "\033[31m #{user_params} \033[0m"
     save_user_cmd = SaveUser.call(user_params, current_user)
     if save_user_cmd.success?
       render json: Common::FacilityUserSerializer.new(save_user_cmd.result).serialized_json

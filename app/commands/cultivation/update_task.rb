@@ -14,14 +14,15 @@ module Cultivation
     end
 
     def call
-      task = Cultivation::Task.includes(:batch).find(@args[:id])
+      task = Cultivation::Task.includes(:batch).find_by(id: @args[:id])
       if @args[:type] == 'resource'
         task.update(user_ids: @args[:user_ids])
       else
         batch = task.batch
-        batch_tasks = Cultivation::QueryTasks.call(batch).result
-        task = batch_tasks.detect { |t| t.id == task.id }
         if valid_batch? batch
+          batch_tasks = Cultivation::QueryTasks.call(batch).result
+          task = batch_tasks.detect { |t| t.id == task.id }
+          facility_users = get_facility_users(batch.facility_id)
           # Remember original start_date
           original_start_date = task.start_date
           # Set batch to active
@@ -30,22 +31,13 @@ module Cultivation
           task = map_args_to_task(task, batch_tasks, @args)
           # Move subtasks's start date & save changes
           adjust_children_dates(task, batch_tasks, original_start_date)
+          # Update estimated cost
+          update_estimated_cost(task, facility_users)
           # Extend / contract parent duration & end_date
-          adjust_parent_dates(task, batch_tasks)
+          update_parent_cascade(task, batch_tasks)
           # Save if no errors
           task.save! if errors.empty?
-
-          # opt = {
-          #   facility_id: batch.facility_id,
-          #   batch_id: batch.id,
-          #   quantity: batch.quantity,
-          # }
-
           # TODO::ANDY - valid_data when updating tasks
-
-          # TODO::ANDY: Estimated Hours are not calculating
-          # Extend end date to Category and Phas
-
           # Update batch
           update_batch(batch, batch_tasks&.first)
         end
@@ -54,6 +46,23 @@ module Cultivation
     end
 
     private
+
+    def get_facility_users(facility_id)
+      User.in(facilities: facility_id).where(is_active: true).to_a
+    end
+
+    def update_batch(batch, first_task)
+      # Here we assume estimated harvest date is the start date of :dry phase
+      # (or :cure, when :dry not found)
+      harvest_phase = Cultivation::Task.
+        where(batch_id: batch.id,
+              is_phase: true,
+              :phase.in => [Constants::CONST_DRY,
+                            Constants::CONST_CURE]).first
+      batch.estimated_harvest_date = harvest_phase.start_date if harvest_phase
+      batch.start_date = first_task.start_date if first_task.start_date
+      batch.save!
+    end
 
     def cascade_changes?(task)
       # Update child and dependents tasks's start & end dates except
@@ -72,18 +81,23 @@ module Cultivation
       if !task.have_children?(batch_tasks)
         # Parent duration should derived from sub-tasks
         task.duration = args[:duration].present? ? args[:duration].to_i : 1
+        task.user_ids = decide_assigned_users(args[:user_ids])
         # Parent estimated_hours should derived from sub-tasks
         task.estimated_hours = args[:estimated_hours].to_f
-        # TODO: Calc estimated cost
-        task.estimated_cost = args[:estimated_cost].to_f
+      else
+        # Clear data not relevant to parent task
+        task.user_ids = []
       end
       task.end_date = task.start_date + task.duration.days
-      task.user_ids = if args[:user_ids].present?
-                        args[:user_ids].map(&:to_bson_id)
-                      else
-                        []
-                      end
       task
+    end
+
+    def decide_assigned_users(args_user_ids)
+      if args_user_ids.present?
+        args_user_ids.uniq.map(&:to_bson_id)
+      else
+        []
+      end
     end
 
     def decide_start_date(task, batch_tasks, args_start_date)
@@ -103,43 +117,22 @@ module Cultivation
       task.start_date || parent.start_date
     end
 
-    def decide_duration(task, parent, children)
-      if parent.end_date < task.end_date
-        # Extend parent duration / end_date
-        (task.end_date - parent.start_date) / 1.day
-      else
-        # Contract parent duration / end_date
-        max_child_date = children.map(&:end_date).compact.max
-        (max_child_date - parent.start_date) / 1.day
-      end
-    end
-
-    def decide_estimated_hours(children, batch_tasks)
-      children.reduce(0) do |sum, e|
-        if !e.have_children?(batch_tasks) && e.estimated_hours
-          sum + e.estimated_hours
-        else
-          sum
+    def update_estimated_cost(task, users)
+      if task.estimated_hours && task.duration && task.user_ids.present?
+        hours_per_person = task.estimated_hours / task.user_ids.length
+        estimated_cost = 0.00
+        task.user_ids.each do |user_id|
+          user = users.detect { |u| u.id == user_id }
+          if user.present?
+            estimated_cost += user.hourly_rate * hours_per_person
+          else
+            # Remove user from task if not found
+            task.user_ids.delete_if { |i| i == user_id }
+          end
         end
-      end
-    end
-
-    def adjust_children_dates(task, batch_tasks, original_start_date)
-      days_diff = (task.start_date - original_start_date) / 1.day
-      children = task.children(batch_tasks)
-      move_children(children, batch_tasks, days_diff)
-      children.each(&:save)
-    end
-
-    def adjust_parent_dates(task, batch_tasks)
-      parent = task.parent(batch_tasks)
-      while parent.present?
-        children = parent.children(batch_tasks)
-        parent.estimated_hours = decide_estimated_hours(children, batch_tasks)
-        parent.duration = decide_duration(task, parent, children)
-        parent.end_date = parent.start_date + parent.duration.days
-        parent.save
-        parent = parent.parent(batch_tasks)
+        task.estimated_cost = estimated_cost
+      else
+        task.estimated_cost = 0
       end
     end
 
@@ -154,17 +147,55 @@ module Cultivation
       end
     end
 
-    def update_batch(batch, first_task)
-      # Here we assume estimated harvest date is the start date of :dry phase
-      # (or :cure, when :dry not found)
-      harvest_phase = Cultivation::Task.
-        where(batch_id: batch.id,
-              is_phase: true,
-              :phase.in => [Constants::CONST_DRY,
-                            Constants::CONST_CURE]).first
-      batch.estimated_harvest_date = harvest_phase.start_date if harvest_phase
-      batch.start_date = first_task.start_date if first_task.start_date
-      batch.save!
+    def adjust_children_dates(task, batch_tasks, original_start_date)
+      days_diff = (task.start_date - original_start_date) / 1.day
+      children = task.children(batch_tasks)
+      move_children(children, batch_tasks, days_diff)
+      children.each(&:save)
+    end
+
+    def sum_children_hours(children, batch_tasks)
+      children.reduce(0) do |sum, e|
+        if !e.have_children?(batch_tasks) && e.estimated_hours
+          sum + e.estimated_hours
+        else
+          sum
+        end
+      end
+    end
+
+    def sum_children_cost(children, batch_tasks)
+      children.reduce(0.0) do |sum, e|
+        if !e.have_children?(batch_tasks) && e.estimated_cost
+          sum + e.estimated_cost
+        else
+          sum
+        end
+      end
+    end
+
+    def decide_duration(task, parent, children)
+      if parent.end_date < task.end_date
+        # Extend parent duration / end_date
+        (task.end_date - parent.start_date) / 1.day
+      else
+        # Contract parent duration / end_date
+        max_child_date = children.map(&:end_date).compact.max
+        (max_child_date - parent.start_date) / 1.day
+      end
+    end
+
+    def update_parent_cascade(task, batch_tasks)
+      parent = task.parent(batch_tasks)
+      while parent.present?
+        children = parent.children(batch_tasks)
+        parent.estimated_hours = sum_children_hours(children, batch_tasks)
+        parent.estimated_cost = sum_children_cost(children, batch_tasks)
+        parent.duration = decide_duration(task, parent, children)
+        parent.end_date = parent.start_date + parent.duration.days
+        parent.save
+        parent = parent.parent(batch_tasks)
+      end
     end
 
     # Find all subtasks

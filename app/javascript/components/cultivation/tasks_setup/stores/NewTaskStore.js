@@ -21,6 +21,18 @@ function parseTask(taskAttributes) {
   })
 }
 
+function haveChildren(nodeWbs, tasks) {
+  const childWbs = nodeWbs + '.'
+  return tasks.some(t => t.wbs.startsWith(childWbs))
+}
+
+function updateFlags(tasks) {
+  tasks.forEach(task => {
+    task.haveChildren = haveChildren(task.wbs, tasks)
+  })
+  return tasks
+}
+
 class TaskStore {
   @observable isLoading = false
   @observable isDataLoaded = false
@@ -33,7 +45,8 @@ class TaskStore {
     const url = `/api/v1/batches/${batchId}/tasks`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
-      this.tasks = response.data.map(res => parseTask(res.attributes))
+      const tasks = response.data.map(res => parseTask(res.attributes))
+      this.tasks = updateFlags(tasks)
       this.isDataLoaded = true
     } catch (error) {
       this.isDataLoaded = false
@@ -280,7 +293,7 @@ class TaskStore {
     const updateObj = {
       user_ids
     }
-    await this.editTask(batchId, taskId, updateObj)
+    await this.editTask(batchId, taskId, updateObj, true)
   }
 
   async updateTask(batch_id, task) {

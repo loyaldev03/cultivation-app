@@ -64,7 +64,7 @@ class IssueForm extends React.Component {
     })
 
     this.uppy.on('complete', result => {
-      console.log(result)
+      // console.log(result)
 
       if (result.successful) {
         let attachments = this.state.attachments
@@ -193,7 +193,6 @@ class IssueForm extends React.Component {
   }
 
   onDeleteAttachment = key => {
-    console.log(key)
     const result = confirm('Remove attachment?')
     if (result) {
       const attachment = this.state.attachments.find(x => x.key == key)
@@ -338,7 +337,6 @@ class IssueForm extends React.Component {
   }
 
   onTogglePreview = (url='', type = '') => {
-    console.log('preview')
     this.setState({ 
       previewOpen: !this.state.previewOpen,
       previewUrl: url,
@@ -402,7 +400,7 @@ class IssueForm extends React.Component {
   }
 
   renderAttachments() {
-    console.log(this.state.attachments)
+    // console.log(this.state.attachments)
     const attachments = this.state.attachments.map(x => {
       if (x.mime_type.startsWith('video/')) {
         return (

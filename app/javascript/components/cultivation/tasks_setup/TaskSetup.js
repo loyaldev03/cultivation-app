@@ -8,6 +8,7 @@ import loadItems from './actions/loadItems'
 import { formatDate2, ActiveBadge } from '../../utils'
 import TaskList from './components/TaskList'
 import { Manager, Reference, Popper } from 'react-popper'
+import TaskStore from './stores/NewTaskStore'
 
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
@@ -31,15 +32,10 @@ class TaskSetup extends React.Component {
       ],
       columnOpen: false
     }
-  }
 
-  async componentDidMount() {
-    // await loadTasks.loadbatch(this.props.batch_id)
-    // loadDisplayTaskStore()
-    // loadUsers()
-    // loadUserRoles()
-    // loadItems(this.props.batch.facility_id)
-    // document.addEventListener('mousedown', this.handleOutsideClick, false)
+    if (!TaskStore.isDataLoaded) {
+      TaskStore.loadTasks(props.batch_id)
+    }
   }
 
   onChangeFilterColumns = value => {
@@ -85,7 +81,6 @@ class TaskSetup extends React.Component {
     return (
       <React.Fragment>
         <BatchHeader batch={batch} />
-
         <div className="flex justify-between">
           <BatchTabs batch={batch} currentTab="taskList" />
           <Manager>

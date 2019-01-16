@@ -1,6 +1,5 @@
 import React, { lazy, Suspense } from 'react'
 import classNames from 'classnames'
-import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
 import TaskStore from '../stores/NewTaskStore'

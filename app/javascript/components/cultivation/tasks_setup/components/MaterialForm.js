@@ -1,12 +1,9 @@
 import 'babel-polyfill'
 
 import React from 'react'
-import { render } from 'react-dom'
 import Select from 'react-select'
-import { toJS } from 'mobx'
-import { groupBy, httpPostOptions } from '../../../utils'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { SlidePanelHeader, SlidePanelFooter } from '../../../utils'
+import { SlidePanelHeader, SlidePanelFooter, httpGetOptions } from '../../../utils'
 
 const handleInputChange = newValue => {
   return newValue ? newValue : ''
@@ -27,20 +24,23 @@ export default class MaterialForm extends React.Component {
     this.loadProducts(this.state.batch_id)
   }
 
-  loadProducts = batch_id => {
-    return fetch(`/api/v1/products?batch_id=${batch_id}`, {
-      credentials: 'include'
-    })
-      .then(response => response.json())
-      .then(data => {
-        const products = data.data.map(x => ({
+  loadProducts = async batch_id => {
+    const url = `/api/v1/products?batch_id=${batch_id}`
+    const response = await(await fetch(url, httpGetOptions)).json()
+
+    // return fetch(`/api/v1/products?batch_id=${batch_id}`, {
+    //   credentials: 'include'
+    // })
+    //   .then(response => response.json())
+    //   .then(data => {
+    const products = response.data.map(x => ({
           label: x.attributes.name,
           value: x.attributes.id,
           ...x.attributes
         }))
         this.setState({ defaultProduct: products })
         return products
-      })
+      // })
   }
 
   onChangeProduct = product => {

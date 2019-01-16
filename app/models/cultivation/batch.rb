@@ -11,7 +11,6 @@ module Cultivation
     field :estimated_harvest_date, type: Time
     # Planned quantity for the batch (capacity needed)
     field :quantity, type: Integer
-    field :facility_id, type: BSON::ObjectId
     field :current_growth_stage, type: String
     # Active Batch would affect the capacity of the Booked Tray.
     field :is_active, type: Boolean, default: -> { false }

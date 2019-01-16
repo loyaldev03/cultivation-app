@@ -27,10 +27,6 @@ class TaskSerializer
 
   attributes &:wbs
 
-  attribute :item_display do |object|
-    # object.material_use.map { |a| a.name }.join(',')
-  end
-
   attribute :items do |object|
     object.material_use.map do |item|
       {

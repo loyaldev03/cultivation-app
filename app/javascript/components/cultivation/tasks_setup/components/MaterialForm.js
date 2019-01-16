@@ -3,7 +3,11 @@ import 'babel-polyfill'
 import React from 'react'
 import Select from 'react-select'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { SlidePanelHeader, SlidePanelFooter, httpGetOptions } from '../../../utils'
+import {
+  SlidePanelHeader,
+  SlidePanelFooter,
+  httpGetOptions
+} from '../../../utils'
 
 const handleInputChange = newValue => {
   return newValue ? newValue : ''
@@ -26,7 +30,7 @@ export default class MaterialForm extends React.Component {
 
   loadProducts = async batch_id => {
     const url = `/api/v1/products?batch_id=${batch_id}`
-    const response = await(await fetch(url, httpGetOptions)).json()
+    const response = await (await fetch(url, httpGetOptions)).json()
 
     // return fetch(`/api/v1/products?batch_id=${batch_id}`, {
     //   credentials: 'include'
@@ -34,13 +38,13 @@ export default class MaterialForm extends React.Component {
     //   .then(response => response.json())
     //   .then(data => {
     const products = response.data.map(x => ({
-          label: x.attributes.name,
-          value: x.attributes.id,
-          ...x.attributes
-        }))
-        this.setState({ defaultProduct: products })
-        return products
-      // })
+      label: x.attributes.name,
+      value: x.attributes.id,
+      ...x.attributes
+    }))
+    this.setState({ defaultProduct: products })
+    return products
+    // })
   }
 
   onChangeProduct = product => {

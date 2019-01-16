@@ -24,6 +24,8 @@ import {
 const Calendar = lazy(() => import('react-calendar/dist/entry.nostyle'))
 const ReactTable = lazy(() => import('react-table'))
 const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
+const AssignMaterialForm = lazy(() => import('./MaterialForm'))
+
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
     <a
@@ -53,6 +55,7 @@ class TaskList extends React.Component {
       batch: this.props.batch,
       showStartDateCalendar: false,
       showAssignResourcePanel: false,
+      showAssignMaterialPanel: false,
       searchMonth: dateToMonthOption(batchStartDate)
     }
   }
@@ -127,6 +130,14 @@ class TaskList extends React.Component {
     this.setState({
       taskSelected: taskId,
       showAssignResourcePanel: !this.state.showAssignResourcePanel
+    })
+  }
+
+  handleShowMaterialForm = (taskId, items) => {
+    this.assignMaterialForm.setSelectedItems(this.props.batch.id, taskId, items)
+    this.setState({
+      taskSelected: taskId,
+      showAssignMaterialPanel: !this.state.showAssignMaterialPanel
     })
   }
 
@@ -388,7 +399,7 @@ class TaskList extends React.Component {
     },
     {
       accessor: 'haveChildren',
-      show: false,
+      show: false
     },
     {
       accessor: 'indent',
@@ -572,9 +583,26 @@ class TaskList extends React.Component {
     },
     {
       Header: 'Materials',
-      accessor: 'item_display',
-      maxWidth: '100',
-      show: this.checkVisibility('materials')
+      accessor: 'items',
+      maxWidth: '200',
+      show: this.checkVisibility('materials'),
+      className: 'justify-center',
+      Cell: data => {
+        // console.log(toJS(data.row.items))
+        const { id, items, haveChildren } = data.row
+        if (haveChildren) {
+          return null
+        }
+        return (
+          <div
+            className="flex pointer items-center"
+            onClick={() => this.handleShowMaterialForm(id, items)}
+          >
+            {items && <span className="pa1">{items.length}</span>}
+            <i className="ml2 material-icons icon--medium icon--rounded">add</i>
+          </div>
+        )
+      }
     }
   ]
 
@@ -582,6 +610,7 @@ class TaskList extends React.Component {
     const {
       showStartDateCalendar,
       showAssignResourcePanel,
+      showAssignMaterialPanel,
       searchMonth,
       selectedStartDate
     } = this.state
@@ -611,6 +640,26 @@ class TaskList extends React.Component {
                     users
                   )
                 }}
+              />
+            </Suspense>
+          )}
+        />
+        <SlidePanel
+          width="500px"
+          show={showAssignMaterialPanel}
+          renderBody={props => (
+            <Suspense fallback={<div />}>
+              <AssignMaterialForm
+                ref={form => (this.assignMaterialForm = form)}
+                onClose={() =>
+                  this.setState({ showAssignMaterialPanel: false })
+                }
+                onSave={materials => {
+                  const taskId = this.state.taskSelected
+                  TaskStore.editAssignedMaterial(batchId, taskId, materials)
+                  this.setState({ showAssignMaterialPanel: false })
+                }}
+                batch_id={this.props.batch.id}
               />
             </Suspense>
           )}

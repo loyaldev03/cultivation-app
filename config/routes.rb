@@ -206,6 +206,7 @@ Rails.application.routes.draw do
             post 'update_dependency'
             get 'locations'
             post 'delete_relationship'
+            post 'update_material_use'
           end
         end
         resources :nutrient_profiles

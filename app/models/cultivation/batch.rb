@@ -11,7 +11,6 @@ module Cultivation
     field :estimated_harvest_date, type: Time
     # Planned quantity for the batch (capacity needed)
     field :quantity, type: Integer
-    field :facility_id, type: BSON::ObjectId
     field :current_growth_stage, type: String
     # Active Batch would affect the capacity of the Booked Tray.
     field :is_active, type: Boolean, default: -> { false }
@@ -20,6 +19,7 @@ module Cultivation
     field :selected_plants, type: Array, default: []
 
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
+    belongs_to :facility, class_name: 'Facility'
     has_many :tray_plans, class_name: 'Cultivation::TrayPlan'
     has_many :tasks, class_name: 'Cultivation::Task'
     has_many :plants, class_name: 'Inventory::Plant'
@@ -68,14 +68,15 @@ module Cultivation
     def material_use
       materials = []
       tasks.each do |task|
-        task.material_use.each do |material|
-          a = materials.find { |b| b.name == material.name }
-          if a.nil?
-            materials << material
-          else
-            a.quantity += material.quantity
-          end
-        end
+        ## BROKEN
+        # task.material_use.each do |material|
+        #   a = materials.find { |b| b.name == material.name }
+        #   if a.nil?
+        #     materials << material
+        #   else
+        #     a.quantity += material.quantity
+        #   end
+        # end
       end
       materials
     end

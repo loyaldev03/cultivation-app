@@ -12,7 +12,9 @@ module Issues
                 :location_type,
                 :cultivation_batch,
                 :assigned_to,
-                :user
+                :attachments,
+                :user,
+                :args
 
     def initialize(user, args)
       @user = user
@@ -33,6 +35,8 @@ module Issues
       @cultivation_batch = Cultivation::Batch.find(args[:cultivation_batch_id])
       @task = Cultivation::Task.find(args[:task_id])
       @assigned_to = User.find(args[:assigned_to_id])
+
+      @attachments = args[:attachments]
     end
 
     def call
@@ -92,19 +96,22 @@ module Issues
 
     # TODO: Not complete yet, debug!
     def update_attachments(issue, args)
-      # if issue.persisted?
-      #   delete_ids = args[:delete_attachments]
-      #   issue.attachments.in(id: delete_ids).update_all(deleted: true)
-      # end
+      if issue.persisted?
+        delete_ids = args[:delete_attachments]
+        issue.attachments.in(id: delete_ids).update_all(deleted: true)
+      end
 
-      # args[:attachments].each do |attachment|
-      #   if attachment[:id].blank?
-      #     # New image if id.blank,
-      #     new_file = issues.attachments.build
-      #     new_file.file = attachment[:data] # <json string>
-      #     new_file.save!
-      #   end
-      # end
+      attachments.each do |attachment|
+        if attachment[:id].blank?
+          Rails.logger.debug "\t\t\t>>>> Adding new attachments"
+          Rails.logger.debug "\t\t\t>>>> attachment: #{attachment.inspect}"
+
+          # New image if id.blank,
+          new_file = issue.attachments.build
+          new_file.file = attachment[:data] # <json string>
+          new_file.save!
+        end
+      end
     end
   end
 end

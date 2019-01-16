@@ -383,6 +383,45 @@ class TaskStore {
   getDependencies(task) {
     return task.depend_on
   }
+
+  @action
+  async editAssignedMaterial(batchId, taskId, items) {
+    console.log(batchId)
+    console.log(taskId)
+    console.log(items)
+    const task = this.getTaskById(taskId)
+    console.log(toJS(task))
+    if (items) {
+      task.items = items
+      console.log(toJS(task))
+      this.tasks = this.tasks.map(t => {
+        return t.id === taskId ? task : t
+      })
+
+      const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_material_use`
+
+      const payload = {
+        items: task.items.map(e => ({
+          product_id: e.product_id,
+          quantity: e.quantity
+        }))
+      }
+
+      try {
+        const response = await (await fetch(
+          url,
+          httpPostOptions(payload)
+        )).json()
+        const updated = parseTask(response.data.attributes)
+        this.tasks = this.tasks.map(t => {
+          return t.id === taskId ? updated : t
+        })
+        toast('Task Relationship Deleted', 'success')
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
 }
 
 const taskStore = new TaskStore()

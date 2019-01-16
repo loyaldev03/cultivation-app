@@ -5,7 +5,6 @@ module Cultivation
     REFTYPE_CHILDREN = 'children'.freeze
     REFTYPE_DEPENDENT = 'dependent'.freeze
 
-
     def initialize(args = nil, current_user = nil, activate_batch = false)
       @args = args
       @current_user = current_user

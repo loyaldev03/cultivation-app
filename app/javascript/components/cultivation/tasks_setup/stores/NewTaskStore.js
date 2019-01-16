@@ -6,7 +6,10 @@ import {
   httpPostOptions,
   httpDeleteOptions,
   addDayToDate,
-  toast
+  moneyFormatter,
+  decimalFormatter,
+  sumBy,
+  toast,
 } from '../../../utils'
 import { addDays, differenceInCalendarDays, parse } from 'date-fns'
 
@@ -128,6 +131,14 @@ class TaskStore {
     return !!found
   }
 
+  @computed get childTasks() {
+    if (this.isDataLoaded) {
+      return this.tasks.filter(t => !t.haveChildren)
+    } else {
+      return []
+    }
+  }
+
   @computed get taskList() {
     if (this.isDataLoaded) {
       return this.tasks.filter(t => {
@@ -138,6 +149,24 @@ class TaskStore {
       })
     } else {
       return []
+    }
+  }
+
+  @computed get totalEstimatedHours() {
+    if (this.isDataLoaded) {
+      const value = sumBy(this.childTasks, 'estimated_hours')
+      return decimalFormatter.format(value)
+    } else {
+      return '--'
+    }
+  }
+
+  @computed get totalEstimatedCost() {
+    if (this.isDataLoaded) {
+      const value = sumBy(this.childTasks, 'estimated_cost')
+      return moneyFormatter.format(value)
+    } else {
+      return '--'
     }
   }
 

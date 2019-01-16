@@ -26,11 +26,9 @@
               Register strains that are grown at your facility.
             </p>
           </div>
-          <% if @strains_count > 0 %>
-            <%= link_to 'Change', inventory_strains_path, class: 'btn btn--secondary' %>
-          <% else %>
-            <%= link_to 'Start', inventory_strains_path, class: 'btn btn--primary' %>
-          <% end %>
+          
+          <%= link_to 'Setup', inventory_strains_path, class: 'btn btn--secondary' %>
+          
         </div>
         <div class="flex flex-row justify-center items-center mb4">
           <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%">
@@ -46,10 +44,8 @@
           </div>
           <% if @strains_count <= 0 %>
             <%= link_to 'You need to register strain first.', '', class: 'flex-none black-20 link f6 fw6 pv2 br2 dim' %>
-          <% elsif Inventory::Plant.count > 0 %>
-            <%= link_to 'Change', mothers_inventory_plants_path, class: 'btn btn--secondary' %>
           <% else %>
-            <%= link_to 'Start', mothers_inventory_plants_path, class: 'btn btn--primary' %>
+            <%= link_to 'Setup', mothers_inventory_plants_path, class: 'btn btn--secondary' %>          
           <% end %>
         </div>
 
@@ -66,11 +62,7 @@
             </p>
           </div>
           
-          <% if @raw_material_count <= 0 %>
-            <%= link_to 'Start', nutrients_inventory_raw_materials_path, class: 'btn btn--primary' %>
-          <% else %>
-            <%= link_to 'Change', nutrients_inventory_raw_materials_path, class: 'btn btn--secondary' %>
-          <% end %>
+          <%= link_to 'Setup', nutrients_inventory_raw_materials_path, class: 'btn btn--secondary' %>
         </div>
 
         <div class="flex flex-row justify-center items-center mb4">
@@ -85,11 +77,8 @@
               Product items ready for Sale
             </p>
           </div>
-          <% if @sales_product_count <= 0 %>
-            <%= link_to 'Start', harvest_packages_inventory_sales_products_path, class: 'btn btn--primary' %>
-          <% else %>
-            <%= link_to 'Change', harvest_packages_inventory_sales_products_path, class: 'btn btn--secondary' %>
-          <% end %>
+          <%= link_to 'Setup', harvest_packages_inventory_sales_products_path, class: 'btn btn--secondary' %>
+          
         </div>
 
 
@@ -106,46 +95,10 @@
             </p>
           </div>
 
-          <% if @non_sales_product_count <= 0 %>
-            <%= link_to 'Start', inventory_non_sales_items_path, class: 'btn btn--primary' %>
-          <% else %>
-            <%= link_to 'Change', inventory_non_sales_items_path, class: 'btn btn--secondary' %>
-          <% end %>
+          
+          <%= link_to 'Setup', inventory_non_sales_items_path, class: 'btn btn--secondary' %>
+          
         </div>
-
-        <!-- 
-        <hr class="mt4 mb4 b--black-5 bw1 w-100">
-
-         <div class="flex flex-row justify-center items-center mb4">
-          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%"></div>
-          <div class="flex-auto ph3 f6">
-            <p class="ma0 pa0 fw6 dark-gray ttc">
-              Vendor listing
-            </p>
-          </div>
-          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
-        </div>
-
-        <div class="flex flex-row justify-center items-center mb4">
-          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%"></div>
-          <div class="flex-auto ph3 f6">
-            <p class="ma0 pa0 fw6 dark-gray ttc">
-              Purchase Order &amp; stock intake settings
-            </p>
-          </div>
-          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
-        </div>
-
-        
-        <div class="flex flex-row justify-center items-center mb4">
-          <div class="ba b--light-gray bw1 flex-none" style="height: 50px; width: 50px; border-radius: 50%"></div>
-          <div class="flex-auto ph3 f6">
-            <p class="ma0 pa0 fw6 dark-gray ttc">
-              User access
-            </p>
-          </div>
-          <a href="#" class="flex-none bg-orange link white f6 fw6 pv2 ph3 br2 dim">Start</a>
-        </div> -->
       </div>
       
       <div class="w-70 bg-white pt4 pb4">

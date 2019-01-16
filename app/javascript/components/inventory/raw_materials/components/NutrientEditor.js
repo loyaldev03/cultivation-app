@@ -81,20 +81,20 @@ class NutrientEditor extends React.Component {
   onFacilityChanged = item => {
     let changes = {
       facility_id: item.f_id,
-      defaultProduct: [],
+      defaultProduct: []
     }
 
     if (this.state.product_id.length > 0) {
-      changes = { 
-        ...changes, 
+      changes = {
+        ...changes,
         product: null,
         product_id: '',
         product_name: '',
         manufacturer: '',
-        description: '',
+        description: ''
       }
     }
-    
+
     this.setState(changes, () => {
       this.loadProducts(
         '',
@@ -119,13 +119,13 @@ class NutrientEditor extends React.Component {
     }
 
     if (this.state.product_id.length > 0) {
-      changes = { 
-        ...changes, 
+      changes = {
+        ...changes,
         product: null,
         product_id: '',
         product_name: '',
         manufacturer: '',
-        description: '',
+        description: ''
       }
     }
 

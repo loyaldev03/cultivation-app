@@ -68,23 +68,26 @@ class BatchSerializer
   end
 
   attribute :current_phase do |object|
-    Cultivation::Task.where(
-      batch_id: object.id,
-      is_phase: true,
-      :start_date.lte => Date.today,
-      :end_date.gte => Date.today,
-    ).first&.name
+    'n/a'
+    # Cultivation::Task.where(
+    #   batch_id: object.id,
+    #   is_phase: true,
+    #   :start_date.lte => Date.today,
+    #   :end_date.gte => Date.today,
+    # ).first&.name
   end
 
   attribute :progress_today do |object|
-    (Date.today - object.start_date).round
+    # (Date.today - object.start_date).round
+    -1
   end
 
   attribute :estimated_total_days do |object|
-    if object.estimated_harvest_date && object.start_date
-      (object.estimated_harvest_date - object.start_date).round
-    else
-      ''
-    end
+    -2
+    # if object.estimated_harvest_date && object.start_date
+    #   (object.estimated_harvest_date - object.start_date).round
+    # else
+    #   ''
+    # end
   end
 end

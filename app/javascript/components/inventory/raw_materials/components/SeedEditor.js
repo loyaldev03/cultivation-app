@@ -66,7 +66,7 @@ class SeedEditor extends React.Component {
   onFacilityStrainChanged = item => {
     let changes = {
       facility_strain_id: item.value,
-      facility_id: item.facility_id,
+      facility_id: item.facility_id
     }
 
     if (this.state.product_id.length > 0) {
@@ -82,9 +82,8 @@ class SeedEditor extends React.Component {
     }
 
     this.setState(changes, () => {
-        this.loadProducts('')
-      }
-    )
+      this.loadProducts('')
+    })
   }
 
   onChangeGeneric = event => {
@@ -183,7 +182,6 @@ class SeedEditor extends React.Component {
     if (product_name.length === 0) {
       errors.product = ['Product is required.']
     }
-
 
     const {
       isValid: purchaseIsValid,

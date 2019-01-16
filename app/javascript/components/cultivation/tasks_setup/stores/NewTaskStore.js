@@ -207,6 +207,7 @@ class TaskStore {
           this.loadTasks(batchId)
         } else {
           const updated = parseTask(response.data.attributes)
+          updated.haveChildren = haveChildren(updated.wbs, this.tasks)
           this.tasks = this.tasks.map(t => {
             return t.id === taskId ? updated : t
           })

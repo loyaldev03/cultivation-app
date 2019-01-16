@@ -60,12 +60,19 @@ class Comments extends React.Component {
         sender_id: 2,
         current_user_id: 2,
         sent_at: new Date('01 Jan 1970 00:00:00 GMT'),
-        message:
-          'Captured some picture as ref.',
+        message: 'Captured some picture as ref.',
         quote: 'Yes it seems to be so...',
         attachments: [
-          { url: 'https://picsum.photos/300/200', preview: 'https://picsum.photos/300/200', type: 'image/png' },
-          { url: 'https://picsum.photos/300/201', preview: 'https://picsum.photos/300/201', type: 'image/png' },
+          {
+            url: 'https://picsum.photos/300/200',
+            preview: 'https://picsum.photos/300/200',
+            type: 'image/png'
+          },
+          {
+            url: 'https://picsum.photos/300/201',
+            preview: 'https://picsum.photos/300/201',
+            type: 'image/png'
+          }
         ],
         resolved: false
       },
@@ -77,19 +84,59 @@ class Comments extends React.Component {
         sender_id: 2,
         current_user_id: 2,
         sent_at: new Date('01 Jan 1970 00:00:00 GMT'),
-        message:
-          'and some more...',
+        message: 'and some more...',
         attachments: [
-          { url: 'https://picsum.photos/300/200', preview: 'https://picsum.photos/300/200', type: 'image/png' },
-          { url: 'https://picsum.photos/301/201', preview: 'https://picsum.photos/301/201', type: 'image/png' },
-          { url: 'https://picsum.photos/302/202', preview: 'https://picsum.photos/302/202', type: 'image/png' },
-          { url: 'https://picsum.photos/303/200', preview: 'https://picsum.photos/303/200', type: 'image/png' },
-          { url: 'https://picsum.photos/304/201', preview: 'https://picsum.photos/304/201', type: 'image/png' },
-          { url: 'https://picsum.photos/305/202', preview: 'https://picsum.photos/305/202', type: 'image/png' },
-          { url: 'https://picsum.photos/306/200', preview: 'https://picsum.photos/306/200', type: 'image/png' },
-          { url: 'https://picsum.photos/307/201', preview: 'https://picsum.photos/307/201', type: 'image/png' },
-          { url: 'https://picsum.photos/307/201', preview: 'https://picsum.photos/307/201', type: 'video/mp4', filename: 'axx111yy' },
-          { url: 'https://picsum.photos/308/202', preview: 'https://picsum.photos/308/202', type: 'image/png' },
+          {
+            url: 'https://picsum.photos/300/200',
+            preview: 'https://picsum.photos/300/200',
+            type: 'image/png'
+          },
+          {
+            url: 'https://picsum.photos/301/201',
+            preview: 'https://picsum.photos/301/201',
+            type: 'image/png'
+          },
+          {
+            url: 'https://picsum.photos/302/202',
+            preview: 'https://picsum.photos/302/202',
+            type: 'image/png'
+          },
+          {
+            url: 'https://picsum.photos/303/200',
+            preview: 'https://picsum.photos/303/200',
+            type: 'image/png'
+          },
+          {
+            url: 'https://picsum.photos/304/201',
+            preview: 'https://picsum.photos/304/201',
+            type: 'image/png'
+          },
+          {
+            url: 'https://picsum.photos/305/202',
+            preview: 'https://picsum.photos/305/202',
+            type: 'image/png'
+          },
+          {
+            url: 'https://picsum.photos/306/200',
+            preview: 'https://picsum.photos/306/200',
+            type: 'image/png'
+          },
+          {
+            url: 'https://picsum.photos/307/201',
+            preview: 'https://picsum.photos/307/201',
+            type: 'image/png'
+          },
+          {
+            url: 'https://picsum.photos/307/201',
+            preview: 'https://picsum.photos/307/201',
+            type: 'video/mp4',
+            filename: 'axx111yy'
+          },
+          {
+            url: 'https://picsum.photos/308/202',
+            preview: 'https://picsum.photos/308/202',
+            type: 'image/png'
+          }
         ],
         resolved: false
       }

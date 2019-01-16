@@ -2,7 +2,7 @@ import React from 'react'
 import Avatar from '../../utils/Avatar.js'
 import { formatDate, formatTime } from '../../utils/DateHelper'
 
-const Preview = ({url, preview, type, filename = ''}) => {
+const Preview = ({ url, preview, type, filename = '' }) => {
   return (
     <div
       src="/"
@@ -23,8 +23,7 @@ const Preview = ({url, preview, type, filename = ''}) => {
   )
 }
 
-
-const Thumbnail = ({url, preview, type, filename}) => {
+const Thumbnail = ({ url, preview, type, filename }) => {
   if (type.startsWith('image')) {
     return (
       <div
@@ -61,7 +60,7 @@ const CommentMessage = ({
   message,
   quote = '',
   resolved = false,
-  attachments = [],
+  attachments = []
 }) => {
   const isMe = sender_id === current_user_id
   const align = isMe ? 'justify-end' : 'justify-start'
@@ -82,21 +81,24 @@ const CommentMessage = ({
               <p className="f6 black-70 lh-title mt0 mb1 flex-auto">
                 {message}
               </p>
-              <span className="material-icons black-05 hover-gray ph1 pointer" style={{ fontSize: '18px'}}>more_vert</span>
+              <span
+                className="material-icons black-05 hover-gray ph1 pointer"
+                style={{ fontSize: '18px' }}
+              >
+                more_vert
+              </span>
             </div>
-            { 
-              attachments.length > 0 && (
-                <div className="flex flex-wrap mt2 mb1">
-                  { attachments.map((props) => <Preview key={props.url} {...props} />) }
-                </div>)
-            }
-            { 
-              // TODO: Refactor CommentMessage to TaskCreatedMessage so that 'quote' layout is not here.
+            {attachments.length > 0 && (
+              <div className="flex flex-wrap mt2 mb1">
+                {attachments.map(props => (
+                  <Preview key={props.url} {...props} />
+                ))}
+              </div>
+            )}
+            {// TODO: Refactor CommentMessage to TaskCreatedMessage so that 'quote' layout is not here.
               quote.length > 0 && (
-                <div className="bg-white pa2 i f7 gray mt1 mr3">
-                  { quote }
-                </div>)
-            }
+                <div className="bg-white pa2 i f7 gray mt1 mr3">{quote}</div>
+              )}
           </div>
 
           <div className="fw4 gray" style={{ fontSize: '10px' }}>

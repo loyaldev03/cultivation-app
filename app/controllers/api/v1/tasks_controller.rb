@@ -56,6 +56,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     destination_task = Cultivation::Task.find(params[:destination_id])
     if destination_task.present?
       source_task = Cultivation::Task.find(params[:source_id])
+      # TODO: Need move this logic into updateTask
       start_date = source_task.end_date + 1.days
       end_date = start_date + destination_task.duration.days
       destination_task.update(depend_on: params[:source_id],

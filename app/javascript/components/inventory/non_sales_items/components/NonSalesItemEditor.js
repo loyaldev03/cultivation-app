@@ -28,11 +28,9 @@ class NonSalesItemEditor extends React.Component {
         this.reset()
       } else {
         getNonSalesItem(id)
-          .then(x => {
-            const attr = x.data.data.attributes
-            return attr
-          })
+          .then(x => x.data.data.attributes)
           .then(attr => {
+            console.log(attr)
             const catalogueOptions = this.props.catalogues.result.map(x => ({
               value: x.value,
               label: x.label,
@@ -54,6 +52,7 @@ class NonSalesItemEditor extends React.Component {
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer,
                 description: attr.description,
+                product: attr.product,
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -78,13 +77,39 @@ class NonSalesItemEditor extends React.Component {
   }
 
   onFacilityChanged = item => {
-    this.setState({ facility_id: item.f_id }, () => {
+    let changes = { facility_id: item.f_id }
+
+    if (this.state.product_id.length > 0) {
+      changes = {
+        ...changes,
+        product_id: '',
+        product_name: '',
+        manufacturer: '',
+        description: '',
+        defaultProduct: []
+      }
+    }
+
+    this.setState(changes, () => {
       this.loadProducts('', this.state.catalogue, this.state.facility_id)
     })
   }
 
   onNonSalesItemTypeSelected = item => {
-    this.setState({ catalogue: item }, () => {
+    let changes = { catalogue: item }
+
+    if (this.state.product_id.length > 0) {
+      changes = {
+        ...changes,
+        product_id: '',
+        product_name: '',
+        manufacturer: '',
+        description: '',
+        defaultProduct: []
+      }
+    }
+
+    this.setState(changes, () => {
       this.loadProducts('', this.state.catalogue, this.state.facility_id)
     })
   }
@@ -102,10 +127,12 @@ class NonSalesItemEditor extends React.Component {
       qty_per_package: '',
       nonSalesItemType: { value: '', label: '', children: [] },
       catalogue: { value: '', label: '', uoms: [] },
+      product: { value: '', label: '' },
       product_id: '',
       product_name: '',
       manufacturer: '',
       description: '',
+      defaultProduct: [],
       order_quantity: 0,
       price_per_package: 0,
       order_uom: { value: '', label: '' },
@@ -186,9 +213,9 @@ class NonSalesItemEditor extends React.Component {
       ]
     }
 
-    // if (!catalogue) {
-    //   errors.catalogue = ['Non-sales item product is required.']
-    // }
+    if (!catalogue) {
+      errors.catalogue = ['Non-sales item product is required.']
+    }
 
     if (location_id.length === 0) {
       errors.location_id = ['Storage location is required.']
@@ -255,6 +282,7 @@ class NonSalesItemEditor extends React.Component {
     if (product) {
       if (product.__isNew__) {
         this.setState({
+          product,
           product_name: product.value,
           product_id: '',
           manufacturer: '',
@@ -262,6 +290,7 @@ class NonSalesItemEditor extends React.Component {
         })
       } else {
         this.setState({
+          product,
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,
@@ -270,6 +299,7 @@ class NonSalesItemEditor extends React.Component {
       }
     } else {
       this.setState({
+        product,
         product_id: '',
         manufacturer: '',
         description: ''
@@ -361,7 +391,7 @@ class NonSalesItemEditor extends React.Component {
                 }
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
-                value={this.state.product_name}
+                value={this.state.product}
                 onChange={this.onChangeProduct}
               />
               <FieldError errors={this.state.errors} field="product" />
@@ -498,7 +528,7 @@ class NonSalesItemEditor extends React.Component {
                 Where are they stored?
               </label>
               <LocationPicker
-                mode="sales"
+                mode="storage"
                 locations={locations}
                 facility_id={this.state.facility_id}
                 onChange={x => this.setState({ location_id: x.rm_id })}

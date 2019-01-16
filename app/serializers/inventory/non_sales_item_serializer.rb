@@ -74,5 +74,21 @@ module Inventory
         strain_name: object.facility_strain.strain_name,
       }
     end
+
+    attribute :product do |object|
+      if object.product
+        {
+          id: object.product.id.to_s,
+          name: object.product.name,
+          sku: object.product.sku,
+          status: object.product.status,
+          transaction_limit: object.product.transaction_limit,
+          description: object.product.description,
+          manufacturer: object.product.manufacturer,
+        }
+      else
+        nil
+      end
+    end
   end
 end

@@ -65,7 +65,7 @@ class PurchasedCloneEditor extends React.Component {
     }
 
     if (this.state.product_id.length > 0) {
-      changes = { 
+      changes = {
         ...changes,
         product_name: '',
         manufacturer: '',
@@ -77,9 +77,8 @@ class PurchasedCloneEditor extends React.Component {
     }
 
     this.setState(changes, () => {
-        this.loadProducts('')
-      }
-    )
+      this.loadProducts('')
+    })
   }
 
   onChangeGeneric = event => {

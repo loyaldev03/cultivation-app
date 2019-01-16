@@ -313,15 +313,15 @@ class TaskStore {
   }
 
   formatGantt(tasks) {
-    tasks = toJS(tasks)
     if (this.isDataLoaded) {
       let formatted_tasks = tasks.map(task => {
-        const { id, name, start_date, end_date, parent_id } = task
+        const { id, name, start_date, end_date } = task
+        const end = addDays(end_date, -1)
         return {
           id,
           name,
           start: start_date,
-          end: end_date,
+          end: end,
           dependencies: this.getDependencies(task)
         }
       })
@@ -337,14 +337,9 @@ class TaskStore {
 
   @action
   async editAssignedMaterial(batchId, taskId, items) {
-    console.log(batchId)
-    console.log(taskId)
-    console.log(items)
     const task = this.getTaskById(taskId)
-    console.log(toJS(task))
     if (items) {
       task.items = items
-      console.log(toJS(task))
       this.tasks = this.tasks.map(t => {
         return t.id === taskId ? task : t
       })

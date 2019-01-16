@@ -1,14 +1,10 @@
 import React from 'react'
-import { render } from 'react-dom'
-
-import { observable, toJS } from 'mobx'
-import { observer, Provider } from 'mobx-react'
-import { formatDate2, addDayToDate } from '../../utils'
-
+import { observer } from 'mobx-react'
 import TaskStore from '../tasks_setup/stores/NewTaskStore'
 import ReactGantt from './ReactGantt'
-import { Manager, Reference, Popper, Arrow } from 'react-popper'
+import { Manager, Reference, Popper } from 'react-popper'
 import classNames from 'classnames'
+import { addSeconds } from 'date-fns'
 
 const styles = `
 path.handle-arrow {
@@ -112,7 +108,12 @@ class GanttChart extends React.Component {
     let el = document.querySelector('.gantt-container')
     let scrollLeft = el.scrollLeft
     let scrollTop = el.scrollTop
-    await TaskStore.editStartDate(this.props.batch_id, task.id, start_date)
+    if (task.start.getTime() === start_date.getTime()){
+      await TaskStore.editEndDate(this.props.batch_id, task.id, addSeconds(end_date, 1))
+    }
+    else{
+      await TaskStore.editStartDate(this.props.batch_id, task.id, start_date)
+    }
     el.scrollLeft = scrollLeft
     el.scrollTop = scrollTop
   }

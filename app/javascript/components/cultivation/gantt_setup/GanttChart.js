@@ -108,10 +108,13 @@ class GanttChart extends React.Component {
     let el = document.querySelector('.gantt-container')
     let scrollLeft = el.scrollLeft
     let scrollTop = el.scrollTop
-    if (task.start.getTime() === start_date.getTime()){
-      await TaskStore.editEndDate(this.props.batch_id, task.id, addSeconds(end_date, 1))
-    }
-    else{
+    if (task.start.getTime() === start_date.getTime()) {
+      await TaskStore.editEndDate(
+        this.props.batch_id,
+        task.id,
+        addSeconds(end_date, 1)
+      )
+    } else {
       await TaskStore.editStartDate(this.props.batch_id, task.id, start_date)
     }
     el.scrollLeft = scrollLeft

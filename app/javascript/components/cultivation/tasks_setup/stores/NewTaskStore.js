@@ -9,7 +9,7 @@ import {
   moneyFormatter,
   decimalFormatter,
   sumBy,
-  toast,
+  toast
 } from '../../../utils'
 import { addDays, differenceInCalendarDays, parse } from 'date-fns'
 

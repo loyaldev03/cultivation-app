@@ -3,12 +3,8 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def index
     if @batch.present?
-      tasks = get_all_tasks
-      users = User.active
-      task_json = TaskSerializer.new(
-        tasks, params: {tasks: tasks, users: users},
-      ).serialized_json
-      render json: task_json
+      tasks = Cultivation::QueryTasks.call(@batch).result
+      render json: TaskSerializer.new(tasks).serialized_json
     else
       render json: {data: 'Batch Not Found'}
     end
@@ -114,10 +110,6 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def set_batch
     @batch = Cultivation::Batch.includes(:tasks).find_by(id: params[:batch_id])
-  end
-
-  def get_all_tasks
-    Cultivation::QueryTasks.call(@batch).result
   end
 
   def task_params

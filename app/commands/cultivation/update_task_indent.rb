@@ -12,7 +12,7 @@ module Cultivation
       if valid_params? && can_indent?
         tasks = get_tasks(task_to_indent.batch)
         @task_to_indent = get_task(tasks, @task_id)
-        children = get_children(tasks, task_to_indent.wbs)
+        children = task_to_indent.children(tasks)
 
         if can_indent_in?
           task_to_indent.indent += 1
@@ -65,10 +65,6 @@ module Cultivation
 
     def get_task(batch_tasks, task_id)
       batch_tasks.detect { |t| t.id == task_id }
-    end
-
-    def get_children(batch_tasks, task_wbs)
-      WbsTree.children(batch_tasks, task_wbs)
     end
 
     def task_to_indent

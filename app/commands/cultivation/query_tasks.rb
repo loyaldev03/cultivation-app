@@ -10,9 +10,7 @@ module Cultivation
       if @batch.present?
         tasks = @batch.tasks.order_by(position: :asc).to_a
         wbs_list = WbsTree.generate(tasks)
-        tasks.each_with_index do |t, i|
-          t.wbs = wbs_list[i][:wbs]
-        end
+        tasks.each_with_index { |t, i| t.wbs = wbs_list[i][:wbs] }
         tasks
       else
         errors.add(:error, 'Invalid param batch')

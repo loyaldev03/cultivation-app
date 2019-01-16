@@ -6,6 +6,9 @@ import {
   httpPostOptions,
   httpDeleteOptions,
   addDayToDate,
+  moneyFormatter,
+  decimalFormatter,
+  sumBy,
   toast
 } from '../../../utils'
 import { addDays, differenceInCalendarDays, parse } from 'date-fns'
@@ -26,11 +29,19 @@ function haveChildren(nodeWbs, tasks) {
   return tasks.some(t => t.wbs.startsWith(childWbs))
 }
 
-function updateFlags(tasks) {
-  tasks.forEach(task => {
-    task.haveChildren = haveChildren(task.wbs, tasks)
-  })
-  return tasks
+function updateFlags(singleTarget, tasks) {
+  if (singleTarget && tasks) {
+    singleTarget.haveChildren = haveChildren(singleTarget.wbs, tasks)
+    return singleTarget
+  }
+  if (tasks) {
+    tasks.forEach(task => {
+      task.haveChildren = haveChildren(task.wbs, tasks)
+    })
+    return tasks
+  } else {
+    return []
+  }
 }
 
 class TaskStore {
@@ -46,7 +57,7 @@ class TaskStore {
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       const tasks = response.data.map(res => parseTask(res.attributes))
-      this.tasks = updateFlags(tasks)
+      this.tasks = updateFlags(null, tasks)
       this.isDataLoaded = true
     } catch (error) {
       this.isDataLoaded = false
@@ -64,7 +75,7 @@ class TaskStore {
       const payload = { target_position_task_id: targetPositionTaskId }
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {
-        await this.loadTasks(batchId)
+        this.loadTasks(batchId)
       } else {
         console.error(response.errors)
       }
@@ -128,6 +139,14 @@ class TaskStore {
     return !!found
   }
 
+  @computed get childTasks() {
+    if (this.isDataLoaded) {
+      return this.tasks.filter(t => !t.haveChildren)
+    } else {
+      return []
+    }
+  }
+
   @computed get taskList() {
     if (this.isDataLoaded) {
       return this.tasks.filter(t => {
@@ -138,6 +157,24 @@ class TaskStore {
       })
     } else {
       return []
+    }
+  }
+
+  @computed get totalEstimatedHours() {
+    if (this.isDataLoaded) {
+      const value = sumBy(this.childTasks, 'estimated_hours')
+      return decimalFormatter.format(value)
+    } else {
+      return '--'
+    }
+  }
+
+  @computed get totalEstimatedCost() {
+    if (this.isDataLoaded) {
+      const value = sumBy(this.childTasks, 'estimated_cost')
+      return moneyFormatter.format(value)
+    } else {
+      return '--'
     }
   }
 
@@ -206,8 +243,8 @@ class TaskStore {
         if (isReload) {
           this.loadTasks(batchId)
         } else {
-          const updated = parseTask(response.data.attributes)
-          updated.haveChildren = haveChildren(updated.wbs, this.tasks)
+          const parsed = parseTask(response.data.attributes)
+          const updated = updateFlags(parsed, this.tasks)
           this.tasks = this.tasks.map(t => {
             return t.id === taskId ? updated : t
           })
@@ -359,7 +396,8 @@ class TaskStore {
           url,
           httpPostOptions(payload)
         )).json()
-        const updated = parseTask(response.data.attributes)
+        const parsed = parseTask(response.data.attributes)
+        const updated = updateFlags(parsed, this.tasks)
         this.tasks = this.tasks.map(t => {
           return t.id === taskId ? updated : t
         })

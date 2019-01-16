@@ -35,7 +35,6 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'rspec-rails'
-  gem 'capybara'
 
   # Automatically re-run rspec tests
   gem 'spring-commands-rspec'

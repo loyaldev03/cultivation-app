@@ -61,7 +61,6 @@ class TaskList extends React.Component {
   }
 
   async componentDidMount() {
-    await TaskStore.loadTasks(this.props.batch.id)
     await UserStore.loadUsers(this.props.batch.facility_id)
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)

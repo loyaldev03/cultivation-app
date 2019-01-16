@@ -1,9 +1,9 @@
 class TaskSerializer
   include FastJsonapi::ObjectSerializer
+
   attributes :phase,
     :name,
     :duration,
-    :days_from_start_date, # TODO: Remove
     :start_date,
     :end_date,
     :position,

@@ -84,7 +84,6 @@ class TaskSetup extends React.Component {
       'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
     return (
       <React.Fragment>
-
         <BatchHeader batch={batch} />
 
         <div className="flex justify-between">

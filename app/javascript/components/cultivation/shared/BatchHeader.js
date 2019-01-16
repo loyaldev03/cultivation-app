@@ -52,20 +52,20 @@ class BatchHeader extends React.Component {
                       </div>
                     </div>
                   ) : (
-                      <div className="flex">
-                        <div className="w-40">Missing Quantity</div>
-                        <div className="w-40">
-                          <a
-                            href={`/cultivation/batches/${
-                              batch.id
-                              }?select_location=1`}
-                            className="link red"
-                          >
-                            Set location &amp; quantity
+                    <div className="flex">
+                      <div className="w-40">Missing Quantity</div>
+                      <div className="w-40">
+                        <a
+                          href={`/cultivation/batches/${
+                            batch.id
+                          }?select_location=1`}
+                          className="link red"
+                        >
+                          Set location &amp; quantity
                         </a>
-                        </div>
                       </div>
-                    )}
+                    </div>
+                  )}
                   <hr />
                   <div className=" flex">
                     <div className="w-40">
@@ -171,9 +171,7 @@ class BatchHeader extends React.Component {
           </div>
         </div>
       </React.Fragment>
-
     )
   }
-
 }
 export default BatchHeader

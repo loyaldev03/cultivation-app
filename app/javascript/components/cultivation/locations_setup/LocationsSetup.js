@@ -37,7 +37,7 @@ class LocationsSetup extends React.Component {
           total_estimated_cost={batch.total_estimated_cost}
           total_estimated_hour={batch.total_estimated_hour}
           estimated_harvest_date={batch.estimated_harvest_date}
-        />        
+        />
         <BatchTabs batch={batch} currentTab="location" />
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">

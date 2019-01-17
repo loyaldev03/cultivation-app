@@ -1,10 +1,11 @@
 class Api::V1::UsersController < Api::V1::BaseApiController
   def index
-    cmd = QueryUsers.call(current_user)
+    facility_id = params[:facility_id]
+    cmd = QueryUsers.call(current_user, facility_id)
     if cmd.success?
       render json: UserSerializer.new(cmd.result).serialized_json
     else
-      render json: command.errors, status: 422
+      render json: cmd.errors, status: 422
     end
   end
 

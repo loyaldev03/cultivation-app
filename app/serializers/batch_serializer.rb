@@ -77,7 +77,7 @@ class BatchSerializer
   end
 
   attribute :progress_today do |object|
-    (Date.today - object.start_date).round
+    -1 # (Date.today - object.start_date).round
   end
 
   attribute :estimated_total_days do |object|

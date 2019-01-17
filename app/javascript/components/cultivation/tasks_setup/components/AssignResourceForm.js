@@ -4,11 +4,11 @@ import UserStore from '../stores/NewUserStore'
 import { SlidePanelHeader, SlidePanelFooter } from '../../../utils'
 import Avatar from '../../../utils/Avatar'
 
-const RoleTag = React.memo(({ id, name, onClick }) => {
+const RoleTag = React.memo(({ name, onClick }) => {
   return (
     <a
       href="#0"
-      className="link ma1 pa1 f7 bg-blue white br1 dim"
+      className="link mr1 f7 fw6 bg-light-blue dark-blue pa--tag ttu br2"
       onClick={onClick}
     >
       {name}
@@ -70,7 +70,6 @@ const PersonRow = React.memo(
                 return (
                   <RoleTag
                     key={role.id}
-                    id={role.id}
                     name={role.name}
                     onClick={() => onToggleRole(role.id, role.name)}
                   />
@@ -119,8 +118,8 @@ class AssignResourceForm extends React.Component {
       this.setState({ selectedUsers })
     }
   }
-  onSave = () => {
-    this.props.onSave(this.state.selectedUsers)
+  onSave = async () => {
+    await this.props.onSave(this.state.selectedUsers)
   }
 
   render() {
@@ -133,7 +132,7 @@ class AssignResourceForm extends React.Component {
       <div className="flex flex-column h-100">
         <SlidePanelHeader onClose={onClose} title="Assign Resources" />
         <div className="flex flex-column flex-auto justify-between">
-          <div className="pa3">
+          <div className="pa3 flex flex-column">
             <input
               className="w-100 pa2"
               type="search"
@@ -144,20 +143,18 @@ class AssignResourceForm extends React.Component {
               {filterRoles &&
                 filterRoles.map(role => {
                   return (
-                    <span
+                    <RoleTag
                       key={role.id}
+                      name={role.name}
                       onClick={() => this.onToggleRole(role.id, role.name)}
-                      className="dib pointer bg-blue f7 white pa1 mr1 br1"
-                    >
-                      {role.name}
-                    </span>
+                    />
                   )
                 })}
             </div>
             {!showResult ? (
               <span className="mt2 pv2 red">No Result</span>
             ) : (
-              <ul className="pa2 list mt2 ba br2 b--light-grey">
+              <ul className="pa2 list mt2 flex-auto ba br2 b--light-grey overflow-auto">
                 {UserStore.searchResult.map(user => {
                   const isSelected = selectedUsers.includes(user.id)
                   return (

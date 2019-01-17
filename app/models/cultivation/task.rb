@@ -12,13 +12,14 @@ module Cultivation
     field :name, type: String
     field :indent, type: Integer, default: -> { 0 }
     field :duration, type: Integer
+    # FIXME: Remove
     field :days_from_start_date, type: Integer
     field :start_date, type: Time
     field :end_date, type: Time
-    field :estimated_hours, type: Float
-    field :actual_hours, type: Float
-    field :estimated_cost, type: Float
-    field :actual_cost, type: Float
+    field :estimated_hours, type: Float, default: -> { 0 }
+    field :actual_hours, type: Float, default: -> { 0 }
+    field :estimated_cost, type: Float, default: -> { 0 }
+    field :actual_cost, type: Float, default: -> { 0 }
     # Indicate a top most task
     # FIXME: Remove
     field :is_phase, type: Boolean, default: -> { false }
@@ -87,25 +88,6 @@ module Cultivation
 
     def indelible?
       !indelible.nil? && !indelible.blank?
-    end
-
-    def estimated_cost
-      if estimated_hours && duration
-        hours_per_day = estimated_hours.to_f / duration.to_i
-      end
-
-      if hours_per_day && !user_ids.empty?
-        hours_per_person = hours_per_day / user_ids.length
-      end
-
-      task_cost = 0.0
-      duration ||= 0
-      if hours_per_person && !users.empty?
-        users.each do |user|
-          task_cost += (user&.hourly_rate.to_f * hours_per_person) * duration
-        end
-      end
-      task_cost
     end
   end
 end

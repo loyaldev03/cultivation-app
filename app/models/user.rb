@@ -45,8 +45,8 @@ class User
   field :current_sign_in_ip, type: String
   field :last_sign_in_ip, type: String
 
-  field :roles, type: Array, default: []
-  field :facilities, type: Array, default: []
+  field :roles, type: Array, default: []      # Array of BSON::ObjectId
+  field :facilities, type: Array, default: [] # Array of BSON::ObjectId
   scope :active, -> { where(is_active: true) }
   ## Confirmable
   # field :confirmation_token,   type: String

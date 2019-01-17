@@ -24,6 +24,8 @@ import {
 const Calendar = lazy(() => import('react-calendar/dist/entry.nostyle'))
 const ReactTable = lazy(() => import('react-table'))
 const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
+const AssignMaterialForm = lazy(() => import('./MaterialForm'))
+
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
     <a
@@ -53,13 +55,13 @@ class TaskList extends React.Component {
       batch: this.props.batch,
       showStartDateCalendar: false,
       showAssignResourcePanel: false,
+      showAssignMaterialPanel: false,
       searchMonth: dateToMonthOption(batchStartDate)
     }
   }
 
   async componentDidMount() {
-    await TaskStore.loadTasks(this.props.batch.id)
-    await UserStore.loadUsers()
+    await UserStore.loadUsers(this.props.batch.facility_id)
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
     // need to find after data react-table is loaded callback
@@ -127,6 +129,14 @@ class TaskList extends React.Component {
     this.setState({
       taskSelected: taskId,
       showAssignResourcePanel: !this.state.showAssignResourcePanel
+    })
+  }
+
+  handleShowMaterialForm = (taskId, items) => {
+    this.assignMaterialForm.setSelectedItems(this.props.batch.id, taskId, items)
+    this.setState({
+      taskSelected: taskId,
+      showAssignMaterialPanel: !this.state.showAssignMaterialPanel
     })
   }
 
@@ -387,6 +397,10 @@ class TaskList extends React.Component {
       show: false
     },
     {
+      accessor: 'haveChildren',
+      show: false
+    },
+    {
       accessor: 'indent',
       show: false
     },
@@ -461,9 +475,10 @@ class TaskList extends React.Component {
       className: 'tr',
       show: this.checkVisibility('end_date'),
       Cell: data => {
-        const { id, end_date } = data.row
+        const { id, end_date, haveChildren } = data.row
         return (
           <InlineEditDateField
+            editable={!haveChildren}
             text={end_date}
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
@@ -480,9 +495,10 @@ class TaskList extends React.Component {
       className: 'tr',
       show: this.checkVisibility('duration'),
       Cell: data => {
-        const { id, duration } = data.row
+        const { id, duration, haveChildren } = data.row
         return (
           <InlineEditNumberField
+            editable={!haveChildren}
             text={duration}
             min="1"
             step="1"
@@ -501,9 +517,10 @@ class TaskList extends React.Component {
       className: 'tr',
       show: this.checkVisibility('estimated_hours'),
       Cell: data => {
-        const { id, estimated_hours } = data.row
+        const { id, estimated_hours, haveChildren } = data.row
         return (
           <InlineEditNumberField
+            editable={!haveChildren}
             text={estimated_hours}
             min="0"
             step=".25"
@@ -530,7 +547,10 @@ class TaskList extends React.Component {
       className: 'justify-center',
       show: this.checkVisibility('resource_assigned'),
       Cell: data => {
-        const { id, user_ids } = data.row
+        const { id, user_ids, wbs, haveChildren } = data.row
+        if (haveChildren) {
+          return null
+        }
         return (
           <div
             className="flex pointer"
@@ -539,15 +559,19 @@ class TaskList extends React.Component {
             {user_ids &&
               user_ids.map(u => {
                 const user = UserStore.getUserById(u)
-                return (
-                  <Avatar
-                    size={24}
-                    key={user.id}
-                    firstName={user.first_name}
-                    lastName={user.last_name}
-                    photoUrl={user.photo_url}
-                  />
-                )
+                if (user) {
+                  return (
+                    <Avatar
+                      size={24}
+                      key={user.id}
+                      firstName={user.first_name}
+                      lastName={user.last_name}
+                      photoUrl={user.photo_url}
+                    />
+                  )
+                } else {
+                  return null
+                }
               })}
             <i className="ml2 material-icons icon--medium icon--rounded">
               person_add
@@ -558,9 +582,26 @@ class TaskList extends React.Component {
     },
     {
       Header: 'Materials',
-      accessor: 'item_display',
-      maxWidth: '100',
-      show: this.checkVisibility('materials')
+      accessor: 'items',
+      maxWidth: '200',
+      show: this.checkVisibility('materials'),
+      className: 'justify-center',
+      Cell: data => {
+        // console.log(toJS(data.row.items))
+        const { id, items, haveChildren } = data.row
+        if (haveChildren) {
+          return null
+        }
+        return (
+          <div
+            className="flex pointer items-center"
+            onClick={() => this.handleShowMaterialForm(id, items)}
+          >
+            {items && <span className="pa1">{items.length}</span>}
+            <i className="ml2 material-icons icon--medium icon--rounded">add</i>
+          </div>
+        )
+      }
     }
   ]
 
@@ -568,6 +609,7 @@ class TaskList extends React.Component {
     const {
       showStartDateCalendar,
       showAssignResourcePanel,
+      showAssignMaterialPanel,
       searchMonth,
       selectedStartDate
     } = this.state
@@ -597,6 +639,26 @@ class TaskList extends React.Component {
                     users
                   )
                 }}
+              />
+            </Suspense>
+          )}
+        />
+        <SlidePanel
+          width="500px"
+          show={showAssignMaterialPanel}
+          renderBody={props => (
+            <Suspense fallback={<div />}>
+              <AssignMaterialForm
+                ref={form => (this.assignMaterialForm = form)}
+                onClose={() =>
+                  this.setState({ showAssignMaterialPanel: false })
+                }
+                onSave={materials => {
+                  const taskId = this.state.taskSelected
+                  TaskStore.editAssignedMaterial(batchId, taskId, materials)
+                  this.setState({ showAssignMaterialPanel: false })
+                }}
+                batch_id={this.props.batch.id}
               />
             </Suspense>
           )}

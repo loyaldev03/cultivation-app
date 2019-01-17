@@ -50,6 +50,37 @@ const Thumbnail = ({ url, preview, type, filename }) => {
   }
 }
 
+const CommentBody = ({message, attachments = []}) => {
+  return (
+    <div className="mb2 pv2 pl3 pr0 br2 bg-black-05">
+      <div className="flex">
+        <p className="f6 black-70 lh-title mt0 mb1 flex-auto">
+          {message}
+        </p>
+        <span
+          className="material-icons black-05 hover-gray ph1 pointer"
+          style={{ fontSize: '18px' }}
+        >
+          more_vert
+        </span>
+      </div>
+      {attachments.length > 0 && (
+        <div className="flex flex-wrap mt2 mb1">
+          {attachments.map(props => (
+            <Preview key={props.url} {...props} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+const TaskBody = ({ task_url, task_name, quote = ''}) => {
+  return (
+    <div className="bg-white pa2 i f7 gray mt1 mr3">{quote}</div>
+  )
+}
+
 const CommentMessage = ({
   sender_first_name,
   sender_last_name,
@@ -58,9 +89,12 @@ const CommentMessage = ({
   current_user_id,
   sent_at,
   message,
-  quote = '',
   resolved = false,
-  attachments = []
+  attachments = [],
+  task_url = '',
+  task_name = '',
+  quote = '',
+
 }) => {
   const isMe = sender_id === current_user_id
   const align = isMe ? 'justify-end' : 'justify-start'
@@ -76,31 +110,12 @@ const CommentMessage = ({
           />
         </div>
         <div style={{ minWidth: '40%', maxWidth: '85%' }}>
-          <div className="mb2 pv2 pl3 pr0 br2 bg-black-05">
-            <div className="flex">
-              <p className="f6 black-70 lh-title mt0 mb1 flex-auto">
-                {message}
-              </p>
-              <span
-                className="material-icons black-05 hover-gray ph1 pointer"
-                style={{ fontSize: '18px' }}
-              >
-                more_vert
-              </span>
-            </div>
-            {attachments.length > 0 && (
-              <div className="flex flex-wrap mt2 mb1">
-                {attachments.map(props => (
-                  <Preview key={props.url} {...props} />
-                ))}
-              </div>
-            )}
-            {// TODO: Refactor CommentMessage to TaskCreatedMessage so that 'quote' layout is not here.
-              quote.length > 0 && (
-                <div className="bg-white pa2 i f7 gray mt1 mr3">{quote}</div>
-              )}
-          </div>
-
+          { task_url.length === 0 && 
+            <CommentBody message={message} attachments={attachments} /> 
+          }
+          { task_url.length > 0 && 
+            <TaskBody task_url={task_url} task_name ={task_name} quote={quote} /> 
+          }
           <div className="fw4 gray" style={{ fontSize: '10px' }}>
             <span className="orange">
               {sender_first_name} {sender_last_name}

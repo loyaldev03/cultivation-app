@@ -10,6 +10,7 @@ import TaskList from './components/TaskList'
 import Select from 'react-select'
 import reactSelectStyle from '../../utils/reactSelectStyle'
 import { Manager, Reference, Popper } from 'react-popper'
+import TaskStore from './stores/NewTaskStore'
 
 @observer
 class TaskSetup extends React.Component {
@@ -30,15 +31,10 @@ class TaskSetup extends React.Component {
       ],
       columnOpen: false
     }
-  }
 
-  async componentDidMount() {
-    // await loadTasks.loadbatch(this.props.batch_id)
-    // loadDisplayTaskStore()
-    // loadUsers()
-    // loadUserRoles()
-    // loadItems(this.props.batch.facility_id)
-    // document.addEventListener('mousedown', this.handleOutsideClick, false)
+    if (!TaskStore.isDataLoaded) {
+      TaskStore.loadTasks(props.batch_id)
+    }
   }
 
   onChangeFilterColumns = value => {
@@ -182,7 +178,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="tr">
-                        <label>{batch.total_estimated_cost}</label>
+                        <label>{TaskStore.totalEstimatedCost}</label>
                       </div>
                     </div>
                   </div>
@@ -193,7 +189,7 @@ class TaskSetup extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="tr">
-                        <label>{batch.total_estimated_hour}</label>
+                        <label>{TaskStore.totalEstimatedHours}</label>
                       </div>
                     </div>
                   </div>

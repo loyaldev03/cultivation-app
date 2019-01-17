@@ -60,15 +60,15 @@ class LetterAvatar extends React.PureComponent {
     const { firstName = '', lastName = '', size, radius } = this.props
     if (firstName || lastName) {
       let initials = ''
-      let bgColor
       if (lastName) {
         initials = initials + lastName[0]
-        bgColor = getColorCode(lastName[0])
+        // bgColor = getColorCode(lastName[0])
       }
       if (firstName) {
         initials = firstName[0] + initials
-        bgColor = getColorCode(firstName[0])
+        // bgColor = getColorCode(firstName[0])
       }
+      let bgColor = [38, 168, 220]
 
       const style = {
         backgroundColor: `rgb(${bgColor})`,
@@ -79,7 +79,7 @@ class LetterAvatar extends React.PureComponent {
         lineHeight: size + 'px',
         color: 'rgba(233,233,233,0.9)',
         textAlign: 'center',
-        cursor: 'default',
+        cursor: 'inherit',
         display: 'inline-block',
         borderRadius: radius
       }
@@ -95,7 +95,7 @@ class LetterAvatar extends React.PureComponent {
         lineHeight: size + 'px',
         color: 'rgba(233,233,233,0.9)',
         textAlign: 'center',
-        cursor: 'default',
+        cursor: 'inherit',
         display: 'inline-block',
         borderRadius: radius
       }

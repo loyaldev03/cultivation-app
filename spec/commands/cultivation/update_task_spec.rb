@@ -150,10 +150,36 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
   let(:t3) { tasks[11] }
   let(:t4) { tasks[12] }
 
+  context ".call - update task name" do
+    it "update task name" do
+      args = {
+        id: t1.id.to_s,
+        name: Faker::Lorem.sentence,
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      expect(cmd.errors.empty?).to be true
+      expect(cmd.result.name).not_to eq t1.name
+    end
+  end
+
   context ".call - updating estimated hours / cost" do
     let(:worker10) { create(:user, facilities: [facility.id], hourly_rate: 10) }
     let(:worker8) { create(:user, facilities: [facility.id], hourly_rate: 8) }
     let(:worker_invalid) { create(:user, hourly_rate: 10) }
+
+    it "update estimated hours of parent task have no changes" do
+      args = {
+        id: t1.id.to_s,
+        estimated_hours: Faker::Number.number(2),
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      expect(cmd.errors.empty?).to be true
+      expect(cmd.result.estimated_hours).to eq t1.estimated_hours
+    end
 
     it "update subtask estimated hours should rollup to parent" do
       target = t2_3_2_1
@@ -184,7 +210,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       expect(parent.estimated_hours).to eq expected
     end
 
-    it "update assigned users" do
+    it "update assigned users should only save unique" do
       target = t2_3_2_1
       args = {id: target.id, user_ids: [
         worker10.id,
@@ -238,19 +264,58 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
     end
   end
 
-  context ".call - updating dates" do
-    it "update task name" do
+  context ".call - update predecessors / depend_on" do
+    it "update depend_on should persist depend_on field" do
       args = {
-        id: t1.id.to_s,
-        name: Faker::Lorem.sentence,
+        id: t3.id.to_s,
+        depend_on: t1.id.to_s,
       }
 
       cmd = Cultivation::UpdateTask.call(args, current_user)
 
-      expect(cmd.errors.empty?).to be true
-      expect(cmd.result.name).not_to eq t1.name
+      expect(cmd.success?).to be true
+      expect(cmd.result.depend_on).to eq t1.id
     end
 
+    it "update depend_on on child node have no effect" do
+      args = {
+        id: t2_3_2_1.id.to_s,
+        depend_on: t2.id.to_s,
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      expect(cmd.success?).to be false
+      expect(cmd.result.depend_on).to eq nil
+      expect(cmd.errors[:depend_on][0]).to eq "Cannot set parent node as predecessor"
+    end
+
+    it "update depend_on should update start_date" do
+      args = {
+        id: t3.id.to_s,
+        depend_on: t1.id.to_s,
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      expect(cmd.success?).to be true
+      expect(cmd.result.start_date).to eq t1.end_date
+    end
+
+    it "remove predecessor should set depend_on to nil" do
+      args = {
+        id: t3.id.to_s,
+        depend_on: nil,
+      }
+
+      cmd = Cultivation::UpdateTask.call(args, current_user)
+
+      expect(cmd.success?).to be true
+      expect(cmd.result.depend_on).to be nil
+    end
+  end
+
+  context ".call - updating dates" do
     it "update start_date forward" do
       args = {
         id: t2.id.to_s,
@@ -297,42 +362,6 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
       expect(cmd.errors.empty?).to be true
       expect(cmd.result.name).to eq t4.name
-    end
-
-    it "update estimated hours" do
-      args = {
-        id: t1.id.to_s,
-        estimated_hours: Faker::Number.number(2),
-      }
-
-      cmd = Cultivation::UpdateTask.call(args, current_user)
-
-      expect(cmd.errors.empty?).to be true
-      expect(cmd.result.estimated_hours).to eq t1.estimated_hours
-    end
-
-    it "update depend_on" do
-      args = {
-        id: t3.id.to_s,
-        depend_on: t1.id.to_s,
-      }
-
-      cmd = Cultivation::UpdateTask.call(args, current_user)
-
-      expect(cmd.success?).to be true
-      expect(cmd.result.depend_on).to eq t1.id
-    end
-
-    it "remove depend_on" do
-      args = {
-        id: t3.id.to_s,
-        depend_on: nil,
-      }
-
-      cmd = Cultivation::UpdateTask.call(args, current_user)
-
-      expect(cmd.success?).to be true
-      expect(cmd.result.depend_on).to be nil
     end
 
     it "cascade start_date forward changes to sub-tasks" do

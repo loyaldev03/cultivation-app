@@ -24,7 +24,18 @@ class WbsTree
       end
     end
 
-    def have_children(tasks_with_wbs = [], node_wbs = '')
+    def child_of?(node_wbs, predecessor_wbs, tasks_with_wbs = [])
+      p = parent(tasks_with_wbs, node_wbs)
+      while p.present?
+        if p.wbs == predecessor_wbs
+          return true
+        end
+        p = parent(tasks_with_wbs, p.wbs)
+      end
+      false
+    end
+
+    def have_children?(node_wbs = '', tasks_with_wbs = [])
       child_wbs = node_wbs + '.'
       tasks_with_wbs.any? { |t| t.wbs.starts_with? child_wbs }
     end

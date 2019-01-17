@@ -175,6 +175,7 @@ export default class MaterialForm extends React.Component {
                       </td>
                       <td className="tl pv2 ph3">
                         <select
+                          defaultValue={x.uom}
                           onChange={e =>
                             this.handleChangeUom(x.product_id, e.target.value)
                           }
@@ -184,7 +185,6 @@ export default class MaterialForm extends React.Component {
                               <option
                                 key={index}
                                 value={y}
-                                selected={x.uom == y}
                               >
                                 {y}
                               </option>

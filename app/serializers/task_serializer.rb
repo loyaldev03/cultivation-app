@@ -37,7 +37,7 @@ class TaskSerializer
         quantity: item.quantity,
         uom: item.uom,
         catalogue_id: item&.catalogue_id&.to_s,
-        uoms: item&.catalogue&.uoms&.pluck(:unit),
+        uoms: item&.product&.catalogue&.uoms&.pluck(:unit),
       }
     end
   end

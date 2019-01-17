@@ -383,11 +383,11 @@ class TaskStore {
       })
 
       const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_material_use`
-
       const payload = {
         items: task.items.map(e => ({
           product_id: e.product_id,
-          quantity: e.quantity
+          quantity: e.quantity,
+          uom: e.uom
         }))
       }
 

@@ -163,7 +163,7 @@ class TaskStore {
   @computed get totalEstimatedHours() {
     if (this.isDataLoaded) {
       const value = sumBy(this.childTasks, 'estimated_hours')
-      return decimalFormatter.format(value)
+      return value
     } else {
       return '--'
     }
@@ -172,7 +172,7 @@ class TaskStore {
   @computed get totalEstimatedCost() {
     if (this.isDataLoaded) {
       const value = sumBy(this.childTasks, 'estimated_cost')
-      return moneyFormatter.format(value)
+      return value
     } else {
       return '--'
     }

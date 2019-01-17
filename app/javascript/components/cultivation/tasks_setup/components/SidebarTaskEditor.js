@@ -1,10 +1,9 @@
 import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
-import updateTasks from '../actions/updateTask'
+import { TextInput, NumericInput } from '../../../utils/FormHelpers'
 import createTask from '../actions/createTask'
 import { addDays, differenceInCalendarDays, parse } from 'date-fns'
-import ErrorStore from '../stores/ErrorStore'
+import TaskStore from '../stores/NewTaskStore'
 
 class SidebarTaskEditor extends React.Component {
   constructor(props) {
@@ -119,7 +118,7 @@ class SidebarTaskEditor extends React.Component {
       task_type
     }
     if (id) {
-      updateTasks.updateTask(changedTask)
+      TaskStore.editTask(batchId, id, changedTask, true)
     } else {
       createTask.createTask(changedTask)
     }

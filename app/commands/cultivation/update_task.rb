@@ -72,10 +72,10 @@ module Cultivation
       # Only allow non-indelible task change these field
       if !task.indelible?
         task.name = args[:name]
-        task.depend_on = args[:depend_on].present? ? args[:depend_on].to_bson_id : nil
         task.task_type = args[:task_type] || []
       end
-      task.start_date = decide_start_date(task, batch_tasks, args[:start_date])
+      task.start_date = decide_start_date(task, batch_tasks, args[:start_date], args[:depend_on])
+      task.depend_on = decide_depend_on(task, batch_tasks, args[:depend_on])
       if !task.have_children?(batch_tasks)
         # Parent duration should derived from sub-tasks
         task.duration = args[:duration].present? ? args[:duration].to_i : 1
@@ -90,11 +90,14 @@ module Cultivation
       task
     end
 
-    def decide_assigned_users(args_user_ids)
-      if args_user_ids.present?
-        args_user_ids.uniq.map(&:to_bson_id)
-      else
-        []
+    def decide_depend_on(task, batch_tasks, args_depend_on)
+      if args_depend_on.present?
+        predecessor = batch_tasks.detect { |t| t.id == args_depend_on.to_bson_id }
+        if predecessor.present? && task.child_of?(predecessor.wbs, batch_tasks)
+          errors.add(:depend_on, 'Cannot set parent node as predecessor')
+          return nil
+        end
+        args_depend_on.to_bson_id
       end
     end
 

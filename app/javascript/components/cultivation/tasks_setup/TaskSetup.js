@@ -34,6 +34,7 @@ class TaskSetup extends React.Component {
 
     if (!TaskStore.isDataLoaded) {
       TaskStore.loadTasks(props.batch_id)
+      TaskStore.facilityPhases = props.batch.cultivation_phases
     }
   }
 

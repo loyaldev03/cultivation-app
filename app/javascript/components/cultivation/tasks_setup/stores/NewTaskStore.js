@@ -6,6 +6,9 @@ import {
   httpPostOptions,
   httpDeleteOptions,
   addDayToDate,
+  moneyFormatter,
+  decimalFormatter,
+  sumBy,
   toast
 } from '../../../utils'
 import { addDays, differenceInCalendarDays, parse } from 'date-fns'
@@ -26,11 +29,19 @@ function haveChildren(nodeWbs, tasks) {
   return tasks.some(t => t.wbs.startsWith(childWbs))
 }
 
-function updateFlags(tasks) {
-  tasks.forEach(task => {
-    task.haveChildren = haveChildren(task.wbs, tasks)
-  })
-  return tasks
+function updateFlags(singleTarget, tasks) {
+  if (singleTarget && tasks) {
+    singleTarget.haveChildren = haveChildren(singleTarget.wbs, tasks)
+    return singleTarget
+  }
+  if (tasks) {
+    tasks.forEach(task => {
+      task.haveChildren = haveChildren(task.wbs, tasks)
+    })
+    return tasks
+  } else {
+    return []
+  }
 }
 
 class TaskStore {
@@ -46,7 +57,7 @@ class TaskStore {
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       const tasks = response.data.map(res => parseTask(res.attributes))
-      this.tasks = updateFlags(tasks)
+      this.tasks = updateFlags(null, tasks)
       this.isDataLoaded = true
     } catch (error) {
       this.isDataLoaded = false
@@ -64,7 +75,7 @@ class TaskStore {
       const payload = { target_position_task_id: targetPositionTaskId }
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {
-        await this.loadTasks(batchId)
+        this.loadTasks(batchId)
       } else {
         console.error(response.errors)
       }
@@ -128,6 +139,14 @@ class TaskStore {
     return !!found
   }
 
+  @computed get childTasks() {
+    if (this.isDataLoaded) {
+      return this.tasks.filter(t => !t.haveChildren)
+    } else {
+      return []
+    }
+  }
+
   @computed get taskList() {
     if (this.isDataLoaded) {
       return this.tasks.filter(t => {
@@ -138,6 +157,24 @@ class TaskStore {
       })
     } else {
       return []
+    }
+  }
+
+  @computed get totalEstimatedHours() {
+    if (this.isDataLoaded) {
+      const value = sumBy(this.childTasks, 'estimated_hours')
+      return value
+    } else {
+      return '--'
+    }
+  }
+
+  @computed get totalEstimatedCost() {
+    if (this.isDataLoaded) {
+      const value = sumBy(this.childTasks, 'estimated_cost')
+      return value
+    } else {
+      return '--'
     }
   }
 
@@ -206,8 +243,8 @@ class TaskStore {
         if (isReload) {
           this.loadTasks(batchId)
         } else {
-          const updated = parseTask(response.data.attributes)
-          updated.haveChildren = haveChildren(updated.wbs, this.tasks)
+          const parsed = parseTask(response.data.attributes)
+          const updated = updateFlags(parsed, this.tasks)
           this.tasks = this.tasks.map(t => {
             return t.id === taskId ? updated : t
           })
@@ -297,54 +334,6 @@ class TaskStore {
     await this.editTask(batchId, taskId, updateObj, true)
   }
 
-  async updateTask(batch_id, task) {
-    this.isLoading = true
-    let new_task = task
-    let id = task.id
-    let end_date = task['_end']
-    let start_date = task['_start']
-
-    let timeDiff = new Date(end_date).getTime() - new Date(start_date).getTime()
-    let duration = timeDiff / (1000 * 3600 * 24)
-
-    const found = toJS(this.tasks.find(x => x.id === task.id))
-    if (found) {
-      let url = `/api/v1/batches/${batch_id}/tasks/${id}`
-      let payload = {
-        assigned_employee: found.assigned_employee,
-        batch_id: found.batch_id,
-        days_from_start_date: found.days_from_start_date,
-        depend_on: found.depend_on,
-        duration: duration,
-        end_date: end_date,
-        start_date: start_date,
-        estimated_hours: found.estimated_hours,
-        id: id,
-        is_category: found.is_category,
-        is_phase: found.is_phase,
-        name: found.name,
-        parent_id: found.parent_id,
-        phase: found.phase,
-        position: found.position,
-        task_category: found.task_category,
-        time_taken: found.time_taken,
-        task_type: found.task_type
-      }
-
-      try {
-        const response = await (await fetch(
-          url,
-          httpPutOptions(payload)
-        )).json()
-        await this.loadTasks(batch_id)
-        this.isLoading = false
-        toast('Task Updated', 'success')
-      } catch (error) {
-        console.log(error)
-      }
-    }
-  }
-
   @action
   async deleteRelationship(batch_id, destination_id) {
     this.isLoading = true
@@ -362,15 +351,15 @@ class TaskStore {
   }
 
   formatGantt(tasks) {
-    tasks = toJS(tasks)
     if (this.isDataLoaded) {
       let formatted_tasks = tasks.map(task => {
-        const { id, name, start_date, end_date, parent_id } = task
+        const { id, name, start_date, end_date } = task
+        const end = addDays(end_date, -1)
         return {
           id,
           name,
           start: start_date,
-          end: end_date,
+          end: end,
           dependencies: this.getDependencies(task)
         }
       })
@@ -382,6 +371,41 @@ class TaskStore {
 
   getDependencies(task) {
     return task.depend_on
+  }
+
+  @action
+  async editAssignedMaterial(batchId, taskId, items) {
+    const task = this.getTaskById(taskId)
+    if (items) {
+      task.items = items
+      this.tasks = this.tasks.map(t => {
+        return t.id === taskId ? task : t
+      })
+
+      const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_material_use`
+
+      const payload = {
+        items: task.items.map(e => ({
+          product_id: e.product_id,
+          quantity: e.quantity
+        }))
+      }
+
+      try {
+        const response = await (await fetch(
+          url,
+          httpPostOptions(payload)
+        )).json()
+        const parsed = parseTask(response.data.attributes)
+        const updated = updateFlags(parsed, this.tasks)
+        this.tasks = this.tasks.map(t => {
+          return t.id === taskId ? updated : t
+        })
+        toast('Task Relationship Deleted', 'success')
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }
 }
 

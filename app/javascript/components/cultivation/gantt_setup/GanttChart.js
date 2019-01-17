@@ -1,14 +1,10 @@
 import React from 'react'
-import { render } from 'react-dom'
-
-import { observable, toJS } from 'mobx'
-import { observer, Provider } from 'mobx-react'
-import { formatDate2, addDayToDate } from '../../utils'
-
+import { observer } from 'mobx-react'
 import TaskStore from '../tasks_setup/stores/NewTaskStore'
 import ReactGantt from './ReactGantt'
-import { Manager, Reference, Popper, Arrow } from 'react-popper'
+import { Manager, Reference, Popper } from 'react-popper'
 import classNames from 'classnames'
+import { addSeconds } from 'date-fns'
 
 const styles = `
 path.handle-arrow {
@@ -108,11 +104,19 @@ class GanttChart extends React.Component {
     }))
   }
 
-  onDateChange = async task => {
+  onDateChange = async (task, start_date, end_date) => {
     let el = document.querySelector('.gantt-container')
     let scrollLeft = el.scrollLeft
     let scrollTop = el.scrollTop
-    await TaskStore.updateTask(this.props.batch_id, task)
+    if (task.start.getTime() === start_date.getTime()) {
+      await TaskStore.editEndDate(
+        this.props.batch_id,
+        task.id,
+        addSeconds(end_date, 1)
+      )
+    } else {
+      await TaskStore.editStartDate(this.props.batch_id, task.id, start_date)
+    }
     el.scrollLeft = scrollLeft
     el.scrollTop = scrollTop
   }
@@ -195,38 +199,6 @@ class GanttChart extends React.Component {
     return (
       <React.Fragment>
         <style>{styles}</style>
-        <div className="w-50">
-          <a
-            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
-            onClick={e => this.changeView('Quarter Day')}
-          >
-            Quarter Day
-          </a>
-          <a
-            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
-            onClick={e => this.changeView('Half Day')}
-          >
-            Half Day
-          </a>
-          <a
-            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
-            onClick={e => this.changeView('Day')}
-          >
-            Day
-          </a>
-          <a
-            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
-            onClick={e => this.changeView('Week')}
-          >
-            Week
-          </a>
-          <a
-            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
-            onClick={e => this.changeView('Month')}
-          >
-            Month
-          </a>
-        </div>
         {TaskStore.isDataLoaded && (
           <div className="flex">
             <div className="w-30 bt br bl b--black-10">

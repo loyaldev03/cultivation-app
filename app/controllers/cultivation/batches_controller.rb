@@ -130,23 +130,7 @@ class Cultivation::BatchesController < ApplicationController
   def find_batch_info
     @batch = Cultivation::Batch.includes(:facility_strain).find(params[:id])
 
-    @batch_attributes = {
-      id: @batch.id.to_s,
-      batch_no: @batch.batch_no.to_s,
-      quantity: @batch.quantity,
-      facility_id: @batch.facility_id.to_s,
-      strain: @batch.facility_strain.strain_name,
-      batch_source: @batch.batch_source,
-      grow_method: @batch.grow_method,
-      start_date: @batch.start_date,
-      estimated_harvest_date: @batch.estimated_harvest_date,
-      nutrient_profile: @batch.nutrient_profile,
-      total_estimated_hour: @batch.total_estimated_hours,
-      total_estimated_cost: ActionController::Base.helpers.number_to_currency(@batch.total_estimated_costs, unit: '$'),
-      materials: @batch.material_summary,
-      cultivation_phases: @batch&.facility_strain&.facility&.growth_stages,
-      is_active: @batch.is_active,
-    }
+    @batch_attributes = Cultivation::FindBatchInfo.call(params[:id]).result
   end
 
   def record_params

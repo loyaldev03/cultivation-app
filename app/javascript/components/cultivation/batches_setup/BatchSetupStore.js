@@ -12,6 +12,7 @@ import {
 const CULTIVATION_PHASES = ['clone', 'veg1', 'veg2', 'flower', 'dry', 'cure']
 
 class BatchSetupStore {
+  @observable searchMonth
   @observable isLoading = false
   @observable trays = {}
   @observable plans = {}

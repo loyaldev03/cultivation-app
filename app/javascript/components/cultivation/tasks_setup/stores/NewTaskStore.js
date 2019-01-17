@@ -49,6 +49,7 @@ class TaskStore {
   @observable isDataLoaded = false
   @observable collapsedNodes = []
   @observable tasks = []
+  @observable facilityPhases = []
 
   @action
   async loadTasks(batchId) {
@@ -139,6 +140,14 @@ class TaskStore {
     return !!found
   }
 
+  @computed get batchStartDate() {
+    if (this.isDataLoaded) {
+      return this.tasks[0].start_date
+    } else {
+      return new Date()
+    }
+  }
+
   @computed get childTasks() {
     if (this.isDataLoaded) {
       return this.tasks.filter(t => !t.haveChildren)
@@ -158,6 +167,33 @@ class TaskStore {
     } else {
       return []
     }
+  }
+
+  @computed get phaseDuration() {
+    if (this.isDataLoaded) {
+      // Build phase schedule from current Task List
+      const stayingTasks = this.tasks.filter(
+        t =>
+          t.indelible === 'staying' &&
+          this.facilityPhases.some(p => p === t.phase)
+      )
+      const phaseDuration = {}
+      stayingTasks.forEach(t => {
+        phaseDuration[t.phase] = t.duration
+      })
+      return phaseDuration
+    } else {
+      return {}
+    }
+  }
+
+  @computed get totalDuration() {
+    const durations = this.phaseDuration
+    let total = 0
+    Object.keys(durations).forEach(key => {
+      total += durations[key]
+    })
+    return total
   }
 
   @computed get totalEstimatedHours() {

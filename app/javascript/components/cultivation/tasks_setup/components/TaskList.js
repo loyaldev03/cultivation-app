@@ -697,59 +697,6 @@ class TaskList extends React.Component {
         </div>
         <div data-role="sidebar" className="rc-slide-panel">
           <div className="rc-slide-panel__body h-100">
-            {showStartDateCalendar ? (
-              <div className="w-100 ph3">
-                <div className="ph4 pv3 h3">
-                  <a
-                    href="#0"
-                    className="slide-panel__close-button dim"
-                    onClick={() => this.closeSidebar()}
-                  >
-                    <i className="material-icons mid-gray md-18 pa1">close</i>
-                  </a>
-                </div>
-                <p className="tc">Select a Start Date for the batch</p>
-                {!BatchSetupStore.isLoading ? (
-                  <React.Fragment>
-                    <CalendarTitleBar
-                      month={searchMonth}
-                      onPrev={e =>
-                        this.onSearch(monthOptionAdd(searchMonth, -1))
-                      }
-                      onNext={e =>
-                        this.onSearch(monthOptionAdd(searchMonth, 1))
-                      }
-                    />
-                    <Suspense fallback={<div />}>
-                      <Calendar
-                        activeStartDate={monthStartDate(searchMonth)}
-                        className="availabilty-calendar"
-                        showNavigation={false}
-                        onChange={this.handleDatePick}
-                        tileContent={({ date, view }) => (
-                          <CapacityTile
-                            startDate={date}
-                            duration={totalDuration}
-                          />
-                        )}
-                      />
-                    </Suspense>
-                  </React.Fragment>
-                ) : (
-                  <div style={{ minHeight: '362px' }}>
-                    <span className="dib pa2">Searching...</span>
-                  </div>
-                )}
-                <div className="mt2 w-100 tr">
-                  <input
-                    type="button"
-                    disabled={!selectedStartDate}
-                    value="Schedule Batch"
-                    className="btn btn--primary btn--large"
-                    onClick={() => this.handleSubmit()}
-                  />
-                </div>
-              </div>
             ) : (
               <TaskEditor
                 onClose={this.closeSidebar}
@@ -767,37 +714,3 @@ class TaskList extends React.Component {
 }
 
 export default TaskList
-
-class CalendarTitleBar extends React.PureComponent {
-  render() {
-    const { onPrev, onNext, month } = this.props
-    return (
-      <div className="availabilty-calendar-title">
-        <button
-          onClick={onPrev}
-          className="fl fw4 ph2 br-100 pointer bg-white ml2"
-        >
-          &#171;
-        </button>
-        {monthOptionToString(month)}
-        <button
-          onClick={onNext}
-          className="fr fw4 ph2 br-100 pointer bg-white mr2"
-        >
-          &#187;
-        </button>
-      </div>
-    )
-  }
-}
-
-class CapacityTile extends React.PureComponent {
-  render() {
-    const { startDate, duration } = this.props
-    return (
-      <span className="react-calendar__tile__content">
-        {BatchSetupStore.getCapacity(startDate, duration)}
-      </span>
-    )
-  }
-}

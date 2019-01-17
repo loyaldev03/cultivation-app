@@ -24,7 +24,7 @@ module Cultivation
 
       @batch_attributes = {
         id: @batch.id.to_s,
-        batch_no: @batch.batch_no.to_s,
+        batch_no: @batch.batch_no,
         quantity: @batch.quantity,
         facility_id: @batch.facility_id.to_s,
         strain: @batch.facility_strain.strain_name,
@@ -36,7 +36,7 @@ module Cultivation
         total_estimated_hour: total_estimated_hour,
         total_estimated_cost: total_estimated_cost,
         materials: @batch.material_summary,
-        cultivation_phases: @batch&.facility_strain&.facility&.growth_stages,
+        cultivation_phases: @batch&.facility&.growth_stages,
         is_active: @batch.is_active,
       }
 

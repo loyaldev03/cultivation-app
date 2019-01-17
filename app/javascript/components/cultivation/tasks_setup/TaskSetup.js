@@ -1,11 +1,6 @@
 import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
-import classNames from 'classnames'
-import loadUsers from './actions/loadUsers'
-import loadUserRoles from './actions/loadUserRoles'
-import loadItems from './actions/loadItems'
-import { formatDate2, ActiveBadge } from '../../utils'
 import TaskList from './components/TaskList'
 import { Manager, Reference, Popper } from 'react-popper'
 import TaskStore from './stores/NewTaskStore'
@@ -80,7 +75,20 @@ class TaskSetup extends React.Component {
       'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
     return (
       <React.Fragment>
-        <BatchHeader batch={batch} />
+        <BatchHeader 
+          batch_no={batch.batch_no}
+          batch_source={batch.batch_source}
+          quantity={batch.quantity}
+          is_active={batch.is_active}
+          name = {batch.name}
+          id={batch.id}
+          strain={batch.strain}
+          grow_method={batch.grow_method}
+          start_date={batch.start_date}
+          total_estimated_cost={TaskStore.totalEstimatedCost}
+          total_estimated_hour={TaskStore.totalEstimatedHours}
+          estimated_harvest_date={batch.estimated_harvest_date}
+        />
         <div className="flex justify-between">
           <BatchTabs batch={batch} currentTab="taskList" />
           <Manager>

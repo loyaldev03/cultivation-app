@@ -9,8 +9,24 @@
 
   <div class="pa4 grey">
       <div class="fl w-100 flex flex-column">
-        <%= react_component 'cultivation/shared/BatchHeader', { batch_id: @batch.id.to_s, batch: @batch_attributes} %>
+      <%= @batch_attributes[:batch_no]%>
+        <%= react_component 'cultivation/shared/BatchHeader', { 
+          batch_no: @batch_attributes[:batch_no],
+          batch_source: @batch_attributes[:batch_source],
+          quantity: @batch_attributes[:quantity],
+          is_active: @batch_attributes[:is_active],
+          name: @batch_attributes[:name],
+          id: @batch_attributes[:id],
+          strain: @batch_attributes[:strain],
+          grow_method: @batch_attributes[:grow_method],
+          start_date: @batch_attributes[:start_date],
+          total_estimated_cost: @batch_attributes[:total_estimated_cost],
+          total_estimated_hour: @batch_attributes[:total_estimated_hour],
+          estimated_harvest_date: @batch_attributes[:estimated_harvest_date]
+        }%>
+
         <%= react_component 'cultivation/shared/BatchTabs', { batch_id: @batch.id.to_s, batch: @batch_attributes, currentTab: "materials"} %>
+        
         <div class="flex flex-column justify-between bg-white box--shadow">
           <div class="pa4">
             <div class="fl w-100 flex flex-column">

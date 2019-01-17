@@ -160,10 +160,25 @@ class BatchIssues extends React.Component {
   }
 
   render() {
+    const { batch } = this.props
+
     return (
       <React.Fragment>
-        <BatchHeader batch={this.props.batch} />
-        <BatchTabs batch={this.props.batch} currentTab="issues" />
+        <BatchHeader
+          batch_no={batch.batch_no}
+          batch_source={batch.batch_source}
+          quantity={batch.quantity}
+          is_active={batch.is_active}
+          name={batch.name}
+          id={batch.id}
+          strain={batch.strain}
+          grow_method={batch.grow_method}
+          start_date={batch.start_date}
+          total_estimated_cost={batch.total_estimated_cost}
+          total_estimated_hour={batch.total_estimated_hour}
+          estimated_harvest_date={batch.estimated_harvest_date}
+        />
+        <BatchTabs batch={batch} currentTab="issues" />
 
         {this.renderContent()}
 

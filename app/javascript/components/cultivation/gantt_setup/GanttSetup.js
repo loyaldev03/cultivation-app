@@ -34,7 +34,20 @@ class GanttSetup extends React.Component {
       'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
     return (
       <React.Fragment>
-        <BatchHeader batch={batch} />
+        <BatchHeader
+          batch_no={batch.batch_no}
+          batch_source={batch.batch_source}
+          quantity={batch.quantity}
+          is_active={batch.is_active}
+          name={batch.name}
+          id={batch.id}
+          strain={batch.strain}
+          grow_method={batch.grow_method}
+          start_date={batch.start_date}
+          total_estimated_cost={batch.total_estimated_cost}
+          total_estimated_hour={batch.total_estimated_hour}
+          estimated_harvest_date={batch.estimated_harvest_date}
+        />
         <BatchTabs batch={batch} currentTab="gantChart" />
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">

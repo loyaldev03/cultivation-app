@@ -5,7 +5,7 @@ export const safeDisplay = (str, fallback = '-') =>
   isEmptyString(str) ? fallback : str
 
 const decimalFormatter = new Intl.NumberFormat('en', {
-  minimumFractionDigits: 2,
+  minimumFractionDigits: 2
 })
 
 const moneyFormatter = new Intl.NumberFormat('en-US', {

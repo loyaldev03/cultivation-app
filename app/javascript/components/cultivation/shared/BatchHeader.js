@@ -1,5 +1,9 @@
 import React from 'react'
-import { formatDate2, ActiveBadge } from '../../utils'
+import {
+  formatDate2, 
+  ActiveBadge, 
+  moneyFormatter,
+  decimalFormatter } from '../../utils'
 
 class BatchHeader extends React.Component {
   constructor(props) {
@@ -7,11 +11,24 @@ class BatchHeader extends React.Component {
   }
 
   render() {
-    const { batch } = this.props
-    const batchSource = batch.batch_source
-      ? batch.batch_source.replace(/_/g, ' ')
+    const { 
+      batch_no,
+      batch_source,
+      quantity,
+      is_active,
+      name,
+      id,
+      strain,
+      grow_method,
+      start_date,
+      total_estimated_cost,
+      total_estimated_hour,
+      estimated_harvest_date
+     } = this.props
+    const batchSource = batch_source
+      ? batch_source.replace(/_/g, ' ')
       : ''
-    const batchQuantity = batch.quantity ? batch.quantity : 0
+    const batchQuantity = quantity ? quantity : 0
 
     return (
       <React.Fragment>
@@ -21,8 +38,8 @@ class BatchHeader extends React.Component {
               <div className="flex">
                 <div className="w-30">
                   <h4 className="tl pa0 ma0 h6--font dark-grey">
-                    Batch {batch.batch_no}
-                    <ActiveBadge className="fr" isActive={batch.is_active} />
+                    Batch {batch_no}
+                    <ActiveBadge className="fr" isActive={is_active} />
                   </h4>
                 </div>
               </div>
@@ -47,7 +64,7 @@ class BatchHeader extends React.Component {
                       </div>
                       <div className="w-40">
                         <div className="">
-                          <label>{batch.name}</label>
+                          <label>{name}</label>
                         </div>
                       </div>
                     </div>
@@ -57,7 +74,7 @@ class BatchHeader extends React.Component {
                       <div className="w-40">
                         <a
                           href={`/cultivation/batches/${
-                            batch.id
+                            id
                           }?select_location=1`}
                           className="link red"
                         >
@@ -73,7 +90,7 @@ class BatchHeader extends React.Component {
                     </div>
                     <div className="w-40">
                       <div className="">
-                        <label>{batch.strain}</label>
+                        <label>{strain}</label>
                       </div>
                     </div>
                   </div>
@@ -84,7 +101,7 @@ class BatchHeader extends React.Component {
                     </div>
                     <div className="w-40">
                       <div className="">
-                        <label>{batch.grow_method}</label>
+                        <label>{grow_method}</label>
                       </div>
                     </div>
                   </div>
@@ -99,7 +116,7 @@ class BatchHeader extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="tr">
-                        <label>{formatDate2(batch.start_date)}</label>
+                        <label>{formatDate2(start_date)}</label>
                       </div>
                     </div>
                   </div>
@@ -110,7 +127,7 @@ class BatchHeader extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="tr">
-                        <label>{batch.total_estimated_cost}</label>
+                        <label>{moneyFormatter.format(total_estimated_cost)}</label>
                       </div>
                     </div>
                   </div>
@@ -121,7 +138,7 @@ class BatchHeader extends React.Component {
                     </div>
                     <div className="w-50">
                       <div className="tr">
-                        <label>{batch.total_estimated_hour}</label>
+                        <label>{decimalFormatter.format(total_estimated_hour)}</label>
                       </div>
                     </div>
                   </div>
@@ -137,7 +154,7 @@ class BatchHeader extends React.Component {
                     <div className="w-50">
                       <div className="tr">
                         <label>
-                          {formatDate2(batch.estimated_harvest_date)}
+                          {formatDate2(estimated_harvest_date)}
                         </label>
                       </div>
                     </div>

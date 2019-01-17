@@ -182,10 +182,7 @@ export default class MaterialForm extends React.Component {
                         >
                           {x.uoms &&
                             x.uoms.map((y, index) => (
-                              <option
-                                key={index}
-                                value={y}
-                              >
+                              <option key={index} value={y}>
                                 {y}
                               </option>
                             ))}

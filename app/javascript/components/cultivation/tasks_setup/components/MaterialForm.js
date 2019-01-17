@@ -174,11 +174,22 @@ export default class MaterialForm extends React.Component {
                         />
                       </td>
                       <td className="tl pv2 ph3">
-                        <select onChange={e => this.handleChangeUom(x.product_id, e.target.value)}>
-                            {x.uoms && x.uoms.map((y, index)=>(
-                              <option key={index} value={y} selected={x.uom == y}>{y}</option>
+                        <select
+                          onChange={e =>
+                            this.handleChangeUom(x.product_id, e.target.value)
+                          }
+                        >
+                          {x.uoms &&
+                            x.uoms.map((y, index) => (
+                              <option
+                                key={index}
+                                value={y}
+                                selected={x.uom == y}
+                              >
+                                {y}
+                              </option>
                             ))}
-                          </select>
+                        </select>
                       </td>
                       <td className="tl pv2 ph3">
                         <i

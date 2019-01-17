@@ -1,7 +1,6 @@
 FactoryBot.define do
   factory :facility_strain, class: Inventory::FacilityStrain do
     created_by { create(:user) }
-    facility_id { create(:facility) }
     strain_name { Faker::Name.name }
     strain_type { "sativa" }
     sativa_makeup { Faker::Number.number(2).to_i }
@@ -9,5 +8,6 @@ FactoryBot.define do
     testing_status { 'external' }
     thc { Faker::Number.number(2).to_i / 100 }
     cbd { Faker::Number.number(1).to_i / 100 }
+    facility
   end
 end

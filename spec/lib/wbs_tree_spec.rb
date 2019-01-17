@@ -209,11 +209,38 @@ RSpec.describe "WbsTree", type: :lib do
     it ".have_children should return boolean" do
       saved_tasks = Cultivation::QueryTasks.call(tasks[0].batch).result
 
-      res1 = WbsTree.have_children(saved_tasks, saved_tasks[0].wbs)
-      res2 = WbsTree.have_children(saved_tasks, saved_tasks[1].wbs)
+      res1 = WbsTree.have_children?(saved_tasks[0].wbs, saved_tasks)
+      res2 = WbsTree.have_children?(saved_tasks[1].wbs, saved_tasks)
 
       expect(res1).to be true
       expect(res2).to be false
+    end
+
+    it ".child_of? should return true" do
+      saved_tasks = Cultivation::QueryTasks.call(tasks[0].batch).result
+      t1 = saved_tasks[0] # 1
+      target = saved_tasks[2] # 1.2
+
+      result = WbsTree.child_of?(target.wbs, t1.wbs, saved_tasks)
+      expect(result).to be true
+    end
+
+    it ".child_of? should return true (deeply nested)" do
+      saved_tasks = Cultivation::QueryTasks.call(tasks[0].batch).result
+      grand_parent = saved_tasks[4] # 2
+      target = saved_tasks[10] # 2.3.2.1
+
+      result = WbsTree.child_of?(target.wbs, grand_parent.wbs, saved_tasks)
+      expect(result).to be true
+    end
+
+    it ".child_of? should return false" do
+      saved_tasks = Cultivation::QueryTasks.call(tasks[0].batch).result
+      t1 = saved_tasks[0] # 1
+      target = saved_tasks[5] # 2.2
+
+      result = WbsTree.child_of?(target.wbs, t1.wbs, saved_tasks)
+      expect(result).to be false
     end
   end
 end

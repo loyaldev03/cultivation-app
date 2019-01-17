@@ -53,7 +53,7 @@ module Cultivation
       if wbs.empty?
         raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
       end
-      WbsTree.have_children(batch_tasks, wbs)
+      WbsTree.have_children?(wbs, batch_tasks)
     end
 
     def children(batch_tasks)
@@ -70,11 +70,25 @@ module Cultivation
       wbs.ends_with? '.1'
     end
 
+    def child_of?(predecessor_wbs, batch_tasks)
+      if wbs.empty?
+        raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
+      end
+      WbsTree.child_of?(wbs, predecessor_wbs, batch_tasks)
+    end
+
     def parent(batch_tasks)
       if wbs.empty?
         raise ArgumentError, 'Missing :wbs when calling parent. Use Task retrieve via QueryTasks.'
       end
       WbsTree.parent(batch_tasks, wbs)
+    end
+
+    def predecessor(batch_tasks)
+      if wbs.empty?
+        raise ArgumentError, 'Missing :wbs when calling parent. Use Task retrieve via QueryTasks.'
+      end
+      batch_tasks.detect { |t| t.id == depend_on }
     end
 
     # Find tasks that depends on current task

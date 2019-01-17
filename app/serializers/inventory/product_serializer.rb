@@ -16,6 +16,12 @@ module Inventory
       object.catalogue if object.catalogue
     end
 
+    attribute :uoms do |object|
+      if object.catalogue
+        object.catalogue.uoms.pluck(:unit)
+      end
+    end
+
     attribute :facility_id do |object|
       object.facility_id.to_s
     end

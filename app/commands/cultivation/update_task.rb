@@ -101,7 +101,14 @@ module Cultivation
       end
     end
 
-    def decide_start_date(task, batch_tasks, args_start_date)
+    def decide_start_date(task, batch_tasks, args_start_date, args_depend_on = nil)
+      # TODO::ANDY if task is a first child, it should also change the parent start_date
+      if args_depend_on.present? && task.depend_on != args_depend_on
+        predecessor = batch_tasks.detect { |t| t.id == args_depend_on.to_bson_id }
+        if predecessor.present? && !task.child_of?(predecessor.wbs, batch_tasks)
+          return predecessor.end_date
+        end
+      end
       parent = task.parent(batch_tasks)
       # First subtask should have same start_date as parent task
       if task.first_child?
@@ -116,6 +123,14 @@ module Cultivation
       end
       # Use parent start date if not available
       task.start_date || parent.start_date
+    end
+
+    def decide_assigned_users(args_user_ids)
+      if args_user_ids.present?
+        args_user_ids.uniq.map(&:to_bson_id)
+      else
+        []
+      end
     end
 
     def update_estimated_cost(task, users)
@@ -196,15 +211,6 @@ module Cultivation
         parent.end_date = parent.start_date + parent.duration.days
         parent.save
         parent = parent.parent(batch_tasks)
-      end
-    end
-
-    # Find all subtasks
-    def get_dependents(task, batch_tasks)
-      batch_tasks.select do |t|
-        t.depend_on &&
-          # Dependent tasks should have depends on set to current task
-          t.depend_on.to_s == task.id.to_s
       end
     end
 

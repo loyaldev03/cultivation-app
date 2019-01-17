@@ -195,38 +195,6 @@ class GanttChart extends React.Component {
     return (
       <React.Fragment>
         <style>{styles}</style>
-        <div className="w-50">
-          <a
-            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
-            onClick={e => this.changeView('Quarter Day')}
-          >
-            Quarter Day
-          </a>
-          <a
-            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
-            onClick={e => this.changeView('Half Day')}
-          >
-            Half Day
-          </a>
-          <a
-            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
-            onClick={e => this.changeView('Day')}
-          >
-            Day
-          </a>
-          <a
-            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
-            onClick={e => this.changeView('Week')}
-          >
-            Week
-          </a>
-          <a
-            className="f6 link dim br3 ba ph3 pv2 mb2 dib black w-5 pointer mr2"
-            onClick={e => this.changeView('Month')}
-          >
-            Month
-          </a>
-        </div>
         {TaskStore.isDataLoaded && (
           <div className="flex">
             <div className="w-30 bt br bl b--black-10">
@@ -410,7 +378,7 @@ class GanttChart extends React.Component {
           </div>
         )}
         {!TaskStore.isDataLoaded && (
-          <div className="loading"> Loading Gantt Chart ...</div>
+          <div className="grey"> Loading...</div>
         )}
       </React.Fragment>
     )

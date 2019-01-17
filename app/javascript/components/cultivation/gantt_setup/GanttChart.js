@@ -377,9 +377,7 @@ class GanttChart extends React.Component {
             </div>
           </div>
         )}
-        {!TaskStore.isDataLoaded && (
-          <div className="grey"> Loading...</div>
-        )}
+        {!TaskStore.isDataLoaded && <div className="grey"> Loading...</div>}
       </React.Fragment>
     )
   }

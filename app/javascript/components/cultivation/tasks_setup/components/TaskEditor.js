@@ -1,8 +1,6 @@
 import React from 'react'
 import TaskStore from '../stores/NewTaskStore'
 import SidebarTaskEditor from './SidebarTaskEditor'
-import MaterialForm from './MaterialForm'
-import ResourceForm from './ResourceForm'
 
 const styles = `
 
@@ -87,12 +85,6 @@ export default class TaskEditor extends React.Component {
           />
         )
       }
-      if (tabs === 'Resource') {
-        return <ResourceForm key={id} id={id} task={task} batch_id={batchId} />
-      }
-      if (tabs === 'Material') {
-        return <MaterialForm key={id} id={id} task={task} batch_id={batchId} />
-      }
     } else {
       return (
         <SidebarTaskEditor
@@ -103,15 +95,6 @@ export default class TaskEditor extends React.Component {
           showEstimatedHoursField={true}
         />
       )
-      // return (
-      //   <AddTaskForm
-      //     key={id + action}
-      //     batchId={batchId}
-      //     relativeTaskId={relativeTaskId}
-      //     action={action}
-      //     handleReset={this.props.handleReset}
-      //   />
-      // )
     }
   }
 
@@ -166,8 +149,9 @@ export default class TaskEditor extends React.Component {
 
   render() {
     const { task, tabs } = this.state
-    const haveChildren =
-      task && task.wbs ? TaskStore.haveChildren(task.wbs) : false
+    if (!task) {
+      return null
+    }
     return (
       <div className="flex flex-column">
         <style> {styles} </style>
@@ -184,30 +168,10 @@ export default class TaskEditor extends React.Component {
             >
               General
             </div>
-            {!haveChildren ? (
-              <div
-                className={`pl3 ph4 pointer dim ${
-                  tabs === 'Resource' ? 'active' : null
-                }`}
-                onClick={this.changeTabs('Resource')}
-              >
-                Resource
-              </div>
-            ) : null}
-            {!haveChildren ? (
-              <div
-                className={`pl3 ph4 pointer dim ${
-                  tabs === 'Material' ? 'active' : null
-                }`}
-                onClick={this.changeTabs('Material')}
-              >
-                Material
-              </div>
-            ) : null}
           </div>
           {this.renderCloseSidebar()}
         </div>
-        {this.renderSidebarTaskEditor(haveChildren)}
+        {this.renderSidebarTaskEditor(task.haveChildren)}
       </div>
     )
   }

@@ -5,26 +5,17 @@ import { Manager, Reference, Popper, Arrow } from 'react-popper'
 import TaskStore from '../stores/NewTaskStore'
 import UserStore from '../stores/NewUserStore'
 import TaskEditor from './TaskEditor'
-import BatchSetupStore from '../../batches_setup/BatchSetupStore'
 import InlineEditTaskNameField from './InlineEditTaskNameField'
 import InlineEditTextField from './InlineEditTextField'
 import InlineEditNumberField from './InlineEditNumberField'
 import InlineEditDateField from './InlineEditDateField'
 import Avatar from '../../../utils/Avatar'
-import { editorSidebarHandler } from '../../../utils/EditorSidebarHandler'
-import { toast } from '../../../utils/toast'
-import {
-  monthStartDate,
-  monthOptionAdd,
-  monthOptionToString,
-  formatDate2,
-  dateToMonthOption,
-  SlidePanel
-} from '../../../utils'
-const Calendar = lazy(() => import('react-calendar/dist/entry.nostyle'))
+import { formatDate2, moneyFormatter, SlidePanel } from '../../../utils'
+
 const ReactTable = lazy(() => import('react-table'))
 const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
 const AssignMaterialForm = lazy(() => import('./MaterialForm'))
+const CultivationCalendar = lazy(() => import('./CultivationCalendar'))
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -37,12 +28,6 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
     </a>
   )
 }
-
-const MoneyFormatter = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-  minimumFractionDigits: 2
-})
 
 @observer
 class TaskList extends React.Component {

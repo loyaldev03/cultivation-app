@@ -459,14 +459,9 @@ class TaskStore {
 
   @action
   async editAssignedMaterial(batchId, taskId, items) {
-    console.log(batchId)
-    console.log(taskId)
-    console.log(items)
     const task = this.getTaskById(taskId)
-    console.log(toJS(task))
     if (items) {
       task.items = items
-      console.log(toJS(task))
       this.tasks = this.tasks.map(t => {
         return t.id === taskId ? task : t
       })

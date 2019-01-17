@@ -11,6 +11,7 @@ class TaskSerializer
     :estimated_cost,
     :wbs,
     :indent,
+    :indelible,
     :task_type
 
   attributes :id do |object|

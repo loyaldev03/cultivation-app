@@ -352,28 +352,6 @@ class TaskList extends React.Component {
     this.setState({ selectedStartDate })
   }
 
-  calculateTotalDuration = phaseDuration => {
-    // Culculate total number of days for all cultivation phases that
-    // need locations booking
-    let total = 0
-    Object.keys(phaseDuration).forEach(key => {
-      total += phaseDuration[key]
-    })
-    return total
-  }
-
-  buildPhaseDuration = (tasks = []) => {
-    // Build phase schedule from current Task List
-    const facilityPhases = this.props.batch.cultivation_phases
-    const phaseTasks = tasks.filter(
-      t => t.indent > 0 && facilityPhases.some(p => p === t.phase)
-    )
-    const phaseDuration = {}
-    phaseTasks.forEach(t => {
-      phaseDuration[t.phase] = t.duration
-    })
-    return phaseDuration
-  }
 
   onSearch(searchMonth) {
     BatchSetupStore.clearSearch()

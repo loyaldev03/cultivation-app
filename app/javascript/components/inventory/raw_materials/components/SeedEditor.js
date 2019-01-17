@@ -64,19 +64,26 @@ class SeedEditor extends React.Component {
   }
 
   onFacilityStrainChanged = item => {
-    this.setState(
-      {
-        facility_strain_id: item.value,
-        facility_id: item.facility_id,
+    let changes = {
+      facility_strain_id: item.value,
+      facility_id: item.facility_id
+    }
+
+    if (this.state.product_id.length > 0) {
+      changes = {
+        ...changes,
         product_name: '',
         manufacturer: '',
         description: '',
-        product_id: ''
-      },
-      () => {
-        this.loadProducts('')
+        product_id: '',
+        product: null,
+        defaultProduct: []
       }
-    )
+    }
+
+    this.setState(changes, () => {
+      this.loadProducts('')
+    })
   }
 
   onChangeGeneric = event => {
@@ -93,7 +100,7 @@ class SeedEditor extends React.Component {
       qty_per_package: '',
       product_id: '',
       product_name: '',
-      product: { value: '', label: '' },
+      product: null,
       manufacturer: '',
       description: '',
       order_quantity: 0,
@@ -101,6 +108,8 @@ class SeedEditor extends React.Component {
       order_uom: { value: '', label: '' },
       uom: { value: '', label: '' },
       location_id: '',
+      defaultProduct: [],
+
       // purchase info
       vendor: null,
       purchase_order: null,
@@ -115,8 +124,8 @@ class SeedEditor extends React.Component {
   }
 
   onSave = event => {
-    const payload = this.validateAndGetValues()
-    if (payload.isValid) {
+    const { isValid, errrors, ...payload } = this.validateAndGetValues()
+    if (isValid) {
       setupSeed(payload).then(({ status, data }) => {
         if (status >= 400) {
           this.setState({ errors: data.errors })
@@ -168,6 +177,10 @@ class SeedEditor extends React.Component {
 
     if (parseFloat(qty_per_package) <= 0) {
       errors.qty_per_package = ['Quantity per package is required.']
+    }
+
+    if (product_name.length === 0) {
+      errors.product = ['Product is required.']
     }
 
     const {
@@ -231,7 +244,7 @@ class SeedEditor extends React.Component {
     if (product) {
       if (product.__isNew__) {
         this.setState({
-          product: product,
+          product,
           product_name: product.value,
           product_id: '',
           manufacturer: '',
@@ -239,7 +252,7 @@ class SeedEditor extends React.Component {
         })
       } else {
         this.setState({
-          product: { value: product.id, label: product.name },
+          product,
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,
@@ -248,7 +261,7 @@ class SeedEditor extends React.Component {
       }
     } else {
       this.setState({
-        product: { value: '', label: '' },
+        product: null,
         product_id: '',
         manufacturer: '',
         description: ''

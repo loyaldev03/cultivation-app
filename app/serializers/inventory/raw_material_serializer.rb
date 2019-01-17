@@ -14,7 +14,19 @@ module Inventory
     end
 
     attribute :product do |object|
-      object.product if object.product
+      if object.product
+        {
+          id: object.product.id.to_s,
+          name: object.product.name,
+          sku: object.product.sku,
+          status: object.product.status,
+          transaction_limit: object.product.transaction_limit,
+          description: object.product.description,
+          manufacturer: object.product.manufacturer,
+        }
+      else
+        nil
+      end
     end
 
     attribute :description do |object|

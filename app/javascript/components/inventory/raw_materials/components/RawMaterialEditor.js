@@ -69,22 +69,48 @@ class RawMaterialEditor extends React.Component {
   }
 
   onFacilityChanged = item => {
-    this.setState({ facility_id: item.f_id }, () => {
+    let changes = { facility_id: item.f_id, defaultProduct: [] }
+    // When facility changed, current selected product should not be valid
+    // because that product belongs to another facility.
+    if (this.state.product_id.length > 0) {
+      changes = {
+        ...changes,
+        product: null,
+        manufacturer: '',
+        description: '',
+        product_id: '',
+        product_name: ''
+      }
+    }
+
+    this.setState(changes, () => {
       this.loadProducts('', this.state.catalogue, this.state.facility_id)
     })
   }
 
   onCatalogueSelected = item => {
-    console.log(this.props.raw_material_type)
-    this.setState(
-      {
-        catalogue: item,
-        uom: { value: '', label: '' }
-      },
-      () => {
-        this.loadProducts('', this.state.catalogue, this.state.facility_id)
+    let changes = {
+      catalogue: item,
+      uom: { value: '', label: '' },
+      defaultProduct: []
+    }
+
+    // When catalogue changed, current selected product should not be valid
+    // because that product belongs to another catalogue.
+    if (this.state.product_id.length > 0) {
+      changes = {
+        ...changes,
+        product: null,
+        manufacturer: '',
+        description: '',
+        product_id: '',
+        product_name: ''
       }
-    )
+    }
+
+    this.setState(changes, () => {
+      this.loadProducts('', this.state.catalogue, this.state.facility_id)
+    })
   }
 
   onChangeGeneric = event => {
@@ -109,6 +135,9 @@ class RawMaterialEditor extends React.Component {
       order_uom: { value: '', label: '' },
       uom: { value: '', label: '' },
       location_id: '',
+
+      // Default product list
+      defaultProduct: [],
 
       // purchase info
       vendor: null,
@@ -192,6 +221,10 @@ class RawMaterialEditor extends React.Component {
       errors.location_id = ['Storage location is required.']
     }
 
+    if (product_name.length === 0) {
+      errors.product = ['Product is required.']
+    }
+
     const {
       isValid: purchaseIsValid,
       ...purchaseData
@@ -225,7 +258,7 @@ class RawMaterialEditor extends React.Component {
 
   loadProducts = (inputValue, catalogue, facility_id) => {
     inputValue = inputValue || ''
-    console.log(catalogue)
+
     return fetch(
       `/api/v1/products?type=raw_materials&category=${
         this.props.raw_material_type
@@ -254,7 +287,7 @@ class RawMaterialEditor extends React.Component {
     if (product) {
       if (product.__isNew__) {
         this.setState({
-          product: product,
+          product,
           product_name: product.value,
           product_id: '',
           manufacturer: '',
@@ -262,7 +295,7 @@ class RawMaterialEditor extends React.Component {
         })
       } else {
         this.setState({
-          product: { value: product.id, label: product.name },
+          product,
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,
@@ -288,6 +321,8 @@ class RawMaterialEditor extends React.Component {
       parseFloat(this.state.price_per_package) > 0 &&
       parseFloat(this.state.order_quantity) > 0
     const hasProductId = this.state.product_id
+    const canSelectProduct =
+      this.state.facility_id.length > 0 && this.state.catalogue
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -310,6 +345,7 @@ class RawMaterialEditor extends React.Component {
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
               <LocationPicker
+                key={this.state.facility_id}
                 mode="facility"
                 onChange={this.onFacilityChanged}
                 locations={locations}
@@ -341,7 +377,8 @@ class RawMaterialEditor extends React.Component {
               <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
               <AsyncCreatableSelect
                 isClearable
-                noOptionsMessage={() => 'Type to search product...'}
+                isDisabled={!canSelectProduct}
+                noOptionsMessage={() => 'Please first select a facility'}
                 placeholder={'Search...'}
                 defaultOptions={this.state.defaultProduct}
                 loadOptions={e =>
@@ -455,7 +492,7 @@ class RawMaterialEditor extends React.Component {
                   />
                 </div>
                 <div className="w-20 pl3">
-                  <label className="f6 fw6 db mb1 gray ttc">UoM</label>
+                  <label className="f6 fw6 db mb1 gray ttc">Unit</label>
                   <Select
                     value={this.state.uom}
                     options={uoms}
@@ -490,6 +527,7 @@ class RawMaterialEditor extends React.Component {
                 Where are they stored?
               </label>
               <LocationPicker
+                key={this.state.facility_id}
                 mode="storage"
                 locations={locations}
                 facility_id={this.state.facility_id}

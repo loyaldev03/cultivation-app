@@ -262,6 +262,42 @@ class TaskStore {
   }
 
   @action
+  async createTask(batchId, relatedTaskId, taskAction, updateObj) {
+    this.isLoading = true
+    const task = Object.assign(
+      {},
+      {
+        batch_id: batchId,
+        action: taskAction,
+        name: updateObj.name,
+        start_date: updateObj.start_date,
+        end_date: updateObj.end_date,
+        duration: updateObj.duration,
+        estimated_hours: updateObj.estimated_hours,
+        task_related_id: relatedTaskId,
+        task_type: updateObj.task_type
+      }
+    )
+    const url = `/api/v1/batches/${batchId}/tasks`
+    try {
+      const response = await (await fetch(
+        url,
+        httpPostOptions({ task })
+      )).json()
+      if (response.data) {
+        toast('Task added', 'success')
+        await this.loadTasks(batchId)
+      } else {
+        console.error(response.errors)
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  @action
   async editTask(batchId, taskId, updateObj, isReload = false) {
     this.isLoading = true
     const task = this.getTaskById(taskId)

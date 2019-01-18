@@ -306,12 +306,14 @@ class TaskList extends React.Component {
     {
       Header: 'WBS',
       accessor: 'wbs',
-      maxWidth: '70',
+      headerClassName: 'f6',
+      width: '85',
       show: this.checkVisibility('wbs')
     },
     {
       Header: 'Tasks',
       accessor: 'name',
+      headerClassName: 'f6',
       maxWidth: '400',
       show: this.checkVisibility('name'),
       Cell: this.renderTaskNameColumn
@@ -319,7 +321,8 @@ class TaskList extends React.Component {
     {
       Header: 'Predecessor',
       accessor: 'depend_on',
-      maxWidth: '100',
+      headerClassName: 'f6',
+      width: '85',
       show: this.checkVisibility('depend_on'),
       Cell: data => {
         const { id, depend_on } = data.row
@@ -347,6 +350,7 @@ class TaskList extends React.Component {
     {
       Header: 'Start Date',
       accessor: 'start_date',
+      headerClassName: 'f6',
       maxWidth: '100',
       className: 'tr',
       show: this.checkVisibility('start_date'),
@@ -366,6 +370,7 @@ class TaskList extends React.Component {
     {
       Header: 'End Date',
       accessor: 'end_date',
+      headerClassName: 'f6',
       maxWidth: '100',
       className: 'tr',
       show: this.checkVisibility('end_date'),
@@ -386,6 +391,7 @@ class TaskList extends React.Component {
     {
       Header: 'Duration',
       accessor: 'duration',
+      headerClassName: 'f6',
       maxWidth: '90',
       className: 'tr',
       show: this.checkVisibility('duration'),
@@ -408,6 +414,7 @@ class TaskList extends React.Component {
     {
       Header: 'Est. Hr',
       accessor: 'estimated_hours',
+      headerClassName: 'f6',
       maxWidth: '100',
       className: 'tr',
       show: this.checkVisibility('estimated_hours'),
@@ -430,6 +437,7 @@ class TaskList extends React.Component {
     {
       Header: 'Est. Cost',
       accessor: 'estimated_cost',
+      headerClassName: 'f6',
       maxWidth: '100',
       className: 'justify-end',
       show: this.checkVisibility('estimated_cost'),
@@ -438,6 +446,7 @@ class TaskList extends React.Component {
     {
       Header: 'Assigned',
       accessor: 'user_ids',
+      headerClassName: 'f6',
       maxWidth: '200',
       className: 'justify-center',
       show: this.checkVisibility('resource_assigned'),
@@ -478,6 +487,7 @@ class TaskList extends React.Component {
     {
       Header: 'Materials',
       accessor: 'items',
+      headerClassName: 'f6',
       maxWidth: '200',
       show: this.checkVisibility('materials'),
       className: 'justify-center',

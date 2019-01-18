@@ -571,7 +571,7 @@ class TaskList extends React.Component {
           renderBody={props => (
             <Suspense fallback={<div />}>
               <TaskEditor
-                onClose={() => this.setState({ showTaskEditor: false })}
+                onClose={() => this.setState({ showTaskEditor: false, taskAction: '' })}
                 taskId={this.state.taskSelected}
                 taskAction={this.state.taskAction}
                 batchId={batchId}

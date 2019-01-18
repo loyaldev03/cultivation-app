@@ -11,8 +11,12 @@ export default class TaskEditor extends React.Component {
       taskAction &&
       (taskId !== prevProps.taskId || taskAction !== prevProps.taskAction)
     ) {
-      const task = TaskStore.getTaskById(taskId)
-      this.editor.setEditingTask(task)
+      if (taskAction === 'update') {
+        const task = TaskStore.getTaskById(taskId)
+        this.editor.setEditingTask(task)
+      } else {
+        this.editor.setEditingTask(null)
+      }
     }
   }
 
@@ -26,8 +30,12 @@ export default class TaskEditor extends React.Component {
 
   onSave = () => {
     const updates = this.editor.getEditingTask()
-    const { batchId, taskId } = this.props
-    TaskStore.editTask(batchId, taskId, updates)
+    const { batchId, taskId, taskAction } = this.props
+    if (taskAction === 'update') {
+      TaskStore.editTask(batchId, taskId, updates)
+    } else {
+      TaskStore.createTask(batchId, taskId, taskAction, updates)
+    }
     this.props.onClose()
   }
 

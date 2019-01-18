@@ -36,7 +36,7 @@ class SidebarTaskEditor extends React.Component {
         haveChildren: task.haveChildren
       })
     } else {
-      this.setState(GET_DEFAULT_STATE())
+      this.setState({ ...GET_DEFAULT_STATE() })
     }
   }
 
@@ -99,35 +99,6 @@ class SidebarTaskEditor extends React.Component {
         break
     }
     this.setState({ assigned_employee: value })
-  }
-
-  handleSubmit = event => {
-    const {
-      id,
-      name,
-      start_date,
-      end_date,
-      duration,
-      estimated_hours,
-      task_type
-    } = this.state
-    const { action, task, relativeTaskId } = this.props
-    const changedTask = {
-      ...task,
-      task_related_id: relativeTaskId,
-      action: action,
-      name,
-      start_date,
-      end_date,
-      duration,
-      estimated_hours,
-      task_type
-    }
-    if (id) {
-      updateTasks.updateTask(changedTask)
-    } else {
-      createTask.createTask(changedTask)
-    }
   }
 
   handleChangeCheckbox = fieldName => e => {

@@ -53,23 +53,6 @@ class TaskList extends React.Component {
     window.editorSidebar.close()
   }
 
-  renderAddButton = row => {
-    if (row.value == true) {
-      return (
-        <div>
-          <i
-            className="material-icons md-600 md-gray md-17 ph2 pointer"
-            onClick={e => {
-              this.handleAddTask(row)
-            }}
-          >
-            add
-          </i>
-        </div>
-      )
-    }
-  }
-
   handleEllipsisClick = taskId => e => {
     this.setState({ idOpen: taskId, taskSelected: taskId })
   }
@@ -109,6 +92,14 @@ class TaskList extends React.Component {
     this.setState({
       taskSelected: taskId,
       showAssignMaterialPanel: !this.state.showAssignMaterialPanel
+    })
+  }
+
+  handleAddTask = (taskId, action) => {
+    this.setState({
+      taskAction: action,
+      taskSelected: taskId,
+      showTaskEditor: true
     })
   }
 
@@ -214,14 +205,6 @@ class TaskList extends React.Component {
         </Manager>
       </div>
     )
-  }
-
-  handleAddTask = (taskId, action) => {
-    this.setState({
-      taskAction: action,
-      taskSelected: taskId,
-      showTaskEditor: true
-    })
   }
 
   handleReset = () => {
@@ -592,7 +575,6 @@ class TaskList extends React.Component {
                 taskId={this.state.taskSelected}
                 taskAction={this.state.taskAction}
                 batchId={batchId}
-                handleReset={this.handleReset}
               />
             </Suspense>
           )}

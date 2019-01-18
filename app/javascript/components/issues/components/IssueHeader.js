@@ -20,24 +20,25 @@ const renderSeverity = value => {
         </i>
       </div>
     )
+  } else if (value === 'low') {
+    return <div className="tc ttc purple f7">FYI</div>
   } else {
-    return (
-      <div className="tc ttc purple f7">
-        FYI
-      </div>
-    )
+    return null
   }
 }
 
-
-const IssueHeader = ({ 
-  reporterFirsName, reporterLastName, reporterPhotoUrl = '',
-  issueNo, severity, createdAt = null, 
-  onClose = () => {},
- }) => {
+const IssueHeader = ({
+  reporterFirsName,
+  reporterLastName,
+  reporterPhotoUrl = '',
+  issueNo,
+  severity,
+  createdAt = null,
+  onClose = () => {}
+}) => {
   return (
     <div className="ph3 pt1 pb2 b--light-gray flex flex-column">
-      <div className="flex w-100 items-center pt2">
+      <div className="flex w-100 pt2">
         <div className="w-auto">
           <Avatar
             firstName={reporterFirsName}
@@ -46,27 +47,27 @@ const IssueHeader = ({
             size={25}
           />
         </div>
-        <div className="f7 fw6 pl2 mr1 gray">
-          { formatIssueNo(issueNo) }
-        </div>
-        <div className="f7 fw6 ph2">&bull;</div>
-        <div className="f7 fw6 green pr2">OPEN</div>
-        { renderSeverity(severity) }
-      </div>
-      
-      { createdAt &&
-      <div className="flex w-pt1 pl4 ">
-        <div style={{ fontSize: '10px' }} className="fw4 gray">
-          {formatDate(createdAt)},{' '}
-          {formatTime(createdAt)}
-        </div>
-      </div>
-      }
+        <div className="pl2">
+          <div className="flex items-center pt1">
+            <div className="f7 fw6 mr1 gray">ISSUE {formatIssueNo(issueNo)}</div>
+            <div className="f7 fw6 ph2">&bull;</div>
+            <div className="f7 fw6 green pr2">OPEN</div>
+            {renderSeverity(severity)}
+          </div>
 
-      <span
-        className="rc-slide-panel__close-button dim"
-        onClick={onClose}
-      >
+          {createdAt && (
+            <div className="flex pt1">
+              <div style={{ fontSize: '10px' }} className="fw4 gray">
+                {formatDate(createdAt)}, {formatTime(createdAt)}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      
+
+      <span className="rc-slide-panel__close-button dim" onClick={onClose}>
         <i className="material-icons mid-gray md-18">close</i>
       </span>
     </div>

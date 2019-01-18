@@ -1,7 +1,12 @@
 import React from 'react'
-import IssueForm from './components/IssueForm.js'
-import IssueDetails from './components/IssueDetails.js'
+import { observer } from 'mobx-react'
+import IssueForm from './components/IssueForm'
+import IssueDetails from './components/IssueDetails'
+import IssueHeader from './components/IssueHeader'
+import currentIssueStore from './store/CurrentIssueStore'
+import getIssue from './actions/getIssue'
 
+@observer
 class IssueSidebar extends React.Component {
   constructor(props) {
     super(props)
@@ -12,6 +17,15 @@ class IssueSidebar extends React.Component {
     document.addEventListener('editor-sidebar-open', event => {
       const issueId = event.detail.id
       const mode = event.detail.mode
+
+      if (issueId) {
+        getIssue(issueId).then(issue => {
+          console.log(issue.data.data.attributes)
+          currentIssueStore.load(issue.data.data.attributes)
+        })
+      } else if(mode === 'create') {
+        currentIssueStore.reset()
+      }
 
       if (mode === 'details') {
         this.setState({ mode, issueId })
@@ -39,7 +53,11 @@ class IssueSidebar extends React.Component {
   }
 
   onClose = () => {
-    window.editorSidebar.close()
+    if (this.state.mode === 'edit') {
+      this.setState({ mode: 'details' })
+    } else {
+      window.editorSidebar.close()
+    }
   }
 
   renderBody() {
@@ -70,9 +88,19 @@ class IssueSidebar extends React.Component {
   }
 
   render() {
+    const issue = currentIssueStore.issue
     return (
       <div className="rc-slide-panel" data-role="sidebar">
-        <div className="rc-slide-panel__body flex flex-column">
+        <div className="rc-slide-panel__body flex flex-column relative">
+          <IssueHeader
+            reporterFirsName={issue.reported_by.first_name}
+            reporterLastName={issue.reported_by.last_name}
+            reporterPhotoUrl={issue.reported_by.photo}
+            issueNo={issue.issue_no}
+            severity={issue.severity}
+            createdAt={this.state.mode === 'details' ? issue.created_at : ''}
+            onClose={this.onClose}
+          />
           {this.renderBody()}
         </div>
       </div>

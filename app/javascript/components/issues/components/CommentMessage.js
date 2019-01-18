@@ -50,20 +50,28 @@ const Thumbnail = ({ url, preview, type, filename }) => {
   }
 }
 
-const CommentBody = ({ id, message, attachments = [], resolved = false, reason = '' }) => {
+const CommentBody = ({
+  id,
+  message,
+  attachments = [],
+  resolved = false,
+  reason = ''
+}) => {
   return (
     <div className="mb2 pv2 pl3 pr0 br2 bg-black-05">
-      { resolved && (
+      {resolved && (
         <p className="green f6 fw6 mt0 mb2 flex">
-          <span className="mt1" style={{ marginTop: '2px'}}>Resolved</span>
-          <span className="material-icons ml1" style={{ fontSize: '18px' }}>check</span>
+          <span className="mt1" style={{ marginTop: '2px' }}>
+            Resolved
+          </span>
+          <span className="material-icons ml1" style={{ fontSize: '18px' }}>
+            check
+          </span>
         </p>
       )}
       <div className="flex">
-        <p className="f6 black-70 lh-title mt0 mb1 flex-auto">
-          {message}
-        </p>
-        
+        <p className="f6 black-70 lh-title mt0 mb1 flex-auto">{message}</p>
+
         <span
           className="material-icons black-05 hover-gray ph1 pointer"
           style={{ fontSize: '18px' }}
@@ -71,7 +79,7 @@ const CommentBody = ({ id, message, attachments = [], resolved = false, reason =
           more_vert
         </span>
       </div>
-      { reason.length > 0 && (
+      {reason.length > 0 && (
         <p className="f6 black-70 lh-title mt0 mb1 flex-auto pr3">
           Reason: {reason}
         </p>
@@ -103,12 +111,13 @@ const TaskBody = ({ task_url, task_name, quote = '' }) => {
         &quot;{quote}&quot;
       </div>
       <div className="pr3 mb2">
-        <a href={task_url} className="f6 fw4 orange link">{task_name}</a>
+        <a href={task_url} className="f6 fw4 orange link">
+          {task_name}
+        </a>
       </div>
     </div>
   )
 }
-
 
 const CommentMessage = ({
   id,
@@ -141,7 +150,13 @@ const CommentMessage = ({
         </div>
         <div style={{ minWidth: '40%', maxWidth: '85%' }}>
           {task_url.length === 0 && (
-            <CommentBody message={message} attachments={attachments} resolved={resolved} reason={reason} id={id} />
+            <CommentBody
+              message={message}
+              attachments={attachments}
+              resolved={resolved}
+              reason={reason}
+              id={id}
+            />
           )}
           {task_url.length > 0 && (
             <TaskBody task_url={task_url} task_name={task_name} quote={quote} />

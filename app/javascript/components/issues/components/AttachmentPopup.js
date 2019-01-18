@@ -1,6 +1,6 @@
 import React from 'react'
 
-class AttachmentPreview extends React.Component {
+class AttachmentPopup extends React.Component {
   onClose = event => {
     this.props.onClose()
     event.preventDefault()
@@ -35,23 +35,29 @@ class AttachmentPreview extends React.Component {
 
     const { url, type } = this.props
     return (
-      <div
-        className="absolute"
-        style={{
-          backgroundColor: 'rgba(0,0,0,0.65)',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0
-        }}
-      >
-        <div style={{ margin: '15px 1px 1px 1px' }}>
+      <React.Fragment>
+        <div
+          className="absolute"
+          style={{
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            height: '100%'
+          }}></div>
+        <div style={{ 
+          position: 'absolute',
+          top: 80,
+          marginLeft: '10px',
+          marginRight: '10px',
+        }}>
           <div className="pv2 ph3 items-start flex justify-end bg-white br3 br--top">
             <a href="#" onClick={this.onClose}>
               <i className="material-icons mid-gray md-18">close</i>
             </a>
           </div>
-          <div className="items-start flex justify-center">
+          <div className="items-start flex justify-center bg-white">
             {this.renderContent()}
           </div>
 
@@ -63,9 +69,9 @@ class AttachmentPreview extends React.Component {
             )}
           </div>
         </div>
-      </div>
+      </React.Fragment>
     )
   }
 }
 
-export default AttachmentPreview
+export default AttachmentPopup

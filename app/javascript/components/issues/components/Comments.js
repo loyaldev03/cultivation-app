@@ -151,7 +151,7 @@ class Comments extends React.Component {
         message: 'I got this.',
         task_url: 'http://google.com',
         task_name: 'Call Mike for inspection and remedial',
-        quote: 'Captured some picture as ref.',
+        quote: 'Captured some picture as ref.'
       },
       {
         id: 8,
@@ -164,8 +164,7 @@ class Comments extends React.Component {
         message: 'Done',
         resolved: true,
         reason: 'Insufficient material'
-      },
-      
+      }
     ].map(x => <CommentMessage key={x.id} {...x} />)
 
     return messages

@@ -34,7 +34,7 @@ class IssueDetails extends Component {
       showMore: false,
       previewOpen: false,
       previewUrl: '',
-      previewType: '',
+      previewType: ''
     }
   }
 
@@ -59,15 +59,17 @@ class IssueDetails extends Component {
   renderShowMore() {
     const issue = currentIssueStore.issue
     if (!this.state.showMore) {
-      return <div className="flex mt3 mb3">
-                <a
-                  href="#"
-                  className="orange f6 link mt3"
-                  onClick={this.onToggleShowMore}
-                >
-                  Show more
-                </a>
-              </div>
+      return (
+        <div className="flex mt3 mb3">
+          <a
+            href="#"
+            className="orange f6 link mt3"
+            onClick={this.onToggleShowMore}
+          >
+            Show more
+          </a>
+        </div>
+      )
     }
 
     return (
@@ -105,9 +107,15 @@ class IssueDetails extends Component {
 
   render() {
     const issue = currentIssueStore.issue
-    let assignedFirstName = '', assignedLastName = '', assignedPhoto = ''
+    let assignedFirstName = '',
+      assignedLastName = '',
+      assignedPhoto = ''
     if (issue.assigned_to) {
-      ({ first_name: assignedFirstName, last_name: assignedLastName, photo: assignedPhoto } = issue.assigned_to)
+      ;({
+        first_name: assignedFirstName,
+        last_name: assignedLastName,
+        photo: assignedPhoto
+      } = issue.assigned_to)
     }
 
     return (
@@ -128,7 +136,12 @@ class IssueDetails extends Component {
         <div className="ph3">
           <div className="flex w-100">
             <div className="w-auto pv2 mr2">
-              <Avatar firstName={assignedFirstName} lastName={assignedLastName} size={25} photoUrl={assignedPhoto} />
+              <Avatar
+                firstName={assignedFirstName}
+                lastName={assignedLastName}
+                size={25}
+                photoUrl={assignedPhoto}
+              />
             </div>
             <div className="flex flex-column w-100">
               <div className="f5 fw6 dark-grey w-auto pv2 mt1">
@@ -136,18 +149,18 @@ class IssueDetails extends Component {
               </div>
               <p className="fw4 f6 pre mt0 grey">{issue.description}</p>
               <div className="flex">
-              { 
-                issue.attachments.map(x => <AttachmentThumbnail
-                  key={x.key} 
-                  id={x.key}
-                  url={x.url}
-                  preview={x.url} 
-                  type={ x.mime_type} 
-                  filename='' 
-                  onClick={() => this.onTogglePreview(x.url, x.mime_type)}
-                  showDelete={false}
-                />)
-              }
+                {issue.attachments.map(x => (
+                  <AttachmentThumbnail
+                    key={x.key}
+                    id={x.key}
+                    url={x.url}
+                    preview={x.url}
+                    type={x.mime_type}
+                    filename=""
+                    onClick={() => this.onTogglePreview(x.url, x.mime_type)}
+                    showDelete={false}
+                  />
+                ))}
               </div>
               {this.renderShowMore()}
             </div>

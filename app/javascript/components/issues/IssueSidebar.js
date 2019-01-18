@@ -23,7 +23,7 @@ class IssueSidebar extends React.Component {
           console.log(issue.data.data.attributes)
           currentIssueStore.load(issue.data.data.attributes)
         })
-      } else if(mode === 'create') {
+      } else if (mode === 'create') {
         currentIssueStore.reset()
       }
 

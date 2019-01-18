@@ -49,7 +49,9 @@ const IssueHeader = ({
         </div>
         <div className="pl2">
           <div className="flex items-center pt1">
-            <div className="f7 fw6 mr1 gray">ISSUE {formatIssueNo(issueNo)}</div>
+            <div className="f7 fw6 mr1 gray">
+              ISSUE {formatIssueNo(issueNo)}
+            </div>
             <div className="f7 fw6 ph2">&bull;</div>
             <div className="f7 fw6 green pr2">OPEN</div>
             {renderSeverity(severity)}
@@ -64,8 +66,6 @@ const IssueHeader = ({
           )}
         </div>
       </div>
-
-      
 
       <span className="rc-slide-panel__close-button dim" onClick={onClose}>
         <i className="material-icons mid-gray md-18">close</i>

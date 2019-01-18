@@ -137,14 +137,17 @@ class IssueForm extends React.Component {
       locations = await loadLocations(this.props.batchId, issue.task.id)
     }
 
-    this.setState({
-      ...this.resetState(),
-      ...issue,
-      
-      locations,
-      task_id: issue.task ? issue.task.id : '',
-      assigned_to_id: issue.assigned_to ? issue.assigned_to.id : '',
-    }, this.resizeDescriptionInput)
+    this.setState(
+      {
+        ...this.resetState(),
+        ...issue,
+
+        locations,
+        task_id: issue.task ? issue.task.id : '',
+        assigned_to_id: issue.assigned_to ? issue.assigned_to.id : ''
+      },
+      this.resizeDescriptionInput
+    )
   }
 
   resetState = () => {
@@ -256,11 +259,12 @@ class IssueForm extends React.Component {
     const computed = window.getComputedStyle(field)
 
     // Calculate the height
-    const height = parseInt(computed.getPropertyValue('border-top-width'), 10)
-                + parseInt(computed.getPropertyValue('padding-top'), 10)
-                + field.scrollHeight
-                + parseInt(computed.getPropertyValue('padding-bottom'), 10)
-                + parseInt(computed.getPropertyValue('border-bottom-width'), 10);
+    const height =
+      parseInt(computed.getPropertyValue('border-top-width'), 10) +
+      parseInt(computed.getPropertyValue('padding-top'), 10) +
+      field.scrollHeight +
+      parseInt(computed.getPropertyValue('padding-bottom'), 10) +
+      parseInt(computed.getPropertyValue('border-bottom-width'), 10)
 
     field.style.height = height + 'px'
   }
@@ -378,17 +382,19 @@ class IssueForm extends React.Component {
   renderAttachments() {
     // console.log(this.state.attachments)
     const attachments = this.state.attachments.map(x => {
-      return <AttachmentThumbnail
-        key={x.key} 
-        id={x.key}
-        url={x.url}
-        preview={x.url} 
-        type={ x.mime_type} 
-        filename='' 
-        onClick={() => this.onTogglePreview(x.url, x.mime_type)}
-        showDelete={true}
-        onDelete={() => this.onDeleteAttachment(x.key)}
-      />
+      return (
+        <AttachmentThumbnail
+          key={x.key}
+          id={x.key}
+          url={x.url}
+          preview={x.url}
+          type={x.mime_type}
+          filename=""
+          onClick={() => this.onTogglePreview(x.url, x.mime_type)}
+          showDelete={true}
+          onDelete={() => this.onDeleteAttachment(x.key)}
+        />
+      )
     })
 
     return (

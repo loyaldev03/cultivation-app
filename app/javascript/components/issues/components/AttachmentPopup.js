@@ -45,13 +45,16 @@ class AttachmentPopup extends React.Component {
             right: 0,
             bottom: 0,
             height: '100%'
-          }}></div>
-        <div style={{ 
-          position: 'absolute',
-          top: 80,
-          marginLeft: '10px',
-          marginRight: '10px',
-        }}>
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            top: 80,
+            marginLeft: '10px',
+            marginRight: '10px'
+          }}
+        >
           <div className="pv2 ph3 items-start flex justify-end bg-white br3 br--top">
             <a href="#" onClick={this.onClose}>
               <i className="material-icons mid-gray md-18">close</i>

@@ -16,7 +16,7 @@ class CurrentIssueStore {
       location_type: '',
       created_at: null,
       attachments: [], // not sure if this is ok
-      comments: [], 
+      comments: [],
       task: { id: '', name: '' },
       reported_by: {
         id: '',
@@ -41,7 +41,7 @@ class CurrentIssueStore {
     set(this.issue, issue)
   }
 
-  // @computed 
+  // @computed
   // isAssigned() {
   //   return this.issue.assigned_to.id.length > 0
   // }

@@ -1,14 +1,14 @@
 import React from 'react'
 
-const AttachmentThumbnail = ({ 
+const AttachmentThumbnail = ({
   id = '',
-  url, 
-  preview, 
-  type, 
-  filename = '', 
+  url,
+  preview,
+  type,
+  filename = '',
   onClick = (url, mime_type) => {},
   showDelete = false,
-  onDelete, 
+  onDelete
 }) => {
   const height = showDelete ? '70px' : '50px'
 
@@ -19,7 +19,12 @@ const AttachmentThumbnail = ({
       style={{ width: 50, height }}
       className="mr1 overflow-hidden relative hover-photo mb1"
     >
-      <Image preview={preview} type={type} filename={filename} onClick={onClick} />
+      <Image
+        preview={preview}
+        type={type}
+        filename={filename}
+        onClick={onClick}
+      />
       <div
         className="zoom-btn"
         style={{ width: 50, height: 50 }}
@@ -28,26 +33,19 @@ const AttachmentThumbnail = ({
       >
         <i className="material-icons absolute">search</i>
       </div>
-      {
-        showDelete && (
-          <p
-            style={{ width: 50, bottom: -10, fontSize: '12px' }}
-            className="tc mt1 mb0 delete-btn"
-          >
-            <a
-              href="#"
-              className="link gray"
-              onClick={() => onDelete(id)}
-            >
-              Delete
-            </a>
-          </p>
-        )
-      }
+      {showDelete && (
+        <p
+          style={{ width: 50, bottom: -10, fontSize: '12px' }}
+          className="tc mt1 mb0 delete-btn"
+        >
+          <a href="#" className="link gray" onClick={() => onDelete(id)}>
+            Delete
+          </a>
+        </p>
+      )}
     </div>
   )
 }
-
 
 const Image = ({ preview, type, filename }) => {
   if (type.startsWith('image')) {
@@ -57,7 +55,7 @@ const Image = ({ preview, type, filename }) => {
         style={{
           width: 50,
           height: 50,
-          background: `url(${preview}) no-repeat center center`,
+          background: `url(${preview}) no-repeat center center`
         }}
       />
     )

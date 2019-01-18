@@ -46,7 +46,7 @@ class TaskList extends React.Component {
   componentDidMount() {
     UserStore.loadUsers(this.props.batch.facility_id)
     // need to find after data react-table is loaded callback
-    setTimeout(() => this.mountEvents(), 100)
+    setTimeout(() => this.mountEvents(), 1000)
   }
 
   closeSidebar = () => {
@@ -132,10 +132,7 @@ class TaskList extends React.Component {
     const hasChild = TaskStore.hasChildNode(wbs)
     const isCollapsed = TaskStore.isCollapsed(wbs)
     return (
-      <div
-        className="flex flex-auto justify-between items-center h-100 hide-child"
-        draggable={true}
-      >
+      <div className="flex flex-auto justify-between items-center h-100 hide-child">
         <InlineEditTaskNameField
           text={data.value}
           indent={indent}

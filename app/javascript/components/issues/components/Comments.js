@@ -127,19 +127,45 @@ class Comments extends React.Component {
             type: 'image/png'
           },
           {
-            url: 'https://picsum.photos/307/201',
-            preview: 'https://picsum.photos/307/201',
+            url: 'https://picsum.photos/307/202',
+            preview: 'https://picsum.photos/307/202',
             type: 'video/mp4',
             filename: 'axx111yy'
           },
           {
-            url: 'https://picsum.photos/308/202',
-            preview: 'https://picsum.photos/308/202',
+            url: 'https://picsum.photos/308/203',
+            preview: 'https://picsum.photos/308/203',
             type: 'image/png'
           }
         ],
         resolved: false
-      }
+      },
+      {
+        id: 7,
+        sender_first_name: 'Tim',
+        sender_last_name: 'K',
+        sender_photo: null,
+        sender_id: 1,
+        current_user_id: 2,
+        sent_at: new Date('01 Jan 1970 00:00:00 GMT'),
+        message: 'I got this.',
+        task_url: 'http://google.com',
+        task_name: 'Call Mike for inspection and remedial',
+        quote: 'Captured some picture as ref.',
+      },
+      {
+        id: 8,
+        sender_first_name: 'Tim',
+        sender_last_name: 'K',
+        sender_photo: null,
+        sender_id: 1,
+        current_user_id: 2,
+        sent_at: new Date('01 Jan 1970 00:00:00 GMT'),
+        message: 'Done',
+        resolved: true,
+        reason: 'Insufficient material'
+      },
+      
     ].map(x => <CommentMessage key={x.id} {...x} />)
 
     return messages
@@ -148,13 +174,13 @@ class Comments extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="flex pl4 pr3 pb3 items-center mt3">
+        <div className="flex ph3 pb3 items-center mt3">
           <div className="f7 fw6 gray w-auto mr1">ISSUE #001</div>
           <div className="f7 fw6 gray w-auto mr1 self-start">&bull;</div>
           <div className="f7 fw6 gray w-auto">Discussion</div>
         </div>
         {this.renderMessages()}
-        <div className="pl4 pr3 mv3">
+        <div className="ph3 mv3">
           <div className="b--black-10 flex br3 ba w-100 ph2 pt1 pb2 flex items-center">
             <Avatar firstName="Sample" lastName="User" size={25} />
             <textarea

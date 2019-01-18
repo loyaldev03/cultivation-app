@@ -20,7 +20,7 @@ s3_public_options = {
 print "\t\t\t >>>>>>>> AWS_REGION: #{ENV['AWS_REGION']}"
 
 Shrine.storages = {
-  # avatar: Shrine::Storage::S3.new(prefix: "avatar", public: true, **s3_public_options),
+  avatar: Shrine::Storage::S3.new(prefix: "avatar", public: true, **s3_public_options),
   cache: Shrine::Storage::S3.new(prefix: "cache", **s3_general_options),
   store: Shrine::Storage::S3.new(**s3_general_options),
 }

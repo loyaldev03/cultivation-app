@@ -51,6 +51,7 @@ class IssueSidebar extends React.Component {
         <IssueDetails
           onClose={this.onClose}
           onToggleMode={this.onToggleMode}
+          issueId={this.state.issueId}
           batchId={batch.id}
         />
       )

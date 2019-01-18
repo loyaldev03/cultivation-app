@@ -50,11 +50,20 @@ const Thumbnail = ({ url, preview, type, filename }) => {
   }
 }
 
-const CommentBody = ({ message, attachments = [] }) => {
+const CommentBody = ({ id, message, attachments = [], resolved = false, reason = '' }) => {
   return (
     <div className="mb2 pv2 pl3 pr0 br2 bg-black-05">
+      { resolved && (
+        <p className="green f6 fw6 mt0 mb2 flex">
+          <span className="mt1" style={{ marginTop: '2px'}}>Resolved</span>
+          <span className="material-icons ml1" style={{ fontSize: '18px' }}>check</span>
+        </p>
+      )}
       <div className="flex">
-        <p className="f6 black-70 lh-title mt0 mb1 flex-auto">{message}</p>
+        <p className="f6 black-70 lh-title mt0 mb1 flex-auto">
+          {message}
+        </p>
+        
         <span
           className="material-icons black-05 hover-gray ph1 pointer"
           style={{ fontSize: '18px' }}
@@ -62,10 +71,15 @@ const CommentBody = ({ message, attachments = [] }) => {
           more_vert
         </span>
       </div>
+      { reason.length > 0 && (
+        <p className="f6 black-70 lh-title mt0 mb1 flex-auto pr3">
+          Reason: {reason}
+        </p>
+      )}
       {attachments.length > 0 && (
         <div className="flex flex-wrap mt2 mb1">
           {attachments.map(props => (
-            <Preview key={props.url} {...props} />
+            <Preview key={`${id}.${props.url}`} {...props} />
           ))}
         </div>
       )}
@@ -74,10 +88,30 @@ const CommentBody = ({ message, attachments = [] }) => {
 }
 
 const TaskBody = ({ task_url, task_name, quote = '' }) => {
-  return <div className="bg-white pa2 i f7 gray mt1 mr3">{quote}</div>
+  return (
+    <div className="mb2 pv2 pl3 br2 bg-black-05">
+      <div className="flex mb2 justify-between">
+        <div className="f6 gray fw6">Task Created</div>
+        <span
+          className="material-icons black-05 hover-gray ph1 pointer"
+          style={{ fontSize: '18px' }}
+        >
+          more_vert
+        </span>
+      </div>
+      <div className="bg-white pa2 i f7 gray mt1 mr3 mb2">
+        &quot;{quote}&quot;
+      </div>
+      <div className="pr3 mb2">
+        <a href={task_url} className="f6 fw4 orange link">{task_name}</a>
+      </div>
+    </div>
+  )
 }
 
+
 const CommentMessage = ({
+  id,
   sender_first_name,
   sender_last_name,
   sender_photo,
@@ -86,6 +120,7 @@ const CommentMessage = ({
   sent_at,
   message,
   resolved = false,
+  reason = '',
   attachments = [],
   task_url = '',
   task_name = '',
@@ -95,7 +130,7 @@ const CommentMessage = ({
   const align = isMe ? 'justify-end' : 'justify-start'
   return (
     <React.Fragment>
-      <div className={`pl4 pr3 mb3 mt1 flex ${align}`}>
+      <div className={`ph3 mb3 mt1 flex ${align}`}>
         <div className={`pt1 mr2 ${isMe && 'dn'}`}>
           <Avatar
             firstName={sender_first_name}
@@ -106,7 +141,7 @@ const CommentMessage = ({
         </div>
         <div style={{ minWidth: '40%', maxWidth: '85%' }}>
           {task_url.length === 0 && (
-            <CommentBody message={message} attachments={attachments} />
+            <CommentBody message={message} attachments={attachments} resolved={resolved} reason={reason} id={id} />
           )}
           {task_url.length > 0 && (
             <TaskBody task_url={task_url} task_name={task_name} quote={quote} />

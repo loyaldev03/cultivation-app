@@ -110,7 +110,7 @@ const columns = [
 ]
 
 const openSidebar = (event, id = null, mode = null) => {
-  window.editorSidebar.open({ id, mode })
+  window.editorSidebar.open({ id, mode, width: '500px' })
   event.preventDefault()
 }
 

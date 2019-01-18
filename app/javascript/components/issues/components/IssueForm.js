@@ -27,6 +27,7 @@ import TaskOption from './TaskOption'
 import LocationOption from './LocationOption'
 import LocationSingleValue from './LocationSingleValue'
 import AttachmentPreview from './AttachmentPreview'
+import IssueHeader from './IssueHeader'
 
 const severityOptions = [
   { value: 'low', label: 'Low' },
@@ -344,31 +345,27 @@ class IssueForm extends React.Component {
     })
   }
 
+  onClose = () => {
+    if (this.props.issueId.length > 0) {
+      this.props.onToggleMode()
+    } else {
+      this.props.onClose()
+    }
+  }
+
   renderTitle() {
     if (this.props.mode === 'edit') {
       return (
         <React.Fragment>
-          <div className="flex w-100 ph4 items-center pt3">
-            <div className="w-auto">
-              <Avatar
-                firstName={this.state.reported_by.first_name}
-                lastName={this.state.reported_by.last_name}
-                photoUrl={this.state.reported_by.photo}
-                size={25}
-              />
-            </div>
-            <div className="f7 fw6 gray w-auto ph2 mr1">
-              ISSUE #{this.state.issue_no.toString().padStart(5, '0')}
-            </div>
-            <div className="f7 fw6 green flex f6 green fw6 w-auto">OPEN</div>
-            <span
-              className="rc-slide-panel__close-button dim"
-              onClick={this.props.onClose}
-            >
-              <i className="material-icons mid-gray md-18">close</i>
-            </span>
-          </div>
-          <div className="flex w-100 ph4 mt4 mb2">
+          <IssueHeader 
+            reporterFirsName={this.state.reported_by.first_name} 
+            reporterLastName={this.state.reported_by.last_name} 
+            reporterPhotoUrl={this.state.reported_by.photo}
+            issueNo={this.state.issue_no}
+            severity={this.state.severity}
+            onClose={this.onClose}
+          />
+          <div className="flex w-100 ph3 mt3 mb2">
             <a
               href="#"
               onClick={this.props.onToggleMode}
@@ -383,7 +380,7 @@ class IssueForm extends React.Component {
       return (
         <React.Fragment>
           <div
-            className="ph4 pv2 bb b--light-gray flex items-center"
+            className="ph3 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
             <h1 className="f4 fw6 ma0 flex flex-auto ttc">Submit an issue</h1>
@@ -535,7 +532,7 @@ class IssueForm extends React.Component {
       <React.Fragment>
         {this.renderTitle()}
 
-        <div className="ph4 mt3 mb3 flex">
+        <div className="ph3 mt3 mb3 flex">
           <div className="w-100">
             <TextInput
               label="Title"
@@ -546,7 +543,7 @@ class IssueForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mb3 flex">
+        <div className="ph3 mb3 flex">
           <div className="w-30">
             <label className="f6 fw6 db mb1 gray ttc">Severity</label>
             <Select
@@ -568,7 +565,7 @@ class IssueForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mb3 flex">
+        <div className="ph3 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Task</label>
             <Select
@@ -583,7 +580,7 @@ class IssueForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mb3 flex">
+        <div className="ph3 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Location</label>
             <Select
@@ -609,7 +606,7 @@ class IssueForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mb3 flex">
+        <div className="ph3 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Assign to</label>
             <UserPicker
@@ -620,7 +617,7 @@ class IssueForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mb3 flex">
+        <div className="ph3 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Details</label>
             <textarea
@@ -632,12 +629,12 @@ class IssueForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mb1 flex">
+        <div className="ph3 mb1 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Attachments</label>
           </div>
         </div>
-        <div className="ph4 mb3 flex">
+        <div className="ph3 mb3 flex">
           <div className="w-100 flex flex-wrap">{this.renderAttachments()}</div>
         </div>
 

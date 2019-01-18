@@ -58,36 +58,33 @@ class CultivationCalendar extends React.Component {
 
   render() {
     const { onClose, totalDuration, phaseDuration } = this.props
-    const { searchMonth } = BatchSetupStore
+    const { searchMonth, isLoading } = BatchSetupStore
     return (
       <div className="flex flex-column h-100">
         <SlidePanelHeader onClose={onClose} title="Batch's Start Date" />
         <div className="flex-auto pa2">
-          <p className="tc">Select a Start Date for the batch</p>
-          {BatchSetupStore.isLoading ? (
-            <div style={{ minHeight: '362px' }}>
-              <span className="dib pa2">Searching...</span>
-            </div>
-          ) : (
-            <React.Fragment>
-              <CalendarTitleBar
-                month={searchMonth}
-                onPrev={e => this.onSearch(monthOptionAdd(searchMonth, -1))}
-                onNext={e => this.onSearch(monthOptionAdd(searchMonth, 1))}
+          <p className="ma1 pa2 tc f4">Select a Start Date for the batch</p>
+          <p className="mt1 mb1 h1 tc">
+            {isLoading && <span>Searching...</span>}
+          </p>
+          <React.Fragment>
+            <CalendarTitleBar
+              month={searchMonth}
+              onPrev={e => this.onSearch(monthOptionAdd(searchMonth, -1))}
+              onNext={e => this.onSearch(monthOptionAdd(searchMonth, 1))}
+            />
+            <Suspense fallback={<div />}>
+              <Calendar
+                activeStartDate={monthStartDate(searchMonth)}
+                className="availabilty-calendar"
+                showNavigation={false}
+                onChange={this.onDatePick}
+                tileContent={({ date, view }) => (
+                  <CapacityTile startDate={date} duration={totalDuration} />
+                )}
               />
-              <Suspense fallback={<div />}>
-                <Calendar
-                  activeStartDate={monthStartDate(searchMonth)}
-                  className="availabilty-calendar"
-                  showNavigation={false}
-                  onChange={this.onDatePick}
-                  tileContent={({ date, view }) => (
-                    <CapacityTile startDate={date} duration={totalDuration} />
-                  )}
-                />
-              </Suspense>
-            </React.Fragment>
-          )}
+            </Suspense>
+          </React.Fragment>
         </div>
         <SlidePanelFooter onSave={this.onSave} />
       </div>

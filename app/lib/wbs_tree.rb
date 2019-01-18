@@ -1,8 +1,8 @@
 class WbsTree
   class << self
     def generate(tasks = [])
-      max_indent = tasks.max_by(&:indent)
-      nodes = Array.new(max_indent.indent * 2, 0)
+      max_indent = [tasks.max_by(&:indent).indent, 1].max
+      nodes = Array.new(max_indent * 2, 0)
       prev_indent = 0
 
       tasks.map do |t|

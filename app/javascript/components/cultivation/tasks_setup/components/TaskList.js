@@ -46,28 +46,11 @@ class TaskList extends React.Component {
   componentDidMount() {
     UserStore.loadUsers(this.props.batch.facility_id)
     // need to find after data react-table is loaded callback
-    setTimeout(() => this.mountEvents(), 100)
+    setTimeout(() => this.mountEvents(), 1000)
   }
 
   closeSidebar = () => {
     window.editorSidebar.close()
-  }
-
-  renderAddButton = row => {
-    if (row.value == true) {
-      return (
-        <div>
-          <i
-            className="material-icons md-600 md-gray md-17 ph2 pointer"
-            onClick={e => {
-              this.handleAddTask(row)
-            }}
-          >
-            add
-          </i>
-        </div>
-      )
-    }
   }
 
   handleEllipsisClick = taskId => e => {
@@ -112,6 +95,14 @@ class TaskList extends React.Component {
     })
   }
 
+  handleAddTask = (taskId, action) => {
+    this.setState({
+      taskAction: action,
+      taskSelected: taskId,
+      showTaskEditor: true
+    })
+  }
+
   handleDelete = async row => {
     if (confirm('Are you sure you want to delete this task? ')) {
       await TaskStore.deleteTask(this.props.batch.id, row.row.id)
@@ -132,10 +123,7 @@ class TaskList extends React.Component {
     const hasChild = TaskStore.hasChildNode(wbs)
     const isCollapsed = TaskStore.isCollapsed(wbs)
     return (
-      <div
-        className="flex flex-auto justify-between items-center h-100 hide-child"
-        draggable={true}
-      >
+      <div className="flex flex-auto justify-between items-center h-100 hide-child">
         <InlineEditTaskNameField
           text={data.value}
           indent={indent}
@@ -217,14 +205,6 @@ class TaskList extends React.Component {
         </Manager>
       </div>
     )
-  }
-
-  handleAddTask = (taskId, action) => {
-    this.setState({
-      taskAction: action,
-      taskSelected: taskId,
-      showTaskEditor: true
-    })
   }
 
   handleReset = () => {
@@ -309,12 +289,14 @@ class TaskList extends React.Component {
     {
       Header: 'WBS',
       accessor: 'wbs',
-      maxWidth: '70',
+      headerClassName: 'f6',
+      width: '85',
       show: this.checkVisibility('wbs')
     },
     {
       Header: 'Tasks',
       accessor: 'name',
+      headerClassName: 'f6',
       maxWidth: '400',
       show: this.checkVisibility('name'),
       Cell: this.renderTaskNameColumn
@@ -322,7 +304,8 @@ class TaskList extends React.Component {
     {
       Header: 'Predecessor',
       accessor: 'depend_on',
-      maxWidth: '100',
+      headerClassName: 'f6',
+      width: '85',
       show: this.checkVisibility('depend_on'),
       Cell: data => {
         const { id, depend_on } = data.row
@@ -350,6 +333,7 @@ class TaskList extends React.Component {
     {
       Header: 'Start Date',
       accessor: 'start_date',
+      headerClassName: 'f6',
       maxWidth: '100',
       className: 'tr',
       show: this.checkVisibility('start_date'),
@@ -369,6 +353,7 @@ class TaskList extends React.Component {
     {
       Header: 'End Date',
       accessor: 'end_date',
+      headerClassName: 'f6',
       maxWidth: '100',
       className: 'tr',
       show: this.checkVisibility('end_date'),
@@ -389,6 +374,7 @@ class TaskList extends React.Component {
     {
       Header: 'Duration',
       accessor: 'duration',
+      headerClassName: 'f6',
       maxWidth: '90',
       className: 'tr',
       show: this.checkVisibility('duration'),
@@ -411,6 +397,7 @@ class TaskList extends React.Component {
     {
       Header: 'Est. Hr',
       accessor: 'estimated_hours',
+      headerClassName: 'f6',
       maxWidth: '100',
       className: 'tr',
       show: this.checkVisibility('estimated_hours'),
@@ -433,6 +420,7 @@ class TaskList extends React.Component {
     {
       Header: 'Est. Cost',
       accessor: 'estimated_cost',
+      headerClassName: 'f6',
       maxWidth: '100',
       className: 'justify-end',
       show: this.checkVisibility('estimated_cost'),
@@ -441,6 +429,7 @@ class TaskList extends React.Component {
     {
       Header: 'Assigned',
       accessor: 'user_ids',
+      headerClassName: 'f6',
       maxWidth: '200',
       className: 'justify-center',
       show: this.checkVisibility('resource_assigned'),
@@ -481,6 +470,7 @@ class TaskList extends React.Component {
     {
       Header: 'Materials',
       accessor: 'items',
+      headerClassName: 'f6',
       maxWidth: '200',
       show: this.checkVisibility('materials'),
       className: 'justify-center',
@@ -581,11 +571,10 @@ class TaskList extends React.Component {
           renderBody={props => (
             <Suspense fallback={<div />}>
               <TaskEditor
-                onClose={() => this.setState({ showTaskEditor: false })}
+                onClose={() => this.setState({ showTaskEditor: false, taskAction: '' })}
                 taskId={this.state.taskSelected}
                 taskAction={this.state.taskAction}
                 batchId={batchId}
-                handleReset={this.handleReset}
               />
             </Suspense>
           )}

@@ -25,7 +25,10 @@ export default class TaskEditor extends React.Component {
   }
 
   onSave = () => {
-    console.log('onSave')
+    const updates = this.editor.getEditingTask()
+    const { batchId, taskId } = this.props
+    TaskStore.editTask(batchId, taskId, updates)
+    this.props.onClose()
   }
 
   render() {

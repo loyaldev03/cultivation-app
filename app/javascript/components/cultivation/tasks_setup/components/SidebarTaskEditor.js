@@ -3,7 +3,7 @@ import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
 import updateTasks from '../actions/updateTask'
 import createTask from '../actions/createTask'
-import { addDays, differenceInCalendarDays, parse } from 'date-fns'
+import { addDays, differenceInCalendarDays } from 'date-fns'
 import ErrorStore from '../stores/ErrorStore'
 
 const GET_DEFAULT_STATE = () => {
@@ -28,8 +28,8 @@ class SidebarTaskEditor extends React.Component {
       this.setState({
         id: task.id,
         name: task.name,
-        start_date: parse(task.start_date),
-        end_date: parse(task.end_date),
+        start_date: task.start_date,
+        end_date: task.end_date,
         duration: task.duration,
         estimated_hours: task.estimated_hours || '',
         task_type: task.task_type,
@@ -37,6 +37,27 @@ class SidebarTaskEditor extends React.Component {
       })
     } else {
       this.setState(GET_DEFAULT_STATE())
+    }
+  }
+
+  getEditingTask() {
+    const {
+      id,
+      name,
+      start_date,
+      end_date,
+      duration,
+      estimated_hours,
+      task_type
+    } = this.state
+    return {
+      id,
+      name,
+      start_date,
+      end_date,
+      duration,
+      estimated_hours,
+      task_type
     }
   }
 
@@ -90,12 +111,11 @@ class SidebarTaskEditor extends React.Component {
       estimated_hours,
       task_type
     } = this.state
-    const { action, batchId, task, relativeTaskId } = this.props
+    const { action, task, relativeTaskId } = this.props
     const changedTask = {
       ...task,
       task_related_id: relativeTaskId,
       action: action,
-      batch_id: batchId,
       name,
       start_date,
       end_date,

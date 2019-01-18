@@ -11,10 +11,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def update
-    update_cmd = Cultivation::UpdateTask.call(
-      task_params,
-      current_user,
-    )
+    update_cmd = Cultivation::UpdateTask.call(current_user, task_params)
     if update_cmd.success?
       render json: TaskSerializer.new(update_cmd.result)
     else

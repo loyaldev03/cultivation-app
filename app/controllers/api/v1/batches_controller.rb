@@ -41,6 +41,7 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   def update_batch
     if params[:action_type] == 'activate'
       update_cmd = Cultivation::UpdateBatchActivate.call(
+        current_user,
         batch_id: params[:batch_id],
         start_date: params[:start_date],
       )

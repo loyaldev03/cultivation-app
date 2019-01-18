@@ -6,8 +6,8 @@ import createTask from '../actions/createTask'
 import { addDays, differenceInCalendarDays } from 'date-fns'
 import ErrorStore from '../stores/ErrorStore'
 
-const GET_DEFAULT_STATE = () => {
-  const today = new Date()
+const GET_DEFAULT_STATE = (start_date = null) => {
+  const today = start_date ? start_date : new Date()
   const tomorrow = addDays(today, 1)
   return {
     id: '',
@@ -23,7 +23,7 @@ const GET_DEFAULT_STATE = () => {
 class SidebarTaskEditor extends React.Component {
   state = GET_DEFAULT_STATE()
 
-  setEditingTask(task) {
+  setEditingTask(task, start_date) {
     if (task) {
       this.setState({
         id: task.id,
@@ -36,7 +36,7 @@ class SidebarTaskEditor extends React.Component {
         haveChildren: task.haveChildren
       })
     } else {
-      this.setState({ ...GET_DEFAULT_STATE() })
+      this.setState({ ...GET_DEFAULT_STATE(start_date) })
     }
   }
 

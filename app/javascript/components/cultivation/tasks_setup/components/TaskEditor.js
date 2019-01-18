@@ -11,11 +11,11 @@ export default class TaskEditor extends React.Component {
       taskAction &&
       (taskId !== prevProps.taskId || taskAction !== prevProps.taskAction)
     ) {
+      const task = TaskStore.getTaskById(taskId)
       if (taskAction === 'update') {
-        const task = TaskStore.getTaskById(taskId)
         this.editor.setEditingTask(task)
       } else {
-        this.editor.setEditingTask(null)
+        this.editor.setEditingTask(null, task.start_date)
       }
     }
   }

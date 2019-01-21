@@ -17,4 +17,13 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
       render json: request_with_errors(command.errors), status: 422
     end
   end
+
+  def archive
+    command = Issues::ArchiveIssue.call(params.to_unsafe_h)
+    if command.success?
+      render json: {}.to_json
+    else
+      render json: {}.to_json, status: 422
+    end
+  end
 end

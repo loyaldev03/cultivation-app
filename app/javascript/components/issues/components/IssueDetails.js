@@ -6,6 +6,7 @@ import Comments from './Comments'
 import currentIssueStore from '../store/CurrentIssueStore'
 import AttachmentThumbnail from './AttachmentThumbnail'
 import AttachmentPopup from './AttachmentPopup'
+import archiveIssue from '../actions/archiveIssue'
 
 class IssueDetails extends Component {
   constructor(props) {
@@ -40,6 +41,24 @@ class IssueDetails extends Component {
 
   toggleEdit = event => {
     this.props.onToggleMode()
+    event.preventDefault()
+  }
+
+  archiveIssue = event => {
+    const id = currentIssueStore.issue.id
+    const archiveConfirmation = window.confirm('Are you sure?')
+
+    if (archiveConfirmation === true) {
+      archiveIssue({ id: id }).then(({ status, data }) => {
+        if (status != 200) {
+          // Do action on failed
+          this.setState({ errors: data.errors })
+        } else {
+          // Do action on success
+        }
+      })
+    }
+
     event.preventDefault()
   }
 
@@ -96,7 +115,11 @@ class IssueDetails extends Component {
             >
               Edit
             </a>
-            <a href="#" className="btn--secondary link f6 pv2 ph3 br2">
+            <a
+              href="#"
+              onClick={this.archiveIssue}
+              className="btn--secondary link f6 pv2 ph3 br2"
+            >
               Archive this issue
             </a>
           </div>

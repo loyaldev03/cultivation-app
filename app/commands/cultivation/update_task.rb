@@ -55,8 +55,9 @@ module Cultivation
       # (or :cure, when :dry not found)
       harvest_phase = Cultivation::Task.
         where(batch_id: batch.id,
-              is_phase: true,
-              :phase.in => [Constants::CONST_DRY,
+              indent: 0,
+              :phase.in => [Constants::CONST_HARVEST,
+                            Constants::CONST_DRY,
                             Constants::CONST_CURE]).first
       # Set batch to active
       batch.is_active = true if @activate_batch

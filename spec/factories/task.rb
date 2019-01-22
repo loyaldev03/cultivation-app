@@ -8,10 +8,5 @@ FactoryBot.define do
     phase { Constants::CONST_CLONE }
     start_date { Time.now }
     end_date { Time.now + duration.to_i.days }
-
-    trait :is_phase do
-      is_phase { true }
-      is_category { false }
-    end
   end
 end

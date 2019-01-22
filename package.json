@@ -13,6 +13,7 @@
     "@uppy/xhr-upload": "^0.29.1",
     "animate.css": "^3.7.0",
     "babel-core": "^6.26.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.5",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",

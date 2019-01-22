@@ -2,99 +2,43 @@ import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { TextInput, NumericInput } from '../../../utils/FormHelpers'
 import createTask from '../actions/createTask'
-import { addDays, differenceInCalendarDays, parse } from 'date-fns'
-import TaskStore from '../stores/NewTaskStore'
+import { addDays, differenceInCalendarDays } from 'date-fns'
 
+const GET_DEFAULT_STATE = (start_date = null) => {
+  const today = start_date ? start_date : new Date()
+  const tomorrow = addDays(today, 1)
+  return {
+    id: '',
+    name: '',
+    start_date: today,
+    end_date: tomorrow,
+    duration: 1,
+    estimated_hours: 0.0,
+    task_type: [],
+    haveChildren: false
+  }
+}
 class SidebarTaskEditor extends React.Component {
-  constructor(props) {
-    super(props)
-    if (props.task) {
-      const {
-        id,
-        name,
-        start_date,
-        end_date,
-        duration,
-        estimated_hours,
-        task_type
-      } = props.task
-      this.state = {
-        id,
-        name,
-        start_date: start_date ? parse(start_date) : '',
-        end_date: end_date ? parse(end_date) : '',
-        duration,
-        estimated_hours: estimated_hours || '',
-        task_type: task_type || [],
-        tabs: 'general'
-      }
+  state = GET_DEFAULT_STATE()
+
+  setEditingTask(task, start_date) {
+    if (task) {
+      this.setState({
+        id: task.id,
+        name: task.name,
+        start_date: task.start_date,
+        end_date: task.end_date,
+        duration: task.duration,
+        estimated_hours: task.estimated_hours || '',
+        task_type: task.task_type,
+        haveChildren: task.haveChildren
+      })
     } else {
-      const today = new Date()
-      const tomorrow = addDays(today, 1)
-      this.state = {
-        id: '',
-        name: '',
-        duration: '',
-        start_date: today,
-        end_date: tomorrow,
-        estimated_hours: '',
-        task_type: [],
-        tabs: 'general'
-      }
+      this.setState({ ...GET_DEFAULT_STATE(start_date) })
     }
   }
 
-  handleChangeText = fieldName => e => {
-    if (fieldName === 'duration') {
-      this.setState({
-        end_date: addDays(this.state.start_date, e.target.value),
-        [fieldName]: e.target.value
-      })
-      return
-    }
-    this.setState({
-      [fieldName]: e.target.value
-    })
-  }
-
-  handleChangeDate = (fieldName, value) => {
-    if (fieldName === 'end_date' && this.state.start_date) {
-      this.setState({
-        duration: differenceInCalendarDays(value, this.state.start_date),
-        [fieldName]: value
-      })
-      return
-    }
-    if (fieldName === 'start_date' && this.state.end_date) {
-      this.setState({
-        duration: differenceInCalendarDays(this.state.start_date, value),
-        [fieldName]: value
-      })
-      return
-    } else {
-      this.setState({ [fieldName]: value })
-    }
-  }
-
-  handleChangeSelect = (value, { action, removedValue }) => {
-    let arr = this.state.assigned_employee
-    switch (action) {
-      case 'select-option':
-        // arr.push(value[0])
-        // console.log(value[0].value)
-        break
-      case 'remove-value':
-        // console.log(removedValue.value)
-        const index = arr.indexOf(removedValue)
-        arr.splice(index, 1)
-        break
-    }
-    this.setState({ assigned_employee: value })
-    // value = orderOptions(value);
-    // this.setState({ value: value });
-  }
-
-  handleSubmit = event => {
+  getEditingTask() {
     const {
       id,
       name,
@@ -104,12 +48,8 @@ class SidebarTaskEditor extends React.Component {
       estimated_hours,
       task_type
     } = this.state
-    const { action, batchId, task, relativeTaskId } = this.props
-    const changedTask = {
-      ...task,
-      task_related_id: relativeTaskId,
-      action: action,
-      batch_id: batchId,
+    return {
+      id,
       name,
       start_date,
       end_date,
@@ -117,11 +57,46 @@ class SidebarTaskEditor extends React.Component {
       estimated_hours,
       task_type
     }
-    if (id) {
-      TaskStore.editTask(batchId, id, changedTask, true)
+  }
+
+  handleChangeText = fieldName => e => {
+    if (fieldName === 'duration') {
+      this.setState({
+        end_date: addDays(this.state.start_date, e.target.value),
+        duration: e.target.value
+      })
     } else {
-      createTask.createTask(changedTask)
+      this.setState({
+        [fieldName]: e.target.value
+      })
     }
+  }
+
+  handleChangeDate = (fieldName, value) => {
+    if (fieldName === 'end_date' && this.state.start_date) {
+      this.setState({
+        end_date: value,
+        duration: differenceInCalendarDays(value, this.state.start_date)
+      })
+    } else if (fieldName === 'start_date' && this.state.end_date) {
+      this.setState({
+        start_date: value,
+        end_date: addDays(value, this.state.duration)
+      })
+    }
+  }
+
+  handleChangeSelect = (value, { action, removedValue }) => {
+    let arr = this.state.assigned_employee
+    switch (action) {
+      case 'select-option':
+        break
+      case 'remove-value':
+        const index = arr.indexOf(removedValue)
+        arr.splice(index, 1)
+        break
+    }
+    this.setState({ assigned_employee: value })
   }
 
   handleChangeCheckbox = fieldName => e => {
@@ -139,8 +114,6 @@ class SidebarTaskEditor extends React.Component {
   }
 
   render() {
-    const { showEstimatedHoursField } = this.props
-    // let errorMessage = ErrorStore.slice()
     const {
       name,
       start_date,
@@ -148,7 +121,7 @@ class SidebarTaskEditor extends React.Component {
       duration,
       estimated_hours,
       actual_hours,
-      task_type,
+      haveChildren,
       errors
     } = this.state
     return (
@@ -165,7 +138,6 @@ class SidebarTaskEditor extends React.Component {
             </label>
           </div>
         </div>
-
         <div className="ph4 mt3 mb3 flex">
           <div className="w-100">
             <TextInput
@@ -207,7 +179,7 @@ class SidebarTaskEditor extends React.Component {
           </div>
         </div>
 
-        {showEstimatedHoursField ? (
+        {!haveChildren ? (
           <div className="ph4 mt3 mb3 flex">
             <div className="w-40">
               <NumericInput
@@ -222,7 +194,7 @@ class SidebarTaskEditor extends React.Component {
           </div>
         ) : null}
 
-        {showEstimatedHoursField ? (
+        {!haveChildren ? (
           <div>
             <hr className="mt3 m b--light-gray w-100" />
 
@@ -288,7 +260,7 @@ class SidebarTaskEditor extends React.Component {
           </div>
         ) : null}
 
-        {!showEstimatedHoursField ? (
+        {!!haveChildren ? (
           <div className="mt3">
             <hr className="mt3 m b--light-gray w-100" />
             <div className="ph4 mt3 mb3">
@@ -323,17 +295,6 @@ class SidebarTaskEditor extends React.Component {
             </div>
           </div>
         ) : null}
-        <div className="w-100 pa4 bt b--light-grey absolute right-0 bottom-0 flex items-center justify-between">
-          <button
-            name="commit"
-            type="submit"
-            value="continue"
-            className="btn btn--primary btn--large"
-            onClick={this.handleSubmit}
-          >
-            Save
-          </button>
-        </div>
       </React.Fragment>
     )
   }

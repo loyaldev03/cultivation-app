@@ -34,6 +34,7 @@ module Cultivation
           end
         end
 
+        Cultivation::UpdateTask.call(@current_user, task_to_indent)
         task_to_indent
       end
     end

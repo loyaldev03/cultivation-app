@@ -75,7 +75,8 @@ class TaskSetup extends React.Component {
     let inactiveTabs =
       'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
     return (
-      <React.Fragment>
+      <div className="pa4 grey flex flex-column h-100">
+        <div id="toast" className="toast animated toast--success" />
         <BatchHeader
           batch_no={batch.batch_no}
           batch_source={batch.batch_source}
@@ -255,19 +256,10 @@ class TaskSetup extends React.Component {
           </Manager>
         </div>
 
-        <div className="flex flex-column justify-between bg-white box--shadow">
-          <div className="pa4">
-            <div className="fl w-100 flex flex-column">
-              <TaskList batch={this.props.batch} columns={this.state.columns} />
-            </div>
-          </div>
+        <div className="pa4 flex flex-column justify-between bg-white box--shadow">
+          <TaskList batch={this.props.batch} columns={this.state.columns} />
         </div>
-
-        <div id="toast" className="toast animated toast--success">
-          Row Saved
-        </div>
-        <br />
-      </React.Fragment>
+      </div>
     )
   }
 }

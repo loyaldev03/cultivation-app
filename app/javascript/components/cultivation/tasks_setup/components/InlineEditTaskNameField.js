@@ -13,7 +13,10 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
       onCollapseClick
     } = this.props
     return (
-      <div className={`pa1 flex flex-auto items-center indent--${indent}`}>
+      <div
+        className={`pa1 flex flex-auto items-center indent--${indent}`}
+        draggable={true}
+      >
         {hasChild ? (
           <i
             className="material-icons dim grey f7 pointer"

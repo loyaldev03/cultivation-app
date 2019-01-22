@@ -5,7 +5,7 @@ module Cultivation
     REFTYPE_CHILDREN = 'children'.freeze
     REFTYPE_DEPENDENT = 'dependent'.freeze
 
-    def initialize(args = nil, current_user = nil, activate_batch = false)
+    def initialize(current_user = nil, args = nil, activate_batch = false)
       @args = args
       @current_user = current_user
       @activate_batch = activate_batch
@@ -23,21 +23,22 @@ module Cultivation
           facility_users = get_facility_users(batch.facility_id)
           # Remember original start_date
           original_start_date = task.start_date
-          # Set batch to active
-          batch.is_active = true if @activate_batch
           # Update task with args and re-calculate end_date
           task = map_args_to_task(task, batch_tasks, @args)
           # Move subtasks's start date & save changes
-          adjust_children_dates(task, batch_tasks, original_start_date)
+          days_diff = (task.start_date - original_start_date) / 1.day
+          adjust_children_dates(task, batch_tasks, days_diff)
           # Update estimated cost
           update_estimated_cost(task, facility_users)
           # Extend / contract parent duration & end_date
           update_parent_cascade(task, batch_tasks)
+          # Cascade changes to root node's siblings
+          update_root_siblings(task, batch_tasks, days_diff)
           # Save if no errors
           task.save! if errors.empty?
           # TODO::ANDY - valid_data when updating tasks
           # Update batch
-          update_batch(batch, batch_tasks&.first)
+          update_batch(batch, batch_tasks&.first, @activate_batch)
         end
       end
       task
@@ -49,7 +50,7 @@ module Cultivation
       User.in(facilities: facility_id).where(is_active: true).to_a
     end
 
-    def update_batch(batch, first_task)
+    def update_batch(batch, first_task, activate_batch)
       # Here we assume estimated harvest date is the start date of :dry phase
       # (or :cure, when :dry not found)
       harvest_phase = Cultivation::Task.
@@ -57,6 +58,8 @@ module Cultivation
               is_phase: true,
               :phase.in => [Constants::CONST_DRY,
                             Constants::CONST_CURE]).first
+      # Set batch to active
+      batch.is_active = true if @activate_batch
       batch.estimated_harvest_date = harvest_phase.start_date if harvest_phase
       batch.start_date = first_task.start_date if first_task.start_date
       batch.save!
@@ -152,22 +155,37 @@ module Cultivation
       end
     end
 
+    def move_task(task, batch_tasks, number_of_days = 0)
+      new_start_date = task.start_date + number_of_days.days
+      task.start_date = decide_start_date(task, batch_tasks, new_start_date)
+      task.duration ||= 1
+      task.end_date = task.start_date + task.duration.days
+    end
+
     def move_children(tasks, batch_tasks, number_of_days = 0)
       if tasks.present? && number_of_days != 0
         tasks.each do |t|
-          new_start_date = t.start_date + number_of_days.days
-          t.start_date = decide_start_date(t, batch_tasks, new_start_date)
-          t.duration ||= 1
-          t.end_date = t.start_date + t.duration.days
+          move_task(t, batch_tasks, number_of_days)
         end
       end
     end
 
-    def adjust_children_dates(task, batch_tasks, original_start_date)
-      days_diff = (task.start_date - original_start_date) / 1.day
+    def adjust_children_dates(task, batch_tasks, days_diff)
       children = task.children(batch_tasks)
       move_children(children, batch_tasks, days_diff)
       children.each(&:save)
+    end
+
+    def update_root_siblings(task, batch_tasks, days_diff)
+      if task.indent.zero?
+        siblings = batch_tasks.select { |t| t.indent.zero? && t.position > task.position }
+        siblings.each do |node|
+          move_task(node, batch_tasks, days_diff)
+          adjust_children_dates(node, batch_tasks, days_diff)
+        end
+        siblings.each(&:save)
+        return
+      end
     end
 
     def sum_children_hours(children, batch_tasks)

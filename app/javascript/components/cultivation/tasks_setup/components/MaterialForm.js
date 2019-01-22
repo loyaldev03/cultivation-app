@@ -163,7 +163,7 @@ export default class MaterialForm extends React.Component {
                           type="text"
                           name="pin"
                           size="2"
-                          style={{height: 30+ 'px'}}
+                          style={{ height: 30 + 'px' }}
                           class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
                           defaultValue={x.quantity}
                           onChange={e =>

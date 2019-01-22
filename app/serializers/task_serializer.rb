@@ -47,38 +47,13 @@ class TaskSerializer
     object.user_ids.map(&:to_s)
   end
 
-  # TODO: Move to UI
   attribute :actual_hours do |object, params|
+    # TODO: TBD
     object.actual_hours
-    # children = params[:tasks].select { |a| a.parent_id == object.id.to_s }
-    # if object.is_phase
-    #   sum = 0.0
-    #   children.each do |child|
-    #     child_children = params[:tasks].select { |a| a.parent_id == child.id.to_s }
-    #     sum += child_children.map { |a| a.actual_hours.to_f }.sum
-    #   end
-    #   '%.2f' % sum
-    # elsif object.is_category
-    #   '%.2f' % children.map { |a| a.actual_hours.to_f }.sum
-    # else
-    #   '%.2f' % object.actual_hours if object.actual_hours
-    # end
   end
 
   attribute :actual_cost do |object, params|
+    # TODO: TBD
     object.actual_cost
-    # children = params[:tasks].select { |a| a.parent_id == object.id.to_s }
-    # if object.is_phase
-    #   sum = 0.0
-    #   children.each do |child|
-    #     child_children = params[:tasks].select { |a| a.parent_id == child.id.to_s }
-    #     sum += child_children.map { |a| a.actual_cost.to_f }.sum
-    #   end
-    #   '%.2f' % sum
-    # elsif object.is_category
-    #   '%.2f' % children.map { |a| a.actual_cost.to_f }.sum
-    # else
-    #   '%.2f' % object.actual_cost if object.actual_cost
-    # end
   end
 end

@@ -81,13 +81,14 @@ class Comments extends React.Component {
   onAddComment = event => {
     addComment({
       issueId: this.props.issueId,
-      message: this.state.newComment
+      message: this.state.newComment,
+      attachments: this.state.attachments,
     }).then(({ status }) => {
       if (status != 200) {
         alert('something wrong')
       } else {
         event.preventDefault()
-        this.setState({ newComment: '' })
+        this.setState({ newComment: '', attachments: [] })
         window.editorSidebar.scrollToBottom()
       }
     })

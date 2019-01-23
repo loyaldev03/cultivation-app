@@ -5,13 +5,13 @@ import currentIssueStore from '../store/CurrentIssueStore'
 const getIssue = issueId => {
   Promise.all([_getIssue(issueId), getComments(issueId)]).then(
     ([issueData, commentsData]) => {
-      console.group('issueData')
-      console.log(issueData)
-      console.groupEnd()
+      // console.group('issueData')
+      // console.log(issueData)
+      // console.groupEnd()
 
-      console.group('commentsData')
-      console.log(commentsData)
-      console.groupEnd()
+      // console.group('commentsData')
+      // console.log(commentsData)
+      // console.groupEnd()
 
       const {
         data: {
@@ -24,9 +24,6 @@ const getIssue = issueId => {
 
       if (issuedStatus === 200 && commentsStatus === 200) {
         comments = commentsData.data.data.map(x => x.attributes)
-        console.log('getIssue success!')
-        console.log(issue)
-        console.log(comments)
         currentIssueStore.setIssue(issue)
         currentIssueStore.setComments(comments)
       }

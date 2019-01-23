@@ -43,6 +43,7 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
   end
 
   def attachment
+    # TODO: return both cache/ url and store/ url
     # Example of calling that works...
     # let resp = await fetch(`/api/v1/issues/1/attachment?key=d5346233691cc77372ed3c3268c98755.png`, httpGetOptions).then(x => x.text())
     link = Shrine.storages[:cache].url(params[:key])

@@ -2,11 +2,9 @@ module.exports = {
     "env": {
         "browser": true,
         "es6": true,
-        "amd": true
     },
     "extends": [
         "eslint:recommended",
-        "plugin:react/recommended"
     ],
     "settings": {
         "react": {
@@ -15,7 +13,7 @@ module.exports = {
         },
     },
     "parserOptions": {
-        "ecmaVersion": 2018,
+        "ecmaVersion": 6,
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
             "jsx": true
@@ -23,7 +21,7 @@ module.exports = {
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
     ],
     "rules": {
         "react/prop-types": 0,

@@ -1,8 +1,7 @@
 import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
+import { TextInput, NumericInput } from '../../../utils/FormHelpers'
 import { addDays, differenceInCalendarDays } from 'date-fns'
-import ErrorStore from '../stores/ErrorStore'
 
 const GET_DEFAULT_STATE = (start_date = null) => {
   const today = start_date ? start_date : new Date()

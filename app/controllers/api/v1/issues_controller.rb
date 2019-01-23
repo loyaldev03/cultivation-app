@@ -19,9 +19,7 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
   end
 
   def add_comment
-    Rails.logger.debug "\t\t\t>>>>>> current_user: #{current_user.inspect}"
     command = Issues::AddComment.call(current_user, params.to_unsafe_h)
-
     if command.success?
       render json: Issues::IssueCommentSerializer.new(command.result).serialized_json
     else
@@ -33,5 +31,14 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
     issue = Issues::Issue.find(params[:id])
     comments = issue ? Issues::Issue.find(params[:id]).comments : []
     render json: Issues::IssueCommentSerializer.new(comments).serialized_json
+  end
+
+  def archive
+    command = Issues::ArchiveIssue.call(params.to_unsafe_h)
+    if command.success?
+      render json: {}.to_json
+    else
+      render json: {}.to_json, status: 422
+    end
   end
 end

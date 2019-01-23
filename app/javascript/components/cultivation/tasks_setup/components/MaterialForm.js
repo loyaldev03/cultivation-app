@@ -154,7 +154,7 @@ export default class MaterialForm extends React.Component {
                   </tr>
                   {materials.map((x, index) => (
                     <tr className="pointer bb" key={index}>
-                      <td className="tl pv2 ph3" width="90%" align="left">
+                      <td className="tl pv2" width="90%" align="left">
                         {x.product_name}
                       </td>
                       <td className="tl pv2 ph3">{x.category}</td>
@@ -162,8 +162,9 @@ export default class MaterialForm extends React.Component {
                         <input
                           type="text"
                           name="pin"
-                          maxLength="4"
-                          size="4"
+                          size="2"
+                          style={{ height: 30 + 'px' }}
+                          class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
                           defaultValue={x.quantity}
                           onChange={e =>
                             this.handleChangeQuantity(

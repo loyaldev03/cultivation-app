@@ -180,11 +180,16 @@ class GanttChart extends React.Component {
     let scrollLeft = el.scrollLeft
     let scrollTop = el.scrollTop
 
-    await TaskStore.updateDependency(
+    let destination_task = TaskStore.getTaskById(destination_id)
+    destination_task.depend_on = source_id
+
+    await TaskStore.editTask(
       this.props.batch_id,
       destination_id,
-      source_id
+      destination_task,
+      true
     )
+
     el.scrollLeft = scrollLeft
     el.scrollTop = scrollTop
   }

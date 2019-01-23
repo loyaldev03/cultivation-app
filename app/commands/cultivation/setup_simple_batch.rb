@@ -124,15 +124,11 @@ module Cultivation
 
       task = batch.tasks.create!(
         phase: phase,
-        task_category: '',
         name: '',
         duration: duration,
         start_date: start_date,
         end_date: start_date + duration.days,
-        days_from_start_date: 0, # should be obsolete??
-        is_phase: true,
-        is_category: false,
-        parent_id: nil,
+        indent: 0,
         depend_on: batch.tasks.last.present? ? batch.tasks.last.id : nil,
       )
 

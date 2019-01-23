@@ -214,7 +214,9 @@ class MotherEditor extends React.Component {
             licenseKey: this.props.scanditLicense,
             targetId: 'scandit-barcode-picker',
             onScan: result => {
-              this.setState({ plant_ids: result + '\n' + this.state.plant_ids })
+              this.setState({
+                plant_ids: result + '\n' + this.state.plant_ids
+              })
               this.resizePlantIDTextArea()
             },
             onReady: () => {

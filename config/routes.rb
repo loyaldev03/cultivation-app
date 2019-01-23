@@ -203,7 +203,6 @@ Rails.application.routes.draw do
           member do
             post 'update_indent'
             post 'update_position'
-            post 'update_dependency'
             get 'locations'
             post 'delete_relationship'
             post 'update_material_use'

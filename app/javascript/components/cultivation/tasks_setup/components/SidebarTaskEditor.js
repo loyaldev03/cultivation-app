@@ -1,7 +1,6 @@
 import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { TextInput, NumericInput } from '../../../utils/FormHelpers'
-import createTask from '../actions/createTask'
 import { addDays, differenceInCalendarDays } from 'date-fns'
 
 const GET_DEFAULT_STATE = (start_date = null) => {

@@ -16,6 +16,7 @@ module Cultivation
     field :is_active, type: Boolean, default: -> { false }
     # This is the mothers' plantId
     field :selected_plants, type: Array, default: []
+    field :status, type: String, default: Constants::BATCH_STATUS_DRAFT
 
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     belongs_to :facility, class_name: 'Facility'
@@ -59,7 +60,7 @@ module Cultivation
     def material_use
       materials = []
       tasks.each do |task|
-        ## BROKEN
+        # FIXME
         # task.material_use.each do |material|
         #   a = materials.find { |b| b.name == material.name }
         #   if a.nil?

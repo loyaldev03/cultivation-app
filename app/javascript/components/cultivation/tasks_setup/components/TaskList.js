@@ -283,10 +283,6 @@ class TaskList extends React.Component {
       show: false
     },
     {
-      accessor: 'parent_id',
-      show: false
-    },
-    {
       Header: 'WBS',
       accessor: 'wbs',
       headerClassName: 'f6',

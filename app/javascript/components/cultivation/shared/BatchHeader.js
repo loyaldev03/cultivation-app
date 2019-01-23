@@ -3,7 +3,8 @@ import {
   formatDate2,
   ActiveBadge,
   moneyFormatter,
-  decimalFormatter
+  decimalFormatter,
+  sanitizeText,
 } from '../../utils'
 
 class BatchHeader extends React.Component {
@@ -26,7 +27,6 @@ class BatchHeader extends React.Component {
       total_estimated_hour,
       estimated_harvest_date
     } = this.props
-    const batchSource = batch_source ? batch_source.replace(/_/g, ' ') : ''
     const batchQuantity = quantity ? quantity : 0
 
     return (
@@ -51,7 +51,7 @@ class BatchHeader extends React.Component {
                     </div>
                     <div className="w-40">
                       <div className="ttc">
-                        <label>{batchSource}</label>
+                        <label>{sanitizeText(batch_source)}</label>
                       </div>
                     </div>
                   </div>
@@ -97,8 +97,8 @@ class BatchHeader extends React.Component {
                       <label>Grow Method</label>
                     </div>
                     <div className="w-40">
-                      <div className="">
-                        <label>{grow_method}</label>
+                      <div className="ttc">
+                        <label>{sanitizeText(grow_method)}</label>
                       </div>
                     </div>
                   </div>

@@ -16,6 +16,13 @@ module Cultivation
     def call
       errors.add(:batch_id, 'batch_id is required') if @batch_id.nil?
       errors.add(:start_date, 'Start Date is required') if @start_date.nil?
+      #validate purchase clone
+      result = Cultivation::ValidatePurchaseClone.call(current_user: @current_user, batch_id: @batch_id)
+      errors.add(:batch_id, result.errors['strain']) unless result.success?
+      #validate seed
+
+      #
+
       if errors.empty?
         first_task = Cultivation::Task.find_by(
           batch_id: @batch_id.to_bson_id,

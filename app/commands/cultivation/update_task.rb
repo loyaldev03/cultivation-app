@@ -106,12 +106,14 @@ module Cultivation
     end
 
     def decide_start_date(task, batch_tasks, args_start_date, args_depend_on = nil)
-      # TODO::ANDY if task is a first child, it should also change the parent start_date
       if args_depend_on.present? && task.depend_on != args_depend_on
         predecessor = batch_tasks.detect { |t| t.id == args_depend_on.to_bson_id }
         if predecessor.present? && !task.child_of?(predecessor.wbs, batch_tasks)
           return predecessor.end_date
         end
+        # TODO::ANDY if dependent task is also a first child,
+        # it should also change the parent start_date. Only do this if user is
+        # changing the depend_on
       end
       parent = task.parent(batch_tasks)
       # First subtask should have same start_date as parent task

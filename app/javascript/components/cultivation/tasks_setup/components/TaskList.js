@@ -88,7 +88,9 @@ class TaskList extends React.Component {
   }
 
   handleShowMaterialForm = (taskId, items) => {
-    this.assignMaterialForm.setSelectedItems(this.props.batch.id, taskId, items)
+    const task = TaskStore.getTaskById(taskId)
+
+    this.assignMaterialForm.setSelectedItems(this.props.batch.id, task, taskId, items)
     this.setState({
       taskSelected: taskId,
       showAssignMaterialPanel: !this.state.showAssignMaterialPanel
@@ -544,6 +546,8 @@ class TaskList extends React.Component {
                   this.setState({ showAssignMaterialPanel: false })
                 }}
                 batch_id={batchId}
+                facility_id={this.props.batch.facility_id}
+                facility_strain_id={this.props.batch.facility_strain_id}
               />
             </Suspense>
           )}

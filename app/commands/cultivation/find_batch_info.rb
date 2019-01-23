@@ -27,6 +27,7 @@ module Cultivation
         batch_no: @batch.batch_no,
         quantity: @batch.quantity,
         facility_id: @batch.facility_id.to_s,
+        facility_strain_id: @batch.facility_strain.id.to_s,
         strain: @batch.facility_strain.strain_name,
         batch_source: @batch.batch_source,
         grow_method: @batch.grow_method,

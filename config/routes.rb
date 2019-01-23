@@ -249,6 +249,11 @@ Rails.application.routes.draw do
         collection do
           get 'by_batch/:batch_id', action: 'by_batch'
         end
+
+        member do
+          post 'add_comment'
+          get 'comments'
+        end
       end
     end
   end

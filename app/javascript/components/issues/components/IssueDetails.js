@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import React, { Component } from 'react'
-
+import { toJS } from 'mobx'
 import Avatar from '../../utils/Avatar'
 import Comments from './Comments'
 import currentIssueStore from '../store/CurrentIssueStore'
@@ -57,7 +57,6 @@ class IssueDetails extends Component {
   }
 
   renderShowMore() {
-    const issue = currentIssueStore.issue
     if (!this.state.showMore) {
       return (
         <div className="flex mt3 mb3">
@@ -167,7 +166,8 @@ class IssueDetails extends Component {
           </div>
         </div>
         <hr className="w-100" />
-        <Comments />
+        
+        <Comments issueId={issue.id} issueNo={issue.issue_no} />
         <AttachmentPopup
           open={this.state.previewOpen}
           key={this.state.previewUrl}

@@ -1,54 +1,8 @@
 import React from 'react'
 import Avatar from '../../utils/Avatar.js'
+import AttachmentThumbnail from './AttachmentThumbnail'
 import { formatDate, formatTime } from '../../utils/DateHelper'
 
-const Preview = ({ url, preview, type, filename = '' }) => {
-  return (
-    <div
-      src="/"
-      mime_type={type}
-      style={{ width: 48, height: 48 }}
-      className="mr1 overflow-hidden relative hover-photo mb1"
-    >
-      <Thumbnail url={url} preview={preview} type={type} filename={filename} />
-      <div
-        className="zoom-btn"
-        style={{ width: 48, height: 48 }}
-        url={url}
-        /* onClick={() => this.onTogglePreview(x.url, x.mime_type)} */
-      >
-        <i className="material-icons absolute">search</i>
-      </div>
-    </div>
-  )
-}
-
-const Thumbnail = ({ url, preview, type, filename }) => {
-  if (type.startsWith('image')) {
-    return (
-      <div
-        style={{
-          width: 48,
-          height: 48,
-          background: `url(${preview}) no-repeat center center`,
-          backgroundSize: 'cover'
-        }}
-      />
-    )
-  } else {
-    return (
-      <div
-        className="gray overflow-hidden f7 bg-white"
-        style={{
-          width: 48,
-          height: 48
-        }}
-      >
-        VID - {filename}
-      </div>
-    )
-  }
-}
 
 const CommentBody = ({
   id,
@@ -87,7 +41,7 @@ const CommentBody = ({
       {attachments.length > 0 && (
         <div className="flex flex-wrap mt2 mb1">
           {attachments.map(props => (
-            <Preview key={`${id}.${props.url}`} {...props} />
+            <AttachmentThumbnail key={`${id}.${props.url}`} {...props} />
           ))}
         </div>
       )}
@@ -121,11 +75,8 @@ const TaskBody = ({ task_url, task_name, quote = '' }) => {
 
 const CommentMessage = ({
   id,
-  sender_first_name,
-  sender_last_name,
-  sender_photo,
-  sender_id,
-  current_user_id,
+  sender,
+  is_me,
   sent_at,
   message,
   resolved = false,
@@ -135,17 +86,16 @@ const CommentMessage = ({
   task_name = '',
   quote = ''
 }) => {
-  const isMe = sender_id === current_user_id
-  const align = isMe ? 'justify-end' : 'justify-start'
+  const align = is_me == true ? 'justify-start' : 'justify-end'
   return (
     <React.Fragment>
       <div className={`ph3 mb3 mt1 flex ${align}`}>
-        <div className={`pt1 mr2 ${isMe && 'dn'}`}>
+        <div className={`pt1 mr2 ${!is_me && 'dn'}`}>
           <Avatar
-            firstName={sender_first_name}
-            lastName={sender_last_name}
+            firstName={sender.first_name}
+            lastName={sender.last_name}
             size={25}
-            photoUrl={sender_photo}
+            photoUrl={sender.photo}
           />
         </div>
         <div style={{ minWidth: '40%', maxWidth: '85%' }}>
@@ -163,17 +113,17 @@ const CommentMessage = ({
           )}
           <div className="fw4 gray" style={{ fontSize: '10px' }}>
             <span className="orange">
-              {sender_first_name} {sender_last_name}
+              {sender.first_name} {sender.last_name}
             </span>
             , {formatDate(sent_at)} {formatTime(sent_at)}
           </div>
         </div>
-        <div className={`pt1 ml2 ${!isMe && 'dn'}`}>
+        <div className={`pt1 ml2 ${is_me && 'dn'}`}>
           <Avatar
-            firstName={sender_first_name}
-            lastName={sender_last_name}
+            firstName={sender.first_name}
+            lastName={sender.last_name}
             size={25}
-            photoUrl={sender_photo}
+            photoUrl={sender.photo}
           />
         </div>
       </div>

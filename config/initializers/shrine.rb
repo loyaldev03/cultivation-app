@@ -17,7 +17,15 @@ s3_public_options = {
   region:            ENV['AWS_REGION']
 }
 
-print "\t\t\t >>>>>>>> AWS_REGION: #{ENV['AWS_REGION']}"
+if Rails.env.development? || Rails.env.test?
+  s3_general_options = s3_public_options = {
+    access_key_id: 'AKIAJ45K32YD37C47NJA',
+    secret_access_key: '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',
+    bucket: 'cannected-dev',
+    region: 'ap-southeast-1',
+  }
+end
+
 
 Shrine.storages = {
   avatar: Shrine::Storage::S3.new(prefix: "avatar", public: true, **s3_public_options),

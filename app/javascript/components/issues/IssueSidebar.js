@@ -19,10 +19,7 @@ class IssueSidebar extends React.Component {
       const mode = event.detail.mode
 
       if (issueId) {
-        getIssue(issueId).then(issue => {
-          console.log(issue.data.data.attributes)
-          currentIssueStore.load(issue.data.data.attributes)
-        })
+        getIssue(issueId)
       } else if (mode === 'create') {
         currentIssueStore.reset()
       }
@@ -56,6 +53,7 @@ class IssueSidebar extends React.Component {
     if (this.state.mode === 'edit') {
       this.setState({ mode: 'details' })
     } else {
+      currentIssueStore.reset()
       window.editorSidebar.close()
     }
   }

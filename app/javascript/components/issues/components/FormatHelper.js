@@ -1,3 +1,8 @@
 export const formatIssueNo = issueNo => {
-  return `#${issueNo.toString().padStart(5, '0')}`
+  console.log(`issueNo: ${issueNo}`)
+  if (issueNo) {
+    return `#${issueNo.toString().padStart(5, '0')}` 
+  } else {
+    ''
+  }
 }

@@ -1,209 +1,185 @@
 import React from 'react'
-import Avatar from '../../utils/Avatar.js'
-import CommentMessage from './CommentMessage'
-class Comments extends React.Component {
-  renderMessages() {
-    const messages = [
-      {
-        id: 1,
-        sender_first_name: 'Tim',
-        sender_last_name: 'K',
-        sender_photo: null,
-        sender_id: 1,
-        current_user_id: 2,
-        sent_at: new Date('01 Jan 1970 00:00:00 GMT'),
-        message: 'Seems like we have an issue.',
-        quote: '',
-        resolved: false
-      },
-      {
-        id: 2,
-        sender_first_name: 'Sample',
-        sender_last_name: 'User',
-        sender_photo: null,
-        sender_id: 2,
-        current_user_id: 2,
-        sent_at: new Date('01 Jan 1970 00:00:00 GMT'),
-        message: 'Yes it seems to be so...',
-        quote: '',
-        resolved: false
-      },
-      {
-        id: 3,
-        sender_first_name: 'Tim',
-        sender_last_name: 'K',
-        sender_photo: null,
-        sender_id: 1,
-        current_user_id: 2,
-        sent_at: new Date('01 Jan 1970 00:00:00 GMT'),
-        message: 'Gonna call Mike.',
-        quote: 'Yes it seems to be so...',
-        resolved: false
-      },
-      {
-        id: 4,
-        sender_first_name: 'Tim',
-        sender_last_name: 'K',
-        sender_photo: null,
-        sender_id: 1,
-        current_user_id: 2,
-        sent_at: new Date('01 Jan 1970 00:00:00 GMT'),
-        message:
-          'As you can see above, the stateless component is just a function. Thus, all the annoying and confusing quirks with Javascript’s this keyword are avoided. The entire component becomes easier to understand without the this keyword.',
-        resolved: false
-      },
-      {
-        id: 5,
-        sender_first_name: 'Sample',
-        sender_last_name: 'User',
-        sender_photo: null,
-        sender_id: 2,
-        current_user_id: 2,
-        sent_at: new Date('01 Jan 1970 00:00:00 GMT'),
-        message: 'Captured some picture as ref.',
-        quote: 'Yes it seems to be so...',
-        attachments: [
-          {
-            url: 'https://picsum.photos/300/200',
-            preview: 'https://picsum.photos/300/200',
-            type: 'image/png'
-          },
-          {
-            url: 'https://picsum.photos/300/201',
-            preview: 'https://picsum.photos/300/201',
-            type: 'image/png'
-          }
-        ],
-        resolved: false
-      },
-      {
-        id: 6,
-        sender_first_name: 'Sample',
-        sender_last_name: 'User',
-        sender_photo: null,
-        sender_id: 2,
-        current_user_id: 2,
-        sent_at: new Date('01 Jan 1970 00:00:00 GMT'),
-        message: 'and some more...',
-        attachments: [
-          {
-            url: 'https://picsum.photos/300/200',
-            preview: 'https://picsum.photos/300/200',
-            type: 'image/png'
-          },
-          {
-            url: 'https://picsum.photos/301/201',
-            preview: 'https://picsum.photos/301/201',
-            type: 'image/png'
-          },
-          {
-            url: 'https://picsum.photos/302/202',
-            preview: 'https://picsum.photos/302/202',
-            type: 'image/png'
-          },
-          {
-            url: 'https://picsum.photos/303/200',
-            preview: 'https://picsum.photos/303/200',
-            type: 'image/png'
-          },
-          {
-            url: 'https://picsum.photos/304/201',
-            preview: 'https://picsum.photos/304/201',
-            type: 'image/png'
-          },
-          {
-            url: 'https://picsum.photos/305/202',
-            preview: 'https://picsum.photos/305/202',
-            type: 'image/png'
-          },
-          {
-            url: 'https://picsum.photos/306/200',
-            preview: 'https://picsum.photos/306/200',
-            type: 'image/png'
-          },
-          {
-            url: 'https://picsum.photos/307/201',
-            preview: 'https://picsum.photos/307/201',
-            type: 'image/png'
-          },
-          {
-            url: 'https://picsum.photos/307/202',
-            preview: 'https://picsum.photos/307/202',
-            type: 'video/mp4',
-            filename: 'axx111yy'
-          },
-          {
-            url: 'https://picsum.photos/308/203',
-            preview: 'https://picsum.photos/308/203',
-            type: 'image/png'
-          }
-        ],
-        resolved: false
-      },
-      {
-        id: 7,
-        sender_first_name: 'Tim',
-        sender_last_name: 'K',
-        sender_photo: null,
-        sender_id: 1,
-        current_user_id: 2,
-        sent_at: new Date('01 Jan 1970 00:00:00 GMT'),
-        message: 'I got this.',
-        task_url: 'http://google.com',
-        task_name: 'Call Mike for inspection and remedial',
-        quote: 'Captured some picture as ref.'
-      },
-      {
-        id: 8,
-        sender_first_name: 'Tim',
-        sender_last_name: 'K',
-        sender_photo: null,
-        sender_id: 1,
-        current_user_id: 2,
-        sent_at: new Date('01 Jan 1970 00:00:00 GMT'),
-        message: 'Done',
-        resolved: true,
-        reason: 'Insufficient material'
-      }
-    ].map(x => <CommentMessage key={x.id} {...x} />)
+import { observer } from 'mobx-react'
+import DashboardModal from '@uppy/react/lib/DashboardModal'
+import '@uppy/core/dist/style.css'
+import '@uppy/dashboard/dist/style.css'
+import '@uppy/webcam/dist/style.css'
+import setupUppy from './setupUppy'
 
-    return messages
+// import { toJS } from 'mobx'
+
+import Avatar from '../../utils/Avatar.js'
+import currentIssueStore from '../store/CurrentIssueStore'
+import CommentMessage from './CommentMessage'
+import AttachmentThumbnail from './AttachmentThumbnail'
+import { formatIssueNo } from './FormatHelper'
+import currentIssue from '../store/CurrentIssueStore';
+import addComment from '../actions/addComment';
+
+@observer
+class Comments extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = this.resetState()
+    this.newCommentText = React.createRef()
+    this.uppy = setupUppy(this.onUppyComplete)
+  }
+
+  resetState() {
+    return ({
+      newComment: '',
+      attachments: [],
+      uppyOpen: false,
+    })
+  }
+
+  onUppyComplete = result => { 
+    if (result.successful) {
+      let attachments = this.state.attachments
+      const newAttachments = result.successful.map(file => {
+        return {
+          id: '',
+          key: file.meta.key,
+          filename: file.meta.name,
+          url: file.preview,
+          mime_type: file.type,
+          data: JSON.stringify({
+            id: file.meta.key.match(/^cache\/(.+)/)[1],
+            storage: 'cache',
+            metadata: {
+              size: file.size,
+              filename: file.name,
+              mime_type: file.type
+            }
+          })
+        }
+      })
+      attachments = [...attachments, ...newAttachments]
+      this.setState({ attachments })
+    }
+  }
+
+  onUppyOpen = () => {
+    window.editorSidebar.scrollToTop()
+    this.setState({ uppyOpen: !this.state.uppyOpen })
+  }
+
+  onUppyClose = () => {
+    this.setState({ uppyOpen: false })
+    this.uppy.reset()
+  }
+
+
+  onChangeNewComment = event => {
+    this.setState({
+      newComment: event.target.value
+    }, this.resizeCommentText)
+  }
+
+  onAddComment = event => {
+    addComment({
+      issueId: this.props.issueId, 
+      message: this.state.newComment
+    }).then(({ status }) => {
+      if (status != 200) {
+        alert('something wrong')
+      } else {
+        event.preventDefault()
+        this.setState({ newComment: '' })
+        window.editorSidebar.scrollToBottom()
+      }
+    })
+  }
+
+  resizeCommentText = () => {
+    // Reset field height
+    const field = this.newCommentText.current
+    field.style.height = 'inherit'
+
+    // Get the computed styles for the element
+    const computed = window.getComputedStyle(field)
+
+    // Calculate the height
+    let height =
+      parseInt(computed.getPropertyValue('border-top-width'), 10) +
+      parseInt(computed.getPropertyValue('padding-top'), 10) +
+      field.scrollHeight +
+      parseInt(computed.getPropertyValue('padding-bottom'), 10) +
+      parseInt(computed.getPropertyValue('border-bottom-width'), 10)
+
+    if (height <= 24) {
+      height = 25
+    }
+
+    field.style.height = height + 'px'
+  }
+
+  renderAttachments() {
+    if (this.state.attachments.length === 0) {
+      return null
+    }
+
+    const attachments = this.state.attachments.map(x => {
+      return (
+        <AttachmentThumbnail
+          key={x.key}
+          id={x.key}
+          url={x.url}
+          preview={x.url}
+          type={x.mime_type}
+          filename=""
+          onClick={() => this.onTogglePreview(x.url, x.mime_type)}
+          showDelete={true}
+          onDelete={() => this.onDeleteAttachment(x.key)}
+        />
+      )
+    })
+
+    return (
+      <div className="mt2 flex flex-auto">
+        {attachments}
+      </div>
+    )
   }
 
   render() {
     return (
       <React.Fragment>
         <div className="flex ph3 pb3 items-center mt3">
-          <div className="f7 fw6 gray w-auto mr1">ISSUE #001</div>
+          <div className="f7 fw6 gray w-auto mr1">ISSUE {formatIssueNo(this.props.issueNo)}</div>
           <div className="f7 fw6 gray w-auto mr1 self-start">&bull;</div>
           <div className="f7 fw6 gray w-auto">Discussion</div>
         </div>
-        {this.renderMessages()}
-        <div className="ph3 mv3">
-          <div className="b--black-10 flex br3 ba w-100 ph2 pt1 pb2 flex items-center">
+        { currentIssue.comments && currentIssue.comments.map(x => <CommentMessage key={x.id} {...x} />) }
+        <div className="ph3 mt3 mb4">
+          <div className="b--black-10 flex br3 ba w-100 ph2 pt1 pb2 flex items-start">
             <Avatar firstName="Sample" lastName="User" size={25} />
-            <textarea
-              type="text"
-              className="bn flex-auto flex ml1 f6 dark-grey outline-0"
-              rows="1"
-            />
-            <a href="#" className="ml1">
+            <div className="flex flex-column flex-auto ml2">
+              <textarea
+                ref={this.newCommentText}
+                type="text"
+                className="bn flex-auto flex f6 dark-grey outline-0"
+                style={{resize: 'none', paddingTop: '4px'}}
+                rows="1"
+                value={this.state.newComment}
+                onChange={this.onChangeNewComment}
+              />
+              { this.renderAttachments()}
+            </div>
+            
+            <a href="#" onClick={this.onUppyOpen} className="flex items-center link self-end" style={{ height: '25px' }}>
               <span
                 className="material-icons black-30 f6 v-mid"
-                style={{ fontSize: '18px' }}
-              >
-                attach_file
-              </span>
-            </a>
-            <a href="#" className="ml1">
-              <span
-                className="material-icons black-30 f6 v-mid"
-                style={{ fontSize: '18px' }}
+                style={{ fontSize: '22px' }}
               >
                 add
               </span>
             </a>
-            <a href="#" className="ml1">
+            <a href="#" 
+              className="ml1 flex items-center link self-end" 
+              style={{ height: '25px' }}
+              onClick={this.onAddComment}
+              >
               <span
                 className="material-icons black-30 f6 v-mid"
                 style={{ fontSize: '18px' }}
@@ -213,7 +189,14 @@ class Comments extends React.Component {
             </a>
           </div>
         </div>
-        <div />
+        <DashboardModal
+          uppy={this.uppy}
+          closeModalOnClickOutside
+          open={this.state.uppyOpen}
+          onRequestClose={this.onUppyClose}
+          proudlyDisplayPoweredByUppy={false}
+          plugins={['Webcam', 'Dropbox', 'AwsS3']}
+        />
       </React.Fragment>
     )
   }

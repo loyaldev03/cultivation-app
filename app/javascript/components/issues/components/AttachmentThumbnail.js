@@ -29,7 +29,7 @@ const AttachmentThumbnail = ({
         className="zoom-btn"
         style={{ width: 50, height: 50 }}
         url={url}
-        onClick={() => onClick(url, type)}
+        onClick={() => onClick(url, type, filename)}
       >
         <i className="material-icons absolute">search</i>
       </div>

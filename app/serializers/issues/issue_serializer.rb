@@ -26,11 +26,7 @@ module Issues
     end
 
     attribute :attachments do |object|
-      nil
-    end
-
-    attribute :comments do |object|
-      nil
+      []
     end
 
     attribute :cultivation_batch do |object|

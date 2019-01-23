@@ -2,14 +2,11 @@ import 'babel-polyfill'
 
 import React from 'react'
 import Select from 'react-select'
-import Uppy from '@uppy/core'
 import DashboardModal from '@uppy/react/lib/DashboardModal'
-import Webcam from '@uppy/webcam'
-import Dropbox from '@uppy/dropbox'
-import AwsS3 from '@uppy/aws-s3'
 import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
+import setupUppy from './setupUppy'
 
 import { TextInput } from '../../utils/FormHelpers'
 import reactSelectStyle from '../../utils/reactSelectStyle'
@@ -44,53 +41,8 @@ class IssueForm extends React.Component {
       users: [],
       locations: []
     }
-    this.setupUppy()
+    this.uppy = setupUppy(this.onUppyComplete)
     this.descriptionInput = React.createRef()
-  }
-
-  setupUppy() {
-    this.uppy = Uppy({
-      meta: { type: 'avatar' },
-      restrictions: { maxNumberOfFiles: 1 },
-      autoProceed: true
-    })
-
-    this.uppy.use(Webcam)
-    this.uppy.use(Dropbox, {
-      serverUrl: location.protocol + '//' + location.host
-    })
-
-    this.uppy.use(AwsS3, {
-      serverUrl: location.protocol + '//' + location.host
-    })
-
-    this.uppy.on('complete', result => {
-      // console.log(result)
-
-      if (result.successful) {
-        let attachments = this.state.attachments
-        const newAttachments = result.successful.map(file => {
-          return {
-            id: '',
-            key: file.meta.key,
-            filename: file.meta.name,
-            url: file.preview,
-            mime_type: file.type,
-            data: JSON.stringify({
-              id: file.meta.key.match(/^cache\/(.+)/)[1],
-              storage: 'cache',
-              metadata: {
-                size: file.size,
-                filename: file.name,
-                mime_type: file.type
-              }
-            })
-          }
-        })
-        attachments = [...attachments, ...newAttachments]
-        this.setState({ attachments })
-      }
-    })
   }
 
   componentDidMount() {
@@ -175,6 +127,34 @@ class IssueForm extends React.Component {
       errors: {}
     }
   }
+
+
+  onUppyComplete = result => {
+    if (result.successful) {
+     let attachments = this.state.attachments
+     const newAttachments = result.successful.map(file => {
+       return {
+         id: '',
+         key: file.meta.key,
+         filename: file.meta.name,
+         url: file.preview,
+         mime_type: file.type,
+         data: JSON.stringify({
+           id: file.meta.key.match(/^cache\/(.+)/)[1],
+           storage: 'cache',
+           metadata: {
+             size: file.size,
+             filename: file.name,
+             mime_type: file.type
+           }
+         })
+       }
+     })
+     attachments = [...attachments, ...newAttachments]
+     this.setState({ attachments })
+   }
+ }
+
 
   onUppyOpen = () => {
     window.editorSidebar.scrollToTop()
@@ -330,7 +310,7 @@ class IssueForm extends React.Component {
     }
   }
 
-  onTogglePreview = (url = '', type = '') => {
+  onTogglePreview = (url = '', type = '', filename) => {
     this.setState({
       previewOpen: !this.state.previewOpen,
       previewUrl: url,
@@ -380,7 +360,6 @@ class IssueForm extends React.Component {
   }
 
   renderAttachments() {
-    // console.log(this.state.attachments)
     const attachments = this.state.attachments.map(x => {
       return (
         <AttachmentThumbnail
@@ -407,7 +386,7 @@ class IssueForm extends React.Component {
           className="bg-black-20 white flex justify-center items-center link"
           onClick={this.onUppyOpen}
         >
-          <i className="material-icons white f3">attach_file</i>
+          <i className="material-icons white f3">add</i>
         </a>
       </React.Fragment>
     )
@@ -567,7 +546,6 @@ class IssueForm extends React.Component {
           uppy={this.uppy}
           closeModalOnClickOutside
           open={this.state.uppyOpen}
-          allowMultipleUploads={true}
           onRequestClose={this.onUppyClose}
           proudlyDisplayPoweredByUppy={false}
           plugins={['Webcam', 'Dropbox', 'AwsS3']}

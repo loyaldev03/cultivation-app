@@ -8,7 +8,7 @@ FactoryBot.define do
     start_date { Time.now }
     end_date { Time.now + 10.days }
     capacity { 1 }
-    batch { build(:batch) }
+    batch
 
     trait :clone do
       phase { Constants::CONST_CLONE }

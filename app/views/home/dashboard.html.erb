@@ -5,40 +5,6 @@
 <div class="ma4 bg-white">
   <div class="w-100 fl">
     <h2 class="mt3 ml4 dib">Cultivation Schedules</h2>
-    <div class="ba b--light-gray pa4 bg-white">
-      <table class="ba br2 b--black-10 pv2 ph3 f6">
-        <thead>
-          <tr>
-            <th class="w5 pv2 ph3 tl ttu">Batch ID</th>
-            <th class="w4 tr ph3 ttu">Start Date</th>
-            <th class="w4 tr ph3 ttu">Estimated Harvest Date</th>
-            <th class="w4 tr ph3 ttu">Active</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @dashboard.cultivation_batches.each do |batch| %>
-            <tr class="striped--light-gray dim">
-              <td class="pv2 ph3 tl ttu">
-                <%= link_to batch.batch_no, cultivation_batch_path(batch.id), class: "link pa1 dib" %>
-              </td>
-              <td class="tr pv2 ph3">
-                <%= batch.start_date.try(:strftime, '%m/%d/%Y') %>
-              </td>
-              <td class="tr pv2 ph3">
-                <%= batch.estimated_harvest_date.try(:strftime, '%m/%d/%Y') %>
-              </td>
-              <td class="tr pv2 ph3">
-                <%= batch.is_active? ? 'Active' : 'Inactive' %>
-              </td>
-              <td>
-                <%= link_to 'DELETE',  batch,  method: :delete, data: { confirm: 'Are you sure?' }, class: "pv2 link ph3" %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
   </div>
 
   <div class="w-50 fl">

@@ -4,6 +4,10 @@ export const isEmptyString = str =>
 export const safeDisplay = (str, fallback = '-') =>
   isEmptyString(str) ? fallback : str
 
+const sanitizeText = text => (
+  text ? text.replace(/_/g, ' ') : ''
+)
+
 const decimalFormatter = new Intl.NumberFormat('en', {
   minimumFractionDigits: 2
 })
@@ -14,4 +18,4 @@ const moneyFormatter = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 2
 })
 
-export { decimalFormatter, moneyFormatter }
+export { decimalFormatter, moneyFormatter, sanitizeText }

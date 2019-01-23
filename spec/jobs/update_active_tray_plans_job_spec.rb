@@ -31,7 +31,7 @@ RSpec.describe UpdateActiveTrayPlansJob, type: :job do
   end
   let(:facility_strain) { build(:facility_strain) }
   let(:batch) do
-    create(:batch,
+    create(:batch, :active,
             facility_id: facility.id,
             facility_strain: facility_strain,
             start_date: Time.strptime("2018/08/01", DATE_FORMAT),

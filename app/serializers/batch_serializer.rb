@@ -1,7 +1,7 @@
 # TODO: Change to harvest batch serializer
 class BatchSerializer
   include FastJsonapi::ObjectSerializer
-  attributes :name, :batch_source, :batch_no, :is_active, :start_date, :grow_method, :current_growth_stage, :estimated_harvest_date
+  attributes :name, :batch_source, :batch_no, :status, :start_date, :grow_method, :current_growth_stage, :estimated_harvest_date
   has_many :tasks, if: Proc.new { |record, params| params.nil? || params[:exclude_tasks] != true }
 
   attribute :facility do |object|

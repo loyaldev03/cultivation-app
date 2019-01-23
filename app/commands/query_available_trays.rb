@@ -113,11 +113,11 @@ class QueryAvailableTrays
             as: 'batch',
           }},
           {"$addFields": {"batch": {"$arrayElemAt": ['$batch', 0]}}},
-          {"$project": {batch_active: '$batch.is_active', capacity: 1, start_date: 1, end_date: 1}},
+          {"$project": {batch_status: '$batch.status', capacity: 1, start_date: 1, end_date: 1}},
           {"$match": {
             "$expr": {
               "$and": [
-                {"$eq": ['$batch_active', true]},
+                {"$ne": ['$batch_status', Constants::BATCH_STATUS_DRAFT]},
               ],
             },
           }},

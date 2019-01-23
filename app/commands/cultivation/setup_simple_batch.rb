@@ -97,10 +97,10 @@ module Cultivation
         start_date: start_date,
         estimated_harvest_date: estimated_harvest_date,
         facility_strain: facility_strain,
-        facility_id: facility_strain.facility_id,  # should be obsolete?
+        facility_id: facility_strain.facility_id,
         grow_method: grow_method,
         current_growth_stage: current_growth_stage,
-        is_active: false,
+        status: Constants::BATCH_STATUS_SCHEDULED,
       )
       add_tasks(batch)
       batch

@@ -4,7 +4,10 @@ import { httpPostOptions } from '../../utils'
 const addComment = payload => {
   // console.log('current issue addComment')
 
-  return fetch(`/api/v1/issues/${payload.issueId}/add_comment`, httpPostOptions(payload))
+  return fetch(
+    `/api/v1/issues/${payload.issueId}/add_comment`,
+    httpPostOptions(payload)
+  )
     .then(response => {
       return response.json().then(data => ({
         status: response.status,

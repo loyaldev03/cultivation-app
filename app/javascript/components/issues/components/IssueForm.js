@@ -128,33 +128,31 @@ class IssueForm extends React.Component {
     }
   }
 
-
   onUppyComplete = result => {
     if (result.successful) {
-     let attachments = this.state.attachments
-     const newAttachments = result.successful.map(file => {
-       return {
-         id: '',
-         key: file.meta.key,
-         filename: file.meta.name,
-         url: file.preview,
-         mime_type: file.type,
-         data: JSON.stringify({
-           id: file.meta.key.match(/^cache\/(.+)/)[1],
-           storage: 'cache',
-           metadata: {
-             size: file.size,
-             filename: file.name,
-             mime_type: file.type
-           }
-         })
-       }
-     })
-     attachments = [...attachments, ...newAttachments]
-     this.setState({ attachments })
-   }
- }
-
+      let attachments = this.state.attachments
+      const newAttachments = result.successful.map(file => {
+        return {
+          id: '',
+          key: file.meta.key,
+          filename: file.meta.name,
+          url: file.preview,
+          mime_type: file.type,
+          data: JSON.stringify({
+            id: file.meta.key.match(/^cache\/(.+)/)[1],
+            storage: 'cache',
+            metadata: {
+              size: file.size,
+              filename: file.name,
+              mime_type: file.type
+            }
+          })
+        }
+      })
+      attachments = [...attachments, ...newAttachments]
+      this.setState({ attachments })
+    }
+  }
 
   onUppyOpen = () => {
     window.editorSidebar.scrollToTop()

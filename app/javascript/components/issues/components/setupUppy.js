@@ -6,7 +6,11 @@ import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
 
-const setupUppy = (onComplete = (result) => { result }) => {
+const setupUppy = (
+  onComplete = result => {
+    result
+  }
+) => {
   const uppy = Uppy({
     autoProceed: true,
     allowMultipleUploads: false,

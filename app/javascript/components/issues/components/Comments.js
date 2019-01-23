@@ -13,8 +13,8 @@ import currentIssueStore from '../store/CurrentIssueStore'
 import CommentMessage from './CommentMessage'
 import AttachmentThumbnail from './AttachmentThumbnail'
 import { formatIssueNo } from './FormatHelper'
-import currentIssue from '../store/CurrentIssueStore';
-import addComment from '../actions/addComment';
+import currentIssue from '../store/CurrentIssueStore'
+import addComment from '../actions/addComment'
 
 @observer
 class Comments extends React.Component {
@@ -26,14 +26,14 @@ class Comments extends React.Component {
   }
 
   resetState() {
-    return ({
+    return {
       newComment: '',
       attachments: [],
-      uppyOpen: false,
-    })
+      uppyOpen: false
+    }
   }
 
-  onUppyComplete = result => { 
+  onUppyComplete = result => {
     if (result.successful) {
       let attachments = this.state.attachments
       const newAttachments = result.successful.map(file => {
@@ -69,16 +69,18 @@ class Comments extends React.Component {
     this.uppy.reset()
   }
 
-
   onChangeNewComment = event => {
-    this.setState({
-      newComment: event.target.value
-    }, this.resizeCommentText)
+    this.setState(
+      {
+        newComment: event.target.value
+      },
+      this.resizeCommentText
+    )
   }
 
   onAddComment = event => {
     addComment({
-      issueId: this.props.issueId, 
+      issueId: this.props.issueId,
       message: this.state.newComment
     }).then(({ status }) => {
       if (status != 200) {
@@ -135,22 +137,21 @@ class Comments extends React.Component {
       )
     })
 
-    return (
-      <div className="mt2 flex flex-auto">
-        {attachments}
-      </div>
-    )
+    return <div className="mt2 flex flex-auto">{attachments}</div>
   }
 
   render() {
     return (
       <React.Fragment>
         <div className="flex ph3 pb3 items-center mt3">
-          <div className="f7 fw6 gray w-auto mr1">ISSUE {formatIssueNo(this.props.issueNo)}</div>
+          <div className="f7 fw6 gray w-auto mr1">
+            ISSUE {formatIssueNo(this.props.issueNo)}
+          </div>
           <div className="f7 fw6 gray w-auto mr1 self-start">&bull;</div>
           <div className="f7 fw6 gray w-auto">Discussion</div>
         </div>
-        { currentIssue.comments && currentIssue.comments.map(x => <CommentMessage key={x.id} {...x} />) }
+        {currentIssue.comments &&
+          currentIssue.comments.map(x => <CommentMessage key={x.id} {...x} />)}
         <div className="ph3 mt3 mb4">
           <div className="b--black-10 flex br3 ba w-100 ph2 pt1 pb2 flex items-start">
             <Avatar firstName="Sample" lastName="User" size={25} />
@@ -159,15 +160,20 @@ class Comments extends React.Component {
                 ref={this.newCommentText}
                 type="text"
                 className="bn flex-auto flex f6 dark-grey outline-0"
-                style={{resize: 'none', paddingTop: '4px'}}
+                style={{ resize: 'none', paddingTop: '4px' }}
                 rows="1"
                 value={this.state.newComment}
                 onChange={this.onChangeNewComment}
               />
-              { this.renderAttachments()}
+              {this.renderAttachments()}
             </div>
-            
-            <a href="#" onClick={this.onUppyOpen} className="flex items-center link self-end" style={{ height: '25px' }}>
+
+            <a
+              href="#"
+              onClick={this.onUppyOpen}
+              className="flex items-center link self-end"
+              style={{ height: '25px' }}
+            >
               <span
                 className="material-icons black-30 f6 v-mid"
                 style={{ fontSize: '22px' }}
@@ -175,11 +181,12 @@ class Comments extends React.Component {
                 add
               </span>
             </a>
-            <a href="#" 
-              className="ml1 flex items-center link self-end" 
+            <a
+              href="#"
+              className="ml1 flex items-center link self-end"
               style={{ height: '25px' }}
               onClick={this.onAddComment}
-              >
+            >
               <span
                 className="material-icons black-30 f6 v-mid"
                 style={{ fontSize: '18px' }}

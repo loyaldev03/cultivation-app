@@ -166,7 +166,7 @@ class IssueDetails extends Component {
           </div>
         </div>
         <hr className="w-100" />
-        
+
         <Comments issueId={issue.id} issueNo={issue.issue_no} />
         <AttachmentPopup
           open={this.state.previewOpen}

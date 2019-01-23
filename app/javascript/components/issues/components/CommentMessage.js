@@ -3,7 +3,6 @@ import Avatar from '../../utils/Avatar.js'
 import AttachmentThumbnail from './AttachmentThumbnail'
 import { formatDate, formatTime } from '../../utils/DateHelper'
 
-
 const CommentBody = ({
   id,
   message,

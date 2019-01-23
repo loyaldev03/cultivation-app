@@ -3,35 +3,36 @@ import getComments from './getComments'
 import currentIssueStore from '../store/CurrentIssueStore'
 
 const getIssue = issueId => {
-  Promise.all([
-    _getIssue(issueId),
-    getComments(issueId)
-  ]).then(([issueData, commentsData]) => {
+  Promise.all([_getIssue(issueId), getComments(issueId)]).then(
+    ([issueData, commentsData]) => {
+      console.group('issueData')
+      console.log(issueData)
+      console.groupEnd()
 
-    console.group('issueData')
-    console.log(issueData)
-    console.groupEnd()
+      console.group('commentsData')
+      console.log(commentsData)
+      console.groupEnd()
 
-    console.group('commentsData')
-    console.log(commentsData)
-    console.groupEnd()
+      const {
+        data: {
+          data: { attributes: issue }
+        },
+        status: issuedStatus
+      } = issueData
+      let commentsStatus = commentsData.status
+      let comments = []
 
-    const { data: { data: { attributes: issue } }, status: issuedStatus } = issueData
-    let commentsStatus = commentsData.status
-    let comments = []
-    
-
-    if (issuedStatus === 200 && commentsStatus === 200) {
-      comments = commentsData.data.data.map(x => x.attributes)
-      console.log('getIssue success!')
-      console.log(issue)
-      console.log(comments)
-      currentIssueStore.setIssue(issue)
-      currentIssueStore.setComments(comments)
+      if (issuedStatus === 200 && commentsStatus === 200) {
+        comments = commentsData.data.data.map(x => x.attributes)
+        console.log('getIssue success!')
+        console.log(issue)
+        console.log(comments)
+        currentIssueStore.setIssue(issue)
+        currentIssueStore.setComments(comments)
+      }
     }
-  })
+  )
 }
-
 
 const _getIssue = issueId => {
   return fetch(`/api/v1/issues/${issueId}`, httpGetOptions).then(response => {

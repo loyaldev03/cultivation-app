@@ -61,7 +61,7 @@ class EditorSidebarHandler {
   }
 
   scrollToBottom() {
-    this.sidebarNode.scrollTop = this.sidebarNode.scrollHeight;
+    this.sidebarNode.scrollTop = this.sidebarNode.scrollHeight
   }
 }
 

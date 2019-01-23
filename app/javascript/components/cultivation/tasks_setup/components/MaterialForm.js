@@ -27,10 +27,14 @@ export default class MaterialForm extends React.Component {
       materials: [],
       items: []
     }
-    this.loadProducts(this.state.batch_id, this.state.facility_id, this.state.facility_strain_id)
+    this.loadProducts(
+      this.state.batch_id,
+      this.state.facility_id,
+      this.state.facility_strain_id
+    )
   }
 
-  loadProducts = async (batch_id, facility_id, facility_strain_id)=> {
+  loadProducts = async (batch_id, facility_id, facility_strain_id) => {
     let url = `/api/v1/products?batch_id=${batch_id}`
     let response = await (await fetch(url, httpGetOptions)).json()
     const products = response.data.map(x => ({
@@ -39,7 +43,6 @@ export default class MaterialForm extends React.Component {
       ...x.attributes
     }))
 
-
     url = `/api/v1/products?type=raw_materials&category=purchased_clone&facility_id=${facility_id}&facility_strain_id=${facility_strain_id}&filter=`
     response = await (await fetch(url, httpGetOptions)).json()
     const plant_products = response.data.map(x => ({
@@ -47,7 +50,6 @@ export default class MaterialForm extends React.Component {
       value: x.attributes.id,
       ...x.attributes
     }))
-
 
     this.setState({ defaultProduct: products, plantProduct: plant_products })
     return products
@@ -136,8 +138,14 @@ export default class MaterialForm extends React.Component {
             <div className="w-80">
               <Select
                 isClearable="true"
-                placeholder={task_plant ? "Search Strain ..." : "Search Product ..."}
-                options={task_plant ? this.state.plantProduct : this.state.defaultProduct}
+                placeholder={
+                  task_plant ? 'Search Strain ...' : 'Search Product ...'
+                }
+                options={
+                  task_plant
+                    ? this.state.plantProduct
+                    : this.state.defaultProduct
+                }
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
                 value={this.state.product}

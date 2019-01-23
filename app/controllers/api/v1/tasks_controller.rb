@@ -101,7 +101,6 @@ class Api::V1::TasksController < Api::V1::BaseApiController
                                  :end_date,
                                  :estimated_hours,
                                  :estimated_cost,
-                                 :parent_id,
                                  :depend_on,
                                  :task_type,
                                  :position,

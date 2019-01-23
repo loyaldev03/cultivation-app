@@ -9,6 +9,8 @@ class TaskSerializer
     :position,
     :estimated_hours,
     :estimated_cost,
+    :actual_hours,
+    :actual_cost,
     :wbs,
     :indent,
     :indelible,
@@ -16,10 +18,6 @@ class TaskSerializer
 
   attributes :id do |object|
     object.id.to_s
-  end
-
-  attributes :parent_id do |object|
-    object.parent_id.to_s
   end
 
   attributes :depend_on do |object|
@@ -45,15 +43,5 @@ class TaskSerializer
 
   attribute :user_ids do |object|
     object.user_ids.map(&:to_s)
-  end
-
-  attribute :actual_hours do |object, params|
-    # TODO: TBD
-    object.actual_hours
-  end
-
-  attribute :actual_cost do |object, params|
-    # TODO: TBD
-    object.actual_cost
   end
 end

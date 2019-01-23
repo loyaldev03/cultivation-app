@@ -18,8 +18,6 @@ module Cultivation
     field :actual_cost, type: Float, default: -> { 0 }
     # Indelible task cannot be remove, possible values: 'cleaning', 'moving'
     field :indelible, type: String
-    # FIXME: Remove - Parent task
-    field :parent_id, type: BSON::ObjectId
     # Predecessor task
     field :depend_on, type: BSON::ObjectId
     field :task_type, type: Array, default: []

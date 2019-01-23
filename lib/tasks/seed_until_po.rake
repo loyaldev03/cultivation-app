@@ -301,8 +301,7 @@ task seed_until_po: :environment  do
                         start_date:       start_date,
                         end_date:         start_date + duration.days,
                         estimated_hours:  tp[:estimated_hours],
-                        indent:           tp[:indent],
-                        parent_id:        prev_task)
+                        indent:           tp[:indent])
   end
 
   batch.tasks.last.material_use.create!(

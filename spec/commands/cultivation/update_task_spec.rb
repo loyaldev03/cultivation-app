@@ -53,7 +53,6 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
                   duration: 2,
                   start_date: t2.start_date,
                   end_date: t2.start_date + 2.days,
-                  parent_id: t2.id,
                   indent: 1)
     # wbs: 2.2
     t2_2 = create(:task,
@@ -62,7 +61,6 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
                   duration: 2,
                   start_date: t2.start_date + 1.days,
                   end_date: t2.start_date + 3.days,
-                  parent_id: t2.id,
                   indent: 1)
     # wbs: 2.3
     t2_3 = create(:task,
@@ -71,7 +69,6 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
                   duration: 10,
                   start_date: t2_1.end_date,
                   end_date: t2_1.end_date + 10.days,
-                  parent_id: t2.id,
                   indent: 1)
     # wbs: 2.3.1
     t2_3_1 = create(:task,
@@ -80,7 +77,6 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
                     duration: 3,
                     start_date: t2_3.start_date,
                     end_date: t2_3.start_date + 3.days,
-                    parent_id: t2_3.id,
                     indent: 2)
     # wbs: 2.3.2
     t2_3_2 = create(:task,
@@ -90,7 +86,6 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
                     start_date: t2_3_1.end_date,
                     end_date: t2_3_1.end_date + 7.days,
                     depend_on: t2_3_1.id,
-                    parent_id: t2_3.id,
                     indent: 2)
 
     # wbs: 2.3.2.1
@@ -100,7 +95,6 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
                      duration: 7,
                      start_date: t2_3_2.start_date,
                      end_date: t2_3_2.start_date + 7.days,
-                     parent_id: t2_3_2.id,
                      indent: 3)
     # wbs: 3
     t3 = create(:task,

@@ -28,9 +28,6 @@
               <td class="tr pv2 ph3">
                 <%= batch.estimated_harvest_date.try(:strftime, '%m/%d/%Y') %>
               </td>
-              <td class="tr pv2 ph3">
-                <%= batch.is_active? ? 'Active' : 'Inactive' %>
-              </td>
               <td>
                 <%= link_to 'DELETE',  batch,  method: :delete, data: { confirm: 'Are you sure?' }, class: "pv2 link ph3" %>
               </td>

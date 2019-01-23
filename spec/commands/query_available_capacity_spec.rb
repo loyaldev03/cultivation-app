@@ -25,7 +25,7 @@ RSpec.describe QueryAvailableCapacity, type: :command do
       first_shelf.trays.last
     end
     let(:batch) do
-      create(:batch,
+      create(:batch, :active,
              facility_id: facility.id,
              start_date: Time.strptime("2018/08/01", DATE_FORMAT),
              quantity: 5)

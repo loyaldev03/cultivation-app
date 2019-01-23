@@ -12,8 +12,6 @@ module Cultivation
     # Planned quantity for the batch (capacity needed)
     field :quantity, type: Integer
     field :current_growth_stage, type: String
-    # Active Batch would affect the capacity of the Booked Tray.
-    field :is_active, type: Boolean, default: -> { false }
     # Selected Mother Plants (IDs)
     field :selected_plants, type: Array, default: []
     # Draft - Draft batch should not trigger validation

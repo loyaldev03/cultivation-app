@@ -151,15 +151,16 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
         batch_id: batch.id,
         start_date: selected_start_date,
       }
+      expect(batch.status).to eq Constants::BATCH_STATUS_DRAFT
 
-      cmd = Cultivation::UpdateBatchActivate.call(current_user, args)
+      cmd = Cultivation::UpdateBatchScheduled.call(current_user, args)
       saved_batch = Cultivation::Batch.find(batch.id)
       saved_t1 = Cultivation::Task.find(t1.id)
       saved_t11 = Cultivation::Task.find(t1_1.id)
       saved_t12 = Cultivation::Task.find(t1_2.id)
 
       expect(cmd.success?).to be true
-      expect(saved_batch.is_active).to be true
+      expect(saved_batch.status).to eq Constants::BATCH_STATUS_SCHEDULED
       expect(saved_batch.start_date).to eq selected_start_date
       expect(saved_t1.start_date).to eq selected_start_date
       expect(saved_t11.start_date).to eq selected_start_date

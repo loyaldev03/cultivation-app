@@ -37,7 +37,7 @@ module Cultivation
         total_estimated_cost: total_estimated_cost,
         materials: @batch.material_summary,
         cultivation_phases: @batch&.facility&.growth_stages,
-        is_active: @batch.is_active,
+        status: @batch.status,
       }
 
       if @batch.nil?

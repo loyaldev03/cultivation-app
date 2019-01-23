@@ -9,6 +9,12 @@ export const GROWTH_PHASE = {
   CURE: 'cure'
 }
 
+export const BATCH_STATUS = {
+  DRAFT: 'DRAFT',
+  SCHEDULED: 'SCHEDULED',
+  ACTIVE: 'ACTIVE'
+}
+
 export const BATCH_SOURCE = {
   MOTHER: 'clones_from_mother',
   PURCHASED: 'clones_purchased',

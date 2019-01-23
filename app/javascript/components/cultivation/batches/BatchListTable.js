@@ -27,7 +27,7 @@ class BatchListTable extends React.Component {
                 {formatDate2(b.estimated_harvest_date)}
               </td>
               <td className="tr pv2 ph3">
-                <ActiveBadge isActive={b.is_active} />
+                <ActiveBadge status={b.status} />
               </td>
             </tr>
           ))}

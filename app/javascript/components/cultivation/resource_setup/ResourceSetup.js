@@ -28,7 +28,7 @@ class ResourceSetup extends React.Component {
           batch_no={batch.batch_no}
           batch_source={batch.batch_source}
           quantity={batch.quantity}
-          is_active={batch.is_active}
+          status={batch.status}
           name={batch.name}
           id={batch.id}
           strain={batch.strain}

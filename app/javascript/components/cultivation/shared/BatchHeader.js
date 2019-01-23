@@ -16,7 +16,7 @@ class BatchHeader extends React.Component {
       batch_no,
       batch_source,
       quantity,
-      is_active,
+      status,
       name,
       id,
       strain,
@@ -38,7 +38,7 @@ class BatchHeader extends React.Component {
                 <div className="w-30">
                   <h4 className="tl pa0 ma0 h6--font dark-grey">
                     Batch {batch_no}
-                    <ActiveBadge className="fr" isActive={is_active} />
+                    <ActiveBadge className="fr" status={status} />
                   </h4>
                 </div>
               </div>

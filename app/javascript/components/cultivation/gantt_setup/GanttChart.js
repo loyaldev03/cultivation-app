@@ -122,8 +122,6 @@ class GanttChart extends React.Component {
   }
 
   onLoad = e => {
-    console.log('gantt chart loaded ')
-
     const headers = Array.prototype.slice.call(
       document.querySelectorAll('.rt-tr-group')
     )
@@ -179,11 +177,10 @@ class GanttChart extends React.Component {
     let el = document.querySelector('.gantt-container')
     let scrollLeft = el.scrollLeft
     let scrollTop = el.scrollTop
-
-    await TaskStore.updateDependency(
+    await TaskStore.editTask(
       this.props.batch_id,
       destination_id,
-      source_id
+      { depend_on: source_id }
     )
     el.scrollLeft = scrollLeft
     el.scrollTop = scrollTop

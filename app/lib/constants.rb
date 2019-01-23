@@ -44,7 +44,7 @@ module Constants
 
   BATCH_STATUS_DRAFT = 'DRAFT'.freeze
   BATCH_STATUS_SCHEDULED = 'SCHEDULED'.freeze
-  BATCH_STATUS_STARTED = 'STARTED'.freeze
+  BATCH_STATUS_ACTIVE = 'ACTIVE'.freeze
 
   PLANT_TYPES = [
     {code: CONST_CLONE, name: 'Clone'},

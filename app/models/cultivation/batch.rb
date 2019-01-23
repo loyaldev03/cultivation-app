@@ -14,8 +14,10 @@ module Cultivation
     field :current_growth_stage, type: String
     # Active Batch would affect the capacity of the Booked Tray.
     field :is_active, type: Boolean, default: -> { false }
-    # This is the mothers' plantId
+    # Selected Mother Plants (IDs)
     field :selected_plants, type: Array, default: []
+    # Draft - Draft batch should not trigger validation
+    # Scheduled, Active - Take up spaces in Tray Plan
     field :status, type: String, default: Constants::BATCH_STATUS_DRAFT
 
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'

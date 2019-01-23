@@ -42,7 +42,7 @@ RSpec.describe UpdateActiveTrayPlansJob, type: :job do
     # Create a "Phase" task do set start_date & end_date of a phase.
     # The job will need to access the dates for it to create the
     # tray booking record.
-    create(:task, :is_phase,
+    create(:task,
             batch: batch,
             phase: Constants::CONST_CLONE,
             duration: 16,

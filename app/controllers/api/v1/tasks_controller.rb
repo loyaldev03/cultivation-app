@@ -111,10 +111,8 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def task_params
     params.require(:task).permit(:phase,
-                                 :task_category,
                                  :name,
                                  :duration,
-                                 :days_from_start_date,
                                  :start_date,
                                  :end_date,
                                  :estimated_hours,

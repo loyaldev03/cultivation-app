@@ -21,37 +21,44 @@ class BatchSerializer
   end
 
   attribute :clone_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_CLONE)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_CLONE)
     task ? task.duration : ''
   end
 
   attribute :veg_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_VEG)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_VEG)
     task ? task.duration : ''
   end
 
   attribute :veg1_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_VEG1)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_VEG1)
     task ? task.duration : ''
   end
 
   attribute :veg2_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_VEG2)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_VEG2)
     task ? task.duration : ''
   end
 
   attribute :flower_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_FLOWER)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_FLOWER)
     task ? task.duration : ''
   end
 
   attribute :dry_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_DRY)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_DRY)
     task ? task.duration : ''
   end
 
   attribute :curing_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_CURE)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_CURE)
     task ? task.duration : ''
   end
 
@@ -71,7 +78,7 @@ class BatchSerializer
     'n/a'
     # Cultivation::Task.where(
     #   batch_id: object.id,
-    #   is_phase: true,
+    #   indent: 0,
     #   :start_date.lte => Date.today,
     #   :end_date.gte => Date.today,
     # ).first&.name

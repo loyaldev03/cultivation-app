@@ -57,7 +57,7 @@ class AttachmentPopup extends React.Component {
             top: 80,
             marginLeft: '10px',
             marginRight: '10px',
-            width: 'calc(100% - 20px)',
+            width: 'calc(100% - 20px)'
           }}
         >
           <div className="pv2 ph3 items-start flex justify-end bg-white br3 br--top">

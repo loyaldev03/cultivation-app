@@ -42,7 +42,11 @@ const CommentBody = ({
       {attachments.length > 0 && (
         <div className="flex flex-wrap mt2 mb1">
           {attachments.map(props => (
-            <AttachmentThumbnail key={`${id}.${props.url}`} {...props} onClick={() => onClick(props.url, props.type)}/>
+            <AttachmentThumbnail
+              key={`${id}.${props.url}`}
+              {...props}
+              onClick={() => onClick(props.url, props.type)}
+            />
           ))}
         </div>
       )}

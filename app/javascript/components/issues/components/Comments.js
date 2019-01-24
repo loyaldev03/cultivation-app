@@ -33,7 +33,7 @@ class Comments extends React.Component {
       uppyOpen: false,
       previewOpen: false,
       previewUrl: '',
-      previewType: '',
+      previewType: ''
     }
   }
 
@@ -129,7 +129,6 @@ class Comments extends React.Component {
     })
   }
 
-
   onDeleteAttachment = key => {
     const result = confirm('Remove attachment?')
     if (result) {
@@ -176,7 +175,13 @@ class Comments extends React.Component {
           <div className="f7 fw6 gray w-auto">Discussion</div>
         </div>
         {currentIssue.comments &&
-          currentIssue.comments.map(x => <CommentMessage key={x.id} {...x} onTogglePreview={this.onTogglePreview} />)}
+          currentIssue.comments.map(x => (
+            <CommentMessage
+              key={x.id}
+              {...x}
+              onTogglePreview={this.onTogglePreview}
+            />
+          ))}
         <div className="ph3 mt3 mb4">
           <div className="b--black-10 flex br3 ba w-100 ph2 pt1 pb2 flex items-start">
             <Avatar firstName="Sample" lastName="User" size={25} />

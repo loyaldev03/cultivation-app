@@ -25,14 +25,6 @@ module Issues
       object.location_id.to_s
     end
 
-    attribute :attachments do |object|
-      nil
-    end
-
-    attribute :comments do |object|
-      nil
-    end
-
     attribute :cultivation_batch do |object|
       {
         id: object.cultivation_batch.id.to_s,
@@ -95,6 +87,7 @@ module Issues
           url: attachment.file_url(expires_in: 3600),
           mime_type: attachment.file_mime_type,
           data: attachment.file_data,
+          filename: attachment.file_filename,
         }
       end
     end

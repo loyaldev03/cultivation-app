@@ -56,7 +56,9 @@ module Issues
     end
 
     def valid_data?
-      ## TODO: Do validation here
+      ## TODO: Do validation here,
+      # 1. issue requires title, issue type, reported by
+      # 2. location id should be same facility as the batch
       true
     end
 
@@ -103,10 +105,6 @@ module Issues
 
       attachments.each do |attachment|
         if attachment[:id].blank?
-          Rails.logger.debug "\t\t\t>>>> Adding new attachments"
-          Rails.logger.debug "\t\t\t>>>> attachment: #{attachment.inspect}"
-
-          # New image if id.blank,
           new_file = issue.attachments.build
           new_file.file = attachment[:data] # <json string>
           new_file.save!

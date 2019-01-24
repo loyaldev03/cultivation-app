@@ -4,7 +4,7 @@ import {
   ActiveBadge,
   moneyFormatter,
   decimalFormatter,
-  sanitizeText,
+  sanitizeText
 } from '../../utils'
 
 class BatchHeader extends React.Component {

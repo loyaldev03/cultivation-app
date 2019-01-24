@@ -85,3 +85,7 @@ textarea[readonly] {
     } 
   }
 }
+
+.link:focus {
+  outline: 0;
+}

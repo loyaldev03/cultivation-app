@@ -30,7 +30,6 @@ class NonSalesItemEditor extends React.Component {
         getNonSalesItem(id)
           .then(x => x.data.data.attributes)
           .then(attr => {
-            console.log(attr)
             const catalogueOptions = this.props.catalogues.result.map(x => ({
               value: x.value,
               label: x.label,

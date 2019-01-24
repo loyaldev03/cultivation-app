@@ -19,7 +19,7 @@ module Cultivation
       record = Cultivation::Task.find(@id)
       record.material_use = []
       @items.each do |item|
-        record.material_use.build({product_id: item[:product_id], quantity: item[:quantity]})
+        record.material_use.build({product_id: item[:product_id], quantity: item[:quantity], uom: item[:uom]})
       end
       record.save!
       record

@@ -59,15 +59,26 @@ class PurchasedCloneEditor extends React.Component {
   }
 
   onFacilityStrainChanged = item => {
-    this.setState(
-      {
-        facility_strain_id: item.value,
-        facility_id: item.facility_id
-      },
-      () => {
-        this.loadProducts('')
+    let changes = {
+      facility_strain_id: item.value,
+      facility_id: item.facility_id
+    }
+
+    if (this.state.product_id.length > 0) {
+      changes = {
+        ...changes,
+        product_name: '',
+        manufacturer: '',
+        description: '',
+        product_id: '',
+        product: null,
+        defaultProduct: []
       }
-    )
+    }
+
+    this.setState(changes, () => {
+      this.loadProducts('')
+    })
   }
 
   onChangeGeneric = event => {
@@ -84,6 +95,7 @@ class PurchasedCloneEditor extends React.Component {
       product_id: '',
       product_name: '',
       product: { value: '', label: '' },
+      defaultProduct: [],
       manufacturer: '',
       description: '',
       order_quantity: 0,
@@ -204,7 +216,7 @@ class PurchasedCloneEditor extends React.Component {
     if (product) {
       if (product.__isNew__) {
         this.setState({
-          product: product,
+          product,
           product_name: product.value,
           product_id: '',
           manufacturer: '',
@@ -212,7 +224,7 @@ class PurchasedCloneEditor extends React.Component {
         })
       } else {
         this.setState({
-          product: { value: product.id, label: product.name },
+          product,
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,

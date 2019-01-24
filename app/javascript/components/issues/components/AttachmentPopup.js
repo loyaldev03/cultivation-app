@@ -41,7 +41,7 @@ class AttachmentPopup extends React.Component {
     return (
       <React.Fragment>
         <div
-          className="absolute"
+          className="fixed"
           style={{
             backgroundColor: 'rgba(0,0,0,0.5)',
             top: 0,

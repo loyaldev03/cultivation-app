@@ -21,16 +21,18 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
   def add_comment
     command = Issues::AddComment.call(current_user, params.to_unsafe_h)
     if command.success?
-      render json: Issues::IssueCommentSerializer.new(command.result).serialized_json
+      options = {params: {current_user_id: current_user.id.to_s}}
+      render json: Issues::IssueCommentSerializer.new(command.result, options).serialized_json
     else
       render json: request_with_errors(command.errors), status: 422
     end
   end
 
   def comments
+    options = {params: {current_user_id: current_user.id.to_s}}
     issue = Issues::Issue.find(params[:id])
     comments = issue ? Issues::Issue.find(params[:id]).comments : []
-    render json: Issues::IssueCommentSerializer.new(comments).serialized_json
+    render json: Issues::IssueCommentSerializer.new(comments, options).serialized_json
   end
 
   def archive

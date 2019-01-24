@@ -1,4 +1,5 @@
 import React from 'react'
+import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import DashboardModal from '@uppy/react/lib/DashboardModal'
 import '@uppy/core/dist/style.css'
@@ -165,6 +166,9 @@ class Comments extends React.Component {
   }
 
   render() {
+    const { current_user_first_name, current_user_last_name, current_user_photo } = this.props
+    console.log(current_user_first_name, current_user_last_name, current_user_photo)
+
     return (
       <React.Fragment>
         <div className="flex ph3 pb3 items-center mt3">
@@ -184,7 +188,14 @@ class Comments extends React.Component {
           ))}
         <div className="ph3 mt3 mb4">
           <div className="b--black-10 flex br3 ba w-100 ph2 pt1 pb2 flex items-start">
-            <Avatar firstName="Sample" lastName="User" size={25} />
+            <div style={{ marginTop: '3px'}}>
+              <Avatar 
+                firstName={current_user_first_name}
+                lastName={current_user_last_name}
+                photoUrl={current_user_photo}
+                size={25} 
+              />
+            </div>
             <div className="flex flex-column flex-auto ml2">
               <textarea
                 ref={this.newCommentText}
@@ -205,8 +216,8 @@ class Comments extends React.Component {
               style={{ height: '25px' }}
             >
               <span
-                className="material-icons black-30 f6 v-mid"
-                style={{ fontSize: '22px' }}
+                className="material-icons black-30 f6 v-mid hover-black-50"
+                style={{ fontSize: '23px' }}
               >
                 add
               </span>
@@ -218,7 +229,7 @@ class Comments extends React.Component {
               onClick={this.onAddComment}
             >
               <span
-                className="material-icons black-30 f6 v-mid"
+                className="material-icons black-30 f6 v-mid hover-black-50"
                 style={{ fontSize: '18px' }}
               >
                 send

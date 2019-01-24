@@ -11,10 +11,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def update
-    update_cmd = Cultivation::UpdateTask.call(
-      task_params,
-      current_user,
-    )
+    update_cmd = Cultivation::UpdateTask.call(current_user, task_params)
     if update_cmd.success?
       render json: TaskSerializer.new(update_cmd.result)
     else
@@ -45,22 +42,6 @@ class Api::V1::TasksController < Api::V1::BaseApiController
       render json: {data: {id: indent_cmd.result.id.to_s}}
     else
       render json: {errors: indent_cmd.errors}
-    end
-  end
-
-  def update_dependency
-    destination_task = Cultivation::Task.find(params[:destination_id])
-    if destination_task.present?
-      source_task = Cultivation::Task.find(params[:source_id])
-      # TODO: Need move this logic into updateTask
-      start_date = source_task.end_date + 1.days
-      end_date = start_date + destination_task.duration.days
-      destination_task.update(depend_on: params[:source_id],
-                              start_date: start_date,
-                              end_date: end_date)
-      render json: {data: {id: destination_task.id}}
-    else
-      render json: {errors: 'Update failed'}
     end
   end
 
@@ -114,17 +95,12 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def task_params
     params.require(:task).permit(:phase,
-                                 :task_category,
                                  :name,
                                  :duration,
-                                 :days_from_start_date,
                                  :start_date,
                                  :end_date,
                                  :estimated_hours,
                                  :estimated_cost,
-                                 :is_phase,
-                                 :is_category,
-                                 :parent_id,
                                  :depend_on,
                                  :task_type,
                                  :position,

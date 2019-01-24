@@ -122,8 +122,6 @@ class GanttChart extends React.Component {
   }
 
   onLoad = e => {
-    console.log('gantt chart loaded ')
-
     const headers = Array.prototype.slice.call(
       document.querySelectorAll('.rt-tr-group')
     )
@@ -179,12 +177,9 @@ class GanttChart extends React.Component {
     let el = document.querySelector('.gantt-container')
     let scrollLeft = el.scrollLeft
     let scrollTop = el.scrollTop
-
-    await TaskStore.updateDependency(
-      this.props.batch_id,
-      destination_id,
-      source_id
-    )
+    await TaskStore.editTask(this.props.batch_id, destination_id, {
+      depend_on: source_id
+    })
     el.scrollLeft = scrollLeft
     el.scrollTop = scrollTop
   }
@@ -297,21 +292,18 @@ class GanttChart extends React.Component {
                                         </i>
                                         Indent Out
                                       </a>
-                                      {task.is_phase !== true && (
-                                        <a
-                                          className="ttc pv2 tc flex pointer"
-                                          style={{ display: 'flex' }}
-                                          // onClick={e => {
-                                          //   handleAddTask(row, 'top')
-                                          // }}
-                                        >
-                                          <i className="material-icons md-600 md-17 ph2">
-                                            vertical_align_top
-                                          </i>
-                                          Insert Task Above
-                                        </a>
-                                      )}
-
+                                      <a
+                                        className="ttc pv2 tc flex pointer"
+                                        style={{ display: 'flex' }}
+                                        // onClick={e => {
+                                        //   handleAddTask(row, 'top')
+                                        // }}
+                                      >
+                                        <i className="material-icons md-600 md-17 ph2">
+                                          vertical_align_top
+                                        </i>
+                                        Insert Task Above
+                                      </a>
                                       <a
                                         className="ttc pv2 tc flex pointer"
                                         style={{ display: 'flex' }}
@@ -381,9 +373,7 @@ class GanttChart extends React.Component {
             </div>
           </div>
         )}
-        {!TaskStore.isDataLoaded && (
-          <div className="loading"> Loading Gantt Chart ...</div>
-        )}
+        {!TaskStore.isDataLoaded && <div className="grey"> Loading...</div>}
       </React.Fragment>
     )
   }

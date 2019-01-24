@@ -31,12 +31,6 @@ export default class MaterialForm extends React.Component {
   loadProducts = async batch_id => {
     const url = `/api/v1/products?batch_id=${batch_id}`
     const response = await (await fetch(url, httpGetOptions)).json()
-
-    // return fetch(`/api/v1/products?batch_id=${batch_id}`, {
-    //   credentials: 'include'
-    // })
-    //   .then(response => response.json())
-    //   .then(data => {
     const products = response.data.map(x => ({
       label: x.attributes.name,
       value: x.attributes.id,
@@ -44,7 +38,6 @@ export default class MaterialForm extends React.Component {
     }))
     this.setState({ defaultProduct: products })
     return products
-    // })
   }
 
   onChangeProduct = product => {
@@ -73,7 +66,8 @@ export default class MaterialForm extends React.Component {
               product_name: this.state.product.name,
               product_id: this.state.product.id,
               category: this.state.product.catalogue.category,
-              quantity: ''
+              quantity: '',
+              uoms: this.state.product.uoms
             }
           ],
           product: { value: '', label: '' }
@@ -103,6 +97,14 @@ export default class MaterialForm extends React.Component {
   handleChangeQuantity = (id, quantity) => {
     let material = this.state.materials.find(e => e.product_id === id)
     material.quantity = quantity
+    let tasks = this.state.materials.map(t => {
+      return t.product_id === id ? material : t
+    })
+  }
+
+  handleChangeUom = (id, uom) => {
+    let material = this.state.materials.find(e => e.product_id === id)
+    material.uom = uom
     let tasks = this.state.materials.map(t => {
       return t.product_id === id ? material : t
     })
@@ -152,7 +154,7 @@ export default class MaterialForm extends React.Component {
                   </tr>
                   {materials.map((x, index) => (
                     <tr className="pointer bb" key={index}>
-                      <td className="tl pv2 ph3" width="90%" align="left">
+                      <td className="tl pv2" width="90%" align="left">
                         {x.product_name}
                       </td>
                       <td className="tl pv2 ph3">{x.category}</td>
@@ -160,8 +162,9 @@ export default class MaterialForm extends React.Component {
                         <input
                           type="text"
                           name="pin"
-                          maxLength="4"
-                          size="4"
+                          size="2"
+                          style={{ height: 30 + 'px' }}
+                          class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
                           defaultValue={x.quantity}
                           onChange={e =>
                             this.handleChangeQuantity(
@@ -171,7 +174,21 @@ export default class MaterialForm extends React.Component {
                           }
                         />
                       </td>
-                      <td className="tl pv2 ph3">{x.uom}</td>
+                      <td className="tl pv2 ph3">
+                        <select
+                          defaultValue={x.uom}
+                          onChange={e =>
+                            this.handleChangeUom(x.product_id, e.target.value)
+                          }
+                        >
+                          {x.uoms &&
+                            x.uoms.map((y, index) => (
+                              <option key={index} value={y}>
+                                {y}
+                              </option>
+                            ))}
+                        </select>
+                      </td>
                       <td className="tl pv2 ph3">
                         <i
                           className="material-icons red md-18 pointer dim"

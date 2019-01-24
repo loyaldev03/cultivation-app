@@ -39,8 +39,10 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def update_batch
+    # TODO::ANDY::Rename Action Type to something more meaningful
     if params[:action_type] == 'activate'
-      update_cmd = Cultivation::UpdateBatchActivate.call(
+      update_cmd = Cultivation::UpdateBatchScheduled.call(
+        current_user,
         batch_id: params[:batch_id],
         start_date: params[:start_date],
       )

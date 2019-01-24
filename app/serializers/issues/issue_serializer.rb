@@ -25,10 +25,6 @@ module Issues
       object.location_id.to_s
     end
 
-    attribute :attachments do |object|
-      []
-    end
-
     attribute :cultivation_batch do |object|
       {
         id: object.cultivation_batch.id.to_s,

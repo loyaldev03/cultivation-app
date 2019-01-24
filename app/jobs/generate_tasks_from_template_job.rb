@@ -27,11 +27,6 @@ class GenerateTasksFromTemplateJob < ApplicationJob
     parent = Array.new(10) # Maximum 20 level depth
     new_tasks = []
 
-    # TODO: How to identify which is the actual task for moving plants
-    # Set a default task_type for Moving Plants task
-    # if new_task[:name].start_with?('Move Plants')
-    #   set_move_task_defaults(new_task)
-    # end
     # Loop through each task from template
     template_tasks.each do |task|
       new_task = build_task(task, start_date, end_date)
@@ -41,11 +36,6 @@ class GenerateTasksFromTemplateJob < ApplicationJob
 
       # Remember current node for next iteration
       parent[new_task[:indent]] = new_task[:id]
-
-      # Set parent
-      if new_task[:indent].positive?
-        new_task[:parent_id] = parent[new_task[:indent] - 1]
-      end
 
       # Set predecessor using wbs
       if task[:predecessor].present?

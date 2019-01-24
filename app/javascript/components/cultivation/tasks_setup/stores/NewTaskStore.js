@@ -49,6 +49,7 @@ class TaskStore {
   @observable isDataLoaded = false
   @observable collapsedNodes = []
   @observable tasks = []
+  @observable facilityPhases = []
 
   @action
   async loadTasks(batchId) {
@@ -139,6 +140,14 @@ class TaskStore {
     return !!found
   }
 
+  @computed get batchStartDate() {
+    if (this.isDataLoaded) {
+      return this.tasks[0].start_date
+    } else {
+      return new Date()
+    }
+  }
+
   @computed get childTasks() {
     if (this.isDataLoaded) {
       return this.tasks.filter(t => !t.haveChildren)
@@ -160,10 +169,37 @@ class TaskStore {
     }
   }
 
+  @computed get phaseDuration() {
+    if (this.isDataLoaded) {
+      // Build phase schedule from current Task List
+      const stayingTasks = this.tasks.filter(
+        t =>
+          t.indelible === 'staying' &&
+          this.facilityPhases.some(p => p === t.phase)
+      )
+      const phaseDuration = {}
+      stayingTasks.forEach(t => {
+        phaseDuration[t.phase] = t.duration
+      })
+      return phaseDuration
+    } else {
+      return {}
+    }
+  }
+
+  @computed get totalDuration() {
+    const durations = this.phaseDuration
+    let total = 0
+    Object.keys(durations).forEach(key => {
+      total += durations[key]
+    })
+    return total
+  }
+
   @computed get totalEstimatedHours() {
     if (this.isDataLoaded) {
       const value = sumBy(this.childTasks, 'estimated_hours')
-      return decimalFormatter.format(value)
+      return value
     } else {
       return '--'
     }
@@ -172,7 +208,7 @@ class TaskStore {
   @computed get totalEstimatedCost() {
     if (this.isDataLoaded) {
       const value = sumBy(this.childTasks, 'estimated_cost')
-      return moneyFormatter.format(value)
+      return value
     } else {
       return '--'
     }
@@ -207,21 +243,42 @@ class TaskStore {
   }
 
   getGanttTasks() {
-    return toJS(this.formatGantt(this.taskList))
+    return this.formatGantt(this.taskList)
   }
 
   @action
-  async updateDependency(batch_id, destination_id, source_id) {
+  async createTask(batchId, relatedTaskId, taskAction, updateObj) {
     this.isLoading = true
-
-    const url = `/api/v1/batches/${batch_id}/tasks/${destination_id}/update_dependency`
-    const payload = { destination_id, source_id }
+    const task = Object.assign(
+      {},
+      {
+        batch_id: batchId,
+        action: taskAction,
+        name: updateObj.name,
+        start_date: updateObj.start_date,
+        end_date: updateObj.end_date,
+        duration: updateObj.duration,
+        estimated_hours: updateObj.estimated_hours,
+        task_related_id: relatedTaskId,
+        task_type: updateObj.task_type
+      }
+    )
+    const url = `/api/v1/batches/${batchId}/tasks`
     try {
-      const response = await (await fetch(url, httpPostOptions(payload))).json()
-      await this.loadTasks(batch_id)
-      this.isLoading = false
+      const response = await (await fetch(
+        url,
+        httpPostOptions({ task })
+      )).json()
+      if (response.data) {
+        toast('Task added', 'success')
+        await this.loadTasks(batchId)
+      } else {
+        console.error(response.errors)
+      }
     } catch (error) {
       console.log(error)
+    } finally {
+      this.isLoading = false
     }
   }
 
@@ -383,11 +440,11 @@ class TaskStore {
       })
 
       const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_material_use`
-
       const payload = {
         items: task.items.map(e => ({
           product_id: e.product_id,
-          quantity: e.quantity
+          quantity: e.quantity,
+          uom: e.uom
         }))
       }
 

@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import React, { Component } from 'react'
-import { toJS } from 'mobx'
+import PropTypes from 'prop-types'
 import Avatar from '../../utils/Avatar'
 import Comments from './Comments'
 import currentIssueStore from '../store/CurrentIssueStore'
@@ -95,7 +95,14 @@ class IssueDetails extends Component {
         <div className="flex mt3 mb3 w-100 justify-end">
           <a href="#" className="link flex items-center outline-0">
             <span className="f7 gray mr2">Followed by</span>
-            <Avatar firstName="" lastName="" photoUrl="" size={25} />
+            <Avatar 
+              firstName="" 
+              lastName="" 
+              photoUrl="" 
+              size={25} 
+              showNoUser
+              onClick={() => alert('trigger assign followers')}
+            />
           </a>
         </div>
         <div className="flex mt3 mb3 w-100 items-center justify-between">
@@ -131,20 +138,24 @@ class IssueDetails extends Component {
     const issue = currentIssueStore.issue
     let assignedFirstName = '',
       assignedLastName = '',
-      assignedPhoto = ''
+      assignedPhoto = '',
+      showNoUser = true
+
     if (issue.assigned_to) {
       ;({
         first_name: assignedFirstName,
         last_name: assignedLastName,
         photo: assignedPhoto
       } = issue.assigned_to)
+
+      showNoUser = false
     }
 
     return (
       <React.Fragment>
         <div
           className="ph3"
-          style={{ marginTop: '-10px', marginBottom: '-3px' }}
+          style={{ marginTop: '-16px', marginBottom: '-3px' }}
         >
           <div
             style={{
@@ -163,6 +174,8 @@ class IssueDetails extends Component {
                 lastName={assignedLastName}
                 size={25}
                 photoUrl={assignedPhoto}
+                showNoUser={showNoUser}
+                onClick={() => alert('trigger assign task to user')}
               />
             </div>
             <div className="flex flex-column w-100">
@@ -190,7 +203,13 @@ class IssueDetails extends Component {
         </div>
         <hr className="w-100" />
 
-        <Comments issueId={issue.id} issueNo={issue.issue_no} />
+        <Comments 
+          issueId={issue.id} 
+          issueNo={issue.issue_no}
+          current_user_first_name={this.props.current_user_first_name}
+          current_user_last_name={this.props.current_user_last_name}
+          current_user_photo={this.props.current_user_photo}
+        />
         <AttachmentPopup
           open={this.state.previewOpen}
           key={this.state.previewUrl}
@@ -201,6 +220,17 @@ class IssueDetails extends Component {
       </React.Fragment>
     )
   }
+}
+
+
+IssueDetails.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onToggleMode: PropTypes.func.isRequired,
+  issueId: PropTypes.string.isRequired,
+  batchId: PropTypes.string.isRequired,
+  current_user_first_name: PropTypes.string.isRequired,
+  current_user_last_name: PropTypes.string.isRequired,
+  current_user_photo: PropTypes.string,
 }
 
 export default IssueDetails

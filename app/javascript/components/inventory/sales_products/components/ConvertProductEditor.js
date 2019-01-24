@@ -606,6 +606,7 @@ class ConvertProductEditor extends React.Component {
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <LocationPicker
+                key={this.state.facility_id}
                 mode="facility"
                 onChange={this.onFacilityChanged}
                 isDisabled={hasProductId}
@@ -730,7 +731,8 @@ class ConvertProductEditor extends React.Component {
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <LocationPicker
-                mode="storage"
+                key={this.state.facility_id}
+                mode="sales"
                 onChange={this.onRoomChanged}
                 locations={locations}
                 facility_id={this.state.facility_id}

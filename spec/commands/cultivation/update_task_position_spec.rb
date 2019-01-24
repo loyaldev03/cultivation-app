@@ -14,7 +14,6 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                   duration: 1,
                   start_date: t1.start_date,
                   end_date: t1.start_date + 1.days,
-                  parent_id: t1.id,
                   indent: 1)
     # wbs: 1.2
     t1_2 = create(:task,
@@ -23,7 +22,6 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                   duration: 2,
                   start_date: t1.start_date,
                   end_date: t1.start_date + 2.days,
-                  parent_id: t1.id,
                   indent: 1)
     # wbs: 1.3
     t1_3 = create(:task,
@@ -32,7 +30,6 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                   duration: 1,
                   start_date: t1_2.start_date,
                   end_date: t1_2.start_date + 1.days,
-                  parent_id: t1.id,
                   indent: 1)
     # wbs: 2
     t2 = create(:task,
@@ -49,7 +46,6 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                   duration: 2,
                   start_date: t2.start_date,
                   end_date: t2.start_date + 2.days,
-                  parent_id: t2.id,
                   indent: 1)
     # wbs: 2.2
     t2_2 = create(:task,
@@ -58,7 +54,6 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                   duration: 2,
                   start_date: t2.start_date + 1.days,
                   end_date: t2.start_date + 3.days,
-                  parent_id: t2.id,
                   indent: 1)
     # wbs: 2.3
     t2_3 = create(:task,
@@ -67,7 +62,6 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                   duration: 2,
                   start_date: t2_1.end_date,
                   end_date: t2_1.end_date + 2.days,
-                  parent_id: t2.id,
                   indent: 1)
     # wbs: 2.3.1
     t2_3_1 = create(:task,
@@ -76,7 +70,6 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                     duration: 1,
                     start_date: t2_3.start_date,
                     end_date: t2_3.start_date + 1.days,
-                    parent_id: t2_3.id,
                     indent: 2)
     # wbs: 2.3.2
     t2_3_2 = create(:task,
@@ -85,7 +78,6 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                     duration: 1,
                     start_date: t2_3_1.start_date,
                     end_date: t2_3_1.start_date + 1.days,
-                    parent_id: t2_3.id,
                     indent: 2)
 
     # wbs: 2.3.2.1
@@ -95,7 +87,6 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                      duration: 1,
                      start_date: t2_3_2.start_date,
                      end_date: t2_3_2.start_date + 1.days,
-                     parent_id: t2_3_2.id,
                      indent: 3)
     # wbs: 3
     t3 = create(:task,
@@ -187,7 +178,6 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_follow.position).to eq 3
     expect(t_dropped.wbs).to eq "1.1"
     expect(cmd.result.indent).to eq 1
-    expect(cmd.result.parent_id).to eq tasks[0].id
   end
 
   it "Cond C - Drop task 2.3.2 on 2.3" do
@@ -207,7 +197,6 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_follow.wbs).to eq "2.3.2"
     expect(t_dropped.wbs).to eq "2.3"
     expect(cmd.result.indent).to eq 2
-    expect(cmd.result.parent_id).to eq t_dropped.id
   end
 
   it "Cond D - Drop task 2.3.2 on 1" do
@@ -230,7 +219,6 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_child.wbs).to eq "1.1.1"
     expect(t_child.indent).to eq 2
     expect(cmd.result.indent).to eq 1
-    expect(cmd.result.parent_id).to eq t_dropped.id
   end
 
   it "Cond E - Drop task 2.3.2.1 on 3" do
@@ -310,7 +298,6 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_follow.wbs).to eq "2.2.1.1"
     expect(t_follow.position).to eq 8
     expect(cmd.result.indent).to eq 2
-    expect(cmd.result.parent_id).to eq t_dropped.id
   end
 
   it "Cond I - Drop task 3 on 2.3.2.1" do

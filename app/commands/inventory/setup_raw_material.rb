@@ -9,6 +9,7 @@ module Inventory
                 :facility_id,
                 :facility,
                 :location_id,
+                :catalogue_id,
                 :catalogue,
                 :product_id,
                 :product_name,
@@ -107,6 +108,13 @@ module Inventory
       errors.add(:purchase_order_no, 'Purchase order no is required') if purchase_order_no.blank?
       errors.add(:purchase_date, 'Purchase date is required') if purchase_date.blank?
       errors.add(:invoice_no, 'Invoice No is required') if invoice_no.blank?
+
+      unless product_id.blank?
+        product = Inventory::Product.find(product_id)
+        errors.add(:product, 'This product belongs to another facility, please do you data entry again.') if product.facility_id.to_s != facility_id
+        errors.add(:product, 'This product belongs to another catalogue, please do you data entry again.') if product.catalogue_id.to_s != catalogue_id
+      end
+
       errors.empty?
     end
 

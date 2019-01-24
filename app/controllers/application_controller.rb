@@ -22,7 +22,6 @@ class ApplicationController < ActionController::Base
 
   def set_timezone(&block)
     Time.use_zone(current_user.timezone, &block)
-    Rails.logger.debug "\033[34m BaseApiController::Time.use_zone:: #{current_user&.timezone} \033[0m"
   end
 
   def miniprofiler

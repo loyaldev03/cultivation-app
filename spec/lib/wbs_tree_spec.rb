@@ -73,7 +73,6 @@ RSpec.describe "WbsTree", type: :lib do
                     duration: 1,
                     start_date: t1.start_date,
                     end_date: t1.start_date + 1.days,
-                    parent_id: t1.id,
                     indent: 1)
       # wbs: 1.2
       t1_2 = create(:task,
@@ -81,7 +80,6 @@ RSpec.describe "WbsTree", type: :lib do
                     duration: 2,
                     start_date: t1.start_date,
                     end_date: t1.start_date + 2.days,
-                    parent_id: t1.id,
                     indent: 1)
       # wbs: 1.3
       t1_3 = create(:task,
@@ -89,7 +87,6 @@ RSpec.describe "WbsTree", type: :lib do
                     duration: 1,
                     start_date: t1_2.start_date,
                     end_date: t1_2.start_date + 1.days,
-                    parent_id: t1.id,
                     indent: 1)
       # wbs: 2
       t2 = create(:task,
@@ -104,7 +101,6 @@ RSpec.describe "WbsTree", type: :lib do
                     duration: 2,
                     start_date: t2.start_date,
                     end_date: t2.start_date + 2.days,
-                    parent_id: t2.id,
                     indent: 1)
       # wbs: 2.2
       t2_2 = create(:task,
@@ -112,7 +108,6 @@ RSpec.describe "WbsTree", type: :lib do
                     duration: 2,
                     start_date: t2.start_date + 1.days,
                     end_date: t2.start_date + 3.days,
-                    parent_id: t2.id,
                     indent: 1)
       # wbs: 2.3
       t2_3 = create(:task,
@@ -120,7 +115,6 @@ RSpec.describe "WbsTree", type: :lib do
                     duration: 2,
                     start_date: t2_1.end_date,
                     end_date: t2_1.end_date + 2.days,
-                    parent_id: t2.id,
                     indent: 1)
       # wbs: 2.3.1
       t2_3_1 = create(:task,
@@ -128,7 +122,6 @@ RSpec.describe "WbsTree", type: :lib do
                       duration: 1,
                       start_date: t2_3.start_date,
                       end_date: t2_3.start_date + 1.days,
-                      parent_id: t2_3.id,
                       indent: 2)
       # wbs: 2.3.2
       t2_3_2 = create(:task,
@@ -136,7 +129,6 @@ RSpec.describe "WbsTree", type: :lib do
                       duration: 1,
                       start_date: t2_3_1.start_date,
                       end_date: t2_3_1.start_date + 1.days,
-                      parent_id: t2_3.id,
                       indent: 2)
 
       # wbs: 2.3.2.1
@@ -145,7 +137,6 @@ RSpec.describe "WbsTree", type: :lib do
                       duration: 1,
                       start_date: t2_3_2.start_date,
                       end_date: t2_3_2.start_date + 1.days,
-                      parent_id: t2_3_2.id,
                       indent: 3)
       # wbs: 3
       t3 = create(:task,
@@ -209,11 +200,38 @@ RSpec.describe "WbsTree", type: :lib do
     it ".have_children should return boolean" do
       saved_tasks = Cultivation::QueryTasks.call(tasks[0].batch).result
 
-      res1 = WbsTree.have_children(saved_tasks, saved_tasks[0].wbs)
-      res2 = WbsTree.have_children(saved_tasks, saved_tasks[1].wbs)
+      res1 = WbsTree.have_children?(saved_tasks[0].wbs, saved_tasks)
+      res2 = WbsTree.have_children?(saved_tasks[1].wbs, saved_tasks)
 
       expect(res1).to be true
       expect(res2).to be false
+    end
+
+    it ".child_of? should return true" do
+      saved_tasks = Cultivation::QueryTasks.call(tasks[0].batch).result
+      t1 = saved_tasks[0] # 1
+      target = saved_tasks[2] # 1.2
+
+      result = WbsTree.child_of?(target.wbs, t1.wbs, saved_tasks)
+      expect(result).to be true
+    end
+
+    it ".child_of? should return true (deeply nested)" do
+      saved_tasks = Cultivation::QueryTasks.call(tasks[0].batch).result
+      grand_parent = saved_tasks[4] # 2
+      target = saved_tasks[10] # 2.3.2.1
+
+      result = WbsTree.child_of?(target.wbs, grand_parent.wbs, saved_tasks)
+      expect(result).to be true
+    end
+
+    it ".child_of? should return false" do
+      saved_tasks = Cultivation::QueryTasks.call(tasks[0].batch).result
+      t1 = saved_tasks[0] # 1
+      target = saved_tasks[5] # 2.2
+
+      result = WbsTree.child_of?(target.wbs, t1.wbs, saved_tasks)
+      expect(result).to be false
     end
   end
 end

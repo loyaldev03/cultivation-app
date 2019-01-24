@@ -9,12 +9,12 @@ import BatchEditor from './components/BatchEditor'
 const columns = [
   {
     Header: '',
-    accessor: 'attributes.is_active',
+    accessor: 'attributes.status',
     filterable: false,
     width: 30,
     Cell: props => {
       let color = 'red'
-      if (props.value === true) {
+      if (props.value === 'ACTIVE' || props.value === 'SCHEDULED') {
         color = '#00cc77'
       }
       return (

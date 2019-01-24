@@ -1,4 +1,5 @@
 import issueStore from '../store/IssueStore'
+import currentIssue from '../store/CurrentIssueStore'
 import { httpPostOptions } from '../../utils'
 
 const saveIssue = payload => {

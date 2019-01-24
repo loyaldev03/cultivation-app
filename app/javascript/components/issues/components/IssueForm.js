@@ -257,7 +257,7 @@ class IssueForm extends React.Component {
         } else {
           this.setState(this.resetState())
           this.props.onClose()
-          currentIssueStore.load(data.data.attributes)
+          currentIssueStore.setIssue(data.data.attributes)
         }
       })
     }

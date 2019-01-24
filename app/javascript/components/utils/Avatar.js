@@ -9,9 +9,26 @@ const Avatar = React.memo(
     photoUrl,
     className,
     size = 36,
-    backgroundColor = '#eee'
+    backgroundColor = '#eee',
+    showNoUser = false,
+    onClick = () => {}
   }) => {
-    if (photoUrl && photoUrl.length >= 10) {
+    if (showNoUser) {
+      return (
+        <div
+          className="flex justify-center items-center fw6 white bg-black-20 pointer hover-bg-black-10"
+          style={{
+            width: size,
+            height: size,
+            backgroundSize: 'cover',
+            borderRadius: '50%',
+          }}
+          onClick={onClick}
+        >
+          ?
+        </div>
+      )
+    } else if (photoUrl && photoUrl.length >= 10) {
       // http://a.b
       return (
         <div

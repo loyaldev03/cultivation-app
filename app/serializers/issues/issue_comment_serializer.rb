@@ -11,6 +11,7 @@ module Issues
       {
         first_name: object.created_by.first_name,
         last_name: object.created_by.last_name,
+        photo: object.created_by.photo&.url,
       }
     end
 
@@ -18,8 +19,8 @@ module Issues
       object.created_at.iso8601
     end
 
-    attribute :is_me do |object|
-      true # TODO: check by caller, so dont have to send user ID
+    attribute :is_me do |object, params|
+      object.created_by.id.to_s == params[:current_user_id]
     end
 
     attribute :task do |object|

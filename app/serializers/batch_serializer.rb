@@ -1,7 +1,7 @@
 # TODO: Change to harvest batch serializer
 class BatchSerializer
   include FastJsonapi::ObjectSerializer
-  attributes :name, :batch_source, :batch_no, :is_active, :start_date, :grow_method, :current_growth_stage, :estimated_harvest_date
+  attributes :name, :batch_source, :batch_no, :status, :start_date, :grow_method, :current_growth_stage, :estimated_harvest_date
   has_many :tasks, if: Proc.new { |record, params| params.nil? || params[:exclude_tasks] != true }
 
   attribute :facility do |object|
@@ -21,37 +21,44 @@ class BatchSerializer
   end
 
   attribute :clone_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_CLONE)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_CLONE)
     task ? task.duration : ''
   end
 
   attribute :veg_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_VEG)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_VEG)
     task ? task.duration : ''
   end
 
   attribute :veg1_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_VEG1)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_VEG1)
     task ? task.duration : ''
   end
 
   attribute :veg2_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_VEG2)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_VEG2)
     task ? task.duration : ''
   end
 
   attribute :flower_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_FLOWER)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_FLOWER)
     task ? task.duration : ''
   end
 
   attribute :dry_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_DRY)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_DRY)
     task ? task.duration : ''
   end
 
   attribute :curing_duration do |object|
-    task = object.tasks.find_by(is_phase: true, phase: Constants::CONST_CURE)
+    # FIXME: N+1
+    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_CURE)
     task ? task.duration : ''
   end
 
@@ -68,19 +75,26 @@ class BatchSerializer
   end
 
   attribute :current_phase do |object|
-    Cultivation::Task.where(
-      batch_id: object.id,
-      is_phase: true,
-      :start_date.lte => Date.today,
-      :end_date.gte => Date.today,
-    ).first&.name
+    'n/a'
+    # Cultivation::Task.where(
+    #   batch_id: object.id,
+    #   indent: 0,
+    #   :start_date.lte => Date.today,
+    #   :end_date.gte => Date.today,
+    # ).first&.name
   end
 
   attribute :progress_today do |object|
-    -1 # (Date.today - object.start_date).round
+    # (Date.today - object.start_date).round
+    -1
   end
 
   attribute :estimated_total_days do |object|
-    -1 # TODO: Broken by new schema
+    -2
+    # if object.estimated_harvest_date && object.start_date
+    #   (object.estimated_harvest_date - object.start_date).round
+    # else
+    #   ''
+    # end
   end
 end

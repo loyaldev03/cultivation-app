@@ -6,7 +6,11 @@
 <% end %>
 
 <div class="pa4">
-  <div class="fl w-100 flex flex-column">
-    <%= react_component 'cultivation/issues/BatchIssues', { batch: @batch_attributes} %>
+  <div class="fl w-100 flex flex-column grey">
+    <%= react_component 'cultivation/issues/BatchIssues', { 
+      batch: @batch_attributes, 
+      current_user_first_name: current_user.first_name,
+      current_user_last_name: current_user.last_name,
+      current_user_photo: current_user.photo&.url } %>
   </div>
 </div>

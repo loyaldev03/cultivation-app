@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import IssueForm from './components/IssueForm'
 import IssueDetails from './components/IssueDetails'
@@ -59,7 +60,7 @@ class IssueSidebar extends React.Component {
   }
 
   renderBody() {
-    const { batch } = this.props
+    const { batch_id, facility_id, current_user_first_name, current_user_last_name, current_user_photo } = this.props
     const { mode } = this.state
 
     if (mode === 'details') {
@@ -68,7 +69,10 @@ class IssueSidebar extends React.Component {
           onClose={this.onClose}
           onToggleMode={this.onToggleMode}
           issueId={this.state.issueId}
-          batchId={batch.id}
+          batchId={batch_id}
+          current_user_first_name={current_user_first_name}
+          current_user_last_name={current_user_last_name}
+          current_user_photo={current_user_photo}
         />
       )
     } else {
@@ -78,8 +82,8 @@ class IssueSidebar extends React.Component {
           onToggleMode={this.onToggleMode}
           mode={this.state.mode}
           issueId={this.state.issueId}
-          batchId={batch.id}
-          facilityId={batch.facility_id}
+          batchId={batch_id}
+          facilityId={facility_id}
         />
       )
     }
@@ -105,5 +109,15 @@ class IssueSidebar extends React.Component {
     )
   }
 }
+
+
+IssueSidebar.propTypes = {
+  batch_id: PropTypes.string.isRequired,
+  facility_id: PropTypes.string.isRequired,
+  current_user_first_name: PropTypes.string.isRequired,
+  current_user_last_name: PropTypes.string.isRequired,
+  current_user_photo: PropTypes.string,
+}
+
 
 export default IssueSidebar

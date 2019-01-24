@@ -1,6 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
-import { formatDate2 } from '../../utils'
 import Avatar from '../../utils/Avatar'
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
@@ -12,12 +12,14 @@ import issueStore from '../../issues/store/IssueStore'
 const renderUser = user => {
   if (user) {
     return (
-      <Avatar
-        firstName={user.first_name}
-        lastName={user.last_name}
-        photoUrl={user.photo}
-        size="20px"
-      />
+      <div className="flex justify-center">
+        <Avatar
+          firstName={user.first_name}
+          lastName={user.last_name}
+          photoUrl={user.photo}
+          size={20}
+        />
+      </div>
     )
   }
   return null
@@ -92,19 +94,19 @@ const columns = [
   {
     Header: 'Reported',
     headerStyle: { textAlign: 'center' },
-    width: 100,
+    width: 90,
     Cell: record => renderUser(record.original.attributes.reported_by)
   },
   {
     Header: 'Assigned',
     headerStyle: { textAlign: 'center' },
-    width: 100,
+    width: 90,
     Cell: record => renderUser(record.original.attributes.assigned_to)
   },
   {
     Header: 'Status',
     headerStyle: { textAlign: 'left' },
-    width: 150,
+    width: 100,
     Cell: record => renderHumanize(record.original.attributes.status)
   }
 ]
@@ -152,7 +154,14 @@ class BatchIssues extends React.Component {
               filterable
               className="f6 w-100 grey"
             />
-            <IssueSidebar batch={this.props.batch} mode={this.state.mode} />
+            <IssueSidebar 
+              batch_id={this.props.batch.id} 
+              facility_id={this.props.batch.facility_id}
+              mode={this.state.mode} 
+              current_user_first_name={this.props.current_user_first_name}
+              current_user_last_name={this.props.current_user_last_name}
+              current_user_photo={this.props.current_user_photo}
+            />
           </div>
         </div>
       </React.Fragment>
@@ -160,10 +169,25 @@ class BatchIssues extends React.Component {
   }
 
   render() {
+    const { batch } = this.props
+
     return (
       <React.Fragment>
-        <BatchHeader batch={this.props.batch} />
-        <BatchTabs batch={this.props.batch} currentTab="issues" />
+        <BatchHeader
+          batch_no={batch.batch_no}
+          batch_source={batch.batch_source}
+          quantity={batch.quantity}
+          status={batch.status}
+          name={batch.name}
+          id={batch.id}
+          strain={batch.strain}
+          grow_method={batch.grow_method}
+          start_date={batch.start_date}
+          total_estimated_cost={batch.total_estimated_cost}
+          total_estimated_hour={batch.total_estimated_hour}
+          estimated_harvest_date={batch.estimated_harvest_date}
+        />
+        <BatchTabs batch={batch} currentTab="issues" />
 
         {this.renderContent()}
 
@@ -173,6 +197,13 @@ class BatchIssues extends React.Component {
       </React.Fragment>
     )
   }
+}
+
+BatchIssues.propTypes = {
+  batch: PropTypes.object.isRequired,
+  current_user_first_name: PropTypes.string.isRequired,
+  current_user_last_name: PropTypes.string.isRequired,
+  current_user_photo: PropTypes.string,
 }
 
 export default BatchIssues

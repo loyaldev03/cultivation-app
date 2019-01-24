@@ -116,6 +116,7 @@ const openSidebar = (event, id = null, mode = null) => {
   event.preventDefault()
 }
 
+
 @observer
 class BatchIssues extends React.Component {
   constructor(props) {

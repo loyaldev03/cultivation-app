@@ -95,11 +95,11 @@ class IssueDetails extends Component {
         <div className="flex mt3 mb3 w-100 justify-end">
           <a href="#" className="link flex items-center outline-0">
             <span className="f7 gray mr2">Followed by</span>
-            <Avatar 
-              firstName="" 
-              lastName="" 
-              photoUrl="" 
-              size={25} 
+            <Avatar
+              firstName=""
+              lastName=""
+              photoUrl=""
+              size={25}
               showNoUser
               onClick={() => alert('trigger assign followers')}
             />
@@ -135,6 +135,9 @@ class IssueDetails extends Component {
   }
 
   render() {
+
+    const { current_user_first_name, current_user_last_name, current_user_photo } = this.props
+    
     const issue = currentIssueStore.issue
     let assignedFirstName = '',
       assignedLastName = '',
@@ -202,13 +205,12 @@ class IssueDetails extends Component {
           </div>
         </div>
         <hr className="w-100" />
-
-        <Comments 
-          issueId={issue.id} 
+        <Comments
+          issueId={issue.id}
           issueNo={issue.issue_no}
-          current_user_first_name={this.props.current_user_first_name}
-          current_user_last_name={this.props.current_user_last_name}
-          current_user_photo={this.props.current_user_photo}
+          current_user_first_name={current_user_first_name}
+          current_user_last_name={current_user_last_name}
+          current_user_photo={current_user_photo}
         />
         <AttachmentPopup
           open={this.state.previewOpen}
@@ -221,7 +223,6 @@ class IssueDetails extends Component {
     )
   }
 }
-
 
 IssueDetails.propTypes = {
   onClose: PropTypes.func.isRequired,

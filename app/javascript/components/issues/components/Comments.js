@@ -93,7 +93,7 @@ class Comments extends React.Component {
         alert('something wrong')
       } else {
         event.preventDefault()
-        this.setState({ newComment: '', attachments: [] })
+        this.setState({ newComment: '', attachments: [] }, this.resizeCommentText)
         window.editorSidebar.scrollToBottom()
       }
     })
@@ -166,8 +166,13 @@ class Comments extends React.Component {
   }
 
   render() {
-    const { current_user_first_name, current_user_last_name, current_user_photo } = this.props
-    console.log(current_user_first_name, current_user_last_name, current_user_photo)
+    const {
+      current_user_first_name,
+      current_user_last_name,
+      current_user_photo
+    } = this.props
+    
+    const hasComment = currentIssue.comments && currentIssue.comments.length > 0
 
     return (
       <React.Fragment>
@@ -178,7 +183,7 @@ class Comments extends React.Component {
           <div className="f7 fw6 gray w-auto mr1 self-start">&bull;</div>
           <div className="f7 fw6 gray w-auto">Discussion</div>
         </div>
-        {currentIssue.comments &&
+        {hasComment &&
           currentIssue.comments.map(x => (
             <CommentMessage
               key={x.id}
@@ -186,14 +191,14 @@ class Comments extends React.Component {
               onTogglePreview={this.onTogglePreview}
             />
           ))}
-        <div className="ph3 mt3 mb4">
+        <div className={`ph3 mb4 ${hasComment && 'mt3'}`}>
           <div className="b--black-10 flex br3 ba w-100 ph2 pt1 pb2 flex items-start">
-            <div style={{ marginTop: '3px'}}>
-              <Avatar 
+            <div style={{ marginTop: '3px' }}>
+              <Avatar
                 firstName={current_user_first_name}
                 lastName={current_user_last_name}
                 photoUrl={current_user_photo}
-                size={25} 
+                size={25}
               />
             </div>
             <div className="flex flex-column flex-auto ml2">

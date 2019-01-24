@@ -154,10 +154,10 @@ class BatchIssues extends React.Component {
               filterable
               className="f6 w-100 grey"
             />
-            <IssueSidebar 
-              batch_id={this.props.batch.id} 
+            <IssueSidebar
+              batch_id={this.props.batch.id}
               facility_id={this.props.batch.facility_id}
-              mode={this.state.mode} 
+              mode={this.state.mode}
               current_user_first_name={this.props.current_user_first_name}
               current_user_last_name={this.props.current_user_last_name}
               current_user_photo={this.props.current_user_photo}
@@ -203,7 +203,7 @@ BatchIssues.propTypes = {
   batch: PropTypes.object.isRequired,
   current_user_first_name: PropTypes.string.isRequired,
   current_user_last_name: PropTypes.string.isRequired,
-  current_user_photo: PropTypes.string,
+  current_user_photo: PropTypes.string
 }
 
 export default BatchIssues

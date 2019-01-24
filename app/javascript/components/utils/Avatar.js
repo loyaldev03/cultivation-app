@@ -21,7 +21,7 @@ const Avatar = React.memo(
             width: size,
             height: size,
             backgroundSize: 'cover',
-            borderRadius: '50%',
+            borderRadius: '50%'
           }}
           onClick={onClick}
         >

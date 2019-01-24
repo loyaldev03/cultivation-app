@@ -60,7 +60,13 @@ class IssueSidebar extends React.Component {
   }
 
   renderBody() {
-    const { batch_id, facility_id, current_user_first_name, current_user_last_name, current_user_photo } = this.props
+    const {
+      batch_id,
+      facility_id,
+      current_user_first_name,
+      current_user_last_name,
+      current_user_photo
+    } = this.props
     const { mode } = this.state
 
     if (mode === 'details') {
@@ -110,7 +116,6 @@ class IssueSidebar extends React.Component {
   }
 }
 
-
 IssueSidebar.propTypes = {
   batch_id: PropTypes.string.isRequired,
   facility_id: PropTypes.string.isRequired,
@@ -118,6 +123,5 @@ IssueSidebar.propTypes = {
   current_user_last_name: PropTypes.string.isRequired,
   current_user_photo: PropTypes.string,
 }
-
 
 export default IssueSidebar

@@ -20,7 +20,7 @@ module Cultivation
         if valid_batch? batch
           batch_tasks = Cultivation::QueryTasks.call(batch).result
           task = batch_tasks.detect { |t| t.id == task.id }
-          facility_users = get_facility_users(batch.facility_id)
+          facility_users = QueryUsers.call(@current_user, batch.facility_id).result
           # Remember original start_date
           original_start_date = task.start_date
           # Update task with args and re-calculate end_date
@@ -45,10 +45,6 @@ module Cultivation
     end
 
     private
-
-    def get_facility_users(facility_id)
-      User.in(facilities: facility_id).where(is_active: true).to_a
-    end
 
     def update_batch(batch, first_task, schedule_batch)
       # Here we assume estimated harvest date is the start date of :dry phase

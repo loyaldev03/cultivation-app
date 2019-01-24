@@ -17,7 +17,8 @@ const Avatar = React.memo(
     if (showNoUser) {
       return (
         <div
-          className={`flex justify-center items-center fw6 white bg-black-20 hover-bg-black-10 ${hasAction && 'pointer'}`}
+          className={`flex justify-center items-center fw6 white bg-black-20 hover-bg-black-10 ${hasAction &&
+            'pointer'}`}
           style={{
             width: size,
             height: size,

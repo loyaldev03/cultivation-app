@@ -9,9 +9,9 @@ import setupUppy from './setupUppy'
 // import { toJS } from 'mobx'
 
 import Avatar from '../../utils/Avatar.js'
-import currentIssueStore from '../store/CurrentIssueStore'
 import CommentMessage from './CommentMessage'
 import AttachmentThumbnail from './AttachmentThumbnail'
+import AttachmentPopup from './AttachmentPopup'
 import { formatIssueNo } from './FormatHelper'
 import currentIssue from '../store/CurrentIssueStore'
 import addComment from '../actions/addComment'
@@ -29,7 +29,11 @@ class Comments extends React.Component {
     return {
       newComment: '',
       attachments: [],
-      uppyOpen: false
+      delete_attachments: [],
+      uppyOpen: false,
+      previewOpen: false,
+      previewUrl: '',
+      previewType: '',
     }
   }
 
@@ -117,6 +121,26 @@ class Comments extends React.Component {
     field.style.height = height + 'px'
   }
 
+  onTogglePreview = (url = '', type = '', filename) => {
+    this.setState({
+      previewOpen: !this.state.previewOpen,
+      previewUrl: url,
+      previewType: type
+    })
+  }
+
+
+  onDeleteAttachment = key => {
+    const result = confirm('Remove attachment?')
+    if (result) {
+      const attachment = this.state.attachments.find(x => x.key == key)
+      this.setState({
+        attachments: this.state.attachments.filter(x => x.key != key),
+        delete_attachments: [...this.state.delete_attachments, key]
+      })
+    }
+  }
+
   renderAttachments() {
     if (this.state.attachments.length === 0) {
       return null
@@ -152,7 +176,7 @@ class Comments extends React.Component {
           <div className="f7 fw6 gray w-auto">Discussion</div>
         </div>
         {currentIssue.comments &&
-          currentIssue.comments.map(x => <CommentMessage key={x.id} {...x} />)}
+          currentIssue.comments.map(x => <CommentMessage key={x.id} {...x} onTogglePreview={this.onTogglePreview} />)}
         <div className="ph3 mt3 mb4">
           <div className="b--black-10 flex br3 ba w-100 ph2 pt1 pb2 flex items-start">
             <Avatar firstName="Sample" lastName="User" size={25} />
@@ -160,7 +184,7 @@ class Comments extends React.Component {
               <textarea
                 ref={this.newCommentText}
                 type="text"
-                className="bn flex-auto flex f6 dark-grey outline-0"
+                className="bn flex-auto flex f6 dark-grey outline-0 pl0"
                 style={{ resize: 'none', paddingTop: '4px' }}
                 rows="1"
                 value={this.state.newComment}
@@ -204,6 +228,13 @@ class Comments extends React.Component {
           onRequestClose={this.onUppyClose}
           proudlyDisplayPoweredByUppy={false}
           plugins={['Webcam', 'Dropbox', 'AwsS3']}
+        />
+        <AttachmentPopup
+          open={this.state.previewOpen}
+          key={this.state.previewUrl}
+          url={this.state.previewUrl}
+          type={this.state.previewType}
+          onClose={this.onTogglePreview}
         />
       </React.Fragment>
     )

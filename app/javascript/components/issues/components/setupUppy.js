@@ -29,16 +29,6 @@ const setupUppy = (
   })
 
   uppy.on('complete', onComplete)
-  // uppy.on('file-added', (file) => {
-  //   console.log(file)
-  //   let reader = new FileReader()
-  //   const d = reader.readAsDataURL(file)
-  //   console.log(d)
-  // })
-
-  uppy.on('upload-success', (file, resp, uploadURL) => {
-    console.log(file)
-  })
   return uppy
 }
 

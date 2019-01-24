@@ -1,4 +1,5 @@
 import React from 'react'
+import { toJS } from 'mobx'
 import Avatar from '../../utils/Avatar.js'
 import AttachmentThumbnail from './AttachmentThumbnail'
 import { formatDate, formatTime } from '../../utils/DateHelper'
@@ -8,7 +9,8 @@ const CommentBody = ({
   message,
   attachments = [],
   resolved = false,
-  reason = ''
+  reason = '',
+  onClick = (url, mime_type) => {}
 }) => {
   return (
     <div className="mb2 pv2 pl3 pr0 br2 bg-black-05">
@@ -40,7 +42,7 @@ const CommentBody = ({
       {attachments.length > 0 && (
         <div className="flex flex-wrap mt2 mb1">
           {attachments.map(props => (
-            <AttachmentThumbnail key={`${id}.${props.url}`} {...props} />
+            <AttachmentThumbnail key={`${id}.${props.url}`} {...props} onClick={() => onClick(props.url, props.type)}/>
           ))}
         </div>
       )}
@@ -83,7 +85,8 @@ const CommentMessage = ({
   attachments = [],
   task_url = '',
   task_name = '',
-  quote = ''
+  quote = '',
+  onTogglePreview = (url, mime_type) => {}
 }) => {
   const align = is_me == true ? 'justify-start' : 'justify-end'
   return (
@@ -105,6 +108,7 @@ const CommentMessage = ({
               resolved={resolved}
               reason={reason}
               id={id}
+              onClick={onTogglePreview}
             />
           )}
           {task_url.length > 0 && (

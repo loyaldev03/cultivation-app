@@ -9,6 +9,10 @@ class AttachmentPopup extends React.Component {
   renderContent() {
     const { url, type } = this.props
 
+    if (url.startsWith('blob:')) {
+      console.log('statts with')
+    }
+
     if (type.startsWith('image')) {
       return <img src={url} className="w-100" />
     } else if (type.startsWith('video')) {
@@ -52,7 +56,8 @@ class AttachmentPopup extends React.Component {
             position: 'absolute',
             top: 80,
             marginLeft: '10px',
-            marginRight: '10px'
+            marginRight: '10px',
+            width: 'calc(100% - 20px)',
           }}
         >
           <div className="pv2 ph3 items-start flex justify-end bg-white br3 br--top">

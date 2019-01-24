@@ -5,6 +5,10 @@ FactoryBot.define do
     quantity { Faker::Number.number(2).to_i }
     status { Constants::BATCH_STATUS_DRAFT }
 
+    trait :scheduled do
+      status { Constants::BATCH_STATUS_SCHEDULED }
+    end
+
     trait :active do
       status { Constants::BATCH_STATUS_ACTIVE }
     end

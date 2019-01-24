@@ -45,6 +45,7 @@ module Cultivation
           batch.save!
           # Save all tray plans
           Cultivation::TrayPlan.collection.insert_many(new_plans)
+          batch
         end
       end
     end
@@ -71,7 +72,7 @@ module Cultivation
             sp[:quantity] += p[:tray_capacity].to_i
           else
             sp = {
-              plant_id: p[:plant_id],
+              plant_id: p[:plant_id].to_bson_id,
               quantity: p[:tray_capacity].to_i,
             }
             selected_plants << sp
@@ -99,7 +100,7 @@ module Cultivation
     end
 
     def build_tray_plans(facility_id, batch_id, phase_info, locations = [])
-      current_time = Time.now
+      current_time = Time.zone.now
       # Important: Must save capacity as integer for
       # QueryAvailableTrays commands to work.
       locations.map do |loc|

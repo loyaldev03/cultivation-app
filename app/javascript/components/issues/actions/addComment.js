@@ -2,8 +2,6 @@ import currentIssueStore from '../store/CurrentIssueStore'
 import { httpPostOptions } from '../../utils'
 
 const addComment = payload => {
-  // console.log('current issue addComment')
-
   return fetch(
     `/api/v1/issues/${payload.issueId}/add_comment`,
     httpPostOptions(payload)

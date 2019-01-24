@@ -46,9 +46,7 @@ class CurrentIssueStore {
 
   @action
   addComment(comment) {
-    console.log('currentIssueStore.addComment')
     const newComments = [...this.comments.slice(), comment]
-    console.log(newComments)
     this.comments.replace(newComments)
   }
 

@@ -11,12 +11,13 @@ const Avatar = React.memo(
     size = 36,
     backgroundColor = '#eee',
     showNoUser = false,
-    onClick = () => {}
+    onClick = null
   }) => {
+    const hasAction = onClick ? true : false
     if (showNoUser) {
       return (
         <div
-          className="flex justify-center items-center fw6 white bg-black-20 pointer hover-bg-black-10"
+          className={`flex justify-center items-center fw6 white bg-black-20 hover-bg-black-10 ${hasAction && 'pointer'}`}
           style={{
             width: size,
             height: size,
@@ -32,7 +33,7 @@ const Avatar = React.memo(
       // http://a.b
       return (
         <div
-          className={className}
+          className={`${className} ${hasAction && 'pointer'}`}
           style={{
             background: `url(${photoUrl}) no-repeat center center`,
             backgroundColor,
@@ -46,12 +47,14 @@ const Avatar = React.memo(
     }
 
     return (
-      <LetterAvatar
-        firstName={firstName}
-        lastName={lastName}
-        size={size}
-        radius="50%"
-      />
+      <div className={`${hasAction && 'pointer'}`} onClick={onClick}>
+        <LetterAvatar
+          firstName={firstName}
+          lastName={lastName}
+          size={size}
+          radius="50%"
+        />
+      </div>
     )
   }
 )

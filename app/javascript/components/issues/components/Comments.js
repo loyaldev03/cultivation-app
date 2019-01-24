@@ -7,8 +7,6 @@ import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
 import setupUppy from './setupUppy'
 
-// import { toJS } from 'mobx'
-
 import Avatar from '../../utils/Avatar.js'
 import CommentMessage from './CommentMessage'
 import AttachmentThumbnail from './AttachmentThumbnail'

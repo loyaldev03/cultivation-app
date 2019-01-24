@@ -121,7 +121,7 @@ IssueSidebar.propTypes = {
   facility_id: PropTypes.string.isRequired,
   current_user_first_name: PropTypes.string.isRequired,
   current_user_last_name: PropTypes.string.isRequired,
-  current_user_photo: PropTypes.string,
+  current_user_photo: PropTypes.string
 }
 
 export default IssueSidebar

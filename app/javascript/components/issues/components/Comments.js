@@ -93,7 +93,10 @@ class Comments extends React.Component {
         alert('something wrong')
       } else {
         event.preventDefault()
-        this.setState({ newComment: '', attachments: [] }, this.resizeCommentText)
+        this.setState(
+          { newComment: '', attachments: [] },
+          this.resizeCommentText
+        )
         window.editorSidebar.scrollToBottom()
       }
     })
@@ -171,7 +174,7 @@ class Comments extends React.Component {
       current_user_last_name,
       current_user_photo
     } = this.props
-    
+
     const hasComment = currentIssue.comments && currentIssue.comments.length > 0
 
     return (

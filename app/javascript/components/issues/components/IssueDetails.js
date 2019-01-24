@@ -135,9 +135,12 @@ class IssueDetails extends Component {
   }
 
   render() {
+    const {
+      current_user_first_name,
+      current_user_last_name,
+      current_user_photo
+    } = this.props
 
-    const { current_user_first_name, current_user_last_name, current_user_photo } = this.props
-    
     const issue = currentIssueStore.issue
     let assignedFirstName = '',
       assignedLastName = '',
@@ -231,7 +234,7 @@ IssueDetails.propTypes = {
   batchId: PropTypes.string.isRequired,
   current_user_first_name: PropTypes.string.isRequired,
   current_user_last_name: PropTypes.string.isRequired,
-  current_user_photo: PropTypes.string,
+  current_user_photo: PropTypes.string
 }
 
 export default IssueDetails

@@ -104,12 +104,13 @@ class Cultivation::BatchesController < ApplicationController
     # Get start_date and end_date from batch
     phases_info = get_batch_phase(batch, cultivation_phases)
     if phases_info.any?
-      filter_args = {facility_id: batch.facility_id,
-                     purpose: cultivation_phases,
-                     exclude_batch_id: batch.id}
-      available_trays_cmd = QueryAvailableTrays.call(batch.start_date,
-                                                     batch.estimated_harvest_date,
-                                                     filter_args)
+      available_trays_cmd = QueryAvailableTrays.call(
+        start_date: batch.start_date,
+        end_date: batch.estimated_harvest_date,
+        facility_id: batch.facility_id,
+        purpose: cultivation_phases,
+        exclude_batch_id: batch.id,
+      )
       if available_trays_cmd.success?
         available_trays_cmd.result
       else

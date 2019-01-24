@@ -15,12 +15,10 @@ module Cultivation
 
       # TODO: Duplicate & expand QueryAvailableTrays to retrieve all locations.
       available_trays = QueryAvailableTrays.call(
-        Time.new(1901, 1, 1),
-        Time.new(1901, 1, 1),
-        {
-          facility_id: cultivation_batch.facility_strain.facility_id,
-          purpose: task.phase,
-        }
+        start_date: Time.new(1901, 1, 1),
+        end_date: Time.new(1901, 1, 1),
+        facility_id: cultivation_batch.facility_strain.facility_id,
+        purpose: task.phase,
       ).call.result
 
       # 2. filter from available to trays used in this batch.

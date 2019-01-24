@@ -24,7 +24,8 @@ RSpec.describe QueryAvailableTrays, type: :command do
       create(:batch, :active,
              facility_id: subject.id,
              start_date: start_date,
-             quantity: 5)
+             quantity: 5,
+             batch_source: 'clones_from_mother')
     end
 
     it "Condition A" do
@@ -54,9 +55,10 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
       # Execute
       query_cmd = QueryAvailableTrays.call(
-        start_date,
-        end_date,
-        facility_id: subject.id, purpose: [Constants::CONST_CLONE],
+        start_date: start_date,
+        end_date: end_date,
+        facility_id: subject.id,
+        purpose: [Constants::CONST_CLONE],
       )
 
       # Validate
@@ -85,10 +87,12 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
-      query_cmd = QueryAvailableTrays.call(start_date, end_date, {
+      query_cmd = QueryAvailableTrays.call(
+        start_date: start_date,
+        end_date: end_date,
         facility_id: subject.id,
         phase: Constants::CONST_CLONE,
-      })
+      )
 
       # Validate
       target = query_cmd.result.detect { |t| t.tray_id.to_s == last_tray.id.to_s }
@@ -113,7 +117,12 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
-      query_cmd = QueryAvailableTrays.call(start_date, end_date, {facility_id: subject.id, purpose: 'clone'})
+      query_cmd = QueryAvailableTrays.call(
+        start_date: start_date,
+        end_date: end_date,
+        facility_id: subject.id,
+        purpose: 'clone',
+      )
 
       # Validate
       target = query_cmd.result.detect { |t| t.tray_id.to_s == last_tray.id.to_s }
@@ -138,7 +147,12 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
-      query_cmd = QueryAvailableTrays.call(start_date, end_date, {facility_id: subject.id, purpose: 'clone'})
+      query_cmd = QueryAvailableTrays.call(
+        start_date: start_date,
+        end_date: end_date,
+        facility_id: subject.id,
+        purpose: 'clone',
+      )
 
       # Validate
       target = query_cmd.result.detect { |t| t.tray_id.to_s == last_tray.id.to_s }
@@ -163,7 +177,12 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
-      query_cmd = QueryAvailableTrays.call(start_date, end_date, {facility_id: subject.id, purpose: 'clone'})
+      query_cmd = QueryAvailableTrays.call(
+        start_date: start_date,
+        end_date: end_date,
+        facility_id: subject.id,
+        purpose: 'clone',
+      )
 
       # Validate
       target = query_cmd.result.detect { |t| t.tray_id.to_s == last_tray.id.to_s }
@@ -188,7 +207,12 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
-      query_cmd = QueryAvailableTrays.call(start_date, end_date, {facility_id: subject.id, purpose: 'clone'})
+      query_cmd = QueryAvailableTrays.call(
+        start_date: start_date,
+        end_date: end_date,
+        facility_id: subject.id,
+        purpose: 'clone',
+      )
 
       # Validate
       target = query_cmd.result.detect { |t| t.tray_id.to_s == last_tray.id.to_s }
@@ -213,7 +237,12 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
-      query_cmd = QueryAvailableTrays.call(start_date, end_date, {facility_id: subject.id, purpose: 'clone'})
+      query_cmd = QueryAvailableTrays.call(
+        start_date: start_date,
+        end_date: end_date,
+        facility_id: subject.id,
+        purpose: 'clone',
+      )
 
       # Validate
       target = query_cmd.result.detect { |t| t.tray_id.to_s == last_tray.id.to_s }
@@ -238,7 +267,12 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
-      query_cmd = QueryAvailableTrays.call(start_date, end_date, {facility_id: subject.id, purpose: 'clone'})
+      query_cmd = QueryAvailableTrays.call(
+        start_date: start_date,
+        end_date: end_date,
+        facility_id: subject.id,
+        purpose: 'clone',
+      )
 
       # Validate
       target = query_cmd.result.detect { |t| t.tray_id.to_s == last_tray.id.to_s }
@@ -263,7 +297,12 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
-      query_cmd = QueryAvailableTrays.call(start_date, end_date, {facility_id: subject.id, purpose: 'clone'})
+      query_cmd = QueryAvailableTrays.call(
+        start_date: start_date,
+        end_date: end_date,
+        facility_id: subject.id,
+        purpose: 'clone',
+      )
 
       # Validate
       target = query_cmd.result.detect { |t| t.tray_id.to_s == last_tray.id.to_s }
@@ -287,7 +326,12 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
-      query_cmd = QueryAvailableTrays.call(start_date, end_date, {facility_id: subject.id, purpose: 'clone'})
+      query_cmd = QueryAvailableTrays.call(
+        start_date: start_date,
+        end_date: end_date,
+        facility_id: subject.id,
+        purpose: 'clone',
+      )
 
       # Validate
       target = query_cmd.result.detect { |t| t.tray_id.to_s == last_tray.id.to_s }
@@ -312,7 +356,12 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
-      query_cmd = QueryAvailableTrays.call(start_date, end_date, {facility_id: subject.id, purpose: 'clone'})
+      query_cmd = QueryAvailableTrays.call(
+        start_date: start_date,
+        end_date: end_date,
+        facility_id: subject.id,
+        purpose: 'clone',
+      )
 
       # Validate
       target = query_cmd.result.detect { |t| t.tray_id.to_s == last_tray.id.to_s }
@@ -352,7 +401,12 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p2_start_date,
                   end_date: p2_end_date)
 
-      query_cmd = QueryAvailableTrays.call(start_date, end_date, {facility_id: subject.id, purpose: 'clone'})
+      query_cmd = QueryAvailableTrays.call(
+        start_date: start_date,
+        end_date: end_date,
+        facility_id: subject.id,
+        purpose: 'clone',
+      )
 
       # Validate
       target = query_cmd.result.detect { |t| t.tray_id.to_s == last_tray.id.to_s }
@@ -377,7 +431,11 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
-      query_cmd = QueryAvailableTrays.call(start_date, end_date)
+      query_cmd = QueryAvailableTrays.call(
+        facility_id: subject.id,
+        start_date: start_date,
+        end_date: end_date,
+      )
 
       # Validate
       target = query_cmd.result.detect { |t| t.tray_id.to_s == last_tray.id.to_s }
@@ -402,7 +460,11 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   start_date: p1_start_date,
                   end_date: p1_end_date)
 
-      query_cmd = QueryAvailableTrays.call(start_date, end_date)
+      query_cmd = QueryAvailableTrays.call(
+        facility_id: subject.id,
+        start_date: start_date,
+        end_date: end_date,
+      )
 
       # Validate
       target = query_cmd.result.detect { |t| t.tray_id.to_s == last_tray.id.to_s }

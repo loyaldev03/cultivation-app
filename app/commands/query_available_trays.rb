@@ -1,18 +1,25 @@
 class QueryAvailableTrays
   prepend SimpleCommand
 
-  def initialize(start_date, end_date, filter = {})
-    raise ArgumentError, 'start_date' if start_date.nil?
-    raise ArgumentError, 'end_date' if end_date.nil?
-    raise ArgumentError, 'start_date should be earlier than end_date' if end_date < start_date
+  def initialize(args = {})
+    args = {
+      facility_id: nil,
+      exclude_batch_id: nil,
+      purpose: nil,
+      start_date: nil,
+      end_date: nil,
+    }.merge(args)
 
-    @start_date = start_date.beginning_of_day
-    @end_date = end_date.end_of_day
+    raise ArgumentError, 'facility_id' if args[:facility_id].nil?
+    raise ArgumentError, 'start_date' if args[:start_date].nil?
+    raise ArgumentError, 'end_date' if args[:end_date].nil?
+    raise ArgumentError, 'start_date should be ealier than end_date' if args[:end_date] < args[:start_date]
 
-    # Optional match clauses
-    @facility_id = filter[:facility_id].to_bson_id if filter[:facility_id]
-    @purpose = filter[:purpose]
-    @exclude_batch_id = filter[:exclude_batch_id].to_bson_id if filter[:exclude_batch_id]
+    @facility_id = args[:facility_id]&.to_bson_id
+    @exclude_batch_id = args[:exclude_batch_id]&.to_bson_id
+    @purpose = args[:purpose]
+    @start_date = args[:start_date]
+    @end_date = args[:end_date]
   end
 
   def call

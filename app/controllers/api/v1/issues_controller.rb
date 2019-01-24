@@ -38,9 +38,9 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
   def archive
     command = Issues::ArchiveIssue.call(params.to_unsafe_h)
     if command.success?
-      render json: {}.to_json
+      render json: Issues::IssueSerializer.new(command.result).serialized_json
     else
-      render json: {}.to_json, status: 422
+      render json: request_with_errors(command.errors), status: 422
     end
   end
 

@@ -5,10 +5,10 @@ module Cultivation
     REFTYPE_CHILDREN = 'children'.freeze
     REFTYPE_DEPENDENT = 'dependent'.freeze
 
-    def initialize(current_user = nil, args = nil, activate_batch = false)
+    def initialize(current_user = nil, args = nil, schedule_batch = false)
       @args = args
       @current_user = current_user
-      @activate_batch = activate_batch
+      @schedule_batch = schedule_batch
     end
 
     def call
@@ -38,7 +38,7 @@ module Cultivation
           task.save! if errors.empty?
           # TODO::ANDY - valid_data when updating tasks
           # Update batch
-          update_batch(batch, batch_tasks&.first, @activate_batch)
+          update_batch(batch, batch_tasks&.first, @schedule_batch)
         end
       end
       task
@@ -50,16 +50,19 @@ module Cultivation
       User.in(facilities: facility_id).where(is_active: true).to_a
     end
 
-    def update_batch(batch, first_task, activate_batch)
+    def update_batch(batch, first_task, schedule_batch)
       # Here we assume estimated harvest date is the start date of :dry phase
       # (or :cure, when :dry not found)
       harvest_phase = Cultivation::Task.
         where(batch_id: batch.id,
-              is_phase: true,
-              :phase.in => [Constants::CONST_DRY,
+              indent: 0,
+              :phase.in => [Constants::CONST_HARVEST,
+                            Constants::CONST_DRY,
                             Constants::CONST_CURE]).first
       # Set batch to active
-      batch.is_active = true if @activate_batch
+      if schedule_batch
+        batch.status = Constants::BATCH_STATUS_SCHEDULED
+      end
       batch.estimated_harvest_date = harvest_phase.start_date if harvest_phase
       batch.start_date = first_task.start_date if first_task.start_date
       batch.save!
@@ -105,12 +108,14 @@ module Cultivation
     end
 
     def decide_start_date(task, batch_tasks, args_start_date, args_depend_on = nil)
-      # TODO::ANDY if task is a first child, it should also change the parent start_date
       if args_depend_on.present? && task.depend_on != args_depend_on
         predecessor = batch_tasks.detect { |t| t.id == args_depend_on.to_bson_id }
         if predecessor.present? && !task.child_of?(predecessor.wbs, batch_tasks)
           return predecessor.end_date
         end
+        # TODO::ANDY if dependent task is also a first child,
+        # it should also change the parent start_date. Only do this if user is
+        # changing the depend_on
       end
       parent = task.parent(batch_tasks)
       # First subtask should have same start_date as parent task

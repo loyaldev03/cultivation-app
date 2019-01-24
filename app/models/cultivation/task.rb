@@ -7,29 +7,17 @@ module Cultivation
     attr_accessor :wbs
 
     field :phase, type: String
-    # FIXME: Remove
-    field :task_category, type: String
     field :name, type: String
     field :indent, type: Integer, default: -> { 0 }
     field :duration, type: Integer
-    # FIXME: Remove
-    field :days_from_start_date, type: Integer
     field :start_date, type: Time
     field :end_date, type: Time
     field :estimated_hours, type: Float, default: -> { 0 }
     field :actual_hours, type: Float, default: -> { 0 }
     field :estimated_cost, type: Float, default: -> { 0 }
     field :actual_cost, type: Float, default: -> { 0 }
-    # Indicate a top most task
-    # FIXME: Remove
-    field :is_phase, type: Boolean, default: -> { false }
-    # Indicate a Category task (2nd level task)
-    # FIXME: Remove
-    field :is_category, type: Boolean, default: -> { false }
     # Indelible task cannot be remove, possible values: 'cleaning', 'moving'
     field :indelible, type: String
-    # FIXME: Remove - Parent task
-    field :parent_id, type: BSON::ObjectId
     # Predecessor task
     field :depend_on, type: BSON::ObjectId
     field :task_type, type: Array, default: []

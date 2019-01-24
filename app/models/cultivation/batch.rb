@@ -12,11 +12,11 @@ module Cultivation
     # Planned quantity for the batch (capacity needed)
     field :quantity, type: Integer
     field :current_growth_stage, type: String
-    # Active Batch would affect the capacity of the Booked Tray.
-    field :is_active, type: Boolean, default: -> { false }
-    # Plant selected during batch setup. Depends on the batch_source
-    # this can either the mothers' plantId or the clones' plantId
+    # Selected Mother Plants (IDs)
     field :selected_plants, type: Array, default: []
+    # Draft - Draft batch should not trigger validation
+    # Scheduled, Active - Take up spaces in Tray Plan
+    field :status, type: String, default: Constants::BATCH_STATUS_DRAFT
 
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     belongs_to :facility, class_name: 'Facility'
@@ -24,14 +24,6 @@ module Cultivation
     has_many :tasks, class_name: 'Cultivation::Task'
     has_many :plants, class_name: 'Inventory::Plant'
     has_one :nutrient_profile, class_name: 'Cultivation::NutrientProfile'
-
-    def phases
-      tasks.where(is_phase: true)
-    end
-
-    def orphan_tasks
-      tasks.where(parent_id: '', is_phase: false, is_category: false)
-    end
 
     def dependent_task(tasks, task)
       return if task.tasks_depend.count.zero?
@@ -68,7 +60,7 @@ module Cultivation
     def material_use
       materials = []
       tasks.each do |task|
-        ## BROKEN
+        # FIXME
         # task.material_use.each do |material|
         #   a = materials.find { |b| b.name == material.name }
         #   if a.nil?

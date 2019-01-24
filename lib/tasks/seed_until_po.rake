@@ -266,25 +266,42 @@ task seed_until_po: :environment  do
 
   start_date = DateTime.now + 2.days
   [
-    {:phase => Constants::CONST_CLONE, :task_category => '', :name => 'Clone', :duration => 17, :days_from_start_date => 0, :estimated_hours => nil, :materials => nil, :is_phase => 'true', :is_category => 'false'},
-    {:phase => Constants::CONST_CLONE, :task_category => 'Prepare', :name => 'Prepare', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :materials => nil, :is_phase => 'false', :is_category => 'true'},
-    {:phase => Constants::CONST_CLONE, :task_category => 'Prepare', :name => 'Prepare Sample', :duration => 1, :days_from_start_date => 0, :estimated_hours => nil, :materials => nil, :is_phase => 'false', :is_category => 'false'}].each do |tp|  
+    {
+      phase: Constants::CONST_CLONE,
+      name: 'Clone',
+      duration: 17,
+      estimated_hours: nil,
+      materials: nil,
+      indent: 0
+    },
+    {
+      phase: Constants::CONST_CLONE,
+      name: 'Prepare',
+      duration: 1,
+      estimated_hours: nil,
+      materials: nil,
+      indent: 1
+    },
+    {
+      phase: Constants::CONST_CLONE,
+      name: 'Prepare Sample',
+      duration: 1,
+      estimated_hours: nil,
+      materials: nil,
+      indent: 1
+    }
+  ].each do |tp|
+    # puts "task, tp: #{tp}"
+    duration = tp[:duration].nil? ? 1 : tp[:duration].to_i
+    prev_task = batch.tasks.count > 0 ? batch.tasks[-1].id : nil
 
-      # puts "task, tp: #{tp}"
-      duration = tp[:duration].to_i unless tp[:duration].nil?
-      prev_task = batch.tasks.count > 0 ? batch.tasks[-1].id : nil
-
-      batch.tasks.create!(phase:            tp[:phase],
-                          task_category:    tp[:task_category],
-                          name:             tp[:name],
-                          duration:         duration,
-                          start_date:       start_date + tp[:days_from_start_date].to_i.days,
-                          end_date:         start_date + tp[:days_from_start_date].to_i.days + duration.days,
-                          days_from_start_date: tp[:days_from_start_date],
-                          estimated_hours:  tp[:estimated_hours],
-                          is_phase:         tp[:is_phase] == 'true',
-                          is_category:      tp[:is_category] == 'true',
-                          parent_id:        prev_task)
+    batch.tasks.create!(phase:            tp[:phase],
+                        name:             tp[:name],
+                        duration:         duration,
+                        start_date:       start_date,
+                        end_date:         start_date + duration.days,
+                        estimated_hours:  tp[:estimated_hours],
+                        indent:           tp[:indent])
   end
 
   batch.tasks.last.material_use.create!(

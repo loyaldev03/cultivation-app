@@ -1,5 +1,5 @@
 module Cultivation
-  class UpdateBatchActivate
+  class UpdateBatchScheduled
     prepend SimpleCommand
 
     def initialize(current_user, args = {})
@@ -23,7 +23,6 @@ module Cultivation
           position: 0,
         )
         first_task.start_date = @start_date
-        Rails.logger.debug "\033[31m first_task.start_date: #{first_task.start_date} \033[0m"
         UpdateTask.call(@current_user, first_task, true)
       end
 

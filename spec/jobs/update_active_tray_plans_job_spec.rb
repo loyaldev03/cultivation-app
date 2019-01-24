@@ -31,7 +31,7 @@ RSpec.describe UpdateActiveTrayPlansJob, type: :job do
   end
   let(:facility_strain) { build(:facility_strain) }
   let(:batch) do
-    create(:batch,
+    create(:batch, :active,
             facility_id: facility.id,
             facility_strain: facility_strain,
             start_date: Time.strptime("2018/08/01", DATE_FORMAT),
@@ -42,7 +42,7 @@ RSpec.describe UpdateActiveTrayPlansJob, type: :job do
     # Create a "Phase" task do set start_date & end_date of a phase.
     # The job will need to access the dates for it to create the
     # tray booking record.
-    create(:task, :is_phase,
+    create(:task,
             batch: batch,
             phase: Constants::CONST_CLONE,
             duration: 16,

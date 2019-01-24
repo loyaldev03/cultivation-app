@@ -21,7 +21,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
     let(:start_date) { Time.strptime("2018/08/01", DATE_FORMAT) }
     let(:end_date) { Time.strptime("2018/08/17", DATE_FORMAT) }
     let(:batch) do
-      create(:batch,
+      create(:batch, :active,
              facility_id: subject.id,
              start_date: start_date,
              quantity: 5)

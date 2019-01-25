@@ -21,8 +21,11 @@ module Cultivation
           batch_id: @batch_id.to_bson_id,
           position: 0,
         )
-        first_task.start_date = @start_date
-        UpdateTask.call(@current_user, first_task, true)
+        args = {
+          id: first_task.id,
+          start_date: @start_date.beginning_of_day,
+        }
+        UpdateTask.call(@current_user, args, true)
       end
     rescue StandardError
       errors.add(:error, $!.message)

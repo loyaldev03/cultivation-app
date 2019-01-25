@@ -164,12 +164,13 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
       expect(cmd.success?).to be true
       expect(saved_batch.status).to eq Constants::BATCH_STATUS_SCHEDULED
-      expect(saved_batch.start_date).to eq batch_start_date
+      expect(saved_batch.start_date).to eq batch_start_date.beginning_of_day
       expect(saved_t1.start_date).to eq batch_start_date
       expect(saved_t11.start_date).to eq batch_start_date
       expect(saved_t12.start_date).to eq batch_start_date + 10.days
     end
   end
+
   context ".call - update task name" do
     it "update task name" do
       args = {
@@ -523,14 +524,13 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
     it "subtask end ealier than parent task should contract parent 2" do
       target = t1_2
-      
       args = {
         id: target.id.to_s,
         duration: 3,
       }
 
       cmd = Cultivation::UpdateTask.call(current_user, args)
-      
+
       parent = Cultivation::Task.find(t1.id)
       expect(cmd.success?).to be true
       expect(cmd.result.end_date.to_i).to eq (target.start_date + 3.days).to_i

@@ -1,9 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe Cultivation::UpdateTask, type: :command do
+  before do
+    Time.zone = "Kuala Lumpur"
+  end
   let(:facility) { create(:facility, :is_complete) }
   let(:current_user) { create(:user, facilities: [facility.id]) }
-  let(:start_date) { Time.parse("01/01/2019") }
+  let(:start_date) { Time.zone.parse("01/01/2019") }
   let(:batch) { create(:batch, facility_id: facility.id, start_date: start_date) }
   let!(:tasks) do
     # wbs: 1
@@ -146,10 +149,10 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
   context ".call - update activate batch" do
     it "activate batch" do
-      selected_start_date = t1.start_date + Faker::Number.number(3).to_i.days
+      batch_start_date = t1.start_date + Faker::Number.number(3).to_i.days
       args = {
         batch_id: batch.id,
-        start_date: selected_start_date,
+        start_date: batch_start_date,
       }
       expect(batch.status).to eq Constants::BATCH_STATUS_DRAFT
 
@@ -161,10 +164,10 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
       expect(cmd.success?).to be true
       expect(saved_batch.status).to eq Constants::BATCH_STATUS_SCHEDULED
-      expect(saved_batch.start_date).to eq selected_start_date
-      expect(saved_t1.start_date).to eq selected_start_date
-      expect(saved_t11.start_date).to eq selected_start_date
-      expect(saved_t12.start_date).to eq selected_start_date + 10.days
+      expect(saved_batch.start_date).to eq batch_start_date
+      expect(saved_t1.start_date).to eq batch_start_date
+      expect(saved_t11.start_date).to eq batch_start_date
+      expect(saved_t12.start_date).to eq batch_start_date + 10.days
     end
   end
   context ".call - update task name" do

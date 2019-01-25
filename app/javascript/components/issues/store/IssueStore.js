@@ -24,7 +24,7 @@ class IssueStore {
 
   @action
   delete(issue) {
-    this.issues = this.issues.filter(x => x.id !== issue.id)
+    this.issues.replace(this.issues.filter(x => x.id !== issue.id))
   }
 
   @computed

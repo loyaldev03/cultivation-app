@@ -1,9 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Cultivation::UpdateTask, type: :command do
-  before do
-    Time.zone = "Kuala Lumpur"
-  end
   let(:facility) { create(:facility, :is_complete) }
   let(:current_user) { create(:user, facilities: [facility.id]) }
   let(:start_date) { Time.zone.parse("01/01/2019") }
@@ -158,10 +155,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
       cmd = Cultivation::UpdateBatchScheduled.call(current_user, args)
       saved_batch = Cultivation::Batch.find(batch.id)
-      saved_t1 = Cultivation::Task.find(t1.id)
-      saved_t11 = Cultivation::Task.find(t1_1.id)
-      saved_t12 = Cultivation::Task.find(t1_2.id)
-
+      saved_t1, saved_t11, saved_t12 = Cultivation::Task.in(id: [t1.id, t1_1.id, t1_2.id]).to_a
       expect(cmd.success?).to be true
       expect(saved_batch.status).to eq Constants::BATCH_STATUS_SCHEDULED
       expect(saved_batch.start_date).to eq batch_start_date.beginning_of_day
@@ -275,8 +269,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
       cmd = Cultivation::UpdateTask.call(current_user, args)
 
-      parent = Cultivation::Task.find(t2_3_2.id)
-      grand_parent = Cultivation::Task.find(t2_3.id)
+      grand_parent, parent = Cultivation::Task.in(id: [t2_3_2.id, t2_3.id])
 
       total_cost = (5 * worker10.hourly_rate) + (5 * worker8.hourly_rate)
       expect(cmd.success?).to be true

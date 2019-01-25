@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe QueryAvailableTrays, type: :command do
-  subject! do
+  let(:facility) do
     facility = create(:facility, :is_complete)
     facility.rooms.each do |room|
       room.rows.each do |row|
@@ -14,7 +14,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
   end
 
   context ".call(start_date, end_date)" do
-    let(:clone_room) { subject.rooms.detect { |r| r.purpose == Constants::CONST_CLONE } }
+    let(:clone_room) { facility.rooms.detect { |r| r.purpose == Constants::CONST_CLONE } }
     let(:last_row) { clone_room.rows.last }
     let(:last_shelf) { last_row.shelves.last }
     let(:last_tray) { last_shelf.trays.last }
@@ -22,7 +22,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
     let(:end_date) { Time.strptime("2018/08/17", DATE_FORMAT) }
     let(:batch) do
       create(:batch, :active,
-             facility_id: subject.id,
+             facility_id: facility.id,
              start_date: start_date,
              quantity: 5,
              batch_source: 'clones_from_mother')
@@ -34,7 +34,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/01", DATE_FORMAT)
       p1_capacity = 5
       p1 = create(:tray_plan,
-              facility_id: subject.id,
+              facility_id: facility.id,
               batch: batch,
               room_id: clone_room.id,
               row_id: last_row.id,
@@ -47,7 +47,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
 
       # p "------------------"
       # p batch.start_date
-      # p subject.id == batch.facility_id && subject.id == p1.facility_id
+      # p facility.id == batch.facility_id && facility.id == p1.facility_id
       # p p1.batch_id == batch.id
       # p p1.tray_id == last_tray.id
       # p p1.phase == clone_room.purpose # IMPORTANT
@@ -57,7 +57,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: subject.id,
+        facility_id: facility.id,
         purpose: [Constants::CONST_CLONE],
       )
 
@@ -76,7 +76,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/17", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -90,7 +90,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: subject.id,
+        facility_id: facility.id,
         phase: Constants::CONST_CLONE,
       )
 
@@ -106,7 +106,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/20", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -120,7 +120,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: subject.id,
+        facility_id: facility.id,
         purpose: 'clone',
       )
 
@@ -136,7 +136,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/16", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -150,7 +150,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: subject.id,
+        facility_id: facility.id,
         purpose: 'clone',
       )
 
@@ -166,7 +166,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/17", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -180,7 +180,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: subject.id,
+        facility_id: facility.id,
         purpose: 'clone',
       )
 
@@ -196,7 +196,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/17", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -210,7 +210,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: subject.id,
+        facility_id: facility.id,
         purpose: 'clone',
       )
 
@@ -226,7 +226,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/22", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -240,7 +240,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: subject.id,
+        facility_id: facility.id,
         purpose: 'clone',
       )
 
@@ -256,7 +256,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/15", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -270,7 +270,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: subject.id,
+        facility_id: facility.id,
         purpose: 'clone',
       )
 
@@ -286,7 +286,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/19", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -300,7 +300,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: subject.id,
+        facility_id: facility.id,
         purpose: 'clone',
       )
 
@@ -316,7 +316,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/17", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -329,7 +329,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: subject.id,
+        facility_id: facility.id,
         purpose: 'clone',
       )
 
@@ -345,7 +345,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/1", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -359,7 +359,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: subject.id,
+        facility_id: facility.id,
         purpose: 'clone',
       )
 
@@ -375,7 +375,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/1", DATE_FORMAT)
       p1_capacity = 3
       p1 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -390,7 +390,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p2_end_date = Time.strptime("2018/08/3", DATE_FORMAT)
       p2_capacity = 10
       p2 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -404,7 +404,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       query_cmd = QueryAvailableTrays.call(
         start_date: start_date,
         end_date: end_date,
-        facility_id: subject.id,
+        facility_id: facility.id,
         purpose: 'clone',
       )
 
@@ -420,7 +420,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/07/31", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -432,7 +432,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   end_date: p1_end_date)
 
       query_cmd = QueryAvailableTrays.call(
-        facility_id: subject.id,
+        facility_id: facility.id,
         start_date: start_date,
         end_date: end_date,
       )
@@ -449,7 +449,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/31", DATE_FORMAT)
       p1_capacity = Faker::Number.number(1).to_i
       p1 = create(:tray_plan,
-                  facility_id: subject.id,
+                  facility_id: facility.id,
                   batch: batch,
                   room_id: clone_room.id,
                   row_id: last_row.id,
@@ -461,7 +461,7 @@ RSpec.describe QueryAvailableTrays, type: :command do
                   end_date: p1_end_date)
 
       query_cmd = QueryAvailableTrays.call(
-        facility_id: subject.id,
+        facility_id: facility.id,
         start_date: start_date,
         end_date: end_date,
       )

@@ -55,38 +55,122 @@ RSpec.describe Cultivation::SaveTrayPlans, type: :command do
   let(:clone_tray2) { clone_shelf1.trays.last }
   let(:plant1_id) { BSON::ObjectId.new }
   let(:plant2_id) { BSON::ObjectId.new }
-  let(:plans) do
-    [
-      {
-        id: "plant#1",
+
+  context ".call with duplicate tray plan" do
+    let(:plans) do
+      [
+        {
+          id: "plant#1",
+          phase: "clone",
+          quantity: 6,
+          serialNo: "M001",
+          trays: [
+            {
+              plant_id: plant1_id.to_s,
+              room_id: clone_room.id.to_s,
+              row_id: clone_row1.id.to_s,
+              shelf_id: clone_shelf1.id.to_s,
+              tray_capacity: 3,
+              tray_code: clone_tray1.code.to_s,
+              tray_id: clone_tray1.id.to_s,
+            },
+            {
+              plant_id: plant2_id.to_s,
+              room_id: clone_room.id.to_s,
+              row_id: clone_row1.id.to_s,
+              shelf_id: clone_shelf1.id.to_s,
+              tray_capacity: 3,
+              tray_code: clone_tray1.code.to_s,
+              tray_id: clone_tray1.id.to_s,
+            }
+          ]
+        }
+      ]
+    end
+
+    it "should save as 1 single record" do
+      cmd = Cultivation::SaveTrayPlans.call(batch.id, plans, 6)
+      query = QueryAvailableCapacity.call(facility_id: facility.id,
+                                          start_date: tasks[1].start_date,
+                                          end_date: tasks[1].end_date,
+                                          purpose: "clone")
+
+      # Validate Tray Plans
+      tray_plans = Cultivation::TrayPlan.where(batch_id: batch.id)
+      expect(cmd.success?).to be true
+      expect(cmd.result.quantity).to be 6
+      expect(tray_plans.count).to eq 1
+      # Validate Saved Tray
+      expect(tray_plans[0]).to have_attributes(
+        facility_id: facility.id,
+        batch_id: batch.id,
+        room_id: clone_room.id,
+        row_id: clone_row1.id,
+        shelf_id: clone_shelf1.id,
+        tray_id: clone_tray1.id,
+        capacity: 6,
         phase: "clone",
-        quantity: 10,
-        serialNo: "M001",
-        trays: [
-          {
-            plant_id: plant1_id.to_s,
-            room_id: clone_room.id.to_s,
-            row_id: clone_row1.id.to_s,
-            shelf_id: clone_shelf1.id.to_s,
-            tray_capacity: 5,
-            tray_code: clone_tray1.code.to_s,
-            tray_id: clone_tray1.id.to_s,
-          },
-          {
-            plant_id: plant2_id.to_s,
-            room_id: clone_room.id.to_s,
-            row_id: clone_row1.id.to_s,
-            shelf_id: clone_shelf1.id.to_s,
-            tray_capacity: 5,
-            tray_code: clone_tray2.code.to_s,
-            tray_id: clone_tray2.id.to_s,
-          }
-        ]
-      }
-    ]
+        start_date: tasks[1].start_date,
+        end_date: tasks[1].end_date,
+      )
+      expect(query.result).to eq 74
+    end
+
+    it "should allow exclude after save" do
+      cmd = Cultivation::SaveTrayPlans.call(batch.id, plans, 10)
+      query = QueryAvailableCapacity.call(facility_id: facility.id,
+                                          start_date: tasks[1].start_date,
+                                          end_date: tasks[1].end_date,
+                                          exclude_batch_id: batch.id,
+                                          purpose: "clone")
+      expect(cmd.success?).to be true
+      expect(query.result).to eq 80
+    end
+
+    it "should delete previous plans" do
+      Cultivation::SaveTrayPlans.call(batch.id, plans, 6)
+      Cultivation::SaveTrayPlans.call(batch.id, plans, 6)
+
+      query = QueryAvailableCapacity.call(facility_id: facility.id,
+                                          start_date: tasks[1].start_date,
+                                          end_date: tasks[1].end_date,
+                                          purpose: "clone")
+      expect(query.result).to eq 74
+    end
   end
 
-  context ".call update_locations" do
+  context ".call with 2 plans" do
+    let(:plans) do
+      [
+        {
+          id: "plant#1",
+          phase: "clone",
+          quantity: 10,
+          serialNo: "M001",
+          trays: [
+            {
+              plant_id: plant1_id.to_s,
+              room_id: clone_room.id.to_s,
+              row_id: clone_row1.id.to_s,
+              shelf_id: clone_shelf1.id.to_s,
+              tray_capacity: 5,
+              tray_code: clone_tray1.code.to_s,
+              tray_id: clone_tray1.id.to_s,
+            },
+            {
+              plant_id: plant2_id.to_s,
+              room_id: clone_room.id.to_s,
+              row_id: clone_row1.id.to_s,
+              shelf_id: clone_shelf1.id.to_s,
+              tray_capacity: 5,
+              tray_code: clone_tray2.code.to_s,
+              tray_id: clone_tray2.id.to_s,
+            }
+          ]
+        }
+      ]
+    end
+
     it "create batch with selected_plants" do
       cmd = Cultivation::SaveTrayPlans.call(batch.id, plans, 10)
 

@@ -4,9 +4,7 @@ export const isEmptyString = str =>
 export const safeDisplay = (str, fallback = '-') =>
   isEmptyString(str) ? fallback : str
 
-const sanitizeText = text => (
-  text ? text.replace(/_/g, ' ') : ''
-)
+const sanitizeText = text => (text ? text.replace(/_/g, ' ') : '')
 
 const decimalFormatter = new Intl.NumberFormat('en', {
   minimumFractionDigits: 2

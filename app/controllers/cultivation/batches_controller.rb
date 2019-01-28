@@ -79,12 +79,6 @@ class Cultivation::BatchesController < ApplicationController
   def material
   end
 
-  def destroy
-    Cultivation::DestroyBatch.call(params[:id])
-    flash[:notice] = 'Batch deleted.'
-    redirect_to dashboard_path
-  end
-
   private
 
   def get_plants_selection_type(batch_source)

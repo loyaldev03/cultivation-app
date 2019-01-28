@@ -1,10 +1,10 @@
 import 'babel-polyfill'
 import React from 'react'
-import { ActiveBadge, formatDate2 } from '../../utils'
+import { ActiveBadge, formatDate2, } from '../../utils'
 
 class BatchListTable extends React.Component {
   render() {
-    const { batches } = this.props
+    const { batches, onDelete } = this.props
     return (
       <table className="ba br2 b--black-10 pv2 ph3 f6">
         <tbody>
@@ -28,6 +28,14 @@ class BatchListTable extends React.Component {
               </td>
               <td className="tr pv2 ph3">
                 <ActiveBadge status={b.status} />
+              </td>
+              <td>
+                <i
+                  className="material-icons red pointer"
+                  onClick={() => onDelete(b.id)}
+                >
+                  delete
+                </i>
               </td>
             </tr>
           ))}

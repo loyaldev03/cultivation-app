@@ -10,8 +10,8 @@ class QueryPlannedTrays
     raise ArgumentError, 'end_date' if end_date.nil?
     raise ArgumentError, 'start_date should be ealier than end_date' if end_date <= start_date
 
-    @start_date = start_date.beginning_of_day
-    @end_date = end_date.end_of_day
+    @start_date = start_date
+    @end_date = end_date
     @facility_id = facility_id
     @exclude_batch_id = exclude_batch_id
   end

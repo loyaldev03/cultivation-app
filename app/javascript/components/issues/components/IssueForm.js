@@ -1,31 +1,30 @@
 import 'babel-polyfill'
 
 import React from 'react'
-import Select, { components } from 'react-select'
-import Uppy from '@uppy/core'
+import Select from 'react-select'
 import DashboardModal from '@uppy/react/lib/DashboardModal'
-import Webcam from '@uppy/webcam'
-import Dropbox from '@uppy/dropbox'
-import AwsS3 from '@uppy/aws-s3'
 import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
+import setupUppy from './setupUppy'
 
 import { TextInput } from '../../utils/FormHelpers'
 import reactSelectStyle from '../../utils/reactSelectStyle'
-import Avatar from '../../utils/Avatar'
 import UserPicker from '../../utils/UserPicker'
 import { formatDate, formatTime } from '../../utils/DateHelper'
 
 import saveIssue from '../actions/saveIssue'
-import getIssue from '../actions/getIssue'
 import loadTasks from '../actions/loadTasks'
 import loadUsers from '../actions/loadUsers'
 import loadLocations from '../actions/loadLocations'
 
+import currentIssueStore from '../store/CurrentIssueStore'
+
 import TaskOption from './TaskOption'
 import LocationOption from './LocationOption'
 import LocationSingleValue from './LocationSingleValue'
+import AttachmentPopup from './AttachmentPopup'
+import AttachmentThumbnail from './AttachmentThumbnail'
 
 const severityOptions = [
   { value: 'low', label: 'Low' },
@@ -42,53 +41,8 @@ class IssueForm extends React.Component {
       users: [],
       locations: []
     }
-    this.setupUppy()
+    this.uppy = setupUppy(this.onUppyComplete)
     this.descriptionInput = React.createRef()
-  }
-
-  setupUppy() {
-    this.uppy = Uppy({
-      meta: { type: 'avatar' },
-      restrictions: { maxNumberOfFiles: 1 },
-      autoProceed: true
-    })
-
-    this.uppy.use(Webcam)
-    this.uppy.use(Dropbox, {
-      serverUrl: location.protocol + '//' + location.host
-    })
-
-    this.uppy.use(AwsS3, {
-      serverUrl: location.protocol + '//' + location.host
-    })
-
-    this.uppy.on('complete', result => {
-      console.log(result)
-
-      if (result.successful) {
-        let attachments = this.state.attachments
-        const newAttachments = result.successful.map(file => {
-          return {
-            id: '',
-            key: file.meta.key,
-            filename: file.meta.name,
-            url: file.preview,
-            mime_type: file.type,
-            data: JSON.stringify({
-              id: file.meta.key.match(/^cache\/(.+)/)[1],
-              storage: 'cache',
-              metadata: {
-                size: file.size,
-                filename: file.name,
-                mime_type: file.type
-              }
-            })
-          }
-        })
-        attachments = [...attachments, ...newAttachments]
-        this.setState({ attachments })
-      }
-    })
   }
 
   componentDidMount() {
@@ -128,31 +82,24 @@ class IssueForm extends React.Component {
   }
 
   async loadIssue() {
-    const { data } = await getIssue(this.props.issueId)
-    const attr = data.data.attributes
+    const issue = currentIssueStore.issue
     let locations = []
 
-    if (attr.task) {
-      locations = await loadLocations(this.props.batchId, attr.task.id)
+    if (issue.task) {
+      locations = await loadLocations(this.props.batchId, issue.task.id)
     }
 
-    this.setState({
-      ...this.resetState(),
-      id: this.props.issueId,
-      title: attr.title,
-      description: attr.description,
-      severity: attr.severity,
-      task_id: attr.task ? attr.task.id : '',
-      locations,
-      location_id: attr.location_id,
-      location_type: attr.location_type,
-      assigned_to_id: attr.assigned_to ? attr.assigned_to.id : '',
-      status: attr.status,
-      created_at: attr.created_at,
-      reported_by: attr.reported_by,
-      issue_no: attr.issue_no,
-      attachments: attr.attachments
-    })
+    this.setState(
+      {
+        ...this.resetState(),
+        ...issue,
+
+        locations,
+        task_id: issue.task ? issue.task.id : '',
+        assigned_to_id: issue.assigned_to ? issue.assigned_to.id : ''
+      },
+      this.resizeDescriptionInput
+    )
   }
 
   resetState = () => {
@@ -168,13 +115,42 @@ class IssueForm extends React.Component {
       // read only
       status: '',
       created_at: null,
-      reported_by: { first_name: 'J', lastName: 'D', photo: null },
+      reported_by: { first_name: '', lastName: '', photo: null },
       issue_no: '',
       // UI states
+      previewOpen: false,
+      previewUrl: '',
+      previewType: '',
       uppyOpen: false,
       attachments: [],
       delete_attachments: [],
       errors: {}
+    }
+  }
+
+  onUppyComplete = result => {
+    if (result.successful) {
+      let attachments = this.state.attachments
+      const newAttachments = result.successful.map(file => {
+        return {
+          id: '',
+          key: file.meta.key,
+          filename: file.meta.name,
+          url: file.preview,
+          mime_type: file.type,
+          data: JSON.stringify({
+            id: file.meta.key.match(/^cache\/(.+)/)[1],
+            storage: 'cache',
+            metadata: {
+              size: file.size,
+              filename: file.name,
+              mime_type: file.type
+            }
+          })
+        }
+      })
+      attachments = [...attachments, ...newAttachments]
+      this.setState({ attachments })
     }
   }
 
@@ -189,7 +165,6 @@ class IssueForm extends React.Component {
   }
 
   onDeleteAttachment = key => {
-    console.log(key)
     const result = confirm('Remove attachment?')
     if (result) {
       const attachment = this.state.attachments.find(x => x.key == key)
@@ -254,23 +229,22 @@ class IssueForm extends React.Component {
   }
 
   resizeDescriptionInput = () => {
-    const lines = (this.state.description.match(/\n/g) || []).length
-    const node = this.descriptionInput.current
+    // Reset field height
+    const field = this.descriptionInput.current
+    field.style.height = 'inherit'
 
-    if (!node) {
-      return
-    }
+    // Get the computed styles for the element
+    const computed = window.getComputedStyle(field)
 
-    if (lines < 3) {
-      node.style.height = 'auto'
-      node.style.minHeight = ''
-    } else if (lines >= 3 && lines < 15) {
-      node.style.height = 40 + lines * 23 + 'px'
-      node.style.minHeight = ''
-    } else {
-      node.style.minHeight = 40 + 15 * 20 + 'px'
-      node.style.height = 'auto'
-    }
+    // Calculate the height
+    const height =
+      parseInt(computed.getPropertyValue('border-top-width'), 10) +
+      parseInt(computed.getPropertyValue('padding-top'), 10) +
+      field.scrollHeight +
+      parseInt(computed.getPropertyValue('padding-bottom'), 10) +
+      parseInt(computed.getPropertyValue('border-bottom-width'), 10)
+
+    field.style.height = height + 'px'
   }
 
   onSave = event => {
@@ -282,7 +256,8 @@ class IssueForm extends React.Component {
           this.setState({ errors: data.errors })
         } else {
           this.setState(this.resetState())
-          window.editorSidebar.close()
+          this.props.onClose()
+          currentIssueStore.setIssue(data.data.attributes)
         }
       })
     }
@@ -333,46 +308,40 @@ class IssueForm extends React.Component {
     }
   }
 
+  onTogglePreview = (url = '', type = '', filename) => {
+    this.setState({
+      previewOpen: !this.state.previewOpen,
+      previewUrl: url,
+      previewType: type
+    })
+  }
+
+  onClose = () => {
+    if (this.props.issueId.length > 0) {
+      this.props.onToggleMode()
+    } else {
+      this.props.onClose()
+    }
+  }
+
   renderTitle() {
     if (this.props.mode === 'edit') {
       return (
-        <React.Fragment>
-          <div className="flex w-100 ph4 items-center pt3">
-            <div className="w-auto">
-              <Avatar
-                firstName={this.state.reported_by.first_name}
-                lastName={this.state.reported_by.last_name}
-                photoUrl={this.state.reported_by.photo}
-                size={25}
-              />
-            </div>
-            <div className="f7 fw6 gray w-auto ph2 mr1">
-              ISSUE #{this.state.issue_no.toString().padStart(5, '0')}
-            </div>
-            <div className="f7 fw6 green flex f6 green fw6 w-auto">OPEN</div>
-            <span
-              className="rc-slide-panel__close-button dim"
-              onClick={this.props.onClose}
-            >
-              <i className="material-icons mid-gray md-18">close</i>
-            </span>
-          </div>
-          <div className="flex w-100 ph4 mt4 mb2">
-            <a
-              href="#"
-              onClick={this.props.onToggleMode}
-              className="link orange f6"
-            >
-              &lt; Back
-            </a>
-          </div>
-        </React.Fragment>
+        <div className="flex w-100 ph3 mt3 mb2">
+          <a
+            href="#"
+            onClick={this.props.onToggleMode}
+            className="link orange f6"
+          >
+            &lt; Back
+          </a>
+        </div>
       )
     } else {
       return (
         <React.Fragment>
           <div
-            className="ph4 pv2 bb b--light-gray flex items-center"
+            className="ph3 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
             <h1 className="f4 fw6 ma0 flex flex-auto ttc">Submit an issue</h1>
@@ -389,68 +358,19 @@ class IssueForm extends React.Component {
   }
 
   renderAttachments() {
-    console.log(this.state.attachments)
     const attachments = this.state.attachments.map(x => {
-      if (x.mime_type.startsWith('video/')) {
-        return (
-          <div
-            src="/"
-            key={x.key}
-            style={{ width: 50, height: 50 }}
-            mime_type={x.mime_type}
-            className="bg-black-30 white mr1 f7 relative hover-photo"
-          >
-            VID - {x.metaKey}
-            <div className="zoom-btn" style={{ width: 50, height: 50 }}>
-              <i className="material-icons absolute">search</i>
-            </div>
-            <p
-              style={{ width: 50, bottom: -10, fontSize: '12px' }}
-              className="tc mt1 mb0 delete-btn"
-            >
-              <a
-                href="#"
-                className="link gray"
-                onClick={() => this.onDeleteAttachment(x.key)}
-              >
-                Delete
-              </a>
-            </p>
-          </div>
-        )
-      }
       return (
-        <div
-          src="/"
+        <AttachmentThumbnail
           key={x.key}
-          mime_type={x.mime_type}
-          style={{ width: 50, height: 70 }}
-          className="mr1 overflow-hidden relative hover-photo"
-        >
-          <div
-            style={{
-              width: 50,
-              height: 50,
-              background: `url(${x.url}) no-repeat center center`,
-              backgroundSize: 'cover'
-            }}
-          />
-          <div className="zoom-btn" style={{ width: 50, height: 50 }}>
-            <i className="material-icons absolute">search</i>
-          </div>
-          <p
-            style={{ width: 50, bottom: -10, fontSize: '12px' }}
-            className="tc mt1 mb0 delete-btn"
-          >
-            <a
-              href="#"
-              className="link gray"
-              onClick={() => this.onDeleteAttachment(x.key)}
-            >
-              Delete
-            </a>
-          </p>
-        </div>
+          id={x.key}
+          url={x.url}
+          preview={x.url}
+          type={x.mime_type}
+          filename=""
+          onClick={() => this.onTogglePreview(x.url, x.mime_type)}
+          showDelete={true}
+          onDelete={() => this.onDeleteAttachment(x.key)}
+        />
       )
     })
 
@@ -464,7 +384,7 @@ class IssueForm extends React.Component {
           className="bg-black-20 white flex justify-center items-center link"
           onClick={this.onUppyOpen}
         >
-          <i className="material-icons white f3">attach_file</i>
+          <i className="material-icons white f3">add</i>
         </a>
       </React.Fragment>
     )
@@ -472,11 +392,14 @@ class IssueForm extends React.Component {
 
   renderReportedAt() {
     if (this.state.id.length > 0) {
-      return `${formatDate(this.state.created_at)}, ${formatTime(
-        this.state.created_at
-      )}`
+      return (
+        <span className="f6 grey flex f6 pt2 fw4">
+          {formatDate(this.state.created_at)},{' '}
+          {formatTime(this.state.created_at)}
+        </span>
+      )
     } else {
-      return 'Today'
+      return <span className="f6 green flex f6 green pt2 fw6">Today</span>
     }
   }
 
@@ -494,9 +417,6 @@ class IssueForm extends React.Component {
     const location = location_id
       ? this.state.locations.find(x => x.id === location_id)
       : null
-    const assigned_to = assigned_to_id
-      ? this.state.users.find(x => x.value === assigned_to_id)
-      : null
     const severityOption = severity
       ? severityOptions.find(x => x.value === severity)
       : null
@@ -505,7 +425,7 @@ class IssueForm extends React.Component {
       <React.Fragment>
         {this.renderTitle()}
 
-        <div className="ph4 mt3 mb3 flex">
+        <div className="ph3 mt3 mb3 flex">
           <div className="w-100">
             <TextInput
               label="Title"
@@ -516,7 +436,7 @@ class IssueForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mb3 flex">
+        <div className="ph3 mb3 flex">
           <div className="w-30">
             <label className="f6 fw6 db mb1 gray ttc">Severity</label>
             <Select
@@ -534,13 +454,11 @@ class IssueForm extends React.Component {
           </div>
           <div className="w-40 pl3">
             <label className="f6 fw6 db mb1 gray ttc">Reported at</label>
-            <span className="f6 green flex f6 green pt2 fw6">
-              {this.renderReportedAt()}
-            </span>
+            {this.renderReportedAt()}
           </div>
         </div>
 
-        <div className="ph4 mb3 flex">
+        <div className="ph3 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Task</label>
             <Select
@@ -555,7 +473,7 @@ class IssueForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mb3 flex">
+        <div className="ph3 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Location</label>
             <Select
@@ -581,7 +499,7 @@ class IssueForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mb3 flex">
+        <div className="ph3 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Assign to</label>
             <UserPicker
@@ -592,7 +510,7 @@ class IssueForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mb3 flex">
+        <div className="ph3 mb3 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Details</label>
             <textarea
@@ -604,12 +522,12 @@ class IssueForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mb1 flex">
+        <div className="ph3 mb1 flex">
           <div className="w-100">
             <label className="f6 fw6 db mb1 gray ttc">Attachments</label>
           </div>
         </div>
-        <div className="ph4 mb3 flex">
+        <div className="ph3 mb3 flex">
           <div className="w-100 flex flex-wrap">{this.renderAttachments()}</div>
         </div>
 
@@ -626,10 +544,16 @@ class IssueForm extends React.Component {
           uppy={this.uppy}
           closeModalOnClickOutside
           open={this.state.uppyOpen}
-          allowMultipleUploads={true}
           onRequestClose={this.onUppyClose}
           proudlyDisplayPoweredByUppy={false}
           plugins={['Webcam', 'Dropbox', 'AwsS3']}
+        />
+        <AttachmentPopup
+          open={this.state.previewOpen}
+          key={this.state.previewUrl}
+          url={this.state.previewUrl}
+          type={this.state.previewType}
+          onClose={this.onTogglePreview}
         />
       </React.Fragment>
     )

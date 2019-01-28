@@ -244,9 +244,16 @@ Rails.application.routes.draw do
         put ':id/update_materials_used', to: 'daily_tasks#update_materials_used'
       end
 
-      resources :issues, only: [:create, :by_batch, :show] do
+      resources :issues, only: [:create, :by_batch, :show, :archive] do
         collection do
           get 'by_batch/:batch_id', action: 'by_batch'
+          post 'archive'
+        end
+
+        member do
+          post 'add_comment'
+          get 'comments'
+          get 'attachment'
         end
       end
     end

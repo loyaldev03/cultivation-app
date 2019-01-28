@@ -51,7 +51,7 @@ const launchBarcodeScanner = (options = {}) => {
       })
 
       barcodePicker.onReady(() => {
-        console.log('barcode reader ready!')
+        // console.log('barcode reader ready!')
         if (options.onReady) {
           options.onReady()
         }

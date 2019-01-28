@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Cultivation::UpdateTask, type: :command do
   let(:facility) { create(:facility, :is_complete) }
   let(:current_user) { create(:user, facilities: [facility.id]) }
-  let(:start_date) { Time.parse("01/01/2019") }
+  let(:start_date) { Time.zone.parse("01/01/2019") }
   let(:batch) { create(:batch, facility_id: facility.id, start_date: start_date) }
   let!(:tasks) do
     # wbs: 1
@@ -146,27 +146,25 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
   context ".call - update activate batch" do
     it "activate batch" do
-      selected_start_date = t1.start_date + Faker::Number.number(3).to_i.days
+      batch_start_date = t1.start_date + Faker::Number.number(3).to_i.days
       args = {
         batch_id: batch.id,
-        start_date: selected_start_date,
+        start_date: batch_start_date,
       }
       expect(batch.status).to eq Constants::BATCH_STATUS_DRAFT
 
       cmd = Cultivation::UpdateBatchScheduled.call(current_user, args)
       saved_batch = Cultivation::Batch.find(batch.id)
-      saved_t1 = Cultivation::Task.find(t1.id)
-      saved_t11 = Cultivation::Task.find(t1_1.id)
-      saved_t12 = Cultivation::Task.find(t1_2.id)
-
+      saved_t1, saved_t11, saved_t12 = Cultivation::Task.in(id: [t1.id, t1_1.id, t1_2.id]).to_a
       expect(cmd.success?).to be true
       expect(saved_batch.status).to eq Constants::BATCH_STATUS_SCHEDULED
-      expect(saved_batch.start_date).to eq selected_start_date
-      expect(saved_t1.start_date).to eq selected_start_date
-      expect(saved_t11.start_date).to eq selected_start_date
-      expect(saved_t12.start_date).to eq selected_start_date + 10.days
+      expect(saved_batch.start_date).to eq batch_start_date.beginning_of_day
+      expect(saved_t1.start_date).to eq batch_start_date
+      expect(saved_t11.start_date).to eq batch_start_date
+      expect(saved_t12.start_date).to eq batch_start_date + 10.days
     end
   end
+
   context ".call - update task name" do
     it "update task name" do
       args = {
@@ -271,8 +269,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
       cmd = Cultivation::UpdateTask.call(current_user, args)
 
-      parent = Cultivation::Task.find(t2_3_2.id)
-      grand_parent = Cultivation::Task.find(t2_3.id)
+      grand_parent, parent = Cultivation::Task.in(id: [t2_3_2.id, t2_3.id])
 
       total_cost = (5 * worker10.hourly_rate) + (5 * worker8.hourly_rate)
       expect(cmd.success?).to be true
@@ -520,14 +517,13 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
     it "subtask end ealier than parent task should contract parent 2" do
       target = t1_2
-      
       args = {
         id: target.id.to_s,
         duration: 3,
       }
 
       cmd = Cultivation::UpdateTask.call(current_user, args)
-      
+
       parent = Cultivation::Task.find(t1.id)
       expect(cmd.success?).to be true
       expect(cmd.result.end_date.to_i).to eq (target.start_date + 3.days).to_i

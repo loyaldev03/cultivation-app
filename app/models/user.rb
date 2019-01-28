@@ -24,7 +24,7 @@ class User
   field :default_facility_id, type: BSON::ObjectId
   field :is_active, type: Boolean, default: -> { true }
   field :photo_data, type: String
-  field :hourly_rate, type: Float, default: 0.0
+  field :hourly_rate, type: Float, default: -> { 0.0 }
   field :overtime_hourly_rate, type: Float
 
   ## Database authenticatable
@@ -47,7 +47,7 @@ class User
 
   field :roles, type: Array, default: []      # Array of BSON::ObjectId
   field :facilities, type: Array, default: [] # Array of BSON::ObjectId
-  scope :active, -> { where(is_active: true) }
+
   ## Confirmable
   # field :confirmation_token,   type: String
   # field :confirmed_at,         type: Time
@@ -67,11 +67,5 @@ class User
 
   def display_name
     "#{first_name} #{last_name}"
-  end
-
-  # TODO: Need a flag to indicate user is developer
-  # This need to be refactor
-  def is_dev?
-    true
   end
 end

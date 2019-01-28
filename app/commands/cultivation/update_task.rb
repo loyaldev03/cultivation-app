@@ -19,8 +19,8 @@ module Cultivation
         batch = task.batch
         if valid_batch? batch
           batch_tasks = Cultivation::QueryTasks.call(batch).result
-          task = batch_tasks.detect { |t| t.id == task.id }
-          facility_users = get_facility_users(batch.facility_id)
+          task = get_task(batch_tasks, task.id)
+          facility_users = QueryUsers.call(@current_user, batch.facility_id).result
           # Remember original start_date
           original_start_date = task.start_date
           # Update task with args and re-calculate end_date
@@ -46,10 +46,6 @@ module Cultivation
 
     private
 
-    def get_facility_users(facility_id)
-      User.in(facilities: facility_id).where(is_active: true).to_a
-    end
-
     def update_batch(batch, first_task, schedule_batch)
       # Here we assume estimated harvest date is the start date of :dry phase
       # (or :cure, when :dry not found)
@@ -63,8 +59,8 @@ module Cultivation
       if schedule_batch
         batch.status = Constants::BATCH_STATUS_SCHEDULED
       end
-      batch.estimated_harvest_date = harvest_phase.start_date if harvest_phase
-      batch.start_date = first_task.start_date if first_task.start_date
+      batch.estimated_harvest_date = harvest_phase&.start_date
+      batch.start_date = first_task&.start_date
       batch.save!
     end
 
@@ -98,7 +94,7 @@ module Cultivation
 
     def decide_depend_on(task, batch_tasks, args_depend_on)
       if args_depend_on.present?
-        predecessor = batch_tasks.detect { |t| t.id == args_depend_on.to_bson_id }
+        predecessor = get_task(batch_tasks, args_depend_on)
         if predecessor.present? && task.child_of?(predecessor.wbs, batch_tasks)
           errors.add(:depend_on, 'Cannot set parent node as predecessor')
           return nil
@@ -109,7 +105,7 @@ module Cultivation
 
     def decide_start_date(task, batch_tasks, args_start_date, args_depend_on = nil)
       if args_depend_on.present? && task.depend_on != args_depend_on
-        predecessor = batch_tasks.detect { |t| t.id == args_depend_on.to_bson_id }
+        predecessor = get_task(batch_tasks, args_depend_on)
         if predecessor.present? && !task.child_of?(predecessor.wbs, batch_tasks)
           return predecessor.end_date
         end
@@ -122,7 +118,7 @@ module Cultivation
       if task.first_child?
         return parent.start_date
       end
-      # Subtask should be be set ealier than parent start_date
+      # Subtask should not be set ealier than parent start_date
       if args_start_date
         if parent && args_start_date < parent.start_date
           return parent.start_date
@@ -292,6 +288,10 @@ module Cultivation
         end
       end
       errors.empty?
+    end
+
+    def get_task(tasks, task_id)
+      tasks.detect { |t| t.id == task_id.to_bson_id }
     end
 
     def get_phase_tasks(tasks)

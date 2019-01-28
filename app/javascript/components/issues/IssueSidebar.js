@@ -1,7 +1,13 @@
 import React from 'react'
-import IssueForm from './components/IssueForm.js'
-import IssueDetails from './components/IssueDetails.js'
+import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
+import IssueForm from './components/IssueForm'
+import IssueDetails from './components/IssueDetails'
+import IssueHeader from './components/IssueHeader'
+import currentIssueStore from './store/CurrentIssueStore'
+import getIssue from './actions/getIssue'
 
+@observer
 class IssueSidebar extends React.Component {
   constructor(props) {
     super(props)
@@ -12,6 +18,12 @@ class IssueSidebar extends React.Component {
     document.addEventListener('editor-sidebar-open', event => {
       const issueId = event.detail.id
       const mode = event.detail.mode
+
+      if (issueId) {
+        getIssue(issueId)
+      } else if (mode === 'create') {
+        currentIssueStore.reset()
+      }
 
       if (mode === 'details') {
         this.setState({ mode, issueId })
@@ -39,11 +51,22 @@ class IssueSidebar extends React.Component {
   }
 
   onClose = () => {
-    window.editorSidebar.close()
+    if (this.state.mode === 'edit') {
+      this.setState({ mode: 'details' })
+    } else {
+      currentIssueStore.reset()
+      window.editorSidebar.close()
+    }
   }
 
   renderBody() {
-    const { batch } = this.props
+    const {
+      batch_id,
+      facility_id,
+      current_user_first_name,
+      current_user_last_name,
+      current_user_photo
+    } = this.props
     const { mode } = this.state
 
     if (mode === 'details') {
@@ -51,7 +74,11 @@ class IssueSidebar extends React.Component {
         <IssueDetails
           onClose={this.onClose}
           onToggleMode={this.onToggleMode}
-          batchId={batch.id}
+          issueId={this.state.issueId}
+          batchId={batch_id}
+          current_user_first_name={current_user_first_name}
+          current_user_last_name={current_user_last_name}
+          current_user_photo={current_user_photo}
         />
       )
     } else {
@@ -61,22 +88,40 @@ class IssueSidebar extends React.Component {
           onToggleMode={this.onToggleMode}
           mode={this.state.mode}
           issueId={this.state.issueId}
-          batchId={batch.id}
-          facilityId={batch.facility_id}
+          batchId={batch_id}
+          facilityId={facility_id}
         />
       )
     }
   }
 
   render() {
+    const issue = currentIssueStore.issue
     return (
       <div className="rc-slide-panel" data-role="sidebar">
-        <div className="rc-slide-panel__body flex flex-column">
+        <div className="rc-slide-panel__body flex flex-column relative">
+          <IssueHeader
+            reporterFirsName={issue.reported_by.first_name}
+            reporterLastName={issue.reported_by.last_name}
+            reporterPhotoUrl={issue.reported_by.photo}
+            issueNo={issue.issue_no}
+            severity={issue.severity}
+            createdAt={this.state.mode === 'details' ? issue.created_at : ''}
+            onClose={this.onClose}
+          />
           {this.renderBody()}
         </div>
       </div>
     )
   }
+}
+
+IssueSidebar.propTypes = {
+  batch_id: PropTypes.string.isRequired,
+  facility_id: PropTypes.string.isRequired,
+  current_user_first_name: PropTypes.string.isRequired,
+  current_user_last_name: PropTypes.string.isRequired,
+  current_user_photo: PropTypes.string
 }
 
 export default IssueSidebar

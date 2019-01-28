@@ -10,7 +10,9 @@ const CommentBody = ({
   attachments = [],
   resolved = false,
   reason = '',
-  onClick = (url, mime_type) => {}
+  onClick = (url, mime_type) => {},
+  isMenuOpen = false,
+  renderMenu = () => null
 }) => {
   return (
     <div className="mb2 pv2 pl3 pr0 br2 bg-black-05">
@@ -26,13 +28,7 @@ const CommentBody = ({
       )}
       <div className="flex">
         <p className="f6 black-70 lh-title mt0 mb1 flex-auto pre">{message}</p>
-
-        <span
-          className="material-icons black-05 hover-gray ph1 pointer"
-          style={{ fontSize: '18px' }}
-        >
-          more_vert
-        </span>
+        { renderMenu(isMenuOpen) }
       </div>
       {reason.length > 0 && (
         <p className="f6 black-70 lh-title mt0 mb1 flex-auto pr3">
@@ -54,17 +50,12 @@ const CommentBody = ({
   )
 }
 
-const TaskBody = ({ task_url, task_name, quote = '' }) => {
+const TaskBody = ({ task_url, task_name, quote = '', menu = () => null }) => {
   return (
     <div className="mb2 pv2 pl3 br2 bg-black-05">
       <div className="flex mb2 justify-between">
         <div className="f6 gray fw6">Task Created</div>
-        <span
-          className="material-icons black-05 hover-gray ph1 pointer"
-          style={{ fontSize: '18px' }}
-        >
-          more_vert
-        </span>
+        <menu/>
       </div>
       <div className="bg-white pa2 i f7 gray mt1 mr3 mb2">
         &quot;{quote}&quot;
@@ -90,9 +81,12 @@ const CommentMessage = ({
   task_url = '',
   task_name = '',
   quote = '',
-  onTogglePreview = (url, mime_type) => {}
+  onTogglePreview = (url, mime_type) => {},
+  isMenuOpen = false,
+  renderMenu
 }) => {
   const align = is_me == true ? 'justify-start' : 'justify-end'
+
   return (
     <React.Fragment>
       <div className={`ph3 mb3 mt1 flex ${align}`}>
@@ -113,6 +107,8 @@ const CommentMessage = ({
               reason={reason}
               id={id}
               onClick={onTogglePreview}
+              isMenuOpen={isMenuOpen}
+              renderMenu={renderMenu}
             />
           )}
           {task_url.length > 0 && (

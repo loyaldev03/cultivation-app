@@ -6,6 +6,7 @@ import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
 import setupUppy from './setupUppy'
+import { Manager, Reference, Popper } from 'react-popper'
 
 import Avatar from '../../utils/Avatar.js'
 import CommentMessage from './CommentMessage'
@@ -15,6 +16,78 @@ import { formatIssueNo } from './FormatHelper'
 import currentIssue from '../store/CurrentIssueStore'
 import addComment from '../actions/addComment'
 
+const MenuButton = ({ icon, text, onClick, className = '' }) => {
+  return (
+    <a
+      className={`pa2 flex link dim pointer items-center ${className}`}
+      onClick={onClick}
+    >
+      <i className="material-icons md-17 pr2">{icon}</i>
+      <span className="pr2">{text}</span>
+    </a>
+  )
+}
+
+const CommentMenu = ({isOpen, id, handleEllipsisClick, handleMouseLeave}) => {
+  return (
+    <Manager>
+      <Reference>
+        {({ ref }) => {
+          return (
+            <span
+              className="material-icons black-05 hover-gray ph1 pointer"
+              style={{ fontSize: '18px', height: '21px' }}
+              ref={ref}
+              onClick={() => handleEllipsisClick(id)}
+            >
+              more_vert
+            </span>
+          )
+        }}
+      </Reference>
+      {isOpen && (
+        <Popper placement="bottom-start">
+          {({ ref, style, placement, arrowProps }) => (
+            <div
+              ref={ref}
+              style={style}
+              data-placement={placement}
+              className="bg-white f6 flex"
+            >
+              { console.log(ref) }
+              <div
+                className="db shadow-4"
+                onMouseLeave={handleMouseLeave}
+              >
+                <MenuButton
+                  icon="reply"
+                  text="Reply"
+                />
+                <MenuButton
+                  icon="playlist_add"
+                  text="Convert to task"
+                />
+                <MenuButton
+                  icon="check"
+                  text="Resolve"
+                />
+                <MenuButton
+                  icon="edit"
+                  text="Edit"
+                />
+                <MenuButton
+                  icon="delete"
+                  text="Delete"
+                />
+              </div>
+              <div ref={arrowProps.ref} style={arrowProps.style} />
+            </div>
+          )}
+        </Popper>
+      )}
+    </Manager>
+  )
+}
 @observer
 class Comments extends React.Component {
   constructor(props) {
@@ -32,7 +105,8 @@ class Comments extends React.Component {
       uppyOpen: false,
       previewOpen: false,
       previewUrl: '',
-      previewType: ''
+      previewType: '',
+      idMenuOpen: '',
     }
   }
 
@@ -166,6 +240,18 @@ class Comments extends React.Component {
     return <div className="mt2 flex flex-auto">{attachments}</div>
   }
 
+  handleEllipsisClick = (id) => {
+    this.setState({ idMenuOpen: id })
+  }
+
+  handleMouseLeave = () => {
+    this.setState({
+      idMenuOpen: ''
+    })
+  }
+
+  
+
   render() {
     const {
       current_user_first_name,
@@ -175,6 +261,7 @@ class Comments extends React.Component {
 
     const hasComment = currentIssue.comments && currentIssue.comments.length > 0
 
+    
     return (
       <React.Fragment>
         <div className="flex ph3 pb3 items-center mt3">
@@ -185,13 +272,23 @@ class Comments extends React.Component {
           <div className="f7 fw6 gray w-auto">Discussion</div>
         </div>
         {hasComment &&
-          currentIssue.comments.map(x => (
-            <CommentMessage
-              key={x.id}
-              {...x}
-              onTogglePreview={this.onTogglePreview}
-            />
-          ))}
+          currentIssue.comments.map(x => {
+            return (
+              <CommentMessage
+                key={x.id}
+                {...x}
+                onTogglePreview={this.onTogglePreview}
+                isMenuOpen={this.state.idMenuOpen === x.id}
+                renderMenu={isMenuOpen => (
+                  <CommentMenu 
+                    isOpen={isMenuOpen} 
+                    id={x.id} 
+                    handleEllipsisClick={this.handleEllipsisClick} 
+                    handleMouseLeave={this.handleMouseLeave}
+                />)}
+              />
+            )})
+          }
         <div className={`ph3 mb4 ${hasComment && 'mt3'}`}>
           <div className="b--black-10 flex br3 ba w-100 ph2 pt1 pb2 flex items-start">
             <div style={{ marginTop: '3px' }}>

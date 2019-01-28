@@ -7,7 +7,7 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def list_infos
-    batches = Cultivation::Batch.all.order(c_at: :desc)
+    batches = Cultivation::Batch.includes(:facility_strain).all.order(c_at: :desc)
     render json: BatchInfoSerializer.new(batches).serialized_json
   end
 

@@ -46,52 +46,27 @@ module Cultivation
         end
         errors.add('strain', 'Purchase Clone is not selected')
       else
-
-        #make command to sum total booked per product id
         batches_selected = Cultivation::Batch.where(:start_date.gte => Time.now).not_in(id: batch.id)
 
-        # batches_selected = batches.select{|a| a[:start_date] > Time.now}
-        #add to filter by status active and scheduled batch
-        purchased_clone_products = plant_task.material_use
-        material_available = []
-        purchased_clone_products.each do |material|
-          product = material.product
-          material_available << {product_id: product.id, quantity: product.packages.sum { |a| a.quantity }.to_i}
-        end
+        plant_task.material_use.each do |material|
+          result = Inventory::QueryAvailableMaterial.call(material.product_id, batches_selected.pluck(:id)).result
 
-        material_booked = []
-        plant_tasks = Cultivation::Task.where(:batch_id.in => batches_selected.pluck(:id), indelible: 'plants')
-
-        plant_tasks.each do |task|
-          task.material_use.each do |material|
-            product = material.product
-            material_booked << {product_id: product.id, quantity: material.quantity}
-          end
-        end
-
-        material_available.each do |material|
-          book_material = material_booked.detect { |a| a[:product_id] == material[:product_id] }
-          material_quantity = 0
-          material_quantity = book_material[:quantity] if book_material.present?
-
-          remaining_material = material[:quantity] - material_quantity.to_i
-          product_needed = purchased_clone_products.detect { |a| a[:product_id] == material[:product_id] }
-
-          unless remaining_material >= product_needed.quantity
-            Rails.logger.debug 'InSufficient'
+          remaining_material = result[:material_available] - result[:material_booked]
+          Rails.logger.debug "Available Material => #{result}"
+          unless remaining_material >= material.quantity
             issue = Issues::Issue.find_by(
               task_id: plant_task.id,
               cultivation_batch_id: batch.id.to_s,
               reported_by: args[:current_user].id,
-              title: "Insufficient Purchase Clone #{product_needed&.product&.name}",
+              title: "Insufficient Purchase Clone #{material&.product&.name}",
             )
-            #create issue
+            #create issue if issue doesnt exist
             unless issue and issue.persisted?
               issue = Issues::Issue
                 .create!(
                   issue_no: Issues::Issue.count + 1,
-                  title: "Insufficient Purchase Clone #{product_needed&.product&.name}",
-                  description: "Insufficient Purchase Clone #{product_needed&.product&.name}",
+                  title: "Insufficient Purchase Clone #{material&.product&.name}",
+                  description: "Insufficient Purchase Clone #{material&.product&.name}",
                   severity: 'severe',
                   issue_type: 'task_from_batch',
                   status: 'open',
@@ -101,21 +76,9 @@ module Cultivation
                 )
             end
 
-            errors.add('strain', "Insufficient Purchase Clone #{product_needed&.product&.name}")
+            errors.add('strain', "Insufficient Purchase Clone #{material&.product&.name}")
           end
-          #CONTINUE FROM HERE
-          #check remaining material sufficient or not
-          #if not create an issue and return error not enough
         end
-        # batches_selected.each do |batch|
-        #   plant_task = batch.tasks.detect { |a| a['indelible'] == 'plants' }
-
-        #   material_booked << {}
-        # end
-
-        #compare for all batches that doesnt started yet
-        #create issue if not sufficient
-        #check if products > quantity
       end
     rescue
       Rails.logger.debug "#{$!.message}"

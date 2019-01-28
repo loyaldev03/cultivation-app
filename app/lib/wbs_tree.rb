@@ -25,6 +25,9 @@ class WbsTree
     end
 
     def child_of?(node_wbs, predecessor_wbs, tasks_with_wbs = [])
+      if predecessor_wbs.nil?
+        return false
+      end
       p = parent(tasks_with_wbs, node_wbs)
       while p.present?
         if p.wbs == predecessor_wbs

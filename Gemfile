@@ -80,7 +80,11 @@ gem 'simple_form'
 
 # Database
 gem 'mongoid', '~> 6.4.1'
+gem 'mongoid_orderable'
 gem 'mongoid_rails_migrations'
+
+# Check for N+1
+gem 'bullet', group: 'development'
 
 # User authentication
 gem 'devise'
@@ -106,8 +110,6 @@ gem 'rollbar'
 
 # Api Serializer
 gem 'fast_jsonapi'
-
-gem 'mongoid_orderable'
 
 # File attachment
 gem 'shrine', '~> 2.12'

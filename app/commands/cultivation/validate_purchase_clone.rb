@@ -46,35 +46,34 @@ module Cultivation
         end
         errors.add('strain', 'Purchase Clone is not selected')
       else
-        batches_selected = Cultivation::Batch.where(:start_date.gte => Time.now).not_in(id: batch.id)
+        batches_selected = Cultivation::Batch
+          .where(:start_date.gte => Time.now)
+          .where(:status.in => [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE])
+          .not_in(id: batch.id) #not draft => schedule and active
 
         plant_task.material_use.each do |material|
           result = Inventory::QueryAvailableMaterial.call(material.product_id, batches_selected.pluck(:id)).result
 
           remaining_material = result[:material_available] - result[:material_booked]
-          Rails.logger.debug "Available Material => #{result}"
-          unless remaining_material >= material.quantity
-            issue = Issues::Issue.find_by(
+
+          if remaining_material <= material.quantity
+            issue = Issues::Issue.find_or_initialize_by(
               task_id: plant_task.id,
               cultivation_batch_id: batch.id.to_s,
-              reported_by: args[:current_user].id,
               title: "Insufficient Purchase Clone #{material&.product&.name}",
             )
-            #create issue if issue doesnt exist
-            unless issue and issue.persisted?
-              issue = Issues::Issue
-                .create!(
-                  issue_no: Issues::Issue.count + 1,
-                  title: "Insufficient Purchase Clone #{material&.product&.name}",
-                  description: "Insufficient Purchase Clone #{material&.product&.name}",
-                  severity: 'severe',
-                  issue_type: 'task_from_batch',
-                  status: 'open',
-                  task_id: plant_task.id,
-                  cultivation_batch_id: batch.id.to_s,
-                  reported_by: args[:current_user].id,
-                )
-            end
+
+            issue.issue_no = Issues::Issue.count + 1
+            issue.title = "Insufficient Purchase Clone #{material&.product&.name}"
+            issue.description = "Insufficient Purchase Clone #{material&.product&.name}"
+            issue.severity = 'severe'
+            issue.issue_type = 'task_from_batch'
+            issue.status = 'open'
+            issue.task_id = plant_task.id
+            issue.cultivation_batch_id = batch.id.to_s
+            issue.reported_by = args[:current_user].id
+
+            issue.save
 
             errors.add('strain', "Insufficient Purchase Clone #{material&.product&.name}")
           end

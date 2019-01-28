@@ -5,12 +5,7 @@ module Inventory
     def initialize(product_id, batches_ids, filter = {})
       raise ArgumentError, 'product_id' if product_id.nil?
       raise ArgumentError, 'batches_ids' if batches_ids.nil?
-      Rails.logger.debug "Product id => #{product_id}"
       @product = Inventory::Product.find(product_id)
-      Rails.logger.debug "Product  => #{@product.inspect}"
-
-      # @batches = batches
-      # Rails.logger.debug "Batches => #{@batches.count}"
       @plant_tasks = Cultivation::Task.where(:batch_id.in => batches_ids, indelible: 'plants')
     end
 

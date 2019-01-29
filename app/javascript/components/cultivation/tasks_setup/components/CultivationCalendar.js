@@ -32,7 +32,7 @@ class CultivationCalendar extends React.Component {
         facility_id: facilityId,
         search_month: searchMonth,
         total_duration: totalDuration,
-        exclude_batch_id: batchId,
+        exclude_batch_id: batchId
       }
       BatchSetupStore.search(searchParams, phaseDuration)
     }

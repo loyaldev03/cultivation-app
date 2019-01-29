@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe QueryPlannedTrays, type: :command do
-  let(:facility) do
+  let!(:facility) do
     facility = create(:facility, :is_complete)
     facility.rooms.each do |room|
       room.rows.each do |row|
@@ -12,8 +12,8 @@ RSpec.describe QueryPlannedTrays, type: :command do
     end
     facility
   end
-  let(:current_user) { create(:user, facilities: [facility.id]) }
-  let(:strain) { create(:facility_strain, facility: facility) }
+  let!(:current_user) { create(:user, facilities: [facility.id]) }
+  let!(:strain) { create(:facility_strain, facility: facility) }
   # Clone Locations
   let(:clone_room) { facility.rooms.detect { |r| r.purpose == "clone" } }
   let(:clone_row1) { clone_room.rows.first }
@@ -45,23 +45,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
   let(:cure_tray1) { cure_shelf1.trays.first }
   let(:cure_tray2) { cure_shelf1.trays.last }
 
-  context "verify test data is correct" do
-    it "verify facility data is setup correctly" do
-      expect(Tray.count).to be 48
-      expect(clone_room.purpose).to eq "clone"
-      expect(clone_tray1.capacity).to eq 10
-      expect(veg_room.purpose).to eq "veg"
-      expect(veg_tray1.capacity).to eq 10
-      expect(flower_room.purpose).to eq "flower"
-      expect(flower_tray1.capacity).to eq 10
-      expect(dry_room.purpose).to eq "dry"
-      expect(dry_tray1.capacity).to eq 10
-      expect(cure_room.purpose).to eq "cure"
-      expect(cure_tray1.capacity).to eq 10
-    end
-  end
-
-  context ".call - when 2 batches exists in db" do
+  context "with two batches exists in db." do
     let(:start_date) { Time.zone.parse("01/01/2019").beginning_of_day }
     let(:plant1_id) { BSON::ObjectId.new }
     let(:plant2_id) { BSON::ObjectId.new }
@@ -114,7 +98,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
        t6,
        t7, t71]
     end
-    let(:batch2_tasks) do
+    let!(:batch2_tasks) do
       t1  = create(:task, batch: batch2, name: "Clone", phase: "clone", indelible: "group", indent: 0,
                    duration: 8, start_date: batch2.start_date, end_date: batch2.start_date + 8.days)
       t11 = create(:task, batch: batch2, name: "Grow", phase: "clone", indelible: "staying", indent: 1,
@@ -139,93 +123,183 @@ RSpec.describe QueryPlannedTrays, type: :command do
                   duration: 5, start_date: t6.end_date, end_date: t6.end_date + 5.days)
       t71 = create(:task, batch: batch2, name: "Curing", phase: "cure", indelible: "staying", indent: 1,
                   duration: 5, start_date: t6.end_date, end_date: t6.end_date + 5.days)
-      [t1, t11,
-       t2, t21,
-       t3, t31,
-       t4,
-       t5, t51,
-       t6,
-       t7, t71]
+      [t1, t11, # 8
+       t2, t21, #14
+       t3, t31, #56
+       t4,      # 2
+       t5, t51, # 7
+       t6,      # 2
+       t7, t71] # 5
     end
-
     let(:batch1_plans) do
+      quantity = 6
       [
-        {
-          id: "plant#1",
-          phase: "clone",
-          quantity: 6,
-          serialNo: "M001",
+        { id: "plant#1", phase: "clone", quantity: quantity, serialNo: "M001",
           trays: [
-            {
-              plant_id: plant1_id.to_s,
-              room_id: clone_room.id.to_s,
-              row_id: clone_row1.id.to_s,
-              shelf_id: clone_shelf1.id.to_s,
-              tray_id: clone_tray1.id.to_s,
-              tray_capacity: 3,
-              tray_code: clone_tray1.code.to_s,
-            },
-            {
-              plant_id: plant2_id.to_s,
-              room_id: clone_room.id.to_s,
-              row_id: clone_row1.id.to_s,
-              shelf_id: clone_shelf1.id.to_s,
-              tray_id: clone_tray2.id.to_s,
-              tray_capacity: 3,
-              tray_code: clone_tray2.code.to_s,
-            }
+            { plant_id: plant1_id.to_s, room_id: clone_room.id.to_s, row_id: clone_row1.id.to_s, shelf_id: clone_shelf1.id.to_s,
+              tray_id: clone_tray1.id.to_s, tray_capacity: 3, tray_code: clone_tray1.code.to_s },
+            { plant_id: plant2_id.to_s, room_id: clone_room.id.to_s, row_id: clone_row1.id.to_s, shelf_id: clone_shelf1.id.to_s,
+              tray_id: clone_tray2.id.to_s, tray_capacity: 3, tray_code: clone_tray2.code.to_s },
           ]
-        }
+        },
+        { id: "veg#1", phase: "veg", quantity: quantity,
+          trays: [
+            { room_id: veg_room.id.to_s, row_id: veg_row1.id.to_s, shelf_id: veg_shelf1.id.to_s,
+              tray_id: veg_tray1.id.to_s, tray_capacity: quantity, tray_code: veg_tray1.code.to_s },
+          ]
+        },
+        { id: "flower#1", phase: "flower", quantity: quantity,
+          trays: [
+            { room_id: flower_room.id.to_s, row_id: flower_row1.id.to_s, shelf_id: flower_shelf1.id.to_s,
+              tray_id: flower_tray1.id.to_s, tray_capacity: quantity, tray_code: flower_tray1.code.to_s },
+          ]
+        },
+        { id: "dry#1", phase: "dry", quantity: quantity,
+          trays: [
+            { room_id: dry_room.id.to_s, row_id: dry_row1.id.to_s, shelf_id: dry_shelf1.id.to_s,
+              tray_id: dry_tray1.id.to_s, tray_capacity: quantity, tray_code: dry_tray1.code.to_s },
+          ]
+        },
+        { id: "cure#1", phase: "cure", quantity: quantity,
+          trays: [
+            { room_id: cure_room.id.to_s, row_id: cure_row1.id.to_s, shelf_id: cure_shelf1.id.to_s,
+              tray_id: cure_tray1.id.to_s, tray_capacity: quantity, tray_code: cure_tray1.code.to_s },
+          ]
+        },
+      ]
+    end
+    let(:batch2_plans) do
+      quantity = 3
+      [
+        { id: "plant#1", phase: "clone", quantity: quantity,
+          trays: [
+            { plant_id: plant2_id.to_s, room_id: clone_room.id.to_s, row_id: clone_row1.id.to_s, shelf_id: clone_shelf1.id.to_s,
+              tray_id: clone_tray2.id.to_s, tray_capacity: 3, tray_code: clone_tray2.code.to_s },
+          ]
+        },
+        { id: "veg#1", phase: "veg", quantity: quantity,
+          trays: [
+            { room_id: veg_room.id.to_s, row_id: veg_row1.id.to_s, shelf_id: veg_shelf1.id.to_s,
+              tray_id: veg_tray1.id.to_s, tray_capacity: quantity, tray_code: veg_tray1.code.to_s },
+          ]
+        },
+        { id: "flower#1", phase: "flower", quantity: quantity,
+          trays: [
+            { room_id: flower_room.id.to_s, row_id: flower_row1.id.to_s, shelf_id: flower_shelf1.id.to_s,
+              tray_id: flower_tray1.id.to_s, tray_capacity: quantity, tray_code: flower_tray1.code.to_s },
+          ]
+        },
+        { id: "dry#1", phase: "dry", quantity: quantity,
+          trays: [
+            { room_id: dry_room.id.to_s, row_id: dry_row1.id.to_s, shelf_id: dry_shelf1.id.to_s,
+              tray_id: dry_tray1.id.to_s, tray_capacity: quantity, tray_code: dry_tray1.code.to_s },
+          ]
+        },
+        { id: "cure#1", phase: "cure", quantity: quantity,
+          trays: [
+            { room_id: cure_room.id.to_s, row_id: cure_row1.id.to_s, shelf_id: cure_shelf1.id.to_s,
+              tray_id: cure_tray1.id.to_s, tray_capacity: quantity, tray_code: cure_tray1.code.to_s },
+          ]
+        },
       ]
     end
 
-    it "verify tray plans are saved", focus: true do
+    before do
       # Prepare - Create a new booking that overlaps with default plan
       Cultivation::SaveTrayPlans.call(batch1.id, batch1_plans, 6)
+      Cultivation::SaveTrayPlans.call(batch2.id, batch2_plans, 3)
+    end
 
-      # [ t1, t11,  # clone
-      #   t2, t21,  # veg
-      #   t3, t31,  # flower
-      #   t4,       # harvest
-      #   t5, t51,  # dry
-      #   t6,       # trim
-      #   t7, t71 ] # cure
-
+    it "verify Clone TrayPlan are saved correctly" do
       # Verify "clone" phase's TrayPlans are saved
       phase_start = batch1_tasks[1].start_date
       phase_end = batch1_tasks[1].end_date
-      q1 = QueryAvailableCapacity.call(facility_id: facility.id,
-                                       start_date: phase_start,
-                                       end_date: phase_end,
-                                       purpose: "clone")
-      expect(q1.result).to eq 74
+      cmd = QueryAvailableCapacity.call(facility_id: facility.id,
+                                        start_date: phase_start,
+                                        end_date: phase_end,
+                                        purpose: "clone")
+      expect(cmd.result).to eq 71
+    end
 
+    it "verify Veg TrayPlan are setup correctly" do
       # Verify "veg" phase's TrayPlans are saved
       phase_start = batch1_tasks[3].start_date
       phase_end = batch1_tasks[3].end_date
-      q2 = QueryAvailableCapacity.call(facility_id: facility.id,
-                                       start_date: phase_start,
-                                       end_date: phase_end,
-                                       purpose: "veg")
-      expect(q2.result).to eq 80
+      cmd = QueryAvailableCapacity.call(facility_id: facility.id,
+                                        start_date: phase_start,
+                                        end_date: phase_end,
+                                        purpose: "veg")
+      expect(cmd.result).to eq 71
     end
 
-    it "verify batch 'staying' task setup correctly" do
+    it "verify Flower TrayPlan are setup correctly" do
+      # Verify "flower" phase's TrayPlans are saved
+      phase_start = batch1_tasks[5].start_date
+      phase_end = batch1_tasks[5].end_date
+      cmd = QueryAvailableCapacity.call(facility_id: facility.id,
+                                        start_date: phase_start,
+                                        end_date: phase_end,
+                                        purpose: "flower")
+      expect(cmd.result).to eq 71
+    end
+
+    it "verify Dry TrayPlan are setup correctly" do
+      # Verify "flower" phase's TrayPlans are saved
+      phase_start = batch1_tasks[8].start_date
+      phase_end = batch1_tasks[8].end_date
+      cmd = QueryAvailableCapacity.call(facility_id: facility.id,
+                                        start_date: phase_start,
+                                        end_date: phase_end,
+                                        purpose: "dry")
+      expect(cmd.result).to eq 71
+    end
+
+    it "verify Cure TrayPlan are setup correctly" do
+      # Verify "flower" phase's TrayPlans are saved
+      phase_start = batch1_tasks[11].start_date
+      phase_end = batch1_tasks[11].end_date
+      cmd = QueryAvailableCapacity.call(facility_id: facility.id,
+                                        start_date: phase_start,
+                                        end_date: phase_end,
+                                        purpose: "cure")
+      expect(cmd.result).to eq 71
+    end
+
+    it "verify facility data is setup correctly" do
+      expect(Tray.count).to be 48
+      expect(clone_room.purpose).to eq "clone"
+      expect(clone_tray1.capacity).to eq 10
+      expect(veg_room.purpose).to eq "veg"
+      expect(veg_tray1.capacity).to eq 10
+      expect(flower_room.purpose).to eq "flower"
+      expect(flower_tray1.capacity).to eq 10
+      expect(dry_room.purpose).to eq "dry"
+      expect(dry_tray1.capacity).to eq 10
+      expect(cure_room.purpose).to eq "cure"
+      expect(cure_tray1.capacity).to eq 10
+    end
+
+    it "verify two batches are saved in database" do
+      expect(Cultivation::Batch.count).to eq 2
+    end
+
+    it "verify batch 'staying' task exists correctly" do
       # Verify phases saved in batch 1
       cmd = Cultivation::QueryBatchPhases.call(batch1, Constants::CULTIVATION_PHASES_1V)
       expect(cmd.success?).to be true
       expect(cmd.result.count).to be 5
 
       # Verify phases saved in batch 2
-      # cmd = Cultivation::QueryBatchPhases.call(batch2, Constants::CULTIVATION_PHASES_1V)
-      # expect(cmd.success?).to be true
-      # expect(cmd.result.count).to be 5
+      cmd = Cultivation::QueryBatchPhases.call(batch2, Constants::CULTIVATION_PHASES_1V)
+      expect(cmd.success?).to be true
+      expect(cmd.result.count).to be 5
     end
 
-    it "should have 2 batches in database" do
-      expect(Cultivation::Batch.count).to eq 2
-      expect(Cultivation::Task.count).to eq(2 * 14)
-      # TODO: Add test plans into both batch
+    it ".call with exclude quantity from batch1", focus: true do
+      cmd = QueryPlannedTrays.call(start_date - 6.days,
+                                   start_date + 90.days, # Total Duration (staying)
+                                   facility.id)
+      expect(cmd.result.size).to be 11 # Because 3/5 plan in db belongs to batch1
     end
   end
 
@@ -275,7 +349,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       expect(res.result.size).to eq 1
     end
 
-    it "should excluded trays planned with params excluded_batch_id" do
+    it "should excluded trays planned with params exclude_batch_id" do
       # Prepare
       p1_start_date = Time.strptime("2018/07/25", DATE_FORMAT)
       # let end_date overlaps with previously scheduled's start_date
@@ -288,9 +362,13 @@ RSpec.describe QueryPlannedTrays, type: :command do
               tray_id: clone_tray1.id,
               start_date: p1_start_date,
               end_date: p1_end_date)
+      exclude_batch_id = tp.batch_id
 
       # Perform
-      res = QueryPlannedTrays.call(schedule_start_date, schedule_end_date, facility.id, tp.batch_id)
+      res = QueryPlannedTrays.call(schedule_start_date,
+                                   schedule_end_date,
+                                   facility.id,
+                                   exclude_batch_id)
 
       # Validate
       expect(res.result.size).to eq 0

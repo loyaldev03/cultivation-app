@@ -26,12 +26,13 @@ class CultivationCalendar extends React.Component {
   onSearch = searchMonth => {
     BatchSetupStore.clearSearch()
     BatchSetupStore.searchMonth = searchMonth
-    const { totalDuration, facilityId, phaseDuration } = this.props
+    const { totalDuration, facilityId, phaseDuration, batchId } = this.props
     if (this.props.totalDuration > 0) {
       const searchParams = {
         facility_id: facilityId,
         search_month: searchMonth,
-        total_duration: totalDuration
+        total_duration: totalDuration,
+        exclude_batch_id: batchId,
       }
       BatchSetupStore.search(searchParams, phaseDuration)
     }

@@ -77,13 +77,15 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
 
   def search_batch_plans
     faciliy_id = params['facility_id']
+    exclude_batch_id = params['exclude_batch_id']
     month_str = params['search_month']        # E.g. '10-2018' (Format => MM-YYYY)
     total_duration = params['total_duration'] # E.g. 100
     start_date, end_date = get_search_start_end_date(month_str, total_duration)
     # Rails.logger.debug "\033[35m total_duration: #{total_duration} \033[0m"
+    # Rails.logger.debug "\033[35m exclude_batch_id: #{exclude_batch_id} \033[0m"
     # Rails.logger.debug "\033[35m start_date: #{start_date} \033[0m"
     # Rails.logger.debug "\033[35m end_date: #{end_date} \033[0m"
-    command = QueryPlannedTrays.call(start_date, end_date, faciliy_id)
+    command = QueryPlannedTrays.call(start_date, end_date, faciliy_id, exclude_batch_id)
     if command.success?
       render json: TrayLocationSerializer.new(command.result).serialized_json
     else

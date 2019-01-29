@@ -147,15 +147,19 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
   context ".call - update activate batch" do
     it "activate batch" do
       batch_start_date = t1.start_date + Faker::Number.number(3).to_i.days
+      args_start_date = batch_start_date.to_s
       args = {
         batch_id: batch.id,
-        start_date: batch_start_date,
+        start_date: args_start_date,
       }
       expect(batch.status).to eq Constants::BATCH_STATUS_DRAFT
 
       cmd = Cultivation::UpdateBatchScheduled.call(current_user, args)
       saved_batch = Cultivation::Batch.find(batch.id)
-      saved_t1, saved_t11, saved_t12 = Cultivation::Task.in(id: [t1.id, t1_1.id, t1_2.id]).to_a
+      saved_t1, saved_t11, saved_t12 = Cultivation::Task.in(id: [t1.id,
+                                                                 t1_1.id,
+                                                                 t1_2.id]).to_a
+      expect(cmd.errors).to eq({})
       expect(cmd.success?).to be true
       expect(saved_batch.status).to eq Constants::BATCH_STATUS_SCHEDULED
       expect(saved_batch.start_date).to eq batch_start_date.beginning_of_day

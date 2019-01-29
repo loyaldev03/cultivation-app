@@ -5,7 +5,7 @@ module Cultivation
     def initialize(current_user, args = {})
       args = {
         batch_id: nil,      # BSON::ObjectId, Batch.id
-        start_date: nil,    # Batch Start Date
+        start_date: nil,    # String, Batch Start Date
       }.merge(args)
 
       @batch_id = args[:batch_id]
@@ -16,7 +16,10 @@ module Cultivation
     def call
       errors.add(:batch_id, 'batch_id is required') if @batch_id.nil?
       errors.add(:start_date, 'Start Date is required') if @start_date.nil?
-
+      unless @start_date.is_a? String
+        errors.add(:start_date, 'Start Date has to be a ISO Date String')
+      end
+      @start_date = Time.zone.parse(@start_date)
       if errors.empty?
         first_task = Cultivation::Task.find_by(
           batch_id: @batch_id.to_bson_id,

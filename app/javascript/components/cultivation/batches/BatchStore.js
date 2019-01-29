@@ -1,5 +1,5 @@
 import { observable, action, runInAction, toJS } from 'mobx'
-import { httpGetOptions } from '../../utils'
+import { httpGetOptions, httpPostOptions } from '../../utils'
 
 class BatchStore {
   @observable isLoading = false
@@ -13,7 +13,6 @@ class BatchStore {
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       runInAction(() => {
-        this.isLoading = false
         if (response.data) {
           this.batches = response.data.map(rec => {
             return { ...rec.attributes, id: rec.id }
@@ -22,6 +21,24 @@ class BatchStore {
         } else {
           this.batches = []
           this.isDataLoaded = false
+        }
+      })
+    } catch (err) {
+      console.error(err)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  @action
+  async deleteBatch(batchId) {
+    const url = '/api/v1/batches/destroy'
+    const payload = { id: batchId }
+    try {
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      runInAction(() => {
+        if (response.data) {
+          this.batches = this.batches.filter(x => x.id !== response.data)
         }
       })
     } catch (err) {

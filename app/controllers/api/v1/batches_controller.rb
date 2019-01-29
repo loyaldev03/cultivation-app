@@ -91,6 +91,15 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     end
   end
 
+  def destroy
+    command = Cultivation::DestroyBatch.call(current_user, params[:id])
+    if command.success?
+      render json: {data: command.result}
+    else
+      render json: {error: command.errors}
+    end
+  end
+
   private
 
   def batch_params

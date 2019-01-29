@@ -295,11 +295,22 @@ RSpec.describe QueryPlannedTrays, type: :command do
       expect(cmd.result.count).to be 5
     end
 
-    it ".call with exclude quantity from batch1", focus: true do
+    it ".call with exclude quantity from batch1" do
       cmd = QueryPlannedTrays.call(start_date - 6.days,
                                    start_date + 90.days, # Total Duration (staying)
-                                   facility.id)
-      expect(cmd.result.size).to be 11 # Because 3/5 plan in db belongs to batch1
+                                   facility.id,
+                                   batch1.id,
+                                  )
+      expect(cmd.result.size).to be 5 # Because 3/5 plan in db belongs to batch1
+    end
+
+    it ".call with exclude quantity from batch2" do
+      cmd = QueryPlannedTrays.call(start_date - 6.days,
+                                   start_date + 90.days, # Total Duration (staying)
+                                   facility.id,
+                                   batch2.id,
+                                  )
+      expect(cmd.result.size).to be 6 # Because 3/5 plan in db belongs to batch1
     end
   end
 

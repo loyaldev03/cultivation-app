@@ -43,7 +43,7 @@ export default class MaterialForm extends React.Component {
       ...x.attributes
     }))
     let plant_products = []
-    if (this.props.batch_source === 'clones_purchased'){
+    if (this.props.batch_source === 'clones_purchased') {
       url = `/api/v1/products?type=raw_materials&category=purchased_clone&facility_id=${facility_id}&facility_strain_id=${facility_strain_id}&filter=`
       response = await (await fetch(url, httpGetOptions)).json()
       plant_products = response.data.map(x => ({
@@ -51,9 +51,8 @@ export default class MaterialForm extends React.Component {
         value: x.attributes.id,
         ...x.attributes
       }))
-
     }
-    if (this.props.batch_source === 'seeds'){
+    if (this.props.batch_source === 'seeds') {
       url = `/api/v1/products?type=raw_materials&category=seeds&facility_id=${facility_id}&facility_strain_id=${facility_strain_id}&filter=`
       response = await (await fetch(url, httpGetOptions)).json()
       plant_products = response.data.map(x => ({
@@ -61,9 +60,7 @@ export default class MaterialForm extends React.Component {
         value: x.attributes.id,
         ...x.attributes
       }))
-      
     }
-
 
     this.setState({ defaultProduct: products, plantProduct: plant_products })
     return products

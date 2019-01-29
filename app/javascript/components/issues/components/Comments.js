@@ -16,6 +16,7 @@ import ResolveIssueForm from './ResolveIssueForm'
 import { formatIssueNo } from './FormatHelper'
 import currentIssue from '../store/CurrentIssueStore'
 import addComment from '../actions/addComment'
+import resolveIssue from '../actions/resolveIssue'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -29,14 +30,21 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
   )
 }
 
-const CommentMenu = ({ isOpen, id, handleEllipsisClick, handleMouseLeave, handleResolve, handleReply }) => {
+const CommentMenu = ({
+  isOpen,
+  id,
+  handleEllipsisClick,
+  handleMouseLeave,
+  handleResolve,
+  handleReply
+}) => {
   return (
     <Manager>
       <Reference>
         {({ ref }) => {
           return (
             <span
-              className="material-icons black-05 hover-gray ph1 pointer"
+              className="material-icons black-10 hover-dark-gray ph1 pointer"
               style={{ fontSize: '18px', height: '21px' }}
               ref={ref}
               onClick={() => handleEllipsisClick(id)}
@@ -58,7 +66,11 @@ const CommentMenu = ({ isOpen, id, handleEllipsisClick, handleMouseLeave, handle
               <div className="db shadow-4" onMouseLeave={handleMouseLeave}>
                 <MenuButton icon="reply" text="Reply" onClick={handleReply} />
                 <MenuButton icon="playlist_add" text="Convert to task" />
-                <MenuButton icon="check" text="Resolve" onClick={handleResolve} />
+                <MenuButton
+                  icon="check"
+                  text="Resolve"
+                  onClick={handleResolve}
+                />
                 <MenuButton icon="edit" text="Edit" />
                 <MenuButton icon="delete" text="Delete" />
               </div>
@@ -91,7 +103,7 @@ class Comments extends React.Component {
       showCommentMenuId: '',
       showAddComment: true,
       showResolveForm: false,
-      showNewTaskForm: false,
+      showNewTaskForm: false
     }
   }
 
@@ -201,6 +213,70 @@ class Comments extends React.Component {
     }
   }
 
+
+  handleEllipsisClick = id => {
+    this.setState({ showCommentMenuId: id })
+  }
+
+  handleMouseLeave = () => {
+    this.setState({
+      showCommentMenuId: ''
+    })
+  }
+
+  handleShowResolve = () => {
+    this.setState({
+      showResolveForm: true,
+      showCommentMenuId: '',
+      showAddComment: false
+    })
+
+    window.editorSidebar.scrollToBottom()
+  }
+
+  onReplyComment = () => {
+    window.editorSidebar.scrollToBottom()
+    this.newCommentText.current.focus()
+  }
+
+  onSubmitResolve = (data) => {
+    if (!data.cancel) {
+      const merged = { ...data, id: currentIssue.issue.id}
+      resolveIssue(merged)
+    }
+    this.setState({
+      showResolveForm: false,
+      showCommentMenuId: '',
+      showAddComment: true
+    })
+  }
+
+  
+
+  renderResolveForm() {
+    if (!this.state.showResolveForm) {
+      return null
+    }
+
+    const {
+      current_user_first_name,
+      current_user_last_name,
+      current_user_photo
+    } = this.props
+
+    return <ResolveIssueForm  
+      firstName={current_user_first_name}
+      lastName={current_user_last_name}
+      photoUrl={current_user_photo}
+      onSubmit={this.onSubmitResolve}
+    />
+  }
+
+  renderNewTaskForm() {
+    return null
+  }
+
+
   renderAttachments() {
     if (this.state.attachments.length === 0) {
       return null
@@ -223,45 +299,6 @@ class Comments extends React.Component {
     })
 
     return <div className="mt2 flex flex-auto">{attachments}</div>
-  }
-
-  handleEllipsisClick = id => {
-    this.setState({ showCommentMenuId: id })
-  }
-
-  handleMouseLeave = () => {
-    this.setState({
-      showCommentMenuId: ''
-    })
-  }
-
-  handleShowResolve = () => {
-    this.setState({ 
-      showResolveForm: true,
-      showCommentMenuId: '',
-      showAddComment: false,
-    })
-
-    window.editorSidebar.scrollToBottom()
-  }
-
-  onReplyComment = () => {
-    window.editorSidebar.scrollToBottom()
-    this.newCommentText.current.focus()
-  }
-
-  renderResolveForm() {
-    if (!this.state.showResolveForm) {
-      return null
-    }
-
-    return (
-      <ResolveIssueForm />
-    )
-  }
-
-  renderNewTaskForm() {
-    return null
   }
 
   render() {
@@ -304,7 +341,10 @@ class Comments extends React.Component {
               />
             )
           })}
-        <div className={`ph3 mb4 ${hasComment && 'mt3'} ${!showAddComment && 'dn' }`}>
+        <div
+          className={`ph3 mb4 ${hasComment && 'mt3'} ${!showAddComment &&
+            'dn'}`}
+        >
           <div className="b--black-10 flex br3 ba w-100 ph2 pt1 pb2 flex items-start">
             <div style={{ marginTop: '3px' }}>
               <Avatar
@@ -355,8 +395,8 @@ class Comments extends React.Component {
             </a>
           </div>
         </div>
-        { this.renderResolveForm() }
-        { this.renderNewTaskForm() }
+        {this.renderResolveForm()}
+        {this.renderNewTaskForm()}
         <DashboardModal
           uppy={this.uppy}
           closeModalOnClickOutside

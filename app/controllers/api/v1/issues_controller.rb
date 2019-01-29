@@ -51,4 +51,19 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
     link = Shrine.storages[:cache].url(params[:key])
     render plain: link
   end
+
+  def resolve
+    Rails.logger.debug "\t\t\t>>> params: #{params.inspect}"
+
+    p = params.to_unsafe_h
+    issue = Issues::Issue.find(p[:id])
+    issue.status = 'resolved'
+    issue.resolution_notes = p[:notes]
+    issue.reason = p[:reason]
+    issue.resolved_at = Time.now
+    issue.resolved_by = current_user
+    issue.save!
+
+    render json: Issues::IssueSerializer.new(issue).serialized_json
+  end
 end

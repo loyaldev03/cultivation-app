@@ -83,7 +83,7 @@ const CommentMessage = ({
   quote = '',
   onTogglePreview = (url, mime_type) => {},
   isMenuOpen = false,
-  renderMenu,
+  renderMenu
 }) => {
   const align = is_me == true ? 'justify-start' : 'justify-end'
 

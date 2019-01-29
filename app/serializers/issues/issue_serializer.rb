@@ -66,7 +66,7 @@ module Issues
         {
           id: object.resolved_by_id.to_s,
           display_name: object.resolved_by.display_name,
-          photo: object.resolved_by.photo.url,
+          photo: object.resolved_by.photo&.url,
           first_name: object.resolved_by.first_name,
           last_name: object.resolved_by.last_name,
         }

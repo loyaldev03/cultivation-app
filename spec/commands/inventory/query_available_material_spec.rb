@@ -95,7 +95,7 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
     task
   end
 
-  context ".call" , focus: true do
+  context ".call" do
     it "return correct material available" do
       batches_selected = Cultivation::Batch
                     .where(:start_date.gte => Time.now)

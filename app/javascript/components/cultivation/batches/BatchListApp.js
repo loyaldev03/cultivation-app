@@ -16,7 +16,7 @@ class BatchListApp extends React.Component {
     store.loadBatches()
   }
   onDelete = batchId => {
-    if (window.confirm("Are you sure you want to delete this batch?")) { 
+    if (window.confirm('Are you sure you want to delete this batch?')) {
       store.deleteBatch(batchId)
     }
   }

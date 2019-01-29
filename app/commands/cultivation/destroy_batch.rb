@@ -19,7 +19,7 @@ module Cultivation
         Cultivation::TrayPlan.delete_all({batch_id: @batch_id})
         @batch_id
       else
-        errors.add(:batch, "Unable to delete an active batch")
+        errors.add(:batch, 'Unable to delete an active batch')
       end
     end
   end

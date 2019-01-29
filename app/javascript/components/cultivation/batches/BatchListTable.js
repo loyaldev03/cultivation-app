@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import React from 'react'
-import { ActiveBadge, formatDate2, } from '../../utils'
+import { ActiveBadge, formatDate2 } from '../../utils'
 
 class BatchListTable extends React.Component {
   render() {

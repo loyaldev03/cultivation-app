@@ -12,8 +12,8 @@ class QueryPlannedTrays
 
     @start_date = start_date
     @end_date = end_date
-    @facility_id = facility_id
-    @exclude_batch_id = exclude_batch_id
+    @facility_id = facility_id&.to_bson_id
+    @exclude_batch_id = exclude_batch_id&.to_bson_id
   end
 
   def call
@@ -33,8 +33,8 @@ class QueryPlannedTrays
                                        end_date: {"$gte": @end_date}).selector
 
     planned = Cultivation::TrayPlan.or(cond_a, cond_b, cond_c)
-    planned = planned.where(facility_id: @facility_id.to_bson_id) if @facility_id
-    planned = planned.not.where(batch_id: @exclude_batch_id.to_bson_id) if @exclude_batch_id
+    planned = planned.where(facility_id: @facility_id) if @facility_id
+    planned = planned.not.where(batch_id: @exclude_batch_id) if @exclude_batch_id
     # TODO::ANDY filter out inactive batches
     planned.to_a
   end

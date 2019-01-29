@@ -44,6 +44,7 @@ RSpec.describe UpdateActiveTrayPlansJob, type: :job do
     # tray booking record.
     create(:task,
             batch: batch,
+            indelible: "staying",
             phase: Constants::CONST_CLONE,
             duration: 16,
             start_date: batch.start_date,
@@ -73,9 +74,9 @@ RSpec.describe UpdateActiveTrayPlansJob, type: :job do
         # Simulate plants added into two different tray
         location_id = i % 2 == 0 ? clone_tray.id : clone_tray2.id
         create(:plant, :clone,
-                        cultivation_batch: batch,
-                        location_id: location_id,
-                        facility_strain: facility_strain)
+                       cultivation_batch: batch,
+                       location_id: location_id,
+                       facility_strain: facility_strain)
       end
 
       # Execute
@@ -84,7 +85,7 @@ RSpec.describe UpdateActiveTrayPlansJob, type: :job do
       # Validate
       plan_info = {
         facility_id: facility.id,
-        phase: Constants::CONST_CLONE,
+        purpose: Constants::CONST_CLONE,
         start_date: phase_task.start_date,
         end_date: phase_task.end_date,
       }
@@ -124,7 +125,7 @@ RSpec.describe UpdateActiveTrayPlansJob, type: :job do
       # Validate
       plan_info = {
         facility_id: facility.id,
-        phase: Constants::CONST_CLONE,
+        purpose: Constants::CONST_CLONE,
         start_date: phase_task.start_date,
         end_date: phase_task.end_date,
       }

@@ -62,6 +62,15 @@ module Cultivation
       batch.estimated_harvest_date = harvest_phase&.start_date
       batch.start_date = first_task&.start_date
       batch.save!
+      update_tray_plans(batch)
+      batch
+    end
+
+    def update_tray_plans(batch)
+      cmd = Cultivation::UpdateTrayPlans.call(@current_user, batch_id: batch.id)
+      if !cmd.success?
+        errors = cmd.errors
+      end
     end
 
     def cascade_changes?(task)
@@ -256,7 +265,7 @@ module Cultivation
         args = {
           facility_id: opt[:facility_id],
           exclude_batch_id: opt[:batch_id],
-          phase: t.phase,
+          purpose: t.phase,
           start_date: t.start_date,
           end_date: t.end_date,
         }

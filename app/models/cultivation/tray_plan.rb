@@ -8,8 +8,8 @@ module Cultivation
     field :row_id, type: BSON::ObjectId
     field :shelf_id, type: BSON::ObjectId
     field :tray_id, type: BSON::ObjectId
-    field :start_date, type: DateTime
-    field :end_date, type: DateTime
+    field :start_date, type: Time
+    field :end_date, type: Time
     field :capacity, type: Integer
     field :phase, type: String # To enable query for plans by Cultivation Phase
 

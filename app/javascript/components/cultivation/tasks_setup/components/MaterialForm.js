@@ -82,16 +82,14 @@ export default class MaterialForm extends React.Component {
           .includes(this.state.product.value)
       ) {
         // compare if same id existed no need to re-insert to material array
-        console.log('Id Existed')
       } else {
-        console.log(this.state.product)
         this.setState(previousState => ({
           materials: [
             ...previousState.materials,
             {
               product_name: this.state.product.name,
               product_id: this.state.product.id,
-              category: this.state.product.catalogue.category,
+              category: this.state.product.catalogue.label,
               quantity: '',
               uoms: this.state.product.uoms
             }
@@ -124,17 +122,19 @@ export default class MaterialForm extends React.Component {
   handleChangeQuantity = (id, quantity) => {
     let material = this.state.materials.find(e => e.product_id === id)
     material.quantity = quantity
-    let tasks = this.state.materials.map(t => {
+    let materials = this.state.materials.map(t => {
       return t.product_id === id ? material : t
     })
+    this.setState({ materials: materials })
   }
 
   handleChangeUom = (id, uom) => {
     let material = this.state.materials.find(e => e.product_id === id)
     material.uom = uom
-    let tasks = this.state.materials.map(t => {
+    let materials = this.state.materials.map(t => {
       return t.product_id === id ? material : t
     })
+    this.setState({ materials: materials })
   }
 
   render() {
@@ -198,7 +198,7 @@ export default class MaterialForm extends React.Component {
                           size="2"
                           style={{ height: 30 + 'px' }}
                           className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                          defaultValue={x.quantity}
+                          value={x.quantity}
                           onChange={e =>
                             this.handleChangeQuantity(
                               x.product_id,
@@ -209,7 +209,7 @@ export default class MaterialForm extends React.Component {
                       </td>
                       <td className="tl pv2 ph3">
                         <select
-                          defaultValue={x.uom}
+                          value={x.uom}
                           onChange={e =>
                             this.handleChangeUom(x.product_id, e.target.value)
                           }

@@ -45,12 +45,11 @@ module Cultivation
         errors.add(:batch_id, result.errors['strain']) unless result.success?
       end
 
-      #validate seed
-      # if batch.batch_source == 'seeds'
-      #   result = Cultivation::ValidateSeed.call(current_user: @current_user, batch_id: @batch_id)
-      #   errors.add(:batch_id, result.errors['strain']) unless result.success?
-      # end
-      #
+      # validate seed
+      if batch.batch_source == 'seeds'
+        result = Cultivation::ValidateSeed.call(current_user: @current_user, batch_id: @batch_id)
+        errors.add(:batch_id, result.errors['strain']) unless result.success?
+      end
     end
   end
 end

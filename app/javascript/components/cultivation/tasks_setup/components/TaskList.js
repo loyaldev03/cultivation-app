@@ -546,6 +546,7 @@ class TaskList extends React.Component {
                   TaskStore.editAssignedMaterial(batchId, taskId, materials)
                   this.setState({ showAssignMaterialPanel: false })
                 }}
+                batch_source={this.props.batch.batch_source}
                 batch_id={batchId}
                 facility_id={this.props.batch.facility_id}
                 facility_strain_id={this.props.batch.facility_strain_id}

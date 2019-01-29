@@ -1,5 +1,5 @@
 module Cultivation
-  class ValidatePurchaseClone
+  class ValidateSeed
     prepend SimpleCommand
 
     attr_reader :args
@@ -16,7 +16,7 @@ module Cultivation
 
     def save_record
       batch = Cultivation::Batch.find(args[:batch_id])
-      catalogue_id = Inventory::Catalogue.purchased_clones.id
+      catalogue_id = Inventory::Catalogue.seed.id
       products = Inventory::Product.in(catalogue: catalogue_id).where(facility_id: batch.facility_id)
 
       tasks = batch.tasks
@@ -34,8 +34,8 @@ module Cultivation
           issue = Issues::Issue
             .create!(
               issue_no: Issues::Issue.count + 1,
-              title: 'Purchase Clone is not selected',
-              description: 'Purchase Clone is not selected',
+              title: 'Seed is not selected',
+              description: 'Seed is not selected',
               severity: 'severe',
               issue_type: 'task_from_batch',
               status: 'open',
@@ -44,7 +44,7 @@ module Cultivation
               reported_by: args[:current_user].id,
             )
         end
-        errors.add('strain', 'Purchase Clone is not selected')
+        errors.add('strain', 'Seed is not selected')
       else
         batches_selected = Cultivation::Batch
           .where(:start_date.gte => Time.now)
@@ -55,16 +55,18 @@ module Cultivation
           result = Inventory::QueryAvailableMaterial.call(material.product_id, batches_selected.pluck(:id)).result
 
           remaining_material = result[:material_available] - result[:material_booked]
+          Rails.logger.debug "Remaining Material ==> #{remaining_material}"
+          Rails.logger.debug "Material Needed ==> #{material.quantity}"
           if remaining_material < material.quantity
             issue = Issues::Issue.find_or_initialize_by(
               task_id: plant_task.id,
               cultivation_batch_id: batch.id.to_s,
-              title: "Insufficient Purchase Clone #{material&.product&.name}",
+              title: "Insufficient Seed #{material&.product&.name}",
             )
 
             issue.issue_no = Issues::Issue.count + 1
-            issue.title = "Insufficient Purchase Clone #{material&.product&.name}"
-            issue.description = "Insufficient Purchase Clone #{material&.product&.name}"
+            issue.title = "Insufficient Seed #{material&.product&.name}"
+            issue.description = "Insufficient Seed #{material&.product&.name}"
             issue.severity = 'severe'
             issue.issue_type = 'task_from_batch'
             issue.status = 'open'
@@ -74,7 +76,7 @@ module Cultivation
 
             issue.save
 
-            errors.add('strain', "Insufficient Purchase Clone #{material&.product&.name}")
+            errors.add('strain', "Insufficient Seed #{material&.product&.name}")
           end
         end
       end

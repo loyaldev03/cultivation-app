@@ -122,12 +122,13 @@ RSpec.describe Cultivation::UpdateTrayPlans, type: :command do
       },
     ]
   end
+
   before do
     # Prepare - Create a new booking that overlaps with default plan
     Cultivation::SaveTrayPlans.call(batch1.id, batch1_plans, 6)
   end
 
-  it ".call should update existing TrayPlan booking dates", focus: true do
+  it ".call should update existing TrayPlan booking dates" do
     cmd = Cultivation::UpdateTrayPlans.call(current_user, batch_id: batch1.id)
 
     updated1 = Cultivation::TrayPlan.where(batch_id: batch1.id, phase: "clone").first

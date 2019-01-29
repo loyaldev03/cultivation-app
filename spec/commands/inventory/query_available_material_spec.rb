@@ -108,6 +108,21 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
       expect(result[:material_available]).to eq 30
     end
 
+    it "return correct material available after adding stock" do
+      package = product.packages.new(product_name: product.name, quantity: 30, catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
+      package.save
+
+      batches_selected = Cultivation::Batch
+                    .where(:start_date.gte => Time.now)
+                    .where(:status.in =>  [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE])
+                    .not_in(id: batch1.id) #not draft => schedule and active
+      plant_task = batch1.tasks.detect { |a| a['indelible'] == 'plants' }
+
+      material = plant_task.material_use.first
+      result = Inventory::QueryAvailableMaterial.call(material.product_id, batches_selected.pluck(:id)).result
+      expect(result[:material_available]).to eq 60
+    end
+
     it "return correct material booked" do
       batches_selected = Cultivation::Batch
                     .where(:start_date.gte => Time.now)
@@ -119,5 +134,21 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
       result = Inventory::QueryAvailableMaterial.call(material.product_id, batches_selected.pluck(:id)).result
       expect(result[:material_booked]).to eq 20
     end
+
+    it "return correct material booked after adding booked material" do
+      task = batch2.tasks.first
+      task.material_use.first.update(quantity: 50)
+
+      batches_selected = Cultivation::Batch
+                    .where(:start_date.gte => Time.now)
+                    .where(:status.in =>  [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE])
+                    .not_in(id: batch1.id) #not draft => schedule and active
+      plant_task = batch1.tasks.detect { |a| a['indelible'] == 'plants' }
+
+      material = plant_task.material_use.first
+      result = Inventory::QueryAvailableMaterial.call(material.product_id, batches_selected.pluck(:id)).result
+      expect(result[:material_booked]).to eq 60
+    end
+
   end
 end

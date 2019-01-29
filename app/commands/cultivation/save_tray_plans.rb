@@ -32,13 +32,17 @@ module Cultivation
           batch_phases.each do |phase_info|
             # New location plans
             phase_plan = phase_trays.detect { |p| p[:phase] == phase_info.phase }
-            # Rails.logger.debug "\033[34m trays for phase: \033[0m"
-            trays = phase_plan[:trays]
-            # Build new booking record of trays
-            new_plans += build_tray_plans(batch.facility_id,
-                                          batch.id,
-                                          phase_info,
-                                          trays)
+            if phase_plan.present?
+              # Rails.logger.debug "\033[34m trays for phase: \033[0m"
+              trays = phase_plan[:trays]
+              # Build new booking record of trays
+              new_plans += build_tray_plans(batch.facility_id,
+                                            batch.id,
+                                            phase_info,
+                                            trays)
+            else
+              Rails.logger.debug "\033[34m Missing phase plan for: #{phase_info.phase} \033[0m"
+            end
           end
           batch.save!
           # Save all tray plans
@@ -61,7 +65,7 @@ module Cultivation
         mother_plants = clone_plans.map do |p|
           p[:trays]
         end
-        mother_plants = mother_plants.flatten
+        mother_plants = mother_plants&.flatten&.compact
         # Rails.logger.debug "\033[31m Mother Plans Flatten \033[0m"
         # Rails.logger.debug mother_plants.to_yaml
         mother_plants.each do |p|
@@ -87,7 +91,7 @@ module Cultivation
       tray_plans = []
       plans.each do |p|
         tp = tray_plans.detect { |x| x[:phase] == p[:phase] }
-        if tp
+        if tp.present?
           tp[:quantity] += p[:quantity]
           tp[:trays] += p[:trays]
         else

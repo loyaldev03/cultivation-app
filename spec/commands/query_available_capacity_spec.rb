@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe QueryAvailableCapacity, type: :command do
-  subject (:facility) do
+  let(:facility) do
     facility = create(:facility, :is_complete)
     facility.rooms.each do |room|
       room.rows.each do |row|
@@ -15,7 +15,7 @@ RSpec.describe QueryAvailableCapacity, type: :command do
   end
   context ".call" do
     let(:clone_room) do
-      subject.rooms.detect do |r|
+      facility.rooms.detect do |r|
         r.purpose == Constants::CONST_CLONE
       end
     end
@@ -51,7 +51,7 @@ RSpec.describe QueryAvailableCapacity, type: :command do
       # Prepare - Create a new booking that overlaps with default plan
       new_booking = {
         facility_id: facility.id,
-        phase: Constants::CONST_CLONE,
+        purpose: Constants::CONST_CLONE,
         start_date: Time.strptime("2018/07/25", DATE_FORMAT),
         end_date: Time.strptime("2018/08/01", DATE_FORMAT),
       }
@@ -66,7 +66,7 @@ RSpec.describe QueryAvailableCapacity, type: :command do
     it "return remaining capacity when not overlapping - B" do
       new_booking = {
         facility_id: facility.id,
-        phase: Constants::CONST_CLONE,
+        purpose: Constants::CONST_CLONE,
         start_date: Time.strptime("2018/07/25", DATE_FORMAT),
         end_date: Time.strptime("2018/08/17", DATE_FORMAT),
       }
@@ -82,7 +82,7 @@ RSpec.describe QueryAvailableCapacity, type: :command do
       new_booking = {
         facility_id: facility.id,
         exclude_batch_id: batch.id,
-        phase: Constants::CONST_CLONE,
+        purpose: Constants::CONST_CLONE,
         start_date: Time.strptime("2018/07/25", DATE_FORMAT),
         end_date: Time.strptime("2018/08/17", DATE_FORMAT),
       }
@@ -97,7 +97,7 @@ RSpec.describe QueryAvailableCapacity, type: :command do
     it "return remaining capacity when overlapping end_date - G" do
       new_booking = {
         facility_id: facility.id,
-        phase: Constants::CONST_CLONE,
+        purpose: Constants::CONST_CLONE,
         start_date: Time.strptime("2018/08/17", DATE_FORMAT),
         end_date: Time.strptime("2018/08/22", DATE_FORMAT),
       }
@@ -112,7 +112,7 @@ RSpec.describe QueryAvailableCapacity, type: :command do
     it "return full capacity when not overlapping - Y" do
       new_booking = {
         facility_id: facility.id,
-        phase: Constants::CONST_CLONE,
+        purpose: Constants::CONST_CLONE,
         start_date: Time.strptime("2018/08/18", DATE_FORMAT),
         end_date: Time.strptime("2018/08/31", DATE_FORMAT),
       }

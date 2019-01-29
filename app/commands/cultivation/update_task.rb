@@ -256,7 +256,7 @@ module Cultivation
         args = {
           facility_id: opt[:facility_id],
           exclude_batch_id: opt[:batch_id],
-          phase: t.phase,
+          purpose: t.phase,
           start_date: t.start_date,
           end_date: t.end_date,
         }

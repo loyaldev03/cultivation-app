@@ -96,6 +96,8 @@ RSpec.describe Cultivation::SaveTrayPlans, type: :command do
                                           end_date: tasks[1].end_date,
                                           purpose: "clone")
 
+      expect(query.result).to eq 74
+
       # Validate Tray Plans
       tray_plans = Cultivation::TrayPlan.where(batch_id: batch.id)
       expect(cmd.success?).to be true
@@ -114,7 +116,6 @@ RSpec.describe Cultivation::SaveTrayPlans, type: :command do
         start_date: tasks[1].start_date,
         end_date: tasks[1].end_date,
       )
-      expect(query.result).to eq 74
     end
 
     it "should allow exclude after save" do

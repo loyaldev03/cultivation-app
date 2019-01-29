@@ -111,6 +111,15 @@ RSpec.describe Cultivation::ValidateRawMaterial, type: :command do
       expect(issues.first.task_id.to_s).to eq(task_1.id.to_s)
     end
 
+    it "return no error if material is added sufficient stock" do
+      package = product.packages.new(product_name: product.name, quantity: 30, catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
+      package.save
+      result = Cultivation::ValidateRawMaterial.call(current_user: current_user, batch_id: batch1.id)
+      issues = Issues::Issue.all
+      expect(result.success?).to be true
+      expect(issues.count).to be 0
+      expect(result.errors).to be_empty
+    end
 
   end
 end

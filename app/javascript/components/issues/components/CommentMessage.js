@@ -28,7 +28,7 @@ const CommentBody = ({
       )}
       <div className="flex">
         <p className="f6 black-70 lh-title mt0 mb1 flex-auto pre">{message}</p>
-        { renderMenu(isMenuOpen) }
+        {renderMenu(isMenuOpen)}
       </div>
       {reason.length > 0 && (
         <p className="f6 black-70 lh-title mt0 mb1 flex-auto pr3">
@@ -55,7 +55,7 @@ const TaskBody = ({ task_url, task_name, quote = '', menu = () => null }) => {
     <div className="mb2 pv2 pl3 br2 bg-black-05">
       <div className="flex mb2 justify-between">
         <div className="f6 gray fw6">Task Created</div>
-        <menu/>
+        <menu />
       </div>
       <div className="bg-white pa2 i f7 gray mt1 mr3 mb2">
         &quot;{quote}&quot;
@@ -83,7 +83,7 @@ const CommentMessage = ({
   quote = '',
   onTogglePreview = (url, mime_type) => {},
   isMenuOpen = false,
-  renderMenu
+  renderMenu,
 }) => {
   const align = is_me == true ? 'justify-start' : 'justify-end'
 

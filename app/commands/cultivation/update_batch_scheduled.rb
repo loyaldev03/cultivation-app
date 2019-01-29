@@ -31,8 +31,25 @@ module Cultivation
         }
         UpdateTask.call(@current_user, args, true)
       end
+
+      validate
     rescue StandardError
       errors.add(:error, $!.message)
+    end
+
+    def validate
+      batch = Cultivation::Batch.find(@batch_id)
+      #validate purchase clone
+      if batch.batch_source == 'clones_purchased'
+        result = Cultivation::ValidatePurchaseClone.call(current_user: @current_user, batch_id: @batch_id)
+        errors.add(:batch_id, result.errors['strain']) unless result.success?
+      end
+
+      # validate seed
+      if batch.batch_source == 'seeds'
+        result = Cultivation::ValidateSeed.call(current_user: @current_user, batch_id: @batch_id)
+        errors.add(:batch_id, result.errors['strain']) unless result.success?
+      end
     end
   end
 end

@@ -34,7 +34,7 @@ module Inventory
     end
 
     attribute :manufacturer do |object|
-      object.product.manufacturer.to_s if object.product
+      object.product.manufacturer.to_s if object.product and object.product.manufacturer
     end
 
     attribute :facility_id do |object|

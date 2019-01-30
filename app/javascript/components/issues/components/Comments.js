@@ -255,7 +255,11 @@ class Comments extends React.Component {
     return null
   }
 
-  render() {
+  renderAddComment() {
+    if (currentIssue.issue.status === 'resolved') {
+      return null
+    }
+
     const {
       current_user_first_name,
       current_user_last_name,
@@ -264,39 +268,8 @@ class Comments extends React.Component {
 
     const hasComment = currentIssue.comments && currentIssue.comments.length > 0
     const { showAddComment } = this.state
-
     return (
-      <React.Fragment>
-        <div className="flex ph3 pb3 items-center mt3">
-          <div className="f7 fw6 gray w-auto mr1">
-            ISSUE {formatIssueNo(this.props.issueNo)}
-          </div>
-          <div className="f7 fw6 gray w-auto mr1 self-start">&bull;</div>
-          <div className="f7 fw6 gray w-auto">Discussion</div>
-        </div>
-        {hasComment &&
-          currentIssue.comments.map(x => {
-            return (
-              <CommentMessage
-                key={x.id}
-                {...x}
-                onTogglePreview={this.onTogglePreview}
-                isMenuOpen={this.state.showCommentMenuId === x.id}
-                renderMenu={isMenuOpen => (
-                  <CommentMenu
-                    isOpen={isMenuOpen}
-                    id={x.id}
-                    handleEllipsisClick={this.handleEllipsisClick}
-                    handleMouseLeave={this.handleMouseLeave}
-                    handleResolve={this.handleShowResolve}
-                    handleReply={this.onReplyComment}
-                  />
-                )}
-              />
-            )
-          })}
-        {this.renderResolvedComment()}
-        <div
+      <div
           className={`ph3 mb4 ${hasComment && 'mt3'} ${!showAddComment &&
             'dn'}`}
         >
@@ -350,6 +323,45 @@ class Comments extends React.Component {
             </a>
           </div>
         </div>
+    )
+  }
+
+  render() {
+   
+    const hasComment = currentIssue.comments && currentIssue.comments.length > 0
+
+    return (
+      <React.Fragment>
+        <div className="flex ph3 pb3 items-center mt3">
+          <div className="f7 fw6 gray w-auto mr1">
+            ISSUE {formatIssueNo(this.props.issueNo)}
+          </div>
+          <div className="f7 fw6 gray w-auto mr1 self-start">&bull;</div>
+          <div className="f7 fw6 gray w-auto">Discussion</div>
+        </div>
+        {hasComment &&
+          currentIssue.comments.map(x => {
+            return (
+              <CommentMessage
+                key={x.id}
+                {...x}
+                onTogglePreview={this.onTogglePreview}
+                isMenuOpen={this.state.showCommentMenuId === x.id}
+                renderMenu={isMenuOpen => (
+                  <CommentMenu
+                    isOpen={isMenuOpen}
+                    id={x.id}
+                    handleEllipsisClick={this.handleEllipsisClick}
+                    handleMouseLeave={this.handleMouseLeave}
+                    handleResolve={this.handleShowResolve}
+                    handleReply={this.onReplyComment}
+                  />
+                )}
+              />
+            )
+          })}
+        { this.renderResolvedComment() }
+        { this.renderAddComment() }
         {this.renderResolveForm()}
         {this.renderNewTaskForm()}
         <DashboardModal

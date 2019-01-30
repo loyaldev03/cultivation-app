@@ -1,5 +1,6 @@
 import React from 'react'
 import TaskStore from '../stores/NewTaskStore'
+import LocationStore from '../stores/LocationStore'
 import { SlidePanelHeader, SlidePanelFooter } from '../../../utils'
 import SidebarTaskEditor from './SidebarTaskEditor'
 
@@ -40,7 +41,7 @@ export default class TaskEditor extends React.Component {
   }
 
   render() {
-    const { onClose, taskId, taskAction, batchId } = this.props
+    const { onClose, taskId, taskAction, batchId, facilityId } = this.props
     if (!taskId) {
       return null
     }
@@ -51,6 +52,8 @@ export default class TaskEditor extends React.Component {
           ref={editor => (this.editor = editor)}
           taskId={taskId}
           batchId={batchId}
+          facilityId={facilityId}
+          locations={LocationStore.locations}
         />
         <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
       </div>

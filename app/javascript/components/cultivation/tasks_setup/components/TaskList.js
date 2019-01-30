@@ -583,6 +583,7 @@ class TaskList extends React.Component {
                 taskId={this.state.taskSelected}
                 taskAction={this.state.taskAction}
                 batchId={batchId}
+                facilityId={this.props.batch.facility_id}
               />
             </Suspense>
           )}

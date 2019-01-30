@@ -1,6 +1,7 @@
 import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { TextInput, NumericInput } from '../../../utils/FormHelpers'
+import LocationPicker from '../../../utils/LocationPicker2'
 import { addDays, differenceInCalendarDays } from 'date-fns'
 
 const GET_DEFAULT_STATE = (start_date = null) => {
@@ -17,6 +18,7 @@ const GET_DEFAULT_STATE = (start_date = null) => {
     haveChildren: false
   }
 }
+
 class SidebarTaskEditor extends React.Component {
   state = GET_DEFAULT_STATE()
 
@@ -113,6 +115,7 @@ class SidebarTaskEditor extends React.Component {
   }
 
   render() {
+    const { locations } = this.props
     const {
       name,
       start_date,
@@ -179,7 +182,16 @@ class SidebarTaskEditor extends React.Component {
         </div>
 
         {!haveChildren ? (
-          <div className="ph4 mt3 mb3 flex">
+          <div className="ph4 mt3 mb3 flex flex-column">
+            <div className="mb3 w-100">
+              <LocationPicker
+                mode="room"
+                facility_id={this.props.facilityId}
+                locations={locations}
+                location_id={this.state.location_id}
+                onChange={() => {}}
+              />
+            </div>
             <div className="w-40">
               <NumericInput
                 label={'Estimated Hours Needed'}

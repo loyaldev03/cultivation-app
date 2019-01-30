@@ -137,7 +137,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :facilities, only: [] do
-        member do 
+        member do
           get 'search_locations'
         end
       end

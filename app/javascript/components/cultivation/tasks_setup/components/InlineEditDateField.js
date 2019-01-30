@@ -56,8 +56,8 @@ export default class InlineEditDateField extends InlineEditTextField {
               data-placement={placement}
               className="inline_calendar"
             >
-              <div ref={arrowProps.ref} style={arrowProps.style} />
               <Calendar value={value} onChange={this.onChange} />
+              <div ref={arrowProps.ref} style={arrowProps.style} />
             </div>
           )}
         </Popper>

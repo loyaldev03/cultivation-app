@@ -34,6 +34,8 @@ const IssueHeader = ({
   issueNo,
   severity,
   createdAt = null,
+  status,
+  isArchived = false,
   onClose = () => {}
 }) => {
   return (
@@ -53,7 +55,7 @@ const IssueHeader = ({
               ISSUE {formatIssueNo(issueNo)}
             </div>
             <div className="f7 fw6 ph2">&bull;</div>
-            <div className="f7 fw6 green pr2">OPEN</div>
+            <div className="f7 fw6 green pr2 ttu">{status}</div>
             {renderSeverity(severity)}
           </div>
 

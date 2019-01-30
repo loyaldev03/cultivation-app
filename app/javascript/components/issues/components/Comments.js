@@ -7,13 +7,19 @@ import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
 import setupUppy from './setupUppy'
 
-import Avatar from '../../utils/Avatar.js'
+import { formatIssueNo } from './FormatHelper'
 import CommentMessage from './CommentMessage'
 import AttachmentThumbnail from './AttachmentThumbnail'
 import AttachmentPopup from './AttachmentPopup'
-import { formatIssueNo } from './FormatHelper'
+import ResolveIssueForm from './ResolveIssueForm'
+import CommentMenu from './CommentMenu'
+import ResolvedComment from './ResolvedComment'
+
 import currentIssue from '../store/CurrentIssueStore'
 import addComment from '../actions/addComment'
+import resolveIssue from '../actions/resolveIssue'
+
+import Avatar from '../../utils/Avatar.js'
 
 @observer
 class Comments extends React.Component {
@@ -32,7 +38,11 @@ class Comments extends React.Component {
       uppyOpen: false,
       previewOpen: false,
       previewUrl: '',
-      previewType: ''
+      previewType: '',
+      showCommentMenuId: '',
+      showAddComment: true,
+      showResolveForm: false,
+      showNewTaskForm: false
     }
   }
 
@@ -142,6 +152,68 @@ class Comments extends React.Component {
     }
   }
 
+  handleEllipsisClick = id => {
+    this.setState({ showCommentMenuId: id })
+  }
+
+  handleMouseLeave = () => {
+    this.setState({
+      showCommentMenuId: ''
+    })
+  }
+
+  handleShowResolve = () => {
+    this.setState({
+      showResolveForm: true,
+      showCommentMenuId: '',
+      showAddComment: false
+    })
+
+    window.editorSidebar.scrollToBottom()
+  }
+
+  onReplyComment = () => {
+    window.editorSidebar.scrollToBottom()
+    this.newCommentText.current.focus()
+  }
+
+  onSubmitResolve = data => {
+    if (!data.cancel) {
+      const merged = { ...data, id: currentIssue.issue.id }
+      resolveIssue(merged)
+    }
+    this.setState({
+      showResolveForm: false,
+      showCommentMenuId: '',
+      showAddComment: true
+    })
+  }
+
+  renderResolveForm() {
+    if (!this.state.showResolveForm) {
+      return null
+    }
+
+    const {
+      current_user_first_name,
+      current_user_last_name,
+      current_user_photo
+    } = this.props
+
+    return (
+      <ResolveIssueForm
+        firstName={current_user_first_name}
+        lastName={current_user_last_name}
+        photoUrl={current_user_photo}
+        onSubmit={this.onSubmitResolve}
+      />
+    )
+  }
+
+  renderNewTaskForm() {
+    return null
+  }
+
   renderAttachments() {
     if (this.state.attachments.length === 0) {
       return null
@@ -166,6 +238,23 @@ class Comments extends React.Component {
     return <div className="mt2 flex flex-auto">{attachments}</div>
   }
 
+  renderResolvedComment() {
+    if (currentIssue.issue.status === 'resolved') {
+      return (
+        <ResolvedComment
+          reason={currentIssue.issue.reason}
+          resolutionNotes={currentIssue.issue.resolution_notes}
+          resolvedByFirstName={currentIssue.issue.resolved_by.first_name}
+          resolvedByLastName={currentIssue.issue.resolved_by.last_name}
+          resolvedByPhoto={currentIssue.issue.resolved_by.photo}
+          resolvedAt={currentIssue.issue.resolved_at}
+          is_me={currentIssue.issue.resolved_by.is_me}
+        />
+      )
+    }
+    return null
+  }
+
   render() {
     const {
       current_user_first_name,
@@ -174,6 +263,7 @@ class Comments extends React.Component {
     } = this.props
 
     const hasComment = currentIssue.comments && currentIssue.comments.length > 0
+    const { showAddComment } = this.state
 
     return (
       <React.Fragment>
@@ -185,14 +275,31 @@ class Comments extends React.Component {
           <div className="f7 fw6 gray w-auto">Discussion</div>
         </div>
         {hasComment &&
-          currentIssue.comments.map(x => (
-            <CommentMessage
-              key={x.id}
-              {...x}
-              onTogglePreview={this.onTogglePreview}
-            />
-          ))}
-        <div className={`ph3 mb4 ${hasComment && 'mt3'}`}>
+          currentIssue.comments.map(x => {
+            return (
+              <CommentMessage
+                key={x.id}
+                {...x}
+                onTogglePreview={this.onTogglePreview}
+                isMenuOpen={this.state.showCommentMenuId === x.id}
+                renderMenu={isMenuOpen => (
+                  <CommentMenu
+                    isOpen={isMenuOpen}
+                    id={x.id}
+                    handleEllipsisClick={this.handleEllipsisClick}
+                    handleMouseLeave={this.handleMouseLeave}
+                    handleResolve={this.handleShowResolve}
+                    handleReply={this.onReplyComment}
+                  />
+                )}
+              />
+            )
+          })}
+        {this.renderResolvedComment()}
+        <div
+          className={`ph3 mb4 ${hasComment && 'mt3'} ${!showAddComment &&
+            'dn'}`}
+        >
           <div className="b--black-10 flex br3 ba w-100 ph2 pt1 pb2 flex items-start">
             <div style={{ marginTop: '3px' }}>
               <Avatar
@@ -243,6 +350,8 @@ class Comments extends React.Component {
             </a>
           </div>
         </div>
+        {this.renderResolveForm()}
+        {this.renderNewTaskForm()}
         <DashboardModal
           uppy={this.uppy}
           closeModalOnClickOutside

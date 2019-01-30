@@ -106,6 +106,7 @@ class IssueSidebar extends React.Component {
             reporterPhotoUrl={issue.reported_by.photo}
             issueNo={issue.issue_no}
             severity={issue.severity}
+            status={issue.status}
             createdAt={this.state.mode === 'details' ? issue.created_at : ''}
             onClose={this.onClose}
           />

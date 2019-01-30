@@ -9,7 +9,7 @@ const UserOption = ({ children, ...props }) => (
         firstName={props.data.first_name}
         lastName={props.data.last_name}
         photoUrl={props.data.photo}
-        size="18px"
+        size={18}
         backgroundColor="#ccc"
       />
       <span className="mh2">{children}</span>

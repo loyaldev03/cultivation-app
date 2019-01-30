@@ -1,6 +1,5 @@
-import issueStore from '../store/IssueStore'
-import currentIssue from '../store/CurrentIssueStore'
 import { httpPostOptions } from '../../utils'
+import getIssue from './getIssue'
 
 const resolveIssue = payload => {
   return fetch(`/api/v1/issues/${payload.id}/resolve`, httpPostOptions(payload))
@@ -16,12 +15,8 @@ const resolveIssue = payload => {
         return result
       }
 
-      console.log(data)
-      
-      issueStore.update(data.data)
-      currentIssue.setIssue(data.data)
-      currentIssue.setComments(data.data.comments)
-      return result
+      console.log(data.id)
+      getIssue(data.id)
     })
 }
 

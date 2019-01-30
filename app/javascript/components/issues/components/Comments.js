@@ -6,82 +6,21 @@ import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
 import setupUppy from './setupUppy'
-import { Manager, Reference, Popper } from 'react-popper'
 
-import Avatar from '../../utils/Avatar.js'
+import { formatIssueNo } from './FormatHelper'
 import CommentMessage from './CommentMessage'
 import AttachmentThumbnail from './AttachmentThumbnail'
 import AttachmentPopup from './AttachmentPopup'
 import ResolveIssueForm from './ResolveIssueForm'
-import { formatIssueNo } from './FormatHelper'
+import CommentMenu from './CommentMenu'
+import ResolvedComment from './ResolvedComment'
+
 import currentIssue from '../store/CurrentIssueStore'
 import addComment from '../actions/addComment'
 import resolveIssue from '../actions/resolveIssue'
 
-const MenuButton = ({ icon, text, onClick, className = '' }) => {
-  return (
-    <a
-      className={`pa2 flex link dim pointer items-center ${className}`}
-      onClick={onClick}
-    >
-      <i className="material-icons md-17 pr2">{icon}</i>
-      <span className="pr2">{text}</span>
-    </a>
-  )
-}
+import Avatar from '../../utils/Avatar.js'
 
-const CommentMenu = ({
-  isOpen,
-  id,
-  handleEllipsisClick,
-  handleMouseLeave,
-  handleResolve,
-  handleReply
-}) => {
-  return (
-    <Manager>
-      <Reference>
-        {({ ref }) => {
-          return (
-            <span
-              className="material-icons black-10 hover-dark-gray ph1 pointer"
-              style={{ fontSize: '18px', height: '21px' }}
-              ref={ref}
-              onClick={() => handleEllipsisClick(id)}
-            >
-              more_vert
-            </span>
-          )
-        }}
-      </Reference>
-      {isOpen && (
-        <Popper placement="bottom-start">
-          {({ ref, style, placement, arrowProps }) => (
-            <div
-              ref={ref}
-              style={style}
-              data-placement={placement}
-              className="bg-white f6 flex"
-            >
-              <div className="db shadow-4" onMouseLeave={handleMouseLeave}>
-                <MenuButton icon="reply" text="Reply" onClick={handleReply} />
-                <MenuButton icon="playlist_add" text="Convert to task" />
-                <MenuButton
-                  icon="check"
-                  text="Resolve"
-                  onClick={handleResolve}
-                />
-                <MenuButton icon="edit" text="Edit" />
-                <MenuButton icon="delete" text="Delete" />
-              </div>
-              <div ref={arrowProps.ref} style={arrowProps.style} />
-            </div>
-          )}
-        </Popper>
-      )}
-    </Manager>
-  )
-}
 @observer
 class Comments extends React.Component {
   constructor(props) {
@@ -213,7 +152,6 @@ class Comments extends React.Component {
     }
   }
 
-
   handleEllipsisClick = id => {
     this.setState({ showCommentMenuId: id })
   }
@@ -239,9 +177,9 @@ class Comments extends React.Component {
     this.newCommentText.current.focus()
   }
 
-  onSubmitResolve = (data) => {
+  onSubmitResolve = data => {
     if (!data.cancel) {
-      const merged = { ...data, id: currentIssue.issue.id}
+      const merged = { ...data, id: currentIssue.issue.id }
       resolveIssue(merged)
     }
     this.setState({
@@ -250,8 +188,6 @@ class Comments extends React.Component {
       showAddComment: true
     })
   }
-
-  
 
   renderResolveForm() {
     if (!this.state.showResolveForm) {
@@ -264,18 +200,19 @@ class Comments extends React.Component {
       current_user_photo
     } = this.props
 
-    return <ResolveIssueForm  
-      firstName={current_user_first_name}
-      lastName={current_user_last_name}
-      photoUrl={current_user_photo}
-      onSubmit={this.onSubmitResolve}
-    />
+    return (
+      <ResolveIssueForm
+        firstName={current_user_first_name}
+        lastName={current_user_last_name}
+        photoUrl={current_user_photo}
+        onSubmit={this.onSubmitResolve}
+      />
+    )
   }
 
   renderNewTaskForm() {
     return null
   }
-
 
   renderAttachments() {
     if (this.state.attachments.length === 0) {
@@ -299,6 +236,23 @@ class Comments extends React.Component {
     })
 
     return <div className="mt2 flex flex-auto">{attachments}</div>
+  }
+
+  renderResolvedComment() {
+    if (currentIssue.issue.status === 'resolved') {
+      return (
+        <ResolvedComment
+          reason={currentIssue.issue.reason}
+          resolutionNotes={currentIssue.issue.resolution_notes}
+          resolvedByFirstName={currentIssue.issue.resolved_by.first_name}
+          resolvedByLastName={currentIssue.issue.resolved_by.last_name}
+          resolvedByPhoto={currentIssue.issue.resolved_by.photo}
+          resolvedAt={currentIssue.issue.resolved_at}
+          is_me={currentIssue.issue.resolved_by.is_me}
+        />
+      )
+    }
+    return null
   }
 
   render() {
@@ -341,6 +295,7 @@ class Comments extends React.Component {
               />
             )
           })}
+        {this.renderResolvedComment()}
         <div
           className={`ph3 mb4 ${hasComment && 'mt3'} ${!showAddComment &&
             'dn'}`}

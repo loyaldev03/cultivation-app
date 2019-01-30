@@ -1,7 +1,8 @@
 class Api::V1::IssuesController < Api::V1::BaseApiController
   def show
     issue = Issues::Issue.find(params[:id])
-    render json: Issues::IssueSerializer.new(issue).serialized_json
+    options = {params: {current_user_id: current_user.id.to_s}}
+    render json: Issues::IssueSerializer.new(issue, options).serialized_json
   end
 
   def by_batch
@@ -64,6 +65,6 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
     issue.resolved_by = current_user
     issue.save!
 
-    render json: Issues::IssueSerializer.new(issue).serialized_json
+    render json: {id: p[:id]}, status: 200
   end
 end

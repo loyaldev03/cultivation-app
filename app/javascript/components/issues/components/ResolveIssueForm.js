@@ -90,15 +90,15 @@ class ResolveIssueForm extends React.Component {
             />
             <FieldError errors={this.state.errors} field="reason" />
           </div>
-          { this.showOthers && (
+          {this.showOthers && (
             <div className="mb3">
-              <TextInput 
+              <TextInput
                 value={this.state.otherReason}
                 onChange={this.onChangeGeneric}
                 placeholder="Please specify"
                 fieldname="otherReason"
-                errors={this.state.errors} 
-                />
+                errors={this.state.errors}
+              />
             </div>
           )}
           <div className=" mb3 flex">
@@ -115,18 +115,10 @@ class ResolveIssueForm extends React.Component {
             </div>
           </div>
           <div className="mt3 mb3 flex justify-between">
-            <a
-              href="#"
-              onClick={this.onSave}
-              className="btn btn--primary f6"
-            >
+            <a href="#" onClick={this.onSave} className="btn btn--primary f6">
               Submit
             </a>
-            <a
-              href="#"
-              onClick={this.onCancel}
-              className="link orange f6"
-            >
+            <a href="#" onClick={this.onCancel} className="link orange f6">
               Cancel
             </a>
           </div>

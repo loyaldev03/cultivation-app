@@ -56,7 +56,9 @@ class CultivationCalendar extends React.Component {
       toast('Batch saved successfully', 'success')
       setTimeout(() => window.location.reload(), 1000)
     }
-    this.props.onSave()
+    if(this.props.onSave){
+      this.props.onSave()
+    }
   }
 
   onClose = () => {

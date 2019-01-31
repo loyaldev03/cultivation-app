@@ -18,12 +18,7 @@ module Cultivation
 
     def save_record
       batch = Cultivation::Batch.find(args[:batch_id])
-
-      tasks = batch.tasks
-      wbs_list = WbsTree.generate(tasks)
-      tasks.each_with_index do |t, i|
-        t.wbs = wbs_list[i][:wbs]
-      end
+      tasks = Cultivation::QueryTasks.call(batch).result
       tasks.each do |task|
         check_task_assigned(batch, task)
         check_over_hours(batch, task)

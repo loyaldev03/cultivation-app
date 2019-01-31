@@ -15,6 +15,11 @@ const archiveIssue = payload => {
         return result
       }
 
+      if (payload.id) {
+        // Remove archived item from the list
+        issueStore.delete(data.data)
+      }
+
       return result
     })
 }

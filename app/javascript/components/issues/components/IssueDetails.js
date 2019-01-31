@@ -6,6 +6,7 @@ import Comments from './Comments'
 import currentIssueStore from '../store/CurrentIssueStore'
 import AttachmentThumbnail from './AttachmentThumbnail'
 import AttachmentPopup from './AttachmentPopup'
+import ResolvedSegment from './ResolvedSegment'
 import archiveIssue from '../actions/archiveIssue'
 
 class IssueDetails extends Component {
@@ -105,7 +106,7 @@ class IssueDetails extends Component {
             />
           </a>
         </div>
-        <div className="flex mt3 mb3 w-100 items-center justify-between">
+        <div className="flex mt3 mb4 w-100 items-center justify-between">
           <a
             href="#"
             onClick={this.onToggleShowMore}
@@ -132,6 +133,23 @@ class IssueDetails extends Component {
         </div>
       </React.Fragment>
     )
+  }
+
+  renderResolved() {
+    if (currentIssueStore.issue.status === 'resolved') {
+      return (
+        <ResolvedSegment
+          reason={currentIssueStore.issue.reason}
+          resolutionNotes={currentIssueStore.issue.resolution_notes}
+          resolvedByFirstName={currentIssueStore.issue.resolved_by.first_name}
+          resolvedByLastName={currentIssueStore.issue.resolved_by.last_name}
+          resolvedByPhoto={currentIssueStore.issue.resolved_by.photo}
+          resolvedAt={currentIssueStore.issue.resolved_at}
+        />
+      )
+    }
+
+    return null
   }
 
   render() {
@@ -174,7 +192,7 @@ class IssueDetails extends Component {
 
         <div className="ph3">
           <div className="flex w-100">
-            <div className="w-auto pv2 mr2">
+            <div className="w-auto pv2 mr2 mb3">
               <Avatar
                 firstName={assignedFirstName}
                 lastName={assignedLastName}
@@ -207,7 +225,8 @@ class IssueDetails extends Component {
             </div>
           </div>
         </div>
-        <hr className="w-100" />
+        {this.renderResolved()}
+        <hr className="w-100 mt0" />
         <Comments
           issueId={issue.id}
           issueNo={issue.issue_no}

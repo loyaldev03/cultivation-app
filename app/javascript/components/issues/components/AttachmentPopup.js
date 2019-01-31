@@ -10,7 +10,7 @@ class AttachmentPopup extends React.Component {
     const { url, type } = this.props
 
     if (url.startsWith('blob:')) {
-      console.log('statts with')
+      console.log('strats with')
     }
 
     if (type.startsWith('image')) {

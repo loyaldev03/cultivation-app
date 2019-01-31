@@ -566,7 +566,6 @@ class TaskList extends React.Component {
                 totalDuration={TaskStore.totalDuration}
                 phaseDuration={TaskStore.phaseDuration}
                 onClose={() => this.setState({ showStartDateCalendar: false })}
-                onSave={() => this.setState({ showStartDateCalendar: false })}
               />
             </Suspense>
           )}

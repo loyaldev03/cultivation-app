@@ -616,7 +616,7 @@ class TaskList extends React.Component {
           <input
             type="button"
             className="btn btn--primary btn--large"
-            value="Save & Continue"
+            value="Schedule & Verify"
             onClick={() => this.setState({ showStartDateCalendar: true })}
           />
         </div>

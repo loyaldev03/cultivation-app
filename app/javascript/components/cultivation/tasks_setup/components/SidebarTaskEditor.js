@@ -2,6 +2,7 @@ import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { TextInput, NumericInput } from '../../../utils/FormHelpers'
 import LocationPicker from '../../../utils/LocationPicker2'
+import MotherPlantsEditor from './MotherPlantsEditor'
 import { addDays, differenceInCalendarDays } from 'date-fns'
 
 const GET_DEFAULT_STATE = (start_date = null) => {
@@ -14,7 +15,7 @@ const GET_DEFAULT_STATE = (start_date = null) => {
     end_date: tomorrow,
     duration: 1,
     estimated_hours: 0.0,
-    task_type: [],
+    indelible: '',
     haveChildren: false
   }
 }
@@ -31,7 +32,7 @@ class SidebarTaskEditor extends React.Component {
         end_date: task.end_date,
         duration: task.duration,
         estimated_hours: task.estimated_hours || '',
-        task_type: task.task_type,
+        indelible: task.indelible,
         haveChildren: task.haveChildren
       })
     } else {
@@ -46,8 +47,7 @@ class SidebarTaskEditor extends React.Component {
       start_date,
       end_date,
       duration,
-      estimated_hours,
-      task_type
+      estimated_hours
     } = this.state
     return {
       id,
@@ -55,8 +55,7 @@ class SidebarTaskEditor extends React.Component {
       start_date,
       end_date,
       duration,
-      estimated_hours,
-      task_type
+      estimated_hours
     }
   }
 
@@ -87,33 +86,6 @@ class SidebarTaskEditor extends React.Component {
     }
   }
 
-  handleChangeSelect = (value, { action, removedValue }) => {
-    let arr = this.state.assigned_employee
-    switch (action) {
-      case 'select-option':
-        break
-      case 'remove-value':
-        const index = arr.indexOf(removedValue)
-        arr.splice(index, 1)
-        break
-    }
-    this.setState({ assigned_employee: value })
-  }
-
-  handleChangeCheckbox = fieldName => e => {
-    let { task_type } = this.state
-    if (e.target.checked) {
-      task_type.push(fieldName)
-    } else {
-      task_type = task_type.filter(k => k !== fieldName)
-    }
-    this.setState({ task_type })
-  }
-
-  checkboxValue = field => {
-    return this.state.task_type.includes(field)
-  }
-
   render() {
     const { locations } = this.props
     const {
@@ -122,6 +94,7 @@ class SidebarTaskEditor extends React.Component {
       end_date,
       duration,
       estimated_hours,
+      indelible,
       actual_hours,
       haveChildren,
       errors
@@ -140,7 +113,7 @@ class SidebarTaskEditor extends React.Component {
             </label>
           </div>
         </div>
-        <div className="ph4 mt3 mb3 flex">
+        <div className="ph4 mv3 flex">
           <div className="w-100">
             <TextInput
               label={'Task'}
@@ -151,7 +124,7 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         </div>
-        <div className="ph4 flex">
+        <div className="ph4 mb3 flex">
           <div className="w-40">
             <label className="f6 fw6 db mb1 gray ttc">Start At</label>
             <DatePicker
@@ -181,17 +154,34 @@ class SidebarTaskEditor extends React.Component {
           </div>
         </div>
 
+        {indelible === 'clip_mother_plant' && (
+          <div className="ph4 mb3 flex flex-column">
+            <MotherPlantsEditor
+              quantityRequired={12}
+              renderLabel={props => (
+                <label className="f6 fw6 flex mb1 gray justify-between">
+                  <span>Mother Plant(s)</span>
+                  <span>Quantity Required: {props.quantityRequired}</span>
+                </label>
+              )}
+            />
+          </div>
+        )}
+
+        {indelible !== 'clip_mother_plant' && !haveChildren && (
+          <div className="ph4 mb3 flex flex-column">
+            <LocationPicker
+              mode="room"
+              facility_id={this.props.facilityId}
+              locations={locations}
+              location_id={this.state.location_id}
+              onChange={() => {}}
+            />
+          </div>
+        )}
+
         {!haveChildren ? (
-          <div className="ph4 mt3 mb3 flex flex-column">
-            <div className="mb3 w-100">
-              <LocationPicker
-                mode="room"
-                facility_id={this.props.facilityId}
-                locations={locations}
-                location_id={this.state.location_id}
-                onChange={() => {}}
-              />
-            </div>
+          <div className="ph4 mb3 flex flex-column">
             <div className="w-40">
               <NumericInput
                 label={'Estimated Hours Needed'}

@@ -17,6 +17,7 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
       facility_strain_id: params[:facility_strain_id],
       batch_source: params[:batch_source],
       grow_method: params[:grow_method],
+      name: params[:name],
     }
     command = Cultivation::CreateBatch.call(current_user, args)
     if command.success?

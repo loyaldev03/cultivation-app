@@ -28,8 +28,8 @@ module Cultivation
         check_task_assigned(batch, task)
         check_over_hours(batch, task)
       end
-      errors.add('resource', 'Some of the task is not assign') if @resource_errors > 0 # if estimated hours is set but no user assign
-      errors.add('resource', 'Over Hours is assign to staff') if @over_hours > 0 # if overhours
+      errors.add('resource', 'Some of the task have no resource') if @resource_errors > 0 # if estimated hours is set but no user assign
+      errors.add('resource', 'Resource overallocation') if @over_hours > 0 # if overhours
     rescue
       Rails.logger.debug "#{$!.message}"
       errors.add(:error, $!.message)
@@ -41,12 +41,12 @@ module Cultivation
         issue = Issues::Issue.find_or_initialize_by(
           task_id: task.id,
           cultivation_batch_id: batch.id.to_s,
-          title: 'No User Assigned to this task',
+          title: "Task #{task.wbs} have no resource allocate",
         )
 
         issue.issue_no = Issues::Issue.count + 1
-        issue.title = 'No User Assigned to this task'
-        issue.description = 'No User Assigned to this task'
+        issue.title = "Task #{task.wbs} have no resource allocate"
+        issue.description = "Task #{task.wbs} have no resource allocate"
         issue.severity = 'severe'
         issue.issue_type = 'task_from_batch'
         issue.status = 'open'
@@ -65,11 +65,11 @@ module Cultivation
           issue = Issues::Issue.find_or_initialize_by(
             task_id: task.id,
             cultivation_batch_id: batch.id.to_s,
-            title: "Over Hours is assigned for Task #{task.wbs}",
+            title: "Resource overallocations for Task #{task.wbs}",
           )
           issue.issue_no = Issues::Issue.count + 1
-          issue.title = "Over Hours is assigned for Task #{task.wbs}"
-          issue.description = "Over Hours is assigned for Task #{task.wbs}"
+          issue.title = "Resource overallocations for Task #{task.wbs}"
+          issue.description = "Resource overallocations for Task #{task.wbs}"
           issue.severity = 'severe'
           issue.issue_type = 'task_from_batch'
           issue.status = 'open'

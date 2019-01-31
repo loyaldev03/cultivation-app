@@ -95,7 +95,7 @@ RSpec.describe Cultivation::ValidateResource, type: :command do
       result = Cultivation::ValidateResource.call(current_user: current_user, batch_id: batch1.id)
       expect(result.success?).to be false
       expect(result.errors['resource'].count).to be > 0
-      expect(result.errors['resource']).to include('Some of the task is not assign')
+      expect(result.errors['resource']).to include('Some of the task have no resource')
     end
 
     it "return error if user assigned with over working hours" do
@@ -103,7 +103,7 @@ RSpec.describe Cultivation::ValidateResource, type: :command do
       result = Cultivation::ValidateResource.call(current_user: current_user, batch_id: batch1.id)
       expect(result.success?).to be false
       expect(result.errors['resource'].count).to be > 0
-      expect(result.errors['resource']).to include('Over Hours is assign to staff')
+      expect(result.errors['resource']).to include('Resource overallocation')
     end
 
   end

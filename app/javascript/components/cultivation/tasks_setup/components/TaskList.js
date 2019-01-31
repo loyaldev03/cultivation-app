@@ -12,6 +12,9 @@ import InlineEditDateField from './InlineEditDateField'
 import Avatar from '../../../utils/Avatar'
 import { formatDate2, moneyFormatter, SlidePanel } from '../../../utils'
 
+// TODO: Delete after test
+import MotherPlantsEditor from './MotherPlantsEditor'
+
 const ReactTable = lazy(() => import('react-table'))
 const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
 const AssignMaterialForm = lazy(() => import('./MaterialForm'))
@@ -588,6 +591,23 @@ class TaskList extends React.Component {
             </Suspense>
           )}
         />
+        <div className="">
+          <h3>DELETE AFTER TEST</h3>
+          <MotherPlantsEditor
+            className="w-50"
+            quantityRequired={12}
+            onAddItem={newItem => console.log(newItem)}
+            onDeleteItem={itemId => console.log('delete', itemId)}
+            renderLabel={props => (
+              <div className="mb1 f6 fw6 flex justify-between items-center">
+                <span className="grey">Mother Plant(s)</span>
+                <span className="red">
+                  Quantity Required: {props.quantityRequired}
+                </span>
+              </div>
+            )}
+          />
+        </div>
         <Suspense fallback={<div />}>
           <ReactTable
             columns={this.columnsConfig(batchId)}

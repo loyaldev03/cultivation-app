@@ -2,7 +2,10 @@ import { httpPostOptions } from '../../utils'
 import getIssue from './getIssue'
 
 const saveAssignTo = payload => {
-  return fetch(`/api/v1/issues/${payload.id}/assign_to`, httpPostOptions(payload))
+  return fetch(
+    `/api/v1/issues/${payload.id}/assign_to`,
+    httpPostOptions(payload)
+  )
     .then(response => {
       return response.json().then(data => ({
         status: response.status,

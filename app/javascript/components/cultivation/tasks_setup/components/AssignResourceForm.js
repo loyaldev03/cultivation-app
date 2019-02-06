@@ -116,13 +116,12 @@ class AssignResourceForm extends React.Component {
     if (found) {
       this.setState({ selectedUsers: selectedUsers.filter(x => x !== id) })
     } else {
-
       if (selectMode === 'multiple') {
         selectedUsers.push(id)
       } else {
         selectedUsers = [id]
       }
-      
+
       this.setState({ selectedUsers })
     }
   }
@@ -199,7 +198,7 @@ AssignResourceForm.propTypes = {
 }
 
 AssignResourceForm.defaultProps = {
-  selectMode: 'multiple',  // or 'single'
+  selectMode: 'multiple', // or 'single'
   title: 'Assign Resources'
 }
 

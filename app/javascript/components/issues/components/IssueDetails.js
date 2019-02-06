@@ -108,9 +108,8 @@ class IssueDetails extends Component {
     return (
       <React.Fragment>
         <div className="flex mt3 mb3 w-100 justify-end items-center">
-          
           <span className="f7 gray">Followed by</span>
-          { noFollowers && 
+          {noFollowers && (
             <div className="ml1">
               <Avatar
                 firstName=""
@@ -125,25 +124,25 @@ class IssueDetails extends Component {
                 }}
               />
             </div>
-          }
+          )}
 
-          { !noFollowers && followers.map( x => (
-            <div className="ml1" key={x.id}>
-              <Avatar
-                firstName={x.first_name}
-                lastName={x.last_name}
-                photoUrl={x.photo}
-                size={25}
-                onClick={event => {
-                  console.log(followers)
-                  this.assignFollowersForm.setSelectedUsers(followerIds)
-                  this.setState({ showAssignFollowers: true })
-                  event.preventDefault()
-                }}
-              />
-            </div>
-          ))}
-          
+          {!noFollowers &&
+            followers.map(x => (
+              <div className="ml1" key={x.id}>
+                <Avatar
+                  firstName={x.first_name}
+                  lastName={x.last_name}
+                  photoUrl={x.photo}
+                  size={25}
+                  onClick={event => {
+                    console.log(followers)
+                    this.assignFollowersForm.setSelectedUsers(followerIds)
+                    this.setState({ showAssignFollowers: true })
+                    event.preventDefault()
+                  }}
+                />
+              </div>
+            ))}
         </div>
         <div className="flex mt3 mb4 w-100 items-center justify-between">
           <a
@@ -214,7 +213,9 @@ class IssueDetails extends Component {
       showNoUser = false
     }
 
-    const assigned_to = currentIssueStore.issue.assigned_to ? [currentIssueStore.issue.assigned_to.id] : []
+    const assigned_to = currentIssueStore.issue.assigned_to
+      ? [currentIssueStore.issue.assigned_to.id]
+      : []
     return (
       <React.Fragment>
         <div
@@ -241,8 +242,8 @@ class IssueDetails extends Component {
                 showNoUser={showNoUser}
                 onClick={() => {
                   this.assignResouceForm.setSelectedUsers(assigned_to)
-                  this.setState({ showAssignTask: true })}
-                }
+                  this.setState({ showAssignTask: true })
+                }}
               />
             </div>
             <div className="flex flex-column w-100">

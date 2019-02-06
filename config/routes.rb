@@ -253,6 +253,8 @@ Rails.application.routes.draw do
         member do
           post 'add_comment'
           post 'resolve'
+          post 'assign_to'
+          post 'followers'
           get 'comments'
           get 'attachment'
         end

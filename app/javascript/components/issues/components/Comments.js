@@ -201,9 +201,11 @@ class Comments extends React.Component {
       currentIssue.updateComment(comment_id, { editing: false })
     })
   }
-  
+
   onDeleteComment = comment_id => {
-    deleteComment(currentIssue.issue.id, comment_id)
+    if (confirm("Are you sure?")) {
+      deleteComment(currentIssue.issue.id, comment_id)
+    }
   }
 
   renderResolveForm() {
@@ -274,7 +276,7 @@ class Comments extends React.Component {
   }
 
   renderAddComment() {
-    if (currentIssue.issue.status === 'resolved') {
+    if (currentIssue.issue.is_archived || currentIssue.issue.status === 'resolved') {
       return null
     }
 
@@ -345,6 +347,7 @@ class Comments extends React.Component {
 
   render() {
     const hasComment = currentIssue.comments && currentIssue.comments.length > 0
+    const hideMenu = currentIssue.issue.is_archived || currentIssue.issue.status === 'resolved'
 
     return (
       <React.Fragment>
@@ -357,6 +360,22 @@ class Comments extends React.Component {
         </div>
         {hasComment &&
           currentIssue.comments.map(x => {
+            const menuBuilder = isMenuOpen => {
+              if (hideMenu) { return null }
+              return (
+                <CommentMenu
+                  isOpen={isMenuOpen}
+                  isMe={x.is_me}
+                  id={x.id}
+                  handleEllipsisClick={this.handleEllipsisClick}
+                  handleMouseLeave={this.handleMouseLeave}
+                  handleResolve={this.handleShowResolve}
+                  handleReply={this.onReplyComment}
+                  handleEdit={() => this.onEditComment(x.id)}
+                  handleDelete={() => this.onDeleteComment(x.id)}
+                />)
+            }
+
             return (
               <CommentMessage
                 key={x.id}
@@ -364,19 +383,7 @@ class Comments extends React.Component {
                 onTogglePreview={this.onTogglePreview}
                 onEditCompleted={this.onEditCommentCompleted}
                 isMenuOpen={this.state.showCommentMenuId === x.id}
-                renderMenu={isMenuOpen => (
-                  <CommentMenu
-                    isOpen={isMenuOpen}
-                    isMe={x.is_me}
-                    id={x.id}
-                    handleEllipsisClick={this.handleEllipsisClick}
-                    handleMouseLeave={this.handleMouseLeave}
-                    handleResolve={this.handleShowResolve}
-                    handleReply={this.onReplyComment}
-                    handleEdit={() => this.onEditComment(x.id)}
-                    handleDelete={() => this.onDeleteComment(x.id)}
-                  />
-                )}
+                renderMenu={menuBuilder}
               />
             )
           })}

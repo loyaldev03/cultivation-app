@@ -16,7 +16,7 @@ module Issues
 
     def archive_issue
       issue = Issues::Issue.find(id)
-      issue.update!(status: 'archived')
+      issue.update!(is_archived: true)
       issue
     end
   end

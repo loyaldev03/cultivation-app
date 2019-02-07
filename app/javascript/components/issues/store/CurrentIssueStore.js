@@ -50,7 +50,10 @@ class CurrentIssueStore {
 
   @action
   addComment(comment) {
-    const newComments = [...this.comments.slice(), { ...comment, editing: false }]
+    const newComments = [
+      ...this.comments.slice(),
+      { ...comment, editing: false }
+    ]
     this.comments.replace(newComments)
   }
 
@@ -61,7 +64,7 @@ class CurrentIssueStore {
     console.log(index)
     if (index >= 0) {
       const toUpdate = comments[index]
-      comments[index] = {...toUpdate, ...newAttributes}
+      comments[index] = { ...toUpdate, ...newAttributes }
       this.comments.replace(comments)
     }
   }

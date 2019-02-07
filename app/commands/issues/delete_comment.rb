@@ -4,11 +4,12 @@ module Issues
     attr_reader :current_user,
                 :args,
                 :id,
-                :comment_id,
-                def initialize(current_user, args)
-                  @id = args[:id]
-                  @comment_id = args[:comment_id]
-                end
+                :comment_id
+
+    def initialize(current_user, args)
+      @id = args[:id]
+      @comment_id = args[:comment_id]
+    end
 
     def call
       return nil unless (valid_user? && valid_data?)

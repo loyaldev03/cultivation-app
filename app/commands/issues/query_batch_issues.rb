@@ -10,7 +10,7 @@ module Issues
     end
 
     def call
-      Issues::Issue.where(cultivation_batch_id: batch_id).
+      Issues::Issue.where(cultivation_batch_id: batch_id, is_archived: false).
         in(status: filter_status).
         order(created_at: :desc)
     end

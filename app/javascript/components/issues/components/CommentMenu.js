@@ -22,7 +22,7 @@ const CommentMenu = ({
   handleResolve,
   handleReply,
   handleEdit,
-  handleDelete,
+  handleDelete
 }) => {
   return (
     <Manager>
@@ -52,9 +52,21 @@ const CommentMenu = ({
               <div className="db shadow-4" onMouseLeave={handleMouseLeave}>
                 <MenuButton icon="reply" text="Reply" onClick={handleReply} />
                 <MenuButton icon="playlist_add" text="Convert to task" />
-                <MenuButton icon="check" text="Resolve" onClick={handleResolve} />
-                { isMe && <MenuButton icon="edit" text="Edit" onClick={handleEdit} /> }
-                { isMe && <MenuButton icon="delete" text="Delete" onClick={handleDelete} /> }
+                <MenuButton
+                  icon="check"
+                  text="Resolve"
+                  onClick={handleResolve}
+                />
+                {isMe && (
+                  <MenuButton icon="edit" text="Edit" onClick={handleEdit} />
+                )}
+                {isMe && (
+                  <MenuButton
+                    icon="delete"
+                    text="Delete"
+                    onClick={handleDelete}
+                  />
+                )}
               </div>
               <div ref={arrowProps.ref} style={arrowProps.style} />
             </div>

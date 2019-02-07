@@ -23,10 +23,9 @@ class BatchHeader extends React.Component {
     const url = `/api/v1/batches/${batchId}/update_batch_info`
     try {
       const payload = { name: name }
-      const response = await(await fetch(url, httpPostOptions(payload))).json()
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {
         toast('Batch Info Updated', 'success')
-
       } else {
         console.error(response.errors)
       }

@@ -38,38 +38,32 @@ export default class InlineEditBatchNameField extends InlineEditTextField {
             </i>
           </React.Fragment>
         ) : (
-            <React.Fragment>
-              {this.props.issue_available == true && !hasChild ?
-                <a
-                  href="http://localhost:3000/cultivation/batches/5c4fc4b5fb8387afc21f969c/issues"
-                >
-                  <i
-                    className="material-icons icon--small red"
-                    value=""
-                  >
-                    error
+          <React.Fragment>
+            {this.props.issue_available == true && !hasChild ? (
+              <a href="http://localhost:3000/cultivation/batches/5c4fc4b5fb8387afc21f969c/issues">
+                <i className="material-icons icon--small red" value="">
+                  error
                 </i>
-                </a>
-                : null
-              }
-              <a
-                href="#0"
-                className={classNames('link', {
-                  orange: hasChild,
-                  grey: !hasChild
-                })}
-                onClick={onClick}
-              >
-                {text}
               </a>
-              <i
-                className="material-icons icon--small icon--btn child"
-                onClick={this.switchEditMode}
-              >
-                edit
+            ) : null}
+            <a
+              href="#0"
+              className={classNames('link', {
+                orange: hasChild,
+                grey: !hasChild
+              })}
+              onClick={onClick}
+            >
+              {text}
+            </a>
+            <i
+              className="material-icons icon--small icon--btn child"
+              onClick={this.switchEditMode}
+            >
+              edit
             </i>
-            </React.Fragment>
-          )}
+          </React.Fragment>
+        )}
       </div>
     )
   }

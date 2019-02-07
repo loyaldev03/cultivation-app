@@ -14,20 +14,17 @@ class BatchHeader extends React.Component {
     this.state = {
       name: this.props.name
     }
-
   }
 
   updateBatchName = (name, batchId) => {
     console.log(name)
-    this.setState({name: name})
-
+    this.setState({ name: name })
 
     const url = `/api/v1/batches/${batchId}/update_batch_info`
     try {
       const payload = { name: name }
       const response = fetch(url, httpPostOptions(payload)).json()
       if (response.data) {
-        
         // this.loadTasks(batchId)
       } else {
         console.error(response.errors)
@@ -36,9 +33,7 @@ class BatchHeader extends React.Component {
       console.error(error)
     } finally {
     }
-
-
-  } 
+  }
 
   render() {
     const {
@@ -53,7 +48,7 @@ class BatchHeader extends React.Component {
       total_estimated_hour,
       estimated_harvest_date
     } = this.props
-    const {name} = this.state
+    const { name } = this.state
     const batchQuantity = quantity ? quantity : 0
 
     return (

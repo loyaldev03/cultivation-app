@@ -1,5 +1,6 @@
 class Api::V1::UsersController < Api::V1::BaseApiController
   def index
+    Rails.logger.debug "\t\t\t >>>> Calling index users...."
     facility_id = params[:facility_id]
     cmd = QueryUsers.call(current_user, facility_id)
     if cmd.success?

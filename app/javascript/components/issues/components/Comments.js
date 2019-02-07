@@ -255,7 +255,11 @@ class Comments extends React.Component {
     return null
   }
 
-  render() {
+  renderAddComment() {
+    if (currentIssue.issue.status === 'resolved') {
+      return null
+    }
+
     const {
       current_user_first_name,
       current_user_last_name,
@@ -264,6 +268,65 @@ class Comments extends React.Component {
 
     const hasComment = currentIssue.comments && currentIssue.comments.length > 0
     const { showAddComment } = this.state
+    return (
+      <div
+        className={`ph3 mb4 ${hasComment && 'mt3'} ${!showAddComment && 'dn'}`}
+      >
+        <div className="b--black-10 flex br3 ba w-100 ph2 pt1 pb2 flex items-start">
+          <div style={{ marginTop: '3px' }}>
+            <Avatar
+              firstName={current_user_first_name}
+              lastName={current_user_last_name}
+              photoUrl={current_user_photo}
+              size={25}
+            />
+          </div>
+          <div className="flex flex-column flex-auto ml2">
+            <textarea
+              ref={this.newCommentText}
+              type="text"
+              className="bn flex-auto flex f6 dark-grey outline-0 pl0"
+              style={{ resize: 'none', paddingTop: '4px' }}
+              rows="1"
+              value={this.state.newComment}
+              onChange={this.onChangeNewComment}
+            />
+            {this.renderAttachments()}
+          </div>
+
+          <a
+            href="#"
+            onClick={this.onUppyOpen}
+            className="flex items-center link self-end"
+            style={{ height: '25px' }}
+          >
+            <span
+              className="material-icons black-30 f6 v-mid hover-black-50"
+              style={{ fontSize: '23px' }}
+            >
+              add
+            </span>
+          </a>
+          <a
+            href="#"
+            className="ml1 flex items-center link self-end"
+            style={{ height: '25px' }}
+            onClick={this.onAddComment}
+          >
+            <span
+              className="material-icons black-30 f6 v-mid hover-black-50"
+              style={{ fontSize: '18px' }}
+            >
+              send
+            </span>
+          </a>
+        </div>
+      </div>
+    )
+  }
+
+  render() {
+    const hasComment = currentIssue.comments && currentIssue.comments.length > 0
 
     return (
       <React.Fragment>
@@ -296,60 +359,7 @@ class Comments extends React.Component {
             )
           })}
         {this.renderResolvedComment()}
-        <div
-          className={`ph3 mb4 ${hasComment && 'mt3'} ${!showAddComment &&
-            'dn'}`}
-        >
-          <div className="b--black-10 flex br3 ba w-100 ph2 pt1 pb2 flex items-start">
-            <div style={{ marginTop: '3px' }}>
-              <Avatar
-                firstName={current_user_first_name}
-                lastName={current_user_last_name}
-                photoUrl={current_user_photo}
-                size={25}
-              />
-            </div>
-            <div className="flex flex-column flex-auto ml2">
-              <textarea
-                ref={this.newCommentText}
-                type="text"
-                className="bn flex-auto flex f6 dark-grey outline-0 pl0"
-                style={{ resize: 'none', paddingTop: '4px' }}
-                rows="1"
-                value={this.state.newComment}
-                onChange={this.onChangeNewComment}
-              />
-              {this.renderAttachments()}
-            </div>
-
-            <a
-              href="#"
-              onClick={this.onUppyOpen}
-              className="flex items-center link self-end"
-              style={{ height: '25px' }}
-            >
-              <span
-                className="material-icons black-30 f6 v-mid hover-black-50"
-                style={{ fontSize: '23px' }}
-              >
-                add
-              </span>
-            </a>
-            <a
-              href="#"
-              className="ml1 flex items-center link self-end"
-              style={{ height: '25px' }}
-              onClick={this.onAddComment}
-            >
-              <span
-                className="material-icons black-30 f6 v-mid hover-black-50"
-                style={{ fontSize: '18px' }}
-              >
-                send
-              </span>
-            </a>
-          </div>
-        </div>
+        {this.renderAddComment()}
         {this.renderResolveForm()}
         {this.renderNewTaskForm()}
         <DashboardModal

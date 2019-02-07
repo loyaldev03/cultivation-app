@@ -76,6 +76,7 @@ class IssueSidebar extends React.Component {
           onToggleMode={this.onToggleMode}
           issueId={this.state.issueId}
           batchId={batch_id}
+          facilityId={facility_id}
           current_user_first_name={current_user_first_name}
           current_user_last_name={current_user_last_name}
           current_user_photo={current_user_photo}

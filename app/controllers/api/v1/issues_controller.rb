@@ -67,4 +67,21 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
 
     render json: {id: p[:id]}, status: 200
   end
+
+  def assign_to
+    p = params.to_unsafe_h
+    issue = Issues::Issue.find(p[:id])
+    user = User.find(p[:user])
+    issue.assigned_to = user
+    issue.save!
+    render json: {id: p[:id]}, status: 200
+  end
+
+  def followers
+    p = params.to_unsafe_h
+    issue = Issues::Issue.find(p[:id])
+    issue.followers = p[:users].uniq
+    issue.save!
+    render json: {id: p[:id]}, status: 200
+  end
 end

@@ -94,5 +94,20 @@ module Issues
         }
       end
     end
+
+    attribute :followers do |object, params|
+      current_user_id = params[:current_user_id]
+      users = User.in(id: object.followers)
+      users.map do |user|
+        {
+          id: user.id.to_s,
+          display_name: user.display_name,
+          photo: user.photo&.url,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          is_me: user.id.to_s == current_user_id,
+        }
+      end
+    end
   end
 end

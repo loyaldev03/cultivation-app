@@ -201,7 +201,7 @@ class Comments extends React.Component {
       currentIssue.updateComment(comment_id, { editing: false })
     })
   }
-  
+
   onDeleteComment = comment_id => {
     deleteComment(currentIssue.issue.id, comment_id)
   }

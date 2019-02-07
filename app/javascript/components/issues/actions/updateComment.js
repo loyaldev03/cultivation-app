@@ -2,10 +2,7 @@ import currentIssueStore from '../store/CurrentIssueStore'
 import { httpPostOptions } from '../../utils'
 
 const updateComment = (id, payload) => {
-  return fetch(
-    `/api/v1/issues/${id}/update_comment`,
-    httpPostOptions(payload)
-  )
+  return fetch(`/api/v1/issues/${id}/update_comment`, httpPostOptions(payload))
     .then(response => {
       return response.json().then(data => ({
         status: response.status,

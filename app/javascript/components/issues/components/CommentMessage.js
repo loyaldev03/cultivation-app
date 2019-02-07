@@ -11,7 +11,7 @@ const CommentBody = ({
   reason = '',
   onClick = (url, mime_type) => {},
   isMenuOpen = false,
-  renderMenu = (isMenuOpen) => null   // renderMenu is a method that accepts params to indicate menu is open or not.
+  renderMenu = isMenuOpen => null // renderMenu is a method that accepts params to indicate menu is open or not.
 }) => {
   return (
     <div className="mb2 pv2 pl3 pr0 br2 bg-black-05">
@@ -161,16 +161,21 @@ class CommentMessage extends React.Component {
           <div style={{ minWidth: '40%', maxWidth: '85%' }}>
             {editing && (
               <div>
-                <textarea ref={this.messageBox} value={message} className="f6 outline-0 pa1" onChange={this.onChangeMessage} />
+                <textarea
+                  ref={this.messageBox}
+                  value={message}
+                  className="f6 outline-0 pa1"
+                  onChange={this.onChangeMessage}
+                />
                 <i
                   className="material-icons green icon--small icon--btn"
-                  onClick={this.onEditCompleted} 
+                  onClick={this.onEditCompleted}
                 >
                   done
                 </i>
                 <i
                   className="material-icons green icon--small icon--btn"
-                  onClick={this.onCancelEdit} 
+                  onClick={this.onCancelEdit}
                 >
                   close
                 </i>
@@ -189,7 +194,11 @@ class CommentMessage extends React.Component {
               />
             )}
             {task_url.length > 0 && (
-              <TaskBody task_url={task_url} task_name={task_name} quote={quote} />
+              <TaskBody
+                task_url={task_url}
+                task_name={task_name}
+                quote={quote}
+              />
             )}
             <div className="fw4 gray" style={{ fontSize: '10px' }}>
               <span className="orange">

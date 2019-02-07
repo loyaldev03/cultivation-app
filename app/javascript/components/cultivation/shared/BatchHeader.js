@@ -4,21 +4,47 @@ import {
   ActiveBadge,
   moneyFormatter,
   decimalFormatter,
-  sanitizeText
+  sanitizeText,
+  httpPostOptions
 } from '../../utils'
-
+import InlineEditBatchNameField from './InlineEditBatchNameField'
 class BatchHeader extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      name: this.props.name
+    }
+
   }
+
+  updateBatchName = (name, batchId) => {
+    console.log(name)
+    this.setState({name: name})
+
+
+    const url = `/api/v1/batches/${batchId}/update_batch_info`
+    try {
+      const payload = { name: name }
+      const response = fetch(url, httpPostOptions(payload)).json()
+      if (response.data) {
+        
+        // this.loadTasks(batchId)
+      } else {
+        console.error(response.errors)
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+
+
+  } 
 
   render() {
     const {
-      batch_no,
       batch_source,
       quantity,
       status,
-      name,
       id,
       strain,
       grow_method,
@@ -27,6 +53,7 @@ class BatchHeader extends React.Component {
       total_estimated_hour,
       estimated_harvest_date
     } = this.props
+    const {name} = this.state
     const batchQuantity = quantity ? quantity : 0
 
     return (
@@ -37,7 +64,7 @@ class BatchHeader extends React.Component {
               <div className="flex">
                 <div className="w-30">
                   <h4 className="tl pa0 ma0 h6--font dark-grey">
-                    Batch {batch_no}
+                    Batch {name}
                     <ActiveBadge className="fr" status={status} />
                   </h4>
                 </div>
@@ -63,7 +90,20 @@ class BatchHeader extends React.Component {
                       </div>
                       <div className="w-40">
                         <div className="">
-                          <label>{name}</label>
+                          {/* <label>{name}</label> */}
+                          <InlineEditBatchNameField
+                            text={name}
+                            // issue_available={issue_available}
+                            indent={0}
+                            // hasChild={hasChild}
+                            // isCollapsed={isCollapsed}
+                            // onCollapseClick={() => TaskStore.toggleCollapseNode(wbs)}
+                            // onClick={e => this.handleShowSidebar(id)}
+                            // onHighlight={() => this.setState({ taskSelected: id })}
+                            onDoneClick={value => {
+                              this.updateBatchName(value, id)
+                            }}
+                          />
                         </div>
                       </div>
                     </div>

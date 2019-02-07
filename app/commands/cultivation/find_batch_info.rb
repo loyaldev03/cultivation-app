@@ -25,6 +25,7 @@ module Cultivation
       @batch_attributes = {
         id: @batch.id.to_s,
         batch_no: @batch.batch_no,
+        name: @batch.name,
         quantity: @batch.quantity,
         facility_id: @batch.facility_id.to_s,
         facility_strain_id: @batch.facility_strain.id.to_s,

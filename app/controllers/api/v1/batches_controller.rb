@@ -59,11 +59,7 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
 
   def update_batch_info
     args = {name: params[:name]}
-    update_cmd = Cultivation::UpdateBatchInfo.call(
-      current_user,
-      batch_id: params[:batch_id],
-      args: args,
-    )
+    update_cmd = Cultivation::UpdateBatchInfo.call(current_user, params[:batch_id], args)
     if update_cmd.success?
       render json: {data: 'Ok'}
     else

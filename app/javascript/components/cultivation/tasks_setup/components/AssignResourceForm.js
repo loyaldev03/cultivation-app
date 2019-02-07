@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import UserStore from '../stores/NewUserStore'
 import { SlidePanelHeader, SlidePanelFooter } from '../../../utils'
@@ -94,7 +95,7 @@ class AssignResourceForm extends React.Component {
   }
   componentDidMount() {
     if (!UserStore.isDataLoaded) {
-      UserStore.loadUsers()
+      UserStore.loadUsers(this.props.facilityId)
     }
   }
   setSelectedUsers(users = []) {
@@ -109,12 +110,18 @@ class AssignResourceForm extends React.Component {
     UserStore.searchKeyword = e.target.value
   }
   onSelect = id => e => {
-    const { selectedUsers } = this.state
+    let { selectedUsers } = this.state
+    const { selectMode } = this.props
     const found = selectedUsers.find(x => x === id)
     if (found) {
       this.setState({ selectedUsers: selectedUsers.filter(x => x !== id) })
     } else {
-      selectedUsers.push(id)
+      if (selectMode === 'multiple') {
+        selectedUsers.push(id)
+      } else {
+        selectedUsers = [id]
+      }
+
       this.setState({ selectedUsers })
     }
   }
@@ -130,7 +137,7 @@ class AssignResourceForm extends React.Component {
     const showResult = searchResult && searchResult.length
     return (
       <div className="flex flex-column h-100">
-        <SlidePanelHeader onClose={onClose} title="Assign Resources" />
+        <SlidePanelHeader onClose={onClose} title={this.props.title} />
         <div className="flex flex-column flex-auto justify-between">
           <div className="pa3 flex flex-column">
             <input
@@ -180,6 +187,19 @@ class AssignResourceForm extends React.Component {
       </div>
     )
   }
+}
+
+AssignResourceForm.propTypes = {
+  selectMode: PropTypes.string,
+  facilityId: PropTypes.string.isRequired,
+  onSave: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  title: PropTypes.string
+}
+
+AssignResourceForm.defaultProps = {
+  selectMode: 'multiple', // or 'single'
+  title: 'Assign Resources'
 }
 
 export default AssignResourceForm

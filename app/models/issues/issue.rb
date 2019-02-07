@@ -8,7 +8,7 @@ module Issues
     field :description, type: String
     field :severity, type: String       # { severe, normal }
     field :status, type: String         # { open, resolved, archived }
-    field :issue_type, type: String     # { planning, daily_task, task_from_issue }
+    field :issue_type, type: String     # { planning, daily_task }
     field :location_id, type: BSON::ObjectId
     field :location_type, type: String  # full ruby class name
     field :followers, type: Array, default: []

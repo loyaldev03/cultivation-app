@@ -255,6 +255,8 @@ Rails.application.routes.draw do
           post 'resolve'
           post 'assign_to'
           post 'followers'
+          post 'update_comment'
+          post 'delete_comment'
           get 'comments'
           get 'attachment'
         end

@@ -1,5 +1,4 @@
 import React from 'react'
-import { toJS } from 'mobx'
 import Avatar from '../../utils/Avatar.js'
 import AttachmentThumbnail from './AttachmentThumbnail'
 import { formatDate, formatTime } from '../../utils/DateHelper'
@@ -12,7 +11,7 @@ const CommentBody = ({
   reason = '',
   onClick = (url, mime_type) => {},
   isMenuOpen = false,
-  renderMenu = () => null
+  renderMenu = (isMenuOpen) => null   // renderMenu is a method that accepts params to indicate menu is open or not.
 }) => {
   return (
     <div className="mb2 pv2 pl3 pr0 br2 bg-black-05">
@@ -69,69 +68,148 @@ const TaskBody = ({ task_url, task_name, quote = '', menu = () => null }) => {
   )
 }
 
-const CommentMessage = ({
-  id,
-  sender,
-  is_me,
-  sent_at,
-  message,
-  resolved = false,
-  reason = '',
-  attachments = [],
-  task_url = '',
-  task_name = '',
-  quote = '',
-  onTogglePreview = (url, mime_type) => {},
-  isMenuOpen = false,
-  renderMenu
-}) => {
-  const align = is_me == true ? 'justify-start' : 'justify-end'
+class CommentMessage extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      message: props.message
+    }
 
-  return (
-    <React.Fragment>
-      <div className={`ph3 mb3 mt1 flex ${align}`}>
-        <div className={`pt1 mr2 ${!is_me && 'dn'}`}>
-          <Avatar
-            firstName={sender.first_name}
-            lastName={sender.last_name}
-            size={25}
-            photoUrl={sender.photo}
-          />
-        </div>
-        <div style={{ minWidth: '40%', maxWidth: '85%' }}>
-          {task_url.length === 0 && (
-            <CommentBody
-              message={message}
-              attachments={attachments}
-              resolved={resolved}
-              reason={reason}
-              id={id}
-              onClick={onTogglePreview}
-              isMenuOpen={isMenuOpen}
-              renderMenu={renderMenu}
+    this.messageBox = React.createRef()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.editing && this.props.editing) {
+      this.resizeMessageBox()
+    }
+  }
+
+  resizeMessageBox = () => {
+    console.log(this.messageBox.current.style)
+    // this.messageBox.current.style.cssText = 'height:' + this.messageBox.current.scrollHeight + 'px'
+
+    const field = this.messageBox.current
+    field.style.height = 'inherit'
+
+    // Get the computed styles for the element
+    const computed = window.getComputedStyle(field)
+
+    // Calculate the height
+    let height =
+      parseInt(computed.getPropertyValue('border-top-width'), 10) +
+      parseInt(computed.getPropertyValue('padding-top'), 10) +
+      field.scrollHeight +
+      parseInt(computed.getPropertyValue('padding-bottom'), 10) +
+      parseInt(computed.getPropertyValue('border-bottom-width'), 10)
+
+    if (height <= 24) {
+      height = 25
+    }
+
+    field.style.height = height + 'px'
+  }
+
+  onChangeMessage = event => {
+    const target = event.target
+    target.style.cssText = 'height:' + target.scrollHeight + 'px'
+    this.setState({ message: event.target.value }, this.resizeMessageBox)
+  }
+
+  onEditCompleted = event => {
+    const { id } = this.props
+    this.props.onEditCompleted(id, { message: this.state.message })
+  }
+
+  onCancelEdit = event => {
+    this.setState({ message: this.props.message })
+    const { id } = this.props
+    this.props.onEditCompleted(id, { message: this.props.message })
+  }
+
+  render() {
+    const {
+      id,
+      sender,
+      is_me,
+      sent_at,
+      resolved = false,
+      reason = '',
+      attachments = [],
+      task_url = '',
+      task_name = '',
+      quote = '',
+      onTogglePreview = (url, mime_type) => {},
+      isMenuOpen = false,
+      renderMenu,
+      editing
+    } = this.props
+
+    const align = is_me == true ? 'justify-start' : 'justify-end'
+    const { message } = this.state
+
+    return (
+      <React.Fragment>
+        <div className={`ph3 mb3 mt1 flex ${align}`}>
+          <div className={`pt1 mr2 ${!is_me && 'dn'}`}>
+            <Avatar
+              firstName={sender.first_name}
+              lastName={sender.last_name}
+              size={25}
+              photoUrl={sender.photo}
             />
-          )}
-          {task_url.length > 0 && (
-            <TaskBody task_url={task_url} task_name={task_name} quote={quote} />
-          )}
-          <div className="fw4 gray" style={{ fontSize: '10px' }}>
-            <span className="orange">
-              {sender.first_name} {sender.last_name}
-            </span>
-            , {formatDate(sent_at)} {formatTime(sent_at)}
+          </div>
+          <div style={{ minWidth: '40%', maxWidth: '85%' }}>
+            {editing && (
+              <div>
+                <textarea ref={this.messageBox} value={message} className="f6 outline-0 pa1" onChange={this.onChangeMessage} />
+                <i
+                  className="material-icons green icon--small icon--btn"
+                  onClick={this.onEditCompleted} 
+                >
+                  done
+                </i>
+                <i
+                  className="material-icons green icon--small icon--btn"
+                  onClick={this.onCancelEdit} 
+                >
+                  close
+                </i>
+              </div>
+            )}
+            {!editing && task_url.length === 0 && (
+              <CommentBody
+                message={message}
+                attachments={attachments}
+                resolved={resolved}
+                reason={reason}
+                id={id}
+                onClick={onTogglePreview}
+                isMenuOpen={isMenuOpen}
+                renderMenu={renderMenu}
+              />
+            )}
+            {task_url.length > 0 && (
+              <TaskBody task_url={task_url} task_name={task_name} quote={quote} />
+            )}
+            <div className="fw4 gray" style={{ fontSize: '10px' }}>
+              <span className="orange">
+                {sender.first_name} {sender.last_name}
+              </span>
+              , {formatDate(sent_at)} {formatTime(sent_at)}
+            </div>
+          </div>
+          <div className={`pt1 ml2 ${is_me && 'dn'}`}>
+            <Avatar
+              firstName={sender.first_name}
+              lastName={sender.last_name}
+              size={25}
+              photoUrl={sender.photo}
+            />
           </div>
         </div>
-        <div className={`pt1 ml2 ${is_me && 'dn'}`}>
-          <Avatar
-            firstName={sender.first_name}
-            lastName={sender.last_name}
-            size={25}
-            photoUrl={sender.photo}
-          />
-        </div>
-      </div>
-    </React.Fragment>
-  )
+      </React.Fragment>
+    )
+  }
 }
 
 export default CommentMessage

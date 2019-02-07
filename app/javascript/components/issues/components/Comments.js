@@ -17,6 +17,8 @@ import ResolvedComment from './ResolvedComment'
 
 import currentIssue from '../store/CurrentIssueStore'
 import addComment from '../actions/addComment'
+import updateComment from '../actions/updateComment'
+import deleteComment from '../actions/deleteComment'
 import resolveIssue from '../actions/resolveIssue'
 
 import Avatar from '../../utils/Avatar.js'
@@ -92,6 +94,7 @@ class Comments extends React.Component {
   }
 
   onAddComment = event => {
+    event.preventDefault()
     addComment({
       issueId: this.props.issueId,
       message: this.state.newComment,
@@ -100,7 +103,6 @@ class Comments extends React.Component {
       if (status != 200) {
         alert('something wrong')
       } else {
-        event.preventDefault()
         this.setState(
           { newComment: '', attachments: [] },
           this.resizeCommentText
@@ -189,6 +191,21 @@ class Comments extends React.Component {
     })
   }
 
+  onEditComment = id => {
+    this.setState({ showCommentMenuId: '' })
+    currentIssue.updateComment(id, { editing: true })
+  }
+
+  onEditCommentCompleted = (comment_id, changes) => {
+    updateComment(currentIssue.issue.id, { comment_id, ...changes }).then(x => {
+      currentIssue.updateComment(comment_id, { editing: false })
+    })
+  }
+  
+  onDeleteComment = comment_id => {
+    deleteComment(currentIssue.issue.id, comment_id)
+  }
+
   renderResolveForm() {
     if (!this.state.showResolveForm) {
       return null
@@ -202,6 +219,7 @@ class Comments extends React.Component {
 
     return (
       <ResolveIssueForm
+        issueType={currentIssue.issue.issue_type}
         firstName={current_user_first_name}
         lastName={current_user_last_name}
         photoUrl={current_user_photo}
@@ -344,15 +362,19 @@ class Comments extends React.Component {
                 key={x.id}
                 {...x}
                 onTogglePreview={this.onTogglePreview}
+                onEditCompleted={this.onEditCommentCompleted}
                 isMenuOpen={this.state.showCommentMenuId === x.id}
                 renderMenu={isMenuOpen => (
                   <CommentMenu
                     isOpen={isMenuOpen}
+                    isMe={x.is_me}
                     id={x.id}
                     handleEllipsisClick={this.handleEllipsisClick}
                     handleMouseLeave={this.handleMouseLeave}
                     handleResolve={this.handleShowResolve}
                     handleReply={this.onReplyComment}
+                    handleEdit={() => this.onEditComment(x.id)}
+                    handleDelete={() => this.onDeleteComment(x.id)}
                   />
                 )}
               />

@@ -109,6 +109,7 @@ class IssueDetails extends Component {
       <React.Fragment>
         <div className="flex mt3 mb3 w-100 justify-end items-center">
           <span className="f7 gray">Followed by</span>
+
           {noFollowers && (
             <div className="ml1">
               <Avatar
@@ -216,6 +217,8 @@ class IssueDetails extends Component {
     const assigned_to = currentIssueStore.issue.assigned_to
       ? [currentIssueStore.issue.assigned_to.id]
       : []
+
+    const isResolved = currentIssueStore.issue.status === 'resolved'
     return (
       <React.Fragment>
         <div
@@ -234,17 +237,33 @@ class IssueDetails extends Component {
         <div className="ph3">
           <div className="flex w-100">
             <div className="w-auto pv2 mr2 mb3">
-              <Avatar
-                firstName={assignedFirstName}
-                lastName={assignedLastName}
-                size={25}
-                photoUrl={assignedPhoto}
-                showNoUser={showNoUser}
-                onClick={() => {
-                  this.assignResouceForm.setSelectedUsers(assigned_to)
-                  this.setState({ showAssignTask: true })
-                }}
-              />
+              {
+                !isResolved && (
+                  <Avatar
+                    firstName={assignedFirstName}
+                    lastName={assignedLastName}
+                    size={25}
+                    photoUrl={assignedPhoto}
+                    showNoUser={showNoUser}
+                    onClick={() => {
+                      this.assignResouceForm.setSelectedUsers(assigned_to)
+                      this.setState({ showAssignTask: true })
+                    }}
+                  />
+                )
+              }
+              {
+                isResolved && (
+                  <Avatar
+                    firstName={assignedFirstName}
+                    lastName={assignedLastName}
+                    size={25}
+                    photoUrl={assignedPhoto}
+                    showNoUser={showNoUser}
+                  />
+                )
+              }
+              
             </div>
             <div className="flex flex-column w-100">
               <div className="f5 fw6 dark-grey w-auto pv2 mt1">

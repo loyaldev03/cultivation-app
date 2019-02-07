@@ -54,34 +54,47 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
   end
 
   def resolve
-    Rails.logger.debug "\t\t\t>>> params: #{params.inspect}"
-
-    p = params.to_unsafe_h
-    issue = Issues::Issue.find(p[:id])
-    issue.status = 'resolved'
-    issue.resolution_notes = p[:notes]
-    issue.reason = p[:reason]
-    issue.resolved_at = Time.now
-    issue.resolved_by = current_user
-    issue.save!
-
-    render json: {id: p[:id]}, status: 200
+    command = Issues::ResolveIssue.call(current_user, params.to_unsafe_h)
+    if command.success?
+      render json: {id: params[:id]}, status: 200
+    else
+      render json: {id: params[:id]}, status: 500
+    end
   end
 
   def assign_to
-    p = params.to_unsafe_h
-    issue = Issues::Issue.find(p[:id])
-    user = User.find(p[:user])
-    issue.assigned_to = user
-    issue.save!
-    render json: {id: p[:id]}, status: 200
+    command = Issues::AssignIssueTo.call(current_user, params.to_unsafe_h)
+    if command.success?
+      render json: {id: params[:id]}, status: 200
+    else
+      render json: {id: params[:id]}, status: 500
+    end
   end
 
   def followers
-    p = params.to_unsafe_h
-    issue = Issues::Issue.find(p[:id])
-    issue.followers = p[:users].uniq
-    issue.save!
-    render json: {id: p[:id]}, status: 200
+    command = Issues::AssignIssueFollowers.call(current_user, params.to_unsafe_h)
+    if command.success?
+      render json: {id: params[:id]}, status: 200
+    else
+      render json: {id: params[:id]}, status: 500
+    end
+  end
+
+  def update_comment
+    command = Issues::UpdateComment.call(current_user, params.to_unsafe_h)
+    if command.success?
+      render json: {id: params[:id]}, status: 200
+    else
+      render json: {id: params[:id]}, status: 500
+    end
+  end
+
+  def delete_comment
+    command = Issues::DeleteComment.call(current_user, params.to_unsafe_h)
+    if command.success?
+      render json: {id: params[:id]}, status: 200
+    else
+      render json: {id: params[:id]}, status: 500
+    end
   end
 end

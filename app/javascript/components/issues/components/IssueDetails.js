@@ -153,8 +153,8 @@ class IssueDetails extends Component {
           >
             Show less
           </a>
-          
-          { !is_archived && (
+
+          {!is_archived && (
             <div>
               <a
                 href="#"

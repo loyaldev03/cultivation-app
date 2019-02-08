@@ -203,7 +203,7 @@ class Comments extends React.Component {
   }
 
   onDeleteComment = comment_id => {
-    if (confirm("Are you sure?")) {
+    if (confirm('Are you sure?')) {
       deleteComment(currentIssue.issue.id, comment_id)
     }
   }
@@ -276,7 +276,10 @@ class Comments extends React.Component {
   }
 
   renderAddComment() {
-    if (currentIssue.issue.is_archived || currentIssue.issue.status === 'resolved') {
+    if (
+      currentIssue.issue.is_archived ||
+      currentIssue.issue.status === 'resolved'
+    ) {
       return null
     }
 
@@ -347,7 +350,8 @@ class Comments extends React.Component {
 
   render() {
     const hasComment = currentIssue.comments && currentIssue.comments.length > 0
-    const hideMenu = currentIssue.issue.is_archived || currentIssue.issue.status === 'resolved'
+    const hideMenu =
+      currentIssue.issue.is_archived || currentIssue.issue.status === 'resolved'
 
     return (
       <React.Fragment>
@@ -361,7 +365,9 @@ class Comments extends React.Component {
         {hasComment &&
           currentIssue.comments.map(x => {
             const menuBuilder = isMenuOpen => {
-              if (hideMenu) { return null }
+              if (hideMenu) {
+                return null
+              }
               return (
                 <CommentMenu
                   isOpen={isMenuOpen}
@@ -373,7 +379,8 @@ class Comments extends React.Component {
                   handleReply={this.onReplyComment}
                   handleEdit={() => this.onEditComment(x.id)}
                   handleDelete={() => this.onDeleteComment(x.id)}
-                />)
+                />
+              )
             }
 
             return (

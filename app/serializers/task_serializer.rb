@@ -48,4 +48,8 @@ class TaskSerializer
   attribute :issue_available do |object|
     object.issues.count > 0
   end
+
+  attribute :issues do |object|
+    object.issues.map { |a| {id: a.id.to_s, title: a.title} }
+  end
 end

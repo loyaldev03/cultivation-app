@@ -1,8 +1,18 @@
 import React from 'react'
 import classNames from 'classnames'
 import InlineEditTextField from './InlineEditTextField'
+import 'react-tippy/dist/tippy.css';
+import {
+  Tooltip,
+} from 'react-tippy';
 
 export default class InlineEditTaskNameField extends InlineEditTextField {
+  onClickNow =(issue) =>{
+    let id = issue.id
+    let mode = 'details'
+    window.editorSidebar.open({ id, mode, width: '500px'})
+  }
+
   render() {
     const {
       indent,
@@ -10,7 +20,9 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
       hasChild,
       isCollapsed,
       onClick,
-      onCollapseClick
+      onCollapseClick,
+      issue_available,
+      issues
     } = this.props
     return (
       <div
@@ -49,6 +61,37 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
           </React.Fragment>
         ) : (
           <React.Fragment>
+            {issue_available == true && !hasChild ? (
+                <Tooltip
+                  interactive
+                  position="top"
+                  trigger="click"
+                  theme="light"
+                  html={(
+                    <div>
+                      <span>Issues {issues.length}</span>                      
+                      <ul className="pa2 list mt2 flex-auto ba br2 b--light-grey overflow-auto tl">
+                        {
+                          issues.map((i, key) => 
+                            (
+                              <li 
+                                key={key } 
+                                className="pointer br2 dim--grey pa1" 
+                                onClick={(e) => this.onClickNow(i)}>
+                                {i.title}
+                              </li>
+                            )
+                          )
+                        }
+                      </ul>
+                    </div>
+                  )}
+                >
+                  <i className="material-icons icon--small red pointer">
+                    error
+                  </i>
+                </Tooltip>
+            ) : null}
             <a
               href="#0"
               className={classNames('pa1 link', {

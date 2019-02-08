@@ -45,6 +45,7 @@ class TaskList extends React.Component {
 
   componentDidMount() {
     UserStore.loadUsers(this.props.batch.facility_id)
+    window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
     // need to find after data react-table is loaded callback
     setTimeout(() => this.mountEvents(), 1000)
   }
@@ -125,7 +126,7 @@ class TaskList extends React.Component {
   }
 
   renderTaskNameColumn = data => {
-    const { id, wbs, indent } = data.row
+    const { id, wbs, indent, issue_available, issues } = data.row
     const batchId = this.props.batch.id
     const hasChild = TaskStore.hasChildNode(wbs)
     const isCollapsed = TaskStore.isCollapsed(wbs)
@@ -133,6 +134,8 @@ class TaskList extends React.Component {
       <div className="flex flex-auto justify-between items-center h-100 hide-child">
         <InlineEditTaskNameField
           text={data.value}
+          issue_available={issue_available}
+          issues={issues}
           indent={indent}
           hasChild={hasChild}
           isCollapsed={isCollapsed}
@@ -279,6 +282,14 @@ class TaskList extends React.Component {
   columnsConfig = batchId => [
     {
       accessor: 'id',
+      show: false
+    },
+    {
+      accessor: 'issues',
+      show: false
+    },
+    {
+      accessor: 'issue_available',
       show: false
     },
     {

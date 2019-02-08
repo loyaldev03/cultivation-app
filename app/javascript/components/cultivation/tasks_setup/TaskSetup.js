@@ -7,7 +7,7 @@ import TaskStore from './stores/NewTaskStore'
 
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
-
+import IssueSidebar from '../../issues/IssueSidebar'
 @observer
 class TaskSetup extends React.Component {
   constructor(props) {
@@ -259,6 +259,14 @@ class TaskSetup extends React.Component {
         <div className="pa4 flex flex-column justify-between bg-white box--shadow">
           <TaskList batch={this.props.batch} columns={this.state.columns} />
         </div>
+        <IssueSidebar
+          batch_id={this.props.batch.id}
+          facility_id={this.props.batch.facility_id}
+          mode={this.state.mode}
+          current_user_first_name={this.props.current_user_first_name}
+          current_user_last_name={this.props.current_user_last_name}
+          current_user_photo={this.props.current_user_photo}
+        />
       </div>
     )
   }

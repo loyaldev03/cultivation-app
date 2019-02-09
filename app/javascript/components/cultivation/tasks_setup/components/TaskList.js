@@ -507,6 +507,7 @@ class TaskList extends React.Component {
     if (!TaskStore.isDataLoaded || !UserStore.isDataLoaded) {
       return <div>Loading...</div>
     }
+
     return (
       <React.Fragment>
         <SlidePanel
@@ -516,6 +517,7 @@ class TaskList extends React.Component {
             <Suspense fallback={<div />}>
               <AssignResourceForm
                 ref={form => (this.assignResouceForm = form)}
+                facilityId={this.props.batch.facility_id}
                 onClose={() =>
                   this.setState({ showAssignResourcePanel: false })
                 }

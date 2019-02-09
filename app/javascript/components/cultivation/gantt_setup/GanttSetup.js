@@ -10,19 +10,23 @@ import GanttChart from './GanttChart'
 import TaskStore from '../tasks_setup/stores/NewTaskStore'
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
-
+import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
 @observer
 class GanttSetup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       batch: props.batch,
-      tasks: props.tasks
+      tasks: props.tasks,
+      unresolvedIssueCount: 0,
     }
   }
 
   async componentDidMount() {
     await TaskStore.loadTasks(this.props.batch_id)
+    loadUnresolvedIssueCount(this.props.batch.id).then(x => {
+      this.setState({ unresolvedIssueCount: x.count })
+    })
   }
 
   render() {
@@ -48,7 +52,7 @@ class GanttSetup extends React.Component {
           total_estimated_hour={batch.total_estimated_hour}
           estimated_harvest_date={batch.estimated_harvest_date}
         />
-        <BatchTabs batch={batch} currentTab="gantChart" />
+        <BatchTabs batch={batch} currentTab="gantChart" unresolvedIssueCount={this.state.unresolvedIssueCount} />
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">

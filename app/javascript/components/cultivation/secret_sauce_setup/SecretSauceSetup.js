@@ -9,17 +9,22 @@ import SecretSauce from './components/SecretSauce'
 import { formatDate2 } from '../../utils'
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
+import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
 
 class SecretSauceSetup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      batch: props.batch
+      batch: props.batch,
+      unresolvedIssueCount: 0,
     }
   }
 
   componentDidMount() {
     loadNutrientProfile(this.props.batch.nutrient_profile)
+    loadUnresolvedIssueCount(this.props.batch.id).then(x => {
+      this.setState({ unresolvedIssueCount: x.count })
+    })
   }
 
   render() {
@@ -45,7 +50,7 @@ class SecretSauceSetup extends React.Component {
           total_estimated_hour={batch.total_estimated_hour}
           estimated_harvest_date={batch.estimated_harvest_date}
         />
-        <BatchTabs batch={batch} currentTab="secretSauce" />
+        <BatchTabs batch={batch} currentTab="secretSauce" unresolvedIssueCount={this.state.unresolvedIssueCount} />
 
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">

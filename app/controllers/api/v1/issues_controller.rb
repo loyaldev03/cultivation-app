@@ -1,4 +1,13 @@
 class Api::V1::IssuesController < Api::V1::BaseApiController
+  def unresolved_count
+    count = Issues::Issue.where(
+      status: {:$ne => 'resolved'},
+      is_archived: false,
+      cultivation_batch: params[:batch_id],
+    ).count
+    render json: {count: count}, status: 200
+  end
+
   def show
     issue = Issues::Issue.find(params[:id])
     options = {params: {current_user_id: current_user.id.to_s}}

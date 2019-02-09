@@ -7,7 +7,7 @@ import TaskStore from './stores/NewTaskStore'
 
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
-
+import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
 @observer
 class TaskSetup extends React.Component {
   constructor(props) {
@@ -25,13 +25,20 @@ class TaskSetup extends React.Component {
         'materials',
         'depend_on'
       ],
-      columnOpen: false
+      columnOpen: false,
+      unresolvedIssueCount: 0,
     }
 
     if (!TaskStore.isDataLoaded) {
       TaskStore.loadTasks(props.batch_id)
       TaskStore.facilityPhases = props.batch.cultivation_phases
     }
+  }
+
+  componentDidMount() {
+    loadUnresolvedIssueCount(this.props.batch.id).then(x => {
+      this.setState({ unresolvedIssueCount: x.count })
+    })
   }
 
   onChangeFilterColumns = value => {
@@ -92,7 +99,7 @@ class TaskSetup extends React.Component {
           estimated_harvest_date={batch.estimated_harvest_date}
         />
         <div className="flex justify-between">
-          <BatchTabs batch={batch} currentTab="taskList" />
+          <BatchTabs batch={batch} currentTab="taskList" unresolvedIssueCount={this.state.unresolvedIssueCount} />
           <Manager>
             <div className="flex mt4">
               <div className="mr2 mt2">
@@ -151,7 +158,7 @@ class TaskSetup extends React.Component {
                               onChange={handleChangeCheckbox}
                               checked={checkboxValue('name')}
                             />
-                            Name
+                            Task
                           </label>
 
                           <label className="dim f6 fw6 db pv1 gray ttc">

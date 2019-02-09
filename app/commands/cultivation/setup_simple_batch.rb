@@ -129,6 +129,7 @@ module Cultivation
         start_date: start_date,
         end_date: start_date + duration.days,
         indent: 0,
+        indelible: 'staying', # Must use "staying" for TrayPlan to work
         depend_on: batch.tasks.last.present? ? batch.tasks.last.id : nil,
       )
 

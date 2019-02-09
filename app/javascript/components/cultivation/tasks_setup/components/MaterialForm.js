@@ -18,6 +18,8 @@ export default class MaterialForm extends React.Component {
     super(props)
     this.state = {
       batch_id: this.props.batch_id,
+      facility_id: this.props.facility_id,
+      facility_strain_id: this.props.facility_strain_id,
       catalogue_id: '',
       name: '',
       quantity: '',
@@ -25,18 +27,42 @@ export default class MaterialForm extends React.Component {
       materials: [],
       items: []
     }
-    this.loadProducts(this.state.batch_id)
+    this.loadProducts(
+      this.state.batch_id,
+      this.state.facility_id,
+      this.state.facility_strain_id
+    )
   }
 
-  loadProducts = async batch_id => {
-    const url = `/api/v1/products?batch_id=${batch_id}`
-    const response = await (await fetch(url, httpGetOptions)).json()
+  loadProducts = async (batch_id, facility_id, facility_strain_id) => {
+    let url = `/api/v1/products?batch_id=${batch_id}`
+    let response = await (await fetch(url, httpGetOptions)).json()
     const products = response.data.map(x => ({
       label: x.attributes.name,
       value: x.attributes.id,
       ...x.attributes
     }))
-    this.setState({ defaultProduct: products })
+    let plant_products = []
+    if (this.props.batch_source === 'clones_purchased') {
+      url = `/api/v1/products?type=raw_materials&category=purchased_clone&facility_id=${facility_id}&facility_strain_id=${facility_strain_id}&filter=`
+      response = await (await fetch(url, httpGetOptions)).json()
+      plant_products = response.data.map(x => ({
+        label: x.attributes.name,
+        value: x.attributes.id,
+        ...x.attributes
+      }))
+    }
+    if (this.props.batch_source === 'seeds') {
+      url = `/api/v1/products?type=raw_materials&category=seeds&facility_id=${facility_id}&facility_strain_id=${facility_strain_id}&filter=`
+      response = await (await fetch(url, httpGetOptions)).json()
+      plant_products = response.data.map(x => ({
+        label: x.attributes.name,
+        value: x.attributes.id,
+        ...x.attributes
+      }))
+    }
+
+    this.setState({ defaultProduct: products, plantProduct: plant_products })
     return products
   }
 
@@ -56,16 +82,14 @@ export default class MaterialForm extends React.Component {
           .includes(this.state.product.value)
       ) {
         // compare if same id existed no need to re-insert to material array
-        console.log('Id Existed')
       } else {
-        console.log(this.state.product)
         this.setState(previousState => ({
           materials: [
             ...previousState.materials,
             {
               product_name: this.state.product.name,
               product_id: this.state.product.id,
-              category: this.state.product.catalogue.category,
+              category: this.state.product.catalogue.label,
               quantity: '',
               uoms: this.state.product.uoms
             }
@@ -86,34 +110,37 @@ export default class MaterialForm extends React.Component {
     })
   }
 
-  setSelectedItems(batch_id, task_id, items) {
+  setSelectedItems(batch_id, task, task_id, items) {
     this.setState({
       task_id: task_id,
       batch_id: batch_id,
-      materials: items
+      materials: items,
+      task: task
     })
   }
 
   handleChangeQuantity = (id, quantity) => {
     let material = this.state.materials.find(e => e.product_id === id)
     material.quantity = quantity
-    let tasks = this.state.materials.map(t => {
+    let materials = this.state.materials.map(t => {
       return t.product_id === id ? material : t
     })
+    this.setState({ materials: materials })
   }
 
   handleChangeUom = (id, uom) => {
     let material = this.state.materials.find(e => e.product_id === id)
     material.uom = uom
-    let tasks = this.state.materials.map(t => {
+    let materials = this.state.materials.map(t => {
       return t.product_id === id ? material : t
     })
+    this.setState({ materials: materials })
   }
 
   render() {
     let materials = this.state.materials
     const { onClose } = this.props
-
+    let task_plant = this.state.task && this.state.task.indelible === 'plants'
     return (
       <React.Fragment>
         <div className="flex flex-column h-100">
@@ -122,8 +149,14 @@ export default class MaterialForm extends React.Component {
             <div className="w-80">
               <Select
                 isClearable="true"
-                placeholder="Search Product ..."
-                options={this.state.defaultProduct}
+                placeholder={
+                  task_plant ? 'Search Strain ...' : 'Search Product ...'
+                }
+                options={
+                  task_plant
+                    ? this.state.plantProduct
+                    : this.state.defaultProduct
+                }
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
                 value={this.state.product}
@@ -164,8 +197,8 @@ export default class MaterialForm extends React.Component {
                           name="pin"
                           size="2"
                           style={{ height: 30 + 'px' }}
-                          class="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                          defaultValue={x.quantity}
+                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
+                          value={x.quantity}
                           onChange={e =>
                             this.handleChangeQuantity(
                               x.product_id,
@@ -176,7 +209,7 @@ export default class MaterialForm extends React.Component {
                       </td>
                       <td className="tl pv2 ph3">
                         <select
-                          defaultValue={x.uom}
+                          value={x.uom}
                           onChange={e =>
                             this.handleChangeUom(x.product_id, e.target.value)
                           }

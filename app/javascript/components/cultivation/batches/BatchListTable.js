@@ -4,12 +4,14 @@ import { ActiveBadge, formatDate2 } from '../../utils'
 
 class BatchListTable extends React.Component {
   render() {
-    const { batches } = this.props
+    const { batches, onDelete } = this.props
     return (
       <table className="ba br2 b--black-10 pv2 ph3 f6">
         <tbody>
           <tr>
-            <th className="w5 pv2 ph3 tl ttu">Batch ID</th>
+            <th className="w4 pv2 ph3 tl ttu">Batch ID</th>
+            <th className="w4 pv2 ph3 tl ttu">Strains</th>
+            <th className="w3 pv2 ph3 tr ttu">Quantity</th>
             <th className="w4 tr ph3 ttu">Start Date</th>
             <th className="w4 tr ph3 ttu">Harvest Date</th>
             <th className="w4 tr ph3 ttu">Active</th>
@@ -22,12 +24,22 @@ class BatchListTable extends React.Component {
                   {b.batch_no}
                 </a>
               </td>
+              <td className="ph3">{b.strain_name}</td>
+              <td className="ph3 tr">{b.quantity}</td>
               <td className="tr pv2 ph3">{formatDate2(b.start_date)}</td>
               <td className="tr pv2 ph3">
                 {formatDate2(b.estimated_harvest_date)}
               </td>
               <td className="tr pv2 ph3">
                 <ActiveBadge status={b.status} />
+              </td>
+              <td>
+                <i
+                  className="material-icons red pointer"
+                  onClick={() => onDelete(b.id)}
+                >
+                  delete
+                </i>
               </td>
             </tr>
           ))}

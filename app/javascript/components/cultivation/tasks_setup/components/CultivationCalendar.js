@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
 import BatchSetupStore from '../../batches_setup/BatchSetupStore'
+import ErrorList from '../components/ErrorList'
 import { toast } from '../../../utils/toast'
 import {
   dateToMonthOption,
@@ -17,6 +18,7 @@ const Calendar = lazy(() => import('react-calendar/dist/entry.nostyle'))
 class CultivationCalendar extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {}
     BatchSetupStore.searchMonth = dateToMonthOption(this.props.batchStartDate)
     if (!BatchSetupStore.isReady) {
       this.onSearch(BatchSetupStore.searchMonth)
@@ -26,12 +28,13 @@ class CultivationCalendar extends React.Component {
   onSearch = searchMonth => {
     BatchSetupStore.clearSearch()
     BatchSetupStore.searchMonth = searchMonth
-    const { totalDuration, facilityId, phaseDuration } = this.props
+    const { totalDuration, facilityId, phaseDuration, batchId } = this.props
     if (this.props.totalDuration > 0) {
       const searchParams = {
         facility_id: facilityId,
         search_month: searchMonth,
-        total_duration: totalDuration
+        total_duration: totalDuration,
+        exclude_batch_id: batchId
       }
       BatchSetupStore.search(searchParams, phaseDuration)
     }
@@ -48,21 +51,29 @@ class CultivationCalendar extends React.Component {
     )
     if (response.errors) {
       const err1 = Object.keys(response.errors)[0]
-      toast(response.errors[err1], 'error')
+      this.setState({ errors: response.errors[err1] })
     } else {
       toast('Batch saved successfully', 'success')
       setTimeout(() => window.location.reload(), 1000)
     }
-    this.props.onSave()
+    if (this.props.onSave) {
+      this.props.onSave()
+    }
+  }
+
+  onClose = () => {
+    this.setState({ errors: [] })
+    this.props.onClose()
   }
 
   render() {
-    const { onClose, totalDuration, phaseDuration } = this.props
+    const { totalDuration, phaseDuration } = this.props
     const { searchMonth, isLoading } = BatchSetupStore
     return (
       <div className="flex flex-column h-100">
-        <SlidePanelHeader onClose={onClose} title="Batch's Start Date" />
+        <SlidePanelHeader onClose={this.onClose} title="Batch's Start Date" />
         <div className="flex-auto pa2">
+          <ErrorList errors={this.state.errors} />
           <p className="ma1 pa2 tc f4">Select a Start Date for the batch</p>
           <p className="mt1 mb1 h1 tc">
             {isLoading && <span>Searching...</span>}

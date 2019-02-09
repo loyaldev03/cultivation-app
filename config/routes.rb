@@ -198,6 +198,7 @@ Rails.application.routes.draw do
         post 'setup_simple_batch', on: :collection
         post 'update_locations'
         post 'update_batch'
+        post 'destroy', on: :collection
 
         resources :tasks, only: [:index, :update, :create, :destroy] do
           member do

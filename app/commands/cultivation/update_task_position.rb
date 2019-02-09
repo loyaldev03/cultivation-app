@@ -51,7 +51,7 @@ module Cultivation
     def move_children(children, parent_node)
       ref_node = parent_node
       children.each do |t|
-        t = Cultivation::Task.find(t.id)
+        t = Cultivation::Task.includes(:batch).find(t.id)
         move_node(t, ref_node)
         ref_node = t
       end
@@ -66,7 +66,7 @@ module Cultivation
     end
 
     def task_to_move
-      @task_to_move ||= Cultivation::Task.includes(:batch).find_by(id: @task_id)
+      @task_to_move ||= Cultivation::Task.includes(:batch, :users).find_by(id: @task_id)
     end
 
     def get_task(batch_tasks, task_id)

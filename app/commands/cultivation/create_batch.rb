@@ -44,6 +44,7 @@ module Cultivation
 
     def create_new_batch(args)
       batch = Cultivation::Batch.new
+      batch.name = args[:name]
       batch.facility_id = args[:facility_id]
       batch.batch_source = args[:batch_source]
       batch.facility_strain_id = args[:facility_strain_id]
@@ -52,7 +53,6 @@ module Cultivation
       batch.grow_method = args[:grow_method]
       batch.quantity = args[:quantity]
       batch.batch_no = get_next_batch_no
-      batch.name = batch.batch_no
       batch.current_growth_stage = Constants::CONST_CLONE
       batch.save!
       batch

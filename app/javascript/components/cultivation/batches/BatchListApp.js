@@ -12,11 +12,13 @@ class BatchListApp extends React.Component {
   state = {
     tabIndex: 0
   }
-  // onSelectTab = () => {
-  //   console.log('Clicked Tab')
-  // }
   componentDidMount() {
     store.loadBatches()
+  }
+  onDelete = batchId => {
+    if (window.confirm('Are you sure you want to delete this batch?')) {
+      store.deleteBatch(batchId)
+    }
   }
   render() {
     return (
@@ -29,20 +31,13 @@ class BatchListApp extends React.Component {
             {store.isLoading ? (
               <div className="grey">Loading...</div>
             ) : (
-              store.isDataLoaded && <BatchListTable batches={store.batches} />
+              store.isDataLoaded && (
+                <BatchListTable
+                  batches={store.batches}
+                  onDelete={this.onDelete}
+                />
+              )
             )}
-            {/* <Tabs
-              className="react-tabs--primary"
-              selectedIndex={this.state.tabIndex}
-              onSelect={this.onSelectTab}
-            >
-              <TabList>
-                <Tab key="activeBatches">Active</Tab>
-              </TabList>
-              <TabPanel key="activeBatches" className="pb4">
-                
-              </TabPanel>
-            </Tabs> */}
           </div>
         </div>
       </React.Fragment>

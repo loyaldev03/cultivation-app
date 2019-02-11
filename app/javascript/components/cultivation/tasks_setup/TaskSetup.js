@@ -34,7 +34,7 @@ class TaskSetup extends React.Component {
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
   }
 

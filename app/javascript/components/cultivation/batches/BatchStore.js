@@ -1,5 +1,5 @@
-import { observable, action, runInAction, toJS } from 'mobx'
-import { httpGetOptions, httpPostOptions } from '../../utils'
+import { observable, action, runInAction } from 'mobx'
+import { httpGetOptions, httpPostOptions, toast } from '../../utils'
 
 class BatchStore {
   @observable isLoading = false
@@ -41,6 +41,22 @@ class BatchStore {
           this.batches = this.batches.filter(x => x.id !== response.data)
         }
       })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  @action
+  async updateBatchName(name, batchId) {
+    const url = `/api/v1/batches/${batchId}/update_batch_info`
+    try {
+      const payload = { name: name }
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      if (response.data) {
+        toast('Batch Info Updated', 'success')
+      } else {
+        console.error(response.errors)
+      }
     } catch (err) {
       console.error(err)
     }

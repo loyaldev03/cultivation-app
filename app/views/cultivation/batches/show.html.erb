@@ -13,5 +13,11 @@
     }
   %>
 <% else %>
-  <%= react_component 'cultivation/tasks_setup/TaskSetup', { batch_id: @batch.id.to_s, batch: @batch_attributes}, { class: "flex flex-column h-100" } %>
+  <%= react_component 'cultivation/tasks_setup/TaskSetup', 
+    { batch_id: @batch.id.to_s, 
+      batch: @batch_attributes, 
+      current_user_first_name: current_user.first_name,
+      current_user_last_name: current_user.last_name,
+      current_user_photo: current_user.photo&.url}, 
+    { class: "flex flex-column h-100" } %>
 <% end %>

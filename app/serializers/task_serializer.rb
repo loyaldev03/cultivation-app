@@ -44,4 +44,8 @@ class TaskSerializer
   attribute :user_ids do |object|
     object.user_ids.map(&:to_s)
   end
+
+  attribute :issues do |object|
+    object.issues.map { |a| {id: a.id.to_s, title: a.title} }
+  end
 end

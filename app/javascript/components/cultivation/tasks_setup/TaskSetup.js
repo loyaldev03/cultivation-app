@@ -34,6 +34,10 @@ class TaskSetup extends React.Component {
     }
   }
 
+  componentDidMount(){
+    window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
+  }
+
   onChangeFilterColumns = value => {
     this.setState({ columns: value })
   }

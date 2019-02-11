@@ -4,11 +4,7 @@ import InlineEditTextField from '../tasks_setup/components/InlineEditTextField'
 
 export default class InlineEditBatchNameField extends InlineEditTextField {
   render() {
-    const {
-      indent,
-      text,
-      onClick,
-    } = this.props
+    const { indent, text, onClick } = this.props
     return (
       <div
         className={`flex flex-auto items-center indent--${indent}`}
@@ -19,7 +15,7 @@ export default class InlineEditBatchNameField extends InlineEditTextField {
             <input
               autoFocus
               ref={input => (this.textInput = input)}
-              className='flex-auto b--grey link grey'
+              className="flex-auto b--grey link grey"
               onKeyPress={this.handleKeyPress}
               type="text"
               defaultValue={text}
@@ -33,11 +29,7 @@ export default class InlineEditBatchNameField extends InlineEditTextField {
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <a
-              href="#0"
-              className='grey link'
-              onClick={onClick}
-            >
+            <a href="#0" className="grey link" onClick={onClick}>
               {text}
             </a>
             <i

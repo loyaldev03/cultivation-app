@@ -7,10 +7,7 @@ export default class InlineEditBatchNameField extends InlineEditTextField {
     const {
       indent,
       text,
-      hasChild,
-      isCollapsed,
       onClick,
-      onCollapseClick
     } = this.props
     return (
       <div
@@ -22,10 +19,7 @@ export default class InlineEditBatchNameField extends InlineEditTextField {
             <input
               autoFocus
               ref={input => (this.textInput = input)}
-              className={classNames('flex-auto b--grey link', {
-                orange: hasChild,
-                grey: !hasChild
-              })}
+              className='flex-auto b--grey link grey'
               onKeyPress={this.handleKeyPress}
               type="text"
               defaultValue={text}
@@ -39,19 +33,9 @@ export default class InlineEditBatchNameField extends InlineEditTextField {
           </React.Fragment>
         ) : (
           <React.Fragment>
-            {this.props.issue_available == true && !hasChild ? (
-              <a href="http://localhost:3000/cultivation/batches/5c4fc4b5fb8387afc21f969c/issues">
-                <i className="material-icons icon--small red" value="">
-                  error
-                </i>
-              </a>
-            ) : null}
             <a
               href="#0"
-              className={classNames('link', {
-                orange: hasChild,
-                grey: !hasChild
-              })}
+              className='grey link'
               onClick={onClick}
             >
               {text}

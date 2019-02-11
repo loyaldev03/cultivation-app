@@ -45,10 +45,6 @@ class TaskSerializer
     object.user_ids.map(&:to_s)
   end
 
-  attribute :issue_available do |object|
-    object.issues.count > 0
-  end
-
   attribute :issues do |object|
     object.issues.map { |a| {id: a.id.to_s, title: a.title} }
   end

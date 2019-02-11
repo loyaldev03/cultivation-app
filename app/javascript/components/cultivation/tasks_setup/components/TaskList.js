@@ -126,7 +126,7 @@ class TaskList extends React.Component {
   }
 
   renderTaskNameColumn = data => {
-    const { id, wbs, indent, issue_available, issues } = data.row
+    const { id, wbs, indent, issues } = data.row
     const batchId = this.props.batch.id
     const hasChild = TaskStore.hasChildNode(wbs)
     const isCollapsed = TaskStore.isCollapsed(wbs)
@@ -134,7 +134,6 @@ class TaskList extends React.Component {
       <div className="flex flex-auto justify-between items-center h-100 hide-child">
         <InlineEditTaskNameField
           text={data.value}
-          issue_available={issue_available}
           issues={issues}
           indent={indent}
           hasChild={hasChild}
@@ -286,10 +285,6 @@ class TaskList extends React.Component {
     },
     {
       accessor: 'issues',
-      show: false
-    },
-    {
-      accessor: 'issue_available',
       show: false
     },
     {

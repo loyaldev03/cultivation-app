@@ -19,7 +19,6 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
       isCollapsed,
       onClick,
       onCollapseClick,
-      issue_available,
       issues
     } = this.props
     return (
@@ -59,7 +58,7 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
           </React.Fragment>
         ) : (
           <React.Fragment>
-            {issue_available == true ? (
+            {issues.length > 0 ? (
               <Tooltip
                 interactive
                 position="top"

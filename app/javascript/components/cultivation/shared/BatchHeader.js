@@ -88,13 +88,7 @@ class BatchHeader extends React.Component {
                           {/* <label>{name}</label> */}
                           <InlineEditBatchNameField
                             text={name}
-                            // issue_available={issue_available}
                             indent={0}
-                            // hasChild={hasChild}
-                            // isCollapsed={isCollapsed}
-                            // onCollapseClick={() => TaskStore.toggleCollapseNode(wbs)}
-                            // onClick={e => this.handleShowSidebar(id)}
-                            // onHighlight={() => this.setState({ taskSelected: id })}
                             onDoneClick={value => {
                               this.updateBatchName(value, id)
                             }}

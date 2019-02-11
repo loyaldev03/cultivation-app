@@ -11,9 +11,9 @@ const resolveActive = (tab, currentTab) => {
   return inactiveTabs
 }
 
-const batchTabs = ({ batch, currentTab = '' }) => {
+const batchTabs = ({ batch, currentTab = '', unresolvedIssueCount = 0 }) => {
   return (
-    <div className="flex mt4">
+    <div className="flex mt4 items-center">
       <a
         href={'/cultivation/batches/' + batch.id}
         className={resolveActive('taskList', currentTab)}
@@ -39,6 +39,11 @@ const batchTabs = ({ batch, currentTab = '' }) => {
         className={resolveActive('issues', currentTab)}
       >
         Issues
+        {unresolvedIssueCount > 0 && (
+          <span className="b--orange ba orange f7 fw4 ph1 br2 ml1">
+            {unresolvedIssueCount}
+          </span>
+        )}
       </a>
 
       <a

@@ -15,11 +15,14 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
 
 const CommentMenu = ({
   isOpen,
+  isMe,
   id,
   handleEllipsisClick,
   handleMouseLeave,
   handleResolve,
-  handleReply
+  handleReply,
+  handleEdit,
+  handleDelete
 }) => {
   return (
     <Manager>
@@ -54,8 +57,16 @@ const CommentMenu = ({
                   text="Resolve"
                   onClick={handleResolve}
                 />
-                <MenuButton icon="edit" text="Edit" />
-                <MenuButton icon="delete" text="Delete" />
+                {isMe && (
+                  <MenuButton icon="edit" text="Edit" onClick={handleEdit} />
+                )}
+                {isMe && (
+                  <MenuButton
+                    icon="delete"
+                    text="Delete"
+                    onClick={handleDelete}
+                  />
+                )}
               </div>
               <div ref={arrowProps.ref} style={arrowProps.style} />
             </div>

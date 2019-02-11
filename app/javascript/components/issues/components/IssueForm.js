@@ -304,6 +304,7 @@ class IssueForm extends React.Component {
       delete_attachments,
       cultivation_batch_id: this.props.batchId,
       id: this.props.issueId,
+      issue_type: 'planning',
       isValid
     }
   }
@@ -456,6 +457,10 @@ class IssueForm extends React.Component {
             <label className="f6 fw6 db mb1 gray ttc">Reported at</label>
             {this.renderReportedAt()}
           </div>
+        </div>
+
+        <div className="ph3 mb3 flex">
+          <i>add labels field here</i>
         </div>
 
         <div className="ph3 mb3 flex">

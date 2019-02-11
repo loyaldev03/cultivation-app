@@ -25,7 +25,7 @@
           estimated_harvest_date: @batch_attributes[:estimated_harvest_date]
         }%>
 
-        <%= react_component 'cultivation/shared/BatchTabs', { batch_id: @batch.id.to_s, batch: @batch_attributes, currentTab: "materials"} %>
+        <%= react_component 'cultivation/shared/BatchTabs', { batch_id: @batch.id.to_s, batch: @batch_attributes, currentTab: "materials", unresolvedIssueCount: @unresolvedIssueCount } %>
         
         <div class="flex flex-column justify-between bg-white box--shadow">
           <div class="pa4">

@@ -1,9 +1,19 @@
 class Api::V1::BatchesController < Api::V1::BaseApiController
   def index
     batches = Cultivation::Batch.all.order(c_at: :desc)
+    phases = Cultivation::Task.where(
+      batch_id: {:$in => batches.pluck(:id)},
+      indent: 0,
+      phase: {:$in => [
+        Constants::CONST_CLONE, Constants::CONST_VEG, Constants::CONST_VEG1, Constants::CONST_VEG2,
+        Constants::CONST_FLOWER, Constants::CONST_DRY, Constants::CONST_CURE,
+      ]},
+    ).map { |t| ["#{t.batch_id.to_s}/#{t.phase}", t] }.to_h
+
     exclude_tasks = params[:exclude_tasks] == 'true' || false
-    render json: BatchSerializer.new(batches,
-                                     params: {exclude_tasks: exclude_tasks}).serialized_json
+    options = {params: {exclude_tasks: exclude_tasks, phases: phases}}
+
+    render json: BatchSerializer.new(batches, options).serialized_json
   end
 
   def list_infos

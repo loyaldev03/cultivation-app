@@ -1,16 +1,11 @@
 import store from '../store/CultivationBatchStore'
+import { httpGetOptions } from '../../../utils'
 
 export default function loadCultivationBatches() {
   store.isLoading = true
   let apiUrl = '/api/v1/batches'
 
-  fetch(apiUrl, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
+  fetch(apiUrl, httpGetOptions)
     .then(response => {
       return response.json().then(data => {
         return {

@@ -5,10 +5,11 @@ import {
   moneyFormatter,
   decimalFormatter,
   sanitizeText,
-  httpPostOptions,
-  toast
 } from '../../utils'
+
 import InlineEditBatchNameField from './InlineEditBatchNameField'
+import BatchStore from '../batches/BatchStore'
+
 class BatchHeader extends React.Component {
   constructor(props) {
     super(props)
@@ -17,22 +18,12 @@ class BatchHeader extends React.Component {
     }
   }
 
-  updateBatchName = async (name, batchId) => {
-    this.setState({ name: name })
-
-    const url = `/api/v1/batches/${batchId}/update_batch_info`
-    try {
-      const payload = { name: name }
-      const response = await (await fetch(url, httpPostOptions(payload))).json()
-      if (response.data) {
-        toast('Batch Info Updated', 'success')
-      } else {
-        console.error(response.errors)
-      }
-    } catch (error) {
-      console.error(error)
-    } finally {
-    }
+  updateBatchName = (name, id) => {
+    this.setState({ name: name },
+      () => {
+        BatchStore.updateBatchName(name, id)
+      } 
+    )
   }
 
   render() {

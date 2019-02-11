@@ -54,6 +54,12 @@ module Cultivation
       #validate raw material
       result = ValidateRawMaterial.call(current_user: @current_user, batch_id: @batch_id)
       errors.add(:batch_id, result.errors['strain']) unless result.success?
+
+      #validate resource
+      result = ValidateResource.call(current_user: @current_user, batch_id: @batch_id)
+      result.errors['resource'].each do |a|
+        errors.add(:batch_id, a) unless result.success?
+      end
     end
   end
 end

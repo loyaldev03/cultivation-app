@@ -76,6 +76,7 @@ class IssueSidebar extends React.Component {
           onToggleMode={this.onToggleMode}
           issueId={this.state.issueId}
           batchId={batch_id}
+          facilityId={facility_id}
           current_user_first_name={current_user_first_name}
           current_user_last_name={current_user_last_name}
           current_user_photo={current_user_photo}
@@ -106,6 +107,7 @@ class IssueSidebar extends React.Component {
             reporterPhotoUrl={issue.reported_by.photo}
             issueNo={issue.issue_no}
             severity={issue.severity}
+            status={issue.status}
             createdAt={this.state.mode === 'details' ? issue.created_at : ''}
             onClose={this.onClose}
           />

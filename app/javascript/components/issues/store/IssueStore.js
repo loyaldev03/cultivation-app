@@ -22,6 +22,11 @@ class IssueStore {
     }
   }
 
+  @action
+  delete(issue) {
+    this.issues.replace(this.issues.filter(x => x.id !== issue.id))
+  }
+
   @computed
   get bindable() {
     return this.issues.slice()

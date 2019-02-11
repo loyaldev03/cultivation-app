@@ -3,7 +3,7 @@ class GenerateTasksFromTemplateJob < ApplicationJob
 
   def perform(batch_id)
     batch = Cultivation::Batch.find_by(id: batch_id)
-    new_tasks = generate_tasks(batch, get_tasks_from_template)
+    new_tasks = generate_tasks(batch, get_tasks_from_template(batch))
 
     # Insert task to database
     Cultivation::Task.create(new_tasks)
@@ -15,8 +15,8 @@ class GenerateTasksFromTemplateJob < ApplicationJob
 
   private
 
-  def get_tasks_from_template
-    template_path = 'lib/cultivation_templates/template3.json'
+  def get_tasks_from_template(batch)
+    template_path = "lib/cultivation_templates/#{batch.batch_source}.json"
     JSON.parse(File.read(template_path), symbolize_names: true)
   end
 

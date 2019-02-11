@@ -1,9 +1,9 @@
 import 'babel-polyfill'
 import React from 'react'
 import Select from 'react-select'
-import { GroupBox, httpPostOptions, selectStyles } from './../../utils'
+import { httpPostOptions, selectStyles } from './../../utils'
 import { toast } from './../../utils/toast'
-import BatchSetupEditor from './BatchSetupEditor'
+import { TextInput } from '../../utils/FormHelpers'
 
 const ValidationMessage = ({ enable, show, text }) => {
   if (enable && show) {
@@ -44,7 +44,8 @@ class BatchSetupApp extends React.Component {
         facility_id: this.state.facilityId,
         batch_source: this.state.batchSource,
         facility_strain_id: this.state.batchStrain,
-        grow_method: this.state.batchGrowMethod
+        grow_method: this.state.batchGrowMethod,
+        name: this.state.name
       })
     )
       .then(response => response.json())
@@ -92,7 +93,8 @@ class BatchSetupApp extends React.Component {
       batchSource,
       batchGrowMethod,
       errors,
-      isLoading
+      isLoading,
+      name
     } = this.state
 
     const hasVeg2phase = phases.includes('veg2')
@@ -132,6 +134,20 @@ class BatchSetupApp extends React.Component {
               </div>
             </div>
           )}
+          <div className="fl w-100 mt1 mb3">
+            <label className="subtitle-2 grey fl pv2">Batch Name </label>
+            <div className="fr w-100 measure-narrow">
+              <TextInput
+                value={name}
+                onChange={e => this.handleChange('name', e.target.value)}
+              />
+              <ValidationMessage
+                text="Input Name"
+                enable={showValidation}
+                show={!name}
+              />
+            </div>
+          </div>
           <div className="fl w-100 mt1 mb3">
             <label className="subtitle-2 grey fl pv2">Strains </label>
             <div className="fr w-100 measure-narrow">

@@ -29,7 +29,9 @@ class CurrentIssueStore {
         first_name: '',
         last_name: '',
         photo: ''
-      }
+      },
+      reason: '',
+      resolution_notes: ''
     }
   }
 
@@ -39,8 +41,8 @@ class CurrentIssueStore {
   }
 
   setComments(comments) {
-    // const newComments = this.dummyComments()  // should be from issue.comments
-    // this.comments.replace([...newComments, ...comments])
+    // const dummyComments = this.dummyComments()  // should be from issue.comments
+    // this.comments.replace([...dummyComments, ...comments])
     this.comments.replace(comments)
   }
 

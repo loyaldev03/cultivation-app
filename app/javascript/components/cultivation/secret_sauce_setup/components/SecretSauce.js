@@ -1,10 +1,8 @@
 import React from 'react'
-import { render } from 'react-dom'
-import { observable } from 'mobx'
 import { observer, Provider } from 'mobx-react'
 import update from 'immutability-helper'
 
-import { TextInput, FieldError, NumericInput } from '../../../utils/FormHelpers'
+import { TextInput } from '../../../utils/FormHelpers'
 import NutrientProfileStore from '../store/NutrientProfileStore'
 import SaveNutrientProfile from '../actions/saveNutrientProfile'
 

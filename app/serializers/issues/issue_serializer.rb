@@ -61,14 +61,17 @@ module Issues
       object.resolved_at.iso8601 if object.resolved_at.present?
     end
 
-    attribute :resolved_by do |object|
+    attribute :resolved_by do |object, params|
+      current_user_id = params[:current_user_id]
+
       if object.resolved_by.present?
         {
           id: object.resolved_by_id.to_s,
           display_name: object.resolved_by.display_name,
-          photo: object.resolved_by.photo.url,
+          photo: object.resolved_by.photo&.url,
           first_name: object.resolved_by.first_name,
           last_name: object.resolved_by.last_name,
+          is_me: object.resolved_by_id.to_s == current_user_id,
         }
       else
         nil
@@ -88,6 +91,21 @@ module Issues
           mime_type: attachment.file_mime_type,
           data: attachment.file_data,
           filename: attachment.file_filename,
+        }
+      end
+    end
+
+    attribute :followers do |object, params|
+      current_user_id = params[:current_user_id]
+      users = User.in(id: object.followers)
+      users.map do |user|
+        {
+          id: user.id.to_s,
+          display_name: user.display_name,
+          photo: user.photo&.url,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          is_me: user.id.to_s == current_user_id,
         }
       end
     end

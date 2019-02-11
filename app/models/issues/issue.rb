@@ -11,9 +11,11 @@ module Issues
     field :issue_type, type: String     # { planning, daily_task, task_from_issue }
     field :location_id, type: BSON::ObjectId
     field :location_type, type: String  # full ruby class name
+    field :followers, type: Array, default: []
 
     embeds_many :attachments, class_name: 'Issues::Attachment'
     embeds_many :comments, class_name: 'Issues::Comment'
+
     belongs_to :task, class_name: 'Cultivation::Task', optional: true
     belongs_to :cultivation_batch, class_name: 'Cultivation::Batch'
     belongs_to :reported_by, class_name: 'User'

@@ -1,15 +1,7 @@
 class Api::V1::BatchesController < Api::V1::BaseApiController
   def index
     batches = Cultivation::Batch.all.order(c_at: :desc)
-    phases = Cultivation::Task.where(
-      batch_id: {:$in => batches.pluck(:id)},
-      indent: 0,
-      phase: {:$in => [
-        Constants::CONST_CLONE, Constants::CONST_VEG, Constants::CONST_VEG1, Constants::CONST_VEG2,
-        Constants::CONST_FLOWER, Constants::CONST_DRY, Constants::CONST_CURE,
-      ]},
-    ).map { |t| ["#{t.batch_id.to_s}/#{t.phase}", t] }.to_h
-
+    phases = extract_phases(batches)
     exclude_tasks = params[:exclude_tasks] == 'true' || false
     options = {params: {exclude_tasks: exclude_tasks, phases: phases}}
 
@@ -80,7 +72,9 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   def setup_simple_batch
     command = Cultivation::SetupSimpleBatch.call(current_user, batch_params)
     if command.success?
-      render json: BatchSerializer.new(command.result).serialized_json
+      phases = extract_phases(command.result)
+      options = {params: {phases: phases, exclude_tasks: true}}
+      render json: BatchSerializer.new(command.result, options).serialized_json
     else
       render json: command_errors(batch_params, command), status: 422
     end
@@ -124,6 +118,19 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   private
+
+  def extract_phases(batches)
+    batch_array = batches.to_a
+    phases = Cultivation::Task.where(
+      batch_id: {:$in => batch_array.pluck(:id)},
+      indent: 0,
+      phase: {:$in => [
+        Constants::CONST_CLONE, Constants::CONST_VEG, Constants::CONST_VEG1, Constants::CONST_VEG2,
+        Constants::CONST_FLOWER, Constants::CONST_DRY, Constants::CONST_CURE,
+      ]},
+    ).map { |task| ["#{task.batch_id.to_s}/#{task.phase}", task] }.to_h
+    phases
+  end
 
   def batch_params
     params[:batch].to_unsafe_h

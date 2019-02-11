@@ -15,6 +15,7 @@ module Cultivation
       :veg2_duration,
       :flower_duration,
       :dry_duration,
+      :cure_duration,
       :current_growth_stage
 
     def initialize(user, args)
@@ -33,6 +34,7 @@ module Cultivation
       @veg2_duration = args[:veg2_duration].to_i
       @flower_duration = args[:flower_duration].to_i
       @dry_duration = args[:dry_duration].to_i
+      @cure_duration = args[:cure_duration].to_i
       @current_growth_stage = args[:current_growth_stage]
     end
 
@@ -115,6 +117,7 @@ module Cultivation
       flower_start_date = [veg_end_date, veg1_end_date, veg2_end_date].compact.max
       flower_end_date = add_task(batch, Constants::CONST_FLOWER, flower_start_date, flower_duration)
       dry_end_date = add_task(batch, Constants::CONST_DRY, flower_end_date, dry_duration)
+      cure_end_date = add_task(batch, Constants::CONST_CURE, dry_end_date, cure_duration)
     end
 
     def add_task(batch, phase, start_date, duration)

@@ -4,7 +4,7 @@ import {
   ActiveBadge,
   moneyFormatter,
   decimalFormatter,
-  sanitizeText,
+  sanitizeText
 } from '../../utils'
 
 import InlineEditBatchNameField from './InlineEditBatchNameField'
@@ -19,11 +19,9 @@ class BatchHeader extends React.Component {
   }
 
   updateBatchName = (name, id) => {
-    this.setState({ name: name },
-      () => {
-        BatchStore.updateBatchName(name, id)
-      } 
-    )
+    this.setState({ name: name }, () => {
+      BatchStore.updateBatchName(name, id)
+    })
   }
 
   render() {

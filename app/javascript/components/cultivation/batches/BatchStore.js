@@ -61,7 +61,6 @@ class BatchStore {
       console.error(err)
     }
   }
-
 }
 
 const batchStore = new BatchStore()

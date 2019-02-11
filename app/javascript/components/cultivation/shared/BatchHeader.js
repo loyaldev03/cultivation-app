@@ -85,7 +85,6 @@ class BatchHeader extends React.Component {
                       </div>
                       <div className="w-40">
                         <div className="">
-                          {/* <label>{name}</label> */}
                           <InlineEditBatchNameField
                             text={name}
                             indent={0}

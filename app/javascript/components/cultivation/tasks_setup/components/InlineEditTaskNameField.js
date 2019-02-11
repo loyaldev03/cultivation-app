@@ -59,7 +59,7 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
           </React.Fragment>
         ) : (
           <React.Fragment>
-            {issue_available == true && !hasChild ? (
+            {issue_available == true ? (
               <Tooltip
                 interactive
                 position="top"

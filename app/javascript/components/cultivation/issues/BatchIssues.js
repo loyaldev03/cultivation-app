@@ -123,16 +123,13 @@ class BatchIssues extends React.Component {
     super(props)
     this.state = {
       batch: props.batch,
-      unresolvedIssueCount: 0,
+      unresolvedIssueCount: 0
     }
   }
 
   componentDidMount() {
     window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
     loadBatchIssues(this.props.batch.id)
-    loadUnresolvedIssueCount(this.props.batch.id).then(x => {
-      this.setState({ unresolvedIssueCount: x.count })
-    })
   }
 
   renderContent() {
@@ -192,7 +189,11 @@ class BatchIssues extends React.Component {
           total_estimated_hour={batch.total_estimated_hour}
           estimated_harvest_date={batch.estimated_harvest_date}
         />
-        <BatchTabs batch={batch} currentTab="issues" unresolvedIssueCount={issueStore.unresolvedCount} />
+        <BatchTabs
+          batch={batch}
+          currentTab="issues"
+          unresolvedIssueCount={issueStore.unresolvedCount}
+        />
 
         {this.renderContent()}
 

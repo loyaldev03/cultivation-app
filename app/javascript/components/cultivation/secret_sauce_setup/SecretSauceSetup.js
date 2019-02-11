@@ -16,7 +16,7 @@ class SecretSauceSetup extends React.Component {
     super(props)
     this.state = {
       batch: props.batch,
-      unresolvedIssueCount: 0,
+      unresolvedIssueCount: 0
     }
   }
 
@@ -50,7 +50,11 @@ class SecretSauceSetup extends React.Component {
           total_estimated_hour={batch.total_estimated_hour}
           estimated_harvest_date={batch.estimated_harvest_date}
         />
-        <BatchTabs batch={batch} currentTab="secretSauce" unresolvedIssueCount={this.state.unresolvedIssueCount} />
+        <BatchTabs
+          batch={batch}
+          currentTab="secretSauce"
+          unresolvedIssueCount={this.state.unresolvedIssueCount}
+        />
 
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">

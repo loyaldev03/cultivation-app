@@ -34,7 +34,9 @@ class IssueStore {
 
   @computed
   get unresolvedCount() {
-    return this.issues.filter(x => (x.attributes.status !== 'resolved' && !x.attributes.is_archived)).length
+    return this.issues.filter(
+      x => x.attributes.status !== 'resolved' && !x.attributes.is_archived
+    ).length
   }
 }
 

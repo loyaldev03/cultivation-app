@@ -13,7 +13,7 @@ class ResourceSetup extends React.Component {
     super(props)
     this.state = {
       batch: props.batch,
-      unresolvedIssueCount: 0,
+      unresolvedIssueCount: 0
     }
   }
 
@@ -46,7 +46,11 @@ class ResourceSetup extends React.Component {
           total_estimated_hour={batch.total_estimated_hour}
           estimated_harvest_date={batch.estimated_harvest_date}
         />
-        <BatchTabs batch={batch} currentTab="resources" unresolvedIssueCount={this.state.unresolvedIssueCount} />
+        <BatchTabs
+          batch={batch}
+          currentTab="resources"
+          unresolvedIssueCount={this.state.unresolvedIssueCount}
+        />
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
             <div className="fl w-100 flex flex-column">

@@ -26,7 +26,7 @@ class TaskSetup extends React.Component {
         'depend_on'
       ],
       columnOpen: false,
-      unresolvedIssueCount: 0,
+      unresolvedIssueCount: 0
     }
 
     if (!TaskStore.isDataLoaded) {
@@ -99,7 +99,11 @@ class TaskSetup extends React.Component {
           estimated_harvest_date={batch.estimated_harvest_date}
         />
         <div className="flex justify-between">
-          <BatchTabs batch={batch} currentTab="taskList" unresolvedIssueCount={this.state.unresolvedIssueCount} />
+          <BatchTabs
+            batch={batch}
+            currentTab="taskList"
+            unresolvedIssueCount={this.state.unresolvedIssueCount}
+          />
           <Manager>
             <div className="flex mt4">
               <div className="mr2 mt2">

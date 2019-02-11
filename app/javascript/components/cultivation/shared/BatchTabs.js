@@ -39,7 +39,11 @@ const batchTabs = ({ batch, currentTab = '', unresolvedIssueCount = 0 }) => {
         className={resolveActive('issues', currentTab)}
       >
         Issues
-        { unresolvedIssueCount > 0 && <span className="b--orange ba orange f7 fw4 ph1 br2 ml1">{unresolvedIssueCount}</span> }
+        {unresolvedIssueCount > 0 && (
+          <span className="b--orange ba orange f7 fw4 ph1 br2 ml1">
+            {unresolvedIssueCount}
+          </span>
+        )}
       </a>
 
       <a

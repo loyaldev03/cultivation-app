@@ -40,15 +40,40 @@ class CurrentIssueStore {
     set(this.issue, issue)
   }
 
+  @action
   setComments(comments) {
     // const dummyComments = this.dummyComments()  // should be from issue.comments
     // this.comments.replace([...dummyComments, ...comments])
-    this.comments.replace(comments)
+    const newComments = comments.map(x => ({ ...x, editing: false }))
+    this.comments.replace(newComments)
   }
 
   @action
   addComment(comment) {
-    const newComments = [...this.comments.slice(), comment]
+    const newComments = [
+      ...this.comments.slice(),
+      { ...comment, editing: false }
+    ]
+    this.comments.replace(newComments)
+  }
+
+  @action
+  updateComment(comment_id, newAttributes) {
+    const comments = this.comments.slice()
+    let index = comments.findIndex(x => x.id === comment_id)
+    console.log(index)
+    if (index >= 0) {
+      const toUpdate = comments[index]
+      comments[index] = { ...toUpdate, ...newAttributes }
+      this.comments.replace(comments)
+    }
+  }
+
+  @action
+  deleteComment(comment_id) {
+    console.log(comment_id)
+    console.log(this.comments.slice().map(x => x.id))
+    const newComments = this.comments.slice().filter(x => x.id !== comment_id)
     this.comments.replace(newComments)
   }
 

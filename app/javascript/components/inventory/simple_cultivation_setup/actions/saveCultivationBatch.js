@@ -1,14 +1,8 @@
 import store from '../store/CultivationBatchStore'
+import { httpPostOptions } from '../../../utils'
 
 export default function saveCultivationBatch(payload) {
-  return fetch('/api/v1/batches/setup_simple_batch', {
-    method: 'POST',
-    credentials: 'include',
-    body: JSON.stringify(payload),
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
+  return fetch('/api/v1/batches/setup_simple_batch', httpPostOptions(payload))
     .then(response => {
       return response.json().then(data => {
         return { status: response.status, data }

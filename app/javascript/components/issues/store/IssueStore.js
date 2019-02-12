@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, toJS } from 'mobx'
 
 class IssueStore {
   issues = observable([])
@@ -30,6 +30,13 @@ class IssueStore {
   @computed
   get bindable() {
     return this.issues.slice()
+  }
+
+  @computed
+  get unresolvedCount() {
+    return this.issues.filter(
+      x => x.attributes.status !== 'resolved' && !x.attributes.is_archived
+    ).length
   }
 }
 

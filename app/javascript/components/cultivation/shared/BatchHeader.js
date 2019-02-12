@@ -43,13 +43,15 @@ class BatchHeader extends React.Component {
     return (
       <React.Fragment>
         <div className="flex flex-column justify-between bg-white box--shadow">
-          <div className="pa4">
+          <div className="ph4 pb4 pt3">
+            <div className="fl w-100 flex justify-center">
+              <ActiveBadge className="fr" status={status} />
+            </div>
             <div className="fl w-100 flex flex-column">
               <div className="flex">
                 <div className="w-30">
                   <h4 className="tl pa0 ma0 h6--font dark-grey">
-                    Batch {name}
-                    <ActiveBadge className="fr" status={status} />
+                    Batch {batch_no}
                   </h4>
                 </div>
               </div>

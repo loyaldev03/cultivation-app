@@ -45,6 +45,7 @@ class BatchEditor extends React.Component {
       veg2_duration: '',
       flower_duration: '',
       dry_duration: '',
+      cure_duration: '',
       current_growth_stage: 'clone',
       current_growth_stage_disabled: false,
       errors: {}
@@ -128,7 +129,7 @@ class BatchEditor extends React.Component {
       veg2_duration,
       flower_duration,
       dry_duration,
-      curing_duration,
+      cure_duration,
       current_growth_stage
     } = this.state
 
@@ -175,7 +176,7 @@ class BatchEditor extends React.Component {
       veg2_duration,
       flower_duration,
       dry_duration,
-      curing_duration,
+      cure_duration,
       current_growth_stage,
       isValid
     }
@@ -431,6 +432,21 @@ class BatchEditor extends React.Component {
               <NumericInput
                 value={this.state.dry_duration}
                 fieldname="dry_duration"
+                onChange={this.onChangeGeneric}
+                errors={this.state.errors}
+              />
+              <span className="f6 gray pl2">days</span>
+            </div>
+          </div>
+
+          <div className="ph4 mt3 flex items-center">
+            <div className="w-50">
+              <label className="f6 fw6 db mb2 gray ttc">Cure phase</label>
+            </div>
+            <div className="w-20 flex items-center">
+              <NumericInput
+                value={this.state.cure_duration}
+                fieldname="cure_duration"
                 onChange={this.onChangeGeneric}
                 errors={this.state.errors}
               />

@@ -110,6 +110,7 @@ class IssueSidebar extends React.Component {
             status={issue.status}
             createdAt={this.state.mode === 'details' ? issue.created_at : ''}
             onClose={this.onClose}
+            isArchived={issue.is_archived}
           />
           {this.renderBody()}
         </div>

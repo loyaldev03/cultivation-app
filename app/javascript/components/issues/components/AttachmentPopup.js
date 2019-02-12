@@ -48,7 +48,7 @@ class AttachmentPopup extends React.Component {
             left: 0,
             right: 0,
             bottom: 0,
-            height: '100%'
+            height: 'calc(100vh + 70px)'
           }}
         />
         <div

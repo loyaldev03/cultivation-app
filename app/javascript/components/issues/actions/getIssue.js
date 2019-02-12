@@ -5,14 +5,6 @@ import currentIssueStore from '../store/CurrentIssueStore'
 const getIssue = issueId => {
   Promise.all([_getIssue(issueId), getComments(issueId)]).then(
     ([issueData, commentsData]) => {
-      // console.group('issueData')
-      // console.log(issueData)
-      // console.groupEnd()
-
-      // console.group('commentsData')
-      // console.log(commentsData)
-      // console.groupEnd()
-
       const {
         data: {
           data: { attributes: issue }

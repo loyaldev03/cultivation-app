@@ -50,11 +50,12 @@ const IssueHeader = ({
           />
         </div>
         <div className="pl2">
+          {isArchived && <span class="f7 pv1 br1 gray">Archived</span>}
           <div className="flex items-center pt1">
-            <div className="f7 fw6 mr1 gray">
+            <div className="f6 fw6 dark-gray">
               ISSUE {formatIssueNo(issueNo)}
             </div>
-            <div className="f7 fw6 ph2">&bull;</div>
+            <div className="f6 fw6 ph1">&bull;</div>
             <div className="f7 fw6 green pr2 ttu">{status}</div>
             {renderSeverity(severity)}
           </div>

@@ -1,7 +1,6 @@
 import React from 'react'
 import BatchStore from '../../batches/BatchStore'
 import TaskStore from '../stores/NewTaskStore'
-import LocationStore from '../stores/LocationStore'
 import { SlidePanelHeader, SlidePanelFooter } from '../../../utils'
 import SidebarTaskEditor from './SidebarTaskEditor'
 
@@ -71,7 +70,6 @@ export default class TaskEditor extends React.Component {
             batchId={batchId}
             facilityStrainId={facilityStrainId}
             facilityId={facilityId}
-            locations={LocationStore.locations}
           />
         </div>
         <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />

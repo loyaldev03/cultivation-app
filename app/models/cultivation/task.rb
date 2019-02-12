@@ -21,6 +21,7 @@ module Cultivation
     # Predecessor task
     field :depend_on, type: BSON::ObjectId
     field :task_type, type: Array, default: []
+    field :location_id, type: BSON::ObjectId
 
     belongs_to :batch, class_name: 'Cultivation::Batch'
     has_and_belongs_to_many :users, inverse_of: nil

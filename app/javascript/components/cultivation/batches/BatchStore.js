@@ -84,9 +84,12 @@ class BatchStore {
       })
     }
   }
+
   @action
   removePlantFromBatch(plant_id) {
-    this.batch.selected_plants = this.batch.selected_plants.filter(x => x.plant_id !== plant_id)
+    this.batch.selected_plants = this.batch.selected_plants.filter(
+      x => x.plant_id !== plant_id
+    )
   }
 }
 

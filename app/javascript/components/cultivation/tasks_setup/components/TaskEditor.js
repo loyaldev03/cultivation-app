@@ -31,13 +31,15 @@ export default class TaskEditor extends React.Component {
 
   onSave = () => {
     const updates = this.editor.getEditingTask()
-    const { batchId, taskId, taskAction } = this.props
-    if (taskAction === 'update') {
-      TaskStore.editTask(batchId, taskId, updates)
-    } else {
-      TaskStore.createTask(batchId, taskId, taskAction, updates)
+    if (this.editor.validate()) {
+      const { batchId, taskId, taskAction } = this.props
+      if (taskAction === 'update') {
+        TaskStore.editTask(batchId, taskId, updates)
+      } else {
+        TaskStore.createTask(batchId, taskId, taskAction, updates)
+      }
+      this.props.onClose()
     }
-    this.props.onClose()
   }
 
   render() {
@@ -52,18 +54,22 @@ export default class TaskEditor extends React.Component {
     if (!taskId) {
       return null
     }
-    console.log({ facilityStrainId} )
     return (
-      <div className="flex flex-column h-100">
-        <SlidePanelHeader onClose={onClose} title={this.getTitle(taskAction)} />
-        <SidebarTaskEditor
-          ref={editor => (this.editor = editor)}
-          taskId={taskId}
-          batchId={batchId}
-          facilityStrainId={facilityStrainId}
-          facilityId={facilityId}
-          locations={LocationStore.locations}
-        />
+      <div className="flex flex-column h-100 justify-between">
+        <div>
+          <SlidePanelHeader
+            onClose={onClose}
+            title={this.getTitle(taskAction)}
+          />
+          <SidebarTaskEditor
+            ref={editor => (this.editor = editor)}
+            taskId={taskId}
+            batchId={batchId}
+            facilityStrainId={facilityStrainId}
+            facilityId={facilityId}
+            locations={LocationStore.locations}
+          />
+        </div>
         <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
       </div>
     )

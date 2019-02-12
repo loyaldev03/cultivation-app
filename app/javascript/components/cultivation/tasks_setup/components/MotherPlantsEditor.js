@@ -33,13 +33,24 @@ export default class MotherPlantsEditor extends React.Component {
     }
   }
   onDelete = plantId => {
-    console.log('onDelete', plantId)
     BatchStore.removePlantFromBatch(plantId)
   }
   onSelectPlant = plantOption => {
     this.setState({
       selectedPlantOption: plantOption
     })
+  }
+  validate = () => {
+    if (
+      BatchStore.batch &&
+      BatchStore.batch.quantity &&
+      BatchStore.batch.selected_plants
+    ) {
+      const total = sumBy(BatchStore.batch.selected_plants, 'quantity')
+      return total === BatchStore.batch.quantity
+    } else {
+      return false
+    }
   }
   async componentDidMount() {
     const { batchId, facilityStrainId } = this.props
@@ -66,7 +77,10 @@ export default class MotherPlantsEditor extends React.Component {
             Quantity Needed: {BatchStore.batch.quantity}
           </span>
         </div>
-        <SmallAdjustmentMessage value={totalSelected} total={BatchStore.batch.quantity} />
+        <SmallAdjustmentMessage
+          value={totalSelected}
+          total={BatchStore.batch.quantity}
+        />
         <table className="w-100 f6 fw6 gray ba b--light-grey collapse">
           <tbody>
             <tr>
@@ -154,7 +168,8 @@ const SmallAdjustmentMessage = React.memo(({ value, total }) => {
     const res = +value - +total
     return (
       <div className="dib bg-washed-red pa2 ba br2 b--washed-red grey w-4 mb1 tc">
-        You need to remove <span className="fw6 dark-grey">{res}</span> plant(s).
+        You need to remove <span className="fw6 dark-grey">{res}</span>{' '}
+        plant(s).
       </div>
     )
   }

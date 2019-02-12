@@ -59,6 +59,10 @@ class SidebarTaskEditor extends React.Component {
     }
   }
 
+  validate = () => {
+    return this.motherPlantsEditor.validate()
+  }
+
   handleChangeText = fieldName => e => {
     if (fieldName === 'duration') {
       this.setState({
@@ -157,6 +161,7 @@ class SidebarTaskEditor extends React.Component {
         {indelible === 'clip_mother_plant' && (
           <div className="ph4 mb3 flex flex-column">
             <MotherPlantsEditor
+              ref={editor => (this.motherPlantsEditor = editor)}
               batchId={batchId}
               facilityStrainId={facilityStrainId}
               onAddItem={newItem => console.log('onAddItem')}

@@ -155,7 +155,8 @@ module Inventory
 
     def update_raw_material(invoice_item)
       product = save_product
-
+      new_uom = Common::UnitOfMeasure.find_by(unit: uom)
+      new_quantity = new_uom.to(quantity, catalogue.common_uom) #convert quantity to common uom in catalogue
       transaction = Inventory::ItemTransaction.find(id)
       transaction.ref_id = invoice_item.id
       transaction.event_date = purchase_date
@@ -165,8 +166,8 @@ module Inventory
 
       transaction.order_quantity = order_quantity
       transaction.order_uom = order_uom
-      transaction.uom = uom
-      transaction.quantity = quantity
+      transaction.uom = catalogue.common_uom
+      transaction.quantity = new_quantity
       transaction.conversion = qty_per_package
       transaction.catalogue = catalogue
       transaction.product_name = product_name

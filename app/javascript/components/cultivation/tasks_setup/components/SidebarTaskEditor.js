@@ -60,7 +60,10 @@ class SidebarTaskEditor extends React.Component {
   }
 
   validate = () => {
-    return this.motherPlantsEditor.validate()
+    if (this.motherPlantsEditor) {
+      return this.motherPlantsEditor.validate()
+    }
+    return true
   }
 
   handleChangeText = fieldName => e => {

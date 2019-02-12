@@ -1,4 +1,4 @@
-import { observable, action, runInAction } from 'mobx'
+import { observable, action, runInAction, toJS } from 'mobx'
 import { httpGetOptions, httpPostOptions, toast } from '../../utils'
 
 class BatchStore {
@@ -60,7 +60,26 @@ class BatchStore {
       const payload = { name: name }
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {
-        toast('Batch Info Updated', 'success')
+        toast('Batch Updated', 'success')
+      } else {
+        console.error(response.errors)
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  @action
+  async updateBatchSelectedPlants(batchId) {
+    const url = `/api/v1/batches/${batchId}/update_batch_info`
+    try {
+      const payload = {
+        name: this.batch.name,
+        selected_plants: toJS(this.batch.selected_plants)
+      }
+      const response = await(await fetch(url, httpPostOptions(payload))).json()
+      if (response.data) {
+        toast('Batch Updated', 'success')
       } else {
         console.error(response.errors)
       }

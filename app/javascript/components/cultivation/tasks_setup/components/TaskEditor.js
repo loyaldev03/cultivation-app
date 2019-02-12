@@ -1,4 +1,5 @@
 import React from 'react'
+import BatchStore from '../../batches/BatchStore'
 import TaskStore from '../stores/NewTaskStore'
 import LocationStore from '../stores/LocationStore'
 import { SlidePanelHeader, SlidePanelFooter } from '../../../utils'
@@ -35,6 +36,9 @@ export default class TaskEditor extends React.Component {
       const { batchId, taskId, taskAction } = this.props
       if (taskAction === 'update') {
         TaskStore.editTask(batchId, taskId, updates)
+        if (this.editor.state.indelible === 'clip_mother_plant') {
+          BatchStore.updateBatchSelectedPlants(batchId)
+        }
       } else {
         TaskStore.createTask(batchId, taskId, taskAction, updates)
       }

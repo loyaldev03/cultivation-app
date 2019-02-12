@@ -1,5 +1,6 @@
 import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
+import { loadTaskLocations, LocationSelector } from '../../../utils'
 import { TextInput, NumericInput } from '../../../utils/FormHelpers'
 import LocationPicker from '../../../utils/LocationPicker2'
 import MotherPlantsEditor from './MotherPlantsEditor'
@@ -16,15 +17,18 @@ const GET_DEFAULT_STATE = (start_date = null) => {
     duration: 1,
     estimated_hours: 0.0,
     indelible: '',
-    haveChildren: false
+    haveChildren: false,
+    taskLocation: {},
+    locationOptions: [],
   }
 }
 
 class SidebarTaskEditor extends React.Component {
   state = GET_DEFAULT_STATE()
 
-  setEditingTask(task, start_date) {
+  setEditingTask = async (task, start_date) => {
     if (task) {
+      const locationOptions = await loadTaskLocations(this.props.batchId, task.id)
       this.setState({
         id: task.id,
         name: task.name,
@@ -33,7 +37,9 @@ class SidebarTaskEditor extends React.Component {
         duration: task.duration,
         estimated_hours: task.estimated_hours || '',
         indelible: task.indelible,
-        haveChildren: task.haveChildren
+        haveChildren: task.haveChildren,
+        taskLocation: {},
+        locationOptions,
       })
     } else {
       this.setState({ ...GET_DEFAULT_STATE(start_date) })
@@ -93,8 +99,14 @@ class SidebarTaskEditor extends React.Component {
     }
   }
 
+  handleChangeLocation = location => {
+    this.setState({
+      taskLocation: location,
+    })
+  }
+
   render() {
-    const { locations, batchId, facilityStrainId, facilityId } = this.props
+    const { batchId, facilityStrainId, facilityId } = this.props
     const {
       name,
       start_date,
@@ -104,6 +116,8 @@ class SidebarTaskEditor extends React.Component {
       indelible,
       actual_hours,
       haveChildren,
+      taskLocation,
+      locationOptions,
       errors
     } = this.state
     return (
@@ -175,12 +189,10 @@ class SidebarTaskEditor extends React.Component {
 
         {indelible !== 'clip_mother_plant' && !haveChildren && (
           <div className="ph4 mb3 flex flex-column">
-            <LocationPicker
-              mode="room"
-              facility_id={facilityId}
-              locations={locations}
-              location_id={this.state.location_id}
-              onChange={() => {}}
+            <LocationSelector
+              locationOptions={locationOptions}
+              value={taskLocation}
+              onChange={value => this.handleChangeLocation(value)}
             />
           </div>
         )}

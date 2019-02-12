@@ -4,7 +4,6 @@ import { observer } from 'mobx-react'
 import { Manager, Reference, Popper } from 'react-popper'
 import TaskList from './components/TaskList'
 import TaskStore from './stores/NewTaskStore'
-import LocationStore from './stores/LocationStore'
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
 import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
@@ -29,14 +28,9 @@ class TaskSetup extends React.Component {
       columnOpen: false,
       unresolvedIssueCount: 0
     }
-
     if (!TaskStore.isDataLoaded) {
       TaskStore.loadTasks(props.batch_id)
       TaskStore.facilityPhases = props.batch.cultivation_phases
-    }
-
-    if (!LocationStore.isDataLoaded) {
-      LocationStore.loadLocations(props.batch.facility_id)
     }
   }
 

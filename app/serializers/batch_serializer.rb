@@ -20,46 +20,74 @@ class BatchSerializer
     object.facility_strain&.strain_name
   end
 
-  attribute :clone_duration do |object|
-    # FIXME: N+1
-    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_CLONE)
-    task ? task.duration : ''
+  attribute :clone_duration do |object, params|
+    if params[:phases]
+      key = "#{object.id.to_s}/#{Constants::CONST_CLONE}"
+      phase = params[:phases][key]
+      phase.duration if phase
+    else
+      ''
+    end
   end
 
-  attribute :veg_duration do |object|
-    # FIXME: N+1
-    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_VEG)
-    task ? task.duration : ''
+  attribute :veg_duration do |object, params|
+    if params[:phases]
+      key = "#{object.id.to_s}/#{Constants::CONST_VEG}"
+      phase = params[:phases][key]
+      phase.duration if phase
+    else
+      ''
+    end
   end
 
-  attribute :veg1_duration do |object|
-    # FIXME: N+1
-    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_VEG1)
-    task ? task.duration : ''
+  attribute :veg1_duration do |object, params|
+    if params[:phases]
+      key = "#{object.id.to_s}/#{Constants::CONST_VEG1}"
+      phase = params[:phases][key]
+      phase.duration if phase
+    else
+      ''
+    end
   end
 
-  attribute :veg2_duration do |object|
-    # FIXME: N+1
-    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_VEG2)
-    task ? task.duration : ''
+  attribute :veg2_duration do |object, params|
+    if params[:phases]
+      key = "#{object.id.to_s}/#{Constants::CONST_VEG2}"
+      phase = params[:phases][key]
+      phase.duration if phase
+    else
+      ''
+    end
   end
 
-  attribute :flower_duration do |object|
-    # FIXME: N+1
-    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_FLOWER)
-    task ? task.duration : ''
+  attribute :flower_duration do |object, params|
+    if params[:phases]
+      key = "#{object.id.to_s}/#{Constants::CONST_FLOWER}"
+      phase = params[:phases][key]
+      phase.duration if phase
+    else
+      ''
+    end
   end
 
-  attribute :dry_duration do |object|
-    # FIXME: N+1
-    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_DRY)
-    task ? task.duration : ''
+  attribute :dry_duration do |object, params|
+    if params[:phases]
+      key = "#{object.id.to_s}/#{Constants::CONST_DRY}"
+      phase = params[:phases][key]
+      phase.duration if phase
+    else
+      ''
+    end
   end
 
-  attribute :curing_duration do |object|
-    # FIXME: N+1
-    task = object.tasks.find_by(indent: 0, phase: Constants::CONST_CURE)
-    task ? task.duration : ''
+  attribute :cure_duration do |object, params|
+    if params[:phases]
+      key = "#{object.id.to_s}/#{Constants::CONST_CURE}"
+      phase = params[:phases][key]
+      phase.duration if phase
+    else
+      ''
+    end
   end
 
   attribute :plant_count do |object|

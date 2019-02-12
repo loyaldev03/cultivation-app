@@ -101,6 +101,7 @@ class IssueDetails extends Component {
       )
     }
 
+    const is_archived = currentIssueStore.issue.is_archived
     const followers = currentIssueStore.issue.followers
     const followerIds = followers.map(x => x.id)
     const noFollowers = followers.length === 0
@@ -109,6 +110,7 @@ class IssueDetails extends Component {
       <React.Fragment>
         <div className="flex mt3 mb3 w-100 justify-end items-center">
           <span className="f7 gray">Followed by</span>
+
           {noFollowers && (
             <div className="ml1">
               <Avatar
@@ -135,7 +137,6 @@ class IssueDetails extends Component {
                   photoUrl={x.photo}
                   size={25}
                   onClick={event => {
-                    console.log(followers)
                     this.assignFollowersForm.setSelectedUsers(followerIds)
                     this.setState({ showAssignFollowers: true })
                     event.preventDefault()
@@ -152,22 +153,25 @@ class IssueDetails extends Component {
           >
             Show less
           </a>
-          <div>
-            <a
-              href="#"
-              onClick={this.toggleEdit}
-              className="btn--secondary link f6 pv2 ph3 br2 mr2"
-            >
-              Edit
-            </a>
-            <a
-              href="#"
-              onClick={this.archiveIssue}
-              className="btn--secondary link f6 pv2 ph3 br2"
-            >
-              Archive this issue
-            </a>
-          </div>
+
+          {!is_archived && (
+            <div>
+              <a
+                href="#"
+                onClick={this.toggleEdit}
+                className="btn--secondary link f6 pv2 ph3 br2 mr2"
+              >
+                Edit
+              </a>
+              <a
+                href="#"
+                onClick={this.archiveIssue}
+                className="btn--secondary link f6 pv2 ph3 br2"
+              >
+                Archive this issue
+              </a>
+            </div>
+          )}
         </div>
       </React.Fragment>
     )
@@ -216,6 +220,8 @@ class IssueDetails extends Component {
     const assigned_to = currentIssueStore.issue.assigned_to
       ? [currentIssueStore.issue.assigned_to.id]
       : []
+
+    const isResolved = currentIssueStore.issue.status === 'resolved'
     return (
       <React.Fragment>
         <div
@@ -234,17 +240,28 @@ class IssueDetails extends Component {
         <div className="ph3">
           <div className="flex w-100">
             <div className="w-auto pv2 mr2 mb3">
-              <Avatar
-                firstName={assignedFirstName}
-                lastName={assignedLastName}
-                size={25}
-                photoUrl={assignedPhoto}
-                showNoUser={showNoUser}
-                onClick={() => {
-                  this.assignResouceForm.setSelectedUsers(assigned_to)
-                  this.setState({ showAssignTask: true })
-                }}
-              />
+              {!isResolved && (
+                <Avatar
+                  firstName={assignedFirstName}
+                  lastName={assignedLastName}
+                  size={25}
+                  photoUrl={assignedPhoto}
+                  showNoUser={showNoUser}
+                  onClick={() => {
+                    this.assignResouceForm.setSelectedUsers(assigned_to)
+                    this.setState({ showAssignTask: true })
+                  }}
+                />
+              )}
+              {isResolved && (
+                <Avatar
+                  firstName={assignedFirstName}
+                  lastName={assignedLastName}
+                  size={25}
+                  photoUrl={assignedPhoto}
+                  showNoUser={showNoUser}
+                />
+              )}
             </div>
             <div className="flex flex-column w-100">
               <div className="f5 fw6 dark-grey w-auto pv2 mt1">

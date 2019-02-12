@@ -199,6 +199,7 @@ Rails.application.routes.draw do
         post 'setup_simple_batch', on: :collection
         post 'update_locations'
         post 'update_batch'
+        post 'update_batch_info'
         post 'destroy', on: :collection
 
         resources :tasks, only: [:index, :update, :create, :destroy] do
@@ -249,6 +250,7 @@ Rails.application.routes.draw do
       resources :issues, only: [:create, :by_batch, :show, :archive] do
         collection do
           get 'by_batch/:batch_id', action: 'by_batch'
+          get 'unresolved_count/:batch_id', action: 'unresolved_count'
           post 'archive'
         end
 
@@ -257,6 +259,8 @@ Rails.application.routes.draw do
           post 'resolve'
           post 'assign_to'
           post 'followers'
+          post 'update_comment'
+          post 'delete_comment'
           get 'comments'
           get 'attachment'
         end

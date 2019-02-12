@@ -7,7 +7,8 @@ import TaskStore from './stores/NewTaskStore'
 import LocationStore from './stores/LocationStore'
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
-
+import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
+import IssueSidebar from '../../issues/IssueSidebar'
 @observer
 class TaskSetup extends React.Component {
   constructor(props) {
@@ -25,7 +26,8 @@ class TaskSetup extends React.Component {
         'materials',
         'depend_on'
       ],
-      columnOpen: false
+      columnOpen: false,
+      unresolvedIssueCount: 0
     }
 
     if (!TaskStore.isDataLoaded) {
@@ -36,6 +38,13 @@ class TaskSetup extends React.Component {
     if (!LocationStore.isDataLoaded) {
       LocationStore.loadLocations(props.batch.facility_id)
     }
+  }
+
+  componentDidMount() {
+    loadUnresolvedIssueCount(this.props.batch.id).then(x => {
+      this.setState({ unresolvedIssueCount: x.count })
+    })
+    window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
   }
 
   onChangeFilterColumns = value => {
@@ -96,7 +105,11 @@ class TaskSetup extends React.Component {
           estimated_harvest_date={batch.estimated_harvest_date}
         />
         <div className="flex justify-between">
-          <BatchTabs batch={batch} currentTab="taskList" />
+          <BatchTabs
+            batch={batch}
+            currentTab="taskList"
+            unresolvedIssueCount={this.state.unresolvedIssueCount}
+          />
           <Manager>
             <div className="flex mt4">
               <div className="mr2 mt2">
@@ -155,7 +168,7 @@ class TaskSetup extends React.Component {
                               onChange={handleChangeCheckbox}
                               checked={checkboxValue('name')}
                             />
-                            Name
+                            Task
                           </label>
 
                           <label className="dim f6 fw6 db pv1 gray ttc">
@@ -263,6 +276,14 @@ class TaskSetup extends React.Component {
         <div className="pa4 flex flex-column justify-between bg-white box--shadow">
           <TaskList batch={this.props.batch} columns={this.state.columns} />
         </div>
+        <IssueSidebar
+          batch_id={this.props.batch.id}
+          facility_id={this.props.batch.facility_id}
+          mode={this.state.mode}
+          current_user_first_name={this.props.current_user_first_name}
+          current_user_last_name={this.props.current_user_last_name}
+          current_user_photo={this.props.current_user_photo}
+        />
       </div>
     )
   }

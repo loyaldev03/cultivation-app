@@ -7,18 +7,28 @@ import {
   sanitizeText
 } from '../../utils'
 
+import InlineEditBatchNameField from './InlineEditBatchNameField'
+import BatchStore from '../batches/BatchStore'
+
 class BatchHeader extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      name: this.props.name
+    }
+  }
+
+  updateBatchName = (name, id) => {
+    this.setState({ name: name }, () => {
+      BatchStore.updateBatchName(name, id)
+    })
   }
 
   render() {
     const {
-      batch_no,
       batch_source,
       quantity,
       status,
-      name,
       id,
       strain,
       grow_method,
@@ -27,18 +37,21 @@ class BatchHeader extends React.Component {
       total_estimated_hour,
       estimated_harvest_date
     } = this.props
+    const { name } = this.state
     const batchQuantity = quantity ? quantity : 0
 
     return (
       <React.Fragment>
         <div className="flex flex-column justify-between bg-white box--shadow">
-          <div className="pa4">
+          <div className="ph4 pb4 pt3">
+            <div className="fl w-100 flex justify-center">
+              <ActiveBadge className="fr" status={status} />
+            </div>
             <div className="fl w-100 flex flex-column">
               <div className="flex">
                 <div className="w-30">
                   <h4 className="tl pa0 ma0 h6--font dark-grey">
                     Batch {batch_no}
-                    <ActiveBadge className="fr" status={status} />
                   </h4>
                 </div>
               </div>
@@ -63,7 +76,13 @@ class BatchHeader extends React.Component {
                       </div>
                       <div className="w-40">
                         <div className="">
-                          <label>{name}</label>
+                          <InlineEditBatchNameField
+                            text={name}
+                            indent={0}
+                            onDoneClick={value => {
+                              this.updateBatchName(value, id)
+                            }}
+                          />
                         </div>
                       </div>
                     </div>

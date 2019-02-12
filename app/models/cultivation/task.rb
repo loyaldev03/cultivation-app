@@ -27,6 +27,7 @@ module Cultivation
     embeds_many :work_days, class_name: 'Cultivation::WorkDay'
     embeds_many :material_use, class_name: 'Cultivation::Item'
 
+    has_many :issues, class_name: 'Issues::Issue'
     orderable scope: :batch, base: 0
 
     scope :expected_on, -> (date) {

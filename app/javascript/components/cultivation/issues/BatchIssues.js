@@ -8,6 +8,7 @@ import ReactTable from 'react-table'
 import IssueSidebar from '../../issues/IssueSidebar'
 import loadBatchIssues from '../../issues/actions/loadBatchIssues'
 import issueStore from '../../issues/store/IssueStore'
+import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
 
 const renderUser = user => {
   if (user) {
@@ -121,7 +122,8 @@ class BatchIssues extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      batch: props.batch
+      batch: props.batch,
+      unresolvedIssueCount: 0
     }
   }
 
@@ -134,14 +136,14 @@ class BatchIssues extends React.Component {
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3 ">
-          <div className="flex mb3 justify-end">
+          {/* <div className="flex mb3 justify-end">
             <button
               className="btn btn--primary"
               onClick={event => openSidebar(event, null, 'create')}
             >
               Submit an issue
             </button>
-          </div>
+          </div> */}
 
           <div className="flex">
             <ReactTable
@@ -187,7 +189,11 @@ class BatchIssues extends React.Component {
           total_estimated_hour={batch.total_estimated_hour}
           estimated_harvest_date={batch.estimated_harvest_date}
         />
-        <BatchTabs batch={batch} currentTab="issues" />
+        <BatchTabs
+          batch={batch}
+          currentTab="issues"
+          unresolvedIssueCount={issueStore.unresolvedCount}
+        />
 
         {this.renderContent()}
 

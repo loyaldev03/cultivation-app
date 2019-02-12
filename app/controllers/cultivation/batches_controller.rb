@@ -77,6 +77,11 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def material
+    @unresolvedIssueCount = Issues::Issue.where(
+      status: {:$ne => 'resolved'},
+      is_archived: false,
+      cultivation_batch: @batch.id,
+    ).count
   end
 
   private

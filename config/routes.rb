@@ -137,7 +137,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :facilities, only: [] do
-        member do 
+        member do
           get 'search_locations'
         end
       end
@@ -192,6 +192,7 @@ Rails.application.routes.draw do
       end
 
       resources :batches, only: [:index, :create] do
+        get 'batch_info'
         get 'list_infos', on: :collection
         get 'search_locations', on: :collection
         post 'search_batch_plans', on: :collection

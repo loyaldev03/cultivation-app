@@ -26,6 +26,7 @@ class BatchHeader extends React.Component {
 
   render() {
     const {
+      batch_no,
       batch_source,
       quantity,
       status,

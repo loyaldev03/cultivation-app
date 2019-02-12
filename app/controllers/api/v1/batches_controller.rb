@@ -8,6 +8,12 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     render json: BatchSerializer.new(batches, options).serialized_json
   end
 
+  def batch_info
+    batch_id = params[:batch_id]
+    batch = Cultivation::Batch.includes(:facility_strain).find_by(id: batch_id)
+    render json: BatchInfoSerializer.new(batch).serialized_json
+  end
+
   def list_infos
     batches = Cultivation::Batch.includes(:facility_strain).all.order(c_at: :desc)
     render json: BatchInfoSerializer.new(batches).serialized_json
@@ -42,7 +48,6 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def update_batch
-    # TODO::ANDY::Rename Action Type to something more meaningful
     if params[:action_type] == 'activate'
       update_cmd = Cultivation::UpdateBatchScheduled.call(
         current_user,
@@ -60,8 +65,15 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def update_batch_info
-    args = {name: params[:name]}
-    update_cmd = Cultivation::UpdateBatchInfo.call(current_user, params[:batch_id], args)
+    args = {
+      name: params[:name],
+      selected_plants: params[:selected_plants],
+    }
+    update_cmd = Cultivation::UpdateBatchInfo.call(
+      current_user,
+      params[:batch_id],
+      args
+    )
     if update_cmd.success?
       render json: {data: 'Ok'}
     else

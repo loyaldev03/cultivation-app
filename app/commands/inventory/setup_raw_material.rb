@@ -130,6 +130,8 @@ module Inventory
 
     def create_raw_material(invoice_item)
       product = save_product
+      new_uom = Common::UnitOfMeasure.find_by(unit: uom)
+      new_quantity = new_uom.to(quantity, catalogue.common_uom) #convert quantity to common uom in catalogue
       Inventory::ItemTransaction.create!(
         ref_id: invoice_item.id,
         ref_type: 'Inventory::VendorInvoiceItem',
@@ -140,8 +142,8 @@ module Inventory
         product_name: invoice_item.product_name,
         description: invoice_item.description,
         manufacturer: invoice_item.manufacturer,
-        uom: uom,
-        quantity: quantity,
+        uom: catalogue.common_uom,
+        quantity: new_quantity,
         order_quantity: order_quantity,          # quantity inside PO and stock receive
         order_uom: order_uom,               # uom inside PO and stock receive
         conversion: qty_per_package,         # conversion rule, 1 bag = 65 kg

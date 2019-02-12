@@ -38,6 +38,7 @@ module Inventory
     field :acccount_code, type: String
     field :is_active, type: Boolean, default: true
     field :uom_dimension, type: String
+    field :common_uom, type: String
     field :default_price, type: BigDecimal
 
     scope :raw_materials, -> { where(catalogue_type: 'raw_materials', is_active: true) }

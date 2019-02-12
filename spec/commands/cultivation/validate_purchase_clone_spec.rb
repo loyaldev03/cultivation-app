@@ -33,7 +33,7 @@ RSpec.describe Cultivation::ValidatePurchaseClone, type: :command do
 
   let(:current_user) { create(:user, facilities: [facility.id]) }
   let!(:batch1) do
-    start_date = Time.zone.parse("01/01/2019").beginning_of_day
+    start_date = Time.now.beginning_of_day
     create(:batch, :scheduled,
           facility_strain: facility_strain,
           facility: facility,
@@ -49,7 +49,7 @@ RSpec.describe Cultivation::ValidatePurchaseClone, type: :command do
   end
 
   let!(:batch2) do
-    start_date = Time.zone.parse("01/02/2019").beginning_of_day
+    start_date = Time.now.beginning_of_day + 1.month
     create(:batch, :scheduled,
           facility_strain: facility_strain,
           facility: facility,
@@ -70,7 +70,7 @@ RSpec.describe Cultivation::ValidatePurchaseClone, type: :command do
   end
 
   let!(:batch3) do
-    start_date = Time.zone.parse("01/03/2019").beginning_of_day
+    start_date = Time.now.beginning_of_day + 2.month
     create(:batch, :scheduled,
           facility_strain: facility_strain,
           facility: facility,

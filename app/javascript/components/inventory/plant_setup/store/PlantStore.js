@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, toJS } from 'mobx'
 
 class PlantStore {
   plants = observable([])
@@ -29,6 +29,18 @@ class PlantStore {
   @computed
   get bindablePlants() {
     return this.plants.slice()
+  }
+
+  getPlantById(plantId) {
+    if (plantId) {
+      return toJS(this.plants.find(x => x.id === plantId))
+    }
+  }
+  getPlantsOptions() {
+    return this.plants.map(p => ({
+      value: p.id,
+      label: p.attributes.plant_id
+    }))
   }
 }
 

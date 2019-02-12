@@ -483,7 +483,6 @@ class TaskList extends React.Component {
       show: this.checkVisibility('materials'),
       className: 'justify-center',
       Cell: data => {
-        // console.log(toJS(data.row.items))
         const { id, items, haveChildren } = data.row
         if (haveChildren) {
           return null
@@ -534,6 +533,7 @@ class TaskList extends React.Component {
                     users
                   )
                 }}
+                facilityId={this.props.batch.facility_id}
               />
             </Suspense>
           )}
@@ -589,6 +589,8 @@ class TaskList extends React.Component {
                 taskId={this.state.taskSelected}
                 taskAction={this.state.taskAction}
                 batchId={batchId}
+                facilityStrainId={this.props.batch.facility_strain_id}
+                facilityId={this.props.batch.facility_id}
               />
             </Suspense>
           )}
@@ -621,7 +623,7 @@ class TaskList extends React.Component {
           <input
             type="button"
             className="btn btn--primary btn--large"
-            value="Save & Continue"
+            value="Schedule & Verify"
             onClick={() => this.setState({ showStartDateCalendar: true })}
           />
         </div>

@@ -57,8 +57,10 @@ module Cultivation
 
       #validate resource
       result = ValidateResource.call(current_user: @current_user, batch_id: @batch_id)
-      result.errors['resource'].each do |a|
-        errors.add(:batch_id, a) unless result.success?
+      if result.errors['resource'].present?
+        result.errors['resource'].each do |a|
+          errors.add(:batch_id, a) unless result.success?
+        end
       end
     end
   end

@@ -481,7 +481,6 @@ class TaskList extends React.Component {
       show: this.checkVisibility('materials'),
       className: 'justify-center',
       Cell: data => {
-        // console.log(toJS(data.row.items))
         const { id, items, haveChildren } = data.row
         if (haveChildren) {
           return null
@@ -530,6 +529,7 @@ class TaskList extends React.Component {
                     users
                   )
                 }}
+                facilityId={this.props.batch.facility_id}
               />
             </Suspense>
           )}
@@ -591,17 +591,19 @@ class TaskList extends React.Component {
           )}
         />
         <div className="">
-          <h3>DELETE AFTER TEST</h3>
+          <h3 className="red">DELETE AFTER TEST</h3>
           <MotherPlantsEditor
+            batchId={batchId}
+            facilityStrainId={this.props.batch.facility_strain_id}
             className="w-50"
-            quantityRequired={12}
+            quantityRequired={this.props.batch.quantity}
             onAddItem={newItem => console.log(newItem)}
             onDeleteItem={itemId => console.log('delete', itemId)}
             renderLabel={props => (
               <div className="mb1 f6 fw6 flex justify-between items-center">
                 <span className="grey">Mother Plant(s)</span>
-                <span className="red">
-                  Quantity Required: {props.quantityRequired}
+                <span className="grey">
+                  Quantity Needed: {props.quantityRequired}
                 </span>
               </div>
             )}

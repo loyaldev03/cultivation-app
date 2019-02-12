@@ -41,10 +41,18 @@ export default class TaskEditor extends React.Component {
   }
 
   render() {
-    const { onClose, taskId, taskAction, batchId, facilityId } = this.props
+    const {
+      onClose,
+      taskId,
+      taskAction,
+      batchId,
+      facilityStrainId,
+      facilityId
+    } = this.props
     if (!taskId) {
       return null
     }
+    console.log({ facilityStrainId} )
     return (
       <div className="flex flex-column h-100">
         <SlidePanelHeader onClose={onClose} title={this.getTitle(taskAction)} />
@@ -52,6 +60,7 @@ export default class TaskEditor extends React.Component {
           ref={editor => (this.editor = editor)}
           taskId={taskId}
           batchId={batchId}
+          facilityStrainId={facilityStrainId}
           facilityId={facilityId}
           locations={LocationStore.locations}
         />

@@ -87,7 +87,7 @@ class SidebarTaskEditor extends React.Component {
   }
 
   render() {
-    const { locations } = this.props
+    const { locations, batchId, facilityStrainId, facilityId } = this.props
     const {
       name,
       start_date,
@@ -157,13 +157,10 @@ class SidebarTaskEditor extends React.Component {
         {indelible === 'clip_mother_plant' && (
           <div className="ph4 mb3 flex flex-column">
             <MotherPlantsEditor
-              quantityRequired={12}
-              renderLabel={props => (
-                <label className="f6 fw6 flex mb1 gray justify-between">
-                  <span>Mother Plant(s)</span>
-                  <span>Quantity Required: {props.quantityRequired}</span>
-                </label>
-              )}
+              batchId={batchId}
+              facilityStrainId={facilityStrainId}
+              onAddItem={newItem => console.log('onAddItem')}
+              onDeleteItem={itemId => console.log('onDeleteItem')}
             />
           </div>
         )}
@@ -172,7 +169,7 @@ class SidebarTaskEditor extends React.Component {
           <div className="ph4 mb3 flex flex-column">
             <LocationPicker
               mode="room"
-              facility_id={this.props.facilityId}
+              facility_id={facilityId}
               locations={locations}
               location_id={this.state.location_id}
               onChange={() => {}}

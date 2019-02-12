@@ -12,9 +12,6 @@ import InlineEditDateField from './InlineEditDateField'
 import Avatar from '../../../utils/Avatar'
 import { formatDate2, moneyFormatter, SlidePanel } from '../../../utils'
 
-// TODO: Delete after test
-import MotherPlantsEditor from './MotherPlantsEditor'
-
 const ReactTable = lazy(() => import('react-table'))
 const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
 const AssignMaterialForm = lazy(() => import('./MaterialForm'))
@@ -585,30 +582,12 @@ class TaskList extends React.Component {
                 taskId={this.state.taskSelected}
                 taskAction={this.state.taskAction}
                 batchId={batchId}
+                facilityStrainId={this.props.batch.facility_strain_id}
                 facilityId={this.props.batch.facility_id}
               />
             </Suspense>
           )}
         />
-        <div className="">
-          <h3 className="red">DELETE AFTER TEST</h3>
-          <MotherPlantsEditor
-            batchId={batchId}
-            facilityStrainId={this.props.batch.facility_strain_id}
-            className="w-50"
-            quantityRequired={this.props.batch.quantity}
-            onAddItem={newItem => console.log(newItem)}
-            onDeleteItem={itemId => console.log('delete', itemId)}
-            renderLabel={props => (
-              <div className="mb1 f6 fw6 flex justify-between items-center">
-                <span className="grey">Mother Plant(s)</span>
-                <span className="grey">
-                  Quantity Needed: {props.quantityRequired}
-                </span>
-              </div>
-            )}
-          />
-        </div>
         <Suspense fallback={<div />}>
           <ReactTable
             columns={this.columnsConfig(batchId)}

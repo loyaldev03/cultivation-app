@@ -25,7 +25,7 @@ class BatchInfoSerializer
     object.selected_plants.map do |plant|
       {
         plant_id: plant[:plant_id].to_s,
-        quantity: plant[:quantity]
+        quantity: plant[:quantity],
       }
     end
   end

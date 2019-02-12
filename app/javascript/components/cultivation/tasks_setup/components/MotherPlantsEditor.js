@@ -49,7 +49,7 @@ export default class MotherPlantsEditor extends React.Component {
     ])
   }
   render() {
-    const { quantityRequired, className = '' } = this.props
+    const { className = '' } = this.props
     const { selectedPlantOption, selectedPlantQuantity } = this.state
     if (BatchStore.isLoading) {
       return <div className={`${className}`}>Loading..</div>
@@ -60,8 +60,13 @@ export default class MotherPlantsEditor extends React.Component {
     const totalSelected = sumBy(BatchStore.batch.selected_plants, 'quantity')
     return (
       <form className={`${className}`} onSubmit={this.onSubmit}>
-        {this.props.renderLabel(this.props)}
-        <SmallAdjustmentMessage value={totalSelected} total={quantityRequired} />
+        <div className="mb1 f6 fw6 flex justify-between items-center">
+          <span className="grey">Mother Plant(s)</span>
+          <span className="grey">
+            Quantity Needed: {BatchStore.batch.quantity}
+          </span>
+        </div>
+        <SmallAdjustmentMessage value={totalSelected} total={BatchStore.batch.quantity} />
         <table className="w-100 f6 fw6 gray ba b--light-grey collapse">
           <tbody>
             <tr>

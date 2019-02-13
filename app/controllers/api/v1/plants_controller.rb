@@ -70,7 +70,8 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def lot_numbers
-    lot_numbers = Inventory::Plant.where(batch_id: '').pluck(:lot_no).uniq
+    batch_id = params[:batch_id]
+    lot_numbers = Inventory::Plant.where(cultivation_batch_id: batch_id).pluck(:lot_number).uniq
     render json: {lot_numbers: lot_numbers}, status: 200
   end
 

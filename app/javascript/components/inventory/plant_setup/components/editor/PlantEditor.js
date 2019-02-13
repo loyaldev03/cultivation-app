@@ -73,7 +73,6 @@ class PlantEditor extends React.Component {
               return
             }
 
-
             const invoice = data.attributes.vendor_invoice
             const purchase_order = data.attributes.purchase_order
             let invoice_attr = {}
@@ -118,13 +117,11 @@ class PlantEditor extends React.Component {
 
             let lot_number = null
             if (data.attributes.lot_number) {
-              console.log(lot_number)
               lot_number = {
                 value: data.attributes.lot_number,
                 label: data.attributes.lot_number
               }
             }
-
 
             this.setState({
               ...this.resetState(),
@@ -150,6 +147,8 @@ class PlantEditor extends React.Component {
               ...vendor_attr,
               ...invoice_attr
             })
+
+            this.loadLotNumbers(batch.id)
           }
         )
       }
@@ -167,6 +166,7 @@ class PlantEditor extends React.Component {
       location_id: '',
       planting_date: null,
       lot_number: null,
+      defaultLotNumbers: [],
       // purchase info
       vendor_id: '',
       vendor_name: '',
@@ -248,6 +248,32 @@ class PlantEditor extends React.Component {
       isBought: item.batch_source === BATCH_SOURCE.PURCHASED,
       showScanner: false
     })
+
+    this.loadLotNumbers(item.value)
+  }
+  
+
+  loadLotNumbers = batchId => {
+    const payload = {
+      method: 'POST',
+      credentials: 'include',
+      body: JSON.stringify({batch_id: batchId }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }
+
+    fetch('/api/v1/plants/lot_numbers', payload)
+      .then(x => x.json())
+      .then(data => {
+        const defaultLotNumbers = data.lot_numbers.map( x => ({ value: x, label: x }))
+        this.setState({ defaultLotNumbers })
+      })
+  }
+
+  onloadLotNumbers = () => {
+    this.loadLotNumbers(this.state.cultivation_batch_id)
   }
 
   onMotherIdChanged = item => {
@@ -293,7 +319,7 @@ class PlantEditor extends React.Component {
       planting_date,
       isBought,
       motherOption,
-      vendor_id,
+      vendor_id
     } = this.state
 
     let { lot_number } = this.state
@@ -572,12 +598,13 @@ class PlantEditor extends React.Component {
                 placeholder="Search lot no..."
                 onChange={this.onLotNoChanged}
                 value={this.state.lot_number}
-                styles={reactSelectStyle}/>
+                styles={reactSelectStyle}
+                defaultOptions={this.state.defaultLotNumbers}
+              />
             </div>
           </div>
 
           {this.renderPlantIdTextArea()}
-
 
           <div className="ph4 mt0 flex flex-column">
             <div className="w-100 mb2 flex justify-end">

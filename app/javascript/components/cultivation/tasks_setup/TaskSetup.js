@@ -83,10 +83,6 @@ class TaskSetup extends React.Component {
     const { batch } = this.props
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
-    let activeTabs =
-      'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
-    let inactiveTabs =
-      'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
     return (
       <div className="pa4 grey flex flex-column h-100">
         <div id="toast" className="toast animated toast--success" />

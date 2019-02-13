@@ -77,7 +77,7 @@ class BatchStore {
         name: this.batch.name,
         selected_plants: toJS(this.batch.selected_plants)
       }
-      const response = await(await fetch(url, httpPostOptions(payload))).json()
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {
         toast('Batch Updated', 'success')
       } else {

@@ -193,6 +193,7 @@ class SidebarTaskEditor extends React.Component {
         )}
         {indelible !== 'clip_mother_plant' && !haveChildren && (
           <div className="ph4 mb3 flex flex-column">
+            <label className="f6 fw6 db mb1 gray ttc">Location</label>
             <LocationSelector
               locationOptions={locationOptions}
               value={taskLocation}

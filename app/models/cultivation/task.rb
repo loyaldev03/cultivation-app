@@ -16,11 +16,14 @@ module Cultivation
     field :actual_hours, type: Float, default: -> { 0 }
     field :estimated_cost, type: Float, default: -> { 0 }
     field :actual_cost, type: Float, default: -> { 0 }
-    # Indelible task cannot be remove, possible values: 'cleaning', 'moving'
+    # Indelible task cannot be remove, possible values: 'cleaning', 'moving' (see template json for more example)
     field :indelible, type: String
     # Predecessor task
     field :depend_on, type: BSON::ObjectId
     field :task_type, type: Array, default: []
+    # Task Location Info
+    field :location_id, type: BSON::ObjectId
+    field :location_type, type: String  # full ruby class name
 
     belongs_to :batch, class_name: 'Cultivation::Batch'
     has_and_belongs_to_many :users, inverse_of: nil

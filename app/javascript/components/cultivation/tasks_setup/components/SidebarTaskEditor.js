@@ -1,5 +1,6 @@
 import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
+import { loadTaskLocations, LocationSelector } from '../../../utils'
 import { TextInput, NumericInput } from '../../../utils/FormHelpers'
 import LocationPicker from '../../../utils/LocationPicker2'
 import MotherPlantsEditor from './MotherPlantsEditor'
@@ -16,15 +17,22 @@ const GET_DEFAULT_STATE = (start_date = null) => {
     duration: 1,
     estimated_hours: 0.0,
     indelible: '',
-    haveChildren: false
+    haveChildren: false,
+    taskLocation: {},
+    locationOptions: []
   }
 }
 
 class SidebarTaskEditor extends React.Component {
   state = GET_DEFAULT_STATE()
 
-  setEditingTask(task, start_date) {
+  setEditingTask = async (task, start_date) => {
     if (task) {
+      const locationOptions = await loadTaskLocations(
+        this.props.batchId,
+        task.id
+      )
+      const taskLocation = locationOptions.find(x => x.id === task.location_id)
       this.setState({
         id: task.id,
         name: task.name,
@@ -33,7 +41,9 @@ class SidebarTaskEditor extends React.Component {
         duration: task.duration,
         estimated_hours: task.estimated_hours || '',
         indelible: task.indelible,
-        haveChildren: task.haveChildren
+        haveChildren: task.haveChildren,
+        taskLocation: taskLocation || {},
+        locationOptions
       })
     } else {
       this.setState({ ...GET_DEFAULT_STATE(start_date) })
@@ -47,7 +57,8 @@ class SidebarTaskEditor extends React.Component {
       start_date,
       end_date,
       duration,
-      estimated_hours
+      estimated_hours,
+      taskLocation
     } = this.state
     return {
       id,
@@ -55,7 +66,9 @@ class SidebarTaskEditor extends React.Component {
       start_date,
       end_date,
       duration,
-      estimated_hours
+      estimated_hours,
+      location_id: taskLocation.id,
+      location_type: taskLocation.location_type
     }
   }
 
@@ -93,8 +106,14 @@ class SidebarTaskEditor extends React.Component {
     }
   }
 
+  handleChangeLocation = location => {
+    this.setState({
+      taskLocation: location
+    })
+  }
+
   render() {
-    const { locations, batchId, facilityStrainId, facilityId } = this.props
+    const { batchId, facilityStrainId, facilityId } = this.props
     const {
       name,
       start_date,
@@ -104,6 +123,8 @@ class SidebarTaskEditor extends React.Component {
       indelible,
       actual_hours,
       haveChildren,
+      taskLocation,
+      locationOptions,
       errors
     } = this.state
     return (
@@ -140,7 +161,6 @@ class SidebarTaskEditor extends React.Component {
               onChange={value => this.handleChangeDate('start_date', value)}
             />
           </div>
-
           <div className="w-40 pl3">
             <label className="f6 fw6 db mb1 gray ttc">End At</label>
             <DatePicker
@@ -160,7 +180,6 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         </div>
-
         {indelible === 'clip_mother_plant' && (
           <div className="ph4 mb3 flex flex-column">
             <MotherPlantsEditor
@@ -172,19 +191,16 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         )}
-
         {indelible !== 'clip_mother_plant' && !haveChildren && (
           <div className="ph4 mb3 flex flex-column">
-            <LocationPicker
-              mode="room"
-              facility_id={facilityId}
-              locations={locations}
-              location_id={this.state.location_id}
-              onChange={() => {}}
+            <label className="f6 fw6 db mb1 gray ttc">Location</label>
+            <LocationSelector
+              locationOptions={locationOptions}
+              value={taskLocation}
+              onChange={value => this.handleChangeLocation(value)}
             />
           </div>
         )}
-
         {!haveChildren ? (
           <div className="ph4 mb3 flex flex-column">
             <div className="w-40">
@@ -199,7 +215,6 @@ class SidebarTaskEditor extends React.Component {
             </div>
           </div>
         ) : null}
-
         {!!haveChildren ? (
           <div className="mt3">
             <hr className="mt3 m b--light-gray w-100" />

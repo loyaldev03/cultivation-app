@@ -198,16 +198,14 @@ class TaskList extends React.Component {
                       text="Edit Task Details"
                       onClick={e => this.handleShowSidebar(id)}
                     />
-                    {this.props.batch.status !== 'ACTIVE' ? 
+                    {this.props.batch.status !== 'ACTIVE' ? (
                       <MenuButton
                         icon="delete_outline"
                         text="Delete Task"
                         className="red"
                         onClick={e => this.handleDelete(data)}
                       />
-                      : null         
-                    }
-
+                    ) : null}
                   </div>
                   <div ref={arrowProps.ref} style={arrowProps.style} />
                 </div>

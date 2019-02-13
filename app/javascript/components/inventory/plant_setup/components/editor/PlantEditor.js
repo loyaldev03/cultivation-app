@@ -251,13 +251,12 @@ class PlantEditor extends React.Component {
 
     this.loadLotNumbers(item.value)
   }
-  
 
   loadLotNumbers = batchId => {
     const payload = {
       method: 'POST',
       credentials: 'include',
-      body: JSON.stringify({batch_id: batchId }),
+      body: JSON.stringify({ batch_id: batchId }),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
@@ -267,7 +266,10 @@ class PlantEditor extends React.Component {
     fetch('/api/v1/plants/lot_numbers', payload)
       .then(x => x.json())
       .then(data => {
-        const defaultLotNumbers = data.lot_numbers.map( x => ({ value: x, label: x }))
+        const defaultLotNumbers = data.lot_numbers.map(x => ({
+          value: x,
+          label: x
+        }))
         this.setState({ defaultLotNumbers })
       })
   }

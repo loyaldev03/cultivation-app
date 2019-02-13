@@ -183,6 +183,23 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
     end
   end
 
+  context ".call - update task location" do
+    it "update task location", focus: true do
+      room = facility.rooms.first
+      args = {
+        id: t2_3_2_1.id.to_s,
+        location_id: room.id.to_s,
+        location_type: "Room",
+      }
+
+      cmd = Cultivation::UpdateTask.call(current_user, args)
+
+      expect(cmd.errors.empty?).to be true
+      expect(cmd.result.location_id.to_s).to eq room.id.to_s
+      expect(cmd.result.location_type).to eq "Room"
+    end
+  end
+
   context ".call - updating estimated hours / cost" do
     let(:worker10) { create(:user, facilities: [facility.id], hourly_rate: 10) }
     let(:worker8) { create(:user, facilities: [facility.id], hourly_rate: 8) }

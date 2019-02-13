@@ -83,7 +83,6 @@ module Cultivation
       # Only allow non-indelible task change these field
       if !task.indelible?
         task.name = args[:name]
-        task.task_type = args[:task_type] || []
       end
       task.start_date = decide_start_date(task, batch_tasks, args[:start_date], args[:depend_on])
       task.depend_on = decide_depend_on(task, batch_tasks, args[:depend_on])
@@ -98,6 +97,12 @@ module Cultivation
         task.user_ids = []
       end
       task.end_date = task.start_date + task.duration.days
+
+      # Map location info to task
+      if task.indelible != 'clip_mother_plant'
+        task.location_id = args[:location_id].to_bson_id if args[:location_id].present?
+        task.location_type = args[:location_type] if args[:location_type].present?
+      end
       task
     end
 

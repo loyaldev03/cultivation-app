@@ -62,7 +62,6 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
               <Tooltip
                 interactive
                 position="top"
-                trigger="click"
                 theme="light"
                 html={
                   <div>

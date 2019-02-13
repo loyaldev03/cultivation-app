@@ -19,7 +19,7 @@ const GET_DEFAULT_STATE = (start_date = null) => {
     indelible: '',
     haveChildren: false,
     taskLocation: {},
-    locationOptions: [],
+    locationOptions: []
   }
 }
 
@@ -28,7 +28,11 @@ class SidebarTaskEditor extends React.Component {
 
   setEditingTask = async (task, start_date) => {
     if (task) {
-      const locationOptions = await loadTaskLocations(this.props.batchId, task.id)
+      const locationOptions = await loadTaskLocations(
+        this.props.batchId,
+        task.id
+      )
+      const taskLocation = locationOptions.find(x => x.id === task.location_id)
       this.setState({
         id: task.id,
         name: task.name,
@@ -38,8 +42,8 @@ class SidebarTaskEditor extends React.Component {
         estimated_hours: task.estimated_hours || '',
         indelible: task.indelible,
         haveChildren: task.haveChildren,
-        taskLocation: {},
-        locationOptions,
+        taskLocation: taskLocation || {},
+        locationOptions
       })
     } else {
       this.setState({ ...GET_DEFAULT_STATE(start_date) })
@@ -53,7 +57,8 @@ class SidebarTaskEditor extends React.Component {
       start_date,
       end_date,
       duration,
-      estimated_hours
+      estimated_hours,
+      taskLocation
     } = this.state
     return {
       id,
@@ -61,7 +66,9 @@ class SidebarTaskEditor extends React.Component {
       start_date,
       end_date,
       duration,
-      estimated_hours
+      estimated_hours,
+      location_id: taskLocation.id,
+      location_type: taskLocation.location_type
     }
   }
 
@@ -101,7 +108,7 @@ class SidebarTaskEditor extends React.Component {
 
   handleChangeLocation = location => {
     this.setState({
-      taskLocation: location,
+      taskLocation: location
     })
   }
 
@@ -154,7 +161,6 @@ class SidebarTaskEditor extends React.Component {
               onChange={value => this.handleChangeDate('start_date', value)}
             />
           </div>
-
           <div className="w-40 pl3">
             <label className="f6 fw6 db mb1 gray ttc">End At</label>
             <DatePicker
@@ -174,7 +180,6 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         </div>
-
         {indelible === 'clip_mother_plant' && (
           <div className="ph4 mb3 flex flex-column">
             <MotherPlantsEditor
@@ -186,7 +191,6 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         )}
-
         {indelible !== 'clip_mother_plant' && !haveChildren && (
           <div className="ph4 mb3 flex flex-column">
             <LocationSelector
@@ -196,7 +200,6 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         )}
-
         {!haveChildren ? (
           <div className="ph4 mb3 flex flex-column">
             <div className="w-40">
@@ -211,7 +214,6 @@ class SidebarTaskEditor extends React.Component {
             </div>
           </div>
         ) : null}
-
         {!!haveChildren ? (
           <div className="mt3">
             <hr className="mt3 m b--light-gray w-100" />

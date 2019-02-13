@@ -1,5 +1,6 @@
 import { httpPostOptions } from '../../utils'
 import getIssue from './getIssue'
+import issuesStore from '../store/IssueStore'
 
 const resolveIssue = payload => {
   return fetch(`/api/v1/issues/${payload.id}/resolve`, httpPostOptions(payload))
@@ -11,12 +12,12 @@ const resolveIssue = payload => {
     })
     .then(result => {
       const { status, data } = result
-      if (status !== 200) {
-        return result
+      if (status === 200) {
+        getIssue(data.id).then(updatedIssue => {
+          issuesStore.update(updatedIssue)
+        })
       }
-
-      console.log(data.id)
-      getIssue(data.id)
+      return result
     })
 }
 

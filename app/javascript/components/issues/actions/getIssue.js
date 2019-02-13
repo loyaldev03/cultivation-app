@@ -3,7 +3,7 @@ import getComments from './getComments'
 import currentIssueStore from '../store/CurrentIssueStore'
 
 const getIssue = issueId => {
-  Promise.all([_getIssue(issueId), getComments(issueId)]).then(
+  return Promise.all([_getIssue(issueId), getComments(issueId)]).then(
     ([issueData, commentsData]) => {
       const {
         data: {
@@ -19,6 +19,8 @@ const getIssue = issueId => {
         currentIssueStore.setIssue(issue)
         currentIssueStore.setComments(comments)
       }
+
+      return issueData.data.data
     }
   )
 }

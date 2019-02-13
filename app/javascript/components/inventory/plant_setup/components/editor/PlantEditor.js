@@ -8,6 +8,8 @@ import {
 } from '../../../../utils/FormHelpers'
 import Select from 'react-select'
 import AsyncSelect from 'react-select/lib/Async'
+import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
+
 import LocationPicker from '../../../../utils/LocationPicker2'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import setupPlants from '../../actions/setupPlants'
@@ -71,6 +73,7 @@ class PlantEditor extends React.Component {
               return
             }
 
+
             const invoice = data.attributes.vendor_invoice
             const purchase_order = data.attributes.purchase_order
             let invoice_attr = {}
@@ -113,6 +116,16 @@ class PlantEditor extends React.Component {
               }
             }
 
+            let lot_number = null
+            if (data.attributes.lot_number) {
+              console.log(lot_number)
+              lot_number = {
+                value: data.attributes.lot_number,
+                label: data.attributes.lot_number
+              }
+            }
+
+
             this.setState({
               ...this.resetState(),
               id: data.id,
@@ -124,6 +137,7 @@ class PlantEditor extends React.Component {
               location_id: data.attributes.location_id,
               planting_date: new Date(data.attributes.planting_date),
               motherOption: motherOption,
+              lot_number,
 
               // UI states
               strain_name: batch.strain_name,
@@ -152,6 +166,7 @@ class PlantEditor extends React.Component {
       plant_qty: 0,
       location_id: '',
       planting_date: null,
+      lot_number: null,
       // purchase info
       vendor_id: '',
       vendor_name: '',
@@ -243,6 +258,10 @@ class PlantEditor extends React.Component {
     }
   }
 
+  onLotNoChanged = lot_number => {
+    this.setState({ lot_number })
+  }
+
   onSave = event => {
     const data = this.validateAndGetValues()
     const { errors, isValid, ...payload } = data
@@ -274,10 +293,13 @@ class PlantEditor extends React.Component {
       planting_date,
       isBought,
       motherOption,
-      vendor_id
+      vendor_id,
     } = this.state
 
+    let { lot_number } = this.state
+
     const mother_id = motherOption ? motherOption.value : ''
+    lot_number = lot_number ? lot_number.value : ''
 
     let errors = {}
 
@@ -315,6 +337,7 @@ class PlantEditor extends React.Component {
       planting_date: planting_date && planting_date.toISOString(),
       mother_id,
       isBought,
+      lot_number,
       errors,
       isValid
     }
@@ -540,7 +563,21 @@ class PlantEditor extends React.Component {
           </div>
 
           {this.renderBatchDetails()}
+
+          <div className="ph4 mt3 mb3 flex flex-column">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">Lot No</label>
+              <AsyncCreatableSelect
+                isClearable
+                placeholder="Search lot no..."
+                onChange={this.onLotNoChanged}
+                value={this.state.lot_number}
+                styles={reactSelectStyle}/>
+            </div>
+          </div>
+
           {this.renderPlantIdTextArea()}
+
 
           <div className="ph4 mt0 flex flex-column">
             <div className="w-100 mb2 flex justify-end">

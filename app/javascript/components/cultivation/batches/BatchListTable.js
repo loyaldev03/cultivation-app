@@ -34,12 +34,16 @@ class BatchListTable extends React.Component {
                 <ActiveBadge status={b.status} />
               </td>
               <td>
-                <i
-                  className="material-icons red pointer"
-                  onClick={() => onDelete(b.id)}
-                >
-                  delete
-                </i>
+                {b.status !== 'ACTIVE' ?
+                  <i
+                    className="material-icons red pointer"
+                    onClick={() => onDelete(b.id)}
+                  >
+                    delete
+                  </i>
+                  : null
+                }
+
               </td>
             </tr>
           ))}

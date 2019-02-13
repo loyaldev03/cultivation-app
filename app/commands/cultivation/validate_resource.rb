@@ -36,12 +36,12 @@ module Cultivation
         issue = Issues::Issue.find_or_initialize_by(
           task_id: task.id,
           cultivation_batch_id: batch.id.to_s,
-          title: "Task #{task.wbs} have no resource allocate",
+          title: 'Task have no resource allocate',
         )
 
         issue.issue_no = Issues::Issue.count + 1
-        issue.title = "Task #{task.wbs} have no resource allocate"
-        issue.description = "Task #{task.wbs} have no resource allocate"
+        issue.title = 'Task have no resource allocate'
+        issue.description = 'Task have no resource allocate'
         issue.severity = 'severe'
         issue.issue_type = 'task_from_batch'
         issue.status = 'open'
@@ -60,11 +60,11 @@ module Cultivation
           issue = Issues::Issue.find_or_initialize_by(
             task_id: task.id,
             cultivation_batch_id: batch.id.to_s,
-            title: "Resource overallocations for Task #{task.wbs}",
+            title: 'Resource overallocations for Task',
           )
           issue.issue_no = Issues::Issue.count + 1
-          issue.title = "Resource overallocations for Task #{task.wbs}"
-          issue.description = "Resource overallocations for Task #{task.wbs}"
+          issue.title = 'Resource overallocations for Task'
+          issue.description = 'Resource overallocations for Task'
           issue.severity = 'severe'
           issue.issue_type = 'task_from_batch'
           issue.status = 'open'

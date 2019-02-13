@@ -67,7 +67,7 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
                   <div>
                     <span>
                       Issues
-                      <span className="f7 fw6 ph3 pv1 ba br2 dib tc bg-orange b--orange white ml2">
+                      <span className="b--orange ba orange f7 fw4 ph1 br2 ml1">
                         {issues.length}
                       </span>
                     </span>

@@ -82,6 +82,7 @@ gem 'simple_form'
 gem 'mongoid', '~> 6.4.1'
 gem 'mongoid_orderable'
 gem 'mongoid_rails_migrations'
+gem 'mongoid-history'
 
 # Check for N+1
 gem 'bullet', group: 'development'

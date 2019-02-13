@@ -14,7 +14,8 @@ class TaskSerializer
     :wbs,
     :indent,
     :indelible,
-    :task_type
+    :task_type,
+    :location_type
 
   attributes :id do |object|
     object.id.to_s
@@ -39,6 +40,10 @@ class TaskSerializer
         uoms: item&.product&.catalogue&.uoms&.pluck(:unit),
       }
     end
+  end
+
+  attributes :location_id do |object|
+    object.location_id.to_s
   end
 
   attribute :user_ids do |object|

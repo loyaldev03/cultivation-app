@@ -2,8 +2,8 @@ import React from 'react'
 import classNames from 'classnames'
 import InlineEditTextField from './InlineEditTextField'
 import 'react-tippy/dist/tippy.css'
+import Tippy from '@tippy.js/react'
 import { Tooltip } from 'react-tippy'
-
 export default class InlineEditTaskNameField extends InlineEditTextField {
   onClickNow = issue => {
     let id = issue.id
@@ -59,34 +59,39 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
         ) : (
           <React.Fragment>
             {issues.length > 0 ? (
-              <Tooltip
-                interactive
-                position="top"
-                theme="light"
-                html={
-                  <div>
-                    <span>
-                      Issues
+                <Tippy
+                  placement="top"
+                  interactive={true}
+                  content={
+                    <div
+                      className="bg-white f6 flex"
+                    >
+                      <div
+                        className="db shadow-4 grey pa2"
+                      >
+                      <span>
+                        Issues
                       <span className="b--orange ba orange f7 fw4 ph1 br2 ml1">
-                        {issues.length}
+                          {issues.length}
+                        </span>
                       </span>
-                    </span>
-                    <ul className="pa2 list mt2 flex-auto ba br2 b--light-grey overflow-auto tl">
-                      {issues.map((i, key) => (
-                        <li
-                          key={key}
-                          className="pointer br2 dim--grey pa1"
-                          onClick={e => this.onClickNow(i)}
-                        >
-                          {i.title}
-                        </li>
-                      ))}
-                    </ul>
+                      <ul className="pa2 list mt2 flex-auto br2 overflow-auto tl">
+                        {issues.map((i, key) => (
+                          <li
+                            key={key}
+                            className="pointer br2 dim--grey pa1"
+                            onClick={e => this.onClickNow(i)}
+                          >
+                            {i.title}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                }
-              >
-                <i className="material-icons icon--small red pointer">error</i>
-              </Tooltip>
+                  }
+                >
+                  <i className="material-icons icon--small red pointer">error</i>
+                </Tippy>
             ) : null}
             <a
               href="#0"

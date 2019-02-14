@@ -1,7 +1,7 @@
 import 'babel-polyfill'
 import React from 'react'
 import { ActiveBadge, formatDate2 } from '../../utils'
-import { Tooltip } from 'react-tippy'
+import Tippy from '@tippy.js/react'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -48,12 +48,11 @@ class BatchListTable extends React.Component {
               </td>
               <td>
                 {b.status !== 'ACTIVE' ? (
-                  <Tooltip
-                    interactive
-                    position="bottom"
+                  <Tippy 
+                    placement="bottom-end"
                     trigger="click"
-                    theme="light"
-                    html={
+                    duration="0"
+                    content={
                       <div className="bg-white f6 flex">
                         <div className="db shadow-4">
                           <MenuButton
@@ -65,11 +64,11 @@ class BatchListTable extends React.Component {
                         </div>
                       </div>
                     }
-                  >
+                    >
                     <i className={'pointer material-icons show-on-batch'}>
                       more_horiz
                     </i>
-                  </Tooltip>
+                  </Tippy>
                 ) : null}
               </td>
             </tr>

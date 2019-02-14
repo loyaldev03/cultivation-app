@@ -59,19 +59,15 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
         ) : (
           <React.Fragment>
             {issues.length > 0 ? (
-                <Tippy
-                  placement="top"
-                  interactive={true}
-                  content={
-                    <div
-                      className="bg-white f6 flex"
-                    >
-                      <div
-                        className="db shadow-4 grey pa2"
-                      >
+              <Tippy
+                placement="top"
+                interactive={true}
+                content={
+                  <div className="bg-white f6 flex">
+                    <div className="db shadow-4 grey pa2">
                       <span>
                         Issues
-                      <span className="b--orange ba orange f7 fw4 ph1 br2 ml1">
+                        <span className="b--orange ba orange f7 fw4 ph1 br2 ml1">
                           {issues.length}
                         </span>
                       </span>
@@ -88,10 +84,10 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
                       </ul>
                     </div>
                   </div>
-                  }
-                >
-                  <i className="material-icons icon--small red pointer">error</i>
-                </Tippy>
+                }
+              >
+                <i className="material-icons icon--small red pointer">error</i>
+              </Tippy>
             ) : null}
             <a
               href="#0"

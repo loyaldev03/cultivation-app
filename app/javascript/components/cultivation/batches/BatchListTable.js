@@ -48,7 +48,7 @@ class BatchListTable extends React.Component {
               </td>
               <td>
                 {b.status !== 'ACTIVE' ? (
-                  <Tippy 
+                  <Tippy
                     placement="bottom-end"
                     trigger="click"
                     duration="0"
@@ -64,7 +64,7 @@ class BatchListTable extends React.Component {
                         </div>
                       </div>
                     }
-                    >
+                  >
                     <i className={'pointer material-icons show-on-batch'}>
                       more_horiz
                     </i>

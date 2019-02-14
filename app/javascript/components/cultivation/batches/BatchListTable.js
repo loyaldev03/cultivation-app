@@ -28,7 +28,7 @@ class BatchListTable extends React.Component {
             <th className="w4 tr ph3 ttu">Start Date</th>
             <th className="w4 tr ph3 ttu">Harvest Date</th>
             <th className="w4 tr ph3 ttu">Active</th>
-            <th width='7%'/>
+            <th width="7%" />
           </tr>
           {batches.map(b => (
             <tr className="dim batch-row" key={b.batch_no}>
@@ -54,27 +54,21 @@ class BatchListTable extends React.Component {
                     trigger="click"
                     theme="light"
                     html={
-                      <div
-                        className="bg-white f6 flex"
-                      >
-                        <div
-                          className="db shadow-4"
-                        >
-                            <MenuButton
-                              icon="delete_outline"
-                              text="Delete Task"
-                              className="red"
-                              onClick={() => onDelete(b.id)}
-                            />
+                      <div className="bg-white f6 flex">
+                        <div className="db shadow-4">
+                          <MenuButton
+                            icon="delete_outline"
+                            text="Delete Task"
+                            className="red"
+                            onClick={() => onDelete(b.id)}
+                          />
                         </div>
                       </div>
                     }
                   >
-                  <i
-                    className={'pointer material-icons show-on-batch'}
-                  >
-                    more_horiz
-                  </i>
+                    <i className={'pointer material-icons show-on-batch'}>
+                      more_horiz
+                    </i>
                   </Tooltip>
                 ) : null}
               </td>

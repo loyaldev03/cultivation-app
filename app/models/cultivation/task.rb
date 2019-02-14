@@ -3,6 +3,9 @@ module Cultivation
     include Mongoid::Document
     include Mongoid::Timestamps::Short
     include Mongoid::Orderable
+    # History tracking all Task documents
+    # Note: tracking will not work until #track_history is invoked
+    include Mongoid::History::Trackable
 
     attr_accessor :wbs
 
@@ -32,6 +35,11 @@ module Cultivation
 
     has_many :issues, class_name: 'Issues::Issue'
     orderable scope: :batch, base: 0
+
+    track_history on: %i[phase name duration start_date end_date estimated_hours depend_on location_id],
+                  modifier_field: :modifier,
+                  modifier_field_inverse_of: nil,
+                  modifier_field_optional: true
 
     scope :expected_on, -> (date) {
             all.and(:start_date.lte => date, :end_date.gte => date)

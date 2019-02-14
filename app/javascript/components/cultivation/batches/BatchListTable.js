@@ -1,6 +1,19 @@
 import 'babel-polyfill'
 import React from 'react'
 import { ActiveBadge, formatDate2 } from '../../utils'
+import { Tooltip } from 'react-tippy'
+
+const MenuButton = ({ icon, text, onClick, className = '' }) => {
+  return (
+    <a
+      className={`pa2 flex link dim pointer items-center ${className}`}
+      onClick={onClick}
+    >
+      <i className="material-icons md-17 pr2">{icon}</i>
+      <span className="pr2">{text}</span>
+    </a>
+  )
+}
 
 class BatchListTable extends React.Component {
   render() {
@@ -15,10 +28,10 @@ class BatchListTable extends React.Component {
             <th className="w4 tr ph3 ttu">Start Date</th>
             <th className="w4 tr ph3 ttu">Harvest Date</th>
             <th className="w4 tr ph3 ttu">Active</th>
-            <th />
+            <th width='7%'/>
           </tr>
           {batches.map(b => (
-            <tr className="dim" key={b.batch_no}>
+            <tr className="dim batch-row" key={b.batch_no}>
               <td className="pv2 ph3 tl ttu">
                 <a className="link" href={`/cultivation/batches/${b.id}`}>
                   {b.batch_no}
@@ -35,12 +48,34 @@ class BatchListTable extends React.Component {
               </td>
               <td>
                 {b.status !== 'ACTIVE' ? (
-                  <i
-                    className="material-icons red pointer"
-                    onClick={() => onDelete(b.id)}
+                  <Tooltip
+                    interactive
+                    position="bottom"
+                    trigger="click"
+                    theme="light"
+                    html={
+                      <div
+                        className="bg-white f6 flex"
+                      >
+                        <div
+                          className="db shadow-4"
+                        >
+                            <MenuButton
+                              icon="delete_outline"
+                              text="Delete Task"
+                              className="red"
+                              onClick={() => onDelete(b.id)}
+                            />
+                        </div>
+                      </div>
+                    }
                   >
-                    delete
+                  <i
+                    className={'pointer material-icons show-on-batch'}
+                  >
+                    more_horiz
                   </i>
+                  </Tooltip>
                 ) : null}
               </td>
             </tr>

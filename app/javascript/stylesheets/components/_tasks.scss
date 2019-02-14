@@ -71,3 +71,13 @@ $indentWidth: 24px;
   }
 }
 
+.batch-row:hover {
+  .show-on-batch {
+    display: block;
+  }
+}
+.batch-row {
+  .show-on-batch {
+    display: none;
+  }
+}

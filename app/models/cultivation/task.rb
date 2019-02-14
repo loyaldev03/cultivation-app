@@ -36,10 +36,11 @@ module Cultivation
     has_many :issues, class_name: 'Issues::Issue'
     orderable scope: :batch, base: 0
 
-    track_history on: %i[phase name duration start_date end_date estimated_hours depend_on location_id],
+    track_history on: %i[phase name duration start_date end_date estimated_hours depend_on location_id location_type],
                   modifier_field: :modifier,
                   modifier_field_inverse_of: nil,
-                  modifier_field_optional: true
+                  modifier_field_optional: true,
+                  tracker_class_name: :task_history_tracker
 
     scope :expected_on, -> (date) {
             all.and(:start_date.lte => date, :end_date.gte => date)

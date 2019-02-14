@@ -8,7 +8,7 @@ module Cultivation
 
     def call
       if @batch.present?
-        tasks = @batch.tasks.order_by(position: :asc).to_a
+        tasks = @batch.tasks.includes(:issues).order_by(position: :asc).to_a
         wbs_list = WbsTree.generate(tasks)
         tasks.each_with_index do |t, i|
           t.wbs = wbs_list[i][:wbs]

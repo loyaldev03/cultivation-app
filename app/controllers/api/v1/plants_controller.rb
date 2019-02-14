@@ -69,6 +69,12 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     render json: Inventory::HarvestBatchSerializer.new(batch, include_options).serialized_json
   end
 
+  def lot_numbers
+    batch_id = params[:batch_id]
+    lot_numbers = Inventory::Plant.where(cultivation_batch_id: batch_id).pluck(:lot_number).uniq
+    render json: {lot_numbers: lot_numbers}, status: 200
+  end
+
   #
   def manicure_batch
   end

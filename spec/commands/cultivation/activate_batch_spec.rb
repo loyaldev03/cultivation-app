@@ -33,6 +33,7 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
 
   let(:current_user) { create(:user, facilities: [facility.id]) }
   let!(:batch1) do
+    Time.zone = facility.timezone
     start_date = Time.zone.now.beginning_of_day
     create(:batch, :scheduled,
           facility_strain: facility_strain,
@@ -43,20 +44,8 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
   end
 
   context ".call" do
-    it "return Scheduled status if not same timezone" do
-      timezones = TZInfo::Timezone.all.map {|a| a.name}
-      timezones.delete(facility.timezone) #exclude facility timezone from list
-      Time.zone = timezones.sample
-      start_date = Time.zone.now.beginning_of_day
-      batch1.update(start_date: start_date)
-
-      result = Cultivation::ActivateBatch.call
-      expect(Cultivation::Batch.first.status).to eq 'SCHEDULED'
-    end
     it "return Active status if same timezone" do
       Time.zone = facility.timezone
-      start_date = Time.zone.now.beginning_of_day
-      batch1.update(start_date: start_date)
 
       result = Cultivation::ActivateBatch.call
       expect(Cultivation::Batch.first.status).to eq 'ACTIVE'

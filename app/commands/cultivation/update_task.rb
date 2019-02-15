@@ -29,7 +29,7 @@ module Cultivation
           days_diff = (task.start_date - original_start_date) / 1.day
           adjust_children_dates(task, batch_tasks, days_diff)
           # Update estimated cost
-          update_estimated_cost(task, facility_users)
+          update_estimated_cost(task, batch_tasks, facility_users)
           # Extend / contract parent duration & end_date
           update_parent_cascade(task, batch_tasks)
           # Cascade changes to root node's siblings
@@ -87,10 +87,8 @@ module Cultivation
       task.start_date = decide_start_date(task, batch_tasks, args[:start_date], args[:depend_on])
       task.depend_on = decide_depend_on(task, batch_tasks, args[:depend_on])
       if !task.have_children?(batch_tasks)
-        # Parent duration should derived from sub-tasks
         task.duration = args[:duration].present? ? args[:duration].to_i : 1
         task.user_ids = decide_assigned_users(args[:user_ids])
-        # Parent estimated_hours should derived from sub-tasks
         task.estimated_hours = args[:estimated_hours].to_f
       else
         # Clear data not relevant to parent task
@@ -151,7 +149,15 @@ module Cultivation
       end
     end
 
-    def update_estimated_cost(task, users)
+    def update_estimated_cost(task, batch_tasks, users)
+      if task.have_children?(batch_tasks)
+        # Task with children task would deduce from child tasks.
+        children = task.children(batch_tasks)
+        task.estimated_hours = sum_children_hours(children, batch_tasks)
+        task.estimated_cost = sum_children_cost(children, batch_tasks)
+        return
+      end
+
       if task.estimated_hours && task.duration && task.user_ids.present?
         hours_per_person = task.estimated_hours / task.user_ids.length
         estimated_cost = 0.00
@@ -199,7 +205,6 @@ module Cultivation
           adjust_children_dates(node, batch_tasks, days_diff)
         end
         siblings.each(&:save)
-        return
       end
     end
 
@@ -237,14 +242,18 @@ module Cultivation
     def update_parent_cascade(task, batch_tasks)
       parent = task.parent(batch_tasks)
       while parent.present?
-        children = parent.children(batch_tasks)
-        parent.estimated_hours = sum_children_hours(children, batch_tasks)
-        parent.estimated_cost = sum_children_cost(children, batch_tasks)
-        parent.duration = decide_duration(task, parent, children)
-        parent.end_date = parent.start_date + parent.duration.days
-        parent.save
+        update_parent_estimations(task, parent, batch_tasks)
         parent = parent.parent(batch_tasks)
       end
+    end
+
+    def update_parent_estimations(task, parent, batch_tasks)
+      children = parent.children(batch_tasks)
+      parent.estimated_hours = sum_children_hours(children, batch_tasks)
+      parent.estimated_cost = sum_children_cost(children, batch_tasks)
+      parent.duration = decide_duration(task, parent, children)
+      parent.end_date = parent.start_date + parent.duration.days
+      parent.save
     end
 
     def valid_batch?(batch)

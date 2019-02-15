@@ -46,7 +46,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def create
-    create_cmd = Cultivation::CreateTask.call(task_params)
+    create_cmd = Cultivation::CreateTask.call(current_user, task_params)
     if create_cmd.success?
       render json: {data: {id: create_cmd.result.id.to_s}}
     else

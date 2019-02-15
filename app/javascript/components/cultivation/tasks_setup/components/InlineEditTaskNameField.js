@@ -1,9 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 import InlineEditTextField from './InlineEditTextField'
-import 'react-tippy/dist/tippy.css'
 import Tippy from '@tippy.js/react'
-import { Tooltip } from 'react-tippy'
 export default class InlineEditTaskNameField extends InlineEditTextField {
   onClickNow = issue => {
     let id = issue.id

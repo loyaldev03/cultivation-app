@@ -125,7 +125,7 @@ class TaskList extends React.Component {
   }
 
   renderTaskNameColumn = data => {
-    const { id, wbs, indent, issues } = data.row
+    const { id, wbs, indent, issues, deletable } = data.row
     const batchId = this.props.batch.id
     const hasChild = TaskStore.hasChildNode(wbs)
     const isCollapsed = TaskStore.isCollapsed(wbs)
@@ -198,12 +198,14 @@ class TaskList extends React.Component {
                       text="Edit Task Details"
                       onClick={e => this.handleShowSidebar(id)}
                     />
-                    <MenuButton
-                      icon="delete_outline"
-                      text="Delete Task"
-                      className="red"
-                      onClick={e => this.handleDelete(data)}
-                    />
+                    {deletable ? (
+                      <MenuButton
+                        icon="delete_outline"
+                        text="Delete Task"
+                        className="red"
+                        onClick={e => this.handleDelete(data)}
+                      />
+                    ) : null}
                   </div>
                   <div ref={arrowProps.ref} style={arrowProps.style} />
                 </div>
@@ -284,6 +286,10 @@ class TaskList extends React.Component {
     },
     {
       accessor: 'issues',
+      show: false
+    },
+    {
+      accessor: 'deletable',
       show: false
     },
     {

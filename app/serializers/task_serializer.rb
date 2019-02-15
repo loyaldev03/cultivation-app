@@ -53,4 +53,12 @@ class TaskSerializer
   attribute :issues do |object|
     object.issues.map { |a| {id: a.id.to_s, title: a.title} }
   end
+
+  attribute :deletable do |object|
+    if object.issues.count > 0 || object.user_ids.count > 0 || object.material_use.count > 0
+      false
+    else
+      true
+    end
+  end
 end

@@ -144,7 +144,7 @@ const LocationSingleValue = ({ children, ...props }) => (
 
 LocationSelector.propTypes = {
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.object,
+  value: PropTypes.object
 }
 
 const loadTaskLocations = (batchId, taskId) => {

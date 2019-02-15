@@ -17,6 +17,8 @@ module Cultivation
       if task&.indelible.present?
         errors.add(:id, "\"#{task.name}\" is indelible")
         true
+      elsif task.issues.count > 0 || task.user_ids.count > 0 || task.material_use.count > 0 #NOTES : need to add workday
+        errors.add(:id, 'This task cannot be deleted')
       elsif task
         task.delete
       else

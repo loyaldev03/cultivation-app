@@ -100,7 +100,6 @@ class BatchLocationApp extends React.Component {
   onButtonClick = (field, value) => e => this.setState({ [field]: value })
 
   onEditorSave = editingPlant => {
-    // console.log('onEditorSave.editingPlant', editingPlant)
     // find and update the existing record
     const plantConfig = this.getSelected(editingPlant.id)
 
@@ -123,7 +122,6 @@ class BatchLocationApp extends React.Component {
 
   // Build available locations, taking out capacity occupied by different rows
   getAvailableLocations = (plantId, phase) => {
-    // console.log('getAvailableLocations:', phase)
     const { selectedPlants, locations } = this.state
     const allPlantsTrays = selectedPlants
       .filter(p => p.id !== plantId)
@@ -223,7 +221,7 @@ class BatchLocationApp extends React.Component {
 
   // plantType = the type plant for location selection
   // when it's 'mother', let user select the mother plant during clone location selection
-  renderBookingsForPhase = (phase, quantity = 0, plantType = '') => {
+  renderBookingsForPhase = (phase, strainId, quantity = 0, plantType = '') => {
     const bookings = this.getBookingsByPhase(phase)
     const selectedCapacity = sumBy(bookings, 'quantity')
     const isBalance = quantity === selectedCapacity && quantity > 0
@@ -242,6 +240,7 @@ class BatchLocationApp extends React.Component {
           getSelected={this.getSelected}
           isBalance={isBalance}
           locationResolver={this.locationResolver}
+          strainId={strainId}
         />
       </React.Fragment>
     )
@@ -297,6 +296,7 @@ class BatchLocationApp extends React.Component {
               <div className="mt3 dib w-100">
                 {this.renderBookingsForPhase(
                   GROWTH_PHASE.CLONE,
+                  batchInfo.strainId,
                   quantity,
                   batchInfo.cloneSelectionType
                 )}
@@ -305,23 +305,23 @@ class BatchLocationApp extends React.Component {
               {isNotified && (
                 <React.Fragment>
                   <div className="mt4">
-                    {this.renderBookingsForPhase(GROWTH_PHASE.VEG1, quantity)}
+                    {this.renderBookingsForPhase(GROWTH_PHASE.VEG1, batchInfo.strainId, quantity)}
                   </div>
 
                   <div className="mt4">
-                    {this.renderBookingsForPhase(GROWTH_PHASE.VEG2, quantity)}
+                    {this.renderBookingsForPhase(GROWTH_PHASE.VEG2, batchInfo.strainId, quantity)}
                   </div>
 
                   <div className="mt4">
-                    {this.renderBookingsForPhase(GROWTH_PHASE.FLOWER, quantity)}
+                    {this.renderBookingsForPhase(GROWTH_PHASE.FLOWER, batchInfo.strainId, quantity)}
                   </div>
 
                   <div className="mt4">
-                    {this.renderBookingsForPhase(GROWTH_PHASE.DRY, quantity)}
+                    {this.renderBookingsForPhase(GROWTH_PHASE.DRY, batchInfo.strainId, quantity)}
                   </div>
 
                   <div className="mt4">
-                    {this.renderBookingsForPhase(GROWTH_PHASE.CURE, quantity)}
+                    {this.renderBookingsForPhase(GROWTH_PHASE.CURE, batchInfo.strainId, quantity)}
                   </div>
                 </React.Fragment>
               )}

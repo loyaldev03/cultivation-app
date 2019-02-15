@@ -52,6 +52,7 @@ class Cultivation::BatchesController < ApplicationController
         quantity: @batch.quantity,
         startDate: @batch.start_date,
         strainDisplayName: "#{@batch.facility_strain.strain_name} (#{@batch.facility_strain.strain_type})",
+        strainId: @batch.facility_strain_id.to_s,
         harvestDate: @batch.estimated_harvest_date,
       }).marshal_dump
       # Set the plantType for react BatchPlantSelectionList

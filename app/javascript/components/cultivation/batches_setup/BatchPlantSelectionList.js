@@ -43,7 +43,7 @@ const LocationField = React.memo(({ plant, locationResolver, onClick }) => {
 class BatchPlantSelectionList extends React.Component {
   componentDidMount() {
     if (this.props.plantType) {
-      loadPlants(this.props.plantType)
+      loadPlants(this.props.plantType, this.props.strainId)
     }
   }
 

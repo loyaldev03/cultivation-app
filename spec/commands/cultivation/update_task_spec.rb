@@ -184,7 +184,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
   end
 
   context ".call - update task location" do
-    it "update task location", focus: true do
+    it "update task location" do
       room = facility.rooms.first
       args = {
         id: t2_3_2_1.id.to_s,

@@ -77,10 +77,6 @@ class TaskSetup extends React.Component {
     const { batch } = this.props
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
-    let activeTabs =
-      'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
-    let inactiveTabs =
-      'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
     return (
       <div className="pa4 grey flex flex-column h-100">
         <div id="toast" className="toast animated toast--success" />
@@ -268,11 +264,11 @@ class TaskSetup extends React.Component {
         </div>
 
         <div className="pa4 flex flex-column justify-between bg-white box--shadow">
-          <TaskList batch={this.props.batch} columns={this.state.columns} />
+          <TaskList batch={batch} columns={this.state.columns} />
         </div>
         <IssueSidebar
-          batch_id={this.props.batch.id}
-          facility_id={this.props.batch.facility_id}
+          batch_id={batch.id}
+          facility_id={batch.facility_id}
           mode={this.state.mode}
           current_user_first_name={this.props.current_user_first_name}
           current_user_last_name={this.props.current_user_last_name}

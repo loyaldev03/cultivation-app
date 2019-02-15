@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@rails/webpacker": "3.5",
+    "@tippy.js/react": "^1.1.1",
     "@uppy/aws-s3": "^0.29.1",
     "@uppy/core": "^0.29.1",
     "@uppy/drag-drop": "^0.29.1",

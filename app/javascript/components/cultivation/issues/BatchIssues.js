@@ -136,14 +136,14 @@ class BatchIssues extends React.Component {
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3 ">
-          {/* <div className="flex mb3 justify-end">
+          <div className="flex mb3 justify-end">
             <button
               className="btn btn--primary"
               onClick={event => openSidebar(event, null, 'create')}
             >
               Submit an issue
             </button>
-          </div> */}
+          </div>
 
           <div className="flex">
             <ReactTable

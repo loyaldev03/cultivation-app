@@ -93,10 +93,9 @@ module Common
     # kg to g is then:
     # kg -> g = qty / 0.001
     def to(quantity, target_unit)
-      target_uom = UOM.find_by(unit: target_unit, dimension: self.dimension, base_unit: self.base_unit)
+      target_uom = Common::UnitOfMeasure.find_by(unit: target_unit, dimension: self.dimension, base_unit: self.base_unit)
       return nil if target_uom.nil?
-
-      base_qty = conversion * quantity
+      base_qty = conversion * quantity.to_i
       base_qty / target_uom.conversion
     end
   end

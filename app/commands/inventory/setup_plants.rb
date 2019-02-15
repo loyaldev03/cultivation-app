@@ -28,7 +28,8 @@ module Inventory
       :vendor_location_license_num,
       :purchase_date,
       :batch,
-      :catalogue
+      :catalogue,
+      :lot_number
 
     def initialize(user, args)
       @user = user
@@ -53,6 +54,8 @@ module Inventory
       @purchase_date = args[:purchase_date]
       @invoice_no = args[:invoice_no]
       @purchase_order_no = args[:purchase_order_no]
+      @lot_number = args[:lot_number]
+
       @batch = Cultivation::Batch.find(args[:cultivation_batch_id])
       @catalogue = Inventory::Catalogue.plant
     end
@@ -128,6 +131,7 @@ module Inventory
         status: is_draft ? 'draft' : 'available',
         planting_date: planting_date,
         mother_id: mother_id,
+        lot_number: lot_number,
         ref_id: invoice_item ? invoice_item.id : nil,
         ref_type: invoice_item ? invoice_item.class.name : nil,
       )
@@ -158,6 +162,7 @@ module Inventory
           status: is_draft ? 'draft' : 'available',
           planting_date: planting_date,
           mother_id: mother_id,
+          lot_number: lot_number,
           ref_id: invoice_item ? invoice_item.id : nil,
           ref_type: invoice_item ? invoice_item.class.name : nil,
         )

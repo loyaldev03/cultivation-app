@@ -11,6 +11,7 @@ module Issues
       @id = args[:id]
       @notes = args[:notes]
       @reason = args[:reason]
+      @current_user = current_user
     end
 
     def call

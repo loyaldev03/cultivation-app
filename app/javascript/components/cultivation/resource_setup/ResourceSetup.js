@@ -1,9 +1,5 @@
 import React from 'react'
-import { render } from 'react-dom'
 
-import { observable } from 'mobx'
-import { observer, Provider } from 'mobx-react'
-import { formatDate2 } from '../../utils'
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
 import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'

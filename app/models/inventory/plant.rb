@@ -32,6 +32,7 @@ module Inventory
     field :expected_harvest_date, type: DateTime
     field :destroyed_date, type: DateTime
     field :mother_id, type: BSON::ObjectId
+    field :lot_number, type: String
 
     field :wet_weight, type: BigDecimal, default: 0
     field :wet_waste_weight, type: BigDecimal, default: 0

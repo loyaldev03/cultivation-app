@@ -55,8 +55,12 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def destroy
-    delete_cmd = Cultivation::DestroyTask.call(params[:id])
-    render json: {errors: delete_cmd.errors}
+    delete_cmd = Cultivation::DestroyTask.call(current_user, params[:id])
+    if delete_cmd.success?
+      render json: {data: delete_cmd.result}
+    else
+      render json: {error: delete_cmd.errors}
+    end
   end
 
   def delete_relationship

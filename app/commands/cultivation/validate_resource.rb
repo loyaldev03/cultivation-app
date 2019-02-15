@@ -36,7 +36,7 @@ module Cultivation
         issue = Issues::Issue.find_or_initialize_by(
           task_id: task.id,
           cultivation_batch_id: batch.id.to_s,
-          title: "Task  #{task.name} have no resource allocate",
+          title: "Task #{task.name} have no resource allocate",
         )
 
         issue.issue_no = Issues::Issue.count + 1
@@ -63,8 +63,8 @@ module Cultivation
             title: "Resource over-allocation for Task #{task.name}",
           )
           issue.issue_no = Issues::Issue.count + 1
-          issue.title = "Resource over-allocation for Tas #{task.name} "
-          issue.description = "Resource over-allocation for Tas #{task.name} "
+          issue.title = "Resource over-allocation for Task #{task.name} "
+          issue.description = "Resource over-allocation for Task #{task.name} "
           issue.severity = 'severe'
           issue.issue_type = 'task_from_batch'
           issue.status = 'open'

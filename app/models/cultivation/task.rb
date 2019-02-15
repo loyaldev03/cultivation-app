@@ -78,6 +78,13 @@ module Cultivation
       WbsTree.child_of?(wbs, predecessor_wbs, batch_tasks)
     end
 
+    def siblings(batch_tasks)
+      if wbs.empty?
+        raise ArgumentError, 'Missing :wbs when calling parent. Use Task retrieve via QueryTasks.'
+      end
+      WbsTree.siblings(batch_tasks, wbs)
+    end
+
     def parent(batch_tasks)
       if wbs.empty?
         raise ArgumentError, 'Missing :wbs when calling parent. Use Task retrieve via QueryTasks.'

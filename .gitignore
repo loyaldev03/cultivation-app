@@ -36,3 +36,7 @@ yarn-debug.log*
 .idea
 .tool-versions
 .vscode
+
+# Ignore redis binary dump (dump.rdb) files
+*.rdb
+

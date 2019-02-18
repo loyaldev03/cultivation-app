@@ -21,9 +21,9 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def update_position
     update_cmd = Cultivation::UpdateTaskPosition.call(
+      current_user,
       params[:id],
       params[:target_position_task_id],
-      current_user,
     )
     if update_cmd.success?
       render json: {data: {id: update_cmd.result.id.to_s}}

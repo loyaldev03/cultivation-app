@@ -2,10 +2,10 @@ module Cultivation
   class UpdateTaskPosition
     prepend SimpleCommand
 
-    def initialize(task_id, drop_on_id, current_user)
+    def initialize(current_user, task_id, drop_on_id)
+      @current_user = current_user
       @task_id = task_id&.to_bson_id
       @drop_on_id = drop_on_id&.to_bson_id
-      @current_user = current_user
     end
 
     def call

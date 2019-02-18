@@ -1,0 +1,12 @@
+:concurrency: 3
+
+:timeout: 30
+
+:queues:
+  - critical
+  - default
+  - low
+
+production:
+  :concurrency: 3
+

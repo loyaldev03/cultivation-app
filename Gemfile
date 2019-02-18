@@ -122,3 +122,8 @@ gem 'pundit'
 
 # Model state machine
 gem 'aasm'
+
+
+gem 'redis'
+gem 'sidekiq'
+gem 'sidekiq-cron'

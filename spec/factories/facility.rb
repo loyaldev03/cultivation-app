@@ -7,7 +7,7 @@ FactoryBot.define do
       company_name { Faker::Company.name }
       state_license { Faker::Code.asin }
       site_license { Faker::Address.country }
-      timezone { Faker::Address.country }
+      timezone { TZInfo::Timezone.all.sample.name }
       is_complete { true }
       address { build(:address) }
       rooms do

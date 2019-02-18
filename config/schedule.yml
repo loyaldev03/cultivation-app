@@ -1,0 +1,11 @@
+batch_activation_job:
+  cron: "0 */1 * * *" #run worker every one hour
+  class: "ActivateBatchWorker"
+  queue: "low"
+
+
+
+# batch_activation_job:
+#   cron:  "* * * * *" #run worker every one minute
+#   class: "ActivateBatchWorker"
+#   queue: "low"

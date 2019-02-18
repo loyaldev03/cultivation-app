@@ -24,26 +24,36 @@ module Cultivation
     private
 
     def move_node(task, drop_on)
-      # pp "Moving #{task.name} -> #{drop_on.name} | #{drop_on.position}"
+      first_sibling = nil
       if task.indent > drop_on.indent
-        # pp '       drop as child node:'
         task.indent = drop_on.indent + 1
         new_position = get_new_position(task.position, drop_on.position)
       else
-        tasks = get_tasks(drop_on.batch)
-        drop_on = get_task(tasks, drop_on.id)
-        drop_on_children = drop_on.children(tasks)
+        task_ls = get_tasks(task.batch) # Use another task list to work with
+        first_sibling = task.siblings(task_ls).first
+        drop_on = get_task(task_ls, drop_on.id)
+        drop_on_children = drop_on.children(task_ls)
         if drop_on_children&.any?
-          # pp '       drop on tree parent'
           new_position = get_new_position(task.position,
                                           drop_on_children.last.position)
         else
-          # pp '       drop on sibling node'
           new_position = get_new_position(task.position, drop_on.position)
         end
       end
       # print_current_order
       task.move_to! new_position
+
+      # Call update task to cascade start_date changes. This is in case
+      # where task is being moved as first child.
+      Cultivation::UpdateTask.call(@current_user, task)
+
+      # If task have a sibling - perform update to cascade start date changes.
+      # This is in case where a first task has been moved, and the sibling take
+      # it's plance as first child.
+      if first_sibling
+        Cultivation::UpdateTask.call(@current_user, first_sibling)
+      end
+
       # print_current_order
       task
     end
@@ -51,9 +61,10 @@ module Cultivation
     def move_children(children, parent_node)
       ref_node = parent_node
       children.each do |t|
-        t = Cultivation::Task.includes(:batch).find(t.id)
-        move_node(t, ref_node)
-        ref_node = t
+        batch_tasks = get_tasks(parent_node.batch)
+        t_with_wbs = get_task(batch_tasks, t.id)
+        move_node(t_with_wbs, ref_node)
+        ref_node = t_with_wbs
       end
     end
 

@@ -12,11 +12,10 @@ module Cultivation
 
     def call
       @batches.each do |batch|
-        timezone = batch.facility.timezone
-        Time.zone = timezone #change timezone
-        #compare timezone
-        if Time.zone.now.to_date == batch.start_date.to_date
-          batch.update(status: Constants::BATCH_STATUS_ACTIVE)
+        Time.use_zone(batch.facility.timezone) do
+          if batch.start_date.past?
+            batch.update(status: Constants::BATCH_STATUS_ACTIVE)
+          end
         end
       end
     end

@@ -31,6 +31,7 @@ module Cultivation
     embeds_many :material_use, class_name: 'Cultivation::Item'
 
     has_many :issues, class_name: 'Issues::Issue'
+    has_one :task_detail, class_name: 'Cultivation::TaskDetail'
     orderable scope: :batch, base: 0
 
     scope :expected_on, -> (date) {

@@ -443,4 +443,21 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_moved.start_date.to_date).to eq drop_at_task.start_date.to_date
   end
 
+  it "Move first child task away, should update new first child start date" do
+    task_to_move = tasks[1]
+    task_follow  = tasks[2]
+    drop_at_task = tasks[3]
+
+    cmd = Cultivation::UpdateTaskPosition.call(current_user,
+                                               task_to_move.id.to_s,
+                                               drop_at_task.id)
+
+    updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
+    t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
+    t_follow = updated_tasks.detect { |t| t.id == task_follow.id }
+    expect(cmd.success?).to be true
+    expect(t_follow.wbs).to eq "1.1"
+    expect(t_follow.start_date.to_date).to eq(tasks[0].start_date.to_date)
+    expect(t_moved.wbs).to eq "1.3"
+  end
 end

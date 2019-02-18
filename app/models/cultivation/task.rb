@@ -51,50 +51,50 @@ module Cultivation
     end
 
     def have_children?(batch_tasks)
-      if wbs.empty?
+      if !wbs.present?
         raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
       end
       WbsTree.have_children?(wbs, batch_tasks)
     end
 
     def children(batch_tasks)
-      if wbs.empty?
+      if !wbs.present?
         raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
       end
       WbsTree.children(batch_tasks, wbs)
     end
 
     def first_child?
-      if wbs.empty?
-        raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
+      if !wbs.present?
+        raise ArgumentError, 'Missing :wbs when calling first_child. Use Task retrieve via QueryTasks.'
       end
       wbs.ends_with? '.1'
     end
 
     def child_of?(predecessor_wbs, batch_tasks)
-      if wbs.empty?
-        raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
+      if !wbs.present?
+        raise ArgumentError, 'Missing :wbs when calling child_of. Use Task retrieve via QueryTasks.'
       end
       WbsTree.child_of?(wbs, predecessor_wbs, batch_tasks)
     end
 
     def siblings(batch_tasks)
-      if wbs.empty?
-        raise ArgumentError, 'Missing :wbs when calling parent. Use Task retrieve via QueryTasks.'
+      if !wbs.present?
+        raise ArgumentError, 'Missing :wbs when calling siblings. Use Task retrieve via QueryTasks.'
       end
       WbsTree.siblings(batch_tasks, wbs)
     end
 
     def parent(batch_tasks)
-      if wbs.empty?
+      if !wbs.present?
         raise ArgumentError, 'Missing :wbs when calling parent. Use Task retrieve via QueryTasks.'
       end
       WbsTree.parent(batch_tasks, wbs)
     end
 
     def predecessor(batch_tasks)
-      if wbs.empty?
-        raise ArgumentError, 'Missing :wbs when calling parent. Use Task retrieve via QueryTasks.'
+      if !wbs.present?
+        raise ArgumentError, 'Missing :wbs when calling predecessor. Use Task retrieve via QueryTasks.'
       end
       batch_tasks.detect { |t| t.id == depend_on }
     end

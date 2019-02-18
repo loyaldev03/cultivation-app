@@ -138,7 +138,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(tasks_wbs[12][:wbs]).to eq "4"
   end
 
-  it "Cond A - Drop task 1.1 on 1.3" do
+  it "Move task from top to bottom (same parent)" do
     task_to_move = tasks[1] # 1.1
     drop_at_task = tasks[3] # 1.3
 
@@ -158,7 +158,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_dropped.wbs).to eq "1.2"
   end
 
-  it "Cond B - Drop task 1.3 on 1.1 to reorder" do
+  it "Move task from bottom to top (same parent)" do
     t1_1 = tasks[1] # 1.1
     t1_2 = tasks[2] # 1.2
     t1_3 = tasks[3] # 1.3
@@ -199,7 +199,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(cmd.result.indent).to eq 2
   end
 
-  it "Cond D - Drop task 2.3.2 on 1" do
+  it "Move task from bottom to top (diff parrent)" do
     task_to_move = tasks[9] # 2.3.2
     drop_at_task = tasks[0] # 1
 
@@ -240,7 +240,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_follow.wbs).to eq "4"
   end
 
-  it "Cond F - Drop task 2.3.2 to 2.3.1" do
+  it "Swap task position bottom to top (sibling)" do
     task_to_move = tasks[9] # 2.3.2
     drop_at_task = tasks[8] # 2.3.1
 
@@ -258,7 +258,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_dropped.indent).to eq 2
   end
 
-  it "Cond G - Drop task 2.3.1 to 2.3.2" do
+  it "Swap task position top to bottom (sibling)" do
     task_to_move = tasks[8] # 2.3.1
     drop_at_task = tasks[9] # 2.3.2
 
@@ -442,4 +442,5 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_moved.wbs).to eq "1.1"
     expect(t_moved.start_date.to_date).to eq drop_at_task.start_date.to_date
   end
+
 end

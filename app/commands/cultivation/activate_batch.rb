@@ -7,7 +7,7 @@ module Cultivation
 
     def initialize
       @batches = Cultivation::Batch
-        .where(:status.in => [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_DRAFT])
+        .where(:status.in => [Constants::BATCH_STATUS_SCHEDULED])
     end
 
     def call

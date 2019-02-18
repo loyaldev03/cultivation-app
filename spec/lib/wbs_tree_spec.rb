@@ -197,7 +197,7 @@ RSpec.describe "WbsTree", type: :lib do
       expect(parent6&.wbs).to be nil
     end
 
-    it ".siblings should return siblings", focus: true do
+    it ".siblings should return siblings" do
       saved_tasks = Cultivation::QueryTasks.call(tasks[0].batch).result
 
       siblings = WbsTree.siblings(saved_tasks, "2.2")

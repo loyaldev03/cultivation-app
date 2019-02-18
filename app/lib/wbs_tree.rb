@@ -53,10 +53,12 @@ class WbsTree
       task_parent = parent(tasks_with_wbs, node_wbs)
       if task_parent
         siblings = children(tasks_with_wbs, task_parent.wbs)
-        siblings.select do |t|
+        res = siblings.select do |t|
           t.wbs != node_wbs && t.indent == task.indent
         end
+        return res || []
       end
+      []
     end
 
     def parent(tasks_with_wbs = [], node_wbs = '')

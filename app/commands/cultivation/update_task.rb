@@ -5,26 +5,29 @@ module Cultivation
     REFTYPE_CHILDREN = 'children'.freeze
     REFTYPE_DEPENDENT = 'dependent'.freeze
 
+    attr_accessor :args, :current_user, :cascade_change_tasks, :schedule_batch
+
     def initialize(current_user = nil, args = nil, schedule_batch = false)
-      @args = args
-      @current_user = current_user
-      @schedule_batch = schedule_batch
+      self.current_user = current_user
+      self.args = args
+      self.schedule_batch = schedule_batch
+      self.cascade_change_tasks = []
     end
 
     def call
-      task = Cultivation::Task.includes(:batch).find_by(id: @args[:id])
-      if @args[:type] == 'resource'
-        task.update(user_ids: @args[:user_ids])
+      task = Cultivation::Task.includes(:batch).find_by(id: args[:id])
+      if args[:type] == 'resource'
+        task.update(user_ids: args[:user_ids])
       else
         batch = task.batch
         if valid_batch? batch
           batch_tasks = Cultivation::QueryTasks.call(batch).result
           task = get_task(batch_tasks, task.id)
-          facility_users = QueryUsers.call(@current_user, batch.facility_id).result
+          facility_users = QueryUsers.call(current_user, batch.facility_id).result
           # Remember original start_date
           original_start_date = task.start_date
           # Update task with args and re-calculate end_date
-          task = map_args_to_task(task, batch_tasks, @args)
+          task = map_args_to_task(task, batch_tasks)
           # Move subtasks's start date & save changes
           days_diff = (task.start_date - original_start_date) / 1.day
           adjust_children_dates(task, batch_tasks, days_diff)
@@ -35,16 +38,36 @@ module Cultivation
           # Cascade changes to root node's siblings
           update_root_siblings(task, batch_tasks, days_diff)
           # Save if no errors
+          detect_cascade_changes(task, batch_tasks)
           task.save! if errors.empty?
+          perform_cascade_change_tasks
           # TODO::ANDY - valid_data when updating tasks
           # Update batch
-          update_batch(batch, batch_tasks&.first, @schedule_batch)
+          update_batch(batch, batch_tasks&.first, schedule_batch)
         end
       end
       task
     end
 
     private
+
+    def detect_cascade_changes(task, batch_tasks)
+      # If the task is a first child of it's parent task, and user has change
+      # the depend_on field. The start_date should cascade to parent task.
+      if task.first_child? && task.changes['depend_on'].present?
+        task_parent = task.parent(batch_tasks)
+        task_parent.start_date = task.start_date
+        cascade_change_tasks.push(task_parent)
+      end
+    end
+
+    def perform_cascade_change_tasks
+      if cascade_change_tasks.present?
+        cascade_change_tasks.each do |t|
+          UpdateTask.call(current_user, t)
+        end
+      end
+    end
 
     def update_batch(batch, first_task, schedule_batch)
       # Here we assume estimated harvest date is the start date of :dry phase
@@ -67,19 +90,13 @@ module Cultivation
     end
 
     def update_tray_plans(batch)
-      cmd = Cultivation::UpdateTrayPlans.call(@current_user, batch_id: batch.id)
+      cmd = Cultivation::UpdateTrayPlans.call(current_user, batch_id: batch.id)
       if !cmd.success?
         errors = cmd.errors
       end
     end
 
-    def cascade_changes?(task)
-      # Update child and dependents tasks's start & end dates except
-      # when task is Clean - doesn't effect parent or dependent tasks
-      task.indelible != 'cleaning'
-    end
-
-    def map_args_to_task(task, batch_tasks, args)
+    def map_args_to_task(task, batch_tasks)
       # Only allow non-indelible task change these field
       if !task.indelible?
         task.name = args[:name]
@@ -121,9 +138,6 @@ module Cultivation
         if predecessor.present? && !task.child_of?(predecessor.wbs, batch_tasks)
           return predecessor.end_date
         end
-        # TODO::ANDY if dependent task is also a first child,
-        # it should also change the parent start_date. Only do this if user is
-        # changing the depend_on
       end
       parent = task.parent(batch_tasks)
       # First subtask should have same start_date as parent task

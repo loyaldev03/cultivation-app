@@ -59,6 +59,13 @@ module Cultivation
         task_parent.start_date = task.start_date
         cascade_change_tasks.push(task_parent)
       end
+
+      if task.changes['end_date'].present?
+        dependents = task.dependents(batch_tasks)
+        if dependents.present?
+          cascade_change_tasks.push(*dependents)
+        end
+      end
     end
 
     def perform_cascade_change_tasks
@@ -133,12 +140,22 @@ module Cultivation
     end
 
     def decide_start_date(task, batch_tasks, args_start_date, args_depend_on = nil)
+      # Start Date decided by depend_on task
       if args_depend_on.present? && task.depend_on != args_depend_on
         predecessor = get_task(batch_tasks, args_depend_on)
         if predecessor.present? && !task.child_of?(predecessor.wbs, batch_tasks)
           return predecessor.end_date
         end
       end
+
+      if task.depend_on.present?
+        predecessor = get_task(batch_tasks, task.depend_on)
+        if predecessor.present?
+          return predecessor.end_date
+        end
+      end
+
+      # Start Date decided by parent task
       parent = task.parent(batch_tasks)
       # First subtask should have same start_date as parent task
       if task.first_child?
@@ -151,6 +168,7 @@ module Cultivation
         end
         return args_start_date
       end
+
       # Use parent start date if not available
       task.start_date || parent.start_date
     end

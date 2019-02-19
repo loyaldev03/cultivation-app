@@ -7,8 +7,8 @@ module Cultivation
       field :start_time, type: DateTime
       field :end_time, type: DateTime
 
-      # embedded_in :work_day, class_name: 'Cultivation::WorkDay'
-      belongs_to :task_detail, class_name: 'Cultivation::TaskDetail'
+      embedded_in :work_day, class_name: 'Cultivation::WorkDay'
+      # belongs_to :task_detail, class_name: 'Cultivation::TaskDetail'
       validates_presence_of :start_time
 
       def stop!

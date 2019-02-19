@@ -348,6 +348,25 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       expect(cmd.success?).to be true
       expect(cmd.result.depend_on).to be nil
     end
+
+    it "first_child should cascade changes to parent" do
+      args = {
+        id: t2_3_2_1.id.to_s,
+        depend_on: t2_2.id.to_s,
+      }
+      expect(t2_3_2_1.start_date).not_to eq t2_2.end_date
+
+      cmd = Cultivation::UpdateTask.call(current_user, args)
+
+      expect(cmd.success?).to be true
+
+      tasks = Cultivation::QueryTasks.call(cmd.result.batch).result
+      target = tasks.detect { |t| t.id == cmd.result.id }
+      expect(target.start_date).to eq t2_2.end_date
+
+      parent = target.parent(tasks)
+      expect(parent.start_date).to eq target.start_date
+    end
   end
 
   context ".call - updating dates" do

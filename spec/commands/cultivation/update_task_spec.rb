@@ -85,7 +85,6 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
                     duration: 7,
                     start_date: t2_3_1.end_date,
                     end_date: t2_3_1.end_date + 7.days,
-                    depend_on: t2_3_1.id,
                     indent: 2)
 
     # wbs: 2.3.2.1
@@ -103,7 +102,6 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
                 duration: 10,
                 start_date: t2.end_date,
                 end_date: t2.end_date + 10.days,
-                depend_on: t2_3_2_1.id,
                 indent: 0)
     # wbs: 4
     t4 = create(:task,
@@ -361,7 +359,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       expect(cmd.success?).to be true
 
       tasks = Cultivation::QueryTasks.call(cmd.result.batch).result
-      target = tasks.detect { |t| t.id == cmd.result.id }
+      target = tasks.detect { |t| t.id == t2_3_2_1.id }
       expect(target.start_date).to eq t2_2.end_date
 
       parent = target.parent(tasks)
@@ -582,6 +580,31 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       expect(cmd.success?).to be true
       expect(cmd.result.end_date.to_datetime).to eq t1.end_date.to_datetime
       expect(cmd.result.duration).to eq t1.duration
+    end
+
+    it "depend_on end_date changes should cascade to dependents" do
+      args = {
+        id: t2_3_2_1.id.to_s,
+        depend_on: t2_2.id.to_s,
+      }
+      expect(t2_3_2_1.start_date).not_to eq t2_2.end_date
+
+      # First set the depend_on to take end date from depend_on
+      cmd1 = Cultivation::UpdateTask.call(current_user, args)
+      expect(cmd1.result.start_date).to eq t2_2.end_date
+
+      # Then, change the depend_on end_date
+      cmd2 = Cultivation::UpdateTask.call(
+        current_user,
+        id: t2_2.id.to_s,
+        duration: Faker::Number.number(1),
+      )
+
+      # depend_on end_date should cascade to dependents
+      tasks = Cultivation::QueryTasks.call(cmd2.result.batch).result
+      target = tasks.detect { |t| t.id == t2_3_2_1.id }
+      depend_on = tasks.detect { |t| t.id == t2_2.id }
+      expect(target.start_date).to eq depend_on.end_date
     end
   end
 end

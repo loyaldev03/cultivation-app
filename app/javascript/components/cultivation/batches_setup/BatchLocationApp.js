@@ -305,23 +305,43 @@ class BatchLocationApp extends React.Component {
               {isNotified && (
                 <React.Fragment>
                   <div className="mt4">
-                    {this.renderBookingsForPhase(GROWTH_PHASE.VEG1, batchInfo.strainId, quantity)}
+                    {this.renderBookingsForPhase(
+                      GROWTH_PHASE.VEG1,
+                      batchInfo.strainId,
+                      quantity
+                    )}
                   </div>
 
                   <div className="mt4">
-                    {this.renderBookingsForPhase(GROWTH_PHASE.VEG2, batchInfo.strainId, quantity)}
+                    {this.renderBookingsForPhase(
+                      GROWTH_PHASE.VEG2,
+                      batchInfo.strainId,
+                      quantity
+                    )}
                   </div>
 
                   <div className="mt4">
-                    {this.renderBookingsForPhase(GROWTH_PHASE.FLOWER, batchInfo.strainId, quantity)}
+                    {this.renderBookingsForPhase(
+                      GROWTH_PHASE.FLOWER,
+                      batchInfo.strainId,
+                      quantity
+                    )}
                   </div>
 
                   <div className="mt4">
-                    {this.renderBookingsForPhase(GROWTH_PHASE.DRY, batchInfo.strainId, quantity)}
+                    {this.renderBookingsForPhase(
+                      GROWTH_PHASE.DRY,
+                      batchInfo.strainId,
+                      quantity
+                    )}
                   </div>
 
                   <div className="mt4">
-                    {this.renderBookingsForPhase(GROWTH_PHASE.CURE, batchInfo.strainId, quantity)}
+                    {this.renderBookingsForPhase(
+                      GROWTH_PHASE.CURE,
+                      batchInfo.strainId,
+                      quantity
+                    )}
                   </div>
                 </React.Fragment>
               )}

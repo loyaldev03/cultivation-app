@@ -46,7 +46,7 @@ class TaskList extends React.Component {
   componentDidMount() {
     UserStore.loadUsers(this.props.batch.facility_id)
     // need to find after data react-table is loaded callback
-    setTimeout(() => this.mountEvents(), 1000)
+    setTimeout(() => this.mountEvents(), 1500)
   }
 
   closeSidebar = () => {

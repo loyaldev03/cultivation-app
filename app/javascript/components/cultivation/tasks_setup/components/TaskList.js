@@ -335,7 +335,12 @@ class TaskList extends React.Component {
             onDoneClick={value => {
               const selectedTask = TaskStore.getTaskByWbs(value)
               if (selectedTask) {
-                TaskStore.editTask(batchId, id, { depend_on: selectedTask.id }, true)
+                TaskStore.editTask(
+                  batchId,
+                  id,
+                  { depend_on: selectedTask.id },
+                  true
+                )
               } else {
                 TaskStore.editTask(batchId, id, { depend_on: null })
               }

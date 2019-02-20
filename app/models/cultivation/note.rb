@@ -4,8 +4,7 @@ module Cultivation
     include Mongoid::Timestamps::Short
 
     field :notes, type: String
-
-    belongs_to :task, class_name: 'Cultivation::Task'
+    embedded_in :task, class_name: 'Cultivation::Task'
     belongs_to :user, class_name: 'User'
   end
 end

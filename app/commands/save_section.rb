@@ -24,7 +24,15 @@ class SaveSection
     section.purpose_option = fo.purpose_option
     section.rack_has_levels = fo.rack_has_levels
     section.rack_count = fo.rack_count
+    room.purpose = get_room_purpose(room)
     facility.save!
     section
+  end
+
+  def get_room_purpose(room)
+    purposes = room.sections.map(&:purpose)&.uniq
+    if purposes.present?
+      room.purpose = purposes.join(', ')
+    end
   end
 end

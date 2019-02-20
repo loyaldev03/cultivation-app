@@ -32,13 +32,13 @@ module Cultivation
     #notes => Material used and waste in daily task should use ItemTransaction , use event_type for material_used or material_wasted
     belongs_to :batch, class_name: 'Cultivation::Batch'
 
-    has_many :notes, class_name: 'Cultivation::TaskLog::Note'
-    has_many :time_logs, class_name: 'Cultivation::TaskLog::TimeLog'
+    has_many :time_logs, class_name: 'Cultivation::TimeLog'
     has_many :issues, class_name: 'Issues::Issue'
 
     has_and_belongs_to_many :users, inverse_of: nil
 
     embeds_many :material_use, class_name: 'Cultivation::Item'
+    embeds_many :notes, class_name: 'Cultivation::Note'
 
     orderable scope: :batch, base: 0
 

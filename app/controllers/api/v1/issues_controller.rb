@@ -19,6 +19,11 @@ class Api::V1::IssuesController < Api::V1::BaseApiController
     render json: Issues::IssueSerializer.new(issues).serialized_json
   end
 
+  def by_task
+    issues = Issues::QueryTaskIssues.call(params[:task_id]).result
+    render json: Issues::IssueSerializer.new(issues).serialized_json
+  end
+
   def create
     command = Issues::SaveIssue.call(current_user, params.to_unsafe_h)
     if command.success?

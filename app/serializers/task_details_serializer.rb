@@ -1,4 +1,4 @@
-class TaskSerializer
+class TaskDetailsSerializer
   include FastJsonapi::ObjectSerializer
 
   attributes :phase,

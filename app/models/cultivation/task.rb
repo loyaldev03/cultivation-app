@@ -20,7 +20,6 @@ module Cultivation
     field :indelible, type: String
     # Predecessor task
     field :depend_on, type: BSON::ObjectId
-    field :task_type, type: Array, default: []
     # Task Location Info
     field :location_id, type: BSON::ObjectId
     field :location_type, type: String  # full ruby class name

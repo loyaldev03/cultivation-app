@@ -14,7 +14,6 @@ class TaskSerializer
     :wbs,
     :indent,
     :indelible,
-    :task_type,
     :location_type
 
   attributes :id do |object|

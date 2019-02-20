@@ -3,10 +3,11 @@ module Inventory
     include Mongoid::Document
     include Mongoid::Timestamps::Short
 
+    #add created_by for whodunnit
     field :plant_id, type: BSON::ObjectId       # might be removed if no ID assigned
     field :ref_id, type: BSON::ObjectId
     field :ref_type, type: String
-    field :event_type, type: String             # stock_intake, materials_used
+    field :event_type, type: String             # stock_intake, materials_used, material_wasted
     field :event_date, type: DateTime
 
     #

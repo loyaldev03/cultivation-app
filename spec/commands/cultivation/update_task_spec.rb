@@ -353,6 +353,7 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
         depend_on: t2_2.id.to_s,
       }
       expect(t2_3_2_1.start_date).not_to eq t2_2.end_date
+      expect(t2_3_2.duration).to eq t2_3_2_1.duration
 
       cmd = Cultivation::UpdateTask.call(current_user, args)
 
@@ -360,10 +361,11 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
 
       tasks = Cultivation::QueryTasks.call(cmd.result.batch).result
       target = tasks.detect { |t| t.id == t2_3_2_1.id }
+      parent = tasks.detect { |t| t.id == t2_3_2.id }
       expect(target.start_date).to eq t2_2.end_date
-
-      parent = target.parent(tasks)
       expect(parent.start_date).to eq target.start_date
+      expect(parent.end_date).to eq target.end_date
+      expect(parent.duration).to eq target.duration
     end
   end
 

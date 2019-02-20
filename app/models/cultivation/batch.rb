@@ -2,6 +2,7 @@ module Cultivation
   class Batch
     include Mongoid::Document
     include Mongoid::Timestamps::Short
+    include Mongoid::History::Trackable
 
     field :batch_no, type: String
     field :name, type: String
@@ -24,6 +25,21 @@ module Cultivation
     has_many :tasks, class_name: 'Cultivation::Task'
     has_many :plants, class_name: 'Inventory::Plant'
     has_one :nutrient_profile, class_name: 'Cultivation::NutrientProfile'
+
+    track_history on: [:batch_no,
+                       :name,
+                       :batch_source,
+                       :grow_method,
+                       :start_date,
+                       :estimated_harvest_date,
+                       :quantity,
+                       :current_growth_stage,
+                       :selected_plants,
+                       :status],
+                  modifier_field: :modifier,
+                  modifier_field_inverse_of: nil,
+                  modifier_field_optional: true,
+                  tracker_class_name: :batch_history_tracker
 
     def dependent_task(tasks, task)
       return if task.tasks_depend.count.zero?

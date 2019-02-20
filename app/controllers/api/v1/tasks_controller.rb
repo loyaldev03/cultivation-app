@@ -21,9 +21,9 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def update_position
     update_cmd = Cultivation::UpdateTaskPosition.call(
+      current_user,
       params[:id],
       params[:target_position_task_id],
-      current_user,
     )
     if update_cmd.success?
       render json: {data: {id: update_cmd.result.id.to_s}}
@@ -46,7 +46,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def create
-    create_cmd = Cultivation::CreateTask.call(task_params)
+    create_cmd = Cultivation::CreateTask.call(current_user, task_params)
     if create_cmd.success?
       render json: {data: {id: create_cmd.result.id.to_s}}
     else
@@ -55,8 +55,12 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def destroy
-    delete_cmd = Cultivation::DestroyTask.call(params[:id])
-    render json: {errors: delete_cmd.errors}
+    delete_cmd = Cultivation::DestroyTask.call(current_user, params[:id])
+    if delete_cmd.success?
+      render json: {data: delete_cmd.result}
+    else
+      render json: {error: delete_cmd.errors}
+    end
   end
 
   def delete_relationship

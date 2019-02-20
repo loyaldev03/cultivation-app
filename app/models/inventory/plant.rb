@@ -2,6 +2,7 @@ module Inventory
   class Plant
     include Mongoid::Document
     include Mongoid::Timestamps::Short
+    include Mongoid::History::Trackable
 
     # Seed data for prepurchased clone
 
@@ -31,13 +32,36 @@ module Inventory
     field :expected_harvest_date, type: DateTime
     field :destroyed_date, type: DateTime
     field :mother_id, type: BSON::ObjectId
+    field :lot_number, type: String
 
     field :wet_weight, type: BigDecimal, default: 0
     field :wet_waste_weight, type: BigDecimal, default: 0
     field :wet_weight_uom, type: String
 
     field :last_metrc_update, type: DateTime
+
+    # E.g. If plant is purchased, this would like to invoice item
+    # E.g. If grown from clipping, this would be nil
     field :ref_id, type: BSON::ObjectId
     field :ref_type, type: String
+
+    track_history on: [:plant_tag,
+                       :location_id,
+                       :location_type,
+                       :status,
+                       :current_growth_stage,
+                       :planting_date,
+                       :estimated_harvest_date,
+                       :destroyed_date,
+                       :mother_date,
+                       :mother_id,
+                       :lot_number,
+                       :wet_weight,
+                       :wet_waste_weight,
+                       :wet_weight_uom],
+                  modifier_field: :modifier,
+                  modifier_field_inverse_of: nil,
+                  modifier_field_optional: true,
+                  tracker_class_name: :plant_history_tracker
   end
 end

@@ -182,13 +182,16 @@ class Comments extends React.Component {
   onSubmitResolve = data => {
     if (!data.cancel) {
       const merged = { ...data, id: currentIssue.issue.id }
-      resolveIssue(merged)
+      resolveIssue(merged).then(({ _, status }) => {
+        if (status === 200) {
+          this.setState({
+            showResolveForm: false,
+            showCommentMenuId: '',
+            showAddComment: true
+          })
+        }
+      })
     }
-    this.setState({
-      showResolveForm: false,
-      showCommentMenuId: '',
-      showAddComment: true
-    })
   }
 
   onEditComment = id => {

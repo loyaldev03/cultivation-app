@@ -46,7 +46,7 @@ class TaskList extends React.Component {
   componentDidMount() {
     UserStore.loadUsers(this.props.batch.facility_id)
     // need to find after data react-table is loaded callback
-    setTimeout(() => this.mountEvents(), 1000)
+    setTimeout(() => this.mountEvents(), 1500)
   }
 
   closeSidebar = () => {
@@ -335,7 +335,7 @@ class TaskList extends React.Component {
             onDoneClick={value => {
               const selectedTask = TaskStore.getTaskByWbs(value)
               if (selectedTask) {
-                TaskStore.editTask(batchId, id, { depend_on: selectedTask.id })
+                TaskStore.editTask(batchId, id, { depend_on: selectedTask.id }, true)
               } else {
                 TaskStore.editTask(batchId, id, { depend_on: null })
               }

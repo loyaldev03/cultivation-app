@@ -3,6 +3,9 @@ module Cultivation
     include Mongoid::Document
     include Mongoid::Timestamps::Short
     include Mongoid::Orderable
+    # History tracking all Task documents
+    # Note: tracking will not work until #track_history is invoked
+    include Mongoid::History::Trackable
 
     attr_accessor :wbs
 
@@ -39,6 +42,12 @@ module Cultivation
 
     orderable scope: :batch, base: 0
 
+    track_history on: %i[phase name duration start_date end_date estimated_hours depend_on location_id location_type],
+                  modifier_field: :modifier,
+                  modifier_field_inverse_of: nil,
+                  modifier_field_optional: true,
+                  tracker_class_name: :task_history_tracker
+
     scope :expected_on, -> (date) {
             all.and(:start_date.lte => date, :end_date.gte => date)
           }
@@ -48,43 +57,50 @@ module Cultivation
     end
 
     def have_children?(batch_tasks)
-      if wbs.empty?
+      if !wbs.present?
         raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
       end
       WbsTree.have_children?(wbs, batch_tasks)
     end
 
     def children(batch_tasks)
-      if wbs.empty?
+      if !wbs.present?
         raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
       end
       WbsTree.children(batch_tasks, wbs)
     end
 
     def first_child?
-      if wbs.empty?
-        raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
+      if !wbs.present?
+        raise ArgumentError, 'Missing :wbs when calling first_child. Use Task retrieve via QueryTasks.'
       end
       wbs.ends_with? '.1'
     end
 
     def child_of?(predecessor_wbs, batch_tasks)
-      if wbs.empty?
-        raise ArgumentError, 'Missing :wbs when calling children. Use Task retrieve via QueryTasks.'
+      if !wbs.present?
+        raise ArgumentError, 'Missing :wbs when calling child_of. Use Task retrieve via QueryTasks.'
       end
       WbsTree.child_of?(wbs, predecessor_wbs, batch_tasks)
     end
 
+    def siblings(batch_tasks)
+      if !wbs.present?
+        raise ArgumentError, 'Missing :wbs when calling siblings. Use Task retrieve via QueryTasks.'
+      end
+      WbsTree.siblings(batch_tasks, wbs)
+    end
+
     def parent(batch_tasks)
-      if wbs.empty?
+      if !wbs.present?
         raise ArgumentError, 'Missing :wbs when calling parent. Use Task retrieve via QueryTasks.'
       end
       WbsTree.parent(batch_tasks, wbs)
     end
 
     def predecessor(batch_tasks)
-      if wbs.empty?
-        raise ArgumentError, 'Missing :wbs when calling parent. Use Task retrieve via QueryTasks.'
+      if !wbs.present?
+        raise ArgumentError, 'Missing :wbs when calling predecessor. Use Task retrieve via QueryTasks.'
       end
       batch_tasks.detect { |t| t.id == depend_on }
     end

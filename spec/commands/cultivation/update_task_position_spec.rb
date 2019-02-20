@@ -11,25 +11,25 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     t1_1 = create(:task,
                   batch: t1.batch,
                   name: "Task 1.1",
-                  duration: 1,
+                  duration: 5,
                   start_date: t1.start_date,
-                  end_date: t1.start_date + 1.days,
+                  end_date: t1.start_date + 5.days,
                   indent: 1)
     # wbs: 1.2
     t1_2 = create(:task,
                   batch: t1.batch,
                   name: "Task 1.2",
                   duration: 2,
-                  start_date: t1.start_date,
-                  end_date: t1.start_date + 2.days,
+                  start_date: t1.start_date + 1.days,
+                  end_date: t1.start_date + 3.days,
                   indent: 1)
     # wbs: 1.3
     t1_3 = create(:task,
                   batch: t1.batch,
                   name: "Task 1.3",
                   duration: 1,
-                  start_date: t1_2.start_date,
-                  end_date: t1_2.start_date + 1.days,
+                  start_date: t1.start_date + 2.days,
+                  end_date: t1.start_date + 3.days,
                   indent: 1)
     # wbs: 2
     t2 = create(:task,
@@ -138,13 +138,13 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(tasks_wbs[12][:wbs]).to eq "4"
   end
 
-  it "Cond A - Drop task 1.1 on 1.3" do
+  it "Move task from top to bottom (same parent)" do
     task_to_move = tasks[1] # 1.1
     drop_at_task = tasks[3] # 1.3
 
-    cmd = Cultivation::UpdateTaskPosition.call(task_to_move.id,
-                                               drop_at_task.id,
-                                               current_user)
+    cmd = Cultivation::UpdateTaskPosition.call(current_user,
+                                               task_to_move.id,
+                                               drop_at_task.id)
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
@@ -158,12 +158,12 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_dropped.wbs).to eq "1.2"
   end
 
-  it "Cond B - Drop task 1.3 on 1.1 to reorder" do
+  it "Move task from bottom to top (same parent)" do
     t1_1 = tasks[1] # 1.1
     t1_2 = tasks[2] # 1.2
     t1_3 = tasks[3] # 1.3
 
-    cmd = Cultivation::UpdateTaskPosition.call(t1_3.id, t1_1.id, current_user)
+    cmd = Cultivation::UpdateTaskPosition.call(current_user, t1_3.id, t1_1.id)
 
     # Verify position has been moved
     updated_tasks = Cultivation::QueryTasks.call(t1_3.batch).result
@@ -184,9 +184,9 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     task_to_move = tasks[9]
     drop_at_task = tasks[7]
 
-    cmd = Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
-                                         drop_at_task.id.to_s,
-                                         current_user)
+    cmd = Cultivation::UpdateTaskPosition.call(current_user,
+                                               task_to_move.id.to_s,
+                                               drop_at_task.id.to_s)
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
@@ -199,13 +199,13 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(cmd.result.indent).to eq 2
   end
 
-  it "Cond D - Drop task 2.3.2 on 1" do
+  it "Move task from bottom to top (diff parrent)" do
     task_to_move = tasks[9] # 2.3.2
     drop_at_task = tasks[0] # 1
 
-    cmd = Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
-                                         drop_at_task.id.to_s,
-                                         current_user)
+    cmd = Cultivation::UpdateTaskPosition.call(current_user,
+                                               task_to_move.id.to_s,
+                                               drop_at_task.id.to_s)
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
@@ -225,9 +225,9 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     task_to_move = tasks[10] # 2.3.2.1
     drop_at_task = tasks[11] # 3
 
-    Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
-                                         drop_at_task.id.to_s,
-                                         current_user)
+    Cultivation::UpdateTaskPosition.call(current_user,
+                                         task_to_move.id.to_s,
+                                         drop_at_task.id.to_s)
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
@@ -240,13 +240,13 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_follow.wbs).to eq "4"
   end
 
-  it "Cond F - Drop task 2.3.2 to 2.3.1" do
+  it "Swap task position bottom to top (sibling)" do
     task_to_move = tasks[9] # 2.3.2
     drop_at_task = tasks[8] # 2.3.1
 
-    Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
-                                         drop_at_task.id,
-                                         current_user)
+    Cultivation::UpdateTaskPosition.call(current_user,
+                                         task_to_move.id.to_s,
+                                         drop_at_task.id)
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
@@ -258,13 +258,13 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_dropped.indent).to eq 2
   end
 
-  it "Cond G - Drop task 2.3.1 to 2.3.2" do
+  it "Swap task position top to bottom (sibling)" do
     task_to_move = tasks[8] # 2.3.1
     drop_at_task = tasks[9] # 2.3.2
 
-    Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
-                                         drop_at_task.id,
-                                         current_user)
+    Cultivation::UpdateTaskPosition.call(current_user,
+                                         task_to_move.id.to_s,
+                                         drop_at_task.id)
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
@@ -283,9 +283,9 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     task_to_move = tasks[9] # 2.3.2
     drop_at_task = tasks[6] # 2.2
 
-    cmd = Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
-                                         drop_at_task.id,
-                                         current_user)
+    cmd = Cultivation::UpdateTaskPosition.call(current_user,
+                                               task_to_move.id.to_s,
+                                               drop_at_task.id)
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
@@ -304,9 +304,9 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     task_to_move = tasks[11] # 3
     drop_at_task = tasks[10] # 2.3.2.1
 
-    cmd = Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
-                                         drop_at_task.id.to_s,
-                                         current_user)
+    cmd = Cultivation::UpdateTaskPosition.call(current_user,
+                                               task_to_move.id.to_s,
+                                               drop_at_task.id.to_s)
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
@@ -321,9 +321,9 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     task_to_move = tasks[11]
     drop_at_task = tasks[0]
 
-    Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
-                                         drop_at_task.id,
-                                         current_user)
+    Cultivation::UpdateTaskPosition.call(current_user,
+                                         task_to_move.id.to_s,
+                                         drop_at_task.id)
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
@@ -339,9 +339,9 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     task_to_move = tasks[12]
     drop_at_task = tasks[10]
 
-    cmd = Cultivation::UpdateTaskPosition.call(task_to_move.id,
-                                               drop_at_task.id,
-                                               current_user)
+    cmd = Cultivation::UpdateTaskPosition.call(current_user,
+                                               task_to_move.id,
+                                               drop_at_task.id)
 
     expect(cmd.success?).to eq false
     expect(cmd.errors[:error][0]).not_to be nil
@@ -351,9 +351,9 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     task_to_move = tasks[7]  # 2.3
     drop_at_task = tasks[11] # 3
 
-    Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
-                                         drop_at_task.id,
-                                         current_user)
+    Cultivation::UpdateTaskPosition.call(current_user,
+                                         task_to_move.id.to_s,
+                                         drop_at_task.id)
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
@@ -371,9 +371,9 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     task_to_move = tasks[4]  # 2
     drop_at_task = tasks[11] # 3
 
-    Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
-                                         drop_at_task.id,
-                                         current_user)
+    Cultivation::UpdateTaskPosition.call(current_user,
+                                         task_to_move.id.to_s,
+                                         drop_at_task.id)
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
@@ -392,9 +392,9 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     task_to_move = tasks[7]  # 2.3
     drop_at_task = tasks[0]  # 1
 
-    Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
-                                         drop_at_task.id,
-                                         current_user)
+    Cultivation::UpdateTaskPosition.call(current_user,
+                                         task_to_move.id.to_s,
+                                         drop_at_task.id)
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
@@ -410,9 +410,9 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     task_to_move = tasks[5]
     drop_at_task = tasks[9]
 
-    cmd = Cultivation::UpdateTaskPosition.call(task_to_move.id.to_s,
-                                               drop_at_task.id,
-                                               current_user)
+    cmd = Cultivation::UpdateTaskPosition.call(current_user,
+                                               task_to_move.id.to_s,
+                                               drop_at_task.id)
 
     updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
     t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
@@ -426,5 +426,38 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
     expect(t_follow.position).to eq 5
     expect(t_dropped.wbs).to eq "2.2.2"
     expect(t_dropped.position).to eq 8
+  end
+
+  it "Move task as first child, should follow parent date" do
+    task_to_move = tasks[3]
+    drop_at_task = tasks[0]
+
+    cmd = Cultivation::UpdateTaskPosition.call(current_user,
+                                               task_to_move.id.to_s,
+                                               drop_at_task.id)
+
+    updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
+    t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
+    expect(cmd.success?).to be true
+    expect(t_moved.wbs).to eq "1.1"
+    expect(t_moved.start_date.to_date).to eq drop_at_task.start_date.to_date
+  end
+
+  it "Move first child task away, should update new first child start date" do
+    task_to_move = tasks[1]
+    task_follow  = tasks[2]
+    drop_at_task = tasks[3]
+
+    cmd = Cultivation::UpdateTaskPosition.call(current_user,
+                                               task_to_move.id.to_s,
+                                               drop_at_task.id)
+
+    updated_tasks = Cultivation::QueryTasks.call(task_to_move.batch).result
+    t_moved = updated_tasks.detect { |t| t.id == task_to_move.id }
+    t_follow = updated_tasks.detect { |t| t.id == task_follow.id }
+    expect(cmd.success?).to be true
+    expect(t_follow.wbs).to eq "1.1"
+    expect(t_follow.start_date.to_date).to eq(tasks[0].start_date.to_date)
+    expect(t_moved.wbs).to eq "1.3"
   end
 end

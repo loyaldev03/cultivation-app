@@ -5,46 +5,76 @@ module Cultivation
     REFTYPE_CHILDREN = 'children'.freeze
     REFTYPE_DEPENDENT = 'dependent'.freeze
 
+    attr_accessor :args, :current_user, :cascade_change_tasks, :schedule_batch
+
     def initialize(current_user = nil, args = nil, schedule_batch = false)
-      @args = args
-      @current_user = current_user
-      @schedule_batch = schedule_batch
+      self.current_user = current_user
+      self.args = args
+      self.schedule_batch = schedule_batch
+      self.cascade_change_tasks = []
     end
 
     def call
-      task = Cultivation::Task.includes(:batch).find_by(id: @args[:id])
-      if @args[:type] == 'resource'
-        task.update(user_ids: @args[:user_ids])
+      task = Cultivation::Task.includes(:batch).find_by(id: args[:id])
+      if args[:type] == 'resource'
+        task.update(user_ids: args[:user_ids])
       else
         batch = task.batch
         if valid_batch? batch
           batch_tasks = Cultivation::QueryTasks.call(batch).result
           task = get_task(batch_tasks, task.id)
-          facility_users = QueryUsers.call(@current_user, batch.facility_id).result
+          facility_users = QueryUsers.call(current_user, batch.facility_id).result
           # Remember original start_date
           original_start_date = task.start_date
           # Update task with args and re-calculate end_date
-          task = map_args_to_task(task, batch_tasks, @args)
+          task = map_args_to_task(task, batch_tasks)
           # Move subtasks's start date & save changes
           days_diff = (task.start_date - original_start_date) / 1.day
           adjust_children_dates(task, batch_tasks, days_diff)
           # Update estimated cost
-          update_estimated_cost(task, facility_users)
+          update_estimated_cost(task, batch_tasks, facility_users)
           # Extend / contract parent duration & end_date
           update_parent_cascade(task, batch_tasks)
           # Cascade changes to root node's siblings
           update_root_siblings(task, batch_tasks, days_diff)
           # Save if no errors
+          detect_cascade_changes(task, batch_tasks)
           task.save! if errors.empty?
+          perform_cascade_change_tasks
           # TODO::ANDY - valid_data when updating tasks
           # Update batch
-          update_batch(batch, batch_tasks&.first, @schedule_batch)
+          update_batch(batch, batch_tasks&.first, schedule_batch)
         end
       end
       task
     end
 
     private
+
+    def detect_cascade_changes(task, batch_tasks)
+      # If the task is a first child of it's parent task, and user has change
+      # the depend_on field. The start_date should cascade to parent task.
+      if task.first_child? && task.changes['depend_on'].present?
+        task_parent = task.parent(batch_tasks)
+        task_parent.start_date = task.start_date
+        cascade_change_tasks.push(task_parent)
+      end
+
+      if task.changes['end_date'].present?
+        dependents = task.dependents(batch_tasks)
+        if dependents.present?
+          cascade_change_tasks.push(*dependents)
+        end
+      end
+    end
+
+    def perform_cascade_change_tasks
+      if cascade_change_tasks.present?
+        cascade_change_tasks.each do |t|
+          UpdateTask.call(current_user, t)
+        end
+      end
+    end
 
     def update_batch(batch, first_task, schedule_batch)
       # Here we assume estimated harvest date is the start date of :dry phase
@@ -67,19 +97,13 @@ module Cultivation
     end
 
     def update_tray_plans(batch)
-      cmd = Cultivation::UpdateTrayPlans.call(@current_user, batch_id: batch.id)
+      cmd = Cultivation::UpdateTrayPlans.call(current_user, batch_id: batch.id)
       if !cmd.success?
         errors = cmd.errors
       end
     end
 
-    def cascade_changes?(task)
-      # Update child and dependents tasks's start & end dates except
-      # when task is Clean - doesn't effect parent or dependent tasks
-      task.indelible != 'cleaning'
-    end
-
-    def map_args_to_task(task, batch_tasks, args)
+    def map_args_to_task(task, batch_tasks)
       # Only allow non-indelible task change these field
       if !task.indelible?
         task.name = args[:name]
@@ -87,10 +111,8 @@ module Cultivation
       task.start_date = decide_start_date(task, batch_tasks, args[:start_date], args[:depend_on])
       task.depend_on = decide_depend_on(task, batch_tasks, args[:depend_on])
       if !task.have_children?(batch_tasks)
-        # Parent duration should derived from sub-tasks
         task.duration = args[:duration].present? ? args[:duration].to_i : 1
         task.user_ids = decide_assigned_users(args[:user_ids])
-        # Parent estimated_hours should derived from sub-tasks
         task.estimated_hours = args[:estimated_hours].to_f
       else
         # Clear data not relevant to parent task
@@ -118,15 +140,22 @@ module Cultivation
     end
 
     def decide_start_date(task, batch_tasks, args_start_date, args_depend_on = nil)
+      # Start Date decided by depend_on task
       if args_depend_on.present? && task.depend_on != args_depend_on
         predecessor = get_task(batch_tasks, args_depend_on)
         if predecessor.present? && !task.child_of?(predecessor.wbs, batch_tasks)
           return predecessor.end_date
         end
-        # TODO::ANDY if dependent task is also a first child,
-        # it should also change the parent start_date. Only do this if user is
-        # changing the depend_on
       end
+
+      if task.depend_on.present?
+        predecessor = get_task(batch_tasks, task.depend_on)
+        if predecessor.present?
+          return predecessor.end_date
+        end
+      end
+
+      # Start Date decided by parent task
       parent = task.parent(batch_tasks)
       # First subtask should have same start_date as parent task
       if task.first_child?
@@ -139,6 +168,7 @@ module Cultivation
         end
         return args_start_date
       end
+
       # Use parent start date if not available
       task.start_date || parent.start_date
     end
@@ -151,7 +181,15 @@ module Cultivation
       end
     end
 
-    def update_estimated_cost(task, users)
+    def update_estimated_cost(task, batch_tasks, users)
+      if task.have_children?(batch_tasks)
+        # Task with children task would deduce from child tasks.
+        children = task.children(batch_tasks)
+        task.estimated_hours = sum_children_hours(children, batch_tasks)
+        task.estimated_cost = sum_children_cost(children, batch_tasks)
+        return
+      end
+
       if task.estimated_hours && task.duration && task.user_ids.present?
         hours_per_person = task.estimated_hours / task.user_ids.length
         estimated_cost = 0.00
@@ -199,7 +237,6 @@ module Cultivation
           adjust_children_dates(node, batch_tasks, days_diff)
         end
         siblings.each(&:save)
-        return
       end
     end
 
@@ -237,14 +274,18 @@ module Cultivation
     def update_parent_cascade(task, batch_tasks)
       parent = task.parent(batch_tasks)
       while parent.present?
-        children = parent.children(batch_tasks)
-        parent.estimated_hours = sum_children_hours(children, batch_tasks)
-        parent.estimated_cost = sum_children_cost(children, batch_tasks)
-        parent.duration = decide_duration(task, parent, children)
-        parent.end_date = parent.start_date + parent.duration.days
-        parent.save
+        update_parent_estimations(task, parent, batch_tasks)
         parent = parent.parent(batch_tasks)
       end
+    end
+
+    def update_parent_estimations(task, parent, batch_tasks)
+      children = parent.children(batch_tasks)
+      parent.estimated_hours = sum_children_hours(children, batch_tasks)
+      parent.estimated_cost = sum_children_cost(children, batch_tasks)
+      parent.duration = decide_duration(task, parent, children)
+      parent.end_date = parent.start_date + parent.duration.days
+      parent.save
     end
 
     def valid_batch?(batch)

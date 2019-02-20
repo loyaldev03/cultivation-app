@@ -4,17 +4,18 @@ module Cultivation
 
     attr_reader :args
 
-    def initialize(args)
+    def initialize(current_user, args)
       @args = args
+      @current_user = current_user
     end
 
     def call
-      save_record(@args)
+      save_record
     end
 
     private
 
-    def save_record(args)
+    def save_record
       task_related = Cultivation::Task.find_by(id: args[:task_related_id])
       argument = args.except(:task_related_id, :position, :action)
       argument[:batch_id] = task_related.batch_id
@@ -31,6 +32,8 @@ module Cultivation
         new_task.indent = task_related.indent + 1 if have_children
         new_task.move_to! task_related.position + 1
       end
+      # Call update task on the new task to cascade changes
+      Cultivation::UpdateTask.call(@current_user, new_task)
       new_task
     end
 

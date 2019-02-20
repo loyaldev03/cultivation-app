@@ -48,6 +48,19 @@ class WbsTree
       tasks_with_wbs.select { |t| t.wbs.starts_with? child_wbs }
     end
 
+    def siblings(tasks_with_wbs = [], node_wbs = '')
+      task = tasks_with_wbs.detect { |t| t.wbs == node_wbs }
+      task_parent = parent(tasks_with_wbs, node_wbs)
+      if task_parent
+        siblings = children(tasks_with_wbs, task_parent.wbs)
+        res = siblings.select do |t|
+          t.wbs != node_wbs && t.indent == task.indent
+        end
+        return res || []
+      end
+      []
+    end
+
     def parent(tasks_with_wbs = [], node_wbs = '')
       if !node_wbs.blank? && !tasks_with_wbs.blank?
         last_index = node_wbs.rindex('.')

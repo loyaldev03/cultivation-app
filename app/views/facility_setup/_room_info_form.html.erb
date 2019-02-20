@@ -25,11 +25,17 @@
     </div>
 
     <div class="mb3">
-      <%= f.label "Purpose of Room", class:"subtitle-2 db mb1 grey ttc" %>
-      <%= f.select :purpose,
-        options_for_select(
-          Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}, room.purpose)
-      %> 
+      <% if room.sections.present? %>
+        <%= f.label "Purpose of Room (set by sections)", class:"subtitle-2 db mb1 grey" %>
+        <span class="grey pt1 ttc"><%= room.purpose %></span>
+        <%= f.hidden_field :purpose, value: room.purpose %>
+      <% else %>
+        <%= f.label "Purpose of Room", class:"subtitle-2 db mb1 grey ttc" %>
+        <%= f.select :purpose,
+          options_for_select(
+            Constants::ROOM_PURPOSE.collect {|p| [ p[:name], p[:code]]}, room.purpose)
+        %> 
+      <% end %>
     </div>
 
     <% if room.wz_generated %>

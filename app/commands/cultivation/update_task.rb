@@ -31,11 +31,11 @@ module Cultivation
           # Move subtasks's start date & save changes
           days_diff = (task.start_date - original_start_date) / 1.day
           adjust_children_dates(task, batch_tasks, days_diff)
-          # Update estimated cost
+          # Update estimated cost of current task
           update_estimated_cost(task, batch_tasks, facility_users)
           # Extend / contract parent duration & end_date
           update_parent_cascade(task, batch_tasks)
-          # Cascade changes to root node's siblings
+          # Cascade changes to root node's siblings (if current node is root)
           update_root_siblings(task, batch_tasks, days_diff)
           # Save if no errors
           detect_cascade_changes(task, batch_tasks)
@@ -52,14 +52,6 @@ module Cultivation
     private
 
     def detect_cascade_changes(task, batch_tasks)
-      # If the task is a first child of it's parent task, and user has change
-      # the depend_on field. The start_date should cascade to parent task.
-      if task.first_child? && task.changes['depend_on'].present?
-        task_parent = task.parent(batch_tasks)
-        task_parent.start_date = task.start_date
-        cascade_change_tasks.push(task_parent)
-      end
-
       if task.changes['end_date'].present?
         dependents = task.dependents(batch_tasks)
         if dependents.present?
@@ -155,6 +147,18 @@ module Cultivation
         end
       end
 
+      # Start Date decided by child's predecessor end date
+      children = task.children(batch_tasks)
+      if children.present?
+        first_child = children[0]
+        if first_child.depend_on.present?
+          predecessor = get_task(batch_tasks, first_child.depend_on)
+          if predecessor.present?
+            return predecessor.end_date
+          end
+        end
+      end
+
       # Start Date decided by parent task
       parent = task.parent(batch_tasks)
       # First subtask should have same start_date as parent task
@@ -208,11 +212,10 @@ module Cultivation
       end
     end
 
-    def move_task(task, batch_tasks, number_of_days = 0)
-      new_start_date = task.start_date + number_of_days.days
-      task.start_date = decide_start_date(task, batch_tasks, new_start_date)
-      task.duration ||= 1
-      task.end_date = task.start_date + task.duration.days
+    def adjust_children_dates(task, batch_tasks, days_diff)
+      children = task.children(batch_tasks)
+      move_children(children, batch_tasks, days_diff)
+      children.each(&:save)
     end
 
     def move_children(tasks, batch_tasks, number_of_days = 0)
@@ -223,10 +226,11 @@ module Cultivation
       end
     end
 
-    def adjust_children_dates(task, batch_tasks, days_diff)
-      children = task.children(batch_tasks)
-      move_children(children, batch_tasks, days_diff)
-      children.each(&:save)
+    def move_task(task, batch_tasks, number_of_days = 0)
+      new_start_date = task.start_date + number_of_days.days
+      task.start_date = decide_start_date(task, batch_tasks, new_start_date)
+      task.duration ||= 1
+      task.end_date = task.start_date + task.duration.days
     end
 
     def update_root_siblings(task, batch_tasks, days_diff)
@@ -274,15 +278,18 @@ module Cultivation
     def update_parent_cascade(task, batch_tasks)
       parent = task.parent(batch_tasks)
       while parent.present?
-        update_parent_estimations(task, parent, batch_tasks)
+        update_parent_fields(task, parent, batch_tasks)
         parent = parent.parent(batch_tasks)
       end
     end
 
-    def update_parent_estimations(task, parent, batch_tasks)
+    def update_parent_fields(task, parent, batch_tasks)
       children = parent.children(batch_tasks)
       parent.estimated_hours = sum_children_hours(children, batch_tasks)
       parent.estimated_cost = sum_children_cost(children, batch_tasks)
+      if task.first_child? && task.depend_on.present?
+        parent.start_date = task.start_date
+      end
       parent.duration = decide_duration(task, parent, children)
       parent.end_date = parent.start_date + parent.duration.days
       parent.save

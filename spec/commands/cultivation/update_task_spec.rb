@@ -421,14 +421,15 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
     it "cascade start_date forward changes to sub-tasks" do
       args = {
         id: t1.id.to_s,
-        start_date: Time.parse("03/02/2019"),
+        start_date: Time.parse("03/03/2019"),
       }
 
       cmd = Cultivation::UpdateTask.call(current_user, args)
 
-      saved11 = Cultivation::Task.find(t1_1.id)
+      res11 = Cultivation::Task.find_by(id: t1_1.id)
       expect(cmd.success?).to be true
-      expect(saved11.start_date).to eq cmd.result.start_date
+      expect(res11.start_date).not_to eq t1.start_date
+      expect(res11.start_date).to eq cmd.result.start_date
     end
 
     it "cascade start_date backward changes to subtasks" do

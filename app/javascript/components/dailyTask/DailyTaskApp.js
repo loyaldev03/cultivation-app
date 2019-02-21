@@ -24,7 +24,6 @@ const tasks = [
 ]
 
 class DailyTaskApp extends React.Component {
-
   state = {
     showAddIssue: false,
     showAddMaterial: false,
@@ -34,38 +33,45 @@ class DailyTaskApp extends React.Component {
 
   onToggleAddIssue = (taskId = null) => {
     console.log('on add issue')
-    this.setState({ 
+    this.setState({
       showAddIssue: !this.state.showAddIssue,
       currentTaskId: taskId
     })
   }
 
   onToggleAddMaterial = (taskId = null) => {
-    this.setState({ 
+    this.setState({
       showAddMaterial: !this.state.showAddMaterial,
       currentTaskId: taskId
     })
   }
 
   onToggleAddNotes = (taskId = null) => {
-    this.setState({ 
+    this.setState({
       showAddNotes: !this.state.showAddNotes,
-      currentTaskId: taskId 
+      currentTaskId: taskId
     })
   }
 
   renderSlidePanel() {
-    const { showAddMaterial, showAddIssue, showAddNotes } = this.state 
+    const { showAddMaterial, showAddIssue, showAddNotes } = this.state
     return (
       <React.Fragment>
-       
         <SlidePanel
           width="600px"
           show={showAddMaterial}
           renderBody={props => (
             <div>
               <h3>Add material here...</h3>
-              <a href="#" onClick={event => { this.onToggleAddMaterial(); event.preventDefault() }}>Close</a>
+              <a
+                href="#"
+                onClick={event => {
+                  this.onToggleAddMaterial()
+                  event.preventDefault()
+                }}
+              >
+                Close
+              </a>
             </div>
           )}
         />
@@ -75,7 +81,15 @@ class DailyTaskApp extends React.Component {
           renderBody={props => (
             <div>
               <h3>Add issue here...</h3>
-              <a href="#" onClick={event => { this.onToggleAddIssue(); event.preventDefault() }}>Close</a>
+              <a
+                href="#"
+                onClick={event => {
+                  this.onToggleAddIssue()
+                  event.preventDefault()
+                }}
+              >
+                Close
+              </a>
             </div>
           )}
         />
@@ -85,7 +99,15 @@ class DailyTaskApp extends React.Component {
           renderBody={props => (
             <div>
               <h3>Add notes here...</h3>
-              <a href="#" onClick={event => { this.onToggleAddNotes(); event.preventDefault() }}>Close</a>
+              <a
+                href="#"
+                onClick={event => {
+                  this.onToggleAddNotes()
+                  event.preventDefault()
+                }}
+              >
+                Close
+              </a>
             </div>
           )}
         />
@@ -107,12 +129,12 @@ class DailyTaskApp extends React.Component {
           <div className="ph3 pb3 pt4">
             <h3 className="f3 gray ma0 pa0 fw4">Batch Yoda</h3>
           </div>
-          <HeaderRow/>
+          <HeaderRow />
           {tasks.map(x => (
-            <TaskRow 
-              key={x.id} {
-              ...x} 
-              onToggleAddIssue={this.onToggleAddIssue} 
+            <TaskRow
+              key={x.id}
+              {...x}
+              onToggleAddIssue={this.onToggleAddIssue}
               onToggleAddMaterial={this.onToggleAddMaterial}
               onToggleAddNotes={this.onToggleAddNotes}
             />
@@ -125,16 +147,16 @@ class DailyTaskApp extends React.Component {
           </div>
           <HeaderRow />
           {tasks.map(x => (
-            <TaskRow 
-              key={x.id} 
-              {...x} 
-              onToggleAddIssue={this.onToggleAddIssue} 
+            <TaskRow
+              key={x.id}
+              {...x}
+              onToggleAddIssue={this.onToggleAddIssue}
               onToggleAddMaterial={this.onToggleAddMaterial}
               onToggleAddNotes={this.onToggleAddNotes}
             />
           ))}
         </div>
-        { this.renderSlidePanel() }
+        {this.renderSlidePanel()}
       </React.Fragment>
     )
   }

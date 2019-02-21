@@ -15,11 +15,11 @@ const MaterialUsedRow = ({
         {expected} {uom}
       </div>
       <div className="f6 dark-gray w-20">
-        <input value={actual} className="w-40" onChange={()=>{}}/>
+        <input value={actual} className="w-40" onChange={() => {}} />
         <span className="ml2">{uom}</span>
       </div>
       <div className="f6 dark-gray w-20">
-        <input value={wasted} className="w-40" onChange={()=>{}}/>
+        <input value={wasted} className="w-40" onChange={() => {}} />
         <span className="ml2">{uom}</span>
       </div>
     </div>

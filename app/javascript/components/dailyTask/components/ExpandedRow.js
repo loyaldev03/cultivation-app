@@ -35,7 +35,11 @@ class ExpandedRow extends React.Component {
           <div className="w-60 ph2 pt2 pb3" style={rightBorder}>
             <div className="flex items-center justify-between mb3">
               <span className="gray fw6 f6">Materials</span>
-              <a href="#" className="btn btn--secondary f6" onClick={this.onToggleAddIssue}>
+              <a
+                href="#"
+                className="btn btn--secondary f6"
+                onClick={this.onToggleAddIssue}
+              >
                 Add
               </a>
             </div>
@@ -65,7 +69,11 @@ class ExpandedRow extends React.Component {
           <div className="w-30 ph2 pt2 pb3" style={rightBorder}>
             <div className="flex items-center justify-between mb3">
               <span className="gray fw6 f6">Issues</span>
-              <a href="#" className="btn btn--secondary f6" onClick={this.onToggleAddMaterial}>
+              <a
+                href="#"
+                className="btn btn--secondary f6"
+                onClick={this.onToggleAddMaterial}
+              >
                 Add
               </a>
             </div>
@@ -74,7 +82,11 @@ class ExpandedRow extends React.Component {
           <div className="w-30 ph2 pt2 pb3">
             <div className="flex items-center justify-between mb3">
               <span className="gray fw6 f6">Notes</span>
-              <a href="#" className="btn btn--secondary f6" onClick={this.onToggleAddNotes}>
+              <a
+                href="#"
+                className="btn btn--secondary f6"
+                onClick={this.onToggleAddNotes}
+              >
                 Add
               </a>
             </div>

@@ -134,6 +134,7 @@ class DailyTaskApp extends React.Component {
         {dailyTasksStore.bindable.map(batch => (
           <BatchedDailyTasks
             key={batch.id}
+            batchNo={batch.batch_no}
             batchName={batch.name}
             tasks={batch.tasks}
             onToggleAddIssue={this.onToggleAddIssue}

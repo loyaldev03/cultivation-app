@@ -3,11 +3,11 @@ import HeaderRow from './HeaderRow'
 import TaskRow from './TaskRow'
 
 const BatchedDailyTasks = ({
-  batchName, 
-  tasks, 
-  onToggleAddIssue, 
-  onToggleAddMaterial, 
-  onToggleAddNotes,
+  batchName,
+  tasks,
+  onToggleAddIssue,
+  onToggleAddMaterial,
+  onToggleAddNotes
 }) => {
   return (
     <div className="box--shadow bg-white pb3 mb4">
@@ -28,4 +28,4 @@ const BatchedDailyTasks = ({
   )
 }
 
-export default BatchedDailyTasks 
+export default BatchedDailyTasks

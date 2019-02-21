@@ -3,7 +3,7 @@ import { observer } from 'mobx-react'
 import { SlidePanel } from '../utils/'
 import BatchedDailyTasks from './components/BatchedDailyTasks'
 import loadDailyTasks from './actions/loadDailyTasks'
-import dailyTasksStore from  './stores/DailyTasksStore'
+import dailyTasksStore from './stores/DailyTasksStore'
 
 const tasks = [
   {
@@ -131,8 +131,8 @@ class DailyTaskApp extends React.Component {
           </span>
         </div>
 
-        { dailyTasksStore.bindable.map( batch => 
-          <BatchedDailyTasks 
+        {dailyTasksStore.bindable.map(batch => (
+          <BatchedDailyTasks
             key={batch.id}
             batchName={batch.name}
             tasks={batch.tasks}
@@ -140,8 +140,8 @@ class DailyTaskApp extends React.Component {
             onToggleAddMaterial={this.onToggleAddMaterial}
             onToggleAddNotes={this.onToggleAddNotes}
           />
-        ) }
-      
+        ))}
+
         {this.renderSlidePanel()}
       </React.Fragment>
     )

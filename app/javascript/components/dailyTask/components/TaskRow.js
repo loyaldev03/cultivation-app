@@ -21,7 +21,11 @@ class TaskRow extends React.Component {
 
   onExpand = event => {
     console.log('expanded')
-    console.log(`this should call getDailyTaskDetails('${this.props.id}') method if it is an expansion...`)
+    console.log(
+      `this should call getDailyTaskDetails('${
+        this.props.id
+      }') method if it is an expansion...`
+    )
 
     if (!this.state.expanded) {
       getDailyTaskDetails(this.props.id)
@@ -70,7 +74,14 @@ class TaskRow extends React.Component {
   }
 
   render() {
-    const { wbs, name, location_id, location_type, work_status, issues } = this.props
+    const {
+      wbs,
+      name,
+      location_id,
+      location_type,
+      work_status,
+      issues
+    } = this.props
 
     return (
       <div className="bb b--black-05">
@@ -105,7 +116,9 @@ class TaskRow extends React.Component {
             className="flex items-center justify-start pa2"
             style={locationWidth}
           >
-            <span className="f6">{location_type} {location_id}</span>
+            <span className="f6">
+              {location_type} {location_id}
+            </span>
           </div>
 
           <div className="flex items-center justify-center " style={btnWidth}>
@@ -114,7 +127,9 @@ class TaskRow extends React.Component {
               style={{ fontSize: '20px' }}
               onClick={this.onToggleStart}
             >
-              {this.state.work_status === 'in_progress' ? 'pause' : 'play_arrow'}
+              {this.state.work_status === 'in_progress'
+                ? 'pause'
+                : 'play_arrow'}
             </span>
           </div>
 
@@ -122,7 +137,9 @@ class TaskRow extends React.Component {
             className="flex items-center justify-center pa2"
             style={statusWidth}
           >
-            <span className="f6 black-30 ttc">{work_status.replace(/[_]/g, ' ')}</span>
+            <span className="f6 black-30 ttc">
+              {work_status.replace(/[_]/g, ' ')}
+            </span>
           </div>
         </div>
         {this.renderExpanded()}

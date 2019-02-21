@@ -2,26 +2,25 @@ module Cultivation
   class StartTimeLog
     prepend SimpleCommand
 
-    def initialize(task_id, args = {})
+    def initialize(user_id, task_id, args = {})
       @task = Cultivation::Task.find(task_id)
-      @work_day = @task.work_days.last
-      # @work_day = @task.work_days.find_or_create_by!(date: params[:date], user: current_user)
+      @user = User.find(user_id)
       @args = args
     end
 
     def call
       if validate?
-        @work_day.update(aasm_state: 'started')
-        time_log = @work_day.time_logs.new(start_time: Time.now) #create new time_logs
+        @task.update(work_status: 'started')
+        time_log = @task.time_logs.new(start_time: Time.now, user: @user) #create new time_logs
         time_log.save
-        @work_day
+        @task
       end
     rescue StandardError
       errors.add(:error, $!.message)
     end
 
     def validate?
-      @task.present? and status_include?
+      @task.present? #and status_include?
     end
 
     def status_include?

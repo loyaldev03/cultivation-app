@@ -31,21 +31,7 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     when 'done'
       cmd = DailyTask::DoneTask.call(current_user.id, params[:task_id])
     end
-    data = WorkDaySerializer.new(cmd.result).serialized_json
-    render json: data
-  end
-
-  def start_task
-    # @work_day.start!
-    cmd = DailyTask::StartTimeLog.call(params[:id])
-    data = WorkDaySerializer.new(cmd.result).serialized_json
-    render json: data
-  end
-
-  def stop_task
-    # @work_day.stop!
-    cmd = DailyTask::StopTimeLog.call(params[:id])
-    data = WorkDaySerializer.new(cmd.result).serialized_json
+    data = TaskDetailsSerializer.new(cmd.result).serialized_json
     render json: data
   end
 

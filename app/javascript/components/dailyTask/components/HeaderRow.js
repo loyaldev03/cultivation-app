@@ -25,7 +25,7 @@ const HeaderRow = () => {
       </div>
 
       <div
-        className="flex items-center justify-center pa2"
+        className="flex items-center justify-start pa2"
         style={locationWidth}
       >
         <span className="f6 grey">Location</span>

@@ -1,8 +1,9 @@
 import React from 'react'
-// import { observer } from 'mobx-react'
-import HeaderRow from './components/HeaderRow'
-import TaskRow from './components/TaskRow'
+import { observer } from 'mobx-react'
 import { SlidePanel } from '../utils/'
+import BatchedDailyTasks from './components/BatchedDailyTasks'
+import loadDailyTasks from './actions/loadDailyTasks'
+import dailyTasksStore from  './stores/DailyTasksStore'
 
 const tasks = [
   {
@@ -23,12 +24,17 @@ const tasks = [
   }
 ]
 
+@observer
 class DailyTaskApp extends React.Component {
   state = {
     showAddIssue: false,
     showAddMaterial: false,
     showAddNotes: false,
     currentTaskId: null
+  }
+
+  componentDidMount() {
+    loadDailyTasks()
   }
 
   onToggleAddIssue = (taskId = null) => {
@@ -125,37 +131,17 @@ class DailyTaskApp extends React.Component {
           </span>
         </div>
 
-        <div className="box--shadow bg-white pb3 mb4">
-          <div className="ph3 pb3 pt4">
-            <h3 className="f3 grey ma0 pa0 fw4">Batch Yoda</h3>
-          </div>
-          <HeaderRow />
-          {tasks.map(x => (
-            <TaskRow
-              key={x.id}
-              {...x}
-              onToggleAddIssue={this.onToggleAddIssue}
-              onToggleAddMaterial={this.onToggleAddMaterial}
-              onToggleAddNotes={this.onToggleAddNotes}
-            />
-          ))}
-        </div>
-
-        <div className="box--shadow bg-white pb3 mb4">
-          <div className="ph3 pb3 pt4">
-            <h3 className="f3 grey ma0 pa0 fw4">Batch Jedi</h3>
-          </div>
-          <HeaderRow />
-          {tasks.map(x => (
-            <TaskRow
-              key={x.id}
-              {...x}
-              onToggleAddIssue={this.onToggleAddIssue}
-              onToggleAddMaterial={this.onToggleAddMaterial}
-              onToggleAddNotes={this.onToggleAddNotes}
-            />
-          ))}
-        </div>
+        { dailyTasksStore.bindable.map( batch => 
+          <BatchedDailyTasks 
+            key={batch.id}
+            batchName={batch.name}
+            tasks={batch.tasks}
+            onToggleAddIssue={this.onToggleAddIssue}
+            onToggleAddMaterial={this.onToggleAddMaterial}
+            onToggleAddNotes={this.onToggleAddNotes}
+          />
+        ) }
+      
         {this.renderSlidePanel()}
       </React.Fragment>
     )

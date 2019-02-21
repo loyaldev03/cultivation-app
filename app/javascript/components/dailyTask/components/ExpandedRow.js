@@ -31,7 +31,7 @@ class ExpandedRow extends React.Component {
           </a>
         </div>
 
-        <div className="flex ba b--black-20 ma2 br2">
+        <div className="flex ba b--black-20 ma2 br2 mb3">
           <div className="w-60 ph2 pt2 pb3" style={rightBorder}>
             <div className="flex items-center justify-between mb3">
               <span className="gray fw6 f6">Materials</span>

@@ -12,7 +12,8 @@ class TaskDetailsSerializer
     object.id.to_s
   end
 
-  attributes &:wbs
+  # TODO: Not sure what is this for...
+  # attributes &:wbs
 
   attribute :items do |object|
     object.material_use.map do |item|

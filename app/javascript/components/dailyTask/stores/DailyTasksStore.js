@@ -1,15 +1,15 @@
 import { observable, action, computed, toJS } from 'mobx'
 
 class DailyTaskStore {
-  dailyTasks = observable([])
+  batches = observable([])
 
-  load(tasks) {
-    this.dailyTasks.replace(tasks)
+  load(batches) {
+    this.batches.replace(batches)
   }
 
   @computed
-  bindable() {
-    return this.dailyTasks.slice()
+  get bindable() {
+    return this.batches.slice()
   }
 }
 

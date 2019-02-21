@@ -7,7 +7,7 @@ const taskWidth = {
 }
 
 const locationWidth = {
-  width: '200px'
+  width: '250px'
 }
 
 const statusWidth = {

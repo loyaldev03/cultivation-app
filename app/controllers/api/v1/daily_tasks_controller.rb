@@ -14,7 +14,7 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     ).map do |batch_group|
       {
         batch: serialized_batch(batch_group['_id']),
-        tasks: serialized_tasks(batch_group['tasks']),
+        tasks: serialized_tasks(batch_group['_id'], batch_group['tasks']),
       }
     end
     render json: @tasks_by_batch
@@ -81,10 +81,20 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
       merge(rooms: batch_room_names(batch))
   end
 
-  def serialized_tasks(task_ids)
-    work_days = task_ids.map do |task_id|
-      Cultivation::Task.find(task_id)
+  def serialized_tasks(batch_id, task_ids)
+    all_tasks = Cultivation::Batch.find(batch_id).tasks
+
+    # Create a map where task id is the Key and wbs is the Value.
+    wbs_map = WbsTree.generate(all_tasks).inject({}) do |memo, item|
+      memo[item[:id]] = item[:wbs]
+      memo
     end
+
+    work_days = Cultivation::Task.in(id: task_ids).to_a
+    work_days.each do |t|
+      t.wbs = wbs_map[t.id.to_s]
+    end
+
     TaskDetailsSerializer.new(work_days).serializable_hash[:data]
   end
 

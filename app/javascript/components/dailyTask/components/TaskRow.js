@@ -7,24 +7,35 @@ import {
   statusWidth
 } from './TaskTableStyles'
 import ExpandedRow from './ExpandedRow'
+import getDailyTaskDetails from '../actions/getDailyTaskDetails'
 
 class TaskRow extends React.Component {
   state = {
     expanded: false,
-    status: 'not_started'
+    work_status: 'not_started'
+  }
+
+  componentDidMount() {
+    console.log(this.props)
   }
 
   onExpand = event => {
-    console.log('expended')
+    console.log('expanded')
+    console.log(`this should call getDailyTaskDetails('${this.props.id}') method if it is an expansion...`)
+
+    if (!this.state.expanded) {
+      getDailyTaskDetails(this.props.id)
+    }
     this.setState({ expanded: !this.state.expanded })
-    // event.preventDefault()
+    event.preventDefault()
   }
 
   onToggleStart = event => {
-    if (this.state.status === 'not_started') {
-      this.setState({ status: 'in_progress' })
+    console.log('onToggleStart')
+    if (this.state.work_status === 'not_started') {
+      this.setState({ work_status: 'in_progress' })
     } else {
-      this.setState({ status: 'not_started' })
+      this.setState({ work_status: 'not_started' })
     }
   }
 
@@ -43,8 +54,8 @@ class TaskRow extends React.Component {
     )
   }
 
-  renderIssueCount(count) {
-    if (count <= 0) {
+  renderIssueCount(issues) {
+    if (issues.length <= 0) {
       return null
     }
 
@@ -59,10 +70,10 @@ class TaskRow extends React.Component {
   }
 
   render() {
-    const { wbs, task, location, status, issueCount } = this.props
+    const { wbs, name, location_id, location_type, work_status, issues } = this.props
 
     return (
-      <React.Fragment>
+      <div className="bb b--black-05">
         <div className="flex items-center pv1 dark-gray">
           <div
             className="flex items-center justify-center f6 pa2"
@@ -84,17 +95,17 @@ class TaskRow extends React.Component {
                 ? 'keyboard_arrow_down'
                 : 'keyboard_arrow_right'}
             </span>
-            {this.renderIssueCount(issueCount)}
+            {this.renderIssueCount(issues)}
             <span className="f6 pointer" onClick={this.onExpand}>
-              {task}
+              {name}
             </span>
           </div>
 
           <div
-            className="flex items-center justify-center pa2"
+            className="flex items-center justify-start pa2"
             style={locationWidth}
           >
-            <span className="f6">{location}</span>
+            <span className="f6">{location_type} {location_id}</span>
           </div>
 
           <div className="flex items-center justify-center " style={btnWidth}>
@@ -103,7 +114,7 @@ class TaskRow extends React.Component {
               style={{ fontSize: '20px' }}
               onClick={this.onToggleStart}
             >
-              {this.state.status === 'in_progress' ? 'pause' : 'play_arrow'}
+              {this.state.work_status === 'in_progress' ? 'pause' : 'play_arrow'}
             </span>
           </div>
 
@@ -111,11 +122,11 @@ class TaskRow extends React.Component {
             className="flex items-center justify-center pa2"
             style={statusWidth}
           >
-            <span className="f6 black-30 ttc">{status}</span>
+            <span className="f6 black-30 ttc">{work_status.replace(/[_]/g, ' ')}</span>
           </div>
         </div>
         {this.renderExpanded()}
-      </React.Fragment>
+      </div>
     )
   }
 }

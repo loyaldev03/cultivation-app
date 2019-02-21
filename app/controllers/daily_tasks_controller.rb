@@ -17,7 +17,6 @@ class DailyTasksController < ApplicationController
         tasks: serialized_tasks(batch_group['tasks']),
       }
     end
-
     @inventory_catalogue = serialized_catalogue
   end
 
@@ -32,9 +31,9 @@ class DailyTasksController < ApplicationController
 
   def serialized_tasks(task_ids)
     work_days = task_ids.map do |task_id|
-      Cultivation::Task.find(task_id).work_days.find_or_initialize_by(date: @tasks_date, user: current_user)
+      Cultivation::Task.find(task_id)
     end
-    WorkDaySerializer.new(work_days).serializable_hash[:data]
+    TaskDetailsSerializer.new(work_days).serializable_hash[:data]
   end
 
   def serialized_catalogue

@@ -61,10 +61,6 @@ class GenerateTasksFromTemplateJob < ApplicationJob
     predecessor[:id] if predecessor.present?
   end
 
-  def set_move_task_defaults(task)
-    task[:task_type] = ['move_plant']
-  end
-
   def build_task(task, parent_start_date, parent_end_date)
     raise ArgumentError, 'start_date is required' if parent_start_date.nil?
 

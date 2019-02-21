@@ -1,24 +1,24 @@
 module Cultivation
-  class WorkDay
+  class TaskDetail
     include Mongoid::Document
     include Mongoid::Timestamps::Short
-    include AASM
 
     field :user_id, type: BSON::ObjectId
     field :date, type: Date
     field :is_done, default: -> { false } # indicate the task is done for the day
     field :duration, type: Integer, default: 0 # in seconds
-    field :aasm_state
+    # field :aasm_state
 
     validates_presence_of :user_id, :date
     validates_uniqueness_of :user_id, scope: :date # one record per user per day of work
 
-    embedded_in :task
+    # embedded_in :task
+    belongs_to :task
     belongs_to :user
 
     # Non batch related tasks may exists and they incure material used & waste, time used.
     embeds_many :notes, class_name: 'Cultivation::TaskLog::Note'
-    embeds_many :time_logs, class_name: 'Cultivation::TaskLog::TimeLog'
+    has_many :time_logs, class_name: 'Cultivation::TaskLog::TimeLog'
     embeds_many :materials_used, class_name: 'Cultivation::TaskLog::MaterialUsed'
     embeds_many :materials_wasted, class_name: 'Cultivation::TaskLog::MaterialWasted'
 
@@ -30,15 +30,9 @@ module Cultivation
     #     transitions from: %i(new stopped stuck), to: :started
     #   end
 
-    #   #aasm_state from (new stopped stuck), to :started
-    #   #latest_active_time_log stop
-    #   #create new time_logs
-
     #   event :stop, after: :clear_timer do
     #     transitions from: :started, to: :stopped
     #   end
-    #   #clear_timer , stop the latest time log
-    #   #calculate total duration and save
 
     #   event :stuck do
     #     transitions from: :started, to: :stuck

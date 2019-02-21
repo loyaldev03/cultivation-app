@@ -3,6 +3,7 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   before_action :set_work_day, except: [:tasks]
 
   def tasks
+    #make to command
     @tasks_date = Date.today
     match = current_user.cultivation_tasks.expected_on(@tasks_date).selector
     @tasks_by_batch = Cultivation::Task.collection.aggregate(
@@ -20,20 +21,28 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   end
 
   def time_log
+    case params[:action]
+    when 'start'
+      StartTimeLog.call(current_user.id, params[:task_id])
+    when 'stop'
+      StopTimeLog.call(current_user.id, params[:task_id])
+    when 'stuck'
+    when 'done'
+    end
     #need action
     #
   end
 
   def start_task
     # @work_day.start!
-    cmd = Cultivation::StartTimeLog.call(params[:id])
+    cmd = DailyTask::StartTimeLog.call(params[:id])
     data = WorkDaySerializer.new(cmd.result).serialized_json
     render json: data
   end
 
   def stop_task
     # @work_day.stop!
-    cmd = Cultivation::StopTimeLog.call(params[:id])
+    cmd = DailyTask::StopTimeLog.call(params[:id])
     data = WorkDaySerializer.new(cmd.result).serialized_json
     render json: data
   end

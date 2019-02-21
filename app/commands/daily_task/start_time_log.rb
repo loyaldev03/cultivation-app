@@ -1,5 +1,5 @@
-module Cultivation
-  class StopTimeLog
+module DailyTask
+  class StartTimeLog
     prepend SimpleCommand
 
     def initialize(user_id, task_id, args = {})
@@ -10,9 +10,9 @@ module Cultivation
 
     def call
       if validate?
-        @task.time_logs.find_by(end_time: nil).stop!
-        duration = @task.time_logs.map(&:duration_in_seconds).compact.sum
-        @task.update(work_status: 'stopped', duration: duration)
+        @task.update(work_status: 'started')
+        time_log = @task.time_logs.new(start_time: Time.now, user: @user) #create new time_logs
+        time_log.save
         @task
       end
     rescue StandardError
@@ -24,7 +24,7 @@ module Cultivation
     end
 
     def status_include?
-      status_allowed = ['started']
+      status_allowed = ['new', 'stopped', 'stuck', 'started']
       status_allowed.include?(@work_day.aasm_state)
     end
   end

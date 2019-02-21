@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Cultivation::StartTimeLog, type: :command do
+RSpec.describe DailyTask::StartTimeLog, type: :command do
   let(:strain) { Common::Strain.create!(name: 'xyz', strain_type: 'indica') }
   let(:facility) do
     facility = create(:facility, :is_complete)
@@ -54,7 +54,7 @@ RSpec.describe Cultivation::StartTimeLog, type: :command do
 
   context ".call" do
     it "return correct state" do
-      cmd = Cultivation::StartTimeLog.call(current_user.id, task_1.id)
+      cmd = DailyTask::StartTimeLog.call(current_user.id, task_1.id)
       expect(cmd.success?).to be true
       expect(cmd.result.work_status).to eq('started')
       expect(cmd.result.time_logs.last.end_time).to be_nil

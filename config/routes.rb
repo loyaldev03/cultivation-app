@@ -245,6 +245,8 @@ Rails.application.routes.draw do
         put ':id/stop_task', to: 'daily_tasks#stop_task'
         put ':id/add_notes', to: 'daily_tasks#add_notes'
         put ':id/update_materials_used', to: 'daily_tasks#update_materials_used'
+        get '/tasks', to: 'daily_tasks#tasks'
+        put '/time_log', to: 'daily_tasks#time_log'
       end
 
       resources :issues, only: [:create, :by_batch, :show, :archive] do

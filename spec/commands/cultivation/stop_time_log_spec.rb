@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Cultivation::StartTimeLog, type: :command do
+RSpec.describe DailyTask::StartTimeLog, type: :command do
   let(:strain) { Common::Strain.create!(name: 'xyz', strain_type: 'indica') }
   let(:facility) do
     facility = create(:facility, :is_complete)
@@ -48,16 +48,12 @@ RSpec.describe Cultivation::StartTimeLog, type: :command do
     task
   end
 
-  let!(:work_day) do 
-    task_1.work_days.create(date: Time.now.to_date, user: current_user, aasm_state: 'new')
-  end
-
   context ".call" do
     it "return error if no seed selected" do
-      Cultivation::StartTimeLog.call(task_1.id)
-      cmd = Cultivation::StopTimeLog.call(task_1.id)
+      DailyTask::StartTimeLog.call(current_user.id, task_1.id)
+      cmd = DailyTask::StopTimeLog.call(current_user.id, task_1.id)
       expect(cmd.success?).to be true
-      expect(cmd.result.aasm_state).to eq('stopped')
+      expect(cmd.result.work_status).to eq('stopped')
     end
   end
 end

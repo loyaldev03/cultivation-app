@@ -1,26 +1,26 @@
-module Cultivation
+module DailyTask
   class StopTimeLog
     prepend SimpleCommand
 
-    def initialize(task_id, args = {})
+    def initialize(user_id, task_id, args = {})
       @task = Cultivation::Task.find(task_id)
-      @work_day = @task.work_days.last
+      @user = User.find(user_id)
       @args = args
     end
 
     def call
       if validate?
-        @work_day.time_logs.find_by(end_time: nil).stop!
-        duration = @work_day.time_logs.map(&:duration_in_seconds).compact.sum
-        @work_day.update(aasm_state: 'stopped', duration: duration)
-        @work_day
+        @task.time_logs.find_by(end_time: nil).stop!
+        duration = @task.time_logs.map(&:duration_in_seconds).compact.sum
+        @task.update(work_status: 'stopped', duration: duration)
+        @task
       end
     rescue StandardError
       errors.add(:error, $!.message)
     end
 
     def validate?
-      @task.present? and status_include?
+      @task.present? #and status_include?
     end
 
     def status_include?

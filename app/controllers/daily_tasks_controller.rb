@@ -1,5 +1,9 @@
 class DailyTasksController < ApplicationController
   def index
+    render 'index', layout: 'worker'
+  end
+
+  def index2
     @tasks_date = Date.today
     match = current_user.cultivation_tasks.expected_on(@tasks_date).selector
     @tasks_by_batch = Cultivation::Task.collection.aggregate(

@@ -27,8 +27,13 @@ class WorkDashboardApp extends React.Component {
         <div className="bg-white box--shadow pa4 fl w-100">
           <div className="fl w-100 ma1">
             <div className="flex flex-column">
-              {DailyTasksStore.dailyTasksByBatch.map((taskBatch, i) => (
-                <Batch item={taskBatch} key={i} />
+              {this.props.tasks_by_batch.map((batch, i) => (
+                <div>
+                  <p>Batch Name => {batch.batch.attributes.name}</p>
+                  {batch.tasks.map((task, i) => (
+                    <p>Task => {JSON.stringify(task)}</p>
+                  ))}
+                </div>
               ))}
             </div>
           </div>

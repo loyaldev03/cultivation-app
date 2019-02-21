@@ -3,16 +3,16 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   before_action :set_work_day
 
   def start_task
-    @work_day.start!
-
-    data = WorkDaySerializer.new(@work_day).serialized_json
+    # @work_day.start!
+    cmd = Cultivation::StartTimeLog.call(params[:id])
+    data = WorkDaySerializer.new(cmd.result).serialized_json
     render json: data
   end
 
   def stop_task
-    @work_day.stop!
-
-    data = WorkDaySerializer.new(@work_day).serialized_json
+    # @work_day.stop!
+    cmd = Cultivation::StopTimeLog.call(params[:id])
+    data = WorkDaySerializer.new(cmd.result).serialized_json
     render json: data
   end
 

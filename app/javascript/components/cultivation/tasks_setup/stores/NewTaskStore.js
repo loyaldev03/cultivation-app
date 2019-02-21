@@ -259,8 +259,7 @@ class TaskStore {
         end_date: updateObj.end_date,
         duration: updateObj.duration,
         estimated_hours: updateObj.estimated_hours,
-        task_related_id: relatedTaskId, // Reference to the position of new task
-        task_type: updateObj.task_type
+        task_related_id: relatedTaskId // Reference to the position of new task
       }
     )
     const url = `/api/v1/batches/${batchId}/tasks`

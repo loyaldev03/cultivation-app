@@ -1,27 +1,15 @@
-class TaskSerializer
+class TaskDetailsSerializer
   include FastJsonapi::ObjectSerializer
 
   attributes :phase,
     :name,
     :duration,
-    :start_date,
-    :end_date,
-    :position,
-    :estimated_hours,
-    :estimated_cost,
-    :actual_hours,
-    :actual_cost,
+    :work_status,
     :wbs,
-    :indent,
-    :indelible,
     :location_type
 
   attributes :id do |object|
     object.id.to_s
-  end
-
-  attributes :depend_on do |object|
-    object.depend_on.to_s
   end
 
   attributes &:wbs

@@ -2,6 +2,7 @@ import { httpGetOptions } from '../../utils/FetchHelper'
 import getComments from './getComments'
 import currentIssueStore from '../store/CurrentIssueStore'
 
+// TODO: to be completed
 const getIssue = issueId => {
   return Promise.all([_getIssue(issueId), getComments(issueId)]).then(
     ([issueData, commentsData]) => {

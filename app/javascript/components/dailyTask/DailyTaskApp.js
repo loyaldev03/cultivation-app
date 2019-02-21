@@ -1,8 +1,9 @@
 import React from 'react'
-// import { observer } from 'mobx-react'
-import HeaderRow from './components/HeaderRow'
-import TaskRow from './components/TaskRow'
+import { observer } from 'mobx-react'
 import { SlidePanel } from '../utils/'
+import BatchedDailyTasks from './components/BatchedDailyTasks'
+import loadDailyTasks from './actions/loadDailyTasks'
+import dailyTasksStore from './stores/DailyTasksStore'
 
 const tasks = [
   {
@@ -23,8 +24,8 @@ const tasks = [
   }
 ]
 
+@observer
 class DailyTaskApp extends React.Component {
-
   state = {
     showAddIssue: false,
     showAddMaterial: false,
@@ -32,40 +33,51 @@ class DailyTaskApp extends React.Component {
     currentTaskId: null
   }
 
+  componentDidMount() {
+    loadDailyTasks()
+  }
+
   onToggleAddIssue = (taskId = null) => {
     console.log('on add issue')
-    this.setState({ 
+    this.setState({
       showAddIssue: !this.state.showAddIssue,
       currentTaskId: taskId
     })
   }
 
   onToggleAddMaterial = (taskId = null) => {
-    this.setState({ 
+    this.setState({
       showAddMaterial: !this.state.showAddMaterial,
       currentTaskId: taskId
     })
   }
 
   onToggleAddNotes = (taskId = null) => {
-    this.setState({ 
+    this.setState({
       showAddNotes: !this.state.showAddNotes,
-      currentTaskId: taskId 
+      currentTaskId: taskId
     })
   }
 
   renderSlidePanel() {
-    const { showAddMaterial, showAddIssue, showAddNotes } = this.state 
+    const { showAddMaterial, showAddIssue, showAddNotes } = this.state
     return (
       <React.Fragment>
-       
         <SlidePanel
           width="600px"
           show={showAddMaterial}
           renderBody={props => (
             <div>
               <h3>Add material here...</h3>
-              <a href="#" onClick={event => { this.onToggleAddMaterial(); event.preventDefault() }}>Close</a>
+              <a
+                href="#"
+                onClick={event => {
+                  this.onToggleAddMaterial()
+                  event.preventDefault()
+                }}
+              >
+                Close
+              </a>
             </div>
           )}
         />
@@ -75,7 +87,15 @@ class DailyTaskApp extends React.Component {
           renderBody={props => (
             <div>
               <h3>Add issue here...</h3>
-              <a href="#" onClick={event => { this.onToggleAddIssue(); event.preventDefault() }}>Close</a>
+              <a
+                href="#"
+                onClick={event => {
+                  this.onToggleAddIssue()
+                  event.preventDefault()
+                }}
+              >
+                Close
+              </a>
             </div>
           )}
         />
@@ -85,7 +105,15 @@ class DailyTaskApp extends React.Component {
           renderBody={props => (
             <div>
               <h3>Add notes here...</h3>
-              <a href="#" onClick={event => { this.onToggleAddNotes(); event.preventDefault() }}>Close</a>
+              <a
+                href="#"
+                onClick={event => {
+                  this.onToggleAddNotes()
+                  event.preventDefault()
+                }}
+              >
+                Close
+              </a>
             </div>
           )}
         />
@@ -103,38 +131,18 @@ class DailyTaskApp extends React.Component {
           </span>
         </div>
 
-        <div className="box--shadow bg-white pb3 mb4">
-          <div className="ph3 pb3 pt4">
-            <h3 className="f3 gray ma0 pa0 fw4">Batch Yoda</h3>
-          </div>
-          <HeaderRow/>
-          {tasks.map(x => (
-            <TaskRow 
-              key={x.id} {
-              ...x} 
-              onToggleAddIssue={this.onToggleAddIssue} 
-              onToggleAddMaterial={this.onToggleAddMaterial}
-              onToggleAddNotes={this.onToggleAddNotes}
-            />
-          ))}
-        </div>
+        {dailyTasksStore.bindable.map(batch => (
+          <BatchedDailyTasks
+            key={batch.id}
+            batchName={batch.name}
+            tasks={batch.tasks}
+            onToggleAddIssue={this.onToggleAddIssue}
+            onToggleAddMaterial={this.onToggleAddMaterial}
+            onToggleAddNotes={this.onToggleAddNotes}
+          />
+        ))}
 
-        <div className="box--shadow bg-white pb3 mb4">
-          <div className="ph3 pb3 pt4">
-            <h3 className="f3 gray ma0 pa0 fw4">Batch Jedi</h3>
-          </div>
-          <HeaderRow />
-          {tasks.map(x => (
-            <TaskRow 
-              key={x.id} 
-              {...x} 
-              onToggleAddIssue={this.onToggleAddIssue} 
-              onToggleAddMaterial={this.onToggleAddMaterial}
-              onToggleAddNotes={this.onToggleAddNotes}
-            />
-          ))}
-        </div>
-        { this.renderSlidePanel() }
+        {this.renderSlidePanel()}
       </React.Fragment>
     )
   }

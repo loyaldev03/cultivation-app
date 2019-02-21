@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <%= render "layouts/head", include_sidebar: true, include_popper: true %>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+      <div class="flex flex-row min-vh-100 ">
+        <div id="main" class="main flex flex-column flex-auto">
+          <%= flash_messages %>
+          <main class="min-vh-100 h-100">
+            <div 
+              style="height: 50px" 
+              class="ph4 f6 w-100 bg-white box--shadow-header flex flex-row items-center justify-between"
+            >
+
+              <div class="flex items-center">
+                <%= react_component 'utils/Avatar', {
+                  firstName: current_user&.first_name,
+                  lastName: current_user&.last_name,
+                  photoUrl: current_user&.photo_url
+                }, {
+                  tag: 'span'
+                }%> 
+
+                <% if content_for? :breadcrumb %>
+                  <div class="flex items-center pl3">
+                    <%= yield :breadcrumb %>
+                  </div>
+                <% end %>
+              </div>
+
+              
+                
+
+              <div class="flex flex-row items-center">
+                <%= switch_user_select if Rails.env.development? %>
+                <i 
+                  onclick="openModal()" id="notification-popup" 
+                  class="material-icons grey mh2 dim md-21 pointer">
+                  notifications_none
+                </i>
+
+                <%= render 'layouts/notification' %>
+                <div class="ba b--black-20 br2 pointer" style="width: 40px; height: 35px;">
+                  &nbsp;
+                </div>
+              </div>
+              
+            </div>
+            
+            <%= yield %>
+          </main>
+          
+        </div>
+      </div>
+    </div>
+    <%= render "layouts/before_body_end" %>
+  </body>
+</html>
+

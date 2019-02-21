@@ -1,7 +1,7 @@
 import { httpGetOptions } from '../../utils/FetchHelper'
 
 // TODO: not complete yet
-const getDailyTaskDetails = (taskId) => {
+const getDailyTaskDetails = taskId => {
   return fetch(`/api/v1/issues/${taskId}/comments`, httpGetOptions).then(
     response => {
       return response.json().then(data => ({

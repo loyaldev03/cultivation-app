@@ -20,7 +20,7 @@ const btnWidth = {
 
 const headerRow = {
   borderTop: '1px solid #ccc',
-  borderBottom: '1px solid #ccc',
+  borderBottom: '1px solid #ccc'
 }
 
 export { wbsWidth, taskWidth, locationWidth, btnWidth, statusWidth, headerRow }

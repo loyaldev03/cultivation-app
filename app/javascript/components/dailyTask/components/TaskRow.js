@@ -102,9 +102,8 @@ class TaskRow extends React.Component {
     const {
       wbs,
       name,
-      location_id,
+      location_name,
       location_type,
-      work_status,
       issues
     } = this.props
 
@@ -142,7 +141,7 @@ class TaskRow extends React.Component {
             style={locationWidth}
           >
             <span className="f6">
-              {location_type} {location_id}
+              {location_type} {location_name}
             </span>
           </div>
 

@@ -31,7 +31,6 @@ class DailyTaskStore {
       const payload = { actions: action, task_id: taskId }
       const response = await (await fetch(url, httpPutOptions(payload))).json()
       if (response.data) {
-
         // this.loadTasks(batchId)
       } else {
         console.error(response.errors)

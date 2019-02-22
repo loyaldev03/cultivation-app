@@ -38,16 +38,16 @@ class TaskRow extends React.Component {
   onToggleStart = event => {
     console.log('onToggleStart')
     let stuck
-    if(this.state.work_status === 'stuck'){
+    if (this.state.work_status === 'stuck') {
       stuck = true
     }
     const default_status = ['stopped', 'stuck', 'done']
     if (default_status.includes(this.state.work_status)) {
       DailyTaskStore.updateTimeLog('start', this.props.id)
       this.setState({ work_status: 'started' })
-      if(stuck){
+      if (stuck) {
         toast(`Removed stuck status.`, 'success')
-      }else{
+      } else {
         toast(`Start time recorded`, 'success')
       }
     } else {
@@ -60,9 +60,9 @@ class TaskRow extends React.Component {
   onClickStatus = action => {
     DailyTaskStore.updateTimeLog(action, this.props.id)
     this.setState({ work_status: action })
-    if(action === 'stuck'){
+    if (action === 'stuck') {
       toast(`Supervisor is notified.`, 'success')
-    }else{
+    } else {
       toast(`Status changed to done`, 'success')
     }
   }

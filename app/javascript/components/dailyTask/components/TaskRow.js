@@ -10,6 +10,8 @@ import ExpandedRow from './ExpandedRow'
 import getDailyTaskDetails from '../actions/getDailyTaskDetails'
 import { toast } from '../../utils'
 import DailyTaskStore from '../stores/DailyTasksStore'
+import classNames from 'classnames'
+
 class TaskRow extends React.Component {
   state = {
     expanded: false,
@@ -37,20 +39,22 @@ class TaskRow extends React.Component {
 
   onToggleStart = event => {
     console.log('onToggleStart')
-    const default_status = ['stopped', 'stuck', 'done']
-    if (default_status.includes(this.state.work_status)) {
-      let status_before = this.state.work_status
-      DailyTaskStore.updateTimeLog('start', this.props.id)
-      this.setState({ work_status: 'started' })
-      if (status_before == 'stuck') {
-        toast(`Removed stuck status.`, 'success')
+    if(this.state.work_status !== 'done'){
+      const default_status = ['stopped', 'stuck', 'done']
+      if (default_status.includes(this.state.work_status)) {
+        let status_before = this.state.work_status
+        DailyTaskStore.updateTimeLog('start', this.props.id)
+        this.setState({ work_status: 'started' })
+        if (status_before == 'stuck') {
+          toast(`Removed stuck status.`, 'success')
+        } else {
+          toast(`Start time recorded`, 'success')
+        }
       } else {
-        toast(`Start time recorded`, 'success')
+        DailyTaskStore.updateTimeLog('stop', this.props.id)
+        this.setState({ work_status: 'stopped' })
+        toast(`End time recorded`, 'success')
       }
-    } else {
-      DailyTaskStore.updateTimeLog('stop', this.props.id)
-      this.setState({ work_status: 'stopped' })
-      toast(`End time recorded`, 'success')
     }
   }
 
@@ -138,7 +142,7 @@ class TaskRow extends React.Component {
 
           <div className="flex items-center justify-center " style={btnWidth}>
             <span
-              className="mr1 material-icons orange pointer pa2"
+              className={classNames('mr1 material-icons pointer pa2', { orange: this.state.work_status !== 'done' }, {grey: this.state.work_status === 'done'})}
               style={{ fontSize: '20px' }}
               onClick={this.onToggleStart}
             >

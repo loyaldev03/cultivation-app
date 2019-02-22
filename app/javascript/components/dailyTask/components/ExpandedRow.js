@@ -21,7 +21,7 @@ class ExpandedRow extends React.Component {
   }
 
   render() {
-    const { notes } = this.props
+    const { taskId, notes } = this.props
     return (
       <React.Fragment>
         <div className="flex justify-end pv3 ph3">

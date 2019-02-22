@@ -23,9 +23,9 @@ const getDailyTaskDetails = taskId => {
       console.log(notes)
 
       // Set new data to the currentTaskStore
-      currentTaskStore.loadMaterialsUsed(materials)
-      currentTaskStore.loadIssues(issues)
-      currentTaskStore.loadNotes(notes)
+      // currentTaskStore.loadMaterialsUsed(materials)
+      // currentTaskStore.loadIssues(issues)
+      // currentTaskStore.loadNotes(notes)
     }
   )
 }

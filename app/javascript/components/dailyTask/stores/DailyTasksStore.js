@@ -7,7 +7,6 @@ class DailyTaskStore {
     this.batches.replace(batches)
   }
 
-
   @action
   updateNote(note) {
     this.batches.forEach(b => {

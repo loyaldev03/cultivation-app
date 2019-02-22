@@ -49,6 +49,9 @@ class CultivationCalendar extends React.Component {
       this.props.batchId,
       BatchSetupStore.selectedStartDate
     )
+
+    console.log(response)
+
     if (response.errors) {
       const err1 = Object.keys(response.errors)[0]
       this.setState({ errors: response.errors[err1] })

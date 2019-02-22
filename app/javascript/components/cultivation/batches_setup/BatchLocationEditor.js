@@ -122,10 +122,22 @@ class BatchLocationEditor extends React.PureComponent {
     })
   }
 
+  // TODO: Something not right with this....
   onSelectRoomTab = tabIndex => {
     const rooms = groupBy(this.props.locations, 'room_id')
     const roomId = Object.keys(rooms)[tabIndex]
     this.onSelectRoom(roomId)
+    this.setState({ tabIndex })
+  }
+
+  onSelectRoom = value => {
+    this.setState({
+      selectedLocation: this.getSelectedLocation('room', value),
+      selectedRoom: value,
+      selectedRow: null,
+      selectedShelf: null,
+      showRoomList: false
+    })
   }
 
   onSelectRow = value => e => {
@@ -336,7 +348,7 @@ class BatchLocationEditor extends React.PureComponent {
             </TabList>
             {Object.keys(rooms).map(roomId => {
               return (
-                <TabPanel key={roomId} className="ph4 pb4">
+                <TabPanel key={roomId} className="ph4">
                   <div className="pb3">
                     {selectedTrays && selectedTrays.length > 0 && (
                       <React.Fragment>
@@ -590,7 +602,7 @@ class BatchLocationEditor extends React.PureComponent {
             })}
           </Tabs>
 
-          <div className="bt b--light-grey tr pv3 ph4">
+          <div className="bt b--light-grey tr pv3 mt4 ph4">
             <input type="submit" value="Save" className="btn btn--primary" />
           </div>
         </form>

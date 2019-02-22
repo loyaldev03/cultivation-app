@@ -6,7 +6,7 @@ module Cultivation
 
     def initialize(args = {})
       @args = args
-      @resource_errors = 0
+      @resource_errors = []
       @over_hours = 0
     end
 
@@ -20,10 +20,12 @@ module Cultivation
       batch = Cultivation::Batch.find(args[:batch_id])
       tasks = Cultivation::QueryTasks.call(batch).result
       tasks.each do |task|
-        check_task_assigned(batch, task)
-        check_over_hours(batch, task)
+        if !task.have_children?(tasks) # exclude parent tasks.
+          check_task_assigned(batch, task)
+          check_over_hours(batch, task)
+        end
       end
-      errors.add('resource', 'Some of the task have no resource') if @resource_errors > 0 # if estimated hours is set but no user assign
+      errors.add('resource', @resource_errors.join(', ')) if @resource_errors.present? # if estimated hours is set but no user assign
       errors.add('resource', 'Resource overallocation') if @over_hours > 0 # if overhours
     rescue
       Rails.logger.debug "#{$!.message}"
@@ -32,16 +34,15 @@ module Cultivation
 
     def check_task_assigned(batch, task)
       if task.estimated_hours > 0.0 && task.user_ids.count == 0
-        @resource_errors += 1
+        @resource_errors << "Task #{task.name} is unassigned."
         issue = Issues::Issue.find_or_initialize_by(
           task_id: task.id,
           cultivation_batch_id: batch.id.to_s,
-          title: "Task #{task.name} have no resource allocate",
+          title: "Task #{task.name} is unassigned.",
         )
-
         issue.issue_no = Issues::Issue.count + 1
-        issue.title = "Task #{task.name} have no resource allocate"
-        issue.description = "Task #{task.name} have no resource allocate"
+        issue.title = "Task #{task.name} is unassigned."
+        issue.description = "Task #{task.name} is unassigned."
         issue.severity = 'severe'
         issue.issue_type = 'task_from_batch'
         issue.status = 'open'

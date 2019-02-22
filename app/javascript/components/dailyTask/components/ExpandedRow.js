@@ -1,5 +1,6 @@
 import React from 'react'
 import MaterialUsedRow from './MaterialUsedRow'
+import NoteList from './NoteList'
 
 const rightBorder = { borderRight: '1px solid #ccc' }
 
@@ -20,6 +21,7 @@ class ExpandedRow extends React.Component {
   }
 
   render() {
+    const { taskId, notes } = this.props
     return (
       <React.Fragment>
         <div className="flex justify-end pv3 ph3">
@@ -90,6 +92,7 @@ class ExpandedRow extends React.Component {
                 Add
               </a>
             </div>
+            <NoteList show={true} notes={notes} />
           </div>
         </div>
       </React.Fragment>

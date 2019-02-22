@@ -244,6 +244,7 @@ Rails.application.routes.draw do
         put ':id/start_task', to: 'daily_tasks#start_task'
         put ':id/stop_task', to: 'daily_tasks#stop_task'
         put ':id/add_notes', to: 'daily_tasks#add_notes'
+        post ':id/update_note', to: 'daily_tasks#update_note'
         put ':id/update_materials_used', to: 'daily_tasks#update_materials_used'
         get '/tasks', to: 'daily_tasks#tasks'
         put '/time_log', to: 'daily_tasks#time_log'

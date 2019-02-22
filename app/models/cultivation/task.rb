@@ -38,11 +38,22 @@ module Cultivation
     has_and_belongs_to_many :users, inverse_of: nil
 
     embeds_many :material_use, class_name: 'Cultivation::Item'
+
     embeds_many :notes, class_name: 'Cultivation::Note'
 
     orderable scope: :batch, base: 0
 
-    track_history on: %i[phase name duration start_date end_date estimated_hours depend_on location_id location_type work_status],
+    track_history on: [:phase,
+                       :name,
+                       :duration,
+                       :start_date,
+                       :end_date,
+                       :estimated_hours,
+                       :depend_on,
+                       :location_id,
+                       :location_type,
+                       :notes,
+                       :work_status],
                   modifier_field: :modifier,
                   modifier_field_inverse_of: nil,
                   modifier_field_optional: true,

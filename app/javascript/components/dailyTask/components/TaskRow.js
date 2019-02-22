@@ -99,13 +99,7 @@ class TaskRow extends React.Component {
   }
 
   render() {
-    const {
-      wbs,
-      name,
-      location_name,
-      location_type,
-      issues
-    } = this.props
+    const { wbs, name, location_name, location_type, issues } = this.props
 
     return (
       <div className="bb b--black-05">

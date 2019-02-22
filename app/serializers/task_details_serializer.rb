@@ -13,8 +13,6 @@ class TaskDetailsSerializer
   end
 
   # TODO: Not sure what is this for...
-  # attributes &:wbs
-
   attribute :items do |object|
     object.material_use.map do |item|
       {
@@ -40,6 +38,10 @@ class TaskDetailsSerializer
 
   attribute :issues do |object|
     object.issues.map { |a| {id: a.id.to_s, title: a.title} }
+  end
+
+  attribute :notes do |object|
+    object.notes.map { |a| {id: a.id.to_s, body: a.body} }
   end
 
   attribute :deletable do |object|

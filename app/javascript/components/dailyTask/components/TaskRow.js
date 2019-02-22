@@ -39,7 +39,7 @@ class TaskRow extends React.Component {
 
   onToggleStart = event => {
     console.log('onToggleStart')
-    if(this.state.work_status !== 'done'){
+    if (this.state.work_status !== 'done') {
       const default_status = ['stopped', 'stuck', 'done']
       if (default_status.includes(this.state.work_status)) {
         let status_before = this.state.work_status
@@ -142,7 +142,11 @@ class TaskRow extends React.Component {
 
           <div className="flex items-center justify-center " style={btnWidth}>
             <span
-              className={classNames('mr1 material-icons pointer pa2', { orange: this.state.work_status !== 'done' }, {grey: this.state.work_status === 'done'})}
+              className={classNames(
+                'mr1 material-icons pointer pa2',
+                { orange: this.state.work_status !== 'done' },
+                { grey: this.state.work_status === 'done' }
+              )}
               style={{ fontSize: '20px' }}
               onClick={this.onToggleStart}
             >

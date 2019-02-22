@@ -37,15 +37,12 @@ class TaskRow extends React.Component {
 
   onToggleStart = event => {
     console.log('onToggleStart')
-    let stuck
-    if (this.state.work_status === 'stuck') {
-      stuck = true
-    }
     const default_status = ['stopped', 'stuck', 'done']
     if (default_status.includes(this.state.work_status)) {
+      let status_before = this.state.work_status
       DailyTaskStore.updateTimeLog('start', this.props.id)
       this.setState({ work_status: 'started' })
-      if (stuck) {
+      if (status_before == 'stuck') {
         toast(`Removed stuck status.`, 'success')
       } else {
         toast(`Start time recorded`, 'success')

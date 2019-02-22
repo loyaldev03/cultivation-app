@@ -4,7 +4,9 @@ import { observer } from 'mobx-react'
 import { SlidePanel } from '../utils/'
 import BatchedDailyTasks from './components/BatchedDailyTasks'
 import loadDailyTasks from './actions/loadDailyTasks'
+import editNote from './actions/editNote'
 import dailyTasksStore from './stores/DailyTasksStore'
+import NoteEditor from './components/NoteEditor'
 
 const tasks = [
   {
@@ -39,7 +41,6 @@ class DailyTaskApp extends React.Component {
   }
 
   onToggleAddIssue = (taskId = null) => {
-    console.log('on add issue')
     this.setState({
       showAddIssue: !this.state.showAddIssue,
       currentTaskId: taskId
@@ -53,15 +54,27 @@ class DailyTaskApp extends React.Component {
     })
   }
 
-  onToggleAddNotes = (taskId = null) => {
-    this.setState({
-      showAddNotes: !this.state.showAddNotes,
-      currentTaskId: taskId
-    })
+  onToggleAddNotes = taskId => {
+    if (taskId) {
+      this.setState({
+        showAddNotes: true,
+        currentTaskId: taskId
+      })
+    } else {
+      this.setState({
+        showAddNotes: false,
+        currentTaskId: null
+      })
+    }
   }
 
   renderSlidePanel() {
-    const { showAddMaterial, showAddIssue, showAddNotes } = this.state
+    const {
+      currentTaskId,
+      showAddMaterial,
+      showAddIssue,
+      showAddNotes
+    } = this.state
     return (
       <React.Fragment>
         <SlidePanel
@@ -101,21 +114,16 @@ class DailyTaskApp extends React.Component {
           )}
         />
         <SlidePanel
-          width="600px"
+          width="500px"
           show={showAddNotes}
           renderBody={props => (
-            <div>
-              <h3>Add notes here...</h3>
-              <a
-                href="#"
-                onClick={event => {
-                  this.onToggleAddNotes()
-                  event.preventDefault()
-                }}
-              >
-                Close
-              </a>
-            </div>
+            <NoteEditor
+              title="Add Note"
+              onClose={this.onToggleAddNotes}
+              onSave={body => {
+                editNote(this.state.currentTaskId, body)
+              }}
+            />
           )}
         />
       </React.Fragment>

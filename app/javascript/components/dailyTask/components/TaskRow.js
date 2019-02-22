@@ -80,6 +80,7 @@ class TaskRow extends React.Component {
         onToggleAddMaterial={this.props.onToggleAddMaterial}
         onToggleAddNotes={this.props.onToggleAddNotes}
         onClickStatus={this.onClickStatus}
+        notes={this.props.notes}
       />
     )
   }

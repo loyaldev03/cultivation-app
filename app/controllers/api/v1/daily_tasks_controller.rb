@@ -4,7 +4,7 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
 
   def tasks
     #make to command
-    @tasks_date = Date.today
+    @tasks_date = Time.now
     match = current_user.cultivation_tasks.expected_on(@tasks_date).selector
     @tasks_by_batch = Cultivation::Task.collection.aggregate(
       [

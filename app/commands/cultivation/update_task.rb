@@ -84,6 +84,13 @@ module Cultivation
       batch.estimated_harvest_date = harvest_phase&.start_date
       batch.start_date = first_task&.start_date
       batch.save!
+
+      if (schedule_batch &&
+          batch.status = Constants::BATCH_STATUS_SCHEDULED &&
+                         batch.start_date <= Time.now)
+        ActivateBatchWorker.new.perform() # activate scheduled class immediately
+      end
+
       update_tray_plans(batch)
       batch
     end

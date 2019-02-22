@@ -82,6 +82,7 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   end
 
   def serialized_tasks(batch_id, task_ids)
+    # TODO: Swich to Cultivation::QueryTasks instead, no need to manually build the wbs
     all_tasks = Cultivation::Batch.find(batch_id).tasks
 
     # Create a map where task id is the Key and wbs is the Value.

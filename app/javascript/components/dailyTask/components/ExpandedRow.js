@@ -21,6 +21,7 @@ class ExpandedRow extends React.Component {
   }
 
   render() {
+    const { notes } = this.props
     return (
       <React.Fragment>
         <div className="flex justify-end pv3 ph3">
@@ -91,7 +92,7 @@ class ExpandedRow extends React.Component {
                 Add
               </a>
             </div>
-            <NoteList show={true} notes={this.notes()} />
+            <NoteList show={true} notes={notes} />
           </div>
         </div>
       </React.Fragment>

@@ -31,8 +31,7 @@ class DailyTaskApp extends React.Component {
     showAddIssue: false,
     showAddMaterial: false,
     showAddNotes: false,
-    currentTaskId: null,
-    today_date: Date.now
+    currentTaskId: null
   }
 
   componentDidMount() {

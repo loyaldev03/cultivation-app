@@ -3,7 +3,6 @@ import HeaderRow from './HeaderRow'
 import TaskRow from './TaskRow'
 import { observer } from 'mobx-react'
 
-
 const BatchedDailyTasks = observer(
   ({
     batchNo,

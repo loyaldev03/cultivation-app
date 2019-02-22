@@ -8,7 +8,7 @@ import {
 } from './TaskTableStyles'
 import ExpandedRow from './ExpandedRow'
 import getDailyTaskDetails from '../actions/getDailyTaskDetails'
-import {toast} from '../../utils'
+import { toast } from '../../utils'
 import DailyTaskStore from '../stores/DailyTasksStore'
 class TaskRow extends React.Component {
   state = {
@@ -138,9 +138,7 @@ class TaskRow extends React.Component {
               style={{ fontSize: '20px' }}
               onClick={this.onToggleStart}
             >
-              {this.state.work_status === 'started'
-                ? 'pause'
-                : 'play_arrow'}
+              {this.state.work_status === 'started' ? 'pause' : 'play_arrow'}
             </span>
           </div>
 

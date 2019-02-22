@@ -42,8 +42,6 @@ class DailyTaskStore {
       // this.isLoading = false
     }
   }
-
-
 }
 
 const dailyTasksStore = new DailyTaskStore()

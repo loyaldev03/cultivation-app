@@ -128,10 +128,29 @@ class DailyTaskApp extends React.Component {
     let h = date.getHours()
     let m = date.getMinutes()
     let s = date.getSeconds()
-    let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const monthNames = ["January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ];
+    let days = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday'
+    ]
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
     let dayName = days[date.getDay()].substring(0, 3)
     let monthName = monthNames[date.getMonth()].substring(0, 3)
     let dates = `${dayName}, ${date.getDate()} ${monthName} ${date.getFullYear()}`
@@ -149,7 +168,6 @@ class DailyTaskApp extends React.Component {
           <span className="f6 pv1 ph2 br2 ba b--black-20 black-60 bg-white ml2">
             {this.getDateToday()}
           </span>
-
         </div>
 
         {dailyTasksStore.bindable.map(batch => (

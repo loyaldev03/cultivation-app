@@ -1,7 +1,5 @@
 import { observable, action, computed, toJS } from 'mobx'
-import {
-  httpPutOptions,
-} from '../../utils'
+import { httpPutOptions } from '../../utils'
 class DailyTaskStore {
   batches = observable([])
 

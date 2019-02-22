@@ -5,6 +5,7 @@ module Inventory
 
     #add created_by for whodunnit
     field :plant_id, type: BSON::ObjectId       # might be removed if no ID assigned
+    # TODO: Create index for ref_id + ref_type
     field :ref_id, type: BSON::ObjectId
     field :ref_type, type: String
     field :event_type, type: String             # stock_intake, materials_used, material_wasted
@@ -38,6 +39,8 @@ module Inventory
     belongs_to :catalogue, class_name: 'Inventory::Catalogue'
     belongs_to :harvest_batch, class_name: 'Inventory::HarvestBatch', optional: true
     belongs_to :product, class_name: 'Inventory::Product', optional: true
+    # TODO: Missing link to Cultivation::Batch
+    # TODO: Missing fields for standard amount and quantity
   end
 end
 

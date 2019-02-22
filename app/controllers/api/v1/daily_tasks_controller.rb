@@ -1,6 +1,6 @@
 class Api::V1::DailyTasksController < Api::V1::BaseApiController
   before_action :set_task, except: [:tasks]
-  before_action :set_work_day, except: [:tasks]
+  before_action :set_work_day, except: [:tasks, :update_note]
 
   def tasks
     #make to command
@@ -33,6 +33,25 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     end
     data = TaskDetailsSerializer.new(cmd.result).serialized_json
     render json: data
+  end
+
+  def update_note
+    update_cmd = DailyTask::UpdateNote.call(
+      current_user,
+      params[:id],
+      params[:note_id],
+      params[:body],
+    )
+    if update_cmd.success?
+      note = {
+        id: update_cmd.result.id.to_s,
+        task_id: update_cmd.task_id.to_s,
+        body: update_cmd.result.body,
+      }
+      render json: {data: note.as_json}
+    else
+      render json: {errors: update_cmd.errors}
+    end
   end
 
   def add_notes

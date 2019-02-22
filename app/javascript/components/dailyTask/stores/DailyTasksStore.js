@@ -1,5 +1,16 @@
 import { observable, action, computed, toJS } from 'mobx'
-
+import {
+  formatDate2,
+  httpPutOptions,
+  httpGetOptions,
+  httpPostOptions,
+  httpDeleteOptions,
+  addDayToDate,
+  moneyFormatter,
+  decimalFormatter,
+  sumBy,
+  toast
+} from '../../utils'
 class DailyTaskStore {
   batches = observable([])
 
@@ -11,6 +22,28 @@ class DailyTaskStore {
   get bindable() {
     return this.batches.slice()
   }
+
+  @action
+  async updateTimeLog(action, taskId) {
+    this.isLoading = true
+    const url = `/api/v1/daily_tasks/time_log`
+    try {
+      const payload = { actions: action, task_id: taskId }
+      const response = await (await fetch(url, httpPutOptions(payload))).json()
+      if (response.data) {
+        toast(`Success update timelog`, 'success')
+        // this.loadTasks(batchId)
+      } else {
+        console.error(response.errors)
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      // this.isLoading = false
+    }
+  }
+
+
 }
 
 const dailyTasksStore = new DailyTaskStore()

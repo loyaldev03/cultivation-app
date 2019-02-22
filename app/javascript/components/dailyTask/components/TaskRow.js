@@ -8,11 +8,12 @@ import {
 } from './TaskTableStyles'
 import ExpandedRow from './ExpandedRow'
 import getDailyTaskDetails from '../actions/getDailyTaskDetails'
-
+import {toast} from '../../utils'
+import DailyTaskStore from '../stores/DailyTasksStore'
 class TaskRow extends React.Component {
   state = {
     expanded: false,
-    work_status: 'not_started'
+    work_status: this.props.work_status
   }
 
   componentDidMount() {
@@ -36,11 +37,20 @@ class TaskRow extends React.Component {
 
   onToggleStart = event => {
     console.log('onToggleStart')
-    if (this.state.work_status === 'not_started') {
-      this.setState({ work_status: 'in_progress' })
+    toast(this.state.work_status, 'success')
+    const default_status = ['stopped', 'stuck', 'done']
+    if (default_status.includes(this.state.work_status)) {
+      DailyTaskStore.updateTimeLog('start', this.props.id)
+      this.setState({ work_status: 'started' })
     } else {
-      this.setState({ work_status: 'not_started' })
+      DailyTaskStore.updateTimeLog('stop', this.props.id)
+      this.setState({ work_status: 'stopped' })
     }
+  }
+
+  onClickStatus = action => {
+    DailyTaskStore.updateTimeLog(action, this.props.id)
+    this.setState({ work_status: action })
   }
 
   renderExpanded() {
@@ -54,6 +64,7 @@ class TaskRow extends React.Component {
         onToggleAddIssue={this.props.onToggleAddIssue}
         onToggleAddMaterial={this.props.onToggleAddMaterial}
         onToggleAddNotes={this.props.onToggleAddNotes}
+        onClickStatus={this.onClickStatus}
       />
     )
   }
@@ -127,7 +138,7 @@ class TaskRow extends React.Component {
               style={{ fontSize: '20px' }}
               onClick={this.onToggleStart}
             >
-              {this.state.work_status === 'in_progress'
+              {this.state.work_status === 'started'
                 ? 'pause'
                 : 'play_arrow'}
             </span>
@@ -138,7 +149,7 @@ class TaskRow extends React.Component {
             style={statusWidth}
           >
             <span className="f6 black-30 ttc">
-              {work_status.replace(/[_]/g, ' ')}
+              {this.state.work_status.replace(/[_]/g, ' ')}
             </span>
           </div>
         </div>

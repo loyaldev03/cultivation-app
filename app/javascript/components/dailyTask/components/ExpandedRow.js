@@ -25,10 +25,18 @@ class ExpandedRow extends React.Component {
     return (
       <React.Fragment>
         <div className="flex justify-end pv3 ph3">
-          <a href="#" className="btn btn--primary mr2">
+          <a
+            href="#"
+            className="btn btn--primary mr2"
+            onClick={e => this.props.onClickStatus('done')}
+          >
             Done
           </a>
-          <a href="#" className="btn btn--secondary">
+          <a
+            href="#"
+            className="btn btn--secondary"
+            onClick={e => this.props.onClickStatus('stuck')}
+          >
             I'm stuck
           </a>
         </div>

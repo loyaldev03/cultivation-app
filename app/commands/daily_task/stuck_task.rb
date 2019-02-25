@@ -10,7 +10,8 @@ module DailyTask
 
     def call
       if validate?
-        @task.time_logs.find_by(end_time: nil).stop!
+        last_time_log = @task.time_logs.find_by(end_time: nil)
+        last_time_log.stop! if last_time_log
         @task.update(work_status: 'stuck')
         @task
       end

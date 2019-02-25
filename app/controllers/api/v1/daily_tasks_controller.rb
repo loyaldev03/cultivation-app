@@ -1,6 +1,6 @@
 class Api::V1::DailyTasksController < Api::V1::BaseApiController
-  before_action :set_task, except: [:tasks]
-  before_action :set_work_day, except: [:tasks, :update_note]
+  before_action :set_task, except: [:tasks, :time_log]
+  before_action :set_work_day, except: [:tasks, :time_log, :update_note]
 
   def tasks
     #make to command
@@ -21,7 +21,7 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   end
 
   def time_log
-    case params[:action]
+    case params[:actions]
     when 'start'
       cmd = DailyTask::StartTimeLog.call(current_user.id, params[:task_id])
     when 'stop'

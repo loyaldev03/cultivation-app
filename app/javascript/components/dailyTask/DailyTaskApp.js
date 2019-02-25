@@ -130,13 +130,50 @@ class DailyTaskApp extends React.Component {
     )
   }
 
+  getDateToday = () => {
+    let date = new Date()
+    let h = date.getHours()
+    let m = date.getMinutes()
+    let s = date.getSeconds()
+    let days = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday'
+    ]
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
+    let dayName = days[date.getDay()].substring(0, 3)
+    let monthName = monthNames[date.getMonth()].substring(0, 3)
+    let dates = `${dayName}, ${date.getDate()} ${monthName} ${date.getFullYear()}`
+
+    return dates
+  }
+
   render() {
+    const today_date = this.getDateToday()
     return (
       <React.Fragment>
+        <div id="toast" className="toast animated toast--success" />
         <div className="flex items-end justify-start mb3">
           <h1 className="f3 ma0 pa0 black-90 fw6">Today</h1>
           <span className="f6 pv1 ph2 br2 ba b--black-20 black-60 bg-white ml2">
-            Fri, 15 Feb 2019
+            {this.getDateToday()}
           </span>
         </div>
 

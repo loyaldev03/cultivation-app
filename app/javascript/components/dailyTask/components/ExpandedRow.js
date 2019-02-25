@@ -1,7 +1,7 @@
 import React from 'react'
 import MaterialUsedRow from './MaterialUsedRow'
 import NoteList from './NoteList'
-import deleteNote from '../actions/deleteNote'
+import DailyTaskStore from '../stores/DailyTasksStore'
 
 const rightBorder = { borderRight: '1px solid #ccc' }
 
@@ -24,7 +24,7 @@ class ExpandedRow extends React.Component {
   onDeleteNote = noteId => {
     const result = confirm('Confirm delete this note?')
     if (result) {
-      deleteNote(this.props.taskId, noteId)
+      DailyTaskStore.deleteNote(this.props.taskId, noteId)
     }
   }
 

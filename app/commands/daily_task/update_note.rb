@@ -6,8 +6,8 @@ module DailyTask
 
     def initialize(current_user, task_id, note_id, body)
       @current_user = current_user
-      @task_id = task_id&.to_bson_id
-      @note_id = note_id&.to_bson_id
+      @task_id = task_id.to_bson_id if task_id.present?
+      @note_id = note_id.to_bson_id if note_id.present?
       @body = body
     end
 
@@ -17,7 +17,12 @@ module DailyTask
         if note_id.nil?
           note = task.notes.build
           note.body = body
-          task.save!
+          note.save!
+          note
+        else
+          note = task.notes.detect { |n| n.id == note_id }
+          note.body = body
+          note.save!
           note
         end
       end

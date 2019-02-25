@@ -1,31 +1,12 @@
 import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
-import { SlidePanel } from '../utils/'
+import { SlidePanel, formatDate3 } from '../utils/'
 import BatchedDailyTasks from './components/BatchedDailyTasks'
 import loadDailyTasks from './actions/loadDailyTasks'
 import editNote from './actions/editNote'
 import dailyTasksStore from './stores/DailyTasksStore'
 import NoteEditor from './components/NoteEditor'
-
-const tasks = [
-  {
-    id: 1,
-    wbs: '1.1',
-    task: 'Add nutrient',
-    location: 'Clone Room A',
-    status: 'not started',
-    issueCount: 0
-  },
-  {
-    id: 2,
-    wbs: '2.1',
-    task: 'Clean',
-    location: 'Clone Room A',
-    status: 'not started',
-    issueCount: 2
-  }
-]
 
 @observer
 class DailyTaskApp extends React.Component {
@@ -33,7 +14,8 @@ class DailyTaskApp extends React.Component {
     showAddIssue: false,
     showAddMaterial: false,
     showAddNotes: false,
-    currentTaskId: null
+    currentTaskId: '',
+    currentNoteId: ''
   }
 
   componentDidMount() {
@@ -54,23 +36,29 @@ class DailyTaskApp extends React.Component {
     })
   }
 
-  onToggleAddNotes = taskId => {
+  onToggleAddNotes = (taskId, noteId = '', body = '') => {
+    // console.log({taskId, noteId, body})
     if (taskId) {
       this.setState({
         showAddNotes: true,
-        currentTaskId: taskId
+        currentTaskId: taskId,
+        currentNoteId: noteId
       })
+      this.noteEditor.setBody(body)
     } else {
       this.setState({
         showAddNotes: false,
-        currentTaskId: null
+        currentTaskId: '',
+        currentNoteId: ''
       })
+      this.noteEditor.setBody('')
     }
   }
 
   renderSlidePanel() {
     const {
       currentTaskId,
+      currentNoteId,
       showAddMaterial,
       showAddIssue,
       showAddNotes
@@ -118,10 +106,11 @@ class DailyTaskApp extends React.Component {
           show={showAddNotes}
           renderBody={props => (
             <NoteEditor
-              title="Add Note"
-              onClose={this.onToggleAddNotes}
+              ref={editor => (this.noteEditor = editor)}
+              title={currentNoteId ? 'Update Note' : 'Add Note'}
+              onClose={() => this.onToggleAddNotes('')}
               onSave={body => {
-                editNote(this.state.currentTaskId, body)
+                editNote(currentTaskId, currentNoteId, body)
               }}
             />
           )}
@@ -130,56 +119,21 @@ class DailyTaskApp extends React.Component {
     )
   }
 
-  getDateToday = () => {
-    let date = new Date()
-    let h = date.getHours()
-    let m = date.getMinutes()
-    let s = date.getSeconds()
-    let days = [
-      'Sunday',
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday'
-    ]
-    const monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ]
-    let dayName = days[date.getDay()].substring(0, 3)
-    let monthName = monthNames[date.getMonth()].substring(0, 3)
-    let dates = `${dayName}, ${date.getDate()} ${monthName} ${date.getFullYear()}`
-
-    return dates
-  }
-
   render() {
-    const today_date = this.getDateToday()
+    const { today } = this.props
     return (
       <React.Fragment>
         <div id="toast" className="toast animated toast--success" />
         <div className="flex items-end justify-start mb3">
           <h1 className="f3 ma0 pa0 black-90 fw6">Today</h1>
           <span className="f6 pv1 ph2 br2 ba b--black-20 black-60 bg-white ml2">
-            {this.getDateToday()}
+            {formatDate3(today)}
           </span>
         </div>
-
         {dailyTasksStore.bindable.map(batch => (
           <BatchedDailyTasks
             key={batch.id}
+            batchNo={batch.batch_no}
             batchName={batch.name}
             tasks={batch.tasks}
             onToggleAddIssue={this.onToggleAddIssue}

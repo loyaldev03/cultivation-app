@@ -5,7 +5,13 @@ class NoteEditor extends React.Component {
   onSave = () => {
     this.props.onSave(this.inputText.value)
     this.props.onClose()
+    this.inputText.value = ""
   }
+
+  setBody = body => {
+    this.inputText.value = body
+  }
+
   render() {
     const { onClose, onSave } = this.props
     return (
@@ -18,7 +24,7 @@ class NoteEditor extends React.Component {
               ref={input => (this.inputText = input)}
               className="dark-grey"
               className="w-100 b--light-grey"
-              rows={5}
+              rows={7}
             />
           </div>
         </div>

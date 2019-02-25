@@ -1,6 +1,7 @@
 import React from 'react'
 import MaterialUsedRow from './MaterialUsedRow'
 import NoteList from './NoteList'
+import DailyTaskStore from '../stores/DailyTasksStore'
 
 const rightBorder = { borderRight: '1px solid #ccc' }
 
@@ -18,6 +19,17 @@ class ExpandedRow extends React.Component {
   onToggleAddNotes = event => {
     this.props.onToggleAddNotes(this.props.taskId)
     event.preventDefault()
+  }
+
+  onDeleteNote = noteId => {
+    const result = confirm('Confirm delete this note?')
+    if (result) {
+      DailyTaskStore.deleteNote(this.props.taskId, noteId)
+    }
+  }
+
+  onEditNote = (noteId, body) => {
+    this.props.onToggleAddNotes(this.props.taskId, noteId, body)
   }
 
   render() {
@@ -100,7 +112,12 @@ class ExpandedRow extends React.Component {
                 Add
               </a>
             </div>
-            <NoteList show={true} notes={notes} />
+            <NoteList
+              show={true}
+              notes={notes}
+              onEdit={this.onEditNote}
+              onDelete={this.onDeleteNote}
+            />
           </div>
         </div>
       </React.Fragment>

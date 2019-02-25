@@ -1,7 +1,9 @@
 import { observable, action, computed, toJS } from 'mobx'
-import { httpPutOptions } from '../../utils'
+import { httpPutOptions, httpDeleteOptions } from '../../utils'
+
 class DailyTaskStore {
-  batches = observable([])
+  @observable batches = []
+  @observable isLoading = false
 
   load(batches) {
     this.batches.replace(batches)
@@ -26,6 +28,31 @@ class DailyTaskStore {
     })
   }
 
+  @action
+  async deleteNote(taskId, noteId) {
+    this.isLoading = true
+    const url = `/api/v1/daily_tasks/${taskId}/notes/${noteId}`
+    try {
+      const response = await (await fetch(url, httpDeleteOptions())).json()
+      if (response.data) {
+        this.batches.forEach(b => {
+          const task = b.tasks.find(x => x.id === taskId)
+          if (task) {
+            if (task.notes) {
+              task.notes = task.notes.filter(n => n.id !== noteId)
+            }
+          }
+        })
+      } else {
+        console.error(response.errors)
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
   @computed
   get bindable() {
     return this.batches.slice()
@@ -46,7 +73,7 @@ class DailyTaskStore {
     } catch (error) {
       console.error(error)
     } finally {
-      // this.isLoading = false
+      this.isLoading = false
     }
   }
 }

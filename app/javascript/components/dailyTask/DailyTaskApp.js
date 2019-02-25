@@ -14,7 +14,8 @@ class DailyTaskApp extends React.Component {
     showAddIssue: false,
     showAddMaterial: false,
     showAddNotes: false,
-    currentTaskId: null
+    currentTaskId: '',
+    currentNoteId: ''
   }
 
   componentDidMount() {
@@ -35,23 +36,29 @@ class DailyTaskApp extends React.Component {
     })
   }
 
-  onToggleAddNotes = taskId => {
+  onToggleAddNotes = (taskId, noteId = '', body = '') => {
+    // console.log({taskId, noteId, body})
     if (taskId) {
       this.setState({
         showAddNotes: true,
-        currentTaskId: taskId
+        currentTaskId: taskId,
+        currentNoteId: noteId
       })
+      this.noteEditor.setBody(body)
     } else {
       this.setState({
         showAddNotes: false,
-        currentTaskId: null
+        currentTaskId: '',
+        currentNoteId: ''
       })
+      this.noteEditor.setBody('')
     }
   }
 
   renderSlidePanel() {
     const {
       currentTaskId,
+      currentNoteId,
       showAddMaterial,
       showAddIssue,
       showAddNotes
@@ -99,10 +106,11 @@ class DailyTaskApp extends React.Component {
           show={showAddNotes}
           renderBody={props => (
             <NoteEditor
-              title="Add Note"
-              onClose={() => this.onToggleAddNotes("")}
+              ref={editor => (this.noteEditor = editor)}
+              title={currentNoteId ? 'Update Note' : 'Add Note'}
+              onClose={() => this.onToggleAddNotes('')}
               onSave={body => {
-                editNote(this.state.currentTaskId, body)
+                editNote(currentTaskId, currentNoteId, body)
               }}
             />
           )}

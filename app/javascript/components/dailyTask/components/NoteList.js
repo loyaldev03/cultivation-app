@@ -10,11 +10,11 @@ const NoteList = React.memo(({ onEdit, onDelete, notes = [], show = true }) => {
         {notes.map(x => (
           <li className="pv1" key={x.id}>
             <div className="flex justify-between item-center">
-              <span className="f7">TODO: Dec 12 2:10pm</span>
+              <span className="f7 red">TODO: Dec 12 2:10pm</span>
               <div>
                 <i
                   className="material-icons pointer icon--xs pr2"
-                  onClick={() => onEdit(x.id)}
+                  onClick={() => onEdit(x.id, x.body)}
                 >
                   edit
                 </i>

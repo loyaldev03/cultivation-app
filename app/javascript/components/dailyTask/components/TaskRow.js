@@ -37,7 +37,6 @@ class TaskRow extends React.Component {
   }
 
   onToggleStart = event => {
-    console.log('onToggleStart')
     if (this.state.work_status !== 'done') {
       const default_status = ['stopped', 'stuck', 'done']
       if (default_status.includes(this.state.work_status)) {

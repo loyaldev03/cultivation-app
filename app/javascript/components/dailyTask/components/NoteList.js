@@ -1,6 +1,6 @@
 import React from 'react'
 
-const NoteList = React.memo(({ notes = [], show = true }) => {
+const NoteList = React.memo(({ onEdit, onDelete, notes = [], show = true }) => {
   if (!show) {
     return null
   }
@@ -10,10 +10,20 @@ const NoteList = React.memo(({ notes = [], show = true }) => {
         {notes.map(x => (
           <li className="pv1" key={x.id}>
             <div className="flex justify-between item-center">
-              <span className="f7">Dec 12 2:10pm</span>
+              <span className="f7">TODO: Dec 12 2:10pm</span>
               <div>
-                <i className="material-icons pointer icon--xs pr2">edit</i>
-                <i className="material-icons pointer icon--xs">delete</i>
+                <i
+                  className="material-icons pointer icon--xs pr2"
+                  onClick={() => onEdit(x.id)}
+                >
+                  edit
+                </i>
+                <i
+                  className="material-icons pointer icon--xs"
+                  onClick={() => onDelete(x.id)}
+                >
+                  delete
+                </i>
               </div>
             </div>
             <p className="mv0 f6 dark-gray">{x.body}</p>

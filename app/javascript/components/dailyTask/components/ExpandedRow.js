@@ -20,6 +20,17 @@ class ExpandedRow extends React.Component {
     event.preventDefault()
   }
 
+  onDeleteNote = noteId => {
+    const result = confirm('Confirm delete this note?')
+    if (result) {
+      console.log('call delete note api', noteId)
+    }
+  }
+
+  onEditNote = noteId => {
+    console.log('call edit note', noteId)
+  }
+
   render() {
     const { taskId, notes } = this.props
     return (
@@ -92,7 +103,12 @@ class ExpandedRow extends React.Component {
                 Add
               </a>
             </div>
-            <NoteList show={true} notes={notes} />
+            <NoteList
+              show={true}
+              notes={notes}
+              onEdit={this.onEditNote}
+              onDelete={this.onDeleteNote}
+            />
           </div>
         </div>
       </React.Fragment>

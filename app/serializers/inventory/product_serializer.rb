@@ -29,5 +29,17 @@ module Inventory
     attribute :facility_strain_id do |object|
       object.facility_strain_id.to_s
     end
+
+    attribute :nitrogen do |object|
+      object.nutrients.detect { |a| a[:element] == 'nitrogen' }&.value
+    end
+
+    attribute :prosphorus do |object|
+      object.nutrients.detect { |a| a[:element] == 'prosphorus' }&.value
+    end
+
+    attribute :potassium do |object|
+      object.nutrients.detect { |a| a[:element] == 'potassium' }&.value
+    end
   end
 end

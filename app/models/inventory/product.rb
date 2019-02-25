@@ -13,6 +13,7 @@ module Inventory
     field :description, type: String
     field :manufacturer, type: String
 
+    embeds_many :nutrients, class_name: 'Inventory::Nutrient'
     has_many :packages, class_name: 'Inventory::ItemTransaction'
     belongs_to :catalogue, class_name: 'Inventory::Catalogue'
     belongs_to :facility, class_name: 'Facility'

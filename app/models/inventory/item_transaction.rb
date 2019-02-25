@@ -3,7 +3,6 @@ module Inventory
     include Mongoid::Document
     include Mongoid::Timestamps::Short
 
-    #add created_by for whodunnit
     field :plant_id, type: BSON::ObjectId       # might be removed if no ID assigned
     # TODO: Create index for ref_id + ref_type
     field :ref_id, type: BSON::ObjectId
@@ -11,7 +10,6 @@ module Inventory
     field :event_type, type: String             # stock_intake, materials_used, material_wasted
     field :event_date, type: DateTime
 
-    #
     field :product_name, type: String
     field :description, type: String
     field :manufacturer, type: String
@@ -33,6 +31,8 @@ module Inventory
     field :cost_per_unit, type: BigDecimal      # this cost per unit is cost for each quantity
 
     field :breakdowns, type: Array
+
+    field :created_by, type: BSON::ObjectId #whodunnit
 
     belongs_to :facility
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true

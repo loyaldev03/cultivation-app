@@ -40,7 +40,6 @@ class NutrientEditor extends React.Component {
             const nutrientType = this.props.catalogues.find(
               x => x.key == catalogue.parent_key
             )
-
             this.setState(
               {
                 ...this.resetState(),
@@ -54,6 +53,9 @@ class NutrientEditor extends React.Component {
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer,
                 description: attr.description,
+                nitrogen: attr.product.nitrogen,
+                prosphorus: attr.product.prosphorus,
+                potassium: attr.product.potassium,
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -207,7 +209,10 @@ class NutrientEditor extends React.Component {
       order_quantity,
       order_uom: { value: order_uom },
       price_per_package: price,
-      location_id
+      location_id,
+      nitrogen,
+      prosphorus,
+      potassium
     } = this.state
 
     let errors = {}
@@ -277,7 +282,10 @@ class NutrientEditor extends React.Component {
       price,
       location_id,
       ...purchaseData,
-      isValid
+      isValid,
+      nitrogen,
+      prosphorus,
+      potassium
     }
   }
 
@@ -313,7 +321,10 @@ class NutrientEditor extends React.Component {
           product_name: product.value,
           product_id: '',
           manufacturer: '',
-          description: ''
+          description: '',
+          nitrogen: '',
+          prosphorus: '',
+          potassium: ''
         })
       } else {
         this.setState({
@@ -321,7 +332,10 @@ class NutrientEditor extends React.Component {
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,
-          description: product.description
+          description: product.description,
+          nitrogen: product.nitrogen,
+          prosphorus: product.prosphorus,
+          potassium: product.potassium
         })
       }
     } else {
@@ -452,6 +466,41 @@ class NutrientEditor extends React.Component {
                 className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
                 fieldname="description"
                 value={this.state.description}
+                onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
+              />
+            </div>
+          </div>
+          <hr className="mt3 m b--light-gray w-100" />
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db dark-gray">Nutrients</label>
+            </div>
+          </div>
+          <div className="ph4 mb3 flex">
+            <div className="w-30">
+              <NumericInput
+                label="Nitrogen (%)"
+                fieldname="nitrogen"
+                value={this.state.nitrogen}
+                onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
+              />
+            </div>
+            <div className="w-30 pl3">
+              <NumericInput
+                label="Prosphorus (%)"
+                fieldname="prosphorus"
+                value={this.state.prosphorus}
+                onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
+              />
+            </div>
+            <div className="w-30 pl3">
+              <NumericInput
+                label="Potassium (%)"
+                fieldname="potassium"
+                value={this.state.potassium}
                 onChange={this.onChangeGeneric}
                 readOnly={hasProductId}
               />

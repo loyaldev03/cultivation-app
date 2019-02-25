@@ -18,8 +18,7 @@ class TaskRow extends React.Component {
     work_status: this.props.work_status
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   onExpand = event => {
     // console.log('expanded')

@@ -85,6 +85,8 @@ module Cultivation
       batch.start_date = first_task&.start_date
       batch.save!
 
+      # TODO: No need to check for status, since the bg job would loop through
+      # all scheduled batch and activate it.
       if (schedule_batch &&
           batch.status = Constants::BATCH_STATUS_SCHEDULED &&
                          batch.start_date <= Time.now)

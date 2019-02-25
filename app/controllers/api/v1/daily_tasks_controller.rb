@@ -3,8 +3,8 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   before_action :set_work_day, except: [:tasks, :update_note]
 
   def tasks
-    #make to command
-    @tasks_date = Time.now
+    # TODO: make into command
+    @tasks_date = Time.now.beginning_of_day
     match = current_user.cultivation_tasks.expected_on(@tasks_date).selector
     @tasks_by_batch = Cultivation::Task.collection.aggregate(
       [

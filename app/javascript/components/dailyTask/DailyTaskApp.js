@@ -119,7 +119,7 @@ class DailyTaskApp extends React.Component {
           renderBody={props => (
             <NoteEditor
               title="Add Note"
-              onClose={this.onToggleAddNotes}
+              onClose={() => this.onToggleAddNotes("")}
               onSave={body => {
                 editNote(this.state.currentTaskId, body)
               }}

@@ -1,6 +1,7 @@
 import React from 'react'
 import MaterialUsedRow from './MaterialUsedRow'
 import NoteList from './NoteList'
+import deleteNote from '../actions/deleteNote'
 
 const rightBorder = { borderRight: '1px solid #ccc' }
 
@@ -24,6 +25,7 @@ class ExpandedRow extends React.Component {
     const result = confirm('Confirm delete this note?')
     if (result) {
       console.log('call delete note api', noteId)
+      deleteNote(this.props.taskId, noteId)
     }
   }
 

@@ -26,6 +26,18 @@ class DailyTaskStore {
     })
   }
 
+  @action
+  deleteNote(taskId, noteId) {
+    this.batches.forEach(b => {
+      const task = b.tasks.find(x => x.id === taskId)
+      if (task) {
+        if (task.notes) {
+          task.notes = task.notes.filter(n => n.id !== noteId)
+        }
+      }
+    })
+  }
+
   @computed
   get bindable() {
     return this.batches.slice()

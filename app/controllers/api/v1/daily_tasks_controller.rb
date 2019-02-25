@@ -1,6 +1,5 @@
 class Api::V1::DailyTasksController < Api::V1::BaseApiController
   before_action :set_task, except: [:tasks]
-  before_action :set_work_day, except: [:tasks, :update_note]
 
   def tasks
     # TODO: make into command
@@ -54,6 +53,19 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     end
   end
 
+  def destroy_note
+    del_cmd = DailyTask::DeleteNote.call(
+      current_user,
+      params[:id],
+      params[:note_id],
+    )
+    if del_cmd.success?
+      render json: {data: del_cmd.note_id.to_s}
+    else
+      render json: {errors: del_cmd.errors}
+    end
+  end
+
   def add_notes
     @work_day.notes.create(notes: params[:notes])
 
@@ -87,10 +99,6 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
 
   def set_task
     @task = current_user.cultivation_tasks.find(params[:id])
-  end
-
-  def set_work_day
-    @work_day = @task.work_days.find_or_create_by!(date: params[:date], user: current_user)
   end
 
   def serialized_batch(id)

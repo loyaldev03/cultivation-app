@@ -1,7 +1,7 @@
 import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
-import { SlidePanel } from '../utils/'
+import { SlidePanel, formatDate3 } from '../utils/'
 import BatchedDailyTasks from './components/BatchedDailyTasks'
 import loadDailyTasks from './actions/loadDailyTasks'
 import editNote from './actions/editNote'
@@ -131,12 +131,13 @@ class DailyTaskApp extends React.Component {
   }
 
   render() {
+    const { today } = this.props
     return (
       <React.Fragment>
         <div className="flex items-end justify-start mb3">
           <h1 className="f3 ma0 pa0 black-90 fw6">Today</h1>
           <span className="f6 pv1 ph2 br2 ba b--black-20 black-60 bg-white ml2">
-            Fri, 15 Feb 2019
+            {formatDate3(today)}
           </span>
         </div>
 

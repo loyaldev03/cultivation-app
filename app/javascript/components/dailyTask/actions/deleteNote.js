@@ -8,7 +8,6 @@ const deleteNote = (taskId, noteId) => {
       return response.json()
     })
     .then(data => {
-      console.log(taskId, data.data)
       dailyTasksStore.deleteNote(taskId, data.data)
     })
 }

@@ -1,6 +1,4 @@
 class Api::V1::DailyTasksController < Api::V1::BaseApiController
-  before_action :set_task, except: [:tasks]
-
   def tasks
     # TODO: make into command
     @tasks_date = Time.now.beginning_of_day
@@ -20,7 +18,7 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   end
 
   def time_log
-    case params[:action]
+    case params[:actions]
     when 'start'
       cmd = DailyTask::StartTimeLog.call(current_user.id, params[:task_id])
     when 'stop'
@@ -96,10 +94,6 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   end
 
   private
-
-  def set_task
-    @task = current_user.cultivation_tasks.find(params[:id])
-  end
 
   def serialized_batch(id)
     batch = Cultivation::Batch.find(id)

@@ -8,24 +8,26 @@ import {
 } from './TaskTableStyles'
 import ExpandedRow from './ExpandedRow'
 import getDailyTaskDetails from '../actions/getDailyTaskDetails'
+import { toast } from '../../utils'
+import DailyTaskStore from '../stores/DailyTasksStore'
+import classNames from 'classnames'
 
 class TaskRow extends React.Component {
   state = {
     expanded: false,
-    work_status: 'not_started'
+    work_status: this.props.work_status
   }
 
   componentDidMount() {
-    console.log(this.props)
   }
 
   onExpand = event => {
-    console.log('expanded')
-    console.log(
-      `this should call getDailyTaskDetails('${
-        this.props.id
-      }') method if it is an expansion...`
-    )
+    // console.log('expanded')
+    // console.log(
+    //   `this should call getDailyTaskDetails('${
+    //     this.props.id
+    //   }') method if it is an expansion...`
+    // )
 
     if (!this.state.expanded) {
       getDailyTaskDetails(this.props.id)
@@ -36,10 +38,32 @@ class TaskRow extends React.Component {
 
   onToggleStart = event => {
     console.log('onToggleStart')
-    if (this.state.work_status === 'not_started') {
-      this.setState({ work_status: 'in_progress' })
+    if (this.state.work_status !== 'done') {
+      const default_status = ['stopped', 'stuck', 'done']
+      if (default_status.includes(this.state.work_status)) {
+        let status_before = this.state.work_status
+        DailyTaskStore.updateTimeLog('start', this.props.id)
+        this.setState({ work_status: 'started' })
+        if (status_before == 'stuck') {
+          toast(`Removed stuck status.`, 'success')
+        } else {
+          toast(`Start time recorded`, 'success')
+        }
+      } else {
+        DailyTaskStore.updateTimeLog('stop', this.props.id)
+        this.setState({ work_status: 'stopped' })
+        toast(`End time recorded`, 'success')
+      }
+    }
+  }
+
+  onClickStatus = action => {
+    DailyTaskStore.updateTimeLog(action, this.props.id)
+    this.setState({ work_status: action })
+    if (action === 'stuck') {
+      toast(`Supervisor is notified.`, 'success')
     } else {
-      this.setState({ work_status: 'not_started' })
+      toast(`Status changed to done`, 'success')
     }
   }
 
@@ -54,6 +78,7 @@ class TaskRow extends React.Component {
         onToggleAddIssue={this.props.onToggleAddIssue}
         onToggleAddMaterial={this.props.onToggleAddMaterial}
         onToggleAddNotes={this.props.onToggleAddNotes}
+        onClickStatus={this.onClickStatus}
         notes={this.props.notes}
       />
     )
@@ -75,14 +100,7 @@ class TaskRow extends React.Component {
   }
 
   render() {
-    const {
-      wbs,
-      name,
-      location_id,
-      location_type,
-      work_status,
-      issues
-    } = this.props
+    const { wbs, name, location_name, location_type, issues } = this.props
 
     return (
       <div className="bb b--black-05">
@@ -118,19 +136,21 @@ class TaskRow extends React.Component {
             style={locationWidth}
           >
             <span className="f6">
-              {location_type} {location_id}
+              {location_type} {location_name}
             </span>
           </div>
 
           <div className="flex items-center justify-center " style={btnWidth}>
             <span
-              className="mr1 material-icons orange pointer pa2"
+              className={classNames(
+                'mr1 material-icons pointer pa2',
+                { orange: this.state.work_status !== 'done' },
+                { grey: this.state.work_status === 'done' }
+              )}
               style={{ fontSize: '20px' }}
               onClick={this.onToggleStart}
             >
-              {this.state.work_status === 'in_progress'
-                ? 'pause'
-                : 'play_arrow'}
+              {this.state.work_status === 'started' ? 'pause' : 'play_arrow'}
             </span>
           </div>
 
@@ -139,7 +159,7 @@ class TaskRow extends React.Component {
             style={statusWidth}
           >
             <span className="f6 black-30 ttc">
-              {work_status.replace(/[_]/g, ' ')}
+              {this.state.work_status.replace(/[_]/g, ' ')}
             </span>
           </div>
         </div>

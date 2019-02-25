@@ -24,7 +24,6 @@ class ExpandedRow extends React.Component {
   onDeleteNote = noteId => {
     const result = confirm('Confirm delete this note?')
     if (result) {
-      console.log('call delete note api', noteId)
       deleteNote(this.props.taskId, noteId)
     }
   }
@@ -38,10 +37,18 @@ class ExpandedRow extends React.Component {
     return (
       <React.Fragment>
         <div className="flex justify-end pv3 ph3">
-          <a href="#" className="btn btn--primary mr2">
+          <a
+            href="#"
+            className="btn btn--primary mr2"
+            onClick={e => this.props.onClickStatus('done')}
+          >
             Done
           </a>
-          <a href="#" className="btn btn--secondary">
+          <a
+            href="#"
+            className="btn btn--secondary"
+            onClick={e => this.props.onClickStatus('stuck')}
+          >
             I'm stuck
           </a>
         </div>

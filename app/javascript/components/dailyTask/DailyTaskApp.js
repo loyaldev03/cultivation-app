@@ -8,25 +8,6 @@ import editNote from './actions/editNote'
 import dailyTasksStore from './stores/DailyTasksStore'
 import NoteEditor from './components/NoteEditor'
 
-const tasks = [
-  {
-    id: 1,
-    wbs: '1.1',
-    task: 'Add nutrient',
-    location: 'Clone Room A',
-    status: 'not started',
-    issueCount: 0
-  },
-  {
-    id: 2,
-    wbs: '2.1',
-    task: 'Clean',
-    location: 'Clone Room A',
-    status: 'not started',
-    issueCount: 2
-  }
-]
-
 @observer
 class DailyTaskApp extends React.Component {
   state = {
@@ -134,13 +115,13 @@ class DailyTaskApp extends React.Component {
     const { today } = this.props
     return (
       <React.Fragment>
+        <div id="toast" className="toast animated toast--success" />
         <div className="flex items-end justify-start mb3">
           <h1 className="f3 ma0 pa0 black-90 fw6">Today</h1>
           <span className="f6 pv1 ph2 br2 ba b--black-20 black-60 bg-white ml2">
             {formatDate3(today)}
           </span>
         </div>
-
         {dailyTasksStore.bindable.map(batch => (
           <BatchedDailyTasks
             key={batch.id}

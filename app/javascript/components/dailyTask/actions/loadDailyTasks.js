@@ -22,8 +22,6 @@ const loadDailyTasks = () => {
             ...y.attributes
           }))
         }
-
-        console.log(batch)
         return batch
       })
       dailyTasksStore.load(batches)

@@ -19,16 +19,15 @@ class TaskRow extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props)
   }
 
   onExpand = event => {
-    console.log('expanded')
-    console.log(
-      `this should call getDailyTaskDetails('${
-        this.props.id
-      }') method if it is an expansion...`
-    )
+    // console.log('expanded')
+    // console.log(
+    //   `this should call getDailyTaskDetails('${
+    //     this.props.id
+    //   }') method if it is an expansion...`
+    // )
 
     if (!this.state.expanded) {
       getDailyTaskDetails(this.props.id)

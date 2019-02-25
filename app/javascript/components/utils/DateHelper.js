@@ -54,7 +54,8 @@ export const formatDate = date => {
 export const formatDate2 = date =>
   format(date, 'M/DD/YYYY', { awareOfUnicodeTokens: true })
 
-export const formatDate3 = date => format(date, 'ddd, D MMM YYYY')
+export const formatDate3 = date =>
+  format(date, 'ddd, D MMM YYYY', { awareOfUnicodeTokens: true })
 
 const durationToDate = seconds =>
   addSeconds(startOfDay(new Date()), parseInt(seconds))

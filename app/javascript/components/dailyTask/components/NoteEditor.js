@@ -5,6 +5,7 @@ class NoteEditor extends React.Component {
   onSave = () => {
     this.props.onSave(this.inputText.value)
     this.props.onClose()
+    this.inputText.value = ""
   }
   render() {
     const { onClose, onSave } = this.props

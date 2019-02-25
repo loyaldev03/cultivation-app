@@ -18,10 +18,9 @@ const getDailyTaskDetails = taskId => {
 
   Promise.all([getIssues, getMaterials, getNotes]).then(
     ([issues, materials, notes]) => {
-      console.log(issues)
-      console.log(materials)
-      console.log(notes)
-
+      // console.log(issues)
+      // console.log(materials)
+      // console.log(notes)
       // Set new data to the currentTaskStore
       // currentTaskStore.loadMaterialsUsed(materials)
       // currentTaskStore.loadIssues(issues)

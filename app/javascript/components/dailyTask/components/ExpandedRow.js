@@ -28,8 +28,8 @@ class ExpandedRow extends React.Component {
     }
   }
 
-  onEditNote = noteId => {
-    console.log('call edit note', noteId)
+  onEditNote = (noteId, body) => {
+    this.props.onToggleAddNotes(this.props.taskId, noteId, body)
   }
 
   render() {

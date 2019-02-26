@@ -9,9 +9,10 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
         {"$group": {_id: '$batch_id', tasks: {"$push": '$_id'}}},
       ],
     ).map do |batch_group|
+      batch = Cultivation::Batch.find(batch_group['_id'])
       {
-        batch: serialized_batch(batch_group['_id']),
-        tasks: serialized_tasks(batch_group['_id'], batch_group['tasks']),
+        batch: serialized_batch(batch),
+        tasks: serialized_tasks(batch, batch_group['tasks']),
       }
     end
     render json: @tasks_by_batch
@@ -44,6 +45,8 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
         id: update_cmd.result.id.to_s,
         task_id: update_cmd.task_id.to_s,
         body: update_cmd.result.body,
+        u_at: update_cmd.result.u_at,
+        u_by: update_cmd.result[:u_by],
       }
       render json: {data: note.as_json}
     else
@@ -102,22 +105,21 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
       merge(rooms: batch_room_names(batch))
   end
 
-  def serialized_tasks(batch_id, task_ids)
-    # TODO: Swich to Cultivation::QueryTasks instead, no need to manually build the wbs
-    all_tasks = Cultivation::Batch.find(batch_id).tasks
-
-    # Create a map where task id is the Key and wbs is the Value.
-    wbs_map = WbsTree.generate(all_tasks).inject({}) do |memo, item|
-      memo[item[:id]] = item[:wbs]
-      memo
+  def serialized_tasks(batch, task_ids)
+    tasks = Cultivation::QueryTasks.call(batch, [:issues]).result
+    active_tasks = tasks.select { |t| task_ids.include?(t.id) }
+    active_user_ids = active_tasks.map { |t| t.notes.pluck(:modifier_id) }.flatten.compact
+    # Map user's display name to api response
+    note_users = User.where(:_id.in => active_user_ids).to_a
+    active_tasks.each do |t|
+      t.notes.each do |n|
+        user = note_users.detect { |u| u.id == n.modifier_id }
+        if user
+          n[:u_by] = user.display_name
+        end
+      end
     end
-
-    work_days = Cultivation::Task.in(id: task_ids).to_a
-    work_days.each do |t|
-      t.wbs = wbs_map[t.id.to_s]
-    end
-
-    TaskDetailsSerializer.new(work_days).serializable_hash[:data]
+    TaskDetailsSerializer.new(active_tasks).serializable_hash[:data]
   end
 
   def serialized_catalogue

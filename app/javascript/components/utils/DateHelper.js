@@ -1,10 +1,11 @@
 import {
-  parse,
   format,
   addMonths,
   startOfDay,
   addSeconds,
-  addDays
+  addDays,
+  differenceInHours,
+  distanceInWordsToNow,
 } from 'date-fns'
 import { getCookie } from './'
 
@@ -56,6 +57,16 @@ export const formatDate2 = date =>
 
 export const formatDate3 = date =>
   format(date, 'ddd, D MMM YYYY', { awareOfUnicodeTokens: true })
+
+export const formatAgo = date => {
+  const now = new Date()
+  const res = differenceInHours(now, date)
+  if (res > 12) {
+    return format(date, 'ddd, D MMM YYYY, h:mm:ss a', { awareOfUnicodeTokens: true })
+  } else {
+    return distanceInWordsToNow(date, {addSuffix: true})
+  }
+}
 
 const durationToDate = seconds =>
   addSeconds(startOfDay(new Date()), parseInt(seconds))

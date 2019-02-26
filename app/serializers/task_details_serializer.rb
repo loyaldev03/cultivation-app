@@ -51,7 +51,7 @@ class TaskDetailsSerializer
   end
 
   attribute :notes do |object|
-    object.notes.map { |a| {id: a.id.to_s, body: a.body} }
+    object.notes.map { |a| {id: a.id.to_s, body: a.body, u_at: a.u_at} }
   end
 
   attribute :deletable do |object|

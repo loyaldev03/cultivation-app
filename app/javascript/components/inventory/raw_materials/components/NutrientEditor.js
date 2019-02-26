@@ -93,7 +93,10 @@ class NutrientEditor extends React.Component {
         product_id: '',
         product_name: '',
         manufacturer: '',
-        description: ''
+        description: '',
+        nitrogen: '',
+        prosphorus: '',
+        potassium: ''
       }
     }
 
@@ -127,7 +130,10 @@ class NutrientEditor extends React.Component {
         product_id: '',
         product_name: '',
         manufacturer: '',
-        description: ''
+        description: '',
+        nitrogen: '',
+        prosphorus: '',
+        potassium: ''
       }
     }
 
@@ -159,6 +165,9 @@ class NutrientEditor extends React.Component {
       product_name: '',
       manufacturer: '',
       description: '',
+      nitrogen: '',
+      prosphorus: '',
+      potassium: '',
       defaultProduct: [],
       order_quantity: 0,
       price_per_package: 0,
@@ -484,7 +493,6 @@ class NutrientEditor extends React.Component {
                 fieldname="nitrogen"
                 value={this.state.nitrogen}
                 onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
               />
             </div>
             <div className="w-30 pl3">
@@ -493,7 +501,6 @@ class NutrientEditor extends React.Component {
                 fieldname="prosphorus"
                 value={this.state.prosphorus}
                 onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
               />
             </div>
             <div className="w-30 pl3">
@@ -502,7 +509,6 @@ class NutrientEditor extends React.Component {
                 fieldname="potassium"
                 value={this.state.potassium}
                 onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
               />
             </div>
           </div>

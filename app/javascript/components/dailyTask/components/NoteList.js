@@ -12,9 +12,10 @@ const NoteList = React.memo(({ onEdit, onDelete, notes = [], show = true }) => {
           return (
             <li className="pv1" key={x.id}>
               <div className="flex justify-between item-center">
-                <span className="f7 red">
-                  {formatAgo(x.u_at)}
-                </span>
+                <div>
+                  {x.u_at && <span className="pr1 f7 blue">{x.u_by}</span>}
+                  <span className="f7">{formatAgo(x.u_at)}</span>
+                </div>
                 <div>
                   <i
                     className="material-icons pointer icon--xs pr2"

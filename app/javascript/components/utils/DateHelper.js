@@ -5,7 +5,7 @@ import {
   addSeconds,
   addDays,
   differenceInHours,
-  distanceInWordsToNow,
+  distanceInWordsToNow
 } from 'date-fns'
 import { getCookie } from './'
 
@@ -62,9 +62,11 @@ export const formatAgo = date => {
   const now = new Date()
   const res = differenceInHours(now, date)
   if (res > 12) {
-    return format(date, 'ddd, D MMM YYYY, h:mm:ss a', { awareOfUnicodeTokens: true })
+    return format(date, 'ddd, D MMM YYYY, h:mm:ss a', {
+      awareOfUnicodeTokens: true
+    })
   } else {
-    return distanceInWordsToNow(date, {addSuffix: true})
+    return distanceInWordsToNow(date, { addSuffix: true })
   }
 }
 

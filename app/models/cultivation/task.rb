@@ -3,8 +3,6 @@ module Cultivation
     include Mongoid::Document
     include Mongoid::Timestamps::Short
     include Mongoid::Orderable
-    # History tracking all Task documents
-    # Note: tracking will not work until #track_history is invoked
     include Mongoid::History::Trackable
 
     attr_accessor :wbs
@@ -38,7 +36,6 @@ module Cultivation
     has_and_belongs_to_many :users, inverse_of: nil
 
     embeds_many :material_use, class_name: 'Cultivation::Item'
-
     embeds_many :notes, class_name: 'Cultivation::Note'
 
     orderable scope: :batch, base: 0
@@ -52,8 +49,8 @@ module Cultivation
                        :depend_on,
                        :location_id,
                        :location_type,
-                       :notes,
-                       :work_status],
+                       :work_status,
+                       :notes],
                   modifier_field: :modifier,
                   modifier_field_inverse_of: nil,
                   modifier_field_optional: true,

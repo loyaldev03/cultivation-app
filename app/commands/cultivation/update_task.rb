@@ -39,6 +39,7 @@ module Cultivation
           update_root_siblings(task, batch_tasks, days_diff)
           # Save if no errors
           detect_cascade_changes(task, batch_tasks)
+          task.modifier = current_user
           task.save! if errors.empty?
           perform_cascade_change_tasks
           # TODO::ANDY - valid_data when updating tasks

@@ -15,16 +15,15 @@ module DailyTask
       if valid_params?
         task = Cultivation::Task.find_by(id: task_id)
         if note_id.nil?
-          note = task.notes.build
-          note.body = body
-          note.save!
-          note
+          note = task.notes.build(body: body, modifier: current_user)
         else
           note = task.notes.detect { |n| n.id == note_id }
           note.body = body
-          note.save!
-          note
+          note.modifier = current_user
         end
+        note.save!
+        note[:u_by] = current_user.display_name
+        note
       end
     end
 

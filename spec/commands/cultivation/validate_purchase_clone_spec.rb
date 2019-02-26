@@ -1,6 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Cultivation::ValidatePurchaseClone, type: :command do
+  let(:uom) {SeedUnitOfMeasure.call}
   let(:strain) { Common::Strain.create!(name: 'xyz', strain_type: 'indica') }
   let(:facility) do
     facility = create(:facility, :is_complete)
@@ -27,7 +28,7 @@ RSpec.describe Cultivation::ValidatePurchaseClone, type: :command do
   end
 
   let!(:package) do
-    package = product.packages.new(product_name: product.name, quantity: 30, catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
+    package = product.packages.new(product_name: product.name, quantity: 30, uom:  'kg', catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
     package.save
   end
 
@@ -62,7 +63,8 @@ RSpec.describe Cultivation::ValidatePurchaseClone, type: :command do
     task = batch2.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "plants" })
     task.material_use.new({
       quantity: 10,
-      catalogue: catalogue,
+      uom: 'kg',
+      # catalogue: catalogue,
       product: product
     })
     task.save
@@ -83,7 +85,8 @@ RSpec.describe Cultivation::ValidatePurchaseClone, type: :command do
     task = batch3.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "plants" })
     task.material_use.new({
       quantity: 10,
-      catalogue: catalogue,
+      uom: 'kg',
+      # catalogue: catalogue,
       product: product
     })
     task.save
@@ -102,7 +105,8 @@ RSpec.describe Cultivation::ValidatePurchaseClone, type: :command do
       task = batch1.tasks.first
       task.material_use.new({
         quantity: 10,
-        catalogue: catalogue,
+        # catalogue: catalogue,
+        uom: 'kg',
         product: product
       })
       task.save
@@ -115,7 +119,8 @@ RSpec.describe Cultivation::ValidatePurchaseClone, type: :command do
       task = batch1.tasks.first
       task.material_use.new({
         quantity: 11,
-        catalogue: catalogue,
+        uom: 'kg',
+        # catalogue: catalogue,
         product: product
       })
       task.save

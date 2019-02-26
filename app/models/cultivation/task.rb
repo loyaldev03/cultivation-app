@@ -37,7 +37,7 @@ module Cultivation
 
     has_and_belongs_to_many :users, inverse_of: nil
 
-    embeds_many :material_use, class_name: 'Cultivation::Item'
+    embeds_many :material_use, class_name: 'Cultivation::Item', cascade_callbacks: true
 
     embeds_many :notes, class_name: 'Cultivation::Note'
 

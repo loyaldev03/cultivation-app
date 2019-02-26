@@ -1,6 +1,7 @@
 require "rails_helper"
 
 RSpec.describe DailyTask::StartTimeLog, type: :command do
+  let(:uom) {SeedUnitOfMeasure.call}
   let(:strain) { Common::Strain.create!(name: 'xyz', strain_type: 'indica') }
   let(:facility) do
     facility = create(:facility, :is_complete)
@@ -27,7 +28,7 @@ RSpec.describe DailyTask::StartTimeLog, type: :command do
   end
 
   let!(:package) do
-    package = product.packages.new(product_name: product.name, quantity: 30, catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
+    package = product.packages.new(product_name: product.name, quantity: 30, uom:  'kg', catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
     package.save
   end
 

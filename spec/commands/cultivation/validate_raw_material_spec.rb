@@ -1,6 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Cultivation::ValidateRawMaterial, type: :command do
+  let(:uom) {SeedUnitOfMeasure.call}
   let(:strain) { Common::Strain.create!(name: 'xyz', strain_type: 'indica') }
   let(:facility) do
     facility = create(:facility, :is_complete)
@@ -27,7 +28,7 @@ RSpec.describe Cultivation::ValidateRawMaterial, type: :command do
   end
 
   let!(:package) do
-    package = product.packages.new(product_name: product.name, quantity: 30, catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
+    package = product.packages.new(product_name: product.name, quantity: 30, uom:  'kg', catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
     package.save
   end
 
@@ -46,7 +47,8 @@ RSpec.describe Cultivation::ValidateRawMaterial, type: :command do
     task = batch1.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "" })
     task.material_use.new({
       quantity: 40,
-      catalogue: catalogue,
+      # catalogue: catalogue,
+      uom:  'kg',
       product: product
     })
     task.save
@@ -67,7 +69,8 @@ RSpec.describe Cultivation::ValidateRawMaterial, type: :command do
     task = batch2.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "" })
     task.material_use.new({
       quantity: 10,
-      catalogue: catalogue,
+      # catalogue: catalogue,
+      uom:  'kg',
       product: product
     })
     task.save
@@ -88,7 +91,8 @@ RSpec.describe Cultivation::ValidateRawMaterial, type: :command do
     task = batch3.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "" })
     task.material_use.new({
       quantity: 10,
-      catalogue: catalogue,
+      # catalogue: catalogue,
+      uom:  'kg',
       product: product
     })
     task.save
@@ -112,7 +116,7 @@ RSpec.describe Cultivation::ValidateRawMaterial, type: :command do
     end
 
     it "return no error if material is added sufficient stock" do
-      package = product.packages.new(product_name: product.name, quantity: 30, catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
+      package = product.packages.new(product_name: product.name, quantity: 30, uom:  'kg', catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
       package.save
       result = Cultivation::ValidateRawMaterial.call(current_user: current_user, batch_id: batch1.id)
       issues = Issues::Issue.all

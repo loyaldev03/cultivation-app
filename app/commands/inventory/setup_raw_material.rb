@@ -137,8 +137,6 @@ module Inventory
     def create_raw_material(invoice_item)
       product = save_product
       save_npk(product) if nutrients?
-      new_uom = Common::UnitOfMeasure.find_by(unit: uom)
-      new_quantity = new_uom.to(quantity, catalogue.common_uom) #convert quantity to common uom in catalogue
       Inventory::ItemTransaction.create!(
         ref_id: invoice_item.id,
         ref_type: 'Inventory::VendorInvoiceItem',
@@ -149,8 +147,8 @@ module Inventory
         product_name: invoice_item.product_name,
         description: invoice_item.description,
         manufacturer: invoice_item.manufacturer,
-        uom: catalogue.common_uom,
-        quantity: new_quantity,
+        uom: uom,
+        quantity: quantity,
         order_quantity: order_quantity,          # quantity inside PO and stock receive
         order_uom: order_uom,               # uom inside PO and stock receive
         conversion: qty_per_package,         # conversion rule, 1 bag = 65 kg
@@ -163,8 +161,6 @@ module Inventory
     def update_raw_material(invoice_item)
       product = save_product
       save_npk(product) if nutrients?
-      new_uom = Common::UnitOfMeasure.find_by(unit: uom)
-      new_quantity = new_uom.to(quantity, catalogue.common_uom) #convert quantity to common uom in catalogue
       transaction = Inventory::ItemTransaction.find(id)
       transaction.ref_id = invoice_item.id
       transaction.event_date = purchase_date
@@ -174,8 +170,8 @@ module Inventory
 
       transaction.order_quantity = order_quantity
       transaction.order_uom = order_uom
-      transaction.uom = catalogue.common_uom
-      transaction.quantity = new_quantity
+      transaction.uom = uom
+      transaction.quantity = quantity
       transaction.conversion = qty_per_package
       transaction.catalogue = catalogue
       transaction.product_name = product_name

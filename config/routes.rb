@@ -243,7 +243,6 @@ Rails.application.routes.draw do
       scope :daily_tasks do
         put ':id/start_task', to: 'daily_tasks#start_task'
         put ':id/stop_task', to: 'daily_tasks#stop_task'
-        put ':id/add_notes', to: 'daily_tasks#add_notes'
         post ':id/update_note', to: 'daily_tasks#update_note'
         delete ':id/notes/:note_id', to: 'daily_tasks#destroy_note'
         put ':id/update_materials_used', to: 'daily_tasks#update_materials_used'

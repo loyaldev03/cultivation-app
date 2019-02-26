@@ -47,7 +47,6 @@ RSpec.describe Cultivation::ValidateRawMaterial, type: :command do
     task = batch1.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "" })
     task.material_use.new({
       quantity: 40,
-      # catalogue: catalogue,
       uom:  'kg',
       product: product
     })
@@ -69,7 +68,6 @@ RSpec.describe Cultivation::ValidateRawMaterial, type: :command do
     task = batch2.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "" })
     task.material_use.new({
       quantity: 10,
-      # catalogue: catalogue,
       uom:  'kg',
       product: product
     })
@@ -91,7 +89,6 @@ RSpec.describe Cultivation::ValidateRawMaterial, type: :command do
     task = batch3.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "" })
     task.material_use.new({
       quantity: 10,
-      # catalogue: catalogue,
       uom:  'kg',
       product: product
     })

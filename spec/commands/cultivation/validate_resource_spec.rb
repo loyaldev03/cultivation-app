@@ -63,7 +63,6 @@ RSpec.describe Cultivation::ValidateResource, type: :command do
     task = batch2.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "plants" })
     task.material_use.new({
       quantity: 10,
-      # catalogue: catalogue,
       uom:  'kg',
       product: product
     })
@@ -85,7 +84,6 @@ RSpec.describe Cultivation::ValidateResource, type: :command do
     task = batch3.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "plants" })
     task.material_use.new({
       quantity: 10,
-      # catalogue: catalogue,
       uom:  'kg',
       product: product
     })

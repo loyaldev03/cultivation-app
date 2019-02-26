@@ -51,7 +51,6 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
     task.material_use.new({
       quantity: 10,
       uom: 'kg',
-      # catalogue: catalogue,
       product: product
     })
     task.save
@@ -74,7 +73,6 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
     task.material_use.new({
       quantity: 10,
       uom: 'kg',
-      # catalogue: catalogue,
       product: product
     })
     task.save
@@ -97,7 +95,6 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
     task.material_use.new({
       quantity: 10,
       uom: 'kg',
-      # catalogue: catalogue,
       product: product
     })
     task.save

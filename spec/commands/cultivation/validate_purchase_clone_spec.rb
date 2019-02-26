@@ -64,7 +64,6 @@ RSpec.describe Cultivation::ValidatePurchaseClone, type: :command do
     task.material_use.new({
       quantity: 10,
       uom: 'kg',
-      # catalogue: catalogue,
       product: product
     })
     task.save
@@ -86,7 +85,6 @@ RSpec.describe Cultivation::ValidatePurchaseClone, type: :command do
     task.material_use.new({
       quantity: 10,
       uom: 'kg',
-      # catalogue: catalogue,
       product: product
     })
     task.save
@@ -105,8 +103,7 @@ RSpec.describe Cultivation::ValidatePurchaseClone, type: :command do
       task = batch1.tasks.first
       task.material_use.new({
         quantity: 10,
-        # catalogue: catalogue,
-        uom: 'kg',
+          uom: 'kg',
         product: product
       })
       task.save
@@ -120,8 +117,7 @@ RSpec.describe Cultivation::ValidatePurchaseClone, type: :command do
       task.material_use.new({
         quantity: 11,
         uom: 'kg',
-        # catalogue: catalogue,
-        product: product
+          product: product
       })
       task.save
       result = Cultivation::ValidatePurchaseClone.call(current_user: current_user, batch_id: batch1.id)

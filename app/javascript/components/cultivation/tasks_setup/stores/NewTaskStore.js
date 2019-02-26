@@ -24,19 +24,38 @@ function parseTask(taskAttributes) {
   })
 }
 
+function getChildren(wbs, tasks = []) {
+  const childWbs = wbs + '.'
+  return tasks.filter(t => t.wbs.startsWith(childWbs))
+}
+
 function haveChildren(nodeWbs, tasks) {
   const childWbs = nodeWbs + '.'
   return tasks.some(t => t.wbs.startsWith(childWbs))
 }
 
+function cascadeIndelible(task, tasks) {
+  if (task.haveChildren && task.indelible === 'add_nutrient') {
+    const children = getChildren(task.wbs, tasks)
+    children.forEach(x => {
+      x.indelible = task.indelible
+      if (x.haveChildren) {
+        cascadeIndelible(x, tasks)
+      }
+    })
+  }
+}
+
 function updateFlags(singleTarget, tasks) {
   if (singleTarget && tasks) {
     singleTarget.haveChildren = haveChildren(singleTarget.wbs, tasks)
+    cascadeIndelible(singleTarget, tasks)
     return singleTarget
   }
   if (tasks) {
     tasks.forEach(task => {
       task.haveChildren = haveChildren(task.wbs, tasks)
+      cascadeIndelible(task, tasks)
     })
     return tasks
   } else {
@@ -223,8 +242,7 @@ class TaskStore {
   }
 
   getChildren(nodeWbs) {
-    const childWbs = nodeWbs + '.'
-    return this.tasks.filter(t => t.wbs.startsWith(childWbs))
+    getChildren(nodeWbs, this.tasks)
   }
 
   haveChildren(nodeWbs) {

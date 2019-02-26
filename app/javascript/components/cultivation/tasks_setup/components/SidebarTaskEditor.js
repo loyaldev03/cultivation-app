@@ -201,6 +201,11 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         )}
+        {indelible === 'add_nutrient' && (
+          <div className="ph4 mb3 flex flex-column">
+            <label className="f6 fw6 db mb1 gray ttc">Add Nutrient</label>
+          </div>
+        )}
         {!haveChildren ? (
           <div className="ph4 mb3 flex flex-column">
             <div className="w-40">

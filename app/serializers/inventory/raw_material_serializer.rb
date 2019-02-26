@@ -15,6 +15,10 @@ module Inventory
 
     attribute :product do |object|
       if object.product
+        nutrients = object.product.nutrients
+        nitrogen = nutrients.detect { |a| a[:element] == 'nitrogen' }
+        prosphorus = nutrients.detect { |a| a[:element] == 'prosphorus' }
+        potassium = nutrients.detect { |a| a[:element] == 'potassium' }
         {
           id: object.product.id.to_s,
           name: object.product.name,
@@ -23,6 +27,9 @@ module Inventory
           transaction_limit: object.product.transaction_limit,
           description: object.product.description,
           manufacturer: object.product.manufacturer,
+          nitrogen: nitrogen&.value,
+          prosphorus: prosphorus&.value,
+          potassium: potassium&.value,
         }
       else
         nil

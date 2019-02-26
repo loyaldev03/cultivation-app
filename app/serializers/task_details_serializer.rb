@@ -5,8 +5,7 @@ class TaskDetailsSerializer
     :name,
     :duration,
     :work_status,
-    :wbs,
-    :location_type
+    :wbs
 
   attributes :id do |object|
     object.id.to_s
@@ -28,10 +27,6 @@ class TaskDetailsSerializer
     end
   end
 
-  attributes :location_id do |object|
-    object.location_id.to_s
-  end
-
   attributes :location_name do |object|
     if !object.location_id
       ''
@@ -49,10 +44,6 @@ class TaskDetailsSerializer
     else
       ''
     end
-  end
-
-  attribute :user_ids do |object|
-    object.user_ids.map(&:to_s)
   end
 
   attribute :issues do |object|

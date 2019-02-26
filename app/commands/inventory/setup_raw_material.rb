@@ -31,7 +31,10 @@ module Inventory
                 :purchase_order_id,  # For update purpose
                 :purchase_order_item_id,
                 :invoice_id,
-                :invoice_item_id
+                :invoice_item_id,
+                :nitrogen,
+                :prosphorus,
+                :potassium
 
     def initialize(user, args)
       @args = args
@@ -68,6 +71,9 @@ module Inventory
       @invoice_id = args[:invoice_id]
       @purchase_order_item_id = nil
       @invoice_item_id = nil
+      @nitrogen = args[:nitrogen]
+      @prosphorus = args[:prosphorus]
+      @potassium = args[:potassium]
     end
 
     def call
@@ -130,6 +136,7 @@ module Inventory
 
     def create_raw_material(invoice_item)
       product = save_product
+      save_npk(product) if nutrients?
       new_uom = Common::UnitOfMeasure.find_by(unit: uom)
       new_quantity = new_uom.to(quantity, catalogue.common_uom) #convert quantity to common uom in catalogue
       Inventory::ItemTransaction.create!(
@@ -155,6 +162,7 @@ module Inventory
 
     def update_raw_material(invoice_item)
       product = save_product
+      save_npk(product) if nutrients?
       new_uom = Common::UnitOfMeasure.find_by(unit: uom)
       new_quantity = new_uom.to(quantity, catalogue.common_uom) #convert quantity to common uom in catalogue
       transaction = Inventory::ItemTransaction.find(id)
@@ -313,6 +321,22 @@ module Inventory
                  facility: facility,
                )
       end
+    end
+
+    def save_npk(product)
+      nutrients_data = [
+        {element: 'nitrogen', value: nitrogen},
+        {element: 'prosphorus', value: prosphorus},
+        {element: 'potassium', value: potassium},
+      ]
+      nutrients_data.each do |data|
+        nutrient = product.nutrients.find_or_create_by(element: data[:element])
+        nutrient.update(value: data[:value])
+      end
+    end
+
+    def nutrients?
+      catalogue.category == 'nutrients'
     end
 
     def combine_errors(errors_source, from_field, to_field)

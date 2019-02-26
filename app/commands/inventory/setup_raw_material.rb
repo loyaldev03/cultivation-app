@@ -324,7 +324,6 @@ module Inventory
     end
 
     def save_npk(product)
-      Rails.logger.debug "Catalogue category => #{catalogue.category} #{nutrients?}"
       nutrients_data = [
         {element: 'nitrogen', value: nitrogen},
         {element: 'prosphorus', value: prosphorus},
@@ -333,9 +332,7 @@ module Inventory
       nutrients_data.each do |data|
         nutrient = product.nutrients.find_or_create_by(element: data[:element])
         nutrient.update(value: data[:value])
-        Rails.logger.debug "Errors => #{nutrient.errors.inspect}"
       end
-      Rails.logger.debug "Product Nutrient => #{product.nutrients.inspect}"
     end
 
     def nutrients?

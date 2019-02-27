@@ -2,4 +2,4 @@
   <%= breadcrumbs ["Planning",root_path], 'Cultivation Batches' %>
 <% end %>
 
-<%= react_component('cultivation/batches/BatchListApp', { batches: @dashboard.cultivation_batches }) %>
+<%= react_component('cultivation/batches/BatchListApp', { batches: @dashboard.cultivation_batches, defaultFacilityId: current_default_facility&.id.to_s }) %>

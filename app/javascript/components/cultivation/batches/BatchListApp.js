@@ -21,13 +21,12 @@ class BatchListApp extends React.Component {
     }
   }
   render() {
+    const { defaultFacilityId } = this.props
     return (
       <React.Fragment>
         <div className="pa4 fl w-100">
           <div className="bg-white box--shadow pa4 fl w-100">
-            <div className="fl w-100 mb4">
-              <h5 className="tl pa0 ma0 h5--font dark-grey ttc">Batches</h5>
-            </div>
+            <h5 className="tl pa0 ma0 h5--font dark-grey ttc">Batches</h5>
             {store.isLoading ? (
               <div className="grey">Loading...</div>
             ) : (
@@ -38,6 +37,12 @@ class BatchListApp extends React.Component {
                 />
               )
             )}
+            <a
+              href={`/cultivation/batches/new?facility_id=${defaultFacilityId}`}
+              className="btn btn--primary"
+            >
+              Create new batch
+            </a>
           </div>
         </div>
       </React.Fragment>

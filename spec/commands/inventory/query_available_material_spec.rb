@@ -1,6 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
+  let(:uom) {SeedUnitOfMeasure.call}
   let(:strain) { Common::Strain.create!(name: 'xyz', strain_type: 'indica') }
   let(:facility) do
     facility = create(:facility, :is_complete)
@@ -28,7 +29,7 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
 
   let!(:package) do
     #material booked
-    package = product.packages.new(product_name: product.name, quantity: 30, catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
+    package = product.packages.build(product_name: product.name, quantity: 30, uom:  'kg', catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
     package.save
   end
 
@@ -49,7 +50,7 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
     #material used
     task.material_use.new({
       quantity: 10,
-      catalogue: catalogue,
+      uom: 'kg',
       product: product
     })
     task.save
@@ -71,7 +72,7 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
     task = batch2.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "plants" })
     task.material_use.new({
       quantity: 10,
-      catalogue: catalogue,
+      uom: 'kg',
       product: product
     })
     task.save
@@ -93,7 +94,7 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
     task = batch3.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "plants" })
     task.material_use.new({
       quantity: 10,
-      catalogue: catalogue,
+      uom: 'kg',
       product: product
     })
     task.save
@@ -107,14 +108,13 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
                     .where(:status.in =>  [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE])
                     .not_in(id: batch1.id) #not draft => schedule and active
       plant_task = batch1.tasks.detect { |a| a['indelible'] == 'plants' }
-
       material = plant_task.material_use.first
       result = Inventory::QueryAvailableMaterial.call(material.product_id, batches_selected.pluck(:id)).result
       expect(result[:material_available]).to eq 30
     end
 
     it "return correct material available after adding stock" do
-      package = product.packages.new(product_name: product.name, quantity: 30, catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
+      package = product.packages.new(product_name: product.name, quantity: 30, uom: 'kg', catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
       package.save
 
       batches_selected = Cultivation::Batch

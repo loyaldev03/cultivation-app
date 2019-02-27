@@ -27,7 +27,7 @@ RSpec.describe DailyTask::StartTimeLog, type: :command do
   end
 
   let!(:package) do
-    package = product.packages.new(product_name: product.name, quantity: 30, catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
+    package = product.packages.new(product_name: product.name, quantity: 30, uom:  'kg', catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
     package.save
   end
 

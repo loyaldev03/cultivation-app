@@ -16,13 +16,13 @@ module Inventory
     private
 
     def query_records
-      material_available = @product.packages.sum { |a| a.quantity }.to_i
+      material_available = @product.packages.sum { |a| a.common_quantity }.to_i
       material_booked = 0
       @plant_tasks.each do |task|
         task.material_use.each do |material|
           product = material.product
           if product == @product
-            material_booked += material.quantity
+            material_booked += material.common_quantity.to_i
           end
         end
       end

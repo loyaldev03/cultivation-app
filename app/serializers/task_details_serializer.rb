@@ -7,8 +7,12 @@ class TaskDetailsSerializer
     :work_status,
     :wbs
 
-  attributes :id do |object|
+  attribute :id do |object|
     object.id.to_s
+  end
+
+  attribute :batch_id do |object|
+    object.batch_id.to_s
   end
 
   # TODO: Not sure what is this for...

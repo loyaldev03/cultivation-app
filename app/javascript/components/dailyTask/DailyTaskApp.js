@@ -7,6 +7,7 @@ import loadDailyTasks from './actions/loadDailyTasks'
 import editNote from './actions/editNote'
 import dailyTasksStore from './stores/DailyTasksStore'
 import NoteEditor from './components/NoteEditor'
+import sidebarStore from './stores/SidebarStore'
 
 @observer
 class DailyTaskApp extends React.Component {
@@ -22,21 +23,14 @@ class DailyTaskApp extends React.Component {
     loadDailyTasks()
   }
 
-  onToggleAddIssue = (taskId = null) => {
+  onToggleAddIssue = (batchId = null, taskId = null) => {
     this.setState({
       showAddIssue: !this.state.showAddIssue,
       currentTaskId: taskId
     })
   }
 
-  onToggleAddMaterial = (taskId = null) => {
-    this.setState({
-      showAddMaterial: !this.state.showAddMaterial,
-      currentTaskId: taskId
-    })
-  }
-
-  onToggleAddNotes = (taskId, noteId = '', body = '') => {
+  onToggleAddNotes = (batchId = null, taskId, noteId = '', body = '') => {
     // console.log({taskId, noteId, body})
     if (taskId) {
       this.setState({
@@ -56,10 +50,12 @@ class DailyTaskApp extends React.Component {
   }
 
   renderSlidePanel() {
+    const { showMaterialUsed } = sidebarStore
+
     const {
       currentTaskId,
       currentNoteId,
-      showAddMaterial,
+      // showAddMaterial,
       showAddIssue,
       showAddNotes
     } = this.state
@@ -67,19 +63,25 @@ class DailyTaskApp extends React.Component {
       <React.Fragment>
         <SlidePanel
           width="600px"
-          show={showAddMaterial}
+          show={showMaterialUsed}
           renderBody={props => (
             <div>
               <h3>Add material here...</h3>
               <a
                 href="#"
                 onClick={event => {
-                  this.onToggleAddMaterial()
+                  sidebarStore.toggleMaterialUsed()
                   event.preventDefault()
                 }}
               >
                 Close
               </a>
+              <div>
+                Task ID: { sidebarStore.taskId }
+              </div>
+              <div>
+                Batch ID: { sidebarStore.batchId }
+              </div>
             </div>
           )}
         />
@@ -133,11 +135,11 @@ class DailyTaskApp extends React.Component {
         {dailyTasksStore.bindable.map(batch => (
           <BatchedDailyTasks
             key={batch.id}
+            batchId={batch.id}
             batchNo={batch.batch_no}
             batchName={batch.name}
             tasks={batch.tasks}
             onToggleAddIssue={this.onToggleAddIssue}
-            onToggleAddMaterial={this.onToggleAddMaterial}
             onToggleAddNotes={this.onToggleAddNotes}
           />
         ))}

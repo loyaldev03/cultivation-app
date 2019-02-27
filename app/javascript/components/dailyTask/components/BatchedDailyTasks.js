@@ -5,11 +5,11 @@ import { observer } from 'mobx-react'
 
 const BatchedDailyTasks = observer(
   ({
+    batchId,
     batchNo,
     batchName,
     tasks,
     onToggleAddIssue,
-    onToggleAddMaterial,
     onToggleAddNotes
   }) => {
     return (
@@ -20,15 +20,17 @@ const BatchedDailyTasks = observer(
           </h3>
         </div>
         <HeaderRow />
-        {tasks.map(x => (
-          <TaskRow
-            key={x.id}
-            {...x}
-            onToggleAddIssue={onToggleAddIssue}
-            onToggleAddMaterial={onToggleAddMaterial}
-            onToggleAddNotes={onToggleAddNotes}
-          />
-        ))}
+        {tasks.map(x => {
+          console.log(`batchId: ${batchId}`)
+          return (
+            <TaskRow
+              key={x.id}
+              batchId={batchId}
+              {...x}
+              onToggleAddIssue={onToggleAddIssue}
+              onToggleAddNotes={onToggleAddNotes}
+            />)
+          })}
       </div>
     )
   }

@@ -72,12 +72,10 @@ class TaskRow extends React.Component {
 
     return (
       <ExpandedRow
-        taskId={this.props.id}
+        {...this.props}
         onToggleAddIssue={this.props.onToggleAddIssue}
-        onToggleAddMaterial={this.props.onToggleAddMaterial}
         onToggleAddNotes={this.props.onToggleAddNotes}
         onClickStatus={this.onClickStatus}
-        notes={this.props.notes}
       />
     )
   }

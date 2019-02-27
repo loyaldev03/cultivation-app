@@ -2,6 +2,7 @@ module Inventory
   class ItemTransaction
     include Mongoid::Document
     include Mongoid::Timestamps::Short
+    include ConvertQuantity
 
     field :plant_id, type: BSON::ObjectId       # might be removed if no ID assigned
     # TODO: Create index for ref_id + ref_type
@@ -16,6 +17,8 @@ module Inventory
 
     field :quantity, type: BigDecimal           # can be +/-
     field :uom, type: String
+    field :common_quantity, type: BigDecimal
+    field :common_uom, type: String
     field :order_quantity, type: BigDecimal
     field :order_uom, type: String
     field :conversion, type: BigDecimal

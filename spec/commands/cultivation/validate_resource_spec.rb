@@ -1,6 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Cultivation::ValidateResource, type: :command do
+  let(:uom) {SeedUnitOfMeasure.call}
   let(:strain) { Common::Strain.create!(name: 'xyz', strain_type: 'indica') }
   let(:facility) do
     facility = create(:facility, :is_complete)
@@ -27,7 +28,7 @@ RSpec.describe Cultivation::ValidateResource, type: :command do
   end
 
   let!(:package) do
-    package = product.packages.new(product_name: product.name, quantity: 30, catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
+    package = product.packages.new(product_name: product.name, quantity: 30, uom:  'kg', catalogue_id: catalogue.id, facility_id: facility.id, facility_strain_id: facility_strain.id)
     package.save
   end
 
@@ -62,7 +63,7 @@ RSpec.describe Cultivation::ValidateResource, type: :command do
     task = batch2.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "plants" })
     task.material_use.new({
       quantity: 10,
-      catalogue: catalogue,
+      uom:  'kg',
       product: product
     })
     task.save
@@ -83,7 +84,7 @@ RSpec.describe Cultivation::ValidateResource, type: :command do
     task = batch3.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "plants" })
     task.material_use.new({
       quantity: 10,
-      catalogue: catalogue,
+      uom:  'kg',
       product: product
     })
     task.save
@@ -95,7 +96,8 @@ RSpec.describe Cultivation::ValidateResource, type: :command do
       result = Cultivation::ValidateResource.call(current_user: current_user, batch_id: batch1.id)
       expect(result.success?).to be false
       expect(result.errors['resource'].count).to be > 0
-      expect(result.errors['resource']).to include('Some of the task have no resource')
+      pp result.errors['resource']
+      expect(result.errors['resource']).to include("Task #{task_1.name} is unassigned.")
     end
 
     it "return error if user assigned with over working hours" do

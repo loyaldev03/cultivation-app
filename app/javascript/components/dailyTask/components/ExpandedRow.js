@@ -63,23 +63,23 @@ class ExpandedRow extends React.Component {
               <a
                 href="#"
                 className="btn btn--secondary f6"
-                onClick={() => { sidebarStore.toggleMaterialUsed(batchId, taskId) }}
+                onClick={() => {
+                  sidebarStore.toggleMaterialUsed(batchId, taskId)
+                }}
               >
                 Add
               </a>
             </div>
 
-            {
-              items.map(x => (
-                <MaterialUsedRow 
-                  key={x.id} 
-                  materialId={x.id} 
-                  material={x.product_name} 
-                  expected={x.quantity} 
-                  uom={x.uom}
-                />
-              ))
-            }
+            {items.map(x => (
+              <MaterialUsedRow
+                key={x.id}
+                materialId={x.id}
+                material={x.product_name}
+                expected={x.quantity}
+                uom={x.uom}
+              />
+            ))}
           </div>
 
           <div className="w-30 ph2 pt2 pb3" style={rightBorder}>

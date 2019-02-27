@@ -76,12 +76,8 @@ class DailyTaskApp extends React.Component {
               >
                 Close
               </a>
-              <div>
-                Task ID: { sidebarStore.taskId }
-              </div>
-              <div>
-                Batch ID: { sidebarStore.batchId }
-              </div>
+              <div>Task ID: {sidebarStore.taskId}</div>
+              <div>Batch ID: {sidebarStore.batchId}</div>
             </div>
           )}
         />

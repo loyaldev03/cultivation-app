@@ -29,8 +29,9 @@ const BatchedDailyTasks = observer(
               {...x}
               onToggleAddIssue={onToggleAddIssue}
               onToggleAddNotes={onToggleAddNotes}
-            />)
-          })}
+            />
+          )
+        })}
       </div>
     )
   }

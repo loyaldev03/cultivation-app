@@ -33,11 +33,11 @@ class ExpandedRow extends React.Component {
   }
 
   render() {
-    const { notes } = this.props
+    const { taskIndelible, notes } = this.props
     return (
       <React.Fragment>
         <div className="flex justify-between pv3 ph3">
-          <div className="flex">TODO: Task Related form</div>
+          <div className="flex">TODO: Task Related form: {taskIndelible}</div>
           <div>
             <a
               href="#"

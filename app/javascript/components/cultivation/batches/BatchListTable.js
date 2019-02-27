@@ -19,10 +19,10 @@ class BatchListTable extends React.Component {
   render() {
     const { batches, onDelete } = this.props
     return (
-      <table className="ba br2 b--black-10 pv2 ph3 f6">
+      <table className="pv2 f6">
         <tbody>
           <tr>
-            <th className="w4 pv2 ph3 tl ttu">Batch ID</th>
+            <th className="w4 pv2 tl ttu">Batch ID</th>
             <th className="w4 pv2 ph3 tl ttu">Strains</th>
             <th className="w3 pv2 ph3 tr ttu">Quantity</th>
             <th className="w4 tr ph3 ttu">Start Date</th>
@@ -32,7 +32,7 @@ class BatchListTable extends React.Component {
           </tr>
           {batches.map(b => (
             <tr className="dim batch-row" key={b.batch_no}>
-              <td className="pv2 ph3 tl ttu">
+              <td className="pv2 tl ttu">
                 <a className="link" href={`/cultivation/batches/${b.id}`}>
                   {b.batch_no}
                 </a>

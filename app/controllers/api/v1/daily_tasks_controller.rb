@@ -67,13 +67,6 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     end
   end
 
-  def add_notes
-    @work_day.notes.create(notes: params[:notes])
-
-    data = WorkDaySerializer.new(@work_day).serialized_json
-    render json: data
-  end
-
   def update_materials_used
     updated_materials_used = []
     # Rails.logger.debug "\t\t\t\t>>>>> params[:materials]"

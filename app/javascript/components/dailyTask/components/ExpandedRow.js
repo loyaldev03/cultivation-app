@@ -33,26 +33,28 @@ class ExpandedRow extends React.Component {
   }
 
   render() {
-    const { taskId, notes } = this.props
+    const { notes } = this.props
     return (
       <React.Fragment>
-        <div className="flex justify-end pv3 ph3">
-          <a
-            href="#"
-            className="btn btn--primary mr2"
-            onClick={e => this.props.onClickStatus('done')}
-          >
-            Done
-          </a>
-          <a
-            href="#"
-            className="btn btn--secondary"
-            onClick={e => this.props.onClickStatus('stuck')}
-          >
-            I'm stuck
-          </a>
+        <div className="flex justify-between pv3 ph3">
+          <div className="flex">TODO: Task Related form</div>
+          <div>
+            <a
+              href="#"
+              className="btn btn--primary mr2"
+              onClick={e => this.props.onClickStatus('done')}
+            >
+              Done
+            </a>
+            <a
+              href="#"
+              className="btn btn--secondary"
+              onClick={e => this.props.onClickStatus('stuck')}
+            >
+              I'm stuck
+            </a>
+          </div>
         </div>
-
         <div className="flex ba b--black-20 ma2 br2 mb3">
           <div className="w-60 ph2 pt2 pb3" style={rightBorder}>
             <div className="flex items-center justify-between mb3">

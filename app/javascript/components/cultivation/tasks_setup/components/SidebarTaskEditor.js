@@ -207,47 +207,29 @@ class SidebarTaskEditor extends React.Component {
             <div className="w-100">
               <div class="fl w-third pr2">
                 <label class="f6 fw6 db mb1 gray ttc">Nitrogen (%)</label>
-                <input
-                  class="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                  type="number"
-                />
+                <input class="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner" type="number" />
               </div>
               <div class="fl w-third ph1">
                 <label class="f6 fw6 db mb1 gray ttc">Prosphorus (%)</label>
-                <input
-                  class="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                  type="number"
-                />
+                <input class="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner" type="number" />
               </div>
               <div class="fl w-third pl2">
                 <label class="f6 fw6 db mb1 gray ttc">Potassium (%)</label>
-                <input
-                  class="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                  type="number"
-                />
+                <input class="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner" type="number" />
               </div>
             </div>
             <div className="w-100 pt2">
               <div class="fl w-third pr2">
                 <label class="f6 fw6 db mb1 gray ttc">Culcium (%)</label>
-                <input
-                  class="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                  type="number"
-                />
+                <input class="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner" type="number" />
               </div>
               <div class="fl w-third ph1">
                 <label class="f6 fw6 db mb1 gray ttc">Iron (%)</label>
-                <input
-                  class="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                  type="number"
-                />
+                <input class="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner" type="number" />
               </div>
               <div class="fl w-third pl2">
                 <label class="f6 fw6 db mb1 gray ttc">Molybdenum (%)</label>
-                <input
-                  class="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                  type="number"
-                />
+                <input class="db w-100 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner" type="number" />
               </div>
             </div>
           </div>

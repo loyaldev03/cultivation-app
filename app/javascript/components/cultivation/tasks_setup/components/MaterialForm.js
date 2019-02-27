@@ -91,7 +91,8 @@ export default class MaterialForm extends React.Component {
               product_id: this.state.product.id,
               category: this.state.product.catalogue.label,
               quantity: '',
-              uoms: this.state.product.uoms
+              uoms: this.state.product.uoms,
+              uom: this.state.product.uoms[0]
             }
           ],
           product: { value: '', label: '' }

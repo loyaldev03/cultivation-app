@@ -2,6 +2,7 @@ import React from 'react'
 import MaterialUsedRow from './MaterialUsedRow'
 import NoteList from './NoteList'
 import DailyTaskStore from '../stores/DailyTasksStore'
+import NutrientEntryForm from '../../utils/NutrientEntryForm'
 
 const rightBorder = { borderRight: '1px solid #ccc' }
 
@@ -34,10 +35,56 @@ class ExpandedRow extends React.Component {
 
   render() {
     const { taskIndelible, notes } = this.props
+    const sampleData = [
+      {
+        id: 1,
+        name: 'Nitrogen',
+        quantity: 3,
+        uom: '%',
+        checked: false
+      },
+      {
+        id: 1,
+        name: 'Prosphorus',
+        quantity: 300,
+        uom: '%',
+        checked: false
+      },
+      {
+        id: 1,
+        name: 'Potassium',
+        quantity: 6,
+        uom: '%',
+        checked: false
+      },
+      {
+        id: 1,
+        name: 'Iron',
+        quantity: 43,
+        uom: '%',
+        checked: false
+      },
+      {
+        id: 1,
+        name: 'Molybdenum',
+        quantity: 30,
+        uom: '%',
+        checked: false
+      }
+    ]
+
     return (
       <React.Fragment>
         <div className="flex justify-between pv3 ph3">
-          <div className="flex">TODO: Task Related form: {taskIndelible}</div>
+          <div>
+            {taskIndelible === 'add_nutrient' && (
+              <NutrientEntryForm
+                className="nutrient-form w-70"
+                fields={sampleData}
+                fieldType="checkboxes"
+              />
+            )}
+          </div>
           <div>
             <a
               href="#"

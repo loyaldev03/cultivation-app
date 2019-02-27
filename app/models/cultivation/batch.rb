@@ -26,6 +26,8 @@ module Cultivation
     has_many :plants, class_name: 'Inventory::Plant'
     has_one :nutrient_profile, class_name: 'Cultivation::NutrientProfile'
 
+    scope :active, -> { where(status: Constants::BATCH_STATUS_ACTIVE) }
+
     track_history on: [:batch_no,
                        :name,
                        :batch_source,

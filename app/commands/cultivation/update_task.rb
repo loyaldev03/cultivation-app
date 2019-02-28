@@ -238,7 +238,7 @@ module Cultivation
     end
 
     def cascade_indelible(task, children)
-      if task.indelible? && task.indelible == "add_nutrient"
+      if task.indelible? && task.indelible == 'add_nutrient'
         children.each do |t|
           t.indelible = task.indelible
         end

@@ -9,9 +9,9 @@ class NutrientEntryForm extends React.Component {
         {fields.map(f => (
           <div className="nutrient-form__group">
             <label className="nutrient-form__label">
-              <span className="nutrient-name">{f.name}</span>
               {fieldType === 'checkboxes' && (
                 <React.Fragment>
+                  <span className="nutrient-name">{f.name}</span>
                   <span className="nutrient-quantity">
                     {f.quantity} {f.uom}
                   </span>
@@ -20,8 +20,8 @@ class NutrientEntryForm extends React.Component {
               )}
               {fieldType === 'textboxes' && (
                 <React.Fragment>
+                  <span className="nutrient-name">{f.name} ({f.uom})</span>
                   <input type="number" className="nutrient-form__input tr" />
-                  <span className="pl1">{f.uom}</span>
                 </React.Fragment>
               )}
             </label>

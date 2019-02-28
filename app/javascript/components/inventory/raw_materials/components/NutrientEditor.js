@@ -56,7 +56,10 @@ class NutrientEditor extends React.Component {
                 nitrogen: attr.product.nitrogen,
                 prosphorus: attr.product.prosphorus,
                 potassium: attr.product.potassium,
-                nutrients: attr.product.nutrients.map(e=> ({nutrient_element: {label: e.element, value: e.element}, nutrient_value: e.value})),
+                nutrients: attr.product.nutrients.map(e => ({
+                  nutrient_element: { label: e.element, value: e.element },
+                  nutrient_value: e.value
+                })),
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },

@@ -224,6 +224,7 @@ module Cultivation
 
     def adjust_children_dates(task, batch_tasks, days_diff)
       children = task.children(batch_tasks)
+      cascade_indelible(task, children)
       move_children(children, batch_tasks, days_diff)
       children.each(&:save)
     end
@@ -232,6 +233,14 @@ module Cultivation
       if tasks.present? && number_of_days != 0
         tasks.each do |t|
           move_task(t, batch_tasks, number_of_days)
+        end
+      end
+    end
+
+    def cascade_indelible(task, children)
+      if task.indelible? && task.indelible == "add_nutrient"
+        children.each do |t|
+          t.indelible = task.indelible
         end
       end
     end

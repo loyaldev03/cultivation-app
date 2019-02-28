@@ -22,18 +22,18 @@ export const BATCH_SOURCE = {
 }
 
 export const NUTRITION_LIST = [
-  { id: 1, name: 'nitrogen', quantity: 0, uom: '%' },
-  { id: 2, name: 'prosphorus', quantity: 0, uom: '%' },
-  { id: 3, name: 'potassium', quantity: 0, uom: '%' },
-  { id: 4, name: 'boron', quantity: 0, uom: '%' },
-  { id: 5, name: 'calcium', quantity: 0, uom: '%' },
-  { id: 6, name: 'chlorine', quantity: 0, uom: '%' },
-  { id: 7, name: 'cobalt', quantity: 0, uom: '%' },
-  { id: 8, name: 'iron', quantity: 0, uom: '%' },
-  { id: 9, name: 'magnesium', quantity: 0, uom: '%' },
-  { id: 10, name: 'manganese', quantity: 0, uom: '%' },
-  { id: 11, name: 'molybdenum', quantity: 0, uom: '%' },
-  { id: 12, name: 'silicon', quantity: 0, uom: '%' },
-  { id: 13, name: 'sulfur', quantity: 0, uom: '%' },
-  { id: 14, name: 'zinc', quantity: 0, uom: '%' }
+  { id: 1, element: 'nitrogen', value: 0, uom: '%' },
+  { id: 2, element: 'prosphorus', value: 0, uom: '%' },
+  { id: 3, element: 'potassium', value: 0, uom: '%' },
+  { id: 4, element: 'boron', value: 0, uom: '%' },
+  { id: 5, element: 'calcium', value: 0, uom: '%' },
+  { id: 6, element: 'chlorine', value: 0, uom: '%' },
+  { id: 7, element: 'cobalt', value: 0, uom: '%' },
+  { id: 8, element: 'iron', value: 0, uom: '%' },
+  { id: 9, element: 'magnesium', value: 0, uom: '%' },
+  { id: 10, element: 'manganese', value: 0, uom: '%' },
+  { id: 11, element: 'molybdenum', value: 0, uom: '%' },
+  { id: 12, element: 'silicon', value: 0, uom: '%' },
+  { id: 13, element: 'sulfur', value: 0, uom: '%' },
+  { id: 14, element: 'zinc', value: 0, uom: '%' }
 ]

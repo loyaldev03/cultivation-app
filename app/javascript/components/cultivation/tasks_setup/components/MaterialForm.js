@@ -1,8 +1,7 @@
-import 'babel-polyfill'
-
 import React from 'react'
 import Select from 'react-select'
-import reactSelectStyle from '../../../utils/reactSelectStyle'
+import { selectStyles } from '../../../utils'
+import NutrientEntryForm from '../../../utils/NutrientEntryForm'
 import {
   SlidePanelHeader,
   SlidePanelFooter,
@@ -139,15 +138,53 @@ export default class MaterialForm extends React.Component {
   }
 
   render() {
-    let materials = this.state.materials
     const { onClose } = this.props
-    let task_plant = this.state.task && this.state.task.indelible === 'plants'
+    const { materials, task } = this.state
+    let task_plant = task && task.indelible === 'plants'
+    const showNutrientSummary = materials && materials.length > 0 && task.indelible === 'add_nutrient'
+    const sampleData = [
+      {
+        id: 1,
+        name: 'Nitrogen',
+        quantity: 3,
+        uom: '%',
+        checked: false
+      },
+      {
+        id: 2,
+        name: 'Prosphorus',
+        quantity: 300,
+        uom: '%',
+        checked: false
+      },
+      {
+        id: 3,
+        name: 'Potassium',
+        quantity: 6,
+        uom: '%',
+        checked: false
+      },
+      {
+        id: 4,
+        name: 'Iron',
+        quantity: 43,
+        uom: '%',
+        checked: false
+      },
+      {
+        id: 4,
+        name: 'Molybdenum',
+        quantity: 30,
+        uom: '%',
+        checked: false
+      }
+    ]
     return (
       <React.Fragment>
         <div className="flex flex-column h-100">
           <SlidePanelHeader onClose={onClose} title="Assign Materials" />
           <div className="ph4 mt3 flex">
-            <div className="w-80">
+            <div className="w-90">
               <Select
                 isClearable="true"
                 placeholder={
@@ -159,12 +196,12 @@ export default class MaterialForm extends React.Component {
                     : this.state.defaultProduct
                 }
                 onInputChange={handleInputChange}
-                styles={reactSelectStyle}
+                styles={selectStyles}
                 value={this.state.product}
                 onChange={this.onChangeProduct}
               />
             </div>
-            <div className="w-20">
+            <div className="w-10">
               <i
                 className="material-icons icon--btn child orange ml3"
                 onClick={this.onSubmitItem}
@@ -174,7 +211,7 @@ export default class MaterialForm extends React.Component {
             </div>
           </div>
           <div className="flex flex-column flex-auto justify-between">
-            <div className="ph4 mt3 flex f6 fw6 db mb1 gray ttc">
+            <div className="ph4 mt3 f6 fw6 db mb1 gray ttc">
               <table className="w-100">
                 <tbody>
                   <tr className="bb">
@@ -197,8 +234,7 @@ export default class MaterialForm extends React.Component {
                           type="text"
                           name="pin"
                           size="2"
-                          style={{ height: 30 + 'px' }}
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
+                          className="input"
                           value={x.quantity}
                           onChange={e =>
                             this.handleChangeQuantity(
@@ -235,6 +271,16 @@ export default class MaterialForm extends React.Component {
                   ))}
                 </tbody>
               </table>
+              {(materials && materials.length > 0) && (
+                <React.Fragment>
+                  <span className="fw6 b db ph1 mt4 mb2">Nutrition Information:</span>
+                  <NutrientEntryForm
+                    className="nutrient-form--narrow ph1"
+                    fields={sampleData}
+                    fieldType="textboxes"
+                  />
+                </React.Fragment>
+              )}
             </div>
             <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
           </div>

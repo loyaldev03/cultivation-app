@@ -2,7 +2,6 @@ import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { loadTaskLocations, LocationSelector } from '../../../utils'
 import { TextInput, NumericInput } from '../../../utils/FormHelpers'
-import NutrientEntryForm from '../../../utils/NutrientEntryForm'
 import LocationPicker from '../../../utils/LocationPicker2'
 import MotherPlantsEditor from './MotherPlantsEditor'
 import { addDays, differenceInCalendarDays } from 'date-fns'
@@ -128,43 +127,6 @@ class SidebarTaskEditor extends React.Component {
       locationOptions,
       errors
     } = this.state
-    const sampleData = [
-      {
-        id: 1,
-        name: 'Nitrogen',
-        quantity: 3,
-        uom: '%',
-        checked: false
-      },
-      {
-        id: 1,
-        name: 'Prosphorus',
-        quantity: 300,
-        uom: '%',
-        checked: false
-      },
-      {
-        id: 1,
-        name: 'Potassium',
-        quantity: 6,
-        uom: '%',
-        checked: false
-      },
-      {
-        id: 1,
-        name: 'Iron',
-        quantity: 43,
-        uom: '%',
-        checked: false
-      },
-      {
-        id: 1,
-        name: 'Molybdenum',
-        quantity: 30,
-        uom: '%',
-        checked: false
-      }
-    ]
     return (
       <React.Fragment>
         <div
@@ -236,16 +198,6 @@ class SidebarTaskEditor extends React.Component {
               locationOptions={locationOptions}
               value={taskLocation}
               onChange={value => this.handleChangeLocation(value)}
-            />
-          </div>
-        )}
-        {indelible === 'add_nutrient' && (
-          <div className="ph4 mb3 flex flex-column">
-            <label className="f6 fw6 db mb1 gray ttc">Add Nutrient</label>
-            <NutrientEntryForm
-              className="nutrient-form--narrow w-100"
-              fields={sampleData}
-              fieldType="textboxes"
             />
           </div>
         )}

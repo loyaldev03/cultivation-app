@@ -363,7 +363,8 @@ class NutrientEditor extends React.Component {
           description: '',
           nitrogen: '',
           prosphorus: '',
-          potassium: ''
+          potassium: '',
+          nutrients: []
         })
       } else {
         this.setState({
@@ -374,7 +375,11 @@ class NutrientEditor extends React.Component {
           description: product.description,
           nitrogen: product.nitrogen,
           prosphorus: product.prosphorus,
-          potassium: product.potassium
+          potassium: product.potassium,
+          nutrients: product.nutrients.map(e => ({
+            nutrient_element: { label: e.element, value: e.element },
+            nutrient_value: e.value
+          }))
         })
       }
     } else {
@@ -383,7 +388,11 @@ class NutrientEditor extends React.Component {
         product_id: '',
         product_name: '',
         manufacturer: '',
-        description: ''
+        description: '',
+        nitrogen: '',
+        prosphorus: '',
+        potassium: '',
+        nutrients: []
       })
     }
   }
@@ -499,7 +508,7 @@ class NutrientEditor extends React.Component {
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
                 placeholder={'Search...'}
-                defaultOptions={this.state.defaultProduct}
+                defaultOptionss={this.state.defaultProduct}
                 loadOptions={e =>
                   this.loadProducts(
                     e,
@@ -576,8 +585,9 @@ class NutrientEditor extends React.Component {
           <div className="ph4 mt3 mb3 flex">
             <div className="w-30">
               <label className="f6 fw6 db mb1 gray ttc">Nutrient Element</label>
-              <Select
-                options={nutrients_elements}
+              <AsyncCreatableSelect
+                isClearable
+                defaultOptions={nutrients_elements}
                 value={this.state.nutrient_element}
                 onChange={this.onNutrientElementSelected}
                 styles={reactSelectStyle}

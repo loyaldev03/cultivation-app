@@ -54,7 +54,6 @@ class DailyTaskStore {
     }
   }
 
-
   @action
   async updateTimeLog(action, taskId) {
     this.isLoading = true

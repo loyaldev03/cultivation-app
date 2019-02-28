@@ -8,7 +8,6 @@ import sidebarStore from '../stores/SidebarStore'
 const rightBorder = { borderRight: '1px solid #ccc' }
 
 class ExpandedRow extends React.Component {
-
   onToggleAddNotes = event => {
     this.props.onToggleAddNotes(this.props.taskId)
     event.preventDefault()
@@ -60,7 +59,7 @@ class ExpandedRow extends React.Component {
                 className="btn btn--secondary f6"
                 onClick={() => {
                   console.log('open material sidebar')
-                  sidebarStore.toggleMaterialUsed(batchId , taskId)
+                  sidebarStore.toggleMaterialUsed(batchId, taskId)
                 }}
               >
                 Add
@@ -69,19 +68,31 @@ class ExpandedRow extends React.Component {
 
             <div className="flex items-center pb2 justify-between">
               <div className="f6 dark-gray w-60">&nbsp;</div>
-              <div className="f6 grey flex items-center justify-center" style={{ width: '100px'}}>
+              <div
+                className="f6 grey flex items-center justify-center"
+                style={{ width: '100px' }}
+              >
                 Target
               </div>
-              <div className="f6 grey flex items-center justify-start pl1" style={{ width: '100px'}}>
+              <div
+                className="f6 grey flex items-center justify-start pl1"
+                style={{ width: '100px' }}
+              >
                 Actual
               </div>
-              <div className="f6 grey flex items-center justify-start pl1" style={{ width: '100px'}}>
+              <div
+                className="f6 grey flex items-center justify-start pl1"
+                style={{ width: '100px' }}
+              >
                 Waste
               </div>
               {/* <div className="f6 grey flex items-center justify-start pl1" style={{ width: '100px'}}>
                 Accumulated
               </div> */}
-              <div style={{ width: '50px'}} className="flex items-center justify-end">
+              <div
+                style={{ width: '50px' }}
+                className="flex items-center justify-end"
+              >
                 &nbsp;
               </div>
             </div>
@@ -106,7 +117,9 @@ class ExpandedRow extends React.Component {
               <a
                 href="#"
                 className="btn btn--secondary f6"
-                onClick={() => { alert('not ready') }}
+                onClick={() => {
+                  alert('not ready')
+                }}
               >
                 Add
               </a>

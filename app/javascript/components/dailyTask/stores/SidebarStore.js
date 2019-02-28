@@ -21,7 +21,7 @@ class SidebarStore {
     this.showIssues = false
     this.batchId = batchId
     this.taskId = taskId
-    this.showMaterialUsed = (batchId != null && taskId != null)
+    this.showMaterialUsed = batchId != null && taskId != null
   }
 
   @action

@@ -17,7 +17,7 @@ class TaskRow extends React.Component {
     work_status: this.props.work_status
   }
 
-  onExpand = event => {   
+  onExpand = event => {
     this.setState({ expanded: !this.state.expanded })
     event.preventDefault()
   }
@@ -131,13 +131,14 @@ class TaskRow extends React.Component {
             </span>
           </div>
         </div>
-        { this.state.expanded && (
-          <ExpandedRow 
-            {...this.props} 
-            onToggleAddIssue={this.props.onToggleAddIssue} 
+        {this.state.expanded && (
+          <ExpandedRow
+            {...this.props}
+            onToggleAddIssue={this.props.onToggleAddIssue}
             onToggleAddNotes={this.props.onToggleAddNotes}
-            onClickStatus={this.onClickStatus}/>)
-          }
+            onClickStatus={this.onClickStatus}
+          />
+        )}
       </div>
     )
   }

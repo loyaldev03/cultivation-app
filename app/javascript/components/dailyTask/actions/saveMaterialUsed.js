@@ -11,7 +11,7 @@ const saveMaterialUsed = (batchId, taskId, materialUsedId, actual, waste) => {
   const index = batches.findIndex(x => x.id == batchId)
   const batch = batches[index]
 
-  const task = batch.tasks.find( x => x.id === taskId)
+  const task = batch.tasks.find(x => x.id === taskId)
   const materialUsed = task.items.find(x => x.id === materialUsedId)
   materialUsed.actual = actual
   materialUsed.waste = waste
@@ -23,18 +23,20 @@ const saveMaterialUsed = (batchId, taskId, materialUsedId, actual, waste) => {
     date: new Date().toISOString(),
     materialUsedId,
     actual,
-    waste,
+    waste
   }
 
-  fetch(`/api/v1/daily_tasks/${taskId}/save_material_used`, httpPostOptions(payload))
+  fetch(
+    `/api/v1/daily_tasks/${taskId}/save_material_used`,
+    httpPostOptions(payload)
+  )
     .then(x => x.json())
     .then(data => {
       console.log(data)
       // const newBatches = [...batches.slice(0, index - 1), batch, ...batches.slice(index + 1)]
       // dailyTasksStore.load(batches)
     })
-    // .catch(d => console.log(d))
-  
+  // .catch(d => console.log(d))
 }
 
 export default saveMaterialUsed

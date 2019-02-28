@@ -56,6 +56,7 @@ class NutrientEditor extends React.Component {
                 nitrogen: attr.product.nitrogen,
                 prosphorus: attr.product.prosphorus,
                 potassium: attr.product.potassium,
+                nutrients: attr.product.nutrients.map(e=> ({nutrient_element: {label: e.element, value: e.element}, nutrient_value: e.value})),
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -117,6 +118,12 @@ class NutrientEditor extends React.Component {
     })
   }
 
+  onNutrientElementSelected = item => {
+    this.setState({
+      nutrient_element: item
+    })
+  }
+
   onNutrientProductSelected = item => {
     let changes = {
       catalogue: item,
@@ -155,6 +162,21 @@ class NutrientEditor extends React.Component {
 
   resetState() {
     return {
+      nutrients: [],
+      nutrients_elements: [
+        { label: 'Boron', value: 'boron' },
+        { label: 'Calcium', value: 'calcium' },
+        { label: 'Chlorine', value: 'chlorine' },
+        { label: 'Cobalt', value: 'cobalt' },
+        { label: 'Copper', value: 'copper' },
+        { label: 'Iron', value: 'iron' },
+        { label: 'Magnesium', value: 'magnesium' },
+        { label: 'Manganese', value: 'manganese' },
+        { label: 'Molybdenum', value: 'molybdenum' },
+        { label: 'Silicon', value: 'silicon' },
+        { label: 'Sulfur', value: 'sulfur' },
+        { label: 'Zinc', value: 'zinc' }
+      ],
       id: '',
       facility_id: '',
       qty_per_package: '',
@@ -275,6 +297,10 @@ class NutrientEditor extends React.Component {
       this.setState({ errors })
     }
 
+    const nutrients = this.state.nutrients.map(e => ({
+      element: e.nutrient_element.value,
+      value: e.nutrient_value
+    }))
     return {
       id,
       facility_id,
@@ -294,7 +320,8 @@ class NutrientEditor extends React.Component {
       isValid,
       nitrogen,
       prosphorus,
-      potassium
+      potassium,
+      nutrients
     }
   }
 
@@ -358,8 +385,38 @@ class NutrientEditor extends React.Component {
     }
   }
 
+  addNutrient = () => {
+    if (
+      this.state.nutrients
+        .map(e => e.nutrient_element)
+        .includes(this.state.nutrient_element)
+    ) {
+    } else {
+      this.setState(previousState => ({
+        nutrients: [
+          ...previousState.nutrients,
+          {
+            nutrient_element: this.state.nutrient_element,
+            nutrient_value: this.state.nutrient_value
+          }
+        ],
+        nutrient_element: '',
+        nutrient_value: ''
+      }))
+    }
+  }
+
+  removeNutrient = element => {
+    this.setState({
+      nutrients: this.state.nutrients.filter(
+        item => item.nutrient_element !== element
+      )
+    })
+  }
+
   render() {
     const { locations, catalogues } = this.props
+    const { nutrients_elements, nutrients } = this.state
     const nutrientProducts = this.state.nutrientType.children
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
@@ -487,7 +544,7 @@ class NutrientEditor extends React.Component {
             </div>
           </div>
           <div className="ph4 mb3 flex">
-            <div className="w-30">
+            <div className="w-40">
               <NumericInput
                 label="Nitrogen (%)"
                 fieldname="nitrogen"
@@ -495,7 +552,7 @@ class NutrientEditor extends React.Component {
                 onChange={this.onChangeGeneric}
               />
             </div>
-            <div className="w-30 pl3">
+            <div className="w-40 pl3">
               <NumericInput
                 label="Prosphorus (%)"
                 fieldname="prosphorus"
@@ -503,7 +560,7 @@ class NutrientEditor extends React.Component {
                 onChange={this.onChangeGeneric}
               />
             </div>
-            <div className="w-30 pl3">
+            <div className="w-40 pl3">
               <NumericInput
                 label="Potassium (%)"
                 fieldname="potassium"
@@ -512,7 +569,59 @@ class NutrientEditor extends React.Component {
               />
             </div>
           </div>
-
+          <hr className="mt3 m b--light-gray w-100" />
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-30">
+              <label className="f6 fw6 db mb1 gray ttc">Nutrient Element</label>
+              <Select
+                options={nutrients_elements}
+                value={this.state.nutrient_element}
+                onChange={this.onNutrientElementSelected}
+                styles={reactSelectStyle}
+              />
+            </div>
+            <div className="w-30 pl3">
+              <NumericInput
+                label="Value (%)"
+                fieldname="nutrient_value"
+                value={this.state.nutrient_value}
+                onChange={this.onChangeGeneric}
+              />
+            </div>
+            <div className="w-30 pl3">
+              <span className="dim pointer" onClick={this.addNutrient}>
+                <i className="material-icons mid-gray md-18 mt4">add</i>
+              </span>
+            </div>
+          </div>
+          <div className="ph4 mt3 mb3 flex f6 grey">
+            <div className="w-50">
+              {nutrients.length > 0 && (
+                <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100">
+                  <tbody>
+                    {nutrients.map((x, index) => (
+                      <tr key={index} className="">
+                        <td className="tl pv2 ph3 w5">
+                          {x.nutrient_element.label}
+                        </td>
+                        <td className="tl pv2 ph3 w5">{x.nutrient_value}%</td>
+                        <td className="tl pv2 ph3 w5">
+                          <span
+                            className="dim pointer"
+                            onClick={e =>
+                              this.removeNutrient(x.nutrient_element)
+                            }
+                          >
+                            <i className="material-icons red md-14">delete</i>
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
           <hr className="mt3 m b--light-gray w-100" />
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">

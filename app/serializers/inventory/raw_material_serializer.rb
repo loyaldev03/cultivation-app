@@ -19,6 +19,8 @@ module Inventory
         nitrogen = nutrients.detect { |a| a[:element] == 'nitrogen' }
         prosphorus = nutrients.detect { |a| a[:element] == 'prosphorus' }
         potassium = nutrients.detect { |a| a[:element] == 'potassium' }
+        elements = ['nitrogen', 'prosphorus', 'potassium']
+        other_nutrients = nutrients.select { |a| !elements.include?(a[:element]) }.map { |a| {element: a[:element], value: a[:value]} }
         {
           id: object.product.id.to_s,
           name: object.product.name,
@@ -30,6 +32,7 @@ module Inventory
           nitrogen: nitrogen&.value,
           prosphorus: prosphorus&.value,
           potassium: potassium&.value,
+          nutrients: other_nutrients,
         }
       else
         nil

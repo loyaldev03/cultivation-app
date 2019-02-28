@@ -1,17 +1,12 @@
-import 'babel-polyfill'
-
 import React from 'react'
 import Select from 'react-select'
-import reactSelectStyle from '../../../utils/reactSelectStyle'
+import { selectStyles, NUTRITION_LIST } from '../../../utils'
+import NutrientEntryForm from '../../../utils/NutrientEntryForm'
 import {
   SlidePanelHeader,
   SlidePanelFooter,
   httpGetOptions
 } from '../../../utils'
-
-const handleInputChange = newValue => {
-  return newValue ? newValue : ''
-}
 
 export default class MaterialForm extends React.Component {
   constructor(props) {
@@ -25,7 +20,8 @@ export default class MaterialForm extends React.Component {
       quantity: '',
       uom: '',
       materials: [],
-      items: []
+      items: [],
+      nutrients: []
     }
     this.loadProducts(
       this.state.batch_id,
@@ -68,41 +64,31 @@ export default class MaterialForm extends React.Component {
 
   onChangeProduct = product => {
     if (product) {
-      this.setState({
-        product: { value: product.id, label: product.name, ...product }
-      })
-    }
-  }
-
-  onSubmitItem = () => {
-    if (this.state.product && this.state.product.value) {
-      if (
-        this.state.materials
-          .map(e => e.product_id)
-          .includes(this.state.product.value)
-      ) {
+      if (this.state.materials.map(e => e.product_id).includes(product.id)) {
         // compare if same id existed no need to re-insert to material array
       } else {
         this.setState(previousState => ({
           materials: [
             ...previousState.materials,
             {
-              product_name: this.state.product.name,
-              product_id: this.state.product.id,
-              category: this.state.product.catalogue.label,
+              product_name: product.name,
+              product_id: product.id,
+              category: product.catalogue.label,
               quantity: '',
-              uoms: this.state.product.uoms,
-              uom: this.state.product.uoms[0]
+              uoms: product.uoms,
+              uom: product.uoms[0]
             }
-          ],
-          product: { value: '', label: '' }
+          ]
         }))
       }
     }
   }
 
   onSave = () => {
-    this.props.onSave(this.state.materials)
+    this.props.onSave({
+      nutrients: this.nutrientForm ? this.nutrientForm.getFormInputs() : null,
+      materials: this.state.materials
+    })
   }
 
   onDeleteMaterial = value => {
@@ -112,11 +98,26 @@ export default class MaterialForm extends React.Component {
   }
 
   setSelectedItems(batch_id, task, task_id, items) {
+    const existingList = task.add_nutrients || []
+    const nutrients = NUTRITION_LIST.map(x => {
+      const rec = existingList.find(y => y.element === x.element)
+      if (rec) {
+        return {
+          id: rec.id,
+          element: rec.element,
+          value: rec.value,
+          uom: x.uom
+        }
+      } else {
+        return { id: x.id, element: x.element, value: x.value, uom: x.uom }
+      }
+    })
     this.setState({
       task_id: task_id,
       batch_id: batch_id,
       materials: items,
-      task: task
+      task: task,
+      nutrients
     })
   }
 
@@ -139,15 +140,21 @@ export default class MaterialForm extends React.Component {
   }
 
   render() {
-    let materials = this.state.materials
     const { onClose } = this.props
-    let task_plant = this.state.task && this.state.task.indelible === 'plants'
+    const { nutrients, materials, task } = this.state
+    let task_plant = task && task.indelible === 'plants'
+    const showNutrient =
+      materials && materials.length > 0 && task.indelible === 'add_nutrient'
+    const title =
+      task && task.indelible === 'add_nutrient'
+        ? 'Add Nutrient'
+        : 'Assign Materials'
     return (
       <React.Fragment>
         <div className="flex flex-column h-100">
-          <SlidePanelHeader onClose={onClose} title="Assign Materials" />
-          <div className="ph4 mt3 flex">
-            <div className="w-80">
+          <SlidePanelHeader onClose={onClose} title={title} />
+          <div className="ph4 mt3 flex items-center">
+            <div className="w-100">
               <Select
                 isClearable="true"
                 placeholder={
@@ -158,47 +165,33 @@ export default class MaterialForm extends React.Component {
                     ? this.state.plantProduct
                     : this.state.defaultProduct
                 }
-                onInputChange={handleInputChange}
-                styles={reactSelectStyle}
+                styles={selectStyles}
                 value={this.state.product}
                 onChange={this.onChangeProduct}
               />
             </div>
-            <div className="w-20">
-              <i
-                className="material-icons icon--btn child orange ml3"
-                onClick={this.onSubmitItem}
-              >
-                add
-              </i>
-            </div>
           </div>
           <div className="flex flex-column flex-auto justify-between">
-            <div className="ph4 mt3 flex f6 fw6 db mb1 gray ttc">
-              <table className="w-100">
+            <div className="ph4 mt3 f6 fw6 db mb1 gray">
+              <table className="w-100 ttc">
                 <tbody>
                   <tr className="bb">
-                    <th align="left" width="90%">
-                      Product Name
-                    </th>
+                    <th align="left">Product Name</th>
                     <th>Category</th>
-                    <th width="10%">Qty</th>
+                    <th>Qty</th>
                     <th>UOM</th>
                     <th />
                   </tr>
                   {materials.map((x, index) => (
                     <tr className="pointer bb" key={index}>
-                      <td className="tl pv2" width="90%" align="left">
-                        {x.product_name}
-                      </td>
-                      <td className="tl pv2 ph3">{x.category}</td>
-                      <td className="tl pv2 ph3" width="10%">
+                      <td className="tl pv2">{x.product_name}</td>
+                      <td className="tl pa2">{x.category}</td>
+                      <td className="tl pa2 w3">
                         <input
-                          type="text"
+                          type="number"
                           name="pin"
                           size="2"
-                          style={{ height: 30 + 'px' }}
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
+                          className="input tr"
                           value={x.quantity}
                           onChange={e =>
                             this.handleChangeQuantity(
@@ -208,7 +201,7 @@ export default class MaterialForm extends React.Component {
                           }
                         />
                       </td>
-                      <td className="tl pv2 ph3">
+                      <td className="tc pa2 w3">
                         <select
                           value={x.uom}
                           onChange={e =>
@@ -223,7 +216,7 @@ export default class MaterialForm extends React.Component {
                             ))}
                         </select>
                       </td>
-                      <td className="tl pv2 ph3">
+                      <td className="tr w1">
                         <i
                           className="material-icons red md-18 pointer dim"
                           onClick={e => this.onDeleteMaterial(x.product_id)}
@@ -235,6 +228,19 @@ export default class MaterialForm extends React.Component {
                   ))}
                 </tbody>
               </table>
+              {showNutrient && (
+                <React.Fragment>
+                  <span className="fw6 b db ph1 mt4 mb2">
+                    Nutrition Information:
+                  </span>
+                  <NutrientEntryForm
+                    ref={form => (this.nutrientForm = form)}
+                    className="nutrient-form--narrow ph1"
+                    fields={nutrients}
+                    fieldType="textboxes"
+                  />
+                </React.Fragment>
+              )}
             </div>
             <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
           </div>

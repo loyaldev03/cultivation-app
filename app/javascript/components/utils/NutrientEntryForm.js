@@ -1,48 +1,63 @@
 import React from 'react'
 
-const sampleData = [
-  {
-    id: 1,
-    nutrient: 'Nitrogen',
-    uom: '%'
-  },
-  {
-    id: 1,
-    nutrient: 'Prosphorus',
-    uom: '%'
-  },
-  {
-    id: 1,
-    nutrient: 'Potassium',
-    uom: '%'
-  },
-  {
-    id: 1,
-    nutrient: 'Iron',
-    uom: '%'
-  },
-  {
-    id: 1,
-    nutrient: 'Molybdenum',
-    uom: '%'
-  }
-]
 class NutrientEntryForm extends React.Component {
+  state = {
+    nutrients: {}
+  }
+  onChangeTextInput = field => e => {
+    const { nutrients } = this.state
+    nutrients[field] = e.target.value
+    this.setState({
+      nutrients
+    })
+  }
+  getFormInputs = () => {
+    const nutrients = this.props.fields.map(x => {
+      const updated = this.state.nutrients[x.element]
+      if (updated) {
+        return {
+          element: x.element,
+          value: updated
+        }
+      } else {
+        return x
+      }
+    })
+    return nutrients
+  }
   render() {
+    const { className, fieldType, fields = [] } = this.props
+    if (!fields || !fieldType) return null
     return (
-      <div className="nutrient-form">
-        <div className="">
-          <label className="">Nitrogen (%)</label>
-          <input className="" type="number" />
-        </div>
-        <div className="">
-          <label className="">Prosphorus (%)</label>
-          <input className="" type="number" />
-        </div>
-        <div className="">
-          <label className="">Potassium (%)</label>
-          <input className="" type="number" />
-        </div>
+      <div className={`${className}`}>
+        {fields.map(f => (
+          <div key={f.id} className="nutrient-form__group">
+            <label className="nutrient-form__label">
+              {fieldType === 'checkboxes' && (
+                <React.Fragment>
+                  <span className="nutrient-name">{f.element}</span>
+                  <span className="nutrient-quantity">
+                    {f.value} {f.uom}
+                  </span>
+                  <input type="checkbox" className="nutrient-form__input" />
+                </React.Fragment>
+              )}
+              {fieldType === 'textboxes' && (
+                <React.Fragment>
+                  <span className="nutrient-name">
+                    {f.element} ({f.uom})
+                  </span>
+                  <input
+                    type="number"
+                    className="nutrient-form__input input tr"
+                    defaultValue={f.value}
+                    onChange={this.onChangeTextInput(f.element)}
+                  />
+                </React.Fragment>
+              )}
+            </label>
+          </div>
+        ))}
       </div>
     )
   }

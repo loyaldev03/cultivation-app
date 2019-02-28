@@ -3,7 +3,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def index
     if @batch.present?
-      tasks = Cultivation::QueryTasks.call(@batch).result
+      tasks = Cultivation::QueryTasks.call(@batch, [:issues]).result
       render json: TaskSerializer.new(tasks).serialized_json
     else
       render json: {data: 'Batch Not Found'}
@@ -13,7 +13,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   def update
     update_cmd = Cultivation::UpdateTask.call(current_user, task_params)
     if update_cmd.success?
-      render json: TaskSerializer.new(update_cmd.result)
+      render json: TaskSerializer.new(update_cmd.result).serialized_json
     else
       render json: {errors: update_cmd.errors}
     end
@@ -83,9 +83,12 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def update_material_use
-    command = Cultivation::SaveMaterialUse.call(params[:id], params[:items])
+    command = Cultivation::SaveMaterialUse.call(current_user,
+                                                params[:id],
+                                                params[:items],
+                                                params[:nutrients])
     if command.success?
-      render json: {data: {task_id: TaskSerializer.new(command.result)}}
+      render json: TaskSerializer.new(command.result).serialized_json
     else
       render json: {error: command.errors}
     end

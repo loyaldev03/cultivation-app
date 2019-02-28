@@ -23,7 +23,7 @@ module Cultivation
     field :depend_on, type: BSON::ObjectId
     # Task Location Info
     field :location_id, type: BSON::ObjectId
-    field :location_type, type: String  # full ruby class name
+    field :location_type, type: String # full ruby class name
 
     field :work_status, type: String, default: 'not_started' # use for daily task stuck, not_started, started
 
@@ -36,7 +36,7 @@ module Cultivation
     has_and_belongs_to_many :users, inverse_of: nil
 
     embeds_many :material_use, class_name: 'Cultivation::Item', cascade_callbacks: true
-
+    embeds_many :add_nutrients, as: :nutrition, class_name: 'Inventory::Nutrient'
     embeds_many :notes, class_name: 'Cultivation::Note'
 
     orderable scope: :batch, base: 0

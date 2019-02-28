@@ -63,7 +63,7 @@ class DailyTaskApp extends React.Component {
       <React.Fragment>
         <SlidePanel
           width="600px"
-          show={showMaterialUsed}
+          show={sidebarStore.showMaterialUsed}
           renderBody={props => (
             <div>
               <h3>Add material here...</h3>
@@ -128,7 +128,7 @@ class DailyTaskApp extends React.Component {
             {formatDate3(today)}
           </span>
         </div>
-        {dailyTasksStore.bindable.map(batch => (
+        {dailyTasksStore.batches.map(batch => (
           <BatchedDailyTasks
             key={batch.id}
             batchId={batch.id}

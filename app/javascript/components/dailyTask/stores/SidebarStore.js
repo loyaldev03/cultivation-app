@@ -9,26 +9,23 @@ class SidebarStore {
   @observable taskId = null
 
   @action
-  toggleNotes() {
+  toggleNotes(batchId = null, taskId = null) {
     this.showNotes = !this.showNotes
     this.showMaterialUsed = false
     this.showIssues = false
   }
 
+  @action
   toggleMaterialUsed(batchId = null, taskId = null) {
     this.showNotes = false
     this.showIssues = false
     this.batchId = batchId
     this.taskId = taskId
-
-    if (!batchId || !taskId) {
-      this.showMaterialUsed = false
-    } else {
-      this.showMaterialUsed = !this.showMaterialUsed
-    }
+    this.showMaterialUsed = (batchId != null && taskId != null)
   }
 
-  toggleIssues() {
+  @action
+  toggleIssues(batchId = null, taskId = null) {
     this.showNotes = false
     this.showMaterialUsed = false
     this.showIssues = !this.showIssues

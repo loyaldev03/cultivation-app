@@ -1,4 +1,5 @@
 import React from 'react'
+import { toJS } from 'mobx'
 import HeaderRow from './HeaderRow'
 import TaskRow from './TaskRow'
 import { observer } from 'mobx-react'
@@ -21,11 +22,10 @@ const BatchedDailyTasks = observer(
         </div>
         <HeaderRow />
         {tasks.map(x => {
-          console.log(`batchId: ${batchId}`)
+          console.log(toJS(x))
           return (
             <TaskRow
               key={x.id}
-              batchId={batchId}
               {...x}
               onToggleAddIssue={onToggleAddIssue}
               onToggleAddNotes={onToggleAddNotes}

@@ -74,26 +74,33 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     render json: data
   end
 
-  def update_materials_used
-    updated_materials_used = []
-    # Rails.logger.debug "\t\t\t\t>>>>> params[:materials]"
-    # Rails.logger.debug params[:materials]
+  def save_material_used
+    task_id = params[:id]
+    date = Time.parse(params[:date]).beginning_of_day
+    material_used_id = params['materialUsedId']
+    actual = params[:actual]
+    waste = params[:waste]
 
-    params[:materials].each do |material|
-      unless material[:catalogue_id].blank?
-        material_used = @work_day.materials_used.find_or_create_by(catalogue_id: material[:catalogue_id])
-        material_used.task_item_id = material[:task_item_id]
-        material_used.quantity = material[:qty]
-        material_used.uom = material[:uom] # TODO: Should be referring to Common::UnitOfMeasure
-        material_used.save
+    Rails.logger.debug "\t\t\t\t>>>>> add_material_used id. task id: #{task_id}, date: #{date.inspect}, material_used_id: #{material_used_id}, actual: #{actual}, waste: #{waste}"
 
-        updated_materials_used << material_used.catalogue_id
-      end
+    command = DailyTask::SaveMaterialUsed.call(current_user, task_id, date, material_used_id, actual, waste)
+    if command.success?
+      r = command.result
+      render json: command.result, status: 200
+    else
+      render json: command.errors, status: 422
     end
+  end
 
-    @work_day.materials_used.not_in(catalogue_id: updated_materials_used).destroy_all
-    data = WorkDaySerializer.new(@work_day).serialized_json
-    render json: data
+  # Returns all material used
+  def materials_used
+    task_ids = params[:task_ids]
+    # Cultivation::Task.in(id: task_ids)
+    # material_used_ids
+    # date = Time.parse(params[:date]).to_date
+    # # t = Cultivation::Task.in(id: task_ids).
+
+    # txs = Inventory::ItemTransaction.where(ref_id: { '$in': [material_used_ids] }, ref_type: 'Cultivation::Item', event_date: date)
   end
 
   private
@@ -120,11 +127,6 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
       end
     end
     TaskDetailsSerializer.new(active_tasks).serializable_hash[:data]
-  end
-
-  def serialized_catalogue
-    catalogues = Inventory::Catalogue.raw_materials.selectable.order(label: :asc)
-    Inventory::CatalogueSerializer.new(catalogues).serializable_hash[:data]
   end
 
   def batch_room_names(batch)

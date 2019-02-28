@@ -8,15 +8,6 @@ import sidebarStore from '../stores/SidebarStore'
 const rightBorder = { borderRight: '1px solid #ccc' }
 
 class ExpandedRow extends React.Component {
-  onToggleAddIssue = event => {
-    this.props.onToggleAddIssue(this.props.taskId)
-    event.preventDefault()
-  }
-
-  onToggleAddMaterial = event => {
-    this.props.onToggleAddMaterial(this.props.taskId)
-    event.preventDefault()
-  }
 
   onToggleAddNotes = event => {
     this.props.onToggleAddNotes(this.props.taskId)
@@ -35,8 +26,12 @@ class ExpandedRow extends React.Component {
   }
 
   render() {
-    const { taskId, notes, batchId, items } = this.props
-    console.log(this.props)
+    const { id: taskId, notes, batch_id: batchId, items } = this.props
+    console.group('expanded row')
+    console.log(toJS(this.props))
+    console.log(toJS(this.props.items))
+    console.groupEnd()
+
     return (
       <React.Fragment>
         <div className="flex justify-end pv3 ph3">
@@ -64,19 +59,42 @@ class ExpandedRow extends React.Component {
                 href="#"
                 className="btn btn--secondary f6"
                 onClick={() => {
-                  sidebarStore.toggleMaterialUsed(batchId, taskId)
+                  console.log('open material sidebar')
+                  sidebarStore.toggleMaterialUsed(batchId , taskId)
                 }}
               >
                 Add
               </a>
             </div>
 
+            <div className="flex items-center pb2 justify-between">
+              <div className="f6 dark-gray w-60">&nbsp;</div>
+              <div className="f6 grey flex items-center justify-center" style={{ width: '100px'}}>
+                Target
+              </div>
+              <div className="f6 grey flex items-center justify-start pl1" style={{ width: '100px'}}>
+                Actual
+              </div>
+              <div className="f6 grey flex items-center justify-start pl1" style={{ width: '100px'}}>
+                Waste
+              </div>
+              {/* <div className="f6 grey flex items-center justify-start pl1" style={{ width: '100px'}}>
+                Accumulated
+              </div> */}
+              <div style={{ width: '50px'}} className="flex items-center justify-end">
+                &nbsp;
+              </div>
+            </div>
             {items.map(x => (
               <MaterialUsedRow
                 key={x.id}
-                materialId={x.id}
+                taskId={taskId}
+                batchId={batchId}
+                id={x.id}
                 material={x.product_name}
                 expected={x.quantity}
+                actual={x.actual}
+                wasted={x.wasted}
                 uom={x.uom}
               />
             ))}
@@ -88,7 +106,7 @@ class ExpandedRow extends React.Component {
               <a
                 href="#"
                 className="btn btn--secondary f6"
-                onClick={this.onToggleAddMaterial}
+                onClick={() => { alert('not ready') }}
               >
                 Add
               </a>

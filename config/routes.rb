@@ -246,9 +246,12 @@ Rails.application.routes.draw do
         put ':id/add_notes', to: 'daily_tasks#add_notes'
         post ':id/update_note', to: 'daily_tasks#update_note'
         delete ':id/notes/:note_id', to: 'daily_tasks#destroy_note'
-        put ':id/update_materials_used', to: 'daily_tasks#update_materials_used'
         get '/tasks', to: 'daily_tasks#tasks'
         put '/time_log', to: 'daily_tasks#time_log'
+
+        
+        post ':id/save_material_used', to: 'daily_tasks#save_material_used'
+        
       end
 
       resources :issues, only: [:create, :by_batch, :show, :archive] do

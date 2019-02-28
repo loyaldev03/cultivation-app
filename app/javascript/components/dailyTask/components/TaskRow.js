@@ -7,7 +7,6 @@ import {
   statusWidth
 } from './TaskTableStyles'
 import ExpandedRow from './ExpandedRow'
-import getDailyTaskDetails from '../actions/getDailyTaskDetails'
 import { toast } from '../../utils'
 import DailyTaskStore from '../stores/DailyTasksStore'
 import classNames from 'classnames'
@@ -18,19 +17,7 @@ class TaskRow extends React.Component {
     work_status: this.props.work_status
   }
 
-  componentDidMount() {}
-
-  onExpand = event => {
-    // console.log('expanded')
-    // console.log(
-    //   `this should call getDailyTaskDetails('${
-    //     this.props.id
-    //   }') method if it is an expansion...`
-    // )
-
-    if (!this.state.expanded) {
-      getDailyTaskDetails(this.props.id)
-    }
+  onExpand = event => {   
     this.setState({ expanded: !this.state.expanded })
     event.preventDefault()
   }
@@ -63,21 +50,6 @@ class TaskRow extends React.Component {
     } else {
       toast(`Status changed to done`, 'success')
     }
-  }
-
-  renderExpanded() {
-    if (!this.state.expanded) {
-      return null
-    }
-
-    return (
-      <ExpandedRow
-        {...this.props}
-        onToggleAddIssue={this.props.onToggleAddIssue}
-        onToggleAddNotes={this.props.onToggleAddNotes}
-        onClickStatus={this.onClickStatus}
-      />
-    )
   }
 
   renderIssueCount(issues) {
@@ -159,7 +131,13 @@ class TaskRow extends React.Component {
             </span>
           </div>
         </div>
-        {this.renderExpanded()}
+        { this.state.expanded && (
+          <ExpandedRow 
+            {...this.props} 
+            onToggleAddIssue={this.props.onToggleAddIssue} 
+            onToggleAddNotes={this.props.onToggleAddNotes}
+            onClickStatus={this.onClickStatus}/>)
+          }
       </div>
     )
   }

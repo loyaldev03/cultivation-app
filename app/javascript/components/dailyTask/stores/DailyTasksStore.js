@@ -5,6 +5,7 @@ class DailyTaskStore {
   @observable batches = []
   @observable isLoading = false
 
+  @action
   load(batches) {
     this.batches.replace(batches)
   }
@@ -53,10 +54,6 @@ class DailyTaskStore {
     }
   }
 
-  @computed
-  get bindable() {
-    return this.batches.slice()
-  }
 
   @action
   async updateTimeLog(action, taskId) {

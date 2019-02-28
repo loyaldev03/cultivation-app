@@ -8,10 +8,6 @@ import {
   httpGetOptions
 } from '../../../utils'
 
-const handleInputChange = newValue => {
-  return newValue ? newValue : ''
-}
-
 export default class MaterialForm extends React.Component {
   constructor(props) {
     super(props)
@@ -67,18 +63,10 @@ export default class MaterialForm extends React.Component {
 
   onChangeProduct = product => {
     if (product) {
-      this.setState({
-        product: { value: product.id, label: product.name, ...product }
-      })
-    }
-  }
-
-  onSubmitItem = () => {
-    if (this.state.product && this.state.product.value) {
       if (
         this.state.materials
           .map(e => e.product_id)
-          .includes(this.state.product.value)
+          .includes(product.id)
       ) {
         // compare if same id existed no need to re-insert to material array
       } else {
@@ -86,15 +74,14 @@ export default class MaterialForm extends React.Component {
           materials: [
             ...previousState.materials,
             {
-              product_name: this.state.product.name,
-              product_id: this.state.product.id,
-              category: this.state.product.catalogue.label,
+              product_name: product.name,
+              product_id: product.id,
+              category: product.catalogue.label,
               quantity: '',
-              uoms: this.state.product.uoms,
-              uom: this.state.product.uoms[0]
+              uoms: product.uoms,
+              uom: product.uoms[0]
             }
           ],
-          product: { value: '', label: '' }
         }))
       }
     }
@@ -141,14 +128,14 @@ export default class MaterialForm extends React.Component {
     const { onClose } = this.props
     const { materials, task } = this.state
     let task_plant = task && task.indelible === 'plants'
-    const showNutrientSummary =
-      materials && materials.length > 0 && task.indelible === 'add_nutrient'
+    const showNutrient = materials && materials.length > 0 && task.indelible === 'add_nutrient'
+    const title = (task && task.indelible === 'add_nutrient') ? "Add Nutrient" : "Assign Materials"
     return (
       <React.Fragment>
         <div className="flex flex-column h-100">
-          <SlidePanelHeader onClose={onClose} title="Assign Materials" />
-          <div className="ph4 mt3 flex">
-            <div className="w-90">
+          <SlidePanelHeader onClose={onClose} title={title}/>
+          <div className="ph4 mt3 flex items-center">
+            <div className="w-100">
               <Select
                 isClearable="true"
                 placeholder={
@@ -159,46 +146,37 @@ export default class MaterialForm extends React.Component {
                     ? this.state.plantProduct
                     : this.state.defaultProduct
                 }
-                onInputChange={handleInputChange}
                 styles={selectStyles}
                 value={this.state.product}
                 onChange={this.onChangeProduct}
               />
             </div>
-            <div className="w-10">
-              <i
-                className="material-icons icon--btn child orange ml3"
-                onClick={this.onSubmitItem}
-              >
-                add
-              </i>
-            </div>
           </div>
           <div className="flex flex-column flex-auto justify-between">
-            <div className="ph4 mt3 f6 fw6 db mb1 gray ttc">
-              <table className="w-100">
+            <div className="ph4 mt3 f6 fw6 db mb1 gray">
+              <table className="w-100 ttc">
                 <tbody>
                   <tr className="bb">
-                    <th align="left" width="90%">
+                    <th align="left">
                       Product Name
                     </th>
                     <th>Category</th>
-                    <th width="10%">Qty</th>
+                    <th>Qty</th>
                     <th>UOM</th>
                     <th />
                   </tr>
                   {materials.map((x, index) => (
                     <tr className="pointer bb" key={index}>
-                      <td className="tl pv2" width="90%" align="left">
+                      <td className="tl pv2">
                         {x.product_name}
                       </td>
-                      <td className="tl pv2 ph3">{x.category}</td>
-                      <td className="tl pv2 ph3" width="10%">
+                      <td className="tl pa2">{x.category}</td>
+                      <td className="tl pa2 w3">
                         <input
                           type="text"
                           name="pin"
                           size="2"
-                          className="input"
+                          className="input tr"
                           value={x.quantity}
                           onChange={e =>
                             this.handleChangeQuantity(
@@ -208,7 +186,7 @@ export default class MaterialForm extends React.Component {
                           }
                         />
                       </td>
-                      <td className="tl pv2 ph3">
+                      <td className="tc pa2 w3">
                         <select
                           value={x.uom}
                           onChange={e =>
@@ -223,7 +201,7 @@ export default class MaterialForm extends React.Component {
                             ))}
                         </select>
                       </td>
-                      <td className="tl pv2 ph3">
+                      <td className="tr w1">
                         <i
                           className="material-icons red md-18 pointer dim"
                           onClick={e => this.onDeleteMaterial(x.product_id)}
@@ -235,7 +213,7 @@ export default class MaterialForm extends React.Component {
                   ))}
                 </tbody>
               </table>
-              {materials && materials.length > 0 && (
+              {showNutrient && (
                 <React.Fragment>
                   <span className="fw6 b db ph1 mt4 mb2">
                     Nutrition Information:

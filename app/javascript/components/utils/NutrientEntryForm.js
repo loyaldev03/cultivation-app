@@ -1,6 +1,16 @@
 import React from 'react'
 
 class NutrientEntryForm extends React.Component {
+  state = {
+    nutrients: {}
+  }
+  onChangeTextInput = field => e => {
+    const { nutrients } = this.state
+    nutrients[field] = e.target.value
+    this.setState({
+      nutrients
+    })
+  }
   render() {
     const { className, fieldType, fields = [] } = this.props
     if (!fields || !fieldType) return null
@@ -26,6 +36,7 @@ class NutrientEntryForm extends React.Component {
                   <input
                     type="number"
                     className="nutrient-form__input input tr"
+                    onChange={this.onChangeTextInput(f.name)}
                   />
                 </React.Fragment>
               )}

@@ -3,7 +3,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def index
     if @batch.present?
-      tasks = Cultivation::QueryTasks.call(@batch).result
+      tasks = Cultivation::QueryTasks.call(@batch, [:issues]).result
       render json: TaskSerializer.new(tasks).serialized_json
     else
       render json: {data: 'Batch Not Found'}

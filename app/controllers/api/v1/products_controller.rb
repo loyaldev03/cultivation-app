@@ -25,6 +25,8 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
         products = Inventory::Product.in(catalogue: catalogue_id).where(name: /^#{params[:filter]}/i)
       end
     end
+    products.includes([:catalogue])
+
     products = products.where(facility_id: facility_id) if facility_id.present?
 
     products = products.where(facility_strain_id: facility_strain_id) if facility_strain_id.present?

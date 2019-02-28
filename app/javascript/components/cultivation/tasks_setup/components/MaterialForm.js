@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-import { selectStyles } from '../../../utils'
+import { selectStyles, NUTRITION_LIST } from '../../../utils'
 import NutrientEntryForm from '../../../utils/NutrientEntryForm'
 import {
   SlidePanelHeader,
@@ -141,44 +141,8 @@ export default class MaterialForm extends React.Component {
     const { onClose } = this.props
     const { materials, task } = this.state
     let task_plant = task && task.indelible === 'plants'
-    const showNutrientSummary = materials && materials.length > 0 && task.indelible === 'add_nutrient'
-    const sampleData = [
-      {
-        id: 1,
-        name: 'Nitrogen',
-        quantity: 3,
-        uom: '%',
-        checked: false
-      },
-      {
-        id: 2,
-        name: 'Prosphorus',
-        quantity: 300,
-        uom: '%',
-        checked: false
-      },
-      {
-        id: 3,
-        name: 'Potassium',
-        quantity: 6,
-        uom: '%',
-        checked: false
-      },
-      {
-        id: 4,
-        name: 'Iron',
-        quantity: 43,
-        uom: '%',
-        checked: false
-      },
-      {
-        id: 4,
-        name: 'Molybdenum',
-        quantity: 30,
-        uom: '%',
-        checked: false
-      }
-    ]
+    const showNutrientSummary =
+      materials && materials.length > 0 && task.indelible === 'add_nutrient'
     return (
       <React.Fragment>
         <div className="flex flex-column h-100">
@@ -271,12 +235,14 @@ export default class MaterialForm extends React.Component {
                   ))}
                 </tbody>
               </table>
-              {(materials && materials.length > 0) && (
+              {materials && materials.length > 0 && (
                 <React.Fragment>
-                  <span className="fw6 b db ph1 mt4 mb2">Nutrition Information:</span>
+                  <span className="fw6 b db ph1 mt4 mb2">
+                    Nutrition Information:
+                  </span>
                   <NutrientEntryForm
                     className="nutrient-form--narrow ph1"
-                    fields={sampleData}
+                    fields={NUTRITION_LIST}
                     fieldType="textboxes"
                   />
                 </React.Fragment>

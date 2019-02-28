@@ -20,8 +20,13 @@ class NutrientEntryForm extends React.Component {
               )}
               {fieldType === 'textboxes' && (
                 <React.Fragment>
-                  <span className="nutrient-name">{f.name} ({f.uom})</span>
-                  <input type="number" className="nutrient-form__input input tr" />
+                  <span className="nutrient-name">
+                    {f.name} ({f.uom})
+                  </span>
+                  <input
+                    type="number"
+                    className="nutrient-form__input input tr"
+                  />
                 </React.Fragment>
               )}
             </label>

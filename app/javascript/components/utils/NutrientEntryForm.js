@@ -11,6 +11,20 @@ class NutrientEntryForm extends React.Component {
       nutrients
     })
   }
+  getFormInputs = () => {
+    const nutrients = this.props.fields.map(x => {
+      const updated = this.state.nutrients[x.element]
+      if (updated) {
+        return {
+          element: x.element,
+          value: updated
+        }
+      } else {
+        return x
+      }
+    })
+    return nutrients
+  }
   render() {
     const { className, fieldType, fields = [] } = this.props
     if (!fields || !fieldType) return null
@@ -21,9 +35,9 @@ class NutrientEntryForm extends React.Component {
             <label className="nutrient-form__label">
               {fieldType === 'checkboxes' && (
                 <React.Fragment>
-                  <span className="nutrient-name">{f.name}</span>
+                  <span className="nutrient-name">{f.element}</span>
                   <span className="nutrient-quantity">
-                    {f.quantity} {f.uom}
+                    {f.value} {f.uom}
                   </span>
                   <input type="checkbox" className="nutrient-form__input" />
                 </React.Fragment>
@@ -31,12 +45,13 @@ class NutrientEntryForm extends React.Component {
               {fieldType === 'textboxes' && (
                 <React.Fragment>
                   <span className="nutrient-name">
-                    {f.name} ({f.uom})
+                    {f.element} ({f.uom})
                   </span>
                   <input
                     type="number"
                     className="nutrient-form__input input tr"
-                    onChange={this.onChangeTextInput(f.name)}
+                    defaultValue={f.value}
+                    onChange={this.onChangeTextInput(f.element)}
                   />
                 </React.Fragment>
               )}

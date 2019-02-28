@@ -448,34 +448,29 @@ class TaskStore {
   }
 
   @action
-  async editAssignedMaterial(batchId, taskId, items) {
+  async editAssignedMaterial(batchId, taskId, items = [], nutrients = {}) {
     const task = this.getTaskById(taskId)
-    if (items) {
-      task.items = items
-      this.tasks = this.tasks.map(t => {
-        return t.id === taskId ? task : t
-      })
-
+    if (items && items.length > 0) {
       const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_material_use`
       const payload = {
-        items: task.items.map(e => ({
+        items: items.map(e => ({
           product_id: e.product_id,
           quantity: e.quantity,
           uom: e.uom
-        }))
+        })),
+        nutrients
       }
-
       try {
         const response = await (await fetch(
           url,
           httpPostOptions(payload)
         )).json()
-        const parsed = parseTask(response.data.attributes)
-        const updated = updateFlags(parsed, this.tasks)
+        task.items = response.data.attributes.items
+        task.add_nutrients = response.data.attributes.add_nutrients
         this.tasks = this.tasks.map(t => {
-          return t.id === taskId ? updated : t
+          return t.id === taskId ? task : t
         })
-        toast('Task Relationship Deleted', 'success')
+        toast('Material updated', 'success')
       } catch (error) {
         console.log(error)
       }

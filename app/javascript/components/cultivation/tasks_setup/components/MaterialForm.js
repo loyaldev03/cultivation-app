@@ -20,7 +20,8 @@ export default class MaterialForm extends React.Component {
       quantity: '',
       uom: '',
       materials: [],
-      items: []
+      items: [],
+      nutrients: []
     }
     this.loadProducts(
       this.state.batch_id,
@@ -63,11 +64,7 @@ export default class MaterialForm extends React.Component {
 
   onChangeProduct = product => {
     if (product) {
-      if (
-        this.state.materials
-          .map(e => e.product_id)
-          .includes(product.id)
-      ) {
+      if (this.state.materials.map(e => e.product_id).includes(product.id)) {
         // compare if same id existed no need to re-insert to material array
       } else {
         this.setState(previousState => ({
@@ -81,14 +78,17 @@ export default class MaterialForm extends React.Component {
               uoms: product.uoms,
               uom: product.uoms[0]
             }
-          ],
+          ]
         }))
       }
     }
   }
 
   onSave = () => {
-    this.props.onSave(this.state.materials)
+    this.props.onSave({
+      nutrients: this.nutrientForm ? this.nutrientForm.getFormInputs() : null,
+      materials: this.state.materials
+    })
   }
 
   onDeleteMaterial = value => {
@@ -98,11 +98,26 @@ export default class MaterialForm extends React.Component {
   }
 
   setSelectedItems(batch_id, task, task_id, items) {
+    const existingList = task.add_nutrients || []
+    const nutrients = NUTRITION_LIST.map(x => {
+      const rec = existingList.find(y => y.element === x.element)
+      if (rec) {
+        return {
+          id: rec.id,
+          element: rec.element,
+          value: rec.value,
+          uom: x.uom
+        }
+      } else {
+        return { id: x.id, element: x.element, value: x.value, uom: x.uom }
+      }
+    })
     this.setState({
       task_id: task_id,
       batch_id: batch_id,
       materials: items,
-      task: task
+      task: task,
+      nutrients
     })
   }
 
@@ -126,14 +141,18 @@ export default class MaterialForm extends React.Component {
 
   render() {
     const { onClose } = this.props
-    const { materials, task } = this.state
+    const { nutrients, materials, task } = this.state
     let task_plant = task && task.indelible === 'plants'
-    const showNutrient = materials && materials.length > 0 && task.indelible === 'add_nutrient'
-    const title = (task && task.indelible === 'add_nutrient') ? "Add Nutrient" : "Assign Materials"
+    const showNutrient =
+      materials && materials.length > 0 && task.indelible === 'add_nutrient'
+    const title =
+      task && task.indelible === 'add_nutrient'
+        ? 'Add Nutrient'
+        : 'Assign Materials'
     return (
       <React.Fragment>
         <div className="flex flex-column h-100">
-          <SlidePanelHeader onClose={onClose} title={title}/>
+          <SlidePanelHeader onClose={onClose} title={title} />
           <div className="ph4 mt3 flex items-center">
             <div className="w-100">
               <Select
@@ -157,9 +176,7 @@ export default class MaterialForm extends React.Component {
               <table className="w-100 ttc">
                 <tbody>
                   <tr className="bb">
-                    <th align="left">
-                      Product Name
-                    </th>
+                    <th align="left">Product Name</th>
                     <th>Category</th>
                     <th>Qty</th>
                     <th>UOM</th>
@@ -167,13 +184,11 @@ export default class MaterialForm extends React.Component {
                   </tr>
                   {materials.map((x, index) => (
                     <tr className="pointer bb" key={index}>
-                      <td className="tl pv2">
-                        {x.product_name}
-                      </td>
+                      <td className="tl pv2">{x.product_name}</td>
                       <td className="tl pa2">{x.category}</td>
                       <td className="tl pa2 w3">
                         <input
-                          type="text"
+                          type="number"
                           name="pin"
                           size="2"
                           className="input tr"
@@ -219,8 +234,9 @@ export default class MaterialForm extends React.Component {
                     Nutrition Information:
                   </span>
                   <NutrientEntryForm
+                    ref={form => (this.nutrientForm = form)}
                     className="nutrient-form--narrow ph1"
-                    fields={NUTRITION_LIST}
+                    fields={nutrients}
                     fieldType="textboxes"
                   />
                 </React.Fragment>

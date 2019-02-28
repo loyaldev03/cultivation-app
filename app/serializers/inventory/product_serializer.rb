@@ -41,5 +41,10 @@ module Inventory
     attribute :potassium do |object|
       object.nutrients.detect { |a| a[:element] == 'potassium' }&.value
     end
+
+    attribute :nutrients do |object|
+      elements = ['nitrogen', 'prosphorus', 'potassium']
+      object.nutrients.select { |a| !elements.include?(a[:element]) }.map { |a| {element: a[:element], value: a[:value]} }
+    end
   end
 end

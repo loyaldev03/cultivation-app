@@ -34,7 +34,8 @@ module Inventory
                 :invoice_item_id,
                 :nitrogen,
                 :prosphorus,
-                :potassium
+                :potassium,
+                :nutrients
 
     def initialize(user, args)
       @args = args
@@ -74,6 +75,7 @@ module Inventory
       @nitrogen = args[:nitrogen]
       @prosphorus = args[:prosphorus]
       @potassium = args[:potassium]
+      @nutrients = args[:nutrients]
     end
 
     def call
@@ -325,10 +327,15 @@ module Inventory
         {element: 'prosphorus', value: prosphorus},
         {element: 'potassium', value: potassium},
       ]
-      nutrients_data.each do |data|
-        nutrient = product.nutrients.find_or_create_by(element: data[:element])
-        nutrient.update(value: data[:value])
+      nutrients.each do |nutrient|
+        nutrients_data << {element: nutrient['element'], value: nutrient['value']}
       end
+
+      product.nutrients = []
+      nutrients_data.each do |data|
+        product.nutrients.build(element: data[:element], value: data[:value])
+      end
+      product.save
     end
 
     def nutrients?

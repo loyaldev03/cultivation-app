@@ -62,8 +62,18 @@ class TaskDetailsSerializer
     end
   end
 
+  attribute :add_nutrients do |object|
+    object.add_nutrients.map do |a|
+      {
+        id: a.id.to_s,
+        element: a.element,
+        value: a.value,
+      }
+    end
+  end
+
   attribute :deletable do |object|
-    if object.issues.count > 0 || object.user_ids.count > 0 || object.material_use.count > 0
+    if object.issues.present? || object.user_ids.present? || object.material_use.present?
       false
     else
       true

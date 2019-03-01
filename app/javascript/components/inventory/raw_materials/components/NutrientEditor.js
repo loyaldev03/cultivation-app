@@ -556,7 +556,7 @@ class NutrientEditor extends React.Component {
             </div>
           </div>
           <div className="ph4 mb3 flex">
-            <div className="w-30">
+            <div className="w-third">
               <NumericInput
                 label="Nitrogen (%)"
                 fieldname="nitrogen"
@@ -564,7 +564,7 @@ class NutrientEditor extends React.Component {
                 onChange={this.onChangeGeneric}
               />
             </div>
-            <div className="w-40 pl3">
+            <div className="w-third pl3">
               <NumericInput
                 label="Prosphorus (%)"
                 fieldname="prosphorus"
@@ -572,7 +572,7 @@ class NutrientEditor extends React.Component {
                 onChange={this.onChangeGeneric}
               />
             </div>
-            <div className="w-30 pl3">
+            <div className="w-third pl3">
               <NumericInput
                 label="Potassium (%)"
                 fieldname="potassium"

@@ -64,7 +64,7 @@ class TaskSerializer
   end
 
   attribute :deletable do |object|
-    if object.issues.count > 0 || object.user_ids.count > 0 || object.material_use.count > 0
+    if object.issues.present? || object.user_ids.present? || object.material_use.present?
       false
     else
       true

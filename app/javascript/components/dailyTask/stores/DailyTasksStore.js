@@ -58,6 +58,12 @@ class DailyTaskStore {
     return this.batches.slice()
   }
 
+  getNutrientsByTask(batchId, taskId) {
+    const batch = this.batches.find(x => x.id === batchId)
+    const task = batch.tasks.find(x => x.id === taskId)
+    return task.add_nutrients.filter(x => x.value)
+  }
+
   @action
   async updateTimeLog(action, taskId) {
     this.isLoading = true

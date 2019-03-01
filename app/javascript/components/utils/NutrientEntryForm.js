@@ -1,4 +1,5 @@
 import React from 'react'
+import { decimalFormatter } from '../utils'
 
 class NutrientEntryForm extends React.Component {
   state = {
@@ -37,7 +38,7 @@ class NutrientEntryForm extends React.Component {
                 <React.Fragment>
                   <span className="nutrient-name">{f.element}</span>
                   <span className="nutrient-quantity">
-                    {f.value} {f.uom}
+                    {decimalFormatter.format(f.value)}%
                   </span>
                   <input type="checkbox" className="nutrient-form__input" />
                 </React.Fragment>

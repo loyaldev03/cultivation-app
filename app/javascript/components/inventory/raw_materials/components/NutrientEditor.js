@@ -556,7 +556,7 @@ class NutrientEditor extends React.Component {
             </div>
           </div>
           <div className="ph4 mb3 flex">
-            <div className="w-40">
+            <div className="w-third">
               <NumericInput
                 label="Nitrogen (%)"
                 fieldname="nitrogen"
@@ -564,7 +564,7 @@ class NutrientEditor extends React.Component {
                 onChange={this.onChangeGeneric}
               />
             </div>
-            <div className="w-40 pl3">
+            <div className="w-third pl3">
               <NumericInput
                 label="Prosphorus (%)"
                 fieldname="prosphorus"
@@ -572,7 +572,7 @@ class NutrientEditor extends React.Component {
                 onChange={this.onChangeGeneric}
               />
             </div>
-            <div className="w-40 pl3">
+            <div className="w-third pl3">
               <NumericInput
                 label="Potassium (%)"
                 fieldname="potassium"
@@ -583,7 +583,7 @@ class NutrientEditor extends React.Component {
           </div>
           <hr className="mt3 m b--light-gray w-100" />
           <div className="ph4 mt3 mb3 flex">
-            <div className="w-30">
+            <div className="w-50">
               <label className="f6 fw6 db mb1 gray ttc">Nutrient Element</label>
               <AsyncCreatableSelect
                 isClearable
@@ -593,7 +593,7 @@ class NutrientEditor extends React.Component {
                 styles={reactSelectStyle}
               />
             </div>
-            <div className="w-30 pl3">
+            <div className="w-50 pl3">
               <NumericInput
                 label="Value (%)"
                 fieldname="nutrient_value"
@@ -601,24 +601,26 @@ class NutrientEditor extends React.Component {
                 onChange={this.onChangeGeneric}
               />
             </div>
-            <div className="w-30 pl3">
+            <div className="w-10 pl3">
               <span className="dim pointer" onClick={this.addNutrient}>
                 <i className="material-icons mid-gray md-18 mt4">add</i>
               </span>
             </div>
           </div>
           <div className="ph4 mt3 mb3 flex f6 grey">
-            <div className="w-50">
+            <div className="w-100">
               {nutrients.length > 0 && (
                 <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100">
                   <tbody>
                     {nutrients.map((x, index) => (
                       <tr key={index} className="">
-                        <td className="tl pv2 ph3 w5">
+                        <td className="tl pv2 ph3 w-70">
                           {x.nutrient_element.label}
                         </td>
-                        <td className="tl pv2 ph3 w5">{x.nutrient_value}%</td>
-                        <td className="tl pv2 ph3 w5">
+                        <td className="tl pv2 ph3 w5 tr">
+                          {x.nutrient_value}%
+                        </td>
+                        <td className="tl pv2 ph3 w5 tr">
                           <span
                             className="dim pointer"
                             onClick={e =>

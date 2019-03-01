@@ -21,7 +21,7 @@ module Cultivation
       else
         batch = task.batch
         if valid_batch? batch
-          batch_tasks = Cultivation::QueryTasks.call(batch).result
+          batch_tasks = Cultivation::QueryTasks.call(batch, [:modifier, :users]).result
           task = get_task(batch_tasks, task.id)
           facility_users = QueryUsers.call(current_user, batch.facility_id).result
           # Remember original start_date

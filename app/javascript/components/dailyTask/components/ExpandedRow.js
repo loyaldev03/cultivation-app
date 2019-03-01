@@ -2,6 +2,8 @@ import React from 'react'
 import MaterialUsedRow from './MaterialUsedRow'
 import NoteList from './NoteList'
 import DailyTaskStore from '../stores/DailyTasksStore'
+import { NUTRITION_LIST } from '../../utils'
+import NutrientEntryForm from '../../utils/NutrientEntryForm'
 
 const rightBorder = { borderRight: '1px solid #ccc' }
 
@@ -37,7 +39,15 @@ class ExpandedRow extends React.Component {
     return (
       <React.Fragment>
         <div className="flex justify-between pv3 ph3">
-          <div className="flex">TODO: Task Related form: {taskIndelible}</div>
+          <div>
+            {taskIndelible === 'add_nutrient' && (
+              <NutrientEntryForm
+                className="nutrient-form w-70"
+                fields={NUTRITION_LIST}
+                fieldType="checkboxes"
+              />
+            )}
+          </div>
           <div>
             <a
               href="#"

@@ -89,7 +89,6 @@ class TaskList extends React.Component {
 
   handleShowMaterialForm = (taskId, items) => {
     const task = TaskStore.getTaskById(taskId)
-
     this.assignMaterialForm.setSelectedItems(
       this.props.batch.id,
       task,
@@ -559,9 +558,9 @@ class TaskList extends React.Component {
                 onClose={() =>
                   this.setState({ showAssignMaterialPanel: false })
                 }
-                onSave={materials => {
+                onSave={({ nutrients, materials }) => {
                   const taskId = this.state.taskSelected
-                  TaskStore.editAssignedMaterial(batchId, taskId, materials)
+                  TaskStore.editAssignedMaterial(batchId, taskId, materials, nutrients)
                   this.setState({ showAssignMaterialPanel: false })
                 }}
                 batch_source={this.props.batch.batch_source}

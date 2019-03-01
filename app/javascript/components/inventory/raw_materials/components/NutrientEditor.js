@@ -617,7 +617,9 @@ class NutrientEditor extends React.Component {
                         <td className="tl pv2 ph3 w-70">
                           {x.nutrient_element.label}
                         </td>
-                        <td className="tl pv2 ph3 w5 tr">{x.nutrient_value}%</td>
+                        <td className="tl pv2 ph3 w5 tr">
+                          {x.nutrient_value}%
+                        </td>
                         <td className="tl pv2 ph3 w5 tr">
                           <span
                             className="dim pointer"

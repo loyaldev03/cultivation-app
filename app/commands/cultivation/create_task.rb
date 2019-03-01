@@ -30,6 +30,7 @@ module Cultivation
         task_related = tasks.detect { |t| t.id == task_related.id }
         have_children = get_children(tasks, task_related.wbs).any?
         new_task.indent = task_related.indent + 1 if have_children
+        new_task.indelible = task_related.indelible
         new_task.move_to! task_related.position + 1
       end
       # Call update task on the new task to cascade changes

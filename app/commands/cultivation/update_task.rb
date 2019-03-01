@@ -107,7 +107,7 @@ module Cultivation
 
     def map_args_to_task(task, batch_tasks)
       # Only allow non-indelible task change these field
-      if !task.indelible?
+      if !task.indelible? || task.indelible == 'add_nutrient'
         task.name = args[:name]
       end
       task.start_date = decide_start_date(task, batch_tasks, args[:start_date], args[:depend_on])

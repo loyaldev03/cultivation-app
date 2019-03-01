@@ -13,12 +13,13 @@ class NutrientEntryForm extends React.Component {
     })
   }
   getFormInputs = () => {
+    const updatedElements = Object.keys(this.state.nutrients)
     const nutrients = this.props.fields.map(x => {
-      const updated = this.state.nutrients[x.element]
-      if (updated) {
+      const value = this.state.nutrients[x.element]
+      if (updatedElements.includes(x.element)) {
         return {
           element: x.element,
-          value: updated
+          value
         }
       } else {
         return x
@@ -46,7 +47,7 @@ class NutrientEntryForm extends React.Component {
               {fieldType === 'textboxes' && (
                 <React.Fragment>
                   <span className="nutrient-name">
-                    {f.element} ({f.uom})
+                    {f.element} (%)
                   </span>
                   <input
                     type="number"

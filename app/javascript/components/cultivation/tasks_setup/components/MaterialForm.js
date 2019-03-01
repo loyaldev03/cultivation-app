@@ -106,10 +106,9 @@ export default class MaterialForm extends React.Component {
           id: rec.id,
           element: rec.element,
           value: rec.value,
-          uom: x.uom
         }
       } else {
-        return { id: x.id, element: x.element, value: x.value, uom: x.uom }
+        return { id: x.id, element: x.element, value: '' }
       }
     })
     this.setState({
@@ -122,18 +121,18 @@ export default class MaterialForm extends React.Component {
   }
 
   handleChangeQuantity = (id, quantity) => {
-    let material = this.state.materials.find(e => e.product_id === id)
+    const material = this.state.materials.find(e => e.product_id === id)
     material.quantity = quantity
-    let materials = this.state.materials.map(t => {
+    const materials = this.state.materials.map(t => {
       return t.product_id === id ? material : t
     })
     this.setState({ materials: materials })
   }
 
   handleChangeUom = (id, uom) => {
-    let material = this.state.materials.find(e => e.product_id === id)
+    const material = this.state.materials.find(e => e.product_id === id)
     material.uom = uom
-    let materials = this.state.materials.map(t => {
+    const materials = this.state.materials.map(t => {
       return t.product_id === id ? material : t
     })
     this.setState({ materials: materials })
@@ -142,7 +141,7 @@ export default class MaterialForm extends React.Component {
   render() {
     const { onClose } = this.props
     const { nutrients, materials, task } = this.state
-    let task_plant = task && task.indelible === 'plants'
+    const task_plant = task && task.indelible === 'plants'
     const showNutrient =
       materials && materials.length > 0 && task.indelible === 'add_nutrient'
     const title =

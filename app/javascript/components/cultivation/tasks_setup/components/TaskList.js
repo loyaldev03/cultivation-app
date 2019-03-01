@@ -560,7 +560,12 @@ class TaskList extends React.Component {
                 }
                 onSave={({ nutrients, materials }) => {
                   const taskId = this.state.taskSelected
-                  TaskStore.editAssignedMaterial(batchId, taskId, materials, nutrients)
+                  TaskStore.editAssignedMaterial(
+                    batchId,
+                    taskId,
+                    materials,
+                    nutrients
+                  )
                   this.setState({ showAssignMaterialPanel: false })
                 }}
                 batch_source={this.props.batch.batch_source}

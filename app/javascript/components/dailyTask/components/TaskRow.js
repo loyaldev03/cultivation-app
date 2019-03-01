@@ -58,7 +58,9 @@ class TaskRow extends React.Component {
   onClickStatus = action => {
     if (this.state.work_status !== 'done') {
       if (action === 'done') {
-        if (window.confirm('Are you sure you want to change status to done ?')) {
+        if (
+          window.confirm('Are you sure you want to change status to done ?')
+        ) {
           DailyTaskStore.updateTimeLog(action, this.props.id)
           this.setState({ work_status: action })
           toast(`Status changed to done`, 'success')

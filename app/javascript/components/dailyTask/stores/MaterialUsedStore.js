@@ -2,7 +2,7 @@ import { observable, action, computed, toJS, get } from 'mobx'
 
 class MaterialUsedStore {
   store = observable.map({})
-  
+
   @action
   load(newMaterialUsedList = []) {
     console.group('newMaterialUsedList')
@@ -13,11 +13,11 @@ class MaterialUsedStore {
       this.store.set(x.key, x)
     })
   }
-  
+
   get(key) {
     const data = this.store.get(key)
     if (data) {
-      return data 
+      return data
     } else {
       return {}
     }

@@ -47,7 +47,6 @@ const loadDailyTasks = () => {
 
           materialUsedStore.load(data)
         })
-
     }) // if completed, load into current issue store...
 }
 

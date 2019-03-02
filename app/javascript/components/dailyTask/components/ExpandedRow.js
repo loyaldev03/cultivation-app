@@ -97,7 +97,7 @@ class ExpandedRow extends React.Component {
             {items.map(x => {
               const actual = materialUsedStore.get(`${x.id}.material_used`)
               const waste = materialUsedStore.get(`${x.id}.material_waste`)
-              
+
               return (
                 <MaterialUsedRow
                   key={x.id}
@@ -108,7 +108,8 @@ class ExpandedRow extends React.Component {
                   expected={x.quantity}
                   actual={actual.quantity}
                   waste={waste.quantity}
-                  uom={x.uom}/>
+                  uom={x.uom}
+                />
               )
             })}
           </div>

@@ -8,6 +8,7 @@ import editNote from './actions/editNote'
 import dailyTasksStore from './stores/DailyTasksStore'
 import NoteEditor from './components/NoteEditor'
 import sidebarStore from './stores/SidebarStore'
+import materialUsedStore  from './stores/MaterialUsedStore'
 
 @observer
 class DailyTaskApp extends React.Component {
@@ -21,6 +22,7 @@ class DailyTaskApp extends React.Component {
 
   componentDidMount() {
     loadDailyTasks()
+    materialUsedStore.loadNutrientsCatalogue(this.props.nutrient_ids)
   }
 
   onToggleAddIssue = (batchId = null, taskId = null) => {

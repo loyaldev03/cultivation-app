@@ -2,6 +2,7 @@ import { observable, action, computed, toJS, get } from 'mobx'
 
 class MaterialUsedStore {
   store = observable.map({})
+  @observable nutrientIds = []
 
   @action
   load(newMaterialUsedList = []) {
@@ -12,6 +13,15 @@ class MaterialUsedStore {
     newMaterialUsedList.forEach(x => {
       this.store.set(x.key, x)
     })
+  }
+
+  @action
+  loadNutrientsCatalogue(nutrientIds) {
+    this.nutrientIds.replace(nutrientIds)
+  }
+
+  shouldShowTarget(catalogue_id) {
+    return this.nutrientIds.indexOf(catalogue_id) >= 0
   }
 
   get(key) {

@@ -1,23 +1,7 @@
 class DailyTasksController < ApplicationController
   def index
+    @nutrient_ids = Inventory::Catalogue.where(category: Constants::NUTRIENTS_KEY).where(:sub_category.ne => '').map { |x| x.id.to_s }
     render 'index', layout: 'worker'
-  end
-
-  def index2
-    @tasks_date = Time.now.beginning_of_day
-    match = current_user.cultivation_tasks.expected_on(@tasks_date).selector
-    @tasks_by_batch = Cultivation::Task.collection.aggregate(
-      [
-        {"$match": match},
-        {"$group": {_id: '$batch_id', tasks: {"$push": '$_id'}}},
-      ],
-    ).map do |batch_group|
-      {
-        batch: serialized_batch(batch_group['_id']),
-        tasks: serialized_tasks(batch_group['tasks']),
-      }
-    end
-    @inventory_catalogue = serialized_catalogue
   end
 
   private

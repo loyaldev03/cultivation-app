@@ -105,7 +105,6 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   def materials_used
     task_ids = params[:task_ids]
     date = Time.parse(params[:date]).beginning_of_day
-    # Rails.logger.debug "\t\t\t\t>>>>> date: #{date.inspect}"
     material_used_ids = []
 
     Cultivation::Task.in(id: task_ids).each do |t|

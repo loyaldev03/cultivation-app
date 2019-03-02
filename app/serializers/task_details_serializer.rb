@@ -15,7 +15,6 @@ class TaskDetailsSerializer
     object.batch_id.to_s
   end
 
-  # TODO: Not sure what is this for...
   attribute :items do |object|
     object.material_use.map do |item|
       {

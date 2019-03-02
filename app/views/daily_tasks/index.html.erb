@@ -3,5 +3,5 @@
 <% end %>
 
 <div class="pa4">
-  <%= react_component 'dailyTask/DailyTaskApp', { today: Time.now.beginning_of_day }  %>
+  <%= react_component 'dailyTask/DailyTaskApp', { today: Time.now.beginning_of_day, nutrient_ids: @nutrient_ids }  %>
 </div>

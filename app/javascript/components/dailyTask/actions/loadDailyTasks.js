@@ -12,7 +12,7 @@ const loadDailyTasks = () => {
       }))
     })
     .then(data => {
-      // console.log(data)
+      console.log(data)
       const batches = data.data.map(x => {
         const batch = {
           ...x.batch.attributes,
@@ -23,7 +23,7 @@ const loadDailyTasks = () => {
             ...y.attributes
           }))
         }
-        console.log(batch)
+        // console.log(batch)
         return batch
       })
       dailyTasksStore.load(batches)
@@ -33,7 +33,7 @@ const loadDailyTasks = () => {
         batch.tasks.forEach(task => task_ids.push(task.id))
       })
 
-      console.log(task_ids)
+      // console.log(task_ids)
       const payload = {
         task_ids,
         date: new Date()
@@ -41,9 +41,9 @@ const loadDailyTasks = () => {
       fetch('/api/v1/daily_tasks/materials_used', httpPostOptions(payload))
         .then(response => response.json())
         .then(data => {
-          console.group('materials_used')
-          console.log(data)
-          console.groupEnd()
+          // console.group('materials_used')
+          // console.log(data)
+          // console.groupEnd()
 
           materialUsedStore.load(data)
         })

@@ -44,7 +44,7 @@ class MaterialUsedRow extends React.PureComponent {
   }
 
   render() {
-    const { material, expected, uom } = this.props
+    const { material, expected, uom, showTarget = false } = this.props
 
     const { actual, waste } = this.state
 
@@ -55,7 +55,7 @@ class MaterialUsedRow extends React.PureComponent {
           className="f6 dark-gray flex items-center justify-center"
           style={{ width: '100px', minWidth: '100px' }}
         >
-          {expected} {uom}
+          { showTarget && `${expected} ${uom}` }
         </div>
         <div
           className="f6 dark-gray flex items-center justify-start mr2"
@@ -89,9 +89,6 @@ class MaterialUsedRow extends React.PureComponent {
             {uom}
           </span>
         </div>
-        {/* <div className="f6 dark-gray flex items-center justify-start" style={{ width: '100px' }}>
-          30 lb
-        </div> */}
         <div
           style={{ width: '50px', minWidth: '50px' }}
           className="flex items-center justify-start"

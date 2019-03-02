@@ -1,4 +1,5 @@
 import dailyTasksStore from '../stores/DailyTasksStore'
+import materialUsedStore from '../stores/MaterialUsedStore'
 import { toJS } from 'mobx'
 import { httpPostOptions } from '../../utils/FetchHelper'
 
@@ -33,6 +34,7 @@ const saveMaterialUsed = (batchId, taskId, materialUsedId, actual, waste) => {
     .then(x => x.json())
     .then(data => {
       console.log(data)
+      materialUsedStore.update(data.key, data)
       // const newBatches = [...batches.slice(0, index - 1), batch, ...batches.slice(index + 1)]
       // dailyTasksStore.load(batches)
     })

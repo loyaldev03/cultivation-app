@@ -6,7 +6,7 @@ class MaterialUsedRow extends React.PureComponent {
     super(props)
     this.state = {
       actual: props.actual || 0,
-      wasted: props.wasted || 0,
+      waste: props.waste || 0,
       changed: false
     }
   }
@@ -31,14 +31,14 @@ class MaterialUsedRow extends React.PureComponent {
       this.props.taskId,
       this.props.id,
       this.state.actual,
-      this.state.wasted
+      this.state.waste
     )
   }
 
   onCancel = event => {
     this.setState({
       actual: this.props.actual || 0,
-      wasted: this.props.wasted || 0,
+      waste: this.props.waste || 0,
       changed: false
     })
   }
@@ -46,28 +46,30 @@ class MaterialUsedRow extends React.PureComponent {
   render() {
     const { material, expected, uom } = this.props
 
-    const { actual, wasted } = this.state
+    const { actual, waste } = this.state
 
     return (
       <div className="flex items-center pv2">
         <div className="f6 dark-gray w-60">{material}</div>
         <div
           className="f6 dark-gray flex items-center justify-center"
-          style={{ width: '100px' }}
+          style={{ width: '100px', minWidth: '100px' }}
         >
           {expected} {uom}
         </div>
         <div
-          className="f6 dark-gray flex items-center justify-start"
+          className="f6 dark-gray flex items-center justify-start mr2"
           style={{ width: '100px' }}
         >
           <input
             value={actual}
             name="actual"
-            className="w-40"
+            type="number"
+            min="0"
+            className="flex flex-auto pa1 br1 tr ba b--black-20 br2 outline-0"
             onChange={this.onInputChange}
           />
-          <span className="ml1" style={{ width: '20px' }}>
+          <span className="ml1 grey" style={{ width: '40px' }}>
             {uom}
           </span>
         </div>
@@ -76,12 +78,14 @@ class MaterialUsedRow extends React.PureComponent {
           style={{ width: '100px' }}
         >
           <input
-            value={wasted}
-            name="wasted"
-            className="w-40"
+            value={waste}
+            name="waste"
+            type="number"
+            min="0"
+            className="flex flex-auto pa1 ba tr ba b--black-20 br2 outline-0"
             onChange={this.onInputChange}
           />
-          <span className="ml1" style={{ width: '20px' }}>
+          <span className="ml1 grey" style={{ width: '40px' }}>
             {uom}
           </span>
         </div>
@@ -89,7 +93,7 @@ class MaterialUsedRow extends React.PureComponent {
           30 lb
         </div> */}
         <div
-          style={{ minWidth: '50px' }}
+          style={{ width: '50px', minWidth: '50px' }}
           className="flex items-center justify-start"
         >
           {this.state.changed && (

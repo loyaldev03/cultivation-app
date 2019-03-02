@@ -83,10 +83,19 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
 
     Rails.logger.debug "\t\t\t\t>>>>> add_material_used id. task id: #{task_id}, date: #{date.inspect}, material_used_id: #{material_used_id}, actual: #{actual}, waste: #{waste}"
 
-    command = DailyTask::SaveMaterialUsed.call(current_user, task_id, date, material_used_id, actual, waste)
+    command = DailyTask::SaveMaterialUsage.call(current_user, task_id, date, material_used_id, actual, waste)
     if command.success?
-      r = command.result
-      render json: command.result, status: 200
+      data = command.result.map do |tx|
+        {
+          key: "#{tx.ref_id.to_s}.#{tx.event_type}",
+          material_use_id: tx.ref_id.to_s,
+          type: tx.event_type,
+          quantity: -tx.quantity,
+          date: tx.event_date.iso8601,
+        }
+      end
+
+      render json: data, status: 200
     else
       render json: command.errors, status: 422
     end
@@ -95,12 +104,26 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   # Returns all material used
   def materials_used
     task_ids = params[:task_ids]
-    # Cultivation::Task.in(id: task_ids)
-    # material_used_ids
-    # date = Time.parse(params[:date]).to_date
-    # # t = Cultivation::Task.in(id: task_ids).
+    date = Time.parse(params[:date]).beginning_of_day
+    # Rails.logger.debug "\t\t\t\t>>>>> date: #{date.inspect}"
+    material_used_ids = []
+
+    Cultivation::Task.in(id: task_ids).each do |t|
+      material_used_ids.concat(t.material_use.map { |mu| mu.id.to_s })
+    end
 
     # txs = Inventory::ItemTransaction.where(ref_id: { '$in': [material_used_ids] }, ref_type: 'Cultivation::Item', event_date: date)
+    data = Inventory::ItemTransaction.in(ref_id: material_used_ids).where(event_date: date).map do |tx|
+      {
+        key: "#{tx.ref_id.to_s}.#{tx.event_type}",
+        material_use_id: tx.ref_id.to_s,
+        type: tx.event_type,
+        quantity: -tx.quantity,
+        date: tx.event_date.iso8601,
+      }
+    end
+
+    render json: data, status: 200
   end
 
   private

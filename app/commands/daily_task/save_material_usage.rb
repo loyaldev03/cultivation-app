@@ -1,5 +1,5 @@
 module DailyTask
-  class SaveMaterialUsed
+  class SaveMaterialUsage
     prepend SimpleCommand
 
     attr_reader :current_user, :task_id, :material_used_id, :actual, :waste, :date
@@ -10,59 +10,52 @@ module DailyTask
 
       # Because we are not doing additive entry, so have to force all entry
       # from same day to overide each other.
-      @date = date.to_date
+      @date = date
       @material_used_id = material_used_id.to_s
-      @actual = actual.to_d
-      @waste = waste.to_d
+      @actual = -actual.to_d
+      @waste = -waste.to_d
     end
 
     def call
       if valid_user? && valid_params?
         task = Cultivation::Task.find_by(id: task_id)
         material_use = task.material_use.find(id: material_used_id)
-        result = {task_id: task_id, material_used_id: material_used_id, actual: nil, waste: nil}
+        actual_tx = nil
+        waste_tx = nil
 
         if material_use.present?
-          if actual > 0
-            tx = create_transaction('material_used', task, material_use)
-            tx.quantity = actual
-            tx.uom = material_use.uom
-
-            Rails.logger.debug "\t\t\t\t>>>>>>>> SaveMaterialUsed -> tx (materiaul used)"
-            Rails.logger.debug tx.inspect
-            tx.save!
-            result[:actual] = actual
+          if actual < 0
+            actual_tx = create_transaction('material_used', task, material_use, actual, material_use.uom)
+            actual_tx.save!
           end
 
-          if waste > 0
-            tx = create_transaction('material_waste', task, material_use)
-            tx.quantity = waste
-            tx.uom = material_use.uom
-
-            Rails.logger.debug "\t\t\t\t>>>>>>>> SaveMaterialUsed -> tx (material waste)"
-            Rails.logger.debug tx.inspect
-            tx.save!
-            result[:waste] = waste
+          if waste < 0
+            waste_tx = create_transaction('material_waste', task, material_use, waste, material_use.uom)
+            waste_tx.save!
           end
         end
 
-        result
+        [actual_tx, waste_tx].compact
       end
     end
 
     private
 
-    def create_transaction(event_type, task, material_use)
-      Inventory::ItemTransaction.find_or_initialize_by(
+    def create_transaction(event_type, task, material_use, quantity, uom)
+      tx = Inventory::ItemTransaction.find_or_initialize_by(
+        event_date: date,
         ref_id: material_used_id,
         ref_type: 'Cultivation::Item',
         event_type: event_type,
-        event_date: date,
         product: material_use.product,
         catalogue: material_use.product.catalogue,
         cultivation_batch: task.batch,
         facility: task.batch.facility,
       )
+
+      tx.quantity = quantity
+      tx.uom = uom
+      tx
     end
 
     def valid_user?

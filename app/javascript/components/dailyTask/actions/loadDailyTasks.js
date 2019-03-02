@@ -1,5 +1,6 @@
-import { httpGetOptions } from '../../utils/FetchHelper'
+import { httpGetOptions, httpPostOptions } from '../../utils/FetchHelper'
 import dailyTasksStore from '../stores/DailyTasksStore'
+import materialUsedStore from '../stores/MaterialUsedStore'
 
 // TODO: not complete yet
 const loadDailyTasks = () => {
@@ -26,6 +27,27 @@ const loadDailyTasks = () => {
         return batch
       })
       dailyTasksStore.load(batches)
+
+      const task_ids = []
+      batches.forEach(batch => {
+        batch.tasks.forEach(task => task_ids.push(task.id))
+      })
+
+      console.log(task_ids)
+      const payload = {
+        task_ids,
+        date: new Date()
+      }
+      fetch('/api/v1/daily_tasks/materials_used', httpPostOptions(payload))
+        .then(response => response.json())
+        .then(data => {
+          console.group('materials_used')
+          console.log(data)
+          console.groupEnd()
+
+          materialUsedStore.load(data)
+        })
+
     }) // if completed, load into current issue store...
 }
 

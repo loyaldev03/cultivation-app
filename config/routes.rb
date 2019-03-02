@@ -251,7 +251,7 @@ Rails.application.routes.draw do
 
         
         post ':id/save_material_used', to: 'daily_tasks#save_material_used'
-        
+        post 'materials_used', to: 'daily_tasks#materials_used' 
       end
 
       resources :issues, only: [:create, :by_batch, :show, :archive] do

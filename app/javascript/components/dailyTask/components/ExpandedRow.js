@@ -4,6 +4,7 @@ import MaterialUsedRow from './MaterialUsedRow'
 import NoteList from './NoteList'
 import DailyTaskStore from '../stores/DailyTasksStore'
 import sidebarStore from '../stores/SidebarStore'
+import materialUsedStore from '../stores/MaterialUsedStore'
 
 const rightBorder = { borderRight: '1px solid #ccc' }
 
@@ -66,49 +67,50 @@ class ExpandedRow extends React.Component {
               </a>
             </div>
 
-            <div className="flex items-center pb2 justify-between">
+            <div className="flex items-center pb1 justify-between">
               <div className="f6 dark-gray w-60">&nbsp;</div>
               <div
                 className="f6 grey flex items-center justify-center"
-                style={{ width: '100px' }}
+                style={{ width: '100px', minWidth: '100px' }}
               >
                 Target
               </div>
               <div
-                className="f6 grey flex items-center justify-start pl1"
-                style={{ width: '100px' }}
+                className="f6 grey flex items-center justify-center mr2"
+                style={{ minWidth: '100px' }}
               >
                 Actual
               </div>
               <div
-                className="f6 grey flex items-center justify-start pl1"
-                style={{ width: '100px' }}
+                className="f6 grey flex items-center justify-center"
+                style={{ minWidth: '100px' }}
               >
                 Waste
               </div>
-              {/* <div className="f6 grey flex items-center justify-start pl1" style={{ width: '100px'}}>
-                Accumulated
-              </div> */}
               <div
-                style={{ width: '50px' }}
+                style={{ width: '50px', minWidth: '50px' }}
                 className="flex items-center justify-end"
               >
                 &nbsp;
               </div>
             </div>
-            {items.map(x => (
-              <MaterialUsedRow
-                key={x.id}
-                taskId={taskId}
-                batchId={batchId}
-                id={x.id}
-                material={x.product_name}
-                expected={x.quantity}
-                actual={x.actual}
-                wasted={x.wasted}
-                uom={x.uom}
-              />
-            ))}
+            {items.map(x => {
+              const actual = materialUsedStore.get(`${x.id}.material_used`)
+              const waste = materialUsedStore.get(`${x.id}.material_waste`)
+              
+              return (
+                <MaterialUsedRow
+                  key={x.id}
+                  taskId={taskId}
+                  batchId={batchId}
+                  id={x.id}
+                  material={x.product_name}
+                  expected={x.quantity}
+                  actual={actual.quantity}
+                  waste={waste.quantity}
+                  uom={x.uom}/>
+              )
+            })}
           </div>
 
           <div className="w-30 ph2 pt2 pb3" style={rightBorder}>

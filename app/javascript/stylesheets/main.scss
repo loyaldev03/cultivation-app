@@ -1,13 +1,11 @@
 @import 'variables';
 
-/* NOTE: Put react stylesheets here instead of app/assets/stylesheets, since that one uses Sprockets, and this one uses Webpack */
-/* TODO: Move all app/assets/stylesheets to here and uses Webpack instead of Sprockets */
-
 /* IMPORT EXTERNAL STYLES */
 @import 'react-table/react-table.css';
 @import 'animate.css';
 
 /* IMPORT COMPONENTS STYLES */
+@import 'components/inputs';
 @import 'components/buttons';
 @import 'components/tabs';
 @import 'components/groupbox';
@@ -16,6 +14,7 @@
 @import 'components/react-tabs';
 @import 'components/select';
 @import 'components/material-icons';
+@import 'components/nutrient-form';
 
 /* IMPORT Page Specific STYLES */
 @import 'components/tasks';

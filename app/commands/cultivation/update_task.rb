@@ -21,7 +21,7 @@ module Cultivation
       else
         batch = task.batch
         if valid_batch? batch
-          batch_tasks = Cultivation::QueryTasks.call(batch).result
+          batch_tasks = Cultivation::QueryTasks.call(batch, [:modifier, :users]).result
           task = get_task(batch_tasks, task.id)
           facility_users = QueryUsers.call(current_user, batch.facility_id).result
           # Remember original start_date
@@ -107,7 +107,7 @@ module Cultivation
 
     def map_args_to_task(task, batch_tasks)
       # Only allow non-indelible task change these field
-      if !task.indelible?
+      if !task.indelible? || task.indelible == 'add_nutrient'
         task.name = args[:name]
       end
       task.start_date = decide_start_date(task, batch_tasks, args[:start_date], args[:depend_on])
@@ -224,6 +224,7 @@ module Cultivation
 
     def adjust_children_dates(task, batch_tasks, days_diff)
       children = task.children(batch_tasks)
+      cascade_indelible(task, children)
       move_children(children, batch_tasks, days_diff)
       children.each(&:save)
     end
@@ -232,6 +233,14 @@ module Cultivation
       if tasks.present? && number_of_days != 0
         tasks.each do |t|
           move_task(t, batch_tasks, number_of_days)
+        end
+      end
+    end
+
+    def cascade_indelible(task, children)
+      if task.indelible? && task.indelible == 'add_nutrient'
+        children.each do |t|
+          t.indelible = task.indelible
         end
       end
     end

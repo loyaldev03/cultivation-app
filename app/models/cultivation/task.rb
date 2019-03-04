@@ -23,7 +23,7 @@ module Cultivation
     field :depend_on, type: BSON::ObjectId
     # Task Location Info
     field :location_id, type: BSON::ObjectId
-    field :location_type, type: String  # full ruby class name
+    field :location_type, type: String # full ruby class name
 
     field :work_status, type: String, default: 'not_started' # use for daily task stuck, not_started, started
 
@@ -36,7 +36,7 @@ module Cultivation
     has_and_belongs_to_many :users, inverse_of: nil
 
     embeds_many :material_use, class_name: 'Cultivation::Item', cascade_callbacks: true
-
+    embeds_many :add_nutrients, as: :nutrition, class_name: 'Inventory::Nutrient'
     embeds_many :notes, class_name: 'Cultivation::Note'
 
     orderable scope: :batch, base: 0
@@ -51,6 +51,7 @@ module Cultivation
                        :location_id,
                        :location_type,
                        :work_status,
+                       :add_nutrients,
                        :notes],
                   modifier_field: :modifier,
                   modifier_field_inverse_of: nil,
@@ -58,7 +59,7 @@ module Cultivation
                   tracker_class_name: :task_history_tracker
 
     scope :expected_on, -> (date) {
-            all.and(:start_date.lte => date, :end_date.gte => date)
+            where(:batch_id.in => Cultivation::Batch.active.pluck(:id)).and(:start_date.lte => date, :end_date.gte => date)
           }
 
     def tasks_depend

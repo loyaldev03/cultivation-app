@@ -4,7 +4,6 @@ import { observer } from 'mobx-react'
 import { SlidePanel, formatDate3 } from '../utils/'
 import BatchedDailyTasks from './components/BatchedDailyTasks'
 import loadDailyTasks from './actions/loadDailyTasks'
-import editNote from './actions/editNote'
 import dailyTasksStore from './stores/DailyTasksStore'
 import NoteEditor from './components/NoteEditor'
 import sidebarStore from './stores/SidebarStore'
@@ -110,7 +109,7 @@ class DailyTaskApp extends React.Component {
               title={currentNoteId ? 'Update Note' : 'Add Note'}
               onClose={() => this.onToggleAddNotes('')}
               onSave={body => {
-                editNote(currentTaskId, currentNoteId, body)
+                dailyTasksStore.editNote(currentTaskId, currentNoteId, body)
               }}
             />
           )}

@@ -2,11 +2,13 @@ module Cultivation
   class SaveMaterialUse
     prepend SimpleCommand
 
-    attr_reader :args
+    attr_reader :current_user, :id, :items, :nutrients
 
-    def initialize(id, items)
-      @id = id
+    def initialize(current_user, id, items, nutrients)
+      @current_user = current_user
+      @id = id.to_bson_id
       @items = items
+      @nutrients = nutrients
     end
 
     def call
@@ -16,13 +18,24 @@ module Cultivation
     private
 
     def save_record
-      record = Cultivation::Task.find(@id)
+      record = Cultivation::Task.find(id)
       record.material_use = []
-      @items.each do |item|
-        Rails.logger.debug "\t\t\t\t>>>>>>> item[:product_id]: #{item[:product_id]}, quantity: item[:quantity]: #{item[:quantity]}, uom: item[:uom]: #{item[:uom]})"
-        record.material_use.create!({product_id: item[:product_id], quantity: item[:quantity], uom: item[:uom]})
+      record.add_nutrients = []
+      items.each do |item|
+        record.material_use.build(
+          product_id: item[:product_id],
+          quantity: item[:quantity],
+          uom: item[:uom],
+        )
       end
-      # record.save!
+      nutrients.each do |nutrient|
+        value = nutrient[:value].present? ? nutrient[:value].to_f : 0.00
+        record.add_nutrients.build(
+          element: nutrient[:element],
+          value: value,
+        )
+      end
+      record.save!
       record
     rescue
       errors.add(:error, $!.message)

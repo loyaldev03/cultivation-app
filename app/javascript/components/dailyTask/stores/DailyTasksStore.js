@@ -1,5 +1,5 @@
 import { observable, action, computed, toJS } from 'mobx'
-import { httpPutOptions, httpDeleteOptions } from '../../utils'
+import { httpPostOptions, httpPutOptions, httpDeleteOptions } from '../../utils'
 
 class DailyTaskStore {
   @observable batches = []
@@ -29,6 +29,73 @@ class DailyTaskStore {
     })
   }
 
+  @computed
+  get bindable() {
+    return this.batches.slice()
+  }
+
+  getNutrientsByTask(batchId, taskId) {
+    const batch = this.batches.find(x => x.id === batchId)
+    const task = batch.tasks.find(x => x.id === taskId)
+    return task.add_nutrients.filter(x => x.value)
+  }
+
+  @action
+  async editNote(taskId, noteId, body) {
+    this.isLoading = true
+    const url = `/api/v1/daily_tasks/${taskId}/update_note`
+    const payload = { note_id: noteId, body }
+    try {
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      if (response.data) {
+        this.updateNote(response.data)
+      } else {
+        console.error(response.errors)
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  @action
+  async updateTimeLog(action, taskId) {
+    this.isLoading = true
+    const url = `/api/v1/daily_tasks/time_log`
+    const payload = { actions: action, task_id: taskId }
+    try {
+      const response = await (await fetch(url, httpPutOptions(payload))).json()
+      if (response.data) {
+        // this.loadTasks(batchId)
+      } else {
+        console.error(response.errors)
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  @action
+  async updateNutrients(batchId, taskId, nutrients) {
+    this.isLoading = true
+    const url = `/api/v1/daily_tasks/${taskId}/update_nutrients`
+    const payload = { nutrients }
+    try {
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      if (response.data) {
+      } else {
+        console.error(response.errors)
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
   @action
   async deleteNote(taskId, noteId) {
     this.isLoading = true
@@ -44,25 +111,6 @@ class DailyTaskStore {
             }
           }
         })
-      } else {
-        console.error(response.errors)
-      }
-    } catch (error) {
-      console.error(error)
-    } finally {
-      this.isLoading = false
-    }
-  }
-
-  @action
-  async updateTimeLog(action, taskId) {
-    this.isLoading = true
-    const url = `/api/v1/daily_tasks/time_log`
-    try {
-      const payload = { actions: action, task_id: taskId }
-      const response = await (await fetch(url, httpPutOptions(payload))).json()
-      if (response.data) {
-        // this.loadTasks(batchId)
       } else {
         console.error(response.errors)
       }

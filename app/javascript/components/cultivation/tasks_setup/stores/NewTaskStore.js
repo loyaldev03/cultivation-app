@@ -24,19 +24,38 @@ function parseTask(taskAttributes) {
   })
 }
 
+function getChildren(wbs, tasks = []) {
+  const childWbs = wbs + '.'
+  return tasks.filter(t => t.wbs.startsWith(childWbs))
+}
+
 function haveChildren(nodeWbs, tasks) {
   const childWbs = nodeWbs + '.'
   return tasks.some(t => t.wbs.startsWith(childWbs))
 }
 
+function cascadeIndelible(task, tasks) {
+  if (task.haveChildren && task.indelible === 'add_nutrient') {
+    const children = getChildren(task.wbs, tasks)
+    children.forEach(x => {
+      x.indelible = task.indelible
+      if (x.haveChildren) {
+        cascadeIndelible(x, tasks)
+      }
+    })
+  }
+}
+
 function updateFlags(singleTarget, tasks) {
   if (singleTarget && tasks) {
     singleTarget.haveChildren = haveChildren(singleTarget.wbs, tasks)
+    cascadeIndelible(singleTarget, tasks)
     return singleTarget
   }
   if (tasks) {
     tasks.forEach(task => {
       task.haveChildren = haveChildren(task.wbs, tasks)
+      cascadeIndelible(task, tasks)
     })
     return tasks
   } else {
@@ -223,8 +242,7 @@ class TaskStore {
   }
 
   getChildren(nodeWbs) {
-    const childWbs = nodeWbs + '.'
-    return this.tasks.filter(t => t.wbs.startsWith(childWbs))
+    getChildren(nodeWbs, this.tasks)
   }
 
   haveChildren(nodeWbs) {
@@ -430,37 +448,34 @@ class TaskStore {
   }
 
   @action
-  async editAssignedMaterial(batchId, taskId, items) {
+  async editAssignedMaterial(batchId, taskId, items = [], nutrients = []) {
     const task = this.getTaskById(taskId)
-    if (items) {
-      task.items = items
+    const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_material_use`
+    const payload = {
+      items: items.map(e => ({
+        product_id: e.product_id,
+        quantity: e.quantity,
+        uom: e.uom
+      })),
+      nutrients: nutrients
+        .filter(x => x.value)
+        .map(x => {
+          return {
+            element: x.element,
+            value: x.value
+          }
+        })
+    }
+    try {
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      task.items = response.data.attributes.items
+      task.add_nutrients = response.data.attributes.add_nutrients
       this.tasks = this.tasks.map(t => {
         return t.id === taskId ? task : t
       })
-
-      const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_material_use`
-      const payload = {
-        items: task.items.map(e => ({
-          product_id: e.product_id,
-          quantity: e.quantity,
-          uom: e.uom
-        }))
-      }
-
-      try {
-        const response = await (await fetch(
-          url,
-          httpPostOptions(payload)
-        )).json()
-        const parsed = parseTask(response.data.attributes)
-        const updated = updateFlags(parsed, this.tasks)
-        this.tasks = this.tasks.map(t => {
-          return t.id === taskId ? updated : t
-        })
-        toast('Task Relationship Deleted', 'success')
-      } catch (error) {
-        console.log(error)
-      }
+      toast('Material updated', 'success')
+    } catch (error) {
+      console.log(error)
     }
   }
 }

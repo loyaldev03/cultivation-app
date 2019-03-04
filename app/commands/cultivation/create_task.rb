@@ -24,13 +24,20 @@ module Cultivation
       argument[:indelible] = nil
       new_task = Cultivation::Task.create(argument)
       if args[:action] == 'add-above'
+        # Add Task Above
         new_task.move_to! task_related.position
       else
+        # Add Task Below
         tasks = Cultivation::QueryTasks.call(task_related.batch).result
         task_related = tasks.detect { |t| t.id == task_related.id }
-        have_children = get_children(tasks, task_related.wbs).any?
-        new_task.indent = task_related.indent + 1 if have_children
-        new_task.move_to! task_related.position + 1
+        if task_related.have_children?(tasks)
+          last_sibling = task_related.children(tasks).last
+          new_task.indent = task_related.indent + 1
+          new_task.indelible = task_related.indelible
+          new_task.move_to! last_sibling.position + 1
+        else
+          new_task.move_to! task_related.position + 1
+        end
       end
       # Call update task on the new task to cascade changes
       Cultivation::UpdateTask.call(@current_user, new_task)

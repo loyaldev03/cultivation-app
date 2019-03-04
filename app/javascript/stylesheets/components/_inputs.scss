@@ -1,0 +1,12 @@
+.input {
+  height: 30px;
+  padding: .2em .5em;
+  border: 1px solid $lightGrey;
+  border-radius: .25em;
+}
+
+.input:focus {
+  outline: none;
+  border: 1px solid $orange;
+  box-shadow: 0 0 5px rgba(241, 93, 42, 1);
+}

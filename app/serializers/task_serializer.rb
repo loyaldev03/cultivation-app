@@ -41,6 +41,16 @@ class TaskSerializer
     end
   end
 
+  attribute :add_nutrients do |object|
+    object.add_nutrients.map do |item|
+      {
+        id: item.id.to_s,
+        element: item.element,
+        value: item.value,
+      }
+    end
+  end
+
   attributes :location_id do |object|
     object.location_id.to_s
   end
@@ -54,7 +64,7 @@ class TaskSerializer
   end
 
   attribute :deletable do |object|
-    if object.issues.count > 0 || object.user_ids.count > 0 || object.material_use.count > 0
+    if object.issues.present? || object.user_ids.present? || object.material_use.present?
       false
     else
       true

@@ -54,6 +54,19 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     end
   end
 
+  def update_nutrients
+    update_cmd = DailyTask::UpdateNutrients.call(
+      current_user,
+      params[:id], # task_id
+      params[:nutrients],
+    )
+    if update_cmd.success?
+      render json: {data: update_cmd.result.id.to_s}
+    else
+      render json: {errors: update_cmd.errors}
+    end
+  end
+
   def destroy_note
     del_cmd = DailyTask::DeleteNote.call(
       current_user,
@@ -69,7 +82,6 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
 
   def add_notes
     @work_day.notes.create(notes: params[:notes])
-
     data = WorkDaySerializer.new(@work_day).serialized_json
     render json: data
   end

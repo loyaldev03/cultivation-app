@@ -32,7 +32,13 @@ export const NUTRITION_LIST = [
   { id: 8, element: 'iron', label: 'Iron (Fe)', value: 0, uom: '%' },
   { id: 9, element: 'magnesium', label: 'Magnesium (Mg)', value: 0, uom: '%' },
   { id: 10, element: 'manganese', label: 'Manganese (Mn)', value: 0, uom: '%' },
-  { id: 11, element: 'molybdenum', label: 'Molybdenum (Mo)', value: 0, uom: '%' },
+  {
+    id: 11,
+    element: 'molybdenum',
+    label: 'Molybdenum (Mo)',
+    value: 0,
+    uom: '%'
+  },
   { id: 12, element: 'silicon', label: 'Silicon (Si)', value: 0, uom: '%' },
   { id: 13, element: 'sulfur', label: 'Sulfer (S)', value: 0, uom: '%' },
   { id: 14, element: 'zinc', label: 'Zinc (Zn)', value: 0, uom: '%' }

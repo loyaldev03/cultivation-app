@@ -51,7 +51,9 @@ class NutrientEntryForm extends React.Component {
                   <span className="nutrient-quantity">
                     {decimalFormatter.format(f.value)}%
                   </span>
-                  <input type="checkbox" className="nutrient-form__input"
+                  <input
+                    type="checkbox"
+                    className="nutrient-form__input"
                     onChange={this.onChangeCheckBox(f.element)}
                     defaultChecked={f.checked}
                   />
@@ -59,9 +61,7 @@ class NutrientEntryForm extends React.Component {
               )}
               {fieldType === 'textboxes' && (
                 <React.Fragment>
-                  <span className="nutrient-name">
-                    {f.element} (%)
-                  </span>
+                  <span className="nutrient-name">{f.element} (%)</span>
                   <input
                     type="number"
                     className="nutrient-form__input input tr"

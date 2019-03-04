@@ -83,8 +83,6 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def update_material_use
-    Rails.logger.debug "\t\t\t>>>>  params[:items]"
-    Rails.logger.debug params[:items].inspect
     command = Cultivation::SaveMaterialUse.call(params[:id], params[:items])
     if command.success?
       render json: {data: {task_id: TaskSerializer.new(command.result)}}

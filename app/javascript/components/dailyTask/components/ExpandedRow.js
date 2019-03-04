@@ -98,8 +98,10 @@ class ExpandedRow extends React.Component {
               const actual = materialUsedStore.get(`${x.id}.material_used`)
               const waste = materialUsedStore.get(`${x.id}.material_waste`)
               console.log(`x.catalogue_id: ${x.catalogue_id}`)
-              const showTarget = materialUsedStore.shouldShowTarget(x.catalogue_id)
-              
+              const showTarget = materialUsedStore.shouldShowTarget(
+                x.catalogue_id
+              )
+
               return (
                 <MaterialUsedRow
                   key={x.id}

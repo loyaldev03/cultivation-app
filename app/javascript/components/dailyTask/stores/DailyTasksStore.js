@@ -4,7 +4,7 @@ import { httpPutOptions, httpDeleteOptions } from '../../utils'
 class DailyTaskStore {
   @observable batches = []
   @observable isLoading = false
-  
+
   @action
   load(batches) {
     this.batches.replace(batches)

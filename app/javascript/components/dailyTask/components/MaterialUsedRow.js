@@ -55,7 +55,7 @@ class MaterialUsedRow extends React.PureComponent {
           className="f6 dark-gray flex items-center justify-center"
           style={{ width: '100px', minWidth: '100px' }}
         >
-          { showTarget && `${expected} ${uom}` }
+          {showTarget && `${expected} ${uom}`}
         </div>
         <div
           className="f6 dark-gray flex items-center justify-start mr2"

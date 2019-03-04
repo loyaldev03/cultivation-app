@@ -51,6 +51,7 @@ module Cultivation
                        :location_id,
                        :location_type,
                        :work_status,
+                       :add_nutrients,
                        :notes],
                   modifier_field: :modifier,
                   modifier_field_inverse_of: nil,

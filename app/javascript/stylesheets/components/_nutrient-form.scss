@@ -3,7 +3,7 @@
   color: $darkGrey;
   font-weight: 400;
   font-size: 0.875em;
-  grid-column-gap: 1em;
+  grid-column-gap: 1.4em;
   grid-row-gap: 0.75em;
   grid-template-columns: 1fr 1fr 1fr;
   max-width: 900px;
@@ -24,8 +24,9 @@
     }
 
     .nutrient-quantity {
-      width: 6rem;
+      width: 4rem;
       text-align: right;
+      padding-right: 0.5em;
     }
   }
 

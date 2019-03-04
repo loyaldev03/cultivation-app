@@ -11,7 +11,6 @@ Rails.application.routes.draw do
 
   root to: "home#index"
 
-  # TODO: Need to DRY up. Refer to daily_tasks routes
   get "facility_setup/new" => "facility_setup#new"
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"
   get "facility_setup/room_info" => "facility_setup#room_info", as: 'fetch_room_info'
@@ -244,6 +243,7 @@ Rails.application.routes.draw do
         put ':id/start_task', to: 'daily_tasks#start_task'
         put ':id/stop_task', to: 'daily_tasks#stop_task'
         post ':id/update_note', to: 'daily_tasks#update_note'
+        post ':id/update_nutrients', to: 'daily_tasks#update_nutrients'
         delete ':id/notes/:note_id', to: 'daily_tasks#destroy_note'
         put ':id/update_materials_used', to: 'daily_tasks#update_materials_used'
         get '/tasks', to: 'daily_tasks#tasks'

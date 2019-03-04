@@ -47,7 +47,7 @@ class DailyTaskStore {
     try {
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {
-        this.updateNote(data.data)
+        this.updateNote(response.data)
       } else {
         console.error(response.errors)
       }

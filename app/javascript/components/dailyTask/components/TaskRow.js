@@ -81,6 +81,7 @@ class TaskRow extends React.Component {
     return (
       <ExpandedRow
         taskId={this.props.id}
+        batchId={this.props.batchId}
         taskIndelible={this.props.indelible}
         onToggleAddIssue={this.props.onToggleAddIssue}
         onToggleAddMaterial={this.props.onToggleAddMaterial}

@@ -18,7 +18,8 @@ module Cultivation
       task = Cultivation::Task.includes(:batch, :issues).find(@task_id)
       batch_tasks = Cultivation::QueryTasks.call(task.batch).result
       task = batch_tasks.detect { |t| t.id == task.id }
-      if task.indelible?
+      parent = task.parent(batch_tasks)
+      if task.indelible? && !parent.indelible?
         errors.add(:id, "Special task \"#{task.name}\" cannot be deleted.")
         false
       elsif task.children(batch_tasks).present?
@@ -37,7 +38,6 @@ module Cultivation
         errors.add(:id, 'This with assigned materials cannot be deleted')
         false
       elsif task
-        parent = task.parent(batch_tasks)
         task.delete
         # Call update on parent task to cascade duration changes.
         Cultivation::UpdateTask.call(@current_user, parent)

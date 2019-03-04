@@ -5,6 +5,7 @@ import { observer } from 'mobx-react'
 
 const BatchedDailyTasks = observer(
   ({
+    batchId,
     batchNo,
     batchName,
     tasks,
@@ -24,6 +25,7 @@ const BatchedDailyTasks = observer(
           <TaskRow
             key={x.id}
             {...x}
+            batchId={batchId}
             onToggleAddIssue={onToggleAddIssue}
             onToggleAddMaterial={onToggleAddMaterial}
             onToggleAddNotes={onToggleAddNotes}

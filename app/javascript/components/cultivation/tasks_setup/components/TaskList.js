@@ -124,7 +124,7 @@ class TaskList extends React.Component {
   }
 
   renderTaskNameColumn = data => {
-    const { id, wbs, indent, issues, deletable } = data.row
+    const { id, wbs, indent, issues, deletable, indelible } = data.row
     const batchId = this.props.batch.id
     const hasChild = TaskStore.hasChildNode(wbs)
     const isCollapsed = TaskStore.isCollapsed(wbs)
@@ -297,6 +297,10 @@ class TaskList extends React.Component {
     },
     {
       accessor: 'indent',
+      show: false
+    },
+    {
+      accessor: 'indelible',
       show: false
     },
     {

@@ -448,32 +448,34 @@ class TaskStore {
   }
 
   @action
-  async editAssignedMaterial(batchId, taskId, items = [], nutrients = {}) {
+  async editAssignedMaterial(batchId, taskId, items = [], nutrients = []) {
     const task = this.getTaskById(taskId)
-    if (items && items.length > 0) {
-      const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_material_use`
-      const payload = {
-        items: items.map(e => ({
-          product_id: e.product_id,
-          quantity: e.quantity,
-          uom: e.uom
-        })),
-        nutrients
-      }
-      try {
-        const response = await (await fetch(
-          url,
-          httpPostOptions(payload)
-        )).json()
-        task.items = response.data.attributes.items
-        task.add_nutrients = response.data.attributes.add_nutrients
-        this.tasks = this.tasks.map(t => {
-          return t.id === taskId ? task : t
+    const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_material_use`
+    const payload = {
+      items: items.map(e => ({
+        product_id: e.product_id,
+        quantity: e.quantity,
+        uom: e.uom
+      })),
+      nutrients: nutrients
+        .filter(x => x.value)
+        .map(x => {
+          return {
+            element: x.element,
+            value: x.value
+          }
         })
-        toast('Material updated', 'success')
-      } catch (error) {
-        console.log(error)
-      }
+    }
+    try {
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      task.items = response.data.attributes.items
+      task.add_nutrients = response.data.attributes.add_nutrients
+      this.tasks = this.tasks.map(t => {
+        return t.id === taskId ? task : t
+      })
+      toast('Material updated', 'success')
+    } catch (error) {
+      console.log(error)
     }
   }
 }

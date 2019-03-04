@@ -22,7 +22,7 @@ class GenerateTasksFromTemplateJob < ApplicationJob
 
   def generate_tasks(batch, template_tasks)
     # Temporary variables
-    start_date = batch.start_date
+    start_date = batch.start_date.beginning_of_day
     end_date = nil
     parent = Array.new(10) # Maximum 20 level depth
     new_tasks = []

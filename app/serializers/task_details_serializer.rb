@@ -68,6 +68,7 @@ class TaskDetailsSerializer
         id: a.id.to_s,
         element: a.element,
         value: a.value,
+        checked: a.checked,
       }
     end
   end

@@ -33,6 +33,10 @@ class ExpandedRow extends React.Component {
     this.props.onToggleAddNotes(this.props.taskId, noteId, body)
   }
 
+  onUpdateNutrients = (nutrients) => {
+    DailyTaskStore.updateNutrients(this.props.batchId, this.props.taskId, nutrients)
+  }
+
   render() {
     const { taskIndelible, notes, taskId, batchId } = this.props
     return (
@@ -40,11 +44,15 @@ class ExpandedRow extends React.Component {
         <div className="flex justify-between pv3 ph3">
           <div>
             {taskIndelible === 'add_nutrient' && (
-              <NutrientEntryForm
-                className="nutrient-form w-70"
-                fields={DailyTaskStore.getNutrientsByTask(batchId, taskId)}
-                fieldType="checkboxes"
-              />
+              <React.Fragment>
+                <span className="f6 grey db">Add Nutrients:</span>
+                <NutrientEntryForm
+                  className="nutrient-form mt2 w-70"
+                  fields={DailyTaskStore.getNutrientsByTask(batchId, taskId)}
+                  fieldType="checkboxes"
+                  onUpdateNutrients={this.onUpdateNutrients}
+                />
+              </React.Fragment>
             )}
           </div>
           <div>

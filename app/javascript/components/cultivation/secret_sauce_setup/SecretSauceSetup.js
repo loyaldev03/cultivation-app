@@ -1,5 +1,4 @@
 import React from 'react'
-
 import loadNutrientProfile from './actions/loadNutrientProfile'
 import SecretSauce from './components/SecretSauce'
 import BatchHeader from '../shared/BatchHeader'
@@ -24,13 +23,14 @@ class SecretSauceSetup extends React.Component {
 
   render() {
     const { batch } = this.props
-
     let activeTabs =
       'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
     let inactiveTabs =
       'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
+
     return (
-      <React.Fragment>
+      <div className="pa4 w-100 h-100 flex flex-column grey">
+        <div id="toast" className="toast animated toast--success" />
         <BatchHeader
           batch_no={batch.batch_no}
           batch_source={batch.batch_source}
@@ -50,23 +50,10 @@ class SecretSauceSetup extends React.Component {
           currentTab="secretSauce"
           unresolvedIssueCount={this.state.unresolvedIssueCount}
         />
-
-        <div className="flex flex-column justify-between bg-white box--shadow">
-          <div className="pa4">
-            <div className="fl w-100 flex flex-column">
-              <SecretSauce
-                batch_id={this.props.batch_id}
-                batch={this.props.batch}
-              />
-            </div>
-          </div>
+        <div className="pa4 flex flex-column bg-white">
+          <SecretSauce batchId={this.props.batch.id} batch={this.props.batch} />
         </div>
-
-        <div id="toast" className="toast animated toast--success">
-          Row Saved
-        </div>
-        <br />
-      </React.Fragment>
+      </div>
     )
   }
 }

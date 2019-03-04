@@ -79,3 +79,17 @@
     }
   }
 }
+
+.react-tabs--secret-sause {
+  .react-tabs {
+    &__tab-list {
+      margin: 0;
+    }
+
+    &__tab-panel {
+      border-left: 1px solid $lightGrey;
+      border-right: 1px solid $lightGrey;
+      border-bottom: 1px solid $lightGrey;
+    }
+  }
+}

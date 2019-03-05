@@ -18,7 +18,9 @@ const Calendar = lazy(() => import('react-calendar/dist/entry.nostyle'))
 class CultivationCalendar extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      errors: []
+    }
     BatchSetupStore.searchMonth = dateToMonthOption(this.props.batchStartDate)
     if (!BatchSetupStore.isReady) {
       this.onSearch(BatchSetupStore.searchMonth)
@@ -50,17 +52,12 @@ class CultivationCalendar extends React.Component {
       BatchSetupStore.selectedStartDate
     )
 
-    console.log(response)
-
     if (response.errors) {
       const err1 = Object.keys(response.errors)[0]
       this.setState({ errors: response.errors[err1] })
     } else {
       toast('Batch saved successfully', 'success')
       setTimeout(() => window.location.reload(), 1000)
-    }
-    if (this.props.onSave) {
-      this.props.onSave()
     }
   }
 
@@ -70,13 +67,18 @@ class CultivationCalendar extends React.Component {
   }
 
   render() {
-    const { totalDuration, phaseDuration } = this.props
+    const { totalDuration } = this.props
+    const { errors } = this.state
     const { searchMonth, isLoading } = BatchSetupStore
     return (
       <div className="flex flex-column h-100">
         <SlidePanelHeader onClose={this.onClose} title="Batch's Start Date" />
         <div className="flex-auto pa2">
-          <ErrorList errors={this.state.errors} />
+          { errors.length > 0 ? (
+          <ErrorList errors={errors} />
+          )
+          :
+          null}
           <p className="ma1 pa2 tc f4">Select a Start Date for the batch</p>
           <p className="mt1 mb1 h1 tc">
             {isLoading && <span>Searching...</span>}

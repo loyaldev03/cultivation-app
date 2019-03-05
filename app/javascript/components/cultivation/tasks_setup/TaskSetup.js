@@ -2,6 +2,7 @@ import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper } from 'react-popper'
+import Tippy from '@tippy.js/react'
 import TaskList from './components/TaskList'
 import TaskStore from './stores/NewTaskStore'
 import BatchHeader from '../shared/BatchHeader'
@@ -109,22 +110,13 @@ class TaskSetup extends React.Component {
                 <span className="grey f6 ml2">Filter</span>
               </div>
               <Reference>
-                {({ ref }) => (
-                  <a
-                    className="f6 link ba b--light-grey ph3 pv2 mb3 flex justify-center dib grey pointer"
-                    ref={ref}
-                    onClick={this.handleClick}
-                  >
-                    Show Columns
-                    <i className="material-icons icon--small pointer ml2">
-                      expand_more
-                    </i>
-                  </a>
-                )}
-              </Reference>
-              {this.state.columnOpen && (
-                <Popper placement="bottom-end">
-                  {({ ref, style, placement, arrowProps }) => (
+                {
+                  ({ ref, style, placement, arrowProps }) => (
+                    <Tippy
+                    placement="bottom-end"
+                    trigger="click"
+                    duration="0"
+                    content={
                     <div
                       ref={ref}
                       className="z-1"
@@ -255,10 +247,18 @@ class TaskSetup extends React.Component {
                           </label>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </Popper>
-              )}
+                    </div>}>
+                    <span className="f6 link ba b--light-grey ph3 pv2 mb3 flex justify-center dib grey pointer">
+                    Show Columns
+                      <i className="material-icons icon--small pointer ml2">
+                        expand_more
+                      </i>
+                    </span>
+                  </Tippy>)
+                }
+                
+              </Reference>
+              
             </div>
           </Manager>
         </div>

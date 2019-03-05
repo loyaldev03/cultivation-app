@@ -2,6 +2,7 @@ import React, { lazy, Suspense } from 'react'
 import classNames from 'classnames'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper, Arrow } from 'react-popper'
+import Tippy from '@tippy.js/react'
 import TaskStore from '../stores/NewTaskStore'
 import UserStore from '../stores/NewUserStore'
 import TaskEditor from './TaskEditor'
@@ -36,6 +37,7 @@ class TaskList extends React.Component {
     this.dragged = null
     this.state = {
       isOpen: false,
+      isClicked: false,
       showTaskEditor: false,
       showStartDateCalendar: false,
       showAssignResourcePanel: false,
@@ -143,34 +145,15 @@ class TaskList extends React.Component {
             TaskStore.editTask(batchId, id, { name: value })
           }}
         />
-        <Manager>
-          <Reference>
-            {({ ref }) => {
-              return (
-                <i
-                  ref={ref}
-                  onClick={this.handleEllipsisClick(id)}
-                  className={classNames('pointer material-icons', {
-                    'show-on-hover': this.state.taskSelected !== id
-                  })}
-                >
-                  more_horiz
-                </i>
-              )
-            }}
-          </Reference>
-          {this.state.idOpen === id && (
-            <Popper placement="bottom-start">
-              {({ ref, style, placement, arrowProps }) => (
+        <Tippy
+          placement="bottom-end"
+          trigger="click"
+          content={
                 <div
-                  ref={ref}
-                  style={style}
-                  data-placement={placement}
-                  className="bg-white f6 flex"
+                  className="bg-white f6 flex z-1"
                 >
                   <div
                     className="db shadow-4"
-                    onMouseLeave={this.handleMouseLeave}
                   >
                     <MenuButton
                       icon="format_indent_increase"
@@ -206,12 +189,13 @@ class TaskList extends React.Component {
                       />
                     ) : null}
                   </div>
-                  <div ref={arrowProps.ref} style={arrowProps.style} />
+                  
                 </div>
-              )}
-            </Popper>
-          )}
-        </Manager>
+              }
+        >
+          <i className="pointer material-icons">more_horiz</i>
+        </Tippy>
+       
       </div>
     )
   }

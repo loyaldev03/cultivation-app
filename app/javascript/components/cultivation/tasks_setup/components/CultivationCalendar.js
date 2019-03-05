@@ -74,11 +74,7 @@ class CultivationCalendar extends React.Component {
       <div className="flex flex-column h-100">
         <SlidePanelHeader onClose={this.onClose} title="Batch's Start Date" />
         <div className="flex-auto pa2">
-          { errors.length > 0 ? (
-          <ErrorList errors={errors} />
-          )
-          :
-          null}
+          {errors.length > 0 ? <ErrorList errors={errors} /> : null}
           <p className="ma1 pa2 tc f4">Select a Start Date for the batch</p>
           <p className="mt1 mb1 h1 tc">
             {isLoading && <span>Searching...</span>}

@@ -7,13 +7,18 @@ import { observer } from 'mobx-react'
 class NutrientsAdded extends React.Component {
   render() {
     const { className } = this.props
-    const nutrientsByWeek = groupBy(NutrientProfileStore.nutrients, 'task_name')
+    let nutrientsByWeek = groupBy(NutrientProfileStore.nutrients, 'task_name')
+    if (Object.keys(nutrientsByWeek).length === 0) {
+      nutrientsByWeek = {
+        "": []
+      }
+    }
     return (
       <React.Fragment>
         {Object.keys(nutrientsByWeek).map(week => {
           return (
             <div className={className} key={week}>
-              <span className="f6 fw6 ph2 pv1" style={{ minWidth: 70 }}>{week} (%)</span>
+              <span className="f6 fw6 pv1 ph2 tr" style={{ minWidth: 70 }}>{week} (%)</span>
               <div className="flex flex-column">
                 {NUTRITION_LIST.map(x => {
                   const nutrient = NutrientProfileStore.getNutrientByElement(
@@ -22,7 +27,7 @@ class NutrientsAdded extends React.Component {
                   )
                   return (
                     <React.Fragment key={x.element}>
-                      <span className="w3 pa1 tr">
+                      <span className="w3 pv1 ph2 tr">
                         {nutrient ? decimalFormatter.format(nutrient.value) : '--'}
                       </span>
                     </React.Fragment>

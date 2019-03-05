@@ -89,7 +89,7 @@ class SecretSauce extends React.Component {
                       })}
                     </div>
                   )}
-                  {x[0] !== 'nutrients' && <div className="pa3">&nbsp;</div>}
+                  {x[0] !== 'nutrients' && <div className="h5">&nbsp;</div>}
                 </TabPanel>
               ))}
             </Tabs>

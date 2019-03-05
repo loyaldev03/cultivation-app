@@ -210,7 +210,7 @@ Rails.application.routes.draw do
             post 'update_material_use'
           end
         end
-        resources :nutrient_profiles
+        resources :nutrient_profiles, only: [:index, :create, :update]
       end
 
       resources :users, only: [:index] do

@@ -141,7 +141,7 @@ class BatchIssues extends React.Component {
   renderTitle = record => {
     let tags = record.original.attributes.tags
     return (
-      <div className='flex justify-between w-100'>
+      <div className="flex justify-between w-100">
         <a
           href="#"
           className="link flex w-100 grey"
@@ -151,11 +151,12 @@ class BatchIssues extends React.Component {
         >
           {record.original.attributes.title}
         </a>
-        { tags.length > 0 &&
-          tags.map((tag, index) => 
-            <span className="bg-green ba white f7 fw4 ph1 br2 ml1" key={index}>{tag}</span>
-          )
-        }
+        {tags.length > 0 &&
+          tags.map((tag, index) => (
+            <span className="bg-green ba white f7 fw4 ph1 br2 ml1" key={index}>
+              {tag}
+            </span>
+          ))}
       </div>
     )
   }

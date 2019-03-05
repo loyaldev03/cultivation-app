@@ -194,9 +194,15 @@ class TaskList extends React.Component {
               }
         >
           <i 
-          onClick={this.handleEllipsisClick(id)}className={classNames('pointer material-icons', {
+            onClick={this.handleEllipsisClick(id)}
+            className={
+              classNames('pointer material-icons', {
                     'show-on-hover': this.state.taskSelected !== id
-                  })}>more_horiz</i>
+                  })
+            }
+          >
+            more_horiz
+          </i>
         </Tippy>
        
       </div>

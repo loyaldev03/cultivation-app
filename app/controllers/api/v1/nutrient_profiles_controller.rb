@@ -1,14 +1,4 @@
 class Api::V1::NutrientProfilesController < Api::V1::BaseApiController
-  def create
-    nutrient_profile = Cultivation::SaveNutrientProfile.call(nutrient_params).result
-    render json: {data: nutrient_profile}
-  end
-
-  def update
-    nutrient_profile = Cultivation::SaveNutrientProfile.call(nutrient_params).result
-    render json: {data: nutrient_profile}
-  end
-
   def index
     query_cmd = Cultivation::QueryNutrients.call(params[:batch_id],
                                                  params[:phases])
@@ -17,6 +7,16 @@ class Api::V1::NutrientProfilesController < Api::V1::BaseApiController
     else
       render json: {errors: update_cmd.errors}
     end
+  end
+
+  def create
+    nutrient_profile = Cultivation::SaveNutrientProfile.call(nutrient_params).result
+    render json: {data: nutrient_profile}
+  end
+
+  def update
+    nutrient_profile = Cultivation::SaveNutrientProfile.call(nutrient_params).result
+    render json: {data: nutrient_profile}
   end
 
   private

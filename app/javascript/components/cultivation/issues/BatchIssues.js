@@ -10,120 +10,14 @@ import loadBatchIssues from '../../issues/actions/loadBatchIssues'
 import issueStore from '../../issues/store/IssueStore'
 import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
 
-const renderUser = user => {
-  if (user) {
-    return (
-      <div className="flex justify-center">
-        <Avatar
-          firstName={user.first_name}
-          lastName={user.last_name}
-          photoUrl={user.photo}
-          size={20}
-        />
-      </div>
-    )
-  }
-  return null
-}
-
-const renderHumanize = value => {
-  return <div className="tl ttc grey">{value.replace(/[_]/g, ' ')}</div>
-}
-
-const renderSeverity = value => {
-  if (value === 'high') {
-    return (
-      <div className="tc ttc">
-        <i className="material-icons red" style={{ fontSize: '18px' }}>
-          error
-        </i>
-      </div>
-    )
-  } else if (value === 'medium') {
-    return (
-      <div className="tc ttc">
-        <i className="material-icons gold" style={{ fontSize: '18px' }}>
-          warning
-        </i>
-      </div>
-    )
-  } else {
-    return (
-      <div className="tc ttc">
-        <span className="f6 fw4 purple">FYI</span>
-      </div>
-    )
-  }
-}
-
-const renderOpenIssue = record => {
-  return (
-    <a
-      href="#"
-      className="link flex w-100 grey"
-      onClick={event => openSidebar(event, record.original.id, 'details')}
-    >
-      {record.original.attributes.issue_no.toString().padStart(5, '0')}
-    </a>
-  )
-}
-
-const columns = [
-  {
-    Header: 'ID',
-    headerStyle: { textAlign: 'left' },
-    width: 100,
-    Cell: record => renderOpenIssue(record)
-  },
-  {
-    Header: 'Type',
-    headerStyle: { textAlign: 'left' },
-    width: 150,
-    Cell: record => renderHumanize(record.original.attributes.issue_type)
-  },
-  {
-    Header: 'Severity',
-    headerStyle: { textAlign: 'center' },
-    width: 70,
-    Cell: record => renderSeverity(record.original.attributes.severity)
-  },
-  {
-    Header: 'Title',
-    accessor: 'attributes.title',
-    headerStyle: { textAlign: 'left' }
-  },
-  {
-    Header: 'Reported',
-    headerStyle: { textAlign: 'center' },
-    width: 90,
-    Cell: record => renderUser(record.original.attributes.reported_by)
-  },
-  {
-    Header: 'Assigned',
-    headerStyle: { textAlign: 'center' },
-    width: 90,
-    Cell: record => renderUser(record.original.attributes.assigned_to)
-  },
-  {
-    Header: 'Status',
-    headerStyle: { textAlign: 'left' },
-    width: 100,
-    Cell: record => renderHumanize(record.original.attributes.status)
-  }
-]
-
-const openSidebar = (event, id = null, mode = null) => {
-  window.editorSidebar.open({ id, mode, width: '500px' })
-  event.preventDefault()
-}
-
 @observer
 class BatchIssues extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       batch: props.batch,
-      unresolvedIssueCount: 0
+      unresolvedIssueCount: 0,
+      taskSelected: ''
     }
   }
 
@@ -139,7 +33,7 @@ class BatchIssues extends React.Component {
           <div className="flex mb3 justify-end">
             <button
               className="btn btn--primary"
-              onClick={event => openSidebar(event, null, 'create')}
+              onClick={event => this.openSidebar(event, null, 'create')}
             >
               Submit an issue
             </button>
@@ -147,14 +41,28 @@ class BatchIssues extends React.Component {
 
           <div className="flex">
             <ReactTable
-              columns={columns}
+              columns={this.columns}
               pagination={{ position: 'top' }}
               data={issueStore.bindable}
               showPagination={false}
               pageSize={30}
               minRows={5}
               filterable
-              className="f6 w-100 grey"
+              className="f6 w-100 grey -highlight"
+              getTrProps={(state, rowInfo, column) => {
+                let className = 'task-row'
+                if (
+                  rowInfo &&
+                  rowInfo.row &&
+                  this.state.taskSelected &&
+                  this.state.taskSelected === rowInfo.row.id
+                ) {
+                  className = 'task-row shadow-1'
+                }
+                return {
+                  className
+                }
+              }}
             />
             <IssueSidebar
               batch_id={this.props.batch.id}
@@ -168,6 +76,132 @@ class BatchIssues extends React.Component {
         </div>
       </React.Fragment>
     )
+  }
+
+  renderUser = user => {
+    if (user) {
+      return (
+        <div className="flex justify-center">
+          <Avatar
+            firstName={user.first_name}
+            lastName={user.last_name}
+            photoUrl={user.photo}
+            size={20}
+          />
+        </div>
+      )
+    }
+    return null
+  }
+
+  renderHumanize = value => {
+    return <div className="tl ttc grey">{value.replace(/[_]/g, ' ')}</div>
+  }
+
+  renderSeverity = value => {
+    if (value === 'high') {
+      return (
+        <div className="tc ttc">
+          <i className="material-icons red" style={{ fontSize: '18px' }}>
+            error
+          </i>
+        </div>
+      )
+    } else if (value === 'medium') {
+      return (
+        <div className="tc ttc">
+          <i className="material-icons gold" style={{ fontSize: '18px' }}>
+            warning
+          </i>
+        </div>
+      )
+    } else {
+      return (
+        <div className="tc ttc">
+          <span className="f6 fw4 purple">FYI</span>
+        </div>
+      )
+    }
+  }
+
+  renderOpenIssue = record => {
+    return (
+      <a
+        href="#"
+        className="link flex w-100 grey"
+        onClick={event =>
+          this.openSidebar(event, record.original.id, 'details')
+        }
+      >
+        {record.original.attributes.issue_no.toString().padStart(5, '0')}
+      </a>
+    )
+  }
+
+  renderTitle = record => {
+    return (
+      <a
+        href="#"
+        className="link flex w-100 grey"
+        onClick={event =>
+          this.openSidebar(event, record.original.id, 'details')
+        }
+      >
+        {record.original.attributes.title}
+      </a>
+    )
+  }
+
+  columns = [
+    {
+      Header: 'ID',
+      accessor: 'id',
+      headerStyle: { textAlign: 'left' },
+      width: 100,
+      Cell: record => this.renderOpenIssue(record)
+    },
+    {
+      Header: 'Type',
+      headerStyle: { textAlign: 'left' },
+      width: 150,
+      Cell: record => this.renderHumanize(record.original.attributes.issue_type)
+    },
+    {
+      Header: 'Severity',
+      headerStyle: { textAlign: 'center' },
+      width: 70,
+      Cell: record => this.renderSeverity(record.original.attributes.severity)
+    },
+    {
+      Header: 'Title',
+      accessor: 'attributes.title',
+      headerStyle: { textAlign: 'left' },
+      Cell: record => this.renderTitle(record)
+    },
+    {
+      Header: 'Reported',
+      headerStyle: { textAlign: 'center' },
+      width: 90,
+      Cell: record => this.renderUser(record.original.attributes.reported_by)
+    },
+    {
+      Header: 'Assigned',
+      headerStyle: { textAlign: 'center' },
+      width: 90,
+      Cell: record => this.renderUser(record.original.attributes.assigned_to)
+    },
+    {
+      Header: 'Status',
+      headerStyle: { textAlign: 'left' },
+      width: 100,
+      Cell: record => this.renderHumanize(record.original.attributes.status)
+    }
+  ]
+
+  openSidebar = (event, id = null, mode = null) => {
+    this.setState({ taskSelected: id })
+    window.editorSidebar.open({ id, mode, width: '500px' })
+    event.preventDefault()
   }
 
   render() {

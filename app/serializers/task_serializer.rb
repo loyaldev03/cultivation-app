@@ -60,7 +60,7 @@ class TaskSerializer
   end
 
   attribute :issues do |object|
-    object.issues.map { |a| {id: a.id.to_s, title: a.title} }
+    object.issues.not_archived.map { |a| {id: a.id.to_s, title: a.title} }
   end
 
   attribute :deletable do |object|

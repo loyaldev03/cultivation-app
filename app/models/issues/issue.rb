@@ -27,5 +27,8 @@ module Issues
     field :reason, type: String
     field :resolved_at, type: DateTime
     belongs_to :resolved_by, class_name: 'User', optional: true
+
+    scope :not_archived, -> { where is_archived: false }
+    scope :archived, -> { where is_archived: true }
   end
 end

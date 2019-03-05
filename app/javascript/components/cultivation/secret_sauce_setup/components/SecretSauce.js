@@ -96,12 +96,6 @@ class SecretSauce extends React.Component {
                 </TabPanel>
               ))}
             </Tabs>
-
-            <div className="flex justify-end pv3">
-              <a className="btn btn--primary" onClick={this.handleSubmit}>
-                Save &amp; Continue
-              </a>
-            </div>
           </div>
         </div>
       </React.Fragment>

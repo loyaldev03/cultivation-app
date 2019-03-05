@@ -52,7 +52,8 @@ class BatchIssues extends React.Component {
               getTrProps={(state, rowInfo, column) => {
                 let className = 'task-row'
                 if (
-                  rowInfo && rowInfo.row &&
+                  rowInfo &&
+                  rowInfo.row &&
                   this.state.taskSelected &&
                   this.state.taskSelected === rowInfo.row.id
                 ) {
@@ -76,7 +77,6 @@ class BatchIssues extends React.Component {
       </React.Fragment>
     )
   }
-
 
   renderUser = user => {
     if (user) {
@@ -104,7 +104,7 @@ class BatchIssues extends React.Component {
         <div className="tc ttc">
           <i className="material-icons red" style={{ fontSize: '18px' }}>
             error
-        </i>
+          </i>
         </div>
       )
     } else if (value === 'medium') {
@@ -112,7 +112,7 @@ class BatchIssues extends React.Component {
         <div className="tc ttc">
           <i className="material-icons gold" style={{ fontSize: '18px' }}>
             warning
-        </i>
+          </i>
         </div>
       )
     } else {
@@ -129,7 +129,9 @@ class BatchIssues extends React.Component {
       <a
         href="#"
         className="link flex w-100 grey"
-        onClick={event => this.openSidebar(event, record.original.id, 'details')}
+        onClick={event =>
+          this.openSidebar(event, record.original.id, 'details')
+        }
       >
         {record.original.attributes.issue_no.toString().padStart(5, '0')}
       </a>
@@ -141,7 +143,9 @@ class BatchIssues extends React.Component {
       <a
         href="#"
         className="link flex w-100 grey"
-        onClick={event => this.openSidebar(event, record.original.id, 'details')}
+        onClick={event =>
+          this.openSidebar(event, record.original.id, 'details')
+        }
       >
         {record.original.attributes.title}
       </a>
@@ -199,7 +203,6 @@ class BatchIssues extends React.Component {
     window.editorSidebar.open({ id, mode, width: '500px' })
     event.preventDefault()
   }
-
 
   render() {
     const { batch } = this.props

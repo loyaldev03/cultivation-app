@@ -2,7 +2,7 @@ import 'babel-polyfill'
 
 import React from 'react'
 import Select from 'react-select'
-import CreatableSelect from 'react-select/lib/Creatable';
+import CreatableSelect from 'react-select/lib/Creatable'
 
 import DashboardModal from '@uppy/react/lib/DashboardModal'
 import '@uppy/core/dist/style.css'
@@ -260,7 +260,10 @@ class IssueForm extends React.Component {
         } else {
           // this.setState(this.resetState()) //causing memory leaks
           this.props.onClose()
-          data.data.attributes.tags = data.data.attributes.tags.map(e => ({ label: e, value: e }))
+          data.data.attributes.tags = data.data.attributes.tags.map(e => ({
+            label: e,
+            value: e
+          }))
           currentIssueStore.setIssue(data.data.attributes)
         }
       })
@@ -295,7 +298,7 @@ class IssueForm extends React.Component {
     if (!isValid) {
       this.setState({ errors })
     }
-    const tags = this.state.tags.map((e)=> e.value)
+    const tags = this.state.tags.map(e => e.value)
 
     return {
       title,
@@ -411,8 +414,8 @@ class IssueForm extends React.Component {
   }
 
   handleChange = (newValue, actionMeta) => {
-    this.setState({tags: newValue})
-  };
+    this.setState({ tags: newValue })
+  }
 
   render() {
     const {

@@ -24,6 +24,12 @@ class NutrientProfileStore {
       this.isLoading = false
     }
   }
+
+  getNutrientByElement(week, element) {
+    return this.nutrients.find(
+      x => x.task_name === week && x.element === element
+    )
+  }
 }
 
 const nutrientProfileStore = new NutrientProfileStore()

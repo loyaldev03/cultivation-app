@@ -6,7 +6,7 @@ import BatchedDailyTasks from './components/BatchedDailyTasks'
 import loadDailyTasks from './actions/loadDailyTasks'
 import dailyTasksStore from './stores/DailyTasksStore'
 import NoteEditor from './components/NoteEditor'
-import sidebarStore from './stores/SidebarStore'
+import dailyTaskSidebarStore from './stores/SidebarStore'
 import materialUsedStore from './stores/MaterialUsedStore'
 
 @observer
@@ -14,7 +14,6 @@ class DailyTaskApp extends React.Component {
   state = {
     showAddIssue: false,
     showAddMaterial: false,
-    showAddNotes: false,
     currentTaskId: '',
     currentNoteId: ''
   }
@@ -31,54 +30,53 @@ class DailyTaskApp extends React.Component {
     })
   }
 
-  onToggleAddNotes = (batchId = null, taskId, noteId = '', body = '') => {
-    // console.log({taskId, noteId, body})
-    if (taskId) {
-      this.setState({
-        showAddNotes: true,
-        currentTaskId: taskId,
-        currentNoteId: noteId
-      })
-      this.noteEditor.setBody(body)
-    } else {
-      this.setState({
-        showAddNotes: false,
-        currentTaskId: '',
-        currentNoteId: ''
-      })
-      this.noteEditor.setBody('')
-    }
-  }
+  // onToggleAddNotes = (batchId = null, taskId, noteId = '', body = '') => {
+  //   console.log({batchId, taskId, noteId, body})
+  //   if (taskId) {
+  //     this.setState({
+  //       showAddNotes: true,
+  //       currentTaskId: taskId,
+  //       currentNoteId: noteId
+  //     })
+  //     this.noteEditor.setBody(body)
+  //   } else {
+  //     this.setState({
+  //       showAddNotes: false,
+  //       currentTaskId: '',
+  //       currentNoteId: ''
+  //     })
+  //     this.noteEditor.setBody('')
+  //   }
+  // }
 
   renderSlidePanel() {
-    const { showMaterialUsed } = sidebarStore
+    const { showMaterialUsed, showNotes } = dailyTaskSidebarStore
 
     const {
       currentTaskId,
       currentNoteId,
-      // showAddMaterial,
       showAddIssue,
-      showAddNotes
     } = this.state
+
     return (
       <React.Fragment>
         <SlidePanel
           width="600px"
-          show={sidebarStore.showMaterialUsed}
+          show={showMaterialUsed}
           renderBody={props => (
             <div>
               <h3>Add material here...</h3>
               <a
                 href="#"
                 onClick={event => {
-                  sidebarStore.toggleMaterialUsed()
+                  dailyTaskSidebarStore.closeMaterialUsed()
                   event.preventDefault()
                 }}
               >
                 Close
               </a>
-              <div>Task ID: {sidebarStore.taskId}</div>
-              <div>Batch ID: {sidebarStore.batchId}</div>
+              <div>Task ID: {dailyTaskSidebarStore.taskId}</div>
+              <div>Batch ID: {dailyTaskSidebarStore.batchId}</div>
             </div>
           )}
         />
@@ -102,16 +100,9 @@ class DailyTaskApp extends React.Component {
         />
         <SlidePanel
           width="500px"
-          show={showAddNotes}
+          show={showNotes.get()}
           renderBody={props => (
-            <NoteEditor
-              ref={editor => (this.noteEditor = editor)}
-              title={currentNoteId ? 'Update Note' : 'Add Note'}
-              onClose={() => this.onToggleAddNotes('')}
-              onSave={body => {
-                dailyTasksStore.editNote(currentTaskId, currentNoteId, body)
-              }}
-            />
+            <NoteEditor/>
           )}
         />
       </React.Fragment>
@@ -137,7 +128,6 @@ class DailyTaskApp extends React.Component {
             batchName={batch.name}
             tasks={batch.tasks}
             onToggleAddIssue={this.onToggleAddIssue}
-            onToggleAddNotes={this.onToggleAddNotes}
           />
         ))}
 

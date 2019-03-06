@@ -10,8 +10,10 @@ import NutrientEntryForm from '../../utils/NutrientEntryForm'
 const rightBorder = { borderRight: '1px solid #ccc' }
 
 class ExpandedRow extends React.Component {
-  onToggleAddNotes = event => {
-    this.props.onToggleAddNotes(this.props.taskId)
+
+  onShowAddNotes = event => {
+    // console.log(this.props.batch_id, this.props.id)
+    sidebarStore.openNotes(this.props.batch_id, this.props.id)
     event.preventDefault()
   }
 
@@ -23,7 +25,8 @@ class ExpandedRow extends React.Component {
   }
 
   onEditNote = (noteId, body) => {
-    this.props.onToggleAddNotes(this.props.taskId, noteId, body)
+    // this.props.onToggleAddNotes(this.props.taskId, noteId, body)
+    sidebarStore.openNotes(this.props.batch_id, this.props.id, noteId, body)
   }
 
   onUpdateNutrients = nutrients => {
@@ -42,10 +45,10 @@ class ExpandedRow extends React.Component {
       batch_id: batchId,
       items
     } = this.props
-    console.group('expanded row')
-    console.log(toJS(this.props))
-    console.log(toJS(this.props.items))
-    console.groupEnd()
+    // console.group('expanded row')
+    // console.log(toJS(this.props))
+    // console.log(toJS(this.props.items))
+    // console.groupEnd()
 
     return (
       <React.Fragment>
@@ -89,7 +92,7 @@ class ExpandedRow extends React.Component {
                 className="btn btn--secondary f6"
                 onClick={() => {
                   console.log('open material sidebar')
-                  sidebarStore.toggleMaterialUsed(batchId, taskId)
+                  sidebarStore.openMaterialUsed(batchId, taskId)
                 }}
               >
                 Add
@@ -126,7 +129,6 @@ class ExpandedRow extends React.Component {
             {items.map(x => {
               const actual = materialUsedStore.get(`${x.id}.material_used`)
               const waste = materialUsedStore.get(`${x.id}.material_waste`)
-              console.log(`x.catalogue_id: ${x.catalogue_id}`)
               const showTarget = materialUsedStore.shouldShowTarget(
                 x.catalogue_id
               )
@@ -169,7 +171,7 @@ class ExpandedRow extends React.Component {
               <a
                 href="#"
                 className="btn btn--secondary f6"
-                onClick={this.onToggleAddNotes}
+                onClick={this.onShowAddNotes}
               >
                 Add
               </a>

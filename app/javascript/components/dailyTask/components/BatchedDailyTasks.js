@@ -11,7 +11,6 @@ const BatchedDailyTasks = observer(
     batchName,
     tasks,
     onToggleAddIssue,
-    onToggleAddNotes
   }) => {
     return (
       <div className="box--shadow bg-white pb3 mb4">
@@ -22,13 +21,12 @@ const BatchedDailyTasks = observer(
         </div>
         <HeaderRow />
         {tasks.map(x => {
-          console.log(toJS(x))
+          // console.log(toJS(x))
           return (
             <TaskRow
               key={x.id}
               {...x}
               onToggleAddIssue={onToggleAddIssue}
-              onToggleAddNotes={onToggleAddNotes}
             />
           )
         })}

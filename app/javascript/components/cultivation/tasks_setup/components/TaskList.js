@@ -1,7 +1,6 @@
 import React, { lazy, Suspense } from 'react'
 import classNames from 'classnames'
 import { observer } from 'mobx-react'
-import { Manager, Reference, Popper, Arrow } from 'react-popper'
 import Tippy from '@tippy.js/react'
 import TaskStore from '../stores/NewTaskStore'
 import UserStore from '../stores/NewUserStore'
@@ -187,7 +186,9 @@ class TaskList extends React.Component {
                   ) : null}
                 </div>
               </div>
-            ) : null
+            ) : (
+              ""
+            )
           }
         >
           <i

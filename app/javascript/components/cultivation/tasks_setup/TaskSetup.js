@@ -2,6 +2,7 @@ import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
 import { Manager, Reference, Popper } from 'react-popper'
+import Tippy from '@tippy.js/react'
 import TaskList from './components/TaskList'
 import TaskStore from './stores/NewTaskStore'
 import BatchHeader from '../shared/BatchHeader'
@@ -109,156 +110,154 @@ class TaskSetup extends React.Component {
                 <span className="grey f6 ml2">Filter</span>
               </div>
               <Reference>
-                {({ ref }) => (
-                  <a
-                    className="f6 link ba b--light-grey ph3 pv2 mb3 flex justify-center dib grey pointer"
-                    ref={ref}
-                    onClick={this.handleClick}
-                  >
-                    Show Columns
-                    <i className="material-icons icon--small pointer ml2">
-                      expand_more
-                    </i>
-                  </a>
-                )}
-              </Reference>
-              {this.state.columnOpen && (
-                <Popper placement="bottom-end">
-                  {({ ref, style, placement, arrowProps }) => (
-                    <div
-                      ref={ref}
-                      className="z-1"
-                      style={style}
-                      data-placement={placement}
-                    >
+                {({ ref, style, placement, arrowProps }) => (
+                  <Tippy
+                    placement="bottom-end"
+                    trigger="click"
+                    duration="0"
+                    content={
                       <div
-                        id="myDropdown"
-                        ref={node => (this.node = node)}
-                        className="pa2 bg-white ba b--light-grey br1"
+                        ref={ref}
+                        className="z-1"
+                        style={style}
+                        data-placement={placement}
                       >
-                        <div className="">
-                          <label className="dim f6 fw6 db pv1 gray ttc">
-                            <input
-                              type="checkbox"
-                              name="checkbox-1"
-                              className="mr2"
-                              value="wbs"
-                              onChange={handleChangeCheckbox}
-                              checked={checkboxValue('wbs')}
-                            />
-                            WBS
-                          </label>
+                        <div
+                          id="myDropdown"
+                          ref={node => (this.node = node)}
+                          className="pa2 bg-white ba b--light-grey br1"
+                        >
+                          <div className="">
+                            <label className="dim f6 fw6 db pv1 gray ttc">
+                              <input
+                                type="checkbox"
+                                name="checkbox-1"
+                                className="mr2"
+                                value="wbs"
+                                onChange={handleChangeCheckbox}
+                                checked={checkboxValue('wbs')}
+                              />
+                              WBS
+                            </label>
 
-                          <label className="dim f6 fw6 db pv1 gray ttc">
-                            <input
-                              type="checkbox"
-                              name="checkbox-1"
-                              className="mr2"
-                              value="name"
-                              onChange={handleChangeCheckbox}
-                              checked={checkboxValue('name')}
-                            />
-                            Task
-                          </label>
+                            <label className="dim f6 fw6 db pv1 gray ttc">
+                              <input
+                                type="checkbox"
+                                name="checkbox-1"
+                                className="mr2"
+                                value="name"
+                                onChange={handleChangeCheckbox}
+                                checked={checkboxValue('name')}
+                              />
+                              Task
+                            </label>
 
-                          <label className="dim f6 fw6 db pv1 gray ttc">
-                            <input
-                              type="checkbox"
-                              name="checkbox-1"
-                              className="mr2"
-                              value="depend_on"
-                              onChange={handleChangeCheckbox}
-                              checked={checkboxValue('depend_on')}
-                            />
-                            Predecessor
-                          </label>
+                            <label className="dim f6 fw6 db pv1 gray ttc">
+                              <input
+                                type="checkbox"
+                                name="checkbox-1"
+                                className="mr2"
+                                value="depend_on"
+                                onChange={handleChangeCheckbox}
+                                checked={checkboxValue('depend_on')}
+                              />
+                              Predecessor
+                            </label>
 
-                          <label className="dim f6 fw6 db pv1 gray ttc">
-                            <input
-                              type="checkbox"
-                              name="checkbox-1"
-                              className="mr2"
-                              value="start_date"
-                              onChange={handleChangeCheckbox}
-                              checked={checkboxValue('start_date')}
-                            />
-                            Start Date
-                          </label>
+                            <label className="dim f6 fw6 db pv1 gray ttc">
+                              <input
+                                type="checkbox"
+                                name="checkbox-1"
+                                className="mr2"
+                                value="start_date"
+                                onChange={handleChangeCheckbox}
+                                checked={checkboxValue('start_date')}
+                              />
+                              Start Date
+                            </label>
 
-                          <label className="dim f6 fw6 db pv1 gray ttc">
-                            <input
-                              type="checkbox"
-                              name="checkbox-1"
-                              className="mr2"
-                              value="end_date"
-                              onChange={handleChangeCheckbox}
-                              checked={checkboxValue('end_date')}
-                            />
-                            End Date
-                          </label>
+                            <label className="dim f6 fw6 db pv1 gray ttc">
+                              <input
+                                type="checkbox"
+                                name="checkbox-1"
+                                className="mr2"
+                                value="end_date"
+                                onChange={handleChangeCheckbox}
+                                checked={checkboxValue('end_date')}
+                              />
+                              End Date
+                            </label>
 
-                          <label className="dim f6 fw6 db pv1 gray ttc">
-                            <input
-                              type="checkbox"
-                              name="checkbox-1"
-                              className="mr2"
-                              value="duration"
-                              onChange={handleChangeCheckbox}
-                              checked={checkboxValue('duration')}
-                            />
-                            Duration
-                          </label>
+                            <label className="dim f6 fw6 db pv1 gray ttc">
+                              <input
+                                type="checkbox"
+                                name="checkbox-1"
+                                className="mr2"
+                                value="duration"
+                                onChange={handleChangeCheckbox}
+                                checked={checkboxValue('duration')}
+                              />
+                              Duration
+                            </label>
 
-                          <label className="dim f6 fw6 db pv1 gray ttc">
-                            <input
-                              type="checkbox"
-                              name="checkbox-1"
-                              className="mr2"
-                              value="estimated_hours"
-                              onChange={handleChangeCheckbox}
-                              checked={checkboxValue('estimated_hours')}
-                            />
-                            Estimated Hour
-                          </label>
-                          <label className="dim f6 fw6 db pv1 gray ttc">
-                            <input
-                              type="checkbox"
-                              name="checkbox-1"
-                              className="mr2"
-                              value="estimated_cost"
-                              onChange={handleChangeCheckbox}
-                              checked={checkboxValue('estimated_cost')}
-                            />
-                            Estimated Cost
-                          </label>
-                          <label className="dim f6 fw6 db pv1 gray ttc">
-                            <input
-                              type="checkbox"
-                              name="checkbox-1"
-                              className="mr2"
-                              value="resource_assigned"
-                              onChange={handleChangeCheckbox}
-                              checked={checkboxValue('resource_assigned')}
-                            />
-                            Resource Assigned
-                          </label>
-                          <label className="dim f6 fw6 db pv1 gray ttc">
-                            <input
-                              type="checkbox"
-                              name="checkbox-1"
-                              className="mr2"
-                              value="materials"
-                              onChange={handleChangeCheckbox}
-                              checked={checkboxValue('materials')}
-                            />
-                            Materials
-                          </label>
+                            <label className="dim f6 fw6 db pv1 gray ttc">
+                              <input
+                                type="checkbox"
+                                name="checkbox-1"
+                                className="mr2"
+                                value="estimated_hours"
+                                onChange={handleChangeCheckbox}
+                                checked={checkboxValue('estimated_hours')}
+                              />
+                              Estimated Hour
+                            </label>
+                            <label className="dim f6 fw6 db pv1 gray ttc">
+                              <input
+                                type="checkbox"
+                                name="checkbox-1"
+                                className="mr2"
+                                value="estimated_cost"
+                                onChange={handleChangeCheckbox}
+                                checked={checkboxValue('estimated_cost')}
+                              />
+                              Estimated Cost
+                            </label>
+                            <label className="dim f6 fw6 db pv1 gray ttc">
+                              <input
+                                type="checkbox"
+                                name="checkbox-1"
+                                className="mr2"
+                                value="resource_assigned"
+                                onChange={handleChangeCheckbox}
+                                checked={checkboxValue('resource_assigned')}
+                              />
+                              Resource Assigned
+                            </label>
+                            <label className="dim f6 fw6 db pv1 gray ttc">
+                              <input
+                                type="checkbox"
+                                name="checkbox-1"
+                                className="mr2"
+                                value="materials"
+                                onChange={handleChangeCheckbox}
+                                checked={checkboxValue('materials')}
+                              />
+                              Materials
+                            </label>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </Popper>
-              )}
+                    }
+                  >
+                    <span className="f6 link ba b--light-grey ph3 pv2 mb3 flex justify-center dib grey pointer">
+                      Show Columns
+                      <i className="material-icons icon--small pointer ml2">
+                        expand_more
+                      </i>
+                    </span>
+                  </Tippy>
+                )}
+              </Reference>
             </div>
           </Manager>
         </div>

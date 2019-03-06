@@ -139,16 +139,25 @@ class BatchIssues extends React.Component {
   }
 
   renderTitle = record => {
+    let tags = record.original.attributes.tags
     return (
-      <a
-        href="#"
-        className="link flex w-100 grey"
-        onClick={event =>
-          this.openSidebar(event, record.original.id, 'details')
-        }
-      >
-        {record.original.attributes.title}
-      </a>
+      <div className="flex justify-between w-100">
+        <a
+          href="#"
+          className="link flex w-100 grey"
+          onClick={event =>
+            this.openSidebar(event, record.original.id, 'details')
+          }
+        >
+          {record.original.attributes.title}
+        </a>
+        {tags.length > 0 &&
+          tags.map((tag, index) => (
+            <span className="bg-green ba white f7 fw4 ph1 br2 ml1" key={index}>
+              {tag}
+            </span>
+          ))}
+      </div>
     )
   }
 

@@ -13,6 +13,7 @@ module Issues
     field :location_id, type: BSON::ObjectId
     field :location_type, type: String  # full ruby class name
     field :followers, type: Array, default: []
+    field :tags, type: Array, default: []
 
     embeds_many :attachments, class_name: 'Issues::Attachment'
     embeds_many :comments, class_name: 'Issues::Comment'

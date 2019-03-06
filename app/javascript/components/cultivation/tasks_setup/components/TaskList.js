@@ -150,7 +150,7 @@ class TaskList extends React.Component {
           trigger="click"
           content={this.state.idOpen === id ?
                 <div
-                  className="bg-white f6 flex"
+                  className="bg-white f6 flex grey"
                 >
                   <div
                     className="db shadow-4"

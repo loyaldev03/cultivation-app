@@ -148,9 +148,9 @@ class TaskList extends React.Component {
         <Tippy
           placement="bottom-end"
           trigger="click"
-          content={
+          content={this.state.idOpen === id ?
                 <div
-                  className="bg-white f6 flex z-1"
+                  className="bg-white f6 flex"
                 >
                   <div
                     className="db shadow-4"
@@ -190,7 +190,7 @@ class TaskList extends React.Component {
                     ) : null}
                   </div>
                   
-                </div>
+                </div> : null
               }
         >
           <i 

@@ -11,14 +11,14 @@ import getDailyTaskDetails from '../actions/getDailyTaskDetails'
 import { toast } from '../../utils'
 import DailyTaskStore from '../stores/DailyTasksStore'
 import classNames from 'classnames'
-
 class TaskRow extends React.Component {
   state = {
     expanded: false,
     work_status: this.props.work_status
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+  }
 
   onExpand = event => {
     // console.log('expanded')
@@ -88,6 +88,7 @@ class TaskRow extends React.Component {
         onToggleAddNotes={this.props.onToggleAddNotes}
         onClickStatus={this.onClickStatus}
         notes={this.props.notes}
+        issues={this.props.issues}
       />
     )
   }

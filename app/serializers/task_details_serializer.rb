@@ -48,7 +48,7 @@ class TaskDetailsSerializer
   end
 
   attribute :issues do |object|
-    object.issues.map { |a| {id: a.id.to_s, title: a.title} }
+    object.issues.map { |a| {id: a.id.to_s, title: a.title, tags: a.tags, issue_no: a.issue_no} }
   end
 
   attribute :notes do |object|

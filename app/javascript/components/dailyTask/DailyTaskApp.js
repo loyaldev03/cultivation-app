@@ -6,6 +6,7 @@ import BatchedDailyTasks from './components/BatchedDailyTasks'
 import loadDailyTasks from './actions/loadDailyTasks'
 import dailyTasksStore from './stores/DailyTasksStore'
 import NoteEditor from './components/NoteEditor'
+import IssueSidebar from '../issues/IssueSidebar'
 
 @observer
 class DailyTaskApp extends React.Component {
@@ -19,6 +20,7 @@ class DailyTaskApp extends React.Component {
 
   componentDidMount() {
     loadDailyTasks()
+    window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
   }
 
   onToggleAddIssue = (taskId = null) => {
@@ -130,18 +132,28 @@ class DailyTaskApp extends React.Component {
           </span>
         </div>
         {dailyTasksStore.bindable.map(batch => (
-          <BatchedDailyTasks
-            key={batch.id}
-            batchId={batch.id}
-            batchNo={batch.batch_no}
-            batchName={batch.name}
-            tasks={batch.tasks}
-            onToggleAddIssue={this.onToggleAddIssue}
-            onToggleAddMaterial={this.onToggleAddMaterial}
-            onToggleAddNotes={this.onToggleAddNotes}
-          />
-        ))}
+          <div>
+            <BatchedDailyTasks
+              key={batch.id}
+              batchId={batch.id}
+              batchNo={batch.batch_no}
+              batchName={batch.name}
+              tasks={batch.tasks}
+              onToggleAddIssue={this.onToggleAddIssue}
+              onToggleAddMaterial={this.onToggleAddMaterial}
+              onToggleAddNotes={this.onToggleAddNotes}
+            />
+          </div>
 
+        ))}
+        <IssueSidebar
+          // batch_id={batch.id}
+          // facility_id={batch.facility_id}
+          mode={this.state.mode}
+          current_user_first_name={this.props.current_user_first_name}
+          current_user_last_name={this.props.current_user_last_name}
+          current_user_photo={this.props.current_user_photo}
+        />
         {this.renderSlidePanel()}
       </React.Fragment>
     )

@@ -1,6 +1,7 @@
 import React from 'react'
 import MaterialUsedRow from './MaterialUsedRow'
 import NoteList from './NoteList'
+import IssueList from './IssueList'
 import DailyTaskStore from '../stores/DailyTasksStore'
 import NutrientEntryForm from '../../utils/NutrientEntryForm'
 
@@ -41,8 +42,15 @@ class ExpandedRow extends React.Component {
     )
   }
 
+  onClickNow = issue => {
+    console.log(issue)
+    let id = issue.id
+    let mode = 'details'
+    window.editorSidebar.open({ id, mode, width: '500px' })
+  }
+
   render() {
-    const { taskIndelible, notes, taskId, batchId } = this.props
+    const { taskIndelible, notes, taskId, batchId, issues } = this.props
     return (
       <React.Fragment>
         <div className="flex justify-between pv3 ph3">
@@ -117,11 +125,17 @@ class ExpandedRow extends React.Component {
               <a
                 href="#"
                 className="btn btn--secondary f6"
-                onClick={this.onToggleAddMaterial}
+                onClick={event => window.editorSidebar.open(event, null, 'create')}
               >
                 Add
               </a>
             </div>
+            <IssueList
+              show={true}
+              issues={issues}
+              onEdit={this.onClickNow}
+              onDelete={this.onToggleAddIssue}
+            />
           </div>
 
           <div className="w-30 ph2 pt2 pb3">

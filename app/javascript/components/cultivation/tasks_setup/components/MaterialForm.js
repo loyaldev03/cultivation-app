@@ -105,7 +105,7 @@ export default class MaterialForm extends React.Component {
         return {
           id: rec.id,
           element: rec.element,
-          value: rec.value,
+          value: rec.value
         }
       } else {
         return { id: x.id, element: x.element, value: '' }

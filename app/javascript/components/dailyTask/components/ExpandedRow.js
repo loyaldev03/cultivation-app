@@ -33,8 +33,12 @@ class ExpandedRow extends React.Component {
     this.props.onToggleAddNotes(this.props.taskId, noteId, body)
   }
 
-  onUpdateNutrients = (nutrients) => {
-    DailyTaskStore.updateNutrients(this.props.batchId, this.props.taskId, nutrients)
+  onUpdateNutrients = nutrients => {
+    DailyTaskStore.updateNutrients(
+      this.props.batchId,
+      this.props.taskId,
+      nutrients
+    )
   }
 
   render() {

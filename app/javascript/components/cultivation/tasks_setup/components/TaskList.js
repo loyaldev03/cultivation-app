@@ -148,63 +148,57 @@ class TaskList extends React.Component {
         <Tippy
           placement="bottom-end"
           trigger="click"
-          content={this.state.idOpen === id ?
-                <div
-                  className="bg-white f6 flex grey"
-                >
-                  <div
-                    className="db shadow-4"
-                  >
+          content={
+            this.state.idOpen === id ? (
+              <div className="bg-white f6 flex grey">
+                <div className="db shadow-4">
+                  <MenuButton
+                    icon="format_indent_increase"
+                    text="Indent In"
+                    onClick={e => this.handleIndent(id, 'in')}
+                  />
+                  <MenuButton
+                    icon="format_indent_decrease"
+                    text="Indent Out"
+                    onClick={e => this.handleIndent(id, 'out')}
+                  />
+                  <MenuButton
+                    icon="vertical_align_top"
+                    text="Insert Task Above"
+                    onClick={e => this.handleAddTask(id, 'add-above')}
+                  />
+                  <MenuButton
+                    icon="vertical_align_bottom"
+                    text="Insert Task Below"
+                    onClick={e => this.handleAddTask(id, 'add-below')}
+                  />
+                  <MenuButton
+                    icon="edit"
+                    text="Edit Task Details"
+                    onClick={e => this.handleShowSidebar(id)}
+                  />
+                  {deletable ? (
                     <MenuButton
-                      icon="format_indent_increase"
-                      text="Indent In"
-                      onClick={e => this.handleIndent(id, 'in')}
+                      icon="delete_outline"
+                      text="Delete Task"
+                      className="red"
+                      onClick={e => this.handleDelete(data)}
                     />
-                    <MenuButton
-                      icon="format_indent_decrease"
-                      text="Indent Out"
-                      onClick={e => this.handleIndent(id, 'out')}
-                    />
-                    <MenuButton
-                      icon="vertical_align_top"
-                      text="Insert Task Above"
-                      onClick={e => this.handleAddTask(id, 'add-above')}
-                    />
-                    <MenuButton
-                      icon="vertical_align_bottom"
-                      text="Insert Task Below"
-                      onClick={e => this.handleAddTask(id, 'add-below')}
-                    />
-                    <MenuButton
-                      icon="edit"
-                      text="Edit Task Details"
-                      onClick={e => this.handleShowSidebar(id)}
-                    />
-                    {deletable ? (
-                      <MenuButton
-                        icon="delete_outline"
-                        text="Delete Task"
-                        className="red"
-                        onClick={e => this.handleDelete(data)}
-                      />
-                    ) : null}
-                  </div>
-                  
-                </div> : null
-              }
+                  ) : null}
+                </div>
+              </div>
+            ) : null
+          }
         >
-          <i 
+          <i
             onClick={this.handleEllipsisClick(id)}
-            className={
-              classNames('pointer material-icons', {
-                    'show-on-hover': this.state.taskSelected !== id
-                  })
-            }
+            className={classNames('pointer material-icons', {
+              'show-on-hover': this.state.taskSelected !== id
+            })}
           >
             more_horiz
           </i>
         </Tippy>
-       
       </div>
     )
   }

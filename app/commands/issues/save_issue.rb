@@ -14,6 +14,7 @@ module Issues
                 :assigned_to,
                 :attachments,
                 :user,
+                :tags,
                 :args
 
     def initialize(user, args)
@@ -37,6 +38,7 @@ module Issues
       @assigned_to = User.find(args[:assigned_to_id])
 
       @attachments = args[:attachments]
+      @tags = args[:tags]
     end
 
     def call
@@ -76,6 +78,7 @@ module Issues
         reported_by: user,
         assigned_to: assigned_to,
         task: task,
+        tags: tags,
       )
       update_attachments(issue, args)
       issue
@@ -91,6 +94,7 @@ module Issues
         location_type: location_type,
         assigned_to: assigned_to,
         task: task,
+        tags: tags,
       )
       update_attachments(issue, args)
       issue

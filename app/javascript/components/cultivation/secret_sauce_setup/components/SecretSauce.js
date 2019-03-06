@@ -1,9 +1,9 @@
 import React from 'react'
 import classNames from 'classnames'
-import { observer } from 'mobx-react'
 import { NUTRITION_LIST } from '../../../utils'
 import NutrientProfileStore from '../store/NutrientProfileStore'
 import SaveNutrientProfile from '../actions/saveNutrientProfile'
+import { NutrientList, NutrientsAdded } from './NutrientsAdded'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 
 const SAUSE_TABS = [
@@ -12,22 +12,29 @@ const SAUSE_TABS = [
   ['temperature', 'Temperature / Moisture']
 ]
 
-@observer
 class SecretSauce extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       tabIndex: 0,
       batch: this.props.batch,
-      nutrients: NutrientProfileStore.nutrients,
       id: NutrientProfileStore.id,
       tabs: 'nutrients',
       phase: 'clone'
     }
   }
 
+  componentDidMount() {
+    NutrientProfileStore.loadNutrients(this.props.batchId, "clone")
+  }
+
   handleSubmit = () => {
     SaveNutrientProfile.saveNutrientProfile(this.state)
+  }
+
+  onSwitchPhase = phase => e => {
+    NutrientProfileStore.loadNutrients(this.props.batchId, phase)
+    this.setState({ phase })
   }
 
   onSelectTab = tabIndex => {
@@ -52,7 +59,7 @@ class SecretSauce extends React.Component {
                           'ba b--light-grey': phase !== x
                         }
                       )}
-                      onClick={e => this.setState({ phase: x })}
+                      onClick={this.onSwitchPhase(x)}
                     >
                       {x}
                     </a>
@@ -79,26 +86,16 @@ class SecretSauce extends React.Component {
                       <span className="pa1 f6 f5-ns db mb3 ttc fw6">
                         {phase}
                       </span>
-                      {NUTRITION_LIST.map(x => {
-                        return (
-                          <div key={x.element} className="flex mb2">
-                            <span className="w4 pa1">{x.label}</span>
-                            <span className="w3 pa1 tr">9.99%</span>
-                          </div>
-                        )
-                      })}
+                      <div className="flex">
+                        <NutrientList className="flex flex-column" />
+                        <NutrientsAdded className="flex flex-column" phase={phase} />
+                      </div>
                     </div>
                   )}
-                  {x[0] !== 'nutrients' && <div className="pa3">&nbsp;</div>}
+                  {x[0] !== 'nutrients' && <div className="h5">&nbsp;</div>}
                 </TabPanel>
               ))}
             </Tabs>
-
-            <div className="flex justify-end pv3">
-              <a className="btn btn--primary" onClick={this.handleSubmit}>
-                Save &amp; Continue
-              </a>
-            </div>
           </div>
         </div>
       </React.Fragment>

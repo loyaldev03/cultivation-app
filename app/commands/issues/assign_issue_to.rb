@@ -8,14 +8,14 @@ module Issues
 
     def initialize(current_user, args)
       @id = args[:id]
-      @users = args[:users]
+      @user_id = args[:user]
     end
 
     def call
       return nil unless (valid_user? && valid_data?)
-
-      issue = Issues::Issue.find(id)
-      issue.followers = users.uniq
+      issue = Issues::Issue.find(@id)
+      user = User.find(@user_id)
+      issue.assigned_to = user
       issue.save!
       issue
     end

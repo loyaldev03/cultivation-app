@@ -1,8 +1,8 @@
+import 'babel-polyfill'
 import React from 'react'
-import loadNutrientProfile from './actions/loadNutrientProfile'
-import SecretSauce from './components/SecretSauce'
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
+import SecretSauce from './components/SecretSauce'
 import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
 
 class SecretSauceSetup extends React.Component {
@@ -15,7 +15,6 @@ class SecretSauceSetup extends React.Component {
   }
 
   componentDidMount() {
-    loadNutrientProfile(this.props.batch.nutrient_profile)
     loadUnresolvedIssueCount(this.props.batch.id).then(x => {
       this.setState({ unresolvedIssueCount: x.count })
     })
@@ -23,10 +22,6 @@ class SecretSauceSetup extends React.Component {
 
   render() {
     const { batch } = this.props
-    let activeTabs =
-      'link bb-r br-r bt-l br-l pv3 ph4 b--black-10 f6 fw6 dark-gray hover-bg-light-gray bg-white'
-    let inactiveTabs =
-      'link bt-l bb-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-dark-gray hover-bg-light-gray bg-white'
 
     return (
       <div className="pa4 w-100 h-100 flex flex-column grey">

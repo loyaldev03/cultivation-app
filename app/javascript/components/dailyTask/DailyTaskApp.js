@@ -144,7 +144,6 @@ class DailyTaskApp extends React.Component {
               onToggleAddNotes={this.onToggleAddNotes}
             />
           </div>
-
         ))}
         <IssueSidebar
           // batch_id={batch.id}

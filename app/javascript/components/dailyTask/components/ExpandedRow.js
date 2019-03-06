@@ -125,7 +125,9 @@ class ExpandedRow extends React.Component {
               <a
                 href="#"
                 className="btn btn--secondary f6"
-                onClick={event => window.editorSidebar.open(event, null, 'create')}
+                onClick={event =>
+                  window.editorSidebar.open(event, null, 'create')
+                }
               >
                 Add
               </a>

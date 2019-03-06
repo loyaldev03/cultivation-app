@@ -88,7 +88,7 @@ module Inventory
         ''
       elsif object.location_type == 'room'
         facility = Facility.find_by(:'rooms._id' => BSON::ObjectId(object.location_id))
-        room = facility.rooms.find(object.location_id)
+        room = facility.rooms.find(object.location_id) if facility
         room ? "#{facility.code}.#{room.code} - #{room.name}" : ''
       elsif object.location_type == 'tray'
         tray = Tray.find_by(id: object.location_id)

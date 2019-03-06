@@ -1,7 +1,6 @@
 import { observable, action, computed, toJS } from 'mobx'
 
 class SidebarStore {
-
   // Controls which sidebar is visible
   showNotes = observable.box(false)
   showMaterialUsed = observable.box(false)

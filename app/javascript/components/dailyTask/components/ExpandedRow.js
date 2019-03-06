@@ -10,7 +10,6 @@ import NutrientEntryForm from '../../utils/NutrientEntryForm'
 const rightBorder = { borderRight: '1px solid #ccc' }
 
 class ExpandedRow extends React.Component {
-
   onShowAddNotes = event => {
     // console.log(this.props.batch_id, this.props.id)
     sidebarStore.openNotes(this.props.batch_id, this.props.id)

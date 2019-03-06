@@ -11,58 +11,19 @@ import materialUsedStore from './stores/MaterialUsedStore'
 
 @observer
 class DailyTaskApp extends React.Component {
-  state = {
-    showAddIssue: false,
-    showAddMaterial: false,
-    currentTaskId: '',
-    currentNoteId: ''
-  }
-
   componentDidMount() {
     loadDailyTasks()
     materialUsedStore.loadNutrientsCatalogue(this.props.nutrient_ids)
   }
 
-  onToggleAddIssue = (batchId = null, taskId = null) => {
-    this.setState({
-      showAddIssue: !this.state.showAddIssue,
-      currentTaskId: taskId
-    })
-  }
-
-  // onToggleAddNotes = (batchId = null, taskId, noteId = '', body = '') => {
-  //   console.log({batchId, taskId, noteId, body})
-  //   if (taskId) {
-  //     this.setState({
-  //       showAddNotes: true,
-  //       currentTaskId: taskId,
-  //       currentNoteId: noteId
-  //     })
-  //     this.noteEditor.setBody(body)
-  //   } else {
-  //     this.setState({
-  //       showAddNotes: false,
-  //       currentTaskId: '',
-  //       currentNoteId: ''
-  //     })
-  //     this.noteEditor.setBody('')
-  //   }
-  // }
-
   renderSlidePanel() {
-    const { showMaterialUsed, showNotes } = dailyTaskSidebarStore
-
-    const {
-      currentTaskId,
-      currentNoteId,
-      showAddIssue,
-    } = this.state
+    const { showMaterialUsed, showNotes, showIssues } = dailyTaskSidebarStore
 
     return (
       <React.Fragment>
         <SlidePanel
           width="600px"
-          show={showMaterialUsed}
+          show={showMaterialUsed.get()}
           renderBody={props => (
             <div>
               <h3>Add material here...</h3>
@@ -82,7 +43,7 @@ class DailyTaskApp extends React.Component {
         />
         <SlidePanel
           width="600px"
-          show={showAddIssue}
+          show={showIssues.get()}
           renderBody={props => (
             <div>
               <h3>Add issue here...</h3>
@@ -101,9 +62,7 @@ class DailyTaskApp extends React.Component {
         <SlidePanel
           width="500px"
           show={showNotes.get()}
-          renderBody={props => (
-            <NoteEditor/>
-          )}
+          renderBody={props => <NoteEditor />}
         />
       </React.Fragment>
     )
@@ -127,7 +86,6 @@ class DailyTaskApp extends React.Component {
             batchNo={batch.batch_no}
             batchName={batch.name}
             tasks={batch.tasks}
-            onToggleAddIssue={this.onToggleAddIssue}
           />
         ))}
 

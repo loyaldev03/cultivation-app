@@ -1,13 +1,12 @@
 import React from 'react'
-import { observe } from 'mobx'
+import { toJS } from 'mobx'
 import { SlidePanelHeader, SlidePanelFooter } from '../../utils'
 import dailyTaskSidebarStore from '../stores/SidebarStore'
 import dailyTasksStore from '../stores/DailyTasksStore'
 
 class NoteEditor extends React.Component {
-
   componentDidMount() {
-    dailyTaskSidebarStore.showNotes.observe((change) => {
+    dailyTaskSidebarStore.showNotes.observe(change => {
       if (change.newValue) {
         this.setBody(dailyTaskSidebarStore.noteBody)
       }

@@ -80,12 +80,6 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     end
   end
 
-  def add_notes
-    @work_day.notes.create(notes: params[:notes])
-    data = WorkDaySerializer.new(@work_day).serialized_json
-    render json: data
-  end
-
   def save_material_used
     task_id = params[:id]
     date = Time.parse(params[:date]).beginning_of_day

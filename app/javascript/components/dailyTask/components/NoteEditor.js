@@ -1,11 +1,30 @@
 import React from 'react'
+import { toJS } from 'mobx'
 import { SlidePanelHeader, SlidePanelFooter } from '../../utils'
+import dailyTaskSidebarStore from '../stores/SidebarStore'
+import dailyTasksStore from '../stores/DailyTasksStore'
 
 class NoteEditor extends React.Component {
+  componentDidMount() {
+    dailyTaskSidebarStore.showNotes.observe(change => {
+      if (change.newValue) {
+        this.setBody(dailyTaskSidebarStore.noteBody)
+      }
+    })
+  }
+
   onSave = () => {
-    this.props.onSave(this.inputText.value)
-    this.props.onClose()
+    const taskId = dailyTaskSidebarStore.taskId
+    const noteId = dailyTaskSidebarStore.noteId
+    const body = this.inputText.value
     this.inputText.value = ''
+
+    dailyTasksStore.editNote(taskId, noteId, body)
+    dailyTaskSidebarStore.closeNotes()
+  }
+
+  onClose = () => {
+    dailyTaskSidebarStore.closeNotes()
   }
 
   setBody = body => {
@@ -14,9 +33,11 @@ class NoteEditor extends React.Component {
 
   render() {
     const { onClose, onSave } = this.props
+    const title = dailyTaskSidebarStore.noteId ? 'Update Note' : 'Add Note'
+
     return (
       <div className="flex flex-column h-100">
-        <SlidePanelHeader onClose={onClose} title={this.props.title} />
+        <SlidePanelHeader onClose={this.onClose} title={title} />
         <div className="flex flex-column flex-auto justify-between">
           <div className="pa3 flex flex-column">
             <label className="grey mb2">Notes:</label>

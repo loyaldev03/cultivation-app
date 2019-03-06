@@ -10,7 +10,7 @@ class NutrientsAdded extends React.Component {
     let nutrientsByWeek = groupBy(NutrientProfileStore.nutrients, 'task_name')
     if (Object.keys(nutrientsByWeek).length === 0) {
       nutrientsByWeek = {
-        "": []
+        '': []
       }
     }
     return (
@@ -18,7 +18,9 @@ class NutrientsAdded extends React.Component {
         {Object.keys(nutrientsByWeek).map(week => {
           return (
             <div className={className} key={week}>
-              <span className="f6 fw6 pv1 ph2 tr" style={{ minWidth: 70 }}>{week} (%)</span>
+              <span className="f6 fw6 pv1 ph2 tr" style={{ minWidth: 70 }}>
+                {week} (%)
+              </span>
               <div className="flex flex-column">
                 {NUTRITION_LIST.map(x => {
                   const nutrient = NutrientProfileStore.getNutrientByElement(
@@ -28,7 +30,9 @@ class NutrientsAdded extends React.Component {
                   return (
                     <React.Fragment key={x.element}>
                       <span className="w3 pv1 ph2 tr">
-                        {nutrient ? decimalFormatter.format(nutrient.value) : '--'}
+                        {nutrient
+                          ? decimalFormatter.format(nutrient.value)
+                          : '--'}
                       </span>
                     </React.Fragment>
                   )

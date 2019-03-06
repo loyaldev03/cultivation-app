@@ -8,7 +8,7 @@ module Inventory
     # TODO: Create index for ref_id + ref_type
     field :ref_id, type: BSON::ObjectId
     field :ref_type, type: String
-    field :event_type, type: String             # stock_intake, materials_used, material_wasted
+    field :event_type, type: String             # stock_intake, materials_used, material_waste
     field :event_date, type: DateTime
 
     field :product_name, type: String
@@ -40,6 +40,8 @@ module Inventory
     belongs_to :facility
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
     belongs_to :catalogue, class_name: 'Inventory::Catalogue'
+
+    belongs_to :cultivation_batch, class_name: 'Cultivation::Batch', optional: true
     belongs_to :harvest_batch, class_name: 'Inventory::HarvestBatch', optional: true
     belongs_to :product, class_name: 'Inventory::Product', optional: true
     # TODO: Missing link to Cultivation::Batch

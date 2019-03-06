@@ -25,7 +25,7 @@ class SecretSauce extends React.Component {
   }
 
   componentDidMount() {
-    NutrientProfileStore.loadNutrients(this.props.batchId, "clone")
+    NutrientProfileStore.loadNutrients(this.props.batchId, 'clone')
   }
 
   handleSubmit = () => {
@@ -88,7 +88,10 @@ class SecretSauce extends React.Component {
                       </span>
                       <div className="flex">
                         <NutrientList className="flex flex-column" />
-                        <NutrientsAdded className="flex flex-column" phase={phase} />
+                        <NutrientsAdded
+                          className="flex flex-column"
+                          phase={phase}
+                        />
                       </div>
                     </div>
                   )}

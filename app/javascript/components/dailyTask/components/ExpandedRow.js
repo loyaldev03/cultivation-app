@@ -35,7 +35,13 @@ class ExpandedRow extends React.Component {
   }
 
   render() {
-    const { id: taskId, taskIndelible, notes, batch_id: batchId, items } = this.props
+    const {
+      id: taskId,
+      taskIndelible,
+      notes,
+      batch_id: batchId,
+      items
+    } = this.props
     console.group('expanded row')
     console.log(toJS(this.props))
     console.log(toJS(this.props.items))

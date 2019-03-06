@@ -11,7 +11,6 @@ const rightBorder = { borderRight: '1px solid #ccc' }
 
 class ExpandedRow extends React.Component {
   onShowAddNotes = event => {
-    // console.log(this.props.batch_id, this.props.id)
     sidebarStore.openNotes(this.props.batch_id, this.props.id)
     event.preventDefault()
   }
@@ -24,7 +23,6 @@ class ExpandedRow extends React.Component {
   }
 
   onEditNote = (noteId, body) => {
-    // this.props.onToggleAddNotes(this.props.taskId, noteId, body)
     sidebarStore.openNotes(this.props.batch_id, this.props.id, noteId, body)
   }
 
@@ -39,21 +37,23 @@ class ExpandedRow extends React.Component {
   render() {
     const {
       id: taskId,
-      taskIndelible,
+      indelible,
       notes,
       batch_id: batchId,
       items
     } = this.props
+
     // console.group('expanded row')
     // console.log(toJS(this.props))
-    // console.log(toJS(this.props.items))
+    // // console.log(toJS(this.props.items))
+    // console.log(batchId, taskId, indelible)
     // console.groupEnd()
 
     return (
       <React.Fragment>
         <div className="flex justify-between pv3 ph3">
           <div>
-            {taskIndelible === 'add_nutrient' && (
+            {indelible === 'add_nutrient' && (
               <React.Fragment>
                 <span className="f6 grey db">Add Nutrients:</span>
                 <NutrientEntryForm

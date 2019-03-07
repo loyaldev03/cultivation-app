@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react'
 import classNames from 'classnames'
 import { observer } from 'mobx-react'
-import { Manager, Reference, Popper, Arrow } from 'react-popper'
+import Tippy from '@tippy.js/react'
 import TaskStore from '../stores/NewTaskStore'
 import UserStore from '../stores/NewUserStore'
 import TaskEditor from './TaskEditor'
@@ -36,6 +36,7 @@ class TaskList extends React.Component {
     this.dragged = null
     this.state = {
       isOpen: false,
+      isClicked: false,
       showTaskEditor: false,
       showStartDateCalendar: false,
       showAssignResourcePanel: false,
@@ -143,75 +144,62 @@ class TaskList extends React.Component {
             TaskStore.editTask(batchId, id, { name: value })
           }}
         />
-        <Manager>
-          <Reference>
-            {({ ref }) => {
-              return (
-                <i
-                  ref={ref}
-                  onClick={this.handleEllipsisClick(id)}
-                  className={classNames('pointer material-icons', {
-                    'show-on-hover': this.state.taskSelected !== id
-                  })}
-                >
-                  more_horiz
-                </i>
-              )
-            }}
-          </Reference>
-          {this.state.idOpen === id && (
-            <Popper placement="bottom-start">
-              {({ ref, style, placement, arrowProps }) => (
-                <div
-                  ref={ref}
-                  style={style}
-                  data-placement={placement}
-                  className="bg-white f6 flex"
-                >
-                  <div
-                    className="db shadow-4"
-                    onMouseLeave={this.handleMouseLeave}
-                  >
+        <Tippy
+          placement="bottom-end"
+          trigger="click"
+          content={
+            this.state.idOpen === id ? (
+              <div className="bg-white f6 flex grey">
+                <div className="db shadow-4">
+                  <MenuButton
+                    icon="format_indent_increase"
+                    text="Indent In"
+                    onClick={e => this.handleIndent(id, 'in')}
+                  />
+                  <MenuButton
+                    icon="format_indent_decrease"
+                    text="Indent Out"
+                    onClick={e => this.handleIndent(id, 'out')}
+                  />
+                  <MenuButton
+                    icon="vertical_align_top"
+                    text="Insert Task Above"
+                    onClick={e => this.handleAddTask(id, 'add-above')}
+                  />
+                  <MenuButton
+                    icon="vertical_align_bottom"
+                    text="Insert Task Below"
+                    onClick={e => this.handleAddTask(id, 'add-below')}
+                  />
+                  <MenuButton
+                    icon="edit"
+                    text="Edit Task Details"
+                    onClick={e => this.handleShowSidebar(id)}
+                  />
+                  {deletable ? (
                     <MenuButton
-                      icon="format_indent_increase"
-                      text="Indent In"
-                      onClick={e => this.handleIndent(id, 'in')}
+                      icon="delete_outline"
+                      text="Delete Task"
+                      className="red"
+                      onClick={e => this.handleDelete(data)}
                     />
-                    <MenuButton
-                      icon="format_indent_decrease"
-                      text="Indent Out"
-                      onClick={e => this.handleIndent(id, 'out')}
-                    />
-                    <MenuButton
-                      icon="vertical_align_top"
-                      text="Insert Task Above"
-                      onClick={e => this.handleAddTask(id, 'add-above')}
-                    />
-                    <MenuButton
-                      icon="vertical_align_bottom"
-                      text="Insert Task Below"
-                      onClick={e => this.handleAddTask(id, 'add-below')}
-                    />
-                    <MenuButton
-                      icon="edit"
-                      text="Edit Task Details"
-                      onClick={e => this.handleShowSidebar(id)}
-                    />
-                    {deletable ? (
-                      <MenuButton
-                        icon="delete_outline"
-                        text="Delete Task"
-                        className="red"
-                        onClick={e => this.handleDelete(data)}
-                      />
-                    ) : null}
-                  </div>
-                  <div ref={arrowProps.ref} style={arrowProps.style} />
+                  ) : null}
                 </div>
-              )}
-            </Popper>
-          )}
-        </Manager>
+              </div>
+            ) : (
+              ""
+            )
+          }
+        >
+          <i
+            onClick={this.handleEllipsisClick(id)}
+            className={classNames('pointer material-icons', {
+              'show-on-hover': this.state.taskSelected !== id
+            })}
+          >
+            more_horiz
+          </i>
+        </Tippy>
       </div>
     )
   }

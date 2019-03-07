@@ -1,25 +1,18 @@
 import React from 'react'
+import { toJS } from 'mobx'
 import MaterialUsedRow from './MaterialUsedRow'
 import NoteList from './NoteList'
 import IssueList from './IssueList'
 import DailyTaskStore from '../stores/DailyTasksStore'
+import sidebarStore from '../stores/SidebarStore'
+import materialUsedStore from '../stores/MaterialUsedStore'
 import NutrientEntryForm from '../../utils/NutrientEntryForm'
 
 const rightBorder = { borderRight: '1px solid #ccc' }
 
 class ExpandedRow extends React.Component {
-  onToggleAddIssue = event => {
-    this.props.onToggleAddIssue(this.props.taskId)
-    event.preventDefault()
-  }
-
-  onToggleAddMaterial = event => {
-    this.props.onToggleAddMaterial(this.props.taskId)
-    event.preventDefault()
-  }
-
-  onToggleAddNotes = event => {
-    this.props.onToggleAddNotes(this.props.taskId)
+  onShowAddNotes = event => {
+    sidebarStore.openNotes(this.props.batch_id, this.props.id)
     event.preventDefault()
   }
 
@@ -31,7 +24,7 @@ class ExpandedRow extends React.Component {
   }
 
   onEditNote = (noteId, body) => {
-    this.props.onToggleAddNotes(this.props.taskId, noteId, body)
+    sidebarStore.openNotes(this.props.batch_id, this.props.id, noteId, body)
   }
 
   onUpdateNutrients = nutrients => {
@@ -50,12 +43,26 @@ class ExpandedRow extends React.Component {
   }
 
   render() {
-    const { taskIndelible, notes, taskId, batchId, issues } = this.props
+    const {
+      id: taskId,
+      indelible,
+      notes,
+      batch_id: batchId,
+      items,
+      issues
+    } = this.props
+
+    // console.group('expanded row')
+    // console.log(toJS(this.props))
+    // // console.log(toJS(this.props.items))
+    // console.log(batchId, taskId, indelible)
+    // console.groupEnd()
+
     return (
       <React.Fragment>
         <div className="flex justify-between pv3 ph3">
           <div>
-            {taskIndelible === 'add_nutrient' && (
+            {indelible === 'add_nutrient' && (
               <React.Fragment>
                 <span className="f6 grey db">Add Nutrients:</span>
                 <NutrientEntryForm
@@ -91,32 +98,64 @@ class ExpandedRow extends React.Component {
               <a
                 href="#"
                 className="btn btn--secondary f6"
-                onClick={this.onToggleAddIssue}
+                onClick={() => {
+                  console.log('open material sidebar')
+                  sidebarStore.openMaterialUsed(batchId, taskId)
+                }}
               >
                 Add
               </a>
             </div>
-            <MaterialUsedRow
-              material="Bloodmeal Max Nutrient 360"
-              expected="5"
-              uom="lb"
-              actual=""
-              wasted=""
-            />
-            <MaterialUsedRow
-              material="Quick Cup, Set of 5"
-              expected="500"
-              uom="ea"
-              actual=""
-              wasted=""
-            />
-            <MaterialUsedRow
-              material="Std glove"
-              expected="500"
-              uom="ea"
-              actual=""
-              wasted=""
-            />
+
+            <div className="flex items-center pb1 justify-between">
+              <div className="f6 dark-gray w-60">&nbsp;</div>
+              <div
+                className="f6 grey flex items-center justify-center"
+                style={{ width: '100px', minWidth: '100px' }}
+              >
+                Target
+              </div>
+              <div
+                className="f6 grey flex items-center justify-center mr2"
+                style={{ minWidth: '100px' }}
+              >
+                Actual
+              </div>
+              <div
+                className="f6 grey flex items-center justify-center"
+                style={{ minWidth: '100px' }}
+              >
+                Waste
+              </div>
+              <div
+                style={{ width: '50px', minWidth: '50px' }}
+                className="flex items-center justify-end"
+              >
+                &nbsp;
+              </div>
+            </div>
+            {items.map(x => {
+              const actual = materialUsedStore.get(`${x.id}.material_used`)
+              const waste = materialUsedStore.get(`${x.id}.material_waste`)
+              const showTarget = materialUsedStore.shouldShowTarget(
+                x.catalogue_id
+              )
+
+              return (
+                <MaterialUsedRow
+                  key={x.id}
+                  taskId={taskId}
+                  batchId={batchId}
+                  id={x.id}
+                  material={x.product_name}
+                  expected={x.quantity}
+                  actual={actual.quantity}
+                  waste={waste.quantity}
+                  uom={x.uom}
+                  showTarget={showTarget}
+                />
+              )
+            })}
           </div>
 
           <div className="w-30 ph2 pt2 pb3" style={rightBorder}>
@@ -146,7 +185,7 @@ class ExpandedRow extends React.Component {
               <a
                 href="#"
                 className="btn btn--secondary f6"
-                onClick={this.onToggleAddNotes}
+                onClick={this.onShowAddNotes}
               >
                 Add
               </a>

@@ -14,11 +14,12 @@ module FacilityWizardForm
     private
 
     def set_record
-      find_cmd = FindFacility.call({id: self.facility_id})
-      facility = find_cmd.result
-      room = facility.rooms.find(self.room_id)
-      self.has_sections = room.has_sections
-      self.purpose = room.purpose
+      facility = FindFacility.call(id: facility_id).result
+      if room_id.present?
+        room = facility.rooms.find(room_id)
+        self.has_sections = room.has_sections
+        self.purpose = room.purpose
+      end
     end
   end
 end

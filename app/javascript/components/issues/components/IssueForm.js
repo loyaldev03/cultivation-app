@@ -2,6 +2,8 @@ import 'babel-polyfill'
 
 import React from 'react'
 import Select from 'react-select'
+import CreatableSelect from 'react-select/lib/Creatable'
+
 import DashboardModal from '@uppy/react/lib/DashboardModal'
 import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
@@ -112,6 +114,7 @@ class IssueForm extends React.Component {
       location_id: '',
       location_type: '',
       assigned_to_id: '',
+      tags: [],
       // read only
       status: '',
       created_at: null,
@@ -255,8 +258,12 @@ class IssueForm extends React.Component {
         if (status >= 400) {
           this.setState({ errors: data.errors })
         } else {
-          this.setState(this.resetState())
+          // this.setState(this.resetState()) //causing memory leaks
           this.props.onClose()
+          data.data.attributes.tags = data.data.attributes.tags.map(e => ({
+            label: e,
+            value: e
+          }))
           currentIssueStore.setIssue(data.data.attributes)
         }
       })
@@ -291,6 +298,7 @@ class IssueForm extends React.Component {
     if (!isValid) {
       this.setState({ errors })
     }
+    const tags = this.state.tags.map(e => e.value)
 
     return {
       title,
@@ -300,6 +308,7 @@ class IssueForm extends React.Component {
       location_id,
       location_type,
       assigned_to_id,
+      tags,
       attachments,
       delete_attachments,
       cultivation_batch_id: this.props.batchId,
@@ -404,13 +413,18 @@ class IssueForm extends React.Component {
     }
   }
 
+  handleChange = (newValue, actionMeta) => {
+    this.setState({ tags: newValue })
+  }
+
   render() {
     const {
       severity,
       task_id,
       location_id,
       assigned_to_id,
-      description
+      description,
+      tags
     } = this.state
     const task = task_id
       ? this.state.tasks.find(x => x.value === task_id)
@@ -460,7 +474,15 @@ class IssueForm extends React.Component {
         </div>
 
         <div className="ph3 mb3 flex">
-          <i>add labels field here</i>
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc">Tags</label>
+            <CreatableSelect
+              isMulti
+              onChange={this.handleChange}
+              styles={reactSelectStyle}
+              value={tags}
+            />
+          </div>
         </div>
 
         <div className="ph3 mb3 flex">

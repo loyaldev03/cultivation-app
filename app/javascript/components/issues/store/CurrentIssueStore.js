@@ -31,7 +31,8 @@ class CurrentIssueStore {
         photo: ''
       },
       reason: '',
-      resolution_notes: ''
+      resolution_notes: '',
+      tags: []
     }
   }
 

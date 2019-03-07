@@ -8,11 +8,14 @@ class TaskDetailsSerializer
     :wbs,
     :indelible
 
-  attributes :id do |object|
+  attribute :id do |object|
     object.id.to_s
   end
 
-  # TODO: Not sure what is this for...
+  attribute :batch_id do |object|
+    object.batch_id.to_s
+  end
+
   attribute :items do |object|
     object.material_use.map do |item|
       {
@@ -22,7 +25,7 @@ class TaskDetailsSerializer
         category: item.product.try(:catalogue).try(:category),
         quantity: item.quantity,
         uom: item.uom,
-        catalogue_id: item&.product&.catalogue&.to_s,
+        catalogue_id: item&.product&.catalogue_id&.to_s,
         uoms: item&.product&.catalogue&.uoms&.pluck(:unit),
       }
     end

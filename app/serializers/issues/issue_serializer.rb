@@ -4,7 +4,7 @@ module Issues
 
     attributes :issue_no, :title, :description, :severity,
                :status, :issue_type, :location_type,
-               :resolution_notes, :reason, :is_archived
+               :resolution_notes, :reason, :is_archived, :tags
 
     attribute :id do |object|
       object.id.to_s

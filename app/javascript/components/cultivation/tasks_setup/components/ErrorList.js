@@ -8,7 +8,7 @@ class ErrorList extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.errors && this.state.errors !== prevProps.errors) {
+    if (this.props.errors !== prevProps.errors) {
       this.setState({ errors: prevProps.errors })
     }
   }

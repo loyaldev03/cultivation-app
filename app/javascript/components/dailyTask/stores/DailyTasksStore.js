@@ -5,6 +5,7 @@ class DailyTaskStore {
   @observable batches = []
   @observable isLoading = false
 
+  @action
   load(batches) {
     this.batches.replace(batches)
   }
@@ -36,6 +37,7 @@ class DailyTaskStore {
   getNutrientsByTask(batchId, taskId) {
     const batch = this.batches.find(x => x.id === batchId)
     const task = batch.tasks.find(x => x.id === taskId)
+    console.log(task)
     return task.add_nutrients.filter(x => x.value)
   }
 

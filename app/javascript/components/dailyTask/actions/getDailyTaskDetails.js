@@ -1,5 +1,4 @@
 import { httpGetOptions } from '../../utils/FetchHelper'
-import currentTaskStore from '../stores/CurrentTaskStore'
 
 // TODO: not complete yet
 const getDailyTaskDetails = taskId => {

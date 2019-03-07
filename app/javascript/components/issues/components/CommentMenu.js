@@ -32,7 +32,7 @@ const CommentMenu = ({
     content={<div
                 className="bg-white f6 flex grey"
               >
-                <div className="db shadow-4" onMouseLeave={handleMouseLeave}>
+                <div className="db shadow-4" >
                   <MenuButton icon="reply" text="Reply" onClick={handleReply} />
                   <MenuButton icon="playlist_add" text="Convert to task" />
                   <MenuButton

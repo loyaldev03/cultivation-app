@@ -195,7 +195,7 @@ class Comments extends React.Component {
   }
 
   onEditComment = id => {
-    this.setState({ showCommentMenuId: '' })
+    this.setState({ showCommentMenuId: id })
     currentIssue.updateComment(id, { editing: true })
   }
 

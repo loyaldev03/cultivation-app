@@ -2,7 +2,7 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import TaskStore from '../tasks_setup/stores/NewTaskStore'
 import ReactGantt from './ReactGantt'
-import { Manager, Reference, Popper } from 'react-popper'
+import Tippy from '@tippy.js/react'
 import classNames from 'classnames'
 import { addSeconds } from 'date-fns'
 
@@ -237,119 +237,100 @@ class GanttChart extends React.Component {
                             )}
                             {task.name.substring(0, 20)}
                           </span>
-
-                          <Manager>
-                            <Reference>
-                              {({ ref }) => (
-                                <i
-                                  ref={ref}
-                                  id={task.id}
-                                  onClick={e => this.handleDropdown(task.id)}
-                                  className="material-icons ml2 pointer button-dropdown"
+                          <Tippy
+                            placement="bottom-end"
+                            trigger="click"
+                            content={
+                              <div id={'dropdown-' + task.id}>
+                                <div
+                                  id="myDropdown"
+                                  onMouseLeave={this.handleMouseLeave}
+                                  className="gray table-dropdown dropdown-content box--shadow-header show"
                                 >
-                                  more_horiz
-                                </i>
-                              )}
-                            </Reference>
-                            {this.state.idOpen === task.id && (
-                              <Popper
-                                placement="bottom"
-                                style={{ borderColor: 'red' }}
-                              >
-                                {({ ref, style, placement, arrowProps }) => (
-                                  <div
-                                    ref={ref}
-                                    id={'dropdown-' + task.id}
-                                    style={style}
-                                    data-placement={placement}
+                                  <a
+                                    className="ttc pv2 tc flex pointer"
+                                    style={{ display: 'flex' }}
+                                    // onClick={e => {
+                                    //   handleIndent(row, 'in')
+                                    // }}
                                   >
-                                    <div
-                                      id="myDropdown"
-                                      onMouseLeave={this.handleMouseLeave}
-                                      className="table-dropdown dropdown-content box--shadow-header show"
-                                    >
-                                      <a
-                                        className="ttc pv2 tc flex pointer"
-                                        style={{ display: 'flex' }}
-                                        // onClick={e => {
-                                        //   handleIndent(row, 'in')
-                                        // }}
-                                      >
-                                        <i className="material-icons md-600 md-17 ph2">
-                                          format_indent_increase
-                                        </i>
-                                        Indent In
-                                      </a>
-                                      <a
-                                        className="ttc pv2 tc flex pointer"
-                                        style={{ display: 'flex' }}
-                                        // onClick={e => {
-                                        //   handleIndent(row, 'out')
-                                        // }}
-                                      >
-                                        <i className="material-icons md-600 md-17 ph2">
-                                          format_indent_decrease
-                                        </i>
-                                        Indent Out
-                                      </a>
-                                      <a
-                                        className="ttc pv2 tc flex pointer"
-                                        style={{ display: 'flex' }}
-                                        // onClick={e => {
-                                        //   handleAddTask(row, 'top')
-                                        // }}
-                                      >
-                                        <i className="material-icons md-600 md-17 ph2">
-                                          vertical_align_top
-                                        </i>
-                                        Insert Task Above
-                                      </a>
-                                      <a
-                                        className="ttc pv2 tc flex pointer"
-                                        style={{ display: 'flex' }}
-                                        // onClick={e => {
-                                        //   handleAddTask(row, 'bottom')
-                                        // }}
-                                      >
-                                        <i className="material-icons md-600 md-17 ph2">
-                                          vertical_align_bottom
-                                        </i>
-                                        Insert Task Below
-                                      </a>
-                                      <a
-                                        className="ttc pv2 tc flex pointer"
-                                        style={{ display: 'flex' }}
-                                        // onClick={e => {
-                                        //   handleEdit(row)
-                                        // }}
-                                      >
-                                        <i className="material-icons md-600 md-17 ph2">
-                                          edit
-                                        </i>
-                                        Edit
-                                      </a>
-                                      <a
-                                        className="ttc pv2 tc flex pointer"
-                                        style={{ display: 'flex' }}
-                                        // onClick={e => {
-                                        //   handleDelete(row)
-                                        // }}
-                                      >
-                                        <i className="material-icons md-600 md-17 ph2">
-                                          delete_outline
-                                        </i>
-                                        Delete
-                                      </a>
-                                    </div>
-                                    <div
-                                      ref={arrowProps.ref}
-                                      style={arrowProps.style}
-                                    />
-                                  </div>
-                                )}
-                              </Popper>
-                            )}
-                          </Manager>
+                                    <i className="material-icons md-600 md-17 ph2">
+                                      format_indent_increase
+                                    </i>
+                                    Indent In
+                                  </a>
+                                  <a
+                                    className="ttc pv2 tc flex pointer"
+                                    style={{ display: 'flex' }}
+                                    // onClick={e => {
+                                    //   handleIndent(row, 'out')
+                                    // }}
+                                  >
+                                    <i className="material-icons md-600 md-17 ph2">
+                                      format_indent_decrease
+                                    </i>
+                                    Indent Out
+                                  </a>
+                                  <a
+                                    className="ttc pv2 tc flex pointer"
+                                    style={{ display: 'flex' }}
+                                    // onClick={e => {
+                                    //   handleAddTask(row, 'top')
+                                    // }}
+                                  >
+                                    <i className="material-icons md-600 md-17 ph2">
+                                      vertical_align_top
+                                    </i>
+                                    Insert Task Above
+                                  </a>
+                                  <a
+                                    className="ttc pv2 tc flex pointer"
+                                    style={{ display: 'flex' }}
+                                    // onClick={e => {
+                                    //   handleAddTask(row, 'bottom')
+                                    // }}
+                                  >
+                                    <i className="material-icons md-600 md-17 ph2">
+                                      vertical_align_bottom
+                                    </i>
+                                    Insert Task Below
+                                  </a>
+                                  <a
+                                    className="ttc pv2 tc flex pointer"
+                                    style={{ display: 'flex' }}
+                                    // onClick={e => {
+                                    //   handleEdit(row)
+                                    // }}
+                                  >
+                                    <i className="material-icons md-600 md-17 ph2">
+                                      edit
+                                    </i>
+                                    Edit
+                                  </a>
+                                  <a
+                                    className="ttc pv2 tc flex pointer"
+                                    style={{ display: 'flex' }}
+                                    // onClick={e => {
+                                    //   handleDelete(row)
+                                    // }}
+                                  >
+                                    <i className="material-icons md-600 md-17 ph2">
+                                      delete_outline
+                                    </i>
+                                    Delete
+                                  </a>
+                                </div>
+                              </div>
+                            }
+                          >
+                            <i
+                              id={task.id}
+                              onClick={e => this.handleDropdown(task.id)}
+                              className="material-icons ml2 pointer button-dropdown"
+                            >
+                              more_horiz
+                            </i>
+                          </Tippy>
                         </div>
                       </td>
                     </tr>

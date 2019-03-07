@@ -187,7 +187,7 @@ class TaskList extends React.Component {
                 </div>
               </div>
             ) : (
-              ""
+              ''
             )
           }
         >

@@ -16,7 +16,12 @@ class Settings::Company::CompanyInfoController < ApplicationController
     @company_info.state_license = company_info_params[:state_license]
     @company_info.tax_id = company_info_params[:tax_id]
     @company_info.timezone = company_info_params[:timezone]
-    @company_info.save!
+
+    if @company_info.save
+      redirect_to edit_settings_company_company_info_path
+    else
+      render 'edit'
+    end
   end
 
   private

@@ -16,6 +16,11 @@ class ExpandedRow extends React.Component {
     event.preventDefault()
   }
 
+  onShowMaterialUsedSidebar = event => {
+    sidebarStore.openMaterialUsed(this.props.batch_id, this.props.id)
+    event.preventDefault()
+  }
+
   onDeleteNote = noteId => {
     const result = confirm('Confirm delete this note?')
     if (result) {
@@ -29,8 +34,8 @@ class ExpandedRow extends React.Component {
 
   onUpdateNutrients = nutrients => {
     DailyTaskStore.updateNutrients(
-      this.props.batchId,
-      this.props.taskId,
+      this.props.batch_id,
+      this.props.id,
       nutrients
     )
   }
@@ -98,10 +103,7 @@ class ExpandedRow extends React.Component {
               <a
                 href="#"
                 className="btn btn--secondary f6"
-                onClick={() => {
-                  console.log('open material sidebar')
-                  sidebarStore.openMaterialUsed(batchId, taskId)
-                }}
+                onClick={this.onShowMaterialUsedSidebar}
               >
                 Add
               </a>

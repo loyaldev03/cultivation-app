@@ -125,7 +125,7 @@ class TaskList extends React.Component {
   }
 
   renderTaskNameColumn = data => {
-    const { id, wbs, indent, issues, deletable, indelible } = data.row
+    const { id, wbs, indent, issues, deletable, indelible, items } = data.row
     const batchId = this.props.batch.id
     const hasChild = TaskStore.hasChildNode(wbs)
     const isCollapsed = TaskStore.isCollapsed(wbs)
@@ -184,6 +184,11 @@ class TaskList extends React.Component {
                       onClick={e => this.handleDelete(data)}
                     />
                   ) : null}
+                  { data.value==="Add nutrients" ? <MenuButton
+                    icon="edit"
+                    text={data.value}
+                    onClick={()=>this.handleShowMaterialForm(id, items)}
+                  />:""}
                 </div>
               </div>
             ) : (

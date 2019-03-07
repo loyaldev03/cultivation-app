@@ -3,7 +3,6 @@ import { observer } from 'mobx-react'
 import TaskStore from '../tasks_setup/stores/NewTaskStore'
 import ReactGantt from './ReactGantt'
 import Tippy from '@tippy.js/react'
-import { Manager, Reference, Popper } from 'react-popper'
 import classNames from 'classnames'
 import { addSeconds } from 'date-fns'
 

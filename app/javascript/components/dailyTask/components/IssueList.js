@@ -1,5 +1,38 @@
 import React from 'react'
 // import { formatAgo } from '../../utils'
+import { formatDate, formatTime } from '../../utils/DateHelper'
+
+const renderSeverity = value => {
+  if (value === 'high') {
+    return (
+      <div className="tc ttc">
+        <i className="material-icons red" style={{ fontSize: '18px' }}>
+          error
+        </i>
+      </div>
+    )
+  } else if (value === 'medium') {
+    return (
+      <div className="tc ttc">
+        <i className="material-icons gold" style={{ fontSize: '18px' }}>
+          warning
+        </i>
+      </div>
+    )
+  } else if (value === 'low') {
+    return <div className="tc ttc purple f7">FYI</div>
+  } else {
+    return null
+  }
+}
+
+const formatIssueNo = issueNo => {
+  if (issueNo) {
+    return `#${issueNo.toString().padStart(5, '0')}`
+  } else {
+    ('')
+  }
+}
 
 const IssueList = React.memo(
   ({ onEdit, onDelete, issues = [], show = true }) => {
@@ -12,21 +45,24 @@ const IssueList = React.memo(
           {issues.map(x => {
             return (
               <li className="pv2 pointer" key={x.id} onClick={e => onEdit(x)}>
-                <div className="flex justify-between">
-                  <div className="f6 dark-gray">Issue #{x.issue_no}</div>
-                  <div className="f6 dark-gray items-right">
-                    {x.tags.length > 0 &&
-                      x.tags.map((tag, index) => (
-                        <span
-                          className="bg-green ba white f7 fw4 ph1 br2 ml1"
-                          key={index}
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                <div className="pl2">
+                  <div className="flex items-center">
+                    <div className="f6 fw6 dark-gray">
+                      ISSUE {formatIssueNo(x.issue_no)}
+                    </div>
+                    <div className="f6 fw6 ph1">&bull;</div>
+                    <div className="f7 fw6 green pr2 ttu">{x.status}</div>
+                    {renderSeverity(x.severity)}
                   </div>
+
+                  {x.created_at && (
+                    <div className="flex pt1">
+                      <div style={{ fontSize: '10px' }} className="fw4 gray">
+                        {formatDate(x.created_at)}, {formatTime(x.created_at)}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <span className="f6 dark-gray">{x.title}</span>
               </li>
             )
           })}

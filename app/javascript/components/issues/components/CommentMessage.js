@@ -85,7 +85,6 @@ class CommentMessage extends React.Component {
   }
 
   resizeMessageBox = () => {
-    console.log(this.messageBox.current.style)
     // this.messageBox.current.style.cssText = 'height:' + this.messageBox.current.scrollHeight + 'px'
 
     const field = this.messageBox.current

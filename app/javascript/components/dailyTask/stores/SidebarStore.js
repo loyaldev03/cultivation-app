@@ -31,8 +31,6 @@ class SidebarStore {
     this.noteBody = noteBody
 
     this.showNotes.set(true)
-    this.showMaterialUsed.set(false)
-    this.showIssues.set(false)
   }
 
   @action
@@ -47,10 +45,7 @@ class SidebarStore {
     this.noteBody = ''
     this.batchId = batchId
     this.taskId = taskId
-
-    this.showNotes.set(false)
     this.showMaterialUsed.set(true)
-    this.showIssues.set(false)
   }
 
   @action

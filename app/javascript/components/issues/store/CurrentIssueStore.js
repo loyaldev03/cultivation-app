@@ -62,7 +62,6 @@ class CurrentIssueStore {
   updateComment(comment_id, newAttributes) {
     const comments = this.comments.slice()
     let index = comments.findIndex(x => x.id === comment_id)
-    console.log(index)
     if (index >= 0) {
       const toUpdate = comments[index]
       comments[index] = { ...toUpdate, ...newAttributes }
@@ -72,8 +71,6 @@ class CurrentIssueStore {
 
   @action
   deleteComment(comment_id) {
-    console.log(comment_id)
-    console.log(this.comments.slice().map(x => x.id))
     const newComments = this.comments.slice().filter(x => x.id !== comment_id)
     this.comments.replace(newComments)
   }

@@ -184,11 +184,11 @@ class TaskList extends React.Component {
                       onClick={e => this.handleDelete(data)}
                     />
                   ) : null}
-                  { data.value==="Add nutrients" ? <MenuButton
-                    icon="edit"
+                  { data.value==="Add nutrients" ? <div className="bt bw1"><p className="i tc">Special Task</p><MenuButton
+                    icon="colorize"
                     text={data.value}
                     onClick={()=>this.handleShowMaterialForm(id, items)}
-                  />:""}
+                  /></div>:""}
                 </div>
               </div>
             ) : (

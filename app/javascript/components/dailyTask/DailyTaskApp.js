@@ -152,6 +152,7 @@ class DailyTaskApp extends React.Component {
           current_user_first_name={this.props.current_user_first_name}
           current_user_last_name={this.props.current_user_last_name}
           current_user_photo={this.props.current_user_photo}
+          daily_task={true}
         />
         {this.renderSlidePanel()}
       </React.Fragment>

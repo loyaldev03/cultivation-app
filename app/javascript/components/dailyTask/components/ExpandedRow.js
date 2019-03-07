@@ -24,7 +24,7 @@ class ExpandedRow extends React.Component {
   onDeleteNote = noteId => {
     const result = confirm('Confirm delete this note?')
     if (result) {
-      DailyTaskStore.deleteNote(this.props.taskId, noteId)
+      DailyTaskStore.deleteNote(this.props.id, noteId)
     }
   }
 

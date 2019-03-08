@@ -1,9 +1,9 @@
 import React from 'react'
 import InlineEditTextField from './InlineEditTextField'
-import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import { formatDate2 } from '../../../utils'
 import { Manager, Reference, Popper } from 'react-popper'
+import Tippy from '@tippy.js/react'
 
 export default class InlineEditDateField extends InlineEditTextField {
   state = {
@@ -40,28 +40,33 @@ export default class InlineEditDateField extends InlineEditTextField {
     const { value } = this.state
     // text is Date Object from Task Store
     return (
-      <Manager>
-        <Reference>
-          {({ ref }) => (
-            <span ref={ref} className="flex-auto w2 h1">
-              {formatDate2(value)}
-            </span>
-          )}
-        </Reference>
-        <Popper placement="bottom">
-          {({ ref, style, placement, arrowProps }) => (
-            <div
-              ref={ref}
-              style={style}
-              data-placement={placement}
-              className="inline_calendar"
-            >
-              <Calendar value={value} onChange={this.onChange} />
-              <div ref={arrowProps.ref} style={arrowProps.style} />
-            </div>
-          )}
-        </Popper>
-      </Manager>
+      <Tippy
+        placement="bottom-end"
+        trigger="click"
+        content={
+          <div className="inline_calendar">
+            <Calendar value={value} onChange={this.onChange} />
+            <input
+              type="button"
+              className="btn btn--primary "
+              value="Add"
+              onClick={() => {
+                console.log('Button Add Triggered')
+              }}
+            />
+            <input
+              type="button"
+              className="btn btn--secondary "
+              value="Close"
+              onClick={() => {
+                console.log('Button Close Triggered')
+              }}
+            />
+          </div>
+        }
+      >
+        <span className="flex-auto w2 h1">{formatDate2(value)}</span>
+      </Tippy>
     )
   }
 }

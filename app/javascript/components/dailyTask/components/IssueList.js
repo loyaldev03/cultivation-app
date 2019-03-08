@@ -35,7 +35,7 @@ const formatIssueNo = issueNo => {
 }
 
 const IssueList = React.memo(
-  ({ onEdit, onDelete, issues = [], show = true }) => {
+  ({ onShow, onDelete, issues = [], show = true }) => {
     if (!show) {
       return null
     }
@@ -44,7 +44,7 @@ const IssueList = React.memo(
         <ul className="list pl0">
           {issues.map(x => {
             return (
-              <li className="pv2 pointer" key={x.id} onClick={e => onEdit(x)}>
+              <li className="pv2 pointer" key={x.id} onClick={e => onShow(x)}>
                 <div className="pl2">
                   <div className="flex items-center">
                     <div className="f6 fw6 dark-gray">

@@ -8,6 +8,9 @@ import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
 import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
 import IssueSidebar from '../../issues/IssueSidebar'
+import {SlidePanel} from '../../utils'
+import dailyTaskSidebarStore from '../../dailyTask/stores/SidebarStore'
+
 @observer
 class TaskSetup extends React.Component {
   constructor(props) {
@@ -38,7 +41,6 @@ class TaskSetup extends React.Component {
     loadUnresolvedIssueCount(this.props.batch.id).then(x => {
       this.setState({ unresolvedIssueCount: x.count })
     })
-    window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
   }
 
   onChangeFilterColumns = value => {
@@ -77,6 +79,7 @@ class TaskSetup extends React.Component {
     const { batch } = this.props
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
+    const { showIssues } = dailyTaskSidebarStore
     return (
       <div className="pa4 grey flex flex-column h-100">
         <div id="toast" className="toast animated toast--success" />
@@ -251,14 +254,21 @@ class TaskSetup extends React.Component {
         <div className="pa4 flex flex-column justify-between bg-white box--shadow">
           <TaskList batch={batch} columns={this.state.columns} />
         </div>
-        <IssueSidebar
-          batch_id={batch.id}
-          facility_id={batch.facility_id}
-          mode={this.state.mode}
-          current_user_first_name={this.props.current_user_first_name}
-          current_user_last_name={this.props.current_user_last_name}
-          current_user_photo={this.props.current_user_photo}
+        <SlidePanel
+          width="500px"
+          show={showIssues.get()}
+          renderBody={props =>
+            <IssueSidebar
+              batch_id={batch.id}
+              facility_id={batch.facility_id}
+              mode={this.state.mode}
+              current_user_first_name={this.props.current_user_first_name}
+              current_user_last_name={this.props.current_user_last_name}
+              current_user_photo={this.props.current_user_photo}
+            />
+          }
         />
+
       </div>
     )
   }

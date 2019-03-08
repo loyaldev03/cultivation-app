@@ -6,31 +6,33 @@ import IssueDetails from './components/IssueDetails'
 import IssueHeader from './components/IssueHeader'
 import currentIssueStore from './store/CurrentIssueStore'
 import getIssue from './actions/getIssue'
-
+import dailyTaskSidebarStore from '../dailyTask/stores/SidebarStore'
 @observer
 class IssueSidebar extends React.Component {
-  constructor(props) {
+constructor(props) {
     super(props)
     this.state = this.resetState()
   }
 
   componentDidMount() {
-    document.addEventListener('editor-sidebar-open', event => {
-      const issueId = event.detail.id
-      const mode = event.detail.mode
+    dailyTaskSidebarStore.showIssues.observe(change => {
+      if (change.newValue) {
+        const issueId = dailyTaskSidebarStore.issueId
+        const mode = dailyTaskSidebarStore.issueMode
 
-      if (issueId) {
-        getIssue(issueId)
-      } else if (mode === 'create') {
-        currentIssueStore.reset()
-      }
+        if (issueId) {
+          getIssue(issueId)
+        } else if (mode === 'create') {
+          currentIssueStore.reset()
+        }
 
-      if (mode === 'details') {
-        this.setState({ mode, issueId })
-      } else if (!issueId) {
-        this.setState({ mode: 'create', issueId: '' })
-      } else {
-        this.setState({ mode: 'edit', issueId })
+        if (mode === 'details') {
+          this.setState({ mode, issueId })
+        } else if (!issueId) {
+          this.setState({ mode: 'create', issueId: '' })
+        } else {
+          this.setState({ mode: 'edit', issueId })
+        }
       }
     })
   }
@@ -55,7 +57,8 @@ class IssueSidebar extends React.Component {
       this.setState({ mode: 'details' })
     } else {
       currentIssueStore.reset()
-      window.editorSidebar.close()
+      dailyTaskSidebarStore.closeIssues()
+      // window.editorSidebar.close()
     }
   }
 
@@ -66,7 +69,6 @@ class IssueSidebar extends React.Component {
       current_user_first_name,
       current_user_last_name,
       current_user_photo,
-      daily_task
     } = this.props
     const { mode } = this.state
 
@@ -81,7 +83,6 @@ class IssueSidebar extends React.Component {
           current_user_first_name={current_user_first_name}
           current_user_last_name={current_user_last_name}
           current_user_photo={current_user_photo}
-          daily_task={daily_task}
         />
       )
     } else {
@@ -101,22 +102,20 @@ class IssueSidebar extends React.Component {
   render() {
     const issue = currentIssueStore.issue
     return (
-      <div className="rc-slide-panel" data-role="sidebar">
-        <div className="rc-slide-panel__body flex flex-column relative">
-          <IssueHeader
-            reporterFirsName={issue.reported_by.first_name}
-            reporterLastName={issue.reported_by.last_name}
-            reporterPhotoUrl={issue.reported_by.photo}
-            issueNo={issue.issue_no}
-            severity={issue.severity}
-            status={issue.status}
-            createdAt={this.state.mode === 'details' ? issue.created_at : ''}
-            onClose={this.onClose}
-            isArchived={issue.is_archived}
-          />
-          {this.renderBody()}
-        </div>
-      </div>
+      <React.Fragment>
+        <IssueHeader
+          reporterFirsName={issue.reported_by.first_name}
+          reporterLastName={issue.reported_by.last_name}
+          reporterPhotoUrl={issue.reported_by.photo}
+          issueNo={issue.issue_no}
+          severity={issue.severity}
+          status={issue.status}
+          createdAt={this.state.mode === 'details' ? issue.created_at : ''}
+          onClose={this.onClose}
+          isArchived={issue.is_archived}
+        />
+        {this.renderBody()}
+      </React.Fragment>
     )
   }
 }

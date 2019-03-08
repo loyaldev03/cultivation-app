@@ -10,6 +10,9 @@ class SidebarStore {
   @observable taskId = null
   @observable noteId = null
   @observable noteBody = ''
+  @observable issueId = ''
+  @observable issueMode = ''
+
 
   reset() {
     this.noteId = null
@@ -59,6 +62,19 @@ class SidebarStore {
     this.showMaterialUsed = false
     this.showIssues = !this.showIssues
   }
+
+  @action
+  openIssues(id = null, mode = null){
+    this.reset()
+    this.issueId = id
+    this.issueMode = mode
+    this.showIssues.set(true)
+  }
+
+  closeIssues(){
+    this.reset()
+  }
+
 }
 
 const sidebar = new SidebarStore()

@@ -20,7 +20,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
   document.body.addEventListener(
     'click',
     function(e) {
-      if (!e.target.closest('.rc-slide-panel')) {
+      window.sidebarTarget = e.target
+      if (
+        !e.target.closest('.rc-slide-panel') && // not clicking inside the slide panel
+        !e.target.closest('.tippy-popper') // not clicking inside a tippy popup
+      ) {
         // Clicked outside the element...
         //console.log('Clicked outside the slide-panel', e
         if (window.editorSidebar && window.editorSidebar.sidebarNode) {

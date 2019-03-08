@@ -2,7 +2,6 @@ import React from 'react'
 import InlineEditTextField from './InlineEditTextField'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import { formatDate2 } from '../../../utils'
-import { Manager, Reference, Popper } from 'react-popper'
 import Tippy from '@tippy.js/react'
 
 export default class InlineEditDateField extends InlineEditTextField {

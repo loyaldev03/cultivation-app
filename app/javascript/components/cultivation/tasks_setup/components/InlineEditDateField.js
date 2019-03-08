@@ -2,7 +2,6 @@ import React from 'react'
 import InlineEditTextField from './InlineEditTextField'
 import Calendar from 'react-calendar/dist/entry.nostyle'
 import { formatDate2 } from '../../../utils'
-import { Manager, Reference, Popper } from 'react-popper'
 import Tippy from '@tippy.js/react'
 
 export default class InlineEditDateField extends InlineEditTextField {
@@ -38,6 +37,8 @@ export default class InlineEditDateField extends InlineEditTextField {
   }
   renderEdit(text) {
     const { value } = this.state
+    const { onDoneClick } = this.props
+
     // text is Date Object from Task Store
     return (
       <Tippy
@@ -51,7 +52,7 @@ export default class InlineEditDateField extends InlineEditTextField {
               className="btn btn--primary "
               value="Add"
               onClick={() => {
-                console.log('Button Add Triggered')
+                onDoneClick(this.state.value)
               }}
             />
             <input

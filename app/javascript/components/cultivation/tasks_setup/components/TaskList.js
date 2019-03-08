@@ -11,6 +11,7 @@ import InlineEditNumberField from './InlineEditNumberField'
 import InlineEditDateField from './InlineEditDateField'
 import Avatar from '../../../utils/Avatar'
 import { formatDate2, moneyFormatter, SlidePanel } from '../../../utils'
+import MyImage from 'images/BagOfSeeds.png'
 
 const ReactTable = lazy(() => import('react-table'))
 const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
@@ -23,7 +24,11 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
       className={`pa2 flex link dim pointer items-center ${className}`}
       onClick={onClick}
     >
-      <i className="material-icons md-17 pr2">{icon}</i>
+      {icon ? (
+        <i className="material-icons md-17 pr2">{icon}</i>
+      ) : (
+        <img src={MyImage} style={{ width: '2em' }} />
+      )}
       <span className="pr2">{text}</span>
     </a>
   )
@@ -187,8 +192,8 @@ class TaskList extends React.Component {
                   {indelible === 'add_nutrient' ? (
                     <div className="bt bw1">
                       <p className="i tc silver">Special Task</p>
+
                       <MenuButton
-                        icon="ac_unit"
                         text="Add nutrients"
                         onClick={() => this.handleShowMaterialForm(id, items)}
                       />

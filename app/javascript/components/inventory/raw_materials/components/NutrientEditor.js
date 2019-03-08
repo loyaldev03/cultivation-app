@@ -259,7 +259,7 @@ class NutrientEditor extends React.Component {
       errors.facility_id = ['Facility is required.']
     }
 
-    if (uom.length === 0) {
+    if (uom && uom.length === 0) {
       errors.uom = ['Unit of measure is required.']
     }
 

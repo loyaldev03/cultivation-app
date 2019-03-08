@@ -1,18 +1,19 @@
-import rawMaterialStore from '../store/RawMaterialStore'
+import RawMaterialStore from '../store/RawMaterialStore'
 import { httpGetOptions } from '../../../utils'
 
-export default function loadRawMaterials(type, facility_id = null) {
-  return fetch(`/api/v1/raw_materials?type=${type}`, httpGetOptions)
-    .then(response => {
-      return response.json().then(data => ({
-        status: response.status,
-        data
-      }))
-    })
-    .then(result => {
-      const { status, data } = result
-      if (status == 200) {
-        rawMaterialStore.load(data.data)
-      }
-    })
+const loadRawMaterials = async type => {
+  RawMaterialStore.isLoading = true
+  const url = `/api/v1/raw_materials?type=${type}`
+  try {
+    const response = await (await fetch(url, httpGetOptions)).json()
+    if (response.data) {
+      RawMaterialStore.load(response.data)
+    }
+  } catch (err) {
+    console.error(err)
+  } finally {
+    RawMaterialStore.isLoading = false
+  }
 }
+
+export default loadRawMaterials

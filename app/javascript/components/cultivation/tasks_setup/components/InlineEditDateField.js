@@ -36,32 +36,27 @@ export default class InlineEditDateField extends InlineEditTextField {
     }
   }
   renderEdit(text) {
-    const { value } = this.state
-    const { onDoneClick } = this.props
-
+    const { value, isEdit } = this.state
     // text is Date Object from Task Store
     return (
       <Tippy
-        placement="bottom-end"
-        trigger="click"
+        placement="bottom"
+        isVisible={isEdit}
+        trigger="manual"
         content={
           <div className="inline_calendar">
             <Calendar value={value} onChange={this.onChange} />
             <input
               type="button"
-              className="btn btn--primary "
-              value="Add"
-              onClick={() => {
-                onDoneClick(this.state.value)
-              }}
+              className="btn btn--primary btn--small"
+              value="Ok"
+              onClick={this.switchViewMode}
             />
             <input
               type="button"
-              className="btn btn--secondary "
-              value="Close"
-              onClick={() => {
-                console.log('Button Close Triggered')
-              }}
+              className="btn btn--secondary btn--small fr"
+              value="Cancel"
+              onClick={this.onCancelEdit}
             />
           </div>
         }

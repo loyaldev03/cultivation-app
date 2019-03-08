@@ -3,7 +3,6 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     type = params[:type]
     category = params[:category]
     facility_id = params[:facility_id].to_s
-    facility_id = Cultivation::Batch.find(params[:batch_id].to_s).facility_id if params[:batch_id]
     facility_strain_id = params[:facility_strain_id].to_s
 
     case category

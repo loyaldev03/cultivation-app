@@ -1,16 +1,17 @@
-$buttonHeight1: 38px;
-$buttonHeight2: 46px;
+$buttonHeight3: 32px;
+$buttonHeight5: 38px;
+$buttonHeight8: 46px;
 
 .btn {
   display: inline-block;
-  height: $buttonHeight1;
+  height: $buttonHeight5;
   padding: 0 2em 0 2em;
 
   outline-color: $orange;
   border-radius: 0.22em;
   cursor: pointer;
 
-  line-height: $buttonHeight1 - 2px;
+  line-height: $buttonHeight5 - 2px;
   letter-spacing: 0.0652em;
   font-size: 14px;
   font-weight: 600;
@@ -52,9 +53,15 @@ $buttonHeight2: 46px;
 }
 
 .btn--large {
-  height: $buttonHeight2;
-  line-height: $buttonHeight2 - 2px;
+  height: $buttonHeight8;
+  line-height: $buttonHeight8 - 2px;
   font-size: 15px;
+}
+
+.btn--small {
+  height: $buttonHeight3;
+  line-height: $buttonHeight3 - 2px;
+  font-size: 13px;
 }
 
 .btn--slim {

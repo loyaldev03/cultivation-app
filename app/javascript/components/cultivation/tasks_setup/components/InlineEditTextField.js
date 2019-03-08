@@ -22,6 +22,12 @@ export default class InlineEditTextField extends React.PureComponent {
       onHighlight()
     }
   }
+  onCancelEdit = e => {
+    this.setState({
+      isEdit: false,
+      value: this.props.text
+    })
+  }
   handleKeyPress = e => {
     if (e.key === 'Enter') {
       this.switchViewMode(e)

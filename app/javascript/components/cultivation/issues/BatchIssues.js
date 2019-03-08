@@ -9,6 +9,9 @@ import IssueSidebar from '../../issues/IssueSidebar'
 import loadBatchIssues from '../../issues/actions/loadBatchIssues'
 import issueStore from '../../issues/store/IssueStore'
 import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
+import { SlidePanel } from '../../utils'
+
+import dailyTaskSidebarStore from '../../dailyTask/stores/SidebarStore'
 
 @observer
 class BatchIssues extends React.Component {
@@ -22,11 +25,11 @@ class BatchIssues extends React.Component {
   }
 
   componentDidMount() {
-    window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
     loadBatchIssues(this.props.batch.id)
   }
 
   renderContent() {
+    const { showIssues } = dailyTaskSidebarStore
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3 ">
@@ -64,13 +67,19 @@ class BatchIssues extends React.Component {
                 }
               }}
             />
-            <IssueSidebar
-              batch_id={this.props.batch.id}
-              facility_id={this.props.batch.facility_id}
-              mode={this.state.mode}
-              current_user_first_name={this.props.current_user_first_name}
-              current_user_last_name={this.props.current_user_last_name}
-              current_user_photo={this.props.current_user_photo}
+            <SlidePanel
+              width="500px"
+              show={showIssues.get()}
+              renderBody={props => (
+                <IssueSidebar
+                  batch_id={this.props.batch.id}
+                  facility_id={this.props.batch.facility_id}
+                  mode={this.state.mode}
+                  current_user_first_name={this.props.current_user_first_name}
+                  current_user_last_name={this.props.current_user_last_name}
+                  current_user_photo={this.props.current_user_photo}
+                />
+              )}
             />
           </div>
         </div>
@@ -209,7 +218,7 @@ class BatchIssues extends React.Component {
 
   openSidebar = (event, id = null, mode = null) => {
     this.setState({ taskSelected: id })
-    window.editorSidebar.open({ id, mode, width: '500px' })
+    dailyTaskSidebarStore.openIssues(id, mode)
     event.preventDefault()
   }
 

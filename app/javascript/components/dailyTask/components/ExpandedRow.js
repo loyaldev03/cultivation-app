@@ -2,6 +2,7 @@ import React from 'react'
 import { toJS } from 'mobx'
 import MaterialUsedRow from './MaterialUsedRow'
 import NoteList from './NoteList'
+import IssueList from './IssueList'
 import DailyTaskStore from '../stores/DailyTasksStore'
 import sidebarStore from '../stores/SidebarStore'
 import materialUsedStore from '../stores/MaterialUsedStore'
@@ -15,10 +16,15 @@ class ExpandedRow extends React.Component {
     event.preventDefault()
   }
 
+  onShowMaterialUsedSidebar = event => {
+    sidebarStore.openMaterialUsed(this.props.batch_id, this.props.id)
+    event.preventDefault()
+  }
+
   onDeleteNote = noteId => {
     const result = confirm('Confirm delete this note?')
     if (result) {
-      DailyTaskStore.deleteNote(this.props.taskId, noteId)
+      DailyTaskStore.deleteNote(this.props.id, noteId)
     }
   }
 
@@ -28,10 +34,18 @@ class ExpandedRow extends React.Component {
 
   onUpdateNutrients = nutrients => {
     DailyTaskStore.updateNutrients(
-      this.props.batchId,
-      this.props.taskId,
+      this.props.batch_id,
+      this.props.id,
       nutrients
     )
+  }
+
+  onShowIssue = issue => {
+    let id = issue.id
+    let mode = 'details'
+    let dailyTask = true
+    sidebarStore.openIssues(id, mode, dailyTask)
+    event.preventDefault()
   }
 
   render() {
@@ -40,7 +54,8 @@ class ExpandedRow extends React.Component {
       indelible,
       notes,
       batch_id: batchId,
-      items
+      items,
+      issues
     } = this.props
 
     // console.group('expanded row')
@@ -89,10 +104,7 @@ class ExpandedRow extends React.Component {
               <a
                 href="#"
                 className="btn btn--secondary f6"
-                onClick={() => {
-                  console.log('open material sidebar')
-                  sidebarStore.openMaterialUsed(batchId, taskId)
-                }}
+                onClick={this.onShowMaterialUsedSidebar}
               >
                 Add
               </a>
@@ -155,13 +167,19 @@ class ExpandedRow extends React.Component {
               <a
                 href="#"
                 className="btn btn--secondary f6"
-                onClick={() => {
-                  alert('not ready')
-                }}
+                onClick={event =>
+                  window.editorSidebar.open(event, null, 'create')
+                }
               >
                 Add
               </a>
             </div>
+            <IssueList
+              show={true}
+              issues={issues}
+              onShow={this.onShowIssue}
+              onDelete={this.onToggleAddIssue}
+            />
           </div>
 
           <div className="w-30 ph2 pt2 pb3">

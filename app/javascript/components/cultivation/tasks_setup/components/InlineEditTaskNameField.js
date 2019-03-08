@@ -2,11 +2,14 @@ import React from 'react'
 import classNames from 'classnames'
 import InlineEditTextField from './InlineEditTextField'
 import Tippy from '@tippy.js/react'
+import dailyTaskSidebarStore from '../../../dailyTask/stores/SidebarStore'
 export default class InlineEditTaskNameField extends InlineEditTextField {
-  onClickNow = issue => {
+  openSidebar = issue => {
+    this.setState({ taskSelected: id })
     let id = issue.id
     let mode = 'details'
-    window.editorSidebar.open({ id, mode, width: '500px' })
+    dailyTaskSidebarStore.openIssues(id, mode)
+    event.preventDefault()
   }
 
   render() {
@@ -74,7 +77,7 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
                           <li
                             key={key}
                             className="pointer br2 dim--grey pa1"
-                            onClick={e => this.onClickNow(i)}
+                            onClick={e => this.openSidebar(i)}
                           >
                             {i.title}
                           </li>

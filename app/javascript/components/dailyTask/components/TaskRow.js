@@ -10,7 +10,6 @@ import ExpandedRow from './ExpandedRow'
 import { toast } from '../../utils'
 import DailyTaskStore from '../stores/DailyTasksStore'
 import classNames from 'classnames'
-
 class TaskRow extends React.Component {
   state = {
     expanded: false,

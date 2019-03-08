@@ -9,7 +9,7 @@ import IssueSidebar from '../../issues/IssueSidebar'
 import loadBatchIssues from '../../issues/actions/loadBatchIssues'
 import issueStore from '../../issues/store/IssueStore'
 import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
-import { SlidePanel} from '../../utils'
+import { SlidePanel } from '../../utils'
 
 import dailyTaskSidebarStore from '../../dailyTask/stores/SidebarStore'
 
@@ -70,7 +70,7 @@ class BatchIssues extends React.Component {
             <SlidePanel
               width="500px"
               show={showIssues.get()}
-              renderBody={props =>
+              renderBody={props => (
                 <IssueSidebar
                   batch_id={this.props.batch.id}
                   facility_id={this.props.batch.facility_id}
@@ -79,10 +79,8 @@ class BatchIssues extends React.Component {
                   current_user_last_name={this.props.current_user_last_name}
                   current_user_photo={this.props.current_user_photo}
                 />
-
-              }
+              )}
             />
-
           </div>
         </div>
       </React.Fragment>

@@ -4,7 +4,6 @@ import InlineEditTextField from './InlineEditTextField'
 import Tippy from '@tippy.js/react'
 import dailyTaskSidebarStore from '../../../dailyTask/stores/SidebarStore'
 export default class InlineEditTaskNameField extends InlineEditTextField {
-
   openSidebar = issue => {
     this.setState({ taskSelected: id })
     let id = issue.id

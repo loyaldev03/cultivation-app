@@ -8,7 +8,7 @@ import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
 import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
 import IssueSidebar from '../../issues/IssueSidebar'
-import {SlidePanel} from '../../utils'
+import { SlidePanel } from '../../utils'
 import dailyTaskSidebarStore from '../../dailyTask/stores/SidebarStore'
 
 @observer
@@ -257,7 +257,7 @@ class TaskSetup extends React.Component {
         <SlidePanel
           width="500px"
           show={showIssues.get()}
-          renderBody={props =>
+          renderBody={props => (
             <IssueSidebar
               batch_id={batch.id}
               facility_id={batch.facility_id}
@@ -266,9 +266,8 @@ class TaskSetup extends React.Component {
               current_user_last_name={this.props.current_user_last_name}
               current_user_photo={this.props.current_user_photo}
             />
-          }
+          )}
         />
-
       </div>
     )
   }

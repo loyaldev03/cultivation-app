@@ -9,7 +9,7 @@ import getIssue from './actions/getIssue'
 import dailyTaskSidebarStore from '../dailyTask/stores/SidebarStore'
 @observer
 class IssueSidebar extends React.Component {
-constructor(props) {
+  constructor(props) {
     super(props)
     this.state = this.resetState()
   }
@@ -68,7 +68,7 @@ constructor(props) {
       facility_id,
       current_user_first_name,
       current_user_last_name,
-      current_user_photo,
+      current_user_photo
     } = this.props
     const { mode } = this.state
 

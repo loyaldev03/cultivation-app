@@ -13,7 +13,6 @@ class SidebarStore {
   @observable issueId = ''
   @observable issueMode = ''
 
-
   reset() {
     this.noteId = null
     this.noteBody = ''
@@ -64,17 +63,16 @@ class SidebarStore {
   }
 
   @action
-  openIssues(id = null, mode = null){
+  openIssues(id = null, mode = null) {
     this.reset()
     this.issueId = id
     this.issueMode = mode
     this.showIssues.set(true)
   }
 
-  closeIssues(){
+  closeIssues() {
     this.reset()
   }
-
 }
 
 const sidebar = new SidebarStore()

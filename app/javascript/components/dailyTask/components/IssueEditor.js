@@ -40,8 +40,7 @@ class IssueEditor extends React.Component {
       <div className="flex flex-column h-100">
         <SlidePanelHeader onClose={this.onClose} title={title} />
         <div className="flex flex-column flex-auto justify-between">
-          <div className="pa3 flex flex-column">
-          </div>
+          <div className="pa3 flex flex-column" />
         </div>
         <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
       </div>

@@ -10,7 +10,6 @@ import dailyTaskSidebarStore from './stores/SidebarStore'
 import materialUsedStore from './stores/MaterialUsedStore'
 import IssueSidebar from '../issues/IssueSidebar'
 
-
 import AssignMaterialForm from '../cultivation/tasks_setup/components/MaterialForm'
 @observer
 class DailyTaskApp extends React.Component {

@@ -105,7 +105,7 @@ class IssueDetails extends Component {
     const followers = currentIssueStore.issue.followers
     const followerIds = followers.map(x => x.id)
     const noFollowers = followers.length === 0
-    const { daily_task } = this.props
+    const { dailyTask } = this.props
     return (
       <React.Fragment>
         <div className="flex mt3 mb3 w-100 justify-end items-center">
@@ -154,7 +154,7 @@ class IssueDetails extends Component {
             Show less
           </a>
 
-          {!is_archived && !daily_task && (
+          {!is_archived && !dailyTask && (
             <div>
               <a
                 href="#"

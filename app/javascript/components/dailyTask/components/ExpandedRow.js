@@ -40,10 +40,11 @@ class ExpandedRow extends React.Component {
     )
   }
 
-  onClickNow = issue => {
+  onShowIssue = issue => {
     let id = issue.id
     let mode = 'details'
-    sidebarStore.openIssues(id, mode)
+    let dailyTask = true
+    sidebarStore.openIssues(id, mode, dailyTask)
     event.preventDefault()
   }
 
@@ -176,7 +177,7 @@ class ExpandedRow extends React.Component {
             <IssueList
               show={true}
               issues={issues}
-              onShow={this.onClickNow}
+              onShow={this.onShowIssue}
               onDelete={this.onToggleAddIssue}
             />
           </div>

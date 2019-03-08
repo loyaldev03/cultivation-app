@@ -12,7 +12,7 @@ class SidebarStore {
   @observable noteBody = ''
   @observable issueId = ''
   @observable issueMode = ''
-
+  @observable dailyTask = null
   reset() {
     this.noteId = null
     this.noteBody = ''
@@ -63,10 +63,11 @@ class SidebarStore {
   }
 
   @action
-  openIssues(id = null, mode = null) {
+  openIssues(id = null, mode = null, dailyTask = null) {
     this.reset()
     this.issueId = id
     this.issueMode = mode
+    this.dailyTask = dailyTask
     this.showIssues.set(true)
   }
 

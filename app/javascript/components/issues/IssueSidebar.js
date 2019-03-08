@@ -19,7 +19,7 @@ class IssueSidebar extends React.Component {
       if (change.newValue) {
         const issueId = dailyTaskSidebarStore.issueId
         const mode = dailyTaskSidebarStore.issueMode
-
+        const dailyTask = dailyTaskSidebarStore.dailyTask
         if (issueId) {
           getIssue(issueId)
         } else if (mode === 'create') {
@@ -27,7 +27,7 @@ class IssueSidebar extends React.Component {
         }
 
         if (mode === 'details') {
-          this.setState({ mode, issueId })
+          this.setState({ mode, issueId, dailyTask })
         } else if (!issueId) {
           this.setState({ mode: 'create', issueId: '' })
         } else {
@@ -83,6 +83,7 @@ class IssueSidebar extends React.Component {
           current_user_first_name={current_user_first_name}
           current_user_last_name={current_user_last_name}
           current_user_photo={current_user_photo}
+          dailyTask={this.state.dailyTask}
         />
       )
     } else {

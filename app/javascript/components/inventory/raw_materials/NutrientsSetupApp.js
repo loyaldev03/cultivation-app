@@ -1,9 +1,10 @@
+import 'babel-polyfill'
 import React from 'react'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
 import NutrientEditor from './components/NutrientEditor'
-import rawMaterialStore from './store/RawMaterialStore'
+import RawMaterialStore from './store/RawMaterialStore'
 import loadRawMaterials from './actions/loadRawMaterials'
 
 const columns = [
@@ -88,10 +89,10 @@ class NutrientsSetupApp extends React.Component {
   }
 
   onAddRecord = () => {
-    window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
+    window.editorSidebar.open({ width: '500px' })
   }
 
-  renderNutrientList() {
+  render() {
     return (
       <React.Fragment>
         <div className="w-100 bg-white pa3">
@@ -108,26 +109,16 @@ class NutrientsSetupApp extends React.Component {
               </button>
             </div>
           </div>
-
           <ReactTable
             columns={columns}
-            pagination={{ position: 'top' }}
-            data={rawMaterialStore.bindable}
+            data={RawMaterialStore.materials}
+            loading={RawMaterialStore.isLoading}
             showPagination={false}
-            pageSize={30}
             minRows={5}
             filterable
             className="f6"
           />
         </div>
-      </React.Fragment>
-    )
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        {this.renderNutrientList()}
         <NutrientEditor
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}

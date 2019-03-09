@@ -37,6 +37,7 @@ module Inventory
     field :sub_category, type: String, default: ''       # If node is level 2, refer to parant using parent's key.
     field :acccount_code, type: String
     field :is_active, type: Boolean, default: true
+    # Obsolete :uom_dimension - moved to Product model
     field :uom_dimension, type: String
     field :common_uom, type: String
     field :default_price, type: BigDecimal

@@ -12,6 +12,8 @@ module Inventory
     field :transaction_limit, type: BigDecimal
     field :description, type: String
     field :manufacturer, type: String
+    # This replaces the one in Inventory::Catalogue
+    field :uom_dimension, type: String
 
     embeds_many :nutrients, as: :nutrition, class_name: 'Inventory::Nutrient'
     has_many :packages, class_name: 'Inventory::ItemTransaction'

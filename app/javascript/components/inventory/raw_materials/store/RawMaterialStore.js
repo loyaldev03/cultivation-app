@@ -1,12 +1,13 @@
-import { observable, action, computed } from 'mobx'
+import { observable, action, computed, toJS } from 'mobx'
+import { httpGetOptions } from '../../../utils'
 
 class RawMaterialStore {
-  materials = observable([])
   @observable isLoading = false
+  @observable materials = []
 
   @action
-  load(newMaterials) {
-    this.materials.replace(newMaterials)
+  async load(materials = []) {
+    this.materials = materials
   }
 
   @action
@@ -18,7 +19,11 @@ class RawMaterialStore {
   update(material) {
     const index = this.materials.findIndex(x => x.id === material.id)
     if (index >= 0) {
-      this.materials[index] = material
+      this.materials = this.materials.map(x =>
+        x.id === material.id ? material : x
+      )
+    } else {
+      this.materials.push(material)
     }
   }
 

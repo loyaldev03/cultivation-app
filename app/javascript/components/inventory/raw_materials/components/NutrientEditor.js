@@ -400,7 +400,7 @@ class NutrientEditor extends React.Component {
           manufacturer: product.manufacturer,
           description: product.description,
           product_size: product.size ? product.size : '',
-          product_uom: {label: product.common_uom, value: product.common_uom},
+          product_uom: { label: product.common_uom, value: product.common_uom },
           product_ppm: product.ppm ? product.ppm : '',
           nitrogen: product.nitrogen,
           prosphorus: product.prosphorus,
@@ -463,7 +463,7 @@ class NutrientEditor extends React.Component {
     const { nutrients_elements, nutrients } = this.state
     const nutrientProducts = this.state.nutrientType.children
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
-    const all_uoms = this.props.uoms.map(x=> ({value: x, label: x}))
+    const all_uoms = this.props.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
 
     const showTotalPrice =

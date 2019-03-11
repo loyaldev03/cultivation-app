@@ -66,7 +66,7 @@ class DailyTaskApp extends React.Component {
           )}
         />
         <SlidePanel
-          width="600px"
+          width="500px"
           show={showIssues.get()}
           renderBody={props => (
             <IssueSidebar

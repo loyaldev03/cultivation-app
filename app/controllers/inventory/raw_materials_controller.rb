@@ -3,6 +3,7 @@ class Inventory::RawMaterialsController < ApplicationController
 
   def nutrients
     @catalogues = Inventory::QueryCatalogueTree.call('raw_materials', Constants::NUTRIENTS_KEY).result
+    @uoms = Common::UnitOfMeasure.all.pluck(:unit)
   end
 
   def grow_medium

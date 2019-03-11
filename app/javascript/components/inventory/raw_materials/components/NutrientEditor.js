@@ -93,7 +93,7 @@ class NutrientEditor extends React.Component {
     if (this.state.product_id.length > 0) {
       changes = {
         ...changes,
-        product: null,
+        product: { value: '', label: '' },
         product_id: '',
         product_name: '',
         manufacturer: '',
@@ -136,7 +136,7 @@ class NutrientEditor extends React.Component {
     if (this.state.product_id.length > 0) {
       changes = {
         ...changes,
-        product: null,
+        product: { value: '', label: '' },
         product_id: '',
         product_name: '',
         manufacturer: '',
@@ -190,6 +190,10 @@ class NutrientEditor extends React.Component {
       product_name: '',
       manufacturer: '',
       description: '',
+      product_size: '',
+      product_uom: { label: '', value: '' },
+      product_ppm: '',
+      nutrient_value: '',
       nitrogen: '',
       prosphorus: '',
       potassium: '',
@@ -201,9 +205,9 @@ class NutrientEditor extends React.Component {
       location_id: '',
 
       // purchase info
-      vendor: null,
-      purchase_order: null,
-      vendor_invoice: null,
+      vendor: {},
+      purchase_order: {},
+      vendor_invoice: {},
       errors: {}
     }
   }
@@ -246,7 +250,9 @@ class NutrientEditor extends React.Component {
       location_id,
       nitrogen,
       prosphorus,
-      potassium
+      potassium,
+      product_size,
+      product_ppm
     } = this.state
 
     let errors = {}
@@ -300,10 +306,24 @@ class NutrientEditor extends React.Component {
       this.setState({ errors })
     }
 
-    const nutrients = this.state.nutrients.map(e => ({
+    let nutrients = this.state.nutrients
+    if (
+      nutrients
+        .map(e => e.nutrient_element)
+        .includes(this.state.nutrient_element)
+    ) {
+    } else {
+      nutrients.push({
+        nutrient_element: this.state.nutrient_element,
+        nutrient_value: this.state.nutrient_value
+      })
+    }
+    nutrients = nutrients.map(e => ({
       element: e.nutrient_element.value,
       value: e.nutrient_value
     }))
+
+    const product_uom = this.state.product_uom.value
     return {
       id,
       facility_id,
@@ -324,7 +344,10 @@ class NutrientEditor extends React.Component {
       nitrogen,
       prosphorus,
       potassium,
-      nutrients
+      nutrients,
+      product_size,
+      product_uom,
+      product_ppm
     }
   }
 
@@ -361,6 +384,9 @@ class NutrientEditor extends React.Component {
           product_id: '',
           manufacturer: '',
           description: '',
+          product_size: '',
+          product_uom: { label: '', value: '' },
+          product_ppm: '',
           nitrogen: '',
           prosphorus: '',
           potassium: '',
@@ -373,6 +399,9 @@ class NutrientEditor extends React.Component {
           product_name: product.name,
           manufacturer: product.manufacturer,
           description: product.description,
+          product_size: product.size ? product.size : '',
+          product_uom: {label: product.common_uom, value: product.common_uom},
+          product_ppm: product.ppm ? product.ppm : '',
           nitrogen: product.nitrogen,
           prosphorus: product.prosphorus,
           potassium: product.potassium,
@@ -389,6 +418,9 @@ class NutrientEditor extends React.Component {
         product_name: '',
         manufacturer: '',
         description: '',
+        product_size: '',
+        product_uom: { label: '', value: '' },
+        product_ppm: '',
         nitrogen: '',
         prosphorus: '',
         potassium: '',
@@ -431,6 +463,7 @@ class NutrientEditor extends React.Component {
     const { nutrients_elements, nutrients } = this.state
     const nutrientProducts = this.state.nutrientType.children
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
+    const all_uoms = this.props.uoms.map(x=> ({value: x, label: x}))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
 
     const showTotalPrice =
@@ -526,13 +559,41 @@ class NutrientEditor extends React.Component {
             </div>
           </div>
           <div className="ph4 mb3 flex">
-            <div className="w-100">
+            <div className="w-40">
               <TextInput
                 label="Manufacturer"
                 fieldname="manufacturer"
                 value={this.state.manufacturer}
                 onChange={this.onChangeGeneric}
                 readOnly={hasProductId}
+              />
+            </div>
+            <div className="w-20 pl3">
+              <NumericInput
+                label="Size"
+                fieldname="product_size"
+                value={this.state.product_size}
+                onChange={this.onChangeGeneric}
+                // readOnly={hasProductId}
+              />
+            </div>
+            <div className="w-20 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+              <Select
+                value={this.state.product_uom}
+                options={all_uoms}
+                styles={reactSelectStyle}
+                onChange={x => this.setState({ product_uom: x })}
+              />
+              <FieldError errors={this.state.errors} field="product_uom" />
+            </div>
+            <div className="w-20 pl3">
+              <NumericInput
+                label="PPM"
+                fieldname="product_ppm"
+                value={this.state.product_ppm}
+                onChange={this.onChangeGeneric}
+                // readOnly={hasProductId}
               />
             </div>
           </div>

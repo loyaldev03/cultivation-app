@@ -13,6 +13,9 @@ module Inventory
                 :catalogue,
                 :product_id,
                 :product_name,
+                :product_uom,
+                :product_size,
+                :product_ppm,
                 :description,
                 :manufacturer,
                 :quantity,
@@ -53,6 +56,10 @@ module Inventory
       @product_name = args[:product_name]
       @description = args[:description]
       @manufacturer = args[:manufacturer]
+      @product_uom = args[:product_uom]
+      @product_size = args[:product_size]
+      @product_ppm = args[:product_ppm]
+
       @quantity = args[:quantity]
       @uom = args[:uom]
       @order_quantity = args[:order_quantity]
@@ -317,6 +324,9 @@ module Inventory
                  description: description,
                  catalogue: catalogue,
                  facility: facility,
+                 common_uom: product_uom,
+                 size: product_size,
+                 ppm: product_ppm,
                )
       end
     end

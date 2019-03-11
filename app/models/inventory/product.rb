@@ -14,6 +14,9 @@ module Inventory
     field :manufacturer, type: String
     # This replaces the one in Inventory::Catalogue
     field :uom_dimension, type: String
+    field :common_uom, type: String
+    field :size, type: BigDecimal
+    field :ppm, type: Integer
 
     embeds_many :nutrients, as: :nutrition, class_name: 'Inventory::Nutrient'
     has_many :packages, class_name: 'Inventory::ItemTransaction'

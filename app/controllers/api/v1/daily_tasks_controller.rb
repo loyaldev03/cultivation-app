@@ -161,7 +161,7 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     plans = batch.tray_plans.where(phase: batch.current_growth_stage).to_a
     plans.map do |tray_plan|
       facility = Facility.where('rooms._id': BSON::ObjectId(tray_plan.room_id)).first
-      facility.rooms.find(tray_plan.room_id).name
+      facility&.rooms&.find(tray_plan.room_id)&.name
     end
   end
 end

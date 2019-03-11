@@ -21,7 +21,6 @@
         
         </p>
 
-        
 
         <p class="mv3 subtitle-2 grey">
         A few tips about setting up each room:
@@ -76,6 +75,10 @@
               </div>
             </div>
           <% end %>
+        </div>
+        <div class="w-100 pv4 mt2 tr">
+          <%= link_to "got it", facility_setup_row_shelf_info_path(facility_id: @room_summary_form.facility_id, room_id: @room_summary_form.room_id), 
+              class: "dim ph5 pv3 mv4 button bg-orange white bn box--br3 ttu link pointer" %>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
   <div class="flex items-center">
     <%= breadcrumbs ["Home",root_path], 
         ["Facility Setup", facility_setup_new_path(facility_id: @rooms_info_form.facility_id)], 
-        "Room Setup" 
+        "Facility Configuration" 
     %>
   </div>
 <% end %>
@@ -11,16 +11,20 @@
   <div class="flex flex-column justify-between bg-white box--shadow">
     <div class="pa4 min-h-600">
       <div class="fl w-70-l w-100 flex flex-column width-100">
-        <h5 class="tl pa0 ma0 h5--font dark-grey">Room Setup</h5>
+        <h5 class="tl pa0 ma0 h5--font dark-grey">Facility Configuration</h5>
         <p class="mt2 body-1 grey">
-          Awesome, you've just setup your facility! Room details are next...
+        Now that we have the basic info done, let’s configure your facility. 
         </p>
         <div id="rooms_grid" class="pv4 carousel-wrapper">
           <%= render partial: 'rooms_list',
             locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms}
           %>
         </div>
+        <% if @rooms_info_form.rooms.length>0 %>
+        <span class="grey">Delete and Reset Room</span>
+        <% end %>
       </div>
+      
     </div>
 
     <%= render partial: "bottom_back_button", 

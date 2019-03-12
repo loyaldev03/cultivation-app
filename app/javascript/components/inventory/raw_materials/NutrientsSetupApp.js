@@ -95,7 +95,7 @@ class NutrientsSetupApp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="w-100 bg-white pa3">
+        <div className="w-100 bg-white pa3 grey">
           <div className="flex mb4 mt2">
             <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
               Nutrients Inventory
@@ -116,7 +116,7 @@ class NutrientsSetupApp extends React.Component {
             showPagination={false}
             minRows={5}
             filterable
-            className="f6"
+            className="f6 -highlight"
           />
         </div>
         <NutrientEditor

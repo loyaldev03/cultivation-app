@@ -6,6 +6,7 @@ class SidebarStore {
   showMaterialUsed = observable.box(false)
   showIssues = observable.box(false)
 
+  @observable facilityId = null
   @observable batchId = null
   @observable taskId = null
   @observable noteId = null

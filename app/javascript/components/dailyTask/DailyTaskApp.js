@@ -10,12 +10,15 @@ import dailyTaskSidebarStore from './stores/SidebarStore'
 import materialUsedStore from './stores/MaterialUsedStore'
 import IssueSidebar from '../issues/IssueSidebar'
 
-import AssignMaterialForm from '../cultivation/tasks_setup/components/MaterialForm'
+// import AssignMaterialForm from '../cultivation/tasks_setup/components/MaterialForm'
+import AddMaterialForm from './components/AddMaterialForm'
+
 @observer
 class DailyTaskApp extends React.Component {
   componentDidMount() {
     loadDailyTasks()
     materialUsedStore.loadNutrientsCatalogue(this.props.nutrient_ids)
+    dailyTaskSidebarStore.facilityId = this.props.facility_id
   }
 
   renderSlidePanel() {
@@ -26,44 +29,7 @@ class DailyTaskApp extends React.Component {
         <SlidePanel
           width="600px"
           show={showMaterialUsed.get()}
-          renderBody={props => (
-            <div>
-              <h3>Add material here...</h3>
-              <a
-                href="#"
-                onClick={event => {
-                  dailyTaskSidebarStore.closeMaterialUsed()
-                  event.preventDefault()
-                }}
-              >
-                Close
-              </a>
-              <div>Task ID: {dailyTaskSidebarStore.taskId}</div>
-              <div>Batch ID: {dailyTaskSidebarStore.batchId}</div>
-              <AssignMaterialForm
-                // ref={form => (this.assignMaterialForm = form)}
-                onClose={() =>
-                  // this.setState({ showAssignMaterialPanel: false })
-                  dailyTaskSidebarStore.closeMaterialUsed()
-                }
-                onSave={({ materials, nutrients }) => {
-                  const taskId = this.state.taskSelected
-                  console.log('save called...')
-                  // TaskStore.editAssignedMaterial(
-                  //   batchId,
-                  //   taskId,
-                  //   materials,
-                  //   nutrients || []
-                  // )
-                  // this.setState({ showAssignMaterialPanel: false })
-                }}
-                batch_id=""
-                facility_id={'this.props.batch.facility_id'}
-                facility_strain_id=""
-                batch_source=""
-              />
-            </div>
-          )}
+          renderBody={props => <AddMaterialForm />}
         />
         <SlidePanel
           width="500px"

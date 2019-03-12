@@ -53,13 +53,21 @@ class NutrientEditor extends React.Component {
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer,
                 description: attr.description,
-                nitrogen: attr.product.nitrogen,
-                prosphorus: attr.product.prosphorus,
-                potassium: attr.product.potassium,
+                nitrogen: attr.product.nitrogen ? attr.product.nitrogen : '',
+                prosphorus: attr.product.prosphorus
+                  ? attr.product.prosphorus
+                  : '',
+                potassium: attr.product.potassium ? attr.product.potassium : '',
                 nutrients: attr.product.nutrients.map(e => ({
                   nutrient_element: { label: e.element, value: e.element },
                   nutrient_value: e.value
                 })),
+                product_size: attr.product.size ? attr.product.size : '',
+                product_uom: {
+                  label: attr.product.common_uom,
+                  value: attr.product.common_uom
+                },
+                product_ppm: attr.product.ppm ? attr.product.ppm : '',
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -93,7 +101,7 @@ class NutrientEditor extends React.Component {
     if (this.state.product_id.length > 0) {
       changes = {
         ...changes,
-        product: null,
+        product: { value: '', label: '' },
         product_id: '',
         product_name: '',
         manufacturer: '',
@@ -136,7 +144,7 @@ class NutrientEditor extends React.Component {
     if (this.state.product_id.length > 0) {
       changes = {
         ...changes,
-        product: null,
+        product: { value: '', label: '' },
         product_id: '',
         product_name: '',
         manufacturer: '',
@@ -167,18 +175,18 @@ class NutrientEditor extends React.Component {
     return {
       nutrients: [],
       nutrients_elements: [
-        { label: 'Boron', value: 'boron' },
-        { label: 'Calcium', value: 'calcium' },
-        { label: 'Chlorine', value: 'chlorine' },
-        { label: 'Cobalt', value: 'cobalt' },
-        { label: 'Copper', value: 'copper' },
-        { label: 'Iron', value: 'iron' },
-        { label: 'Magnesium', value: 'magnesium' },
-        { label: 'Manganese', value: 'manganese' },
-        { label: 'Molybdenum', value: 'molybdenum' },
-        { label: 'Silicon', value: 'silicon' },
-        { label: 'Sulfur', value: 'sulfur' },
-        { label: 'Zinc', value: 'zinc' }
+        { label: 'Boron (B)', value: 'boron' },
+        { label: 'Calcium (Ca)', value: 'calcium' },
+        { label: 'Chlorine (CI)', value: 'chlorine' },
+        { label: 'Cobalt (Co)', value: 'cobalt' },
+        { label: 'Copper (Cu)', value: 'copper' },
+        { label: 'Iron (Fe)', value: 'iron' },
+        { label: 'Magnesium (Mg)', value: 'magnesium' },
+        { label: 'Manganese (Mm)', value: 'manganese' },
+        { label: 'Molybdenum (Mo)', value: 'molybdenum' },
+        { label: 'Silicon (Si)', value: 'silicon' },
+        { label: 'Sulfur (S)', value: 'sulfur' },
+        { label: 'Zinc (Zn)', value: 'zinc' }
       ],
       id: '',
       facility_id: '',
@@ -190,6 +198,10 @@ class NutrientEditor extends React.Component {
       product_name: '',
       manufacturer: '',
       description: '',
+      product_size: '',
+      product_uom: { label: '', value: '' },
+      product_ppm: '',
+      nutrient_value: '',
       nitrogen: '',
       prosphorus: '',
       potassium: '',
@@ -201,9 +213,9 @@ class NutrientEditor extends React.Component {
       location_id: '',
 
       // purchase info
-      vendor: null,
-      purchase_order: null,
-      vendor_invoice: null,
+      vendor: {},
+      purchase_order: {},
+      vendor_invoice: {},
       errors: {}
     }
   }
@@ -246,7 +258,9 @@ class NutrientEditor extends React.Component {
       location_id,
       nitrogen,
       prosphorus,
-      potassium
+      potassium,
+      product_size,
+      product_ppm
     } = this.state
 
     let errors = {}
@@ -300,10 +314,26 @@ class NutrientEditor extends React.Component {
       this.setState({ errors })
     }
 
-    const nutrients = this.state.nutrients.map(e => ({
+    let nutrients = this.state.nutrients
+    if (
+      nutrients
+        .map(e => e.nutrient_element.value)
+        .includes(this.state.nutrient_element.value)
+    ) {
+    } else {
+      if (this.state.nutrient_element && this.state.nutrient_value) {
+        nutrients.push({
+          nutrient_element: this.state.nutrient_element,
+          nutrient_value: this.state.nutrient_value
+        })
+      }
+    }
+    nutrients = nutrients.map(e => ({
       element: e.nutrient_element.value,
       value: e.nutrient_value
     }))
+
+    const product_uom = this.state.product_uom.value
     return {
       id,
       facility_id,
@@ -324,7 +354,10 @@ class NutrientEditor extends React.Component {
       nitrogen,
       prosphorus,
       potassium,
-      nutrients
+      nutrients,
+      product_size,
+      product_uom,
+      product_ppm
     }
   }
 
@@ -361,6 +394,9 @@ class NutrientEditor extends React.Component {
           product_id: '',
           manufacturer: '',
           description: '',
+          product_size: '',
+          product_uom: { label: '', value: '' },
+          product_ppm: '',
           nitrogen: '',
           prosphorus: '',
           potassium: '',
@@ -373,6 +409,9 @@ class NutrientEditor extends React.Component {
           product_name: product.name,
           manufacturer: product.manufacturer,
           description: product.description,
+          product_size: product.size ? product.size : '',
+          product_uom: { label: product.common_uom, value: product.common_uom },
+          product_ppm: product.ppm ? product.ppm : '',
           nitrogen: product.nitrogen,
           prosphorus: product.prosphorus,
           potassium: product.potassium,
@@ -389,6 +428,9 @@ class NutrientEditor extends React.Component {
         product_name: '',
         manufacturer: '',
         description: '',
+        product_size: '',
+        product_uom: { label: '', value: '' },
+        product_ppm: '',
         nitrogen: '',
         prosphorus: '',
         potassium: '',
@@ -400,8 +442,8 @@ class NutrientEditor extends React.Component {
   addNutrient = () => {
     if (
       this.state.nutrients
-        .map(e => e.nutrient_element)
-        .includes(this.state.nutrient_element)
+        .map(e => e.nutrient_element.value)
+        .includes(this.state.nutrient_element.value)
     ) {
     } else {
       this.setState(previousState => ({
@@ -431,6 +473,7 @@ class NutrientEditor extends React.Component {
     const { nutrients_elements, nutrients } = this.state
     const nutrientProducts = this.state.nutrientType.children
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
+    const all_uoms = this.props.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
 
     const showTotalPrice =
@@ -526,13 +569,41 @@ class NutrientEditor extends React.Component {
             </div>
           </div>
           <div className="ph4 mb3 flex">
-            <div className="w-100">
+            <div className="w-40">
               <TextInput
                 label="Manufacturer"
                 fieldname="manufacturer"
                 value={this.state.manufacturer}
                 onChange={this.onChangeGeneric}
                 readOnly={hasProductId}
+              />
+            </div>
+            <div className="w-20 pl3">
+              <NumericInput
+                label="Size"
+                fieldname="product_size"
+                value={this.state.product_size}
+                onChange={this.onChangeGeneric}
+                // readOnly={hasProductId}
+              />
+            </div>
+            <div className="w-20 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+              <Select
+                value={this.state.product_uom}
+                options={all_uoms}
+                styles={reactSelectStyle}
+                onChange={x => this.setState({ product_uom: x })}
+              />
+              <FieldError errors={this.state.errors} field="product_uom" />
+            </div>
+            <div className="w-20 pl3">
+              <NumericInput
+                label="PPM"
+                fieldname="product_ppm"
+                value={this.state.product_ppm}
+                onChange={this.onChangeGeneric}
+                // readOnly={hasProductId}
               />
             </div>
           </div>
@@ -558,7 +629,7 @@ class NutrientEditor extends React.Component {
           <div className="ph4 mb3 flex">
             <div className="w-third">
               <NumericInput
-                label="Nitrogen (%)"
+                label="Nitrogen (N)"
                 fieldname="nitrogen"
                 value={this.state.nitrogen}
                 onChange={this.onChangeGeneric}
@@ -566,7 +637,7 @@ class NutrientEditor extends React.Component {
             </div>
             <div className="w-third pl3">
               <NumericInput
-                label="Prosphorus (%)"
+                label="Prosphorus (P)"
                 fieldname="prosphorus"
                 value={this.state.prosphorus}
                 onChange={this.onChangeGeneric}
@@ -574,14 +645,20 @@ class NutrientEditor extends React.Component {
             </div>
             <div className="w-third pl3">
               <NumericInput
-                label="Potassium (%)"
+                label="Potassium (K)"
                 fieldname="potassium"
                 value={this.state.potassium}
                 onChange={this.onChangeGeneric}
               />
             </div>
           </div>
-          <hr className="mt3 m b--light-gray w-100" />
+
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db dark-gray">Micronutrients</label>
+            </div>
+          </div>
+
           <div className="ph4 mt3 mb3 flex">
             <div className="w-50">
               <label className="f6 fw6 db mb1 gray ttc">Nutrient Element</label>

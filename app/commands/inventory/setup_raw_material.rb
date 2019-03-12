@@ -13,6 +13,9 @@ module Inventory
                 :catalogue,
                 :product_id,
                 :product_name,
+                :product_uom,
+                :product_size,
+                :product_ppm,
                 :description,
                 :manufacturer,
                 :quantity,
@@ -53,6 +56,10 @@ module Inventory
       @product_name = args[:product_name]
       @description = args[:description]
       @manufacturer = args[:manufacturer]
+      @product_uom = args[:product_uom]
+      @product_size = args[:product_size]
+      @product_ppm = args[:product_ppm]
+
       @quantity = args[:quantity]
       @uom = args[:uom]
       @order_quantity = args[:order_quantity]
@@ -311,12 +318,17 @@ module Inventory
       if product_id.present?
         return Inventory::Product.find(product_id)
       else
+        uom_dimension = Common::UnitOfMeasure.find_by(unit: product_uom)&.dimension
         return Inventory::Product.create!(
                  name: product_name,
                  manufacturer: manufacturer,
                  description: description,
                  catalogue: catalogue,
                  facility: facility,
+                 common_uom: product_uom,
+                 size: product_size,
+                 ppm: product_ppm,
+                 uom_dimension: uom_dimension,
                )
       end
     end

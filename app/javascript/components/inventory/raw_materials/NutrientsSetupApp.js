@@ -122,6 +122,7 @@ class NutrientsSetupApp extends React.Component {
         <NutrientEditor
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}
+          uoms={this.props.uoms}
           catalogues={this.props.catalogues}
         />
       </React.Fragment>

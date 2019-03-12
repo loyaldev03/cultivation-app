@@ -245,8 +245,8 @@ class PurchaseInfo extends React.Component {
 
       this.setState({
         vendor: { value: item.value, label: item.label },
-        vendor_no: item.vendor_no,
-        address: item.address,
+        vendor_no: item.vendor_no ? item.vendor_no : '',
+        address: item.address ? item.address : '',
         vendor_state_license_num: item.state_license_num || '',
         vendor_state_license_expiration_date: state_license_expiration_date,
         vendor_location_license_num: item.location_license_num || '',

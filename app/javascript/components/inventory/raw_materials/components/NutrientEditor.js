@@ -46,12 +46,11 @@ class NutrientEditor extends React.Component {
                 nutrientType: nutrientType,
                 catalogue: catalogue,
                 id: id,
-                facility_id: attr.facility_id,
                 qty_per_package: attr.conversion,
                 product: { value: attr.product.id, label: attr.product.name },
                 product_id: attr.product_id,
                 product_name: attr.product_name,
-                manufacturer: attr.manufacturer,
+                manufacturer: attr.manufacturer || '',
                 description: attr.description,
                 nitrogen: attr.product.nitrogen ? attr.product.nitrogen : '',
                 prosphorus: attr.product.prosphorus
@@ -83,42 +82,12 @@ class NutrientEditor extends React.Component {
                   '',
                   this.state.nutrientType,
                   this.state.catalogue,
-                  this.state.facility_id
+                  this.props.facility_id
                 )
               }
             )
           })
       }
-    })
-  }
-
-  onFacilityChanged = item => {
-    let changes = {
-      facility_id: item.f_id,
-      defaultProduct: []
-    }
-
-    if (this.state.product_id.length > 0) {
-      changes = {
-        ...changes,
-        product: { value: '', label: '' },
-        product_id: '',
-        product_name: '',
-        manufacturer: '',
-        description: '',
-        nitrogen: '',
-        prosphorus: '',
-        potassium: ''
-      }
-    }
-
-    this.setState(changes, () => {
-      this.loadProducts(
-        '',
-        this.state.nutrientType,
-        this.state.catalogue,
-        this.state.facility_id
-      )
     })
   }
 
@@ -160,7 +129,7 @@ class NutrientEditor extends React.Component {
         '',
         this.state.nutrientType,
         this.state.catalogue,
-        this.state.facility_id
+        this.props.facility_id
       )
     })
   }
@@ -189,7 +158,6 @@ class NutrientEditor extends React.Component {
         { label: 'Zinc (Zn)', value: 'zinc' }
       ],
       id: '',
-      facility_id: '',
       qty_per_package: '',
       nutrientType: { value: '', label: '', children: [] },
       catalogue: { value: '', label: '', uoms: [] },
@@ -244,7 +212,6 @@ class NutrientEditor extends React.Component {
   validateAndGetValues() {
     const {
       id,
-      facility_id,
       uom: { value: uom },
       qty_per_package,
       catalogue: { value: catalogue },
@@ -268,10 +235,6 @@ class NutrientEditor extends React.Component {
     const quantity =
       parseFloat(this.state.order_quantity) *
       parseFloat(this.state.qty_per_package)
-
-    if (facility_id.length === 0) {
-      errors.facility_id = ['Facility is required.']
-    }
 
     if (uom && uom.length === 0) {
       errors.uom = ['Unit of measure is required.']
@@ -334,6 +297,7 @@ class NutrientEditor extends React.Component {
     }))
 
     const product_uom = this.state.product_uom.value
+    const facility_id = this.props.facility_id
     return {
       id,
       facility_id,
@@ -407,14 +371,14 @@ class NutrientEditor extends React.Component {
           product,
           product_id: product.id,
           product_name: product.name,
-          manufacturer: product.manufacturer,
-          description: product.description,
-          product_size: product.size ? product.size : '',
+          manufacturer: product.manufacturer || '',
+          description: product.description || '',
+          product_size: product.size || '',
           product_uom: { label: product.common_uom, value: product.common_uom },
-          product_ppm: product.ppm ? product.ppm : '',
-          nitrogen: product.nitrogen,
-          prosphorus: product.prosphorus,
-          potassium: product.potassium,
+          product_ppm: product.ppm || '',
+          nitrogen: product.nitrogen || '',
+          prosphorus: product.prosphorus || '',
+          potassium: product.potassium || '',
           nutrients: product.nutrients.map(e => ({
             nutrient_element: { label: e.element, value: e.element },
             nutrient_value: e.value
@@ -469,7 +433,7 @@ class NutrientEditor extends React.Component {
   }
 
   render() {
-    const { locations, catalogues } = this.props
+    const { facility_id, locations, catalogues } = this.props
     const { nutrients_elements, nutrients } = this.state
     const nutrientProducts = this.state.nutrientType.children
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
@@ -481,8 +445,7 @@ class NutrientEditor extends React.Component {
       parseFloat(this.state.order_quantity) > 0
 
     const hasProductId = this.state.product_id
-    const canSelectProduct =
-      this.state.facility_id.length > 0 && this.state.catalogue
+    const canSelectProduct = facility_id && this.state.catalogue
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -500,20 +463,6 @@ class NutrientEditor extends React.Component {
             >
               <i className="material-icons mid-gray md-18">close</i>
             </span>
-          </div>
-
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <LocationPicker
-                key={this.state.facility_id}
-                mode="facility"
-                onChange={this.onFacilityChanged}
-                locations={locations}
-                facility_id={this.state.facility_id}
-                location_id={this.state.facility_id}
-              />
-              <FieldError errors={this.state.errors} field="facility_id" />
-            </div>
           </div>
 
           <div className="ph4 mb3 flex">
@@ -557,7 +506,7 @@ class NutrientEditor extends React.Component {
                     e,
                     this.state.nutrientType,
                     this.state.catalogue,
-                    this.state.facility_id
+                    facility_id
                   )
                 }
                 onInputChange={handleInputChange}
@@ -819,10 +768,10 @@ class NutrientEditor extends React.Component {
                 Where are they stored?
               </label>
               <LocationPicker
-                key={this.state.facility_id}
+                key={facility_id}
                 mode="storage"
                 locations={locations}
-                facility_id={this.state.facility_id}
+                facility_id={facility_id}
                 onChange={x => this.setState({ location_id: x.rm_id })}
                 location_id={this.state.location_id}
               />

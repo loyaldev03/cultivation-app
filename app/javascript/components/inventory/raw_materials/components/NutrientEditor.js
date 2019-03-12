@@ -309,8 +309,8 @@ class NutrientEditor extends React.Component {
     let nutrients = this.state.nutrients
     if (
       nutrients
-        .map(e => e.nutrient_element)
-        .includes(this.state.nutrient_element)
+        .map(e => e.nutrient_element.value)
+        .includes(this.state.nutrient_element.value)
     ) {
     } else {
       nutrients.push({
@@ -432,8 +432,8 @@ class NutrientEditor extends React.Component {
   addNutrient = () => {
     if (
       this.state.nutrients
-        .map(e => e.nutrient_element)
-        .includes(this.state.nutrient_element)
+        .map(e => e.nutrient_element.value)
+        .includes(this.state.nutrient_element.value)
     ) {
     } else {
       this.setState(previousState => ({

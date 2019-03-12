@@ -29,7 +29,7 @@ function TextInput({
 
 function NumericInput({
   label,
-  value = undefined,
+  value = '',
   placeholder,
   min = '',
   max = '',

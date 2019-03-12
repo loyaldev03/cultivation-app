@@ -318,6 +318,7 @@ module Inventory
       if product_id.present?
         return Inventory::Product.find(product_id)
       else
+        uom_dimension = Common::UnitOfMeasure.find_by(unit: product_uom)&.dimension
         return Inventory::Product.create!(
                  name: product_name,
                  manufacturer: manufacturer,
@@ -327,6 +328,7 @@ module Inventory
                  common_uom: product_uom,
                  size: product_size,
                  ppm: product_ppm,
+                 uom_dimension: uom_dimension,
                )
       end
     end

@@ -14,7 +14,7 @@ class DailyTaskStore {
   async appendMaterialUse(batchId, taskId, items) {
     const url = `/api/v1/batches/${batchId}/tasks/${taskId}/append_material_use`
     const payload = { items }
-    
+
     const response = await (await fetch(url, httpPostOptions(payload))).json()
     if (!response.error) {
       const batch = this.batches.find(x => x.id === batchId)

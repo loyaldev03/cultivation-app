@@ -17,11 +17,14 @@ class ExpandedRow extends React.Component {
   }
 
   onShowMaterialUsedSidebar = event => {
-    
-    const omitProductIds = this.props.items.map( x => x.product_id)
+    const omitProductIds = this.props.items.map(x => x.product_id)
     console.log(toJS(omitProductIds))
-    sidebarStore.openMaterialUsed(this.props.batch_id, this.props.id, omitProductIds)
-    
+    sidebarStore.openMaterialUsed(
+      this.props.batch_id,
+      this.props.id,
+      omitProductIds
+    )
+
     event.preventDefault()
   }
 

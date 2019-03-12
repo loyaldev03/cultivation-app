@@ -7,13 +7,13 @@ import { httpGetOptions, httpPostOptions } from '../../utils/FetchHelper'
 import sidebarStore from '../stores/SidebarStore'
 import dailyTaskStore from '../stores/DailyTasksStore'
 import { SlidePanelHeader, SlidePanelFooter } from '../../utils/SlidePanel'
-import dailyTasksStore from '../stores/DailyTasksStore';
+import dailyTasksStore from '../stores/DailyTasksStore'
 
 class AddMaterialForm extends React.Component {
   state = {
     materials: [],
     inputValue: '',
-    retainCache: false,
+    retainCache: false
   }
 
   loadProducts = async (filter = '') => {
@@ -22,7 +22,9 @@ class AddMaterialForm extends React.Component {
     let materialIds = this.state.materials.map(x => x.id)
     materialIds = materialIds.concat(toJS(sidebarStore.omitMaterials.slice()))
 
-    const url = `/api/v1/products/non_nutrients?facility_id=${facilityId}&filter=${filter}&exclude=${materialIds.join(',')}`
+    const url = `/api/v1/products/non_nutrients?facility_id=${facilityId}&filter=${filter}&exclude=${materialIds.join(
+      ','
+    )}`
     const response = await (await fetch(url, httpGetOptions)).json()
     const products = response.data.map(x => ({
       label: x.attributes.name,
@@ -49,44 +51,52 @@ class AddMaterialForm extends React.Component {
     const selectedProducts = [this.state.product, ...this.state.materials]
     this.setState({
       materials: selectedProducts,
-      product: null, 
+      product: null
     })
 
     event.preventDefault()
   }
 
   onDeleteMaterial = productId => {
-    const selectedProducts = this.state.materials.filter(x => x.id !== productId)
-    
+    const selectedProducts = this.state.materials.filter(
+      x => x.id !== productId
+    )
+
     this.setState({
-      materials: selectedProducts,
+      materials: selectedProducts
     })
   }
 
-  onSave = async (event) => {
+  onSave = async event => {
     const items = this.state.materials.map(e => ({
-      product_id: e.id,
+      product_id: e.id
     }))
 
-    await dailyTaskStore.appendMaterialUse(sidebarStore.batchId, sidebarStore.taskId, items)
+    await dailyTaskStore.appendMaterialUse(
+      sidebarStore.batchId,
+      sidebarStore.taskId,
+      items
+    )
     sidebarStore.closeMaterialUsed()
     // event.preventDefault()
   }
 
-
-  handleInputChange = (newValue) => {
+  handleInputChange = newValue => {
     const inputValue = newValue.replace(/\W/g, '')
     this.setState({ inputValue })
-    return inputValue;
+    return inputValue
   }
 
-  loadOptions = (inputValue) => {
+  loadOptions = inputValue => {
     return this.loadProducts(inputValue)
   }
 
   render() {
     const { materials } = this.state
-    const forceResetProducts = materials.map(x => x.id).concat(toJS(sidebarStore.omitMaterials)).join('.')
+    const forceResetProducts = materials
+      .map(x => x.id)
+      .concat(toJS(sidebarStore.omitMaterials))
+      .join('.')
 
     return (
       <React.Fragment>

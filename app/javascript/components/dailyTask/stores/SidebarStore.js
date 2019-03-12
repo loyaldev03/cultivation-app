@@ -44,7 +44,7 @@ class SidebarStore {
   }
 
   @action
-  openMaterialUsed(batchId = null, taskId = null, omitMaterials=[]) {
+  openMaterialUsed(batchId = null, taskId = null, omitMaterials = []) {
     this.reset()
     this.omitMaterials.replace(omitMaterials)
     this.noteId = null

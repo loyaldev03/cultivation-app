@@ -15,10 +15,11 @@ import AddMaterialForm from './components/AddMaterialForm'
 
 @observer
 class DailyTaskApp extends React.Component {
-  componentDidMount() {
-    loadDailyTasks()
+  constructor(props) {
+    super(props)
     materialUsedStore.loadNutrientsCatalogue(this.props.nutrient_ids)
     dailyTaskSidebarStore.facilityId = this.props.facility_id
+    loadDailyTasks()
   }
 
   renderSlidePanel() {
@@ -27,7 +28,7 @@ class DailyTaskApp extends React.Component {
     return (
       <React.Fragment>
         <SlidePanel
-          width="600px"
+          width="500px"
           show={showMaterialUsed.get()}
           renderBody={props => <AddMaterialForm />}
         />

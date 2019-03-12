@@ -36,8 +36,9 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     render json: Inventory::ProductSerializer.new(products).serialized_json
   end
 
-  # Returns list of products th
+  # Returns list of products that is not nutrient/ supplement related.
   def non_nutrients
+    # TODO: Unit test to test if all producst from valid catalogue are returned
     facility_id = if params[:batch_id].present?
                     Cultivation::Batch.find(params[:batch_id]).facility_id
                   elsif params[:facility_strain_id].present?
@@ -55,15 +56,33 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
           Constants::SUPPLEMENTS_KEY,
         ]},
       ).
+        where(
+        key: {'$nin': [
+          Constants::SEEDS_KEY,
+          Constants::PURCHASED_CLONES_KEY,
+        ]},
+      ).
         concat(Inventory::Catalogue.non_sales).
         pluck(:id)
+
+    exclude_ids = if params[:exclude].present?
+                    params[:exclude].split(',')
+                  else
+                    []
+                  end
+
+    Rails.logger.debug "\t\t\t\t>>> exclude_ids: #{exclude_ids}"
 
     products = Inventory::Product.includes([:catalogue]).
       in(catalogue: valid_categories).
       where(facility_id: facility_id).
       where(name: /^#{params[:filter]}/i).
-      limit(7).
+      where(id: {'$nin': exclude_ids}).
+      limit(20).
       order(name: :asc)
+
+    # checklist = products.map {|x| x.name }
+    Rails.logger.debug "\t\t\t\t>>> products: #{products.count}"
 
     render json: Inventory::ProductSerializer.new(products).serialized_json
   end

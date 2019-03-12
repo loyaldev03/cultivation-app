@@ -5,6 +5,7 @@ class SidebarStore {
   showNotes = observable.box(false)
   showMaterialUsed = observable.box(false)
   showIssues = observable.box(false)
+  omitMaterials = observable([])
 
   @observable facilityId = null
   @observable batchId = null
@@ -19,6 +20,7 @@ class SidebarStore {
     this.noteBody = ''
     this.batchId = null
     this.taskId = null
+    this.omitMaterials.clear()
     this.showNotes.set(false)
     this.showMaterialUsed.set(false)
     this.showIssues.set(false)
@@ -42,8 +44,9 @@ class SidebarStore {
   }
 
   @action
-  openMaterialUsed(batchId = null, taskId = null) {
+  openMaterialUsed(batchId = null, taskId = null, omitMaterials=[]) {
     this.reset()
+    this.omitMaterials.replace(omitMaterials)
     this.noteId = null
     this.noteBody = ''
     this.batchId = batchId

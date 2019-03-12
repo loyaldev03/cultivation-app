@@ -6,6 +6,9 @@ module Cultivation
 
     field :quantity, type: Float
     field :uom, type: String
+
+    # TODO: Karg - these fields are not needed. common_uom & qty is actually for ItemTransaction table.
+    # Not this table.
     field :common_quantity, type: BigDecimal
     field :common_uom, type: String
 

@@ -210,6 +210,7 @@ Rails.application.routes.draw do
             get 'locations'
             post 'delete_relationship'
             post 'update_material_use'
+            post 'append_material_use'
           end
         end
         resources :nutrient_profiles, only: [:index, :create, :update]

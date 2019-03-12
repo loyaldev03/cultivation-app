@@ -82,11 +82,24 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     end
   end
 
+  # TODO: Not so comfortable this is a direct replacement of items
+  # Items that already has usage should not be replaced.
   def update_material_use
     command = Cultivation::SaveMaterialUse.call(current_user,
                                                 params[:id],
                                                 params[:items],
                                                 params[:nutrients])
+    if command.success?
+      render json: TaskSerializer.new(command.result).serialized_json
+    else
+      render json: {error: command.errors}
+    end
+  end
+
+  def append_material_use
+    command = Cultivation::AppendMaterialUse.call(current_user,
+                                                  params[:id],
+                                                  params[:items])
     if command.success?
       render json: TaskSerializer.new(command.result).serialized_json
     else

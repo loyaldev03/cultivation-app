@@ -1,44 +1,36 @@
+import 'babel-polyfill'
 import React from 'react'
-import Select from 'react-select'
-import { observe } from 'mobx'
+import AsyncSelect from 'react-select/lib/Async'
+import { observe, toJS } from 'mobx'
 import reactSelectStyle from '../../utils/reactSelectStyle'
-import { httpGetOptions } from '../../utils/FetchHelper'
+import { httpGetOptions, httpPostOptions } from '../../utils/FetchHelper'
 import sidebarStore from '../stores/SidebarStore'
+import dailyTaskStore from '../stores/DailyTasksStore'
 import { SlidePanelHeader, SlidePanelFooter } from '../../utils/SlidePanel'
+import dailyTasksStore from '../stores/DailyTasksStore';
 
 class AddMaterialForm extends React.Component {
   state = {
-    availableProducts: [],
-    materials: []
+    materials: [],
+    inputValue: '',
+    retainCache: false,
   }
 
-  componentDidMount() {
-    // on currentTaskId changed
-    // sidebarStore.batch_id
+  loadProducts = async (filter = '') => {
+    // console.log('calling loadProducts')
+    const facilityId = sidebarStore.facilityId
+    let materialIds = this.state.materials.map(x => x.id)
+    materialIds = materialIds.concat(toJS(sidebarStore.omitMaterials.slice()))
 
-    observe(sidebarStore, 'batchId', change => {
-      console.group('observe(sidebarStore.batchId)')
-      console.log(change)
-      console.groupEnd()
-      // if (change.newValue) {
-      this.loadProducts(sidebarStore.facilityId)
-      // }
-      //
-    })
-  }
-
-  loadProducts = async facilityId => {
-    let url = `/api/v1/products/non_nutrients?facility_id=${facilityId}`
-    let response = await (await fetch(url, httpGetOptions)).json()
+    const url = `/api/v1/products/non_nutrients?facility_id=${facilityId}&filter=${filter}&exclude=${materialIds.join(',')}`
+    const response = await (await fetch(url, httpGetOptions)).json()
     const products = response.data.map(x => ({
       label: x.attributes.name,
       value: x.attributes.id,
       ...x.attributes
     }))
 
-    console.log(products)
-    this.setState({ availableProducts: products })
-    // return products
+    return products
   }
 
   onClose = () => {
@@ -50,55 +42,73 @@ class AddMaterialForm extends React.Component {
   }
 
   onAddProduct = event => {
-    const selectedProducts = [this.state.product, ...this.state.materials]
-    const availableProducts = this.state.availableProducts.filter(
-      x => selectedProducts.findIndex(p => p.id == x.id) < 0
-    )
+    if (!this.state.product) {
+      return
+    }
 
+    const selectedProducts = [this.state.product, ...this.state.materials]
     this.setState({
       materials: selectedProducts,
-      availableProducts,
-      product: null
+      product: null, 
     })
+
     event.preventDefault()
   }
 
   onDeleteMaterial = productId => {
-    const selectedProducts = this.state.materials.filter(
-      x => x.value != productId
-    )
-    const availableProducts = this.state.availableProducts.filter(
-      x => selectedProducts.findIndex(p => p.id == x.id) < 0
-    )
-
+    const selectedProducts = this.state.materials.filter(x => x.id !== productId)
+    
     this.setState({
       materials: selectedProducts,
-      availableProducts
     })
   }
 
-  onSave = () => {}
+  onSave = async (event) => {
+    const items = this.state.materials.map(e => ({
+      product_id: e.id,
+    }))
+
+    await dailyTaskStore.appendMaterialUse(sidebarStore.batchId, sidebarStore.taskId, items)
+    sidebarStore.closeMaterialUsed()
+    // event.preventDefault()
+  }
+
+
+  handleInputChange = (newValue) => {
+    const inputValue = newValue.replace(/\W/g, '')
+    this.setState({ inputValue })
+    return inputValue;
+  }
+
+  loadOptions = (inputValue) => {
+    return this.loadProducts(inputValue)
+  }
 
   render() {
     const { materials } = this.state
+    const forceResetProducts = materials.map(x => x.id).concat(toJS(sidebarStore.omitMaterials)).join('.')
 
     return (
       <React.Fragment>
         <div className="flex flex-column h-100">
           <SlidePanelHeader onClose={this.onClose} title="Add material" />
           <div className="ph4 mt3 flex items-center">
-            <div className="w-90 mr2">
-              <Select
+            <div className="w-100 mr2">
+              <AsyncSelect
+                key={forceResetProducts}
                 isClearable="true"
                 placeholder="Search Product ..."
-                options={this.state.availableProducts}
                 styles={reactSelectStyle}
                 value={this.state.product}
+                defaultOptions={true}
+                cacheOptions={this.state.retainCache}
+                loadOptions={this.loadOptions}
                 onChange={this.onChangeProduct}
+                onInputChange={this.handleInputChange}
               />
             </div>
-            <div className="w-10">
-              <span className="pa3 pointer" onClick={this.onAddProduct}>
+            <div className="flex flex-none">
+              <span className="ph3 pv2 pointer" onClick={this.onAddProduct}>
                 <i className="material-icons mid-gray md-18">add</i>
               </span>
             </div>

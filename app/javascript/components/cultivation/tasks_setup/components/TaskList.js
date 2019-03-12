@@ -18,7 +18,7 @@ const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
 const AssignMaterialForm = lazy(() => import('./MaterialForm'))
 const CultivationCalendar = lazy(() => import('./CultivationCalendar'))
 
-const MenuButton = ({ icon, text, onClick, className = '' }) => {
+const MenuButton = ({ icon, indelible, text, onClick, className = '' }) => {
   return (
     <a
       className={`pa2 flex link dim pointer items-center ${className}`}
@@ -27,7 +27,9 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
       {icon ? (
         <i className="material-icons md-17 pr2">{icon}</i>
       ) : (
-        <img src={MyImage} style={{ width: '2em' }} />
+        indelible == "add_nutrient" ?
+        <img src={MyImage} style={{ width: '2em' }} />:
+        ""
       )}
       <span className="pr2">{text}</span>
     </a>
@@ -195,12 +197,28 @@ class TaskList extends React.Component {
 
                       <MenuButton
                         text="Add nutrients"
+                        indelible={indelible}
                         onClick={() => this.handleShowMaterialForm(id, items)}
                       />
                     </div>
                   ) : (
                     ''
                   )}
+                  {indelible === 'clip_mother_plant' ? (
+                    <div className="bt bw1">
+                      <p className="i tc silver">Special Task</p>
+
+                      <MenuButton
+                        text="Select Mother"
+                        indelible={indelible}
+                        onClick={() => console.log("trigger mother sidebar")}
+                      />
+                    </div>
+                  ) : (
+                    ''
+                  )
+
+                  }
                 </div>
               </div>
             ) : (

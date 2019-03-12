@@ -2,7 +2,7 @@ module Inventory
   class ProductSerializer
     include FastJsonapi::ObjectSerializer
 
-    attributes :name, :sku, :status, :transaction_limit, :manufacturer, :description, :size, :common_uom, :ppm
+    attributes :name, :sku, :status, :transaction_limit, :manufacturer, :description, :size, :common_uom, :ppm, :uom_dimension
 
     attribute :id do |object|
       object.id.to_s
@@ -17,9 +17,7 @@ module Inventory
     end
 
     attribute :uoms do |object|
-      if object.catalogue
-        object.catalogue.uoms.pluck(:unit)
-      end
+      object.uoms.pluck(:unit)
     end
 
     attribute :facility_id do |object|

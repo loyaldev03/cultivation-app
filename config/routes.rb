@@ -184,7 +184,9 @@ Rails.application.routes.draw do
       resources :vendors, only: [:index]
       resources :purchase_orders, only: [:index]
       resources :vendor_invoices, only: [:index, :show]
-      resources :products, only: [:index]
+      resources :products, only: [:index] do
+        get :non_nutrients, on: :collection
+      end
 
       resources :strains, only: [:index, :create, :show] do
         get 'suggest', on: :collection
@@ -208,6 +210,7 @@ Rails.application.routes.draw do
             get 'locations'
             post 'delete_relationship'
             post 'update_material_use'
+            post 'append_material_use'
           end
         end
         resources :nutrient_profiles, only: [:index, :create, :update]

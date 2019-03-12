@@ -44,7 +44,6 @@ module Inventory
 
     scope :raw_materials, -> { where(catalogue_type: 'raw_materials', is_active: true) }
     scope :sales_product, -> { where(catalogue_type: Constants::SALES_KEY, is_active: true) }
-    scope :non_sales_product, -> { where(catalogue_type: 'non_sales_product', is_active: true) }
     scope :plants, -> { where(catalogue_type: Constants::PLANTS_KEY, is_active: true) }
     scope :non_sales, -> { where(catalogue_type: Constants::NON_SALES_KEY, is_active: true) }
     scope :selectable, -> { where(:uom_dimension.nin => [nil, '']) }

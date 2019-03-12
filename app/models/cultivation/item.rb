@@ -11,6 +11,7 @@ module Cultivation
     # Not this table.
     field :common_quantity, type: BigDecimal
     field :common_uom, type: String
+    field :checked, type: Boolean, default: -> { false }
 
     embedded_in :task, class_name: 'Cultivation::Task'
     # belongs_to :catalogue, class_name: 'Inventory::Catalogue', optional: true

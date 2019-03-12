@@ -26,5 +26,9 @@ module Inventory
     # Strain is optional because a product that is a combination of multiple product has more
     # than one strain.
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
+
+    def uoms
+      Common::UnitOfMeasure.where(dimension: self.uom_dimension)
+    end
   end
 end

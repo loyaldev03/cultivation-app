@@ -4,11 +4,12 @@ module Cultivation
 
     attr_reader :current_user, :id, :items, :nutrients
 
-    def initialize(current_user, id, items, nutrients)
+    def initialize(current_user, id, items, nutrients, water_ph)
       @current_user = current_user
       @id = id.to_bson_id
       @items = items
       @nutrients = nutrients
+      @water_ph = water_ph
     end
 
     def call
@@ -21,6 +22,7 @@ module Cultivation
       record = Cultivation::Task.find(id)
       record.material_use = []
       record.add_nutrients = []
+      record.water_ph = water_ph
       items.each do |item|
         record.material_use.build(
           product_id: item[:product_id],

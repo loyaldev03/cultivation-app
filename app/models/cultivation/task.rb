@@ -17,6 +17,7 @@ module Cultivation
     field :actual_hours, type: Float, default: -> { 0 }
     field :estimated_cost, type: Float, default: -> { 0 }
     field :actual_cost, type: Float, default: -> { 0 }
+    field :water_ph, type: Float, default: -> { 0.0 }
     # Indelible task cannot be remove, possible values: 'cleaning', 'moving' (see template json for more example)
     field :indelible, type: String
     # Predecessor task

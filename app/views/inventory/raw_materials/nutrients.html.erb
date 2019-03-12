@@ -11,8 +11,13 @@
   <%= render partial: 'setupIntro' %>
   <%= render partial: 'setupNavigation', locals: { selected: 'nutrients' } %>
   <div class="flex flex-column">
-    <%= react_component('inventory/raw_materials/NutrientsSetupApp', 
-    { locations: @locations, order_uoms: @order_uoms, catalogues: @catalogues, uoms: @uoms }) %>
+    <%= react_component('inventory/raw_materials/NutrientsSetupApp', {
+      locations: @locations,
+      order_uoms: @order_uoms,
+      catalogues: @catalogues,
+      uoms: @uoms,
+      facility_id: current_default_facility.id.to_s
+    }) %>
 
     <div class="w-100 bg-white ph3 pt2 pb4">
       <div class="dim flex flex-row items-center pointer">

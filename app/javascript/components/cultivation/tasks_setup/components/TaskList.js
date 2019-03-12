@@ -26,10 +26,10 @@ const MenuButton = ({ icon, indelible, text, onClick, className = '' }) => {
     >
       {icon ? (
         <i className="material-icons md-17 pr2">{icon}</i>
+      ) : indelible == 'add_nutrient' ? (
+        <img src={MyImage} style={{ width: '2em' }} />
       ) : (
-        indelible == "add_nutrient" ?
-        <img src={MyImage} style={{ width: '2em' }} />:
-        ""
+        ''
       )}
       <span className="pr2">{text}</span>
     </a>
@@ -211,14 +211,12 @@ class TaskList extends React.Component {
                       <MenuButton
                         text="Select Mother"
                         indelible={indelible}
-                        onClick={() => console.log("trigger mother sidebar")}
+                        onClick={() => console.log('trigger mother sidebar')}
                       />
                     </div>
                   ) : (
                     ''
-                  )
-
-                  }
+                  )}
                 </div>
               </div>
             ) : (

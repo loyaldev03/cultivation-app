@@ -11,6 +11,20 @@ class DailyTaskStore {
   }
 
   @action
+  async appendMaterialUse(batchId, taskId, items) {
+    const url = `/api/v1/batches/${batchId}/tasks/${taskId}/append_material_use`
+    const payload = { items }
+
+    const response = await (await fetch(url, httpPostOptions(payload))).json()
+    if (!response.error) {
+      const batch = this.batches.find(x => x.id === batchId)
+      const task = batch.tasks.find(x => x.id === taskId)
+      task.items = response.data.attributes.items
+    }
+    return response
+  }
+
+  @action
   updateNote(note) {
     this.batches.forEach(b => {
       const task = b.tasks.find(x => x.id === note.task_id)

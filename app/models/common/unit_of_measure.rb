@@ -79,6 +79,25 @@ module Common
       find_by(dimension: 'length', unit: unit)
     end
 
+    def self.uom_of(dimension, unit)
+      case dimension
+      when 'custom'
+        self.custom(unit)
+      when 'plants'
+        self.plants(unit)
+      when 'piece'
+        self.pieces(unit)
+      when 'weight'
+        self.weights(unit)
+      when 'volume'
+        self.volumes(unit)
+      when 'length'
+        self.length(unit)
+      else
+        raise 'Invalid dimension'
+      end
+    end
+
     ###
     # Usage example, convert 5kg to gram:
     #

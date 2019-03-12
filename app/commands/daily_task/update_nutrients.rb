@@ -13,9 +13,9 @@ module DailyTask
     def call
       if valid_params?
         task = Cultivation::Task.find_by(id: task_id)
-        task.add_nutrients.each do |n|
-          if nutrients.key? n.element
-            n.checked = nutrients[n.element]
+        task.material_use.each do |n|
+          if nutrients.map { |a| a[:product_id] }.include? n.product_id.to_s
+            n.checked = nutrients.detect { |a| a[:product_id] == n.product_id.to_s }[:checked]
           end
         end
         task.modifier = current_user

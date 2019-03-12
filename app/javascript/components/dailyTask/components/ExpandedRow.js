@@ -55,6 +55,14 @@ class ExpandedRow extends React.Component {
     event.preventDefault()
   }
 
+  onCreateIssue = issue => {
+    let id = issue.id
+    let mode = 'create'
+    let dailyTask = true
+    sidebarStore.openIssues(id, mode, dailyTask)
+    event.preventDefault()
+  }
+
   render() {
     const {
       id: taskId,
@@ -175,7 +183,7 @@ class ExpandedRow extends React.Component {
                 href="#"
                 className="btn btn--secondary f6"
                 onClick={event =>
-                  window.editorSidebar.open(event, null, 'create')
+                  this.onCreateIssue(event)
                 }
               >
                 Add

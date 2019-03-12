@@ -54,14 +54,19 @@ class NutrientEditor extends React.Component {
                 manufacturer: attr.manufacturer,
                 description: attr.description,
                 nitrogen: attr.product.nitrogen ? attr.product.nitrogen : '',
-                prosphorus: attr.product.prosphorus ? attr.product.prosphorus : '',
+                prosphorus: attr.product.prosphorus
+                  ? attr.product.prosphorus
+                  : '',
                 potassium: attr.product.potassium ? attr.product.potassium : '',
                 nutrients: attr.product.nutrients.map(e => ({
                   nutrient_element: { label: e.element, value: e.element },
                   nutrient_value: e.value
                 })),
                 product_size: attr.product.size ? attr.product.size : '',
-                product_uom: { label: attr.product.common_uom, value: attr.product.common_uom },
+                product_uom: {
+                  label: attr.product.common_uom,
+                  value: attr.product.common_uom
+                },
                 product_ppm: attr.product.ppm ? attr.product.ppm : '',
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
@@ -316,13 +321,12 @@ class NutrientEditor extends React.Component {
         .includes(this.state.nutrient_element.value)
     ) {
     } else {
-      if (this.state.nutrient_element && this.state.nutrient_value){
+      if (this.state.nutrient_element && this.state.nutrient_value) {
         nutrients.push({
           nutrient_element: this.state.nutrient_element,
           nutrient_value: this.state.nutrient_value
         })
       }
-
     }
     nutrients = nutrients.map(e => ({
       element: e.nutrient_element.value,

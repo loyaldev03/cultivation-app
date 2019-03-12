@@ -12,8 +12,13 @@ import dailyTasksStore from '../stores/DailyTasksStore'
 class AddMaterialForm extends React.Component {
   state = {
     materials: [],
-    inputValue: '',
-    retainCache: false
+    product: null
+  }
+
+  componentDidMount() {
+    observe(sidebarStore, 'taskId', change => {
+      this.setState({ materials: [], product: null })
+    })
   }
 
   loadProducts = async (filter = '') => {
@@ -36,6 +41,7 @@ class AddMaterialForm extends React.Component {
   }
 
   onClose = () => {
+    this.setState({ materials: [], product: null })
     sidebarStore.closeMaterialUsed()
   }
 
@@ -77,13 +83,13 @@ class AddMaterialForm extends React.Component {
       sidebarStore.taskId,
       items
     )
+    this.setState({ materials: [], product: null })
     sidebarStore.closeMaterialUsed()
     // event.preventDefault()
   }
 
   handleInputChange = newValue => {
     const inputValue = newValue.replace(/\W/g, '')
-    this.setState({ inputValue })
     return inputValue
   }
 
@@ -111,7 +117,7 @@ class AddMaterialForm extends React.Component {
                 styles={reactSelectStyle}
                 value={this.state.product}
                 defaultOptions={true}
-                cacheOptions={this.state.retainCache}
+                cacheOptions={false}
                 loadOptions={this.loadOptions}
                 onChange={this.onChangeProduct}
                 onInputChange={this.handleInputChange}

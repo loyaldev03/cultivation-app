@@ -465,35 +465,7 @@ class NutrientEditor extends React.Component {
             </span>
           </div>
 
-          <div className="ph4 mb3 flex">
-            <div className="w-40">
-              <label className="f6 fw6 db mb1 gray ttc">Nutrient Type</label>
-              <Select
-                options={catalogues}
-                value={this.state.nutrientType}
-                onChange={this.onNutrientTypeSelected}
-                styles={reactSelectStyle}
-              />
-            </div>
-            {nutrientProducts && (
-              <div className="w-60 pl3">
-                <label className="f6 fw6 db mb1 gray ttc">
-                  {this.state.nutrientType.label}&nbsp;
-                </label>
-                <Select
-                  key={this.state.nutrientType}
-                  options={nutrientProducts}
-                  value={this.state.catalogue}
-                  onChange={this.onNutrientProductSelected}
-                  styles={reactSelectStyle}
-                />
-                <FieldError errors={this.state.errors} field="catalogue" />
-              </div>
-            )}
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-          <div className="ph4 mb3 flex">
+          <div className="ph4 mv3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
               <AsyncCreatableSelect
@@ -517,6 +489,7 @@ class NutrientEditor extends React.Component {
               <FieldError errors={this.state.errors} field="product" />
             </div>
           </div>
+
           <div className="ph4 mb3 flex">
             <div className="w-40">
               <TextInput
@@ -569,12 +542,42 @@ class NutrientEditor extends React.Component {
               />
             </div>
           </div>
+
           <hr className="mt3 m b--light-gray w-100" />
+
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
               <label className="f6 fw6 db dark-gray">Nutrients</label>
             </div>
           </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-third">
+              <label className="f6 fw6 db mb1 gray ttc">Nutrient Type</label>
+              <Select
+                options={catalogues}
+                value={this.state.nutrientType}
+                onChange={this.onNutrientTypeSelected}
+                styles={reactSelectStyle}
+              />
+            </div>
+            {nutrientProducts && (
+              <div className="pl3 w-two-thirds">
+                <label className="f6 fw6 db mb1 gray ttc">
+                  {this.state.nutrientType.label}&nbsp;
+                </label>
+                <Select
+                  key={this.state.nutrientType}
+                  options={nutrientProducts}
+                  value={this.state.catalogue}
+                  onChange={this.onNutrientProductSelected}
+                  styles={reactSelectStyle}
+                />
+                <FieldError errors={this.state.errors} field="catalogue" />
+              </div>
+            )}
+          </div>
+
           <div className="ph4 mb3 flex">
             <div className="w-third">
               <NumericInput
@@ -602,14 +605,14 @@ class NutrientEditor extends React.Component {
             </div>
           </div>
 
-          <div className="ph4 mt3 mb3 flex">
+          <div className="ph4 mt2 flex">
             <div className="w-100">
               <label className="f6 fw6 db dark-gray">Micronutrients</label>
             </div>
           </div>
 
           <div className="ph4 mt3 mb3 flex">
-            <div className="w-50">
+            <div className="w-70">
               <label className="f6 fw6 db mb1 gray ttc">Nutrient Element</label>
               <AsyncCreatableSelect
                 isClearable
@@ -619,7 +622,7 @@ class NutrientEditor extends React.Component {
                 styles={reactSelectStyle}
               />
             </div>
-            <div className="w-50 pl3">
+            <div className="w-20 pl3">
               <NumericInput
                 label="Value (%)"
                 fieldname="nutrient_value"
@@ -627,26 +630,26 @@ class NutrientEditor extends React.Component {
                 onChange={this.onChangeGeneric}
               />
             </div>
-            <div className="w-10 pl3">
+            <div className="w-10 pl2">
               <span className="dim pointer" onClick={this.addNutrient}>
                 <i className="material-icons mid-gray md-18 mt4">add</i>
               </span>
             </div>
           </div>
-          <div className="ph4 mt3 mb3 flex f6 grey">
+          <div className="ph4 mb3 flex f6 grey">
             <div className="w-100">
               {nutrients.length > 0 && (
                 <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100">
                   <tbody>
                     {nutrients.map((x, index) => (
                       <tr key={index} className="">
-                        <td className="tl pv2 ph3 w-70">
+                        <td className="pv2 ph3 w-70 ttc">
                           {x.nutrient_element.label}
                         </td>
-                        <td className="tl pv2 ph3 w5 tr">
+                        <td className="pl3 w-20 tr">
                           {x.nutrient_value}%
                         </td>
-                        <td className="tl pv2 ph3 w5 tr">
+                        <td className="ph3 w-10 tr pt1">
                           <span
                             className="dim pointer"
                             onClick={e =>
@@ -690,7 +693,7 @@ class NutrientEditor extends React.Component {
               />
               <FieldError errors={this.state.errors} field="order_uom" />
             </div>
-            <div className="w-50 pl3">
+            <div className="w-50 pl3 tr">
               <NumericInput
                 label={`Price per ${this.state.order_uom &&
                   this.state.order_uom.label} before tax`}
@@ -699,7 +702,7 @@ class NutrientEditor extends React.Component {
                 onChange={this.onChangeGeneric}
               />
               {showTotalPrice && (
-                <p className="f6 gray mb0">
+                <p className="f6 gray mb0 tr">
                   Total ${' '}
                   {(
                     parseFloat(this.state.price_per_package) *
@@ -743,11 +746,11 @@ class NutrientEditor extends React.Component {
                   <FieldError errors={this.state.errors} field="uom" />
                 </div>
                 <div className="w-50 pl4">
-                  <label className="f6 fw6 db mb1 gray ttc">
+                  <label className="f6 fw6 db mb1 gray ttc tr">
                     Total material in {this.state.order_quantity}{' '}
                     {this.state.order_uom.label}
                   </label>
-                  <div className="f6 pv2 fw6">
+                  <div className="f6 pv2 fw6 tr">
                     {this.state.order_quantity &&
                       this.state.qty_per_package &&
                       parseFloat(this.state.order_quantity) *
@@ -759,6 +762,18 @@ class NutrientEditor extends React.Component {
               </div>
             </React.Fragment>
           )}
+
+          <hr className="mt3 m b--light-gray w-100" />
+
+          <PurchaseInfo
+            key={this.state.id}
+            ref={this.purchaseInfoEditor}
+            label="How the nutrients are purchased?"
+            vendor={this.state.vendor}
+            purchase_order={this.state.purchase_order}
+            vendor_invoice={this.state.vendor_invoice}
+            showVendorLicense={false}
+          />
 
           <hr className="mt3 m b--light-gray w-100" />
 
@@ -778,18 +793,6 @@ class NutrientEditor extends React.Component {
               <FieldError errors={this.state.errors} field="location_id" />
             </div>
           </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-
-          <PurchaseInfo
-            key={this.state.id}
-            ref={this.purchaseInfoEditor}
-            label="How the nutrients are purchased?"
-            vendor={this.state.vendor}
-            purchase_order={this.state.purchase_order}
-            vendor_invoice={this.state.vendor_invoice}
-            showVendorLicense={false}
-          />
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
             <a

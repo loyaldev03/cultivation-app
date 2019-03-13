@@ -7,7 +7,7 @@
     </div>
   <% else %>
     <%= link_to 'Nutrients',
-      nutrients_inventory_raw_materials_path, 
+      nutrients_inventory_raw_materials_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
 
@@ -17,7 +17,7 @@
     </div>
   <% else %>
     <%= link_to 'Grow Medium',
-      grow_medium_inventory_raw_materials_path,
+      grow_medium_inventory_raw_materials_path(facility_id: params[:facility_id]),
       class: 'scrollable-tab__tab' %>
   <% end %>
 
@@ -27,7 +27,7 @@
     </div>
   <% else %>
     <%= link_to 'Grow Lights', 
-      grow_lights_inventory_raw_materials_path,
+      grow_lights_inventory_raw_materials_path(facility_id: params[:facility_id]),
       class: 'scrollable-tab__tab' %>
   <% end %>
 
@@ -37,7 +37,7 @@
     </div>
   <% else %>
     <%= link_to 'Supplements',
-      supplements_inventory_raw_materials_path, 
+      supplements_inventory_raw_materials_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
   
@@ -47,7 +47,7 @@
     </div>
   <% else %>
     <%= link_to 'Seeds',
-      seeds_inventory_raw_materials_path, 
+      seeds_inventory_raw_materials_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
 
@@ -57,7 +57,7 @@
     </div>
   <% else %>
     <%= link_to 'Purchased clones',
-      purchased_clones_inventory_raw_materials_path, 
+      purchased_clones_inventory_raw_materials_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
 
@@ -68,7 +68,7 @@
     </div>
   <% else %>
     <%= link_to 'Others',
-      others_inventory_raw_materials_path,
+      others_inventory_raw_materials_path(facility_id: params[:facility_id]),
       class: 'scrollable-tab__tab' %>
   <% end %>
 </div>

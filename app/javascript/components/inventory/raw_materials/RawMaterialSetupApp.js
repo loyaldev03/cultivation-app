@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import React from 'react'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
@@ -101,7 +102,7 @@ class RawMaterialSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadRawMaterials(this.props.raw_material_type)
+    loadRawMaterials(this.props.raw_material_type, this.props.facility_id)
   }
 
   openSidebar() {

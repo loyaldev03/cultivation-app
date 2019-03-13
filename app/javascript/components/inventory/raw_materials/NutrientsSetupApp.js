@@ -85,7 +85,7 @@ class NutrientsSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadRawMaterials('nutrients')
+    loadRawMaterials('nutrients', this.props.facility_id)
   }
 
   onAddRecord = () => {

@@ -177,6 +177,27 @@ module Common
                              base_unit: 'm',
                              conversion: 0.9144)
 
+      UOM.find_or_create_by!(name: 'teaspoon',
+                             unit: 'tsp',
+                             dimension: 'volume',
+                             is_base_unit: false,
+                             base_unit: 'l',
+                             conversion: 0.005)
+
+      UOM.find_or_create_by!(name: 'tablespoon',
+                             unit: 'tbsp',
+                             dimension: 'volume',
+                             is_base_unit: false,
+                             base_unit: 'l',
+                             conversion: 0.015)
+
+      UOM.find_or_create_by!(name: 'quart',
+                             unit: 'qt',
+                             dimension: 'volume',
+                             is_base_unit: false,
+                             base_unit: 'l',
+                             conversion: 0.946)
+
       ## TODO: Sales uom
       # Constants::SALES_KEY
       #

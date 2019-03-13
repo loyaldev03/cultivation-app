@@ -24,7 +24,7 @@ module Cannvas
     config.load_defaults 5.2
 
     # Enable Mongoid database queries on a per-request basis
-    config.middleware.use(Mongoid::QueryCache::Middleware)
+    Mongoid::QueryCache.enabled = true
 
     # CORS configuration
     # config.middleware.insert_before 0, Rack::Cors do

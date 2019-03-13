@@ -26,7 +26,6 @@ module Inventory
       special_type = ['seeds', 'purchased_clones']
 
       if (special_type.include?(type))
-        Rails.logger.debug 'Special Case !'
         raw_material_ids = Inventory::Catalogue.raw_materials.where(
           :uom_dimension.nin => [nil, ''],
           key: type,

@@ -26,7 +26,7 @@ const CommentBody = ({
         </p>
       )}
       <div className="flex">
-        <p className="f6 black-70 lh-title mt0 mb1 flex-auto pre">{message}</p>
+        <p className="f6 black-70 lh-title mt0 mb1 flex-auto">{message}</p>
         {renderMenu(isMenuOpen)}
       </div>
       {reason.length > 0 && (

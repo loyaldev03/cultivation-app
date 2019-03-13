@@ -39,17 +39,21 @@ class EditorSidebarHandler {
     const event = new CustomEvent('editor-sidebar-open', { detail: data })
     document.dispatchEvent(event)
 
-    if (data && data.width) {
-      this.sidebarNode.style.width = data.width
+    if (this.sidebarNode) {
+      if (data && data.width) {
+        this.sidebarNode.style.width = data.width
+      }
+      this.sidebarNode.style.transform = 'translate(0%)'
     }
-    this.sidebarNode.style.transform = 'translate(0%)'
   }
 
   close(data) {
     const event = new CustomEvent('editor-sidebar-close', { detail: data })
     document.dispatchEvent(event)
-    this.sidebarNode.style.transform = 'translate(100%)'
-    this.sidebarNode.scrollTop = 0
+    if (this.sidebarNode) {
+      this.sidebarNode.style.transform = 'translate(100%)'
+      this.sidebarNode.scrollTop = 0
+    }
   }
 
   setup(node) {
@@ -57,11 +61,15 @@ class EditorSidebarHandler {
   }
 
   scrollToTop() {
-    this.sidebarNode.scrollTop = 0
+    if (this.sidebarNode) {
+      this.sidebarNode.scrollTop = 0
+    }
   }
 
   scrollToBottom() {
-    this.sidebarNode.scrollTop = this.sidebarNode.scrollHeight
+    if (this.sidebarNode) {
+      this.sidebarNode.scrollTop = this.sidebarNode.scrollHeight
+    }
   }
 }
 

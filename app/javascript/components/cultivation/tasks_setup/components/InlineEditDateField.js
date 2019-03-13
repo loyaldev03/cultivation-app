@@ -43,6 +43,7 @@ export default class InlineEditDateField extends InlineEditTextField {
         placement="bottom"
         isVisible={isEdit}
         trigger="manual"
+        hideOnClick={false}
         content={
           <div className="inline_calendar">
             <Calendar value={value} onChange={this.onChange} />

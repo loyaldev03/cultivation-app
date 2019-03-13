@@ -279,9 +279,12 @@ class NutrientEditor extends React.Component {
 
     let nutrients = this.state.nutrients
     if (this.state.nutrient_element && this.state.nutrient_value) {
-      if (!nutrients
-        .map(e => e.nutrient_element.value)
-        .includes(this.state.nutrient_element.value)) { // check if current selected element exist in collection, if not insert
+      if (
+        !nutrients
+          .map(e => e.nutrient_element.value)
+          .includes(this.state.nutrient_element.value)
+      ) {
+        // check if current selected element exist in collection, if not insert
         nutrients.push({
           nutrient_element: this.state.nutrient_element,
           nutrient_value: this.state.nutrient_value
@@ -402,9 +405,12 @@ class NutrientEditor extends React.Component {
 
   addNutrient = () => {
     if (this.state.nutrient_element && this.state.nutrient_value) {
-      if (!this.state.nutrients
-        .map(e => e.nutrient_element.value)
-        .includes(this.state.nutrient_element.value)) { // check if current selected element exist in collection, if not insert
+      if (
+        !this.state.nutrients
+          .map(e => e.nutrient_element.value)
+          .includes(this.state.nutrient_element.value)
+      ) {
+        // check if current selected element exist in collection, if not insert
         this.setState(previousState => ({
           nutrients: [
             ...previousState.nutrients,
@@ -642,9 +648,7 @@ class NutrientEditor extends React.Component {
                         <td className="pv2 ph3 w-70 ttc">
                           {x.nutrient_element.label}
                         </td>
-                        <td className="pl3 w-20 tr">
-                          {x.nutrient_value}%
-                        </td>
+                        <td className="pl3 w-20 tr">{x.nutrient_value}%</td>
                         <td className="ph3 w-10 tr pt1">
                           <span
                             className="dim pointer"

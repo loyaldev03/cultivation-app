@@ -316,7 +316,20 @@ module Inventory
 
     def save_product
       if product_id.present?
-        return Inventory::Product.find(product_id)
+        product = Inventory::Product.find(product_id)
+        uom_dimension = Common::UnitOfMeasure.find_by(unit: product_uom)&.dimension
+        product.update(
+          name: product_name,
+          manufacturer: manufacturer,
+          description: description,
+          catalogue: catalogue,
+          facility: facility,
+          common_uom: product_uom,
+          size: product_size,
+          ppm: product_ppm,
+          uom_dimension: uom_dimension,
+        )
+        return product
       else
         uom_dimension = Common::UnitOfMeasure.find_by(unit: product_uom)&.dimension
         return Inventory::Product.create!(

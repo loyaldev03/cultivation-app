@@ -20,15 +20,7 @@
             locals: {facility_id: @rooms_info_form.facility_id, rooms: @rooms_info_form.rooms}
           %>
         </div>
-        <% if @rooms_info_form.rooms.length>0 %>
-        <div class="flex flex-row justify-between">
-          <span class="grey">Delete and Reset Room</span>
-          <span class="grey">Add New Room</span>
-        </div>
-        <% end %>
-       
       </div>
-      
     </div>
 
     <%= render partial: "bottom_back_button", 

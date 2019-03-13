@@ -41,16 +41,6 @@ class TaskSerializer
     end
   end
 
-  attribute :add_nutrients do |object|
-    object.add_nutrients.map do |item|
-      {
-        id: item.id.to_s,
-        element: item.element,
-        value: item.value,
-      }
-    end
-  end
-
   attributes :location_id do |object|
     object.location_id.to_s
   end

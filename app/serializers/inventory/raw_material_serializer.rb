@@ -33,6 +33,9 @@ module Inventory
           prosphorus: prosphorus&.value,
           potassium: potassium&.value,
           nutrients: other_nutrients,
+          size: object.product.size,
+          ppm: object.product.ppm,
+          common_uom: object.product.common_uom,
         }
       else
         nil

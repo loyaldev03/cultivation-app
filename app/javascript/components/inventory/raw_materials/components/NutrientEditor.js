@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
-// import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { PurchaseInfo } from '../../../utils'
@@ -499,7 +498,6 @@ class NutrientEditor extends React.Component {
                 fieldname="manufacturer"
                 value={this.state.manufacturer}
                 onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
               />
             </div>
             <div className="w-20 pl3">
@@ -508,7 +506,6 @@ class NutrientEditor extends React.Component {
                 fieldname="product_size"
                 value={this.state.product_size}
                 onChange={this.onChangeGeneric}
-                // readOnly={hasProductId}
               />
             </div>
             <div className="w-20 pl3">
@@ -527,7 +524,6 @@ class NutrientEditor extends React.Component {
                 fieldname="product_ppm"
                 value={this.state.product_ppm}
                 onChange={this.onChangeGeneric}
-                // readOnly={hasProductId}
               />
             </div>
           </div>
@@ -540,7 +536,6 @@ class NutrientEditor extends React.Component {
                 fieldname="description"
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
               />
             </div>
           </div>

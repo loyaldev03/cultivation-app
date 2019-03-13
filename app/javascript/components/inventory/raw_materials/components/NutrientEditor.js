@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
-// import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { PurchaseInfo } from '../../../utils'
@@ -278,13 +277,13 @@ class NutrientEditor extends React.Component {
     }
 
     let nutrients = this.state.nutrients
-    if (
-      nutrients
-        .map(e => e.nutrient_element.value)
-        .includes(this.state.nutrient_element.value)
-    ) {
-    } else {
-      if (this.state.nutrient_element && this.state.nutrient_value) {
+    if (this.state.nutrient_element && this.state.nutrient_value) {
+      if (
+        !nutrients
+          .map(e => e.nutrient_element.value)
+          .includes(this.state.nutrient_element.value)
+      ) {
+        // check if current selected element exist in collection, if not insert
         nutrients.push({
           nutrient_element: this.state.nutrient_element,
           nutrient_value: this.state.nutrient_value
@@ -404,23 +403,25 @@ class NutrientEditor extends React.Component {
   }
 
   addNutrient = () => {
-    if (
-      this.state.nutrients
-        .map(e => e.nutrient_element.value)
-        .includes(this.state.nutrient_element.value)
-    ) {
-    } else {
-      this.setState(previousState => ({
-        nutrients: [
-          ...previousState.nutrients,
-          {
-            nutrient_element: this.state.nutrient_element,
-            nutrient_value: this.state.nutrient_value
-          }
-        ],
-        nutrient_element: '',
-        nutrient_value: ''
-      }))
+    if (this.state.nutrient_element && this.state.nutrient_value) {
+      if (
+        !this.state.nutrients
+          .map(e => e.nutrient_element.value)
+          .includes(this.state.nutrient_element.value)
+      ) {
+        // check if current selected element exist in collection, if not insert
+        this.setState(previousState => ({
+          nutrients: [
+            ...previousState.nutrients,
+            {
+              nutrient_element: this.state.nutrient_element,
+              nutrient_value: this.state.nutrient_value
+            }
+          ],
+          nutrient_element: '',
+          nutrient_value: ''
+        }))
+      }
     }
   }
 
@@ -497,7 +498,6 @@ class NutrientEditor extends React.Component {
                 fieldname="manufacturer"
                 value={this.state.manufacturer}
                 onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
               />
             </div>
             <div className="w-20 pl3">
@@ -506,7 +506,6 @@ class NutrientEditor extends React.Component {
                 fieldname="product_size"
                 value={this.state.product_size}
                 onChange={this.onChangeGeneric}
-                // readOnly={hasProductId}
               />
             </div>
             <div className="w-20 pl3">
@@ -525,7 +524,6 @@ class NutrientEditor extends React.Component {
                 fieldname="product_ppm"
                 value={this.state.product_ppm}
                 onChange={this.onChangeGeneric}
-                // readOnly={hasProductId}
               />
             </div>
           </div>
@@ -538,7 +536,6 @@ class NutrientEditor extends React.Component {
                 fieldname="description"
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
               />
             </div>
           </div>

@@ -123,7 +123,7 @@ class NutrientsSetupApp extends React.Component {
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}
           uoms={this.props.uoms}
-          catalogues={this.props.catalogues}
+          catalogue_id={this.props.catalogue_id}
           facility_id={this.props.facility_id}
         />
       </React.Fragment>

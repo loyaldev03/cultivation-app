@@ -1,9 +1,9 @@
 class Inventory::RawMaterialsController < ApplicationController
-  before_action :setup_editor_data
+  before_action :setup_editor_data, :set_facility_id
 
   def nutrients
-    @catalogues = Inventory::QueryCatalogueTree.call('raw_materials', Constants::NUTRIENTS_KEY).result
     @uoms = Common::UnitOfMeasure.all.pluck(:unit)
+    @catalogue_id = Inventory::QueryCatalogue.call(Constants::NUTRIENTS_KEY).result&.id.to_s
   end
 
   def grow_medium
@@ -33,6 +33,10 @@ class Inventory::RawMaterialsController < ApplicationController
   end
 
   private
+
+  def set_facility_id
+    @facility_id = params[:facility_id]
+  end
 
   def setup_editor_data
     @locations = QueryAllValidFacilityLocations.call().result

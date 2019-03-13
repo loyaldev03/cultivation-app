@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import React from 'react'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
@@ -98,7 +99,7 @@ class PurchasedClonesSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadRawMaterials('purchased_clones')
+    loadRawMaterials('purchased_clones', this.props.facility_id)
   }
 
   onAddRecord = () => {

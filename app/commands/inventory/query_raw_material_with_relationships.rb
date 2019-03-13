@@ -5,12 +5,13 @@ module Inventory
   class QueryRawMaterialWithRelationships
     prepend SimpleCommand
 
-    attr_reader :id, :type, :event_types
+    attr_reader :id, :type, :event_types, :facility_id
 
-    def initialize(type:, id:, event_types:)
+    def initialize(type:, id:, event_types:, facility_id:)
       @type = type
       @id = id.blank? ? nil : BSON::ObjectId(id)
       @event_types = event_types
+      @facility_id = facility_id
     end
 
     def call
@@ -38,6 +39,7 @@ module Inventory
       end
 
       item_transactions = Inventory::ItemTransaction.includes(:catalogue, :facility, :facility_strain).where(
+        :facility_id => @facility_id,
         :event_type.in => @event_types,
         :catalogue_id.in => raw_material_ids,
       ).order(c_at: :desc)

@@ -27,7 +27,7 @@
             </p>
           </div>
           
-          <%= link_to 'Setup', inventory_strains_path, class: 'btn btn--secondary' %>
+          <%= link_to 'Setup', inventory_strains_path(facility_id: current_default_facility&.id&.to_s), class: 'btn btn--secondary' %>
           
         </div>
         <div class="flex flex-row justify-center items-center mb4">
@@ -45,7 +45,7 @@
           <% if @strains_count <= 0 %>
             <%= link_to 'You need to register strain first.', '', class: 'flex-none black-20 link f6 fw6 pv2 br2 dim' %>
           <% else %>
-            <%= link_to 'Setup', mothers_inventory_plants_path, class: 'btn btn--secondary' %>          
+            <%= link_to 'Setup', mothers_inventory_plants_path(facility_id: current_default_facility&.id&.to_s), class: 'btn btn--secondary' %>          
           <% end %>
         </div>
 
@@ -62,7 +62,7 @@
             </p>
           </div>
           
-          <%= link_to 'Setup', nutrients_inventory_raw_materials_path, class: 'btn btn--secondary' %>
+        <%= link_to 'Setup', nutrients_inventory_raw_materials_path(facility_id: current_default_facility&.id&.to_s), class: 'btn btn--secondary' %>
         </div>
 
         <div class="flex flex-row justify-center items-center mb4">
@@ -77,7 +77,7 @@
               Product items ready for Sale
             </p>
           </div>
-          <%= link_to 'Setup', harvest_packages_inventory_sales_products_path, class: 'btn btn--secondary' %>
+          <%= link_to 'Setup', harvest_packages_inventory_sales_products_path(facility_id: current_default_facility&.id&.to_s), class: 'btn btn--secondary' %>
           
         </div>
 
@@ -96,7 +96,7 @@
           </div>
 
           
-          <%= link_to 'Setup', inventory_non_sales_items_path, class: 'btn btn--secondary' %>
+          <%= link_to 'Setup', inventory_non_sales_items_path(facility_id: current_default_facility&.id&.to_s), class: 'btn btn--secondary' %>
           
         </div>
       </div>

@@ -278,13 +278,10 @@ class NutrientEditor extends React.Component {
     }
 
     let nutrients = this.state.nutrients
-    if (
-      nutrients
+    if (this.state.nutrient_element && this.state.nutrient_value) {
+      if (!nutrients
         .map(e => e.nutrient_element.value)
-        .includes(this.state.nutrient_element.value)
-    ) {
-    } else {
-      if (this.state.nutrient_element && this.state.nutrient_value) {
+        .includes(this.state.nutrient_element.value)) { // check if current selected element exist in collection, if not insert
         nutrients.push({
           nutrient_element: this.state.nutrient_element,
           nutrient_value: this.state.nutrient_value
@@ -404,23 +401,22 @@ class NutrientEditor extends React.Component {
   }
 
   addNutrient = () => {
-    if (
-      this.state.nutrients
+    if (this.state.nutrient_element && this.state.nutrient_value) {
+      if (!this.state.nutrients
         .map(e => e.nutrient_element.value)
-        .includes(this.state.nutrient_element.value)
-    ) {
-    } else {
-      this.setState(previousState => ({
-        nutrients: [
-          ...previousState.nutrients,
-          {
-            nutrient_element: this.state.nutrient_element,
-            nutrient_value: this.state.nutrient_value
-          }
-        ],
-        nutrient_element: '',
-        nutrient_value: ''
-      }))
+        .includes(this.state.nutrient_element.value)) { // check if current selected element exist in collection, if not insert
+        this.setState(previousState => ({
+          nutrients: [
+            ...previousState.nutrients,
+            {
+              nutrient_element: this.state.nutrient_element,
+              nutrient_value: this.state.nutrient_value
+            }
+          ],
+          nutrient_element: '',
+          nutrient_value: ''
+        }))
+      }
     }
   }
 

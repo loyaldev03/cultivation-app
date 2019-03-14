@@ -59,7 +59,10 @@ class Api::V1::RawMaterialsController < Api::V1::BaseApiController
   end
 
   def material_to_serialize(catalogue_type:, id:, event_types:, facility_id:)
-    result = Inventory::QueryRawMaterialWithRelationships.call(type: catalogue_type, id: id, event_types: event_types, facility_id: facility_id).result
+    result = Inventory::QueryRawMaterialWithRelationships.call(type: catalogue_type,
+                                                               id: id,
+                                                               event_types: event_types,
+                                                               facility_id: facility_id).result
     item_transactions = result[:item_transactions]
     vendor_invoice_items = result[:vendor_invoice_items]
     additional_fields = [:vendor_invoice, :vendor, :purchase_order]

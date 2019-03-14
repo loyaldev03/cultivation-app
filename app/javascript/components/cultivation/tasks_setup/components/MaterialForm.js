@@ -236,21 +236,6 @@ export default class MaterialForm extends React.Component {
                       </td>
                     </tr>
                   ))}
-                  <tr>
-                    <td className="tr w1 pv3 pr3">
-                      <i className="material-icons blue">opacity</i>
-                    </td>
-                    <td className="tr w2 pv3 pr3 flex items-center nowrap">
-                      Water Ph:
-                      <input
-                        type="number"
-                        name="pin"
-                        size="2"
-                        className="input tr w2"
-                        onChange={e => this.handleChangePH(e.target.value)}
-                      />
-                    </td>
-                  </tr>
                 </tbody>
               </table>
               <div className="flex pv3 items-center">

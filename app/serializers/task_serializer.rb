@@ -14,7 +14,8 @@ class TaskSerializer
     :wbs,
     :indent,
     :indelible,
-    :location_type
+    :location_type,
+    :water_ph
 
   attributes :id do |object|
     object.id.to_s

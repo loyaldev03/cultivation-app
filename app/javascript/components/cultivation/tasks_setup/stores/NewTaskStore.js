@@ -462,9 +462,10 @@ class TaskStore {
       items: items.map(e => ({
         product_id: e.product_id,
         quantity: e.quantity,
-        uom: e.uom,
+        uom: e.uom
       })),
-      nutrients: nutrients.filter(x => x.value)
+      nutrients: nutrients
+        .filter(x => x.value)
         .map(x => {
           return {
             element: x.element,

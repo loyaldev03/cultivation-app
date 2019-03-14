@@ -123,7 +123,8 @@ export default class MaterialForm extends React.Component {
       batch_id: batch_id,
       materials: items,
       task: task,
-      nutrients
+      nutrients,
+      water_ph: task.water_ph
     })
   }
 

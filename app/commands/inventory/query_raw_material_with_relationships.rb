@@ -9,7 +9,7 @@ module Inventory
 
     def initialize(type:, id:, event_types:, facility_id:)
       @type = type
-      @id = id.blank? ? nil : BSON::ObjectId(id)
+      @id = id&.to_bson_id
       @event_types = event_types
       @facility_id = facility_id
     end
@@ -25,18 +25,20 @@ module Inventory
     # TODO: Change this to $aggregate and $unwrap to reduce number of N + 1 query
     def retrieve_collection
       special_type = ['seeds', 'purchased_clones']
-
-      if (special_type.include?(type))
-        raw_material_ids = Inventory::Catalogue.raw_materials.where(
-          :uom_dimension.nin => [nil, ''],
-          key: type,
-        ).pluck(:id)
-      else
-        raw_material_ids = Inventory::Catalogue.raw_materials.where(
-          :uom_dimension.nin => [nil, ''],
-          category: type,
-        ).pluck(:id)
-      end
+      raw_material_ids = if type == 'nutrients'
+                           Inventory::Catalogue.raw_materials.where(key: type).
+                             pluck(:id)
+                         elsif special_type.include?(type)
+                           Inventory::Catalogue.raw_materials.where(
+                             :uom_dimension.nin => [nil, ''],
+                             key: type,
+                           ).pluck(:id)
+                         else
+                           Inventory::Catalogue.raw_materials.where(
+                             :uom_dimension.nin => [nil, ''],
+                             category: type,
+                           ).pluck(:id)
+                         end
 
       item_transactions = Inventory::ItemTransaction.includes(:catalogue, :facility, :facility_strain).where(
         :facility_id => @facility_id,

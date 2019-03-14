@@ -271,9 +271,7 @@ class NutrientEditor extends React.Component {
     inputValue = inputValue || ''
     const { catalogue_id } = this.props
     return fetch(
-      `/api/v1/products?type=raw_materials&category=nutrients&catalogue_id=${
-        catalogue_id
-      }&facility_id=${facility_id}&filter=${inputValue}`,
+      `/api/v1/products?type=raw_materials&category=nutrients&catalogue_id=${catalogue_id}&facility_id=${facility_id}&filter=${inputValue}`,
       {
         credentials: 'include'
       }
@@ -379,7 +377,12 @@ class NutrientEditor extends React.Component {
 
   render() {
     const { facility_id, catalogue_id, locations } = this.props
-    const { nutrients_elements, nutrients, price_per_package, order_quantity } = this.state
+    const {
+      nutrients_elements,
+      nutrients,
+      price_per_package,
+      order_quantity
+    } = this.state
     const all_uoms = this.props.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
     const showTotalPrice = price_per_package && order_quantity
@@ -412,12 +415,7 @@ class NutrientEditor extends React.Component {
                 placeholder={'Search...'}
                 defaultOptionss={this.state.defaultProduct}
                 loadOptions={e =>
-                  this.loadProducts(
-                    e,
-                    '',
-                    catalogue_id,
-                    facility_id
-                  )
+                  this.loadProducts(e, '', catalogue_id, facility_id)
                 }
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
@@ -624,7 +622,8 @@ class NutrientEditor extends React.Component {
               <div className="ph4 mt3 mb3 flex">
                 <div className="w-100">
                   <label className="f6 fw6 db dark-gray">
-                    Amount of material in each <span className="ttl">{this.state.order_uom.label}</span>
+                    Amount of material in each{' '}
+                    <span className="ttl">{this.state.order_uom.label}</span>
                   </label>
                 </div>
               </div>
@@ -715,7 +714,7 @@ class NutrientEditor extends React.Component {
 
 NutrientEditor.propTypes = {
   locations: PropTypes.array.isRequired,
-  order_uoms: PropTypes.array.isRequired,
+  order_uoms: PropTypes.array.isRequired
 }
 
 export default NutrientEditor

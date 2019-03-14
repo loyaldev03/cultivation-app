@@ -8,7 +8,7 @@ function clearSelection() {
 }
 
 // Bind Carousel as pageSize card in a row (used in Rooms / Rows setup)
-function bindCarousel(gotoLast) {
+function bindCarousel(gotoIndex = 0) {
   const siemaElms = $$('.siema')
   const siemaPageSize = 4
   const siemaOptions = {
@@ -30,11 +30,19 @@ function bindCarousel(gotoLast) {
         const rightBtn = carousel.children[2]
         leftBtn.addEventListener('click', () => mySiema.prev())
         rightBtn.addEventListener('click', () => mySiema.next())
-        if (gotoLast) {
-          mySiema.goTo(cardCount - siemaPageSize)
-          // Note: Clear highlighted elements when added / deleting
-          setTimeout(() => clearSelection(), 300)
+        if (!gotoIndex) {
+          // Go to first
+          mySiema.goTo(0)
         }
+        else if (gotoIndex === -1) {
+          // Go to last
+          mySiema.goTo(cardCount - siemaPageSize)
+        }
+        else {
+          mySiema.goTo(gotoIndex)
+        }
+        // Note: Clear highlighted elements when added / deleting
+        setTimeout(() => clearSelection(), 300)
       } else {
         if (cardCount == 1) {
           // when the carousel is empty (only contain the "Add" card

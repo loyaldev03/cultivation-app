@@ -5,4 +5,4 @@ if (roomsGridElm) {
                             rooms: @rooms_info_form.rooms %>")
 }
 
-<%= render 'rebind_carousels' %>
+<%= render 'rebind_carousels', goto: @mode == 'increment' ? -1 : 0 %>

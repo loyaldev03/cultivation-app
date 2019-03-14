@@ -583,13 +583,14 @@ class TaskList extends React.Component {
                 onClose={() =>
                   this.setState({ showAssignMaterialPanel: false })
                 }
-                onSave={({ materials, nutrients }) => {
+                onSave={({ materials, nutrients, water_ph }) => {
                   const taskId = this.state.taskSelected
                   TaskStore.editAssignedMaterial(
                     batchId,
                     taskId,
                     materials,
-                    nutrients || []
+                    nutrients || [],
+                    water_ph
                   )
                   this.setState({ showAssignMaterialPanel: false })
                 }}

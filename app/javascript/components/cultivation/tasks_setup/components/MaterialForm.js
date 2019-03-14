@@ -21,7 +21,8 @@ export default class MaterialForm extends React.Component {
       uom: '',
       materials: [],
       items: [],
-      nutrients: []
+      nutrients: [],
+      water_ph: 0
     }
     this.loadProducts(
       this.state.batch_id,
@@ -88,14 +89,17 @@ export default class MaterialForm extends React.Component {
   onSave = () => {
     this.props.onSave({
       nutrients: this.nutrientForm ? this.nutrientForm.getFormInputs() : null,
-      materials: this.state.materials
+      materials: this.state.materials,
+      water_ph: this.state.water_ph
     })
   }
 
   onDeleteMaterial = value => {
-    this.setState({
-      materials: this.state.materials.filter(item => item.product_id !== value)
-    })
+    if (confirm('Are you sure you want to delete this relationship? ')) {
+      this.setState({
+        materials: this.state.materials.filter(item => item.product_id !== value)
+      })
+    }
   }
 
   setSelectedItems(batch_id, task, task_id, items) {
@@ -139,9 +143,14 @@ export default class MaterialForm extends React.Component {
     this.setState({ materials: materials })
   }
 
+  handleChangePH = (ph) => {
+    this.setState({ water_ph:ph })
+  }
+
   render() {
     const { onClose } = this.props
     const { nutrients, materials, task } = this.state
+    console.log(this.state);
     const task_plant = task && task.indelible === 'plants'
     const showNutrient =
       materials && materials.length > 0 && task.indelible === 'add_nutrient'
@@ -243,7 +252,7 @@ export default class MaterialForm extends React.Component {
                         name="pin"
                         size="2"
                         className="input tr w2"
-                        onChange={e => console.log(e.target.value)}
+                        onChange={e => this.handleChangePH(e.target.value)}
                       />
                     </td>
                   </tr>

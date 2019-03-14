@@ -183,30 +183,25 @@ export default class MaterialForm extends React.Component {
           <div className="flex flex-column flex-auto justify-between">
             <div className="ph4 mt3 f6 fw6 db mb1 gray">
               <table className="w-100 ttc f6">
-                <thead className="ba bw1">
-                  <tr className="">
-                    <th align="left">Product Name</th>
-                    <th>PPM</th>
-                    <th>Amt</th>
-                    <th>UoM</th>
-                    <th />
+                <thead className="">
+                  <tr>
+                    <th className="bb b--light-grey tl">Product Name</th>
+                    <th className="bb b--light-grey">PPM</th>
+                    <th className="bb b--light-grey">Amt</th>
+                    <th className="bb b--light-grey">UoM</th>
+                    <th className="" />
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="lh-copy">
                   {materials.map((x, index) => (
                     <tr className="pointer bb" key={index}>
-                      <td className="tl pv2 pv3 pr3">
-                        {x.product_name}
-                      </td>
-                      <td className="tl pa2 pv3 pr3 ">
-                        {x.ppm}
-                      </td>
-                      <td className="tl pa2 w3 pv3 pr3">
+                      <td className="tl w5">{x.product_name}</td>
+                      <td className="tr w3">{x.ppm}</td>
+                      <td className="tl w3">
                         <input
                           type="number"
                           name="pin"
-                          size="2"
-                          className="input tr"
+                          className="input w3 tr"
                           value={x.quantity}
                           onChange={e =>
                             this.handleChangeQuantity(
@@ -216,7 +211,7 @@ export default class MaterialForm extends React.Component {
                           }
                         />
                       </td>
-                      <td className="tc pa2 w3 pv3 pr3">
+                      <td className="tc w3">
                         <select
                           value={x.uom}
                           onChange={e =>
@@ -231,7 +226,7 @@ export default class MaterialForm extends React.Component {
                             ))}
                         </select>
                       </td>
-                      <td className="tr w1 pv3 pr3">
+                      <td className="tr w1 pt2">
                         <i
                           className="material-icons red md-18 pointer dim"
                           onClick={e => this.onDeleteMaterial(x.product_id)}
@@ -258,6 +253,16 @@ export default class MaterialForm extends React.Component {
                   </tr>
                 </tbody>
               </table>
+              <div className="flex pv3 items-center">
+                <i className="material-icons blue pr2">opacity</i>
+                <span className="pr2">Water Ph:</span>
+                <input
+                  type="number"
+                  name="pin"
+                  className="input tr w3"
+                  onChange={e => this.handleChangePH(e.target.value)}
+                />
+              </div>
             </div>
             <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
           </div>

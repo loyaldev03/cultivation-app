@@ -21,7 +21,8 @@ export default class MaterialForm extends React.Component {
       uom: '',
       materials: [],
       items: [],
-      nutrients: []
+      nutrients: [],
+      water_ph: 0
     }
     this.loadProducts(
       this.state.batch_id,
@@ -88,14 +89,17 @@ export default class MaterialForm extends React.Component {
   onSave = () => {
     this.props.onSave({
       nutrients: this.nutrientForm ? this.nutrientForm.getFormInputs() : null,
-      materials: this.state.materials
+      materials: this.state.materials,
+      water_ph: this.state.water_ph
     })
   }
 
   onDeleteMaterial = value => {
-    this.setState({
-      materials: this.state.materials.filter(item => item.product_id !== value)
-    })
+    if (confirm('Are you sure you want to delete this relationship? ')) {
+      this.setState({
+        materials: this.state.materials.filter(item => item.product_id !== value)
+      })
+    }
   }
 
   setSelectedItems(batch_id, task, task_id, items) {
@@ -139,9 +143,14 @@ export default class MaterialForm extends React.Component {
     this.setState({ materials: materials })
   }
 
+  handleChangePH = (ph) => {
+    this.setState({ water_ph:ph })
+  }
+
   render() {
     const { onClose } = this.props
     const { nutrients, materials, task } = this.state
+    console.log(this.state);
     const task_plant = task && task.indelible === 'plants'
     const showNutrient =
       materials && materials.length > 0 && task.indelible === 'add_nutrient'
@@ -174,30 +183,25 @@ export default class MaterialForm extends React.Component {
           <div className="flex flex-column flex-auto justify-between">
             <div className="ph4 mt3 f6 fw6 db mb1 gray">
               <table className="w-100 ttc f6">
-                <thead className="ba bw1">
-                  <tr className="">
-                    <th align="left">Product Name</th>
-                    <th>PPM</th>
-                    <th>Amt</th>
-                    <th>UoM</th>
-                    <th />
+                <thead className="">
+                  <tr>
+                    <th className="bb b--light-grey tl">Product Name</th>
+                    <th className="bb b--light-grey">PPM</th>
+                    <th className="bb b--light-grey">Amt</th>
+                    <th className="bb b--light-grey">UoM</th>
+                    <th className="" />
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="lh-copy">
                   {materials.map((x, index) => (
                     <tr className="pointer bb" key={index}>
-                      <td className="tl pv2 pv3 pr3">
-                        {x.product_name}
-                      </td>
-                      <td className="tl pa2 pv3 pr3 ">
-                        {x.ppm}
-                      </td>
-                      <td className="tl pa2 w3 pv3 pr3">
+                      <td className="tl w5">{x.product_name}</td>
+                      <td className="tr w3">{x.ppm}</td>
+                      <td className="tl w3">
                         <input
                           type="number"
                           name="pin"
-                          size="2"
-                          className="input tr"
+                          className="input w3 tr"
                           value={x.quantity}
                           onChange={e =>
                             this.handleChangeQuantity(
@@ -207,7 +211,7 @@ export default class MaterialForm extends React.Component {
                           }
                         />
                       </td>
-                      <td className="tc pa2 w3 pv3 pr3">
+                      <td className="tc w3">
                         <select
                           value={x.uom}
                           onChange={e =>
@@ -222,7 +226,7 @@ export default class MaterialForm extends React.Component {
                             ))}
                         </select>
                       </td>
-                      <td className="tr w1 pv3 pr3">
+                      <td className="tr w1 pt2">
                         <i
                           className="material-icons red md-18 pointer dim"
                           onClick={e => this.onDeleteMaterial(x.product_id)}
@@ -243,12 +247,22 @@ export default class MaterialForm extends React.Component {
                         name="pin"
                         size="2"
                         className="input tr w2"
-                        onChange={e => console.log(e.target.value)}
+                        onChange={e => this.handleChangePH(e.target.value)}
                       />
                     </td>
                   </tr>
                 </tbody>
               </table>
+              <div className="flex pv3 items-center">
+                <i className="material-icons blue pr2">opacity</i>
+                <span className="pr2">Water Ph:</span>
+                <input
+                  type="number"
+                  name="pin"
+                  className="input tr w3"
+                  onChange={e => this.handleChangePH(e.target.value)}
+                />
+              </div>
             </div>
             <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
           </div>

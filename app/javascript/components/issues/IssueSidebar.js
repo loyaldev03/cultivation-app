@@ -11,7 +11,7 @@ import dailyTaskSidebarStore from '../dailyTask/stores/SidebarStore'
 @observer
 class IssueSidebar extends React.Component {
   state = this.resetState()
-  
+
   componentDidMount() {
     observe(dailyTaskSidebarStore, 'showIssues', change => {
       if (change.newValue) {

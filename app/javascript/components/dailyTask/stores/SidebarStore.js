@@ -4,7 +4,7 @@ class SidebarStore {
   // Controls which sidebar is visible
   @observable showMaterialUsed = false
   @observable showNotes = false
-  
+
   @observable showIssues = false
   @observable omitMaterials = []
   @observable facilityId = null

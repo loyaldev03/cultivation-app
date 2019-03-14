@@ -29,21 +29,9 @@ class NutrientEditor extends React.Component {
         getRawMaterial(id)
           .then(x => x.data.data.attributes)
           .then(attr => {
-            const flatten_catalogues = this.props.catalogues.reduce(
-              (sum, val) => sum.concat(val.children || []),
-              []
-            )
-            const catalogue = flatten_catalogues.find(
-              x => x.value == attr.catalogue_id
-            )
-            const nutrientType = this.props.catalogues.find(
-              x => x.key == catalogue.parent_key
-            )
             this.setState(
               {
                 ...this.resetState(),
-                nutrientType: nutrientType,
-                catalogue: catalogue,
                 id: id,
                 qty_per_package: attr.conversion,
                 product: { value: attr.product.id, label: attr.product.name },
@@ -51,21 +39,19 @@ class NutrientEditor extends React.Component {
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer || '',
                 description: attr.description,
-                nitrogen: attr.product.nitrogen ? attr.product.nitrogen : '',
-                prosphorus: attr.product.prosphorus
-                  ? attr.product.prosphorus
-                  : '',
-                potassium: attr.product.potassium ? attr.product.potassium : '',
+                nitrogen: attr.product.nitrogen || '',
+                prosphorus: attr.product.prosphorus || '',
+                potassium: attr.product.potassium || '',
                 nutrients: attr.product.nutrients.map(e => ({
                   nutrient_element: { label: e.element, value: e.element },
                   nutrient_value: e.value
                 })),
-                product_size: attr.product.size ? attr.product.size : '',
+                product_size: attr.product.size || '',
                 product_uom: {
                   label: attr.product.common_uom,
                   value: attr.product.common_uom
                 },
-                product_ppm: attr.product.ppm ? attr.product.ppm : '',
+                product_ppm: attr.product.ppm || '',
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -79,8 +65,8 @@ class NutrientEditor extends React.Component {
               () => {
                 this.loadProducts(
                   '',
-                  this.state.nutrientType,
-                  this.state.catalogue,
+                  '',
+                  this.props.catalogue_id,
                   this.props.facility_id
                 )
               }
@@ -90,46 +76,9 @@ class NutrientEditor extends React.Component {
     })
   }
 
-  onNutrientTypeSelected = item => {
-    this.setState({
-      nutrientType: item,
-      catalogue: { value: '', label: '', uoms: [] }
-    })
-  }
-
   onNutrientElementSelected = item => {
     this.setState({
       nutrient_element: item
-    })
-  }
-
-  onNutrientProductSelected = item => {
-    let changes = {
-      catalogue: item,
-      defaultProduct: []
-    }
-
-    if (this.state.product_id.length > 0) {
-      changes = {
-        ...changes,
-        product: { value: '', label: '' },
-        product_id: '',
-        product_name: '',
-        manufacturer: '',
-        description: '',
-        nitrogen: '',
-        prosphorus: '',
-        potassium: ''
-      }
-    }
-
-    this.setState(changes, () => {
-      this.loadProducts(
-        '',
-        this.state.nutrientType,
-        this.state.catalogue,
-        this.props.facility_id
-      )
     })
   }
 
@@ -158,7 +107,6 @@ class NutrientEditor extends React.Component {
       ],
       id: '',
       qty_per_package: '',
-      nutrientType: { value: '', label: '', children: [] },
       catalogue: { value: '', label: '', uoms: [] },
       product: { value: '', label: '' },
       product_id: '',
@@ -213,7 +161,6 @@ class NutrientEditor extends React.Component {
       id,
       uom: { value: uom },
       qty_per_package,
-      catalogue: { value: catalogue },
       product_id,
       product_name,
       manufacturer,
@@ -235,11 +182,11 @@ class NutrientEditor extends React.Component {
       parseFloat(this.state.order_quantity) *
       parseFloat(this.state.qty_per_package)
 
-    if (uom && uom.length === 0) {
+    if (!uom) {
       errors.uom = ['Unit of measure is required.']
     }
 
-    if (order_uom.length === 0) {
+    if (!order_uom) {
       errors.order_uom = ['Unit of measure is required.']
     }
 
@@ -253,15 +200,11 @@ class NutrientEditor extends React.Component {
       ]
     }
 
-    if (!catalogue) {
-      errors.catalogue = ['Nutrient product is required.']
-    }
-
-    if (location_id.length === 0) {
+    if (!location_id) {
       errors.location_id = ['Storage location is required.']
     }
 
-    if (product_name.length === 0) {
+    if (!product_name) {
       errors.product = ['Product is required.']
     }
 
@@ -302,7 +245,7 @@ class NutrientEditor extends React.Component {
       facility_id,
       uom,
       quantity,
-      catalogue,
+      catalogue: this.props.catalogue_id,
       product_id,
       product_name,
       manufacturer,
@@ -324,11 +267,12 @@ class NutrientEditor extends React.Component {
     }
   }
 
-  loadProducts = (inputValue, nutrientType, catalogue, facility_id) => {
+  loadProducts = (inputValue, facility_id) => {
     inputValue = inputValue || ''
+    const { catalogue_id } = this.props
     return fetch(
       `/api/v1/products?type=raw_materials&category=nutrients&catalogue_id=${
-        catalogue.value
+        catalogue_id
       }&facility_id=${facility_id}&filter=${inputValue}`,
       {
         credentials: 'include'
@@ -434,19 +378,12 @@ class NutrientEditor extends React.Component {
   }
 
   render() {
-    const { facility_id, locations, catalogues } = this.props
-    const { nutrients_elements, nutrients } = this.state
-    const nutrientProducts = this.state.nutrientType.children
-    const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
+    const { facility_id, catalogue_id, locations } = this.props
+    const { nutrients_elements, nutrients, price_per_package, order_quantity } = this.state
     const all_uoms = this.props.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
-
-    const showTotalPrice =
-      parseFloat(this.state.price_per_package) > 0 &&
-      parseFloat(this.state.order_quantity) > 0
-
+    const showTotalPrice = price_per_package && order_quantity
     const hasProductId = this.state.product_id
-    const canSelectProduct = facility_id && this.state.catalogue
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -477,8 +414,8 @@ class NutrientEditor extends React.Component {
                 loadOptions={e =>
                   this.loadProducts(
                     e,
-                    this.state.nutrientType,
-                    this.state.catalogue,
+                    '',
+                    catalogue_id,
                     facility_id
                   )
                 }
@@ -546,33 +483,6 @@ class NutrientEditor extends React.Component {
             <div className="w-100">
               <label className="f6 fw6 db dark-gray">Nutrients</label>
             </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-third">
-              <label className="f6 fw6 db mb1 gray ttc">Nutrient Type</label>
-              <Select
-                options={catalogues}
-                value={this.state.nutrientType}
-                onChange={this.onNutrientTypeSelected}
-                styles={reactSelectStyle}
-              />
-            </div>
-            {nutrientProducts && (
-              <div className="pl3 w-two-thirds">
-                <label className="f6 fw6 db mb1 gray ttc">
-                  {this.state.nutrientType.label}&nbsp;
-                </label>
-                <Select
-                  key={this.state.nutrientType}
-                  options={nutrientProducts}
-                  value={this.state.catalogue}
-                  onChange={this.onNutrientProductSelected}
-                  styles={reactSelectStyle}
-                />
-                <FieldError errors={this.state.errors} field="catalogue" />
-              </div>
-            )}
           </div>
 
           <div className="ph4 mb3 flex">
@@ -714,8 +624,7 @@ class NutrientEditor extends React.Component {
               <div className="ph4 mt3 mb3 flex">
                 <div className="w-100">
                   <label className="f6 fw6 db dark-gray">
-                    Amount of material in each{' '}
-                    {this.state.order_uom.label.toLowerCase()}
+                    Amount of material in each <span className="ttl">{this.state.order_uom.label}</span>
                   </label>
                 </div>
               </div>
@@ -734,7 +643,7 @@ class NutrientEditor extends React.Component {
                   <label className="f6 fw6 db mb1 gray ttc">UoM</label>
                   <Select
                     value={this.state.uom}
-                    options={uoms}
+                    options={all_uoms}
                     styles={reactSelectStyle}
                     onChange={x => this.setState({ uom: x })}
                   />
@@ -807,7 +716,6 @@ class NutrientEditor extends React.Component {
 NutrientEditor.propTypes = {
   locations: PropTypes.array.isRequired,
   order_uoms: PropTypes.array.isRequired,
-  catalogues: PropTypes.array.isRequired
 }
 
 export default NutrientEditor

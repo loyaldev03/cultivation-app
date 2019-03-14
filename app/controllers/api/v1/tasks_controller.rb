@@ -88,7 +88,6 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     command = Cultivation::SaveMaterialUse.call(current_user,
                                                 params[:id],
                                                 params[:items],
-                                                params[:nutrients],
                                                 params[:water_ph])
     if command.success?
       render json: TaskSerializer.new(command.result).serialized_json

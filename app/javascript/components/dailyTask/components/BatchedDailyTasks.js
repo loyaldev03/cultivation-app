@@ -13,7 +13,9 @@ const BatchedDailyTasks = observer(
             Batch {batchNo} - {batchName}
           </h3>
           <a href={`/cultivation/batches/${batchId}`} className="pa1">
-            <i className="ph2 material-icons icon--medium grey child fl">assignment</i>
+            <i className="ph2 material-icons icon--medium grey child fl">
+              assignment
+            </i>
           </a>
         </div>
         <HeaderRow />

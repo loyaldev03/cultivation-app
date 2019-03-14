@@ -448,7 +448,13 @@ class TaskStore {
   }
 
   @action
-  async editAssignedMaterial(batchId, taskId, items = [], nutrients = [], water_ph) {
+  async editAssignedMaterial(
+    batchId,
+    taskId,
+    items = [],
+    nutrients = [],
+    water_ph
+  ) {
     const task = this.getTaskById(taskId)
     const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_material_use`
     console.log(nutrients)
@@ -465,7 +471,7 @@ class TaskStore {
             value: x.value
           }
         }),
-        water_ph
+      water_ph
     }
     console.log(payload)
     try {

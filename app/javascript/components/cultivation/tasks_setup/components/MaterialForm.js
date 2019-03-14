@@ -97,7 +97,9 @@ export default class MaterialForm extends React.Component {
   onDeleteMaterial = value => {
     if (confirm('Are you sure you want to delete this relationship? ')) {
       this.setState({
-        materials: this.state.materials.filter(item => item.product_id !== value)
+        materials: this.state.materials.filter(
+          item => item.product_id !== value
+        )
       })
     }
   }
@@ -143,14 +145,14 @@ export default class MaterialForm extends React.Component {
     this.setState({ materials: materials })
   }
 
-  handleChangePH = (ph) => {
-    this.setState({ water_ph:ph })
+  handleChangePH = ph => {
+    this.setState({ water_ph: ph })
   }
 
   render() {
     const { onClose } = this.props
     const { nutrients, materials, task } = this.state
-    console.log(this.state);
+    console.log(this.state)
     const task_plant = task && task.indelible === 'plants'
     const showNutrient =
       materials && materials.length > 0 && task.indelible === 'add_nutrient'

@@ -29,6 +29,7 @@ class NutrientEditor extends React.Component {
         getRawMaterial(id)
           .then(x => x.data.data.attributes)
           .then(attr => {
+            console.log(attr)
             this.setState(
               {
                 ...this.resetState(),
@@ -66,8 +67,6 @@ class NutrientEditor extends React.Component {
                 this.loadProducts(
                   '',
                   '',
-                  this.props.catalogue_id,
-                  this.props.facility_id
                 )
               }
             )
@@ -267,9 +266,9 @@ class NutrientEditor extends React.Component {
     }
   }
 
-  loadProducts = (inputValue, facility_id) => {
+  loadProducts = (inputValue) => {
     inputValue = inputValue || ''
-    const { catalogue_id } = this.props
+    const { catalogue_id, facility_id } = this.props
     return fetch(
       `/api/v1/products?type=raw_materials&category=nutrients&catalogue_id=${
         catalogue_id
@@ -414,9 +413,7 @@ class NutrientEditor extends React.Component {
                 loadOptions={e =>
                   this.loadProducts(
                     e,
-                    '',
-                    catalogue_id,
-                    facility_id
+                    ''
                   )
                 }
                 onInputChange={handleInputChange}

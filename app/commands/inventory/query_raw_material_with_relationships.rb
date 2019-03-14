@@ -46,10 +46,11 @@ module Inventory
         :catalogue_id.in => raw_material_ids,
       ).order(c_at: :desc)
 
-      vi_item_ids = item_transactions.where(ref_type: 'Inventory::VendorInvoiceItem').pluck(:ref_id)
-      vendor_invoice_items = Inventory::VendorInvoiceItem.includes(
-        :invoice, {invoice: :purchase_order, invoice: :vendor}
-      ).in(id: vi_item_ids)
+      vi_item_ids = item_transactions.
+        where(ref_type: 'Inventory::VendorInvoiceItem').pluck(:ref_id)
+      vendor_invoice_items = Inventory::VendorInvoiceItem.
+        includes(:invoice).
+        in(id: vi_item_ids)
 
       {
         item_transactions: item_transactions,
@@ -64,8 +65,9 @@ module Inventory
       )
 
       vendor_invoice_items = if item_transaction.ref_type == 'Inventory::VendorInvoiceItem'
-                               Inventory::VendorInvoiceItem.includes(:invoice, {invoice: :purchase_order, invoice: :vendor})
-                                 .find_by(id: item_transaction.ref_id)
+                               Inventory::VendorInvoiceItem.
+                                 includes(:invoice).
+                                 find_by(id: item_transaction.ref_id)
                              else
                                []
                              end

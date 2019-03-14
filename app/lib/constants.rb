@@ -42,6 +42,20 @@ module Constants
     CONST_CURE,
   ].freeze
 
+  FACILITY_ROOMS_ORDER = [
+    CONST_MOTHER,
+    CONST_CLONE,
+    CONST_VEG1,
+    CONST_VEG2,
+    CONST_VEG,
+    CONST_FLOWER,
+    CONST_DRY,
+    CONST_CURE,
+    CONST_TRIM,
+    CONST_STORAGE,
+    CONST_VAULT,
+  ].freeze
+
   BATCH_STATUS_DRAFT = 'DRAFT'.freeze
   BATCH_STATUS_SCHEDULED = 'SCHEDULED'.freeze
   BATCH_STATUS_ACTIVE = 'ACTIVE'.freeze

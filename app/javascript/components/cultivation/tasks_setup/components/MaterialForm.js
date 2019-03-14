@@ -76,7 +76,8 @@ export default class MaterialForm extends React.Component {
               category: product.catalogue.label,
               quantity: '',
               uoms: product.uoms,
-              uom: product.uoms[0]
+              uom: product.uoms[0],
+              ppm: product.ppm
             }
           ]
         }))
@@ -146,7 +147,7 @@ export default class MaterialForm extends React.Component {
       materials && materials.length > 0 && task.indelible === 'add_nutrient'
     const title =
       task && task.indelible === 'add_nutrient'
-        ? 'Add Nutrient'
+        ? `Add Nutrient . ${task.name}`
         : 'Assign Materials'
     return (
       <React.Fragment>
@@ -172,20 +173,26 @@ export default class MaterialForm extends React.Component {
           </div>
           <div className="flex flex-column flex-auto justify-between">
             <div className="ph4 mt3 f6 fw6 db mb1 gray">
-              <table className="w-100 ttc">
-                <tbody>
-                  <tr className="bb">
+              <table className="w-100 ttc f6">
+                <thead className="ba bw1">
+                  <tr className="">
                     <th align="left">Product Name</th>
-                    <th>Category</th>
-                    <th>Qty</th>
-                    <th>UOM</th>
+                    <th>PPM</th>
+                    <th>Amt</th>
+                    <th>UoM</th>
                     <th />
                   </tr>
+                </thead>
+                <tbody>
                   {materials.map((x, index) => (
                     <tr className="pointer bb" key={index}>
-                      <td className="tl pv2">{x.product_name}</td>
-                      <td className="tl pa2">{x.category}</td>
-                      <td className="tl pa2 w3">
+                      <td className="tl pv2 pv3 pr3">
+                        {x.product_name}
+                      </td>
+                      <td className="tl pa2 pv3 pr3 ">
+                        {x.ppm}
+                      </td>
+                      <td className="tl pa2 w3 pv3 pr3">
                         <input
                           type="number"
                           name="pin"
@@ -200,7 +207,7 @@ export default class MaterialForm extends React.Component {
                           }
                         />
                       </td>
-                      <td className="tc pa2 w3">
+                      <td className="tc pa2 w3 pv3 pr3">
                         <select
                           value={x.uom}
                           onChange={e =>
@@ -215,7 +222,7 @@ export default class MaterialForm extends React.Component {
                             ))}
                         </select>
                       </td>
-                      <td className="tr w1">
+                      <td className="tr w1 pv3 pr3">
                         <i
                           className="material-icons red md-18 pointer dim"
                           onClick={e => this.onDeleteMaterial(x.product_id)}
@@ -225,21 +232,23 @@ export default class MaterialForm extends React.Component {
                       </td>
                     </tr>
                   ))}
+                  <tr>
+                    <td className="tr w1 pv3 pr3">
+                      <i className="material-icons blue">opacity</i>
+                    </td>
+                    <td className="tr w2 pv3 pr3 flex items-center nowrap">
+                      Water Ph:
+                      <input
+                        type="number"
+                        name="pin"
+                        size="2"
+                        className="input tr w2"
+                        onChange={e => console.log(e.target.value)}
+                      />
+                    </td>
+                  </tr>
                 </tbody>
               </table>
-              {showNutrient && (
-                <React.Fragment>
-                  <span className="fw6 b db ph1 mt4 mb2">
-                    Nutrition Information:
-                  </span>
-                  <NutrientEntryForm
-                    ref={form => (this.nutrientForm = form)}
-                    className="nutrient-form--narrow ph1"
-                    fields={nutrients}
-                    fieldType="textboxes"
-                  />
-                </React.Fragment>
-              )}
             </div>
             <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
           </div>

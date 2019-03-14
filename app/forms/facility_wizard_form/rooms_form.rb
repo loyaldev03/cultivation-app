@@ -59,7 +59,15 @@ module FacilityWizardForm
           @rooms ||= []
         else
           @wz_room_count = facility.rooms.size
-          @rooms = facility.rooms.map do |room|
+          custom_order = Constants::FACILITY_ROOMS_ORDER
+          @sorted_rooms = facility.rooms.sort_by do |r|
+            if r.purpose.nil?
+              -1
+            else
+              custom_order.index { |s| r[:purpose].starts_with?(s) }
+            end
+          end
+          @rooms = @sorted_rooms.map do |room|
             RoomInfoForm.new(@facility_id, room)
           end
         end

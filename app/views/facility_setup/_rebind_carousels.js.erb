@@ -1,2 +1,7 @@
-bindCarousel(true)
+<% if defined?(goto) %>
+  bindCarousel(<%= goto %>)
+<% else %>
+  bindCarousel()
+<% end%>
+
 setupCollapsible();

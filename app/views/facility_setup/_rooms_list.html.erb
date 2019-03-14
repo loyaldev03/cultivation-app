@@ -1,4 +1,4 @@
-<% if @rooms_info_form.wz_room_count == 0 %>
+<% if @rooms_info_form.wz_room_count.zero? %>
   <div class="w-70 dib fl">
     <label class="mb2 grey subtitle-2 db">How many rooms are in your facility?</label>
     <%= select_tag :rooms_count,
@@ -26,7 +26,6 @@
     <div class="carousel__button carousel__button--left pointer dim flex items-center justify-center">
       <i class="material-icons md-light fw6">keyboard_arrow_left</i>
     </div>
-
     <div class="carousel__body siema">
       <% rooms.each do |room| %>
         <div class="carousel__card relative ba pa2 flex flex-column justify-between">

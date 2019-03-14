@@ -29,17 +29,14 @@ class DailyTaskApp extends React.Component {
       <React.Fragment>
         <SlidePanel
           width="500px"
-          show={showMaterialUsed.get()}
+          show={showMaterialUsed}
           renderBody={props => <AddMaterialForm />}
         />
         <SlidePanel
           width="500px"
-          show={showIssues.get()}
+          show={showIssues}
           renderBody={props => (
             <IssueSidebar
-              // batch_id={this.props.batch.id}
-              // facility_id={this.props.batch.facility_id}
-              // mode={this.state.mode}
               current_user_first_name={this.props.current_user_first_name}
               current_user_last_name={this.props.current_user_last_name}
               current_user_photo={this.props.current_user_photo}
@@ -48,7 +45,7 @@ class DailyTaskApp extends React.Component {
         />
         <SlidePanel
           width="500px"
-          show={showNotes.get()}
+          show={showNotes}
           renderBody={props => <NoteEditor />}
         />
       </React.Fragment>

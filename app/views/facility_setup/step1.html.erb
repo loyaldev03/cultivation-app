@@ -166,12 +166,11 @@
             <div class="mv4 flex flex-row items-center">
               <p class="grey subtitle-2 dib">Mark facility as ready so that it would be available in other modules:</p>
               <div class="dib pointer w-20-l w-10 flex justify-end">
-                <%= f.check_box :is_complete, checked: @wizard_form.is_complete, class: "toggle toggle-default" %>
-                <label class="toggle-button" for="facility_is_complete"></label>
+                <%= f.check_box :is_enabled, checked: @wizard_form.is_enabled, class: "toggle toggle-default" %>
+                <label class="toggle-button" for="facility_is_enabled"></label>
               </div>
             </div>
           </div>
-          
         <% end %>
       </div>
     </div>

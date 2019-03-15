@@ -50,7 +50,7 @@
 
             <div class="w-100 pb1 flex flex-column">
               <div class="flex flex-column items-center mb0">
-                <%= image_tag 'room-icon.svg', class: "h3 w3 dib center" %>
+                <%= image_tag 'room-icon.svg', class: "w-30 dib center" %>
                 <span class="h6--font dark-grey card--title"><%= room.name %></span>
                 <span class="grey body-1 ttu card--subtitle">
                   <%= room.purpose %>
@@ -106,7 +106,7 @@
           <% if !room.wz_generated %>
             <div>
               <% if room.is_complete %>
-              <a href="#" class="db w-100 link grey tc">
+              <a href="#" class="db pa1 w-100 link grey tc">
                 <i class="material-icons icon--small">content_copy</i>
               </a>
               <% end %>
@@ -161,11 +161,16 @@
   </div>
   <% if rooms.any? %>
     <div class="flex flex-row justify-between ph5 pv4">
-      <span class="grey">Delete and Reset Room</span>
+      <%= link_to "Delete and Reset Rooms",
+        destroy_all_rooms_path(facility_id: facility_id),
+        remote: true,
+        method: :post,
+        data: { confirm: "Confirm delete & reset all rooms in this facility?" },
+        class: "dim link tc grey" %>
       <%= link_to "Add New Room",
         generate_rooms_path(facility_id: facility_id,
-        rooms_count: rooms.size + 1,
-        mode: 'increment'),
+                            rooms_count: rooms.size + 1,
+                            mode: 'increment'),
         remote: true,
         method: :post,
         class: "dim link tc grey" %>

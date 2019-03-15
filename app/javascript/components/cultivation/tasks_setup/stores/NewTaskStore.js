@@ -448,9 +448,16 @@ class TaskStore {
   }
 
   @action
-  async editAssignedMaterial(batchId, taskId, items = [], nutrients = []) {
+  async editAssignedMaterial(
+    batchId,
+    taskId,
+    items = [],
+    nutrients = [],
+    water_ph
+  ) {
     const task = this.getTaskById(taskId)
     const url = `/api/v1/batches/${batchId}/tasks/${taskId}/update_material_use`
+    console.log(nutrients)
     const payload = {
       items: items.map(e => ({
         product_id: e.product_id,
@@ -464,10 +471,13 @@ class TaskStore {
             element: x.element,
             value: x.value
           }
-        })
+        }),
+      water_ph
     }
+    console.log(payload)
     try {
       const response = await (await fetch(url, httpPostOptions(payload))).json()
+      console.log(response)
       task.items = response.data.attributes.items
       task.add_nutrients = response.data.attributes.add_nutrients
       this.tasks = this.tasks.map(t => {

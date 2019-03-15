@@ -8,10 +8,15 @@ const BatchedDailyTasks = observer(
   ({ batchId, batchNo, batchName, tasks, onToggleAddIssue }) => {
     return (
       <div className="box--shadow bg-white pb3 mb4">
-        <div className="ph3 pb3 pt4">
+        <div className="flex pa3 items-center hide-child">
           <h3 className="h6--font dark-grey ma0 pa0">
             Batch {batchNo} - {batchName}
           </h3>
+          <a href={`/cultivation/batches/${batchId}`} className="pa1">
+            <i className="ph2 material-icons icon--medium grey child fl">
+              assignment
+            </i>
+          </a>
         </div>
         <HeaderRow />
         {tasks.map(x => {

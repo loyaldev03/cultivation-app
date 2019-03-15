@@ -139,7 +139,7 @@ class NutrientEditor extends React.Component {
   onSave = event => {
     const { isValid, errors, ...payload } = this.validateAndGetValues()
     if (isValid) {
-    saveRawMaterial(payload).then(({ status, data }) => {
+      saveRawMaterial(payload).then(({ status, data }) => {
         if (status >= 400) {
           this.setState({ errors: data.errors })
         } else {

@@ -247,6 +247,7 @@ export default class MaterialForm extends React.Component {
                 <input
                   type="number"
                   name="pin"
+                  value={this.state.water_ph}
                   className="input tr w3"
                   onChange={e => this.handleChangePH(e.target.value)}
                 />

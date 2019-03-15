@@ -352,8 +352,10 @@ module Inventory
         {element: 'prosphorus', value: prosphorus},
         {element: 'potassium', value: potassium},
       ]
-      nutrients.each do |nutrient|
-        nutrients_data << {element: nutrient['element'], value: nutrient['value']}
+      if nutrients.present?
+        nutrients.each do |nutrient|
+          nutrients_data << {element: nutrient['element'], value: nutrient['value']}
+        end
       end
 
       product.nutrients = []

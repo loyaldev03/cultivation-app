@@ -145,7 +145,7 @@ module Inventory
 
     def create_raw_material(invoice_item)
       product = save_product
-      save_npk(product) if nutrients?
+      save_npk(product)
       Inventory::ItemTransaction.create!(
         ref_id: invoice_item.id,
         ref_type: 'Inventory::VendorInvoiceItem',
@@ -169,7 +169,7 @@ module Inventory
 
     def update_raw_material(invoice_item)
       product = save_product
-      save_npk(product) if nutrients?
+      save_npk(product)
       transaction = Inventory::ItemTransaction.find(id)
       transaction.ref_id = invoice_item.id
       transaction.event_date = purchase_date
@@ -352,8 +352,10 @@ module Inventory
         {element: 'prosphorus', value: prosphorus},
         {element: 'potassium', value: potassium},
       ]
-      nutrients.each do |nutrient|
-        nutrients_data << {element: nutrient['element'], value: nutrient['value']}
+      if nutrients.present?
+        nutrients.each do |nutrient|
+          nutrients_data << {element: nutrient['element'], value: nutrient['value']}
+        end
       end
 
       product.nutrients = []

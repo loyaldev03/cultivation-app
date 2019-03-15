@@ -58,7 +58,8 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  Mongoid.logger = Logger.new(STDOUT)
+  # Log mogodb query
+  # Mongoid.logger = Logger.new(STDOUT)
 
   config.after_initialize do
     Bullet.enable = true

@@ -24,18 +24,15 @@ module Inventory
 
     # TODO: Change this to $aggregate and $unwrap to reduce number of N + 1 query
     def retrieve_collection
-      special_type = ['seeds', 'purchased_clones']
-      raw_material_ids = if type == 'nutrients'
-                           Inventory::Catalogue.raw_materials.where(key: type).
-                             pluck(:id)
-                         elsif special_type.include?(type)
+      special_type = ['seeds', 'purchased_clones', 'nutrients']
+      raw_material_ids = if special_type.include?(type)
+                           #find parent only one
                            Inventory::Catalogue.raw_materials.where(
-                             :uom_dimension.nin => [nil, ''],
                              key: type,
                            ).pluck(:id)
                          else
+                           #find catalogue for other than parent, parent will never have category type
                            Inventory::Catalogue.raw_materials.where(
-                             :uom_dimension.nin => [nil, ''],
                              category: type,
                            ).pluck(:id)
                          end

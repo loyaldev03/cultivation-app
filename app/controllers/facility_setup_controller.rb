@@ -58,14 +58,14 @@ class FacilitySetupController < ApplicationController
   # POST called through ajax when user changes room count (generate room record)
   def generate_rooms
     facility_id = params[:facility_id]
-    mode = params[:mode]
+    @mode = params[:mode]
 
     @rooms_info_form = FacilityWizardForm::RoomsForm.new(facility_id)
     rooms_count = params[:rooms_count].nil? ? 1 : params[:rooms_count].to_i
     @rooms_info_form.generate_rooms(rooms_count)
-    if mode == 'new'
+    if @mode == 'new'
       SaveFacilityWizardRooms.call(facility_id, @rooms_info_form.rooms, true)
-    elsif mode == 'increment'
+    elsif @mode == 'increment'
       SaveFacilityWizardRooms.call(facility_id, [@rooms_info_form.rooms.last])
     end
 
@@ -120,6 +120,15 @@ class FacilitySetupController < ApplicationController
     @facility_id = params[:facility_id]
     @room_id = params[:room_id]
     SaveFacilityDestroyRoom.call(@facility_id, @room_id)
+    respond_to do |format|
+      @rooms_info_form = FacilityWizardForm::RoomsForm.new(@facility_id)
+      format.js
+    end
+  end
+
+  def destroy_all_rooms
+    @facility_id = params[:facility_id]
+    SaveFacilityDestroyAllRooms.call(@facility_id)
     respond_to do |format|
       @rooms_info_form = FacilityWizardForm::RoomsForm.new(@facility_id)
       format.js

@@ -126,6 +126,15 @@ class FacilitySetupController < ApplicationController
     end
   end
 
+  def destroy_all_rooms
+    @facility_id = params[:facility_id]
+    SaveFacilityDestroyAllRooms.call(@facility_id)
+    respond_to do |format|
+      @rooms_info_form = FacilityWizardForm::RoomsForm.new(@facility_id)
+      format.js
+    end
+  end
+
   # GET show room setup summary
   def room_summary
     @room_summary_form = FacilityWizardForm::RoomSummaryForm.new(params)

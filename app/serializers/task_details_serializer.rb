@@ -43,6 +43,7 @@ class TaskDetailsSerializer
         uom: item.uom,
         catalogue_id: item&.product&.catalogue_id&.to_s,
         uoms: item&.product&.catalogue&.uoms&.pluck(:unit),
+        ppm: item&.product&.ppm,
       }
     end
   end

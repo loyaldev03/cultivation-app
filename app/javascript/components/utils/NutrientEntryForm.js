@@ -38,6 +38,7 @@ class NutrientEntryForm extends React.Component {
     return nutrients
   }
   render() {
+    console.log(this.props)
     const { className, fieldType, fields = [] } = this.props
     if (!fields || !fieldType) return null
     return (
@@ -47,10 +48,12 @@ class NutrientEntryForm extends React.Component {
             <label className="nutrient-form__label">
               {fieldType === 'checkboxes' && (
                 <React.Fragment>
-                  <span className="nutrient-name">{f.element}</span>
-                  <span className="nutrient-quantity">
-                    {decimalFormatter.format(f.value)}%
-                  </span>
+                  <span className="nutrient-name">{f.product_name}</span>
+
+                  <span className="nutrient-ppm">{f.ppm}</span>
+
+                  <span className="nutrient-quantity">{f.quantity}</span>
+                  <span className="nutrient-oum">{f.uom}</span>
                   <input
                     type="checkbox"
                     className="nutrient-form__input"

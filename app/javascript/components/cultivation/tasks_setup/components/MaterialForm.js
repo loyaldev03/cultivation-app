@@ -197,7 +197,7 @@ export default class MaterialForm extends React.Component {
                 </thead>
                 <tbody className="lh-copy">
                   {materials.map((x, index) => (
-                    <tr className="pointer bb" key={index}>
+                    <tr className="pointer bb hide-child" key={index}>
                       <td className="tl w5">{x.product_name}</td>
                       <td className="tr w3">{x.ppm}</td>
                       <td className="tl w3">
@@ -231,7 +231,7 @@ export default class MaterialForm extends React.Component {
                       </td>
                       <td className="tr w1 pt2">
                         <i
-                          className="material-icons red md-18 pointer dim"
+                          className="material-icons red md-18 pointer dim child"
                           onClick={e => this.onDeleteMaterial(x.product_id)}
                         >
                           delete

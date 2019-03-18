@@ -20,7 +20,7 @@ const BatchedDailyTasks = observer(
         </div>
         <HeaderRow />
         {tasks.map(x => {
-          // console.log(toJS(x))
+          console.log(toJS(x))
           return <TaskRow key={x.id} {...x} />
         })}
       </div>

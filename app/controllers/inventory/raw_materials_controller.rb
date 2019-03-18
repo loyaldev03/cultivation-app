@@ -39,7 +39,7 @@ class Inventory::RawMaterialsController < ApplicationController
   end
 
   def setup_editor_data
-    @locations = QueryAllValidFacilityLocations.call().result
+    @locations = QueryAllValidFacilityLocations.call(facility_id: params[:facility_id]).result
     @order_uoms = Common::UnitOfMeasure.where(:dimension.in => %w(piece)).pluck(:unit)
   end
 end

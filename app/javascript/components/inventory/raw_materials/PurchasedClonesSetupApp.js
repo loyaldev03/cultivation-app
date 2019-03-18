@@ -148,6 +148,7 @@ class PurchasedClonesSetupApp extends React.Component {
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}
           uoms={this.props.uoms}
+          facility_id={this.props.facility_id}
         />
       </React.Fragment>
     )

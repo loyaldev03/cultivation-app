@@ -262,7 +262,7 @@ class RawMaterialEditor extends React.Component {
     }
   }
 
-  loadProducts = (inputValue) => {
+  loadProducts = inputValue => {
     inputValue = inputValue || ''
 
     return fetch(
@@ -360,9 +360,7 @@ class RawMaterialEditor extends React.Component {
                 isClearable
                 placeholder={'Search...'}
                 defaultOptions={this.state.defaultProduct}
-                loadOptions={e =>
-                  this.loadProducts(e)
-                }
+                loadOptions={e => this.loadProducts(e)}
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
                 value={this.state.product}

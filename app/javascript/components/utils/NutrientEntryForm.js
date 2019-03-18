@@ -13,13 +13,9 @@ class NutrientEntryForm extends React.Component {
     })
   }
   onChangeCheckBox = field => e => {
-    const { nutrients } = this.state
-    nutrients[field] = e.target.checked
-    this.setState({
-      nutrients
-    })
+    field.checked = !field.checked
     if (this.props.onUpdateNutrients) {
-      this.props.onUpdateNutrients(nutrients)
+      this.props.onUpdateNutrients(this.props.fields)
     }
   }
   getFormInputs = () => {
@@ -38,44 +34,47 @@ class NutrientEntryForm extends React.Component {
     return nutrients
   }
   render() {
-    console.log(this.props)
     const { className, fieldType, fields = [] } = this.props
     if (!fields || !fieldType) return null
     return (
       <div className={`${className}`}>
-        {fields.map(f => (
-          <div key={f.id} className="nutrient-form__group">
-            <label className="nutrient-form__label">
-              {fieldType === 'checkboxes' && (
-                <React.Fragment>
-                  <span className="nutrient-name">{f.product_name}</span>
+        <table className="w-100 ttc f6 gray">
+          <thead>
+            <tr className="b">
+              <th className="bb b--light-grey tl w5">Product Name</th>
+              <th className="bb b--light-grey">PPM</th>
+              <th className="bb b--light-grey">Amt</th>
+              <th className="bb b--light-grey">UoM</th>
+              <th className="" />
+            </tr>
+          </thead>
+          <tbody className="lh-copy">
+            {fields.map(f => (
+              <tr key={f.id} className="nutrient-form__group">
+                {/* <label className="nutrient-form__label"> */}
+                {fieldType === 'checkboxes' && (
+                  <React.Fragment>
+                    <td>{f.product_name}</td>
 
-                  <span className="nutrient-ppm">{f.ppm}</span>
+                    <td className="tr">{f.ppm}</td>
 
-                  <span className="nutrient-quantity">{f.quantity}</span>
-                  <span className="nutrient-oum">{f.uom}</span>
-                  <input
-                    type="checkbox"
-                    className="nutrient-form__input"
-                    onChange={this.onChangeCheckBox(f.element)}
-                    defaultChecked={f.checked}
-                  />
-                </React.Fragment>
-              )}
-              {fieldType === 'textboxes' && (
-                <React.Fragment>
-                  <span className="nutrient-name">{f.element} (%)</span>
-                  <input
-                    type="number"
-                    className="nutrient-form__input input tr"
-                    defaultValue={f.value}
-                    onChange={this.onChangeTextInput(f.element)}
-                  />
-                </React.Fragment>
-              )}
-            </label>
-          </div>
-        ))}
+                    <td className="tr">{f.quantity}</td>
+                    <td className="">{f.uom}</td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        className="nutrient-form__input"
+                        onChange={this.onChangeCheckBox(f)}
+                        defaultChecked={f.checked}
+                      />
+                    </td>
+                  </React.Fragment>
+                )}
+                {/* </label> */}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     )
   }

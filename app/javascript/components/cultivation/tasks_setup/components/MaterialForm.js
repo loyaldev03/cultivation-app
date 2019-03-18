@@ -159,7 +159,7 @@ export default class MaterialForm extends React.Component {
       materials && materials.length > 0 && task.indelible === 'add_nutrient'
     const title =
       task && task.indelible === 'add_nutrient'
-        ? `Add Nutrient . ${task.name}`
+        ? `Add Nutrient ${task.name == 'Add nutrients' ? '' : '. ' + task.name}`
         : 'Assign Materials'
     return (
       <React.Fragment>

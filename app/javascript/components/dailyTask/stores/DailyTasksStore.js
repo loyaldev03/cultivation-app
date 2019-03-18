@@ -51,7 +51,7 @@ class DailyTaskStore {
   getNutrientsByTask(batchId, taskId) {
     const batch = this.batches.find(x => x.id === batchId)
     const task = batch.tasks.find(x => x.id === taskId)
-    return toJS(task.nutrients)
+    return task.nutrients
   }
 
   @action

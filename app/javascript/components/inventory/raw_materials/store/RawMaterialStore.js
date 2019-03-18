@@ -23,7 +23,7 @@ class RawMaterialStore {
         x.id === material.id ? material : x
       )
     } else {
-      this.materials.push(material)
+      this.materials.unshift(material)
     }
   }
 

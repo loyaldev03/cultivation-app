@@ -262,9 +262,9 @@ class RawMaterialEditor extends React.Component {
     return fetch(
       `/api/v1/products?type=raw_materials&category=${
         this.props.raw_material_type
-      }&catalogue_id=${
-        catalogue.value
-      }&facility_id=${facility_id}&filter=${inputValue}`,
+      }&catalogue_id=${catalogue.value}&facility_id=${
+        this.props.facility_id
+      }&filter=${inputValue}`,
       {
         credentials: 'include'
       }
@@ -313,7 +313,7 @@ class RawMaterialEditor extends React.Component {
   }
 
   render() {
-    const { locations } = this.props
+    const { locations, facility_id } = this.props
     const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
 
@@ -321,8 +321,6 @@ class RawMaterialEditor extends React.Component {
       parseFloat(this.state.price_per_package) > 0 &&
       parseFloat(this.state.order_quantity) > 0
     const hasProductId = this.state.product_id
-    const canSelectProduct =
-      this.state.facility_id.length > 0 && this.state.catalogue
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -342,50 +340,18 @@ class RawMaterialEditor extends React.Component {
             </span>
           </div>
 
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <LocationPicker
-                key={this.state.facility_id}
-                mode="facility"
-                onChange={this.onFacilityChanged}
-                locations={locations}
-                facility_id={this.state.facility_id}
-                location_id={this.state.facility_id}
-              />
-              <FieldError errors={this.state.errors} field="facility_id" />
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <label className="f6 fw6 db mb1 gray ttc">
-                {this.label} Type
-              </label>
-              <Select
-                options={this.props.catalogues}
-                value={this.state.catalogue}
-                onChange={this.onCatalogueSelected}
-                styles={reactSelectStyle}
-              />
-              <FieldError errors={this.state.errors} field="catalogue" />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-          <div className="ph4 mb3 flex">
+          <div className="ph4 mb3 mt3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
               <AsyncCreatableSelect
                 isClearable
-                isDisabled={!canSelectProduct}
-                noOptionsMessage={() => 'Please first select a facility'}
                 placeholder={'Search...'}
                 defaultOptions={this.state.defaultProduct}
                 loadOptions={e =>
                   this.loadProducts(
                     e,
                     this.state.catalogue,
-                    this.state.facility_id
+                    this.props.facility_id
                   )
                 }
                 onInputChange={handleInputChange}
@@ -419,6 +385,23 @@ class RawMaterialEditor extends React.Component {
                 onChange={this.onChangeGeneric}
                 readOnly={hasProductId}
               />
+            </div>
+          </div>
+
+          <hr className="mt3 m b--light-gray w-100" />
+
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">
+                {this.label} Type
+              </label>
+              <Select
+                options={this.props.catalogues}
+                value={this.state.catalogue}
+                onChange={this.onCatalogueSelected}
+                styles={reactSelectStyle}
+              />
+              <FieldError errors={this.state.errors} field="catalogue" />
             </div>
           </div>
 
@@ -520,26 +503,6 @@ class RawMaterialEditor extends React.Component {
           )}
 
           <hr className="mt3 m b--light-gray w-100" />
-
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Where are they stored?
-              </label>
-              <LocationPicker
-                key={this.state.facility_id}
-                mode="storage"
-                locations={locations}
-                facility_id={this.state.facility_id}
-                onChange={x => this.setState({ location_id: x.rm_id })}
-                location_id={this.state.location_id}
-              />
-              <FieldError errors={this.state.errors} field="location_id" />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
@@ -549,6 +512,35 @@ class RawMaterialEditor extends React.Component {
             purchase_order={this.state.purchase_order}
             vendor_invoice={this.state.vendor_invoice}
           />
+
+          <hr className="mt3 m b--light-gray w-100" />
+
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">
+                Where are they stored?
+              </label>
+              {JSON.stringify(locations)}
+              <LocationPicker
+                key={facility_id}
+                mode="storage"
+                locations={locations}
+                facility_id={facility_id}
+                onChange={x => this.setState({ location_id: x.rm_id })}
+                location_id={this.state.location_id}
+              />
+
+              {/* <LocationPicker
+                key={this.props.facility_id}
+                mode="storage"
+                locations={locations}
+                facility_id={this.props.facility_id}
+                onChange={x => this.setState({ location_id: x.rm_id })}
+                location_id={this.state.location_id}
+              /> */}
+              <FieldError errors={this.state.errors} field="location_id" />
+            </div>
+          </div>
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
             <a

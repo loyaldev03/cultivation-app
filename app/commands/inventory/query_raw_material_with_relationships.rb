@@ -24,6 +24,8 @@ module Inventory
 
     # TODO: Change this to $aggregate and $unwrap to reduce number of N + 1 query
     def retrieve_collection
+
+      #same as query in products index, query_raw_material_with_relationship, should move to cmd ?
       special_type = ['seeds', 'purchased_clones', 'nutrients']
       raw_material_ids = if special_type.include?(type)
                            #find parent only one

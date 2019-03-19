@@ -231,10 +231,10 @@ export default class MaterialForm extends React.Component {
                       </td>
                       <td className="tr w1 pt2">
                         <i
-                          className="material-icons red md-18 pointer dim child"
+                          className="material-icons gray md-18 pointer dim child"
                           onClick={e => this.onDeleteMaterial(x.product_id)}
                         >
-                          delete
+                          delete_outline
                         </i>
                       </td>
                     </tr>

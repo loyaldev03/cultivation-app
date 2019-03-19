@@ -91,23 +91,7 @@ class RawMaterialEditor extends React.Component {
   }
 
   onCatalogueSelected = item => {
-    let changes = {
-      catalogue: item,
-      uom: { value: '', label: '' },
-      defaultProduct: []
-    }
-
-    // When catalogue changed, current selected product should not be valid
-    // because that product belongs to another catalogue.
-    if (this.state.product_id.length > 0) {
-      changes = {
-        ...changes
-      }
-    }
-
-    this.setState(changes, () => {
-      this.loadProducts('')
-    })
+    this.setState({ catalogue: item })
   }
 
   onChangeGeneric = event => {
@@ -301,6 +285,9 @@ class RawMaterialEditor extends React.Component {
           product_ppm: ''
         })
       } else {
+        const catalogue = this.props.catalogues.find(
+          x => x.id == product.catalogue_id
+        )
         this.setState({
           product,
           product_id: product.id,
@@ -309,7 +296,8 @@ class RawMaterialEditor extends React.Component {
           description: product.description,
           product_size: product.size || '',
           product_uom: { label: product.common_uom, value: product.common_uom },
-          product_ppm: product.ppm || ''
+          product_ppm: product.ppm || '',
+          catalogue: catalogue
         })
       }
     } else {

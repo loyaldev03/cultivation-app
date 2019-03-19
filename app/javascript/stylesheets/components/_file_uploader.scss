@@ -1,0 +1,26 @@
+.file-uploader {
+  display: grid;
+  grid-column-gap: 1em;
+  grid-row-gap: 0.75em;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.file-uploader__card {
+  justify-self: center;
+  align-self: center;
+}
+
+.file-uploader__card--add {
+  border: 1px dashed $lightGrey;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+.file-uploader__card--add:hover {
+  border-color: $orange;
+  .material-icons {
+    color: $orange;
+  }
+}

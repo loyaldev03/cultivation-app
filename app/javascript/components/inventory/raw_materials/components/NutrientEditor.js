@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { PurchaseInfo } from '../../../utils'
+import { PurchaseInfo, FileUploader } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
@@ -466,6 +466,21 @@ class NutrientEditor extends React.Component {
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
               />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">Usage Instructions</label>
+              <FileUploader
+                files={[
+                  {id: 1, url: "https://via.placeholder.com/150" },
+                  {id: 2, url: "https://via.placeholder.com/150" },
+                  {id: 3, url: "https://via.placeholder.com/150" },
+                  {id: 4, url: "https://via.placeholder.com/150" },
+                  {id: 7, url: "https://via.placeholder.com/150" },
+                ]}
+                className="pa2 ba b--black-20 br2 file-uploader" />
             </div>
           </div>
 

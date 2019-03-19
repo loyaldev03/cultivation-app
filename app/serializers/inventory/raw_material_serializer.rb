@@ -36,6 +36,7 @@ module Inventory
           size: object.product.size,
           ppm: object.product.ppm,
           common_uom: object.product.common_uom,
+          catalogue_id: object.product.catalogue_id.to_s,
         }
       else
         nil
@@ -63,7 +64,7 @@ module Inventory
     end
 
     attribute :catalogue do |object|
-      object.catalogue.label
+      object.product.catalogue.label
     end
 
     attribute :location_id do |object|

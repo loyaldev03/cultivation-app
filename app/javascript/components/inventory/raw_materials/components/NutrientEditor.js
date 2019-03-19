@@ -474,11 +474,13 @@ class NutrientEditor extends React.Component {
               <label className="f6 fw6 db mb1 gray ttc">Usage Instructions</label>
               <FileUploader
                 files={[
-                  {id: 1, url: "https://via.placeholder.com/150" },
-                  {id: 2, url: "https://via.placeholder.com/150" },
-                  {id: 3, url: "https://via.placeholder.com/150" },
-                  {id: 4, url: "https://via.placeholder.com/150" },
-                  {id: 7, url: "https://via.placeholder.com/150" },
+                  {id: 1, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
+                  {id: 2, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
+                  {id: 3, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
+                  {id: 4, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
+                  {id: 5, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
+                  {id: 6, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
+                  {id: 7, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
                 ]}
                 className="pa2 ba b--black-20 br2 file-uploader" />
             </div>

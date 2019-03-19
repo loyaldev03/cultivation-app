@@ -5,10 +5,11 @@ const AttachmentThumbnail = ({
   url,
   preview,
   type,
+  onDelete,
+  size = 50,
   filename = '',
   onClick = (url, mime_type) => {},
   showDelete = false,
-  onDelete
 }) => {
   const height = showDelete ? '70px' : '50px'
 
@@ -16,7 +17,7 @@ const AttachmentThumbnail = ({
     <div
       src="/"
       mime_type={type}
-      style={{ width: 50, height }}
+      style={{ width: size, height }}
       className="mr1 overflow-hidden relative hover-photo mb1"
     >
       <Image
@@ -24,10 +25,11 @@ const AttachmentThumbnail = ({
         type={type}
         filename={filename}
         onClick={onClick}
+        size={size}
       />
       <div
         className="zoom-btn"
-        style={{ width: 50, height: 50 }}
+        style={{ width: size, height: size }}
         url={url}
         onClick={() => onClick(url, type, filename)}
       >
@@ -35,7 +37,7 @@ const AttachmentThumbnail = ({
       </div>
       {showDelete && (
         <p
-          style={{ width: 50, bottom: -10, fontSize: '12px' }}
+          style={{ width: size, bottom: -10, fontSize: '12px' }}
           className="tc mt1 mb0 delete-btn"
         >
           <a href="#" className="link gray" onClick={() => onDelete(id)}>
@@ -47,14 +49,14 @@ const AttachmentThumbnail = ({
   )
 }
 
-const Image = ({ preview, type, filename }) => {
+const Image = ({ preview, type, filename, size }) => {
   if (type.startsWith('image')) {
     return (
       <div
         className="cover"
         style={{
-          width: 50,
-          height: 50,
+          width: size,
+          height: size,
           background: `url(${preview}) no-repeat center center`
         }}
       />
@@ -64,8 +66,8 @@ const Image = ({ preview, type, filename }) => {
       <div
         className="gray overflow-hidden f7 bg-white ba b--black-05"
         style={{
-          width: 50,
-          height: 50
+          width: size,
+          height: size
         }}
       >
         VID - {filename}

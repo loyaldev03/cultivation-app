@@ -116,7 +116,7 @@ class RawMaterialSetupApp extends React.Component {
   renderList() {
     return (
       <React.Fragment>
-        <div className="w-100 bg-white pa3">
+        <div className="w-100 bg-white pa3 grey">
           <div className="flex mb4 mt2">
             <h1 className="mv0 f3 fw4 dark-gray flex-auto ttc">{this.title}</h1>
             <div style={{ justifySelf: 'end' }}>
@@ -153,6 +153,8 @@ class RawMaterialSetupApp extends React.Component {
           order_uoms={this.props.order_uoms}
           raw_material_type={this.props.raw_material_type}
           catalogues={this.props.catalogues}
+          facility_id={this.props.facility_id}
+          uoms={this.props.uoms}
         />
       </React.Fragment>
     )

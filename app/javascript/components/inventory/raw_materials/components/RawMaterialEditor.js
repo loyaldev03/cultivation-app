@@ -45,6 +45,12 @@ class RawMaterialEditor extends React.Component {
                 product: { value: attr.product.id, label: attr.product.name },
                 manufacturer: attr.manufacturer,
                 description: attr.description,
+                product_size: attr.product.size || '',
+                product_uom: {
+                  label: attr.product.common_uom,
+                  value: attr.product.common_uom
+                },
+                product_ppm: attr.product.ppm || '',
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -56,11 +62,7 @@ class RawMaterialEditor extends React.Component {
                 vendor_invoice: attr.vendor_invoice
               },
               () => {
-                this.loadProducts(
-                  '',
-                  this.state.catalogue,
-                  this.state.facility_id
-                )
+                this.loadProducts('')
               }
             )
           })
@@ -84,7 +86,7 @@ class RawMaterialEditor extends React.Component {
     }
 
     this.setState(changes, () => {
-      this.loadProducts('', this.state.catalogue, this.state.facility_id)
+      this.loadProducts('')
     })
   }
 
@@ -99,17 +101,12 @@ class RawMaterialEditor extends React.Component {
     // because that product belongs to another catalogue.
     if (this.state.product_id.length > 0) {
       changes = {
-        ...changes,
-        product: null,
-        manufacturer: '',
-        description: '',
-        product_id: '',
-        product_name: ''
+        ...changes
       }
     }
 
     this.setState(changes, () => {
-      this.loadProducts('', this.state.catalogue, this.state.facility_id)
+      this.loadProducts('')
     })
   }
 
@@ -122,7 +119,7 @@ class RawMaterialEditor extends React.Component {
   resetState() {
     return {
       id: '',
-      facility_id: '',
+      facility_id: this.props.facility_id,
       qty_per_package: '',
       catalogue: { value: '', label: '', uoms: [] },
       product: { value: '', label: '' },
@@ -130,6 +127,9 @@ class RawMaterialEditor extends React.Component {
       product_name: '',
       manufacturer: '',
       description: '',
+      product_size: '',
+      product_uom: { label: '', value: '' },
+      product_ppm: '',
       order_quantity: 0,
       price_per_package: 0,
       order_uom: { value: '', label: '' },
@@ -179,6 +179,8 @@ class RawMaterialEditor extends React.Component {
       product_name,
       manufacturer,
       description,
+      product_size,
+      product_ppm,
       order_quantity,
       order_uom: { value: order_uom },
       price_per_package: price,
@@ -235,6 +237,7 @@ class RawMaterialEditor extends React.Component {
     if (!isValid) {
       this.setState({ errors })
     }
+    const product_uom = this.state.product_uom.value
 
     return {
       id,
@@ -245,6 +248,9 @@ class RawMaterialEditor extends React.Component {
       product_id,
       product_name,
       manufacturer,
+      product_size,
+      product_uom,
+      product_ppm,
       description,
       order_quantity,
       order_uom,
@@ -256,15 +262,13 @@ class RawMaterialEditor extends React.Component {
     }
   }
 
-  loadProducts = (inputValue, catalogue, facility_id) => {
+  loadProducts = inputValue => {
     inputValue = inputValue || ''
 
     return fetch(
       `/api/v1/products?type=raw_materials&category=${
         this.props.raw_material_type
-      }&catalogue_id=${
-        catalogue.value
-      }&facility_id=${facility_id}&filter=${inputValue}`,
+      }&facility_id=${this.props.facility_id}&filter=${inputValue}`,
       {
         credentials: 'include'
       }
@@ -291,7 +295,10 @@ class RawMaterialEditor extends React.Component {
           product_name: product.value,
           product_id: '',
           manufacturer: '',
-          description: ''
+          description: '',
+          product_size: '',
+          product_uom: { label: '', value: '' },
+          product_ppm: ''
         })
       } else {
         this.setState({
@@ -299,7 +306,10 @@ class RawMaterialEditor extends React.Component {
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,
-          description: product.description
+          description: product.description,
+          product_size: product.size || '',
+          product_uom: { label: product.common_uom, value: product.common_uom },
+          product_ppm: product.ppm || ''
         })
       }
     } else {
@@ -307,22 +317,23 @@ class RawMaterialEditor extends React.Component {
         product: { value: '', label: '' },
         product_id: '',
         manufacturer: '',
-        description: ''
+        description: '',
+        product_size: '',
+        product_uom: { label: '', value: '' },
+        product_ppm: ''
       })
     }
   }
 
   render() {
-    const { locations } = this.props
-    const uoms = this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
+    const { locations, facility_id } = this.props
+    const uoms = this.props.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
 
     const showTotalPrice =
       parseFloat(this.state.price_per_package) > 0 &&
       parseFloat(this.state.order_quantity) > 0
     const hasProductId = this.state.product_id
-    const canSelectProduct =
-      this.state.facility_id.length > 0 && this.state.catalogue
 
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -342,52 +353,14 @@ class RawMaterialEditor extends React.Component {
             </span>
           </div>
 
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <LocationPicker
-                key={this.state.facility_id}
-                mode="facility"
-                onChange={this.onFacilityChanged}
-                locations={locations}
-                facility_id={this.state.facility_id}
-                location_id={this.state.facility_id}
-              />
-              <FieldError errors={this.state.errors} field="facility_id" />
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <label className="f6 fw6 db mb1 gray ttc">
-                {this.label} Type
-              </label>
-              <Select
-                options={this.props.catalogues}
-                value={this.state.catalogue}
-                onChange={this.onCatalogueSelected}
-                styles={reactSelectStyle}
-              />
-              <FieldError errors={this.state.errors} field="catalogue" />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-          <div className="ph4 mb3 flex">
+          <div className="ph4 mb3 mt3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
               <AsyncCreatableSelect
                 isClearable
-                isDisabled={!canSelectProduct}
-                noOptionsMessage={() => 'Please first select a facility'}
                 placeholder={'Search...'}
                 defaultOptions={this.state.defaultProduct}
-                loadOptions={e =>
-                  this.loadProducts(
-                    e,
-                    this.state.catalogue,
-                    this.state.facility_id
-                  )
-                }
+                loadOptions={e => this.loadProducts(e)}
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
                 value={this.state.product}
@@ -398,13 +371,38 @@ class RawMaterialEditor extends React.Component {
           </div>
 
           <div className="ph4 mb3 flex">
-            <div className="w-100">
+            <div className="w-40">
               <TextInput
                 label="Manufacturer"
                 fieldname="manufacturer"
                 value={this.state.manufacturer}
                 onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
+              />
+            </div>
+            <div className="w-20 pl3">
+              <NumericInput
+                label="Size"
+                fieldname="product_size"
+                value={this.state.product_size}
+                onChange={this.onChangeGeneric}
+              />
+            </div>
+            <div className="w-20 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+              <Select
+                value={this.state.product_uom}
+                options={uoms}
+                styles={reactSelectStyle}
+                onChange={x => this.setState({ product_uom: x })}
+              />
+              <FieldError errors={this.state.errors} field="product_uom" />
+            </div>
+            <div className="w-20 pl3">
+              <NumericInput
+                label="PPM"
+                fieldname="product_ppm"
+                value={this.state.product_ppm}
+                onChange={this.onChangeGeneric}
               />
             </div>
           </div>
@@ -417,8 +415,22 @@ class RawMaterialEditor extends React.Component {
                 fieldname="description"
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
               />
+            </div>
+          </div>
+
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">
+                {this.label} Type
+              </label>
+              <Select
+                options={this.props.catalogues}
+                value={this.state.catalogue}
+                onChange={this.onCatalogueSelected}
+                styles={reactSelectStyle}
+              />
+              <FieldError errors={this.state.errors} field="catalogue" />
             </div>
           </div>
 
@@ -520,26 +532,6 @@ class RawMaterialEditor extends React.Component {
           )}
 
           <hr className="mt3 m b--light-gray w-100" />
-
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Where are they stored?
-              </label>
-              <LocationPicker
-                key={this.state.facility_id}
-                mode="storage"
-                locations={locations}
-                facility_id={this.state.facility_id}
-                onChange={x => this.setState({ location_id: x.rm_id })}
-                location_id={this.state.location_id}
-              />
-              <FieldError errors={this.state.errors} field="location_id" />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
@@ -549,6 +541,25 @@ class RawMaterialEditor extends React.Component {
             purchase_order={this.state.purchase_order}
             vendor_invoice={this.state.vendor_invoice}
           />
+
+          <hr className="mt3 m b--light-gray w-100" />
+
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">
+                Where are they stored?
+              </label>
+              <LocationPicker
+                key={facility_id}
+                mode="storage"
+                locations={locations}
+                facility_id={facility_id}
+                onChange={x => this.setState({ location_id: x.rm_id })}
+                location_id={this.state.location_id}
+              />
+              <FieldError errors={this.state.errors} field="location_id" />
+            </div>
+          </div>
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
             <a

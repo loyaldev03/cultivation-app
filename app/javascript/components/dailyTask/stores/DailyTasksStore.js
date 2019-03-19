@@ -100,7 +100,7 @@ class DailyTaskStore {
     try {
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {
-        console.log(response.data)
+        
       } else {
         console.error(response.errors)
       }

@@ -51,8 +51,7 @@ class DailyTaskStore {
   getNutrientsByTask(batchId, taskId) {
     const batch = this.batches.find(x => x.id === batchId)
     const task = batch.tasks.find(x => x.id === taskId)
-    console.log(task)
-    return task.add_nutrients.filter(x => x.value)
+    return task.nutrients
   }
 
   @action
@@ -101,6 +100,7 @@ class DailyTaskStore {
     try {
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {
+        console.log(response.data)
       } else {
         console.error(response.errors)
       }

@@ -1,38 +1,35 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
-import { observe } from 'mobx'
 import IssueForm from './components/IssueForm'
 import IssueDetails from './components/IssueDetails'
 import IssueHeader from './components/IssueHeader'
 import currentIssueStore from './store/CurrentIssueStore'
 import getIssue from './actions/getIssue'
-import dailyTaskSidebarStore from '../dailyTask/stores/SidebarStore'
+
 @observer
 class IssueSidebar extends React.Component {
-  state = this.resetState()
+  constructor(props) {
+    super(props)
+    const issueId = props.id
+    const mode = props.mode
 
-  componentDidMount() {
-    observe(dailyTaskSidebarStore, 'showIssues', change => {
-      if (change.newValue) {
-        const issueId = dailyTaskSidebarStore.issueId
-        const mode = dailyTaskSidebarStore.issueMode
-        const dailyTask = dailyTaskSidebarStore.dailyTask
-        if (issueId) {
-          getIssue(issueId)
-        } else if (mode === 'create') {
-          currentIssueStore.reset()
-        }
+    if (issueId) {
+      getIssue(issueId)
+    } else if (mode === 'create') {
+      currentIssueStore.reset()
+    }
 
-        if (mode === 'details') {
-          this.setState({ mode, issueId, dailyTask })
-        } else if (!issueId) {
-          this.setState({ mode: 'create', issueId: '' })
-        } else {
-          this.setState({ mode: 'edit', issueId })
-        }
-      }
-    })
+    let state = this.resetState()
+    if (mode === 'details') {
+      state = { ...state, mode, issueId }
+    } else if (!issueId) {
+      state = { ...state, mode: 'create', issueId: '' }
+    } else {
+      state = { ...state, mode: 'edit', issueId }
+    }
+
+    this.state = state
   }
 
   resetState() {
@@ -55,8 +52,13 @@ class IssueSidebar extends React.Component {
       this.setState({ mode: 'details' })
     } else {
       currentIssueStore.reset()
-      dailyTaskSidebarStore.closeIssues()
-      // window.editorSidebar.close()
+      this.props.onClose()
+    }
+  }
+
+  onCreated = issue => {
+    if (this.props.onCreated) {
+      this.props.onCreated(issue)
     }
   }
 
@@ -66,7 +68,8 @@ class IssueSidebar extends React.Component {
       facility_id,
       current_user_first_name,
       current_user_last_name,
-      current_user_photo
+      current_user_photo,
+      daily_task
     } = this.props
     const { mode } = this.state
 
@@ -81,7 +84,7 @@ class IssueSidebar extends React.Component {
           current_user_first_name={current_user_first_name}
           current_user_last_name={current_user_last_name}
           current_user_photo={current_user_photo}
-          dailyTask={this.state.dailyTask}
+          daily_task={daily_task}
         />
       )
     } else {
@@ -89,6 +92,7 @@ class IssueSidebar extends React.Component {
         <IssueForm
           onClose={this.onClose}
           onToggleMode={this.onToggleMode}
+          onCreated={this.onCreated}
           mode={this.state.mode}
           issueId={this.state.issueId}
           batchId={batch_id}
@@ -120,11 +124,14 @@ class IssueSidebar extends React.Component {
 }
 
 IssueSidebar.propTypes = {
+  issueId: PropTypes.string,
   batch_id: PropTypes.string.isRequired,
   facility_id: PropTypes.string.isRequired,
   current_user_first_name: PropTypes.string.isRequired,
   current_user_last_name: PropTypes.string.isRequired,
-  current_user_photo: PropTypes.string
+  current_user_photo: PropTypes.string,
+  onClose: PropTypes.func.isRequired,
+  onCreated: PropTypes.func
 }
 
 export default IssueSidebar

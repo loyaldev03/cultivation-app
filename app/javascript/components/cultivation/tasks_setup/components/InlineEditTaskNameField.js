@@ -2,6 +2,8 @@ import React from 'react'
 import classNames from 'classnames'
 import InlineEditTextField from './InlineEditTextField'
 import Tippy from '@tippy.js/react'
+
+// TODO: Should not be here....
 import dailyTaskSidebarStore from '../../../dailyTask/stores/SidebarStore'
 export default class InlineEditTaskNameField extends InlineEditTextField {
   openSidebar = issue => {

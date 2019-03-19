@@ -2,16 +2,19 @@ import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
 import { SlidePanel, formatDate3 } from '../utils/'
+
 import BatchedDailyTasks from './components/BatchedDailyTasks'
-import loadDailyTasks from './actions/loadDailyTasks'
-import dailyTasksStore from './stores/DailyTasksStore'
 import NoteEditor from './components/NoteEditor'
+import AddMaterialForm from './components/AddMaterialForm'
+
+import loadDailyTasks from './actions/loadDailyTasks'
+
+import dailyTasksStore from './stores/DailyTasksStore'
 import dailyTaskSidebarStore from './stores/SidebarStore'
 import materialUsedStore from './stores/MaterialUsedStore'
-import IssueSidebar from '../issues/IssueSidebar'
 
-// import AssignMaterialForm from '../cultivation/tasks_setup/components/MaterialForm'
-import AddMaterialForm from './components/AddMaterialForm'
+import dailyTaskSidebarAdaptor from './dailyTaskSidebarAdaptor'
+import IssueSidebar from '../issues/IssueSidebar2'
 
 @observer
 class DailyTaskApp extends React.Component {
@@ -24,6 +27,10 @@ class DailyTaskApp extends React.Component {
 
   renderSlidePanel() {
     const { showMaterialUsed, showNotes, showIssues } = dailyTaskSidebarStore
+    const IssueSideBarWithStore = dailyTaskSidebarAdaptor(
+      IssueSidebar,
+      this.props
+    )
 
     return (
       <React.Fragment>
@@ -35,13 +42,7 @@ class DailyTaskApp extends React.Component {
         <SlidePanel
           width="500px"
           show={showIssues}
-          renderBody={props => (
-            <IssueSidebar
-              current_user_first_name={this.props.current_user_first_name}
-              current_user_last_name={this.props.current_user_last_name}
-              current_user_photo={this.props.current_user_photo}
-            />
-          )}
+          renderBody={props => <IssueSideBarWithStore />}
         />
         <SlidePanel
           width="500px"

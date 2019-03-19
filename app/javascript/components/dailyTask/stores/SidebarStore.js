@@ -68,12 +68,17 @@ class SidebarStore {
   }
 
   @action
-  openIssues(id = null, mode = null, dailyTask = null) {
+  openIssues(id = null, mode = null, dailyTask = null, taskId, batchId) {
+    console.log(dailyTask)
+
     this.reset()
     this.issueId = id
     this.issueMode = mode
     this.dailyTask = dailyTask
+    this.taskId = taskId
+    this.batchId = batchId
     this.showIssues = true
+    console.log(taskId, batchId)
   }
 
   @action

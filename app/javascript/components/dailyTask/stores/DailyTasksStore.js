@@ -1,5 +1,6 @@
 import { observable, action, computed, toJS } from 'mobx'
 import { httpPostOptions, httpPutOptions, httpDeleteOptions } from '../../utils'
+import taskStore from '../../cultivation/tasks_setup/stores/NewTaskStore'
 
 class DailyTaskStore {
   @observable batches = []
@@ -7,6 +8,7 @@ class DailyTaskStore {
 
   @action
   load(batches) {
+    // console.log(batches)
     this.batches.replace(batches)
   }
 
@@ -134,6 +136,25 @@ class DailyTaskStore {
     } finally {
       this.isLoading = false
     }
+  }
+
+  @action
+  appendIssue(batchId, issue) {
+    const batch = this.batches.find(x => x.id === batchId)
+    const task = batch.tasks.find(x => x.id === issue.task.id)
+    const toInsert = {
+      id: issue.id,
+      issue_no: issue.issue_no,
+      title: issue.title,
+      severity: issue.severity,
+      status: issue.status,
+      created_at: issue.created_at,
+      tags: issue.tags
+    }
+    task.issues.push(toInsert)
+
+    // For now seems like this is the only way to force rerender
+    this.batches.replace(toJS(this.batches))
   }
 }
 

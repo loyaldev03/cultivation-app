@@ -7,7 +7,7 @@ import TaskStore from './stores/NewTaskStore'
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
 import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
-import IssueSidebar from '../../issues/IssueSidebar'
+import IssueSidebar from '../../issues/IssueSidebar2'
 import { SlidePanel } from '../../utils'
 import dailyTaskSidebarStore from '../../dailyTask/stores/SidebarStore'
 
@@ -79,7 +79,9 @@ class TaskSetup extends React.Component {
     const { batch } = this.props
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
-    const { showIssues } = dailyTaskSidebarStore
+    // const { showIssues } = dailyTaskSidebarStore
+    const showIssues = false
+
     return (
       <div className="pa4 grey flex flex-column h-100">
         <div id="toast" className="toast animated toast--success" />
@@ -256,7 +258,7 @@ class TaskSetup extends React.Component {
         </div>
         <SlidePanel
           width="500px"
-          show={showIssues.get()}
+          show={showIssues}
           renderBody={props => (
             <IssueSidebar
               batch_id={batch.id}

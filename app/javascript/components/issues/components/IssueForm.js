@@ -259,12 +259,17 @@ class IssueForm extends React.Component {
           this.setState({ errors: data.errors })
         } else {
           // this.setState(this.resetState()) //causing memory leaks
-          this.props.onClose()
           data.data.attributes.tags = data.data.attributes.tags.map(e => ({
             label: e,
             value: e
           }))
           currentIssueStore.setIssue(data.data.attributes)
+          this.props.onClose()
+
+          // Pass newly created issue back to parent.
+          if (this.props.onCreated) {
+            this.props.onCreated(data.data.attributes)
+          }
         }
       })
     }
@@ -313,6 +318,8 @@ class IssueForm extends React.Component {
       delete_attachments,
       cultivation_batch_id: this.props.batchId,
       id: this.props.issueId,
+
+      // TODO: This should be daily_task if issues are raise at daily task screen
       issue_type: 'planning',
       isValid
     }

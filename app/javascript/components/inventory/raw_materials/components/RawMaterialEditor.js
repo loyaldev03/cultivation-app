@@ -419,8 +419,6 @@ class RawMaterialEditor extends React.Component {
             </div>
           </div>
 
-          <hr className="mt3 m b--light-gray w-100" />
-
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">

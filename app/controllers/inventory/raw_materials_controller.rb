@@ -23,12 +23,12 @@ class Inventory::RawMaterialsController < ApplicationController
   end
 
   def seeds
-    @facility_strains = Inventory::QueryFacilityStrains.call.result
+    @facility_strains = Inventory::QueryFacilityStrains.call(params[:facility_id]).result
     @uoms = Inventory::Catalogue.seed.uoms.pluck(:unit)
   end
 
   def purchased_clones
-    @facility_strains = Inventory::QueryFacilityStrains.call.result
+    @facility_strains = Inventory::QueryFacilityStrains.call(params[:facility_id]).result
     @uoms = Inventory::Catalogue.purchased_clones.uoms.pluck(:unit)
   end
 

@@ -44,6 +44,12 @@ class SeedEditor extends React.Component {
                 product: { value: attr.product.id, label: attr.product.name },
                 manufacturer: attr.manufacturer,
                 description: attr.description,
+                product_size: attr.product.size || '',
+                product_uom: {
+                  label: attr.product.common_uom,
+                  value: attr.product.common_uom
+                },
+                product_ppm: attr.product.ppm || '',
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -71,13 +77,13 @@ class SeedEditor extends React.Component {
 
     if (this.state.product_id.length > 0) {
       changes = {
-        ...changes,
-        product_name: '',
-        manufacturer: '',
-        description: '',
-        product_id: '',
-        product: null,
-        defaultProduct: []
+        ...changes
+        // product_name: '',
+        // manufacturer: '',
+        // description: '',
+        // product_id: '',
+        // product: null,
+        // defaultProduct: []
       }
     }
 
@@ -103,6 +109,9 @@ class SeedEditor extends React.Component {
       product: null,
       manufacturer: '',
       description: '',
+      product_size: '',
+      product_uom: { label: '', value: '' },
+      product_ppm: '',
       order_quantity: 0,
       price_per_package: 0,
       order_uom: { value: '', label: '' },
@@ -149,6 +158,8 @@ class SeedEditor extends React.Component {
       product_name,
       manufacturer,
       description,
+      product_size,
+      product_ppm,
       order_quantity,
       order_uom: { value: order_uom },
       price_per_package: price,
@@ -194,6 +205,7 @@ class SeedEditor extends React.Component {
     if (!isValid) {
       this.setState({ errors })
     }
+    const product_uom = this.state.product_uom.value
 
     return {
       id,
@@ -204,6 +216,9 @@ class SeedEditor extends React.Component {
       product_name,
       manufacturer,
       description,
+      product_size,
+      product_uom,
+      product_ppm,
       order_quantity,
       order_uom,
       qty_per_package,
@@ -218,7 +233,7 @@ class SeedEditor extends React.Component {
     inputValue = inputValue || ''
     return fetch(
       `/api/v1/products?type=raw_materials&category=seeds&facility_id=${
-        this.state.facility_id
+        this.props.facility_id
       }&facility_strain_id=${
         this.state.facility_strain_id
       }&filter=${inputValue}`,
@@ -241,6 +256,7 @@ class SeedEditor extends React.Component {
   }
 
   onChangeProduct = product => {
+    console.log(product)
     if (product) {
       if (product.__isNew__) {
         this.setState({
@@ -248,7 +264,10 @@ class SeedEditor extends React.Component {
           product_name: product.value,
           product_id: '',
           manufacturer: '',
-          description: ''
+          description: '',
+          product_size: '',
+          product_uom: { label: '', value: '' },
+          product_ppm: ''
         })
       } else {
         this.setState({
@@ -256,7 +275,10 @@ class SeedEditor extends React.Component {
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,
-          description: product.description
+          description: product.description,
+          product_size: product.size || '',
+          product_uom: { label: product.common_uom, value: product.common_uom },
+          product_ppm: product.ppm || ''
         })
       }
     } else {
@@ -264,7 +286,10 @@ class SeedEditor extends React.Component {
         product: null,
         product_id: '',
         manufacturer: '',
-        description: ''
+        description: '',
+        product_size: '',
+        product_uom: { label: '', value: '' },
+        product_ppm: ''
       })
     }
   }
@@ -320,13 +345,38 @@ class SeedEditor extends React.Component {
           </div>
 
           <div className="ph4 mb3 flex">
-            <div className="w-100">
+            <div className="w-40">
               <TextInput
                 label="Manufacturer"
                 fieldname="manufacturer"
                 value={this.state.manufacturer}
                 onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
+              />
+            </div>
+            <div className="w-20 pl3">
+              <NumericInput
+                label="Size"
+                fieldname="product_size"
+                value={this.state.product_size}
+                onChange={this.onChangeGeneric}
+              />
+            </div>
+            <div className="w-20 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+              <Select
+                value={this.state.product_uom}
+                options={uoms}
+                styles={reactSelectStyle}
+                onChange={x => this.setState({ product_uom: x })}
+              />
+              <FieldError errors={this.state.errors} field="product_uom" />
+            </div>
+            <div className="w-20 pl3">
+              <NumericInput
+                label="PPM"
+                fieldname="product_ppm"
+                value={this.state.product_ppm}
+                onChange={this.onChangeGeneric}
               />
             </div>
           </div>
@@ -475,10 +525,10 @@ class SeedEditor extends React.Component {
                 Where are they stored?
               </label>
               <LocationPicker
-                key={this.state.facility_id}
+                key={this.props.facility_id}
                 mode="storage"
                 locations={locations}
-                facility_id={this.state.facility_id}
+                facility_id={this.props.facility_id}
                 onChange={x => this.setState({ location_id: x.rm_id })}
                 location_id={this.state.location_id}
               />

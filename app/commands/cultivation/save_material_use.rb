@@ -22,10 +22,13 @@ module Cultivation
       record.material_use = []
       record.water_ph = @water_ph
       items.each do |item|
+        product = Inventory::Product.find(item[:product_id])
+        catalogue = product.catalogue
         record.material_use.build(
           product_id: item[:product_id],
           quantity: item[:quantity],
           uom: item[:uom],
+          catalogue: catalogue.key,
         )
       end
       record.save

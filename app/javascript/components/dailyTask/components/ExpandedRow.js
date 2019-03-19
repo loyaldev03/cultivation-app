@@ -87,7 +87,7 @@ class ExpandedRow extends React.Component {
               <React.Fragment>
                 <span className="f6 grey db">Add Nutrients:</span>
                 <NutrientEntryForm
-                  className="nutrient-form mt2 w-70"
+                  className="mt2 w-100"
                   fields={DailyTaskStore.getNutrientsByTask(batchId, taskId)}
                   fieldType="checkboxes"
                   onUpdateNutrients={this.onUpdateNutrients}

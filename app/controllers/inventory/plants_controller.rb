@@ -40,11 +40,11 @@ class Inventory::PlantsController < ApplicationController
   end
 
   def load_facility_strains
-    @facility_strains = Inventory::QueryFacilityStrains.call.result
+    @facility_strains = Inventory::QueryFacilityStrains.call(params[:facility_id]).result
   end
 
   def load_locations
-    @locations = QueryAllValidFacilityLocations.call.result
+    @locations = QueryAllValidFacilityLocations.call(facility_id: params[:facility_id]).result
   end
 
   def load_scandit_licence

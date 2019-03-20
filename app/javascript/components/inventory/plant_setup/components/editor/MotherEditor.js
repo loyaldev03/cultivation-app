@@ -397,9 +397,9 @@ class MotherEditor extends React.Component {
             <div className="w-100">
               {console.log('Need to change this to tray level not room.')}
               <LocationPicker
-                key={`${this.state.facility_id}.${this.state.location_id}`}
+                key={`${this.props.facility_id}.${this.state.location_id}`}
                 mode="mother"
-                facility_id={this.state.facility_id}
+                facility_id={this.props.facility_id}
                 locations={this.locations}
                 location_id={this.state.location_id}
                 onChange={this.onLocationChanged}

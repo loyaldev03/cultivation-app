@@ -234,8 +234,6 @@ class SeedEditor extends React.Component {
     return fetch(
       `/api/v1/products?type=raw_materials&category=seeds&facility_id=${
         this.props.facility_id
-      }&facility_strain_id=${
-        this.state.facility_strain_id
       }&filter=${inputValue}`,
       {
         credentials: 'include'
@@ -267,7 +265,8 @@ class SeedEditor extends React.Component {
           description: '',
           product_size: '',
           product_uom: { label: '', value: '' },
-          product_ppm: ''
+          product_ppm: '',
+          facility_strain_id: ''
         })
       } else {
         this.setState({
@@ -278,7 +277,8 @@ class SeedEditor extends React.Component {
           description: product.description,
           product_size: product.size || '',
           product_uom: { label: product.common_uom, value: product.common_uom },
-          product_ppm: product.ppm || ''
+          product_ppm: product.ppm || '',
+          facility_strain_id: product.facility_strain_id
         })
       }
     } else {
@@ -289,7 +289,8 @@ class SeedEditor extends React.Component {
         description: '',
         product_size: '',
         product_uom: { label: '', value: '' },
-        product_ppm: ''
+        product_ppm: '',
+        facility_strain_id: ''
       })
     }
   }

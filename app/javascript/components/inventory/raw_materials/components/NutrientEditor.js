@@ -498,7 +498,7 @@ class NutrientEditor extends React.Component {
               />
             </div>
           </div>
-          
+
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">

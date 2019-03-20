@@ -59,26 +59,7 @@ class PurchasedCloneEditor extends React.Component {
   }
 
   onFacilityStrainChanged = item => {
-    let changes = {
-      facility_strain_id: item.value,
-      facility_id: item.facility_id
-    }
-
-    if (this.state.product_id.length > 0) {
-      changes = {
-        ...changes,
-        product_name: '',
-        manufacturer: '',
-        description: '',
-        product_id: '',
-        product: null,
-        defaultProduct: []
-      }
-    }
-
-    this.setState(changes, () => {
-      this.loadProducts('')
-    })
+    this.setState({ facility_strain_id: item.value })
   }
 
   onChangeGeneric = event => {
@@ -189,10 +170,8 @@ class PurchasedCloneEditor extends React.Component {
   loadProducts = inputValue => {
     inputValue = inputValue || ''
     return fetch(
-      `/api/v1/products?type=raw_materials&category=purchased_clone&facility_id=${
-        this.state.facility_id
-      }&facility_strain_id=${
-        this.state.facility_strain_id
+      `/api/v1/products?type=raw_materials&category=purchased_clones&facility_id=${
+        this.props.facility_id
       }&filter=${inputValue}`,
       {
         credentials: 'include'
@@ -274,27 +253,7 @@ class PurchasedCloneEditor extends React.Component {
             </span>
           </div>
 
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Select Strain</label>
-              <Select
-                key={this.state.facility_strain_id}
-                options={facility_strains}
-                noOptionsMessage={() => 'Type to search strain...'}
-                styles={reactSelectStyle}
-                onChange={this.onFacilityStrainChanged}
-                value={facilityStrain}
-              />
-              <FieldError
-                errors={this.state.errors}
-                field="facility_strain_id"
-              />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-
-          <div className="ph4 mb3 flex">
+          <div className="ph4 mb3 mt3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
               <AsyncCreatableSelect
@@ -337,7 +296,26 @@ class PurchasedCloneEditor extends React.Component {
             </div>
           </div>
 
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">Select Strain</label>
+              <Select
+                key={this.state.facility_strain_id}
+                options={facility_strains}
+                noOptionsMessage={() => 'Type to search strain...'}
+                styles={reactSelectStyle}
+                onChange={this.onFacilityStrainChanged}
+                value={facilityStrain}
+              />
+              <FieldError
+                errors={this.state.errors}
+                field="facility_strain_id"
+              />
+            </div>
+          </div>
+
           <hr className="mt3 m b--light-gray w-100" />
+
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
               <label className="f6 fw6 db dark-gray">Purchase details</label>
@@ -386,25 +364,6 @@ class PurchasedCloneEditor extends React.Component {
 
           <hr className="mt3 m b--light-gray w-100" />
 
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Where are they stored?
-              </label>
-              <LocationPicker
-                key={this.state.facility_id}
-                mode="storage"
-                locations={locations}
-                facility_id={this.state.facility_id}
-                onChange={x => this.setState({ location_id: x.rm_id })}
-                location_id={this.state.location_id}
-              />
-              <FieldError errors={this.state.errors} field="location_id" />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
@@ -414,6 +373,25 @@ class PurchasedCloneEditor extends React.Component {
             purchase_order={this.state.purchase_order}
             vendor_invoice={this.state.vendor_invoice}
           />
+
+          <hr className="mt3 m b--light-gray w-100" />
+
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">
+                Where are they stored?
+              </label>
+              <LocationPicker
+                key={this.props.facility_id}
+                mode="storage"
+                locations={locations}
+                facility_id={this.props.facility_id}
+                onChange={x => this.setState({ location_id: x.rm_id })}
+                location_id={this.state.location_id}
+              />
+              <FieldError errors={this.state.errors} field="location_id" />
+            </div>
+          </div>
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
             <a

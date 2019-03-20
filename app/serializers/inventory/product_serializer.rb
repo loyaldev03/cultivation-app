@@ -2,7 +2,7 @@ module Inventory
   class ProductSerializer
     include FastJsonapi::ObjectSerializer
 
-    attributes :name, :sku, :status, :transaction_limit, :manufacturer, :description, :size, :common_uom, :ppm, :uom_dimension
+    attributes :name, :sku, :status, :transaction_limit, :manufacturer, :description, :size, :common_uom, :ppm, :uom_dimension, :epa_number
 
     attribute :id do |object|
       object.id.to_s

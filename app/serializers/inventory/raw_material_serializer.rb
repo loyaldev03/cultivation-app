@@ -36,6 +36,7 @@ module Inventory
           size: object.product.size,
           ppm: object.product.ppm,
           common_uom: object.product.common_uom,
+          epa_number: object.product.epa_number,
           catalogue_id: object.product.catalogue_id.to_s,
         }
       else

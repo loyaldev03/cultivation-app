@@ -18,6 +18,7 @@ class RawMaterialEditor extends React.Component {
     this.state = this.resetState()
     this.purchaseInfoEditor = React.createRef()
     this.label = props.raw_material_type.replace(/[_]/g, ' ')
+    console.log(this.props.raw_material_type)
   }
 
   componentDidMount() {
@@ -51,6 +52,7 @@ class RawMaterialEditor extends React.Component {
                   value: attr.product.common_uom
                 },
                 product_ppm: attr.product.ppm || '',
+                epa_number: attr.product.epa_number || '',
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -114,6 +116,7 @@ class RawMaterialEditor extends React.Component {
       product_size: '',
       product_uom: { label: '', value: '' },
       product_ppm: '',
+      epa_number: '',
       order_quantity: 0,
       price_per_package: 0,
       order_uom: { value: '', label: '' },
@@ -165,6 +168,7 @@ class RawMaterialEditor extends React.Component {
       description,
       product_size,
       product_ppm,
+      epa_number,
       order_quantity,
       order_uom: { value: order_uom },
       price_per_package: price,
@@ -235,6 +239,7 @@ class RawMaterialEditor extends React.Component {
       product_size,
       product_uom,
       product_ppm,
+      epa_number,
       description,
       order_quantity,
       order_uom,
@@ -282,7 +287,8 @@ class RawMaterialEditor extends React.Component {
           description: '',
           product_size: '',
           product_uom: { label: '', value: '' },
-          product_ppm: ''
+          product_ppm: '',
+          epa_number: ''
         })
       } else {
         const catalogue = this.props.catalogues.find(
@@ -297,7 +303,8 @@ class RawMaterialEditor extends React.Component {
           product_size: product.size || '',
           product_uom: { label: product.common_uom, value: product.common_uom },
           product_ppm: product.ppm || '',
-          catalogue: catalogue
+          catalogue: catalogue,
+          epa_number: product.epa_number || ''
         })
       }
     } else {
@@ -308,7 +315,8 @@ class RawMaterialEditor extends React.Component {
         description: '',
         product_size: '',
         product_uom: { label: '', value: '' },
-        product_ppm: ''
+        product_ppm: '',
+        epa_number: ''
       })
     }
   }
@@ -406,6 +414,20 @@ class RawMaterialEditor extends React.Component {
               />
             </div>
           </div>
+          {this.props.raw_material_type === 'supplements' &&
+            <div className="ph4 mb3 flex">
+              <div className="w-100">
+                <TextInput
+                  label="EPA reg number"
+                  fieldname="epa_number"
+                  value={this.state.epa_number}
+                  onChange={this.onChangeGeneric}
+                />
+              </div>
+            </div>
+          }
+
+
 
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">

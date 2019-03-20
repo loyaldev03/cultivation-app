@@ -16,6 +16,7 @@ module Inventory
                 :product_uom,
                 :product_size,
                 :product_ppm,
+                :epa_number,
                 :description,
                 :manufacturer,
                 :quantity,
@@ -59,6 +60,7 @@ module Inventory
       @product_uom = args[:product_uom]
       @product_size = args[:product_size]
       @product_ppm = args[:product_ppm]
+      @epa_number = args[:epa_number]
 
       @quantity = args[:quantity]
       @uom = args[:uom]
@@ -326,6 +328,7 @@ module Inventory
           common_uom: product_uom,
           size: product_size,
           ppm: product_ppm,
+          epa_number: epa_number,
           uom_dimension: uom_dimension,
         )
         return product
@@ -340,6 +343,7 @@ module Inventory
                  common_uom: product_uom,
                  size: product_size,
                  ppm: product_ppm,
+                 epa_number: epa_number,
                  uom_dimension: uom_dimension,
                )
       end

@@ -53,6 +53,7 @@ class NutrientEditor extends React.Component {
                   value: attr.product.common_uom
                 },
                 product_ppm: attr.product.ppm || '',
+                epa_number: attr.product.epa_number || '',
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -112,6 +113,7 @@ class NutrientEditor extends React.Component {
       product_size: '',
       product_uom: { label: '', value: '' },
       product_ppm: '',
+      epa_number: '',
       nutrient_value: '',
       nitrogen: '',
       prosphorus: '',
@@ -169,7 +171,8 @@ class NutrientEditor extends React.Component {
       prosphorus,
       potassium,
       product_size,
-      product_ppm
+      product_ppm,
+      epa_number
     } = this.state
 
     let errors = {}
@@ -259,7 +262,8 @@ class NutrientEditor extends React.Component {
       nutrients,
       product_size,
       product_uom,
-      product_ppm
+      product_ppm,
+      epa_number
     }
   }
 
@@ -298,6 +302,7 @@ class NutrientEditor extends React.Component {
           product_size: '',
           product_uom: { label: '', value: '' },
           product_ppm: '',
+          epa_number: '',
           nitrogen: '',
           prosphorus: '',
           potassium: '',
@@ -313,6 +318,7 @@ class NutrientEditor extends React.Component {
           product_size: product.size || '',
           product_uom: { label: product.common_uom, value: product.common_uom },
           product_ppm: product.ppm || '',
+          epa_number: product.epa_number || '',
           nitrogen: product.nitrogen || '',
           prosphorus: product.prosphorus || '',
           potassium: product.potassium || '',
@@ -332,6 +338,7 @@ class NutrientEditor extends React.Component {
         product_size: '',
         product_uom: { label: '', value: '' },
         product_ppm: '',
+        epa_number: '',
         nitrogen: '',
         prosphorus: '',
         potassium: '',
@@ -464,6 +471,17 @@ class NutrientEditor extends React.Component {
                 className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
                 fieldname="description"
                 value={this.state.description}
+                onChange={this.onChangeGeneric}
+              />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <TextInput
+                label="EPA reg number"
+                fieldname="epa_number"
+                value={this.state.epa_number}
                 onChange={this.onChangeGeneric}
               />
             </div>

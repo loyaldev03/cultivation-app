@@ -1,6 +1,6 @@
 import React from 'react'
 import Avatar from '../../utils/Avatar.js'
-import AttachmentThumbnail from './AttachmentThumbnail'
+import AttachmentThumbnail from '../../utils/AttachmentThumbnail'
 import { formatDate, formatTime } from '../../utils/DateHelper'
 
 const CommentBody = ({

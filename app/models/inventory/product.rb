@@ -18,13 +18,17 @@ module Inventory
     field :size, type: BigDecimal
     field :ppm, type: Integer
 
+    field :epa_number, type: String # => nutrients , supplements
+
     embeds_many :nutrients, as: :nutrition, class_name: 'Inventory::Nutrient'
+    embeds_many :attachments, as: :attachable, class_name: 'FileAttachment'
+
     has_many :packages, class_name: 'Inventory::ItemTransaction'
     belongs_to :catalogue, class_name: 'Inventory::Catalogue'
     belongs_to :facility, class_name: 'Facility'
 
-    # Strain is optional because a product that is a combination of multiple product has more
-    # than one strain.
+    # Strain is optional because a product that is a combination of
+    # multiple product has more than one strain.
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
 
     def uoms

@@ -40,6 +40,12 @@ class PurchasedCloneEditor extends React.Component {
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer,
                 description: attr.description,
+                product_size: attr.product.size || '',
+                product_uom: {
+                  label: attr.product.common_uom,
+                  value: attr.product.common_uom
+                },
+                product_ppm: attr.product.ppm || '',
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -79,6 +85,9 @@ class PurchasedCloneEditor extends React.Component {
       defaultProduct: [],
       manufacturer: '',
       description: '',
+      product_size: '',
+      product_uom: { label: '', value: '' },
+      product_ppm: '',
       order_quantity: 0,
       price_per_package: 0,
       order_uom: { value: '', label: '' },
@@ -119,6 +128,8 @@ class PurchasedCloneEditor extends React.Component {
       product_name,
       manufacturer,
       description,
+      product_size,
+      product_ppm,
       order_quantity,
       order_uom: { value: order_uom },
       price_per_package: price,
@@ -151,6 +162,8 @@ class PurchasedCloneEditor extends React.Component {
       this.setState({ errors })
     }
 
+    const product_uom = this.state.product_uom.value
+
     return {
       id,
       facility_strain_id,
@@ -158,6 +171,9 @@ class PurchasedCloneEditor extends React.Component {
       product_name,
       manufacturer,
       description,
+      product_size,
+      product_uom,
+      product_ppm,
       order_quantity,
       order_uom,
       price,
@@ -199,7 +215,11 @@ class PurchasedCloneEditor extends React.Component {
           product_name: product.value,
           product_id: '',
           manufacturer: '',
-          description: ''
+          description: '',
+          product_size: '',
+          product_uom: { label: '', value: '' },
+          product_ppm: '',
+          facility_strain_id: ''
         })
       } else {
         this.setState({
@@ -207,7 +227,11 @@ class PurchasedCloneEditor extends React.Component {
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,
-          description: product.description
+          description: product.description,
+          product_size: product.size || '',
+          product_uom: { label: product.common_uom, value: product.common_uom },
+          product_ppm: product.ppm || '',
+          facility_strain_id: product.facility_strain_id
         })
       }
     } else {
@@ -215,7 +239,11 @@ class PurchasedCloneEditor extends React.Component {
         product: { value: '', label: '' },
         product_id: '',
         manufacturer: '',
-        description: ''
+        description: '',
+        product_size: '',
+        product_uom: { label: '', value: '' },
+        product_ppm: '',
+        facility_strain_id: ''
       })
     }
   }
@@ -226,6 +254,7 @@ class PurchasedCloneEditor extends React.Component {
       x => x.value === this.state.facility_strain_id
     )
     const order_uoms = [{ value: 'cup', label: 'cup' }]
+    const uoms = this.props.uoms.map(x => ({ value: x, label: x }))
 
     const showTotalPrice =
       parseFloat(this.state.price_per_package) > 0 &&
@@ -272,13 +301,38 @@ class PurchasedCloneEditor extends React.Component {
           </div>
 
           <div className="ph4 mb3 flex">
-            <div className="w-100">
+            <div className="w-40">
               <TextInput
                 label="Manufacturer"
                 fieldname="manufacturer"
                 value={this.state.manufacturer}
                 onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
+              />
+            </div>
+            <div className="w-20 pl3">
+              <NumericInput
+                label="Size"
+                fieldname="product_size"
+                value={this.state.product_size}
+                onChange={this.onChangeGeneric}
+              />
+            </div>
+            <div className="w-20 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+              <Select
+                value={this.state.product_uom}
+                options={uoms}
+                styles={reactSelectStyle}
+                onChange={x => this.setState({ product_uom: x })}
+              />
+              <FieldError errors={this.state.errors} field="product_uom" />
+            </div>
+            <div className="w-20 pl3">
+              <NumericInput
+                label="PPM"
+                fieldname="product_ppm"
+                value={this.state.product_ppm}
+                onChange={this.onChangeGeneric}
               />
             </div>
           </div>

@@ -1,23 +1,38 @@
 .file-uploader {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-column-gap: 0.75em;
-  grid-row-gap: 0.50em;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-column-gap: 0.50em;
+  grid-row-gap: 1.25em;
+  padding-top: 0.8em;
+  padding-bottom: 1.5em;
 }
 
 .file-uploader__card {
+  border: 1px solid #f1f1f1;
+  background-color: #f1f1f1;
   justify-self: center;
   align-self: center;
+  text-align: center;
+  position: relative;
+
+  img {
+    width: 100%;
+  }
+}
+
+.file-uploader__card:hover {
+  border: 1px dashed $orange;
 }
 
 .file-uploader__card--add {
-  border: 1px dashed $lightGrey;
   display: flex;
+  background-color: white;
+  border: 1px dashed $lightGrey;
   justify-content: center;
   align-items: center;
   text-decoration: none;
   .material-icons {
-    padding: 10px;
+    padding: 23px;
   }
 }
 
@@ -26,4 +41,38 @@
   .material-icons {
     color: $orange;
   }
+}
+
+.file-uploader__card__preview {
+  display: table;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover !important;
+  text-decoration: none;
+  border-radius: .25rem;
+
+  .material-icons {
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    padding: 1.25em;
+  }
+}
+
+.file-uploader__card__delete {
+  text-align: center;
+  text-decoration: none;
+  color: $lightGrey;
+  .material-icons {
+    font-size: 1.2em;
+    line-height: 1.2em;
+  }
+  position: absolute;
+  bottom: -1.5em;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.file-uploader__card__delete:hover {
+  color: $red;
 }

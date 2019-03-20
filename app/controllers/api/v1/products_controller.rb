@@ -71,7 +71,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
                     []
                   end
 
-    Rails.logger.debug "\t\t\t\t>>> exclude_ids: #{exclude_ids}"
+    # Rails.logger.debug "\t\t\t\t>>> exclude_ids: #{exclude_ids}"
 
     products = Inventory::Product.includes([:catalogue]).
       in(catalogue: valid_categories).
@@ -82,7 +82,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
       order(name: :asc)
 
     # checklist = products.map {|x| x.name }
-    Rails.logger.debug "\t\t\t\t>>> products: #{products.count}"
+    # Rails.logger.debug "\t\t\t\t>>> products: #{products.count}"
 
     render json: Inventory::ProductSerializer.new(products).serialized_json
   end

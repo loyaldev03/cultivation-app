@@ -9,7 +9,7 @@ const AttachmentThumbnail = ({
   size = 50,
   filename = '',
   onClick = (url, mime_type) => {},
-  showDelete = false,
+  showDelete = false
 }) => {
   const height = showDelete ? '70px' : '50px'
 

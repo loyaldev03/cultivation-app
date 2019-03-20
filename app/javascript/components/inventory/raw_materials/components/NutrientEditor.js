@@ -29,7 +29,6 @@ class NutrientEditor extends React.Component {
         getRawMaterial(id)
           .then(x => x.data.data.attributes)
           .then(attr => {
-            console.log(attr)
             this.setState(
               {
                 ...this.resetState(),
@@ -39,7 +38,8 @@ class NutrientEditor extends React.Component {
                 product_id: attr.product_id,
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer || '',
-                description: attr.description,
+                description: attr.description || '',
+                attachments: attr.attachments || [],
                 nitrogen: attr.product.nitrogen || '',
                 prosphorus: attr.product.prosphorus || '',
                 potassium: attr.product.potassium || '',
@@ -53,6 +53,7 @@ class NutrientEditor extends React.Component {
                   value: attr.product.common_uom
                 },
                 product_ppm: attr.product.ppm || '',
+                attachments: attr.product.attachments || [],
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -84,6 +85,10 @@ class NutrientEditor extends React.Component {
     this.setState({ [key]: value })
   }
 
+  onChangeAttachments = attachments => {
+    this.setState({ attachments })
+  }
+
   resetState() {
     return {
       nutrients: [],
@@ -112,6 +117,7 @@ class NutrientEditor extends React.Component {
       product_size: '',
       product_uom: { label: '', value: '' },
       product_ppm: '',
+      attachments: [],
       nutrient_value: '',
       nitrogen: '',
       prosphorus: '',
@@ -169,7 +175,8 @@ class NutrientEditor extends React.Component {
       prosphorus,
       potassium,
       product_size,
-      product_ppm
+      product_ppm,
+      attachments
     } = this.state
 
     let errors = {}
@@ -259,7 +266,8 @@ class NutrientEditor extends React.Component {
       nutrients,
       product_size,
       product_uom,
-      product_ppm
+      product_ppm,
+      attachments
     }
   }
 
@@ -298,6 +306,7 @@ class NutrientEditor extends React.Component {
           product_size: '',
           product_uom: { label: '', value: '' },
           product_ppm: '',
+          attachments: [],
           nitrogen: '',
           prosphorus: '',
           potassium: '',
@@ -313,6 +322,7 @@ class NutrientEditor extends React.Component {
           product_size: product.size || '',
           product_uom: { label: product.common_uom, value: product.common_uom },
           product_ppm: product.ppm || '',
+          attachments: product.attachments || [],
           nitrogen: product.nitrogen || '',
           prosphorus: product.prosphorus || '',
           potassium: product.potassium || '',
@@ -332,6 +342,7 @@ class NutrientEditor extends React.Component {
         product_size: '',
         product_uom: { label: '', value: '' },
         product_ppm: '',
+        attachments: [],
         nitrogen: '',
         prosphorus: '',
         potassium: '',
@@ -374,6 +385,7 @@ class NutrientEditor extends React.Component {
   render() {
     const { facility_id, catalogue_id, locations } = this.props
     const {
+      attachments,
       nutrients_elements,
       nutrients,
       price_per_package,
@@ -471,18 +483,14 @@ class NutrientEditor extends React.Component {
 
           <div className="ph4 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Usage Instructions</label>
+              <label className="f6 fw6 db mb1 gray ttc">
+                Usage Instructions
+              </label>
               <FileUploader
-                files={[
-                  {id: 1, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
-                  {id: 2, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
-                  {id: 3, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
-                  {id: 4, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
-                  {id: 5, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
-                  {id: 6, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
-                  {id: 7, url: "https://via.placeholder.com/150", mime_type: "image/jpg" },
-                ]}
-                className="pa2 ba b--black-20 br2 file-uploader" />
+                attachments={attachments}
+                onChange={this.onChangeAttachments}
+                className="pa2 ba b--black-20 br2 file-uploader"
+              />
             </div>
           </div>
 

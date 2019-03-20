@@ -39,7 +39,8 @@ module Inventory
                 :nitrogen,
                 :prosphorus,
                 :potassium,
-                :nutrients
+                :nutrients,
+                :attachments
 
     def initialize(user, args)
       @args = args
@@ -85,6 +86,7 @@ module Inventory
       @prosphorus = args[:prosphorus]
       @potassium = args[:potassium]
       @nutrients = args[:nutrients]
+      @attachments = args[:attachments]
     end
 
     def call
@@ -319,7 +321,19 @@ module Inventory
       if product_id.present?
         product = Inventory::Product.find(product_id)
         uom_dimension = Common::UnitOfMeasure.find_by(unit: product_uom)&.dimension
-        product.update(
+        product.name = product_name
+        product.manufacturer = manufacturer
+        product.description = description
+        product.catalogue = catalogue
+        product.facility = facility
+        product.common_uom = product_uom
+        product.size = product_size
+        product.ppm = product_ppm
+        product.uom_dimension = uom_dimension
+        product.epa_number = epa_number
+      else
+        uom_dimension = Common::UnitOfMeasure.find_by(unit: product_uom)&.dimension
+        product = Inventory::Product.new(
           name: product_name,
           manufacturer: manufacturer,
           description: description,
@@ -331,21 +345,29 @@ module Inventory
           epa_number: epa_number,
           uom_dimension: uom_dimension,
         )
-        return product
-      else
-        uom_dimension = Common::UnitOfMeasure.find_by(unit: product_uom)&.dimension
-        return Inventory::Product.create!(
-                 name: product_name,
-                 manufacturer: manufacturer,
-                 description: description,
-                 catalogue: catalogue,
-                 facility: facility,
-                 common_uom: product_uom,
-                 size: product_size,
-                 ppm: product_ppm,
-                 epa_number: epa_number,
-                 uom_dimension: uom_dimension,
-               )
+        save_attachments(product)
+        product.save!
+        product
+      end
+    end
+
+    def save_attachments(product)
+      if product.attachments.present?
+        product.attachments.each do |file|
+          found = attachments.detect { |f| f[:id] == file.id.to_s }
+          if found.nil?
+            file.delete
+          end
+        end
+      end
+
+      if attachments.present?
+        attachments.each do |file|
+          if file[:id].blank?
+            new_file = product.attachments.build
+            new_file.file = file[:data] # <json string>
+          end
+        end
       end
     end
 

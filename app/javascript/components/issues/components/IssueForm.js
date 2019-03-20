@@ -8,11 +8,13 @@ import DashboardModal from '@uppy/react/lib/DashboardModal'
 import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/webcam/dist/style.css'
-import setupUppy from './setupUppy'
+import setupUppy from '../../utils/setupUppy'
 
 import { TextInput } from '../../utils/FormHelpers'
 import reactSelectStyle from '../../utils/reactSelectStyle'
 import UserPicker from '../../utils/UserPicker'
+import AttachmentPopup from '../../utils/AttachmentPopup'
+import AttachmentThumbnail from '../../utils/AttachmentThumbnail'
 import { formatDate, formatTime } from '../../utils/DateHelper'
 
 import saveIssue from '../actions/saveIssue'
@@ -25,8 +27,6 @@ import currentIssueStore from '../store/CurrentIssueStore'
 import TaskOption from './TaskOption'
 import LocationOption from './LocationOption'
 import LocationSingleValue from './LocationSingleValue'
-import AttachmentPopup from './AttachmentPopup'
-import AttachmentThumbnail from './AttachmentThumbnail'
 
 const severityOptions = [
   { value: 'low', label: 'Low' },

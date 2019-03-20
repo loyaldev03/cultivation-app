@@ -44,5 +44,17 @@ module Inventory
       elements = ['nitrogen', 'prosphorus', 'potassium']
       object.nutrients.select { |a| !elements.include?(a[:element]) }.map { |a| {element: a[:element], value: a[:value]} }
     end
+
+    attribute :attachments do |object|
+      object.attachments.map do |file|
+        {
+          id: file.id.to_s,
+          url: file.file_url(expires_in: 3600),
+          mime_type: file.file_mime_type,
+          data: file.file_data,
+          filename: file.file_filename,
+        }
+      end
+    end
   end
 end

@@ -511,7 +511,7 @@ class SeedEditor extends React.Component {
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
-            label="How the nutrients are purchased?"
+            label="Vendor Name"
             vendor={this.state.vendor}
             purchase_order={this.state.purchase_order}
             vendor_invoice={this.state.vendor_invoice}

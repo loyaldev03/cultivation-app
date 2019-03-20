@@ -83,6 +83,7 @@ class IssueForm extends React.Component {
     }
   }
 
+  // TODO: Should be no-op if component already unmounted.
   async loadIssue() {
     const issue = currentIssueStore.issue
     let locations = []
@@ -267,8 +268,8 @@ class IssueForm extends React.Component {
           this.props.onClose()
 
           // Pass newly created issue back to parent.
-          if (this.props.onCreated) {
-            this.props.onCreated(data.data.attributes)
+          if (this.props.onSaved) {
+            this.props.onSaved(data.data.attributes)
           }
         }
       })
@@ -333,12 +334,19 @@ class IssueForm extends React.Component {
     })
   }
 
-  onClose = () => {
+  onClose = event => {
+    event.preventDefault()
+
     if (this.props.issueId.length > 0) {
       this.props.onToggleMode()
     } else {
       this.props.onClose()
     }
+  }
+
+  onBack = event => {
+    event.preventDefault()
+    this.props.onToggleMode()
   }
 
   renderTitle() {
@@ -347,7 +355,7 @@ class IssueForm extends React.Component {
         <div className="flex w-100 ph3 mt3 mb2">
           <a
             href="#"
-            onClick={this.props.onToggleMode}
+            onClick={this.onBach}
             className="link orange f6"
           >
             &lt; Back
@@ -364,7 +372,7 @@ class IssueForm extends React.Component {
             <h1 className="f4 fw6 ma0 flex flex-auto ttc">Submit an issue</h1>
             <span
               className="rc-slide-panel__close-button dim"
-              onClick={this.props.onClose}
+              onClick={this.onClose}
             >
               <i className="material-icons mid-gray md-18">close</i>
             </span>

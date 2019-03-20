@@ -139,7 +139,7 @@ class DailyTaskStore {
   }
 
   @action
-  appendIssue(batchId, issue) {
+  updateOrAppendIssue(batchId, issue) {
     const batch = this.batches.find(x => x.id === batchId)
     const task = batch.tasks.find(x => x.id === issue.task.id)
     const toInsert = {
@@ -151,10 +151,16 @@ class DailyTaskStore {
       created_at: issue.created_at,
       tags: issue.tags
     }
-    task.issues.push(toInsert)
 
+    const exist = task.issues.find(i => i.id === toInsert.id)
+    if (exist) {
+      task.issues = task.issues.map(i => (i.id === toInsert.id ? toInsert : i))
+    } else {
+      task.issues = [...task.issues, toInsert]
+    }
+    
     // For now seems like this is the only way to force rerender
-    this.batches.replace(toJS(this.batches))
+    // this.batches.replace(toJS(this.batches))
   }
 }
 

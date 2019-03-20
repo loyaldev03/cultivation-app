@@ -2,21 +2,18 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import sidebarStore from './stores/SidebarStore'
 import dailyTasksStore from './stores/DailyTasksStore'
+import currentIssueStore from '../issues/store/CurrentIssueStore'
 
 const dailyTaskSidebarAdaptor = (IssueSidebar, props) => {
   const comp = class extends React.Component {
     onClose = () => {
       sidebarStore.closeIssues()
+      currentIssueStore.reset()
     }
 
-    onCreated = (batch_id, newIssue) => {
-      // console.group('onCreated')
-      // console.log(batch_id)
-      // console.log(newIssue)
-      // inject issue into the task
-
-      dailyTasksStore.appendIssue(batch_id, newIssue)
-      // console.groupEnd()
+    onSaved = (batch_id, issue) => {
+      console.log(issue)
+      dailyTasksStore.updateOrAppendIssue(batch_id, issue)
     }
 
     render() {
@@ -35,7 +32,7 @@ const dailyTaskSidebarAdaptor = (IssueSidebar, props) => {
           facility_id={facility_id}
           {...props}
           onClose={this.onClose}
-          onCreated={newIssue => this.onCreated(batch_id, newIssue)}
+          onSaved={issue => this.onSaved(batch_id, issue)}
         />
       )
     }

@@ -1,64 +1,71 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { observe, toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import IssueForm from './components/IssueForm'
 import IssueDetails from './components/IssueDetails'
 import IssueHeader from './components/IssueHeader'
 import currentIssueStore from './store/CurrentIssueStore'
-import getIssue from './actions/getIssue'
+// import getIssue from './actions/getIssue'
 
 @observer
 class IssueSidebar extends React.Component {
-  constructor(props) {
-    super(props)
-    const issueId = props.id
-    const mode = props.mode
+  // constructor(props) {
+  //   super(props)
+  //   // const issueId = props.id
+  //   // const mode = props.mode
 
-    if (issueId) {
-      getIssue(issueId)
-    } else if (mode === 'create') {
-      currentIssueStore.reset()
-    }
+  //   // if (issueId) {
+  //   //   getIssue(issueId)
+  //   // } else if (mode === 'create') {
+  //   //   currentIssueStore.reset()
+  //   // }
 
-    let state = this.resetState()
-    if (mode === 'details') {
-      state = { ...state, mode, issueId }
-    } else if (!issueId) {
-      state = { ...state, mode: 'create', issueId: '' }
-    } else {
-      state = { ...state, mode: 'edit', issueId }
-    }
+  //   this.state = {
+  //     ...this.resetState(),
+  //     mode: props.mode,
+  //   }
 
-    this.state = state
-  }
+  //   // observe(currentIssueStore, 'mode', changes => {
+  //   //   console.log('>> currentIssueStore.issue changed....')
+  //   //   console.log(changes)
+  //   //   const { mode } = this.state
+  //   //   const issueId = toJS(currentIssueStore.issue.id)
+  //   //   let state = this.resetState()
 
-  resetState() {
-    return {
-      issueId: '',
-      mode: 'create'
-    }
-  }
+  //   //   if (mode === 'details') {
+  //   //     state = { ...state, mode, issueId }
+  //   //   } else if (!issueId) {
+  //   //     state = { ...state, mode: 'create', issueId: '' }
+  //   //   } else {
+  //   //     state = { ...state, mode: 'edit', issueId }
+  //   //   }
+  //   //   this.setState({ state })
+  //   // })
+  // }
 
   onToggleMode = () => {
-    if (this.state.mode === 'details') {
-      this.setState({ mode: 'edit' })
+    if (currentIssueStore.mode === 'details') {
+      // this.setState({ mode: 'edit' })
+      currentIssueStore.mode = 'edit'
     } else {
-      this.setState({ mode: 'details' })
+      // this.setState({ mode: 'details' })
+      currentIssueStore.mode = 'details'
     }
   }
 
   onClose = () => {
-    if (this.state.mode === 'edit') {
-      this.setState({ mode: 'details' })
+    if (currentIssueStore.mode === 'edit') {
+      currentIssueStore.mode = 'details'
     } else {
       currentIssueStore.reset()
       this.props.onClose()
     }
   }
 
-  onCreated = issue => {
-    if (this.props.onCreated) {
-      this.props.onCreated(issue)
+  onSaved = issue => {
+    if (this.props.onSaved) {
+      this.props.onSaved(issue)
     }
   }
 
@@ -71,14 +78,15 @@ class IssueSidebar extends React.Component {
       current_user_photo,
       daily_task
     } = this.props
-    const { mode } = this.state
-
-    if (mode === 'details') {
+    
+    const issueId = currentIssueStore.issue ? currentIssueStore.issue.id : null
+    
+    if (currentIssueStore.mode === 'details') {
       return (
         <IssueDetails
           onClose={this.onClose}
           onToggleMode={this.onToggleMode}
-          issueId={this.state.issueId}
+          issueId={issueId}
           batchId={batch_id}
           facilityId={facility_id}
           current_user_first_name={current_user_first_name}
@@ -92,9 +100,9 @@ class IssueSidebar extends React.Component {
         <IssueForm
           onClose={this.onClose}
           onToggleMode={this.onToggleMode}
-          onCreated={this.onCreated}
-          mode={this.state.mode}
-          issueId={this.state.issueId}
+          onSaved={this.onSaved}
+          mode={currentIssueStore.mode}
+          issueId={issueId}
           batchId={batch_id}
           facilityId={facility_id}
         />
@@ -113,7 +121,7 @@ class IssueSidebar extends React.Component {
           issueNo={issue.issue_no}
           severity={issue.severity}
           status={issue.status}
-          createdAt={this.state.mode === 'details' ? issue.created_at : ''}
+          createdAt={currentIssueStore.mode === 'details' ? issue.created_at : ''}
           onClose={this.onClose}
           isArchived={issue.is_archived}
         />
@@ -124,14 +132,13 @@ class IssueSidebar extends React.Component {
 }
 
 IssueSidebar.propTypes = {
-  issueId: PropTypes.string,
   batch_id: PropTypes.string.isRequired,
   facility_id: PropTypes.string.isRequired,
   current_user_first_name: PropTypes.string.isRequired,
   current_user_last_name: PropTypes.string.isRequired,
   current_user_photo: PropTypes.string,
   onClose: PropTypes.func.isRequired,
-  onCreated: PropTypes.func
+  onSaved: PropTypes.func
 }
 
 export default IssueSidebar

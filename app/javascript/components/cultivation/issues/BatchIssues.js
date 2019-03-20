@@ -11,6 +11,7 @@ import issueStore from '../../issues/store/IssueStore'
 import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
 import { SlidePanel } from '../../utils'
 import getIssue from '../../issues/actions/getIssue'
+import currentIssueStore from '../../issues/store/CurrentIssueStore'
 
 @observer
 class BatchIssues extends React.Component {
@@ -19,13 +20,11 @@ class BatchIssues extends React.Component {
     this.state = {
       batch: props.batch,
       unresolvedIssueCount: 0,
-      taskSelected: '',
+      issueSelected: '',
       showIssues: false
     }
-  }
 
-  componentDidMount() {
-    loadBatchIssues(this.props.batch.id)
+    loadBatchIssues(props.batch.id)
   }
 
   onCloseSidebar = () => {
@@ -34,11 +33,17 @@ class BatchIssues extends React.Component {
 
   openSidebar = (event, id = null, mode = null) => {
     this.setState({
-      taskSelected: id,
+      issueSelected: id,
       showIssues: true
     })
 
-    getIssue(id)
+    currentIssueStore.reset()
+    currentIssueStore.mode = mode
+
+    if (id) {
+      getIssue(id)
+    }
+    
     event.preventDefault()
   }
 
@@ -72,8 +77,8 @@ class BatchIssues extends React.Component {
                 if (
                   rowInfo &&
                   rowInfo.row &&
-                  this.state.taskSelected &&
-                  this.state.taskSelected === rowInfo.row.id
+                  this.state.issueSelected &&
+                  this.state.issueSelected === rowInfo.row.id
                 ) {
                   className = 'task-row shadow-1'
                 }
@@ -89,7 +94,7 @@ class BatchIssues extends React.Component {
                 <IssueSidebar
                   batch_id={this.props.batch.id}
                   facility_id={this.props.batch.facility_id}
-                  mode={this.state.mode}
+                  mode={currentIssueStore.mode}
                   current_user_first_name={this.props.current_user_first_name}
                   current_user_last_name={this.props.current_user_last_name}
                   current_user_photo={this.props.current_user_photo}

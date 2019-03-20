@@ -1,4 +1,6 @@
 import { observable, action, computed, toJS } from 'mobx'
+import currentIssueStore from '../../issues/store/CurrentIssueStore'
+import getIssue from '../../issues/actions/getIssue'
 
 class SidebarStore {
   // Controls which sidebar is visible
@@ -77,6 +79,14 @@ class SidebarStore {
     this.dailyTask = dailyTask
     this.taskId = taskId
     this.batchId = batchId
+
+    currentIssueStore.reset()
+    currentIssueStore.mode = mode
+
+    if (id) {
+      getIssue(id) // retrieve details from API
+    }
+
     this.showIssues = true
     console.log(taskId, batchId)
   }

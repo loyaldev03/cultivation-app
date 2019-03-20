@@ -48,14 +48,14 @@ class ExpandedRow extends React.Component {
   }
 
   onShowIssue = issue => {
-    let id = issue.id
+    let issueId = issue.id
     let mode = 'details'
-    let dailyTask = true
-    sidebarStore.openIssues(id, mode, dailyTask)
+    let dailyTask = true // What
+    sidebarStore.openIssues(issueId, mode, dailyTask, this.props.id, this.props.batch_id)
     event.preventDefault()
   }
 
-  onCreateIssue = event => {
+  onNewIssue = event => {
     console.log(this.props.id, this.props.batch_id)
 
     const id = null
@@ -185,7 +185,7 @@ class ExpandedRow extends React.Component {
               <a
                 href="#"
                 className="btn btn--secondary f6"
-                onClick={this.onCreateIssue}
+                onClick={this.onNewIssue}
               >
                 Add
               </a>

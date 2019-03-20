@@ -414,7 +414,7 @@ class RawMaterialEditor extends React.Component {
               />
             </div>
           </div>
-          {this.props.raw_material_type === 'supplements' &&
+          {this.props.raw_material_type === 'supplements' && (
             <div className="ph4 mb3 flex">
               <div className="w-100">
                 <TextInput
@@ -425,9 +425,7 @@ class RawMaterialEditor extends React.Component {
                 />
               </div>
             </div>
-          }
-
-
+          )}
 
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">

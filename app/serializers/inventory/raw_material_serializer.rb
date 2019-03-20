@@ -117,8 +117,8 @@ module Inventory
                         params && params[:include]&.include?(:facility_strain)
                       } do |object, params|
       {
-        id: object.facility_strain_id.to_s,
-        strain_name: object.facility_strain.strain_name,
+        id: object&.product.facility_strain_id.to_s,
+        strain_name: object&.product.facility_strain.strain_name,
       }
     end
   end

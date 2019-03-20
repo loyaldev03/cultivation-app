@@ -421,7 +421,7 @@ class PurchasedCloneEditor extends React.Component {
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
-            label={`How the ${this.label} are purchased?`}
+            label={`Vendor Name`}
             showVendorLicense
             vendor={this.state.vendor}
             purchase_order={this.state.purchase_order}

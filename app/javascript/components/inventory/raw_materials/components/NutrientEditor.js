@@ -53,6 +53,7 @@ class NutrientEditor extends React.Component {
                   value: attr.product.common_uom
                 },
                 product_ppm: attr.product.ppm || '',
+                epa_number: attr.product.epa_number || '',
                 attachments: attr.product.attachments || [],
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
@@ -117,6 +118,7 @@ class NutrientEditor extends React.Component {
       product_size: '',
       product_uom: { label: '', value: '' },
       product_ppm: '',
+      epa_number: '',
       attachments: [],
       nutrient_value: '',
       nitrogen: '',
@@ -176,6 +178,7 @@ class NutrientEditor extends React.Component {
       potassium,
       product_size,
       product_ppm,
+      epa_number,
       attachments
     } = this.state
 
@@ -267,6 +270,7 @@ class NutrientEditor extends React.Component {
       product_size,
       product_uom,
       product_ppm,
+      epa_number,
       attachments
     }
   }
@@ -306,6 +310,7 @@ class NutrientEditor extends React.Component {
           product_size: '',
           product_uom: { label: '', value: '' },
           product_ppm: '',
+          epa_number: '',
           attachments: [],
           nitrogen: '',
           prosphorus: '',
@@ -322,6 +327,7 @@ class NutrientEditor extends React.Component {
           product_size: product.size || '',
           product_uom: { label: product.common_uom, value: product.common_uom },
           product_ppm: product.ppm || '',
+          epa_number: product.epa_number || '',
           attachments: product.attachments || [],
           nitrogen: product.nitrogen || '',
           prosphorus: product.prosphorus || '',
@@ -342,6 +348,7 @@ class NutrientEditor extends React.Component {
         product_size: '',
         product_uom: { label: '', value: '' },
         product_ppm: '',
+        epa_number: '',
         attachments: [],
         nitrogen: '',
         prosphorus: '',
@@ -476,6 +483,17 @@ class NutrientEditor extends React.Component {
                 className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
                 fieldname="description"
                 value={this.state.description}
+                onChange={this.onChangeGeneric}
+              />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <TextInput
+                label="EPA reg number"
+                fieldname="epa_number"
+                value={this.state.epa_number}
                 onChange={this.onChangeGeneric}
               />
             </div>
@@ -690,7 +708,7 @@ class NutrientEditor extends React.Component {
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
-            label="How the nutrients are purchased?"
+            label="Vendor Name"
             vendor={this.state.vendor}
             purchase_order={this.state.purchase_order}
             vendor_invoice={this.state.vendor_invoice}

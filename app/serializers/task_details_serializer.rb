@@ -27,6 +27,25 @@ class TaskDetailsSerializer
         uom: item.uom,
         catalogue_id: item&.product&.catalogue_id&.to_s,
         uoms: item&.product&.catalogue&.uoms&.pluck(:unit),
+        ppm: item&.product&.ppm,
+        checked: item&.checked,
+      }
+    end
+  end
+
+  attribute :nutrients do |object|
+    object.material_use.nutrients.map do |item|
+      {
+        id: item.id.to_s,
+        product_name: item.product.try(:name),
+        product_id: item.product.try(:id).to_s,
+        category: item.product.try(:catalogue).try(:category),
+        quantity: item.quantity,
+        uom: item.uom,
+        catalogue_id: item&.product&.catalogue_id&.to_s,
+        uoms: item&.product&.catalogue&.uoms&.pluck(:unit),
+        ppm: item&.product&.ppm,
+        checked: item&.checked,
       }
     end
   end

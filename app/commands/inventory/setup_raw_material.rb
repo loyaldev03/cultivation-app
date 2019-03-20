@@ -129,7 +129,6 @@ module Inventory
       unless product_id.blank?
         product = Inventory::Product.find(product_id)
         errors.add(:product, 'This product belongs to another facility, please do you data entry again.') if product.facility_id.to_s != facility_id
-        errors.add(:product, 'This product belongs to another catalogue, please do you data entry again.') if product.catalogue_id.to_s != catalogue_id
       end
 
       errors.empty?

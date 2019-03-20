@@ -111,9 +111,11 @@ class NutrientsSetupApp extends React.Component {
           </div>
           <ReactTable
             columns={columns}
-            data={RawMaterialStore.materials}
+            pagination={{ position: 'top' }}
+            data={RawMaterialStore.bindable}
             loading={RawMaterialStore.isLoading}
             showPagination={false}
+            pageSize={30}
             minRows={5}
             filterable
             className="f6 -highlight"

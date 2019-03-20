@@ -109,7 +109,7 @@ class PurchasedClonesSetupApp extends React.Component {
   renderList() {
     return (
       <React.Fragment>
-        <div className="w-100 bg-white pa3">
+        <div className="w-100 bg-white pa3 grey">
           <div className="flex mb4 mt2">
             <h1 className="mv0 f3 fw4 dark-gray flex-auto ttc">
               Purchased Clones Inventory
@@ -148,6 +148,7 @@ class PurchasedClonesSetupApp extends React.Component {
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}
           uoms={this.props.uoms}
+          facility_id={this.props.facility_id}
         />
       </React.Fragment>
     )

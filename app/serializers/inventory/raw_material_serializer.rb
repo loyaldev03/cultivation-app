@@ -47,6 +47,7 @@ module Inventory
           ppm: object.product.ppm,
           common_uom: object.product.common_uom,
           attachments: attachments,
+          catalogue_id: object.product.catalogue_id.to_s,
         }
       else
         nil
@@ -74,7 +75,7 @@ module Inventory
     end
 
     attribute :catalogue do |object|
-      object.catalogue.label
+      object.product.catalogue.label
     end
 
     attribute :location_id do |object|
@@ -127,8 +128,8 @@ module Inventory
                         params && params[:include]&.include?(:facility_strain)
                       } do |object, params|
       {
-        id: object.facility_strain_id.to_s,
-        strain_name: object.facility_strain.strain_name,
+        id: object&.product.facility_strain_id.to_s,
+        strain_name: object&.product.facility_strain.strain_name,
       }
     end
   end

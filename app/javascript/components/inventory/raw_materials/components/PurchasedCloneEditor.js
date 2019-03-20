@@ -40,6 +40,12 @@ class PurchasedCloneEditor extends React.Component {
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer,
                 description: attr.description,
+                product_size: attr.product.size || '',
+                product_uom: {
+                  label: attr.product.common_uom,
+                  value: attr.product.common_uom
+                },
+                product_ppm: attr.product.ppm || '',
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -59,26 +65,7 @@ class PurchasedCloneEditor extends React.Component {
   }
 
   onFacilityStrainChanged = item => {
-    let changes = {
-      facility_strain_id: item.value,
-      facility_id: item.facility_id
-    }
-
-    if (this.state.product_id.length > 0) {
-      changes = {
-        ...changes,
-        product_name: '',
-        manufacturer: '',
-        description: '',
-        product_id: '',
-        product: null,
-        defaultProduct: []
-      }
-    }
-
-    this.setState(changes, () => {
-      this.loadProducts('')
-    })
+    this.setState({ facility_strain_id: item.value })
   }
 
   onChangeGeneric = event => {
@@ -98,6 +85,9 @@ class PurchasedCloneEditor extends React.Component {
       defaultProduct: [],
       manufacturer: '',
       description: '',
+      product_size: '',
+      product_uom: { label: '', value: '' },
+      product_ppm: '',
       order_quantity: 0,
       price_per_package: 0,
       order_uom: { value: '', label: '' },
@@ -138,6 +128,8 @@ class PurchasedCloneEditor extends React.Component {
       product_name,
       manufacturer,
       description,
+      product_size,
+      product_ppm,
       order_quantity,
       order_uom: { value: order_uom },
       price_per_package: price,
@@ -170,6 +162,8 @@ class PurchasedCloneEditor extends React.Component {
       this.setState({ errors })
     }
 
+    const product_uom = this.state.product_uom.value
+
     return {
       id,
       facility_strain_id,
@@ -177,6 +171,9 @@ class PurchasedCloneEditor extends React.Component {
       product_name,
       manufacturer,
       description,
+      product_size,
+      product_uom,
+      product_ppm,
       order_quantity,
       order_uom,
       price,
@@ -189,10 +186,8 @@ class PurchasedCloneEditor extends React.Component {
   loadProducts = inputValue => {
     inputValue = inputValue || ''
     return fetch(
-      `/api/v1/products?type=raw_materials&category=purchased_clone&facility_id=${
-        this.state.facility_id
-      }&facility_strain_id=${
-        this.state.facility_strain_id
+      `/api/v1/products?type=raw_materials&category=purchased_clones&facility_id=${
+        this.props.facility_id
       }&filter=${inputValue}`,
       {
         credentials: 'include'
@@ -220,7 +215,11 @@ class PurchasedCloneEditor extends React.Component {
           product_name: product.value,
           product_id: '',
           manufacturer: '',
-          description: ''
+          description: '',
+          product_size: '',
+          product_uom: { label: '', value: '' },
+          product_ppm: '',
+          facility_strain_id: ''
         })
       } else {
         this.setState({
@@ -228,7 +227,11 @@ class PurchasedCloneEditor extends React.Component {
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,
-          description: product.description
+          description: product.description,
+          product_size: product.size || '',
+          product_uom: { label: product.common_uom, value: product.common_uom },
+          product_ppm: product.ppm || '',
+          facility_strain_id: product.facility_strain_id
         })
       }
     } else {
@@ -236,7 +239,11 @@ class PurchasedCloneEditor extends React.Component {
         product: { value: '', label: '' },
         product_id: '',
         manufacturer: '',
-        description: ''
+        description: '',
+        product_size: '',
+        product_uom: { label: '', value: '' },
+        product_ppm: '',
+        facility_strain_id: ''
       })
     }
   }
@@ -247,6 +254,7 @@ class PurchasedCloneEditor extends React.Component {
       x => x.value === this.state.facility_strain_id
     )
     const order_uoms = [{ value: 'cup', label: 'cup' }]
+    const uoms = this.props.uoms.map(x => ({ value: x, label: x }))
 
     const showTotalPrice =
       parseFloat(this.state.price_per_package) > 0 &&
@@ -274,7 +282,75 @@ class PurchasedCloneEditor extends React.Component {
             </span>
           </div>
 
-          <div className="ph4 mt3 mb3 flex">
+          <div className="ph4 mb3 mt3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
+              <AsyncCreatableSelect
+                isClearable
+                noOptionsMessage={() => 'Type to search product...'}
+                placeholder={'Search...'}
+                defaultOptions={this.state.defaultProduct}
+                loadOptions={e => this.loadProducts(e)}
+                onInputChange={handleInputChange}
+                styles={reactSelectStyle}
+                value={this.state.product}
+                onChange={this.onChangeProduct}
+              />
+              <FieldError errors={this.state.errors} field="product" />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-40">
+              <TextInput
+                label="Manufacturer"
+                fieldname="manufacturer"
+                value={this.state.manufacturer}
+                onChange={this.onChangeGeneric}
+              />
+            </div>
+            <div className="w-20 pl3">
+              <NumericInput
+                label="Size"
+                fieldname="product_size"
+                value={this.state.product_size}
+                onChange={this.onChangeGeneric}
+              />
+            </div>
+            <div className="w-20 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+              <Select
+                value={this.state.product_uom}
+                options={uoms}
+                styles={reactSelectStyle}
+                onChange={x => this.setState({ product_uom: x })}
+              />
+              <FieldError errors={this.state.errors} field="product_uom" />
+            </div>
+            <div className="w-20 pl3">
+              <NumericInput
+                label="PPM"
+                fieldname="product_ppm"
+                value={this.state.product_ppm}
+                onChange={this.onChangeGeneric}
+              />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">Description</label>
+              <textarea
+                className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
+                fieldname="description"
+                value={this.state.description}
+                onChange={this.onChangeGeneric}
+                readOnly={hasProductId}
+              />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Select Strain</label>
               <Select
@@ -294,50 +370,6 @@ class PurchasedCloneEditor extends React.Component {
 
           <hr className="mt3 m b--light-gray w-100" />
 
-          <div className="ph4 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
-              <AsyncCreatableSelect
-                isClearable
-                noOptionsMessage={() => 'Type to search product...'}
-                placeholder={'Search...'}
-                defaultOptions={this.state.defaultProduct}
-                loadOptions={e => this.loadProducts(e)}
-                onInputChange={handleInputChange}
-                styles={reactSelectStyle}
-                value={this.state.product}
-                onChange={this.onChangeProduct}
-              />
-              <FieldError errors={this.state.errors} field="product" />
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-100">
-              <TextInput
-                label="Manufacturer"
-                fieldname="manufacturer"
-                value={this.state.manufacturer}
-                onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
-              />
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Description</label>
-              <textarea
-                className="db w-100 pa2 f6 black ba b--black-20 br2 mb0 outline-0 lh-copy"
-                fieldname="description"
-                value={this.state.description}
-                onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
-              />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
               <label className="f6 fw6 db dark-gray">Purchase details</label>
@@ -386,25 +418,6 @@ class PurchasedCloneEditor extends React.Component {
 
           <hr className="mt3 m b--light-gray w-100" />
 
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Where are they stored?
-              </label>
-              <LocationPicker
-                key={this.state.facility_id}
-                mode="storage"
-                locations={locations}
-                facility_id={this.state.facility_id}
-                onChange={x => this.setState({ location_id: x.rm_id })}
-                location_id={this.state.location_id}
-              />
-              <FieldError errors={this.state.errors} field="location_id" />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
@@ -414,6 +427,25 @@ class PurchasedCloneEditor extends React.Component {
             purchase_order={this.state.purchase_order}
             vendor_invoice={this.state.vendor_invoice}
           />
+
+          <hr className="mt3 m b--light-gray w-100" />
+
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">
+                Where are they stored?
+              </label>
+              <LocationPicker
+                key={this.props.facility_id}
+                mode="storage"
+                locations={locations}
+                facility_id={this.props.facility_id}
+                onChange={x => this.setState({ location_id: x.rm_id })}
+                location_id={this.state.location_id}
+              />
+              <FieldError errors={this.state.errors} field="location_id" />
+            </div>
+          </div>
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
             <a

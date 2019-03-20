@@ -18,7 +18,6 @@ class RawMaterialEditor extends React.Component {
     this.state = this.resetState()
     this.purchaseInfoEditor = React.createRef()
     this.label = props.raw_material_type.replace(/[_]/g, ' ')
-    console.log(this.props.raw_material_type)
   }
 
   componentDidMount() {
@@ -543,7 +542,7 @@ class RawMaterialEditor extends React.Component {
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
-            label={`How the ${this.label} are purchased?`}
+            label={`Vendor Name`}
             showVendorLicense={false}
             vendor={this.state.vendor}
             purchase_order={this.state.purchase_order}

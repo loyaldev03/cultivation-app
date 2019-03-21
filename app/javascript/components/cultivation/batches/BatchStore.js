@@ -36,7 +36,7 @@ class BatchStore {
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       runInAction(() => {
-        if (response.data) {
+        if (response && response.data) {
           this.batches = response.data.map(rec => {
             return { ...rec.attributes, id: rec.id }
           })

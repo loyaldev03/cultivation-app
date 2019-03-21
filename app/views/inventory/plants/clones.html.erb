@@ -14,7 +14,8 @@
     <%= react_component('inventory/plant_setup/CloneSetupApp', {
         cultivation_batches: @cultivation_batches,
         locations: @locations,
-        scanditLicense: @scanditLicense
+        scanditLicense: @scanditLicense,
+        facility_id: params[:facility_id]
       }) %>
     <div class="w-100 bg-white ph3 pt2 pb4">
       <div class="dim flex flex-row items-center pointer">

@@ -5,7 +5,8 @@ import plantStore from '../store/PlantStore'
  */
 export default function loadPlants(
   current_growth_stage = '',
-  facility_strain_id = ''
+  facility_strain_id = '',
+  facility_id = ''
 ) {
   plantStore.isLoading = true
   let apiUrl = '/api/v1/plants/all'
@@ -16,6 +17,10 @@ export default function loadPlants(
 
   if (facility_strain_id.length > 0) {
     apiUrl = apiUrl + '?facility_strain_id=' + facility_strain_id
+  }
+
+  if (facility_id && facility_id.length > 0) {
+    apiUrl = apiUrl + '?facility_id=' + facility_id
   }
 
   fetch(apiUrl, {

@@ -35,7 +35,7 @@ class Inventory::PlantsController < ApplicationController
   private
 
   def load_batches
-    cultivation_batches = Cultivation::Batch.includes(:facility_strain, :tasks)
+    cultivation_batches = Cultivation::Batch.where(facility_id: params[:facility_id]).includes(:facility_strain, :tasks)
     @cultivation_batches = BatchSerializer.new(cultivation_batches, params: {exclude_tasks: true}).serializable_hash[:data]
   end
 

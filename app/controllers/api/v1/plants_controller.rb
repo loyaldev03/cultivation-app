@@ -5,6 +5,13 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch)
                              .where(current_growth_stage: {'$in': growth_stages})
     plants = plants.where(facility_strain_id: params[:facility_strain_id]) if params[:facility_strain_id]
+    if params[:facility_id]
+      facility = Facility.find(params[:facility_id])
+      if facility
+        facility_strain_ids = facility.strains.pluck(:id).map { |a| a.to_s }
+        plants = plants.in(facility_strain_id: facility_strain_ids)
+      end
+    end
     plants = plants.order(c_at: :desc)
 
     data = Inventory::PlantSerializer.new(plants).serialized_json

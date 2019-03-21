@@ -634,9 +634,9 @@ class PlantEditor extends React.Component {
           <div className="ph4 mt3 flex">
             <div className="w-100">
               <LocationPicker
-                key={`${this.state.facility_id}.${this.state.location_id}`}
+                key={`${this.props.facility_id}.${this.state.location_id}`}
                 mode={this.props.growth_stage}
-                facility_id={this.state.facility_id}
+                facility_id={this.props.facility_id}
                 onChange={this.onLocationChanged}
                 locations={this.locations}
                 location_id={this.state.location_id}

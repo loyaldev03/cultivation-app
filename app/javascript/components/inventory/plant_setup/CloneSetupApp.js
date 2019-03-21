@@ -93,7 +93,7 @@ class CloneSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadPlants('clone')
+    loadPlants('clone', '', this.props.facility_id)
   }
 
   openSidebar() {
@@ -135,6 +135,7 @@ class CloneSetupApp extends React.Component {
           cultivation_batches={this.props.cultivation_batches}
           locations={this.props.locations}
           scanditLicense={this.props.scanditLicense}
+          facility_id={this.props.facility_id}
         />
       </React.Fragment>
     )

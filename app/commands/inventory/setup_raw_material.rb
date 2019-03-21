@@ -16,6 +16,7 @@ module Inventory
                 :product_uom,
                 :product_size,
                 :product_ppm,
+                :epa_number,
                 :description,
                 :manufacturer,
                 :quantity,
@@ -38,7 +39,8 @@ module Inventory
                 :nitrogen,
                 :prosphorus,
                 :potassium,
-                :nutrients
+                :nutrients,
+                :attachments
 
     def initialize(user, args)
       @args = args
@@ -59,6 +61,7 @@ module Inventory
       @product_uom = args[:product_uom]
       @product_size = args[:product_size]
       @product_ppm = args[:product_ppm]
+      @epa_number = args[:epa_number]
 
       @quantity = args[:quantity]
       @uom = args[:uom]
@@ -83,6 +86,7 @@ module Inventory
       @prosphorus = args[:prosphorus]
       @potassium = args[:potassium]
       @nutrients = args[:nutrients]
+      @attachments = args[:attachments]
     end
 
     def call
@@ -127,7 +131,6 @@ module Inventory
       unless product_id.blank?
         product = Inventory::Product.find(product_id)
         errors.add(:product, 'This product belongs to another facility, please do you data entry again.') if product.facility_id.to_s != facility_id
-        errors.add(:product, 'This product belongs to another catalogue, please do you data entry again.') if product.catalogue_id.to_s != catalogue_id
       end
 
       errors.empty?
@@ -145,7 +148,6 @@ module Inventory
 
     def create_raw_material(invoice_item)
       product = save_product
-      save_npk(product)
       Inventory::ItemTransaction.create!(
         ref_id: invoice_item.id,
         ref_type: 'Inventory::VendorInvoiceItem',
@@ -169,7 +171,6 @@ module Inventory
 
     def update_raw_material(invoice_item)
       product = save_product
-      save_npk(product)
       transaction = Inventory::ItemTransaction.find(id)
       transaction.ref_id = invoice_item.id
       transaction.event_date = purchase_date
@@ -318,7 +319,19 @@ module Inventory
       if product_id.present?
         product = Inventory::Product.find(product_id)
         uom_dimension = Common::UnitOfMeasure.find_by(unit: product_uom)&.dimension
-        product.update(
+        product.name = product_name
+        product.manufacturer = manufacturer
+        product.description = description
+        product.catalogue = catalogue
+        product.facility = facility
+        product.common_uom = product_uom
+        product.size = product_size
+        product.ppm = product_ppm
+        product.uom_dimension = uom_dimension
+        product.epa_number = epa_number
+      else
+        uom_dimension = Common::UnitOfMeasure.find_by(unit: product_uom)&.dimension
+        product = Inventory::Product.new(
           name: product_name,
           manufacturer: manufacturer,
           description: description,
@@ -327,22 +340,33 @@ module Inventory
           common_uom: product_uom,
           size: product_size,
           ppm: product_ppm,
+          epa_number: epa_number,
           uom_dimension: uom_dimension,
         )
-        return product
-      else
-        uom_dimension = Common::UnitOfMeasure.find_by(unit: product_uom)&.dimension
-        return Inventory::Product.create!(
-                 name: product_name,
-                 manufacturer: manufacturer,
-                 description: description,
-                 catalogue: catalogue,
-                 facility: facility,
-                 common_uom: product_uom,
-                 size: product_size,
-                 ppm: product_ppm,
-                 uom_dimension: uom_dimension,
-               )
+      end
+      save_attachments(product)
+      save_npk(product)
+      product.save!
+      product
+    end
+
+    def save_attachments(product)
+      if product.attachments.present?
+        product.attachments.each do |file|
+          found = attachments.detect { |f| f[:id] == file.id.to_s }
+          if found.nil?
+            file.delete
+          end
+        end
+      end
+
+      if attachments.present?
+        attachments.each do |file|
+          if file[:id].blank?
+            new_file = product.attachments.build
+            new_file.file = file[:data] # <json string>
+          end
+        end
       end
     end
 
@@ -357,12 +381,10 @@ module Inventory
           nutrients_data << {element: nutrient['element'], value: nutrient['value']}
         end
       end
-
       product.nutrients = []
       nutrients_data.each do |data|
         product.nutrients.build(element: data[:element], value: data[:value])
       end
-      product.save
     end
 
     def nutrients?

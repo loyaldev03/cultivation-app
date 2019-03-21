@@ -6,7 +6,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
       tasks = Cultivation::QueryTasks.call(@batch, [:issues]).result
       render json: TaskSerializer.new(tasks).serialized_json
     else
-      render json: {data: 'Batch Not Found'}
+      render json: {data: 'Batch Not Found'}, status: 422
     end
   end
 

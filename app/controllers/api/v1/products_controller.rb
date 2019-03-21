@@ -7,23 +7,28 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     facility_id = Cultivation::Batch.find(params[:batch_id].to_s).facility_id if params[:batch_id]
     facility_strain_id = params[:facility_strain_id].to_s
 
-    case category
-    when 'purchased_clone'
-      catalogue_id = Inventory::Catalogue.purchased_clones.id
-    when 'seeds'
-      catalogue_id = Inventory::Catalogue.seed.id
-    else
-      catalogue_id = params[:catalogue_id].to_s
-    end
+    #same as query in products index, query_raw_material_with_relationship, should move to cmd ?
+    special_type = ['seeds', 'purchased_clones', 'nutrients']
+    catalogue_ids = if special_type.include?(category)
+                      # find parent only one
+                      Inventory::Catalogue.raw_materials.where(
+                        key: category,
+                      ).pluck(:id)
+                    else
+                      # find catalogue for other than parent, parent will never have category type
+                      Inventory::Catalogue.raw_materials.where(
+                        category: category,
+                      ).pluck(:id)
+                    end
 
     products = []
-    if catalogue_id.blank?
+    if catalogue_ids.blank?
       products = Inventory::Product.all
     else
       if params[:filter].blank?
-        products = Inventory::Product.in(catalogue: catalogue_id)
+        products = Inventory::Product.where(:catalogue_id.in => catalogue_ids)
       else
-        products = Inventory::Product.in(catalogue: catalogue_id).where(name: /^#{params[:filter]}/i)
+        products = Inventory::Product.where(:catalogue_id.in => catalogue_ids).where(name: /^#{params[:filter]}/i)
       end
     end
     products.includes([:catalogue])
@@ -71,7 +76,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
                     []
                   end
 
-    Rails.logger.debug "\t\t\t\t>>> exclude_ids: #{exclude_ids}"
+    # Rails.logger.debug "\t\t\t\t>>> exclude_ids: #{exclude_ids}"
 
     products = Inventory::Product.includes([:catalogue]).
       in(catalogue: valid_categories).
@@ -82,7 +87,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
       order(name: :asc)
 
     # checklist = products.map {|x| x.name }
-    Rails.logger.debug "\t\t\t\t>>> products: #{products.count}"
+    # Rails.logger.debug "\t\t\t\t>>> products: #{products.count}"
 
     render json: Inventory::ProductSerializer.new(products).serialized_json
   end

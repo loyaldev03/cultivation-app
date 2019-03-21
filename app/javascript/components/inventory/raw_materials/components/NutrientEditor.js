@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { PurchaseInfo } from '../../../utils'
+import { PurchaseInfo, FileUploader } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
@@ -29,7 +29,6 @@ class NutrientEditor extends React.Component {
         getRawMaterial(id)
           .then(x => x.data.data.attributes)
           .then(attr => {
-            console.log(attr)
             this.setState(
               {
                 ...this.resetState(),
@@ -39,7 +38,8 @@ class NutrientEditor extends React.Component {
                 product_id: attr.product_id,
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer || '',
-                description: attr.description,
+                description: attr.description || '',
+                attachments: attr.attachments || [],
                 nitrogen: attr.product.nitrogen || '',
                 prosphorus: attr.product.prosphorus || '',
                 potassium: attr.product.potassium || '',
@@ -53,6 +53,8 @@ class NutrientEditor extends React.Component {
                   value: attr.product.common_uom
                 },
                 product_ppm: attr.product.ppm || '',
+                epa_number: attr.product.epa_number || '',
+                attachments: attr.product.attachments || [],
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -84,6 +86,10 @@ class NutrientEditor extends React.Component {
     this.setState({ [key]: value })
   }
 
+  onChangeAttachments = attachments => {
+    this.setState({ attachments })
+  }
+
   resetState() {
     return {
       nutrients: [],
@@ -112,6 +118,8 @@ class NutrientEditor extends React.Component {
       product_size: '',
       product_uom: { label: '', value: '' },
       product_ppm: '',
+      epa_number: '',
+      attachments: [],
       nutrient_value: '',
       nitrogen: '',
       prosphorus: '',
@@ -169,7 +177,9 @@ class NutrientEditor extends React.Component {
       prosphorus,
       potassium,
       product_size,
-      product_ppm
+      product_ppm,
+      epa_number,
+      attachments
     } = this.state
 
     let errors = {}
@@ -259,7 +269,9 @@ class NutrientEditor extends React.Component {
       nutrients,
       product_size,
       product_uom,
-      product_ppm
+      product_ppm,
+      epa_number,
+      attachments
     }
   }
 
@@ -298,6 +310,8 @@ class NutrientEditor extends React.Component {
           product_size: '',
           product_uom: { label: '', value: '' },
           product_ppm: '',
+          epa_number: '',
+          attachments: [],
           nitrogen: '',
           prosphorus: '',
           potassium: '',
@@ -313,6 +327,8 @@ class NutrientEditor extends React.Component {
           product_size: product.size || '',
           product_uom: { label: product.common_uom, value: product.common_uom },
           product_ppm: product.ppm || '',
+          epa_number: product.epa_number || '',
+          attachments: product.attachments || [],
           nitrogen: product.nitrogen || '',
           prosphorus: product.prosphorus || '',
           potassium: product.potassium || '',
@@ -332,6 +348,8 @@ class NutrientEditor extends React.Component {
         product_size: '',
         product_uom: { label: '', value: '' },
         product_ppm: '',
+        epa_number: '',
+        attachments: [],
         nitrogen: '',
         prosphorus: '',
         potassium: '',
@@ -374,6 +392,7 @@ class NutrientEditor extends React.Component {
   render() {
     const { facility_id, catalogue_id, locations } = this.props
     const {
+      attachments,
       nutrients_elements,
       nutrients,
       price_per_package,
@@ -465,6 +484,30 @@ class NutrientEditor extends React.Component {
                 fieldname="description"
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
+              />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <TextInput
+                label="EPA reg number"
+                fieldname="epa_number"
+                value={this.state.epa_number}
+                onChange={this.onChangeGeneric}
+              />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">
+                Usage Instructions
+              </label>
+              <FileUploader
+                attachments={attachments}
+                onChange={this.onChangeAttachments}
+                className="pa2 ba b--black-20 br2 file-uploader"
               />
             </div>
           </div>
@@ -665,7 +708,7 @@ class NutrientEditor extends React.Component {
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
-            label="How the nutrients are purchased?"
+            label="Vendor Name"
             vendor={this.state.vendor}
             purchase_order={this.state.purchase_order}
             vendor_invoice={this.state.vendor_invoice}

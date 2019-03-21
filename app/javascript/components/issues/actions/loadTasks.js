@@ -9,7 +9,7 @@ const loadTasks = batchId => {
       }))
     })
     .then(({ status, data }) => {
-      if (status >= 400) {
+      if (status >= 400 && !data && !data.data) {
         return []
       } else {
         const options = data.data.map(x => ({

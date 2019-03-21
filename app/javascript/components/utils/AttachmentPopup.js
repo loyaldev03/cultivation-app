@@ -37,7 +37,7 @@ class AttachmentPopup extends React.Component {
       return null
     }
 
-    const { url, type } = this.props
+    const { url, type, width = 'calc(100% - 20px)' } = this.props
     return (
       <React.Fragment>
         <div
@@ -48,7 +48,8 @@ class AttachmentPopup extends React.Component {
             left: 0,
             right: 0,
             bottom: 0,
-            height: 'calc(100vh + 70px)'
+            height: 'calc(100vh + 70px)',
+            zIndex: 1
           }}
         />
         <div
@@ -57,7 +58,8 @@ class AttachmentPopup extends React.Component {
             top: 80,
             marginLeft: '10px',
             marginRight: '10px',
-            width: 'calc(100% - 20px)'
+            width: width,
+            zIndex: 2
           }}
         >
           <div className="pv2 ph3 items-start flex justify-end bg-white br3 br--top">

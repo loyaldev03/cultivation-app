@@ -76,12 +76,17 @@ class TaskStore {
     const url = `/api/v1/batches/${batchId}/tasks`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
-      const tasks = response.data.map(res => parseTask(res.attributes))
-      this.tasks = updateFlags(null, tasks)
-      this.isDataLoaded = true
+      if (response && response.data) {
+        const tasks = response.data.map(res => parseTask(res.attributes))
+        this.tasks = updateFlags(null, tasks)
+        this.isDataLoaded = true
+      } else {
+        this.tasks = []
+        this.isDataLoaded = false
+      }
     } catch (error) {
       this.isDataLoaded = false
-      console.error(error)
+      Rollbar.error('Error Loading Task List:', error)
     } finally {
       this.isLoading = false
     }

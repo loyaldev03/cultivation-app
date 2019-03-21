@@ -1,12 +1,14 @@
 import { observable, action, computed, toJS } from 'mobx'
+import currentIssueStore from '../../issues/store/CurrentIssueStore'
+import getIssue from '../../issues/actions/getIssue'
 
 class SidebarStore {
   // Controls which sidebar is visible
-  showNotes = observable.box(false)
-  showMaterialUsed = observable.box(false)
-  showIssues = observable.box(false)
-  omitMaterials = observable([])
+  @observable showMaterialUsed = false
+  @observable showNotes = false
 
+  @observable showIssues = false
+  @observable omitMaterials = []
   @observable facilityId = null
   @observable batchId = null
   @observable taskId = null
@@ -15,15 +17,16 @@ class SidebarStore {
   @observable issueId = ''
   @observable issueMode = ''
   @observable dailyTask = null
+
   reset() {
     this.noteId = null
     this.noteBody = ''
     this.batchId = null
     this.taskId = null
     this.omitMaterials.clear()
-    this.showNotes.set(false)
-    this.showMaterialUsed.set(false)
-    this.showIssues.set(false)
+    this.showNotes = false
+    this.showMaterialUsed = false
+    this.showIssues = false
   }
 
   @action
@@ -35,7 +38,7 @@ class SidebarStore {
     this.noteId = noteId
     this.noteBody = noteBody
 
-    this.showNotes.set(true)
+    this.showNotes = true
   }
 
   @action
@@ -51,7 +54,7 @@ class SidebarStore {
     this.noteBody = ''
     this.batchId = batchId
     this.taskId = taskId
-    this.showMaterialUsed.set(true)
+    this.showMaterialUsed = true
   }
 
   @action
@@ -67,14 +70,28 @@ class SidebarStore {
   }
 
   @action
-  openIssues(id = null, mode = null, dailyTask = null) {
+  openIssues(id = null, mode = null, dailyTask = null, taskId, batchId) {
+    console.log(dailyTask)
+
     this.reset()
     this.issueId = id
     this.issueMode = mode
     this.dailyTask = dailyTask
-    this.showIssues.set(true)
+    this.taskId = taskId
+    this.batchId = batchId
+
+    currentIssueStore.reset()
+    currentIssueStore.mode = mode
+
+    if (id) {
+      getIssue(id) // retrieve details from API
+    }
+
+    this.showIssues = true
+    console.log(taskId, batchId)
   }
 
+  @action
   closeIssues() {
     this.reset()
   }

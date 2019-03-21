@@ -14,7 +14,8 @@
     <%= react_component('inventory/plant_setup/MotherSetupApp', {
         facility_strains: @facility_strains,
         locations: @locations,
-        scanditLicense: @scanditLicense
+        scanditLicense: @scanditLicense,
+        facility_id: params[:facility_id]
       }) %>
     <div class="w-100 bg-white ph3 pt2 pb4">
       <div class="dim flex flex-row items-center pointer">

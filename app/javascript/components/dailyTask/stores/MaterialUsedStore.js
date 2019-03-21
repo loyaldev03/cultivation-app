@@ -6,10 +6,6 @@ class MaterialUsedStore {
 
   @action
   load(newMaterialUsedList = []) {
-    console.group('newMaterialUsedList')
-    console.log(newMaterialUsedList)
-    console.groupEnd()
-
     newMaterialUsedList.forEach(x => {
       this.store.set(x.key, x)
     })

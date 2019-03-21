@@ -7,7 +7,7 @@
     </div>
   <% else %>
     <%= link_to 'Mother Plants',
-      mothers_inventory_plants_path, 
+      mothers_inventory_plants_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
 
@@ -17,7 +17,7 @@
     </div>
   <% else %>
     <%= link_to 'Cultivation Batches', 
-      cultivation_batches_inventory_plants_path, 
+      cultivation_batches_inventory_plants_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
 
@@ -27,7 +27,7 @@
     </div>
   <% else %>
     <%= link_to 'Clones/ Plantings',
-      clones_inventory_plants_path, 
+      clones_inventory_plants_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
 
@@ -37,7 +37,7 @@
     </div>
   <% else %>
     <%= link_to 'Veg',
-      vegs_inventory_plants_path, 
+      vegs_inventory_plants_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
 
@@ -47,7 +47,7 @@
     </div>
   <% else %>
     <%= link_to 'Flower',
-      flowers_inventory_plants_path, 
+      flowers_inventory_plants_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
 
@@ -57,7 +57,7 @@
     </div>
   <% else %>
     <%= link_to 'Harvest Batches',
-      harvest_batches_inventory_plants_path, 
+      harvest_batches_inventory_plants_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
 </div>

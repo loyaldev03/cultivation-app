@@ -1,6 +1,6 @@
 import React from 'react'
 import Avatar from '../../utils/Avatar.js'
-import AttachmentThumbnail from './AttachmentThumbnail'
+import AttachmentThumbnail from '../../utils/AttachmentThumbnail'
 import { formatDate, formatTime } from '../../utils/DateHelper'
 
 const CommentBody = ({
@@ -26,7 +26,7 @@ const CommentBody = ({
         </p>
       )}
       <div className="flex">
-        <p className="f6 black-70 lh-title mt0 mb1 flex-auto">{message}</p>
+        <p className="f6 black-70 lh-title mt0 mb1 flex-auto pre">{message}</p>
         {renderMenu(isMenuOpen)}
       </div>
       {reason.length > 0 && (

@@ -21,6 +21,16 @@ module Inventory
         potassium = nutrients.detect { |a| a[:element] == 'potassium' }
         elements = ['nitrogen', 'prosphorus', 'potassium']
         other_nutrients = nutrients.select { |a| !elements.include?(a[:element]) }.map { |a| {element: a[:element], value: a[:value]} }
+        attachments = object.product.attachments.map do |file|
+          {
+            id: file.id.to_s,
+            url: file.file_url(expires_in: 3600),
+            mime_type: file.file_mime_type,
+            data: file.file_data,
+            filename: file.file_filename,
+          }
+        end
+
         {
           id: object.product.id.to_s,
           name: object.product.name,
@@ -36,6 +46,9 @@ module Inventory
           size: object.product.size,
           ppm: object.product.ppm,
           common_uom: object.product.common_uom,
+          epa_number: object.product.epa_number,
+          attachments: attachments,
+          catalogue_id: object.product.catalogue_id.to_s,
         }
       else
         nil
@@ -63,7 +76,7 @@ module Inventory
     end
 
     attribute :catalogue do |object|
-      object.catalogue.label
+      object.product.catalogue.label
     end
 
     attribute :location_id do |object|
@@ -116,8 +129,8 @@ module Inventory
                         params && params[:include]&.include?(:facility_strain)
                       } do |object, params|
       {
-        id: object.facility_strain_id.to_s,
-        strain_name: object.facility_strain.strain_name,
+        id: object&.product.facility_strain_id.to_s,
+        strain_name: object&.product.facility_strain.strain_name,
       }
     end
   end

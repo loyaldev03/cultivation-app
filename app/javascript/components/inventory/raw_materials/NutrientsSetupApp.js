@@ -9,9 +9,8 @@ import loadRawMaterials from './actions/loadRawMaterials'
 
 const columns = [
   {
-    Header: 'Grow Medium',
     accessor: 'attributes.catalogue',
-    headerClassName: 'tl'
+    show: false,
   },
   {
     Header: 'Product Name',

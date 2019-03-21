@@ -148,7 +148,6 @@ module Inventory
 
     def create_raw_material(invoice_item)
       product = save_product
-      save_npk(product)
       Inventory::ItemTransaction.create!(
         ref_id: invoice_item.id,
         ref_type: 'Inventory::VendorInvoiceItem',
@@ -172,7 +171,6 @@ module Inventory
 
     def update_raw_material(invoice_item)
       product = save_product
-      save_npk(product)
       transaction = Inventory::ItemTransaction.find(id)
       transaction.ref_id = invoice_item.id
       transaction.event_date = purchase_date
@@ -347,6 +345,7 @@ module Inventory
         )
       end
       save_attachments(product)
+      save_npk(product)
       product.save!
       product
     end
@@ -386,7 +385,6 @@ module Inventory
       nutrients_data.each do |data|
         product.nutrients.build(element: data[:element], value: data[:value])
       end
-      product.save
     end
 
     def nutrients?

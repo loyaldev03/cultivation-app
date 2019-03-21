@@ -57,7 +57,7 @@ class BatchListTable extends React.Component {
                         <div className="db shadow-4">
                           <MenuButton
                             icon="delete_outline"
-                            text="Delete Task"
+                            text="Delete Draft"
                             className="red"
                             onClick={() => onDelete(b.id)}
                           />

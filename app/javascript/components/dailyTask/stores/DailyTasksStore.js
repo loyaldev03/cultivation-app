@@ -158,7 +158,7 @@ class DailyTaskStore {
     } else {
       task.issues = [...task.issues, toInsert]
     }
-    
+
     // For now seems like this is the only way to force rerender
     // this.batches.replace(toJS(this.batches))
   }

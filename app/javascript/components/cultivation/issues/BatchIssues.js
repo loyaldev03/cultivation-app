@@ -43,7 +43,7 @@ class BatchIssues extends React.Component {
     if (id) {
       getIssue(id)
     }
-    
+
     event.preventDefault()
   }
 

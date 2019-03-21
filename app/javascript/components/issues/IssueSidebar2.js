@@ -78,9 +78,9 @@ class IssueSidebar extends React.Component {
       current_user_photo,
       daily_task
     } = this.props
-    
+
     const issueId = currentIssueStore.issue ? currentIssueStore.issue.id : null
-    
+
     if (currentIssueStore.mode === 'details') {
       return (
         <IssueDetails
@@ -121,7 +121,9 @@ class IssueSidebar extends React.Component {
           issueNo={issue.issue_no}
           severity={issue.severity}
           status={issue.status}
-          createdAt={currentIssueStore.mode === 'details' ? issue.created_at : ''}
+          createdAt={
+            currentIssueStore.mode === 'details' ? issue.created_at : ''
+          }
           onClose={this.onClose}
           isArchived={issue.is_archived}
         />

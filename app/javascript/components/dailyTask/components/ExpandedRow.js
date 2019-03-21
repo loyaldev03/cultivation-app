@@ -51,7 +51,13 @@ class ExpandedRow extends React.Component {
     let issueId = issue.id
     let mode = 'details'
     let dailyTask = true // What
-    sidebarStore.openIssues(issueId, mode, dailyTask, this.props.id, this.props.batch_id)
+    sidebarStore.openIssues(
+      issueId,
+      mode,
+      dailyTask,
+      this.props.id,
+      this.props.batch_id
+    )
     event.preventDefault()
   }
 

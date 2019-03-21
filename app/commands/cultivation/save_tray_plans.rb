@@ -13,10 +13,6 @@ module Cultivation
         batch = Cultivation::Batch.find_by(id: @batch_id)
         if batch.present?
           facility = Facility.find_by(id: batch.facility_id)
-          # Save selected mother plants
-          batch.selected_plants = get_selected_plants(
-            batch.batch_source, @plans
-          )
           batch.quantity = @quantity
           batch_phases = Cultivation::QueryBatchPhases.call(
             batch,
@@ -49,32 +45,6 @@ module Cultivation
     end
 
     private
-
-    def get_selected_plants(batch_source, plans)
-      selected_plants = []
-      if batch_source == 'clones_from_mother'
-        clone_plans = plans.select do |p|
-          p[:phase] == Constants::CONST_CLONE
-        end
-        mother_plants = clone_plans.map do |p|
-          p[:trays]
-        end
-        mother_plants = mother_plants&.flatten&.compact
-        mother_plants.each do |p|
-          sp = selected_plants.detect { |x| x[:plant_id] == p[:plant_id] }
-          if sp
-            sp[:quantity] += p[:tray_capacity].to_i
-          else
-            sp = {
-              plant_id: p[:plant_id].to_bson_id,
-              quantity: p[:tray_capacity].to_i,
-            }
-            selected_plants << sp
-          end
-        end
-      end
-      selected_plants
-    end
 
     # Consolidate trays of the same phase
     def consolidate_phase_trays(plans)

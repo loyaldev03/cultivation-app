@@ -25,7 +25,7 @@ const AdjustmentMessage = React.memo(({ value, total }) => {
     const res = +value - +total
     return (
       <div className="dib bg-washed-red ml2 pa2 ba br2 b--washed-red grey w4 tc">
-        You need to remove <span className="fw6 dark-grey">{res}</span> plant.
+        You need to remove <span className="fw6 dark-grey">{res}</span> tray(s)
       </div>
     )
   }

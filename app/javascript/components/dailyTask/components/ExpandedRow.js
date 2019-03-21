@@ -18,7 +18,7 @@ class ExpandedRow extends React.Component {
 
   onShowMaterialUsedSidebar = event => {
     const omitProductIds = this.props.items.map(x => x.product_id)
-    console.log(toJS(omitProductIds))
+    // console.log(toJS(omitProductIds))
     sidebarStore.openMaterialUsed(
       this.props.batch_id,
       this.props.id,
@@ -48,18 +48,33 @@ class ExpandedRow extends React.Component {
   }
 
   onShowIssue = issue => {
-    let id = issue.id
+    let issueId = issue.id
     let mode = 'details'
-    let dailyTask = true
-    sidebarStore.openIssues(id, mode, dailyTask)
+    let dailyTask = true // What
+    sidebarStore.openIssues(
+      issueId,
+      mode,
+      dailyTask,
+      this.props.id,
+      this.props.batch_id
+    )
     event.preventDefault()
   }
 
-  onCreateIssue = issue => {
-    let id = issue.id
-    let mode = 'create'
-    let dailyTask = true
-    sidebarStore.openIssues(id, mode, dailyTask)
+  onNewIssue = event => {
+    console.log(this.props.id, this.props.batch_id)
+
+    const id = null
+    const mode = 'create'
+    const dailyTask = true
+
+    sidebarStore.openIssues(
+      id,
+      mode,
+      dailyTask,
+      this.props.id,
+      this.props.batch_id
+    )
     event.preventDefault()
   }
 
@@ -72,12 +87,6 @@ class ExpandedRow extends React.Component {
       items,
       issues
     } = this.props
-
-    // console.group('expanded row')
-    // console.log(toJS(this.props))
-    // // console.log(toJS(this.props.items))
-    // console.log(batchId, taskId, indelible)
-    // console.groupEnd()
 
     return (
       <React.Fragment>
@@ -176,13 +185,13 @@ class ExpandedRow extends React.Component {
             })}
           </div>
 
-          <div className="w-30 ph2 pt2 pb3" style={rightBorder}>
+          <div className="w-30 ph2 pt2" style={rightBorder}>
             <div className="flex items-center justify-between mb3">
               <span className="gray fw6 f6">Issues</span>
               <a
                 href="#"
                 className="btn btn--secondary f6"
-                onClick={event => this.onCreateIssue(event)}
+                onClick={this.onNewIssue}
               >
                 Add
               </a>
@@ -195,7 +204,7 @@ class ExpandedRow extends React.Component {
             />
           </div>
 
-          <div className="w-30 ph2 pt2 pb3">
+          <div className="w-30 ph2 pt2">
             <div className="flex items-center justify-between mb3">
               <span className="gray fw6 f6">Notes</span>
               <a

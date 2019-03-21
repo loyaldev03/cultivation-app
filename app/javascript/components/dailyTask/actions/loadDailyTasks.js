@@ -12,7 +12,7 @@ const loadDailyTasks = () => {
       }))
     })
     .then(data => {
-      console.log(data)
+      // console.log(data)
       const batches = data.data.map(x => {
         const batch = {
           ...x.batch.attributes,

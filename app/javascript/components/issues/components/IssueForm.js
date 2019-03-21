@@ -83,6 +83,7 @@ class IssueForm extends React.Component {
     }
   }
 
+  // TODO: Should be no-op if component already unmounted.
   async loadIssue() {
     const issue = currentIssueStore.issue
     let locations = []
@@ -259,12 +260,17 @@ class IssueForm extends React.Component {
           this.setState({ errors: data.errors })
         } else {
           // this.setState(this.resetState()) //causing memory leaks
-          this.props.onClose()
           data.data.attributes.tags = data.data.attributes.tags.map(e => ({
             label: e,
             value: e
           }))
           currentIssueStore.setIssue(data.data.attributes)
+          this.props.onClose()
+
+          // Pass newly created issue back to parent.
+          if (this.props.onSaved) {
+            this.props.onSaved(data.data.attributes)
+          }
         }
       })
     }
@@ -313,6 +319,8 @@ class IssueForm extends React.Component {
       delete_attachments,
       cultivation_batch_id: this.props.batchId,
       id: this.props.issueId,
+
+      // TODO: This should be daily_task if issues are raise at daily task screen
       issue_type: 'planning',
       isValid
     }
@@ -326,7 +334,9 @@ class IssueForm extends React.Component {
     })
   }
 
-  onClose = () => {
+  onClose = event => {
+    event.preventDefault()
+
     if (this.props.issueId.length > 0) {
       this.props.onToggleMode()
     } else {
@@ -334,15 +344,16 @@ class IssueForm extends React.Component {
     }
   }
 
+  onBack = event => {
+    event.preventDefault()
+    this.props.onToggleMode()
+  }
+
   renderTitle() {
     if (this.props.mode === 'edit') {
       return (
         <div className="flex w-100 ph3 mt3 mb2">
-          <a
-            href="#"
-            onClick={this.props.onToggleMode}
-            className="link orange f6"
-          >
+          <a href="#" onClick={this.onBack} className="link orange f6">
             &lt; Back
           </a>
         </div>
@@ -357,7 +368,7 @@ class IssueForm extends React.Component {
             <h1 className="f4 fw6 ma0 flex flex-auto ttc">Submit an issue</h1>
             <span
               className="rc-slide-panel__close-button dim"
-              onClick={this.props.onClose}
+              onClick={this.onClose}
             >
               <i className="material-icons mid-gray md-18">close</i>
             </span>

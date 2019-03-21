@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
+import { observe } from 'mobx'
 import IssueForm from './components/IssueForm'
 import IssueDetails from './components/IssueDetails'
 import IssueHeader from './components/IssueHeader'
@@ -9,13 +10,10 @@ import getIssue from './actions/getIssue'
 import dailyTaskSidebarStore from '../dailyTask/stores/SidebarStore'
 @observer
 class IssueSidebar extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = this.resetState()
-  }
+  state = this.resetState()
 
   componentDidMount() {
-    dailyTaskSidebarStore.showIssues.observe(change => {
+    observe(dailyTaskSidebarStore, 'showIssues', change => {
       if (change.newValue) {
         const issueId = dailyTaskSidebarStore.issueId
         const mode = dailyTaskSidebarStore.issueMode

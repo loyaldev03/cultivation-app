@@ -10,7 +10,7 @@ import loadRawMaterials from './actions/loadRawMaterials'
 const columns = [
   {
     accessor: 'attributes.catalogue',
-    show: false,
+    show: false
   },
   {
     Header: 'Product Name',

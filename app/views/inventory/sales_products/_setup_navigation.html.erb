@@ -7,7 +7,7 @@
     </div>
   <% else %>
     <%= link_to 'Harvest Packages',
-      harvest_packages_inventory_sales_products_path, 
+      harvest_packages_inventory_sales_products_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
 
@@ -17,7 +17,7 @@
     </div>
   <% else %>
     <%= link_to 'Convert Products',
-      convert_products_inventory_sales_products_path, 
+      convert_products_inventory_sales_products_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
 
@@ -27,7 +27,7 @@
     </div>
   <% else %>
     <%= link_to 'Product Info',
-      product_info_inventory_sales_products_path, 
+      product_info_inventory_sales_products_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
 </div>

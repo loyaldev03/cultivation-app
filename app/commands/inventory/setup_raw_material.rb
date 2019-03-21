@@ -345,10 +345,10 @@ module Inventory
           epa_number: epa_number,
           uom_dimension: uom_dimension,
         )
-        save_attachments(product)
-        product.save!
-        product
       end
+      save_attachments(product)
+      product.save!
+      product
     end
 
     def save_attachments(product)
@@ -382,7 +382,6 @@ module Inventory
           nutrients_data << {element: nutrient['element'], value: nutrient['value']}
         end
       end
-
       product.nutrients = []
       nutrients_data.each do |data|
         product.nutrients.build(element: data[:element], value: data[:value])

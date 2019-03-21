@@ -2,15 +2,14 @@ import React from 'react'
 import classNames from 'classnames'
 import InlineEditTextField from './InlineEditTextField'
 import Tippy from '@tippy.js/react'
+import currentIssueStore from '../../../issues/store/CurrentIssueStore'
+import getIssue from '../../../issues/actions/getIssue'
 
-// TODO: Should not be here....
-import dailyTaskSidebarStore from '../../../dailyTask/stores/SidebarStore'
 export default class InlineEditTaskNameField extends InlineEditTextField {
   openSidebar = issue => {
-    this.setState({ taskSelected: id })
-    let id = issue.id
-    let mode = 'details'
-    dailyTaskSidebarStore.openIssues(id, mode)
+    currentIssueStore.reset()
+    currentIssueStore.mode = 'details'
+    getIssue(issue.id)
     event.preventDefault()
   }
 

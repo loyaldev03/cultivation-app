@@ -255,6 +255,7 @@ class CurrentIssueStore {
   reset() {
     set(this.issue, this.resetState())
     this.comments.replace([])
+    this.mode = ''
   }
 }
 

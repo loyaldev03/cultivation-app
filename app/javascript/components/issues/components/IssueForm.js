@@ -353,7 +353,7 @@ class IssueForm extends React.Component {
     if (this.props.mode === 'edit') {
       return (
         <div className="flex w-100 ph3 mt3 mb2">
-          <a href="#" onClick={this.onBach} className="link orange f6">
+          <a href="#" onClick={this.onBack} className="link orange f6">
             &lt; Back
           </a>
         </div>

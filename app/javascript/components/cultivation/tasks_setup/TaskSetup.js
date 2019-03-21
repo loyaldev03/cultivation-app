@@ -8,8 +8,8 @@ import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
 import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
 import IssueSidebar from '../../issues/IssueSidebar2'
+import currentIssueStore from '../../issues/store/CurrentIssueStore'
 import { SlidePanel } from '../../utils'
-import dailyTaskSidebarStore from '../../dailyTask/stores/SidebarStore'
 
 @observer
 class TaskSetup extends React.Component {
@@ -79,8 +79,8 @@ class TaskSetup extends React.Component {
     const { batch } = this.props
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
-    // const { showIssues } = dailyTaskSidebarStore
-    const showIssues = false
+    const showIssues =
+      currentIssueStore.mode === 'details' || currentIssueStore.mode === 'edit'
 
     return (
       <div className="pa4 grey flex flex-column h-100">
@@ -267,6 +267,7 @@ class TaskSetup extends React.Component {
               current_user_first_name={this.props.current_user_first_name}
               current_user_last_name={this.props.current_user_last_name}
               current_user_photo={this.props.current_user_photo}
+              onClose={() => {}}
             />
           )}
         />

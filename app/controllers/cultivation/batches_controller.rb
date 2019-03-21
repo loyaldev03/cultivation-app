@@ -57,8 +57,6 @@ class Cultivation::BatchesController < ApplicationController
       }).marshal_dump
       # Set the plantType for react BatchPlantSelectionList
       @locations = get_cultivation_locations(@batch)
-      Rails.logger.debug "\033[31m BatchId: #{@batch.id} \033[0m"
-      Rails.logger.debug "\033[31m Locations: #{@locations} \033[0m"
     end
   end
 

@@ -153,7 +153,6 @@ export default class MaterialForm extends React.Component {
   render() {
     const { onClose } = this.props
     const { nutrients, materials, task } = this.state
-    console.log(this.state)
     const task_plant = task && task.indelible === 'plants'
     const showNutrient =
       materials && materials.length > 0 && task.indelible === 'add_nutrient'

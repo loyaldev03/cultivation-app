@@ -10,17 +10,10 @@ module Cultivation
 
     def call
       if @batch_id.present? && @plans.any?
-        # Rails.logger.debug "\033[34m Find Batch: #{@batch_id} \033[0m"
-        # Rails.logger.debug "\033[34m # of plans: #{@plans.length} \033[0m"
         batch = Cultivation::Batch.find_by(id: @batch_id)
         if batch.present?
           facility = Facility.find_by(id: batch.facility_id)
-          # Save selected mother plants
-          batch.selected_plants = get_selected_plants(
-            batch.batch_source, @plans
-          )
           batch.quantity = @quantity
-          # Rails.logger.debug "\033[34m Found Batch \033[0m"
           batch_phases = Cultivation::QueryBatchPhases.call(
             batch,
             facility.growth_stages,
@@ -33,7 +26,6 @@ module Cultivation
             # New location plans
             phase_plan = phase_trays.detect { |p| p[:phase] == phase_info.phase }
             if phase_plan.present?
-              # Rails.logger.debug "\033[34m trays for phase: \033[0m"
               trays = phase_plan[:trays]
               # Build new booking record of trays
               new_plans += build_tray_plans(batch.facility_id,
@@ -53,38 +45,6 @@ module Cultivation
     end
 
     private
-
-    def get_selected_plants(batch_source, plans)
-      selected_plants = []
-      if batch_source == 'clones_from_mother'
-        clone_plans = plans.select do |p|
-          p[:phase] == Constants::CONST_CLONE
-        end
-        # Rails.logger.debug "\033[31m Clone Plans \033[0m"
-        # Rails.logger.debug clone_plans.to_yaml
-        mother_plants = clone_plans.map do |p|
-          p[:trays]
-        end
-        mother_plants = mother_plants&.flatten&.compact
-        # Rails.logger.debug "\033[31m Mother Plans Flatten \033[0m"
-        # Rails.logger.debug mother_plants.to_yaml
-        mother_plants.each do |p|
-          sp = selected_plants.detect { |x| x[:plant_id] == p[:plant_id] }
-          if sp
-            sp[:quantity] += p[:tray_capacity].to_i
-          else
-            sp = {
-              plant_id: p[:plant_id].to_bson_id,
-              quantity: p[:tray_capacity].to_i,
-            }
-            selected_plants << sp
-          end
-        end
-        # Rails.logger.debug "\033[31m Selected Plants \033[0m"
-        # Rails.logger.debug selected_plants.to_yaml
-      end
-      selected_plants
-    end
 
     # Consolidate trays of the same phase
     def consolidate_phase_trays(plans)

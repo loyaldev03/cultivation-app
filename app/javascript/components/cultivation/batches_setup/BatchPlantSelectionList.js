@@ -1,8 +1,8 @@
 import React from 'react'
 import classNames from 'classnames'
+import isEmpty from 'lodash.isempty'
 import { observer } from 'mobx-react'
 import { ImgPlant, GROWTH_PHASE } from '../../utils'
-import plantStore from '../../inventory/plant_setup/store/PlantStore'
 import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 
 const QuantityField = React.memo(({ plant, onClick }) => {
@@ -41,12 +41,6 @@ const LocationField = React.memo(({ plant, locationResolver, onClick }) => {
 
 @observer
 class BatchPlantSelectionList extends React.Component {
-  componentDidMount() {
-    if (this.props.plantType) {
-      loadPlants(this.props.plantType, this.props.strainId)
-    }
-  }
-
   renderMotherCloneBookingTable = (motherPlants, phase) => {
     return (
       <table className="collapse br2 f5 w-100">
@@ -171,25 +165,6 @@ class BatchPlantSelectionList extends React.Component {
     // plantType = the type plant for location selection
     // when it's 'mother', let user select the mother plant during clone location selection
     const { phase, plantType, bookings } = this.props
-    const { plants } = plantStore
-    // console.log('bookings', bookings)
-    if (plantStore.isLoading) {
-      return <p className="f6">Loading....</p>
-    }
-    if (plantType === GROWTH_PHASE.MOTHER && phase === GROWTH_PHASE.CLONE) {
-      if (plants && plants.length > 0)
-        return this.renderMotherCloneBookingTable(plants, phase)
-      else {
-        return (
-          <p className="f5 red">
-            Oops! It seem like you don't have the necessary plants available.
-            You can add plants to your inventory{' '}
-            <a href="/inventory/setup">here</a>.
-          </p>
-        )
-      }
-    }
-
     return this.renderBookingTable(bookings, phase)
   }
 }

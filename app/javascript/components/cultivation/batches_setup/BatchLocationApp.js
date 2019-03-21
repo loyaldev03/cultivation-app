@@ -3,6 +3,7 @@ import classNames from 'classnames'
 import React from 'react'
 import BatchPlantSelectionList from './BatchPlantSelectionList'
 import BatchLocationEditor from './BatchLocationEditor'
+import isEmpty from 'lodash.isempty'
 import {
   Modal,
   sumBy,
@@ -129,7 +130,7 @@ class BatchLocationApp extends React.Component {
       .filter(loc => loc.tray_purpose === phase)
       .map(loc => {
         const found = allPlantsTrays.filter(t => t.tray_id === loc.tray_id)
-        if (found && found.length > 0) {
+        if (isEmpty(found)) {
           const newTrayPlannedCapacity =
             parseInt(loc.planned_capacity) + sumBy(found, 'tray_capacity')
           const newLoc = {
@@ -146,7 +147,7 @@ class BatchLocationApp extends React.Component {
   }
 
   isDisableNext = () => {
-    if (!this.state.selectedPlants || !this.state.selectedPlants.length) {
+    if (isEmpty(this.state.selectedPlants)) {
       // toast('Please select plants & locations to continue.', 'warning')
       // Plants Location & Quantity is required
       return true
@@ -203,15 +204,17 @@ class BatchLocationApp extends React.Component {
     this.setState({ isLoading: true })
     const { id } = this.props.batchInfo
     try {
-      await fetch(
+      const res = await fetch(
         `/api/v1/batches/${id}/update_locations`,
         httpPostOptions({
           plans: this.state.selectedPlants,
           quantity: this.state.quantity
         })
       )
-      // navigate to batch overview
-      window.location.replace('/cultivation/batches/' + id)
+      if (res) {
+        // navigate to batch overview
+        window.location.replace('/cultivation/batches/' + id)
+      }
     } catch (error) {
       console.error(error)
     }

@@ -6,7 +6,6 @@ import BatchLocationEditor from './BatchLocationEditor'
 import {
   Modal,
   sumBy,
-  formatDate,
   httpPostOptions,
   ImgPlantGrowth,
   GROWTH_PHASE

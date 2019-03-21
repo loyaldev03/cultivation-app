@@ -19,7 +19,7 @@ export default function loadPlants(
     apiUrl = apiUrl + '?facility_strain_id=' + facility_strain_id
   }
 
-  if (facility_id.length > 0) {
+  if (facility_id && facility_id.length > 0) {
     apiUrl = apiUrl + '?facility_id=' + facility_id
   }
 

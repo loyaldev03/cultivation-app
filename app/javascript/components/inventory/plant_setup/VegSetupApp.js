@@ -93,7 +93,7 @@ class VegSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadPlants('veg')
+    loadPlants('veg', '', this.props.facility_id)
   }
 
   openSidebar() {
@@ -133,6 +133,7 @@ class VegSetupApp extends React.Component {
           cultivation_batches={this.props.cultivation_batches}
           locations={this.props.locations}
           scanditLicense={this.props.scanditLicense}
+          facility_id={this.props.facility_id}
         />
       </React.Fragment>
     )

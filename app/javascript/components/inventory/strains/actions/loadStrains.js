@@ -5,7 +5,7 @@ import strainStore from '../store/StrainStore'
  */
 export default function loadStrains(facility_id = null) {
   strainStore.isLoading = true
-  let apiUrl = '/api/v1/strains'
+  let apiUrl = `/api/v1/strains?facility_id=${facility_id}`
 
   fetch(apiUrl, {
     method: 'GET',

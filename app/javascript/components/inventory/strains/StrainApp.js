@@ -10,7 +10,7 @@ class StrainApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadStrains()
+    loadStrains(this.props.facility_id)
   }
 
   openSidebar = () => {

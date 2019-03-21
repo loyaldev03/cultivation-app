@@ -186,10 +186,10 @@ export default class StrainEditor extends React.Component {
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
               <LocationPicker
-                key={this.state.facility_id}
+                key={this.props.facility_id}
                 mode="facility"
                 locations={this.props.locations}
-                location_id={this.state.facility_id}
+                location_id={this.props.facility_id}
                 onChange={this.onFacilityChanged}
               />
               <FieldError errors={this.state.errors} field="facility_id" />

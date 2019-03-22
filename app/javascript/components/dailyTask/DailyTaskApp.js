@@ -74,7 +74,7 @@ class DailyTaskApp extends React.Component {
                 onUpdateNutrients={this.onUpdateNutrients}
               />
               
-              <SlidePanelFooter onSave={this.onUpdateNutrients} onCancel={()=>dailyTaskSidebarStore.closeIssues()} />
+              <SlidePanelFooter onSave={()=>dailyTaskSidebarStore.closeIssues()} onCancel={()=>dailyTaskSidebarStore.closeIssues()} />
               </div>
             </div>
             }

@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'

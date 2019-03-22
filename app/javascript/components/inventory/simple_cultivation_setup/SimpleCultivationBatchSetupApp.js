@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import React from 'react'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'

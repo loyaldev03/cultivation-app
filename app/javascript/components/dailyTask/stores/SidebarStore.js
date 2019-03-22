@@ -6,7 +6,7 @@ class SidebarStore {
   // Controls which sidebar is visible
   @observable showMaterialUsed = false
   @observable showNotes = false
-
+  @observable showAddNutrients = false
   @observable showIssues = false
   @observable omitMaterials = []
   @observable facilityId = null
@@ -26,6 +26,7 @@ class SidebarStore {
     this.omitMaterials.clear()
     this.showNotes = false
     this.showMaterialUsed = false
+    this.showAddNutrients = false
     this.showIssues = false
   }
 
@@ -69,6 +70,12 @@ class SidebarStore {
     this.showIssues = !this.showIssues
   }
 
+  @action
+  openNutirents(batchId , taskId){
+    this.showAddNutrients = true
+    this.batchId = batchId
+    this.taskId=taskId
+  }
   @action
   openIssues(id = null, mode = null, dailyTask = null, taskId, batchId) {
     console.log(dailyTask)

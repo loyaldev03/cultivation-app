@@ -60,37 +60,6 @@ export default class InlineEditTaskNameField extends InlineEditTextField {
           </React.Fragment>
         ) : (
           <React.Fragment>
-            {issues.length > 0 ? (
-              <Tippy
-                placement="top"
-                interactive={true}
-                content={
-                  <div className="bg-white f6 flex">
-                    <div className="db shadow-4 grey pa2">
-                      <span>
-                        Issues
-                        <span className="b--orange ba orange f7 fw4 ph1 br2 ml1">
-                          {issues.length}
-                        </span>
-                      </span>
-                      <ul className="pa2 list mt2 flex-auto br2 overflow-auto tl">
-                        {issues.map((i, key) => (
-                          <li
-                            key={key}
-                            className="pointer br2 dim--grey pa1"
-                            onClick={e => this.openSidebar(i)}
-                          >
-                            {i.title}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                }
-              >
-                <i className="material-icons icon--small red pointer">error</i>
-              </Tippy>
-            ) : null}
             <a
               href="#0"
               className={classNames('pa1 link', {

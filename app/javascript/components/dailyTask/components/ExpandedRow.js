@@ -60,7 +60,12 @@ class ExpandedRow extends React.Component {
     )
     event.preventDefault()
   }
-
+  onNewNutirent = event => {
+    sidebarStore.openNutirents(
+      this.props.batch_id,
+      this.props.id
+    )
+  }
   onNewIssue = event => {
     console.log(this.props.id, this.props.batch_id)
 
@@ -90,21 +95,17 @@ class ExpandedRow extends React.Component {
 
     return (
       <React.Fragment>
-        <div className="flex justify-between pv3 ph3">
+        <div className="flex w100 justify-end tr pv3 ph3">
           <div>
-            {indelible === 'add_nutrient' && (
-              <React.Fragment>
-                <span className="f6 grey db">Add Nutrients:</span>
-                <NutrientEntryForm
-                  className="mt2 w-100"
-                  fields={DailyTaskStore.getNutrientsByTask(batchId, taskId)}
-                  fieldType="checkboxes"
-                  onUpdateNutrients={this.onUpdateNutrients}
-                />
-              </React.Fragment>
-            )}
-          </div>
-          <div>
+            { indelible=== 'add_nutrient' &&
+              <a
+              href="#"
+              className="btn btn--secondary mr3"
+              onClick={this.onNewNutirent}
+            >
+              Add Nutrient
+            </a>
+            }
             <a
               href="#"
               className="btn btn--primary mr2"

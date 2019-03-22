@@ -48,13 +48,16 @@ class QueryAvailableTrays
     criteria = Facility.collection.aggregate [
       match_facility,
       {"$project": {_id: 0, facility_id: '$_id', facility_code: '$code', facility_name: '$name', rooms: 1}},
-      {"$unwind": '$rooms'},
-      {"$unwind": '$rooms.rows'},
-      {"$unwind": '$rooms.rows.shelves'},
+      {"$unwind": {path: '$rooms', preserveNullAndEmptyArrays: true}},
+      {"$unwind": {path: '$rooms.rows', preserveNullAndEmptyArrays: true}},
+      {"$unwind": {path: '$rooms.rows.shelves', preserveNullAndEmptyArrays: true}},
       {"$match": {
-        "$and": [
-          {"rooms.is_complete": true},
-          {"rooms.rows.shelves.is_complete": true},
+        "$or": [
+          {"$and": [
+            {"rooms.is_complete": true},
+            {"rooms.rows.shelves.is_complete": true},
+          ]},
+          {"rooms.rows.shelves": nil},
         ],
       }},
       {"$lookup": {
@@ -85,8 +88,12 @@ class QueryAvailableTrays
         foreignField: 'shelf_id',
         as: 'trays',
       }},
-      {"$unwind": '$trays'},
-      {"$match": {"trays.capacity": {"$ne": nil}}},
+      {"$unwind": {path: '$trays', preserveNullAndEmptyArrays: true}},
+      {"$match": {
+        "$or": [
+          {"trays.capacity": {"$ne": nil}}, {"trays": {"$eq": nil}},
+        ],
+      }},
       {"$lookup": {
         from: 'cultivation_tray_plans',
         let: {
@@ -167,9 +174,6 @@ class QueryAvailableTrays
       }},
     ]
 
-    res = criteria.map do |x|
-      AvailableTray.new(x)
-    end
-    res ||= []
+    criteria.map { |x| AvailableTray.new(x) } || []
   end
 end

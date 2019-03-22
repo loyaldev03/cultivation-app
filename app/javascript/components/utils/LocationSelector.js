@@ -147,15 +147,15 @@ LocationSelector.propTypes = {
   value: PropTypes.object
 }
 
-const loadTaskLocations = (batchId, taskId) => {
+const loadTaskLocations = async (batchId, taskId) => {
   if (!batchId || !taskId) {
     return Promise.resolve([])
   }
-
-  return fetch(
+  const locations = await (await fetch(
     `/api/v1/batches/${batchId}/tasks/${taskId}/locations`,
     httpGetOptions
-  ).then(response => response.json())
+  )).json()
+  return locations || []
 }
 
 export { loadTaskLocations, LocationSelector }

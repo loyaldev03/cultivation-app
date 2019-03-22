@@ -94,7 +94,7 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
 
   def search_locations
     # Rails.logger.debug "\033[34m Faclity ID: #{params[:facility_id]} \033[0m"
-    command = QueryReadyTrays.call(params[:facility_id])
+    command = QueryReadyTrays.call(params[:facility_id], params[:purpose])
     if command.success?
       render json: {data: command.result}
     else

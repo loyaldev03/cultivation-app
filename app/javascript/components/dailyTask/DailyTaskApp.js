@@ -68,7 +68,7 @@ class DailyTaskApp extends React.Component {
               <SlidePanelHeader onClose={()=>dailyTaskSidebarStore.closeIssues()} title={'Add Nutrients:'} />
               <div className="flex flex-column flex-auto justify-between">
               <NutrientEntryForm
-                className="ma2 w-100"
+                className="ph4 pv3 w-100"
                 fields={DailyTaskStore.getNutrientsByTask(batchId, taskId)}
                 fieldType="checkboxes"
                 onUpdateNutrients={this.onUpdateNutrients}

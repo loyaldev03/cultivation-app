@@ -71,10 +71,10 @@ class SidebarStore {
   }
 
   @action
-  openNutirents(batchId , taskId){
+  openNutirents(batchId, taskId) {
     this.showAddNutrients = true
     this.batchId = batchId
-    this.taskId=taskId
+    this.taskId = taskId
   }
   @action
   openIssues(id = null, mode = null, dailyTask = null, taskId, batchId) {

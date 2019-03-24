@@ -61,10 +61,7 @@ class ExpandedRow extends React.Component {
     event.preventDefault()
   }
   onNewNutirent = event => {
-    sidebarStore.openNutirents(
-      this.props.batch_id,
-      this.props.id
-    )
+    sidebarStore.openNutirents(this.props.batch_id, this.props.id)
   }
   onNewIssue = event => {
     console.log(this.props.id, this.props.batch_id)
@@ -97,15 +94,15 @@ class ExpandedRow extends React.Component {
       <React.Fragment>
         <div className="flex w100 justify-end tr pv3 ph3">
           <div>
-            { indelible=== 'add_nutrient' &&
+            {indelible === 'add_nutrient' && (
               <a
-              href="#"
-              className="btn btn--secondary mr3"
-              onClick={this.onNewNutirent}
-            >
-              Add Nutrient
-            </a>
-            }
+                href="#"
+                className="btn btn--secondary mr3"
+                onClick={this.onNewNutirent}
+              >
+                Add Nutrient
+              </a>
+            )}
             <a
               href="#"
               className="btn btn--primary mr2"

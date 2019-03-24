@@ -19,7 +19,6 @@ import DailyTaskStore from './stores/DailyTasksStore'
 import NutrientEntryForm from '../utils/NutrientEntryForm'
 import { SlidePanelHeader, SlidePanelFooter } from '../utils'
 
-
 @observer
 class DailyTaskApp extends React.Component {
   constructor(props) {
@@ -29,15 +28,18 @@ class DailyTaskApp extends React.Component {
     loadDailyTasks()
   }
   onUpdateNutrients = nutrients => {
-    const {batchId, taskId } = dailyTaskSidebarStore
-    DailyTaskStore.updateNutrients(
-      batchId, 
-      taskId,
-      nutrients
-    )
+    const { batchId, taskId } = dailyTaskSidebarStore
+    DailyTaskStore.updateNutrients(batchId, taskId, nutrients)
   }
   renderSlidePanel() {
-    const { showMaterialUsed, showNotes, showIssues, showAddNutrients, batchId, taskId } = dailyTaskSidebarStore
+    const {
+      showMaterialUsed,
+      showNotes,
+      showIssues,
+      showAddNutrients,
+      batchId,
+      taskId
+    } = dailyTaskSidebarStore
     const IssueSideBarWithStore = dailyTaskSidebarAdaptor(
       IssueSidebar,
       this.props
@@ -62,24 +64,34 @@ class DailyTaskApp extends React.Component {
         <SlidePanel
           width="500px"
           show={showAddNutrients}
-          renderBody={props => 
-            { if(showAddNutrients){
-              return <div className="flex flex-column h-100">
-              <SlidePanelHeader onClose={()=>dailyTaskSidebarStore.closeIssues()} title={'Add Nutrients:'} />
-              <div className="flex flex-column flex-auto justify-between">
-              <NutrientEntryForm
-                className="ph4 pv3 w-100"
-                fields={DailyTaskStore.getNutrientsByTask(batchId, taskId)}
-                fieldType="checkboxes"
-                onUpdateNutrients={this.onUpdateNutrients}
-              />
-              
-              <SlidePanelFooter onSave={()=>dailyTaskSidebarStore.closeIssues()} onCancel={()=>dailyTaskSidebarStore.closeIssues()} />
-              </div>
-            </div>
+          renderBody={props => {
+            if (showAddNutrients) {
+              return (
+                <div className="flex flex-column h-100">
+                  <SlidePanelHeader
+                    onClose={() => dailyTaskSidebarStore.closeIssues()}
+                    title={'Add Nutrients:'}
+                  />
+                  <div className="flex flex-column flex-auto justify-between">
+                    <NutrientEntryForm
+                      className="ph4 pv3 w-100"
+                      fields={DailyTaskStore.getNutrientsByTask(
+                        batchId,
+                        taskId
+                      )}
+                      fieldType="checkboxes"
+                      onUpdateNutrients={this.onUpdateNutrients}
+                    />
+
+                    <SlidePanelFooter
+                      onSave={() => dailyTaskSidebarStore.closeIssues()}
+                      onCancel={() => dailyTaskSidebarStore.closeIssues()}
+                    />
+                  </div>
+                </div>
+              )
             }
-              }
-         }
+          }}
         />
       </React.Fragment>
     )

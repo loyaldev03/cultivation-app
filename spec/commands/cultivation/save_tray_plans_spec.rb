@@ -173,26 +173,6 @@ RSpec.describe Cultivation::SaveTrayPlans, type: :command do
       ]
     end
 
-    it "create batch with selected_plants" do
-      cmd = Cultivation::SaveTrayPlans.call(batch.id, plans, 10)
-
-      # Validate Facility
-      expect(clone_room.is_complete).to be true
-      expect(clone_shelf1.is_complete).to be true
-      expect(clone_tray1.capacity).to be 10
-      expect(clone_tray2.capacity).to be 10
-
-      # Validate Batch
-      expect(cmd.success?).to be true
-      expect(cmd.result).not_to be nil
-      expect(cmd.result.status).to eq "SCHEDULED"
-      expect(cmd.result.selected_plants[0]["plant_id"]).to eq plant1_id
-      expect(cmd.result.selected_plants[0]["quantity"]).to eq 5
-      expect(cmd.result.selected_plants[1]["plant_id"]).to eq plant2_id
-      expect(cmd.result.selected_plants[1]["quantity"]).to eq 5
-      expect(cmd.result.quantity).to be 10
-    end
-
     it "save tray plans with all ids" do
       cmd = Cultivation::SaveTrayPlans.call(batch.id, plans, 10)
 

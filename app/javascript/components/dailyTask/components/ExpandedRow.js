@@ -1,5 +1,4 @@
 import React from 'react'
-import { toJS } from 'mobx'
 import MaterialUsedRow from './MaterialUsedRow'
 import NoteList from './NoteList'
 import IssueList from './IssueList'
@@ -18,7 +17,6 @@ class ExpandedRow extends React.Component {
 
   onShowMaterialUsedSidebar = event => {
     const omitProductIds = this.props.items.map(x => x.product_id)
-    // console.log(toJS(omitProductIds))
     sidebarStore.openMaterialUsed(
       this.props.batch_id,
       this.props.id,
@@ -60,16 +58,19 @@ class ExpandedRow extends React.Component {
     )
     event.preventDefault()
   }
-  onNewNutirent = event => {
-    sidebarStore.openNutirents(this.props.batch_id, this.props.id)
-  }
-  onNewIssue = event => {
-    console.log(this.props.id, this.props.batch_id)
 
+  onClickAddNutrient = event => {
+    sidebarStore.openSidebar('add_nutrient', this.props.batch_id, this.props.id)
+  }
+
+  onClickCreateUid = event => {
+    sidebarStore.openSidebar('clip_pot_tag', this.props.batch_id, this.props.id)
+  }
+
+  onNewIssue = event => {
     const id = null
     const mode = 'create'
     const dailyTask = true
-
     sidebarStore.openIssues(
       id,
       mode,
@@ -96,22 +97,31 @@ class ExpandedRow extends React.Component {
           <div>
             {indelible === 'add_nutrient' && (
               <a
-                href="#"
+                href="#0"
                 className="btn btn--secondary mr3"
-                onClick={this.onNewNutirent}
+                onClick={this.onClickAddNutrient}
               >
                 Add Nutrient
               </a>
             )}
+            {indelible === 'clip_pot_tag' && (
+              <a
+                href="#0"
+                className="btn btn--secondary mr3"
+                onClick={this.onClickCreateUid}
+              >
+                Create UID
+              </a>
+            )}
             <a
-              href="#"
+              href="#0"
               className="btn btn--primary mr2"
               onClick={e => this.props.onClickStatus('done')}
             >
               Done
             </a>
             <a
-              href="#"
+              href="#0"
               className="btn btn--secondary"
               onClick={e => this.props.onClickStatus('stuck')}
             >

@@ -36,7 +36,7 @@ class DailyTaskApp extends React.Component {
       showMaterialUsed,
       showNotes,
       showIssues,
-      showAddNutrients,
+      sidebarName,
       batchId,
       taskId
     } = dailyTaskSidebarStore
@@ -63,13 +63,13 @@ class DailyTaskApp extends React.Component {
         />
         <SlidePanel
           width="500px"
-          show={showAddNutrients}
+          show={sidebarName === 'add_nutrient'}
           renderBody={props => {
-            if (showAddNutrients) {
+            if (sidebarName === 'add_nutrient') {
               return (
                 <div className="flex flex-column h-100">
                   <SlidePanelHeader
-                    onClose={() => dailyTaskSidebarStore.closeIssues()}
+                    onClose={() => dailyTaskSidebarStore.closeSidebar()}
                     title={'Add Nutrients:'}
                   />
                   <div className="flex flex-column flex-auto justify-between">
@@ -84,8 +84,15 @@ class DailyTaskApp extends React.Component {
                     />
 
                     <SlidePanelFooter
-                      onSave={() => dailyTaskSidebarStore.closeIssues()}
-                      onCancel={() => dailyTaskSidebarStore.closeIssues()}
+                      onSave={() => dailyTaskSidebarStore.closeSidebar()}
+                      onCancel={() => dailyTaskSidebarStore.closeSidebar()}
+                    />
+                  </div>
+                </div>
+              )
+            }
+          }}
+        />
                     />
                   </div>
                 </div>

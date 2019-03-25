@@ -42,11 +42,6 @@ class SidebarStore {
   }
 
   @action
-  closeNotes() {
-    this.reset()
-  }
-
-  @action
   openMaterialUsed(batchId = null, taskId = null, omitMaterials = []) {
     this.reset()
     this.omitMaterials.replace(omitMaterials)

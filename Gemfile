@@ -113,16 +113,15 @@ gem 'rollbar'
 gem 'fast_jsonapi'
 
 # File attachment
+gem 'aws-sdk-s3', '~> 1.2'
 gem 'shrine', '~> 2.12'
 gem 'shrine-mongoid'
-gem 'aws-sdk-s3', '~> 1.2'
 
 # Authorization
 gem 'pundit'
 
 # Model state machine
 gem 'aasm'
-
 
 gem 'redis'
 gem 'sidekiq'

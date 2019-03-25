@@ -31,7 +31,7 @@ class Api::V1::NonSalesItemsController < Api::V1::BaseApiController
   end
 
   def item_to_serialize(catalogue_type:, id:, event_types:)
-    result = Inventory::QueryNonSalesItems.call(type: catalogue_type, id: id, event_types: event_types).result
+    result = Inventory::QueryNonSalesItems.call(type: catalogue_type, id: id, event_types: event_types, facility_id: params[:facility_id]).result
     item_transactions = result[:item_transactions]
     vendor_invoice_items = result[:vendor_invoice_items]
     additional_fields = [:vendor_invoice, :vendor, :purchase_order]

@@ -2,7 +2,7 @@ import nonSalesItemStore from '../store/NonSalesItemStore'
 import { httpGetOptions } from '../../../utils'
 
 export default function loadNonSalesItems(facility_id = null) {
-  return fetch('/api/v1/non_sales_items', httpGetOptions)
+  return fetch(`/api/v1/non_sales_items?facility_id=${facility_id}`, httpGetOptions)
     .then(response => {
       return response.json().then(data => ({
         status: response.status,

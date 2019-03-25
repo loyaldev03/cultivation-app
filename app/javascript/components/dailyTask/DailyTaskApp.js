@@ -93,6 +93,23 @@ class DailyTaskApp extends React.Component {
             }
           }}
         />
+        <SlidePanel
+          width="500px"
+          show={sidebarName === 'clip_pot_tag'}
+          renderBody={props => {
+            if (sidebarName === 'clip_pot_tag') {
+              return (
+                <div className="flex flex-column h-100">
+                  <SlidePanelHeader
+                    onClose={() => dailyTaskSidebarStore.closeSidebar()}
+                    title={'Create plant ID after clipping'}
+                  />
+                  <div className="flex flex-column flex-auto justify-between">
+                    HERE IS MY CLIP SPECIAL TASK
+
+                    <SlidePanelFooter
+                      onSave={() => dailyTaskSidebarStore.closeSidebar()}
+                      onCancel={() => dailyTaskSidebarStore.closeSidebar()}
                     />
                   </div>
                 </div>

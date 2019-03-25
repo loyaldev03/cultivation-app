@@ -602,21 +602,6 @@ class ConvertProductEditor extends React.Component {
             </div>
           </div>
 
-          <div className="ph4 mb3 flex">
-            <div className="w-100">
-              <LocationPicker
-                key={this.props.facility_id}
-                mode="facility"
-                onChange={this.onFacilityChanged}
-                isDisabled={hasProductId}
-                locations={locations}
-                facility_id={this.props.facility_id}
-                location_id={this.props.facility_id}
-              />
-              <FieldError errors={this.state.errors} field="location_id" />
-            </div>
-          </div>
-
           <hr className="mt3 m b--light-gray w-100" />
 
           <div className="ph4 mt3 mb3 flex">

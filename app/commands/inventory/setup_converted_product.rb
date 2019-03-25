@@ -123,7 +123,7 @@ module Inventory
     end
 
     def save_packages!(product)
-      if id.blank? #or (id && product.packages.find(id).nil?) # check if id blank and if id exist but package doesnt exist (change product)
+      if id.blank?
         packages = create_packages!(product)
       else
         packages = update_package!(product)
@@ -153,7 +153,8 @@ module Inventory
     end
 
     def update_package!(product)
-      package = product.packages.find(id)
+      package = Inventory::ItemTransaction.find(id)
+      package.product_id = product.id
       package.facility_id = facility_id
       package.catalogue_id = catalogue_id
       package.package_tag = package_tags.strip

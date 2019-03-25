@@ -51,7 +51,6 @@ class NutrientEntryForm extends React.Component {
           <tbody className="lh-copy">
             {fields.map(f => (
               <tr key={f.id} className="nutrient-form__group">
-                {/* <label className="nutrient-form__label"> */}
                 {fieldType === 'checkboxes' && (
                   <React.Fragment>
                     <td>{f.product_name}</td>
@@ -70,7 +69,6 @@ class NutrientEntryForm extends React.Component {
                     </td>
                   </React.Fragment>
                 )}
-                {/* </label> */}
               </tr>
             ))}
           </tbody>

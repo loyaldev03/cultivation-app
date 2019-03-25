@@ -91,7 +91,7 @@ class HarvestbatchSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadHarvests()
+    loadHarvests(this.props.facility_id)
   }
 
   openSidebar() {

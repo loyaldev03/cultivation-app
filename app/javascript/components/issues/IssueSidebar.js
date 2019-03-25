@@ -7,17 +7,17 @@ import IssueDetails from './components/IssueDetails'
 import IssueHeader from './components/IssueHeader'
 import currentIssueStore from './store/CurrentIssueStore'
 import getIssue from './actions/getIssue'
-import dailyTaskSidebarStore from '../dailyTask/stores/SidebarStore'
+import SidebarStore from '../dailyTask/stores/SidebarStore'
 @observer
 class IssueSidebar extends React.Component {
   state = this.resetState()
 
   componentDidMount() {
-    observe(dailyTaskSidebarStore, 'showIssues', change => {
+    observe(SidebarStore, 'showIssues', change => {
       if (change.newValue) {
-        const issueId = dailyTaskSidebarStore.issueId
-        const mode = dailyTaskSidebarStore.issueMode
-        const dailyTask = dailyTaskSidebarStore.dailyTask
+        const issueId = SidebarStore.issueId
+        const mode = SidebarStore.issueMode
+        const dailyTask = SidebarStore.dailyTask
         if (issueId) {
           getIssue(issueId)
         } else if (mode === 'create') {
@@ -55,8 +55,7 @@ class IssueSidebar extends React.Component {
       this.setState({ mode: 'details' })
     } else {
       currentIssueStore.reset()
-      dailyTaskSidebarStore.closeIssues()
-      // window.editorSidebar.close()
+      SidebarStore.closeSidebar()
     }
   }
 

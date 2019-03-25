@@ -1,31 +1,30 @@
 import React from 'react'
 import { toJS } from 'mobx'
 import { SlidePanelHeader, SlidePanelFooter } from '../../utils'
-import dailyTaskSidebarStore from '../stores/SidebarStore'
-import dailyTasksStore from '../stores/DailyTasksStore'
+import SidebarStore from '../stores/SidebarStore'
+import DailyTasksStore from '../stores/DailyTasksStore'
 
 class IssueEditor extends React.Component {
   componentDidMount() {
-    dailyTaskSidebarStore.showIssues.observe(change => {
-      console.log('notes changing')
+    SidebarStore.showIssues.observe(change => {
       if (change.newValue) {
-        this.setBody(dailyTaskSidebarStore.noteBody)
+        this.setBody(SidebarStore.noteBody)
       }
     })
   }
 
   onSave = () => {
-    const taskId = dailyTaskSidebarStore.taskId
-    const noteId = dailyTaskSidebarStore.noteId
+    const taskId = SidebarStore.taskId
+    const noteId = SidebarStore.noteId
     const body = this.inputText.value
     this.inputText.value = ''
 
-    dailyTasksStore.editNote(taskId, noteId, body)
-    dailyTaskSidebarStore.closeNotes()
+    DailyTasksStore.editNote(taskId, noteId, body)
+    SidebarStore.closeSidebar()
   }
 
   onClose = () => {
-    dailyTaskSidebarStore.closeNotes()
+    SidebarStore.closeSidebar()
   }
 
   setBody = body => {
@@ -34,7 +33,7 @@ class IssueEditor extends React.Component {
 
   render() {
     const { onClose, onSave } = this.props
-    const title = dailyTaskSidebarStore.noteId ? 'Update Note' : 'Issue Detail'
+    const title = SidebarStore.noteId ? 'Update Note' : 'Issue Detail'
 
     return (
       <div className="flex flex-column h-100">

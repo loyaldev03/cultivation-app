@@ -89,11 +89,6 @@ class SidebarStore {
 
     this.showIssues = true
   }
-
-  @action
-  closeIssues() {
-    this.reset()
-  }
 }
 
 const sidebar = new SidebarStore()

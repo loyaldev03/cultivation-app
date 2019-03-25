@@ -36,7 +36,7 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
   end
 
   def converted_products
-    items = Inventory::ItemTransaction.includes(:product, :catalogue).
+    items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue).
       in(catalogue: sales_catalogue_ids(Constants::CONVERTED_PRODUCT_KEY)).
       order(c_at: :desc)
     render json: Inventory::HarvestPackageSerializer.new(items).serialized_json

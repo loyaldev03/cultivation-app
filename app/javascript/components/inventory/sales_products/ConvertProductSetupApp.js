@@ -90,7 +90,7 @@ class ConvertProductSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadProducts()
+    loadProducts(this.props.facility_id)
   }
 
   onAddRecord = () => {
@@ -127,6 +127,7 @@ class ConvertProductSetupApp extends React.Component {
           sales_catalogue={this.props.sales_catalogue}
           breakdown_uoms={this.props.breakdown_uoms}
           scanditLicense={this.props.scanditLicense}
+          facility_id={this.props.facility_id}
         />
       </div>
     )

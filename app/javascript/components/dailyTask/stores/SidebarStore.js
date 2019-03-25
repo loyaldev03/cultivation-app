@@ -58,11 +58,6 @@ class SidebarStore {
   }
 
   @action
-  closeMaterialUsed() {
-    this.reset()
-  }
-
-  @action
   toggleIssues(batchId = null, taskId = null) {
     this.showNotes = false
     this.showMaterialUsed = false

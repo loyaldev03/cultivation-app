@@ -11,10 +11,6 @@ class MaterialUsedRow extends React.PureComponent {
     }
   }
 
-  componentDidMount() {
-    console.log(this.props)
-  }
-
   onInputChange = event => {
     this.setState({
       [event.target.attributes.name.value]: event.target.value,

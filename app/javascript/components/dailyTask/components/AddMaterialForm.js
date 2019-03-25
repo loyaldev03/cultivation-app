@@ -42,7 +42,7 @@ class AddMaterialForm extends React.Component {
 
   onClose = () => {
     this.setState({ materials: [], product: null })
-    sidebarStore.closeMaterialUsed()
+    sidebarStore.closeSidebar()
   }
 
   onChangeProduct = product => {
@@ -84,8 +84,7 @@ class AddMaterialForm extends React.Component {
       items
     )
     this.setState({ materials: [], product: null })
-    sidebarStore.closeMaterialUsed()
-    // event.preventDefault()
+    sidebarStore.closeSidebar()
   }
 
   handleInputChange = newValue => {

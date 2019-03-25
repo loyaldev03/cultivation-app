@@ -267,10 +267,9 @@ class NonSalesItemEditor extends React.Component {
           product_id: '',
           manufacturer: '',
           description: '',
-          catalogue: {label: '', value: '', uoms: []}
+          catalogue: { label: '', value: '', uoms: [] }
         })
       } else {
-
         const catalogueOptions = this.props.catalogues.result.map(x => ({
           value: x.value,
           label: x.label,
@@ -280,7 +279,6 @@ class NonSalesItemEditor extends React.Component {
         const catalogue = catalogueOptions.find(
           x => x.value == product.catalogue_id
         )
-
 
         this.setState({
           product,

@@ -319,13 +319,15 @@ export default class HarvestBatchEditor extends React.Component {
 
         <div className="pl2 flex-column flex justify-end">
           <a
-            className="ba tc b--gray br2 link"
-            index={index}
             href="#"
-            style={{ height: '34px', width: '25px', lineHeight: '2em' }}
-            onClick={this.onRemovePlant}
+            style={{ height: '34px', width: '25px', lineHeight: '2.5em' }}
           >
-            -
+            <i 
+              className="material-icons gray md-18 pointer dim child" 
+              index={index}
+              onClick={this.onRemovePlant}>
+              delete_outline
+            </i>
           </a>
         </div>
       </div>
@@ -530,7 +532,7 @@ export default class HarvestBatchEditor extends React.Component {
               <LocationPicker
                 key={facility_strain_id}
                 mode="dry"
-                facility_id={facility_id}
+                facility_id={this.props.facility_id}
                 locations={locations}
                 location_id={this.state.location_id}
                 onChange={this.onLocationChanged}

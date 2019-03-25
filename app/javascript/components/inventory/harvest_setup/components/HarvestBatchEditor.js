@@ -322,10 +322,11 @@ export default class HarvestBatchEditor extends React.Component {
             href="#"
             style={{ height: '34px', width: '25px', lineHeight: '2.5em' }}
           >
-            <i 
-              className="material-icons gray md-18 pointer dim child" 
+            <i
+              className="material-icons gray md-18 pointer dim child"
               index={index}
-              onClick={this.onRemovePlant}>
+              onClick={this.onRemovePlant}
+            >
               delete_outline
             </i>
           </a>

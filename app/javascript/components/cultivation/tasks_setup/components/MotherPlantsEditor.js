@@ -99,10 +99,11 @@ export default class MotherPlantsEditor extends React.Component {
                     <td className="pa1">{plant.attributes.location_name}</td>
                     <td className="pa1 flex justify-center">
                       <i
-                        className="material-icons icon--small red pointer"
+                        title="Delete"
+                        className="material-icons icon--small pointer"
                         onClick={() => this.onDelete(p.plant_id)}
                       >
-                        delete
+                        delete_outline
                       </i>
                     </td>
                   </tr>

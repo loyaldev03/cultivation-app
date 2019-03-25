@@ -83,9 +83,9 @@ RSpec.describe Cultivation::SaveTrayPlans, type: :command do
               tray_capacity: 3,
               tray_code: clone_tray1.code.to_s,
               tray_id: clone_tray1.id.to_s,
-            }
-          ]
-        }
+            },
+          ],
+        },
       ]
     end
 
@@ -167,9 +167,9 @@ RSpec.describe Cultivation::SaveTrayPlans, type: :command do
               tray_capacity: 5,
               tray_code: clone_tray2.code.to_s,
               tray_id: clone_tray2.id.to_s,
-            }
-          ]
-        }
+            },
+          ],
+        },
       ]
     end
 

@@ -123,7 +123,7 @@ module Inventory
     end
 
     def save_packages!(product)
-      if id.blank? or (id && product.packages.find(id).nil?) # check if id blank and if id exist but package doesnt exist (change product)
+      if id.blank? #or (id && product.packages.find(id).nil?) # check if id blank and if id exist but package doesnt exist (change product)
         packages = create_packages!(product)
       else
         packages = update_package!(product)

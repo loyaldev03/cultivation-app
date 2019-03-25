@@ -125,7 +125,7 @@ class ConvertProductEditor extends React.Component {
     if (coalese(product) !== false && product.__isNew__) {
       this.setState({
         product_id: '',
-        product,
+        product
       })
     } else if (coalese(product) !== false) {
       this.setState({
@@ -506,7 +506,9 @@ class ConvertProductEditor extends React.Component {
     inputValue = inputValue || ''
 
     return fetch(
-      `/api/v1/sales_products/products?facility_id=${this.props.facility_id}&type=converted_product&filter=${inputValue}`,
+      `/api/v1/sales_products/products?facility_id=${
+        this.props.facility_id
+      }&type=converted_product&filter=${inputValue}`,
       {
         credentials: 'include'
       }

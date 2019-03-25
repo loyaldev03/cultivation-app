@@ -10,3 +10,12 @@
   border: 1px solid $orange;
   box-shadow: 0 0 5px rgba(241, 93, 42, 1);
 }
+
+.input--with-icon {
+  padding-right: 2em;
+}
+
+.input__icon {
+  margin-left: -2em;
+  cursor: pointer;
+}

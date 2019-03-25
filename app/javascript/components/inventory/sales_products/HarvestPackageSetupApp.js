@@ -125,7 +125,7 @@ class HarvestPackageSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadHarvestPackages()
+    loadHarvestPackages(this.props.facility_id)
   }
 
   onAddRecord = () => {
@@ -166,6 +166,7 @@ class HarvestPackageSetupApp extends React.Component {
             drawdown_uoms={this.props.drawdown_uoms}
             harvest_batches={this.props.harvest_batches}
             sales_catalogue={this.props.sales_catalogue}
+            facility_id={this.props.facility_id}
           />
         </div>
       </React.Fragment>

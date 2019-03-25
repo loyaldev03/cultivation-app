@@ -94,7 +94,7 @@ class FlowerSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadPlants('flower')
+    loadPlants('flower', '', this.props.facility_id)
   }
 
   openSidebar() {
@@ -106,13 +106,13 @@ class FlowerSetupApp extends React.Component {
       <React.Fragment>
         <div className="w-100 bg-white pa3">
           <div className="flex mb4 mt2">
-            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Vegs</h1>
+            <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Flowers</h1>
             <div style={{ justifySelf: 'end' }}>
               <button
                 className="pv2 ph3 bg-orange white bn br2 ttc link dim f6 fw6 pointer"
                 onClick={this.openSidebar}
               >
-                Add vegs
+                Add Flowers
               </button>
             </div>
           </div>
@@ -134,6 +134,7 @@ class FlowerSetupApp extends React.Component {
           cultivation_batches={this.props.cultivation_batches}
           locations={this.props.locations}
           scanditLicense={this.props.scanditLicense}
+          facility_id = {this.props.facility_id}
         />
       </React.Fragment>
     )

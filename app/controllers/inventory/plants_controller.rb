@@ -24,7 +24,7 @@ class Inventory::PlantsController < ApplicationController
   end
 
   def harvest_batches
-    cultivation_batches = Cultivation::Batch.includes(:facility_strain, :tasks).in(current_growth_stage: ['dry', 'cure'])
+    cultivation_batches = Cultivation::Batch.includes(:facility_strain, :tasks).where(facility_id: params[:facility_id]).in(current_growth_stage: ['dry', 'cure'])
     @cultivation_batches = BatchSerializer.new(cultivation_batches, params: {exclude_tasks: true}).serializable_hash[:data]
     @uoms = Common::UnitOfMeasure.where(dimension: 'weight').map &:unit
   end

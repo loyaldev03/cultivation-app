@@ -1,9 +1,12 @@
 import batchStore from '../store/HarvestBatchStore'
 import { httpGetOptions } from '../../../utils'
 
-const loadHarvests = () => {
+const loadHarvests = facility_id => {
   batchStore.isLoading = true
-  return fetch('/api/v1/plants/harvests', httpGetOptions)
+  return fetch(
+    `/api/v1/plants/harvests?facility_id=${facility_id}`,
+    httpGetOptions
+  )
     .then(response => {
       return response.json().then(data => ({
         status: response.status,

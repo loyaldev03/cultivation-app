@@ -67,7 +67,8 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   end
 
   def harvests
-    batches = Inventory::HarvestBatch.includes(:cultivation_batch, :facility_strain, :plants).all.order(c_at: :desc)
+    facility_strains_ids = Inventory::FacilityStrain.where(facility_id: params[:facility_id]).pluck(:id)
+    batches = Inventory::HarvestBatch.in(facility_strain_id: facility_strains_ids).includes(:cultivation_batch, :facility_strain, :plants).order(c_at: :desc)
     render json: Inventory::HarvestBatchSerializer.new(batches).serialized_json
   end
 

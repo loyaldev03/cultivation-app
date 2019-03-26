@@ -38,13 +38,13 @@ class NutrientEntryForm extends React.Component {
     if (!fields || !fieldType) return null
     return (
       <div className={`${className}`}>
-        <table className="w-100 ttc f6 gray">
+        <table className="w-100 ttc gray">
           <thead>
-            <tr className="b">
-              <th className="bb b--light-grey tl w5">Product Name</th>
-              <th className="bb b--light-grey">PPM</th>
-              <th className="bb b--light-grey">Amt</th>
-              <th className="bb b--light-grey">UoM</th>
+            <tr className="f6">
+              <th className="tl w5">Product Name</th>
+              <th className="w4 tr">PPM</th>
+              <th className="w4 tr">Amt</th>
+              <th className="w4 tc">UoM</th>
               <th className="" />
             </tr>
           </thead>
@@ -53,13 +53,11 @@ class NutrientEntryForm extends React.Component {
               <tr key={f.id} className="nutrient-form__group">
                 {fieldType === 'checkboxes' && (
                   <React.Fragment>
-                    <td>{f.product_name}</td>
-
-                    <td className="tr">{f.ppm}</td>
-
-                    <td className="tr">{f.quantity}</td>
-                    <td className="">{f.uom}</td>
-                    <td>
+                    <td className="tl v-top">{f.product_name}</td>
+                    <td className="tr v-top">{f.ppm}</td>
+                    <td className="tr v-top">{f.quantity}</td>
+                    <td className="tc v-top">{f.uom}</td>
+                    <td className="v-top">
                       <input
                         type="checkbox"
                         className="nutrient-form__input"

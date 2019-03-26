@@ -26,24 +26,24 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
 
     catalogue_ids = sales_catalogue_ids(type)
     products = []
-
+    products = Inventory::Product.where(facility_id: params[:facility_id]).in(catalogue: catalogue_ids)
     if params[:filter].blank?
-      products = Inventory::Product.in(catalogue: catalogue_ids).limit(7).order(name: :asc)
+      products = products.limit(7).order(name: :asc)
     else
-      products = Inventory::Product.in(catalogue: catalogue_ids).where(:name => /^#{params[:filter]}/i).limit(7).order(name: :asc)
+      products = products.where(:name => /^#{params[:filter]}/i).limit(7).order(name: :asc)
     end
     render json: Inventory::ProductSerializer.new(products).serialized_json
   end
 
   def converted_products
-    items = Inventory::ItemTransaction.includes(:product, :catalogue).
+    items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue).
       in(catalogue: sales_catalogue_ids(Constants::CONVERTED_PRODUCT_KEY)).
       order(c_at: :desc)
     render json: Inventory::HarvestPackageSerializer.new(items).serialized_json
   end
 
   def harvest_packages
-    items = Inventory::ItemTransaction.includes(:product, :catalogue, :harvest_batch).
+    items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue, :harvest_batch).
       in(catalogue: sales_catalogue_ids('raw_sales_product')).
       order(c_at: :desc)
     render json: Inventory::HarvestPackageSerializer.new(items).serialized_json

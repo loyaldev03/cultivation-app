@@ -153,7 +153,8 @@ module Inventory
     end
 
     def update_package!(product)
-      package = product.packages.find(id)
+      package = Inventory::ItemTransaction.find(id)
+      package.product_id = product.id
       package.facility_id = facility_id
       package.catalogue_id = catalogue_id
       package.package_tag = package_tags.strip

@@ -7,19 +7,27 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     facility_id = Cultivation::Batch.find(params[:batch_id].to_s).facility_id if params[:batch_id]
     facility_strain_id = params[:facility_strain_id].to_s
 
-    #same as query in products index, query_raw_material_with_relationship, should move to cmd ?
-    special_type = ['seeds', 'purchased_clones', 'nutrients']
-    catalogue_ids = if special_type.include?(category)
-                      # find parent only one
-                      Inventory::Catalogue.raw_materials.where(
-                        key: category,
-                      ).pluck(:id)
-                    else
-                      # find catalogue for other than parent, parent will never have category type
-                      Inventory::Catalogue.raw_materials.where(
-                        category: category,
-                      ).pluck(:id)
-                    end
+    if type == 'raw_materials'
+      #same as query in products index, query_raw_material_with_relationship, should move to cmd ?
+      special_type = ['seeds', 'purchased_clones', 'nutrients']
+      catalogue_ids = if special_type.include?(category)
+                        # find parent only one
+                        Inventory::Catalogue.raw_materials.where(
+                          key: category,
+                        ).pluck(:id)
+                      else
+                        # find catalogue for other than parent, parent will never have category type
+                        Inventory::Catalogue.raw_materials.where(
+                          category: category,
+                        ).pluck(:id)
+                      end
+    end
+
+    if type == 'non_sales'
+      catalogue_ids = Inventory::Catalogue.non_sales.where(
+        category: category,
+      ).pluck(:id)
+    end
 
     products = []
     if catalogue_ids.blank?

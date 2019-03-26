@@ -8,7 +8,7 @@ class Inventory::NonSalesItemsController < ApplicationController
   private
 
   def setup_editor_data
-    @locations = QueryAllValidFacilityLocations.call().result
+    @locations = QueryAllValidFacilityLocations.call(facility_id: params[:facility_id]).result
     @order_uoms = Common::UnitOfMeasure.where(:dimension.in => %w(piece weight volume)).pluck(:unit)
   end
 end

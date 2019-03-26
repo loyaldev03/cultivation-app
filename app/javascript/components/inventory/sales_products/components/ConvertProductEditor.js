@@ -25,28 +25,6 @@ const handleInputChange = newValue => {
   return newValue ? newValue : ''
 }
 
-const loadProducts = inputValue => {
-  inputValue = inputValue || ''
-
-  return fetch(
-    '/api/v1/sales_products/products?type=converted_product&filter=' +
-      inputValue,
-    {
-      credentials: 'include'
-    }
-  )
-    .then(response => response.json())
-    .then(data => {
-      const products = data.data.map(x => ({
-        label: x.attributes.name,
-        value: x.attributes.id,
-        ...x.attributes
-      }))
-
-      return products
-    })
-}
-
 class ConvertProductEditor extends React.Component {
   constructor(props) {
     super(props)
@@ -119,7 +97,7 @@ class ConvertProductEditor extends React.Component {
               sku: attr.product.sku,
               transaction_limit: attr.product.transaction_limit || '',
               catalogue: catalogue,
-              facility_id: attr.product.facility_id,
+              facility_id: this.props.facility_id,
               package_tags: attr.package_tag,
               quantity: attr.quantity,
               uom: uom,
@@ -147,8 +125,7 @@ class ConvertProductEditor extends React.Component {
     if (coalese(product) !== false && product.__isNew__) {
       this.setState({
         product_id: '',
-        product,
-        facility_id: ''
+        product
       })
     } else if (coalese(product) !== false) {
       this.setState({
@@ -158,7 +135,6 @@ class ConvertProductEditor extends React.Component {
         catalogue: this.props.sales_catalogue.find(
           x => x.value === product.catalogue_id
         ),
-        facility_id: product.facility_id,
         transaction_limit: product.transaction_limit || ''
       })
     } else {
@@ -297,7 +273,6 @@ class ConvertProductEditor extends React.Component {
       id,
       sku,
       catalogue,
-      facility_id,
       package_tags,
       quantity,
       production_date,
@@ -308,6 +283,7 @@ class ConvertProductEditor extends React.Component {
       isMultiPackage
     } = this.state
 
+    let facility_id = this.props.facility_id
     let { product, product_id, end_package_tag, breakdowns, uom } = this.state
     let name = '',
       errors = {}
@@ -526,6 +502,29 @@ class ConvertProductEditor extends React.Component {
     )
   }
 
+  loadProducts = inputValue => {
+    inputValue = inputValue || ''
+
+    return fetch(
+      `/api/v1/sales_products/products?facility_id=${
+        this.props.facility_id
+      }&type=converted_product&filter=${inputValue}`,
+      {
+        credentials: 'include'
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        const products = data.data.map(x => ({
+          label: x.attributes.name,
+          value: x.attributes.id,
+          ...x.attributes
+        }))
+
+        return products
+      })
+  }
+
   render() {
     const { locations, sales_catalogue } = this.props
     const uoms = this.state.catalogue
@@ -569,7 +568,7 @@ class ConvertProductEditor extends React.Component {
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
                 placeholder="Search..."
-                loadOptions={loadProducts}
+                loadOptions={this.loadProducts}
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
                 value={this.state.product}
@@ -600,21 +599,6 @@ class ConvertProductEditor extends React.Component {
                 isDisabled={hasProductId}
               />
               <FieldError errors={this.state.errors} field="catalogue_id" />
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-100">
-              <LocationPicker
-                key={this.state.facility_id}
-                mode="facility"
-                onChange={this.onFacilityChanged}
-                isDisabled={hasProductId}
-                locations={locations}
-                facility_id={this.state.facility_id}
-                location_id={this.state.facility_id}
-              />
-              <FieldError errors={this.state.errors} field="location_id" />
             </div>
           </div>
 
@@ -731,11 +715,11 @@ class ConvertProductEditor extends React.Component {
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <LocationPicker
-                key={this.state.facility_id}
+                key={this.props.facility_id}
                 mode="sales"
                 onChange={this.onRoomChanged}
                 locations={locations}
-                facility_id={this.state.facility_id}
+                facility_id={this.props.facility_id}
                 location_id={this.state.location_id}
               />
               <FieldError errors={this.state.errors} field="location_id" />

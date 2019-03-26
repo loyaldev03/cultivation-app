@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import React from 'react'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
@@ -89,7 +90,7 @@ class NonSalesItemsSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadNonSalesItems()
+    loadNonSalesItems(this.props.facility_id)
   }
 
   onAddRecord = () => {
@@ -137,6 +138,7 @@ class NonSalesItemsSetupApp extends React.Component {
           locations={this.props.locations}
           order_uoms={this.props.order_uoms}
           catalogues={this.props.catalogues}
+          facility_id={this.props.facility_id}
         />
       </React.Fragment>
     )

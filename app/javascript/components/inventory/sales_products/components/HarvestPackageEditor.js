@@ -27,28 +27,6 @@ const handleInputChange = newValue => {
   return newValue ? newValue : ''
 }
 
-const loadProducts = inputValue => {
-  inputValue = inputValue || ''
-
-  return fetch(
-    '/api/v1/sales_products/products?type=raw_sales_product&filter=' +
-      inputValue,
-    {
-      credentials: 'include'
-    }
-  )
-    .then(response => response.json())
-    .then(data => {
-      const products = data.data.map(x => ({
-        label: x.attributes.name,
-        value: x.attributes.id,
-        ...x.attributes
-      }))
-
-      return products
-    })
-}
-
 class HarvestPackageEditor extends React.Component {
   constructor(props) {
     super(props)
@@ -365,6 +343,28 @@ class HarvestPackageEditor extends React.Component {
     }
   }
 
+  loadProducts = inputValue => {
+    inputValue = inputValue || ''
+    return fetch(
+      `/api/v1/sales_products/products?facility_id=${
+        this.props.facility_id
+      }&type=raw_sales_product&filter=${inputValue}`,
+      {
+        credentials: 'include'
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        const products = data.data.map(x => ({
+          label: x.attributes.name,
+          value: x.attributes.id,
+          ...x.attributes
+        }))
+
+        return products
+      })
+  }
+
   render() {
     const {
       locations,
@@ -382,7 +382,7 @@ class HarvestPackageEditor extends React.Component {
 
     const harvestOptions = harvest_batches
       .map(x => ({ id: x.id, ...x.attributes }))
-      .filter(x => x.facility.id === this.state.facility_id)
+      .filter(x => x.facility.id === this.props.facility_id)
       .map(x => ({
         value: x.id,
         label: `${x.harvest_name} (${x.strain_name})`,
@@ -425,7 +425,7 @@ class HarvestPackageEditor extends React.Component {
                 isClearable
                 noOptionsMessage={() => 'Type to search product...'}
                 placeholder="Search..."
-                loadOptions={loadProducts}
+                loadOptions={this.loadProducts}
                 onInputChange={handleInputChange}
                 styles={reactSelectStyle}
                 value={this.state.product}
@@ -574,7 +574,7 @@ class HarvestPackageEditor extends React.Component {
                 mode="storage"
                 onChange={this.onRoomChanged}
                 locations={locations}
-                facility_id={this.state.facility_id}
+                facility_id={this.props.facility_id}
                 location_id={this.state.location_id}
               />
               <FieldError errors={this.state.errors} field="location_id" />
@@ -594,7 +594,7 @@ class HarvestPackageEditor extends React.Component {
               <label className="f6 fw6 db mb1 gray ttc">Harvest name</label>
               <Creatable
                 isClearable
-                key={this.state.facility_id}
+                key={this.props.facility_id}
                 options={harvestOptions}
                 value={this.state.harvest_batch}
                 onChange={this.onHarvestBatchChanged}

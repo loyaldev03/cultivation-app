@@ -1,21 +1,21 @@
 import React, { useState } from 'react'
 import SidebarStore from '../stores/SidebarStore'
-import { SlidePanelHeader } from '../../utils'
-import barcodeImage from '../../../images/barcode.svg'
-
-const InputBarcode = ({ autoFocus = false }) => (
-  <div className="flex items-center">
-    <input
-      type="text"
-      className="w5 input input--with-icon"
-      autoFocus={autoFocus}
-    />
-    <img className="input__icon" src={barcodeImage} alt="Scan barcode" />
-  </div>
-)
+import { InputBarcode, SlidePanelHeader } from '../../utils'
 
 const ExpandableRow = () => {
+  let clippingInput = null
   const [expand, setExpand] = useState(false)
+  const onScanMother = e => {
+    if (e.key === 'Enter') {
+      console.log('onScanMother')
+      clippingInput.focus()
+    }
+  }
+  const onScanClipping = e => {
+    if (e.key === 'Enter') {
+      console.log('onScanClipping')
+    }
+  }
   return (
     <React.Fragment>
       <div className="flex items-center pv1">
@@ -37,12 +37,15 @@ const ExpandableRow = () => {
           <div className="pa2 w-100">
             <div className="pt2 pb3">
               <label className="db pb1">Scan mother plant: </label>
-              <InputBarcode autoFocus={true} />
+              <InputBarcode autoFocus={true} onKeyPress={onScanMother} />
             </div>
             <div className="pb3">
               <label className="db pb1">Scan each clipping: </label>
               <div className="flex justify-between">
-                <InputBarcode />
+                <InputBarcode
+                  inputRef={input => (clippingInput = input)}
+                  onKeyPress={onScanClipping}
+                />
                 <a href="#0" className="btn btn--primary btn--small">
                   DONE
                 </a>

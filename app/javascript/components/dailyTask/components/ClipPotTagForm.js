@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import SidebarStore from '../stores/SidebarStore'
-import { SlidePanelHeader, SlidePanelFooter } from '../../utils'
+import { SlidePanelHeader } from '../../utils'
 import barcodeImage from '../../../images/barcode.svg'
 
 const InputBarcode = ({ autoFocus = false }) => (

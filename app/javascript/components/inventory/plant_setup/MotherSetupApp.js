@@ -92,7 +92,7 @@ class PlantSetupApp extends React.Component {
   componentDidMount() {
     const sidebarNode = document.querySelector('[data-role=sidebar]')
     window.editorSidebar.setup(sidebarNode)
-    loadPlants('mother')
+    loadPlants('mother', '', this.props.facility_id)
   }
 
   openSidebar() {

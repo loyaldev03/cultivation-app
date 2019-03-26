@@ -150,9 +150,9 @@ module Inventory
           catalogue_id: catalogue_id,
         )
       else
-        package = product.packages.find(id)
+        package = Inventory::ItemTransaction.find(id)
       end
-
+      package.product_id = product.id
       package.package_tag = package_tag
       package.quantity = quantity
       package.uom = uom

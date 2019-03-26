@@ -39,7 +39,6 @@ class NonSalesItemEditor extends React.Component {
             const catalogue = catalogueOptions.find(
               x => x.value == attr.catalogue_id
             )
-
             this.setState(
               {
                 ...this.resetState(),
@@ -51,7 +50,7 @@ class NonSalesItemEditor extends React.Component {
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer,
                 description: attr.description,
-                product: attr.product,
+                product: { label: attr.product_name, value: attr.product_name },
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
                 order_uom: { value: attr.order_uom, label: attr.order_uom },
@@ -66,7 +65,7 @@ class NonSalesItemEditor extends React.Component {
                 this.loadProducts(
                   '',
                   this.state.catalogue,
-                  this.state.facility_id
+                  this.props.facility_id
                 )
               }
             )
@@ -90,27 +89,12 @@ class NonSalesItemEditor extends React.Component {
     }
 
     this.setState(changes, () => {
-      this.loadProducts('', this.state.catalogue, this.state.facility_id)
+      this.loadProducts('', this.state.catalogue, this.props.facility_id)
     })
   }
 
   onNonSalesItemTypeSelected = item => {
-    let changes = { catalogue: item }
-
-    if (this.state.product_id.length > 0) {
-      changes = {
-        ...changes,
-        product_id: '',
-        product_name: '',
-        manufacturer: '',
-        description: '',
-        defaultProduct: []
-      }
-    }
-
-    this.setState(changes, () => {
-      this.loadProducts('', this.state.catalogue, this.state.facility_id)
-    })
+    this.setState({ catalogue: item })
   }
 
   onChangeGeneric = event => {
@@ -170,7 +154,6 @@ class NonSalesItemEditor extends React.Component {
   validateAndGetValues() {
     const {
       id,
-      facility_id,
       uom: { value: uom },
       qty_per_package,
       catalogue: { value: catalogue },
@@ -189,10 +172,7 @@ class NonSalesItemEditor extends React.Component {
     const quantity =
       parseFloat(this.state.order_quantity) *
       parseFloat(this.state.qty_per_package)
-
-    if (facility_id.length === 0) {
-      errors.facility_id = ['Facility is required.']
-    }
+    const facility_id = this.props.facility_id
 
     if (uom.length === 0) {
       errors.uom = ['Unit of measure is required.']
@@ -278,6 +258,7 @@ class NonSalesItemEditor extends React.Component {
   }
 
   onChangeProduct = product => {
+    console.log(product)
     if (product) {
       if (product.__isNew__) {
         this.setState({
@@ -285,15 +266,27 @@ class NonSalesItemEditor extends React.Component {
           product_name: product.value,
           product_id: '',
           manufacturer: '',
-          description: ''
+          description: '',
+          catalogue: { label: '', value: '', uoms: [] }
         })
       } else {
+        const catalogueOptions = this.props.catalogues.result.map(x => ({
+          value: x.value,
+          label: x.label,
+          uoms: x.uoms
+        }))
+
+        const catalogue = catalogueOptions.find(
+          x => x.value == product.catalogue_id
+        )
+
         this.setState({
           product,
           product_id: product.id,
           product_name: product.name,
           manufacturer: product.manufacturer,
-          description: product.description
+          description: product.description,
+          catalogue: catalogue
         })
       }
     } else {
@@ -301,7 +294,8 @@ class NonSalesItemEditor extends React.Component {
         product,
         product_id: '',
         manufacturer: '',
-        description: ''
+        description: '',
+        catalogue: { label: '', value: '', uoms: [] }
       })
     }
   }
@@ -342,35 +336,6 @@ class NonSalesItemEditor extends React.Component {
 
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
-              <LocationPicker
-                mode="facility"
-                onChange={this.onFacilityChanged}
-                locations={locations}
-                facility_id={this.state.facility_id}
-                location_id={this.state.facility_id}
-              />
-              <FieldError errors={this.state.errors} field="facility_id" />
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-40">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Non-sales Item Type
-              </label>
-              <Select
-                options={catalogueOptions}
-                value={this.state.catalogue}
-                onChange={this.onNonSalesItemTypeSelected}
-                styles={reactSelectStyle}
-              />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-
-          <div className="ph4 mb3 flex">
-            <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
               <AsyncCreatableSelect
                 isClearable
@@ -385,7 +350,7 @@ class NonSalesItemEditor extends React.Component {
                   this.loadProducts(
                     e,
                     this.state.catalogue,
-                    this.state.facility_id
+                    this.props.facility_id
                   )
                 }
                 onInputChange={handleInputChange}
@@ -404,7 +369,6 @@ class NonSalesItemEditor extends React.Component {
                 fieldname="manufacturer"
                 value={this.state.manufacturer}
                 onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
               />
             </div>
           </div>
@@ -417,7 +381,20 @@ class NonSalesItemEditor extends React.Component {
                 fieldname="description"
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
+              />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">
+                Non-sales Item Type
+              </label>
+              <Select
+                options={catalogueOptions}
+                value={this.state.catalogue}
+                onChange={this.onNonSalesItemTypeSelected}
+                styles={reactSelectStyle}
               />
             </div>
           </div>
@@ -521,24 +498,6 @@ class NonSalesItemEditor extends React.Component {
 
           <hr className="mt3 m b--light-gray w-100" />
 
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">
-                Where are they stored?
-              </label>
-              <LocationPicker
-                mode="storage"
-                locations={locations}
-                facility_id={this.state.facility_id}
-                onChange={x => this.setState({ location_id: x.rm_id })}
-                location_id={this.state.location_id}
-              />
-              <FieldError errors={this.state.errors} field="location_id" />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-
           <PurchaseInfo
             key={this.state.id}
             ref={this.purchaseInfoEditor}
@@ -548,6 +507,24 @@ class NonSalesItemEditor extends React.Component {
             vendor_invoice={this.state.vendor_invoice}
             showVendorLicense={false}
           />
+
+          <hr className="mt3 m b--light-gray w-100" />
+
+          <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">
+                Where are they stored?
+              </label>
+              <LocationPicker
+                mode="storage"
+                locations={locations}
+                facility_id={this.props.facility_id}
+                onChange={x => this.setState({ location_id: x.rm_id })}
+                location_id={this.state.location_id}
+              />
+              <FieldError errors={this.state.errors} field="location_id" />
+            </div>
+          </div>
 
           <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
             <a

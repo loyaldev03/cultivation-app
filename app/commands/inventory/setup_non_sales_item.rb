@@ -292,7 +292,15 @@ module Inventory
 
     def save_product
       if product_id.present?
-        return Inventory::Product.find(product_id)
+        product = Inventory::Product.find(product_id)
+        product.update(
+          name: product_name,
+          manufacturer: manufacturer,
+          description: description,
+          catalogue: catalogue,
+          facility: facility,
+        )
+        return product
       else
         return Inventory::Product.create!(
                  name: product_name,

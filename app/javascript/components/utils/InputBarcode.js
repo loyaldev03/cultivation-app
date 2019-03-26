@@ -8,7 +8,7 @@ const InputBarcode = ({
   onKeyPress,
   onBarcodeClick,
   autoFocus = false,
-  className = 'w5',
+  className = 'w5'
 }) => {
   return (
     <div className="flex items-center">
@@ -36,7 +36,7 @@ InputBarcode.propTypes = {
   onBarcodeClick: PropTypes.func,
   onKeyPress: PropTypes.func,
   autoFocus: PropTypes.bool,
-  className: PropTypes.string,
+  className: PropTypes.string
 }
 
 export { InputBarcode }

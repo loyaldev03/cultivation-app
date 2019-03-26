@@ -99,4 +99,22 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
 
     render json: Inventory::ProductSerializer.new(products).serialized_json
   end
+
+  def upc
+    body = {'upc' => params[:upc]}.to_json
+    url = 'https://api.upcitemdb.com/prod/trial/lookup'
+    url_temp = 'http://www.mocky.io/v2/5c99def83200004b00d90ac7'
+
+    response = RestClient.post(url_temp, body) { |response, request, result, &block|
+      Rails.logger.debug "Response Code => #{response.code}"
+      case response.code
+      when 200
+        Rails.logger.debug "Response => #{response.inspect}"
+        Rails.logger.debug "Response Body => #{response.body.inspect}"
+        render json: {data: JSON.parse(response.body)['items'][0]}
+      else
+        render json: {data: 'Error retrieving product'}
+      end
+    }
+  end
 end

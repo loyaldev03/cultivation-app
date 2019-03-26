@@ -8,6 +8,7 @@ import LocationPicker from '../../../utils/LocationPicker2'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
+import UpcStore from '../store/UpcStore'
 
 const handleInputChange = newValue => {
   return newValue ? newValue : ''
@@ -114,6 +115,7 @@ class NutrientEditor extends React.Component {
       product_id: '',
       product_name: '',
       manufacturer: '',
+      upc: '',
       description: '',
       product_size: '',
       product_uom: { label: '', value: '' },
@@ -389,6 +391,23 @@ class NutrientEditor extends React.Component {
     })
   }
 
+  handleKeyPress = async e => {
+    if (e.key === 'Enter') {
+      const product = await UpcStore.loadItem(this.state.upc)
+      if (product.brand) {
+        this.setState({
+          manufacturer: product.brand,
+          description: product.description,
+          product: { label: product.title, value: product.title }
+        })
+      }
+    }
+  }
+
+  handleChangeInput = event => {
+    this.setState({ upc: event.target.value })
+  }
+
   render() {
     const { facility_id, catalogue_id, locations } = this.props
     const {
@@ -484,6 +503,19 @@ class NutrientEditor extends React.Component {
                 fieldname="description"
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
+              />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">UPC</label>
+              <input
+                value={this.state.upc}
+                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
+                type="text"
+                onChange={this.handleChangeInput}
+                onKeyPress={this.handleKeyPress}
               />
             </div>
           </div>

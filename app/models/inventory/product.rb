@@ -18,6 +18,8 @@ module Inventory
     field :size, type: BigDecimal
     field :ppm, type: Integer
 
+    field :upc, type: String
+    field :model, type: String
     field :epa_number, type: String # => nutrients , supplements
 
     embeds_many :nutrients, as: :nutrition, class_name: 'Inventory::Nutrient'

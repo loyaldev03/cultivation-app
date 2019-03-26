@@ -109,8 +109,6 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
       Rails.logger.debug "Response Code => #{response.code}"
       case response.code
       when 200
-        Rails.logger.debug "Response => #{response.inspect}"
-        Rails.logger.debug "Response Body => #{response.body.inspect}"
         render json: {data: JSON.parse(response.body)['items'][0]}
       else
         render json: {data: 'Error retrieving product'}

@@ -61,7 +61,7 @@ class ClipPotTagForm extends React.Component {
         />
         <div className="flex flex-column flex-auto justify-between">
           <div className="pa3 flex flex-column grey">
-            <div className="flex f6 pv2">
+            <div className="flex f6 pv2 fw7">
               <span className="ph2 w-30 ml3">Mother Plant ID</span>
               <span className="ph2 w-30">Location</span>
               <span className="ph2 w-20"># of Clippings</span>

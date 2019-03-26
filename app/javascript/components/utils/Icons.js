@@ -4,5 +4,14 @@ import ImgDelete from '../../../assets/images/ic_delete.svg'
 import ImgPlant from '../../../assets/images/plant_icon.svg'
 import ImgTriangle from '../../../assets/images/ic_triangle.svg'
 import ImgPlantGrowth from '../../../assets/images/plant_grow.svg'
+import ImgBarcode from '../../../assets/images/barcode.svg'
 
-export { ImgAdd, ImgClear, ImgDelete, ImgPlant, ImgTriangle, ImgPlantGrowth }
+export {
+  ImgAdd,
+  ImgClear,
+  ImgDelete,
+  ImgPlant,
+  ImgTriangle,
+  ImgPlantGrowth,
+  ImgBarcode
+}

@@ -6,7 +6,6 @@ class SidebarStore {
   // Controls which sidebar is visible
   @observable showMaterialUsed = false
   @observable showNotes = false
-  @observable showAddNutrients = false
   @observable showIssues = false
   @observable omitMaterials = []
   @observable facilityId = null
@@ -17,6 +16,7 @@ class SidebarStore {
   @observable issueId = ''
   @observable issueMode = ''
   @observable dailyTask = null
+  @observable sidebarName = ''
 
   reset() {
     this.noteId = null
@@ -26,8 +26,8 @@ class SidebarStore {
     this.omitMaterials.clear()
     this.showNotes = false
     this.showMaterialUsed = false
-    this.showAddNutrients = false
     this.showIssues = false
+    this.sidebarName = ''
   }
 
   @action
@@ -38,13 +38,7 @@ class SidebarStore {
     this.taskId = taskId
     this.noteId = noteId
     this.noteBody = noteBody
-
     this.showNotes = true
-  }
-
-  @action
-  closeNotes() {
-    this.reset()
   }
 
   @action
@@ -59,11 +53,6 @@ class SidebarStore {
   }
 
   @action
-  closeMaterialUsed() {
-    this.reset()
-  }
-
-  @action
   toggleIssues(batchId = null, taskId = null) {
     this.showNotes = false
     this.showMaterialUsed = false
@@ -71,15 +60,19 @@ class SidebarStore {
   }
 
   @action
-  openNutirents(batchId, taskId) {
-    this.showAddNutrients = true
+  openSidebar(sidebarName, batchId, taskId) {
     this.batchId = batchId
     this.taskId = taskId
+    this.sidebarName = sidebarName
   }
+
+  @action
+  closeSidebar() {
+    this.reset()
+  }
+
   @action
   openIssues(id = null, mode = null, dailyTask = null, taskId, batchId) {
-    console.log(dailyTask)
-
     this.reset()
     this.issueId = id
     this.issueMode = mode
@@ -95,12 +88,6 @@ class SidebarStore {
     }
 
     this.showIssues = true
-    console.log(taskId, batchId)
-  }
-
-  @action
-  closeIssues() {
-    this.reset()
   }
 }
 

@@ -9,13 +9,12 @@ module.exports = {
     "settings": {
         "react": {
           "pragma": "React",
-          "version": "16.6.3",
+          "version": "16.8.5",
         },
     },
     "parserOptions": {
         "ecmaVersion": 6,
         "ecmaFeatures": {
-            "experimentalObjectRestSpread": true,
             "jsx": true
         },
         "sourceType": "module"
@@ -42,7 +41,8 @@ module.exports = {
             "never"
         ],
         "no-unused-vars": [
-            "error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": true }
+          "error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": true }
         ],
+        "react/jsx-uses-vars": 1,
     }
 };

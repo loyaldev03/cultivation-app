@@ -56,13 +56,11 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
 
   # Ruby code formatter (.rufo)
-  gem 'rufo', '~> 0.3.1', require: false
   gem 'rubocop', '~> 0.57.2', require: false
+  gem 'rufo', '~> 0.3.1', require: false
+
   # Format erb files
   gem 'htmlbeautifier'
-
-  # Run app with Procfile
-  gem 'foreman', '~> 0.85.0', require: false
 
   # Quickly switch user during development
   gem 'switch_user'
@@ -113,17 +111,11 @@ gem 'rollbar'
 gem 'fast_jsonapi'
 
 # File attachment
+gem 'aws-sdk-s3', '~> 1.2'
 gem 'shrine', '~> 2.12'
 gem 'shrine-mongoid'
-gem 'aws-sdk-s3', '~> 1.2'
 
-# Authorization
-gem 'pundit'
-
-# Model state machine
-gem 'aasm'
-
-
+# Background Job
 gem 'redis'
 gem 'sidekiq'
 gem 'sidekiq-cron'

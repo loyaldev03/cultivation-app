@@ -29,14 +29,14 @@ class TaskRow extends React.Component {
         DailyTaskStore.updateTimeLog('start', this.props.id)
         this.setState({ work_status: 'started' })
         if (status_before == 'stuck') {
-          toast(`Removed stuck status.`, 'success')
+          toast('Removed stuck status.', 'success')
         } else {
-          toast(`Start time recorded`, 'success')
+          toast('Start time recorded', 'success')
         }
       } else {
         DailyTaskStore.updateTimeLog('stop', this.props.id)
         this.setState({ work_status: 'stopped' })
-        toast(`End time recorded`, 'success')
+        toast('End time recorded', 'success')
       }
     }
   }
@@ -49,12 +49,12 @@ class TaskRow extends React.Component {
         ) {
           DailyTaskStore.updateTimeLog(action, this.props.id)
           this.setState({ work_status: action })
-          toast(`Status changed to done`, 'success')
+          toast('Status changed to done', 'success')
         }
       } else {
         DailyTaskStore.updateTimeLog(action, this.props.id)
         this.setState({ work_status: action })
-        toast(`Supervisor is notified.`, 'success')
+        toast('Supervisor is notified.', 'success')
       }
     }
   }

@@ -1,12 +1,23 @@
 .input {
-  height: 30px;
+  height: 2.15rem;
   padding: .2em .5em;
   border: 1px solid $lightGrey;
   border-radius: .25em;
+  color: #383838;
 }
 
 .input:focus {
   outline: none;
   border: 1px solid $orange;
-  box-shadow: 0 0 5px rgba(241, 93, 42, 1);
+  box-shadow: 0 0 2px rgba(241, 93, 42, 1);
+}
+
+.input--with-icon {
+  padding-right: 2.10em;
+}
+
+.input__icon {
+  margin-left: -2.10em;
+  cursor: pointer;
+  padding: 0.25em;
 }

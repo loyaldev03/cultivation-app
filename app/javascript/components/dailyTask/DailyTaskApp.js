@@ -1,45 +1,52 @@
 import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
-import { SlidePanel, formatDate3 } from '../utils/'
-
 import BatchedDailyTasks from './components/BatchedDailyTasks'
 import NoteEditor from './components/NoteEditor'
 import AddMaterialForm from './components/AddMaterialForm'
-
+import ClipPotTagForm from './components/ClipPotTagForm'
 import loadDailyTasks from './actions/loadDailyTasks'
-
-import dailyTasksStore from './stores/DailyTasksStore'
-import dailyTaskSidebarStore from './stores/SidebarStore'
-import materialUsedStore from './stores/MaterialUsedStore'
-
+import DailyTasksStore from './stores/DailyTasksStore'
+import MaterialUsedStore from './stores/MaterialUsedStore'
+import SidebarStore from './stores/SidebarStore'
 import dailyTaskSidebarAdaptor from './dailyTaskSidebarAdaptor'
 import IssueSidebar from '../issues/IssueSidebar2'
-import DailyTaskStore from './stores/DailyTasksStore'
 import NutrientEntryForm from '../utils/NutrientEntryForm'
-import { SlidePanelHeader, SlidePanelFooter } from '../utils'
+import {
+  formatDate3,
+  SlidePanel,
+  SlidePanelHeader,
+  SlidePanelFooter
+} from '../utils'
 
 @observer
 class DailyTaskApp extends React.Component {
   constructor(props) {
     super(props)
-    materialUsedStore.loadNutrientsCatalogue(this.props.nutrient_ids)
-    dailyTaskSidebarStore.facilityId = this.props.facility_id
+    MaterialUsedStore.loadNutrientsCatalogue(this.props.nutrient_ids)
+    SidebarStore.facilityId = this.props.facility_id
     loadDailyTasks()
   }
+  componentDidMount() {
+    SidebarStore.openSidebar(
+      'clip_pot_tag',
+      '5c9354718c24bdc68af413bd',
+      '5c9354728c24bdc68af413cf'
+    )
+  }
   onUpdateNutrients = nutrients => {
-    const { batchId, taskId } = dailyTaskSidebarStore
-    DailyTaskStore.updateNutrients(batchId, taskId, nutrients)
+    const { batchId, taskId } = SidebarStore
+    DailyTasksStore.updateNutrients(batchId, taskId, nutrients)
   }
   renderSlidePanel() {
     const {
       showMaterialUsed,
       showNotes,
       showIssues,
-      showAddNutrients,
+      sidebarName,
       batchId,
       taskId
-    } = dailyTaskSidebarStore
+    } = SidebarStore
     const IssueSideBarWithStore = dailyTaskSidebarAdaptor(
       IssueSidebar,
       this.props
@@ -63,19 +70,19 @@ class DailyTaskApp extends React.Component {
         />
         <SlidePanel
           width="500px"
-          show={showAddNutrients}
+          show={sidebarName === 'add_nutrient'}
           renderBody={props => {
-            if (showAddNutrients) {
+            if (sidebarName === 'add_nutrient') {
               return (
                 <div className="flex flex-column h-100">
                   <SlidePanelHeader
-                    onClose={() => dailyTaskSidebarStore.closeIssues()}
+                    onClose={() => SidebarStore.closeSidebar()}
                     title={'Add Nutrients:'}
                   />
                   <div className="flex flex-column flex-auto justify-between">
                     <NutrientEntryForm
                       className="ph4 pv3 w-100"
-                      fields={DailyTaskStore.getNutrientsByTask(
+                      fields={DailyTasksStore.getNutrientsByTask(
                         batchId,
                         taskId
                       )}
@@ -84,14 +91,21 @@ class DailyTaskApp extends React.Component {
                     />
 
                     <SlidePanelFooter
-                      onSave={() => dailyTaskSidebarStore.closeIssues()}
-                      onCancel={() => dailyTaskSidebarStore.closeIssues()}
+                      onSave={() => SidebarStore.closeSidebar()}
+                      onCancel={() => SidebarStore.closeSidebar()}
                     />
                   </div>
                 </div>
               )
             }
           }}
+        />
+        <SlidePanel
+          width="600px"
+          show={sidebarName === 'clip_pot_tag'}
+          renderBody={props => (
+            <ClipPotTagForm show={sidebarName === 'clip_pot_tag'} />
+          )}
         />
       </React.Fragment>
     )
@@ -108,7 +122,7 @@ class DailyTaskApp extends React.Component {
             {formatDate3(today)}
           </span>
         </div>
-        {dailyTasksStore.batches.map(batch => (
+        {DailyTasksStore.batches.map(batch => (
           <BatchedDailyTasks
             key={batch.id}
             batchId={batch.id}

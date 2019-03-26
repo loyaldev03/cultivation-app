@@ -48,7 +48,7 @@ SlidePanelFooter.propTypes = {
 
 class SlidePanel extends React.Component {
   render() {
-    const { show, width = '450px', renderBody } = this.props
+    const { show, renderBody, width = '450px' } = this.props
     return (
       <div
         style={{

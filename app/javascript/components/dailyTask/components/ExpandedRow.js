@@ -1,25 +1,23 @@
 import React from 'react'
-import { toJS } from 'mobx'
 import MaterialUsedRow from './MaterialUsedRow'
 import NoteList from './NoteList'
 import IssueList from './IssueList'
 import DailyTaskStore from '../stores/DailyTasksStore'
-import sidebarStore from '../stores/SidebarStore'
-import materialUsedStore from '../stores/MaterialUsedStore'
+import SidebarStore from '../stores/SidebarStore'
+import MaterialUsedStore from '../stores/MaterialUsedStore'
 import NutrientEntryForm from '../../utils/NutrientEntryForm'
 
 const rightBorder = { borderRight: '1px solid #ccc' }
 
 class ExpandedRow extends React.Component {
   onShowAddNotes = event => {
-    sidebarStore.openNotes(this.props.batch_id, this.props.id)
+    SidebarStore.openNotes(this.props.batch_id, this.props.id)
     event.preventDefault()
   }
 
   onShowMaterialUsedSidebar = event => {
     const omitProductIds = this.props.items.map(x => x.product_id)
-    // console.log(toJS(omitProductIds))
-    sidebarStore.openMaterialUsed(
+    SidebarStore.openMaterialUsed(
       this.props.batch_id,
       this.props.id,
       omitProductIds
@@ -36,7 +34,7 @@ class ExpandedRow extends React.Component {
   }
 
   onEditNote = (noteId, body) => {
-    sidebarStore.openNotes(this.props.batch_id, this.props.id, noteId, body)
+    SidebarStore.openNotes(this.props.batch_id, this.props.id, noteId, body)
   }
 
   onUpdateNutrients = nutrients => {
@@ -51,7 +49,7 @@ class ExpandedRow extends React.Component {
     let issueId = issue.id
     let mode = 'details'
     let dailyTask = true // What
-    sidebarStore.openIssues(
+    SidebarStore.openIssues(
       issueId,
       mode,
       dailyTask,
@@ -60,17 +58,22 @@ class ExpandedRow extends React.Component {
     )
     event.preventDefault()
   }
-  onNewNutirent = event => {
-    sidebarStore.openNutirents(this.props.batch_id, this.props.id)
-  }
-  onNewIssue = event => {
-    console.log(this.props.id, this.props.batch_id)
 
+  onClickAddNutrient = event => {
+    SidebarStore.openSidebar('add_nutrient', this.props.batch_id, this.props.id)
+  }
+
+  onClickCreateUid = event => {
+    console.log('batchId', this.props.batch_id)
+    console.log('taskId', this.props.id)
+    SidebarStore.openSidebar('clip_pot_tag', this.props.batch_id, this.props.id)
+  }
+
+  onNewIssue = event => {
     const id = null
     const mode = 'create'
     const dailyTask = true
-
-    sidebarStore.openIssues(
+    SidebarStore.openIssues(
       id,
       mode,
       dailyTask,
@@ -96,22 +99,31 @@ class ExpandedRow extends React.Component {
           <div>
             {indelible === 'add_nutrient' && (
               <a
-                href="#"
+                href="#0"
                 className="btn btn--secondary mr3"
-                onClick={this.onNewNutirent}
+                onClick={this.onClickAddNutrient}
               >
                 Add Nutrient
               </a>
             )}
+            {indelible === 'clip_pot_tag' && (
+              <a
+                href="#0"
+                className="btn btn--secondary mr3"
+                onClick={this.onClickCreateUid}
+              >
+                Create UID
+              </a>
+            )}
             <a
-              href="#"
+              href="#0"
               className="btn btn--primary mr2"
               onClick={e => this.props.onClickStatus('done')}
             >
               Done
             </a>
             <a
-              href="#"
+              href="#0"
               className="btn btn--secondary"
               onClick={e => this.props.onClickStatus('stuck')}
             >
@@ -160,9 +172,9 @@ class ExpandedRow extends React.Component {
               </div>
             </div>
             {items.map(x => {
-              const actual = materialUsedStore.get(`${x.id}.material_used`)
-              const waste = materialUsedStore.get(`${x.id}.material_waste`)
-              const showTarget = materialUsedStore.shouldShowTarget(
+              const actual = MaterialUsedStore.get(`${x.id}.material_used`)
+              const waste = MaterialUsedStore.get(`${x.id}.material_waste`)
+              const showTarget = MaterialUsedStore.shouldShowTarget(
                 x.catalogue_id
               )
 

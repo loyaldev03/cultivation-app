@@ -4,7 +4,7 @@
   { "wbs": "1.1.2", "phase": "clone", "name": "Prepare trays and cups", "duration": "", "indelible": "", "predecessor": "" },
   { "wbs": "1.1.3", "phase": "clone", "name": "Prepare mother plants", "duration": "", "indelible": "", "predecessor": "" },
   { "wbs": "1.1.4", "phase": "clone", "name": "Clip", "duration": "1", "indelible": "clip_mother_plant", "predecessor": "" },
-  { "wbs": "1.1.5", "phase": "clone", "name": "Place in cups", "duration": "", "indelible": "", "predecessor": "" },
+  { "wbs": "1.1.5", "phase": "clone", "name": "Clip, pot and create UID", "duration": "1", "indelible": "clip_pot_tag", "predecessor": "" },
   { "wbs": "1.1.6", "phase": "clone", "name": "Add nutrients", "duration": "", "indelible": "add_nutrient", "predecessor": "" },
   { "wbs": "1.1.7", "phase": "clone", "name": "Create tags", "duration": "", "indelible": "", "predecessor": "" },
   { "wbs": "1.1.8", "phase": "clone", "name": "Move to clone room", "duration": "", "indelible": "", "predecessor": "" },

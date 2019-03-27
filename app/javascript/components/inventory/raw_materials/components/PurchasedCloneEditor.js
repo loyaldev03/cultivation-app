@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { PurchaseInfo } from '../../../utils'
+import { PurchaseInfo, InputBarcode } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { setupPurchasedClones } from '../actions/setupPurchasedClones'
 import { getRawMaterial } from '../actions/getRawMaterial'
@@ -379,10 +379,8 @@ class PurchasedCloneEditor extends React.Component {
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">UPC</label>
-              <input
+              <InputBarcode
                 value={this.state.upc}
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-                type="text"
                 onChange={this.handleChangeUpc}
                 onKeyPress={this.handleKeyPress}
               />

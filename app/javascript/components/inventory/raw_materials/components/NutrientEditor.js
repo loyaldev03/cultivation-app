@@ -427,7 +427,6 @@ class NutrientEditor extends React.Component {
     const all_uoms = this.props.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
     const showTotalPrice = price_per_package && order_quantity
-    const hasProductId = this.state.product_id
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">

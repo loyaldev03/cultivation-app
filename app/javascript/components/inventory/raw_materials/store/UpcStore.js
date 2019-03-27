@@ -1,13 +1,7 @@
 import { observable, action, toJS, computed } from 'mobx'
 import {
-  httpPutOptions,
-  httpGetOptions,
-  httpPostOptions,
-  httpDeleteOptions,
-  sumBy,
-  toast
+  httpGetOptions
 } from '../../../utils'
-import { addDays, differenceInCalendarDays, parse } from 'date-fns'
 
 class UpcStore {
   @observable isLoading = false
@@ -33,52 +27,12 @@ class UpcStore {
     } finally {
       this.isLoading = false
     }
-
-    // this.isLoading = true
-    // const url = `https://api.upcitemdb.com/prod/trial/lookup?upc=752289793103`
-    // const response = await await fetch(url, {
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Access-Control-Allow-Origin': 'http://localhost:3000',
-    //     'Content-Type': 'application/json',
-    //     'Access-Control-Allow-Methods': 'GET',
-    //     'Access-Control-Allow-Headers': 'Content-Type'
-    //   }
-    // })
-    // console.log(response)
-    // try {
-    //   const response = await (await fetch(url)).json()
-    //   console.log(response)
-    //   if (response && response.data) {
-    //     console.log(response)
-    //     // const tasks = response.data.map(res => parseTask(res.attributes))
-    //     // this.tasks = updateFlags(null, tasks)
-    //     // this.isDataLoaded = true
-    //   } else {
-    //     // this.tasks = []
-    //     // this.isDataLoaded = false
-    //   }
-    // } catch (error) {
-    //   this.isDataLoaded = false
-    //   console.log(error)
-    //   Rollbar.error('Error Loading Item:', error)
-    // } finally {
-    //   this.isLoading = false
-    // }
   }
 
-  @computed get taskList() {
-    if (this.isDataLoaded) {
-      return this.tasks.filter(t => {
-        const found = this.collapsedNodes.find(
-          x => t.wbs.startsWith(x) && t.wbs !== x
-        )
-        return !found
-      })
-    } else {
-      return []
-    }
+  getItem() {
+    return toJS(this.item)
   }
+
 }
 
 const upcStore = new UpcStore()

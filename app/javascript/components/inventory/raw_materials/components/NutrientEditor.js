@@ -115,8 +115,8 @@ class NutrientEditor extends React.Component {
       product_id: '',
       product_name: '',
       manufacturer: '',
-      upc: '',
       description: '',
+      upc: '',
       product_size: '',
       product_uom: { label: '', value: '' },
       product_ppm: '',
@@ -410,7 +410,7 @@ class NutrientEditor extends React.Component {
     }
   }
 
-  handleChangeInput = event => {
+  handleChangeUpc = event => {
     this.setState({ upc: event.target.value })
   }
 
@@ -520,7 +520,7 @@ class NutrientEditor extends React.Component {
                 value={this.state.upc}
                 className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
                 type="text"
-                onChange={this.handleChangeInput}
+                onChange={this.handleChangeUpc}
                 onKeyPress={this.handleKeyPress}
               />
             </div>

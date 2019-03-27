@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
+import { InputBarcode } from '../../../utils'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { PurchaseInfo, FileUploader } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
@@ -522,6 +523,11 @@ class NutrientEditor extends React.Component {
                 className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
                 type="text"
                 onChange={this.handleChangeUpc}
+                onKeyPress={this.handleKeyPress}
+              />
+              <InputBarcode
+                autoFocus={true}
+                ref={input => (motherInput = input)}
                 onKeyPress={this.handleKeyPress}
               />
             </div>

@@ -2,7 +2,6 @@ module Cultivation
   class WorkDay
     include Mongoid::Document
     include Mongoid::Timestamps::Short
-    include AASM
 
     field :user_id, type: BSON::ObjectId
     field :date, type: Date
@@ -21,33 +20,6 @@ module Cultivation
     embeds_many :time_logs, class_name: 'Cultivation::TaskLog::TimeLog'
     embeds_many :materials_used, class_name: 'Cultivation::TaskLog::MaterialUsed'
     embeds_many :materials_wasted, class_name: 'Cultivation::TaskLog::MaterialWasted'
-
-    # aasm do
-    #   state :new, initial: true
-    #   state :started, :stopped, :done, :stuck
-
-    #   event :start, after: :log_timer do
-    #     transitions from: %i(new stopped stuck), to: :started
-    #   end
-
-    #   #aasm_state from (new stopped stuck), to :started
-    #   #latest_active_time_log stop
-    #   #create new time_logs
-
-    #   event :stop, after: :clear_timer do
-    #     transitions from: :started, to: :stopped
-    #   end
-    #   #clear_timer , stop the latest time log
-    #   #calculate total duration and save
-
-    #   event :stuck do
-    #     transitions from: :started, to: :stuck
-    #   end
-
-    #   event :done, after: %i(clear_timer set_done) do
-    #     transitions from: %i(started stopped stuck), to: :done
-    #   end
-    # end
 
     def batch
       task.batch

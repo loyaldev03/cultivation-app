@@ -2,45 +2,16 @@ import React, { useState, forwardRef } from 'react'
 import isEmpty from 'lodash.isempty'
 import { observer } from 'mobx-react'
 import SidebarStore from '../stores/SidebarStore'
+import ClippingStore from '../stores/ClippingStore'
 import { InputBarcode, SlidePanelHeader } from '../../utils'
 
+@observer
 class ClipPotTagForm extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      motherPlants: []
+  componentDidUpdate(prevProps) {
+    const { batchId, taskId } = this.props
+    if (batchId && taskId !== prevProps.taskId) {
+      ClippingStore.fetchClippingData(batchId, taskId)
     }
-  }
-
-  async componentDidMount() {
-    const res = await (await fetch(
-      'https://jsonplaceholder.typicode.com/todos/1'
-    )).json()
-    this.setState({
-      motherPlants: [
-        {
-          plantId: '5c5265b18c24bd19df581c85',
-          plantTag: 'M0AK0192',
-          plantLocation: 'M01.S1.R1.Sh1.T3',
-          scannedPlants: [],
-          quantityRequired: 10
-        },
-        {
-          plantId: '5c5265b18c24bd19df581c86',
-          plantTag: 'M0AK0193',
-          plantLocation: 'M02.S1.R1.Sh1.T4',
-          scannedPlants: [],
-          quantityRequired: 10
-        },
-        {
-          plantId: '5c5265b18c24bd19df581c87',
-          plantTag: 'M0AK0194',
-          plantLocation: 'M01.S1.R1.Sh1.T5',
-          scannedPlants: ['ABC123', 'ABC234', 'ABC3245'],
-          quantityRequired: 5
-        }
-      ]
-    })
   }
 
   plantRefs = []
@@ -52,32 +23,53 @@ class ClipPotTagForm extends React.Component {
   }
 
   render() {
-    const { motherPlants } = this.state
+    const { show = true } = this.props
+    if (!show) return null
     return (
       <div className="flex flex-column h-100">
-        <SlidePanelHeader
-          onClose={() => SidebarStore.closeSidebar()}
-          title={'Create plant ID after clipping'}
-        />
-        <div className="flex flex-column flex-auto justify-between">
-          <div className="pa3 flex flex-column grey">
-            <div className="flex f6 pv2 fw7">
-              <span className="ph2 w-30 ml3">Mother Plant ID</span>
-              <span className="ph2 w-30">Location</span>
-              <span className="ph2 w-20"># of Clippings</span>
-              <span className="ph2 w3">Scan UID</span>
+        <div>
+          <div className="ph4 pv3 bb b--light-grey">
+            <h1 className="h6--font dark-grey ma0">
+              Create plant ID after clipping
+            </h1>
+            <div className="flex justify-end items-center pt3">
+              <i className="material-icons orange pointer pa1 mh2">error_outline</i>
+              <a href="#0" className="btn btn--secondary btn--small">
+                Add Issue
+              </a>
             </div>
-            {motherPlants.map((m, i) => (
-              <MotherPlantRow
-                key={m.plantId}
-                ref={row => (this.plantRefs[i] = row)}
-                {...m}
-                rowIndex={i}
-                onDoneMoveNext={this.onDoneMoveNext}
-              />
-            ))}
           </div>
+          <a
+            href="#0"
+            className="slide-panel__close-button dim"
+            onClick={() => SidebarStore.closeSidebar()}
+          >
+            <i className="material-icons mid-gray md-18 pa1">close</i>
+          </a>
         </div>
+        {ClippingStore.isLoading ? (
+          <div className="pa4 grey">Loading...</div>
+        ) : (
+          <div className="flex flex-column flex-auto justify-between">
+            <div className="pa3 flex flex-column grey">
+              <div className="flex f6 pv2 fw7">
+                <span className="ph2 w-30 ml3">Mother Plant ID</span>
+                <span className="ph2 w-30">Location</span>
+                <span className="ph2 w-20"># of Clippings</span>
+                <span className="ph2 w3">Scan UID</span>
+              </div>
+              {ClippingStore.motherPlants.map((m, i) => (
+                <MotherPlantRow
+                  key={m.plantId}
+                  ref={row => (this.plantRefs[i] = row)}
+                  {...m}
+                  rowIndex={i}
+                  onDoneMoveNext={this.onDoneMoveNext}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -105,7 +97,7 @@ const MotherPlantRow = forwardRef(
       }
     }
     const onScanClipping = e => {
-      if (e.key === 'Enter' && !plants.includes(e.target.value)) {
+      if (e.key === 'Enter' && e.target.value && !plants.includes(e.target.value)) {
         setPlants([...plants, e.target.value])
       }
     }

@@ -1,30 +1,28 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import sidebarStore from './stores/SidebarStore'
-import dailyTasksStore from './stores/DailyTasksStore'
-import currentIssueStore from '../issues/store/CurrentIssueStore'
+import SidebarStore from './stores/SidebarStore'
+import DailyTasksStore from './stores/DailyTasksStore'
+import CurrentIssueStore from '../issues/store/CurrentIssueStore'
 
 const dailyTaskSidebarAdaptor = (IssueSidebar, props) => {
   const comp = class extends React.Component {
     onClose = () => {
-      sidebarStore.closeIssues()
-      currentIssueStore.reset()
+      SidebarStore.closeSidebar()
+      CurrentIssueStore.reset()
     }
 
     onSaved = (batch_id, issue) => {
-      console.log(issue)
-      dailyTasksStore.updateOrAppendIssue(batch_id, issue)
+      DailyTasksStore.updateOrAppendIssue(batch_id, issue)
     }
 
     render() {
-      if (!sidebarStore.showIssues) {
+      if (!SidebarStore.showIssues) {
         return null
       }
 
-      const issueId = sidebarStore.issueId
-      const batch_id = sidebarStore.batchId
-      const facility_id = sidebarStore.facilityId
-      console.log(issueId, batch_id, facility_id)
+      const issueId = SidebarStore.issueId
+      const batch_id = SidebarStore.batchId
+      const facility_id = SidebarStore.facilityId
 
       return (
         <IssueSidebar

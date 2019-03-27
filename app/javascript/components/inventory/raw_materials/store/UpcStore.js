@@ -1,7 +1,5 @@
 import { observable, action, toJS, computed } from 'mobx'
-import {
-  httpGetOptions
-} from '../../../utils'
+import { httpGetOptions } from '../../../utils'
 
 class UpcStore {
   @observable isLoading = false
@@ -32,7 +30,6 @@ class UpcStore {
   getItem() {
     return toJS(this.item)
   }
-
 }
 
 const upcStore = new UpcStore()

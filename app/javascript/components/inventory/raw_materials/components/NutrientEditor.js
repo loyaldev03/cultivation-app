@@ -2,9 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
-import { InputBarcode } from '../../../utils'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { PurchaseInfo, FileUploader } from '../../../utils'
+import { PurchaseInfo, FileUploader, InputBarcode } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
@@ -429,7 +428,6 @@ class NutrientEditor extends React.Component {
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
     const showTotalPrice = price_per_package && order_quantity
     const hasProductId = this.state.product_id
-
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
@@ -518,16 +516,9 @@ class NutrientEditor extends React.Component {
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <label className="f6 fw6 db mb1 gray ttc">UPC</label>
-              <input
-                value={this.state.upc}
-                className="db w-100 pa2 f6 black ba b--black-20 br2 outline-0"
-                type="text"
-                onChange={this.handleChangeUpc}
-                onKeyPress={this.handleKeyPress}
-              />
               <InputBarcode
-                autoFocus={true}
-                ref={input => (motherInput = input)}
+                value={this.state.upc}
+                onChange={this.handleChangeUpc}
                 onKeyPress={this.handleKeyPress}
               />
             </div>

@@ -64,8 +64,6 @@ class ExpandedRow extends React.Component {
   }
 
   onClickCreateUid = event => {
-    console.log('batchId', this.props.batch_id)
-    console.log('taskId', this.props.id)
     SidebarStore.openSidebar('clip_pot_tag', this.props.batch_id, this.props.id)
   }
 
@@ -88,7 +86,7 @@ class ExpandedRow extends React.Component {
       id: taskId,
       indelible,
       notes,
-      batch_id: batchId,
+      batch_id,
       items,
       issues
     } = this.props
@@ -182,7 +180,7 @@ class ExpandedRow extends React.Component {
                 <MaterialUsedRow
                   key={x.id}
                   taskId={taskId}
-                  batchId={batchId}
+                  batchId={batch_id}
                   id={x.id}
                   material={x.product_name}
                   expected={x.quantity}

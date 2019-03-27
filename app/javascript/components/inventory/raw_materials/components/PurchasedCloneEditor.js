@@ -41,6 +41,7 @@ class PurchasedCloneEditor extends React.Component {
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer,
                 description: attr.description,
+                upc: attr.product.upc || '',
                 product_size: attr.product.size || '',
                 product_uom: {
                   label: attr.product.common_uom,

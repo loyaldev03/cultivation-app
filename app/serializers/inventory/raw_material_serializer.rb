@@ -39,6 +39,7 @@ module Inventory
           transaction_limit: object.product.transaction_limit,
           description: object.product.description,
           manufacturer: object.product.manufacturer,
+          upc: object.product.upc,
           nitrogen: nitrogen&.value,
           prosphorus: prosphorus&.value,
           potassium: potassium&.value,

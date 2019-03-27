@@ -40,6 +40,7 @@ class NutrientEditor extends React.Component {
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer || '',
                 description: attr.description || '',
+                upc: attr.product.upc || '',
                 attachments: attr.attachments || [],
                 nitrogen: attr.product.nitrogen || '',
                 prosphorus: attr.product.prosphorus || '',

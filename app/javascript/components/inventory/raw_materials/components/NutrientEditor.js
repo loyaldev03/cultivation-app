@@ -171,6 +171,7 @@ class NutrientEditor extends React.Component {
       product_name,
       manufacturer,
       description,
+      upc,
       order_quantity,
       order_uom: { value: order_uom },
       price_per_package: price,
@@ -257,6 +258,7 @@ class NutrientEditor extends React.Component {
       product_id,
       product_name,
       manufacturer,
+      upc,
       description,
       order_quantity,
       order_uom,
@@ -317,7 +319,8 @@ class NutrientEditor extends React.Component {
           nitrogen: '',
           prosphorus: '',
           potassium: '',
-          nutrients: []
+          nutrients: [],
+          upc: ''
         })
       } else {
         this.setState({
@@ -337,7 +340,8 @@ class NutrientEditor extends React.Component {
           nutrients: product.nutrients.map(e => ({
             nutrient_element: { label: e.element, value: e.element },
             nutrient_value: e.value
-          }))
+          })),
+          upc: product.upc || ''
         })
       }
     } else {
@@ -355,7 +359,8 @@ class NutrientEditor extends React.Component {
         nitrogen: '',
         prosphorus: '',
         potassium: '',
-        nutrients: []
+        nutrients: [],
+        upc: ''
       })
     }
   }
@@ -398,7 +403,8 @@ class NutrientEditor extends React.Component {
         this.setState({
           manufacturer: product.brand,
           description: product.description,
-          product: { label: product.title, value: product.title }
+          product: { label: product.title, value: product.title },
+          product_name: product.title
         })
       }
     }

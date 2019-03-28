@@ -15,22 +15,14 @@ module Cultivation
       @args = {
         batch_id: nil,
         task_id: nil,
+        selected_plants: 0,
       }.merge(args)
     end
 
     def call
       if valid_params?
-        # criteria = Cultivation::Batch.collection.aggregate [
-        #   {"$match": {_id: args[:batch_id].to_bson_id}},
-        #   {
-        #     "$project": {
-        #       _id: 1,
-        #       quantity: 1,
-        #       selected_plants: 1,
-        #     },
-        #   },
         criteria = Cultivation::Batch.collection.aggregate([
-          {"$match": {_id: args[:batch_id].to_bson_id}},
+          match_batch,
           {"$unwind": '$selected_plants'},
           {"$lookup": {
             from: 'inventory_plants',
@@ -53,22 +45,22 @@ module Cultivation
               },
             },
           }},
-          {"$project": {
-            _id: '$_id.batch_id',
-            quantity: '$_id.batch_quantity',
-            selected_plants: 1,
-          }},
+          args_project,
         ])
         res = criteria.first
         if res.present?
-          plants = res[:selected_plants].map do |y|
-            SelectedPlant.new(
-              y[:plant_id].to_s,
-              y[:quantity] || '',
-              y[:plant_code] || '',
-              y[:plant_location_id].to_s,
-            )
-          end
+          plants = if res[:selected_plants]
+                     res[:selected_plants].map do |y|
+                       SelectedPlant.new(
+                         y[:plant_id].to_s,
+                         y[:quantity] || '',
+                         y[:plant_code] || '',
+                         y[:plant_location_id].to_s,
+                       )
+                     end
+                   else
+                     []
+                   end
           PlantMovement.new(
             res[:_id].to_s,
             res[:quantity] || '',
@@ -80,9 +72,20 @@ module Cultivation
 
     private
 
+    def args_project
+      project = {
+        "$project": {
+          _id: '$_id.batch_id',
+          quantity: '$_id.batch_quantity',
+        },
+      }
+      project[:$project][:selected_plants] = 1 if args[:selected_plants] == '1'
+      project
+    end
+
     def match_batch
       if args[:batch_id]
-        {"$match": {_id: args[:batch_id]}}
+        {"$match": {_id: args[:batch_id].to_bson_id}}
       else
         {"$match": {}}
       end

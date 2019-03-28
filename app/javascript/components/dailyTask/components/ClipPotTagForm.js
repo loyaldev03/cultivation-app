@@ -62,7 +62,7 @@ class ClipPotTagForm extends React.Component {
               </div>
               {ClippingStore.motherPlants.map((m, i) => (
                 <MotherPlantRow
-                  key={m.plantId}
+                  key={m.plant_id}
                   ref={row => (this.plantRefs[i] = row)}
                   {...m}
                   rowIndex={i}
@@ -89,10 +89,10 @@ const MotherPlantRow = forwardRef(
     {
       onDoneMoveNext,
       rowIndex,
-      plantId,
-      plantTag,
-      plantLocation,
-      quantityRequired,
+      plant_id,
+      plant_code,
+      plant_location,
+      quantity,
       scannedPlants = []
     },
     ref
@@ -114,8 +114,8 @@ const MotherPlantRow = forwardRef(
         setPlants([...plants, e.target.value])
       }
     }
-    const onDeleteScan = plantTag => {
-      setPlants(plants.filter(t => t !== plantTag))
+    const onDeleteScan = plant_code => {
+      setPlants(plants.filter(t => t !== plant_code))
     }
     const onDone = e => {
       setExpand(false)
@@ -134,13 +134,13 @@ const MotherPlantRow = forwardRef(
           <i className="material-icons md-16">
             {expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}
           </i>
-          <span className="ph2 w-30">{plantTag}</span>
-          <span className="ph2 w-30">{plantLocation}</span>
+          <span className="ph2 w-30">{plant_code}</span>
+          <span className="ph2 w-30">{plant_location}</span>
           <span className="ph2 w-20 tc">
-            {plants.length}/{quantityRequired}
+            {plants.length}/{quantity}
           </span>
           <span className="ph2 w3 tc">
-            {plants.length >= quantityRequired ? 'DONE' : 'SCAN'}
+            {plants.length >= quantity ? 'DONE' : 'SCAN'}
           </span>
         </div>
         {expand && (

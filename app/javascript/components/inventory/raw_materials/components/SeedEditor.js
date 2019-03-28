@@ -442,7 +442,6 @@ class SeedEditor extends React.Component {
                 onKeyPress={this.handleKeyPress}
                 scanditLicense={this.props.scanditLicense}
                 onBarcodeScan={this.onBarcodeScan}
-                onScanClose={true}
               />
             </div>
           </div>

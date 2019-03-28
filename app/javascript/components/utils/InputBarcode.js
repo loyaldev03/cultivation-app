@@ -13,7 +13,7 @@ const InputBarcode = forwardRef(
       value,
       autoFocus = false,
       className = 'w5',
-      onScanClose = false
+      multiple = false
     },
     ref
   ) => {
@@ -27,7 +27,7 @@ const InputBarcode = forwardRef(
           targetRef: scannerRef,
           onScan: result => {
             onBarcodeScan(result)
-            if (onScanClose) {
+            if (!multiple) {
               scanner.destroy()
             }
           }
@@ -45,21 +45,36 @@ const InputBarcode = forwardRef(
     return (
       <React.Fragment>
         <div className="flex items-center">
-          <input
-            type="text"
-            ref={ref}
-            value={value}
-            className={`grey input input--with-icon ${className}`}
-            autoFocus={autoFocus}
-            onKeyPress={onKeyPress}
-            onChange={onChange}
-          />
-          <img
-            className="input__icon"
-            src={ImgBarcode}
-            alt="Scan barcode"
-            onClick={onShowScanner}
-          />
+          {multiple ?
+              <textarea
+                ref={ref}
+                value={value}
+                className={`grey ${className}`}
+                autoFocus={autoFocus}
+                onKeyPress={onKeyPress}
+                onChange={onChange}
+                rows="3"
+              />
+            :
+              <React.Fragment>
+                <input
+                  type="text"
+                  ref={ref}
+                  value={value}
+                  className={`grey input input--with-icon ${className}`}
+                  autoFocus={autoFocus}
+                  onKeyPress={onKeyPress}
+                  onChange={onChange}
+                />
+                <img
+                  className="input__icon"
+                  src={ImgBarcode}
+                  alt="Scan barcode"
+                  onClick={onShowScanner}
+                />
+              </React.Fragment>
+
+          }
         </div>
         <div className="flex items-center mt3">
           <div className="scanner" ref={x => (scannerRef = x)} />

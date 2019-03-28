@@ -12,7 +12,15 @@
  <%= render partial: 'setupNavigation', locals: { selected: Constants::OTHERS_KEY } %>
   <div class="flex flex-column">
     <%= react_component('inventory/raw_materials/RawMaterialSetupApp', { 
-      locations: @locations, order_uoms: @order_uoms, uoms: @uoms, raw_material_type: Constants::OTHERS_KEY, catalogues: @catalogues, facility_id: params[:facility_id] }) %>
+      locations: @locations, 
+      order_uoms: @order_uoms, 
+      uoms: @uoms, 
+      raw_material_type: Constants::OTHERS_KEY, 
+      catalogues: @catalogues, 
+      facility_id: params[:facility_id],
+      scanditLicense: @scanditLicense 
+      }) 
+    %>
    
     <div class="w-100 bg-white ph3 pt2 pb4">
       <div class="dim flex flex-row items-center pointer">

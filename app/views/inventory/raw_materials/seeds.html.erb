@@ -12,7 +12,15 @@
   <%= render partial: 'setupNavigation', locals: { selected: Constants::SEEDS_KEY } %>
   <div class="flex flex-column">
     <%= react_component('inventory/raw_materials/SeedSetupApp', { 
-      locations: @locations, order_uoms: @order_uoms, uoms: @uoms, facility_strains: @facility_strains, facility_id: params[:facility_id] }) %>
+      locations: @locations, 
+      order_uoms: @order_uoms, 
+      uoms: @uoms, 
+      facility_strains: @facility_strains, 
+      facility_id: params[:facility_id],
+      scanditLicense: @scanditLicense
+      }) 
+      
+    %>
    
     <div class="w-100 bg-white ph3 pt2 pb4">
       <div class="dim flex flex-row items-center pointer">

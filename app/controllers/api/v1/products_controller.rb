@@ -105,7 +105,7 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     url = 'https://api.upcitemdb.com/prod/trial/lookup'
     url_temp = 'http://www.mocky.io/v2/5c99def83200004b00d90ac7'
 
-    response = RestClient.post(url_temp, body) { |response, request, result, &block|
+    response = RestClient.post(url, body) { |response, request, result, &block|
       Rails.logger.debug "Response Code => #{response.code}"
       case response.code
       when 200

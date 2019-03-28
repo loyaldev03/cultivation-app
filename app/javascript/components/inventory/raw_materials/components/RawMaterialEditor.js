@@ -329,22 +329,34 @@ class RawMaterialEditor extends React.Component {
     }
   }
 
-  handleKeyPress = async e => {
+  handleKeyPress = e => {
     if (e.key === 'Enter') {
-      const product = await UpcStore.loadItem(this.state.upc)
-      if (product.brand) {
-        this.setState({
-          manufacturer: product.brand,
-          description: product.description,
-          product: { label: product.title, value: product.title },
-          product_name: product.title
-        })
-      }
+      this.loadItemScan()
+    }
+  }
+
+  loadItemScan = async e => {
+    console.log('call api to retrieve product info')
+    const product = await UpcStore.loadItem(this.state.upc)
+    if (product.brand) {
+      this.setState({
+        manufacturer: product.brand,
+        description: product.description,
+        product: { label: product.title, value: product.title },
+        product_name: product.title
+      })
     }
   }
 
   handleChangeUpc = event => {
     this.setState({ upc: event.target.value })
+  }
+
+  onBarcodeScan = e => {
+    console.log(e)
+    this.setState({ upc: e }, () => {
+      this.loadItemScan()
+    })
   }
 
   render() {
@@ -448,6 +460,8 @@ class RawMaterialEditor extends React.Component {
                 value={this.state.upc}
                 onChange={this.handleChangeUpc}
                 onKeyPress={this.handleKeyPress}
+                scanditLicense={this.props.scanditLicense}
+                onBarcodeScan={this.onBarcodeScan}
               />
             </div>
           </div>

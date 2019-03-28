@@ -9,7 +9,6 @@ const setup = licenseKey => {
 }
 
 const launchBarcodeScanner = (options = {}) => {
-  const picker = document.getElementById(options.targetId)
   if (!options.licenseKey) {
     console.error('Expect barcode scanner license to be provided.')
     return Promise.resolve(false)
@@ -17,7 +16,7 @@ const launchBarcodeScanner = (options = {}) => {
 
   return setup(options.licenseKey)
     .then(() =>
-      ScanditSDK.BarcodePicker.create(picker, {
+      ScanditSDK.BarcodePicker.create(options.targetRef, {
         playSoundOnScan: true,
         vibrateOnScan: true
       })

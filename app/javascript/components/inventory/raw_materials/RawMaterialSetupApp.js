@@ -155,6 +155,7 @@ class RawMaterialSetupApp extends React.Component {
           catalogues={this.props.catalogues}
           facility_id={this.props.facility_id}
           uoms={this.props.uoms}
+          scanditLicense={this.props.scanditLicense}
         />
       </React.Fragment>
     )

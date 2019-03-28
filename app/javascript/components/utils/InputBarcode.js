@@ -8,6 +8,7 @@ const InputBarcode = forwardRef(
       onChange,
       onKeyPress,
       onBarcodeClick,
+      value,
       autoFocus = false,
       className = 'w5'
     },
@@ -18,6 +19,7 @@ const InputBarcode = forwardRef(
         <input
           type="text"
           ref={ref}
+          value={value}
           className={`grey input input--with-icon ${className}`}
           autoFocus={autoFocus}
           onKeyPress={onKeyPress}

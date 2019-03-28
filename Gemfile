@@ -119,3 +119,5 @@ gem 'shrine-mongoid'
 gem 'redis'
 gem 'sidekiq'
 gem 'sidekiq-cron'
+
+gem 'rest-client'

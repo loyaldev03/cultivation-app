@@ -187,6 +187,7 @@ Rails.application.routes.draw do
       resources :vendor_invoices, only: [:index, :show]
       resources :products, only: [:index] do
         get :non_nutrients, on: :collection
+        get :upc, on: :collection
       end
 
       resources :strains, only: [:index, :create, :show] do

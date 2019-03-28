@@ -82,14 +82,7 @@ class ExpandedRow extends React.Component {
   }
 
   render() {
-    const {
-      id: taskId,
-      indelible,
-      notes,
-      batch_id,
-      items,
-      issues
-    } = this.props
+    const { id: taskId, indelible, notes, batch_id, items, issues } = this.props
 
     return (
       <React.Fragment>

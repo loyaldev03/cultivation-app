@@ -4,11 +4,13 @@ import Select from 'react-select'
 // import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { PurchaseInfo } from '../../../utils'
+import { PurchaseInfo, InputBarcode } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
+import UpcStore from '../store/UpcStore'
+
 const handleInputChange = newValue => {
   return newValue ? newValue : ''
 }
@@ -45,6 +47,7 @@ class RawMaterialEditor extends React.Component {
                 product: { value: attr.product.id, label: attr.product.name },
                 manufacturer: attr.manufacturer,
                 description: attr.description,
+                upc: attr.product.upc || '',
                 product_size: attr.product.size || '',
                 product_uom: {
                   label: attr.product.common_uom,
@@ -111,6 +114,7 @@ class RawMaterialEditor extends React.Component {
       product_id: '',
       product_name: '',
       manufacturer: '',
+      upc: '',
       description: '',
       product_size: '',
       product_uom: { label: '', value: '' },
@@ -165,6 +169,7 @@ class RawMaterialEditor extends React.Component {
       product_name,
       manufacturer,
       description,
+      upc,
       product_size,
       product_ppm,
       epa_number,
@@ -235,6 +240,7 @@ class RawMaterialEditor extends React.Component {
       product_id,
       product_name,
       manufacturer,
+      upc,
       product_size,
       product_uom,
       product_ppm,
@@ -287,7 +293,8 @@ class RawMaterialEditor extends React.Component {
           product_size: '',
           product_uom: { label: '', value: '' },
           product_ppm: '',
-          epa_number: ''
+          epa_number: '',
+          upc: ''
         })
       } else {
         const catalogue = this.props.catalogues.find(
@@ -303,7 +310,8 @@ class RawMaterialEditor extends React.Component {
           product_uom: { label: product.common_uom, value: product.common_uom },
           product_ppm: product.ppm || '',
           catalogue: catalogue,
-          epa_number: product.epa_number || ''
+          epa_number: product.epa_number || '',
+          upc: product.upc || ''
         })
       }
     } else {
@@ -315,9 +323,28 @@ class RawMaterialEditor extends React.Component {
         product_size: '',
         product_uom: { label: '', value: '' },
         product_ppm: '',
-        epa_number: ''
+        epa_number: '',
+        upc: ''
       })
     }
+  }
+
+  handleKeyPress = async e => {
+    if (e.key === 'Enter') {
+      const product = await UpcStore.loadItem(this.state.upc)
+      if (product.brand) {
+        this.setState({
+          manufacturer: product.brand,
+          description: product.description,
+          product: { label: product.title, value: product.title },
+          product_name: product.title
+        })
+      }
+    }
+  }
+
+  handleChangeUpc = event => {
+    this.setState({ upc: event.target.value })
   }
 
   render() {
@@ -413,6 +440,18 @@ class RawMaterialEditor extends React.Component {
               />
             </div>
           </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">UPC</label>
+              <InputBarcode
+                value={this.state.upc}
+                onChange={this.handleChangeUpc}
+                onKeyPress={this.handleKeyPress}
+              />
+            </div>
+          </div>
+
           {this.props.raw_material_type === 'supplements' && (
             <div className="ph4 mb3 flex">
               <div className="w-100">

@@ -14,6 +14,7 @@ module Inventory
                 :product_name,
                 :description,
                 :manufacturer,
+                :upc,
                 :quantity,
                 :uom,
                 :price,
@@ -47,6 +48,7 @@ module Inventory
       @product_name = args[:product_name]
       @description = args[:description]
       @manufacturer = args[:manufacturer]
+      @upc = args[:upc]
       @quantity = args[:quantity]
       @uom = args[:uom]
       @order_quantity = args[:order_quantity]
@@ -297,6 +299,7 @@ module Inventory
           name: product_name,
           manufacturer: manufacturer,
           description: description,
+          upc: upc,
           catalogue: catalogue,
           facility: facility,
         )
@@ -306,6 +309,7 @@ module Inventory
                  name: product_name,
                  manufacturer: manufacturer,
                  description: description,
+                 upc: upc,
                  catalogue: catalogue,
                  facility: facility,
                )

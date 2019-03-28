@@ -3,11 +3,12 @@ import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { PurchaseInfo } from '../../../utils'
+import { PurchaseInfo, InputBarcode } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { setupPurchasedClones } from '../actions/setupPurchasedClones'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
+import UpcStore from '../store/UpcStore'
 
 const handleInputChange = newValue => {
   return newValue ? newValue : ''
@@ -40,6 +41,7 @@ class PurchasedCloneEditor extends React.Component {
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer,
                 description: attr.description,
+                upc: attr.product.upc || '',
                 product_size: attr.product.size || '',
                 product_uom: {
                   label: attr.product.common_uom,
@@ -85,6 +87,7 @@ class PurchasedCloneEditor extends React.Component {
       defaultProduct: [],
       manufacturer: '',
       description: '',
+      upc: '',
       product_size: '',
       product_uom: { label: '', value: '' },
       product_ppm: '',
@@ -128,6 +131,7 @@ class PurchasedCloneEditor extends React.Component {
       product_name,
       manufacturer,
       description,
+      upc,
       product_size,
       product_ppm,
       order_quantity,
@@ -171,6 +175,7 @@ class PurchasedCloneEditor extends React.Component {
       product_name,
       manufacturer,
       description,
+      upc,
       product_size,
       product_uom,
       product_ppm,
@@ -216,6 +221,7 @@ class PurchasedCloneEditor extends React.Component {
           product_id: '',
           manufacturer: '',
           description: '',
+          upc: '',
           product_size: '',
           product_uom: { label: '', value: '' },
           product_ppm: '',
@@ -228,6 +234,7 @@ class PurchasedCloneEditor extends React.Component {
           product_name: product.name,
           manufacturer: product.manufacturer,
           description: product.description,
+          upc: product.upc || '',
           product_size: product.size || '',
           product_uom: { label: product.common_uom, value: product.common_uom },
           product_ppm: product.ppm || '',
@@ -240,12 +247,31 @@ class PurchasedCloneEditor extends React.Component {
         product_id: '',
         manufacturer: '',
         description: '',
+        upc: '',
         product_size: '',
         product_uom: { label: '', value: '' },
         product_ppm: '',
         facility_strain_id: ''
       })
     }
+  }
+
+  handleKeyPress = async e => {
+    if (e.key === 'Enter') {
+      const product = await UpcStore.loadItem(this.state.upc)
+      if (product.brand) {
+        this.setState({
+          manufacturer: product.brand,
+          description: product.description,
+          product: { label: product.title, value: product.title },
+          product_name: product.title
+        })
+      }
+    }
+  }
+
+  handleChangeUpc = event => {
+    this.setState({ upc: event.target.value })
   }
 
   render() {
@@ -346,6 +372,17 @@ class PurchasedCloneEditor extends React.Component {
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
                 readOnly={hasProductId}
+              />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">UPC</label>
+              <InputBarcode
+                value={this.state.upc}
+                onChange={this.handleChangeUpc}
+                onKeyPress={this.handleKeyPress}
               />
             </div>
           </div>

@@ -153,6 +153,7 @@ class SeedSetupApp extends React.Component {
           order_uoms={this.props.order_uoms}
           uoms={this.props.uoms}
           facility_id={this.props.facility_id}
+          scanditLicense={this.props.scanditLicense}
         />
       </React.Fragment>
     )

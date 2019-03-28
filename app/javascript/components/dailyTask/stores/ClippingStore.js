@@ -9,7 +9,7 @@ class ClippingStore {
   async fetchClippingData(batchId, taskId) {
     this.isLoading = true
     // TODO: Change to real API endpoint
-    const url = `http://localhost:3000/api/v1/batches/5c5265df8c24bd19df581c89/nutrient_profiles`
+    const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response.data) {

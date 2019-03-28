@@ -59,9 +59,9 @@ module Cultivation
             selected_plants: 1,
           }},
         ])
-
-        criteria.map do |x|
-          plants = x[:selected_plants].map do |y|
+        res = criteria.first
+        if res.present?
+          plants = res[:selected_plants].map do |y|
             SelectedPlant.new(
               y[:plant_id].to_s,
               y[:quantity] || '',
@@ -70,11 +70,11 @@ module Cultivation
             )
           end
           PlantMovement.new(
-            x[:_id].to_s,
-            x[:quantity] || '',
+            res[:_id].to_s,
+            res[:quantity] || '',
             plants
           )
-        end || []
+        end
       end
     end
 

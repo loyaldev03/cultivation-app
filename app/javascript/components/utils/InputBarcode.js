@@ -12,7 +12,8 @@ const InputBarcode = forwardRef(
       scanditLicense,
       value,
       autoFocus = false,
-      className = 'w5'
+      className = 'w5',
+      onScanClose = false
     },
     ref
   ) => {
@@ -26,7 +27,9 @@ const InputBarcode = forwardRef(
           targetRef: scannerRef,
           onScan: result => {
             onBarcodeScan(result)
-            scanner.destroy()
+            if (onScanClose){
+              scanner.destroy()
+            }
           }
         }).then(ref => {
           scanner = ref
@@ -38,6 +41,7 @@ const InputBarcode = forwardRef(
         }
       }
     }
+
 
     return (
       <React.Fragment>

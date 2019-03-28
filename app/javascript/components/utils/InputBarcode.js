@@ -27,7 +27,7 @@ const InputBarcode = forwardRef(
           targetRef: scannerRef,
           onScan: result => {
             onBarcodeScan(result)
-            if (onScanClose){
+            if (onScanClose) {
               scanner.destroy()
             }
           }
@@ -41,7 +41,6 @@ const InputBarcode = forwardRef(
         }
       }
     }
-
 
     return (
       <React.Fragment>

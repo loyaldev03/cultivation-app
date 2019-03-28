@@ -28,11 +28,11 @@ class DailyTaskApp extends React.Component {
     loadDailyTasks()
   }
   componentDidMount() {
-    // SidebarStore.openSidebar(
-    //   'clip_pot_tag',
-    //   '5c9354718c24bdc68af413bd',
-    //   '5c9354728c24bdc68af413cf'
-    // )
+    SidebarStore.openSidebar(
+      'clip_pot_tag',
+      '5c9354718c24bdc68af413bd',
+      '5c9354728c24bdc68af413cf'
+    )
   }
   onUpdateNutrients = nutrients => {
     const { batchId, taskId } = SidebarStore

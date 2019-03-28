@@ -126,6 +126,7 @@ class NutrientsSetupApp extends React.Component {
           uoms={this.props.uoms}
           catalogue_id={this.props.catalogue_id}
           facility_id={this.props.facility_id}
+          scanditLicense={this.props.scanditLicense}
         />
       </React.Fragment>
     )

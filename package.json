@@ -39,7 +39,7 @@
     "react-table": "^6.8.6",
     "react-tabs": "^3.0.0",
     "react_ujs": "^2.4.4",
-    "scandit-sdk": "^3.2.0",
+    "scandit-sdk": "^4.1.1",
     "siema": "^1.5.1",
     "tachyons": "^4.11.1",
     "turbolinks": "^5.1.1"

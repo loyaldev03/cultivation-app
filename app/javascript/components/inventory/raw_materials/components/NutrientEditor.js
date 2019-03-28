@@ -9,6 +9,7 @@ import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 import UpcStore from '../store/UpcStore'
+import { launchBarcodeScanner } from '../../../utils/BarcodeScanner'
 
 const handleInputChange = newValue => {
   return newValue ? newValue : ''
@@ -24,6 +25,9 @@ class NutrientEditor extends React.Component {
   componentDidMount() {
     document.addEventListener('editor-sidebar-open', event => {
       const id = event.detail.id
+      if (this.scanner) {
+        this.scanner.destroy()
+      }
       if (!id) {
         this.reset()
       } else {
@@ -133,7 +137,8 @@ class NutrientEditor extends React.Component {
       order_uom: { value: '', label: '' },
       uom: { value: '', label: '' },
       location_id: '',
-
+      showScanner: false,
+      scannerReady: false,
       // purchase info
       vendor: {},
       purchase_order: {},
@@ -397,22 +402,34 @@ class NutrientEditor extends React.Component {
     })
   }
 
-  handleKeyPress = async e => {
+  handleKeyPress = e => {
     if (e.key === 'Enter') {
-      const product = await UpcStore.loadItem(this.state.upc)
-      if (product.brand) {
-        this.setState({
-          manufacturer: product.brand,
-          description: product.description,
-          product: { label: product.title, value: product.title },
-          product_name: product.title
-        })
-      }
+      this.loadItemScan()
+    }
+  }
+
+  loadItemScan = async e => {
+    console.log('call api to retrieve product info')
+    const product = await UpcStore.loadItem(this.state.upc)
+    if (product.brand) {
+      this.setState({
+        manufacturer: product.brand,
+        description: product.description,
+        product: { label: product.title, value: product.title },
+        product_name: product.title
+      })
     }
   }
 
   handleChangeUpc = event => {
     this.setState({ upc: event.target.value })
+  }
+
+  onBarcodeScan = e => {
+    console.log(e)
+    this.setState({ upc: e }, () => {
+      this.loadItemScan()
+    })
   }
 
   render() {
@@ -519,6 +536,9 @@ class NutrientEditor extends React.Component {
                 value={this.state.upc}
                 onChange={this.handleChangeUpc}
                 onKeyPress={this.handleKeyPress}
+                onBarcodeClick={this.onShowScanner}
+                scanditLicense={this.props.scanditLicense}
+                onBarcodeScan={this.onBarcodeScan}
               />
             </div>
           </div>

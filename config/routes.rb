@@ -197,6 +197,7 @@ Rails.application.routes.draw do
         get 'batch_info'
         get 'list_infos', on: :collection
         get 'search_locations', on: :collection
+        get 'plants_movement_history', on: :collection
         post 'search_batch_plans', on: :collection
         post 'setup_simple_batch', on: :collection
         post 'update_locations'

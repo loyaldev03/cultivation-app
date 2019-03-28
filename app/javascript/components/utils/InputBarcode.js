@@ -59,10 +59,7 @@ const InputBarcode = forwardRef(
           />
         </div>
         <div className="flex items-center mt3">
-          <div
-            className="scanner"
-            ref={x => (scannerRef = x)}
-          />
+          <div className="scanner" ref={x => (scannerRef = x)} />
         </div>
       </React.Fragment>
     )

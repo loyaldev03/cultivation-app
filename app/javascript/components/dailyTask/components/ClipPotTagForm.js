@@ -28,12 +28,14 @@ class ClipPotTagForm extends React.Component {
     return (
       <div className="flex flex-column h-100">
         <div>
-          <div className="ph4 pv3 bb b--light-grey">
+          <div className="ph4 pv3">
             <h1 className="h6--font dark-grey ma0">
               Create plant ID after clipping
             </h1>
             <div className="flex justify-end items-center pt3">
-              <i className="material-icons orange pointer pa1 mh2">error_outline</i>
+              <i className="material-icons orange pointer pa1 mh2">
+                error_outline
+              </i>
               <a href="#0" className="btn btn--secondary btn--small">
                 Add Issue
               </a>
@@ -50,13 +52,13 @@ class ClipPotTagForm extends React.Component {
         {ClippingStore.isLoading ? (
           <div className="pa4 grey">Loading...</div>
         ) : (
-          <div className="flex flex-column flex-auto justify-between">
-            <div className="pa3 flex flex-column grey">
-              <div className="flex f6 pv2 fw7">
+          <div className="flex flex-column flex-auto">
+            <div className="flex flex-column grey relative">
+              <div className="flex f6 pa2 fw7 bg-light-gray">
                 <span className="ph2 w-30 ml3">Mother Plant ID</span>
                 <span className="ph2 w-30">Location</span>
-                <span className="ph2 w-20"># of Clippings</span>
-                <span className="ph2 w3">Scan UID</span>
+                <span className="ph2 w-20 tc"># of clippings</span>
+                <span className="ph2 w3 tc">UID</span>
               </div>
               {ClippingStore.motherPlants.map((m, i) => (
                 <MotherPlantRow
@@ -67,6 +69,13 @@ class ClipPotTagForm extends React.Component {
                   onDoneMoveNext={this.onDoneMoveNext}
                 />
               ))}
+              <div
+                className="ph4 pb5 f4 fw6 grey absolute left-0"
+                style={{ bottom: '-6em' }}
+              >
+                <span className="pr2">Total Clippings:</span>
+                <span className="fw7">15/25</span>
+              </div>
             </div>
           </div>
         )}
@@ -97,7 +106,11 @@ const MotherPlantRow = forwardRef(
       }
     }
     const onScanClipping = e => {
-      if (e.key === 'Enter' && e.target.value && !plants.includes(e.target.value)) {
+      if (
+        e.key === 'Enter' &&
+        e.target.value &&
+        !plants.includes(e.target.value)
+      ) {
         setPlants([...plants, e.target.value])
       }
     }
@@ -115,10 +128,10 @@ const MotherPlantRow = forwardRef(
       <React.Fragment>
         <div
           ref={ref}
-          className="flex items-center pv1 pointer"
+          className="flex items-center pv3 ph2 pointer"
           onClick={onExpand}
         >
-          <i className="material-icons md-18 black-30">
+          <i className="material-icons md-16">
             {expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}
           </i>
           <span className="ph2 w-30">{plantTag}</span>
@@ -127,13 +140,13 @@ const MotherPlantRow = forwardRef(
             {plants.length}/{quantityRequired}
           </span>
           <span className="ph2 w3 tc">
-            <ScanStatus count={plants.length} total={quantityRequired} />
+            {plants.length >= quantityRequired ? 'DONE' : 'SCAN'}
           </span>
         </div>
         {expand && (
-          <div className="flex pl3 pb3">
-            <div className="pa2 w-100">
-              <div className="pb4 pt3">
+          <div className="flex ph3">
+            <div className="pa3 w-100">
+              <div className="pb4 pt2">
                 <label className="db pb1">Scan mother plant: </label>
                 <InputBarcode
                   autoFocus={true}
@@ -168,14 +181,6 @@ const MotherPlantRow = forwardRef(
     )
   }
 )
-
-const ScanStatus = ({ count, total }) => {
-  if (count === total) {
-    return 'DONE'
-  } else {
-    return 'SCAN'
-  }
-}
 
 const PlantTagList = ({ onDelete, plantTags = [] }) => {
   if (isEmpty(plantTags)) {

@@ -105,6 +105,7 @@ class DailyTaskApp extends React.Component {
           show={sidebarName === 'clip_pot_tag'}
           renderBody={props => (
             <ClipPotTagForm
+              scanditLicense={this.props.scanditLicense}
               show={sidebarName === 'clip_pot_tag'}
               batchId={batchId}
               taskId={taskId}

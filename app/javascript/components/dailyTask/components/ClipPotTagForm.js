@@ -23,7 +23,7 @@ class ClipPotTagForm extends React.Component {
   }
 
   render() {
-    const { show = true } = this.props
+    const { show = true, scanditLicense } = this.props
     if (!show) return null
     return (
       <div className="flex flex-column h-100">
@@ -66,6 +66,7 @@ class ClipPotTagForm extends React.Component {
                   ref={row => (this.plantRefs[i] = row)}
                   {...m}
                   rowIndex={i}
+                  scanditLicense={scanditLicense}
                   onDoneMoveNext={this.onDoneMoveNext}
                 />
               ))}
@@ -93,6 +94,7 @@ const MotherPlantRow = forwardRef(
       plant_code,
       plant_location,
       quantity,
+      scanditLicense,
       scannedPlants = []
     },
     ref
@@ -149,6 +151,7 @@ const MotherPlantRow = forwardRef(
               <div className="pb4 pt2">
                 <label className="db pb1">Scan mother plant: </label>
                 <InputBarcode
+                  scanditLicense={scanditLicense}
                   autoFocus={true}
                   ref={input => (motherInput = input)}
                   onKeyPress={onScanMother}

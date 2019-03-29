@@ -13,4 +13,11 @@ class PlantsMovementsSerializer
       }
     end
   end
+
+  # attributes :histories do |object|
+  #   {
+  #     action: object.action,
+  #     plants: object.plants,
+  #   }
+  # end
 end

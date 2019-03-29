@@ -109,6 +109,7 @@ class DailyTaskApp extends React.Component {
               show={sidebarName === 'clip_pot_tag'}
               batchId={batchId}
               taskId={taskId}
+              indelible={sidebarName}
             />
           )}
         />

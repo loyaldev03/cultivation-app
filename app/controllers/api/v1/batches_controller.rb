@@ -140,6 +140,26 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     end
   end
 
+  def update_plants_movement
+    command = Cultivation::SavePlantMovement.call(
+      current_user,
+      batch_id: params[:batch_id],
+      task_id: params[:task_id],
+      mother_plant_id: params[:mother_plant_id],
+      mother_plant_code: params[:mother_plant_code],
+      destination_id: params[:destination_id],
+      destination_type: params[:destination_type],
+      destination_code: params[:destination_code],
+      plants: params[:plants],
+    )
+
+    if command.success?
+      render json: {data: 'OK'}
+    else
+      render json: {error: command.errors}
+    end
+  end
+
   private
 
   def extract_phases(batches)

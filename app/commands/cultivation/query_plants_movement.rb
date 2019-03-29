@@ -14,7 +14,6 @@ module Cultivation
       @current_user = current_user
       @args = {
         batch_id: nil,
-        task_id: nil,
         selected_plants: 0,
       }.merge(args)
     end

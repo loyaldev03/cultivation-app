@@ -6,10 +6,10 @@ class ClippingStore {
   @observable isLoading = false
 
   @action
-  async fetchClippingData(batchId, taskId) {
+  async fetchClippingData(batchId) {
     this.isLoading = true
-    const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}&selected_plants=1`
     try {
+      const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}&selected_plants=1`
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response.data && response.data.attributes) {
         this.motherPlants = response.data.attributes.selected_plants
@@ -18,6 +18,28 @@ class ClippingStore {
       }
     } catch (error) {
       Rollbar.error('Error loading mother plants:', error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  @action
+  async updateClippings(args) {
+    // batchId, taskId, motherPlantId, clippings
+    this.isLoading = true
+    try {
+      const url = `/api/v1/batches/${args.batch_id}/update_plants_movement`
+      const payload = args
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      if (response.data) {
+        console.log(response.data)
+        // this.motherPlants = response.data.attributes.selected_plants
+      } else {
+        console.log(response)
+        console.error(response.errors)
+      }
+    } catch (error) {
+      throw error
     } finally {
       this.isLoading = false
     }

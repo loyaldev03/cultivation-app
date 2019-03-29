@@ -6,14 +6,12 @@ module Cultivation
     field :batch_id, type: BSON::ObjectId
     # Reference Task.id
     field :task_id, type: BSON::ObjectId
-    field :plant_id, type: BSON::ObjectId
-    field :plant_code, type: String
     # Mother plant id (for clipping task)
     field :mother_plant_id, type: BSON::ObjectId
     field :mother_plant_code, type: String
     # E.g. match Task.phase, e.g. clone, veg1, veg2
     field :phase, type: String
-    # E.g. match Task.indelible, e.g. clip_pot_tag
+    # E.g. match Task.indelible, e.g. clip_pot_tag, moving
     field :action, type: String
     # User who perform this action
     field :user_id, type: BSON::ObjectId
@@ -22,5 +20,16 @@ module Cultivation
     field :destination_id, type: BSON::ObjectId
     field :destination_type, type: String
     field :destination_code, type: String
+
+    embeds_many :plants, class_name: 'Cultivation::PlantRecord'
+  end
+
+  class PlantRecord
+    include Mongoid::Document
+
+    field :plant_id, type: BSON::ObjectId
+    field :plant_code, type: String
+
+    embedded_in :plant_movement_history, class_name: 'Cultivation::PlantMovementHistory'
   end
 end

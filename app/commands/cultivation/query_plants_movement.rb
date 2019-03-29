@@ -1,5 +1,8 @@
 module Cultivation
-  PlantMovement = Struct.new(:id, :quantity, :selected_plants)
+  PlantMovement = Struct.new(:id,
+                             :quantity,
+                             :selected_plants,
+                             :histories)
   SelectedPlant = Struct.new(:plant_id,
                              :quantity,
                              :plant_code,
@@ -14,8 +17,6 @@ module Cultivation
       @current_user = current_user
       @args = {
         batch_id: nil,
-        task_id: nil,
-        selected_plants: 0,
       }.merge(args)
     end
 
@@ -52,19 +53,29 @@ module Cultivation
           plants = if res[:selected_plants]
                      res[:selected_plants].map do |y|
                        SelectedPlant.new(
-                         y[:plant_id].to_s,
+                         y[:plant_id],
                          y[:quantity] || '',
                          y[:plant_code] || '',
-                         y[:plant_location_id].to_s,
+                         y[:plant_location_id],
                        )
                      end
                    else
                      []
                    end
+          histories = if args[:phase] && args[:activity]
+                        Cultivation::PlantMovementHistory.where(
+                          batch_id: args[:batch_id],
+                          phase: args[:phase],
+                          activity: args[:activity],
+                        )
+                      else
+                        []
+                      end
           PlantMovement.new(
-            res[:_id].to_s,
+            res[:_id],
             res[:quantity] || '',
-            plants
+            plants,
+            histories,
           )
         end
       end
@@ -79,7 +90,7 @@ module Cultivation
           quantity: '$_id.batch_quantity',
         },
       }
-      project[:$project][:selected_plants] = 1 if args[:selected_plants] == '1'
+      project[:$project][:selected_plants] = 1 # if args[:selected_plants] == '1'
       project
     end
 

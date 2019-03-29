@@ -11,5 +11,5 @@ class Section
   # Dry rack count or High rise rack count
   field :rack_count, type: Integer
 
-  embedded_in :room
+  embedded_in :room, class_name: 'Room'
 end

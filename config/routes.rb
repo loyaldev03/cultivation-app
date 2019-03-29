@@ -201,6 +201,7 @@ Rails.application.routes.draw do
         get 'plants_movement_history', on: :collection
         post 'search_batch_plans', on: :collection
         post 'setup_simple_batch', on: :collection
+        post 'update_plants_movement'
         post 'update_locations'
         post 'update_batch'
         post 'update_batch_info'

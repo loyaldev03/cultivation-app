@@ -28,11 +28,11 @@ class DailyTaskApp extends React.Component {
     loadDailyTasks()
   }
   componentDidMount() {
-    SidebarStore.openSidebar(
-      'clip_pot_tag',
-      '5c9354718c24bdc68af413bd',
-      '5c9354728c24bdc68af413cf'
-    )
+    // SidebarStore.openSidebar(
+    //   'clip_pot_tag',
+    //   '5c9354718c24bdc68af413bd',
+    //   '5c9354728c24bdc68af413cf'
+    // )
   }
   onUpdateNutrients = nutrients => {
     const { batchId, taskId } = SidebarStore
@@ -105,9 +105,11 @@ class DailyTaskApp extends React.Component {
           show={sidebarName === 'clip_pot_tag'}
           renderBody={props => (
             <ClipPotTagForm
+              scanditLicense={this.props.scanditLicense}
               show={sidebarName === 'clip_pot_tag'}
               batchId={batchId}
               taskId={taskId}
+              indelible={sidebarName}
             />
           )}
         />

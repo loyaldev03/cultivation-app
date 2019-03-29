@@ -61,9 +61,9 @@ class SidebarStore {
 
   @action
   openSidebar(sidebarName, batchId, taskId) {
+    this.sidebarName = sidebarName
     this.batchId = batchId
     this.taskId = taskId
-    this.sidebarName = sidebarName
   }
 
   @action

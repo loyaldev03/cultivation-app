@@ -12,7 +12,7 @@ class Room
   # set to false after user saved
   field :wz_generated, type: Boolean, default: -> { true }
 
-  embedded_in :facility
-  embeds_many :rows
-  embeds_many :sections
+  embedded_in :facility, class_name: 'Facility'
+  embeds_many :rows, class_name: 'Row'
+  embeds_many :sections, class_name: 'Section'
 end

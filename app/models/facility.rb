@@ -12,7 +12,7 @@ class Facility
   field :is_enabled, type: Boolean, default: -> { true }
 
   embeds_one :address, as: :addressable, class_name: 'Address'
-  embeds_many :rooms
+  embeds_many :rooms, class_name: 'Room'
 
   has_many :strains, class_name: 'Inventory::FacilityStrain'
   has_many :catalogue, class_name: 'Inventory::Catalogue'

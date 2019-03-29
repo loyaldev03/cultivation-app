@@ -22,7 +22,7 @@ module Cultivation
           hist = Cultivation::PlantMovementHistory.find_or_initialize_by(
             batch_id: args[:batch_id].to_bson_id,
             phase: task.phase,
-            action: task.indelible,
+            activity: task.indelible,
             mother_plant_id: args[:mother_plant_id].to_bson_id,
           )
           hist.mother_plant_code = args[:mother_plant_code]
@@ -31,7 +31,7 @@ module Cultivation
           hist Cultivation::PlantMovementHistory.find_or_initialize_by(
             batch_id: args[:batch_id].to_bson_id,
             phase: task.phase,
-            action: task.indelible,
+            activity: task.indelible,
             destination_id: args[:destination_id],
           )
           hist.destination_type = args[:destination_type]

@@ -7,7 +7,7 @@ module Cultivation
     # E.g. match Task.phase, e.g. clone, veg1, veg2
     field :phase, type: String
     # E.g. match Task.indelible, e.g. clip_pot_tag, moving
-    field :action, type: String
+    field :activity, type: String
     # Reference Task.id
     # field :task_id, type: BSON::ObjectId
     # Mother plant id (for clipping task)

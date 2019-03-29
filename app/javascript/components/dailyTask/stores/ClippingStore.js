@@ -6,10 +6,10 @@ class ClippingStore {
   @observable isLoading = false
 
   @action
-  async fetchClippingData(batchId) {
+  async fetchClippingData(batchId, phase, activity) {
     this.isLoading = true
     try {
-      const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}&selected_plants=1`
+      const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}&phase=${phase}&activity=${activity}`
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response.data && response.data.attributes) {
         this.motherPlants = response.data.attributes.selected_plants

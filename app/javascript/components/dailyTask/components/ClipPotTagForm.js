@@ -10,7 +10,7 @@ class ClipPotTagForm extends React.Component {
   componentDidUpdate(prevProps) {
     const { batchId, taskId, indelible } = this.props
     if (batchId && taskId !== prevProps.taskId) {
-      ClippingStore.fetchClippingData(batchId)
+      ClippingStore.fetchClippingData(batchId, 'clone', indelible)
     }
   }
 

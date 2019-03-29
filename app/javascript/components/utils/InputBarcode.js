@@ -75,6 +75,16 @@ const InputBarcode = forwardRef(
             </React.Fragment>
           )}
         </div>
+        {multiple ? (
+          <div className="w-100 mb2 mt2 flex justify-end">
+            <a
+              className="ph2 pv2 btn--secondary f6 link pointer"
+              onClick={onShowScanner}
+            >
+              Scan Tags
+            </a>
+          </div>
+        ) : null}
         <div className="flex items-center mt3">
           <div className="scanner" ref={x => (scannerRef = x)} />
         </div>

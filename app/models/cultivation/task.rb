@@ -128,5 +128,9 @@ module Cultivation
     def indelible?
       !indelible.nil? && !indelible.blank?
     end
+
+    def sum_actual_hours
+      time_logs.map { |a| a.duration_in_minutes }.sum
+    end
   end
 end

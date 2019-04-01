@@ -58,15 +58,12 @@ class ClipPotTagForm extends React.Component {
                 total={ClippingStore.totalQuantity}
               />
               <div className="flex">
-                {/*
-                // Which issue to show?
                 <i
                   className="material-icons grey pointer pa1 mh2"
                   onClick={this.onShowIssue}
                 >
                   error_outline
                 </i>
-                */}
                 <a
                   href="#0"
                   className="btn btn--secondary btn--small"
@@ -144,17 +141,29 @@ const MotherPlantRow = forwardRef(
   ) => {
     let motherInput, clippingInput
     const [expand, setExpand] = useState(false)
+    const [errors, setErrors] = useState({})
+    const validates = () => {
+      const newErrors = {}
+      if (isEmpty(motherInput.value)) {
+        newErrors['motherInput'] = 'Please enter mother Plant ID'
+      } else if (motherInput.value !== plant_code) {
+        newErrors['motherInput'] = 'Mother Plant ID does not match'
+      }
+      if (motherInput.value && isEmpty(clippingInput.value)) {
+        newErrors['clippingInput'] = 'Please enter Plant ID'
+      } else if (scannedPlants.includes(clippingInput.value)) {
+        newErrors['clippingInput'] = 'Plant ID was already processed'
+      }
+      setErrors(newErrors)
+      return newErrors
+    }
     const onScanMother = e => {
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && isEmpty(validates())) {
         clippingInput.focus()
       }
     }
     const onScanClipping = async e => {
-      if (
-        e.key === 'Enter' &&
-        clippingInput.value &&
-        !scannedPlants.includes(clippingInput.value)
-      ) {
+      if (e.key === 'Enter' && clippingInput.value && isEmpty(validates())) {
         const newPlants = [...scannedPlants, clippingInput.value]
         clippingInput.select()
         await ClippingStore.updateClippings({
@@ -211,19 +220,21 @@ const MotherPlantRow = forwardRef(
                   autoFocus={true}
                   ref={input => (motherInput = input)}
                   onKeyPress={onScanMother}
+                  error={errors['motherInput']}
                 />
               </div>
               <div className="pb4">
                 <label className="db pb1">Scan each clipping: </label>
-                <div className="flex justify-between">
+                <div className="">
                   <InputBarcode
                     scanditLicense={scanditLicense}
                     ref={input => (clippingInput = input)}
                     onKeyPress={onScanClipping}
+                    error={errors['clippingInput']}
                   />
                   <a
                     href="#0"
-                    className="btn btn--primary btn--small"
+                    className="btn btn--primary btn--small fr"
                     onClick={onDone}
                   >
                     DONE

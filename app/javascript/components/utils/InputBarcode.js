@@ -11,6 +11,7 @@ const InputBarcode = forwardRef(
       onBarcodeScan,
       scanditLicense,
       value,
+      error,
       autoFocus = false,
       className = 'w5',
       multiple = false
@@ -75,6 +76,7 @@ const InputBarcode = forwardRef(
             </React.Fragment>
           )}
         </div>
+        {error && <span className="f6 i red dib pv1">{error}</span>}
         {multiple ? (
           <div className="w-100 mb2 mt2 flex justify-end">
             <a

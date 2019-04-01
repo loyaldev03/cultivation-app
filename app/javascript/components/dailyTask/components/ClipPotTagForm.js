@@ -16,6 +16,26 @@ class ClipPotTagForm extends React.Component {
 
   plantRefs = []
 
+  onNewIssue = event => {
+    SidebarStore.openIssues(
+      null,
+      'create',
+      true,
+      this.props.taskId,
+      this.props.batchId
+    )
+  }
+
+  onShowIssue = issue => {
+    SidebarStore.openIssues(
+      null,
+      'details',
+      true,
+      this.props.taskId,
+      this.props.batchId
+    )
+  }
+
   onDoneMoveNext = rowIndex => {
     if (this.plantRefs[rowIndex + 1]) {
       this.plantRefs[rowIndex + 1].click()
@@ -38,10 +58,20 @@ class ClipPotTagForm extends React.Component {
                 total={ClippingStore.totalQuantity}
               />
               <div className="flex">
-                <i className="material-icons orange pointer pa1 mh2">
+                {/*
+                // Which issue to show?
+                <i
+                  className="material-icons grey pointer pa1 mh2"
+                  onClick={this.onShowIssue}
+                >
                   error_outline
                 </i>
-                <a href="#0" className="btn btn--secondary btn--small">
+                */}
+                <a
+                  href="#0"
+                  className="btn btn--secondary btn--small"
+                  onClick={this.onNewIssue}
+                >
                   Add Issue
                 </a>
               </div>

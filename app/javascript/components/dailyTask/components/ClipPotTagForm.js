@@ -57,24 +57,31 @@ class ClipPotTagForm extends React.Component {
               <span className="ph2 w-20 tc"># of clippings</span>
               <span className="ph2 w3 tc">UID</span>
             </div>
-            {ClippingStore.motherPlants.map((m, i) => (
-              <MotherPlantRow
-                key={m.plant_id}
-                ref={row => (this.plantRefs[i] = row)}
-                {...m}
-                rowIndex={i}
-                batchId={batchId}
-                taskId={taskId}
-                scanditLicense={scanditLicense}
-                onDoneMoveNext={this.onDoneMoveNext}
-              />
-            ))}
+            {ClippingStore.isDataLoaded &&
+              ClippingStore.motherPlants.map((m, i) => {
+                const movement = ClippingStore.getPlantMovements(m.plant_code)
+                return (
+                  <MotherPlantRow
+                    key={m.plant_id}
+                    ref={row => (this.plantRefs[i] = row)}
+                    {...m}
+                    rowIndex={i}
+                    batchId={batchId}
+                    taskId={taskId}
+                    scanditLicense={scanditLicense}
+                    scannedPlants={movement}
+                    onDoneMoveNext={this.onDoneMoveNext}
+                  />
+                )
+              })}
             <div
               className="ph4 pb5 f4 fw6 grey absolute left-0"
               style={{ bottom: '-6em' }}
             >
               <span className="pr2">Total Clippings:</span>
-              <span className="fw7">15/25</span>
+              <span className="fw7">
+                {ClippingStore.totalClippings}/{ClippingStore.totalQuantity}
+              </span>
             </div>
           </div>
         </div>
@@ -101,7 +108,6 @@ const MotherPlantRow = forwardRef(
   ) => {
     let motherInput, clippingInput
     const [expand, setExpand] = useState(false)
-    const [plants, setPlants] = useState(scannedPlants)
     const onScanMother = e => {
       if (e.key === 'Enter') {
         clippingInput.focus()
@@ -111,10 +117,9 @@ const MotherPlantRow = forwardRef(
       if (
         e.key === 'Enter' &&
         clippingInput.value &&
-        !plants.includes(clippingInput.value)
+        !scannedPlants.includes(clippingInput.value)
       ) {
-        const newPlants = [...plants, clippingInput.value]
-        setPlants(newPlants)
+        const newPlants = [...scannedPlants, clippingInput.value]
         clippingInput.select()
         await ClippingStore.updateClippings({
           batch_id: batchId,
@@ -125,9 +130,14 @@ const MotherPlantRow = forwardRef(
         })
       }
     }
-    const onDeleteScan = plant_code => {
-      setPlants(plants.filter(t => t !== plant_code))
-      ClippingStore.updateClippings(clippingInput.value, newPlants)
+    const onDeleteScan = async clipping_code => {
+      await ClippingStore.deleteClippings({
+        batch_id: batchId,
+        task_id: taskId,
+        mother_plant_id: plant_id,
+        mother_plant_code: plant_code,
+        clipping_code
+      })
     }
     const onDone = e => {
       setExpand(false)
@@ -149,10 +159,10 @@ const MotherPlantRow = forwardRef(
           <span className="ph2 w-30">{plant_code}</span>
           <span className="ph2 w-30">{plant_location}</span>
           <span className="ph2 w-20 tc">
-            {plants.length}/{quantity}
+            {scannedPlants.length}/{quantity}
           </span>
           <span className="ph2 w3 tc">
-            {plants.length >= quantity ? 'DONE' : 'SCAN'}
+            {scannedPlants.length >= quantity ? 'DONE' : 'SCAN'}
           </span>
         </div>
         {expand && (
@@ -186,7 +196,10 @@ const MotherPlantRow = forwardRef(
               </div>
               <div className="pv3">
                 <label className="db pb1">Clippings Scanned</label>
-                <PlantTagList plantTags={plants} onDelete={onDeleteScan} />
+                <PlantTagList
+                  plantTags={scannedPlants}
+                  onDelete={onDeleteScan}
+                />
               </div>
             </div>
           </div>
@@ -201,9 +214,9 @@ const PlantTagList = ({ onDelete, plantTags = [] }) => {
     return <p className="mv1 i light-grey">Nothing yet.</p>
   }
   return (
-    <ol className="pl3 mv1">
+    <ol className="clippings">
       {plantTags.map(tag => (
-        <li key={tag} className="ph2 pv1 hide-child">
+        <li key={tag} className="clippings__item hide-child">
           <span className="flex items-center">
             {tag}
             <i

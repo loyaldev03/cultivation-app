@@ -108,13 +108,16 @@ class ClipPotTagForm extends React.Component {
                 )
               })}
             <div
-              className="ph4 pb5 f4 fw6 grey absolute left-0"
+              className="ph4 pb5 f4 fw6 grey absolute flex left-0"
               style={{ bottom: '-6em' }}
             >
               <span className="pr2">Total Clippings:</span>
               <span className="fw7">
                 {ClippingStore.totalClippings}/{ClippingStore.totalQuantity}
               </span>
+              {ClippingStore.totalClippings === ClippingStore.totalQuantity && (
+                <i class="material-icons ph2 green">check_circle</i>
+              )}
             </div>
           </div>
         </div>

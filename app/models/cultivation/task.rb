@@ -130,7 +130,7 @@ module Cultivation
     end
 
     def sum_actual_hours
-      time_logs.map { |a| a.duration_in_minutes }.sum
+      time_logs.map { |a| a.duration_in_hours }.sum
     end
   end
 end

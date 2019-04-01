@@ -109,7 +109,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
 
   def actual_hours
     tasks = @batch.tasks.includes(:time_logs)
-    result = tasks.map { |task| {task_id: task.id.to_s, actual_hour: task.sum_actual_hours} }
+    result = tasks.map { |task| {task_id: task.id.to_s, actual_hours: task.sum_actual_hours} }
     render json: {data: result}
   end
 

@@ -2,7 +2,7 @@ module Cultivation
   PlantMovement = Struct.new(:id,
                              :quantity,
                              :selected_plants,
-                             :histories)
+                             :movements)
   SelectedPlant = Struct.new(:plant_id,
                              :quantity,
                              :plant_code,
@@ -62,7 +62,7 @@ module Cultivation
                    else
                      []
                    end
-          histories = if args[:phase] && args[:activity]
+          movements = if args[:phase] && args[:activity]
                         Cultivation::PlantMovementHistory.where(
                           batch_id: args[:batch_id],
                           phase: args[:phase],
@@ -75,7 +75,7 @@ module Cultivation
             res[:_id],
             res[:quantity] || '',
             plants,
-            histories,
+            movements,
           )
         end
       end

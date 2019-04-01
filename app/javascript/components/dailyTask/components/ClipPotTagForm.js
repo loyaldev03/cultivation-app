@@ -3,7 +3,7 @@ import isEmpty from 'lodash.isempty'
 import { observer } from 'mobx-react'
 import SidebarStore from '../stores/SidebarStore'
 import ClippingStore from '../stores/ClippingStore'
-import { InputBarcode, SlidePanelHeader } from '../../utils'
+import { AdjustmentMessage, InputBarcode, SlidePanelHeader } from '../../utils'
 
 @observer
 class ClipPotTagForm extends React.Component {
@@ -32,13 +32,19 @@ class ClipPotTagForm extends React.Component {
             <h1 className="h6--font dark-grey ma0">
               Create plant ID after clipping
             </h1>
-            <div className="flex justify-end items-center pt3">
-              <i className="material-icons orange pointer pa1 mh2">
-                error_outline
-              </i>
-              <a href="#0" className="btn btn--secondary btn--small">
-                Add Issue
-              </a>
+            <div className="flex justify-between items-center pt3">
+              <AdjustmentMessage
+                value={ClippingStore.totalClippings}
+                total={ClippingStore.totalQuantity}
+              />
+              <div className="flex">
+                <i className="material-icons orange pointer pa1 mh2">
+                  error_outline
+                </i>
+                <a href="#0" className="btn btn--secondary btn--small">
+                  Add Issue
+                </a>
+              </div>
             </div>
           </div>
           <a

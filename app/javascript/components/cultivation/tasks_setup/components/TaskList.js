@@ -512,6 +512,13 @@ class TaskList extends React.Component {
       Cell: data => moneyFormatter.format(data.row.estimated_cost)
     },
     {
+      Header: 'Actual Hours',
+      accessor: 'actual_hours',
+      headerClassName: 'f6',
+      width: '85',
+      show: this.checkVisibility('actual_hours')
+    },
+    {
       Header: 'Assigned',
       accessor: 'user_ids',
       headerClassName: 'f6',

@@ -23,6 +23,7 @@ class TaskSetup extends React.Component {
         'end_date',
         'duration',
         'estimated_hours',
+        'actual_hours',
         'estimated_cost',
         'resource_assigned',
         'materials',
@@ -215,6 +216,17 @@ class TaskSetup extends React.Component {
                           checked={checkboxValue('estimated_cost')}
                         />
                         Estimated Cost
+                      </label>
+                      <label className="dim f6 fw6 db pv1 gray ttc">
+                        <input
+                          type="checkbox"
+                          name="checkbox-1"
+                          className="mr2"
+                          value="actual_hours"
+                          onChange={handleChangeCheckbox}
+                          checked={checkboxValue('actual_hours')}
+                        />
+                        Actual Hour
                       </label>
                       <label className="dim f6 fw6 db pv1 gray ttc">
                         <input

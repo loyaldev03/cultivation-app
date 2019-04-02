@@ -2,6 +2,7 @@ module Cultivation
   PlantMovement = Struct.new(:id,
                              :quantity,
                              :selected_plants,
+                             :selected_trays,
                              :movements)
   SelectedPlant = Struct.new(:plant_id,
                              :quantity,
@@ -90,7 +91,7 @@ module Cultivation
           quantity: '$_id.batch_quantity',
         },
       }
-      project[:$project][:selected_plants] = 1 # if args[:selected_plants] == '1'
+      project[:$project][:selected_plants] = 1 if args[:selected_plants] == '1'
       project
     end
 

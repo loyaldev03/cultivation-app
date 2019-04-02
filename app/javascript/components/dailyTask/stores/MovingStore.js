@@ -13,7 +13,7 @@ class MovingStore {
     this.isLoading = true
     this.phase = phase
     try {
-      const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}&phase=${phase}&activity=${activity}?selected_plants=0`
+      const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}&phase=${phase}&activity=${activity}&selected_trays=1`
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response.data && response.data.attributes) {
         const { selected_plants, movements } = response.data.attributes

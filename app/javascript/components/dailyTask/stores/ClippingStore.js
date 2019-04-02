@@ -12,7 +12,7 @@ class ClippingStore {
   async fetchClippingData(batchId, phase, activity) {
     this.isLoading = true
     try {
-      const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}&phase=${phase}&activity=${activity}`
+      const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}&phase=${phase}&activity=${activity}&selected_plants=1`
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response.data && response.data.attributes) {
         const { selected_plants, movements } = response.data.attributes

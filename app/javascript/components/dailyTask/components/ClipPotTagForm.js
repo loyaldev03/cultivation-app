@@ -9,9 +9,9 @@ import { AdjustmentMessage, InputBarcode, SlidePanelHeader } from '../../utils'
 @observer
 class ClipPotTagForm extends React.Component {
   componentDidUpdate(prevProps) {
-    const { batchId, taskId, indelible } = this.props
-    if (batchId && taskId !== prevProps.taskId) {
-      ClippingStore.fetchClippingData(batchId, 'clone', indelible)
+    const { batchId, taskId, phase, indelible, show } = this.props
+    if (batchId && taskId !== prevProps.taskId && show) {
+      ClippingStore.fetchClippingData(batchId, phase, indelible)
     }
   }
 

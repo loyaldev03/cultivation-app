@@ -54,15 +54,23 @@ RSpec.describe Cultivation::CalculateActualHours, type: :command do
       expect(cmd.result).to eq(67.5)
     end
 
-    it "OT Full", focus: true do #Not the same
-      start_time = DateTime.new(2019, 4, 21, 19,00) #ot 18.00-19.30 => 2 hour 30 minutes * (7/60) = 17.5
+    it "OT full before working hours start time " do
+      start_time = DateTime.new(2019, 4, 21, 6,00) #ot 18.00-19.30 => 2 hour 30 minutes * (7/60) = 17.5
+      end_time = DateTime.new(2019, 4, 21, 7, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
+      task = Cultivation::Task.create
+      time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
+      cmd = Cultivation::CalculateActualHours.call(time_log.id.to_s)
+      expect(cmd.result).to eq(10.5)
+    end
+
+    it "OT full after working hours end time " do
+      start_time = DateTime.new(2019, 4, 21, 19, 00) #ot 18.00-19.30 => 2 hour 30 minutes * (7/60) = 17.5
       end_time = DateTime.new(2019, 4, 21, 21, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
       task = Cultivation::Task.create
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
       cmd = Cultivation::CalculateActualHours.call(time_log.id.to_s)
-      pp cmd
+      expect(cmd.result).to eq(17.5)
     end
-
 
   end
 end

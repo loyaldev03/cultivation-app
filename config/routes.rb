@@ -216,6 +216,9 @@ Rails.application.routes.draw do
             post 'update_material_use'
             post 'append_material_use'
           end
+          collection do
+            get 'actual_hours'
+          end
         end
         resources :nutrient_profiles, only: [:index, :create, :update]
       end

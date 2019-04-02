@@ -26,22 +26,21 @@ module Cultivation
             mother_plant_id: args[:mother_plant_id].to_bson_id,
           )
           hist.mother_plant_code = args[:mother_plant_code]
-        else
-          # task.indelible == "moving"
-          hist Cultivation::PlantMovementHistory.find_or_initialize_by(
+        elsif task.indelible == "moving_to_tray"
+          hist = Cultivation::PlantMovementHistory.find_or_initialize_by(
             batch_id: args[:batch_id].to_bson_id,
             phase: task.phase,
             activity: task.indelible,
             destination_id: args[:destination_id],
           )
-          hist.destination_type = args[:destination_type]
           hist.destination_code = args[:destination_code]
+          hist.destination_type = args[:destination_type]
+          # TODO: Create background job to update current plant location
         end
 
         hist.plants = args[:plants]
         hist.user_id = current_user.id
         hist.user_name = current_user.display_name
-        # TODO: Create background job to update current plant location
         hist.save!
         hist
       end

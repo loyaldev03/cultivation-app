@@ -2,16 +2,18 @@ module Inventory
   class QueryMaterialCount
     prepend SimpleCommand
 
-    attr_reader :product_ids, :facility_id
+    attr_reader :product_ids, :facility_id, :user
 
-    def initialize(product_ids, facility_id)
+    def initialize(product_ids, facility_id, user = nil)
       @product_ids = product_ids.map { |x| x.to_bson_id } rescue []
+
+      # Not sure if facility is needed
       @facility_id = facility_id
-      # @user = user
+      @user = user
     end
 
     def call
-      available_inventories = Inventory::Product.collection.aggregate([
+      received_inventories = Inventory::Product.collection.aggregate([
         {'$match': {'_id': {'$in': product_ids}}},
         {'$lookup': {from: 'inventory_item_transactions', localField: '_id', foreignField: 'product_id', as: 'tx'}},
         {'$unwind': {'path': '$tx', 'preserveNullAndEmptyArrays': false}},
@@ -24,109 +26,118 @@ module Inventory
           _id: '$_id',
           name: {"$first": '$name'},
           uom: {'$last': '$tx.common_uom'},
-          common_quantity: {'$sum': {'$toDecimal': '$tx.common_quantity'}},
+          total_available_qty: {'$sum': {'$toDecimal': '$tx.common_quantity'}},
         }},
       ])
 
-      # Planned to use equals to....
-      # Batch is currently active or planned
-      # If task in not_started, should include
-      # If task is in progress/stuck, should include
-      # If task is already completed, should ignore
+      ##
+      # Used or allocated inventory comes from Cultivation Batches that are currently active or planned.
+      # For each task, take the max between planned or (accumulated used + waste) quantity.
+      # Accumulate the final quantity by each product.
 
-      # facility_id: 5bea7e7eedfdb2c4e1436110
-      # {"$match": {"_id": { '$in': product_ids }}},
-
-      # planned_inventories =
-      # lookup to item::tx whee ref event_type in material_used or waste
-      # pi = Cultivation::Batch.collection.aggregate([
-      #   {
-      #     "$match": {
-      #       '$and': [
-      #         status: { '$in': [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE] },
-      #         facility_id: facility_id
-      #       ]
-      #     }
-      #   },
-      #   { "$lookup": {from: 'cultivation_tasks', localField: '_id', foreignField: 'batch_id', as: 'tasks' } },
-      #   { '$unwind': { 'path': '$tasks', 'preserveNullAndEmptyArrays': false }},
-      #   { '$unwind': { 'path': '$tasks.material_use', 'preserveNullAndEmptyArrays': false }},
-      #   { "$lookup": {from: 'inventory_item_transactions', localField: 'ref_id', foreignField: 'tasks.material_use._id', as: 'material_use' } },
-      #   {
-      #     '$project': {
-      #       name: '$name',
-      #       batch_id: '$_id',
-      #       tasks: '$tasks',
-      #       material_use: '$tasks.material_use',
-      #       material_use_id: '$tasks.material_use._id',
-      #       product: '$tasks.material_use.product_id',
-      #       material_use: '$material_use'
-      #     }
-      #   },
-      #   { "$lookup": {from: 'inventory_products', localField: '_id', foreignField: 'product', as: 'products' } }
-      # ])
-
-      # pi = Cultivation::Batch.collection.aggregate([
-      #   {
-      #     "$match": { status: { '$in': [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE] } }
-      #   },
-      #   { "$lookup": {from: 'cultivation_tasks', localField: '_id', foreignField: 'cultivation_batch_id', as: 'tasks' } },
-      #   { '$unwind': { 'path': '$tasks', 'preserveNullAndEmptyArrays': false }},
-      #   { '$unwind': { 'path': '$tasks.material_use', 'preserveNullAndEmptyArrays': false }},
-      #   { "$lookup": {from: 'products', localField: '_id', foreignField: 'product_id', as: 'products' } },
-      #   { '$unwind': { 'path': '$products', 'preserveNullAndEmptyArrays': false }},
-      #   {
-      #     '$project': {
-      #       p: '$product._id',
-      #       p_name: '$product.name',
-      #       name: '$name',
-      #       batch_id: '$_id'
-      #     }
-      #   }
-      # ])
-      # { '$unwind': { 'path': '$tasks1', 'preserveNullAndEmptyArrays': true }},
-
-      # BEST SO FAR
       batch_ids = Cultivation::Batch.where(
         status: {'$in': [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE]},
-      ).
-        pluck(:id)
+      ).pluck(:id)
 
-      pi5 = Cultivation::Task.collection.aggregate([
-        {"$match": {batch_id: {'$in': batch_ids}}},
-        {'$unwind': {'path': '$material_use', 'preserveNullAndEmptyArrays': false}},
-        {"$lookup": {from: 'inventory_item_transactions', localField: 'material_use._id', foreignField: 'ref_id', as: 'tx'}},
-        {
-          '$project': {
-            id: '$_id',
-            tasks: '$name',
-            material_use_id: '$material_use._id',
-            product_id: '$material_use.product_id',
-            planned: '$material_use.quantity',
-            used_quantity: '$tx.common_quantity',
-          },
-        },
-        '$project': {
-          id: '$id',
-          tasks: '$tasks',
-          material_use_id: '$material_use_id',
-          product_id: '$product_id',
-          planned: '$planned',
-          sum_used_quantity: {
-            '$reduce': {
-              input: '$used_quantity',
-              initialValue: 0,
-              in: {'$add': ['$$value', {'$toDecimal': '$$this'}]},
+      used_or_allocated_inventories =
+        Cultivation::Task.collection.aggregate([
+          {"$match": {batch_id: {'$in': batch_ids}}},
+          {"$unwind": {"path": '$material_use', "preserveNullAndEmptyArrays": false}},
+          {"$lookup": {from: 'inventory_item_transactions', localField: 'material_use._id', foreignField: 'ref_id', as: 'tx'}},
+          {"$lookup": {from: 'inventory_products', localField: 'material_use.product_id', foreignField: '_id', as: 'pd'}},
+          {
+            "$project": {
+              id: '$_id',
+              tasks: '$name',
+              material_use_id: '$material_use_id',
+              product_id: '$material_use.product_id',
+              product_name: {"$arrayElemAt": ['$pd.name', 0]},
+              planned_quantity: '$material_use.quantity',
+              sum_used_quantity: {
+                "$abs": {
+                  "$reduce": {
+                    input: '$tx.common_quantity',
+                    initialValue: 0,
+                    in: {"$add": ['$$value', {"$toDecimal": '$$this'}]},
+                  },
+                },
+              },
             },
           },
-        },
-      ])
+          {
+            "$project": {
+              id: 1,
+              tasks: 1,
+              material_use_id: 1,
+              product_id: 1,
+              product_name: 1,
+              planned_quantity: 1,
+              sum_used_quantity: 1,
+              final_qty: {
+                "$cond": {
+                  "if": {"$gte": ['$planned_quantity', '$sum_used_quantity']},
+                  "then": '$planned_quantity',
+                  "else": '$sum_used_quantity',
+                },
+              },
+            },
+          },
+          {
+            "$group": {
+              _id: '$product_id',
+              name: {"$first": '$product_name'},
+              total_planned: {"$sum": '$planned_quantity'},
+              total_used_waste: {"$sum": '$sum_used_quantity'},
+              total_planned_or_used: {"$sum": '$final_qty'},
+            },
+          },
+        ])
 
-      # Next in the aggregation pipeline
-      # Add if condition and take the largest number between planned * used
-      # Then group data by product_id
+      # Compile end result by product id
+      availability = Hash.new do |hash, key|
+        hash[key] = {
+          product_id: key,
+          name: '',
+          intake: 0,
+          planned_or_used: 0,
+          available: 0,
+          is_available: false,  # if true if intake > planned_or_used
+        }
+      end
 
-      available_inventories
+      products = Inventory::Product.where(
+        "_id": {"$in": product_ids},
+        facility_id: facility_id,
+      )
+
+      products.each do |product|
+        key = product.id.to_s
+        availability[key][:name] = product.name
+      end
+
+      received_inventories.each do |row|
+        key = row['_id'].to_s
+        availability[key][:intake] = row[:total_available_qty]
+        availability[key][:name] = row[:name]
+      end
+
+      used_or_allocated_inventories.each do |row|
+        key = row['_id'].to_s
+        total_planned_or_used = if row[:total_planned_or_used].is_a? BSON::Decimal128
+                                  row[:total_planned_or_used].to_big_decimal
+                                else
+                                  row[:total_planned_or_used]
+                                end
+
+        available = availability[key][:intake] - total_planned_or_used
+        availability[key][:planned_or_used] = total_planned_or_used
+        availability[key][:available] = available
+
+        # True if intake > planned_or_used
+        availability[key][:is_available] = available > 0
+      end
+
+      availability
     end
   end
 end

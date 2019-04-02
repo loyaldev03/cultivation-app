@@ -117,7 +117,7 @@ class ClipPotTagForm extends React.Component {
                 {ClippingStore.totalClippings}/{ClippingStore.totalQuantity}
               </span>
               {ClippingStore.totalClippings === ClippingStore.totalQuantity && (
-                <i class="material-icons ph2 green">check_circle</i>
+                <i className="material-icons ph2 green">check_circle</i>
               )}
             </div>
           </div>
@@ -146,6 +146,7 @@ const MotherPlantRow = forwardRef(
     let motherInput, clippingInput
     const [expand, setExpand] = useState(false)
     const [errors, setErrors] = useState({})
+    // TODO: Split into 2 like in MovingIntoTrayForm
     const validates = () => {
       const newErrors = {}
       if (isEmpty(motherInput.value)) {

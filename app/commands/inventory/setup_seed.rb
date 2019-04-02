@@ -15,6 +15,7 @@ module Inventory
       :product_id,
       :product_name,
       :manufacturer,
+      :upc,
       :description,
       :product_uom,
       :product_size,
@@ -55,6 +56,7 @@ module Inventory
       @product_name = args[:product_name]
       @description = args[:description]
       @manufacturer = args[:manufacturer]
+      @upc = args[:upc]
       @product_uom = args[:product_uom]
       @product_size = args[:product_size]
       @product_ppm = args[:product_ppm]
@@ -331,6 +333,7 @@ module Inventory
           name: product_name,
           manufacturer: manufacturer,
           description: description,
+          upc: upc,
           catalogue: catalogue,
           facility: facility,
           facility_strain: facility_strain,
@@ -346,6 +349,7 @@ module Inventory
                  name: product_name,
                  manufacturer: manufacturer,
                  description: description,
+                 upc: upc,
                  catalogue: catalogue,
                  facility: facility,
                  facility_strain: facility_strain,

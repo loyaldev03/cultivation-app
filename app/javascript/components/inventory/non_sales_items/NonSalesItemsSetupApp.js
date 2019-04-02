@@ -139,6 +139,7 @@ class NonSalesItemsSetupApp extends React.Component {
           order_uoms={this.props.order_uoms}
           catalogues={this.props.catalogues}
           facility_id={this.props.facility_id}
+          scanditLicense={this.props.scanditLicense}
         />
       </React.Fragment>
     )

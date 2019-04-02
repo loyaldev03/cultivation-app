@@ -85,6 +85,30 @@ class TaskStore {
       Rollbar.error('Error Loading Task List:', error)
     } finally {
       this.isLoading = false
+      this.loadActualHours(batchId)
+    }
+  }
+
+  @action
+  async loadActualHours(batchId) {
+    const url = `/api/v1/batches/${batchId}/tasks/actual_hours`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response && response.data) {
+        this.tasks = this.tasks.map(s => {
+          let a = response.data.find(e => e.task_id === s.id)
+          if (a) {
+            s.actual_hours = a.actual_hours
+          }
+          console.log(toJS(s))
+          return s
+        })
+      }
+    } catch (error) {
+      this.isDataLoaded = false
+      Rollbar.error('Error Loading Task List actual_hours :', error)
+    } finally {
+      this.isLoading = false
     }
   }
 

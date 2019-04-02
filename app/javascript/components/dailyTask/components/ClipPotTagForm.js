@@ -2,48 +2,39 @@ import React, { useState, forwardRef } from 'react'
 import isEmpty from 'lodash.isempty'
 import { observer } from 'mobx-react'
 import SidebarStore from '../stores/SidebarStore'
-import { InputBarcode, SlidePanelHeader } from '../../utils'
+import ClippingStore from '../stores/ClippingStore'
+import { AdjustmentMessage, InputBarcode, SlidePanelHeader } from '../../utils'
 
+@observer
 class ClipPotTagForm extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      motherPlants: []
+  componentDidUpdate(prevProps) {
+    const { batchId, taskId, indelible } = this.props
+    if (batchId && taskId !== prevProps.taskId) {
+      ClippingStore.fetchClippingData(batchId, 'clone', indelible)
     }
   }
 
-  async componentDidMount() {
-    const res = await (await fetch(
-      'https://jsonplaceholder.typicode.com/todos/1'
-    )).json()
-    this.setState({
-      motherPlants: [
-        {
-          plantId: '5c5265b18c24bd19df581c85',
-          plantTag: 'M0AK0192',
-          plantLocation: 'M01.S1.R1.Sh1.T3',
-          scannedPlants: [],
-          quantityRequired: 10
-        },
-        {
-          plantId: '5c5265b18c24bd19df581c86',
-          plantTag: 'M0AK0193',
-          plantLocation: 'M02.S1.R1.Sh1.T4',
-          scannedPlants: [],
-          quantityRequired: 10
-        },
-        {
-          plantId: '5c5265b18c24bd19df581c87',
-          plantTag: 'M0AK0194',
-          plantLocation: 'M01.S1.R1.Sh1.T5',
-          scannedPlants: ['ABC123', 'ABC234', 'ABC3245'],
-          quantityRequired: 5
-        }
-      ]
-    })
+  plantRefs = []
+
+  onNewIssue = event => {
+    SidebarStore.openIssues(
+      null,
+      'create',
+      true,
+      this.props.taskId,
+      this.props.batchId
+    )
   }
 
-  plantRefs = []
+  onShowIssue = issue => {
+    SidebarStore.openIssues(
+      null,
+      'details',
+      true,
+      this.props.taskId,
+      this.props.batchId
+    )
+  }
 
   onDoneMoveNext = rowIndex => {
     if (this.plantRefs[rowIndex + 1]) {
@@ -52,30 +43,82 @@ class ClipPotTagForm extends React.Component {
   }
 
   render() {
-    const { motherPlants } = this.state
+    const { batchId, taskId, scanditLicense, show = true } = this.props
+    if (!show) return null
     return (
       <div className="flex flex-column h-100">
-        <SlidePanelHeader
-          onClose={() => SidebarStore.closeSidebar()}
-          title={'Create plant ID after clipping'}
-        />
-        <div className="flex flex-column flex-auto justify-between">
-          <div className="pa3 flex flex-column grey">
-            <div className="flex f6 pv2 fw7">
+        <div>
+          <div className="ph4 pv3">
+            <h1 className="h6--font dark-grey ma0">
+              Create plant ID after clipping
+            </h1>
+            <div className="flex justify-between items-center pt3">
+              <AdjustmentMessage
+                value={ClippingStore.totalClippings}
+                total={ClippingStore.totalQuantity}
+              />
+              <div className="flex">
+                <i
+                  className="material-icons grey pointer pa1 mh2"
+                  onClick={this.onShowIssue}
+                >
+                  error_outline
+                </i>
+                <a
+                  href="#0"
+                  className="btn btn--secondary btn--small"
+                  onClick={this.onNewIssue}
+                >
+                  Add Issue
+                </a>
+              </div>
+            </div>
+          </div>
+          <a
+            href="#0"
+            className="slide-panel__close-button dim"
+            onClick={() => SidebarStore.closeSidebar()}
+          >
+            <i className="material-icons mid-gray md-18 pa1">close</i>
+          </a>
+        </div>
+        <div className="flex flex-column flex-auto">
+          <div className="flex flex-column grey relative">
+            <div className="flex f6 pa2 fw7 bg-light-gray">
               <span className="ph2 w-30 ml3">Mother Plant ID</span>
               <span className="ph2 w-30">Location</span>
-              <span className="ph2 w-20"># of Clippings</span>
-              <span className="ph2 w3">Scan UID</span>
+              <span className="ph2 w-20 tc"># of clippings</span>
+              <span className="ph2 w3 tc">UID</span>
             </div>
-            {motherPlants.map((m, i) => (
-              <MotherPlantRow
-                key={m.plantId}
-                ref={row => (this.plantRefs[i] = row)}
-                {...m}
-                rowIndex={i}
-                onDoneMoveNext={this.onDoneMoveNext}
-              />
-            ))}
+            {ClippingStore.isDataLoaded &&
+              ClippingStore.motherPlants.map((m, i) => {
+                const movement = ClippingStore.getPlantMovements(m.plant_code)
+                return (
+                  <MotherPlantRow
+                    key={m.plant_id}
+                    ref={row => (this.plantRefs[i] = row)}
+                    {...m}
+                    rowIndex={i}
+                    batchId={batchId}
+                    taskId={taskId}
+                    scanditLicense={scanditLicense}
+                    scannedPlants={movement}
+                    onDoneMoveNext={this.onDoneMoveNext}
+                  />
+                )
+              })}
+            <div
+              className="ph4 pb5 f4 fw6 grey absolute flex left-0"
+              style={{ bottom: '-6em' }}
+            >
+              <span className="pr2">Total Clippings:</span>
+              <span className="fw7">
+                {ClippingStore.totalClippings}/{ClippingStore.totalQuantity}
+              </span>
+              {ClippingStore.totalClippings === ClippingStore.totalQuantity && (
+                <i class="material-icons ph2 green">check_circle</i>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -88,29 +131,61 @@ const MotherPlantRow = forwardRef(
     {
       onDoneMoveNext,
       rowIndex,
-      plantId,
-      plantTag,
-      plantLocation,
-      quantityRequired,
+      batchId,
+      taskId,
+      plant_id,
+      plant_code,
+      plant_location,
+      quantity,
+      scanditLicense,
       scannedPlants = []
     },
     ref
   ) => {
     let motherInput, clippingInput
     const [expand, setExpand] = useState(false)
-    const [plants, setPlants] = useState(scannedPlants)
+    const [errors, setErrors] = useState({})
+    const validates = () => {
+      const newErrors = {}
+      if (isEmpty(motherInput.value)) {
+        newErrors['motherInput'] = 'Please enter mother Plant ID'
+      } else if (motherInput.value !== plant_code) {
+        newErrors['motherInput'] = 'Mother Plant ID does not match'
+      }
+      if (motherInput.value && isEmpty(clippingInput.value)) {
+        newErrors['clippingInput'] = 'Please enter Plant ID'
+      } else if (scannedPlants.includes(clippingInput.value)) {
+        newErrors['clippingInput'] = 'Plant ID was already processed'
+      }
+      setErrors(newErrors)
+      return newErrors
+    }
     const onScanMother = e => {
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && isEmpty(validates())) {
         clippingInput.focus()
       }
     }
-    const onScanClipping = e => {
-      if (e.key === 'Enter' && !plants.includes(e.target.value)) {
-        setPlants([...plants, e.target.value])
+    const onScanClipping = async e => {
+      if (e.key === 'Enter' && clippingInput.value && isEmpty(validates())) {
+        const newPlants = [...scannedPlants, clippingInput.value]
+        clippingInput.select()
+        await ClippingStore.updateClippings({
+          batch_id: batchId,
+          task_id: taskId,
+          mother_plant_id: plant_id,
+          mother_plant_code: plant_code,
+          plants: newPlants
+        })
       }
     }
-    const onDeleteScan = plantTag => {
-      setPlants(plants.filter(t => t !== plantTag))
+    const onDeleteScan = async clipping_code => {
+      await ClippingStore.deleteClippings({
+        batch_id: batchId,
+        task_id: taskId,
+        mother_plant_id: plant_id,
+        mother_plant_code: plant_code,
+        clipping_code
+      })
     }
     const onDone = e => {
       setExpand(false)
@@ -123,42 +198,46 @@ const MotherPlantRow = forwardRef(
       <React.Fragment>
         <div
           ref={ref}
-          className="flex items-center pv1 pointer"
+          className="flex items-center pv3 ph2 pointer"
           onClick={onExpand}
         >
-          <i className="material-icons md-18 black-30">
+          <i className="material-icons md-16">
             {expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}
           </i>
-          <span className="ph2 w-30">{plantTag}</span>
-          <span className="ph2 w-30">{plantLocation}</span>
+          <span className="ph2 w-30">{plant_code}</span>
+          <span className="ph2 w-30">{plant_location}</span>
           <span className="ph2 w-20 tc">
-            {plants.length}/{quantityRequired}
+            {scannedPlants.length}/{quantity}
           </span>
           <span className="ph2 w3 tc">
-            <ScanStatus count={plants.length} total={quantityRequired} />
+            {scannedPlants.length >= quantity ? 'DONE' : 'SCAN'}
           </span>
         </div>
         {expand && (
-          <div className="flex pl3 pb3">
-            <div className="pa2 w-100">
-              <div className="pb4 pt3">
+          <div className="flex ph3">
+            <div className="pa3 w-100">
+              <div className="pb4 pt2">
                 <label className="db pb1">Scan mother plant: </label>
                 <InputBarcode
+                  scanditLicense={scanditLicense}
                   autoFocus={true}
                   ref={input => (motherInput = input)}
                   onKeyPress={onScanMother}
+                  error={errors['motherInput']}
                 />
               </div>
               <div className="pb4">
                 <label className="db pb1">Scan each clipping: </label>
-                <div className="flex justify-between">
+                <div className="">
                   <InputBarcode
+                    scanditLicense={scanditLicense}
                     ref={input => (clippingInput = input)}
                     onKeyPress={onScanClipping}
+                    error={errors['clippingInput']}
                   />
                   <a
                     href="#0"
-                    className="btn btn--primary btn--small"
+                    className="btn btn--primary btn--small fr"
                     onClick={onDone}
                   >
                     DONE
@@ -167,7 +246,10 @@ const MotherPlantRow = forwardRef(
               </div>
               <div className="pv3">
                 <label className="db pb1">Clippings Scanned</label>
-                <PlantTagList plantTags={plants} onDelete={onDeleteScan} />
+                <PlantTagList
+                  plantTags={scannedPlants}
+                  onDelete={onDeleteScan}
+                />
               </div>
             </div>
           </div>
@@ -177,22 +259,14 @@ const MotherPlantRow = forwardRef(
   }
 )
 
-const ScanStatus = ({ count, total }) => {
-  if (count === total) {
-    return 'DONE'
-  } else {
-    return 'SCAN'
-  }
-}
-
 const PlantTagList = ({ onDelete, plantTags = [] }) => {
   if (isEmpty(plantTags)) {
     return <p className="mv1 i light-grey">Nothing yet.</p>
   }
   return (
-    <ol className="pl3 mv1">
+    <ol className="clippings">
       {plantTags.map(tag => (
-        <li key={tag} className="ph2 pv1 hide-child">
+        <li key={tag} className="clippings__item hide-child">
           <span className="flex items-center">
             {tag}
             <i

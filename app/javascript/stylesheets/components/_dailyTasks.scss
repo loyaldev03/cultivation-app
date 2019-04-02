@@ -1,0 +1,11 @@
+.clippings {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 0.3rem;
+  grid-row-gap: 0.25rem;
+  padding-left: 1em;
+}
+
+.clippings__item {
+  padding: 0.25em;
+}

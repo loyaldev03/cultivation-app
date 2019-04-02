@@ -85,6 +85,7 @@ module Inventory
           transaction_limit: object.product.transaction_limit,
           description: object.product.description,
           manufacturer: object.product.manufacturer,
+          upc: object.product.upc,
         }
       else
         nil

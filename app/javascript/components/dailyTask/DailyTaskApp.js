@@ -103,11 +103,15 @@ class DailyTaskApp extends React.Component {
         <SlidePanel
           width="600px"
           show={sidebarName === 'clip_pot_tag'}
-          renderBody={props => {
-            return batchId && taskId && sidebarName === 'clip_pot_tag' ? (
-              <ClipPotTagForm batchId={batchId} taskId={taskId} />
-            ) : null
-          }}
+          renderBody={props => (
+            <ClipPotTagForm
+              scanditLicense={this.props.scanditLicense}
+              show={sidebarName === 'clip_pot_tag'}
+              batchId={batchId}
+              taskId={taskId}
+              indelible={sidebarName}
+            />
+          )}
         />
       </React.Fragment>
     )

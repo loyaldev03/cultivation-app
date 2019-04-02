@@ -14,7 +14,7 @@ class Shelf
   # and capacity_type info
   field :is_complete, type: Boolean, default: -> { false }
 
-  embedded_in :row
+  embedded_in :row, class_name: 'Row'
 
   has_many :trays, dependent: :restrict
 end

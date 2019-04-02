@@ -187,6 +187,7 @@ Rails.application.routes.draw do
       resources :vendor_invoices, only: [:index, :show]
       resources :products, only: [:index] do
         get :non_nutrients, on: :collection
+        get :upc, on: :collection
       end
 
       resources :strains, only: [:index, :create, :show] do
@@ -197,8 +198,10 @@ Rails.application.routes.draw do
         get 'batch_info'
         get 'list_infos', on: :collection
         get 'search_locations', on: :collection
+        get 'plants_movement_history', on: :collection
         post 'search_batch_plans', on: :collection
         post 'setup_simple_batch', on: :collection
+        post 'update_plants_movement'
         post 'update_locations'
         post 'update_batch'
         post 'update_batch_info'
@@ -212,6 +215,9 @@ Rails.application.routes.draw do
             post 'delete_relationship'
             post 'update_material_use'
             post 'append_material_use'
+          end
+          collection do
+            get 'actual_hours'
           end
         end
         resources :nutrient_profiles, only: [:index, :create, :update]

@@ -4,11 +4,12 @@ import Select from 'react-select'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { PurchaseInfo } from '../../../utils'
+import { PurchaseInfo, InputBarcode } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { saveNonSalesItem } from '../actions/saveNonSalesItem'
 import { getNonSalesItem } from '../actions/getNonSalesItem'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
+import UpcStore from '../../raw_materials/store/UpcStore'
 
 const handleInputChange = newValue => {
   return newValue ? newValue : ''
@@ -50,6 +51,7 @@ class NonSalesItemEditor extends React.Component {
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer,
                 description: attr.description,
+                upc: attr.product.upc || '',
                 product: { label: attr.product_name, value: attr.product_name },
                 order_quantity: parseFloat(attr.order_quantity),
                 price_per_package: parseFloat(attr.vendor_invoice.item_price),
@@ -114,6 +116,7 @@ class NonSalesItemEditor extends React.Component {
       product_id: '',
       product_name: '',
       manufacturer: '',
+      upc: '',
       description: '',
       defaultProduct: [],
       order_quantity: 0,
@@ -161,6 +164,7 @@ class NonSalesItemEditor extends React.Component {
       product_name,
       manufacturer,
       description,
+      upc,
       order_quantity,
       order_uom: { value: order_uom },
       price_per_package: price,
@@ -221,6 +225,7 @@ class NonSalesItemEditor extends React.Component {
       product_id,
       product_name,
       manufacturer,
+      upc,
       description,
       order_quantity,
       order_uom,
@@ -267,7 +272,8 @@ class NonSalesItemEditor extends React.Component {
           product_id: '',
           manufacturer: '',
           description: '',
-          catalogue: { label: '', value: '', uoms: [] }
+          catalogue: { label: '', value: '', uoms: [] },
+          upc: ''
         })
       } else {
         const catalogueOptions = this.props.catalogues.result.map(x => ({
@@ -286,7 +292,8 @@ class NonSalesItemEditor extends React.Component {
           product_name: product.name,
           manufacturer: product.manufacturer,
           description: product.description,
-          catalogue: catalogue
+          catalogue: catalogue,
+          upc: product.upc || ''
         })
       }
     } else {
@@ -295,9 +302,40 @@ class NonSalesItemEditor extends React.Component {
         product_id: '',
         manufacturer: '',
         description: '',
-        catalogue: { label: '', value: '', uoms: [] }
+        catalogue: { label: '', value: '', uoms: [] },
+        upc: ''
       })
     }
+  }
+
+  handleKeyPress = e => {
+    if (e.key === 'Enter') {
+      this.loadItemScan()
+    }
+  }
+
+  loadItemScan = async e => {
+    console.log('call api to retrieve product info')
+    const product = await UpcStore.loadItem(this.state.upc)
+    if (product.brand) {
+      this.setState({
+        manufacturer: product.brand,
+        description: product.description,
+        product: { label: product.title, value: product.title },
+        product_name: product.title
+      })
+    }
+  }
+
+  handleChangeUpc = event => {
+    this.setState({ upc: event.target.value })
+  }
+
+  onBarcodeScan = e => {
+    console.log(e)
+    this.setState({ upc: e }, () => {
+      this.loadItemScan()
+    })
   }
 
   render() {
@@ -381,6 +419,19 @@ class NonSalesItemEditor extends React.Component {
                 fieldname="description"
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
+              />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">UPC</label>
+              <InputBarcode
+                value={this.state.upc}
+                onChange={this.handleChangeUpc}
+                onKeyPress={this.handleKeyPress}
+                scanditLicense={this.props.scanditLicense}
+                onBarcodeScan={this.onBarcodeScan}
               />
             </div>
           </div>

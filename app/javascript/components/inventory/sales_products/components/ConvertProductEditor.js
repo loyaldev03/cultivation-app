@@ -9,6 +9,7 @@ import {
   CalendarPicker
 } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
+import { InputBarcode } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { launchBarcodeScanner } from '../../../utils/BarcodeScanner'
 import setupConvertedProduct from '../actions/setupConvertedProduct'
@@ -156,32 +157,6 @@ class ConvertProductEditor extends React.Component {
   onChangeUom = uom => this.setState({ uom })
   onChangeProductionDate = production_date => this.setState({ production_date })
   onChangeExpirationDate = expiration_date => this.setState({ expiration_date })
-
-  onShowScanner = e => {
-    this.setState(
-      { showScanner: !this.state.showScanner, scannerReady: false },
-      () => {
-        if (this.state.showScanner) {
-          launchBarcodeScanner({
-            licenseKey: this.props.scanditLicense,
-            targetId: 'scandit-barcode-picker',
-            onScan: result => {
-              this.setState({
-                package_tags: result + '\n' + this.state.package_tags
-              })
-              this.resizePackageIdTextArea()
-            },
-            onReady: () => {
-              this.setState({ scannerReady: true })
-            }
-          }).then(scanner => (this.scanner = scanner))
-        } else {
-          this.scanner.destroy()
-        }
-      }
-    )
-    e.preventDefault()
-  }
 
   onAddBreakdown = event => {
     const { breakdowns } = this.state
@@ -525,6 +500,13 @@ class ConvertProductEditor extends React.Component {
       })
   }
 
+  onBarcodeScan = result => {
+    this.setState({
+      package_tags: result + '\n' + this.state.package_tags
+    })
+    this.resizePackageIdTextArea()
+  }
+
   render() {
     const { locations, sales_catalogue } = this.props
     const uoms = this.state.catalogue
@@ -609,33 +591,21 @@ class ConvertProductEditor extends React.Component {
               <label className="f6 fw6 db dark-gray">Package Details</label>
             </div>
           </div>
+
           <div className="ph4 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 gray">Product Tag(s)</label>
-              {this.renderPackageTag()}
-            </div>
-          </div>
-
-          <div className="ph4 mt0 mb3 flex flex-column">
-            <div className="w-100 mb2 flex justify-end">
-              <a
-                href=""
-                onClick={this.onShowScanner}
-                className="ph2 pv2 btn--secondary f6 link"
-              >
-                {this.state.showScanner ? 'Hide scanner' : scan_tag}
-              </a>
-            </div>
-            <div className="w-100">
-              <div id="scandit-barcode-picker" className="scanner" />
-            </div>
-            <div className="w-100 tc">
-              {this.state.showScanner && this.state.scannerReady && (
-                <div className="f7 gray">Scanner is ready!</div>
-              )}
-              {this.state.showScanner && !this.state.scannerReady && (
-                <div className="f7 gray">Loading scanner...</div>
-              )}
+              <label className="f6 fw6 db mb1 gray ttc">Product Tag(s)</label>
+              <InputBarcode
+                value={this.state.package_tags}
+                ref={this.packageIdTextArea}
+                onChange={this.onChangePackageTags}
+                scanditLicense={this.props.scanditLicense}
+                onBarcodeScan={this.onBarcodeScan}
+                className={
+                  'db w-100 pa2 f6 black ba b--black-20 br2 mt1 mb0 outline-0 lh-copy'
+                }
+                multiple={true}
+              />
             </div>
           </div>
 

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react'
 import loadPlants from '../../../inventory/plant_setup/actions/loadPlants'
 import BatchStore from '../../batches/BatchStore'
 import PlantStore from '../../../inventory/plant_setup/store/PlantStore'
-import { sumBy, smallSelectStyle } from '../../../utils'
+import { sumBy, smallSelectStyle, AdjustmentMessage } from '../../../utils'
 /**
  * This component is used in special "Clip" task in Task List
  */
@@ -77,11 +77,11 @@ export default class MotherPlantsEditor extends React.Component {
             Quantity Needed: {BatchStore.batch.quantity}
           </span>
         </div>
-        <SmallAdjustmentMessage
+        <AdjustmentMessage
           value={totalSelected}
           total={BatchStore.batch.quantity}
         />
-        <table className="w-100 f6 fw6 gray ba b--light-grey collapse">
+        <table className="mt1 w-100 f6 fw6 gray ba b--light-grey collapse">
           <tbody>
             <tr>
               <td className="pa1 bb b--light-grey w4">Plant Id</td>
@@ -155,24 +155,3 @@ export default class MotherPlantsEditor extends React.Component {
     )
   }
 }
-
-const SmallAdjustmentMessage = React.memo(({ value, total }) => {
-  if (value >= 0 && value < total) {
-    const res = +total - +value
-    return (
-      <div className="dib bg-light-yellow pa2 ba br2 b--light-yellow grey w-4 mb1 tc">
-        You need to select <span className="fw6 dark-grey">{res}</span> more!
-      </div>
-    )
-  }
-  if (value > 0 && value > total) {
-    const res = +value - +total
-    return (
-      <div className="dib bg-washed-red pa2 ba br2 b--washed-red grey w-4 mb1 tc">
-        You need to remove <span className="fw6 dark-grey">{res}</span>{' '}
-        plant(s).
-      </div>
-    )
-  }
-  return null
-})

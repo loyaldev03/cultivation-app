@@ -3,11 +3,13 @@ import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { PurchaseInfo, FileUploader } from '../../../utils'
+import { PurchaseInfo, FileUploader, InputBarcode } from '../../../utils'
 import LocationPicker from '../../../utils/LocationPicker2'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
+import UpcStore from '../store/UpcStore'
+import { launchBarcodeScanner } from '../../../utils/BarcodeScanner'
 
 const handleInputChange = newValue => {
   return newValue ? newValue : ''
@@ -23,6 +25,9 @@ class NutrientEditor extends React.Component {
   componentDidMount() {
     document.addEventListener('editor-sidebar-open', event => {
       const id = event.detail.id
+      if (this.scanner) {
+        this.scanner.destroy()
+      }
       if (!id) {
         this.reset()
       } else {
@@ -39,6 +44,7 @@ class NutrientEditor extends React.Component {
                 product_name: attr.product_name,
                 manufacturer: attr.manufacturer || '',
                 description: attr.description || '',
+                upc: attr.product.upc || '',
                 attachments: attr.attachments || [],
                 nitrogen: attr.product.nitrogen || '',
                 prosphorus: attr.product.prosphorus || '',
@@ -115,6 +121,7 @@ class NutrientEditor extends React.Component {
       product_name: '',
       manufacturer: '',
       description: '',
+      upc: '',
       product_size: '',
       product_uom: { label: '', value: '' },
       product_ppm: '',
@@ -130,7 +137,8 @@ class NutrientEditor extends React.Component {
       order_uom: { value: '', label: '' },
       uom: { value: '', label: '' },
       location_id: '',
-
+      showScanner: false,
+      scannerReady: false,
       // purchase info
       vendor: {},
       purchase_order: {},
@@ -169,6 +177,7 @@ class NutrientEditor extends React.Component {
       product_name,
       manufacturer,
       description,
+      upc,
       order_quantity,
       order_uom: { value: order_uom },
       price_per_package: price,
@@ -255,6 +264,7 @@ class NutrientEditor extends React.Component {
       product_id,
       product_name,
       manufacturer,
+      upc,
       description,
       order_quantity,
       order_uom,
@@ -315,7 +325,8 @@ class NutrientEditor extends React.Component {
           nitrogen: '',
           prosphorus: '',
           potassium: '',
-          nutrients: []
+          nutrients: [],
+          upc: ''
         })
       } else {
         this.setState({
@@ -335,7 +346,8 @@ class NutrientEditor extends React.Component {
           nutrients: product.nutrients.map(e => ({
             nutrient_element: { label: e.element, value: e.element },
             nutrient_value: e.value
-          }))
+          })),
+          upc: product.upc || ''
         })
       }
     } else {
@@ -353,7 +365,8 @@ class NutrientEditor extends React.Component {
         nitrogen: '',
         prosphorus: '',
         potassium: '',
-        nutrients: []
+        nutrients: [],
+        upc: ''
       })
     }
   }
@@ -389,6 +402,36 @@ class NutrientEditor extends React.Component {
     })
   }
 
+  handleKeyPress = e => {
+    if (e.key === 'Enter') {
+      this.loadItemScan()
+    }
+  }
+
+  loadItemScan = async e => {
+    console.log('call api to retrieve product info')
+    const product = await UpcStore.loadItem(this.state.upc)
+    if (product.brand) {
+      this.setState({
+        manufacturer: product.brand,
+        description: product.description,
+        product: { label: product.title, value: product.title },
+        product_name: product.title
+      })
+    }
+  }
+
+  handleChangeUpc = event => {
+    this.setState({ upc: event.target.value })
+  }
+
+  onBarcodeScan = e => {
+    console.log(e)
+    this.setState({ upc: e }, () => {
+      this.loadItemScan()
+    })
+  }
+
   render() {
     const { facility_id, catalogue_id, locations } = this.props
     const {
@@ -401,8 +444,6 @@ class NutrientEditor extends React.Component {
     const all_uoms = this.props.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
     const showTotalPrice = price_per_package && order_quantity
-    const hasProductId = this.state.product_id
-
     return (
       <div className="rc-slide-panel" data-role="sidebar">
         <div className="rc-slide-panel__body flex flex-column">
@@ -484,6 +525,19 @@ class NutrientEditor extends React.Component {
                 fieldname="description"
                 value={this.state.description}
                 onChange={this.onChangeGeneric}
+              />
+            </div>
+          </div>
+
+          <div className="ph4 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 gray ttc">UPC</label>
+              <InputBarcode
+                value={this.state.upc}
+                onChange={this.handleChangeUpc}
+                onKeyPress={this.handleKeyPress}
+                scanditLicense={this.props.scanditLicense}
+                onBarcodeScan={this.onBarcodeScan}
               />
             </div>
           </div>

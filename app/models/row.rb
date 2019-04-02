@@ -14,6 +14,6 @@ class Row
   field :wz_shelves_count, type: Integer, default: -> { 1 }
   field :wz_trays_count, type: Integer, default: -> { 0 }
 
-  embedded_in :room
+  embedded_in :room, class_name: 'Room'
   embeds_many :shelves, class_name: 'Shelf'
 end

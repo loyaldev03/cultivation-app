@@ -19,6 +19,7 @@ module Inventory
                 :epa_number,
                 :description,
                 :manufacturer,
+                :upc,
                 :quantity,
                 :uom,
                 :price,
@@ -58,6 +59,7 @@ module Inventory
       @product_name = args[:product_name]
       @description = args[:description]
       @manufacturer = args[:manufacturer]
+      @upc = args[:upc]
       @product_uom = args[:product_uom]
       @product_size = args[:product_size]
       @product_ppm = args[:product_ppm]
@@ -321,6 +323,7 @@ module Inventory
         uom_dimension = Common::UnitOfMeasure.find_by(unit: product_uom)&.dimension
         product.name = product_name
         product.manufacturer = manufacturer
+        product.upc = upc
         product.description = description
         product.catalogue = catalogue
         product.facility = facility
@@ -334,6 +337,7 @@ module Inventory
         product = Inventory::Product.new(
           name: product_name,
           manufacturer: manufacturer,
+          upc: upc,
           description: description,
           catalogue: catalogue,
           facility: facility,

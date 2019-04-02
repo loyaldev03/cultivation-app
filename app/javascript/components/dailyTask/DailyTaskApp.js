@@ -34,6 +34,12 @@ class DailyTaskApp extends React.Component {
     //   '5c9354718c24bdc68af413bd',
     //   '5c9354728c24bdc68af413cf'
     // )
+    // SidebarStore.openSidebar(
+    //   'moving_to_tray',
+    //   '5c9354718c24bdc68af413bd',
+    //   '5c9354728c24bdc68af413d8',
+    //   'clone',
+    // )
   }
   onUpdateNutrients = nutrients => {
     const { batchId, taskId } = SidebarStore
@@ -47,7 +53,7 @@ class DailyTaskApp extends React.Component {
       sidebarName,
       batchId,
       taskId,
-      taskPhase,
+      taskPhase
     } = SidebarStore
     const IssueSideBarWithStore = dailyTaskSidebarAdaptor(
       IssueSidebar,

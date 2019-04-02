@@ -40,7 +40,9 @@ class MovingStore {
 
   @action
   async updateMovings(args) {
-    const found = this.movements.find(x => x.destination_code === args.destination_code)
+    const found = this.movements.find(
+      x => x.destination_code === args.destination_code
+    )
     let newHist
     if (found) {
       newHist = { ...found, plants: args.plants }

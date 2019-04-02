@@ -18,8 +18,8 @@ class PlantsMovementsSerializer
     end
   end
 
-  attributes :histories do |object|
-    object.histories.map do |h|
+  attributes :movements do |object|
+    object.movements.map do |h|
       {
         phase: h.phase,
         activity: h.activity,

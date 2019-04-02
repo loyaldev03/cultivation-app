@@ -22,7 +22,8 @@ module Cultivation
     end
 
     def duration_in_minutes
-      duration_in_seconds / 60
+      return 0 if end_time.nil?
+      (duration_in_seconds / 1.minutes).round(2)
     end
 
     def duration_in_hours

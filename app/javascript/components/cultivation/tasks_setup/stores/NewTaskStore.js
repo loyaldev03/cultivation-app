@@ -97,10 +97,10 @@ class TaskStore {
       if (response && response.data) {
         this.tasks = this.tasks.map(s => {
           let a = response.data.find(e => e.task_id === s.id)
-            if(a){
-              s.actual_hours = a.actual_hours
-            }
-            console.log(toJS(s))
+          if (a) {
+            s.actual_hours = a.actual_hours
+          }
+          console.log(toJS(s))
           return s
         })
       }

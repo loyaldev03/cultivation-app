@@ -16,14 +16,8 @@ class MovingStore {
       const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}&phase=${phase}&activity=${activity}&selected_trays=1`
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response.data && response.data.attributes) {
-        const { selected_plants, movements } = response.data.attributes
-        // TODO: Change this into
-        const selectedLocations = selected_plants.map(x => ({
-          destination_id: x.plant_id,
-          destination_code: x.plant_code,
-          capacity: x.quantity
-        }))
-        this.selectedLocations = selectedLocations
+        const { selected_trays, movements } = response.data.attributes
+        this.selectedLocations = selected_trays
         this.movements = movements
         this.isDataLoaded = true
       } else {

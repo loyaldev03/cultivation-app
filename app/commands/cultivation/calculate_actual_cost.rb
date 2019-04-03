@@ -1,6 +1,6 @@
 
 module Cultivation
-  class CalculateActualHours
+  class CalculateActualCost
     prepend SimpleCommand
 
     attr_reader :args
@@ -23,33 +23,41 @@ module Cultivation
 
       if ((@time_log.start_time >= working_hour_start) and (@time_log.start_time < working_hour_end)) and ((@time_log.end_time > working_hour_start) and (@time_log.end_time <= working_hour_end)) #compare hours in the range
         pp 1
-        total_cost = @time_log.duration_in_minutes * (@user.hourly_rate / 60)
+        actual_cost = @time_log.duration_in_minutes * (@user.hourly_rate / 60)
+        actual_minutes = @time_log.duration_in_minutes
       elsif ((@time_log.start_time < working_hour_start)) and ((@time_log.end_time > working_hour_start) and (@time_log.end_time <= working_hour_end)) #7.30am-9.30am
         pp 2
         ot_minutes = difference_in_minutes(working_hour_start, @time_log.start_time) # 8am - 7.30 am = 30minutes
         in_range_minutes = difference_in_minutes(@time_log.end_time, working_hour_start) # 9.30am - 8am = 30minutes + 60minutes
-        total_cost = (in_range_minutes * (@user.hourly_rate / 60)) + (ot_minutes * (@user.overtime_hourly_rate / 60))
+        actual_cost = (in_range_minutes * (@user.hourly_rate / 60)) + (ot_minutes * (@user.overtime_hourly_rate / 60))
+        actual_minutes = in_range_minutes + ot_minutes
       elsif ((@time_log.start_time >= working_hour_start) and (@time_log.start_time <= working_hour_end)) and (@time_log.end_time > working_hour_end) #8.00am-6.30pm
         pp 3
         ot_minutes = difference_in_minutes(@time_log.end_time, working_hour_end) # 6pm - 6.30 pm = 30minutes
         in_range_minutes = difference_in_minutes(working_hour_end, @time_log.start_time) # 8.00am - 6pm = 10 hours
-        total_cost = (in_range_minutes * (@user.hourly_rate / 60)) + (ot_minutes * (@user.overtime_hourly_rate / 60))
+        actual_cost = (in_range_minutes * (@user.hourly_rate / 60)) + (ot_minutes * (@user.overtime_hourly_rate / 60))
+        actual_minutes = in_range_minutes + ot_minutes
       elsif (@time_log.start_time < working_hour_start) and (@time_log.end_time > working_hour_end) #8.00am-6.30pm
         pp 4
         ot1_minutes = difference_in_minutes(working_hour_start, @time_log.start_time) # 7.30am - 8.00 am = 30minutes
         ot2_minutes = difference_in_minutes(@time_log.end_time, working_hour_end) # 6pm - 6.30 pm = 30minutes
         total_ot = ot1_minutes + ot2_minutes
         in_range_minutes = difference_in_minutes(working_hour_end, working_hour_start) # 8.00am - 6pm = 10 hours
-        total_cost = (in_range_minutes * (@user.hourly_rate / 60)) + (total_ot * (@user.overtime_hourly_rate / 60))
+        actual_cost = (in_range_minutes * (@user.hourly_rate / 60)) + (total_ot * (@user.overtime_hourly_rate / 60))
+        actual_minutes = in_range_minutes + total_ot
       elsif (@time_log.start_time > working_hour_start) and (@time_log.end_time > working_hour_end) #8.00am-6.30pm
         pp 5
         ot_minutes = difference_in_minutes(@time_log.end_time, @time_log.start_time) # 7.30am - 8.00 am = 30minutes
-        total_cost = (ot_minutes * (@user.overtime_hourly_rate / 60))
+        actual_cost = (ot_minutes * (@user.overtime_hourly_rate / 60))
+        actual_minutes = ot_minutes
       elsif (@time_log.start_time < working_hour_start) and (@time_log.end_time < working_hour_end) #8.00am-6.30pm
         pp 6
         ot_minutes = difference_in_minutes(@time_log.end_time, @time_log.start_time) # 7.30am - 8.00 am = 30minutes
-        total_cost = (ot_minutes * (@user.overtime_hourly_rate / 60))
+        actual_cost = (ot_minutes * (@user.overtime_hourly_rate / 60))
+        actual_minutes = ot_minutes
       end
+
+      return {actual_cost: actual_cost, actual_minutes: actual_minutes}
     end
 
     def difference_in_minutes(start_time, end_time) # 1 hour 30 minute should return 90 minutes

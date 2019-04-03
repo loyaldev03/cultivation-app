@@ -519,6 +519,13 @@ class TaskList extends React.Component {
       show: this.checkVisibility('actual_hours')
     },
     {
+      Header: 'Actual Cost',
+      accessor: 'actual_cost',
+      headerClassName: 'f6',
+      width: '85',
+      show: this.checkVisibility('actual_cost')
+    },
+    {
       Header: 'Assigned',
       accessor: 'user_ids',
       headerClassName: 'f6',

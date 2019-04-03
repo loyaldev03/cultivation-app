@@ -28,7 +28,7 @@ class PlantsMovementsSerializer
         {
           destination_id: t.tray_id&.to_s,
           destination_code: t.tray_code&.to_s,
-          quantity: t.capacity,
+          capacity: t.capacity,
         }
       end
     end
@@ -42,6 +42,9 @@ class PlantsMovementsSerializer
           activity: h.activity,
           mother_plant_id: h.mother_plant_id&.to_s,
           mother_plant_code: h.mother_plant_code,
+          destination_id: h.destination_id&.to_s,
+          destination_code: h.destination_code,
+          destination_type: h.destination_type,
           plants: h.plants,
         }
       end

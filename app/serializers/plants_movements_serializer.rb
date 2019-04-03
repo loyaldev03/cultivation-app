@@ -22,6 +22,18 @@ class PlantsMovementsSerializer
     end
   end
 
+  attributes :selected_trays do |object|
+    if object.selected_trays.present?
+      object.selected_trays.map do |t|
+        {
+          destination_id: t.tray_id&.to_s,
+          destination_code: t.tray_code&.to_s,
+          quantity: t.capacity,
+        }
+      end
+    end
+  end
+
   attributes :movements do |object|
     if object.movements.present?
       object.movements.map do |h|

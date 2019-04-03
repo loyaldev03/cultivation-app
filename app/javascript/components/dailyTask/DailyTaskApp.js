@@ -5,6 +5,7 @@ import BatchedDailyTasks from './components/BatchedDailyTasks'
 import NoteEditor from './components/NoteEditor'
 import AddMaterialForm from './components/AddMaterialForm'
 import ClipPotTagForm from './components/ClipPotTagForm'
+import MovingIntoTrayForm from './components/MovingIntoTrayForm'
 import loadDailyTasks from './actions/loadDailyTasks'
 import DailyTasksStore from './stores/DailyTasksStore'
 import MaterialUsedStore from './stores/MaterialUsedStore'
@@ -33,6 +34,12 @@ class DailyTaskApp extends React.Component {
     //   '5c9354718c24bdc68af413bd',
     //   '5c9354728c24bdc68af413cf'
     // )
+    // SidebarStore.openSidebar(
+    //   'moving_to_tray',
+    //   '5c9354718c24bdc68af413bd',
+    //   '5c9354728c24bdc68af413d8',
+    //   'clone',
+    // )
   }
   onUpdateNutrients = nutrients => {
     const { batchId, taskId } = SidebarStore
@@ -45,7 +52,8 @@ class DailyTaskApp extends React.Component {
       showIssues,
       sidebarName,
       batchId,
-      taskId
+      taskId,
+      taskPhase
     } = SidebarStore
     const IssueSideBarWithStore = dailyTaskSidebarAdaptor(
       IssueSidebar,
@@ -109,6 +117,20 @@ class DailyTaskApp extends React.Component {
               show={sidebarName === 'clip_pot_tag'}
               batchId={batchId}
               taskId={taskId}
+              phase={taskPhase}
+              indelible={sidebarName}
+            />
+          )}
+        />
+        <SlidePanel
+          width="600px"
+          show={sidebarName === 'moving_to_tray'}
+          renderBody={props => (
+            <MovingIntoTrayForm
+              show={sidebarName === 'moving_to_tray'}
+              batchId={batchId}
+              taskId={taskId}
+              phase={taskPhase}
               indelible={sidebarName}
             />
           )}

@@ -12,7 +12,7 @@ class ClippingStore {
   async fetchClippingData(batchId, phase, activity) {
     this.isLoading = true
     try {
-      const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}&phase=${phase}&activity=${activity}`
+      const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}&phase=${phase}&activity=${activity}&selected_plants=1`
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response.data && response.data.attributes) {
         const { selected_plants, movements } = response.data.attributes
@@ -33,31 +33,29 @@ class ClippingStore {
 
   @action
   async updateClippings(args) {
-    // batchId, taskId, motherPlantId, clippings
-    try {
-      const url = `/api/v1/batches/${args.batch_id}/update_plants_movement`
-      const payload = args
-      const found = this.movements.find(
-        x => x.mother_plant_code === args.mother_plant_code
+    const found = this.movements.find(
+      x => x.mother_plant_code === args.mother_plant_code
+    )
+    let newHist
+    if (found) {
+      newHist = { ...found, plants: args.plants }
+      this.movements = this.movements.map(x =>
+        x.mother_plant_code === found.mother_plant_code ? newHist : x
       )
-      // optimistic updates
-      if (found) {
-        const newHist = { ...found, plants: args.plants }
-        this.movements = this.movements.map(x =>
-          x.mother_plant_code === found.mother_plant_code ? newHist : x
-        )
-      } else {
-        this.movements = [...this.movements, newHist]
+    } else {
+      newHist = {
+        activity: args.activity,
+        mother_plant_id: args.mother_plant_id,
+        mother_plant_code: args.mother_plant_code,
+        phase: args.phase,
+        plants: args.plants
       }
-      const response = await (await fetch(url, httpPostOptions(payload))).json()
-      if (response.data) {
-        // this.motherPlants = response.data.attributes.selected_plants
-      } else {
-        console.log(response)
-        console.error(response.errors)
-      }
-    } catch (error) {
-      throw error
+      this.movements = [...this.movements, newHist]
+    }
+    const url = `/api/v1/batches/${args.batch_id}/update_plants_movement`
+    const response = await (await fetch(url, httpPostOptions(args))).json()
+    if (response.errors) {
+      console.error(response.errors)
     }
   }
 

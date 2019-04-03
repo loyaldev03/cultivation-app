@@ -3,14 +3,15 @@ import isEmpty from 'lodash.isempty'
 import { observer } from 'mobx-react'
 import SidebarStore from '../stores/SidebarStore'
 import ClippingStore from '../stores/ClippingStore'
+import PlantTagList from './PlantTagList'
 import { AdjustmentMessage, InputBarcode, SlidePanelHeader } from '../../utils'
 
 @observer
 class ClipPotTagForm extends React.Component {
   componentDidUpdate(prevProps) {
-    const { batchId, taskId, indelible } = this.props
-    if (batchId && taskId !== prevProps.taskId) {
-      ClippingStore.fetchClippingData(batchId, 'clone', indelible)
+    const { batchId, taskId, phase, indelible, show } = this.props
+    if (batchId && taskId !== prevProps.taskId && show) {
+      ClippingStore.fetchClippingData(batchId, phase, indelible)
     }
   }
 
@@ -116,7 +117,7 @@ class ClipPotTagForm extends React.Component {
                 {ClippingStore.totalClippings}/{ClippingStore.totalQuantity}
               </span>
               {ClippingStore.totalClippings === ClippingStore.totalQuantity && (
-                <i class="material-icons ph2 green">check_circle</i>
+                <i className="material-icons ph2 green">check_circle</i>
               )}
             </div>
           </div>
@@ -145,6 +146,7 @@ const MotherPlantRow = forwardRef(
     let motherInput, clippingInput
     const [expand, setExpand] = useState(false)
     const [errors, setErrors] = useState({})
+    // TODO: Split into 2 like in MovingIntoTrayForm
     const validates = () => {
       const newErrors = {}
       if (isEmpty(motherInput.value)) {
@@ -258,28 +260,5 @@ const MotherPlantRow = forwardRef(
     )
   }
 )
-
-const PlantTagList = ({ onDelete, plantTags = [] }) => {
-  if (isEmpty(plantTags)) {
-    return <p className="mv1 i light-grey">Nothing yet.</p>
-  }
-  return (
-    <ol className="clippings">
-      {plantTags.map(tag => (
-        <li key={tag} className="clippings__item hide-child">
-          <span className="flex items-center">
-            {tag}
-            <i
-              className="ml2 material-icons md-16 child pointer"
-              onClick={() => onDelete(tag)}
-            >
-              delete_outline
-            </i>
-          </span>
-        </li>
-      ))}
-    </ol>
-  )
-}
 
 export default ClipPotTagForm

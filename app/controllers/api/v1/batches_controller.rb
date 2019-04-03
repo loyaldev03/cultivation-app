@@ -130,10 +130,14 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def plants_movement_history
-    command = Cultivation::QueryPlantsMovement.call(current_user,
-                                                    batch_id: params[:batch_id],
-                                                    phase: params[:phase],
-                                                    activity: params[:activity])
+    command = Cultivation::QueryPlantsMovement.call(
+      current_user,
+      batch_id: params[:batch_id],
+      phase: params[:phase],
+      activity: params[:activity],
+      selected_trays: params[:selected_trays],
+      selected_plants: params[:selected_plants],
+    )
     if command.success?
       render json: PlantsMovementsSerializer.new(command.result).serialized_json
     else

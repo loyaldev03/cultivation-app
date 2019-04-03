@@ -176,20 +176,13 @@ const ExpandableRow = forwardRef(
                 />
               </div>
               <div className="pb4">
-                <label className="db pb1">Scan each clipping: </label>
+                <label className="db pb1">Scan each plant: </label>
                 <div className="">
                   <InputBarcode
                     ref={input => (childInput = input)}
                     onKeyPress={onScanChild}
                     error={errors['childInput']}
                   />
-                  <a
-                    href="#0"
-                    className="btn btn--primary btn--small fr"
-                    onClick={onDone}
-                  >
-                    DONE
-                  </a>
                 </div>
               </div>
               <div className="pv3">

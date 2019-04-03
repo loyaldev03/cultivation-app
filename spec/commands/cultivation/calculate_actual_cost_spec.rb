@@ -14,8 +14,8 @@ RSpec.describe Cultivation::CalculateActualCost, type: :command do
 
   context ".call" do
     it "In range time logs return correct actual cost" do
-      start_time = DateTime.new(2019, 4, 21, 8,00) # 18:00 - 8:00 = 10 hours * 5 = 50.0
-      end_time = DateTime.new(2019, 4, 21, 18, 00)
+      start_time = Time.zone.local(2019, 4, 21, 8,00) # 18:00 - 8:00 = 10 hours * 5 = 50.0
+      end_time = Time.zone.local(2019, 4, 21, 18, 00)
       task = Cultivation::Task.create
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
       cmd = Cultivation::CalculateActualCost.call(time_log.id.to_s)
@@ -26,8 +26,8 @@ RSpec.describe Cultivation::CalculateActualCost, type: :command do
     end
 
     it "Exceed start working hours return corrent actual cost" do
-      start_time = DateTime.new(2019, 4, 21, 7,30) #ot 7.30-8.00 => 30 minutes * (7/60) = 3.5
-      end_time = DateTime.new(2019, 4, 21, 18, 00) # 8.00 - 18.00 => 10 hours * 5 = 50.00
+      start_time = Time.zone.local(2019, 4, 21, 7,30) #ot 7.30-8.00 => 30 minutes * (7/60) = 3.5
+      end_time = Time.zone.local(2019, 4, 21, 18, 00) # 8.00 - 18.00 => 10 hours * 5 = 50.00
       task = Cultivation::Task.create
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
       cmd = Cultivation::CalculateActualCost.call(time_log.id.to_s)
@@ -39,8 +39,8 @@ RSpec.describe Cultivation::CalculateActualCost, type: :command do
 
 
     it "Exceed end working hours return corrent actual cost" do
-      start_time = DateTime.new(2019, 4, 21, 8,00) #ot 18.00-19.30 => 30 minutes * (7/60) = 10.5
-      end_time = DateTime.new(2019, 4, 21, 19, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00
+      start_time = Time.zone.local(2019, 4, 21, 8,00) #ot 18.00-19.30 => 30 minutes * (7/60) = 10.5
+      end_time = Time.zone.local(2019, 4, 21, 19, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00
       task = Cultivation::Task.create
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
       cmd = Cultivation::CalculateActualCost.call(time_log.id.to_s)
@@ -51,8 +51,8 @@ RSpec.describe Cultivation::CalculateActualCost, type: :command do
     end
 
     it "Exceed end working hours return corrent actual cost" do
-      start_time = DateTime.new(2019, 4, 21, 7,00) #ot 18.00-19.30 => 2 hour 30 minutes * (7/60) = 17.5
-      end_time = DateTime.new(2019, 4, 21, 19, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
+      start_time = Time.zone.local(2019, 4, 21, 7,00) #ot 18.00-19.30 => 2 hour 30 minutes * (7/60) = 17.5
+      end_time = Time.zone.local(2019, 4, 21, 19, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
       task = Cultivation::Task.create
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
       cmd = Cultivation::CalculateActualCost.call(time_log.id.to_s)
@@ -63,8 +63,8 @@ RSpec.describe Cultivation::CalculateActualCost, type: :command do
     end
 
     it "OT full before working hours start time " do
-      start_time = DateTime.new(2019, 4, 21, 6,00) #ot 18.00-19.30 => 2 hour 30 minutes * (7/60) = 17.5
-      end_time = DateTime.new(2019, 4, 21, 7, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
+      start_time = Time.zone.local(2019, 4, 21, 6,00) #ot 18.00-19.30 => 2 hour 30 minutes * (7/60) = 17.5
+      end_time = Time.zone.local(2019, 4, 21, 7, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
       task = Cultivation::Task.create
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
       cmd = Cultivation::CalculateActualCost.call(time_log.id.to_s)
@@ -74,8 +74,8 @@ RSpec.describe Cultivation::CalculateActualCost, type: :command do
     end
 
     it "OT full after working hours end time " do
-      start_time = DateTime.new(2019, 4, 21, 19, 00) #ot 18.00-19.30 => 2 hour 30 minutes * (7/60) = 17.5
-      end_time = DateTime.new(2019, 4, 21, 21, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
+      start_time = Time.zone.local(2019, 4, 21, 19, 00) #ot 18.00-19.30 => 2 hour 30 minutes * (7/60) = 17.5
+      end_time = Time.zone.local(2019, 4, 21, 21, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
       task = Cultivation::Task.create
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
       cmd = Cultivation::CalculateActualCost.call(time_log.id.to_s)

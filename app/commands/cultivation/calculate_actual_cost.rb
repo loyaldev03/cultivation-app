@@ -12,8 +12,8 @@ module Cultivation
 
     def call
       #assume time format is 24
-      working_hour_start = DateTime.new(@time_log.start_time.year, @time_log.start_time.month, @time_log.start_time.day, 8, 00)
-      working_hour_end = DateTime.new(@time_log.start_time.year, @time_log.start_time.month, @time_log.start_time.day, 18, 00)
+      working_hour_start = Time.zone.local(@time_log.start_time.year, @time_log.start_time.month, @time_log.start_time.day, 8, 00)
+      working_hour_end = Time.zone.local(@time_log.start_time.year, @time_log.start_time.month, @time_log.start_time.day, 18, 00)
       # 8am -> 6pm
       # CASES
       # 7.30am - 8.30 am => exceed start working hour (done)

@@ -3,8 +3,8 @@ module Cultivation
     include Mongoid::Document
     include Mongoid::Timestamps::Short
 
-    field :start_time, type: DateTime
-    field :end_time, type: DateTime
+    field :start_time, type: Time
+    field :end_time, type: Time
 
     belongs_to :task, class_name: 'Cultivation::Task'
     belongs_to :user, class_name: 'User'

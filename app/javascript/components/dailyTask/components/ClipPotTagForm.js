@@ -33,9 +33,7 @@ class ClipPotTagForm extends React.Component {
               Create plant ID after clipping
             </h1>
             <div className="flex justify-end items-center pt3">
-              <i className="material-icons orange pointer pa1 mh2">
-                error_outline
-              </i>
+              <i className="material-icons orange pointer pa1 mh2">error_outline</i>
               <a href="#0" className="btn btn--secondary btn--small">
                 Add Issue
               </a>
@@ -99,11 +97,7 @@ const MotherPlantRow = forwardRef(
       }
     }
     const onScanClipping = e => {
-      if (
-        e.key === 'Enter' &&
-        e.target.value &&
-        !plants.includes(e.target.value)
-      ) {
+      if (e.key === 'Enter' && e.target.value && !plants.includes(e.target.value)) {
         setPlants([...plants, e.target.value])
       }
     }

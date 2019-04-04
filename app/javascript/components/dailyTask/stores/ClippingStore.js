@@ -89,10 +89,12 @@ class ClippingStore {
     return isEmpty(res) ? [] : res.plants
   }
 
+  @computed
   get totalClippings() {
     return this.movements.reduce((acc, obj) => acc + obj.plants.length, 0)
   }
 
+  @computed
   get totalQuantity() {
     return this.motherPlants.reduce((acc, obj) => acc + obj.quantity, 0)
   }

@@ -116,6 +116,15 @@ class ExpandedRow extends React.Component {
                 Moving to Trays
               </a>
             )}
+            {indelible === 'moving_to_next_phase' && (
+              <a
+                href="#0"
+                className="btn btn--secondary mr3"
+                onClick={this.onOpenSidebar(indelible)}
+              >
+                Move Plants to Next Phase
+              </a>
+            )}
             <a
               href="#0"
               className="btn btn--primary mr2"

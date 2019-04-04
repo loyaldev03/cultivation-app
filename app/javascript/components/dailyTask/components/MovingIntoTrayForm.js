@@ -1,7 +1,7 @@
 import React, { forwardRef, useState } from 'react'
 import isEmpty from 'lodash.isempty'
 import { observer } from 'mobx-react'
-import { InputBarcode, SlidePanelHeader } from '../../utils'
+import { ProgressBar, InputBarcode, SlidePanelHeader } from '../../utils'
 import SidebarStore from '../stores/SidebarStore'
 import MovingStore from '../stores/MovingStore'
 import PlantTagList from './PlantTagList'
@@ -36,7 +36,7 @@ class MovingIntoTrayForm extends React.Component {
           <div className="flex flex-column grey relative">
             <div className="flex f6 pa2 fw7 bg-light-gray">
               <span className="ph2 flex-auto ml3">Tray ID</span>
-              <span className="ph2 w-20 tc">Capacity</span>
+              <span className="ph2 w-10 tc">Capacity</span>
               <span className="ph2 w3 tc">UID</span>
             </div>
             {MovingStore.isDataLoaded &&
@@ -59,6 +59,18 @@ class MovingIntoTrayForm extends React.Component {
                   />
                 )
               })}
+            <div
+              className="ph4 pb5 f4 fw6 grey absolute flex left-0"
+              style={{ bottom: '-6em' }}
+            >
+              <span className="pr2">Total Plants:</span>
+              <span className="fw7">
+                {MovingStore.totalPlants}/{MovingStore.totalCapacity}
+              </span>
+              {MovingStore.totalPlants === MovingStore.totalCapacity && (
+                <i className="material-icons ph2 green">check_circle</i>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -108,6 +120,7 @@ const ExpandableRow = forwardRef(
       setErrors(newErrors)
       return newErrors
     }
+    const disableInputs = scannedPlants.length >= capacity
     const onScanParent = e => {
       if (e.key === 'Enter' && isEmpty(validateParent())) {
         childInput.focus()
@@ -156,12 +169,14 @@ const ExpandableRow = forwardRef(
             {expand ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}
           </i>
           <span className="ph2 flex-auto">{destination_code}</span>
-          <span className="ph2 w-20 tc">
+          <ProgressBar
+            className="w-10 mt1"
+            percent={(scannedPlants.length / capacity) * 100}
+          />
+          <span className="ph2 w-10 tc">
             {scannedPlants.length}/{capacity}
           </span>
-          <span className="ph2 w3 tc">
-            {scannedPlants.length >= capacity ? 'DONE' : 'SCAN'}
-          </span>
+          <span className="ph2 w3 tc">{disableInputs ? 'DONE' : 'SCAN'}</span>
         </div>
         {expand && (
           <div className="flex ph3">
@@ -169,8 +184,9 @@ const ExpandableRow = forwardRef(
               <div className="pb4 pt2">
                 <label className="db pb1">Scan tray: </label>
                 <InputBarcode
-                  autoFocus={true}
                   ref={input => (parentInput = input)}
+                  readOnly={disableInputs}
+                  autoFocus={true}
                   onKeyPress={onScanParent}
                   error={errors['parentInput']}
                 />
@@ -180,8 +196,16 @@ const ExpandableRow = forwardRef(
                 <div className="">
                   <InputBarcode
                     ref={input => (childInput = input)}
+                    readOnly={disableInputs}
                     onKeyPress={onScanChild}
                     error={errors['childInput']}
+                  />
+                  <input
+                    type="button"
+                    className="btn btn--primary btn--small fr"
+                    disabled={!disableInputs}
+                    onClick={onDone}
+                    value="DONE"
                   />
                 </div>
               </div>

@@ -11,6 +11,8 @@ module Cultivation
 
     validates_presence_of :start_time
 
+    embeds_many :breakdowns, class_name: 'Cultivation::Breakdown'
+
     def stop!
       self.end_time = Time.now
       save

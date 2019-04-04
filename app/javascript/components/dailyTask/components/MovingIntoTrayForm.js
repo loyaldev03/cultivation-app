@@ -120,6 +120,7 @@ const ExpandableRow = forwardRef(
       setErrors(newErrors)
       return newErrors
     }
+    const disableInputs = scannedPlants.length >= capacity
     const onScanParent = e => {
       if (e.key === 'Enter' && isEmpty(validateParent())) {
         childInput.focus()
@@ -194,6 +195,13 @@ const ExpandableRow = forwardRef(
                     ref={input => (childInput = input)}
                     onKeyPress={onScanChild}
                     error={errors['childInput']}
+                  />
+                  <input
+                    type="button"
+                    className="btn btn--primary btn--small fr"
+                    disabled={!disableInputs}
+                    onClick={onDone}
+                    value="DONE"
                   />
                 </div>
               </div>

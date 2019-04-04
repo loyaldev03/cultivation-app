@@ -26,7 +26,7 @@ module Cultivation
             mother_plant_id: args[:mother_plant_id].to_bson_id,
           )
           hist.mother_plant_code = args[:mother_plant_code]
-        elsif task.indelible == 'moving_to_tray'
+        elsif task.indelible == 'moving_to_tray' || task.indelible == 'moving_to_next_phase'
           hist = Cultivation::PlantMovementHistory.find_or_initialize_by(
             batch_id: args[:batch_id].to_bson_id,
             phase: task.phase,

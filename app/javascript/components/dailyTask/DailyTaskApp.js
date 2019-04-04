@@ -124,10 +124,16 @@ class DailyTaskApp extends React.Component {
         />
         <SlidePanel
           width="600px"
-          show={sidebarName === 'moving_to_tray' || sidebarName === 'moving_to_next_phase'}
+          show={
+            sidebarName === 'moving_to_tray' ||
+            sidebarName === 'moving_to_next_phase'
+          }
           renderBody={props => (
             <MovingIntoTrayForm
-              show={sidebarName === 'moving_to_tray' || sidebarName === 'moving_to_next_phase'}
+              show={
+                sidebarName === 'moving_to_tray' ||
+                sidebarName === 'moving_to_next_phase'
+              }
               batchId={batchId}
               taskId={taskId}
               phase={taskPhase}

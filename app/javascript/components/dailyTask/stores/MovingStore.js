@@ -72,6 +72,16 @@ class MovingStore {
     const res = this.movements.find(x => x.destination_code === trayCode)
     return isEmpty(res) ? [] : res.plants
   }
+
+  @computed
+  get totalPlants() {
+    return this.movements.reduce((acc, obj) => acc + obj.plants.length, 0)
+  }
+
+  @computed
+  get totalCapacity() {
+    return this.selectedLocations.reduce((acc, obj) => acc + obj.capacity, 0)
+  }
 }
 
 const movingStore = new MovingStore()

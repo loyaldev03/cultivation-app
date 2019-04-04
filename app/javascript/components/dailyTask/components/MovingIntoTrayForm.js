@@ -59,6 +59,18 @@ class MovingIntoTrayForm extends React.Component {
                   />
                 )
               })}
+            <div
+              className="ph4 pb5 f4 fw6 grey absolute flex left-0"
+              style={{ bottom: '-6em' }}
+            >
+              <span className="pr2">Total Plants:</span>
+              <span className="fw7">
+                {MovingStore.totalPlants}/{MovingStore.totalCapacity}
+              </span>
+              {MovingStore.totalPlants === MovingStore.totalCapacity && (
+                <i className="material-icons ph2 green">check_circle</i>
+              )}
+            </div>
           </div>
         </div>
       </div>

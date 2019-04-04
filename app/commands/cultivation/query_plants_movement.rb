@@ -128,11 +128,11 @@ module Cultivation
       Cultivation::Batch.collection.aggregate(
         [
           match_batch,
-          {"$project": {"quantity": 1, "current_growth_stage": 1}},
+          {"$project": {"quantity": 1}},
           {
             "$lookup": {
               "from": 'cultivation_tray_plans',
-              "let": {"batchId": '$_id', "phase": '$current_growth_stage'},
+              "let": {"batchId": '$_id', "phase": args[:phase]},
               "pipeline": [
                 {
                   "$match": {

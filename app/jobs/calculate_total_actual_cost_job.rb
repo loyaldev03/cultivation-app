@@ -12,7 +12,7 @@ class CalculateTotalActualCostJob < ApplicationJob
         sum_minutes += result[:actual_minutes]
       end
     end
-    actual_hours = sum_minutes / 60
+    actual_hours = sum_minutes / 60 #convert to hours
     @task.update(actual_cost: sum_cost.round(2), actual_hours: actual_hours.round(2))
   end
 end

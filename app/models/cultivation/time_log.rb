@@ -3,13 +3,15 @@ module Cultivation
     include Mongoid::Document
     include Mongoid::Timestamps::Short
 
-    field :start_time, type: DateTime
-    field :end_time, type: DateTime
+    field :start_time, type: Time
+    field :end_time, type: Time
 
     belongs_to :task, class_name: 'Cultivation::Task'
     belongs_to :user, class_name: 'User'
 
     validates_presence_of :start_time
+
+    embeds_many :breakdowns, class_name: 'Cultivation::Breakdown'
 
     def stop!
       self.end_time = Time.now
@@ -22,7 +24,8 @@ module Cultivation
     end
 
     def duration_in_minutes
-      duration_in_seconds / 60
+      return 0 if end_time.nil?
+      (duration_in_seconds / 1.minutes).round(2)
     end
 
     def duration_in_hours

@@ -85,7 +85,6 @@ class TaskStore {
       Rollbar.error('Error Loading Task List:', error)
     } finally {
       this.isLoading = false
-      this.loadActualHours(batchId)
     }
   }
 

@@ -100,7 +100,6 @@ class TaskStore {
           if (a) {
             s.actual_hours = a.actual_hours
           }
-          console.log(toJS(s))
           return s
         })
       }

@@ -14,7 +14,6 @@ import { formatDate2, moneyFormatter, SlidePanel } from '../../../utils'
 import MyImage from 'images/BagOfSeeds.png'
 
 const ReactTable = lazy(() => import('react-table'))
-const ClippinPanel = lazy(() => import('./ClippingPanel'))
 const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
 const AssignMaterialForm = lazy(() => import('./MaterialForm'))
 const CultivationCalendar = lazy(() => import('./CultivationCalendar'))
@@ -46,7 +45,6 @@ class TaskList extends React.Component {
       isOpen: false,
       isClicked: false,
       showTaskEditor: false,
-      showClippingPanel: false,
       showStartDateCalendar: false,
       showAssignResourcePanel: false,
       showAssignMaterialPanel: false
@@ -108,13 +106,6 @@ class TaskList extends React.Component {
     this.setState({
       taskSelected: taskId,
       showAssignMaterialPanel: !this.state.showAssignMaterialPanel
-    })
-  }
-
-  handleShowClippingPanel = (taskId, item) => {
-    this.setState({
-      taskSelected: taskId,
-      showClippingPanel: !this.state.showClippingPanel
     })
   }
 
@@ -220,7 +211,7 @@ class TaskList extends React.Component {
                       <MenuButton
                         text="Select Mother"
                         indelible={indelible}
-                        onClick={() => this.handleShowClippingPanel(id, items)}
+                        onClick={() => console.log('trigger mother sidebar')}
                       />
                     </div>
                   ) : (
@@ -605,8 +596,7 @@ class TaskList extends React.Component {
       showTaskEditor,
       showStartDateCalendar,
       showAssignResourcePanel,
-      showAssignMaterialPanel,
-      showClippingPanel
+      showAssignMaterialPanel
     } = this.state
     const batchId = this.props.batch.id
     if (!TaskStore.isDataLoaded || !UserStore.isDataLoaded) {
@@ -635,19 +625,6 @@ class TaskList extends React.Component {
                   )
                 }}
                 facilityId={this.props.batch.facility_id}
-              />
-            </Suspense>
-          )}
-        />
-        <SlidePanel
-          width="600px"
-          show={showClippingPanel}
-          renderBody={props => (
-            <Suspense fallback={<div />}>
-              <ClippinPanel
-                title="Clipping"
-                facilityId={this.props.batch.facility_id}
-                onClose={() => this.setState({ showClippingPanel: false })}
               />
             </Suspense>
           )}

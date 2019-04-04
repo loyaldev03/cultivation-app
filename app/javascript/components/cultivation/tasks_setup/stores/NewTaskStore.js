@@ -471,13 +471,6 @@ class TaskStore {
   }
 
   @action
-  async roomData(id) {
-    const url = `/api/v1/batches/search_locations?facility_id=${id}&purpose[]=clone`
-    const response = await (await fetch(url, httpGetOptions)).json()
-    return response.data
-  }
-
-  @action
   async editAssignedMaterial(
     batchId,
     taskId,

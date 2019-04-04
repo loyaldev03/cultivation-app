@@ -2,6 +2,7 @@ class Shelf
   include Mongoid::Document
 
   field :code, type: String
+  field :full_code, type: String
   field :capacity, type: Integer, default: -> { 0 }
   field :wz_generated, type: Boolean, default: -> { true }
 

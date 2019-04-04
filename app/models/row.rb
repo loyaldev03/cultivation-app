@@ -3,6 +3,7 @@ class Row
 
   field :name, type: String
   field :code, type: String
+  field :full_code, type: String
   # row is complete when all shelves is_complete
   field :is_complete, type: Boolean, default: -> { false }
   field :section_id, type: BSON::ObjectId

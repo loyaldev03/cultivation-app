@@ -12,6 +12,7 @@ const InputBarcode = forwardRef(
       scanditLicense,
       value,
       error,
+      readOnly = false,
       autoFocus = false,
       className = 'w5',
       multiple = false
@@ -49,6 +50,7 @@ const InputBarcode = forwardRef(
           {multiple ? (
             <textarea
               ref={ref}
+              readOnly={readOnly}
               value={value}
               className={`grey ${className}`}
               autoFocus={autoFocus}
@@ -59,8 +61,9 @@ const InputBarcode = forwardRef(
           ) : (
             <React.Fragment>
               <input
-                type="text"
                 ref={ref}
+                readOnly={readOnly}
+                type="text"
                 value={value}
                 className={`grey input input--with-icon ${className}`}
                 autoFocus={autoFocus}

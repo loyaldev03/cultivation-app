@@ -59,12 +59,13 @@ class ExpandedRow extends React.Component {
     event.preventDefault()
   }
 
-  onClickAddNutrient = event => {
-    SidebarStore.openSidebar('add_nutrient', this.props.batch_id, this.props.id)
-  }
-
-  onClickCreateUid = event => {
-    SidebarStore.openSidebar('clip_pot_tag', this.props.batch_id, this.props.id)
+  onOpenSidebar = sidebar => e => {
+    SidebarStore.openSidebar(
+      sidebar,
+      this.props.batch_id,
+      this.props.id,
+      this.props.phase
+    )
   }
 
   onNewIssue = event => {
@@ -92,7 +93,7 @@ class ExpandedRow extends React.Component {
               <a
                 href="#0"
                 className="btn btn--secondary mr3"
-                onClick={this.onClickAddNutrient}
+                onClick={this.onOpenSidebar(indelible)}
               >
                 Add Nutrient
               </a>
@@ -101,9 +102,27 @@ class ExpandedRow extends React.Component {
               <a
                 href="#0"
                 className="btn btn--secondary mr3"
-                onClick={this.onClickCreateUid}
+                onClick={this.onOpenSidebar(indelible)}
               >
                 Create UID
+              </a>
+            )}
+            {indelible === 'moving_to_tray' && (
+              <a
+                href="#0"
+                className="btn btn--secondary mr3"
+                onClick={this.onOpenSidebar(indelible)}
+              >
+                Moving to Trays
+              </a>
+            )}
+            {indelible === 'moving_to_next_phase' && (
+              <a
+                href="#0"
+                className="btn btn--secondary mr3"
+                onClick={this.onOpenSidebar(indelible)}
+              >
+                Move Plants to Next Phase
               </a>
             )}
             <a

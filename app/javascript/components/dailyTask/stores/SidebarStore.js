@@ -17,6 +17,7 @@ class SidebarStore {
   @observable issueMode = ''
   @observable dailyTask = null
   @observable sidebarName = ''
+  @observable taskPhase = ''
 
   reset() {
     this.noteId = null
@@ -60,10 +61,11 @@ class SidebarStore {
   }
 
   @action
-  openSidebar(sidebarName, batchId, taskId) {
+  openSidebar(sidebarName, batchId, taskId, taskPhase = '') {
     this.sidebarName = sidebarName
     this.batchId = batchId
     this.taskId = taskId
+    this.taskPhase = taskPhase
   }
 
   @action

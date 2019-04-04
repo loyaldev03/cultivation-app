@@ -1,6 +1,6 @@
 
 module Cultivation
-  class CalculateActualCost
+  class CalculateTaskActualCostAndHours
     prepend SimpleCommand
 
     attr_reader :args

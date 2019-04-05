@@ -24,23 +24,25 @@ class SaveFacilityWizardRows
 
     if replace
       room.rows = Array.new(form_rows.size) do |i|
-        build_row(form_rows[i])
+        build_row(facility, room, form_rows[i])
       end
     else
       room.rows << Array.new(form_rows.size) do |i|
-        build_row(form_rows[i])
+        build_row(facility, room, form_rows[i])
       end
     end
     SaveRoomIsComplete.call(room) # This would called `save!` already
     room
   end
 
-  def build_row(row_info_form)
-    Row.new(
+  def build_row(facility, room, row_info_form)
+    row = Row.new(
       id: row_info_form.id,
       code: row_info_form.code,
       name: row_info_form.name,
       section_id: row_info_form.section_id.to_bson_id,
     )
+    row.full_code = Constants.generate_full_code(facility, room, row)
+    row
   end
 end

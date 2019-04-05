@@ -35,6 +35,7 @@ class SaveShelfAddTray
     tray = Tray.new
     tray.shelf = shelf
     tray.code = NextFacilityCode.call(:tray, last_code, 1).result
+    tray.full_code = Constants.generate_full_code(facility, room, row, shelf, tray)
     tray.save!
 
     update_is_complete_flag(row, room)

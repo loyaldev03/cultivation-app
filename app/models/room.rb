@@ -4,6 +4,7 @@ class Room
 
   field :name, type: String
   field :code, type: String
+  field :full_code, type: String
   field :desc, type: String
   field :purpose, type: String
   field :has_sections, type: Boolean, default: -> { false }

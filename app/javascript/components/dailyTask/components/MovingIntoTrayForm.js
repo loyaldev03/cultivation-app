@@ -1,7 +1,12 @@
 import React, { forwardRef, useState } from 'react'
 import isEmpty from 'lodash.isempty'
 import { observer } from 'mobx-react'
-import { ProgressBar, InputBarcode, SlidePanelHeader } from '../../utils'
+import {
+  ImgBarcode,
+  ProgressBar,
+  InputBarcode,
+  SlidePanelHeader
+} from '../../utils'
 import SidebarStore from '../stores/SidebarStore'
 import MovingStore from '../stores/MovingStore'
 import PlantTagList from './PlantTagList'
@@ -176,7 +181,13 @@ const ExpandableRow = forwardRef(
           <span className="ph2 w-10 tc">
             {scannedPlants.length}/{capacity}
           </span>
-          <span className="ph2 w3 tc">{disableInputs ? 'DONE' : 'SCAN'}</span>
+          <span className="ph2 w3 flex justify-center items-center">
+            {disableInputs ? (
+              'DONE'
+            ) : (
+              <img src={ImgBarcode} alt="Scan barcode" />
+            )}
+          </span>
         </div>
         {expand && (
           <div className="flex ph3">

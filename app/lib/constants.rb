@@ -360,6 +360,27 @@ module Constants
       ],
     },
   ].freeze
+
+  class << self
+    def generate_full_code(facility, room = nil, row = nil, shelf = nil, tray = nil)
+      if facility
+        full_code = "#{facility.code}.#{room.code}"
+        if row.present?
+          if row.section_id.present?
+            section = room.sections.detect { |s| s.id == row.section_id }
+            full_code = "#{full_code}.#{section.code}.#{row.code}"
+          else
+            full_code = "#{full_code}.#{row.code}"
+          end
+          full_code = "#{full_code}.#{shelf.code}" if shelf.present?
+          full_code = "#{full_code}.#{tray.code}" if tray.present?
+        end
+        full_code
+      else
+        ''
+      end
+    end
+  end
 end
 
 CAN_READ = 1

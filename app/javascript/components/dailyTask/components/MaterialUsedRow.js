@@ -61,8 +61,9 @@ class MaterialUsedRow extends React.PureComponent {
             value={actual}
             name="actual"
             type="number"
+            size="2"
             min="0"
-            className="flex flex-auto pa1 br1 tr ba b--black-20 br2 outline-0"
+            className="flex flex-auto pa1 br1 tr ba b--black-20 br2 outline-0 w-60"
             onChange={this.onInputChange}
           />
           <span className="ml1 grey" style={{ width: '40px' }}>
@@ -77,8 +78,9 @@ class MaterialUsedRow extends React.PureComponent {
             value={waste}
             name="waste"
             type="number"
+            size="4"
             min="0"
-            className="flex flex-auto pa1 ba tr ba b--black-20 br2 outline-0"
+            className="flex flex-auto pa1 ba tr ba b--black-20 br2 outline-0 w-60"
             onChange={this.onInputChange}
           />
           <span className="ml1 grey" style={{ width: '40px' }}>

@@ -377,7 +377,7 @@ module Constants
         end
         full_code
       else
-        ""
+        ''
       end
     end
   end

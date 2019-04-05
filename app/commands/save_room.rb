@@ -23,6 +23,7 @@ class SaveRoom
     end
     room.name = form_object.name
     room.code = form_object.code
+    room.full_code = Constants.generate_full_code(facility, room)
     room.desc = form_object.desc
     room.purpose = form_object.purpose
     room.has_sections = form_object.has_sections

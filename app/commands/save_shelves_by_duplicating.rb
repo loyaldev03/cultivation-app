@@ -36,14 +36,14 @@ class SaveShelvesByDuplicating
         row.shelves.each do |target_shelf|
           if target_shelf.id != source_shelf.id
             copy_attrs(COPY_SHELF_ATTRS, source_shelf, target_shelf)
-            copy_trays(source_shelf.trays, target_shelf)
+            copy_trays(facility, room, row, source_shelf.trays, target_shelf)
           end
         end
       else
         target_shelf = row.shelves.detect { |o| o.id == @duplicate_target.to_bson_id }
         if target_shelf.present?
           copy_attrs(COPY_SHELF_ATTRS, source_shelf, target_shelf)
-          copy_trays(source_shelf.trays, target_shelf)
+          copy_trays(facility, room, row, source_shelf.trays, target_shelf)
         end
       end
 
@@ -55,11 +55,12 @@ class SaveShelvesByDuplicating
     end
   end
 
-  def copy_trays(source_trays, target_shelf)
+  def copy_trays(facility, room, row, source_trays, target_shelf)
     target_trays = target_shelf.trays || []
     if source_trays.any?
       source_trays.each_with_index do |source_tray, index|
         target_tray = target_trays[index] || Tray.new({code: NextFacilityCode.call(:tray, nil, index + 1).result})
+        target_tray.full_code = Constants.generate_full_code(facility, room, row, target_shelf, target_tray)
         copy_attrs(COPY_TRAY_ATTRS, source_tray, target_tray)
         target_tray.shelf = target_shelf
         target_tray.save!

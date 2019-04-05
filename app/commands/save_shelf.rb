@@ -19,6 +19,7 @@ class SaveShelf
     row = room.rows.find(args[:row_id])
     shelf = row.shelves.find(args[:id])
     shelf.code = args[:code]
+    shelf.full_code = Constants.generate_full_code(facility, room, row, shelf)
     # Rails.logger.debug ">>> save_shelf facility: #{facility.id}"
     # Rails.logger.debug ">>> save_shelf room: #{room.id}"
     # Rails.logger.debug ">>> save_shelf row: #{row.id}"

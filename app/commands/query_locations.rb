@@ -55,7 +55,7 @@ class QueryLocations
       {"$unwind": {path: '$trays'}},
       {"$match": {
         "$or": [
-          {"trays.capacity": {"$ne": nil}}, {"trays": {"$eq": nil}}
+          {"trays.capacity": {"$ne": nil}}, {"trays": {"$eq": nil}},
         ],
       }},
       {"$project": {
@@ -80,7 +80,7 @@ class QueryLocations
         tray_code: '$trays.code',
         tray_capacity: '$trays.capacity',
         row_purpose: 1,
-      }}
+      }},
     ]
     criteria.to_a
   end

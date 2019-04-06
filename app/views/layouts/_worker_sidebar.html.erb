@@ -1,0 +1,51 @@
+<div id="sidebar" class="sidebar fixed min-vh-100 collapsed overflow-hidden" data-turbolinks="false">
+  <%= link_to root_path, class: 'tc pv3 flex justify-center show-collapsed box--shadow-header outline-0', style: 'height: 50px' do %>
+    <%= image_tag 'logo-small.svg' %>
+  <% end %>
+
+  <%= link_to root_path, class: 'tc pv3 hide box--shadow-header outline-0', style: 'height: 50px' do %>
+    <%= image_tag 'logo.svg' %>
+  <% end %>
+
+  <ul class="list pl0 mt2 hide">
+    <%= link_to root_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">home</i>
+        <span class="link subtitle-2-regular grey">Home</span>
+      </li>
+    <% end %>
+
+    <%= link_to daily_tasks_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">assignment</i>
+        <span class="link subtitle-2-regular grey">Daily Tasks</span>
+      </li>
+    <% end %>
+  </ul>
+
+  <ul class="list mt2 pa0 show-collapsed">
+    <%= link_to root_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">home</i>
+      </li>
+    <% end %>
+
+    <%= link_to daily_tasks_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">assignment</i>
+      </li>
+    <% end %>
+
+    <%= link_to daily_tasks_path, class: "link" do %>
+      <li class="pv3 ph4 grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3">calendar_today</i>
+      </li>
+    <% end %>
+  </ul>
+
+  <div class="w-100 pa3 tc absolute bottom-0">
+    <a id="toggle-sidebar" href="#" class="link grey outline-0 ph3 pv2">
+      &#8677;
+    </a>
+  </div>
+</div>

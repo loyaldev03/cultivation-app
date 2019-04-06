@@ -5,7 +5,8 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="flex flex-row min-vh-100 ">
-        <div id="main" class="main flex flex-column flex-auto">
+        <%= render 'layouts/worker_sidebar' %>
+        <div id="main" class="main flex flex-column flex-auto" style="padding-left: 75px;">
           <%= flash_messages %>
           <main class="min-vh-100 h-100">
             <div 
@@ -47,7 +48,6 @@
               </div>
               
             </div>
-            
             <%= yield %>
           </main>
           

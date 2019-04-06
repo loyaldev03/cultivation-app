@@ -6,8 +6,6 @@ module Inventory
 
     def initialize(product_ids, facility_id, user = nil)
       @product_ids = product_ids.map { |x| x.to_bson_id } rescue []
-
-      # Not sure if facility is needed
       @facility_id = facility_id
       @user = user
     end
@@ -58,7 +56,7 @@ module Inventory
                   "$reduce": {
                     input: '$tx.common_quantity',
                     initialValue: 0,
-                    in: {"$add": ['$$value', {"$toDecimal": '$$this'}]},
+                    in: {"$add": ['$$value', {'$abs': {"$toDecimal": '$$this'}}]},
                   },
                 },
               },
@@ -113,31 +111,39 @@ module Inventory
       products.each do |product|
         key = product.id.to_s
         availability[key][:name] = product.name
+        availability[key][:common_uom] = product.common_uom
       end
 
       received_inventories.each do |row|
         key = row['_id'].to_s
-        availability[key][:intake] = row[:total_available_qty]
+        availability[key][:intake] = to_decimal(row[:total_available_qty])
         availability[key][:name] = row[:name]
       end
 
       used_or_allocated_inventories.each do |row|
         key = row['_id'].to_s
-        total_planned_or_used = if row[:total_planned_or_used].is_a? BSON::Decimal128
-                                  row[:total_planned_or_used].to_big_decimal
-                                else
-                                  row[:total_planned_or_used]
-                                end
-
+        total_planned_or_used = to_decimal(row[:total_planned_or_used])
         available = availability[key][:intake] - total_planned_or_used
+
         availability[key][:planned_or_used] = total_planned_or_used
         availability[key][:available] = available
+        # availability[key][:available] = availability[key][:intake]
 
         # True if intake > planned_or_used
         availability[key][:is_available] = available > 0
+        # availability[key][:is_available] = false
       end
 
       availability
+    end
+
+    def to_decimal(maybe_bson_decimal128)
+      if maybe_bson_decimal128.is_a?(BSON::Decimal128)
+        d = maybe_bson_decimal128.to_big_decimal
+        d.nan? ? 0 : d
+      else
+        maybe_bson_decimal128
+      end
     end
   end
 end

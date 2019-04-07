@@ -35,6 +35,7 @@ module Inventory
 
       batch_ids = Cultivation::Batch.where(
         status: {'$in': [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE]},
+        facility_id: facility_id,
       ).pluck(:id)
 
       used_or_allocated_inventories =
@@ -62,6 +63,7 @@ module Inventory
               },
             },
           },
+          {"$match": {product_id: {'$in': product_ids}}},
           {
             "$project": {
               id: 1,
@@ -120,6 +122,8 @@ module Inventory
         availability[key][:name] = row[:name]
       end
 
+      Rails.logger.debug "\t\t\t\t>>>> <QMC - used_or_allocated_inventories>: #{used_or_allocated_inventories.to_a.inspect} \n\n"
+
       used_or_allocated_inventories.each do |row|
         key = row['_id'].to_s
         total_planned_or_used = to_decimal(row[:total_planned_or_used])
@@ -132,6 +136,8 @@ module Inventory
         # True if intake > planned_or_used
         availability[key][:is_available] = available > 0
         # availability[key][:is_available] = false
+
+        Rails.logger.debug "\t\t\t\t>>>> <QMC>: #{availability[key].inspect} \n\n"
       end
 
       availability

@@ -2,18 +2,20 @@ module Cultivation
   class ValidateRawMaterial
     prepend SimpleCommand
 
-    attr_reader :args, :batch_id, :facility_id, :user
+    attr_reader :batch_id, :facility_id, :user
 
-    def initialize(args = {})
-      @args = args
-      @batch_id = args[:batch_id].to_bson_id
-      @facility_id = args[:facility_id].to_bson_id
-      @user = args[:current_user].id
+    def initialize(batch_id, facility_id, current_user)
+      @batch_id = batch_id.to_bson_id
+      @facility_id = facility_id.to_bson_id
+      @user = current_user
     end
 
     def call
       product_ids = extract_product_ids(batch_id)
       result = Inventory::QueryMaterialCount.call(product_ids, facility_id, user).result
+
+      # Rails.logger.debug "\t\t\t\t>>> Inventory::QueryMaterialCount, product_ids: #{product_ids}, facility_id: #{facility_id}"
+      # Rails.logger.debug "\t\t\t\t>>>>result: #{result.inspect}"
 
       result.each do |item|
         product_result = item[1]

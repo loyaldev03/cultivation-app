@@ -52,7 +52,7 @@ module Cultivation
       end
 
       #validate raw material
-      result = ValidateRawMaterial.call(current_user: @current_user, batch_id: @batch_id)
+      result = ValidateRawMaterial.call(@batch_id, batch.facility_id, @current_user)
       errors.add(:batch_id, result.errors[:material_use]) unless result.success?
       Rails.logger.debug "\t\t\t\t >>>> raw material validations: #{result.errors.inspect}"
 

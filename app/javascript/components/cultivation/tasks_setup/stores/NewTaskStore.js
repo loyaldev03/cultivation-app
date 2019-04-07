@@ -85,7 +85,6 @@ class TaskStore {
       Rollbar.error('Error Loading Task List:', error)
     } finally {
       this.isLoading = false
-      this.loadActualHours(batchId)
     }
   }
 
@@ -100,7 +99,6 @@ class TaskStore {
           if (a) {
             s.actual_hours = a.actual_hours
           }
-          console.log(toJS(s))
           return s
         })
       }
@@ -470,6 +468,13 @@ class TaskStore {
 
   getDependencies(task) {
     return task.depend_on
+  }
+
+  @action
+  async roomData(id) {
+    const url = `/api/v1/batches/search_locations?facility_id=${id}&purpose[]=clone`
+    const response = await (await fetch(url, httpGetOptions)).json()
+    return response.data
   }
 
   @action

@@ -2,11 +2,15 @@ module Cultivation
   PlantMovement = Struct.new(:id,
                              :quantity,
                              :selected_plants,
+                             :selected_trays,
                              :movements)
   SelectedPlant = Struct.new(:plant_id,
                              :quantity,
                              :plant_code,
                              :plant_location)
+  TrayLocation = Struct.new(:tray_id,
+                            :tray_code,
+                            :capacity)
 
   class QueryPlantsMovement
     prepend SimpleCommand
@@ -22,59 +26,22 @@ module Cultivation
 
     def call
       if valid_params?
-        criteria = Cultivation::Batch.collection.aggregate([
-          match_batch,
-          {"$unwind": '$selected_plants'},
-          {"$lookup": {
-            from: 'inventory_plants',
-            localField: 'selected_plants.plant_id',
-            foreignField: '_id',
-            as: 'plant',
-          }},
-          {"$unwind": '$plant'},
-          {"$group": {
-            _id: {
-              batch_id: '$_id',
-              batch_quantity: '$quantity',
-            },
-            selected_plants: {
-              "$push": {
-                plant_id: '$selected_plants.plant_id',
-                plant_code: '$plant.plant_id',
-                plant_location_id: '$plant.location_id',
-                quantity: '$selected_plants.quantity',
-              },
-            },
-          }},
-          args_project,
-        ])
-        res = criteria.first
+        res = if args[:selected_plants] == '1'
+                query_with_selected_plants.first
+              elsif args[:selected_trays] == '1'
+                query_with_selected_trays.first
+              else
+                {}
+              end
         if res.present?
-          plants = if res[:selected_plants]
-                     res[:selected_plants].map do |y|
-                       SelectedPlant.new(
-                         y[:plant_id],
-                         y[:quantity] || '',
-                         y[:plant_code] || '',
-                         y[:plant_location_id],
-                       )
-                     end
-                   else
-                     []
-                   end
-          movements = if args[:phase] && args[:activity]
-                        Cultivation::PlantMovementHistory.where(
-                          batch_id: args[:batch_id],
-                          phase: args[:phase],
-                          activity: args[:activity],
-                        )
-                      else
-                        []
-                      end
+          plants = get_selected_plants_from_result(res)
+          trays = get_selected_trays_from_result(res)
+          movements = get_movements_by_phase_activity
           PlantMovement.new(
             res[:_id],
             res[:quantity] || '',
             plants,
+            trays,
             movements,
           )
         end
@@ -83,15 +50,124 @@ module Cultivation
 
     private
 
-    def args_project
-      project = {
-        "$project": {
+    def get_selected_plants_from_result(res)
+      if res[:selected_plants].present?
+        res[:selected_plants].map do |y|
+          SelectedPlant.new(
+            y[:plant_id],
+            y[:quantity] || '',
+            y[:plant_code] || '',
+            y[:plant_location_id],
+          )
+        end
+      else
+        []
+      end
+    end
+
+    def get_selected_trays_from_result(res)
+      if res[:tray_plan].present?
+        res[:tray_plan].map do |t|
+          TrayLocation.new(
+            t[:tray_id],
+            t[:tray_code],
+            t[:capacity],
+          )
+        end
+      else
+        []
+      end
+    end
+
+    def get_movements_by_phase_activity
+      if args[:phase] && args[:activity]
+        Cultivation::PlantMovementHistory.where(
+          batch_id: args[:batch_id],
+          phase: args[:phase],
+          activity: args[:activity],
+        )
+      else
+        []
+      end
+    end
+
+    def query_with_selected_plants
+      Cultivation::Batch.collection.aggregate([
+        match_batch,
+        {"$unwind": '$selected_plants'},
+        {"$lookup": {
+          from: 'inventory_plants',
+          localField: 'selected_plants.plant_id',
+          foreignField: '_id',
+          as: 'plant',
+        }},
+        {"$unwind": '$plant'},
+        {"$group": {
+          _id: {
+            batch_id: '$_id',
+            batch_quantity: '$quantity',
+          },
+          selected_plants: {
+            "$push": {
+              plant_id: '$selected_plants.plant_id',
+              plant_code: '$plant.plant_id',
+              plant_location_id: '$plant.location_id',
+              quantity: '$selected_plants.quantity',
+            },
+          },
+        }},
+        {"$project": {
           _id: '$_id.batch_id',
           quantity: '$_id.batch_quantity',
-        },
-      }
-      project[:$project][:selected_plants] = 1 # if args[:selected_plants] == '1'
-      project
+          selected_plants: 1,
+        }},
+      ])
+    end
+
+    def query_with_selected_trays
+      Cultivation::Batch.collection.aggregate(
+        [
+          match_batch,
+          {"$project": {"quantity": 1}},
+          {
+            "$lookup": {
+              "from": 'cultivation_tray_plans',
+              "let": {"batchId": '$_id', "phase": args[:phase]},
+              "pipeline": [
+                {
+                  "$match": {
+                    "$expr": {
+                      "$and": [
+                        {"$eq": ['$batch_id', '$$batchId']},
+                        {"$eq": ['$phase', '$$phase']},
+                      ],
+                    },
+                  },
+                },
+              ],
+              "as": 'tray_plan',
+            },
+          },
+          {
+            "$project": {
+              "_id": 1,
+              "quantity": 1,
+              "tray_plan": {
+                "$map": {
+                  "input": '$tray_plan',
+                  "as": 'tray_plan',
+                  "in": {
+                    "_id": '$$tray_plan._id',
+                    "tray_id": '$$tray_plan.tray_id',
+                    "tray_code": '$$tray_plan.tray_id',
+                    "capacity": '$$tray_plan.capacity',
+                  },
+                },
+              },
+            },
+          },
+        ],
+      )
     end
 
     def match_batch

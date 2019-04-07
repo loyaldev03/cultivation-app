@@ -2,21 +2,22 @@ import isEmpty from 'lodash.isempty'
 import { observable, action, computed } from 'mobx'
 import { httpGetOptions, httpPostOptions } from '../../utils'
 
-class ClippingStore {
+class MovingStore {
   @observable isLoading = false
   @observable isDataLoaded = false
-  @observable motherPlants = []
+  @observable selectedLocations = []
   @observable movements = []
 
   @action
-  async fetchClippingData(batchId, phase, activity) {
+  async fetchMovingData(batchId, phase, activity) {
     this.isLoading = true
+    this.phase = phase
     try {
-      const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}&phase=${phase}&activity=${activity}&selected_plants=1`
+      const url = `/api/v1/batches/plants_movement_history?batch_id=${batchId}&phase=${phase}&activity=${activity}&selected_trays=1`
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response.data && response.data.attributes) {
-        const { selected_plants, movements } = response.data.attributes
-        this.motherPlants = selected_plants
+        const { selected_trays, movements } = response.data.attributes
+        this.selectedLocations = selected_trays
         this.movements = movements
         this.isDataLoaded = true
       } else {
@@ -25,28 +26,28 @@ class ClippingStore {
       }
     } catch (error) {
       this.isDataLoaded = false
-      console.error('Error loading mother plants:', error)
+      console.error('Error loading booked trays:', error)
     } finally {
       this.isLoading = false
     }
   }
 
   @action
-  async updateClippings(args) {
+  async updateMovings(args) {
     const found = this.movements.find(
-      x => x.mother_plant_code === args.mother_plant_code
+      x => x.destination_code === args.destination_code
     )
     let newHist
     if (found) {
       newHist = { ...found, plants: args.plants }
       this.movements = this.movements.map(x =>
-        x.mother_plant_code === found.mother_plant_code ? newHist : x
+        x.destination_code === found.destination_code ? newHist : x
       )
     } else {
       newHist = {
         activity: args.activity,
-        mother_plant_id: args.mother_plant_id,
-        mother_plant_code: args.mother_plant_code,
+        destination_id: args.destination_id,
+        destination_code: args.destination_code,
         phase: args.phase,
         plants: args.plants
       }
@@ -60,46 +61,29 @@ class ClippingStore {
   }
 
   @action
-  async deleteClippings({
-    batch_id,
-    task_id,
-    mother_plant_id,
-    mother_plant_code,
-    clipping_code
-  }) {
-    const found = this.movements.find(
-      x => x.mother_plant_code === mother_plant_code
-    )
-    if (found) {
-      const newHist = found.plants.filter(t => t !== clipping_code)
-      await this.updateClippings({
-        batch_id,
-        task_id,
-        mother_plant_id,
-        mother_plant_code,
-        plants: newHist
-      })
-    }
+  async deleteClippings(args) {
+    console.log('deleteClippings:', args)
   }
 
-  getPlantMovements(motherPlantCode) {
-    const res = this.movements.find(
-      x => x.mother_plant_code === motherPlantCode
-    )
+  getPlantMovements(trayCode) {
+    if (!trayCode) {
+      throw new Error('Invalid Tray Code')
+    }
+    const res = this.movements.find(x => x.destination_code === trayCode)
     return isEmpty(res) ? [] : res.plants
   }
 
   @computed
-  get totalClippings() {
+  get totalPlants() {
     return this.movements.reduce((acc, obj) => acc + obj.plants.length, 0)
   }
 
   @computed
-  get totalQuantity() {
-    return this.motherPlants.reduce((acc, obj) => acc + obj.quantity, 0)
+  get totalCapacity() {
+    return this.selectedLocations.reduce((acc, obj) => acc + obj.capacity, 0)
   }
 }
 
-const clippingStore = new ClippingStore()
+const movingStore = new MovingStore()
 
-export default clippingStore
+export default movingStore

@@ -9,7 +9,7 @@ module FacilitiesForm
 
     def save
       @facility = Facility.find(facility_id)
-      room = @facility.rooms.build(code: code, name: name, desc: desc)
+      @facility.rooms.build(code: code, name: name, desc: desc)
 
       if valid?
         @facility.room_count += 1

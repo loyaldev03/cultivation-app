@@ -8,6 +8,7 @@ module Cultivation
     field :row_id, type: BSON::ObjectId
     field :shelf_id, type: BSON::ObjectId
     field :tray_id, type: BSON::ObjectId
+    field :tray_full_code, type: String
     field :start_date, type: Time
     field :end_date, type: Time
     field :capacity, type: Integer

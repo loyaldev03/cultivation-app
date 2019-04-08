@@ -8,6 +8,9 @@ class HomeController < ApplicationController
   end
 
   def worker_dashboard
+    @total_tasks = get_tasks_today.count
+    @next_payment_date = QueryNextPaymentDate.call(DateTime.now).result
+    @hours_worked = get_hours_worked
     render 'worker_dashboard', layout: 'worker'
   end
 
@@ -58,5 +61,34 @@ class HomeController < ApplicationController
     end
 
     redirect_to root_path, flash: {notice: 'Data has reset.'}
+  end
+
+  private
+
+  def get_tasks_today
+    @tasks_date = DateTime.now.beginning_of_day
+    match = current_user.cultivation_tasks.expected_on(@tasks_date).selector
+    Cultivation::Task.collection.aggregate(
+      [
+        {"$match": match},
+      ]
+    )
+  end
+
+  def get_hours_worked
+    time_logs = current_user.time_logs.where(
+      :start_time.gte => DateTime.now.beginning_of_week,
+      :end_time.lte => DateTime.now.end_of_week,
+    )
+
+    sum_minutes = 0.0
+    time_logs.each do |time_log|
+      if time_log.start_time and time_log.end_time
+        result = Cultivation::CalculateTaskActualCostAndHours.call(time_log.id.to_s).result
+        sum_minutes += result[:actual_minutes]
+      end
+    end
+    actual_hours = sum_minutes / 60 #convert to hours
+    actual_hours.round(2)
   end
 end

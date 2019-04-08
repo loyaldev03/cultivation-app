@@ -1,0 +1,91 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Home",root_path], 'Dashboard' %>
+<% end %>
+
+
+
+<div class="ba b--light-gray pa3 bg-white">
+  <div class='flex justify-between'>
+    <div><h1 class='f5 fw6 ml4'>Overall Info</h1></div>
+    <div class='flex'>
+      <h1 class='f5 fw6'>Weekly</h1>
+      <i class='material-icons grey mr2 dim md-21 pointer mt2'>
+        keyboard_arrow_down
+      </i>
+    </div>
+  </div>
+
+  <div class='flex justify-between mt2'>
+    <div class='flex br b--light-gray' style='flex: 1 1 auto'>
+      <i class='material-icons mt3 ml5 orange mr3 dim md-48 pointer mt2'>
+        check_circle
+      </i>
+      <div>
+        <h1 class='f5 fw6 grey'>Worked hours</h1>
+        <b class='f3 fw6'>30</b>
+      </div>
+    </div>
+    <div class='flex br b--light-gray' style='flex: 1 1 auto'>
+      <i class='material-icons mt3 ml5 orange mr3 dim md-48 pointer mt2'>
+        location_on
+      </i>
+      <div>
+        <h1 class='f5 fw6 grey'>On time arrivals</h1>
+        <b class='f3 fw6'>30</b>
+      </div>
+    </div>
+    <div class='flex br b--light-gray' style='flex: 1 1 auto'>
+      <i class='material-icons mt3 ml5 orange mr3 dim md-48 pointer mt2'>
+        assignment
+      </i>
+      <div>
+        <h1 class='f5 fw6 grey'>Tasks completed</h1>
+        <b class='f3 fw6'>30</b>
+      </div>
+    </div>
+    <div class='flex' style='flex: 1 1 auto'>
+      <i class='material-icons mt3 ml5 orange mr3 dim md-48 pointer mt2'>
+        assignment_turned_in
+      </i>
+      <div>
+        <h1 class='f5 fw6 grey'>Tasks completed on time</h1>
+        <b class='f3 fw6'>30</b>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class='flex mt4'>
+
+  <div class='w-50'>
+    <div class="ba b--light-gray pa3 bg-white">
+      <div class='flex justify-between'>
+        <div><h1 class='f5 fw6 ml3'>Working hours</h1></div>
+        <div class='flex'>
+          <h1 class='f5 fw6'>Daily</h1>
+          <i class='material-icons grey mr2 dim md-21 pointer mt2'>
+            keyboard_arrow_down
+          </i>
+        </div>
+      </div>
+      <%= image_tag 'worker_dashboard_graph'%>
+    </div>
+  </div>
+
+  <div class='w-50 ml3'>
+    <div class="ba b--light-gray pa3 bg-white">
+      <div class='flex justify-between'>
+        <div><h1 class='f5 fw6 '>Overall Info</h1></div>
+        <div class='flex'>
+          <h1 class='f5 fw6'>Weekly</h1>
+          <i class='material-icons grey mr2 dim md-21 pointer mt2'>
+            keyboard_arrow_down
+          </i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

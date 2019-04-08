@@ -7,6 +7,10 @@ class HomeController < ApplicationController
     @dashboard = DashboardForm::DashboardForm.new
   end
 
+  def worker_dashboard
+    render 'worker_dashboard', layout: 'worker'
+  end
+
   def inventory_setup
     @strains_count = Inventory::FacilityStrain.count
   end

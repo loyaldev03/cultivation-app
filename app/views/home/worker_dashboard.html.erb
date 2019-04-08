@@ -136,6 +136,20 @@
           </i>
         </div>
       </div>
+      <div>
+        <style>
+          .react-calendar{
+            width: 100%;
+            border: none;
+          }
+
+        </style>
+
+        <%= react_component 'worker_dashboard/dashboardCalendar/DashboardCalendarApp',
+          {
+            date: Time.now.beginning_of_day
+          } %>
+      </div>
     </div>
   </div>
 

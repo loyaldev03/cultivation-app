@@ -29,6 +29,23 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     render json: data
   end
 
+  def search_by_location
+    facility_id = params[:facility_id]
+    strain_id = params[:strain_id]
+    location_id = params[:location_id]
+    command = Inventory::SearchPlantsByLocation.call(
+      facility_id,
+      strain_id,
+      location_id,
+    )
+    if command.success?
+      plants = command.result.sort_by(&:plant_id)
+      render json: plants.as_json
+    else
+      render json: request_with_errors(command.errors)
+    end
+  end
+
   def show
     plant = Inventory::Plant.find(params[:id])
     render json: Inventory::PlantSerializer.new(plant, include_options).serialized_json

@@ -70,7 +70,7 @@
           </i>
         </div>
       </div>
-      <%= image_tag 'worker_dashboard_graph'%>
+      <%= image_tag 'worker_dashboard_graph', height: '380px'%>
     </div>
     <div class="ba b--light-gray pa3 bg-white mt3">
       <div class='flex justify-between'>
@@ -82,6 +82,34 @@
           </i>
         </div>
       </div>
+      <ul class="list pl0 pb0">
+        <li class="pt2 pb3 pointer">
+          <div class="flex items-center justify-start">
+            <div class="f7 fw6 silver">ISSUE #00012</div>
+            <div class="f6 fw6 ph1">•</div>
+            <div class="f7 fw6 green pr2 ttu">open</div>
+              <div class="tc ttc">
+                <i class="material-icons gold" style="font-size: 18px;">warning</i>
+              </div>
+            </div>
+          <div class="flex pt1 justify-start">
+            <div class="fw4 gray" style="font-size: 10px;">Mar 06, 2019, 11:37 AM</div>
+          </div>
+        </li>
+        <li class="pt2 pb3 pointer">
+          <div class="flex items-center justify-start">
+            <div class="f7 fw6 silver">ISSUE #00013</div>
+            <div class="f6 fw6 ph1">•</div>
+            <div class="f7 fw6 green pr2 ttu">open</div>
+            <div class="tc ttc">
+              <i class="material-icons gold" style="font-size: 18px;">warning</i>
+            </div>
+          </div>
+          <div class="flex pt1 justify-start">
+            <div class="fw4 gray" style="font-size: 10px;">Mar 06, 2019, 11:37 AM</div>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 
@@ -126,7 +154,7 @@
         </a>
       </div>
     </div>
-    <div class="ba b--light-gray pa3 bg-white mt3">
+    <div class="ba b--light-gray pa3 bg-white mt3" style='height: 435px;'>
       <div class='flex justify-between'>
         <div><h1 class='f5 fw6 '>Working Calendar</h1></div>
         <div class='flex'>
@@ -153,4 +181,40 @@
     </div>
   </div>
 
+</div>
+
+
+<div class='flex mt4'>
+
+  <div class='w-100'>
+    <div class="ba b--light-gray pa3 bg-white">
+      <div>
+        <h1 class='f5 fw6 '>Payment Details</h1>
+      </div>
+      <table class="f6 w-100 mw8 mt4" cellspacing="0">
+        <thead>
+          <tr>
+            <th class="fw6 tl pb3 pr3 bg-white">Bill</th>
+            <th class="fw6 tl pb3 pr3 bg-white">Date</th>
+            <th class="fw6 tl pb3 pr3 bg-white">Salary</th>
+            <th class="fw6 tl pb3 pr3 bg-white">OT Bonus</th>
+          </tr>
+        </thead>
+        <tbody class="lh-copy">
+          <tr>
+            <td class="pv3 pr3">Transaction #46256</td>
+            <td class="pv3 pr3">05.03.2019</td>
+            <td class="pv3 pr3 green">$200</td>
+            <td class="pv3 pr3 green">$200</td>
+          </tr>
+          <tr>
+            <td class="pv3 pr3">Transaction #46256</td>
+            <td class="pv3 pr3">05.03.2019</td>
+            <td class="pv3 pr3 green">$590</td>
+            <td class="pv3 pr3 green">$20.90</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

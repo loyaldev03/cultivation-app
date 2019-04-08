@@ -159,7 +159,7 @@ module Cultivation
                   "in": {
                     "_id": '$$tray_plan._id',
                     "tray_id": '$$tray_plan.tray_id',
-                    "tray_code": '$$tray_plan.tray_id',
+                    "tray_full_code": '$$tray_plan.tray_full_code',
                     "capacity": '$$tray_plan.capacity',
                   },
                 },

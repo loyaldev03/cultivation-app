@@ -35,7 +35,7 @@ module FacilityWizardForm
     def submit(params, current_user)
       raise ArgumentError, 'Missing current_user' if current_user.nil?
 
-      self.map_attrs_from_hash(ATTRS, params)
+      map_attrs_from_hash(ATTRS, params)
       if valid?
         save_cmd = SaveFacility.call(self, current_user)
         if save_cmd.success?

@@ -17,6 +17,7 @@ module Cultivation
         @batch.delete
         Cultivation::Task.delete_all({batch_id: @batch_id})
         Cultivation::TrayPlan.delete_all({batch_id: @batch_id})
+        Issues::Issue.delete_all({cultivation_batch_id: @batch_id})
         @batch_id
       else
         errors.add(:batch, 'Unable to delete an active batch')

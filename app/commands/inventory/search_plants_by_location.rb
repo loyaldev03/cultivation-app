@@ -2,7 +2,7 @@ module Inventory
   SearchPlantByLocationResult = Struct.new(:plant_id,
                                            :plant_code,
                                            :location_id,
-                                           :location_type)
+                                           :location_code)
 
   class SearchPlantsByLocation
     prepend SimpleCommand
@@ -33,7 +33,7 @@ module Inventory
           SearchPlantByLocationResult.new(p.id.to_s,
                                           p.plant_id,
                                           p.location_id.to_s,
-                                          p.location_type)
+                                          get_location_code(p.location_id))
         end
       end
     end
@@ -44,6 +44,7 @@ module Inventory
       @locations ||= QueryLocations.call(facility_id).result
     end
 
+    # TODO::REFACTOR#001 - Can this be refactor?
     def query_trays
       res = locations.select { |x| x[:room_id] == location_id }
       if res.any?
@@ -73,6 +74,34 @@ module Inventory
       if res.any?
         @location_type = 'Tray'
         return res
+      end
+    end
+
+    # TODO::REFACTOR#001
+    def get_location_code(location_id)
+      res = locations.detect { |x| x[:room_id] == location_id }
+      if res.present?
+        return res[:room_full_code]
+      end
+
+      res = locations.detect { |x| x[:section_id] == location_id }
+      if res.present?
+        return res[:section_full_code]
+      end
+
+      res = locations.detect { |x| x[:row_id] == location_id }
+      if res.present?
+        return res[:row_full_code]
+      end
+
+      res = locations.detect { |x| x[:shelf_id] == location_id }
+      if res.present?
+        return res[:shelf_full_code]
+      end
+
+      res = locations.detect { |x| x[:tray] == location_id }
+      if res.present?
+        return res[:tray_full_code]
       end
     end
 

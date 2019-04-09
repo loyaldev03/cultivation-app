@@ -64,7 +64,9 @@ module Cultivation
     def build_tray_plans(facility_id, batch_id, phase_info, trays = [])
       current_time = Time.zone.now
       plans = []
+      plan_trays = Tray.in(id: trays.pluck(:tray_id)).to_a
       trays.each do |tray|
+        tray_rec = plan_trays.detect { |t| t.id == tray[:tray_id].to_bson_id }
         # Combine booked quantity for same Tray
         existing = plans.detect { |x| x[:tray_id] == tray[:tray_id].to_bson_id }
         if existing.present?

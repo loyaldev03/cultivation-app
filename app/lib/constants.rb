@@ -364,7 +364,7 @@ module Constants
   class << self
     def generate_full_code(facility, room = nil, row = nil, shelf = nil, tray = nil)
       if facility
-        full_code = "#{facility.code}.#{room.code}"
+        full_code = room.code
         if row.present?
           if row.section_id.present?
             section = room.sections.detect { |s| s.id == row.section_id }

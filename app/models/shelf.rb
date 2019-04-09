@@ -17,5 +17,5 @@ class Shelf
 
   embedded_in :row, class_name: 'Row'
 
-  has_many :trays, dependent: :restrict
+  has_many :trays, dependent: :delete
 end

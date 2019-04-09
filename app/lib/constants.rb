@@ -15,6 +15,10 @@ module Constants
   CONST_VEG2 = 'veg2'.freeze
   CONST_HARVEST = 'harvest'.freeze
 
+  INDELIBLE_CLIP_POT_TAG = 'clip_pot_tag'.freeze
+  INDELIBLE_MOVING_TO_TRAY = 'moving_to_tray'.freeze
+  INDELIBLE_MOVING_NEXT_PHASE = 'moving_to_next_phase'.freeze
+
   CULTIVATION_PHASES_1V = [
     CONST_CLONE,
     CONST_VEG,

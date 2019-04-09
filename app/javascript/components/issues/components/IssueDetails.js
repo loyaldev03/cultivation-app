@@ -268,9 +268,11 @@ class IssueDetails extends Component {
               <div className="f5 fw6 dark-grey w-auto pv2 mt1">
                 {issue.title}
               </div>
-              {
-                descriptions.map((item, i) => <p key={i} className="fw4 f6 mt0 grey">{item}</p>)
-              }
+              {descriptions.map((item, i) => (
+                <p key={i} className="fw4 f6 mt0 grey">
+                  {item}
+                </p>
+              ))}
               <div className="flex">
                 {issue.attachments.map(x => (
                   <AttachmentThumbnail

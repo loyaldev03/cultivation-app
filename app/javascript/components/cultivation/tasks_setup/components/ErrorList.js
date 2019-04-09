@@ -3,7 +3,7 @@ class ErrorList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      errors: this.props.errors
+      errors: this.props.errors.flat()
     }
   }
 

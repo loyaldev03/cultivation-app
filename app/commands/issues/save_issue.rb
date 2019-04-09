@@ -34,11 +34,11 @@ module Issues
       @resolved_at = args[:resolved_at]
 
       @cultivation_batch = Cultivation::Batch.find(args[:cultivation_batch_id])
-      @task = Cultivation::Task.find(args[:task_id])
-      @assigned_to = User.find(args[:assigned_to_id])
+      @task = Cultivation::Task.find_by(id: args[:task_id])
+      @assigned_to = User.find_by(id: args[:assigned_to_id])
 
       @attachments = args[:attachments]
-      @tags = args[:tags]
+      @tags = args[:tags] || []
     end
 
     def call
@@ -106,6 +106,8 @@ module Issues
         delete_ids = args[:delete_attachments]
         issue.attachments.in(id: delete_ids).update_all(deleted: true)
       end
+
+      return if attachments.empty?
 
       attachments.each do |attachment|
         if attachment[:id].blank?

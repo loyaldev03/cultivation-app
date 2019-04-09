@@ -222,6 +222,7 @@ class IssueDetails extends Component {
       : []
 
     const isResolved = currentIssueStore.issue.status === 'resolved'
+    const descriptions = issue.description.replace(/\\n/g, '\n').split('\n')
     return (
       <React.Fragment>
         <div
@@ -267,7 +268,9 @@ class IssueDetails extends Component {
               <div className="f5 fw6 dark-grey w-auto pv2 mt1">
                 {issue.title}
               </div>
-              <p className="fw4 f6 mt0 grey">{issue.description}</p>
+              {
+                descriptions.map((item, i) => <p key={i} className="fw4 f6 mt0 grey">{item}</p>)
+              }
               <div className="flex">
                 {issue.attachments.map(x => (
                   <AttachmentThumbnail

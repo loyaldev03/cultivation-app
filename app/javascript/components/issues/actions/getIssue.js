@@ -17,7 +17,7 @@ const getIssue = issueId => {
 
       if (issuedStatus === 200 && commentsStatus === 200) {
         comments = commentsData.data.data.map(x => x.attributes)
-        issue.tags = issue.tags.map(e => ({ label: e, value: e }))
+        issue.tags = issue.tags && issue.tags.map(e => ({ label: e, value: e }))
         currentIssueStore.setIssue(issue)
         currentIssueStore.setComments(comments)
       }

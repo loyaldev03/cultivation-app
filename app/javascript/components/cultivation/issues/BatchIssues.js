@@ -169,7 +169,7 @@ class BatchIssues extends React.Component {
   }
 
   renderTitle = record => {
-    let tags = record.original.attributes.tags
+    let tags = record.original.attributes.tags || []
     return (
       <div className="flex justify-between w-100">
         <a

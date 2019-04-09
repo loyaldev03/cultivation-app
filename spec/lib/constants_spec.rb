@@ -18,8 +18,8 @@ RSpec.describe "Generate Full Code", type: :lib do
     result = Constants.generate_full_code(facility, room)
 
     expect(result.nil?).to be false
-    expect(result).to eq "#{facility.code}.#{room.code}"
-    expect(result.length > 5).to eq true
+    expect(result).to eq room.code
+    expect(result.length).to eq 4
   end
 
   it "row full_code" do
@@ -28,8 +28,8 @@ RSpec.describe "Generate Full Code", type: :lib do
     result = Constants.generate_full_code(facility, room, row)
 
     expect(result.nil?).to be false
-    expect(result).to eq "#{facility.code}.#{room.code}.#{row.code}"
-    expect(result.length > 10).to eq true
+    expect(result).to eq "#{room.code}.#{row.code}"
+    expect(result.length).to eq 9
   end
 
   it "row (with section) full_code" do
@@ -43,10 +43,10 @@ RSpec.describe "Generate Full Code", type: :lib do
     last_row.section_id = second_section.id
 
     result = Constants.generate_full_code(facility, room, first_row)
-    expect(result).to eq "#{facility.code}.#{room.code}.#{first_section.code}.#{first_row.code}"
+    expect(result).to eq "#{room.code}.#{first_section.code}.#{first_row.code}"
 
     result = Constants.generate_full_code(facility, room, last_row)
-    expect(result).to eq "#{facility.code}.#{room.code}.#{second_section.code}.#{last_row.code}"
+    expect(result).to eq "#{room.code}.#{second_section.code}.#{last_row.code}"
   end
 
   it "shelf full_code" do
@@ -56,8 +56,8 @@ RSpec.describe "Generate Full Code", type: :lib do
     result = Constants.generate_full_code(facility, room, row, shelf)
 
     expect(result.nil?).to be false
-    expect(result).to eq "#{facility.code}.#{room.code}.#{row.code}.#{shelf.code}"
-    expect(result.length > 15).to eq true
+    expect(result).to eq "#{room.code}.#{row.code}.#{shelf.code}"
+    expect(result.length).to eq 14
   end
 
   it "shelf (with section) full_code" do
@@ -69,7 +69,7 @@ RSpec.describe "Generate Full Code", type: :lib do
     shelf = row.shelves.first
 
     result = Constants.generate_full_code(facility, room, row, shelf)
-    expect(result).to eq "#{facility.code}.#{room.code}.#{section.code}.#{row.code}.#{shelf.code}"
+    expect(result).to eq "#{room.code}.#{section.code}.#{row.code}.#{shelf.code}"
   end
 
   it "tray full_code" do
@@ -80,8 +80,8 @@ RSpec.describe "Generate Full Code", type: :lib do
     result = Constants.generate_full_code(facility, room, row, shelf, tray)
 
     expect(result.nil?).to be false
-    expect(result).to eq "#{facility.code}.#{room.code}.#{row.code}.#{shelf.code}.#{tray.code}"
-    expect(result.length > 20).to eq true
+    expect(result).to eq "#{room.code}.#{row.code}.#{shelf.code}.#{tray.code}"
+    expect(result.length > 15).to eq true
   end
 
   it "tray (with section) full_code" do
@@ -95,7 +95,7 @@ RSpec.describe "Generate Full Code", type: :lib do
     result = Constants.generate_full_code(facility, room, row, shelf, tray)
 
     expect(result.nil?).to be false
-    expect(result).to eq "#{facility.code}.#{room.code}.#{section.code}.#{row.code}.#{shelf.code}.#{tray.code}"
-    expect(result.length > 20).to eq true
+    expect(result).to eq "#{room.code}.#{section.code}.#{row.code}.#{shelf.code}.#{tray.code}"
+    expect(result.length > 15).to eq true
   end
 end

@@ -31,9 +31,9 @@ class DailyTasksController < ApplicationController
     )
 
     sum_minutes = 0.0
-    time_logs.each do |time_log|
+    time_logs.includes(:user).each do |time_log|
       if time_log.start_time and time_log.end_time
-        result = Cultivation::CalculateTaskActualCostAndHours.call(time_log.id.to_s).result
+        result = Cultivation::CalculateTaskActualCostAndHours.call(time_log, time_log.user).result
         sum_minutes += result[:actual_minutes]
       end
     end

@@ -5,9 +5,9 @@ module Cultivation
 
     attr_reader :args
 
-    def initialize(time_log_id)
-      @time_log = Cultivation::TimeLog.find(time_log_id)
-      @user = @time_log.user
+    def initialize(time_log, user)
+      @time_log = time_log
+      @user = user
     end
 
     def call

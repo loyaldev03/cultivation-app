@@ -33,8 +33,8 @@ module Cultivation
       end
 
       validate
-    rescue StandardError
-      errors.add(:error, $!.message)
+      # rescue StandardError
+      #   errors.add(:error, $!.message)
     end
 
     def validate
@@ -47,13 +47,14 @@ module Cultivation
 
       # validate seed
       if batch.batch_source == 'seeds'
-        result = Cultivation::ValidateSeed.call(current_user: @current_user, batch_id: @batch_id)
+        result = Cultivation::ValidateSeed.call(current_user: @current_user, batch_id: @batch_id, facility_id: batch.facility_id)
         errors.add(:batch_id, result.errors['strain']) unless result.success?
       end
 
       #validate raw material
-      result = ValidateRawMaterial.call(current_user: @current_user, batch_id: @batch_id)
-      errors.add(:batch_id, result.errors['strain']) unless result.success?
+      result = ValidateRawMaterial.call(@batch_id, batch.facility_id, @current_user)
+      errors.add(:batch_id, result.errors[:material_use]) unless result.success?
+      Rails.logger.debug "\t\t\t\t >>>> raw material validations: #{result.errors.inspect}"
 
       #validate resource
       result = ValidateResource.call(current_user: @current_user, batch_id: @batch_id)

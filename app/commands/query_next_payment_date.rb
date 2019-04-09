@@ -18,8 +18,7 @@ class QueryNextPaymentDate
     if date.friday?
       date
     elsif date.strftime('%w').to_i < 5
-      num_days = date.strftime('%w').to_i
-      date + (5 - num_days).days
+      date.beginning_of_week + 5.days
     else
       date.next_week(:friday)
     end

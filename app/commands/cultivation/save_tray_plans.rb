@@ -79,7 +79,6 @@ module Cultivation
             row_id: tray[:row_id].to_bson_id,
             shelf_id: tray[:shelf_id].to_bson_id,
             tray_id: tray[:tray_id].to_bson_id,
-            tray_full_code: tray_rec.full_code,
             start_date: phase_info.start_date,
             end_date: phase_info.end_date,
             capacity: tray[:tray_capacity].to_i, # Important: Must as integer for

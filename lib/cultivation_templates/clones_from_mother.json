@@ -75,7 +75,7 @@
   { "wbs": "4.1.3.3", "phase": "flower", "name": "Transplant plants to new pots", "duration": "", "indelible": "", "predecessor": "" },
   { "wbs": "5", "phase": "harvest", "name": "Harvest", "duration": "", "indelible": "group", "predecessor": "" },
   { "wbs": "5.1", "phase": "harvest", "name": "Prepare equipment and materials for harvesting", "duration": "", "indelible": "", "predecessor": "" },
-  { "wbs": "5.2", "phase": "harvest", "name": "Create Harvest batch ID and tags for METRC", "duration": "", "indelible": "", "predecessor": "" },
+  { "wbs": "5.2", "phase": "harvest", "name": "Create Harvest batch ID and tags for METRC", "duration": "", "indelible": "create_harvest_batch", "predecessor": "" },
   { "wbs": "5.3", "phase": "harvest", "name": "Cut plants", "duration": "", "indelible": "", "predecessor": "" },
   { "wbs": "5.4", "phase": "harvest", "name": "Measure wet weight", "duration": "", "indelible": "", "predecessor": "" },
   { "wbs": "5.5", "phase": "harvest", "name": "Remove all Leaves ", "duration": "", "indelible": "", "predecessor": "" },

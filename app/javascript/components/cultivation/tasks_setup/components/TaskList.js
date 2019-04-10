@@ -18,6 +18,7 @@ const ClippinPanel = lazy(() => import('./ClippingPanel'))
 const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
 const AssignMaterialForm = lazy(() => import('./MaterialForm'))
 const CultivationCalendar = lazy(() => import('./CultivationCalendar'))
+const HarvestBatchForm = lazy(() => import('./HarvestBatchForm'))
 
 const MenuButton = ({ icon, indelible, text, onClick, className = '' }) => {
   return (
@@ -49,7 +50,8 @@ class TaskList extends React.Component {
       showClippingPanel: false,
       showStartDateCalendar: false,
       showAssignResourcePanel: false,
-      showAssignMaterialPanel: false
+      showAssignMaterialPanel: false,
+      showHarvestBatchForm: true
     }
   }
 
@@ -115,6 +117,13 @@ class TaskList extends React.Component {
     this.setState({
       taskSelected: taskId,
       showClippingPanel: !this.state.showClippingPanel
+    })
+  }
+
+  handleShowHarvestBatchForm = (taskId, item) => {
+    this.setState({
+      taskSelected: taskId,
+      showHarvestBatchForm: !this.state.showHarvestBatchForm
     })
   }
 
@@ -226,6 +235,21 @@ class TaskList extends React.Component {
                   ) : (
                     ''
                   )}
+
+                  {indelible === 'create_harvest_batch' ? (
+                    <div className="bt bw1">
+                      <p className="i tc silver">Create batch ID</p>
+
+                      <MenuButton
+                        text="Create batch ID"
+                        indelible={indelible}
+                        onClick={() => this.handleShowHarvestBatchForm(id, items)}
+                      />
+                    </div>
+                  ) : (
+                    ''
+                  )}
+
                 </div>
               </div>
             ) : (
@@ -606,7 +630,8 @@ class TaskList extends React.Component {
       showStartDateCalendar,
       showAssignResourcePanel,
       showAssignMaterialPanel,
-      showClippingPanel
+      showClippingPanel,
+      showHarvestBatchForm
     } = this.state
     const batchId = this.props.batch.id
     if (!TaskStore.isDataLoaded || !UserStore.isDataLoaded) {
@@ -705,6 +730,24 @@ class TaskList extends React.Component {
               <TaskEditor
                 onClose={() =>
                   this.setState({ showTaskEditor: false, taskAction: '' })
+                }
+                taskId={this.state.taskSelected}
+                taskAction={this.state.taskAction}
+                batchId={batchId}
+                facilityStrainId={this.props.batch.facility_strain_id}
+                facilityId={this.props.batch.facility_id}
+              />
+            </Suspense>
+          )}
+        />
+        <SlidePanel
+          width="500px"
+          show={showHarvestBatchForm}
+          renderBody={props => (
+            <Suspense fallback={<div />}>
+              <HarvestBatchForm
+                onClose={() =>
+                  this.setState({ showHarvestBatchForm: false, taskAction: '' })
                 }
                 taskId={this.state.taskSelected}
                 taskAction={this.state.taskAction}

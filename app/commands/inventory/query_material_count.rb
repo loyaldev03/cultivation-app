@@ -57,7 +57,7 @@ module Inventory
                   "$reduce": {
                     input: '$tx.common_quantity',
                     initialValue: 0,
-                    in: {"$add": ['$$value', {'$abs': {"$toDecimal": '$$this'}}]},
+                    in: {"$add": ['$$value', {'$abs': {"$toDouble": '$$this'}}]},
                   },
                 },
               },

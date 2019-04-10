@@ -26,14 +26,22 @@ class TaskRow extends React.Component {
       const default_status = ['stopped', 'stuck', 'done', 'new', 'not_started']
       if (default_status.includes(this.props.work_status)) {
         let status_before = this.props.work_status
-        DailyTaskStore.updateTimeLog('started', this.props.id, this.props.batch_id)
+        DailyTaskStore.updateTimeLog(
+          'started',
+          this.props.id,
+          this.props.batch_id
+        )
         if (status_before == 'stuck') {
           toast('Removed stuck status.', 'success')
         } else {
           toast('Start time recorded', 'success')
         }
       } else {
-        DailyTaskStore.updateTimeLog('stopped', this.props.id, this.props.batch_id)
+        DailyTaskStore.updateTimeLog(
+          'stopped',
+          this.props.id,
+          this.props.batch_id
+        )
         toast('End time recorded', 'success')
       }
     }
@@ -45,7 +53,11 @@ class TaskRow extends React.Component {
         if (
           window.confirm('Are you sure you want to change status to done ?')
         ) {
-          DailyTaskStore.updateTimeLog(action, this.props.id, this.props.batch_id)
+          DailyTaskStore.updateTimeLog(
+            action,
+            this.props.id,
+            this.props.batch_id
+          )
           this.setState({ work_status: action })
           toast('Status changed to done', 'success')
         }

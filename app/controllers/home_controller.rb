@@ -1,4 +1,6 @@
 class HomeController < ApplicationController
+  include WorkersDashboard
+
   def index
     @home = HomeSetupStatus.call(current_default_facility).result
   end
@@ -73,22 +75,5 @@ class HomeController < ApplicationController
         {"$match": match},
       ]
     )
-  end
-
-  def get_hours_worked
-    time_logs = current_user.time_logs.where(
-      :start_time.gte => DateTime.now.beginning_of_week,
-      :end_time.lte => DateTime.now.end_of_week,
-    )
-
-    sum_minutes = 0.0
-    time_logs.includes(:user).each do |time_log|
-      if time_log.start_time and time_log.end_time
-        result = Cultivation::CalculateTaskActualCostAndHours.call(time_log, time_log.user).result
-        sum_minutes += result[:actual_minutes]
-      end
-    end
-    actual_hours = sum_minutes / 60 #convert to hours
-    actual_hours.round(2)
   end
 end

@@ -7,7 +7,7 @@ class CalculateTotalActualCostJob < ApplicationJob
     sum_minutes = 0.0
     @task.time_logs.includes(:user).each do |time_log|
       if time_log.start_time and time_log.end_time
-        result = Cultivation::CalculateTaskActualCostAndHours.call(time_log, time_log.user).result
+        result = Cultivation::CalculateTaskActualCostAndHours.call(time_log, time_log.user, true).result #true for calculating the breakdown
         sum_cost += result[:actual_cost]
         sum_minutes += result[:actual_minutes]
       end

@@ -4,7 +4,6 @@ module WorkersDashboard
   included do
   end
 
-
   def get_hours_worked
     time_logs = current_user.time_logs.where(
       :start_time.gte => DateTime.now.beginning_of_week,
@@ -21,5 +20,4 @@ module WorkersDashboard
     actual_hours = sum_minutes / 60 #convert to hours
     actual_hours.round(2)
   end
-
 end

@@ -1,4 +1,3 @@
-
 module Cultivation
   class ActivateBatch
     prepend SimpleCommand
@@ -6,8 +5,8 @@ module Cultivation
     attr_reader :args
 
     def initialize
-      @batches = Cultivation::Batch
-        .where(:status.in => [Constants::BATCH_STATUS_SCHEDULED])
+      @batches = Cultivation::Batch.
+        where(:status.in => [Constants::BATCH_STATUS_SCHEDULED])
     end
 
     def call

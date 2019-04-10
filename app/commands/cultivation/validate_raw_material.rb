@@ -14,9 +14,6 @@ module Cultivation
       product_ids = extract_product_ids(batch_id)
       result = Inventory::QueryMaterialCount.call(product_ids, facility_id, user).result
 
-      # Rails.logger.debug "\t\t\t\t>>> Inventory::QueryMaterialCount, product_ids: #{product_ids}, facility_id: #{facility_id}"
-      # Rails.logger.debug "\t\t\t\t>>>>result: #{result.inspect}"
-
       result.each do |item|
         product_result = item[1]
         if !product_result[:is_available]
@@ -44,32 +41,11 @@ module Cultivation
         {"$group": {"_id": nil, "product_ids": {"$addToSet": '$tasks.material_use.product_id'}}},
       ])
 
-      result.first[:product_ids]
-    end
-
-    # TODO: Should be another service
-    def create_issues
-      inadequate_products.each do |product|
-        issue = Issues::Issue.find_or_initialize_by(
-          task_id: task.id,
-          cultivation_batch_id: batch.id.to_s,
-          title: "Insufficient Raw Material #{material&.product&.name}",
-        )
-        issue.issue_no = Issues::Issue.count + 1
-        issue.title = "Insufficient Raw Material #{material&.product&.name}"
-        issue.description = "Insufficient Raw Material #{material&.product&.name}"
-        issue.severity = 'severe'
-        issue.issue_type = 'task_from_batch'
-        issue.status = 'open'
-        # issue.task_id = task.id # ....
-        issue.cultivation_batch_id = batch_id
-        issue.reported_by = user
-
-        issue.save!
+      if result.count == 0
+        []
+      else
+        result.first[:product_ids]
       end
-    rescue
-      Rails.logger.debug "#{$!.message}"
-      errors.add(:error, $!.message)
     end
   end
 end

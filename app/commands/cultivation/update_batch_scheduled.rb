@@ -53,8 +53,10 @@ module Cultivation
 
       #validate raw material
       result = ValidateRawMaterial.call(@batch_id, batch.facility_id, @current_user)
-      errors.add(:batch_id, result.errors[:material_use]) unless result.success?
-      Rails.logger.debug "\t\t\t\t >>>> raw material validations: #{result.errors.inspect}"
+      unless result.success?
+        errors.add(:batch_id, result.errors[:material_use])
+        create_issue_for_material_errors(batch, result.errors[:material_use], @current_user)
+      end
 
       #validate resource
       result = ValidateResource.call(current_user: @current_user, batch_id: @batch_id)
@@ -62,6 +64,26 @@ module Cultivation
         result.errors['resource'].each do |a|
           errors.add(:batch_id, a) unless result.success?
         end
+      end
+    end
+
+    def create_issue_for_material_errors(batch, errors, reported_by)
+      issue = Issues::Issue.find_by(
+        title: 'Insufficient materials',
+        cultivation_batch_id: batch.id,
+        issue_type: 'task_from_batch',
+      )
+
+      if issue.present?
+        issue.update!(description: errors.join('\n'))
+      else
+        Issues::SaveIssue.call(reported_by, {
+          title: 'Insufficient materials',
+          description: errors.join('\n'),
+          severity: 'severe',
+          cultivation_batch_id: batch.id,
+          issue_type: 'task_from_batch',
+        })
       end
     end
   end

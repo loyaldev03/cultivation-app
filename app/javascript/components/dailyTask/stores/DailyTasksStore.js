@@ -76,7 +76,7 @@ class DailyTaskStore {
   }
 
   @action
-  async updateTimeLog(action, taskId) {
+  async updateTimeLog(action, taskId, batchId) {
     this.isLoading = true
     const url = `/api/v1/daily_tasks/time_log`
     const payload = { actions: action, task_id: taskId }
@@ -84,6 +84,7 @@ class DailyTaskStore {
       const response = await (await fetch(url, httpPutOptions(payload))).json()
       if (response.data) {
         // this.loadTasks(batchId)
+        this.updateTaskWorkStatus(batchId, taskId, action)
       } else {
         console.error(response.errors)
       }
@@ -160,6 +161,17 @@ class DailyTaskStore {
 
     // For now seems like this is the only way to force rerender
     // this.batches.replace(toJS(this.batches))
+  }
+
+  @action
+  updateTaskWorkStatus(batchId, taskId, status) {
+    console.log(batchId)
+    let batch = this.batches.find(x => x.id === batchId)
+    let task = batch.tasks.find(x => x.id === taskId)
+    task.work_status = status
+    this.batches = this.batches.map(t => {
+      return t.id === batchId ? batch : t
+    })
   }
 }
 

@@ -6,6 +6,7 @@ import DailyTaskStore from '../stores/DailyTasksStore'
 import SidebarStore from '../stores/SidebarStore'
 import MaterialUsedStore from '../stores/MaterialUsedStore'
 import NutrientEntryForm from '../../utils/NutrientEntryForm'
+import classNames from 'classnames'
 
 const rightBorder = { borderRight: '1px solid #ccc' }
 
@@ -60,12 +61,16 @@ class ExpandedRow extends React.Component {
   }
 
   onOpenSidebar = sidebar => e => {
-    SidebarStore.openSidebar(
-      sidebar,
-      this.props.batch_id,
-      this.props.id,
-      this.props.phase
-    )
+    const showButtonStatus = ['started', 'stuck']
+    console.log(this.props.work_status)
+    if (showButtonStatus.includes(this.props.work_status)) {
+      SidebarStore.openSidebar(
+        sidebar,
+        this.props.batch_id,
+        this.props.id,
+        this.props.phase
+      )
+    }
   }
 
   onNewIssue = event => {
@@ -84,7 +89,8 @@ class ExpandedRow extends React.Component {
 
   render() {
     const { id: taskId, indelible, notes, batch_id, items, issues } = this.props
-
+    const showButtonStatus = ['started', 'stuck']
+    const hideButtonStatus = ['done', 'new', 'stopped']
     return (
       <React.Fragment>
         <div className="flex w100 justify-end tr pv3 ph3">
@@ -92,7 +98,19 @@ class ExpandedRow extends React.Component {
             {indelible === 'add_nutrient' && (
               <a
                 href="#0"
-                className="btn btn--secondary mr3"
+                className={classNames(
+                  'btn mr3',
+                  {
+                    'btn--secondary': showButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  },
+                  {
+                    'btn--disabled': hideButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  }
+                )}
                 onClick={this.onOpenSidebar(indelible)}
               >
                 Add Nutrient
@@ -101,7 +119,19 @@ class ExpandedRow extends React.Component {
             {indelible === 'clip_pot_tag' && (
               <a
                 href="#0"
-                className="btn btn--secondary mr3"
+                className={classNames(
+                  'btn mr3',
+                  {
+                    'btn--secondary': showButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  },
+                  {
+                    'btn--disabled': hideButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  }
+                )}
                 onClick={this.onOpenSidebar(indelible)}
               >
                 Create UID
@@ -110,7 +140,19 @@ class ExpandedRow extends React.Component {
             {indelible === 'moving_to_tray' && (
               <a
                 href="#0"
-                className="btn btn--secondary mr3"
+                className={classNames(
+                  'btn mr3',
+                  {
+                    'btn--secondary': showButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  },
+                  {
+                    'btn--disabled': hideButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  }
+                )}
                 onClick={this.onOpenSidebar(indelible)}
               >
                 Moving to Trays
@@ -119,7 +161,19 @@ class ExpandedRow extends React.Component {
             {indelible === 'moving_to_next_phase' && (
               <a
                 href="#0"
-                className="btn btn--secondary mr3"
+                className={classNames(
+                  'btn mr3',
+                  {
+                    'btn--secondary': showButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  },
+                  {
+                    'btn--disabled': hideButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  }
+                )}
                 onClick={this.onOpenSidebar(indelible)}
               >
                 Move Plants to Next Phase
@@ -127,15 +181,48 @@ class ExpandedRow extends React.Component {
             )}
             <a
               href="#0"
-              className="btn btn--primary mr2"
-              onClick={e => this.props.onClickStatus('done')}
+              className={classNames(
+                'btn mr3',
+                {
+                  'btn--primary': showButtonStatus.includes(
+                    this.props.work_status
+                  )
+                },
+                {
+                  'btn--disabled': hideButtonStatus.includes(
+                    this.props.work_status
+                  )
+                }
+              )}
+              onClick={e =>
+                showButtonStatus.includes(this.props.work_status)
+                  ? this.props.onClickStatus('done')
+                  : e
+              }
             >
               Done
             </a>
+
             <a
               href="#0"
-              className="btn btn--secondary"
-              onClick={e => this.props.onClickStatus('stuck')}
+              className={classNames(
+                'btn',
+                {
+                  'btn--primary': showButtonStatus.includes(
+                    this.props.work_status
+                  )
+                },
+                {
+                  'btn--disabled': hideButtonStatus.includes(
+                    this.props.work_status
+                  )
+                }
+              )}
+              onClick={e =>
+                showButtonStatus.includes(this.props.work_status)
+                  ? this.props.onClickStatus('stuck')
+                  : e
+              }
             >
               I'm stuck
             </a>

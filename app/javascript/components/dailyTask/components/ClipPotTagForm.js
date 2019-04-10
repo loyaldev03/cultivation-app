@@ -5,6 +5,7 @@ import SidebarStore from '../stores/SidebarStore'
 import ClippingStore from '../stores/ClippingStore'
 import PlantTagList from './PlantTagList'
 import { AdjustmentMessage, InputBarcode, SlidePanelHeader } from '../../utils'
+import dailyTasksStore from '../stores/DailyTasksStore'
 
 @observer
 class ClipPotTagForm extends React.Component {
@@ -40,6 +41,9 @@ class ClipPotTagForm extends React.Component {
   onDoneMoveNext = rowIndex => {
     if (this.plantRefs[rowIndex + 1]) {
       this.plantRefs[rowIndex + 1].click()
+    }
+    if (ClippingStore.taskCompleted) {
+      dailyTasksStore.updateTaskWorkStatus()
     }
   }
 

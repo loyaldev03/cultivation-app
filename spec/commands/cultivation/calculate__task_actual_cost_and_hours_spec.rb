@@ -43,7 +43,7 @@ RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
         end_time = Time.zone.local(2019, 4, 21, 18, 00)
         task = Cultivation::Task.create(batch: batch1)
         time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
-        cmd = Cultivation::CalculateTaskActualCostAndHours.call(time_log.id.to_s)
+        cmd = Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
         time_log = Cultivation::TimeLog.find(time_log.id.to_s)
 
         expect(cmd.errors).to eq({})
@@ -57,7 +57,7 @@ RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
       end_time = Time.zone.local(2019, 4, 21, 18, 00) # 8.00 - 18.00 => 10 hours * 5 = 50.00
       task = Cultivation::Task.create(batch: batch1)
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
-      cmd = Cultivation::CalculateTaskActualCostAndHours.call(time_log.id.to_s)
+      cmd = Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
       time_log = Cultivation::TimeLog.find(time_log.id.to_s)
 
       expect(cmd.errors).to eq({})
@@ -72,7 +72,7 @@ RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
       end_time = Time.zone.local(2019, 4, 21, 19, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00
       task = Cultivation::Task.create(batch: batch1)
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
-      cmd = Cultivation::CalculateTaskActualCostAndHours.call(time_log.id.to_s)
+      cmd = Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
       time_log = Cultivation::TimeLog.find(time_log.id.to_s)
 
       expect(cmd.errors).to eq({})
@@ -86,7 +86,7 @@ RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
       end_time = Time.zone.local(2019, 4, 21, 19, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
       task = Cultivation::Task.create(batch: batch1)
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
-      cmd = Cultivation::CalculateTaskActualCostAndHours.call(time_log.id.to_s)
+      cmd = Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
       time_log = Cultivation::TimeLog.find(time_log.id.to_s)
 
       expect(cmd.errors).to eq({})
@@ -100,7 +100,7 @@ RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
       end_time = Time.zone.local(2019, 4, 21, 7, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
       task = Cultivation::Task.create(batch: batch1)
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
-      cmd = Cultivation::CalculateTaskActualCostAndHours.call(time_log.id.to_s)
+      cmd = Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
       time_log = Cultivation::TimeLog.find(time_log.id.to_s)
 
       expect(cmd.result[:actual_minutes]).to eq(90)
@@ -113,7 +113,7 @@ RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
       end_time = Time.zone.local(2019, 4, 21, 21, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
       task = Cultivation::Task.create(batch: batch1)
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
-      cmd = Cultivation::CalculateTaskActualCostAndHours.call(time_log.id.to_s)
+      cmd = Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
       time_log = Cultivation::TimeLog.find(time_log.id.to_s)
 
       expect(cmd.result[:actual_minutes]).to eq(150)

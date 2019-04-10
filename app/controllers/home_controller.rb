@@ -1,10 +1,19 @@
 class HomeController < ApplicationController
+  include WorkersDashboard
+
   def index
     @home = HomeSetupStatus.call(current_default_facility).result
   end
 
   def dashboard
     @dashboard = DashboardForm::DashboardForm.new
+  end
+
+  def worker_dashboard
+    @total_tasks = get_tasks_today.count
+    @next_payment_date = QueryNextPaymentDate.call(DateTime.now).result
+    @hours_worked = get_hours_worked
+    render 'worker_dashboard', layout: 'worker'
   end
 
   def inventory_setup
@@ -54,5 +63,17 @@ class HomeController < ApplicationController
     end
 
     redirect_to root_path, flash: {notice: 'Data has reset.'}
+  end
+
+  private
+
+  def get_tasks_today
+    @tasks_date = DateTime.now.beginning_of_day
+    match = current_user.cultivation_tasks.expected_on(@tasks_date).selector
+    Cultivation::Task.collection.aggregate(
+      [
+        {"$match": match},
+      ]
+    )
   end
 end

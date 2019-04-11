@@ -98,6 +98,11 @@ class ClippingStore {
   get totalQuantity() {
     return this.motherPlants.reduce((acc, obj) => acc + obj.quantity, 0)
   }
+
+  @computed
+  get taskCompleted() {
+    return this.totalClippings == this.totalQuantity
+  }
 }
 
 const clippingStore = new ClippingStore()

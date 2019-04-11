@@ -165,10 +165,19 @@ class DailyTaskStore {
 
   @action
   updateTaskWorkStatus(batchId, taskId, status) {
-    console.log(batchId)
     let batch = this.batches.find(x => x.id === batchId)
     let task = batch.tasks.find(x => x.id === taskId)
     task.work_status = status
+    this.batches = this.batches.map(t => {
+      return t.id === batchId ? batch : t
+    })
+  }
+
+  @action
+  updateTaskWorkIndelibleDone(batchId, taskId, indelible_done) {
+    let batch = this.batches.find(x => x.id === batchId)
+    let task = batch.tasks.find(x => x.id === taskId)
+    task.indelible_done = indelible_done
     this.batches = this.batches.map(t => {
       return t.id === batchId ? batch : t
     })

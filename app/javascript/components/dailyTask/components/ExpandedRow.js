@@ -87,10 +87,23 @@ class ExpandedRow extends React.Component {
     event.preventDefault()
   }
 
+  showDoneButton = e => {
+    const showButtonStatus = ['started', 'stuck']
+    if (this.props.indelible) {
+      return (
+        showButtonStatus.includes(this.props.work_status) &&
+        this.props.indelible_done
+      )
+    } else {
+      return showButtonStatus.includes(this.props.work_status)
+    }
+  }
+
   render() {
     const { id: taskId, indelible, notes, batch_id, items, issues } = this.props
     const showButtonStatus = ['started', 'stuck']
     const hideButtonStatus = ['done', 'new', 'stopped']
+    const showDoneButton = this.showDoneButton()
     return (
       <React.Fragment>
         <div className="flex w100 justify-end tr pv3 ph3">
@@ -179,29 +192,20 @@ class ExpandedRow extends React.Component {
                 Move Plants to Next Phase
               </a>
             )}
-            <a
-              href="#0"
-              className={classNames(
-                'btn mr3',
-                {
-                  'btn--primary': showButtonStatus.includes(
-                    this.props.work_status
-                  )
-                },
-                {
-                  'btn--disabled': hideButtonStatus.includes(
-                    this.props.work_status
-                  )
-                }
-              )}
-              onClick={e =>
-                showButtonStatus.includes(this.props.work_status)
-                  ? this.props.onClickStatus('done')
-                  : e
-              }
-            >
-              Done
-            </a>
+
+            {showDoneButton ? (
+              <a
+                href="#0"
+                className="btn mr3 btn--primary"
+                onClick={e => this.props.onClickStatus('done')}
+              >
+                Done
+              </a>
+            ) : (
+              <a href="#0" className="btn mr3 btn--disabled">
+                Done
+              </a>
+            )}
 
             <a
               href="#0"

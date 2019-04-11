@@ -42,9 +42,6 @@ class ClipPotTagForm extends React.Component {
     if (this.plantRefs[rowIndex + 1]) {
       this.plantRefs[rowIndex + 1].click()
     }
-    if (ClippingStore.taskCompleted) {
-      dailyTasksStore.updateTaskWorkStatus()
-    }
   }
 
   render() {
@@ -182,6 +179,11 @@ const MotherPlantRow = forwardRef(
           mother_plant_code: plant_code,
           plants: newPlants
         })
+        dailyTasksStore.updateTaskWorkIndelibleDone(
+          batchId,
+          taskId,
+          ClippingStore.taskCompleted
+        )
       }
     }
     const onDeleteScan = async clipping_code => {
@@ -192,6 +194,11 @@ const MotherPlantRow = forwardRef(
         mother_plant_code: plant_code,
         clipping_code
       })
+      dailyTasksStore.updateTaskWorkIndelibleDone(
+        batchId,
+        taskId,
+        ClippingStore.taskCompleted
+      )
     }
     const onDone = e => {
       setExpand(false)

@@ -82,6 +82,12 @@ class MovingStore {
   get totalCapacity() {
     return this.selectedLocations.reduce((acc, obj) => acc + obj.capacity, 0)
   }
+
+  @computed
+  get taskCompleted() {
+    return this.totalPlants == this.totalCapacity
+  }
+
 }
 
 const movingStore = new MovingStore()

@@ -14,7 +14,7 @@ module Cultivation
     embeds_many :breakdowns, class_name: 'Cultivation::Breakdown'
 
     def stop!
-      self.end_time = Time.now
+      self.end_time = Time.current
       save
     end
 

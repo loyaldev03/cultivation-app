@@ -2,10 +2,10 @@
   <h3 class="dark-gray">My Task</h3>
 <% end %>
 
-<div class="pa4">
+<div class="">
   <%= react_component 'dailyTask/DailyTaskApp',
     {
-      today: Time.now.beginning_of_day,
+      today: Time.current.beginning_of_day,
       current_user_first_name: current_user.first_name,
       current_user_last_name: current_user.last_name,
       current_user_photo: current_user.photo&.url,

@@ -21,7 +21,7 @@ module Issues
       issue.status = 'resolved'
       issue.resolution_notes = notes
       issue.reason = reason
-      issue.resolved_at = Time.now
+      issue.resolved_at = Time.current
       issue.resolved_by = current_user
       issue.save!
       issue

@@ -5,8 +5,8 @@ FactoryBot.define do
     name { Faker::Lorem.word }
     duration { duration }
     phase { Constants::CONST_CLONE }
-    start_date { Time.now }
-    end_date { Time.now + duration.to_i.days }
+    start_date { Time.current }
+    end_date { Time.current + duration.to_i.days }
 
     batch
   end

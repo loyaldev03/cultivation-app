@@ -6,7 +6,7 @@ RSpec.describe Inventory::SetupMother, type: :command do
     let(:facility_strain) { Inventory::FacilityStrain.create!(facility: facility, strain_name: 'X1', strain_type: 'sativa', created_by: user) }
     let(:room) { facility.rooms.create!(name: 'room 1', code: 'r1') }
     let(:user) { create(:user) }
-    let(:planted_on) { DateTime.now.iso8601 }
+    let(:planted_on) { Time.current }
     let(:new_vendor_name) { 'new_vendor_name'}
     let(:vendor_no) { 'vendor_no'}
     let(:address) { 'address'}

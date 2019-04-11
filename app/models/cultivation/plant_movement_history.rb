@@ -6,7 +6,7 @@ module Cultivation
     field :batch_id, type: BSON::ObjectId
     # E.g. match Task.phase, e.g. clone, veg1, veg2
     field :phase, type: String
-    # E.g. match Task.indelible, e.g. clip_pot_tag, moving
+    # E.g. match Task.indelible, e.g. clip_pot_tag, moving_to_tray...
     field :activity, type: String
     # Reference Task.id
     # field :task_id, type: BSON::ObjectId

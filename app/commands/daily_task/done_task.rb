@@ -14,6 +14,7 @@ module DailyTask
         last_time_log.stop! if last_time_log
         @task.update(work_status: 'done')
         CalculateTotalActualCostJob.perform_now(@task.id.to_s)
+        MovePlantsToNextPhaseJob.perform_later(@task.batch_id.to_s)
         @task
       end
     rescue StandardError

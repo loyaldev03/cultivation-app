@@ -48,6 +48,8 @@ class User
   field :roles, type: Array, default: []      # Array of BSON::ObjectId
   field :facilities, type: Array, default: [] # Array of BSON::ObjectId
 
+  has_many :time_logs, class_name: 'Cultivation::TimeLog'
+
   ## Confirmable
   # field :confirmation_token,   type: String
   # field :confirmed_at,         type: Time

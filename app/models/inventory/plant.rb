@@ -6,7 +6,7 @@ module Inventory
 
     # Seed data for prepurchased clone
 
-    belongs_to :created_by, class_name: 'User'
+    belongs_to :created_by, class_name: 'User' # TODO: Remove this and use modifier
     belongs_to :cultivation_batch, class_name: 'Cultivation::Batch', optional: true
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     belongs_to :harvest_batch, class_name: 'Inventory::HarvestBatch', optional: true
@@ -16,26 +16,28 @@ module Inventory
 
     belongs_to :vendor_invoice, class_name: 'Inventory::VendorInvoice', optional: true
 
-    field :plant_id, type: String
-    field :plant_tag, type: String
+    field :plant_id, type: String # e.g. MOT-AK47-001
+    field :plant_tag, type: String # METRC Tag
     field :location_id, type: BSON::ObjectId
     field :location_type, type: String
     field :status, type: String
-    field :current_growth_stage, type: String   # mother, clone, veg, veg1, veg2, flower, harvested, destroyed
-    field :mother_date, type: DateTime
-    field :planting_date, type: DateTime
-    field :veg_date, type: DateTime
-    field :veg1_date, type: DateTime
-    field :veg2_date, type: DateTime
-    field :flower_date, type: DateTime
-    field :harvest_date, type: DateTime
-    field :expected_harvest_date, type: DateTime
-    field :destroyed_date, type: DateTime
+    # mother, clone, veg, veg1, veg2, flower, harvested, destroyed
+    field :current_growth_stage, type: String
+    field :mother_date, type: Time
+    field :planting_date, type: Time
+    field :veg_date, type: Time
+    field :veg1_date, type: Time
+    field :veg2_date, type: Time
+    field :flower_date, type: Time
+    field :harvest_date, type: Time
+    field :expected_harvest_date, type: Time
+    field :destroyed_date, type: Time
     field :mother_id, type: BSON::ObjectId
+    # metrc require big batch to split into multiple lot
     field :lot_number, type: String
 
-    field :wet_weight, type: Float, default: -> { 0 }
-    field :wet_waste_weight, type: Float, default: -> { 0 }
+    field :wet_weight, type: Float, default: -> { 0.0 }
+    field :wet_waste_weight, type: Float, default: -> { 0.0 }
     field :wet_weight_uom, type: String
 
     field :last_metrc_update, type: DateTime

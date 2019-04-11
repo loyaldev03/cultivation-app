@@ -150,12 +150,6 @@ class DailyTaskApp extends React.Component {
     return (
       <React.Fragment>
         <div id="toast" className="toast animated toast--success" />
-        <div className="flex items-end justify-start mb3">
-          <h1 className="f3 ma0 pa0 black-90 fw6">Today</h1>
-          <span className="f6 pv1 ph2 br2 ba b--black-20 black-60 bg-white ml2">
-            {formatDate3(today)}
-          </span>
-        </div>
         {DailyTasksStore.batches.map(batch => (
           <BatchedDailyTasks
             key={batch.id}

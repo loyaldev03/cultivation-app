@@ -36,6 +36,7 @@ Rails.application.routes.draw do
   post "facility_setup/duplicate_rows" => "facility_setup#duplicate_rows", as: "duplicate_rows"
 
   get "dashboard" => "home#dashboard"
+  get "worker_dashboard" => "home#worker_dashboard"
   get "settings" => "home#settings"
   get "inventory/setup" => "home#inventory_setup"
   post "reset_data" => "home#reset_data"

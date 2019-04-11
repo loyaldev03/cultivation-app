@@ -85,7 +85,7 @@ class UpdateActiveTrayPlansJob < ApplicationJob
   end
 
   def build_tray_plan(batch_id, phase_info, location, capacity)
-    current_time = Time.now
+    current_time = Time.current
     {
       batch_id: batch_id.to_bson_id,
       facility_id: location.facility_id,

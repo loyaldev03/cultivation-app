@@ -11,7 +11,7 @@ import {
 import InlineEditBatchNameField from './InlineEditBatchNameField'
 import BatchStore from '../batches/BatchStore'
 
-class BatchHeader extends React.Component {
+class BatchHeader extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = {
@@ -37,11 +37,11 @@ class BatchHeader extends React.Component {
       start_date,
       total_estimated_cost,
       total_estimated_hour,
-      estimated_harvest_date
+      estimated_harvest_date,
+      current_growth_stage
     } = this.props
     const { name } = this.state
     const batchQuantity = quantity ? quantity : 0
-
     return (
       <React.Fragment>
         <div className="flex flex-column justify-between bg-white box--shadow">
@@ -50,12 +50,13 @@ class BatchHeader extends React.Component {
               <ActiveBadge className="fr" status={status} />
             </div>
             <div className="fl w-100 flex flex-column">
-              <div className="flex">
+              <div className="flex justify-between items-center">
                 <div className="w-30">
                   <h4 className="tl pa0 ma0 h6--font dark-grey">
                     Batch {batch_no}
                   </h4>
                 </div>
+                <span className="f5 fr">{current_growth_stage}</span>
               </div>
               <div className="mb3 flex">
                 <div className="w-30">

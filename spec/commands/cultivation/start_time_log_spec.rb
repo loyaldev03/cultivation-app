@@ -34,7 +34,7 @@ RSpec.describe DailyTask::StartTimeLog, type: :command do
 
   let(:current_user) { create(:user, facilities: [facility.id]) }
   let!(:batch1) do
-    start_date = Time.now.beginning_of_day
+    start_date = Time.current.beginning_of_day
     create(:batch, :scheduled,
           facility_strain: facility_strain,
           facility: facility,
@@ -50,7 +50,7 @@ RSpec.describe DailyTask::StartTimeLog, type: :command do
   end
 
   let!(:date_now) do 
-    Time.now.to_date
+    Time.current.to_date
   end
 
   context ".call" do

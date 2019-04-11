@@ -49,7 +49,7 @@ module Cultivation
       batch.batch_source = args[:batch_source]
       batch.facility_strain_id = args[:facility_strain_id]
       # Default start_date to tomorrow
-      batch.start_date = (Time.now + 1.days).beginning_of_day
+      batch.start_date = (Time.current + 1.days).beginning_of_day
       batch.grow_method = args[:grow_method]
       batch.quantity = args[:quantity]
       batch.batch_no = get_next_batch_no

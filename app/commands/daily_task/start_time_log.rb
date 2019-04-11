@@ -11,7 +11,7 @@ module DailyTask
     def call
       if validate?
         @task.update(work_status: 'started')
-        time_log = @task.time_logs.new(start_time: Time.now, user: @user) #create new time_logs
+        time_log = @task.time_logs.new(start_time: Time.current, user: @user) #create new time_logs
         time_log.save
         @task
       end
@@ -20,7 +20,7 @@ module DailyTask
     end
 
     def validate?
-      @task.present? #and status_include?
+      @task.present? # and status_include?
     end
 
     def status_include?

@@ -5,7 +5,8 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="flex flex-row min-vh-100 ">
-        <div id="main" class="main flex flex-column flex-auto">
+        <%= render 'layouts/worker_sidebar' %>
+        <div id="main" class="main flex flex-column flex-auto" style="padding-left: 75px;">
           <%= flash_messages %>
           <main class="min-vh-100 h-100">
             <div 
@@ -13,42 +14,81 @@
               class="ph4 f6 w-100 bg-white box--shadow-header flex flex-row items-center justify-between"
             >
 
-              <div class="flex items-center">
-                <%= react_component 'utils/Avatar', {
-                  firstName: current_user&.first_name,
-                  lastName: current_user&.last_name,
-                  photoUrl: current_user&.photo_url
-                }, {
-                  tag: 'span'
-                }%> 
-
-                <% if content_for? :breadcrumb %>
-                  <div class="flex items-center pl3">
-                    <%= yield :breadcrumb %>
-                  </div>
-                <% end %>
-              </div>
-
-              
-                
-
-              <div class="flex flex-row items-center">
-                <%= switch_user_select if Rails.env.development? %>
-                <i 
-                  onclick="openModal()" id="notification-popup" 
-                  class="material-icons grey mh2 dim md-21 pointer">
-                  notifications_none
-                </i>
-
-                <%= render 'layouts/notification' %>
-                <div class="ba b--black-20 br2 pointer" style="width: 40px; height: 35px;">
-                  &nbsp;
+              <% if content_for? :breadcrumb %>
+                <div class="flex items-center">
+                  <%= yield :breadcrumb %>
                 </div>
-              </div>
+
+                <div class="flex flex-row items-center">
+                  <%= switch_user_select if Rails.env.development? %>
+                  <i 
+                    onclick="openModal()" id="notification-popup" 
+                    class="material-icons grey mr2 dim md-21 pointer ml2">
+                    notifications_none
+                  </i>
+
+                  <%= render 'layouts/notification' %>
+
+                  <div class="ph2">
+                    <%= react_component 'utils/Avatar', {
+                      firstName: current_user&.first_name,
+                      lastName: current_user&.last_name,
+                      photoUrl: current_user&.photo_url
+                    }, {
+                      tag: 'span'
+                    }%> 
+                  </div>
+
+                  <% if !current_user.first_name %>
+                    <span class="grey subtitle-2"> <%= current_user.email %> </span>
+                  <% else %>
+                    <span class="ttc grey subtitle-2"> 
+                      <%= current_user.first_name %> <%= current_user.last_name %>
+                    </span>
+                  <% end %>
+
+                  <i onclick="toggleDropdown()" class="material-icons dim grey ml2 pointer" id="toggle-dropdown">keyboard_arrow_down</i>
+                  
+                  <div class="dropdown">
+                    <div id="myDropdown" class="dropdown-content box--shadow-header">
+                      <%= link_to 'Edit profile', edit_user_registration_path,
+                           class: 'ttc grey subtitle-2 pv3 tc dim' %>
+
+                      <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
+                          class: 'grey subtitle-2 pv3 tc dim' %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
               
             </div>
-            
-            <%= yield %>
+            <div class='pa4 flex flex-column h-100'>
+              <div class="flex justify-between mb5">
+                <div class="flex">
+                  <img
+                    src="<%= current_user&.photo_url%>"
+                    class="br-100 ba h3 w3 dib" alt="avatar">
+                  <div class='ml3'>
+                  <h1 class='f3 ma0 pa0 black-90 fw6 '>Hello <%= current_user.display_name %></h1>
+                  <h1 class='f5 ma0 pa0 black-90 fw6 flex mt2'>
+                    Today you have
+                    <div class='orange ml1'><%= @total_tasks %> tasks!</div>
+                  </h1>
+                  <h1 class='f5 ma0 pa0 grey fw6 flex mt2'>
+                    Date today : <%= Time.current.strftime('%d %b %Y') %>
+                  </h1>
+                  </div>
+
+                </div>
+                <div class='flex'>
+                  <div>
+                    <h1 class='f4 ma0 pa0 black-90 fw6'>Next Payment : <%= @next_payment_date.strftime('%d %b %Y')%></h1>
+                    <h1 class='f5 ma0 pa0 grey fw6 mt2'><%= @hours_worked %> hours worked this week</h1>
+                  </div>
+                </div>
+              </div>
+              <%= yield %>
+            </div>
           </main>
           
         </div>

@@ -47,7 +47,6 @@ const batchTabs = ({ batch, currentTab = '', unresolvedIssueCount = 0 }) => {
         Location
       </a> */}
 
-
       <a
         href={'/cultivation/batches/' + batch.id + '/secret_sauce'}
         className={resolveActive('secretSauce', currentTab)}

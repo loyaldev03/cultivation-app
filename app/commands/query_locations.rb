@@ -104,4 +104,15 @@ class QueryLocations
       {"$match": {row_purpose: purposes}}
     end
   end
+
+  LocationOption = Struct.new(:label, :value)
+
+  class << self
+    def select_options(facility_id, purposes)
+      locations = QueryLocations.call(facility_id, purposes).result
+      locations.map do |loc|
+        LocationOption.new(loc[:tray_full_code], loc[:tray_id].to_s)
+      end
+    end
+  end
 end

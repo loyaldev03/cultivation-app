@@ -103,6 +103,11 @@ class DailyTaskStore {
     try {
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {
+        //enable done button if all task is completed
+        let nutrients = this.getNutrientsByTask(batchId, taskId)
+        let checkedNutrients = nutrients.filter(e => e.checked === true)
+        let taskCompleted = nutrients.length == checkedNutrients.length
+        this.updateTaskWorkIndelibleDone(batchId, taskId, taskCompleted)
       } else {
         console.error(response.errors)
       }

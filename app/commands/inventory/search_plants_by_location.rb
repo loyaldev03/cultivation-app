@@ -70,7 +70,7 @@ module Inventory
         return res
       end
 
-      res = locations.select { |x| x[:tray] == location_id }
+      res = locations.select { |x| x[:tray_id] == location_id }
       if res.any?
         @location_type = 'Tray'
         return res
@@ -99,7 +99,7 @@ module Inventory
         return res[:shelf_full_code]
       end
 
-      res = locations.detect { |x| x[:tray] == location_id }
+      res = locations.detect { |x| x[:tray_id] == location_id }
       if res.present?
         return res[:tray_full_code]
       end

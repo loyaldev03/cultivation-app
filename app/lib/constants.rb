@@ -377,8 +377,12 @@ module Constants
           else
             full_code = "#{full_code}.#{row.code}"
           end
-          full_code = "#{full_code}.#{shelf.code}" if shelf.present?
-          full_code = "#{full_code}.#{tray.code}" if tray.present?
+          if row.has_shelves && shelf.present?
+            full_code = "#{full_code}.#{shelf.code}"
+          end
+          if row.has_trays && tray.present?
+            full_code = "#{full_code}.#{tray.code}"
+          end
         end
         full_code
       else

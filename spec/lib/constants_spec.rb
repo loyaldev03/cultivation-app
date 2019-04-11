@@ -15,6 +15,7 @@ RSpec.describe "Generate Full Code", type: :lib do
 
   it "room full_code" do
     room = facility.rooms.first
+
     result = Constants.generate_full_code(facility, room)
 
     expect(result.nil?).to be false
@@ -22,9 +23,10 @@ RSpec.describe "Generate Full Code", type: :lib do
     expect(result.length).to eq 4
   end
 
-  it "row full_code" do
+  it "row (without section)  full_code" do
     room = facility.rooms.first
     row = room.rows.first
+    
     result = Constants.generate_full_code(facility, room, row)
 
     expect(result.nil?).to be false
@@ -49,10 +51,11 @@ RSpec.describe "Generate Full Code", type: :lib do
     expect(result).to eq "#{room.code}.#{second_section.code}.#{last_row.code}"
   end
 
-  it "shelf full_code" do
+  it "shelf (- section) full_code" do
     room = facility.rooms.first
     row = room.rows.first
     shelf = row.shelves.first
+
     result = Constants.generate_full_code(facility, room, row, shelf)
 
     expect(result.nil?).to be false
@@ -60,7 +63,7 @@ RSpec.describe "Generate Full Code", type: :lib do
     expect(result.length).to eq 14
   end
 
-  it "shelf (with section) full_code" do
+  it "shelf (+ section) full_code" do
     room = facility.rooms.first
     section = room.sections.build(code: "SecA")
     room.save!
@@ -69,14 +72,16 @@ RSpec.describe "Generate Full Code", type: :lib do
     shelf = row.shelves.first
 
     result = Constants.generate_full_code(facility, room, row, shelf)
+
     expect(result).to eq "#{room.code}.#{section.code}.#{row.code}.#{shelf.code}"
   end
 
-  it "tray full_code" do
+  it "tray (- section) full_code" do
     room = facility.rooms.first
     row = room.rows.first
     shelf = row.shelves.first
     tray = shelf.trays.last
+
     result = Constants.generate_full_code(facility, room, row, shelf, tray)
 
     expect(result.nil?).to be false
@@ -84,7 +89,7 @@ RSpec.describe "Generate Full Code", type: :lib do
     expect(result.length > 15).to eq true
   end
 
-  it "tray (with section) full_code" do
+  it "tray (+ section) full_code" do
     room = facility.rooms.first
     section = room.sections.build(code: "SecA")
     room.save!
@@ -92,10 +97,56 @@ RSpec.describe "Generate Full Code", type: :lib do
     row.section_id = section.id
     shelf = row.shelves.first
     tray = shelf.trays.last
+
     result = Constants.generate_full_code(facility, room, row, shelf, tray)
 
     expect(result.nil?).to be false
     expect(result).to eq "#{room.code}.#{section.code}.#{row.code}.#{shelf.code}.#{tray.code}"
     expect(result.length > 15).to eq true
+  end
+
+  it "tray (- section / - shelf / - tray) full_code" do
+    room = facility.rooms.first
+    row = room.rows.first
+    row.has_shelves = false
+    row.has_trays = false
+    row.save!
+    shelf = row.shelves.first
+    tray = shelf.trays.last
+
+    result = Constants.generate_full_code(facility, room, row, shelf, tray)
+
+    expect(result.nil?).to be false
+    expect(result).to eq "#{room.code}.#{row.code}"
+  end
+
+  it "tray (- section / + shelf / - tray) full_code" do
+    room = facility.rooms.first
+    row = room.rows.first
+    row.has_shelves = true
+    row.has_trays = false
+    row.save!
+    shelf = row.shelves.first
+    tray = shelf.trays.last
+
+    result = Constants.generate_full_code(facility, room, row, shelf, tray)
+
+    expect(result.nil?).to be false
+    expect(result).to eq "#{room.code}.#{row.code}.#{shelf.code}"
+  end
+
+  it "tray (- section / + shelf / + tray) full_code" do
+    room = facility.rooms.first
+    row = room.rows.first
+    row.has_shelves = true
+    row.has_trays = true
+    row.save!
+    shelf = row.shelves.first
+    tray = shelf.trays.last
+
+    result = Constants.generate_full_code(facility, room, row, shelf, tray)
+
+    expect(result.nil?).to be false
+    expect(result).to eq "#{room.code}.#{row.code}.#{shelf.code}.#{tray.code}"
   end
 end

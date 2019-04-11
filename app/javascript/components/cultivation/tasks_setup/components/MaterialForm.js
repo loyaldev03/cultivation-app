@@ -30,7 +30,7 @@ export default class MaterialForm extends React.Component {
   loadProducts = async inputValue => {
     let url
     if (
-      this.state.task && 
+      this.state.task &&
       this.state.task.indelible &&
       this.state.task.indelible == 'add_nutrient'
     ) {
@@ -48,7 +48,7 @@ export default class MaterialForm extends React.Component {
       ...x.attributes
     }))
     this.setState({ defaultProduct: products })
-    
+
     return products
   }
 

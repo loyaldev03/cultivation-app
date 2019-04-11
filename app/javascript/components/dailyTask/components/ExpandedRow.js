@@ -62,7 +62,6 @@ class ExpandedRow extends React.Component {
 
   onOpenSidebar = sidebar => e => {
     const showButtonStatus = ['started', 'stuck']
-    console.log(this.props.work_status)
     if (showButtonStatus.includes(this.props.work_status)) {
       SidebarStore.openSidebar(
         sidebar,

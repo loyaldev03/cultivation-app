@@ -2,12 +2,14 @@ module Cultivation
   class ActivateBatch
     prepend SimpleCommand
 
-    attr_reader :args
+    attr_reader :current_time
 
-    def initialize
-      @batches = Cultivation::Batch.
-        includes(:facility).
-        where(:status.in => [Constants::BATCH_STATUS_SCHEDULED])
+    def initialize(current_time)
+      if current_time.is_a?(Time)
+        @current_time = current_time
+      else
+        raise "Expected current_time to be of type 'Time'"
+      end
     end
 
     def call
@@ -23,7 +25,7 @@ module Cultivation
 
     def update_status(batch)
       # Activate batch by changing it's status to active
-      if batch.start_date.past?
+      if current_time >= batch.start_date
         batch.update(status: Constants::BATCH_STATUS_ACTIVE)
       end
     end

@@ -34,6 +34,7 @@ module Cultivation
         grow_method: @batch.grow_method,
         start_date: @batch.start_date,
         estimated_harvest_date: @batch.estimated_harvest_date,
+        current_growth_stage: @batch.current_growth_stage,
         nutrient_profile: @batch.nutrient_profile,
         total_estimated_hour: total_estimated_hour,
         total_estimated_cost: total_estimated_cost,

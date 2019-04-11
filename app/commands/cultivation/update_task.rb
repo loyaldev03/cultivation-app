@@ -90,7 +90,7 @@ module Cultivation
       # all scheduled batch and activate it.
       if (schedule_batch &&
           batch.status = Constants::BATCH_STATUS_SCHEDULED &&
-                         batch.start_date <= Time.now)
+                         batch.start_date <= Time.current)
         ActivateBatchWorker.new.perform() # activate scheduled class immediately
       end
 
@@ -378,7 +378,7 @@ module Cultivation
     def get_phase_tasks(tasks)
       # Find "Phase" tasks only
       tasks.select do |t|
-        t.phase && Constants::CULTIVATION_PHASES_3V.include?(t.phase)
+        t.phase && Constants::CULTIVATION_PHASES.include?(t.phase)
       end
     end
   end

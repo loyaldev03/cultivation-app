@@ -47,7 +47,7 @@ module Cultivation
         errors.add('strain', 'Seed is not selected')
       else
         batches_selected = Cultivation::Batch
-          .where(:start_date.gte => Time.now)
+          .where(:start_date.gte => Time.current)
           .where(:status.in => [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE])
           .not_in(id: batch.id) #not draft => schedule and active
 

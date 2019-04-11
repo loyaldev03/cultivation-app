@@ -88,18 +88,9 @@ class TaskSetup extends React.Component {
       <div className="pa4 grey flex flex-column h-100">
         <div id="toast" className="toast animated toast--success" />
         <BatchHeader
-          batch_no={batch.batch_no}
-          batch_source={batch.batch_source}
-          quantity={batch.quantity}
-          status={batch.status}
-          name={batch.name}
-          id={batch.id}
-          strain={batch.strain}
-          grow_method={batch.grow_method}
-          start_date={batch.start_date}
+          {...batch}
           total_estimated_cost={TaskStore.totalEstimatedCost}
           total_estimated_hour={TaskStore.totalEstimatedHours}
-          estimated_harvest_date={batch.estimated_harvest_date}
         />
         <div className="flex justify-between">
           <BatchTabs

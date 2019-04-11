@@ -56,25 +56,15 @@ module Cultivation
 
     def material_use
       materials = []
-      tasks.each do |task|
-        # FIXME
-        # task.material_use.each do |material|
-        #   a = materials.find { |b| b.name == material.name }
-        #   if a.nil?
-        #     materials << material
-        #   else
-        #     a.quantity += material.quantity
-        #   end
-        # end
-      end
       materials
     end
 
     def material_summary
-      new_materials = material_use.map { |material|
-        Rails.logger.debug "Material Details ==> #{material.inspect}"
-        Rails.logger.debug "Facility Id ==> #{facility_id}"
-        transaction = Inventory::ItemTransaction.where(facility_id: facility_id, catalogue_id: material.catalogue_id)
+      new_materials = material_use.map do |material|
+        transaction = Inventory::ItemTransaction.where(
+          facility_id: facility_id,
+          catalogue_id: material.catalogue_id,
+        )
         sum = 0
         transaction.each do |a|
           sum += a.quantity
@@ -85,16 +75,16 @@ module Cultivation
           break if batch.id == id
           item = batch.material_use.find { |b| b.name == material.name }
           sum -= item.quantity if item
-          sum = 0 if sum < 0
+          sum = 0 if sum.negative?
         end
 
-        OpenStruct.new({
+        OpenStruct.new(
           name: material.name,
           quantity: material.quantity,
           uom: material.uom,
           inventory_quantity: sum,
-        })
-      }
+        )
+      end
       new_materials
     end
   end

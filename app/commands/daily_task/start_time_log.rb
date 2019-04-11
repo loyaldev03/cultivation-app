@@ -20,7 +20,7 @@ module DailyTask
     end
 
     def validate?
-      @task.present? #and status_include?
+      @task.present? # and status_include?
     end
 
     def status_include?

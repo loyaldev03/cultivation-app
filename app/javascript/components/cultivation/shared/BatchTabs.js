@@ -27,12 +27,6 @@ const batchTabs = ({ batch, currentTab = '', unresolvedIssueCount = 0 }) => {
       >
         Gantt Chart
       </a>
-      <a
-        href={'/cultivation/batches/' + batch.id + '/locations'}
-        className={resolveActive('location', currentTab)}
-      >
-        Location
-      </a>
 
       <a
         href={'/cultivation/batches/' + batch.id + '/issues'}
@@ -46,11 +40,19 @@ const batchTabs = ({ batch, currentTab = '', unresolvedIssueCount = 0 }) => {
         )}
       </a>
 
+      {/* <a
+        href={'/cultivation/batches/' + batch.id + '/locations'}
+        className={resolveActive('location', currentTab)}
+      >
+        Location
+      </a> */}
+
+
       <a
         href={'/cultivation/batches/' + batch.id + '/secret_sauce'}
         className={resolveActive('secretSauce', currentTab)}
       >
-        Secret Sauce
+        Nutrient Profile
       </a>
 
       <a
@@ -60,11 +62,18 @@ const batchTabs = ({ batch, currentTab = '', unresolvedIssueCount = 0 }) => {
         Resource
       </a>
 
-      <a
+      {/* <a
         href={'/cultivation/batches/' + batch.id + '/material'}
         className={resolveActive('materials', currentTab)}
       >
         Material
+      </a> */}
+
+      <a
+        href={'/cultivation/batches/' + batch.id + '/material'}
+        className={resolveActive('materials', currentTab)}
+      >
+        METRC IDs
       </a>
     </div>
   )

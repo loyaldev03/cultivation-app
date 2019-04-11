@@ -1,5 +1,5 @@
 import React from 'react'
-import Select from 'react-select'
+import AsyncSelect from 'react-select/lib/Async'
 import { selectStyles, NUTRITION_LIST } from '../../../utils'
 import NutrientEntryForm from '../../../utils/NutrientEntryForm'
 import {
@@ -24,42 +24,31 @@ export default class MaterialForm extends React.Component {
       nutrients: [],
       water_ph: 0
     }
-    this.loadProducts(
-      this.state.batch_id,
-      this.state.facility_id,
-      this.state.facility_strain_id
-    )
+    this.loadProducts('')
   }
 
-  loadProducts = async (batch_id, facility_id, facility_strain_id) => {
-    let url = `/api/v1/products?batch_id=${batch_id}`
+  loadProducts = async inputValue => {
+    let url
+    if (
+      this.state.task && 
+      this.state.task.indelible &&
+      this.state.task.indelible == 'add_nutrient'
+    ) {
+      url = `/api/v1/products?type=raw_materials&category=nutrients&facility_id=${facility_id}`
+    } else {
+      url = `/api/v1/products?facility_id=${
+        this.state.facility_id
+      }&filter=${inputValue}`
+    }
+
     let response = await (await fetch(url, httpGetOptions)).json()
     const products = response.data.map(x => ({
       label: x.attributes.name,
       value: x.attributes.id,
       ...x.attributes
     }))
-    let plant_products = []
-    if (this.props.batch_source === 'clones_purchased') {
-      url = `/api/v1/products?type=raw_materials&category=purchased_clone&facility_id=${facility_id}&facility_strain_id=${facility_strain_id}&filter=`
-      response = await (await fetch(url, httpGetOptions)).json()
-      plant_products = response.data.map(x => ({
-        label: x.attributes.name,
-        value: x.attributes.id,
-        ...x.attributes
-      }))
-    }
-    if (this.props.batch_source === 'seeds') {
-      url = `/api/v1/products?type=raw_materials&category=seeds&facility_id=${facility_id}&facility_strain_id=${facility_strain_id}&filter=`
-      response = await (await fetch(url, httpGetOptions)).json()
-      plant_products = response.data.map(x => ({
-        label: x.attributes.name,
-        value: x.attributes.id,
-        ...x.attributes
-      }))
-    }
-
-    this.setState({ defaultProduct: products, plantProduct: plant_products })
+    this.setState({ defaultProduct: products })
+    
     return products
   }
 
@@ -150,10 +139,13 @@ export default class MaterialForm extends React.Component {
     this.setState({ water_ph: ph })
   }
 
+  handleInputChange = newValue => {
+    return newValue ? newValue : ''
+  }
+
   render() {
     const { onClose } = this.props
     const { nutrients, materials, task } = this.state
-    const task_plant = task && task.indelible === 'plants'
     const showNutrient =
       materials && materials.length > 0 && task.indelible === 'add_nutrient'
     const title =
@@ -166,18 +158,13 @@ export default class MaterialForm extends React.Component {
           <SlidePanelHeader onClose={onClose} title={title} />
           <div className="ph4 mt3 flex items-center">
             <div className="w-100">
-              <Select
+              <AsyncSelect
+                placeholder="Search Product ..."
                 isClearable="true"
-                placeholder={
-                  task_plant ? 'Search Strain ...' : 'Search Product ...'
-                }
-                options={
-                  task_plant
-                    ? this.state.plantProduct
-                    : this.state.defaultProduct
-                }
-                styles={selectStyles}
-                value={this.state.product}
+                cacheOptions
+                loadOptions={e => this.loadProducts(e, '')}
+                defaultOptions={this.state.defaultProduct}
+                onInputChange={this.handleInputChange}
                 onChange={this.onChangeProduct}
               />
             </div>
@@ -240,17 +227,19 @@ export default class MaterialForm extends React.Component {
                   ))}
                 </tbody>
               </table>
-              <div className="flex pv3 items-center">
-                <i className="material-icons blue pr2">opacity</i>
-                <span className="pr2">Water Ph:</span>
-                <input
-                  type="number"
-                  name="pin"
-                  value={this.state.water_ph}
-                  className="input tr w3"
-                  onChange={e => this.handleChangePH(e.target.value)}
-                />
-              </div>
+              {task && task.indelible === 'add_nutrient' && (
+                <div className="flex pv3 items-center">
+                  <i className="material-icons blue pr2">opacity</i>
+                  <span className="pr2">Water Ph:</span>
+                  <input
+                    type="number"
+                    name="pin"
+                    value={this.state.water_ph}
+                    className="input tr w3"
+                    onChange={e => this.handleChangePH(e.target.value)}
+                  />
+                </div>
+              )}
             </div>
             <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
           </div>

@@ -13,7 +13,6 @@
   <div class="flex flex-column">
     <%= react_component('inventory/plant_setup/MotherSetupApp', {
         facility_strains: @facility_strains,
-        locations: @locations,
         scanditLicense: @scanditLicense,
         facility_id: params[:facility_id]
       }) %>
@@ -21,7 +20,7 @@
       <div class="dim flex flex-row items-center pointer">
         <i class="material-icons md-light-gray">keyboard_arrow_left</i>
         <%= link_to "Back", inventory_setup_path, class: "db tr ttu link button--font light-grey" %>
-      </div>  
+      </div>
     </div>
   </div>
 </div>

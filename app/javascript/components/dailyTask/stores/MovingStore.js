@@ -87,7 +87,6 @@ class MovingStore {
   get taskCompleted() {
     return this.totalPlants == this.totalCapacity
   }
-
 }
 
 const movingStore = new MovingStore()

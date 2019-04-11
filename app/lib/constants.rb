@@ -18,6 +18,7 @@ module Constants
   INDELIBLE_CLIP_POT_TAG = 'clip_pot_tag'.freeze
   INDELIBLE_MOVING_TO_TRAY = 'moving_to_tray'.freeze
   INDELIBLE_MOVING_NEXT_PHASE = 'moving_to_next_phase'.freeze
+  INDELIBLE_STAYING = 'staying'.freeze
 
   CULTIVATION_PHASES_1V = [
     CONST_CLONE,

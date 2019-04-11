@@ -89,7 +89,8 @@ class ExpandedRow extends React.Component {
 
   showDoneButton = e => {
     const showButtonStatus = ['started', 'stuck']
-    if (this.props.indelible) {
+    let indelible = ['clip_pot_tag', 'moving_to_tray'] //only these two indelible affect the disable done button, add_nutrient no need
+    if (this.props.indelible && indelible.includes(this.props.indelible)) { 
       return (
         showButtonStatus.includes(this.props.work_status) &&
         this.props.indelible_done

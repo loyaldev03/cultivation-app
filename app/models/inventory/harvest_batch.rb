@@ -1,3 +1,4 @@
+# TODO: To be removed
 module Inventory
   class HarvestBatch
     include Mongoid::Document
@@ -5,8 +6,8 @@ module Inventory
 
     field :harvest_name, type: String
     field :harvest_date, type: DateTime
-    field :total_wet_weight, type: BigDecimal
-    field :total_wet_waste_weight, type: BigDecimal
+    field :total_wet_weight, type: Float, default: -> { 0 }
+    field :total_wet_waste_weight, type: Float, default: -> { 0 }
     field :uom, type: String
     field :status, type: String                 # new, closed (when fully packaged)
 

@@ -34,8 +34,8 @@ module Inventory
     field :mother_id, type: BSON::ObjectId
     field :lot_number, type: String
 
-    field :wet_weight, type: BigDecimal, default: 0
-    field :wet_waste_weight, type: BigDecimal, default: 0
+    field :wet_weight, type: Float, default: -> { 0 }
+    field :wet_waste_weight, type: Float, default: -> { 0 }
     field :wet_weight_uom, type: String
 
     field :last_metrc_update, type: DateTime

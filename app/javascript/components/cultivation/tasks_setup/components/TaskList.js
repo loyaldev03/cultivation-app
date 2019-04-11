@@ -243,13 +243,14 @@ class TaskList extends React.Component {
                       <MenuButton
                         text="Create batch ID"
                         indelible={indelible}
-                        onClick={() => this.handleShowHarvestBatchForm(id, items)}
+                        onClick={() =>
+                          this.handleShowHarvestBatchForm(id, items)
+                        }
                       />
                     </div>
                   ) : (
                     ''
                   )}
-
                 </div>
               </div>
             ) : (

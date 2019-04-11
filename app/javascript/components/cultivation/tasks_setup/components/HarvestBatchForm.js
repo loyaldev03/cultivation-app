@@ -8,7 +8,6 @@ import reactSelectStyle from '../../../utils/reactSelectStyle'
 
 // @observer
 class HarvestBatchForm extends React.Component {
-
   state = {
     name: '',
     harvest_room: '',
@@ -20,9 +19,7 @@ class HarvestBatchForm extends React.Component {
     console.log('on save')
   }
 
-  validate = () => {
-
-  }
+  validate = () => {}
 
   handleChangeText = fieldName => e => {
     this.setState({
@@ -41,41 +38,41 @@ class HarvestBatchForm extends React.Component {
     return (
       <div>
         <SlidePanelHeader onClose={onClose} title="Create Harvest" />
-        
-          <div className="ph4 mv3 flex">
-            <div className="w-100">
-              <TextInput
-                label={'Harvest batch name'}
-                value={name}
-                onChange={this.handleChangeText('name')}
-                errors={errors}
-                errorField="name"
-              />
-            </div>
+
+        <div className="ph4 mv3 flex">
+          <div className="w-100">
+            <TextInput
+              label={'Harvest batch name'}
+              value={name}
+              onChange={this.handleChangeText('name')}
+              errors={errors}
+              errorField="name"
+            />
           </div>
-          <div className="ph4 mv3 flex flex-column">
-            <label className="subtitle-2 grey fl pb2">Unit of measure</label>
-            <div className="w-100 flex flex-column">
-              <Select
-                options={uomOptions}
-                value={uom}
-                onChange={this.handleUomChanged}
-                styles={reactSelectStyle}
-              />
-            </div>
+        </div>
+        <div className="ph4 mv3 flex flex-column">
+          <label className="subtitle-2 grey fl pb2">Unit of measure</label>
+          <div className="w-100 flex flex-column">
+            <Select
+              options={uomOptions}
+              value={uom}
+              onChange={this.handleUomChanged}
+              styles={reactSelectStyle}
+            />
           </div>
-          <div className="ph4 mt3 mb4 flex">
-            <div className="w-100">
-              <TextInput
-                label={'Harvest room'}
-                value={harvest_room}
-                onChange={this.handleChangeText('harvest_room')}
-                errors={errors}
-                errorField="harvest_room"
-              />
-            </div>
+        </div>
+        <div className="ph4 mt3 mb4 flex">
+          <div className="w-100">
+            <TextInput
+              label={'Harvest room'}
+              value={harvest_room}
+              onChange={this.handleChangeText('harvest_room')}
+              errors={errors}
+              errorField="harvest_room"
+            />
           </div>
-          <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
+        </div>
+        <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
       </div>
     )
   }

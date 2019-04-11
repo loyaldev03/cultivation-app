@@ -9,13 +9,13 @@ module Inventory
     field :name, type: String
     field :sku, type: String
     field :status, type: String    # available, draft
-    field :transaction_limit, type: BigDecimal
+    field :transaction_limit, type: Float, default: -> { 0 }
     field :description, type: String
     field :manufacturer, type: String
     # This replaces the one in Inventory::Catalogue
     field :uom_dimension, type: String
     field :common_uom, type: String
-    field :size, type: BigDecimal
+    field :size, type: Float, default: -> { 0 }
     field :ppm, type: Integer
 
     field :upc, type: String

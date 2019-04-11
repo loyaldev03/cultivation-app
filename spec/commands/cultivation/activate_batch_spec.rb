@@ -98,7 +98,7 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
   context ".call" do
     it "Activate batch on start date" do
       Time.use_zone(facility.timezone) do
-        Cultivation::ActivateBatch.call(Time.now)
+        Cultivation::ActivateBatch.call(Time.current)
 
         result = Cultivation::Batch.find(batch1.id)
         expect(result.status).to eq 'ACTIVE'

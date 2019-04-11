@@ -188,7 +188,7 @@ task seed_until_po: :environment  do
     Inventory::ItemTransaction.create!( ref_id:           item.id,
                                         ref_type:         'Inventory::VendorInvoiceItem',
                                         event_type:       'stock_intake',         # Move to Constants
-                                        event_date:       DateTime.now,           # stock intake happen today
+                                        event_date:       Time.current,           # stock intake happen today
                                         facility:         invoice.facility,
                                         catalogue:        item.catalogue,
                                         product_name:     item.product_name,
@@ -257,14 +257,14 @@ task seed_until_po: :environment  do
   batch = Cultivation::Batch.create!(
     batch_no: 'b111',
     name: 'batch1',
-    start_date: DateTime.now + 2.days, # future date
+    start_date: Time.current + 2.days, # future date
     batch_source: 'clones_from_mother',
     facility_id: facility_strain.facility_id,
     current_growth_stage: 'clone',
     facility_strain: facility_strain
   )
 
-  start_date = DateTime.now + 2.days
+  start_date = Time.current + 2.days
   [
     {
       phase: Constants::CONST_CLONE,
@@ -325,7 +325,7 @@ task seed_until_po: :environment  do
                           ref_id:           mat_used.id,
                           ref_type:         mat_used.class.name,
                           event_type:       'materials_used',         # Move to Constants
-                          event_date:       DateTime.now,             # stock intake happen today
+                          event_date:       Time.current,             # stock intake happen today
                           facility:         Facility.find(batch.facility_id),
                           catalogue:        seaweed,
                           product_name:     seaweed.label,

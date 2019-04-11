@@ -6,8 +6,8 @@ module WorkersDashboard
 
   def get_hours_worked
     time_logs = current_user.time_logs.where(
-      :start_time.gte => DateTime.now.beginning_of_week,
-      :end_time.lte => DateTime.now.end_of_week,
+      :start_time.gte => Time.current.beginning_of_week,
+      :end_time.lte => Time.current.end_of_week,
     ).to_a
 
     sum_minutes = 0.0

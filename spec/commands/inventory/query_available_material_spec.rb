@@ -35,7 +35,7 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
 
   let(:current_user) { create(:user, facilities: [facility.id]) }
   let!(:batch1) do
-    start_date = Time.now.beginning_of_day
+    start_date = Time.current.beginning_of_day
     create(:batch, :scheduled,
           facility_strain: facility_strain,
           facility: facility,
@@ -58,7 +58,7 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
   end
 
   let!(:batch2) do
-    start_date = Time.now.beginning_of_day + 1.month
+    start_date = Time.current.beginning_of_day + 1.month
     create(:batch, :scheduled,
           facility_strain: facility_strain,
           facility: facility,
@@ -80,7 +80,7 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
   end
 
   let!(:batch3) do
-    start_date = Time.now.beginning_of_day + 2.month
+    start_date = Time.current.beginning_of_day + 2.month
     create(:batch, :scheduled,
           facility_strain: facility_strain,
           facility: facility,
@@ -104,9 +104,9 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
   context ".call" do
     it "return correct material available" do
       batches_selected = Cultivation::Batch
-                    .where(:start_date.gte => Time.now)
-                    .where(:status.in =>  [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE])
-                    .not_in(id: batch1.id) #not draft => schedule and active
+        .where(:start_date.gte => Time.current)
+        .where(:status.in =>  [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE])
+        .not_in(id: batch1.id) #not draft => schedule and active
       plant_task = batch1.tasks.detect { |a| a['indelible'] == 'plants' }
       material = plant_task.material_use.first
       result = Inventory::QueryAvailableMaterial.call(material.product_id, batches_selected.pluck(:id)).result
@@ -118,9 +118,9 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
       package.save
 
       batches_selected = Cultivation::Batch
-                    .where(:start_date.gte => Time.now)
-                    .where(:status.in =>  [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE])
-                    .not_in(id: batch1.id) #not draft => schedule and active
+        .where(:start_date.gte => Time.current)
+        .where(:status.in =>  [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE])
+        .not_in(id: batch1.id) #not draft => schedule and active
       plant_task = batch1.tasks.detect { |a| a['indelible'] == 'plants' }
 
       material = plant_task.material_use.first
@@ -130,9 +130,9 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
 
     it "return correct material booked" do
       batches_selected = Cultivation::Batch
-                    .where(:start_date.gte => Time.now)
-                    .where(:status.in =>  [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE])
-                    .not_in(id: batch1.id) #not draft => schedule and active
+        .where(:start_date.gte => Time.current)
+        .where(:status.in =>  [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE])
+        .not_in(id: batch1.id) #not draft => schedule and active
       plant_task = batch1.tasks.detect { |a| a['indelible'] == 'plants' }
 
       material = plant_task.material_use.first
@@ -144,9 +144,9 @@ RSpec.describe Inventory::QueryAvailableMaterial, type: :command do
       task = batch2.tasks.first
       task.material_use.first.update(quantity: 50)
       batches_selected = Cultivation::Batch
-                    .where(:start_date.gte => Time.now)
-                    .where(:status.in =>  [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE])
-                    .not_in(id: batch1.id) #not draft => schedule and active
+        .where(:start_date.gte => Time.current)
+        .where(:status.in =>  [Constants::BATCH_STATUS_SCHEDULED, Constants::BATCH_STATUS_ACTIVE])
+        .not_in(id: batch1.id) #not draft => schedule and active
       plant_task = batch1.tasks.detect { |a| a['indelible'] == 'plants' }
 
       material = plant_task.material_use.first

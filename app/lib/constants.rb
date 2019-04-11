@@ -36,7 +36,7 @@ module Constants
     CONST_CURE,
   ].freeze
 
-  CULTIVATION_PHASES_3V = [
+  CULTIVATION_PHASES = [
     CONST_CLONE,
     CONST_VEG,
     CONST_VEG1,

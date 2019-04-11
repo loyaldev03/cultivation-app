@@ -5,8 +5,8 @@ FactoryBot.define do
     row_id { "Row1" }
     shelf_id { "Shelf1" }
     tray_id { "Tray1" }
-    start_date { Time.now }
-    end_date { Time.now + 10.days }
+    start_date { Time.current }
+    end_date { Time.current + 10.days }
     capacity { 1 }
     batch
 

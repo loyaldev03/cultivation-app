@@ -90,7 +90,7 @@ module Cultivation
       # all scheduled batch and activate it.
       if (schedule_batch &&
           batch.status = Constants::BATCH_STATUS_SCHEDULED &&
-                         batch.start_date <= Time.now)
+                         batch.start_date <= Time.current)
         ActivateBatchWorker.new.perform() # activate scheduled class immediately
       end
 

@@ -32,7 +32,7 @@ export default class MaterialForm extends React.Component {
     if (
       this.state.task &&
       this.state.task.indelible &&
-      this.state.task.indelible == 'add_nutrient'
+      this.state.task.indelible === 'add_nutrient'
     ) {
       url = `/api/v1/products?type=raw_materials&category=nutrients&facility_id=${facility_id}`
     } else {
@@ -40,7 +40,6 @@ export default class MaterialForm extends React.Component {
         this.state.facility_id
       }&filter=${inputValue}`
     }
-
     let response = await (await fetch(url, httpGetOptions)).json()
     const products = response.data.map(x => ({
       label: x.attributes.name,
@@ -185,12 +184,12 @@ export default class MaterialForm extends React.Component {
                   {materials.map((x, index) => (
                     <tr className="pointer bb hide-child" key={index}>
                       <td className="tl w5">{x.product_name}</td>
-                      <td className="tr w3">{x.ppm}</td>
-                      <td className="tl w3">
+                      <td className="tr w3 tc">{x.ppm}</td>
+                      <td className="tl w3 grey tc">
                         <input
                           type="number"
                           name="pin"
-                          className="input w3 tr"
+                          className="input w3 tr tc"
                           value={x.quantity}
                           onChange={e =>
                             this.handleChangeQuantity(
@@ -198,14 +197,16 @@ export default class MaterialForm extends React.Component {
                               e.target.value
                             )
                           }
+                          style={{ height: 30 + 'px' }}
                         />
                       </td>
-                      <td className="tc w3">
+                      <td className="tc w3 grey tc">
                         <select
                           value={x.uom}
                           onChange={e =>
                             this.handleChangeUom(x.product_id, e.target.value)
                           }
+                          style={{ minWidth: 60 + 'px' }}
                         >
                           {x.uoms &&
                             x.uoms.map((y, index) => (

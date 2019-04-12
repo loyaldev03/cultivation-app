@@ -148,6 +148,7 @@ Rails.application.routes.draw do
       resources :facilities, only: [] do
         member do
           get 'search_locations'
+          get 'locations'
         end
       end
 

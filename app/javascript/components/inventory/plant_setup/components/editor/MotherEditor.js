@@ -2,7 +2,7 @@ import React from 'react'
 import Select from 'react-select'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { NumericInput, FieldError } from '../../../../utils/FormHelpers'
-import LocationPicker from '../../../../utils/LocationPicker2'
+import { LocationPicker } from '../../../../utils'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import setupMother from '../../actions/setupMother'
 import getPlant from '../../actions/getPlant'
@@ -14,7 +14,6 @@ class MotherEditor extends React.Component {
     super(props)
     this.state = this.resetState()
     this.scanner = null
-    this.locations = this.props.locations
 
     // Callback ref to get instance of html DOM: https://reactjs.org/docs/refs-and-the-dom.html#callback-refs
     // Getting a ref to textarea in order to adjust height according to content.
@@ -293,7 +292,7 @@ class MotherEditor extends React.Component {
     if (this.state.isShowPlantQtyForm) return null
     return (
       <React.Fragment>
-        <div className="ph4 mb2 flex">
+        <div className="ph4 mb3 flex">
           <div className="w-100">
             <p className="f6 fw4 gray mt0 mb2 pa0 lh-copy">
               Each mother plant has its own <strong>Plant ID</strong>. If you
@@ -312,7 +311,7 @@ class MotherEditor extends React.Component {
         </div>
         <div className="ph4 mt0 mb3 flex">
           <div className="w-50">
-            <label className="f6 fw6 db mb1 gray">Planted On</label>
+            <label className="f6 fw6 db mb1 dark-gray">Planted On</label>
             <DatePicker
               value={this.state.planted_on}
               onChange={this.onPlantedOnChanged}
@@ -354,7 +353,7 @@ class MotherEditor extends React.Component {
 
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Select Strain</label>
+              <label className="f6 fw6 db mb1 dark-gray ttc">Select Strain</label>
               <Select
                 options={this.state.strainOptions}
                 noOptionsMessage={() => 'Type to search strain...'}
@@ -371,8 +370,23 @@ class MotherEditor extends React.Component {
               />
             </div>
           </div>
+
           <hr className="mt3 b--light-gray w-100" />
-          <div className="ph4 mt3 mb1">
+
+          <div className="ph4 mt3 mb1 flex flex-column">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 dark-gray">Location</label>
+              <LocationPicker
+                purpose="mother"
+                facility_id={this.props.facility_id}
+                location_id={this.state.location_id}
+                onChange={this.onLocationChanged}
+              />
+              <FieldError errors={this.state.errors} field="location_id" />
+            </div>
+          </div>
+
+          <div className="ph4 mt2 mb1">
             <span className="f6 fw6 dark-gray">Plant IDs</span>
           </div>
 
@@ -392,30 +406,12 @@ class MotherEditor extends React.Component {
             </div>
           </div>
 
-          <hr className="mt3 m b--light-gray w-100" />
-          <div className="ph4 mt3 mb3 flex flex-column">
-            <div className="w-100">
-              {console.log('Need to change this to tray level not room.')}
-              <LocationPicker
-                key={`${this.props.facility_id}.${this.state.location_id}`}
-                mode="mother"
-                facility_id={this.props.facility_id}
-                locations={this.locations}
-                location_id={this.state.location_id}
-                onChange={this.onLocationChanged}
-              />
-              <FieldError errors={this.state.errors} field="location_id" />
-            </div>
-          </div>
-
           <hr className="mt3 mb3 b--light-gray w-100" />
           <div className="ph4 mb3 mt2">
             <span className="f6 fw6 dark-gray">Plant Origin?</span>
           </div>
           <div className="ph4 mb3 flex justify-between">
-            <label className="f6 fw6 db mb1 gray">
-              Mother plants are purchased
-            </label>
+            <label className="f6 fw6 db mb1 gray">Mother plants are purchased</label>
             <input
               className="toggle toggle-default"
               type="checkbox"

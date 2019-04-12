@@ -1,5 +1,5 @@
 batch_activation_job:
-  cron: "* * * * *" #run worker every minutes
+  cron: "*/5 * * * *" #run worker every minutes
   class: "ActivateBatchWorker"
   queue: "low"
 

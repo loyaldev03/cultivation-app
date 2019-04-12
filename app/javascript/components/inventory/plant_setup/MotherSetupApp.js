@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
@@ -129,7 +130,6 @@ class PlantSetupApp extends React.Component {
         </div>
         <MotherEditor
           isOpened={false}
-          locations={this.props.locations}
           facilityStrains={this.props.facility_strains}
           scanditLicense={this.props.scanditLicense}
           facility_id={this.props.facility_id}

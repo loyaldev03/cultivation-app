@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+
 import {
   TextInput,
   FieldError,
@@ -10,13 +11,12 @@ import Select from 'react-select'
 import AsyncSelect from 'react-select/lib/Async'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
 
-import LocationPicker from '../../../../utils/LocationPicker2'
 import PurchaseInfo from '../shared/PurchaseInfo'
 import setupPlants from '../../actions/setupPlants'
 import reactSelectStyle from '../../../../utils/reactSelectStyle'
 import getPlant from '../../actions/getPlant'
 import searchPlants from '../../actions/searchPlants'
-import { BATCH_SOURCE } from '../../../../utils'
+import { LocationPicker, BATCH_SOURCE } from '../../../../utils'
 import { launchBarcodeScanner } from '../../../../utils/BarcodeScanner'
 
 class PlantEditor extends React.Component {
@@ -452,7 +452,7 @@ class PlantEditor extends React.Component {
     return (
       <React.Fragment>
         <div className="ph4 mt3 mb1" style={style}>
-          <span className="f6 fw6 gray">Plant IDs</span>
+          <span className="f6 fw6 dark-gray">Plant IDs</span>
         </div>
         <div className="ph4 mb2 flex" style={style}>
           <div className="w-100">
@@ -547,6 +547,13 @@ class PlantEditor extends React.Component {
     return ''
   }
 
+  locationPurpose = () => {
+    if (this.props.growth_stage.startsWith('veg')) {
+      return 'veg,veg1,veg2'
+    }
+    return this.props.growth_stage
+  }
+
   render() {
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -606,6 +613,19 @@ class PlantEditor extends React.Component {
             </div>
           </div>
 
+          <div className="ph4 mt3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db mb1 dark-gray">Location</label>
+              <LocationPicker
+                purpose={this.locationPurpose()}
+                facility_id={this.props.facility_id}
+                location_id={this.state.location_id}
+                onChange={this.onLocationChanged}
+              />
+              <FieldError errors={this.state.errors} field="location_id" />
+            </div>
+          </div>
+
           {this.renderPlantIdTextArea()}
 
           <div className="ph4 mt0 flex flex-column">
@@ -631,19 +651,6 @@ class PlantEditor extends React.Component {
             </div>
           </div>
 
-          <div className="ph4 mt3 flex">
-            <div className="w-100">
-              <LocationPicker
-                key={`${this.props.facility_id}.${this.state.location_id}`}
-                mode={this.props.growth_stage}
-                facility_id={this.props.facility_id}
-                onChange={this.onLocationChanged}
-                locations={this.locations}
-                location_id={this.state.location_id}
-              />
-              <FieldError errors={this.state.errors} field="location_id" />
-            </div>
-          </div>
           <div className="ph4 mt3 flex">
             <div className="w-50">
               <label className="f6 fw6 db mb1 gray ttc">Planted On</label>

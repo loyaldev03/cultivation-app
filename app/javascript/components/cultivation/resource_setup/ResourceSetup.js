@@ -37,7 +37,7 @@ class ResourceSetup extends React.Component {
         />
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
-            <div className="fl w-100 flex flex-column">
+            <div className="fl w-100 flex flex-column" style={{ maxWidth: '1300px'}}>
               <img src={BatchResourceImage} />
             </div>
           </div>

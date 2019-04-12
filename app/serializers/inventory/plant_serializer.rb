@@ -81,19 +81,9 @@ module Inventory
       object.c_at.iso8601
     end
 
-    attribute :location_name do |object, params = {}|
-      if params[:exclude] && params[:exclude].include?(:location)
-        ''
-      elsif !object.location_id
-        ''
-      elsif object.location_type == 'room'
-        facility = Facility.find_by(:'rooms._id' => BSON::ObjectId(object.location_id))
-        room = facility.rooms.find(object.location_id) if facility
-        room ? "#{facility.code}.#{room.code} - #{room.name}" : ''
-      elsif object.location_type == 'tray'
-        tray = Tray.find_by(id: object.location_id)
-        facility = Facility.find_by(:'rooms.rows.shelves._id' => tray.shelf_id)
-        tray ? "#{facility.code}...#{tray.code}" : ''
+    attribute :location_name do |object, params|
+      if params[:query] && object.location_id
+        params[:query].get_location_code(object.location_id)
       else
         ''
       end

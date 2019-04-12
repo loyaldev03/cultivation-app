@@ -14,7 +14,10 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     end
     plants = plants.order(c_at: :desc)
 
-    data = Inventory::PlantSerializer.new(plants).serialized_json
+    data = Inventory::PlantSerializer.new(
+      plants,
+      params: {query: QueryLocations.call(facility.id)},
+    ).serialized_json
     render json: data
   end
 
@@ -22,10 +25,14 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     plants = Inventory::SearchPlants.call(
       params[:facility_strain_id],
       params[:current_growth_stage],
-      params[:search]
+      params[:search],
     ).result
-    options = {params: {exclude: [:location, :batch]}}
-    data = Inventory::PlantSerializer.new(plants, options).serialized_json
+    data = Inventory::PlantSerializer.new(
+      plants,
+      params: {
+        exclude: %i(location batch),
+      },
+    ).serialized_json
     render json: data
   end
 
@@ -48,14 +55,18 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
 
   def show
     plant = Inventory::Plant.find(params[:id])
-    render json: Inventory::PlantSerializer.new(plant, include_options).serialized_json
+    render json: Inventory::PlantSerializer.new(
+      plant,
+      include_options,
+    ).serialized_json
   end
 
   def setup_mother
     command = Inventory::SetupMother.call(current_user, params[:plant].to_unsafe_h)
-
     if command.success?
-      data = Inventory::PlantSerializer.new(command.result).serialized_json
+      data = Inventory::PlantSerializer.new(
+        command.result,
+      ).serialized_json
       render json: data
     else
       render json: request_with_errors(command.errors), status: 422
@@ -66,7 +77,9 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     command = Inventory::SetupPlants.call(current_user, params[:plant].to_unsafe_h)
 
     if command.success?
-      data = Inventory::PlantSerializer.new(command.result).serialized_json
+      data = Inventory::PlantSerializer.new(
+        command.result,
+      ).serialized_json
       render json: data
     else
       render json: request_with_errors(command.errors), status: 422
@@ -98,10 +111,6 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     batch_id = params[:batch_id]
     lot_numbers = Inventory::Plant.where(cultivation_batch_id: batch_id).pluck(:lot_number).uniq
     render json: {lot_numbers: lot_numbers}, status: 200
-  end
-
-  #
-  def manicure_batch
   end
 
   private

@@ -27,28 +27,33 @@ export default class MaterialForm extends React.Component {
     this.loadProducts('')
   }
 
-  loadProducts = async inputValue => {
+  loadProducts = inputValue => {
     let url
     if (
       this.state.task &&
       this.state.task.indelible &&
       this.state.task.indelible === 'add_nutrient'
     ) {
-      url = `/api/v1/products?type=raw_materials&category=nutrients&facility_id=${facility_id}`
+      url = `/api/v1/products?type=raw_materials&category=nutrients&facility_id=${
+        this.state.facility_id
+      }&filter=${inputValue}`
     } else {
       url = `/api/v1/products?facility_id=${
         this.state.facility_id
       }&filter=${inputValue}`
     }
-    let response = await (await fetch(url, httpGetOptions)).json()
-    const products = response.data.map(x => ({
-      label: x.attributes.name,
-      value: x.attributes.id,
-      ...x.attributes
-    }))
-    this.setState({ defaultProduct: products })
+    return fetch(url, httpGetOptions)
+      .then(response => response.json())
+      .then(response => {
+        const products = response.data.map(x => ({
+          label: x.attributes.name,
+          value: x.attributes.id,
+          ...x.attributes
+        }))
 
-    return products
+        this.setState({ defaultProduct: products })
+        return products
+      })
   }
 
   onChangeProduct = product => {

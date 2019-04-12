@@ -126,6 +126,7 @@ Rails.application.routes.draw do
 
   namespace 'cultivation' do
     resources :batches do
+      get 'dashboard', on: :collection
       member do
         get 'gantt'
         get 'locations'

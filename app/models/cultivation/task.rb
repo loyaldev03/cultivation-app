@@ -26,7 +26,7 @@ module Cultivation
     field :location_id, type: BSON::ObjectId
     field :location_type, type: String # full ruby class name
 
-    field :work_status, type: String, default: 'not_started' # use for daily task stuck, not_started, started
+    field :work_status, type: String, default: 'new' # use for daily task => new, started, stuck
 
     #notes => Material used and waste in daily task should use ItemTransaction , use event_type for material_used or material_wasted
     belongs_to :batch, class_name: 'Cultivation::Batch'

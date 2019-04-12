@@ -20,9 +20,9 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
 
   def time_log
     case params[:actions]
-    when 'start'
+    when 'started'
       cmd = DailyTask::StartTimeLog.call(current_user.id, params[:task_id])
-    when 'stop'
+    when 'stopped'
       cmd = DailyTask::StopTimeLog.call(current_user.id, params[:task_id])
     when 'stuck'
       cmd = DailyTask::StuckTask.call(current_user.id, params[:task_id])

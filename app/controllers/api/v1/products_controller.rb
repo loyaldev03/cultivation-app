@@ -30,20 +30,20 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     end
 
     products = []
-    if catalogue_ids.blank?
+
+    if catalogue_ids.blank? || type.nil? && category.nil?
       products = Inventory::Product.all
     else
-      if params[:filter].blank?
-        products = Inventory::Product.where(:catalogue_id.in => catalogue_ids)
-      else
-        products = Inventory::Product.where(:catalogue_id.in => catalogue_ids).where(name: /^#{params[:filter]}/i)
-      end
+      products = Inventory::Product.where(:catalogue_id.in => catalogue_ids)
     end
+
     products.includes([:catalogue])
 
     products = products.where(facility_id: facility_id) if facility_id.present?
 
     products = products.where(facility_strain_id: facility_strain_id) if facility_strain_id.present?
+
+    products = products.where(name: /^#{params[:filter]}/i) if params[:filter].present?
 
     products = products.limit(7).order(name: :asc)
     render json: Inventory::ProductSerializer.new(products).serialized_json

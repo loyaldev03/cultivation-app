@@ -1,28 +1,11 @@
 class ApplicationController < ActionController::Base
   before_action :miniprofiler
   before_action :authenticate_user!
+  include RequestScoping # After authenticate_user
   before_action :configure_permitted_parameters, if: :devise_controller?
-  before_action :set_rollbar_scope, if: :current_user
-  around_action :set_timezone, if: :current_user
   layout :layout_by_resource
 
-  helper_method :current_default_facility
-  helper_method :current_facility
-
   protected
-
-  def set_rollbar_scope
-    Rollbar.scope!(:person => {
-                     :id => current_user.id.to_s,
-                     :email => current_user.email,
-                     :username => current_user.display_name,
-                     :timezone => current_user.timezone,
-                   })
-  end
-
-  def set_timezone(&block)
-    Time.use_zone(current_user.timezone, &block)
-  end
 
   def miniprofiler
     # Enable mini profiler only in development environment
@@ -48,17 +31,5 @@ class ApplicationController < ActionController::Base
     else
       'application'
     end
-  end
-
-  private
-
-  def current_default_facility
-    if current_user.present?
-      @current_default_facility ||= FindDefaultFacility.call(current_user).result
-    end
-  end
-
-  def current_facility
-    @current_facility ||= FindFacility.call(id: params[:facility_id]).result if params[:facility_id].present?
   end
 end

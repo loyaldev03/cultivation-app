@@ -11,8 +11,14 @@ class LocationStore {
   @observable selectedLocationId = ''
 
   @action
-  async load(facilityId, purpose) {
-    const url = `/api/v1/facilities/${facilityId}/locations?purposes[]=${purpose}`
+  async load(facilityId, purposes) {
+    let url = `/api/v1/facilities/${facilityId}/locations?`
+    if (purposes.includes(",")) {
+      url = url + purposes.split(",").map(p => "purposes[]=" + p).join("&")
+    }
+    else {
+      url = url + "purposes[]=" + purposes
+    }
     try {
       const res = await (await fetch(url, httpGetOptions)).json()
       if (res.data) {

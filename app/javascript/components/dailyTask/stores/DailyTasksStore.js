@@ -106,7 +106,7 @@ class DailyTaskStore {
         //enable done button if all task is completed
         let nutrients = this.getNutrientsByTask(batchId, taskId)
         let checkedNutrients = nutrients.filter(e => e.checked === true)
-        let taskCompleted = nutrients.length == checkedNutrients.length
+        let taskCompleted = nutrients.length === checkedNutrients.length
         this.updateTaskWorkIndelibleDone(batchId, taskId, taskCompleted)
       } else {
         console.error(response.errors)

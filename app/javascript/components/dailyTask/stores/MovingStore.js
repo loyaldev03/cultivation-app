@@ -85,7 +85,7 @@ class MovingStore {
 
   @computed
   get taskCompleted() {
-    return this.totalPlants == this.totalCapacity
+    return this.totalPlants === this.totalCapacity
   }
 }
 

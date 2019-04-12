@@ -101,7 +101,7 @@ class ClippingStore {
 
   @computed
   get taskCompleted() {
-    return this.totalClippings == this.totalQuantity
+    return this.totalClippings === this.totalQuantity
   }
 }
 

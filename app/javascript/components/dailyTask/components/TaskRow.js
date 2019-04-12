@@ -23,7 +23,7 @@ class TaskRow extends React.Component {
 
   onToggleStart = event => {
     if (this.props.work_status !== 'done') {
-      const default_status = ['stopped', 'stuck', 'done', 'new', 'not_started']
+      const default_status = ['stopped', 'stuck', 'done', 'new']
       if (default_status.includes(this.props.work_status)) {
         let status_before = this.props.work_status
         DailyTaskStore.updateTimeLog(

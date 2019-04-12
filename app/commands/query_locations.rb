@@ -94,34 +94,26 @@ class QueryLocations
   end
 
   def get_location_code(location_id)
-    if result.blank?
+    if !result || !location_id
       return '--'
+    else
+      location_id = location_id.to_bson_id
     end
 
     res = result.detect { |x| x[:room_id] == location_id }
-    if res.present?
-      return res[:room_full_code]
-    end
+    return res[:room_full_code] if res.present?
 
     res = result.detect { |x| x[:section_id] == location_id }
-    if res.present?
-      return res[:section_full_code]
-    end
+    return res[:section_full_code] if res.present?
 
     res = result.detect { |x| x[:row_id] == location_id }
-    if res.present?
-      return res[:row_full_code]
-    end
+    return res[:row_full_code] if res.present?
 
     res = result.detect { |x| x[:shelf_id] == location_id }
-    if res.present?
-      return res[:shelf_full_code]
-    end
+    return res[:shelf_full_code] if res.present?
 
     res = result.detect { |x| x[:tray_id] == location_id }
-    if res.present?
-      return res[:tray_full_code]
-    end
+    return res[:tray_full_code] if res.present?
   end
 
   def query_trays(location_id)

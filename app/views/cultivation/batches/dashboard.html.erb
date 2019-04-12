@@ -1,48 +1,48 @@
 <% content_for :breadcrumb do %>
-  <%= breadcrumbs ["Home",root_path], 'Dashboard' %>
+  <%= breadcrumbs ["Home",root_path], 'Cultivation' %>
 <% end %>
 
 <div class="mh4 mt5 mb4">
   <div className="flex mt4 items-center ">
     <a
-      href="<%= root_path %>"
+      href="<%= dashboard_cultivation_batches_path %>"
       class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
     >
       Dashboard
     </a>
     <a
-      href="<%= employees_path %>"
+      href="<%= cultivation_batches_path %>"
       class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
     >
-      Employees
+      Batches
     </a>
     <a
-      href="<%= employees_schedule_path %>"
+      href=""
       class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
     >
-      Employee Schedule
+      Plants
     </a>
     <a
-      href="<%= timesheets_path %>"
+      href=""
       class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
     >
-      Timesheets
+      Harvest
     </a>
     <a
-      href="<%= requests_path %>"
+      href=""
       class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
     >
-      Requests
+      Unassigned Tasks
     </a>
     <a
-      href="<%= first_setup_path %>"
+      href=""
       class="link bl-l bb-l bt-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
     >
-      Facility setup
+      Issues
     </a>
   </div>
 </div>
 
 <div class="mh4 mt5">
-  <%= image_tag "dummy/main-timesheets-cropped.png", style: 'max-width: 1300px; ' %>
+  <%= image_tag "dummy/cultivation-dashboard-cropped.png", style: 'max-width: 1300px; ' %>
 </div>

@@ -18,7 +18,8 @@ module Inventory
     def call
       if valid_params?
         # find all trays id by location type & id
-        trays = query_trays
+        @query = QueryLocations.call(facility_id)
+        trays, @location_type = @query.query_trays(location_id)
         room_ids = trays.pluck(:room_id)
         section_ids = trays.pluck(:section_id)
         row_ids = trays.pluck(:row_id)
@@ -30,80 +31,17 @@ module Inventory
           in(location_id: all_ids.compact.uniq).
           where(facility_strain_id: strain_id)
         plants.map do |p|
-          SearchPlantByLocationResult.new(p.id.to_s,
-                                          p.plant_id,
-                                          p.location_id.to_s,
-                                          get_location_code(p.location_id))
+          SearchPlantByLocationResult.new(
+            p.id.to_s,
+            p.plant_id,
+            p.location_id.to_s,
+            @query.get_location_code(p.location_id),
+          )
         end
       end
     end
 
     private
-
-    def locations
-      @locations ||= QueryLocations.call(facility_id).result
-    end
-
-    # TODO::REFACTOR#001 - Can this be refactor?
-    def query_trays
-      res = locations.select { |x| x[:room_id] == location_id }
-      if res.any?
-        @location_type = 'Room'
-        return res
-      end
-
-      res = locations.select { |x| x[:section_id] == location_id }
-      if res.any?
-        @location_type = 'Section'
-        return res
-      end
-
-      res = locations.select { |x| x[:row_id] == location_id }
-      if res.any?
-        @location_type = 'Row'
-        return res
-      end
-
-      res = locations.select { |x| x[:shelf_id] == location_id }
-      if res.any?
-        @location_type = 'Shelf'
-        return res
-      end
-
-      res = locations.select { |x| x[:tray_id] == location_id }
-      if res.any?
-        @location_type = 'Tray'
-        return res
-      end
-    end
-
-    # TODO::REFACTOR#001
-    def get_location_code(location_id)
-      res = locations.detect { |x| x[:room_id] == location_id }
-      if res.present?
-        return res[:room_full_code]
-      end
-
-      res = locations.detect { |x| x[:section_id] == location_id }
-      if res.present?
-        return res[:section_full_code]
-      end
-
-      res = locations.detect { |x| x[:row_id] == location_id }
-      if res.present?
-        return res[:row_full_code]
-      end
-
-      res = locations.detect { |x| x[:shelf_id] == location_id }
-      if res.present?
-        return res[:shelf_full_code]
-      end
-
-      res = locations.detect { |x| x[:tray_id] == location_id }
-      if res.present?
-        return res[:tray_full_code]
-      end
-    end
 
     def valid_params?
       if facility_id.nil?

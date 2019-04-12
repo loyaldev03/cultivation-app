@@ -2,7 +2,6 @@ class QueryLocations
   prepend SimpleCommand
 
   attr_reader :facility_id, :purposes
-  attr_accessor :locations
 
   def initialize(facility_id, purposes = [])
     @facility_id = facility_id&.to_bson_id
@@ -123,6 +122,23 @@ class QueryLocations
     if res.present?
       return res[:tray_full_code]
     end
+  end
+
+  def query_trays(location_id)
+    res = result.select { |x| x[:room_id] == location_id }
+    return res, 'Room'.freeze if res.any?
+
+    res = result.select { |x| x[:section_id] == location_id }
+    return res, 'Section'.freeze if res.any?
+
+    res = result.select { |x| x[:row_id] == location_id }
+    return res, 'Row'.freeze if res.any?
+
+    res = result.select { |x| x[:shelf_id] == location_id }
+    return res, 'Shelf'.freeze if res.any?
+
+    res = result.select { |x| x[:tray_id] == location_id }
+    return res, 'Tray'.freeze if res.any?
   end
 
   private

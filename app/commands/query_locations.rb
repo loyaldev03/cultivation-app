@@ -2,6 +2,7 @@ class QueryLocations
   prepend SimpleCommand
 
   attr_reader :facility_id, :purposes
+  attr_accessor :locations
 
   def initialize(facility_id, purposes = [])
     @facility_id = facility_id&.to_bson_id
@@ -93,6 +94,37 @@ class QueryLocations
     criteria.to_a
   end
 
+  def get_location_code(location_id)
+    if result.blank?
+      return '--'
+    end
+
+    res = result.detect { |x| x[:room_id] == location_id }
+    if res.present?
+      return res[:room_full_code]
+    end
+
+    res = result.detect { |x| x[:section_id] == location_id }
+    if res.present?
+      return res[:section_full_code]
+    end
+
+    res = result.detect { |x| x[:row_id] == location_id }
+    if res.present?
+      return res[:row_full_code]
+    end
+
+    res = result.detect { |x| x[:shelf_id] == location_id }
+    if res.present?
+      return res[:shelf_full_code]
+    end
+
+    res = result.detect { |x| x[:tray_id] == location_id }
+    if res.present?
+      return res[:tray_full_code]
+    end
+  end
+
   private
 
   def match_purposes
@@ -109,8 +141,8 @@ class QueryLocations
 
   class << self
     def select_options(facility_id, purposes)
-      locations = QueryLocations.call(facility_id, purposes).result
-      locations.map do |loc|
+      result = QueryLocations.call(facility_id, purposes).result
+      result.map do |loc|
         LocationOption.new(loc[:tray_full_code], loc[:tray_id].to_s)
       end
     end

@@ -547,6 +547,13 @@ class PlantEditor extends React.Component {
     return ''
   }
 
+  locationPurpose = () => {
+    if (this.props.growth_stage.startsWith('veg')) {
+      return 'veg,veg1,veg2'
+    }
+    return this.props.growth_stage
+  }
+
   render() {
     return (
       <div className="rc-slide-panel" data-role="sidebar">
@@ -610,7 +617,7 @@ class PlantEditor extends React.Component {
             <div className="w-100">
               <label className="f6 fw6 db mb1 dark-gray">Location</label>
               <LocationPicker
-                purpose={this.props.growth_stage}
+                purpose={this.locationPurpose()}
                 facility_id={this.props.facility_id}
                 location_id={this.state.location_id}
                 onChange={this.onLocationChanged}

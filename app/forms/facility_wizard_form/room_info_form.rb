@@ -34,7 +34,7 @@ module FacilityWizardForm
 
     def need_setup_rows
       # LOGIC#0001
-      if self.purpose == 'trim' || self.purpose == 'storage'
+      if self.purpose == 'trim' || self.purpose == 'storage' || self.purpose == 'harvest'
         false
       else
         true

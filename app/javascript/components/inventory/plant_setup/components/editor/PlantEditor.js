@@ -613,9 +613,9 @@ class PlantEditor extends React.Component {
             </div>
           </div>
 
-          <div className="ph4 mt3 flex">
+          <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 dark-gray">Location</label>
+              <label className="f6 fw6 db mb1 gray">Location</label>
               <LocationPicker
                 purpose={this.locationPurpose()}
                 facility_id={this.props.facility_id}

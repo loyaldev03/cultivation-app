@@ -2,17 +2,13 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
   def all
     growth_stages = *params[:current_growth_stage] # convert to array
     growth_stages = %w(veg veg1 veg2) if params[:current_growth_stage] == 'veg'
-    plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch)
-                             .where(current_growth_stage: {'$in': growth_stages})
+    plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch).
+      where(current_growth_stage: {'$in': growth_stages})
     plants = plants.where(facility_strain_id: params[:facility_strain_id]) if params[:facility_strain_id]
-    if params[:facility_id]
-      facility = Facility.find(params[:facility_id])
-      if facility
-        facility_strain_ids = facility.strains.pluck(:id).map { |a| a.to_s }
-        plants = plants.in(facility_strain_id: facility_strain_ids)
-      end
-    end
-    plants = plants.order(c_at: :desc)
+    facility = current_facility || current_default_facility
+    facility_strain_ids = facility.strains.pluck(:id).map(&:to_s)
+    plants = plants.in(facility_strain_id: facility_strain_ids)
+    plants = plants.order(c_at: :desc).to_a
 
     data = Inventory::PlantSerializer.new(
       plants,

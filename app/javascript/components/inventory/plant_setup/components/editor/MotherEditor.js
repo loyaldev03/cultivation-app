@@ -353,7 +353,9 @@ class MotherEditor extends React.Component {
 
           <div className="ph4 mt3 mb3 flex">
             <div className="w-100">
-              <label className="f6 fw6 db mb1 dark-gray ttc">Select Strain</label>
+              <label className="f6 fw6 db mb1 dark-gray ttc">
+                Select Strain
+              </label>
               <Select
                 options={this.state.strainOptions}
                 noOptionsMessage={() => 'Type to search strain...'}
@@ -411,7 +413,9 @@ class MotherEditor extends React.Component {
             <span className="f6 fw6 dark-gray">Plant Origin?</span>
           </div>
           <div className="ph4 mb3 flex justify-between">
-            <label className="f6 fw6 db mb1 gray">Mother plants are purchased</label>
+            <label className="f6 fw6 db mb1 gray">
+              Mother plants are purchased
+            </label>
             <input
               className="toggle toggle-default"
               type="checkbox"

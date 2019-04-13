@@ -92,8 +92,8 @@ module Inventory
       errors.add(:location_id, 'Mother room is required') if location_id.blank?
 
       facility_strain = Inventory::FacilityStrain.find(facility_strain_id)
-      location_exists = Facility.find_by('rooms._id': BSON::ObjectId(location_id), id: facility_strain.facility_id)
-      errors.add(:location_id, 'Mother room must be within facility where you register the strain.') if location_id.present? && location_exists.nil?
+      location_exists = Tray.find_by(id: location_id.to_bson_id)
+      errors.add(:location_id, 'Invalid location.') if location_id.present? && location_exists.nil?
     end
 
     def valid_vendor?

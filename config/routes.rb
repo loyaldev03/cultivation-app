@@ -9,7 +9,14 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  root to: "home#index"
+  root to: "home#dashboard"
+
+  # These set is for dummy only
+  get "first_setup" => "home#index"
+  get "employees" => "home#employees"
+  get "employees_schedule" => "home#employees_schedule"
+  get "timesheets" => "home#timesheets"
+  get "requests" => "home#requests"
 
   get "facility_setup/new" => "facility_setup#new"
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"
@@ -119,6 +126,7 @@ Rails.application.routes.draw do
 
   namespace 'cultivation' do
     resources :batches do
+      get 'dashboard', on: :collection
       member do
         get 'gantt'
         get 'locations'
@@ -140,6 +148,7 @@ Rails.application.routes.draw do
       resources :facilities, only: [] do
         member do
           get 'search_locations'
+          get 'locations'
         end
       end
 

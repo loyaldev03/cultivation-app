@@ -170,21 +170,11 @@ class BatchLocationApp extends React.Component {
       this.getBookingsByPhase(GROWTH_PHASE.FLOWER),
       'quantity'
     )
-    const selectedDryQuantity = sumBy(
-      this.getBookingsByPhase(GROWTH_PHASE.DRY),
-      'quantity'
-    )
-    const selectedCureQuantity = sumBy(
-      this.getBookingsByPhase(GROWTH_PHASE.CURE),
-      'quantity'
-    )
     if (
       selectedCloneQuantity === quantity &&
       selectedVeg1Quantity === quantity &&
       selectedVeg2Quantity === quantity &&
-      selectedFlowerQuantity === quantity &&
-      selectedDryQuantity === quantity &&
-      selectedCureQuantity === quantity
+      selectedFlowerQuantity === quantity
     ) {
       return false
     } else {
@@ -325,22 +315,6 @@ class BatchLocationApp extends React.Component {
                   <div className="mt4">
                     {this.renderBookingsForPhase(
                       GROWTH_PHASE.FLOWER,
-                      batchInfo.strainId,
-                      quantity
-                    )}
-                  </div>
-
-                  <div className="mt4">
-                    {this.renderBookingsForPhase(
-                      GROWTH_PHASE.DRY,
-                      batchInfo.strainId,
-                      quantity
-                    )}
-                  </div>
-
-                  <div className="mt4">
-                    {this.renderBookingsForPhase(
-                      GROWTH_PHASE.CURE,
                       batchInfo.strainId,
                       quantity
                     )}

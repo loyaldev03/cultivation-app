@@ -5,6 +5,7 @@ import SidebarStore from '../stores/SidebarStore'
 import ClippingStore from '../stores/ClippingStore'
 import PlantTagList from './PlantTagList'
 import { AdjustmentMessage, InputBarcode, SlidePanelHeader } from '../../utils'
+import dailyTasksStore from '../stores/DailyTasksStore'
 
 @observer
 class ClipPotTagForm extends React.Component {
@@ -178,6 +179,11 @@ const MotherPlantRow = forwardRef(
           mother_plant_code: plant_code,
           plants: newPlants
         })
+        dailyTasksStore.updateTaskWorkIndelibleDone(
+          batchId,
+          taskId,
+          ClippingStore.taskCompleted
+        )
       }
     }
     const onDeleteScan = async clipping_code => {
@@ -188,6 +194,11 @@ const MotherPlantRow = forwardRef(
         mother_plant_code: plant_code,
         clipping_code
       })
+      dailyTasksStore.updateTaskWorkIndelibleDone(
+        batchId,
+        taskId,
+        ClippingStore.taskCompleted
+      )
     }
     const onDone = e => {
       setExpand(false)

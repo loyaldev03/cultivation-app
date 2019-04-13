@@ -8,4 +8,11 @@ class Api::V1::FacilitiesController < Api::V1::BaseApiController
       render json: {error: command.errors, status: 400}
     end
   end
+
+  def locations
+    facility_id = params[:id]
+    purposes = params[:purposes] || []
+    locations = QueryLocations.select_options(facility_id, purposes)
+    render json: {data: locations.as_json}
+  end
 end

@@ -67,10 +67,13 @@ class QueryLocations
         room_name: '$rooms.name',
         room_code: '$rooms.code',
         room_full_code: '$rooms.full_code',
+        room_has_sections: '$rooms.has_sections',
         row_id: '$rooms.rows._id',
         row_name: '$rooms.rows.name',
         row_code: '$rooms.rows.code',
         row_full_code: '$rooms.rows.full_code',
+        row_has_shelves: '$rooms.rows.has_shelves',
+        row_has_trays: '$rooms.rows.has_trays',
         section_id: '$section.section_id',
         section_name: '$section.section_name',
         section_code: '$section.section_code',
@@ -90,6 +93,46 @@ class QueryLocations
     criteria.to_a
   end
 
+  def get_location_code(location_id)
+    if !result || !location_id
+      return '--'
+    else
+      location_id = location_id.to_bson_id
+    end
+
+    res = result.detect { |x| x[:room_id] == location_id }
+    return res[:room_full_code] if res.present?
+
+    res = result.detect { |x| x[:section_id] == location_id }
+    return res[:section_full_code] if res.present?
+
+    res = result.detect { |x| x[:row_id] == location_id }
+    return res[:row_full_code] if res.present?
+
+    res = result.detect { |x| x[:shelf_id] == location_id }
+    return res[:shelf_full_code] if res.present?
+
+    res = result.detect { |x| x[:tray_id] == location_id }
+    return res[:tray_full_code] if res.present?
+  end
+
+  def query_trays(location_id)
+    res = result.select { |x| x[:room_id] == location_id }
+    return res, 'Room'.freeze if res.any?
+
+    res = result.select { |x| x[:section_id] == location_id }
+    return res, 'Section'.freeze if res.any?
+
+    res = result.select { |x| x[:row_id] == location_id }
+    return res, 'Row'.freeze if res.any?
+
+    res = result.select { |x| x[:shelf_id] == location_id }
+    return res, 'Shelf'.freeze if res.any?
+
+    res = result.select { |x| x[:tray_id] == location_id }
+    return res, 'Tray'.freeze if res.any?
+  end
+
   private
 
   def match_purposes
@@ -99,6 +142,17 @@ class QueryLocations
       {"$match": {row_purpose: {'$in': purposes}}}
     else
       {"$match": {row_purpose: purposes}}
+    end
+  end
+
+  LocationOption = Struct.new(:label, :value)
+
+  class << self
+    def select_options(facility_id, purposes)
+      result = QueryLocations.call(facility_id, purposes).result
+      result.map do |loc|
+        LocationOption.new(loc[:tray_full_code], loc[:tray_id].to_s)
+      end
     end
   end
 end

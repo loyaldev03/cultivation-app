@@ -50,37 +50,9 @@ module Cultivation
 
     private
 
-    def locations
+    def query
       @batch ||= Cultivation::Batch.find(args[:batch_id])
-      @locations ||= QueryLocations.call(@batch.facility_id).result
-    end
-
-    # TODO::REFACTOR#001
-    def get_location_code(location_id)
-      res = locations.detect { |x| x[:room_id] == location_id }
-      if res.present?
-        return res[:room_full_code]
-      end
-
-      res = locations.detect { |x| x[:section_id] == location_id }
-      if res.present?
-        return res[:section_full_code]
-      end
-
-      res = locations.detect { |x| x[:row_id] == location_id }
-      if res.present?
-        return res[:row_full_code]
-      end
-
-      res = locations.detect { |x| x[:shelf_id] == location_id }
-      if res.present?
-        return res[:shelf_full_code]
-      end
-
-      res = locations.detect { |x| x[:tray_id] == location_id }
-      if res.present?
-        return res[:tray_full_code]
-      end
+      @query ||= QueryLocations.call(@batch.facility_id)
     end
 
     def get_selected_plants_from_result(res)
@@ -90,7 +62,7 @@ module Cultivation
             y[:plant_id],
             y[:quantity] || '',
             y[:plant_code] || '',
-            get_location_code(y[:plant_location_id]),
+            query.get_location_code(y[:plant_location_id]),
           )
         end
       else
@@ -103,7 +75,7 @@ module Cultivation
         res[:tray_plan].map do |t|
           TrayLocation.new(
             t[:tray_id],
-            get_location_code(t[:tray_id]),
+            query.get_location_code(t[:tray_id]),
             t[:capacity],
           )
         end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Cultivation::SaveTrayPlans, type: :command do
-  let(:facility) do
+  let!(:facility) do
     facility = create(:facility, :is_complete)
     facility.rooms.each do |room|
       room.rows.each do |row|

@@ -13,7 +13,7 @@ module DailyTask
       if valid_params?
         last_time_log = task.time_logs.find_by(end_time: nil)
         last_time_log&.stop!
-        task.update(work_status: 'done')
+        task.update(work_status: Constants::WORK_STATUS_DONE)
         CalculateTotalActualCostJob.perform_now(task.id.to_s)
         MovePlantsToNextPhaseJob.perform_later(task.batch_id.to_s)
         task
@@ -43,4 +43,3 @@ module DailyTask
     end
   end
 end
-

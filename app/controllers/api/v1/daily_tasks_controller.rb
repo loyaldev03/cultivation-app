@@ -20,13 +20,13 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
 
   def time_log
     case params[:actions]
-    when 'start'
+    when Constants::WORK_STATUS_START
       cmd = DailyTask::StartTimeLog.call(current_user.id, params[:task_id])
-    when 'stop'
+    when Constants::WORK_STATUS_STOP
       cmd = DailyTask::StopTimeLog.call(current_user.id, params[:task_id])
-    when 'stuck'
+    when Constants::WORK_STATUS_STUCK
       cmd = DailyTask::StuckTask.call(current_user.id, params[:task_id])
-    when 'done'
+    when Constants::WORK_STATUS_DONE
       cmd = DailyTask::DoneTask.call(current_user.id, params[:task_id])
     end
     data = TaskDetailsSerializer.new(cmd.result).serialized_json

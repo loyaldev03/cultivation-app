@@ -365,9 +365,7 @@ class TaskList extends React.Component {
                         <li
                           key={key}
                           className="pointer br2 dim--grey pa1"
-                          onClick={e => 
-                            this.openSidebar(e, i.id, 'details')
-                          }
+                          onClick={e => this.openSidebar(e, i.id, 'details')}
                         >
                           {i.title}
                         </li>

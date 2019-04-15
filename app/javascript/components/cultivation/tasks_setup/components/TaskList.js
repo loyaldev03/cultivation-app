@@ -12,6 +12,8 @@ import InlineEditDateField from './InlineEditDateField'
 import Avatar from '../../../utils/Avatar'
 import { formatDate2, moneyFormatter, SlidePanel } from '../../../utils'
 import MyImage from 'images/BagOfSeeds.png'
+import currentIssueStore from '../../../issues/store/CurrentIssueStore'
+import getIssue from '../../../issues/actions/getIssue'
 
 const ReactTable = lazy(() => import('react-table'))
 const ClippinPanel = lazy(() => import('./ClippingPanel'))
@@ -363,7 +365,7 @@ class TaskList extends React.Component {
                         <li
                           key={key}
                           className="pointer br2 dim--grey pa1"
-                          onClick={e => this.openSidebar(i)}
+                          onClick={e => this.openSidebar(e, i.id, 'details')}
                         >
                           {i.title}
                         </li>
@@ -599,6 +601,22 @@ class TaskList extends React.Component {
       }
     }
   ]
+
+  openSidebar = (event, id = null, mode = null) => {
+    this.setState({
+      issueSelected: id,
+      showIssues: true
+    })
+
+    currentIssueStore.reset()
+    currentIssueStore.mode = mode
+
+    if (id) {
+      getIssue(id)
+    }
+
+    event.preventDefault()
+  }
 
   render() {
     const {

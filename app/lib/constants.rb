@@ -20,6 +20,11 @@ module Constants
   INDELIBLE_MOVING_NEXT_PHASE = 'moving_to_next_phase'.freeze
   INDELIBLE_STAYING = 'staying'.freeze
 
+  WORK_STATUS_STARTED = 'started'.freeze
+  WORK_STATUS_STOPPED = 'stopped'.freeze
+  WORK_STATUS_STUCK = 'stuck'.freeze
+  WORK_STATUS_DONE = 'done'.freeze
+
   CULTIVATION_PHASES_1V = [
     CONST_CLONE,
     CONST_VEG,

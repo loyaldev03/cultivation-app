@@ -113,6 +113,12 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     render json: {data: result}
   end
 
+  def load_issues
+    tasks = @batch.tasks.includes(:issues)
+    result = tasks.map { |task| {task_id: task.id.to_s, issues: task.issues.reject { |a| a.is_archived? }.map { |a| {id: a.id.to_s, title: a.title} }} }
+    render json: {data: result}
+  end
+
   private
 
   def set_batch

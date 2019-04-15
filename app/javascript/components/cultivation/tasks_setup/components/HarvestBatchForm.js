@@ -3,7 +3,11 @@ import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import Select from 'react-select'
 import { TextInput, NumericInput } from '../../../utils/FormHelpers'
-import { SlidePanelHeader, SlidePanelFooter, LocationPicker } from '../../../utils'
+import {
+  SlidePanelHeader,
+  SlidePanelFooter,
+  LocationPicker
+} from '../../../utils'
 
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 
@@ -66,10 +70,10 @@ class HarvestBatchForm extends React.Component {
             />
           </div>
         </div>
-        
+
         <div className="ph4 mt3 mb4 flex">
           <div className="w-100">
-            <LocationPicker 
+            <LocationPicker
               purpose="harvest"
               facility_id={this.props.facilityId}
               location_id={this.state.locationId}

@@ -40,10 +40,14 @@ module Cultivation
         current_phase = phases.detect { |p| p.start_date >= current_time }
         prev = growth_stages.index(batch.current_growth_stage)
         curr = growth_stages.index(current_phase.phase)
-        if prev < curr
+        if prev && curr && prev < curr
           batch.update(current_growth_stage: current_phase.phase)
         end
       end
+    end
+
+    def update_plants_current_growth_stage(batch)
+      MovePlantsToNextPhaseJob.perform_later(batch.id.to_s)
     end
   end
 end

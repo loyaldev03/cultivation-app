@@ -473,11 +473,17 @@ class TaskStore {
 
   @action
   async roomData(id) {
-    const url = `/api/v1/batches/search_locations?facility_id=${id}&purpose[]=clone`
+    const url = `/api/v1/batches/search_locations?facility_id=${id}&purpose[]=mother`
     const response = await (await fetch(url, httpGetOptions)).json()
     return response.data
   }
 
+  @action
+  async getPlantOnSelect(facility_id, strain_id, location_id) {
+    const url = `/api/v1/plants/search_by_location?facility_id=${facility_id}&strain_id=${strain_id}&location_id=${location_id}`
+    const response = await (await fetch(url, httpGetOptions)).json()
+    return response
+  }
   @action
   async editAssignedMaterial(
     batchId,

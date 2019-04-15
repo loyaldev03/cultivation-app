@@ -1,5 +1,6 @@
 import { observable, action, runInAction, toJS } from 'mobx'
 import { httpGetOptions, httpPostOptions, toast } from '../../utils'
+import setupPlants from '../../inventory/plant_setup/actions/setupPlants'
 
 class BatchStore {
   @observable isLoading = false
@@ -27,6 +28,11 @@ class BatchStore {
     } finally {
       this.isLoading = false
     }
+  }
+
+  @action
+  getSelected() {
+    return toJS(this.batch.selected_plants)
   }
 
   @action
@@ -118,6 +124,11 @@ class BatchStore {
         quantity
       })
     }
+  }
+
+  @action
+  setAllPlants(plantArr) {
+    this.batch.selected_plants = plantArr
   }
 
   @action

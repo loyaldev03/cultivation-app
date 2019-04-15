@@ -16,7 +16,7 @@ import currentIssueStore from '../../../issues/store/CurrentIssueStore'
 import getIssue from '../../../issues/actions/getIssue'
 
 const ReactTable = lazy(() => import('react-table'))
-const ClippinPanel = lazy(() => import('./ClippingPanel'))
+const ClippingPanel = lazy(() => import('./ClippingPanel'))
 const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
 const AssignMaterialForm = lazy(() => import('./MaterialForm'))
 const CultivationCalendar = lazy(() => import('./CultivationCalendar'))
@@ -156,7 +156,9 @@ class TaskList extends React.Component {
           hasChild={hasChild}
           isCollapsed={isCollapsed}
           onCollapseClick={() => TaskStore.toggleCollapseNode(wbs)}
-          onClick={e => this.handleShowSidebar(id)}
+          onClick={e => {
+            this.handleShowSidebar(id)
+          }}
           onHighlight={() => this.setState({ taskSelected: id })}
           onDoneClick={value => {
             TaskStore.editTask(batchId, id, { name: value })
@@ -662,9 +664,11 @@ class TaskList extends React.Component {
           show={showClippingPanel}
           renderBody={props => (
             <Suspense fallback={<div />}>
-              <ClippinPanel
-                title="Clipping"
+              <ClippingPanel
+                title="Clip"
+                batchId={this.props.batch.id}
                 facilityId={this.props.batch.facility_id}
+                strainId={this.props.batch.facility_strain_id}
                 onClose={() => this.setState({ showClippingPanel: false })}
               />
             </Suspense>

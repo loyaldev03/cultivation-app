@@ -13,11 +13,15 @@ class LocationStore {
   @action
   async load(facilityId, purposes) {
     let url = `/api/v1/facilities/${facilityId}/locations?`
-    if (purposes.includes(",")) {
-      url = url + purposes.split(",").map(p => "purposes[]=" + p).join("&")
-    }
-    else {
-      url = url + "purposes[]=" + purposes
+    if (purposes.includes(',')) {
+      url =
+        url +
+        purposes
+          .split(',')
+          .map(p => 'purposes[]=' + p)
+          .join('&')
+    } else {
+      url = url + 'purposes[]=' + purposes
     }
     try {
       const res = await (await fetch(url, httpGetOptions)).json()

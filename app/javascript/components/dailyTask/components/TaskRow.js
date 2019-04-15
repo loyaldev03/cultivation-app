@@ -2,6 +2,7 @@ import React from 'react'
 import {
   wbsWidth,
   taskWidth,
+  estimatedHoursWidth,
   locationWidth,
   btnWidth,
   statusWidth
@@ -85,7 +86,14 @@ class TaskRow extends React.Component {
   }
 
   render() {
-    const { wbs, name, location_name, location_type, issues } = this.props
+    const {
+      wbs,
+      name,
+      location_name,
+      location_type,
+      issues,
+      estimated_hours
+    } = this.props
 
     return (
       <div className="bb b--black-05">
@@ -114,6 +122,13 @@ class TaskRow extends React.Component {
             <span className="f6 pointer" onClick={this.onExpand}>
               {name}
             </span>
+          </div>
+
+          <div
+            className="flex items-center justify-center pa2 tc"
+            style={estimatedHoursWidth}
+          >
+            <span className="f6 tc">{estimated_hours}</span>
           </div>
 
           <div

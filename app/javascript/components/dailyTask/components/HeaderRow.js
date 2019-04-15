@@ -2,6 +2,7 @@ import React from 'react'
 import {
   wbsWidth,
   taskWidth,
+  estimatedHoursWidth,
   locationWidth,
   btnWidth,
   statusWidth,
@@ -22,6 +23,13 @@ const HeaderRow = () => {
         <span className="f6 grey" style={{ marginLeft: '30px' }}>
           Task
         </span>
+      </div>
+
+      <div
+        className="flex items-center justify-center pa2"
+        style={estimatedHoursWidth}
+      >
+        <span className="f6 grey">Estimated Hours</span>
       </div>
 
       <div

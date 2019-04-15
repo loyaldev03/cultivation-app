@@ -88,10 +88,16 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
     end
 
     it "should create plant if not exists" do
+      task_clip = create(:task,
+                         batch: batch,
+                         work_status: Constants::WORK_STATUS_DONE,
+                         phase: Constants::CONST_CLONE,
+                         indelible: Constants::INDELIBLE_CLIP_POT_TAG)
       # Prepare - Add a new clipping history record. New clipping history
       # should create a new plant in the system after running this job.
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
+        task: task_clip,
         phase: batch.current_growth_stage,
         activity: Constants::INDELIBLE_CLIP_POT_TAG,
         mother_plant_id: mother_plant1.id,
@@ -106,6 +112,7 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
         phase: batch.current_growth_stage,
+        task: task_clip,
         activity: Constants::INDELIBLE_CLIP_POT_TAG,
         mother_plant_id: mother_plant2.id,
         mother_plant_code: mother_plant2.plant_id,
@@ -129,11 +136,22 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
     end
 
     it "should move plants into trays" do
+      task_clip = create(:task,
+                         batch: batch,
+                         work_status: Constants::WORK_STATUS_DONE,
+                         phase: Constants::CONST_CLONE,
+                         indelible: Constants::INDELIBLE_CLIP_POT_TAG)
+      task_move = create(:task,
+                         batch: batch,
+                         work_status: Constants::WORK_STATUS_DONE,
+                         phase: Constants::CONST_CLONE,
+                         indelible: Constants::INDELIBLE_MOVING_TO_TRAY)
       plants_tags1 = [Faker::Code.ean, Faker::Code.ean, Faker::Code.ean]
       plants_tags2 = [Faker::Code.ean, Faker::Code.ean, Faker::Code.ean]
       # Create 2 movement history record to move 6 plants into a pot
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
+        task: task_clip,
         phase: batch.current_growth_stage,
         activity: Constants::INDELIBLE_CLIP_POT_TAG,
         mother_plant_id: mother_plant1.id,
@@ -147,6 +165,7 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       )
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
+        task: task_clip,
         phase: batch.current_growth_stage,
         activity: Constants::INDELIBLE_CLIP_POT_TAG,
         mother_plant_id: mother_plant2.id,
@@ -161,6 +180,7 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       # Create 2 movement record to move 6 plants into tray in clone room
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
+        task: task_move,
         phase: batch.current_growth_stage,
         activity: Constants::INDELIBLE_MOVING_TO_TRAY,
         user_id: current_user.id,
@@ -172,6 +192,7 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       )
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
+        task: task_move,
         phase: batch.current_growth_stage,
         activity: Constants::INDELIBLE_MOVING_TO_TRAY,
         user_id: current_user.id,
@@ -200,6 +221,11 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       batch.current_growth_stage = Constants::CONST_VEG
       batch.save
       plants_tags1 = [Faker::Code.ean, Faker::Code.ean, Faker::Code.ean]
+      task_move = create(:task,
+                         batch: batch,
+                         work_status: Constants::WORK_STATUS_DONE,
+                         phase: Constants::CONST_CLONE,
+                         indelible: Constants::INDELIBLE_MOVING_NEXT_PHASE)
 
       # Add plants into inventory first before moving
       plants_tags1.each do |plant_tag|
@@ -218,6 +244,7 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       # Move plants into trays in veg room
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
+        task: task_move,
         phase: batch.current_growth_stage,
         activity: Constants::INDELIBLE_MOVING_NEXT_PHASE,
         user_id: current_user.id,
@@ -246,6 +273,11 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       batch.current_growth_stage = Constants::CONST_FLOWER
       batch.save
       plants_tags1 = [Faker::Code.ean,Faker::Code.ean, Faker::Code.ean, Faker::Code.ean]
+      task_move = create(:task,
+                         batch: batch,
+                         work_status: Constants::WORK_STATUS_DONE,
+                         phase: Constants::CONST_CLONE,
+                         indelible: Constants::INDELIBLE_MOVING_NEXT_PHASE)
 
       # Add plants into inventory first before moving
       plants_tags1.each do |plant_tag|
@@ -264,6 +296,7 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       # Move plants into trays in veg room
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
+        task: task_move,
         phase: batch.current_growth_stage,
         activity: Constants::INDELIBLE_MOVING_NEXT_PHASE,
         user_id: current_user.id,

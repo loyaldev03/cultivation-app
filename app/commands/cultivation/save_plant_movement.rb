@@ -4,6 +4,11 @@ module Cultivation
 
     attr_reader :current_user, :args
 
+    # NOTE: When user finishes recording the plants movements & hit the save
+    # button, this command will run and record all the plants movement scans.
+    # After the task which own this history is completed. The actual plant
+    # location will also be update (by MovePlantsToNextPhaseJob)
+
     def initialize(current_user, args)
       @current_user = current_user
       @args = {
@@ -21,21 +26,22 @@ module Cultivation
         if task.indelible == 'clip_pot_tag'
           hist = Cultivation::PlantMovementHistory.find_or_initialize_by(
             batch_id: args[:batch_id].to_bson_id,
+            task_id: task.id,
             phase: task.phase,
             activity: task.indelible,
             mother_plant_id: args[:mother_plant_id].to_bson_id,
+            mother_plant_code: args[:mother_plant_code],
           )
-          hist.mother_plant_code = args[:mother_plant_code]
         elsif task.indelible == 'moving_to_tray' || task.indelible == 'moving_to_next_phase'
           hist = Cultivation::PlantMovementHistory.find_or_initialize_by(
             batch_id: args[:batch_id].to_bson_id,
+            task_id: task.id,
             phase: task.phase,
             activity: task.indelible,
             destination_id: args[:destination_id],
+            destination_code: args[:destination_code],
+            destination_type: args[:destination_type],
           )
-          hist.destination_code = args[:destination_code]
-          hist.destination_type = args[:destination_type]
-          # TODO: Create background job to update current plant location
         end
 
         hist.plants = args[:plants]

@@ -78,14 +78,7 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
            indelible: Constants::INDELIBLE_STAYING,
            batch: batch1,
            start_date: batch1.start_date + 10.days,
-           phase: Constants::CONST_VEG1)
-  end
-  let!(:task5) do
-    create(:task,
-           indelible: Constants::INDELIBLE_STAYING,
-           batch: batch1,
-           start_date: batch1.start_date + 20.days,
-           phase: Constants::CONST_VEG2)
+           phase: Constants::CONST_VEG)
   end
   let!(:task6) do
     create(:task,
@@ -106,21 +99,12 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
       end
     end
 
-    it "Update batch growth stage to veg1" do
+    it "Update batch growth stage to veg" do
       Time.use_zone(facility.timezone) do
         Cultivation::ActivateBatch.call(task4.start_date)
 
         result = Cultivation::Batch.find(batch1.id)
-        expect(result.current_growth_stage).to eq Constants::CONST_VEG1
-      end
-    end
-
-    it "Update batch growth stage to veg2" do
-      Time.use_zone(facility.timezone) do
-        Cultivation::ActivateBatch.call(task5.start_date)
-
-        result = Cultivation::Batch.find(batch1.id)
-        expect(result.current_growth_stage).to eq Constants::CONST_VEG2
+        expect(result.current_growth_stage).to eq Constants::CONST_VEG
       end
     end
 

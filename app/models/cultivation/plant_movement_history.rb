@@ -8,8 +8,6 @@ module Cultivation
     field :phase, type: String
     # E.g. match Task.indelible, e.g. clip_pot_tag, moving_to_tray...
     field :activity, type: String
-    # Reference to the task that created this record
-    field :task_id, type: BSON::ObjectId
     # Mother plant id (for clipping task)
     field :mother_plant_id, type: BSON::ObjectId
     field :mother_plant_code, type: String
@@ -21,5 +19,8 @@ module Cultivation
     field :destination_type, type: String
     field :destination_code, type: String
     field :plants, type: Array, default: -> { [] }
+
+    # Reference to the task that created this record
+    belongs_to :task, class_name: 'Cultivation::Task', inverse_of: :movement_histories, optional: true
   end
 end

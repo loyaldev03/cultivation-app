@@ -33,6 +33,7 @@ module Cultivation
 
     has_many :time_logs, class_name: 'Cultivation::TimeLog', dependent: :delete
     has_many :issues, class_name: 'Issues::Issue', dependent: :delete
+    has_many :movement_histories, class_name: 'Cultivation::PlantMovementHistory', dependent: :delete
 
     has_and_belongs_to_many :users, inverse_of: nil
 

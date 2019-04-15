@@ -14,7 +14,6 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
     end
     facility
   end
-
   let!(:current_user) do
     user = create(:user, facilities: [facility.id], default_facility_id: facility.id)
     user
@@ -29,13 +28,24 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       r.purpose == Constants::CONST_CLONE
     end
   end
-  let(:first_row) { clone_room.rows.first }
+  let(:veg_room) do
+    facility.rooms.detect { |r| r.purpose == Constants::CONST_VEG }
+  end
   let(:clone_tray) do
-    first_shelf = first_row.shelves.first
+    first_shelf = clone_room.rows.first.shelves.first
     first_shelf.trays.last
   end
   let(:clone_tray2) do
-    first_shelf = first_row.shelves.first
+    first_shelf = clone_room.rows.first.shelves.first
+    first_shelf.trays.first
+  end
+  let(:veg_tray1) do
+    first_shelf = veg_room.rows.first.shelves.first
+    first_shelf.trays.first
+  end
+  let(:flower_tray1) do
+    flower_room = facility.rooms.detect { |r| r.purpose == Constants::CONST_FLOWER }
+    first_shelf = flower_room.rows.first.shelves.first
     first_shelf.trays.first
   end
   let(:facility_strain) { build(:facility_strain) }
@@ -78,10 +88,16 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
     end
 
     it "should create plant if not exists" do
+      task_clip = create(:task,
+                         batch: batch,
+                         work_status: Constants::WORK_STATUS_DONE,
+                         phase: Constants::CONST_CLONE,
+                         indelible: Constants::INDELIBLE_CLIP_POT_TAG)
       # Prepare - Add a new clipping history record. New clipping history
       # should create a new plant in the system after running this job.
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
+        task: task_clip,
         phase: batch.current_growth_stage,
         activity: Constants::INDELIBLE_CLIP_POT_TAG,
         mother_plant_id: mother_plant1.id,
@@ -96,6 +112,7 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
         phase: batch.current_growth_stage,
+        task: task_clip,
         activity: Constants::INDELIBLE_CLIP_POT_TAG,
         mother_plant_id: mother_plant2.id,
         mother_plant_code: mother_plant2.plant_id,
@@ -119,10 +136,22 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
     end
 
     it "should move plants into trays" do
+      task_clip = create(:task,
+                         batch: batch,
+                         work_status: Constants::WORK_STATUS_DONE,
+                         phase: Constants::CONST_CLONE,
+                         indelible: Constants::INDELIBLE_CLIP_POT_TAG)
+      task_move = create(:task,
+                         batch: batch,
+                         work_status: Constants::WORK_STATUS_DONE,
+                         phase: Constants::CONST_CLONE,
+                         indelible: Constants::INDELIBLE_MOVING_TO_TRAY)
       plants_tags1 = [Faker::Code.ean, Faker::Code.ean, Faker::Code.ean]
       plants_tags2 = [Faker::Code.ean, Faker::Code.ean, Faker::Code.ean]
+      # Create 2 movement history record to move 6 plants into a pot
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
+        task: task_clip,
         phase: batch.current_growth_stage,
         activity: Constants::INDELIBLE_CLIP_POT_TAG,
         mother_plant_id: mother_plant1.id,
@@ -136,6 +165,7 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       )
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
+        task: task_clip,
         phase: batch.current_growth_stage,
         activity: Constants::INDELIBLE_CLIP_POT_TAG,
         mother_plant_id: mother_plant2.id,
@@ -147,8 +177,10 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
         destination_code: mother_room.code,
         plants: plants_tags2,
       )
+      # Create 2 movement record to move 6 plants into tray in clone room
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
+        task: task_move,
         phase: batch.current_growth_stage,
         activity: Constants::INDELIBLE_MOVING_TO_TRAY,
         user_id: current_user.id,
@@ -160,6 +192,7 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       )
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
+        task: task_move,
         phase: batch.current_growth_stage,
         activity: Constants::INDELIBLE_MOVING_TO_TRAY,
         user_id: current_user.id,
@@ -181,6 +214,110 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
         ).size
 
       expect(total_clones).to eq 6
+    end
+
+    it "should move plants to next phase - veg1" do
+      # Change batch to flower phase
+      batch.current_growth_stage = Constants::CONST_VEG
+      batch.save
+      plants_tags1 = [Faker::Code.ean, Faker::Code.ean, Faker::Code.ean]
+      task_move = create(:task,
+                         batch: batch,
+                         work_status: Constants::WORK_STATUS_DONE,
+                         phase: Constants::CONST_CLONE,
+                         indelible: Constants::INDELIBLE_MOVING_NEXT_PHASE)
+
+      # Add plants into inventory first before moving
+      plants_tags1.each do |plant_tag|
+        Inventory::Plant.create(
+          cultivation_batch_id: batch.id,
+          plant_id: plant_tag,
+          plant_tag: plant_tag,
+          planting_date: Time.current,
+          current_growth_stage: Constants::CONST_CLONE,
+          facility_strain_id: batch.facility_strain_id,
+          created_by_id: current_user.id,
+          modifier_id: current_user.id,
+        )
+      end
+
+      # Move plants into trays in veg room
+      Cultivation::PlantMovementHistory.create(
+        batch_id: batch.id,
+        task: task_move,
+        phase: batch.current_growth_stage,
+        activity: Constants::INDELIBLE_MOVING_NEXT_PHASE,
+        user_id: current_user.id,
+        user_name: current_user.display_name,
+        destination_id: veg_tray1.id,
+        destination_type: "tray",
+        destination_code: veg_tray1.code,
+        plants: plants_tags1,
+      )
+
+      # Execute to Move to Next Phase
+      perform_enqueued_jobs { job }
+
+      # Validate plants are moved into clone Room tray
+      total_veg = Inventory::Plant.
+        where(
+          cultivation_batch_id: batch.id,
+          current_growth_stage: Constants::CONST_VEG,
+        ).size
+
+      expect(total_veg).to eq(3)
+    end
+
+    it "should move plants to next phase - flower" do
+      # Change batch to flower phase
+      batch.current_growth_stage = Constants::CONST_FLOWER
+      batch.save
+      plants_tags1 = [Faker::Code.ean,Faker::Code.ean, Faker::Code.ean, Faker::Code.ean]
+      task_move = create(:task,
+                         batch: batch,
+                         work_status: Constants::WORK_STATUS_DONE,
+                         phase: Constants::CONST_CLONE,
+                         indelible: Constants::INDELIBLE_MOVING_NEXT_PHASE)
+
+      # Add plants into inventory first before moving
+      plants_tags1.each do |plant_tag|
+        Inventory::Plant.create(
+          cultivation_batch_id: batch.id,
+          plant_id: plant_tag,
+          plant_tag: plant_tag,
+          planting_date: Time.current,
+          current_growth_stage: Constants::CONST_VEG,
+          facility_strain_id: batch.facility_strain_id,
+          created_by_id: current_user.id,
+          modifier_id: current_user.id,
+        )
+      end
+
+      # Move plants into trays in veg room
+      Cultivation::PlantMovementHistory.create(
+        batch_id: batch.id,
+        task: task_move,
+        phase: batch.current_growth_stage,
+        activity: Constants::INDELIBLE_MOVING_NEXT_PHASE,
+        user_id: current_user.id,
+        user_name: current_user.display_name,
+        destination_id: flower_tray1.id,
+        destination_type: "tray",
+        destination_code: flower_tray1.code,
+        plants: plants_tags1,
+      )
+
+      # Execute to Move to Next Phase
+      perform_enqueued_jobs { job }
+
+      # Validate plants are moved into clone Room tray
+      total_veg = Inventory::Plant.
+        where(
+          cultivation_batch_id: batch.id,
+          current_growth_stage: Constants::CONST_FLOWER,
+        ).size
+
+      expect(total_veg).to eq(4)
     end
   end
 end

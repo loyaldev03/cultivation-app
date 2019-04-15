@@ -11,13 +11,17 @@ import {
 
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 
-// @observer
 class HarvestBatchForm extends React.Component {
   state = {
     name: '',
+    location: null,
     locationId: '',
     uom: null,
     errors: {}
+  }
+
+  componentDidMount() {
+    // retrieve harvest batch
   }
 
   onSave = () => {
@@ -36,14 +40,15 @@ class HarvestBatchForm extends React.Component {
     this.setState({ uom })
   }
 
-  onLocationChanged = item => {
-    console.log(item)
+  onLocationChanged = location => {
+    this.setState({ location })
   }
 
   render() {
     const { onClose } = this.props
-    const { name, harvest_room, errors, uom } = this.state
+    const { name, location, errors, uom } = this.state
     const uomOptions = ['g', 'lb'].map(x => ({ label: x, value: x }))
+
     return (
       <div>
         <SlidePanelHeader onClose={onClose} title="Create Harvest" />
@@ -71,10 +76,12 @@ class HarvestBatchForm extends React.Component {
           </div>
         </div>
 
-        <div className="ph4 mt3 mb4 flex">
-          <div className="w-100">
+        <div className="ph4 mt3 mb4 flex flex-column">
+          <label className="subtitle-2 grey fl pb2">Harvest room</label>
+          <div className="w-100 flex flex-column">
             <LocationPicker
               purpose="harvest"
+              value={location}
               facility_id={this.props.facilityId}
               location_id={this.state.locationId}
               onChange={this.onLocationChanged}

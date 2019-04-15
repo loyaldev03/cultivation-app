@@ -1,4 +1,3 @@
-# TODO: To be removed
 module Inventory
   class HarvestBatch
     include Mongoid::Document

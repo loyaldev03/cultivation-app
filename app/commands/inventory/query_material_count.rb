@@ -24,7 +24,7 @@ module Inventory
           _id: '$_id',
           name: {"$first": '$name'},
           uom: {'$last': '$tx.common_uom'},
-          total_available_qty: {'$sum': {'$toDecimal': '$tx.common_quantity'}},
+          total_available_qty: {'$sum': '$tx.common_quantity'},
         }},
       ])
 

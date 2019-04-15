@@ -229,6 +229,7 @@ Rails.application.routes.draw do
           end
           collection do
             get 'actual_hours'
+            get 'load_issues'
           end
         end
         resources :nutrient_profiles, only: [:index, :create, :update]

@@ -16,6 +16,9 @@ module Cultivation
       working_hour_start = Time.zone.local(@time_log.start_time.year, @time_log.start_time.month, @time_log.start_time.day, 8, 00)
       working_hour_end = Time.zone.local(@time_log.start_time.year, @time_log.start_time.month, @time_log.start_time.day, 18, 00)
 
+      user_overtime_hourly_rate = @user.overtime_hourly_rate || 0
+      user_hourly_rate = @user.hourly_rate || 0
+
       # 8am -> 6pm
       # CASES
       # 7.30am - 8.30 am => exceed start working hour (done)
@@ -25,10 +28,10 @@ module Cultivation
 
       # (start_time in working hour range) and (end_time in working hour range)
       if ((@time_log.start_time >= working_hour_start) and (@time_log.start_time < working_hour_end)) and ((@time_log.end_time > working_hour_start) and (@time_log.end_time <= working_hour_end)) #compare hours in the range
-        actual_cost = @time_log.duration_in_minutes * (@user.hourly_rate / 60)
+        actual_cost = @time_log.duration_in_minutes * (user_hourly_rate / 60)
         actual_minutes = @time_log.duration_in_minutes
         if breakdown
-          @time_log.breakdowns.new(cost_type: 'Normal', rate: @user.hourly_rate, duration: actual_minutes, cost: actual_cost)
+          @time_log.breakdowns.new(cost_type: 'Normal', rate: user_hourly_rate, duration: actual_minutes, cost: actual_cost)
           @time_log.save
         end
         # (start_time earlier than working hour start time) and (end_time in working hour range)
@@ -36,14 +39,14 @@ module Cultivation
         #calculate ot minutes
         #calculate diff working_hour_start to start lunch hour
         ot_minutes = difference_in_minutes(working_hour_start, @time_log.start_time) # 8am - 7.30 am = 30minutes
-        ot_cost = (ot_minutes * (@user.overtime_hourly_rate / 60))
+        ot_cost = (ot_minutes * (user_overtime_hourly_rate / 60))
 
         in_range_minutes = difference_in_minutes(@time_log.end_time, working_hour_start) # 9.30am - 8am = 30minutes + 60minutes
-        in_range_cost = (in_range_minutes * (@user.hourly_rate / 60))
+        in_range_cost = (in_range_minutes * (user_hourly_rate / 60))
 
         if breakdown
-          @time_log.breakdowns.new(cost_type: 'OT', rate: @user.overtime_hourly_rate, duration: ot_minutes, cost: ot_cost)
-          @time_log.breakdowns.new(cost_type: 'Normal', rate: @user.hourly_rate, duration: in_range_minutes, cost: in_range_cost)
+          @time_log.breakdowns.new(cost_type: 'OT', rate: user_overtime_hourly_rate, duration: ot_minutes, cost: ot_cost)
+          @time_log.breakdowns.new(cost_type: 'Normal', rate: user_hourly_rate, duration: in_range_minutes, cost: in_range_cost)
           @time_log.save
         end
 
@@ -52,14 +55,14 @@ module Cultivation
         # (start_time in working hour range) and (end_time exceed working hour end time)
       elsif ((@time_log.start_time >= working_hour_start) and (@time_log.start_time <= working_hour_end)) and (@time_log.end_time > working_hour_end) #8.00am-6.30pm
         ot_minutes = difference_in_minutes(@time_log.end_time, working_hour_end) # 6pm - 6.30 pm = 30minutes
-        ot_cost = ot_minutes * (@user.overtime_hourly_rate / 60)
+        ot_cost = ot_minutes * (user_overtime_hourly_rate / 60)
 
         in_range_minutes = difference_in_minutes(working_hour_end, @time_log.start_time) # 8.00am - 6pm = 10 hours
-        in_range_cost = in_range_minutes * (@user.hourly_rate / 60)
+        in_range_cost = in_range_minutes * (user_hourly_rate / 60)
 
         if breakdown
-          @time_log.breakdowns.new(cost_type: 'OT', rate: @user.overtime_hourly_rate, duration: ot_minutes, cost: ot_cost)
-          @time_log.breakdowns.new(cost_type: 'Normal', rate: @user.hourly_rate, duration: in_range_minutes, cost: in_range_cost)
+          @time_log.breakdowns.new(cost_type: 'OT', rate: user_overtime_hourly_rate, duration: ot_minutes, cost: ot_cost)
+          @time_log.breakdowns.new(cost_type: 'Normal', rate: user_hourly_rate, duration: in_range_minutes, cost: in_range_cost)
           @time_log.save
         end
 
@@ -68,21 +71,21 @@ module Cultivation
         # start_time earlier than working hour start time and end_time exceed working hour end time
       elsif (@time_log.start_time < working_hour_start) and (@time_log.end_time > working_hour_end)
         ot1_minutes = difference_in_minutes(working_hour_start, @time_log.start_time) # 7.30am - 8.00 am = 30minutes
-        ot1_cost = ot1_minutes * (@user.overtime_hourly_rate / 60)
+        ot1_cost = ot1_minutes * (user_overtime_hourly_rate / 60)
 
         ot2_minutes = difference_in_minutes(@time_log.end_time, working_hour_end) # 6pm - 6.30 pm = 30minutes
-        ot2_cost = ot2_minutes * (@user.overtime_hourly_rate / 60)
+        ot2_cost = ot2_minutes * (user_overtime_hourly_rate / 60)
 
         total_ot_cost = ot1_cost + ot2_cost
         total_ot_minutes = ot1_minutes + ot2_minutes
 
         in_range_minutes = difference_in_minutes(working_hour_end, working_hour_start) # 8.00am - 6pm = 10 hours
-        in_range_cost = in_range_minutes * (@user.hourly_rate / 60)
+        in_range_cost = in_range_minutes * (user_hourly_rate / 60)
 
         if breakdown
-          @time_log.breakdowns.new(cost_type: 'OT', rate: @user.overtime_hourly_rate, duration: ot1_minutes, cost: ot1_cost)
-          @time_log.breakdowns.new(cost_type: 'OT', rate: @user.overtime_hourly_rate, duration: ot2_minutes, cost: ot2_cost)
-          @time_log.breakdowns.new(cost_type: 'Normal', rate: @user.hourly_rate, duration: in_range_minutes, cost: in_range_cost)
+          @time_log.breakdowns.new(cost_type: 'OT', rate: user_overtime_hourly_rate, duration: ot1_minutes, cost: ot1_cost)
+          @time_log.breakdowns.new(cost_type: 'OT', rate: user_overtime_hourly_rate, duration: ot2_minutes, cost: ot2_cost)
+          @time_log.breakdowns.new(cost_type: 'Normal', rate: user_hourly_rate, duration: in_range_minutes, cost: in_range_cost)
           @time_log.save
         end
 
@@ -91,20 +94,20 @@ module Cultivation
         # full OT start_time exceed working hour end_time and end_time exceed working hour end_time
       elsif (@time_log.start_time > working_hour_end) and (@time_log.end_time > working_hour_end) #7pm - 8pm
         ot_minutes = difference_in_minutes(@time_log.end_time, @time_log.start_time) # 7.30am - 8.00 am = 30minutes
-        actual_cost = (ot_minutes * (@user.overtime_hourly_rate / 60))
+        actual_cost = (ot_minutes * (user_overtime_hourly_rate / 60))
         actual_minutes = ot_minutes
         if breakdown
-          @time_log.breakdowns.new(cost_type: 'OT', rate: @user.overtime_hourly_rate, duration: actual_minutes, cost: actual_cost)
+          @time_log.breakdowns.new(cost_type: 'OT', rate: user_overtime_hourly_rate, duration: actual_minutes, cost: actual_cost)
           @time_log.save
         end
         # full OT start time earlier working hour start_time and end time earlier working hour start_time
       elsif (@time_log.start_time < working_hour_start) and (@time_log.end_time < working_hour_start) #6am - 7am
         ot_minutes = difference_in_minutes(@time_log.end_time, @time_log.start_time) # 7.30am - 8.00 am = 30minutes
-        actual_cost = (ot_minutes * (@user.overtime_hourly_rate / 60))
+        actual_cost = (ot_minutes * (user_overtime_hourly_rate / 60))
         actual_minutes = ot_minutes
 
         if breakdown
-          @time_log.breakdowns.new(cost_type: 'OT', rate: @user.overtime_hourly_rate, duration: actual_minutes, cost: actual_cost)
+          @time_log.breakdowns.new(cost_type: 'OT', rate: user_overtime_hourly_rate, duration: actual_minutes, cost: actual_cost)
           @time_log.save
         end
       end

@@ -1,0 +1,48 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Home",root_path], 'Dashboard' %>
+<% end %>
+
+<div class="mh4 mt5 mb4">
+  <div className="flex mt4 items-center ">
+    <a
+      href="<%= root_path %>"
+      class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
+    >
+      Dashboard
+    </a>
+    <a
+      href="<%= employees_path %>"
+      class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
+    >
+      Employees
+    </a>
+    <a
+      href="<%= employees_schedule_path %>"
+      class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
+    >
+      Employee Schedule
+    </a>
+    <a
+      href="<%= timesheets_path %>"
+      class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
+    >
+      Timesheets
+    </a>
+    <a
+      href="<%= requests_path %>"
+      class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
+    >
+      Requests
+    </a>
+    <a
+      href="<%= first_setup_path %>"
+      class="link bl-l bb-l bt-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
+    >
+      Facility setup
+    </a>
+  </div>
+</div>
+
+<div class="mh4 mt5">
+  <%= image_tag "dummy/main-timesheets-cropped.png", style: 'max-width: 1300px; ' %>
+</div>

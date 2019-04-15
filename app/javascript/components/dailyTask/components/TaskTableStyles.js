@@ -6,6 +6,10 @@ const taskWidth = {
   flex: 'auto'
 }
 
+const estimatedHoursWidth = {
+  width: '150px'
+}
+
 const locationWidth = {
   width: '250px'
 }
@@ -23,4 +27,12 @@ const headerRow = {
   borderBottom: '1px solid #ccc'
 }
 
-export { wbsWidth, taskWidth, locationWidth, btnWidth, statusWidth, headerRow }
+export {
+  wbsWidth,
+  taskWidth,
+  locationWidth,
+  btnWidth,
+  statusWidth,
+  headerRow,
+  estimatedHoursWidth
+}

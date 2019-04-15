@@ -3,6 +3,7 @@ import React from 'react'
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'
 import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
+import BatchResourceImage from '../../../../assets/images/dummy/batch-resource-tab-cropped.png'
 
 class ResourceSetup extends React.Component {
   constructor(props) {
@@ -36,8 +37,11 @@ class ResourceSetup extends React.Component {
         />
         <div className="flex flex-column justify-between bg-white box--shadow">
           <div className="pa4">
-            <div className="fl w-100 flex flex-column">
-              <h2>Resource is here</h2>
+            <div
+              className="fl w-100 flex flex-column"
+              style={{ maxWidth: '1300px' }}
+            >
+              <img src={BatchResourceImage} />
             </div>
           </div>
         </div>

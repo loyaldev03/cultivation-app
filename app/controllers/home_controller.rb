@@ -9,6 +9,18 @@ class HomeController < ApplicationController
     @dashboard = DashboardForm::DashboardForm.new
   end
 
+  def employees
+  end
+
+  def employees_schedule
+  end
+
+  def timesheets
+  end
+
+  def requests
+  end
+
   def worker_dashboard
     @total_tasks = get_tasks_today.count
     @next_payment_date = QueryNextPaymentDate.call(Time.current).result

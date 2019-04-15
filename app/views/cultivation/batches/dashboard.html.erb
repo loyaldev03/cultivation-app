@@ -1,0 +1,48 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Home",root_path], 'Cultivation' %>
+<% end %>
+
+<div class="mh4 mt5 mb4">
+  <div className="flex mt4 items-center ">
+    <a
+      href="<%= dashboard_cultivation_batches_path %>"
+      class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
+    >
+      Dashboard
+    </a>
+    <a
+      href="<%= cultivation_batches_path %>"
+      class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
+    >
+      Batches
+    </a>
+    <a
+      href=""
+      class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
+    >
+      Plants
+    </a>
+    <a
+      href=""
+      class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
+    >
+      Harvest
+    </a>
+    <a
+      href=""
+      class="link bl-l bb-l bt-l  pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
+    >
+      Unassigned Tasks
+    </a>
+    <a
+      href=""
+      class="link bl-l bb-l bt-l br-l pv3 ph4 b--black-10 f6 fw6 gray hover-bg-light-gray bg-white shadow-5"
+    >
+      Issues
+    </a>
+  </div>
+</div>
+
+<div class="mh4 mt5">
+  <%= image_tag "dummy/cultivation-dashboard-cropped.png", style: 'max-width: 1300px; ' %>
+</div>

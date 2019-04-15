@@ -85,19 +85,20 @@ class TaskStore {
       Rollbar.error('Error Loading Task List:', error)
     } finally {
       this.isLoading = false
+      this.loadIssues(batchId)
     }
   }
 
   @action
-  async loadActualHours(batchId) {
-    const url = `/api/v1/batches/${batchId}/tasks/actual_hours`
+  async loadIssues(batchId) {
+    const url = `/api/v1/batches/${batchId}/tasks/load_issues`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
         this.tasks = this.tasks.map(s => {
           let a = response.data.find(e => e.task_id === s.id)
           if (a) {
-            s.actual_hours = a.actual_hours
+            s.issues = a.issues
           }
           return s
         })

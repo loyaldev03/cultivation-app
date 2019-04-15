@@ -10,7 +10,7 @@ import {
 import SidebarStore from '../stores/SidebarStore'
 import MovingStore from '../stores/MovingStore'
 import PlantTagList from './PlantTagList'
-
+import dailyTasksStore from '../stores/DailyTasksStore'
 @observer
 class MovingIntoTrayForm extends React.Component {
   componentDidUpdate(prevProps) {
@@ -145,6 +145,11 @@ const ExpandableRow = forwardRef(
           destination_type: 'Tray',
           plants: newPlants
         })
+        dailyTasksStore.updateTaskWorkIndelibleDone(
+          batchId,
+          taskId,
+          MovingStore.taskCompleted
+        )
       }
     }
     const onDeleteScan = async plant_code => {

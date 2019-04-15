@@ -20,8 +20,8 @@ module Constants
   INDELIBLE_MOVING_NEXT_PHASE = 'moving_to_next_phase'.freeze
   INDELIBLE_STAYING = 'staying'.freeze
 
-  WORK_STATUS_START = 'start'.freeze
-  WORK_STATUS_STOP = 'stop'.freeze
+  WORK_STATUS_STARTED = 'started'.freeze
+  WORK_STATUS_STOPPED = 'stopped'.freeze
   WORK_STATUS_STUCK = 'stuck'.freeze
   WORK_STATUS_DONE = 'done'.freeze
 

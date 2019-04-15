@@ -2,6 +2,7 @@ import React from 'react'
 import {
   wbsWidth,
   taskWidth,
+  estimatedHoursWidth,
   locationWidth,
   btnWidth,
   statusWidth
@@ -22,37 +23,47 @@ class TaskRow extends React.Component {
   }
 
   onToggleStart = event => {
-    if (this.state.work_status !== 'done') {
-      const default_status = ['stopped', 'stuck', 'done', 'not_started']
-      if (default_status.includes(this.state.work_status)) {
-        let status_before = this.state.work_status
-        DailyTaskStore.updateTimeLog('start', this.props.id)
-        this.setState({ work_status: 'started' })
+    if (this.props.work_status !== 'done') {
+      const default_status = ['stopped', 'stuck', 'done', 'new']
+      if (default_status.includes(this.props.work_status)) {
+        let status_before = this.props.work_status
+        DailyTaskStore.updateTimeLog(
+          'started',
+          this.props.id,
+          this.props.batch_id
+        )
         if (status_before == 'stuck') {
           toast('Removed stuck status.', 'success')
         } else {
           toast('Start time recorded', 'success')
         }
       } else {
-        DailyTaskStore.updateTimeLog('stop', this.props.id)
-        this.setState({ work_status: 'stopped' })
+        DailyTaskStore.updateTimeLog(
+          'stopped',
+          this.props.id,
+          this.props.batch_id
+        )
         toast('End time recorded', 'success')
       }
     }
   }
 
   onClickStatus = action => {
-    if (this.state.work_status !== 'done') {
+    if (this.props.work_status !== 'done') {
       if (action === 'done') {
         if (
           window.confirm('Are you sure you want to change status to done ?')
         ) {
-          DailyTaskStore.updateTimeLog(action, this.props.id)
+          DailyTaskStore.updateTimeLog(
+            action,
+            this.props.id,
+            this.props.batch_id
+          )
           this.setState({ work_status: action })
           toast('Status changed to done', 'success')
         }
       } else {
-        DailyTaskStore.updateTimeLog(action, this.props.id)
+        DailyTaskStore.updateTimeLog(action, this.props.id, this.props.batch_id)
         this.setState({ work_status: action })
         toast('Supervisor is notified.', 'success')
       }
@@ -75,7 +86,14 @@ class TaskRow extends React.Component {
   }
 
   render() {
-    const { wbs, name, location_name, location_type, issues } = this.props
+    const {
+      wbs,
+      name,
+      location_name,
+      location_type,
+      issues,
+      estimated_hours
+    } = this.props
 
     return (
       <div className="bb b--black-05">
@@ -107,6 +125,13 @@ class TaskRow extends React.Component {
           </div>
 
           <div
+            className="flex items-center justify-center pa2 tc"
+            style={estimatedHoursWidth}
+          >
+            <span className="f6 tc">{estimated_hours}</span>
+          </div>
+
+          <div
             className="flex items-center justify-start pa2"
             style={locationWidth}
           >
@@ -119,13 +144,13 @@ class TaskRow extends React.Component {
             <span
               className={classNames(
                 'mr1 material-icons pointer pa2',
-                { orange: this.state.work_status !== 'done' },
-                { grey: this.state.work_status === 'done' }
+                { orange: this.props.work_status !== 'done' },
+                { grey: this.props.work_status === 'done' }
               )}
               style={{ fontSize: '20px' }}
               onClick={this.onToggleStart}
             >
-              {this.state.work_status === 'started' ? 'pause' : 'play_arrow'}
+              {this.props.work_status === 'started' ? 'pause' : 'play_arrow'}
             </span>
           </div>
 
@@ -134,7 +159,7 @@ class TaskRow extends React.Component {
             style={statusWidth}
           >
             <span className="f6 black-30 ttc">
-              {this.state.work_status.replace(/[_]/g, ' ')}
+              {this.props.work_status.replace(/[_]/g, ' ')}
             </span>
           </div>
         </div>
@@ -143,6 +168,7 @@ class TaskRow extends React.Component {
             {...this.props}
             onToggleAddIssue={this.props.onToggleAddIssue}
             onClickStatus={this.onClickStatus}
+            work_status={this.props.work_status}
           />
         )}
       </div>

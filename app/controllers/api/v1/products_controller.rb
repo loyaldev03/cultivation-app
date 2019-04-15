@@ -65,12 +65,12 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     valid_categories =
       Inventory::Catalogue.raw_materials.where(
         category: {'$nin': [
-          Constants::NUTRIENTS_KEY,
           Constants::SUPPLEMENTS_KEY,
         ]},
       ).
         where(
         key: {'$nin': [
+          Constants::NUTRIENTS_KEY,
           Constants::SEEDS_KEY,
           Constants::PURCHASED_CLONES_KEY,
         ]},

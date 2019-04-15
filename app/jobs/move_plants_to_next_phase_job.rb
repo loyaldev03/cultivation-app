@@ -17,16 +17,15 @@ class MovePlantsToNextPhaseJob < ApplicationJob
               cultivation_batch_id: batch.id,
               plant_id: plant_tag,
               plant_tag: plant_tag,
-              created_by_id: his.user_id,
-              planting_date: Time.zone.now,
+              planting_date: Time.current,
               mother_id: his.mother_plant_id,
               facility_strain_id: batch.facility_strain_id,
+              created_by_id: his.user_id,
               modifier_id: his.user_id,
             )
           end
         end
       end
-
       # Moving into trays
       histories.where(activity: Constants::INDELIBLE_MOVING_TO_TRAY).each do |his|
         his.plants.each do |plant_tag|
@@ -41,10 +40,12 @@ class MovePlantsToNextPhaseJob < ApplicationJob
         end
       end
     else
-      histories.where(
+      # Moving into next phase
+      records = histories.where(
         activity: Constants::INDELIBLE_MOVING_NEXT_PHASE,
         phase: batch.current_growth_stage,
-      ).each do |his|
+      )
+      records.each do |his|
         his.plants.each do |plant_tag|
           plant = existing_plants.detect { |x| x.plant_tag == plant_tag }
           if plant.present?

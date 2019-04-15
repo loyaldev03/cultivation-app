@@ -18,6 +18,8 @@ module Cultivation
     # Draft - Draft batch should not trigger validation
     # Scheduled, Active - Take up spaces in Tray Plan
     field :status, type: String, default: Constants::BATCH_STATUS_DRAFT
+    field :actual_cost, type: Float, default: -> { 0 }
+    field :actual_hours, type: Float, default: -> { 0 }
 
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     belongs_to :facility, class_name: 'Facility'

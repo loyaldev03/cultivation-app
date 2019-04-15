@@ -38,7 +38,9 @@ class BatchHeader extends React.PureComponent {
       total_estimated_cost,
       total_estimated_hour,
       estimated_harvest_date,
-      current_growth_stage
+      current_growth_stage,
+      actual_hours,
+      actual_cost
     } = this.props
     const { name } = this.state
     const batchQuantity = quantity ? quantity : 0
@@ -187,7 +189,7 @@ class BatchHeader extends React.PureComponent {
                     </div>
                     <div className="w-50">
                       <div className="tr">
-                        <label>--</label>
+                        <label>${actual_cost}</label>
                       </div>
                     </div>
                   </div>
@@ -198,7 +200,7 @@ class BatchHeader extends React.PureComponent {
                     </div>
                     <div className="w-50">
                       <div className="tr">
-                        <label>--</label>
+                        <label>{actual_hours}</label>
                       </div>
                     </div>
                   </div>

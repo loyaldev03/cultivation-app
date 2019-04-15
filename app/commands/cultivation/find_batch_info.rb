@@ -40,6 +40,8 @@ module Cultivation
         total_estimated_cost: total_estimated_cost,
         materials: @batch.material_summary,
         cultivation_phases: @batch&.facility&.growth_stages,
+        actual_cost: @batch.actual_cost,
+        actual_hours: @batch.actual_hours,
         status: @batch.status,
       }
 

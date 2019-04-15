@@ -20,6 +20,7 @@ module Cultivation
         Time.use_zone(batch.facility.timezone) do
           update_status(batch)
           update_current_growth_stage(batch)
+          update_plants_current_growth_stage(batch)
         end
       end
     end

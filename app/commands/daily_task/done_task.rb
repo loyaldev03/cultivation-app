@@ -14,8 +14,9 @@ module DailyTask
         last_time_log = task.time_logs.find_by(end_time: nil)
         last_time_log&.stop!
         task.update(work_status: Constants::WORK_STATUS_DONE)
-        CalculateTotalActualCostJob.perform_now(task.id.to_s)
+        CalculateTotalActualCostJob.perform_later(task.id.to_s)
         MovePlantsToNextPhaseJob.perform_later(task.batch_id.to_s)
+        CalculateTotalActualCostBatchJob.perform_later(@task.batch_id.to_s)
         task
       end
     rescue StandardError

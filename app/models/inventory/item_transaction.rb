@@ -37,7 +37,7 @@ module Inventory
 
     field :created_by, type: BSON::ObjectId #whodunnit
 
-    belongs_to :facility
+    belongs_to :facility, class_name: 'Facility'
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true
     belongs_to :catalogue, class_name: 'Inventory::Catalogue'
 

@@ -127,7 +127,6 @@ class HarvestbatchSetupApp extends React.Component {
         </div>
         <HarvestBatchEditor
           cultivation_batches={this.props.cultivation_batches}
-          locations={this.props.locations}
           uoms={this.props.uoms}
           facility_id={this.props.facility_id}
         />

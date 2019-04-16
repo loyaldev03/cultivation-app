@@ -4,8 +4,7 @@ import Select from 'react-select'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { PurchaseInfo, InputBarcode } from '../../../utils'
-import LocationPicker from '../../../utils/LocationPicker2'
+import { LocationPicker, PurchaseInfo, InputBarcode } from '../../../utils'
 import { saveNonSalesItem } from '../actions/saveNonSalesItem'
 import { getNonSalesItem } from '../actions/getNonSalesItem'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
@@ -338,8 +337,12 @@ class NonSalesItemEditor extends React.Component {
     })
   }
 
+  onLocationChanged = event => {
+    this.setState({ location_id: event.location_id })
+  }
+
   render() {
-    const { locations, catalogues } = this.props
+    const { catalogues } = this.props
     const catalogueOptions = catalogues.result.map(x => ({
       value: x.value,
       label: x.label,
@@ -567,11 +570,10 @@ class NonSalesItemEditor extends React.Component {
                 Where are they stored?
               </label>
               <LocationPicker
-                mode="storage"
-                locations={locations}
+                purpose="storage"
                 facility_id={this.props.facility_id}
-                onChange={x => this.setState({ location_id: x.rm_id })}
                 location_id={this.state.location_id}
+                onChange={this.onLocationChanged}
               />
               <FieldError errors={this.state.errors} field="location_id" />
             </div>

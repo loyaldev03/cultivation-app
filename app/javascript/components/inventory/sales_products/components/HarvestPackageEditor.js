@@ -10,8 +10,7 @@ import {
   CalendarPicker
 } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import LocationPicker from '../../../utils/LocationPicker2'
-import { formatDate } from '../../../utils'
+import { LocationPicker, formatDate } from '../../../utils'
 import setupHarvestPackage from '../actions/setupHarvestPackage'
 import getHarvestPackage from '../actions/getHarvestPackage'
 
@@ -201,7 +200,10 @@ class HarvestPackageEditor extends React.Component {
   onChangeUom = uom => this.setState({ uom })
   onChangeProductionDate = production_date => this.setState({ production_date })
   onChangeExpirationDate = expiration_date => this.setState({ expiration_date })
-  onRoomChanged = item => this.setState({ location_id: item.rm_id })
+  onLocationChanged = event => {
+    this.setState({ location_id: event.location_id })
+  }
+
   onHarvestBatchChanged = harvest_batch => {
     if (harvest_batch && harvest_batch.__isNew__) {
       this.setState({
@@ -367,7 +369,6 @@ class HarvestPackageEditor extends React.Component {
 
   render() {
     const {
-      locations,
       harvest_batches,
       facility_strains,
       sales_catalogue
@@ -571,11 +572,10 @@ class HarvestPackageEditor extends React.Component {
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <LocationPicker
-                mode="storage"
-                onChange={this.onRoomChanged}
-                locations={locations}
+                purpose="storage"
                 facility_id={this.props.facility_id}
                 location_id={this.state.location_id}
+                onChange={this.onLocationChanged}
               />
               <FieldError errors={this.state.errors} field="location_id" />
             </div>
@@ -666,7 +666,6 @@ class HarvestPackageEditor extends React.Component {
 }
 
 HarvestPackageEditor.propTypes = {
-  locations: PropTypes.array.isRequired,
   drawdown_uoms: PropTypes.array.isRequired,
   harvest_batches: PropTypes.array.isRequired,
   sales_catalogue: PropTypes.array.isRequired

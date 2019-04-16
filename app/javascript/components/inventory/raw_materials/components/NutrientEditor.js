@@ -441,7 +441,7 @@ class NutrientEditor extends React.Component {
   }
 
   render() {
-    const { facility_id, catalogue_id, locations } = this.props
+    const { facility_id, catalogue_id } = this.props
     const {
       attachments,
       nutrients_elements,
@@ -810,7 +810,6 @@ class NutrientEditor extends React.Component {
 }
 
 NutrientEditor.propTypes = {
-  locations: PropTypes.array.isRequired,
   order_uoms: PropTypes.array.isRequired
 }
 

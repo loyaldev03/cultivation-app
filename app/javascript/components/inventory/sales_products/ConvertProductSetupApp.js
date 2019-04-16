@@ -123,7 +123,6 @@ class ConvertProductSetupApp extends React.Component {
           className="f6"
         />
         <ConvertProductEditor
-          locations={this.props.locations}
           sales_catalogue={this.props.sales_catalogue}
           breakdown_uoms={this.props.breakdown_uoms}
           scanditLicense={this.props.scanditLicense}
@@ -135,7 +134,6 @@ class ConvertProductSetupApp extends React.Component {
 }
 
 ConvertProductSetupApp.propTypes = {
-  locations: PropTypes.array.isRequired,
   sales_catalogue: PropTypes.array.isRequired,
   breakdown_uoms: PropTypes.array.isRequired,
   scanditLicense: PropTypes.string.isRequired

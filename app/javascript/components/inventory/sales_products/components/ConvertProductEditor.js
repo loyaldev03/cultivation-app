@@ -9,8 +9,7 @@ import {
   CalendarPicker
 } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { InputBarcode } from '../../../utils'
-import LocationPicker from '../../../utils/LocationPicker2'
+import { LocationPicker, InputBarcode } from '../../../utils'
 import { launchBarcodeScanner } from '../../../utils/BarcodeScanner'
 import setupConvertedProduct from '../actions/setupConvertedProduct'
 import getConvertedProduct from '../actions/getConvertedProduct'
@@ -150,7 +149,9 @@ class ConvertProductEditor extends React.Component {
 
   onCatalogueSelected = item => this.setState({ catalogue: item })
   onFacilityChanged = item => this.setState({ facility_id: item.f_id })
-  onRoomChanged = item => this.setState({ location_id: item.rm_id })
+  onLocationChanged = event => {
+    this.setState({ location_id: event.location_id })
+  }
   onToggleIsMultiPackage = () => {
     this.setState({ isMultiPackage: !this.state.isMultiPackage })
   }
@@ -508,7 +509,7 @@ class ConvertProductEditor extends React.Component {
   }
 
   render() {
-    const { locations, sales_catalogue } = this.props
+    const { sales_catalogue } = this.props
     const uoms = this.state.catalogue
       ? this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
       : []
@@ -685,12 +686,10 @@ class ConvertProductEditor extends React.Component {
           <div className="ph4 mb3 flex">
             <div className="w-100">
               <LocationPicker
-                key={this.props.facility_id}
-                mode="sales"
-                onChange={this.onRoomChanged}
-                locations={locations}
+                purpose="vault"
                 facility_id={this.props.facility_id}
                 location_id={this.state.location_id}
+                onChange={this.onLocationChanged}
               />
               <FieldError errors={this.state.errors} field="location_id" />
             </div>

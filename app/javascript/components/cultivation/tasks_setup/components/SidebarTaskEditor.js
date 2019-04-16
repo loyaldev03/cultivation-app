@@ -1,8 +1,11 @@
 import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import { loadTaskLocations, LocationSelector } from '../../../utils'
+import {
+  loadTaskLocations,
+  LocationPicker,
+  LocationSelector
+} from '../../../utils'
 import { TextInput, NumericInput } from '../../../utils/FormHelpers'
-import LocationPicker from '../../../utils/LocationPicker2'
 import MotherPlantsEditor from './MotherPlantsEditor'
 import { addDays, differenceInCalendarDays } from 'date-fns'
 
@@ -15,11 +18,11 @@ const GET_DEFAULT_STATE = (start_date = null) => {
     start_date: today,
     end_date: tomorrow,
     duration: 1,
+    phase: '',
     estimated_hours: 0.0,
     indelible: '',
     haveChildren: false,
     taskLocation: {},
-    locationOptions: []
   }
 }
 
@@ -28,22 +31,17 @@ class SidebarTaskEditor extends React.Component {
 
   setEditingTask = async (task, start_date) => {
     if (task) {
-      const locationOptions = await loadTaskLocations(
-        this.props.batchId,
-        task.id
-      )
-      const taskLocation = locationOptions.find(x => x.id === task.location_id)
       this.setState({
         id: task.id,
         name: task.name,
         start_date: task.start_date,
         end_date: task.end_date,
         duration: task.duration,
+        phase: task.phase,
         estimated_hours: task.estimated_hours || '',
         indelible: task.indelible,
         haveChildren: task.haveChildren,
-        taskLocation: taskLocation || {},
-        locationOptions
+        location_id: task.location_id || '',
       })
     } else {
       this.setState({ ...GET_DEFAULT_STATE(start_date) })
@@ -58,7 +56,7 @@ class SidebarTaskEditor extends React.Component {
       end_date,
       duration,
       estimated_hours,
-      taskLocation
+      location_id,
     } = this.state
     return {
       id,
@@ -67,8 +65,7 @@ class SidebarTaskEditor extends React.Component {
       end_date,
       duration,
       estimated_hours,
-      location_id: taskLocation.id,
-      location_type: taskLocation.location_type
+      location_id: location_id,
     }
   }
 
@@ -106,25 +103,24 @@ class SidebarTaskEditor extends React.Component {
     }
   }
 
-  handleChangeLocation = location => {
-    this.setState({
-      taskLocation: location
-    })
+  handleChangeLocation = event => {
+    this.setState({ location_id: event.location_id })
   }
 
   render() {
     const { batchId, facilityStrainId, facilityId } = this.props
     const {
+      id,
       name,
       start_date,
       end_date,
       duration,
+      phase,
       estimated_hours,
       indelible,
       actual_hours,
       haveChildren,
-      taskLocation,
-      locationOptions,
+      location_id,
       errors
     } = this.state
     return (
@@ -194,10 +190,11 @@ class SidebarTaskEditor extends React.Component {
         {indelible !== 'clip_mother_plant' && !haveChildren && (
           <div className="ph4 mb3 flex flex-column">
             <label className="f6 fw6 db mb1 gray ttc">Location</label>
-            <LocationSelector
-              locationOptions={locationOptions}
-              value={taskLocation}
-              onChange={value => this.handleChangeLocation(value)}
+            <LocationPicker
+              purpose={phase}
+              facility_id={facilityId}
+              location_id={location_id}
+              onChange={this.handleChangeLocation}
             />
           </div>
         )}

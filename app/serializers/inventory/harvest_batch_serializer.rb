@@ -14,23 +14,21 @@ module Inventory
     end
 
     attribute :harvest_date do |object|
-      object.harvest_date.iso8601
+      object.harvest_date&.iso8601
     end
 
     attribute :strain_name do |object|
       object.facility_strain.strain_name
     end
 
+    # TODO: should be removed
     attribute :location do |object|
+      facility = Facility.find(object.facility_strain.facility_id)
       Tray.in(id: object.plants.pluck(:location_id)).pluck(:code).uniq.join(', ')
     end
 
     attribute :location_id do |object|
-      if object.plants.empty?
-        nil
-      else
-        object.plants.first.location_id.to_s
-      end
+      object.location_id&.to_s
     end
 
     attribute :plant_count do |object|

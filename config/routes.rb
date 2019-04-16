@@ -207,6 +207,7 @@ Rails.application.routes.draw do
 
       resources :batches, only: [:index, :create] do
         get 'batch_info'
+        get 'harvest_batch'
         get 'list_infos', on: :collection
         get 'search_locations', on: :collection
         get 'plants_movement_history', on: :collection
@@ -216,6 +217,7 @@ Rails.application.routes.draw do
         post 'update_locations'
         post 'update_batch'
         post 'update_batch_info'
+        post 'save_harvest_batch'
         post 'destroy', on: :collection
 
         resources :tasks, only: [:index, :update, :create, :destroy] do

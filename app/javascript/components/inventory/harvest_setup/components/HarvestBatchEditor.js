@@ -111,6 +111,7 @@ export default class HarvestBatchEditor extends React.Component {
   }
 
   onLocationChanged = event => {
+    // TODO: need to change to harvest room
     this.setState({ location_id: event.t_id })
   }
 

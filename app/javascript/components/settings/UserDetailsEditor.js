@@ -54,6 +54,10 @@ class UserDetailsEditor extends React.PureComponent {
         )
       }
       let user_mode
+      props.user.user_mode = props.user.user_mode
+        ? props.user.user_mode
+        : 'worker'
+
       if (props.user.user_mode) {
         user_mode = {
           label:
@@ -62,7 +66,6 @@ class UserDetailsEditor extends React.PureComponent {
           value: props.user.user_mode
         }
       }
-
       this.state = {
         tabs: 'General',
         userId: props.user.id,

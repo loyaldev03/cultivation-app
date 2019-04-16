@@ -8,7 +8,8 @@ module Common
                :email,
                :overtime_hourly_rate,
                :hourly_rate,
-               :photo_data
+               :photo_data,
+               :user_mode
 
     attribute :default_facility_id do |object|
       object.default_facility_id.to_s

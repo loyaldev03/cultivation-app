@@ -24,6 +24,7 @@ class SaveUser
       user.is_active = args[:is_active]
       user.hourly_rate = args[:hourly_rate]
       user.overtime_hourly_rate = args[:overtime_hourly_rate]
+      user.user_mode = args[:user_mode]
       user.default_facility_id = if args[:default_facility_id]
                                    args[:default_facility_id].to_bson_id
                                  end

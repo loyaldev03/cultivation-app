@@ -149,7 +149,6 @@ class RawMaterialSetupApp extends React.Component {
       <React.Fragment>
         {this.renderList()}
         <RawMaterialEditor
-          locations={this.props.locations}
           order_uoms={this.props.order_uoms}
           raw_material_type={this.props.raw_material_type}
           catalogues={this.props.catalogues}

@@ -1,7 +1,7 @@
 class CalculateTotalActualCostJob < ApplicationJob
   queue_as :default
 
-  def perform(task_id)
+  def perform(task_id) # use for calculating total actual cost and hour for tasks
     @task = Cultivation::Task.find(task_id)
     sum_cost = 0.0
     sum_minutes = 0.0

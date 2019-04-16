@@ -80,7 +80,7 @@ class FacilitySetupController < ApplicationController
     form_object = FacilityWizardForm::UpdateRoomInfoForm.new
 
     # LOGIC#0001 - No rows setup for Trim and Storage room
-    if %w(trim storage harvest).include?(room_info_params[:purpose])
+    if Constants::ROOM_ONLY_SETUP.include?(room_info_params[:purpose])
       is_continue = false
     end
 

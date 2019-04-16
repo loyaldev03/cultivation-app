@@ -145,7 +145,6 @@ class PurchasedClonesSetupApp extends React.Component {
         {this.renderList()}
         <PurchasedCloneEditor
           facility_strains={this.props.facility_strains}
-          locations={this.props.locations}
           order_uoms={this.props.order_uoms}
           uoms={this.props.uoms}
           facility_id={this.props.facility_id}

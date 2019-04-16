@@ -1,7 +1,6 @@
 class Inventory::PlantsController < ApplicationController
   before_action :load_facility_strains, only: [:mothers, :cultivation_batches]
   before_action :load_batches, only: [:clones, :vegs, :flowers, :harvest_batches]
-  before_action :load_locations
   before_action :load_scandit_licence, except: [:cultivation_batches]
 
   def index
@@ -41,10 +40,6 @@ class Inventory::PlantsController < ApplicationController
 
   def load_facility_strains
     @facility_strains = Inventory::QueryFacilityStrains.call(params[:facility_id]).result
-  end
-
-  def load_locations
-    @locations = QueryAllValidFacilityLocations.call(facility_id: params[:facility_id]).result
   end
 
   def load_scandit_licence

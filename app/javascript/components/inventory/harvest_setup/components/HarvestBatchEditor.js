@@ -3,8 +3,7 @@ import Select from 'react-select'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
-import LocationPicker from '../../../utils/LocationPicker2'
-import { PurchaseInfo, formatDate } from '../../../utils'
+import { LocationPicker, PurchaseInfo, formatDate } from '../../../utils'
 import setupHarvestBatch from '../actions/setupHarvestBatch'
 import getHarvestBatch from '../actions/getHarvestBatch'
 
@@ -111,8 +110,7 @@ export default class HarvestBatchEditor extends React.Component {
   }
 
   onLocationChanged = event => {
-    // TODO: need to change to harvest room
-    this.setState({ location_id: event.t_id })
+    this.setState({ location_id: event.location_id })
   }
 
   onAddPlant = event => {
@@ -401,7 +399,6 @@ export default class HarvestBatchEditor extends React.Component {
   }
 
   render() {
-    const { locations } = this.props
     const { plants, cultivation_batch, plant_uom } = this.state
     let facility_id = '',
       facility_strain_id = ''
@@ -532,10 +529,8 @@ export default class HarvestBatchEditor extends React.Component {
           <div className="ph4 mt3 mb3 flex flex-column">
             <div className="w-100">
               <LocationPicker
-                key={facility_strain_id}
-                mode="dry"
+                purpose="dry"
                 facility_id={this.props.facility_id}
-                locations={locations}
                 location_id={this.state.location_id}
                 onChange={this.onLocationChanged}
               />

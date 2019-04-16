@@ -41,8 +41,6 @@ class PlantEditor extends React.Component {
         .map(x => ({ id: x.id, ...x.attributes }))
     }
 
-    this.locations = this.props.locations.filter(x => x.t_id.length > 0)
-
     // Converting to callback ref because purchase info editor is hidding and showing.
     // This will cause the standard way to set ref to be broken / undefined.
     this.purchaseInfoEditor = null
@@ -700,7 +698,6 @@ class PlantEditor extends React.Component {
 
 PlantEditor.propTypes = {
   cultivation_batches: PropTypes.array.isRequired,
-  locations: PropTypes.array.isRequired,
   growth_stage: PropTypes.string.isRequired,
   scanditLicense: PropTypes.string.isRequired
 }

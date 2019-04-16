@@ -15,9 +15,9 @@ module Inventory
     field :status, type: String        # { draft, approved, completed, canceled }
     field :completed_date, type: DateTime      # When PO is fully delivered, the completed date is added.
 
-    belongs_to :facility
+    belongs_to :facility, class_name: 'Facility'
     belongs_to :vendor, class_name: 'Inventory::Vendor'
-    has_many :items, class_name: 'Inventory::PurchaseOrderItem', dependent: :delete
+    has_many :items, class_name: 'Inventory::PurchaseOrderItem', dependent: :delete_all
 
     validates_uniqueness_of :purchase_order_no, scope: :vendor
 

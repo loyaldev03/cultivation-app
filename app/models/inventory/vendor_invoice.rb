@@ -13,7 +13,7 @@ module Inventory
     field :status, type: String          # {draft, submitted, paid, inventory_setup}
     field :terms_in_days, type: Integer, default: 0
 
-    belongs_to :facility
+    belongs_to :facility, class_name: 'Facility'
     belongs_to :vendor, class_name: 'Inventory::Vendor'
     belongs_to :purchase_order, class_name: 'Inventory::PurchaseOrder'
     has_many :items, class_name: 'Inventory::VendorInvoiceItem', dependent: :destroy

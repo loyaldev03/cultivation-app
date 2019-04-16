@@ -1,8 +1,12 @@
 import React from 'react'
 import * as d3 from 'd3'
-
 class Sunburst extends React.Component {
   componentDidMount() {
+    let div = d3
+      .select('html')
+      .append('div')
+      .attr('class', 'tooltipSunburst')
+      .style('opacity', 0)
     let g = d3
       .select('svg') // <-- 1
       .attr('width', this.props.width) // <-- 2
@@ -16,7 +20,10 @@ class Sunburst extends React.Component {
     let partition = d3
       .partition() // <-- 1
       .size([2 * Math.PI, this.getRadius(this.props.width, this.props.height)])
-    const levels = ['section_code', 'row_code', 'shelf_code'],
+
+    let levels = this.props.data[0].section_code
+        ? ['section_code', 'row_code', 'shelf_code']
+        : ['row_code', 'shelf_code'],
       structurizedData = this.flatToHierarchy(
         this.props.data,
         levels,
@@ -44,7 +51,7 @@ class Sunburst extends React.Component {
       .outerRadius(function(d) {
         return d.y1
       })
-
+    let that = this
     g.selectAll('g')
       .data(root.descendants())
       .enter()
@@ -57,40 +64,56 @@ class Sunburst extends React.Component {
       .attr('d', arc)
       .style('stroke', '#fff')
       .on('mouseover', function(d) {
+        div.style('opacity', 0.9)
+        div
+          .html(d.data.name + '<br/>')
+          .style('left', d3.event.pageX + 'px')
+          .style('top', d3.event.pageY - 28 + 'px')
+
         d3.select(this).style('cursor', 'pointer')
 
-        d3.selectAll('path')
-          .filter(function(node) {
-            return d.descendants().indexOf(node) >= 0
-          })
-          .style('fill', function(d) {
-            return d.parent ? '#FF7F30' : '#fff'
-          })
+        // d3.selectAll('path')
+        //   .filter(function(node) {
+        //     return d.descendants().indexOf(node) >= 0
+        //   })
+        //   .style('fill', function(d) {
+        //     return d.parent ? '#F66830' : '#fff'
+        //   })
       })
       .on('mouseout', function(d) {
         //   return d3.color(d.depth ? "#d3d3d3" : "#fff");
+        div.style('opacity', 0)
+        // d3.selectAll('path').style('fill', function(d) {
+        //   // if(d && d.data.name === "S02 T01")
+        //   //   return "url(#diagonalHatch)"
 
-        d3.selectAll('path').style('fill', function(d) {
-          // if(d && d.data.name === "S02 T01")
-          //   return "url(#diagonalHatch)"
-
-          return d3.color(d && d.depth ? '#C7C7C7' : '#fff')
-        })
+        //   return d3.color(d && d.depth ? '#C7C7C7' : '#fff')
+        // })
       })
       .on('click', function(d) {
-        console.log(d)
-        d3.selectAll('path').filter(function(node) {
-          return d.descendants().indexOf(node) >= 0
-        })
+        that.props.onAddTray(d.data)
+        that.props.onChoosen(d.data, d.data.hierarchy)
+        that.props.onClearTray()
+        let child = d.descendants()
+        let parent = d.parent ? d.parent.descendants() : []
+        d3.selectAll('path')
+          .filter(node => node)
+          .style('fill', function(d) {
+            let color = d3.color(parent.indexOf(d) >= 0 ? '#ffa36a' : '#C7C7C7')
+            if (child.indexOf(d) >= 0) {
+              color = d3.color('#ff7f30')
+            }
+            if (d.parent) {
+              return color
+            } else {
+              return d3.color('#fff')
+            }
+          })
       })
       .style('fill', function(d) {
-        // if(d && d.data.name === "S01 T01")
-        //   return "url(#diagonalHatch)"
-
         return d3.color(d.depth ? '#C7C7C7' : '#fff')
       })
 
-    let that = this
     g.selectAll('.node') // <-- 1
       .append('text') // <-- 2
       .attr('font-weight', 'bold')
@@ -104,18 +127,19 @@ class Sunburst extends React.Component {
         )
       }) // <-- 3
       .attr('dx', function(d) {
-        return d.parent ? '-20' : '-10'
+        return d.parent ? '' : ''
       }) // <-- 4
       .attr('dy', function(d) {
-        return d.parent ? '.5em' : '-1.5em'
+        return d.parent ? '' : '-15'
       })
       .style('pointer-events', 'none')
       .style('font-size', '0.8em')
+      .style('text-anchor', 'middle')
       .style('fill', function(d) {
         return d.parent ? '#FFF' : '#707A8B'
       }) // <-- 5
       .text(function(d) {
-        return d.data ? d.data.name : ''
+        return d.parent ? '' : d.data.name
       }) // <-- 6
   }
 
@@ -130,7 +154,12 @@ class Sunburst extends React.Component {
   }
   flatToHierarchy = (flatData, levels, nameField, countField) => {
     // Adapted from https://stackoverflow.com/a/19317823
-    let nestedData = { name: flatData[0].facility_code, children: [] }
+    let nestedData = {
+      name: flatData[0].room_name,
+      id: flatData[0].room_id,
+      code: 'room',
+      children: []
+    }
 
     // For each data row, loop through the expected levels traversing the output tree
     flatData.forEach(function(d) {
@@ -145,7 +174,25 @@ class Sunburst extends React.Component {
         })
         // Add a branch if it isn't there
         if (isNaN(index)) {
-          depthCursor.push({ name: d[property], children: [] })
+          let id = '',
+            hierarchy = ''
+          if (property === 'section_code') {
+            id = 'section_id'
+            hierarchy = 'section'
+          } else if (property === 'shelf_code') {
+            id = 'shelf_id'
+            hierarchy = 'shelf'
+          } else {
+            id = 'row_id'
+            hierarchy = 'row'
+          }
+          depthCursor.push({
+            name: d[property],
+            id: d[id],
+            meta: d,
+            hierarchy,
+            children: []
+          })
           index = depthCursor.length - 1
         }
         // Reference the new child array as we go deeper into the tree
@@ -155,6 +202,8 @@ class Sunburst extends React.Component {
           depthCursor.push({
             name: d[nameField],
             count: +d[countField],
+
+            id: d['tray_id'],
             size: 1
           })
         }
@@ -179,7 +228,6 @@ class Sunburst extends React.Component {
       <svg
         style={{ width: this.props.width, height: this.props.height }}
         id={`sunburst`}
-        className="pt3"
       >
         <pattern
           id="diagonalHatch"

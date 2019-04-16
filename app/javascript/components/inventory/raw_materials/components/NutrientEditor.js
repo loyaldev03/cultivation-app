@@ -3,8 +3,12 @@ import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { PurchaseInfo, FileUploader, InputBarcode } from '../../../utils'
-import LocationPicker from '../../../utils/LocationPicker2'
+import {
+  LocationPicker,
+  PurchaseInfo,
+  FileUploader,
+  InputBarcode
+} from '../../../utils'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
@@ -432,8 +436,12 @@ class NutrientEditor extends React.Component {
     })
   }
 
+  onLocationChanged = event => {
+    this.setState({ location_id: event.location_id })
+  }
+
   render() {
-    const { facility_id, catalogue_id, locations } = this.props
+    const { facility_id, catalogue_id } = this.props
     const {
       attachments,
       nutrients_elements,
@@ -777,12 +785,10 @@ class NutrientEditor extends React.Component {
                 Where are they stored?
               </label>
               <LocationPicker
-                key={facility_id}
-                mode="storage"
-                locations={locations}
+                purpose="storage"
                 facility_id={facility_id}
-                onChange={x => this.setState({ location_id: x.rm_id })}
                 location_id={this.state.location_id}
+                onChange={this.onLocationChanged}
               />
               <FieldError errors={this.state.errors} field="location_id" />
             </div>
@@ -804,7 +810,6 @@ class NutrientEditor extends React.Component {
 }
 
 NutrientEditor.propTypes = {
-  locations: PropTypes.array.isRequired,
   order_uoms: PropTypes.array.isRequired
 }
 

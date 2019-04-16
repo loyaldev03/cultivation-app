@@ -18,12 +18,14 @@ module Cultivation
     # Draft - Draft batch should not trigger validation
     # Scheduled, Active - Take up spaces in Tray Plan
     field :status, type: String, default: Constants::BATCH_STATUS_DRAFT
+    field :actual_cost, type: Float, default: -> { 0 }
+    field :actual_hours, type: Float, default: -> { 0 }
 
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     belongs_to :facility, class_name: 'Facility'
-    has_many :tray_plans, class_name: 'Cultivation::TrayPlan', dependent: :delete
-    has_many :tasks, class_name: 'Cultivation::Task', dependent: :delete
-    has_many :plants, class_name: 'Inventory::Plant', dependent: :delete
+    has_many :tray_plans, class_name: 'Cultivation::TrayPlan', dependent: :delete_all
+    has_many :tasks, class_name: 'Cultivation::Task', dependent: :delete_all
+    has_many :plants, class_name: 'Inventory::Plant', dependent: :delete_all
     has_one :nutrient_profile, class_name: 'Cultivation::NutrientProfile'
 
     scope :active, -> { where(status: Constants::BATCH_STATUS_ACTIVE) }

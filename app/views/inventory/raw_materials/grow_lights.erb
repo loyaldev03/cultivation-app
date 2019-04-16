@@ -12,7 +12,6 @@
   <%= render partial: 'setupNavigation', locals: { selected: Constants::GROW_LIGHT_KEY } %>
   <div class="flex flex-column">
     <%= react_component('inventory/raw_materials/RawMaterialSetupApp', { 
-      locations: @locations, 
       order_uoms: @order_uoms, 
       uoms: @uoms,
       raw_material_type:  Constants::GROW_LIGHT_KEY, 
@@ -21,7 +20,7 @@
       scanditLicense: @scanditLicense
       })
     %>
-   
+
     <div class="w-100 bg-white ph3 pt2 pb4">
       <div class="dim flex flex-row items-center pointer">
         <i class="material-icons md-light-gray">keyboard_arrow_left</i>

@@ -13,7 +13,6 @@
   <div class="flex flex-column">
     <%= react_component('inventory/harvest_setup/HarvestBatchSetupApp', {
         cultivation_batches: @cultivation_batches,
-        locations: @locations,
         uoms: @uoms,
         facility_id: params[:facility_id]
       }) %>

@@ -50,7 +50,6 @@ class HarvestBatchForm extends React.Component {
     }
 
     event.preventDefault()
-
   }
 
   validateAndGetValues = () => {
@@ -59,17 +58,17 @@ class HarvestBatchForm extends React.Component {
     let errors = {}
 
     if (harvest_name.length <= 0) {
-      errors.harvest_name = ["Harvest batch name is required."]
+      errors.harvest_name = ['Harvest batch name is required.']
     }
-    
+
     if (location_id.length <= 0) {
-      errors.location_id = ["Harvest room is required."]
+      errors.location_id = ['Harvest room is required.']
     }
 
     if (uom.length <= 0) {
-      errors.uom = ["Uom is required."]
+      errors.uom = ['Uom is required.']
     }
-    const isValid = Object.getOwnPropertyNames(errors).length === 0 
+    const isValid = Object.getOwnPropertyNames(errors).length === 0
 
     if (!isValid) {
       this.setState({ errors })

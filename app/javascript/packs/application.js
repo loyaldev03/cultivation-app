@@ -7,6 +7,11 @@
 // To reference this file, add <%= javascript_pack_tag 'application' %> to the appropriate
 // layout file, like app/views/layouts/application.html.erb
 
+window.Rollbar = {
+  // To suppress error when calling Rollbar in Development
+  error: console.error
+}
+
 import '../stylesheets/main.scss'
 import { editorSidebarHandler } from '../components/utils/EditorSidebarHandler'
 

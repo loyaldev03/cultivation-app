@@ -20,13 +20,5 @@ module Inventory
 
     belongs_to :facility, class_name: 'Facility'
     belongs_to :created_by, class_name: 'User'
-
-    # has_many :cultivation_batches
-    # has_many :harvest_batches
-    # has_many :manicure_batches
-    # has_many :manicure_batches
-    # has_many :wastes
-    # has_many :plants
-    # has_many :destroyed_plants
   end
 end

@@ -77,10 +77,10 @@ gem 'country_select'
 gem 'simple_form'
 
 # Database
-gem 'mongoid', '~> 6.4.1'
+gem 'mongoid', '~> 7.0.2'
+gem 'mongoid-history'
 gem 'mongoid_orderable'
 gem 'mongoid_rails_migrations'
-gem 'mongoid-history'
 
 # Check for N+1
 gem 'bullet', group: 'development'
@@ -107,8 +107,9 @@ gem 'scout_apm'
 # Error tracking
 gem 'rollbar'
 
-# Api Serializer
+# Api
 gem 'fast_jsonapi'
+gem 'rest-client'
 
 # File attachment
 gem 'aws-sdk-s3', '~> 1.2'
@@ -119,5 +120,3 @@ gem 'shrine-mongoid'
 gem 'redis'
 gem 'sidekiq'
 gem 'sidekiq-cron'
-
-gem 'rest-client'

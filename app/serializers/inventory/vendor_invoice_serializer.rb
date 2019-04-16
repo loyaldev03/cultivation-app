@@ -1,7 +1,7 @@
 module Inventory
   class VendorInvoiceSerializer
     include FastJsonapi::ObjectSerializer
-    belongs_to :vendor
+    belongs_to :vendor, class_name: 'Inventory::Vendor'
 
     attributes :invoice_no,
       :total_amount,

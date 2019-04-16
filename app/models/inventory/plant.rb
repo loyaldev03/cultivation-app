@@ -10,10 +10,6 @@ module Inventory
     belongs_to :cultivation_batch, class_name: 'Cultivation::Batch', optional: true
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     belongs_to :harvest_batch, class_name: 'Inventory::HarvestBatch', optional: true
-
-    # belongs_to :manicure_batch,     class_name: 'Cultivation::ManicureBatch', optional: true
-    # has_many :item_histories
-
     belongs_to :vendor_invoice, class_name: 'Inventory::VendorInvoice', optional: true
 
     field :plant_id, type: String # e.g. MOT-AK47-001

@@ -31,11 +31,11 @@ module Cultivation
     #notes => Material used and waste in daily task should use ItemTransaction , use event_type for material_used or material_wasted
     belongs_to :batch, class_name: 'Cultivation::Batch'
 
-    has_many :time_logs, class_name: 'Cultivation::TimeLog', dependent: :delete
-    has_many :issues, class_name: 'Issues::Issue', dependent: :delete
-    has_many :movement_histories, class_name: 'Cultivation::PlantMovementHistory', dependent: :delete
+    has_many :time_logs, class_name: 'Cultivation::TimeLog', dependent: :delete_all
+    has_many :issues, class_name: 'Issues::Issue', dependent: :delete_all
+    has_many :movement_histories, class_name: 'Cultivation::PlantMovementHistory', dependent: :delete_all
 
-    has_and_belongs_to_many :users, inverse_of: nil
+    has_and_belongs_to_many :users, class_name: 'User', inverse_of: nil
 
     embeds_many :material_use, class_name: 'Cultivation::Item', cascade_callbacks: true
     embeds_many :add_nutrients, as: :nutrition, class_name: 'Inventory::Nutrient'

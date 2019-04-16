@@ -44,8 +44,6 @@ module Inventory
     belongs_to :cultivation_batch, class_name: 'Cultivation::Batch', optional: true
     belongs_to :harvest_batch, class_name: 'Inventory::HarvestBatch', optional: true
     belongs_to :product, class_name: 'Inventory::Product', optional: true
-    # TODO: Missing link to Cultivation::Batch
-    # TODO: Missing fields for standard amount and quantity
   end
 end
 

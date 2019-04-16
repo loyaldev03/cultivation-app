@@ -154,7 +154,10 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
         end
       end
     end
-    TaskDetailsSerializer.new(active_tasks).serializable_hash[:data]
+    TaskDetailsSerializer.new(
+      active_tasks,
+      params: {query: QueryLocations.call(batch.facility_id)},
+    ).serializable_hash[:data]
   end
 
   def batch_room_names(batch)

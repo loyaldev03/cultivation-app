@@ -51,20 +51,9 @@ class TaskDetailsSerializer
     end
   end
 
-  attributes :location_name do |object|
-    if !object.location_id
-      ''
-    elsif object.location_type == 'Room'
-      facility = Facility.find_by(:'rooms._id' => BSON::ObjectId(object.location_id))
-      room = facility.rooms.find(object.location_id)
-      room ? "#{facility.code}.#{room.code} - #{room.name}" : ''
-    elsif object.location_type == 'Tray'
-      tray = Tray.find_by(id: object.location_id)
-      facility = Facility.find_by(:'rooms.rows.shelves._id' => tray.shelf_id)
-      tray ? "#{facility.code}...#{tray.code}" : ''
-    elsif object.location_type == 'Facility'
-      facility = Facility.find(object.location_id)
-      facility.name
+  attribute :location_name do |object, params|
+    if params[:query] && object.location_id
+      params[:query].get_location_code(object.location_id)
     else
       ''
     end

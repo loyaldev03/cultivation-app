@@ -12,7 +12,6 @@
   <%= render partial: 'setupNavigation', locals: { selected: Constants::GROW_MEDIUM_KEY } %>
   <div class="flex flex-column">
     <%= react_component('inventory/raw_materials/RawMaterialSetupApp', { 
-      locations: @locations, 
       uoms: @uoms, 
       order_uoms: @order_uoms, 
       raw_material_type: Constants::GROW_MEDIUM_KEY, 

@@ -12,7 +12,6 @@
   <%= render partial: 'setupNavigation', locals: { selected: 'nutrients' } %>
   <div class="flex flex-column">
     <%= react_component('inventory/raw_materials/NutrientsSetupApp', {
-      locations: @locations,
       order_uoms: @order_uoms,
       catalogues: @catalogues,
       uoms: @uoms,

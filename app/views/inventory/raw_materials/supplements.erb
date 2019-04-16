@@ -12,7 +12,6 @@
   <%= render partial: 'setupNavigation', locals: { selected: Constants::SUPPLEMENTS_KEY } %>
   <div class="flex flex-column">
     <%= react_component('inventory/raw_materials/RawMaterialSetupApp', { 
-      locations: @locations, 
       order_uoms: @order_uoms, 
       uoms: @uoms, 
       raw_material_type: Constants::SUPPLEMENTS_KEY, 

@@ -4,8 +4,7 @@ import Select from 'react-select'
 // import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { PurchaseInfo, InputBarcode } from '../../../utils'
-import LocationPicker from '../../../utils/LocationPicker2'
+import {LocationPicker, PurchaseInfo, InputBarcode } from '../../../utils'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
@@ -359,8 +358,13 @@ class RawMaterialEditor extends React.Component {
     })
   }
 
+  onLocationChanged = event => {
+    this.setState({ location_id: event.location_id })
+  }
+
+
   render() {
-    const { locations, facility_id } = this.props
+    const { facility_id } = this.props
     const uoms = this.props.uoms.map(x => ({ value: x, label: x }))
     const order_uoms = this.props.order_uoms.map(x => ({ value: x, label: x }))
 
@@ -610,12 +614,10 @@ class RawMaterialEditor extends React.Component {
                 Where are they stored?
               </label>
               <LocationPicker
-                key={facility_id}
-                mode="storage"
-                locations={locations}
+                purpose="storage"
                 facility_id={facility_id}
-                onChange={x => this.setState({ location_id: x.rm_id })}
                 location_id={this.state.location_id}
+                onChange={this.onLocationChanged}
               />
               <FieldError errors={this.state.errors} field="location_id" />
             </div>
@@ -637,7 +639,6 @@ class RawMaterialEditor extends React.Component {
 }
 
 RawMaterialEditor.propTypes = {
-  locations: PropTypes.array.isRequired,
   order_uoms: PropTypes.array.isRequired,
   raw_material_type: PropTypes.string.isRequired
 }

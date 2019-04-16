@@ -162,7 +162,6 @@ class HarvestPackageSetupApp extends React.Component {
           />
           <HarvestPackageEditor
             facility_strains={this.props.facility_strains}
-            locations={this.props.locations}
             drawdown_uoms={this.props.drawdown_uoms}
             harvest_batches={this.props.harvest_batches}
             sales_catalogue={this.props.sales_catalogue}
@@ -180,7 +179,6 @@ class HarvestPackageSetupApp extends React.Component {
 
 HarvestPackageSetupApp.propTypes = {
   facility_strains: PropTypes.array.isRequired,
-  locations: PropTypes.array.isRequired,
   harvest_batches: PropTypes.array.isRequired,
   sales_catalogue: PropTypes.array.isRequired,
   drawdown_uoms: PropTypes.array.isRequired

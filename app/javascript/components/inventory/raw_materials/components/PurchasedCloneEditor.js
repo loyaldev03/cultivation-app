@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 import Select from 'react-select'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { PurchaseInfo, InputBarcode } from '../../../utils'
-import LocationPicker from '../../../utils/LocationPicker2'
+import { LocationPicker, PurchaseInfo, InputBarcode } from '../../../utils'
 import { setupPurchasedClones } from '../actions/setupPurchasedClones'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
@@ -280,14 +279,17 @@ class PurchasedCloneEditor extends React.Component {
   }
 
   onBarcodeScan = e => {
-    console.log(e)
     this.setState({ upc: e }, () => {
       this.loadItemScan()
     })
   }
 
+  onLocationChanged = event => {
+    this.setState({ location_id: event.location_id })
+  }
+
   render() {
-    const { locations, facility_strains } = this.props
+    const { facility_strains } = this.props
     let facilityStrain = facility_strains.find(
       x => x.value === this.state.facility_strain_id
     )
@@ -487,12 +489,10 @@ class PurchasedCloneEditor extends React.Component {
                 Where are they stored?
               </label>
               <LocationPicker
-                key={this.props.facility_id}
-                mode="storage"
-                locations={locations}
+                purpose="storage"
                 facility_id={this.props.facility_id}
-                onChange={x => this.setState({ location_id: x.rm_id })}
                 location_id={this.state.location_id}
+                onChange={this.onLocationChanged}
               />
               <FieldError errors={this.state.errors} field="location_id" />
             </div>
@@ -515,7 +515,6 @@ class PurchasedCloneEditor extends React.Component {
 
 PurchasedCloneEditor.propTypes = {
   facility_strains: PropTypes.array.isRequired,
-  locations: PropTypes.array.isRequired,
   order_uoms: PropTypes.array.isRequired,
   uoms: PropTypes.array.isRequired
 }

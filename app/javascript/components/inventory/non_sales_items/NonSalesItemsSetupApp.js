@@ -135,7 +135,6 @@ class NonSalesItemsSetupApp extends React.Component {
       <React.Fragment>
         {this.renderNonSalesItemsList()}
         <NonSalesItemEditor
-          locations={this.props.locations}
           order_uoms={this.props.order_uoms}
           catalogues={this.props.catalogues}
           facility_id={this.props.facility_id}

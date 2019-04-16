@@ -8066,10 +8066,10 @@ sax@^1.2.4, sax@~1.2.1:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
-scandit-sdk@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/scandit-sdk/-/scandit-sdk-4.2.0.tgz#2e8506f61d4e9b974146f8380a90bfa7fc132e50"
-  integrity sha512-3b5wSB/OpHXvEKZ3I5aiyZshoSgNx/xmzylw/vHtAUxtSv9X7dp1q/CPceUs1vMavpfuXs3vqBflkXCLGxfNNQ==
+scandit-sdk@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/scandit-sdk/-/scandit-sdk-4.2.1.tgz#4cd8a5bf6aca67052b7bee0b097db9cda25a1ae0"
+  integrity sha512-bLedr8IXBp+v7bNzJvFLS0jEgsyu/fabUsyhy3TWmFghPg9peRzHcD5NHsfsm9ci8m19aU5mGVbKAGD9sC6x2A==
   dependencies:
     "@babel/runtime-corejs2" "^7.4.3"
     eventemitter3 "3.1.0"

@@ -13,15 +13,17 @@ class LocationStore {
   @action
   async load(facilityId, purposes) {
     let url = `/api/v1/facilities/${facilityId}/locations?`
-    if (purposes.includes(',')) {
-      url =
-        url +
-        purposes
-          .split(',')
-          .map(p => 'purposes[]=' + p)
-          .join('&')
-    } else {
-      url = url + 'purposes[]=' + purposes
+    if (!isEmpty(purposes)) {
+      if (purposes.includes(',')) {
+        url =
+          url +
+          purposes
+            .split(',')
+            .map(p => 'purposes[]=' + p)
+            .join('&')
+      } else {
+        url = url + 'purposes[]=' + purposes
+      }
     }
     try {
       const res = await (await fetch(url, httpGetOptions)).json()
@@ -32,7 +34,7 @@ class LocationStore {
       }
     } catch (error) {
       this.locationOptions = []
-      console.error(error)
+      Rollbar.error('Error loading location', error)
     }
   }
 

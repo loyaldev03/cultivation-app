@@ -4,7 +4,7 @@ import Select from 'react-select'
 // import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { FieldError, NumericInput, TextInput } from '../../../utils/FormHelpers'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import {LocationPicker, PurchaseInfo, InputBarcode } from '../../../utils'
+import { LocationPicker, PurchaseInfo, InputBarcode } from '../../../utils'
 import { saveRawMaterial } from '../actions/saveRawMaterial'
 import { getRawMaterial } from '../actions/getRawMaterial'
 import AsyncCreatableSelect from 'react-select/lib/AsyncCreatable'
@@ -361,7 +361,6 @@ class RawMaterialEditor extends React.Component {
   onLocationChanged = event => {
     this.setState({ location_id: event.location_id })
   }
-
 
   render() {
     const { facility_id } = this.props

@@ -62,6 +62,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       :timezone,
       :hourly_rate,
       :overtime_hourly_rate,
+      :user_mode,
       facilities: [],
       roles: [],
     )

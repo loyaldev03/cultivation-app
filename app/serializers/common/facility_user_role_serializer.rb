@@ -53,6 +53,7 @@ module Common
           current_sign_in_at: user.current_sign_in_at,
           last_sign_in_at: user.last_sign_in_at,
           last_sign_in_ip: user.last_sign_in_ip,
+          user_mode: user.user_mode,
         }
       end
     end

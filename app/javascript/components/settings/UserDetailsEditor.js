@@ -25,6 +25,12 @@ const styles = `
 
 `
 
+const user_modes = [
+  { label: 'Admin', value: 'admin' },
+  { label: 'Manager', value: 'manager' },
+  { label: 'Worker', value: 'worker' }
+]
+
 class UserDetailsEditor extends React.PureComponent {
   constructor(props) {
     super(props)
@@ -47,6 +53,16 @@ class UserDetailsEditor extends React.PureComponent {
           y => y.value === props.user.default_facility_id
         )
       }
+      let user_mode
+      if (props.user.user_mode) {
+        user_mode = {
+          label:
+            props.user.user_mode.substr(0, 1).toUpperCase() +
+            props.user.user_mode.substr(1).toLowerCase(), // Upcase first letter
+          value: props.user.user_mode
+        }
+      }
+
       this.state = {
         tabs: 'General',
         userId: props.user.id,
@@ -59,6 +75,7 @@ class UserDetailsEditor extends React.PureComponent {
         isActive: props.user.is_active || false,
         hourly_rate: props.user.hourly_rate,
         overtime_hourly_rate: props.user.overtime_hourly_rate,
+        user_mode: user_mode,
         facilities,
         roles,
         default_facility
@@ -115,12 +132,14 @@ class UserDetailsEditor extends React.PureComponent {
       photoData,
       hourly_rate,
       overtime_hourly_rate,
+      user_mode,
       isActive
     } = this.state
     const newRoles = roles ? roles.map(x => x.value) : []
     const newFacilities = facilities ? facilities.map(x => x.value) : []
     const defaultFacilityId = default_facility ? default_facility.value : null
     const photo_data = photoData ? JSON.stringify(photoData) : null
+    const newUserMode = user_mode ? user_mode.value : null
     const userDetails = {
       user: {
         id: userId,
@@ -132,6 +151,7 @@ class UserDetailsEditor extends React.PureComponent {
         photo_data: photo_data,
         hourly_rate: hourly_rate,
         overtime_hourly_rate: overtime_hourly_rate,
+        user_mode: newUserMode,
         is_active: isActive || false,
         facilities: newFacilities,
         roles: newRoles,
@@ -164,6 +184,7 @@ class UserDetailsEditor extends React.PureComponent {
       roles,
       default_facility,
       hourly_rate,
+      user_mode,
       overtime_hourly_rate
     } = this.state
 
@@ -275,6 +296,16 @@ class UserDetailsEditor extends React.PureComponent {
                     type="password"
                   />
                 </div>
+              </div>
+              <div className="mt2 fl w-100 mb2">
+                <label className="f6 fw6 db mb1 gray ttc">User mode</label>
+                <Select
+                  options={user_modes}
+                  isClearable={true}
+                  onChange={opt => this.onSelectChange('user_mode', opt)}
+                  value={user_mode}
+                  className="mt1 w-100 f6"
+                />
               </div>
               <div className="mt3 fl w-100 pt3 bt b--light-gray">
                 <label className="f6 fw6 db mb0 dark-gray ttc">

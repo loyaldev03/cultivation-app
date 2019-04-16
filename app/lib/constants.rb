@@ -67,6 +67,15 @@ module Constants
     CONST_VAULT,
   ].freeze
 
+  ROOM_ONLY_SETUP = [
+    CONST_CURE,
+    CONST_DRY,
+    CONST_HARVEST,
+    CONST_STORAGE,
+    CONST_TRIM,
+    CONST_VAULT,
+  ].freeze
+
   BATCH_STATUS_DRAFT = 'DRAFT'.freeze
   BATCH_STATUS_SCHEDULED = 'SCHEDULED'.freeze
   BATCH_STATUS_ACTIVE = 'ACTIVE'.freeze

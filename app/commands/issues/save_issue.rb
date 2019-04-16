@@ -107,7 +107,7 @@ module Issues
         issue.attachments.in(id: delete_ids).update_all(deleted: true)
       end
 
-      return if attachments.empty?
+      return if (attachments.nil? || attachments.empty?)
 
       attachments.each do |attachment|
         if attachment[:id].blank?

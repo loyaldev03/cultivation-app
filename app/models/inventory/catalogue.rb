@@ -40,7 +40,7 @@ module Inventory
     # Obsolete :uom_dimension - moved to Product model
     field :uom_dimension, type: String
     field :common_uom, type: String
-    field :default_price, type: BigDecimal
+    field :default_price, type: Float, default: -> { 0 }
 
     scope :raw_materials, -> { where(catalogue_type: 'raw_materials', is_active: true) }
     scope :sales_product, -> { where(catalogue_type: Constants::SALES_KEY, is_active: true) }

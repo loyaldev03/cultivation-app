@@ -165,6 +165,30 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     end
   end
 
+  def harvest_batch
+    harvest_batch = Inventory::HarvestBatch.find({cultivation_batch: params[:batch_id]})
+    render json: Inventory::HarvestBatchSerializer.new(harvest_batch).serialized_json
+  end
+
+  def create_harvest_batch
+    harvest_batch = Inventory::HarvestBatch.find({cultivation_batch: params[:batch_id]})
+
+    command = SetupHarvestBatch.call(current_user,
+                                     id: harvest_batch ? harvest_batch.id : nil,
+                                     cultivation_batch_id: params[:cultivation_batch_id],
+                                     harvest_name: params[:harvest_name],
+                                     uom: params[:uom],
+                                     delete_plants: [],
+                                     plants: [])
+
+    if command.success?
+      data = Inventory::HarvestBatchSerializer.new(command.result).serialized_json
+      render json: data
+    else
+      render json: {error: command.errors}, status: 422
+    end
+  end
+
   private
 
   def extract_phases(batches)

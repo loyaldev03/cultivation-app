@@ -52,7 +52,7 @@ class QueryLocations
         foreignField: 'shelf_id',
         as: 'trays',
       }},
-      {"$unwind": {path: '$trays'}},
+      {"$unwind": {path: '$trays', preserveNullAndEmptyArrays: true}},
       {"$match": {
         "$or": [
           {"trays.capacity": {"$ne": nil}}, {"trays": {"$eq": nil}},
@@ -151,7 +151,11 @@ class QueryLocations
     def select_options(facility_id, purposes)
       result = QueryLocations.call(facility_id, purposes).result
       result.map do |loc|
-        LocationOption.new(loc[:tray_full_code], loc[:tray_id].to_s)
+        if loc[:tray_id].blank?
+          LocationOption.new("#{loc[:room_name]} - #{loc[:room_code]}", loc[:room_id].to_s)
+        else
+          LocationOption.new(loc[:tray_full_code], loc[:tray_id].to_s)
+        end
       end
     end
   end

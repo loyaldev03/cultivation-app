@@ -6,10 +6,10 @@ module Inventory
     field :product_name, type: String
     field :description, type: String
     field :manufacturer, type: String
-    field :quantity, type: BigDecimal, default: 0.0
-    field :price, type: BigDecimal, default: 0.0
+    field :quantity, type: Float, default: -> { 0 }
+    field :price, type: Float, default: -> { 0 }
     field :currency, type: String, default: 'USD'
-    field :tax, type: BigDecimal, default: 0.0
+    field :tax, type: Float, default: -> { 0 }
     field :uom, type: String
 
     has_one :invoice_item, class_name: 'Inventory::VendorInvoiceItem'

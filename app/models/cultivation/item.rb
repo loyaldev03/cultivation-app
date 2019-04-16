@@ -9,7 +9,7 @@ module Cultivation
 
     # TODO: Karg - these fields are not needed. common_uom & qty is actually for ItemTransaction table.
     # Not this table.
-    field :common_quantity, type: BigDecimal
+    field :common_quantity, type: Float, default: -> { 0 }
     field :common_uom, type: String
     field :checked, type: Boolean, default: -> { false }
     field :catalogue, type: String #might be key, category , subcategory, => grow_light, nutrients

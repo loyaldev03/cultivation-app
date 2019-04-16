@@ -62,7 +62,17 @@ module Constants
     CONST_DRY,
     CONST_CURE,
     CONST_TRIM,
+    CONST_HARVEST,
     CONST_STORAGE,
+    CONST_VAULT,
+  ].freeze
+
+  ROOM_ONLY_SETUP = [
+    CONST_CURE,
+    CONST_DRY,
+    CONST_HARVEST,
+    CONST_STORAGE,
+    CONST_TRIM,
     CONST_VAULT,
   ].freeze
 
@@ -96,6 +106,7 @@ module Constants
     {code: CONST_VEG, name: 'Veg'},
     {code: CONST_VEG1, name: 'Veg 1'},
     {code: CONST_VEG2, name: 'Veg 2'},
+    {code: CONST_HARVEST, name: 'Harvest'},
   ].freeze
 
   SECTION_PURPOSE = [

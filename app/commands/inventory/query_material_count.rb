@@ -24,7 +24,7 @@ module Inventory
           _id: '$_id',
           name: {"$first": '$name'},
           uom: {'$last': '$tx.common_uom'},
-          total_available_qty: {'$sum': {'$toDecimal': '$tx.common_quantity'}},
+          total_available_qty: {'$sum': '$tx.common_quantity'},
         }},
       ])
 
@@ -57,7 +57,7 @@ module Inventory
                   "$reduce": {
                     input: '$tx.common_quantity',
                     initialValue: 0,
-                    in: {"$add": ['$$value', {'$abs': {"$toDecimal": '$$this'}}]},
+                    in: {"$add": ['$$value', {'$abs': '$$this'}]},
                   },
                 },
               },

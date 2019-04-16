@@ -34,11 +34,7 @@ module FacilityWizardForm
 
     def need_setup_rows
       # LOGIC#0001
-      if self.purpose == 'trim' || self.purpose == 'storage'
-        false
-      else
-        true
-      end
+      !Constants::ROOM_ONLY_SETUP.include?(purpose)
     end
 
     def set_rows(model_rows)

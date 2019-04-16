@@ -17,7 +17,7 @@ module Inventory
 
     belongs_to :facility, class_name: 'Facility'
     belongs_to :vendor, class_name: 'Inventory::Vendor'
-    has_many :items, class_name: 'Inventory::PurchaseOrderItem', dependent: :delete
+    has_many :items, class_name: 'Inventory::PurchaseOrderItem', dependent: :delete_all
 
     validates_uniqueness_of :purchase_order_no, scope: :vendor
 

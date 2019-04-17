@@ -1,10 +1,6 @@
 import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import {
-  loadTaskLocations,
-  LocationPicker,
-  LocationSelector
-} from '../../../utils'
+import { LocationPicker } from '../../../utils'
 import { TextInput, NumericInput } from '../../../utils/FormHelpers'
 import MotherPlantsEditor from './MotherPlantsEditor'
 import { addDays, differenceInCalendarDays } from 'date-fns'
@@ -22,7 +18,6 @@ const GET_DEFAULT_STATE = (start_date = null) => {
     estimated_hours: 0.0,
     indelible: '',
     haveChildren: false,
-    taskLocation: {}
   }
 }
 

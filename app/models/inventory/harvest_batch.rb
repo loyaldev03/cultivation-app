@@ -9,6 +9,7 @@ module Inventory
     field :total_wet_waste_weight, type: Float, default: -> { 0 }
     field :uom, type: String
     field :status, type: String                 # new, closed (when fully packaged)
+    field :location_id, type: BSON::ObjectId
 
     has_many :plants, class_name: 'Inventory::Plant'
     has_many :packages, class_name: 'Inventory::ItemTransaction'  # These are packages created from harvest after it has done drying & curing.

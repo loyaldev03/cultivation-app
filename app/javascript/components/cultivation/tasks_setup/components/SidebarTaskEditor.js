@@ -22,7 +22,7 @@ const GET_DEFAULT_STATE = (start_date = null) => {
     estimated_hours: 0.0,
     indelible: '',
     haveChildren: false,
-    taskLocation: {},
+    taskLocation: {}
   }
 }
 
@@ -41,7 +41,7 @@ class SidebarTaskEditor extends React.Component {
         estimated_hours: task.estimated_hours || '',
         indelible: task.indelible,
         haveChildren: task.haveChildren,
-        location_id: task.location_id || '',
+        location_id: task.location_id || ''
       })
     } else {
       this.setState({ ...GET_DEFAULT_STATE(start_date) })
@@ -56,7 +56,7 @@ class SidebarTaskEditor extends React.Component {
       end_date,
       duration,
       estimated_hours,
-      location_id,
+      location_id
     } = this.state
     return {
       id,
@@ -65,7 +65,7 @@ class SidebarTaskEditor extends React.Component {
       end_date,
       duration,
       estimated_hours,
-      location_id: location_id,
+      location_id: location_id
     }
   }
 

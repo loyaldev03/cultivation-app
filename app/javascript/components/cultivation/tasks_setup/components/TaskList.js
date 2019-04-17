@@ -14,6 +14,7 @@ import { formatDate2, moneyFormatter, SlidePanel } from '../../../utils'
 import MyImage from 'images/BagOfSeeds.png'
 import currentIssueStore from '../../../issues/store/CurrentIssueStore'
 import getIssue from '../../../issues/actions/getIssue'
+import loadHarvestBatch from '../actions/loadHarvestBatch'
 
 const ReactTable = lazy(() => import('react-table'))
 const ClippingPanel = lazy(() => import('./ClippingPanel'))
@@ -123,10 +124,10 @@ class TaskList extends React.Component {
   }
 
   handleShowHarvestBatchForm = (taskId, item) => {
-    this.setState({
-      taskSelected: taskId,
-      showHarvestBatchForm: !this.state.showHarvestBatchForm
-    })
+    if (!this.state.showHarvestBatchForm) {
+      this.harvestBatchForm.loadData(this.props.batch.id)
+    }
+    this.setState({ showHarvestBatchForm: !this.state.showHarvestBatchForm })
   }
 
   handleAddTask = (taskId, action) => {
@@ -652,7 +653,8 @@ class TaskList extends React.Component {
       showAssignResourcePanel,
       showAssignMaterialPanel,
       showClippingPanel,
-      showHarvestBatchForm
+      showHarvestBatchForm,
+      harvestBatch
     } = this.state
     const batchId = this.props.batch.id
     if (!TaskStore.isDataLoaded || !UserStore.isDataLoaded) {
@@ -772,10 +774,8 @@ class TaskList extends React.Component {
                 onClose={() =>
                   this.setState({ showHarvestBatchForm: false, taskAction: '' })
                 }
-                taskId={this.state.taskSelected}
-                taskAction={this.state.taskAction}
+                ref={form => (this.harvestBatchForm = form)}
                 batchId={batchId}
-                facilityStrainId={this.props.batch.facility_strain_id}
                 facilityId={this.props.batch.facility_id}
               />
             </Suspense>

@@ -166,20 +166,18 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def harvest_batch
-    harvest_batch = Inventory::HarvestBatch.find({cultivation_batch: params[:batch_id]})
+    harvest_batch = Inventory::HarvestBatch.find_by({cultivation_batch_id: params[:batch_id]})
+    Rails.logger.debug "\t\t\t\t>>>> harvest_batch: #{harvest_batch.inspect}"
     render json: Inventory::HarvestBatchSerializer.new(harvest_batch).serialized_json
   end
 
-  def create_harvest_batch
-    harvest_batch = Inventory::HarvestBatch.find({cultivation_batch: params[:batch_id]})
-
-    command = SetupHarvestBatch.call(current_user,
-                                     id: harvest_batch ? harvest_batch.id : nil,
-                                     cultivation_batch_id: params[:cultivation_batch_id],
-                                     harvest_name: params[:harvest_name],
-                                     uom: params[:uom],
-                                     delete_plants: [],
-                                     plants: [])
+  def save_harvest_batch
+    command = Inventory::SaveHarvestBatch.call(current_user, {
+      harvest_name: params[:harvest_name],
+      location_id: params[:location_id],
+      uom: params[:uom],
+      cultivation_batch_id: params[:batch_id],
+    })
 
     if command.success?
       data = Inventory::HarvestBatchSerializer.new(command.result).serialized_json

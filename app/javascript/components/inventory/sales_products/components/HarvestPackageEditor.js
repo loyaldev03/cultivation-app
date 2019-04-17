@@ -368,11 +368,7 @@ class HarvestPackageEditor extends React.Component {
   }
 
   render() {
-    const {
-      harvest_batches,
-      facility_strains,
-      sales_catalogue
-    } = this.props
+    const { harvest_batches, facility_strains, sales_catalogue } = this.props
     const uoms = this.state.catalogue
       ? this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
       : []

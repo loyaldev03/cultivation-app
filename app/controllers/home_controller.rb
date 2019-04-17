@@ -6,7 +6,11 @@ class HomeController < ApplicationController
   end
 
   def dashboard
-    @dashboard = DashboardForm::DashboardForm.new
+    if ['manager', 'admin'].include? current_user.user_mode
+      @dashboard = DashboardForm::DashboardForm.new
+    else
+      redirect_to worker_dashboard_path
+    end
   end
 
   def employees

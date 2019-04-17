@@ -5,7 +5,12 @@ import UserStore from '../stores/NewUserStore'
 import BatchStore from '../../batches/BatchStore'
 import TaskStore from '../stores/NewTaskStore'
 import loadPlants from '../../../inventory/plant_setup/actions/loadPlants'
-import { SlidePanelHeader, SlidePanelFooter, ProgressBar } from '../../../utils'
+import {
+  SlidePanelHeader,
+  SlidePanelFooter,
+  ProgressBar,
+  ErrorBoundary
+} from '../../../utils'
 import Sunburst from './Sunburst'
 import Tippy from '@tippy.js/react'
 @observer
@@ -27,7 +32,9 @@ class ClippingPanel extends React.Component {
       loadPlants('mother', this.props.facilityId)
     ])
     BatchStore.getSelected()
-    this.setState({ roomData: await TaskStore.roomData(this.props.facilityId) })
+    this.setState({
+      roomData: await TaskStore.roomData(this.props.facilityId, 'mother')
+    })
   }
   onClearTray = () => {
     this.setState({ traySelected: [], codeSelected: null })
@@ -165,15 +172,17 @@ class ClippingPanel extends React.Component {
         </div>
         {roomData ? (
           <div className="w-100 tc">
-            <Sunburst
-              data={roomData}
-              onClearTray={this.onClearTray}
-              onAddTray={this.onAddTray}
-              onChoosen={this.onChoosen}
-              highlightedNode={highlightedNode}
-              width="300"
-              height="300"
-            />
+            <ErrorBoundary>
+              <Sunburst
+                data={roomData}
+                onClearTray={this.onClearTray}
+                onAddTray={this.onAddTray}
+                onChoosen={this.onChoosen}
+                highlightedNode={highlightedNode}
+                width="300"
+                height="300"
+              />
+            </ErrorBoundary>
           </div>
         ) : null}
         {codeSelected && (

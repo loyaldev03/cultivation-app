@@ -208,10 +208,11 @@ export default class MaterialForm extends React.Component {
                       <td className="tc w3 grey tc">
                         <select
                           value={x.uom}
+                          className="input"
                           onChange={e =>
                             this.handleChangeUom(x.product_id, e.target.value)
                           }
-                          style={{ minWidth: 60 + 'px' }}
+                          style={{ minWidth: 67 + 'px' }}
                         >
                           {x.uoms &&
                             x.uoms.map((y, index) => (

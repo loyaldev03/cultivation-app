@@ -32,6 +32,13 @@ class HomeController < ApplicationController
     render 'worker_dashboard', layout: 'worker'
   end
 
+  def worker_schedule
+    @total_tasks = get_tasks_today.count
+    @next_payment_date = QueryNextPaymentDate.call(Time.current).result
+    @hours_worked = get_hours_worked
+    render 'worker_schedule', layout: 'worker'
+  end
+
   def inventory_setup
     @strains_count = Inventory::FacilityStrain.count
   end

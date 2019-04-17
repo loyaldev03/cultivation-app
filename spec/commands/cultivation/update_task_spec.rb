@@ -1,10 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe Cultivation::UpdateTask, type: :command do
-  let(:facility) { create(:facility, :is_complete) }
+  let!(:facility) { create(:facility, :is_complete) }
+  let!(:facility_strain) { create(:facility_strain, facility: facility) }
   let(:current_user) { create(:user, facilities: [facility.id]) }
   let(:start_date) { Time.zone.parse("01/01/2019") }
-  let(:batch) { create(:batch, facility_id: facility.id, start_date: start_date) }
+  let(:batch) do
+    create(:batch,
+           facility_id: facility.id,
+           facility_strain: facility_strain,
+           start_date: start_date)
+  end
   let!(:tasks) do
     # wbs: 1
     t1 = create(:task,

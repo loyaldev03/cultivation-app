@@ -2,9 +2,20 @@ require 'rails_helper'
 
 RSpec.describe Inventory::SetupMother, type: :command do
   context ".call" do
-    let(:facility) { Facility.create!(name: Faker::Lorem.word, code: Faker::Lorem.word) }
-    let(:facility_strain) { Inventory::FacilityStrain.create!(facility: facility, strain_name: 'X1', strain_type: 'sativa', created_by: user) }
-    let(:room) { facility.rooms.create!(name: 'room 1', code: 'r1') }
+    let!(:facility) do
+      facility = create(:facility, :is_complete)
+      facility.rooms.each do |room|
+        room.rows.each do |row|
+          row.shelves.each do |shelf|
+            shelf.trays.each(&:save!)
+          end
+        end
+      end
+      facility
+    end
+    let(:facility_strain) { create(:facility_strain, facility: facility) }
+    let(:mother_room) { facility.rooms.detect { |r| r.purpose == "mother" } }
+    let(:mother_location) { mother_room.rows.first.shelves.first.trays.first }
     let(:user) { create(:user) }
     let(:planted_on) { Time.current }
     let(:new_vendor_name) { 'new_vendor_name'}
@@ -33,7 +44,7 @@ RSpec.describe Inventory::SetupMother, type: :command do
         {
           plant_ids: single_plant_id,
           facility_strain_id: facility_strain.id.to_s,
-          location_id: room.id.to_s,
+          location_id: mother_location.id.to_s,
           planted_on: planted_on,
           vendor_name: new_vendor_name,
           vendor_no: vendor_no,
@@ -61,11 +72,10 @@ RSpec.describe Inventory::SetupMother, type: :command do
       expect(cmd.result[0]).to have_attributes(
         facility_strain: facility_strain,
         plant_id: single_plant_id,
-        location_id: room.id,
-        location_type: 'room',
+        location_id: mother_location.id,
         status: 'available',
         current_growth_stage: 'mother',
-        planting_date: DateTime.parse(planted_on)
+        planting_date: planted_on
       )
     end
 
@@ -80,7 +90,7 @@ RSpec.describe Inventory::SetupMother, type: :command do
         {
           plant_ids: plant_ids,
           facility_strain_id: facility_strain.id.to_s,
-          location_id: room.id.to_s,
+          location_id: mother_location.id.to_s,
           planted_on: planted_on,
           vendor_name: new_vendor_name,
           vendor_no: vendor_no,
@@ -108,11 +118,10 @@ RSpec.describe Inventory::SetupMother, type: :command do
       expect(cmd.result[1]).to have_attributes(
         plant_id: plant_ids.split(',').last.strip,
         facility_strain: facility_strain,
-        location_id: room.id,
-        location_type: 'room',
+        location_id: mother_location.id,
         status: 'available',
         current_growth_stage: 'mother',
-        planting_date: DateTime.parse(planted_on)
+        planting_date: planted_on
       )
     end
 

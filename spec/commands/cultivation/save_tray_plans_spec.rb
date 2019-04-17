@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Cultivation::SaveTrayPlans, type: :command do
+  before do
+    Time.zone = "UTC"
+  end
   let!(:facility) do
     facility = create(:facility, :is_complete)
     facility.rooms.each do |room|

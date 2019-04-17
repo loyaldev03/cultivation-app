@@ -13,10 +13,12 @@ RSpec.describe Cultivation::SaveTrayPlans, type: :command do
     facility
   end
   let(:current_user) { create(:user, facilities: [facility.id]) }
+  let(:strain) { create(:facility_strain, facility: facility) }
   let(:batch) do
     start_date = Time.zone.parse("01/01/2019").beginning_of_day
     create(:batch, :scheduled,
            facility_id: facility.id,
+           facility_strain: strain,
            start_date: start_date,
            quantity: 10,
            batch_source: 'clones_from_mother')

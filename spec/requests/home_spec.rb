@@ -21,7 +21,7 @@ RSpec.describe "Home", type: :request do
       it "should render dashboard" do
         get root_path
 
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(302)
       end
     end
   end

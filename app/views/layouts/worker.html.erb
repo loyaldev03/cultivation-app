@@ -82,7 +82,7 @@
                 </div>
                 <div class='flex'>
                   <div>
-                    <h1 class='f4 ma0 pa0 black-90 fw6'>Next Payment : <%= @next_payment_date.strftime('%d %b %Y')%></h1>
+                    <h1 class='f4 ma0 pa0 black-90 fw6'>Next Payment : <%= @next_payment_date&.strftime('%d %b %Y')%></h1>
                     <h1 class='f5 ma0 pa0 grey fw6 mt2'><%= @hours_worked %> hours worked this week</h1>
                   </div>
                 </div>

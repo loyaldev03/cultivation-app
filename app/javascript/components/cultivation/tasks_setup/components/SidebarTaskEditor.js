@@ -17,7 +17,7 @@ const GET_DEFAULT_STATE = (start_date = null) => {
     phase: '',
     estimated_hours: 0.0,
     indelible: '',
-    haveChildren: false,
+    haveChildren: false
   }
 }
 

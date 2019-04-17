@@ -154,13 +154,9 @@ class DailyTaskApp extends React.Component {
                 <span>Progress</span>
                 <span>0/100</span>
               </div>
-              <div className="ph4">
-                Scan barcode or enter plant ID
-              </div>
+              <div className="ph4">Scan barcode or enter plant ID</div>
 
-              <div className="ph4">
-                Wet weight, g
-              </div>
+              <div className="ph4">Wet weight, g</div>
             </React.Fragment>
           )}
         />

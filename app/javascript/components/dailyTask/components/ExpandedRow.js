@@ -194,8 +194,7 @@ class ExpandedRow extends React.Component {
               </a>
             )}
 
-            
-            { indelible == 'measure_harvest_weight' && (
+            {indelible == 'measure_harvest_weight' && (
               <a
                 href="#0"
                 className={classNames(

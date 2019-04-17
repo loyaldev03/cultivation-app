@@ -48,7 +48,7 @@ const columns = [
         const d = new Date(props.value)
         return (
           <span>{`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`}</span>
-        )  
+        )
       } else {
         return ''
       }

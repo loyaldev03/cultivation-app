@@ -28,7 +28,9 @@ class ApplicationController < ActionController::Base
   def layout_by_resource
     if devise_controller? && action_name == 'new'
       'login'
-    else
+    elsif current_user.user_mode == 'worker'
+      'worker'
+    elsif ['admin', 'manager'].include? current_user.user_mode
       'application'
     end
   end

@@ -17,25 +17,6 @@ class StrainApp extends React.Component {
     window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
   }
 
-  renderStrainList() {
-    return (
-      <div className="fl w-100-m w-80-l bg-white pa3">
-        <div className="flex mt3 mb4">
-          <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Strains</h1>
-          <div style={{ justifySelf: 'end' }}>
-            <button
-              className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
-              onClick={this.openSidebar}
-            >
-              Add strain
-            </button>
-          </div>
-        </div>
-        <StrainList />
-      </div>
-    )
-  }
-
   render() {
     return (
       <React.Fragment>
@@ -49,21 +30,30 @@ class StrainApp extends React.Component {
             </p>
           </div>
         </div>
-        {this.renderStrainList()}
-        <StrainEditor isOpened={false} locations={this.props.locations} />
+        <div className="fl w-100-m w-80-l bg-white pa3">
+          <div className="flex justify-between mt3 mb4">
+            <h1 className="mv0 f3 fw4 dark-gray">Strains</h1>
+            <button
+              className="btn btn--primary btn--small"
+              onClick={this.openSidebar}
+            >
+              Add strain
+            </button>
+          </div>
+          <StrainList />
+        </div>
+        <StrainEditor isOpened={false} facility_id={this.props.facility_id} />
       </React.Fragment>
     )
   }
 }
 
 StrainApp.propTypes = {
-  facility_id: PropTypes.string.isRequired,
-  locations: PropTypes.array.isRequired
+  facility_id: PropTypes.string.isRequired
 }
 
 StrainApp.defaultProps = {
-  facility_id: '',
-  locations: []
+  facility_id: ''
 }
 
 export default StrainApp

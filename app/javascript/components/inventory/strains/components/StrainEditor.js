@@ -1,9 +1,6 @@
 import React from 'react'
 import StrainAutoSuggest from './StrainAutoSuggest'
 import { NumericInput, FieldError } from '../../../utils/FormHelpers'
-
-// TODO: Replace LocationPicker to v2 version
-import LocationPicker from '../../../utils/LocationPicker'
 import saveStrain from '../actions/saveStrain'
 import getStrain from '../actions/getStrain'
 
@@ -12,12 +9,6 @@ export default class StrainEditor extends React.Component {
     super(props)
     this.state = this.resetState()
     this.strainPicker = React.createRef()
-
-    if (props.facility_id && props.facility_id.length > 0) {
-      this.isFacilitySet = true
-    } else {
-      this.isFacilitySet = false
-    }
   }
 
   componentDidMount() {
@@ -181,21 +172,6 @@ export default class StrainEditor extends React.Component {
         <div className="ph4">
           <FieldError errors={this.state.errors} field="strain_name" />
         </div>
-
-        {!this.isFacilitySet && (
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <LocationPicker
-                key={this.props.facility_id}
-                mode="facility"
-                locations={this.props.locations}
-                location_id={this.props.facility_id}
-                onChange={this.onFacilityChanged}
-              />
-              <FieldError errors={this.state.errors} field="facility_id" />
-            </div>
-          </div>
-        )}
 
         <hr className="mt3 m b--light-gray w-100" />
 

@@ -82,7 +82,7 @@ class TaskStore {
       }
     } catch (error) {
       this.isDataLoaded = false
-      Rollbar.error('Error Loading Task List:', error)
+      console.error(error)
     } finally {
       this.isLoading = false
       this.loadIssues(batchId)
@@ -105,7 +105,7 @@ class TaskStore {
       }
     } catch (error) {
       this.isDataLoaded = false
-      Rollbar.error('Error Loading Task List actual_hours :', error)
+      console.error(error)
     } finally {
       this.isLoading = false
     }

@@ -21,7 +21,7 @@ class UpcStore {
       }
     } catch (error) {
       this.isDataLoaded = false
-      Rollbar.error('Error Loading Product List:', error)
+      console.error(error)
     } finally {
       this.isLoading = false
     }

@@ -132,7 +132,6 @@ class FlowerSetupApp extends React.Component {
         <PlantEditor
           growth_stage="flower"
           cultivation_batches={this.props.cultivation_batches}
-          locations={this.props.locations}
           scanditLicense={this.props.scanditLicense}
           facility_id={this.props.facility_id}
         />

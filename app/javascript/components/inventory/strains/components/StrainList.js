@@ -8,12 +8,18 @@ const columns = [
     Header: 'Name',
     accessor: 'attributes.strain_name',
     className: 'tl pl2',
-    headerClassName: 'tl'
+    headerClassName: 'tl',
+    Cell: x => (
+      <a href="#0" className="link grey" onClick={e => openStrain(e, x.index)}>
+        {x.value}
+      </a>
+    )
   },
   {
     Header: 'Type',
     accessor: 'attributes.strain_type',
     className: 'tl',
+    maxWidth: 120,
     headerClassName: 'tl'
   },
   {
@@ -34,24 +40,8 @@ const columns = [
     Header: 'Testing status',
     accessor: 'attributes.testing_status',
     className: 'tl',
+    maxWidth: 220,
     headerClassName: 'tl'
-  },
-  {
-    Header: 'Facility',
-    accessor: 'attributes.facility_name',
-    className: 'tl',
-    headerClassName: 'tl'
-  },
-  {
-    Header: '',
-    className: 'tc',
-    filterable: false,
-    maxWidth: 45,
-    Cell: x => (
-      <a href="#" onClick={event => openStrain(event, x.index)}>
-        <i className="material-icons gray">more_horiz</i>
-      </a>
-    )
   }
 ]
 
@@ -73,7 +63,7 @@ class StrainList extends React.Component {
         pageSize={30}
         minRows={5}
         filterable
-        className="f6"
+        className="f6 grey"
         showPagination={strainStore.strains.length > 30}
       />
     )

@@ -79,7 +79,7 @@ class FacilitySetupController < ApplicationController
     is_continue = params[:commit] == 'continue'
     form_object = FacilityWizardForm::UpdateRoomInfoForm.new
 
-    # LOGIC#0001 - No rows setup for Trim and Storage room
+    # LOGIC#0001 - No rows setup for these types of room
     if Constants::ROOM_ONLY_SETUP.include?(room_info_params[:purpose])
       is_continue = false
     end
@@ -370,7 +370,7 @@ class FacilitySetupController < ApplicationController
       facility_id,
       room_id,
       row_id,
-      shelf_id
+      shelf_id,
     )
   end
 

@@ -25,16 +25,11 @@ class LocationStore {
         url = url + 'purposes[]=' + purposes
       }
     }
-    try {
-      const res = await (await fetch(url, httpGetOptions)).json()
-      if (res.data) {
-        this.locationOptions = res.data
-      } else {
-        this.locationOptions = []
-      }
-    } catch (error) {
+    const res = await (await fetch(url, httpGetOptions)).json()
+    if (res.data) {
+      this.locationOptions = res.data
+    } else {
       this.locationOptions = []
-      Rollbar.error('Error loading location', error)
     }
   }
 

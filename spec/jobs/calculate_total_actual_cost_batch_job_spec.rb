@@ -48,7 +48,7 @@ RSpec.describe CalculateTotalActualCostBatchJob, type: :job do
         on_queue("low")
     end
 
-    it "should return correct sum value for actual_cost and actual_hours", focus: true do
+    it "should return correct sum value for actual_cost and actual_hours" do
       start_time = Time.zone.local(2019, 4, 21, 8,00)
       end_time = Time.zone.local(2019, 4, 21, 18, 00)
       task = Cultivation::Task.create(batch: batch1)

@@ -21,7 +21,6 @@ module Inventory
       object.facility_strain.strain_name
     end
 
-    # TODO: should be removed
     attribute :location do |object|
       facility = Facility.find(object.facility_strain.facility_id)
       facility.rooms.find_by(id: object.location_id)&.full_code

@@ -53,6 +53,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       create(:batch, :scheduled,
              facility: facility,
              start_date: start_date,
+             status: Constants::BATCH_STATUS_SCHEDULED,
              quantity: 6,
              batch_source: 'clones_from_mother',
              facility_strain: strain)
@@ -61,6 +62,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       create(:batch, :scheduled,
              facility: facility,
              start_date: start_date,
+             status: Constants::BATCH_STATUS_ACTIVE,
              quantity: 3,
              batch_source: 'clones_from_mother',
              facility_strain: strain)
@@ -310,13 +312,21 @@ RSpec.describe QueryPlannedTrays, type: :command do
                                    facility.id,
                                    batch2.id,
                                   )
-      expect(cmd.result.size).to be 6 # Because 3/5 plan in db belongs to batch1
+      expect(cmd.result.size).to eq 6 # Because 3/5 plan in db belongs to batch1
     end
   end
 
   context ".call - without setup of batches" do
     let(:schedule_start_date) { Time.strptime("2018/08/01", DATE_FORMAT) }
     let(:schedule_end_date) { Time.strptime("2018/08/17", DATE_FORMAT) }
+    let!(:batch1) do
+      create(:batch, :scheduled,
+             facility: facility,
+             start_date: schedule_start_date,
+             quantity: 6,
+             batch_source: 'clones_from_mother',
+             facility_strain: strain)
+    end
 
     it "should not include trays planned prior to schedule" do
       # Prepare
@@ -345,6 +355,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       # let end_date overlaps with previously scheduled's start_date
       p1_end_date = Time.strptime("2018/08/01", DATE_FORMAT)
       create(:tray_plan,
+              batch: batch1,
               facility_id: facility.id,
               room_id: clone_room.id,
               row_id: clone_row1.id,
@@ -391,6 +402,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       p1_start_date = Time.strptime("2018/08/05", DATE_FORMAT)
       p1_end_date = Time.strptime("2018/08/15", DATE_FORMAT)
       p1 = create(:tray_plan,
+                  batch: batch1,
                   facility_id: facility.id,
                   room_id: clone_room.id,
                   row_id: clone_row1.id,
@@ -411,6 +423,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       p1_start_date = Time.strptime("2018/08/01", DATE_FORMAT)
       p1_end_date = Time.strptime("2018/08/17", DATE_FORMAT)
       p1 = create(:tray_plan,
+                  batch: batch1,
                   facility_id: facility.id,
                   room_id: clone_room.id,
                   row_id: clone_row1.id,
@@ -432,6 +445,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       p1_start_date = Time.strptime("2018/07/31", DATE_FORMAT)
       p1_end_date = Time.strptime("2018/08/20", DATE_FORMAT)
       p1 = create(:tray_plan,
+                  batch: batch1,
                   facility_id: facility.id,
                   room_id: clone_room.id,
                   row_id: clone_row1.id,
@@ -453,6 +467,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       p1_start_date = Time.strptime("2018/08/01", DATE_FORMAT)
       p1_end_date = Time.strptime("2018/08/10", DATE_FORMAT)
       p1 = create(:tray_plan,
+                  batch: batch1,
                   facility_id: facility.id,
                   room_id: clone_room.id,
                   row_id: clone_row1.id,
@@ -474,6 +489,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       p1_start_date = Time.strptime("2018/08/05", DATE_FORMAT)
       p1_end_date = Time.strptime("2018/08/15", DATE_FORMAT)
       p1 = create(:tray_plan,
+                  batch: batch1.id,
                   facility_id: facility.id,
                   room_id: clone_room.id,
                   row_id: clone_row1.id,
@@ -495,6 +511,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       p1_start_date = Time.strptime("2018/08/10", DATE_FORMAT)
       p1_end_date = Time.strptime("2018/08/17", DATE_FORMAT)
       p1 = create(:tray_plan,
+                  batch: batch1,
                   facility_id: facility.id,
                   room_id: clone_room.id,
                   row_id: clone_row1.id,
@@ -516,6 +533,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       p1_start_date = Time.strptime("2018/08/10", DATE_FORMAT)
       p1_end_date = Time.strptime("2018/08/20", DATE_FORMAT)
       p1 = create(:tray_plan,
+                  batch: batch1,
                   facility_id: facility.id,
                   room_id: clone_room.id,
                   row_id: clone_row1.id,
@@ -537,6 +555,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       p1_start_date = Time.strptime("2018/08/17", DATE_FORMAT)
       p1_end_date = Time.strptime("2018/08/20", DATE_FORMAT)
       p1 = create(:tray_plan,
+                  batch: batch1,
                   facility_id: facility.id,
                   room_id: clone_room.id,
                   row_id: clone_row1.id,
@@ -600,6 +619,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       p1_start_date = Time.strptime("2018/07/26", DATE_FORMAT)
       p1_end_date = Time.strptime("2018/08/17", DATE_FORMAT)
       p1 = create(:tray_plan,
+                  batch: batch1,
                   facility_id: facility.id,
                   room_id: clone_room.id,
                   row_id: clone_row1.id,
@@ -622,6 +642,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
       p1_end_date = Time.strptime("2018/08/17", DATE_FORMAT)
       p1 = create(:tray_plan,
                   facility_id: facility.id,
+                  batch: batch1.id,
                   room_id: clone_room.id,
                   row_id: clone_row1.id,
                   shelf_id: clone_shelf1.id,

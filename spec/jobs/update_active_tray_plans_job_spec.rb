@@ -4,7 +4,7 @@ RSpec.describe UpdateActiveTrayPlansJob, type: :job do
   include ActiveJob::TestHelper
 
   let(:current_user) { create(:user) }
-  let(:facility) do
+  let!(:facility) do
     facility = create(:facility, :is_complete)
     facility.rooms.each do |room|
       room.rows.each do |row|
@@ -29,7 +29,7 @@ RSpec.describe UpdateActiveTrayPlansJob, type: :job do
     first_shelf = first_row.shelves.first
     first_shelf.trays.first
   end
-  let(:facility_strain) { build(:facility_strain) }
+  let(:facility_strain) { create(:facility_strain, facility: facility) }
   let(:batch) do
     create(:batch, :active,
             facility_id: facility.id,

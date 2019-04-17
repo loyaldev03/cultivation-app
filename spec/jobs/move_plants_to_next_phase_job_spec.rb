@@ -48,7 +48,7 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
     first_shelf = flower_room.rows.first.shelves.first
     first_shelf.trays.first
   end
-  let(:facility_strain) { build(:facility_strain) }
+  let(:facility_strain) { create(:facility_strain, facility: facility) }
   let(:batch) do
     create(:batch, :active,
            current_growth_stage: Constants::CONST_CLONE,

@@ -27,7 +27,8 @@ class SaveRoomIsComplete
   private
 
   def get_is_complete(rows)
-    if @room.purpose == 'trim' || @room.purpose == 'storage'
+    # LOGIC#0001 - No rows setup for these types of room
+    if Constants::ROOM_ONLY_SETUP.include?(@room.purpose)
       return true
     end
     if rows.blank?

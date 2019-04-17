@@ -27,6 +27,7 @@ class SaveFacilityAddSection
     section = room.sections.build(
       name: last_section_name.next,
       code: section_code,
+      purpose: room.purpose,
       full_code: "#{facility.code}.#{room.code}.#{section_code}",
     )
     room.has_sections = true

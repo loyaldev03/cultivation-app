@@ -1,16 +1,19 @@
 import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
+
+import dailyTaskSidebarAdaptor from './dailyTaskSidebarAdaptor'
 import BatchedDailyTasks from './components/BatchedDailyTasks'
 import NoteEditor from './components/NoteEditor'
 import AddMaterialForm from './components/AddMaterialForm'
 import ClipPotTagForm from './components/ClipPotTagForm'
 import MovingIntoTrayForm from './components/MovingIntoTrayForm'
+import HarvestBatchWeightForm from './components/HarvestBatchWeightForm'
+
 import loadDailyTasks from './actions/loadDailyTasks'
 import DailyTasksStore from './stores/DailyTasksStore'
 import MaterialUsedStore from './stores/MaterialUsedStore'
 import SidebarStore from './stores/SidebarStore'
-import dailyTaskSidebarAdaptor from './dailyTaskSidebarAdaptor'
 import IssueSidebar from '../issues/IssueSidebar2'
 import NutrientEntryForm from '../utils/NutrientEntryForm'
 import {
@@ -142,22 +145,14 @@ class DailyTaskApp extends React.Component {
           )}
         />
         <SlidePanel
-          width="600px"
+          width="500px"
           show={sidebarName === 'measure_harvest_weight'}
           renderBody={props => (
-            <React.Fragment>
-              <SlidePanelHeader
-                onClose={() => SidebarStore.closeSidebar()}
-                title="Record wet weight"
-              />
-              <div className="flex justify-between ph4 mt3">
-                <span>Progress</span>
-                <span>0/100</span>
-              </div>
-              <div className="ph4">Scan barcode or enter plant ID</div>
-
-              <div className="ph4">Wet weight, g</div>
-            </React.Fragment>
+            <HarvestBatchWeightForm 
+              scanditLicense={this.props.scanditLicense}
+              batchId={batchId}
+              show={sidebarName === 'measure_harvest_weight'}
+            />
           )}
         />
       </React.Fragment>

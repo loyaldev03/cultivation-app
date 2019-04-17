@@ -24,7 +24,7 @@ module Inventory
     # TODO: should be removed
     attribute :location do |object|
       facility = Facility.find(object.facility_strain.facility_id)
-      Tray.in(id: object.plants.pluck(:location_id)).pluck(:code).uniq.join(', ')
+      facility.rooms.find_by(id: object.location_id)&.full_code
     end
 
     attribute :location_id do |object|

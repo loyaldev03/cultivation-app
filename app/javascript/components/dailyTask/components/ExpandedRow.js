@@ -61,6 +61,7 @@ class ExpandedRow extends React.Component {
   }
 
   onOpenSidebar = sidebar => e => {
+    console.log(sidebar)
     const showButtonStatus = ['started', 'stuck']
     if (showButtonStatus.includes(this.props.work_status)) {
       SidebarStore.openSidebar(
@@ -190,6 +191,29 @@ class ExpandedRow extends React.Component {
                 onClick={this.onOpenSidebar(indelible)}
               >
                 Move Plants to Next Phase
+              </a>
+            )}
+
+            
+            { indelible == 'measure_harvest_weight' && (
+              <a
+                href="#0"
+                className={classNames(
+                  'btn mr3',
+                  {
+                    'btn--secondary': showButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  },
+                  {
+                    'btn--disabled': hideButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  }
+                )}
+                onClick={this.onOpenSidebar('measure_harvest_weight')}
+              >
+                Measure weight
               </a>
             )}
 

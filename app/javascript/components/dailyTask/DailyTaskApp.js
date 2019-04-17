@@ -141,6 +141,29 @@ class DailyTaskApp extends React.Component {
             />
           )}
         />
+        <SlidePanel
+          width="600px"
+          show={sidebarName === 'measure_harvest_weight'}
+          renderBody={props => (
+            <React.Fragment>
+              <SlidePanelHeader
+                onClose={() => SidebarStore.closeSidebar()}
+                title="Record wet weight"
+              />
+              <div className="flex justify-between ph4 mt3">
+                <span>Progress</span>
+                <span>0/100</span>
+              </div>
+              <div className="ph4">
+                Scan barcode or enter plant ID
+              </div>
+
+              <div className="ph4">
+                Wet weight, g
+              </div>
+            </React.Fragment>
+          )}
+        />
       </React.Fragment>
     )
   }
@@ -150,6 +173,7 @@ class DailyTaskApp extends React.Component {
     return (
       <React.Fragment>
         <div id="toast" className="toast animated toast--success" />
+        <div>{SidebarStore.sidebarName}</div>
         {DailyTasksStore.batches.map(batch => (
           <BatchedDailyTasks
             key={batch.id}

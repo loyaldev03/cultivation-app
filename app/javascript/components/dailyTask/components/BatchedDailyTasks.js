@@ -4,7 +4,7 @@ import TaskRow from './TaskRow'
 import { observer } from 'mobx-react'
 
 const BatchedDailyTasks = observer(
-  ({ batchId, batchNo, batchName, tasks, onToggleAddIssue }) => {
+  ({ batchId, batchNo, batchName, tasks }) => {
     return (
       <div className="box--shadow bg-white pb3 mb4">
         <div className="flex pa3 items-center hide-child">

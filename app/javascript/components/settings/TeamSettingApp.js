@@ -15,8 +15,10 @@ const build_facilities_options = facilities =>
     label: `${f.name} (${f.code})`
   }))
 
-const build_user_manager_options = users => 
-  users.filter(e => e.user_mode === 'manager').map(f => ({ value: f.id, label: `${f.first_name} ${f.last_name}` }))
+const build_user_manager_options = users =>
+  users
+    .filter(e => e.user_mode === 'manager')
+    .map(f => ({ value: f.id, label: `${f.first_name} ${f.last_name}` }))
 
 const build_roles_options = roles =>
   roles.map(f => ({

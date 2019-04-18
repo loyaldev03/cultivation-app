@@ -63,9 +63,7 @@ class UserDetailsEditor extends React.PureComponent {
       }
 
       if (props.user.user_mode) {
-        user_mode = user_modes.find(
-          y => y.value === props.user.user_mode
-        )
+        user_mode = user_modes.find(y => y.value === props.user.user_mode)
       }
 
       this.state = {
@@ -147,7 +145,9 @@ class UserDetailsEditor extends React.PureComponent {
     const defaultFacilityId = default_facility ? default_facility.value : null
     const photo_data = photoData ? JSON.stringify(photoData) : null
     const newUserMode = user_mode ? user_mode.value : null
-    const reporting_manager_id = reporting_manager ? reporting_manager.value : null
+    const reporting_manager_id = reporting_manager
+      ? reporting_manager.value
+      : null
 
     const userDetails = {
       user: {
@@ -326,7 +326,9 @@ class UserDetailsEditor extends React.PureComponent {
                 <Select
                   options={userManagerOptions}
                   isClearable={true}
-                  onChange={opt => this.onSelectChange('reporting_manager', opt)}
+                  onChange={opt =>
+                    this.onSelectChange('reporting_manager', opt)
+                  }
                   value={reporting_manager}
                   className="mt1 w-100 f6"
                 />

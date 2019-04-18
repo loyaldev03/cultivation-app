@@ -24,7 +24,7 @@ class HarvestBatchWeightForm extends React.Component {
     }
   }
 
-  onChange = event => { 
+  onChange = event => {
     this.setState({ plantId: event.target.value })
   }
 
@@ -37,7 +37,7 @@ class HarvestBatchWeightForm extends React.Component {
   onSubmit = event => {
     const { batchId } = this.props
     const { plantId, weight } = this.state
-    harvestBatchStore.saveWeight(batchId, plantId, weight).then( result => {
+    harvestBatchStore.saveWeight(batchId, plantId, weight).then(result => {
       console.log(result)
 
       if (result.success) {
@@ -61,9 +61,12 @@ class HarvestBatchWeightForm extends React.Component {
     const { errors, weight, plantId } = this.state
 
     const weightLabel = `Wet weight, ${harvestBatchStore.uom}`
-    const percent = Math.round(toJS(harvestBatchStore.totalWeighted) / toJS(harvestBatchStore.totalPlants) * 100)
+    const percent = Math.round(
+      (toJS(harvestBatchStore.totalWeighted) /
+        toJS(harvestBatchStore.totalPlants)) *
+        100
+    )
 
-    
     if (!show) return null
     return (
       <div className="flex flex-column h-100">
@@ -74,7 +77,9 @@ class HarvestBatchWeightForm extends React.Component {
         />
         <div className="ph4 mt3 mb2 flex justify-between">
           <span className="f6 fw6 gray">Progress</span>
-          <span className="f6 gray">{harvestBatchStore.totalWeighted}/{harvestBatchStore.totalPlants}</span>
+          <span className="f6 gray">
+            {harvestBatchStore.totalWeighted}/{harvestBatchStore.totalPlants}
+          </span>
         </div>
         <div className="ph4 mt1 mb3 flex items-center">
           <ProgressBar percent={percent} height={10} className="w-100" />
@@ -95,10 +100,9 @@ class HarvestBatchWeightForm extends React.Component {
           />
         </div>
 
-        
         <div className="flex items-end ph4">
           <div className="w-30">
-            <NumericInput 
+            <NumericInput
               label={weightLabel}
               labelClassName="ttn"
               value={weight}
@@ -109,7 +113,11 @@ class HarvestBatchWeightForm extends React.Component {
             />
           </div>
           <div className="ml2 w-20">
-            <a href="#" className="bg-orange white btn btn-primary btn--small" onClick={this.onSubmit}>
+            <a
+              href="#"
+              className="bg-orange white btn btn-primary btn--small"
+              onClick={this.onSubmit}
+            >
               &#9166;
             </a>
           </div>

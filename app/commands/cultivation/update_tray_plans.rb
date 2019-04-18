@@ -2,7 +2,7 @@ module Cultivation
   class UpdateTrayPlans
     prepend SimpleCommand
 
-    attr_reader :current_user, :batch_id, :clean_tasks
+    attr_reader :current_user, :batch_id
 
     def initialize(current_user, args = {})
       args = {
@@ -16,12 +16,10 @@ module Cultivation
     def call
       if valid_params?
         tray_plans.each do |plan|
-          grow_task = phase_tasks.detect { |t| t.phase == plan.phase }
-          clean_task = clean_tasks.detect { |t| t.phase == plan.phase }
-          plan_end_date = clean_task ? clean_task.end_date : grow_task.end_date
-          if grow_task
-            plan.start_date = grow_task.start_date
-            plan.end_date = plan_end_date
+          schedule = booking_schedules.detect { |t| t.phase == plan.phase }
+          if schedule
+            plan.start_date = schedule.start_date
+            plan.end_date = schedule.end_date
             plan.save
           end
         end
@@ -44,16 +42,8 @@ module Cultivation
       @facility ||= batch.facility
     end
 
-    def phase_tasks
-      if @phase_tasks.nil?
-        cmd = Cultivation::QueryBatchPhases.call(
-          batch,
-          facility.growth_stages,
-        )
-        @clean_tasks = cmd.cleaning_schedules || []
-        @phase_tasks = cmd.staying_schedules || []
-      end
-      @phase_tasks
+    def booking_schedules
+      @booking_schedules ||= Cultivation::QueryBatchPhases.call(batch, facility.growth_stages).booking_schedules
     end
 
     def valid_params?

@@ -287,14 +287,12 @@ RSpec.describe QueryPlannedTrays, type: :command do
 
     it "verify batch 'staying' task exists correctly" do
       # Verify phases saved in batch 1
-      cmd = Cultivation::QueryBatchPhases.call(batch1, Constants::CULTIVATION_PHASES_1V)
-      expect(cmd.success?).to be true
-      expect(cmd.result.count).to be 5
+      res = Cultivation::QueryBatchPhases.call(batch1, Constants::CULTIVATION_PHASES_1V).booking_schedules
+      expect(res.count).to be 5
 
       # Verify phases saved in batch 2
-      cmd = Cultivation::QueryBatchPhases.call(batch2, Constants::CULTIVATION_PHASES_1V)
-      expect(cmd.success?).to be true
-      expect(cmd.result.count).to be 5
+      res = Cultivation::QueryBatchPhases.call(batch2, Constants::CULTIVATION_PHASES_1V).booking_schedules
+      expect(res.count).to be 5
     end
 
     it ".call with exclude quantity from batch1" do

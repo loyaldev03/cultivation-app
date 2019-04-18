@@ -14,15 +14,12 @@ module Cultivation
         if batch.present?
           facility = Facility.find_by(id: batch.facility_id)
           batch.quantity = @quantity
-          batch_phases = Cultivation::QueryBatchPhases.call(
-            batch,
-            facility.growth_stages,
-          ).result
+          schedules = Cultivation::QueryBatchPhases.call(batch, facility.growth_stages).booking_schedules
           # Delete all existing location plans
           batch.tray_plans.delete_all
           phase_trays = consolidate_phase_trays(@plans)
           new_plans = []
-          batch_phases.each do |phase_info|
+          schedules.each do |phase_info|
             # New location plans
             phase_plan = phase_trays.detect { |p| p[:phase] == phase_info.phase }
             if phase_plan.present?

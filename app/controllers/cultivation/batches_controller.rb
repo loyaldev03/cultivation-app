@@ -100,8 +100,8 @@ class Cultivation::BatchesController < ApplicationController
     # Get phases from Facility
     cultivation_phases = batch.facility_strain.facility.growth_stages
     # Get start_date and end_date from batch
-    phases_info = get_batch_phase(batch, cultivation_phases)
-    if phases_info.any?
+    schedules = Cultivation::QueryBatchPhases.call(batch, cultivation_phases).booking_schedules
+    if schedules.any?
       available_trays_cmd = QueryAvailableTrays.call(
         start_date: batch.start_date,
         end_date: batch.estimated_harvest_date,
@@ -114,15 +114,6 @@ class Cultivation::BatchesController < ApplicationController
       else
         []
       end
-    end
-  end
-
-  def get_batch_phase(batch, phases)
-    find_phase_cmd = Cultivation::QueryBatchPhases.call(batch, phases)
-    if find_phase_cmd.success?
-      find_phase_cmd.result
-    else
-      []
     end
   end
 

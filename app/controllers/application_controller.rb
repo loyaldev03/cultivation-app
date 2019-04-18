@@ -22,6 +22,10 @@ class ApplicationController < ActionController::Base
                                                          :title,
                                                          :photo,
                                                          :timezone,
+                                                         :phone_number,
+                                                         :address,
+                                                         :password,
+                                                         :password_confirmation,
                                                        ])
   end
 

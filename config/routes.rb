@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     mount Shrine.presign_endpoint(:cache) => "/s3/params"
   end
 
-  devise_for :users
+  devise_for :users, controllers: { registrations: 'registrations' }
 
   root to: "home#dashboard"
 

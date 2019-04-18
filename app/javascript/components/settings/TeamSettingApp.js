@@ -15,6 +15,9 @@ const build_facilities_options = facilities =>
     label: `${f.name} (${f.code})`
   }))
 
+const build_user_manager_options = users => 
+  users.filter(e => e.user_mode === 'manager').map(f => ({ value: f.id, label: `${f.first_name} ${f.last_name}` }))
+
 const build_roles_options = roles =>
   roles.map(f => ({
     value: f.id,
@@ -203,6 +206,7 @@ class TeamSetttingApp extends React.Component {
     const { facilities, users, roles, modules } = store
     const { editingUser, editingRole, isSaving, activeTab } = this.state
     const facilitiesOptions = build_facilities_options(facilities)
+    const userManagerOptions = build_user_manager_options(users)
     const rolesOptions = build_roles_options(roles)
 
     return (
@@ -366,6 +370,7 @@ class TeamSetttingApp extends React.Component {
                 onSave={this.onUserSave}
                 onClose={this.closeSidebar}
                 facilitiesOptions={facilitiesOptions}
+                userManagerOptions={userManagerOptions}
                 rolesOptions={rolesOptions}
                 isSaving={isSaving}
               />

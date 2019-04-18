@@ -28,6 +28,7 @@ module Common
     attribute :users do |object|
       object.users.map do |user|
         default_facility_id = user.default_facility_id ? user.default_facility_id.to_s : nil
+        reporting_manager_id = user.reporting_manager_id ? user.reporting_manager_id.to_s : nil
 
         if user.photo_data && user.photo_data != 'null'
           photo_data = user.photo_data
@@ -54,6 +55,7 @@ module Common
           last_sign_in_at: user.last_sign_in_at,
           last_sign_in_ip: user.last_sign_in_ip,
           user_mode: user.user_mode,
+          reporting_manager_id: reporting_manager_id,
         }
       end
     end

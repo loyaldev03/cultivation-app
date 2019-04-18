@@ -59,22 +59,31 @@ RSpec.describe Cultivation::UpdateTrayPlans, type: :command do
     original_start = Time.zone.parse("01/01/2018").beginning_of_day
     t1  = create(:task, batch: batch1, name: "Clone", phase: Constants::CONST_CLONE,
                  indelible: Constants::INDELIBLE_GROUP, indent: 0,
-                 duration: 8, start_date: original_start, end_date: original_start + 8.days)
+                 duration: 8, start_date: original_start, end_date: original_start + 10.days)
     t11 = create(:task, batch: batch1, name: "Grow", phase: Constants::CONST_CLONE,
                  indelible: Constants::INDELIBLE_STAYING, indent: 1,
                  duration: 8, start_date: original_start, end_date: original_start + 8.days)
+    t12 = create(:task, batch: batch1, name: "Cleaning", phase: Constants::CONST_CLONE,
+                 indelible: Constants::INDELIBLE_CLEANING, indent: 1,
+                 duration: 2, start_date: t11.end_date, end_date: t11.end_date + 2.days)
     t2  = create(:task, batch: batch1, name: "Veg", phase: Constants::CONST_VEG,
                  indelible: Constants::INDELIBLE_GROUP, indent: 0,
-                 duration: 14, start_date: t1.end_date, end_date: t1.end_date + 14.days)
+                 duration: 14, start_date: t1.end_date, end_date: t1.end_date + 16.days)
     t21 = create(:task, batch: batch1, name: "Grow", phase: Constants::CONST_VEG,
                  indelible: Constants::INDELIBLE_STAYING, indent: 1,
                  duration: 14, start_date: t1.end_date, end_date: t1.end_date + 14.days)
+    t22 = create(:task, batch: batch1, name: "Cleaning", phase: Constants::CONST_VEG,
+                 indelible: Constants::INDELIBLE_CLEANING, indent: 1,
+                 duration: 2, start_date: t21.end_date, end_date: t21.end_date + 2.days)
     t3  = create(:task, batch: batch1, name: "Flower", phase: Constants::CONST_FLOWER,
                  indelible: Constants::INDELIBLE_GROUP, indent: 0,
-                 duration: 56, start_date: t2.end_date, end_date: t2.end_date + 56.days)
+                 duration: 56, start_date: t2.end_date, end_date: t2.end_date + 58.days)
     t31 = create(:task, batch: batch1, name: "Grow", phase: Constants::CONST_FLOWER,
                  indelible: Constants::INDELIBLE_STAYING, indent: 1,
                  duration: 56, start_date: t2.end_date, end_date: t2.end_date + 56.days)
+    t32 = create(:task, batch: batch1, name: "Cleaning", phase: Constants::CONST_FLOWER,
+                 indelible: Constants::INDELIBLE_CLEANING, indent: 1,
+                 duration: 2, start_date: t31.end_date, end_date: t31.end_date + 2.days)
     t4  = create(:task, batch: batch1, name: "Harvest", phase: Constants::CONST_HARVEST,
                  indelible: Constants::INDELIBLE_GROUP, indent: 0,
                  duration: 2, start_date: t3.end_date, end_date: t3.end_date + 2.days)
@@ -93,13 +102,15 @@ RSpec.describe Cultivation::UpdateTrayPlans, type: :command do
     t71 = create(:task, batch: batch1, name: "Curing", phase: Constants::CONST_CURE,
                  indelible: Constants::INDELIBLE_STAYING, indent: 1,
                  duration: 5, start_date: t6.end_date, end_date: t6.end_date + 5.days)
-    [t1, t11,
-      t2, t21,
-      t3, t31,
+    [
+      t1, t11, t12,
+      t2, t21, t22,
+      t3, t31, t32,
       t4,
       t5, t51,
       t6,
-      t7, t71]
+      t7, t71
+    ]
   end
   let(:batch1_plans) do
     quantity = 6
@@ -157,7 +168,7 @@ RSpec.describe Cultivation::UpdateTrayPlans, type: :command do
     Cultivation::SaveTrayPlans.call(batch1.id, batch1_plans, 6)
   end
 
-  it ".call should update existing TrayPlan booking start dates" do
+  it "tray plans should start on grow period start_date" do
     cmd = Cultivation::UpdateTrayPlans.call(current_user, batch_id: batch1.id)
 
     booking_clone = Cultivation::TrayPlan.
@@ -167,11 +178,36 @@ RSpec.describe Cultivation::UpdateTrayPlans, type: :command do
     booking_flower = Cultivation::TrayPlan.
       where(batch_id: batch1.id, phase: Constants::CONST_FLOWER).first
 
+    clone_grow_period = batch1_tasks[1]
+    veg_grow_period = batch1_tasks[4]
+    flower_grow_period = batch1_tasks[7]
+
     expect(cmd.errors).to eq({})
     expect(cmd.success?).to be true
-    expect(booking_clone.start_date).to eq batch1_tasks[1].start_date
-    expect(booking_veg.start_date).to eq batch1_tasks[3].start_date
-    expect(booking_flower.start_date).to eq batch1_tasks[5].start_date
+    expect(booking_clone.start_date).to eq clone_grow_period.start_date
+    expect(booking_veg.start_date).to eq veg_grow_period.start_date
+    expect(booking_flower.start_date).to eq flower_grow_period.start_date
+  end
+
+  it "tray plans should end on cleaning end_date" do
+    cmd = Cultivation::UpdateTrayPlans.call(current_user, batch_id: batch1.id)
+
+    booking_clone = Cultivation::TrayPlan.
+      where(batch_id: batch1.id, phase: Constants::CONST_CLONE).first
+    booking_veg = Cultivation::TrayPlan.
+      where(batch_id: batch1.id, phase: Constants::CONST_VEG).first
+    booking_flower = Cultivation::TrayPlan.
+      where(batch_id: batch1.id, phase: Constants::CONST_FLOWER).first
+
+    clone_clean_period = batch1_tasks[2]
+    veg_clean_period = batch1_tasks[5]
+    flower_clean_period = batch1_tasks[8]
+
+    expect(cmd.errors).to eq({})
+    expect(cmd.success?).to be true
+    expect(booking_clone.end_date).to eq clone_clean_period.end_date
+    expect(booking_flower.end_date).to eq flower_clean_period.end_date
+    expect(booking_veg.end_date).to eq veg_clean_period.end_date
   end
 end
 

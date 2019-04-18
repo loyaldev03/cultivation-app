@@ -131,6 +131,46 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     render json: data, status: 200
   end
 
+  def harvest_batch_status
+    batch = Cultivation::Batch.find(params[:batch_id])
+    harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: params[:batch_id])
+
+    if harvest_batch
+      data = {
+        total_plants: batch.plants.where(destroyed_date: nil).count,
+        total_weighted: harvest_batch.plants.count,
+        uom: harvest_batch.uom,
+      }
+      render json: data, status: 200
+    else
+      render json: {errors: {harvest_bath: ['Harvest batch is not setup.']}}, status: 422
+    end
+  end
+
+  def save_harvest_batch_weight
+    batch = Cultivation::Batch.find(params[:batch_id])
+    plant = batch.plants.find_by(plant_tag: params[:plant_id])
+
+    if plant.nil?
+      render json: {errors: {plant: ["Plant #{params[:plant_id]} does not exist in this batch."]}}, status: 422 and return
+    end
+
+    harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: params[:batch_id])
+    if harvest_batch.nil?
+      render json: {errors: {harvest_bath: ['Harvest batch is not setup.']}}, status: 422 and return
+    end
+
+    plant.update!(wet_weight: params[:weight], wet_weight_uom: harvest_batch.uom)
+    harvest_batch.plants << plant
+
+    data = {
+      total_plants: batch.plants.where(destroyed_date: nil).count,
+      total_weighted: harvest_batch.plants.count,
+      uom: harvest_batch.uom,
+    }
+    render json: data, status: 200
+  end
+
   private
 
   def serialized_batch(id)

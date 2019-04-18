@@ -148,7 +148,7 @@ class DailyTaskApp extends React.Component {
           width="500px"
           show={sidebarName === 'measure_harvest_weight'}
           renderBody={props => (
-            <HarvestBatchWeightForm 
+            <HarvestBatchWeightForm
               scanditLicense={this.props.scanditLicense}
               batchId={batchId}
               show={sidebarName === 'measure_harvest_weight'}

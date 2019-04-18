@@ -88,7 +88,7 @@ module Cultivation
 
       # NOTE: Background job would activate all scheduled batch
       # if batch.start_date <= Time.current
-      ActivateBatchWorker.new.perform()
+      ActivateBatchWorker.new.perform
 
       update_tray_plans(batch)
       batch
@@ -97,7 +97,7 @@ module Cultivation
     def update_tray_plans(batch)
       cmd = Cultivation::UpdateTrayPlans.call(current_user, batch_id: batch.id)
       if !cmd.success?
-        errors = cmd.errors
+        self.errors = cmd.errors
       end
     end
 

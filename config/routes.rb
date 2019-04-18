@@ -44,6 +44,8 @@ Rails.application.routes.draw do
 
   get "dashboard" => "home#dashboard"
   get "worker_dashboard" => "home#worker_dashboard"
+  get "worker_schedule" => "home#worker_schedule"
+
   get "settings" => "home#settings"
   get "inventory/setup" => "home#inventory_setup"
   post "reset_data" => "home#reset_data"

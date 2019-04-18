@@ -472,8 +472,8 @@ class TaskStore {
   }
 
   @action
-  async roomData(id) {
-    const url = `/api/v1/batches/search_locations?facility_id=${id}&purpose[]=mother`
+  async roomData(id, roomPurpose) {
+    const url = `/api/v1/batches/search_locations?facility_id=${id}&purpose[]=${roomPurpose}`
     const response = await (await fetch(url, httpGetOptions)).json()
     return response.data
   }

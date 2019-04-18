@@ -14,6 +14,9 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error, info) {
     // You can also log the error to an error reporting service
     console.log(error, info)
+    if (typeof Rollbar !== 'undefined') {
+      Rollbar.error('Something went wrong', error)
+    }
   }
 
   render() {

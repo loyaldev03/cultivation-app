@@ -15,6 +15,10 @@ module Common
       object.default_facility_id.to_s
     end
 
+    attribute :reporting_manager_id do |object|
+      object.reporting_manager_id.to_s
+    end
+
     attribute :photo_url do |object|
       if object.photo_data && object.photo_data != 'null'
         object.photo_url

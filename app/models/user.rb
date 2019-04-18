@@ -49,7 +49,8 @@ class User
 
   field :roles, type: Array, default: []      # Array of BSON::ObjectId
   field :facilities, type: Array, default: [] # Array of BSON::ObjectId
-  field :user_mode, type: String, default: 'worker' # admin | manage | worker
+  field :user_mode, type: String, default: 'worker' # admin | manager | worker
+  field :reporting_manager_id, type: BSON::ObjectId
 
   has_many :time_logs, class_name: 'Cultivation::TimeLog'
 

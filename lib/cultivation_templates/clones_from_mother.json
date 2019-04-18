@@ -85,7 +85,7 @@
   { "wbs": "5.9.1", "phase": "harvest", "name": "Check dry room for set up ", "duration": "", "indelible": "", "predecessor": "" },
   { "wbs": "5.9.2", "phase": "harvest", "name": "Move to dry room", "duration": "", "indelible": "moving_to_next_phase", "predecessor": "" },
   { "wbs": "5.1", "phase": "harvest", "name": "Prepare waste disposal", "duration": "", "indelible": "", "predecessor": "" },
-  { "wbs": "5.1.1", "phase": "harvest", "name": "Prepare documents", "duration": "", "indelible": "", "predecessor": "" },
+  { "wbs": "5.1.1", "phase": "harvest", "name": "Prepare documents", "duration": "", "indelible": "create_disposal_doc", "predecessor": "" },
   { "wbs": "5.1.2", "phase": "harvest", "name": "Send waste for dispoal", "duration": "", "indelible": "", "predecessor": "" },
   { "wbs": "5.2", "phase": "harvest", "name": "Clean", "duration": "2", "indelible": "cleaning", "predecessor": "5.9.2" },
   { "wbs": "5.2.1", "phase": "harvest", "name": "Wash and clean trays/pots", "duration": "2", "indelible": "", "predecessor": "" },

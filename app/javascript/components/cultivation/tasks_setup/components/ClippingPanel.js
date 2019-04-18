@@ -59,8 +59,9 @@ class ClippingPanel extends React.Component {
       BatchStore.getSelected().forEach(element => {
         if (element.plant_id == x.plant_id) x.quantity = element.quantity
       })
-      return x
-    })
+        return x
+    }).filter( a=> a.quantity>0)
+
     let uniqueLocationCode = temp.map(x => {
       return { code: x.location_code, ticked: true }
     })
@@ -73,7 +74,7 @@ class ClippingPanel extends React.Component {
   }
   onUpdateOnePlant = (id, e) => {
     this.state.traySelected.map(plant => {
-      if (plant.plant_id == id) {
+      if (plant.plant_id == id)  {
         plant.quantity = e.target.value
       }
       return plant

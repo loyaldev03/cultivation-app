@@ -13,6 +13,7 @@ import {
 } from '../../../utils'
 import Sunburst from './Sunburst'
 import Tippy from '@tippy.js/react'
+import taskStore from '../stores/NewTaskStore'
 @observer
 class ClippingPanel extends React.Component {
   state = {
@@ -32,6 +33,7 @@ class ClippingPanel extends React.Component {
       loadPlants('mother', this.props.facilityId)
     ])
     BatchStore.getSelected()
+    console.log()
     this.setState({
       roomData: await TaskStore.roomData(this.props.facilityId, 'mother')
     })
@@ -40,7 +42,7 @@ class ClippingPanel extends React.Component {
     this.setState({ traySelected: [], codeSelected: null })
   }
   onChoosen = (data, code) => {
-    if (code == 'shelf') {
+    if (code === 'shelf') {
       this.setState({
         highlightedNode: [data.meta.row_code, data.meta.shelf_code]
       })
@@ -49,18 +51,21 @@ class ClippingPanel extends React.Component {
   }
   onAddTray = async element => {
     this.state.traySelected.push(element)
+    taskStore.updateSunburstIsSelected()
     let temp = await TaskStore.getPlantOnSelect(
       this.props.facilityId,
       this.props.strainId,
       element.id
     )
-    temp = temp.map(x => {
-      x.quantity = 0
-      BatchStore.getSelected().forEach(element => {
-        if (element.plant_id == x.plant_id) x.quantity = element.quantity
-      })
+    temp = temp
+      .map(x => {
+        x.quantity = 0
+        BatchStore.getSelected().forEach(element => {
+          if (element.plant_id === x.plant_id) x.quantity = element.quantity
+        })
         return x
-    }).filter( a=> a.quantity>0)
+      })
+      .filter(a => a.quantity > 0)
 
     let uniqueLocationCode = temp.map(x => {
       return { code: x.location_code, ticked: true }
@@ -74,7 +79,7 @@ class ClippingPanel extends React.Component {
   }
   onUpdateOnePlant = (id, e) => {
     this.state.traySelected.map(plant => {
-      if (plant.plant_id == id)  {
+      if (plant.plant_id === id) {
         plant.quantity = e.target.value
       }
       return plant
@@ -138,7 +143,7 @@ class ClippingPanel extends React.Component {
   }
   onApplyAllClipping = e => {
     this.setState({ clipNumber: e.target.value })
-    if (this.state.applyAllToggle == true) {
+    if (this.state.applyAllToggle === true) {
       let temp = this.state.traySelected.map(x => {
         x.quantity = e.target.value
         return x
@@ -167,6 +172,7 @@ class ClippingPanel extends React.Component {
       <div>
         <SlidePanelHeader onClose={onClose} title={this.props.title} />
         <div className="ph4 pb4 pt3">
+          {JSON.stringify(TaskStore.isSunburstNodeSelected)}
           <span className="orange">Sage</span> mother plants are located in the
           sections highlighted in orange. Select the area of the mother plants
           you’d like to clip

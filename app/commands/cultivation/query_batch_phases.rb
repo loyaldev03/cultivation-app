@@ -16,8 +16,8 @@ module Cultivation
 
     def call
       if @batch.present? && @batch.tasks.present?
-        tasks = @batch.tasks.where(indelible: 'staying')
-        tasks = tasks.where(:phase.in => @phases) unless @phases.empty?
+        tasks = @batch.tasks.where(indelible: Constants::INDELIBLE_STAYING)
+        tasks = tasks.where(:phase.in => @phases) unless @phases.blank?
         tasks = tasks.order_by(position: :asc)
         phases = tasks.map do |task|
           PhaseInfo.new(

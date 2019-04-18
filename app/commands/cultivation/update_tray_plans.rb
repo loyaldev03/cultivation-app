@@ -29,7 +29,7 @@ module Cultivation
     def batch
       @batch ||= Cultivation::Batch.includes(:facility,
                                              :tasks,
-                                             :tray_plans).find_by(id: @batch_id)
+                                             :tray_plans).find(@batch_id)
     end
 
     def tray_plans

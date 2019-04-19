@@ -21,6 +21,9 @@ module Cultivation
           end
           @batch.selected_plants = selected_plants
         end
+        if @args[:selected_location].present?
+          @batch.selected_location = @args[:selected_location].to_bson_id
+        end
         @batch.save!
       end
     rescue StandardError

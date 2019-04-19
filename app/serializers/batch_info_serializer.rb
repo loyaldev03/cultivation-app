@@ -7,7 +7,8 @@ class BatchInfoSerializer
              :estimated_harvest_date,
              :quantity,
              :status,
-             :selected_plants
+             :selected_plants,
+             :selected_location
 
   attribute :id do |object|
     object.id.to_s
@@ -28,5 +29,9 @@ class BatchInfoSerializer
         quantity: plant[:quantity],
       }
     end
+  end
+
+  attribute :selected_location do |object|
+    object.selected_location.to_s
   end
 end

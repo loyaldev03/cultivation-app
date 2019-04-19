@@ -287,7 +287,7 @@ class UserDetailsEditor extends React.PureComponent {
                       'w4 h4 bg-black-10': !photoUrl
                     })}
                   >
-                    <img src={photoUrl} className="fl" />
+                    <img src={photoUrl} className="fl h4 w4"  />
                     <AvatarPicker
                       key={photoUrl}
                       onUploadSuccess={this.onUploadAvatarSuccess}

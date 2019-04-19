@@ -53,7 +53,7 @@ class User
   field :reporting_manager_id, type: BSON::ObjectId
 
   has_many :time_logs, class_name: 'Cultivation::TimeLog'
-
+  embeds_many :work_schedules, class_name: 'Common::WorkSchedule'
   ## Confirmable
   # field :confirmation_token,   type: String
   # field :confirmed_at,         type: Time

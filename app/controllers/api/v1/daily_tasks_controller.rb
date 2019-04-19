@@ -160,8 +160,14 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
       render json: {errors: {harvest_bath: ['Harvest batch is not setup.']}}, status: 422 and return
     end
 
+    if plant.harvest_batch.present? && !params[:override]
+      render json: {errors: {duplicate_plant: []}}, status: 422 and return
+    end
+
     plant.update!(wet_weight: params[:weight], wet_weight_uom: harvest_batch.uom)
     harvest_batch.plants << plant
+
+    # harvest_batch.update!(total_wet_weight: harvest_batch.plants.pluck(:wet_weight).sum)
 
     data = {
       total_plants: batch.plants.where(destroyed_date: nil).count,

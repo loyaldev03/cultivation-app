@@ -35,8 +35,11 @@ class HarvestBatchStore {
       })
       .then(({ status, data }) => {
         console.log(data)
-        this.totalPlants = data.total_plants
-        this.totalWeighted = data.total_weighted
+
+        if (status === 200) {
+          this.totalPlants = data.total_plants
+          this.totalWeighted = data.total_weighted
+        }
 
         return {
           success: status == 200,

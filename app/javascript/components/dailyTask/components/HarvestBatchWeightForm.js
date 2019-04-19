@@ -48,6 +48,10 @@ class HarvestBatchWeightForm extends React.Component {
           override: false
         })
       } else {
+        console.log(result.data.errors)
+        if (result.data.errors.duplicate_plant) {
+          alert('Duplicate plant')
+        }
         this.setState({
           errors: result.data.errors
         })

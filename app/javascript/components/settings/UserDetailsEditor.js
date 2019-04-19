@@ -40,7 +40,7 @@ class UserDetailsEditor extends React.PureComponent {
       let default_facility = {}
       let reporting_manager = {}
       let user_mode = {}
-      let working_hours = []
+      let work_schedules = []
       if (props.user.facilities && props.facilitiesOptions) {
         facilities = props.user.facilities.map(id =>
           props.facilitiesOptions.find(y => y.value === id)
@@ -68,7 +68,7 @@ class UserDetailsEditor extends React.PureComponent {
       }
 
       if (props.user.work_schedules) {
-        working_hours = props.user.work_schedules
+        work_schedules = props.user.work_schedules
       }
 
       this.state = {
@@ -88,7 +88,7 @@ class UserDetailsEditor extends React.PureComponent {
         facilities,
         roles,
         default_facility,
-        working_hours: working_hours
+        work_schedules: work_schedules
       }
     } else {
       this.state = {
@@ -115,19 +115,19 @@ class UserDetailsEditor extends React.PureComponent {
   onChangeToggle = field => e => this.setState({ [field]: e.target.checked })
 
   onChangeWorkingHourInput = (day, time, e) => {
-    let temp_working_hours = this.state.working_hours
-    let temp_day = temp_working_hours.find(e => e.day === day)
+    let temp_work_schedules = this.state.work_schedules
+    let temp_day = temp_work_schedules.find(e => e.day === day)
     if (temp_day) {
       temp_day[time] = e.target.value
     }
-    temp_working_hours.map(e => e.day === day)
-    temp_working_hours = temp_working_hours.map(s => {
+    temp_work_schedules.map(e => e.day === day)
+    temp_work_schedules = temp_work_schedules.map(s => {
       if (s.day === day) {
         s = temp_day
       }
       return s
     })
-    this.setState({ working_hours: temp_working_hours })
+    this.setState({ work_schedules: temp_work_schedules })
   }
 
   onSelectChange = (field, options) => {
@@ -160,7 +160,7 @@ class UserDetailsEditor extends React.PureComponent {
       overtime_hourly_rate,
       user_mode,
       reporting_manager,
-      working_hours,
+      work_schedules,
       isActive
     } = this.state
     const newRoles = roles ? roles.map(x => x.value) : []
@@ -189,7 +189,7 @@ class UserDetailsEditor extends React.PureComponent {
         roles: newRoles,
         reporting_manager_id: reporting_manager_id,
         default_facility_id: defaultFacilityId,
-        work_schedules: working_hours
+        work_schedules: work_schedules
       }
     }
     this.props.onSave(userDetails)
@@ -224,17 +224,17 @@ class UserDetailsEditor extends React.PureComponent {
       overtime_hourly_rate
     } = this.state
 
-    const sunday = this.state.working_hours.find(e => e.day === 'sunday') || {}
-    const monday = this.state.working_hours.find(e => e.day === 'monday') || {}
+    const sunday = this.state.work_schedules.find(e => e.day === 'sunday') || {}
+    const monday = this.state.work_schedules.find(e => e.day === 'monday') || {}
     const tuesday =
-      this.state.working_hours.find(e => e.day === 'tuesday') || {}
+      this.state.work_schedules.find(e => e.day === 'tuesday') || {}
     const wednesday =
-      this.state.working_hours.find(e => e.day === 'wednesday') || {}
+      this.state.work_schedules.find(e => e.day === 'wednesday') || {}
     const thursday =
-      this.state.working_hours.find(e => e.day === 'thursday') || {}
-    const friday = this.state.working_hours.find(e => e.day === 'friday') || {}
+      this.state.work_schedules.find(e => e.day === 'thursday') || {}
+    const friday = this.state.work_schedules.find(e => e.day === 'friday') || {}
     const saturday =
-      this.state.working_hours.find(e => e.day === 'saturday') || {}
+      this.state.work_schedules.find(e => e.day === 'saturday') || {}
 
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
 
@@ -410,7 +410,7 @@ class UserDetailsEditor extends React.PureComponent {
               </div>
               <div className="mt3 fl w-100 pt3 bt b--light-gray">
                 <label className="f6 fw6 db mb0 dark-gray ttc">
-                  Working Hours
+                  Work Schedules
                 </label>
               </div>
               <div className="mt2 fl w-100 flex justify-between">

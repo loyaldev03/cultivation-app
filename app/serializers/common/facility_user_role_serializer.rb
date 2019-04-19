@@ -35,6 +35,16 @@ module Common
           photo_url = user.photo_url
         end
 
+        days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+        work_schedules = days.map do |a|
+          day_work = user.work_schedules.detect { |b| b.day == a }
+          {
+            day: a,
+            start_time: day_work&.start_time&.strftime('%H:%M'),
+            end_time: day_work&.end_time&.strftime('%H:%M'),
+          }
+        end
+
         {
           id: user.id.to_s,
           first_name: user.first_name,
@@ -56,6 +66,7 @@ module Common
           last_sign_in_ip: user.last_sign_in_ip,
           user_mode: user.user_mode,
           reporting_manager_id: reporting_manager_id,
+          work_schedules: work_schedules,
         }
       end
     end

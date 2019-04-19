@@ -34,5 +34,17 @@ module Common
     attribute :roles do |object|
       object.roles.map(&:to_s)
     end
+
+    attribute :work_schedules do |object|
+      days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+      work_schedules = days.map do |a|
+        day_work = object.work_schedules.detect { |b| b.day == a }
+        {
+          day: a,
+          start_time: day_work&.start_time&.strftime('%H:%M'),
+          end_time: day_work&.end_time&.strftime('%H:%M'),
+        }
+      end
+    end
   end
 end

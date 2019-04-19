@@ -22,6 +22,7 @@ class ClippingPanel extends React.Component {
     trayFilterList: [],
     highlightedNode: [],
     locationFilter: [],
+    locationSelected: null,
     allLocationChecked: false,
     clipNumber: 0,
     applyAllToggle: false,
@@ -32,10 +33,9 @@ class ClippingPanel extends React.Component {
       BatchStore.loadBatch(this.props.batchId),
       loadPlants('mother', this.props.facilityId)
     ])
-    BatchStore.getSelected()
-    console.log()
     this.setState({
-      roomData: await TaskStore.roomData(this.props.facilityId, 'mother')
+      roomData: await TaskStore.roomData(this.props.facilityId, 'mother'),
+      locationSelected: BatchStore.batch.selected_location
     })
   }
   onClearTray = () => {
@@ -73,6 +73,7 @@ class ClippingPanel extends React.Component {
     this.setState({
       traySelected: temp,
       codeSelected: element.name,
+      locationSelected: element.id,
       trayFilterList: this.uniqBy(uniqueLocationCode, 'code'),
       allLocationChecked: true
     })
@@ -106,7 +107,10 @@ class ClippingPanel extends React.Component {
         0
       ) <= BatchStore.batch.quantity
     )
-      BatchStore.updateBatchSelectedPlants(this.props.batchId)
+      BatchStore.updateBatchSelectedPlants(
+        this.props.batchId,
+        this.state.locationSelected
+      )
   }
 
   onFilterLocation = (e, locationCode) => {
@@ -159,6 +163,7 @@ class ClippingPanel extends React.Component {
       traySelected,
       trayFilterList,
       clipNumber,
+      locationSelected,
       codeSelected,
       applyAllToggle,
       highlightedNode,
@@ -172,7 +177,6 @@ class ClippingPanel extends React.Component {
       <div>
         <SlidePanelHeader onClose={onClose} title={this.props.title} />
         <div className="ph4 pb4 pt3">
-          {JSON.stringify(TaskStore.isSunburstNodeSelected)}
           <span className="orange">Sage</span> mother plants are located in the
           sections highlighted in orange. Select the area of the mother plants
           you’d like to clip
@@ -182,6 +186,7 @@ class ClippingPanel extends React.Component {
             <ErrorBoundary>
               <Sunburst
                 data={roomData}
+                locationSelected={locationSelected}
                 onClearTray={this.onClearTray}
                 onAddTray={this.onAddTray}
                 onChoosen={this.onChoosen}
@@ -224,7 +229,7 @@ class ClippingPanel extends React.Component {
                   />
                 </div>
               )}
-              <div className="mt2 subtitle-2">
+              <div className="mt3 subtitle-2">
                 You selected mother plants at:
                 <br />
                 <div className="bg-light-gray  grey f5 flex justify-between items-center pa1 pv2">
@@ -336,7 +341,7 @@ class ClippingPanel extends React.Component {
                         <div className="fl w-20 pa1 tc">
                           <input
                             type="number"
-                            className="input w-30 tr"
+                            className="input w-40 tr"
                             value={tray.quantity}
                             maxLength="2"
                             onChange={e =>

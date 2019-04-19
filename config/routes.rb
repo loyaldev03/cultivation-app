@@ -277,6 +277,9 @@ Rails.application.routes.draw do
         
         post ':id/save_material_used', to: 'daily_tasks#save_material_used'
         post 'materials_used', to: 'daily_tasks#materials_used' 
+
+        get ':batch_id/harvest_batch_status', to: 'daily_tasks#harvest_batch_status'
+        post ':batch_id/save_harvest_batch_weight', to: 'daily_tasks#save_harvest_batch_weight'
       end
 
       resources :issues, only: [:create, :by_batch, :show, :archive] do

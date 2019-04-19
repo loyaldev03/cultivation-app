@@ -62,6 +62,7 @@ class SidebarStore {
 
   @action
   openSidebar(sidebarName, batchId, taskId, taskPhase = '') {
+    console.log(sidebarName)
     this.sidebarName = sidebarName
     this.batchId = batchId
     this.taskId = taskId

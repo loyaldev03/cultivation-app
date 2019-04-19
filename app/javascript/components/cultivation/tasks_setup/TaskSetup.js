@@ -30,6 +30,7 @@ class TaskSetup extends React.Component {
         'materials',
         'depend_on'
       ],
+      showDiedPlants: false,
       columnOpen: false,
       unresolvedIssueCount: 0
     }
@@ -79,6 +80,7 @@ class TaskSetup extends React.Component {
 
   render() {
     const { batch } = this.props
+    const { showDiedPlants } = this.state
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
     const showIssues =
@@ -99,6 +101,17 @@ class TaskSetup extends React.Component {
             unresolvedIssueCount={this.state.unresolvedIssueCount}
           />
           <div className="flex mt4">
+            <a
+              href="#0"
+              className="btn btn--secondary btn--small mr3"
+              onClick={() =>
+                this.setState({
+                  showDiedPlants: true
+                })
+              }
+            >
+              Report Died Plant
+            </a>
             <div className="mr2 mt2">
               <i className="material-icons icon--small pointer">filter_list</i>
               <span className="grey f6 ml2">Filter</span>
@@ -271,6 +284,22 @@ class TaskSetup extends React.Component {
         <div className="pa4 flex flex-column justify-between bg-white box--shadow">
           <TaskList batch={batch} columns={this.state.columns} />
         </div>
+        <SlidePanel
+          show={showDiedPlants}
+          renderBody={props => (
+            <div className="flex flex-column pa2">
+              <h2>Report Died Plants</h2>
+              <div className="mh2 mb3">
+                <label>Plant ID:</label>
+                <input type="text" className="input" />
+              </div>
+              <div className="mh2 mb3">
+                <label>Reasons:</label>
+                <input type="text" className="input" />
+              </div>
+            </div>
+          )}
+        />
         <SlidePanel
           width="500px"
           show={showIssues}

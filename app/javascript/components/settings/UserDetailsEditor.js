@@ -160,6 +160,7 @@ class UserDetailsEditor extends React.PureComponent {
       overtime_hourly_rate,
       user_mode,
       reporting_manager,
+      working_hours,
       isActive
     } = this.state
     const newRoles = roles ? roles.map(x => x.value) : []
@@ -187,7 +188,8 @@ class UserDetailsEditor extends React.PureComponent {
         facilities: newFacilities,
         roles: newRoles,
         reporting_manager_id: reporting_manager_id,
-        default_facility_id: defaultFacilityId
+        default_facility_id: defaultFacilityId,
+        work_schedules: working_hours
       }
     }
     this.props.onSave(userDetails)

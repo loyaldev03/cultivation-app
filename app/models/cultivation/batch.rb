@@ -15,6 +15,7 @@ module Cultivation
     field :current_growth_stage, type: String
     # Selected Mother Plants (IDs)
     field :selected_plants, type: Array, default: []
+    field :selected_location, type: BSON::ObjectId
     # Draft - Draft batch should not trigger validation
     # Scheduled, Active - Take up spaces in Tray Plan
     field :status, type: String, default: Constants::BATCH_STATUS_DRAFT

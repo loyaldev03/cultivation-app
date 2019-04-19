@@ -38,6 +38,8 @@ class UserDetailsEditor extends React.PureComponent {
       let facilities = []
       let roles = []
       let default_facility = {}
+      let reporting_manager = {}
+      let user_mode = {}
       if (props.user.facilities && props.facilitiesOptions) {
         facilities = props.user.facilities.map(id =>
           props.facilitiesOptions.find(y => y.value === id)
@@ -53,19 +55,17 @@ class UserDetailsEditor extends React.PureComponent {
           y => y.value === props.user.default_facility_id
         )
       }
-      let user_mode
-      props.user.user_mode = props.user.user_mode
-        ? props.user.user_mode
-        : 'worker'
+
+      if (props.user.reporting_manager_id) {
+        reporting_manager = props.userManagerOptions.find(
+          y => y.value === props.user.reporting_manager_id
+        )
+      }
 
       if (props.user.user_mode) {
-        user_mode = {
-          label:
-            props.user.user_mode.substr(0, 1).toUpperCase() +
-            props.user.user_mode.substr(1).toLowerCase(), // Upcase first letter
-          value: props.user.user_mode
-        }
+        user_mode = user_modes.find(y => y.value === props.user.user_mode)
       }
+
       this.state = {
         tabs: 'General',
         userId: props.user.id,
@@ -79,6 +79,7 @@ class UserDetailsEditor extends React.PureComponent {
         hourly_rate: props.user.hourly_rate,
         overtime_hourly_rate: props.user.overtime_hourly_rate,
         user_mode: user_mode,
+        reporting_manager: reporting_manager,
         facilities,
         roles,
         default_facility
@@ -136,6 +137,7 @@ class UserDetailsEditor extends React.PureComponent {
       hourly_rate,
       overtime_hourly_rate,
       user_mode,
+      reporting_manager,
       isActive
     } = this.state
     const newRoles = roles ? roles.map(x => x.value) : []
@@ -143,6 +145,10 @@ class UserDetailsEditor extends React.PureComponent {
     const defaultFacilityId = default_facility ? default_facility.value : null
     const photo_data = photoData ? JSON.stringify(photoData) : null
     const newUserMode = user_mode ? user_mode.value : null
+    const reporting_manager_id = reporting_manager
+      ? reporting_manager.value
+      : null
+
     const userDetails = {
       user: {
         id: userId,
@@ -158,6 +164,7 @@ class UserDetailsEditor extends React.PureComponent {
         is_active: isActive || false,
         facilities: newFacilities,
         roles: newRoles,
+        reporting_manager_id: reporting_manager_id,
         default_facility_id: defaultFacilityId
       }
     }
@@ -174,6 +181,7 @@ class UserDetailsEditor extends React.PureComponent {
       facilitiesOptions,
       rolesOptions,
       isSaving,
+      userManagerOptions,
       user
     } = this.props
     const {
@@ -188,6 +196,7 @@ class UserDetailsEditor extends React.PureComponent {
       default_facility,
       hourly_rate,
       user_mode,
+      reporting_manager,
       overtime_hourly_rate
     } = this.state
 
@@ -307,6 +316,20 @@ class UserDetailsEditor extends React.PureComponent {
                   isClearable={true}
                   onChange={opt => this.onSelectChange('user_mode', opt)}
                   value={user_mode}
+                  className="mt1 w-100 f6"
+                />
+              </div>
+              <div className="mt2 fl w-100 mb2">
+                <label className="f6 fw6 db mb1 gray ttc">
+                  Reporting Manager
+                </label>
+                <Select
+                  options={userManagerOptions}
+                  isClearable={true}
+                  onChange={opt =>
+                    this.onSelectChange('reporting_manager', opt)
+                  }
+                  value={reporting_manager}
                   className="mt1 w-100 f6"
                 />
               </div>

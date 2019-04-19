@@ -12,7 +12,7 @@ class UpdateActiveTrayPlansJob < ApplicationJob
     # Find the corresponding batch
     batch = Cultivation::Batch.find(batch_id)
     # Find all 'phase' tasks
-    phases = Cultivation::QueryBatchPhases.call(batch).result
+    phases = Cultivation::QueryBatchPhases.call(batch).booking_schedules
     # Find all tray locations in database
     locations = QueryReadyTrays.call(batch.facility_id).result
     # Find all existing TrayPlans

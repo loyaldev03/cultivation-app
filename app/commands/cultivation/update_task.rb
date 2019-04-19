@@ -42,7 +42,7 @@ module Cultivation
           task.modifier = current_user
           task.save! if errors.empty?
           perform_cascade_change_tasks
-          # TODO::ANDY - valid_data when updating tasks
+          # TODO::ANDY - validate_capacity when updating tasks
           # Update batch
           update_batch(batch, batch_tasks&.first, schedule_batch)
         end
@@ -320,7 +320,7 @@ module Cultivation
       errors.empty? # No Errors => Valid
     end
 
-    def valid_data?(tasks, opt = {})
+    def validate_capacity?(tasks, opt = {})
       # max_date = tasks.pluck(:end_date).compact.max
       # min_date = tasks.pluck(:start_date).compact.min
       # overlap_batch = false

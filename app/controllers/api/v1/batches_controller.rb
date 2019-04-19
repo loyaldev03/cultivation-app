@@ -68,11 +68,12 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     args = {
       name: params[:name],
       selected_plants: params[:selected_plants],
+      selected_location: params[:selected_location],
     }
     update_cmd = Cultivation::UpdateBatchInfo.call(
       current_user,
       params[:batch_id],
-      args
+      args,
     )
     if update_cmd.success?
       render json: {data: 'Ok'}

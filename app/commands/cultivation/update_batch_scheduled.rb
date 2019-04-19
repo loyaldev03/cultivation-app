@@ -39,7 +39,7 @@ module Cultivation
 
     def validate
       batch = Cultivation::Batch.find(@batch_id)
-      #validate purchase clone
+      # validate purchase clone
       if batch.batch_source == 'clones_purchased'
         result = Cultivation::ValidatePurchaseClone.call(current_user: @current_user, batch_id: @batch_id)
         errors.add(:batch_id, result.errors['strain']) unless result.success?
@@ -51,14 +51,14 @@ module Cultivation
         errors.add(:batch_id, result.errors['strain']) unless result.success?
       end
 
-      #validate raw material
+      # validate raw material
       result = ValidateRawMaterial.call(@batch_id, batch.facility_id, @current_user)
       unless result.success?
         errors.add(:batch_id, result.errors[:material_use])
         create_issue_for_material_errors(batch, result.errors[:material_use], @current_user)
       end
 
-      #validate resource
+      # validate resource
       result = ValidateResource.call(current_user: @current_user, batch_id: @batch_id)
       if result.errors['resource'].present?
         result.errors['resource'].each do |a|

@@ -81,7 +81,8 @@ class BatchStore {
     try {
       const payload = {
         name: this.batch.name,
-        selected_plants: toJS(this.batch.selected_plants)
+        selected_plants: toJS(this.batch.selected_plants),
+        selected_location: '' // TODO: get the selected location that the user clicked.
       }
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {

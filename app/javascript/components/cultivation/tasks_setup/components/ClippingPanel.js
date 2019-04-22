@@ -48,7 +48,7 @@ class ClippingPanel extends React.Component {
     this.setState({ traySelected: [], codeSelected: null })
   }
   onChoosen = (data, code) => {
-    if (code == 'shelf') {
+    if (code === 'shelf') {
       this.setState({
         highlightedNode: [data.meta.row_code, data.meta.shelf_code]
       })
@@ -81,7 +81,7 @@ class ClippingPanel extends React.Component {
   }
   onUpdateOnePlant = (id, e) => {
     this.state.traySelected.map(plant => {
-      if (plant.plant_id == id) {
+      if (plant.plant_id === id) {
         plant.quantity = e.target.value
       }
       return plant
@@ -187,7 +187,7 @@ class ClippingPanel extends React.Component {
               onClick={e => this.changeRoom(card)}
             >
               {card}
-              <img src={RoomIcon} className="h2"/>
+              <img src={RoomIcon} className="h2" />
             </div>
           ))}
         </div>

@@ -5,17 +5,24 @@ class HarvestBatchStore {
   @observable uom = ''
   @observable totalPlants = 0 // total number of alive plants in this batch
   @observable totalWeighted = 0 // number of plants weighted in this system
+  @observable totalWetWasteWeight = 0
+  @observable harvestBatchName = ''
 
   @action
-  load(batchId) {
-    fetch(`/api/v1/daily_tasks/${batchId}/harvest_batch_status`, httpGetOptions)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
+  async load(batchId) {
+    const url = `/api/v1/daily_tasks/${batchId}/harvest_batch_status`
+    try {
+      const data = await (await fetch(url, httpGetOptions)).json()
+      if (data) {
         this.uom = data.uom
         this.totalPlants = data.total_plants
         this.totalWeighted = data.total_weighted
-      })
+        this.totalWetWasteWeight = data.total_wet_waste_weight
+        this.harvestBatchName = data.harvest_batch_name
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   @action
@@ -47,6 +54,36 @@ class HarvestBatchStore {
         }
       })
   }
+
+  @action
+  saveWasteWeight(batchId, weight) {
+    const payload = { weight }
+
+    return fetch(
+      `/api/v1/daily_tasks/${batchId}/save_waste_weight`,
+      httpPostOptions(payload)
+    )
+      .then(response => {
+        return response.json().then(d => ({
+          data: d,
+          status: response.status
+        }))
+      })
+      .then(({ status, data }) => {
+        console.log(data)
+
+        if (status === 200) {
+          this.totalWetWasteWeight = data.total_wet_waste_weight
+        }
+
+        return {
+          success: status == 200,
+          data
+        }
+      })
+  }
+
+
 }
 
 const harvestBatchStore = new HarvestBatchStore()

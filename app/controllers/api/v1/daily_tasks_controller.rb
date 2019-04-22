@@ -140,6 +140,8 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
         total_plants: batch.plants.where(destroyed_date: nil).count,
         total_weighted: harvest_batch.plants.count,
         uom: harvest_batch.uom,
+        total_wet_waste_weight: harvest_batch.total_wet_waste_weight,
+        harvest_batch_name: harvest_batch.harvest_name,
       }
       render json: data, status: 200
     else
@@ -169,6 +171,20 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
 
     # harvest_batch.update!(total_wet_weight: harvest_batch.plants.pluck(:wet_weight).sum)
 
+    data = {
+      total_plants: batch.plants.where(destroyed_date: nil).count,
+      total_weighted: harvest_batch.plants.count,
+      uom: harvest_batch.uom,
+    }
+    render json: data, status: 200
+  end
+
+  def save_waste_weight
+    batch = Cultivation::Batch.find(params[:batch_id])
+    harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: params[:batch_id])
+    harvest_batch.update(
+      total_wet_waste_weight: params[:weight],
+    )
     data = {
       total_plants: batch.plants.where(destroyed_date: nil).count,
       total_weighted: harvest_batch.plants.count,

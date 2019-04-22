@@ -12,7 +12,6 @@ import {
 } from '../../../utils'
 import Sunburst from './Sunburst'
 import Tippy from '@tippy.js/react'
-import taskStore from '../stores/NewTaskStore'
 @observer
 class ClippingPanel extends React.Component {
   state = {
@@ -22,20 +21,27 @@ class ClippingPanel extends React.Component {
     trayFilterList: [],
     highlightedNode: [],
     locationFilter: [],
-    locationSelected: null,
     allLocationChecked: false,
     clipNumber: 0,
     roomChoice: null,
     applyAllToggle: false,
-    codeSelected: null
+    codeSelected: null,
+    roomSelected: null
   }
   async componentDidMount() {
     await Promise.all([
       BatchStore.loadBatch(this.props.batchId),
       loadPlants('mother', this.props.facilityId)
     ])
+    let roomData = await TaskStore.roomData(this.props.facilityId, 'mother')
+    let motherRoomList = roomData.map(e => {
+      return e.room_name
+    })
+    motherRoomList = [...new Set(motherRoomList)]
     this.setState({
-      roomData: await TaskStore.roomData(this.props.facilityId, 'mother'),
+      motherRoomList,
+      roomChoice: motherRoomList[0],
+      roomData,
       locationSelected: BatchStore.batch.selected_location
     })
   }
@@ -52,29 +58,26 @@ class ClippingPanel extends React.Component {
   }
   onAddTray = async element => {
     this.state.traySelected.push(element)
-    taskStore.updateSunburstIsSelected()
     let temp = await TaskStore.getPlantOnSelect(
       this.props.facilityId,
       this.props.strainId,
       element.id
     )
-    temp = temp
-      .map(x => {
-        x.quantity = 0
-        BatchStore.getSelected().forEach(element => {
-          if (element.plant_id === x.plant_id) x.quantity = element.quantity
-        })
-        return x
+    temp = temp.map(x => {
+      x.quantity = 0
+      BatchStore.getSelected().forEach(element => {
+        if (element.plant_id == x.plant_id) x.quantity = element.quantity
       })
-      .filter(a => a.quantity > 0)
-
+      return x
+    })
     let uniqueLocationCode = temp.map(x => {
       return { code: x.location_code, ticked: true }
     })
+    console.log(element)
     this.setState({
       traySelected: temp,
       codeSelected: element.name,
-      locationSelected: element.id,
+      roomSelected: element.meta ? element.meta.room_name : '',
       trayFilterList: this.uniqBy(uniqueLocationCode, 'code'),
       allLocationChecked: true
     })
@@ -108,10 +111,7 @@ class ClippingPanel extends React.Component {
         0
       ) <= BatchStore.batch.quantity
     )
-      BatchStore.updateBatchSelectedPlants(
-        this.props.batchId,
-        this.state.locationSelected
-      )
+      BatchStore.updateBatchSelectedPlants(this.props.batchId)
   }
 
   onFilterLocation = (e, locationCode) => {
@@ -148,7 +148,7 @@ class ClippingPanel extends React.Component {
   }
   onApplyAllClipping = e => {
     this.setState({ clipNumber: e.target.value })
-    if (this.state.applyAllToggle === true) {
+    if (this.state.applyAllToggle == true) {
       let temp = this.state.traySelected.map(x => {
         x.quantity = e.target.value
         return x
@@ -171,6 +171,7 @@ class ClippingPanel extends React.Component {
       roomChoice,
       locationSelected,
       codeSelected,
+      roomSelected,
       applyAllToggle,
       highlightedNode,
       allLocationChecked
@@ -187,6 +188,7 @@ class ClippingPanel extends React.Component {
             <div
               className={`flex flex-column f6 lh-copy ba br2 b--light-grey pa2 ml1 pointer ${card ===
                 roomChoice && 'orange b'}`}
+              key={card}
               onClick={e => this.changeRoom(card)}
             >
               {card}
@@ -219,7 +221,7 @@ class ClippingPanel extends React.Component {
         {codeSelected && (
           <div className="orange tc mt4">
             You’ve selected all mother plants located in {codeSelected} in{' '}
-            {roomChoice}
+            {roomSelected}
           </div>
         )}
         {traySelected && traySelected.length > 0 ? (
@@ -361,7 +363,7 @@ class ClippingPanel extends React.Component {
                         <div className="fl w-20 pa1 tc">
                           <input
                             type="number"
-                            className="input w-40 tr"
+                            className="input w-30 tr"
                             value={tray.quantity}
                             maxLength="2"
                             onChange={e =>

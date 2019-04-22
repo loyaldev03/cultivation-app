@@ -1,10 +1,12 @@
 import React from 'react'
+import isEmpty from 'lodash.isempty'
 import { observer } from 'mobx-react'
 import { observable, action, computed } from 'mobx'
 import {
   InputBarcode,
   SlidePanelHeader,
   SlidePanelFooter,
+  httpGetOptions,
   httpPostOptions,
   toast
 } from '../../../utils'
@@ -15,9 +17,9 @@ class ReportDestroyedPlants extends React.Component {
     showAll: false
   }
   async componentDidUpdate(prevProps) {
-    const { batchId } = this.props
-    if (batchId && batchId !== prevProps.batchId) {
-      await destroyedPlantsStore.load(batchId)
+    const { batch_id } = this.props
+    if (batch_id && batch_id !== prevProps.batch_id) {
+      await destroyedPlantsStore.load(batch_id)
     }
   }
   onSave = async () => {
@@ -32,7 +34,7 @@ class ReportDestroyedPlants extends React.Component {
     }
   }
   onShowAll = async () => {
-    await destroyedPlantsStore.load(this.props.batchId)
+    await destroyedPlantsStore.load(this.props.batch_id)
     this.setState({ showAll: true })
   }
   render() {
@@ -68,18 +70,22 @@ class ReportDestroyedPlants extends React.Component {
                     <span className="w4">Destroyed Date</span>
                     <span className="w1" />
                   </div>
-                  {destroyedPlantsStore.plants.map(p => (
-                    <div key={p.plant_id} className="flex items-center pv1">
-                      <span className="flex-auto">{p.plant_id}</span>
-                      <span className="w4">{p.destroyed_on}</span>
-                      <i
-                        className="w1 material-icons icon--medium"
-                        title={p.reason}
-                      >
-                        info
-                      </i>
-                    </div>
-                  ))}
+                  {isEmpty(destroyedPlantsStore.plants) ? (
+                    <div className="i">Nothing yet...</div>
+                  ) : (
+                    destroyedPlantsStore.plants.map(p => (
+                      <div key={p.plant_id} className="flex items-center pv1">
+                        <span className="flex-auto">{p.plant_id}</span>
+                        <span className="w4">{p.destroyed_on}</span>
+                        <i
+                          className="w1 material-icons icon--medium"
+                          title={p.reason}
+                        >
+                          info
+                        </i>
+                      </div>
+                    ))
+                  )}
                 </React.Fragment>
               )}
               {!showAll && (
@@ -102,42 +108,26 @@ class ReportDestroyedPlants extends React.Component {
 
 class DestroyedPlantsStore {
   @observable plants = []
-  @observable batchId = ''
+  @observable batch_id = ''
   @observable isSaving = false
 
   @action
-  async load(batchId) {
-    this.batchId = batchId
-    this.plants = [
-      {
-        plant_id: '19028310923809',
-        destroyed_on: '21-04-2019',
-        reason: 'Plant is dead'
-      },
-      {
-        plant_id: '19028310923810',
-        destroyed_on: '22-04-2019',
-        reason: 'Plant is dead'
-      },
-      {
-        plant_id: '19028310923811',
-        destroyed_on: '23-04-2019',
-        reason: 'Plant is dead'
+  async load(batch_id) {
+    if (batch_id) {
+      const url = `/api/v1/plants/destroyed_plants?batch_id=${batch_id}`
+      const res = await (await fetch(url, httpGetOptions)).json()
+      if (res) {
+        this.batch_id = batch_id
+        this.plants = res
       }
-    ]
+    }
   }
 
   @action
   async addDestroyedPlant(plant_id, reason) {
-    if (!plant_id) {
-      return
-    }
+    if (!plant_id) return
     this.isSaving = true
-    const payload = {
-      plant_id,
-      reason,
-      destroyed_on: 'Some Date'
-    }
+    const payload = { plant_id, reason, destroyed_on: new Date().toString() }
     // Optimistic update
     const found = this.plants.find(p => p.plant_id === plant_id)
     if (found) {
@@ -147,16 +137,8 @@ class DestroyedPlantsStore {
     } else {
       this.plants = [...this.plants, payload]
     }
-    // TODO: Submit new destroyed plant to API
-    const url = 'https://jsonplaceholder.typicode.com/posts'
-    const res = await (await fetch(
-      url,
-      httpPostOptions({
-        title: 'foo',
-        body: 'bar',
-        userId: 1
-      })
-    )).json()
+    const url = '/api/v1/plants/save_destroyed_plant'
+    const res = await (await fetch(url, httpPostOptions(payload))).json()
     this.isSaving = false
     if (res) {
       return true

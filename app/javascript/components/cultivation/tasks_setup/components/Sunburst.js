@@ -1,6 +1,7 @@
 import React from 'react'
 import * as d3 from 'd3'
 class Sunburst extends React.Component {
+  state = { renderData: [] }
   componentDidMount() {
     let div = d3
       .select('html')
@@ -30,6 +31,7 @@ class Sunburst extends React.Component {
         'tray_code',
         'tray_capacity'
       )
+    this.setState({ renderData: structurizedData })
     let root = d3
       .hierarchy(structurizedData) // <-- 1
       .sum(function(d) {
@@ -69,26 +71,10 @@ class Sunburst extends React.Component {
           .html(d.data.name + '<br/>')
           .style('left', d3.event.pageX + 'px')
           .style('top', d3.event.pageY - 28 + 'px')
-
         d3.select(this).style('cursor', 'pointer')
-
-        // d3.selectAll('path')
-        //   .filter(function(node) {
-        //     return d.descendants().indexOf(node) >= 0
-        //   })
-        //   .style('fill', function(d) {
-        //     return d.parent ? '#F66830' : '#fff'
-        //   })
       })
       .on('mouseout', function(d) {
-        //   return d3.color(d.depth ? "#d3d3d3" : "#fff");
         div.style('opacity', 0)
-        // d3.selectAll('path').style('fill', function(d) {
-        //   // if(d && d.data.name === "S02 T01")
-        //   //   return "url(#diagonalHatch)"
-
-        //   return d3.color(d && d.depth ? '#C7C7C7' : '#fff')
-        // })
       })
       .on('click', function(d) {
         that.props.onAddTray(d.data)
@@ -101,7 +87,7 @@ class Sunburst extends React.Component {
           .style('fill', function(d) {
             let color = d3.color(parent.indexOf(d) >= 0 ? '#ffa36a' : '#C7C7C7')
             if (child.indexOf(d) >= 0) {
-              color = d3.color('#ff7f30')
+              color = d3.color('#ff6300')
             }
             if (d.parent) {
               return color
@@ -114,8 +100,8 @@ class Sunburst extends React.Component {
         return d3.color(d.depth ? '#C7C7C7' : '#fff')
       })
 
-    g.selectAll('.node') // <-- 1
-      .append('text') // <-- 2
+    g.selectAll('.node')
+      .append('text')
       .attr('font-weight', 'bold')
       .attr('transform', function(d) {
         return (
@@ -125,10 +111,10 @@ class Sunburst extends React.Component {
           that.computeTextRotation(d) +
           ')'
         )
-      }) // <-- 3
+      })
       .attr('dx', function(d) {
         return d.parent ? '' : ''
-      }) // <-- 4
+      })
       .attr('dy', function(d) {
         return d.parent ? '' : '-15'
       })
@@ -137,10 +123,37 @@ class Sunburst extends React.Component {
       .style('text-anchor', 'middle')
       .style('fill', function(d) {
         return d.parent ? '#FFF' : '#707A8B'
-      }) // <-- 5
+      })
       .text(function(d) {
         return d.parent ? '' : d.data.name
-      }) // <-- 6
+      })
+    console.log(this.props.locationSelected)
+    if (this.props.locationSelected) {
+      g.selectAll('path').filter(d => {
+        if (d.data.id === that.props.locationSelected) {
+          that.props.onAddTray(d.data)
+          that.props.onChoosen(d.data, d.data.hierarchy)
+          that.props.onClearTray()
+          let child = d.descendants()
+          let parent = d.parent ? d.parent.descendants() : []
+          d3.selectAll('path')
+            .filter(node => node)
+            .style('fill', function(d) {
+              let color = d3.color(
+                parent.indexOf(d) >= 0 ? '#ffa36a' : '#C7C7C7'
+              )
+              if (child.indexOf(d) >= 0) {
+                color = d3.color('#ff6300')
+              }
+              if (d.parent) {
+                return color
+              } else {
+                return d3.color('#fff')
+              }
+            })
+        }
+      })
+    }
   }
 
   computeTextRotation = d => {
@@ -160,7 +173,6 @@ class Sunburst extends React.Component {
       code: 'room',
       children: []
     }
-
     // For each data row, loop through the expected levels traversing the output tree
     flatData.forEach(function(d) {
       // Keep this as a reference to the current level
@@ -209,7 +221,6 @@ class Sunburst extends React.Component {
         }
       })
     })
-
     // sum up the leaves / branches and return the hierarchy
     return nestedData
   }

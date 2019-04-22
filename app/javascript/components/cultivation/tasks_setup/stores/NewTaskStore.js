@@ -64,7 +64,13 @@ class TaskStore {
   @observable isDataLoaded = false
   @observable collapsedNodes = []
   @observable tasks = []
+  @observable isSunburstNodeSelected = false
   @observable facilityPhases = []
+
+  @action
+  updateSunburstIsSelected() {
+    this.isSunburstNodeSelected = true
+  }
 
   @action
   async loadTasks(batchId) {

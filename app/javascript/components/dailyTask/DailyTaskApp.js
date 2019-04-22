@@ -1,16 +1,19 @@
 import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
+
+import dailyTaskSidebarAdaptor from './dailyTaskSidebarAdaptor'
 import BatchedDailyTasks from './components/BatchedDailyTasks'
 import NoteEditor from './components/NoteEditor'
 import AddMaterialForm from './components/AddMaterialForm'
 import ClipPotTagForm from './components/ClipPotTagForm'
 import MovingIntoTrayForm from './components/MovingIntoTrayForm'
+import HarvestBatchWeightForm from './components/HarvestBatchWeightForm'
+
 import loadDailyTasks from './actions/loadDailyTasks'
 import DailyTasksStore from './stores/DailyTasksStore'
 import MaterialUsedStore from './stores/MaterialUsedStore'
 import SidebarStore from './stores/SidebarStore'
-import dailyTaskSidebarAdaptor from './dailyTaskSidebarAdaptor'
 import IssueSidebar from '../issues/IssueSidebar2'
 import NutrientEntryForm from '../utils/NutrientEntryForm'
 import {
@@ -141,6 +144,17 @@ class DailyTaskApp extends React.Component {
             />
           )}
         />
+        <SlidePanel
+          width="500px"
+          show={sidebarName === 'measure_harvest_weight'}
+          renderBody={props => (
+            <HarvestBatchWeightForm
+              scanditLicense={this.props.scanditLicense}
+              batchId={batchId}
+              show={sidebarName === 'measure_harvest_weight'}
+            />
+          )}
+        />
       </React.Fragment>
     )
   }
@@ -150,6 +164,7 @@ class DailyTaskApp extends React.Component {
     return (
       <React.Fragment>
         <div id="toast" className="toast animated toast--success" />
+        <div>{SidebarStore.sidebarName}</div>
         {DailyTasksStore.batches.map(batch => (
           <BatchedDailyTasks
             key={batch.id}

@@ -5,7 +5,8 @@ import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 import {
   SlidePanelHeader,
   SlidePanelFooter,
-  LocationPicker
+  LocationPicker,
+  toast
 } from '../../../utils'
 
 import reactSelectStyle from '../../../utils/reactSelectStyle'
@@ -43,6 +44,7 @@ class HarvestBatchForm extends React.Component {
         if (status >= 400) {
           this.setState({ errors: data.errors })
         } else {
+          toast('Harvest batch saved.', 'success')
           this.reset()
           this.props.onClose()
         }
@@ -111,11 +113,10 @@ class HarvestBatchForm extends React.Component {
     const { harvest_name, location_id, errors, uom } = this.state
     const uomOptions = ['g', 'lb'].map(x => ({ label: x, value: x }))
 
-    console.log(errors)
     return (
       <div>
+        <div id="toast" className="toast animated toast--success" />
         <SlidePanelHeader onClose={onClose} title="Create Harvest" />
-
         <div className="ph4 mv3 flex">
           <div className="w-100">
             <TextInput

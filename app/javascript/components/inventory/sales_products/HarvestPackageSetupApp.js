@@ -55,15 +55,8 @@ const columns = (locations, harvest_batches) => [
   },
   {
     Header: 'Location',
-    headerClassName: 'tl',
-    Cell: record => (
-      <div className="tl">
-        {
-          locations.find(x => x.rm_id == record.original.attributes.location_id)
-            .rm_name
-        }
-      </div>
-    )
+    accessor: 'attributes.location_name',
+    headerClassName: 'tl'
   },
   {
     Header: 'Harvest batch',

@@ -40,6 +40,7 @@ class UserDetailsEditor extends React.PureComponent {
       let default_facility = {}
       let reporting_manager = {}
       let user_mode = {}
+      let work_schedules = []
       if (props.user.facilities && props.facilitiesOptions) {
         facilities = props.user.facilities.map(id =>
           props.facilitiesOptions.find(y => y.value === id)
@@ -66,6 +67,10 @@ class UserDetailsEditor extends React.PureComponent {
         user_mode = user_modes.find(y => y.value === props.user.user_mode)
       }
 
+      if (props.user.work_schedules) {
+        work_schedules = props.user.work_schedules
+      }
+
       this.state = {
         tabs: 'General',
         userId: props.user.id,
@@ -82,7 +87,8 @@ class UserDetailsEditor extends React.PureComponent {
         reporting_manager: reporting_manager,
         facilities,
         roles,
-        default_facility
+        default_facility,
+        work_schedules: work_schedules
       }
     } else {
       this.state = {
@@ -107,6 +113,22 @@ class UserDetailsEditor extends React.PureComponent {
   onChangeInput = field => e => this.setState({ [field]: e.target.value })
 
   onChangeToggle = field => e => this.setState({ [field]: e.target.checked })
+
+  onChangeWorkingHourInput = (day, time, e) => {
+    let temp_work_schedules = this.state.work_schedules
+    let temp_day = temp_work_schedules.find(e => e.day === day)
+    if (temp_day) {
+      temp_day[time] = e.target.value
+    }
+    temp_work_schedules.map(e => e.day === day)
+    temp_work_schedules = temp_work_schedules.map(s => {
+      if (s.day === day) {
+        s = temp_day
+      }
+      return s
+    })
+    this.setState({ work_schedules: temp_work_schedules })
+  }
 
   onSelectChange = (field, options) => {
     if (options && (options.value || options.length)) {
@@ -138,6 +160,7 @@ class UserDetailsEditor extends React.PureComponent {
       overtime_hourly_rate,
       user_mode,
       reporting_manager,
+      work_schedules,
       isActive
     } = this.state
     const newRoles = roles ? roles.map(x => x.value) : []
@@ -165,7 +188,8 @@ class UserDetailsEditor extends React.PureComponent {
         facilities: newFacilities,
         roles: newRoles,
         reporting_manager_id: reporting_manager_id,
-        default_facility_id: defaultFacilityId
+        default_facility_id: defaultFacilityId,
+        work_schedules: work_schedules
       }
     }
     this.props.onSave(userDetails)
@@ -199,6 +223,18 @@ class UserDetailsEditor extends React.PureComponent {
       reporting_manager,
       overtime_hourly_rate
     } = this.state
+
+    const sunday = this.state.work_schedules.find(e => e.day === 'sunday') || {}
+    const monday = this.state.work_schedules.find(e => e.day === 'monday') || {}
+    const tuesday =
+      this.state.work_schedules.find(e => e.day === 'tuesday') || {}
+    const wednesday =
+      this.state.work_schedules.find(e => e.day === 'wednesday') || {}
+    const thursday =
+      this.state.work_schedules.find(e => e.day === 'thursday') || {}
+    const friday = this.state.work_schedules.find(e => e.day === 'friday') || {}
+    const saturday =
+      this.state.work_schedules.find(e => e.day === 'saturday') || {}
 
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
 
@@ -251,7 +287,7 @@ class UserDetailsEditor extends React.PureComponent {
                       'w4 h4 bg-black-10': !photoUrl
                     })}
                   >
-                    <img src={photoUrl} className="fl" />
+                    <img src={photoUrl} className="fl h4 w4" />
                     <AvatarPicker
                       key={photoUrl}
                       onUploadSuccess={this.onUploadAvatarSuccess}
@@ -371,6 +407,183 @@ class UserDetailsEditor extends React.PureComponent {
                   value={roles}
                   className="mt1 w-100 f6"
                 />
+              </div>
+              <div className="mt3 fl w-100 pt3 bt b--light-gray">
+                <label className="f6 fw6 db mb0 dark-gray ttc">
+                  Work Schedules
+                </label>
+              </div>
+              <div className="mt2 fl w-100 flex justify-between">
+                <label className="f6 fw6 db mb1 gray ttc">Sunday</label>
+                <div class="flex w-60 justify-between">
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput('sunday', 'start_time', e)
+                    }
+                    value={sunday.start_time}
+                  />
+                  <div class="flex items-center">
+                    <label className="f4 db mb1 ttc">-</label>
+                  </div>
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput('sunday', 'end_time', e)
+                    }
+                    value={sunday.end_time}
+                  />
+                </div>
+              </div>
+              <div className="mt2 fl w-100 flex justify-between">
+                <label className="f6 fw6 db mb1 gray ttc">Monday</label>
+                <div class="flex w-60 justify-between">
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput('monday', 'start_time', e)
+                    }
+                    value={monday.start_time}
+                  />
+                  <div class="flex items-center">
+                    <label className="f4 db mb1 ttc">-</label>
+                  </div>
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput('monday', 'end_time', e)
+                    }
+                    value={monday.end_time}
+                  />
+                </div>
+              </div>
+              <div className="mt2 fl w-100 flex justify-between">
+                <label className="f6 fw6 db mb1 gray ttc">Tuesday</label>
+                <div class="flex w-60 justify-between">
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput('tuesday', 'start_time', e)
+                    }
+                    value={tuesday.start_time}
+                  />
+                  <div class="flex items-center">
+                    <label className="f4 db mb1 ttc">-</label>
+                  </div>
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput('tuesday', 'end_time', e)
+                    }
+                    value={tuesday.end_time}
+                  />
+                </div>
+              </div>
+              <div className="mt2 fl w-100 flex justify-between">
+                <label className="f6 fw6 db mb1 gray ttc">Wednesday</label>
+                <div class="flex w-60 justify-between">
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput(
+                        'wednesday',
+                        'start_time',
+                        e
+                      )
+                    }
+                    value={wednesday.start_time}
+                  />
+                  <div class="flex items-center">
+                    <label className="f4 db mb1 ttc">-</label>
+                  </div>
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput('wednesday', 'end_time', e)
+                    }
+                    value={wednesday.end_time}
+                  />
+                </div>
+              </div>
+              <div className="mt2 fl w-100 flex justify-between">
+                <label className="f6 fw6 db mb1 gray ttc">Thursday</label>
+                <div class="flex w-60 justify-between">
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput('thursday', 'start_time', e)
+                    }
+                    value={thursday.start_time}
+                  />
+                  <div class="flex items-center">
+                    <label className="f4 db mb1 ttc">-</label>
+                  </div>
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput('thursday', 'end_time', e)
+                    }
+                    value={thursday.end_time}
+                  />
+                </div>
+              </div>
+              <div className="mt2 fl w-100 flex justify-between">
+                <label className="f6 fw6 db mb1 gray ttc">Friday</label>
+                <div class="flex w-60 justify-between">
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput('friday', 'start_time', e)
+                    }
+                    value={friday.start_time}
+                  />
+                  <div class="flex items-center">
+                    <label className="f4 db mb1 ttc">-</label>
+                  </div>
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput('friday', 'end_time', e)
+                    }
+                    value={friday.end_time}
+                  />
+                </div>
+              </div>
+              <div className="mt2 fl w-100 flex justify-between">
+                <label className="f6 fw6 db mb1 gray ttc">Saturday</label>
+                <div class="flex w-60 justify-between">
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput('saturday', 'start_time', e)
+                    }
+                    value={saturday.start_time}
+                  />
+                  <div class="flex items-center">
+                    <label className="f4 db mb1 ttc">-</label>
+                  </div>
+                  <input
+                    className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                    type="time"
+                    onChange={e =>
+                      this.onChangeWorkingHourInput('saturday', 'end_time', e)
+                    }
+                    value={saturday.end_time}
+                  />
+                </div>
               </div>
               <div className="mt3 fl w-100 pt3 bt b--light-gray">
                 <label className="f6 fw6 db mb0 dark-gray ttc">

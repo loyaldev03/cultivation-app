@@ -28,6 +28,15 @@ class SaveUser
       user.reporting_manager_id = if args[:reporting_manager_id]
                                     args[:reporting_manager_id].to_bson_id
                                   end
+      user.work_schedules = []
+      args[:work_schedules].map do |a|
+        user.work_schedules.build(
+          day: a[:day],
+          start_time: a[:start_time] ? Time.parse(a[:start_time]) : '',
+          end_time: a[:end_time] ? Time.parse(a[:end_time]) : '',
+        )
+      end
+
       user.default_facility_id = if args[:default_facility_id]
                                    args[:default_facility_id].to_bson_id
                                  end

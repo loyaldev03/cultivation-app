@@ -66,6 +66,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       :reporting_manager_id,
       facilities: [],
       roles: [],
+      work_schedules: [:day, :start_time, :end_time],
     )
   end
 

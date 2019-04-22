@@ -34,6 +34,14 @@ module Inventory
       }
     end
 
+    attribute :location_name do |object, params|
+      if params[:query] && object.location_id
+        params[:query].get_location_code(object.location_id)
+      else
+        ''
+      end
+    end
+
     attribute :product do |object|
       product = object.product
       {

@@ -216,7 +216,6 @@ class ExpandedRow extends React.Component {
               </a>
             )}
 
-
             {indelible == 'measure_waste_weight' && (
               <a
                 href="#0"

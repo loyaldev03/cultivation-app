@@ -82,8 +82,6 @@ class HarvestBatchStore {
         }
       })
   }
-
-
 }
 
 const harvestBatchStore = new HarvestBatchStore()

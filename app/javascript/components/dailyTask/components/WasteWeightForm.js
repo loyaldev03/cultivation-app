@@ -17,7 +17,7 @@ class WasteWeightForm extends React.Component {
   async componentDidUpdate(prevProps) {
     if (!prevProps.show && this.props.show) {
       await harvestBatchStore.load(this.props.batchId)
-      this.setState({ weight: harvestBatchStore.totalWetWasteWeight})
+      this.setState({ weight: harvestBatchStore.totalWetWasteWeight })
     }
   }
 
@@ -69,7 +69,7 @@ class WasteWeightForm extends React.Component {
             </div>
             <div className="ph4 mt2 flex flex-column w-100">
               <span className="f6 fw6 gray">{harvestBatchName}</span>
-            </div> 
+            </div>
 
             <div className="flex items-end ph4 mt4">
               <div className="w-30">
@@ -85,13 +85,9 @@ class WasteWeightForm extends React.Component {
               </div>
             </div>
           </div>
-          <SlidePanelFooter
-            onSave={() => this.onSubmit()}
-        />
+          <SlidePanelFooter onSave={() => this.onSubmit()} />
         </div>
-
       </div>
-
     )
   }
 }

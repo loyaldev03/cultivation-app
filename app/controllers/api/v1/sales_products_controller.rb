@@ -39,14 +39,26 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
     items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue).
       in(catalogue: sales_catalogue_ids(Constants::CONVERTED_PRODUCT_KEY)).
       order(c_at: :desc)
-    render json: Inventory::HarvestPackageSerializer.new(items).serialized_json
+
+    serialized_json = Inventory::HarvestPackageSerializer.new(
+      items,
+      params: {query: QueryLocations.call(params[:facility_id])},
+    ).serializable_hash[:data]
+
+    render json: {data: serialized_json}
   end
 
   def harvest_packages
     items = Inventory::ItemTransaction.where(facility_id: params[:facility_id]).includes(:product, :catalogue, :harvest_batch).
       in(catalogue: sales_catalogue_ids('raw_sales_product')).
       order(c_at: :desc)
-    render json: Inventory::HarvestPackageSerializer.new(items).serialized_json
+
+    serialized_json = Inventory::HarvestPackageSerializer.new(
+      items,
+      params: {query: QueryLocations.call(params[:facility_id])},
+    ).serializable_hash[:data]
+
+    render json: {data: serialized_json}
   end
 
   def harvest_package

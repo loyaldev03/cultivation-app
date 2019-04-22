@@ -1,7 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
-import UserStore from '../stores/NewUserStore'
 import BatchStore from '../../batches/BatchStore'
 import TaskStore from '../stores/NewTaskStore'
 import loadPlants from '../../../inventory/plant_setup/actions/loadPlants'
@@ -9,32 +7,41 @@ import {
   SlidePanelHeader,
   SlidePanelFooter,
   ProgressBar,
-  ErrorBoundary
+  ErrorBoundary,
+  RoomIcon
 } from '../../../utils'
 import Sunburst from './Sunburst'
 import Tippy from '@tippy.js/react'
-import taskStore from '../stores/NewTaskStore'
 @observer
 class ClippingPanel extends React.Component {
   state = {
     roomData: null,
     traySelected: [],
+    motherRoomList: [],
     trayFilterList: [],
     highlightedNode: [],
     locationFilter: [],
-    locationSelected: null,
     allLocationChecked: false,
     clipNumber: 0,
+    roomChoice: null,
     applyAllToggle: false,
-    codeSelected: null
+    codeSelected: null,
+    roomSelected: null
   }
   async componentDidMount() {
     await Promise.all([
       BatchStore.loadBatch(this.props.batchId),
       loadPlants('mother', this.props.facilityId)
     ])
+    let roomData = await TaskStore.roomData(this.props.facilityId, 'mother')
+    let motherRoomList = roomData.map(e => {
+      return e.room_name
+    })
+    motherRoomList = [...new Set(motherRoomList)]
     this.setState({
-      roomData: await TaskStore.roomData(this.props.facilityId, 'mother'),
+      motherRoomList,
+      roomChoice: motherRoomList[0],
+      roomData,
       locationSelected: BatchStore.batch.selected_location
     })
   }
@@ -51,29 +58,26 @@ class ClippingPanel extends React.Component {
   }
   onAddTray = async element => {
     this.state.traySelected.push(element)
-    taskStore.updateSunburstIsSelected()
     let temp = await TaskStore.getPlantOnSelect(
       this.props.facilityId,
       this.props.strainId,
       element.id
     )
-    temp = temp
-      .map(x => {
-        x.quantity = 0
-        BatchStore.getSelected().forEach(element => {
-          if (element.plant_id === x.plant_id) x.quantity = element.quantity
-        })
-        return x
+    temp = temp.map(x => {
+      x.quantity = 0
+      BatchStore.getSelected().forEach(element => {
+        if (element.plant_id == x.plant_id) x.quantity = element.quantity
       })
-      .filter(a => a.quantity > 0)
-
+      return x
+    })
     let uniqueLocationCode = temp.map(x => {
       return { code: x.location_code, ticked: true }
     })
+    console.log(element)
     this.setState({
       traySelected: temp,
       codeSelected: element.name,
-      locationSelected: element.id,
+      roomSelected: element.meta ? `in ${element.meta.room_name}` : '',
       trayFilterList: this.uniqBy(uniqueLocationCode, 'code'),
       allLocationChecked: true
     })
@@ -107,10 +111,7 @@ class ClippingPanel extends React.Component {
         0
       ) <= BatchStore.batch.quantity
     )
-      BatchStore.updateBatchSelectedPlants(
-        this.props.batchId,
-        this.state.locationSelected
-      )
+      BatchStore.updateBatchSelectedPlants(this.props.batchId)
   }
 
   onFilterLocation = (e, locationCode) => {
@@ -147,7 +148,7 @@ class ClippingPanel extends React.Component {
   }
   onApplyAllClipping = e => {
     this.setState({ clipNumber: e.target.value })
-    if (this.state.applyAllToggle === true) {
+    if (this.state.applyAllToggle == true) {
       let temp = this.state.traySelected.map(x => {
         x.quantity = e.target.value
         return x
@@ -156,15 +157,21 @@ class ClippingPanel extends React.Component {
     }
   }
 
+  changeRoom = roomName => {
+    this.setState({ roomChoice: roomName })
+  }
   render() {
     const { onClose } = this.props
     const {
       roomData,
       traySelected,
       trayFilterList,
+      motherRoomList,
       clipNumber,
+      roomChoice,
       locationSelected,
       codeSelected,
+      roomSelected,
       applyAllToggle,
       highlightedNode,
       allLocationChecked
@@ -176,6 +183,19 @@ class ClippingPanel extends React.Component {
     return (
       <div>
         <SlidePanelHeader onClose={onClose} title={this.props.title} />
+        <div className="flex justify-center tc mt3">
+          {motherRoomList.map(card => (
+            <div
+              className={`flex flex-column f6 lh-copy ba br2 b--light-grey pa2 ml1 pointer ${card ===
+                roomChoice && 'orange b'}`}
+              key={card}
+              onClick={e => this.changeRoom(card)}
+            >
+              {card}
+              <img src={RoomIcon} className="h2" />
+            </div>
+          ))}
+        </div>
         <div className="ph4 pb4 pt3">
           <span className="orange">Sage</span> mother plants are located in the
           sections highlighted in orange. Select the area of the mother plants
@@ -185,10 +205,11 @@ class ClippingPanel extends React.Component {
           <div className="w-100 tc">
             <ErrorBoundary>
               <Sunburst
-                data={roomData}
+                data={roomData.filter(node => node.room_name === roomChoice)}
                 locationSelected={locationSelected}
                 onClearTray={this.onClearTray}
                 onAddTray={this.onAddTray}
+                roomChoice={roomChoice}
                 onChoosen={this.onChoosen}
                 highlightedNode={highlightedNode}
                 width="300"
@@ -199,7 +220,8 @@ class ClippingPanel extends React.Component {
         ) : null}
         {codeSelected && (
           <div className="orange tc mt4">
-            You’ve selected all mother plants located in {codeSelected}
+            You’ve selected all mother plants located in {codeSelected}{' '}
+            {roomSelected}
           </div>
         )}
         {traySelected && traySelected.length > 0 ? (
@@ -229,7 +251,7 @@ class ClippingPanel extends React.Component {
                   />
                 </div>
               )}
-              <div className="mt3 subtitle-2">
+              <div className="mt4 subtitle-2">
                 You selected mother plants at:
                 <br />
                 <div className="bg-light-gray  grey f5 flex justify-between items-center pa1 pv2">
@@ -341,7 +363,7 @@ class ClippingPanel extends React.Component {
                         <div className="fl w-20 pa1 tc">
                           <input
                             type="number"
-                            className="input w-40 tr"
+                            className="input w-30 tr"
                             value={tray.quantity}
                             maxLength="2"
                             onChange={e =>

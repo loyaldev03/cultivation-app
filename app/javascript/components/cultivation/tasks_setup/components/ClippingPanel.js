@@ -77,7 +77,7 @@ class ClippingPanel extends React.Component {
     this.setState({
       traySelected: temp,
       codeSelected: element.name,
-      roomSelected: element.meta ? element.meta.room_name : '',
+      roomSelected: element.meta ? `in ${element.meta.room_name}` : '',
       trayFilterList: this.uniqBy(uniqueLocationCode, 'code'),
       allLocationChecked: true
     })
@@ -220,7 +220,7 @@ class ClippingPanel extends React.Component {
         ) : null}
         {codeSelected && (
           <div className="orange tc mt4">
-            You’ve selected all mother plants located in {codeSelected} in{' '}
+            You’ve selected all mother plants located in {codeSelected}{' '}
             {roomSelected}
           </div>
         )}

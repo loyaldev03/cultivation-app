@@ -33,7 +33,7 @@ const columns = locations => [
   {
     Header: 'Location',
     accessor: 'attributes.location_name',
-    headerClassName: 'tl',
+    headerClassName: 'tl'
   },
 
   {

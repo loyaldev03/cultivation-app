@@ -216,6 +216,28 @@ class ExpandedRow extends React.Component {
               </a>
             )}
 
+            {indelible == 'measure_waste_weight' && (
+              <a
+                href="#0"
+                className={classNames(
+                  'btn mr3',
+                  {
+                    'btn--secondary': showButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  },
+                  {
+                    'btn--disabled': hideButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  }
+                )}
+                onClick={this.onOpenSidebar('measure_waste_weight')}
+              >
+                Measure waste weight
+              </a>
+            )}
+
             {showDoneButton ? (
               <a
                 href="#0"

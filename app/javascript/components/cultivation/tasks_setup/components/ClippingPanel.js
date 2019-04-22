@@ -12,6 +12,7 @@ import {
 } from '../../../utils'
 import Sunburst from './Sunburst'
 import Tippy from '@tippy.js/react'
+import taskStore from '../stores/NewTaskStore'
 @observer
 class ClippingPanel extends React.Component {
   state = {
@@ -21,6 +22,7 @@ class ClippingPanel extends React.Component {
     trayFilterList: [],
     highlightedNode: [],
     locationFilter: [],
+    locationSelected: null,
     allLocationChecked: false,
     clipNumber: 0,
     roomChoice: null,
@@ -32,15 +34,8 @@ class ClippingPanel extends React.Component {
       BatchStore.loadBatch(this.props.batchId),
       loadPlants('mother', this.props.facilityId)
     ])
-    let roomData = await TaskStore.roomData(this.props.facilityId, 'mother')
-    let motherRoomList = roomData.map(e => {
-      return e.room_name
-    })
-    motherRoomList = [...new Set(motherRoomList)]
     this.setState({
-      motherRoomList,
-      roomChoice: motherRoomList[0],
-      roomData,
+      roomData: await TaskStore.roomData(this.props.facilityId, 'mother'),
       locationSelected: BatchStore.batch.selected_location
     })
   }
@@ -57,24 +52,29 @@ class ClippingPanel extends React.Component {
   }
   onAddTray = async element => {
     this.state.traySelected.push(element)
+    taskStore.updateSunburstIsSelected()
     let temp = await TaskStore.getPlantOnSelect(
       this.props.facilityId,
       this.props.strainId,
       element.id
     )
-    temp = temp.map(x => {
-      x.quantity = 0
-      BatchStore.getSelected().forEach(element => {
-        if (element.plant_id == x.plant_id) x.quantity = element.quantity
+    temp = temp
+      .map(x => {
+        x.quantity = 0
+        BatchStore.getSelected().forEach(element => {
+          if (element.plant_id === x.plant_id) x.quantity = element.quantity
+        })
+        return x
       })
-      return x
-    })
+      .filter(a => a.quantity > 0)
+
     let uniqueLocationCode = temp.map(x => {
       return { code: x.location_code, ticked: true }
     })
     this.setState({
       traySelected: temp,
       codeSelected: element.name,
+      locationSelected: element.id,
       trayFilterList: this.uniqBy(uniqueLocationCode, 'code'),
       allLocationChecked: true
     })
@@ -108,7 +108,10 @@ class ClippingPanel extends React.Component {
         0
       ) <= BatchStore.batch.quantity
     )
-      BatchStore.updateBatchSelectedPlants(this.props.batchId)
+      BatchStore.updateBatchSelectedPlants(
+        this.props.batchId,
+        this.state.locationSelected
+      )
   }
 
   onFilterLocation = (e, locationCode) => {
@@ -145,7 +148,7 @@ class ClippingPanel extends React.Component {
   }
   onApplyAllClipping = e => {
     this.setState({ clipNumber: e.target.value })
-    if (this.state.applyAllToggle == true) {
+    if (this.state.applyAllToggle === true) {
       let temp = this.state.traySelected.map(x => {
         x.quantity = e.target.value
         return x
@@ -358,7 +361,7 @@ class ClippingPanel extends React.Component {
                         <div className="fl w-20 pa1 tc">
                           <input
                             type="number"
-                            className="input w-30 tr"
+                            className="input w-40 tr"
                             value={tray.quantity}
                             maxLength="2"
                             onChange={e =>

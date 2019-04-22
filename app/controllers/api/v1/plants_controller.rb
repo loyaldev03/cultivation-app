@@ -49,6 +49,20 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     end
   end
 
+  def save_destroyed_plant
+    command = Inventory::SaveDestroyedPlant.call(
+      current_user,
+      batch_id: params[:batch_id],
+      plant_id: params[:plant_id],
+      destroyed_reason: params[:destroyed_reason],
+    )
+    if command.success?
+      render json: command.result.as_json
+    else
+      render json: request_with_errors(command.errors)
+    end
+  end
+
   def destroyed_plants
     batch_id = params[:batch_id]
     command = Inventory::QueryDestroyedPlants.call(batch_id: batch_id)

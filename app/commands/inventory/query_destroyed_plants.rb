@@ -1,7 +1,8 @@
 module Inventory
-  DestroyedPlant = Struct.new(:plant_id, :destroyed_date, :destroyed_reason)
   class QueryDestroyedPlants
     prepend SimpleCommand
+
+    DestroyedPlant = Struct.new(:plant_id, :destroyed_date, :destroyed_reason)
 
     attr_reader :batch_id
 

@@ -166,6 +166,7 @@ Rails.application.routes.draw do
           post 'setup_plants'
           post 'setup_harvest_batch'
           post 'lot_numbers'
+          post 'save_destroyed_plant'
         end
       end
 

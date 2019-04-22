@@ -182,6 +182,11 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   def save_waste_weight
     batch = Cultivation::Batch.find(params[:batch_id])
     harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: params[:batch_id])
+
+    if harvest_batch.nil?
+      render json: {errors: {harvest_bath: ['Harvest batch is not setup.']}}, status: 422 and return
+    end
+
     harvest_batch.update(
       total_wet_waste_weight: params[:weight],
     )

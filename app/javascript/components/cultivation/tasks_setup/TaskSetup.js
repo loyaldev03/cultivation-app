@@ -9,6 +9,7 @@ import BatchTabs from '../shared/BatchTabs'
 import loadUnresolvedIssueCount from '../../issues/actions/loadUnresolvedIssueCount'
 import IssueSidebar from '../../issues/IssueSidebar2'
 import currentIssueStore from '../../issues/store/CurrentIssueStore'
+import ReportDestroyedPlants from './components/ReportDestroyedPlants'
 import { SlidePanel } from '../../utils'
 
 @observer
@@ -30,6 +31,7 @@ class TaskSetup extends React.Component {
         'materials',
         'depend_on'
       ],
+      showDestroyedPlants: false,
       columnOpen: false,
       unresolvedIssueCount: 0
     }
@@ -79,6 +81,7 @@ class TaskSetup extends React.Component {
 
   render() {
     const { batch } = this.props
+    const { showDestroyedPlants } = this.state
     let handleChangeCheckbox = this.handleChangeCheckbox
     let checkboxValue = this.checkboxValue
     const showIssues =
@@ -99,6 +102,17 @@ class TaskSetup extends React.Component {
             unresolvedIssueCount={this.state.unresolvedIssueCount}
           />
           <div className="flex mt4">
+            <a
+              href="#0"
+              className="btn btn--secondary btn--small mr3"
+              onClick={() =>
+                this.setState({
+                  showDestroyedPlants: true
+                })
+              }
+            >
+              Report Destroyed Plant
+            </a>
             <div className="mr2 mt2">
               <i className="material-icons icon--small pointer">filter_list</i>
               <span className="grey f6 ml2">Filter</span>
@@ -271,6 +285,16 @@ class TaskSetup extends React.Component {
         <div className="pa4 flex flex-column justify-between bg-white box--shadow">
           <TaskList batch={batch} columns={this.state.columns} />
         </div>
+        <SlidePanel
+          show={showDestroyedPlants}
+          renderBody={props => (
+            <ReportDestroyedPlants
+              batch_id={batch.id}
+              title="Report Destroyed Plants"
+              onClose={() => this.setState({ showDestroyedPlants: false })}
+            />
+          )}
+        />
         <SlidePanel
           width="500px"
           show={showIssues}

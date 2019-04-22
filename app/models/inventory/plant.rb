@@ -28,6 +28,7 @@ module Inventory
     field :harvest_date, type: Time
     field :expected_harvest_date, type: Time
     field :destroyed_date, type: Time
+    field :destroyed_reason, type: String
     field :mother_id, type: BSON::ObjectId
     # metrc require big batch to split into multiple lot
     field :lot_number, type: String

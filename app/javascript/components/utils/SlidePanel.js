@@ -28,12 +28,13 @@ SlidePanelHeader.propTypes = {
 
 class SlidePanelFooter extends React.PureComponent {
   render() {
+    const { label = 'Save' } = this.props
     return (
       <div className="pv3 ph4 bt b--light-grey">
         <input
           type="submit"
           className="fr btn btn--primary"
-          value="Save"
+          value={label}
           onClick={this.props.onSave}
         />
       </div>

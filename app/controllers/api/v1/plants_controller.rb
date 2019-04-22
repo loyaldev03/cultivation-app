@@ -49,6 +49,16 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     end
   end
 
+  def destroyed_plants
+    batch_id = params[:batch_id]
+    command = Inventory::QueryDestroyedPlants.call(batch_id: batch_id)
+    if command.success?
+      render json: command.result
+    else
+      render json: request_with_errors(command.errors)
+    end
+  end
+
   def show
     plant = Inventory::Plant.find(params[:id])
     render json: Inventory::PlantSerializer.new(

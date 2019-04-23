@@ -38,14 +38,14 @@ export default class WeeklyCalendar extends React.Component {
           ))}
         </Row>
         {time.map((x, i) => (
-          <Row>
-            <Cell className="tr">
+          <Row className="h3 grey">
+            <Cell className="tr" style={{ marginTop: '-1em' }}>
               {i + 8 < 12
                 ? `${i + 8} AM`
                 : `${i + 8 - 12 == 0 ? 12 : i + 8 - 12} PM`}
             </Cell>
             {week.map((x, i) => (
-              <Cell />
+              <Cell className="bb b--light-grey" />
             ))}
           </Row>
         ))}
@@ -54,6 +54,18 @@ export default class WeeklyCalendar extends React.Component {
   }
 }
 
-const Row = props => <div className="w-100 flex">{props.children}</div>
+const Row = props => (
+  <div className={classNames('w-100 flex', props.className)}>
+    {props.children}
+  </div>
+)
 
-const Cell = props => <div className="w-10">{props.children}</div>
+const Cell = props => (
+  <div className={classNames('w-10', props.className)} style={props.style}>
+    {props.children}
+  </div>
+)
+
+const classNames = (className, propClass) => {
+  return `${className} ${propClass}`
+}

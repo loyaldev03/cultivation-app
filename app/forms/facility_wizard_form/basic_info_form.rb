@@ -6,8 +6,6 @@ module FacilityWizardForm
     ATTRS = [:id,
              :name,
              :code,
-             :company_name,
-             :state_license,
              :site_license,
              :timezone,
              :is_complete,
@@ -52,8 +50,6 @@ module FacilityWizardForm
       self.id = record.id
       self.name = record.name
       self.code = record.code
-      self.company_name = record.company_name
-      self.state_license = record.state_license
       self.site_license = record.site_license
       self.timezone = record.timezone
       self.is_complete = record.is_complete

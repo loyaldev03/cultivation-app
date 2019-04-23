@@ -63,13 +63,15 @@ class ClippingPanel extends React.Component {
       this.props.strainId,
       element.id
     )
-    temp = temp.map(x => {
-      x.quantity = 0
-      BatchStore.getSelected().forEach(element => {
-        if (element.plant_id == x.plant_id) x.quantity = element.quantity
+    temp = temp
+      .map(x => {
+        x.quantity = 0
+        BatchStore.getSelected().forEach(element => {
+          if (element.plant_id == x.plant_id) x.quantity = element.quantity
+        })
+        return x
       })
-      return x
-    })
+      .filter(a => a.quantity > 0)
     let uniqueLocationCode = temp.map(x => {
       return { code: x.location_code, ticked: true }
     })

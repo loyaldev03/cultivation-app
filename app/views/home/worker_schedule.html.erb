@@ -1,0 +1,48 @@
+<% content_for :breadcrumb do %>
+  <h3 class="dark-gray">Worker Schedule page</h2>
+<% end %>
+
+<div class="pa4">
+
+
+<div class="flex justify-between mb5">
+    <div class="flex">
+      <div class="flex items-center">
+        <% if current_user&.photo_url.present? %>
+          <img
+            src="<%= current_user&.photo_url%>"
+            class="br-100 ba h3 w3 dib pointer" 
+            alt="avatar"
+            id='image'
+            for='imgupload'
+          >
+        <% else %>
+          <i class='material-icons pointer md-48 grey' style='' id='image'>
+            camera_alt
+          </i>
+        <% end %>
+      </div>
+      <div class='ml3'>
+      <h1 class='f3 ma0 pa0 black-90 fw6 '>Hello <%= current_user.display_name %></h1>
+      <h1 class='f5 ma0 pa0 black-90 fw6 flex mt2'>
+        Today you have
+        <div class='orange ml1'><%= @total_tasks %> tasks!</div>
+      </h1>
+      <h1 class='f5 ma0 pa0 grey fw6 flex mt2'>
+        Date today : <%= Time.current.strftime('%d %b %Y') %>
+      </h1>
+      </div>
+
+    </div>
+    <div class='flex'>
+      <div>
+        <h1 class='f4 ma0 pa0 black-90 fw6'>Next Payment : <%= @next_payment_date&.strftime('%d %b %Y')%></h1>
+        <h1 class='f5 ma0 pa0 grey fw6 mt2'><%= @hours_worked %> hours worked this week</h1>
+      </div>
+    </div>
+  </div>
+<%= react_component 'worker_schedule/WorkerScheduleApp',
+{
+  date: Time.current.beginning_of_day
+} %>
+</div>

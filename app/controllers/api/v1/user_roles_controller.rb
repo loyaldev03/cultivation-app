@@ -63,8 +63,10 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       :hourly_rate,
       :overtime_hourly_rate,
       :user_mode,
+      :reporting_manager_id,
       facilities: [],
       roles: [],
+      work_schedules: [:day, :start_time, :end_time],
     )
   end
 

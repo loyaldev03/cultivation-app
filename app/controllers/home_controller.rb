@@ -6,7 +6,11 @@ class HomeController < ApplicationController
   end
 
   def dashboard
-    @dashboard = DashboardForm::DashboardForm.new
+    if ['manager', 'admin'].include? current_user.user_mode
+      @dashboard = DashboardForm::DashboardForm.new
+    else
+      redirect_to worker_dashboard_path
+    end
   end
 
   def employees
@@ -26,6 +30,13 @@ class HomeController < ApplicationController
     @next_payment_date = QueryNextPaymentDate.call(Time.current).result
     @hours_worked = get_hours_worked
     render 'worker_dashboard', layout: 'worker'
+  end
+
+  def worker_schedule
+    @total_tasks = get_tasks_today.count
+    @next_payment_date = QueryNextPaymentDate.call(Time.current).result
+    @hours_worked = get_hours_worked
+    render 'worker_schedule', layout: 'worker'
   end
 
   def inventory_setup

@@ -37,7 +37,7 @@ module Cultivation
     def update_current_growth_stage(batch)
       if batch.status == Constants::BATCH_STATUS_ACTIVE
         growth_stages = batch.facility.growth_stages
-        phases = Cultivation::QueryBatchPhases.call(batch).result
+        phases = Cultivation::QueryBatchPhases.call(batch).staying_schedules
         current_phase = phases.detect { |p| p.start_date >= current_time }
         prev = growth_stages.index(batch.current_growth_stage)
         curr = growth_stages.index(current_phase.phase)

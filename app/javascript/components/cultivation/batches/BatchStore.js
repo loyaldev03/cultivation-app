@@ -76,12 +76,13 @@ class BatchStore {
   }
 
   @action
-  async updateBatchSelectedPlants(batchId) {
+  async updateBatchSelectedPlants(batchId, locationSelected) {
     const url = `/api/v1/batches/${batchId}/update_batch_info`
     try {
       const payload = {
         name: this.batch.name,
-        selected_plants: toJS(this.batch.selected_plants)
+        selected_plants: toJS(this.batch.selected_plants),
+        selected_location: locationSelected // TODO: get the selected location that the user clicked.
       }
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response.data) {

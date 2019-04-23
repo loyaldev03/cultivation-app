@@ -125,14 +125,14 @@ module Cultivation
       # Rails.logger.debug [phase, start_date, duration]
       return start_date if duration == 0
 
-      task = batch.tasks.create!(
+      batch.tasks.create!(
         phase: phase,
-        name: '',
+        name: "Grow Period - #{phase.capitalize}",
         duration: duration,
         start_date: start_date,
         end_date: start_date + duration.days,
         indent: 0,
-        indelible: 'staying', # Must use "staying" for TrayPlan to work
+        indelible: Constants::INDELIBLE_STAYING, # staying == growing -> Booking of Trays
         depend_on: batch.tasks.last.present? ? batch.tasks.last.id : nil,
       )
 

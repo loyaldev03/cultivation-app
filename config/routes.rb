@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     mount Shrine.presign_endpoint(:cache) => "/s3/params"
   end
 
-  devise_for :users
+  devise_for :users, controllers: { registrations: 'registrations' }
 
   root to: "home#dashboard"
 
@@ -44,6 +44,8 @@ Rails.application.routes.draw do
 
   get "dashboard" => "home#dashboard"
   get "worker_dashboard" => "home#worker_dashboard"
+  get "worker_schedule" => "home#worker_schedule"
+
   get "settings" => "home#settings"
   get "inventory/setup" => "home#inventory_setup"
   post "reset_data" => "home#reset_data"
@@ -157,12 +159,14 @@ Rails.application.routes.draw do
           get 'all/(:current_growth_stage)', action: :all
           get 'search/:current_growth_stage/(:facility_strain_id)/(:search)', action: :search
           get 'search_by_location'
+          get 'destroyed_plants'
           get 'harvests'
           get 'harvests/:id', action: 'show_harvest'
           post 'setup_mother'
           post 'setup_plants'
           post 'setup_harvest_batch'
           post 'lot_numbers'
+          post 'save_destroyed_plant'
         end
       end
 
@@ -278,6 +282,7 @@ Rails.application.routes.draw do
 
         get ':batch_id/harvest_batch_status', to: 'daily_tasks#harvest_batch_status'
         post ':batch_id/save_harvest_batch_weight', to: 'daily_tasks#save_harvest_batch_weight'
+        post ':batch_id/save_weight', to: 'daily_tasks#save_weight'
       end
 
       resources :issues, only: [:create, :by_batch, :show, :archive] do

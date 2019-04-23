@@ -21,7 +21,7 @@ class SaveSection
     section.name = fo.name
     section.code = fo.code
     section.full_code = "#{facility.code}.#{room.code}.#{section.code}"
-    section.purpose = fo.purpose
+    section.purpose = fo.purpose || room.purpose
     section.purpose_option = fo.purpose_option
     section.rack_has_levels = fo.rack_has_levels
     section.rack_count = fo.rack_count

@@ -1,15 +1,28 @@
 require 'rails_helper'
 
 RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
-  subject(:current_user) { create(:user) }
-  subject!(:tasks) do
+  let!(:facility) { create(:facility, :is_complete) }
+  let!(:facility_strain) { create(:facility_strain, facility: facility) }
+  let!(:current_user) { create(:user) }
+  let(:start_date) { Time.zone.parse("01/01/2019") }
+  let(:batch) do
+    create(:batch,
+           facility_id: facility.id,
+           facility_strain: facility_strain,
+           start_date: start_date)
+  end
+  let!(:tasks) do
     # wbs: 1
     t1 = create(:task,
+                batch: batch,
                 name: "Task 1",
+                indent: 0,
+                start_date: start_date,
+                end_date: start_date + 1.days,
                 indent: 0)
     # wbs: 1.1
     t1_1 = create(:task,
-                  batch: t1.batch,
+                  batch: batch,
                   name: "Task 1.1",
                   duration: 5,
                   start_date: t1.start_date,
@@ -17,7 +30,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                   indent: 1)
     # wbs: 1.2
     t1_2 = create(:task,
-                  batch: t1.batch,
+                  batch: batch,
                   name: "Task 1.2",
                   duration: 2,
                   start_date: t1.start_date + 1.days,
@@ -25,7 +38,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                   indent: 1)
     # wbs: 1.3
     t1_3 = create(:task,
-                  batch: t1.batch,
+                  batch: batch,
                   name: "Task 1.3",
                   duration: 1,
                   start_date: t1.start_date + 2.days,
@@ -33,7 +46,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                   indent: 1)
     # wbs: 2
     t2 = create(:task,
-                batch: t1.batch,
+                batch: batch,
                 name: "Task 2",
                 duration: 5,
                 start_date: t1.end_date,
@@ -41,7 +54,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                 indent: 0)
     # wbs: 2.1
     t2_1 = create(:task,
-                  batch: t2.batch,
+                  batch: batch,
                   name: "Task 2.1",
                   duration: 2,
                   start_date: t2.start_date,
@@ -49,7 +62,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                   indent: 1)
     # wbs: 2.2
     t2_2 = create(:task,
-                  batch: t2.batch,
+                  batch: batch,
                   name: "Task 2.2",
                   duration: 2,
                   start_date: t2.start_date + 1.days,
@@ -57,7 +70,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                   indent: 1)
     # wbs: 2.3
     t2_3 = create(:task,
-                  batch: t2.batch,
+                  batch: batch,
                   name: "Task 2.3",
                   duration: 2,
                   start_date: t2_1.end_date,
@@ -65,7 +78,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                   indent: 1)
     # wbs: 2.3.1
     t2_3_1 = create(:task,
-                    batch: t2.batch,
+                    batch: batch,
                     name: "Task 2.3.1",
                     duration: 1,
                     start_date: t2_3.start_date,
@@ -73,7 +86,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                     indent: 2)
     # wbs: 2.3.2
     t2_3_2 = create(:task,
-                    batch: t2.batch,
+                    batch: batch,
                     name: "Task 2.3.2",
                     duration: 1,
                     start_date: t2_3_1.start_date,
@@ -82,7 +95,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
 
     # wbs: 2.3.2.1
     t2_3_2_1 = create(:task,
-                     batch: t2.batch,
+                     batch: batch,
                      name: "Task 2.3.2.1",
                      duration: 1,
                      start_date: t2_3_2.start_date,
@@ -90,7 +103,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                      indent: 3)
     # wbs: 3
     t3 = create(:task,
-                batch: t2.batch,
+                batch: batch,
                 name: "Task 3",
                 duration: 10,
                 start_date: t2.end_date,
@@ -98,7 +111,7 @@ RSpec.describe Cultivation::UpdateTaskPosition, type: :command do
                 indent: 0)
     # wbs: 4
     t4 = create(:task,
-                batch: t3.batch,
+                batch: batch,
                 name: "Task 4",
                 duration: 10,
                 start_date: t3.end_date,

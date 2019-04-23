@@ -18,6 +18,7 @@ class SidebarStore {
   @observable dailyTask = null
   @observable sidebarName = ''
   @observable taskPhase = ''
+  @observable taskIndelible = '' //used for multiple indelible in WeightForm
 
   reset() {
     this.noteId = null
@@ -61,11 +62,18 @@ class SidebarStore {
   }
 
   @action
-  openSidebar(sidebarName, batchId, taskId, taskPhase = '') {
+  openSidebar(
+    sidebarName,
+    batchId,
+    taskId,
+    taskPhase = '',
+    taskIndelible = ''
+  ) {
     this.sidebarName = sidebarName
     this.batchId = batchId
     this.taskId = taskId
     this.taskPhase = taskPhase
+    this.taskIndelible = taskIndelible
   }
 
   @action

@@ -21,6 +21,8 @@ class User
   field :last_name, type: String
   field :title, type: String
   field :timezone, type: String, default: 'Pacific Time (US & Canada)'
+  field :phone_number, type: String
+  field :address, type: String
   field :default_facility_id, type: BSON::ObjectId
   field :is_active, type: Boolean, default: -> { true }
   field :photo_data, type: String
@@ -47,10 +49,11 @@ class User
 
   field :roles, type: Array, default: []      # Array of BSON::ObjectId
   field :facilities, type: Array, default: [] # Array of BSON::ObjectId
-  field :user_mode, type: String, default: 'worker' # admin | manage | worker
+  field :user_mode, type: String, default: 'worker' # admin | manager | worker
+  field :reporting_manager_id, type: BSON::ObjectId
 
   has_many :time_logs, class_name: 'Cultivation::TimeLog'
-
+  embeds_many :work_schedules, class_name: 'Common::WorkSchedule'
   ## Confirmable
   # field :confirmation_token,   type: String
   # field :confirmed_at,         type: Time
@@ -70,5 +73,9 @@ class User
 
   def display_name
     "#{first_name} #{last_name}"
+  end
+
+  def display_roles
+    Common::Role.find(roles)&.pluck(:name)
   end
 end

@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe Cultivation::ActivateBatch, type: :command do
   let(:uom) { SeedUnitOfMeasure.call }
-  let(:strain) { Common::Strain.create!(name: 'xyz', strain_type: 'indica') }
   let!(:facility) do
     facility = create(:facility, :is_complete)
     facility.rooms.each do |room|
@@ -15,7 +14,7 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
     facility
   end
 
-  let!(:facility_strain) { create(:facility_strain, facility: facility) }
+  let(:facility_strain) { create(:facility_strain, facility: facility) }
 
   let!(:catalogue) do
     create(:catalogue)

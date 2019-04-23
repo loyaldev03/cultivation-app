@@ -29,12 +29,13 @@ class SaveRoom
     room.has_sections = form_object.has_sections
     if room.has_sections && room.sections.blank?
       new_code = NextFacilityCode.call(:section, nil, 1).result
-      room.sections.build(code: new_code)
+      room.sections.build(code: new_code, purpose: room.purpose)
     end
 
-    if room.purpose == 'trim' || room.purpose == 'storage'
+    # LOGIC#0001 - No rows setup for these types of room
+    if Constants::ROOM_ONLY_SETUP.include?(room.purpose)
       # Mark room as complete since there's no setup requrired
-      # for Trim and Storage room
+      # for these types of room.
       room.is_complete = true
     end
 

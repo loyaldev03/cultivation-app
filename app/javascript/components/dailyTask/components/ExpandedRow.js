@@ -68,7 +68,8 @@ class ExpandedRow extends React.Component {
         sidebar,
         this.props.batch_id,
         this.props.id,
-        this.props.phase
+        this.props.phase,
+        this.props.indelible
       )
     }
   }
@@ -213,6 +214,33 @@ class ExpandedRow extends React.Component {
                 onClick={this.onOpenSidebar('measure_harvest_weight')}
               >
                 Measure weight
+              </a>
+            )}
+
+            {[
+              'measure_waste_weight',
+              'measure_dry_weight',
+              'measure_trim_weight',
+              'measure_trim_waste'
+            ].includes(indelible) && (
+              <a
+                href="#0"
+                className={classNames(
+                  'btn mr3',
+                  {
+                    'btn--secondary': showButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  },
+                  {
+                    'btn--disabled': hideButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  }
+                )}
+                onClick={this.onOpenSidebar('measure_waste_weight')}
+              >
+                {indelible.replace(/_/g, ' ')}
               </a>
             )}
 

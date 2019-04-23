@@ -42,7 +42,7 @@ module Cultivation
           task.modifier = current_user
           task.save! if errors.empty?
           perform_cascade_change_tasks
-          # TODO::ANDY - valid_data when updating tasks
+          # TODO::ANDY - validate_capacity when updating tasks
           # Update batch
           update_batch(batch, batch_tasks&.first, schedule_batch)
         end
@@ -86,13 +86,9 @@ module Cultivation
       batch.start_date = first_task&.start_date
       batch.save!
 
-      # TODO: No need to check for status, since the bg job would loop through
-      # all scheduled batch and activate it.
-      if (schedule_batch &&
-          batch.status = Constants::BATCH_STATUS_SCHEDULED &&
-                         batch.start_date <= Time.current)
-        ActivateBatchWorker.new.perform() # activate scheduled class immediately
-      end
+      # NOTE: Background job would activate all scheduled batch
+      # if batch.start_date <= Time.current
+      ActivateBatchWorker.new.perform
 
       update_tray_plans(batch)
       batch
@@ -101,7 +97,7 @@ module Cultivation
     def update_tray_plans(batch)
       cmd = Cultivation::UpdateTrayPlans.call(current_user, batch_id: batch.id)
       if !cmd.success?
-        errors = cmd.errors
+        self.errors = cmd.errors
       end
     end
 
@@ -324,7 +320,7 @@ module Cultivation
       errors.empty? # No Errors => Valid
     end
 
-    def valid_data?(tasks, opt = {})
+    def validate_capacity?(tasks, opt = {})
       # max_date = tasks.pluck(:end_date).compact.max
       # min_date = tasks.pluck(:start_date).compact.min
       # overlap_batch = false

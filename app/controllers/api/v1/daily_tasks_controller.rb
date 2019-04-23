@@ -140,6 +140,12 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
         total_plants: batch.plants.where(destroyed_date: nil).count,
         total_weighted: harvest_batch.plants.count,
         uom: harvest_batch.uom,
+        harvest_batch_name: harvest_batch.harvest_name,
+        total_wet_waste_weight: harvest_batch.total_wet_waste_weight,
+        total_dry_weight: harvest_batch.total_dry_weight,
+        total_trim_weight: harvest_batch.total_trim_weight,
+        total_trim_waste_weight: harvest_batch.total_trim_waste_weight,
+
       }
       render json: data, status: 200
     else
@@ -197,6 +203,36 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     #   uom: harvest_batch.uom,
     # }
     # render json: data, status: 200
+  end
+
+  def save_weight
+    batch = Cultivation::Batch.find(params[:batch_id])
+    harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: params[:batch_id])
+
+    if harvest_batch.nil?
+      render json: {errors: {harvest_bath: ['Harvest batch is not setup.']}}, status: 422 and return
+    end
+
+    if params[:indelible] == 'measure_waste_weight' #match attribute with indelible
+      args = {total_wet_waste_weight: params[:weight]}
+    elsif params[:indelible] == 'measure_dry_weight'
+      args = {total_dry_weight: params[:weight]}
+    elsif params[:indelible] == 'measure_trim_weight'
+      args = {total_trim_weight: params[:weight]}
+    elsif params[:indelible] == 'measure_trim_waste'
+      args = {total_trim_waste_weight: params[:weight]}
+    else
+      args = {}
+    end
+
+    harvest_batch.update(args)
+
+    data = {
+      total_plants: batch.plants.where(destroyed_date: nil).count,
+      total_weighted: harvest_batch.plants.count,
+      uom: harvest_batch.uom,
+    }
+    render json: data, status: 200
   end
 
   private

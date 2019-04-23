@@ -64,7 +64,13 @@ class TaskStore {
   @observable isDataLoaded = false
   @observable collapsedNodes = []
   @observable tasks = []
+  @observable isSunburstNodeSelected = false
   @observable facilityPhases = []
+
+  @action
+  updateSunburstIsSelected() {
+    this.isSunburstNodeSelected = true
+  }
 
   @action
   async loadTasks(batchId) {
@@ -472,8 +478,8 @@ class TaskStore {
   }
 
   @action
-  async roomData(id) {
-    const url = `/api/v1/batches/search_locations?facility_id=${id}&purpose[]=mother`
+  async roomData(id, roomPurpose) {
+    const url = `/api/v1/batches/search_locations?facility_id=${id}&purpose[]=${roomPurpose}`
     const response = await (await fetch(url, httpGetOptions)).json()
     return response.data
   }

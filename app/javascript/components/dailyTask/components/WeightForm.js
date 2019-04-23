@@ -42,24 +42,26 @@ class WeightForm extends React.Component {
     const { batchId } = this.props
     const { weight } = this.state
     const indelible = SidebarStore.taskIndelible
-    harvestBatchStore.saveWasteWeight(batchId, weight, indelible).then(result => {
-      if (result.success) {
-        toast(`Record updated`, 'success')
-        this.setState({
-          weight: '',
-          override: false
-        })
-        SidebarStore.closeSidebar()
-      } else {
-        console.log(result.data.errors)
-      }
-    })
+    harvestBatchStore
+      .saveWasteWeight(batchId, weight, indelible)
+      .then(result => {
+        if (result.success) {
+          toast(`Record updated`, 'success')
+          this.setState({
+            weight: '',
+            override: false
+          })
+          SidebarStore.closeSidebar()
+        } else {
+          console.log(result.data.errors)
+        }
+      })
   }
 
-  getLabel = (taskIndelible) => {
-    if (taskIndelible === 'measure_waste_weight'){
+  getLabel = taskIndelible => {
+    if (taskIndelible === 'measure_waste_weight') {
       return 'Wet Waste weight'
-    } else if (taskIndelible === 'measure_dry_weight'){
+    } else if (taskIndelible === 'measure_dry_weight') {
       return 'Dry weight'
     } else if (taskIndelible === 'measure_trim_weight') {
       return 'Trim weight'
@@ -68,7 +70,7 @@ class WeightForm extends React.Component {
     }
   }
 
-  getHeader = (taskIndelible) => {
+  getHeader = taskIndelible => {
     if (taskIndelible === 'measure_waste_weight') {
       return 'Record wet waste weight'
     } else if (taskIndelible === 'measure_dry_weight') {
@@ -85,7 +87,9 @@ class WeightForm extends React.Component {
     const { weight } = this.state
     const taskIndelible = SidebarStore.taskIndelible
 
-    const weightLabel = `${this.getLabel(taskIndelible)}, ${harvestBatchStore.uom}`
+    const weightLabel = `${this.getLabel(taskIndelible)}, ${
+      harvestBatchStore.uom
+    }`
     const headerLabel = this.getHeader(taskIndelible)
 
     const harvestBatchName = harvestBatchStore.harvestBatchName

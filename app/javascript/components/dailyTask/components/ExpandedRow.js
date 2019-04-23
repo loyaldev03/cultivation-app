@@ -217,7 +217,12 @@ class ExpandedRow extends React.Component {
               </a>
             )}
 
-            {['measure_waste_weight', 'measure_dry_weight', 'measure_trim_weight', 'measure_trim_waste'].includes(indelible) && (
+            {[
+              'measure_waste_weight',
+              'measure_dry_weight',
+              'measure_trim_weight',
+              'measure_trim_waste'
+            ].includes(indelible) && (
               <a
                 href="#0"
                 className={classNames(
@@ -235,8 +240,7 @@ class ExpandedRow extends React.Component {
                 )}
                 onClick={this.onOpenSidebar('measure_waste_weight')}
               >
-                {indelible.replace(/_/g, ' ')
-}
+                {indelible.replace(/_/g, ' ')}
               </a>
             )}
 

@@ -6,7 +6,7 @@ class HarvestBatchStore {
   @observable totalPlants = 0 // total number of alive plants in this batch
   @observable harvestBatchName = '' // harvest batch name
   @observable totalWeighted = 0 // number of plants weighted in this system
-  @observable totalWetWasteWeight = 0 // number of wet waste 
+  @observable totalWetWasteWeight = 0 // number of wet waste
   @observable totalDryWeight = 0 // number of dry weight
   @observable totalTrimWeight = 0 // number of trim weight
   @observable totalTrimWasteWeight = 0 // number of trim waste weight
@@ -25,7 +25,6 @@ class HarvestBatchStore {
         this.totalDryWeight = data.total_dry_weight
         this.totalTrimWeight = data.total_trim_weight
         this.totalTrimWasteWeight = data.total_trim_waste_weight
-
       }
     } catch (error) {
       console.log(error)

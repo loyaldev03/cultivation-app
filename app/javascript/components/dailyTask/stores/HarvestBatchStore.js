@@ -34,7 +34,6 @@ class HarvestBatchStore {
   @action
   saveWeight(batchId, plantTd, weight) {
     const payload = { weight, plant_id: plantTd }
-    console.log(payload)
 
     return fetch(
       `/api/v1/daily_tasks/${batchId}/save_harvest_batch_weight`,
@@ -47,7 +46,6 @@ class HarvestBatchStore {
         }))
       })
       .then(({ status, data }) => {
-        console.log(data)
 
         if (status === 200) {
           this.totalPlants = data.total_plants
@@ -64,7 +62,6 @@ class HarvestBatchStore {
   @action
   saveWasteWeight(batchId, weight, indelible) {
     const payload = { weight, indelible }
-    console.log(payload)
     return fetch(
       `/api/v1/daily_tasks/${batchId}/save_weight`,
       httpPostOptions(payload)
@@ -76,7 +73,6 @@ class HarvestBatchStore {
         }))
       })
       .then(({ status, data }) => {
-        console.log(data)
 
         if (status === 200) {
           this.totalWetWasteWeight = data.total_wet_waste_weight

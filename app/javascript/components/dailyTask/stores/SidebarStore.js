@@ -69,7 +69,6 @@ class SidebarStore {
     taskPhase = '',
     taskIndelible = ''
   ) {
-    console.log(sidebarName)
     this.sidebarName = sidebarName
     this.batchId = batchId
     this.taskId = taskId

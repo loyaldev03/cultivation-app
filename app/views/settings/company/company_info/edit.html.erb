@@ -10,7 +10,6 @@
         <p class="mt2 body-1 grey">
           Let's get a few details of your company info.
         </p>
-        
         <%= form_with model: @company_info, url: settings_company_company_info_path, local: true do |f| %>
           <div class="flex flex-column mt3">
             <div class="mv4 flex flex-row-l flex-column">
@@ -39,7 +38,7 @@
 
                 <div class="flex flex-row">
                   <div class="w-40 mr4">
-                    <%= f.label "timezone", class: "db mb1 grey subtitle-2 ttc" %>
+                    <%= f.label "Timezone", class: "db mb1 grey subtitle-2" %>
                     <%= f.time_zone_select :timezone,
                         nil,
                         {

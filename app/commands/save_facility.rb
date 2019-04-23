@@ -31,8 +31,6 @@ class SaveFacility
   def map_attributes(record, form_object)
     record.name = form_object.name
     record.code = form_object.code
-    record.company_name = form_object.company_name
-    record.state_license = form_object.state_license
     record.site_license = form_object.site_license
     record.timezone = form_object.timezone
     record.is_complete = form_object.is_complete

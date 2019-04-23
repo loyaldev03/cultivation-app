@@ -156,18 +156,6 @@ RSpec.describe QueryPlannedTrays, type: :command do
               tray_id: flower_tray1.id.to_s, tray_capacity: quantity, tray_code: flower_tray1.code.to_s },
           ]
         },
-        { id: "dry#1", phase: "dry", quantity: quantity,
-          trays: [
-            { room_id: dry_room.id.to_s, row_id: dry_row1.id.to_s, shelf_id: dry_shelf1.id.to_s,
-              tray_id: dry_tray1.id.to_s, tray_capacity: quantity, tray_code: dry_tray1.code.to_s },
-          ]
-        },
-        { id: "cure#1", phase: "cure", quantity: quantity,
-          trays: [
-            { room_id: cure_room.id.to_s, row_id: cure_row1.id.to_s, shelf_id: cure_shelf1.id.to_s,
-              tray_id: cure_tray1.id.to_s, tray_capacity: quantity, tray_code: cure_tray1.code.to_s },
-          ]
-        },
       ]
     end
     let(:batch2_plans) do
@@ -189,18 +177,6 @@ RSpec.describe QueryPlannedTrays, type: :command do
           trays: [
             { room_id: flower_room.id.to_s, row_id: flower_row1.id.to_s, shelf_id: flower_shelf1.id.to_s,
               tray_id: flower_tray1.id.to_s, tray_capacity: quantity, tray_code: flower_tray1.code.to_s },
-          ]
-        },
-        { id: "dry#1", phase: "dry", quantity: quantity,
-          trays: [
-            { room_id: dry_room.id.to_s, row_id: dry_row1.id.to_s, shelf_id: dry_shelf1.id.to_s,
-              tray_id: dry_tray1.id.to_s, tray_capacity: quantity, tray_code: dry_tray1.code.to_s },
-          ]
-        },
-        { id: "cure#1", phase: "cure", quantity: quantity,
-          trays: [
-            { room_id: cure_room.id.to_s, row_id: cure_row1.id.to_s, shelf_id: cure_shelf1.id.to_s,
-              tray_id: cure_tray1.id.to_s, tray_capacity: quantity, tray_code: cure_tray1.code.to_s },
           ]
         },
       ]
@@ -245,28 +221,6 @@ RSpec.describe QueryPlannedTrays, type: :command do
       expect(cmd.result).to eq 71
     end
 
-    it "verify Dry TrayPlan are setup correctly" do
-      # Verify "flower" phase's TrayPlans are saved
-      phase_start = batch1_tasks[8].start_date
-      phase_end = batch1_tasks[8].end_date
-      cmd = QueryAvailableCapacity.call(facility_id: facility.id,
-                                        start_date: phase_start,
-                                        end_date: phase_end,
-                                        purpose: "dry")
-      expect(cmd.result).to eq 71
-    end
-
-    it "verify Cure TrayPlan are setup correctly" do
-      # Verify "flower" phase's TrayPlans are saved
-      phase_start = batch1_tasks[11].start_date
-      phase_end = batch1_tasks[11].end_date
-      cmd = QueryAvailableCapacity.call(facility_id: facility.id,
-                                        start_date: phase_start,
-                                        end_date: phase_end,
-                                        purpose: "cure")
-      expect(cmd.result).to eq 71
-    end
-
     it "verify facility data is setup correctly" do
       expect(Tray.count).to be 48
       expect(clone_room.purpose).to eq "clone"
@@ -288,11 +242,11 @@ RSpec.describe QueryPlannedTrays, type: :command do
     it "verify batch 'staying' task exists correctly" do
       # Verify phases saved in batch 1
       res = Cultivation::QueryBatchPhases.call(batch1, Constants::CULTIVATION_PHASES_1V).booking_schedules
-      expect(res.count).to be 5
+      expect(res.count).to be 3
 
       # Verify phases saved in batch 2
       res = Cultivation::QueryBatchPhases.call(batch2, Constants::CULTIVATION_PHASES_1V).booking_schedules
-      expect(res.count).to be 5
+      expect(res.count).to be 3
     end
 
     it ".call with exclude quantity from batch1" do
@@ -301,7 +255,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
                                    facility.id,
                                    batch1.id,
                                   )
-      expect(cmd.result.size).to be 5 # Because 3/5 plan in db belongs to batch1
+      expect(cmd.result.size).to be 3 # Because 3/5 plan in db belongs to batch1
     end
 
     it ".call with exclude quantity from batch2" do
@@ -310,7 +264,7 @@ RSpec.describe QueryPlannedTrays, type: :command do
                                    facility.id,
                                    batch2.id,
                                   )
-      expect(cmd.result.size).to eq 6 # Because 3/5 plan in db belongs to batch1
+      expect(cmd.result.size).to eq 4 # Because 3/5 plan in db belongs to batch1
     end
   end
 

@@ -272,6 +272,7 @@ Rails.application.routes.draw do
         post ':id/update_nutrients', to: 'daily_tasks#update_nutrients'
         delete ':id/notes/:note_id', to: 'daily_tasks#destroy_note'
         get '/tasks', to: 'daily_tasks#tasks'
+        get '/tasks_by_date', to: 'daily_tasks#tasks_by_date'
         put '/time_log', to: 'daily_tasks#time_log'
 
         

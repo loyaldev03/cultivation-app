@@ -18,6 +18,18 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     render json: @tasks_by_batch
   end
 
+  def tasks_by_date
+    tasks = current_user.cultivation_tasks.expected_on(params[:date])
+    batches = Cultivation::Batch.find(tasks.map { |a| a.batch_id }.uniq)
+    query_locations = batches.map { |a| {batch_id: a.id.to_s, query: QueryLocations.call(a.facility_id)} }
+    json_serializer = TaskCalendarSerializer.new(
+      tasks,
+      params: {query: query_locations},
+    ).serializable_hash[:data]
+
+    render json: json_serializer
+  end
+
   def time_log
     case params[:actions]
     when Constants::WORK_STATUS_STARTED

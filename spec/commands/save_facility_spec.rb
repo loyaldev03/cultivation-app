@@ -17,8 +17,6 @@ RSpec.describe SaveFacility, type: :command do
       form_object = FacilityWizardForm::BasicInfoForm.new
       form_object.name = Faker::Lorem.word
       form_object.code = Faker::Number.number(2)
-      form_object.company_name = Faker::Company.name
-      form_object.state_license = Faker::Code.asin
       form_object.site_license = Faker::Address.country
       form_object.timezone = Faker::Code.asin
       form_object.is_complete = true
@@ -43,8 +41,6 @@ RSpec.describe SaveFacility, type: :command do
       expect(saved).to have_attributes(
         name: form_object.name,
         code: form_object.code,
-        company_name: form_object.company_name,
-        state_license: form_object.state_license,
         site_license: form_object.site_license,
         timezone: form_object.timezone,
         is_complete: form_object.is_complete,
@@ -68,8 +64,6 @@ RSpec.describe SaveFacility, type: :command do
       facility = Facility.create!(
         name: Faker::Lorem.word,
         code: Faker::Number.number(2),
-        company_name: Faker::Company.name,
-        state_license: Faker::Code.asin,
         site_license: Faker::Address.country,
         timezone: Faker::Code.asin,
         is_complete: true,
@@ -115,8 +109,6 @@ RSpec.describe SaveFacility, type: :command do
       expect(saved).to have_attributes(
         name: form_object.name,
         code: form_object.code,
-        company_name: form_object.company_name,
-        state_license: form_object.state_license,
         site_license: form_object.site_license,
         timezone: form_object.timezone,
         is_complete: form_object.is_complete,

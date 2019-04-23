@@ -8,7 +8,7 @@
   <div class="flex flex-column justify-between bg-white box--shadow">
     <div class="pa4 min-h-600">
       <div class="fl w-70-l w-100 flex flex-column width-100">
-        <h5 class="tl pa0 ma0 h5--font dark-grey">Tell us about your facility.</h5>
+        <h5 class="tl pa0 ma0 h5--font dark-grey">Tell us about your facility</h5>
         <p class="mt2 body-1 grey">
           Let's get a few details of your facility to get things rolling...
         </p>
@@ -36,24 +36,6 @@
               </div>
 
               <div class="fl w-80-l w-100 pt0-l pt3 flex flex-column">
-                <div class="flex flex-row mb3">
-                  <div class="w-50 mr4">
-                    <%= f.label "Company name", class: "db mb1 grey subtitle-2 ttc" %>
-                    <%= f.text_field :company_name,
-                      placeholder: "Company's name",
-                      value: @wizard_form.company_name,
-                      class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
-                  </div>
-
-                  <div class="w-20-l w-30">
-                    <%= f.label "State License #", class: "db mb1 grey subtitle-2 ttc" %>
-                    <%= f.text_field :state_license,
-                      placeholder: "S0001",
-                      value: @wizard_form.state_license,
-                      class: "grey input-reset br2 outline-0 ba b--light-grey pa2 db w-100" %>
-                  </div>
-                </div>
-
                 <div class="flex flex-row">
                   <div class="mr4 w-50">
                     <%= f.label "Facility name", class: "grey subtitle-2 ttc db mb1" %>

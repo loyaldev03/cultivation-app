@@ -374,7 +374,7 @@ module Cultivation
     def get_phase_tasks(tasks)
       # Find "Phase" tasks only
       tasks.select do |t|
-        t.phase && Constants::CULTIVATION_PHASES.include?(t.phase)
+        t.phase && Constants::REQUIRED_BOOKING_PHASES.include?(t.phase)
       end
     end
   end

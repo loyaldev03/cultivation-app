@@ -44,18 +44,25 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
     Time.zone = facility.timezone
     start_date = Time.zone.now.beginning_of_day
     create(:batch, :scheduled,
-            facility_strain: facility_strain,
-            facility: facility,
-            start_date: start_date,
-            quantity: 10,
-            current_growth_stage: Constants::CONST_CLONE,
-            batch_source: Constants::PURCHASED_CLONES_KEY)
+           facility_strain: facility_strain,
+           facility: facility,
+           start_date: start_date,
+           quantity: 10,
+           current_growth_stage: Constants::CONST_CLONE,
+           batch_source: Constants::PURCHASED_CLONES_KEY)
   end
 
   let!(:task1) do
     create(:task,
+           indelible: Constants::INDELIBLE_GROUP,
+           indent: 0,
+           batch: batch1,
+           start_date: batch1.start_date,
+           phase: Constants::CONST_CLONE)
+    create(:task,
            indelible: Constants::INDELIBLE_CLIP_POT_TAG,
            batch: batch1,
+           start_date: batch1.start_date,
            phase: Constants::CONST_CLONE)
   end
   let!(:task2) do
@@ -74,12 +81,24 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
   end
   let!(:task4) do
     create(:task,
+           indelible: Constants::INDELIBLE_GROUP,
+           indent: 0,
+           batch: batch1,
+           start_date: batch1.start_date + 10.days,
+           phase: Constants::CONST_VEG)
+    create(:task,
            indelible: Constants::INDELIBLE_STAYING,
            batch: batch1,
            start_date: batch1.start_date + 10.days,
            phase: Constants::CONST_VEG)
   end
   let!(:task6) do
+    create(:task,
+           indelible: Constants::INDELIBLE_GROUP,
+           indent: 0,
+           batch: batch1,
+           start_date: batch1.start_date + 30.days,
+           phase: Constants::CONST_FLOWER)
     create(:task,
            indelible: Constants::INDELIBLE_STAYING,
            batch: batch1,
@@ -90,7 +109,7 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
   context ".call" do
     it "Activate batch on start date" do
       Time.use_zone(facility.timezone) do
-        Cultivation::ActivateBatch.call(Time.current)
+        Cultivation::ActivateBatch.call(batch1.start_date)
 
         result = Cultivation::Batch.find(batch1.id)
         expect(result.status).to eq 'ACTIVE'

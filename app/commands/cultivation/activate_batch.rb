@@ -15,10 +15,18 @@ module Cultivation
     def call
       @batches = Cultivation::Batch.
         includes(:facility).
-        where(:status.in => [Constants::BATCH_STATUS_SCHEDULED])
+        where(status: Constants::BATCH_STATUS_SCHEDULED)
       @batches.each do |batch|
         Time.use_zone(batch.facility.timezone) do
           update_status(batch)
+        end
+      end
+
+      @active_batches = Cultivation::Batch.
+        includes(:facility).
+        where(status: Constants::BATCH_STATUS_ACTIVE)
+      @active_batches.each do |batch|
+        Time.use_zone(batch.facility.timezone) do
           update_current_growth_stage(batch)
           update_plants_current_growth_stage(batch)
         end
@@ -36,13 +44,17 @@ module Cultivation
 
     def update_current_growth_stage(batch)
       if batch.status == Constants::BATCH_STATUS_ACTIVE
-        growth_stages = batch.facility.growth_stages
-        phases = Cultivation::QueryBatchPhases.call(batch).staying_schedules
-        current_phase = phases.detect { |p| p.start_date >= current_time }
-        prev = growth_stages.index(batch.current_growth_stage)
-        curr = growth_stages.index(current_phase.phase)
-        if prev && curr && prev < curr
-          batch.update(current_growth_stage: current_phase.phase)
+        schedules = Cultivation::QueryBatchPhases.call(batch).grouping_schedules
+        if schedules.present?
+          phases = schedules.pluck(:phase)
+          current_phase = schedules.detect { |p| p.start_date >= current_time }
+          if current_phase.present?
+            prev = phases.index(batch.current_growth_stage)
+            curr = phases.index(current_phase.phase)
+            if prev && curr && prev < curr
+              batch.update(current_growth_stage: current_phase.phase)
+            end
+          end
         end
       end
     end

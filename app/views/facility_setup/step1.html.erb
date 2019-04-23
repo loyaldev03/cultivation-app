@@ -108,6 +108,17 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="flex flex-row mt3">
+                  <div class="mr4 w-50">
+                    <%= f.label "Timezone", class: "grey subtitle-2 ttc db mb1" %>
+                    <%= f.time_zone_select(:timezone,
+                                           ActiveSupport::TimeZone.us_zones,
+                                           { include_blank: true,
+                                             default: @wizard_form.timezone || "Pacific Time (US & Canada)" },
+                                           { class: 'w-100 form-helper-select'}) %>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -145,7 +156,7 @@
               </div>
             </div>
 
-            <div class="mv4 flex flex-row items-center">
+            <div class="mt2 flex flex-row items-center">
               <p class="grey subtitle-2 dib">Mark facility as ready so that it would be available in other modules:</p>
               <div class="dib pointer w-20-l w-10 flex justify-end">
                 <%= f.check_box :is_enabled, checked: @wizard_form.is_enabled, class: "toggle toggle-default" %>

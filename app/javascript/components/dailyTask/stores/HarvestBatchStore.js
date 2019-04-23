@@ -46,7 +46,6 @@ class HarvestBatchStore {
         }))
       })
       .then(({ status, data }) => {
-
         if (status === 200) {
           this.totalPlants = data.total_plants
           this.totalWeighted = data.total_weighted
@@ -73,7 +72,6 @@ class HarvestBatchStore {
         }))
       })
       .then(({ status, data }) => {
-
         if (status === 200) {
           this.totalWetWasteWeight = data.total_wet_waste_weight
         }

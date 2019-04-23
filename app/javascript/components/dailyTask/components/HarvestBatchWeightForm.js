@@ -2,19 +2,17 @@ import React from 'react'
 import { toJS, autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import SidebarStore from '../stores/SidebarStore'
-// import ClippingStore from '../stores/ClippingStore'
-// import PlantTagList from './PlantTagList'
 import { InputBarcode, SlidePanelHeader, ProgressBar, toast } from '../../utils'
 import { NumericInput } from '../../utils/FormHelpers'
-import dailyTasksStore from '../stores/DailyTasksStore'
 import harvestBatchStore from '../stores/HarvestBatchStore'
 
 @observer
 class HarvestBatchWeightForm extends React.Component {
   state = {
     errors: {},
-    plantId: '',
+    plant_id: '',
     weight: '',
+    askOverride: false,
     override: false
   }
 
@@ -22,10 +20,20 @@ class HarvestBatchWeightForm extends React.Component {
     if (!prevProps.show && this.props.show) {
       harvestBatchStore.load(this.props.batchId)
     }
+
+    if (prevProps.show && !this.props.show) {
+      this.setState({
+        errors: {},
+        plant_id: '',
+        weight: '',
+        askOverride: false,
+        override: false
+      })
+    }
   }
 
   onChange = event => {
-    this.setState({ plantId: event.target.value })
+    this.setState({ plant_id: event.target.value })
   }
 
   onChangeWeight = event => {
@@ -34,35 +42,79 @@ class HarvestBatchWeightForm extends React.Component {
     this.setState({ [key]: value })
   }
 
-  onSubmit = event => {
-    const { batchId } = this.props
-    const { plantId, weight } = this.state
-    harvestBatchStore.saveWeight(batchId, plantId, weight).then(result => {
-      console.log(result)
+  onSave = event => {
+    if (event) {
+      event.preventDefault()
+    }
 
-      if (result.success) {
-        toast(`${plantId} wet weight captured`, 'success')
-        this.setState({
-          plantId: '',
-          weight: '',
-          override: false
-        })
-      } else {
-        console.log(result.data.errors)
-        if (result.data.errors.duplicate_plant) {
-          alert('Duplicate plant')
+    const { plant_id, weight, isValid } = this.validateAndGetValues()
+    if (!isValid) {
+      return
+    }
+
+    const { batchId } = this.props
+    const { override } = this.state
+    harvestBatchStore
+      .saveWeight(batchId, plant_id, weight, override)
+      .then(result => {
+        if (result.success) {
+          toast(`${plant_id} wet weight captured`, 'success')
+          this.setState({
+            plant_id: '',
+            weight: '',
+            override: false,
+            askOverride: false,
+            errors: {}
+          })
+        } else {
+          if (result.data.errors.duplicate_plant) {
+            this.setState({
+              askOverride: true
+            })
+          }
+
+          this.setState({
+            errors: result.data.errors,
+            override: false
+          })
         }
-        this.setState({
-          errors: result.data.errors
-        })
-      }
-    })
+      })
+  }
+
+  validateAndGetValues() {
+    const { plant_id, weight } = this.state
+    let errors = {}
+
+    if (plant_id.length === 0) {
+      errors.plant_id = ['Plant ID is required']
+    }
+
+    if (weight.length === 0 || parseFloat(weight) <= 0) {
+      errors.weight = ['Weight must be more than zero.']
+    }
+
+    const isValid = Object.getOwnPropertyNames(errors).length === 0
+    if (!isValid) {
+      this.setState({ errors })
+    }
+
+    return {
+      isValid,
+      plant_id,
+      weight
+    }
+  }
+
+  onSaveOverride = event => {
     event.preventDefault()
+    this.setState({ override: true }, () => {
+      this.onSave()
+    })
   }
 
   render() {
     const { batchId, scanditLicense, show = true } = this.props
-    const { errors, weight, plantId } = this.state
+    const { errors, weight, plant_id } = this.state
 
     const weightLabel = `Wet weight, ${harvestBatchStore.uom}`
     const percent = Math.round(
@@ -94,38 +146,63 @@ class HarvestBatchWeightForm extends React.Component {
         </div>
         <div className="ph4 mt2 flex flex-column w-100">
           <InputBarcode
-            value={plantId}
+            value={plant_id}
             scanditLicense={scanditLicense}
             autoFocus={true}
             onChange={this.onChange}
             onKeyPress={this.onScanMother}
-            error={errors['motherInput']}
+            error={errors['plant_id']}
             className="w-100"
           />
         </div>
 
-        <div className="flex items-end ph4">
+        <div className="flex items-end ph4 mb2">
+          <div className="w-100">
+            <span className="f6 fw6 gray ttn">{weightLabel}</span>
+          </div>
+        </div>
+        <div className="flex items-start ph4">
           <div className="w-30">
             <NumericInput
-              label={weightLabel}
-              labelClassName="ttn"
               value={weight}
               placeholder="Plant wet weight"
               min={0}
               fieldname="weight"
               onChange={this.onChangeWeight}
+              errors={errors}
             />
           </div>
           <div className="ml2 w-20">
             <a
               href="#"
               className="bg-orange white btn btn-primary btn--small"
-              onClick={this.onSubmit}
+              onClick={this.onSave}
             >
               &#9166;
             </a>
           </div>
         </div>
+
+        {this.state.askOverride && (
+          <div className="flex ph4 mt3 justify-between">
+            <p className="f6 mr2 mb0 mt2 w-70">
+              <span className="fw6">{plant_id}</span> is already recorded.
+              Proceed to override?
+            </p>
+            <span className="w-30 items-center justify-end flex">
+              <a
+                href="#"
+                onClick={this.onSaveOverride}
+                className="btn btn--secondary f6 btn--small"
+              >
+                Yes
+              </a>
+              <a href="#" className="link f6 fw4 ph3 ttu">
+                No
+              </a>
+            </span>
+          </div>
+        )}
       </div>
     )
   }

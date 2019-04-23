@@ -11,7 +11,6 @@ class HarvestBatchStore {
     fetch(`/api/v1/daily_tasks/${batchId}/harvest_batch_status`, httpGetOptions)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
         this.uom = data.uom
         this.totalPlants = data.total_plants
         this.totalWeighted = data.total_weighted
@@ -19,9 +18,8 @@ class HarvestBatchStore {
   }
 
   @action
-  saveWeight(batchId, plantTd, weight) {
-    const payload = { weight, plant_id: plantTd }
-    console.log(payload)
+  saveWeight(batchId, plantTd, weight, override) {
+    const payload = { weight, plant_id: plantTd, override }
 
     return fetch(
       `/api/v1/daily_tasks/${batchId}/save_harvest_batch_weight`,
@@ -34,8 +32,6 @@ class HarvestBatchStore {
         }))
       })
       .then(({ status, data }) => {
-        console.log(data)
-
         if (status === 200) {
           this.totalPlants = data.total_plants
           this.totalWeighted = data.total_weighted
@@ -43,7 +39,8 @@ class HarvestBatchStore {
 
         return {
           success: status == 200,
-          data
+          data: data,
+          errors: data.errors
         }
       })
   }

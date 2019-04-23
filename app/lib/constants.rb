@@ -31,8 +31,6 @@ module Constants
     CONST_CLONE,
     CONST_VEG,
     CONST_FLOWER,
-    CONST_DRY,
-    CONST_CURE,
   ].freeze
 
   CULTIVATION_PHASES_2V = [
@@ -40,19 +38,15 @@ module Constants
     CONST_VEG1,
     CONST_VEG2,
     CONST_FLOWER,
-    CONST_DRY,
-    CONST_CURE,
   ].freeze
 
-  CULTIVATION_PHASES = [
+  REQUIRED_BOOKING_PHASES = [
     CONST_CLONE,
     CONST_VEG1,
     CONST_VEG2,
     CONST_VEG,
     CONST_FLOWER,
-    CONST_DRY,
-    CONST_CURE,
-  ].freeze
+  ]
 
   FACILITY_ROOMS_ORDER = [
     CONST_MOTHER,

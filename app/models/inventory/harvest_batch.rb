@@ -7,6 +7,12 @@ module Inventory
     field :harvest_date, type: DateTime
     field :total_wet_weight, type: Float, default: -> { 0 }
     field :total_wet_waste_weight, type: Float, default: -> { 0 }
+
+    field :total_trim_weight, type: Float, default: -> { 0 }
+    field :total_trim_waste_weight, type: Float, default: -> { 0 }
+
+    field :total_dry_weight, type: Float, default: -> { 0 }
+
     field :uom, type: String
     field :status, type: String                 # new, closed (when fully packaged)
     field :location_id, type: BSON::ObjectId

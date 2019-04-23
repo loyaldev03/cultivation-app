@@ -4,9 +4,12 @@ import { httpPostOptions, httpGetOptions } from '../../utils'
 class HarvestBatchStore {
   @observable uom = ''
   @observable totalPlants = 0 // total number of alive plants in this batch
+  @observable harvestBatchName = '' // harvest batch name
   @observable totalWeighted = 0 // number of plants weighted in this system
-  @observable totalWetWasteWeight = 0
-  @observable harvestBatchName = ''
+  @observable totalWetWasteWeight = 0 // number of wet waste 
+  @observable totalDryWeight = 0 // number of dry weight
+  @observable totalTrimWeight = 0 // number of trim weight
+  @observable totalTrimWasteWeight = 0 // number of trim waste weight
 
   @action
   async load(batchId) {
@@ -16,9 +19,13 @@ class HarvestBatchStore {
       if (data) {
         this.uom = data.uom
         this.totalPlants = data.total_plants
+        this.harvestBatchName = data.harvest_batch_name
         this.totalWeighted = data.total_weighted
         this.totalWetWasteWeight = data.total_wet_waste_weight
-        this.harvestBatchName = data.harvest_batch_name
+        this.totalDryWeight = data.total_dry_weight
+        this.totalTrimWeight = data.total_trim_weight
+        this.totalTrimWasteWeight = data.total_trim_waste_weight
+
       }
     } catch (error) {
       console.log(error)
@@ -56,11 +63,11 @@ class HarvestBatchStore {
   }
 
   @action
-  saveWasteWeight(batchId, weight) {
-    const payload = { weight }
-
+  saveWasteWeight(batchId, weight, indelible) {
+    const payload = { weight, indelible }
+    console.log(payload)
     return fetch(
-      `/api/v1/daily_tasks/${batchId}/save_waste_weight`,
+      `/api/v1/daily_tasks/${batchId}/save_weight`,
       httpPostOptions(payload)
     )
       .then(response => {

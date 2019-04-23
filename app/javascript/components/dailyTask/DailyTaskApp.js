@@ -9,7 +9,7 @@ import AddMaterialForm from './components/AddMaterialForm'
 import ClipPotTagForm from './components/ClipPotTagForm'
 import MovingIntoTrayForm from './components/MovingIntoTrayForm'
 import HarvestBatchWeightForm from './components/HarvestBatchWeightForm'
-import WasteWeightForm from './components/WasteWeightForm'
+import WeightForm from './components/WeightForm'
 
 import loadDailyTasks from './actions/loadDailyTasks'
 import DailyTasksStore from './stores/DailyTasksStore'
@@ -160,8 +160,9 @@ class DailyTaskApp extends React.Component {
           width="500px"
           show={sidebarName === 'measure_waste_weight'}
           renderBody={props => (
-            <WasteWeightForm
+            <WeightForm
               batchId={batchId}
+              sidebarName={sidebarName}
               show={sidebarName === 'measure_waste_weight'}
             />
           )}

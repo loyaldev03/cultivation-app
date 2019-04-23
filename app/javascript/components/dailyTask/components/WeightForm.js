@@ -6,7 +6,7 @@ import { NumericInput } from '../../utils/FormHelpers'
 import harvestBatchStore from '../stores/HarvestBatchStore'
 
 @observer
-class WasteWeightForm extends React.Component {
+class WeightForm extends React.Component {
   state = {
     errors: {},
     plantId: '',
@@ -16,8 +16,19 @@ class WasteWeightForm extends React.Component {
 
   async componentDidUpdate(prevProps) {
     if (!prevProps.show && this.props.show) {
+      const taskIndelible = SidebarStore.taskIndelible
       await harvestBatchStore.load(this.props.batchId)
-      this.setState({ weight: harvestBatchStore.totalWetWasteWeight })
+      let weight = 0
+      if (taskIndelible === 'measure_waste_weight') {
+        weight = harvestBatchStore.totalWetWasteWeight
+      } else if (taskIndelible === 'measure_dry_weight') {
+        weight = harvestBatchStore.totalDryWeight
+      } else if (taskIndelible === 'measure_trim_weight') {
+        weight = harvestBatchStore.totalTrimWeight
+      } else if (taskIndelible === 'measure_trim_waste') {
+        weight = harvestBatchStore.totalTrimWasteWeight
+      }
+      this.setState({ weight: weight })
     }
   }
 
@@ -30,27 +41,56 @@ class WasteWeightForm extends React.Component {
   onSubmit = event => {
     const { batchId } = this.props
     const { weight } = this.state
-    harvestBatchStore.saveWasteWeight(batchId, weight).then(result => {
-      console.log(result)
+    const indelible = SidebarStore.taskIndelible
+    harvestBatchStore
+      .saveWasteWeight(batchId, weight, indelible)
+      .then(result => {
+        if (result.success) {
+          toast(`Record updated`, 'success')
+          this.setState({
+            weight: '',
+            override: false
+          })
+          SidebarStore.closeSidebar()
+        } else {
+          console.log(result.data.errors)
+        }
+      })
+  }
 
-      if (result.success) {
-        toast(`Wet waste weight captured`, 'success')
-        this.setState({
-          weight: '',
-          override: false
-        })
-        SidebarStore.closeSidebar()
-      } else {
-        console.log(result.data.errors)
-      }
-    })
+  getLabel = taskIndelible => {
+    if (taskIndelible === 'measure_waste_weight') {
+      return 'Wet Waste weight'
+    } else if (taskIndelible === 'measure_dry_weight') {
+      return 'Dry weight'
+    } else if (taskIndelible === 'measure_trim_weight') {
+      return 'Trim weight'
+    } else if (taskIndelible === 'measure_trim_waste') {
+      return 'Trim Waste weight'
+    }
+  }
+
+  getHeader = taskIndelible => {
+    if (taskIndelible === 'measure_waste_weight') {
+      return 'Record wet waste weight'
+    } else if (taskIndelible === 'measure_dry_weight') {
+      return 'Record dry weight'
+    } else if (taskIndelible === 'measure_trim_weight') {
+      return 'Record trim weight'
+    } else if (taskIndelible === 'measure_trim_waste') {
+      return 'Record trim waste weight'
+    }
   }
 
   render() {
     const { show = true } = this.props
     const { weight } = this.state
+    const taskIndelible = SidebarStore.taskIndelible
 
-    const weightLabel = `Waste weight, ${harvestBatchStore.uom}`
+    const weightLabel = `${this.getLabel(taskIndelible)}, ${
+      harvestBatchStore.uom
+    }`
+    const headerLabel = this.getHeader(taskIndelible)
 
     const harvestBatchName = harvestBatchStore.harvestBatchName
     if (!show) return null
@@ -59,7 +99,7 @@ class WasteWeightForm extends React.Component {
         <div id="toast" className="toast animated toast--success" />
         <SlidePanelHeader
           onClose={() => SidebarStore.closeSidebar()}
-          title="Record waste wet weight"
+          title={headerLabel}
         />
 
         <div className="flex flex-column flex-auto justify-between">
@@ -92,4 +132,4 @@ class WasteWeightForm extends React.Component {
   }
 }
 
-export default WasteWeightForm
+export default WeightForm

@@ -22,6 +22,7 @@ const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
 const AssignMaterialForm = lazy(() => import('./MaterialForm'))
 const CultivationCalendar = lazy(() => import('./CultivationCalendar'))
 const HarvestBatchForm = lazy(() => import('./HarvestBatchForm'))
+const PackagePlanForm = lazy(() => import('./PackagePlanForm'))
 
 const MenuButton = ({ icon, indelible, text, onClick, className = '' }) => {
   return (
@@ -54,7 +55,8 @@ class TaskList extends React.Component {
       showStartDateCalendar: false,
       showAssignResourcePanel: false,
       showAssignMaterialPanel: false,
-      showHarvestBatchForm: false
+      showHarvestBatchForm: false,
+      showPackagePlanForm: false
     }
   }
 
@@ -128,6 +130,13 @@ class TaskList extends React.Component {
       this.harvestBatchForm.loadData(this.props.batch.id)
     }
     this.setState({ showHarvestBatchForm: !this.state.showHarvestBatchForm })
+  }
+
+  handleShowPackagePlanForm = (taskId, item) => {
+    if (!this.state.showPackagePlanForm) {
+      // this.packagePlanForm.loadData(this.props.batch.id)
+    }
+    this.setState({ showPackagePlanForm: !this.state.showPackagePlanForm })
   }
 
   handleAddTask = (taskId, action) => {
@@ -250,6 +259,22 @@ class TaskList extends React.Component {
                         indelible={indelible}
                         onClick={() =>
                           this.handleShowHarvestBatchForm(id, items)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    ''
+                  )}
+
+                  {indelible === 'create_package_plan' ? (
+                    <div className="bt bw1">
+                      <p className="i tc silver">Create packages</p>
+
+                      <MenuButton
+                        text="Create batch ID"
+                        indelible={indelible}
+                        onClick={() =>
+                          this.handleShowPackagePlanForm(id, items)
                         }
                       />
                     </div>
@@ -654,6 +679,7 @@ class TaskList extends React.Component {
       showAssignMaterialPanel,
       showClippingPanel,
       showHarvestBatchForm,
+      showPackagePlanForm,
       harvestBatch
     } = this.state
     const batchId = this.props.batch.id
@@ -781,6 +807,23 @@ class TaskList extends React.Component {
             </Suspense>
           )}
         />
+        <SlidePanel
+          width="500px"
+          show={showPackagePlanForm}
+          renderBody={props => (
+            <Suspense fallback={<div />}>
+              <PackagePlanForm
+                onClose={() =>
+                  this.setState({ showPackagePlanForm: false, taskAction: '' })
+                }
+                // ref={form => (this.harvestBatchForm = form)}
+                // batchId={batchId}
+                // facilityId={this.props.batch.facility_id}
+              />
+            </Suspense>
+          )}
+        />
+        
         <Suspense fallback={<div />}>
           <ReactTable
             columns={this.columnsConfig(batchId)}

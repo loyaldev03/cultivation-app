@@ -13,27 +13,33 @@ module Cultivation
     end
 
     def call
-      @batches = Cultivation::Batch.
-        includes(:facility).
-        where(status: Constants::BATCH_STATUS_SCHEDULED)
-      @batches.each do |batch|
-        Time.use_zone(batch.facility.timezone) do
-          update_status(batch)
+      batches.each do |b|
+        Time.use_zone(b.facility.timezone) do
+          update_status(b)
         end
       end
 
-      @active_batches = Cultivation::Batch.
-        includes(:facility).
-        where(status: Constants::BATCH_STATUS_ACTIVE)
-      @active_batches.each do |batch|
-        Time.use_zone(batch.facility.timezone) do
-          update_current_growth_stage(batch)
-          update_plants_current_growth_stage(batch)
+      active_batches.each do |b|
+        Time.use_zone(b.facility.timezone) do
+          update_current_growth_stage(b)
+          update_plants_current_growth_stage(b)
         end
       end
     end
 
     private
+
+    def batches
+      @batches ||= Cultivation::Batch.
+        includes(:facility).
+        where(status: Constants::BATCH_STATUS_SCHEDULED)
+    end
+
+    def active_batches
+      @active_batches ||= Cultivation::Batch.
+        includes(:facility).
+        where(status: Constants::BATCH_STATUS_ACTIVE)
+    end
 
     def update_status(batch)
       # Activate batch by changing it's status to active

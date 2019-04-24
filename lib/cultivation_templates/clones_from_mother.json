@@ -116,7 +116,7 @@
   { "wbs": "8", "phase": "cure", "name": "Cure", "duration": "10", "indelible": "group", "predecessor": "" },
   { "wbs": "8.1", "phase": "cure", "name": "Curing period", "duration": "10", "indelible": "staying", "predecessor": "" },
   { "wbs": "8.1.1", "phase": "cure", "name": "Monitor cure room", "duration": "10", "indelible": "", "predecessor": "" },
-  { "wbs": "8.1.2", "phase": "cure", "name": "when ready, measure weight", "duration": "", "indelible": "", "predecessor": "" },
+  { "wbs": "8.1.2", "phase": "cure", "name": "when ready, measure weight", "duration": "", "indelible": "measure_cure_weight", "predecessor": "" },
   { "wbs": "9", "phase": "packaging", "name": "Packaging", "duration": "2", "indelible": "group", "predecessor": "" },
   { "wbs": "9.1", "phase": "packaging", "name": "Prepare workstation and equipment", "duration": "", "indelible": "", "predecessor": "" },
   { "wbs": "9.2", "phase": "packaging", "name": "Create new package batch ID", "duration": "", "indelible": "", "predecessor": "" },

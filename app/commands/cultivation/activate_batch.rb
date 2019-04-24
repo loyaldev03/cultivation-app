@@ -57,10 +57,20 @@ module Cultivation
         next_phase = schedules.detect { |p| p.start_date >= current_time }
         if next_phase.present?
           next_index = phases.index(next_phase.phase)
-          curr_index = phases.index(batch.current_growth_stage)
+          curr_phase = next_index > 0 ? phases[next_index - 1] : next_phase.phase
+          curr_index = phases.index(curr_phase)
           # Check order to see if we need to advance batch growth stage
           if next_index && curr_index < next_index
-            batch.update(current_growth_stage: next_phase.phase)
+            batch.update(current_growth_stage: curr_phase)
+          end
+        else
+          curr_schedule ||= schedules.detect { |p| current_time <= p.end_date }
+          if curr_schedule.present?
+            curr_index = phases.index(curr_schedule.phase)
+            batch_index = phases.index(batch.current_growth_stage)
+            if curr_index && curr_index > batch_index
+              batch.update(current_growth_stage: curr_schedule.phase)
+            end
           end
         end
       end

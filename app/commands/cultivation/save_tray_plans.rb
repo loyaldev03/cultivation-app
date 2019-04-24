@@ -14,7 +14,7 @@ module Cultivation
         if batch.present?
           facility = Facility.find_by(id: batch.facility_id)
           batch.quantity = @quantity
-          schedules = Cultivation::QueryBatchPhases.call(batch, facility.growth_stages).booking_schedules
+          schedules = Cultivation::QueryBatchPhases.call(batch).booking_schedules
           # Delete all existing location plans
           batch.tray_plans.delete_all
           phase_trays = consolidate_phase_trays(@plans)

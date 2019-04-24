@@ -326,10 +326,11 @@ module Cultivation
       # overlap_batch = false
       # overlap_batch_name = ''
       # Find "Phase" tasks that has changes
-      phase_tasks = get_phase_tasks(tasks)
+      phase_tasks = tasks.select do |t|
+        t.phase && Constants::REQUIRED_BOOKING_PHASES.include?(t.phase)
+      end
+
       phase_tasks.each do |t|
-        # Rails.logger.debug ">>> phase_tasks, #{t.name} - #{t.phase}"
-        # Rails.logger.debug ">>> phase_dates, #{t.start_date} - #{t.end_date}"
         args = {
           facility_id: opt[:facility_id],
           exclude_batch_id: opt[:batch_id],
@@ -338,8 +339,6 @@ module Cultivation
           end_date: t.end_date,
         }
         available_capacity = QueryAvailableCapacity.call(args).result
-        # Rails.logger.debug "required capacity: #{opt[:quantity]}"
-        # Rails.logger.debug "available capacity: #{available_capacity}"
         if opt[:quantity] > available_capacity
           error_message = "Not enough capacity on selected dates in #{t.name}. "
           existing_plans = QueryPlannedTrays.call(t.start_date,
@@ -349,9 +348,6 @@ module Cultivation
           if !existing_plans.empty?
             existing_plans = existing_plans.select { |p| p.phase == t.phase }
             batch_ids = existing_plans.pluck(:batch_id).uniq
-            # overlapping_phase = existing_plans.pluck(:phase).uniq
-            # Rails.logger.debug batch_ids
-            # Rails.logger.debug overlapping_phase
             batch_nos = Cultivation::Batch.
               where(:id.in => batch_ids).
               pluck(:batch_no)
@@ -369,13 +365,6 @@ module Cultivation
 
     def get_task(tasks, task_id)
       tasks.detect { |t| t.id == task_id.to_bson_id }
-    end
-
-    def get_phase_tasks(tasks)
-      # Find "Phase" tasks only
-      tasks.select do |t|
-        t.phase && Constants::CULTIVATION_PHASES.include?(t.phase)
-      end
     end
   end
 end

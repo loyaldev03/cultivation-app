@@ -4,10 +4,8 @@ class Facility
 
   field :name, type: String
   field :code, type: String
-  field :company_name, type: String
-  field :state_license, type: String
   field :site_license, type: String
-  field :timezone, type: String
+  field :timezone, type: String, default: 'Pacific Time (US & Canada)'
   field :is_complete, type: Boolean, default: -> { false }
   field :is_enabled, type: Boolean, default: -> { true }
 

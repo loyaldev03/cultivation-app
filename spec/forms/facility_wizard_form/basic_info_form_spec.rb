@@ -15,17 +15,13 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
   end
 
   context ".new with id" do
-    subject(:facility) {
-      create(:facility, :is_complete)
-    }
+    subject(:facility) { create(:facility, :is_complete) }
     it "init form_object from saved record" do
       form_object = FacilityWizardForm::BasicInfoForm.new(facility.id)
 
       expect(form_object).to have_attributes(
         name: facility.name,
         code: facility.code,
-        company_name: facility.company_name,
-        state_license: facility.state_license,
         site_license: facility.site_license,
         timezone: facility.timezone,
         is_complete: facility.is_complete,
@@ -47,7 +43,6 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
       params = {
         name: Faker::Name.name,
         code: Faker::Number.number(3),
-        company_name: Faker::Name.name
       }
 
       form_object.submit(params, current_user)
@@ -55,9 +50,8 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
       saved = Facility.find_by(code: params[:code])
       expect(form_object.valid?).to eq true
       expect(saved).to have_attributes(
-         name: params[:name],
-         code: params[:code],
-         company_name: params[:company_name]
+        name: params[:name],
+        code: params[:code],
       )
     end
   end
@@ -72,7 +66,6 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
         id: facility.id,
         name: Faker::Company.name,
         code: Faker::Number.number(3),
-        company_name: Faker::Name.name
       }
 
       form_object.submit(params, current_user)
@@ -81,11 +74,9 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
       expect(form_object.valid?).to eq true
       expect(form_object.id).to eq facility.id
       expect(form_object.name).to eq params[:name]
-      expect(form_object.company_name).to eq params[:company_name]
       expect(saved).to have_attributes(
         name: params[:name],
         code: params[:code],
-        company_name: params[:company_name],
       )
     end
   end

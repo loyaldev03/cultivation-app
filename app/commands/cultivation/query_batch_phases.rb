@@ -1,15 +1,15 @@
 module Cultivation
-  PhaseInfo = Struct.new(:id,
-                         :name,
-                         :phase,
-                         :start_date,
-                         :end_date,
-                         :duration)
-
   class QueryBatchPhases
     prepend SimpleCommand
 
-    attr_reader :staying_schedules, :cleaning_schedules, :booking_schedules
+    PhaseInfo = Struct.new(:id,
+                           :name,
+                           :phase,
+                           :start_date,
+                           :end_date,
+                           :duration)
+
+    attr_reader :staying_schedules, :cleaning_schedules, :booking_schedules, :grouping_schedules
 
     def initialize(batch, phases = [])
       @batch = batch
@@ -21,6 +21,7 @@ module Cultivation
       if @batch.present? && @batch.tasks.present?
         tasks = @batch.tasks.where(
           :indelible.in => [
+            Constants::INDELIBLE_GROUP,
             Constants::INDELIBLE_STAYING,
             Constants::INDELIBLE_CLEANING,
           ],
@@ -29,6 +30,10 @@ module Cultivation
         tasks = tasks.order_by(position: :asc).to_a
         staying_tasks = tasks.select { |t| t.indelible == Constants::INDELIBLE_STAYING }
         cleaning_tasks = tasks.select { |t| t.indelible == Constants::INDELIBLE_CLEANING }
+        grouping_tasks = tasks.select { |t| t.indelible == Constants::INDELIBLE_GROUP }
+        @grouping_schedules = grouping_tasks.map do |t|
+          PhaseInfo.new(t.id, t.name, t.phase, t.start_date, t.end_date, t.duration)
+        end
         @cleaning_schedules = cleaning_tasks.map do |t|
           PhaseInfo.new(t.id, t.name, t.phase, t.start_date, t.end_date, t.duration)
         end

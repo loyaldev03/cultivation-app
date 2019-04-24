@@ -9,7 +9,7 @@ import {
 } from '../../utils'
 
 // TODO: Handle veg | veg1 & veg2
-const CULTIVATION_PHASES = ['clone', 'veg1', 'veg2', 'flower', 'dry', 'cure']
+const CULTIVATION_PHASES = ['clone', 'veg1', 'veg2', 'flower']
 
 class BatchSetupStore {
   @observable searchMonth

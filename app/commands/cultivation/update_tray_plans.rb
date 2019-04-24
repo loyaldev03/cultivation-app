@@ -43,7 +43,7 @@ module Cultivation
     end
 
     def booking_schedules
-      @booking_schedules ||= Cultivation::QueryBatchPhases.call(batch, facility.growth_stages).booking_schedules
+      @booking_schedules ||= Cultivation::QueryBatchPhases.call(batch).booking_schedules
     end
 
     def valid_params?

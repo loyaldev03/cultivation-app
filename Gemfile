@@ -120,3 +120,6 @@ gem 'shrine-mongoid'
 gem 'redis'
 gem 'sidekiq'
 gem 'sidekiq-cron'
+
+# Time travel
+gem 'timecop'

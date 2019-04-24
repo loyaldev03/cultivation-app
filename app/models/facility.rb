@@ -4,8 +4,6 @@ class Facility
 
   field :name, type: String
   field :code, type: String
-  field :company_name, type: String
-  field :state_license, type: String
   field :site_license, type: String
   field :timezone, type: String
   field :is_complete, type: Boolean, default: -> { false }

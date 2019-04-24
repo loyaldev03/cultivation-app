@@ -4,8 +4,6 @@ FactoryBot.define do
     code { Faker::Number.number(2) }
 
     trait :is_complete do
-      company_name { Faker::Company.name }
-      state_license { Faker::Code.asin }
       site_license { Faker::Address.country }
       timezone { TZInfo::Timezone.all.sample.name }
       is_complete { true }

@@ -24,8 +24,6 @@ RSpec.describe FacilityWizardForm::BasicInfoForm, type: :form do
       expect(form_object).to have_attributes(
         name: facility.name,
         code: facility.code,
-        company_name: facility.company_name,
-        state_license: facility.state_license,
         site_license: facility.site_license,
         timezone: facility.timezone,
         is_complete: facility.is_complete,

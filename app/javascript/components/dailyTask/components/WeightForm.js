@@ -27,6 +27,8 @@ class WeightForm extends React.Component {
         weight = harvestBatchStore.totalTrimWeight
       } else if (taskIndelible === 'measure_trim_waste') {
         weight = harvestBatchStore.totalTrimWasteWeight
+      } else if (taskIndelible === 'measure_cure_weight') {
+        weight = harvestBatchStore.totalCureWeight
       }
       this.setState({ weight: weight })
     }
@@ -67,6 +69,8 @@ class WeightForm extends React.Component {
       return 'Trim weight'
     } else if (taskIndelible === 'measure_trim_waste') {
       return 'Trim Waste weight'
+    } else if (taskIndelible === 'measure_cure_weight') {
+      return 'Cure weight'
     }
   }
 
@@ -79,6 +83,8 @@ class WeightForm extends React.Component {
       return 'Record trim weight'
     } else if (taskIndelible === 'measure_trim_waste') {
       return 'Record trim waste weight'
+    } else if (taskIndelible === 'measure_cure_weight') {
+      return 'Record cure weight'
     }
   }
 

@@ -221,7 +221,8 @@ class ExpandedRow extends React.Component {
               'measure_waste_weight',
               'measure_dry_weight',
               'measure_trim_weight',
-              'measure_trim_waste'
+              'measure_trim_waste',
+              'measure_cure_weight'
             ].includes(indelible) && (
               <a
                 href="#0"

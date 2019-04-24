@@ -25,6 +25,7 @@ class HarvestBatchStore {
         this.totalDryWeight = data.total_dry_weight
         this.totalTrimWeight = data.total_trim_weight
         this.totalTrimWasteWeight = data.total_trim_waste_weight
+        this.totalCureWeight = data.total_cure_weight
       }
     } catch (error) {
       console.log(error)

@@ -32,8 +32,8 @@ class HarvestBatchStore {
   }
 
   @action
-  saveWeight(batchId, plantTd, weight) {
-    const payload = { weight, plant_id: plantTd }
+  saveWeight(batchId, plantId, weight, override) {
+    const payload = { weight, plant_id: plantId, override }
 
     return fetch(
       `/api/v1/daily_tasks/${batchId}/save_harvest_batch_weight`,
@@ -53,7 +53,8 @@ class HarvestBatchStore {
 
         return {
           success: status == 200,
-          data
+          data: data,
+          errors: data.errors
         }
       })
   }

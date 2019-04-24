@@ -154,33 +154,55 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
   end
 
   def save_harvest_batch_weight
-    batch = Cultivation::Batch.find(params[:batch_id])
-    plant = batch.plants.find_by(plant_tag: params[:plant_id])
+    command = DailyTask::SavePlantHarvestWeight.call(
+      current_user,
+      params[:batch_id],
+      params[:plant_id],
+      params[:weight],
+      params[:override]
+    )
 
-    if plant.nil?
-      render json: {errors: {plant: ["Plant #{params[:plant_id]} does not exist in this batch."]}}, status: 422 and return
+    if command.success?
+      render json: command.result, status: 200
+    else
+      render json: {errors: command.errors}, status: 422
     end
 
-    harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: params[:batch_id])
-    if harvest_batch.nil?
-      render json: {errors: {harvest_bath: ['Harvest batch is not setup.']}}, status: 422 and return
-    end
+    # batch = Cultivation::Batch.find(params[:batch_id])
+    # plant = batch.plants.find_by(plant_tag: params[:plant_id])
 
-    if plant.harvest_batch.present? && !params[:override]
-      render json: {errors: {duplicate_plant: []}}, status: 422 and return
-    end
+    # if plant.nil?
+    #   render json: {errors: {plant_id: ["#{params[:plant_id]} does not exist in this batch."]}}, status: 422 and return
+    # end
 
-    plant.update!(wet_weight: params[:weight], wet_weight_uom: harvest_batch.uom)
-    harvest_batch.plants << plant
+    # harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: params[:batch_id])
+    # if harvest_batch.nil?
+    #   render json: {errors: {harvest_batch: ['Harvest batch is not setup.']}}, status: 422 and return
+    # end
 
-    # harvest_batch.update!(total_wet_weight: harvest_batch.plants.pluck(:wet_weight).sum)
+    # if plant.harvest_batch.present? && !params[:override]
+    #   render json: {errors: {duplicate_plant: []}}, status: 422 and return
+    # end
 
-    data = {
-      total_plants: batch.plants.where(destroyed_date: nil).count,
-      total_weighted: harvest_batch.plants.count,
-      uom: harvest_batch.uom,
-    }
-    render json: data, status: 200
+    # plant.update!(
+    #   wet_weight: params[:weight],
+    #   wet_weight_uom: harvest_batch.uom,
+    #   harvest_date: Time.current
+    # )
+
+    # harvest_batch.plants << plant
+
+    # harvest_batch.update!(
+    #   harvest_date: harvest_batch.harvest_date || Time.current,
+    #   total_wet_weight: harvest_batch.plants.sum { |x| x.wet_weight }
+    # )
+
+    # data = {
+    #   total_plants: batch.plants.where(current_growth_stage: CONST_FLOWER, destroyed_date: nil).count,
+    #   total_weighted: harvest_batch.plants.count,
+    #   uom: harvest_batch.uom,
+    # }
+    # render json: data, status: 200
   end
 
   def save_weight

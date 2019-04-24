@@ -146,7 +146,7 @@ class DailyTaskApp extends React.Component {
           )}
         />
         <SlidePanel
-          width="500px"
+          width="530px"
           show={sidebarName === 'measure_harvest_weight'}
           renderBody={props => (
             <HarvestBatchWeightForm
@@ -176,7 +176,6 @@ class DailyTaskApp extends React.Component {
     return (
       <React.Fragment>
         <div id="toast" className="toast animated toast--success" />
-        <div>{SidebarStore.sidebarName}</div>
         {DailyTasksStore.batches.map(batch => (
           <BatchedDailyTasks
             key={batch.id}

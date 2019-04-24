@@ -157,7 +157,7 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
         total_dry_weight: harvest_batch.total_dry_weight,
         total_trim_weight: harvest_batch.total_trim_weight,
         total_trim_waste_weight: harvest_batch.total_trim_waste_weight,
-
+        total_cure_weight: harvest_batch.total_cure_weight,
       }
       render json: data, status: 200
     else
@@ -233,6 +233,8 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
       args = {total_trim_weight: params[:weight]}
     elsif params[:indelible] == 'measure_trim_waste'
       args = {total_trim_waste_weight: params[:weight]}
+    elsif params[:indelible] == 'measure_cure_weight'
+      args = {total_cure_weight: params[:weight]}
     else
       args = {}
     end

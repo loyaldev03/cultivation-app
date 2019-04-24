@@ -88,11 +88,16 @@ class MovePlantsToNextPhaseJob < ApplicationJob
 
   def update_plant(plant_id, user_id, dest_id, dest_type)
     plant = existing_plants.detect { |x| x.plant_id == plant_id }
+    stage = batch.current_growth_stage
     if plant.present?
       plant.location_id = dest_id
       plant.location_type = dest_type
-      plant.current_growth_stage = batch.current_growth_stage
+      plant.current_growth_stage = stage
       plant.modifier_id = user_id
+      plant.veg_date ||= Time.current if stage == Constants::CONST_VEG
+      plant.veg1_date ||= Time.current if stage == Constants::CONST_VEG1
+      plant.veg2_date ||= Time.current if stage == Constants::CONST_VEG2
+      plant.flower_date ||= Time.current if stage == Constants::CONST_FLOWER
       plant.save
     end
   end

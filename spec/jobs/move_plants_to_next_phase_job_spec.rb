@@ -245,13 +245,19 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       perform_enqueued_jobs { job }
 
       # Validate plants are moved into clone Room tray
-      total_veg = Inventory::Plant.
+      total_plants = Inventory::Plant.
         where(
           cultivation_batch_id: batch.id,
           current_growth_stage: Constants::CONST_VEG,
         ).size
+      last_plant = Inventory::Plant.
+        where(
+          cultivation_batch_id: batch.id,
+          current_growth_stage: Constants::CONST_VEG,
+      ).last
 
-      expect(total_veg).to eq(3)
+      expect(last_plant.veg_date).not_to be nil
+      expect(total_plants).to eq(3)
     end
 
     it "should move plants to next phase - flower" do
@@ -283,13 +289,19 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       perform_enqueued_jobs { job }
 
       # Validate plants are moved into clone Room tray
-      total_veg = Inventory::Plant.
+      total_plants = Inventory::Plant.
         where(
           cultivation_batch_id: batch.id,
           current_growth_stage: Constants::CONST_FLOWER,
         ).size
+      last_plant = Inventory::Plant.
+        where(
+          cultivation_batch_id: batch.id,
+          current_growth_stage: Constants::CONST_FLOWER,
+      ).last
 
-      expect(total_veg).to eq(4)
+      expect(last_plant.flower_date).not_to be nil
+      expect(total_plants).to eq(4)
     end
   end
 end

@@ -65,11 +65,9 @@ module FacilityWizardForm
             order_i = if r.purpose.blank?
                         facility.rooms.size
                       else
-                        custom_order.index { |s| r[:purpose].starts_with?(s) }
+                        custom_order.index { |s| r[:purpose].ends_with?(s) }
                       end
-            [
-              order_i, r[:c_at],
-            ]
+            [order_i, r[:c_at]]
           end
           @rooms = @sorted_rooms.map do |room|
             RoomInfoForm.new(@facility_id, room)

@@ -49,17 +49,18 @@ module Cultivation
     end
 
     def update_current_growth_stage(batch)
-      if batch.status == Constants::BATCH_STATUS_ACTIVE
-        schedules = Cultivation::QueryBatchPhases.call(batch).grouping_schedules
-        if schedules.present?
-          phases = schedules.pluck(:phase)
-          current_phase = schedules.detect { |p| p.start_date >= current_time }
-          if current_phase.present?
-            prev = phases.index(batch.current_growth_stage)
-            curr = phases.index(current_phase.phase)
-            if prev && curr && prev < curr
-              batch.update(current_growth_stage: current_phase.phase)
-            end
+      schedules = Cultivation::QueryBatchPhases.call(batch).grouping_schedules
+      if schedules.present?
+        # Extrach all phases, make sure this is in the correct order
+        phases = schedules.pluck(:phase)
+        # Find next phase that starts after current_time
+        next_phase = schedules.detect { |p| p.start_date >= current_time }
+        if next_phase.present?
+          next_index = phases.index(next_phase.phase)
+          curr_index = phases.index(batch.current_growth_stage)
+          # Check order to see if we need to advance batch growth stage
+          if next_index && curr_index < next_index
+            batch.update(current_growth_stage: next_phase.phase)
           end
         end
       end

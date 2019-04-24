@@ -823,7 +823,7 @@ class TaskList extends React.Component {
             </Suspense>
           )}
         />
-        
+
         <Suspense fallback={<div />}>
           <ReactTable
             columns={this.columnsConfig(batchId)}

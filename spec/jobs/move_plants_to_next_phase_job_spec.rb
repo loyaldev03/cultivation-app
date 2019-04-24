@@ -227,20 +227,6 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
                          phase: Constants::CONST_CLONE,
                          indelible: Constants::INDELIBLE_MOVING_NEXT_PHASE)
 
-      # Add plants into inventory first before moving
-      plants_tags1.each do |plant_tag|
-        Inventory::Plant.create(
-          cultivation_batch_id: batch.id,
-          plant_id: plant_tag,
-          plant_tag: plant_tag,
-          planting_date: Time.current,
-          current_growth_stage: Constants::CONST_CLONE,
-          facility_strain_id: batch.facility_strain_id,
-          created_by_id: current_user.id,
-          modifier_id: current_user.id,
-        )
-      end
-
       # Move plants into trays in veg room
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
@@ -272,28 +258,14 @@ RSpec.describe MovePlantsToNextPhaseJob, type: :job do
       # Change batch to flower phase
       batch.current_growth_stage = Constants::CONST_FLOWER
       batch.save
-      plants_tags1 = [Faker::Code.ean,Faker::Code.ean, Faker::Code.ean, Faker::Code.ean]
+      plants_tags1 = [Faker::Code.ean, Faker::Code.ean, Faker::Code.ean, Faker::Code.ean]
       task_move = create(:task,
                          batch: batch,
                          work_status: Constants::WORK_STATUS_DONE,
                          phase: Constants::CONST_CLONE,
                          indelible: Constants::INDELIBLE_MOVING_NEXT_PHASE)
 
-      # Add plants into inventory first before moving
-      plants_tags1.each do |plant_tag|
-        Inventory::Plant.create(
-          cultivation_batch_id: batch.id,
-          plant_id: plant_tag,
-          plant_tag: plant_tag,
-          planting_date: Time.current,
-          current_growth_stage: Constants::CONST_VEG,
-          facility_strain_id: batch.facility_strain_id,
-          created_by_id: current_user.id,
-          modifier_id: current_user.id,
-        )
-      end
-
-      # Move plants into trays in veg room
+      # Move plants to flower room
       Cultivation::PlantMovementHistory.create(
         batch_id: batch.id,
         task: task_move,

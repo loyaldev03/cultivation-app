@@ -4,6 +4,7 @@ module RequestScoping
   included do
     before_action :set_rollbar_scope, if: :current_user
     around_action :set_timezone, if: :current_user
+    around_action :set_timetravel, if: :current_user
 
     helper_method :current_default_facility
     helper_method :current_facility
@@ -12,12 +13,37 @@ module RequestScoping
   protected
 
   def set_rollbar_scope
-    Rollbar.scope!(person: {
-                     id: current_user.id.to_s,
-                     email: current_user.email,
-                     username: current_user.display_name,
-                     timezone: current_user.timezone,
-                   })
+    Rollbar.scope!(
+      person: {
+        id: current_user.id.to_s,
+        email: current_user.email,
+        username: current_user.display_name,
+        timezone: current_user.timezone,
+      },
+    )
+  end
+
+  def set_timetravel
+    if ENV['ENABLE_TIME_TRAVEL'] == 'yes'
+      time_travel
+      yield
+      time_travel_return
+    end
+  end
+
+  def time_travel
+    config = System::Configuration.first
+    if config&.enable_time_travel
+      Rails.logger.info 'TIME TRAVEL START'
+      Timecop.travel(config.current_time)
+    else
+      Timecop.return
+    end
+  end
+
+  def time_travel_return
+    Rails.logger.info 'TIME TRAVEL RETURN'
+    Timecop.return
   end
 
   def set_timezone(&block)

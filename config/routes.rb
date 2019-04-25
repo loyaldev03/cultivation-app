@@ -276,7 +276,7 @@ Rails.application.routes.draw do
         get '/tasks', to: 'daily_tasks#tasks'
         get '/tasks_by_date', to: 'daily_tasks#tasks_by_date'
         put '/time_log', to: 'daily_tasks#time_log'
-
+        get '/work_schedules', to: 'daily_tasks#work_schedules'
         
         post ':id/save_material_used', to: 'daily_tasks#save_material_used'
         post 'materials_used', to: 'daily_tasks#materials_used' 

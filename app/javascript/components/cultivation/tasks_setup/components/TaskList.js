@@ -56,7 +56,7 @@ class TaskList extends React.Component {
       showAssignResourcePanel: false,
       showAssignMaterialPanel: false,
       showHarvestBatchForm: false,
-      showPackagePlanForm: false
+      showPackagePlanForm: true
     }
   }
 

@@ -224,8 +224,8 @@ class ClippingPanel extends React.Component {
                 onChoosen={this.onChoosen}
                 highlightedNode={highlightedNode}
                 onHaveSection={this.onHaveSection}
-                width= "300" 
-                height="300" 
+                width="300"
+                height="300"
               />
             </ErrorBoundary>
           </div>

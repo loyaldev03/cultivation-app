@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 class Sunburst extends React.Component {
   componentDidMount() {
     let div = d3
-      .select('html')
+      .select('.cursorplacer')
       .append('div')
       .attr('class', 'tooltipSunburst')
       .style('opacity', 0)
@@ -69,7 +69,7 @@ class Sunburst extends React.Component {
         div.style('opacity', 0.9)
         div
           .html(d.data.name + '<br/>')
-          .style('left', d3.event.pageX + 'px')
+          .style('left', d3.event.pageX - 1000 + 'px')
           .style('top', d3.event.pageY - 28 + 'px')
 
         d3.select(this).style('cursor', 'pointer')

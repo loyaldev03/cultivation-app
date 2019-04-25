@@ -192,6 +192,7 @@ class ClippingPanel extends React.Component {
     return (
       <div>
         <SlidePanelHeader onClose={onClose} title={this.props.title} />
+        <div className="cursorplacer"/>
         <div className="flex justify-center tc mt3">
           {motherRoomList.map(card => (
             <div

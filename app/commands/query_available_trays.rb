@@ -132,6 +132,7 @@ class QueryAvailableTrays
             "$expr": {
               "$and": [
                 {"$ne": ['$batch_status', Constants::BATCH_STATUS_DRAFT]},
+                {"$ne": ['$batch_status', Constants::BATCH_STATUS_COMPLETED]},
               ],
             },
           }},

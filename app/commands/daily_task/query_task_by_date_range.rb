@@ -42,18 +42,8 @@ module DailyTask
       arr = []
       dates.each do |date|
         task_selected = tasks_result.select { |a| a[:start_date] <= date and a[:end_date] >= date }
-
-        tasks = task_selected.map do |a|
-          {
-            id: a.id.to_s,
-            name: a.name,
-            work_status: a.work_status,
-          }
-        end
-
         arr << {
           date: date,
-          tasks: tasks,
           numberOfTasks: task_selected.count,
         }
       end

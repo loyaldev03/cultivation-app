@@ -2,7 +2,7 @@ module DailyTask
   class QueryUserWorkSchedules
     prepend SimpleCommand
 
-    attr_reader :current_user, :task_id, :note_id
+    attr_reader :start_date, :end_date, :current_user
 
     def initialize(start_date, end_date, current_user)
       @current_user = current_user

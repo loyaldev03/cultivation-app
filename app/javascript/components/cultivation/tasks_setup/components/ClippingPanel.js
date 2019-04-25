@@ -169,7 +169,7 @@ class ClippingPanel extends React.Component {
     this.setState({ roomChoice: roomName })
   }
   render() {
-    const { onClose } = this.props
+    const { onClose, show } = this.props
     const {
       roomData,
       traySelected,
@@ -192,7 +192,7 @@ class ClippingPanel extends React.Component {
     return (
       <div>
         <SlidePanelHeader onClose={onClose} title={this.props.title} />
-        <div className="cursorplacer"/>
+        <div className="cursorplacer" />
         <div className="flex justify-center tc mt3">
           {motherRoomList.map(card => (
             <div
@@ -224,8 +224,8 @@ class ClippingPanel extends React.Component {
                 onChoosen={this.onChoosen}
                 highlightedNode={highlightedNode}
                 onHaveSection={this.onHaveSection}
-                width="300"
-                height="300"
+                width= "300" 
+                height="300" 
               />
             </ErrorBoundary>
           </div>

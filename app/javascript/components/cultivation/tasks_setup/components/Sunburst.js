@@ -3,12 +3,11 @@ import * as d3 from 'd3'
 class Sunburst extends React.Component {
   componentDidMount() {
     let div = d3
-      .select('.cursorplacer')
-      .append('div')
+      .select('.sunburst_tooltip')
       .attr('class', 'tooltipSunburst')
       .style('opacity', 0)
     let g = d3
-      .select('svg') // <-- 1
+      .select('#sunburst') // <-- 1
       .attr('width', this.props.width) // <-- 2
       .attr('height', this.props.height)
       .append('g') // <-- 3
@@ -392,32 +391,35 @@ class Sunburst extends React.Component {
   }
   render() {
     return (
-      <svg
-        style={{ width: this.props.width, height: this.props.height }}
-        id={`sunburst`}
-      >
-        <pattern
-          id="diagonalHatch"
-          patternUnits="userSpaceOnUse"
-          width="10"
-          height="10"
+      <React.Fragment>
+        <div className="sunburst_tooltip" />
+        <svg
+          style={{ width: this.props.width, height: this.props.height }}
+          id={`sunburst`}
         >
-          <rect width="10" height="10" fill="#C7C7C7" />
-          <path
-            d="M-1,1 l2,-2
+          <pattern
+            id="diagonalHatch"
+            patternUnits="userSpaceOnUse"
+            width="10"
+            height="10"
+          >
+            <rect width="10" height="10" fill="#C7C7C7" />
+            <path
+              d="M-1,1 l2,-2
            M0,10 l10,-10
            M9,11 l2,-2"
-            style={{
-              stroke: 'orange',
-              width: 4,
-              height: 8,
-              margin: '4em',
-              strokeWidth: '2',
-              strokeDashoffset: '100'
-            }}
-          />
-        </pattern>
-      </svg>
+              style={{
+                stroke: 'orange',
+                width: 4,
+                height: 8,
+                margin: '4em',
+                strokeWidth: '2',
+                strokeDashoffset: '100'
+              }}
+            />
+          </pattern>
+        </svg>
+      </React.Fragment>
     )
   }
 }

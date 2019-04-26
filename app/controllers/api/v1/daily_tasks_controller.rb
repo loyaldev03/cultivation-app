@@ -30,6 +30,11 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     render json: json_serializer
   end
 
+  def work_schedules
+    result = DailyTask::QueryUserWorkSchedules.call(params[:start_date], params[:end_date], current_user).result
+    render json: result
+  end
+
   def tasks_by_date_range
     result = DailyTask::QueryTaskByDateRange.call(params[:start_date], params[:end_date], current_user).result
     render json: result

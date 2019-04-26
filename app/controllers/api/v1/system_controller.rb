@@ -4,6 +4,7 @@ class Api::V1::SystemController < Api::V1::BaseApiController
     render json: {
       data: {
         current_time: config.current_time,
+        enable_time_travel: config.enable_time_travel,
       },
     }
   end
@@ -23,6 +24,7 @@ class Api::V1::SystemController < Api::V1::BaseApiController
     render json: {
       data: {
         "current_time": config.current_time,
+        "enable_time_travel": config.enable_time_travel,
       },
     }
   end

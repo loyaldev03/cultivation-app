@@ -4,27 +4,49 @@ import { observer } from 'mobx-react'
 import Calendar from 'react-calendar'
 import WeeklyCalendar from './ConceptWeeklyCalendar'
 import MonthlyCalendar from './MonthlyCalendar'
-
+import workerScheduleStore from './stores/WorkerScheduleStore'
+import MiniMonthlyCalendar from './MiniMonthlyCalendar'
 @observer
 class WorkerScheduleApp extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      date: new Date(),
-      choice: 'week'
-    }
+  state = {
+    date: new Date(),
+    choice: 'week',
+    dateSelected: null,
+    taskList: null
   }
 
   onChangeCalendar = duration => {
     console.log(duration)
     this.setState({ choice: duration })
   }
-
+  getDayTask = async date => {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
+    let dateSelected = `${date.getDate()} ${
+      months[date.getMonth()]
+    } ${date.getFullYear()}`
+    const taskList = await workerScheduleStore.getTaskByDate(
+      `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+    )
+    this.setState({ taskList, dateSelected })
+  }
   onChange = date => this.setState({ date })
 
   render() {
-    const { choice } = this.state
-    const duration = ['week', 'month']
+    const { choice, taskList, dateSelected } = this.state
+    const duration = ['Week', 'Month']
     return (
       <React.Fragment>
         <div className="flex flex-column mt3 ba b--light-gray pa3 bg-white">
@@ -47,10 +69,38 @@ class WorkerScheduleApp extends React.Component {
             </span>
           </div>
           <div className="flex justify-between">
-            <div className="flex flex-column w-30 grey ">
-              <Calendar onChange={this.onChange} value={this.state.date} />
+            <div className="flex flex-column w-40 grey ">
+              <Calendar
+                onChange={this.onChange}
+                value={this.state.date}
+                onClickDay={this.getDayTask}
+              />
+              {/* <MiniMonthlyCalendar/> */}
               <div>
-                <h3>Task List</h3>
+                <div className="flex justify-between f3 lh-copy b dark-gray mb3 mt2">
+                  <span>Task</span>
+                  <span>{dateSelected}</span>
+                </div>
+                {taskList &&
+                  taskList.map(task => (
+                    <div className="b" key={task.id}>
+                      <div className="flex justify-between grey">
+                        <span>
+                          {task.attributes.name}
+                          <div className="f6">
+                            {task.attributes.location_name}
+                          </div>
+                        </span>
+                        <span>
+                          {task.attributes.work_status === 'not_started' && (
+                            <i className="orange material-icons pointer md-36 dim">
+                              play_circle_filled
+                            </i>
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
               </div>
             </div>
             {choice == 'week' && (

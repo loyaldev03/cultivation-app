@@ -17,6 +17,12 @@ Rails.application.routes.draw do
   get "employees_schedule" => "home#employees_schedule"
   get "timesheets" => "home#timesheets"
   get "requests" => "home#requests"
+  get "cult/batches" => "home#cult_batches"
+  get "cult/plants" => "home#cult_plants"
+  get "cult/harvests" => "home#cult_harvests"
+  get "cult/tasks" => "home#cult_tasks"
+  get "cult/issues" => "home#cult_issues"
+  # End of dummy pages
 
   get "facility_setup/new" => "facility_setup#new"
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"

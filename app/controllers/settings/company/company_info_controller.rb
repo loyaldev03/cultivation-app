@@ -16,6 +16,18 @@ class Settings::Company::CompanyInfoController < ApplicationController
     @company_info.state_license = company_info_params[:state_license]
     @company_info.tax_id = company_info_params[:tax_id]
     @company_info.timezone = company_info_params[:timezone]
+    @company_info.work_schedules = []
+
+    company_info_params[:work_schedules].each do |a|
+      day = a.keys[0]
+      Rails.logger.debug "#{day}"
+      # @company_info.work_schedules.build({
+      #   day: day,
+      #   start_time: a[day][:start_time],
+      #   end_time: a[day][:end_time]
+      # })
+
+    end
 
     if @company_info.save
       redirect_to edit_settings_company_company_info_path
@@ -34,7 +46,8 @@ class Settings::Company::CompanyInfoController < ApplicationController
       :website,
       :state_license,
       :tax_id,
-      :timezone
+      :timezone,
+      work_schedules: [monday: {}, tuesday: {}, wednesday: {}, thursday: {}, friday: {}, saturday: {}, sunday: {}],
     )
   end
 end

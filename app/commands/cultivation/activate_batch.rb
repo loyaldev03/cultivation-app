@@ -66,11 +66,11 @@ module Cultivation
         else
           curr_schedule ||= schedules.detect { |p| current_time <= p.end_date }
           if curr_schedule.present?
-            curr_index = phases.index(curr_schedule.phase)
-            batch_index = phases.index(batch.current_growth_stage)
-            if curr_index && curr_index > batch_index
-              batch.update(current_growth_stage: curr_schedule.phase)
-            end
+            # curr_index = phases.index(curr_schedule.phase)
+            # batch_index = phases.index(batch.current_growth_stage)
+            # if curr_index && curr_index > batch_index
+            batch.update(current_growth_stage: curr_schedule.phase)
+            # end
           end
         end
       end

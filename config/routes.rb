@@ -147,6 +147,13 @@ Rails.application.routes.draw do
   # API for web pages
   namespace :api do
     namespace :v1 do
+      resources :system, only: [], as: :system do
+        collection do
+          get 'configuration'
+          post 'update_configuration'
+        end
+      end
+
       resources :facilities, only: [] do
         member do
           get 'search_locations'

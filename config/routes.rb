@@ -147,6 +147,13 @@ Rails.application.routes.draw do
   # API for web pages
   namespace :api do
     namespace :v1 do
+      resources :system, only: [], as: :system do
+        collection do
+          get 'configuration'
+          post 'update_configuration'
+        end
+      end
+
       resources :facilities, only: [] do
         member do
           get 'search_locations'
@@ -275,8 +282,9 @@ Rails.application.routes.draw do
         delete ':id/notes/:note_id', to: 'daily_tasks#destroy_note'
         get '/tasks', to: 'daily_tasks#tasks'
         get '/tasks_by_date', to: 'daily_tasks#tasks_by_date'
+        get '/tasks_by_date_range', to: 'daily_tasks#tasks_by_date_range'
         put '/time_log', to: 'daily_tasks#time_log'
-
+        get '/work_schedules', to: 'daily_tasks#work_schedules'
         
         post ':id/save_material_used', to: 'daily_tasks#save_material_used'
         post 'materials_used', to: 'daily_tasks#materials_used' 

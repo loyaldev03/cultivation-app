@@ -116,7 +116,7 @@ class ProductTypeSection extends React.Component {
                 </th>
                 <th className="tc bb b--black-10 pb2 gray w-20">Quantity</th>
                 <th className="tr bb b--black-10 pb2 gray w-20">Total</th>
-                <th className="tr bb b--black-10 pb2 gray" />
+                <th className="tr bb b--white pb2" />
               </tr>
             </thead>
             <tbody>
@@ -128,7 +128,7 @@ class ProductTypeSection extends React.Component {
                   </td>
                   <td className="tr pv1 w-20">{x.quantity * x.conversion}</td>
                   <td className="tc pv1">
-                    <span className="material-icons orange dim md-18">
+                    <span className="material-icons orange dim md-18 pointer">
                       delete
                     </span>
                   </td>

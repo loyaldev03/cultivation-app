@@ -68,14 +68,18 @@
 /* navbar hover */
 .nav-ex:hover {
   background-color: #FEE8E0;
-  cursor: pointer;
+  
   border-left-color: var(--orange);
-  border-left-width: 7px;
-  padding-left: 1.7rem;
+  border-left-width: 5px;
+  // padding-left: 1.7rem;
+  padding-right: 5px;
+  padding-left: 11px;
+
+
   
   .link {
-    color: var(--orange);
-    font-weight: 600;
+    
+    // font-weight: 600;
   }
   
   .material-icons {
@@ -83,12 +87,17 @@
   }
 }
 
+.nav-ex .link:hover {
+  color: var(--orange);
+}
+
 .nav-cl:hover {
   background-color: #FEE8E0;
   cursor: pointer;
   border-left-color: var(--orange);
   border-left-width: 5px;
-  padding-left: 1.6rem;
+  // padding-left: 1.6rem;
+  padding-right: 5px;
 
   .material-icons {
     color: var(--orange);

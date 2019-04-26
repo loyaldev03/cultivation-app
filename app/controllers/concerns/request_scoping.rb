@@ -28,6 +28,8 @@ module RequestScoping
       time_travel
       yield
       time_travel_return
+    else
+      yield
     end
   end
 

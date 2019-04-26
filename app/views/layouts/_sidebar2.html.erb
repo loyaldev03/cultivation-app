@@ -25,22 +25,22 @@
       </div>
       <ul class="ul list f6 gray ml4 pl2 mt2">
         <li class="pv2">
-          <%= link_to 'Batches', cultivation_batches_path, class: 'link gray f6' %>
+          <%= link_to 'Batches', cult_batches_path, class: 'link gray f6' %>
         </li>
         <li class="pv2">
           <%= link_to 'Schedule', '', class: 'link gray f6' %>
         </li>
         <li class="pv2">
-          <%= link_to 'Plants', '', class: 'link gray f6' %>
+          <%= link_to 'Plants', cult_plants_path, class: 'link gray f6' %>
         </li>
         <li class="pv2">
-          <%= link_to 'Harvest', '', class: 'link gray f6' %>
+          <%= link_to 'Harvest', cult_harvests_path, class: 'link gray f6' %>
         </li>
         <li class="pv2">
-          <%= link_to 'Tasks', '', class: 'link gray f6' %>
+          <%= link_to 'Tasks', cult_tasks_path, class: 'link gray f6' %>
         </li>
         <li class="pv2">
-          <%= link_to 'Issues', '', class: 'link gray f6' %>
+          <%= link_to 'Issues', cult_issues_path, class: 'link gray f6' %>
         </li>
       </ul>
     </li>
@@ -167,6 +167,15 @@
       <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
         <i class="material-icons md-16 grey mr3 ml1">settings</i>
         <span class="link subtitle-2-regular grey">Settings</span>
+      </li>
+    <% end %>
+
+
+    
+    <%= link_to cultivation_batches_path, class: "link" do %>
+      <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3 ml1">track_changes</i>
+        <span class="link subtitle-2-regular grey">Legacy cultivation batches</span>
       </li>
     <% end %>
 

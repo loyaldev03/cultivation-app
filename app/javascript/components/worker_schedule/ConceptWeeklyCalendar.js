@@ -18,34 +18,87 @@ export default class WeeklyCalendar extends React.Component {
     let week = this.getWeekDate(date)
     let time = new Array(10).fill(undefined)
     return (
-      <div className="w-70 flex flex-column">
+      <div className="flex flex-column">
         <Row className="b grey">
           <Cell />
           {week.map((x, i) => (
             <Cell
               className={` b--light-grey tc ${x == new Date().getDate() &&
-                'orange'} lh-title bb ${i != week.length - 1 && 'br'}`}
+                'orange'} lh-title bb`}
+              key={week.length + i + 'title'}
             >
               {days[i]}
 
-              <div
-                className={`${x == new Date().getDate() &&
-                  'br-100 bg-orange white ba b--black-10 tc dtc v-mid pa2 '} ma2 b`}
-              >
-                {x}
+              <div className={`ma2 b`}>
+                <span
+                  className={`${x == new Date().getDate() &&
+                    'br-100 bg-orange white ba b--black-10 tc v-mid pa2 '} `}
+                >
+                  {x}
+                </span>
               </div>
             </Cell>
           ))}
         </Row>
-        {time.map((x, i) => (
-          <Row className="h3 grey">
+        <Row style={{ marginTop: '-2em' }}>
+          <Cell />
+          <Cell className="br h2 b--light-grey" />
+          <Cell className="br h2 b--light-grey" />
+          <Cell className="br h2 b--light-grey" />
+          <Cell className="br h2 b--light-grey" />
+          <Cell className="br h2 b--light-grey" />
+          <Cell className="br h2 b--light-grey" />
+        </Row>
+        {time.map((row, rowNumber) => (
+          <Row className="grey" key={rowNumber + 8} style={{ height: '3em' }}>
             <Cell className="tr" style={{ marginTop: '-1em' }}>
-              {i + 8 < 12
-                ? `${i + 8} AM`
-                : `${i + 8 - 12 == 0 ? 12 : i + 8 - 12} PM`}
+              {rowNumber + 8 < 12
+                ? `${rowNumber + 8} AM`
+                : `${rowNumber + 8 - 12 == 0 ? 12 : rowNumber + 8 - 12} PM`}
             </Cell>
-            {week.map((x, i) => (
-              <Cell className="bb b--light-grey" />
+            {week.map((cell, cellNumber) => (
+              <Cell
+                className={`${rowNumber < 9 &&
+                  'bb'} b--light-grey ${cellNumber < 6 && 'br'}`}
+                key={cell + cellNumber}
+              >
+                {rowNumber == 3 && cellNumber == 1 && (
+                  <Marker
+                    style={{
+                      position: 'absolute',
+                      height: 'calc(3em*4)',
+                      width: '4rem'
+                    }}
+                  >
+                    {' '}
+                    Task marking 4Hrs
+                  </Marker>
+                )}
+                {rowNumber == 2 && cellNumber == 4 && (
+                  <Marker
+                    style={{
+                      position: 'absolute',
+                      height: 'calc(3em*2.5)',
+                      width: '4rem'
+                    }}
+                  >
+                    {' '}
+                    Task Marking 2.5Hrs
+                  </Marker>
+                )}
+                {rowNumber == 1 && cellNumber == 5 && (
+                  <Marker
+                    style={{
+                      position: 'absolute',
+                      height: 'calc(3em*7)',
+                      width: '4rem'
+                    }}
+                  >
+                    {' '}
+                    Task Marking 7Hrs
+                  </Marker>
+                )}
+              </Cell>
             ))}
           </Row>
         ))}
@@ -55,13 +108,25 @@ export default class WeeklyCalendar extends React.Component {
 }
 
 const Row = props => (
-  <div className={classNames('w-100 flex', props.className)}>
+  <div
+    className={classNames('w-100 flex', props.className)}
+    style={props.style}
+  >
     {props.children}
   </div>
 )
 
 const Cell = props => (
-  <div className={classNames('w-10', props.className)} style={props.style}>
+  <div className={classNames('w3', props.className)} style={props.style}>
+    {props.children}
+  </div>
+)
+
+const Marker = props => (
+  <div
+    className={classNames('bg-orange white tc br3', props.className)}
+    style={props.style}
+  >
     {props.children}
   </div>
 )

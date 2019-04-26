@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 class Sunburst extends React.Component {
   componentDidMount() {
     let div = d3
-      .select('html')
+      .select('.cursorplacer')
       .append('div')
       .attr('class', 'tooltipSunburst')
       .style('opacity', 0)
@@ -20,6 +20,8 @@ class Sunburst extends React.Component {
     let partition = d3
       .partition() // <-- 1
       .size([2 * Math.PI, this.getRadius(this.props.width, this.props.height)])
+
+    this.props.onHaveSection(this.props.data[0].section_code ? true : false)
 
     let levels = this.props.data[0].section_code
         ? ['section_code', 'row_code', 'shelf_code']
@@ -67,7 +69,7 @@ class Sunburst extends React.Component {
         div.style('opacity', 0.9)
         div
           .html(d.data.name + '<br/>')
-          .style('left', d3.event.pageX + 'px')
+          .style('left', d3.event.pageX - 1000 + 'px')
           .style('top', d3.event.pageY - 28 + 'px')
 
         d3.select(this).style('cursor', 'pointer')
@@ -101,7 +103,7 @@ class Sunburst extends React.Component {
           .style('fill', function(d) {
             let color = d3.color(parent.indexOf(d) >= 0 ? '#ffa36a' : '#C7C7C7')
             if (child.indexOf(d) >= 0) {
-              color = d3.color('#ff7f30')
+              color = d3.color('#F66830')
             }
             if (d.parent) {
               return color
@@ -130,7 +132,7 @@ class Sunburst extends React.Component {
         return d.parent ? '' : ''
       }) // <-- 4
       .attr('dy', function(d) {
-        return d.parent ? '' : '-15'
+        return d.parent ? '' : that.props.data[0].section_code ? '-11' : '-15'
       })
       .style('pointer-events', 'none')
       .style('font-size', '0.8em')
@@ -171,7 +173,7 @@ class Sunburst extends React.Component {
           2 * Math.PI,
           this.getRadius(this.props.width, this.props.height)
         ])
-
+      this.props.onHaveSection(this.props.data[0].section_code ? true : false)
       let levels = this.props.data[0].section_code
           ? ['section_code', 'row_code', 'shelf_code']
           : ['row_code', 'shelf_code'],
@@ -239,7 +241,7 @@ class Sunburst extends React.Component {
                 parent.indexOf(d) >= 0 ? '#ffa36a' : '#C7C7C7'
               )
               if (child.indexOf(d) >= 0) {
-                color = d3.color('#ff6300')
+                color = d3.color('#F66830')
               }
               if (d.parent) {
                 return color
@@ -268,7 +270,7 @@ class Sunburst extends React.Component {
           return d.parent ? '' : ''
         })
         .attr('dy', function(d) {
-          return d.parent ? '' : '-15'
+          return d.parent ? '' : that.props.data[0].section_code ? '-11' : '-15'
         })
         .style('pointer-events', 'none')
         .style('font-size', '0.8em')
@@ -295,7 +297,7 @@ class Sunburst extends React.Component {
                   parent.indexOf(d) >= 0 ? '#ffa36a' : '#C7C7C7'
                 )
                 if (child.indexOf(d) >= 0) {
-                  color = d3.color('#ff6300')
+                  color = d3.color('#F66830')
                 }
                 if (d.parent) {
                   return color

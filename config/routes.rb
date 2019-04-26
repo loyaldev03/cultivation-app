@@ -275,6 +275,7 @@ Rails.application.routes.draw do
         delete ':id/notes/:note_id', to: 'daily_tasks#destroy_note'
         get '/tasks', to: 'daily_tasks#tasks'
         get '/tasks_by_date', to: 'daily_tasks#tasks_by_date'
+        get '/tasks_by_date_range', to: 'daily_tasks#tasks_by_date_range'
         put '/time_log', to: 'daily_tasks#time_log'
         get '/work_schedules', to: 'daily_tasks#work_schedules'
         

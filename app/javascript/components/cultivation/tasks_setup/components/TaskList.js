@@ -694,6 +694,7 @@ class TaskList extends React.Component {
             <Suspense fallback={<div />}>
               <ClippingPanel
                 title="Clip"
+                show={showClippingPanel}
                 batchId={this.props.batch.id}
                 facilityId={this.props.batch.facility_id}
                 strainId={this.props.batch.facility_strain_id}

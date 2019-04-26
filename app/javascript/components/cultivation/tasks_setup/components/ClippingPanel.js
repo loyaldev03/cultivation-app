@@ -23,6 +23,7 @@ class ClippingPanel extends React.Component {
     locationFilter: [],
     allLocationChecked: false,
     clipNumber: 0,
+    isHasSection: null,
     roomChoice: null,
     applyAllToggle: false,
     codeSelected: null,
@@ -56,6 +57,11 @@ class ClippingPanel extends React.Component {
     } else {
     }
   }
+
+  onHaveSection = isHasSection => {
+    this.setState({ isHasSection })
+  }
+
   onAddTray = async element => {
     this.state.traySelected.push(element)
     let temp = await TaskStore.getPlantOnSelect(
@@ -163,7 +169,7 @@ class ClippingPanel extends React.Component {
     this.setState({ roomChoice: roomName })
   }
   render() {
-    const { onClose } = this.props
+    const { onClose, show } = this.props
     const {
       roomData,
       traySelected,
@@ -176,6 +182,7 @@ class ClippingPanel extends React.Component {
       roomSelected,
       applyAllToggle,
       highlightedNode,
+      isHasSection,
       allLocationChecked
     } = this.state
     let totalPlantOnForm = traySelected.reduce(
@@ -185,11 +192,13 @@ class ClippingPanel extends React.Component {
     return (
       <div>
         <SlidePanelHeader onClose={onClose} title={this.props.title} />
+        <div className="cursorplacer" />
         <div className="flex justify-center tc mt3">
           {motherRoomList.map(card => (
             <div
-              className={`flex flex-column f6 lh-copy ba br2 b--light-grey pa2 ml1 pointer ${card ===
-                roomChoice && 'orange b'}`}
+              className={`flex flex-column f6 lh-copy ba br2 pa2 ml1 pointer ${
+                card === roomChoice ? 'orange b b--orange' : 'b--light-grey'
+              }`}
               key={card}
               onClick={e => this.changeRoom(card)}
             >
@@ -214,6 +223,7 @@ class ClippingPanel extends React.Component {
                 roomChoice={roomChoice}
                 onChoosen={this.onChoosen}
                 highlightedNode={highlightedNode}
+                onHaveSection={this.onHaveSection}
                 width="300"
                 height="300"
               />
@@ -239,7 +249,7 @@ class ClippingPanel extends React.Component {
                 </div>
               ) : (
                 <div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between mb1">
                     <div>Total clones to create</div>
                     <div>
                       {totalPlantOnForm}/{BatchStore.batch.quantity}
@@ -253,12 +263,198 @@ class ClippingPanel extends React.Component {
                   />
                 </div>
               )}
-              <div className="mt4 subtitle-2">
-                You selected mother plants at:
-                <br />
-                <div className="bg-light-gray  grey f5 flex justify-between items-center pa1 pv2">
+              {isHasSection ? (
+                <React.Fragment>
+                  <MultiSection section={traySelected} />
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <div className="mt4 subtitle-2">
+                    <div className="mb1 b">You selected mother plants at:</div>
+                    <div className="bg-light-gray  grey f5 flex justify-between items-center pa1 pv2 mb1">
+                      <div className="b flex flex-start items-center pl2">
+                        {codeSelected} > tray{' '}
+                        <i className="material-icons icon--small">delete</i>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        Apply to all{' '}
+                        <Tippy
+                          placement="bottom-end"
+                          content={
+                            <div className="inline_calendar grey ">
+                              Tips: If selected, all mother plants in this are
+                              will be clipped by the number you indicated above.
+                              You may also select the specific mother plants in
+                              specific locations and indicate a different number
+                              of clipping for each one
+                            </div>
+                          }
+                        >
+                          <i className="material-icons icon--small pointer">
+                            help
+                          </i>
+                        </Tippy>
+                        <label className="switch">
+                          <input
+                            type="checkbox"
+                            checked={applyAllToggle}
+                            onChange={e =>
+                              this.setState({ applyAllToggle: !applyAllToggle })
+                            }
+                          />
+                          <span className="slider round" />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-between">
+                    <div>
+                      Total Mother plants selected:
+                      <span className="orange">{traySelected.length}</span>
+                    </div>
+                    {applyAllToggle && (
+                      <input
+                        type="number"
+                        className="input w-10 tr"
+                        value={clipNumber}
+                        maxLength="2"
+                        onChange={this.onApplyAllClipping}
+                      />
+                    )}
+                  </div>
+
+                  <div className="mt3">
+                    <div className="w-100">
+                      <div className="fl w-25  pt2 bb b--light-gray pb1 mb1">
+                        <Tippy
+                          trigger="click"
+                          content={
+                            <div className="bg-white ba b--light-silver br2 ml1 w5 grey overflow-y-auto">
+                              <div className="bg-light-gray pa1">
+                                <input
+                                  type="checkbox"
+                                  checked={allLocationChecked}
+                                  onChange={e => this.onShowAllLocation()}
+                                />{' '}
+                                All
+                              </div>
+                              {trayFilterList.map(x => (
+                                <div className="pa1" key={x.code}>
+                                  <input
+                                    type="checkbox"
+                                    checked={x.ticked}
+                                    onChange={e => this.onFilterLocation(e, x)}
+                                  />
+                                  {x.code}
+                                </div>
+                              ))}
+                            </div>
+                          }
+                        >
+                          <i className="material-icons icon--small pointer">
+                            filter_list
+                          </i>
+                        </Tippy>
+                        Location Code
+                      </div>
+                      <div className="fl w-25  pt2 bb b--light-gray pb1 mb1">
+                        Plant ID
+                      </div>
+                      <div
+                        className={`fl w-25  pt2 bb b--light-gray  pb1 mb1 ${applyAllToggle &&
+                          'flex justify-between'}`}
+                      >
+                        <span className="">Number of clipping</span>
+                      </div>
+                      <div className="fl w-25  pt2 bb b--light-gray pb1 mb1">
+                        Total Clone {totalPlantOnForm}
+                      </div>
+                    </div>
+                    <div className="w-100 h5 overflow-y-auto">
+                      {traySelected.map(tray => {
+                        let show = trayFilterList.find(
+                          x => x.code === tray.location_code
+                        )
+                        return show && show.ticked ? (
+                          <div className="fl w-100" key={tray.plant_id}>
+                            <div className="fl w-25 pa1">
+                              {tray.location_code}
+                            </div>
+                            <div className="fl w-25 pa1">{tray.plant_code}</div>
+                            <div className="fl w-20 pa1 tc">
+                              <input
+                                type="number"
+                                className="gray w-80 tr b--none"
+                                value={tray.quantity}
+                                maxLength="2"
+                                onChange={e =>
+                                  this.onUpdateOnePlant(tray.plant_id, e)
+                                }
+                              />
+                            </div>
+                          </div>
+                        ) : null
+                      })}
+                    </div>
+                  </div>
+                </React.Fragment>
+              )}
+            </div>
+          </React.Fragment>
+        ) : (
+          <div className="tc pa5">
+            <i className="material-icons md-17 orange">help</i>Tip: You can
+            select the entire area, or you can select individual location of the
+            mother plants. You can also select{' '}
+            <span className="b">Apply All</span> if you want to have the same
+            number of clippings per mother plant in the entire area selected.
+          </div>
+        )}
+        {codeSelected && (
+          <SlidePanelFooter onSave={this.onUpdatePlant} onClose={onClose} />
+        )}
+      </div>
+    )
+  }
+}
+export default ClippingPanel
+
+class MultiSection extends React.Component {
+  state = {
+    data: null,
+    applyAllToggle: false
+  }
+  componentDidMount() {
+    const { section } = this.props
+    let getSection = section.map(x => {
+      let { location_code } = x
+      let name = location_code.split(/[..]/)
+      console.log(name)
+      return name[1]
+    })
+    getSection = [...new Set(getSection)]
+    let data = getSection.map(x => {
+      return {
+        name: x,
+        data: section.filter(sectionData => {
+          return sectionData.location_code.indexOf(x) > 0
+        })
+      }
+    })
+    this.setState({ data })
+  }
+  render() {
+    const { data, applyAllToggle } = this.state
+    return (
+      <React.Fragment>
+        <div className="mt4 mb1 b">You selected mother plants at:</div>
+        {data &&
+          data.map((x, i) => (
+            <div className="mb3" key={x.name + i}>
+              <div className="subtitle-2">
+                <div className="bg-light-gray  grey f5 flex justify-between items-center pa1 pv2 mb1">
                   <div className="b flex flex-start items-center pl2">
-                    {codeSelected} > tray{' '}
+                    {x.name} > tray{' '}
                     <i className="material-icons icon--small">delete</i>
                   </div>
                   <div className="flex justify-between items-center">
@@ -290,110 +486,78 @@ class ClippingPanel extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="flex justify-between">
-                <div>
-                  Total Mother plants selected:
-                  <span className="orange">{traySelected.length}</span>
+              <div className="mt2">
+                <div className="w-100 flex">
+                  <div className=" w-25  pt2 bb b--light-gray pb1 mb1">
+                    {/* <Tippy
+              trigger="click"
+              content={
+                <div className="bg-white ba b--light-gray br2 ml1 w5 grey overflow-y-auto">
+                  <div className="bg-light-gray pa1">
+                    <input
+                      type="checkbox"
+                      checked={allLocationChecked}
+                      onChange={e => this.onShowAllLocation()}
+                    />{' '}
+                    All
+                  </div>
+                  {trayFilterList.map(x => (
+                    <div className="pa1" key={x.code}>
+                      <input
+                        type="checkbox"
+                        checked={x.ticked}
+                        onChange={e => this.onFilterLocation(e, x)}
+                      />
+                      {x.code}
+                    </div>
+                  ))}
                 </div>
-                {applyAllToggle && (
-                  <input
-                    type="number"
-                    className="input w-10 tr"
-                    value={clipNumber}
-                    maxLength="2"
-                    onChange={this.onApplyAllClipping}
-                  />
-                )}
-              </div>
-
-              <div className="mt3">
-                <div className="w-100">
-                  <div className="fl w-25  pt2 bb b--light-silver">
-                    <Tippy
-                      trigger="click"
-                      content={
-                        <div className="bg-white ba b--light-silver br2 ml1 w5 grey overflow-y-auto">
-                          <div className="bg-light-gray pa1">
-                            <input
-                              type="checkbox"
-                              checked={allLocationChecked}
-                              onChange={e => this.onShowAllLocation()}
-                            />{' '}
-                            All
-                          </div>
-                          {trayFilterList.map(x => (
-                            <div className="pa1" key={x.code}>
-                              <input
-                                type="checkbox"
-                                checked={x.ticked}
-                                onChange={e => this.onFilterLocation(e, x)}
-                              />
-                              {x.code}
-                            </div>
-                          ))}
-                        </div>
-                      }
-                    >
-                      <i className="material-icons icon--small pointer">
-                        filter_list
-                      </i>
-                    </Tippy>
+              }
+            > */}
+                    <i className="material-icons icon--small pointer">
+                      filter_list
+                    </i>
+                    {/* </Tippy> */}
                     Location Code
                   </div>
-                  <div className="fl w-25  pt2 bb b--light-silver">
+                  <div className=" w-25  pt2 bb b--light-gray pb1 mb1">
                     Plant ID
                   </div>
                   <div
-                    className={`fl w-20  pt2 bb b--light-silver ${applyAllToggle &&
+                    className={`fl w-25  pt2 bb b--light-gray  pb1 mb1 ${applyAllToggle &&
                       'flex justify-between'}`}
                   >
-                    <span className="pl2"># of clipping</span>
+                    <span className="">Number of clipping</span>
                   </div>
-                  <div className="fl w-25  pt2 bb b--light-silver">
-                    Total Clone {totalPlantOnForm}
+                  <div className="w-25  pt2 bb b--light-gray pb1 mb1">
+                    Total Clone
+                    {/* {totalPlantOnForm} */}
                   </div>
-                </div>
-                <div className="w-100 h5 overflow-y-auto">
-                  {traySelected.map(tray => {
-                    let show = trayFilterList.find(
-                      x => x.code === tray.location_code
-                    )
-                    return show && show.ticked ? (
-                      <div className="fl w-100" key={tray.plant_id}>
-                        <div className="fl w-25 pa1">{tray.location_code}</div>
-                        <div className="fl w-25 pa1">{tray.plant_code}</div>
-                        <div className="fl w-20 pa1 tc">
-                          <input
-                            type="number"
-                            className="input w-30 tr"
-                            value={tray.quantity}
-                            maxLength="2"
-                            onChange={e =>
-                              this.onUpdateOnePlant(tray.plant_id, e)
-                            }
-                          />
-                        </div>
-                      </div>
-                    ) : null
-                  })}
                 </div>
               </div>
+              <div className="w-100 flex ">
+                {x.data.map(tray => (
+                  <div className="flex w-100" key={tray.plant_id}>
+                    <div className="w-25 pa1">{tray.location_code}</div>
+                    <div className="w-25 pa1">{tray.plant_code}</div>
+                    <div className="w-20 pa1 tc">
+                      <input
+                        type="number"
+                        className="gray w-80 tr b--none"
+                        value={tray.quantity}
+                        maxLength="2"
+                        readOnly
+                        // onChange={e =>
+                        //   this.onUpdateOnePlant(tray.plant_id, e)
+                        // }
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </React.Fragment>
-        ) : (
-          <div className="tc pa5">
-            <i className="material-icons md-17 orange">help</i>Tip: You can
-            select the entire area, or you can select individual location of the
-            mother plants. You can also select{' '}
-            <span className="b">Apply All</span> if you want to have the same
-            number of clippings per mother plant in the entire area selected.
-          </div>
-        )}
-        {codeSelected && (
-          <SlidePanelFooter onSave={this.onUpdatePlant} onClose={onClose} />
-        )}
-      </div>
+          ))}
+      </React.Fragment>
     )
   }
 }
-export default ClippingPanel

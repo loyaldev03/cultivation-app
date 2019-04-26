@@ -46,12 +46,16 @@ class TimeTaveller extends React.Component {
     const { current_time, enable_time_travel } = this.state
     return (
       <div className="ph2 f6 grey flex justify-center items-center">
-        <span className={classNames('w4 mr2 tr', { "b red": enable_time_travel })}>
+        <span
+          className={classNames('w4 mr2 tr', { 'b red': enable_time_travel })}
+        >
           Clock Tower:
         </span>
         <div id="toast" className="toast" />
         <DatePicker
-          className={classNames('f5 w-100 measure-wide ', { "ba b--red br3": enable_time_travel })}
+          className={classNames('f5 w-100 measure-wide ', {
+            'ba b--red br3': enable_time_travel
+          })}
           value={current_time}
           fieldname="start_date"
           onChange={this.onChange}

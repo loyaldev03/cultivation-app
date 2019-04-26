@@ -81,7 +81,6 @@ class ClippingPanel extends React.Component {
     let uniqueLocationCode = temp.map(x => {
       return { code: x.location_code, ticked: true }
     })
-    console.log(element)
     this.setState({
       traySelected: temp,
       codeSelected: element.name,
@@ -170,6 +169,9 @@ class ClippingPanel extends React.Component {
   }
   render() {
     const { onClose, show } = this.props
+    if (!show) {
+      return null
+    }
     const {
       roomData,
       traySelected,
@@ -192,7 +194,6 @@ class ClippingPanel extends React.Component {
     return (
       <div>
         <SlidePanelHeader onClose={onClose} title={this.props.title} />
-        <div className="cursorplacer" />
         <div className="flex justify-center tc mt3">
           {motherRoomList.map(card => (
             <div
@@ -208,9 +209,8 @@ class ClippingPanel extends React.Component {
           ))}
         </div>
         <div className="ph4 pb4 pt3">
-          <span className="orange">Sage</span> mother plants are located in the
-          sections highlighted in orange. Select the area of the mother plants
-          you’d like to clip
+          Mother plants are located in the sections highlighted in orange.
+          Select the area of the mother plants you’d like to clip
         </div>
         {roomData ? (
           <div className="w-100 tc">

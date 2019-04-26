@@ -34,7 +34,7 @@ module RequestScoping
   def time_travel
     config = System::Configuration.first
     if config&.enable_time_travel
-      Rails.logger.info 'TIME TRAVEL START'
+      Rails.logger.info "\033[31m TIME TRAVEL ACTIVE \033[0m"
       Timecop.travel(config.current_time)
     else
       Timecop.return
@@ -42,7 +42,6 @@ module RequestScoping
   end
 
   def time_travel_return
-    Rails.logger.info 'TIME TRAVEL RETURN'
     Timecop.return
   end
 

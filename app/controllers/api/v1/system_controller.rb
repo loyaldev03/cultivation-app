@@ -21,6 +21,10 @@ class Api::V1::SystemController < Api::V1::BaseApiController
       config.current_time = Time.current
     end
     config.save!
+
+    # Run worker to update batch status
+    ActivateBatchWorker.new.perform
+
     render json: {
       data: {
         "current_time": config.current_time,

@@ -13,6 +13,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       roles: Common::QueryRoles.call.result.order(name: :asc),
       users: users,
       modules: Constants::APP_MODULES,
+      company_work_schedules: CompanyInfo.first.work_schedules,
     })
     data = Common::FacilityUserRoleSerializer.new(result).serialized_json
     render json: data

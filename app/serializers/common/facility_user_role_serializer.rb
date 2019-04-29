@@ -25,6 +25,18 @@ module Common
 
     attribute :modules
 
+    attribute :company_work_schedules do |object|
+      days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+      work_schedules = days.map do |a|
+        day_work = object.company_work_schedules.detect { |b| b.day == a }
+        {
+          day: a,
+          start_time: day_work&.start_time&.strftime('%H:%M'),
+          end_time: day_work&.end_time&.strftime('%H:%M'),
+        }
+      end
+    end
+
     attribute :users do |object|
       object.users.map do |user|
         default_facility_id = user.default_facility_id ? user.default_facility_id.to_s : nil

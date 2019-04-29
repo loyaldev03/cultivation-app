@@ -21,7 +21,13 @@ class UserRoleStore {
       const response = await (await fetch(url, httpGetOptions)).json()
       runInAction(() => {
         if (response.data && response.data.attributes) {
-          const { facilities, users, roles, modules, company_work_schedules } = response.data.attributes
+          const {
+            facilities,
+            users,
+            roles,
+            modules,
+            company_work_schedules
+          } = response.data.attributes
           this.isDataLoaded = true
           this.facilities = facilities || []
           this.users = users || []

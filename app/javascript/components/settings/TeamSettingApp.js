@@ -210,7 +210,7 @@ class TeamSetttingApp extends React.Component {
     const facilitiesOptions = build_facilities_options(facilities)
     const userManagerOptions = build_user_manager_options(users)
     const rolesOptions = build_roles_options(roles)
-    
+
     return (
       <React.Fragment>
         <div id="toast" className="toast" />

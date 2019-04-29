@@ -69,7 +69,7 @@ class UserDetailsEditor extends React.PureComponent {
 
       if (props.user.work_schedules) {
         work_schedules = props.user.work_schedules
-      }else{
+      } else {
         work_schedules = props.companyWorkSchedules
       }
 

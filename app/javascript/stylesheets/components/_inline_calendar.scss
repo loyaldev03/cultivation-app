@@ -9,6 +9,10 @@ $calendarFontSize: 14px;
   border-radius: 4px;
   background-color: $white;
 
+  .react-calendar {
+    padding-bottom: 0.35em;
+  }
+
   .react-calendar__navigation__label {
     color: $grey;
     background-color: $white;
@@ -18,9 +22,14 @@ $calendarFontSize: 14px;
     line-height: $calendarFontSize;
   }
   .react-calendar__month-view__weekdays {
-    font-size: 0.8em;
+    font-size: 0.85em;
     margin-top: 0.3em;
     padding: 0.2em 0;
+    text-align: center;
+    color: $grey;
+    abbr {
+      text-decoration: none;
+    }
   }
   .react-calendar__tile {
     color: $grey;

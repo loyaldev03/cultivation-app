@@ -205,12 +205,12 @@ class TeamSetttingApp extends React.Component {
     if (!store.isDataLoaded) {
       return <p className="orange ph4 pt3">No data available...</p>
     }
-    const { facilities, users, roles, modules } = store
+    const { facilities, users, roles, modules, companyWorkSchedules } = store
     const { editingUser, editingRole, isSaving, activeTab } = this.state
     const facilitiesOptions = build_facilities_options(facilities)
     const userManagerOptions = build_user_manager_options(users)
     const rolesOptions = build_roles_options(roles)
-
+    
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
@@ -375,6 +375,7 @@ class TeamSetttingApp extends React.Component {
                 userManagerOptions={userManagerOptions}
                 rolesOptions={rolesOptions}
                 isSaving={isSaving}
+                companyWorkSchedules={companyWorkSchedules}
               />
             )}
             {activeTab === 'rolesTab' && (

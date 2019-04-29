@@ -17,7 +17,7 @@ import getIssue from '../../../issues/actions/getIssue'
 import loadHarvestBatch from '../actions/loadHarvestBatch'
 
 const ReactTable = lazy(() => import('react-table'))
-const ClippingPanel = lazy(() => import('./ClippingPanel'))
+const ClippingPanel = lazy(() => import('./ClippingPanel2'))
 const AssignResourceForm = lazy(() => import('./AssignResourceForm'))
 const AssignMaterialForm = lazy(() => import('./MaterialForm'))
 const CultivationCalendar = lazy(() => import('./CultivationCalendar'))

@@ -34,19 +34,36 @@ class ClippingPanel extends React.Component {
     })
     motherRoomList = [...new Set(motherRoomList)]
     let hasSection = roomData[0].section_code !== null
+    let motherPlantList = await TaskStore.getPlantOnSelect(
+        this.props.facilityId,
+        this.props.strainId,
+        BatchStore.batch.selected_location
+    )
+    let codeSelected = motherRoomList.map(x=> {
+        if (x.room_id===BatchStore.batch.selected_location){
+            return x.room_id
+        }
+        if (x.section_id===BatchStore.batch.selected_location){
+            return x.section_id
+        }
+        if (x.row_id===BatchStore.batch.selected_location){
+            return x.row_id
+        }
+        if (x.shelf_id===BatchStore.batch.selected_location){
+            return x.shelf_id
+        }
+        if (x.tray_id===BatchStore.batch.selected_location){
+            return x.tray_id
+        }
+    })
+    codeSelected = codeSelected[0]
     this.setState({
       motherRoomList,
       roomChoice: motherRoomList[0],
       roomData,
       hasSection,
-      locationSelected: BatchStore.batch.selected_location
-    })
-    let motherPlantList = await TaskStore.getPlantOnSelect(
-      this.props.facilityId,
-      this.props.strainId,
-      this.state.locationSelected
-    )
-    this.setState({
+      codeSelected,
+      locationSelected: BatchStore.batch.selected_location,
       motherPlantList
     })
   }
@@ -164,10 +181,12 @@ export default ClippingPanel
 class TableSection extends React.Component {
   state = {
     selectedPlant: [],
-    plantList: []
+    plantList: [],
+    codeSelected: null,
   }
   componentDidMount() {
     console.log(this.props.hasSection, BatchStore.batch.selected_plants)
+    const listSelected = BatchStore.batch.selected_plants.map(x => x.plant_id)
     let plantList = this.props.data
       .map(plant => {
         plant.quantity = 0
@@ -180,9 +199,14 @@ class TableSection extends React.Component {
         return plant
       })
       .filter(a => a.quantity > 0)
+    let codeSelected = plantList[0].location_code;
+    
+    const regex=/[a-zA-Z 0-9]*\./m;
+    codeSelected = regex.exec(codeSelected)[0]
     this.setState({
       selectedPlant: BatchStore.batch.selected_plants,
-      plantList
+      plantList,
+      codeSelected
     })
   }
   componentDidUpdate(prevProps) {
@@ -209,8 +233,7 @@ class TableSection extends React.Component {
     }
   }
   render() {
-    const { codeSelected } = this.props
-    const { plantList } = this.state
+    const { plantList, codeSelected } = this.state
     return (
       <div>
         <div className="bg-light-gray  grey f5 flex justify-between items-center pa1 pv2 mb1">

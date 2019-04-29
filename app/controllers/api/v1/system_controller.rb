@@ -1,6 +1,9 @@
 class Api::V1::SystemController < Api::V1::BaseApiController
   def configuration
-    config = System::Configuration.first
+    config = System::Configuration.first || System::Configuration.new
+    config.current_time ||= Time.current
+    config.enable_time_travel ||= false
+
     render json: {
       data: {
         current_time: config.current_time,

@@ -29,6 +29,12 @@ class MovePlantsToNextPhaseJob < ApplicationJob
         activity: Constants::INDELIBLE_MOVING_NEXT_PHASE,
         phase: batch.current_growth_stage,
       )
+      # In-case where moving to tray was perform outside of clone stage.
+      if move_records.blank?
+        move_records = histories.where(
+          activity: Constants::INDELIBLE_MOVING_TO_TRAY,
+        )
+      end
     end
     move_records.each do |rec|
       if rec.task&.work_status == Constants::WORK_STATUS_DONE

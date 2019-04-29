@@ -48,6 +48,16 @@ class Sunburst extends React.Component {
       }) // <-- 2
     console.log(root)
     this.partition(root)
+    root.descendants().map(d => {
+      if (d.data.id === this.props.locationSelected) {
+        this.setState({
+          selectedNode: d.data.id,
+          selectedNodeList: d.descendants(),
+          neighbourNode: d.parent ? d.parent.descendants() : []
+        })
+        this.props.onCodeSelect(d)
+      }
+    })
     this.setState({ nodeData: root.descendants() })
   }
 
@@ -71,6 +81,16 @@ class Sunburst extends React.Component {
         }) // <-- 2
       console.log(root)
       this.partition(root)
+      root.descendants().map(d => {
+        if (d.data.id === this.props.locationSelected) {
+          this.setState({
+            selectedNode: d.data.id,
+            selectedNodeList: d.descendants(),
+            neighbourNode: d.parent ? d.parent.descendants() : []
+          })
+          this.props.onCodeSelect(d)
+        }
+      })
       this.setState({ nodeData: root.descendants() })
     }
   }
@@ -145,6 +165,7 @@ class Sunburst extends React.Component {
 
   onClickNode = d => {
     console.log('clicked', d)
+    this.props.onCodeSelect(d)
     this.setState({
       selectedNode: d.data.id,
       selectedNodeList: d.descendants(),

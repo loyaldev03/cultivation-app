@@ -9,4 +9,6 @@ class CompanyInfo
   field :state_license, type: String
   field :tax_id, type: String
   field :timezone, type: String
+
+  embeds_many :work_schedules, class_name: 'Common::WorkSchedule'
 end

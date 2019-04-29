@@ -160,7 +160,7 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
       end
     end
 
-    it "Update batch growth stage to harvest", focus: true do
+    it "Update batch growth stage to harvest" do
       Time.use_zone(facility.timezone) do
         # pp "flo == #{task_staying_flower.start_date}"
         # pp "har == #{task_staying_harvest.start_date}"

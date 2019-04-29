@@ -1,0 +1,86 @@
+<div class="mv4 flex flex-row-l flex-column">
+  <div class="w-20">
+    <span class="subtitle-2 grey">Company Details</span>
+  </div>
+
+  <div class="fl w-80-l w-100 pt0-l pt3 flex flex-column">
+    <div class="flex flex-row mb3">
+      <div class="w-40 mr4">
+        <%= f.label "Company name", class: "db mb1 grey subtitle-2 ttc" %>
+        <%= f.text_field :name, 
+            placeholder: "Company's name",
+            value: @company_info.name,
+            class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+      </div>
+
+      <div class="w-40">
+        <%= f.label "state license #", class: "db mb1 grey subtitle-2 ttc" %>
+        <%= f.text_field :state_license, 
+            placeholder: "S0001",
+            value: @company_info.state_license,
+            class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+      </div>
+    </div>
+
+    <div class="flex flex-row">
+      <div class="w-40 mr4">
+        <%= f.label "Timezone", class: "db mb1 grey subtitle-2" %>
+        <%= f.time_zone_select :timezone,
+            nil,
+            {
+              :value => @company_info.timezone,
+              :default => "Pacific Time (US & Canada)"
+            },
+            { :class => "w-100 form-helper-select" }
+        %>
+      </div>
+
+      <div class="w-40">
+        <%= f.label "tax ID", class: "db mb1 grey subtitle-2 ttc" %>
+        <%= f.text_field :tax_id, 
+            placeholder: "00-1234567",
+            value: @company_info.tax_id,
+            class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flex flex-row-l flex-column">
+  <div class="w-20">
+    <span class="subtitle-2 grey">Contact Details</span>
+  </div>
+
+  <div class="fl w-80-l w-100 pt0-l pt3 flex flex-column">
+    <div class="flex flex-row mb3">
+      <div class="w-40 mr4">
+        <%= f.label "phone number", class: "db mb1 grey subtitle-2 ttc" %>
+        <%= f.text_field :phone, 
+            placeholder: "000-1234567",
+            value: @company_info.phone,
+            class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+      </div>
+
+      <div class="w-40">
+        <%= f.label "fax number", class: "db mb1 grey subtitle-2 ttc" %>
+        <%= f.text_field :fax, 
+            placeholder: "000-1234567",
+            value: @company_info.fax,
+            class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+      </div>
+    </div>
+
+    <div class="flex flex-row">
+      <div class="w-40">
+        <%= f.label "website", class: "db mb1 grey subtitle-2 ttc" %>
+        <%= f.text_field :website, 
+            placeholder: "https://www.google.com/",
+            value: @company_info.website,
+            class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>

@@ -39,7 +39,7 @@ class ResourceSetup extends React.Component {
           <div className="pa4">
             <div
               className="fl w-100 flex flex-column"
-              style={{ maxWidth: '1300px' }}
+              style={{ maxWidth: '1300px', width: '100%' }}
             >
               <img src={BatchResourceImage} />
             </div>

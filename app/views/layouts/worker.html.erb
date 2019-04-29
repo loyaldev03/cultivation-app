@@ -20,6 +20,9 @@
                 </div>
 
                 <div class="flex flex-row items-center">
+                  <% if ENV["ENABLE_TIME_TRAVEL"] == "yes" %>
+                    <%= react_component 'utils/TimeTaveller', { current_time: Time.current } %>
+                  <% end %>
                   <%= switch_user_select if Rails.env.development? %>
                   <i 
                     onclick="openModal()" id="notification-popup" 

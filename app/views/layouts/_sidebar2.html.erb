@@ -1,0 +1,253 @@
+<div id="sidebar" class="sidebar fixed min-vh-100 uncollapsed overflow-hidden" data-turbolinks="false">
+  <%= link_to root_path, class: 'tc pv3 flex justify-center show-collapsed box--shadow-header outline-0', style: 'height: 50px' do %>
+    <%= image_tag 'logo-small.svg' %>
+  <% end %>
+
+  <%= link_to root_path, class: 'pl3 hide box--shadow-header outline-0', style: 'height: 50px; padding-top: 12px;' do %>
+    <%= image_tag 'logo.svg' %>
+  <% end %>
+
+  <ul class="list pl0 mt0 hide overflow-y-scroll" style="height: calc(100vh - 100px);">
+    <%= link_to root_path, class: "link" do %>
+      <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3 ml1">home</i>
+        <span class="link subtitle-2-regular grey">Home</span>
+      </li>
+    <% end %>
+
+    
+    <li class="pv3 ph3 flex flex-column nav-ex ba bt-0 bl-0 br-0 bb-0">
+      <div class="flex flex-row items-center">
+        <i class="material-icons md-16 grey mr3 ml1">spa</i>
+        <%= link_to dashboard_cultivation_batches_path, class: "link" do %>
+          <span class="link subtitle-2-regular grey">Cultivation Planning</span>
+        <% end %>
+      </div>
+      <ul class="ul list f6 gray ml4 pl2 mt2">
+        <li class="pv2">
+          <%= link_to 'Batches', cult_batches_path, class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Schedule', '', class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Plants', cult_plants_path, class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Harvest', cult_harvests_path, class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Tasks', cult_tasks_path, class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Issues', cult_issues_path, class: 'link gray f6' %>
+        </li>
+      </ul>
+    </li>
+    
+  
+    <li class="pv3 ph3 flex flex-column nav-ex ba bt-0 bl-0 br-0 bb-0">
+      <div class="flex flex-row items-center">
+        <i class="material-icons md-16 grey mr3 ml1">list_alt</i>
+        <%= link_to inventory_setup_path, class: "link" do %>
+          <span class="link subtitle-2-regular grey">Inventory</span>
+        <% end %>
+      </div>
+
+      <ul class="ul list f6 gray ml4 pl2 mt2">
+        <li class="pv2">
+          <%= link_to 'Strains', inventory_strains_path(facility_id: current_default_facility&.id&.to_s), class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Plants', mothers_inventory_plants_path(facility_id: current_default_facility&.id&.to_s), class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Raw materials', nutrients_inventory_raw_materials_path(facility_id: current_default_facility&.id&.to_s), class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Packages', harvest_packages_inventory_sales_products_path(facility_id: current_default_facility&.id&.to_s), class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'METRC', '#', class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Products', convert_products_inventory_sales_products_path(facility_id:current_default_facility&.id&.to_s), class: 'link gray f6' %>
+        </li>
+      </ul>
+    </li>
+  
+
+    <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+      <i class="material-icons md-16 grey mr3 ml1">supervisor_account</i>
+      <span class="link subtitle-2-regular grey">Customers</span>
+    </li>
+
+    <li class="pv3 ph3 flex flex-column nav-ex ba bt-0 bl-0 br-0 bb-0">
+      <div class="flex flex-row items-center">
+        <i class="material-icons md-16 grey mr3 ml1">face</i>
+        
+        <%= link_to employees_path, class: "link" do %>
+          <span class="link subtitle-2-regular grey">People</span>
+        <% end %>
+      </div>
+
+      <ul class="ul list f6 gray ml4 pl2 mt2">
+        <li class="pv2">
+          <%= link_to 'Employee list', employees_path, class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Schedule', employees_schedule_path, class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Timesheets', timesheets_path, class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Paydates', '', class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Status', requests_path, class: 'link gray f6' %>
+        </li>
+      </ul>
+    </li>
+
+
+    <li class="pv3 ph3 flex flex-column nav-ex ba bt-0 bl-0 br-0 bb-0">
+      <div class="flex flex-row items-center">
+        <i class="material-icons md-16 grey mr3 ml1">shopping_cart</i>
+        <span class="link subtitle-2-regular grey">Procurement</span>
+      </div>
+
+      <ul class="ul list f6 gray ml4 pl2 mt2">
+        <li class="pv2">
+          <%= link_to 'Open orders', '', class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Vendors', '', class: 'link gray f6' %>
+        </li>
+      </ul>
+    </li>
+
+    
+    <li class="pv3 ph3 flex flex-column nav-ex ba bt-0 bl-0 br-0 bb-0">
+      <div class="flex flex-row items-center">
+        <i class="material-icons md-16 grey mr3 ml1">business</i>
+        <%= link_to facility_setup_new_path(facility_id: current_default_facility&.id), class: 'link' do %>
+          <span class="link subtitle-2-regular grey">Facility</span>
+        <% end %>
+      </div>
+
+
+      <ul class="ul list f6 gray ml4 pl2 mt2">
+        <li class="pv2">
+          <%= link_to 'Facility', '', class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Rooms', '', class: 'link gray f6' %>
+        </li>
+      </ul>
+    </li>
+
+    <li class="pv3 ph3 flex flex-column nav-ex ba bt-0 bl-0 br-0 bb-0">
+      <div class="flex flex-row items-center">
+        <i class="material-icons md-16 grey mr3 ml1">settings_input_composite</i>
+        <span class="link subtitle-2-regular grey">Integration</span>
+      </div>
+
+      <ul class="ul list f6 gray ml4 pl2 mt2">
+        <li class="pv2">
+          <%= link_to 'METRC', '', class: 'link gray f6' %>
+        </li>
+        <li class="pv2">
+          <%= link_to 'Quickbooks', '', class: 'link gray f6' %>
+        </li>
+      </ul>
+    </li>
+
+    <%= link_to settings_path, class: "link" do %>
+      <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3 ml1">settings</i>
+        <span class="link subtitle-2-regular grey">Settings</span>
+      </li>
+    <% end %>
+
+
+    
+    <%= link_to cultivation_batches_path, class: "link" do %>
+      <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3 ml1">track_changes</i>
+        <span class="link subtitle-2-regular grey">Legacy cultivation batches</span>
+      </li>
+    <% end %>
+
+  </ul>
+
+  <ul class="list mt0 pa0 show-collapsed">
+    <%= link_to root_path, class: "link" do %>
+      <li class="pv3 justify-center grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey">home</i>
+      </li>
+    <% end %>
+
+    <%= link_to dashboard_cultivation_batches_path, class: "link" do %>
+      <li class="pv3 justify-center grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey">spa</i>
+      </li>
+    <% end %>
+
+    <%= link_to inventory_setup_path, class: "link" do %>
+      <li class="pv3 justify-center grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey">list_alt</i>
+        
+      </li>
+    <% end %>
+
+    <%= link_to '#', class: "link" do %>
+      <li class="pv3 justify-center grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey">supervisor_account</i>
+        
+      </li>
+    <% end %>
+
+
+    <%= link_to '#', class: "link" do %>
+      <li class="pv3 justify-center grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey">face</i>
+        
+      </li>
+    <% end %>
+
+
+    <%= link_to '#', class: "link" do %>
+      <li class="pv3 justify-center grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey">shopping_cart</i>
+      </li>
+    <% end %>
+
+    <%= link_to facility_setup_new_path(facility_id: current_default_facility&.id), class: "link" do %>
+      <li class="pv3 justify-center grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey">business</i>
+      </li>
+    <% end %>
+
+
+    <%= link_to '#', class: "link" do %>
+      <li class="pv3 justify-center grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey">settings_input_composite</i>
+      </li>
+    <% end %>
+    
+     <%= link_to settings_path, class: "link" do %>
+      <li class="pv3 justify-center grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey">settings</i>
+      </li>
+    <% end %>
+
+    <!--- --->
+  </ul>
+
+  <div class="w-100 pa3 tc absolute bottom-0 bg-white">
+    <a id="toggle-sidebar" href="#" class="link grey outline-0 ph3 pv2">
+      &#8677;
+    </a>
+  </div>
+</div>

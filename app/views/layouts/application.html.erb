@@ -5,8 +5,8 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
       <div class="flex flex-row min-vh-100 ">
-        <%= render 'layouts/sidebar' %>
-        <div id="main" class="main flex flex-column flex-auto" style="padding-left: 75px;">
+        <%= render 'layouts/sidebar2' %>
+        <div id="main" class="main flex flex-column flex-auto" style="padding-left: 210px;">
           <%= flash_messages %>
           <main class="min-vh-100 h-100">
             <div 
@@ -15,7 +15,11 @@
             >
               <% if content_for? :breadcrumb %>
                 <div class="flex items-center">
-                  <%= yield :breadcrumb %>
+                  <!--  '' #yield :breadcrumb -->
+                  <span class="f5 fw4 gray flex items-center">
+                    <i class="material-icons mr2 black-20 md-18">location_on</i>
+                    <%= current_default_facility&.name %>
+                  </span>
                 </div>
 
                 <div class="flex flex-row items-center">

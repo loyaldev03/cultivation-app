@@ -31,11 +31,6 @@
             >
               Holiday
             </a>
-            <a  
-              href="<%= edit_settings_company_company_info_path(type: 'facilities') %>" 
-              class="tab <%= 'tab--active' if params[:type] == 'facilities'%>">
-              Facilities
-            </a>
             <div class="mt0 ba b--light-grey pa3">
 
                <%= render partial: params[:type] || 'company_info', locals: {f: f} %>

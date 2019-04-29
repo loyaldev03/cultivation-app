@@ -1,6 +1,22 @@
 class Settings::Company::CompanyInfoController < ApplicationController
   def edit
     @company_info = CompanyInfo.last
+    @work_schedules = @company_info.work_schedules
+      .map { |a|
+      {
+        day: a[:day],
+        start_time: a[:start_time]&.strftime('%H:%M'),
+        end_time: a[:end_time]&.strftime('%H:%M'),
+      }
+    }
+    @sunday = @work_schedules.detect { |a| a[:day] == 'sunday' }
+    @monday = @work_schedules.detect { |a| a[:day] == 'monday' }
+    @tuesday = @work_schedules.detect { |a| a[:day] == 'tuesday' }
+    @wednesday = @work_schedules.detect { |a| a[:day] == 'wednesday' }
+    @thursday = @work_schedules.detect { |a| a[:day] == 'thursday' }
+    @friday = @work_schedules.detect { |a| a[:day] == 'friday' }
+    @saturday = @work_schedules.detect { |a| a[:day] == 'saturday' }
+
     if @company_info.nil?
       @company_info = CompanyInfo.new
       @company_info.save!
@@ -16,17 +32,16 @@ class Settings::Company::CompanyInfoController < ApplicationController
     @company_info.state_license = company_info_params[:state_license]
     @company_info.tax_id = company_info_params[:tax_id]
     @company_info.timezone = company_info_params[:timezone]
-    @company_info.work_schedules = []
 
-    company_info_params[:work_schedules].each do |a|
-      day = a.keys[0]
-      Rails.logger.debug "#{day}"
-      # @company_info.work_schedules.build({
-      #   day: day,
-      #   start_time: a[day][:start_time],
-      #   end_time: a[day][:end_time]
-      # })
-
+    @company_info.work_schedules = [] #clear work_schedules
+    days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+    days.each do |a| # insert back work_schedules
+      day = company_info_params[:work_schedules].first[a]
+      @company_info.work_schedules.build({
+        day: a,
+        start_time: day[:start_time],
+        end_time: day[:end_time],
+      })
     end
 
     if @company_info.save

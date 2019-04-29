@@ -9,10 +9,11 @@ import dailyTasksStore from '../stores/DailyTasksStore'
 
 @observer
 class ClipPotTagForm extends React.Component {
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
     const { batchId, taskId, phase, indelible, show } = this.props
     if (batchId && taskId !== prevProps.taskId && show) {
-      ClippingStore.fetchClippingData(batchId, phase, indelible)
+      await ClippingStore.fetchClippingData(batchId, phase, indelible)
+      dailyTasksStore.updateTaskWorkIndelibleDone(batchId, taskId, ClippingStore.taskCompleted)
     }
   }
 

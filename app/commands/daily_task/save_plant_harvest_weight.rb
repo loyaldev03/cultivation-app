@@ -11,13 +11,12 @@ module DailyTask
       @plant_id = plant_id
       @weight = weight
       @override = override
-
-      @batch = Cultivation::Batch.find(@batch_id)
-      @plant = @batch.plants.find_by(plant_tag: @plant_id)
-      @harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: @batch_id)
     end
 
     def call
+      @batch = Cultivation::Batch.find(@batch_id)
+      @plant = Inventory::Plant.find_by(plant_tag: @plant_id, cultivation_batch_id: @batch_id)
+      @harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: @batch_id)
       if validate
         save
       end

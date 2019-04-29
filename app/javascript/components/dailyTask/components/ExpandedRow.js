@@ -61,7 +61,6 @@ class ExpandedRow extends React.Component {
   }
 
   onOpenSidebar = sidebar => e => {
-    console.log(sidebar)
     const showButtonStatus = ['started', 'stuck']
     if (showButtonStatus.includes(this.props.work_status)) {
       SidebarStore.openSidebar(
@@ -90,8 +89,8 @@ class ExpandedRow extends React.Component {
 
   showDoneButton = e => {
     const showButtonStatus = ['started', 'stuck']
-    let indelible = ['clip_pot_tag', 'moving_to_tray', 'add_nutrient']
-    if (this.props.indelible && indelible.includes(this.props.indelible)) {
+    let indelibles = ['clip_pot_tag', 'moving_to_tray', 'add_nutrient']
+    if (this.props.indelible && indelibles.includes(this.props.indelible)) {
       return (
         showButtonStatus.includes(this.props.work_status) &&
         this.props.indelible_done

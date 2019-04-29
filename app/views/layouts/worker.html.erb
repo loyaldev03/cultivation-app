@@ -51,25 +51,22 @@
                   <% end %>
 
                   <i onclick="toggleDropdown()" class="material-icons dim grey ml2 pointer" id="toggle-dropdown">keyboard_arrow_down</i>
-                  
+
                   <div class="dropdown">
                     <div id="myDropdown" class="dropdown-content box--shadow-header">
                       <%= link_to 'Edit profile', edit_user_registration_path,
                            class: 'ttc grey subtitle-2 pv3 tc dim' %>
-
                       <%= link_to "Sign out", destroy_user_session_path, method: :delete, 
                           class: 'grey subtitle-2 pv3 tc dim' %>
                     </div>
                   </div>
                 </div>
               <% end %>
-              
             </div>
-            <div class='flex flex-column h-100'>
+            <div class=''>
               <%= yield %>
             </div>
           </main>
-          
         </div>
       </div>
     </div>

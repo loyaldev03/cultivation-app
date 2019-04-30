@@ -35,7 +35,16 @@ const columns = [
   {
     Header: 'Plant ID',
     accessor: 'attributes.plant_id',
-    headerStyle: { textAlign: 'left' }
+    headerStyle: { textAlign: 'left' },
+    Cell: x => (
+      <a
+        href="#0"
+        className="link grey"
+        onClick={event => openStrain(event, x.original.id)}
+      >
+        {x.value}
+      </a>
+    )
   },
   {
     Header: 'Strain',
@@ -70,17 +79,6 @@ const columns = [
     accessor: 'attributes.location_name',
     headerStyle: { textAlign: 'left' },
     width: 180
-  },
-  {
-    Header: '',
-    className: 'tc',
-    filterable: false,
-    maxWidth: 45,
-    Cell: x => (
-      <a href="#" onClick={event => openStrain(event, x.original.id)}>
-        <i className="material-icons gray">more_horiz</i>
-      </a>
-    )
   }
 ]
 
@@ -125,7 +123,7 @@ class PlantSetupApp extends React.Component {
             pageSize={30}
             minRows={5}
             filterable
-            className="f6"
+            className="f6 -highlight"
             showPagination={plantStore.plants.length > 30}
           />
         </div>

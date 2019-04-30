@@ -18,7 +18,7 @@ const columns = [
   {
     Header: 'Type',
     accessor: 'attributes.strain_type',
-    className: 'tl',
+    className: 'tl ttc',
     maxWidth: 120,
     headerClassName: 'tl'
   },

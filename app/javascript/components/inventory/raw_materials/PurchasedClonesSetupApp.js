@@ -116,7 +116,7 @@ class PurchasedClonesSetupApp extends React.Component {
             </h1>
             <div style={{ justifySelf: 'end' }}>
               <button
-                className="pv2 ph3 bg-orange white bn br2 ttu link dim f6 fw6 pointer"
+                className="btn btn--primary btn--small"
                 onClick={this.onAddRecord}
               >
                 Add Purchased Clones

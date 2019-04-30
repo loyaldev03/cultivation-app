@@ -31,10 +31,12 @@ class MovePlantsToNextPhaseJob < ApplicationJob
       )
       if move_records.blank?
         last_history = histories.last
-        move_records = histories.where(
-          activity: Constants::INDELIBLE_MOVING_NEXT_PHASE,
-          phase: last_history.phase,
-        )
+        if last_history
+          move_records = histories.where(
+            activity: Constants::INDELIBLE_MOVING_NEXT_PHASE,
+            phase: last_history.phase,
+          )
+        end
       end
       # In-case where moving to tray was perform outside of clone stage.
       # if move_records.blank?

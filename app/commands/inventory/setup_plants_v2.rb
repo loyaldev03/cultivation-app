@@ -201,7 +201,7 @@ module Inventory
         facility_strain_id: facility_strain.id,
         cultivation_batch_id: cultivation_batch_id,
         current_growth_stage: growth_stage,
-        created_by: user,
+        modifier: user,
         location_id: location_id,
         location_type: 'tray',
         status: is_draft ? 'draft' : 'available',

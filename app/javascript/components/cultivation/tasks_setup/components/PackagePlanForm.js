@@ -4,162 +4,15 @@ import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { SlidePanelHeader, toast } from '../../../utils'
 import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 
-class ProductTypeSection extends React.Component {
-  state = {
-    showNewRow: false,
-    packageType: null,
-    quantity: ''
-  }
-
-  onShowNewRow = event => {
-    event.preventDefault()
-    this.setState({ showNewRow: !this.state.showNewRow })
-  }
-
-  onHideNewRow = event => {
-    event.preventDefault()
-    this.setState({
-      showNewRow: false,
-      packageType: null,
-      quantity: ''
-    })
-  }
-
-  onAddRow = event => {
-    event.preventDefault()
-    this.props.onAddPackage(
-      this.props.productTypeData.product_type,
-      this.state.packageType.value,
-      this.state.quantity,
-      1
-    )
-
-    this.setState({
-      showNewRow: false,
-      packageType: null,
-      quantity: ''
-    })
-  }
-
-  onChangePackageType = packageType => {
-    this.setState({ packageType })
-  }
-
-  onChangeQuantity = event => {
-    const key = event.target.attributes.fieldname.value
-    const value = event.target.value
-    this.setState({ [key]: value })
-  }
-
-  renderAddNewRow() {
-    if (!this.state.showNewRow) {
-      return null
-    }
-
-    const options = PackageTypes.map(x => ({ value: x, label: x }))
-    return (
-      <div className="ph4 mt2 flex items-center">
-        <div className="w-100 pa2 bg-black-05 flex items-center">
-          <div className="w-40 pr2">
-            <Select
-              options={options}
-              styles={reactSelectStyle}
-              value={this.state.packageType}
-              onChange={this.onChangePackageType}
-            />
-          </div>
-          <div className="w-20">
-            <NumericInput
-              value={this.state.quantity}
-              onChange={this.onChangeQuantity}
-              fieldname="quantity"
-            />
-          </div>
-          <div className="w-20 pl2">
-            <a
-              href="#"
-              className="btn btn--primary btn--small"
-              onClick={this.onAddRow}
-            >
-              Save
-            </a>
-          </div>
-          <div className="w-20 pl1 tc">
-            <a href="#" className="f6 orange link" onClick={this.onHideNewRow}>
-              Cancel
-            </a>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  render() {
-    const { productTypeData } = this.props
-    return (
-      <div className="mb4">
-        <div className="ph4 mt3 flex">
-          <div className="w-100 fw6 f5 ph1 ttc flex items-center">
-            {productTypeData.product_type}
-            <span className="ml3 material-icons orange dim md-18 pointer">
-              delete
-            </span>
-          </div>
-        </div>
-
-        <div className="ph4 mt3 flex">
-          <table className="w-100 f6">
-            <thead>
-              <tr>
-                <th className="tl bb b--black-10 pb2 gray w-40">
-                  Package type
-                </th>
-                <th className="tc bb b--black-10 pb2 gray w-20">Quantity</th>
-                <th className="tr bb b--black-10 pb2 gray w-20">Total</th>
-                <th className="tr bb b--white pb2" />
-              </tr>
-            </thead>
-            <tbody>
-              {productTypeData.breakdowns.map(x => (
-                <tr key={x.id}>
-                  <td className="pv1 w-40">{x.package_type}</td>
-                  <td className="tc pv1 w-20">
-                    <NumericInput value={x.quantity} />
-                  </td>
-                  <td className="tr pv1 w-20">{x.quantity * x.conversion}</td>
-                  <td className="tc pv1">
-                    <span className="material-icons orange dim md-18 pointer">
-                      delete
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {this.state.showNewRow && this.renderAddNewRow()}
-        {!this.state.showNewRow && (
-          <div className="ph4 mt2 flex">
-            <a
-              href="#"
-              className="orange tc f6 w-100 link"
-              onClick={this.onShowNewRow}
-            >
-              + Add more package
-            </a>
-          </div>
-        )}
-      </div>
-    )
-  }
-}
-
 class PackagePlanForm extends React.Component {
   state = {
     showAddProductType: false,
     productType: null,
     data: []
+  }
+
+  componentDidMount() {
+    console.log('load plans for product types...')
   }
 
   onAddPackage = (productType, packageType, quantity, conversion) => {
@@ -319,38 +172,6 @@ const ProductTypes = [
   'Shakes',
   'Trims',
   'Pre-rolls'
-  // 'Capsule/Tablet',
-  // 'Concentrate (liquid)',
-  // 'Concentrate (liquid each)',
-  // 'Concentrate (solid)',
-  // 'Concentrate (solid each)',
-  // 'Edible',
-  // 'Edible (each)',
-  // 'Extract (liquid)',
-  // 'Extract (liquid-each)',
-  // 'Extract (solid)',
-  // 'Extract (solid-each)',
-  // 'Flower',
-  // 'Fresh Cannabis Plant',
-  // 'Immature Plant',
-  // 'Kief',
-  // 'Leaf',
-  // 'Liquid',
-  // 'Liquid (each)',
-  // 'Pre-Roll Flower',
-  // 'Pre-Roll Leaf',
-  // 'Suppository (each)',
-  // 'Tincture',
-  // 'Tincture (each)',
-  // 'Topical',
-  // 'Topical (liquid)',
-  // 'Topical (liquid-each)',
-  // 'Topical (solid)',
-  // 'Topical (solid-each)',
-  // 'Vape Oil',
-  // 'Vape Oil (each)',
-  // 'Wax',
-  // 'Other'
 ]
 
 const PackageTypes = [
@@ -364,6 +185,157 @@ const PackageTypes = [
   'Lb',
   'Ounce'
 ]
+
+class ProductTypeSection extends React.Component {
+  state = {
+    showNewRow: false,
+    packageType: null,
+    quantity: ''
+  }
+
+  onShowNewRow = event => {
+    event.preventDefault()
+    this.setState({ showNewRow: !this.state.showNewRow })
+  }
+
+  onHideNewRow = event => {
+    event.preventDefault()
+    this.setState({
+      showNewRow: false,
+      packageType: null,
+      quantity: ''
+    })
+  }
+
+  onAddRow = event => {
+    event.preventDefault()
+    this.props.onAddPackage(
+      this.props.productTypeData.product_type,
+      this.state.packageType.value,
+      this.state.quantity,
+      1
+    )
+
+    this.setState({
+      showNewRow: false,
+      packageType: null,
+      quantity: ''
+    })
+  }
+
+  onChangePackageType = packageType => {
+    this.setState({ packageType })
+  }
+
+  onChangeQuantity = event => {
+    const key = event.target.attributes.fieldname.value
+    const value = event.target.value
+    this.setState({ [key]: value })
+  }
+
+  renderAddNewRow() {
+    if (!this.state.showNewRow) {
+      return null
+    }
+
+    const options = PackageTypes.map(x => ({ value: x, label: x }))
+    return (
+      <div className="ph4 mt2 flex items-center">
+        <div className="w-100 pa2 bg-black-05 flex items-center">
+          <div className="w-40 pr2">
+            <Select
+              options={options}
+              styles={reactSelectStyle}
+              value={this.state.packageType}
+              onChange={this.onChangePackageType}
+            />
+          </div>
+          <div className="w-20">
+            <NumericInput
+              value={this.state.quantity}
+              onChange={this.onChangeQuantity}
+              fieldname="quantity"
+            />
+          </div>
+          <div className="w-20 pl2">
+            <a
+              href="#"
+              className="btn btn--primary btn--small"
+              onClick={this.onAddRow}
+            >
+              Save
+            </a>
+          </div>
+          <div className="w-20 pl1 tc">
+            <a href="#" className="f6 orange link" onClick={this.onHideNewRow}>
+              Cancel
+            </a>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  render() {
+    const { productTypeData } = this.props
+    return (
+      <div className="mb4">
+        <div className="ph4 mt3 flex">
+          <div className="w-100 fw6 f5 ph1 ttc flex items-center">
+            {productTypeData.product_type}
+            <span className="ml3 material-icons orange dim md-18 pointer">
+              delete
+            </span>
+          </div>
+        </div>
+
+        <div className="ph4 mt3 flex">
+          <table className="w-100 f6">
+            <thead>
+              <tr>
+                <th className="tl bb b--black-10 pb2 gray w-40">
+                  Package type
+                </th>
+                <th className="tc bb b--black-10 pb2 gray w-20">Quantity</th>
+                <th className="tr bb b--black-10 pb2 gray w-20">Total</th>
+                <th className="tr bb b--white pb2" />
+              </tr>
+            </thead>
+            <tbody>
+              {productTypeData.breakdowns.map(x => (
+                <tr key={x.id}>
+                  <td className="pv1 w-40">{x.package_type}</td>
+                  <td className="tc pv1 w-20">
+                    <NumericInput value={x.quantity} />
+                  </td>
+                  <td className="tr pv1 w-20">{x.quantity * x.conversion}</td>
+                  <td className="tc pv1">
+                    <span className="material-icons orange dim md-18 pointer">
+                      delete
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {this.state.showNewRow && this.renderAddNewRow()}
+        {!this.state.showNewRow && (
+          <div className="ph4 mt2 flex">
+            <a
+              href="#"
+              className="orange tc f6 w-100 link"
+              onClick={this.onShowNewRow}
+            >
+              + Add more package
+            </a>
+          </div>
+        )}
+      </div>
+    )
+  }
+}
 
 // const data2 = [
 //   {

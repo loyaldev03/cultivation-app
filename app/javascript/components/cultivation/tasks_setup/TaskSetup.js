@@ -273,7 +273,10 @@ class TaskSetup extends React.Component {
               }
             >
               <span className="f6 link ba b--light-grey ph3 pv2 mb3 flex justify-center dib grey pointer">
-              <i className="material-icons icon--small pointer mr2">filter_list</i> Columns
+                <i className="material-icons icon--small pointer mr2">
+                  filter_list
+                </i>{' '}
+                Columns
                 <i className="material-icons icon--small pointer ml2">
                   expand_more
                 </i>

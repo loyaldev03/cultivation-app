@@ -13,7 +13,11 @@ class ClipPotTagForm extends React.Component {
     const { batchId, taskId, phase, indelible, show } = this.props
     if (batchId && taskId !== prevProps.taskId && show) {
       await ClippingStore.fetchClippingData(batchId, phase, indelible)
-      dailyTasksStore.updateTaskWorkIndelibleDone(batchId, taskId, ClippingStore.taskCompleted)
+      dailyTasksStore.updateTaskWorkIndelibleDone(
+        batchId,
+        taskId,
+        ClippingStore.taskCompleted
+      )
     }
   }
 

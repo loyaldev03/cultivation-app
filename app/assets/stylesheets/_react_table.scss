@@ -1,11 +1,10 @@
 .ReactTable {
   color: var(--grey);
-  .rt-tr {
-    .rt-td {
-      padding: 5px 7px;
-      display: inline-flex;
-      align-items: center;
-    }
+  .rt-tr .rt-th,
+  .rt-tr .rt-td {
+    padding: 7px 7px;
+    display: inline-flex;
+    align-items: center;
   }
 }
 

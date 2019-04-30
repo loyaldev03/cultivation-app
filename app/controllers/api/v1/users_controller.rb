@@ -24,7 +24,7 @@ class Api::V1::UsersController < Api::V1::BaseApiController
         photo: u.photo&.url,
         first_name: u.first_name,
         last_name: u.last_name,
-        roles: Common::Role.in(id: u.roles).map(&:name),
+        roles: ::Common::Role.in(id: u.roles).map(&:name),
       }
     end
 

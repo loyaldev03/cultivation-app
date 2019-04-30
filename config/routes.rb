@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
   # These set is for dummy only
   get "first_setup" => "home#index"
+  get "employees-dashboard" => "home#employees_dashboard"
   get "employees" => "home#employees"
   get "employees_schedule" => "home#employees_schedule"
   get "timesheets" => "home#timesheets"
@@ -252,6 +253,12 @@ Rails.application.routes.draw do
           end
         end
         resources :nutrient_profiles, only: [:index, :create, :update]
+
+        resources :product_plans, only: [:index, :create] do
+          post ':product_type_id/destroy', action: 'destroy'
+          post ':product_type_id/package_plans', action: 'save_package_plan'
+          post ':product_type_id/package_plans/:package_plan', action: 'delete_package_plan'
+        end
       end
 
       resources :users, only: [:index] do
@@ -281,8 +288,8 @@ Rails.application.routes.draw do
 
       # TODO: change this to resources
       scope :daily_tasks do
-        put ':id/start_task', to: 'daily_tasks#start_task'
-        put ':id/stop_task', to: 'daily_tasks#stop_task'
+        put ':id/start_task', to: 'daily_tasks#start_task' # TODO: delete this?
+        put ':id/stop_task', to: 'daily_tasks#stop_task' # TODO: delete this?
         post ':id/update_note', to: 'daily_tasks#update_note'
         post ':id/update_nutrients', to: 'daily_tasks#update_nutrients'
         delete ':id/notes/:note_id', to: 'daily_tasks#destroy_note'

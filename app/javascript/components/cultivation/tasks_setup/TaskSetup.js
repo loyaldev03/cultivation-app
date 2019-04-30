@@ -111,12 +111,12 @@ class TaskSetup extends React.Component {
                 })
               }
             >
-              Report Destroyed Plant
+              Destroyed Plants
             </a>
-            <div className="mr2 mt2">
+            {/* <div className="mr2 mt2">
               <i className="material-icons icon--small pointer">filter_list</i>
               <span className="grey f6 ml2">Filter</span>
-            </div>
+            </div> */}
 
             <Tippy
               placement="bottom-end"
@@ -273,7 +273,10 @@ class TaskSetup extends React.Component {
               }
             >
               <span className="f6 link ba b--light-grey ph3 pv2 mb3 flex justify-center dib grey pointer">
-                Show Columns
+                <i className="material-icons icon--small pointer mr2">
+                  filter_list
+                </i>{' '}
+                Columns
                 <i className="material-icons icon--small pointer ml2">
                   expand_more
                 </i>

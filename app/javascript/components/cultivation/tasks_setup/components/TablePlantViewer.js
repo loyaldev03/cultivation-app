@@ -6,7 +6,7 @@ export default class TablePlantViewer extends React.Component {
   render() {
     let { name, data } = this.props.data
     return (
-      <div className="mb2">
+      <div className="mb4">
         <div className="subtitle-2">
           <div className="bg-light-gray  grey f5 flex justify-between items-center pa1 pv2 mb1">
             <div className="b flex flex-start items-center pl2">

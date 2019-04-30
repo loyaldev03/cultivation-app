@@ -156,6 +156,7 @@ class ClippingPanel extends React.Component {
               </div>
             ))}
           </div>
+          <div className="ph4 pb4 pt3"></div>
           {/* <div className="ph4 pb4 pt3">
             <span className="orange">Sage</span> mother plants are located in
             the sections highlighted in orange. Select the area of the mother

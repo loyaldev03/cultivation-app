@@ -104,7 +104,7 @@ class HarvestbatchSetupApp extends React.Component {
             <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Harvest Batches</h1>
             <div style={{ justifySelf: 'end' }}>
               <button
-                className="pv2 ph3 bg-orange white bn br2 ttc link dim f6 fw6 pointer"
+                className="btn btn--primary btn--small"
                 onClick={this.openSidebar}
               >
                 Add Harvest Batch

@@ -140,7 +140,7 @@ class SimpleCultivationBatchSetupApp extends React.Component {
             </h1>
             <div style={{ justifySelf: 'end' }}>
               <button
-                className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
+                className="btn btn--primary btn--small"
                 onClick={this.onAddRecord}
               >
                 Add batch

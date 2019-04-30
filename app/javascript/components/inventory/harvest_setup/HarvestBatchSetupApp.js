@@ -11,7 +11,16 @@ const columns = [
   {
     Header: 'Cultivation Batch Name',
     accessor: 'attributes.harvest_name',
-    headerStyle: { textAlign: 'left' }
+    headerStyle: { textAlign: 'left' },
+    Cell: x => (
+      <a
+        href="#0"
+        className="link grey"
+        onClick={event => openSidebar(event, x.original.id)}
+      >
+        {x.value}
+      </a>
+    )
   },
   {
     Header: 'Strain',
@@ -67,17 +76,6 @@ const columns = [
     headerStyle: { textAlign: 'left' },
     className: 'tl',
     width: 130
-  },
-  {
-    Header: '',
-    className: 'tc',
-    filterable: false,
-    maxWidth: 45,
-    Cell: x => (
-      <a href="#" onClick={event => openSidebar(event, x.original.id)}>
-        <i className="material-icons gray">more_horiz</i>
-      </a>
-    )
   }
 ]
 
@@ -113,7 +111,6 @@ class HarvestbatchSetupApp extends React.Component {
               </button>
             </div>
           </div>
-
           <ReactTable
             columns={columns}
             pagination={{ position: 'top' }}

@@ -36,7 +36,16 @@ const columns = [
     Header: 'Plant ID',
     accessor: 'attributes.plant_id',
     headerStyle: { textAlign: 'left' },
-    width: 150
+    width: 180,
+    Cell: x => (
+      <a
+        href="#0"
+        className="link grey"
+        onClick={event => openSidebar(event, x.original.id)}
+      >
+        {x.value}
+      </a>
+    )
   },
   {
     Header: 'Batch',
@@ -70,17 +79,6 @@ const columns = [
     accessor: 'attributes.location_name',
     headerStyle: { textAlign: 'left' },
     width: 180
-  },
-  {
-    Header: '',
-    className: 'tc',
-    filterable: false,
-    maxWidth: 45,
-    Cell: x => (
-      <a href="#" onClick={event => openSidebar(event, x.original.id)}>
-        <i className="material-icons gray">more_horiz</i>
-      </a>
-    )
   }
 ]
 

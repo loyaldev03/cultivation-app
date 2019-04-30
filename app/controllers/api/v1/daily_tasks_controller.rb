@@ -259,6 +259,24 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     render json: data, status: 200
   end
 
+  def save_pto
+    command = Common::SaveWorkRequest.call(current_user, 'PTO', params[:start_date], params[:end_date], params[:description])
+    if command.success?
+      render json: command.result, status: 200
+    else
+      render json: {error: command.errors}, status: 422
+    end
+  end
+
+  def save_ot
+    command = Common::SaveWorkRequest.call(current_user, 'OT', params[:start_date], params[:end_date], params[:description])
+    if command.success?
+      render json: command.result, status: 200
+    else
+      render json: {error: command.errors}, status: 422
+    end
+  end
+
   private
 
   def serialized_batch(id)

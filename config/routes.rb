@@ -298,6 +298,9 @@ Rails.application.routes.draw do
         get ':batch_id/harvest_batch_status', to: 'daily_tasks#harvest_batch_status'
         post ':batch_id/save_harvest_batch_weight', to: 'daily_tasks#save_harvest_batch_weight'
         post ':batch_id/save_weight', to: 'daily_tasks#save_weight'
+        post ':batch_id/save_pto', to: 'daily_tasks#save_pto'
+        post ':batch_id/save_ot', to: 'daily_tasks#save_ot'
+
       end
 
       resources :issues, only: [:create, :by_batch, :show, :archive] do

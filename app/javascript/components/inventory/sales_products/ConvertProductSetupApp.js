@@ -113,7 +113,7 @@ class ConvertProductSetupApp extends React.Component {
           pageSize={30}
           minRows={5}
           filterable
-          className="f6"
+          className="f6 -highlight"
         />
         <ConvertProductEditor
           sales_catalogue={this.props.sales_catalogue}

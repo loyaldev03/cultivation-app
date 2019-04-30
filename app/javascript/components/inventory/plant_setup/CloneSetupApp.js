@@ -127,7 +127,7 @@ class CloneSetupApp extends React.Component {
             pageSize={30}
             minRows={5}
             filterable
-            className="f6"
+            className="f6 -highlight"
             showPagination={plantStore.bindablePlants.length > 30}
           />
         </div>

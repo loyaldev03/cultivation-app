@@ -198,10 +198,9 @@ module Inventory
           facility_strain_id: facility_strain_id,
         ) do |t|
           t.current_growth_stage = 'mother'
-          t.created_by = user
+          t.modifier = user
           t.location_id = location_id
           t.location_type = 'room'
-          t.status = 'available'
           t.planting_date = planted_on
           t.mother_date = ''
           t.ref_id = invoice_item.present? ? invoice_item.id : nil

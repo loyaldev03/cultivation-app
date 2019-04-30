@@ -69,7 +69,7 @@ const columns = [
     Header: 'Location',
     accessor: 'attributes.location_name',
     headerStyle: { textAlign: 'left' },
-    width: 130
+    width: 180
   },
   {
     Header: '',
@@ -125,7 +125,7 @@ class FlowerSetupApp extends React.Component {
             pageSize={30}
             minRows={5}
             filterable
-            className="f6"
+            className="f6 -highlight"
             showPagination={plantStore.bindablePlants.length > 30}
           />
         </div>

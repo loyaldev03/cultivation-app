@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       main.style.paddingLeft = "75px";
     } else {
       sidebar.className = sidebar.className.replace(/ collapsed/g, ' uncollapsed');
-      main.style.paddingLeft = "210px";
+      main.style.paddingLeft = "230px";
     }
   });
 });

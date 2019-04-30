@@ -10,9 +10,9 @@ module Inventory
     attr_reader :facility_id, :strain_id, :location_id, :location_type
 
     def initialize(facility_id, strain_id, location_id)
-      @facility_id = facility_id&.to_bson_id
-      @strain_id = strain_id&.to_bson_id
-      @location_id = location_id&.to_bson_id
+      @facility_id = facility_id.to_bson_id unless facility_id.blank?
+      @strain_id = strain_id.to_bson_id unless strain_id.blank?
+      @location_id = location_id.to_bson_id unless location_id.blank?
     end
 
     def call

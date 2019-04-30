@@ -136,7 +136,7 @@ class SeedSetupApp extends React.Component {
             pageSize={30}
             minRows={5}
             filterable
-            className="f6"
+            className="f6 -highlight"
           />
         </div>
       </React.Fragment>

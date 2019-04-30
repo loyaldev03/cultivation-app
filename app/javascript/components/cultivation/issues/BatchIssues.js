@@ -71,7 +71,7 @@ class BatchIssues extends React.Component {
               pageSize={30}
               minRows={5}
               filterable
-              className="f6 w-100 grey -highlight"
+              className="f6 w-100 -highlight"
               getTrProps={(state, rowInfo, column) => {
                 let className = 'task-row'
                 if (

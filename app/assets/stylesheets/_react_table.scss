@@ -1,0 +1,15 @@
+.ReactTable {
+  color: var(--grey);
+  .rt-tr .rt-th,
+  .rt-tr .rt-td {
+    padding: 7px 7px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+.ReactTable .rt-thead.-header {
+  box-shadow: none !important;
+  border-bottom: 1px solid #eee;
+  font-weight: 600;
+}

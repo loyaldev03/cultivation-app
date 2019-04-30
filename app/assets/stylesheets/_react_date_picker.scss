@@ -4,7 +4,7 @@
   border-radius: .25rem;
   height: 34px;
   align-items: center;
-  padding: 0 4px;
+  padding: 0 0.2em;
 
   input, button {
     outline: 0;
@@ -15,24 +15,24 @@
   display: flex;
   flex: 1;
 }
-
 .react-date-picker__inputGroup__input {
+  min-width: 1.95em;
   font-size: 14px;
   border: 0;
   text-align: center;
 }
-
-.react-date-picker__inputGroup__input:empty {
-  min-width: 15px;
+.react-date-picker__inputGroup__input.react-date-picker__inputGroup__year {
+  min-width: 2.95em;
 }
 
 .react-date-picker__button {
+  height: 19px;
   background: white;
-  padding: 0 3px;
+  padding: 0 0.15em;
   border: 0;
 
   svg {
-    width: 13px;
+    width: 0.9em;
     opacity: 0.5;
   }
 }
@@ -75,7 +75,9 @@
     padding-bottom: 5px;
 
     button {
+      background: transparent;
       border: none;
+      cursor: pointer;
     }
   }
 

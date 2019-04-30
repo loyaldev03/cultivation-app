@@ -94,7 +94,6 @@ class MovePlantsToNextPhaseJob < ApplicationJob
       planting_date: Time.current,
       mother_id: mother_id,
       facility_strain_id: batch.facility_strain_id,
-      created_by_id: user_id,
       modifier_id: user_id,
     )
   end

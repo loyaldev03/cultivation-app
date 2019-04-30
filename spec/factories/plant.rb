@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :plant, class: Inventory::Plant do
-    created_by { build(:user) }
+    modifier { build(:user) }
     cultivation_batch { build(:batch) }
     facility_strain { build(:facility_strain) }
     plant_id { Faker::Code.nric }

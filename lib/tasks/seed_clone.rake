@@ -1,6 +1,7 @@
 desc "Create 15 fake clone data"
 task seed_purchased_clones: :environment  do
   facility = Facility.completed.last
+  first_user = User.first
 
   fs = Inventory::FacilityStrain.find_or_initialize_by(
     facility_id: facility.id,
@@ -11,7 +12,7 @@ task seed_purchased_clones: :environment  do
     fs.facility = facility
     fs.strain_name = 'AK 47a'
     fs.strain_type = 'sativa'
-    fs.created_by = User.last
+    fs.created_by = first_user
     fs.save!
 
     puts "Created facility strain: #{fs.strain_name}"
@@ -19,7 +20,7 @@ task seed_purchased_clones: :environment  do
 
   15.times do |i|
     p = Inventory::Plant.new
-    p.created_by = User.last
+    p.modifier = first_user
     p.facility_strain = fs
     p.plant_id = "P%05d" % i
     p.plant_tag = "T.#{p.plant_id}"

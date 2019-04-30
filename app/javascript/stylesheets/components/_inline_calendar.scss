@@ -13,6 +13,14 @@ $calendarFontSize: 14px;
     padding-bottom: 0.35em;
   }
 
+  .react-calendar__navigation {
+    button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+  }
+
   .react-calendar__navigation__label {
     color: $grey;
     background-color: $white;

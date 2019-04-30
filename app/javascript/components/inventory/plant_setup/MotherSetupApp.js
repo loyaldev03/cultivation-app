@@ -68,7 +68,8 @@ const columns = [
   {
     Header: 'Location',
     accessor: 'attributes.location_name',
-    headerStyle: { textAlign: 'left' }
+    headerStyle: { textAlign: 'left' },
+    width: 180
   },
   {
     Header: '',

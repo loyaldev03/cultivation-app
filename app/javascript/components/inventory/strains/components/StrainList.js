@@ -63,7 +63,7 @@ class StrainList extends React.Component {
         pageSize={30}
         minRows={5}
         filterable
-        className="f6 grey"
+        className="f6 -highlight"
         showPagination={strainStore.strains.length > 30}
       />
     )

@@ -1,6 +1,7 @@
 import { observable, action, runInAction, toJS } from 'mobx'
 import { httpGetOptions, httpPostOptions, toast } from '../../utils'
 import setupPlants from '../../inventory/plant_setup/actions/setupPlants'
+import PlantTagList from '../../dailyTask/components/PlantTagList'
 
 class BatchStore {
   @observable isLoading = false
@@ -128,8 +129,28 @@ class BatchStore {
   }
 
   @action
+  setOnePlant(plant_id, quantity) {
+    this.batch.selected_plants = this.batch.selected_plants.map(storePlant => {
+      if (storePlant.plant_id === plant_id) {
+        storePlant.quantity = quantity
+      }
+      return storePlant
+    })
+  }
+  @action
   setAllPlants(plantArr) {
-    this.batch.selected_plants = plantArr
+    // this.batch.selected_plants = plantArr
+    plantArr.map(allMotherPlant => {
+      this.batch.selected_plants = this.batch.selected_plants.map(
+        storePlant => {
+          if (storePlant.plant_id === allMotherPlant.plant_id) {
+            storePlant.quantity = allMotherPlant.quantity
+          }
+          return storePlant
+        }
+      )
+      return plantArr
+    })
   }
 
   @action

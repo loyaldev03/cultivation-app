@@ -9,13 +9,13 @@ class Settings::Company::CompanyInfoController < ApplicationController
         end_time: a[:end_time]&.strftime('%H:%M'),
       }
     }
-    @sunday = @work_schedules.detect { |a| a[:day] == 'sunday' }
-    @monday = @work_schedules.detect { |a| a[:day] == 'monday' }
-    @tuesday = @work_schedules.detect { |a| a[:day] == 'tuesday' }
-    @wednesday = @work_schedules.detect { |a| a[:day] == 'wednesday' }
-    @thursday = @work_schedules.detect { |a| a[:day] == 'thursday' }
-    @friday = @work_schedules.detect { |a| a[:day] == 'friday' }
-    @saturday = @work_schedules.detect { |a| a[:day] == 'saturday' }
+    @sunday = @work_schedules.detect { |a| a[:day] == 'sunday' } || {}
+    @monday = @work_schedules.detect { |a| a[:day] == 'monday' } || {}
+    @tuesday = @work_schedules.detect { |a| a[:day] == 'tuesday' } || {}
+    @wednesday = @work_schedules.detect { |a| a[:day] == 'wednesday' } || {}
+    @thursday = @work_schedules.detect { |a| a[:day] == 'thursday' } || {}
+    @friday = @work_schedules.detect { |a| a[:day] == 'friday' } || {}
+    @saturday = @work_schedules.detect { |a| a[:day] == 'saturday' } || {}
 
     if @company_info.nil?
       @company_info = CompanyInfo.new

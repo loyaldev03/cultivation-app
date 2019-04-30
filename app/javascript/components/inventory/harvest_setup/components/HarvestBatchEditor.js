@@ -37,8 +37,8 @@ export default class HarvestBatchEditor extends React.Component {
           const attr = data.data.attributes
           const uom = this.props.uoms.find(x => x == attr.uom)
           const plants = isEmpty(attr.plants)
-              ? [{ id: '', plant_id: '', wet_weight: '', wet_waste_weight: '' }]
-              : attr.plants
+            ? [{ id: '', plant_id: '', wet_weight: '', wet_waste_weight: '' }]
+            : attr.plants
 
           this.setState({
             ...this.resetState(),
@@ -399,14 +399,15 @@ export default class HarvestBatchEditor extends React.Component {
 
   render() {
     const { id, plants, cultivation_batch, plant_uom } = this.state
-    let facility_id = '', facility_strain_id = ''
+    let facility_id = '',
+      facility_strain_id = ''
 
     if (cultivation_batch) {
       facility_id = cultivation_batch.facility_id
       facility_strain_id = cultivation_batch.facility_strain_id
     }
 
-    const title = id ? "Edit Harvest Batch" : "Add Harvest Batch"
+    const title = id ? 'Edit Harvest Batch' : 'Add Harvest Batch'
     const uom = plant_uom ? plant_uom.label : ''
     const total_weight = this.calculateTotalWeight(plants)
     const displayTotalWeight =

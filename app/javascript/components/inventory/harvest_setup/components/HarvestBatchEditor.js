@@ -1,4 +1,5 @@
 import React from 'react'
+import isEmpty from 'lodash.isempty'
 import Select from 'react-select'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
@@ -33,13 +34,11 @@ export default class HarvestBatchEditor extends React.Component {
             alert('Something wrong')
             return
           }
-
           const attr = data.data.attributes
           const uom = this.props.uoms.find(x => x == attr.uom)
-          const plants =
-            attr.plants.length > 0
-              ? attr.plants
-              : [{ id: '', plant_id: '', wet_weight: '', wet_waste_weight: '' }]
+          const plants = isEmpty(attr.plants)
+              ? [{ id: '', plant_id: '', wet_weight: '', wet_waste_weight: '' }]
+              : attr.plants
 
           this.setState({
             ...this.resetState(),
@@ -399,15 +398,15 @@ export default class HarvestBatchEditor extends React.Component {
   }
 
   render() {
-    const { plants, cultivation_batch, plant_uom } = this.state
-    let facility_id = '',
-      facility_strain_id = ''
+    const { id, plants, cultivation_batch, plant_uom } = this.state
+    let facility_id = '', facility_strain_id = ''
 
     if (cultivation_batch) {
       facility_id = cultivation_batch.facility_id
       facility_strain_id = cultivation_batch.facility_strain_id
     }
 
+    const title = id ? "Edit Harvest Batch" : "Add Harvest Batch"
     const uom = plant_uom ? plant_uom.label : ''
     const total_weight = this.calculateTotalWeight(plants)
     const displayTotalWeight =
@@ -420,7 +419,7 @@ export default class HarvestBatchEditor extends React.Component {
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Harvest Batch</h1>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">{title}</h1>
             <span
               className="rc-slide-panel__close-button dim"
               onClick={() => {
@@ -528,6 +527,7 @@ export default class HarvestBatchEditor extends React.Component {
 
           <div className="ph4 mt3 mb3 flex flex-column">
             <div className="w-100">
+              <label className="f6 fw6 db mb1 gray">Location</label>
               <LocationPicker
                 purpose="dry"
                 facility_id={this.props.facility_id}

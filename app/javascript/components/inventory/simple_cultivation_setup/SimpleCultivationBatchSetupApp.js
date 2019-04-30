@@ -37,12 +37,36 @@ const columns = [
     Header: 'Batch No',
     accessor: 'attributes.batch_no',
     headerClassName: 'tl',
-    width: 70
+    width: 70,
+    Cell: record => (
+      <a
+        href="#0"
+        className="link grey"
+        onClick={event => {
+          const data = toJS(record.original)
+          openBatch(event, data)
+        }}
+      >
+        {record.value}
+      </a>
+    )
   },
   {
     Header: 'Batch name',
     accessor: 'attributes.name',
-    headerClassName: 'tl'
+    headerClassName: 'tl',
+    Cell: record => (
+      <a
+        href="#0"
+        className="link grey"
+        onClick={event => {
+          const data = toJS(record.original)
+          openBatch(event, data)
+        }}
+      >
+        {record.value}
+      </a>
+    )
   },
   {
     Header: 'Start date',
@@ -86,23 +110,6 @@ const columns = [
     Header: 'Facility',
     accessor: 'attributes.facility',
     headerClassName: 'tl'
-  },
-  {
-    Header: '',
-    className: 'tc',
-    filterable: false,
-    maxWidth: 45,
-    Cell: record => (
-      <a
-        href="#"
-        onClick={event => {
-          const data = toJS(record.original)
-          openBatch(event, data)
-        }}
-      >
-        <i className="material-icons gray">more_horiz</i>
-      </a>
-    )
   }
 ]
 
@@ -133,7 +140,7 @@ class SimpleCultivationBatchSetupApp extends React.Component {
             </h1>
             <div style={{ justifySelf: 'end' }}>
               <button
-                className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
+                className="btn btn--primary btn--small"
                 onClick={this.onAddRecord}
               >
                 Add batch
@@ -149,7 +156,7 @@ class SimpleCultivationBatchSetupApp extends React.Component {
             pageSize={30}
             minRows={5}
             filterable
-            className="f6"
+            className="f6 -highlight"
             showPagination={store.bindableBatches.length > 30}
           />
         </div>

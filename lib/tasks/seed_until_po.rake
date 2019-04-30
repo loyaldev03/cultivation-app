@@ -5,6 +5,7 @@ task seed_until_po: :environment  do
   facility = Facility.find_or_create_by!(name: 'Facility 1', code: 'F1') do |f|
     f.is_complete = true
   end
+  first_user = User.first
 
   if facility.rooms.empty?
     facility.rooms.create!(name: 'r1', code: 'r1', purpose: 'clone', is_complete: true)
@@ -30,7 +31,7 @@ task seed_until_po: :environment  do
                         facility:     facility,
                         strain_name:  'Acme XYZ',
                         strain_type:  'sativa',
-                        created_by:   User.last)
+                        created_by:   first_user)
 
   # 1.1. Reset data
   Inventory::Catalogue.delete_all
@@ -312,7 +313,7 @@ task seed_until_po: :environment  do
   # 2. Daily consumption log
   wd = batch.tasks.last.work_days.create!(
                           date: Date.today,
-                          user_id: User.last.id) 
+                          user_id: first_user.id) 
 
   # user has used 0.002 kg
   mat_used = wd.materials_used.create!(

@@ -21,11 +21,11 @@ const setupUppy = (
 
   uppy.use(Webcam)
   uppy.use(Dropbox, {
-    serverUrl: location.protocol + '//' + location.host
+    companionUrl: location.protocol + '//' + location.host
   })
 
   uppy.use(AwsS3, {
-    serverUrl: location.protocol + '//' + location.host
+    companionUrl: location.protocol + '//' + location.host
   })
 
   uppy.on('complete', onComplete)

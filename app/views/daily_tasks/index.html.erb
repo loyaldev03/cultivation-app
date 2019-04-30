@@ -3,7 +3,6 @@
 <% end %>
 
 <div class="pa4">
-
   <div class="flex justify-between mb5">
     <div class="flex">
       <div class="flex items-center">
@@ -31,7 +30,6 @@
         Date today : <%= Time.current.strftime('%d %b %Y') %>
       </h1>
       </div>
-
     </div>
     <div class='flex'>
       <div>
@@ -40,7 +38,6 @@
       </div>
     </div>
   </div>
-
   <%= react_component 'dailyTask/DailyTaskApp',
     {
       today: Time.current.beginning_of_day,

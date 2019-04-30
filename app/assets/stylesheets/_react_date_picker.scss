@@ -1,11 +1,10 @@
 .react-date-picker__wrapper {
   display: flex;
-
   border: 1px solid  rgba(0, 0, 0, 0.2);
   border-radius: .25rem;
   height: 34px;
   align-items: center;
-  padding: 0 4px;
+  padding: 0 0.2em;
 
   input, button {
     outline: 0;
@@ -16,29 +15,31 @@
   display: flex;
   flex: 1;
 }
-
 .react-date-picker__inputGroup__input {
+  min-width: 1.95em;
   font-size: 14px;
   border: 0;
   text-align: center;
 }
-
-.react-date-picker__inputGroup__input:empty {
-  min-width: 15px;
+.react-date-picker__inputGroup__input.react-date-picker__inputGroup__year {
+  min-width: 2.95em;
 }
 
 .react-date-picker__button {
+  height: 19px;
   background: white;
-  padding: 0 3px;
+  padding: 0 0.15em;
   border: 0;
 
   svg {
-    width: 13px;
+    width: 0.9em;
     opacity: 0.5;
   }
 }
 
 .react-calendar__tile {
+  outline: 0;
+  color: var(--grey);
   background-color: white;
   border: none;
   padding-top: 5px;
@@ -58,11 +59,14 @@
   position: relative;
 
   .react-calendar {
+    min-width: 200px;
+    font-size: 14px;
     position: absolute;
     background-color: white;
-    top: 4px;
-    border: 1px solid  rgba(0, 0, 0, 0.2);
-    padding-bottom: 5px;
+    top: 0.3em;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 0.3em;
+    border-radius: 0.3em;
     z-index: 2147483647;
   }
 
@@ -71,14 +75,20 @@
     padding-bottom: 5px;
 
     button {
+      background: transparent;
       border: none;
+      cursor: pointer;
     }
   }
 
   .react-calendar__month-view__weekdays {
+    font-size: 0.85em;
     padding-bottom: 5px;
-    font-size: 11px;
     text-align: center;
+    color: var(--grey);
+    abbr {
+      text-decoration: none;
+    }
   }
 
   .react-calendar__tile:hover {
@@ -97,4 +107,5 @@
 .react-calendar__navigation__label {
   outline-width: 1px;
   outline: gray;
+  color: var(--grey);
 }

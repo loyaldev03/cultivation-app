@@ -11,8 +11,7 @@ module DailyTask
     def call
       if validate?
         @task.time_logs.find_by(end_time: nil).stop!
-        duration = @task.time_logs.map(&:duration_in_seconds).compact.sum
-        @task.update(work_status: 'stopped', duration: duration)
+        @task.update(work_status: 'stopped')
         @task
       end
     rescue StandardError

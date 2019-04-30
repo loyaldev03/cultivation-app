@@ -42,9 +42,17 @@ module Cultivation
     end
 
     def update_status(batch)
-      # Activate batch by changing it's status to active
-      if current_time >= batch.start_date
+      last_group = batch.tasks.
+        where(indelible: Constants::INDELIBLE_GROUP).last
+      if current_time >= last_group.end_date
+        # Mark batch as completed
+        batch.update(status: Constants::BATCH_STATUS_COMPLETED)
+      elsif current_time >= batch.start_date
+        # Activate batch by changing it's status to active
         batch.update(status: Constants::BATCH_STATUS_ACTIVE)
+      else
+        # Revert back to schedule state
+        batch.update(status: Constants::BATCH_STATUS_SCHEDULED)
       end
     end
 

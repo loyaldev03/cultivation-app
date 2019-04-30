@@ -23,6 +23,17 @@ class HomeController < ApplicationController
   end
 
   def requests
+    @work_applications = current_user.work_applications.includes(:user)
+    @work_applications = @work_applications.map do |a|
+      {
+        id: a.id,
+        display_name: a.user.display_name,
+        roles: a.user.display_roles.to_sentence,
+        photo_url: a.user.photo_url,
+        request_type: a.request_type,
+        date: get_date_worker(a),
+      }
+    end
   end
 
   def worker_dashboard
@@ -89,6 +100,14 @@ class HomeController < ApplicationController
   end
 
   private
+
+  def get_date_worker(work_request)
+    if work_request.request_type == 'OT'
+      return "#{work_request.start_time.strftime('%D %R')} - #{work_request.end_time.strftime('%D %R')}"
+    else
+      return "#{work_request.start_time.strftime('%D')} - #{work_request.end_time.strftime('%D')}"
+    end
+  end
 
   def get_tasks_today
     @tasks_date = Time.current.beginning_of_day

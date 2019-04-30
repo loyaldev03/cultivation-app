@@ -56,7 +56,8 @@ const columns = (locations, harvest_batches) => [
   {
     Header: 'Location',
     accessor: 'attributes.location_name',
-    headerClassName: 'tl'
+    headerClassName: 'tl',
+    width: 180
   },
   {
     Header: 'Harvest batch',

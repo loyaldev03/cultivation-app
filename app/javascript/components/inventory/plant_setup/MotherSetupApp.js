@@ -68,7 +68,8 @@ const columns = [
   {
     Header: 'Location',
     accessor: 'attributes.location_name',
-    headerStyle: { textAlign: 'left' }
+    headerStyle: { textAlign: 'left' },
+    width: 180
   },
   {
     Header: '',
@@ -124,7 +125,7 @@ class PlantSetupApp extends React.Component {
             pageSize={30}
             minRows={5}
             filterable
-            className="f6 -highlight"
+            className="f6"
             showPagination={plantStore.plants.length > 30}
           />
         </div>

@@ -1,18 +1,31 @@
 import React from 'react'
 import Select from 'react-select'
+import { observable } from 'mobx'
+import { observer } from 'mobx-react'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { SlidePanelHeader, toast } from '../../../utils'
+import { SlidePanelHeader, SlidePanelFooter, toast } from '../../../utils'
+import { httpGetOptions } from '../../../utils/FormHelpers'
 import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 
+@observer
 class PackagePlanForm extends React.Component {
   state = {
     showAddProductType: false,
     productType: null,
-    data: []
+    data: [],
+    foo: null, 
+    showing: false
   }
 
   componentDidMount() {
-    console.log('load plans for product types...')
+    packagePlanStore.load(this.props.batchId)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log(prevProps.show, this.props.show)
+    if (!prevProps.show && this.props.show) {
+      packagePlanStore.load(this.props.batchId)
+    }
   }
 
   onAddPackage = (productType, packageType, quantity, conversion) => {
@@ -130,7 +143,9 @@ class PackagePlanForm extends React.Component {
 
   render() {
     const { onClose } = this.props
-    const { data, showAddProductType } = this.state
+    const { showAddProductType } = this.state
+
+    const data = packagePlanStore.productTypes
 
     return (
       <div>
@@ -143,7 +158,7 @@ class PackagePlanForm extends React.Component {
 
         <div className="ph4 mt3 flex">
           <div className="w-100 f6">
-            Split into packages
+            Split into packages {this.state.foo}
             {!this.state.showAddProductType && (
               <a
                 href="#"
@@ -158,6 +173,7 @@ class PackagePlanForm extends React.Component {
 
         {this.renderAddProductType()}
         {this.renderBreakdowns(data)}
+        <SlidePanelFooter onSave={() => {}} />
       </div>
     )
   }
@@ -187,11 +203,17 @@ const PackageTypes = [
 ]
 
 class ProductTypeSection extends React.Component {
-  state = {
-    showNewRow: false,
-    packageType: null,
-    quantity: ''
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      productTypeData: this.props.productTypeData,
+      showNewRow: false,
+      packageType: null,
+      quantity: ''
+    }
   }
+  
 
   onShowNewRow = event => {
     event.preventDefault()
@@ -209,14 +231,15 @@ class ProductTypeSection extends React.Component {
 
   onAddRow = event => {
     event.preventDefault()
-    this.props.onAddPackage(
-      this.props.productTypeData.product_type,
-      this.state.packageType.value,
-      this.state.quantity,
-      1
-    )
+    const { productTypeData } = this.state
+    productTypeData.package_plans.push({
+      package_type: this.state.packageType.value,
+      quantity: this.state.quantity,
+      conversion: 1
+    })
 
     this.setState({
+      productTypeData,
       showNewRow: false,
       packageType: null,
       quantity: ''
@@ -238,7 +261,10 @@ class ProductTypeSection extends React.Component {
       return null
     }
 
-    const options = PackageTypes.map(x => ({ value: x, label: x }))
+    const selectedPackageTypes = this.state.productTypeData.package_plans.map(x => x.package_type)
+    const options = PackageTypes.filter(x => selectedPackageTypes.indexOf(x) < 0)
+                                .map(x => ({ value: x, label: x }))
+
     return (
       <div className="ph4 mt2 flex items-center">
         <div className="w-100 pa2 bg-black-05 flex items-center">
@@ -277,7 +303,7 @@ class ProductTypeSection extends React.Component {
   }
 
   render() {
-    const { productTypeData } = this.props
+    const { productTypeData } = this.state
     return (
       <div className="mb4">
         <div className="ph4 mt3 flex">
@@ -302,13 +328,13 @@ class ProductTypeSection extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {productTypeData.breakdowns.map(x => (
-                <tr key={x.id}>
+              {productTypeData.package_plans.map(x => (
+                <tr key={x.package_type}>
                   <td className="pv1 w-40">{x.package_type}</td>
                   <td className="tc pv1 w-20">
-                    <NumericInput value={x.quantity} />
+                    <NumericInput value={x.quantity} onChange={(event) => { console.log(x.id, event.target.value) }}/>
                   </td>
-                  <td className="tr pv1 w-20">{x.quantity * x.conversion}</td>
+                  <td className="tr pv1 w-20">{(x.quantity * x.conversion).toFixed(2)}</td>
                   <td className="tc pv1">
                     <span className="material-icons orange dim md-18 pointer">
                       delete
@@ -336,6 +362,29 @@ class ProductTypeSection extends React.Component {
     )
   }
 }
+
+
+class PackagePlanStore {
+  @observable productTypes = []
+
+  async load(batchId) {
+    const url = `/api/v1/batches/${batchId}/product_plans`
+    // try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response.data) {
+        console.log(response.data)
+        const d = response.data.map(x => x.attributes)
+        this.productTypes.replace(d)
+      } else {
+        console.error(response.errors)
+      }
+    // } catch (error) {
+    //   console.error(error)
+    // } 
+  }
+}
+
+const packagePlanStore = new PackagePlanStore()
 
 // const data2 = [
 //   {

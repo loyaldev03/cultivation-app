@@ -1,11 +1,9 @@
-class Cultivation::ProductPlanController < ApplicationController
-  # before_action :load_cultivation_batch
-
+class Api::V1::ProductPlansController < Api::V1::BaseApiController
   ##
   # Returns all productTypePlan of a batch
   #
   def index
-    product_types = Cultivation::ProductTypePlan.where(cultivation_batch_id: params[:batch_id])
+    product_types = Cultivation::ProductTypePlan.where(batch_id: params[:batch_id])
     render json: ProductTypePlanSerializer.new(product_types).serialized_json, status: 200
   end
 

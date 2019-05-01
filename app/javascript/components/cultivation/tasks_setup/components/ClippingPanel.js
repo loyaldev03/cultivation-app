@@ -13,6 +13,7 @@ import {
 import Sunburst from './Sunburst'
 import TablePlantViewer from './TablePlantViewer'
 import Tippy from '@tippy.js/react'
+
 @observer
 class ClippingPanel extends React.Component {
   state = {
@@ -124,7 +125,7 @@ class ClippingPanel extends React.Component {
       )
   }
   render() {
-    const { onClose } = this.props
+    const { onClose, show } = this.props
     const {
       roomChoice,
       roomData,
@@ -137,6 +138,10 @@ class ClippingPanel extends React.Component {
       currentplant,
       maxQuantity
     } = this.state
+
+    if (!show) {
+      return null
+    }
 
     return (
       roomData.length > 0 && (
@@ -156,7 +161,7 @@ class ClippingPanel extends React.Component {
               </div>
             ))}
           </div>
-          <div className="ph4 pb4 pt3"></div>
+          <div className="ph4 pb4 pt3" />
           {/* <div className="ph4 pb4 pt3">
             <span className="orange">Sage</span> mother plants are located in
             the sections highlighted in orange. Select the area of the mother
@@ -226,8 +231,12 @@ class TableSection extends React.Component {
     codeSelected: null
   }
   componentDidMount() {
-    console.log(this.props.hasSection, BatchStore.batch.selected_plants)
-    const listSelected = BatchStore.batch.selected_plants.map(x => x.plant_id)
+    if (this.props.data && this.props.data.errors) {
+      console.error('FIXME:', this.props.data.errors)
+      return
+    }
+    const listSelected =
+      BatchStore.batch.selected_plants.map(x => x.plant_id) || []
     let plantList = this.props.data
       .map(plant => {
         plant.quantity = 0

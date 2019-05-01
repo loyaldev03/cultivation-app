@@ -1,53 +1,33 @@
 import React from 'react'
 import Select from 'react-select'
-import { observable } from 'mobx'
+import { observable, toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { SlidePanelHeader, SlidePanelFooter, toast } from '../../../utils'
 import { httpGetOptions } from '../../../utils/FormHelpers'
 import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 
-@observer
+
 class PackagePlanForm extends React.Component {
   state = {
     showAddProductType: false,
     productType: null,
     data: [],
-    foo: null, 
+    foo: null,
     showing: false
   }
 
-  componentDidMount() {
-    packagePlanStore.load(this.props.batchId)
+  async componentDidMount() {
+    const data = await packagePlanStore.load(this.props.batchId)
+    this.setState({ data })
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     console.log(prevProps.show, this.props.show)
     if (!prevProps.show && this.props.show) {
-      packagePlanStore.load(this.props.batchId)
+      const data = await packagePlanStore.load(this.props.batchId)
+      this.setState({ data })
     }
-  }
-
-  onAddPackage = (productType, packageType, quantity, conversion) => {
-    // console.log(this.state.data)
-    // console.log(productType)
-
-    const { data } = this.state
-    const index = data.findIndex(x => x.product_type === productType)
-    // const productTypeData = data[index]
-    // console.log(productTypeData)
-
-    const item = {
-      id: packageType,
-      isNew: true,
-      package_type: packageType,
-      quantity,
-      conversion
-    }
-
-    // console.log(item)
-    data[index].breakdowns.push(item)
-    this.setState({ data })
   }
 
   onPickProductType = productType => {
@@ -69,21 +49,49 @@ class PackagePlanForm extends React.Component {
 
   onAddProductType = event => {
     event.preventDefault()
-    const productType = this.state.productType.value
-    const newEntry = {
-      id: productType,
-      product_type: productType,
-      breakdowns: []
-    }
+    const product_type = this.state.productType.value
 
     this.setState({
-      data: [newEntry, ...this.state.data],
+      data: [...this.state.data, { product_type, id: product_type, package_plans: [] }],
       productType: null,
       showAddProductType: false
     })
   }
 
-  renderBreakdowns(data) {
+
+  onAddPackage = (productType, packageType, quantity, conversion) => {
+    const { data } = this.state
+    const index = data.findIndex(x => x.product_type === productType)
+    
+    const item = {
+      id: packageType,
+      isNew: true,
+      package_type: packageType,
+      quantity,
+      conversion
+    }
+
+    data[index].package_plans.push(item)
+    this.setState({ data })
+  }
+
+  onEditPackage = (quantity, product_type, package_type) => {
+    const { data } = this.state
+    const index = data.findIndex(x => x.product_type === product_type)
+    const packageIndex = data[index].package_plans.findIndex(x => x.package_type == package_type)
+    data[index].package_plans[packageIndex].quantity = quantity
+    this.setState({ data })
+  }
+
+  onRemovePackage = (product_type, package_type) => {
+    const { data } = this.state
+    const index = data.findIndex(x => x.product_type === product_type)
+    data[index].package_plans = data[index].package_plans.filter(x => x.package_type !== package_type)
+    this.setState({ data })
+  }
+
+  renderBreakdowns() {
+    const { data } = this.state
     if (data.length == 0) {
       return null
     }
@@ -95,6 +103,8 @@ class PackagePlanForm extends React.Component {
             productTypeData={productTypeData}
             key={productTypeData.id}
             onAddPackage={this.onAddPackage}
+            onEditPackage={this.onEditPackage}
+            onRemovePackage={this.onRemovePackage}
           />
         ))}
       </div>
@@ -106,7 +116,12 @@ class PackagePlanForm extends React.Component {
       return null
     }
 
-    const options = ProductTypes.map(x => ({ value: x, label: x }))
+    const selectedProductTypes = this.state.data.map(x => x.product_type)
+    const options = ProductTypes.filter(
+      x => selectedProductTypes.indexOf(x) < 0
+    ).map(x => ({ value: x, label: x }))
+
+    // const options = ProductTypes.map(x => ({ value: x, label: x }))
     return (
       <div className="ph4 mt2 flex">
         <div className="w-100 flex bg-black-05 pa3 items-center">
@@ -145,8 +160,6 @@ class PackagePlanForm extends React.Component {
     const { onClose } = this.props
     const { showAddProductType } = this.state
 
-    const data = packagePlanStore.productTypes
-
     return (
       <div>
         <div id="toast" className="toast animated toast--success" />
@@ -159,7 +172,7 @@ class PackagePlanForm extends React.Component {
         <div className="ph4 mt3 flex">
           <div className="w-100 f6">
             Split into packages {this.state.foo}
-            {!this.state.showAddProductType && (
+            {!showAddProductType && (
               <a
                 href="#"
                 className="ml3 link orange"
@@ -172,7 +185,7 @@ class PackagePlanForm extends React.Component {
         </div>
 
         {this.renderAddProductType()}
-        {this.renderBreakdowns(data)}
+        {this.renderBreakdowns()}
         <SlidePanelFooter onSave={() => {}} />
       </div>
     )
@@ -203,17 +216,16 @@ const PackageTypes = [
 ]
 
 class ProductTypeSection extends React.Component {
-
+  
   constructor(props) {
     super(props)
+    
     this.state = {
-      productTypeData: this.props.productTypeData,
       showNewRow: false,
       packageType: null,
-      quantity: ''
+      quantity: '',
     }
   }
-  
 
   onShowNewRow = event => {
     event.preventDefault()
@@ -231,26 +243,35 @@ class ProductTypeSection extends React.Component {
 
   onAddRow = event => {
     event.preventDefault()
-    const { productTypeData } = this.state
-    productTypeData.package_plans.push({
-      package_type: this.state.packageType.value,
-      quantity: this.state.quantity,
-      conversion: 1
-    })
+
+    this.props.onAddPackage(
+      this.props.productTypeData.product_type,
+      this.state.packageType.value,
+      this.state.quantity,
+      1
+    )
 
     this.setState({
-      productTypeData,
       showNewRow: false,
       packageType: null,
       quantity: ''
     })
   }
 
+  onRemoveRow = (event, package_type) => {
+    event.preventDefault()
+    this.props.onRemovePackage(
+      this.props.productTypeData.product_type,
+      package_type
+    )
+  }
+  
+
   onChangePackageType = packageType => {
     this.setState({ packageType })
   }
 
-  onChangeQuantity = event => {
+  onChangeNewQuantity = event => {
     const key = event.target.attributes.fieldname.value
     const value = event.target.value
     this.setState({ [key]: value })
@@ -261,9 +282,12 @@ class ProductTypeSection extends React.Component {
       return null
     }
 
-    const selectedPackageTypes = this.state.productTypeData.package_plans.map(x => x.package_type)
-    const options = PackageTypes.filter(x => selectedPackageTypes.indexOf(x) < 0)
-                                .map(x => ({ value: x, label: x }))
+    const selectedPackageTypes = this.props.productTypeData.package_plans.map(
+      x => x.package_type
+    )
+    const options = PackageTypes.filter(
+      x => selectedPackageTypes.indexOf(x) < 0
+    ).map(x => ({ value: x, label: x }))
 
     return (
       <div className="ph4 mt2 flex items-center">
@@ -279,7 +303,7 @@ class ProductTypeSection extends React.Component {
           <div className="w-20">
             <NumericInput
               value={this.state.quantity}
-              onChange={this.onChangeQuantity}
+              onChange={this.onChangeNewQuantity}
               fieldname="quantity"
             />
           </div>
@@ -303,7 +327,7 @@ class ProductTypeSection extends React.Component {
   }
 
   render() {
-    const { productTypeData } = this.state
+    const { productTypeData } = this.props
     return (
       <div className="mb4">
         <div className="ph4 mt3 flex">
@@ -332,13 +356,23 @@ class ProductTypeSection extends React.Component {
                 <tr key={x.package_type}>
                   <td className="pv1 w-40">{x.package_type}</td>
                   <td className="tc pv1 w-20">
-                    <NumericInput value={x.quantity} onChange={(event) => { console.log(x.id, event.target.value) }}/>
+                    <NumericInput
+                      value={x.quantity}
+                      onChange={event => { 
+                        this.props.onEditPackage(event.target.value, productTypeData.product_type, x.package_type) }
+                      }
+                      fieldname="quantity"
+                    />
                   </td>
-                  <td className="tr pv1 w-20">{(x.quantity * x.conversion).toFixed(2)}</td>
+                  <td className="tr pv1 w-20">
+                    {(x.quantity * x.conversion).toFixed(2)}
+                  </td>
                   <td className="tc pv1">
-                    <span className="material-icons orange dim md-18 pointer">
-                      delete
-                    </span>
+                    <a href="#" onClick={(event) => this.onRemoveRow(event, x.package_type)}>
+                      <span className="material-icons orange dim md-18 pointer">
+                        delete
+                      </span>
+                    </a>
                   </td>
                 </tr>
               ))}
@@ -363,64 +397,20 @@ class ProductTypeSection extends React.Component {
   }
 }
 
-
 class PackagePlanStore {
-  @observable productTypes = []
-
   async load(batchId) {
     const url = `/api/v1/batches/${batchId}/product_plans`
     // try {
-      const response = await (await fetch(url, httpGetOptions)).json()
-      if (response.data) {
-        console.log(response.data)
-        const d = response.data.map(x => x.attributes)
-        this.productTypes.replace(d)
-      } else {
-        console.error(response.errors)
-      }
-    // } catch (error) {
-    //   console.error(error)
-    // } 
+    const response = await (await fetch(url, httpGetOptions)).json()
+    if (response.data) {
+      console.log(response.data)
+      const d = response.data.map(x => x.attributes)
+      return d
+    } else {
+      console.error(response.errors)
+      return []
+    }
   }
 }
 
 const packagePlanStore = new PackagePlanStore()
-
-// const data2 = [
-//   {
-//     id: 'x1',
-//     product_type: 'shake',
-//     breakdowns: [
-//       {
-//         id: '1.1',
-//         package_type: 'Lb',
-//         quantity: 12,
-//         conversion: 2.5,
-//       },
-//       {
-//         id: '1.2',
-//         package_type: '0.5 oz',
-//         quantity: 2,
-//         conversion: 0.5,
-//       }
-//     ]
-//   },
-//   {
-//     id: 'x2',
-//     product_type: 'leaves',
-//     breakdowns: [
-//       {
-//         id: '2.1',
-//         package_type: 'Lb',
-//         quantity: 4,
-//         conversion: 2.5,
-//       },
-//       {
-//         id: '2.2',
-//         package_type: '0.5 oz',
-//         quantity: 25,
-//         conversion: 0.5,
-//       }
-//     ]
-//   }
-// ]

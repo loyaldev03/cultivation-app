@@ -132,7 +132,7 @@ class BatchStore {
   setOnePlant(plant_id, quantity) {
     this.batch.selected_plants = this.batch.selected_plants.map(storePlant => {
       if (storePlant.plant_id === plant_id) {
-        storePlant.quantity = quantity
+        storePlant.quantity = parseInt(quantity)
       }
       return storePlant
     })

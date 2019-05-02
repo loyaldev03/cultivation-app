@@ -32,8 +32,19 @@ class HomeController < ApplicationController
         photo_url: a.user.photo_url,
         request_type: a.request_type,
         date: get_date_worker(a),
+        status: a.status,
       }
     end
+  end
+
+  def update_requests
+    @work_application = current_user.work_applications.find(params[:work_request_id])
+    if params[:type] == 'rejected'
+      @work_application.update(status: 'rejected')
+    elsif params[:type] == 'approved'
+      @work_application.update(status: 'approved')
+    end
+    redirect_to requests_path
   end
 
   def worker_dashboard

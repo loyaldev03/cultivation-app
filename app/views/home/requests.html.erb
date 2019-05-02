@@ -34,6 +34,7 @@
                 <th class="pv2 ph3 tl f6 fw6">Date</th>
                 <th class="pv2 ph3 tl f6 fw6">Schedule</th>
                 <th class="pv2 ph3 tl f6 fw6">Notes</th>
+                <th class="pv2 ph3 tl f6 fw6">Status</th>
                 <th class="pv2 ph3 tl f6 fw6"> 
                 </th>
 
@@ -68,9 +69,12 @@
                     description
                   </i>
                 </td>
+                <td class="pv2 ph3 fw6 pointer ttc"><%= work_application[:status]%></td>
                 <td class="pv2 ph3 hidden"> 
-                  <span class="f7 fw6 ph3 pv1 ba br2 dib tc fr bg-orange b--orange white ml2 pointer">ACCEPT</span>
-                  <span class="f7 fw6 ph3 pv1 ba br2 dib tc fr orange b--orange white pointer">DECLINE</span>
+
+                  <%= link_to 'ACCEPT', update_requests_path(work_application[:id], type: 'approved'), class: 'f7 fw6 ph3 pv1 ba br2 dib tc fr bg-orange b--orange white ml2 pointer no-underline', method: :post%>
+                  <%= link_to 'DECLINE', update_requests_path(work_application[:id], type: 'rejected'), class: 'f7 fw6 ph3 pv1 ba br2 dib tc fr orange b--orange white pointer no-underline', method: :post%>
+
                 </td>
               </tr>
               <% end %>

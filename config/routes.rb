@@ -25,6 +25,8 @@ Rails.application.routes.draw do
   get "cult/issues" => "home#cult_issues"
   # End of dummy pages
 
+  post "update_requests/:work_request_id" => "home#update_requests", as: 'update_requests' #for accept and reject requests (manager view)
+
   get "facility_setup/new" => "facility_setup#new"
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"
   get "facility_setup/room_info" => "facility_setup#room_info", as: 'fetch_room_info'

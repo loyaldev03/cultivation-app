@@ -17,7 +17,7 @@ class PackagePlanForm extends React.Component {
   }
 
   async componentDidMount() {
-    const data = await packagePlanStore.load(this.props.batchId)
+    const data = await loadPackagePlans(this.props.batchId)
     this.setState({ data })
   }
 
@@ -95,7 +95,7 @@ class PackagePlanForm extends React.Component {
     this.setState({ data })
   }
 
-  onRemoveProductType = (product_type) => {
+  onRemoveProductType = product_type => {
     const { data } = this.state
     this.setState({ data: data.filter(x => x.product_type !== product_type) })
   }
@@ -346,8 +346,7 @@ class ProductTypeSection extends React.Component {
         <div className="ph4 mt3 flex">
           <div className="w-100 fw6 f5 ph1 ttc flex items-center">
             {productTypeData.product_type}
-            <a href="#"
-              onClick={this.onRemoveProductType}>
+            <a href="#" onClick={this.onRemoveProductType}>
               <span className="ml3 material-icons orange dim md-18 pointer">
                 delete
               </span>
@@ -420,20 +419,17 @@ class ProductTypeSection extends React.Component {
   }
 }
 
-class PackagePlanStore {
-  async load(batchId) {
-    const url = `/api/v1/batches/${batchId}/product_plans`
-    // try {
-    const response = await (await fetch(url, httpGetOptions)).json()
-    if (response.data) {
-      console.log(response.data)
-      const d = response.data.map(x => x.attributes)
-      return d
-    } else {
-      console.error(response.errors)
-      return []
-    }
+
+const loadPackagePlans = async (batchId) => {
+  const url = `/api/v1/batches/${batchId}/product_plans`
+  const response = await (await fetch(url, httpGetOptions)).json()
+  if (response.data) {
+    console.log(response.data)
+    const d = response.data.map(x => x.attributes)
+    return d
+  } else {
+    console.error(response.errors)
+    return []
   }
 }
 
-const packagePlanStore = new PackagePlanStore()

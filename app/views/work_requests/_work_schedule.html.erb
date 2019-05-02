@@ -1,0 +1,17 @@
+
+<div class='ph4'>
+<h3 class='grey f4'>Work Schedule</h3>
+
+<% @worker_schedule.each do |a| %>
+  <%# <%= a%>
+  <div class='flex justify-between grey f5 pa2'>
+    <span class='ttc'><%= a[:day] %></span>
+    <div class='flex justify-between'>
+      <span><%= a[:start_time] %></span>
+      <span>-</span>
+      <span><%= a[:end_time] %></span>
+    </div>
+  </div>
+<% end %>
+
+</div>

@@ -242,6 +242,10 @@ Rails.application.routes.draw do
         post 'save_harvest_batch'
         post 'destroy', on: :collection
 
+
+        get 'product_plans'
+        post 'save_product_plans'
+
         resources :tasks, only: [:index, :update, :create, :destroy] do
           member do
             post 'update_indent'
@@ -258,11 +262,11 @@ Rails.application.routes.draw do
         end
         resources :nutrient_profiles, only: [:index, :create, :update]
 
-        resources :product_plans, only: [:index, :create] do
-          post ':product_type_id/destroy', action: 'destroy'
-          post ':product_type_id/package_plans', action: 'save_package_plan'
-          post ':product_type_id/package_plans/:package_plan', action: 'delete_package_plan'
-        end
+        # resources :product_plans, only: [:index, :create] do
+        #   post ':product_type_id/destroy', action: 'destroy'
+        #   post ':product_type_id/package_plans', action: 'save_package_plan'
+        #   post ':product_type_id/package_plans/:package_plan', action: 'delete_package_plan'
+        # end
       end
 
       resources :users, only: [:index] do

@@ -3,7 +3,7 @@ import Select from 'react-select'
 import { observable, toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { SlidePanelHeader, SlidePanelFooter, toast } from '../../../utils'
+import { SlidePanelHeader, SlidePanelFooter, toast, httpPostOptions } from '../../../utils'
 import { httpGetOptions } from '../../../utils/FormHelpers'
 import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 
@@ -22,9 +22,8 @@ class PackagePlanForm extends React.Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    console.log(prevProps.show, this.props.show)
     if (!prevProps.show && this.props.show) {
-      const data = await packagePlanStore.load(this.props.batchId)
+      const data = await loadPackagePlans(this.props.batchId)
       this.setState({ data })
     }
   }
@@ -98,6 +97,11 @@ class PackagePlanForm extends React.Component {
   onRemoveProductType = product_type => {
     const { data } = this.state
     this.setState({ data: data.filter(x => x.product_type !== product_type) })
+  }
+
+  onSave = event => {
+    event.preventDefault()
+    savePackagePlans(this.props.batchId, this.state.data)
   }
 
   renderBreakdowns() {
@@ -196,7 +200,8 @@ class PackagePlanForm extends React.Component {
 
         {this.renderAddProductType()}
         {this.renderBreakdowns()}
-        <SlidePanelFooter onSave={() => {}} />
+        <div className="ph4 mv3 flex"></div>
+        <SlidePanelFooter onSave={this.onSave} />
       </div>
     )
   }
@@ -431,3 +436,19 @@ const loadPackagePlans = async batchId => {
     return []
   }
 }
+
+const savePackagePlans = async (batchId, productPlans) => {
+  const url = `/api/v1/batches/${batchId}/save_product_plans`
+  const response = await (await fetch(url, httpPostOptions({ product_plans: productPlans }))).json()
+  if (response.data) {
+    console.log(response.data)
+    // const d = response.data.map(x => x.attributes)
+    return response.data
+  } else {
+    console.error(response.errors)
+    return []
+  }
+}
+
+// When saving new package:
+// From packageplans -> lookup product -> if product not exists, create product -> attach new package to the product

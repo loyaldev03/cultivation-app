@@ -3,7 +3,12 @@ import Select from 'react-select'
 import { observable, toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { SlidePanelHeader, SlidePanelFooter, toast, httpPostOptions } from '../../../utils'
+import {
+  SlidePanelHeader,
+  SlidePanelFooter,
+  toast,
+  httpPostOptions
+} from '../../../utils'
 import { httpGetOptions } from '../../../utils/FormHelpers'
 import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 
@@ -200,7 +205,7 @@ class PackagePlanForm extends React.Component {
 
         {this.renderAddProductType()}
         {this.renderBreakdowns()}
-        <div className="ph4 mv3 flex"></div>
+        <div className="ph4 mv3 flex" />
         <SlidePanelFooter onSave={this.onSave} />
       </div>
     )
@@ -439,7 +444,10 @@ const loadPackagePlans = async batchId => {
 
 const savePackagePlans = async (batchId, productPlans) => {
   const url = `/api/v1/batches/${batchId}/save_product_plans`
-  const response = await (await fetch(url, httpPostOptions({ product_plans: productPlans }))).json()
+  const response = await (await fetch(
+    url,
+    httpPostOptions({ product_plans: productPlans })
+  )).json()
   if (response.data) {
     console.log(response.data)
     // const d = response.data.map(x => x.attributes)

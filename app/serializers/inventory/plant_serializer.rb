@@ -15,10 +15,6 @@ module Inventory
       object.facility_strain.strain_name
     end
 
-    attribute :created_by_id do |object|
-      object.created_by_id.to_s
-    end
-
     attribute :cultivation_batch do |object, params = {}|
       if params[:exclude] && params[:exclude].include?(:batch)
         ''

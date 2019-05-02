@@ -18,7 +18,7 @@ function fileUpload(fileInput) {
     })
 
   uppy.use(Uppy.AwsS3, {
-    serverUrl: '/' // will call Shrine's presign endpoint on `/s3/params`
+    companionUrl: '/' // will call Shrine's presign endpoint on `/s3/params`
   })
 
   uppy.on('upload-success', function(file, data) {

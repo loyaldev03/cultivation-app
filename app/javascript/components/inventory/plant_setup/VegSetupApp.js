@@ -36,7 +36,16 @@ const columns = [
     Header: 'Plant ID',
     accessor: 'attributes.plant_id',
     headerStyle: { textAlign: 'left' },
-    width: 150
+    width: 180,
+    Cell: x => (
+      <a
+        href="#0"
+        className="link grey"
+        onClick={event => openSidebar(event, x.original.id)}
+      >
+        {x.value}
+      </a>
+    )
   },
   {
     Header: 'Batch',
@@ -69,18 +78,7 @@ const columns = [
     Header: 'Location',
     accessor: 'attributes.location_name',
     headerStyle: { textAlign: 'left' },
-    width: 130
-  },
-  {
-    Header: '',
-    className: 'tc',
-    filterable: false,
-    maxWidth: 45,
-    Cell: x => (
-      <a href="#" onClick={event => openSidebar(event, x.original.id)}>
-        <i className="material-icons gray">more_horiz</i>
-      </a>
-    )
+    width: 180
   }
 ]
 
@@ -109,7 +107,7 @@ class VegSetupApp extends React.Component {
             <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Vegs</h1>
             <div style={{ justifySelf: 'end' }}>
               <button
-                className="pv2 ph3 bg-orange white bn br2 ttc link dim f6 fw6 pointer"
+                className="btn btn--primary btn--small"
                 onClick={this.openSidebar}
               >
                 Add vegs
@@ -125,7 +123,7 @@ class VegSetupApp extends React.Component {
             pageSize={30}
             minRows={5}
             filterable
-            className="f6"
+            className="f6 -highlight"
             showPagination={plantStore.bindablePlants.length > 30}
           />
         </div>

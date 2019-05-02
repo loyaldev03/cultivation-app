@@ -35,7 +35,16 @@ const columns = [
   {
     Header: 'Plant ID',
     accessor: 'attributes.plant_id',
-    headerStyle: { textAlign: 'left' }
+    headerStyle: { textAlign: 'left' },
+    Cell: x => (
+      <a
+        href="#0"
+        className="link grey"
+        onClick={event => openStrain(event, x.original.id)}
+      >
+        {x.value}
+      </a>
+    )
   },
   {
     Header: 'Strain',
@@ -68,18 +77,8 @@ const columns = [
   {
     Header: 'Location',
     accessor: 'attributes.location_name',
-    headerStyle: { textAlign: 'left' }
-  },
-  {
-    Header: '',
-    className: 'tc',
-    filterable: false,
-    maxWidth: 45,
-    Cell: x => (
-      <a href="#" onClick={event => openStrain(event, x.original.id)}>
-        <i className="material-icons gray">more_horiz</i>
-      </a>
-    )
+    headerStyle: { textAlign: 'left' },
+    width: 180
   }
 ]
 
@@ -108,7 +107,7 @@ class PlantSetupApp extends React.Component {
             <h1 className="mv0 f3 fw4 dark-gray  flex-auto">Mother Plants</h1>
             <div style={{ justifySelf: 'end' }}>
               <button
-                className="pv2 ph3 bg-orange white bn br2 ttc tracked link dim f6 fw6 pointer"
+                className="btn btn--primary btn--small"
                 onClick={this.openSidebar}
               >
                 Add mother
@@ -124,7 +123,7 @@ class PlantSetupApp extends React.Component {
             pageSize={30}
             minRows={5}
             filterable
-            className="f6"
+            className="f6 -highlight"
             showPagination={plantStore.plants.length > 30}
           />
         </div>

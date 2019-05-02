@@ -1,3 +1,11 @@
+.ReactTable {
+  color: var(--grey);
+  .rt-tr .rt-th,
+  .rt-tr .rt-td {
+    padding: 0.8em 0.4em;
+  }
+}
+
 .ReactTable .rt-thead.-header {
   box-shadow: none !important;
   border-bottom: 1px solid #eee;

@@ -56,7 +56,8 @@ const columns = (locations, harvest_batches) => [
   {
     Header: 'Location',
     accessor: 'attributes.location_name',
-    headerClassName: 'tl'
+    headerClassName: 'tl',
+    width: 180
   },
   {
     Header: 'Harvest batch',
@@ -151,7 +152,7 @@ class HarvestPackageSetupApp extends React.Component {
             pageSize={30}
             minRows={5}
             filterable
-            className="f6"
+            className="f6 -highlight"
           />
           <HarvestPackageEditor
             facility_strains={this.props.facility_strains}

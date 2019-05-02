@@ -29,6 +29,21 @@ class MovePlantsToNextPhaseJob < ApplicationJob
         activity: Constants::INDELIBLE_MOVING_NEXT_PHASE,
         phase: batch.current_growth_stage,
       )
+      if move_records.blank?
+        last_history = histories.last
+        if last_history
+          move_records = histories.where(
+            activity: Constants::INDELIBLE_MOVING_NEXT_PHASE,
+            phase: last_history.phase,
+          )
+        end
+      end
+      # In-case where moving to tray was perform outside of clone stage.
+      # if move_records.blank?
+      #   move_records = histories.where(
+      #     activity: Constants::INDELIBLE_MOVING_TO_TRAY,
+      #   )
+      # end
     end
     move_records.each do |rec|
       if rec.task&.work_status == Constants::WORK_STATUS_DONE
@@ -81,7 +96,6 @@ class MovePlantsToNextPhaseJob < ApplicationJob
       planting_date: Time.current,
       mother_id: mother_id,
       facility_strain_id: batch.facility_strain_id,
-      created_by_id: user_id,
       modifier_id: user_id,
     )
   end
@@ -92,13 +106,16 @@ class MovePlantsToNextPhaseJob < ApplicationJob
     if plant.present?
       plant.location_id = dest_id
       plant.location_type = dest_type
-      plant.current_growth_stage = stage
-      plant.modifier_id = user_id
-      plant.veg_date ||= Time.current if stage == Constants::CONST_VEG
-      plant.veg1_date ||= Time.current if stage == Constants::CONST_VEG1
-      plant.veg2_date ||= Time.current if stage == Constants::CONST_VEG2
-      plant.flower_date ||= Time.current if stage == Constants::CONST_FLOWER
-      plant.save
+      if Constants::REQUIRED_BOOKING_PHASES.include?(stage)
+        # Plant can only grow until flower stage.
+        plant.current_growth_stage = stage
+        plant.modifier_id = user_id
+        plant.veg_date ||= Time.current if stage == Constants::CONST_VEG
+        plant.veg1_date ||= Time.current if stage == Constants::CONST_VEG1
+        plant.veg2_date ||= Time.current if stage == Constants::CONST_VEG2
+        plant.flower_date ||= Time.current if stage == Constants::CONST_FLOWER
+        plant.save
+      end
     end
   end
 end

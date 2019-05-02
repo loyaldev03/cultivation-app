@@ -8,6 +8,7 @@ class UserRoleStore {
   @observable roles
   @observable users
   @observable modules
+  @observable companyWorkSchedules
 
   @action
   async loadUsers(includeInactiveUser = false) {
@@ -20,12 +21,19 @@ class UserRoleStore {
       const response = await (await fetch(url, httpGetOptions)).json()
       runInAction(() => {
         if (response.data && response.data.attributes) {
-          const { facilities, users, roles, modules } = response.data.attributes
+          const {
+            facilities,
+            users,
+            roles,
+            modules,
+            company_work_schedules
+          } = response.data.attributes
           this.isDataLoaded = true
           this.facilities = facilities || []
           this.users = users || []
           this.roles = roles || []
           this.modules = modules || []
+          this.companyWorkSchedules = company_work_schedules || []
         } else {
           this.isDataLoaded = false
           this.facilities = []

@@ -139,8 +139,13 @@
 
       <ul class="ul list f6 gray ml4 pl2 mt2">
         <li class="pv2">
-          <%= link_to 'Facility', '', class: 'link gray f6' %>
+          <% if current_facility %>
+            <%= link_to 'Facility', facility_setup_new_path(facility_id: current_facility.id), class: 'link gray f6' %>
+          <% else %>
+            <%= link_to 'Facility', facility_setup_new_path, class: 'link gray f6' %>
+          <% end %>
         </li>
+
         <li class="pv2">
           <%= link_to 'Rooms', '', class: 'link gray f6' %>
         </li>
@@ -175,7 +180,15 @@
     <%= link_to cultivation_batches_path, class: "link" do %>
       <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
         <i class="material-icons md-16 grey mr3 ml1">track_changes</i>
-        <span class="link subtitle-2-regular grey">Legacy cultivation batches</span>
+        <span class="link  grey f7">Legacy cultivation batches</span>
+      </li>
+    <% end %>
+
+
+    <%= link_to first_setup_path, class: 'link' do %>
+      <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0">
+        <i class="material-icons md-16 grey mr3 ml1">track_changes</i>
+        <span class="link  grey f7">Legacy first time setup</span>
       </li>
     <% end %>
 
@@ -241,6 +254,7 @@
         <i class="material-icons md-16 grey">settings</i>
       </li>
     <% end %>
+
 
     <!--- --->
   </ul>

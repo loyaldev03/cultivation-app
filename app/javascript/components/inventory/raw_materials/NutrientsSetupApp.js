@@ -36,7 +36,7 @@ const columns = [
     Header: 'Quantity',
     headerClassName: 'tr',
     Cell: record => (
-      <div className="tr">
+      <div className="w-100 tr">
         {record.original.attributes.order_quantity}{' '}
         {record.original.attributes.order_uom}
       </div>
@@ -46,7 +46,7 @@ const columns = [
     Header: 'Cost',
     headerClassName: 'tr',
     Cell: record => (
-      <div className="tr">
+      <div className="w-100 tr">
         {record.original.attributes.vendor_invoice.item_currency} &nbsp;
         {(
           parseFloat(record.original.attributes.order_quantity) *

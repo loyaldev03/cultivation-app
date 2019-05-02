@@ -17,7 +17,6 @@ Rails.application.routes.draw do
   get "employees" => "home#employees"
   get "employees_schedule" => "home#employees_schedule"
   get "timesheets" => "home#timesheets"
-  get "requests" => "home#requests"
   get "cult/batches" => "home#cult_batches"
   get "cult/plants" => "home#cult_plants"
   get "cult/harvests" => "home#cult_harvests"
@@ -25,7 +24,10 @@ Rails.application.routes.draw do
   get "cult/issues" => "home#cult_issues"
   # End of dummy pages
 
-  post "update_requests/:work_request_id" => "home#update_requests", as: 'update_requests' #for accept and reject requests (manager view)
+  #work_requests
+  get "requests" => "work_requests#requests"
+  get "worker_schedule/:worker_id" => "work_requests#worker_schedule", as: 'worker_schedule'
+  post "update_requests/:work_request_id" => "work_requests#update_requests", as: 'update_requests' #for accept and reject requests (manager view)
 
   get "facility_setup/new" => "facility_setup#new"
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"

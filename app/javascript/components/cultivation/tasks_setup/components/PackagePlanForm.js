@@ -419,8 +419,7 @@ class ProductTypeSection extends React.Component {
   }
 }
 
-
-const loadPackagePlans = async (batchId) => {
+const loadPackagePlans = async batchId => {
   const url = `/api/v1/batches/${batchId}/product_plans`
   const response = await (await fetch(url, httpGetOptions)).json()
   if (response.data) {
@@ -432,4 +431,3 @@ const loadPackagePlans = async (batchId) => {
     return []
   }
 }
-

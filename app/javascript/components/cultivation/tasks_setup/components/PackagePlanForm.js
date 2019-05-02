@@ -7,7 +7,6 @@ import { SlidePanelHeader, SlidePanelFooter, toast } from '../../../utils'
 import { httpGetOptions } from '../../../utils/FormHelpers'
 import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 
-
 class PackagePlanForm extends React.Component {
   state = {
     showAddProductType: false,
@@ -52,17 +51,19 @@ class PackagePlanForm extends React.Component {
     const product_type = this.state.productType.value
 
     this.setState({
-      data: [...this.state.data, { product_type, id: product_type, package_plans: [] }],
+      data: [
+        ...this.state.data,
+        { product_type, id: product_type, package_plans: [] }
+      ],
       productType: null,
       showAddProductType: false
     })
   }
 
-
   onAddPackage = (productType, packageType, quantity, conversion) => {
     const { data } = this.state
     const index = data.findIndex(x => x.product_type === productType)
-    
+
     const item = {
       id: packageType,
       isNew: true,
@@ -78,7 +79,9 @@ class PackagePlanForm extends React.Component {
   onEditPackage = (quantity, product_type, package_type) => {
     const { data } = this.state
     const index = data.findIndex(x => x.product_type === product_type)
-    const packageIndex = data[index].package_plans.findIndex(x => x.package_type == package_type)
+    const packageIndex = data[index].package_plans.findIndex(
+      x => x.package_type == package_type
+    )
     data[index].package_plans[packageIndex].quantity = quantity
     this.setState({ data })
   }
@@ -86,8 +89,15 @@ class PackagePlanForm extends React.Component {
   onRemovePackage = (product_type, package_type) => {
     const { data } = this.state
     const index = data.findIndex(x => x.product_type === product_type)
-    data[index].package_plans = data[index].package_plans.filter(x => x.package_type !== package_type)
+    data[index].package_plans = data[index].package_plans.filter(
+      x => x.package_type !== package_type
+    )
     this.setState({ data })
+  }
+
+  onRemoveProductType = (product_type) => {
+    const { data } = this.state
+    this.setState({ data: data.filter(x => x.product_type !== product_type) })
   }
 
   renderBreakdowns() {
@@ -105,6 +115,7 @@ class PackagePlanForm extends React.Component {
             onAddPackage={this.onAddPackage}
             onEditPackage={this.onEditPackage}
             onRemovePackage={this.onRemovePackage}
+            onRemoveProductType={this.onRemoveProductType}
           />
         ))}
       </div>
@@ -121,7 +132,6 @@ class PackagePlanForm extends React.Component {
       x => selectedProductTypes.indexOf(x) < 0
     ).map(x => ({ value: x, label: x }))
 
-    // const options = ProductTypes.map(x => ({ value: x, label: x }))
     return (
       <div className="ph4 mt2 flex">
         <div className="w-100 flex bg-black-05 pa3 items-center">
@@ -216,14 +226,13 @@ const PackageTypes = [
 ]
 
 class ProductTypeSection extends React.Component {
-  
   constructor(props) {
     super(props)
-    
+
     this.state = {
       showNewRow: false,
       packageType: null,
-      quantity: '',
+      quantity: ''
     }
   }
 
@@ -265,7 +274,6 @@ class ProductTypeSection extends React.Component {
       package_type
     )
   }
-  
 
   onChangePackageType = packageType => {
     this.setState({ packageType })
@@ -275,6 +283,11 @@ class ProductTypeSection extends React.Component {
     const key = event.target.attributes.fieldname.value
     const value = event.target.value
     this.setState({ [key]: value })
+  }
+
+  onRemoveProductType = event => {
+    event.preventDefault()
+    this.props.onRemoveProductType(this.props.productTypeData.product_type)
   }
 
   renderAddNewRow() {
@@ -333,9 +346,12 @@ class ProductTypeSection extends React.Component {
         <div className="ph4 mt3 flex">
           <div className="w-100 fw6 f5 ph1 ttc flex items-center">
             {productTypeData.product_type}
-            <span className="ml3 material-icons orange dim md-18 pointer">
-              delete
-            </span>
+            <a href="#"
+              onClick={this.onRemoveProductType}>
+              <span className="ml3 material-icons orange dim md-18 pointer">
+                delete
+              </span>
+            </a>
           </div>
         </div>
 
@@ -358,9 +374,13 @@ class ProductTypeSection extends React.Component {
                   <td className="tc pv1 w-20">
                     <NumericInput
                       value={x.quantity}
-                      onChange={event => { 
-                        this.props.onEditPackage(event.target.value, productTypeData.product_type, x.package_type) }
-                      }
+                      onChange={event => {
+                        this.props.onEditPackage(
+                          event.target.value,
+                          productTypeData.product_type,
+                          x.package_type
+                        )
+                      }}
                       fieldname="quantity"
                     />
                   </td>
@@ -368,7 +388,10 @@ class ProductTypeSection extends React.Component {
                     {(x.quantity * x.conversion).toFixed(2)}
                   </td>
                   <td className="tc pv1">
-                    <a href="#" onClick={(event) => this.onRemoveRow(event, x.package_type)}>
+                    <a
+                      href="#"
+                      onClick={event => this.onRemoveRow(event, x.package_type)}
+                    >
                       <span className="material-icons orange dim md-18 pointer">
                         delete
                       </span>

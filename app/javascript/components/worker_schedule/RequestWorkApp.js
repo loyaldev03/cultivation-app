@@ -21,7 +21,7 @@ class RequestWorkApp extends React.Component {
   }
 
   onClickOt = () => {
-    this.setState({ showPtoPanel: !this.state.showPtoPanel })
+    this.setState({ showOtPanel: !this.state.showOtPanel })
   }
 
   render() {
@@ -67,11 +67,11 @@ class RequestWorkApp extends React.Component {
           )}
         />
         <div className="mt4">
-          <a className="btn mr3 btn--primary" onClick={this.onClickPto}>
+          <a className="btn mr3 btn--primary" onClick={this.onClickOt}>
             Request OT
           </a>
           <a className="btn mr3 btn--primary">Change Schedule</a>
-          <a className="btn mr3 btn--primary" onClick={this.onClickOt}>
+          <a className="btn mr3 btn--primary" onClick={this.onClickPto}>
             Request PTO
           </a>
         </div>

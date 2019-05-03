@@ -21,6 +21,30 @@ class WorkerScheduleStore {
       this.isLoading = false
     }
   }
+
+  @action
+  savePto = async (start_date, end_date, description) => {
+    this.isLoading = true
+    try {
+      let url = `/api/v1/daily_tasks/save_pto`
+      const payload = {
+        start_date,
+        end_date,
+        description
+      }
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      if (response) {
+        console.log(response)
+        return response
+      }
+    } catch (err) {
+      console.error(err)
+      return null
+    } finally {
+      this.isLoading = false
+    }
+  }
+
 }
 const workerScheduleStore = new WorkerScheduleStore()
 export default workerScheduleStore

@@ -17,7 +17,7 @@ class BatchListTable extends React.PureComponent {
         Header: 'Batch ID',
         accessor: 'name',
         className: 'dark-grey pl3 fw6',
-        minWidth: 110,
+        minWidth: 130,
         Cell: props => (
           <a
             className="link dark-grey"
@@ -33,14 +33,14 @@ class BatchListTable extends React.PureComponent {
         Header: 'Status',
         accessor: 'status',
         className: 'justify-center',
-        width: 90,
+        width: 88,
         Cell: props => <ActiveBadge status={props.value} />
       },
       {
         headerClassName: 'tl',
         Header: 'Strain',
         accessor: 'strain_name',
-        minWidth: 110
+        minWidth: 120
       },
       {
         headerClassName: 'tl',
@@ -54,7 +54,7 @@ class BatchListTable extends React.PureComponent {
         ),
         accessor: 'quantity',
         className: 'justify-end pr3',
-        width: 90,
+        width: 80,
         Cell: props => (props.value ? props.value : '--')
       },
       {
@@ -68,11 +68,10 @@ class BatchListTable extends React.PureComponent {
         ),
         accessor: 'current_growth_stage',
         className: 'justify-center ttc',
-        width: 80
+        width: 75
       },
       {
         headerClassName: 'tl',
-        Header: 'Destroyed plants',
         Header: () => (
           <React.Fragment>
             Destroyed
@@ -96,7 +95,7 @@ class BatchListTable extends React.PureComponent {
         Header: 'Start Date',
         accessor: 'start_date',
         className: 'justify-end pr3',
-        width: 90,
+        width: 88,
         Cell: props => formatDate2(props.value)
       },
       {
@@ -104,7 +103,7 @@ class BatchListTable extends React.PureComponent {
         Header: 'Phase Date',
         accessor: 'start_date',
         className: 'justify-end pr3',
-        width: 90,
+        width: 88,
         Cell: props => formatDate2(props.value)
       },
       {
@@ -118,7 +117,7 @@ class BatchListTable extends React.PureComponent {
         ),
         accessor: 'estimated_harvest_date',
         className: 'justify-end pr3',
-        width: 100,
+        width: 98,
         Cell: props => formatDate2(props.value)
       },
       {

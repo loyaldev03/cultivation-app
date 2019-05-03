@@ -21,6 +21,7 @@
       padding-bottom: 0.5em;
     }
     .rt-tr .rt-th {
+      @extend .ws-unset;
       font-size: 0.9rem;
       height: 3.5rem;
       background-color: var(--grey-smoke);

@@ -18,7 +18,6 @@ class PermissionRow extends React.PureComponent {
   onCheckboxChange = e => {
     const value = this.state.value ^ parseInt(e.target.value)
     this.setState({ value })
-    console.log('onCheckboxChange')
     if (this.props.onChange) {
       this.props.onChange(this.props.code, value)
     }

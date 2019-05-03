@@ -1,11 +1,55 @@
 import 'babel-polyfill'
+import React, { memo, useState, lazy, Suspense } from 'react'
 import ReactTable from 'react-table'
-import React, { memo, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
-import { ActiveBadge, Loading, formatDate2 } from '../../utils'
+import {
+  TempBatchWidgets,
+  ActiveBadge,
+  Loading,
+  formatDate2
+} from '../../utils'
 import store from '../batches/BatchStore'
 
-const CheckboxSelect = ({ show }) => <div>{<div>Hello Component</div>}</div>
+const CheckboxSelect = ({ values = [], options = [] }) => {
+  const [expand, setExpand] = useState(false)
+  return (
+    <div className="f6 dark-grey bg-white pointer ba b--black-30 br2 inline-flex items-center justify-between ph2 relative">
+      <span className="w4">All Columns</span>
+      <i
+        className="material-icons md-16 pointer"
+        onClick={() => setExpand(!expand)}
+      >
+        filter_list
+      </i>
+      {!expand && (
+        <div className="absolute w5 top-2 shadow-3 right-0 z-1 bg-white mt2 ba br2 b--light-grey">
+          <ul className="list pl0 mv2">
+            <li className="flex pv2 ph3 justify-between items-center">
+              <span>Option 1</span>
+              <input type="checkbox" />
+            </li>
+            <li className="flex pv2 ph3 justify-between items-center">
+              <span>Option 1</span>
+              <input type="checkbox" />
+            </li>
+            <li className="flex pv2 ph3 justify-between items-center">
+              Options 3
+              <input type="checkbox" />
+            </li>
+            <li className="flex pv2 ph3 justify-between items-center">
+              Options 4
+              <input type="checkbox" />
+            </li>
+            <li className="flex pv2 ph3 justify-between items-center">
+              Options 5
+              <input type="checkbox" />
+            </li>
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+}
 
 class BatchListTable extends React.PureComponent {
   render() {
@@ -158,13 +202,16 @@ class Batches extends React.Component {
     const { defaultFacilityId } = this.props
     return (
       <div className="pa4 mw1200">
-        <div className="flex flex-row-reverse pb4">
+        <div className="flex flex-row-reverse">
           <a
             href={`/cultivation/batches/new?facility_id=${defaultFacilityId}`}
             className="btn btn--primary"
           >
             Create new batch
           </a>
+        </div>
+        <div className="pv4">
+          <img src={TempBatchWidgets} alt="Scan barcode" />
         </div>
         <div className="flex justify-between">
           <input
@@ -175,10 +222,7 @@ class Batches extends React.Component {
               store.filter = e.target.value
             }}
           />
-          <div className="f6 dark-grey bg-white pointer ba b--black-30 br2 inline-flex items-center justify-between ph2">
-            <span className="w4">All Columns</span>
-            <i className="material-icons md-16">filter_list</i>
-          </div>
+          <CheckboxSelect options={[]} />
         </div>
         <div className="pv3">
           <BatchListTable

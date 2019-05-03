@@ -19,13 +19,12 @@ module Inventory
     end
 
     def call
-      Rails.logger.debug "\033[31m 11 \033[0m"
       if valid_params?
-        Rails.logger.debug "\033[31m 22 \033[0m"
         plant.destroyed_date = Time.current
         plant.destroyed_reason = destroyed_reason
         plant.modifier = current_user
         plant.save!
+        update_destroyed_plants_count
         DestroyedPlant.new(
           plant.plant_id,
           plant.destroyed_date,
@@ -35,6 +34,15 @@ module Inventory
     end
 
     private
+
+    def update_destroyed_plants_count
+      cmd = Inventory::QueryDestroyedPlants.call(batch_id: batch_id)
+      if cmd.success?
+        Cultivation::Batch.
+          where(id: batch_id).
+          update(destroyed_plants_count: cmd.result.size)
+      end
+    end
 
     def plant
       @plant ||= Inventory::Plant.find_by(

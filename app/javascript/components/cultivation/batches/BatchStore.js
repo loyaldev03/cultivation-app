@@ -1,4 +1,4 @@
-import { observable, action, runInAction, toJS } from 'mobx'
+import { observable, action, runInAction, computed, toJS } from 'mobx'
 import { httpGetOptions, httpPostOptions, toast } from '../../utils'
 import setupPlants from '../../inventory/plant_setup/actions/setupPlants'
 import PlantTagList from '../../dailyTask/components/PlantTagList'
@@ -8,6 +8,7 @@ class BatchStore {
   @observable isDataLoaded = false
   @observable batches
   @observable batch
+  @observable filter = ''
 
   @action
   async loadBatch(batchId) {
@@ -57,6 +58,20 @@ class BatchStore {
       console.error(err)
     } finally {
       this.isLoading = false
+    }
+  }
+
+  @computed
+  get filteredList() {
+    if (this.filter) {
+      return this.batches.filter(b => {
+        const batchNoLc = `${b.name || ''} ${b.batch_no}`.toLowerCase()
+        const strainLc = b.strain_name.toLowerCase()
+        const filterLc = this.filter.toLowerCase()
+        return batchNoLc.includes(filterLc) || strainLc.includes(filterLc)
+      })
+    } else {
+      return this.batches
     }
   }
 

@@ -1,8 +1,39 @@
 .ReactTable {
   color: var(--grey);
+  background-color: var(--white);
   .rt-tr .rt-th,
   .rt-tr .rt-td {
-    padding: 0.8em 0.4em;
+    &.pa2 { @extend .pa2 }
+    &.pv2 { @extend .pv2 }
+    &.ph2 { @extend .ph2 }
+    &.pl2 { @extend .pl2 }
+    &.pr2 { @extend .pr2 }
+    &.pa3 { @extend .pa3 }
+    &.pv3 { @extend .pv3 }
+    &.ph3 { @extend .ph3 }
+    &.pl3 { @extend .pl3 }
+    &.pr3 { @extend .pr3 }
+  }
+  &.dashboard-theme {
+    .rt-tbody .rt-tr-group {
+      border-bottom: none;
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
+    }
+    .rt-tr .rt-th {
+      font-size: 0.9rem;
+      height: 3.5rem;
+      background-color: var(--grey-smoke);
+    }
+    .rt-tr .rt-th,
+    .rt-tr .rt-td {
+      @extend .pa2;
+    }
+    .rt-tr .rt-td {
+      display: inline-flex;
+      align-items: center;
+      @extend .f6;
+    }
   }
 }
 

@@ -1,3 +1,5 @@
 <div class="ml4 mt4">
-  <%= image_tag "dummy/cult-batches.png", style: 'max-width: 1300px; width: 100%; ' %>
+  <%= image_tag "dummy/cult-batches.png", style: 'max-width: 1140px; width: 100%; ' %>
 </div>
+
+<%= react_component 'cultivation/dashboards/Batches', { defaultFacilityId: current_default_facility&.id.to_s } %>

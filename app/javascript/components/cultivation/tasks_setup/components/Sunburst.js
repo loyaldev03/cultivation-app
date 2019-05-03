@@ -6,10 +6,10 @@ class Sunburst extends React.Component {
     selectedNode: null,
     selectedNodeList: [],
     neighbourNode: [],
-    opacity:0,
-    top:0,
-    left:0,
-    sectionName:'',
+    opacity: 0,
+    top: 0,
+    left: 0,
+    sectionName: ''
   }
   arc = d3
     .arc() // <-- 2
@@ -173,18 +173,17 @@ class Sunburst extends React.Component {
   }
   mouseOut = () => {
     this.setState({
-      opacity:0,
-      sectionName:''
+      opacity: 0,
+      sectionName: ''
     })
   }
-  mouseOver = (e,node) => {
+  mouseOver = (e, node) => {
     console.log(e.nativeEvent.offsetX)
     this.setState({
-      opacity:0.9,
-      sectionName:node.data.name,
-      left:e.nativeEvent.offsetX+'px',
-      top:e.nativeEvent.offsetY+ 'px',
-
+      opacity: 0.9,
+      sectionName: node.data.name,
+      left: e.nativeEvent.offsetX + 'px',
+      top: e.nativeEvent.offsetY + 'px'
     })
   }
   render() {
@@ -212,9 +211,14 @@ class Sunburst extends React.Component {
         fillColor = '#fff'
       }
       return (
-        <g  onClick={e => this.onClickNode(d)} key={d.data.id} onMouseOut={this.mouseOut} 
-        onMouseOver={e=>this.mouseOver(e,d)}>
-          <path id={d.data.id}
+        <g
+          onClick={e => this.onClickNode(d)}
+          key={d.data.id}
+          onMouseOut={this.mouseOut}
+          onMouseOver={e => this.mouseOver(e, d)}
+        >
+          <path
+            id={d.data.id}
             d={this.arc(d)}
             fill={fillColor}
             stroke="#fff"
@@ -244,28 +248,26 @@ class Sunburst extends React.Component {
     return (
       <React.Fragment>
         <div
-        style={{
-          background:'#fff',
-          opacity:opacity,
-          position:'relative',
-          width:'100px',
-          border:'1px solid #ddd',
-          top:top,
-          left:left,
-        }} 
-      >
-      {sectionName}
-      </div>
-      <svg style={{ width: this.props.width, height: this.props.height }}>
-        <g
-          transform={`translate(${this.props.width / 2},${this.props.height /
-            2})`}
+          style={{
+            background: '#fff',
+            opacity: opacity,
+            position: 'relative',
+            width: '100px',
+            border: '1px solid #ddd',
+            top: top,
+            left: left
+          }}
         >
-          {sliceNode}
-        </g>
-        
-      </svg>
-      
+          {sectionName}
+        </div>
+        <svg style={{ width: this.props.width, height: this.props.height }}>
+          <g
+            transform={`translate(${this.props.width / 2},${this.props.height /
+              2})`}
+          >
+            {sliceNode}
+          </g>
+        </svg>
       </React.Fragment>
     )
   }

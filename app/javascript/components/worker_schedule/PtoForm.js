@@ -23,7 +23,11 @@ class PtoForm extends React.Component {
   componentDidMount() {}
 
   onSave = async () => {
-    await this.props.onSave(this.state.start_date, this.state.end_date, this.state.description)
+    await this.props.onSave(
+      this.state.start_date,
+      this.state.end_date,
+      this.state.description
+    )
   }
 
   onChange = value => {

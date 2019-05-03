@@ -49,10 +49,7 @@ class OtForm extends React.Component {
         <div className="flex flex-column flex-auto justify-between">
           <div className="pa3">
             <div className="flex justify-center" id="ot-calendar">
-              <Calendar
-                onChange={this.onChange}
-                value={this.state.date}
-              />
+              <Calendar onChange={this.onChange} value={this.state.date} />
             </div>
 
             <textarea

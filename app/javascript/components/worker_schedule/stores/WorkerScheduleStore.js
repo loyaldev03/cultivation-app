@@ -44,7 +44,6 @@ class WorkerScheduleStore {
       this.isLoading = false
     }
   }
-
 }
 const workerScheduleStore = new WorkerScheduleStore()
 export default workerScheduleStore

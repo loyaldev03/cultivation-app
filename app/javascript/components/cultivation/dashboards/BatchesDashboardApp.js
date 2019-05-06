@@ -3,52 +3,13 @@ import React, { memo, useState, lazy, Suspense } from 'react'
 import ReactTable from 'react-table'
 import { observer } from 'mobx-react'
 import {
-  TempBatchWidgets,
   ActiveBadge,
+  CheckboxSelect,
   Loading,
-  formatDate2
+  formatDate2,
+  TempBatchWidgets,
 } from '../../utils'
 import store from '../batches/BatchStore'
-
-const CheckboxSelect = ({ onChange, values = [], options = [] }) => {
-  const [expand, setExpand] = useState(false)
-  return (
-    <div className="f6 dark-grey bg-white pointer ba b--black-30 br2 inline-flex items-center justify-between ph2 relative">
-      <span className="w4" onClick={() => setExpand(!expand)}>
-        All Columns
-      </span>
-      <i
-        className="material-icons md-16 pointer"
-        onClick={() => setExpand(!expand)}
-      >
-        filter_list
-      </i>
-      {expand && (
-        <div className="absolute w5 top-2 shadow-3 right-0 z-1 bg-white mt2 ba br2 b--light-grey">
-          <ul className="list pl0 mv2">
-            {options
-              .filter(x => x.Header)
-              .map(x => {
-                return (
-                  <li key={x.accessor} className="z-2">
-                    <label className="z-3 pointer pv2 ph3 flex justify-between items-center">
-                      {x.Header}
-                      <input
-                        type="checkbox"
-                        defaultChecked={true}
-                        name={x.accessor}
-                        onChange={onChange}
-                      />
-                    </label>
-                  </li>
-                )
-              })}
-          </ul>
-        </div>
-      )}
-    </div>
-  )
-}
 
 class BatchListTable extends React.PureComponent {
   render() {

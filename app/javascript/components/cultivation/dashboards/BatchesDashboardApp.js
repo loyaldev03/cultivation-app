@@ -37,11 +37,11 @@ class Batches extends React.Component {
       { accessor: 'id', show: false },
       { accessor: 'batch_no', show: false },
       {
-        headerClassName: 'tl',
+        headerClassName: 'pl3 tl',
         Header: 'Batch ID',
         accessor: 'name',
         className: 'dark-grey pl3 fw6',
-        minWidth: 130,
+        minWidth: 138,
         Cell: props => (
           <a
             className="link dark-grey"
@@ -57,7 +57,7 @@ class Batches extends React.Component {
         Header: 'Status',
         accessor: 'status',
         className: 'justify-center',
-        width: 88,
+        minWidth: 88,
         Cell: props => <ActiveBadge status={props.value} />
       },
       {
@@ -79,7 +79,7 @@ class Batches extends React.Component {
         Header: 'Growth Phase',
         accessor: 'current_growth_stage',
         className: 'justify-center ttc',
-        width: 74
+        minWidth: 74
       },
       {
         headerClassName: 'tl',

@@ -11,7 +11,7 @@ import {
   Loading,
   TempBatchWidgets
 } from '../../utils'
-import store from '../batches/BatchStore'
+import BatchStore from '../batches/BatchStore'
 
 @observer
 class BatchesDashboardApp extends React.Component {
@@ -154,7 +154,7 @@ class BatchesDashboardApp extends React.Component {
     ]
   }
   componentDidMount() {
-    store.loadBatches()
+    BatchStore.loadBatches()
   }
 
   onToggleColumns = e => {
@@ -192,16 +192,16 @@ class BatchesDashboardApp extends React.Component {
             className="input w5"
             placeholder="Search Batch ID"
             onChange={e => {
-              store.filter = e.target.value
+              BatchStore.filter = e.target.value
             }}
           />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>
         <div className="pv3">
           <ListingTable
-            data={store.filteredList}
+            data={BatchStore.filteredList}
             columns={columns}
-            isLoading={store.isLoading}
+            isLoading={BatchStore.isLoading}
           />
         </div>
       </div>

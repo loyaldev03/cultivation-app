@@ -51,6 +51,7 @@ class User
   field :facilities, type: Array, default: [] # Array of BSON::ObjectId
   field :user_mode, type: String, default: 'worker' # admin | manager | worker
   field :reporting_manager_id, type: BSON::ObjectId
+  field :exempt, type: Boolean, default: -> { false } #  false => non exempt => hourly worker , true => exempt => salary worker
 
   has_many :time_logs, class_name: 'Cultivation::TimeLog'
   embeds_many :work_schedules, class_name: 'Common::WorkSchedule'

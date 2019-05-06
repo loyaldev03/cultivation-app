@@ -59,6 +59,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       :title,
       :photo_data,
       :is_active,
+      :exempt,
       :default_facility_id,
       :timezone,
       :hourly_rate,

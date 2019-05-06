@@ -62,6 +62,7 @@ module Common
           first_name: user.first_name,
           last_name: user.last_name,
           is_active: user.is_active,
+          exempt: user.exempt,
           email: user.email,
           title: user.title,
           photo_data: photo_data,

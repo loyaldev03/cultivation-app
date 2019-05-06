@@ -12,7 +12,6 @@ import {
 } from '../../../utils'
 import Sunburst from './Sunburst'
 import TablePlantViewer from './TablePlantViewer'
-import Tippy from '@tippy.js/react'
 
 @observer
 class ClippingPanel extends React.Component {

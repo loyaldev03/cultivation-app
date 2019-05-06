@@ -13,6 +13,7 @@
     &.ph3 { @extend .ph3 }
     &.pl3 { @extend .pl3 }
     &.pr3 { @extend .pr3 }
+    &.truncate { @extend .truncate }
   }
   &.dashboard-theme {
     .rt-tbody .rt-tr-group {

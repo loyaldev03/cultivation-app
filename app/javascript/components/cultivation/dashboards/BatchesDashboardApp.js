@@ -44,7 +44,7 @@ class Batches extends React.Component {
         minWidth: 138,
         Cell: props => (
           <a
-            className="link dark-grey"
+            className="link dark-grey truncate"
             href={`/cultivation/batches/${props.row.id}`}
             title={props.row.batch_no}
           >
@@ -64,7 +64,8 @@ class Batches extends React.Component {
         headerClassName: 'tl',
         Header: 'Strain',
         accessor: 'strain_name',
-        minWidth: 120
+        minWidth: 120,
+        Cell: props => <span className="truncate">{props.value}</span>
       },
       {
         headerClassName: 'tl',
@@ -93,7 +94,8 @@ class Batches extends React.Component {
         headerClassName: 'tl',
         Header: 'Location',
         accessor: 'current_stage_location',
-        minWidth: 180
+        minWidth: 180,
+        Cell: props => <span className="truncate">{props.value}</span>
       },
       {
         headerClassName: 'tl',

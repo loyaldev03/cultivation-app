@@ -36,7 +36,7 @@ class ClippingPanel extends React.Component {
       return e.room_name
     })
     motherRoomList = [...new Set(motherRoomList)]
-    let hasSection = roomData[0].section_code !== null
+    let hasSection = roomData[0] && roomData[0].section_code !== null
     let motherPlantList = await TaskStore.getPlantOnSelect(
       this.props.facilityId,
       this.props.strainId,

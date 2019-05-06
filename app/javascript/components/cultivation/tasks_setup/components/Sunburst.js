@@ -9,7 +9,7 @@ class Sunburst extends React.Component {
     opacity: 0,
     top: 0,
     left: 0,
-    sectionName: ''
+    sectionName: 's'
   }
   arc = d3
     .arc() // <-- 2
@@ -174,16 +174,15 @@ class Sunburst extends React.Component {
   mouseOut = () => {
     this.setState({
       opacity: 0,
-      sectionName: ''
+      sectionName: 's'
     })
   }
   mouseOver = (e, node) => {
-    console.log(e.nativeEvent.offsetX)
     this.setState({
       opacity: 0.9,
       sectionName: node.data.name,
-      left: e.nativeEvent.offsetX + 'px',
-      top: e.nativeEvent.offsetY + 'px'
+      left: e.nativeEvent.offsetX,
+      top: e.clientY
     })
   }
   render() {
@@ -248,14 +247,15 @@ class Sunburst extends React.Component {
     return (
       <React.Fragment>
         <div
+          className="bg-black-80 ba b--black silver"
           style={{
-            background: '#fff',
             opacity: opacity,
-            position: 'relative',
+            position: 'absolute',
             width: '100px',
             border: '1px solid #ddd',
             top: top,
-            left: left
+            left: left,
+            zIndex: '12'
           }}
         >
           {sectionName}

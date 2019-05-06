@@ -32,7 +32,6 @@ class PtoForm extends React.Component {
       this.state.end_date,
       this.state.description
     )
-    
   }
 
   onChange = value => {

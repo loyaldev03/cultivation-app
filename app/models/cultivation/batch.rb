@@ -11,6 +11,7 @@ module Cultivation
     field :start_date, type: Time
     field :estimated_harvest_date, type: Time
     field :estimated_hours, type: Float, default: -> { 0 }
+    field :estimated_cost, type: Float, default: -> { 0 }
     # Planned quantity for the batch (capacity needed)
     field :quantity, type: Integer
     field :current_growth_stage, type: String

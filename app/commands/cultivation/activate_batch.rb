@@ -85,6 +85,7 @@ module Cultivation
             current_stage_location: get_phase_location(batch, curr_phase.phase),
             current_stage_start_date: curr_phase.start_date,
             estimated_hours: calculate_estimated_hours(grouping_tasks),
+            estimated_cost: calculate_estimated_cost(grouping_tasks),
           )
         end
       end
@@ -93,6 +94,12 @@ module Cultivation
     def calculate_estimated_hours(tasks)
       tasks.reduce(0) do |sum, t|
         sum + t.estimated_hours
+      end
+    end
+
+    def calculate_estimated_cost(tasks)
+      tasks.reduce(0) do |sum, t|
+        sum + t.estimated_cost
       end
     end
 

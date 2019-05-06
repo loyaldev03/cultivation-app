@@ -4,10 +4,11 @@ import ReactTable from 'react-table'
 import { differenceInDays } from 'date-fns'
 import { observer } from 'mobx-react'
 import {
+  decimalFormatter,
+  formatDate2,
   ActiveBadge,
   CheckboxSelect,
   Loading,
-  formatDate2,
   TempBatchWidgets
 } from '../../utils'
 import store from '../batches/BatchStore'
@@ -136,9 +137,11 @@ class Batches extends React.Component {
       {
         headerClassName: 'tl',
         Header: 'Est. Hours',
-        accessor: 'estimated_hours', // FIXME
+        accessor: 'estimated_hours',
         className: 'justify-end pr3',
-        width: 110
+        width: 110,
+        Cell: props =>
+          props.value ? decimalFormatter.format(props.value) : '--'
       },
       {
         headerClassName: 'tl',
@@ -150,9 +153,11 @@ class Batches extends React.Component {
       {
         headerClassName: 'tl',
         Header: 'Est. cost',
-        accessor: 'estimated_cost', // FIXME
+        accessor: 'estimated_cost',
         className: 'justify-end pr3',
-        width: 110
+        width: 110,
+        Cell: props =>
+          props.value ? decimalFormatter.format(props.value) : '--'
       },
       {
         headerClassName: 'tl',

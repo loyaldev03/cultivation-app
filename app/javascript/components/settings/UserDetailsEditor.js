@@ -377,9 +377,7 @@ class UserDetailsEditor extends React.PureComponent {
                 />
               </div>
               <div className="mt2 fl w-100">
-                <label
-                  className='f6 fw6 mb1 ttu grey'
-                >
+                <label className="f6 fw6 mb1 ttu grey">
                   {isExempt ? 'Exempt' : 'Non-exempt'}
                 </label>
                 <input

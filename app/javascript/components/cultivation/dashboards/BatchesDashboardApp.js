@@ -1,6 +1,7 @@
 import 'babel-polyfill'
 import React, { memo, useState, lazy, Suspense } from 'react'
 import ReactTable from 'react-table'
+import { differenceInDays } from 'date-fns'
 import { observer } from 'mobx-react'
 import {
   ActiveBadge,
@@ -69,7 +70,7 @@ class Batches extends React.Component {
         Header: 'Total # of plants',
         accessor: 'quantity',
         className: 'justify-end pr3',
-        width: 80,
+        width: 74,
         Cell: props => (props.value ? props.value : '--')
       },
       {
@@ -77,21 +78,21 @@ class Batches extends React.Component {
         Header: 'Growth Phase',
         accessor: 'current_growth_stage',
         className: 'justify-center ttc',
-        width: 75
+        width: 74
       },
       {
         headerClassName: 'tl',
         Header: 'Destroyed plants',
         accessor: 'destroyed_plants_count',
         className: 'justify-center',
-        width: 90,
+        width: 84,
         Cell: props => (props.value ? props.value : '--')
       },
       {
         headerClassName: 'tl',
         Header: 'Location',
-        accessor: 'stage_location_name', // FIXME
-        minWidth: 110
+        accessor: 'current_stage_location',
+        minWidth: 180
       },
       {
         headerClassName: 'tl',
@@ -107,7 +108,7 @@ class Batches extends React.Component {
         accessor: 'current_stage_start_date',
         className: 'justify-end pr3',
         width: 88,
-        Cell: props => formatDate2(props.value)
+        Cell: props => (props.value ? formatDate2(props.value) : '--')
       },
       {
         headerClassName: 'tl',
@@ -122,7 +123,15 @@ class Batches extends React.Component {
         Header: '# of days in current stage',
         accessor: 'stage_days', // FIXME
         className: 'justify-end pr3',
-        width: 100
+        width: 100,
+        Cell: props => {
+          if (props.row.current_stage_start_date)
+            return differenceInDays(
+              new Date(),
+              props.row.current_stage_start_date
+            )
+          else return '--'
+        }
       },
       {
         headerClassName: 'tl',

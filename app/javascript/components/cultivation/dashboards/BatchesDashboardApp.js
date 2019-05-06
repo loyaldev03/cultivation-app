@@ -135,7 +135,7 @@ class Batches extends React.Component {
         }
       },
       {
-        headerClassName: 'tl',
+        headerClassName: 'tr pr3',
         Header: 'Est. Hours',
         accessor: 'estimated_hours',
         className: 'justify-end pr3',
@@ -144,14 +144,14 @@ class Batches extends React.Component {
           props.value ? decimalFormatter.format(props.value) : '--'
       },
       {
-        headerClassName: 'tl',
+        headerClassName: 'tr pr3',
         Header: 'Hrs to date',
-        accessor: 'actual_hours', // FIXME
+        accessor: 'actual_hours',
         className: 'justify-end pr3',
         width: 110
       },
       {
-        headerClassName: 'tl',
+        headerClassName: 'tr pr3',
         Header: 'Est. cost',
         accessor: 'estimated_cost',
         className: 'justify-end pr3',
@@ -160,7 +160,7 @@ class Batches extends React.Component {
           props.value ? decimalFormatter.format(props.value) : '--'
       },
       {
-        headerClassName: 'tl',
+        headerClassName: 'tr pr3',
         Header: 'Cost to date',
         accessor: 'actual_cost',
         className: 'justify-end pr3',

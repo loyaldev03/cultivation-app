@@ -9,7 +9,8 @@ module Common
                :overtime_hourly_rate,
                :hourly_rate,
                :photo_data,
-               :user_mode
+               :user_mode,
+               :exempt
 
     attribute :default_facility_id do |object|
       object.default_facility_id.to_s

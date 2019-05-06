@@ -83,6 +83,7 @@ class UserDetailsEditor extends React.PureComponent {
         photoData: props.user.photo_data,
         photoUrl: props.user.photo_url,
         isActive: props.user.is_active || false,
+        isExempt: props.user.exempt || false,
         hourly_rate: props.user.hourly_rate,
         overtime_hourly_rate: props.user.overtime_hourly_rate,
         user_mode: user_mode,
@@ -103,6 +104,7 @@ class UserDetailsEditor extends React.PureComponent {
         photoData: '',
         photoUrl: '',
         isActive: false,
+        isExempt: false,
         hourly_rate: '',
         overtime_hourly_rate: '',
         facilities: [],
@@ -163,7 +165,8 @@ class UserDetailsEditor extends React.PureComponent {
       user_mode,
       reporting_manager,
       work_schedules,
-      isActive
+      isActive,
+      isExempt
     } = this.state
     const newRoles = roles ? roles.map(x => x.value) : []
     const newFacilities = facilities ? facilities.map(x => x.value) : []
@@ -187,6 +190,7 @@ class UserDetailsEditor extends React.PureComponent {
         overtime_hourly_rate: overtime_hourly_rate,
         user_mode: newUserMode,
         is_active: isActive || false,
+        exempt: isExempt || false,
         facilities: newFacilities,
         roles: newRoles,
         reporting_manager_id: reporting_manager_id,
@@ -217,6 +221,7 @@ class UserDetailsEditor extends React.PureComponent {
       title,
       photoUrl,
       isActive,
+      isExempt,
       facilities,
       roles,
       default_facility,
@@ -371,6 +376,24 @@ class UserDetailsEditor extends React.PureComponent {
                   className="mt1 w-100 f6"
                 />
               </div>
+              <div className="mt2 fl w-100">
+                <label
+                  className='f6 fw6 mb1 ttu grey'
+                >
+                  {isExempt ? 'Exempt' : 'Non-exempt'}
+                </label>
+                <input
+                  id="is_active"
+                  type="checkbox"
+                  className="toggle toggle-default"
+                  onChange={this.onChangeToggle('isExempt')}
+                  checked={isExempt}
+                />
+                <label className="toggle-button mt1 fr" htmlFor="is_active" />
+                <p className="gray f6 db mv1">
+                  {isExempt ? 'Salary Worker' : 'Hourly Worker'}
+                </p>
+              </div>
               <div className="mt3 fl w-100 pt3 bt b--light-gray">
                 <label className="f6 fw6 db mb0 dark-gray ttc">
                   Access Control
@@ -417,7 +440,7 @@ class UserDetailsEditor extends React.PureComponent {
               </div>
               <div className="mt2 fl w-100 flex justify-between">
                 <label className="f6 fw6 db mb1 gray ttc">Sunday</label>
-                <div class="flex w-60 justify-between">
+                <div className="flex w-60 justify-between">
                   <input
                     className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                     type="time"
@@ -426,7 +449,7 @@ class UserDetailsEditor extends React.PureComponent {
                     }
                     value={sunday.start_time}
                   />
-                  <div class="flex items-center">
+                  <div className="flex items-center">
                     <label className="f4 db mb1 ttc">-</label>
                   </div>
                   <input
@@ -441,7 +464,7 @@ class UserDetailsEditor extends React.PureComponent {
               </div>
               <div className="mt2 fl w-100 flex justify-between">
                 <label className="f6 fw6 db mb1 gray ttc">Monday</label>
-                <div class="flex w-60 justify-between">
+                <div className="flex w-60 justify-between">
                   <input
                     className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                     type="time"
@@ -450,7 +473,7 @@ class UserDetailsEditor extends React.PureComponent {
                     }
                     value={monday.start_time}
                   />
-                  <div class="flex items-center">
+                  <div className="flex items-center">
                     <label className="f4 db mb1 ttc">-</label>
                   </div>
                   <input
@@ -465,7 +488,7 @@ class UserDetailsEditor extends React.PureComponent {
               </div>
               <div className="mt2 fl w-100 flex justify-between">
                 <label className="f6 fw6 db mb1 gray ttc">Tuesday</label>
-                <div class="flex w-60 justify-between">
+                <div className="flex w-60 justify-between">
                   <input
                     className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                     type="time"
@@ -474,7 +497,7 @@ class UserDetailsEditor extends React.PureComponent {
                     }
                     value={tuesday.start_time}
                   />
-                  <div class="flex items-center">
+                  <div className="flex items-center">
                     <label className="f4 db mb1 ttc">-</label>
                   </div>
                   <input
@@ -489,7 +512,7 @@ class UserDetailsEditor extends React.PureComponent {
               </div>
               <div className="mt2 fl w-100 flex justify-between">
                 <label className="f6 fw6 db mb1 gray ttc">Wednesday</label>
-                <div class="flex w-60 justify-between">
+                <div className="flex w-60 justify-between">
                   <input
                     className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                     type="time"
@@ -502,7 +525,7 @@ class UserDetailsEditor extends React.PureComponent {
                     }
                     value={wednesday.start_time}
                   />
-                  <div class="flex items-center">
+                  <div className="flex items-center">
                     <label className="f4 db mb1 ttc">-</label>
                   </div>
                   <input
@@ -517,7 +540,7 @@ class UserDetailsEditor extends React.PureComponent {
               </div>
               <div className="mt2 fl w-100 flex justify-between">
                 <label className="f6 fw6 db mb1 gray ttc">Thursday</label>
-                <div class="flex w-60 justify-between">
+                <div className="flex w-60 justify-between">
                   <input
                     className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                     type="time"
@@ -526,7 +549,7 @@ class UserDetailsEditor extends React.PureComponent {
                     }
                     value={thursday.start_time}
                   />
-                  <div class="flex items-center">
+                  <div className="flex items-center">
                     <label className="f4 db mb1 ttc">-</label>
                   </div>
                   <input
@@ -541,7 +564,7 @@ class UserDetailsEditor extends React.PureComponent {
               </div>
               <div className="mt2 fl w-100 flex justify-between">
                 <label className="f6 fw6 db mb1 gray ttc">Friday</label>
-                <div class="flex w-60 justify-between">
+                <div className="flex w-60 justify-between">
                   <input
                     className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                     type="time"
@@ -550,7 +573,7 @@ class UserDetailsEditor extends React.PureComponent {
                     }
                     value={friday.start_time}
                   />
-                  <div class="flex items-center">
+                  <div className="flex items-center">
                     <label className="f4 db mb1 ttc">-</label>
                   </div>
                   <input
@@ -565,7 +588,7 @@ class UserDetailsEditor extends React.PureComponent {
               </div>
               <div className="mt2 fl w-100 flex justify-between">
                 <label className="f6 fw6 db mb1 gray ttc">Saturday</label>
-                <div class="flex w-60 justify-between">
+                <div className="flex w-60 justify-between">
                   <input
                     className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                     type="time"
@@ -574,7 +597,7 @@ class UserDetailsEditor extends React.PureComponent {
                     }
                     value={saturday.start_time}
                   />
-                  <div class="flex items-center">
+                  <div className="flex items-center">
                     <label className="f4 db mb1 ttc">-</label>
                   </div>
                   <input

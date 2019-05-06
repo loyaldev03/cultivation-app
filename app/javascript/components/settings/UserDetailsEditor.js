@@ -94,10 +94,15 @@ class UserDetailsEditor extends React.PureComponent {
         default_facility,
         work_schedules: work_schedules,
         non_exempt_schedules: [
-          { start_date: new Date(2019, 4, 21), end_date: new Date(2019, 5, 22), start_time: '08:00', end_time: '13:00'},
+          {
+            start_date: new Date(2019, 4, 21),
+            end_date: new Date(2019, 5, 22),
+            start_time: '08:00',
+            end_time: '13:00'
+          },
           { start_date: '', end_date: '', start_time: '', end_time: '' },
           { start_date: '', end_date: '', start_time: '', end_time: '' },
-          { start_date: '', end_date: '', start_time: '', end_time: '' },
+          { start_date: '', end_date: '', start_time: '', end_time: '' }
         ]
       }
     } else {
@@ -438,7 +443,7 @@ class UserDetailsEditor extends React.PureComponent {
                   className="mt1 w-100 f6"
                 />
               </div>
-              { isExempt ? (
+              {isExempt ? (
                 <div>
                   <div className="mt3 fl w-100 pt3 bt b--light-gray">
                     <label className="f6 fw6 db mb0 dark-gray ttc">
@@ -452,7 +457,11 @@ class UserDetailsEditor extends React.PureComponent {
                         className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                         type="time"
                         onChange={e =>
-                          this.onChangeWorkingHourInput('sunday', 'start_time', e)
+                          this.onChangeWorkingHourInput(
+                            'sunday',
+                            'start_time',
+                            e
+                          )
                         }
                         value={sunday.start_time}
                       />
@@ -476,7 +485,11 @@ class UserDetailsEditor extends React.PureComponent {
                         className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                         type="time"
                         onChange={e =>
-                          this.onChangeWorkingHourInput('monday', 'start_time', e)
+                          this.onChangeWorkingHourInput(
+                            'monday',
+                            'start_time',
+                            e
+                          )
                         }
                         value={monday.start_time}
                       />
@@ -500,7 +513,11 @@ class UserDetailsEditor extends React.PureComponent {
                         className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                         type="time"
                         onChange={e =>
-                          this.onChangeWorkingHourInput('tuesday', 'start_time', e)
+                          this.onChangeWorkingHourInput(
+                            'tuesday',
+                            'start_time',
+                            e
+                          )
                         }
                         value={tuesday.start_time}
                       />
@@ -511,7 +528,11 @@ class UserDetailsEditor extends React.PureComponent {
                         className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                         type="time"
                         onChange={e =>
-                          this.onChangeWorkingHourInput('tuesday', 'end_time', e)
+                          this.onChangeWorkingHourInput(
+                            'tuesday',
+                            'end_time',
+                            e
+                          )
                         }
                         value={tuesday.end_time}
                       />
@@ -539,7 +560,11 @@ class UserDetailsEditor extends React.PureComponent {
                         className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                         type="time"
                         onChange={e =>
-                          this.onChangeWorkingHourInput('wednesday', 'end_time', e)
+                          this.onChangeWorkingHourInput(
+                            'wednesday',
+                            'end_time',
+                            e
+                          )
                         }
                         value={wednesday.end_time}
                       />
@@ -552,7 +577,11 @@ class UserDetailsEditor extends React.PureComponent {
                         className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                         type="time"
                         onChange={e =>
-                          this.onChangeWorkingHourInput('thursday', 'start_time', e)
+                          this.onChangeWorkingHourInput(
+                            'thursday',
+                            'start_time',
+                            e
+                          )
                         }
                         value={thursday.start_time}
                       />
@@ -563,7 +592,11 @@ class UserDetailsEditor extends React.PureComponent {
                         className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                         type="time"
                         onChange={e =>
-                          this.onChangeWorkingHourInput('thursday', 'end_time', e)
+                          this.onChangeWorkingHourInput(
+                            'thursday',
+                            'end_time',
+                            e
+                          )
                         }
                         value={thursday.end_time}
                       />
@@ -576,7 +609,11 @@ class UserDetailsEditor extends React.PureComponent {
                         className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                         type="time"
                         onChange={e =>
-                          this.onChangeWorkingHourInput('friday', 'start_time', e)
+                          this.onChangeWorkingHourInput(
+                            'friday',
+                            'start_time',
+                            e
+                          )
                         }
                         value={friday.start_time}
                       />
@@ -594,48 +631,60 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                   </div>
                   <div className="mt2 fl w-100 flex justify-between">
-                  <label className="f6 fw6 db mb1 gray ttc">Saturday</label>
-                  <div className="flex w-60 justify-between">
-                    <input
-                      className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                      type="time"
-                      onChange={e =>
-                        this.onChangeWorkingHourInput('saturday', 'start_time', e)
-                      }
-                      value={saturday.start_time}
-                    />
-                    <div className="flex items-center">
-                      <label className="f4 db mb1 ttc">-</label>
+                    <label className="f6 fw6 db mb1 gray ttc">Saturday</label>
+                    <div className="flex w-60 justify-between">
+                      <input
+                        className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                        type="time"
+                        onChange={e =>
+                          this.onChangeWorkingHourInput(
+                            'saturday',
+                            'start_time',
+                            e
+                          )
+                        }
+                        value={saturday.start_time}
+                      />
+                      <div className="flex items-center">
+                        <label className="f4 db mb1 ttc">-</label>
+                      </div>
+                      <input
+                        className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                        type="time"
+                        onChange={e =>
+                          this.onChangeWorkingHourInput(
+                            'saturday',
+                            'end_time',
+                            e
+                          )
+                        }
+                        value={saturday.end_time}
+                      />
                     </div>
-                    <input
-                      className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                      type="time"
-                      onChange={e =>
-                        this.onChangeWorkingHourInput('saturday', 'end_time', e)
-                      }
-                      value={saturday.end_time}
-                    />
                   </div>
                 </div>
-                </div>
-                ) :
+              ) : (
                 <div>
                   <div className="mt3 fl w-100 pt3 bt b--light-gray">
                     <label className="f6 fw6 db mb0 dark-gray ttc">
                       Work Schedules Exempt
                     </label>
                   </div>
-                  {this.state.non_exempt_schedules.map((a) =>
+                  {this.state.non_exempt_schedules.map(a => (
                     <div className="mt3 fl w-100">
                       <div className="w-30 fl pr3">
-                        <label className="f6 fw6 db mb1 gray ttc mb2">Start Date</label>
+                        <label className="f6 fw6 db mb1 gray ttc mb2">
+                          Start Date
+                        </label>
                         <DatePicker
                           value={a.start_date}
                           // onChange={this.onPlantedOnChanged}
                         />
                       </div>
                       <div className="w-30 fl pr3">
-                        <label className="f6 fw6 db mb1 gray ttc mb2">End Date</label>
+                        <label className="f6 fw6 db mb1 gray ttc mb2">
+                          End Date
+                        </label>
                         <DatePicker
                           value={a.end_date}
                           // onChange={this.onPlantedOnChanged}
@@ -644,7 +693,9 @@ class UserDetailsEditor extends React.PureComponent {
                       <div className="w-40 fl">
                         <div className="flex w-100 justify-between">
                           <div>
-                            <label className="f6 fw6 db mb1 gray ttc">Start Time</label>
+                            <label className="f6 fw6 db mb1 gray ttc">
+                              Start Time
+                            </label>
                             <input
                               className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                               type="time"
@@ -655,7 +706,9 @@ class UserDetailsEditor extends React.PureComponent {
                             />
                           </div>
                           <div>
-                            <label className="f6 fw6 db mb1 gray ttc">End Time</label>
+                            <label className="f6 fw6 db mb1 gray ttc">
+                              End Time
+                            </label>
                             <input
                               className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                               type="time"
@@ -666,22 +719,23 @@ class UserDetailsEditor extends React.PureComponent {
                             />
                           </div>
                           <div className="flex items-center">
-                            <span className="material-icons f4 db mb1 ttc mt3 orange pointer">clear</span>
+                            <span className="material-icons f4 db mb1 ttc mt3 orange pointer">
+                              clear
+                            </span>
                           </div>
                         </div>
                       </div>
                     </div>
-                  )}
+                  ))}
 
                   <div className="mt3 fl w-100">
-                    <div className='pointer flex items-center grey f6'>
-                      <span className='material-icons'>add</span>
+                    <div className="pointer flex items-center grey f6">
+                      <span className="material-icons">add</span>
                       <span>Add work schedules</span>
                     </div>
                   </div>
                 </div>
-
-              } 
+              )}
               <div className="mt3 fl w-100 pt3 bt b--light-gray">
                 <label className="f6 fw6 db mb0 dark-gray ttc">
                   Account Status

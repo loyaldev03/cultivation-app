@@ -1,12 +1,15 @@
 import React from 'react'
 import * as d3 from 'd3'
-
 class Sunburst extends React.Component {
   state = {
     nodeData: [],
     selectedNode: null,
     selectedNodeList: [],
-    neighbourNode: []
+    neighbourNode: [],
+    opacity: 0,
+    top: 0,
+    left: 0,
+    sectionName: ''
   }
   arc = d3
     .arc() // <-- 2
@@ -30,7 +33,6 @@ class Sunburst extends React.Component {
     .partition() // <-- 1
     .size([2 * Math.PI, this.getRadius(this.props.width, this.props.height)])
   componentDidMount() {
-    console.log(this.props.data)
     let levels = this.props.data[0].section_code
         ? ['section_code', 'row_code', 'shelf_code']
         : ['row_code', 'shelf_code'],
@@ -46,7 +48,6 @@ class Sunburst extends React.Component {
       .sum(function(d) {
         return d.size
       }) // <-- 2
-    console.log(root)
     this.partition(root)
     root.descendants().map(d => {
       if (d.data.id === this.props.locationSelected) {
@@ -79,7 +80,6 @@ class Sunburst extends React.Component {
         .sum(function(d) {
           return d.size
         }) // <-- 2
-      console.log(root)
       this.partition(root)
       root.descendants().map(d => {
         if (d.data.id === this.props.locationSelected) {
@@ -164,7 +164,6 @@ class Sunburst extends React.Component {
   }
 
   onClickNode = d => {
-    console.log('clicked', d)
     this.props.onCodeSelect(d)
     this.setState({
       selectedNode: d.data.id,
@@ -172,10 +171,29 @@ class Sunburst extends React.Component {
       neighbourNode: d.parent ? d.parent.descendants() : []
     })
   }
+  mouseOut = () => {
+    this.setState({
+      opacity: 0,
+      sectionName: ''
+    })
+  }
+  mouseOver = (e, node) => {
+    console.log(e.nativeEvent.offsetX)
+    this.setState({
+      opacity: 0.9,
+      sectionName: node.data.name,
+      left: e.nativeEvent.offsetX + 'px',
+      top: e.nativeEvent.offsetY + 'px'
+    })
+  }
   render() {
     const {
       nodeData,
       selectedNode,
+      opacity,
+      top,
+      left,
+      sectionName,
       selectedNodeList,
       neighbourNode
     } = this.state
@@ -193,8 +211,14 @@ class Sunburst extends React.Component {
         fillColor = '#fff'
       }
       return (
-        <g onClick={e => this.onClickNode(d)} key={d.data.id}>
+        <g
+          onClick={e => this.onClickNode(d)}
+          key={d.data.id}
+          onMouseOut={this.mouseOut}
+          onMouseOver={e => this.mouseOver(e, d)}
+        >
           <path
+            id={d.data.id}
             d={this.arc(d)}
             fill={fillColor}
             stroke="#fff"
@@ -222,14 +246,29 @@ class Sunburst extends React.Component {
       )
     })
     return (
-      <svg style={{ width: this.props.width, height: this.props.height }}>
-        <g
-          transform={`translate(${this.props.width / 2},${this.props.height /
-            2})`}
+      <React.Fragment>
+        <div
+          style={{
+            background: '#fff',
+            opacity: opacity,
+            position: 'relative',
+            width: '100px',
+            border: '1px solid #ddd',
+            top: top,
+            left: left
+          }}
         >
-          {sliceNode}
-        </g>
-      </svg>
+          {sectionName}
+        </div>
+        <svg style={{ width: this.props.width, height: this.props.height }}>
+          <g
+            transform={`translate(${this.props.width / 2},${this.props.height /
+              2})`}
+          >
+            {sliceNode}
+          </g>
+        </svg>
+      </React.Fragment>
     )
   }
 }

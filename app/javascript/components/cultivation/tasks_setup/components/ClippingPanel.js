@@ -23,7 +23,8 @@ class ClippingPanel extends React.Component {
     locationSelected: null,
     codeSelected: null,
     motherPlantList: [],
-    hasSection: false
+    hasSection: false,
+    isHasMotherPlant: true
   }
   async componentDidMount() {
     await Promise.all([
@@ -41,6 +42,7 @@ class ClippingPanel extends React.Component {
       this.props.strainId,
       BatchStore.batch.selected_location
     )
+    let isHasMotherPlant = motherPlantList.length > 0
     let codeSelected = motherRoomList.map(x => {
       if (x.room_id === BatchStore.batch.selected_location) {
         return x.room_id
@@ -70,6 +72,7 @@ class ClippingPanel extends React.Component {
       roomData,
       hasSection,
       codeSelected,
+      isHasMotherPlant,
       locationSelected: BatchStore.batch.selected_location,
       currentplant,
       maxQuantity: BatchStore.batch.quantity,
@@ -86,6 +89,8 @@ class ClippingPanel extends React.Component {
       this.props.strainId,
       element.data.id
     )
+    // console.log(motherPlantList)
+    let isHasMotherPlant = motherPlantList.length > 0
     let hasSection =
       roomData.filter(node => node.room_name === roomChoice)[0].section_code !==
       null
@@ -95,17 +100,18 @@ class ClippingPanel extends React.Component {
       motherPlantList,
       locationSelected: element.data.id,
       selectedId: element.data.id,
+      isHasMotherPlant,
       hasSection
     })
   }
   onUpdateOnePlant = (id, e) => {
     this.state.motherPlantList.map(plant => {
       if (plant.plant_id === id) {
-        plant.quantity = parseInt(e.target.value)
+        plant.quantity = e.target.value
       }
       return plant
     })
-    BatchStore.setOnePlant(id, parseInt(e.target.value))
+    BatchStore.setOnePlant(id, e.target.value)
     let currentplant = BatchStore.batch.selected_plants.reduce(
       (a, b) => a + (Number(b['quantity']) || 0),
       0
@@ -118,6 +124,7 @@ class ClippingPanel extends React.Component {
       (a, b) => a + (Number(b['quantity']) || 0),
       0
     )
+    console.log(currentplant, BatchStore.batch.selected_plants)
     if (currentplant === BatchStore.batch.quantity)
       BatchStore.updateBatchSelectedPlants(
         this.props.batchId,
@@ -135,6 +142,7 @@ class ClippingPanel extends React.Component {
       roomSelected,
       motherPlantList,
       hasSection,
+      isHasMotherPlant,
       currentplant,
       maxQuantity
     } = this.state
@@ -181,41 +189,62 @@ class ClippingPanel extends React.Component {
               </ErrorBoundary>
             </div>
           ) : null}
-          {codeSelected && (
+
+          {!isHasMotherPlant && (
             <div className="orange tc mt4">
-              You’ve selected all mother plants located in {codeSelected}{' '}
-              {roomSelected}
+              There's no mother plant in this room or section.
             </div>
           )}
-          <div className="pa3">
-            <div className="flex justify-between mb1">
-              <div>Total clones to create</div>
-              <div>
-                {currentplant}/{maxQuantity}
+          {motherPlantList.length > 0 ? (
+            <div>
+              {codeSelected && (
+                <div className="orange tc mt4">
+                  You’ve selected all mother plants located in {codeSelected}{' '}
+                  {roomSelected}
+                </div>
+              )}
+              <div className="pa3">
+                <div className="flex justify-between mb1">
+                  <div>Total clones to create</div>
+                  <div>
+                    {currentplant}/{maxQuantity}
+                  </div>
+                </div>
+                {currentplant <= maxQuantity ? (
+                  <ProgressBar
+                    percent={(currentplant / maxQuantity) * 100}
+                    height={15}
+                  />
+                ) : (
+                  <div className="dib bg-washed-red pa2 ba br2 b--washed-red grey w-4 tc">
+                    please remove{' '}
+                    <span className="b">{currentplant - maxQuantity}</span>{' '}
+                    plant
+                  </div>
+                )}
+              </div>
+
+              <div className="pa3 h5 overflow-y-auto">
+                <div className="mb1 b">You selected mother plants at:</div>
+                <ErrorBoundary>
+                  <TableSection
+                    data={motherPlantList}
+                    onUpdateOnePlant={this.onUpdateOnePlant}
+                    codeSelected={codeSelected}
+                    hasSection={hasSection}
+                  />
+                </ErrorBoundary>
               </div>
             </div>
-            {currentplant <= maxQuantity ? (
-              <ProgressBar
-                percent={(currentplant / maxQuantity) * 100}
-                height={15}
-              />
-            ) : (
-              <div className="dib bg-washed-red pa2 ba br2 b--washed-red grey w-4 tc">
-                please remove{' '}
-                <span className="b">{currentplant - maxQuantity}</span> plant
-              </div>
-            )}
-          </div>
-
-          <div className="pa3 h5 overflow-y-auto">
-            <div className="mb1 b">You selected mother plants at:</div>
-            <TableSection
-              data={motherPlantList}
-              onUpdateOnePlant={this.onUpdateOnePlant}
-              codeSelected={codeSelected}
-              hasSection={hasSection}
-            />
-          </div>
+          ) : (
+            <div className="tc pa5">
+              <i className="material-icons md-17 orange">help</i>Tip: You can
+              select the entire area, or you can select individual location of
+              the mother plants. You can also select{' '}
+              <span className="b">Apply All</span> if you want to have the same
+              number of clippings per mother plant in the entire area selected.
+            </div>
+          )}
           <SlidePanelFooter onSave={this.onUpdatePlant} onClose={onClose} />
         </div>
       )
@@ -231,16 +260,12 @@ class TableSection extends React.Component {
     codeSelected: null
   }
   componentDidMount() {
-    if (this.props.data && this.props.data.errors) {
-      console.error('FIXME:', this.props.data.errors)
-      return
-    }
     const listSelected =
       BatchStore.batch.selected_plants.map(x => x.plant_id) || []
     let plantList = this.props.data
       .map(plant => {
         plant.quantity = 0
-        if (listSelected.indexOf(plant.plant_id) > 0) {
+        if (listSelected.indexOf(plant.plant_id) >= 0) {
           plant.quantity =
             BatchStore.batch.selected_plants[
               listSelected.indexOf(plant.plant_id)
@@ -272,7 +297,7 @@ class TableSection extends React.Component {
       let plantList = this.props.data
         .map(plant => {
           plant.quantity = 0
-          if (listSelected.indexOf(plant.plant_id) > 0) {
+          if (listSelected.indexOf(plant.plant_id) >= 0) {
             plant.quantity =
               BatchStore.batch.selected_plants[
                 listSelected.indexOf(plant.plant_id)

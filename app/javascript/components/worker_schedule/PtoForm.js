@@ -18,7 +18,11 @@ const otCalendar = `
 class PtoForm extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      start_date: '',
+      end_date: '',
+      description: ''
+    }
   }
   componentDidMount() {}
 
@@ -28,6 +32,7 @@ class PtoForm extends React.Component {
       this.state.end_date,
       this.state.description
     )
+    
   }
 
   onChange = value => {

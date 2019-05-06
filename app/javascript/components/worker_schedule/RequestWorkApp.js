@@ -28,6 +28,7 @@ class RequestWorkApp extends React.Component {
     const { showPtoPanel, showOtPanel } = this.state
     return (
       <React.Fragment>
+        <div id="toast" className="toast" />
         <SlidePanel
           width="500px"
           show={showPtoPanel}
@@ -38,12 +39,8 @@ class RequestWorkApp extends React.Component {
                 title={'Request PTO'}
                 onClose={() => this.setState({ showPtoPanel: false })}
                 onSave={(start_date, end_date, description) => {
-                  console.log(start_date)
-                  console.log(end_date)
-                  console.log(description)
                   WorkerScheduleStore.savePto(start_date, end_date, description)
                   this.setState({ showPtoPanel: false })
-                  alert('saving stuff')
                 }}
               />
             </Suspense>
@@ -58,9 +55,11 @@ class RequestWorkApp extends React.Component {
                 ref={form => (this.assignResouceForm = form)}
                 title={'Request OT'}
                 onClose={() => this.setState({ showOtPanel: false })}
-                onSave={users => {
+                onSave={(start_date, end_date, description) => {
+                  console.log(start_date)
+                  console.log(end_date)
+                  WorkerScheduleStore.saveOt(start_date, end_date, description)
                   this.setState({ showOtPanel: false })
-                  alert('saving stuff')
                 }}
               />
             </Suspense>

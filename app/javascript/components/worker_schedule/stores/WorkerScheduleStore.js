@@ -1,5 +1,5 @@
 import { observable, action, computed } from 'mobx'
-import { httpGetOptions, httpPostOptions } from '../../utils'
+import { httpGetOptions, httpPostOptions, toast } from '../../utils'
 class WorkerScheduleStore {
   @observable isLoading = false
   @observable scheduleData = {}
@@ -34,7 +34,7 @@ class WorkerScheduleStore {
       }
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       if (response) {
-        console.log(response)
+        toast('PTO submitted', 'success')
         return response
       }
     } catch (err) {
@@ -44,6 +44,30 @@ class WorkerScheduleStore {
       this.isLoading = false
     }
   }
+
+  @action
+  saveOt = async (start_date, end_date, description) => {
+    this.isLoading = true
+    try {
+      let url = `/api/v1/daily_tasks/save_ot`
+      const payload = {
+        start_date,
+        end_date,
+        description
+      }
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      if (response) {
+        toast('OT submitted', 'success')
+        return response
+      }
+    } catch (err) {
+      console.error(err)
+      return null
+    } finally {
+      this.isLoading = false
+    }
+  }
+
 }
 const workerScheduleStore = new WorkerScheduleStore()
 export default workerScheduleStore

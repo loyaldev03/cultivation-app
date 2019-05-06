@@ -4,10 +4,11 @@ import ReactTable from 'react-table'
 import { differenceInDays } from 'date-fns'
 import { observer } from 'mobx-react'
 import {
+  decimalFormatter,
+  formatDate2,
   ActiveBadge,
   CheckboxSelect,
   Loading,
-  formatDate2,
   TempBatchWidgets
 } from '../../utils'
 import store from '../batches/BatchStore'
@@ -36,14 +37,14 @@ class Batches extends React.Component {
       { accessor: 'id', show: false },
       { accessor: 'batch_no', show: false },
       {
-        headerClassName: 'tl',
+        headerClassName: 'pl3 tl',
         Header: 'Batch ID',
         accessor: 'name',
         className: 'dark-grey pl3 fw6',
-        minWidth: 130,
+        minWidth: 138,
         Cell: props => (
           <a
-            className="link dark-grey"
+            className="link dark-grey truncate"
             href={`/cultivation/batches/${props.row.id}`}
             title={props.row.batch_no}
           >
@@ -56,14 +57,15 @@ class Batches extends React.Component {
         Header: 'Status',
         accessor: 'status',
         className: 'justify-center',
-        width: 88,
+        minWidth: 88,
         Cell: props => <ActiveBadge status={props.value} />
       },
       {
         headerClassName: 'tl',
         Header: 'Strain',
         accessor: 'strain_name',
-        minWidth: 120
+        minWidth: 120,
+        Cell: props => <span className="truncate">{props.value}</span>
       },
       {
         headerClassName: 'tl',
@@ -78,7 +80,7 @@ class Batches extends React.Component {
         Header: 'Growth Phase',
         accessor: 'current_growth_stage',
         className: 'justify-center ttc',
-        width: 74
+        minWidth: 74
       },
       {
         headerClassName: 'tl',
@@ -92,7 +94,8 @@ class Batches extends React.Component {
         headerClassName: 'tl',
         Header: 'Location',
         accessor: 'current_stage_location',
-        minWidth: 180
+        minWidth: 180,
+        Cell: props => <span className="truncate">{props.value}</span>
       },
       {
         headerClassName: 'tl',
@@ -121,7 +124,7 @@ class Batches extends React.Component {
       {
         headerClassName: 'tl',
         Header: '# of days in current stage',
-        accessor: 'stage_days', // FIXME
+        accessor: 'stage_days',
         className: 'justify-end pr3',
         width: 100,
         Cell: props => {
@@ -134,28 +137,32 @@ class Batches extends React.Component {
         }
       },
       {
-        headerClassName: 'tl',
+        headerClassName: 'tr pr3',
         Header: 'Est. Hours',
-        accessor: 'estimated_hours', // FIXME
+        accessor: 'estimated_hours',
         className: 'justify-end pr3',
-        width: 110
+        width: 110,
+        Cell: props =>
+          props.value ? decimalFormatter.format(props.value) : '--'
       },
       {
-        headerClassName: 'tl',
+        headerClassName: 'tr pr3',
         Header: 'Hrs to date',
-        accessor: 'actual_hours', // FIXME
+        accessor: 'actual_hours',
         className: 'justify-end pr3',
         width: 110
       },
       {
-        headerClassName: 'tl',
+        headerClassName: 'tr pr3',
         Header: 'Est. cost',
-        accessor: 'estimated_cost', // FIXME
+        accessor: 'estimated_cost',
         className: 'justify-end pr3',
-        width: 110
+        width: 110,
+        Cell: props =>
+          props.value ? decimalFormatter.format(props.value) : '--'
       },
       {
-        headerClassName: 'tl',
+        headerClassName: 'tr pr3',
         Header: 'Cost to date',
         accessor: 'actual_cost',
         className: 'justify-end pr3',

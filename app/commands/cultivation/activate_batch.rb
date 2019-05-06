@@ -57,8 +57,9 @@ module Cultivation
     end
 
     def update_current_growth_stage(batch)
-      schedules = Cultivation::QueryBatchPhases.call(batch).grouping_schedules
-      if schedules.present?
+      query_cmd = Cultivation::QueryBatchPhases.call(batch)
+      grouping_tasks = query_cmd.grouping_tasks
+      if grouping_tasks.present?
         # Extrach all phases, make sure this is in the correct order
         # e.g. [
         #   clone,  start: 01/1/2019, end: 10/1/2019
@@ -75,14 +76,30 @@ module Cultivation
         #   veg1,   start: 10/1/2019, end: 20/1/2019
         #   clone,  start: 01/1/2019, end: 10/1/2019
         # ]
-        curr_phase = schedules.reverse.detect { |p| current_time >= p.start_date }
+        curr_phase = grouping_tasks.
+          reverse.
+          detect { |p| current_time >= p.start_date }
         if curr_phase.present?
           batch.update(
             current_growth_stage: curr_phase.phase,
             current_stage_location: get_phase_location(batch, curr_phase.phase),
             current_stage_start_date: curr_phase.start_date,
+            estimated_hours: calculate_estimated_hours(grouping_tasks),
+            estimated_cost: calculate_estimated_cost(grouping_tasks),
           )
         end
+      end
+    end
+
+    def calculate_estimated_hours(tasks)
+      tasks.reduce(0) do |sum, t|
+        sum + t.estimated_hours
+      end
+    end
+
+    def calculate_estimated_cost(tasks)
+      tasks.reduce(0) do |sum, t|
+        sum + t.estimated_cost
       end
     end
 

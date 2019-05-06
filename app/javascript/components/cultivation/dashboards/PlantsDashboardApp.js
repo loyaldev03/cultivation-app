@@ -1,6 +1,5 @@
 import 'babel-polyfill'
 import React, { memo, useState, lazy, Suspense } from 'react'
-import ListingTable from './ListingTable'
 import { differenceInDays } from 'date-fns'
 import { observer } from 'mobx-react'
 import {
@@ -9,12 +8,13 @@ import {
   ActiveBadge,
   CheckboxSelect,
   Loading,
-  TempBatchWidgets
+  TempPlantWidgets
 } from '../../utils'
+import ListingTable from './ListingTable'
 import store from '../batches/BatchStore'
 
 @observer
-class BatchesDashboardApp extends React.Component {
+class PlantsDashboardApp extends React.Component {
   state = {
     columns: [
       { accessor: 'id', show: false },
@@ -180,11 +180,11 @@ class BatchesDashboardApp extends React.Component {
             href={`/cultivation/batches/new?facility_id=${defaultFacilityId}`}
             className="btn btn--primary"
           >
-            Create new batch
+            Destroy Plants
           </a>
         </div>
         <div className="pv4">
-          <img src={TempBatchWidgets} />
+          <img src={TempPlantWidgets} />
         </div>
         <div className="flex justify-between">
           <input
@@ -209,4 +209,4 @@ class BatchesDashboardApp extends React.Component {
   }
 }
 
-export default BatchesDashboardApp
+export default PlantsDashboardApp

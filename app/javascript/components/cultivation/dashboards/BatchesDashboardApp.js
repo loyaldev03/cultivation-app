@@ -7,7 +7,7 @@ import {
   CheckboxSelect,
   Loading,
   formatDate2,
-  TempBatchWidgets,
+  TempBatchWidgets
 } from '../../utils'
 import store from '../batches/BatchStore'
 
@@ -90,7 +90,7 @@ class Batches extends React.Component {
       {
         headerClassName: 'tl',
         Header: 'Location',
-        accessor: 'batch_no',
+        accessor: 'stage_location_name', // FIXME
         minWidth: 110
       },
       {
@@ -104,7 +104,7 @@ class Batches extends React.Component {
       {
         headerClassName: 'tl',
         Header: 'Phase Date',
-        accessor: 'start_date2',
+        accessor: 'stage_start_date', // FIXME
         className: 'justify-end pr3',
         width: 88,
         Cell: props => formatDate2(props.value)
@@ -120,9 +120,37 @@ class Batches extends React.Component {
       {
         headerClassName: 'tl',
         Header: '# of days in current stage',
-        accessor: 'batch_no_2',
+        accessor: 'stage_days', // FIXME
         className: 'justify-end pr3',
         width: 100
+      },
+      {
+        headerClassName: 'tl',
+        Header: 'Est. Hours',
+        accessor: 'estimated_hours', // FIXME
+        className: 'justify-end pr3',
+        width: 110
+      },
+      {
+        headerClassName: 'tl',
+        Header: 'Hrs to date',
+        accessor: 'actual_hours', // FIXME
+        className: 'justify-end pr3',
+        width: 110
+      },
+      {
+        headerClassName: 'tl',
+        Header: 'Est. cost',
+        accessor: 'estimated_cost', // FIXME
+        className: 'justify-end pr3',
+        width: 110
+      },
+      {
+        headerClassName: 'tl',
+        Header: 'Cost to date',
+        accessor: 'actual_cost',
+        className: 'justify-end pr3',
+        width: 110
       }
     ]
   }
@@ -131,8 +159,7 @@ class Batches extends React.Component {
   }
 
   onToggleColumns = e => {
-    console.log('onToggleColumns:', e.target.name, e.target.checked)
-    const opt = this.state.columns.find(x => x.accessor === e.target.name)
+    const opt = this.state.columns.find(x => x.Header === e.target.name)
     if (opt) {
       opt.show = e.target.checked
     }

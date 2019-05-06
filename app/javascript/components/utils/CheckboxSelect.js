@@ -57,15 +57,15 @@ const CheckboxSelect = ({ onChange, values = [], options = [] }) => {
               >
                 <div className="ma1 w5 shadow-3 bg-white ba br2 b--light-grey">
                   <ul className="list pl0 mv2">
-                    {optionsToShow.map(x => {
+                    {optionsToShow.map((x, i) => {
                       return (
-                        <li key={x.accessor}>
+                        <li key={i}>
                           <label className="pointer pv2 ph3 flex justify-between items-center">
                             {x.Header}
                             <input
                               type="checkbox"
-                              checked={!(x.show === false)}
-                              name={x.accessor}
+                              defaultChecked={!(x.show === false)}
+                              name={x.Header}
                               onChange={onChange}
                             />
                           </label>

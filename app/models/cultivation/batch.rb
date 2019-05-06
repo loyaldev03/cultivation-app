@@ -13,6 +13,7 @@ module Cultivation
     # Planned quantity for the batch (capacity needed)
     field :quantity, type: Integer
     field :current_growth_stage, type: String
+    field :current_stage_start_date, type: Time
     # Selected Mother Plants (IDs)
     field :selected_plants, type: Array, default: []
     field :selected_location, type: BSON::ObjectId

@@ -104,7 +104,7 @@ class Batches extends React.Component {
       {
         headerClassName: 'tl',
         Header: 'Phase Date',
-        accessor: 'stage_start_date', // FIXME
+        accessor: 'current_stage_start_date',
         className: 'justify-end pr3',
         width: 88,
         Cell: props => formatDate2(props.value)

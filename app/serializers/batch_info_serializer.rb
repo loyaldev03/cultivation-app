@@ -6,6 +6,7 @@ class BatchInfoSerializer
              :start_date,
              :estimated_harvest_date,
              :current_growth_stage,
+             :current_stage_location,
              :current_stage_start_date,
              :quantity,
              :destroyed_plants_count,

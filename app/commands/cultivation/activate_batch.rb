@@ -75,15 +75,24 @@ module Cultivation
         #   veg1,   start: 10/1/2019, end: 20/1/2019
         #   clone,  start: 01/1/2019, end: 10/1/2019
         # ]
-        current_phase = schedules.
-          reverse.
-          detect { |p| current_time >= p.start_date }
-        if current_phase.present?
+        curr_phase = schedules.reverse.detect { |p| current_time >= p.start_date }
+        if curr_phase.present?
           batch.update(
-            current_growth_stage: current_phase.phase,
-            current_stage_start_date: current_phase.start_date,
+            current_growth_stage: curr_phase.phase,
+            current_stage_location: get_phase_location(batch, curr_phase.phase),
+            current_stage_start_date: curr_phase.start_date,
           )
         end
+      end
+    end
+
+    def get_phase_location(batch, phase)
+      cmd = Cultivation::QueryBatchStageLocation.call(batch, phase)
+      if cmd.success?
+        cmd.result || '--'
+      else
+        Rollbar.log('error', cmd.errors)
+        cmd.errors[:error][0]
       end
     end
 

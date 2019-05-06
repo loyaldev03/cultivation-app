@@ -13,9 +13,13 @@ module Cultivation
     # Planned quantity for the batch (capacity needed)
     field :quantity, type: Integer
     field :current_growth_stage, type: String
+    # Location of this batch at current growth stage
+    field :current_stage_location, type: String
+    # Start date of the current growth stage
     field :current_stage_start_date, type: Time
     # Selected Mother Plants (IDs)
     field :selected_plants, type: Array, default: []
+    # Selected Mother Plant location (for Sunburst)
     field :selected_location, type: BSON::ObjectId
     # Draft - Draft batch should not trigger validation
     # Scheduled, Active - Take up spaces in Tray Plan

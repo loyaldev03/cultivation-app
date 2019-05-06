@@ -18,7 +18,7 @@ module Cultivation
       elsif Constants::REQUIRED_BOOKING_PHASES.include?(@phase)
         errors.add(:error, "Missing tray booking for #{@phase}")
       else
-        facility = batch.facility
+        facility = @batch.facility
         room = facility.rooms.detect { |r| r.purpose == @phase }
         room&.full_code
       end

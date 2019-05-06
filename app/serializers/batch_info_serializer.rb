@@ -5,6 +5,7 @@ class BatchInfoSerializer
              :batch_no,
              :start_date,
              :estimated_harvest_date,
+             :estimated_hours,
              :current_growth_stage,
              :current_stage_location,
              :current_stage_start_date,

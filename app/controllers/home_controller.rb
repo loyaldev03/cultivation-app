@@ -110,6 +110,9 @@ class HomeController < ApplicationController
     redirect_to root_path, flash: {notice: 'Data has reset.'}
   end
 
+  def qr
+  end
+
   private
 
   def get_date_worker(work_request)

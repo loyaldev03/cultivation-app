@@ -29,6 +29,9 @@ Rails.application.routes.draw do
   get "worker_schedule/:worker_id" => "work_requests#worker_schedule", as: 'worker_schedule'
   post "update_requests/:work_request_id" => "work_requests#update_requests", as: 'update_requests' #for accept and reject requests (manager view)
 
+    get "qr_code" => "home#qr"
+
+
   get "facility_setup/new" => "facility_setup#new"
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"
   get "facility_setup/room_info" => "facility_setup#room_info", as: 'fetch_room_info'

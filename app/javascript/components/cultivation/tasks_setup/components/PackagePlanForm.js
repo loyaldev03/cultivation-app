@@ -8,7 +8,9 @@ import {
   httpPostOptions
 } from '../../../utils'
 import { httpGetOptions } from '../../../utils/FormHelpers'
-import ProductTypeSection, { convertToHarvestBatchUom } from './ProductTypeSection'
+import ProductTypeSection, {
+  convertToHarvestBatchUom
+} from './ProductTypeSection'
 import loadHarvestBatch from '../actions/loadHarvestBatch'
 // import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 
@@ -46,7 +48,6 @@ class PackagePlanForm extends React.Component {
       this.setState({ data })
     }
   }
-
 
   onPickProductType = productType => {
     this.setState({ productType })
@@ -148,7 +149,6 @@ class PackagePlanForm extends React.Component {
     )
   }
 
-
   renderAddProductType() {
     if (!this.state.showAddProductType) {
       return null
@@ -193,7 +193,6 @@ class PackagePlanForm extends React.Component {
     )
   }
 
-
   totalPlannedWeight = () => {
     console.log(this.state.data)
     console.log(this.state.harvestBatch)
@@ -201,8 +200,17 @@ class PackagePlanForm extends React.Component {
       return (
         sum +
         x.package_plans.reduce((innerSum, y) => {
-          const converted_qty = convertToHarvestBatchUom(y.package_type, y.quantity, this.state.harvestBatch.uom)
-          console.log(x.product_type, converted_qty, this.state.harvestBatch.uom, y)
+          const converted_qty = convertToHarvestBatchUom(
+            y.package_type,
+            y.quantity,
+            this.state.harvestBatch.uom
+          )
+          console.log(
+            x.product_type,
+            converted_qty,
+            this.state.harvestBatch.uom,
+            y
+          )
           return innerSum + converted_qty
         }, 0)
       )

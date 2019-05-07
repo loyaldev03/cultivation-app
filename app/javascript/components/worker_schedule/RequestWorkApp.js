@@ -67,20 +67,18 @@ class RequestWorkApp extends React.Component {
           )}
         />
         <div className="mt4">
-          {
-            isExempt ? (
-              <a className="btn mr3 btn--primary" onClick={this.onClickPto}>
-                Request PTO
+          {isExempt ? (
+            <a className="btn mr3 btn--primary" onClick={this.onClickPto}>
+              Request PTO
+            </a>
+          ) : (
+            <div>
+              <a className="btn mr3 btn--primary" onClick={this.onClickOt}>
+                Request OT
               </a>
-            ) : (
-              <div>
-                <a className="btn mr3 btn--primary" onClick={this.onClickOt}>
-                  Request OT
-                </a>
-                <a className="btn mr3 btn--primary">Change Schedule</a>
-              </div>
-            )
-          }
+              <a className="btn mr3 btn--primary">Change Schedule</a>
+            </div>
+          )}
         </div>
       </React.Fragment>
     )

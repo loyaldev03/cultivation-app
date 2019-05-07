@@ -21,5 +21,5 @@ export {
   RoomIcon,
   TempBatchWidgets,
   TempPlantWidgets,
-  TempTaskWidgets,
+  TempTaskWidgets
 }

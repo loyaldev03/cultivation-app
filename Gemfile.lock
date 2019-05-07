@@ -208,6 +208,7 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     orm_adapter (0.5.0)
+    pagy (3.0.0)
     parallel (1.17.0)
     parser (2.6.2.0)
       ast (~> 2.4.0)
@@ -410,6 +411,7 @@ DEPENDENCIES
   mongoid-history
   mongoid_orderable
   mongoid_rails_migrations
+  pagy
   pry-byebug
   puma (~> 3.11)
   rack-mini-profiler

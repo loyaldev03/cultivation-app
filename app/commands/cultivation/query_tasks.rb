@@ -2,7 +2,7 @@ module Cultivation
   class QueryTasks
     prepend SimpleCommand
 
-    attr_reader :batch, :includes
+    attr_reader :batch, :includes, :pagy
 
     def initialize(batch, includes = [])
       @batch = batch
@@ -25,7 +25,7 @@ module Cultivation
 
     class << self
       def active_tasks(page_size, page, sorted, filtered)
-        ::Cultivation::Task.limit(50)
+        ::Cultivation::Task.all
       end
     end
   end

@@ -1,5 +1,6 @@
 import 'babel-polyfill'
-import React, { memo, useState, lazy, Suspense } from 'react'
+import React, { memo, useState } from 'react'
+import classNames from 'classnames'
 import { differenceInDays } from 'date-fns'
 import { action, observable, computed } from 'mobx'
 import { observer } from 'mobx-react'
@@ -14,23 +15,26 @@ import {
 } from '../../utils'
 import ListingTable from './ListingTable'
 
-
 class ActiveTaskStore {
   @observable tasks = []
   @observable isLoading = false
   @observable isDataLoaded = false
+  @observable pagy = {}
 
   @action
-  async loadActiveTasks(batchId) {
+  async loadActiveTasks({ page, pageSize }) {
     this.isLoading = true
-    const url = `/api/v1/batches/active_tasks`
+    const url = `/api/v1/batches/active_tasks?page=${page +
+      1}&pageSize=${pageSize}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
         this.tasks = response.data.map(x => x.attributes)
+        this.pagy = response.pagy
         this.isDataLoaded = true
       } else {
         this.tasks = []
+        this.pagy = {}
         this.isDataLoaded = false
       }
     } catch (error) {
@@ -56,7 +60,7 @@ class TasksDashboardApp extends React.Component {
         headerClassName: 'tl',
         Header: 'WBS',
         accessor: 'wbs',
-        width: 78,
+        width: 78
       },
       {
         headerClassName: 'pl3 tl',
@@ -94,8 +98,18 @@ class TasksDashboardApp extends React.Component {
         Header: 'Status',
         accessor: 'work_status',
         className: 'justify-center',
-        minWidth: 88,
-        Cell: props => <ActiveBadge status={props.value} />
+        width: 90,
+        Cell: props => (
+          <span
+            className={classNames(`f7 fw6 ph2 pv1 ba br2 dib tc`, {
+              'grey b--grey': props.value === 'not_started',
+              'bg-orange b--orange white': props.value === 'started',
+              'bg-green b--green white': props.value === 'done'
+            })}
+          >
+            {props.value}
+          </span>
+        )
       },
       {
         headerClassName: 'tr pr3',
@@ -132,12 +146,8 @@ class TasksDashboardApp extends React.Component {
     ]
   }
 
-  // componentDidMount() {
-  //   activeTaskStore.loadActiveTasks()
-  // }
-
   onFetchData = (state, instance) => {
-    console.log(state)
+    activeTaskStore.loadActiveTasks(state)
   }
 
   onToggleColumns = e => {
@@ -165,7 +175,7 @@ class TasksDashboardApp extends React.Component {
           <input
             type="text"
             className="input w5"
-            placeholder="Search Plants"
+            placeholder="Search Tasks"
             onChange={e => {
               activeTaskStore.filter = e.target.value
             }}
@@ -177,6 +187,7 @@ class TasksDashboardApp extends React.Component {
             ajax={true}
             onFetchData={this.onFetchData}
             data={activeTaskStore.filteredList}
+            pages={activeTaskStore.pagy.pages}
             columns={columns}
             isLoading={activeTaskStore.isLoading}
           />

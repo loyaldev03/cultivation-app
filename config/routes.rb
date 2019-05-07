@@ -26,7 +26,7 @@ Rails.application.routes.draw do
 
   #work_requests
   get "requests" => "work_requests#requests"
-  get "worker_schedule/:worker_id" => "work_requests#worker_schedule", as: 'worker_schedule'
+  # get "worker_schedule/:worker_id" => "work_requests#worker_schedule", as: 'worker_schedule'
   post "update_requests/:work_request_id" => "work_requests#update_requests", as: 'update_requests' #for accept and reject requests (manager view)
 
   get "facility_setup/new" => "facility_setup#new"

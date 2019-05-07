@@ -1,4 +1,5 @@
 module Cultivation
+  # TODO: Rename to product plan
   class ProductTypePlan
     include Mongoid::Document
     include Mongoid::Timestamps::Short

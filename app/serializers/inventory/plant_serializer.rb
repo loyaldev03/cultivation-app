@@ -9,14 +9,19 @@ module Inventory
       :current_growth_stage,
       :wet_weight,
       :wet_weight_uom,
-      :lot_number
-
-    attribute :strain_name do |object|
-      object.facility_strain.strain_name
-    end
+      :lot_number,
+      :mother_date,
+      :planting_date,
+      :veg_date,
+      :veg1_date,
+      :veg2_date,
+      :flower_date,
+      :harvest_date,
+      :estimated_harvest_date,
+      :created_at
 
     attribute :cultivation_batch do |object, params = {}|
-      if params[:exclude] && params[:exclude].include?(:batch)
+      if params[:exclude]&.include?(:batch)
         ''
       elsif object.cultivation_batch.nil?
         ''
@@ -29,6 +34,30 @@ module Inventory
       object.cultivation_batch_id.to_s
     end
 
+    attribute :cultivation_batch_name do |object|
+      object.cultivation_batch.name
+    end
+
+    attribute :batch_growth_stage do |object|
+      object.cultivation_batch.current_growth_stage
+    end
+
+    attribute :batch_start_date do |object|
+      object.cultivation_batch.start_date
+    end
+
+    attribute :estimated_harvest_date do |object|
+      object.cultivation_batch.estimated_harvest_date
+    end
+
+    attribute :current_stage_start_date do |object|
+      object.cultivation_batch.current_stage_start_date
+    end
+
+    attribute :strain_name do |object|
+      object.facility_strain.strain_name
+    end
+
     attribute :facility_strain_id do |object|
       object.facility_strain_id.to_s
     end
@@ -37,49 +66,15 @@ module Inventory
       object.location_id.to_s
     end
 
-    attribute :mother_date do |object|
-      object.mother_date.iso8601 if object.mother_date
-    end
-
-    attribute :planting_date do |object|
-      object.planting_date.iso8601 if object.planting_date
-    end
-
-    attribute :veg_date do |object|
-      object.veg_date.iso8601 if object.veg_date
-    end
-
-    attribute :veg1_date do |object|
-      object.veg1_date.iso8601 if object.veg1_date
-    end
-
-    attribute :veg2_date do |object|
-      object.veg2_date.iso8601 if object.veg2_date
-    end
-
-    attribute :flower_date do |object|
-      object.flower_date.iso8601 if object.flower_date
-    end
-
-    attribute :harvest_date do |object|
-      object.harvest_date.iso8601 if object.harvest_date
-    end
-
-    attribute :expected_harvest_date do |object|
-      object.expected_harvest_date.iso8601 if object.expected_harvest_date
-    end
-
     attribute :mother_id do |object|
-      (object.mother_id || '').to_s
+      object&.mother_id.to_s
     end
 
-    attribute :created_at do |object|
-      object.c_at.iso8601
-    end
+    attribute :created_at, &:c_at
 
     attribute :location_name do |object, params|
-      if params[:query] && object.location_id
-        params[:query].get_location_code(object.location_id)
+      if params[:locations] && object.location_id
+        params[:locations].get_location_code(object.location_id)
       else
         ''
       end

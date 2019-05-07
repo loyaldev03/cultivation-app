@@ -37,7 +37,7 @@
     <div class='flex'>
       <div>
         <h1 class='f4 ma0 pa0 black-90 fw6'>Next Payment : <%= @next_payment_date&.strftime('%d %b %Y')%></h1>
-          <%= react_component 'worker_schedule/RequestWorkApp' %>
+          <%= react_component 'worker_schedule/RequestWorkApp', { isExempt: current_user.exempt} %>
       </div>
     </div>
   </div>

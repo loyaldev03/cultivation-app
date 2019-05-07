@@ -12,7 +12,8 @@ class RequestWorkApp extends React.Component {
     super(props)
     this.state = {
       showPtoPanel: false,
-      showOtPanel: false
+      showOtPanel: false,
+      isExempt: props.isExempt
     }
   }
 
@@ -25,7 +26,7 @@ class RequestWorkApp extends React.Component {
   }
 
   render() {
-    const { showPtoPanel, showOtPanel } = this.state
+    const { showPtoPanel, showOtPanel, isExempt } = this.state
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
@@ -66,13 +67,20 @@ class RequestWorkApp extends React.Component {
           )}
         />
         <div className="mt4">
-          <a className="btn mr3 btn--primary" onClick={this.onClickOt}>
-            Request OT
-          </a>
-          <a className="btn mr3 btn--primary">Change Schedule</a>
-          <a className="btn mr3 btn--primary" onClick={this.onClickPto}>
-            Request PTO
-          </a>
+          {
+            isExempt ? (
+              <a className="btn mr3 btn--primary" onClick={this.onClickPto}>
+                Request PTO
+              </a>
+            ) : (
+              <div>
+                <a className="btn mr3 btn--primary" onClick={this.onClickOt}>
+                  Request OT
+                </a>
+                <a className="btn mr3 btn--primary">Change Schedule</a>
+              </div>
+            )
+          }
         </div>
       </React.Fragment>
     )

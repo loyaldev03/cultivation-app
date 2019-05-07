@@ -236,9 +236,11 @@ class UserDetailsEditor extends React.PureComponent {
   }
 
   onRemoveNonExemptSchedule = e => {
-    this.setState({
-      non_exempt_schedules: this.state.non_exempt_schedules.filter(a => a !== e)
-    })
+    if (confirm('Are you sure?')) {
+      this.setState({
+        non_exempt_schedules: this.state.non_exempt_schedules.filter(a => a !== e)
+      })
+    }
   }
 
   onChangeNonExemptAttr = (record, key, value) => {
@@ -746,7 +748,7 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                   ))}
 
-                  <div className="mt3 fl w-100">
+                  <div className="mt3 fl w-30">
                     <div
                       className="pointer flex items-center grey f6"
                       onClick={this.onAddNonExemptSchedule}

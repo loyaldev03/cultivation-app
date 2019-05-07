@@ -672,7 +672,7 @@ class UserDetailsEditor extends React.PureComponent {
                     </label>
                   </div>
                   {this.state.non_exempt_schedules.map((a, index) => (
-                    <div className="mt3 fl w-100" key={index}>
+                    <div className="mt3 fl w-100 exempt-worker" key={index}>
                       <div className="w-30 fl pr3">
                         <label className="f6 fw6 db mb1 gray ttc mb2">
                           Start Date
@@ -735,7 +735,7 @@ class UserDetailsEditor extends React.PureComponent {
                           </div>
                           <div className="flex items-center">
                             <span
-                              className="material-icons f4 db mb1 ttc mt3 orange pointer"
+                              className="material-icons f4 db mb1 ttc mt3 orange pointer show-on-hover"
                               onClick={e => this.onRemoveNonExemptSchedule(a)}
                             >
                               clear

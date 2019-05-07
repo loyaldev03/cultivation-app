@@ -444,45 +444,6 @@ class UserDetailsEditor extends React.PureComponent {
                   {isExempt ? 'Salary Worker' : 'Hourly Worker'}
                 </p>
               </div>
-              <div className="mt3 fl w-100 pt3 bt b--light-gray">
-                <label className="f6 fw6 db mb0 dark-gray ttc">
-                  Access Control
-                </label>
-              </div>
-              <div className="mt2 fl w-100">
-                <label className="f6 fw6 db mb1 gray ttc">Facilities</label>
-                <Select
-                  options={facilitiesOptions}
-                  isMulti={true}
-                  isClearable={true}
-                  onChange={opt => this.onSelectChange('facilities', opt)}
-                  value={facilities}
-                  className="mt1 w-100 f6"
-                />
-              </div>
-              <div className="mt2 fl w-100">
-                <label className="f6 fw6 db mb1 gray ttc">
-                  Default Facility
-                </label>
-                <Select
-                  options={facilitiesOptions}
-                  isClearable={true}
-                  onChange={opt => this.onSelectChange('default_facility', opt)}
-                  value={default_facility}
-                  className="mt1 w-100 f6"
-                />
-              </div>
-              <div className="mt2 fl w-100 mb2">
-                <label className="f6 fw6 db mb1 gray ttc">Roles</label>
-                <Select
-                  options={rolesOptions}
-                  isMulti={true}
-                  isClearable={true}
-                  onChange={opt => this.onSelectChange('roles', opt)}
-                  value={roles}
-                  className="mt1 w-100 f6"
-                />
-              </div>
               {isExempt ? (
                 <div>
                   <div className="mt3 fl w-100 pt3 bt b--light-gray">
@@ -796,6 +757,46 @@ class UserDetailsEditor extends React.PureComponent {
                   </div>
                 </div>
               )}
+              <div className="mt3 fl w-100 pt3 bt b--light-gray">
+                <label className="f6 fw6 db mb0 dark-gray ttc">
+                  Access Control
+                </label>
+              </div>
+              <div className="mt2 fl w-100">
+                <label className="f6 fw6 db mb1 gray ttc">Facilities</label>
+                <Select
+                  options={facilitiesOptions}
+                  isMulti={true}
+                  isClearable={true}
+                  onChange={opt => this.onSelectChange('facilities', opt)}
+                  value={facilities}
+                  className="mt1 w-100 f6"
+                />
+              </div>
+              <div className="mt2 fl w-100">
+                <label className="f6 fw6 db mb1 gray ttc">
+                  Default Facility
+                </label>
+                <Select
+                  options={facilitiesOptions}
+                  isClearable={true}
+                  onChange={opt => this.onSelectChange('default_facility', opt)}
+                  value={default_facility}
+                  className="mt1 w-100 f6"
+                />
+              </div>
+              <div className="mt2 fl w-100 mb2">
+                <label className="f6 fw6 db mb1 gray ttc">Roles</label>
+                <Select
+                  options={rolesOptions}
+                  isMulti={true}
+                  isClearable={true}
+                  onChange={opt => this.onSelectChange('roles', opt)}
+                  value={roles}
+                  className="mt1 w-100 f6"
+                />
+              </div>
+
               <div className="mt3 fl w-100 pt3 bt b--light-gray">
                 <label className="f6 fw6 db mb0 dark-gray ttc">
                   Account Status

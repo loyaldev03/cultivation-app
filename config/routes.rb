@@ -231,6 +231,7 @@ Rails.application.routes.draw do
         get 'batch_info'
         get 'harvest_batch'
         get 'list_infos', on: :collection
+        get 'active_tasks', on: :collection, controller: :tasks, action: :active_tasks
         get 'search_locations', on: :collection
         get 'plants_movement_history', on: :collection
         post 'search_batch_plans', on: :collection

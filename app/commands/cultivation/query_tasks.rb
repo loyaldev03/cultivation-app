@@ -22,5 +22,11 @@ module Cultivation
         []
       end
     end
+
+    class << self
+      def active_tasks(page_size, page, sorted, filtered)
+        ::Cultivation::Task.limit(50)
+      end
+    end
   end
 end

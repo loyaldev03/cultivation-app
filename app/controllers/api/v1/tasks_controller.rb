@@ -10,6 +10,12 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     end
   end
 
+  def active_tasks
+    # Tasks for all active batch
+    tasks = Cultivation::QueryTasks.active_tasks(0, 0, 0, 0)
+    render json: TaskSerializer.new(tasks).serialized_json
+  end
+
   def update
     update_cmd = Cultivation::UpdateTask.call(current_user, task_params)
     if update_cmd.success?

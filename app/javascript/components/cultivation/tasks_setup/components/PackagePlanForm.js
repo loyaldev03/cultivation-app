@@ -1,7 +1,5 @@
 import React from 'react'
 import Select from 'react-select'
-import { observable, toJS } from 'mobx'
-import { observer } from 'mobx-react'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import {
   SlidePanelHeader,
@@ -10,8 +8,8 @@ import {
   httpPostOptions
 } from '../../../utils'
 import { httpGetOptions } from '../../../utils/FormHelpers'
-import ProductTypeSection from './ProductTypeSection'
-import loadHarvestBatch from '../actions/loadHarvestBatch';
+import ProductTypeSection, { convertToHarvestBatchUom } from './ProductTypeSection'
+import loadHarvestBatch from '../actions/loadHarvestBatch'
 // import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 
 class PackagePlanForm extends React.Component {
@@ -20,25 +18,26 @@ class PackagePlanForm extends React.Component {
     productType: null,
     data: [],
     showing: false,
-    totalPlannedWeight: 0,
     harvestBatch: { harvest_name: '', uom: '', total_cure_weight: 0 }
   }
 
   async componentDidMount() {
     const data = await loadPackagePlans(this.props.batchId)
-    const hbResponse = (await loadHarvestBatch(this.props.batchId))
+    const hbResponse = await loadHarvestBatch(this.props.batchId)
     let harvestBatch = {}
     if (hbResponse.status !== 200) {
       harvestBatch = { harvest_name: '', uom: 'kg', total_cure_weight: 0 }
     } else {
-      const { harvest_name, uom, total_cure_weight } = hbResponse.data.data.attributes
+      const {
+        harvest_name,
+        uom,
+        total_cure_weight
+      } = hbResponse.data.data.attributes
       harvestBatch = { harvest_name, uom, total_cure_weight }
       // console.log(harvestBatch)
     }
-    
-    // console.log(data)
-    const totalPlannedWeight = sumPlannedWeight(data)
-    this.setState({ data, harvestBatch, totalPlannedWeight })
+
+    this.setState({ data, harvestBatch })
   }
 
   async componentDidUpdate(prevProps, prevState) {
@@ -47,6 +46,7 @@ class PackagePlanForm extends React.Component {
       this.setState({ data })
     }
   }
+
 
   onPickProductType = productType => {
     this.setState({ productType })
@@ -79,7 +79,7 @@ class PackagePlanForm extends React.Component {
     })
   }
 
-  onAddPackage = (productType, packageType, quantity, conversion) => {
+  onAddPackage = (productType, packageType, quantity, converted_qty) => {
     const { data } = this.state
     const index = data.findIndex(x => x.product_type === productType)
 
@@ -88,12 +88,11 @@ class PackagePlanForm extends React.Component {
       isNew: true,
       package_type: packageType,
       quantity: parseFloat(quantity),
-      conversion
+      converted_qty
     }
 
     data[index].package_plans.push(item)
-    const totalPlannedWeight = sumPlannedWeight(data)
-    this.setState({ data, totalPlannedWeight })
+    this.setState({ data })
   }
 
   onEditPackage = (quantity, product_type, package_type) => {
@@ -103,8 +102,7 @@ class PackagePlanForm extends React.Component {
       x => x.package_type == package_type
     )
     data[index].package_plans[packageIndex].quantity = quantity
-    const totalPlannedWeight = sumPlannedWeight(data)
-    this.setState({ data , totalPlannedWeight})
+    this.setState({ data })
   }
 
   onRemovePackage = (product_type, package_type) => {
@@ -113,15 +111,13 @@ class PackagePlanForm extends React.Component {
     data[index].package_plans = data[index].package_plans.filter(
       x => x.package_type !== package_type
     )
-    const totalPlannedWeight = sumPlannedWeight(data)
-    this.setState({ data, totalPlannedWeight })
+    this.setState({ data })
   }
 
   onRemoveProductType = product_type => {
     let { data } = this.state
     data = data.filter(x => x.product_type !== product_type)
-    const totalPlannedWeight = sumPlannedWeight(data)
-    this.setState({ data, totalPlannedWeight })
+    this.setState({ data })
   }
 
   onSave = event => {
@@ -130,7 +126,7 @@ class PackagePlanForm extends React.Component {
   }
 
   renderBreakdowns() {
-    const { data } = this.state
+    const { data, harvestBatch } = this.state
     if (data.length == 0) {
       return null
     }
@@ -141,6 +137,7 @@ class PackagePlanForm extends React.Component {
           <ProductTypeSection
             productTypeData={productTypeData}
             key={productTypeData.id}
+            harvestBatchUom={harvestBatch.uom}
             onAddPackage={this.onAddPackage}
             onEditPackage={this.onEditPackage}
             onRemovePackage={this.onRemovePackage}
@@ -150,6 +147,7 @@ class PackagePlanForm extends React.Component {
       </div>
     )
   }
+
 
   renderAddProductType() {
     if (!this.state.showAddProductType) {
@@ -195,24 +193,41 @@ class PackagePlanForm extends React.Component {
     )
   }
 
+
+  totalPlannedWeight = () => {
+    console.log(this.state.data)
+    console.log(this.state.harvestBatch)
+    return this.state.data.reduce((sum, x) => {
+      return (
+        sum +
+        x.package_plans.reduce((innerSum, y) => {
+          const converted_qty = convertToHarvestBatchUom(y.package_type, y.quantity, this.state.harvestBatch.uom)
+          console.log(x.product_type, converted_qty, this.state.harvestBatch.uom, y)
+          return innerSum + converted_qty
+        }, 0)
+      )
+    }, 0)
+  }
+
   render() {
     const { onClose } = this.props
-    const { showAddProductType, harvestBatch, totalPlannedWeight } = this.state
+    const { showAddProductType, harvestBatch } = this.state
 
     return (
       <div>
         <div id="toast" className="toast animated toast--success" />
         <SlidePanelHeader onClose={onClose} title="Create Package Plan" />
         <div className="ph4 mv3 flex">
-          <div className="w-70 f4 fw6">
-            { harvestBatch.harvest_name }
+          <div className="w-70 f4 fw6">{harvestBatch.harvest_name}</div>
+          <div className="w-30 tr fw4 f5">
+            {this.totalPlannedWeight()} / {harvestBatch.total_cure_weight}{' '}
+            {harvestBatch.uom} allocated
           </div>
-          <div className="w-30 tr fw4 f5">{totalPlannedWeight} / {harvestBatch.total_cure_weight} {harvestBatch.uom} allocated</div>
         </div>
 
         <div className="ph4 mt3 flex">
           <div className="w-100 f6">
-            Split into packages 
+            Split into packages
             {!showAddProductType && (
               <a
                 href="#"
@@ -271,15 +286,6 @@ const savePackagePlans = async (batchId, productPlans) => {
     console.error(response.errors)
     return []
   }
-}
-
-
-const sumPlannedWeight = (productTypes) => {
-  return productTypes.reduce((sum, x) => {
-    return (
-      sum + x.package_plans.reduce((innerSum, y) => { return (innerSum + y.quantity)}, 0)
-    )
-  }, 0)
 }
 
 // When saving new package:

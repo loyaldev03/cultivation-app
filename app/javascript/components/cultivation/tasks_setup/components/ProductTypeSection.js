@@ -1,5 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
+import convert from 'convert-units'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { NumericInput } from '../../../utils/FormHelpers'
 
@@ -31,11 +32,13 @@ class ProductTypeSection extends React.Component {
   onAddRow = event => {
     event.preventDefault()
 
+    const converted_qty = convertToHarvestBatchUom(this.state.packageType.value, this.state.quantity, this.props.harvestBatchUom)
+
     this.props.onAddPackage(
       this.props.productTypeData.product_type,
       this.state.packageType.value,
       this.state.quantity,
-      this.state.packageType.conversion
+      converted_qty
     )
 
     this.setState({
@@ -118,7 +121,7 @@ class ProductTypeSection extends React.Component {
   }
 
   render() {
-    const { productTypeData } = this.props
+    const { productTypeData, harvestBatchUom } = this.props
     return (
       <div className="mb4">
         <div className="ph4 mt3 flex">
@@ -162,7 +165,7 @@ class ProductTypeSection extends React.Component {
                     />
                   </td>
                   <td className="tr pv1 w-20">
-                    {(x.quantity * x.conversion).toFixed(4)}
+                    { convertToHarvestBatchUom(x.package_type, x.quantity, harvestBatchUom).toFixed(4) }
                   </td>
                   <td className="tc pv1">
                     <a
@@ -197,16 +200,28 @@ class ProductTypeSection extends React.Component {
   }
 }
 
+const convertToHarvestBatchUom = (packageType, quantity, harvestBatchUom) => {
+  const foundType = PackageTypes.find(x => x.value == packageType)
+  if (foundType) {
+    const total_qty = foundType.qty_per_package * parseFloat(quantity)
+    const uom = foundType.uom
+    return convert(total_qty).from(uom).to(harvestBatchUom)
+  } else {
+    return 0
+  }
+}
+
 const PackageTypes = [
-  { value: '1/2 gram', label: '1/2 gram', conversion: 0.0005 },
-  { value: '1/2 kg', label: '1/2 kg', conversion: 0.5 },
-  { value: '1/4 Lb', label: '1/4 Lb', conversion: 0.1133981 },
-  { value: '1/4 Oz', label: '1/4 Oz', conversion: 0.0035436904 },
-  { value: 'Eigth', label: 'Eigth', conversion: 0.0035436904 },
-  { value: 'Gram', label: 'Gram', conversion: 0.001 },
-  { value: '1/2 Oz', label: '1/2 Oz', conversion: 0.0141748 },
-  { value: 'Lb', label: 'Lb', conversion: 0.453592 },
-  { value: 'Ounce', label: 'Ounce', conversion: 0.0283495 }
+  { value: '1/2 gram', label: '1/2 gram', uom: 'g', qty_per_package: 0.5 },
+  { value: '1/2 kg', label: '1/2 kg', uom: 'kg', qty_per_package: 0.5 },
+  { value: '1/4 Lb', label: '1/4 Lb', uom: 'lb', qty_per_package: 0.25 },
+  { value: '1/4 Oz', label: '1/4 Oz', uom: 'oz', qty_per_package: 0.25 },
+  { value: 'Eigth', label: 'Eigth', uom: 'oz', qty_per_package: 0.125 },
+  { value: 'Gram', label: 'Gram', uom: 'g', qty_per_package: 1 },
+  { value: '1/2 Oz', label: '1/2 Oz', uom: 'oz', qty_per_package: 0.5 },
+  { value: 'Lb', label: 'Lb', uom: 'lb', qty_per_package: 1 },
+  { value: 'Ounce', label: 'Ounce', uom: 'oz', qty_per_package: 1 }
 ]
 
 export default ProductTypeSection
+export { PackageTypes, convertToHarvestBatchUom }

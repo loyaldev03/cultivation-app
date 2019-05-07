@@ -11,37 +11,37 @@ import {
   TempPlantWidgets
 } from '../../utils'
 import ListingTable from './ListingTable'
-import store from '../batches/BatchStore'
+import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
+import PlantStore from '../../inventory/plant_setup/store/PlantStore'
 
 @observer
 class PlantsDashboardApp extends React.Component {
   state = {
     columns: [
       { accessor: 'id', show: false },
-      { accessor: 'batch_no', show: false },
+      { accessor: 'plant_id', show: false },
       {
         headerClassName: 'pl3 tl',
-        Header: 'Batch ID',
-        accessor: 'name',
+        Header: 'Plant ID',
+        accessor: 'plant_tag',
         className: 'dark-grey pl3 fw6',
         minWidth: 138,
         Cell: props => (
           <a
             className="link dark-grey truncate"
             href={`/cultivation/batches/${props.row.id}`}
-            title={props.row.batch_no}
+            title={props.row.plant_id}
           >
-            {props.value}
+            {props.row.plant_id || props.value}
           </a>
         )
       },
       {
         headerClassName: 'tl',
-        Header: 'Status',
-        accessor: 'status',
-        className: 'justify-center',
-        minWidth: 88,
-        Cell: props => <ActiveBadge status={props.value} />
+        Header: 'Batch ID',
+        accessor: 'cultivation_batch_name',
+        width: 138,
+        Cell: props => (props.value ? props.value : '--')
       },
       {
         headerClassName: 'tl',
@@ -52,38 +52,30 @@ class PlantsDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Total # of plants',
-        accessor: 'quantity',
-        className: 'justify-end pr3',
-        width: 74,
-        Cell: props => (props.value ? props.value : '--')
-      },
-      {
-        headerClassName: 'tl',
         Header: 'Growth Phase',
-        accessor: 'current_growth_stage',
+        accessor: 'batch_growth_stage',
         className: 'justify-center ttc',
         minWidth: 74
       },
       {
         headerClassName: 'tl',
-        Header: 'Destroyed plants',
-        accessor: 'destroyed_plants_count',
-        className: 'justify-center',
-        width: 84,
-        Cell: props => (props.value ? props.value : '--')
-      },
-      {
-        headerClassName: 'tl',
         Header: 'Location',
-        accessor: 'current_stage_location',
+        accessor: 'location_name',
         minWidth: 180,
         Cell: props => <span className="truncate">{props.value}</span>
       },
       {
         headerClassName: 'tl',
-        Header: 'Start Date',
-        accessor: 'start_date',
+        Header: 'Planted Date',
+        accessor: 'planting_date',
+        className: 'justify-end pr3',
+        width: 88,
+        Cell: props => formatDate2(props.value)
+      },
+      {
+        headerClassName: 'tl',
+        Header: 'Batch Start Date',
+        accessor: 'batch_start_date',
         className: 'justify-end pr3',
         width: 88,
         Cell: props => formatDate2(props.value)
@@ -118,43 +110,11 @@ class PlantsDashboardApp extends React.Component {
             )
           else return '--'
         }
-      },
-      {
-        headerClassName: 'tr pr3',
-        Header: 'Est. Hours',
-        accessor: 'estimated_hours',
-        className: 'justify-end pr3',
-        width: 110,
-        Cell: props =>
-          props.value ? decimalFormatter.format(props.value) : '--'
-      },
-      {
-        headerClassName: 'tr pr3',
-        Header: 'Hrs to date',
-        accessor: 'actual_hours',
-        className: 'justify-end pr3',
-        width: 110
-      },
-      {
-        headerClassName: 'tr pr3',
-        Header: 'Est. cost',
-        accessor: 'estimated_cost',
-        className: 'justify-end pr3',
-        width: 110,
-        Cell: props =>
-          props.value ? decimalFormatter.format(props.value) : '--'
-      },
-      {
-        headerClassName: 'tr pr3',
-        Header: 'Cost to date',
-        accessor: 'actual_cost',
-        className: 'justify-end pr3',
-        width: 110
       }
     ]
   }
   componentDidMount() {
-    store.loadBatches()
+    loadPlants('', '', this.props.defaultFacilityId, ['mother'])
   }
 
   onToggleColumns = e => {
@@ -184,7 +144,7 @@ class PlantsDashboardApp extends React.Component {
           </a>
         </div>
         <div className="pv4">
-          <img src={TempPlantWidgets} />
+          <img src={TempPlantWidgets} className="w-100" />
         </div>
         <div className="flex justify-between">
           <input
@@ -192,16 +152,16 @@ class PlantsDashboardApp extends React.Component {
             className="input w5"
             placeholder="Search Batch ID"
             onChange={e => {
-              store.filter = e.target.value
+              PlantStore.filter = e.target.value
             }}
           />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>
         <div className="pv3">
           <ListingTable
-            data={store.filteredList}
+            data={PlantStore.filteredList}
             columns={columns}
-            isLoading={store.isLoading}
+            isLoading={PlantStore.isLoading}
           />
         </div>
       </div>

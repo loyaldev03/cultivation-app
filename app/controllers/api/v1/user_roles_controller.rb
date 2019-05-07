@@ -69,6 +69,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       facilities: [],
       roles: [],
       work_schedules: [:day, :start_time, :end_time],
+      non_exempt_schedules: [:start_date, :end_date, :start_time, :end_time],
     )
   end
 

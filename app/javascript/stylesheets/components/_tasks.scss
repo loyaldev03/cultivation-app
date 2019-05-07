@@ -81,3 +81,15 @@ $indentWidth: 24px;
     display: none;
   }
 }
+
+.exempt-worker{
+  .show-on-hover {
+    visibility: hidden;
+  }
+}
+
+.exempt-worker:hover{
+  .show-on-hover {
+    visibility: visible;
+  }
+}

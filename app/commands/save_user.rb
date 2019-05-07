@@ -38,6 +38,15 @@ class SaveUser
         )
       end
 
+      args[:non_exempt_schedules].map do |a|
+        user.work_schedules.build(
+          start_date: a[:start_date] ? Time.zone.parse(a[:start_date], Time.current) : '',
+          duration: ((Time.zone.parse(a[:end_date], Time.current) - Time.zone.parse(a[:start_date], Time.current)).to_i / 86400),
+          start_time: a[:start_time] ? Time.zone.parse(a[:start_time], Time.current) : '',
+          end_time: a[:end_time] ? Time.zone.parse(a[:end_time], Time.current) : '',
+        )
+      end
+
       user.default_facility_id = if args[:default_facility_id]
                                    args[:default_facility_id].to_bson_id
                                  end

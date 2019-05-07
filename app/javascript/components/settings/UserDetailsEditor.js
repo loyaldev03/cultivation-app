@@ -238,7 +238,9 @@ class UserDetailsEditor extends React.PureComponent {
   onRemoveNonExemptSchedule = e => {
     if (confirm('Are you sure?')) {
       this.setState({
-        non_exempt_schedules: this.state.non_exempt_schedules.filter(a => a !== e)
+        non_exempt_schedules: this.state.non_exempt_schedules.filter(
+          a => a !== e
+        )
       })
     }
   }

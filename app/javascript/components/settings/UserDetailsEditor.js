@@ -244,8 +244,8 @@ class UserDetailsEditor extends React.PureComponent {
       end_time: ''
     }
     const newNonExemptSchedules = [
-      newSchedule,
-      ...this.state.non_exempt_schedules
+      ...this.state.non_exempt_schedules,
+      newSchedule
     ]
     this.setState({
       non_exempt_schedules: newNonExemptSchedules
@@ -729,8 +729,8 @@ class UserDetailsEditor extends React.PureComponent {
                       Work Schedules Exempt
                     </label>
                   </div>
-                  {this.state.non_exempt_schedules.map(a => (
-                    <div className="mt3 fl w-100" key={a.id}>
+                  {this.state.non_exempt_schedules.map((a, index) => (
+                    <div className="mt3 fl w-100" key={index}>
                       <div className="w-30 fl pr3">
                         <label className="f6 fw6 db mb1 gray ttc mb2">
                           Start Date

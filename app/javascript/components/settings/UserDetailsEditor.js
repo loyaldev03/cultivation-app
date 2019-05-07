@@ -74,7 +74,7 @@ class UserDetailsEditor extends React.PureComponent {
       } else {
         work_schedules = props.companyWorkSchedules
       }
-      if (props.user.non_exempt_schedules){
+      if (props.user.non_exempt_schedules) {
         non_exempt_schedules = props.user.non_exempt_schedules.map(e => {
           e.start_date = new Date(e.start_date)
           e.end_date = new Date(e.end_date)

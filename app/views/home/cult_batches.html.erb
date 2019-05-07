@@ -1,3 +1,6 @@
 <%= react_component 'cultivation/dashboards/BatchesDashboardApp',
-  { defaultFacilityId: current_default_facility&.id.to_s }
+  {
+    defaultFacilityId: current_default_facility&.id.to_s,
+    currentTime: Time.current,
+  }
 %>

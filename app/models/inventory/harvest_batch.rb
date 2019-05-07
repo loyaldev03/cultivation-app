@@ -10,11 +10,8 @@ module Inventory
 
     field :total_trim_weight, type: Float, default: -> { 0 }
     field :total_trim_waste_weight, type: Float, default: -> { 0 }
-
-    field :total_dry_weight, type: Float, default: -> { 0 }
-
-    field :total_cure_weight, type: Float, default: -> { 0 }
-
+    field :total_dry_weight, type: Float, default: -> { 0 }  # Weight after finish drying
+    field :total_cure_weight, type: Float, default: -> { 0 } # Weight after finish curing
     field :uom, type: String
     field :status, type: String                 # new, closed (when fully packaged)
     field :location_id, type: BSON::ObjectId

@@ -4,7 +4,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     facility_strain_ids = facility.strains.pluck(:id).map(&:to_s)
     growth_stages = *params[:current_growth_stage] # convert to array
     growth_stages = %w(veg veg1 veg2) if params[:current_growth_stage] == 'veg'
-    excludes = params[:excludes]
+    excludes = params[:excludes] || []
     plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch)
     plants = plants.where(current_growth_stage: {'$in': growth_stages}) if growth_stages.any?
     plants = plants.not_in(current_growth_stage: excludes) if excludes.any?

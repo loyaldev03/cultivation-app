@@ -1,5 +1,16 @@
 class Api::V1::TasksController < Api::V1::BaseApiController
+  include Pagy::Backend
   before_action :set_batch, except: [:update_position]
+
+  Pagy::VARS[:items] = 20
+
+  # override pagy_get_vars to make it work with mongoid count
+  def pagy_get_vars(collection, vars)
+    vars[:count] ||= (c = collection.count).is_a?(Hash) ? c.size : c
+    vars[:page] ||= params[:page]
+    vars[:items] ||= params[:pageSize]
+    vars
+  end
 
   def index
     if @batch.present?
@@ -8,6 +19,12 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     else
       render json: {data: 'Batch Not Found'}, status: 422
     end
+  end
+
+  def active_tasks
+    # Tasks for all active batch
+    pagy, tasks = pagy(Cultivation::Task.all)
+    render json: {data: TaskSerializer.new(tasks).serializable_hash[:data], pagy: pagy}
   end
 
   def update

@@ -2,7 +2,7 @@ module Cultivation
   class QueryTasks
     prepend SimpleCommand
 
-    attr_reader :batch, :includes
+    attr_reader :batch, :includes, :pagy
 
     def initialize(batch, includes = [])
       @batch = batch
@@ -20,6 +20,12 @@ module Cultivation
       else
         errors.add(:error, 'Invalid param batch')
         []
+      end
+    end
+
+    class << self
+      def active_tasks(page_size, page, sorted, filtered)
+        ::Cultivation::Task.all
       end
     end
   end

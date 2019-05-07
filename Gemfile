@@ -81,6 +81,7 @@ gem 'mongoid', '~> 7.0.2'
 gem 'mongoid-history'
 gem 'mongoid_orderable'
 gem 'mongoid_rails_migrations'
+gem 'pagy'
 
 # Check for N+1
 gem 'bullet', group: 'development'

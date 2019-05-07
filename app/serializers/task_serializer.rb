@@ -9,29 +9,22 @@ class TaskSerializer
     :position,
     :estimated_hours,
     :estimated_cost,
+    :actual_hours,
+    :actual_cost,
     :wbs,
     :indent,
     :indelible,
     :location_type,
+    :work_status,
     :water_ph
 
   attributes :id do |object|
     object.id.to_s
   end
 
-  attribute :actual_hours do |object|
-    object.actual_hours
-  end
-
-  attribute :actual_cost do |object|
-    "$#{object.actual_cost}"
-  end
-
   attributes :depend_on do |object|
     object.depend_on.to_s
   end
-
-  attributes &:wbs
 
   attribute :items do |object|
     object.material_use.map do |item|

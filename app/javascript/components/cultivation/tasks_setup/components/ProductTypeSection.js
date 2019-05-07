@@ -197,7 +197,6 @@ class ProductTypeSection extends React.Component {
   }
 }
 
-
 const PackageTypes = [
   { value: '1/2 gram', label: '1/2 gram', conversion: 0.0005 },
   { value: '1/2 kg', label: '1/2 kg', conversion: 0.5 },
@@ -209,6 +208,5 @@ const PackageTypes = [
   { value: 'Lb', label: 'Lb', conversion: 0.453592 },
   { value: 'Ounce', label: 'Ounce', conversion: 0.0283495 }
 ]
-
 
 export default ProductTypeSection

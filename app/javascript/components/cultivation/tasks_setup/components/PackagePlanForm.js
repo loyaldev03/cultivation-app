@@ -224,7 +224,6 @@ const ProductTypes = [
   'Pre-rolls'
 ]
 
-
 const loadPackagePlans = async batchId => {
   const url = `/api/v1/batches/${batchId}/product_plans`
   const response = await (await fetch(url, httpGetOptions)).json()

@@ -113,7 +113,7 @@ class BatchesDashboardApp extends React.Component {
         Cell: props => {
           if (props.row.current_stage_start_date)
             return differenceInDays(
-              new Date(),
+              this.props.currentTime,
               props.row.current_stage_start_date
             )
           else return '--'

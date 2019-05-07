@@ -9,7 +9,7 @@ export default function loadPlants(
   current_growth_stage = '',
   facility_strain_id = '',
   facility_id = '',
-  excludes = [],
+  excludes = []
 ) {
   plantStore.isLoading = true
   let apiUrl = '/api/v1/plants/all'

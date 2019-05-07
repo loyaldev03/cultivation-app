@@ -20,6 +20,7 @@ class PlantsDashboardApp extends React.Component {
     columns: [
       { accessor: 'id', show: false },
       { accessor: 'plant_id', show: false },
+      { accessor: 'cultivation_batch_id', show: false },
       {
         headerClassName: 'pl3 tl',
         Header: 'Plant ID',
@@ -28,8 +29,8 @@ class PlantsDashboardApp extends React.Component {
         minWidth: 138,
         Cell: props => (
           <a
-            className="link dark-grey truncate"
-            href={`/cultivation/batches/${props.row.id}`}
+            className="link grey truncate"
+            href={`/cultivation/batches/${props.row.cultivation_batch_id}`}
             title={props.row.plant_id}
           >
             {props.row.plant_id || props.value}
@@ -37,17 +38,25 @@ class PlantsDashboardApp extends React.Component {
         )
       },
       {
-        headerClassName: 'tl',
+        headerClassName: 'pl3 tl',
         Header: 'Batch ID',
         accessor: 'cultivation_batch_name',
-        width: 138,
-        Cell: props => (props.value ? props.value : '--')
+        className: 'pl3 fw6',
+        minWidth: 138,
+        Cell: props => (
+          <a
+            className="link grey truncate"
+            href={`/cultivation/batches/${props.row.cultivation_batch_id}`}
+          >
+            {props.value || 'Unnamed Batch'}
+          </a>
+        )
       },
       {
         headerClassName: 'tl',
         Header: 'Strain',
         accessor: 'strain_name',
-        minWidth: 120,
+        minWidth: 130,
         Cell: props => <span className="truncate">{props.value}</span>
       },
       {
@@ -105,7 +114,7 @@ class PlantsDashboardApp extends React.Component {
         Cell: props => {
           if (props.row.current_stage_start_date)
             return differenceInDays(
-              new Date(),
+              this.props.currentTime,
               props.row.current_stage_start_date
             )
           else return '--'
@@ -136,10 +145,7 @@ class PlantsDashboardApp extends React.Component {
     return (
       <div className="pa4 mw1200">
         <div className="flex flex-row-reverse">
-          <a
-            href={`/cultivation/batches/new?facility_id=${defaultFacilityId}`}
-            className="btn btn--primary"
-          >
+          <a href="#0" className="btn btn--primary">
             Destroy Plants
           </a>
         </div>
@@ -150,7 +156,7 @@ class PlantsDashboardApp extends React.Component {
           <input
             type="text"
             className="input w5"
-            placeholder="Search Batch ID"
+            placeholder="Search Plants"
             onChange={e => {
               PlantStore.filter = e.target.value
             }}

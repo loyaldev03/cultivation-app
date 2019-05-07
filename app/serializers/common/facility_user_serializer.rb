@@ -47,5 +47,18 @@ module Common
         }
       end
     end
+
+    attributes :non_exempt_schedules do |object|
+      non_exempt_schedules = object.work_schedules.select { |a| a[:start_date] and a[:duration] }
+      non_exempt_schedules = non_exempt_schedules.map do |schedule|
+        {
+          id: schedule[:id].to_s,
+          start_date: schedule[:start_date]&.strftime('%D'),
+          end_date: (schedule[:start_date] + schedule[:duration].days)&.strftime('%D'),
+          start_time: schedule[:start_time]&.strftime('%H:%M'),
+          end_time: schedule[:end_time]&.strftime('%H:%M'),
+        }
+      end
+    end
   end
 end

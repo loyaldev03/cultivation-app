@@ -42,6 +42,7 @@ class UserDetailsEditor extends React.PureComponent {
       let reporting_manager = {}
       let user_mode = {}
       let work_schedules = []
+      let non_exempt_schedules = []
       if (props.user.facilities && props.facilitiesOptions) {
         facilities = props.user.facilities.map(id =>
           props.facilitiesOptions.find(y => y.value === id)
@@ -73,6 +74,13 @@ class UserDetailsEditor extends React.PureComponent {
       } else {
         work_schedules = props.companyWorkSchedules
       }
+      if (props.user.non_exempt_schedules){
+        non_exempt_schedules = props.user.non_exempt_schedules.map(e => {
+          e.start_date = new Date(e.start_date)
+          e.end_date = new Date(e.end_date)
+          return e
+        })
+      }
 
       this.state = {
         tabs: 'General',
@@ -93,36 +101,7 @@ class UserDetailsEditor extends React.PureComponent {
         roles,
         default_facility,
         work_schedules: work_schedules,
-        non_exempt_schedules: [
-          {
-            id: '1',
-            start_date: new Date(2019, 4, 21),
-            end_date: new Date(2019, 5, 22),
-            start_time: '08:00',
-            end_time: '13:00'
-          },
-          {
-            id: '2',
-            start_date: '',
-            end_date: '',
-            start_time: '',
-            end_time: ''
-          },
-          {
-            id: '3',
-            start_date: '',
-            end_date: '',
-            start_time: '',
-            end_time: ''
-          },
-          {
-            id: '4',
-            start_date: '',
-            end_date: '',
-            start_time: '',
-            end_time: ''
-          }
-        ]
+        non_exempt_schedules: non_exempt_schedules || []
       }
     } else {
       this.state = {
@@ -196,6 +175,7 @@ class UserDetailsEditor extends React.PureComponent {
       user_mode,
       reporting_manager,
       work_schedules,
+      non_exempt_schedules,
       isActive,
       isExempt
     } = this.state
@@ -226,7 +206,8 @@ class UserDetailsEditor extends React.PureComponent {
         roles: newRoles,
         reporting_manager_id: reporting_manager_id,
         default_facility_id: defaultFacilityId,
-        work_schedules: work_schedules
+        work_schedules: work_schedules,
+        non_exempt_schedules: non_exempt_schedules
       }
     }
     this.props.onSave(userDetails)

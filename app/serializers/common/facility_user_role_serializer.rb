@@ -52,8 +52,19 @@ module Common
           day_work = user.work_schedules.detect { |b| b.day == a }
           {
             day: a,
-            start_time: day_work&.start_time&.strftime('%H:%M'),
-            end_time: day_work&.end_time&.strftime('%H:%M'),
+            start_time: day_work&.start_time&.strftime('%H:%M') || '',
+            end_time: day_work&.end_time&.strftime('%H:%M') || '',
+          }
+        end
+
+        non_exempt_schedules = user.work_schedules.select { |a| a[:start_date] and a[:duration] }
+        non_exempt_schedules = non_exempt_schedules.map do |schedule|
+          {
+            id: schedule[:id].to_s,
+            start_date: schedule[:start_date]&.strftime('%D'),
+            end_date: (schedule[:start_date] + schedule[:duration].days)&.strftime('%D'),
+            start_time: schedule[:start_time]&.strftime('%H:%M'),
+            end_time: schedule[:end_time]&.strftime('%H:%M'),
           }
         end
 
@@ -80,6 +91,7 @@ module Common
           user_mode: user.user_mode,
           reporting_manager_id: reporting_manager_id,
           work_schedules: work_schedules,
+          non_exempt_schedules: non_exempt_schedules,
         }
       end
     end

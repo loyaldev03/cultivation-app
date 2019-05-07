@@ -1,41 +1,52 @@
 import React from 'react'
 import Select from 'react-select'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
-import { SlidePanelHeader, toast } from '../../../utils'
-import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
+import {
+  SlidePanelHeader,
+  SlidePanelFooter,
+  toast,
+  httpPostOptions
+} from '../../../utils'
+import { httpGetOptions } from '../../../utils/FormHelpers'
+import ProductTypeSection, { convertToHarvestBatchUom } from './ProductTypeSection'
+import loadHarvestBatch from '../actions/loadHarvestBatch'
+// import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 
 class PackagePlanForm extends React.Component {
   state = {
     showAddProductType: false,
     productType: null,
-    data: []
+    data: [],
+    showing: false,
+    harvestBatch: { harvest_name: '', uom: '', total_cure_weight: 0 }
   }
 
-  componentDidMount() {
-    console.log('load plans for product types...')
-  }
-
-  onAddPackage = (productType, packageType, quantity, conversion) => {
-    // console.log(this.state.data)
-    // console.log(productType)
-
-    const { data } = this.state
-    const index = data.findIndex(x => x.product_type === productType)
-    // const productTypeData = data[index]
-    // console.log(productTypeData)
-
-    const item = {
-      id: packageType,
-      isNew: true,
-      package_type: packageType,
-      quantity,
-      conversion
+  async componentDidMount() {
+    const data = await loadPackagePlans(this.props.batchId)
+    const hbResponse = await loadHarvestBatch(this.props.batchId)
+    let harvestBatch = {}
+    if (hbResponse.status !== 200) {
+      harvestBatch = { harvest_name: '', uom: 'kg', total_cure_weight: 0 }
+    } else {
+      const {
+        harvest_name,
+        uom,
+        total_cure_weight
+      } = hbResponse.data.data.attributes
+      harvestBatch = { harvest_name, uom, total_cure_weight }
+      // console.log(harvestBatch)
     }
 
-    // console.log(item)
-    data[index].breakdowns.push(item)
-    this.setState({ data })
+    this.setState({ data, harvestBatch })
   }
+
+  async componentDidUpdate(prevProps, prevState) {
+    if (!prevProps.show && this.props.show) {
+      const data = await loadPackagePlans(this.props.batchId)
+      this.setState({ data })
+    }
+  }
+
 
   onPickProductType = productType => {
     this.setState({ productType })
@@ -56,21 +67,66 @@ class PackagePlanForm extends React.Component {
 
   onAddProductType = event => {
     event.preventDefault()
-    const productType = this.state.productType.value
-    const newEntry = {
-      id: productType,
-      product_type: productType,
-      breakdowns: []
-    }
+    const product_type = this.state.productType.value
 
     this.setState({
-      data: [newEntry, ...this.state.data],
+      data: [
+        ...this.state.data,
+        { product_type, id: product_type, package_plans: [] }
+      ],
       productType: null,
       showAddProductType: false
     })
   }
 
-  renderBreakdowns(data) {
+  onAddPackage = (productType, packageType, quantity, converted_qty) => {
+    const { data } = this.state
+    const index = data.findIndex(x => x.product_type === productType)
+
+    const item = {
+      id: packageType,
+      isNew: true,
+      package_type: packageType,
+      quantity: parseFloat(quantity),
+      converted_qty
+    }
+
+    data[index].package_plans.push(item)
+    this.setState({ data })
+  }
+
+  onEditPackage = (quantity, product_type, package_type) => {
+    const { data } = this.state
+    const index = data.findIndex(x => x.product_type === product_type)
+    const packageIndex = data[index].package_plans.findIndex(
+      x => x.package_type == package_type
+    )
+    data[index].package_plans[packageIndex].quantity = quantity
+    this.setState({ data })
+  }
+
+  onRemovePackage = (product_type, package_type) => {
+    const { data } = this.state
+    const index = data.findIndex(x => x.product_type === product_type)
+    data[index].package_plans = data[index].package_plans.filter(
+      x => x.package_type !== package_type
+    )
+    this.setState({ data })
+  }
+
+  onRemoveProductType = product_type => {
+    let { data } = this.state
+    data = data.filter(x => x.product_type !== product_type)
+    this.setState({ data })
+  }
+
+  onSave = event => {
+    event.preventDefault()
+    savePackagePlans(this.props.batchId, this.state.data)
+  }
+
+  renderBreakdowns() {
+    const { data, harvestBatch } = this.state
     if (data.length == 0) {
       return null
     }
@@ -81,19 +137,28 @@ class PackagePlanForm extends React.Component {
           <ProductTypeSection
             productTypeData={productTypeData}
             key={productTypeData.id}
+            harvestBatchUom={harvestBatch.uom}
             onAddPackage={this.onAddPackage}
+            onEditPackage={this.onEditPackage}
+            onRemovePackage={this.onRemovePackage}
+            onRemoveProductType={this.onRemoveProductType}
           />
         ))}
       </div>
     )
   }
 
+
   renderAddProductType() {
     if (!this.state.showAddProductType) {
       return null
     }
 
-    const options = ProductTypes.map(x => ({ value: x, label: x }))
+    const selectedProductTypes = this.state.data.map(x => x.product_type)
+    const options = ProductTypes.filter(
+      x => selectedProductTypes.indexOf(x) < 0
+    ).map(x => ({ value: x, label: x }))
+
     return (
       <div className="ph4 mt2 flex">
         <div className="w-100 flex bg-black-05 pa3 items-center">
@@ -128,23 +193,42 @@ class PackagePlanForm extends React.Component {
     )
   }
 
+
+  totalPlannedWeight = () => {
+    console.log(this.state.data)
+    console.log(this.state.harvestBatch)
+    return this.state.data.reduce((sum, x) => {
+      return (
+        sum +
+        x.package_plans.reduce((innerSum, y) => {
+          const converted_qty = convertToHarvestBatchUom(y.package_type, y.quantity, this.state.harvestBatch.uom)
+          console.log(x.product_type, converted_qty, this.state.harvestBatch.uom, y)
+          return innerSum + converted_qty
+        }, 0)
+      )
+    }, 0)
+  }
+
   render() {
     const { onClose } = this.props
-    const { data, showAddProductType } = this.state
+    const { showAddProductType, harvestBatch } = this.state
 
     return (
       <div>
         <div id="toast" className="toast animated toast--success" />
         <SlidePanelHeader onClose={onClose} title="Create Package Plan" />
         <div className="ph4 mv3 flex">
-          <div className="w-70 f4 fw6">Batch 45V</div>
-          <div className="w-30 tr f6">0 / 30kg allocated</div>
+          <div className="w-70 f4 fw6">{harvestBatch.harvest_name}</div>
+          <div className="w-30 tr fw4 f5">
+            {this.totalPlannedWeight()} / {harvestBatch.total_cure_weight}{' '}
+            {harvestBatch.uom} allocated
+          </div>
         </div>
 
         <div className="ph4 mt3 flex">
           <div className="w-100 f6">
             Split into packages
-            {!this.state.showAddProductType && (
+            {!showAddProductType && (
               <a
                 href="#"
                 className="ml3 link orange"
@@ -157,7 +241,9 @@ class PackagePlanForm extends React.Component {
         </div>
 
         {this.renderAddProductType()}
-        {this.renderBreakdowns(data)}
+        {this.renderBreakdowns()}
+        <div className="ph4 mv3 flex" />
+        <SlidePanelFooter onSave={this.onSave} />
       </div>
     )
   }
@@ -174,204 +260,33 @@ const ProductTypes = [
   'Pre-rolls'
 ]
 
-const PackageTypes = [
-  '1/2 gram',
-  '1/2 kg',
-  '1/4 Lb',
-  '1/4 Oz',
-  'Eigth',
-  'Gram',
-  '1/2 Oz',
-  'Lb',
-  'Ounce'
-]
-
-class ProductTypeSection extends React.Component {
-  state = {
-    showNewRow: false,
-    packageType: null,
-    quantity: ''
-  }
-
-  onShowNewRow = event => {
-    event.preventDefault()
-    this.setState({ showNewRow: !this.state.showNewRow })
-  }
-
-  onHideNewRow = event => {
-    event.preventDefault()
-    this.setState({
-      showNewRow: false,
-      packageType: null,
-      quantity: ''
-    })
-  }
-
-  onAddRow = event => {
-    event.preventDefault()
-    this.props.onAddPackage(
-      this.props.productTypeData.product_type,
-      this.state.packageType.value,
-      this.state.quantity,
-      1
-    )
-
-    this.setState({
-      showNewRow: false,
-      packageType: null,
-      quantity: ''
-    })
-  }
-
-  onChangePackageType = packageType => {
-    this.setState({ packageType })
-  }
-
-  onChangeQuantity = event => {
-    const key = event.target.attributes.fieldname.value
-    const value = event.target.value
-    this.setState({ [key]: value })
-  }
-
-  renderAddNewRow() {
-    if (!this.state.showNewRow) {
-      return null
-    }
-
-    const options = PackageTypes.map(x => ({ value: x, label: x }))
-    return (
-      <div className="ph4 mt2 flex items-center">
-        <div className="w-100 pa2 bg-black-05 flex items-center">
-          <div className="w-40 pr2">
-            <Select
-              options={options}
-              styles={reactSelectStyle}
-              value={this.state.packageType}
-              onChange={this.onChangePackageType}
-            />
-          </div>
-          <div className="w-20">
-            <NumericInput
-              value={this.state.quantity}
-              onChange={this.onChangeQuantity}
-              fieldname="quantity"
-            />
-          </div>
-          <div className="w-20 pl2">
-            <a
-              href="#"
-              className="btn btn--primary btn--small"
-              onClick={this.onAddRow}
-            >
-              Save
-            </a>
-          </div>
-          <div className="w-20 pl1 tc">
-            <a href="#" className="f6 orange link" onClick={this.onHideNewRow}>
-              Cancel
-            </a>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  render() {
-    const { productTypeData } = this.props
-    return (
-      <div className="mb4">
-        <div className="ph4 mt3 flex">
-          <div className="w-100 fw6 f5 ph1 ttc flex items-center">
-            {productTypeData.product_type}
-            <span className="ml3 material-icons orange dim md-18 pointer">
-              delete
-            </span>
-          </div>
-        </div>
-
-        <div className="ph4 mt3 flex">
-          <table className="w-100 f6">
-            <thead>
-              <tr>
-                <th className="tl bb b--black-10 pb2 gray w-40">
-                  Package type
-                </th>
-                <th className="tc bb b--black-10 pb2 gray w-20">Quantity</th>
-                <th className="tr bb b--black-10 pb2 gray w-20">Total</th>
-                <th className="tr bb b--white pb2" />
-              </tr>
-            </thead>
-            <tbody>
-              {productTypeData.breakdowns.map(x => (
-                <tr key={x.id}>
-                  <td className="pv1 w-40">{x.package_type}</td>
-                  <td className="tc pv1 w-20">
-                    <NumericInput value={x.quantity} />
-                  </td>
-                  <td className="tr pv1 w-20">{x.quantity * x.conversion}</td>
-                  <td className="tc pv1">
-                    <span className="material-icons orange dim md-18 pointer">
-                      delete
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {this.state.showNewRow && this.renderAddNewRow()}
-        {!this.state.showNewRow && (
-          <div className="ph4 mt2 flex">
-            <a
-              href="#"
-              className="orange tc f6 w-100 link"
-              onClick={this.onShowNewRow}
-            >
-              + Add more package
-            </a>
-          </div>
-        )}
-      </div>
-    )
+const loadPackagePlans = async batchId => {
+  const url = `/api/v1/batches/${batchId}/product_plans`
+  const response = await (await fetch(url, httpGetOptions)).json()
+  if (response.data) {
+    const d = response.data.map(x => x.attributes)
+    return d
+  } else {
+    console.error(response.errors)
+    return []
   }
 }
 
-// const data2 = [
-//   {
-//     id: 'x1',
-//     product_type: 'shake',
-//     breakdowns: [
-//       {
-//         id: '1.1',
-//         package_type: 'Lb',
-//         quantity: 12,
-//         conversion: 2.5,
-//       },
-//       {
-//         id: '1.2',
-//         package_type: '0.5 oz',
-//         quantity: 2,
-//         conversion: 0.5,
-//       }
-//     ]
-//   },
-//   {
-//     id: 'x2',
-//     product_type: 'leaves',
-//     breakdowns: [
-//       {
-//         id: '2.1',
-//         package_type: 'Lb',
-//         quantity: 4,
-//         conversion: 2.5,
-//       },
-//       {
-//         id: '2.2',
-//         package_type: '0.5 oz',
-//         quantity: 25,
-//         conversion: 0.5,
-//       }
-//     ]
-//   }
-// ]
+const savePackagePlans = async (batchId, productPlans) => {
+  const url = `/api/v1/batches/${batchId}/save_product_plans`
+  const response = await (await fetch(
+    url,
+    httpPostOptions({ product_plans: productPlans })
+  )).json()
+  if (response.data) {
+    console.log(response.data)
+    // const d = response.data.map(x => x.attributes)
+    return response.data
+  } else {
+    console.error(response.errors)
+    return []
+  }
+}
+
+// When saving new package:
+// From packageplans -> lookup product -> if product not exists, create product -> attach new package to the product

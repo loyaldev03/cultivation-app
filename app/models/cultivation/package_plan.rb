@@ -8,6 +8,7 @@ module Cultivation
     field :package_type, type: String
     field :quantity, type: Float
     field :uom, type: String
+    field :conversion, type: Float
     field :total_weight, type: Float
   end
 end

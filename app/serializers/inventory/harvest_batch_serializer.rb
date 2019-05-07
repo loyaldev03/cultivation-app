@@ -7,7 +7,11 @@ module Inventory
       :total_wet_weight,
       :total_wet_waste_weight,
       :uom,
-      :status
+      :status,
+      :total_trim_weight,
+      :total_trim_waste_weight,
+      :total_dry_weight,
+      :total_cure_weight
 
     attribute :cultivation_batch_name do |object|
       "#{object.cultivation_batch.batch_no} - #{object.cultivation_batch.name}"

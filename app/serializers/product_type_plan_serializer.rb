@@ -19,6 +19,7 @@ class ProductTypePlanSerializer
         quantity: plan.quantity,
         uom: plan.uom,
         total_weight: plan.total_weight,
+        conversion: plan.conversion,
       }
     end
   end

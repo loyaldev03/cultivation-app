@@ -188,6 +188,44 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     end
   end
 
+  def product_plans
+    product_types = Cultivation::ProductTypePlan.where(batch_id: params[:batch_id])
+    render json: ProductTypePlanSerializer.new(product_types).serialized_json, status: 200
+  end
+
+  def save_product_plans
+    batch = Cultivation::Batch.find(params[:batch_id])
+    harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: params[:batch_id])
+
+    Cultivation::ProductTypePlan.where(batch_id: params[:batch_id]).destroy_all
+    Rails.logger.debug "\t\t\t>>>> params.inspect: #{params.inspect}"
+
+    result = []
+    params[:product_plans].each do |i|
+      Rails.logger.debug "\t\t\t>>>> params.inspect - i: #{i.inspect}"
+
+      p = Cultivation::ProductTypePlan.new(
+        product_type: i[:product_type],
+        batch_id: batch,
+        harvest_batch: harvest_batch,
+      )
+
+      i[:package_plans].each do |j|
+        p.package_plans << Cultivation::PackagePlan.new(
+          package_type: j[:package_type],
+          quantity: j[:quantity],
+          conversion: j[:conversion],
+          total_weight: j[:quantity].to_f * j[:conversion].to_f,
+        )
+      end
+
+      p.save!
+      result << p
+    end
+
+    render json: ProductTypePlanSerializer.new(result).serialized_json, status: 200
+  end
+
   private
 
   def extract_phases(batches)

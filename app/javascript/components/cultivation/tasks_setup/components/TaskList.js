@@ -816,7 +816,8 @@ class TaskList extends React.Component {
           renderBody={props => (
             <Suspense fallback={<div />}>
               <PackagePlanForm
-                show={showStartDateCalendar}
+                show={showPackagePlanForm}
+                batchId={batchId}
                 onClose={() =>
                   this.setState({ showPackagePlanForm: false, taskAction: '' })
                 }

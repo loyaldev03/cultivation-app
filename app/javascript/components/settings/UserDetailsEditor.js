@@ -95,14 +95,15 @@ class UserDetailsEditor extends React.PureComponent {
         work_schedules: work_schedules,
         non_exempt_schedules: [
           {
+            id: '1',
             start_date: new Date(2019, 4, 21),
             end_date: new Date(2019, 5, 22),
             start_time: '08:00',
             end_time: '13:00'
           },
-          { start_date: '', end_date: '', start_time: '', end_time: '' },
-          { start_date: '', end_date: '', start_time: '', end_time: '' },
-          { start_date: '', end_date: '', start_time: '', end_time: '' }
+          { id: '2', start_date: '', end_date: '', start_time: '', end_time: '' },
+          { id: '3', start_date: '', end_date: '', start_time: '', end_time: '' },
+          { id: '4', start_date: '', end_date: '', start_time: '', end_time: '' }
         ]
       }
     } else {
@@ -215,6 +216,34 @@ class UserDetailsEditor extends React.PureComponent {
 
   changeTabs = value => {
     this.setState({ tabs: value })
+  }
+
+  onAddNonExemptSchedule = event => {
+    const newSchedule = { start_date: '', end_date: '', start_time: '', end_time: '' }
+    const newNonExemptSchedules = [newSchedule, ...this.state.non_exempt_schedules]
+    this.setState({
+      non_exempt_schedules: newNonExemptSchedules,
+    })
+
+    event.preventDefault()
+  }
+
+  onRemoveNonExemptSchedule = e => {
+    this.setState({ non_exempt_schedules: this.state.non_exempt_schedules.filter( a => a !== e)})
+  }
+
+  onChangeNonExemptAttr = (record, key, value) => {
+    console.log(value)
+    let updated_schedule = this.state.non_exempt_schedules.find(e => e === record)
+    updated_schedule[key] = value
+
+    const updated_schedules = this.state.non_exempt_schedules.map(t => {
+      return t === record ? updated_schedule : t
+    })
+
+    this.setState({
+      non_exempt_schedules: updated_schedules
+    })
   }
 
   render() {
@@ -670,15 +699,15 @@ class UserDetailsEditor extends React.PureComponent {
                       Work Schedules Exempt
                     </label>
                   </div>
-                  {this.state.non_exempt_schedules.map(a => (
-                    <div className="mt3 fl w-100">
+                  {this.state.non_exempt_schedules.map((a) => (
+                    <div className="mt3 fl w-100" key={a.id}>
                       <div className="w-30 fl pr3">
                         <label className="f6 fw6 db mb1 gray ttc mb2">
                           Start Date
                         </label>
                         <DatePicker
                           value={a.start_date}
-                          // onChange={this.onPlantedOnChanged}
+                          onChange={date => this.onChangeNonExemptAttr(a, 'start_date', date)}
                         />
                       </div>
                       <div className="w-30 fl pr3">
@@ -687,7 +716,7 @@ class UserDetailsEditor extends React.PureComponent {
                         </label>
                         <DatePicker
                           value={a.end_date}
-                          // onChange={this.onPlantedOnChanged}
+                          onChange={date => this.onChangeNonExemptAttr(a, 'end_date', date)}
                         />
                       </div>
                       <div className="w-40 fl">
@@ -699,9 +728,7 @@ class UserDetailsEditor extends React.PureComponent {
                             <input
                               className="db f5 mt2 pa1 black ba b--black-20 br2 outline-0 no-spinner tc"
                               type="time"
-                              // onChange={e =>
-                              //   this.onChangeWorkingHourInput('sunday', 'start_time', e)
-                              // }
+                              onChange={e => this.onChangeNonExemptAttr(a, 'start_time', e.target.value)}
                               value={a.start_time}
                             />
                           </div>
@@ -712,14 +739,12 @@ class UserDetailsEditor extends React.PureComponent {
                             <input
                               className="db f5 mt2 pa1 black ba b--black-20 br2 outline-0 no-spinner tc"
                               type="time"
-                              // onChange={e =>
-                              //   this.onChangeWorkingHourInput('sunday', 'end_time', e)
-                              // }
+                              onChange={e => this.onChangeNonExemptAttr(a, 'end_time', e.target.value)}
                               value={a.end_time}
                             />
                           </div>
                           <div className="flex items-center">
-                            <span className="material-icons f4 db mb1 ttc mt3 orange pointer">
+                            <span className="material-icons f4 db mb1 ttc mt3 orange pointer" onClick={e => this.onRemoveNonExemptSchedule(a)}>
                               clear
                             </span>
                           </div>
@@ -729,7 +754,7 @@ class UserDetailsEditor extends React.PureComponent {
                   ))}
 
                   <div className="mt3 fl w-100">
-                    <div className="pointer flex items-center grey f6">
+                      <div className="pointer flex items-center grey f6" onClick={this.onAddNonExemptSchedule}>
                       <span className="material-icons">add</span>
                       <span>Add work schedules</span>
                     </div>

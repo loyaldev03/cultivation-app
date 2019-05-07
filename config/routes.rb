@@ -55,7 +55,7 @@ Rails.application.routes.draw do
 
   get "dashboard" => "home#dashboard"
   get "worker_dashboard" => "home#worker_dashboard"
-  get "worker_schedule" => "home#worker_schedule"
+  get "worker_schedule" => "home#worker_schedule", as: "worker_calendar"
 
   get "settings" => "home#settings"
   get "inventory/setup" => "home#inventory_setup"
@@ -313,8 +313,8 @@ Rails.application.routes.draw do
         get ':batch_id/harvest_batch_status', to: 'daily_tasks#harvest_batch_status'
         post ':batch_id/save_harvest_batch_weight', to: 'daily_tasks#save_harvest_batch_weight'
         post ':batch_id/save_weight', to: 'daily_tasks#save_weight'
-        post ':batch_id/save_pto', to: 'daily_tasks#save_pto'
-        post ':batch_id/save_ot', to: 'daily_tasks#save_ot'
+        post '/save_pto', to: 'daily_tasks#save_pto'
+        post '/save_ot', to: 'daily_tasks#save_ot'
 
       end
 

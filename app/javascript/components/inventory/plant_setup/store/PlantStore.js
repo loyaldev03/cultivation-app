@@ -1,8 +1,9 @@
 import { observable, action, computed, toJS } from 'mobx'
 
 class PlantStore {
-  plants = observable([])
+  @observable plants = []
   @observable isLoading = false
+  @observable filter = ''
 
   @action
   load(newPlants) {
@@ -29,6 +30,21 @@ class PlantStore {
   @computed
   get bindablePlants() {
     return this.plants.slice()
+  }
+
+  @computed
+  get filteredList() {
+    const list = this.plants.map(x => x.attributes)
+    if (this.filter) {
+      return list.filter(b => {
+        const field1 = b.plant_id.toLowerCase()
+        const field2 = b.strain_name.toLowerCase()
+        const filter = this.filter.toLowerCase()
+        return field1.includes(filter) || field2.includes(filter)
+      })
+    } else {
+      return list
+    }
   }
 
   getPlantById(plantId) {

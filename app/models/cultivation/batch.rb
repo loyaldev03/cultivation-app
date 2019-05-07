@@ -10,17 +10,25 @@ module Cultivation
     field :grow_method, type: String
     field :start_date, type: Time
     field :estimated_harvest_date, type: Time
+    field :estimated_hours, type: Float, default: -> { 0 }
+    field :estimated_cost, type: Float, default: -> { 0 }
     # Planned quantity for the batch (capacity needed)
     field :quantity, type: Integer
     field :current_growth_stage, type: String
+    # Location of this batch at current growth stage
+    field :current_stage_location, type: String
+    # Start date of the current growth stage
+    field :current_stage_start_date, type: Time
     # Selected Mother Plants (IDs)
     field :selected_plants, type: Array, default: []
+    # Selected Mother Plant location (for Sunburst)
     field :selected_location, type: BSON::ObjectId
     # Draft - Draft batch should not trigger validation
     # Scheduled, Active - Take up spaces in Tray Plan
     field :status, type: String, default: Constants::BATCH_STATUS_DRAFT
     field :actual_cost, type: Float, default: -> { 0 }
     field :actual_hours, type: Float, default: -> { 0 }
+    field :destroyed_plants_count, type: Integer, default: -> { 0 }
 
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
     belongs_to :facility, class_name: 'Facility'

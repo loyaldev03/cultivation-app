@@ -1,4 +1,6 @@
 import plantStore from '../store/PlantStore'
+import isEmpty from 'lodash.isempty'
+import { httpGetOptions } from '../../../utils'
 
 /**
  * Resets and reload list of plants
@@ -6,7 +8,8 @@ import plantStore from '../store/PlantStore'
 export default function loadPlants(
   current_growth_stage = '',
   facility_strain_id = '',
-  facility_id = ''
+  facility_id = '',
+  excludes = []
 ) {
   plantStore.isLoading = true
   let apiUrl = '/api/v1/plants/all'
@@ -23,13 +26,11 @@ export default function loadPlants(
     apiUrl = apiUrl + '?facility_id=' + facility_id
   }
 
-  fetch(apiUrl, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
+  if (!isEmpty(excludes)) {
+    apiUrl = apiUrl + `&excludes[]=${excludes}`
+  }
+
+  fetch(apiUrl, httpGetOptions)
     .then(response => {
       return response.json().then(data => {
         return {

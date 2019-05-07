@@ -19,10 +19,10 @@ module Cultivation
         end
       end
 
-      active_batches.each do |b|
-        Time.use_zone(b.facility.timezone) do
-          update_current_growth_stage(b)
-          update_plants_current_growth_stage(b)
+      active_batches.each do |batch|
+        Time.use_zone(batch.facility.timezone) do
+          update_current_growth_stage(batch)
+          update_plants_current_growth_stage(batch)
         end
       end
     end
@@ -57,30 +57,59 @@ module Cultivation
     end
 
     def update_current_growth_stage(batch)
-      schedules = Cultivation::QueryBatchPhases.call(batch).grouping_schedules
-      if schedules.present?
+      query_cmd = Cultivation::QueryBatchPhases.call(batch)
+      grouping_tasks = query_cmd.grouping_tasks
+      if grouping_tasks.present?
         # Extrach all phases, make sure this is in the correct order
-        phases = schedules.pluck(:phase)
-        # Find next phase that starts after current_time
-        next_phase = schedules.detect { |p| p.start_date >= current_time }
-        if next_phase.present?
-          next_index = phases.index(next_phase.phase)
-          curr_phase = next_index.positive? ? phases[next_index - 1] : next_phase.phase
-          # curr_index = phases.index(curr_phase)
-          # Check order to see if we need to advance batch growth stage
-          # if next_index && curr_index < next_index
-          batch.update(current_growth_stage: curr_phase)
-          # end
-        else
-          curr_schedule ||= schedules.detect { |p| current_time <= p.end_date }
-          if curr_schedule.present?
-            # curr_index = phases.index(curr_schedule.phase)
-            # batch_index = phases.index(batch.current_growth_stage)
-            # if curr_index && curr_index > batch_index
-            batch.update(current_growth_stage: curr_schedule.phase)
-            # end
-          end
+        # e.g. [
+        #   clone,  start: 01/1/2019, end: 10/1/2019
+        #   veg1,   start: 10/1/2019, end: 20/1/2019
+        #   veg2,   start: 20/1/2019, end: 30/1/2019
+        #   flower, start: 30/1/2019, end: 10/2/2019
+        # ]
+        # Current phase => schedule that start on/after current_time)
+        # e.g. current_time is 10/1/2019, phase should be veg1
+        # Reverse order of schedules to detect using start_date
+        # e.g. [
+        #   flower, start: 30/1/2019, end: 10/2/2019
+        #   veg2,   start: 20/1/2019, end: 30/1/2019
+        #   veg1,   start: 10/1/2019, end: 20/1/2019
+        #   clone,  start: 01/1/2019, end: 10/1/2019
+        # ]
+        curr_phase = grouping_tasks.
+          reverse.
+          detect { |p| current_time >= p.start_date }
+        if curr_phase.present?
+          batch.update(
+            current_growth_stage: curr_phase.phase,
+            current_stage_location: get_phase_location(batch, curr_phase.phase),
+            current_stage_start_date: curr_phase.start_date,
+            estimated_hours: calculate_estimated_hours(grouping_tasks),
+            estimated_cost: calculate_estimated_cost(grouping_tasks),
+          )
         end
+      end
+    end
+
+    def calculate_estimated_hours(tasks)
+      tasks.reduce(0) do |sum, t|
+        sum + t.estimated_hours
+      end
+    end
+
+    def calculate_estimated_cost(tasks)
+      tasks.reduce(0) do |sum, t|
+        sum + t.estimated_cost
+      end
+    end
+
+    def get_phase_location(batch, phase)
+      cmd = Cultivation::QueryBatchStageLocation.call(batch, phase)
+      if cmd.success?
+        cmd.result || '--'
+      else
+        Rollbar.log('error', cmd.errors)
+        cmd.errors[:error][0]
       end
     end
 

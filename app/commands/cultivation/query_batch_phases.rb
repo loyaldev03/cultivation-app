@@ -9,7 +9,11 @@ module Cultivation
                            :end_date,
                            :duration)
 
-    attr_reader :staying_schedules, :cleaning_schedules, :booking_schedules, :grouping_schedules
+    attr_reader :staying_schedules,
+      :cleaning_schedules,
+      :booking_schedules,
+      :grouping_schedules,
+      :grouping_tasks
 
     def initialize(batch, phases = [])
       @batch = batch
@@ -30,7 +34,7 @@ module Cultivation
         tasks = tasks.order_by(position: :asc).to_a
         staying_tasks = tasks.select { |t| t.indelible == Constants::INDELIBLE_STAYING }
         cleaning_tasks = tasks.select { |t| t.indelible == Constants::INDELIBLE_CLEANING }
-        grouping_tasks = tasks.select { |t| t.indelible == Constants::INDELIBLE_GROUP }
+        @grouping_tasks = tasks.select { |t| t.indelible == Constants::INDELIBLE_GROUP }
         @grouping_schedules = grouping_tasks.map do |t|
           PhaseInfo.new(t.id, t.name, t.phase, t.start_date, t.end_date, t.duration)
         end

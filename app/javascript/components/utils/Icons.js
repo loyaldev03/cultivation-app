@@ -6,6 +6,8 @@ import ImgTriangle from '../../../assets/images/ic_triangle.svg'
 import ImgPlantGrowth from '../../../assets/images/plant_grow.svg'
 import ImgBarcode from '../../../assets/images/barcode.svg'
 import RoomIcon from '../../../assets/images/room-icon.svg'
+import TempBatchWidgets from '../../../assets/images/dummy/cult-batches.png'
+import TempPlantWidgets from '../../../assets/images/dummy/cult-plants-widget.png'
 
 export {
   ImgAdd,
@@ -15,5 +17,7 @@ export {
   ImgTriangle,
   ImgPlantGrowth,
   ImgBarcode,
-  RoomIcon
+  RoomIcon,
+  TempBatchWidgets,
+  TempPlantWidgets
 }

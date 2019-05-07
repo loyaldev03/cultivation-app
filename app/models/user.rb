@@ -51,10 +51,11 @@ class User
   field :facilities, type: Array, default: [] # Array of BSON::ObjectId
   field :user_mode, type: String, default: 'worker' # admin | manager | worker
   field :reporting_manager_id, type: BSON::ObjectId
+  field :exempt, type: Boolean, default: -> { false } #  false => non exempt => hourly worker , true => exempt => salary worker
 
   has_many :time_logs, class_name: 'Cultivation::TimeLog'
   embeds_many :work_schedules, class_name: 'Common::WorkSchedule'
-  belongs_to :reporting_manager, class_name: 'User', foreign_key: 'reporting_manager_id'
+  belongs_to :reporting_manager, class_name: 'User', foreign_key: 'reporting_manager_id', optional: true
 
   has_many :work_requests, class_name: 'Common::WorkRequest', foreign_key: 'user_id' #users work request
   has_many :work_applications, class_name: 'Common::WorkRequest', foreign_key: 'reporting_manager_id' #work request manager view

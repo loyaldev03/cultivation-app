@@ -22,6 +22,7 @@ class SaveUser
         user.photo_data = args[:photo_data]
       end
       user.is_active = args[:is_active]
+      user.exempt = args[:exempt]
       user.hourly_rate = args[:hourly_rate]
       user.overtime_hourly_rate = args[:overtime_hourly_rate]
       user.user_mode = args[:user_mode]

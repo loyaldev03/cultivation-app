@@ -5,10 +5,16 @@ class BatchInfoSerializer
              :batch_no,
              :start_date,
              :estimated_harvest_date,
+             :estimated_hours,
+             :estimated_cost,
+             :actual_hours,
+             :actual_cost,
+             :current_growth_stage,
+             :current_stage_location,
+             :current_stage_start_date,
              :quantity,
-             :status,
-             :selected_plants,
-             :selected_location
+             :destroyed_plants_count,
+             :status
 
   attribute :id do |object|
     object.id.to_s

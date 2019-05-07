@@ -130,12 +130,12 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
 
     it "Update batch growth stage to veg" do
       Time.use_zone(facility.timezone) do
+        # pp "clo == #{task_staying_clone.start_date}"
         # pp "veg == #{task_staying_veg.start_date}"
         # pp "flo == #{task_staying_flower.start_date}"
         # pp "har == #{task_staying_harvest.start_date}"
         current_time = Time.zone.local(2018, 2, 7, 12, 0, 0)
         Timecop.freeze(current_time) do
-          # pp "freeze@#{Time.current}"
           Cultivation::ActivateBatch.call(Time.current)
 
           result = Cultivation::Batch.find(batch1.id)

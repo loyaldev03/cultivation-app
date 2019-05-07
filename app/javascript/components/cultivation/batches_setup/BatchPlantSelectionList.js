@@ -1,9 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
-import isEmpty from 'lodash.isempty'
 import { observer } from 'mobx-react'
 import { ImgPlant, GROWTH_PHASE } from '../../utils'
-import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 
 const QuantityField = React.memo(({ plant, onClick }) => {
   if (plant) {

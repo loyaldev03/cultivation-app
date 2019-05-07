@@ -12,7 +12,6 @@ import {
 } from '../../../utils'
 import Sunburst from './Sunburst'
 import TablePlantViewer from './TablePlantViewer'
-import Tippy from '@tippy.js/react'
 
 @observer
 class ClippingPanel extends React.Component {
@@ -29,14 +28,14 @@ class ClippingPanel extends React.Component {
   async componentDidMount() {
     await Promise.all([
       BatchStore.loadBatch(this.props.batchId),
-      loadPlants('mother', this.props.facilityId)
+      loadPlants('mother', this.props.strainId, this.props.facilityId)
     ])
     let roomData = await TaskStore.roomData(this.props.facilityId, 'mother')
     let motherRoomList = roomData.map(e => {
       return e.room_name
     })
     motherRoomList = [...new Set(motherRoomList)]
-    let hasSection = roomData[0].section_code !== null
+    let hasSection = roomData[0] && roomData[0].section_code !== null
     let motherPlantList = await TaskStore.getPlantOnSelect(
       this.props.facilityId,
       this.props.strainId,

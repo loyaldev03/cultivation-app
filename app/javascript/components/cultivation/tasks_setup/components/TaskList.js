@@ -392,7 +392,7 @@ class TaskList extends React.Component {
       Header: 'WBS',
       accessor: 'wbs',
       headerClassName: 'f6',
-      width: '85',
+      width: 80,
       show: this.checkVisibility('wbs')
     },
     {
@@ -434,14 +434,14 @@ class TaskList extends React.Component {
         </React.Fragment>
       ),
       headerClassName: 'f6',
-      maxWidth: '30',
+      width: 30,
       show: this.checkVisibility('wbs')
     },
     {
       Header: 'Tasks',
       accessor: 'name',
       headerClassName: 'f6',
-      maxWidth: '400',
+      minWidth: 380,
       show: this.checkVisibility('name'),
       Cell: this.renderTaskNameColumn
     },
@@ -449,7 +449,7 @@ class TaskList extends React.Component {
       Header: 'Predecessor',
       accessor: 'depend_on',
       headerClassName: 'f6',
-      width: '85',
+      width: 85,
       show: this.checkVisibility('depend_on'),
       Cell: data => {
         const { id, depend_on } = data.row
@@ -483,8 +483,8 @@ class TaskList extends React.Component {
       Header: 'Start Date',
       accessor: 'start_date',
       headerClassName: 'f6',
-      maxWidth: '100',
-      className: 'tr',
+      maxWidth: 90,
+      className: 'tr pr2',
       show: this.checkVisibility('start_date'),
       Cell: data => {
         const { id, start_date } = data.row
@@ -503,8 +503,8 @@ class TaskList extends React.Component {
       Header: 'End Date',
       accessor: 'end_date',
       headerClassName: 'f6',
-      maxWidth: '100',
-      className: 'tr',
+      maxWidth: 90,
+      className: 'tr pr2',
       show: this.checkVisibility('end_date'),
       Cell: data => {
         const { id, end_date, haveChildren } = data.row
@@ -524,8 +524,8 @@ class TaskList extends React.Component {
       Header: 'Duration',
       accessor: 'duration',
       headerClassName: 'f6',
-      maxWidth: '90',
-      className: 'tr',
+      maxWidth: 70,
+      className: 'tr pr3',
       show: this.checkVisibility('duration'),
       Cell: data => {
         const { id, duration, haveChildren } = data.row
@@ -547,8 +547,8 @@ class TaskList extends React.Component {
       Header: 'Est. Hr',
       accessor: 'estimated_hours',
       headerClassName: 'f6',
-      maxWidth: '100',
-      className: 'tr',
+      maxWidth: 80,
+      className: 'tr pr2',
       show: this.checkVisibility('estimated_hours'),
       Cell: data => {
         const { id, estimated_hours, haveChildren } = data.row
@@ -570,8 +570,8 @@ class TaskList extends React.Component {
       Header: 'Est. Cost',
       accessor: 'estimated_cost',
       headerClassName: 'f6',
-      maxWidth: '100',
-      className: 'justify-end',
+      maxWidth: 90,
+      className: 'justify-end pr2',
       show: this.checkVisibility('estimated_cost'),
       Cell: data => moneyFormatter.format(data.row.estimated_cost)
     },
@@ -579,21 +579,23 @@ class TaskList extends React.Component {
       Header: 'Actual Hours',
       accessor: 'actual_hours',
       headerClassName: 'f6',
-      width: '85',
+      width: 95,
+      className: 'justify-end pr2',
       show: this.checkVisibility('actual_hours')
     },
     {
       Header: 'Actual Cost',
       accessor: 'actual_cost',
       headerClassName: 'f6',
-      width: '85',
+      width: 90,
+      className: 'justify-end pr2',
       show: this.checkVisibility('actual_cost')
     },
     {
       Header: 'Assigned',
       accessor: 'user_ids',
       headerClassName: 'f6',
-      maxWidth: '200',
+      minWidth: 130,
       className: 'justify-center',
       show: this.checkVisibility('resource_assigned'),
       Cell: data => {
@@ -634,7 +636,7 @@ class TaskList extends React.Component {
       Header: 'Materials',
       accessor: 'items',
       headerClassName: 'f6',
-      maxWidth: '200',
+      minWidth: 130,
       show: this.checkVisibility('materials'),
       className: 'justify-center',
       Cell: data => {

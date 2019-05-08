@@ -29,8 +29,7 @@ Rails.application.routes.draw do
   # get "worker_schedule/:worker_id" => "work_requests#worker_schedule", as: 'worker_schedule'
   post "update_requests/:work_request_id" => "work_requests#update_requests", as: 'update_requests' #for accept and reject requests (manager view)
 
-    get "qr_code" => "home#qr"
-
+  get "qr_code" => "home#qr"
 
   get "facility_setup/new" => "facility_setup#new"
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"
@@ -55,6 +54,7 @@ Rails.application.routes.draw do
   post "facility_setup/update_row_info" => "facility_setup#update_row_info"
   post "facility_setup/update_shelf_trays" => "facility_setup#update_shelf_trays", as: 'update_shelf_trays'
   post "facility_setup/duplicate_rows" => "facility_setup#duplicate_rows", as: "duplicate_rows"
+  post "facility_setup/whitelist_ip" => "facility_setup#whitelist_ip", as: 'whitelist_ip'
 
   get "dashboard" => "home#dashboard"
   get "worker_dashboard" => "home#worker_dashboard"

@@ -163,6 +163,9 @@
                 <label class="toggle-button" for="facility_is_enabled"></label>
               </div>
             </div>
+            <div class="mt2 flex flex-row items-center">
+              <%= link_to 'Whitelist my public IP', whitelist_ip_path(facility_id: params[:facility_id]), method: :post, class: 'btn btn--primary'%>
+            </div>
           </div>
         <% end %>
       </div>

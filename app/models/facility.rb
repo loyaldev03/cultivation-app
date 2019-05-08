@@ -9,6 +9,8 @@ class Facility
   field :is_complete, type: Boolean, default: -> { false }
   field :is_enabled, type: Boolean, default: -> { true }
 
+  field :whitelist_ips, type: Array, default: []
+
   embeds_one :address, as: :addressable, class_name: 'Address'
   embeds_many :rooms, class_name: 'Room'
 

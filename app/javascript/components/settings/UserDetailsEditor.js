@@ -130,7 +130,7 @@ class UserDetailsEditor extends React.PureComponent {
 
   onChangeExempt = value => {
     console.log(value)
-    this.setState({isExempt: value})
+    this.setState({ isExempt: value })
   }
 
   onChangeWorkingHourInput = (day, time, e) => {
@@ -438,10 +438,8 @@ class UserDetailsEditor extends React.PureComponent {
                 />
               </div>
               <div className="mt2 fl w-100">
-                <label className="f6 fw6 mb1 grey mr3">
-                  Work status
-                </label>
-                <br/>
+                <label className="f6 fw6 mb1 grey mr3">Work status</label>
+                <br />
                 <div className="flex mt2">
                   <div onChange={e => this.onChangeExempt(true)}>
                     <label className="f6 grey mr2 mt2 pointer">

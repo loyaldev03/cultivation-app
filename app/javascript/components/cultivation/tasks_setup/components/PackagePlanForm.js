@@ -8,7 +8,9 @@ import {
   httpPostOptions
 } from '../../../utils'
 import { httpGetOptions } from '../../../utils/FormHelpers'
-import ProductTypeSection, { convertToHarvestBatchUom } from './ProductTypeSection'
+import ProductTypeSection, {
+  convertToHarvestBatchUom
+} from './ProductTypeSection'
 import loadHarvestBatch from '../actions/loadHarvestBatch'
 // import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 
@@ -46,7 +48,6 @@ class PackagePlanForm extends React.Component {
       this.setState({ data })
     }
   }
-
 
   onPickProductType = productType => {
     this.setState({ productType })
@@ -148,7 +149,6 @@ class PackagePlanForm extends React.Component {
     )
   }
 
-
   renderAddProductType() {
     if (!this.state.showAddProductType) {
       return null
@@ -193,16 +193,17 @@ class PackagePlanForm extends React.Component {
     )
   }
 
-
   totalPlannedWeight = () => {
-    console.log(this.state.data)
-    console.log(this.state.harvestBatch)
     return this.state.data.reduce((sum, x) => {
       return (
         sum +
         x.package_plans.reduce((innerSum, y) => {
-          const converted_qty = convertToHarvestBatchUom(y.package_type, y.quantity, this.state.harvestBatch.uom)
-          console.log(x.product_type, converted_qty, this.state.harvestBatch.uom, y)
+          const converted_qty = convertToHarvestBatchUom(
+            y.package_type,
+            y.quantity,
+            this.state.harvestBatch.uom
+          )
+          // console.log(x.product_type, converted_qty, this.state.harvestBatch.uom, y)
           return innerSum + converted_qty
         }, 0)
       )
@@ -264,8 +265,7 @@ const loadPackagePlans = async batchId => {
   const url = `/api/v1/batches/${batchId}/product_plans`
   const response = await (await fetch(url, httpGetOptions)).json()
   if (response.data) {
-    const d = response.data.map(x => x.attributes)
-    return d
+    return response.data.map(x => x.attributes)
   } else {
     console.error(response.errors)
     return []
@@ -279,8 +279,6 @@ const savePackagePlans = async (batchId, productPlans) => {
     httpPostOptions({ product_plans: productPlans })
   )).json()
   if (response.data) {
-    console.log(response.data)
-    // const d = response.data.map(x => x.attributes)
     return response.data
   } else {
     console.error(response.errors)

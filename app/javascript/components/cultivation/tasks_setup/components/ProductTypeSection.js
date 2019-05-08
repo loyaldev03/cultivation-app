@@ -32,7 +32,11 @@ class ProductTypeSection extends React.Component {
   onAddRow = event => {
     event.preventDefault()
 
-    const converted_qty = convertToHarvestBatchUom(this.state.packageType.value, this.state.quantity, this.props.harvestBatchUom)
+    const converted_qty = convertToHarvestBatchUom(
+      this.state.packageType.value,
+      this.state.quantity,
+      this.props.harvestBatchUom
+    )
 
     this.props.onAddPackage(
       this.props.productTypeData.product_type,
@@ -165,7 +169,11 @@ class ProductTypeSection extends React.Component {
                     />
                   </td>
                   <td className="tr pv1 w-20">
-                    { convertToHarvestBatchUom(x.package_type, x.quantity, harvestBatchUom).toFixed(4) }
+                    {convertToHarvestBatchUom(
+                      x.package_type,
+                      x.quantity,
+                      harvestBatchUom
+                    ).toFixed(4)}
                   </td>
                   <td className="tc pv1">
                     <a
@@ -205,7 +213,9 @@ const convertToHarvestBatchUom = (packageType, quantity, harvestBatchUom) => {
   if (foundType) {
     const total_qty = foundType.qty_per_package * parseFloat(quantity)
     const uom = foundType.uom
-    return convert(total_qty).from(uom).to(harvestBatchUom)
+    return convert(total_qty)
+      .from(uom)
+      .to(harvestBatchUom)
   } else {
     return 0
   }

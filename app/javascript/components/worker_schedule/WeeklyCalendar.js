@@ -31,7 +31,7 @@ export default class WeeklyCalendar extends React.Component {
     let week = this.getWeekDate(this.date)
     let mark = 1
     return (
-      <div className="w-60 ph2 grey">
+      <div className=" ph2 grey">
         <table className="w-100">
           <thead>
             <tr>

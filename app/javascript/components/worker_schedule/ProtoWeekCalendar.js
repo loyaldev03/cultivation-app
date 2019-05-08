@@ -106,7 +106,7 @@ export default class WeeklyCalendar extends React.Component {
     const monday = startOfWeek(new Date())
 
     return (
-      <div className="calendar w-70">
+      <div className="calendar w-100">
         <Row className="w-100">
           <HeaderCell className="calendar__cell--time-col" />
           <Cell className="calendar__cell-- w1" />

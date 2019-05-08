@@ -21,7 +21,38 @@ class WorkerScheduleStore {
       this.isLoading = false
     }
   }
-
+  @action
+  getTaskByDateArr = async () => {
+    try {
+      let url = `/api/v1/daily_tasks/work_schedules?start_date=2019-2-21&end_date=2020-2-27`
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        console.log(response)
+        return response
+      }
+    } catch (err) {
+      console.error(err)
+      return null
+    } finally {
+      this.isLoading = false
+    }
+  }
+  @action
+  getTaskByWeekArr = async (start, end) => {
+    try {
+      let url = `/api/v1/daily_tasks/work_schedules?start_date=${start}&end_date=${end}`
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        console.log(response)
+        return response
+      }
+    } catch (err) {
+      console.error(err)
+      return null
+    } finally {
+      this.isLoading = false
+    }
+  }
   @action
   savePto = async (start_date, end_date, description) => {
     this.isLoading = true

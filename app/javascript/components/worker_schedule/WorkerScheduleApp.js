@@ -1,20 +1,42 @@
 import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
-import Calendar from 'react-calendar'
+import Calendar from 'react-calendar/dist/entry.nostyle'
+
 import WeeklyCalendar from './ConceptWeeklyCalendar'
 import MonthlyCalendar from './MonthlyCalendar'
 import workerScheduleStore from './stores/WorkerScheduleStore'
 import MiniMonthlyCalendar from './MiniMonthlyCalendar'
+import {
+  formatYDM,
+  monthStartDate,
+  formatDate,
+  formatMonthAndYear
+} from '../utils'
+
 @observer
 class WorkerScheduleApp extends React.Component {
   state = {
     date: new Date(),
     choice: 'week',
     dateSelected: null,
-    taskList: null
+    taskList: null,
+    weeklyTask: [],
+    isWeeklyLoaded: false
   }
-
+  componentDidMount = async () => {
+    workerScheduleStore
+    var curr = new Date() // get current date
+    var first = curr.getDate() - curr.getDay() + 1 // First day is the day of the month - the day of the week
+    var last = first + 6
+    let monthString = formatMonthAndYear(curr)
+    console.log(monthString + first, monthString + last)
+    let weeklyTask = await workerScheduleStore.getTaskByWeekArr(
+      monthString + first,
+      monthString + last
+    )
+    this.setState({ weeklyTask, isWeeklyLoaded: true })
+  }
   onChangeCalendar = duration => {
     console.log(duration)
     this.setState({ choice: duration })
@@ -45,7 +67,13 @@ class WorkerScheduleApp extends React.Component {
   onChange = date => this.setState({ date })
 
   render() {
-    const { choice, taskList, dateSelected } = this.state
+    const {
+      choice,
+      taskList,
+      dateSelected,
+      weeklyTask,
+      isWeeklyLoaded
+    } = this.state
     const duration = ['Week', 'Month']
     return (
       <React.Fragment>
@@ -68,14 +96,32 @@ class WorkerScheduleApp extends React.Component {
               </select>
             </span>
           </div>
-          <div className="flex justify-between">
-            <div className="flex flex-column w-40 grey ">
+          <div className="flex ">
+            <div className="flex flex-column grey ">
+              {monthStartDate}
               <Calendar
+                className="schedule-calendar"
+                activeStartDate={monthStartDate(formatDate(new Date()))}
                 onChange={this.onChange}
                 value={this.state.date}
                 onClickDay={this.getDayTask}
+                tileContent={({ date, view }) => (
+                  <div
+                    className="react-calendar__tile__content"
+                    style={{
+                      background: `${date.getDate() == 21 && '#f69d63'}`,
+                      color: `${date.getDate() == 21 && '#ff6300'}`
+                    }}
+                    onClick={e => console.log(formatYDM(date))}
+                  >
+                    {date.getDate()}
+                    {date.getDate() == 2 && <div className="dot"> </div>}
+                  </div>
+                )}
+                showNavigation={true}
               />
               {/* <MiniMonthlyCalendar/> */}
+
               <div>
                 <div className="flex justify-between f3 lh-copy b dark-gray mb3 mt2">
                   <span>Task</span>
@@ -103,43 +149,11 @@ class WorkerScheduleApp extends React.Component {
                   ))}
               </div>
             </div>
+            <div className="w-20" />
             {choice == 'week' && (
               <WeeklyCalendar
-                appointments={{
-                  lunes: [
-                    {
-                      nombre: 'Gustavo',
-                      hora_inicio: '08:00',
-                      hora_termino: '09:00'
-                    },
-                    {
-                      nombre: 'Felipe',
-                      hora_inicio: '09:30',
-                      hora_termino: '11:00'
-                    },
-                    {
-                      nombre: 'Cony',
-                      hora_inicio: '18:00',
-                      hora_termino: '18:30'
-                    }
-                  ],
-                  martes: [],
-                  miercoles: [
-                    {
-                      nombre: 'Nicole',
-                      hora_inicio: '11:30',
-                      hora_termino: '14:00'
-                    }
-                  ],
-                  jueves: [
-                    {
-                      nombre: 'Alejandro',
-                      hora_inicio: '00:00',
-                      hora_termino: '00:00'
-                    }
-                  ],
-                  viernes: []
-                }}
+                weeklyTask={weeklyTask}
+                isWeeklyLoaded={isWeeklyLoaded}
               />
             )}
             {choice == 'month' && <MonthlyCalendar />}

@@ -22,7 +22,7 @@ class CreatePackageForm extends React.Component {
       // Flatten it up
       const packagePlans = []
       nestedPackagePlans.forEach(element => {
-        const { product_type, id: product_type_plan_id, } = element
+        const { product_type, id: product_type_plan_id } = element
         element.package_plans.forEach(plan => {
           packagePlans.push({
             product_type,
@@ -34,7 +34,7 @@ class CreatePackageForm extends React.Component {
         })
       })
 
-      this.setState({packagePlans})
+      this.setState({ packagePlans })
     }
   }
 
@@ -64,9 +64,7 @@ class CreatePackageForm extends React.Component {
       })
   }
 
-
   render() {
-
     const { packagePlans } = this.state
 
     return (
@@ -82,15 +80,14 @@ class CreatePackageForm extends React.Component {
             <span className="f6 fw6 gray">Select the packing type</span>
           </div>
           <div className="mh4 mt3 flex flex-column gray mb4 ba b--black-20 br2">
-            {
-              packagePlans.map(x => 
-                <PackageTracking 
-                  key={x.id} 
-                  product_type={x.product_type}
-                  package_type={x.package_type}
-                  quantity={x.quantity}
-                />)
-            }
+            {packagePlans.map(x => (
+              <PackageTracking
+                key={x.id}
+                product_type={x.product_type}
+                package_type={x.package_type}
+                quantity={x.quantity}
+              />
+            ))}
           </div>
           <SlidePanelFooter onSave={() => this.onSubmit()} />
         </div>
@@ -117,15 +114,15 @@ class PackageTracking extends React.Component {
 
   onEnterScanMode = event => {
     event.preventDefault()
-    this.setState({ 
-      inScanMode: true,
+    this.setState({
+      inScanMode: true
       // packageIDs: ['p00001', 'p00002', 'p00003', 'p000055']
     })
   }
 
   onAddPackageID = event => {
     if (event.key === 'Enter') {
-      this.setState({ 
+      this.setState({
         packageID: '',
         packageIDs: [event.target.value, ...this.state.packageIDs]
       })
@@ -147,15 +144,20 @@ class PackageTracking extends React.Component {
 
     return (
       <div className="flex flex-column w-100 mt3 ph3">
-        {showScanner && <InputBarcode
-          scanditLicense={'xxx'}
-          autoFocus={true}
-          value={packageID}
-          onChange={this.onChangePackageID}
-          onKeyPress={this.onAddPackageID}
-          className="w-100 f6"
-        />}
-        <div className="overflow-y-scroll ph2" style={{ maxHeight: '200px', minHeight: '50px' }}>
+        {showScanner && (
+          <InputBarcode
+            scanditLicense={'xxx'}
+            autoFocus={true}
+            value={packageID}
+            onChange={this.onChangePackageID}
+            onKeyPress={this.onAddPackageID}
+            className="w-100 f6"
+          />
+        )}
+        <div
+          className="overflow-y-scroll ph2"
+          style={{ maxHeight: '200px', minHeight: '50px' }}
+        >
           <table className="f6 gray w-100 collapse">
             <thead className="bb b--black-20">
               <tr>
@@ -164,14 +166,12 @@ class PackageTracking extends React.Component {
               </tr>
             </thead>
             <tbody>
-              { 
-                packageIDs.map((x, index) => (
+              {packageIDs.map((x, index) => (
                 <tr key={`${x}.${index}`}>
                   <td className="pa2">{this.props.package_type}</td>
                   <td className="pa2">{x}</td>
                 </tr>
-                ))
-              }
+              ))}
             </tbody>
           </table>
         </div>
@@ -184,22 +184,24 @@ class PackageTracking extends React.Component {
       return null
     }
     const { inScanMode } = this.state
-    const percent = (this.state.packageIDs.length / this.props.quantity * 100)
+    const percent = (this.state.packageIDs.length / this.props.quantity) * 100
     return (
       <div className="mt3 pb3 flex flex-column items-center  bb b--black-20">
         <div className="ph2 w-100">
           <ProgressBar percent={percent} height={10} className="w-100" />
         </div>
-        {!inScanMode && (<div className="mt3 mb3">
-          <a
-            href="#"
-            className="btn btn--primary btn-small f6"
-            onClick={this.onEnterScanMode}
-          >
-            Confirmed packed & create ID
-          </a>
-        </div>)}
-        { this.renderScanMode() }
+        {!inScanMode && (
+          <div className="mt3 mb3">
+            <a
+              href="#"
+              className="btn btn--primary btn-small f6"
+              onClick={this.onEnterScanMode}
+            >
+              Confirmed packed & create ID
+            </a>
+          </div>
+        )}
+        {this.renderScanMode()}
       </div>
     )
   }
@@ -209,29 +211,32 @@ class PackageTracking extends React.Component {
     const { expanded, packageIDs } = this.state
 
     return (
-      <div 
-        className={`flex flex-column ${expanded && 'bg-black-05'} ${!expanded && 'pb3'}`}
+      <div
+        className={`flex flex-column ${expanded && 'bg-black-05'} ${!expanded &&
+          'pb3'}`}
+      >
+        <div
+          className="ph2 pt3 flex items-center pointer"
+          onClick={this.onToggleExpand}
         >
-        <div className="ph2 pt3 flex items-center pointer" onClick={this.onToggleExpand}>
           <i className="material-icons icon--medium black-20">
-            { !expanded && 'keyboard_arrow_up' }
-            { expanded && 'keyboard_arrow_down' }
+            {!expanded && 'keyboard_arrow_up'}
+            {expanded && 'keyboard_arrow_down'}
           </i>
-        
+
           <div className="f6 gray ml2 flex-auto">
             <span className="fw6 mr2">{product_type}</span>
             <span>{package_type}</span>
           </div>
           <div className="f6 gray">
-            {packageIDs.length} / { quantity}
+            {packageIDs.length} / {quantity}
           </div>
         </div>
-        { this.renderExpanded() }
+        {this.renderExpanded()}
       </div>
     )
   }
 }
-
 
 const loadPackagePlans = async batchId => {
   const url = `/api/v1/batches/${batchId}/product_plans`

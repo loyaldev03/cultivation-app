@@ -128,6 +128,11 @@ class UserDetailsEditor extends React.PureComponent {
 
   onChangeToggle = field => e => this.setState({ [field]: e.target.checked })
 
+  onChangeExempt = value => {
+    console.log(value)
+    this.setState({isExempt: value})
+  }
+
   onChangeWorkingHourInput = (day, time, e) => {
     let temp_work_schedules = this.state.work_schedules
     let temp_day = temp_work_schedules.find(e => e.day === day)
@@ -433,20 +438,45 @@ class UserDetailsEditor extends React.PureComponent {
                 />
               </div>
               <div className="mt2 fl w-100">
-                <label className="f6 fw6 mb1 ttu grey">
-                  {isExempt ? 'Exempt' : 'Non-exempt'}
+                <label className="f6 fw6 mb1 grey mr3">
+                  Work status
                 </label>
-                <input
+                <br/>
+                <div className="flex mt2">
+                  <div onChange={e => this.onChangeExempt(true)}>
+                    <label className="f6 grey mr2 mt2 pointer">
+                      Exempt
+                      <input
+                        value="exempt"
+                        type="radio"
+                        checked={isExempt === true}
+                        className="ml2"
+                      />
+                    </label>
+                  </div>
+                  <div onChange={e => this.onChangeExempt(false)}>
+                    <label className="f6 grey mr2 ml2 pointer">
+                      Non-exempt
+                      <input
+                        value="non-exempt"
+                        type="radio"
+                        checked={isExempt === false}
+                        className="ml2"
+                      />
+                    </label>
+                  </div>
+                </div>
+                {/* <input
                   id="is_active"
                   type="checkbox"
                   className="toggle toggle-default"
                   onChange={this.onChangeToggle('isExempt')}
                   checked={isExempt}
-                />
-                <label className="toggle-button mt1 fr" htmlFor="is_active" />
+                /> */}
+                {/* <label className="toggle-button mt1 fr" htmlFor="is_active" />
                 <p className="gray f6 db mv1">
                   {isExempt ? 'Salary Worker' : 'Hourly Worker'}
-                </p>
+                </p> */}
               </div>
               {isExempt ? (
                 <div>

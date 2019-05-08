@@ -167,6 +167,17 @@ class DailyTaskApp extends React.Component {
             />
           )}
         />
+        <SlidePanel
+          width="500px"
+          show={sidebarName === 'create_package_plan'}
+          renderBody={props => (
+            <WeightForm
+              batchId={batchId}
+              sidebarName={sidebarName}
+              show={sidebarName === 'create_package_plan'}
+            />
+          )}
+        />
       </React.Fragment>
     )
   }

@@ -244,6 +244,28 @@ class ExpandedRow extends React.Component {
               </a>
             )}
 
+            {indelible == 'create_package_plan' && (
+              <a
+                href="#0"
+                className={classNames(
+                  'btn mr3',
+                  {
+                    'btn--secondary': showButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  },
+                  {
+                    'btn--disabled': hideButtonStatus.includes(
+                      this.props.work_status
+                    )
+                  }
+                )}
+                onClick={this.onOpenSidebar('create_package_plan')}
+              >
+                Create package
+              </a>
+            )}
+
             {showDoneButton ? (
               <a
                 href="#0"

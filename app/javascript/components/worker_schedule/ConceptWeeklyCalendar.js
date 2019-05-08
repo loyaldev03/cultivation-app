@@ -4,8 +4,26 @@ const date = new Date()
 const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
 
 export default class WeeklyCalendar extends React.Component {
-  constructor() {
-    super()
+  state = {
+    marker: []
+  }
+  componentDidMount = () => {
+    console.log(this.props.weeklyTask)
+    let marker = this.props.weeklyTask.map(x => {
+      let totalTime = x.end_time.substring(0, 2) - x.start_time.substring(0, 2)
+      return { name: x.date, totalTime }
+    })
+    this.setState({ marker })
+  }
+  componentDidUpdate = prevProp => {
+    if (prevProp.isWeeklyLoaded != this.props.isWeeklyLoaded) {
+      let marker = this.props.weeklyTask.map(x => {
+        let totalTime =
+          x.end_time.substring(0, 2) - x.start_time.substring(0, 2)
+        return { name: x.date, totalTime }
+      })
+      this.setState({ marker })
+    }
   }
   getWeekDate = date => {
     let week = new Array(7).fill(undefined).map((element, index) => {
@@ -14,11 +32,13 @@ export default class WeeklyCalendar extends React.Component {
     })
     return week
   }
+
   render() {
+    let { marker } = this.state
     let week = this.getWeekDate(date)
     let time = new Array(10).fill(undefined)
     return (
-      <div className="flex flex-column">
+      <div className="flex flex-column " style={{ flexGrow: 1 }}>
         <Row className="b grey">
           <Cell />
           {week.map((x, i) => (
@@ -62,12 +82,27 @@ export default class WeeklyCalendar extends React.Component {
                   'bb'} b--light-grey ${cellNumber < 6 && 'br'}`}
                 key={cell + cellNumber}
               >
+                {marker[1] && rowNumber == 0 && (
+                  <Marker
+                    style={{
+                      position: 'absolute',
+                      height: `calc(3em*${marker[cellNumber].totalTime})`,
+                      width: '3.8rem',
+                      opacity: '0.9'
+                    }}
+                  >
+                    {' '}
+                    Task marking 4Hrs
+                    <br />
+                    {marker[cellNumber].name}
+                  </Marker>
+                )}
                 {rowNumber == 3 && cellNumber == 1 && (
                   <Marker
                     style={{
                       position: 'absolute',
                       height: 'calc(3em*4)',
-                      width: '4rem'
+                      width: '3.8rem'
                     }}
                   >
                     {' '}
@@ -79,7 +114,7 @@ export default class WeeklyCalendar extends React.Component {
                     style={{
                       position: 'absolute',
                       height: 'calc(3em*2.5)',
-                      width: '4rem'
+                      width: '3.8rem'
                     }}
                   >
                     {' '}
@@ -91,7 +126,7 @@ export default class WeeklyCalendar extends React.Component {
                     style={{
                       position: 'absolute',
                       height: 'calc(3em*7)',
-                      width: '4rem'
+                      width: '3.8rem'
                     }}
                   >
                     {' '}

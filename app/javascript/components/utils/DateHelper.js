@@ -58,6 +58,11 @@ export const formatDate2 = date =>
 export const formatDate3 = date =>
   format(date, 'ddd, D MMM YYYY', { awareOfUnicodeTokens: true })
 
+export const formatYDM = date =>
+  format(date, 'YYYY-M-DD', { awareOfUnicodeTokens: true })
+
+export const formatMonthAndYear = date =>
+  format(date, 'YYYY-M-', { awareOfUnicodeTokens: true })
 export const formatAgo = date => {
   const now = new Date()
   const res = differenceInHours(now, date)

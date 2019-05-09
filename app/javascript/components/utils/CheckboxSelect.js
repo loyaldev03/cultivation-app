@@ -53,7 +53,6 @@ const CheckboxSelect = ({ onChange, values = [], options = [] }) => {
                 ref={ref}
                 style={style}
                 className="z-1"
-                outOfBoundaries={false}
                 data-placement={placement}
               >
                 <div className="ma1 w5 shadow-3 bg-white ba br2 b--light-grey">

@@ -157,17 +157,16 @@ class BatchesDashboardApp extends React.Component {
     BatchStore.loadBatches()
   }
 
-  onToggleColumns = e => {
-    const opt = this.state.columns.find(x => x.Header === e.target.name)
-    if (opt) {
-      opt.show = e.target.checked
+  onToggleColumns = (header, value) => {
+    const column = this.state.columns.find(x => x.Header === header)
+    if (column) {
+      column.show = value
+      this.setState({
+        columns: this.state.columns.map(x =>
+          x.Header === column.Header ? column : x
+        )
+      })
     }
-    this.setState({
-      columns: this.state.columns.map(x =>
-        x.accessor === e.target.name ? opt : x
-      )
-    })
-    e.stopPropagation()
   }
 
   render() {

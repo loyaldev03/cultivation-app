@@ -2,6 +2,7 @@ module Cultivation
   class QueryTasksAggregate
     prepend SimpleCommand
 
+    WorkerInfo = Struct.new(:id, :name)
     TaskInfo = Struct.new(:wbs,
                           :issue_count,
                           :name,
@@ -9,14 +10,16 @@ module Cultivation
                           :batch_name,
                           :batch_no,
                           :start_date,
-                          :duration,
+                          :end_date,
                           :estimated_hours,
                           :estimated_cost,
                           :actual_hours,
                           :actual_cost,
+                          :phase,
+                          :work_status,
                           :workers)
 
-    attr_reader :current_user, :args
+    attr_reader :current_user, :args, :metadata
 
     def initialize(current_user, args = {})
       @current_user = current_user
@@ -36,65 +39,83 @@ module Cultivation
     def call
       if valid_params?
         criteria = Cultivation::Task.collection.aggregate([
-            { "$lookup":
-              { from: "cultivation_batches",
-                localField: "batch_id",
-                foreignField: "_id",
-                as: "batch"
-              }
-            },
-            { "$unwind": "$batch" },
-            match_facility,
-            { "$lookup":
-              { from: "users",
-                localField: "user_ids",
-                foreignField: "_id",
-                as: "worker"
-              }
-            },
-            { "$lookup":
-              { from: "issues_issues",
-                localField: "_id",
-                foreignField: "task_id",
-                as: "issues"
-              }
-            },
-            { "$project":
-              { "wbs": 1,
-                "issue_count": { "$size": "$issues" },
-                "name": 1,
-                "batch_id": "$batch._id",
-                "batch_name": "$batch.name",
-                "batch_no": "$batch.batch_no",
-                "batch_status": "$batch.status",
-                "start_date": 1,
-                "duration": 1,
-                "estimated_hours": 1,
-                "estimated_cost": 1,
-                "actual_hours": 1,
-                "actual_cost": 1,
-                "worker._id": 1,
-                "worker.first_name": 1,
-                "worker.last_name": 1
-              }
-            },
-            { "$facet":
-                { metadata: [
-                    { "$count": "total" },
-                    { "$addFields": {
-                        page: args[:page],
-                        skip: skip,
-                        limit: args[:limit]
-                      }
-                    }
-                  ],
-                  data: [
-                    { "$skip": skip },
-                    { "$limit": args[:limit] },
-                  ]
-                }
-            }
+          {"$lookup": {from: 'cultivation_batches',
+                       localField: 'batch_id',
+                       foreignField: '_id',
+                       as: 'batch'}},
+          {"$unwind": '$batch'},
+          match_facility,
+          {"$lookup": {from: 'users',
+                       localField: 'user_ids',
+                       foreignField: '_id',
+                       as: 'worker'}},
+          {"$lookup": {from: 'issues_issues',
+                       localField: '_id',
+                       foreignField: 'task_id',
+                       as: 'issues'}},
+          {"$project": {"wbs": 1,
+                        "issue_count": {"$size": '$issues'},
+                        "name": 1,
+                        "batch_id": '$batch._id',
+                        "batch_name": '$batch.name',
+                        "batch_no": '$batch.batch_no',
+                        "batch_status": '$batch.status',
+                        "start_date": 1,
+                        "duration": 1,
+                        "estimated_hours": 1,
+                        "estimated_cost": 1,
+                        "actual_hours": 1,
+                        "actual_cost": 1,
+                        "phase": 1,
+                        "work_status": 1,
+                        "worker._id": 1,
+                        "worker.first_name": 1,
+                        "worker.last_name": 1}},
+          {"$facet": {
+            metadata: [
+              {"$count": 'total'},
+              {"$addFields": {
+                page: args[:page],
+                pages: {"$ceil": {"$divide": ['$total', args[:limit]]}},
+                skip: skip,
+                limit: args[:limit],
+              }},
+            ],
+            data: [
+              {"$skip": skip},
+              {"$limit": args[:limit]},
+            ],
+          }},
         ])
+        result = criteria.to_a[0]
+        @metadata = result['metadata'][0]
+        tasks = result['data'].map do |x|
+          workers = x[:worker].map do |w|
+            WorkerInfo.new(
+              w[:_id]&.to_s,
+              "#{w[:first_name]} #{w[:last_name]}",
+            )
+          end
+          end_date = x[:start_date] + x[:duration].days
+          TaskInfo.new(
+            x[:wbs],
+            x[:issue_count],
+            x[:name] || 'Unnamed task',
+            x[:batch_id]&.to_s,
+            x[:batch_name],
+            x[:batch_no],
+            x[:start_date],
+            end_date,
+            x[:estimated_hours],
+            x[:estimated_cost],
+            x[:actual_hours],
+            x[:actual_cost],
+            x[:phase],
+            x[:work_status],
+            workers
+          )
+        end
+        tasks
       end
     end
 

@@ -29,7 +29,11 @@ class Api::V1::TasksController < Api::V1::BaseApiController
       search: params[:search],
     )
     if query_cmd.success?
-      render json: {data: query_cmd.result}
+      result = query_cmd.result
+      render json: {
+        data: result.as_json,
+        metadata: query_cmd.metadata.as_json,
+      }
     else
       render json: {errors: query_cmd.errors}
     end

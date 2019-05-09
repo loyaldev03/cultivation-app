@@ -3,14 +3,14 @@ module Cultivation
     prepend SimpleCommand
 
     PlantMovement = Struct.new(:id,
-                              :quantity,
-                              :selected_plants,
-                              :selected_trays,
-                              :movements)
+                               :quantity,
+                               :selected_plants,
+                               :selected_trays,
+                               :movements)
     SelectedPlant = Struct.new(:plant_id,
-                              :quantity,
-                              :plant_code,
-                              :plant_location)
+                               :quantity,
+                               :plant_code,
+                               :plant_location)
     TrayLocation = Struct.new(:tray_id,
                               :tray_code,
                               :capacity)

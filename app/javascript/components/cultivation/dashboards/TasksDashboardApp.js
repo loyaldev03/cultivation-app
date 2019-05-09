@@ -19,22 +19,21 @@ class ActiveTaskStore {
   @observable tasks = []
   @observable isLoading = false
   @observable isDataLoaded = false
-  @observable pagy = {}
+  @observable metadata = {}
 
   @action
-  async loadActiveTasks({ page, pageSize }) {
+  async loadActiveTasks({ facility_id, page, limit }) {
     this.isLoading = true
-    const url = `/api/v1/batches/active_tasks?page=${page +
-      1}&pageSize=${pageSize}`
+    const url = `/api/v1/batches/active_tasks_agg?facility_id=${facility_id}&page=${page}&limit=${limit}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
-        this.tasks = response.data.map(x => x.attributes)
-        this.pagy = response.pagy
+        this.tasks = response.data
+        this.metadata = response.metadata
         this.isDataLoaded = true
       } else {
         this.tasks = []
-        this.pagy = {}
+        this.metadata = {}
         this.isDataLoaded = false
       }
     } catch (error) {
@@ -57,21 +56,45 @@ class TasksDashboardApp extends React.Component {
   state = {
     columns: [
       {
-        headerClassName: 'tl',
-        Header: 'WBS',
-        accessor: 'wbs',
-        width: 78
+        accessor: 'batch_id',
+        show: false
+      },
+      {
+        headerClassName: 'tc',
+        Header: '!',
+        accessor: 'issue_count',
+        width: 30,
+        Cell: props =>
+          props.value ? (
+            <i className="material-icons md-16 red pointer">error</i>
+          ) : null
       },
       {
         headerClassName: 'pl3 tl',
         Header: 'Task',
         accessor: 'name',
         className: 'pl3 fw6',
-        minWidth: 138,
+        minWidth: 160,
+        Cell: props => <span className="truncate">{props.value}</span>
+      },
+      {
+        headerClassName: 'pl3 tl',
+        Header: 'Phase',
+        accessor: 'phase',
+        className: 'pl3 ttc',
+        minWidth: 70
+      },
+      {
+        headerClassName: 'pl3 tl',
+        Header: 'Batch ID',
+        accessor: 'batch_name',
+        className: 'pl3',
+        minWidth: 128,
         Cell: props => (
           <a
-            className="link dark-grey truncate"
-            href={`/cultivation/batches/${props.row.cultivation_batch_id}`}
+            className="link grey truncate"
+            href={`/cultivation/batches/${props.row.batch_id}`}
+            title={props.row.batch_no}
           >
             {props.value}
           </a>
@@ -147,20 +170,23 @@ class TasksDashboardApp extends React.Component {
   }
 
   onFetchData = (state, instance) => {
-    activeTaskStore.loadActiveTasks(state)
+    activeTaskStore.loadActiveTasks({
+      facility_id: this.props.defaultFacilityId,
+      page: state.page,
+      limit: state.pageSize
+    })
   }
 
-  onToggleColumns = e => {
-    const opt = this.state.columns.find(x => x.Header === e.target.name)
-    if (opt) {
-      opt.show = e.target.checked
+  onChangeCheckbox = (header, value) => {
+    const column = this.state.columns.find(x => x.Header === header)
+    if (column) {
+      column.show = value
+      this.setState({
+        columns: this.state.columns.map(x =>
+          x.Header === column.Header ? column : x
+        )
+      })
     }
-    this.setState({
-      columns: this.state.columns.map(x =>
-        x.accessor === e.target.name ? opt : x
-      )
-    })
-    e.stopPropagation()
   }
 
   render() {
@@ -180,14 +206,14 @@ class TasksDashboardApp extends React.Component {
               activeTaskStore.filter = e.target.value
             }}
           />
-          <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+          <CheckboxSelect options={columns} onChange={this.onChangeCheckbox} />
         </div>
         <div className="pv3">
           <ListingTable
             ajax={true}
             onFetchData={this.onFetchData}
             data={activeTaskStore.filteredList}
-            pages={activeTaskStore.pagy.pages}
+            pages={activeTaskStore.metadata.pages}
             columns={columns}
             isLoading={activeTaskStore.isLoading}
           />

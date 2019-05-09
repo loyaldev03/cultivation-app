@@ -37,7 +37,8 @@ function NumericInput({
   errors = {},
   fieldname = null,
   readOnly = false,
-  labelClassName = ''
+  labelClassName = '',
+  step = ''
 }) {
   return (
     <React.Fragment>
@@ -56,6 +57,7 @@ function NumericInput({
         max={max}
         fieldname={fieldname}
         readOnly={readOnly}
+        step={step}
       />
       {fieldname && <FieldError errors={errors} field={fieldname} />}
     </React.Fragment>

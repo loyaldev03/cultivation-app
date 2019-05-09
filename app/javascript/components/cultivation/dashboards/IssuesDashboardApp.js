@@ -56,14 +56,17 @@ class IssuesDashboard extends React.Component {
         accessor: 'severity',
         className: 'justify-center ttu',
         minWidth: 88,
-        Cell: props => 
-          <span 
+        Cell: props => (
+          <span
             className={classNames(`fw6 red`, {
-              'purple': props.value === 'severe',
-              'yellow': props.value === 'medium',
-              'red': props.value === 'high',
+              purple: props.value === 'severe',
+              yellow: props.value === 'medium',
+              red: props.value === 'high'
             })}
-          >{props.value}</span>
+          >
+            {props.value}
+          </span>
+        )
       },
       {
         headerClassName: 'tl',

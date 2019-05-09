@@ -324,6 +324,7 @@ Rails.application.routes.draw do
 
       resources :issues, only: [:create, :by_batch, :show, :archive] do
         collection do
+          get 'all'
           get 'by_batch/:batch_id', action: 'by_batch'
           get 'unresolved_count/:batch_id', action: 'unresolved_count'
           post 'archive'

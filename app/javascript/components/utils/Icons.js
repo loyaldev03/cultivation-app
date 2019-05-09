@@ -9,6 +9,7 @@ import RoomIcon from '../../../assets/images/room-icon.svg'
 import TempBatchWidgets from '../../../assets/images/dummy/cult-batches.png'
 import TempPlantWidgets from '../../../assets/images/dummy/cult-plants-widget.png'
 import TempTaskWidgets from '../../../assets/images/dummy/cult-tasks.png'
+import TempIssueWidgets from '../../../assets/images/dummy/cult-issues.png'
 
 export {
   ImgAdd,
@@ -21,5 +22,6 @@ export {
   RoomIcon,
   TempBatchWidgets,
   TempPlantWidgets,
-  TempTaskWidgets
+  TempTaskWidgets,
+  TempIssueWidgets
 }

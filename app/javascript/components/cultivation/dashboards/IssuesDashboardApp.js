@@ -1,6 +1,8 @@
 import 'babel-polyfill'
+import React from 'react'
 import { observer } from 'mobx-react'
 import { ActiveBadge, CheckboxSelect, TempIssueWidgets } from '../../utils'
+import classNames from 'classnames'
 import ListingTable from './ListingTable'
 
 import IssueStore from '../../issues/store/IssueStore'
@@ -54,7 +56,14 @@ class IssuesDashboard extends React.Component {
         accessor: 'severity',
         className: 'justify-center ttu',
         minWidth: 88,
-        Cell: props => <span className="fw6 red">{props.value}</span>
+        Cell: props => 
+          <span 
+            className={classNames(`fw6 red`, {
+              'purple': props.value === 'severe',
+              'yellow': props.value === 'medium',
+              'red': props.value === 'high',
+            })}
+          >{props.value}</span>
       },
       {
         headerClassName: 'tl',
@@ -86,17 +95,16 @@ class IssuesDashboard extends React.Component {
     IssueStore.loadAllIssues()
   }
 
-  onToggleColumns = e => {
-    const opt = this.state.columns.find(x => x.Header === e.target.name)
-    if (opt) {
-      opt.show = e.target.checked
+  onToggleColumns = (header, value) => {
+    const column = this.state.columns.find(x => x.Header === header)
+    if (column) {
+      column.show = value
+      this.setState({
+        columns: this.state.columns.map(x =>
+          x.Header === column.Header ? column : x
+        )
+      })
     }
-    this.setState({
-      columns: this.state.columns.map(x =>
-        x.accessor === e.target.name ? opt : x
-      )
-    })
-    e.stopPropagation()
   }
 
   render() {

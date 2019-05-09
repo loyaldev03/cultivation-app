@@ -235,6 +235,7 @@ Rails.application.routes.draw do
         get 'harvest_batch'
         get 'list_infos', on: :collection
         get 'active_tasks', on: :collection, controller: :tasks, action: :active_tasks
+        get 'active_tasks_agg', on: :collection, controller: :tasks, action: :active_tasks_agg
         get 'search_locations', on: :collection
         get 'plants_movement_history', on: :collection
         post 'search_batch_plans', on: :collection
@@ -310,6 +311,7 @@ Rails.application.routes.draw do
         get '/tasks_by_date_range', to: 'daily_tasks#tasks_by_date_range'
         put '/time_log', to: 'daily_tasks#time_log'
         get '/work_schedules', to: 'daily_tasks#work_schedules'
+        get '/schedule_by_date', to: 'daily_tasks#schedule_by_date'
         
         post ':id/save_material_used', to: 'daily_tasks#save_material_used'
         post 'materials_used', to: 'daily_tasks#materials_used' 

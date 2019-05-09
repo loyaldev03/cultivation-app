@@ -10,6 +10,7 @@ import ClipPotTagForm from './components/ClipPotTagForm'
 import MovingIntoTrayForm from './components/MovingIntoTrayForm'
 import HarvestBatchWeightForm from './components/HarvestBatchWeightForm'
 import WeightForm from './components/WeightForm'
+import CreatePackageForm from './components/CreatePackageForm'
 
 import loadDailyTasks from './actions/loadDailyTasks'
 import DailyTasksStore from './stores/DailyTasksStore'
@@ -164,6 +165,17 @@ class DailyTaskApp extends React.Component {
               batchId={batchId}
               sidebarName={sidebarName}
               show={sidebarName === 'measure_waste_weight'}
+            />
+          )}
+        />
+        <SlidePanel
+          width="500px"
+          show={sidebarName === 'create_package_plan'}
+          renderBody={props => (
+            <CreatePackageForm
+              batchId={batchId}
+              sidebarName={sidebarName}
+              show={sidebarName === 'create_package_plan'}
             />
           )}
         />

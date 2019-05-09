@@ -165,6 +165,8 @@ class ProductTypeSection extends React.Component {
                           x.package_type
                         )
                       }}
+                      min={0}
+                      step="1"
                       fieldname="quantity"
                     />
                   </td>
@@ -173,7 +175,7 @@ class ProductTypeSection extends React.Component {
                       x.package_type,
                       x.quantity,
                       harvestBatchUom
-                    ).toFixed(4)}
+                    ).toFixed(2)}
                   </td>
                   <td className="tc pv1">
                     <a

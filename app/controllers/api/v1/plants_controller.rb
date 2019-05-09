@@ -7,7 +7,7 @@ class Api::V1::PlantsController < Api::V1::BaseApiController
     excludes = params[:excludes] || []
     plants = Inventory::Plant.includes(:facility_strain, :cultivation_batch)
     plants = plants.where(current_growth_stage: {'$in': growth_stages}) if growth_stages.any?
-    plants = plants.not_in(current_growth_stage: excludes) if excludes.any?
+    plants = plants.not_in(current_growth_stage: excludes) if excludes&.any?
     plants = plants.where(facility_strain_id: params[:facility_strain_id]) if params[:facility_strain_id]
     plants = plants.in(facility_strain_id: facility_strain_ids)
     plants = plants.order(c_at: :desc).to_a

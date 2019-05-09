@@ -20,6 +20,14 @@ const CheckboxSelect = ({ onChange, values = [], options = [] }) => {
   }, [])
   const optionsToShow = options.filter(x => x.Header)
   const isCustom = optionsToShow.some(x => x.show === false)
+  const onCheckAll = () => {
+    optionsToShow.forEach(opt => {
+      if (opt.show === false) {
+        onChange(opt.Header, true)
+      }
+    })
+    setExpand(false)
+  }
   return (
     <div ref={node} className="f6 dark-grey">
       <Manager>
@@ -57,6 +65,16 @@ const CheckboxSelect = ({ onChange, values = [], options = [] }) => {
               >
                 <div className="ma1 w5 shadow-3 bg-white ba br2 b--light-grey">
                   <ul className="list pl0 mv2">
+                    <li>
+                      <label className="pointer pv2 ph3 flex justify-between items-center">
+                        -- All --
+                        <input
+                          type="checkbox"
+                          checked={!isCustom}
+                          onChange={onCheckAll}
+                        />
+                      </label>
+                    </li>
                     {optionsToShow.map((x, i) => {
                       return (
                         <li key={i}>
@@ -65,8 +83,9 @@ const CheckboxSelect = ({ onChange, values = [], options = [] }) => {
                             <input
                               type="checkbox"
                               defaultChecked={!(x.show === false)}
-                              name={x.Header}
-                              onChange={onChange}
+                              onChange={e =>
+                                onChange(x.Header, e.target.checked)
+                              }
                             />
                           </label>
                         </li>

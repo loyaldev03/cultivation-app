@@ -23,29 +23,20 @@ class PackagePlanForm extends React.Component {
     harvestBatch: { harvest_name: '', uom: '', total_cure_weight: 0 }
   }
 
-  async componentDidMount() {
-    const data = await loadPackagePlans(this.props.batchId)
-    const hbResponse = await loadHarvestBatch(this.props.batchId)
-    let harvestBatch = {}
-    if (hbResponse.status !== 200) {
-      harvestBatch = { harvest_name: '', uom: 'kg', total_cure_weight: 0 }
-    } else {
-      const {
-        harvest_name,
-        uom,
-        total_cure_weight
-      } = hbResponse.data.data.attributes
-      harvestBatch = { harvest_name, uom, total_cure_weight }
-      // console.log(harvestBatch)
-    }
-
-    this.setState({ data, harvestBatch })
-  }
-
   async componentDidUpdate(prevProps, prevState) {
     if (!prevProps.show && this.props.show) {
       const data = await loadPackagePlans(this.props.batchId)
-      this.setState({ data })
+      const hbResponse = await loadHarvestBatch(this.props.batchId)
+      let harvestBatch = { harvest_name: '', uom: 'lb', total_cure_weight: 0 }
+      if (hbResponse.status === 200) {
+        const {
+          harvest_name,
+          uom,
+          total_cure_weight
+        } = hbResponse.data.data.attributes
+        harvestBatch = { harvest_name, uom, total_cure_weight }
+      }
+      this.setState({ data, harvestBatch })
     }
   }
 
@@ -102,7 +93,7 @@ class PackagePlanForm extends React.Component {
     const packageIndex = data[index].package_plans.findIndex(
       x => x.package_type == package_type
     )
-    data[index].package_plans[packageIndex].quantity = quantity
+    data[index].package_plans[packageIndex].quantity = Math.floor(quantity)
     this.setState({ data })
   }
 
@@ -123,7 +114,13 @@ class PackagePlanForm extends React.Component {
 
   onSave = event => {
     event.preventDefault()
-    savePackagePlans(this.props.batchId, this.state.data)
+    savePackagePlans(this.props.batchId, this.state.data).then(result => {
+      if (result.length > 0) {
+        toast('Package plan created.', 'success')
+      } else {
+        toast('Failed to create package plan.', 'error')
+      }
+    })
   }
 
   renderBreakdowns() {
@@ -219,10 +216,10 @@ class PackagePlanForm extends React.Component {
         <div id="toast" className="toast animated toast--success" />
         <SlidePanelHeader onClose={onClose} title="Create Package Plan" />
         <div className="ph4 mv3 flex">
-          <div className="w-70 f4 fw6">{harvestBatch.harvest_name}</div>
-          <div className="w-30 tr fw4 f5">
-            {this.totalPlannedWeight()} / {harvestBatch.total_cure_weight}{' '}
-            {harvestBatch.uom} allocated
+          <div className="w-60 f4 fw6">{harvestBatch.harvest_name}</div>
+          <div className="w-40 tr fw4 f5">
+            {this.totalPlannedWeight().toFixed(2)} /{' '}
+            {harvestBatch.total_cure_weight} {harvestBatch.uom} allocated
           </div>
         </div>
 

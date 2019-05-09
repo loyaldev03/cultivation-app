@@ -310,6 +310,7 @@ Rails.application.routes.draw do
         get '/tasks_by_date_range', to: 'daily_tasks#tasks_by_date_range'
         put '/time_log', to: 'daily_tasks#time_log'
         get '/work_schedules', to: 'daily_tasks#work_schedules'
+        get '/schedule_by_date', to: 'daily_tasks#schedule_by_date'
         
         post ':id/save_material_used', to: 'daily_tasks#save_material_used'
         post 'materials_used', to: 'daily_tasks#materials_used' 

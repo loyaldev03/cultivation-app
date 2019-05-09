@@ -177,7 +177,7 @@ class TasksDashboardApp extends React.Component {
     })
   }
 
-  onChangeCheckbox = (header, value) => {
+  onToggleColumns = (header, value) => {
     const column = this.state.columns.find(x => x.Header === header)
     if (column) {
       column.show = value
@@ -206,7 +206,7 @@ class TasksDashboardApp extends React.Component {
               activeTaskStore.filter = e.target.value
             }}
           />
-          <CheckboxSelect options={columns} onChange={this.onChangeCheckbox} />
+          <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>
         <div className="pv3">
           <ListingTable

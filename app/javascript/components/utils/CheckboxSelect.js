@@ -60,13 +60,13 @@ const CheckboxSelect = ({ onChange, values = [], options = [] }) => {
               <div
                 ref={ref}
                 style={style}
-                className="z-1"
+                className="z-999"
                 data-placement={placement}
               >
                 <div className="ma1 w5 shadow-3 bg-white ba br2 b--light-grey">
                   <ul className="list pl0 mv2">
                     <li>
-                      <label className="pointer pv2 ph3 flex justify-between items-center">
+                      <label className="hover-bg-grey pointer pv2 ph3 flex justify-between items-center">
                         -- All --
                         <input
                           type="checkbox"
@@ -78,7 +78,7 @@ const CheckboxSelect = ({ onChange, values = [], options = [] }) => {
                     {optionsToShow.map((x, i) => {
                       return (
                         <li key={i}>
-                          <label className="pointer pv2 ph3 flex justify-between items-center">
+                          <label className="hover-bg-grey pointer pv2 ph3 flex justify-between items-center">
                             {x.Header}
                             <input
                               type="checkbox"

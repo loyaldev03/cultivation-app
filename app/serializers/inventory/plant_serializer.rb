@@ -35,23 +35,23 @@ module Inventory
     end
 
     attribute :cultivation_batch_name do |object|
-      object.cultivation_batch.name
+      object&.cultivation_batch&.name
     end
 
     attribute :batch_growth_stage do |object|
-      object.cultivation_batch.current_growth_stage
+      object&.cultivation_batch&.current_growth_stage
     end
 
     attribute :batch_start_date do |object|
-      object.cultivation_batch.start_date
+      object&.cultivation_batch&.start_date
     end
 
     attribute :estimated_harvest_date do |object|
-      object.cultivation_batch.estimated_harvest_date
+      object&.cultivation_batch&.estimated_harvest_date
     end
 
     attribute :current_stage_start_date do |object|
-      object.cultivation_batch.current_stage_start_date
+      object&.cultivation_batch&.current_stage_start_date
     end
 
     attribute :strain_name do |object|

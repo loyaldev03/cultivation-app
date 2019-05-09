@@ -1,10 +1,6 @@
 import 'babel-polyfill'
 import { observer } from 'mobx-react'
-import {
-  ActiveBadge,
-  CheckboxSelect,
-  TempIssueWidgets
-} from '../../utils'
+import { ActiveBadge, CheckboxSelect, TempIssueWidgets } from '../../utils'
 import ListingTable from './ListingTable'
 
 import IssueStore from '../../issues/store/IssueStore'
@@ -83,8 +79,7 @@ class IssuesDashboard extends React.Component {
         className: '',
         minWidth: 130,
         Cell: props => <span className="">{props.value}</span>
-      },
-
+      }
     ]
   }
   componentDidMount() {
@@ -109,9 +104,12 @@ class IssuesDashboard extends React.Component {
     return (
       <div className="pa4 mw1200">
         <div className="flex flex-row-reverse">
-          <span className='f5 fw6'>
+          <span className="f5 fw6">
             You have
-            <span className="orange"> {IssueStore.openIssuesCount} Open Issues</span>
+            <span className="orange">
+              {' '}
+              {IssueStore.openIssuesCount} Open Issues
+            </span>
           </span>
         </div>
         <div className="pv4">

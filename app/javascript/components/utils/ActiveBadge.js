@@ -9,7 +9,8 @@ const ActiveBadge = React.memo(({ status, className = '' }) => {
       className={classNames(`f7 fw6 ph3 pv1 ba br2 dib tc ${className}`, {
         'grey b--grey': status === BATCH_STATUS.DRAFT,
         'bg-orange b--orange white': status === BATCH_STATUS.SCHEDULED,
-        'bg-green b--green white': status === BATCH_STATUS.ACTIVE || status === 'open'
+        'bg-green b--green white':
+          status === BATCH_STATUS.ACTIVE || status === 'open'
       })}
     >
       {status}

@@ -1,13 +1,14 @@
 import { observable, action, computed, toJS } from 'mobx'
 
-import { httpGetOptions, formatDate, formatTime} from '../../utils'
+import { httpGetOptions, formatDate, formatTime } from '../../utils'
 
 function parseIssue(taskAttributes) {
   const { created_at } = taskAttributes
   const new_created_at = `${formatDate(created_at)}, ${formatTime(created_at)}`
   return Object.assign(taskAttributes, {
-    created_at: new_created_at,
-  })}
+    created_at: new_created_at
+  })
+}
 
 class IssueStore {
   issues = observable([])
@@ -24,7 +25,7 @@ class IssueStore {
     this.isLoading = true
     const url = `/api/v1/issues/all`
     try {
-      const response = await(await fetch(url, httpGetOptions)).json()
+      const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
         const issues = response.data.map(res => {
           let temp = res
@@ -39,7 +40,6 @@ class IssueStore {
     } catch (error) {
       console.error(error)
     } finally {
-
     }
   }
 
@@ -92,7 +92,6 @@ class IssueStore {
   get openIssuesCount() {
     return this.issues.map(x => x.attributes.status === 'open').length || 0
   }
-
 }
 
 const issueStore = new IssueStore()

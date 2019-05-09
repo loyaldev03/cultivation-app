@@ -95,19 +95,24 @@ class OtForm extends React.Component {
 
             <div className="mt4 fl w-100 flex justify-between">
               <label className="f6 fw6 db mb1 gray ttc">Working Hours</label>
-                {this.state.schedule_start_time && this.state.schedule_end_time ? 
-                  <div className='flex w-60 justify-around'>
-                      <label className="f6 grey">{this.state.schedule_start_time}</label>
-                      <div className="flex items-center">
-                        <label className="f4 db mb1 ttc">-</label>
-                      </div>
-                      <label className="f6 grey">{this.state.schedule_end_time}</label>
-                   </div>
-                   : 
-                  <div className="flex w-60 items-center mb1">
-                    <span class="f6 grey">No schedule</span>
+              {this.state.schedule_start_time &&
+              this.state.schedule_end_time ? (
+                <div className="flex w-60 justify-around">
+                  <label className="f6 grey">
+                    {this.state.schedule_start_time}
+                  </label>
+                  <div className="flex items-center">
+                    <label className="f4 db mb1 ttc">-</label>
                   </div>
-                }
+                  <label className="f6 grey">
+                    {this.state.schedule_end_time}
+                  </label>
+                </div>
+              ) : (
+                <div className="flex w-60 items-center mb1">
+                  <span class="f6 grey">No schedule</span>
+                </div>
+              )}
             </div>
 
             <div className="mt2 fl w-100 flex justify-between">

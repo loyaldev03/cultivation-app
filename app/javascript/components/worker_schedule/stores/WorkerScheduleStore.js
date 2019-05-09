@@ -100,7 +100,7 @@ class WorkerScheduleStore {
   }
 
   @action
-  getWorkScheduleByDate = async (date) => {
+  getWorkScheduleByDate = async date => {
     this.isLoading = true
     try {
       let url = `/api/v1/daily_tasks/schedule_by_date?date=${date}`
@@ -115,7 +115,6 @@ class WorkerScheduleStore {
       this.isLoading = false
     }
   }
-
 }
 const workerScheduleStore = new WorkerScheduleStore()
 export default workerScheduleStore

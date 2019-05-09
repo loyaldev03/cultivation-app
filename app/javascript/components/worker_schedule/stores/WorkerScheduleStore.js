@@ -3,6 +3,7 @@ import { httpGetOptions, httpPostOptions, toast } from '../../utils'
 class WorkerScheduleStore {
   @observable isLoading = false
   @observable scheduleData = {}
+  @observable taskData = []
 
   @action
   getTaskByDate = async date => {
@@ -22,12 +23,16 @@ class WorkerScheduleStore {
     }
   }
   @action
-  getTaskByDateArr = async () => {
+  getTaskByMonth = async (monthAndYearString, date) => {
+    var first = new Date(date.getYear(), date.getMonth(), 1)
+    var last = new Date(date.getYear(), date.getMonth() + 1, 0)
+    console.log(monthAndYearString + first.getDate())
     try {
-      let url = `/api/v1/daily_tasks/work_schedules?start_date=2019-2-21&end_date=2020-2-27`
+      let url = `/api/v1/daily_tasks/tasks_by_date_range?start_date=${monthAndYearString +
+        first.getDate()}&end_date=${monthAndYearString + last.getDate()}`
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
-        console.log(response)
+        this.taskData = response
         return response
       }
     } catch (err) {

@@ -1,28 +1,69 @@
 import React from 'react'
-
+import workerScheduleStore from './stores/WorkerScheduleStore'
+import TaskPopper from './TaskPopper'
 const date = new Date()
 const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
 
 export default class WeeklyCalendar extends React.Component {
   state = {
-    marker: []
+    marker: [],
+    earliest: null,
+    latest: null
   }
   componentDidMount = () => {
     console.log(this.props.weeklyTask)
+    let earliest =
+      this.props.weeklyTask.length > 0
+        ? this.props.weeklyTask[0].start_time.substring(0, 2)
+        : 0
+    let latest =
+      this.props.weeklyTask.length > 0
+        ? this.props.weeklyTask[0].end_time.substring(0, 2)
+        : 0
     let marker = this.props.weeklyTask.map(x => {
+      if (x.end_time.substring(0, 2) > latest) {
+        latest = x.end_time.substring(0, 2)
+      }
+      if (x.start_time.substring(0, 2) < earliest) {
+        earliest = x.start_time.substring(0, 2)
+      }
       let totalTime = x.end_time.substring(0, 2) - x.start_time.substring(0, 2)
-      return { name: x.date, totalTime }
+      return { name: x.date, totalTime, start: x.start_time, end: x.end_time }
     })
-    this.setState({ marker })
+    console.log(earliest, latest)
+    this.setState({
+      marker,
+      earliest: parseInt(earliest),
+      latest: parseInt(latest)
+    })
   }
   componentDidUpdate = prevProp => {
     if (prevProp.isWeeklyLoaded != this.props.isWeeklyLoaded) {
+      let earliest =
+        this.props.weeklyTask.length > 0
+          ? this.props.weeklyTask[0].start_time.substring(0, 2)
+          : 0
+      let latest =
+        this.props.weeklyTask.length > 0
+          ? this.props.weeklyTask[0].end_time.substring(0, 2)
+          : 0
       let marker = this.props.weeklyTask.map(x => {
+        if (x.end_time.substring(0, 2) > latest) {
+          latest = x.end_time.substring(0, 2)
+        }
+        if (x.start_time.substring(0, 2) < earliest) {
+          earliest = x.start_time.substring(0, 2)
+        }
         let totalTime =
           x.end_time.substring(0, 2) - x.start_time.substring(0, 2)
-        return { name: x.date, totalTime }
+        return { name: x.date, totalTime, start: x.start_time, end: x.end_time }
       })
-      this.setState({ marker })
+      console.log(parseInt(earliest), parseInt(latest))
+      this.setState({
+        marker,
+        earliest: parseInt(earliest),
+        latest: parseInt(latest)
+      })
     }
   }
   getWeekDate = date => {
@@ -34,9 +75,11 @@ export default class WeeklyCalendar extends React.Component {
   }
 
   render() {
-    let { marker } = this.state
+    let { marker, earliest, latest } = this.state
     let week = this.getWeekDate(date)
-    let time = new Array(10).fill(undefined)
+    latest == 0 ? (latest = 1) : (latest = latest)
+    earliest == 0 ? (earliest = 1) : (earliest = earliest)
+    let time = new Array(latest - earliest + 2).fill(undefined)
     return (
       <div className="flex flex-column " style={{ flexGrow: 1 }}>
         <Row className="b grey">
@@ -53,6 +96,7 @@ export default class WeeklyCalendar extends React.Component {
                 <span
                   className={`${x == new Date().getDate() &&
                     'br-100 bg-orange white ba b--black-10 tc v-mid pa2 '} `}
+                  style={{ paddingRight: '.8em', paddingLeft: '.8em' }}
                 >
                   {x}
                 </span>
@@ -72,67 +116,55 @@ export default class WeeklyCalendar extends React.Component {
         {time.map((row, rowNumber) => (
           <Row className="grey" key={rowNumber + 8} style={{ height: '3em' }}>
             <Cell className="tr" style={{ marginTop: '-1em' }}>
-              {rowNumber + 8 < 12
-                ? `${rowNumber + 8} AM`
-                : `${rowNumber + 8 - 12 == 0 ? 12 : rowNumber + 8 - 12} PM`}
+              {earliest + rowNumber < 12
+                ? `${earliest + rowNumber} AM`
+                : `${
+                    earliest + rowNumber - 12 == 0
+                      ? 12
+                      : earliest + rowNumber - 12
+                  } PM`}
             </Cell>
             {week.map((cell, cellNumber) => (
               <Cell
-                className={`${rowNumber < 9 &&
+                className={`${rowNumber <= latest - earliest &&
                   'bb'} b--light-grey ${cellNumber < 6 && 'br'}`}
                 key={cell + cellNumber}
               >
-                {marker[1] && rowNumber == 0 && (
-                  <Marker
-                    style={{
-                      position: 'absolute',
-                      height: `calc(3em*${marker[cellNumber].totalTime})`,
-                      width: '3.8rem',
-                      opacity: '0.9'
-                    }}
-                  >
-                    {' '}
-                    Task marking 4Hrs
-                    <br />
-                    {marker[cellNumber].name}
-                  </Marker>
-                )}
-                {rowNumber == 3 && cellNumber == 1 && (
-                  <Marker
-                    style={{
-                      position: 'absolute',
-                      height: 'calc(3em*4)',
-                      width: '3.8rem'
-                    }}
-                  >
-                    {' '}
-                    Task marking 4Hrs
-                  </Marker>
-                )}
-                {rowNumber == 2 && cellNumber == 4 && (
-                  <Marker
-                    style={{
-                      position: 'absolute',
-                      height: 'calc(3em*2.5)',
-                      width: '3.8rem'
-                    }}
-                  >
-                    {' '}
-                    Task Marking 2.5Hrs
-                  </Marker>
-                )}
-                {rowNumber == 1 && cellNumber == 5 && (
-                  <Marker
-                    style={{
-                      position: 'absolute',
-                      height: 'calc(3em*7)',
-                      width: '3.8rem'
-                    }}
-                  >
-                    {' '}
-                    Task Marking 7Hrs
-                  </Marker>
-                )}
+                {marker[cellNumber] &&
+                  rowNumber ==
+                    marker[cellNumber].start.substring(0, 2) - earliest && (
+                    <Marker
+                      style={{
+                        position: 'absolute',
+                        height: `calc(3em*${marker[cellNumber].totalTime})`,
+                        width: '3.8rem',
+                        marginLeft: '.1rem'
+                      }}
+                    >
+                      {' '}
+                      <br />
+                      <span className="small">
+                        {marker[cellNumber].start}-{marker[cellNumber].end}
+                      </span>
+                      <br />
+                      {workerScheduleStore.taskData.findIndex(
+                        x =>
+                          x.date === marker[cellNumber].name &&
+                          x.numberOfTasks > 0
+                      ) >= 0 && (
+                        <TaskPopper date={marker[cellNumber].name}>
+                          {
+                            workerScheduleStore.taskData[
+                              workerScheduleStore.taskData.findIndex(
+                                x => x.date === marker[cellNumber].name
+                              )
+                            ].numberOfTasks
+                          }{' '}
+                          Task
+                        </TaskPopper>
+                      )}
+                    </Marker>
+                  )}
               </Cell>
             ))}
           </Row>

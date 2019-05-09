@@ -18,7 +18,7 @@ import {
 class WorkerScheduleApp extends React.Component {
   state = {
     date: new Date(),
-    choice: 'week',
+    choice: 'Week',
     dateSelected: null,
     taskList: null,
     weeklyTask: [],
@@ -30,7 +30,11 @@ class WorkerScheduleApp extends React.Component {
     var first = curr.getDate() - curr.getDay() + 1 // First day is the day of the month - the day of the week
     var last = first + 6
     let monthString = formatMonthAndYear(curr)
-    console.log(monthString + first, monthString + last)
+    let task = await workerScheduleStore.getTaskByMonth(
+      formatMonthAndYear(curr),
+      curr
+    )
+    console.log(task)
     let weeklyTask = await workerScheduleStore.getTaskByWeekArr(
       monthString + first,
       monthString + last
@@ -115,7 +119,9 @@ class WorkerScheduleApp extends React.Component {
                     onClick={e => console.log(formatYDM(date))}
                   >
                     {date.getDate()}
-                    {date.getDate() == 2 && <div className="dot"> </div>}
+                    {workerScheduleStore.taskData.findIndex(
+                      x => x.date === formatYDM(date) && x.numberOfTasks > 0
+                    ) >= 0 && <div className="dot"> </div>}
                   </div>
                 )}
                 showNavigation={true}
@@ -150,13 +156,13 @@ class WorkerScheduleApp extends React.Component {
               </div>
             </div>
             <div className="w-20" />
-            {choice == 'week' && (
+            {choice == 'Week' && (
               <WeeklyCalendar
                 weeklyTask={weeklyTask}
                 isWeeklyLoaded={isWeeklyLoaded}
               />
             )}
-            {choice == 'month' && <MonthlyCalendar />}
+            {choice == 'Month' && <MonthlyCalendar />}
           </div>
         </div>
       </React.Fragment>

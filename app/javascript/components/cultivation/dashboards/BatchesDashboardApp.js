@@ -8,6 +8,7 @@ import {
   formatDate2,
   ActiveBadge,
   CheckboxSelect,
+  HeaderFilter,
   Loading,
   TempBatchWidgets
 } from '../../utils'
@@ -37,7 +38,14 @@ class BatchesDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Status',
+        Header: (
+          <HeaderFilter
+            title="Status"
+            accessor="status"
+            getOptions={BatchStore.getUniqPropValues}
+            onUpdate={BatchStore.updateFilterOptions}
+          />
+        ),
         accessor: 'status',
         className: 'justify-center',
         minWidth: 88,
@@ -45,7 +53,14 @@ class BatchesDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Strain',
+        Header: (
+          <HeaderFilter
+            title="Strain"
+            accessor="strain_name"
+            getOptions={BatchStore.getUniqPropValues}
+            onUpdate={BatchStore.updateFilterOptions}
+          />
+        ),
         accessor: 'strain_name',
         minWidth: 120,
         Cell: props => <span className="truncate">{props.value}</span>
@@ -60,10 +75,17 @@ class BatchesDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Growth Phase',
+        Header: (
+          <HeaderFilter
+            title="Growth Phase"
+            accessor="current_growth_stage"
+            getOptions={BatchStore.getUniqPropValues}
+            onUpdate={BatchStore.updateFilterOptions}
+          />
+        ),
         accessor: 'current_growth_stage',
         className: 'justify-center ttc',
-        minWidth: 74
+        minWidth: 130
       },
       {
         headerClassName: 'tl',
@@ -75,7 +97,14 @@ class BatchesDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Location',
+        Header: (
+          <HeaderFilter
+            title="Location"
+            accessor="current_stage_location"
+            getOptions={BatchStore.getUniqPropValues}
+            onUpdate={BatchStore.updateFilterOptions}
+          />
+        ),
         accessor: 'current_stage_location',
         minWidth: 180,
         Cell: props => <span className="truncate">{props.value}</span>

@@ -1,4 +1,5 @@
 import React, { lazy, Suspense } from 'react'
+import workerScheduleStore from './stores/WorkerScheduleStore'
 import {
   dateToMonthOption,
   monthOptionAdd,
@@ -12,21 +13,7 @@ class CalendarTitleBar extends React.PureComponent {
   render() {
     const { onPrev, onNext, month } = this.props
     return (
-      <div className="availabilty-calendar-title">
-        <button
-          onClick={onPrev}
-          className="fl fw4 ph2 br-100 pointer bg-white ml2"
-        >
-          &#171;
-        </button>
-        {monthOptionToString(month)}
-        <button
-          onClick={onNext}
-          className="fr fw4 ph2 br-100 pointer bg-white mr2"
-        >
-          &#187;
-        </button>
-      </div>
+      <div className="month-calendar-title">{monthOptionToString(month)}</div>
     )
   }
 }
@@ -35,22 +22,18 @@ export default class MonthlyCalendar extends React.Component {
   render() {
     let date = new Date(),
       totalDuration = 140
-    let searchMonth = '02-2019'
+    let searchMonth = '05-2019'
     return (
-      <div className="w-60 ph2">
-        <CalendarTitleBar
-          month={searchMonth}
-          onPrev={e => this.onSearch(monthOptionAdd(searchMonth, -1))}
-          onNext={e => this.onSearch(monthOptionAdd(searchMonth, 1))}
-        />
+      <div className="ph2">
+        <CalendarTitleBar month={searchMonth} />
         <Suspense fallback={<div />}>
           <Calendar
-            className="availabilty-calendar-title"
             style={{ width: '100%' }}
+            className="schedule-month-calendar"
             showNavigation={false}
             activeStartDate={monthStartDate(searchMonth)}
             tileContent={({ date, view }) => (
-              <CapacityTile startDate={date} duration={totalDuration} />
+              <CapacityTile date={date} duration={totalDuration} />
             )}
           />
         </Suspense>
@@ -59,8 +42,46 @@ export default class MonthlyCalendar extends React.Component {
   }
 }
 class CapacityTile extends React.PureComponent {
+  state = {
+    dayTask: []
+  }
+  componentDidMount = async () => {
+    let { date } = this.props
+    let dayTask = await workerScheduleStore.getTaskByDate(
+      `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+    )
+    console.log(dayTask)
+    this.setState({ dayTask })
+  }
   render() {
-    const { startDate, duration } = this.props
-    return <span className="react-calendar__tile__content" />
+    const { dayTask } = this.state
+    const { date, duration } = this.props
+    return (
+      <div className="white f6 lh-copy day-tile">
+        <span
+          className={`${dayTask.length > 0 ? 'white' : 'gray'} date-indicator`}
+        >
+          {date.getDate()}
+        </span>
+        {dayTask.length > 0 ? (
+          <div
+            className="bg-orange white pa1"
+            style={{
+              fontSize: '.5em',
+              top: '0',
+              left: '0',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            {dayTask.length} Tasks
+          </div>
+        ) : (
+          ' s'
+        )}
+      </div>
+    )
   }
 }

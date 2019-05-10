@@ -40,19 +40,19 @@ export default class TaskPopper extends React.Component {
           <Popper placement="left">
             {({ ref, style, placement, arrowProps }) => (
               <div
-                className="bg-white gray ba b--gray w5 pa3 o-100 tl mr1"
+                className="bg-white gray ba b--silver w5 pa3 o-100 tl mr1"
                 ref={ref}
                 style={style}
                 data-placement={placement}
               >
-                <h3 className="ma0">Tasks</h3>
+                <h4 className="ma0 mb1">Tasks</h4>
                 {taskList &&
                   taskList.map(task => (
                     <div key={task.id}>
                       <div className="flex justify-between grey">
                         <span>
                           {task.attributes.name}
-                          <div className="f6">
+                          <div className="f6 lh-copy">
                             {task.attributes.location_name}
                           </div>
                         </span>

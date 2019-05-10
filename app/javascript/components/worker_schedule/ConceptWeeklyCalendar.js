@@ -81,7 +81,7 @@ export default class WeeklyCalendar extends React.Component {
     earliest == 0 ? (earliest = 1) : (earliest = earliest)
     let time = new Array(latest - earliest + 2).fill(undefined)
     return (
-      <div className="flex flex-column " style={{ flexGrow: 1 }}>
+      <div className="flex flex-column ph4" style={{ flexGrow: 1 }}>
         <Row className="b grey">
           <Cell />
           {week.map((x, i) => (
@@ -106,7 +106,7 @@ export default class WeeklyCalendar extends React.Component {
         </Row>
         <Row style={{ marginTop: '-2em' }}>
           <Cell />
-          <Cell className="br h2 b--light-grey" />
+          <Cell className="br bl h2 b--light-grey" />
           <Cell className="br h2 b--light-grey" />
           <Cell className="br h2 b--light-grey" />
           <Cell className="br h2 b--light-grey" />

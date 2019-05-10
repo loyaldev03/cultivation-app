@@ -129,13 +129,13 @@ class WorkerScheduleApp extends React.Component {
               {/* <MiniMonthlyCalendar/> */}
 
               <div>
-                <div className="flex justify-between f3 lh-copy b dark-gray mb3 mt2">
+                <div className="flex justify-between f6 lh-copy b dark-gray mb3 mt4">
                   <span>Task</span>
                   <span>{dateSelected}</span>
                 </div>
                 {taskList &&
                   taskList.map(task => (
-                    <div className="b" key={task.id}>
+                    <div className="" key={task.id}>
                       <div className="flex justify-between grey">
                         <span>
                           {task.attributes.name}

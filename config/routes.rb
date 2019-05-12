@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   # get "worker_schedule/:worker_id" => "work_requests#worker_schedule", as: 'worker_schedule'
   post "update_requests/:work_request_id" => "work_requests#update_requests", as: 'update_requests' #for accept and reject requests (manager view)
 
-    get "qr_code" => "home#qr"
+  get "qr_code" => "home#qr"
 
 
   get "facility_setup/new" => "facility_setup#new"
@@ -112,6 +112,8 @@ Rails.application.routes.draw do
     end
 
     resources :non_sales_items, only: [:index]
+    resources :metrc, only: [:index]
+    # TaskDashboardApp
   end
 
   namespace 'settings' do
@@ -154,9 +156,12 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace 'daily_tasks' do
-    get '/', action: 'index'
+  namespace :integration do
+    resources :metrc, only: [:index]
   end
+
+  resources :daily_tasks, only: [:index]
+
 
   # API for web pages
   namespace :api do

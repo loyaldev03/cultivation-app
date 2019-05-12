@@ -10,40 +10,6 @@ import currentIssueStore from './store/CurrentIssueStore'
 
 @observer
 class IssueSidebar extends React.Component {
-  // constructor(props) {
-  //   super(props)
-  //   // const issueId = props.id
-  //   // const mode = props.mode
-
-  //   // if (issueId) {
-  //   //   getIssue(issueId)
-  //   // } else if (mode === 'create') {
-  //   //   currentIssueStore.reset()
-  //   // }
-
-  //   this.state = {
-  //     ...this.resetState(),
-  //     mode: props.mode,
-  //   }
-
-  //   // observe(currentIssueStore, 'mode', changes => {
-  //   //   console.log('>> currentIssueStore.issue changed....')
-  //   //   console.log(changes)
-  //   //   const { mode } = this.state
-  //   //   const issueId = toJS(currentIssueStore.issue.id)
-  //   //   let state = this.resetState()
-
-  //   //   if (mode === 'details') {
-  //   //     state = { ...state, mode, issueId }
-  //   //   } else if (!issueId) {
-  //   //     state = { ...state, mode: 'create', issueId: '' }
-  //   //   } else {
-  //   //     state = { ...state, mode: 'edit', issueId }
-  //   //   }
-  //   //   this.setState({ state })
-  //   // })
-  // }
-
   onToggleMode = () => {
     if (currentIssueStore.mode === 'details') {
       // this.setState({ mode: 'edit' })

@@ -45,6 +45,7 @@ module Cultivation
                        as: 'batch'}},
           {"$unwind": '$batch'},
           match_facility,
+          match_search,
           {"$lookup": {from: 'users',
                        localField: 'user_ids',
                        foreignField: '_id',
@@ -124,6 +125,14 @@ module Cultivation
     def match_facility
       if args[:facility_id]
         {"$match": {"batch.facility_id": args[:facility_id].to_bson_id}}
+      else
+        {"$match": {}}
+      end
+    end
+
+    def match_search
+      if !args[:search].blank?
+        {"$match": {"name": args[:search]}}
       else
         {"$match": {}}
       end

@@ -3,7 +3,7 @@ import isEmpty from 'lodash.isempty'
 import React, { memo, useState } from 'react'
 import classNames from 'classnames'
 import { differenceInDays } from 'date-fns'
-import { action, observable, computed } from 'mobx'
+import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import {
   decimalFormatter,
@@ -21,11 +21,33 @@ class ActiveTaskStore {
   @observable isLoading = false
   @observable isDataLoaded = false
   @observable metadata = {}
+  @observable searchTerm = ''
+  @observable filter = {
+    facility_id: '',
+    page: 0,
+    limit: 20
+  }
+
+  constructor() {
+    autorun(
+      () => {
+        if (this.searchTerm && this.filter.facility_id) {
+          this.loadActiveTasks()
+        }
+      },
+      { delay: 700 }
+    )
+  }
 
   @action
-  async loadActiveTasks({ facility_id, page, limit }) {
+  async loadActiveTasks() {
     this.isLoading = true
-    const url = `/api/v1/batches/active_tasks_agg?facility_id=${facility_id}&page=${page}&limit=${limit}`
+    let url = `/api/v1/batches/active_tasks_agg?facility_id=${
+      this.filter.facility_id
+    }`
+    url += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
+      this.searchTerm
+    }`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
@@ -42,6 +64,15 @@ class ActiveTaskStore {
       console.error(error)
     } finally {
       this.isLoading = false
+    }
+  }
+
+  @action
+  setFilter(filter) {
+    this.filter = {
+      facility_id: filter.facility_id,
+      page: filter.page,
+      limit: filter.limit
     }
   }
 
@@ -184,11 +215,12 @@ class TasksDashboardApp extends React.Component {
   }
 
   onFetchData = (state, instance) => {
-    activeTaskStore.loadActiveTasks({
+    activeTaskStore.setFilter({
       facility_id: this.props.defaultFacilityId,
       page: state.page,
       limit: state.pageSize
     })
+    activeTaskStore.loadActiveTasks()
   }
 
   onToggleColumns = (header, value) => {
@@ -217,7 +249,7 @@ class TasksDashboardApp extends React.Component {
             className="input w5"
             placeholder="Search Tasks"
             onChange={e => {
-              activeTaskStore.filter = e.target.value
+              activeTaskStore.searchTerm = e.target.value
             }}
           />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />

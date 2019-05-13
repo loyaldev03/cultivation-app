@@ -17,7 +17,6 @@ export default class TaskPopper extends React.Component {
   getTaskTheDay = async date => {}
   componentWillMount = async () => {
     document.addEventListener('mousedown', this.falsifyPopper)
-    console.log(await workerScheduleStore.getTaskByDate(this.props.date))
     this.setState({
       taskList: await workerScheduleStore.getTaskByDate(this.props.date)
     })

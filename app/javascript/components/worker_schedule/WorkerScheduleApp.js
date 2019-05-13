@@ -34,7 +34,7 @@ class WorkerScheduleApp extends React.Component {
       formatMonthAndYear(curr),
       curr
     )
-    console.log(task)
+    // console.log(task)
     let weeklyTask = await workerScheduleStore.getTaskByWeekArr(
       monthString + first,
       monthString + last
@@ -42,7 +42,7 @@ class WorkerScheduleApp extends React.Component {
     this.setState({ weeklyTask, isWeeklyLoaded: true })
   }
   onChangeCalendar = duration => {
-    console.log(duration)
+    // console.log(duration)
     this.setState({ choice: duration })
   }
   getDayTask = async date => {

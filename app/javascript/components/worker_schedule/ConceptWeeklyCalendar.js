@@ -11,7 +11,6 @@ export default class WeeklyCalendar extends React.Component {
     latest: null
   }
   componentDidMount = () => {
-    console.log(this.props.weeklyTask)
     let earliest =
       this.props.weeklyTask.length > 0
         ? this.props.weeklyTask[0].start_time.substring(0, 2)
@@ -30,7 +29,6 @@ export default class WeeklyCalendar extends React.Component {
       let totalTime = x.end_time.substring(0, 2) - x.start_time.substring(0, 2)
       return { name: x.date, totalTime, start: x.start_time, end: x.end_time }
     })
-    console.log(earliest, latest)
     this.setState({
       marker,
       earliest: parseInt(earliest),
@@ -58,7 +56,6 @@ export default class WeeklyCalendar extends React.Component {
           x.end_time.substring(0, 2) - x.start_time.substring(0, 2)
         return { name: x.date, totalTime, start: x.start_time, end: x.end_time }
       })
-      console.log(parseInt(earliest), parseInt(latest))
       this.setState({
         marker,
         earliest: parseInt(earliest),

@@ -9,14 +9,6 @@ import {
   SlidePanelFooter
 } from '../utils'
 const Calendar = lazy(() => import('react-calendar/dist/entry.nostyle'))
-class CalendarTitleBar extends React.PureComponent {
-  render() {
-    const { onPrev, onNext, month } = this.props
-    return (
-      <div className="month-calendar-title">{monthOptionToString(month)}</div>
-    )
-  }
-}
 
 export default class MonthlyCalendar extends React.Component {
   render() {
@@ -24,8 +16,8 @@ export default class MonthlyCalendar extends React.Component {
       totalDuration = 140
     let searchMonth = '05-2019'
     return (
-      <div className="ph2">
-        <CalendarTitleBar month={searchMonth} />
+      <div className="pl5 pr4">
+        <div className="month-calendar-title">{monthOptionToString(searchMonth)}</div>
         <Suspense fallback={<div />}>
           <Calendar
             style={{ width: '100%' }}
@@ -67,6 +59,7 @@ class CapacityTile extends React.PureComponent {
             className="bg-orange white pa1"
             style={{
               fontSize: '.5em',
+              fontWeight: 600,
               top: '0',
               left: '0',
               width: '100%',

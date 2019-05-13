@@ -26,12 +26,14 @@ export default class TaskPopper extends React.Component {
   }
   render() {
     const { isOpen, taskList } = this.state
+    const { numberOfTask } = this.props
+    const label = numberOfTask && numberOfTask > 1 ? 'Tasks' : 'Task'
     return (
       <Manager>
         <Reference>
           {({ ref }) => (
             <div className="b pointer" onClick={this.togglePopper} ref={ref}>
-              {this.props.children}
+              {numberOfTask} {label}
             </div>
           )}
         </Reference>

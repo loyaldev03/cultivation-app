@@ -12,7 +12,7 @@ import ListingTable from './ListingTable'
 
 import HarvestBatchStore from '../../dailyTask/stores/HarvestBatchStore'
 @observer
-class IssuesDashboard extends React.Component {
+class HarvestDashboard extends React.Component {
   state = {
     columns: [
       { accessor: 'id', show: false },
@@ -126,10 +126,10 @@ class IssuesDashboard extends React.Component {
     return (
       <div className="pa4 mw1200">
         <div className="flex flex-row-reverse">
-          <span className="f5 fw6">
+          {/* <span className="f5 fw6">
             You have
             <span className="orange"> Something here</span>
-          </span>
+          </span> */}
         </div>
         <div className="pv4">
           <img src={TempIssueWidgets} className="w-100" />
@@ -157,4 +157,4 @@ class IssuesDashboard extends React.Component {
   }
 }
 
-export default IssuesDashboard
+export default HarvestDashboard

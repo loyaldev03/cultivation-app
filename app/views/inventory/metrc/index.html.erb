@@ -1,27 +1,14 @@
 <% content_for :breadcrumb do %>
-  <%= breadcrumbs ["Home",root_path],
-      ['Inventory Setup', inventory_setup_path], 'Non-Sales Item'
-  %>
+  <%= breadcrumbs ["Home",root_path] %>
 <% end %>
 
 
 <div class="pa4">
-  <%= render partial: 'setupIntro' %>
   <div class="flex flex-column">
-    <%= react_component('inventory/non_sales_items/NonSalesItemsSetupApp',
+    <%= react_component('inventory/metrc/MetrcInventoryApp',
     { 
-      order_uoms: @order_uoms, 
-      catalogues: @catalogues, 
-      facility_id: params[:facility_id],
-      scanditLicense: @scanditLicense
+      facility_id: @facility_id
     }) 
     %>
-
-    <div class="w-100 bg-white ph3 pt2 pb4">
-      <div class="dim flex flex-row items-center pointer">
-        <i class="material-icons md-light-gray">keyboard_arrow_left</i>
-        <%= link_to "Back", inventory_setup_path, class: "db tr ttu link button--font light-grey" %>
-      </div>
-    </div>
   </div>
 </div>

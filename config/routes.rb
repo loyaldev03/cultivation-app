@@ -156,12 +156,7 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :integration do
-    resources :metrc, only: [:index]
-  end
-
   resources :daily_tasks, only: [:index]
-
 
   # API for web pages
   namespace :api do
@@ -235,6 +230,10 @@ Rails.application.routes.draw do
         get 'suggest', on: :collection
       end
 
+      resources :metrc, only: [:index] do
+        post 'bulk_create/:facility_id', action: 'bulk_create', on: :collection
+      end
+
       resources :batches, only: [:index, :create] do
         get 'batch_info'
         get 'harvest_batch'
@@ -250,8 +249,6 @@ Rails.application.routes.draw do
         post 'update_batch_info'
         post 'save_harvest_batch'
         post 'destroy', on: :collection
-
-
         get 'product_plans'
         post 'save_product_plans'
 
@@ -324,7 +321,6 @@ Rails.application.routes.draw do
         post ':batch_id/save_weight', to: 'daily_tasks#save_weight'
         post '/save_pto', to: 'daily_tasks#save_pto'
         post '/save_ot', to: 'daily_tasks#save_ot'
-
       end
 
       resources :issues, only: [:create, :by_batch, :show, :archive] do

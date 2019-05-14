@@ -112,7 +112,6 @@ class HarvestBatchStore {
       })
   }
 
-
   @computed
   get filteredList() {
     const list = this.harvestBatches.map(x => x.attributes)
@@ -150,7 +149,6 @@ class HarvestBatchStore {
   getUniqPropValues = propName => {
     return uniq(this.filteredList.map(x => x[propName]).sort())
   }
-
 }
 
 const harvestBatchStore = new HarvestBatchStore()

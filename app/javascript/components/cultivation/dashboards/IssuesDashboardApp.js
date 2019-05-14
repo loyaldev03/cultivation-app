@@ -1,7 +1,12 @@
 import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
-import { ActiveBadge, CheckboxSelect, TempIssueWidgets, HeaderFilter } from '../../utils'
+import {
+  ActiveBadge,
+  CheckboxSelect,
+  TempIssueWidgets,
+  HeaderFilter
+} from '../../utils'
 import classNames from 'classnames'
 import ListingTable from './ListingTable'
 
@@ -98,7 +103,7 @@ class IssuesDashboard extends React.Component {
           >
             {props.value}
           </span>
-        )      
+        )
       },
       {
         headerClassName: 'tl',

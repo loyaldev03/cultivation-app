@@ -1,12 +1,11 @@
 import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
-import { ActiveBadge, CheckboxSelect, TempIssueWidgets } from '../../utils'
+import { ActiveBadge, CheckboxSelect, TempIssueWidgets, HeaderFilter } from '../../utils'
 import classNames from 'classnames'
 import ListingTable from './ListingTable'
 
-import IssueStore from '../../issues/store/IssueStore'
-
+import HarvestBatchStore from '../../dailyTask/stores/HarvestBatchStore'
 @observer
 class IssuesDashboard extends React.Component {
   state = {
@@ -15,87 +14,94 @@ class IssuesDashboard extends React.Component {
       { accessor: 'cultivation_batch_id', show: false },
       {
         headerClassName: 'tl',
-        Header: 'Issue ID',
-        accessor: 'issue_no',
+        Header: 'Harvest Name',
+        accessor: 'harvest_name',
         minWidth: 88,
-        className: 'justify-center ttu',
+        className: 'ttu',
         Cell: props => <span className="truncate black fw6">{props.value}</span>
       },
       {
         headerClassName: 'tl',
-        Header: 'Status',
-        accessor: 'status',
-        className: 'justify-center ttu',
+        Header: (
+          <HeaderFilter
+            title="Strain"
+            accessor="strain_name"
+            getOptions={HarvestBatchStore.getUniqPropValues}
+            onUpdate={HarvestBatchStore.updateFilterOptions}
+          />
+        ),
+        accessor: 'strain_name',
         minWidth: 88,
-        Cell: props => <ActiveBadge status={props.value} />
+        className: 'ttu',
+        Cell: props => <span>{props.value}</span>
       },
       {
         headerClassName: 'tl',
-        Header: 'Issue Description',
-        accessor: 'description',
-        minWidth: 130,
-        Cell: props => <span className="truncate black fw6">{props.value}</span>
-      },
-      {
-        headerClassName: 'tl',
-        Header: 'Task',
-        accessor: 'task.name',
-        minWidth: 130,
-        Cell: props => <span className="">{props.value}</span>
-      },
-      {
-        headerClassName: 'tl',
-        Header: 'Group',
-        accessor: 'issue_type',
+        Header: 'Total # of Plants',
+        accessor: 'plants_count',
         minWidth: 88,
-        Cell: props => <span className="ttc">{props.value}</span>
+        Cell: props => <span>{props.value}</span>
       },
       {
         headerClassName: 'tl',
-        Header: 'Priority',
-        accessor: 'severity',
-        className: 'justify-center ttu',
+        Header: 'Wet Weight',
+        accessor: 'total_wet_weight',
         minWidth: 88,
-        Cell: props => (
-          <span
-            className={classNames(`fw6 red`, {
-              purple: props.value === 'severe',
-              yellow: props.value === 'medium',
-              red: props.value === 'high'
-            })}
-          >
-            {props.value}
-          </span>
-        )
+        Cell: props => <span>{props.value}</span>
       },
       {
         headerClassName: 'tl',
-        Header: 'Batch Name',
-        accessor: 'cultivation_batch.name',
-        className: '',
-        minWidth: 130,
-        Cell: props => <span className="">{props.value}</span>
+        Header: 'Dry Weight',
+        accessor: 'total_dry_weight',
+        minWidth: 88,
+        Cell: props => <span>{props.value}</span>
       },
       {
         headerClassName: 'tl',
-        Header: 'Issue Date',
-        accessor: 'created_at',
-        className: '',
-        minWidth: 130,
-        Cell: props => <span className="">{props.value}</span>
+        Header: 'Waste Weight',
+        accessor: 'waste_weight',
+        minWidth: 88,
+        Cell: props => <span>{props.value}</span>
       },
       {
         headerClassName: 'tl',
-        Header: 'Worker',
-        accessor: 'assigned_to.display_name',
-        className: '',
-        minWidth: 130,
-        Cell: props => <span className="">{props.value}</span>
-      }
+        Header: 'Avg Dry Waste',
+        accessor: 'a',
+        minWidth: 88,
+        Cell: props => <span>{props.value}</span>
+      },
+      {
+        headerClassName: 'tl',
+        Header: 'Total Pkg Weight',
+        accessor: 'package_count',
+        minWidth: 88,
+        Cell: props => <span>{props.value}</span>
+      },
+      {
+        headerClassName: 'tl',
+        Header: 'Lab Testing',
+        accessor: 'a',
+        minWidth: 88,
+        Cell: props => <span>{props.value}</span>
+      },
+      {
+        headerClassName: 'tl',
+        Header: 'Cost per Gram',
+        accessor: 'a',
+        minWidth: 88,
+        Cell: props => <span>{props.value}</span>
+      },
+      {
+        headerClassName: 'tl',
+        Header: 'Yield/Sq Pt',
+        accessor: 'a',
+        minWidth: 88,
+        Cell: props => <span>{props.value}</span>
+      },
     ]
   }
   componentDidMount() {
-    IssueStore.loadAllIssues()
+    HarvestBatchStore.loadAll()
   }
 
   onToggleColumns = (header, value) => {
@@ -119,7 +125,7 @@ class IssuesDashboard extends React.Component {
             You have
             <span className="orange">
               {' '}
-              {IssueStore.openIssuesCount} Open Issues
+              Something here
             </span>
           </span>
         </div>
@@ -132,16 +138,16 @@ class IssuesDashboard extends React.Component {
             className="input w5"
             placeholder="Search Plants"
             onChange={e => {
-              IssueStore.filter = e.target.value
+              HarvestBatchStore.filter = e.target.value
             }}
           />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>
         <div className="pv3">
           <ListingTable
-            data={IssueStore.filteredList}
+            data={HarvestBatchStore.filteredList}
             columns={columns}
-            isLoading={IssueStore.isLoading}
+            isLoading={HarvestBatchStore.isLoading}
           />
         </div>
       </div>

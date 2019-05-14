@@ -79,7 +79,10 @@ const CheckboxSelect = ({ onChange, values = [], options = [] }) => {
                       </label>
                     </li>
                     {optionsToShow.map((x, i) => {
-                      const title = (typeof x.Header === "string") ? x.Header : x.Header.props.title
+                      const title =
+                        typeof x.Header === 'string'
+                          ? x.Header
+                          : x.Header.props.title
                       return (
                         <li key={i}>
                           <label className="hover-bg-grey pointer pv2 ph3 flex justify-between items-center">

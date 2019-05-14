@@ -1,7 +1,7 @@
 import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
-import { ActiveBadge, CheckboxSelect, TempIssueWidgets } from '../../utils'
+import { ActiveBadge, CheckboxSelect, TempIssueWidgets, HeaderFilter } from '../../utils'
 import classNames from 'classnames'
 import ListingTable from './ListingTable'
 
@@ -23,10 +23,17 @@ class IssuesDashboard extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Status',
+        Header: (
+          <HeaderFilter
+            title="Status"
+            accessor="status"
+            getOptions={IssueStore.getUniqPropValues}
+            onUpdate={IssueStore.updateFilterOptions}
+          />
+        ),
         accessor: 'status',
-        className: 'justify-center ttu',
         minWidth: 88,
+        className: 'justify-center ttu',
         Cell: props => <ActiveBadge status={props.value} />
       },
       {
@@ -67,6 +74,31 @@ class IssuesDashboard extends React.Component {
             {props.value}
           </span>
         )
+      },
+      {
+        headerClassName: 'tl',
+        Header: (
+          <HeaderFilter
+            title="Priority"
+            accessor="severity"
+            getOptions={IssueStore.getUniqPropValues}
+            onUpdate={IssueStore.updateFilterOptions}
+          />
+        ),
+        accessor: 'severity',
+        minWidth: 88,
+        className: 'justify-center ttu',
+        Cell: props => (
+          <span
+            className={classNames(`fw6 red`, {
+              purple: props.value === 'severe',
+              yellow: props.value === 'medium',
+              red: props.value === 'high'
+            })}
+          >
+            {props.value}
+          </span>
+        )      
       },
       {
         headerClassName: 'tl',

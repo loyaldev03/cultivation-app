@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import classNames from 'classnames'
 import { Manager, Reference, Popper } from 'react-popper'
 
 const CheckboxSelect = ({ onChange, values = [], options = [] }) => {
@@ -19,7 +20,7 @@ const CheckboxSelect = ({ onChange, values = [], options = [] }) => {
     }
   }, [])
   const optionsToShow = options.filter(x => x.Header)
-  const isCustom = optionsToShow.some(x => x.show === false)
+  const isActive = optionsToShow.some(x => x.show === false)
   const onCheckAll = () => {
     optionsToShow.forEach(opt => {
       if (opt.show === false) {
@@ -41,10 +42,12 @@ const CheckboxSelect = ({ onChange, values = [], options = [] }) => {
               >
                 <React.Fragment>
                   <span className="w4 pr2" onClick={() => setExpand(!expand)}>
-                    {isCustom ? 'Custom' : 'All Columns'}
+                    {isActive ? 'Custom' : 'All Columns'}
                   </span>
                   <i
-                    className="material-icons md-16"
+                    className={classNames('material-icons md-16', {
+                      blue: isActive
+                    })}
                     onClick={() => setExpand(!expand)}
                   >
                     filter_list
@@ -55,31 +58,32 @@ const CheckboxSelect = ({ onChange, values = [], options = [] }) => {
           )}
         </Reference>
         {expand && (
-          <Popper placement="bottom-start">
+          <Popper placement="bottom-start" positionFixed>
             {({ ref, style, placement, arrowProps }) => (
               <div
                 ref={ref}
                 style={style}
-                className="z-1"
+                className="z-999"
                 data-placement={placement}
               >
                 <div className="ma1 w5 shadow-3 bg-white ba br2 b--light-grey">
                   <ul className="list pl0 mv2">
                     <li>
-                      <label className="pointer pv2 ph3 flex justify-between items-center">
+                      <label className="hover-bg-grey pointer pv2 ph3 flex justify-between items-center">
                         -- All --
                         <input
                           type="checkbox"
-                          checked={!isCustom}
+                          checked={!isActive}
                           onChange={onCheckAll}
                         />
                       </label>
                     </li>
                     {optionsToShow.map((x, i) => {
+                      const title = (typeof x.Header === "string") ? x.Header : x.Header.props.title
                       return (
                         <li key={i}>
-                          <label className="pointer pv2 ph3 flex justify-between items-center">
-                            {x.Header}
+                          <label className="hover-bg-grey pointer pv2 ph3 flex justify-between items-center">
+                            {title}
                             <input
                               type="checkbox"
                               defaultChecked={!(x.show === false)}

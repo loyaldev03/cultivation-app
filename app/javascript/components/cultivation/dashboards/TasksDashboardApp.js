@@ -1,4 +1,5 @@
 import 'babel-polyfill'
+import isEmpty from 'lodash.isempty'
 import React, { memo, useState } from 'react'
 import classNames from 'classnames'
 import { differenceInDays } from 'date-fns'
@@ -71,7 +72,7 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'pl3 tl',
-        Header: 'Task',
+        Header: 'Task name',
         accessor: 'name',
         className: 'pl3 fw6',
         minWidth: 160,
@@ -102,7 +103,7 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Start Date',
+        Header: 'Start date',
         accessor: 'start_date',
         className: 'justify-end pr3',
         width: 88,
@@ -110,7 +111,7 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'End Date',
+        Header: 'End date',
         accessor: 'end_date',
         className: 'justify-end pr3',
         width: 88,
@@ -136,7 +137,7 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tr pr3',
-        Header: 'Est. Hours',
+        Header: 'Est. hours',
         accessor: 'estimated_hours',
         className: 'justify-end pr3',
         width: 110,
@@ -145,7 +146,7 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tr pr3',
-        Header: 'Hrs to date',
+        Header: 'Act. hours',
         accessor: 'actual_hours',
         className: 'justify-end pr3',
         width: 110
@@ -161,10 +162,23 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tr pr3',
-        Header: 'Cost to date',
+        Header: 'Act. cost',
         accessor: 'actual_cost',
         className: 'justify-end pr3',
         width: 110
+      },
+      {
+        headerClassName: 'tc',
+        Header: 'Assigned to',
+        accessor: 'workers',
+        className: 'justify-center',
+        minWidth: 150,
+        Cell: props => {
+          if (!isEmpty(props.value)) {
+            return props.value.map(x => x.name)
+          }
+          return null
+        }
       }
     ]
   }

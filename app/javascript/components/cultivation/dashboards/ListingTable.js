@@ -9,6 +9,7 @@ export default class ListingTable extends React.PureComponent {
       isLoading,
       onFetchData,
       pages = -1,
+      sortable = false,
       ajax = false
     } = this.props
     if (ajax) {
@@ -19,6 +20,7 @@ export default class ListingTable extends React.PureComponent {
           data={data}
           loading={isLoading}
           minRows={3}
+          sortable={sortable}
           showPagination={true}
           manual
           onFetchData={onFetchData}
@@ -34,6 +36,7 @@ export default class ListingTable extends React.PureComponent {
         data={data}
         loading={isLoading}
         minRows={3}
+        sortable={sortable}
         showPagination={data && data.length > 20}
         defaultPageSize={20}
       />

@@ -45,7 +45,8 @@ export default class MonthlyCalendar extends React.Component {
         />
         <Suspense fallback={<div />}>
           <Calendar
-            className="availabilty-calendar"
+            className="availabilty-calendar-title"
+            style={{ width: '100%' }}
             showNavigation={false}
             activeStartDate={monthStartDate(searchMonth)}
             tileContent={({ date, view }) => (

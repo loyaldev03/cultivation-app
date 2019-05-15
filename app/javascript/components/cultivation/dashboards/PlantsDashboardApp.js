@@ -8,6 +8,7 @@ import {
   ActiveBadge,
   CheckboxSelect,
   Loading,
+  HeaderFilter,
   TempPlantWidgets
 } from '../../utils'
 import ListingTable from './ListingTable'
@@ -54,21 +55,42 @@ class PlantsDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Strain',
+        Header: (
+          <HeaderFilter
+            title="Strain"
+            accessor="strain_name"
+            getOptions={PlantStore.getUniqPropValues}
+            onUpdate={PlantStore.updateFilterOptions}
+          />
+        ),
         accessor: 'strain_name',
         minWidth: 130,
         Cell: props => <span className="truncate">{props.value}</span>
       },
       {
         headerClassName: 'tl',
-        Header: 'Growth Phase',
+        Header: (
+          <HeaderFilter
+            title="Growth Phase"
+            accessor="batch_growth_stage"
+            getOptions={PlantStore.getUniqPropValues}
+            onUpdate={PlantStore.updateFilterOptions}
+          />
+        ),
         accessor: 'batch_growth_stage',
         className: 'justify-center ttc',
-        minWidth: 74
+        minWidth: 130
       },
       {
         headerClassName: 'tl',
-        Header: 'Location',
+        Header: (
+          <HeaderFilter
+            title="Location"
+            accessor="location_name"
+            getOptions={PlantStore.getUniqPropValues}
+            onUpdate={PlantStore.updateFilterOptions}
+          />
+        ),
         accessor: 'location_name',
         minWidth: 180,
         Cell: props => <span className="truncate">{props.value}</span>

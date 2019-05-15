@@ -110,7 +110,7 @@ class OtForm extends React.Component {
                 </div>
               ) : (
                 <div className="flex w-60 items-center mb1">
-                  <span class="f6 grey">No schedule</span>
+                  <span className="f6 grey">No schedule</span>
                 </div>
               )}
             </div>

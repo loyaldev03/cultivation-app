@@ -12,7 +12,6 @@ class WorkerScheduleStore {
       let url = `/api/v1/daily_tasks/tasks_by_date?date=${date}`
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
-        console.log(response)
         return response
       }
     } catch (err) {
@@ -26,7 +25,6 @@ class WorkerScheduleStore {
   getTaskByMonth = async (monthAndYearString, date) => {
     var first = new Date(date.getYear(), date.getMonth(), 1)
     var last = new Date(date.getYear(), date.getMonth() + 1, 0)
-    console.log(monthAndYearString + first.getDate())
     try {
       let url = `/api/v1/daily_tasks/tasks_by_date_range?start_date=${monthAndYearString +
         first.getDate()}&end_date=${monthAndYearString + last.getDate()}`
@@ -48,7 +46,21 @@ class WorkerScheduleStore {
       let url = `/api/v1/daily_tasks/work_schedules?start_date=${start}&end_date=${end}`
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
-        console.log(response)
+        return response
+      }
+    } catch (err) {
+      console.error(err)
+      return null
+    } finally {
+      this.isLoading = false
+    }
+  }
+  @action
+  getTaskByDay = async start => {
+    try {
+      let url = `/api/v1/daily_tasks/work_schedules?start_date=${start}&end_date=${start}`
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
         return response
       }
     } catch (err) {

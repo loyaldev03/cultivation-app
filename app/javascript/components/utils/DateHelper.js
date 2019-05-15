@@ -48,6 +48,10 @@ export const monthOptionAdd = (monthOptionStr, month) => {
   return dateToMonthOption(result)
 }
 
+export const formatShortWeekday = date => {
+  return format(date, 'dd', { awareOfUnicodeTokens: true })[0]
+}
+
 export const formatDate = date => {
   return format(date, 'MMM DD, YYYY', { awareOfUnicodeTokens: true })
 }

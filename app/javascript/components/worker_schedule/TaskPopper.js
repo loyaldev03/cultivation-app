@@ -17,7 +17,6 @@ export default class TaskPopper extends React.Component {
   getTaskTheDay = async date => {}
   componentWillMount = async () => {
     document.addEventListener('mousedown', this.falsifyPopper)
-    console.log(await workerScheduleStore.getTaskByDate(this.props.date))
     this.setState({
       taskList: await workerScheduleStore.getTaskByDate(this.props.date)
     })
@@ -27,12 +26,14 @@ export default class TaskPopper extends React.Component {
   }
   render() {
     const { isOpen, taskList } = this.state
+    const { numberOfTask } = this.props
+    const label = numberOfTask && numberOfTask > 1 ? 'Tasks' : 'Task'
     return (
       <Manager>
         <Reference>
           {({ ref }) => (
             <div className="b pointer" onClick={this.togglePopper} ref={ref}>
-              {this.props.children}
+              {numberOfTask} {label}
             </div>
           )}
         </Reference>
@@ -40,19 +41,19 @@ export default class TaskPopper extends React.Component {
           <Popper placement="left">
             {({ ref, style, placement, arrowProps }) => (
               <div
-                className="bg-white gray ba b--gray w5 pa3 o-100 tl mr1"
+                className="bg-white gray ba b--silver w5 pa3 o-100 tl mr1"
                 ref={ref}
                 style={style}
                 data-placement={placement}
               >
-                <h3 className="ma0">Tasks</h3>
+                <h4 className="ma0 mb1">Tasks</h4>
                 {taskList &&
                   taskList.map(task => (
                     <div key={task.id}>
                       <div className="flex justify-between grey">
                         <span>
                           {task.attributes.name}
-                          <div className="f6">
+                          <div className="f6 lh-copy">
                             {task.attributes.location_name}
                           </div>
                         </span>

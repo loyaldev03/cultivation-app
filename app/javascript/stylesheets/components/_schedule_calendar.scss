@@ -8,9 +8,6 @@
     text-align: center;
     font-size: 1.3em;
     font-weight: 600;
-    border-left: solid 1px var(--light-gray);
-    border-right: solid 1px var(--light-gray);
-    border-top: solid 1px var(--light-gray);
   }
   .dot{
     height: 5px;
@@ -19,13 +16,31 @@
     border-radius: 50%;
     display: inline-block;
     position: absolute;
-    bottom: 9%;
-    right: 46%;
+    bottom: 0;
+    right: 43%;
   }
   .react-calendar.schedule-calendar {
-    border-left: solid 1px var(--light-gray);
-    border-right: solid 1px var(--light-gray);
-    border-bottom: solid 1px var(--light-gray);
+    border:0;
+    font-size:.7em;
+
+    .react-calendar__navigation__label {
+      color: $darkGrey;
+      font-size: 1rem;
+    }
+    .react-calendar__navigation button[disabled] {
+      background: $white;
+    }
+    .react-calendar__navigation__prev2-button,
+    .react-calendar__navigation__next2-button {
+      display: none;
+    }
+
+    .react-calendar__navigation__prev-button,
+    .react-calendar__navigation__next-button {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
     .react-calendar__tile:enabled:hover{
         background: $white
     }
@@ -33,29 +48,29 @@
       background:#fff;
     }
     .react-calendar__month-view__days__day--neighboringMonth{
-        
         .react-calendar__tile__content{
             color: var(--light-gray);
         }
     }
     .react-calendar__month-view__weekdays {
-      color: gray;
+      color: $grey;
       font-size: 1.1em;
       font-weight: 400;
+      padding-bottom:1em;
     }
   
     .react-calendar__month-view__weekdays__weekday {
-      
       text-align: center;
-  
       abbr {
         text-decoration: none;
+        font-weight: 600;
+        color: $grey;
       }
     }
   
     .react-calendar__tile {
       outline: none;
-  
+      padding:.2em .5em;
       abbr {
         display: none;
         position: absolute;
@@ -88,26 +103,21 @@
       height: $tileContentSize;
       line-height: $tileContentSize;
       border-radius: $tileContentSize/2; 
-      color: var(--gray);
+      color: $darkGrey;
+      font-size: 0.65rem;
       font-weight: 600;
       cursor: pointer;
     }
   
     .react-calendar__tile__content:hover {
       color: var(--white);
-      background-color: rgba(246, 104, 48, 0.75);
     }
-  
+
+    $weekRowPadding: 0.25rem;
     .react-calendar__month-view__days__day {
       position: relative;
       text-align: center;
-      time {
-        padding: 1px;
-        color: var(--gray);
-        position: absolute;
-        left: 2px;
-        top: 1px;
-      }
+      padding-top: $weekRowPadding;
+      padding-bottom: $weekRowPadding;
     }
   }
-  

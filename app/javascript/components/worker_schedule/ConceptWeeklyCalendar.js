@@ -11,7 +11,6 @@ export default class WeeklyCalendar extends React.Component {
     latest: null
   }
   componentDidMount = () => {
-    console.log(this.props.weeklyTask)
     let earliest =
       this.props.weeklyTask.length > 0
         ? this.props.weeklyTask[0].start_time.substring(0, 2)
@@ -30,7 +29,6 @@ export default class WeeklyCalendar extends React.Component {
       let totalTime = x.end_time.substring(0, 2) - x.start_time.substring(0, 2)
       return { name: x.date, totalTime, start: x.start_time, end: x.end_time }
     })
-    console.log(earliest, latest)
     this.setState({
       marker,
       earliest: parseInt(earliest),
@@ -58,7 +56,6 @@ export default class WeeklyCalendar extends React.Component {
           x.end_time.substring(0, 2) - x.start_time.substring(0, 2)
         return { name: x.date, totalTime, start: x.start_time, end: x.end_time }
       })
-      console.log(parseInt(earliest), parseInt(latest))
       this.setState({
         marker,
         earliest: parseInt(earliest),
@@ -81,22 +78,22 @@ export default class WeeklyCalendar extends React.Component {
     earliest == 0 ? (earliest = 1) : (earliest = earliest)
     let time = new Array(latest - earliest + 2).fill(undefined)
     return (
-      <div className="flex flex-column " style={{ flexGrow: 1 }}>
-        <Row className="b grey">
+      <div className="flex flex-column" style={{ flexGrow: 1 }}>
+        <Row className="grey">
           <Cell />
           {week.map((x, i) => (
             <Cell
-              className={` b--light-grey tc ${x == new Date().getDate() &&
+              className={` b--calendar-grid tc ${x == new Date().getDate() &&
                 'orange'} lh-title bb`}
               key={week.length + i + 'title'}
             >
-              {days[i]}
+              <span className="f7">{days[i]}</span>
 
-              <div className={`ma2 b`}>
+              <div className="flex justify-center pa1">
                 <span
                   className={`${x == new Date().getDate() &&
-                    'br-100 bg-orange white ba b--black-10 tc v-mid pa2 '} `}
-                  style={{ paddingRight: '.8em', paddingLeft: '.8em' }}
+                    'fw6 bg-orange db w2 h2 white br-100'} `}
+                  style={{ lineHeight: '1.8rem' }}
                 >
                   {x}
                 </span>
@@ -105,17 +102,17 @@ export default class WeeklyCalendar extends React.Component {
           ))}
         </Row>
         <Row style={{ marginTop: '-2em' }}>
-          <Cell />
-          <Cell className="br h2 b--light-grey" />
-          <Cell className="br h2 b--light-grey" />
-          <Cell className="br h2 b--light-grey" />
-          <Cell className="br h2 b--light-grey" />
-          <Cell className="br h2 b--light-grey" />
-          <Cell className="br h2 b--light-grey" />
+          <Cell className="h2" />
+          <Cell className="br h2 b--calendar-grid" />
+          <Cell className="br h2 b--calendar-grid" />
+          <Cell className="br h2 b--calendar-grid" />
+          <Cell className="br h2 b--calendar-grid" />
+          <Cell className="br h2 b--calendar-grid" />
+          <Cell className="br h2 b--calendar-grid" />
         </Row>
         {time.map((row, rowNumber) => (
           <Row className="grey" key={rowNumber + 8} style={{ height: '3em' }}>
-            <Cell className="tr" style={{ marginTop: '-1em' }}>
+            <Cell className="tr f7 fw6 pr2" style={{ marginTop: '-0.7em' }}>
               {earliest + rowNumber < 12
                 ? `${earliest + rowNumber} AM`
                 : `${
@@ -127,7 +124,7 @@ export default class WeeklyCalendar extends React.Component {
             {week.map((cell, cellNumber) => (
               <Cell
                 className={`${rowNumber <= latest - earliest &&
-                  'bb'} b--light-grey ${cellNumber < 6 && 'br'}`}
+                  'bb'} b--calendar-grid ${cellNumber < 6 && 'br'}`}
                 key={cell + cellNumber}
               >
                 {marker[cellNumber] &&
@@ -137,14 +134,16 @@ export default class WeeklyCalendar extends React.Component {
                       style={{
                         position: 'absolute',
                         height: `calc(3em*${marker[cellNumber].totalTime})`,
-                        width: '3.8rem',
-                        marginLeft: '.1rem'
+                        width: '4.4rem',
+                        marginLeft: '0',
+                        paddingLeft: '.2em',
+                        paddingRight: '.2em'
                       }}
                     >
                       {' '}
                       <br />
-                      <span className="small">
-                        {marker[cellNumber].start}-{marker[cellNumber].end}
+                      <span className="f6 db">
+                        {marker[cellNumber].start} - {marker[cellNumber].end}
                       </span>
                       <br />
                       {workerScheduleStore.taskData.findIndex(
@@ -152,16 +151,16 @@ export default class WeeklyCalendar extends React.Component {
                           x.date === marker[cellNumber].name &&
                           x.numberOfTasks > 0
                       ) >= 0 && (
-                        <TaskPopper date={marker[cellNumber].name}>
-                          {
+                        <TaskPopper
+                          date={marker[cellNumber].name}
+                          numberOfTask={
                             workerScheduleStore.taskData[
                               workerScheduleStore.taskData.findIndex(
                                 x => x.date === marker[cellNumber].name
                               )
                             ].numberOfTasks
-                          }{' '}
-                          Task
-                        </TaskPopper>
+                          }
+                        />
                       )}
                     </Marker>
                   )}
@@ -184,7 +183,10 @@ const Row = props => (
 )
 
 const Cell = props => (
-  <div className={classNames('w3', props.className)} style={props.style}>
+  <div
+    className={classNames(' ', props.className)}
+    style={{ ...props.style, width: '4.5rem' }}
+  >
     {props.children}
   </div>
 )

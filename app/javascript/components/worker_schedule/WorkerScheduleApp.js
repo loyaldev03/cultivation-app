@@ -11,6 +11,7 @@ import {
   formatYDM,
   monthStartDate,
   formatDate,
+  formatShortWeekday,
   formatMonthAndYear
 } from '../utils'
 
@@ -20,6 +21,7 @@ class WorkerScheduleApp extends React.Component {
     date: new Date(),
     choice: 'Week',
     dateSelected: null,
+    monthMarking: [],
     taskList: null,
     weeklyTask: [],
     isWeeklyLoaded: false
@@ -30,19 +32,44 @@ class WorkerScheduleApp extends React.Component {
     var first = curr.getDate() - curr.getDay() + 1 // First day is the day of the month - the day of the week
     var last = first + 6
     let monthString = formatMonthAndYear(curr)
+    let date = new Date()
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ]
     let task = await workerScheduleStore.getTaskByMonth(
       formatMonthAndYear(curr),
       curr
     )
-    console.log(task)
     let weeklyTask = await workerScheduleStore.getTaskByWeekArr(
       monthString + first,
       monthString + last
     )
-    this.setState({ weeklyTask, isWeeklyLoaded: true })
+    let dateSelected = `${date.getDate()} ${
+      months[date.getMonth()]
+    } ${date.getFullYear()}`
+    const taskList = await workerScheduleStore.getTaskByDate(
+      `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+    )
+    this.setState({
+      weeklyTask,
+      isWeeklyLoaded: true,
+      taskList,
+      monthMarking: task,
+      dateSelected
+    })
   }
   onChangeCalendar = duration => {
-    console.log(duration)
     this.setState({ choice: duration })
   }
   getDayTask = async date => {
@@ -68,104 +95,115 @@ class WorkerScheduleApp extends React.Component {
     )
     this.setState({ taskList, dateSelected })
   }
-  onChange = date => this.setState({ date })
+  onChange = date => {
+    this.setState({ date })
+  }
 
+  changeDate = async date => {
+    date = date.activeStartDate
+    const taskList = await workerScheduleStore.getTaskByMonth(
+      formatMonthAndYear(date),
+      date
+    )
+    this.setState({ monthMarking: taskList })
+  }
   render() {
     const {
       choice,
       taskList,
       dateSelected,
+      monthMarking,
       weeklyTask,
       isWeeklyLoaded
     } = this.state
     const duration = ['Week', 'Month']
     return (
-      <React.Fragment>
-        <div className="flex flex-column mt3 ba b--light-gray pa3 bg-white">
-          <div className="flex justify-between grey b">
-            <span>Working Calendar</span>
-            <span>
-              <select
-                value={this.choice}
-                className="b--white grey b"
-                onChange={e => this.onChangeCalendar(e.target.value)}
-                style={{ minWidth: 67 + 'px' }}
-              >
-                {duration &&
-                  duration.map((y, index) => (
-                    <option key={index} value={y}>
-                      {y}
-                    </option>
-                  ))}
-              </select>
-            </span>
-          </div>
-          <div className="flex ">
-            <div className="flex flex-column grey ">
-              {monthStartDate}
-              <Calendar
-                className="schedule-calendar"
-                activeStartDate={monthStartDate(formatDate(new Date()))}
-                onChange={this.onChange}
-                value={this.state.date}
-                onClickDay={this.getDayTask}
-                tileContent={({ date, view }) => (
-                  <div
-                    className="react-calendar__tile__content"
-                    style={{
-                      background: `${date.getDate() == 21 && '#f69d63'}`,
-                      color: `${date.getDate() == 21 && '#ff6300'}`
-                    }}
-                    onClick={e => console.log(formatYDM(date))}
-                  >
-                    {date.getDate()}
-                    {workerScheduleStore.taskData.findIndex(
-                      x => x.date === formatYDM(date) && x.numberOfTasks > 0
-                    ) >= 0 && <div className="dot"> </div>}
-                  </div>
-                )}
-                showNavigation={true}
-              />
-              {/* <MiniMonthlyCalendar/> */}
-
-              <div>
-                <div className="flex justify-between f3 lh-copy b dark-gray mb3 mt2">
-                  <span>Task</span>
-                  <span>{dateSelected}</span>
+      <div className="flex flex-column mt3 ba b--light-gray pa3 bg-white">
+        <div className="flex justify-between items-center dark-gray b">
+          <span>Working Calendar</span>
+          <span>
+            <select
+              value={this.choice}
+              className="b--white dark-gray b"
+              onChange={e => this.onChangeCalendar(e.target.value)}
+              style={{ minWidth: 67 + 'px' }}
+            >
+              {duration &&
+                duration.map((y, index) => (
+                  <option key={index} value={y}>
+                    {y}
+                  </option>
+                ))}
+            </select>
+          </span>
+        </div>
+        <div className="flex ">
+          <div className="flex flex-column grey w-30">
+            <Calendar
+              className="schedule-calendar"
+              activeStartDate={monthStartDate(formatDate(new Date()))}
+              onChange={this.onChange}
+              value={this.state.date}
+              onClickDay={this.getDayTask}
+              onActiveDateChange={this.changeDate}
+              view="month"
+              minDetail="month"
+              formatShortWeekday={(locale, date) => formatShortWeekday(date)}
+              tileContent={({ date, view }) => (
+                <div
+                  className="react-calendar__tile__content"
+                  style={{
+                    background: `${date.getDate() == 21 && '#f69d63'}`,
+                    color: `${date.getDate() == 21 && '#ff6300'}`
+                  }}
+                  onClick={e => console.log(formatYDM(date))}
+                >
+                  {date.getDate()}
+                  {monthMarking.findIndex(
+                    x => x.date === formatYDM(date) && x.numberOfTasks > 0
+                  ) >= 0 && <div className="dot"> </div>}
                 </div>
-                {taskList &&
-                  taskList.map(task => (
-                    <div className="b" key={task.id}>
-                      <div className="flex justify-between grey">
-                        <span>
-                          {task.attributes.name}
-                          <div className="f6">
-                            {task.attributes.location_name}
-                          </div>
-                        </span>
-                        <span>
-                          {task.attributes.work_status === 'not_started' && (
-                            <i className="orange material-icons pointer md-36 dim">
-                              play_circle_filled
-                            </i>
-                          )}
+              )}
+              showNavigation={true}
+            />
+            {/* <MiniMonthlyCalendar/> */}
+
+            <div>
+              <div className="flex items-center justify-between lh-copy dark-gray mb3 mt4">
+                <span className="f4 fw6">Tasks</span>
+                <span className="f5 fw6">{dateSelected}</span>
+              </div>
+              {taskList &&
+                taskList.map(task => (
+                  <div className="pb3" key={task.id}>
+                    <div className="flex justify-between grey pb3">
+                      <div>
+                        <span className="fw6 f5">{task.attributes.name}</span>
+                        <span className="f5 pt2 db">
+                          {task.attributes.location_name}
                         </span>
                       </div>
+                      <span>
+                        {task.attributes.work_status === 'not_started' && (
+                          <i className="orange material-icons pointer md-36 dim">
+                            play_circle_filled
+                          </i>
+                        )}
+                      </span>
                     </div>
-                  ))}
-              </div>
+                  </div>
+                ))}
             </div>
-            <div className="w-20" />
-            {choice == 'Week' && (
-              <WeeklyCalendar
-                weeklyTask={weeklyTask}
-                isWeeklyLoaded={isWeeklyLoaded}
-              />
-            )}
-            {choice == 'Month' && <MonthlyCalendar />}
           </div>
+          {choice == 'Week' && (
+            <WeeklyCalendar
+              weeklyTask={weeklyTask}
+              isWeeklyLoaded={isWeeklyLoaded}
+            />
+          )}
+          {choice == 'Month' && <MonthlyCalendar />}
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }

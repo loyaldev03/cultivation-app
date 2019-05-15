@@ -1,20 +1,18 @@
 import React, { lazy, Suspense } from 'react'
 import workerScheduleStore from './stores/WorkerScheduleStore'
 import {
-  dateToMonthOption,
-  monthOptionAdd,
   monthOptionToString,
   monthStartDate,
-  SlidePanelHeader,
-  SlidePanelFooter
+  formatYDM,
+  dateToMonthOption
 } from '../utils'
+import TaskPopper from './TaskPopper';
 const Calendar = lazy(() => import('react-calendar/dist/entry.nostyle'))
 
 export default class MonthlyCalendar extends React.Component {
   render() {
-    let date = new Date(),
-      totalDuration = 140
-    let searchMonth = '05-2019'
+    let date = new Date();
+    let searchMonth = dateToMonthOption(date)
     return (
       <div className="pl5 pr4">
         <div className="month-calendar-title">{monthOptionToString(searchMonth)}</div>
@@ -25,7 +23,7 @@ export default class MonthlyCalendar extends React.Component {
             showNavigation={false}
             activeStartDate={monthStartDate(searchMonth)}
             tileContent={({ date, view }) => (
-              <CapacityTile date={date} duration={totalDuration} />
+              <CapacityTile date={date} duration={0} />
             )}
           />
         </Suspense>
@@ -35,18 +33,20 @@ export default class MonthlyCalendar extends React.Component {
 }
 class CapacityTile extends React.PureComponent {
   state = {
-    dayTask: []
+    dayTask: [],
+    duration: null,
   }
   componentDidMount = async () => {
     let { date } = this.props
     let dayTask = await workerScheduleStore.getTaskByDate(
       `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
     )
-    this.setState({ dayTask })
+    let duration = await workerScheduleStore.getTaskByDay(`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`)
+    this.setState({ dayTask, duration })
   }
   render() {
-    const { dayTask } = this.state
-    const { date, duration } = this.props
+    const { dayTask,duration } = this.state
+    const { date } = this.props
     return (
       <div className="white f6 lh-copy day-tile">
         <span
@@ -58,20 +58,24 @@ class CapacityTile extends React.PureComponent {
           <div
             className="bg-orange white pa1"
             style={{
-              fontSize: '.5em',
+              fontSize: '.6em',
               fontWeight: 600,
               top: '0',
               left: '0',
               width: '100%',
               height: '100%',
               display: 'flex',
+              flexDirection:'column',
               alignItems: 'center'
             }}
           >
-            {dayTask.length} Tasks
+            <div className="mt3 b mb0">{duration[0].start_time} - {duration[0].end_time}</div>
+            {/* <span className="b">{dayTask.length} Tasks</span> */}
+            <TaskPopper date={formatYDM(date)}
+                          numberOfTask={dayTask.length}/>
           </div>
         ) : (
-          ' s'
+          ' '
         )}
       </div>
     )

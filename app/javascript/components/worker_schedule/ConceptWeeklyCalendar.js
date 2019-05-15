@@ -102,8 +102,8 @@ export default class WeeklyCalendar extends React.Component {
           ))}
         </Row>
         <Row style={{ marginTop: '-2em' }}>
-          <Cell />
-          <Cell className="br bl h2 b--calendar-grid" />
+          <Cell className="h2"/>
+          <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
@@ -134,14 +134,16 @@ export default class WeeklyCalendar extends React.Component {
                       style={{
                         position: 'absolute',
                         height: `calc(3em*${marker[cellNumber].totalTime})`,
-                        width: '3.8rem',
-                        marginLeft: '.1rem'
+                        width: '4.4rem',
+                        marginLeft: '0',
+                        paddingLeft:'.2em',
+                        paddingRight:'.2em',
                       }}
                     >
                       {' '}
                       <br />
                       <span className="f6 db">
-                        {marker[cellNumber].start}-{marker[cellNumber].end}
+                        {marker[cellNumber].start} - {marker[cellNumber].end}
                       </span>
                       <br />
                       {workerScheduleStore.taskData.findIndex(
@@ -181,7 +183,7 @@ const Row = props => (
 )
 
 const Cell = props => (
-  <div className={classNames('w3', props.className)} style={props.style}>
+  <div className={classNames(' ', props.className)} style={{...props.style,width:'4.5rem'}}>
     {props.children}
   </div>
 )

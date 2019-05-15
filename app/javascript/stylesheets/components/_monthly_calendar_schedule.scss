@@ -8,10 +8,7 @@
     font-weight: 600;
   }
   .react-calendar.schedule-month-calendar {
-    border-left: solid 1px var(--light-gray);
-    border-right: solid 1px var(--light-gray);
-    border-bottom: solid 1px var(--light-gray);
-    border-top: none;
+    border:none;
     width:100%;
     .day-tile{
         position: absolute;
@@ -105,7 +102,12 @@
         color: var(--white);
         background-color: rgba(246, 104, 48, 0.75);
     }
-
+    .react-calendar__month-view__days{
+        border-left: solid 1px var(--light-gray);
+    border-right: solid 1px var(--light-gray);
+    border-bottom: solid 1px var(--light-gray);
+    border-top: none;
+    }
     .react-calendar__month-view__days__day {
         position: relative;
         text-align: center;

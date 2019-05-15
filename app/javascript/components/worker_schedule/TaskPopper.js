@@ -27,7 +27,7 @@ export default class TaskPopper extends React.Component {
   render() {
     const { isOpen, taskList } = this.state
     const { numberOfTask } = this.props
-    const label = numberOfTask && numberOfTask > 1 ? 'Tasks' : 'Task'
+    const label = (numberOfTask && numberOfTask > 1) ? 'Tasks' : 'Task'
     return (
       <Manager>
         <Reference>

@@ -56,6 +56,21 @@ class WorkerScheduleStore {
     }
   }
   @action
+  getTaskByDay = async (start) => {
+    try {
+      let url = `/api/v1/daily_tasks/work_schedules?start_date=${start}&end_date=${start}`
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        return response
+      }
+    } catch (err) {
+      console.error(err)
+      return null
+    } finally {
+      this.isLoading = false
+    }
+  }
+  @action
   savePto = async (start_date, end_date, description) => {
     this.isLoading = true
     try {

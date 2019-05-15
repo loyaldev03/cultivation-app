@@ -12,6 +12,10 @@ class Worker::LoginController < ApplicationController
           role = Common::Role.find_by(name: params[:role])
           @users = User.all_in(roles: [role.id]) if role.present?
         end
+        @users = @users.order_by(last_sign_in_at: :asc) if params[:filter] == 'last_login'
+        @users = @users.order_by(first_name: :asc) if params[:filter] == 'alpha'
+        @users = @users.select { |a| "#{a['first_name']} #{a['last_name']}" == params[:search] } if params[:search].present?
+        @user = @users.detect { |a| "#{a['first_name']} #{a['last_name']}" == params[:selected] } if params[:selected].present?
       end
     end
   end

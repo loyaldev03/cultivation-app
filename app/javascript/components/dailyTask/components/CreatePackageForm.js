@@ -6,7 +6,7 @@ import { NumericInput } from '../../utils/FormHelpers'
 import { InputBarcode } from '../../utils/InputBarcode'
 import { ProgressBar } from '../../utils/ProgressBar'
 import harvestBatchStore from '../stores/HarvestBatchStore'
-import { httpGetOptions } from '../../utils/FetchHelper'
+import { httpGetOptions, httpPostOptions } from '../../utils/FetchHelper'
 
 @observer
 class CreatePackageForm extends React.Component {
@@ -38,31 +38,6 @@ class CreatePackageForm extends React.Component {
     }
   }
 
-  onChangeWeight = event => {
-    const key = event.target.attributes.fieldname.value
-    const value = event.target.value
-    this.setState({ [key]: value })
-  }
-
-  onSubmit = event => {
-    const { batchId } = this.props
-    const { weight } = this.state
-    const indelible = SidebarStore.taskIndelible
-    harvestBatchStore
-      .saveWasteWeight(batchId, weight, indelible)
-      .then(result => {
-        if (result.success) {
-          toast(`Record updated`, 'success')
-          this.setState({
-            weight: '',
-            override: false
-          })
-          SidebarStore.closeSidebar()
-        } else {
-          console.log(result.data.errors)
-        }
-      })
-  }
 
   render() {
     const { packagePlans } = this.state
@@ -86,10 +61,10 @@ class CreatePackageForm extends React.Component {
                 product_type={x.product_type}
                 package_type={x.package_type}
                 quantity={x.quantity}
+                batchId={this.props.batchId}
               />
             ))}
           </div>
-          <SlidePanelFooter onSave={() => this.onSubmit()} />
         </div>
       </div>
     )
@@ -122,9 +97,25 @@ class PackageTracking extends React.Component {
 
   onAddPackageID = event => {
     if (event.key === 'Enter') {
-      this.setState({
-        packageID: '',
-        packageIDs: [event.target.value, ...this.state.packageIDs]
+      const tag = event.target.value
+      const data = {
+        product_type: this.props.product_type,
+        package_type: this.props.package_type,
+        cultivation_batch_id: this.props.batchId,
+        tag,
+      }
+
+      scanCreate(data).then(x => {
+        console.log(x)
+        // if (x === false) {
+        //   console.log('Not valid...')
+        // } else {
+        //   console.log('valid')
+        //   this.setState({
+        //     packageID: '',
+        //     packageIDs: [tag, ...this.state.packageIDs]
+        //   })
+        // }
       })
     }
   }
@@ -247,5 +238,30 @@ const loadPackagePlans = async batchId => {
   } else {
     console.error(response.errors)
     return []
+  }
+}
+
+
+
+const verifyMetrc = async (facilityId, tag) => {
+  const url = `/api/v1/metrc/verify/${facilityId}?tag=${tag}`
+  const response = await (await fetch(url, httpGetOptions)).json()
+  console.log(response)
+
+  if (response.tag) {  
+    return tag
+  } else {
+    return false
+  }
+}
+
+const scanCreate = async (data) => {
+  const url = '/api/v1/sales_products/scan_and_create'
+  try {
+    const response = await (await fetch(url, httpPostOptions(data))).json()
+    console.log(response)
+    return response
+  } catch(error) {
+    console.log('error', error)
   }
 }

@@ -209,6 +209,7 @@ Rails.application.routes.draw do
           get 'converted_products'
           post 'setup_harvest_package'
           post 'setup_converted_product'
+          post 'scan_and_create'
         end
       end
 
@@ -231,7 +232,10 @@ Rails.application.routes.draw do
       end
 
       resources :metrc, only: [:index] do
-        post 'bulk_create/:facility_id', action: 'bulk_create', on: :collection
+        collection do
+          post 'bulk_create/:facility_id', action: 'bulk_create'
+          get 'verify/:facility_id', action: 'verify'
+        end
       end
 
       resources :batches, only: [:index, :create] do

@@ -24,7 +24,7 @@ module Inventory
     end
 
     attribute :expiration_date do |object|
-      object.expiration_date.iso8601
+      object&.expiration_date&.iso8601
     end
 
     attribute :catalogue do |object|

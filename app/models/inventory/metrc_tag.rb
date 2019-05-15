@@ -6,7 +6,7 @@ module Inventory
 
     field :tag, type: String
     field :tag_type, type: String       # Plant Tag or Package Tag
-    field :status, type: String         # available, used, disposed
+    field :status, type: String         # available, assigned, disposed
     field :replaced_by, type: String
   end
 end

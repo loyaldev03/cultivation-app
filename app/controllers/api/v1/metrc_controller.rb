@@ -24,6 +24,36 @@ class Api::V1::MetrcController < Api::V1::BaseApiController
     render json: Inventory::MetrcTagSerializer.new(saved_tags).serialized_json, status: 200
   end
 
+  def verify
+    facility = Facility.find(params[:facility_id])
+    tag = facility.metrc_tags.find_by(tag: params[:tag])
+
+    # if valid_tag?(tag)
+    #   batch = Cultivation::Batch.find ''
+    #   hb = batch.harvest_batch.first
+    #   package_type = params[:package_type]
+    #   product_type = params[:product_type]
+
+    #   Inventory::ItemTransaction.create!(
+    #     harvest_batch: hb,
+    #     package_tag: tag,
+    #     order_uom: package_type,
+    #     catalogue: Inventory::Catalogue.find_by(label: product_type),
+    #     facility_strain: batch.facility_strain
+    #   )
+    # end
+
+    if tag.nil?
+      render json: {errors: ['METRC tag not exists']}, status: 422
+    elsif tag.status == 'assigned'
+      render json: {errors: ['METRC tag already assigend']}, status: 422
+    elsif tag.status != 'available'
+      render json: {errors: ['METRC tag not available/ disposed']}, status: 422
+    else
+      render json: {tag: tag.tag}, status: 200
+    end
+  end
+
   private
 
   def split_tags(tags)

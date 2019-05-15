@@ -77,6 +77,15 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
     render json: Inventory::HarvestPackageSerializer.new(items).serialized_json
   end
 
+  def scan_and_create
+    command = Inventory::SavePackageFromScan.call(current_user, params.to_unsafe_h)
+    if command.success?
+      render json: Inventory::HarvestPackageSerializer.new(command.result).serialized_json
+    else
+      render json: request_with_errors(command.errors), status: 422
+    end
+  end
+
   private
 
   def sales_catalogue_ids(type)

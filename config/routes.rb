@@ -75,6 +75,9 @@ Rails.application.routes.draw do
     resources :vendor_invoices, only: [:index, :show]
   end
 
+  namespace 'worker' do 
+    resources :login, only: [:index]
+  end
 
   get "inventory/setup" => "home#inventory_setup"
   namespace 'inventory', as: :inventory do

@@ -21,7 +21,7 @@ class WorkerScheduleApp extends React.Component {
     date: new Date(),
     choice: 'Week',
     dateSelected: null,
-    monthMarking:[],
+    monthMarking: [],
     taskList: null,
     weeklyTask: [],
     isWeeklyLoaded: false
@@ -31,8 +31,8 @@ class WorkerScheduleApp extends React.Component {
     var curr = new Date() // get current date
     var first = curr.getDate() - curr.getDay() + 1 // First day is the day of the month - the day of the week
     var last = first + 6
-    let monthString = formatMonthAndYear(curr);
-    let date = new Date();
+    let monthString = formatMonthAndYear(curr)
+    let date = new Date()
     const months = [
       'January',
       'February',
@@ -61,7 +61,13 @@ class WorkerScheduleApp extends React.Component {
     const taskList = await workerScheduleStore.getTaskByDate(
       `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
     )
-    this.setState({ weeklyTask, isWeeklyLoaded: true,taskList, monthMarking:task, dateSelected })
+    this.setState({
+      weeklyTask,
+      isWeeklyLoaded: true,
+      taskList,
+      monthMarking: task,
+      dateSelected
+    })
   }
   onChangeCalendar = duration => {
     this.setState({ choice: duration })
@@ -93,13 +99,13 @@ class WorkerScheduleApp extends React.Component {
     this.setState({ date })
   }
 
-  changeDate = async date =>{
+  changeDate = async date => {
     date = date.activeStartDate
     const taskList = await workerScheduleStore.getTaskByMonth(
       formatMonthAndYear(date),
       date
     )
-    this.setState({ monthMarking:taskList})
+    this.setState({ monthMarking: taskList })
   }
   render() {
     const {

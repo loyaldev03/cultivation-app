@@ -102,7 +102,7 @@ export default class WeeklyCalendar extends React.Component {
           ))}
         </Row>
         <Row style={{ marginTop: '-2em' }}>
-          <Cell className="h2"/>
+          <Cell className="h2" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
@@ -136,8 +136,8 @@ export default class WeeklyCalendar extends React.Component {
                         height: `calc(3em*${marker[cellNumber].totalTime})`,
                         width: '4.4rem',
                         marginLeft: '0',
-                        paddingLeft:'.2em',
-                        paddingRight:'.2em',
+                        paddingLeft: '.2em',
+                        paddingRight: '.2em'
                       }}
                     >
                       {' '}
@@ -183,7 +183,10 @@ const Row = props => (
 )
 
 const Cell = props => (
-  <div className={classNames(' ', props.className)} style={{...props.style,width:'4.5rem'}}>
+  <div
+    className={classNames(' ', props.className)}
+    style={{ ...props.style, width: '4.5rem' }}
+  >
     {props.children}
   </div>
 )

@@ -56,7 +56,7 @@ class WorkerScheduleStore {
     }
   }
   @action
-  getTaskByDay = async (start) => {
+  getTaskByDay = async start => {
     try {
       let url = `/api/v1/daily_tasks/work_schedules?start_date=${start}&end_date=${start}`
       const response = await (await fetch(url, httpGetOptions)).json()

@@ -6,16 +6,18 @@ import {
   formatYDM,
   dateToMonthOption
 } from '../utils'
-import TaskPopper from './TaskPopper';
+import TaskPopper from './TaskPopper'
 const Calendar = lazy(() => import('react-calendar/dist/entry.nostyle'))
 
 export default class MonthlyCalendar extends React.Component {
   render() {
-    let date = new Date();
+    let date = new Date()
     let searchMonth = dateToMonthOption(date)
     return (
       <div className="pl5 pr4">
-        <div className="month-calendar-title">{monthOptionToString(searchMonth)}</div>
+        <div className="month-calendar-title">
+          {monthOptionToString(searchMonth)}
+        </div>
         <Suspense fallback={<div />}>
           <Calendar
             style={{ width: '100%' }}
@@ -34,18 +36,20 @@ export default class MonthlyCalendar extends React.Component {
 class CapacityTile extends React.PureComponent {
   state = {
     dayTask: [],
-    duration: null,
+    duration: null
   }
   componentDidMount = async () => {
     let { date } = this.props
     let dayTask = await workerScheduleStore.getTaskByDate(
       `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
     )
-    let duration = await workerScheduleStore.getTaskByDay(`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`)
+    let duration = await workerScheduleStore.getTaskByDay(
+      `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+    )
     this.setState({ dayTask, duration })
   }
   render() {
-    const { dayTask,duration } = this.state
+    const { dayTask, duration } = this.state
     const { date } = this.props
     return (
       <div className="white f6 lh-copy day-tile">
@@ -65,14 +69,15 @@ class CapacityTile extends React.PureComponent {
               width: '100%',
               height: '100%',
               display: 'flex',
-              flexDirection:'column',
+              flexDirection: 'column',
               alignItems: 'center'
             }}
           >
-            <div className="mt3 b mb0">{duration[0].start_time} - {duration[0].end_time}</div>
+            <div className="mt3 b mb0">
+              {duration[0].start_time} - {duration[0].end_time}
+            </div>
             {/* <span className="b">{dayTask.length} Tasks</span> */}
-            <TaskPopper date={formatYDM(date)}
-                          numberOfTask={dayTask.length}/>
+            <TaskPopper date={formatYDM(date)} numberOfTask={dayTask.length} />
           </div>
         ) : (
           ' '

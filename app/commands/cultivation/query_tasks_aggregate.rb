@@ -132,7 +132,7 @@ module Cultivation
 
     def match_search
       if !args[:search].blank?
-        {"$match": {"name": args[:search]}}
+        {"$match": {"name": Regexp.new(args[:search], Regexp::IGNORECASE)}}
       else
         {"$match": {}}
       end

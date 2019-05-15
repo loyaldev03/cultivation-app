@@ -31,7 +31,10 @@ class ActiveTaskStore {
   constructor() {
     autorun(
       () => {
-        if (this.searchTerm && this.filter.facility_id) {
+        if (this.filter.facility_id) {
+          if (this.searchTerm === null) {
+            this.searchTerm = ''
+          }
           this.loadActiveTasks()
         }
       },
@@ -52,11 +55,11 @@ class ActiveTaskStore {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
         this.tasks = response.data
-        this.metadata = response.metadata
+        this.metadata = Object.assign({ pages: 0 }, response.metadata)
         this.isDataLoaded = true
       } else {
         this.tasks = []
-        this.metadata = {}
+        this.metadata = { pages: 0 }
         this.isDataLoaded = false
       }
     } catch (error) {

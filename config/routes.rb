@@ -343,6 +343,8 @@ Rails.application.routes.draw do
           get 'attachment'
         end
       end
+
+      resources :harvests, only: [:index]
     end
   end
 end

@@ -1,7 +1,12 @@
 import { observable, action, computed, toJS, get } from 'mobx'
 import { httpPostOptions, httpGetOptions } from '../../utils'
+import isEmpty from 'lodash.isempty'
+
+const uniq = require('lodash.uniq')
 
 class HarvestBatchStore {
+  harvestBatches = observable([])
+  @observable isLoading = false
   @observable uom = ''
   @observable totalPlants = 0 // total number of alive plants in this batch
   @observable harvestBatchName = '' // harvest batch name
@@ -10,6 +15,8 @@ class HarvestBatchStore {
   @observable totalDryWeight = 0 // number of dry weight
   @observable totalTrimWeight = 0 // number of trim weight
   @observable totalTrimWasteWeight = 0 // number of trim waste weight
+  @observable filter = ''
+  @observable columnFilters = {}
 
   @action
   async load(batchId) {
@@ -29,6 +36,26 @@ class HarvestBatchStore {
       }
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  @action
+  async loadAll() {
+    this.isLoading = true
+    const url = `/api/v1/harvests`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response && response.data) {
+        const harvestBatches = response.data
+        this.harvestBatches.replace(harvestBatches)
+        console.log(response)
+        this.isLoading = false
+      } else {
+        this.tasks = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
     }
   }
 
@@ -83,6 +110,44 @@ class HarvestBatchStore {
           data
         }
       })
+  }
+
+  @computed
+  get filteredList() {
+    const list = this.harvestBatches.map(x => x.attributes)
+    if (!isEmpty(this.filter) || !isEmpty(this.columnFilters)) {
+      return list.filter(b => {
+        if (this.isFiltered(b)) {
+          return false
+        }
+        const field1 = b.harvest_name.toString()
+        const field2 = b.strain_name.toLowerCase()
+        const filter = this.filter.toLowerCase()
+        return field1.includes(filter) || field2.includes(filter)
+      })
+    } else {
+      return list
+    }
+  }
+
+  isFiltered = record => {
+    let f = Object.keys(this.columnFilters).find(key => {
+      const filter = this.columnFilters[key].filter(x => x.value === false)
+      return filter.find(x => x.label === record[key])
+    })
+    return f ? true : false
+  }
+
+  updateFilterOptions = (propName, filterOptions) => {
+    const updated = {
+      ...this.columnFilters,
+      [propName]: filterOptions
+    }
+    this.columnFilters = updated
+  }
+
+  getUniqPropValues = propName => {
+    return uniq(this.filteredList.map(x => x[propName]).sort())
   }
 }
 

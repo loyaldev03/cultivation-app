@@ -10,6 +10,7 @@ import TempBatchWidgets from '../../../assets/images/dummy/cult-batches.png'
 import TempPlantWidgets from '../../../assets/images/dummy/cult-plants-widget.png'
 import TempTaskWidgets from '../../../assets/images/dummy/cult-tasks.png'
 import TempIssueWidgets from '../../../assets/images/dummy/cult-issues.png'
+import TempHarvestWidgets from '../../../assets/images/dummy/cult-harvest.png'
 
 export {
   ImgAdd,
@@ -23,5 +24,6 @@ export {
   TempBatchWidgets,
   TempPlantWidgets,
   TempTaskWidgets,
-  TempIssueWidgets
+  TempIssueWidgets,
+  TempHarvestWidgets
 }

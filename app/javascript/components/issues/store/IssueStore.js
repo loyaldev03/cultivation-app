@@ -1,6 +1,8 @@
 import { observable, action, computed, toJS } from 'mobx'
-
 import { httpGetOptions, formatDate, formatTime } from '../../utils'
+import isEmpty from 'lodash.isempty'
+
+const uniq = require('lodash.uniq')
 
 function parseIssue(taskAttributes) {
   const { created_at } = taskAttributes
@@ -14,6 +16,7 @@ class IssueStore {
   issues = observable([])
   @observable isLoading = false
   @observable filter = ''
+  @observable columnFilters = {}
 
   @action
   load(newIssues) {
@@ -76,8 +79,11 @@ class IssueStore {
   @computed
   get filteredList() {
     const list = this.issues.map(x => x.attributes)
-    if (this.filter) {
+    if (!isEmpty(this.filter) || !isEmpty(this.columnFilters)) {
       return list.filter(b => {
+        if (this.isFiltered(b)) {
+          return false
+        }
         const field1 = b.issue_no.toString()
         const field2 = b.description.toLowerCase()
         const filter = this.filter.toLowerCase()
@@ -91,6 +97,27 @@ class IssueStore {
   @computed
   get openIssuesCount() {
     return this.issues.map(x => x.attributes.status === 'open').length || 0
+  }
+
+  isFiltered = record => {
+    let f = Object.keys(this.columnFilters).find(key => {
+      const filter = this.columnFilters[key].filter(x => x.value === false)
+      return filter.find(x => x.label === record[key])
+    })
+    return f ? true : false
+  }
+
+  updateFilterOptions = (propName, filterOptions) => {
+    console.log('updating')
+    const updated = {
+      ...this.columnFilters,
+      [propName]: filterOptions
+    }
+    this.columnFilters = updated
+  }
+
+  getUniqPropValues = propName => {
+    return uniq(this.filteredList.map(x => x[propName]).sort())
   }
 }
 

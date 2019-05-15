@@ -6,38 +6,49 @@
           <span class="ml2">Select job type</h1>
         </h1>
       </div>
-      <div class="f3">
-        <div class="pa3 pointer hover-bg-light-gray h3"><span class="ml2">All available</span></div>
-        <div class="pa3 pointer hover-bg-light-gray h3"><span class="ml2">Gardener</span></div>
-        <div class="pa3 pointer hover-bg-light-gray h3"><span class="ml2">Inspector</span></div>
-        <div class="pa3 pointer hover-bg-light-gray h3"><span class="ml2">Mover</span></div>
-        <div class="pa3 pointer hover-bg-light-gray h3"><span class="ml2">Clipper</span></div>
-        <div class="pa3 pointer hover-bg-light-gray h3"><span class="ml2">Cloner</span></div>
+      <div class="f3 overflow-auto" style="height: 90%;">
+        <div class="pa3 pointer hover-bg-light-gray h3">
+          <%= link_to request.params.merge(role: 'all'), class: "ml2 no-underline black" do %>
+            All available
+          <% end %>
+        </div>
+        <% @roles.each do |role| %>
+          <div class="pa3 pointer hover-bg-light-gray h3">
+            <%= link_to request.params.merge(role: role), class: "ml2 no-underline black" do %>
+              <%= role%>
+            <% end %>
+          </div>
+
+        <% end %>
       </div>
     </div>
     <div class="w-50 bg-white">
       <div class="pa2 bb b--light-gray bw1 h3">
         <input id="name" class="input-reset ba b--black-20 pa2 db w-80 br4 tc center f4 grey fw5" type="text" aria-describedby="name-desc" placeholder="Search by name"/>
       </div>
-      <div class="f4 tc flex justify-center bb b--light-gray h3">
-        <div class="pa3 pointer orange bb b--orange"><span class="ml2">Alphabetically</span></div>
-        <div class="pa3 pointer"><span class="ml2">Last logged in</span></div>
+      <div class="f4 tc flex justify-center bb b--light-gray h3 ">
+        <%= link_to request.params.merge(filter: 'alpha'), class: "pa3 pointer no-underline #{params[:filter] == 'alpha' ? 'orange bb b--orange' : 'black'}" do %>
+          <div>
+            Alphabetically
+          </div>
+        <% end %>
+        <%= link_to request.params.merge(filter: 'last_login'), class: "pa3 pointer no-underline #{params[:filter] == 'last_login' ? 'orange bb b--orange' : 'black'}" do %>
+          <div>
+            Last logged in
+          </div>
+        <% end %>
       </div>
-        <div class="pa3 pointer hover-bg-light-gray h3 flex justify-between">
-          <div>
-            <span style="background-color: #eee; width: 36px; height: 36px; font-size: 1.09091em; font-weight: 600; line-height: 36px; color: grey; text-align: center; cursor: inherit; display: inline-block; border-radius: 50%;">ER</span>
-            <span class="ml2 f3">Eric Chapman</span>
+      <% if @users.present? %>
+        <% @users.each do |user|%>
+          <div class="pa3 pointer hover-bg-light-gray h3 flex justify-between">
+            <div>
+              <span style="background-color: #eee; width: 36px; height: 36px; font-size: 1.09091em; font-weight: 600; line-height: 36px; color: grey; text-align: center; cursor: inherit; display: inline-block; border-radius: 50%;">ER</span>
+              <span class="ml2 f3"><%= user.display_name%></span>
+            </div>
+            <span class="ml2 f4 grey"><%= params[:role] %></span>
           </div>
-          <span class="ml2 f4 grey">Gardener</span>
-        </div>
-        <div class="pa3 pointer hover-bg-light-gray h3 flex justify-between">
-          <div>
-            <span style="background-color: #eee; width: 36px; height: 36px; font-size: 1.09091em; font-weight: 600; line-height: 36px; color: grey; text-align: center; cursor: inherit; display: inline-block; border-radius: 50%;">TR</span>
-            <span class="ml2 f3">Tarsoly Raimond</span>
-          </div>
-          <span class="ml2 f4 grey">Clipper</span>
-        </div>
-
+        <% end %>
+      <% end %>
     </div>
     <div class="w-30 bg-grey">
       <div class="w-100 h-100 flex flex-column justify-center items-center">

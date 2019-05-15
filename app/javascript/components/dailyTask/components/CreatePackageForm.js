@@ -38,7 +38,6 @@ class CreatePackageForm extends React.Component {
     }
   }
 
-
   render() {
     const { packagePlans } = this.state
 
@@ -102,7 +101,7 @@ class PackageTracking extends React.Component {
         product_type: this.props.product_type,
         package_type: this.props.package_type,
         cultivation_batch_id: this.props.batchId,
-        tag,
+        tag
       }
 
       scanCreate(data).then(x => {
@@ -241,27 +240,25 @@ const loadPackagePlans = async batchId => {
   }
 }
 
-
-
 const verifyMetrc = async (facilityId, tag) => {
   const url = `/api/v1/metrc/verify/${facilityId}?tag=${tag}`
   const response = await (await fetch(url, httpGetOptions)).json()
   console.log(response)
 
-  if (response.tag) {  
+  if (response.tag) {
     return tag
   } else {
     return false
   }
 }
 
-const scanCreate = async (data) => {
+const scanCreate = async data => {
   const url = '/api/v1/sales_products/scan_and_create'
   try {
     const response = await (await fetch(url, httpPostOptions(data))).json()
     console.log(response)
     return response
-  } catch(error) {
+  } catch (error) {
     console.log('error', error)
   }
 }

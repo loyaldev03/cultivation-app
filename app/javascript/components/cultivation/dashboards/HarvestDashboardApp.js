@@ -6,7 +6,7 @@ import {
   CheckboxSelect,
   TempIssueWidgets,
   HeaderFilter,
-  ListingTable,
+  ListingTable
 } from '../../utils'
 import classNames from 'classnames'
 

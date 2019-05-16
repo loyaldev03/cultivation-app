@@ -46,7 +46,6 @@ class CapacityTile extends React.PureComponent {
     let duration = await workerScheduleStore.getTaskByDay(
       `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
     )
-    console.log(duration)
     this.setState({ dayTask, duration })
   }
   render() {

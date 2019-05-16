@@ -73,9 +73,11 @@ class CapacityTile extends React.PureComponent {
               alignItems: 'center'
             }}
           >
-            <div className="mt3 b mb0">
-              {duration[0].start_time} - {duration[0].end_time}
-            </div>
+            {duration[0] && duration[0].start_time && duration[0].end_time && (
+              <div className="mt3 b mb0">
+                {duration[0].start_time} - {duration[0].end_time}
+              </div>
+            )}
             {/* <span className="b">{dayTask.length} Tasks</span> */}
             <TaskPopper date={formatYDM(date)} numberOfTask={dayTask.length} />
           </div>

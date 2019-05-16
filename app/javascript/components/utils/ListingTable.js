@@ -19,7 +19,7 @@ class ListingTable extends React.PureComponent {
           columns={columns}
           data={data}
           loading={isLoading}
-          minRows={3}
+          minRows={5}
           sortable={sortable}
           showPagination={true}
           manual
@@ -35,7 +35,7 @@ class ListingTable extends React.PureComponent {
         columns={columns}
         data={data}
         loading={isLoading}
-        minRows={3}
+        minRows={5}
         sortable={sortable}
         showPagination={data && data.length > 20}
         defaultPageSize={20}

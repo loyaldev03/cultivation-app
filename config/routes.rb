@@ -179,6 +179,7 @@ Rails.application.routes.draw do
         member do
           get 'search_locations'
           get 'locations'
+          get 'current_trays_summary'
         end
       end
 

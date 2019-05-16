@@ -18,13 +18,12 @@ class RoomsDashboardApp extends React.Component {
   state = {
     columns: [
       { accessor: 'id', show: false },
-      { accessor: 'batch_no', show: false },
       {
         headerClassName: 'pl3 tl',
-        Header: 'Batch ID',
+        Header: 'Room Name',
         accessor: 'name',
         className: 'dark-grey pl3 fw6',
-        minWidth: 138,
+        minWidth: 128,
         Cell: props => (
           <a
             className="link dark-grey truncate"
@@ -37,90 +36,66 @@ class RoomsDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Total # of plants',
-        accessor: 'quantity',
+        Header: 'Room ID',
+        accessor: 'code',
         className: 'justify-end pr3',
-        width: 74,
-        Cell: props => (props.value ? props.value : '--')
+        minWidth: 100
       },
       {
         headerClassName: 'tl',
-        Header: 'Destroyed plants',
-        accessor: 'destroyed_plants_count',
+        Header: 'Purpose',
+        accessor: 'purpose',
         className: 'justify-center',
-        width: 84,
-        Cell: props => (props.value ? props.value : '--')
+        minWidth: 100
       },
       {
         headerClassName: 'tl',
-        Header: 'Start Date',
-        accessor: 'start_date',
+        Header: 'Plant Capacity',
+        accessor: 'capacity',
         className: 'justify-end pr3',
-        width: 88,
-        Cell: props => formatDate2(props.value)
+        width: 120
       },
       {
         headerClassName: 'tl',
-        Header: 'Phase Date',
-        accessor: 'current_stage_start_date',
+        Header: 'Total Used',
+        accessor: 'total_occupied',
         className: 'justify-end pr3',
-        width: 88,
-        Cell: props => (props.value ? formatDate2(props.value) : '--')
+        width: 100
       },
       {
         headerClassName: 'tl',
-        Header: 'Est. Harvest Date',
-        accessor: 'estimated_harvest_date',
+        Header: 'Total Available',
+        accessor: 'total_available',
         className: 'justify-end pr3',
-        width: 98,
-        Cell: props => formatDate2(props.value)
+        width: 120
       },
       {
         headerClassName: 'tl',
-        Header: '# of days in current stage',
+        Header: '# of Sections',
         accessor: 'stage_days',
         className: 'justify-end pr3',
-        width: 100,
-        Cell: props => {
-          if (props.row.current_stage_start_date)
-            return differenceInDays(
-              this.props.currentTime,
-              props.row.current_stage_start_date
-            )
-          else return '--'
-        }
+        width: 98
       },
       {
         headerClassName: 'tr pr3',
-        Header: 'Est. Hours',
+        Header: '# of Rows',
         accessor: 'estimated_hours',
         className: 'justify-end pr3',
-        width: 110,
-        Cell: props =>
-          props.value ? decimalFormatter.format(props.value) : '--'
+        width: 96
       },
       {
         headerClassName: 'tr pr3',
-        Header: 'Hrs to date',
+        Header: '# of Shelves',
         accessor: 'actual_hours',
         className: 'justify-end pr3',
-        width: 110
+        width: 100
       },
       {
         headerClassName: 'tr pr3',
-        Header: 'Est. cost',
+        Header: '# of Trays',
         accessor: 'estimated_cost',
         className: 'justify-end pr3',
-        width: 110,
-        Cell: props =>
-          props.value ? decimalFormatter.format(props.value) : '--'
-      },
-      {
-        headerClassName: 'tr pr3',
-        Header: 'Cost to date',
-        accessor: 'actual_cost',
-        className: 'justify-end pr3',
-        width: 110
+        width: 96
       }
     ]
   }

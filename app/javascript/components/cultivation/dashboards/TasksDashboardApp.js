@@ -12,9 +12,9 @@ import {
   ActiveBadge,
   CheckboxSelect,
   Loading,
+  ListingTable,
   TempTaskWidgets
 } from '../../utils'
-import ListingTable from './ListingTable'
 
 class ActiveTaskStore {
   @observable tasks = []

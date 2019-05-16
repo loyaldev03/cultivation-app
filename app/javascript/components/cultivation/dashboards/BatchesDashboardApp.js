@@ -1,6 +1,5 @@
 import 'babel-polyfill'
 import React, { memo, useState, lazy, Suspense } from 'react'
-import ListingTable from './ListingTable'
 import { differenceInDays } from 'date-fns'
 import { observer } from 'mobx-react'
 import {
@@ -10,6 +9,7 @@ import {
   CheckboxSelect,
   HeaderFilter,
   Loading,
+  ListingTable,
   TempBatchWidgets
 } from '../../utils'
 import BatchStore from '../batches/BatchStore'

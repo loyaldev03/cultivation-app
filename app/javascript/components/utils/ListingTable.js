@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactTable from 'react-table'
 
-export default class ListingTable extends React.PureComponent {
+class ListingTable extends React.PureComponent {
   render() {
     const {
       data,
@@ -43,3 +43,5 @@ export default class ListingTable extends React.PureComponent {
     )
   }
 }
+
+export { ListingTable }

@@ -329,7 +329,7 @@ class UserDetailsEditor extends React.PureComponent {
             <div
               className={`pl3 ph4 pointer dim ${
                 this.state.tabs === 'Work Schedules' ? 'active' : ''
-                }`}
+              }`}
               onClick={() => this.changeTabs('Work Schedules')}
             >
               Work Schedules
@@ -541,12 +541,9 @@ class UserDetailsEditor extends React.PureComponent {
             </div>
           )}
 
-
           {this.state.tabs === 'Work Schedules' && (
             <div className="ph4">
-              <div className="mt2 fl w-100">
-
-              </div>
+              <div className="mt2 fl w-100" />
               <div className="mt2 fl w-100">
                 <label className="f6 fw6 mb1 grey mr3">Work status</label>
                 <br />
@@ -796,98 +793,98 @@ class UserDetailsEditor extends React.PureComponent {
                   </div>
                 </div>
               ) : (
-                  <div>
-                    <div className="mt3 fl w-100 pt3 bt b--light-gray">
-                      <label className="f6 fw6 db mb0 dark-gray ttc">
-                        Work Schedules Exempt
+                <div>
+                  <div className="mt3 fl w-100 pt3 bt b--light-gray">
+                    <label className="f6 fw6 db mb0 dark-gray ttc">
+                      Work Schedules Exempt
                     </label>
-                    </div>
-                    {this.state.non_exempt_schedules.map((a, index) => (
-                      <div className="mt3 fl w-100 exempt-worker" key={index}>
-                        <div className="w-30 fl pr3">
-                          <label className="f6 fw6 db mb1 gray ttc mb2">
-                            Start Date
+                  </div>
+                  {this.state.non_exempt_schedules.map((a, index) => (
+                    <div className="mt3 fl w-100 exempt-worker" key={index}>
+                      <div className="w-30 fl pr3">
+                        <label className="f6 fw6 db mb1 gray ttc mb2">
+                          Start Date
                         </label>
-                          <DatePicker
-                            value={a.start_date}
-                            onChange={date =>
-                              this.onChangeNonExemptAttr(a, 'start_date', date)
-                            }
-                          />
-                        </div>
-                        <div className="w-30 fl pr3">
-                          <label className="f6 fw6 db mb1 gray ttc mb2">
-                            End Date
+                        <DatePicker
+                          value={a.start_date}
+                          onChange={date =>
+                            this.onChangeNonExemptAttr(a, 'start_date', date)
+                          }
+                        />
+                      </div>
+                      <div className="w-30 fl pr3">
+                        <label className="f6 fw6 db mb1 gray ttc mb2">
+                          End Date
                         </label>
-                          <DatePicker
-                            value={a.end_date}
-                            onChange={date =>
-                              this.onChangeNonExemptAttr(a, 'end_date', date)
-                            }
-                          />
-                        </div>
-                        <div className="w-40 fl">
-                          <div className="flex w-100 justify-between">
-                            <div>
-                              <label className="f6 fw6 db mb1 gray ttc">
-                                Start Time
+                        <DatePicker
+                          value={a.end_date}
+                          onChange={date =>
+                            this.onChangeNonExemptAttr(a, 'end_date', date)
+                          }
+                        />
+                      </div>
+                      <div className="w-40 fl">
+                        <div className="flex w-100 justify-between">
+                          <div>
+                            <label className="f6 fw6 db mb1 gray ttc">
+                              Start Time
                             </label>
-                              <input
-                                className="db f6 mt2 black ba b--black-20 br2 outline-0 no-spinner tc"
-                                style={{ padding: '.35rem' }}
-                                type="time"
-                                onChange={e =>
-                                  this.onChangeNonExemptAttr(
-                                    a,
-                                    'start_time',
-                                    e.target.value
-                                  )
-                                }
-                                value={a.start_time}
-                              />
-                            </div>
-                            <div>
-                              <label className="f6 fw6 db mb1 gray ttc">
-                                End Time
+                            <input
+                              className="db f6 mt2 black ba b--black-20 br2 outline-0 no-spinner tc"
+                              style={{ padding: '.35rem' }}
+                              type="time"
+                              onChange={e =>
+                                this.onChangeNonExemptAttr(
+                                  a,
+                                  'start_time',
+                                  e.target.value
+                                )
+                              }
+                              value={a.start_time}
+                            />
+                          </div>
+                          <div>
+                            <label className="f6 fw6 db mb1 gray ttc">
+                              End Time
                             </label>
-                              <input
-                                className="db f6 mt2 black ba b--black-20 br2 outline-0 no-spinner tc"
-                                style={{ padding: '.35rem' }}
-                                type="time"
-                                onChange={e =>
-                                  this.onChangeNonExemptAttr(
-                                    a,
-                                    'end_time',
-                                    e.target.value
-                                  )
-                                }
-                                value={a.end_time}
-                              />
-                            </div>
-                            <div className="flex items-center">
-                              <span
-                                className="material-icons f4 db mb1 ttc mt3 orange pointer show-on-hover"
-                                onClick={e => this.onRemoveNonExemptSchedule(a)}
-                              >
-                                clear
+                            <input
+                              className="db f6 mt2 black ba b--black-20 br2 outline-0 no-spinner tc"
+                              style={{ padding: '.35rem' }}
+                              type="time"
+                              onChange={e =>
+                                this.onChangeNonExemptAttr(
+                                  a,
+                                  'end_time',
+                                  e.target.value
+                                )
+                              }
+                              value={a.end_time}
+                            />
+                          </div>
+                          <div className="flex items-center">
+                            <span
+                              className="material-icons f4 db mb1 ttc mt3 orange pointer show-on-hover"
+                              onClick={e => this.onRemoveNonExemptSchedule(a)}
+                            >
+                              clear
                             </span>
-                            </div>
                           </div>
                         </div>
                       </div>
-                    ))}
+                    </div>
+                  ))}
 
-                    <div className="mt3 fl w-30">
-                      <div
-                        className="pointer flex items-center grey f6"
-                        onClick={this.onAddNonExemptSchedule}
-                      >
-                        <span className="material-icons">add</span>
-                        <span>Add work schedules</span>
-                      </div>
+                  <div className="mt3 fl w-30">
+                    <div
+                      className="pointer flex items-center grey f6"
+                      onClick={this.onAddNonExemptSchedule}
+                    >
+                      <span className="material-icons">add</span>
+                      <span>Add work schedules</span>
                     </div>
                   </div>
-                )}
+                </div>
+              )}
             </div>
           )}
 

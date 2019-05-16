@@ -5,7 +5,6 @@ import classNames from 'classnames'
 import AvatarPicker from '../utils/AvatarPicker'
 import { ReactComponent as BlankAvatar } from '../utils/BlankAvatar.svg'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-
 const styles = `
 
 .active{
@@ -327,6 +326,14 @@ class UserDetailsEditor extends React.PureComponent {
             >
               Costing
             </div>
+            <div
+              className={`pl3 ph4 pointer dim ${
+                this.state.tabs === 'Work Schedules' ? 'active' : ''
+                }`}
+              onClick={() => this.changeTabs('Work Schedules')}
+            >
+              Work Schedules
+            </div>
           </div>
           <a
             href="#0"
@@ -437,6 +444,109 @@ class UserDetailsEditor extends React.PureComponent {
                   className="mt1 w-100 f6"
                 />
               </div>
+
+              <div className="mt3 fl w-100 pt3 bt b--light-gray">
+                <label className="f6 fw6 db mb0 dark-gray ttc">
+                  Access Control
+                </label>
+              </div>
+              <div className="mt2 fl w-100">
+                <label className="f6 fw6 db mb1 gray ttc">Facilities</label>
+                <Select
+                  options={facilitiesOptions}
+                  isMulti={true}
+                  isClearable={true}
+                  onChange={opt => this.onSelectChange('facilities', opt)}
+                  value={facilities}
+                  className="mt1 w-100 f6"
+                />
+              </div>
+              <div className="mt2 fl w-100">
+                <label className="f6 fw6 db mb1 gray ttc">
+                  Default Facility
+                </label>
+                <Select
+                  options={facilitiesOptions}
+                  isClearable={true}
+                  onChange={opt => this.onSelectChange('default_facility', opt)}
+                  value={default_facility}
+                  className="mt1 w-100 f6"
+                />
+              </div>
+              <div className="mt2 fl w-100 mb2">
+                <label className="f6 fw6 db mb1 gray ttc">Roles</label>
+                <Select
+                  options={rolesOptions}
+                  isMulti={true}
+                  isClearable={true}
+                  onChange={opt => this.onSelectChange('roles', opt)}
+                  value={roles}
+                  className="mt1 w-100 f6"
+                />
+              </div>
+
+              <div className="mt3 fl w-100 pt3 bt b--light-gray">
+                <label className="f6 fw6 db mb0 dark-gray ttc">
+                  Account Status
+                </label>
+              </div>
+              <div className="mt2 fl w-100">
+                <label
+                  className={classNames('f6 fw6 mb1 ttu', {
+                    green: isActive,
+                    gray: !isActive
+                  })}
+                >
+                  {isActive ? 'Active' : 'Deactivated'}
+                </label>
+                <input
+                  id="is_active"
+                  type="checkbox"
+                  className="toggle toggle-default"
+                  onChange={this.onChangeToggle('isActive')}
+                  checked={isActive}
+                />
+                <label className="toggle-button mt1 fr" htmlFor="is_active" />
+                <p className="gray f6 db mv1">
+                  Only active user are allowed to access the system.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {this.state.tabs === 'Costing' && (
+            <div className="ph4">
+              <div className="mt2 fl w-100">
+                <div className="w-50 fl pr3">
+                  <label className="f6 fw6 db mb1 gray ttc">Hourly Rate</label>
+                  <input
+                    className="db w-90 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
+                    onChange={this.onChangeInput('hourly_rate')}
+                    value={hourly_rate}
+                    required={true}
+                  />
+                </div>
+                <div className="w-50 fl pl3">
+                  <label className="f6 fw6 db mb1 gray ttc">
+                    Overtime Hourly Rate
+                  </label>
+                  <input
+                    className="db w-90 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
+                    onChange={this.onChangeInput('overtime_hourly_rate')}
+                    value={overtime_hourly_rate}
+                    required={true}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+
+          {this.state.tabs === 'Work Schedules' && (
+            <div className="ph4">
+              <div className="mt2 fl w-100">
+
+              </div>
               <div className="mt2 fl w-100">
                 <label className="f6 fw6 mb1 grey mr3">Work status</label>
                 <br />
@@ -464,17 +574,6 @@ class UserDetailsEditor extends React.PureComponent {
                     </label>
                   </div>
                 </div>
-                {/* <input
-                  id="is_active"
-                  type="checkbox"
-                  className="toggle toggle-default"
-                  onChange={this.onChangeToggle('isExempt')}
-                  checked={isExempt}
-                /> */}
-                {/* <label className="toggle-button mt1 fr" htmlFor="is_active" />
-                <p className="gray f6 db mv1">
-                  {isExempt ? 'Salary Worker' : 'Hourly Worker'}
-                </p> */}
               </div>
               {isExempt ? (
                 <div>
@@ -697,193 +796,101 @@ class UserDetailsEditor extends React.PureComponent {
                   </div>
                 </div>
               ) : (
-                <div>
-                  <div className="mt3 fl w-100 pt3 bt b--light-gray">
-                    <label className="f6 fw6 db mb0 dark-gray ttc">
-                      Work Schedules Exempt
+                  <div>
+                    <div className="mt3 fl w-100 pt3 bt b--light-gray">
+                      <label className="f6 fw6 db mb0 dark-gray ttc">
+                        Work Schedules Exempt
                     </label>
-                  </div>
-                  {this.state.non_exempt_schedules.map((a, index) => (
-                    <div className="mt3 fl w-100 exempt-worker" key={index}>
-                      <div className="w-30 fl pr3">
-                        <label className="f6 fw6 db mb1 gray ttc mb2">
-                          Start Date
+                    </div>
+                    {this.state.non_exempt_schedules.map((a, index) => (
+                      <div className="mt3 fl w-100 exempt-worker" key={index}>
+                        <div className="w-30 fl pr3">
+                          <label className="f6 fw6 db mb1 gray ttc mb2">
+                            Start Date
                         </label>
-                        <DatePicker
-                          value={a.start_date}
-                          onChange={date =>
-                            this.onChangeNonExemptAttr(a, 'start_date', date)
-                          }
-                        />
-                      </div>
-                      <div className="w-30 fl pr3">
-                        <label className="f6 fw6 db mb1 gray ttc mb2">
-                          End Date
+                          <DatePicker
+                            value={a.start_date}
+                            onChange={date =>
+                              this.onChangeNonExemptAttr(a, 'start_date', date)
+                            }
+                          />
+                        </div>
+                        <div className="w-30 fl pr3">
+                          <label className="f6 fw6 db mb1 gray ttc mb2">
+                            End Date
                         </label>
-                        <DatePicker
-                          value={a.end_date}
-                          onChange={date =>
-                            this.onChangeNonExemptAttr(a, 'end_date', date)
-                          }
-                        />
-                      </div>
-                      <div className="w-40 fl">
-                        <div className="flex w-100 justify-between">
-                          <div>
-                            <label className="f6 fw6 db mb1 gray ttc">
-                              Start Time
+                          <DatePicker
+                            value={a.end_date}
+                            onChange={date =>
+                              this.onChangeNonExemptAttr(a, 'end_date', date)
+                            }
+                          />
+                        </div>
+                        <div className="w-40 fl">
+                          <div className="flex w-100 justify-between">
+                            <div>
+                              <label className="f6 fw6 db mb1 gray ttc">
+                                Start Time
                             </label>
-                            <input
-                              className="db f6 mt2 black ba b--black-20 br2 outline-0 no-spinner tc"
-                              style={{ padding: '.35rem' }}
-                              type="time"
-                              onChange={e =>
-                                this.onChangeNonExemptAttr(
-                                  a,
-                                  'start_time',
-                                  e.target.value
-                                )
-                              }
-                              value={a.start_time}
-                            />
-                          </div>
-                          <div>
-                            <label className="f6 fw6 db mb1 gray ttc">
-                              End Time
+                              <input
+                                className="db f6 mt2 black ba b--black-20 br2 outline-0 no-spinner tc"
+                                style={{ padding: '.35rem' }}
+                                type="time"
+                                onChange={e =>
+                                  this.onChangeNonExemptAttr(
+                                    a,
+                                    'start_time',
+                                    e.target.value
+                                  )
+                                }
+                                value={a.start_time}
+                              />
+                            </div>
+                            <div>
+                              <label className="f6 fw6 db mb1 gray ttc">
+                                End Time
                             </label>
-                            <input
-                              className="db f6 mt2 black ba b--black-20 br2 outline-0 no-spinner tc"
-                              style={{ padding: '.35rem' }}
-                              type="time"
-                              onChange={e =>
-                                this.onChangeNonExemptAttr(
-                                  a,
-                                  'end_time',
-                                  e.target.value
-                                )
-                              }
-                              value={a.end_time}
-                            />
-                          </div>
-                          <div className="flex items-center">
-                            <span
-                              className="material-icons f4 db mb1 ttc mt3 orange pointer show-on-hover"
-                              onClick={e => this.onRemoveNonExemptSchedule(a)}
-                            >
-                              clear
+                              <input
+                                className="db f6 mt2 black ba b--black-20 br2 outline-0 no-spinner tc"
+                                style={{ padding: '.35rem' }}
+                                type="time"
+                                onChange={e =>
+                                  this.onChangeNonExemptAttr(
+                                    a,
+                                    'end_time',
+                                    e.target.value
+                                  )
+                                }
+                                value={a.end_time}
+                              />
+                            </div>
+                            <div className="flex items-center">
+                              <span
+                                className="material-icons f4 db mb1 ttc mt3 orange pointer show-on-hover"
+                                onClick={e => this.onRemoveNonExemptSchedule(a)}
+                              >
+                                clear
                             </span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
 
-                  <div className="mt3 fl w-30">
-                    <div
-                      className="pointer flex items-center grey f6"
-                      onClick={this.onAddNonExemptSchedule}
-                    >
-                      <span className="material-icons">add</span>
-                      <span>Add work schedules</span>
+                    <div className="mt3 fl w-30">
+                      <div
+                        className="pointer flex items-center grey f6"
+                        onClick={this.onAddNonExemptSchedule}
+                      >
+                        <span className="material-icons">add</span>
+                        <span>Add work schedules</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-              <div className="mt3 fl w-100 pt3 bt b--light-gray">
-                <label className="f6 fw6 db mb0 dark-gray ttc">
-                  Access Control
-                </label>
-              </div>
-              <div className="mt2 fl w-100">
-                <label className="f6 fw6 db mb1 gray ttc">Facilities</label>
-                <Select
-                  options={facilitiesOptions}
-                  isMulti={true}
-                  isClearable={true}
-                  onChange={opt => this.onSelectChange('facilities', opt)}
-                  value={facilities}
-                  className="mt1 w-100 f6"
-                />
-              </div>
-              <div className="mt2 fl w-100">
-                <label className="f6 fw6 db mb1 gray ttc">
-                  Default Facility
-                </label>
-                <Select
-                  options={facilitiesOptions}
-                  isClearable={true}
-                  onChange={opt => this.onSelectChange('default_facility', opt)}
-                  value={default_facility}
-                  className="mt1 w-100 f6"
-                />
-              </div>
-              <div className="mt2 fl w-100 mb2">
-                <label className="f6 fw6 db mb1 gray ttc">Roles</label>
-                <Select
-                  options={rolesOptions}
-                  isMulti={true}
-                  isClearable={true}
-                  onChange={opt => this.onSelectChange('roles', opt)}
-                  value={roles}
-                  className="mt1 w-100 f6"
-                />
-              </div>
-
-              <div className="mt3 fl w-100 pt3 bt b--light-gray">
-                <label className="f6 fw6 db mb0 dark-gray ttc">
-                  Account Status
-                </label>
-              </div>
-              <div className="mt2 fl w-100">
-                <label
-                  className={classNames('f6 fw6 mb1 ttu', {
-                    green: isActive,
-                    gray: !isActive
-                  })}
-                >
-                  {isActive ? 'Active' : 'Deactivated'}
-                </label>
-                <input
-                  id="is_active"
-                  type="checkbox"
-                  className="toggle toggle-default"
-                  onChange={this.onChangeToggle('isActive')}
-                  checked={isActive}
-                />
-                <label className="toggle-button mt1 fr" htmlFor="is_active" />
-                <p className="gray f6 db mv1">
-                  Only active user are allowed to access the system.
-                </p>
-              </div>
+                )}
             </div>
           )}
 
-          {this.state.tabs === 'Costing' && (
-            <div className="ph4">
-              <div className="mt2 fl w-100">
-                <div className="w-50 fl pr3">
-                  <label className="f6 fw6 db mb1 gray ttc">Hourly Rate</label>
-                  <input
-                    className="db w-90 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                    onChange={this.onChangeInput('hourly_rate')}
-                    value={hourly_rate}
-                    required={true}
-                  />
-                </div>
-                <div className="w-50 fl pl3">
-                  <label className="f6 fw6 db mb1 gray ttc">
-                    Overtime Hourly Rate
-                  </label>
-                  <input
-                    className="db w-90 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
-                    onChange={this.onChangeInput('overtime_hourly_rate')}
-                    value={overtime_hourly_rate}
-                    required={true}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
           <div className="mv3 bt fl w-100 b--light-grey pt3 ph4">
             <input
               type="submit"

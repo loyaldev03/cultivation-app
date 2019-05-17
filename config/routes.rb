@@ -66,6 +66,7 @@ Rails.application.routes.draw do
 
   namespace 'facility_dashboard' do
     get '/' => 'facility_dashboard#index'
+    get '/summary' => 'facility_dashboard#summary'
   end
 
   namespace 'materials', as: :materials do

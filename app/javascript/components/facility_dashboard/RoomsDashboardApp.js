@@ -97,13 +97,7 @@ class RoomsDashboardApp extends React.Component {
         className: 'dark-grey pl3 fw6',
         minWidth: 128,
         Cell: props => (
-          <a
-            className="link dark-grey truncate"
-            href={`/cultivation/batches/${props.row.id}`}
-            title={props.row.batch_no}
-          >
-            {props.value}
-          </a>
+          <span className="link dark-grey truncate">{props.value}</span>
         )
       },
       {
@@ -218,14 +212,7 @@ class RoomsDashboardApp extends React.Component {
     const { columns } = this.state
     return (
       <div className="pa4 mw1200">
-        <div className="flex flex-row-reverse">
-          <a
-            href={`/cultivation/batches/new?facility_id=${defaultFacilityId}`}
-            className="btn btn--primary"
-          >
-            Create new room
-          </a>
-        </div>
+        <div className="flex flex-row-reverse" />
         <div className="mt4 flex justify-between">
           <input
             type="text"
@@ -235,7 +222,15 @@ class RoomsDashboardApp extends React.Component {
               Store.filter = e.target.value
             }}
           />
-          <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+          <div className="flex items-center">
+            <a
+              href={`/facility_setup/rooms_info?facility_id=${defaultFacilityId}`}
+              className="btn btn--primary mh3"
+            >
+              Create new room
+            </a>
+            <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
+          </div>
         </div>
         <div className="pv3">
           <ListingTable

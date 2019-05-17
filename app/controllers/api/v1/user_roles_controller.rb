@@ -56,6 +56,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       :password,
       :first_name,
       :last_name,
+      :phone_number,
       :title,
       :photo_data,
       :is_active,

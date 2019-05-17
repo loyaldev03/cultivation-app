@@ -74,8 +74,6 @@ class UserDetailsEditor extends React.PureComponent {
       } else {
         work_schedules = props.companyWorkSchedules
       }
-      
-
 
       // if (props.user.non_exempt_schedules) {
       //   non_exempt_schedules = props.user.non_exempt_schedules.map(e => {
@@ -84,17 +82,16 @@ class UserDetailsEditor extends React.PureComponent {
       //     return e
       //   })
       // }
-      let sundaySelected = { label: '', value: ''}
+      let sundaySelected = { label: '', value: '' }
       non_exempt_schedules = [
-        { day: 'sunday', date: '', start_time: '08:00', end_time: '' },
-        { day: 'monday', date: '', start_time: '', end_time: '' },
-        { day: 'tuesday', date: '', start_time: '', end_time: '' },
-        { day: 'wednesday', date: '', start_time: '', end_time: '' },
-        { day: 'thursday', date: '', start_time: '', end_time: '' },
-        { day: 'friday', date: '', start_time: '', end_time: '' },
-        { day: 'saturday', date: '', start_time: '', end_time: '' },
+        { day_id: 0, day: 'sunday', date: '', start_time: '08:00', end_time: '' },
+        { day_id: 1, day: 'monday', date: '', start_time: '', end_time: '' },
+        { day_id: 2, day: 'tuesday', date: '', start_time: '', end_time: '' },
+        { day_id: 3, day: 'wednesday', date: '', start_time: '', end_time: '' },
+        { day_id: 4, day: 'thursday', date: '', start_time: '', end_time: '' },
+        { day_id: 5, day: 'friday', date: '', start_time: '', end_time: '' },
+        { day_id: 6, day: 'saturday', date: '', start_time: '', end_time: '' }
       ]
-
 
       let a = { label: '5/19/2019 - 5/25/2019', value: new Date(2019, 4, 19) }
       let b = { label: '5/26/2019 - 6/1/2019', value: new Date(2019, 4, 26) }
@@ -115,7 +112,6 @@ class UserDetailsEditor extends React.PureComponent {
       //   }
       // }
       // console.log(array_of_sundays)
-
 
       this.state = {
         tabs: 'General',
@@ -188,11 +184,9 @@ class UserDetailsEditor extends React.PureComponent {
 
   onSelectChange = (field, options) => {
     if (options && (options.value || options.length)) {
-      if (field === 'sundaySelected'){
-        this.setState({ [field]: options }, () => {
-          this.calculateRangeDate(options.value)
-        })
-      }else {
+      if (field === 'sundaySelected') {
+        this.calculateRangeDate(options.value)
+      } else {
         this.setState({ [field]: options })
       }
     } else {
@@ -200,10 +194,30 @@ class UserDetailsEditor extends React.PureComponent {
     }
   }
 
-  calculateRangeDate = (date) => {
-    for(let i = 0; i < 7; i++){
+  calculateRangeDate = date => {
+
+    const updated_schedules = this.state.non_exempt_schedules
+
+    for (let i = 0; i < 7; i++) {
+
+      updated_schedules.map(t => {
+        let updated = updated_schedules.find(e => e.day_id === i)
+        updated.date = addDays(date, i)
+        return t.day_id === i ? updated : t
+      })
+
       console.log(addDays(date, i))
     }
+    console.log(updated_schedules)
+
+    this.setState({
+      sundaySelected: date,
+      non_exempt_schedules: updated_schedules
+    }, () => {
+        console.log(this.state.non_exempt_schedules)
+    })
+
+
   }
 
   onUploadAvatarSuccess = photoData => {
@@ -339,7 +353,7 @@ class UserDetailsEditor extends React.PureComponent {
       user_mode,
       reporting_manager,
       overtime_hourly_rate,
-      array_of_sundays, 
+      array_of_sundays,
       sundaySelected
     } = this.state
 
@@ -355,14 +369,20 @@ class UserDetailsEditor extends React.PureComponent {
     const saturday =
       this.state.work_schedules.find(e => e.day === 'saturday') || {}
 
-
-    const nonExemptSunday = this.state.non_exempt_schedules.find(e => e.day === 'sunday') || {}
-    const nonExemptMonday = this.state.non_exempt_schedules.find(e => e.day === 'monday') || {}
-    const nonExemptTuesday = this.state.non_exempt_schedules.find(e => e.day === 'tuesday') || {}
-    const nonExemptWednesday = this.state.non_exempt_schedules.find(e => e.day === 'wednesday') || {}
-    const nonExemptThursday = this.state.non_exempt_schedules.find(e => e.day === 'thursday') || {}
-    const nonExemptFriday = this.state.non_exempt_schedules.find(e => e.day === 'friday') || {}
-    const nonExemptSaturday = this.state.non_exempt_schedules.find(e => e.day === 'saturday') || {}
+    const nonExemptSunday =
+      this.state.non_exempt_schedules.find(e => e.day === 'sunday') || {}
+    const nonExemptMonday =
+      this.state.non_exempt_schedules.find(e => e.day === 'monday') || {}
+    const nonExemptTuesday =
+      this.state.non_exempt_schedules.find(e => e.day === 'tuesday') || {}
+    const nonExemptWednesday =
+      this.state.non_exempt_schedules.find(e => e.day === 'wednesday') || {}
+    const nonExemptThursday =
+      this.state.non_exempt_schedules.find(e => e.day === 'thursday') || {}
+    const nonExemptFriday =
+      this.state.non_exempt_schedules.find(e => e.day === 'friday') || {}
+    const nonExemptSaturday =
+      this.state.non_exempt_schedules.find(e => e.day === 'saturday') || {}
 
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
 
@@ -372,7 +392,7 @@ class UserDetailsEditor extends React.PureComponent {
         <div className="ph4 bb b--light-grey">
           <div className="mt3 flex content-stretch">
             <div
-              className={`ph4 pointer dim ${
+              className={`ph4 pointer dim grey ${
                 this.state.tabs === 'General' ? 'active' : ''
               }`}
               onClick={() => this.changeTabs('General')}
@@ -380,7 +400,7 @@ class UserDetailsEditor extends React.PureComponent {
               General
             </div>
             <div
-              className={`pl3 ph4 pointer dim ${
+              className={`pl3 ph4 pointer dim grey ${
                 this.state.tabs === 'Wages' ? 'active' : ''
               }`}
               onClick={() => this.changeTabs('Wages')}
@@ -388,7 +408,7 @@ class UserDetailsEditor extends React.PureComponent {
               Wages
             </div>
             <div
-              className={`pl3 ph4 pointer dim ${
+              className={`pl3 ph4 pointer dim grey ${
                 this.state.tabs === 'Work Schedules' ? 'active' : ''
               }`}
               onClick={() => this.changeTabs('Work Schedules')}
@@ -861,40 +881,49 @@ class UserDetailsEditor extends React.PureComponent {
                     </label>
                   </div>
                   <div className="mt3 w-100 flex justify-between">
-                    <i className="material-icons grey pointer mt2">chevron_left</i>
+                    <i className="material-icons grey pointer mt2">
+                      chevron_left
+                    </i>
                     <div className="w-60 flex">
                       <div className="w-90">
                         <Select
                           options={array_of_sundays}
                           isClearable={true}
-                          onChange={opt => this.onSelectChange('sundaySelected', opt)}
+                          onChange={opt =>
+                            this.onSelectChange('sundaySelected', opt)
+                          }
                           className="mt1 w-100 f6"
                           value={sundaySelected}
                         />
                       </div>
                       <div className="w-10 ml3">
-                        <i className="material-icons grey pointer mt2">file_copy</i>
+                        <i className="material-icons grey pointer mt2">
+                          file_copy
+                        </i>
                       </div>
                     </div>
-                    <i className="material-icons grey pointer mt2">chevron_right</i>
+                    <i className="material-icons grey pointer mt2">
+                      chevron_right
+                    </i>
                   </div>
-
 
                   <div className="mt3">
                     <div className="mt2 fl w-100 flex justify-between">
-                      <label className="f6 fw6 db mb1 gray ttc">Sunday, 05/19/2019</label>
+                      <label className="f6 fw6 db mb1 gray ttc">
+                        Sunday, {JSON.stringify(nonExemptSunday.date)}
+                      </label>
                       <div className="flex w-40 justify-between">
                         <input
                           className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                           type="time"
                           onChange={e =>
                             this.onChangeNonExemptAttr(
-                              nonExemptSunday,
+                              this.state.non_exempt_schedules.find(e => e.day === 'sunday'),
                               'start_time',
                               e.target.value
                             )
                           }
-                          value={nonExemptSunday.start_time}
+                            value={this.state.non_exempt_schedules.find(e => e.day === 'sunday').start_time}
                         />
                         <div className="flex items-center">
                           <label className="f4 db mb1 ttc">-</label>
@@ -914,7 +943,9 @@ class UserDetailsEditor extends React.PureComponent {
                       </div>
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
-                        <label className="f6 fw6 db mb1 gray ttc">Monday, 06/19/2019</label>
+                      <label className="f6 fw6 db mb1 gray ttc">
+                          Monday, {JSON.stringify(nonExemptMonday.date)}
+                      </label>
                       <div className="flex w-40 justify-between">
                         <input
                           className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
@@ -934,19 +965,21 @@ class UserDetailsEditor extends React.PureComponent {
                         <input
                           className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
                           type="time"
-                            onChange={e =>
-                              this.onChangeNonExemptAttr(
-                                nonExemptMonday,
-                                'end_time',
-                                e.target.value
-                              )
-                            }
-                            value={nonExemptMonday.end_time}
+                          onChange={e =>
+                            this.onChangeNonExemptAttr(
+                              nonExemptMonday,
+                              'end_time',
+                              e.target.value
+                            )
+                          }
+                          value={nonExemptMonday.end_time}
                         />
                       </div>
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
-                        <label className="f6 fw6 db mb1 gray ttc">Tuesday, 07/19/2019</label>
+                      <label className="f6 fw6 db mb1 gray ttc">
+                          Tuesday, {JSON.stringify(nonExemptTuesday.date)}
+                      </label>
                       <div className="flex w-40 justify-between">
                         <input
                           className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
@@ -978,7 +1011,9 @@ class UserDetailsEditor extends React.PureComponent {
                       </div>
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
-                        <label className="f6 fw6 db mb1 gray ttc">Wednesday, 08/19/2019</label>
+                      <label className="f6 fw6 db mb1 gray ttc">
+                          Wednesday, {JSON.stringify(nonExemptWednesday.date)}
+                      </label>
                       <div className="flex w-40 justify-between">
                         <input
                           className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
@@ -1010,7 +1045,9 @@ class UserDetailsEditor extends React.PureComponent {
                       </div>
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
-                        <label className="f6 fw6 db mb1 gray ttc">Thursday, 09/19/2019</label>
+                      <label className="f6 fw6 db mb1 gray ttc">
+                          Thursday, {JSON.stringify(nonExemptThursday.date)}
+                      </label>
                       <div className="flex w-40 justify-between">
                         <input
                           className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
@@ -1042,7 +1079,9 @@ class UserDetailsEditor extends React.PureComponent {
                       </div>
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
-                        <label className="f6 fw6 db mb1 gray ttc">Friday, 10/19/2019</label>
+                      <label className="f6 fw6 db mb1 gray ttc">
+                          Friday, {JSON.stringify(nonExemptFriday.date)}
+                      </label>
                       <div className="flex w-40 justify-between">
                         <input
                           className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
@@ -1074,7 +1113,9 @@ class UserDetailsEditor extends React.PureComponent {
                       </div>
                     </div>
                     <div className="mt2 fl w-100 flex justify-between mb4">
-                        <label className="f6 fw6 db mb1 gray ttc">Saturday, 11/19/2019</label>
+                      <label className="f6 fw6 db mb1 gray ttc">
+                          Saturday, {JSON.stringify(nonExemptSaturday.date)}
+                      </label>
                       <div className="flex w-40 justify-between">
                         <input
                           className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"

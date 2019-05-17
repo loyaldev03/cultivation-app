@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import AvatarPicker from '../utils/AvatarPicker'
 import { ReactComponent as BlankAvatar } from '../utils/BlankAvatar.svg'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import imgData from '../../../assets/images/blank-avatar.png'
+import { DefaultAvatar } from '../utils';
 const styles = `
 
 .active{
@@ -361,8 +361,7 @@ class UserDetailsEditor extends React.PureComponent {
                       src={photoUrl}
                       className="fl h4 w4"
                       onError={e => {
-                        
-                        e.target.src = imgData
+                        e.target.src = DefaultAvatar
                       }}
                     />
                     <AvatarPicker

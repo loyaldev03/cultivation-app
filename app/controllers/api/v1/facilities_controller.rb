@@ -18,14 +18,8 @@ class Api::V1::FacilitiesController < Api::V1::BaseApiController
 
   def current_trays_summary
     facility_id = params[:id]
-    purposes = params[:purposes] || []
-    trays = QueryAvailableTrays.call(
-      facility_id: facility_id,
-      purpose: purposes,
-      start_date: Time.current.beginning_of_day,
-      end_date: Time.current.end_of_day,
-    )
+    summary_cmd = QueryFacilitySummary.call(facility_id: facility_id)
 
-    render json: {data: trays.as_json}
+    render json: {data: summary_cmd.result.as_json}
   end
 end

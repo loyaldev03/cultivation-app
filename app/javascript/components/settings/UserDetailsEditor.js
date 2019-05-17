@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import AvatarPicker from '../utils/AvatarPicker'
 import { ReactComponent as BlankAvatar } from '../utils/BlankAvatar.svg'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-import { DefaultAvatar } from '../utils';
+import { DefaultAvatar } from '../utils'
 const styles = `
 
 .active{
@@ -130,7 +130,7 @@ class UserDetailsEditor extends React.PureComponent {
   onChangeToggle = field => e => this.setState({ [field]: e.target.checked })
 
   onChangeExempt = value => {
-    this.setState({ isExempt: value })
+    this.setState({ isExempt: !value })
   }
 
   onChangeWorkingHourInput = (day, time, e) => {
@@ -361,6 +361,7 @@ class UserDetailsEditor extends React.PureComponent {
                       src={photoUrl}
                       className="fl h4 w4"
                       onError={e => {
+                        e.target.onerror = null
                         e.target.src = DefaultAvatar
                       }}
                     />
@@ -460,24 +461,26 @@ class UserDetailsEditor extends React.PureComponent {
                 <label className="f6 fw6 mb1 grey mr3">Work status</label>
                 <br />
                 <div className="flex mt2">
-                  <div onChange={e => this.onChangeExempt(true)}>
+                  <div>
                     <label className="f6 grey mr2 mt2 pointer">
                       Exempt
                       <input
                         value="exempt"
                         type="radio"
-                        checked={isExempt === true}
+                        checked={isExempt}
+                        onChange={e => this.onChangeExempt(isExempt)}
                         className="ml2"
                       />
                     </label>
                   </div>
-                  <div onChange={e => this.onChangeExempt(false)}>
+                  <div>
                     <label className="f6 grey mr2 ml2 pointer">
                       Non-exempt
                       <input
                         value="non-exempt"
                         type="radio"
-                        checked={isExempt === false}
+                        checked={!isExempt}
+                        onChange={e => this.onChangeExempt(isExempt)}
                         className="ml2"
                       />
                     </label>

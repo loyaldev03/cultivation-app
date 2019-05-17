@@ -72,6 +72,7 @@ module Common
           id: user.id.to_s,
           first_name: user.first_name,
           last_name: user.last_name,
+          phone_number: user.phone_number,
           is_active: user.is_active,
           exempt: user.exempt,
           email: user.email,

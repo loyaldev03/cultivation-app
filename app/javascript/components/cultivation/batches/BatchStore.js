@@ -1,10 +1,9 @@
 import isEmpty from 'lodash.isempty'
+import uniq from 'lodash.uniq'
 import { observable, action, runInAction, computed, toJS } from 'mobx'
 import { httpGetOptions, httpPostOptions, toast } from '../../utils'
 import setupPlants from '../../inventory/plant_setup/actions/setupPlants'
 import PlantTagList from '../../dailyTask/components/PlantTagList'
-
-const uniq = require('lodash.uniq')
 
 class BatchStore {
   @observable isLoading = false

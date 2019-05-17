@@ -112,7 +112,6 @@ class TeamSetttingApp extends React.Component {
 
   onUserSave = async userDetails => {
     this.setState({ isSaving: true })
-    console.log(userDetails)
     try {
       const response = await (await fetch('/api/v1/user_roles/update_user', {
         method: 'POST',

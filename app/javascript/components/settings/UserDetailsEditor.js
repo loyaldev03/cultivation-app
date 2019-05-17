@@ -81,7 +81,6 @@ class UserDetailsEditor extends React.PureComponent {
           return e
         })
       }
-      console.log(props.user)
       this.state = {
         tabs: 'General',
         userId: props.user.id,
@@ -131,7 +130,6 @@ class UserDetailsEditor extends React.PureComponent {
   onChangeToggle = field => e => this.setState({ [field]: e.target.checked })
 
   onChangeExempt = value => {
-    console.log(value)
     this.setState({ isExempt: value })
   }
 
@@ -219,7 +217,6 @@ class UserDetailsEditor extends React.PureComponent {
         non_exempt_schedules: non_exempt_schedules
       }
     }
-    console.log(userDetails)
     this.props.onSave(userDetails)
   }
 
@@ -256,7 +253,6 @@ class UserDetailsEditor extends React.PureComponent {
   }
 
   onChangeNonExemptAttr = (record, key, value) => {
-    console.log(value)
     let updated_schedule = this.state.non_exempt_schedules.find(
       e => e === record
     )
@@ -365,8 +361,7 @@ class UserDetailsEditor extends React.PureComponent {
                       src={photoUrl}
                       className="fl h4 w4"
                       onError={e => {
-                        // e.target.onerror = null;
-                        console.log('error pic!')
+                        
                         e.target.src = imgData
                       }}
                     />

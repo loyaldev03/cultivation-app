@@ -14,6 +14,7 @@ import {
   Loading,
   ListingTable,
   httpGetOptions,
+  GROWTH_PHASE,
   TempBatchWidgets
 } from '../utils'
 
@@ -88,6 +89,7 @@ class RoomsDashboardApp extends React.Component {
   state = {
     columns: [
       { accessor: 'id', show: false },
+      { accessor: 'room_has_sections', show: false },
       {
         headerClassName: 'pl3 tl',
         Header: 'Room Name',
@@ -130,51 +132,69 @@ class RoomsDashboardApp extends React.Component {
         Header: 'Plant Capacity',
         accessor: 'total_capacity',
         className: 'justify-end pr3',
-        width: 120
+        width: 120,
+        Cell: props => (this.showValue(props) ? props.value : '')
       },
       {
         headerClassName: 'tl',
         Header: 'Total Used',
         accessor: 'planned_capacity',
         className: 'justify-end pr3',
-        width: 100
+        width: 100,
+        Cell: props => (this.showValue(props) ? props.value : '')
       },
       {
         headerClassName: 'tl',
         Header: 'Total Available',
         accessor: 'available_capacity',
         className: 'justify-end pr3',
-        width: 120
+        width: 120,
+        Cell: props => (this.showValue(props) ? props.value : '')
       },
       {
         headerClassName: 'tl',
         Header: '# of Sections',
-        accessor: 'stage_days',
+        accessor: 'section_count',
         className: 'justify-end pr3',
-        width: 98
+        width: 98,
+        Cell: props => {
+          if (this.showValue(props)) {
+            return props.row.room_has_sections ? props.value : 'n/a'
+          } else {
+            return ''
+          }
+        }
       },
       {
         headerClassName: 'tr pr3',
         Header: '# of Rows',
-        accessor: 'estimated_hours',
+        accessor: 'row_count',
         className: 'justify-end pr3',
-        width: 96
+        width: 96,
+        Cell: props => (this.showValue(props) ? props.value : '')
       },
       {
         headerClassName: 'tr pr3',
         Header: '# of Shelves',
-        accessor: 'actual_hours',
+        accessor: 'shelf_count',
         className: 'justify-end pr3',
-        width: 100
+        width: 100,
+        Cell: props => (this.showValue(props) ? props.value : '')
       },
       {
         headerClassName: 'tr pr3',
         Header: '# of Trays',
-        accessor: 'estimated_cost',
+        accessor: 'tray_count',
         className: 'justify-end pr3',
-        width: 96
+        width: 96,
+        Cell: props => (this.showValue(props) ? props.value : '')
       }
     ]
+  }
+
+  showValue(props) {
+    const room_purpose = props.row.purpose.split(',')[0]
+    return Object.values(GROWTH_PHASE).includes(room_purpose)
   }
 
   componentDidMount() {

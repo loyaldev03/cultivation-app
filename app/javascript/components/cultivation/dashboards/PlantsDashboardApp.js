@@ -9,9 +9,9 @@ import {
   CheckboxSelect,
   Loading,
   HeaderFilter,
+  ListingTable,
   TempPlantWidgets
 } from '../../utils'
-import ListingTable from './ListingTable'
 import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 import PlantStore from '../../inventory/plant_setup/store/PlantStore'
 

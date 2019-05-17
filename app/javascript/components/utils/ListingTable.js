@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactTable from 'react-table'
 
-export default class ListingTable extends React.PureComponent {
+class ListingTable extends React.PureComponent {
   render() {
     const {
       data,
@@ -19,7 +19,7 @@ export default class ListingTable extends React.PureComponent {
           columns={columns}
           data={data}
           loading={isLoading}
-          minRows={3}
+          minRows={5}
           sortable={sortable}
           showPagination={true}
           manual
@@ -35,7 +35,7 @@ export default class ListingTable extends React.PureComponent {
         columns={columns}
         data={data}
         loading={isLoading}
-        minRows={3}
+        minRows={5}
         sortable={sortable}
         showPagination={data && data.length > 20}
         defaultPageSize={20}
@@ -43,3 +43,5 @@ export default class ListingTable extends React.PureComponent {
     )
   }
 }
+
+export { ListingTable }

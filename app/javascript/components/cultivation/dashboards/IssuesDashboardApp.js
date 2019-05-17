@@ -5,10 +5,10 @@ import {
   ActiveBadge,
   CheckboxSelect,
   TempIssueWidgets,
-  HeaderFilter
+  HeaderFilter,
+  ListingTable
 } from '../../utils'
 import classNames from 'classnames'
-import ListingTable from './ListingTable'
 
 import IssueStore from '../../issues/store/IssueStore'
 

@@ -64,7 +64,13 @@ Rails.application.routes.draw do
   get "inventory/setup" => "home#inventory_setup"
   post "reset_data" => "home#reset_data"
 
+  namespace 'facility_dashboard' do
+    get '/' => 'facility_dashboard#index'
+    get '/summary' => 'facility_dashboard#summary'
+  end
+
   namespace 'materials', as: :materials do
+    # FIXME: IS THIS IN USE?
     get '/' => 'materials#index'
   end
 
@@ -135,7 +141,6 @@ Rails.application.routes.draw do
       resources :facilities, only: [:edit, :update, :index] do
         get 'all', on: :collection
       end
-
       resources :rooms,     only: [:index, :edit, :update, :new, :create]
       resources :sections,  only: [:index, :edit, :update]
       resources :rows,      only: [:index, :edit, :update]
@@ -175,6 +180,7 @@ Rails.application.routes.draw do
         member do
           get 'search_locations'
           get 'locations'
+          get 'current_trays_summary'
         end
       end
 

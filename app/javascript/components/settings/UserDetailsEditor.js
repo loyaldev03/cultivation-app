@@ -84,7 +84,13 @@ class UserDetailsEditor extends React.PureComponent {
       // }
       let sundaySelected = { label: '', value: '' }
       non_exempt_schedules = [
-        { day_id: 0, day: 'sunday', date: '', start_time: '08:00', end_time: '' },
+        {
+          day_id: 0,
+          day: 'sunday',
+          date: '',
+          start_time: '08:00',
+          end_time: ''
+        },
         { day_id: 1, day: 'monday', date: '', start_time: '', end_time: '' },
         { day_id: 2, day: 'tuesday', date: '', start_time: '', end_time: '' },
         { day_id: 3, day: 'wednesday', date: '', start_time: '', end_time: '' },
@@ -195,11 +201,9 @@ class UserDetailsEditor extends React.PureComponent {
   }
 
   calculateRangeDate = date => {
-
     const updated_schedules = this.state.non_exempt_schedules
 
     for (let i = 0; i < 7; i++) {
-
       updated_schedules.map(t => {
         let updated = updated_schedules.find(e => e.day_id === i)
         updated.date = addDays(date, i)
@@ -210,14 +214,15 @@ class UserDetailsEditor extends React.PureComponent {
     }
     console.log(updated_schedules)
 
-    this.setState({
-      sundaySelected: date,
-      non_exempt_schedules: updated_schedules
-    }, () => {
+    this.setState(
+      {
+        sundaySelected: date,
+        non_exempt_schedules: updated_schedules
+      },
+      () => {
         console.log(this.state.non_exempt_schedules)
-    })
-
-
+      }
+    )
   }
 
   onUploadAvatarSuccess = photoData => {
@@ -918,12 +923,18 @@ class UserDetailsEditor extends React.PureComponent {
                           type="time"
                           onChange={e =>
                             this.onChangeNonExemptAttr(
-                              this.state.non_exempt_schedules.find(e => e.day === 'sunday'),
+                              this.state.non_exempt_schedules.find(
+                                e => e.day === 'sunday'
+                              ),
                               'start_time',
                               e.target.value
                             )
                           }
-                            value={this.state.non_exempt_schedules.find(e => e.day === 'sunday').start_time}
+                          value={
+                            this.state.non_exempt_schedules.find(
+                              e => e.day === 'sunday'
+                            ).start_time
+                          }
                         />
                         <div className="flex items-center">
                           <label className="f4 db mb1 ttc">-</label>
@@ -944,7 +955,7 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
                       <label className="f6 fw6 db mb1 gray ttc">
-                          Monday, {JSON.stringify(nonExemptMonday.date)}
+                        Monday, {JSON.stringify(nonExemptMonday.date)}
                       </label>
                       <div className="flex w-40 justify-between">
                         <input
@@ -978,7 +989,7 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
                       <label className="f6 fw6 db mb1 gray ttc">
-                          Tuesday, {JSON.stringify(nonExemptTuesday.date)}
+                        Tuesday, {JSON.stringify(nonExemptTuesday.date)}
                       </label>
                       <div className="flex w-40 justify-between">
                         <input
@@ -1012,7 +1023,7 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
                       <label className="f6 fw6 db mb1 gray ttc">
-                          Wednesday, {JSON.stringify(nonExemptWednesday.date)}
+                        Wednesday, {JSON.stringify(nonExemptWednesday.date)}
                       </label>
                       <div className="flex w-40 justify-between">
                         <input
@@ -1046,7 +1057,7 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
                       <label className="f6 fw6 db mb1 gray ttc">
-                          Thursday, {JSON.stringify(nonExemptThursday.date)}
+                        Thursday, {JSON.stringify(nonExemptThursday.date)}
                       </label>
                       <div className="flex w-40 justify-between">
                         <input
@@ -1080,7 +1091,7 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
                       <label className="f6 fw6 db mb1 gray ttc">
-                          Friday, {JSON.stringify(nonExemptFriday.date)}
+                        Friday, {JSON.stringify(nonExemptFriday.date)}
                       </label>
                       <div className="flex w-40 justify-between">
                         <input
@@ -1114,7 +1125,7 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                     <div className="mt2 fl w-100 flex justify-between mb4">
                       <label className="f6 fw6 db mb1 gray ttc">
-                          Saturday, {JSON.stringify(nonExemptSaturday.date)}
+                        Saturday, {JSON.stringify(nonExemptSaturday.date)}
                       </label>
                       <div className="flex w-40 justify-between">
                         <input

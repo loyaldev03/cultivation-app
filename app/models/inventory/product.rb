@@ -16,6 +16,7 @@ module Inventory
     field :uom_dimension, type: String
     field :common_uom, type: String
     field :size, type: Float, default: -> { 0 }
+    field :package_type, type: String
     field :ppm, type: Integer
 
     field :upc, type: String

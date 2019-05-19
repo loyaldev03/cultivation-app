@@ -1,0 +1,14 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Home",root_path] %>
+<% end %>
+
+
+<div class="pa4">
+  <div class="flex flex-column">
+    <%= react_component('inventory/metrc/MetrcInventoryApp',
+    { 
+      facility_id: @facility_id
+    }) 
+    %>
+  </div>
+</div>

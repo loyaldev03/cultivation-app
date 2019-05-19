@@ -68,7 +68,7 @@
           <%= link_to 'Packages', harvest_packages_inventory_sales_products_path(facility_id: current_default_facility&.id&.to_s), class: 'link gray f6' %>
         </li>
         <li class="pv2">
-          <%= link_to 'METRC', '#', class: 'link gray f6' %>
+          <%= link_to 'METRC', inventory_metrc_index_path, class: 'link gray f6' %>
         </li>
         <li class="pv2">
           <%= link_to 'Products', convert_products_inventory_sales_products_path(facility_id:current_default_facility&.id&.to_s), class: 'link gray f6' %>

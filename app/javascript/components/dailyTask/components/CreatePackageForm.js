@@ -80,7 +80,11 @@ class PackageTracking extends React.Component {
   }
 
   async componentDidMount() {
-    const data = await loadScannedPackages(this.props.batchId, this.props.product_type, this.props.package_type)
+    const data = await loadScannedPackages(
+      this.props.batchId,
+      this.props.product_type,
+      this.props.package_type
+    )
     const packageIDs = data.map(x => ({
       id: x.id,
       tag: x.tag
@@ -114,8 +118,11 @@ class PackageTracking extends React.Component {
 
       scanAndCreate(data).then(result => {
         if (result.isValid) {
-          const newPackage = { id: result.package.id, tag: result.package.package_tag }
-          this.setState({ 
+          const newPackage = {
+            id: result.package.id,
+            tag: result.package.package_tag
+          }
+          this.setState({
             packageID: '',
             packageIDs: [newPackage, ...this.state.packageIDs],
             errors: null
@@ -160,7 +167,7 @@ class PackageTracking extends React.Component {
             className="w-100 f6"
           />
         )}
-        { showScanner && this.renderError() }
+        {showScanner && this.renderError()}
         <div
           className="overflow-y-scroll ph2"
           style={{ maxHeight: '200px', minHeight: '50px' }}
@@ -263,7 +270,6 @@ const loadScannedPackages = async (batchId, productType, packageType) => {
   return response
 }
 
-
 const scanAndCreate = async data => {
   const url = '/api/v1/sales_products/scan_and_create'
   const response = await fetch(url, httpPostOptions(data))
@@ -278,7 +284,7 @@ const scanAndCreate = async data => {
   } else {
     let errors = ''
     for (let attr in result.errors) {
-      errors += result.errors[attr] + ". "
+      errors += result.errors[attr] + '. '
     }
 
     return {

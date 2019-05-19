@@ -29,6 +29,10 @@
   border-color: #C7C7C7;
 }
 
+.b--calendar-grid {
+  border-color: #D5D5D5;
+}
+
 .b--light-yellow {
   border-color: var(--light-yellow);
 }
@@ -77,6 +81,11 @@
   width: 50px; 
   height: 50px;
   margin-left: -3rem;
+}
+
+/* hover */
+.hover-bg-grey:hover {
+  background-color: rgba(100, 100, 100, 0.1);
 }
 
 /* navbar hover */
@@ -256,4 +265,12 @@
 
 .dim--grey:hover {
   background: #f1f1f1;
+}
+
+.w-26 {
+  width: 26%;
+}
+
+.w-41{
+  width: 41%;
 }

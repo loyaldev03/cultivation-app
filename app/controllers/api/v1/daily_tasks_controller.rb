@@ -277,6 +277,25 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     end
   end
 
+  def schedule_by_date
+    date = Time.zone.parse(params[:date], Time.current)
+    work_schedule = current_user.work_schedules.find_by(start_date: (date.beginning_of_day..date.end_of_day))
+    Rails.logger.debug "Work Schedule ==> #{work_schedule}"
+    if work_schedule
+      render json: {
+        start_date: params[:date],
+        start_time: work_schedule.start_time&.strftime('%H:%M'),
+        end_time: work_schedule.end_time&.strftime('%H:%M'),
+      }
+    else
+      render json: {
+        start_date: params[:date],
+        start_time: '',
+        end_time: '',
+      }
+    end
+  end
+
   private
 
   def serialized_batch(id)

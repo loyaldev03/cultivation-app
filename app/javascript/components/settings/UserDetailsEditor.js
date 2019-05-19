@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import AvatarPicker from '../utils/AvatarPicker'
 import { ReactComponent as BlankAvatar } from '../utils/BlankAvatar.svg'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'
-
+import { DefaultAvatar } from '../utils'
 const styles = `
 
 .active{
@@ -81,7 +81,6 @@ class UserDetailsEditor extends React.PureComponent {
           return e
         })
       }
-
       this.state = {
         tabs: 'General',
         userId: props.user.id,
@@ -90,6 +89,7 @@ class UserDetailsEditor extends React.PureComponent {
         email: props.user.email || '',
         title: props.user.title || '',
         photoData: props.user.photo_data,
+        phone_number: props.user.phone_number,
         photoUrl: props.user.photo_url,
         isActive: props.user.is_active || false,
         isExempt: props.user.exempt || false,
@@ -111,6 +111,7 @@ class UserDetailsEditor extends React.PureComponent {
         lastName: '',
         email: '',
         title: '',
+        phone_number: '',
         photoData: '',
         photoUrl: '',
         isActive: false,
@@ -127,6 +128,10 @@ class UserDetailsEditor extends React.PureComponent {
   onChangeInput = field => e => this.setState({ [field]: e.target.value })
 
   onChangeToggle = field => e => this.setState({ [field]: e.target.checked })
+
+  onChangeExempt = value => {
+    this.setState({ isExempt: !value })
+  }
 
   onChangeWorkingHourInput = (day, time, e) => {
     let temp_work_schedules = this.state.work_schedules
@@ -166,6 +171,7 @@ class UserDetailsEditor extends React.PureComponent {
       email,
       password,
       title,
+      phone_number,
       facilities,
       default_facility,
       roles,
@@ -195,6 +201,7 @@ class UserDetailsEditor extends React.PureComponent {
         password: password,
         first_name: firstName,
         last_name: lastName,
+        phone_number: phone_number,
         title: title,
         photo_data: photo_data,
         hourly_rate: hourly_rate,
@@ -246,7 +253,6 @@ class UserDetailsEditor extends React.PureComponent {
   }
 
   onChangeNonExemptAttr = (record, key, value) => {
-    console.log(value)
     let updated_schedule = this.state.non_exempt_schedules.find(
       e => e === record
     )
@@ -279,6 +285,7 @@ class UserDetailsEditor extends React.PureComponent {
       isActive,
       isExempt,
       facilities,
+      phone_number,
       roles,
       default_facility,
       hourly_rate,
@@ -350,7 +357,14 @@ class UserDetailsEditor extends React.PureComponent {
                       'w4 h4 bg-black-10': !photoUrl
                     })}
                   >
-                    <img src={photoUrl} className="fl h4 w4" />
+                    <img
+                      src={photoUrl}
+                      className="fl h4 w4"
+                      onError={e => {
+                        e.target.onerror = null
+                        e.target.src = DefaultAvatar
+                      }}
+                    />
                     <AvatarPicker
                       key={photoUrl}
                       onUploadSuccess={this.onUploadAvatarSuccess}
@@ -395,6 +409,17 @@ class UserDetailsEditor extends React.PureComponent {
                   />
                 </div>
               </div>
+              <div className="mt2 fl w-100">
+                <div className="w-50 fl pr3">
+                  <label className="f6 fw6 db mb1 gray ttc">Phone</label>
+                  <input
+                    className="db w-90 pa2 f6 black ba b--black-20 br2 outline-0 no-spinner"
+                    onChange={this.onChangeInput('phone_number')}
+                    value={phone_number}
+                  />
+                </div>
+                <div className="w-50 fr pl3" />
+              </div>
               <div className="mt2 fl w-100 mb2">
                 <div className="w-100 fl pr3">
                   <label className="f6 fw6 dib mb1 gray ttc">Password</label>
@@ -409,7 +434,7 @@ class UserDetailsEditor extends React.PureComponent {
                 </div>
               </div>
               <div className="mt2 fl w-100 mb2">
-                <label className="f6 fw6 db mb1 gray ttc">User mode</label>
+                <label className="f6 fw6 db mb1 gray ttc">Landing Page</label>
                 <Select
                   options={user_modes}
                   isClearable={true}
@@ -433,20 +458,45 @@ class UserDetailsEditor extends React.PureComponent {
                 />
               </div>
               <div className="mt2 fl w-100">
-                <label className="f6 fw6 mb1 ttu grey">
-                  {isExempt ? 'Exempt' : 'Non-exempt'}
-                </label>
-                <input
+                <label className="f6 fw6 mb1 grey mr3">Work status</label>
+                <br />
+                <div className="flex mt2">
+                  <div>
+                    <label className="f6 grey mr2 mt2 pointer">
+                      Exempt
+                      <input
+                        value="exempt"
+                        type="radio"
+                        checked={isExempt}
+                        onChange={e => this.onChangeExempt(isExempt)}
+                        className="ml2"
+                      />
+                    </label>
+                  </div>
+                  <div>
+                    <label className="f6 grey mr2 ml2 pointer">
+                      Non-exempt
+                      <input
+                        value="non-exempt"
+                        type="radio"
+                        checked={!isExempt}
+                        onChange={e => this.onChangeExempt(isExempt)}
+                        className="ml2"
+                      />
+                    </label>
+                  </div>
+                </div>
+                {/* <input
                   id="is_active"
                   type="checkbox"
                   className="toggle toggle-default"
                   onChange={this.onChangeToggle('isExempt')}
                   checked={isExempt}
-                />
-                <label className="toggle-button mt1 fr" htmlFor="is_active" />
+                /> */}
+                {/* <label className="toggle-button mt1 fr" htmlFor="is_active" />
                 <p className="gray f6 db mv1">
                   {isExempt ? 'Salary Worker' : 'Hourly Worker'}
-                </p>
+                </p> */}
               </div>
               {isExempt ? (
                 <div>

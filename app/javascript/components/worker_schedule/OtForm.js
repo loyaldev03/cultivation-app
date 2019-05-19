@@ -2,7 +2,7 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import { SlidePanelHeader, SlidePanelFooter } from '../utils'
 import Calendar from 'react-calendar'
-
+import WorkerScheduleStore from './stores/WorkerScheduleStore'
 const otCalendar = `
   #ot-calendar .react-calendar{
     border: initial;
@@ -23,7 +23,9 @@ class OtForm extends React.Component {
       end_date: '',
       start_time: '',
       end_time: '',
-      description: ''
+      description: '',
+      schedule_start_time: '',
+      schedule_end_time: ''
     }
   }
   componentDidMount() {}
@@ -56,11 +58,14 @@ class OtForm extends React.Component {
     )
   }
 
-  onChangeDate = value => {
+  onChangeDate = async value => {
     if (value) {
+      let result = await WorkerScheduleStore.getWorkScheduleByDate(value)
       this.setState({
         start_date: value,
-        end_date: value
+        end_date: value,
+        schedule_start_time: result.start_time,
+        schedule_end_time: result.end_time
       })
     }
   }
@@ -90,13 +95,24 @@ class OtForm extends React.Component {
 
             <div className="mt4 fl w-100 flex justify-between">
               <label className="f6 fw6 db mb1 gray ttc">Working Hours</label>
-              <div className="flex w-60 justify-around">
-                <label className="f6 grey">08:30</label>
-                <div className="flex items-center">
-                  <label className="f4 db mb1 ttc">-</label>
+              {this.state.schedule_start_time &&
+              this.state.schedule_end_time ? (
+                <div className="flex w-60 justify-around">
+                  <label className="f6 grey">
+                    {this.state.schedule_start_time}
+                  </label>
+                  <div className="flex items-center">
+                    <label className="f4 db mb1 ttc">-</label>
+                  </div>
+                  <label className="f6 grey">
+                    {this.state.schedule_end_time}
+                  </label>
                 </div>
-                <label className="f6 grey">21:30</label>
-              </div>
+              ) : (
+                <div className="flex w-60 items-center mb1">
+                  <span className="f6 grey">No schedule</span>
+                </div>
+              )}
             </div>
 
             <div className="mt2 fl w-100 flex justify-between">

@@ -11,7 +11,7 @@
     <canvas id="mobileCanvas" width="240" height="320" style="display: none; float: bottom;"></canvas>
   </div>
 
-
+<%= javascript_include_tag "scanner", :async => true%>
 <script>
 var videoElement = document.querySelector('video');
 var canvas = document.getElementById('pcCanvas');
@@ -222,6 +222,4 @@ function handleError(error) {
   console.log('Error: ', error);
 }
 </script>
-
-  <script async src="/assets/scanner.js"></script>
 

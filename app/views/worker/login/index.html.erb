@@ -1,0 +1,75 @@
+<% if @ip_included %>
+  <div class="flex w-100 h-100">
+    <div class="w-26 bg-white br b--light-gray bw2">
+      <div class="pa2 bb b--light-gray bw1 h3">
+        <h1 class="f4 grey fw5">
+          <span class="ml2">Select job type</h1>
+        </h1>
+      </div>
+      <div class="f3 overflow-auto" style="height: 90%;">
+        <div class="pa3 pointer hover-bg-light-gray h3">
+          <%= link_to request.params.merge(role: 'all'), class: "ml2 no-underline black" do %>
+            All available
+          <% end %>
+        </div>
+        <% @roles.each do |role| %>
+          <div class="pa3 pointer hover-bg-light-gray h3">
+            <%= link_to request.params.merge(role: role), class: "ml2 no-underline black" do %>
+              <%= role%>
+            <% end %>
+          </div>
+
+        <% end %>
+      </div>
+    </div>
+    <div class="w-41 bg-white">
+      <div class="pa2 bb b--light-gray bw1 h3">
+        <input id="name" class="input-reset ba b--black-20 pa2 db w-80 br4 tc center f4 grey fw5" type="text" aria-describedby="name-desc" placeholder="Search by name"/>
+      </div>
+      <div class="f4 tc flex justify-center bb b--light-gray h3 ">
+        <%= link_to request.params.merge(filter: 'alpha'), class: "pa3 pointer no-underline #{params[:filter] == 'alpha' ? 'orange bb b--orange' : 'black'}" do %>
+          <div>
+            Alphabetically
+          </div>
+        <% end %>
+        <%= link_to request.params.merge(filter: 'last_login'), class: "pa3 pointer no-underline #{params[:filter] == 'last_login' ? 'orange bb b--orange' : 'black'}" do %>
+          <div>
+            Last logged in
+          </div>
+        <% end %>
+      </div>
+      <% if @users.present? %>
+        <% @users.each do |user|%>
+          <%= link_to request.params.merge(selected: user.display_name), class: "pa3 pointer hover-bg-light-gray h3 flex justify-between no-underline " do %>
+            <div>
+              <span style="background-color: #eee; width: 36px; height: 36px; font-size: 1.09091em; font-weight: 600; line-height: 36px; color: grey; text-align: center; cursor: inherit; display: inline-block; border-radius: 50%;">ER</span>
+              <span class="ml2 f3 black"><%= user.display_name%></span>
+            </div>
+            <span class="ml2 f4 grey"><%= params[:role] %></span>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="w-33 bg-grey">
+      <div class="w-100 h-100 flex flex-column justify-center items-center">
+        <% if @user.present? %>
+
+          <label class="grey fw4 f2">Request new PIN</label>
+          <div class="pa4 ws-normal">
+            <label class="grey fw4 f4">The PIN will be sent to the registered phone number.</h4>
+          </div>
+          <div class="flex justify-center">
+            <%= link_to 'REQUEST PIN', '#', class: 'btn btn--primary mt3'%>
+          </div>
+        <% else %>
+          <h1 class="grey fw4">Choose name to start</h1>
+        <% end %>
+      </div>
+    </div>  
+
+  </div>
+<% else %>
+  <div class="w-100 min-vh-100 bg-white flex flex-column justify-center items-center bg-orange">
+    <h1 class="white">Please connect to your facility wifi to access this page.</h1>
+  </div>
+<% end %>

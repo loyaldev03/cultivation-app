@@ -147,7 +147,11 @@
         </li>
 
         <li class="pv2">
-          <%= link_to 'Rooms', '', class: 'link gray f6' %>
+          <% if current_facility %>
+            <%= link_to 'Rooms', facility_dashboard_summary_path(facility_id: current_facility.id), class: 'link gray f6' %>
+          <% else %>
+            <%= link_to 'Rooms', facility_dashboard_summary_path, class: 'link gray f6' %>
+          <% end %>
         </li>
       </ul>
     </li>

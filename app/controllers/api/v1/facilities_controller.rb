@@ -15,4 +15,11 @@ class Api::V1::FacilitiesController < Api::V1::BaseApiController
     locations = QueryLocations.select_options(facility_id, purposes)
     render json: {data: locations.as_json}
   end
+
+  def current_trays_summary
+    facility_id = params[:id]
+    summary_cmd = QueryFacilitySummary.call(facility_id: facility_id)
+
+    render json: {data: summary_cmd.result.as_json}
+  end
 end

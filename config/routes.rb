@@ -31,7 +31,6 @@ Rails.application.routes.draw do
 
   get "qr_code" => "home#qr"
 
-
   get "facility_setup/new" => "facility_setup#new"
   get "facility_setup/rooms_info" => "facility_setup#rooms_info"
   get "facility_setup/room_info" => "facility_setup#room_info", as: 'fetch_room_info'
@@ -55,6 +54,7 @@ Rails.application.routes.draw do
   post "facility_setup/update_row_info" => "facility_setup#update_row_info"
   post "facility_setup/update_shelf_trays" => "facility_setup#update_shelf_trays", as: 'update_shelf_trays'
   post "facility_setup/duplicate_rows" => "facility_setup#duplicate_rows", as: "duplicate_rows"
+  post "facility_setup/whitelist_ip" => "facility_setup#whitelist_ip", as: 'whitelist_ip'
 
   get "dashboard" => "home#dashboard"
   get "worker_dashboard" => "home#worker_dashboard"
@@ -64,7 +64,13 @@ Rails.application.routes.draw do
   get "inventory/setup" => "home#inventory_setup"
   post "reset_data" => "home#reset_data"
 
+  namespace 'facility_dashboard' do
+    get '/' => 'facility_dashboard#index'
+    get '/summary' => 'facility_dashboard#summary'
+  end
+
   namespace 'materials', as: :materials do
+    # FIXME: IS THIS IN USE?
     get '/' => 'materials#index'
   end
 
@@ -75,6 +81,9 @@ Rails.application.routes.draw do
     resources :vendor_invoices, only: [:index, :show]
   end
 
+  namespace 'worker' do 
+    resources :login, only: [:index]
+  end
 
   get "inventory/setup" => "home#inventory_setup"
   namespace 'inventory', as: :inventory do
@@ -134,7 +143,6 @@ Rails.application.routes.draw do
       resources :facilities, only: [:edit, :update, :index] do
         get 'all', on: :collection
       end
-
       resources :rooms,     only: [:index, :edit, :update, :new, :create]
       resources :sections,  only: [:index, :edit, :update]
       resources :rows,      only: [:index, :edit, :update]
@@ -172,6 +180,7 @@ Rails.application.routes.draw do
         member do
           get 'search_locations'
           get 'locations'
+          get 'current_trays_summary'
         end
       end
 
@@ -244,6 +253,7 @@ Rails.application.routes.draw do
         get 'harvest_batch'
         get 'list_infos', on: :collection
         get 'active_tasks', on: :collection, controller: :tasks, action: :active_tasks
+        get 'active_tasks_agg', on: :collection, controller: :tasks, action: :active_tasks_agg
         get 'search_locations', on: :collection
         get 'plants_movement_history', on: :collection
         post 'search_batch_plans', on: :collection
@@ -317,6 +327,7 @@ Rails.application.routes.draw do
         get '/tasks_by_date_range', to: 'daily_tasks#tasks_by_date_range'
         put '/time_log', to: 'daily_tasks#time_log'
         get '/work_schedules', to: 'daily_tasks#work_schedules'
+        get '/schedule_by_date', to: 'daily_tasks#schedule_by_date'
         
         post ':id/save_material_used', to: 'daily_tasks#save_material_used'
         post 'materials_used', to: 'daily_tasks#materials_used' 
@@ -330,6 +341,7 @@ Rails.application.routes.draw do
 
       resources :issues, only: [:create, :by_batch, :show, :archive] do
         collection do
+          get 'all'
           get 'by_batch/:batch_id', action: 'by_batch'
           get 'unresolved_count/:batch_id', action: 'unresolved_count'
           post 'archive'
@@ -346,6 +358,8 @@ Rails.application.routes.draw do
           get 'attachment'
         end
       end
+
+      resources :harvests, only: [:index]
     end
   end
 end

@@ -1,8 +1,9 @@
 import 'babel-polyfill'
+import isEmpty from 'lodash.isempty'
 import React, { memo, useState } from 'react'
 import classNames from 'classnames'
 import { differenceInDays } from 'date-fns'
-import { action, observable, computed } from 'mobx'
+import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import {
   decimalFormatter,
@@ -11,30 +12,54 @@ import {
   ActiveBadge,
   CheckboxSelect,
   Loading,
+  ListingTable,
   TempTaskWidgets
 } from '../../utils'
-import ListingTable from './ListingTable'
 
 class ActiveTaskStore {
   @observable tasks = []
   @observable isLoading = false
   @observable isDataLoaded = false
-  @observable pagy = {}
+  @observable metadata = {}
+  @observable searchTerm = ''
+  @observable filter = {
+    facility_id: '',
+    page: 0,
+    limit: 20
+  }
+
+  constructor() {
+    autorun(
+      () => {
+        if (this.filter.facility_id) {
+          if (this.searchTerm === null) {
+            this.searchTerm = ''
+          }
+          this.loadActiveTasks()
+        }
+      },
+      { delay: 700 }
+    )
+  }
 
   @action
-  async loadActiveTasks({ page, pageSize }) {
+  async loadActiveTasks() {
     this.isLoading = true
-    const url = `/api/v1/batches/active_tasks?page=${page +
-      1}&pageSize=${pageSize}`
+    let url = `/api/v1/batches/active_tasks_agg?facility_id=${
+      this.filter.facility_id
+    }`
+    url += `&page=${this.filter.page}&limit=${this.filter.limit}&search=${
+      this.searchTerm
+    }`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
-        this.tasks = response.data.map(x => x.attributes)
-        this.pagy = response.pagy
+        this.tasks = response.data
+        this.metadata = Object.assign({ pages: 0 }, response.metadata)
         this.isDataLoaded = true
       } else {
         this.tasks = []
-        this.pagy = {}
+        this.metadata = { pages: 0 }
         this.isDataLoaded = false
       }
     } catch (error) {
@@ -42,6 +67,15 @@ class ActiveTaskStore {
       console.error(error)
     } finally {
       this.isLoading = false
+    }
+  }
+
+  @action
+  setFilter(filter) {
+    this.filter = {
+      facility_id: filter.facility_id,
+      page: filter.page,
+      limit: filter.limit
     }
   }
 
@@ -57,21 +91,45 @@ class TasksDashboardApp extends React.Component {
   state = {
     columns: [
       {
-        headerClassName: 'tl',
-        Header: 'WBS',
-        accessor: 'wbs',
-        width: 78
+        accessor: 'batch_id',
+        show: false
+      },
+      {
+        headerClassName: 'tc',
+        Header: '!',
+        accessor: 'issue_count',
+        width: 30,
+        Cell: props =>
+          props.value ? (
+            <i className="material-icons md-16 red pointer">error</i>
+          ) : null
       },
       {
         headerClassName: 'pl3 tl',
-        Header: 'Task',
+        Header: 'Task name',
         accessor: 'name',
         className: 'pl3 fw6',
-        minWidth: 138,
+        minWidth: 160,
+        Cell: props => <span className="truncate">{props.value}</span>
+      },
+      {
+        headerClassName: 'pl3 tl',
+        Header: 'Phase',
+        accessor: 'phase',
+        className: 'pl3 ttc',
+        minWidth: 70
+      },
+      {
+        headerClassName: 'pl3 tl',
+        Header: 'Batch ID',
+        accessor: 'batch_name',
+        className: 'pl3',
+        minWidth: 128,
         Cell: props => (
           <a
-            className="link dark-grey truncate"
-            href={`/cultivation/batches/${props.row.cultivation_batch_id}`}
+            className="link grey truncate"
+            href={`/cultivation/batches/${props.row.batch_id}`}
+            title={props.row.batch_no}
           >
             {props.value}
           </a>
@@ -79,7 +137,7 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Start Date',
+        Header: 'Start date',
         accessor: 'start_date',
         className: 'justify-end pr3',
         width: 88,
@@ -87,7 +145,7 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'End Date',
+        Header: 'End date',
         accessor: 'end_date',
         className: 'justify-end pr3',
         width: 88,
@@ -113,7 +171,7 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tr pr3',
-        Header: 'Est. Hours',
+        Header: 'Est. hours',
         accessor: 'estimated_hours',
         className: 'justify-end pr3',
         width: 110,
@@ -122,7 +180,7 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tr pr3',
-        Header: 'Hrs to date',
+        Header: 'Act. hours',
         accessor: 'actual_hours',
         className: 'justify-end pr3',
         width: 110
@@ -138,29 +196,46 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tr pr3',
-        Header: 'Cost to date',
+        Header: 'Act. cost',
         accessor: 'actual_cost',
         className: 'justify-end pr3',
         width: 110
+      },
+      {
+        headerClassName: 'tc',
+        Header: 'Assigned to',
+        accessor: 'workers',
+        className: 'justify-center',
+        minWidth: 150,
+        Cell: props => {
+          if (!isEmpty(props.value)) {
+            return props.value.map(x => x.name)
+          }
+          return null
+        }
       }
     ]
   }
 
   onFetchData = (state, instance) => {
-    activeTaskStore.loadActiveTasks(state)
+    activeTaskStore.setFilter({
+      facility_id: this.props.defaultFacilityId,
+      page: state.page,
+      limit: state.pageSize
+    })
+    activeTaskStore.loadActiveTasks()
   }
 
-  onToggleColumns = e => {
-    const opt = this.state.columns.find(x => x.Header === e.target.name)
-    if (opt) {
-      opt.show = e.target.checked
+  onToggleColumns = (header, value) => {
+    const column = this.state.columns.find(x => x.Header === header)
+    if (column) {
+      column.show = value
+      this.setState({
+        columns: this.state.columns.map(x =>
+          x.Header === column.Header ? column : x
+        )
+      })
     }
-    this.setState({
-      columns: this.state.columns.map(x =>
-        x.accessor === e.target.name ? opt : x
-      )
-    })
-    e.stopPropagation()
   }
 
   render() {
@@ -177,7 +252,7 @@ class TasksDashboardApp extends React.Component {
             className="input w5"
             placeholder="Search Tasks"
             onChange={e => {
-              activeTaskStore.filter = e.target.value
+              activeTaskStore.searchTerm = e.target.value
             }}
           />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
@@ -187,7 +262,7 @@ class TasksDashboardApp extends React.Component {
             ajax={true}
             onFetchData={this.onFetchData}
             data={activeTaskStore.filteredList}
-            pages={activeTaskStore.pagy.pages}
+            pages={activeTaskStore.metadata.pages}
             columns={columns}
             isLoading={activeTaskStore.isLoading}
           />

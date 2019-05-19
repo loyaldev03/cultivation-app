@@ -25,7 +25,13 @@
       @extend .ws-unset;
       font-size: 0.9rem;
       height: 3.5rem;
+      outline: none;
       background-color: var(--grey-smoke);
+
+      .rt-resizer {
+        width: 16px;
+        right: -8px;
+      }
     }
     .rt-tr .rt-th,
     .rt-tr .rt-td {

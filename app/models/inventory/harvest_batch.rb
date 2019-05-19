@@ -9,7 +9,7 @@ module Inventory
     field :total_wet_waste_weight, type: Float, default: -> { 0 }
 
     field :total_trim_weight, type: Float, default: -> { 0 }
-    field :total_trim_waste_weight, type: Float, default: -> { 0 }
+    field :total_trim_waste_weight, type: Float, default: -> { 0 } #dry waste change this
     field :total_dry_weight, type: Float, default: -> { 0 }  # Weight after finish drying
     field :total_cure_weight, type: Float, default: -> { 0 } # Weight after finish curing
     field :uom, type: String

@@ -363,6 +363,19 @@ class FacilitySetupController < ApplicationController
     end
   end
 
+  def whitelist_ip
+    @facility = Facility.find(params[:facility_id])
+    public_ip = request.remote_ip
+    if @facility.whitelist_ips.include? (public_ip) #if current ip doesnt exist in array
+      flash[:error] = 'Public Ip address existed in whitelist record'
+    else
+      @facility.whitelist_ips << public_ip
+      @facility.save
+      flash[:notice] = 'Public Ip Address added into whitelist record'
+    end
+    redirect_to facility_setup_new_path(facility_id: params[:facility_id])
+  end
+
   private
 
   def get_row_shelves_trays_form(facility_id, room_id, row_id, shelf_id = nil)

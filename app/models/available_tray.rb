@@ -7,9 +7,12 @@ class AvailableTray
               :room_name,
               :room_code,
               :room_purpose,
+              :room_has_sections,
               :row_id,
               :row_name,
               :row_code,
+              :row_has_shelves,
+              :row_has_trays,
               :section_id,
               :section_name,
               :section_code,
@@ -35,9 +38,12 @@ class AvailableTray
     @room_name = args[:room_name]
     @room_code = args[:room_code]
     @room_purpose = args[:room_purpose]
+    @room_has_sections = args[:room_has_sections]
     @row_id = args[:row_id].to_s
     @row_name = args[:row_name]
     @row_code = args[:row_code]
+    @row_has_shelves = args[:row_has_shelves]
+    @row_has_trays = args[:row_has_trays]
     @section_id = args[:section_id].to_s
     @section_name = args[:section_name]
     @section_code = args[:section_code]

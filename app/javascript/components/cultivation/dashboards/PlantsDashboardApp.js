@@ -8,9 +8,10 @@ import {
   ActiveBadge,
   CheckboxSelect,
   Loading,
+  HeaderFilter,
+  ListingTable,
   TempPlantWidgets
 } from '../../utils'
-import ListingTable from './ListingTable'
 import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 import PlantStore from '../../inventory/plant_setup/store/PlantStore'
 
@@ -54,21 +55,42 @@ class PlantsDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Strain',
+        Header: (
+          <HeaderFilter
+            title="Strain"
+            accessor="strain_name"
+            getOptions={PlantStore.getUniqPropValues}
+            onUpdate={PlantStore.updateFilterOptions}
+          />
+        ),
         accessor: 'strain_name',
         minWidth: 130,
         Cell: props => <span className="truncate">{props.value}</span>
       },
       {
         headerClassName: 'tl',
-        Header: 'Growth Phase',
+        Header: (
+          <HeaderFilter
+            title="Growth Phase"
+            accessor="batch_growth_stage"
+            getOptions={PlantStore.getUniqPropValues}
+            onUpdate={PlantStore.updateFilterOptions}
+          />
+        ),
         accessor: 'batch_growth_stage',
         className: 'justify-center ttc',
-        minWidth: 74
+        minWidth: 130
       },
       {
         headerClassName: 'tl',
-        Header: 'Location',
+        Header: (
+          <HeaderFilter
+            title="Location"
+            accessor="location_name"
+            getOptions={PlantStore.getUniqPropValues}
+            onUpdate={PlantStore.updateFilterOptions}
+          />
+        ),
         accessor: 'location_name',
         minWidth: 180,
         Cell: props => <span className="truncate">{props.value}</span>
@@ -126,17 +148,16 @@ class PlantsDashboardApp extends React.Component {
     loadPlants('', '', this.props.defaultFacilityId, ['mother'])
   }
 
-  onToggleColumns = e => {
-    const opt = this.state.columns.find(x => x.Header === e.target.name)
-    if (opt) {
-      opt.show = e.target.checked
+  onToggleColumns = (header, value) => {
+    const column = this.state.columns.find(x => x.Header === header)
+    if (column) {
+      column.show = value
+      this.setState({
+        columns: this.state.columns.map(x =>
+          x.Header === column.Header ? column : x
+        )
+      })
     }
-    this.setState({
-      columns: this.state.columns.map(x =>
-        x.accessor === e.target.name ? opt : x
-      )
-    })
-    e.stopPropagation()
   }
 
   render() {

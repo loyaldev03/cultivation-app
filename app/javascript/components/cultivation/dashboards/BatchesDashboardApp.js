@@ -1,6 +1,5 @@
 import 'babel-polyfill'
 import React, { memo, useState, lazy, Suspense } from 'react'
-import ListingTable from './ListingTable'
 import { differenceInDays } from 'date-fns'
 import { observer } from 'mobx-react'
 import {
@@ -8,7 +7,9 @@ import {
   formatDate2,
   ActiveBadge,
   CheckboxSelect,
+  HeaderFilter,
   Loading,
+  ListingTable,
   TempBatchWidgets
 } from '../../utils'
 import BatchStore from '../batches/BatchStore'
@@ -37,7 +38,14 @@ class BatchesDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Status',
+        Header: (
+          <HeaderFilter
+            title="Status"
+            accessor="status"
+            getOptions={BatchStore.getUniqPropValues}
+            onUpdate={BatchStore.updateFilterOptions}
+          />
+        ),
         accessor: 'status',
         className: 'justify-center',
         minWidth: 88,
@@ -45,7 +53,14 @@ class BatchesDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Strain',
+        Header: (
+          <HeaderFilter
+            title="Strain"
+            accessor="strain_name"
+            getOptions={BatchStore.getUniqPropValues}
+            onUpdate={BatchStore.updateFilterOptions}
+          />
+        ),
         accessor: 'strain_name',
         minWidth: 120,
         Cell: props => <span className="truncate">{props.value}</span>
@@ -60,10 +75,17 @@ class BatchesDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Growth Phase',
+        Header: (
+          <HeaderFilter
+            title="Growth Phase"
+            accessor="current_growth_stage"
+            getOptions={BatchStore.getUniqPropValues}
+            onUpdate={BatchStore.updateFilterOptions}
+          />
+        ),
         accessor: 'current_growth_stage',
         className: 'justify-center ttc',
-        minWidth: 74
+        minWidth: 130
       },
       {
         headerClassName: 'tl',
@@ -75,7 +97,14 @@ class BatchesDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Location',
+        Header: (
+          <HeaderFilter
+            title="Location"
+            accessor="current_stage_location"
+            getOptions={BatchStore.getUniqPropValues}
+            onUpdate={BatchStore.updateFilterOptions}
+          />
+        ),
         accessor: 'current_stage_location',
         minWidth: 180,
         Cell: props => <span className="truncate">{props.value}</span>
@@ -157,17 +186,16 @@ class BatchesDashboardApp extends React.Component {
     BatchStore.loadBatches()
   }
 
-  onToggleColumns = e => {
-    const opt = this.state.columns.find(x => x.Header === e.target.name)
-    if (opt) {
-      opt.show = e.target.checked
+  onToggleColumns = (header, value) => {
+    const column = this.state.columns.find(x => x.Header === header)
+    if (column) {
+      column.show = value
+      this.setState({
+        columns: this.state.columns.map(x =>
+          x.Header === column.Header ? column : x
+        )
+      })
     }
-    this.setState({
-      columns: this.state.columns.map(x =>
-        x.accessor === e.target.name ? opt : x
-      )
-    })
-    e.stopPropagation()
   }
 
   render() {

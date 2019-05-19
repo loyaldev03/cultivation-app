@@ -1,9 +1,12 @@
 import { observable, action, computed, toJS } from 'mobx'
+import isEmpty from 'lodash.isempty'
+const uniq = require('lodash.uniq')
 
 class PlantStore {
   @observable plants = []
   @observable isLoading = false
   @observable filter = ''
+  @observable columnFilters = {}
 
   @action
   load(newPlants) {
@@ -35,8 +38,11 @@ class PlantStore {
   @computed
   get filteredList() {
     const list = this.plants.map(x => x.attributes)
-    if (this.filter) {
+    if (!isEmpty(this.filter) || !isEmpty(this.columnFilters)) {
       return list.filter(b => {
+        if (this.isFiltered(b)) {
+          return false
+        }
         const field1 = b.plant_id.toLowerCase()
         const field2 = b.strain_name.toLowerCase()
         const filter = this.filter.toLowerCase()
@@ -46,6 +52,28 @@ class PlantStore {
       return list
     }
   }
+
+  /* + Required for column filter */
+  isFiltered = record => {
+    let f = Object.keys(this.columnFilters).find(key => {
+      const filter = this.columnFilters[key].filter(x => x.value === false)
+      return filter.find(x => x.label === record[key])
+    })
+    return f ? true : false
+  }
+
+  updateFilterOptions = (propName, filterOptions) => {
+    const updated = {
+      ...this.columnFilters,
+      [propName]: filterOptions
+    }
+    this.columnFilters = updated
+  }
+
+  getUniqPropValues = propName => {
+    return uniq(this.filteredList.map(x => x[propName]).sort())
+  }
+  /* - Required for column filter */
 
   getPlantById(plantId) {
     if (plantId) {

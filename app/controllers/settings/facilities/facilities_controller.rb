@@ -24,6 +24,8 @@ class Settings::Facilities::FacilitiesController < ApplicationController
     end
   end
 
+  private
+
   def facility_params
     params.require(:facilities_form_facility_update).permit(:name, :code, :address, :zipcode, :city, :state, :country, :phone, :fax)
   end

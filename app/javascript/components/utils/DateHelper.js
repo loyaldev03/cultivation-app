@@ -48,6 +48,10 @@ export const monthOptionAdd = (monthOptionStr, month) => {
   return dateToMonthOption(result)
 }
 
+export const formatShortWeekday = date => {
+  return format(date, 'dd', { awareOfUnicodeTokens: true })[0]
+}
+
 export const formatDate = date => {
   return format(date, 'MMM DD, YYYY', { awareOfUnicodeTokens: true })
 }
@@ -58,6 +62,11 @@ export const formatDate2 = date =>
 export const formatDate3 = date =>
   format(date, 'ddd, D MMM YYYY', { awareOfUnicodeTokens: true })
 
+export const formatYDM = date =>
+  format(date, 'YYYY-MM-DD', { awareOfUnicodeTokens: true })
+
+export const formatMonthAndYear = date =>
+  format(date, 'YYYY-M-', { awareOfUnicodeTokens: true })
 export const formatAgo = date => {
   const now = new Date()
   const res = differenceInHours(now, date)

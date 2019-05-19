@@ -22,11 +22,5 @@ module Cultivation
         []
       end
     end
-
-    class << self
-      def active_tasks(page_size, page, sorted, filtered)
-        ::Cultivation::Task.all
-      end
-    end
   end
 end

@@ -1,3 +1,5 @@
+import isEmpty from 'lodash.isempty'
+import uniq from 'lodash.uniq'
 import { observable, action, runInAction, computed, toJS } from 'mobx'
 import { httpGetOptions, httpPostOptions, toast } from '../../utils'
 import setupPlants from '../../inventory/plant_setup/actions/setupPlants'
@@ -9,6 +11,7 @@ class BatchStore {
   @observable batches
   @observable batch
   @observable filter = ''
+  @observable columnFilters = {}
 
   @action
   async loadBatch(batchId) {
@@ -63,16 +66,41 @@ class BatchStore {
 
   @computed
   get filteredList() {
-    if (this.filter) {
+    if (!isEmpty(this.filter) || !isEmpty(this.columnFilters)) {
       return this.batches.filter(b => {
+        if (this.isFiltered(b)) {
+          return false
+        }
         const batchNoLc = `${b.name || ''} ${b.batch_no}`.toLowerCase()
         const strainLc = b.strain_name.toLowerCase()
         const filterLc = this.filter.toLowerCase()
-        return batchNoLc.includes(filterLc) || strainLc.includes(filterLc)
+        const result =
+          batchNoLc.includes(filterLc) || strainLc.includes(filterLc)
+        return result
       })
     } else {
       return this.batches
     }
+  }
+
+  isFiltered = record => {
+    let f = Object.keys(this.columnFilters).find(key => {
+      const filter = this.columnFilters[key].filter(x => x.value === false)
+      return filter.find(x => x.label === record[key])
+    })
+    return f ? true : false
+  }
+
+  updateFilterOptions = (propName, filterOptions) => {
+    const updated = {
+      ...this.columnFilters,
+      [propName]: filterOptions
+    }
+    this.columnFilters = updated
+  }
+
+  getUniqPropValues = propName => {
+    return uniq(this.filteredList.map(x => x[propName]).sort())
   }
 
   @action

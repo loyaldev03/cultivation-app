@@ -2,10 +2,8 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import SidebarStore from '../stores/SidebarStore'
 import { SlidePanelHeader, toast, SlidePanelFooter } from '../../utils'
-import { NumericInput } from '../../utils/FormHelpers'
 import { InputBarcode } from '../../utils/InputBarcode'
 import { ProgressBar } from '../../utils/ProgressBar'
-import harvestBatchStore from '../stores/HarvestBatchStore'
 import { httpGetOptions, httpPostOptions } from '../../utils/FetchHelper'
 
 @observer
@@ -77,11 +75,22 @@ class PackageTracking extends React.Component {
     expanded: false,
     inScanMode: false,
     packageID: '',
-    packageIDs: []
+    packageIDs: [],
+    errors: null
+  }
+
+  async componentDidMount() {
+    const data = await loadScannedPackages(this.props.batchId, this.props.product_type, this.props.package_type)
+    const packageIDs = data.map(x => ({
+      id: x.id,
+      tag: x.tag
+    }))
+
+    const inScanMode = data.length > 0
+    this.setState({ packageIDs, inScanMode })
   }
 
   onToggleExpand = event => {
-    console.log('onToggleExpand')
     event.preventDefault()
     this.setState({ expanded: !this.state.expanded })
   }
@@ -90,7 +99,6 @@ class PackageTracking extends React.Component {
     event.preventDefault()
     this.setState({
       inScanMode: true
-      // packageIDs: ['p00001', 'p00002', 'p00003', 'p000055']
     })
   }
 
@@ -104,17 +112,17 @@ class PackageTracking extends React.Component {
         tag
       }
 
-      scanCreate(data).then(x => {
-        console.log(x)
-        // if (x === false) {
-        //   console.log('Not valid...')
-        // } else {
-        //   console.log('valid')
-        //   this.setState({
-        //     packageID: '',
-        //     packageIDs: [tag, ...this.state.packageIDs]
-        //   })
-        // }
+      scanAndCreate(data).then(result => {
+        if (result.isValid) {
+          const newPackage = { id: result.package.id, tag: result.package.package_tag }
+          this.setState({ 
+            packageID: '',
+            packageIDs: [newPackage, ...this.state.packageIDs],
+            errors: null
+          })
+        } else {
+          this.setState({ errors: result.errors })
+        }
       })
     }
   }
@@ -122,6 +130,14 @@ class PackageTracking extends React.Component {
   onChangePackageID = event => {
     const packageID = event.target.value
     this.setState({ packageID })
+  }
+
+  renderError(showScanner) {
+    if (!this.state.errors) {
+      return null
+    }
+
+    return <div className="f6 i red mb3">{this.state.errors}</div>
   }
 
   renderScanMode() {
@@ -144,6 +160,7 @@ class PackageTracking extends React.Component {
             className="w-100 f6"
           />
         )}
+        { showScanner && this.renderError() }
         <div
           className="overflow-y-scroll ph2"
           style={{ maxHeight: '200px', minHeight: '50px' }}
@@ -157,9 +174,9 @@ class PackageTracking extends React.Component {
             </thead>
             <tbody>
               {packageIDs.map((x, index) => (
-                <tr key={`${x}.${index}`}>
+                <tr key={`${x.tag}.${index}`}>
                   <td className="pa2">{this.props.package_type}</td>
-                  <td className="pa2">{x}</td>
+                  <td className="pa2">{x.tag}</td>
                 </tr>
               ))}
             </tbody>
@@ -232,33 +249,41 @@ const loadPackagePlans = async batchId => {
   const url = `/api/v1/batches/${batchId}/product_plans`
   const response = await (await fetch(url, httpGetOptions)).json()
   if (response.data) {
-    console.log(response.data)
     return response.data.map(x => x.attributes)
   } else {
-    console.error(response.errors)
     return []
   }
 }
 
-const verifyMetrc = async (facilityId, tag) => {
-  const url = `/api/v1/metrc/verify/${facilityId}?tag=${tag}`
+const loadScannedPackages = async (batchId, productType, packageType) => {
+  const product_type = encodeURI(productType)
+  const package_type = encodeURI(packageType)
+  const url = `/api/v1/sales_products/harvest_products/${batchId}?product_type=${product_type}&package_type=${package_type}`
   const response = await (await fetch(url, httpGetOptions)).json()
-  console.log(response)
-
-  if (response.tag) {
-    return tag
-  } else {
-    return false
-  }
+  return response
 }
 
-const scanCreate = async data => {
+
+const scanAndCreate = async data => {
   const url = '/api/v1/sales_products/scan_and_create'
-  try {
-    const response = await (await fetch(url, httpPostOptions(data))).json()
-    console.log(response)
-    return response
-  } catch (error) {
-    console.log('error', error)
+  const response = await fetch(url, httpPostOptions(data))
+  const result = await response.json()
+  // console.log(result)
+
+  if (response.ok) {
+    return {
+      isValid: true,
+      package: { id: result.data.id, ...result.data.attributes }
+    }
+  } else {
+    let errors = ''
+    for (let attr in result.errors) {
+      errors += result.errors[attr] + ". "
+    }
+
+    return {
+      isValid: false,
+      errors
+    }
   }
 }

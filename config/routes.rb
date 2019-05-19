@@ -207,6 +207,7 @@ Rails.application.routes.draw do
           get 'products'
           get 'harvest_packages'
           get 'converted_products'
+          get 'harvest_products/:cultivation_batch_id', action: 'harvest_products'
           post 'setup_harvest_package'
           post 'setup_converted_product'
           post 'scan_and_create'

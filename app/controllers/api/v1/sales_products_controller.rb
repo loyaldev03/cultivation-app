@@ -77,6 +77,7 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
     render json: Inventory::HarvestPackageSerializer.new(items).serialized_json
   end
 
+  # TODO: create_harvest_products
   def scan_and_create
     command = Inventory::SavePackageFromScan.call(current_user, params.to_unsafe_h)
     if command.success?
@@ -84,6 +85,44 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
     else
       render json: request_with_errors(command.errors), status: 422
     end
+  end
+
+  # TODO: is it not the same as harvest package?
+  def harvest_products
+    product_type = params[:product_type]
+    package_type = params[:package_type]
+    cultivation_batch_id = params[:cultivation_batch_id]
+
+    catalogue = Inventory::Catalogue.find_by(label: product_type, category: 'raw_sales_product')
+    cultivation_batch = Cultivation::Batch.find(cultivation_batch_id)
+    facility = cultivation_batch.facility
+    facility_strain = cultivation_batch.facility_strain
+
+    product = Inventory::Product.find_by(
+      facility: facility,
+      facility_strain: facility_strain,
+      catalogue: catalogue,
+      package_type: package_type,
+    )
+
+    packages = Inventory::ItemTransaction.where(
+      catalogue: catalogue,
+      product: product,
+    ).
+      order(created_at: :desc)
+
+    packages_json = packages.map do |x|
+      {
+        id: x.id.to_s,
+        tag: x.package_tag,
+        product_id: x.product.id.to_s,
+        product_type: x.catalogue.label,
+        package_type: x.product.package_type,
+        event_type: 'create_package',
+      }
+    end
+
+    render json: packages_json, status: 200
   end
 
   private

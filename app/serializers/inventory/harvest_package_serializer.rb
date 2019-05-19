@@ -1,3 +1,4 @@
+# TODO: To consider to be replace
 module Inventory
   class HarvestPackageSerializer
     include FastJsonapi::ObjectSerializer

@@ -57,25 +57,30 @@ module Inventory
       @facility = @cultivation_batch.facility
       @facility_strain = @cultivation_batch.facility_strain
       @name = "#{facility_strain.strain_name} - #{product_type}, #{package_type}"
-
       @harvest_batch = @cultivation_batch.harvest_batch.first
 
       @catalogue = Inventory::Catalogue.find_by(label: product_type, category: 'raw_sales_product')
       raise 'No matching catalogue found!' if @catalogue.nil?
+
+      size, uom = find_size_uom_from_package_type(package_type)
+      raise 'No size found for package type' if size.nil?
+      raise 'No UOM found for package type' if uom.nil?
 
       @product = Product.find_or_create_by!(
         facility: @facility,
         facility_strain: facility_strain,
         catalogue: @catalogue,
         name: @name,
+        package_type: package_type,
       ) do |p|
         p.uom_dimension = catalogue.uom_dimension
-        p.common_uom = catalogue.common_uom
+        p.common_uom = uom
+        p.size = size
       end
 
+      @metrc_tag = facility.metrc_tags.find_by(tag: tag, tag_type: 'package')
       @production_date = Time.now
       @quantity = 1
-      @metrc_tag = facility.metrc_tags.find_by(tag: tag)
     end
 
     def valid_user?
@@ -134,5 +139,40 @@ module Inventory
     def update_package!
       nil
     end
+
+    def find_size_uom_from_package_type(package_type)
+      case package_type.upcase
+      when '1/2 GRAM'
+        return 0.5, 'g'
+      when '1/2 KG'
+        return 0.5, 'kg'
+      when '1/4 LB'
+        return 'lb', 0.25
+      when '1/4 OZ'
+        return 'oz', 0.25
+      when 'EIGTH'
+        return 'oz', 0.125
+      when 'GRAM'
+        return 'g', 1
+      when '1/2 OZ'
+        return 'oz', 0.5
+      when 'LB'
+        return 'lb', 1
+      when 'OUNCE'
+        return 'oz', 1
+      else
+        return nil
+      end
+    end
   end
 end
+
+# { value: '1/2 gram', label: '1/2 gram', uom: 'g', qty_per_package: 0.5 },
+#   { value: '1/2 kg', label: '1/2 kg', uom: 'kg', qty_per_package: 0.5 },
+#   { value: '1/4 Lb', label: '1/4 Lb', uom: 'lb', qty_per_package: 0.25 },
+#   { value: '1/4 Oz', label: '1/4 Oz', uom: 'oz', qty_per_package: 0.25 },
+#   { value: 'Eigth', label: 'Eigth', uom: 'oz', qty_per_package: 0.125 },
+#   { value: 'Gram', label: 'Gram', uom: 'g', qty_per_package: 1 },
+#   { value: '1/2 Oz', label: '1/2 Oz', uom: 'oz', qty_per_package: 0.5 },
+#   { value: 'Lb', label: 'Lb', uom: 'lb', qty_per_package: 1 },
+#   { value: 'Ounce', label: 'Ounce', uom: 'oz', qty_per_package: 1 }

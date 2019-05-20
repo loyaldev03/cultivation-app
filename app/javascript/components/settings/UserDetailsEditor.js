@@ -4,6 +4,9 @@ import Select from 'react-select'
 import classNames from 'classnames'
 import AvatarPicker from '../utils/AvatarPicker'
 import { addDays, format, subDays } from 'date-fns'
+import UserRoleStore from './UserRoleStore'
+import { toJS } from 'mobx'
+
 const styles = `
 
 .active{
@@ -73,27 +76,19 @@ class UserDetailsEditor extends React.PureComponent {
         work_schedules = props.companyWorkSchedules
       }
 
-      // if (props.user.non_exempt_schedules) {
-      //   non_exempt_schedules = props.user.non_exempt_schedules.map(e => {
-      //     e.start_date = new Date(e.start_date)
-      //     e.end_date = new Date(e.end_date)
-      //     return e
-      //   })
-      // }
       let sundaySelected = { label: '', value: '' }
       non_exempt_schedules = [
         {
           day_id: 0,
           day: 'sunday',
           date: '',
-          start_time: '08:00',
+          start_time: '',
           end_time: ''
         },
         {
           day_id: 1,
           day: 'monday',
           date: '',
-          display_date: '',
           start_time: '',
           end_time: ''
         },
@@ -101,7 +96,6 @@ class UserDetailsEditor extends React.PureComponent {
           day_id: 2,
           day: 'tuesday',
           date: '',
-          display_date: '',
           start_time: '',
           end_time: ''
         },
@@ -109,7 +103,6 @@ class UserDetailsEditor extends React.PureComponent {
           day_id: 3,
           day: 'wednesday',
           date: '',
-          display_date: '',
           start_time: '',
           end_time: ''
         },
@@ -117,7 +110,6 @@ class UserDetailsEditor extends React.PureComponent {
           day_id: 4,
           day: 'thursday',
           date: '',
-          display_date: '',
           start_time: '',
           end_time: ''
         },
@@ -125,7 +117,6 @@ class UserDetailsEditor extends React.PureComponent {
           day_id: 5,
           day: 'friday',
           date: '',
-          display_date: '',
           start_time: '',
           end_time: ''
         },
@@ -133,7 +124,6 @@ class UserDetailsEditor extends React.PureComponent {
           day_id: 6,
           day: 'saturday',
           date: '',
-          display_date: '',
           start_time: '',
           end_time: ''
         }
@@ -224,13 +214,19 @@ class UserDetailsEditor extends React.PureComponent {
     }
   }
 
-  calculateRangeDate = date => {
+  calculateRangeDate = async date => {
+    console.log(date)
+    await UserRoleStore.getSchedulesByDate(date)
+    const schedules = toJS(UserRoleStore.nonExemptSchedules)
+
     const updated_schedules = this.state.non_exempt_schedules
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < schedules.length; i++) {
       updated_schedules.map(t => {
         let updated = updated_schedules.find(e => e.day_id === i)
-        updated.date = addDays(date, i)
+        updated.date = schedules[i].date
+        updated.start_time = schedules[i].start_time
+        updated.end_time = schedules[i].end_time
         return t.day_id === i ? updated : t
       })
     }
@@ -275,6 +271,10 @@ class UserDetailsEditor extends React.PureComponent {
     const reporting_manager_id = reporting_manager
       ? reporting_manager.value
       : null
+    const updated_non_exempt_schedules = non_exempt_schedules.map(t => {
+      t.date = format(t.date, 'DD/MM/YYYY')
+      return t
+    })
 
     const userDetails = {
       user: {
@@ -295,7 +295,7 @@ class UserDetailsEditor extends React.PureComponent {
         reporting_manager_id: reporting_manager_id,
         default_facility_id: defaultFacilityId,
         work_schedules: work_schedules,
-        non_exempt_schedules: non_exempt_schedules
+        non_exempt_schedules: updated_non_exempt_schedules
       }
     }
     this.props.onSave(userDetails)
@@ -942,274 +942,271 @@ class UserDetailsEditor extends React.PureComponent {
                       chevron_right
                     </i>
                   </div>
-
-                  <div className="mt3">
-                    <div className="mt2 fl w-100 flex justify-between">
-                      <label className="f6 fw6 db mb1 gray ttc">
-                        Sunday,{' '}
-                        {nonExemptSunday.date
-                          ? format(nonExemptSunday.date, 'MM/DD/YYYY')
-                          : null}
-                      </label>
-                      <div className="flex w-40 justify-between">
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              this.state.non_exempt_schedules.find(
-                                e => e.day === 'sunday'
-                              ),
-                              'start_time',
-                              e.target.value
-                            )
-                          }
-                          value={
-                            this.state.non_exempt_schedules.find(
-                              e => e.day === 'sunday'
-                            ).start_time
-                          }
-                        />
-                        <div className="flex items-center">
-                          <label className="f4 db mb1 ttc">-</label>
+                  {UserRoleStore.isLoadingSchedule ? (
+                    <div>loading</div>
+                  ) : (
+                    <div className="mt3">
+                      <div className="mt2 fl w-100 flex justify-between">
+                        <label className="f6 fw6 db mb1 gray ttc">
+                          Sunday,{' '}
+                          {nonExemptSunday.date
+                            ? format(nonExemptSunday.date, 'MM/DD/YYYY')
+                            : null}
+                        </label>
+                        <div className="flex w-40 justify-between">
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptSunday,
+                                'start_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptSunday.start_time}
+                          />
+                          <div className="flex items-center">
+                            <label className="f4 db mb1 ttc">-</label>
+                          </div>
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptSunday,
+                                'end_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptSunday.end_time}
+                          />
                         </div>
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              nonExemptSunday,
-                              'end_time',
-                              e.target.value
-                            )
-                          }
-                          value={nonExemptSunday.end_time}
-                        />
+                      </div>
+                      <div className="mt2 fl w-100 flex justify-between">
+                        <label className="f6 fw6 db mb1 gray ttc">
+                          Monday,{' '}
+                          {nonExemptMonday.date
+                            ? format(nonExemptMonday.date, 'MM/DD/YYYY')
+                            : null}
+                        </label>
+                        <div className="flex w-40 justify-between">
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptMonday,
+                                'start_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptMonday.start_time}
+                          />
+                          <div className="flex items-center">
+                            <label className="f4 db mb1 ttc">-</label>
+                          </div>
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptMonday,
+                                'end_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptMonday.end_time}
+                          />
+                        </div>
+                      </div>
+                      <div className="mt2 fl w-100 flex justify-between">
+                        <label className="f6 fw6 db mb1 gray ttc">
+                          Tuesday,{' '}
+                          {nonExemptTuesday.date
+                            ? format(nonExemptTuesday.date, 'MM/DD/YYYY')
+                            : null}
+                        </label>
+                        <div className="flex w-40 justify-between">
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptTuesday,
+                                'start_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptTuesday.start_time}
+                          />
+                          <div className="flex items-center">
+                            <label className="f4 db mb1 ttc">-</label>
+                          </div>
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptTuesday,
+                                'end_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptTuesday.end_time}
+                          />
+                        </div>
+                      </div>
+                      <div className="mt2 fl w-100 flex justify-between">
+                        <label className="f6 fw6 db mb1 gray ttc">
+                          Wednesday,{' '}
+                          {nonExemptWednesday.date
+                            ? format(nonExemptWednesday.date, 'MM/DD/YYYY')
+                            : null}
+                        </label>
+                        <div className="flex w-40 justify-between">
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptWednesday,
+                                'start_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptWednesday.start_time}
+                          />
+                          <div className="flex items-center">
+                            <label className="f4 db mb1 ttc">-</label>
+                          </div>
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptWednesday,
+                                'end_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptWednesday.end_time}
+                          />
+                        </div>
+                      </div>
+                      <div className="mt2 fl w-100 flex justify-between">
+                        <label className="f6 fw6 db mb1 gray ttc">
+                          Thursday,{' '}
+                          {nonExemptThursday.date
+                            ? format(nonExemptThursday.date, 'MM/DD/YYYY')
+                            : null}
+                        </label>
+                        <div className="flex w-40 justify-between">
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptThursday,
+                                'start_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptThursday.start_time}
+                          />
+                          <div className="flex items-center">
+                            <label className="f4 db mb1 ttc">-</label>
+                          </div>
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptThursday,
+                                'end_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptThursday.end_time}
+                          />
+                        </div>
+                      </div>
+                      <div className="mt2 fl w-100 flex justify-between">
+                        <label className="f6 fw6 db mb1 gray ttc">
+                          Friday,{' '}
+                          {nonExemptFriday.date
+                            ? format(nonExemptFriday.date, 'MM/DD/YYYY')
+                            : null}
+                        </label>
+                        <div className="flex w-40 justify-between">
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptFriday,
+                                'start_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptFriday.start_time}
+                          />
+                          <div className="flex items-center">
+                            <label className="f4 db mb1 ttc">-</label>
+                          </div>
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptFriday,
+                                'end_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptFriday.end_time}
+                          />
+                        </div>
+                      </div>
+                      <div className="mt2 fl w-100 flex justify-between mb4">
+                        <label className="f6 fw6 db mb1 gray ttc">
+                          Saturday,{' '}
+                          {nonExemptSaturday.date
+                            ? format(nonExemptSaturday.date, 'MM/DD/YYYY')
+                            : null}
+                        </label>
+                        <div className="flex w-40 justify-between">
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptSaturday,
+                                'start_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptSaturday.start_time}
+                          />
+                          <div className="flex items-center">
+                            <label className="f4 db mb1 ttc">-</label>
+                          </div>
+                          <input
+                            className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
+                            type="time"
+                            onChange={e =>
+                              this.onChangeNonExemptAttr(
+                                nonExemptSaturday,
+                                'end_time',
+                                e.target.value
+                              )
+                            }
+                            value={nonExemptSaturday.end_time}
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div className="mt2 fl w-100 flex justify-between">
-                      <label className="f6 fw6 db mb1 gray ttc">
-                        Monday,{' '}
-                        {nonExemptMonday.date
-                          ? format(nonExemptMonday.date, 'MM/DD/YYYY')
-                          : null}
-                      </label>
-                      <div className="flex w-40 justify-between">
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              nonExemptMonday,
-                              'start_time',
-                              e.target.value
-                            )
-                          }
-                          value={nonExemptMonday.start_time}
-                        />
-                        <div className="flex items-center">
-                          <label className="f4 db mb1 ttc">-</label>
-                        </div>
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              nonExemptMonday,
-                              'end_time',
-                              e.target.value
-                            )
-                          }
-                          value={nonExemptMonday.end_time}
-                        />
-                      </div>
-                    </div>
-                    <div className="mt2 fl w-100 flex justify-between">
-                      <label className="f6 fw6 db mb1 gray ttc">
-                        Tuesday,{' '}
-                        {nonExemptTuesday.date
-                          ? format(nonExemptTuesday.date, 'MM/DD/YYYY')
-                          : null}
-                      </label>
-                      <div className="flex w-40 justify-between">
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              nonExemptTuesday,
-                              'start_time',
-                              e.target.value
-                            )
-                          }
-                          value={nonExemptTuesday.start_time}
-                        />
-                        <div className="flex items-center">
-                          <label className="f4 db mb1 ttc">-</label>
-                        </div>
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              nonExemptTuesday,
-                              'end_time',
-                              e.target.value
-                            )
-                          }
-                          value={nonExemptTuesday.end_time}
-                        />
-                      </div>
-                    </div>
-                    <div className="mt2 fl w-100 flex justify-between">
-                      <label className="f6 fw6 db mb1 gray ttc">
-                        Wednesday,{' '}
-                        {nonExemptWednesday.date
-                          ? format(nonExemptWednesday.date, 'MM/DD/YYYY')
-                          : null}
-                      </label>
-                      <div className="flex w-40 justify-between">
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              nonExemptWednesday,
-                              'start_time',
-                              e.target.value
-                            )
-                          }
-                          value={nonExemptWednesday.start_time}
-                        />
-                        <div className="flex items-center">
-                          <label className="f4 db mb1 ttc">-</label>
-                        </div>
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              nonExemptWednesday,
-                              'end_time',
-                              e.target.value
-                            )
-                          }
-                          value={nonExemptWednesday.end_time}
-                        />
-                      </div>
-                    </div>
-                    <div className="mt2 fl w-100 flex justify-between">
-                      <label className="f6 fw6 db mb1 gray ttc">
-                        Thursday,{' '}
-                        {nonExemptThursday.date
-                          ? format(nonExemptThursday.date, 'MM/DD/YYYY')
-                          : null}
-                      </label>
-                      <div className="flex w-40 justify-between">
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              nonExemptThursday,
-                              'start_time',
-                              e.target.value
-                            )
-                          }
-                          value={nonExemptThursday.start_time}
-                        />
-                        <div className="flex items-center">
-                          <label className="f4 db mb1 ttc">-</label>
-                        </div>
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              nonExemptThursday,
-                              'end_time',
-                              e.target.value
-                            )
-                          }
-                          value={nonExemptThursday.end_time}
-                        />
-                      </div>
-                    </div>
-                    <div className="mt2 fl w-100 flex justify-between">
-                      <label className="f6 fw6 db mb1 gray ttc">
-                        Friday,{' '}
-                        {nonExemptFriday.date
-                          ? format(nonExemptFriday.date, 'MM/DD/YYYY')
-                          : null}
-                      </label>
-                      <div className="flex w-40 justify-between">
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              nonExemptFriday,
-                              'start_time',
-                              e.target.value
-                            )
-                          }
-                          value={nonExemptFriday.start_time}
-                        />
-                        <div className="flex items-center">
-                          <label className="f4 db mb1 ttc">-</label>
-                        </div>
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              nonExemptFriday,
-                              'end_time',
-                              e.target.value
-                            )
-                          }
-                          value={nonExemptFriday.end_time}
-                        />
-                      </div>
-                    </div>
-                    <div className="mt2 fl w-100 flex justify-between mb4">
-                      <label className="f6 fw6 db mb1 gray ttc">
-                        Saturday,{' '}
-                        {nonExemptSaturday.date
-                          ? format(nonExemptSaturday.date, 'MM/DD/YYYY')
-                          : null}
-                      </label>
-                      <div className="flex w-40 justify-between">
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              nonExemptSaturday,
-                              'start_time',
-                              e.target.value
-                            )
-                          }
-                          value={nonExemptSaturday.start_time}
-                        />
-                        <div className="flex items-center">
-                          <label className="f4 db mb1 ttc">-</label>
-                        </div>
-                        <input
-                          className="db pa2 f6 black ba b--black-20 br2 outline-0 no-spinner tc"
-                          type="time"
-                          onChange={e =>
-                            this.onChangeNonExemptAttr(
-                              nonExemptSaturday,
-                              'end_time',
-                              e.target.value
-                            )
-                          }
-                          value={nonExemptSaturday.end_time}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  )}
                 </div>
               )}
             </div>

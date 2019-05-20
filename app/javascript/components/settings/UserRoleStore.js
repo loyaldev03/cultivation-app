@@ -1,5 +1,6 @@
 import { observable, action, runInAction, toJS } from 'mobx'
 import { httpGetOptions } from '../utils'
+import { format } from 'date-fns'
 
 class UserRoleStore {
   @observable isLoading = false
@@ -9,6 +10,8 @@ class UserRoleStore {
   @observable users
   @observable modules
   @observable companyWorkSchedules
+  @observable nonExemptSchedules
+  @observable isLoadingSchedule = false
 
   @action
   async loadUsers(includeInactiveUser = false) {
@@ -46,6 +49,28 @@ class UserRoleStore {
       console.error(err)
     } finally {
       this.isLoading = false
+    }
+  }
+
+  async getSchedulesByDate(date) {
+    this.isLoadingSchedule = true
+
+    let date_formatted = format(date, 'DD/MM/YYYY')
+    let url = `/api/v1/user_roles/schedules_by_date?date=${date_formatted}`
+
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      runInAction(() => {
+        if (response.data) {
+          this.nonExemptSchedules = response.data || []
+        } else {
+          this.nonExemptSchedules = []
+        }
+      })
+    } catch (err) {
+      console.error(err)
+    } finally {
+      this.isLoadingSchedule = false
     }
   }
 

@@ -46,7 +46,6 @@ const MenuButton = ({ icon, indelible, text, onClick, className = '' }) => {
   )
 }
 
-
 @observer
 class HarvestPackageSetupApp extends React.Component {
   state = {
@@ -66,13 +65,13 @@ class HarvestPackageSetupApp extends React.Component {
     event.preventDefault()
   }
 
-  onAddRecord = (e) => {
+  onAddRecord = e => {
     // window.editorSidebar.open({ width: '500px' }) // this is a very awkward way to set default sidepanel width
     this.setState({ showEditor: true })
     e.preventDefault()
   }
 
-  onShowCreatePackagePlan = (id) => {
+  onShowCreatePackagePlan = id => {
     // somehow pass the id into the form
     this.setState({ showCreatePackagePlan: true, idOpen: id })
   }
@@ -146,41 +145,50 @@ class HarvestPackageSetupApp extends React.Component {
 
   renderActions = record => {
     const id = toJS(record.original.id)
-    
+
     return (
       <span className="pointer">
         <Tippy
           placement="bottom-end"
           trigger="click"
-          content={this.state.idOpen === record.id ? (
-            <div className="bg-white f6 flex grey">
-              <div className="db shadow-4">
-                <MenuButton
-                  icon="edit"
-                  text="Edit"
-                  onClick={e => {
-                    this.openHarvestPackage(event, id)
-                  }}
-                />
-                <MenuButton
-                  icon="settings"
-                  text="Convert product"
-                  onClick={e => this.onShowCreatePackagePlan(id)}
-                />
+          content={
+            this.state.idOpen === record.id ? (
+              <div className="bg-white f6 flex grey">
+                <div className="db shadow-4">
+                  <MenuButton
+                    icon="edit"
+                    text="Edit"
+                    onClick={e => {
+                      this.openHarvestPackage(event, id)
+                    }}
+                  />
+                  <MenuButton
+                    icon="settings"
+                    text="Convert product"
+                    onClick={e => this.onShowCreatePackagePlan(id)}
+                  />
+                </div>
               </div>
-            </div>) : ''}
-            >
-            <i 
-              onClick={() => { this.setState({ idOpen: record.id}) }}
-              className="material-icons gray">more_horiz</i>
+            ) : (
+              ''
+            )
+          }
+        >
+          <i
+            onClick={() => {
+              this.setState({ idOpen: record.id })
+            }}
+            className="material-icons gray"
+          >
+            more_horiz
+          </i>
         </Tippy>
       </span>
     )
   }
-  
 
   render() {
-    const { locations, harvest_batches} = this.props 
+    const { locations, harvest_batches } = this.props
     const { showEditor, showCreatePackagePlan, idOpen } = this.state
 
     return (
@@ -221,7 +229,9 @@ class HarvestPackageSetupApp extends React.Component {
                 harvest_batches={this.props.harvest_batches}
                 sales_catalogue={this.props.sales_catalogue}
                 facility_id={this.props.facility_id}
-                onClose={() => { this.setState({ showEditor: false, idOpen: ''}) }}
+                onClose={() => {
+                  this.setState({ showEditor: false, idOpen: '' })
+                }}
               />
             )}
           />
@@ -232,14 +242,10 @@ class HarvestPackageSetupApp extends React.Component {
               <ConvertPackagePlanForm
                 show={showCreatePackagePlan}
                 packageId={idOpen}
-                onClose={() =>
-                  this.setState({ showCreatePackagePlan: false })
-                }
+                onClose={() => this.setState({ showCreatePackagePlan: false })}
               />
             )}
           />
-
-
         </div>
       </React.Fragment>
     )

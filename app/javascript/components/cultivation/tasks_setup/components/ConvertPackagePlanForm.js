@@ -25,7 +25,10 @@ class ConvertPackagePlanForm extends React.Component {
     if (!prevProps.show && this.props.show) {
       const plans = await loadPackagePlans(this.props.packageId)
       const packagePlans = plans.reduce((sum, item) => {
-        const package_types = sum[item.product_type] || { product_type: item.product_type, package_plans: [] }
+        const package_types = sum[item.product_type] || {
+          product_type: item.product_type,
+          package_plans: []
+        }
         package_types.push(item)
         sum[item.productType] = package_types
       }, [])
@@ -34,7 +37,10 @@ class ConvertPackagePlanForm extends React.Component {
 
       const packageResponse = await getHarvestPackage(this.props.packageId)
       if (packageResponse.status === 200) {
-        console.log(packageResponse.data.data.id, packageResponse.data.data.attributes)
+        console.log(
+          packageResponse.data.data.id,
+          packageResponse.data.data.attributes
+        )
 
         this.setState({
           productPackage: {
@@ -68,10 +74,7 @@ class ConvertPackagePlanForm extends React.Component {
     const product_type = this.state.productType.value
 
     this.setState({
-      data: [
-        ...this.state.data,
-        { product_type, package_plans: [] }
-      ],
+      data: [...this.state.data, { product_type, package_plans: [] }],
       productType: null,
       showAddProductType: false
     })
@@ -223,14 +226,17 @@ class ConvertPackagePlanForm extends React.Component {
         <div id="toast" className="toast animated toast--success" />
         <SlidePanelHeader onClose={onClose} title="Create Package Plan" />
         <div className="ph4 mt3 mb2 flex">
-          <div className="w-60 f5 fw6">{productPackage && productPackage.product.name}</div>
+          <div className="w-60 f5 fw6">
+            {productPackage && productPackage.product.name}
+          </div>
           <div className="w-40 tr fw4 f5">
-            {this.totalPlannedWeight().toFixed(2)} /{' '}
-            {-1} {'kggg'} allocated
+            {this.totalPlannedWeight().toFixed(2)} / {-1} {'kggg'} allocated
           </div>
         </div>
         <div className="ph4 mb3 flex">
-          <div className="w-60 f6 gray">{productPackage && productPackage.package_tag}</div>
+          <div className="w-60 f6 gray">
+            {productPackage && productPackage.package_tag}
+          </div>
         </div>
 
         <div className="ph4 mt3 flex">

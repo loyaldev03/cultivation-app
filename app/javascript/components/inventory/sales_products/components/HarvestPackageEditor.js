@@ -66,8 +66,7 @@ class HarvestPackageEditor extends React.Component {
     }
   }
 
-
-  loadPackage = (id) => {
+  loadPackage = id => {
     if (!id || id === '') {
       this.setState(this.resetState())
     } else {
@@ -77,7 +76,6 @@ class HarvestPackageEditor extends React.Component {
           ...x.data.data.attributes
         }))
         .then(attr => {
-
           const fs = this.props.facility_strains.find(
             x => x.value === attr.product.facility_strain_id
           )
@@ -88,9 +86,7 @@ class HarvestPackageEditor extends React.Component {
 
           let harvest_batch = this.props.harvest_batches
             .map(x => ({ id: x.id, ...x.attributes }))
-            .find(
-              x => x.id === attr.harvest_batch_id
-            )
+            .find(x => x.id === attr.harvest_batch_id)
 
           if (harvest_batch) {
             harvest_batch = {
@@ -372,7 +368,12 @@ class HarvestPackageEditor extends React.Component {
   }
 
   render() {
-    const { harvest_batches, facility_strains, sales_catalogue, onClose } = this.props
+    const {
+      harvest_batches,
+      facility_strains,
+      sales_catalogue,
+      onClose
+    } = this.props
     const uoms = this.state.catalogue
       ? this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
       : []
@@ -395,272 +396,262 @@ class HarvestPackageEditor extends React.Component {
     const hasProductId = this.state.product && this.state.product_id.length > 0
 
     return (
-      
-        <div className="flex flex-column">
-          <div
-            className="ph4 pv2 bb b--light-gray flex items-center"
-            style={{ height: '51px' }}
-          >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">
-              Add Package
-            </h1>
-            <span
-              className="rc-slide-panel__close-button dim"
-              onClick={onClose}
-            >
-              <i className="material-icons mid-gray md-18">close</i>
-            </span>
+      <div className="flex flex-column">
+        <div
+          className="ph4 pv2 bb b--light-gray flex items-center"
+          style={{ height: '51px' }}
+        >
+          <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Package</h1>
+          <span className="rc-slide-panel__close-button dim" onClick={onClose}>
+            <i className="material-icons mid-gray md-18">close</i>
+          </span>
+        </div>
+
+        <div className="ph4 mt3 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db dark-gray">Product Info</label>
           </div>
+        </div>
 
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db dark-gray">Product Info</label>
-            </div>
+        <div className="ph4 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
+            <AsyncCreatableSelect
+              defaultOptions
+              isClearable
+              noOptionsMessage={() => 'Type to search product...'}
+              placeholder="Search..."
+              loadOptions={this.loadProducts}
+              onInputChange={handleInputChange}
+              styles={reactSelectStyle}
+              value={this.state.product}
+              onChange={this.onChangeProduct}
+            />
+            <FieldError errors={this.state.errors} field="product" />
           </div>
+        </div>
 
-          <div className="ph4 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Product Name</label>
-              <AsyncCreatableSelect
-                defaultOptions
-                isClearable
-                noOptionsMessage={() => 'Type to search product...'}
-                placeholder="Search..."
-                loadOptions={this.loadProducts}
-                onInputChange={handleInputChange}
-                styles={reactSelectStyle}
-                value={this.state.product}
-                onChange={this.onChangeProduct}
-              />
-              <FieldError errors={this.state.errors} field="product" />
-            </div>
+        <div className="ph4 mb3 flex">
+          <div className="w-50">
+            <TextInput
+              label="Product code/ SKU"
+              fieldname="sku"
+              value={this.state.sku}
+              onChange={this.onChangeGeneric}
+              readOnly={hasProductId}
+              errors={this.state.errors}
+            />
           </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <TextInput
-                label="Product code/ SKU"
-                fieldname="sku"
-                value={this.state.sku}
-                onChange={this.onChangeGeneric}
-                readOnly={hasProductId}
-                errors={this.state.errors}
-              />
-            </div>
-            <div className="w-50 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">Product type</label>
-              <Select
-                options={sales_catalogue}
-                value={this.state.catalogue}
-                onChange={this.onCatalogueSelected}
-                styles={reactSelectStyle}
-                isDisabled={hasProductId}
-              />
-              <FieldError errors={this.state.errors} field="catalogue_id" />
-            </div>
+          <div className="w-50 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">Product type</label>
+            <Select
+              options={sales_catalogue}
+              value={this.state.catalogue}
+              onChange={this.onCatalogueSelected}
+              styles={reactSelectStyle}
+              isDisabled={hasProductId}
+            />
+            <FieldError errors={this.state.errors} field="catalogue_id" />
           </div>
+        </div>
 
-          <div className="ph4 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Strain</label>
-              <Select
-                options={facility_strains}
-                styles={reactSelectStyle}
-                value={this.state.facility_strain}
-                onChange={this.onChangeFacilityStrain}
-                isDisabled={hasProductId}
-              />
-              <FieldError
-                errors={this.state.errors}
-                field="facility_strain_id"
-              />
-            </div>
+        <div className="ph4 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc">Strain</label>
+            <Select
+              options={facility_strains}
+              styles={reactSelectStyle}
+              value={this.state.facility_strain}
+              onChange={this.onChangeFacilityStrain}
+              isDisabled={hasProductId}
+            />
+            <FieldError errors={this.state.errors} field="facility_strain_id" />
           </div>
+        </div>
 
-          <hr className="mt3 m b--light-gray w-100" />
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db dark-gray">Package Details</label>
-            </div>
+        <hr className="mt3 m b--light-gray w-100" />
+        <div className="ph4 mt3 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db dark-gray">Package Details</label>
           </div>
+        </div>
 
-          <div className="ph4 mb3 flex">
-            <div className="w-70">
-              <TextInput
-                label="Package Tag"
-                fieldname="package_tag"
-                value={this.state.package_tag}
-                onChange={this.onChangeGeneric}
-                errors={this.state.errors}
-              />
-            </div>
-            <div className="w-30 pl2">
-              <label className="f6 fw6 db dark-gray">&nbsp;</label>
-              <a href="" className="orange btn--secondary f6 btn">
-                Scan
-              </a>
-            </div>
+        <div className="ph4 mb3 flex">
+          <div className="w-70">
+            <TextInput
+              label="Package Tag"
+              fieldname="package_tag"
+              value={this.state.package_tag}
+              onChange={this.onChangeGeneric}
+              errors={this.state.errors}
+            />
           </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <NumericInput
-                label="Quantity per pkg"
-                fieldname="quantity"
-                value={this.state.quantity}
-                onChange={this.onChangeGeneric}
-                errors={this.state.errors}
-              />
-            </div>
-            <div className="w-20 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">Unit</label>
-              <Select
-                options={uoms}
-                value={this.state.uom}
-                styles={reactSelectStyle}
-                onChange={this.onChangeUom}
-              />
-              <FieldError errors={this.state.errors} field="uom" />
-            </div>
-          </div>
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <NumericInput
-                label="Cost per unit, $"
-                fieldname="cost_per_unit"
-                value={this.state.cost_per_unit}
-                onChange={this.onChangeGeneric}
-                errors={this.state.errors}
-              />
-            </div>
-            <div className="w-50 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
-              <p className="f6 black mt2 mb0">
-                Total Cost, $
-                {(this.state.cost_per_unit * this.state.quantity).toFixed(2)}
-              </p>
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-50">
-              <label className="f6 fw6 db mb1 gray ttc">Production date</label>
-              <CalendarPicker
-                value={this.state.production_date}
-                onChange={this.onChangeProductionDate}
-              />
-              <FieldError errors={this.state.errors} field="production_date" />
-            </div>
-            <div className="w-50 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
-              <CalendarPicker
-                value={this.state.expiration_date}
-                onChange={this.onChangeExpirationDate}
-              />
-              <FieldError errors={this.state.errors} field="expiration_date" />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 dark-gray ttc">Storage</label>
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-100">
-              <LocationPicker
-                purpose="storage"
-                facility_id={this.props.facility_id}
-                location_id={this.state.location_id}
-                onChange={this.onLocationChanged}
-              />
-              <FieldError errors={this.state.errors} field="location_id" />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 dark-gray ttc">Source</label>
-            </div>
-          </div>
-
-          <div className="ph4 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 gray ttc">Harvest name</label>
-              <Creatable
-                isClearable
-                key={this.props.facility_id}
-                options={harvestOptions}
-                value={this.state.harvest_batch}
-                onChange={this.onHarvestBatchChanged}
-                styles={reactSelectStyle}
-              />
-              <FieldError errors={this.state.errors} field="harvest_batch" />
-            </div>
-          </div>
-
-          {this.renderBatchInfo()}
-
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-50">
-              <NumericInput
-                label="Qty used, dry weight"
-                fieldname="drawdown_quantity"
-                value={this.state.drawdown_quantity}
-                onChange={this.onChangeGeneric}
-                errors={this.state.errors}
-              />
-            </div>
-            <div className="w-20 pl3">
-              <label className="f6 fw6 db mb1 gray ttc">Unit</label>
-              <Select
-                value={this.state.drawdown_uom}
-                options={drawdown_uoms}
-                styles={reactSelectStyle}
-                onChange={this.onChangeDrawdownUom}
-              />
-              <FieldError errors={this.state.errors} field="drawdown_uom" />
-            </div>
-          </div>
-
-          <hr className="mt3 m b--light-gray w-100" />
-          <div className="ph4 mt3 mb3 flex">
-            <div className="w-100">
-              <label className="f6 fw6 db mb1 dark-gray">
-                Is there a transaction limit on this item?
-              </label>
-            </div>
-          </div>
-
-          <div className="ph4 mb3 flex">
-            <div className="w-60">
-              <NumericInput
-                label="If Yes, please provide transaction limit"
-                fieldname="transaction_limit"
-                value={this.state.transaction_limit}
-                onChange={this.onChangeGeneric}
-                errors={this.state.errors}
-                readOnly={hasProductId}
-              />
-            </div>
-          </div>
-
-          <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
-            <a
-              className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
-              href="#"
-              onClick={this.onSave}
-            >
-              Save
+          <div className="w-30 pl2">
+            <label className="f6 fw6 db dark-gray">&nbsp;</label>
+            <a href="" className="orange btn--secondary f6 btn">
+              Scan
             </a>
           </div>
         </div>
-      
+
+        <div className="ph4 mb3 flex">
+          <div className="w-50">
+            <NumericInput
+              label="Quantity per pkg"
+              fieldname="quantity"
+              value={this.state.quantity}
+              onChange={this.onChangeGeneric}
+              errors={this.state.errors}
+            />
+          </div>
+          <div className="w-20 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">Unit</label>
+            <Select
+              options={uoms}
+              value={this.state.uom}
+              styles={reactSelectStyle}
+              onChange={this.onChangeUom}
+            />
+            <FieldError errors={this.state.errors} field="uom" />
+          </div>
+        </div>
+        <div className="ph4 mb3 flex">
+          <div className="w-50">
+            <NumericInput
+              label="Cost per unit, $"
+              fieldname="cost_per_unit"
+              value={this.state.cost_per_unit}
+              onChange={this.onChangeGeneric}
+              errors={this.state.errors}
+            />
+          </div>
+          <div className="w-50 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">&nbsp;</label>
+            <p className="f6 black mt2 mb0">
+              Total Cost, $
+              {(this.state.cost_per_unit * this.state.quantity).toFixed(2)}
+            </p>
+          </div>
+        </div>
+
+        <div className="ph4 mb3 flex">
+          <div className="w-50">
+            <label className="f6 fw6 db mb1 gray ttc">Production date</label>
+            <CalendarPicker
+              value={this.state.production_date}
+              onChange={this.onChangeProductionDate}
+            />
+            <FieldError errors={this.state.errors} field="production_date" />
+          </div>
+          <div className="w-50 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">Expiration date</label>
+            <CalendarPicker
+              value={this.state.expiration_date}
+              onChange={this.onChangeExpirationDate}
+            />
+            <FieldError errors={this.state.errors} field="expiration_date" />
+          </div>
+        </div>
+
+        <hr className="mt3 m b--light-gray w-100" />
+
+        <div className="ph4 mt3 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 dark-gray ttc">Storage</label>
+          </div>
+        </div>
+
+        <div className="ph4 mb3 flex">
+          <div className="w-100">
+            <LocationPicker
+              purpose="storage"
+              facility_id={this.props.facility_id}
+              location_id={this.state.location_id}
+              onChange={this.onLocationChanged}
+            />
+            <FieldError errors={this.state.errors} field="location_id" />
+          </div>
+        </div>
+
+        <hr className="mt3 m b--light-gray w-100" />
+
+        <div className="ph4 mt3 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 dark-gray ttc">Source</label>
+          </div>
+        </div>
+
+        <div className="ph4 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 gray ttc">Harvest name</label>
+            <Creatable
+              isClearable
+              key={this.props.facility_id}
+              options={harvestOptions}
+              value={this.state.harvest_batch}
+              onChange={this.onHarvestBatchChanged}
+              styles={reactSelectStyle}
+            />
+            <FieldError errors={this.state.errors} field="harvest_batch" />
+          </div>
+        </div>
+
+        {this.renderBatchInfo()}
+
+        <div className="ph4 mt3 mb3 flex">
+          <div className="w-50">
+            <NumericInput
+              label="Qty used, dry weight"
+              fieldname="drawdown_quantity"
+              value={this.state.drawdown_quantity}
+              onChange={this.onChangeGeneric}
+              errors={this.state.errors}
+            />
+          </div>
+          <div className="w-20 pl3">
+            <label className="f6 fw6 db mb1 gray ttc">Unit</label>
+            <Select
+              value={this.state.drawdown_uom}
+              options={drawdown_uoms}
+              styles={reactSelectStyle}
+              onChange={this.onChangeDrawdownUom}
+            />
+            <FieldError errors={this.state.errors} field="drawdown_uom" />
+          </div>
+        </div>
+
+        <hr className="mt3 m b--light-gray w-100" />
+        <div className="ph4 mt3 mb3 flex">
+          <div className="w-100">
+            <label className="f6 fw6 db mb1 dark-gray">
+              Is there a transaction limit on this item?
+            </label>
+          </div>
+        </div>
+
+        <div className="ph4 mb3 flex">
+          <div className="w-60">
+            <NumericInput
+              label="If Yes, please provide transaction limit"
+              fieldname="transaction_limit"
+              value={this.state.transaction_limit}
+              onChange={this.onChangeGeneric}
+              errors={this.state.errors}
+              readOnly={hasProductId}
+            />
+          </div>
+        </div>
+
+        <div className="w-100 mt4 pa4 bt b--light-grey flex items-center justify-end">
+          <a
+            className="db tr pv2 ph3 bg-orange white bn br2 ttu tracked link dim f6 fw6"
+            href="#"
+            onClick={this.onSave}
+          >
+            Save
+          </a>
+        </div>
+      </div>
     )
   }
 }

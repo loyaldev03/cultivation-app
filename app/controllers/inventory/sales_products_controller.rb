@@ -1,10 +1,11 @@
 class Inventory::SalesProductsController < ApplicationController
-  def harvest_packages
+  def products
     @facility_strains = Inventory::QueryFacilityStrains.call(params[:facility_id]).result
     @sales_catalogue = Inventory::QueryCatalogueTree.call(Constants::SALES_KEY, 'raw_sales_product').result
     @drawdown_uoms = Common::UnitOfMeasure.where(dimension: 'weight').map &:unit
 
-    harvest_batches = Inventory::HarvestBatch.where(status: 'new')
+    strains = Inventory::FacilityStrain.where(facility: current_facility).pluck(:id)
+    harvest_batches = Inventory::HarvestBatch.in(facility_strain: strains)
     options = {params: {include: [:facility]}}
     @harvest_batches = Inventory::HarvestBatchSerializer.new(harvest_batches, options).serializable_hash[:data]
   end

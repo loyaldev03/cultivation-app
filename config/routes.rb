@@ -114,7 +114,7 @@ Rails.application.routes.draw do
 
     resources :sales_products, only: [] do
       collection do
-        get 'harvest_packages'
+        get 'products'
         get 'convert_products'
         get 'product_info'
       end
@@ -220,6 +220,10 @@ Rails.application.routes.draw do
           post 'setup_harvest_package'
           post 'setup_converted_product'
           post 'scan_and_create'
+        end
+
+        member do
+          get 'product_plans'
         end
       end
 

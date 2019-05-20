@@ -125,6 +125,22 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
     render json: packages_json, status: 200
   end
 
+  def product_plans
+    plans = Inventory::ConvertProductPlan.where(package_id: params[:id])
+    plans_json = plans.map do |p|
+      {
+        id: p.id,
+        product_type: p.product_type,
+        package_plan: p.package_plan,
+        quantity: p.quantity,
+        uom: p.uom,
+        conversion: p.conversion,
+        total_weight: p.total_weight,
+      }
+    end
+    render json: plans_json, status: 200
+  end
+
   private
 
   def sales_catalogue_ids(type)

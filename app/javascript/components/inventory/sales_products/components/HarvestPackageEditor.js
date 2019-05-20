@@ -60,87 +60,90 @@ class HarvestPackageEditor extends React.Component {
     }
   }
 
-  componentDidMount() {
-    document.addEventListener('editor-sidebar-open', event => {
-      const id = event.detail.id
-      if (!id) {
-        this.setState(this.resetState())
-      } else {
-        getHarvestPackage(id)
-          .then(x => ({
-            id: x.data.data.id,
-            ...x.data.data.attributes
-          }))
-          .then(attr => {
-            const fs = this.props.facility_strains.find(
-              x => x.value === attr.product.facility_strain_id
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.packageId != prevProps.packageId) {
+      this.loadPackage(this.props.packageId)
+    }
+  }
+
+
+  loadPackage = (id) => {
+    if (!id || id === '') {
+      this.setState(this.resetState())
+    } else {
+      getHarvestPackage(id)
+        .then(x => ({
+          id: x.data.data.id,
+          ...x.data.data.attributes
+        }))
+        .then(attr => {
+
+          const fs = this.props.facility_strains.find(
+            x => x.value === attr.product.facility_strain_id
+          )
+
+          const catalogue = this.props.sales_catalogue.find(
+            x => x.value == attr.catalogue.id
+          )
+
+          let harvest_batch = this.props.harvest_batches
+            .map(x => ({ id: x.id, ...x.attributes }))
+            .find(
+              x => x.id === attr.harvest_batch_id
             )
 
-            const catalogue = this.props.sales_catalogue.find(
-              x => x.value == attr.catalogue.id
-            )
-
-            let harvest_batch = this.props.harvest_batches
-              .map(x => ({ id: x.id, ...x.attributes }))
-              .find(
-                x =>
-                  x.facility.id === fs.facility_id &&
-                  x.id === attr.harvest_batch_id
-              )
-
-            if (harvest_batch) {
-              harvest_batch = {
-                value: harvest_batch.id,
-                label: `${harvest_batch.harvest_name} (${
-                  harvest_batch.strain_name
-                })`,
-                ...harvest_batch
-              }
-            } else {
-              harvest_batch = {
-                value: attr.other_harvest_batch,
-                label: attr.other_harvest_batch
-              }
+          if (harvest_batch) {
+            harvest_batch = {
+              value: harvest_batch.id,
+              label: `${harvest_batch.harvest_name} (${
+                harvest_batch.strain_name
+              })`,
+              ...harvest_batch
             }
-
-            let drawdown_uom = null,
-              uom = null
-            if (attr.drawdown_uom) {
-              drawdown_uom = {
-                value: attr.drawdown_uom,
-                label: attr.drawdown_uom
-              }
+          } else {
+            harvest_batch = {
+              value: attr.other_harvest_batch,
+              label: attr.other_harvest_batch
             }
+          }
 
-            if (attr.uom) {
-              uom = { value: attr.uom, label: attr.uom }
+          let drawdown_uom = null,
+            uom = null
+          if (attr.drawdown_uom) {
+            drawdown_uom = {
+              value: attr.drawdown_uom,
+              label: attr.drawdown_uom
             }
+          }
 
-            this.setState({
-              ...this.resetState(),
-              product_id: attr.product.id,
-              product: { value: attr.product.id, label: attr.product.name },
-              sku: attr.product.sku,
-              transaction_limit: attr.product.transaction_limit || '',
-              catalogue: catalogue,
-              facility_strain: fs,
-              facility_id: fs.facility_id,
-              id: attr.id,
-              package_tag: attr.package_tag,
-              quantity: attr.quantity,
-              uom: uom,
-              production_date: new Date(attr.production_date),
-              expiration_date: new Date(attr.expiration_date),
-              location_id: attr.location_id,
-              harvest_batch: harvest_batch,
-              other_harvest_batch: attr.other_harvest_batch,
-              drawdown_quantity: attr.drawdown_quantity,
-              drawdown_uom,
-              cost_per_unit: attr.cost_per_unit || ''
-            })
+          if (attr.uom) {
+            uom = { value: attr.uom, label: attr.uom }
+          }
+
+          this.setState({
+            ...this.resetState(),
+            product_id: attr.product.id,
+            product: { value: attr.product.id, label: attr.product.name },
+            sku: attr.product.sku,
+            transaction_limit: attr.product.transaction_limit || '',
+            catalogue: catalogue,
+            facility_strain: fs,
+            facility_id: fs.facility_id,
+            id: attr.id,
+            package_tag: attr.package_tag,
+            quantity: attr.quantity,
+            uom: uom,
+            production_date: new Date(attr.production_date),
+            expiration_date: new Date(attr.expiration_date),
+            location_id: attr.location_id,
+            harvest_batch: harvest_batch,
+            other_harvest_batch: attr.other_harvest_batch,
+            drawdown_quantity: attr.drawdown_quantity,
+            drawdown_uom,
+            cost_per_unit: attr.cost_per_unit || ''
           })
-      }
-    })
+        })
+    }
   }
 
   onChangeProduct = product => {
@@ -306,6 +309,7 @@ class HarvestPackageEditor extends React.Component {
 
   renderBatchInfo() {
     if (
+      this.state.other_harvest_batch == null ||
       this.state.other_harvest_batch.length > 0 ||
       this.state.harvest_batch == null
     ) {
@@ -368,7 +372,7 @@ class HarvestPackageEditor extends React.Component {
   }
 
   render() {
-    const { harvest_batches, facility_strains, sales_catalogue } = this.props
+    const { harvest_batches, facility_strains, sales_catalogue, onClose } = this.props
     const uoms = this.state.catalogue
       ? this.state.catalogue.uoms.map(x => ({ value: x, label: x }))
       : []
@@ -376,6 +380,8 @@ class HarvestPackageEditor extends React.Component {
       value: x,
       label: x
     }))
+
+    // console.log(this.state.harvest_batch)
 
     const harvestOptions = harvest_batches
       .map(x => ({ id: x.id, ...x.attributes }))
@@ -389,20 +395,18 @@ class HarvestPackageEditor extends React.Component {
     const hasProductId = this.state.product && this.state.product_id.length > 0
 
     return (
-      <div className="rc-slide-panel" data-role="sidebar">
-        <div className="rc-slide-panel__body flex flex-column">
+      
+        <div className="flex flex-column">
           <div
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
             <h1 className="f4 fw6 ma0 flex flex-auto ttc">
-              Add Harvests Package
+              Add Package
             </h1>
             <span
               className="rc-slide-panel__close-button dim"
-              onClick={() => {
-                window.editorSidebar.close()
-              }}
+              onClick={onClose}
             >
               <i className="material-icons mid-gray md-18">close</i>
             </span>
@@ -656,7 +660,7 @@ class HarvestPackageEditor extends React.Component {
             </a>
           </div>
         </div>
-      </div>
+      
     )
   }
 }

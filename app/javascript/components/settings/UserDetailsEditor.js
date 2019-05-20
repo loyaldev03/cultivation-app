@@ -89,12 +89,54 @@ class UserDetailsEditor extends React.PureComponent {
           start_time: '08:00',
           end_time: ''
         },
-        { day_id: 1, day: 'monday', date: '', display_date: '', start_time: '', end_time: '' },
-        { day_id: 2, day: 'tuesday', date: '', display_date: '', start_time: '', end_time: '' },
-        { day_id: 3, day: 'wednesday', date: '', display_date: '', start_time: '', end_time: '' },
-        { day_id: 4, day: 'thursday', date: '', display_date: '', start_time: '', end_time: '' },
-        { day_id: 5, day: 'friday', date: '', display_date: '', start_time: '', end_time: '' },
-        { day_id: 6, day: 'saturday', date: '', display_date: '', start_time: '', end_time: '' }
+        {
+          day_id: 1,
+          day: 'monday',
+          date: '',
+          display_date: '',
+          start_time: '',
+          end_time: ''
+        },
+        {
+          day_id: 2,
+          day: 'tuesday',
+          date: '',
+          display_date: '',
+          start_time: '',
+          end_time: ''
+        },
+        {
+          day_id: 3,
+          day: 'wednesday',
+          date: '',
+          display_date: '',
+          start_time: '',
+          end_time: ''
+        },
+        {
+          day_id: 4,
+          day: 'thursday',
+          date: '',
+          display_date: '',
+          start_time: '',
+          end_time: ''
+        },
+        {
+          day_id: 5,
+          day: 'friday',
+          date: '',
+          display_date: '',
+          start_time: '',
+          end_time: ''
+        },
+        {
+          day_id: 6,
+          day: 'saturday',
+          date: '',
+          display_date: '',
+          start_time: '',
+          end_time: ''
+        }
       ]
 
       let a = { label: '5/19/2019 - 5/25/2019', value: new Date(2019, 4, 19) }
@@ -193,8 +235,8 @@ class UserDetailsEditor extends React.PureComponent {
       })
     }
     this.setState({
-        sundaySelected: date,
-        non_exempt_schedules: updated_schedules
+      sundaySelected: date,
+      non_exempt_schedules: updated_schedules
     })
   }
 
@@ -310,13 +352,11 @@ class UserDetailsEditor extends React.PureComponent {
   onNextWeek = () => {
     let nextWeekDate = addDays(this.state.sundaySelected, 7)
     this.calculateRangeDate(nextWeekDate)
-
   }
 
   onPreviousWeek = () => {
     let previousWeekDate = subDays(this.state.sundaySelected, 7)
     this.calculateRangeDate(previousWeekDate)
-
   }
 
   render() {
@@ -871,7 +911,10 @@ class UserDetailsEditor extends React.PureComponent {
                     </label>
                   </div>
                   <div className="mt3 w-100 flex justify-between">
-                    <i className="material-icons grey pointer mt2" onClick={(e) => this.onPreviousWeek()}>
+                    <i
+                      className="material-icons grey pointer mt2"
+                      onClick={e => this.onPreviousWeek()}
+                    >
                       chevron_left
                     </i>
                     <div className="w-60 flex">
@@ -892,7 +935,10 @@ class UserDetailsEditor extends React.PureComponent {
                         </i>
                       </div>
                     </div>
-                      <i className="material-icons grey pointer mt2" onClick={(e) => this.onNextWeek()}>
+                    <i
+                      className="material-icons grey pointer mt2"
+                      onClick={e => this.onNextWeek()}
+                    >
                       chevron_right
                     </i>
                   </div>
@@ -900,7 +946,10 @@ class UserDetailsEditor extends React.PureComponent {
                   <div className="mt3">
                     <div className="mt2 fl w-100 flex justify-between">
                       <label className="f6 fw6 db mb1 gray ttc">
-                          Sunday, {nonExemptSunday.date ? format(nonExemptSunday.date, 'MM/DD/YYYY') : null}
+                        Sunday,{' '}
+                        {nonExemptSunday.date
+                          ? format(nonExemptSunday.date, 'MM/DD/YYYY')
+                          : null}
                       </label>
                       <div className="flex w-40 justify-between">
                         <input
@@ -940,7 +989,10 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
                       <label className="f6 fw6 db mb1 gray ttc">
-                          Monday, {nonExemptMonday.date ? format(nonExemptMonday.date, 'MM/DD/YYYY') : null}
+                        Monday,{' '}
+                        {nonExemptMonday.date
+                          ? format(nonExemptMonday.date, 'MM/DD/YYYY')
+                          : null}
                       </label>
                       <div className="flex w-40 justify-between">
                         <input
@@ -974,7 +1026,10 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
                       <label className="f6 fw6 db mb1 gray ttc">
-                          Tuesday, {nonExemptTuesday.date ? format(nonExemptTuesday.date, 'MM/DD/YYYY') : null}
+                        Tuesday,{' '}
+                        {nonExemptTuesday.date
+                          ? format(nonExemptTuesday.date, 'MM/DD/YYYY')
+                          : null}
                       </label>
                       <div className="flex w-40 justify-between">
                         <input
@@ -1008,7 +1063,10 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
                       <label className="f6 fw6 db mb1 gray ttc">
-                          Wednesday, {nonExemptWednesday.date ? format(nonExemptWednesday.date, 'MM/DD/YYYY') : null}
+                        Wednesday,{' '}
+                        {nonExemptWednesday.date
+                          ? format(nonExemptWednesday.date, 'MM/DD/YYYY')
+                          : null}
                       </label>
                       <div className="flex w-40 justify-between">
                         <input
@@ -1042,7 +1100,10 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
                       <label className="f6 fw6 db mb1 gray ttc">
-                          Thursday, {nonExemptThursday.date ? format(nonExemptThursday.date, 'MM/DD/YYYY') : null}
+                        Thursday,{' '}
+                        {nonExemptThursday.date
+                          ? format(nonExemptThursday.date, 'MM/DD/YYYY')
+                          : null}
                       </label>
                       <div className="flex w-40 justify-between">
                         <input
@@ -1076,7 +1137,10 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                     <div className="mt2 fl w-100 flex justify-between">
                       <label className="f6 fw6 db mb1 gray ttc">
-                          Friday, {nonExemptFriday.date ? format(nonExemptFriday.date, 'MM/DD/YYYY') : null}
+                        Friday,{' '}
+                        {nonExemptFriday.date
+                          ? format(nonExemptFriday.date, 'MM/DD/YYYY')
+                          : null}
                       </label>
                       <div className="flex w-40 justify-between">
                         <input
@@ -1110,7 +1174,10 @@ class UserDetailsEditor extends React.PureComponent {
                     </div>
                     <div className="mt2 fl w-100 flex justify-between mb4">
                       <label className="f6 fw6 db mb1 gray ttc">
-                          Saturday, {nonExemptSaturday.date ? format(nonExemptSaturday.date, 'MM/DD/YYYY') : null}
+                        Saturday,{' '}
+                        {nonExemptSaturday.date
+                          ? format(nonExemptSaturday.date, 'MM/DD/YYYY')
+                          : null}
                       </label>
                       <div className="flex w-40 justify-between">
                         <input

@@ -47,6 +47,24 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
     end
   end
 
+  def schedules_by_date
+    date = Time.zone.parse(params[:date], Time.current)
+    work_schedules = current_user.work_schedules.select { |a| a[:date] }
+    schedule = []
+    (0..6).each do |i|
+      current_date = date + i.days
+      current_schedule = work_schedules.detect { |a| a[:date].beginning_of_day == current_date.beginning_of_day }
+      schedule << {
+        day_id: i,
+        day: Date::DAYNAMES[current_date.wday].downcase,
+        date: current_date&.strftime('%D'),
+        start_time: current_schedule&.start_time&.strftime('%H:%M') || '',
+        end_time: current_schedule&.end_time&.strftime('%H:%M') || '',
+      }
+    end
+    render json: {data: schedule}
+  end
+
   private
 
   def user_params
@@ -69,7 +87,7 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
       facilities: [],
       roles: [],
       work_schedules: [:day, :start_time, :end_time],
-      non_exempt_schedules: [:start_date, :end_date, :start_time, :end_time],
+      non_exempt_schedules: [:start_date, :end_date, :start_time, :end_time, :day_id, :day, :date, :display_date],
     )
   end
 

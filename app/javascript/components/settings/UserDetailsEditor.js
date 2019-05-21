@@ -369,7 +369,10 @@ class UserDetailsEditor extends React.PureComponent {
 
   copyWeekScedule = async () => {
     this.tippy.hide()
-    await UserRoleStore.copyScheduleWeek(this.state.sundaySelected.value, this.state.copySundaySelected.value)
+    await UserRoleStore.copyScheduleWeek(
+      this.state.sundaySelected.value,
+      this.state.copySundaySelected.value
+    )
   }
 
   render() {
@@ -952,21 +955,28 @@ class UserDetailsEditor extends React.PureComponent {
                           onCreate={this.onCreate}
                           content={
                             <div className="bg-white f6 flex">
-                              <div className="db shadow-4 pa3 flex justify-between" style={{width: 20+'rem'}}>
+                              <div
+                                className="db shadow-4 pa3 flex justify-between"
+                                style={{ width: 20 + 'rem' }}
+                              >
                                 <Select
                                   options={array_of_sundays}
                                   isClearable={true}
                                   onChange={opt =>
-                                    this.onSelectChange('copySundaySelected', opt)
+                                    this.onSelectChange(
+                                      'copySundaySelected',
+                                      opt
+                                    )
                                   }
                                   className="mt1 w-70 f6"
                                   value={copySundaySelected}
                                 />
-                                <a 
+                                <a
                                   className="btn btn--primary btn--small ml2 w-30 mt2"
                                   onClick={e => this.copyWeekScedule()}
-                                >Copy</a>
-                                
+                                >
+                                  Copy
+                                </a>
                               </div>
                             </div>
                           }
@@ -975,7 +985,6 @@ class UserDetailsEditor extends React.PureComponent {
                             file_copy
                           </i>
                         </Tippy>
-
                       </div>
                     </div>
                     <i

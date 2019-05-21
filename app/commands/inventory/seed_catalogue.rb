@@ -210,12 +210,19 @@ module Inventory
         {label: 'Other', category: Constants::CONVERTED_PRODUCT_KEY, key: 'other', uom_dimension: 'weight', common_uom: 'kg'},
 
         # These are items can be created by grower
+        # {label: 'Flower', category: 'raw_sales_product', key: 'flower', uom_dimension: 'weight', common_uom: 'kg'},
+        # {label: 'Fresh Cannabis Plant', category: 'raw_sales_product', key: 'fresh_cannabis_plant', uom_dimension: 'piece', common_uom: 'pc'},
+        # {label: 'Immature Plant', category: 'raw_sales_product', key: 'immature_plant', uom_dimension: 'weight', common_uom: 'kg'},
+        # {label: 'Kief', category: 'raw_sales_product', key: 'kief', uom_dimension: 'weight', common_uom: 'kg'},
+        # {label: 'Leaf', category: 'raw_sales_product', key: 'leaf', uom_dimension: 'weight', common_uom: 'kg'},
 
+        {label: 'Whole plant', category: 'raw_sales_product', key: 'whole_plant', uom_dimension: 'weight', common_uom: 'g'},
+        {label: 'Flowers (buds)', category: 'raw_sales_product', key: 'flowers_buds', uom_dimension: 'weight', common_uom: 'g'},
+        {label: 'Kief', category: 'raw_sales_product', key: 'kief', uom_dimension: 'weight', common_uom: 'g'},
+        {label: 'Shakes', category: 'raw_sales_product', key: 'shakes', uom_dimension: 'weight', common_uom: 'g'},
+        {label: 'Trims', category: 'raw_sales_product', key: 'trims', uom_dimension: 'weight', common_uom: 'g'},
+        {label: 'Pre-rolls', category: 'raw_sales_product', key: 'pre_rolls', uom_dimension: 'weight', common_uom: 'g'},
         {label: 'Flower', category: 'raw_sales_product', key: 'flower', uom_dimension: 'weight', common_uom: 'kg'},
-        {label: 'Fresh Cannabis Plant', category: 'raw_sales_product', key: 'fresh_cannabis_plant', uom_dimension: 'piece', common_uom: 'pc'},
-        {label: 'Immature Plant', category: 'raw_sales_product', key: 'immature_plant', uom_dimension: 'weight', common_uom: 'kg'},
-        {label: 'Kief', category: 'raw_sales_product', key: 'kief', uom_dimension: 'weight', common_uom: 'kg'},
-        {label: 'Leaf', category: 'raw_sales_product', key: 'leaf', uom_dimension: 'weight', common_uom: 'kg'},
       ]
     end
   end

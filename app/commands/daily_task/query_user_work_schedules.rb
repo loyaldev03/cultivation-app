@@ -16,8 +16,8 @@ module DailyTask
       work_schedules = []
       dates.each do |date|
         day = date.strftime('%A') #convert to day
-        current_work_schedule = user_work_schedules.detect { |a| a[:day] == day.downcase }
-        if current_work_schedule.start_time.present? and current_work_schedule.end_time.present? # if workschedule exist for the day
+        current_work_schedule = user_work_schedules.detect { |a| a[:day] == day.downcase } #check for nil
+        if current_work_schedule and current_work_schedule.start_time.present? and current_work_schedule.end_time.present? # if workschedule exist for the day
           result = {
             date: date,
             start_time: current_work_schedule.start_time.strftime('%R'),

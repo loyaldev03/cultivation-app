@@ -174,6 +174,7 @@ class DailyTaskApp extends React.Component {
           renderBody={props => (
             <CreatePackageForm
               batchId={batchId}
+              facilityId={this.props.facility_id}
               sidebarName={sidebarName}
               show={sidebarName === 'create_package_plan'}
             />

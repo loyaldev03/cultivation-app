@@ -135,16 +135,18 @@ class UserDetailsEditor extends React.PureComponent {
 
       let curr_date = new Date()
       let temp_date = addDays(curr_date, (0 + 7 - curr_date.getDay()) % 7)
-      for(let i = 0; i < 100; i++){
+      for (let i = 0; i < 100; i++) {
         let next_seven_days = addDays(temp_date, 6)
         let args = {
-          label: `${format(temp_date, 'MM/DD/YYYY')} - ${format(next_seven_days, 'MM/DD/YYYY')}`,
+          label: `${format(temp_date, 'MM/DD/YYYY')} - ${format(
+            next_seven_days,
+            'MM/DD/YYYY'
+          )}`,
           value: temp_date
         }
         array_of_sundays.push(args)
         temp_date = addDays(temp_date, 7)
       }
-
 
       this.state = {
         tabs: 'General',

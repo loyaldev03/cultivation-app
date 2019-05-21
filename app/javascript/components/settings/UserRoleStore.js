@@ -79,7 +79,11 @@ class UserRoleStore {
     let to_date_formatted = format(to_date, 'DD/MM/YYYY')
 
     let url = `/api/v1/user_roles/copy_schedule_week`
-    let payload = { user_id: userId, from: from_date_formatted, to: to_date_formatted }
+    let payload = {
+      user_id: userId,
+      from: from_date_formatted,
+      to: to_date_formatted
+    }
     try {
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       runInAction(() => {

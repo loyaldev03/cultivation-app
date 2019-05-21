@@ -1,5 +1,5 @@
 import { observable, action, runInAction, toJS } from 'mobx'
-import { httpGetOptions } from '../utils'
+import { httpGetOptions, httpPostOptions, toast } from '../utils'
 import { format } from 'date-fns'
 
 class UserRoleStore {
@@ -71,6 +71,27 @@ class UserRoleStore {
       console.error(err)
     } finally {
       this.isLoadingSchedule = false
+    }
+  }
+
+  async copyScheduleWeek(from_date, to_date){
+
+    let from_date_formatted = format(from_date, 'DD/MM/YYYY')
+    let to_date_formatted = format(to_date, 'DD/MM/YYYY')
+
+    let url = `/api/v1/user_roles/copy_schedule_week`
+    let payload = { from: from_date_formatted, to: to_date_formatted} 
+    try {
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      runInAction(() => {
+        if (response.data) {
+          toast('Data copied !', 'success')
+        } else {
+        }
+      })
+    } catch (err) {
+      console.error(err)
+    } finally {
     }
   }
 

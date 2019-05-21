@@ -6,6 +6,7 @@ import AvatarPicker from '../utils/AvatarPicker'
 import { addDays, format, subDays } from 'date-fns'
 import UserRoleStore from './UserRoleStore'
 import { toJS } from 'mobx'
+import Tippy from '@tippy.js/react'
 
 const styles = `
 
@@ -77,6 +78,7 @@ class UserDetailsEditor extends React.PureComponent {
       }
 
       let sundaySelected = { label: '', value: '' }
+      let copySundaySelected = { label: '', value: '' }
       non_exempt_schedules = [
         {
           day_id: 0,
@@ -361,6 +363,15 @@ class UserDetailsEditor extends React.PureComponent {
     this.calculateRangeDate(previousWeekDate)
   }
 
+  onCreate = tippy => {
+    this.tippy = tippy
+  }
+
+  copyWeekScedule = async () => {
+    this.tippy.hide()
+    await UserRoleStore.copyScheduleWeek(this.state.sundaySelected.value, this.state.copySundaySelected.value)
+  }
+
   render() {
     const {
       onClose,
@@ -386,7 +397,8 @@ class UserDetailsEditor extends React.PureComponent {
       reporting_manager,
       overtime_hourly_rate,
       array_of_sundays,
-      sundaySelected
+      sundaySelected, //used for date selection in non exempt schedule
+      copySundaySelected // used for date selection in copy section
     } = this.state
 
     const sunday = this.state.work_schedules.find(e => e.day === 'sunday') || {}
@@ -932,9 +944,38 @@ class UserDetailsEditor extends React.PureComponent {
                         />
                       </div>
                       <div className="w-10 ml3">
-                        <i className="material-icons grey pointer mt2">
-                          file_copy
-                        </i>
+                        <Tippy
+                          placement="top-start"
+                          trigger="click"
+                          arrow={true}
+                          interactive={true}
+                          onCreate={this.onCreate}
+                          content={
+                            <div className="bg-white f6 flex">
+                              <div className="db shadow-4 pa3 flex justify-between" style={{width: 20+'rem'}}>
+                                <Select
+                                  options={array_of_sundays}
+                                  isClearable={true}
+                                  onChange={opt =>
+                                    this.onSelectChange('copySundaySelected', opt)
+                                  }
+                                  className="mt1 w-70 f6"
+                                  value={copySundaySelected}
+                                />
+                                <a 
+                                  className="btn btn--primary btn--small ml2 w-30 mt2"
+                                  onClick={e => this.copyWeekScedule()}
+                                >Copy</a>
+                                
+                              </div>
+                            </div>
+                          }
+                        >
+                          <i className={'material-icons grey pointer mt2'}>
+                            file_copy
+                          </i>
+                        </Tippy>
+
                       </div>
                     </div>
                     <i

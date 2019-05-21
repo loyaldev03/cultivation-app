@@ -48,8 +48,9 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
   end
 
   def schedules_by_date
+    user = User.find(params[:user_id])
     date = Time.zone.parse(params[:date], Time.current)
-    work_schedules = current_user.work_schedules.select { |a| a[:date] }
+    work_schedules = user.work_schedules.select { |a| a[:date] }
     schedule = []
     (0..6).each do |i|
       current_date = date + i.days
@@ -66,8 +67,9 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
   end
 
   def copy_schedule_week
+    user = User.find(params[:user_id])
     args = {from: params[:from], to: params[:to]}
-    cmd = Common::CopyScheduleWeek.call(current_user, args)
+    cmd = Common::CopyScheduleWeek.call(user, args)
 
     if cmd.success?
       render json: {data: 'Data copied'}

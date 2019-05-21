@@ -52,11 +52,11 @@ class UserRoleStore {
     }
   }
 
-  async getSchedulesByDate(date) {
+  async getSchedulesByDate(userId, date) {
     this.isLoadingSchedule = true
 
     let date_formatted = format(date, 'DD/MM/YYYY')
-    let url = `/api/v1/user_roles/schedules_by_date?date=${date_formatted}`
+    let url = `/api/v1/user_roles/schedules_by_date?user_id=${userId}&date=${date_formatted}`
 
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
@@ -74,12 +74,12 @@ class UserRoleStore {
     }
   }
 
-  async copyScheduleWeek(from_date, to_date) {
+  async copyScheduleWeek(userId, from_date, to_date) {
     let from_date_formatted = format(from_date, 'DD/MM/YYYY')
     let to_date_formatted = format(to_date, 'DD/MM/YYYY')
 
     let url = `/api/v1/user_roles/copy_schedule_week`
-    let payload = { from: from_date_formatted, to: to_date_formatted }
+    let payload = { user_id: userId, from: from_date_formatted, to: to_date_formatted }
     try {
       const response = await (await fetch(url, httpPostOptions(payload))).json()
       runInAction(() => {

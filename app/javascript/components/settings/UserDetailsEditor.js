@@ -131,10 +131,20 @@ class UserDetailsEditor extends React.PureComponent {
         }
       ]
 
-      let a = { label: '05/19/2019 - 05/25/2019', value: new Date(2019, 4, 19) }
-      let b = { label: '05/26/2019 - 06/1/2019', value: new Date(2019, 4, 26) }
-      let c = { label: '06/2/2019 - 06/8/2019', value: new Date(2019, 5, 2) }
-      let array_of_sundays = [a, b, c]
+      let array_of_sundays = []
+
+      let curr_date = new Date()
+      let temp_date = addDays(curr_date, (0 + 7 - curr_date.getDay()) % 7)
+      for(let i = 0; i < 100; i++){
+        let next_seven_days = addDays(temp_date, 6)
+        let args = {
+          label: `${format(temp_date, 'MM/DD/YYYY')} - ${format(next_seven_days, 'MM/DD/YYYY')}`,
+          value: temp_date
+        }
+        array_of_sundays.push(args)
+        temp_date = addDays(temp_date, 7)
+      }
+
 
       this.state = {
         tabs: 'General',
@@ -217,7 +227,7 @@ class UserDetailsEditor extends React.PureComponent {
   }
 
   calculateRangeDate = async date => {
-    await UserRoleStore.getSchedulesByDate(date)
+    await UserRoleStore.getSchedulesByDate(this.state.userId, date)
     const schedules = toJS(UserRoleStore.nonExemptSchedules)
 
     const updated_schedules = this.state.non_exempt_schedules
@@ -382,6 +392,7 @@ class UserDetailsEditor extends React.PureComponent {
     ) {
       this.tippy.hide()
       await UserRoleStore.copyScheduleWeek(
+        this.state.userId,
         this.state.sundaySelected.value,
         this.state.copySundaySelected.value
       )

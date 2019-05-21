@@ -354,20 +354,19 @@ class UserDetailsEditor extends React.PureComponent {
   }
 
   onNextWeek = () => {
-    if (this.state.sundaySelected.value){
+    if (this.state.sundaySelected.value) {
       let nextWeekDate = addDays(this.state.sundaySelected.value, 7)
       this.calculateRangeDate(nextWeekDate)
-    }else{
+    } else {
       alert('Please select current week first')
     }
-
   }
 
   onPreviousWeek = () => {
     if (this.state.sundaySelected.value) {
       let previousWeekDate = subDays(this.state.sundaySelected.value, 7)
       this.calculateRangeDate(previousWeekDate)
-    }else{
+    } else {
       alert('Please select current week first')
     }
   }
@@ -377,16 +376,18 @@ class UserDetailsEditor extends React.PureComponent {
   }
 
   copyWeekScedule = async () => {
-    if (this.state.sundaySelected.value && this.state.copySundaySelected.value){
+    if (
+      this.state.sundaySelected.value &&
+      this.state.copySundaySelected.value
+    ) {
       this.tippy.hide()
       await UserRoleStore.copyScheduleWeek(
         this.state.sundaySelected.value,
         this.state.copySundaySelected.value
       )
-    }else{
+    } else {
       alert('Please select week to copy from')
     }
-
   }
 
   render() {

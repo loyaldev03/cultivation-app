@@ -102,7 +102,7 @@ class TaskSetup extends React.Component {
             unresolvedIssueCount={this.state.unresolvedIssueCount}
           />
           <div className="flex mt4">
-            <a
+            {/* <a
               href="#0"
               className="btn btn--secondary btn--small mr3"
               onClick={() =>
@@ -112,7 +112,7 @@ class TaskSetup extends React.Component {
               }
             >
               Destroyed Plants
-            </a>
+            </a> */}
             {/* <div className="mr2 mt2">
               <i className="material-icons icon--small pointer">filter_list</i>
               <span className="grey f6 ml2">Filter</span>

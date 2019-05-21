@@ -229,7 +229,10 @@ class UserDetailsEditor extends React.PureComponent {
         return t.day_id === i ? updated : t
       })
     }
-    let sundaySelected = { value: date, label: `${updated_schedules[0].date} - ${updated_schedules[6].date}`}
+    let sundaySelected = {
+      value: date,
+      label: `${updated_schedules[0].date} - ${updated_schedules[6].date}`
+    }
     this.setState({
       sundaySelected: sundaySelected,
       non_exempt_schedules: updated_schedules

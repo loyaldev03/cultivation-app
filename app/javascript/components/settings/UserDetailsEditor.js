@@ -962,14 +962,15 @@ class UserDetailsEditor extends React.PureComponent {
                     >
                       chevron_left
                     </i>
-                    <div className="w-60 flex">
-                      <div className="w-90">
+                      <div className="w-60 flex justify-center">
+                      <div className="w-60">
                         <Select
                           options={array_of_sundays}
                           isClearable={true}
                           onChange={opt =>
                             this.onSelectChange('sundaySelected', opt)
                           }
+                          placeholder='Please select current week'
                           className="mt1 w-100 f6"
                           value={sundaySelected}
                         />

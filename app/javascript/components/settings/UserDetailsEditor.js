@@ -129,9 +129,9 @@ class UserDetailsEditor extends React.PureComponent {
         }
       ]
 
-      let a = { label: '5/19/2019 - 5/25/2019', value: new Date(2019, 4, 19) }
-      let b = { label: '5/26/2019 - 6/1/2019', value: new Date(2019, 4, 26) }
-      let c = { label: '6/2/2019 - 6/8/2019', value: new Date(2019, 5, 2) }
+      let a = { label: '05/19/2019 - 05/25/2019', value: new Date(2019, 4, 19) }
+      let b = { label: '05/26/2019 - 06/1/2019', value: new Date(2019, 4, 26) }
+      let c = { label: '06/2/2019 - 06/8/2019', value: new Date(2019, 5, 2) }
       let array_of_sundays = [a, b, c]
 
       this.state = {
@@ -215,7 +215,6 @@ class UserDetailsEditor extends React.PureComponent {
   }
 
   calculateRangeDate = async date => {
-    console.log(date)
     await UserRoleStore.getSchedulesByDate(date)
     const schedules = toJS(UserRoleStore.nonExemptSchedules)
 
@@ -230,8 +229,9 @@ class UserDetailsEditor extends React.PureComponent {
         return t.day_id === i ? updated : t
       })
     }
+    let sundaySelected = { value: date, label: `${updated_schedules[0].date} - ${updated_schedules[6].date}`}
     this.setState({
-      sundaySelected: date,
+      sundaySelected: sundaySelected,
       non_exempt_schedules: updated_schedules
     })
   }
@@ -334,7 +334,6 @@ class UserDetailsEditor extends React.PureComponent {
   // }
 
   onChangeNonExemptAttr = (record, key, value) => {
-    console.log(value)
     let updated_schedule = this.state.non_exempt_schedules.find(
       e => e === record
     )
@@ -350,12 +349,12 @@ class UserDetailsEditor extends React.PureComponent {
   }
 
   onNextWeek = () => {
-    let nextWeekDate = addDays(this.state.sundaySelected, 7)
+    let nextWeekDate = addDays(this.state.sundaySelected.value, 7)
     this.calculateRangeDate(nextWeekDate)
   }
 
   onPreviousWeek = () => {
-    let previousWeekDate = subDays(this.state.sundaySelected, 7)
+    let previousWeekDate = subDays(this.state.sundaySelected.value, 7)
     this.calculateRangeDate(previousWeekDate)
   }
 

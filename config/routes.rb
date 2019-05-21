@@ -290,6 +290,7 @@ Rails.application.routes.draw do
         post 'update_role'
         delete 'destroy_role'
         get 'schedules_by_date'
+        post 'copy_schedule_week'
       end
 
       # TODO: items to be removed. Material used for task should be move to batches/tasks api

@@ -65,6 +65,17 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
     render json: {data: schedule}
   end
 
+  def copy_schedule_week
+    args = {from: params[:from], to: params[:to]}
+    cmd = Common::CopyScheduleWeek.call(current_user, args)
+
+    if cmd.success?
+      render json: {data: 'Data copied'}
+    else
+      render json: {error: 'Error copying schedule'}
+    end
+  end
+
   private
 
   def user_params

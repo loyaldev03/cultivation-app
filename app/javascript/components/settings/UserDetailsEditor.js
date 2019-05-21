@@ -354,13 +354,22 @@ class UserDetailsEditor extends React.PureComponent {
   }
 
   onNextWeek = () => {
-    let nextWeekDate = addDays(this.state.sundaySelected.value, 7)
-    this.calculateRangeDate(nextWeekDate)
+    if (this.state.sundaySelected.value){
+      let nextWeekDate = addDays(this.state.sundaySelected.value, 7)
+      this.calculateRangeDate(nextWeekDate)
+    }else{
+      alert('Please select current week first')
+    }
+
   }
 
   onPreviousWeek = () => {
-    let previousWeekDate = subDays(this.state.sundaySelected.value, 7)
-    this.calculateRangeDate(previousWeekDate)
+    if (this.state.sundaySelected.value) {
+      let previousWeekDate = subDays(this.state.sundaySelected.value, 7)
+      this.calculateRangeDate(previousWeekDate)
+    }else{
+      alert('Please select current week first')
+    }
   }
 
   onCreate = tippy => {
@@ -368,11 +377,16 @@ class UserDetailsEditor extends React.PureComponent {
   }
 
   copyWeekScedule = async () => {
-    this.tippy.hide()
-    await UserRoleStore.copyScheduleWeek(
-      this.state.sundaySelected.value,
-      this.state.copySundaySelected.value
-    )
+    if (this.state.sundaySelected.value && this.state.copySundaySelected.value){
+      this.tippy.hide()
+      await UserRoleStore.copyScheduleWeek(
+        this.state.sundaySelected.value,
+        this.state.copySundaySelected.value
+      )
+    }else{
+      alert('Please select week to copy from')
+    }
+
   }
 
   render() {

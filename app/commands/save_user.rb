@@ -30,22 +30,44 @@ class SaveUser
       user.reporting_manager_id = if args[:reporting_manager_id]
                                     args[:reporting_manager_id].to_bson_id
                                   end
-      user.work_schedules = []
-      args[:work_schedules].map do |a|
-        user.work_schedules.build(
-          day: a[:day],
-          start_time: a[:start_time] ? Time.zone.parse(a[:start_time], Time.current) : '',
-          end_time: a[:end_time] ? Time.zone.parse(a[:end_time], Time.current) : '',
-        )
-      end
+      #date exist == non exempt schedule
+      #day exist == exempt schedule
+      #clear exempt schedule and insert all back
+      #but for non exempt cant do that got many dates
 
-      args[:non_exempt_schedules].map do |a|
-        user.work_schedules.build(
-          start_date: a[:start_date] ? Time.zone.parse(a[:start_date], Time.current) : '',
-          duration: ((Time.zone.parse(a[:end_date], Time.current) - Time.zone.parse(a[:start_date], Time.current)).to_i / 86400),
-          start_time: a[:start_time] ? Time.zone.parse(a[:start_time], Time.current) : '',
-          end_time: a[:end_time] ? Time.zone.parse(a[:end_time], Time.current) : '',
-        )
+      if args[:exempt]
+        #exempt worker
+        user.work_schedules = user.work_schedules.select { |a| a[:date] }
+        args[:work_schedules].map do |a|
+          user.work_schedules.build(
+            day: a[:day],
+            start_time: a[:start_time] ? Time.zone.parse(a[:start_time], Time.current) : '',
+            end_time: a[:end_time] ? Time.zone.parse(a[:end_time], Time.current) : '',
+          )
+        end
+      else
+        #non-exempt worker
+        args[:non_exempt_schedules].map do |a|
+          # check if start_time and end_time nil, try find the record and remove
+          if a[:start_time] == '' and a[:end_time] == ''
+            # remove schedule when start_time and end_time doesnt exist
+            user.work_schedules = user.work_schedules.reject { |b| b[:date] == Time.zone.parse(a[:date], Time.current) }
+          else
+            work_schedule = user.work_schedules.detect { |c| c[:date]&.beginning_of_day == Time.zone.parse(a[:date], Time.current)&.beginning_of_day }
+            if work_schedule.present?
+              work_schedule.update(
+                start_time: a[:start_time] ? Time.zone.parse(a[:start_time], Time.current) : '',
+                end_time: a[:end_time] ? Time.zone.parse(a[:end_time], Time.current) : '',
+              )
+            else
+              user.work_schedules.build(
+                date: a[:date] ? Time.zone.parse(a[:date], Time.current) : '',
+                start_time: a[:start_time] ? Time.zone.parse(a[:start_time], Time.current) : '',
+                end_time: a[:end_time] ? Time.zone.parse(a[:end_time], Time.current) : '',
+              )
+            end
+          end
+        end
       end
 
       user.default_facility_id = if args[:default_facility_id]

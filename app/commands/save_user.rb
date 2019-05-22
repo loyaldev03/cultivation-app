@@ -39,7 +39,6 @@ class SaveUser
         #exempt worker
         user.work_schedules = user.work_schedules.select { |a| a[:date] }
         args[:work_schedules].map do |a|
-          Rails.logger.debug "Params ==> #{a[:day]} #{a[:start_time]}"
           user.work_schedules.build(
             day: a[:day],
             start_time: a[:start_time] ? Time.zone.parse(a[:start_time], Time.current) : '',

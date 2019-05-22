@@ -9,8 +9,8 @@ module Common
     #non exempt worker -> hourly worker
     field :date, type: Time
 
-    field :start_time, type: Time, default: Time.new(2019, 4, 21, 9, 00)
-    field :end_time, type: Time, default: Time.new(2019, 4, 21, 17, 00)
+    field :start_time, type: Time, default: Time.new(2019, 1, 1, 9, 00)
+    field :end_time, type: Time, default: Time.new(2019, 1, 1, 17, 00)
 
     embedded_in :user, class_name: 'User'
   end

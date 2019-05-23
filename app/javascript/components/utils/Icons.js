@@ -6,6 +6,7 @@ import ImgTriangle from '../../../assets/images/ic_triangle.svg'
 import ImgPlantGrowth from '../../../assets/images/plant_grow.svg'
 import ImgBarcode from '../../../assets/images/barcode.svg'
 import RoomIcon from '../../../assets/images/room-icon.svg'
+import WorkerDashboardGraph from '../../../assets/images/worker_dashboard_graph.png'
 import TempBatchWidgets from '../../../assets/images/dummy/cult-batches.png'
 import TempPlantWidgets from '../../../assets/images/dummy/cult-plants-widget.png'
 import TempTaskWidgets from '../../../assets/images/dummy/cult-tasks.png'
@@ -25,5 +26,6 @@ export {
   TempPlantWidgets,
   TempTaskWidgets,
   TempIssueWidgets,
-  TempHarvestWidgets
+  TempHarvestWidgets,
+  WorkerDashboardGraph
 }

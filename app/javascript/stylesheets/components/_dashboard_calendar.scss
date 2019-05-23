@@ -1,0 +1,10 @@
+.react-calendar.dashboard-calendar{
+    border:0;
+    width: 100%;
+    .react-calendar__navigation button[disabled] {
+        background: $white;
+    }
+    .react-calendar__tile--active {
+        background: $darkOrange;
+    }
+}

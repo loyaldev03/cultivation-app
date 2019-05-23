@@ -152,6 +152,7 @@ GEM
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
     jmespath (1.4.0)
+    jwt (2.1.0)
     launchy (2.4.3)
       addressable (~> 2.3)
     listen (3.1.5)
@@ -201,6 +202,8 @@ GEM
     multi_json (1.13.1)
     nenv (0.3.0)
     netrc (0.11.0)
+    nexmo (5.7.1)
+      jwt (~> 2)
     nio4r (2.3.1)
     nokogiri (1.10.2)
       mini_portile2 (~> 2.4.0)
@@ -411,6 +414,7 @@ DEPENDENCIES
   mongoid-history
   mongoid_orderable
   mongoid_rails_migrations
+  nexmo
   pagy
   pry-byebug
   puma (~> 3.11)

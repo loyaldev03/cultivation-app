@@ -54,6 +54,9 @@ class User
   field :reporting_manager_id, type: BSON::ObjectId
   field :exempt, type: Boolean, default: -> { false } #  false => non exempt => hourly worker , true => exempt => salary worker
 
+  field :login_code, type: String
+  field :login_code_expired_at, type: Time
+
   has_many :time_logs, class_name: 'Cultivation::TimeLog'
   embeds_many :work_schedules, class_name: 'Common::WorkSchedule'
   belongs_to :reporting_manager, class_name: 'User', foreign_key: 'reporting_manager_id', optional: true

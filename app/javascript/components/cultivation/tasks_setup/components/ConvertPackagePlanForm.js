@@ -26,7 +26,7 @@ class ConvertPackagePlanForm extends React.Component {
       const packageResponse = await getHarvestPackage(this.props.packageId)
       const plans = await loadPackagePlans(this.props.packageId)
       console.log(plans)
-      
+
       const packagePlans = plans.reduce((sum, item) => {
         const index = sum.findIndex(x => x.product_type == item.product_type)
         let t = null
@@ -129,18 +129,20 @@ class ConvertPackagePlanForm extends React.Component {
 
   onSave = event => {
     event.preventDefault()
-    saveConvertPackagePlans(this.props.packageId, this.state.data).then(result => {
-      if (result.length > 0) {
-        this.props.onSave({
-          toast: { message: 'Package plan created.', type: 'success'},
-          hideSidebar: true
-        })
-      } else {
-        this.props.onSave({
-          toast: { message: 'Failed to create package plan.', type: 'error'}
-        })
+    saveConvertPackagePlans(this.props.packageId, this.state.data).then(
+      result => {
+        if (result.length > 0) {
+          this.props.onSave({
+            toast: { message: 'Package plan created.', type: 'success' },
+            hideSidebar: true
+          })
+        } else {
+          this.props.onSave({
+            toast: { message: 'Failed to create package plan.', type: 'error' }
+          })
+        }
       }
-    })
+    )
   }
 
   renderBreakdowns() {
@@ -307,7 +309,7 @@ const saveConvertPackagePlans = async (packageId, productPlans) => {
   )).json()
   try {
     return response
-  } catch(error) {
+  } catch (error) {
     console.error(error)
     return []
   }

@@ -172,7 +172,7 @@ class HarvestPackageSetupApp extends React.Component {
   onSave = data => {
     if (data.toast) {
       toast(data.toast.message, data.toast.type)
-    } 
+    }
 
     if (data.hideSidebar) {
       this.setState({ showCreatePackagePlan: false })

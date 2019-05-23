@@ -2,11 +2,13 @@ class Notification
   include Mongoid::Document
   include Mongoid::Timestamps::Short
 
-  # John Doe has assigned task "Water Plant" to you.
-  field :messages, type: String, default: ''
+  # Verb describing action which trigger the notification
+  # e.g. assign
+  field :action, type: String, default: ''
 
   # Receiver
   field :recipient_id, type: BSON::ObjectId
+  field :recipient_name, type: String, default: ''
 
   # Initiator
   field :actor_id, type: BSON::ObjectId
@@ -21,4 +23,6 @@ class Notification
   # E.g. notifiable_type = "Cultivation::Task"
   field :notifiable_id, type: BSON::ObjectId
   field :notifiable_type, type: String, default: ''
+  # Name of the reference item. E.g. "Water Plant"
+  field :notifiable_name, type: String, default: ''
 end

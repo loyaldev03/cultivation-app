@@ -16,41 +16,52 @@ module Cultivation
 
     def call
       task = Cultivation::Task.includes(:batch).find_by(id: args[:id])
-      if args[:type] == 'resource'
-        task.update(user_ids: args[:user_ids])
-      else
-        batch = task.batch
-        if valid_batch? batch
-          batch_tasks = Cultivation::QueryTasks.call(batch, [:modifier, :users]).result
-          task = get_task(batch_tasks, task.id)
-          facility_users = QueryUsers.call(current_user, batch.facility_id).result
-          # Remember original start_date
-          original_start_date = task.start_date
-          # Update task with args and re-calculate end_date
-          task = map_args_to_task(task, batch_tasks)
-          # Move subtasks's start date & save changes
-          days_diff = (task.start_date - original_start_date) / 1.day
-          adjust_children_dates(task, batch_tasks, days_diff)
-          # Update estimated cost of current task
-          update_estimated_cost(task, batch_tasks, facility_users)
-          # Extend / contract parent duration & end_date
-          update_parent_cascade(task, batch_tasks)
-          # Cascade changes to root node's siblings (if current node is root)
-          update_root_siblings(task, batch_tasks, days_diff)
-          # Save if no errors
-          detect_cascade_changes(task, batch_tasks)
-          task.modifier = current_user
-          task.save! if errors.empty?
-          perform_cascade_change_tasks
-          # TODO::ANDY - validate_capacity when updating tasks
-          # Update batch
-          update_batch(batch, batch_tasks&.first, schedule_batch)
-        end
+      batch = task.batch
+      if valid_batch? batch
+        batch_tasks = Cultivation::QueryTasks.call(batch, [:modifier, :users]).result
+        task = get_task(batch_tasks, task.id)
+        facility_users = QueryUsers.call(current_user, batch.facility_id).result
+        # Remember original start_date
+        original_start_date = task.start_date
+        # Update task with args and re-calculate end_date
+        task = map_args_to_task(task, batch_tasks)
+        # Move subtasks's start date & save changes
+        days_diff = (task.start_date - original_start_date) / 1.day
+        adjust_children_dates(task, batch_tasks, days_diff)
+        # Update estimated cost of current task
+        update_estimated_cost(task, batch_tasks, facility_users)
+        # Extend / contract parent duration & end_date
+        update_parent_cascade(task, batch_tasks)
+        # Cascade changes to root node's siblings (if current node is root)
+        update_root_siblings(task, batch_tasks, days_diff)
+        # Save if no errors
+        detect_cascade_changes(task, batch_tasks)
+        task.modifier = current_user
+        task.save! if errors.empty?
+        perform_cascade_change_tasks
+        # TODO::ANDY - validate_capacity when updating tasks
+        # Update batch
+        update_batch(batch, batch_tasks&.first, schedule_batch)
       end
+      action_notify(task)
       task
     end
 
     private
+
+    def action_notify(task)
+      if args[:action] == 'edit_assignees'
+        job_params = {
+          actor_id: current_user.id.to_s,
+          action: args[:action],
+          recipients: args[:user_ids],
+          notifiable_id: task.id.to_s,
+          notifiable_type: Constants::NOTIFY_TYPE_TASK,
+          notifiable_name: task.name,
+        }
+        CreateNotificationsJob.perform_later job_params
+      end
+    end
 
     def detect_cascade_changes(task, batch_tasks)
       if task.changes['end_date'].present?

@@ -24,13 +24,7 @@
                     <%= react_component 'utils/TimeTaveller', { current_time: Time.current } %>
                   <% end %>
                   <%= switch_user_select if Rails.env.development? %>
-                  <i 
-                    onclick="openModal()" id="notification-popup" 
-                    class="material-icons grey mr2 dim md-21 pointer ml2">
-                    notifications_none
-                  </i>
-
-                  <%= render 'layouts/notification' %>
+                  <%= react_component 'notification/NotificationApp' %>
 
                   <div class="ph2">
                     <%= react_component 'utils/Avatar', {

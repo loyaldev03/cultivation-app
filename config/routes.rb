@@ -169,6 +169,12 @@ Rails.application.routes.draw do
   # API for web pages
   namespace :api do
     namespace :v1 do
+      resources :notifications, only: [:index] do
+        member do
+          post 'mark_as_read'
+        end
+      end
+
       resources :system, only: [], as: :system do
         collection do
           get 'configuration'

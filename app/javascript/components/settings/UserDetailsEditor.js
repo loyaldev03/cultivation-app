@@ -28,6 +28,18 @@ const styles = `
   left: 50%;
 }
 
+.sunday-work:after {
+    background-color: #F66830;
+    border-radius: 10px;
+    content: " ";
+    display: block;
+    margin-left: 10px;
+    margin-top: 3px;
+    height: 10px;
+    width: 10px;
+}
+
+
 `
 
 const user_modes = [
@@ -77,6 +89,10 @@ class UserDetailsEditor extends React.PureComponent {
         work_schedules = props.user.work_schedules
       } else {
         work_schedules = props.companyWorkSchedules
+      }
+
+      if (props.user.id) {
+        UserRoleStore.getWeekWorkSchedule(props.user.id)
       }
 
       let sundaySelected = { label: '', value: '' }
@@ -137,7 +153,7 @@ class UserDetailsEditor extends React.PureComponent {
 
       let curr_date = new Date()
       let temp_date = addDays(curr_date, (0 + 7 - curr_date.getDay()) % 7)
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 50; i++) {
         let next_seven_days = addDays(temp_date, 6)
         let args = {
           label: `${format(temp_date, 'MM/DD/YYYY')} - ${format(
@@ -170,8 +186,9 @@ class UserDetailsEditor extends React.PureComponent {
         default_facility,
         work_schedules: work_schedules,
         non_exempt_schedules: non_exempt_schedules || [],
-        array_of_sundays: array_of_sundays,
-        sundaySelected: sundaySelected
+        array_of_sundays: array_of_sundays
+        // sundaySelected: sundaySelected,
+        // copySundaySelected: copySundaySelected
       }
     } else {
       this.state = {
@@ -407,6 +424,17 @@ class UserDetailsEditor extends React.PureComponent {
       alert('Please select week to copy from')
     }
   }
+
+  formatOptionLabel = ({ value, label, customAbbreviation }) => (
+    <div
+      className={classNames('', {
+        'sunday-work': UserRoleStore.getWeekWithWorkSchedule().includes(label)
+      })}
+      style={{ display: 'flex' }}
+    >
+      <div>{label}</div>
+    </div>
+  )
 
   render() {
     const {
@@ -735,7 +763,7 @@ class UserDetailsEditor extends React.PureComponent {
                         value="exempt"
                         type="radio"
                         checked={isExempt}
-                        onChange={e => this.onChangeExempt(isExempt)}
+                        onChange={e => this.onChangeExempt(true)}
                         className="ml2"
                       />
                     </label>
@@ -747,7 +775,7 @@ class UserDetailsEditor extends React.PureComponent {
                         value="non-exempt"
                         type="radio"
                         checked={!isExempt}
-                        onChange={e => this.onChangeExempt(isExempt)}
+                        onChange={e => this.onChangeExempt(false)}
                         className="ml2"
                       />
                     </label>
@@ -992,12 +1020,14 @@ class UserDetailsEditor extends React.PureComponent {
                       <div className="w-60">
                         <Select
                           options={array_of_sundays}
+                          formatOptionLabel={this.formatOptionLabel}
                           isClearable={true}
                           onChange={opt =>
                             this.onSelectChange('sundaySelected', opt)
                           }
                           placeholder="Please select current week"
                           className="mt1 w-100 f6"
+                          defaultValue={null}
                           value={sundaySelected}
                         />
                       </div>

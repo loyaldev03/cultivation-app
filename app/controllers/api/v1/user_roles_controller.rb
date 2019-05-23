@@ -78,6 +78,29 @@ class Api::V1::UserRolesController < Api::V1::BaseApiController
     end
   end
 
+  def week_work_schedule #return array of week that has work schedule in it
+    user = User.find(params[:user_id])
+    weeks_have_scheduels = []
+    work_schedules = user.work_schedules.select { |a| a[:date] }
+    array_of_sundays = []
+    curr_date = Time.current.beginning_of_day
+    temp_date = curr_date + ((0 + 7 - curr_date.wday) % 7).day
+    (0..50).each do |a|
+      next_seven_days = temp_date + 6.day #find next 7 days
+      label = "#{temp_date.strftime('%m/%d/%Y')} - #{next_seven_days.strftime('%m/%d/%Y')}" #for display
+      (0..6).each do |i|
+        current_date = temp_date + i.days
+        current_schedule = work_schedules.detect { |a| a[:date].beginning_of_day == current_date.beginning_of_day }
+        if current_schedule.present?
+          weeks_have_scheduels << label
+          break
+        end
+      end
+      temp_date = temp_date + 7.day
+    end
+    render json: {data: weeks_have_scheduels}
+  end
+
   private
 
   def user_params

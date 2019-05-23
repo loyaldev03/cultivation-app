@@ -298,12 +298,13 @@ Rails.application.routes.draw do
       end
 
       resource :user_roles, only: [] do
-        get 'search'
-        post 'update_user'
-        post 'update_role'
-        delete 'destroy_role'
-        get 'schedules_by_date'
-        post 'copy_schedule_week'
+        get     'search'
+        post    'update_user'
+        post    'update_role'
+        delete  'destroy_role'
+        get     'schedules_by_date'
+        post    'copy_schedule_week'
+        get     'week_work_schedule'
       end
 
       # TODO: items to be removed. Material used for task should be move to batches/tasks api

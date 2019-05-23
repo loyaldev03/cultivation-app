@@ -11,6 +11,7 @@ class UserRoleStore {
   @observable modules
   @observable companyWorkSchedules
   @observable nonExemptSchedules
+  @observable weekWithWorkSchedule
   @observable isLoadingSchedule = false
 
   @action
@@ -65,6 +66,28 @@ class UserRoleStore {
           this.nonExemptSchedules = response.data || []
         } else {
           this.nonExemptSchedules = []
+        }
+      })
+    } catch (err) {
+      console.error(err)
+    } finally {
+      this.isLoadingSchedule = false
+    }
+  }
+
+  async getWeekWorkSchedule(userId) {
+    this.isLoadingSchedule = true
+
+    let url = `/api/v1/user_roles/week_work_schedule?user_id=${userId}`
+
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      runInAction(() => {
+        if (response.data) {
+          this.weekWithWorkSchedule = response.data || []
+          console.log(toJS(this.weekWithWorkSchedule))
+        } else {
+          this.weekWithWorkSchedule = []
         }
       })
     } catch (err) {
@@ -151,6 +174,10 @@ class UserRoleStore {
       const facility = this.facilities.find(x => x.id === facilityId)
       return facility ? facility.code : 'Invalid Facility'
     }
+  }
+
+  getWeekWithWorkSchedule() {
+    return toJS(this.weekWithWorkSchedule)
   }
 }
 

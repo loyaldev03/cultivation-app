@@ -5,6 +5,7 @@ import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 import ReactTable from 'react-table'
 import Tippy from '@tippy.js/react'
+import { toast } from '../../utils'
 import { formatDate } from '../../utils/DateHelper'
 import HarvestPackageEditor from './components/HarvestPackageEditor'
 import harvestPackageStore from './store/HarvestPackageStore'
@@ -97,25 +98,6 @@ class HarvestPackageSetupApp extends React.Component {
       accessor: 'attributes.catalogue.label',
       headerClassName: 'tl'
     },
-    // {
-    //   Header: 'Location',
-    //   accessor: 'attributes.location_name',
-    //   headerClassName: 'tl',
-    //   width: 180
-    // },
-    // {
-    //   Header: 'Harvest batch',
-    //   headerClassName: 'tl',
-    //   Cell: record => (
-    //     <div className="tl">
-    //       {resolveBatchName(
-    //         record.original.attributes.harvest_batch_id,
-    //         record.original.attributes.other_harvest_batch,
-    //         harvest_batches
-    //       )}
-    //     </div>
-    //   )
-    // },
     {
       Header: 'Production',
       headerClassName: 'tr',
@@ -187,12 +169,23 @@ class HarvestPackageSetupApp extends React.Component {
     )
   }
 
+  onSave = data => {
+    if (data.toast) {
+      toast(data.toast.message, data.toast.type)
+    } 
+
+    if (data.hideSidebar) {
+      this.setState({ showCreatePackagePlan: false })
+    }
+  }
+
   render() {
     const { locations, harvest_batches } = this.props
     const { showEditor, showCreatePackagePlan, idOpen } = this.state
 
     return (
       <React.Fragment>
+        <div id="toast" className="toast animated toast--success" />
         <div className="w-100 bg-white pa3">
           <div className="flex mb4 mt2">
             <h1 className="mv0 f3 fw4 dark-gray  flex-auto">
@@ -243,6 +236,7 @@ class HarvestPackageSetupApp extends React.Component {
                 show={showCreatePackagePlan}
                 packageId={idOpen}
                 onClose={() => this.setState({ showCreatePackagePlan: false })}
+                onSave={this.onSave}
               />
             )}
           />

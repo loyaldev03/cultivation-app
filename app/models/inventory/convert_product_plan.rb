@@ -4,7 +4,7 @@ module Inventory
     include Mongoid::Timestamps::Short
 
     field :product_type, type: String
-    field :package_plan, type: String
+    field :package_type, type: String
     field :quantity, type: Float, default: -> { 0 }
     field :uom, type: String
     field :conversion, type: Float, default: -> { 0 }

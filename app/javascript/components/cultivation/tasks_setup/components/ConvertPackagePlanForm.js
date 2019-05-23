@@ -23,32 +23,36 @@ class ConvertPackagePlanForm extends React.Component {
 
   async componentDidUpdate(prevProps, prevState) {
     if (!prevProps.show && this.props.show) {
+      const packageResponse = await getHarvestPackage(this.props.packageId)
       const plans = await loadPackagePlans(this.props.packageId)
+      console.log(plans)
+      
       const packagePlans = plans.reduce((sum, item) => {
-        const package_types = sum[item.product_type] || {
-          product_type: item.product_type,
-          package_plans: []
+        const index = sum.findIndex(x => x.product_type == item.product_type)
+        let t = null
+        if (index < 0) {
+          t = { product_type: item.product_type, package_plans: [] }
+          t.package_plans.push(item)
+          sum.push(t)
+        } else {
+          t = sum[index]
+          t.package_plans.push(item)
+          sum[index] = t
         }
-        package_types.push(item)
-        sum[item.productType] = package_types
+        return sum
       }, [])
 
-      this.setState({ data: packagePlans })
-
-      const packageResponse = await getHarvestPackage(this.props.packageId)
       if (packageResponse.status === 200) {
-        console.log(
-          packageResponse.data.data.id,
-          packageResponse.data.data.attributes
-        )
-
         this.setState({
           productPackage: {
             id: packageResponse.data.data.id,
             ...packageResponse.data.data.attributes
-          }
+          },
+          data: packagePlans
         })
       }
+
+      // this.setState({ data: packagePlans })
     }
   }
 
@@ -80,7 +84,8 @@ class ConvertPackagePlanForm extends React.Component {
     })
   }
 
-  onAddPackage = (productType, packageType, quantity, converted_qty) => {
+  onAddPackage = (productType, packageType, quantity, converted_qty, uom) => {
+    // console.log(productType, packageType, quantity, converted_qty)
     const { data } = this.state
     const index = data.findIndex(x => x.product_type === productType)
 
@@ -89,6 +94,7 @@ class ConvertPackagePlanForm extends React.Component {
       isNew: true,
       package_type: packageType,
       quantity: parseFloat(quantity),
+      uom: uom,
       converted_qty
     }
 
@@ -123,17 +129,22 @@ class ConvertPackagePlanForm extends React.Component {
 
   onSave = event => {
     event.preventDefault()
-    savePackagePlans(this.props.batchId, this.state.data).then(result => {
+    saveConvertPackagePlans(this.props.packageId, this.state.data).then(result => {
       if (result.length > 0) {
-        toast('Package plan created.', 'success')
+        this.props.onSave({
+          toast: { message: 'Package plan created.', type: 'success'},
+          hideSidebar: true
+        })
       } else {
-        toast('Failed to create package plan.', 'error')
+        this.props.onSave({
+          toast: { message: 'Failed to create package plan.', type: 'error'}
+        })
       }
     })
   }
 
   renderBreakdowns() {
-    const { data, harvestBatch } = this.state
+    const { data, productPackage } = this.state
     if (data.length == 0) {
       return null
     }
@@ -144,7 +155,7 @@ class ConvertPackagePlanForm extends React.Component {
           <ProductTypeSection
             productTypeData={x}
             key={x.product_type}
-            harvestBatchUom={x.uom}
+            harvestBatchUom={productPackage.uom}
             onAddPackage={this.onAddPackage}
             onEditPackage={this.onEditPackage}
             onRemovePackage={this.onRemovePackage}
@@ -200,42 +211,49 @@ class ConvertPackagePlanForm extends React.Component {
   }
 
   totalPlannedWeight = () => {
-    return 0
-    // return this.state.data.reduce((sum, x) => {
-    //   return (
-    //     sum +
-    //     x.package_plans.reduce((innerSum, y) => {
-    //       const converted_qty = convertToHarvestBatchUom(
-    //         y.package_type,
-    //         y.quantity,
-    //         this.state.harvestBatch.uom
-    //       )
-    //       // console.log(x.product_type, converted_qty, this.state.harvestBatch.uom, y)
-    //       return innerSum + converted_qty
-    //     }, 0)
-    //   )
-    // }, 0)
+    return this.state.data.reduce((sum, x) => {
+      return (
+        sum +
+        x.package_plans.reduce((innerSum, y) => {
+          const converted_qty = convertToHarvestBatchUom(
+            y.package_type,
+            y.quantity,
+            this.state.productPackage.uom
+          )
+          return innerSum + converted_qty
+        }, 0)
+      )
+    }, 0)
   }
 
   render() {
     const { onClose } = this.props
     const { showAddProductType, productPackage } = this.state
 
+    const totalQty = productPackage ? productPackage.quantity : 0
+    const uom = productPackage ? productPackage.uom : ''
+    const productName = productPackage ? productPackage.catalogue.label : ''
+    const packageTag = productPackage ? productPackage.package_tag : ''
+
     return (
       <div>
-        <div id="toast" className="toast animated toast--success" />
         <SlidePanelHeader onClose={onClose} title="Create Package Plan" />
-        <div className="ph4 mt3 mb2 flex">
+        <div className="mh4 mt3 pb3 flex bb b--black-10">
           <div className="w-60 f5 fw6">
-            {productPackage && productPackage.product.name}
+            {productPackage && productPackage.catalogue.label}
           </div>
           <div className="w-40 tr fw4 f5">
-            {this.totalPlannedWeight().toFixed(2)} / {-1} {'kggg'} allocated
+            {this.totalPlannedWeight().toFixed(2)} / {totalQty} {uom} allocated
           </div>
         </div>
-        <div className="ph4 mb3 flex">
-          <div className="w-60 f6 gray">
-            {productPackage && productPackage.package_tag}
+        <div className="mh4 pb3 pt3 flex bb b--black-10">
+          <div className="w-50 f6 gray flex flex-column">
+            <label className="fw6 mb1">Convert from</label>
+            {productName} {uom}
+          </div>
+          <div className="w-50 f6 gray flex flex-column tr">
+            <label className="fw6 mb1">Package ID</label>
+            {packageTag}
           </div>
         </div>
 
@@ -277,24 +295,20 @@ const ProductTypes = [
 const loadPackagePlans = async packageId => {
   const url = `/api/v1/sales_products/${packageId}/product_plans`
   const response = await (await fetch(url, httpGetOptions)).json()
-  if (response.data) {
-    return response.data.map(x => x.attributes)
-  } else {
-    console.error(response.errors)
-    return []
-  }
+  // console.log(response)
+  return response
 }
 
-const savePackagePlans = async (batchId, productPlans) => {
-  const url = `/api/v1/batches/${batchId}/save_product_plans`
+const saveConvertPackagePlans = async (packageId, productPlans) => {
+  const url = `/api/v1/sales_products/${packageId}/save_product_plans`
   const response = await (await fetch(
     url,
     httpPostOptions({ product_plans: productPlans })
   )).json()
-  if (response.data) {
-    return response.data
-  } else {
-    console.error(response.errors)
+  try {
+    return response
+  } catch(error) {
+    console.error(error)
     return []
   }
 }

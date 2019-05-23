@@ -224,6 +224,7 @@ Rails.application.routes.draw do
 
         member do
           get 'product_plans'
+          post 'save_product_plans'
         end
       end
 

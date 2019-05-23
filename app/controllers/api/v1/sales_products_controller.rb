@@ -129,15 +129,61 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
     plans = Inventory::ConvertProductPlan.where(package_id: params[:id])
     plans_json = plans.map do |p|
       {
-        id: p.id,
+        id: p.id.to_s,
         product_type: p.product_type,
-        package_plan: p.package_plan,
+        package_type: p.package_type,
         quantity: p.quantity,
         uom: p.uom,
         conversion: p.conversion,
         total_weight: p.total_weight,
       }
     end
+    render json: plans_json, status: 200
+  end
+
+  def save_product_plans
+    package = Inventory::ItemTransaction.find(params[:id])
+    Inventory::ConvertProductPlan.where(package: package).destroy_all
+
+    # "product_plans"=>[
+    #   { "product_type"=>"Whole plant",
+    #     "package_plans"=>[
+    #       {"id"=>"1/2 gram", "isNew"=>true, "package_type"=>"1/2 gram", "quantity"=>2, "uom"=>"g", "converted_qty"=>1}
+    #     ]
+    #   }
+    # ]
+
+    package_plans = []
+    product_plans = params[:product_plans]
+    product_plans.each do |pp|
+      product_type = pp[:product_type]
+      pp[:package_plans].each do |pkg_plan|
+        package_plan = Inventory::ConvertProductPlan.create!(
+          product_type: product_type,
+          quantity: pkg_plan[:quantity],
+          package_type: pkg_plan[:package_type],
+          uom: pkg_plan[:uom],
+          total_weight: pkg_plan[:converted_qty],
+          package: package,
+        )
+        package_plans << package_plan
+      end
+    end
+
+    Rails.logger.debug package_plans.inspect
+
+    plans_json = package_plans.map do |p|
+      {
+        id: p.id.to_s,
+        product_type: p.product_type,
+        package_type: p.package_type,
+        quantity: p.quantity,
+        uom: p.uom,
+        conversion: p.conversion,
+        total_weight: p.total_weight,
+      }
+    end
+
     render json: plans_json, status: 200
   end
 

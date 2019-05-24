@@ -10,14 +10,17 @@ import {
   Loading,
   HeaderFilter,
   ListingTable,
-  TempPlantWidgets
+  TempPlantWidgets,
+  SlidePanel
 } from '../../utils'
 import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 import PlantStore from '../../inventory/plant_setup/store/PlantStore'
+import ReportDestroyedPlants from '../tasks_setup/components/ReportDestroyedPlants'
 
 @observer
 class PlantsDashboardApp extends React.Component {
   state = {
+    showDestroyedPlants: false,
     columns: [
       { accessor: 'id', show: false },
       { accessor: 'plant_id', show: false },
@@ -162,11 +165,19 @@ class PlantsDashboardApp extends React.Component {
 
   render() {
     const { defaultFacilityId } = this.props
-    const { columns } = this.state
+    const { columns, showDestroyedPlants } = this.state
     return (
       <div className="pa4 mw1200">
         <div className="flex flex-row-reverse">
-          <a href="#0" className="btn btn--primary">
+          <a
+            href="#0"
+            className="btn btn--primary"
+            onClick={() =>
+              this.setState({
+                showDestroyedPlants: true
+              })
+            }
+          >
             Destroy Plants
           </a>
         </div>
@@ -191,6 +202,16 @@ class PlantsDashboardApp extends React.Component {
             isLoading={PlantStore.isLoading}
           />
         </div>
+        <SlidePanel
+          show={showDestroyedPlants}
+          renderBody={props => (
+            <ReportDestroyedPlants
+              batch_id={defaultFacilityId}
+              title="Report Destroyed Plants"
+              onClose={() => this.setState({ showDestroyedPlants: false })}
+            />
+          )}
+        />
       </div>
     )
   }

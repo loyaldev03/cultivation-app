@@ -22,13 +22,7 @@ class DashboardCalendarApp extends React.Component {
             minDetail="month"
             value={this.state.date}
             tileContent={({ date, view }) => (
-              <div
-                className="react-calendar__tile__content"
-                style={{
-                  background: `${date.getDate() == 21 && '#f69d63'}`,
-                  color: `${date.getDate() == 21 && '#ff6300'}`
-                }}
-              >
+              <div className="react-calendar__tile__content">
                 {date.getDate()}
               </div>
             )}

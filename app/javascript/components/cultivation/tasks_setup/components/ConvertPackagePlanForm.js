@@ -46,9 +46,12 @@ class ConvertPackagePlanForm extends React.Component {
       }, [])
 
       if (packageResponse.status === 200) {
-        let assign_to = null, start_date = ''
+        let assign_to = null,
+          start_date = ''
         if (result.task) {
-          const user = this.props.users.find(x => x.id === result.task.assign_to)
+          const user = this.props.users.find(
+            x => x.id === result.task.assign_to
+          )
           if (user) {
             assign_to = { value: user.id, label: user.name }
           }
@@ -151,20 +154,23 @@ class ConvertPackagePlanForm extends React.Component {
     event.preventDefault()
     const { data, assign_to, start_date } = this.state
     const assign_to_value = assign_to ? assign_to.value : null
-    saveConvertPackagePlans(this.props.packageId, data, assign_to_value, start_date).then(
-      result => {
-        if (result.length > 0) {
-          this.props.onSave({
-            toast: { message: 'Package plan created.', type: 'success' },
-            hideSidebar: true
-          })
-        } else {
-          this.props.onSave({
-            toast: { message: 'Failed to create package plan.', type: 'error' }
-          })
-        }
+    saveConvertPackagePlans(
+      this.props.packageId,
+      data,
+      assign_to_value,
+      start_date
+    ).then(result => {
+      if (result.length > 0) {
+        this.props.onSave({
+          toast: { message: 'Package plan created.', type: 'success' },
+          hideSidebar: true
+        })
+      } else {
+        this.props.onSave({
+          toast: { message: 'Failed to create package plan.', type: 'error' }
+        })
       }
-    )
+    })
   }
 
   renderBreakdowns() {
@@ -252,15 +258,22 @@ class ConvertPackagePlanForm extends React.Component {
 
   render() {
     const { onClose } = this.props
-    const assignees = this.props.users.map(x => ({ value: x.id, label: x.name }))
+    const assignees = this.props.users.map(x => ({
+      value: x.id,
+      label: x.name
+    }))
 
-    const { showAddProductType, productPackage, assign_to, start_date } = this.state
+    const {
+      showAddProductType,
+      productPackage,
+      assign_to,
+      start_date
+    } = this.state
 
     const totalQty = productPackage ? productPackage.quantity : 0
     const uom = productPackage ? productPackage.uom : ''
     const productName = productPackage ? productPackage.catalogue.label : ''
     const packageTag = productPackage ? productPackage.package_tag : ''
-
 
     return (
       <div>
@@ -301,11 +314,9 @@ class ConvertPackagePlanForm extends React.Component {
 
         {this.renderAddProductType()}
         {this.renderBreakdowns()}
-        
+
         <div className="mt3 ph4 pt3 flex flex-column bt b--black-10">
-          <label className="f6 fw6 db mb1 gray ttc">
-            Assign to
-          </label>
+          <label className="f6 fw6 db mb1 gray ttc">Assign to</label>
           <Select
             key={this.props.packageId}
             options={assignees}
@@ -318,13 +329,10 @@ class ConvertPackagePlanForm extends React.Component {
         <div className="mt3 ph4 mb4 flex flex-column">
           <div className="w-50">
             <label className="f6 fw6 db mb1 gray ttc">Start At</label>
-            <DatePicker
-              value={start_date}
-              onChange={this.onChangeStartDate}
-            />
+            <DatePicker value={start_date} onChange={this.onChangeStartDate} />
           </div>
         </div>
-        
+
         <SlidePanelFooter onSave={this.onSave} />
       </div>
     )
@@ -349,11 +357,16 @@ const loadPackagePlans = async packageId => {
   return response
 }
 
-const saveConvertPackagePlans = async (packageId, productPlans, assign_to, start_date) => {
+const saveConvertPackagePlans = async (
+  packageId,
+  productPlans,
+  assign_to,
+  start_date
+) => {
   const url = `/api/v1/sales_products/${packageId}/save_product_plans`
   const response = await (await fetch(
     url,
-    httpPostOptions({ 
+    httpPostOptions({
       product_plans: productPlans,
       assign_to,
       start_date

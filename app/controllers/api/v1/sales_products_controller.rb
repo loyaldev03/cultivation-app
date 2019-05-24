@@ -138,21 +138,33 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
         total_weight: p.total_weight,
       }
     end
-    render json: plans_json, status: 200
+
+    task = Cultivation::Task.find_by(
+      indelible: 'convert_product',
+      duration: 1,
+      package_id: params[:id].to_bson_id, # associate task to this package
+    )
+
+    if (task)
+      task = {
+        assign_to: task.users.empty? ? nil : task.users.first.id.to_s,
+        start_date: task.start_date,
+      }
+    end
+
+    render json: {product_plans: plans_json, task: task}, status: 200
   end
 
+  # "product_plans"=>[
+  #   { "product_type"=>"Whole plant",
+  #     "package_plans"=>[
+  #       {"id"=>"1/2 gram", "isNew"=>true, "package_type"=>"1/2 gram", "quantity"=>2, "uom"=>"g", "converted_qty"=>1}
+  #     ]
+  #   }
+  # ]
   def save_product_plans
     package = Inventory::ItemTransaction.find(params[:id])
     Inventory::ConvertProductPlan.where(package: package).destroy_all
-
-    # "product_plans"=>[
-    #   { "product_type"=>"Whole plant",
-    #     "package_plans"=>[
-    #       {"id"=>"1/2 gram", "isNew"=>true, "package_type"=>"1/2 gram", "quantity"=>2, "uom"=>"g", "converted_qty"=>1}
-    #     ]
-    #   }
-    # ]
-
     package_plans = []
     product_plans = params[:product_plans]
     product_plans.each do |pp|
@@ -170,7 +182,7 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
       end
     end
 
-    Rails.logger.debug package_plans.inspect
+    # Rails.logger.debug package_plans.inspect
 
     plans_json = package_plans.map do |p|
       {
@@ -183,6 +195,26 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
         total_weight: p.total_weight,
       }
     end
+
+    start_date = params[:start_date]
+    task = Cultivation::Task.find_or_initialize_by(
+      indelible: 'convert_product',
+      duration: 1,
+      package_id: params[:id].to_bson_id, # associate task to this package
+    )
+    task.name = "Convert product - #{package.product_name}"
+    task.start_date = start_date
+    task.end_date = Time.parse(start_date) + 1.day if !params[:start_date].blank?
+    task.save!
+
+    if !params[:assign_to].blank?
+      user = User.find_by(id: params[:assign_to])
+      # Rails.logger.debug "\t\t\t>>>>>>>>>>>>>>>>>>>>>>>>> user: #{user.inspect}"
+      task.user_ids = [user&.id]
+    else
+      task.user_ids = []
+    end
+    task.save!
 
     render json: plans_json, status: 200
   end

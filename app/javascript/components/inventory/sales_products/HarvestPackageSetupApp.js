@@ -235,6 +235,7 @@ class HarvestPackageSetupApp extends React.Component {
               <ConvertPackagePlanForm
                 show={showCreatePackagePlan}
                 packageId={idOpen}
+                users={this.props.users}
                 onClose={() => this.setState({ showCreatePackagePlan: false })}
                 onSave={this.onSave}
               />
@@ -250,7 +251,8 @@ HarvestPackageSetupApp.propTypes = {
   facility_strains: PropTypes.array.isRequired,
   harvest_batches: PropTypes.array.isRequired,
   sales_catalogue: PropTypes.array.isRequired,
-  drawdown_uoms: PropTypes.array.isRequired
+  drawdown_uoms: PropTypes.array.isRequired,
+  users: PropTypes.array.isRequired
 }
 
 export default HarvestPackageSetupApp

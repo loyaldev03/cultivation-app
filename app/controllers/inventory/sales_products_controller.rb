@@ -8,6 +8,13 @@ class Inventory::SalesProductsController < ApplicationController
     harvest_batches = Inventory::HarvestBatch.in(facility_strain: strains)
     options = {params: {include: [:facility]}}
     @harvest_batches = Inventory::HarvestBatchSerializer.new(harvest_batches, options).serializable_hash[:data]
+
+    @users = User.in(facilities: current_facility.id).map do |u|
+      {
+        id: u.id.to_s,
+        name: u.display_name,
+      }
+    end
   end
 
   def convert_products

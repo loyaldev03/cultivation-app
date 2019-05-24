@@ -1,5 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import {
   SlidePanelHeader,
@@ -18,16 +19,18 @@ class ConvertPackagePlanForm extends React.Component {
     showAddProductType: false,
     showing: false,
     productPackage: null,
-    data: []
+    data: [],
+    assign_to: null,
+    start_date: ''
   }
 
   async componentDidUpdate(prevProps, prevState) {
     if (!prevProps.show && this.props.show) {
       const packageResponse = await getHarvestPackage(this.props.packageId)
-      const plans = await loadPackagePlans(this.props.packageId)
-      console.log(plans)
+      const result = await loadPackagePlans(this.props.packageId)
 
-      const packagePlans = plans.reduce((sum, item) => {
+      // Group plans for package type by its product type
+      const packagePlans = result.product_plans.reduce((sum, item) => {
         const index = sum.findIndex(x => x.product_type == item.product_type)
         let t = null
         if (index < 0) {
@@ -43,16 +46,25 @@ class ConvertPackagePlanForm extends React.Component {
       }, [])
 
       if (packageResponse.status === 200) {
+        let assign_to = null, start_date = ''
+        if (result.task) {
+          const user = this.props.users.find(x => x.id === result.task.assign_to)
+          if (user) {
+            assign_to = { value: user.id, label: user.name }
+          }
+          start_date = result.task.start_date || ''
+        }
+
         this.setState({
           productPackage: {
             id: packageResponse.data.data.id,
             ...packageResponse.data.data.attributes
           },
-          data: packagePlans
+          data: packagePlans,
+          assign_to,
+          start_date
         })
       }
-
-      // this.setState({ data: packagePlans })
     }
   }
 
@@ -127,9 +139,19 @@ class ConvertPackagePlanForm extends React.Component {
     this.setState({ data })
   }
 
+  onSelectUser = assign_to => {
+    this.setState({ assign_to })
+  }
+
+  onChangeStartDate = start_date => {
+    this.setState({ start_date })
+  }
+
   onSave = event => {
     event.preventDefault()
-    saveConvertPackagePlans(this.props.packageId, this.state.data).then(
+    const { data, assign_to, start_date } = this.state
+    const assign_to_value = assign_to ? assign_to.value : null
+    saveConvertPackagePlans(this.props.packageId, data, assign_to_value, start_date).then(
       result => {
         if (result.length > 0) {
           this.props.onSave({
@@ -230,12 +252,15 @@ class ConvertPackagePlanForm extends React.Component {
 
   render() {
     const { onClose } = this.props
-    const { showAddProductType, productPackage } = this.state
+    const assignees = this.props.users.map(x => ({ value: x.id, label: x.name }))
+
+    const { showAddProductType, productPackage, assign_to, start_date } = this.state
 
     const totalQty = productPackage ? productPackage.quantity : 0
     const uom = productPackage ? productPackage.uom : ''
     const productName = productPackage ? productPackage.catalogue.label : ''
     const packageTag = productPackage ? productPackage.package_tag : ''
+
 
     return (
       <div>
@@ -276,7 +301,30 @@ class ConvertPackagePlanForm extends React.Component {
 
         {this.renderAddProductType()}
         {this.renderBreakdowns()}
-        <div className="ph4 mv3 flex" />
+        
+        <div className="mt3 ph4 pt3 flex flex-column bt b--black-10">
+          <label className="f6 fw6 db mb1 gray ttc">
+            Assign to
+          </label>
+          <Select
+            key={this.props.packageId}
+            options={assignees}
+            isClearable={true}
+            onChange={this.onSelectUser}
+            value={assign_to}
+            className="mt1 w-100 f6"
+          />
+        </div>
+        <div className="mt3 ph4 mb4 flex flex-column">
+          <div className="w-50">
+            <label className="f6 fw6 db mb1 gray ttc">Start At</label>
+            <DatePicker
+              value={start_date}
+              onChange={this.onChangeStartDate}
+            />
+          </div>
+        </div>
+        
         <SlidePanelFooter onSave={this.onSave} />
       </div>
     )
@@ -301,11 +349,15 @@ const loadPackagePlans = async packageId => {
   return response
 }
 
-const saveConvertPackagePlans = async (packageId, productPlans) => {
+const saveConvertPackagePlans = async (packageId, productPlans, assign_to, start_date) => {
   const url = `/api/v1/sales_products/${packageId}/save_product_plans`
   const response = await (await fetch(
     url,
-    httpPostOptions({ product_plans: productPlans })
+    httpPostOptions({ 
+      product_plans: productPlans,
+      assign_to,
+      start_date
+    })
   )).json()
   try {
     return response

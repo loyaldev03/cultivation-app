@@ -15,6 +15,13 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
         tasks: serialized_tasks(batch, batch_group['tasks']),
       }
     end
+
+    # other_tasks = current_user.cultivation_tasks.expected_on(@tasks_date).selector
+    #   user_id: user_id,
+    #   indelible: "convert_product",
+    #   phase: 'others'
+    # )
+    # @tasks_by_batch.merge!(other_tasks: serialized_tasks(nil, other_tasks))
     render json: @tasks_by_batch
   end
 

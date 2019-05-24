@@ -1,4 +1,5 @@
 <% content_for :breadcrumb do %>
+  &nbsp;
 <% end %>
 
 <div class="pa4">
@@ -19,7 +20,8 @@
       harvest_batches: @harvest_batches,
       sales_catalogue: @sales_catalogue,
       drawdown_uoms: @drawdown_uoms,
-      facility_id: params[:facility_id]
+      facility_id: params[:facility_id],
+      users: @users 
     }) %>
     <div class="w-100 bg-white ph3 pt2 pb4">
       <div class="dim flex flex-row items-center pointer">

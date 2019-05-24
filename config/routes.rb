@@ -82,7 +82,10 @@ Rails.application.routes.draw do
   end
 
   namespace 'worker' do 
-    resources :login, only: [:index]
+    resources :login, only: [:index] do
+      post    'generate_code', on: :collection
+      post    'check_code', on: :collection
+    end
   end
 
   get "inventory/setup" => "home#inventory_setup"

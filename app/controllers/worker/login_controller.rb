@@ -15,9 +15,25 @@ class Worker::LoginController < ApplicationController
         @users = @users.order_by(last_sign_in_at: :asc) if params[:filter] == 'last_login'
         @users = @users.order_by(first_name: :asc) if params[:filter] == 'alpha'
         @users = @users.select { |a| "#{a['first_name']} #{a['last_name']}" == params[:search] } if params[:search].present?
-        @user = @users.detect { |a| "#{a['first_name']} #{a['last_name']}" == params[:selected] } if params[:selected].present?
+        @user = @users.detect { |a| a[:id].to_s == params[:selected] } if params[:selected].present?
       end
     end
+  end
+
+  def generate_code
+    @user = User.find(params[:selected])
+    cmd = Common::GenerateCodeLogin.call(@user)
+    if cmd.success?
+      flash[:notice] == 'Code sent to your number'
+      redirect_to worker_login_index_path(request.params.except(:controller, :_method, :action, :authenticity_token).merge(requested: true))
+    else
+    end
+  end
+
+  def check_code
+    Rails.logger.debug "Password ==> #{params[:user][:password].join('')}"
+    # Common::
+
   end
 
   private

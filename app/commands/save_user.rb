@@ -94,7 +94,7 @@ class SaveUser
       if args[:roles].present?
         args[:roles] = args[:roles].map(&:to_bson_id)
       end
-      user = User.new(args)
+      user = User.new(args.except(:non_exempt_schedules, :work_schedules))
     end
     user.save!
     user

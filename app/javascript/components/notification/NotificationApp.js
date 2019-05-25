@@ -63,7 +63,7 @@ function NotificationApp() {
         <i className="material-icons md-15 grey">notifications_none</i>
       </a>
       {expand && (
-        <div className="z-5 bg-white shadow-3 ba br2 b--light-grey pb3 fixed top-3 right-1">
+        <div className="z-5 width-550 bg-white shadow-3 ba br2 b--light-grey pb3 fixed top-3 right-1">
           <div className="w-100 tc pv2 ph3">
             <span className="grey f5 fw6">Notifications</span>
             <i

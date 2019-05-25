@@ -25,14 +25,7 @@
                 </div>
 
                 <div class="flex flex-row items-center">
-                  <i 
-                    onclick="openModal()" id="notification-popup" 
-                    class="material-icons grey mr3 dim md-21 pointer">
-                    notifications_none
-                  </i>
-
-                  <%= render 'layouts/notification' %>
-
+                  <%= react_component 'notification/NotificationApp' %>
                   <div class="ph2">
                     <%= react_component 'utils/Avatar', {
                       firstName: current_user&.first_name,

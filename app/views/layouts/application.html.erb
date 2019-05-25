@@ -28,13 +28,6 @@
                   <% end %>
                   <%= switch_user_select if Rails.env.development? %>
                   <%= react_component 'notification/NotificationApp' %>
-                  <i 
-                    onclick="openModal()" id="notification-popup" 
-                    class="material-icons grey mr3 dim md-21 pointer">
-                    notifications_none
-                  </i>
-
-                  <%= render 'layouts/notification' %>
 
                   <div class="ph2">
                     <%= react_component 'utils/Avatar', {

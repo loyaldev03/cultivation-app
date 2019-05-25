@@ -18,6 +18,9 @@ class CreateNotificationsJob < ApplicationJob
         notifiable_id: args[:notifiable_id].to_bson_id,
         notifiable_type: args[:notifiable_type],
         notifiable_name: args[:notifiable_name],
+        alt_notifiable_id: args[:alt_notifiable_id].to_bson_id,
+        alt_notifiable_type: args[:alt_notifiable_type],
+        alt_notifiable_name: args[:alt_notifiable_name],
       }
     end
 

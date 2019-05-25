@@ -25,4 +25,10 @@ class Notification
   field :notifiable_type, type: String, default: ''
   # Name of the reference item. E.g. "Water Plant"
   field :notifiable_name, type: String, default: ''
+
+  # Afternate reference id
+  field :alt_notifiable_id, type: BSON::ObjectId
+  field :alt_notifiable_type, type: String, default: ''
+  # Name of the reference item. E.g. "Water Plant"
+  field :alt_notifiable_name, type: String, default: ''
 end

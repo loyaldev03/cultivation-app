@@ -58,6 +58,9 @@ module Cultivation
           notifiable_id: task.id.to_s,
           notifiable_type: Constants::NOTIFY_TYPE_TASK,
           notifiable_name: task.name,
+          alt_notifiable_id: task.batch_id.to_s,
+          alt_notifiable_type: Constants::NOTIFY_TYPE_BATCH,
+          alt_notifiable_name: task.batch.name,
         }
         CreateNotificationsJob.perform_later job_params
       end

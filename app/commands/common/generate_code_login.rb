@@ -9,7 +9,7 @@ module Common
 
     def call
       generated_code = ('%04d' % rand(0..9999)).to_s
-      generated_code_expired_at = Time.now + 5.minutes
+      generated_code_expired_at = Time.now.end_of_day
       @user.update(
         login_code: generated_code,
         login_code_expired_at: generated_code_expired_at,

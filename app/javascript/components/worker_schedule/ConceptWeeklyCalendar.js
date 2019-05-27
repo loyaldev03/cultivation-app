@@ -72,8 +72,6 @@ export default class WeeklyCalendar extends React.Component {
     let week = new Array(7).fill(undefined).map((element, index) => {
       var last = date.setDate(date.getDate() + (index === 0 ? 0 : 1))
       last = new Date(last)
-      console.log(last)
-      // last = last.getDate();
       return last
     })
     return week
@@ -82,7 +80,6 @@ export default class WeeklyCalendar extends React.Component {
   render() {
     let { marker, earliest, latest } = this.state
     let week = this.getWeekDate()
-    console.log(week)
     latest == 0 ? (latest = 1) : (latest = latest)
     earliest == 0 ? (earliest = 1) : (earliest = earliest)
     let time = new Array(latest - earliest + 2).fill(undefined)

@@ -1,5 +1,6 @@
 import { observable, action, runInAction, toJS } from 'mobx'
-import { httpGetOptions } from '../utils'
+import { httpGetOptions, httpPostOptions, toast } from '../utils'
+import { format } from 'date-fns'
 
 class UserRoleStore {
   @observable isLoading = false
@@ -9,6 +10,9 @@ class UserRoleStore {
   @observable users
   @observable modules
   @observable companyWorkSchedules
+  @observable nonExemptSchedules
+  @observable weekWithWorkSchedule
+  @observable isLoadingSchedule = false
 
   @action
   async loadUsers(includeInactiveUser = false) {
@@ -46,6 +50,74 @@ class UserRoleStore {
       console.error(err)
     } finally {
       this.isLoading = false
+    }
+  }
+
+  async getSchedulesByDate(userId, date) {
+    this.isLoadingSchedule = true
+
+    let date_formatted = format(date, 'DD/MM/YYYY')
+    let url = `/api/v1/user_roles/schedules_by_date?user_id=${userId}&date=${date_formatted}`
+
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      runInAction(() => {
+        if (response.data) {
+          this.nonExemptSchedules = response.data || []
+        } else {
+          this.nonExemptSchedules = []
+        }
+      })
+    } catch (err) {
+      console.error(err)
+    } finally {
+      this.isLoadingSchedule = false
+    }
+  }
+
+  async getWeekWorkSchedule(userId) {
+    this.isLoadingSchedule = true
+
+    let url = `/api/v1/user_roles/week_work_schedule?user_id=${userId}`
+
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      runInAction(() => {
+        if (response.data) {
+          this.weekWithWorkSchedule = response.data || []
+          console.log(toJS(this.weekWithWorkSchedule))
+        } else {
+          this.weekWithWorkSchedule = []
+        }
+      })
+    } catch (err) {
+      console.error(err)
+    } finally {
+      this.isLoadingSchedule = false
+    }
+  }
+
+  async copyScheduleWeek(userId, from_date, to_date) {
+    let from_date_formatted = format(from_date, 'DD/MM/YYYY')
+    let to_date_formatted = format(to_date, 'DD/MM/YYYY')
+
+    let url = `/api/v1/user_roles/copy_schedule_week`
+    let payload = {
+      user_id: userId,
+      from: from_date_formatted,
+      to: to_date_formatted
+    }
+    try {
+      const response = await (await fetch(url, httpPostOptions(payload))).json()
+      runInAction(() => {
+        if (response.data) {
+          toast('Data copied !', 'success')
+        } else {
+        }
+      })
+    } catch (err) {
+      console.error(err)
+    } finally {
     }
   }
 
@@ -102,6 +174,10 @@ class UserRoleStore {
       const facility = this.facilities.find(x => x.id === facilityId)
       return facility ? facility.code : 'Invalid Facility'
     }
+  }
+
+  getWeekWithWorkSchedule() {
+    return toJS(this.weekWithWorkSchedule)
   }
 }
 

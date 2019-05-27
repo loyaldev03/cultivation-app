@@ -1,5 +1,6 @@
 class Worker::LoginController < ApplicationController
   layout 'worker_login'
+  skip_before_action :authenticate_user!
   before_action :check_ip_whitelist
 
   def index
@@ -31,15 +32,24 @@ class Worker::LoginController < ApplicationController
   end
 
   def check_code
-    Rails.logger.debug "Password ==> #{params[:user][:password].join('')}"
-    # Common::
-
+    @user = User.find(params[:selected])
+    cmd = Common::CheckCodeLogin.call(@user, {login_code: params[:user][:password].join('')})
+    if cmd.success?
+      sign_in(@user, scope: :user)
+      redirect_to worker_dashboard_path
+    else
+      flash[:notice] == 'Error PIN'
+      redirect_to worker_login_index_path(request.params.except(:controller, :_method, :action, :authenticity_token, :commit, :user).merge(requested: true))
+    end
   end
 
   private
 
   def check_ip_whitelist
-    facility = Facility.find(current_user.default_facility_id)
-    @ip_included = facility.whitelist_ips.include? request.remote_ip
+    #comment out for now , how do we know current default facility if the user doesnt even log in yet ?
+    #before it was checking user default_facility_id
+
+    # facility = Facility.find(current_user.default_facility_id)
+    @ip_included = true #facility.whitelist_ips.include? request.remote_ip
   end
 end

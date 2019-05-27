@@ -51,7 +51,7 @@
     <div class="w-33 bg-grey">
       <div class="w-100 h-100 flex flex-column justify-center items-center">
         <% if @user.present? %>
-          <% if params[:requested] == "true" %>
+          <% if params[:requested] == "true" || (@user.login_code_expired_at && @user.login_code_expired_at >= Time.now) %>
             <%= simple_form_for :user, url: check_code_worker_login_index_path(request.params) do |f| %>
             <div class="flex w-100 justify-center">
               <span class="f3 mb3 grey">Enter PIN</span>

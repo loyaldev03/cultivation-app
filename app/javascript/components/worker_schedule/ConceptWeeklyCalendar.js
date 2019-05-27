@@ -11,6 +11,7 @@ export default class WeeklyCalendar extends React.Component {
     latest: null
   }
   componentDidMount = () => {
+    this.props
     let earliest =
       this.props.weeklyTask.length > 0
         ? this.props.weeklyTask[0].start_time.substring(0, 2)
@@ -63,17 +64,25 @@ export default class WeeklyCalendar extends React.Component {
       })
     }
   }
-  getWeekDate = date => {
+  getWeekDate = () => {
+    let d = new Date()
+    let day = d.getDay()
+    let monday = d.getDate() - day + (day == 0 ? -6 : 1)
+    let date = new Date(d.getFullYear(), d.getMonth(), monday)
     let week = new Array(7).fill(undefined).map((element, index) => {
-      let diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1)
-      return new Date(date.setDate(diff)).getDate() + index
+      var last = date.setDate(date.getDate() + (index === 0 ? 0 : 1))
+      last = new Date(last)
+      console.log(last)
+      // last = last.getDate();
+      return last
     })
     return week
   }
 
   render() {
     let { marker, earliest, latest } = this.state
-    let week = this.getWeekDate(date)
+    let week = this.getWeekDate()
+    console.log(week)
     latest == 0 ? (latest = 1) : (latest = latest)
     earliest == 0 ? (earliest = 1) : (earliest = earliest)
     let time = new Array(latest - earliest + 2).fill(undefined)
@@ -95,7 +104,7 @@ export default class WeeklyCalendar extends React.Component {
                     'fw6 bg-orange db w2 h2 white br-100'} `}
                   style={{ lineHeight: '1.8rem' }}
                 >
-                  {x}
+                  {x.getDate()}
                 </span>
               </div>
             </Cell>

@@ -13,7 +13,7 @@ class NotificationSerializer
 
   attribute :url do |object|
     if object.notifiable_type == Constants::NOTIFY_TYPE_TASK
-      "/cultivation/batches/#{object.alt_notifiable_id}?task_id=#{object.notifiable_id}"
+      "/daily_tasks?batch_id=#{object.alt_notifiable_id}&task_id=#{object.notifiable_id}"
     end
   end
 

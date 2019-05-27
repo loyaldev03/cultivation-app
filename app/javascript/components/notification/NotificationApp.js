@@ -68,25 +68,25 @@ function NotificationApp() {
     }
     setExpand(!expand)
   }
-  const handleMarkAsRead = async id => {
+  const handleMarkAsRead = async (id, url) => {
     await store.markAsRead(id)
+    window.location.replace(url)
   }
   return (
     <div ref={node}>
       <NotificationIcon onClick={handleExpand} />
       {expand && (
-        <div className="z-5 width-550 bg-white shadow-3 ba br2 b--light-grey pb3 fixed top-3 right-1">
-          <div className="w-100 tc pv2 ph3">
-            <span className="grey f5 fw6">Notifications</span>
+        <div className="notification shadow-3 ba br2 b--light-grey fixed top-3 right-1">
+          <div className="notification__header">
+            <span className="notification__header__text">Notifications</span>
             <i
-              className="pointer material-icons grey icon--medium fr"
+              className="pointer material-icons grey icon--medium pa1 fr"
               onClick={() => setExpand(false)}
             >
               close
             </i>
-            <hr className="" />
           </div>
-          <NotificationList onClick={id => handleMarkAsRead(id)} />
+          <NotificationList onClick={(id, url) => handleMarkAsRead(id, url)} />
         </div>
       )}
     </div>
@@ -110,29 +110,26 @@ const NotificationIcon = observer(({ onClick }) => {
 
 const NotificationList = observer(({ onClick }) => {
   return (
-    <React.Fragment>
+    <div className="notification__list">
       {store.notifications.map(x => {
         return (
           <div
             key={x.id}
-            className="pointer ph3 pv2 hover-bg-grey mb2 bt bb b--light-grey"
+            className={classNames('notification__item', {
+              'notification__item--unread': !x.read_at
+            })}
           >
             <a
               href="#0"
-              className={classNames('link fw6 dark-grey', {
-                'light-grey': !!x.read_at
-              })}
-              onClick={() => onClick(x.id)}
+              className="notification__item__link"
+              onClick={() => onClick(x.id, x.url)}
             >
               {x.messages || '--'}
-            </a>
-            <a href={x.url} className="ph2">
-              view
             </a>
           </div>
         )
       })}
-    </React.Fragment>
+    </div>
   )
 })
 

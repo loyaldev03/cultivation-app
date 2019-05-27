@@ -11,7 +11,6 @@ export default class WeeklyCalendar extends React.Component {
     latest: null
   }
   componentDidMount = () => {
-    this.props
     let earliest =
       this.props.weeklyTask.length > 0
         ? this.props.weeklyTask[0].start_time.substring(0, 2)

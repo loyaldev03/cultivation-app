@@ -9,6 +9,10 @@ import { observable, action, computed } from 'mobx'
 class NotificationStore {
   @observable notifications = []
 
+  constructor() {
+    this.load()
+  }
+
   @action
   async load() {
     const url = '/api/v1/notifications'
@@ -26,6 +30,15 @@ class NotificationStore {
     const res = await (await fetch(url, httpPostOptions())).json()
     await this.load()
   }
+
+  @computed
+  get hasUnread() {
+    if (isEmpty(this.notifications)) {
+      return false
+    }
+    const unread = this.notifications.some(x => isEmpty(x.read_at))
+    return !!unread
+  }
 }
 
 const store = new NotificationStore()
@@ -34,8 +47,6 @@ function NotificationApp() {
   const node = useRef()
   const [expand, setExpand] = useState(false)
   useEffect(() => {
-    // TODO: REMOVE auto load by default
-    //store.load()
     document.addEventListener('mousedown', handleClick)
     return () => {
       document.removeEventListener('mousedown', handleClick)
@@ -49,19 +60,20 @@ function NotificationApp() {
     // clicking outside popup
     setExpand(false)
   }
-  const handleExpand = async () => {
-    await store.load()
+  const handleExpand = e => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!expand) {
+      store.load()
+    }
     setExpand(!expand)
   }
   const handleMarkAsRead = async id => {
     await store.markAsRead(id)
   }
-
   return (
     <div ref={node}>
-      <a href="#0" onClick={handleExpand} className="ph2">
-        <i className="material-icons md-15 grey">notifications_none</i>
-      </a>
+      <NotificationIcon onClick={handleExpand} />
       {expand && (
         <div className="z-5 width-550 bg-white shadow-3 ba br2 b--light-grey pb3 fixed top-3 right-1">
           <div className="w-100 tc pv2 ph3">
@@ -80,6 +92,21 @@ function NotificationApp() {
     </div>
   )
 }
+
+const NotificationIcon = observer(({ onClick }) => {
+  return (
+    <a href="#0" onClick={onClick} className="ph2">
+      <i
+        className={classNames('material-icons md-15', {
+          red: store.hasUnread,
+          grey: !store.hasUnread
+        })}
+      >
+        {store.hasUnread ? 'notifications' : 'notifications_none'}
+      </i>
+    </a>
+  )
+})
 
 const NotificationList = observer(({ onClick }) => {
   return (

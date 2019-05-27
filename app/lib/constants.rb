@@ -77,6 +77,10 @@ module Constants
   BATCH_STATUS_ACTIVE = 'ACTIVE'.freeze
   BATCH_STATUS_COMPLETED = 'COMPLETED'.freeze
 
+  NOTIFY_TYPE_TASK = 'Cultivation::Task'.freeze
+  NOTIFY_TYPE_BATCH = 'Cultivation::Batch'.freeze
+  NOTIFY_TYPE_REQUEST = 'Common::WorkRequest'.freeze
+
   PLANT_TYPES = [
     {code: CONST_CLONE, name: 'Clone'},
     {code: CONST_MOTHER, name: 'Mother'},

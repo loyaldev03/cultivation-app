@@ -23,6 +23,9 @@ module Cannvas
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
 
+    # Active Job Queue Adapter
+    config.active_job.queue_adapter = :sidekiq
+
     # CORS configuration
     # config.middleware.insert_before 0, Rack::Cors do
     #   allow do

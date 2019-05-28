@@ -433,7 +433,8 @@ class TaskStore {
   async editAssignedUsers(batchId, taskId, user_ids = []) {
     const task = this.getTaskById(taskId)
     const updateObj = {
-      user_ids
+      user_ids,
+      action: 'edit_assignees'
     }
     await this.editTask(batchId, taskId, updateObj, true)
   }

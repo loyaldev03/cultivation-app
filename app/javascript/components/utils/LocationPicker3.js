@@ -4,7 +4,7 @@ import Select from 'react-select'
 import reactSelectStyle from './reactSelectStyle'
 import { httpGetOptions } from './'
 import { observer } from 'mobx-react'
-import { observable, action, computed, toJS } from 'mobx'
+import { observable, action, computed } from 'mobx'
 
 class LocationStore {
   @observable locationOptions = []

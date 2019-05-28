@@ -289,7 +289,7 @@ class FacilitySetupController < ApplicationController
           form_object.facility_id,
           form_object.room_id,
           form_object.row_id,
-          form_object.id
+          form_object.id,
         )
 
         if @row_shelves_trays_form.is_last_shelf
@@ -320,7 +320,7 @@ class FacilitySetupController < ApplicationController
         @facility_id,
         @room_id,
         @row_id,
-        @shelf_id
+        @shelf_id,
       )
       format.js
     end
@@ -337,7 +337,7 @@ class FacilitySetupController < ApplicationController
         @facility_id,
         @room_id,
         @row_id,
-        @shelf_id
+        @shelf_id,
       )
       format.js
     end

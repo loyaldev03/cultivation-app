@@ -12,7 +12,8 @@ import {
   monthStartDate,
   formatDate,
   formatShortWeekday,
-  formatMonthAndYear
+  formatMonthAndYear,
+  ErrorBoundary
 } from '../utils'
 
 @observer
@@ -29,9 +30,11 @@ class WorkerScheduleApp extends React.Component {
   componentDidMount = async () => {
     workerScheduleStore
     var curr = new Date() // get current date
-    var first = curr.getDate() - curr.getDay() + 1 // First day is the day of the month - the day of the week
-    var last = first + 6
-    let monthString = formatMonthAndYear(curr)
+    let day = curr.getDay()
+    var first = curr.getDate() - day + (day == 0 ? -6 : 1)
+    first = new Date(curr.getFullYear(), curr.getMonth(), first) // First day is the day of the month - the day of the week
+    var last = new Date(curr.getFullYear(), curr.getMonth() + 1, 0)
+    let monthString = formatMonthAndYear(new Date())
     let date = new Date()
     const months = [
       'January',
@@ -52,8 +55,8 @@ class WorkerScheduleApp extends React.Component {
       curr
     )
     let weeklyTask = await workerScheduleStore.getTaskByWeekArr(
-      monthString + first,
-      monthString + last
+      monthString + first.getDate(),
+      formatMonthAndYear(last) + last.getDate()
     )
     let dateSelected = `${date.getDate()} ${
       months[date.getMonth()]
@@ -195,12 +198,14 @@ class WorkerScheduleApp extends React.Component {
                 ))}
             </div>
           </div>
-          {choice == 'Week' && (
-            <WeeklyCalendar
-              weeklyTask={weeklyTask}
-              isWeeklyLoaded={isWeeklyLoaded}
-            />
-          )}
+          <ErrorBoundary>
+            {choice == 'Week' && (
+              <WeeklyCalendar
+                weeklyTask={weeklyTask}
+                isWeeklyLoaded={isWeeklyLoaded}
+              />
+            )}
+          </ErrorBoundary>
           {choice == 'Month' && <MonthlyCalendar />}
         </div>
       </div>

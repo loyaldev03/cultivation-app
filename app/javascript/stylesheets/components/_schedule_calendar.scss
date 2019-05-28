@@ -19,10 +19,15 @@
     bottom: 0;
     right: 43%;
   }
+  .react-calendar .wide{
+    width: 100%;
+  }
   .react-calendar.schedule-calendar {
     border:0;
     font-size:.7em;
-
+    
+      width: 100%;
+   
     .react-calendar__navigation__label {
       color: $darkGrey;
       font-size: 1rem;

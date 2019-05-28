@@ -88,6 +88,29 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace 'mobile' do
+    namespace 'worker' do 
+      resources :logins, only: [:index] do
+        collection do 
+          get     'pin_request'
+          post    'generate_code'
+          post    'check_code'
+        end
+      end
+      resources :dashboards, only: [:index]
+      resources :work_logs do
+        collection do
+          post 'clock_in'
+          post 'clock_out'
+          post 'pause'
+          post 'resume'
+        end
+      end
+    end
+  end
+
+
+
   get "inventory/setup" => "home#inventory_setup"
   namespace 'inventory', as: :inventory do
     resources 'strains', only: [:index]
@@ -334,7 +357,7 @@ Rails.application.routes.draw do
         put '/time_log', to: 'daily_tasks#time_log'
         get '/work_schedules', to: 'daily_tasks#work_schedules'
         get '/schedule_by_date', to: 'daily_tasks#schedule_by_date'
-        
+
         post ':id/save_material_used', to: 'daily_tasks#save_material_used'
         post 'materials_used', to: 'daily_tasks#materials_used' 
 

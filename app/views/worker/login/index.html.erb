@@ -23,7 +23,7 @@
     </div>
     <div class="w-41 bg-white">
       <div class="pa2 bb b--light-gray bw1 h3">
-        <input id="name" class="input-reset ba b--black-20 pa2 db w-80 br4 tc center f4 grey fw5" type="password" aria-describedby="name-desc" placeholder="Search by name"/>
+        <input id="name" class="input-reset ba b--black-20 pa2 db w-80 br4 tc center f4 grey fw5" type="text" aria-describedby="name-desc" placeholder="Search by name"/>
       </div>
       <div class="f4 tc flex justify-center bb b--light-gray h3 ">
         <%= link_to request.params.merge(filter: 'alpha'), class: "pa3 pointer no-underline #{params[:filter] == 'alpha' ? 'orange bb b--orange' : 'black'}" do %>

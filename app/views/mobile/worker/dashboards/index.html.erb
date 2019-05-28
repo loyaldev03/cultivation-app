@@ -1,0 +1,66 @@
+<div class="w-100 h-100 bg-white">
+  <div class="pa3">
+    <div class="mt4">
+      <span class="f4">Hello, <%= current_user.display_name %></span>
+    </div>
+
+    <% if current_user.work_log_status == 'started' || current_user.work_log_status == 'pause'%>
+      <%= link_to clock_out_mobile_worker_work_logs_path, class: 'no-underline black', method: :post do %>
+        <div class="flex justify-center mt5">
+          <div class="ba b--light-gray h4 w-40 shadow-1 flex items-center" style="border-radius: 2.5rem;box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.08);"> 
+            <span class="center">Clock-out</span>
+          </div>
+        </div>
+      <% end %>
+    <% elsif current_user.work_log_status == 'stopped' %>
+      <%= link_to clock_in_mobile_worker_work_logs_path, class: 'no-underline black', method: :post do %>
+        <div class="flex justify-center mt5">
+          <div class="ba b--light-gray h4 w-40 shadow-1 flex items-center" style="border-radius: 2.5rem;box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.08);"> 
+            <span class="center">Clock-in</span>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+    <div class="flex justify-center mt4 grey">
+      <% if current_user.work_log_status == 'started' && @work_log_available && !@break_available%> 
+        Next 15 min break at <%= @next_break.strftime('%R')%>
+      <% end %>
+    </div>
+    <div class="flex justify-center mt4 grey">
+      <% if current_user.work_log_status == 'started' && @break_available %>
+        <%= link_to pause_mobile_worker_work_logs_path, class: 'h6 grey shadow-1 ba b--light-gray no-underline black br3 pa2', method: :post do %>
+          <span class="material-icons">hot_tub</span>
+          <span>Take a break</span>
+        <% end %>
+      <% elsif current_user.work_log_status == 'pause' %>
+        <% if @time_to_resume%>
+          <%= link_to resume_mobile_worker_work_logs_path, class: 'h6 grey shadow-1 ba b--light-gray no-underline black br3 pa2', method: :post do %>
+            <span>Im back !</span>
+            <%= @break_duration %>
+          <% end %>
+        <% else %>
+          <%= @break_duration %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+<script>
+  let myCustomUniqueUserId = "<%= current_user.id.to_s%>";
+  var OneSignal = window.OneSignal || [];
+  OneSignal.push(function() {
+    OneSignal.init({
+      appId: "99df0c5a-3c11-41ff-926f-9ee1faca881a",
+    });
+    OneSignal.on('notificationPermissionChange', function (permissionChange) {
+      OneSignal.setExternalUserId(myCustomUniqueUserId);
+        // console.log("The user's subscription state is now:", isSubscribed);
+      });
+  });
+  // OneSignal.push(function() {
+  //   OneSignal.setExternalUserId(myCustomUniqueUserId);
+  // });
+</script>

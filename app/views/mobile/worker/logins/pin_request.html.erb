@@ -1,0 +1,62 @@
+<div class="w-100 bg-grey">
+  <div class="w-100 min-vh-100 bg-white flex flex-column justify-center items-center">
+    <% if @pin_available %>
+      <%= simple_form_for :user, url: check_code_mobile_worker_logins_path(user_id: params[:user_id]) do |f| %>
+      <div class="flex w-100 justify-center">
+        <span class="f3 mb3 grey">Enter PIN</span>
+      </div>
+      <div class="flex w-100 justify-center container">
+        <input type="password" name="user[password][]" maxlength=1 class="input-reset ba b--black-20 pa2 mb2 w-10 tc f4">
+        <input type="password" name="user[password][]" maxlength=1 class="input-reset ba b--black-20 pa2 mb2 w-10 tc f4">
+        <input type="password" name="user[password][]" maxlength=1 class="input-reset ba b--black-20 pa2 mb2 w-10 tc f4">
+        <input type="password" name="user[password][]" maxlength=1 class="input-reset ba b--black-20 pa2 mb2 w-10 tc f4">
+      </div>
+      <div class="flex w-100 justify-center mt3">
+        <%= f.button :submit, 'START WORKING', class: 'btn btn--primary', style: 'width: 190px'%>
+      </div>
+      <% end %>
+    <% else %>
+      <label class="grey fw4 f2">Request new PIN</label>
+      <div class="pa4 ws-normal">
+        <label class="grey fw4 f4">The PIN will be sent to the registered phone number.</h4>
+      </div>
+      <div class="flex justify-center">
+        <%= link_to 'REQUEST PIN', generate_code_mobile_worker_logins_path(user_id: @user.id.to_s), method: :post, class: 'btn btn--primary mt3'%>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+
+<script>
+
+var container = document.getElementsByClassName("container")[0];
+container.onkeyup = function(e) {
+    var target = e.srcElement || e.target;
+    var maxLength = parseInt(target.attributes["maxlength"].value, 10);
+    var myLength = target.value.length;
+    if (myLength >= maxLength) {
+        var next = target;
+        while (next = next.nextElementSibling) {
+            if (next == null)
+                break;
+            if (next.tagName.toLowerCase() === "input") {
+                next.focus();
+                break;
+            }
+        }
+    }
+    // Move to previous field if empty (user pressed backspace)
+    else if (myLength === 0) {
+        var previous = target;
+        while (previous = previous.previousElementSibling) {
+            if (previous == null)
+                break;
+            if (previous.tagName.toLowerCase() === "input") {
+                previous.focus();
+                break;
+            }
+        }
+    }
+}
+</script>

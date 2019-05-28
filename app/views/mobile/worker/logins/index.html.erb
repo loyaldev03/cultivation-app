@@ -1,0 +1,37 @@
+<div class="w-100 h-100 bg-white">
+<div class="pa3">
+  <h1 class="f3 fw5">Welcome !</h1>
+  <label class="f7 grey">Select job type</label>
+  <div class='mt1 flex overflow-auto'>
+    <%= link_to 'All available', request.params.merge(role: 'all'), class: 'f7 link dim ba ph2 pv2 mb2 dib orange br2 mt1'%>
+    <% @roles.each do |role| %>
+      <%= link_to role.truncate(20), request.params.except(:filter, :selected, :requested).merge(role: role), class: 'f7 link dim ba ph2 pv2 mb2 dib br2 ml2 ba b--light-gray grey mt1', style: 'box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.05);'%>
+    <% end %>
+  </div>
+  <div class="flex mt2">
+    <input id="name" class="input-reset ba b--black-20 pa2 db w-100 br4 tc center f6 grey fw5" type="text" aria-describedby="name-desc" placeholder="Search by name"/>
+  </div>
+  <div class="mt2 f6 tc flex justify-center bb bt b--light-gray " style="height: 3.0rem">
+    <%= link_to request.params.merge(filter: 'alpha'), class: "pa3 pointer no-underline #{params[:filter] == 'alpha' ? 'orange bb b--orange' : 'black'}" do %>
+      <div>
+        Alphabetically
+      </div>
+    <% end %>
+    <%= link_to request.params.merge(filter: 'last_login'), class: "pa3 pointer no-underline #{params[:filter] == 'last_login' ? 'orange bb b--orange' : 'black'}" do %>
+      <div>
+        Last logged in
+      </div>
+    <% end %>
+  </div>
+  <% if @users.present? %>
+    <% @users.each do |user|%>
+      <%= link_to pin_request_mobile_worker_logins_path(user_id: user.id.to_s), class: "pa3 pointer hover-bg-light-gray h3 flex justify-between no-underline " do %>
+        <div>
+          <span style="background-color: #eee; width: 36px; height: 36px; font-size: .875rem; font-weight: 600; line-height: 36px; color: grey; text-align: center; cursor: inherit; display: inline-block; border-radius: 50%;">ER</span>
+          <span class="ml2 f6 black"><%= user.display_name%></span>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+</div>

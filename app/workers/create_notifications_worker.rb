@@ -11,7 +11,6 @@ class CreateNotificationsWorker
               alt_notifiable_id = nil,
               alt_notifiable_type = nil,
               alt_notifiable_name = nil)
-
     @actor_id = actor_id
     @action = action
     @recipients = recipients

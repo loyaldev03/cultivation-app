@@ -15,7 +15,7 @@ class NotificationSerializer
     if object.notifiable_type == Constants::NOTIFY_TYPE_TASK
       "/daily_tasks?batch_id=#{object.alt_notifiable_id}&task_id=#{object.notifiable_id}"
     elsif object.notifiable_type == Constants::NOTIFY_TYPE_BATCH &&
-        params[:current_user].user_mode != "worker"
+          params[:current_user].user_mode != 'worker'
       "/cultivation/batches/#{object.notifiable_id}"
     end
   end

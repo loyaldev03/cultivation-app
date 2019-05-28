@@ -45,7 +45,7 @@ class DailySystemNotificationWorker
 
   def get_facility_managers(batch)
     users = QueryUsers.call(batch.facility_id).result
-    managers = users.reject { |u| u.user_mode == "worker" }
+    managers = users.reject { |u| u.user_mode == 'worker' }
     if managers.present?
       managers.map { |m| m.id.to_s }
     else

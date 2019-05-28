@@ -10,6 +10,7 @@ class Mobile::Worker::DashboardsController < ApplicationController
     @next_break = current_user.work_logs.last.start_time + @break_hours || nil if @work_log_available
     @break_available = Time.now >= @next_break if @next_break
     if current_user.work_log_status == 'pause'
+      @end_break_time = (current_user.work_logs.last.end_time + @break_minutes).strftime('%m/%d/%Y %r')
       @break_duration = (((current_user.work_logs.last.end_time + @break_minutes) - Time.now) / 1.minutes).round(2) # find changes in minutes to display orange bar
       @time_to_resume = @break_duration <= 0
     end

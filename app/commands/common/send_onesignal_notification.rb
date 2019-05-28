@@ -12,7 +12,7 @@ module Common
                 'contents' => {'en' => @args[:message]},
                 'include_external_user_ids' => @args[:user_ids],
                 'delayed_option' => 'timezone',
-                'delivery_time_of_day' => @args[:time_of_day]}
+                'delivery_time_of_day' => @args[:time_of_day]&.strftime('%T')}
       uri = URI.parse('https://onesignal.com/api/v1/notifications')
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true

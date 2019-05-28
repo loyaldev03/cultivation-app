@@ -36,10 +36,14 @@
         <% if @time_to_resume%>
           <%= link_to resume_mobile_worker_work_logs_path, class: 'h6 grey shadow-1 ba b--light-gray no-underline black br3 pa2', method: :post do %>
             <span>Im back !</span>
-            <%= @break_duration %>
           <% end %>
         <% else %>
-          <%= @break_duration %>
+          <div class="flex" data-time="<%= %>">
+            <span>Break-time  </span>
+            <div id="minutes" class="ml2"></div>
+            :
+            <div id="seconds"></div>
+          </div>
         <% end %>
       <% end %>
     </div>
@@ -50,6 +54,7 @@
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
 <script>
   let myCustomUniqueUserId = "<%= current_user.id.to_s%>";
+  let break_time = "<%= @end_break_time%>"
   var OneSignal = window.OneSignal || [];
   OneSignal.push(function() {
     OneSignal.init({
@@ -57,10 +62,51 @@
     });
     OneSignal.on('notificationPermissionChange', function (permissionChange) {
       OneSignal.setExternalUserId(myCustomUniqueUserId);
-        // console.log("The user's subscription state is now:", isSubscribed);
-      });
+    });
   });
-  // OneSignal.push(function() {
-  //   OneSignal.setExternalUserId(myCustomUniqueUserId);
-  // });
+
+  function countdown(endDate) {
+    let days, hours, minutes, seconds;
+    
+    endDate = new Date(endDate).getTime();
+    
+    if (isNaN(endDate)) {
+    return;
+    }
+    
+    setInterval(calculate, 1000);
+    
+    function calculate() {
+      let startDate = new Date();
+      startDate = startDate.getTime();
+      
+      let timeRemaining = parseInt((endDate - startDate) / 1000);
+      
+      if (timeRemaining >= 0) {
+        days = parseInt(timeRemaining / 86400);
+        timeRemaining = (timeRemaining % 86400);
+        
+        hours = parseInt(timeRemaining / 3600);
+        timeRemaining = (timeRemaining % 3600);
+        
+        minutes = parseInt(timeRemaining / 60);
+        timeRemaining = (timeRemaining % 60);
+        
+        seconds = parseInt(timeRemaining);
+        
+        document.getElementById("minutes").innerHTML = ("0" + minutes).slice(-2);
+        document.getElementById("seconds").innerHTML = ("0" + seconds).slice(-2);
+      } else {
+        if(endDate === new Date().getTime() ){
+          location.reload();
+        }
+        return;
+      }
+    }
+  }
+
+  (function () {
+    countdown(break_time); 
+  }());
+
 </script>

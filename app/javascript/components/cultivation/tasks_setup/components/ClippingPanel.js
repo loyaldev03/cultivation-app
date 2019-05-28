@@ -272,7 +272,7 @@ class TableSection extends React.Component {
         }
         return plant
       })
-      .filter(a => a.quantity > 0)
+      .filter(a => a.quantity >= 0)
     let getSection = plantList.map(x => {
       let { location_code } = x
       let name = location_code.split(/[..]/)
@@ -304,7 +304,7 @@ class TableSection extends React.Component {
           }
           return plant
         })
-        .filter(a => a.quantity > 0)
+        .filter(a => a.quantity >= 0)
 
       let getSection = plantList.map(x => {
         let { location_code } = x

@@ -8,7 +8,7 @@ module Common
     end
 
     def call
-      params = {'app_id' => '99df0c5a-3c11-41ff-926f-9ee1faca881a',
+      params = {'app_id' => ENV['ONE_SIGNAL_APP_ID'],
                 'contents' => {'en' => @args[:message]},
                 'include_external_user_ids' => @args[:user_ids],
                 'delayed_option' => 'timezone',
@@ -18,7 +18,7 @@ module Common
       http.use_ssl = true
       request = Net::HTTP::Post.new(uri.path,
                                     'Content-Type' => 'application/json;charset=utf-8',
-                                    'Authorization' => 'Basic YmM4MzE5OTItNjBhMi00NzM5LWJmZGMtNTlmZjhlNjI1ZDRi')
+                                    'Authorization' => "Basic #{ENV['ONE_SIGNAL_API_KEY']}")
       request.body = params.as_json.to_json
       response = http.request(request)
       if response.kind_of? Net::HTTPSuccess

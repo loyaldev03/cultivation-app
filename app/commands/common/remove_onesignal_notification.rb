@@ -8,10 +8,10 @@ module Common
     end
 
     def call
-      uri = URI.parse("https://onesignal.com/api/v1/notifications/#{@args[:one_signal_id]}?app_id=99df0c5a-3c11-41ff-926f-9ee1faca881a")
+      uri = URI.parse("https://onesignal.com/api/v1/notifications/#{@args[:one_signal_id]}?app_id=#{ENV['ONE_SIGNAL_APP_ID']}")
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
-      request = Net::HTTP::Delete.new(uri.path, 'Authorization' => 'Basic YmM4MzE5OTItNjBhMi00NzM5LWJmZGMtNTlmZjhlNjI1ZDRi')
+      request = Net::HTTP::Delete.new(uri.path, 'Authorization' => "Basic #{ENV['ONE_SIGNAL_API_KEY']}")
       response = http.request(request)
       if response.kind_of? Net::HTTPSuccess
         JSON.parse(response.body)

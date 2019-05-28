@@ -44,6 +44,10 @@ module Cultivation
     def update_status(batch)
       last_group = batch.tasks.
         where(indelible: Constants::INDELIBLE_GROUP).last
+      if !last_group
+        return
+      end
+
       if current_time >= last_group.end_date
         # Mark batch as completed
         batch.update(status: Constants::BATCH_STATUS_COMPLETED)

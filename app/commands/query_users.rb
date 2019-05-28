@@ -1,8 +1,7 @@
 class QueryUsers
   prepend SimpleCommand
 
-  def initialize(current_user, facility_id)
-    @current_user = current_user
+  def initialize(facility_id)
     @facility_id = facility_id.to_bson_id if facility_id
   end
 
@@ -33,10 +32,6 @@ class QueryUsers
   private
 
   def valid?
-    if @current_user.nil?
-      errors.add(:error, 'Unknown current user.')
-      return false
-    end
     if @facility_id.nil?
       errors.add(:error, 'Unknown facility.')
       return false

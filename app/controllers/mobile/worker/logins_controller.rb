@@ -1,4 +1,4 @@
-class Worker::LoginController < ApplicationController
+class Mobile::Worker::LoginsController < ApplicationController
   layout 'worker_login'
   skip_before_action :authenticate_user!
   before_action :check_ip_whitelist
@@ -22,25 +22,29 @@ class Worker::LoginController < ApplicationController
   end
 
   def generate_code
-    @user = User.find(params[:selected])
+    @user = User.find(params[:user_id])
     cmd = Common::GenerateCodeLogin.call(@user)
     if cmd.success?
       flash[:notice] == 'Code sent to your number'
-      redirect_to worker_login_index_path(request.params.except(:controller, :_method, :action, :authenticity_token).merge(requested: true))
-    else
+      redirect_to pin_request_mobile_worker_logins_path(user_id: params[:user_id])
     end
   end
 
   def check_code
-    @user = User.find(params[:selected])
+    @user = User.find(params[:user_id])
     cmd = Common::CheckCodeLogin.call(@user, {login_code: params[:user][:password].join('')})
     if cmd.success?
       sign_in(@user, scope: :user)
-      redirect_to worker_dashboard_path
+      redirect_to mobile_worker_dashboards_path
     else
       flash[:notice] == 'Error PIN'
-      redirect_to worker_login_index_path(request.params.except(:controller, :_method, :action, :authenticity_token, :commit, :user).merge(requested: true))
+      redirect_to pin_request_mobile_worker_logins_path(user_id: params[:user_id])
     end
+  end
+
+  def pin_request
+    @user = User.find(params[:user_id])
+    @pin_available = @user.login_code_expired_at && @user.login_code_expired_at >= Time.now
   end
 
   private

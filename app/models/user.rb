@@ -54,12 +54,17 @@ class User
   field :reporting_manager_id, type: BSON::ObjectId
   field :exempt, type: Boolean, default: -> { false } #  false => non exempt => hourly worker , true => exempt => salary worker
 
-  has_many :time_logs, class_name: 'Cultivation::TimeLog'
+  field :login_code, type: String
+  field :login_code_expired_at, type: Time
+  field :work_log_status, type: String, default: 'stopped' # use for work_log_status started, stopped , pause (to detect take a break )
+
+  has_many :time_logs, class_name: 'Cultivation::TimeLog' # for daily_task
+  has_many :work_logs, class_name: 'Common::WorkLog'
   embeds_many :work_schedules, class_name: 'Common::WorkSchedule'
   belongs_to :reporting_manager, class_name: 'User', foreign_key: 'reporting_manager_id', optional: true
 
-  has_many :work_requests, class_name: 'Common::WorkRequest', foreign_key: 'user_id' #users work request
-  has_many :work_applications, class_name: 'Common::WorkRequest', foreign_key: 'reporting_manager_id' #work request manager view
+  has_many :work_requests, class_name: 'Common::WorkRequest', foreign_key: 'user_id' # users work request
+  has_many :work_applications, class_name: 'Common::WorkRequest', foreign_key: 'reporting_manager_id' # work request manager view
 
   ## Confirmable
   # field :confirmation_token,   type: String

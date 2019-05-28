@@ -17,9 +17,8 @@ export default class StatusTile extends React.Component {
   }
   render() {
     const { date } = this.props
-    let { task,issue } = this.state
-    issue = issue.map(x => x.tasks.map( i=> i.attributes.issues))
-    console.log(issue)
+    let { task, issue } = this.state
+    issue = issue.map(x => x.tasks.map(i => i.attributes.issues))
     return (
       <div className="flex mt4">
         <div className="w-60">
@@ -50,40 +49,59 @@ export default class StatusTile extends React.Component {
               </div>
             </div>
             <ul className="list pl0 pb0">
-              {
-                  issue && issue.map(x => x.map(i=>
-                    i.map( k=> <li className="pt2 pb3 pointer" key={k}>
-                    <div className="flex items-center justify-start">
-                      <div className="f6 fw6 silver">ISSUE #{k.issue_no}</div>
-                      <div className="f5 fw6 ph1">•</div>
-                      <div className={`f6 fw6 ${ k.status==='open' ? 'green':'gray'} pr2 ttu`}>{k.status}</div>
-                      {k.severity==='high' && <div className="tc ttc">
-                        <i
-                          className="material-icons red"
-                          style={{ fontSize: '18px' }}
-                        >
-                          error
-                        </i>
-                      </div>}
-                      {k.severity==='medium' && <div className="tc ttc">
-                        <i
-                          className="material-icons gold"
-                          style={{ fontSize: '18px' }}
-                        >
-                          warning
-                        </i>
-                      </div>}
-                      {k.severity==='low' &&<div class="tc ttc purple f7">FYI</div>}
-                    </div>
-                    <div className="flex pt1 justify-start">
-                      <div className="fw4 gray" style={{ fontSize: '10px' }}>
-                        {longDate(new Date(k.created_at))}
-                      </div>
-                    </div>
-                  </li>)
-                    )
+              {issue &&
+                issue.map(x =>
+                  x.map(i =>
+                    i.map(k => (
+                      <li className="pt2 pb3 pointer" key={k}>
+                        <div className="flex items-center justify-start">
+                          <div className="f6 fw6 silver">
+                            ISSUE #{k.issue_no}
+                          </div>
+                          <div className="f5 fw6 ph1">•</div>
+                          <div
+                            className={`f6 fw6 ${
+                              k.status === 'open' ? 'green' : 'gray'
+                            } pr2 ttu`}
+                          >
+                            {k.status}
+                          </div>
+                          {k.severity === 'high' && (
+                            <div className="tc ttc">
+                              <i
+                                className="material-icons red"
+                                style={{ fontSize: '18px' }}
+                              >
+                                error
+                              </i>
+                            </div>
+                          )}
+                          {k.severity === 'medium' && (
+                            <div className="tc ttc">
+                              <i
+                                className="material-icons gold"
+                                style={{ fontSize: '18px' }}
+                              >
+                                warning
+                              </i>
+                            </div>
+                          )}
+                          {k.severity === 'low' && (
+                            <div class="tc ttc purple f7">FYI</div>
+                          )}
+                        </div>
+                        <div className="flex pt1 justify-start">
+                          <div
+                            className="fw4 gray"
+                            style={{ fontSize: '10px' }}
+                          >
+                            {longDate(new Date(k.created_at))}
+                          </div>
+                        </div>
+                      </li>
+                    ))
                   )
-              }
+                )}
             </ul>
           </div>
         </div>

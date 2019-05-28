@@ -80,9 +80,10 @@ export const formatAgo = date => {
   }
 }
 
-export const longDate = date => format(date, 'MMM DD,  YYYY, h:mm A', {
-  awareOfUnicodeTokens: true
-})
+export const longDate = date =>
+  format(date, 'MMM DD,  YYYY, h:mm A', {
+    awareOfUnicodeTokens: true
+  })
 
 const durationToDate = seconds =>
   addSeconds(startOfDay(new Date()), parseInt(seconds))

@@ -21,7 +21,7 @@ class ConvertPackagePlanForm extends React.Component {
     productPackage: null,
     data: [],
     assign_to: null,
-    start_date: ''
+    start_date: new Date()
   }
 
   async componentDidUpdate(prevProps, prevState) {
@@ -47,7 +47,7 @@ class ConvertPackagePlanForm extends React.Component {
 
       if (packageResponse.status === 200) {
         let assign_to = null,
-          start_date = ''
+          start_date = null
         if (result.task) {
           const user = this.props.users.find(
             x => x.id === result.task.assign_to
@@ -55,7 +55,12 @@ class ConvertPackagePlanForm extends React.Component {
           if (user) {
             assign_to = { value: user.id, label: user.name }
           }
-          start_date = result.task.start_date || ''
+
+          // console.log(result.task.start_date)
+          if (result.task.start_date) {
+            start_date = new Date(result.task.start_date)
+            // console.log(start_date)
+          }
         }
 
         this.setState({
@@ -269,6 +274,8 @@ class ConvertPackagePlanForm extends React.Component {
       assign_to,
       start_date
     } = this.state
+
+    // console.log(start_date)
 
     const totalQty = productPackage ? productPackage.quantity : 0
     const uom = productPackage ? productPackage.uom : ''

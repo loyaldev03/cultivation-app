@@ -148,7 +148,7 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
     if (task)
       task = {
         assign_to: task.users.empty? ? nil : task.users.first.id.to_s,
-        start_date: task.start_date,
+        start_date: task.start_date ? task.start_date.iso8601 : nil,
       }
     end
 

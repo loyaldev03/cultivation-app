@@ -10,19 +10,32 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
       ],
     ).map do |batch_group|
       batch = Cultivation::Batch.find(batch_group['_id'])
+      all_tasks = Cultivation::QueryTasks.call(batch, [:issues]).result
+      current_user_tasks = batch_group['tasks']
+
       {
         batch: serialized_batch(batch),
-        tasks: serialized_tasks(batch, batch_group['tasks']),
+        tasks: serialized_tasks(all_tasks, current_user_tasks, batch.facility_id),
       }
     end
 
-    # other_tasks = current_user.cultivation_tasks.expected_on(@tasks_date).selector
-    #   user_id: user_id,
-    #   indelible: "convert_product",
-    #   phase: 'others'
-    # )
-    # @tasks_by_batch.merge!(other_tasks: serialized_tasks(nil, other_tasks))
     render json: @tasks_by_batch
+  end
+
+  def other_tasks
+    Rails.logger.debug "\n\r\t\t\t>>>>>>>>>>>>>>>>>>>>>> other_tasks"
+    @tasks_date = Time.current.beginning_of_day
+    tasks = get_other_tasks(current_user.id, @tasks_date)
+
+    if tasks.any?
+      # tasks_hash = TaskDetailsSerializer.new(tasks).serializable_hash[:data]
+      result = {
+        batch: {type: 'others', name: 'Others'},
+        tasks: serialized_tasks(tasks),
+      }
+    end
+
+    render json: result
   end
 
   def tasks_by_date
@@ -196,42 +209,6 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     else
       render json: {errors: command.errors}, status: 422
     end
-
-    # batch = Cultivation::Batch.find(params[:batch_id])
-    # plant = batch.plants.find_by(plant_tag: params[:plant_id])
-
-    # if plant.nil?
-    #   render json: {errors: {plant_id: ["#{params[:plant_id]} does not exist in this batch."]}}, status: 422 and return
-    # end
-
-    # harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: params[:batch_id])
-    # if harvest_batch.nil?
-    #   render json: {errors: {harvest_batch: ['Harvest batch is not setup.']}}, status: 422 and return
-    # end
-
-    # if plant.harvest_batch.present? && !params[:override]
-    #   render json: {errors: {duplicate_plant: []}}, status: 422 and return
-    # end
-
-    # plant.update!(
-    #   wet_weight: params[:weight],
-    #   wet_weight_uom: harvest_batch.uom,
-    #   harvest_date: Time.current
-    # )
-
-    # harvest_batch.plants << plant
-
-    # harvest_batch.update!(
-    #   harvest_date: harvest_batch.harvest_date || Time.current,
-    #   total_wet_weight: harvest_batch.plants.sum { |x| x.wet_weight }
-    # )
-
-    # data = {
-    #   total_plants: batch.plants.where(current_growth_stage: CONST_FLOWER, destroyed_date: nil).count,
-    #   total_weighted: harvest_batch.plants.count,
-    #   uom: harvest_batch.uom,
-    # }
-    # render json: data, status: 200
   end
 
   def save_weight
@@ -312,9 +289,13 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
       merge(rooms: batch_room_names(batch))
   end
 
-  def serialized_tasks(batch, task_ids)
-    tasks = Cultivation::QueryTasks.call(batch, [:issues]).result
-    active_tasks = tasks.select { |t| task_ids.include?(t.id) }
+  def serialized_tasks(tasks, filter_task_ids = nil, facility_id = nil)
+    active_tasks = if filter_task_ids.present?
+                     tasks.select { |t| filter_task_ids.include?(t.id) }
+                   else
+                     tasks
+                   end
+
     active_user_ids = active_tasks.map { |t| t.notes.pluck(:modifier_id) }.flatten.compact
     # Map user's display name to api response
     note_users = User.where(:_id.in => active_user_ids).to_a
@@ -326,11 +307,37 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
         end
       end
     end
+
+    options = {}
+    options = {query: QueryLocations.call(facility_id)} if facility_id.present?
+
     TaskDetailsSerializer.new(
       active_tasks,
-      params: {query: QueryLocations.call(batch.facility_id)},
+      params: options,
     ).serializable_hash[:data]
   end
+
+  def get_other_tasks(user_id, start_date)
+    user = User.find(user_id)
+    tasks = user.cultivation_tasks.
+      expected_on(start_date).
+      in(user_ids: user_id).
+      where(batch_id: nil)
+    tasks
+  end
+
+  # def serialized_other_tasks(tasks)
+  #   tasks = current_user.cultivation_tasks.
+  #     expected_on(date).
+  #     in(user_ids: current_user.id).
+  #     where(batch_id: nil)
+
+  #   Rails.logger.debug "\n\r\t\t\t>>>>>>>>>>>>>>>>>>>>>> other_tasks"
+  #   Rails.logger.debug tasks.to_a.inspect
+  #   Rails.logger.debug "\t\t\t>>>>>>>>>>>>>>\n\n\r"
+
+  #   TaskDetailsSerializer.new(tasks).serializable_hash[:data]
+  # end
 
   def batch_room_names(batch)
     plans = batch.tray_plans.where(phase: batch.current_growth_stage).to_a

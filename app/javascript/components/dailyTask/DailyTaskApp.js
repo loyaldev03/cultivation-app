@@ -1,5 +1,6 @@
 import 'babel-polyfill'
 import React from 'react'
+import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 
 import dailyTaskSidebarAdaptor from './dailyTaskSidebarAdaptor'
@@ -12,7 +13,7 @@ import HarvestBatchWeightForm from './components/HarvestBatchWeightForm'
 import WeightForm from './components/WeightForm'
 import CreatePackageForm from './components/CreatePackageForm'
 
-import loadDailyTasks from './actions/loadDailyTasks'
+import loadDailyTasks, { loadAllDailyTasks } from './actions/loadDailyTasks'
 import DailyTasksStore from './stores/DailyTasksStore'
 import MaterialUsedStore from './stores/MaterialUsedStore'
 import SidebarStore from './stores/SidebarStore'
@@ -31,21 +32,22 @@ class DailyTaskApp extends React.Component {
     super(props)
     MaterialUsedStore.loadNutrientsCatalogue(this.props.nutrient_ids)
     SidebarStore.facilityId = this.props.facility_id
-    loadDailyTasks()
+    // loadDailyTasks()
+    loadAllDailyTasks()
   }
-  componentDidMount() {
-    // SidebarStore.openSidebar(
-    //   'clip_pot_tag',
-    //   '5c9354718c24bdc68af413bd',
-    //   '5c9354728c24bdc68af413cf'
-    // )
-    // SidebarStore.openSidebar(
-    //   'moving_to_tray',
-    //   '5c9354718c24bdc68af413bd',
-    //   '5c9354728c24bdc68af413d8',
-    //   'clone',
-    // )
-  }
+  // componentDidMount() {
+  //   // SidebarStore.openSidebar(
+  //   //   'clip_pot_tag',
+  //   //   '5c9354718c24bdc68af413bd',
+  //   //   '5c9354728c24bdc68af413cf'
+  //   // )
+  //   // SidebarStore.openSidebar(
+  //   //   'moving_to_tray',
+  //   //   '5c9354718c24bdc68af413bd',
+  //   //   '5c9354728c24bdc68af413d8',
+  //   //   'clone',
+  //   // )
+  // }
   onUpdateNutrients = nutrients => {
     const { batchId, taskId } = SidebarStore
     DailyTasksStore.updateNutrients(batchId, taskId, nutrients)
@@ -178,7 +180,19 @@ class DailyTaskApp extends React.Component {
               sidebarName={sidebarName}
               show={sidebarName === 'create_package_plan'}
             />
-          )}
+          )}  
+        />
+         <SlidePanel
+          width="500px"
+          show={sidebarName === 'convert_product'}
+          renderBody={props => (
+            <CreatePackageForm
+              batchId={batchId}
+              facilityId={this.props.facility_id}
+              sidebarName={sidebarName}
+              show={sidebarName === 'convert_product'}
+            />
+          )}  
         />
       </React.Fragment>
     )
@@ -186,6 +200,7 @@ class DailyTaskApp extends React.Component {
 
   render() {
     const { today } = this.props
+    const otherTasks = toJS(DailyTasksStore.otherTasks)
     return (
       <React.Fragment>
         <div id="toast" className="toast animated toast--success" />
@@ -198,6 +213,15 @@ class DailyTaskApp extends React.Component {
             tasks={batch.tasks}
           />
         ))}
+        { Object.keys(otherTasks).length > 0 && 
+          <BatchedDailyTasks
+            type="others"
+            batchId="others"
+            batchNo=""
+            batchName={otherTasks.name}
+            tasks={otherTasks.tasks}
+          />
+        }
         {this.renderSlidePanel()}
       </React.Fragment>
     )

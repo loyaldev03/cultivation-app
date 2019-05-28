@@ -9,7 +9,7 @@ module Common
 
     def call
       if @args[:login_code] == @user.login_code
-        if @user.login_code_expired_at >= Time.now # code still valid < 5minutes
+        if @user.login_code_expired_at >= Time.now # code still valid < end_of_today 11:59
           true
         else
           errors.add(:login_code, 'Code you entered expired')

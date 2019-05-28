@@ -21,8 +21,8 @@ module Common
 
     def initialize_nextmo
       Nexmo::Client.new(
-        api_key: Rails.application.credentials.nextmo[:api_key],
-        api_secret: Rails.application.credentials.nextmo[:api_secret],
+        api_key: ENV['NEXTMO_API_KEY'],
+        api_secret: ENV['NEXTMO_API_SECRET'],
       )
     end
   end

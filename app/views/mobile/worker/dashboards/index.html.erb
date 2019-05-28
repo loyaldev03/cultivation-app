@@ -109,4 +109,11 @@
     countdown(break_time); 
   }());
 
+  if(new Date(break_time).getTime() > new Date().getTime()){
+    setTimeout(function() {
+        location.reload();
+      }, (new Date(break_time).getTime() - new Date().getTime()) + 1000
+    );
+  }
+
 </script>

@@ -31,7 +31,11 @@ class Mobile::Worker::WorkLogsController < ApplicationController
   end
 
   def resume # resume after 15 minutes break
-    work_log = current_user.work_logs.create(start_time: Time.now)
+    @break_hours = 2.minutes # 2.hours
+    current_time = Time.now
+    params = {message: " It's time to take a break! ", user_ids: [current_user.id.to_s], time_of_day: current_time + @break_hours}
+    cmd = Common::SendOnesignalNotification.call(current_user, params)
+    work_log = current_user.work_logs.create(start_time: current_time)
     current_user.update(work_log_status: 'started')
     redirect_to mobile_worker_dashboards_path
   end

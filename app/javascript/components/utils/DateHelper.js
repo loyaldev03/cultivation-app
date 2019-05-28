@@ -67,6 +67,7 @@ export const formatYDM = date =>
 
 export const formatMonthAndYear = date =>
   format(date, 'YYYY-M-', { awareOfUnicodeTokens: true })
+
 export const formatAgo = date => {
   const now = new Date()
   const res = differenceInHours(now, date)
@@ -78,6 +79,11 @@ export const formatAgo = date => {
     return distanceInWordsToNow(date, { addSuffix: true })
   }
 }
+
+export const longDate = date =>
+  format(date, 'MMM DD,  YYYY, h:mm A', {
+    awareOfUnicodeTokens: true
+  })
 
 const durationToDate = seconds =>
   addSeconds(startOfDay(new Date()), parseInt(seconds))

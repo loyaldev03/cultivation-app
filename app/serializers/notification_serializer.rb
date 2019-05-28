@@ -11,15 +11,22 @@ class NotificationSerializer
     object.actor_id.to_s
   end
 
-  attribute :url do |object|
+  attribute :url do |object, params|
     if object.notifiable_type == Constants::NOTIFY_TYPE_TASK
       "/daily_tasks?batch_id=#{object.alt_notifiable_id}&task_id=#{object.notifiable_id}"
+    elsif object.notifiable_type == Constants::NOTIFY_TYPE_BATCH &&
+        params[:current_user].user_mode != "worker"
+      "/cultivation/batches/#{object.notifiable_id}"
     end
   end
 
   attribute :messages do |object|
     if object.notifiable_type == Constants::NOTIFY_TYPE_TASK
       "#{object.actor_name} assigned task \"#{object.notifiable_name}\" to you"
+    elsif object.notifiable_type == Constants::NOTIFY_TYPE_TASK
+      object.notifiable_name
+    else
+      object.notifiable_name
     end
   end
 end

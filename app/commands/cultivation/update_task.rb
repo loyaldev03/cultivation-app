@@ -50,6 +50,7 @@ module Cultivation
     private
 
     def action_notify(task)
+      Rails.logger.debug "\033[31m >>>>>> action_notify: #{args[:action]} \033[0m"
       if args[:action] == 'edit_assignees'
         job_params = {
           actor_id: current_user.id.to_s,
@@ -62,7 +63,17 @@ module Cultivation
           alt_notifiable_type: Constants::NOTIFY_TYPE_BATCH,
           alt_notifiable_name: task.batch.name,
         }
-        CreateNotificationsJob.perform_later job_params
+        CreateNotificationsWorker.perform_async(
+          current_user.id.to_s,
+          args[:action],
+          args[:user_ids],
+          task.id.to_s,
+          Constants::NOTIFY_TYPE_TASK,
+          task.name,
+          task.batch_id.to_s,
+          Constants::NOTIFY_TYPE_BATCH,
+          task.batch.name,
+        )
       end
     end
 

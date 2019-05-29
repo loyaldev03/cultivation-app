@@ -19,7 +19,7 @@ module Issues
     embeds_many :comments, class_name: 'Issues::Comment'
 
     belongs_to :task, class_name: 'Cultivation::Task', optional: true
-    belongs_to :cultivation_batch, class_name: 'Cultivation::Batch'
+    belongs_to :cultivation_batch, class_name: 'Cultivation::Batch', optional: true
     belongs_to :reported_by, class_name: 'User'
     belongs_to :assigned_to, class_name: 'User', optional: true
 

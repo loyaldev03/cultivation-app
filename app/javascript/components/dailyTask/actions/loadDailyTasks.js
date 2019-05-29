@@ -49,9 +49,29 @@ const loadDailyTasks = () => {
 
 const loadAllDailyTasks = () => {
   Promise.all([loadBatchTasksOnly(), loadOtherTasksOnly()]).then(result => {
-    console.log(result)
-    // Promise.all(result).then(x => { console.log(x)})
-    // result[0].then(k => console.log(k))
+    
+    const batches = result[0]
+    const otherTasks = result[1]
+
+    const task_ids = []
+    batches.forEach(batch => {
+      batch.tasks.forEach(task => task_ids.push(task.id))
+    })
+
+    if (otherTasks) {
+      otherTasks.tasks.forEach(task => task_ids.push(task.id))
+    }
+    
+    const payload = {
+      task_ids,
+      date: new Date()
+    }
+
+    fetch('/api/v1/daily_tasks/materials_used', httpPostOptions(payload))
+      .then(response => response.json())
+      .then(data => {
+        materialUsedStore.load(data)
+      })
   })
 }
 
@@ -92,12 +112,16 @@ const loadOtherTasksOnly = () => {
       }))
     })
     .then(data => {
-      console.log(data.data.batch)
+      if (!data.data) {
+        dailyTasksStore.loadOtherTasks({})
+        return null
+      }
 
       const batch = { id: 'others', ...data.data.batch }
       const tasks = data.data.tasks.map(x => ({
         id: x.id,
-        ...x.attributes
+        ...x.attributes,
+        batch_id: 'others'
       }))
 
       const result = { ...batch, tasks }

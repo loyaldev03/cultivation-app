@@ -28,9 +28,15 @@ class DailyTaskStore {
 
     const response = await (await fetch(url, httpPostOptions(payload))).json()
     if (!response.error) {
-      const batch = this.batches.find(x => x.id === batchId)
-      const task = batch.tasks.find(x => x.id === taskId)
-      task.items = response.data.attributes.items
+
+      if (batchId === 'others')  { // other tasks
+        const task = this.otherTasks.tasks.find(x => x.id === taskId)
+        task.items = response.data.attributes.items
+      } else {
+        const batch = this.batches.find(x => x.id === batchId)
+        const task = batch.tasks.find(x => x.id === taskId)
+        task.items = response.data.attributes.items
+      }
     }
     return response
   }
@@ -155,8 +161,14 @@ class DailyTaskStore {
 
   @action
   updateOrAppendIssue(batchId, issue) {
-    const batch = this.batches.find(x => x.id === batchId)
-    const task = batch.tasks.find(x => x.id === issue.task.id)
+    let task = null
+    if (batchId === 'others') {
+      task = this.otherTasks.tasks.find(x => x.id === issue.task.id)
+    } else {
+      const batch = this.batches.find(x => x.id === batchId)
+      task = batch.tasks.find(x => x.id === issue.task.id)
+    }
+
     const toInsert = {
       id: issue.id,
       issue_no: issue.issue_no,

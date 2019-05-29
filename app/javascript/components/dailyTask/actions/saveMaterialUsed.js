@@ -8,17 +8,23 @@ const saveMaterialUsed = (batchId, taskId, materialUsedId, actual, waste) => {
   // update store
   console.log(batchId, taskId, materialUsedId, actual, waste)
 
-  const batches = toJS(dailyTasksStore.batches)
-  const index = batches.findIndex(x => x.id == batchId)
-  const batch = batches[index]
+  if (batchId === 'others') {
+    const batch = toJS(dailyTasksStore.otherTasks)
+    const task = batch.tasks.find(x => x.id === taskId)
+    const materialUsed = task.items.find(x => x.id === materialUsedId)
+    materialUsed.actual = actual
+    materialUsed.waste = waste
 
-  const task = batch.tasks.find(x => x.id === taskId)
-  const materialUsed = task.items.find(x => x.id === materialUsedId)
-  materialUsed.actual = actual
-  materialUsed.waste = waste
+  } else {
+    const batches = toJS(dailyTasksStore.batches)
+    const index = batches.findIndex(x => x.id == batchId)
+    const batch = batches[index]
 
-  console.log(batch)
-  console.log(batches)
+    const task = batch.tasks.find(x => x.id === taskId)
+    const materialUsed = task.items.find(x => x.id === materialUsedId)
+    materialUsed.actual = actual
+    materialUsed.waste = waste
+  }
 
   const payload = {
     date: new Date().toISOString(),

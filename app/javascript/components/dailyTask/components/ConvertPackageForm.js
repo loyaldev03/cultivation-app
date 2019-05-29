@@ -84,7 +84,7 @@ class PackageTracking extends React.Component {
 
   async componentDidMount() {
     const data = await loadScannedPackages(
-      this.props.sourcePackageId,
+      this.props.source_package_id,
       this.props.product_type,
       this.props.package_type
     )
@@ -287,20 +287,18 @@ const loadScannedPackages = async (
   productType,
   packageType
 ) => {
-  // const product_type = encodeURI(productType)
-  // const package_type = encodeURI(packageType)
-  // const url = `/api/v1/sales_products/harvest_products_by_source/${sourcePackageId}?product_type=${product_type}&package_type=${package_type}`
+  const product_type = encodeURI(productType)
+  const package_type = encodeURI(packageType)
+  const url = `/api/v1/sales_products/harvest_products_from_package/${sourcePackageId}?product_type=${product_type}&package_type=${package_type}`
   // // Load products from the original source....
-  // const response = await (await fetch(url, httpGetOptions)).json()
-  // return response
-  return []
+  const response = await (await fetch(url, httpGetOptions)).json()
+  return response
 }
 
 const scanAndCreate = async data => {
   const url = '/api/v1/sales_products/scan_and_convert'
   const response = await fetch(url, httpPostOptions(data))
   const result = await response.json()
-  // console.log(result)
 
   if (response.ok) {
     return {

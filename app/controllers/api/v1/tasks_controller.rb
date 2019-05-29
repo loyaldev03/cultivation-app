@@ -2,12 +2,17 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   before_action :set_batch, except: [:update_position]
 
   def index
-    if @batch.present?
-      tasks = Cultivation::QueryTasks.call(@batch, [:issues]).result
-      render json: TaskSerializer.new(tasks).serialized_json
-    else
-      render json: {data: 'Batch Not Found'}, status: 422
-    end
+    facility_id = params[:facility_id]
+    tasks = Cultivation::QueryTasks.call(@batch, [:issues], facility_id).result
+    render json: TaskSerializer.new(tasks).serialized_json
+
+    # if @batch.present?
+    #   facility_id = params[:facility_id]
+    #   tasks = Cultivation::QueryTasks.call(@batch, [:issues], facility_id).result
+    #   render json: TaskSerializer.new(tasks).serialized_json
+    # else
+    #   render json: {data: 'Batch Not Found'}, status: 422
+    # end
   end
 
   def active_tasks
@@ -75,7 +80,7 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   end
 
   def create
-    create_cmd = Cultivation::CreateTask.call(current_user, task_params)
+    create_cmd = Cultivation::CreateTask.call(current_user, task_params, current_default_facility.id)
     if create_cmd.success?
       render json: {data: {id: create_cmd.result.id.to_s}}
     else
@@ -151,7 +156,9 @@ class Api::V1::TasksController < Api::V1::BaseApiController
   private
 
   def set_batch
-    @batch = Cultivation::Batch.includes(:tasks).find_by(id: params[:batch_id])
+    if params[:batch_id] != 'others'
+      @batch = Cultivation::Batch.includes(:tasks).find_by(id: params[:batch_id])
+    end
   end
 
   def task_params

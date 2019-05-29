@@ -2,6 +2,7 @@ import React from 'react'
 import DashboardCalendarApp from '../dashboardCalendar/DashboardCalendarApp'
 import { WorkerDashboardGraph, longDate } from '../../utils'
 import workerDashboardStore from '../stores/WorkerDashboardStore'
+import { formatIssueNo } from '../../issues/components/FormatHelper'
 export default class StatusTile extends React.Component {
   state = {
     task: [],
@@ -50,13 +51,13 @@ export default class StatusTile extends React.Component {
             </div>
             <ul className="list pl0 pb0">
               {issue &&
-                issue.map(x =>
+                issue.slice(0, 2).map(x =>
                   x.map(i =>
                     i.map(k => (
                       <li className="pt2 pb3 pointer" key={k}>
                         <div className="flex items-center justify-start">
                           <div className="f6 fw6 silver">
-                            ISSUE #{k.issue_no}
+                            ISSUE {formatIssueNo(k.issue_no)}
                           </div>
                           <div className="f5 fw6 ph1">•</div>
                           <div
@@ -107,7 +108,7 @@ export default class StatusTile extends React.Component {
         </div>
 
         <div className="w-40 ml3">
-          <div className="ba b--light-gray pa3 bg-white">
+          <div className="ba b--light-gray pa3 bg-white h5">
             <div className="flex justify-between">
               <div>
                 <h1 className="f5 fw6 ">Tasks</h1>
@@ -135,11 +136,21 @@ export default class StatusTile extends React.Component {
                 )
               })}
             </div>
-            <div className="flex justify-center mt3">
-              <a className="fw6 orange dim pointer" href="/daily_tasks">
-                Show More
-              </a>
-            </div>
+            {task.length > 0 ? (
+              <div className="flex justify-center mt3">
+                <a
+                  className="fw6 orange dim pointer"
+                  style={{ position: 'absolute', bottom: '0' }}
+                  href="/daily_tasks"
+                >
+                  Show More
+                </a>
+              </div>
+            ) : (
+              <div className="flex justify-center mt5">
+                <span className="fw6 gray dim">No task for today</span>
+              </div>
+            )}
           </div>
           <div
             className="ba b--light-gray pa3 bg-white mt3"

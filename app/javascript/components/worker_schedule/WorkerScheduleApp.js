@@ -33,9 +33,13 @@ class WorkerScheduleApp extends React.Component {
     let day = curr.getDay()
     var first = curr.getDate() - day + (day == 0 ? -6 : 1)
     first = new Date(curr.getFullYear(), curr.getMonth(), first) // First day is the day of the month - the day of the week
-    var last = new Date(curr.getFullYear(), curr.getMonth() + 1, 0)
+    var lastDayWeek = first.setDate(first.getDate() + 7)
+    lastDayWeek = new Date(lastDayWeek)
     let monthString = formatMonthAndYear(new Date())
     let date = new Date()
+    first = curr.getDate() - day + (day == 0 ? -6 : 1)
+    first = new Date(curr.getFullYear(), curr.getMonth(), first)
+
     const months = [
       'January',
       'February',
@@ -56,7 +60,7 @@ class WorkerScheduleApp extends React.Component {
     )
     let weeklyTask = await workerScheduleStore.getTaskByWeekArr(
       monthString + first.getDate(),
-      formatMonthAndYear(last) + last.getDate()
+      formatMonthAndYear(lastDayWeek) + lastDayWeek.getDate()
     )
     let dateSelected = `${date.getDate()} ${
       months[date.getMonth()]

@@ -27,7 +27,12 @@ export default class WeeklyCalendar extends React.Component {
         earliest = x.start_time.substring(0, 2)
       }
       let totalTime = x.end_time.substring(0, 2) - x.start_time.substring(0, 2)
-      return { name: x.date, totalTime, start: x.start_time, end: x.end_time }
+      return {
+        dateDate: new Date(x.date),
+        totalTime,
+        start: x.start_time,
+        end: x.end_time
+      }
     })
     this.setState({
       marker,
@@ -54,11 +59,17 @@ export default class WeeklyCalendar extends React.Component {
         }
         let totalTime =
           x.end_time.substring(0, 2) - x.start_time.substring(0, 2)
-        return { name: x.date, totalTime, start: x.start_time, end: x.end_time }
+        return {
+          dateDate: new Date(x.date),
+          stringFormat: x.date,
+          totalTime,
+          start: x.start_time,
+          end: x.end_time
+        }
       })
       this.setState({
         marker,
-        earliest: parseInt(earliest),
+        earliest: parseInt(earliest) - 1,
         latest: parseInt(latest)
       })
     }
@@ -71,11 +82,13 @@ export default class WeeklyCalendar extends React.Component {
     let week = new Array(7).fill(undefined).map((element, index) => {
       var last = date.setDate(date.getDate() + (index === 0 ? 0 : 1))
       last = new Date(last)
-      return last
+      return last.getDate()
     })
     return week
   }
-
+  checkDay = (cell, marker) => {
+    return marker.findIndex(i => i.dateDate.getDate() === cell)
+  }
   render() {
     let { marker, earliest, latest } = this.state
     let week = this.getWeekDate()
@@ -100,7 +113,7 @@ export default class WeeklyCalendar extends React.Component {
                     'fw6 bg-orange db w2 h2 white br-100'} `}
                   style={{ lineHeight: '1.8rem' }}
                 >
-                  {x.getDate()}
+                  {x}
                 </span>
               </div>
             </Cell>
@@ -132,13 +145,17 @@ export default class WeeklyCalendar extends React.Component {
                   'bb'} b--calendar-grid ${cellNumber < 6 && 'br'}`}
                 key={cell + cellNumber}
               >
-                {marker[cellNumber] &&
+                {marker.length > 0 &&
+                  this.checkDay(cell, marker) >= 0 &&
                   rowNumber ==
-                    marker[cellNumber].start.substring(0, 2) - earliest && (
+                    marker[this.checkDay(cell, marker)].start.substring(0, 2) -
+                      earliest && (
                     <Marker
                       style={{
                         position: 'absolute',
-                        height: `calc(3em*${marker[cellNumber].totalTime})`,
+                        height: `calc(3em*${
+                          marker[this.checkDay(cell, marker)].totalTime
+                        })`,
                         width: '4.4rem',
                         marginLeft: '0',
                         paddingLeft: '.2em',
@@ -148,20 +165,27 @@ export default class WeeklyCalendar extends React.Component {
                       {' '}
                       <br />
                       <span className="f6 db">
-                        {marker[cellNumber].start} - {marker[cellNumber].end}
+                        {marker[this.checkDay(cell, marker)].start} -{' '}
+                        {marker[this.checkDay(cell, marker)].end}
                       </span>
                       <br />
                       {workerScheduleStore.taskData.findIndex(
                         x =>
-                          x.date === marker[cellNumber].name &&
+                          x.date ===
+                            marker[this.checkDay(cell, marker)].stringFormat &&
                           x.numberOfTasks > 0
                       ) >= 0 && (
                         <TaskPopper
-                          date={marker[cellNumber].name}
+                          date={
+                            marker[this.checkDay(cell, marker)].stringFormat
+                          }
                           numberOfTask={
                             workerScheduleStore.taskData[
                               workerScheduleStore.taskData.findIndex(
-                                x => x.date === marker[cellNumber].name
+                                x =>
+                                  x.date ===
+                                  marker[this.checkDay(cell, marker)]
+                                    .stringFormat
                               )
                             ].numberOfTasks
                           }

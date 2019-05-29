@@ -39,7 +39,7 @@ class DailySystemNotificationWorker
       managers_ids,
       batch.id.to_s,
       Constants::NOTIFY_TYPE_BATCH,
-      "#{batch.name} (#{batch.batch_no}) is scheduled to start in #{days_left} days",
+      "#{batch.batch_no} (#{batch.name}) is scheduled to start in #{days_left} days",
     )
   end
 

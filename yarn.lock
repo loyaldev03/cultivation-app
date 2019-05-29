@@ -7586,17 +7586,17 @@ react-calendar@^2.18.1:
     prop-types "^15.6.0"
     react-lifecycles-compat "^3.0.4"
 
-react-date-picker@7.5.1:
-  version "7.5.1"
-  resolved "https://registry.yarnpkg.com/react-date-picker/-/react-date-picker-7.5.1.tgz#bf2b997e0433e422d6466c5eeaaed084f578b449"
-  integrity sha512-5KMMmFCSUXElrii3e3C/tklL0sHoZwY63CrAVjIjWjgjQAaTO40iFj0BIfVvbEcbpaiCRfwdjm8CYnJOSJkAPw==
+react-date-picker@7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/react-date-picker/-/react-date-picker-7.2.0.tgz#79c9881ebe873f8c4183d223aa0905e4c2188129"
+  integrity sha512-ohgz//g1Eq1TOdjijp8UThHfTE/BlUtT8BPZ0WLBN+HGg8WzZKa8+DFwzNbx55fGLwJO60czy3PjFZX36F4QKA==
   dependencies:
+    detect-element-overflow "^1.1.1"
     get-user-locale "^1.1.1"
     make-event-props "^1.1.0"
     merge-class-names "^1.1.1"
     prop-types "^15.6.0"
     react-calendar "^2.18.0"
-    react-fit "^1.0.3"
     react-lifecycles-compat "^3.0.4"
 
 react-dom@^16.8.6:
@@ -7608,14 +7608,6 @@ react-dom@^16.8.6:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.13.6"
-
-react-fit@^1.0.3:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/react-fit/-/react-fit-1.0.4.tgz#1ed9d0fd1bc42d6a3f07a8de7dbfe0fd17a04b67"
-  integrity sha512-TYKXASKYXz1ZcRQpmSepwkj+UmTNsYtm4dDF/qZZchZPWZSFx3oP0RDMavlG4MKXbj8aAPw6ycXuibfOu/yXrA==
-  dependencies:
-    detect-element-overflow "^1.1.1"
-    prop-types "^15.6.0"
 
 react-input-autosize@^2.2.1:
   version "2.2.1"

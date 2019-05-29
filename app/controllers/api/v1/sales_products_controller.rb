@@ -118,7 +118,45 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
         product_id: x.product.id.to_s,
         product_type: x.catalogue.label,
         package_type: x.product.package_type,
-        event_type: 'create_package',
+        event_type: x.event_type,
+      }
+    end
+
+    render json: packages_json, status: 200
+  end
+
+  def harvest_products_from_package
+    product_type = params[:product_type]
+    package_type = params[:package_type]
+    ref_id = params[:source_package_id]
+
+    catalogue = Inventory::Catalogue.find_by(label: product_type, category: 'raw_sales_product')
+    source_package = Inventory::ItemTransaction.find(ref_id)
+    cultivation_batch = source_package.harvest_batch.cultivation_batch
+    facility = cultivation_batch.facility
+    facility_strain = cultivation_batch.facility_strain
+    product = Inventory::Product.find_by(
+      facility: facility,
+      facility_strain: facility_strain,
+      catalogue: catalogue,
+      package_type: package_type,
+    )
+
+    packages = Inventory::ItemTransaction.where(
+      ref_id: ref_id.to_bson_id,
+      event_type: 'convert_package_from_scan',
+      product_id: product.id,
+    ).
+      order(created_at: :desc)
+
+    packages_json = packages.map do |x|
+      {
+        id: x.id.to_s,
+        tag: x.package_tag,
+        product_id: x.product.id.to_s,
+        product_type: x.catalogue.label,
+        package_type: x.product.package_type,
+        event_type: x.event_type,
       }
     end
 

@@ -266,7 +266,7 @@ class ExpandedRow extends React.Component {
               </a>
             )}
 
-{indelible == 'convert_product' && (
+            {indelible == 'convert_product' && (
               <a
                 href="#0"
                 className={classNames(

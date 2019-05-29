@@ -12,6 +12,7 @@ import MovingIntoTrayForm from './components/MovingIntoTrayForm'
 import HarvestBatchWeightForm from './components/HarvestBatchWeightForm'
 import WeightForm from './components/WeightForm'
 import CreatePackageForm from './components/CreatePackageForm'
+import ConvertPackageForm from './components/ConvertPackageForm'
 
 import loadDailyTasks, { loadAllDailyTasks } from './actions/loadDailyTasks'
 import DailyTasksStore from './stores/DailyTasksStore'
@@ -35,19 +36,6 @@ class DailyTaskApp extends React.Component {
     // loadDailyTasks()
     loadAllDailyTasks()
   }
-  // componentDidMount() {
-  //   // SidebarStore.openSidebar(
-  //   //   'clip_pot_tag',
-  //   //   '5c9354718c24bdc68af413bd',
-  //   //   '5c9354728c24bdc68af413cf'
-  //   // )
-  //   // SidebarStore.openSidebar(
-  //   //   'moving_to_tray',
-  //   //   '5c9354718c24bdc68af413bd',
-  //   //   '5c9354728c24bdc68af413d8',
-  //   //   'clone',
-  //   // )
-  // }
   onUpdateNutrients = nutrients => {
     const { batchId, taskId } = SidebarStore
     DailyTasksStore.updateNutrients(batchId, taskId, nutrients)
@@ -180,19 +168,19 @@ class DailyTaskApp extends React.Component {
               sidebarName={sidebarName}
               show={sidebarName === 'create_package_plan'}
             />
-          )}  
+          )}
         />
-         <SlidePanel
+        <SlidePanel
           width="500px"
           show={sidebarName === 'convert_product'}
           renderBody={props => (
-            <CreatePackageForm
-              batchId={batchId}
+            <ConvertPackageForm
               facilityId={this.props.facility_id}
               sidebarName={sidebarName}
+              taskId={taskId}
               show={sidebarName === 'convert_product'}
             />
-          )}  
+          )}
         />
       </React.Fragment>
     )
@@ -213,7 +201,7 @@ class DailyTaskApp extends React.Component {
             tasks={batch.tasks}
           />
         ))}
-        { Object.keys(otherTasks).length > 0 && 
+        {Object.keys(otherTasks).length > 0 && (
           <BatchedDailyTasks
             type="others"
             batchId="others"
@@ -221,7 +209,7 @@ class DailyTaskApp extends React.Component {
             batchName={otherTasks.name}
             tasks={otherTasks.tasks}
           />
-        }
+        )}
         {this.renderSlidePanel()}
       </React.Fragment>
     )

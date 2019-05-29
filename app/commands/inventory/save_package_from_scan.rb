@@ -124,12 +124,13 @@ module Inventory
         quantity: quantity,
         uom: product.common_uom,
         production_date: production_date,
-        event_type: 'create_package',
+        event_type: 'create_package_from_scan',
         event_date: production_date,
         ref_id: ref_id,
         ref_type: ref_type,
         harvest_batch: harvest_batch,
         product_name: name,
+        facility_strain: facility_strain,
       )
 
       metrc_tag.update!(status: 'assigned')

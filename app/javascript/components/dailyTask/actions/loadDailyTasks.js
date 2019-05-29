@@ -38,7 +38,7 @@ const loadDailyTasks = () => {
         task_ids,
         date: new Date()
       }
-      
+
       fetch('/api/v1/daily_tasks/materials_used', httpPostOptions(payload))
         .then(response => response.json())
         .then(data => {
@@ -46,7 +46,6 @@ const loadDailyTasks = () => {
         })
     }) // if completed, load into current issue store...
 }
-
 
 const loadAllDailyTasks = () => {
   Promise.all([loadBatchTasksOnly(), loadOtherTasksOnly()]).then(result => {
@@ -84,9 +83,7 @@ const loadBatchTasksOnly = () => {
     })
 }
 
-
 const loadOtherTasksOnly = () => {
-  
   return fetch('/api/v1/daily_tasks/other_tasks', httpGetOptions)
     .then(response => {
       return response.json().then(data => ({
@@ -109,8 +106,6 @@ const loadOtherTasksOnly = () => {
     })
 }
 
-
-
 // return fetch('/api/v1/daily_tasks/other_tasks', httpGetOptions)
 
 // const p1 = fetch('/api/v1/daily_tasks/tasks', httpGetOptions)
@@ -118,7 +113,7 @@ const loadOtherTasksOnly = () => {
 
 // Promise.all(p1, p2).then((r1, r2) => {
 //    - get task_ids
-//    - assign materials used to the 
+//    - assign materials used to the
 // })
 
 export default loadDailyTasks

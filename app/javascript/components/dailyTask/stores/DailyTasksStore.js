@@ -180,7 +180,6 @@ class DailyTaskStore {
 
   @action
   updateTaskWorkStatus(batchId, taskId, status) {
-    
     if (batchId.length > 0) {
       let batch = this.batches.find(x => x.id === batchId)
       let task = batch.tasks.find(x => x.id === taskId)

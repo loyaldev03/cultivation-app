@@ -155,6 +155,35 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
     render json: {product_plans: plans_json, task: task}, status: 200
   end
 
+  def conversion_plans_by_task
+    task = Cultivation::Task.find(params[:task_id])
+    package_id = task.package_id
+    plans = Inventory::ConvertProductPlan.where(package_id: package_id)
+    plans_json = plans.map do |p|
+      {
+        id: p.id.to_s,
+        source_package_id: p.package.id.to_s,
+        product_type: p.product_type,
+        package_type: p.package_type,
+        quantity: p.quantity,
+        uom: p.uom,
+        conversion: p.conversion,
+        total_weight: p.total_weight,
+      }
+    end
+
+    render json: plans_json, status: 200
+  end
+
+  def scan_and_convert
+    command = Inventory::ConvertPackageFromScan.call(current_user, params.to_unsafe_h)
+    if command.success?
+      render json: Inventory::HarvestPackageSerializer.new(command.result).serialized_json
+    else
+      render json: request_with_errors(command.errors), status: 422
+    end
+  end
+
   # "product_plans"=>[
   #   { "product_type"=>"Whole plant",
   #     "package_plans"=>[

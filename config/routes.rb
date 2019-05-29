@@ -217,9 +217,12 @@ Rails.application.routes.draw do
           get 'harvest_packages'
           get 'converted_products'
           get 'harvest_products/:cultivation_batch_id', action: 'harvest_products'
+          get 'conversion_plans_by_task/:task_id', action: 'conversion_plans_by_task'
+
           post 'setup_harvest_package'
           post 'setup_converted_product'
           post 'scan_and_create'
+          post 'scan_and_convert'
         end
 
         member do

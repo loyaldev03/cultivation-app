@@ -8,6 +8,7 @@ module RequestScoping
 
     helper_method :current_default_facility
     helper_method :current_facility
+    helper_method :current_ip_facility
   end
 
   protected
@@ -49,6 +50,10 @@ module RequestScoping
 
   def set_timezone(&block)
     Time.use_zone(current_user.timezone, &block)
+  end
+
+  def current_ip_facility
+    @current_default_facility ||= Facility.where(:whitelist_ips => request.remote_ip)
   end
 
   def current_default_facility

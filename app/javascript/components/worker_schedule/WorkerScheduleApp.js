@@ -145,9 +145,8 @@ class WorkerScheduleApp extends React.Component {
           </span>
         </div>
         <div className="flex ">
-          <div className="flex flex-column grey w-30">
+          <div className="flex flex-column grey w-30 schedule-calendar">
             <Calendar
-              className="schedule-calendar"
               activeStartDate={monthStartDate(formatDate(new Date()))}
               onChange={this.onChange}
               value={this.state.date}

@@ -37,7 +37,7 @@ export default class StatusTile extends React.Component {
             </div>
             <img src={WorkerDashboardGraph} />
           </div>
-          <div className="ba b--light-gray pa3 bg-white mt3">
+          <div className="ba b--light-gray pa3 bg-white mt3 h5">
             <div className="flex justify-between">
               <div>
                 <h1 className="f5 fw6 ">Issues</h1>
@@ -49,6 +49,21 @@ export default class StatusTile extends React.Component {
                 </i>
               </div>
             </div>
+            {issue && issue.length > 0 ? (
+              <div className="flex justify-center mt3">
+                <a
+                  className="fw6 orange dim pointer"
+                  style={{ position: 'absolute', bottom: '0' }}
+                  href="/daily_tasks"
+                >
+                  Show More
+                </a>
+              </div>
+            ) : (
+              <div className="flex justify-center mt5">
+                <span className="fw6 gray dim">No isssue for today</span>
+              </div>
+            )}
             <ul className="list pl0 pb0">
               {issue &&
                 issue.slice(0, 2).map(x =>

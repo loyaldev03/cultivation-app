@@ -120,13 +120,14 @@ export default class WeeklyCalendar extends React.Component {
           ))}
         </Row>
         <Row style={{ marginTop: '-2em' }}>
-          <Cell className="h2" />
+          <Cell className="h2 pr2" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
+          <Cell className=" h2 b--calendar-grid" />
         </Row>
         {time.map((row, rowNumber) => (
           <Row className="grey" key={rowNumber + 8} style={{ height: '3em' }}>
@@ -144,6 +145,19 @@ export default class WeeklyCalendar extends React.Component {
                 className={`${rowNumber <= latest - earliest &&
                   'bb'} b--calendar-grid ${cellNumber < 6 && 'br'}`}
                 key={cell + cellNumber}
+                style={{
+                  position:
+                    marker.length > 0 &&
+                    this.checkDay(cell, marker) >= 0 &&
+                    rowNumber ==
+                      marker[this.checkDay(cell, marker)].start.substring(
+                        0,
+                        2
+                      ) -
+                        earliest
+                      ? 'relative'
+                      : 'initial'
+                }}
               >
                 {marker.length > 0 &&
                   this.checkDay(cell, marker) >= 0 &&
@@ -156,7 +170,7 @@ export default class WeeklyCalendar extends React.Component {
                         height: `calc(3em*${
                           marker[this.checkDay(cell, marker)].totalTime
                         })`,
-                        width: '4.4rem',
+                        width: '99%',
                         marginLeft: '0',
                         paddingLeft: '.2em',
                         paddingRight: '.2em'
@@ -214,7 +228,7 @@ const Row = props => (
 const Cell = props => (
   <div
     className={classNames(' ', props.className)}
-    style={{ ...props.style, width: '4.5rem' }}
+    style={{ ...props.style, width: '20%' }}
   >
     {props.children}
   </div>

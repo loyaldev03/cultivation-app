@@ -14,6 +14,7 @@ class DailySystemNotificationWorker
 
     notify_batch_about_to_starts
     notify_batch_about_to_move_to_next_stage
+    notify_batch_about_to_harvest
 
     time_travel_return
   end
@@ -23,23 +24,19 @@ class DailySystemNotificationWorker
   def notify_batch_about_to_starts
     scheduled_batches.each do |batch|
       days_left = (batch.start_date - current_time) / 1.days
-      if days_left > 0 && days_left <= 5
+      if days_left > 0 && days_left <= 5 # Notify 5 days before
         managers_ids = get_facility_managers(batch)
-        if managers_ids.present?
-          action_notify_batch_start(batch, managers_ids, days_left.round)
-        else
-          raise StandardError.new "Missing manager in facility: \"#{batch.facility.name}\""
-        end
+        action_notify_batch_start(batch, managers_ids, days_left.round)
       end
     end
   end
 
   def notify_batch_about_to_move_to_next_stage
     active_batches.each do |batch|
-      next_phase = get_next_phase(batch)
+      next_phase = get_next_phase(batch, false)
       if next_phase.present?
         days_left = (next_phase.start_date - current_time) / 1.days
-        if days_left > 0 && days_left <= 1 # Notify
+        if days_left > 0 && days_left <= 1 # Notify a day before
           managers_ids = get_facility_managers(batch)
           action_notify_batch_move(batch, managers_ids, next_phase.phase)
         end
@@ -47,20 +44,42 @@ class DailySystemNotificationWorker
     end
   end
 
-  def get_next_phase(batch)
+  def notify_batch_about_to_harvest
+    active_batches.each do |batch|
+      next_phase = get_next_phase(batch, true)
+      if next_phase.present? && next_phase&.phase == Constants::CONST_HARVEST
+        days_left = (next_phase.start_date - current_time) / 1.days
+        if days_left > 0 && days_left <= 3 # Notify 3 days before harvest
+          managers_ids = get_facility_managers(batch)
+          action_notify_batch_harvest(batch, managers_ids, days_left.round)
+        end
+      end
+    end
+  end
+
+  def get_next_phase(batch, all_phases)
     query_cmd = Cultivation::QueryBatchPhases.call(batch)
     # Grouping tasks are all the phases
-    growing_schedules = query_cmd.growing_schedules.reverse
-    if growing_schedules.present?
-      curr_idx = growing_schedules.find_index { |p| current_time >= p.start_date }
+    schedule = if all_phases
+                 query_cmd.grouping_tasks.reverse
+               else
+                 query_cmd.growing_schedules.reverse
+               end
+    if schedule.present?
+      curr_idx = schedule.find_index { |p| current_time >= p.start_date }
       next_idx = curr_idx - 1 # After reverse next item is in-front
-      if growing_schedules.size > next_idx
-        growing_schedules[next_idx]
+      if schedule.size > next_idx
+        schedule[next_idx]
       end
     end
   end
 
   def action_notify_batch_start(batch, managers_ids, days_left)
+    if managers_ids.blank?
+      raise StandardError.new "Missing manager in facility: \"#{batch.facility.name}\""
+      return
+    end
+
     CreateNotificationsWorker.new.perform(
       nil,
       'batch_start_reminder',
@@ -72,6 +91,11 @@ class DailySystemNotificationWorker
   end
 
   def action_notify_batch_move(batch, managers_ids, phase)
+    if managers_ids.blank?
+      raise StandardError.new "Missing manager in facility: \"#{batch.facility.name}\""
+      return
+    end
+
     CreateNotificationsWorker.new.perform(
       nil,
       'batch_move_reminder',
@@ -79,6 +103,22 @@ class DailySystemNotificationWorker
       batch.id.to_s,
       Constants::NOTIFY_TYPE_BATCH,
       "#{batch.batch_no} (#{batch.name}) is scheduled to move into '#{phase}' phase tomorrow",
+    )
+  end
+
+  def action_notify_batch_harvest(batch, managers_ids, days_left)
+    if managers_ids.blank?
+      raise StandardError.new "Missing manager in facility: \"#{batch.facility.name}\""
+      return
+    end
+
+    CreateNotificationsWorker.new.perform(
+      nil,
+      'batch_harvest_reminder',
+      managers_ids,
+      batch.id.to_s,
+      Constants::NOTIFY_TYPE_BATCH,
+      "#{batch.batch_no} (#{batch.name}) is ready to harvest in #{days_left} days",
     )
   end
 

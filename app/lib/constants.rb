@@ -40,6 +40,7 @@ module Constants
     CONST_FLOWER,
   ].freeze
 
+  # Phases that require tray booking are growing phases
   REQUIRED_BOOKING_PHASES = [
     CONST_CLONE,
     CONST_VEG1,

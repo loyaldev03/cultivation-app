@@ -281,7 +281,7 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
     end
   end
 
-  context 'batch is ready for harvest' do
+  context 'batch is ready for harvest, cure, or package' do
     let!(:active_batch) do
       Time.zone = facility.timezone
       start_date = Time.zone.local(2018, 8, 1, 8, 30, 0)
@@ -356,49 +356,106 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
                     duration: duration,
                     end_date: end_date)
     end
+    let!(:task_staying_cure) do
+      start_date = task_staying_harvest.end_date
+      duration = 10
+      end_date = start_date + duration.days
+      create(:task, indelible: Constants::INDELIBLE_GROUP, indent: 0, batch: active_batch,
+                    phase: Constants::CONST_CURE,
+                    start_date: start_date,
+                    duration: duration,
+                    end_date: end_date)
+    end
 
     let(:job) { described_class.new }
 
-    it 'notify 3 days before harvest' do
-      Time.use_zone(facility.timezone) do
-        current_time = task_staying_harvest.start_date - 3.days
-        Timecop.freeze(current_time) do
-          job.perform
+    context 'notify before harvest' do
+      it 'notify 3 days before harvest' do
+        Time.use_zone(facility.timezone) do
+          current_time = task_staying_harvest.start_date - 3.days
+          Timecop.freeze(current_time) do
+            job.perform
 
-          expect(Notification.count).to eq 1
+            expect(Notification.count).to eq 1
+          end
+        end
+      end
+
+      it 'notify 2 days before harvest' do
+        Time.use_zone(facility.timezone) do
+          current_time = task_staying_harvest.start_date - 2.days
+          Timecop.freeze(current_time) do
+            job.perform
+
+            expect(Notification.count).to eq 1
+          end
+        end
+      end
+
+      it 'notify 1 days before harvest' do
+        Time.use_zone(facility.timezone) do
+          current_time = task_staying_harvest.start_date - 1.days
+          Timecop.freeze(current_time) do
+            job.perform
+
+            expect(Notification.count).to eq 1
+          end
+        end
+      end
+
+      it 'not notify on same same date as harvest' do
+        Time.use_zone(facility.timezone) do
+          current_time = task_staying_harvest.start_date
+          Timecop.freeze(current_time) do
+            job.perform
+
+            expect(Notification.count).to eq 0
+          end
         end
       end
     end
+    context 'notify before cure', focus: true do
+      it 'notify 3 days before cure' do
+        Time.use_zone(facility.timezone) do
+          current_time = task_staying_cure.start_date - 3.days
+          Timecop.freeze(current_time) do
+            job.perform
 
-    it 'notify 2 days before harvest' do
-      Time.use_zone(facility.timezone) do
-        current_time = task_staying_harvest.start_date - 2.days
-        Timecop.freeze(current_time) do
-          job.perform
-
-          expect(Notification.count).to eq 1
+            expect(Notification.count).to eq 1
+          end
         end
       end
-    end
 
-    it 'notify 1 days before harvest' do
-      Time.use_zone(facility.timezone) do
-        current_time = task_staying_harvest.start_date - 1.days
-        Timecop.freeze(current_time) do
-          job.perform
+      it 'notify 2 days before cure' do
+        Time.use_zone(facility.timezone) do
+          current_time = task_staying_cure.start_date - 2.days
+          Timecop.freeze(current_time) do
+            job.perform
 
-          expect(Notification.count).to eq 1
+            expect(Notification.count).to eq 1
+          end
         end
       end
-    end
 
-    it 'not notify on same same date as harvest' do
-      Time.use_zone(facility.timezone) do
-        current_time = task_staying_harvest.start_date
-        Timecop.freeze(current_time) do
-          job.perform
+      it 'notify 1 days before cure' do
+        Time.use_zone(facility.timezone) do
+          current_time = task_staying_cure.start_date - 1.days
+          Timecop.freeze(current_time) do
+            job.perform
 
-          expect(Notification.count).to eq 0
+            expect(Notification.count).to eq 1
+          end
+        end
+      end
+
+      it 'not notify on same same date as cure' do
+        Time.use_zone(facility.timezone) do
+          current_time = task_staying_cure.start_date
+          Timecop.freeze(current_time) do
+            job.perform
+
+            expect(Notification.count).to eq 0
+          end
         end
       end
     end

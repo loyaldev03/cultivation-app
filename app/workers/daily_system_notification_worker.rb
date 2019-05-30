@@ -50,12 +50,12 @@ class DailySystemNotificationWorker
   def get_next_phase(batch)
     query_cmd = Cultivation::QueryBatchPhases.call(batch)
     # Grouping tasks are all the phases
-    grouping_tasks = query_cmd.grouping_tasks.reverse
-    if grouping_tasks.present?
-      curr_idx = grouping_tasks.find_index { |p| current_time >= p.start_date }
+    growing_schedules = query_cmd.growing_schedules.reverse
+    if growing_schedules.present?
+      curr_idx = growing_schedules.find_index { |p| current_time >= p.start_date }
       next_idx = curr_idx - 1 # After reverse next item is in-front
-      if grouping_tasks.size > next_idx
-        grouping_tasks[next_idx]
+      if growing_schedules.size > next_idx
+        growing_schedules[next_idx]
       end
     end
   end

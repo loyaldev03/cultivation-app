@@ -21,9 +21,6 @@ class CreateNotificationsWorker
     @alt_notifiable_type = alt_notifiable_type
     @alt_notifiable_name = alt_notifiable_name
 
-    @logger = Logger.new(STDOUT)
-    @logger.debug ">>>>>>> CreateNotificationsWorker perform: #{action}"
-
     verify_args
 
     @recipients.map do |r|
@@ -43,7 +40,6 @@ class CreateNotificationsWorker
       }
       rec = Notification.new(notification)
       rec.save
-      @logger.debug ">>>>>>> CreateNotificationsWorker: #{rec.id}"
     end
   end
 

@@ -47,9 +47,7 @@ class SecretSauce extends React.Component {
       <React.Fragment>
         <div class="flex justify-center">
           <span className="f6 b flex items-center mr2">Growth Schedule : </span>
-          <div className="bg-orange f6 white pa2 br1 pointer">
-            Clone (5w)
-          </div>
+          <div className="bg-orange f6 white pa2 br1 pointer">Clone (5w)</div>
           <div className="bg-white f6 grey pa2 bt bb b--light-gray pointer">
             Veg1 (3w)
           </div>
@@ -62,7 +60,7 @@ class SecretSauce extends React.Component {
         </div>
         <div className="mt4 flex">
           <div className="w-20 pa3 mr2 h7">
-            <div className="f6 h2 mt3"></div>
+            <div className="f6 h2 mt3" />
             <div className="f6 h2 mt3">Light hours (per day)</div>
             <div className="f6 h2 mt3">Temperature (day/night)</div>
             <div className="f6 h2 mt3">Humidity level</div>
@@ -119,7 +117,9 @@ class SecretSauce extends React.Component {
             <div className="f6 h2 mt3">Week 6</div>
             <div className="flex h5 items-center">
               <div className="center">
-                <i className="material-icons bg-orange white br-100 pa2 pointer">edit</i>
+                <i className="material-icons bg-orange white br-100 pa2 pointer">
+                  edit
+                </i>
               </div>
             </div>
             {/* <div className="f6 h2 mt3">Light hours (per day)</div>
@@ -130,7 +130,6 @@ class SecretSauce extends React.Component {
             <div className="f6 h2 mt3">--</div> */}
           </div>
         </div>
-
       </React.Fragment>
     )
   }

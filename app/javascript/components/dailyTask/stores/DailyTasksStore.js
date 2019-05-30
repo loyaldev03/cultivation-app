@@ -28,8 +28,8 @@ class DailyTaskStore {
 
     const response = await (await fetch(url, httpPostOptions(payload))).json()
     if (!response.error) {
-
-      if (batchId === 'others')  { // other tasks
+      if (batchId === 'others') {
+        // other tasks
         const task = this.otherTasks.tasks.find(x => x.id === taskId)
         task.items = response.data.attributes.items
       } else {

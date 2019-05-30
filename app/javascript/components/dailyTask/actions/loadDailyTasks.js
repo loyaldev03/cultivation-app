@@ -49,7 +49,6 @@ const loadDailyTasks = () => {
 
 const loadAllDailyTasks = () => {
   Promise.all([loadBatchTasksOnly(), loadOtherTasksOnly()]).then(result => {
-    
     const batches = result[0]
     const otherTasks = result[1]
 
@@ -61,7 +60,7 @@ const loadAllDailyTasks = () => {
     if (otherTasks) {
       otherTasks.tasks.forEach(task => task_ids.push(task.id))
     }
-    
+
     const payload = {
       task_ids,
       date: new Date()

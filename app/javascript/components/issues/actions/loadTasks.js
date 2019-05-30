@@ -23,11 +23,11 @@ const loadTasks = (batchId, facilityId = '') => {
             label = x.attributes.wbs + '. '
           }
 
-          return ({
+          return {
             label,
             value: x.attributes.id,
             ...x.attributes
-          })
+          }
         })
         return options
       }

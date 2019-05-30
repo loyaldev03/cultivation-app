@@ -14,7 +14,6 @@ const saveMaterialUsed = (batchId, taskId, materialUsedId, actual, waste) => {
     const materialUsed = task.items.find(x => x.id === materialUsedId)
     materialUsed.actual = actual
     materialUsed.waste = waste
-
   } else {
     const batches = toJS(dailyTasksStore.batches)
     const index = batches.findIndex(x => x.id == batchId)

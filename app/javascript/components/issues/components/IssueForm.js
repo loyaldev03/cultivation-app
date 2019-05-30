@@ -193,14 +193,14 @@ class IssueForm extends React.Component {
         location_type: '',
         locations: []
       })
-    } else if(this.props.batchId === 'others') {
+    } else if (this.props.batchId === 'others') {
       this.setState({
         task_id: task.value,
         locations: [],
         location_id: '',
         location_type: ''
       })
-    } else if(this.props.batchId !== 'others') {
+    } else if (this.props.batchId !== 'others') {
       loadLocations(this.props.batchId, task.value).then(result => {
         this.setState({
           task_id: task.value,

@@ -1,5 +1,6 @@
 import 'babel-polyfill'
 import React from 'react'
+import { toJS } from 'mobx'
 import { observer } from 'mobx-react'
 
 import dailyTaskSidebarAdaptor from './dailyTaskSidebarAdaptor'
@@ -11,8 +12,9 @@ import MovingIntoTrayForm from './components/MovingIntoTrayForm'
 import HarvestBatchWeightForm from './components/HarvestBatchWeightForm'
 import WeightForm from './components/WeightForm'
 import CreatePackageForm from './components/CreatePackageForm'
+import ConvertPackageForm from './components/ConvertPackageForm'
 
-import loadDailyTasks from './actions/loadDailyTasks'
+import loadDailyTasks, { loadAllDailyTasks } from './actions/loadDailyTasks'
 import DailyTasksStore from './stores/DailyTasksStore'
 import MaterialUsedStore from './stores/MaterialUsedStore'
 import SidebarStore from './stores/SidebarStore'
@@ -31,7 +33,7 @@ class DailyTaskApp extends React.Component {
     super(props)
     MaterialUsedStore.loadNutrientsCatalogue(this.props.nutrient_ids)
     SidebarStore.facilityId = this.props.facility_id
-    loadDailyTasks()
+    loadAllDailyTasks()
   }
   onUpdateNutrients = nutrients => {
     const { batchId, taskId } = SidebarStore
@@ -167,12 +169,25 @@ class DailyTaskApp extends React.Component {
             />
           )}
         />
+        <SlidePanel
+          width="500px"
+          show={sidebarName === 'convert_product'}
+          renderBody={props => (
+            <ConvertPackageForm
+              facilityId={this.props.facility_id}
+              sidebarName={sidebarName}
+              taskId={taskId}
+              show={sidebarName === 'convert_product'}
+            />
+          )}
+        />
       </React.Fragment>
     )
   }
 
   render() {
     const { today } = this.props
+    const otherTasks = toJS(DailyTasksStore.otherTasks)
     return (
       <React.Fragment>
         <div id="toast" className="toast animated toast--success" />
@@ -185,6 +200,15 @@ class DailyTaskApp extends React.Component {
             tasks={batch.tasks}
           />
         ))}
+        {Object.keys(otherTasks).length > 0 && (
+          <BatchedDailyTasks
+            type="others"
+            batchId="others"
+            batchNo=""
+            batchName={otherTasks.name}
+            tasks={otherTasks.tasks}
+          />
+        )}
         {this.renderSlidePanel()}
       </React.Fragment>
     )

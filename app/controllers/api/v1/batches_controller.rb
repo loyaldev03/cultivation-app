@@ -189,6 +189,9 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def product_plans
+    # TODO: Cultivation::ProductTypePlan should be a ProductWorkOrder document.
+    # It should cover both work order from creating product from harvest batch.
+    # And also cover work order to convert product to another products.
     product_types = Cultivation::ProductTypePlan.where(batch_id: params[:batch_id])
     render json: ProductTypePlanSerializer.new(product_types).serialized_json, status: 200
   end

@@ -1,5 +1,5 @@
 module Cultivation
-  # TODO: Rename to product plan
+  # TODO: Rename to product work order
   class ProductTypePlan
     include Mongoid::Document
     include Mongoid::Timestamps::Short

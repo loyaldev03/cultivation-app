@@ -10,8 +10,9 @@ module Cultivation
     end
 
     def call
+      return {} if cultivation_batch.nil?
       # 1. get availale trays
-      task = cultivation_batch.tasks.find(task_id)
+      task = cultivation_batch.tasks.find_by(id: task_id)
 
       # TODO: Duplicate & expand QueryAvailableTrays to retrieve all locations.
       available_trays = QueryAvailableTrays.call(

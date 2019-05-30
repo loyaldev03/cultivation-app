@@ -50,7 +50,7 @@ class IssueForm extends React.Component {
   componentDidMount() {
     // Call setState only once
     Promise.all([
-      loadTasks(this.props.batchId),
+      loadTasks(this.props.batchId, this.props.facilityId),
       loadUsers(this.props.facilityId)
     ]).then(result => {
       const tasks = result[0]
@@ -193,7 +193,14 @@ class IssueForm extends React.Component {
         location_type: '',
         locations: []
       })
-    } else {
+    } else if (this.props.batchId === 'others') {
+      this.setState({
+        task_id: task.value,
+        locations: [],
+        location_id: '',
+        location_type: ''
+      })
+    } else if (this.props.batchId !== 'others') {
       loadLocations(this.props.batchId, task.value).then(result => {
         this.setState({
           task_id: task.value,

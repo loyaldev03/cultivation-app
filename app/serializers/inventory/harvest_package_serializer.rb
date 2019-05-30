@@ -49,6 +49,7 @@ module Inventory
         id: product.id.to_s,
         name: product.name,
         sku: product.sku,
+        package_type: product.package_type,
         catalogue_id: product.catalogue_id.to_s,
         facility_strain_id: product.facility_strain_id&.to_s,
         facility_id: product.facility_id.to_s,

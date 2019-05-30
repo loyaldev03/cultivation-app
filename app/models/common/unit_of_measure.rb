@@ -114,7 +114,7 @@ module Common
     def to(quantity, target_unit)
       target_uom = Common::UnitOfMeasure.find_by(unit: target_unit, dimension: self.dimension, base_unit: self.base_unit)
       return nil if target_uom.nil?
-      base_qty = conversion * quantity.to_i
+      base_qty = conversion * quantity.to_f
       base_qty / target_uom.conversion
     end
   end

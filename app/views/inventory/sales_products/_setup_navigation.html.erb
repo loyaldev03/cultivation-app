@@ -1,13 +1,13 @@
 <% selected_style = 'scrollable-tab__tab scrollable-tab__tab--active' %>
 
 <div class="scrollable-tab">    
-  <% if selected == 'harvest_package' %>
+  <% if selected == 'packages' %>
     <div class="<%= selected_style %>">
-      Harvest Packages
+      Packages
     </div>
   <% else %>
-    <%= link_to 'Harvest Packages',
-      harvest_packages_inventory_sales_products_path(facility_id: params[:facility_id]), 
+    <%= link_to 'Packages',
+      products_inventory_sales_products_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
   <% end %>
 
@@ -21,7 +21,8 @@
       class: 'scrollable-tab__tab' %>
   <% end %>
 
-  <% if selected == 'product_info' %>
+  <!--
+   <% if selected == 'product_info' %>
     <div class="<%= selected_style %>">
       Product Info
     </div>
@@ -29,5 +30,6 @@
     <%= link_to 'Product Info',
       product_info_inventory_sales_products_path(facility_id: params[:facility_id]), 
       class: 'scrollable-tab__tab' %>
-  <% end %>
+  <% end %> 
+  -->
 </div>

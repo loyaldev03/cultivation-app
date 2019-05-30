@@ -1,15 +1,24 @@
-import { observable, action, computed, toJS } from 'mobx'
+import { observable, action, computed, toJS, set } from 'mobx'
 import { httpPostOptions, httpPutOptions, httpDeleteOptions } from '../../utils'
 import taskStore from '../../cultivation/tasks_setup/stores/NewTaskStore'
 
 class DailyTaskStore {
   @observable batches = []
   @observable isLoading = false
+  @observable otherTasks = {}
 
   @action
   load(batches) {
     // console.log(batches)
     this.batches.replace(batches)
+  }
+
+  @action
+  loadOtherTasks(otherTasks) {
+    // this.otherTasks.replace(otherTasks)
+    // this.batches.replace(otherTasks)
+    set(this.otherTasks, otherTasks)
+    // this.batches.replace([...this.batches, otherTasks])
   }
 
   @action
@@ -19,9 +28,15 @@ class DailyTaskStore {
 
     const response = await (await fetch(url, httpPostOptions(payload))).json()
     if (!response.error) {
-      const batch = this.batches.find(x => x.id === batchId)
-      const task = batch.tasks.find(x => x.id === taskId)
-      task.items = response.data.attributes.items
+      if (batchId === 'others') {
+        // other tasks
+        const task = this.otherTasks.tasks.find(x => x.id === taskId)
+        task.items = response.data.attributes.items
+      } else {
+        const batch = this.batches.find(x => x.id === batchId)
+        const task = batch.tasks.find(x => x.id === taskId)
+        task.items = response.data.attributes.items
+      }
     }
     return response
   }
@@ -82,6 +97,7 @@ class DailyTaskStore {
     const payload = { actions: action, task_id: taskId }
     try {
       const response = await (await fetch(url, httpPutOptions(payload))).json()
+      console.log(response)
       if (response.data) {
         // this.loadTasks(batchId)
         this.updateTaskWorkStatus(batchId, taskId, action)
@@ -145,8 +161,14 @@ class DailyTaskStore {
 
   @action
   updateOrAppendIssue(batchId, issue) {
-    const batch = this.batches.find(x => x.id === batchId)
-    const task = batch.tasks.find(x => x.id === issue.task.id)
+    let task = null
+    if (batchId === 'others') {
+      task = this.otherTasks.tasks.find(x => x.id === issue.task.id)
+    } else {
+      const batch = this.batches.find(x => x.id === batchId)
+      task = batch.tasks.find(x => x.id === issue.task.id)
+    }
+
     const toInsert = {
       id: issue.id,
       issue_no: issue.issue_no,
@@ -170,12 +192,20 @@ class DailyTaskStore {
 
   @action
   updateTaskWorkStatus(batchId, taskId, status) {
-    let batch = this.batches.find(x => x.id === batchId)
-    let task = batch.tasks.find(x => x.id === taskId)
-    task.work_status = status
-    this.batches = this.batches.map(t => {
-      return t.id === batchId ? batch : t
-    })
+    if (batchId.length > 0) {
+      let batch = this.batches.find(x => x.id === batchId)
+      let task = batch.tasks.find(x => x.id === taskId)
+      task.work_status = status
+      this.batches = this.batches.map(t => {
+        return t.id === batchId ? batch : t
+      })
+    }
+
+    // For other tasks where batchId is empty
+    if (batchId.length == 0) {
+      let task = this.otherTasks.tasks.find(x => x.id === taskId)
+      task.work_status = status
+    }
   }
 
   @action

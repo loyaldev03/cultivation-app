@@ -281,7 +281,6 @@ const loadPackagePlans = async taskId => {
   return packagePlans
 }
 
-// TODO
 const loadScannedPackages = async (
   sourcePackageId,
   productType,

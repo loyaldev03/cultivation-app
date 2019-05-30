@@ -6,5 +6,14 @@ FactoryBot.define do
     password { "password" }
     password_confirmation { "password" }
     is_active { true }
+    user_mode { "admin" }
+
+    trait :worker do
+      user_mode { "worker" }
+    end
+
+    trait :manager do
+      user_mode { "manager" }
+    end
   end
 end

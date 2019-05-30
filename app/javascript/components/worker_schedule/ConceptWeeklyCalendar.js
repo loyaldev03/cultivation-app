@@ -146,10 +146,17 @@ export default class WeeklyCalendar extends React.Component {
                   'bb'} b--calendar-grid ${cellNumber < 6 && 'br'}`}
                 key={cell + cellNumber}
                 style={{
-                  position: marker.length > 0 &&
-                  this.checkDay(cell, marker) >= 0 && rowNumber ==
-                    marker[this.checkDay(cell, marker)].start.substring(0, 2) -
-                      earliest ? 'relative':'initial' 
+                  position:
+                    marker.length > 0 &&
+                    this.checkDay(cell, marker) >= 0 &&
+                    rowNumber ==
+                      marker[this.checkDay(cell, marker)].start.substring(
+                        0,
+                        2
+                      ) -
+                        earliest
+                      ? 'relative'
+                      : 'initial'
                 }}
               >
                 {marker.length > 0 &&
@@ -221,7 +228,7 @@ const Row = props => (
 const Cell = props => (
   <div
     className={classNames(' ', props.className)}
-    style={{ ...props.style, width: '20%'}}
+    style={{ ...props.style, width: '20%' }}
   >
     {props.children}
   </div>

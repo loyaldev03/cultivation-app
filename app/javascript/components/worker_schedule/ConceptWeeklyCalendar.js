@@ -27,7 +27,12 @@ export default class WeeklyCalendar extends React.Component {
         earliest = x.start_time.substring(0, 2)
       }
       let totalTime = x.end_time.substring(0, 2) - x.start_time.substring(0, 2)
-      return { name: x.date, totalTime, start: x.start_time, end: x.end_time }
+      return {
+        dateDate: new Date(x.date),
+        totalTime,
+        start: x.start_time,
+        end: x.end_time
+      }
     })
     this.setState({
       marker,
@@ -54,26 +59,39 @@ export default class WeeklyCalendar extends React.Component {
         }
         let totalTime =
           x.end_time.substring(0, 2) - x.start_time.substring(0, 2)
-        return { name: x.date, totalTime, start: x.start_time, end: x.end_time }
+        return {
+          dateDate: new Date(x.date),
+          stringFormat: x.date,
+          totalTime,
+          start: x.start_time,
+          end: x.end_time
+        }
       })
       this.setState({
         marker,
-        earliest: parseInt(earliest),
+        earliest: parseInt(earliest) - 1,
         latest: parseInt(latest)
       })
     }
   }
-  getWeekDate = date => {
+  getWeekDate = () => {
+    let d = new Date()
+    let day = d.getDay()
+    let monday = d.getDate() - day + (day == 0 ? -6 : 1)
+    let date = new Date(d.getFullYear(), d.getMonth(), monday)
     let week = new Array(7).fill(undefined).map((element, index) => {
-      let diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1)
-      return new Date(date.setDate(diff)).getDate() + index
+      var last = date.setDate(date.getDate() + (index === 0 ? 0 : 1))
+      last = new Date(last)
+      return last.getDate()
     })
     return week
   }
-
+  checkDay = (cell, marker) => {
+    return marker.findIndex(i => i.dateDate.getDate() === cell)
+  }
   render() {
     let { marker, earliest, latest } = this.state
-    let week = this.getWeekDate(date)
+    let week = this.getWeekDate()
     latest == 0 ? (latest = 1) : (latest = latest)
     earliest == 0 ? (earliest = 1) : (earliest = earliest)
     let time = new Array(latest - earliest + 2).fill(undefined)
@@ -102,13 +120,14 @@ export default class WeeklyCalendar extends React.Component {
           ))}
         </Row>
         <Row style={{ marginTop: '-2em' }}>
-          <Cell className="h2" />
+          <Cell className="h2 pr2" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
           <Cell className="br h2 b--calendar-grid" />
+          <Cell className=" h2 b--calendar-grid" />
         </Row>
         {time.map((row, rowNumber) => (
           <Row className="grey" key={rowNumber + 8} style={{ height: '3em' }}>
@@ -126,15 +145,32 @@ export default class WeeklyCalendar extends React.Component {
                 className={`${rowNumber <= latest - earliest &&
                   'bb'} b--calendar-grid ${cellNumber < 6 && 'br'}`}
                 key={cell + cellNumber}
+                style={{
+                  position:
+                    marker.length > 0 &&
+                    this.checkDay(cell, marker) >= 0 &&
+                    rowNumber ==
+                      marker[this.checkDay(cell, marker)].start.substring(
+                        0,
+                        2
+                      ) -
+                        earliest
+                      ? 'relative'
+                      : 'initial'
+                }}
               >
-                {marker[cellNumber] &&
+                {marker.length > 0 &&
+                  this.checkDay(cell, marker) >= 0 &&
                   rowNumber ==
-                    marker[cellNumber].start.substring(0, 2) - earliest && (
+                    marker[this.checkDay(cell, marker)].start.substring(0, 2) -
+                      earliest && (
                     <Marker
                       style={{
                         position: 'absolute',
-                        height: `calc(3em*${marker[cellNumber].totalTime})`,
-                        width: '4.4rem',
+                        height: `calc(3em*${
+                          marker[this.checkDay(cell, marker)].totalTime
+                        })`,
+                        width: '99%',
                         marginLeft: '0',
                         paddingLeft: '.2em',
                         paddingRight: '.2em'
@@ -143,20 +179,27 @@ export default class WeeklyCalendar extends React.Component {
                       {' '}
                       <br />
                       <span className="f6 db">
-                        {marker[cellNumber].start} - {marker[cellNumber].end}
+                        {marker[this.checkDay(cell, marker)].start} -{' '}
+                        {marker[this.checkDay(cell, marker)].end}
                       </span>
                       <br />
                       {workerScheduleStore.taskData.findIndex(
                         x =>
-                          x.date === marker[cellNumber].name &&
+                          x.date ===
+                            marker[this.checkDay(cell, marker)].stringFormat &&
                           x.numberOfTasks > 0
                       ) >= 0 && (
                         <TaskPopper
-                          date={marker[cellNumber].name}
+                          date={
+                            marker[this.checkDay(cell, marker)].stringFormat
+                          }
                           numberOfTask={
                             workerScheduleStore.taskData[
                               workerScheduleStore.taskData.findIndex(
-                                x => x.date === marker[cellNumber].name
+                                x =>
+                                  x.date ===
+                                  marker[this.checkDay(cell, marker)]
+                                    .stringFormat
                               )
                             ].numberOfTasks
                           }
@@ -185,7 +228,7 @@ const Row = props => (
 const Cell = props => (
   <div
     className={classNames(' ', props.className)}
-    style={{ ...props.style, width: '4.5rem' }}
+    style={{ ...props.style, width: '20%' }}
   >
     {props.children}
   </div>

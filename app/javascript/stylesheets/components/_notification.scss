@@ -1,0 +1,51 @@
+.notification {
+  z-index: 5;
+  width: 550px;
+  background: white;
+  max-height: 588px;
+  overflow: auto;
+}
+
+.notification__header {
+  // w-100 tc pv2 ph3
+  padding: 1em 1.5em 1em 1.5em;
+}
+
+.notification__header__text {
+  // grey f5 fw6
+  color: $darkGrey;
+  text-transform: capitalize;
+  font-size: 1.5em;
+  line-height: 1.5em;
+}
+
+.notification__item:first-child {
+  border-top: 1px solid $lightGrey;
+}
+
+.notification__item {
+  padding: 1.35em 1.5em;
+  cursor: pointer;
+  border-bottom: 1px solid $lightGrey;
+  a {
+    text-decoration: none;
+    font-size: 1.2em;
+    color: $grey;
+  }
+  // link fw6 dark-grey
+            // <a href={x.url} className="ph2">
+            //   view
+            // </a>
+}
+
+.notification__item:hover {
+  background-color: rgba(100, 100, 100, 0.1);
+}
+
+.notification__item--unread {
+  a {
+    color: $darkGrey;
+    font-weight: 600;
+  }
+}
+

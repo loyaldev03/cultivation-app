@@ -1,5 +1,8 @@
 batch_activation_job:
-  cron: "*/5 * * * *" #run worker every minutes
+  cron: "*/15 * * * *" # run worker every 15 minutes
   class: "ActivateBatchWorker"
   queue: "low"
-
+system_notification_job:
+  cron: "*/1 * * * *" # run worker every hours
+  class: "DailySystemNotificationWorker"
+  queue: "low"

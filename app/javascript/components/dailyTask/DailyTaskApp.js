@@ -33,7 +33,6 @@ class DailyTaskApp extends React.Component {
     super(props)
     MaterialUsedStore.loadNutrientsCatalogue(this.props.nutrient_ids)
     SidebarStore.facilityId = this.props.facility_id
-    // loadDailyTasks()
     loadAllDailyTasks()
   }
   onUpdateNutrients = nutrients => {

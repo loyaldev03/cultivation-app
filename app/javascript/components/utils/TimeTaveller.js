@@ -51,7 +51,7 @@ class TimeTaveller extends React.Component {
         >
           Clock Tower:
         </span>
-        <div id="toast" className="toast" />
+        <div id="toast" className="toast z-9999" />
         <DatePicker
           className={classNames('f5 w-100 measure-wide ', {
             'ba b--red br3': enable_time_travel

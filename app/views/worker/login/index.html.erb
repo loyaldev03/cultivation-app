@@ -14,11 +14,10 @@
         </div>
         <% @roles.each do |role| %>
           <div class="pa3 pointer hover-bg-light-gray h3">
-            <%= link_to request.params.merge(role: role), class: "ml2 no-underline black" do %>
-              <%= role%>
+            <%= link_to request.params.except(:filter, :selected, :requested).merge(role: role), class: "ml2 no-underline black" do %>
+              <%= role %>
             <% end %>
           </div>
-
         <% end %>
       </div>
     </div>
@@ -40,12 +39,11 @@
       </div>
       <% if @users.present? %>
         <% @users.each do |user|%>
-          <%= link_to request.params.merge(selected: user.display_name), class: "pa3 pointer hover-bg-light-gray h3 flex justify-between no-underline " do %>
+          <%= link_to request.params.except(:requested).merge(selected: user.id.to_s), class: "pa3 pointer hover-bg-light-gray h3 flex justify-between no-underline " do %>
             <div>
               <span style="background-color: #eee; width: 36px; height: 36px; font-size: 1.09091em; font-weight: 600; line-height: 36px; color: grey; text-align: center; cursor: inherit; display: inline-block; border-radius: 50%;">ER</span>
               <span class="ml2 f3 black"><%= user.display_name%></span>
             </div>
-            <span class="ml2 f4 grey"><%= params[:role] %></span>
           <% end %>
         <% end %>
       <% end %>
@@ -53,14 +51,31 @@
     <div class="w-33 bg-grey">
       <div class="w-100 h-100 flex flex-column justify-center items-center">
         <% if @user.present? %>
+          <% if params[:requested] == "true" || (@user.login_code_expired_at && @user.login_code_expired_at >= Time.now) %>
+            <%= simple_form_for :user, url: check_code_worker_login_index_path(request.params) do |f| %>
+            <div class="flex w-100 justify-center">
+              <span class="f3 mb3 grey">Enter PIN</span>
+            </div>
+            <div class="flex w-100 justify-center container">
+              <input type="password" name="user[password][]" maxlength=1 class="input-reset ba b--black-20 pa3 mb2 w-10 tc f4">
+              <input type="password" name="user[password][]" maxlength=1 class="input-reset ba b--black-20 pa3 mb2 w-10 tc f4">
+              <input type="password" name="user[password][]" maxlength=1 class="input-reset ba b--black-20 pa3 mb2 w-10 tc f4">
+              <input type="password" name="user[password][]" maxlength=1 class="input-reset ba b--black-20 pa3 mb2 w-10 tc f4">
+            </div>
+            <div class="flex w-100 justify-center mt3">
+              <%= f.button :submit, 'START WORKING', class: 'btn btn--primary', style: 'width: 190px'%>
+            </div>
+            <% end %>
+          <% else %>
+            <label class="grey fw4 f2">Request new PIN</label>
+            <div class="pa4 ws-normal">
+              <label class="grey fw4 f4">The PIN will be sent to the registered phone number.</h4>
+            </div>
+            <div class="flex justify-center">
+              <%= link_to 'REQUEST PIN', generate_code_worker_login_index_path(request.params), method: :post, class: 'btn btn--primary mt3'%>
+            </div>
 
-          <label class="grey fw4 f2">Request new PIN</label>
-          <div class="pa4 ws-normal">
-            <label class="grey fw4 f4">The PIN will be sent to the registered phone number.</h4>
-          </div>
-          <div class="flex justify-center">
-            <%= link_to 'REQUEST PIN', '#', class: 'btn btn--primary mt3'%>
-          </div>
+          <% end %>
         <% else %>
           <h1 class="grey fw4">Choose name to start</h1>
         <% end %>
@@ -73,3 +88,37 @@
     <h1 class="white">Please connect to your facility wifi to access this page.</h1>
   </div>
 <% end %>
+
+
+<script>
+
+var container = document.getElementsByClassName("container")[0];
+container.onkeyup = function(e) {
+    var target = e.srcElement || e.target;
+    var maxLength = parseInt(target.attributes["maxlength"].value, 10);
+    var myLength = target.value.length;
+    if (myLength >= maxLength) {
+        var next = target;
+        while (next = next.nextElementSibling) {
+            if (next == null)
+                break;
+            if (next.tagName.toLowerCase() === "input") {
+                next.focus();
+                break;
+            }
+        }
+    }
+    // Move to previous field if empty (user pressed backspace)
+    else if (myLength === 0) {
+        var previous = target;
+        while (previous = previous.previousElementSibling) {
+            if (previous == null)
+                break;
+            if (previous.tagName.toLowerCase() === "input") {
+                previous.focus();
+                break;
+            }
+        }
+    }
+}
+</script>

@@ -14,7 +14,7 @@ export default class MonthlyCalendar extends React.Component {
     let date = new Date()
     let searchMonth = dateToMonthOption(date)
     return (
-      <div className="pl5 pr4">
+      <div className="pl5 pr4 schedule-month-calendar">
         <div className="month-calendar-title">
           {monthOptionToString(searchMonth)}
         </div>

@@ -33,18 +33,21 @@ class Settings::Company::CompanyInfoController < ApplicationController
     @company_info.tax_id = company_info_params[:tax_id]
     @company_info.timezone = company_info_params[:timezone]
 
-    @company_info.work_schedules = [] #clear work_schedules
-    days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
-    days.each do |a| # insert back work_schedules
-      day = company_info_params[:work_schedules].first[a]
-      @company_info.work_schedules.build({
-        day: a,
-        start_time: day[:start_time],
-        end_time: day[:end_time],
-      })
+    if company_info_params[:work_schedules].present?
+      @company_info.work_schedules = [] #clear work_schedules
+      days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+      days.each do |a| # insert back work_schedules
+        day = company_info_params[:work_schedules].first[a]
+        @company_info.work_schedules.build({
+          day: a,
+          start_time: day[:start_time],
+          end_time: day[:end_time],
+        })
+      end
     end
 
     if @company_info.save
+      flash[:notice] = 'Company info saved'
       redirect_to edit_settings_company_company_info_path
     else
       render 'edit'

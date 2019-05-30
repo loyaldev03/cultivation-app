@@ -15,8 +15,17 @@ class DashboardCalendarApp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="flex justify-center mt3 w-100">
-          <Calendar onChange={this.onChange} value={this.state.date} />
+        <div className="flex justify-center mt3 w-100 schedule-calendar">
+          <Calendar
+            onChange={this.onChange}
+            minDetail="month"
+            value={this.state.date}
+            tileContent={({ date, view }) => (
+              <div className="react-calendar__tile__content">
+                {date.getDate()}
+              </div>
+            )}
+          />
         </div>
       </React.Fragment>
     )

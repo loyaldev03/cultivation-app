@@ -1,4 +1,5 @@
  // w-100 f3 fw6 db tc pv2 bg-light-gray gray"
+ .schedule-calendar{
  .availabilty-calendar-title {
     display: block;
     background-color: $whiteSmoke;
@@ -19,10 +20,15 @@
     bottom: 0;
     right: 43%;
   }
-  .react-calendar.schedule-calendar {
+  .react-calendar .wide{
+    width: 100%;
+  }
+  .react-calendar {
     border:0;
     font-size:.7em;
-
+    
+      width: 100%;
+   
     .react-calendar__navigation__label {
       color: $darkGrey;
       font-size: 1rem;
@@ -107,6 +113,10 @@
       font-size: 0.65rem;
       font-weight: 600;
       cursor: pointer;
+      @media only screen and (min-width: 1025px) {
+           
+      font-size: 1rem;
+      }
     }
   
     .react-calendar__tile__content:hover {
@@ -121,3 +131,4 @@
       padding-bottom: $weekRowPadding;
     }
   }
+ }

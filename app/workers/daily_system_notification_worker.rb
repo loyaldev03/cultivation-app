@@ -16,6 +16,7 @@ class DailySystemNotificationWorker
     notify_batch_about_to_move_to_next_stage
     notify_batch_about_to_harvest
     notify_batch_about_to_cure
+    notify_batch_about_to_packaging
 
     time_travel_return
   end
@@ -65,7 +66,20 @@ class DailySystemNotificationWorker
         days_left = (next_phase.start_date - current_time) / 1.days
         if days_left > 0 && days_left <= 3 # Notify 3 days before cure
           managers_ids = get_facility_managers(batch)
-          action_notify_batch_harvest(batch, managers_ids, days_left.round)
+          action_notify_batch_cure(batch, managers_ids, days_left.round)
+        end
+      end
+    end
+  end
+
+  def notify_batch_about_to_packaging
+    active_batches.each do |batch|
+      next_phase = get_next_phase(batch, true)
+      if next_phase.present? && next_phase&.phase == Constants::CONST_PACKAGING
+        days_left = (next_phase.start_date - current_time) / 1.days
+        if days_left > 0 && days_left <= 3 # Notify 3 days before packaging
+          managers_ids = get_facility_managers(batch)
+          action_notify_batch_packaging(batch, managers_ids, days_left.round)
         end
       end
     end
@@ -149,6 +163,22 @@ class DailySystemNotificationWorker
       batch.id.to_s,
       Constants::NOTIFY_TYPE_BATCH,
       "#{batch.batch_no} (#{batch.name}) is ready to cure in #{days_left} days",
+    )
+  end
+
+  def action_notify_batch_packaging(batch, managers_ids, days_left)
+    if managers_ids.blank?
+      raise StandardError.new "Missing manager in facility: \"#{batch.facility.name}\""
+      return
+    end
+
+    CreateNotificationsWorker.new.perform(
+      nil,
+      'batch_packaging_reminder',
+      managers_ids,
+      batch.id.to_s,
+      Constants::NOTIFY_TYPE_BATCH,
+      "#{batch.batch_no} (#{batch.name}) is ready to packaging in #{days_left} days",
     )
   end
 

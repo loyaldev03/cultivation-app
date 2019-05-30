@@ -14,6 +14,7 @@ module Constants
   CONST_VEG1 = 'veg1'.freeze
   CONST_VEG2 = 'veg2'.freeze
   CONST_HARVEST = 'harvest'.freeze
+  CONST_PACKAGING = 'packaging'.freeze
 
   INDELIBLE_GROUP = 'group'.freeze
   INDELIBLE_CLIP_POT_TAG = 'clip_pot_tag'.freeze

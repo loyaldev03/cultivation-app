@@ -12,7 +12,7 @@ RSpec.describe CreateNotificationsWorker, type: :job do
 
     it "should enqueue worker" do
       expect {
-        CreateNotificationsWorker.perform_async(
+        described_class.perform_async(
           actor.id.to_s,
           "assign",
           [recipient1.id.to_s, recipient2.id.to_s],
@@ -20,7 +20,7 @@ RSpec.describe CreateNotificationsWorker, type: :job do
           Constants::NOTIFY_TYPE_TASK,
           task.name,
         )
-      }.to change(CreateNotificationsWorker.jobs, :size).by(1)
+      }.to change(described_class.jobs, :size).by(1)
     end
 
     it "should notification records" do

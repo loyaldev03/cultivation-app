@@ -9,8 +9,6 @@ class DailySystemNotificationWorker
   # - batch about to start
   # - unassigned task in batch
   def perform(*args)
-    @logger = Logger.new(STDOUT)
-    @logger.info '>>> Execute DailySystemNotificationWorker <<<'
     time_travel
     @current_time = Time.current
 
@@ -23,27 +21,26 @@ class DailySystemNotificationWorker
   private
 
   def notify_batch_about_to_starts
-    @logger.info '>>> notify_batch_about_to_starts <<<'
     scheduled_batches.each do |batch|
       days_left = (batch.start_date - current_time) / 1.days
-      if days_left <= 5
+      if days_left > 0 && days_left <= 5
         managers_ids = get_facility_managers(batch)
-        @logger.info '>>> notify_batch_about_to_starts::notify <<<'
-        action_notify_batch_start(batch, managers_ids, days_left.round)
+        if managers_ids.present?
+          action_notify_batch_start(batch, managers_ids, days_left.round)
+        else
+          raise StandardError.new "Missing manager in facility: \"#{batch.facility.name}\""
+        end
       end
     end
   end
 
   def notify_batch_about_to_move_to_next_stage
-    @logger.info ">>> notify_batch_about_to_move_to_next_stage:: #{active_batches.size} <<<"
     active_batches.each do |batch|
       next_phase = get_next_phase(batch)
-      @logger.info ">>> next_phase: #{next_phase&.phase} <<<"
       if next_phase.present?
         days_left = (next_phase.start_date - current_time) / 1.days
-        if days_left > 0.0 && days_left <= 1 # Notify
+        if days_left > 0 && days_left <= 1 # Notify
           managers_ids = get_facility_managers(batch)
-          @logger.info '>>> notify_batch_about_to_move_to_next_stage::notify <<<'
           action_notify_batch_move(batch, managers_ids, next_phase.phase)
         end
       end
@@ -53,12 +50,10 @@ class DailySystemNotificationWorker
   def get_next_phase(batch)
     query_cmd = Cultivation::QueryBatchPhases.call(batch)
     # Grouping tasks are all the phases
-    grouping_tasks = query_cmd.grouping_tasks
+    grouping_tasks = query_cmd.grouping_tasks.reverse
     if grouping_tasks.present?
-      @logger.info ">>> 2.0 grouping_tasks:: #{grouping_tasks.size} <<<"
-      curr_idx = grouping_tasks.find_index { |p| p.phase == batch.current_growth_stage }
-      @logger.info ">>> 3.0 curr_idx: #{curr_idx} <<<"
-      next_idx = curr_idx + 1
+      curr_idx = grouping_tasks.find_index { |p| current_time >= p.start_date }
+      next_idx = curr_idx - 1 # After reverse next item is in-front
       if grouping_tasks.size > next_idx
         grouping_tasks[next_idx]
       end
@@ -66,7 +61,7 @@ class DailySystemNotificationWorker
   end
 
   def action_notify_batch_start(batch, managers_ids, days_left)
-    CreateNotificationsWorker.perform_async(
+    CreateNotificationsWorker.new.perform(
       nil,
       'batch_start_reminder',
       managers_ids,
@@ -77,7 +72,7 @@ class DailySystemNotificationWorker
   end
 
   def action_notify_batch_move(batch, managers_ids, phase)
-    CreateNotificationsWorker.perform_async(
+    CreateNotificationsWorker.new.perform(
       nil,
       'batch_move_reminder',
       managers_ids,
@@ -113,7 +108,6 @@ class DailySystemNotificationWorker
     if ENV['ENABLE_TIME_TRAVEL'] == 'yes'
       config = System::Configuration.first
       if config&.enable_time_travel
-        @logger.warn "TIME TRAVEL STARTS ACTIVE::#{Time.current}"
         Timecop.travel(config.current_time)
       else
         Timecop.return
@@ -123,7 +117,6 @@ class DailySystemNotificationWorker
 
   def time_travel_return
     if ENV['ENABLE_TIME_TRAVEL'] == 'yes'
-      @logger.warn "TIME TRAVEL RETURN::#{Time.current}"
       Timecop.return
     end
   end

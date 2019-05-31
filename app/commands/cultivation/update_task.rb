@@ -50,7 +50,6 @@ module Cultivation
     private
 
     def action_notify(task)
-      Rails.logger.debug "\033[31m >>>>>> action_notify: #{args[:action]} \033[0m"
       if args[:action] == 'edit_assignees'
         job_params = {
           actor_id: current_user.id.to_s,

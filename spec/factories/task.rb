@@ -9,5 +9,6 @@ FactoryBot.define do
     end_date { Time.current + duration.to_i.days }
 
     batch
+    facility { batch.facility }
   end
 end

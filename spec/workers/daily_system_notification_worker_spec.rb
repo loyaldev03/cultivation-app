@@ -15,6 +15,7 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
   end
   let!(:facility_strain) { create(:facility_strain, facility: facility) }
   let!(:manager) { create(:user, :manager, facilities: [facility.id]) }
+  let!(:worker) { create(:user, :worker, facilities: [facility.id]) }
 
   context 'perform_async' do
     it 'should enqueue worker' do
@@ -382,6 +383,13 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
                     duration: duration,
                     estimated_hours: 0.5,
                     end_date: end_date)
+      create(:task, indelible: Constants::INDELIBLE_CLEANING, batch: active_batch,
+                    phase: Constants::CONST_FLOWER,
+                    start_date: start_date,
+                    duration: duration,
+                    estimated_hours: 0.5,
+                    user_ids: [worker.id],
+                    end_date: end_date)
     end
     let!(:task_staying_harvest) do
       start_date = task_staying_flower.end_date
@@ -578,5 +586,22 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         end
       end
     end
+
+    context 'active batch with incomplete_tasks' do
+      it 'notify worker of incomplete_tasks' do
+        Time.use_zone(facility.timezone) do
+          current_time = task_staying_veg.end_date + 1.days
+          Timecop.freeze(current_time) do
+            job.perform
+
+            res = Notification.where(action: 'batch_incomplete_tasks_reminder').count
+            notify = Notification.where(action: 'batch_incomplete_tasks_reminder').first
+            expect(res).to eq 1
+            expect(notify.notifiable_name).to end_with "have 1 incomplete task(s)"
+          end
+        end
+      end
+    end
   end
+
 end

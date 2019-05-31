@@ -6,7 +6,6 @@ import Calendar from 'react-calendar/dist/entry.nostyle'
 import WeeklyCalendar from './ConceptWeeklyCalendar'
 import MonthlyCalendar from './MonthlyCalendar'
 import workerScheduleStore from './stores/WorkerScheduleStore'
-import MiniMonthlyCalendar from './MiniMonthlyCalendar'
 import {
   formatYDM,
   monthStartDate,

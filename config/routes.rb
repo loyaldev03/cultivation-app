@@ -82,8 +82,34 @@ Rails.application.routes.draw do
   end
 
   namespace 'worker' do 
-    resources :login, only: [:index]
+    resources :login, only: [:index] do
+      post    'generate_code', on: :collection
+      post    'check_code', on: :collection
+    end
   end
+
+  namespace 'mobile' do
+    namespace 'worker' do 
+      resources :logins, only: [:index] do
+        collection do 
+          get     'pin_request'
+          post    'generate_code'
+          post    'check_code'
+        end
+      end
+      resources :dashboards, only: [:index]
+      resources :work_logs do
+        collection do
+          post 'clock_in'
+          post 'clock_out'
+          post 'pause'
+          post 'resume'
+        end
+      end
+    end
+  end
+
+
 
   get "inventory/setup" => "home#inventory_setup"
   namespace 'inventory', as: :inventory do
@@ -114,7 +140,7 @@ Rails.application.routes.draw do
 
     resources :sales_products, only: [] do
       collection do
-        get 'harvest_packages'
+        get 'products'
         get 'convert_products'
         get 'product_info'
       end
@@ -169,6 +195,12 @@ Rails.application.routes.draw do
   # API for web pages
   namespace :api do
     namespace :v1 do
+      resources :notifications, only: [:index] do
+        member do
+          post 'mark_as_read'
+        end
+      end
+
       resources :system, only: [], as: :system do
         collection do
           get 'configuration'
@@ -217,9 +249,18 @@ Rails.application.routes.draw do
           get 'harvest_packages'
           get 'converted_products'
           get 'harvest_products/:cultivation_batch_id', action: 'harvest_products'
+          get 'conversion_plans_by_task/:task_id', action: 'conversion_plans_by_task'
+          get 'harvest_products_from_package/:source_package_id', action: 'harvest_products_from_package'
+
           post 'setup_harvest_package'
           post 'setup_converted_product'
           post 'scan_and_create'
+          post 'scan_and_convert'
+        end
+
+        member do
+          get 'product_plans'
+          post 'save_product_plans'
         end
       end
 
@@ -326,12 +367,13 @@ Rails.application.routes.draw do
         post ':id/update_nutrients', to: 'daily_tasks#update_nutrients'
         delete ':id/notes/:note_id', to: 'daily_tasks#destroy_note'
         get '/tasks', to: 'daily_tasks#tasks'
+        get '/other_tasks', to: 'daily_tasks#other_tasks'
         get '/tasks_by_date', to: 'daily_tasks#tasks_by_date'
         get '/tasks_by_date_range', to: 'daily_tasks#tasks_by_date_range'
         put '/time_log', to: 'daily_tasks#time_log'
         get '/work_schedules', to: 'daily_tasks#work_schedules'
         get '/schedule_by_date', to: 'daily_tasks#schedule_by_date'
-        
+
         post ':id/save_material_used', to: 'daily_tasks#save_material_used'
         post 'materials_used', to: 'daily_tasks#materials_used' 
 

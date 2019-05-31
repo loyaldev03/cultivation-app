@@ -26,11 +26,15 @@ module Issues
     end
 
     attribute :cultivation_batch do |object|
-      {
-        id: object.cultivation_batch.id.to_s,
-        batch_no: object.cultivation_batch.batch_no,
-        name: object.cultivation_batch.name,
-      }
+      if object.cultivation_batch
+        {
+          id: object.cultivation_batch.id.to_s,
+          batch_no: object.cultivation_batch.batch_no,
+          name: object.cultivation_batch.name,
+        }
+      else
+        nil
+      end
     end
 
     attribute :reported_by do |object|

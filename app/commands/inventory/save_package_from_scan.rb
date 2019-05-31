@@ -80,7 +80,7 @@ module Inventory
 
       @metrc_tag = facility.metrc_tags.find_by(tag: tag, tag_type: 'package')
       @production_date = Time.now
-      @quantity = 1
+      @quantity = size
     end
 
     def valid_user?
@@ -124,12 +124,13 @@ module Inventory
         quantity: quantity,
         uom: product.common_uom,
         production_date: production_date,
-        event_type: 'create_package',
+        event_type: 'create_package_from_scan',
         event_date: production_date,
         ref_id: ref_id,
         ref_type: ref_type,
         harvest_batch: harvest_batch,
         product_name: name,
+        facility_strain: facility_strain,
       )
 
       metrc_tag.update!(status: 'assigned')
@@ -147,19 +148,19 @@ module Inventory
       when '1/2 KG'
         return 0.5, 'kg'
       when '1/4 LB'
-        return 'lb', 0.25
+        return 0.25, 'lb'
       when '1/4 OZ'
-        return 'oz', 0.25
+        return 0.25, 'oz'
       when 'EIGTH'
-        return 'oz', 0.125
+        return 0.125, 'oz'
       when 'GRAM'
-        return 'g', 1
+        return 1, 'g'
       when '1/2 OZ'
-        return 'oz', 0.5
+        return 0.5, 'oz'
       when 'LB'
-        return 'lb', 1
+        return 1, 'lb'
       when 'OUNCE'
-        return 'oz', 1
+        return 1, 'oz'
       else
         return nil
       end

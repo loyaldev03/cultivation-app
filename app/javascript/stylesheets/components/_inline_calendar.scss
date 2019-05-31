@@ -9,47 +9,48 @@ $calendarFontSize: 14px;
   border-radius: 4px;
   background-color: $white;
 
-  .react-calendar {
-    padding-bottom: 0.35em;
-  }
+  
+}
+.inline_calendar > .react-calendar {
+  padding-bottom: 0.35em;
+}
 
-  .react-calendar__navigation {
-    button {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-    }
-  }
-
-  .react-calendar__navigation__label {
-    color: $grey;
-    background-color: $white;
-  }
-  .react-calendar__navigation__arrow {
-    color: $grey;
-    line-height: $calendarFontSize;
-  }
-  .react-calendar__month-view__weekdays {
-    font-size: 0.85em;
-    margin-top: 0.3em;
-    padding: 0.2em 0;
-    text-align: center;
-    color: $grey;
-    abbr {
-      text-decoration: none;
-    }
-  }
-  .react-calendar__tile {
-    color: $grey;
-    outline: 0;
-    line-height: 1.2em;
-  }
-  .react-calendar__tile--active {
-    color: $white;
-  }
-  .react-calendar__tile:hover {
+.inline_calendar > .react-calendar>  .react-calendar__navigation > button {
+  
+    background: transparent;
+    border: none;
     cursor: pointer;
-    color: $black;
-    background-color: $orange;
-  }
+  
+}
+
+.inline_calendar > .react-calendar> .react-calendar__navigation>.react-calendar__navigation__label {
+  color: $grey;
+  background-color: $white;
+}
+.inline_calendar > .react-calendar> .react-calendar__navigation> .react-calendar__navigation__arrow {
+  color: $grey;
+  line-height: $calendarFontSize;
+}
+.inline_calendar > .react-calendar> .react-calendar__month-view  >div> div>  .react-calendar__month-view__weekdays {
+  font-size: 0.85em;
+  margin-top: 0.3em;
+  padding: 0.2em 0;
+  text-align: center;
+  color: $grey;
+}
+.inline_calendar > .react-calendar> .react-calendar__month-view  > div> div> .react-calendar__month-view__weekdays > .react-calendar__month-view__weekdays__weekday> abbr {
+  text-decoration: none;
+}
+.inline_calendar > .react-calendar> .react-calendar__month-view >.react-calendar__tile {
+  color: $grey;
+  outline: 0;
+  line-height: 1.2em;
+}
+.inline_calendar > .react-calendar> .react-calendar__tile--active {
+  color: $white;
+}
+.inline_calendar > .react-calendar> .react-calendar__month-view  > div> div> .react-calendar__month-view__days >.react-calendar__tile:hover {
+  cursor: pointer;
+  color: $black;
+  background-color: $orange;
 }

@@ -51,11 +51,7 @@ export default class StatusTile extends React.Component {
             </div>
             {issue && issue.length > 0 ? (
               <div className="flex justify-center mt3">
-                <a
-                  className="fw6 orange dim pointer"
-                  style={{ position: 'absolute', bottom: '0' }}
-                  href="/daily_tasks"
-                >
+                <a className="fw6 orange dim pointer" href="/daily_tasks">
                   Show More
                 </a>
               </div>
@@ -153,11 +149,7 @@ export default class StatusTile extends React.Component {
             </div>
             {task.length > 0 ? (
               <div className="flex justify-center mt3">
-                <a
-                  className="fw6 orange dim pointer"
-                  style={{ position: 'absolute', bottom: '0' }}
-                  href="/daily_tasks"
-                >
+                <a className="fw6 orange dim pointer" href="/daily_tasks">
                   Show More
                 </a>
               </div>

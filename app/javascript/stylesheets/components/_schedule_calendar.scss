@@ -1,6 +1,6 @@
  // w-100 f3 fw6 db tc pv2 bg-light-gray gray"
- .schedule-calendar{
- .availabilty-calendar-title {
+ 
+ .schedule-calendar > .availabilty-calendar-title {
     display: block;
     background-color: $whiteSmoke;
     color: var(--gray);
@@ -10,7 +10,7 @@
     font-size: 1.3em;
     font-weight: 600;
   }
-  .dot{
+  .schedule-calendar > .dot{
     height: 5px;
     width: 5px;
     background-color: var(--orange);
@@ -20,10 +20,10 @@
     bottom: 0;
     right: 43%;
   }
-  .react-calendar .wide{
+  .schedule-calendar > .react-calendar .wide{
     width: 100%;
   }
-  .react-calendar {
+  .schedule-calendar > .react-calendar {
     border:0;
     font-size:.7em;
     
@@ -131,4 +131,4 @@
       padding-bottom: $weekRowPadding;
     }
   }
- }
+ 

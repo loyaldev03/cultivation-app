@@ -73,6 +73,12 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
                     start_date: start_date,
                     duration: duration,
                     end_date: end_date)
+      create(:task, indelible: Constants::INDELIBLE_CLEANING, batch: scheduled_batch,
+                    phase: Constants::CONST_VEG,
+                    start_date: start_date,
+                    duration: duration,
+                    estimated_hours: 0.5,
+                    end_date: end_date)
     end
     let!(:task_staying_flower) do
       start_date = task_staying_veg.end_date
@@ -151,13 +157,15 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
     end
 
     context 'schedule batch with unassigned tasks' do
-      it 'notify manager on unassigned tasks' do
+      it 'notify manager on unassigned tasks', focus: true do
         Time.use_zone(facility.timezone) do
           current_time = scheduled_batch.start_date - 1.days
           Timecop.freeze(current_time) do
             job.perform
 
             res = Notification.where(action: 'batch_unassigned_tasks_reminder').count
+            notify = Notification.where(action: 'batch_unassigned_tasks_reminder').first
+            expect(notify.notifiable_name).to end_with "have 1 unassigned task(s)"
             expect(res).to eq 1
           end
         end
@@ -213,6 +221,12 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
                     phase: Constants::CONST_VEG,
                     start_date: start_date,
                     duration: duration,
+                    end_date: end_date)
+      create(:task, indelible: Constants::INDELIBLE_CLEANING, batch: scheduled_batch,
+                    phase: Constants::CONST_VEG,
+                    start_date: start_date,
+                    duration: duration,
+                    estimated_hours: 0.5,
                     end_date: end_date)
     end
     let!(:task_staying_flower) do
@@ -341,6 +355,12 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
                     start_date: start_date,
                     duration: duration,
                     end_date: end_date)
+      create(:task, indelible: Constants::INDELIBLE_CLEANING, batch: active_batch,
+                    phase: Constants::CONST_VEG,
+                    start_date: start_date,
+                    duration: duration,
+                    estimated_hours: 0.5,
+                    end_date: end_date)
     end
     let!(:task_staying_flower) do
       start_date = task_staying_veg.end_date
@@ -355,6 +375,12 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
                     phase: Constants::CONST_FLOWER,
                     start_date: start_date,
                     duration: duration,
+                    end_date: end_date)
+      create(:task, indelible: Constants::INDELIBLE_CLEANING, batch: active_batch,
+                    phase: Constants::CONST_FLOWER,
+                    start_date: start_date,
+                    duration: duration,
+                    estimated_hours: 0.5,
                     end_date: end_date)
     end
     let!(:task_staying_harvest) do
@@ -537,7 +563,7 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
       end
     end
 
-    context 'active batch with unassigned_tasks' do
+    context 'active batch with unassigned_tasks', focus: true do
       it 'notify manager of unassigned_tasks' do
         Time.use_zone(facility.timezone) do
           current_time = active_batch.start_date - 1.days
@@ -545,6 +571,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
             job.perform
 
             res = Notification.where(action: 'batch_unassigned_tasks_reminder').count
+            notify = Notification.where(action: 'batch_unassigned_tasks_reminder').first
+            expect(notify.notifiable_name).to end_with "have 2 unassigned task(s)"
             expect(res).to eq 1
           end
         end

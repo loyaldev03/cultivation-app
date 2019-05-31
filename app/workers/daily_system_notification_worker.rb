@@ -91,7 +91,7 @@ class DailySystemNotificationWorker
       days_left = (batch.start_date - current_time) / 1.days
       if days_left > 0 && days_left <= 1
         managers_ids = get_facility_managers(batch)
-        unassigned_count = get_unassigned_tasks_count(batch.id)
+        unassigned_count = get_unassigned_tasks_count(batch)
         if unassigned_count > 0
           action_notify_batch_unassigned(batch, managers_ids, unassigned_count)
         end
@@ -100,7 +100,7 @@ class DailySystemNotificationWorker
 
     active_batches.each do |batch|
       managers_ids = get_facility_managers(batch)
-      unassigned_count = get_unassigned_tasks_count(batch.id)
+      unassigned_count = get_unassigned_tasks_count(batch)
       if unassigned_count > 0
         action_notify_batch_unassigned(batch, managers_ids, unassigned_count)
       end
@@ -127,12 +127,22 @@ class DailySystemNotificationWorker
     end
   end
 
+  def get_unassigned_tasks_count(batch)
+    tasks = Cultivation::QueryTasks.call(batch).result
+    res = tasks.select do |t|
+      !t.have_children?(tasks) && t.user_ids.blank? && t.estimated_hours.positive?
+    end
+    res.count
+  end
 
-  def get_unassigned_tasks_count(batch_id)
-    Cultivation::Task.
-      where(batch_id: batch_id).
-      or({user_ids: nil}, {user_ids: []}).
-      count
+  def count_unassigned_tasks(children, batch_tasks)
+    children.reduce(0.0) do |sum, e|
+      if !e.have_children?(batch_tasks) && e.estimated_cost
+        sum + e.estimated_cost
+      else
+        sum
+      end
+    end
   end
 
   def action_notify_batch_start(batch, managers_ids, days_left)

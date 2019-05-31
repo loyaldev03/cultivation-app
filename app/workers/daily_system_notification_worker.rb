@@ -17,6 +17,7 @@ class DailySystemNotificationWorker
     notify_batch_about_to_harvest
     notify_batch_about_to_cure
     notify_batch_about_to_packaging
+    notify_batch_unassigned_tasks
 
     time_travel_return
   end
@@ -85,6 +86,27 @@ class DailySystemNotificationWorker
     end
   end
 
+  def notify_batch_unassigned_tasks
+    scheduled_batches.each do |batch|
+      days_left = (batch.start_date - current_time) / 1.days
+      if days_left > 0 && days_left <= 1
+        managers_ids = get_facility_managers(batch)
+        unassigned_count = get_unassigned_tasks_count(batch.id)
+        if unassigned_count > 0
+          action_notify_batch_unassigned(batch, managers_ids, unassigned_count)
+        end
+      end
+    end
+
+    active_batches.each do |batch|
+      managers_ids = get_facility_managers(batch)
+      unassigned_count = get_unassigned_tasks_count(batch.id)
+      if unassigned_count > 0
+        action_notify_batch_unassigned(batch, managers_ids, unassigned_count)
+      end
+    end
+  end
+
   def get_next_phase(batch, all_phases)
     query_cmd = Cultivation::QueryBatchPhases.call(batch)
     # Grouping tasks are all the phases
@@ -95,11 +117,22 @@ class DailySystemNotificationWorker
                end
     if schedule.present?
       curr_idx = schedule.find_index { |p| current_time >= p.start_date }
-      next_idx = curr_idx - 1 # After reverse next item is in-front
-      if schedule.size > next_idx
-        schedule[next_idx]
+      if curr_idx
+        # TODO: Check why is this blank?
+        next_idx = curr_idx - 1 # After reverse next item is in-front
+        if schedule.size > next_idx
+          schedule[next_idx]
+        end
       end
     end
+  end
+
+
+  def get_unassigned_tasks_count(batch_id)
+    Cultivation::Task.
+      where(batch_id: batch_id).
+      or({user_ids: nil}, {user_ids: []}).
+      count
   end
 
   def action_notify_batch_start(batch, managers_ids, days_left)
@@ -179,6 +212,22 @@ class DailySystemNotificationWorker
       batch.id.to_s,
       Constants::NOTIFY_TYPE_BATCH,
       "#{batch.batch_no} (#{batch.name}) is ready to packaging in #{days_left} days",
+    )
+  end
+
+  def action_notify_batch_unassigned(batch, managers_ids, unassigned_count)
+    if managers_ids.blank?
+      raise StandardError.new "Missing manager in facility: \"#{batch.facility.name}\""
+      return
+    end
+
+    CreateNotificationsWorker.new.perform(
+      nil,
+      'batch_unassigned_tasks_reminder',
+      managers_ids,
+      batch.id.to_s,
+      Constants::NOTIFY_TYPE_BATCH,
+      "#{batch.batch_no} (#{batch.name}) have #{unassigned_count} unassigned task(s)",
     )
   end
 

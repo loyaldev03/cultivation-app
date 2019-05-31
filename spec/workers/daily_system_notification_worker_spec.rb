@@ -108,9 +108,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         Timecop.freeze(current_time) do
           job.perform
 
-          result = Notification.last
-          expect(Notification.count).to eq 1
-          expect(result.notifiable_name).to end_with('is scheduled to start in 5 days')
+          res = Notification.where(action: 'batch_start_reminder').first
+          expect(res.notifiable_name).to end_with('is scheduled to start in 5 days')
         end
       end
     end
@@ -121,9 +120,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         Timecop.freeze(current_time) do
           job.perform
 
-          result = Notification.last
-          expect(Notification.count).to eq 1
-          expect(result.notifiable_name).to end_with('is scheduled to start in 4 days')
+          res = Notification.where(action: 'batch_start_reminder').first
+          expect(res.notifiable_name).to end_with('is scheduled to start in 4 days')
         end
       end
     end
@@ -134,9 +132,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         Timecop.freeze(current_time) do
           job.perform
 
-          result = Notification.last
-          expect(Notification.count).to eq 1
-          expect(result.notifiable_name).to end_with('is scheduled to start in 1 days')
+          res = Notification.where(action: 'batch_start_reminder').first
+          expect(res.notifiable_name).to end_with('is scheduled to start in 1 days')
         end
       end
     end
@@ -149,6 +146,20 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
 
           result = Notification.last
           expect(Notification.count).to eq 0
+        end
+      end
+    end
+
+    context 'schedule batch with unassigned tasks' do
+      it 'notify manager on unassigned tasks' do
+        Time.use_zone(facility.timezone) do
+          current_time = scheduled_batch.start_date - 1.days
+          Timecop.freeze(current_time) do
+            job.perform
+
+            res = Notification.where(action: 'batch_unassigned_tasks_reminder').count
+            expect(res).to eq 1
+          end
         end
       end
     end
@@ -238,7 +249,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         Timecop.freeze(current_time) do
           job.perform
 
-          expect(Notification.count).to eq 0
+          res = Notification.where(action: 'batch_move_reminder').count
+          expect(res).to eq 0
         end
       end
     end
@@ -249,9 +261,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         Timecop.freeze(current_time) do
           job.perform
 
-          result = Notification.last
-          expect(Notification.count).to eq 1
-          expect(result.notifiable_name).to end_with("is scheduled to move into 'veg' phase tomorrow")
+          res = Notification.where(action: 'batch_move_reminder').first
+          expect(res.notifiable_name).to end_with("is scheduled to move into 'veg' phase tomorrow")
         end
       end
     end
@@ -262,26 +273,26 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         Timecop.freeze(current_time) do
           job.perform
 
-          result = Notification.last
-          expect(Notification.count).to eq 1
-          expect(result.notifiable_name).to end_with("is scheduled to move into 'flower' phase tomorrow")
+          res = Notification.where(action: 'batch_move_reminder').first
+          expect(res.notifiable_name).to end_with("is scheduled to move into 'flower' phase tomorrow")
         end
       end
     end
 
-    it 'same day as veg' do
+    it 'no notification on same day as veg' do
       Time.use_zone(facility.timezone) do
         current_time = task_staying_veg.start_date
         Timecop.freeze(current_time) do
           job.perform
 
-          expect(Notification.count).to eq 0
+          res = Notification.where(action: 'batch_move_reminder').count
+          expect(res).to eq 0
         end
       end
     end
   end
 
-  context 'batch is ready into phase' do
+  context 'batch is moving into next stage' do
     let!(:active_batch) do
       Time.zone = facility.timezone
       start_date = Time.zone.local(2018, 8, 1, 8, 30, 0)
@@ -385,7 +396,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
           Timecop.freeze(current_time) do
             job.perform
 
-            expect(Notification.count).to eq 1
+            res = Notification.where(action: 'batch_harvest_reminder').count
+            expect(res).to eq 1
           end
         end
       end
@@ -396,7 +408,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
           Timecop.freeze(current_time) do
             job.perform
 
-            expect(Notification.count).to eq 1
+            res = Notification.where(action: 'batch_harvest_reminder').count
+            expect(res).to eq 1
           end
         end
       end
@@ -407,7 +420,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
           Timecop.freeze(current_time) do
             job.perform
 
-            expect(Notification.count).to eq 1
+            res = Notification.where(action: 'batch_harvest_reminder').count
+            expect(res).to eq 1
           end
         end
       end
@@ -418,7 +432,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
           Timecop.freeze(current_time) do
             job.perform
 
-            expect(Notification.count).to eq 0
+            res = Notification.where(action: 'batch_harvest_reminder').count
+            expect(res).to eq 0
           end
         end
       end
@@ -430,7 +445,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
           Timecop.freeze(current_time) do
             job.perform
 
-            expect(Notification.count).to eq 1
+            res = Notification.where(action: 'batch_cure_reminder').count
+            expect(res).to eq 1
           end
         end
       end
@@ -441,7 +457,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
           Timecop.freeze(current_time) do
             job.perform
 
-            expect(Notification.count).to eq 1
+            res = Notification.where(action: 'batch_cure_reminder').count
+            expect(res).to eq 1
           end
         end
       end
@@ -452,7 +469,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
           Timecop.freeze(current_time) do
             job.perform
 
-            expect(Notification.count).to eq 1
+            res = Notification.where(action: 'batch_cure_reminder').count
+            expect(res).to eq 1
           end
         end
       end
@@ -463,7 +481,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
           Timecop.freeze(current_time) do
             job.perform
 
-            expect(Notification.count).to eq 0
+            res = Notification.where(action: 'batch_cure_reminder').count
+            expect(res).to eq 0
           end
         end
       end
@@ -475,7 +494,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
           Timecop.freeze(current_time) do
             job.perform
 
-            expect(Notification.count).to eq 1
+            res = Notification.where(action: 'batch_packaging_reminder').count
+            expect(res).to eq 1
           end
         end
       end
@@ -486,7 +506,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
           Timecop.freeze(current_time) do
             job.perform
 
-            expect(Notification.count).to eq 1
+            res = Notification.where(action: 'batch_packaging_reminder').count
+            expect(res).to eq 1
           end
         end
       end
@@ -497,7 +518,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
           Timecop.freeze(current_time) do
             job.perform
 
-            expect(Notification.count).to eq 1
+            res = Notification.where(action: 'batch_packaging_reminder').count
+            expect(res).to eq 1
           end
         end
       end
@@ -508,7 +530,22 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
           Timecop.freeze(current_time) do
             job.perform
 
-            expect(Notification.count).to eq 0
+            res = Notification.where(action: 'batch_packaging_reminder').count
+            expect(res).to eq 0
+          end
+        end
+      end
+    end
+
+    context 'active batch with unassigned_tasks' do
+      it 'notify manager of unassigned_tasks' do
+        Time.use_zone(facility.timezone) do
+          current_time = active_batch.start_date - 1.days
+          Timecop.freeze(current_time) do
+            job.perform
+
+            res = Notification.where(action: 'batch_unassigned_tasks_reminder').count
+            expect(res).to eq 1
           end
         end
       end

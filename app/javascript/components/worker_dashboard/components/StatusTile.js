@@ -49,7 +49,7 @@ export default class StatusTile extends React.Component {
                 </i>
               </div>
             </div>
-            
+
             <ul className="list pl0 pb0">
               {issue &&
                 issue.slice(0, 2).map(x =>
@@ -106,13 +106,13 @@ export default class StatusTile extends React.Component {
                 )}
             </ul>
             {issue && issue.length > 0 ? (
-              <div className="flex justify-center mt3">
+              <div className="flex justify-center mv3">
                 <a className="fw6 orange dim pointer" href="/daily_tasks">
                   Show More
                 </a>
               </div>
             ) : (
-              <div className="flex justify-center mt5">
+              <div className="flex justify-center mv5">
                 <span className="fw6 gray dim">No isssue for today</span>
               </div>
             )}
@@ -149,7 +149,7 @@ export default class StatusTile extends React.Component {
               })}
             </div>
             {task.length > 0 ? (
-              <div className="flex justify-center mt3">
+              <div className="flex justify-center mv3">
                 <a className="fw6 orange dim pointer" href="/daily_tasks">
                   Show More
                 </a>

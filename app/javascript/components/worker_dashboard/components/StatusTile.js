@@ -37,7 +37,7 @@ export default class StatusTile extends React.Component {
             </div>
             <img src={WorkerDashboardGraph} />
           </div>
-          <div className="ba b--light-gray pa3 bg-white mt3 h5">
+          <div className="ba b--light-gray pa3 bg-white mt3">
             <div className="flex justify-between">
               <div>
                 <h1 className="f5 fw6 ">Issues</h1>
@@ -49,22 +49,12 @@ export default class StatusTile extends React.Component {
                 </i>
               </div>
             </div>
-            {issue && issue.length > 0 ? (
-              <div className="flex justify-center mt3">
-                <a className="fw6 orange dim pointer" href="/daily_tasks">
-                  Show More
-                </a>
-              </div>
-            ) : (
-              <div className="flex justify-center mt5">
-                <span className="fw6 gray dim">No isssue for today</span>
-              </div>
-            )}
+
             <ul className="list pl0 pb0">
               {issue &&
                 issue.slice(0, 2).map(x =>
-                  x.map(i =>
-                    i.map(k => (
+                  x.slice(0, 2).map(i =>
+                    i.slice(0, 2).map(k => (
                       <li className="pt2 pb3 pointer" key={k}>
                         <div className="flex items-center justify-start">
                           <div className="f6 fw6 silver">
@@ -115,6 +105,17 @@ export default class StatusTile extends React.Component {
                   )
                 )}
             </ul>
+            {issue && issue.length > 0 ? (
+              <div className="flex justify-center mv3">
+                <a className="fw6 orange dim pointer" href="/daily_tasks">
+                  Show More
+                </a>
+              </div>
+            ) : (
+              <div className="flex justify-center mv5">
+                <span className="fw6 gray dim">No isssue for today</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -148,7 +149,7 @@ export default class StatusTile extends React.Component {
               })}
             </div>
             {task.length > 0 ? (
-              <div className="flex justify-center mt3">
+              <div className="flex justify-center mv3">
                 <a className="fw6 orange dim pointer" href="/daily_tasks">
                   Show More
                 </a>

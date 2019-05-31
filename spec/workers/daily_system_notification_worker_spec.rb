@@ -157,7 +157,7 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
     end
 
     context 'schedule batch with unassigned tasks' do
-      it 'notify manager on unassigned tasks', focus: true do
+      it 'notify manager on unassigned tasks' do
         Time.use_zone(facility.timezone) do
           current_time = scheduled_batch.start_date - 1.days
           Timecop.freeze(current_time) do
@@ -222,7 +222,7 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
                     start_date: start_date,
                     duration: duration,
                     end_date: end_date)
-      create(:task, indelible: Constants::INDELIBLE_CLEANING, batch: scheduled_batch,
+      create(:task, indelible: Constants::INDELIBLE_CLEANING, batch: active_batch,
                     phase: Constants::CONST_VEG,
                     start_date: start_date,
                     duration: duration,
@@ -563,7 +563,7 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
       end
     end
 
-    context 'active batch with unassigned_tasks', focus: true do
+    context 'active batch with unassigned_tasks' do
       it 'notify manager of unassigned_tasks' do
         Time.use_zone(facility.timezone) do
           current_time = active_batch.start_date - 1.days

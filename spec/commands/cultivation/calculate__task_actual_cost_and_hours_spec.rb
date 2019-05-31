@@ -120,6 +120,5 @@ RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
       expect(cmd.result[:actual_cost]).to eq(17.5)
       expect(time_log.breakdowns.count).to eq(1)
     end
-
   end
 end

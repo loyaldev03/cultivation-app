@@ -15,6 +15,7 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
   end
   let!(:facility_strain) { create(:facility_strain, facility: facility) }
   let!(:manager) { create(:user, :manager, facilities: [facility.id]) }
+  let!(:worker) { create(:user, :worker, facilities: [facility.id]) }
 
   context 'perform_async' do
     it 'should enqueue worker' do
@@ -75,9 +76,10 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
                     end_date: end_date)
       create(:task, indelible: Constants::INDELIBLE_CLEANING, batch: scheduled_batch,
                     phase: Constants::CONST_VEG,
-                    start_date: start_date,
-                    duration: duration,
-                    estimated_hours: 0.5,
+                    start_date: end_date - 2.days,
+                    duration: 2,
+                    estimated_hours: 5,
+                    work_status: Constants::WORK_STATUS_STARTED,
                     end_date: end_date)
     end
     let!(:task_staying_flower) do
@@ -165,7 +167,8 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
 
             res = Notification.where(action: 'batch_unassigned_tasks_reminder').count
             notify = Notification.where(action: 'batch_unassigned_tasks_reminder').first
-            expect(notify.notifiable_name).to end_with "have 1 unassigned task(s)"
+            expect(notify).not_to be nil
+            expect(notify.notifiable_name).to end_with 'have 1 unassigned task(s)'
             expect(res).to eq 1
           end
         end
@@ -226,7 +229,6 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
                     phase: Constants::CONST_VEG,
                     start_date: start_date,
                     duration: duration,
-                    estimated_hours: 0.5,
                     end_date: end_date)
     end
     let!(:task_staying_flower) do
@@ -356,9 +358,12 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
                     duration: duration,
                     end_date: end_date)
       create(:task, indelible: Constants::INDELIBLE_CLEANING, batch: active_batch,
+                    name: 'Test Incomplete Task 002',
                     phase: Constants::CONST_VEG,
-                    start_date: start_date,
-                    duration: duration,
+                    work_status: Constants::WORK_STATUS_STARTED,
+                    user_ids: [worker.id],
+                    start_date: end_date - 2.days,
+                    duration: 2,
                     estimated_hours: 0.5,
                     end_date: end_date)
     end
@@ -377,9 +382,11 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
                     duration: duration,
                     end_date: end_date)
       create(:task, indelible: Constants::INDELIBLE_CLEANING, batch: active_batch,
+                    name: 'Test Unassigned Task 002',
                     phase: Constants::CONST_FLOWER,
-                    start_date: start_date,
-                    duration: duration,
+                    user_ids: [],
+                    start_date: end_date - 2.days,
+                    duration: 2,
                     estimated_hours: 0.5,
                     end_date: end_date)
     end
@@ -572,8 +579,27 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
 
             res = Notification.where(action: 'batch_unassigned_tasks_reminder').count
             notify = Notification.where(action: 'batch_unassigned_tasks_reminder').first
-            expect(notify.notifiable_name).to end_with "have 2 unassigned task(s)"
+            expect(notify).not_to be nil
+            expect(notify.notifiable_name).to end_with 'have 1 unassigned task(s)'
             expect(res).to eq 1
+          end
+        end
+      end
+    end
+
+    context 'active batch with incomplete_tasks' do
+      it 'notify worker of incomplete_tasks' do
+        Time.use_zone(facility.timezone) do
+          current_time = task_staying_veg.end_date + 1.days
+          Timecop.freeze(current_time) do
+            job.perform
+
+            res = Notification.where(action: 'task_incomplete_tasks_reminder').count
+            notify = Notification.where(action: 'task_incomplete_tasks_reminder').first
+            expect(res).to eq 1
+            expect(notify.recipient_id).to eq worker.id
+            expect(notify.notifiable_name).to include 'Incomplete Task 002'
+            expect(notify.notifiable_name).to end_with 'not complete on time'
           end
         end
       end

@@ -18,6 +18,7 @@ class DailySystemNotificationWorker
     notify_batch_about_to_cure
     notify_batch_about_to_packaging
     notify_batch_unassigned_tasks
+    notify_tasks_incomplete
 
     time_travel_return
   end
@@ -107,6 +108,15 @@ class DailySystemNotificationWorker
     end
   end
 
+  def notify_tasks_incomplete
+    active_batches.each do |batch|
+      incomplete_tasks = get_incomplete_tasks(batch)
+      incomplete_tasks.each do |task|
+        action_notify_task_incomplete(batch, task.user_ids, task.name)
+      end
+    end
+  end
+
   def get_next_phase(batch, all_phases)
     query_cmd = Cultivation::QueryBatchPhases.call(batch)
     # Grouping tasks are all the phases
@@ -130,9 +140,25 @@ class DailySystemNotificationWorker
   def get_unassigned_tasks_count(batch)
     tasks = Cultivation::QueryTasks.call(batch).result
     res = tasks.select do |t|
-      !t.have_children?(tasks) && t.user_ids.blank? && t.estimated_hours.positive?
+      !t.have_children?(tasks) && # Only task without children is the actual task
+        t.user_ids.blank? &&
+        t.estimated_hours.positive?
     end
     res.count
+  end
+
+  def get_incomplete_tasks(batch)
+    tasks = Cultivation::QueryTasks.call(batch).result
+    incomplete_tasks = tasks.select do |t|
+      end_at = t.start_date + t.duration.days
+      is_overdue = t.work_status != Constants::WORK_STATUS_DONE &&
+                   current_time > end_at
+
+      !t.have_children?(tasks) && # Only task without children is the actual task
+        t.user_ids.present? && # Assigned task
+        is_overdue
+    end
+    incomplete_tasks
   end
 
   def count_unassigned_tasks(children, batch_tasks)
@@ -238,6 +264,22 @@ class DailySystemNotificationWorker
       batch.id.to_s,
       Constants::NOTIFY_TYPE_BATCH,
       "#{batch.batch_no} (#{batch.name}) have #{unassigned_count} unassigned task(s)",
+    )
+  end
+
+  def action_notify_task_incomplete(batch, assignees_ids, task_name)
+    if assignees_ids.blank?
+      raise StandardError.new "Missing assignee in task: \"#{task_name}\""
+      return
+    end
+
+    CreateNotificationsWorker.new.perform(
+      nil,
+      'task_incomplete_tasks_reminder',
+      assignees_ids,
+      batch.id.to_s,
+      Constants::NOTIFY_TYPE_BATCH,
+      "Task '#{task_name}' not complete on time",
     )
   end
 

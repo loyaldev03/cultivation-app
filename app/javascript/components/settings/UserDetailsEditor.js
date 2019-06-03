@@ -495,7 +495,7 @@ class UserDetailsEditor extends React.PureComponent {
 
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
 
-    const isSameUser = this.props.currentId=== this.props.user.id
+    const isSameUser = this.props.currentId === this.props.user.id
     return (
       <div className="h-100 flex flex-auto flex-column">
         <style> {styles} </style>

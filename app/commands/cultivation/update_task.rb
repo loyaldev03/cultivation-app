@@ -5,7 +5,8 @@ module Cultivation
     REFTYPE_CHILDREN = 'children'.freeze
     REFTYPE_DEPENDENT = 'dependent'.freeze
 
-    attr_accessor :args, :current_user, :cascade_change_tasks, :schedule_batch
+    attr_accessor :args, :current_user, :cascade_change_tasks, :schedule_batch,
+      :original_user_ids
 
     def initialize(current_user = nil, args = nil, schedule_batch = false)
       self.current_user = current_user
@@ -16,6 +17,7 @@ module Cultivation
 
     def call
       task = Cultivation::Task.includes(:batch).find_by(id: args[:id])
+      @original_user_ids = task.user_ids.blank? ? [] : task.user_ids.map(&:to_s)
       batch = task.batch
       if valid_batch? batch
         batch_tasks = Cultivation::QueryTasks.call(batch, [:modifier, :users]).result
@@ -51,29 +53,27 @@ module Cultivation
 
     def action_notify(task)
       if args[:action] == 'edit_assignees'
-        job_params = {
-          actor_id: current_user.id.to_s,
-          action: args[:action],
-          recipients: args[:user_ids],
-          notifiable_id: task.id.to_s,
-          notifiable_type: Constants::NOTIFY_TYPE_TASK,
-          notifiable_name: task.name,
-          alt_notifiable_id: task.batch_id.to_s,
-          alt_notifiable_type: Constants::NOTIFY_TYPE_BATCH,
-          alt_notifiable_name: task.batch.name,
-        }
-        CreateNotificationsWorker.perform_async(
-          current_user.id.to_s,
-          args[:action],
-          args[:user_ids],
-          task.id.to_s,
-          Constants::NOTIFY_TYPE_TASK,
-          task.name,
-          task.batch_id.to_s,
-          Constants::NOTIFY_TYPE_BATCH,
-          task.batch.name,
-        )
+        new_user_ids = args[:user_ids].blank? ? [] : args[:user_ids].map(&:to_s)
+        unassigned = original_user_ids - new_user_ids
+        assigned = new_user_ids - original_user_ids
+
+        create_notifications(task, 'task_assigned', assigned) unless assigned.blank?
+        create_notifications(task, 'task_unassigned', unassigned) unless unassigned.blank?
       end
+    end
+
+    def create_notifications(task, action, user_ids)
+      CreateNotificationsWorker.perform_async(
+        current_user.id.to_s,
+        action,
+        user_ids,
+        task.id.to_s,
+        Constants::NOTIFY_TYPE_TASK,
+        task.name,
+        task.batch_id.to_s,
+        Constants::NOTIFY_TYPE_BATCH,
+        task.batch.name,
+      )
     end
 
     def detect_cascade_changes(task, batch_tasks)

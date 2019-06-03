@@ -5,7 +5,6 @@ RSpec.describe "Home", type: :request do
     describe "GET index" do
       it "should redirect to login page" do
         get root_path
-
         expect(response).to redirect_to new_user_session_url
       end
     end
@@ -21,7 +20,7 @@ RSpec.describe "Home", type: :request do
       it "should render dashboard" do
         get root_path
 
-        expect(response.status).to eq(302)
+        expect(response.status).to eq(200)
       end
     end
   end

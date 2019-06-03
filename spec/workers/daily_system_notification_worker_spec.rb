@@ -107,7 +107,6 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
                     duration: duration,
                     end_date: end_date)
     end
-
     let(:job) { described_class.new }
 
     it 'notify 5 days before batch start date' do
@@ -121,7 +120,6 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         end
       end
     end
-
     it 'notify 4 days before batch start date' do
       Time.use_zone(facility.timezone) do
         current_time = scheduled_batch.start_date - 4.days
@@ -133,7 +131,6 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         end
       end
     end
-
     it 'notify a days before batch start date' do
       Time.use_zone(facility.timezone) do
         current_time = scheduled_batch.start_date - 1.days
@@ -145,7 +142,6 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         end
       end
     end
-
     it 'no notify on same day as batch start date' do
       Time.use_zone(facility.timezone) do
         current_time = scheduled_batch.start_date
@@ -157,20 +153,17 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         end
       end
     end
+    it 'notify manager on unassigned tasks' do
+      Time.use_zone(facility.timezone) do
+        current_time = scheduled_batch.start_date - 1.days
+        Timecop.freeze(current_time) do
+          job.perform
 
-    context 'schedule batch with unassigned tasks' do
-      it 'notify manager on unassigned tasks' do
-        Time.use_zone(facility.timezone) do
-          current_time = scheduled_batch.start_date - 1.days
-          Timecop.freeze(current_time) do
-            job.perform
-
-            res = Notification.where(action: 'batch_unassigned_tasks_reminder').count
-            notify = Notification.where(action: 'batch_unassigned_tasks_reminder').first
-            expect(notify).not_to be nil
-            expect(notify.notifiable_name).to end_with 'have 1 unassigned task(s)'
-            expect(res).to eq 1
-          end
+          res = Notification.where(action: 'batch_unassigned_tasks_reminder').count
+          notify = Notification.where(action: 'batch_unassigned_tasks_reminder').first
+          expect(notify).not_to be nil
+          expect(notify.notifiable_name).to end_with 'have 1 unassigned task(s)'
+          expect(res).to eq 1
         end
       end
     end
@@ -256,7 +249,6 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
                     duration: duration,
                     end_date: end_date)
     end
-
     let(:job) { described_class.new }
 
     it 'notify 2 days before moving into veg' do
@@ -270,7 +262,6 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         end
       end
     end
-
     it 'notify a day before moving into veg' do
       Time.use_zone(facility.timezone) do
         current_time = task_staying_veg.start_date - 1.days
@@ -282,7 +273,6 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         end
       end
     end
-
     it 'notify a day before moving into flower' do
       Time.use_zone(facility.timezone) do
         current_time = task_staying_flower.start_date - 1.days
@@ -294,7 +284,6 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         end
       end
     end
-
     it 'no notification on same day as veg' do
       Time.use_zone(facility.timezone) do
         current_time = task_staying_veg.start_date
@@ -569,7 +558,6 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         end
       end
     end
-
     context 'active batch with unassigned_tasks' do
       it 'notify manager of unassigned_tasks' do
         Time.use_zone(facility.timezone) do
@@ -586,7 +574,6 @@ RSpec.describe DailySystemNotificationWorker, type: :job do
         end
       end
     end
-
     context 'active batch with incomplete_tasks' do
       it 'notify worker of incomplete_tasks' do
         Time.use_zone(facility.timezone) do

@@ -495,6 +495,8 @@ class UserDetailsEditor extends React.PureComponent {
 
     const saveButtonText = isSaving ? 'Saving...' : 'Save'
 
+    const isSameUser = this.props.currentId.$oid === this.props.user.id
+    console.log(isSameUser)
     return (
       <div className="h-100 flex flex-auto flex-column">
         <style> {styles} </style>
@@ -573,6 +575,7 @@ class UserDetailsEditor extends React.PureComponent {
                     onChange={this.onChangeInput('firstName')}
                     value={firstName}
                     required={true}
+                    disabled={isSameUser}
                   />
                 </div>
                 <div className="w-50 fr pl3">
@@ -582,6 +585,7 @@ class UserDetailsEditor extends React.PureComponent {
                     onChange={this.onChangeInput('lastName')}
                     value={lastName}
                     required={true}
+                    disabled={isSameUser}
                   />
                 </div>
               </div>

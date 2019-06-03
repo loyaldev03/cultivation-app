@@ -2,4 +2,4 @@
   <%= breadcrumbs ["Settings", settings_path], "Team Settings"%>
 <% end %>
 
-<%= react_component 'settings/TeamSettingApp' %>
+<%= react_component 'settings/TeamSettingApp',{userId:current_user._id} %>

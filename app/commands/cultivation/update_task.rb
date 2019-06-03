@@ -39,6 +39,7 @@ module Cultivation
         # Save if no errors
         detect_cascade_changes(task, batch_tasks)
         task.modifier = current_user
+        task.facility = batch.facility
         task.save! if errors.empty?
         perform_cascade_change_tasks
         # TODO::ANDY - validate_capacity when updating tasks

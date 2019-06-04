@@ -12,12 +12,47 @@ module Cultivation
     end
 
     def call
-      #assume time format is 24
-      working_hour_start = Time.zone.local(@time_log.start_time.year, @time_log.start_time.month, @time_log.start_time.day, 8, 00)
-      working_hour_end = Time.zone.local(@time_log.start_time.year, @time_log.start_time.month, @time_log.start_time.day, 18, 00)
+      # Time log is recorded at
+      #   - time recorded is assume at facility timezone
 
+      # Work scheedule
+      #   - work schedule is date & time store at UTC.
+      #   - to use work schedule, extract the date to individual components and localise to facility'es timezone.
+      #   - ignore the timezone stored in the workscuedle.
+      #
+
+      # Inferring the rates
+      #   1. Get timezone
+      tz = @time_log.task.facility.timezone
+
+      #   2. Assuming time log is already recording at the
+      st = @time_log.start_time
+      et = @time_log.end_time
+
+      # Force convert work schedule start & end time to facility's timezone
+      start_time = Time.find_zone(tz).local(st.year, st.month, st.day, st.hour, st.min)
+      end_time = Time.find_zone(tz).local(et.year, et.month, et.day, et.hour, et.min)
+
+      #   3. Get the work schedule
+      work_date = Time.find_zone(tz).local(
+        start_time.year,
+        start_time.month,
+        start_time.day
+      )
+      ws = @user.work_schedules.find_by(date: work_date)
+      return if ws.nil?
+
+      working_hour_start = Time.find_zone(tz).local(ws.date.year, ws.date.month, ws.date.day, ws.start_time.hour, ws.start_time.min)
+      working_hour_end = Time.find_zone(tz).local(ws.date.year, ws.date.month, ws.date.day, ws.end_time.hour, ws.end_time.min)
       user_overtime_hourly_rate = @user.overtime_hourly_rate || 0
       user_hourly_rate = @user.hourly_rate || 0
+
+      #assume time format is 24
+      # working_hour_start = Time.zone.local(@time_log.start_time.year, @time_log.start_time.month, @time_log.start_time.day, 8, 00)
+      # working_hour_end = Time.zone.local(@time_log.start_time.year, @time_log.start_time.month, @time_log.start_time.day, 18, 00)
+
+      # user_overtime_hourly_rate = @user.overtime_hourly_rate || 0
+      # user_hourly_rate = @user.hourly_rate || 0
 
       # 8am -> 6pm
       # CASES
@@ -27,6 +62,9 @@ module Cultivation
       # 7.30am - 6.30pm => exceed start and end working hour
 
       # (start_time in working hour range) and (end_time in working hour range)
+      # For now, we are not converting time log to facility timezone. This is for scenerio when the facility changes
+      # to another timezone
+      #
       if ((@time_log.start_time >= working_hour_start) and (@time_log.start_time < working_hour_end)) and ((@time_log.end_time > working_hour_start) and (@time_log.end_time <= working_hour_end)) #compare hours in the range
         actual_cost = @time_log.duration_in_minutes * (user_hourly_rate / 60)
         actual_minutes = @time_log.duration_in_minutes

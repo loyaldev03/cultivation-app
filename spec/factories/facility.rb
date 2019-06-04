@@ -5,7 +5,7 @@ FactoryBot.define do
 
     trait :is_complete do
       site_license { Faker::Address.country }
-      timezone { TZInfo::Timezone.all.sample.name }
+      timezone { 'Eastern Time (US & Canada)' }
       is_complete { true }
       address { build(:address) }
       rooms do

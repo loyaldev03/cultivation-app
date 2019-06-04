@@ -139,7 +139,7 @@ class NutrientForm extends React.Component {
       updated_nutrient.active_ingredients = display_nutrients
     }
 
-    if (key === 'amount_uom'){
+    if (key === 'amount_uom') {
       this.tippy.hide()
     }
 
@@ -228,28 +228,33 @@ class NutrientForm extends React.Component {
                     value={temperature_day}
                   /> */}
 
-
-
                   <div class="inputWithIcon">
-                    <input type="text" style={{borderRight: 'white'}} 
-                      className="input-reset bt bl bb b--light-gray br2 br--left pa2 mb2 db w-100 pl4" 
+                    <input
+                      type="text"
+                      style={{ borderRight: 'white' }}
+                      className="input-reset bt bl bb b--light-gray br2 br--left pa2 mb2 db w-100 pl4"
                       onChange={this.onChangeInput('temperature_day')}
                       value={temperature_day}
                     />
-                    <i class="material-icons " aria-hidden="true">wb_sunny</i>
+                    <i class="material-icons " aria-hidden="true">
+                      wb_sunny
+                    </i>
                   </div>
                   <div class="inputWithIcon">
-                    <input type="text" style={{ borderLeft: 'white' }} 
-                      className="input-reset bt bb b--light-gray pa2 mb2 db w-100 pl4" 
+                    <input
+                      type="text"
+                      style={{ borderLeft: 'white' }}
+                      className="input-reset bt bb b--light-gray pa2 mb2 db w-100 pl4"
                       onChange={this.onChangeInput('temperature_night')}
                       value={temperature_night}
                     />
-                    <i class="material-icons " aria-hidden="true">brightness_2</i>
+                    <i class="material-icons " aria-hidden="true">
+                      brightness_2
+                    </i>
                   </div>
                   <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-20 tc">
                     F
                   </div>
-
                 </div>
               </div>
             </div>
@@ -337,11 +342,15 @@ class NutrientForm extends React.Component {
                             <div className="db shadow-4">
                               <MenuButton
                                 text="daily"
-                                onClick={e => this.onChangeWaterFrequencyUom('daily')}
+                                onClick={e =>
+                                  this.onChangeWaterFrequencyUom('daily')
+                                }
                               />
                               <MenuButton
                                 text="hourly"
-                                onClick={e => this.onChangeWaterFrequencyUom('hourly')}
+                                onClick={e =>
+                                  this.onChangeWaterFrequencyUom('hourly')
+                                }
                               />
                             </div>
                           </div>
@@ -419,14 +428,20 @@ class NutrientForm extends React.Component {
                               content={
                                 <div className="bg-white f6 flex grey mt2">
                                   <div className="db shadow-4">
-                                    {
-                                      e.product && e.product.uoms && e.product.uoms.map(g => (
+                                    {e.product &&
+                                      e.product.uoms &&
+                                      e.product.uoms.map(g => (
                                         <MenuButton
                                           text={g}
-                                          onClick={f => this.onChangeDissolveNutrientAttr(e, 'amount_uom', g)}
+                                          onClick={f =>
+                                            this.onChangeDissolveNutrientAttr(
+                                              e,
+                                              'amount_uom',
+                                              g
+                                            )
+                                          }
                                         />
-                                      ))
-                                    }
+                                      ))}
                                   </div>
                                 </div>
                               }

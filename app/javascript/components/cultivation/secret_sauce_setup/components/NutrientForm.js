@@ -1,12 +1,15 @@
 import React, { lazy } from 'react'
 import { observer } from 'mobx-react'
-import { SlidePanelHeader, SlidePanelFooter, selectStyles } from '../../../utils'
+import {
+  SlidePanelHeader,
+  SlidePanelFooter,
+  selectStyles
+} from '../../../utils'
 import InputRange from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
 import Select from 'react-select'
 import NutrientProfileStore from '../store/NutrientProfileStore'
 import Tippy from '@tippy.js/react'
-
 
 const styles = `
 .input-range__track--active {
@@ -17,7 +20,7 @@ const styles = `
     border: 1px solid #F66830;
 }
 `
-const MenuButton = ({text, onClick, className = '' }) => {
+const MenuButton = ({ text, onClick, className = '' }) => {
   return (
     <a
       className={`pa2 flex link dim pointer items-center ${className}`}
@@ -65,7 +68,7 @@ class NutrientForm extends React.Component {
       water_ph: week.water_ph,
       water_frequency_value: week.water_frequency_value,
       water_frequency_uom: week.water_frequency_uom,
-      dissolveNutrients: week.dissolveNutrients,
+      dissolveNutrients: week.dissolveNutrients
     })
   }
   onSave = async () => {
@@ -73,30 +76,37 @@ class NutrientForm extends React.Component {
   }
 
   addDissolveNutrient = () => {
-    const newDissolveNutrient = { 
-      amount: '', 
+    const newDissolveNutrient = {
+      amount: '',
       amount_uom: 'mg',
-      ppm: '', 
-      product: { value: '', label: '' }, 
+      ppm: '',
+      product: { value: '', label: '' },
       active_ingredients: ''
     }
-    const newDissolveNutrients = [...this.state.dissolveNutrients, newDissolveNutrient]
+    const newDissolveNutrients = [
+      ...this.state.dissolveNutrients,
+      newDissolveNutrient
+    ]
     this.setState({
-      dissolveNutrients: newDissolveNutrients,
+      dissolveNutrients: newDissolveNutrients
     })
   }
 
-  removeDissolveNutrient = (e) => {
-    this.setState({ dissolveNutrients: this.state.dissolveNutrients.filter(a => a !== e) })
+  removeDissolveNutrient = e => {
+    this.setState({
+      dissolveNutrients: this.state.dissolveNutrients.filter(a => a !== e)
+    })
   }
 
   onChangeDissolveNutrientAttr = (record, key, value) => {
     let updated_nutrient = this.state.dissolveNutrients.find(e => e === record)
     updated_nutrient[key] = value
-    if(key === 'product'){
+    if (key === 'product') {
       updated_nutrient.product_id = value.value
       updated_nutrient.ppm = value.ppm
-      const display_nutrients = value.nutrients.map(e => `${e.element}, ${e.value}%`).join()
+      const display_nutrients = value.nutrients
+        .map(e => `${e.element}, ${e.value}%`)
+        .join()
       updated_nutrient.active_ingredients = display_nutrients
     }
 
@@ -111,11 +121,11 @@ class NutrientForm extends React.Component {
 
   onChangeInput = field => e => this.setState({ [field]: e.target.value })
 
-  onChangeWaterUom = (value) => {
+  onChangeWaterUom = value => {
     console.log(value)
-    this.setState({ water_intake_uom: value})
+    this.setState({ water_intake_uom: value })
     this.tippy.hide()
-  } 
+  }
 
   onCreateTippy = tippy => {
     this.tippy = tippy
@@ -123,7 +133,17 @@ class NutrientForm extends React.Component {
 
   render() {
     const { onClose } = this.props
-    const { light_hours, temperature_day, humidity_level, water_intake_value, water_intake_uom, water_frequency_value, water_frequency_uom, water_ph, dissolveNutrients } = this.state
+    const {
+      light_hours,
+      temperature_day,
+      humidity_level,
+      water_intake_value,
+      water_intake_uom,
+      water_frequency_value,
+      water_frequency_uom,
+      water_ph,
+      dissolveNutrients
+    } = this.state
     const nutrientProducts = NutrientProfileStore.getNutrientProducts()
     return (
       <div className="flex flex-column h-100">
@@ -135,47 +155,59 @@ class NutrientForm extends React.Component {
               <div className="w-20">
                 <label className="">Light (daily)</label>
                 <div className="flex mt2">
-                  <input id="name" 
-                    className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-40" type="text" aria-describedby="name-desc" 
+                  <input
+                    id="name"
+                    className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-40"
+                    type="text"
+                    aria-describedby="name-desc"
                     value={light_hours}
                     onChange={this.onChangeInput('light_hours')}
                   />
-                  <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-30 tc">h</div>
+                  <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-30 tc">
+                    h
+                  </div>
                 </div>
               </div>
               <div className="w-30">
                 <label className="">Temp. (day/night)</label>
                 <div className="flex mt2">
-                  <input id="name" 
-                    className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-50" type="text" aria-describedby="name-desc" 
+                  <input
+                    id="name"
+                    className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-50"
+                    type="text"
+                    aria-describedby="name-desc"
                     onChange={this.onChangeInput('temperature_day')}
                     value={temperature_day}
                   />
-                  <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-20 tc">F</div>
+                  <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-20 tc">
+                    F
+                  </div>
                 </div>
               </div>
             </div>
-            <div className='mt3'>
-              <div className='mb3'>Humidity level (%)</div>
+            <div className="mt3">
+              <div className="mb3">Humidity level (%)</div>
               <div className="pa2">
                 <InputRange
                   maxValue={100}
                   minValue={0}
                   value={humidity_level}
-                  onChange={value => this.setState({ humidity_level: value })} />
+                  onChange={value => this.setState({ humidity_level: value })}
+                />
               </div>
-
             </div>
             <div className="mt3">
               <div className="flex">
                 <div className="w-30">
                   <label className="">Watering intake</label>
                   <div className="flex mt2">
-                    <input id="name" 
-                      className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-40" type="text" aria-describedby="name-desc" 
+                    <input
+                      id="name"
+                      className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-40"
+                      type="text"
+                      aria-describedby="name-desc"
                       value={water_intake_value}
                       onChange={this.onChangeInput('water_intake_value')}
-
                     />
                     <div className="bt bb br b--light-gray pa2 mb2 db br2 pointer br--right bg-light-gray gray w-60 tc">
                       <Tippy
@@ -197,104 +229,126 @@ class NutrientForm extends React.Component {
                               />
                               <MenuButton
                                 text="gal"
-                                onClick={e => this.onChangeWaterUom("gal")}
+                                onClick={e => this.onChangeWaterUom('gal')}
                               />
                             </div>
                           </div>
                         }
-                      > 
+                      >
                         <div>
                           <span>{water_intake_uom}</span>
                           <i className={'material-icons grey md-14 ml2'}>
                             keyboard_arrow_down
                           </i>
                         </div>
-
                       </Tippy>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center f3 ml1 mr1">
-                  x
-                </div>
+                <div className="flex items-center f3 ml1 mr1">x</div>
                 <div className="w-30">
-                  <div className="h1"></div>
+                  <div className="h1" />
                   <div className="flex mt2">
-                    <input id="name" 
-                      className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-40" type="text" aria-describedby="name-desc" 
+                    <input
+                      id="name"
+                      className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-40"
+                      type="text"
+                      aria-describedby="name-desc"
                       value={water_frequency_value}
                       onChange={this.onChangeInput('water_frequency_value')}
                     />
-                    <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-60 tc">daily</div>
+                    <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-60 tc">
+                      daily
+                    </div>
                   </div>
                 </div>
                 <div className="w-30 ml3">
-                  <div className="h1"></div>
+                  <div className="h1" />
                   <div className="flex mt2">
-                    <input id="name" 
-                      className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-30" type="text" aria-describedby="name-desc" 
+                    <input
+                      id="name"
+                      className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-30"
+                      type="text"
+                      aria-describedby="name-desc"
                       value={water_ph}
                       onChange={this.onChangeInput('water_ph')}
                     />
-                    <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-20 tc">PH</div>
+                    <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-20 tc">
+                      PH
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <div className="mt3">
               <label>Dissolve nutrients </label>
-              {dissolveNutrients && dissolveNutrients.map((e) =>
-                <div className="pa2 mt2" style={{ background: 'rgba(238, 238, 238, 0.3)'}}>
-                  <Select
-                    styles={selectStyles}
-                    options={nutrientProducts}
-                    value={e.product}
-                    onChange={f => this.onChangeDissolveNutrientAttr(e, 'product', f)}
-                  />
-                  <div className="flex">
-                    <div className="w-30 mt2">
-                      <div className="h1">Amount</div>
-                      <div className="flex mt2">
-                        <input 
-                          id="name" 
-                          className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-30" type="text" aria-describedby="name-desc" 
-                          value={e.amount}
-                          onChange={f => this.onChangeDissolveNutrientAttr(e, 'amount', f.target.value)}
-                        />
-                        <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-20 tc">mg</div>
+              {dissolveNutrients &&
+                dissolveNutrients.map(e => (
+                  <div
+                    className="pa2 mt2"
+                    style={{ background: 'rgba(238, 238, 238, 0.3)' }}
+                  >
+                    <Select
+                      styles={selectStyles}
+                      options={nutrientProducts}
+                      value={e.product}
+                      onChange={f =>
+                        this.onChangeDissolveNutrientAttr(e, 'product', f)
+                      }
+                    />
+                    <div className="flex">
+                      <div className="w-30 mt2">
+                        <div className="h1">Amount</div>
+                        <div className="flex mt2">
+                          <input
+                            id="name"
+                            className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-30"
+                            type="text"
+                            aria-describedby="name-desc"
+                            value={e.amount}
+                            onChange={f =>
+                              this.onChangeDissolveNutrientAttr(
+                                e,
+                                'amount',
+                                f.target.value
+                              )
+                            }
+                          />
+                          <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-20 tc">
+                            mg
+                          </div>
+                        </div>
+                      </div>
+                      <div className="w-30 mt2">
+                        <div className="h1">PPM</div>
+                        <div className="flex mt3">{e.ppm}</div>
+                      </div>
+                      <div className="w-30 mt2">
+                        <div className="h1" />
+                        <div className="flex mt3">
+                          <a
+                            className="pointer orange underline"
+                            onClick={f => this.removeDissolveNutrient(e)}
+                          >
+                            Remove
+                          </a>
+                        </div>
                       </div>
                     </div>
-                    <div className="w-30 mt2">
-                      <div className="h1">PPM</div>
-                      <div className="flex mt3">
-                        {e.ppm}
-                      </div>
-                    </div>
-                    <div className="w-30 mt2">
-                      <div className="h1"></div>
-                      <div className="flex mt3">
-                        <a 
-                          className="pointer orange underline"
-                          onClick={f => this.removeDissolveNutrient(e)}
-                        >Remove</a>
-                      </div>
+                    <div className="flex">
+                      <label>Active ingredients</label>
+                      <label>({e.active_ingredients})</label>
                     </div>
                   </div>
-                  <div className="flex">
-                    <label>Active ingredients</label>
-                    <label>({e.active_ingredients})</label>
-                  </div>
-                </div>
-              )}
-              <div 
-                className='pointer flex justify-center orange mt3 center items-center'
+                ))}
+              <div
+                className="pointer flex justify-center orange mt3 center items-center"
                 onClick={this.addDissolveNutrient}
               >
-                <span className='material-icons'>add</span>
+                <span className="material-icons">add</span>
                 <span>Add nutrient</span>
               </div>
             </div>
-
           </div>
           <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
         </div>
@@ -302,7 +356,6 @@ class NutrientForm extends React.Component {
     )
   }
 }
-
 
 // NutrientForm.defaultProps = {
 //   // selectMode: 'multiple', // or 'single'

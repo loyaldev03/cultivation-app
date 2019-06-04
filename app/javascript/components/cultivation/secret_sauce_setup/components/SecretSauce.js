@@ -70,11 +70,13 @@ class SecretSauce extends React.Component {
                 ref={form => (this.nutrientForm = form)}
                 title={phase}
                 facility_id={this.props.batch.facility_id}
-                onClose={() =>
-                  this.setState({ showEditNutrientPanel: false })
-                }
+                onClose={() => this.setState({ showEditNutrientPanel: false })}
                 onSave={nutrient_data => {
-                  NutrientProfileStore.updateWeekNutrient(this.props.batchId, phase, nutrient_data)
+                  NutrientProfileStore.updateWeekNutrient(
+                    this.props.batchId,
+                    phase,
+                    nutrient_data
+                  )
                   this.setState({ showEditNutrientPanel: false })
                 }}
               />
@@ -83,19 +85,22 @@ class SecretSauce extends React.Component {
         />
         <div class="flex justify-center">
           <span className="f6 b flex items-center mr2">Growth Schedule : </span>
-          { phases && phases.map((e) => 
-            <div 
-              className={classNames('ttc', {
-                'bg-orange f6 white pa2 br1 pointer': currPhase.phase_name === e.phase_name,
-                'bg-white f6 grey pa2 bt bb b--light-gray pointer': currPhase.phase_name !== e.phase_name,
-                'bl': phases[0] === e,
-                'br': phases[phases.length - 1] === e,
-              })}
-              onClick={f => this.onSwitchPhase(e.phase_name)}
-            >
-              {e.phase_name} ({e.weeks.length}w)
-            </div>
-          )}
+          {phases &&
+            phases.map(e => (
+              <div
+                className={classNames('ttc', {
+                  'bg-orange f6 white pa2 br1 pointer':
+                    currPhase.phase_name === e.phase_name,
+                  'bg-white f6 grey pa2 bt bb b--light-gray pointer':
+                    currPhase.phase_name !== e.phase_name,
+                  bl: phases[0] === e,
+                  br: phases[phases.length - 1] === e
+                })}
+                onClick={f => this.onSwitchPhase(e.phase_name)}
+              >
+                {e.phase_name} ({e.weeks.length}w)
+              </div>
+            ))}
         </div>
         <div className="mt4 flex">
           <div className="w-20 pa3 mr2 h7">
@@ -107,35 +112,56 @@ class SecretSauce extends React.Component {
             <div className="f6 h2 mt3">Nutrients</div>
             <div className="f6 h2 mt3">Active ingredients</div>
           </div>
-          {currPhase && currPhase.weeks && currPhase.weeks.map((e) =>
-            <React.Fragment>
-            { e.nutrient_enabled ? 
-                <div className="w-25 pa3 mr2 h7 tc pointer" onClick={() => this.handleShowNutrientForm(e)}>
-                <div className="f6 h2 mt3">{e.name}</div>
-                <div className="f6 h2 mt3">{e.light_hours}</div>
-                <div className="f6 h2 mt3">{e.temperature_day}/{e.temperature_night} F</div>
-                <div className="f6 h2 mt3">{e.humidity_level}%</div>
-                <div className="f6 h2 mt3">{e.water_intake_value}{e.water_intake_uom} per plant {e.water_frequency_value},{e.water_ph} ph</div>
-                <div className="f6 h2 mt3">{e.dissolveNutrients.map(e => `${e.product_name} x ${e.amount}${e.amount_uom}`).join()}</div>
-                  <div className="f6 h2 mt3">{e.dissolveNutrients.map(e => e.active_ingredients).join()} </div>
-              </div>
-              : 
-              <div className="w-25 pa3 mr2 h7 tc">
-                <div className="f6 h2 mt3">{e.name}</div>
-                <div className="flex h5 items-center">
-                  <div className="center">
-                    <i className="material-icons bg-orange white br-100 pa2 pointer"
-                      onClick={() => this.handleShowNutrientForm(e)}
-                    >
-                      edit
-                  </i>
+          {currPhase &&
+            currPhase.weeks &&
+            currPhase.weeks.map(e => (
+              <React.Fragment>
+                {e.nutrient_enabled ? (
+                  <div
+                    className="w-25 pa3 mr2 h7 tc pointer"
+                    onClick={() => this.handleShowNutrientForm(e)}
+                  >
+                    <div className="f6 h2 mt3">{e.name}</div>
+                    <div className="f6 h2 mt3">{e.light_hours}</div>
+                    <div className="f6 h2 mt3">
+                      {e.temperature_day}/{e.temperature_night} F
+                    </div>
+                    <div className="f6 h2 mt3">{e.humidity_level}%</div>
+                    <div className="f6 h2 mt3">
+                      {e.water_intake_value}
+                      {e.water_intake_uom} per plant {e.water_frequency_value},
+                      {e.water_ph} ph
+                    </div>
+                    <div className="f6 h2 mt3">
+                      {e.dissolveNutrients
+                        .map(
+                          e => `${e.product_name} x ${e.amount}${e.amount_uom}`
+                        )
+                        .join()}
+                    </div>
+                    <div className="f6 h2 mt3">
+                      {e.dissolveNutrients
+                        .map(e => e.active_ingredients)
+                        .join()}{' '}
+                    </div>
                   </div>
-                </div>
-              </div>
-            }
-            </React.Fragment>
-          )}
-
+                ) : (
+                  <div className="w-25 pa3 mr2 h7 tc">
+                    <div className="f6 h2 mt3">{e.name}</div>
+                    <div className="flex h5 items-center">
+                      <div className="center">
+                        <i
+                          className="material-icons bg-orange white br-100 pa2 pointer"
+                          onClick={() => this.handleShowNutrientForm(e)}
+                        >
+                          edit
+                        </i>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
         </div>
       </React.Fragment>
     )

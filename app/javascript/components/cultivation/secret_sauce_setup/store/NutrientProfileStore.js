@@ -62,7 +62,6 @@ class NutrientProfileStore {
         }))
         console.log(products)
         this.nutrientProducts = products
-
       } else {
         console.error(response.errors)
       }
@@ -84,7 +83,9 @@ class NutrientProfileStore {
       if (response.data) {
         const updated_phase = this.phases.find(e => e.phase_name === phase)
 
-        let updated_week = updated_phase.weeks.find(e => e.name === response.data.name)
+        let updated_week = updated_phase.weeks.find(
+          e => e.name === response.data.name
+        )
         updated_week = response.data
 
         const new_week = updated_phase.weeks.map(u => {
@@ -108,8 +109,8 @@ class NutrientProfileStore {
   }
 
   @action
-  setCurrentNutrientPhase(phase_name){
-    const phase = this.phases.find(e=> e.phase_name === phase_name)
+  setCurrentNutrientPhase(phase_name) {
+    const phase = this.phases.find(e => e.phase_name === phase_name)
     this.currPhase = phase
   }
 
@@ -119,18 +120,17 @@ class NutrientProfileStore {
     )
   }
 
-  getNutrientProducts(){
+  getNutrientProducts() {
     return toJS(this.nutrientProducts)
   }
 
-  getPhases(){
+  getPhases() {
     return toJS(this.phases)
   }
 
-  getCurrentPhase(){
+  getCurrentPhase() {
     return toJS(this.currPhase)
   }
-
 }
 
 const nutrientProfileStore = new NutrientProfileStore()

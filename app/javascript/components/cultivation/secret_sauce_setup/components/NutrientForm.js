@@ -19,6 +19,34 @@ const styles = `
     background: #F66830;
     border: 1px solid #F66830;
 }
+
+  
+  .inputWithIcon{
+    position:relative;
+  }
+  
+  .inputWithIcon i{
+    position:absolute;
+    left:0;
+    top:8px;
+    padding-left:5px;
+    color:#aaa;
+    transition:.3s;
+  }
+  
+  .inputWithIcon input[type=text]:focus + i{
+    color:dodgerBlue;
+  }
+  
+  .inputWithIcon.inputIconBg i{
+    background-color:#aaa;
+    color:#fff;
+    padding:9px 4px;
+    border-radius:4px 0 0 4px;
+  }
+  
+
+
 `
 const MenuButton = ({ text, onClick, className = '' }) => {
   return (
@@ -102,12 +130,17 @@ class NutrientForm extends React.Component {
     let updated_nutrient = this.state.dissolveNutrients.find(e => e === record)
     updated_nutrient[key] = value
     if (key === 'product') {
+      console.log(value)
       updated_nutrient.product_id = value.value
       updated_nutrient.ppm = value.ppm
       const display_nutrients = value.nutrients
         .map(e => `${e.element}, ${e.value}%`)
         .join()
       updated_nutrient.active_ingredients = display_nutrients
+    }
+
+    if (key === 'amount_uom'){
+      this.tippy.hide()
     }
 
     const updated_nutrients = this.state.dissolveNutrients.map(t => {
@@ -131,6 +164,12 @@ class NutrientForm extends React.Component {
     this.tippy = tippy
   }
 
+  onChangeWaterFrequencyUom = value => {
+    console.log(value)
+    this.setState({ water_frequency_uom: value })
+    this.tippy.hide()
+  }
+
   render() {
     const { onClose } = this.props
     const {
@@ -141,6 +180,7 @@ class NutrientForm extends React.Component {
       water_intake_uom,
       water_frequency_value,
       water_frequency_uom,
+      temperature_night,
       water_ph,
       dissolveNutrients
     } = this.state
@@ -171,7 +211,7 @@ class NutrientForm extends React.Component {
               <div className="w-30">
                 <label className="">Temp. (day/night)</label>
                 <div className="flex mt2">
-                  <input
+                  {/* <input
                     id="name"
                     className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-50"
                     type="text"
@@ -179,9 +219,37 @@ class NutrientForm extends React.Component {
                     onChange={this.onChangeInput('temperature_day')}
                     value={temperature_day}
                   />
+                  <input
+                    id="name"
+                    className="input-reset ba b--light-gray br2 br--left pa2 mb2 db w-50"
+                    type="text"
+                    aria-describedby="name-desc"
+                    onChange={this.onChangeInput('temperature_day')}
+                    value={temperature_day}
+                  /> */}
+
+
+
+                  <div class="inputWithIcon">
+                    <input type="text" style={{borderRight: 'white'}} 
+                      className="input-reset bt bl bb b--light-gray br2 br--left pa2 mb2 db w-100 pl4" 
+                      onChange={this.onChangeInput('temperature_day')}
+                      value={temperature_day}
+                    />
+                    <i class="material-icons " aria-hidden="true">wb_sunny</i>
+                  </div>
+                  <div class="inputWithIcon">
+                    <input type="text" style={{ borderLeft: 'white' }} 
+                      className="input-reset bt bb b--light-gray pa2 mb2 db w-100 pl4" 
+                      onChange={this.onChangeInput('temperature_night')}
+                      value={temperature_night}
+                    />
+                    <i class="material-icons " aria-hidden="true">brightness_2</i>
+                  </div>
                   <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-20 tc">
                     F
                   </div>
+
                 </div>
               </div>
             </div>
@@ -245,7 +313,7 @@ class NutrientForm extends React.Component {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center f3 ml1 mr1">x</div>
+                <div className="flex items-center f3 ml1 mr1 mt2">x</div>
                 <div className="w-30">
                   <div className="h1" />
                   <div className="flex mt2">
@@ -258,7 +326,34 @@ class NutrientForm extends React.Component {
                       onChange={this.onChangeInput('water_frequency_value')}
                     />
                     <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-60 tc">
-                      daily
+                      <Tippy
+                        placement="bottom-end"
+                        trigger="click"
+                        arrow={true}
+                        interactive={true}
+                        onCreate={this.onCreateTippy}
+                        content={
+                          <div className="bg-white f6 flex grey mt2">
+                            <div className="db shadow-4">
+                              <MenuButton
+                                text="daily"
+                                onClick={e => this.onChangeWaterFrequencyUom('daily')}
+                              />
+                              <MenuButton
+                                text="hourly"
+                                onClick={e => this.onChangeWaterFrequencyUom('hourly')}
+                              />
+                            </div>
+                          </div>
+                        }
+                      >
+                        <div>
+                          <span>{water_frequency_uom}</span>
+                          <i className={'material-icons grey md-14 ml2'}>
+                            keyboard_arrow_down
+                          </i>
+                        </div>
+                      </Tippy>
                     </div>
                   </div>
                 </div>
@@ -314,8 +409,35 @@ class NutrientForm extends React.Component {
                               )
                             }
                           />
-                          <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-20 tc">
-                            mg
+                          <div className="bt bb br b--light-gray pa2 mb2 db br2 br--right bg-light-gray gray w-50 tc">
+                            <Tippy
+                              placement="bottom-end"
+                              trigger="click"
+                              arrow={true}
+                              interactive={true}
+                              onCreate={this.onCreateTippy}
+                              content={
+                                <div className="bg-white f6 flex grey mt2">
+                                  <div className="db shadow-4">
+                                    {
+                                      e.product && e.product.uoms && e.product.uoms.map(g => (
+                                        <MenuButton
+                                          text={g}
+                                          onClick={f => this.onChangeDissolveNutrientAttr(e, 'amount_uom', g)}
+                                        />
+                                      ))
+                                    }
+                                  </div>
+                                </div>
+                              }
+                            >
+                              <div>
+                                <span>{e.amount_uom}</span>
+                                <i className={'material-icons grey md-14 ml2'}>
+                                  keyboard_arrow_down
+                                </i>
+                              </div>
+                            </Tippy>
                           </div>
                         </div>
                       </div>

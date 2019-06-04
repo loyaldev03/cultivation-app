@@ -2,16 +2,7 @@ module Cultivation
   class NutrientProfile #BatchRecipe
     include Mongoid::Document
     include Mongoid::Timestamps::Short
-
-    belongs_to :batch, class_name: 'Cultivation::Batch'
-    field :phase, type: String  # e.g. Clone, Veg1, Flower
-
-    embeds_many :weekly_nutrients
-  end
-
-  class WeeklyNutrient
-    include Mongoid::Document
-    include Mongoid::Timestamps::Short
+    field :phase_name, type: String # e.g Clone, Flower
     field :name, type: String # e.g. Week1
     field :task_id, type: BSON::ObjectId # bind to task
     field :light_hours, type: Float
@@ -20,9 +11,12 @@ module Cultivation
     field :humidity_level, type: Float
     field :water_intake_value, type: Float
     field :water_intake_uom, type: String
-    field :frequency_value, type: Integer
-    field :frequency_uom, type: String
+    field :water_ph, type: Float
+    field :water_frequency_value, type: Integer
+    field :water_frequency_uom, type: String
 
+    belongs_to :batch
+    belongs_to :task, optional: true
     embeds_many :nutrients
   end
 
@@ -32,10 +26,10 @@ module Cultivation
 
     # field :name, type: String       # e.g. Nitrogen, Phosphorus
     field :product_id, type: BSON::ObjectId
-    field :value, type: String      # e.g. 10
-    field :uom, type: String        # e.g. mg
-    field :ppm, type: String
-    # field :active_ingredients
+    field :amount, type: String      # e.g. 10
+    field :amount_uom, type: String        # e.g. mg
+    field :ppm, type: String # display ppm product
+    field :active_ingredients, type: String # display micronutrients in product
   end
 end
 

@@ -62,7 +62,7 @@ class SecretSauce extends React.Component {
     return (
       <React.Fragment>
         <SlidePanel
-          width="600px"
+          width="500px"
           show={showEditNutrientPanel}
           renderBody={props => (
             <Suspense fallback={<div />}>

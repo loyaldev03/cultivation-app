@@ -121,15 +121,15 @@ class NutrientProfileStore {
   }
 
   getNutrientProducts() {
-    return toJS(this.nutrientProducts)
+    return this.nutrientProducts
   }
 
   getPhases() {
-    return toJS(this.phases)
+    return this.phases
   }
 
   getCurrentPhase() {
-    return toJS(this.currPhase)
+    return this.currPhase
   }
 }
 

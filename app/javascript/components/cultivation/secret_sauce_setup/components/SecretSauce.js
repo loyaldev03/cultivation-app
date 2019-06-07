@@ -103,7 +103,7 @@ class SecretSauce extends React.Component {
             ))}
         </div>
         <div className="mt4 flex nowrap overflow-x-auto">
-          <div className="w5 pa3 mr2 h7">
+          <div className="w-20 pa3 mr2 h7">
             <div className="f6 h2 mt3" />
             <div className="f6 h2 mt3">Light hours (per day)</div>
             <div className="f6 h2 mt3">Temperature (day/night)</div>
@@ -118,7 +118,7 @@ class SecretSauce extends React.Component {
               <React.Fragment>
                 {e.nutrient_enabled ? (
                   <div
-                    className="w5 pa3 mr2 h7 tc pointer"
+                    className="w-25 pa3 mr2 h7 tc pointer"
                     onClick={() => this.handleShowNutrientForm(e)}
                   >
                     <div className="f6 h2 mt3">{e.name}</div>
@@ -146,7 +146,7 @@ class SecretSauce extends React.Component {
                     </div>
                   </div>
                 ) : (
-                    <div className="w5 pa3 mr2 h7 tc">
+                  <div className="w5 pa3 mr2 h7 tc">
                     <div className="f6 h2 mt3">{e.name}</div>
                     <div className="flex h5 items-center">
                       <div className="center">

@@ -89,9 +89,9 @@ class SecretSauce extends React.Component {
             phases.map(e => (
               <div
                 className={classNames('ttc', {
-                  'bg-orange f6 white pa2 br1 pointer':
+                  'bg-orange f6 white pa3 br1 pointer':
                     currPhase.phase_name === e.phase_name,
-                  'bg-white f6 grey pa2 bt bb b--light-gray pointer':
+                  'bg-white f6 grey pa3 bt bb b--light-gray pointer':
                     currPhase.phase_name !== e.phase_name,
                   bl: phases[0] === e,
                   br: phases[phases.length - 1] === e
@@ -102,8 +102,8 @@ class SecretSauce extends React.Component {
               </div>
             ))}
         </div>
-        <div className="mt4 flex">
-          <div className="w-20 pa3 mr2 h7">
+        <div className="mt4 flex nowrap overflow-x-auto">
+          <div className="w5 pa3 mr2 h7">
             <div className="f6 h2 mt3" />
             <div className="f6 h2 mt3">Light hours (per day)</div>
             <div className="f6 h2 mt3">Temperature (day/night)</div>
@@ -118,7 +118,7 @@ class SecretSauce extends React.Component {
               <React.Fragment>
                 {e.nutrient_enabled ? (
                   <div
-                    className="w-25 pa3 mr2 h7 tc pointer"
+                    className="w5 pa3 mr2 h7 tc pointer"
                     onClick={() => this.handleShowNutrientForm(e)}
                   >
                     <div className="f6 h2 mt3">{e.name}</div>
@@ -146,7 +146,7 @@ class SecretSauce extends React.Component {
                     </div>
                   </div>
                 ) : (
-                  <div className="w-25 pa3 mr2 h7 tc">
+                    <div className="w5 pa3 mr2 h7 tc">
                     <div className="f6 h2 mt3">{e.name}</div>
                     <div className="flex h5 items-center">
                       <div className="center">

@@ -17,9 +17,6 @@ module Cultivation
     def save_record
       batch = Cultivation::Batch.find(args[:batch_id])
       record = batch.nutrient_profiles.find_or_create_by(phase_name: args[:phase], name: args[:selectedWeek])
-      Rails.logger.debug "Record ==> #{record.inspect}"
-
-      Rails.logger.debug "Argument ==> #{args.inspect}"
       record.phase_name = args[:phase]
       record.name = args[:selectedWeek]
       record.task_id = ''
@@ -33,10 +30,7 @@ module Cultivation
       record.water_frequency_uom = args[:water_frequency_uom]
       record.water_ph = args[:water_ph]
 
-      Rails.logger.debug "Record inspect ==> #{record.inspect}"
-
       record.nutrients = [] #clear and update new
-      # record.nutrients = build_nutrient(args[:dissolveNutrients])
 
       args['dissolveNutrients'].each do |a|
         record.nutrients.build(
@@ -78,19 +72,5 @@ module Cultivation
     rescue
       errors.add(:error, $!.message)
     end
-  end
-
-  def build_nutrient(nutrients)
-    arr_nutrients = []
-    nutrients.each do |nutrient|
-      arr_nutrients << {
-        product_id: nutrient[:product_id],
-        amount: nutrient[:amount],
-        amount_uom: nutrient[:amount_uom],
-        ppm: nutrient[:ppm],
-        active_ingredients: nutrient[:active_ingredients],
-      }
-    end
-    arr_nutrients
   end
 end

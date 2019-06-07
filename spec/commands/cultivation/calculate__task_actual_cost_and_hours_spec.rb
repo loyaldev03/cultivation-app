@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
   let(:strain) { Common::Strain.create!(name: 'xyz', strain_type: 'indica') }
   let(:facility) do
-    facility = create(:facility, :is_complete)
+    facility = create(:facility, :is_complete, timezone: 'Eastern Time (US & Canada)')
     facility.rooms.each do |room|
       room.rows.each do |row|
         row.shelves.each do |shelf|
@@ -29,7 +29,22 @@ RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
           batch_source: Constants::SEEDS_KEY)
   end
 
-  let!(:valid_user) { User.create!(email: 'email@email.com', password: 'password', password_confirmation: 'password', hourly_rate: 5, overtime_hourly_rate: 7) }
+  let!(:valid_user) { 
+    user = User.create!(email: 'email@email.com', password: 'password', password_confirmation: 'password', hourly_rate: 5, overtime_hourly_rate: 7) 
+    user.work_schedules.create!(
+      date: Time.zone.local(2019, 4, 21),
+      start_time: Time.zone.local(2019, 4, 21, 8, 00),
+      end_time: Time.zone.local(2019, 4, 21, 18, 00)
+    )
+    user
+  }
+
+  around(:example) do |example|
+    puts "around example before"
+    Time.zone = 'Eastern Time (US & Canada)'
+    example.run
+    puts "around example after"
+  end
   
   # CASES
   # 7.30am - 8.30 am => exceed start working hour
@@ -39,23 +54,29 @@ RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
 
   context ".call" do
     it "In working hour range time_logs" do # Between 8am to 6pm
-        start_time = Time.zone.local(2019, 4, 21, 8,00)
-        end_time = Time.zone.local(2019, 4, 21, 18, 00)
-        task = Cultivation::Task.create(batch: batch1)
-        time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
-        cmd = Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
-        time_log = Cultivation::TimeLog.find(time_log.id.to_s)
+      start_time = Time.zone.local(2019, 4, 21, 8, 00)
+      end_time =   Time.zone.local(2019, 4, 21, 18, 00)
 
-        expect(cmd.errors).to eq({})
-        expect(cmd.result[:actual_minutes]).to eq(600)
-        expect(cmd.result[:actual_cost]).to eq(50)
-        expect(time_log.breakdowns.count).to eq(1)
+      # Rails.logger.error ">>>>>>> valid_user.work_schedules.last.start_time:"
+      # Rails.logger.error batch1.facility.timezone
+      # Rails.logger.error valid_user.work_schedules.last.start_time
+      # Rails.logger.error ">>>>>>>"
+
+      task = Cultivation::Task.create(batch: batch1, facility: batch1.facility)
+      time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
+      cmd = Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
+      time_log = Cultivation::TimeLog.find(time_log.id.to_s)
+
+      expect(cmd.errors).to eq({})
+      expect(cmd.result[:actual_minutes]).to eq(600)
+      expect(cmd.result[:actual_cost]).to eq(50)
+      expect(time_log.breakdowns.count).to eq(1)
     end
 
     it "Exceed start working hours return corrent actual cost" do
       start_time = Time.zone.local(2019, 4, 21, 7,30) #ot 7.30-8.00 => 30 minutes * (7/60) = 3.5
       end_time = Time.zone.local(2019, 4, 21, 18, 00) # 8.00 - 18.00 => 10 hours * 5 = 50.00
-      task = Cultivation::Task.create(batch: batch1)
+      task = Cultivation::Task.create(batch: batch1, facility: batch1.facility)
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
       cmd = Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
       time_log = Cultivation::TimeLog.find(time_log.id.to_s)
@@ -68,9 +89,9 @@ RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
 
 
     it "Exceed end working hours return corrent actual cost" do
-      start_time = Time.zone.local(2019, 4, 21, 8,00) #ot 18.00-19.30 => 30 minutes * (7/60) = 10.5
+      start_time = Time.zone.local(2019, 4, 21, 8, 00) # ot 18.00-19.30 => 30 minutes * (7/60) = 10.5
       end_time = Time.zone.local(2019, 4, 21, 19, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00
-      task = Cultivation::Task.create(batch: batch1)
+      task = Cultivation::Task.create(batch: batch1, facility: batch1.facility)
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
       cmd = Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
       time_log = Cultivation::TimeLog.find(time_log.id.to_s)
@@ -82,9 +103,10 @@ RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
     end
 
     it "Exceed start and end working hours return corrent actual cost" do
-      start_time = Time.zone.local(2019, 4, 21, 7,00) #ot 18.00-19.30 => 2 hour 30 minutes * (7/60) = 17.5
+      # Regular working time is 8am to 6pm
+      start_time = Time.zone.local(2019, 4, 21, 7,00) # ot 18.00-19.30 => 2 hour 30 minutes * (7/60) = 17.5
       end_time = Time.zone.local(2019, 4, 21, 19, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
-      task = Cultivation::Task.create(batch: batch1)
+      task = Cultivation::Task.create(batch: batch1, facility: batch1.facility)
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
       cmd = Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
       time_log = Cultivation::TimeLog.find(time_log.id.to_s)
@@ -96,12 +118,21 @@ RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
     end
 
     it "OT full before working hours start time " do
-      start_time = Time.zone.local(2019, 4, 21, 6,00) #ot 18.00-19.30 => 2 hour 30 minutes * (7/60) = 17.5
+      start_time = Time.zone.local(2019, 4, 21, 6,00) #ot 18.00-19.30 => 1 hour 30 minutes * (7/60) = 17.5
       end_time = Time.zone.local(2019, 4, 21, 7, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
-      task = Cultivation::Task.create(batch: batch1)
+
+      # Rails.logger.error ">>>>>>>>> timzone"
+      # Rails.logger.error Time.zone.name
+      # Rails.logger.error ">>>>>>>>>"
+
+      task = Cultivation::Task.create(batch: batch1, facility: batch1.facility)
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
       cmd = Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
       time_log = Cultivation::TimeLog.find(time_log.id.to_s)
+
+      # Rails.logger.error ">>>>>>>>>>\n"
+      # Rails.logger.error cmd.result.inspect
+      # Rails.logger.error ">>>>>>>>>>\n"
 
       expect(cmd.result[:actual_minutes]).to eq(90)
       expect(cmd.result[:actual_cost]).to eq(10.5)
@@ -111,7 +142,7 @@ RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
     it "OT full after working hours end time " do
       start_time = Time.zone.local(2019, 4, 21, 19, 00) #ot 18.00-19.30 => 2 hour 30 minutes * (7/60) = 17.5
       end_time = Time.zone.local(2019, 4, 21, 21, 30) # 8.00 - 18.00 => 10 hours * 5 = 50.00 = 67.5
-      task = Cultivation::Task.create(batch: batch1)
+      task = Cultivation::Task.create(batch: batch1, facility: batch1.facility)
       time_log = Cultivation::TimeLog.create(start_time: start_time, end_time: end_time, user: valid_user, task: task)
       cmd = Cultivation::CalculateTaskActualCostAndHours.call_by_id(time_log.id.to_s, valid_user, true)
       time_log = Cultivation::TimeLog.find(time_log.id.to_s)

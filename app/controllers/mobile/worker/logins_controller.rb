@@ -50,10 +50,6 @@ class Mobile::Worker::LoginsController < ApplicationController
   private
 
   def check_ip_whitelist
-    #comment out for now , how do we know current default facility if the user doesnt even log in yet ?
-    #before it was checking user default_facility_id
-
-    # facility = Facility.find(current_user.default_facility_id)
-    @ip_included = true #facility.whitelist_ips.include? request.remote_ip
+    @ip_included = current_ip_facility.present?
   end
 end

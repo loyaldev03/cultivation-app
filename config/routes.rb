@@ -322,7 +322,13 @@ Rails.application.routes.draw do
             get 'load_issues'
           end
         end
-        resources :nutrient_profiles, only: [:index, :create, :update]
+        resources :nutrient_profiles, only: [:index, :create, :update] do 
+          collection do 
+            get 'by_phases'
+            post 'update_week_nutrient'
+          end
+        end
+
 
         # resources :product_plans, only: [:index, :create] do
         #   post ':product_type_id/destroy', action: 'destroy'

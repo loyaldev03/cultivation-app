@@ -36,7 +36,7 @@ module Cultivation
     has_many :tasks, class_name: 'Cultivation::Task', dependent: :delete_all
     has_many :plants, class_name: 'Inventory::Plant'
     has_many :harvest_batch, class_name: 'Inventory::HarvestBatch'
-    has_one :nutrient_profile, class_name: 'Cultivation::NutrientProfile'
+    has_many :nutrient_profiles, class_name: 'Cultivation::NutrientProfile'
 
     scope :active, -> { where(status: Constants::BATCH_STATUS_ACTIVE) }
 

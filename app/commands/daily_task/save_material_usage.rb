@@ -50,7 +50,7 @@ module DailyTask
         product: material_use.product,
         catalogue: material_use.product.catalogue,
         cultivation_batch: task.batch,
-        facility: task.batch.facility,
+        facility: task.batch ? task.batch.facility : material_use.product.facility,
       )
 
       tx.quantity = quantity

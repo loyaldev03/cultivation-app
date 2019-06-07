@@ -6,7 +6,6 @@ import Calendar from 'react-calendar/dist/entry.nostyle'
 import WeeklyCalendar from './ConceptWeeklyCalendar'
 import MonthlyCalendar from './MonthlyCalendar'
 import workerScheduleStore from './stores/WorkerScheduleStore'
-import MiniMonthlyCalendar from './MiniMonthlyCalendar'
 import {
   formatYDM,
   monthStartDate,
@@ -33,9 +32,13 @@ class WorkerScheduleApp extends React.Component {
     let day = curr.getDay()
     var first = curr.getDate() - day + (day == 0 ? -6 : 1)
     first = new Date(curr.getFullYear(), curr.getMonth(), first) // First day is the day of the month - the day of the week
-    var last = new Date(curr.getFullYear(), curr.getMonth() + 1, 0)
+    var lastDayWeek = first.setDate(first.getDate() + 7)
+    lastDayWeek = new Date(lastDayWeek)
     let monthString = formatMonthAndYear(new Date())
     let date = new Date()
+    first = curr.getDate() - day + (day == 0 ? -6 : 1)
+    first = new Date(curr.getFullYear(), curr.getMonth(), first)
+
     const months = [
       'January',
       'February',
@@ -56,7 +59,7 @@ class WorkerScheduleApp extends React.Component {
     )
     let weeklyTask = await workerScheduleStore.getTaskByWeekArr(
       monthString + first.getDate(),
-      formatMonthAndYear(last) + last.getDate()
+      formatMonthAndYear(lastDayWeek) + lastDayWeek.getDate()
     )
     let dateSelected = `${date.getDate()} ${
       months[date.getMonth()]
@@ -141,9 +144,8 @@ class WorkerScheduleApp extends React.Component {
           </span>
         </div>
         <div className="flex ">
-          <div className="flex flex-column grey w-30">
+          <div className="flex flex-column grey w-30 schedule-calendar">
             <Calendar
-              className="schedule-calendar"
               activeStartDate={monthStartDate(formatDate(new Date()))}
               onChange={this.onChange}
               value={this.state.date}

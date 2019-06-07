@@ -32,6 +32,8 @@ class ProductTypeSection extends React.Component {
   onAddRow = event => {
     event.preventDefault()
 
+    console.log(this.props.harvestBatchUom)
+
     const converted_qty = convertToHarvestBatchUom(
       this.state.packageType.value,
       this.state.quantity,
@@ -42,7 +44,8 @@ class ProductTypeSection extends React.Component {
       this.props.productTypeData.product_type,
       this.state.packageType.value,
       this.state.quantity,
-      converted_qty
+      converted_qty,
+      this.props.harvestBatchUom
     )
 
     this.setState({

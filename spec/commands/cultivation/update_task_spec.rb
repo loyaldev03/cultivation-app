@@ -204,6 +204,124 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
     end
   end
 
+  context ".call - update assignees" do
+    let(:worker10) { create(:user, facilities: [facility.id], hourly_rate: 10) }
+    let(:worker8) { create(:user, facilities: [facility.id], hourly_rate: 8) }
+    let(:worker_invalid) { create(:user, hourly_rate: 10) }
+
+    it "update assigned users should only save unique" do
+      target = t2_3_2_1
+      args = {id: target.id,
+              name: Faker::Name.name,
+              user_ids: [
+                worker10.id,
+                worker10.id,
+                worker8.id,
+                worker_invalid.id,
+              ]}
+
+      cmd = Cultivation::UpdateTask.call(current_user, args)
+
+      expect(cmd.success?).to be true
+      expect(cmd.result.user_ids.length).to eq 2
+      expect(cmd.result.user_ids[0]).to eq worker10.id
+      expect(cmd.result.user_ids[1]).to eq worker8.id
+    end
+
+    it "assigned user should received notification" do
+      target = t2_3_2_1
+      args = {
+        id: target.id,
+        name: Faker::Name.name,
+        estimated_hours: 10,
+        action: "edit_assignees",
+        user_ids: [worker10.id.to_s],
+      }
+
+      Sidekiq::Testing.inline! do
+        cmd = Cultivation::UpdateTask.call(current_user, args)
+        notice = Notification.where(action: 'task_assigned',
+                                    recipient_id: worker10.id).first
+        expect(notice).not_to be nil
+        expect(notice).to have_attributes(
+          recipient_id: worker10.id,
+          recipient_name: worker10.display_name,
+          actor_id: current_user.id,
+          actor_name: current_user.display_name,
+          action: 'task_assigned',
+          notifiable_id: target.id,
+          notifiable_type: Constants::NOTIFY_TYPE_TASK,
+          notifiable_name: args[:name],
+        )
+      end
+    end
+
+    it "unassigned user should received notification" do
+      target = t2_3_2_1
+      assign_args = {
+        id: target.id,
+        name: target.name,
+        estimated_hours: 10,
+        action: "edit_assignees",
+        user_ids: [worker10.id.to_s],
+      }
+      unassign_args = {
+        id: target.id,
+        name: target.name,
+        estimated_hours: 10,
+        action: "edit_assignees",
+        user_ids: [worker8.id.to_s],
+      }
+
+      Sidekiq::Testing.inline! do
+        # First assign the task
+        cmd = Cultivation::UpdateTask.call(current_user, assign_args)
+        assign_notice = Notification.where(action: 'task_assigned',
+                                           recipient_id: worker10.id).first
+
+        expect(assign_notice).not_to be nil
+        expect(assign_notice).to have_attributes(
+          recipient_id: worker10.id,
+          recipient_name: worker10.display_name,
+          actor_id: current_user.id,
+          actor_name: current_user.display_name,
+          action: 'task_assigned',
+          notifiable_id: target.id,
+          notifiable_type: Constants::NOTIFY_TYPE_TASK,
+        )
+
+        # Then, unassign the task
+        cmd = Cultivation::UpdateTask.call(current_user, unassign_args)
+        notice1 = Notification.where(action: 'task_unassigned',
+                                    recipient_id: worker10.id).first
+        notice2 = Notification.where(action: 'task_assigned',
+                                    recipient_id: worker8.id).first
+
+        expect(notice1).not_to be nil
+        expect(notice1).to have_attributes(
+          recipient_id: worker10.id,
+          recipient_name: worker10.display_name,
+          actor_id: current_user.id,
+          actor_name: current_user.display_name,
+          action: 'task_unassigned',
+          notifiable_id: target.id,
+          notifiable_type: Constants::NOTIFY_TYPE_TASK,
+        )
+
+        expect(notice2).not_to be nil
+        expect(notice2).to have_attributes(
+          recipient_id: worker8.id,
+          recipient_name: worker8.display_name,
+          actor_id: current_user.id,
+          actor_name: current_user.display_name,
+          action: 'task_assigned',
+          notifiable_id: target.id,
+          notifiable_type: Constants::NOTIFY_TYPE_TASK,
+        )
+      end
+    end
+  end
+
   context ".call - updating estimated hours / cost" do
     let(:worker10) { create(:user, facilities: [facility.id], hourly_rate: 10) }
     let(:worker8) { create(:user, facilities: [facility.id], hourly_rate: 8) }
@@ -248,23 +366,6 @@ RSpec.describe Cultivation::UpdateTask, type: :command do
       parent = Cultivation::Task.find(t2_3.id)
       expected = args1[:estimated_hours] + args2[:estimated_hours]
       expect(parent.estimated_hours).to eq expected
-    end
-
-    it "update assigned users should only save unique" do
-      target = t2_3_2_1
-      args = {id: target.id, user_ids: [
-        worker10.id,
-        worker10.id,
-        worker8.id,
-        worker_invalid.id,
-      ]}
-
-      cmd = Cultivation::UpdateTask.call(current_user, args)
-
-      expect(cmd.success?).to be true
-      expect(cmd.result.user_ids.length).to eq 2
-      expect(cmd.result.user_ids[0]).to eq worker10.id
-      expect(cmd.result.user_ids[1]).to eq worker8.id
     end
 
     it "update estimated hours & assigned user should update estimated_cost" do

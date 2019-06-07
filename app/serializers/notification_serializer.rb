@@ -21,8 +21,10 @@ class NotificationSerializer
   end
 
   attribute :messages do |object|
-    if object.notifiable_type == Constants::NOTIFY_TYPE_TASK
+    if object.notifiable_type == Constants::NOTIFY_TYPE_TASK && object.action == 'task_assigned'
       "#{object.actor_name} assigned task \"#{object.notifiable_name}\" to you"
+    elsif object.notifiable_type == Constants::NOTIFY_TYPE_TASK && object.action == 'task_unassigned'
+      "#{object.actor_name} has unassigned task \"#{object.notifiable_name}\""
     elsif object.notifiable_type == Constants::NOTIFY_TYPE_TASK
       object.notifiable_name
     else

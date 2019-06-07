@@ -31,4 +31,12 @@ class Notification
   field :alt_notifiable_type, type: String, default: ''
   # Name of the reference item. E.g. "Water Plant"
   field :alt_notifiable_name, type: String, default: ''
+
+  # Uniq reference to prevent duplicate notification
+  index({actor_id: 1,
+         recipient_id: 1,
+         action: 1,
+         notifiable_id: 1,
+         notifiable_name: 1},
+        {unique: true})
 end

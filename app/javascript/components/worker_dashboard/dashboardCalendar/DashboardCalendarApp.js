@@ -1,7 +1,7 @@
 import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
-import Calendar from 'react-calendar'
+import Calendar from 'react-calendar/dist/entry.nostyle'
 
 @observer
 class DashboardCalendarApp extends React.Component {
@@ -15,9 +15,8 @@ class DashboardCalendarApp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="flex justify-center mt3 w-100">
+        <div className="flex justify-center mt3 w-100 schedule-calendar">
           <Calendar
-            className="schedule-calendar"
             onChange={this.onChange}
             minDetail="month"
             value={this.state.date}

@@ -1,5 +1,6 @@
  // w-100 f3 fw6 db tc pv2 bg-light-gray gray"
-  .month-calendar-title {
+ 
+ .month-calendar-title {
     color: $darkGrey;
     padding-top: 0.5em;
     padding-bottom: 0.8em;
@@ -7,7 +8,7 @@
     font-size: 1.3em;
     font-weight: 600;
   }
-  .react-calendar.schedule-month-calendar {
+  .schedule-month-calendar > .react-calendar {
     border:none;
     width:100%;
     .day-tile{
@@ -120,3 +121,4 @@
         }
     }
     }
+ 

@@ -4,9 +4,10 @@ module Cultivation
 
     attr_reader :args
 
-    def initialize(current_user, args)
+    def initialize(current_user, args, facility_id)
       @args = args
       @current_user = current_user
+      @facility_id = facility_id
     end
 
     def call
@@ -22,7 +23,9 @@ module Cultivation
       argument[:phase] = task_related.phase
       argument[:indent] = task_related.indent
       argument[:indelible] = nil
+      argument[:facility_id] = @facility_id
       new_task = Cultivation::Task.create(argument)
+
       if args[:action] == 'add-above'
         # Add Task Above
         new_task.move_to! task_related.position

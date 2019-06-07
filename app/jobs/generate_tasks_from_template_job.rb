@@ -29,7 +29,7 @@ class GenerateTasksFromTemplateJob < ApplicationJob
 
     # Loop through each task from template
     template_tasks.each do |task|
-      new_task = build_task(task, start_date, end_date)
+      new_task = build_task(task, start_date, end_date, batch)
       new_task[:id] = BSON::ObjectId.new
       task[:id] = new_task[:id] # Put the id into the template too
       new_task[:batch_id] = batch.id
@@ -61,7 +61,7 @@ class GenerateTasksFromTemplateJob < ApplicationJob
     predecessor[:id] if predecessor.present?
   end
 
-  def build_task(task, parent_start_date, parent_end_date)
+  def build_task(task, parent_start_date, parent_end_date, batch)
     raise ArgumentError, 'start_date is required' if parent_start_date.nil?
 
     indent = task[:wbs].split('.').length - 1
@@ -80,6 +80,7 @@ class GenerateTasksFromTemplateJob < ApplicationJob
       end_date: task_end_date,
       indelible: task[:indelible],
       indent: indent,
+      facility_id: batch.facility_id,
     }
     record
   end

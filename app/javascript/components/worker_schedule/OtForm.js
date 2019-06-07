@@ -1,7 +1,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import { SlidePanelHeader, SlidePanelFooter } from '../utils'
-import Calendar from 'react-calendar'
+import Calendar from 'react-calendar/dist/entry.nostyle'
 import WorkerScheduleStore from './stores/WorkerScheduleStore'
 const otCalendar = `
   #ot-calendar .react-calendar{

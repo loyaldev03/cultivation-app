@@ -21,19 +21,16 @@ class CreateNotificationsWorker
     @alt_notifiable_type = alt_notifiable_type
     @alt_notifiable_name = alt_notifiable_name
 
-    @logger = Logger.new(STDOUT)
-    @logger.debug ">>>>>>> CreateNotificationsWorker perform: #{action}"
-
     verify_args
 
-    records = @recipients.map do |r|
+    @recipients.map do |r|
       recipient_id = r.to_bson_id
-      {
+      notification = {
         recipient_id: recipient_id,
         recipient_name: get_recipient_name(recipient_id),
         actor_id: actor.id,
         actor_name: actor.display_name,
-        action: @action,
+        action: action,
         notifiable_id: @notifiable_id&.to_bson_id,
         notifiable_type: @notifiable_type,
         notifiable_name: @notifiable_name,
@@ -41,11 +38,8 @@ class CreateNotificationsWorker
         alt_notifiable_type: @alt_notifiable_type,
         alt_notifiable_name: @alt_notifiable_name,
       }
-    end
-
-    if records.any?
-      Notification.create(records)
-      @logger.debug ">>>>>>> CreateNotificationsWorker: #{records.size}"
+      rec = Notification.new(notification)
+      rec.save
     end
   end
 

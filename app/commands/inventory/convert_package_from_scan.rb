@@ -1,22 +1,23 @@
 module Inventory
-  class SavePackageFromScan
+  class ConvertPackageFromScan
     prepend SimpleCommand
 
     attr_reader :user,
       :id,
       :product_type,
       :package_type,
-      :cultivation_batch_id,
+      :source_package_id,
+      :source_package,
       :tag,
       :product,                 # Deduce from product_type, package type & strain from batch
       :name,                    # Deduce from product_type, package type & strain from batch
       :catalogue,               # Deduce from product_type, package type & strain from batch
-      :facility,                # Deduce from cultivation_batch_id
-      :cultivation_batch,       # Deduce from cultivation_batch_id
-      :facility_strain,         # Deduce from cultivation_batch_id
+      :facility,                # Deduce from source package
+      :cultivation_batch,       # Deduce from source package
+      :facility_strain,         # Deduce from source package
       :quantity,                # Hardcoded to 1
       :production_date,         # Hardcoded to Time.now
-      :harvest_batch,           # Deduce from cultivation_batch_id
+      :harvest_batch,           # Deduce from source package
       :metrc_tag,               # Deduce from tag
       :name
 
@@ -28,7 +29,7 @@ module Inventory
       @user = user
       @id = args[:id]
       @tag = args[:tag]
-      @cultivation_batch_id = args[:cultivation_batch_id]
+      @source_package_id = args[:source_package_id]
       @product_type = args[:product_type]
       @package_type = args[:package_type]
     end
@@ -46,18 +47,18 @@ module Inventory
     private
 
     def validate_params!
-      raise 'cultivation_batch_id is required' if cultivation_batch_id.nil?
+      raise 'source_package_id is required' if source_package_id.nil?
       raise 'product_type is required' if product_type.nil?
       raise 'package_type is required' if package_type.nil?
       raise 'tag is required' if tag.nil?
     end
 
     def prepare!
-      @cultivation_batch = Cultivation::Batch.find(cultivation_batch_id)
-      @facility = @cultivation_batch.facility
-      @facility_strain = @cultivation_batch.facility_strain
+      @source_package = Inventory::ItemTransaction.find(source_package_id)
+      @facility = @source_package.facility
+      @facility_strain = @source_package.facility_strain
       @name = "#{facility_strain.strain_name} - #{product_type}, #{package_type}"
-      @harvest_batch = @cultivation_batch.harvest_batch.first
+      @harvest_batch = @source_package.harvest_batch
 
       @catalogue = Inventory::Catalogue.find_by(label: product_type, category: 'raw_sales_product')
       raise 'No matching catalogue found!' if @catalogue.nil?
@@ -110,13 +111,11 @@ module Inventory
       if id.blank?
         create_package!
       else
-        update_package!
+        raise 'Not implemented'
       end
     end
 
     def create_package!
-      ref_type = ref_id = nil   # This to be replaced with package plan
-
       package = product.packages.create!(
         facility_id: facility.id,
         catalogue_id: catalogue.id,
@@ -124,21 +123,30 @@ module Inventory
         quantity: quantity,
         uom: product.common_uom,
         production_date: production_date,
-        event_type: 'create_package_from_scan',
+        event_type: 'convert_package_from_scan',
         event_date: production_date,
-        ref_id: ref_id,
-        ref_type: ref_type,
+        ref_id: source_package_id,
+        ref_type: 'Inventory::ItemTransaction',
         harvest_batch: harvest_batch,
         product_name: name,
         facility_strain: facility_strain,
       )
 
+      deduction = source_package.dup
+      deduction.quantity = -package.quantity
+      deduction.uom = package.uom
+      deduction.event_type = 'deduction_of_convert_package_from_scan'
+      deduction.event_date = Time.now
+      deduction.ref_id = deduction.id
+      deduction.ref_type = 'Inventory::ItemTransaction'
+      deduction.save!
+
+      Rails.logger.debug '>>>>>>>>>>>>>>> deduction'
+      Rails.logger.debug deduction.inspect
+      Rails.logger.debug ">>>>>>>>>>>>>>>\n\r"
+
       metrc_tag.update!(status: 'assigned')
       package
-    end
-
-    def update_package!
-      nil
     end
 
     def find_size_uom_from_package_type(package_type)

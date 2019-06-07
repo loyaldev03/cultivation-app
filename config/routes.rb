@@ -140,7 +140,7 @@ Rails.application.routes.draw do
 
     resources :sales_products, only: [] do
       collection do
-        get 'harvest_packages'
+        get 'products'
         get 'convert_products'
         get 'product_info'
       end
@@ -249,9 +249,18 @@ Rails.application.routes.draw do
           get 'harvest_packages'
           get 'converted_products'
           get 'harvest_products/:cultivation_batch_id', action: 'harvest_products'
+          get 'conversion_plans_by_task/:task_id', action: 'conversion_plans_by_task'
+          get 'harvest_products_from_package/:source_package_id', action: 'harvest_products_from_package'
+
           post 'setup_harvest_package'
           post 'setup_converted_product'
           post 'scan_and_create'
+          post 'scan_and_convert'
+        end
+
+        member do
+          get 'product_plans'
+          post 'save_product_plans'
         end
       end
 
@@ -364,6 +373,7 @@ Rails.application.routes.draw do
         post ':id/update_nutrients', to: 'daily_tasks#update_nutrients'
         delete ':id/notes/:note_id', to: 'daily_tasks#destroy_note'
         get '/tasks', to: 'daily_tasks#tasks'
+        get '/other_tasks', to: 'daily_tasks#other_tasks'
         get '/tasks_by_date', to: 'daily_tasks#tasks_by_date'
         get '/tasks_by_date_range', to: 'daily_tasks#tasks_by_date_range'
         put '/time_log', to: 'daily_tasks#time_log'

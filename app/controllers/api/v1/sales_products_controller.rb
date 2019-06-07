@@ -118,11 +118,173 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
         product_id: x.product.id.to_s,
         product_type: x.catalogue.label,
         package_type: x.product.package_type,
-        event_type: 'create_package',
+        event_type: x.event_type,
       }
     end
 
     render json: packages_json, status: 200
+  end
+
+  def harvest_products_from_package
+    product_type = params[:product_type]
+    package_type = params[:package_type]
+    ref_id = params[:source_package_id]
+
+    catalogue = Inventory::Catalogue.find_by(label: product_type, category: 'raw_sales_product')
+    source_package = Inventory::ItemTransaction.find(ref_id)
+    cultivation_batch = source_package.harvest_batch.cultivation_batch
+    facility = cultivation_batch.facility
+    facility_strain = cultivation_batch.facility_strain
+    product = Inventory::Product.find_by(
+      facility: facility,
+      facility_strain: facility_strain,
+      catalogue: catalogue,
+      package_type: package_type,
+    )
+
+    packages = Inventory::ItemTransaction.where(
+      ref_id: ref_id.to_bson_id,
+      event_type: 'convert_package_from_scan',
+      product_id: product.id,
+    ).
+      order(created_at: :desc)
+
+    packages_json = packages.map do |x|
+      {
+        id: x.id.to_s,
+        tag: x.package_tag,
+        product_id: x.product.id.to_s,
+        product_type: x.catalogue.label,
+        package_type: x.product.package_type,
+        event_type: x.event_type,
+      }
+    end
+
+    render json: packages_json, status: 200
+  end
+
+  def product_plans
+    plans = Inventory::ConvertProductPlan.where(package_id: params[:id])
+    plans_json = plans.map do |p|
+      {
+        id: p.id.to_s,
+        product_type: p.product_type,
+        package_type: p.package_type,
+        quantity: p.quantity,
+        uom: p.uom,
+        conversion: p.conversion,
+        total_weight: p.total_weight,
+      }
+    end
+
+    task = Cultivation::Task.find_by(
+      indelible: 'convert_product',
+      duration: 1,
+      package_id: params[:id].to_bson_id, # associate task to this package
+    )
+
+    if (task)
+      task = {
+        assign_to: task.users.empty? ? nil : task.users.first.id.to_s,
+        start_date: task.start_date ? task.start_date.iso8601 : nil,
+      }
+    end
+
+    render json: {product_plans: plans_json, task: task}, status: 200
+  end
+
+  def conversion_plans_by_task
+    task = Cultivation::Task.find(params[:task_id])
+    package_id = task.package_id
+    plans = Inventory::ConvertProductPlan.where(package_id: package_id)
+    plans_json = plans.map do |p|
+      {
+        id: p.id.to_s,
+        source_package_id: p.package.id.to_s,
+        product_type: p.product_type,
+        package_type: p.package_type,
+        quantity: p.quantity,
+        uom: p.uom,
+        conversion: p.conversion,
+        total_weight: p.total_weight,
+      }
+    end
+
+    render json: plans_json, status: 200
+  end
+
+  def scan_and_convert
+    command = Inventory::ConvertPackageFromScan.call(current_user, params.to_unsafe_h)
+    if command.success?
+      render json: Inventory::HarvestPackageSerializer.new(command.result).serialized_json
+    else
+      render json: request_with_errors(command.errors), status: 422
+    end
+  end
+
+  # "product_plans"=>[
+  #   { "product_type"=>"Whole plant",
+  #     "package_plans"=>[
+  #       {"id"=>"1/2 gram", "isNew"=>true, "package_type"=>"1/2 gram", "quantity"=>2, "uom"=>"g", "converted_qty"=>1}
+  #     ]
+  #   }
+  # ]
+  def save_product_plans
+    package = Inventory::ItemTransaction.find(params[:id])
+    Inventory::ConvertProductPlan.where(package: package).destroy_all
+    package_plans = []
+    product_plans = params[:product_plans]
+    product_plans.each do |pp|
+      product_type = pp[:product_type]
+      pp[:package_plans].each do |pkg_plan|
+        package_plan = Inventory::ConvertProductPlan.create!(
+          product_type: product_type,
+          quantity: pkg_plan[:quantity],
+          package_type: pkg_plan[:package_type],
+          uom: pkg_plan[:uom],
+          total_weight: pkg_plan[:converted_qty],
+          package: package,
+        )
+        package_plans << package_plan
+      end
+    end
+
+    # Rails.logger.debug package_plans.inspect
+
+    plans_json = package_plans.map do |p|
+      {
+        id: p.id.to_s,
+        product_type: p.product_type,
+        package_type: p.package_type,
+        quantity: p.quantity,
+        uom: p.uom,
+        conversion: p.conversion,
+        total_weight: p.total_weight,
+      }
+    end
+
+    start_date = params[:start_date]
+    task = Cultivation::Task.find_or_initialize_by(
+      indelible: 'convert_product',
+      duration: 1,
+      package_id: params[:id].to_bson_id, # associate task to this package
+    )
+    task.name = "Convert product - #{package.product_name}"
+    task.start_date = start_date
+    task.end_date = Time.parse(start_date) + 1.day if !params[:start_date].blank?
+    task.facility_id = current_default_facility.id
+    task.save!
+
+    if !params[:assign_to].blank?
+      user = User.find_by(id: params[:assign_to])
+      # Rails.logger.debug "\t\t\t>>>>>>>>>>>>>>>>>>>>>>>>> user: #{user.inspect}"
+      task.user_ids = [user&.id]
+    else
+      task.user_ids = []
+    end
+    task.save!
+
+    render json: plans_json, status: 200
   end
 
   private

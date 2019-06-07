@@ -4,9 +4,10 @@ module Cultivation
 
     attr_reader :batch, :includes, :pagy
 
-    def initialize(batch, includes = [])
+    def initialize(batch, includes = [], facility_id = nil)
       @batch = batch
       @includes = includes
+      @facility_id = facility_id
     end
 
     def call
@@ -17,8 +18,9 @@ module Cultivation
           t.wbs = wbs_list[i][:wbs]
         end
         tasks
+      elsif @facility_id.present?
+        Cultivation::Task.includes(includes).where(facility_id: @facility_id, batch_id: nil)
       else
-        errors.add(:error, 'Invalid param batch')
         []
       end
     end

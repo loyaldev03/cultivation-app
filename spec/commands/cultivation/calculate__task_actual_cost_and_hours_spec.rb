@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Cultivation::CalculateTaskActualCostAndHours, type: :command do
   let(:strain) { Common::Strain.create!(name: 'xyz', strain_type: 'indica') }
   let(:facility) do
-    facility = create(:facility, :is_complete)
+    facility = create(:facility, :is_complete, timezone: 'Eastern Time (US & Canada)')
     facility.rooms.each do |room|
       room.rows.each do |row|
         row.shelves.each do |shelf|

@@ -16,13 +16,7 @@
               <div class="flex items-center">
                 <span class="f5 fw4 gray flex items-center">
                   <i class="material-icons mr2 black-20 md-18">location_on</i>
-                  <h6>
-                    <%= current_default_facility&.name %> | 
-                    <%= Time.zone %> | 
-                    <%= Time.now %> |
-                    <%= Facility.find(User.find('5cbfd359edfdb205ece0dec5').default_facility_id).timezone %>
-
-                  </h6>
+                  <%= current_default_facility&.name %> 
                 </span>
               </div>
               

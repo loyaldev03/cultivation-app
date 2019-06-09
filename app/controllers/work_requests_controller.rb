@@ -1,4 +1,6 @@
 class WorkRequestsController < ApplicationController
+  authorize_resource class: false
+
   def requests
     @work_applications = current_user.work_applications.includes(:user)
     @work_applications = @work_applications.map do |a|

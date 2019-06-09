@@ -1,5 +1,6 @@
 class FacilitySetupController < ApplicationController
   layout 'wizards/facility_setup'
+  authorize_resource class: false
 
   # GET new facility - basic info form page - step 1
   def new

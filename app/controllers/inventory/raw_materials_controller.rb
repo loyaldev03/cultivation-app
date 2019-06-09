@@ -1,6 +1,7 @@
 class Inventory::RawMaterialsController < ApplicationController
   before_action :setup_editor_data, :set_facility_id
   before_action :set_uoms, except: [:seeds, :purchased_clones]
+  authorize_resource class: false
 
   def nutrients
     @catalogue_id = Inventory::QueryCatalogue.call(Constants::NUTRIENTS_KEY).result&.id.to_s

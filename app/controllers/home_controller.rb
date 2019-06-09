@@ -15,12 +15,15 @@ class HomeController < ApplicationController
   end
 
   def employees
+    authorize! :employees, HomeController
   end
 
   def employees_schedule
+    authorize! :employees_schedule, HomeController
   end
 
   def timesheets
+    authorize! :timesheets, HomeController
   end
 
   def cult_batches
@@ -41,18 +44,6 @@ class HomeController < ApplicationController
 
   def employees_dashboard
     authorize! :employees_dashboard, HomeController
-  end
-
-  def employees
-    authorize! :employees, HomeController
-  end
-
-  def employees_schedule
-    authorize! :employees_schedule, HomeController
-  end
-
-  def timesheets
-    authorize! :timesheets, HomeController
   end
 
   def settings

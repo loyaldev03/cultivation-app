@@ -1,4 +1,5 @@
 class Inventory::PlantsController < ApplicationController
+  authorize_resource class: false
   before_action :load_facility_strains, only: [:mothers, :cultivation_batches]
   before_action :load_batches, only: [:clones, :vegs, :flowers, :harvest_batches]
   before_action :load_scandit_licence, except: [:cultivation_batches]

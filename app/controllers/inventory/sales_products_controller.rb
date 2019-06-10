@@ -1,4 +1,6 @@
 class Inventory::SalesProductsController < ApplicationController
+  authorize_resource class: false
+
   def products
     @facility_strains = Inventory::QueryFacilityStrains.call(params[:facility_id]).result
     @sales_catalogue = Inventory::QueryCatalogueTree.call(Constants::SALES_KEY, 'raw_sales_product').result

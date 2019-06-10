@@ -126,3 +126,5 @@ gem 'sidekiq-cron'
 gem 'timecop'
 #SMS
 gem 'nexmo'
+
+gem 'cancancan'

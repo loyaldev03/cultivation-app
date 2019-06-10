@@ -41,7 +41,7 @@ class ClippingPanel extends React.Component {
       this.props.strainId,
       BatchStore.batch.selected_location
     )
-    let isHasMotherPlant = motherPlantList.length > 0
+    let isHasMotherPlant = roomData.length > 0
     let codeSelected = motherRoomList.map(x => {
       if (x.room_id === BatchStore.batch.selected_location) {
         return x.room_id
@@ -123,7 +123,6 @@ class ClippingPanel extends React.Component {
       (a, b) => a + (Number(b['quantity']) || 0),
       0
     )
-    console.log(currentplant, BatchStore.batch.selected_plants)
     if (currentplant === BatchStore.batch.quantity)
       BatchStore.updateBatchSelectedPlants(
         this.props.batchId,
@@ -149,7 +148,7 @@ class ClippingPanel extends React.Component {
     if (!show) {
       return null
     }
-
+    
     return (
       roomData.length > 0 && (
         <div>
@@ -189,11 +188,18 @@ class ClippingPanel extends React.Component {
             </div>
           ) : null}
 
-          {!isHasMotherPlant && (
+          {!isHasMotherPlant && BatchStore.batch.selected_location && (
             <div className="orange tc mt4">
               There's no mother plant in this room or section.
             </div>
           )}
+
+          { isHasMotherPlant && BatchStore.batch.selected_location==='' && codeSelected== undefined && (
+            <div className="orange tc mt4">
+              Please select section on the diagram
+            </div>
+          )}
+
           {motherPlantList.length > 0 ? (
             <div>
               {codeSelected && (

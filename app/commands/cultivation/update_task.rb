@@ -222,6 +222,9 @@ module Cultivation
         children = task.children(batch_tasks)
         task.estimated_hours = sum_children_hours(children, batch_tasks)
         task.estimated_cost = sum_children_cost(children, batch_tasks)
+
+        # TASK 980
+        # task.estimated_material_cost = sum_children_est_material_cost(children, batch_tasks)
         return
       end
 
@@ -298,6 +301,17 @@ module Cultivation
       children.reduce(0.0) do |sum, e|
         if !e.have_children?(batch_tasks) && e.estimated_cost
           sum + e.estimated_cost
+        else
+          sum
+        end
+      end
+    end
+
+    # TASK 980
+    def sum_children_est_material_cost(children, batch_tasks)
+      children.reduce(0.0) do |sum, e|
+        if !e.have_children?(batch_tasks) && e.estimated_material_cost
+          sum + e.estimated_material_cost
         else
           sum
         end

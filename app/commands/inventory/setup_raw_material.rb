@@ -320,20 +320,21 @@ module Inventory
     def save_product
       if product_id.present?
         product = Inventory::Product.find(product_id)
-        uom_dimension = Common::UnitOfMeasure.find_by(unit: product_uom)&.dimension
+        uom_dimension = Common::UnitOfMeasure.find_by(unit: uom)&.dimension
         product.name = product_name
         product.manufacturer = manufacturer
         product.upc = upc
         product.description = description
         product.catalogue = catalogue
         product.facility = facility
-        product.common_uom = product_uom
+        product.common_uom = uom,
+        product.order_uom = product_uom
         product.size = product_size
         product.ppm = product_ppm
         product.uom_dimension = uom_dimension
         product.epa_number = epa_number
       else
-        uom_dimension = Common::UnitOfMeasure.find_by(unit: product_uom)&.dimension
+        uom_dimension = Common::UnitOfMeasure.find_by(unit: uom)&.dimension
         product = Inventory::Product.new(
           name: product_name,
           manufacturer: manufacturer,
@@ -341,7 +342,8 @@ module Inventory
           description: description,
           catalogue: catalogue,
           facility: facility,
-          common_uom: product_uom,
+          order_uom: product_uom,
+          common_uom: uom,
           size: product_size,
           ppm: product_ppm,
           epa_number: epa_number,

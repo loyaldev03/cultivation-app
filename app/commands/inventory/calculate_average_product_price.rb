@@ -8,14 +8,6 @@ module Inventory
       @current_invoice_item = Inventory::InvoiceItem.find_by invoice_item_id
     end
 
-    # To get average price of products
-    # On save inventory setup.
-    #    -> for each invoice of the product,
-    #
-    #   -> if convert the product purchase quantity to based unit
-    #   -> get total price = quantity * price * (1 + tax)
-    #   -> price per unit = total price / quantity
-
     # def calculate_average_price
     #   vi = Inventory::VendorInvoiceItem.where(product_id: p.id)
     #   qty = vi.quantity
@@ -28,6 +20,12 @@ module Inventory
     #   average all average prices?
     # end
 
+    # What i do not know...
+    # 1. Did item transaction is saved with common uom?
+    # 2. When the material is consumed, is it using common uom?
+    # 3. Is the calculation of uom is correct? i.e.
+    #
+    # TASK 980
     def call
       product_id = current_invoice_item.product_id
       invoice_items = Inventory::VendorInvoiceItem.where(product_id: product_id)

@@ -3,9 +3,8 @@ module Inventory
     prepend SimpleCommand
     attr_reader :current_user, :invoice_item_id, :current_invoice_item
 
-    def initialize(current_user, invoice_item_id)
-      @current_user = current_user
-      @current_invoice_item = Inventory::InvoiceItem.find_by invoice_item_id
+    def initialize(invoice_item_id)
+      @current_invoice_item = Inventory::VendorInvoiceItem.find_by invoice_item_id
     end
 
     # def calculate_average_price

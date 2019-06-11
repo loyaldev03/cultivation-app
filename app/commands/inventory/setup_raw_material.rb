@@ -100,6 +100,9 @@ module Inventory
                        else
                          update_raw_material(invoice_item)
                        end
+
+        # TASK 980
+        Inventory::CalculateAverageProductPrice.call(invoice_item.id)
         raw_material
       end
     end

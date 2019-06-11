@@ -144,6 +144,9 @@ class HomeController < ApplicationController
   def qr
   end
 
+  def onboarding
+  end
+
   private
 
   def get_date_worker(work_request)

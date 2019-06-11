@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   get "cult/harvests" => "home#cult_harvests"
   get "cult/tasks" => "home#cult_tasks"
   get "cult/issues" => "home#cult_issues"
+  get "onboarding" => "home#onboarding"
   # End of dummy pages
 
   #work_requests

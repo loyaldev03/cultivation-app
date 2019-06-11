@@ -148,7 +148,7 @@ class ClippingPanel extends React.Component {
     if (!show) {
       return null
     }
-    
+
     return (
       roomData.length > 0 && (
         <div>
@@ -194,11 +194,13 @@ class ClippingPanel extends React.Component {
             </div>
           )}
 
-          { isHasMotherPlant && BatchStore.batch.selected_location==='' && codeSelected== undefined && (
-            <div className="orange tc mt4">
-              Please select section on the diagram
-            </div>
-          )}
+          {isHasMotherPlant &&
+            BatchStore.batch.selected_location === '' &&
+            codeSelected == undefined && (
+              <div className="orange tc mt4">
+                Please select section on the diagram
+              </div>
+            )}
 
           {motherPlantList.length > 0 ? (
             <div>

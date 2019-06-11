@@ -2,6 +2,7 @@ import React, { useState, forwardRef } from 'react'
 import PropTypes from 'prop-types'
 import { ImgBarcode } from './Icons'
 import { launchBarcodeScanner } from '../utils/BarcodeScanner'
+import BarCodeComponent from './BarcodeComponent';
 
 const InputBarcode = forwardRef(
   (
@@ -21,27 +22,9 @@ const InputBarcode = forwardRef(
   ) => {
     let scanner = null
     let scannerRef = null
-
+    const [hidden, setHidden] = useState(false);
     const onShowScanner = e => {
-      if (!scanner || scanner.destroyed) {
-        launchBarcodeScanner({
-          licenseKey: scanditLicense,
-          targetRef: scannerRef,
-          onScan: result => {
-            onBarcodeScan(result)
-            if (!multiple) {
-              scanner.destroy()
-            }
-          }
-        }).then(ref => {
-          scanner = ref
-          console.log('scanner:', scanner)
-        })
-      } else {
-        if (scanner) {
-          scanner.destroy()
-        }
-      }
+      setHidden(!hidden)
     }
 
     return (
@@ -79,6 +62,7 @@ const InputBarcode = forwardRef(
             </React.Fragment>
           )}
         </div>
+        {hidden && <BarCodeComponent/>}
         {error && <span className="f7 i red dib pv1">{error}</span>}
         {multiple ? (
           <div className="w-100 mb2 mt2 flex justify-end">

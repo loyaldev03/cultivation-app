@@ -36,7 +36,6 @@ module FacilityWizardForm
 
       map_attrs_from_hash(ATTRS, params)
       if valid?
-
         save_cmd = SaveFacility.call(self, current_user)
         if save_cmd.success?
           map_attrs_from_model(save_cmd.result) if save_cmd.success?

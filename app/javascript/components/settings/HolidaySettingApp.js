@@ -17,7 +17,6 @@ const styles = `
 }
 `
 
-
 @observer
 class HolidaySettingApp extends React.Component {
   state = {
@@ -26,9 +25,7 @@ class HolidaySettingApp extends React.Component {
     showAssignResourcePanel: false
   }
 
-  async componentDidMount() {
-
-  }
+  async componentDidMount() {}
 
   openSidebar = () => {
     if (!window.editorSidebar || !window.editorSidebar.sidebarNode) {
@@ -45,13 +42,13 @@ class HolidaySettingApp extends React.Component {
   }
 
   render() {
-    const { showAssignResourcePanel} = this.state
-    let row1 = [];
+    const { showAssignResourcePanel } = this.state
+    let row1 = []
     let date = startOfYear(new Date())
     for (let i = 0; i < 4; i++) {
       row1.push(
-        <Calendar 
-          key={i} 
+        <Calendar
+          key={i}
           value={date}
           showNeighboringMonth={false}
           prevLabel={null}
@@ -59,10 +56,10 @@ class HolidaySettingApp extends React.Component {
           prev2Label={null}
           next2Label={null}
         />
-      );
+      )
       date = addMonths(date, 1)
-    } 
-    let row2 = [];
+    }
+    let row2 = []
     for (let i = 0; i < 4; i++) {
       row2.push(
         <Calendar
@@ -74,10 +71,10 @@ class HolidaySettingApp extends React.Component {
           prev2Label={null}
           next2Label={null}
         />
-      );
+      )
       date = addMonths(date, 1)
-    } 
-    let row3 = [];
+    }
+    let row3 = []
     for (let i = 0; i < 4; i++) {
       row3.push(
         <Calendar
@@ -89,9 +86,9 @@ class HolidaySettingApp extends React.Component {
           prev2Label={null}
           next2Label={null}
         />
-      );
+      )
       date = addMonths(date, 1)
-    } 
+    }
     return (
       <React.Fragment>
         <style>{styles}</style>
@@ -120,17 +117,10 @@ class HolidaySettingApp extends React.Component {
           )}
         />
         <div className="nowrap overflow-x-auto">
-          <div className="flex">
-            {row1}
-          </div>
-          <div className="flex">
-            {row2}
-          </div>
-          <div className="flex">
-            {row3}
-          </div>
+          <div className="flex">{row1}</div>
+          <div className="flex">{row2}</div>
+          <div className="flex">{row3}</div>
         </div>
-
       </React.Fragment>
     )
   }

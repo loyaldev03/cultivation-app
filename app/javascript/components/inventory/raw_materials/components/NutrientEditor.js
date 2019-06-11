@@ -459,7 +459,9 @@ class NutrientEditor extends React.Component {
             className="ph4 pv2 bb b--light-gray flex items-center"
             style={{ height: '51px' }}
           >
-            <h1 className="f4 fw6 ma0 flex flex-auto ttc">Add Nutrient Inventory</h1>
+            <h1 className="f4 fw6 ma0 flex flex-auto ttc">
+              Add Nutrient Inventory
+            </h1>
             <span
               className="rc-slide-panel__close-button dim"
               onClick={() => {
@@ -753,12 +755,11 @@ class NutrientEditor extends React.Component {
                     {this.state.order_uom.label}
                   </label>
                   <div className="f6 pv2 fw6 tr">
-                    {
-                      this.state.product_size && 
+                    {this.state.product_size &&
                       this.state.order_quantity &&
                       this.state.qty_per_package &&
                       parseFloat(this.state.product_size) *
-                      parseFloat(this.state.order_quantity) *
+                        parseFloat(this.state.order_quantity) *
                         parseFloat(this.state.qty_per_package)}
                     &nbsp;
                     {this.state.uom && this.state.uom.label}

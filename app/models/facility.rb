@@ -8,6 +8,7 @@ class Facility
   field :timezone, type: String, default: 'Pacific Time (US & Canada)'
   field :is_complete, type: Boolean, default: -> { false }
   field :is_enabled, type: Boolean, default: -> { true }
+  field :square_foot, type: Float
 
   field :whitelist_ips, type: Array, default: []
 

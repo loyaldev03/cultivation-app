@@ -1,0 +1,164 @@
+<div class="ph4 pv3 bb b--light-grey">
+  <h5 class="h6--font dark-grey ma0 ttc">modify facility</h5>
+  <h5 class="h6--font dark-grey ma0 ttc">Tell us about your facility</h5>
+  <p class="mt2 body-1 grey">
+    Let's get a few details of your facility to get things rolling...
+  </p>
+</div>
+
+<%= form_with scope: :facility, 
+              url: facility_setup_update_basic_info_path(facility_id: @wizard_form.id, company_info: true), 
+              remote: true, html: {id: "wizard-form", 
+              class: 'h-100 flex flex-column justify-between'} do |f| %>
+  <%= f.hidden_field :id, value: @wizard_form.id %>
+
+  <div class="pa4">
+    
+    <div class="fl w-100 pt0-l pt3 flex flex-column">
+      <div class="mb3">
+        <span class="subtitle-2 grey">Facility Details</span>
+      </div>
+      <div class="flex flex-row">
+        <div class="mr4 w-70">
+          <%= f.label "Facility name", class: "grey subtitle-2 ttc db mb1" %>
+          <%= f.text_field :name,
+            placeholder: "Facility's name",
+            value: @wizard_form.name,
+            class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+        </div>
+
+        <div class="w-20-l w-30">
+          <%= f.label "Facility ID", class: "grey subtitle-2 ttc db mb1" %>
+          <%= f.text_field :code,
+            placeholder: "S0001",
+            value: @wizard_form.code,
+            class: "grey input-reset br2 outline-0 ba b--light-grey pa2 db w-100" %>
+        </div>
+      </div>
+      <div class="flex flex-row mt3">
+        <div class="mr4 w-70">
+          <%= f.label "Facility Square Foot", class: "grey subtitle-2 ttc db mb1" %>
+          <%= f.text_field :square_foot,
+            value: @wizard_form.square_foot,
+            class: "grey input-reset br2 outline-0 ba b--light-grey pa2 db w-100" %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="fl w-100 pt0-l pt3 flex flex-column">
+      <div class="mb3 mt3">
+        <span class="grey subtitle-2 ttc">Location Details</span>
+      </div>
+      <div class="flex flex-row">
+        <div class="mr4 w-40">
+          <%= f.label "Location license #", class: "grey subtitle-2 ttc db mb1" %>
+          <%= f.text_field :site_license,
+            placeholder: "F0001",
+            rows: 1,
+            value: @wizard_form.site_license,
+            class: "ttu grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+        </div>
+
+        <div class="w-60">
+          <%= f.label "Address", class: "grey subtitle-2 ttc db mb1" %>
+          <%= f.text_field :address_address,
+            placeholder: "1011, 11th ave ne",
+            value: @wizard_form.address_address,
+            class: "ttu grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+        </div>
+      </div>
+
+      <div class="flex flex-row mt3">
+        <div class="mr4 w-40">
+          <%= f.label "Zipcode", class: "grey subtitle-2 ttc db mb1" %>
+          <%= f.text_field :address_zipcode,
+            placeholder: "123000",
+            value: @wizard_form.address_zipcode,
+            class: "grey ba b--light-grey br2 outline-0 br2 outline-0 pa2 db w-100" %>
+        </div>
+        <div class="w-60">
+          <%= f.label :address_state, class: "grey subtitle-2 ttc db mb1" %>
+          <%= f.text_field :address_state,
+            placeholder: "Carlifornia",
+            value: @wizard_form.address_state,
+            class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+        </div>
+      </div>
+
+      <div class="flex flex-row mt3">
+        <div class="w-40 mr4">
+          <%= f.label :address_country, class: "grey subtitle-2 ttc db mb1" %>
+          <%= f.text_field :address_country,
+            placeholder: "United States of America",
+            value: @wizard_form.address_country,
+            class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+        </div>
+
+        <div class="w-60">
+          <%= f.label "Timezone", class: "grey subtitle-2 ttc db mb1" %>
+          <%= f.time_zone_select(:timezone,
+                                  ActiveSupport::TimeZone.us_zones,
+                                  { include_blank: true,
+                                    default: @wizard_form.timezone || "Pacific Time (US & Canada)" },
+                                  { class: 'w-100 form-helper-select'}) %>
+        </div>
+      </div>
+    </div>
+
+    <div class="fl w-100 pt0-l pt3 flex flex-column">
+      <div class="mb3 mt3">
+        <span class="grey subtitle-2 ttc">Contact Details</span>
+      </div>
+      <div class="flex flex-row">
+        <div class="mr4 w-50">
+          <%= f.label "Phone Number", class: "grey subtitle-2 ttc db mb1" %>
+          <%= f.text_field :address_main_number,
+            placeholder: "1234567",
+            value: @wizard_form.address_main_number,
+            class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+        </div>
+
+        <div class="w-50">
+          <%= f.label "Fax Number", class: "grey subtitle-2 ttc db mb1" %>
+          <%= f.text_field :address_fax_number,
+            placeholder: "011 1234567",
+            value: @wizard_form.address_fax_number,
+            class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+        </div>
+      </div>
+      <div class="flex flex-row mt3">
+        <div class="mr4 w-50">
+          <%= f.label "Email", class: "grey subtitle-2 ttc db mb1" %>
+          <%= f.text_field :address_email,
+            placeholder: "user@email.com",
+            value: @wizard_form.address_email,
+            class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
+        </div>
+      </div>
+
+      <div class="mt2 flex flex-row items-center">
+        <p class="grey subtitle-2 dib">Mark facility as ready so that it would be available in other modules:</p>
+        <div class="dib pointer w-20-l w-10 flex justify-end">
+          <%= f.check_box :is_enabled, checked: @wizard_form.is_enabled, class: "toggle toggle-default" %>
+          <label class="toggle-button" for="facility_is_enabled"></label>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="mb3 mt3">
+      <div class="flex flex-row items-center justify-end w-100 mb3 mt3">
+        <input
+          type="submit"
+          form="wizard-form"
+          value="Save"
+          class="btn btn--primary btn--large" />
+      </div>
+    </div>
+
+
+
+  </div>
+<% end %>

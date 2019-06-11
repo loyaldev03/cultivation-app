@@ -6,6 +6,7 @@ module FacilityWizardForm
     ATTRS = [:id,
              :name,
              :code,
+             :square_foot,
              :site_license,
              :timezone,
              :is_complete,
@@ -35,6 +36,7 @@ module FacilityWizardForm
 
       map_attrs_from_hash(ATTRS, params)
       if valid?
+
         save_cmd = SaveFacility.call(self, current_user)
         if save_cmd.success?
           map_attrs_from_model(save_cmd.result) if save_cmd.success?
@@ -50,6 +52,7 @@ module FacilityWizardForm
       self.id = record.id
       self.name = record.name
       self.code = record.code
+      self.square_foot = record.square_foot
       self.site_license = record.site_license
       self.timezone = record.timezone
       self.is_complete = record.is_complete

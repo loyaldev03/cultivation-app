@@ -12,6 +12,7 @@
     "@uppy/react": "^1.0.2",
     "@uppy/webcam": "^1.0.2",
     "@uppy/xhr-upload": "^1.0.2",
+    "@zxing/library": "^0.14.2",
     "animate.css": "^3.7.1",
     "babel-core": "^6.26.3",
     "babel-plugin-transform-class-properties": "^6.24.1",

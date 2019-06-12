@@ -15,13 +15,27 @@ const styles = `
     background: none;
     color: initial;
 }
+.dot{
+  height: 5px;
+  width: 5px;
+  background-color: var(--orange);
+  border-radius: 50%;
+  display: flex;
+  bottom: 0;
+  right: 43%;
+}
+
+.hide{
+  visibility: hidden;
+}
 `
 
 @observer
 class HolidaySettingApp extends React.Component {
   state = {
     editingUser: {},
-    showAssignResourcePanel: false
+    showHolidayForm: false,
+    dates: [new Date(), new Date(2019, 4, 21), new Date(2019, 4, 22)]
   }
 
   async componentDidMount() {}
@@ -30,7 +44,7 @@ class HolidaySettingApp extends React.Component {
     if (!window.editorSidebar || !window.editorSidebar.sidebarNode) {
       window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
     }
-    window.editorSidebar.open({ width: '700px' })
+    window.editorSidebar.open({ width: '500px' })
   }
 
   closeSidebar = () => {
@@ -40,8 +54,29 @@ class HolidaySettingApp extends React.Component {
     window.editorSidebar.close()
   }
 
+  handleShowHolidayForm = date => {
+    console.log(date)
+    this.holidayForm.setDate(date)
+    this.setState({
+      showHolidayForm: !this.state.showHolidayForm
+    })
+  }
+
   render() {
-    const { showAssignResourcePanel } = this.state
+    const { showHolidayForm, dates } = this.state
+    // const tileContent = ({ date, view }) => view === 'month' && dates.includes(date) ? <i className="dot"></i> : null;
+    const tileContent = ({ date, view }) => 
+      view === 'month' ? <i
+        className={classNames('dot center', {
+          'hide': !dates.some(d => +d === +date)
+        })}
+      /> : null
+    // view === 'month' ? <i
+    //   className={classNames('dot center', {
+    //     'hide': !dates.some(d => +d === +date)
+    //   })}
+    // /> : null
+
     let row1 = []
     let date = startOfYear(new Date())
     for (let i = 0; i < 4; i++) {
@@ -54,6 +89,8 @@ class HolidaySettingApp extends React.Component {
           nextLabel={null}
           prev2Label={null}
           next2Label={null}
+          tileContent={tileContent}
+          onChange={this.handleShowHolidayForm}
         />
       )
       date = addMonths(date, 1)
@@ -69,6 +106,8 @@ class HolidaySettingApp extends React.Component {
           nextLabel={null}
           prev2Label={null}
           next2Label={null}
+          tileContent={tileContent}
+          onChange={this.handleShowHolidayForm}
         />
       )
       date = addMonths(date, 1)
@@ -84,6 +123,8 @@ class HolidaySettingApp extends React.Component {
           nextLabel={null}
           prev2Label={null}
           next2Label={null}
+          tileContent={tileContent}
+          onChange={this.handleShowHolidayForm}
         />
       )
       date = addMonths(date, 1)
@@ -92,25 +133,22 @@ class HolidaySettingApp extends React.Component {
       <React.Fragment>
         <style>{styles}</style>
         <SlidePanel
-          width="600px"
-          show={showAssignResourcePanel}
+          width="500px"
+          show={showHolidayForm}
           renderBody={props => (
             <Suspense fallback={<div />}>
-              <AssignResourceForm
-                ref={form => (this.assignResouceForm = form)}
-                facilityId={this.props.batch.facility_id}
-                onClose={() =>
-                  this.setState({ showAssignResourcePanel: false })
-                }
+              <HolidayForm
+                ref={form => (this.holidayForm = form)}
+                onClose={() => this.setState({ showHolidayForm: false })}
                 onSave={users => {
-                  this.setState({ showAssignResourcePanel: false })
-                  TaskStore.editAssignedUsers(
-                    batchId,
-                    this.state.taskSelected,
-                    users
-                  )
+                  this.setState({ showHolidayForm: false })
+                  // TaskStore.editAssignedUsers(
+                  //   batchId,
+                  //   this.state.taskSelected,
+                  //   users
+                  // )
                 }}
-                facilityId={this.props.batch.facility_id}
+                title={'Holiday'}
               />
             </Suspense>
           )}

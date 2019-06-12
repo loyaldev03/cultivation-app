@@ -1,4 +1,4 @@
-
+# TASK 980
 module Cultivation
   class CalculateProductCost
     prepend SimpleCommand
@@ -28,7 +28,7 @@ module Cultivation
           costs << cost
         end
       end
-      costss.sum()
+      costs.sum()
     end
 
     # On save task

@@ -18,6 +18,8 @@ module Cultivation
       # update_estimated_cost(task)
 
       # TASK 980
+      # TODO: Trace how batch.estimated_cost is updated.
+      #
       # update_cost_of_batch(task.batch_id)
       task
     end
@@ -46,7 +48,6 @@ module Cultivation
 
     # TASK 980
     def update_estimated_cost(task)
-      return # Temporarily commented out
 
       # In order to reduce mistake from race condition / parallel task, the
       # code loops through all material used under the task and update the cost again.

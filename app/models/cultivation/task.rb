@@ -15,9 +15,12 @@ module Cultivation
     field :end_date, type: Time
     field :estimated_hours, type: Float, default: -> { 0 }
     field :actual_hours, type: Float, default: -> { 0 }
+
+    # Human hourly cost
     field :estimated_cost, type: Float, default: -> { 0 }
     field :actual_cost, type: Float, default: -> { 0 }
 
+    # Material cost
     field :estimated_material_cost, type: Float, default: -> { 0 }
     field :actual_material_cost, type: Float, default: -> { 0 }
 

@@ -153,6 +153,13 @@ class ClippingPanel extends React.Component {
       roomData.length > 0 && (
         <div>
           <SlidePanelHeader onClose={onClose} title={this.props.title} />
+          {isHasMotherPlant &&
+            BatchStore.batch.selected_location === '' &&
+            codeSelected == undefined && (
+              <div className="orange tc mt4 f4">
+                Please select any section on the diagram
+              </div>
+            )}
           <div className="flex justify-center tc mt3">
             {motherRoomList.map(card => (
               <div
@@ -167,6 +174,7 @@ class ClippingPanel extends React.Component {
               </div>
             ))}
           </div>
+          
           <div className="ph4 pb4 pt3" />
           {/* <div className="ph4 pb4 pt3">
             <span className="orange">Sage</span> mother plants are located in
@@ -194,13 +202,7 @@ class ClippingPanel extends React.Component {
             </div>
           )}
 
-          {isHasMotherPlant &&
-            BatchStore.batch.selected_location === '' &&
-            codeSelected == undefined && (
-              <div className="orange tc mt4">
-                Please select section on the diagram
-              </div>
-            )}
+          
 
           {motherPlantList.length > 0 ? (
             <div>

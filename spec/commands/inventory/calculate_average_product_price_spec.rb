@@ -1,111 +1,50 @@
 require "rails_helper"
 
 RSpec.describe Inventory::CalculateAverageProductPrice, type: :command do
-  let (:facility) do
-    facility = create(:facility, :is_complete)
-    facility.rooms << build(:room, :storage, :is_complete)
-    facility.save!
-    facility
+  let(:catalogue) { create(:catalogue) }
+  let(:facility) { create(:facility) }
+  let(:product) { create(:product, catalogue: catalogue, facility: facility) }
+  let(:invoice_item1) { double(id: '1', total_amount: 100) } # quantity 10, price per-item 10
+  let(:item_transaction1) { double(quantity: 100) } # quantity 10, amount material per-quantity 10
+
+  let(:invoice_items) do
+    [invoice_item1]
   end
-  
-  let (:manager) { create(:user, :manager, facilities: [facility.id]) }
 
-  let (:catalogue) { Inventory::Catalogue.create!(key: Constants::NUTRIENTS_KEY) }
+  let(:expected_average_price) { 1.0 }
 
-  let (:uom_kg) { create(:unit_of_measure, :kg) }
-  let (:uom_pc) { create(:unit_of_measure, :pc) }
-  let (:uom_bag) { create(:unit_of_measure, :bag) }
+  describe ".call" do
+    context 'when only 1 transaction' do
+      before do
+        allow(Inventory::VendorInvoiceItem).to receive(:where).with(product_name: product.name).and_return(invoice_items)
+        allow(Inventory::ItemTransaction).to receive(:find_by).with(ref_type: 'Inventory::VendorInvoiceItem', ref_id: invoice_item1.id).and_return(item_transaction1)
+      end
 
-  # {"data":
-  #   {
-  #     "id":"5cfcf102edfdb2075b342b50",
-  #     "type":"raw_material",
-  #     "attributes":{
-  #       "order_quantity":2, <-- how many set that was bought
-  #       "order_uom":"pc",   <-- how many set that was bought
-  #       "quantity":24,      
-  #       "uom":"kg",
-  #       "manufacturer":"asd",
-  #       "description":"asdsd",
-  #       "conversion":12,
-  #       "product_name":"Product1b",
-  #       "product_id":"5cf92cf5edfdb20b3b46aaab",
-  #       "product":{
-  #         "id":"5cf92cf5edfdb20b3b46aaab",
-  #         "name":"Product1b",
-  #         "sku":null,
-  #         "status":null,
-  #         "transaction_limit":0,
-  #         "description":"asdsd",
-  #         "manufacturer":"asd",
-  #         "upc":"",
-  #         "nitrogen":1,
-  #         "prosphorus":1,
-  #         "potassium":1,
-  #         "nutrients":[{"element":"boron","value":2}],
-  #         "size":2,             
-  #         "ppm":1,
-  #         "common_uom":"pc",    <--- change to product.order_uom. common_uom is 
-  #         "epa_number":"",
-  #         "attachments":[],
-  #         "catalogue_id":"5c067b01edfdb2c656d60dbf"
-  #       },
-  #       "facility_id":"5bea7e7eedfdb2c4e1436110",
-  #       "facility_name":"Acme Comp",
-  #       "catalogue_id":"5c067b01edfdb2c656d60dbf",
-  #       "catalogue":"Nutrients",
-  #       "location_id":"5bed2e6fedfdb2040c362cba",
-  #       "vendor":{
-  #         "id":"5bea8038edfdb2c4e1436154",
-  #         "name":"V1 Name",
-  #         "vendor_no":"V1",
-  #         "address":"add3",
-  #         "state_license_num":"asda",
-  #         "state_license_expiration_date":"2018-10-29T09:00:00.000-07:00",
-  #         "location_license_expiration_date":"2018-10-29T09:00:00.000-07:00",
-  #         "location_license_num":"ads"
-  #       },
-  #       "purchase_order":{
-  #         "id":"5bea8038edfdb2c4e1436155",
-  #         "purchase_order_no":"PO V1a",
-  #         "purchase_order_date":"2018-11-06T08:00:00.000-08:00"
-  #       },
-  #       "vendor_invoice":{
-  #         "id":"5bea8038edfdb2c4e1436157",
-  #         "invoice_no":"PO V1b",
-  #         "invoice_date":"2018-11-06T08:00:00.000-08:00",
-  #         "item_price":15,
-  #         "item_currency":"USD"
-  #       }
-  #     }}
-  #   }
+      it 'calculates and set average price of product' do
+        cmd = Inventory::CalculateAverageProductPrice.call(product.id)
+        expect(cmd.success?).to eq true
+        expect(product.reload.average_price).to eq(expected_average_price)
+      end
+    end
 
-  context ".call" do
-    it 'should calculate average correctly' do
-      Rails.logger.error "catalogue: #{catalogue.id}"
-      args = {
-        facility_id: facility.id,
-        location_id: facility.rooms.last.id,
-        catalogue: catalogue.id,
-        product_name: 'product one',
-        manufacturer: 'product maker',
-        product_uom: 'pc',
-        product_size: 1,
-        quantity: 5,
-        uom: 'kg',
-        order_quantity: 5,
-        order_uom: uom_bag.unit,
-        price: 5.6,
-        qty_per_package: 2,
-        vendor_name: 'vendor one',
-        purchase_order_no: 'po1',
-        invoice_no: 'iv 1',
-        purchase_date: Time.now
-      }
-      cmd = Inventory::SetupRawMaterial.call(manager, args)
-      expect(cmd.success?).to eq true
+    context 'when there are more than 1 transactions' do
+      let(:invoice_item2) { double(id: '2', total_amount: 1000) } # quantity 10, price per-item 100
+      let(:item_transaction2) { double(quantity: 10) } # quantity 10, amount material per-quantity 1
+      let(:invoice_items) { [invoice_item1, invoice_item2] }
 
-      Rails.logger.error "cmd result: #{cmd.result.inspect}"
+      let(:expected_average_price) { 10.0 } # total amount 1100. total quantity 110
+
+      before do
+        allow(Inventory::VendorInvoiceItem).to receive(:where).with(product_name: product.name).and_return(invoice_items)
+        allow(Inventory::ItemTransaction).to receive(:find_by).with(ref_type: 'Inventory::VendorInvoiceItem', ref_id: invoice_item1.id).and_return(item_transaction1)
+        allow(Inventory::ItemTransaction).to receive(:find_by).with(ref_type: 'Inventory::VendorInvoiceItem', ref_id: invoice_item2.id).and_return(item_transaction2)
+      end
+
+      it 'calculates and set average price of product' do
+        cmd = Inventory::CalculateAverageProductPrice.call(product.id)
+        expect(cmd.success?).to eq true
+        expect(product.reload.average_price).to eq(expected_average_price)
+      end
     end
   end
 end

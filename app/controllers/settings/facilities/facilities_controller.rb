@@ -7,6 +7,7 @@ class Settings::Facilities::FacilitiesController < ApplicationController
   end
 
   def edit
+    @wizard_form = FacilityWizardForm::BasicInfoForm.new(params[:id])
     @facility = FacilitiesForm::FacilityUpdate.find(params[:id])
     render 'edit', layout: nil
 

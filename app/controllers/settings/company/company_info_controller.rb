@@ -1,4 +1,5 @@
 class Settings::Company::CompanyInfoController < ApplicationController
+  authorize_resource class: false
   def edit
     @company_info = CompanyInfo.last
     @facilities = Facility.all

@@ -203,6 +203,7 @@ const ExpandableRow = forwardRef(
                   ref={input => (parentInput = input)}
                   readOnly={disableInputs}
                   autoFocus={true}
+                  onBarcodeScan={(q)=>console.log(q)}
                   onKeyPress={onScanParent}
                   error={errors['parentInput']}
                 />

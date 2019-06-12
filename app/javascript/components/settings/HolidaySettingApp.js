@@ -65,12 +65,14 @@ class HolidaySettingApp extends React.Component {
   render() {
     const { showHolidayForm, dates } = this.state
     // const tileContent = ({ date, view }) => view === 'month' && dates.includes(date) ? <i className="dot"></i> : null;
-    const tileContent = ({ date, view }) => 
-      view === 'month' ? <i
-        className={classNames('dot center', {
-          'hide': !dates.some(d => +d === +date)
-        })}
-      /> : null
+    const tileContent = ({ date, view }) =>
+      view === 'month' ? (
+        <i
+          className={classNames('dot center', {
+            hide: !dates.some(d => +d === +date)
+          })}
+        />
+      ) : null
     // view === 'month' ? <i
     //   className={classNames('dot center', {
     //     'hide': !dates.some(d => +d === +date)

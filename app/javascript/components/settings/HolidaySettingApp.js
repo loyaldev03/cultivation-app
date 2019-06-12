@@ -5,8 +5,8 @@ import { toast } from '../utils/toast'
 import classNames from 'classnames'
 import Calendar from 'react-calendar'
 import { startOfYear, endOfYear, addMonths } from 'date-fns'
-import moment from 'moment'
-import { formatDate2, moneyFormatter, SlidePanel } from '../utils'
+import { SlidePanel } from '../utils'
+import HolidayForm from './HolidayForm'
 
 const styles = `
 .react-calendar, .react-calendar *, .react-calendar *:before, .react-calendar *:after {
@@ -21,7 +21,6 @@ const styles = `
 class HolidaySettingApp extends React.Component {
   state = {
     editingUser: {},
-    startDate: moment().startOf('year'),
     showAssignResourcePanel: false
   }
 

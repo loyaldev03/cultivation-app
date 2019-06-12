@@ -13,13 +13,21 @@ class FacilitySetupController < ApplicationController
     is_draft = params[:commit] == 'draft'
     @wizard_form = FacilityWizardForm::BasicInfoForm.new(params[:facility_id])
     if @wizard_form.submit(facility_basic_info_params, current_user)
-      if is_draft
-        redirect_to facility_setup_new_path(facility_id: @wizard_form.id)
+      if params[:company_info].present? and params[:company_info]
+        render 'layouts/hide_sidebar', layouts: nil
       else
-        redirect_to facility_setup_rooms_info_path(facility_id: @wizard_form.id)
+        if is_draft
+          redirect_to facility_setup_new_path(facility_id: @wizard_form.id)
+        else
+          redirect_to facility_setup_rooms_info_path(facility_id: @wizard_form.id)
+        end
       end
     else
-      render 'facility_setup/step1'
+      if params[:company_info].present? and params[:company_info]
+        render 'layouts/hide_sidebar', layouts: nil
+      else
+        render 'facility_setup/step1'
+      end
     end
   end
 

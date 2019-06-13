@@ -93,12 +93,13 @@ module Inventory
 
     def call
       if valid_permission? && valid_data?
-        invoice_item = save_purchase_info
+        product = save_product
+        invoice_item = save_purchase_info(product)
 
         raw_material = if id.blank?
-                         create_raw_material(invoice_item)
+                         create_raw_material(invoice_item, product)
                        else
-                         update_raw_material(invoice_item)
+                         update_raw_material(invoice_item, product)
                        end
 
         ::CalculateAverageProductPriceJob.perform_later(product_id)
@@ -141,17 +142,16 @@ module Inventory
     end
 
     # Update/ create necessary purchase info
-    def save_purchase_info
+    def save_purchase_info(product)
       handle_po_invoice_switching
       vendor = save_vendor
       po_item = save_purchase_order(vendor)
-      invoice_item = save_invoice(po_item)
+      invoice_item = save_invoice(po_item, product)
 
       invoice_item
     end
 
-    def create_raw_material(invoice_item)
-      product = save_product
+    def create_raw_material(invoice_item, product)
       Inventory::ItemTransaction.create!(
         ref_id: invoice_item.id,
         ref_type: 'Inventory::VendorInvoiceItem',
@@ -173,8 +173,7 @@ module Inventory
       )
     end
 
-    def update_raw_material(invoice_item)
-      product = save_product
+    def update_raw_material(invoice_item, product)
       transaction = Inventory::ItemTransaction.find(id)
       transaction.ref_id = invoice_item.id
       transaction.event_date = purchase_date
@@ -281,7 +280,7 @@ module Inventory
       po_item
     end
 
-    def save_invoice(po_item)
+    def save_invoice(po_item, product)
       return nil if po_item.nil?
 
       invoice = if invoice_id.blank?
@@ -313,6 +312,7 @@ module Inventory
       invoice_item.product_name = po_item.product_name
       invoice_item.manufacturer = manufacturer
       invoice_item.purchase_order_item = po_item
+      invoice_item.product_id = product.id
 
       invoice.save!
       invoice_item.save!

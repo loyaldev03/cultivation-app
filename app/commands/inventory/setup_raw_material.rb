@@ -102,7 +102,7 @@ module Inventory
                          update_raw_material(invoice_item, product)
                        end
 
-        ::CalculateAverageProductPriceJob.perform_later(product_id)
+        ::CalculateAverageProductPriceJob.perform_in(3.seconds, product_id)
         raw_material
       end
     end

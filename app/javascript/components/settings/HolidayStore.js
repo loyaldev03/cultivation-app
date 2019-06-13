@@ -3,13 +3,12 @@ import { httpGetOptions, httpPostOptions, toast } from '../utils'
 
 import { addDays, differenceInCalendarDays, parse } from 'date-fns'
 
-
 function parseTask(holidayAttributes) {
   const { date } = holidayAttributes
   const new_date = new Date(date)
   console.log(new_date)
   return Object.assign(holidayAttributes, {
-    date: new_date,
+    date: new_date
   })
 }
 
@@ -42,7 +41,6 @@ class HolidayStore {
     }
   }
 
-
   @action
   async createHoliday(holiday) {
     this.isLoading = true
@@ -68,8 +66,6 @@ class HolidayStore {
   getHolidays() {
     return toJS(this.holidays)
   }
-
-  
 }
 
 const holidayStore = new HolidayStore()

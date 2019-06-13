@@ -41,9 +41,9 @@ class HolidaySettingApp extends React.Component {
     editingUser: {},
     showHolidayForm: false,
     dates: [
-      {title: 'today', date: new Date()}, 
-      {title: 'Birthday Agong', date: new Date(2019, 4, 21)}, 
-      {title: 'Testing Holiday', date: new Date(2019, 4, 22)}
+      { title: 'today', date: new Date() },
+      { title: 'Birthday Agong', date: new Date(2019, 4, 21) },
+      { title: 'Testing Holiday', date: new Date(2019, 4, 22) }
     ]
   }
 

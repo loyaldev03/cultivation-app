@@ -19,6 +19,7 @@ module Inventory
       total_amount = 0
       vendor_invoice_items.each do |vii|
         item_transaction = Inventory::ItemTransaction.find_by(ref_type: 'Inventory::VendorInvoiceItem', ref_id: vii.id)
+        # TODO: find out why common_quantity is broken
         total_quantity += item_transaction.quantity
         total_amount += vii.total_amount
       end

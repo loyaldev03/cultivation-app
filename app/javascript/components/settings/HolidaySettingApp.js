@@ -7,7 +7,7 @@ import Calendar from 'react-calendar'
 import { startOfYear, endOfYear, addMonths } from 'date-fns'
 import { SlidePanel } from '../utils'
 import HolidayForm from './HolidayForm'
-
+import HolidayStore from './HolidayStore'
 const styles = `
 .react-calendar, .react-calendar *, .react-calendar *:before, .react-calendar *:after {
 }
@@ -25,9 +25,14 @@ const styles = `
   right: 43%;
 }
 
-.hide{
+.hide-holiday{
   visibility: hidden;
 }
+.react-calendar__tile--active:enabled:hover, .react-calendar__tile--active:enabled:focus {
+    background: #1087ff;
+    color: white;
+}
+
 `
 
 @observer
@@ -35,10 +40,16 @@ class HolidaySettingApp extends React.Component {
   state = {
     editingUser: {},
     showHolidayForm: false,
-    dates: [new Date(), new Date(2019, 4, 21), new Date(2019, 4, 22)]
+    dates: [
+      {title: 'today', date: new Date()}, 
+      {title: 'Birthday Agong', date: new Date(2019, 4, 21)}, 
+      {title: 'Testing Holiday', date: new Date(2019, 4, 22)}
+    ]
   }
 
-  async componentDidMount() {}
+  async componentDidMount() {
+    HolidayStore.loadHolidays(2019)
+  }
 
   openSidebar = () => {
     if (!window.editorSidebar || !window.editorSidebar.sidebarNode) {
@@ -63,21 +74,16 @@ class HolidaySettingApp extends React.Component {
   }
 
   render() {
-    const { showHolidayForm, dates } = this.state
-    // const tileContent = ({ date, view }) => view === 'month' && dates.includes(date) ? <i className="dot"></i> : null;
+    const dates = HolidayStore.getHolidays()
+    const { showHolidayForm } = this.state
     const tileContent = ({ date, view }) =>
       view === 'month' ? (
         <i
           className={classNames('dot center', {
-            hide: !dates.some(d => +d === +date)
+            'hide-holiday': !dates.some(d => +d.date === +date)
           })}
         />
       ) : null
-    // view === 'month' ? <i
-    //   className={classNames('dot center', {
-    //     'hide': !dates.some(d => +d === +date)
-    //   })}
-    // /> : null
 
     let row1 = []
     let date = startOfYear(new Date())
@@ -134,6 +140,7 @@ class HolidaySettingApp extends React.Component {
     return (
       <React.Fragment>
         <style>{styles}</style>
+        <div id="toast" className="toast animated toast--success" />
         <SlidePanel
           width="500px"
           show={showHolidayForm}
@@ -142,13 +149,9 @@ class HolidaySettingApp extends React.Component {
               <HolidayForm
                 ref={form => (this.holidayForm = form)}
                 onClose={() => this.setState({ showHolidayForm: false })}
-                onSave={users => {
+                onSave={holiday => {
                   this.setState({ showHolidayForm: false })
-                  // TaskStore.editAssignedUsers(
-                  //   batchId,
-                  //   this.state.taskSelected,
-                  //   users
-                  // )
+                  HolidayStore.createHoliday(holiday)
                 }}
                 title={'Holiday'}
               />

@@ -13,9 +13,7 @@ module Cultivation
 
     def call
       task = save_record
-
-      # TASK 980
-      # update_estimated_cost(task)
+      update_estimated_material_cost(task)
 
       # TASK 980
       # TODO: Trace how batch.estimated_cost is updated.
@@ -32,12 +30,11 @@ module Cultivation
       record.water_ph = @water_ph
       items.each do |item|
         product = Inventory::Product.find(item[:product_id])
-        catalogue = product.catalogue
         record.material_use.build(
           product_id: item[:product_id],
           quantity: item[:quantity],
           uom: item[:uom],
-          catalogue: catalogue.key,
+          catalogue: product.catalogue.key,
         )
       end
       record.save
@@ -46,21 +43,13 @@ module Cultivation
       errors.add(:error, $!.message)
     end
 
-    # TASK 980
-    def update_estimated_cost(task)
-
-      # In order to reduce mistake from race condition / parallel task, the
-      # code loops through all material used under the task and update the cost again.
-      sub_totals = task.material_used.each do |mu|
-        # For each item under the task, convert all unit to standard unit
-        # sum all numbers
-        # update sum back to task actual_material_cost
-        price = mu.product.average_price
-        sub_total = mu.common_quantity * price # TODO: Ensure the cost is positive or change it to be so!
-        sub_total
+    def update_estimated_material_cost(task)
+      estimated_material_cost = task.material_use.reduce(0) do |sum, mu|
+        # TODO: use common_quantity
+        sum + (mu.quantity * mu.product.average_price)
       end
 
-      task.estimated_material_cost = sub_totals.compact.sum
+      task.estimated_material_cost = estimated_material_cost
       task.save!
     end
 

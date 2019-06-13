@@ -43,6 +43,7 @@ module Inventory
     field :default_price, type: Float, default: -> { 0 }
 
     scope :raw_materials, -> { where(catalogue_type: 'raw_materials', is_active: true) }
+    scope :packages, -> { where(catalogue_type: 'packages', is_active: true) }
     scope :sales_product, -> { where(catalogue_type: Constants::SALES_KEY, is_active: true) }
     scope :plants, -> { where(catalogue_type: Constants::PLANTS_KEY, is_active: true) }
     scope :non_sales, -> { where(catalogue_type: Constants::NON_SALES_KEY, is_active: true) }

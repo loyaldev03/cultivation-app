@@ -41,7 +41,6 @@ class BarCodeComponent extends React.Component {
       )
     })
   }
-  
 
   render() {
     return <Webcam className="barcode_cam" height={350} width={350} />

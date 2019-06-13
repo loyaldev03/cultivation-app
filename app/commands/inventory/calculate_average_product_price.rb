@@ -9,7 +9,10 @@ module Inventory
 
     def call
       product = Inventory::Product.find(product_id)
-      vendor_invoice_items = Inventory::VendorInvoiceItem.where(product_name: product.name)
+      vendor_invoice_items = Inventory::VendorInvoiceItem.where(
+        product_name: product.name,
+        product_id: product.id,
+      )
       return unless vendor_invoice_items.present?
 
       total_quantity = 0

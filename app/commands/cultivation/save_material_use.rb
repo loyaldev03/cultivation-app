@@ -50,15 +50,11 @@ module Cultivation
     end
 
     def update_estimated_cost_of_batch(batch)
-      estimated_material_cost = 0
-      estimated_worker_cost = 0
-
-      batch.tasks.each do |task|
-        estimated_material_cost += task.estimated_material_cost
-        estimated_worker_cost += task.estimated_cost
+      batch_estimated_cost = batch.tasks.reduce(0) do |sum, task|
+        sum + (task.estimated_material_cost + task.estimated_cost)
       end
 
-      batch.update!(estimated_cost: (estimated_material_cost + estimated_worker_cost))
+      batch.update!(estimated_cost: batch_estimated_cost)
     end
   end
 end

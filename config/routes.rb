@@ -412,6 +412,7 @@ Rails.application.routes.draw do
       end
 
       resources :harvests, only: [:index]
+      resources :holidays, only: [:index, :create]
     end
   end
 end

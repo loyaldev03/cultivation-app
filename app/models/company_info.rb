@@ -11,4 +11,5 @@ class CompanyInfo
   field :timezone, type: String
 
   embeds_many :work_schedules, class_name: 'Common::WorkSchedule'
+  embeds_many :holidays, class_name: 'Common::Holiday'
 end

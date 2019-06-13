@@ -174,7 +174,7 @@ class ClippingPanel extends React.Component {
               </div>
             ))}
           </div>
-          
+
           <div className="ph4 pb4 pt3" />
           {/* <div className="ph4 pb4 pt3">
             <span className="orange">Sage</span> mother plants are located in
@@ -201,8 +201,6 @@ class ClippingPanel extends React.Component {
               There's no mother plant in this room or section.
             </div>
           )}
-
-          
 
           {motherPlantList.length > 0 ? (
             <div>

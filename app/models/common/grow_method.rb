@@ -5,5 +5,7 @@ module Common
 
     field :name, type: String
     field :is_active, type: Boolean
+
+    scope :active, -> { where(is_active: true) }
   end
 end

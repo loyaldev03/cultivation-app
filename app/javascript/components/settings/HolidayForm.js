@@ -30,7 +30,7 @@ class HolidayForm extends React.Component {
 
   onSave = async () => {
     console.log(this.state.title)
-    await this.props.onSave({title: this.state.title, date: this.state.date})
+    await this.props.onSave({ title: this.state.title, date: this.state.date })
   }
 
   render() {

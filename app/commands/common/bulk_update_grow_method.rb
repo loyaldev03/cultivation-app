@@ -9,18 +9,18 @@ module Common
 
     def call
       ids = @args[:ids]
-      grow_phase = Common::GrowMethod.all
-      temp_grow_phase = []
-      grow_phase.each do |grow_phase|
-        rm = grow_phase
+      grow_method = Common::GrowMethod.all
+      temp_grow_method = []
+      grow_method.each do |grow_method|
+        rm = grow_method
         if ids.include?(rm.id.to_s)
           rm.is_active = true
         else
           rm.is_active = false
         end
-        temp_grow_phase << rm
+        temp_grow_method << rm
       end
-      bulk_update(temp_grow_phase)
+      bulk_update(temp_grow_method)
     end
 
     def bulk_update(array)

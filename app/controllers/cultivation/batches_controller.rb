@@ -36,7 +36,7 @@ class Cultivation::BatchesController < ApplicationController
         label: "#{a.name} (#{a.code})",
       }
     end
-    @grow_methods = Constants::GROW_MEDIUM.map do |a|
+    @grow_methods = Common::GrowMethod.active.all.map do |a|
       {
         value: a[:code],
         label: a[:name],

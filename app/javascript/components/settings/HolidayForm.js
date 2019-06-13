@@ -12,15 +12,11 @@ class HolidayForm extends React.Component {
     super(props)
     this.state = {}
   }
-  componentDidMount() {
-    // if (!UserStore.isDataLoaded) {
-    //   UserStore.loadUsers(this.props.facilityId)
-    // }
-  }
 
-  setDate(start_date) {
+  setDate(date) {
     this.setState({
-      start_date: start_date
+      title: '',
+      date: date
     })
   }
 
@@ -33,12 +29,13 @@ class HolidayForm extends React.Component {
   }
 
   onSave = async () => {
-    await this.props.onSave(this.state.selectedUsers)
+    console.log(this.state.title)
+    await this.props.onSave({title: this.state.title, date: this.state.date})
   }
 
   render() {
     const { onClose } = this.props
-    const { title, start_date, end_date } = this.state
+    const { title, date } = this.state
     return (
       <div className="flex flex-column h-100">
         <SlidePanelHeader onClose={onClose} title={this.props.title} />
@@ -56,41 +53,27 @@ class HolidayForm extends React.Component {
             </div>
             <div className="ph3 mb3 flex">
               <div className="w-50">
-                <label className="f6 fw6 db mb1 gray ttc">Start At</label>
+                <label className="f6 fw6 db mb1 gray ttc">Date</label>
                 <DatePicker
-                  value={start_date}
-                  fieldname="start_date"
-                  onChange={value => this.handleChangeDate('start_date', value)}
-                />
-              </div>
-              <div className="w-50 pl3">
-                <label className="f6 fw6 db mb1 gray ttc">End At</label>
-                <DatePicker
-                  value={end_date}
-                  fieldname="end_date"
-                  onChange={value => this.handleChangeDate('end_date', value)}
+                  value={date}
+                  fieldname="date"
+                  onChange={value => this.handleChangeDate('date', value)}
                 />
               </div>
             </div>
           </div>
-          <SlidePanelFooter onSave={this.onSave} onCancel={onClose} />
+          <div className="pv3 ph4 bt b--light-grey">
+            <input
+              // type="submit"
+              className="fr btn btn--primary w2"
+              value={'Save'}
+              onClick={this.onSave}
+            />
+          </div>
         </div>
       </div>
     )
   }
-}
-
-HolidayForm.propTypes = {
-  // selectMode: PropTypes.string,
-  // facilityId: PropTypes.string.isRequired,
-  // onSave: PropTypes.func.isRequired,
-  // onClose: PropTypes.func.isRequired,
-  // title: PropTypes.string
-}
-
-HolidayForm.defaultProps = {
-  // selectMode: 'multiple', // or 'single'
-  // title: 'Assign Resources'
 }
 
 export default HolidayForm

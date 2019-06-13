@@ -14,11 +14,7 @@ module Cultivation
     def call
       task = save_record
       update_estimated_material_cost(task)
-
-      # TASK 980
-      # TODO: Trace how batch.estimated_cost is updated.
-      #
-      # update_cost_of_batch(task.batch_id)
+      update_estimated_cost_of_batch(task.batch)
       task
     end
 
@@ -53,14 +49,13 @@ module Cultivation
       task.save!
     end
 
-    def update_cost_of_batch(batch_id)
-      batch = Cultivation::Batch.find(batch_id)
+    def update_estimated_cost_of_batch(batch)
       estimated_material_cost = 0
       estimated_worker_cost = 0
 
-      batch.tasks.each do |x|
-        estimated_material_cost += (x.estimated_material_cost || 0)
-        estimated_worker_cost += (x.estimated_worker_cost || 0)
+      batch.tasks.each do |task|
+        estimated_material_cost += task.estimated_material_cost
+        estimated_worker_cost += task.estimated_cost
       end
 
       batch.update!(estimated_cost: (estimated_material_cost + estimated_worker_cost))

@@ -156,10 +156,20 @@ Rails.application.routes.draw do
     namespace 'core', as: :core do
       get '/' => 'core#index'
       resources :unit_of_measures, only: [:index, :edit, :update, :new, :create, :destroy]
+      
+      resources :packages do
+        put 'bulk_update', on: :collection
+      end
+      
       resources :raw_materials do
         put 'bulk_update', on: :collection
       end
+
       resources :grow_methods do
+        put 'bulk_update', on: :collection
+      end
+      
+      resources :grow_phases do
         put 'bulk_update', on: :collection
       end
     end
@@ -415,6 +425,7 @@ Rails.application.routes.draw do
       end
 
       resources :harvests, only: [:index]
+      resources :holidays, only: [:index, :create]
     end
   end
 end

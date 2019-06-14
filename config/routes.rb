@@ -164,6 +164,11 @@ Rails.application.routes.draw do
       resources :raw_materials do
         put 'bulk_update', on: :collection
       end
+
+      resources :grow_methods do
+        put 'bulk_update', on: :collection
+      end
+      
       resources :grow_phases do
         put 'bulk_update', on: :collection
       end

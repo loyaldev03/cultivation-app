@@ -1,0 +1,32 @@
+<div class="ph4 pv3 bb b--light-grey">
+  <h5 class="h6--font dark-grey ma0 ttc">Grow Method</h5>
+</div>
+
+<%= simple_form_for :grow_method, 
+    url: settings_core_grow_method_path, 
+    remote: true, 
+    method: :put,
+    wrapper: false,
+    html: { 
+      class: 'h-100 flex flex-column justify-between' 
+    } do |f|
+%>
+
+  <div class="pa4">
+    <div class="mb3">
+      <%= f.input :name, label: 'Name',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { class: 'db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+    <div class="mb3">
+      <%= f.input :parent_id, as: :hidden,
+        input_html: { value: params[:parent_id], class: 'db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+    </div>
+  </div>
+
+  <div class="bt b--light-grey pv3 ph4">
+    <%= f.submit "Update", class: "fr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" %>
+  </div>
+<% end %>

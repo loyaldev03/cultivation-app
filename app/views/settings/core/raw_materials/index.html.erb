@@ -40,9 +40,9 @@
     <tbody>
       <tr class="striped--light-gray">
         <th class="pv2 ph3 subtitle-2 dark-grey tl ttu" width="50%">Name</th>
-        <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Uom Dimension</th>
-        <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Default Price</th>
-        <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Active</th>
+        <%# <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Uom Dimension</th>
+        <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Default Price</th> %>
+        <th class="pv2 ph3 subtitle-2 dark-grey tr ttu">Active</th>
       </tr>
     <% @raw_materials.each_with_index do |f, i| %>
       <tr class="pointer rt-tr-group <%= f.category if f.category != '' and f.sub_category == ''%> <%= f.sub_category if f.category != '' and f.sub_category != ''%> <%= f.category if f.category != '' and f.sub_category != ''%>">
@@ -79,25 +79,25 @@
                       data: {remote: true, 'toggle-right': edit_settings_core_raw_material_path(f.id)},
                       class: 'ttc grey subtitle-2 pv3 tc dim' 
                 %>
-                <%= link_to "Delete", settings_core_raw_material_path(f.id), method: :delete, 
-                    data: {remote: true, confirm: 'Are you sure?'},
-                    class: 'grey subtitle-2 pv3 tc dim' %>
-                <% if @specials.include?(f.key) %> 
-                  <%= link_to 'Add Subcategory', new_settings_core_raw_material_path(parent_id: f.id),
+                <% unless  @second_levels.include?(f.key) %> 
+                  <%= link_to "Delete", settings_core_raw_material_path(f.id), method: :delete, 
+                      data: {remote: true, confirm: 'Are you sure?'},
+                      class: 'grey subtitle-2 pv3 tc dim' %>
+                <%end%>
+                <%# <% if @specials.include?(f.key) %> 
+                  <%# <%= link_to 'Add Subcategory', new_settings_core_raw_material_path(parent_id: f.id),
                         data: {remote: true, 'toggle-right': new_settings_core_raw_material_path(parent_id: f.id)},
-                        class: 'ttc grey subtitle-2 pv3 tc dim' 
-                  %>
-                <% end %>
+                        class: 'ttc grey subtitle-2 pv3 tc dim' %>
               </div>
             </div>
         </td>
-        <td class="pv2 ph3 dark-grey tl">
+        <%# <td class="pv2 ph3 dark-grey tl">
           <%= f.uom_dimension %>
         </td>
-        <td class="pv2 ph3 dark-grey tl">
+        <%# <td class="pv2 ph3 dark-grey tl">
           <%= f.default_price %>
         </td>
-        <td class="pv2 ph3 dark-grey tl">
+        <td class="pv2 ph3 dark-grey tr ">
           <% if f.is_active? %>
             <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="raw_material[ids][]" checked>
           <% else %>
@@ -114,7 +114,6 @@
 
 
 <script>
-
   $$('.dotted').on('click', function(e) {
     //hide other dropdown
     var other_dropdown = document.getElementsByClassName('dropdown-content')

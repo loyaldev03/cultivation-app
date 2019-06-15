@@ -1,0 +1,53 @@
+<%if @children.present? %>
+  <div class="mb3">
+    <span class="subtitle-2 grey">SubCategories</span>
+  </div>
+<%end%>
+<% if @specials.include?(@record.key) %> 
+  <div class="tr">
+    <input type="button" value="+ Add Subcategory" onClick="showHideDiv('divMsg')" class="btn btn--primary w-50"/>
+  </div>
+<%end%>
+
+<div id="divMsg" style="display:none;">
+		
+  <div class="pa4">
+    <div class="mb3 fl w-70">
+      <%= k.input :sub_label, label: 'Name',
+        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+        input_html: { value: "" , class: 'db w-100 pa2 body-1 grey ba b--light-grey box--br3 outline-0' } 
+      %>
+      <%= k.input :parent_id, as: :hidden, input_html: { value: @record.id } %>
+    </div>
+    <div class="mt3 fl w-30">
+      <%= k.submit "Add", class: "fr mt2 btn btn--primary" %>
+      
+    </div>
+  </div>
+</div>
+<%if @children.present? %>
+  <div class="mt3 bg-near-white">
+    <table class="w-100 table collapse">
+      <tbody>
+        <% @children.each_with_index do |subcat, i| %>
+          <tr class="pointer">
+            <td class="f6 bb b--black-10 tl pl2">
+            <p class="f10 grey">Subctagory Name</p>
+            <%= (subcat.label) %>
+            </td>
+            <% if @second_levels.include?(subcat.key)%>
+              <td class="bb b--black-10"></td>
+            <% else %>
+            <td class="bb b--black-10 f6 tr pv3 pr2">
+              <%= link_to "delete", settings_core_raw_material_path(id: subcat.id, edit_form: true, category: subcat.category), method: :delete, 
+                        data: {remote: true, confirm: 'Are you sure?'},
+                        class: 'link material-icons orange mr3 ml1' %>
+            </td>
+            <%end%>
+          </tr>
+        <%end%>
+
+      </tbody>
+    </table>
+  </div>
+<% end %>

@@ -10,7 +10,7 @@
         <p class="mt2 body-1 grey">
           Let's get a few details of your company info.
         </p>
-        <%= form_with model: @company_info, url: settings_company_company_info_path, local: true do |f| %>
+        <%= form_with model: @company_info, url: settings_company_company_info_path(onboarding_type: params[:onboarding_type]), local: true do |f| %>
           <div class="flex flex-column mt3">
           <div class="fl w-100-m">
             <a 

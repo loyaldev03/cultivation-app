@@ -1,5 +1,8 @@
 class Settings::Core::GrowMethodsController < ApplicationController
   def index
+    if params[:onboarding_type].present?
+      Facility.first.update_onboarding('Constant::ONBOARDING_GROW_METHOD')
+    end
     @grow_methods = Common::GrowMethod.all
   end
 

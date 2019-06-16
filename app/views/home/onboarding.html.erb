@@ -1,277 +1,60 @@
-<div class="ph4">
-  <% content_for :breadcrumb do %>
-    <div>
-      <%= breadcrumbs "Home" %>
-    </div>
-  <% end %>
-
-  <div class="ph4 bg-white ma4 items-center pb3 pt3">
-    <div class="pt4 mb5 b--black-10">
-        <b class="db f3 mb1">Complete System Setup (2/13)</b>
-        <div class="pt3">
-            <div class='bg-moon-gray br-pill overflow-y-hidden' style="height: 10px">
-                <div class='bg-orange br-pill shadow-1' style="width: 10%; height: 10px" ></div>
-            </div>
+<%- if @facility.present? %>
+    <div class="ph4">
+    <% content_for :breadcrumb do %>
+        <div>
+        <%= breadcrumbs "Home" %>
         </div>
+    <% end %>
+    <div class="ph4 bg-white ma4 items-center pb3 pt3">
+        <div class="pt4 mb5 b--black-10">
+            <b class="db f3 mb1">Complete System Setup (<%= @onboarding_count%>/<%= @facility.preferences.ne({code: "Constant::ONBOARDING_DONE"}).count%>)</b>
+            
+            <div class="pt3">
+                <div class='bg-moon-gray br-pill overflow-y-hidden' style="height: 10px">
+                    <div class='bg-orange br-pill shadow-1' style="width: <%= @onboarding_count.to_f / @facility.preferences.ne({code: "Constant::ONBOARDING_DONE"}).count * 100 %>%; height: 10px" ></div>
+                </div>
+            </div>
+            
+        </div>
+
+
+        <%- onboarding_tasks.each do |f| %>
+            <article class="center bg-white br3 pa3 ph0-1 mv3 ba <%= @facility.onboarding_val(f[:code]) ? 'b--orange' : 'b--black-50
+    '%> bw1 pr3">
+                <div class="flex items-center">
+                    <div class="fl w-10">
+                        <span class='<%= @facility.onboarding_val(f[:code]) ? 'orange' : 'black-50'%>'><i class="material-icons">
+                        check_circle_outline
+                        </i>
+                        </span>
+                    </div>
+                    <div class="fl w-80">
+                        <div class="flex-auto">
+                            <span class="f4 db black"><%= f[:label]%></span>
+                            <span class="f5 db black-70"><%= f[:desc]%></span>
+                        </div>
+                    </div>
+                    <div class="fl w-10 tr">
+                        <a href="<%=f[:link] + (@facility.onboarding_val(f[:code]) ? '' : 'onboarding_type=true')%>" class="f4 link dim br2 ph3 pv2 mb2 dib <%= @facility.onboarding_val(f[:code]) ? 'bw1 ba orange' : 'white bg-orange'%>">
+                        
+                            <%if ! @facility.onboarding_val(f[:code]) %>
+                                Start
+                            <%else%>
+                                Review
+                            <%end%>
+                        </a>
+                    </div>
+                </div>
+            </article>
+        <%end%>
+
+
+
+      
+        
         
     </div>
-    
-    <article class="center bg-white br3 pa3 ph0-1 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none orange"><i class="material-icons">
-                check_circle_outline
-                </i>
-                </a>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">Review and confirm general company settings</span>
-                    <span class="f5 db black-70">Time zone, unit of measurements, and other thing like that are set here</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ba bw1 ph3 pv2 mb2 dib orange">Review</a>
-            </div>
-        </div>
-    </article>
-    <article class="center bg-white br3 pa3 ph0-1 pa2 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none grey">
-                    <i class="material-icons">check_circle_outline</i>
-                </button>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">Setup Grow Method</span>
-                    <span class="f5 db black-70">Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ph3 pv2 mb2 dib white bg-orange">Start</a>
-            </div>
-        </div>
-    </article>
-    <article class="center bg-white br3 pa3 ph0-1 pa2 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none grey">
-                    <i class="material-icons">check_circle_outline</i>
-                </button>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">Setup Grow phases</span>
-                    <span class="f5 db black-70">Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ph3 pv2 mb2 dib white bg-orange">Start</a>
-            </div>
-        </div>
-    </article>
-    <article class="center bg-white br3 pa3 ph0-1 pa2 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none grey">
-                    <i class="material-icons">check_circle_outline</i>
-                </button>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">Review and add unit of masurement</span>
-                    <span class="f5 db black-70">Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ph3 pv2 mb2 dib white bg-orange">Start</a>
-            </div>
-        </div>
-    </article>
-    <article class="center bg-white br3 pa3 ph0-1 pa2 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none grey">
-                    <i class="material-icons">check_circle_outline</i>
-                </button>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">Set Raw Materials Type</span>
-                    <span class="f5 db black-70">Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ph3 pv2 mb2 dib white bg-orange">Start</a>
-            </div>
-        </div>
-    </article>
-    <article class="center bg-white br3 pa3 ph0-1 pa2 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none grey">
-                    <i class="material-icons">check_circle_outline</i>
-                </button>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">Invite your teammates</span>
-                    <span class="f5 db black-70">Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ph3 pv2 mb2 dib white bg-orange">Start</a>
-            </div>
-        </div>
-    </article>
-    <article class="center bg-white br3 pa3 ph0-1 pa2 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none grey">
-                    <i class="material-icons">check_circle_outline</i>
-                </button>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">Create, assign roles and permissions</span>
-                    <span class="f5 db black-70">Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ph3 pv2 mb2 dib white bg-orange">Start</a>
-            </div>
-        </div>
-    </article>
-    <article class="center bg-white br3 pa3 ph0-1 pa2 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none grey">
-                    <i class="material-icons">check_circle_outline</i>
-                </button>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">User</span>
-                    <span class="f5 db black-70">Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ph3 pv2 mb2 dib white bg-orange">Start</a>
-            </div>
-        </div>
-    </article>
-    <article class="center bg-white br3 pa3 ph0-1 pa2 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none grey">
-                    <i class="material-icons">check_circle_outline</i>
-                </button>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">Setup facilities, rooms and shelves for proper planting</span>
-                    <span class="f5 db black-70">Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ph3 pv2 mb2 dib white bg-orange">Start</a>
-            </div>
-        </div>
-    </article>
-    <article class="center bg-white br3 pa3 ph0-1 pa2 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none grey">
-                    <i class="material-icons">check_circle_outline</i>
-                </button>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">Active plants inventory</span>
-                    <span class="f5 db black-70">Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ph3 pv2 mb2 dib white bg-orange">Start</a>
-            </div>
-        </div>
-    </article>
-    <article class="center bg-white br3 pa3 ph0-1 pa2 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none grey">
-                    <i class="material-icons">check_circle_outline</i>
-                </button>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">Packages inventory</span>
-                    <span class="f5 db black-70">Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ph3 pv2 mb2 dib white bg-orange">Start</a>
-            </div>
-        </div>
-    </article>
-    <article class="center bg-white br3 pa3 ph0-1 pa2 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none grey">
-                    <i class="material-icons">check_circle_outline</i>
-                </button>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">Add raw materials</span>
-                    <span class="f5 db black-70">Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ph3 pv2 mb2 dib white bg-orange">Start</a>
-            </div>
-        </div>
-    </article>
-    <article class="center bg-white br3 pa3 ph0-1 pa2 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none grey">
-                    <i class="material-icons">check_circle_outline</i>
-                </button>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">Other inventory</span>
-                    <span class="f5 db black-70">Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ph3 pv2 mb2 dib white bg-orange">Start</a>
-            </div>
-        </div>
-    </article>
-    <article class="center bg-white br3 pa3 ph0-1 pa2 mv3 ba b--orange bw1 pr3">
-        <div class="flex items-center">
-            <div class="fl w-10">
-                <button class="f6 link grow ba bw1 dib black b--none grey">
-                    <i class="material-icons">check_circle_outline</i>
-                </button>
-            </div>
-            <div class="fl w-80">
-                <div class="flex-auto">
-                    <span class="f4 db black">Setup batches</span>
-                    <span class="f5 db black-70">Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum</span>
-                </div>
-            </div>
-            <div class="fl w-10 tr">
-                <a href="#" class="f4 link grow br2 ph3 pv2 mb2 dib white bg-orange">Start</a>
-            </div>
-        </div>
-    </article>
-    
-  </div>
 
-  </div>
-</div>
-
+    </div>
+    </div>
+<%end%>

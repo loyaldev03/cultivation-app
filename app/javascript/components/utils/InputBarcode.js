@@ -22,8 +22,8 @@ const InputBarcode = forwardRef(
   ) => {
     let scanner = null
     let scannerRef = null
-    const [hidden, setHidden] = useState(false);
-    const [valueBarcode, onChangeBarcode] = useState('');
+    const [hidden, setHidden] = useState(false)
+    const [valueBarcode, onChangeBarcode] = useState('')
     const onShowScanner = e => {
       setHidden(!hidden)
     }
@@ -63,7 +63,12 @@ const InputBarcode = forwardRef(
             </React.Fragment>
           )}
         </div>
-        {hidden && <BarCodeComponent onChangeBarcode={onChangeBarcode} onShowScanner={onShowScanner}/>}
+        {hidden && (
+          <BarCodeComponent
+            onChangeBarcode={onChangeBarcode}
+            onShowScanner={onShowScanner}
+          />
+        )}
         {error && <span className="f7 i red dib pv1">{error}</span>}
         {multiple ? (
           <div className="w-100 mb2 mt2 flex justify-end">

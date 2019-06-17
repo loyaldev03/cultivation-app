@@ -8,6 +8,8 @@ import UserDetailsEditor from './UserDetailsEditor'
 import RoleDetailsEditor from './RoleDetailsEditor'
 import { toast } from '../utils/toast'
 import classNames from 'classnames'
+import { DefaultAvatar } from '../utils'
+import GridGroupEmblem from '../utils/GridGroupEmblem'
 
 const build_facilities_options = facilities =>
   facilities.map(f => ({
@@ -53,7 +55,8 @@ class TeamSetttingApp extends React.Component {
   state = {
     editingUser: {},
     editingRole: {},
-    activeTab: 'rolesTab'
+    activeTab: 'rolesTab',
+    isListView: true
   }
   async componentDidMount() {
     await store.loadUsers(true)
@@ -206,7 +209,13 @@ class TeamSetttingApp extends React.Component {
       return <p className="orange ph4 pt3">No data available...</p>
     }
     const { facilities, users, roles, modules, companyWorkSchedules } = store
-    const { editingUser, editingRole, isSaving, activeTab } = this.state
+    const {
+      editingUser,
+      editingRole,
+      isSaving,
+      activeTab,
+      isListView
+    } = this.state
     const facilitiesOptions = build_facilities_options(facilities)
     const userManagerOptions = build_user_manager_options(users)
     const rolesOptions = build_roles_options(roles)
@@ -244,78 +253,217 @@ class TeamSetttingApp extends React.Component {
                       New User
                     </a>
                   </div>
-                  <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100">
-                    <tbody>
-                      <tr className="striped--light-gray">
-                        <th />
-                        <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
-                          Name
-                        </th>
-                        <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
-                          Email
-                        </th>
-                        <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
-                          Facility
-                        </th>
-                        <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
-                          Role
-                        </th>
-                      </tr>
-                      {users.map(x => (
-                        <tr
-                          key={x.id}
-                          className={classNames(
-                            'striped--light-gray dim pointer',
-                            { grey: !x.is_active }
-                          )}
-                          onClick={this.onClickUserEdit(x.id)}
-                        >
-                          <td className="pa2 tc">
-                            {x.photo_url ? (
-                              <div>
-                                <img
-                                  src={x.photo_url}
-                                  style={{
-                                    width: '36px',
-                                    height: '36px',
-                                    borderRadius: '18px'
-                                  }}
-                                />
-                              </div>
-                            ) : (
-                              <LetterAvatar
-                                firstName={x.first_name}
-                                lastName={x.last_name}
-                                size={36}
-                                radius={18}
-                              />
-                            )}
-                          </td>
-                          <td className="tl pv2 ph3">
-                            {x.first_name} {x.last_name}
-                            <span
-                              className={classNames('db f7', {
-                                green: x.is_active
-                              })}
-                            >
-                              {x.is_active ? 'Active' : 'Deactivated'}
-                            </span>
-                          </td>
-                          <td className="tl pv2 ph3">{x.email}</td>
-                          <td className="tl pv2 ph3">
-                            {x.facilities.map(f => (
-                              <FacilityTag key={f} id={f} />
-                            ))}
-                          </td>
-                          <td className="tl pv2 ph3">
-                            {x.roles.map(r => (
-                              <RoleTag key={r} id={r} />
-                            ))}
-                          </td>
+                  <div className="pb2 db tr pa2">
+                    <i
+                      className={`material-icons ${!isListView &&
+                        'gray'} md-21  pointer`}
+                      onClick={e => {
+                        this.setState({ isListView: true })
+                      }}
+                    >
+                      view_list
+                    </i>
+
+                    <i
+                      className={`material-icons ${isListView &&
+                        'gray'} md-21  pointer`}
+                      onClick={e => {
+                        this.setState({ isListView: false })
+                      }}
+                    >
+                      grid_on
+                    </i>
+                  </div>
+                  {isListView ? (
+                    <table className="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100">
+                      <tbody>
+                        <tr className="striped--light-gray">
+                          <th />
+                          <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
+                            Name
+                          </th>
+                          <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
+                            Email
+                          </th>
+                          <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
+                            Facility
+                          </th>
+                          <th className="pv2 ph3 subtitle-2 dark-grey tl ttu">
+                            Role
+                          </th>
                         </tr>
+                        {users.map(x => (
+                          <tr
+                            key={x.id}
+                            className={classNames(
+                              'striped--light-gray dim pointer',
+                              { grey: !x.is_active }
+                            )}
+                            onClick={this.onClickUserEdit(x.id)}
+                          >
+                            <td className="pa2 tc">
+                              {x.photo_url ? (
+                                <div>
+                                  <img
+                                    src={x.photo_url}
+                                    style={{
+                                      width: '36px',
+                                      height: '36px',
+                                      borderRadius: '18px'
+                                    }}
+                                    onError={e => {
+                                      e.target.onerror = null
+                                      e.target.src = DefaultAvatar
+                                    }}
+                                  />
+                                </div>
+                              ) : (
+                                <LetterAvatar
+                                  firstName={x.first_name}
+                                  lastName={x.last_name}
+                                  size={36}
+                                  radius={18}
+                                />
+                              )}
+                            </td>
+                            <td className="tl pv2 ph3">
+                              {x.first_name} {x.last_name}
+                              <span
+                                className={classNames('db f7', {
+                                  green: x.is_active
+                                })}
+                              >
+                                {x.is_active ? 'Active' : 'Deactivated'}
+                              </span>
+                            </td>
+                            <td className="tl pv2 ph3">{x.email}</td>
+                            <td className="tl pv2 ph3">
+                              {x.facilities.map(f => (
+                                <FacilityTag key={f} id={f} />
+                              ))}
+                            </td>
+                            <td className="tl pv2 ph3">
+                              {x.roles.map(r => (
+                                <RoleTag key={r} id={r} />
+                              ))}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <div className="flex flex-wrap justify-around box--br3 pv2 ph3 f6 mt1 w-100 mr4 ">
+                      {roles.map(x => (
+                        <div className="mb4 w-100">
+                          <div
+                            className="w-100  bb bw2 b--light-gray"
+                            style={{ marginBottom: '2em' }}
+                          >
+                            <GridGroupEmblem size={56} />
+                            <span class="pl3 f3 lh-title gray">{x.name}</span>
+                          </div>
+                          <div className="flex flex-wrap">
+                            {users
+                              .filter(word => {
+                                let filterRole = word.roles.filter(
+                                  role => store.getRoleName(role) == x.name
+                                )
+                                return filterRole.length > 0
+                              })
+                              .map(x => (
+                                <div className="br2 ba dark-gray b--black-10 mv1 pv4 ph2 mw5 mh2 w4">
+                                  <div className="db w-100 br2 br--top tc ">
+                                    {x.photo_url ? (
+                                      <div>
+                                        <img
+                                          src={x.photo_url}
+                                          style={{
+                                            width: '36px',
+                                            height: '36px',
+                                            borderRadius: '18px'
+                                          }}
+                                          onError={e => {
+                                            e.target.onerror = null
+                                            e.target.src = DefaultAvatar
+                                          }}
+                                        />
+                                      </div>
+                                    ) : (
+                                      <LetterAvatar
+                                        firstName={x.first_name}
+                                        lastName={x.last_name}
+                                        size={36}
+                                        radius={18}
+                                      />
+                                    )}
+                                  </div>
+                                  <div className="w-100 tc mt3 f6 lh-copy measure  mid-gray">
+                                    {x.first_name} {x.last_name}
+                                  </div>
+                                  <div
+                                    className="w-100 tc "
+                                    style={{ wordBreak: 'break-all' }}
+                                  >
+                                    {x.email}
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
                       ))}
-                    </tbody>
-                  </table>
+                      <div className="b-orange w-100">
+                        <div
+                          className="w-100  bb bw2 b--light-gray"
+                          style={{ marginBottom: '2em' }}
+                        >
+                          <GridGroupEmblem size={56} />
+                          <span class="pl3 f3 lh-title gray">Unassigned</span>
+                        </div>
+                        <div className="flex flex-wrap">
+                          {users
+                            .filter(x => x.roles.length === 0)
+                            .map(x => (
+                              <div className="br2 ba dark-gray b--black-10 mv1 pv4 ph2 mw5 mh2 w4">
+                                <div className="db w-100 br2 br--top tc ">
+                                  {x.photo_url ? (
+                                    <div>
+                                      <img
+                                        src={x.photo_url}
+                                        style={{
+                                          width: '36px',
+                                          height: '36px',
+                                          borderRadius: '18px'
+                                        }}
+                                        onError={e => {
+                                          e.target.onerror = null
+                                          e.target.src = DefaultAvatar
+                                        }}
+                                      />
+                                    </div>
+                                  ) : (
+                                    <LetterAvatar
+                                      firstName={x.first_name}
+                                      lastName={x.last_name}
+                                      size={36}
+                                      radius={18}
+                                    />
+                                  )}
+                                </div>
+                                <div className="w-100 tc mt3 f6 lh-copy measure  mid-gray">
+                                  {x.first_name} {x.last_name}
+                                </div>
+                                <div
+                                  className="w-100 tc"
+                                  style={{ wordBreak: 'break-all' }}
+                                >
+                                  {x.email}
+                                </div>
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
               {activeTab === 'rolesTab' && (

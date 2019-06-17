@@ -3,7 +3,7 @@
     <span class="subtitle-2 grey">SubCategories</span>
   </div>
 <%end%>
-<% if @specials.include?(@record.key) %> 
+<% if @specials.include?(@record.key.try(:capitalize)) %> 
   <div class="tr">
     <input type="button" value="+ Add Subcategory" onClick="showHideDiv('divMsg')" class="btn btn--primary w-50"/>
   </div>
@@ -35,7 +35,7 @@
             <p class="f10 grey">Subctagory Name</p>
             <%= (subcat.label) %>
             </td>
-            <% if @second_levels.include?(subcat.key)%>
+            <% if @second_levels.include?(subcat.key.try(:capitalize))%>
               <td class="bb b--black-10"></td>
             <% else %>
             <td class="bb b--black-10 f6 tr pv3 pr2">

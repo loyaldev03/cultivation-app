@@ -23,7 +23,7 @@ class Settings::Core::RawMaterialsController < ApplicationController
         @record = Inventory::Catalogue.find_by(key: @record.category)
         @children = @record.children
         render 'edit', layout: nil
-      elsif @specials.include?(@record.key)
+      elsif @specials.include?(@record.key.try(:capitalize))
         @children = @record.children
         render 'edit', layout: nil
       else
@@ -75,8 +75,8 @@ class Settings::Core::RawMaterialsController < ApplicationController
   private
 
   def set_specialkeys
-    @specials = ['others', 'grow_lights', 'grow_medium', 'nutrients', 'supplements']
-    @second_levels = ['blend', 'nitrogen', 'phosphate', 'potassium']
+    @specials = Constants::SPECIAL_TYPE.pluck(:name)
+    @second_levels = Constants::NUTRIENT_TYPE.pluck(:name)
   end
 
   def create_subcategory

@@ -209,6 +209,14 @@ module Constants
   NON_SALES_KEY = 'non_sales'
   RAW_MATERIALS_KEY = 'raw_materials'
 
+  SPECIAL_TYPE = [
+    {code: :others, name: 'Others'},
+    {code: :grow_lights, name: 'Grow Lights'},
+    {code: :grow_medium, name: 'Grow Medium'},
+    {code: :nutrients, name: 'Nutrients'},
+    {code: :supplements, name: 'Supplements'},
+  ].freeze
+
   NUTRIENT_TYPE = [
     {code: :blend, name: 'Blend'},
     {code: :nitrogen, name: 'Nitrogen'},

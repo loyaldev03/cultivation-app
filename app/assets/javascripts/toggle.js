@@ -27,11 +27,20 @@ function updateCollapsibleState() {
   const selector = 'input[data-toggle]';
   $$(selector).forEach(function(e1) {
     const toggleTarget = e1.getAttribute('data-toggle');
+    const invertTarget = e1.getAttribute('data-invert');
     $$(`[data-collapse="${toggleTarget}"]`).forEach(function(e2) {
-      if (e1.checked) {
-        e2.style.removeProperty("display")
+      if (invertTarget) {
+        if (e1.checked) {
+          e2.style.display = "none"
+        } else {
+          e2.style.removeProperty("display")
+        }
       } else {
-        e2.style.display = "none"
+        if (e1.checked) {
+          e2.style.removeProperty("display")
+        } else {
+          e2.style.display = "none"
+        }
       }
     })
   })
@@ -39,14 +48,27 @@ function updateCollapsibleState() {
 
 function updateToggleCollapsible(e) {
   const targetClass = e.target.getAttribute('data-toggle')
+  const invertTarget = e.target.getAttribute('data-invert');
   const targetElm = $_(`[data-collapse="${targetClass}"]`)
   if (targetElm) {
-    if (e.target.checked) {
-      show(targetElm)
+    if (invertTarget) {
+      if (e.target.checked) {
+        hide(targetElm)
+      }
+      else {
+        show(targetElm)
+      }
     }
-    else {
-      hide(targetElm)
+    else{
+      if (e.target.checked) {
+        show(targetElm)
+      }
+      else {
+        hide(targetElm)
+      }
+
     }
+   
   }
 }
 

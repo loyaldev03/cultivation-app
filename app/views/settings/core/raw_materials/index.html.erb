@@ -50,14 +50,14 @@
           <div class="flex justify-between-ns">
             <% if f.category == '' and f.sub_category == ''%>
               <div>
-                <% if @specials.include?(f.key)%>
+                <% if @specials.include?(f.key.try(:capitalize))%>
                   <i class="material-icons dim grey ml2 pointer collapse-show" style="font-size: 16px;" data-category="<%= f.key%>">arrow_drop_up</i>
                 <% end %>
                 <%= f.label%>
               </div>
             <% elsif f.category != '' and f.sub_category == ''%>
               <div class='ml4' data-toggle-right="<%= edit_settings_core_raw_material_path(f.id)%>">
-                <% if @second_levels.include?(f.key)%>
+                <% if @second_levels.include?(f.key.try(:capitalize))%>
                   <i class="material-icons dim grey ml2 pointer collapse-show" style="font-size: 16px;" data-category="<%= f.key%>">arrow_drop_up</i>
                 <% end %>
                 <%= f.label%>
@@ -79,12 +79,12 @@
                       data: {remote: true, 'toggle-right': edit_settings_core_raw_material_path(f.id)},
                       class: 'ttc grey subtitle-2 pv3 tc dim' 
                 %>
-                <% unless  @second_levels.include?(f.key) %> 
+                <% unless  @second_levels.include?(f.key.try(:capitalize)) %> 
                   <%= link_to "Delete", settings_core_raw_material_path(f.id), method: :delete, 
                       data: {remote: true, confirm: 'Are you sure?'},
                       class: 'grey subtitle-2 pv3 tc dim' %>
                 <%end%>
-                <%# <% if @specials.include?(f.key) %> 
+                <%# <% if @specials.include?(f.key.try(:capitalize)) %> 
                   <%# <%= link_to 'Add Subcategory', new_settings_core_raw_material_path(parent_id: f.id),
                         data: {remote: true, 'toggle-right': new_settings_core_raw_material_path(parent_id: f.id)},
                         class: 'ttc grey subtitle-2 pv3 tc dim' %>

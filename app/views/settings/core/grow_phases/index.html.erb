@@ -66,9 +66,9 @@
         </td>
         <td class="pv2 ph3 dark-grey tl">
           <% if f.is_active? %>
-            <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="grow_phase[ids][]" checked>
+            <input class="mr2" type="checkbox" id="<%= f.id%>" data-name="<%= f.name%>" value="<%= f.id %>" name="grow_phase[ids][]" checked>
           <% else %>
-            <input class="mr2" type="checkbox" id="<%= f.id%>" value="<%= f.id %>" name="grow_phase[ids][]">
+            <input class="mr2" type="checkbox" id="<%= f.id%>" data-name="<%= f.name%>" value="<%= f.id %>" name="grow_phase[ids][]">
           <% end %>
         </td>
       </tr>
@@ -81,6 +81,42 @@
 
 
 <script>
+  var veg1 = $_('[data-name="Veg 1"]');
+  var veg2 = $_('[data-name="Veg 2"]');
+  var veg = $_('[data-name="Veg"]');
+
+
+  veg1.on('change', function(e) {
+    if(veg1.checked){
+      veg2.checked = true
+      veg.checked = false
+    }else{
+      veg2.checked = false
+      veg.checked = true
+    }
+  })
+
+
+  veg2.on('change', function(e) {
+    if(veg2.checked){
+      veg1.checked = true
+      veg.checked = false
+    }else{
+      veg1.checked = false
+      veg.checked = true
+    }
+  })
+
+  veg.on('change', function(e) {
+    if(veg.checked){
+      veg1.checked = false
+      veg2.checked = false
+    }else{
+      veg1.checked = true
+      veg2.checked = true
+    }
+  })
+
 
   $$('.dotted').on('click', function(e) {
     //hide other dropdown

@@ -49,6 +49,7 @@ module Common
     field :base_unit, type: String
     field :conversion, type: Float, default: -> { 0 }  # multiplier to get to base unit
     field :dimension, type: String      # { weight, volume, length, pieces, plants, custom }
+    field :is_metrc, type: Boolean, default: -> { false }
 
     scope :base_unit, -> { where(is_base_unit: true) }
 

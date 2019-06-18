@@ -36,15 +36,12 @@
 
     <div class="">
       <span class="subtitle-2 grey">Is this a base unit?</span>
-      <p class="grey caption mt2 w-90">
-        If toggle is not selected, then that means that its not a base unit.
-      </p>
 
       <div class="flex justify-end w-90">
         <%= f.check_box :is_base_unit,
           checked: @record.is_base_unit,
           class: "toggle toggle-default",
-          data: { toggle: 'shelves_number_options' },
+          data: { toggle: 'shelves_number_options', invert: true},
           id: 'record_is_base_unit'
         %>
         <label class="toggle-button" for="record_is_base_unit"></label>
@@ -65,14 +62,15 @@
           input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
         %>
       </div>
+       <div class="mb2">
+        <%= f.input :conversion, label: 'Conversion',
+          label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
+          input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
+        %>
+      </div>
     </div>
 
-    <div class="mb2">
-      <%= f.input :conversion, label: 'Conversion',
-        label_html: { class: 'subtitle-2 db mb1 grey ttc' }, 
-        input_html: { class: 'box--height db w-70 pa2 body-1 grey ba b--light-grey box--br3 outline-0', rows: 5 } 
-      %>
-    </div>
+   
   </div>
 
   <div class="bt b--light-grey pv3 ph4">

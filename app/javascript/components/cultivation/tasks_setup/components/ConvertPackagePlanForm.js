@@ -209,7 +209,7 @@ class ConvertPackagePlanForm extends React.Component {
     const selectedProductTypes = this.state.data.map(x => x.product_type)
     const options = this.props.sales_catalogue.filter(
       x => selectedProductTypes.indexOf(x.label) < 0
-    )//.map(x => ({ value: x, label: x }))
+    )
 
     return (
       <div className="ph4 mt2 flex">

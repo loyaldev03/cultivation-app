@@ -156,7 +156,7 @@ Rails.application.routes.draw do
     namespace 'core', as: :core do
       get '/' => 'core#index'
       resources :unit_of_measures, only: [:index, :edit, :update, :new, :create, :destroy]
-      
+
       resources :packages do
         put 'bulk_update', on: :collection
       end
@@ -177,6 +177,9 @@ Rails.application.routes.draw do
     namespace 'company', as: :company do
       resources :company_info, only: [:edit, :update]
       resources :team, only: [:index]
+      resources :metrc_integrations do
+        get :metrc_setup, on: :collection
+      end
     end
 
     namespace 'facilities', as: :facility do

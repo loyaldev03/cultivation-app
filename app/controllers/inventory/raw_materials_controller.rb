@@ -5,7 +5,7 @@ class Inventory::RawMaterialsController < ApplicationController
 
   def nutrients
     if params[:onboarding_type].present?
-      current_facility.update_onboarding('Constant::ONBOARDING_RAW_MATERIALS')
+      current_facility.update_onboarding('ONBOARDING_RAW_MATERIALS')
     end
     @catalogue_id = Inventory::QueryCatalogue.call(Constants::NUTRIENTS_KEY).result&.id.to_s
   end
@@ -24,7 +24,7 @@ class Inventory::RawMaterialsController < ApplicationController
 
   def others
     if params[:onboarding_type].present?
-      current_facility.update_onboarding('Constant::ONBOARDING_OTHER_MATERIALS')
+      current_facility.update_onboarding('ONBOARDING_OTHER_MATERIALS')
     end
     @catalogues = Inventory::QueryCatalogueTree.call('raw_materials', Constants::OTHERS_KEY).result
   end

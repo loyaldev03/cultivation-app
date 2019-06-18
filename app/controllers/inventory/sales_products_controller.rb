@@ -3,7 +3,7 @@ class Inventory::SalesProductsController < ApplicationController
 
   def products
     if params[:onboarding_type].present?
-      current_facility.update_onboarding('Constant::ONBOARDING_PACKAGE_INVENTORY')
+      current_facility.update_onboarding('ONBOARDING_PACKAGE_INVENTORY')
     end
     @facility_strains = Inventory::QueryFacilityStrains.call(params[:facility_id]).result
     @sales_catalogue = Inventory::QueryCatalogueTree.call(Constants::SALES_KEY, 'raw_sales_product').result

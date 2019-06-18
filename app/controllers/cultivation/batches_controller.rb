@@ -14,7 +14,7 @@ class Cultivation::BatchesController < ApplicationController
 
   def new
     if params[:onboarding_type].present?
-      current_facility.update_onboarding('Constant::ONBOARDING_SETUP_BATCH')
+      current_facility.update_onboarding('ONBOARDING_SETUP_BATCH')
     end
     @facility_id = current_facility&.id.to_s
     # Cultivation Phases during batch setup depends on the

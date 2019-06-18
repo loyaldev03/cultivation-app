@@ -44,8 +44,8 @@ class Facility
   def update_onboarding(code)
     self.preferences.find_by(code: code).update(value: true)
     unless self.preferences.pluck(:value).include?(false)
-      if onboarding_val('Constant::ONBOARDING_DONE') == false
-        self.preferences.find_by(code: 'Constant::ONBOARDING_DONE').update(value: true)
+      if onboarding_val('ONBOARDING_DONE') == false
+        self.preferences.find_by(code: 'ONBOARDING_DONE').update(value: true)
       end
     end
   end

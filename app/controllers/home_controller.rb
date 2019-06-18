@@ -146,10 +146,10 @@ class HomeController < ApplicationController
 
   def onboarding
     @facility = Facility.find_by(facility_id: params[:facility_id])
-    @onboarding_count = @facility.preferences.ne({code: 'Constant::ONBOARDING_DONE'}).map { |x| x if x.value == true }.compact.count
+    @onboarding_count = @facility.preferences.ne({code: 'ONBOARDING_DONE'}).map { |x| x if x.value == true }.compact.count
     Rails.logger.debug("Facility found--->#{@facility.inspect}")
 
-    if @facility.onboarding_val('Constant::ONBOARDING_DONE') == true
+    if @facility.onboarding_val('ONBOARDING_DONE') == true
       redirect_to dashboard_cultivation_batches_path
     end
   end

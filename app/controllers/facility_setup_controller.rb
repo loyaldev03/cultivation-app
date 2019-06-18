@@ -24,7 +24,7 @@ class FacilitySetupController < ApplicationController
          @facility.rooms.find_by(purpose: Constants::CONST_TRIM).is_complete &&
          @facility.rooms.find_by(purpose: Constants::CONST_STORAGE).is_complete &&
          @facility.rooms.find_by(purpose: Constants::CONST_DRY)
-        @facility.update_onboarding('Constant::ONBOARDING_FACILITY')
+        @facility.update_onboarding('ONBOARDING_FACILITY')
       end
     end
   end

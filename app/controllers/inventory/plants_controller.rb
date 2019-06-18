@@ -10,7 +10,7 @@ class Inventory::PlantsController < ApplicationController
 
   def mothers
     if params[:onboarding_type].present?
-      current_facility.update_onboarding('Constant::ONBOARDING_ACTIVE_PLANTS')
+      current_facility.update_onboarding('ONBOARDING_ACTIVE_PLANTS')
     end
   end
 

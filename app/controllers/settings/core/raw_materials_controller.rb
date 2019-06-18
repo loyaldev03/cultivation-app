@@ -1,7 +1,7 @@
 class Settings::Core::RawMaterialsController < ApplicationController
   def index
     if params[:onboarding_type].present?
-      Facility.first.update_onboarding('Constant::ONBOARDING_MATERIAL_TYPE')
+      Facility.first.update_onboarding('ONBOARDING_MATERIAL_TYPE')
     end
     @raw_materials = Inventory::QueryRawMaterial.call.result
     @specials = ['others', 'grow_light', 'grow_medium', 'nutrients', 'supplements']

@@ -7,11 +7,11 @@
     <% end %>
     <div class="ph4 bg-white ma4 items-center pb3 pt3">
         <div class="pt4 mb5 b--black-10">
-            <b class="db f3 mb1">Complete System Setup (<%= @onboarding_count%>/<%= @facility.preferences.ne({code: "Constant::ONBOARDING_DONE"}).count%>)</b>
+            <b class="db f3 mb1">Complete System Setup (<%= @onboarding_count%>/<%= @facility.preferences.ne({code: "ONBOARDING_DONE"}).count%>)</b>
             
             <div class="pt3">
                 <div class='bg-moon-gray br-pill overflow-y-hidden' style="height: 10px">
-                    <div class='bg-orange br-pill shadow-1' style="width: <%= @onboarding_count.to_f / @facility.preferences.ne({code: "Constant::ONBOARDING_DONE"}).count * 100 %>%; height: 10px" ></div>
+                    <div class='bg-orange br-pill shadow-1' style="width: <%= @onboarding_count.to_f / @facility.preferences.ne({code: "ONBOARDING_DONE"}).count * 100 %>%; height: 10px" ></div>
                 </div>
             </div>
             

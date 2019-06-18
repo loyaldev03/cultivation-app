@@ -4,19 +4,19 @@ task seed_onboarding: :environment  do
     if facility.preferences.count == 0
         
         facility.preferences.create!([
-          { code: "Constant::ONBOARDING_COMP_INFO"},
-          { code: "Constant::ONBOARDING_GROW_METHOD"},
-          { code: "Constant::ONBOARDING_COMP_PHASES"},
-          { code: "Constant::ONBOARDING_UOM"},
-          { code: "Constant::ONBOARDING_MATERIAL_TYPE"},
-          { code: "Constant::ONBOARDING_INVITE_TEAM"},
-          { code: "Constant::ONBOARDING_ACTIVE_PLANTS"},
-          { code: "Constant::ONBOARDING_PACKAGE_INVENTORY"},
-          { code: "Constant::ONBOARDING_RAW_MATERIALS"},
-          { code: "Constant::ONBOARDING_FACILITY"},
-          { code: "Constant::ONBOARDING_OTHER_MATERIALS"},
-          { code: "Constant::ONBOARDING_SETUP_BATCH"},
-          { code: "Constant::ONBOARDING_DONE"}
+          { code: "ONBOARDING_COMP_INFO"},
+          { code: "ONBOARDING_GROW_METHOD"},
+          { code: "ONBOARDING_COMP_PHASES"},
+          { code: "ONBOARDING_UOM"},
+          { code: "ONBOARDING_MATERIAL_TYPE"},
+          { code: "ONBOARDING_INVITE_TEAM"},
+          { code: "ONBOARDING_ACTIVE_PLANTS"},
+          { code: "ONBOARDING_PACKAGE_INVENTORY"},
+          { code: "ONBOARDING_RAW_MATERIALS"},
+          { code: "ONBOARDING_FACILITY"},
+          { code: "ONBOARDING_OTHER_MATERIALS"},
+          { code: "ONBOARDING_SETUP_BATCH"},
+          { code: "ONBOARDING_DONE"}
           
         ])
     end

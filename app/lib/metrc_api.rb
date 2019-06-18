@@ -14,5 +14,11 @@ class MetrcApi
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end
+
+    def get_item_categories
+      url = "#{BASE_URL}/items/v1/categories"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
   end
 end

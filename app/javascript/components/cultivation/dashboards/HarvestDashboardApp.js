@@ -4,7 +4,7 @@ import { observer } from 'mobx-react'
 import {
   ActiveBadge,
   CheckboxSelect,
-  TempIssueWidgets,
+  TempHarvestWidgets,
   HeaderFilter,
   ListingTable
 } from '../../utils'
@@ -132,7 +132,7 @@ class HarvestDashboard extends React.Component {
           </span> */}
         </div>
         <div className="pv4">
-          <img src={TempIssueWidgets} className="w-100" />
+          <img src={TempHarvestWidgets} className="w-100" />
         </div>
         <div className="flex justify-between">
           <input

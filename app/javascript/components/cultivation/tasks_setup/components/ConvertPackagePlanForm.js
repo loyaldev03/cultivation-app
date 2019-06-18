@@ -95,7 +95,7 @@ class ConvertPackagePlanForm extends React.Component {
 
   onAddProductType = event => {
     event.preventDefault()
-    const product_type = this.state.productType.value
+    const product_type = this.state.productType.label
 
     this.setState({
       data: [...this.state.data, { product_type, package_plans: [] }],
@@ -207,9 +207,9 @@ class ConvertPackagePlanForm extends React.Component {
     }
 
     const selectedProductTypes = this.state.data.map(x => x.product_type)
-    const options = ProductTypes.filter(
-      x => selectedProductTypes.indexOf(x) < 0
-    ).map(x => ({ value: x, label: x }))
+    const options = this.props.sales_catalogue.filter(
+      x => selectedProductTypes.indexOf(x.label) < 0
+    )//.map(x => ({ value: x, label: x }))
 
     return (
       <div className="ph4 mt2 flex">

@@ -237,6 +237,7 @@ class HarvestPackageSetupApp extends React.Component {
                 packageId={idOpen}
                 users={this.props.users}
                 onClose={() => this.setState({ showCreatePackagePlan: false })}
+                sales_catalogue={this.props.sales_catalogue}
                 onSave={this.onSave}
               />
             )}

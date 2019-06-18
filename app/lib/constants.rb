@@ -83,6 +83,11 @@ module Constants
   NOTIFY_TYPE_BATCH = 'Cultivation::Batch'.freeze
   NOTIFY_TYPE_REQUEST = 'Common::WorkRequest'.freeze
 
+  BATCH_TYPES_CLONE = 'Clone'.freeze
+  BATCH_TYPES_SEED = 'Seed'.freeze
+
+  PLANT_GROWTH_PHASE_FLOWERING = 'Flowering'.freeze
+
   PLANT_TYPES = [
     {code: CONST_CLONE, name: 'Clone'},
     {code: CONST_MOTHER, name: 'Mother'},

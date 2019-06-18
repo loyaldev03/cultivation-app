@@ -15,7 +15,7 @@ module Inventory
 
     def call
       output = []
-      catalogues = Inventory::Catalogue.where(catalogue_type: type, category: category, sub_category: '')
+      catalogues = Inventory::Catalogue.where(catalogue_type: type, category: category, sub_category: '', is_active: true)
 
       catalogues.each do |parent|
         item = {

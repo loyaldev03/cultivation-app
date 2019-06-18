@@ -37,6 +37,12 @@
     %>
   </div>
 
+  <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <%= link_to "Onboarding Settings", onboarding_path(facility_id: current_user.default_facility_id),
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow'
+    %>
+  </div>
+
   <% if ENV["ENABLE_DATA_RESET"] == "yes" %>
     <div class="w-50 w-30-m w-20-l pa3 pt0">
       <%= link_to "** WARNING ** Reset data", reset_data_path,

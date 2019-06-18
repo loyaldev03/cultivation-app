@@ -33,15 +33,10 @@
     </a>
   </div>
 
-
-
-
   <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-100 mb2">
     <tbody>
       <tr class="striped--light-gray">
         <th class="pv2 ph3 subtitle-2 dark-grey tl ttu" width="50%">Name</th>
-        <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Uom Dimension</th>
-        <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Default Price</th>
         <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Active</th>
       </tr>
     <% @packages.each_with_index do |f, i| %>
@@ -91,12 +86,6 @@
           
               </div>
             </div>
-        </td>
-        <td class="pv2 ph3 dark-grey tl">
-          <%= f.uom_dimension %>
-        </td>
-        <td class="pv2 ph3 dark-grey tl">
-          <%= f.default_price %>
         </td>
         <td class="pv2 ph3 dark-grey tl">
           <% if f.is_active? %>

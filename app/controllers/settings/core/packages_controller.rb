@@ -12,7 +12,8 @@ class Settings::Core::PackagesController < ApplicationController
 
   def create
     @record = Inventory::Catalogue.new(package_params)
-    @record.catalogue_type = 'packages'
+    @record.catalogue_type = 'sales_products'
+    @record.category = 'raw_sales_product'
     @record.key = @record.label.parameterize.underscore
     if params[:record][:parent_id].present?
       @parent = Inventory::Catalogue.find(params[:record][:parent_id])

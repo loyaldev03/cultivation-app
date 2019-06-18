@@ -2,32 +2,42 @@
   <%= breadcrumbs ["Settings", settings_path], "General Settings" %>
 <% end %>
 
-<div class="pa4">
-  <h5 class="tl pa0 ma0 h5--font dark-grey ttc">General Settings</h5>
+<div class="">
+  <div class="w-100 pv3 flex flex-row flex-wrap">
+    <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <%= link_to settings_core_unit_of_measures_path, 
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+      Unit of Measure
+    <% end %>
+    </div>
 
-  <%= link_to settings_core_unit_of_measures_path, 
-      class: 'mt4 w-20 h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
-    Unit of Measure
-  <% end %>
+    <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <%= link_to settings_core_raw_materials_path, 
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+      Raw Materials
+    <% end %>
+    </div>
 
+    <div class="w-50 w-30-m w-20-l pa3 pt0">
+    <%= link_to settings_core_grow_methods_path, 
+        class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+      Grow Method
+    <% end %>
+    </div>
 
-  <%= link_to settings_core_raw_materials_path, 
-      class: 'mt4 w-20 h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
-    Raw Materials
-  <% end %>
+    <div class="w-50 w-30-m w-20-l pa3 pt0">
+      <%= link_to settings_core_grow_phases_path, 
+          class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+        Grow Phases
+      <% end %>
+    </div>
 
-  <%= link_to settings_core_grow_methods_path, 
-      class: 'mt4 w-20 h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
-    Grow Method
-  <% end %>
-  
-  <%= link_to settings_core_grow_phases_path, 
-      class: 'mt4 w-20 h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
-    Grow Phases
-  <% end %>
-
-  <%= link_to settings_core_packages_path, 
-      class: 'mt4 w-20 h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
-    Packages
-  <% end %>
+    <div class="w-50 w-30-m w-20-l pa3 pt0">
+      <%= link_to settings_core_packages_path, 
+          class: 'h4 orange subtitle-2 link flex justify-center items-center tc bg-white box--br3 box--shadow grow' do %>
+        Packages
+      <% end %>
+    </div>
 </div>
+
+

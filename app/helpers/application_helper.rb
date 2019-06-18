@@ -36,6 +36,56 @@ module ApplicationHelper
     nil
   end
 
+  def active_link(path)
+    if path == 'plant'
+      paths = [mothers_inventory_plants_path, cultivation_batches_inventory_plants_path, clones_inventory_plants_path, vegs_inventory_plants_path, flowers_inventory_plants_path, harvests_inventory_plants_path, harvest_batches_inventory_plants_path]
+      if paths.include?(request.path)
+        'active'
+      else
+        'grey'
+      end
+    elsif path == 'raw_material'
+      paths = [nutrients_inventory_raw_materials_path, grow_medium_inventory_raw_materials_path, grow_lights_inventory_raw_materials_path, supplements_inventory_raw_materials_path, others_inventory_raw_materials_path, seeds_inventory_raw_materials_path, purchased_clones_inventory_raw_materials_path]
+      if paths.include?(request.path)
+        'active'
+      else
+        'grey'
+      end
+    elsif current_page?(path)
+      'active'
+    else
+      'grey'
+    end
+  end
+
+  def parent_active_link(parent)
+    case parent
+    when 'cultivation'
+      paths = [dashboard_cultivation_batches_path, cult_batches_path, cult_plants_path, cult_harvests_path, cult_tasks_path, cult_issues_path]
+    when 'inventory'
+      paths = [inventory_setup_path, inventory_strains_path, mothers_inventory_plants_path, nutrients_inventory_raw_materials_path, products_inventory_sales_products_path, inventory_metrc_index_path, convert_products_inventory_sales_products_path]
+      plant_paths = [mothers_inventory_plants_path, cultivation_batches_inventory_plants_path, clones_inventory_plants_path, vegs_inventory_plants_path, flowers_inventory_plants_path, harvests_inventory_plants_path, harvest_batches_inventory_plants_path]
+      raw_material_path = [nutrients_inventory_raw_materials_path, grow_medium_inventory_raw_materials_path, grow_lights_inventory_raw_materials_path, supplements_inventory_raw_materials_path, others_inventory_raw_materials_path, seeds_inventory_raw_materials_path, purchased_clones_inventory_raw_materials_path]
+      paths = paths + plant_paths + raw_material_path
+    when 'people'
+      paths = [employees_dashboard_path, employees_path, employees_schedule_path, timesheets_path, requests_path]
+    when 'procurement'
+      paths = [procurement_path]
+    when 'facility'
+      paths = [facility_setup_new_path, facility_dashboard_summary_path, facility_dashboard_summary_path, facility_setup_rooms_info_path, facility_setup_room_summary_path, facility_setup_row_shelf_info_path]
+    when 'integration'
+      paths = [integration_path]
+    else
+      paths = []
+    end
+
+    if paths.include?(request.path)
+      'parent-active'
+    else
+      'grey'
+    end
+  end
+
   def onboarding_tasks
     [
       {label: 'Review and confirm general company settings', desc: 'Time zone, unit of measurements, and other thing like that are set here', code: 'ONBOARDING_COMP_INFO', link: '/settings/company/company_info/my-company/edit?'},

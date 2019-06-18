@@ -23,6 +23,9 @@ Rails.application.routes.draw do
   get "cult/tasks" => "home#cult_tasks"
   get "cult/issues" => "home#cult_issues"
   get "onboarding" => "home#onboarding"
+  get "procurement" => "home#procurement"
+  get "integration" => "home#integration"
+
   # End of dummy pages
 
   #work_requests

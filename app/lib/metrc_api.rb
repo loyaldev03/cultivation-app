@@ -20,5 +20,17 @@ class MetrcApi
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end
+
+    def get_plant_waste_methods
+      url = "#{BASE_URL}/plants/v1/waste/methods?licenseNumber=#{FACILITY_LICENSE}"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
+    def get_plant_waste_reasons
+      url = "#{BASE_URL}/plants/v1/waste/reasons?licenseNumber=#{FACILITY_LICENSE}"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
   end
 end

@@ -4,14 +4,14 @@ class MetrcUpdateUomWorker
 
   def perform
     # Download Unit of Measures (UoM) list from Metrc via API
-    units = MetrcApi.get_unit_of_measure
-    units.each do |unit|
+    results = MetrcApi.get_unit_of_measure
+    results.each do |h|
       # Parse downloaded data, and map to local UoM model
       uom = Common::UnitOfMeasure.find_or_create_by(
-        name: unit['Name'],
-        unit: unit['Abbreviation'],
+        name: h['Name'],
+        unit: h['Abbreviation'],
       )
-      qty_type = unit['QuantityType']
+      qty_type = h['QuantityType']
       uom.dimension = if qty_type == 'CountBased'
                         'pieces'
                       elsif qty_type == 'VolumeBased'

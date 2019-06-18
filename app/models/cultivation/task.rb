@@ -16,9 +16,9 @@ module Cultivation
     field :estimated_hours, type: Float, default: -> { 0 }
     field :actual_hours, type: Float, default: -> { 0 }
 
-    # Human hourly cost
-    field :estimated_cost, type: Float, default: -> { 0 }
-    field :actual_cost, type: Float, default: -> { 0 }
+    # Labor  cost
+    field :estimated_labor_cost, type: Float, default: -> { 0 }
+    field :actual_labor_cost, type: Float, default: -> { 0 }
 
     # Material cost
     field :estimated_material_cost, type: Float, default: -> { 0 }
@@ -141,6 +141,14 @@ module Cultivation
 
     def sum_actual_hours
       time_logs.map { |a| a.duration_in_hours }.sum
+    end
+
+    def actual_cost
+      actual_labor_cost + actual_material_cost
+    end
+
+    def estimated_cost
+      estimated_labor_cost + estimated_material_cost
     end
   end
 end

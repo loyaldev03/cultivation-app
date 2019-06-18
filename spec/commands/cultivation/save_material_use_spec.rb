@@ -8,7 +8,7 @@ RSpec.describe Cultivation::SaveMaterialUse, type: :command do
 
   let(:user) { double('user') }
   let(:task_estimated_cost) { 50 }
-  let(:task) { create(:task, batch: batch, estimated_cost: task_estimated_cost) }
+  let(:task) { create(:task, batch: batch, estimated_labor_cost: task_estimated_cost) }
   let(:id) { task.id }
 
   let(:catalogue) { create(:catalogue) }

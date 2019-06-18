@@ -221,28 +221,30 @@ module Cultivation
         # Task with children task would deduce from child tasks.
         children = task.children(batch_tasks)
         task.estimated_hours = sum_children_hours(children, batch_tasks)
-        task.estimated_cost = sum_children_cost(children, batch_tasks)
+        task.estimated_labor_cost = sum_children_labor_cost(children, batch_tasks)
 
-        # TASK 980
-        # task.estimated_material_cost = sum_children_est_material_cost(children, batch_tasks)
+        # TASK 980 - not sure should we call this because caller of this command
+        # is usually when there is a task assigned or date changed.
+        #
+        task.estimated_material_cost = sum_children_est_material_cost(children, batch_tasks)
         return
       end
 
       if task.estimated_hours && task.duration && task.user_ids.present?
         hours_per_person = task.estimated_hours / task.user_ids.length
-        estimated_cost = 0.00
+        estimated_labor_cost = 0.00
         task.user_ids.each do |user_id|
           user = users.detect { |u| u.id == user_id }
           if user.present?
-            estimated_cost += user.hourly_rate * hours_per_person
+            estimated_labor_cost += user.hourly_rate * hours_per_person
           else
             # Remove user from task if not found
             task.user_ids.delete_if { |i| i == user_id }
           end
         end
-        task.estimated_cost = estimated_cost
+        task.estimated_labor_cost = estimated_labor_cost
       else
-        task.estimated_cost = 0
+        task.estimated_labor_cost = 0
       end
     end
 
@@ -297,10 +299,10 @@ module Cultivation
       end
     end
 
-    def sum_children_cost(children, batch_tasks)
+    def sum_children_labor_cost(children, batch_tasks)
       children.reduce(0.0) do |sum, e|
-        if !e.have_children?(batch_tasks) && e.estimated_cost
-          sum + e.estimated_cost
+        if !e.have_children?(batch_tasks) && e.estimated_labor_cost
+          sum + e.estimated_labor_cost
         else
           sum
         end
@@ -340,7 +342,9 @@ module Cultivation
     def update_parent_fields(task, parent, batch_tasks)
       children = parent.children(batch_tasks)
       parent.estimated_hours = sum_children_hours(children, batch_tasks)
-      parent.estimated_cost = sum_children_cost(children, batch_tasks)
+      parent.estimated_labor_cost = sum_children_labor_cost(children, batch_tasks)
+      parent.estimated_material_cost = sum_children_est_material_cost(children, batch_tasks)
+
       if task.first_child? && task.depend_on.present?
         parent.start_date = task.start_date
       end

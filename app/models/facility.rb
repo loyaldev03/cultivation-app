@@ -14,6 +14,7 @@ class Facility
 
   embeds_one :address, as: :addressable, class_name: 'Address'
   embeds_many :rooms, class_name: 'Room'
+  embeds_many :preferences, class_name: 'Preference'
 
   has_many :strains, class_name: 'Inventory::FacilityStrain'
   has_many :catalogue, class_name: 'Inventory::Catalogue'
@@ -33,6 +34,19 @@ class Facility
       Constants::CULTIVATION_PHASES_2V
     else
       Constants::CULTIVATION_PHASES_1V
+    end
+  end
+
+  def onboarding_val(code)
+    self.preferences.find_by(code: code).value
+  end
+
+  def update_onboarding(code)
+    self.preferences.find_by(code: code).update(value: true)
+    unless self.preferences.pluck(:value).include?(false)
+      if onboarding_val('ONBOARDING_DONE') == false
+        self.preferences.find_by(code: 'ONBOARDING_DONE').update(value: true)
+      end
     end
   end
 end

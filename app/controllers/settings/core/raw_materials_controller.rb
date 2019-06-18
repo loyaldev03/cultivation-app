@@ -2,6 +2,9 @@ class Settings::Core::RawMaterialsController < ApplicationController
   before_action :set_specialkeys
 
   def index
+    if params[:onboarding_type].present?
+      Facility.first.update_onboarding('ONBOARDING_MATERIAL_TYPE')
+    end
     @raw_materials = Inventory::QueryRawMaterial.call.result
     ###should standardize the name to catalogue example -> Inventory::QueryCatalogue
   end

@@ -4,8 +4,29 @@ class FacilitySetupController < ApplicationController
 
   # GET new facility - basic info form page - step 1
   def new
+    onboarding_check_status
     @wizard_form = FacilityWizardForm::BasicInfoForm.new(params[:facility_id])
     render 'facility_setup/step1'
+  end
+
+  def onboarding_check_status
+    if params[:onboarding_type].present?
+      @facility = Facility.find(params[:facility_id])
+
+      if @facility.is_complete && @facility.is_enabled &&
+         @facility.rooms.find_by(purpose: Constants::CONST_MOTHER).is_complete &&
+         @facility.rooms.find_by(purpose: Constants::CONST_CLONE).is_complete &&
+         (@facility.rooms.find_by(purpose: Constants::CONST_VEG).is_complete ||
+          @facility.rooms.find_by(purpose: Constants::CONST_VEG1).is_complete ||
+          @facility.rooms.find_by(purpose: Constants::CONST_VEG2).is_complete) &&
+         @facility.rooms.find_by(purpose: Constants::CONST_FLOWER).is_complete &&
+         @facility.rooms.find_by(purpose: Constants::CONST_HARVEST).is_complete &&
+         @facility.rooms.find_by(purpose: Constants::CONST_TRIM).is_complete &&
+         @facility.rooms.find_by(purpose: Constants::CONST_STORAGE).is_complete &&
+         @facility.rooms.find_by(purpose: Constants::CONST_DRY)
+        @facility.update_onboarding('ONBOARDING_FACILITY')
+      end
+    end
   end
 
   # POST update facility basic info - step 1 / submit

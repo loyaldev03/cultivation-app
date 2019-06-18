@@ -2,6 +2,9 @@ class Settings::Core::GrowPhasesController < ApplicationController
   before_action :set_grow_phase, only: [:edit, :update, :destroy]
 
   def index
+    if params[:onboarding_type].present?
+      Facility.first.update_onboarding('ONBOARDING_COMP_PHASES')
+    end
     @grow_phases = Common::GrowPhase.all
   end
 

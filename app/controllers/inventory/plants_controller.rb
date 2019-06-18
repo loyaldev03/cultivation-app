@@ -9,6 +9,9 @@ class Inventory::PlantsController < ApplicationController
   end
 
   def mothers
+    if params[:onboarding_type].present?
+      current_facility.update_onboarding('ONBOARDING_ACTIVE_PLANTS')
+    end
   end
 
   def cultivation_batches

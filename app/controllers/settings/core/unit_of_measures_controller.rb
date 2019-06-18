@@ -1,5 +1,8 @@
 class Settings::Core::UnitOfMeasuresController < ApplicationController
   def index
+    if params[:onboarding_type].present?
+      Facility.first.update_onboarding('ONBOARDING_UOM')
+    end
     @list = Common::UnitOfMeasure.all.order_by(name: :asc)
   end
 

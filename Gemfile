@@ -103,6 +103,7 @@ gem 'flamegraph'
 gem 'stackprof'
 
 # Producation Monitoring
+gem 'health_check'
 gem 'scout_apm'
 
 # Error tracking
@@ -126,3 +127,5 @@ gem 'sidekiq-cron'
 gem 'timecop'
 #SMS
 gem 'nexmo'
+
+gem 'cancancan'

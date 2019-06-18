@@ -1,0 +1,21 @@
+<div class="ph4 pv3 bb b--light-grey">
+  <h5 class="h6--font dark-grey ma0 ttc">Packages</h5>
+</div>
+
+<div class="ph4 mt3 mb3 bt2">
+  <label class="f5"><%= @package.label %> Subcategory</label>
+
+  <div class="mt2">
+  <% @children.each do |child|%>
+      <div class="flex items-center mb2">
+        <% if child.is_active? %>
+          <input class="mr2" type="checkbox" id="<%= child.id%>" value="<%= child.id %>" name="package[ids][]" checked>
+        <% else %>
+          <input class="mr2" type="checkbox" id="<%= child.id%>" value="<%= child.id %>" name="package[ids][]">
+        <% end %>
+        <label class="pointer lh-copy"><%= child.label %></label>
+      </div>
+  <% end %>
+  </div>
+</div>
+

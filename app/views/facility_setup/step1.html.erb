@@ -53,7 +53,16 @@
                       class: "grey input-reset br2 outline-0 ba b--light-grey pa2 db w-100" %>
                   </div>
                 </div>
+                <div class="flex flex-row mt3">
+                  <div class="mr4 w-30">
+                    <%= f.label "Facility Square Foot", class: "grey subtitle-2 ttc db mb1" %>
+                    <%= f.text_field :square_foot,
+                      value: @wizard_form.square_foot,
+                      class: "grey input-reset br2 outline-0 ba b--light-grey pa2 db w-100" %>
+                  </div>
+                </div>
               </div>
+              
             </div>
 
             <div class="mb4 flex flex-row-l flex-column">

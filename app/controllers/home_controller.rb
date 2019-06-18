@@ -2,6 +2,7 @@ class HomeController < ApplicationController
   include WorkersDashboard
 
   def index
+    authorize! :index, HomeController
     @home = HomeSetupStatus.call(current_default_facility).result
   end
 
@@ -14,12 +15,39 @@ class HomeController < ApplicationController
   end
 
   def employees
+    authorize! :employees, HomeController
   end
 
   def employees_schedule
+    authorize! :employees_schedule, HomeController
   end
 
   def timesheets
+    authorize! :timesheets, HomeController
+  end
+
+  def cult_batches
+    authorize! :cult_batches, HomeController
+  end
+
+  def cult_plants
+    authorize! :cult_plants, HomeController
+  end
+
+  def cult_tasks
+    authorize! :cult_tasks, HomeController
+  end
+
+  def cult_issues
+    authorize! :cult_issues, HomeController
+  end
+
+  def employees_dashboard
+    authorize! :employees_dashboard, HomeController
+  end
+
+  def settings
+    authorize! :settings, HomeController
   end
 
   def requests
@@ -52,6 +80,7 @@ class HomeController < ApplicationController
     @next_payment_date = QueryNextPaymentDate.call(Time.current).result
     @hours_worked = get_hours_worked
     render 'worker_dashboard', layout: 'worker'
+    authorize! :worker_dashboard, HomeController
   end
 
   def worker_schedule
@@ -59,9 +88,11 @@ class HomeController < ApplicationController
     @next_payment_date = QueryNextPaymentDate.call(Time.current).result
     @hours_worked = get_hours_worked
     render 'worker_schedule', layout: 'worker'
+    authorize! :worker_schedule, HomeController
   end
 
   def inventory_setup
+    authorize! :inventory_setup, HomeController
     @strains_count = Inventory::FacilityStrain.count
   end
 
@@ -111,6 +142,9 @@ class HomeController < ApplicationController
   end
 
   def qr
+  end
+
+  def onboarding
   end
 
   private

@@ -13,15 +13,14 @@
               style="height: 50px"
               class="ph4 f6 w-100 bg-white box--shadow-header flex flex-row items-center justify-between"
             >
+              <div class="flex items-center">
+                <span class="f5 fw4 gray flex items-center">
+                  <i class="material-icons mr2 black-20 md-18">location_on</i>
+                  <%= current_default_facility&.name %> 
+                </span>
+              </div>
+              
               <% if content_for? :breadcrumb %>
-                <div class="flex items-center">
-                  <!--  '' #yield :breadcrumb -->
-                  <span class="f5 fw4 gray flex items-center">
-                    <i class="material-icons mr2 black-20 md-18">location_on</i>
-                    <%= current_default_facility&.name %>
-                  </span>
-                </div>
-
                 <div class="flex flex-row items-center">
                   <% if ENV["ENABLE_TIME_TRAVEL"] == "yes" %>
                     <%= react_component 'utils/TimeTaveller', { current_time: Time.current } %>
@@ -51,7 +50,7 @@
 
                   <div class="dropdown">
                     <div id="myDropdown" class="dropdown-content box--shadow-header">
-                      <%= link_to 'My Task', 'daily_tasks',
+                      <%= link_to 'My Task', daily_tasks_path,
                       class: 'ttc grey subtitle-2 pv3 tc dim' %>  
                       <%= link_to 'Edit profile', edit_user_registration_path,
                            class: 'ttc grey subtitle-2 pv3 tc dim' %>

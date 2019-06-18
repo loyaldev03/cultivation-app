@@ -1,4 +1,5 @@
 class Cultivation::BatchesController < ApplicationController
+  authorize_resource class: false
   before_action :find_batch_info, only: [:show,
                                          :gantt,
                                          :locations,
@@ -35,7 +36,7 @@ class Cultivation::BatchesController < ApplicationController
         label: "#{a.name} (#{a.code})",
       }
     end
-    @grow_methods = Constants::GROW_MEDIUM.map do |a|
+    @grow_methods = Common::GrowMethod.active.all.map do |a|
       {
         value: a[:code],
         label: a[:name],

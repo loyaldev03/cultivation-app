@@ -1,4 +1,5 @@
 class Inventory::PlantsController < ApplicationController
+  authorize_resource class: false
   before_action :load_facility_strains, only: [:mothers, :cultivation_batches]
   before_action :load_batches, only: [:clones, :vegs, :flowers, :harvest_batches]
   before_action :load_scandit_licence, except: [:cultivation_batches]
@@ -23,7 +24,7 @@ class Inventory::PlantsController < ApplicationController
   end
 
   def harvest_batches
-    cultivation_batches = Cultivation::Batch.includes(:facility_strain, :tasks).where(facility_id: params[:facility_id]).in(current_growth_stage: ['dry', 'cure'])
+    cultivation_batches = Cultivation::Batch.includes(:facility_strain, :tasks).where(facility_id: params[:facility_id])
     @cultivation_batches = BatchSerializer.new(cultivation_batches, params: {exclude_tasks: true}).serializable_hash[:data]
     @uoms = Common::UnitOfMeasure.where(dimension: 'weight').map &:unit
   end

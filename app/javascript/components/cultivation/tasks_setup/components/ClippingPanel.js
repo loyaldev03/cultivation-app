@@ -41,7 +41,7 @@ class ClippingPanel extends React.Component {
       this.props.strainId,
       BatchStore.batch.selected_location
     )
-    let isHasMotherPlant = motherPlantList.length > 0
+    let isHasMotherPlant = roomData.length > 0
     let codeSelected = motherRoomList.map(x => {
       if (x.room_id === BatchStore.batch.selected_location) {
         return x.room_id
@@ -123,7 +123,6 @@ class ClippingPanel extends React.Component {
       (a, b) => a + (Number(b['quantity']) || 0),
       0
     )
-    console.log(currentplant, BatchStore.batch.selected_plants)
     if (currentplant === BatchStore.batch.quantity)
       BatchStore.updateBatchSelectedPlants(
         this.props.batchId,
@@ -154,6 +153,13 @@ class ClippingPanel extends React.Component {
       roomData.length > 0 && (
         <div>
           <SlidePanelHeader onClose={onClose} title={this.props.title} />
+          {isHasMotherPlant &&
+            BatchStore.batch.selected_location === '' &&
+            codeSelected == undefined && (
+              <div className="orange tc mt4 f4">
+                Please select any section on the diagram
+              </div>
+            )}
           <div className="flex justify-center tc mt3">
             {motherRoomList.map(card => (
               <div
@@ -168,6 +174,7 @@ class ClippingPanel extends React.Component {
               </div>
             ))}
           </div>
+
           <div className="ph4 pb4 pt3" />
           {/* <div className="ph4 pb4 pt3">
             <span className="orange">Sage</span> mother plants are located in
@@ -189,11 +196,12 @@ class ClippingPanel extends React.Component {
             </div>
           ) : null}
 
-          {!isHasMotherPlant && (
+          {!isHasMotherPlant && BatchStore.batch.selected_location && (
             <div className="orange tc mt4">
               There's no mother plant in this room or section.
             </div>
           )}
+
           {motherPlantList.length > 0 ? (
             <div>
               {codeSelected && (

@@ -16,7 +16,7 @@ RSpec.describe Inventory::CalculateAverageProductPrice, type: :command do
   describe ".call" do
     context 'when only 1 transaction' do
       before do
-        allow(Inventory::VendorInvoiceItem).to receive(:where).with(product_name: product.name).and_return(invoice_items)
+        allow(Inventory::VendorInvoiceItem).to receive(:where).with(product_name: product.name, product_id: product.id).and_return(invoice_items)
         allow(Inventory::ItemTransaction).to receive(:find_by).with(ref_type: 'Inventory::VendorInvoiceItem', ref_id: invoice_item1.id).and_return(item_transaction1)
       end
 
@@ -35,7 +35,7 @@ RSpec.describe Inventory::CalculateAverageProductPrice, type: :command do
       let(:expected_average_price) { 10.0 } # total amount 1100. total quantity 110
 
       before do
-        allow(Inventory::VendorInvoiceItem).to receive(:where).with(product_name: product.name).and_return(invoice_items)
+        allow(Inventory::VendorInvoiceItem).to receive(:where).with(product_name: product.name, product_id: product.id).and_return(invoice_items)
         allow(Inventory::ItemTransaction).to receive(:find_by).with(ref_type: 'Inventory::VendorInvoiceItem', ref_id: invoice_item1.id).and_return(item_transaction1)
         allow(Inventory::ItemTransaction).to receive(:find_by).with(ref_type: 'Inventory::VendorInvoiceItem', ref_id: invoice_item2.id).and_return(item_transaction2)
       end

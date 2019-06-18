@@ -96,9 +96,9 @@
         <li class="pv2">
           <%= link_to 'METRC', inventory_metrc_index_path, class: 'link gray f6' %>
         </li>
-        <li class="pv2">
+        <!-- <li class="pv2">
           <%= link_to 'Products', convert_products_inventory_sales_products_path(facility_id:current_default_facility&.id&.to_s), class: 'link gray f6' %>
-        </li>
+        </li> -->
       </ul>
     </li>
   
@@ -127,12 +127,11 @@
         <li class="pv2">
           <%= link_to 'Timesheets', timesheets_path, class: 'link gray f6' %>
         </li>
+        <!-- 
         <li class="pv2">
-          <%= link_to 'Paydates', '', class: 'link gray f6' %>
+          <%= link_to 'OT Requests', requests_path, class: 'link gray f6' %>
         </li>
-        <li class="pv2">
-          <%= link_to 'Status', requests_path, class: 'link gray f6' %>
-        </li>
+        -->
       </ul>
     </li>
 
@@ -157,7 +156,7 @@
     <li class="pv3 ph3 flex flex-column nav-ex ba bt-0 bl-0 br-0 bb-0">
       <div class="flex flex-row items-center">
         <i class="material-icons md-16 grey mr3 ml1">business</i>
-        <%= link_to facility_setup_new_path(facility_id: current_default_facility&.id), class: 'link' do %>
+        <%= link_to facility_dashboard_path(facility_id: current_facility&.id), class: 'link' do %>
           <span class="link subtitle-2-regular grey">Facility</span>
         <% end %>
       </div>
@@ -166,9 +165,9 @@
       <ul class="ul list f6 gray ml4 pl2 mt2">
         <li class="pv2">
           <% if current_facility %>
-            <%= link_to 'Facility', facility_setup_new_path(facility_id: current_facility.id), class: 'link gray f6' %>
+            <%= link_to 'Facility', facility_dashboard_path(facility_id: current_facility.id), class: 'link gray f6' %>
           <% else %>
-            <%= link_to 'Facility', facility_setup_new_path, class: 'link gray f6' %>
+            <%= link_to 'Facility', facility_setup_new_path(facility_id: current_facility.id), class: 'link gray f6' %>
           <% end %>
         </li>
 

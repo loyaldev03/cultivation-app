@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   get 'prod/unsold' => "home#prod_unsold"
   get 'prod/orders' => "home#prod_orders"
   get 'prod/manifest' => "home#prod_manifest"
+
   # End of dummy pages
 
   #work_requests

@@ -23,6 +23,13 @@ Rails.application.routes.draw do
   get "cult/tasks" => "home#cult_tasks"
   get "cult/issues" => "home#cult_issues"
   get "onboarding" => "home#onboarding"
+
+  get 'prod/dashboard' => "home#prod_dashboard"
+  get 'prod/packages' => "home#prod_packages"
+  get 'prod/sold' => "home#prod_sold"
+  get 'prod/unsold' => "home#prod_unsold"
+  get 'prod/orders' => "home#prod_orders"
+  get 'prod/manifest' => "home#prod_manifest"
   # End of dummy pages
 
   #work_requests

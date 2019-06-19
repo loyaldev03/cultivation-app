@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="fl w-10 tr">
-                        <a href="<%=f[:link] + (@facility.onboarding_val(f[:code]) ? '' : 'onboarding_type=true')%>" class="f4 link dim br2 ph3 pv2 mb2 dib <%= @facility.onboarding_val(f[:code]) ? 'bw1 ba orange' : 'white bg-orange'%>">
+                        <a href="<%=f[:link] + (@facility.onboarding_val(f[:code]) ? '' : ('onboarding_type=true&&facility_id='+@facility.id.to_s))%>" class="f4 link dim br2 ph3 pv2 mb2 dib <%= @facility.onboarding_val(f[:code]) ? 'bw1 ba orange' : 'white bg-orange'%>">
                         
                             <%if ! @facility.onboarding_val(f[:code]) %>
                                 Start

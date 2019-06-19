@@ -145,7 +145,7 @@ class HomeController < ApplicationController
   end
 
   def onboarding
-    @facility = Facility.find_by(facility_id: params[:facility_id])
+    @facility = Facility.find(params[:facility_id])
     @onboarding_count = @facility.preferences.ne({code: 'ONBOARDING_DONE'}).map { |x| x if x.value == true }.compact.count
     Rails.logger.debug("Facility found--->#{@facility.inspect}")
 

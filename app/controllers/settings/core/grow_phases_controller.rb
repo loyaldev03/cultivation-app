@@ -3,7 +3,8 @@ class Settings::Core::GrowPhasesController < ApplicationController
 
   def index
     if params[:onboarding_type].present?
-      Facility.first.update_onboarding('ONBOARDING_COMP_PHASES')
+      @facility = Facility.find(params[:facility_id])
+      @facility.update_onboarding('ONBOARDING_COMP_PHASES')
     end
     @grow_phases = Common::GrowPhase.all
   end

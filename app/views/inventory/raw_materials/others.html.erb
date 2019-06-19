@@ -8,8 +8,8 @@
 
 
 <div class="pa4">
-  <%= render partial: 'setupIntro' %>
- <%= render partial: 'setupNavigation', locals: { selected: Constants::OTHERS_KEY } %>
+  <%= image_tag 'dummy/inventory-overview.png', class: 'mw1200 w-100 mb4' %>
+  <%= render partial: 'setupNavigation', locals: { selected: Constants::OTHERS_KEY } %>
   <div class="flex flex-column">
     <%= react_component('inventory/raw_materials/RawMaterialSetupApp', { 
       order_uoms: @order_uoms, 

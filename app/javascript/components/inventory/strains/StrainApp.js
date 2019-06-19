@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import StrainList from './components/StrainList'
 import StrainEditor from './components/StrainEditor'
 import loadStrains from './actions/loadStrains'
+import { TempStrainWidgets } from '../../utils'
 
 @observer
 class StrainApp extends React.Component {
@@ -20,17 +21,10 @@ class StrainApp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="ph4 pt4 pb4 mb3 bg-white w-80">
-          <div className="w-80">
-            <h1 className="mt0 mb3 f3 fw4 dark-gray">
-              Setup strains for my facility
-            </h1>
-            <p className="mb0 lh-copy f5 grey">
-              Register strains grown at my facility.
-            </p>
-          </div>
+        <div className="mb3 w-100 mw1200">
+          <img src={TempStrainWidgets} />
         </div>
-        <div className="fl w-100-m w-80-l bg-white pa3">
+        <div className="fl w-100 mw1200 bg-white pa3">
           <div className="flex justify-between mt3 mb4">
             <h1 className="mv0 f3 fw4 dark-gray">Strains</h1>
             <button

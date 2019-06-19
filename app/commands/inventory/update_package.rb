@@ -8,7 +8,7 @@ module Inventory
 
     def call
       ids = @args[:ids]
-      packages = Inventory::Catalogue.where(catalogue_type: 'packages')
+      packages = Inventory::Catalogue.where(catalogue_type: 'sales_products', category: 'raw_sales_product')
       temp_packages = []
       packages.each do |package|
         rm = package

@@ -35,13 +35,6 @@ const columns = [
     className: 'tr',
     maxWidth: 120,
     headerClassName: 'tr'
-  },
-  {
-    Header: 'Testing status',
-    accessor: 'attributes.testing_status',
-    className: 'tl',
-    maxWidth: 220,
-    headerClassName: 'tl'
   }
 ]
 

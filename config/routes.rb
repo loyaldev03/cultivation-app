@@ -23,6 +23,16 @@ Rails.application.routes.draw do
   get "cult/tasks" => "home#cult_tasks"
   get "cult/issues" => "home#cult_issues"
   get "onboarding" => "home#onboarding"
+
+  get 'prod/dashboard' => "home#prod_dashboard"
+  get 'prod/packages' => "home#prod_packages"
+  get 'prod/sold' => "home#prod_sold"
+  get 'prod/unsold' => "home#prod_unsold"
+  get 'prod/orders' => "home#prod_orders"
+  get 'prod/manifest' => "home#prod_manifest"
+  get "procurement" => "home#procurement"
+  get "integration" => "home#integration"
+
   # End of dummy pages
 
   #work_requests
@@ -160,7 +170,7 @@ Rails.application.routes.draw do
       resources :packages do
         put 'bulk_update', on: :collection
       end
-
+      
       resources :raw_materials do
         put 'bulk_update', on: :collection
       end
@@ -168,7 +178,7 @@ Rails.application.routes.draw do
       resources :grow_methods do
         put 'bulk_update', on: :collection
       end
-
+      
       resources :grow_phases do
         put 'bulk_update', on: :collection
       end
@@ -177,6 +187,9 @@ Rails.application.routes.draw do
     namespace 'company', as: :company do
       resources :company_info, only: [:edit, :update]
       resources :team, only: [:index]
+      resources :metrc_integrations do
+        get :metrc_setup, on: :collection
+      end
     end
 
     namespace 'facilities', as: :facility do
@@ -336,13 +349,13 @@ Rails.application.routes.draw do
             get 'load_issues'
           end
         end
-        resources :nutrient_profiles, only: [:index, :create, :update] do
-          collection do
+        
+        resources :nutrient_profiles, only: [:index, :create, :update] do 
+          collection do 
             get 'by_phases'
             post 'update_week_nutrient'
           end
         end
-
 
         # resources :product_plans, only: [:index, :create] do
         #   post ':product_type_id/destroy', action: 'destroy'

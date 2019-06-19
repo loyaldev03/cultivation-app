@@ -13,6 +13,9 @@ class Cultivation::BatchesController < ApplicationController
   end
 
   def new
+    if params[:onboarding_type].present?
+      current_facility.update_onboarding('ONBOARDING_SETUP_BATCH')
+    end
     @facility_id = current_facility&.id.to_s
     # Cultivation Phases during batch setup depends on the
     # Facility's (room & section) purposes

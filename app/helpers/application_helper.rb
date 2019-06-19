@@ -96,12 +96,12 @@ module ApplicationHelper
       {label: 'Review and add unit of masurement', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_UOM', link: '/settings/core/unit_of_measures?'},
       {label: 'Set Raw Materials Type', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_MATERIAL_TYPE', link: '/settings/core/raw_materials?'},
       {label: 'Invite your teammates', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_INVITE_TEAM', link: '/settings/company/team?'},
-      {label: 'Setup facilities, rooms and shelves for proper planting', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_FACILITY', link: "/facility_setup/new?facility_id=#{@facility.id}&&"},
-      {label: 'Active plants', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_ACTIVE_PLANTS', link: "/inventory/plants/mothers?facility_id=#{@facility.id}&&"},
-      {label: 'Packages inventory', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_PACKAGE_INVENTORY', link: "/inventory/sales_products/products?facility_id=#{@facility.id}&&"},
-      {label: 'Add raw materials', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_RAW_MATERIALS', link: "/inventory/raw_materials/nutrients?facility_id=#{@facility.id}&&"},
-      {label: 'Other inventory', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_OTHER_MATERIALS', link: "/inventory/raw_materials/others?facility_id=#{@facility.id}&&"},
-      {label: 'Setup batches', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_SETUP_BATCH', link: "/cultivation/batches/new?facility_id=#{@facility.id}&&"},
+      {label: 'Setup facilities, rooms and shelves for proper planting', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_FACILITY', link: '/facility_setup/new?'},
+      {label: 'Active plants', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_ACTIVE_PLANTS', link: '/inventory/plants/mothers?'},
+      {label: 'Packages inventory', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_PACKAGE_INVENTORY', link: '/inventory/sales_products/products?'},
+      {label: 'Add raw materials', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_RAW_MATERIALS', link: '/inventory/raw_materials/nutrients?'},
+      {label: 'Other inventory', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_OTHER_MATERIALS', link: '/inventory/raw_materials/others?'},
+      {label: 'Setup batches', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_SETUP_BATCH', link: '/cultivation/batches/new?'},
     ]
   end
 end

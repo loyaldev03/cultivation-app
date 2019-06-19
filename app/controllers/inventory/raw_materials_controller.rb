@@ -8,6 +8,7 @@ class Inventory::RawMaterialsController < ApplicationController
       current_facility.update_onboarding('ONBOARDING_RAW_MATERIALS')
     end
     @catalogue_id = Inventory::QueryCatalogue.call(Constants::NUTRIENTS_KEY).result&.id.to_s
+    @catalogues = Inventory::QueryCatalogueTree.call('raw_materials', Constants::NUTRIENTS_KEY).result
   end
 
   def grow_medium

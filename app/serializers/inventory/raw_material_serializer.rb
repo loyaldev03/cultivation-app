@@ -73,11 +73,11 @@ module Inventory
     end
 
     attribute :catalogue_id do |object|
-      object.catalogue_id.to_s
+      object.product&.catalogue_id&.to_s
     end
 
     attribute :catalogue do |object|
-      object.product.catalogue.label
+      object.product&.catalogue&.label
     end
 
     attribute :location_id do |object|
@@ -130,8 +130,8 @@ module Inventory
                         params && params[:include]&.include?(:facility_strain)
                       } do |object, params|
       {
-        id: object&.product.facility_strain_id.to_s,
-        strain_name: object&.product.facility_strain.strain_name,
+        id: object&.product&.facility_strain_id&.to_s,
+        strain_name: object&.product&.facility_strain&.strain_name,
       }
     end
   end

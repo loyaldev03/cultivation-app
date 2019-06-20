@@ -43,6 +43,7 @@ class NutrientEditor extends React.Component {
                 ...this.resetState(),
                 id: id,
                 qty_per_package: attr.conversion,
+                catalogue: { value: attr.catalogue_id, label: attr.catalogue, uoms: [] },
                 product: { value: attr.product.id, label: attr.product.name },
                 product_id: attr.product_id,
                 product_name: attr.product_name,
@@ -62,7 +63,7 @@ class NutrientEditor extends React.Component {
                   label: attr.product.common_uom,
                   value: attr.product.common_uom
                 },
-                catalogue_parent: { label: '', value: '' },
+                catalogue_parent: this.props.catalogues.find(a => a.children.filter(f => f.value === attr.catalogue_id).length > 0),
                 product_ppm: attr.product.ppm || '',
                 epa_number: attr.product.epa_number || '',
                 attachments: attr.product.attachments || [],

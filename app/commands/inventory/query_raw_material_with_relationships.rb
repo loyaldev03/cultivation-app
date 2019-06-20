@@ -26,7 +26,7 @@ module Inventory
     def retrieve_collection
 
       #same as query in products index, query_raw_material_with_relationship, should move to cmd ?
-      special_type = ['seeds', 'purchased_clones', 'nutrients']
+      special_type = ['seeds', 'purchased_clones']
       raw_material_ids = if special_type.include?(type)
                            #find parent only one
                            Inventory::Catalogue.raw_materials.where(

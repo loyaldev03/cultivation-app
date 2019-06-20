@@ -1,3 +1,6 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Home",root_path], 'Cultivation' %>
+<% end %>
 <%= react_component 'cultivation/dashboards/TasksDashboardApp',
   {
     defaultFacilityId: current_default_facility&.id.to_s,

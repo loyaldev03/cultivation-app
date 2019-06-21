@@ -40,3 +40,6 @@ yarn-debug.log*
 # Ignore redis binary dump (dump.rdb) files
 *.rdb
 
+# direnv
+.envrc
+

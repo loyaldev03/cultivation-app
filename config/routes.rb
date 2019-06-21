@@ -188,6 +188,7 @@ Rails.application.routes.draw do
       resources :company_info, only: [:edit, :update]
       resources :team, only: [:index]
       resources :metrc_integrations do
+        put :update_metrc, on: :collection
         get :metrc_setup, on: :collection
       end
     end

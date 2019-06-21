@@ -33,13 +33,13 @@
       </div>
     </div>
     <div class="pa4 min-h-300">
-      <div class="grey subtitle-2 ttc underline">Data</div>
+      <div class="grey subtitle-2 ttc">Data</div>
       <div class="mt4">
         <div class="grey subtitle-2 ttc underline">State (CA)</div>
         <div class="mt4">
           <div class="flex justify-between mt3">
             <label class="grey subtitle-2 ttc">Item Categories</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: 'MetrcUpdateItemCategoryWorker'), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
           </div>
           <div class="flex justify-between mt3">
             <label class="grey subtitle-2 ttc">Unit of measure</label>

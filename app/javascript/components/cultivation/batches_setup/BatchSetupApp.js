@@ -97,7 +97,6 @@ class BatchSetupApp extends React.Component {
       name
     } = this.state
 
-    
     const hasVeg2phase = phases.includes('veg2')
     const batchFacilityValue = facilities.find(f => f.value === facilityId)
     const batchStrainValue = strains.find(f => f.value === batchStrain)

@@ -20,13 +20,13 @@
               </div>
             </div>
 
-            <div class="ph4 flex flex-row justify-between items-center " style="height: 86px">
+            <div class="ph2 flex flex-row justify-between items-center " style="">
               <div class="dim flex flex-row items-center pointer">
               </div>
 
               <div class="flex flex-row items-center">
               <%= f.submit "Save",
-                  class: "db pv3 ph4 bg-orange white button--font bn box--br3 ttu link dim pointer" %>
+                  class: "ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" %>
               </div>
             </div>
         <% end %>
@@ -43,7 +43,7 @@
           </div>
           <div class="flex justify-between mt3">
             <label class="grey subtitle-2 ttc">Unit of measure</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: 'MetrcUpdateUomWorker'), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
           </div>
         </div>
       </div>
@@ -119,13 +119,13 @@
         <div class="mt4">
           <div class="flex justify-between mt3">
             <label class="grey subtitle-2 ttc">Waste Methods</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: 'MetrcUpdatePlantWasteMethods'), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
           </div>
         </div>
         <div class="mt4">
           <div class="flex justify-between mt3">
             <label class="grey subtitle-2 ttc">Waste Reason</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: 'MetrcUpdatePlantWasteReasons'), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
           </div>
         </div>
         <div class="mt4">

@@ -124,6 +124,7 @@ class NutrientsSetupApp extends React.Component {
           order_uoms={this.props.order_uoms}
           uoms={this.props.uoms}
           catalogue_id={this.props.catalogue_id}
+          catalogues={this.props.catalogues}
           facility_id={this.props.facility_id}
           scanditLicense={this.props.scanditLicense}
         />

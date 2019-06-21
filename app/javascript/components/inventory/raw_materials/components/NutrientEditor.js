@@ -43,6 +43,11 @@ class NutrientEditor extends React.Component {
                 ...this.resetState(),
                 id: id,
                 qty_per_package: attr.conversion,
+                catalogue: {
+                  value: attr.catalogue_id,
+                  label: attr.catalogue,
+                  uoms: []
+                },
                 product: { value: attr.product.id, label: attr.product.name },
                 product_id: attr.product_id,
                 product_name: attr.product_name,
@@ -62,6 +67,11 @@ class NutrientEditor extends React.Component {
                   label: attr.product.common_uom,
                   value: attr.product.common_uom
                 },
+                catalogue_parent: this.props.catalogues.find(
+                  a =>
+                    a.children.filter(f => f.value === attr.catalogue_id)
+                      .length > 0
+                ),
                 product_ppm: attr.product.ppm || '',
                 epa_number: attr.product.epa_number || '',
                 attachments: attr.product.attachments || [],
@@ -147,6 +157,7 @@ class NutrientEditor extends React.Component {
       vendor: {},
       purchase_order: {},
       vendor_invoice: {},
+      catalogue_parent: { label: '', value: '' },
       errors: {}
     }
   }
@@ -264,7 +275,7 @@ class NutrientEditor extends React.Component {
       facility_id,
       uom,
       quantity,
-      catalogue: this.props.catalogue_id,
+      catalogue: this.state.catalogue.value,
       product_id,
       product_name,
       manufacturer,
@@ -441,7 +452,10 @@ class NutrientEditor extends React.Component {
   }
 
   render() {
-    const { facility_id, catalogue_id } = this.props
+    const { facility_id, catalogue_id, catalogues } = this.props
+    const catalogue_child = this.state.catalogue_parent
+      ? this.state.catalogue_parent.children
+      : []
     const {
       attachments,
       nutrients_elements,
@@ -571,6 +585,37 @@ class NutrientEditor extends React.Component {
                 onChange={this.onChangeAttachments}
                 className="pa2 ba b--black-20 br2 file-uploader"
               />
+            </div>
+          </div>
+          <hr className="mt3 m b--light-gray w-100" />
+          {/* <div className="ph4 mt3 mb3 flex">
+            <div className="w-100">
+              <label className="f6 fw6 db dark-gray">Nutrient Type</label>
+            </div>
+          </div> */}
+          <div className="ph4 mb3 flex mt2">
+            <div className="w-50">
+              <label className="f6 fw6 db mb1 gray ttc">Nutrient Type</label>
+              <Select
+                value={this.state.catalogue_parent}
+                options={catalogues}
+                styles={reactSelectStyle}
+                onChange={x => this.setState({ catalogue_parent: x })}
+              />
+              <FieldError errors={this.state.errors} field="order_uom" />
+            </div>
+
+            <div className="w-50 pl3">
+              <label className="f6 fw6 db mb1 gray ttc">
+                {this.state.catalogue_parent.key} Type
+              </label>
+              <Select
+                value={this.state.catalogue}
+                options={catalogue_child}
+                styles={reactSelectStyle}
+                onChange={x => this.setState({ catalogue: x })}
+              />
+              <FieldError errors={this.state.errors} field="order_uom" />
             </div>
           </div>
 

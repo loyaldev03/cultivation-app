@@ -116,5 +116,12 @@ module Cultivation
     def estimated_cost
       estimated_labor_cost + estimated_material_cost
     end
+
+    # TASK 980
+    def output_cost_per_unit
+      total_weight = harvest_batch.sum { |x| x.total_cure_weight }
+      total_weight_uom = harvest_batch.first.uom
+      actual_cost / total_weight
+    end
   end
 end

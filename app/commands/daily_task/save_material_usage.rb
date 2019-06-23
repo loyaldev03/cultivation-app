@@ -17,7 +17,6 @@ module DailyTask
     end
 
     def call
-      Rails.logger.debug "\t\t>>>>> SaveMaterialUsage called"
       if valid_user? && valid_params?
         task = Cultivation::Task.find_by(id: task_id)
         material_use = task.material_use.find(id: material_used_id)
@@ -38,6 +37,7 @@ module DailyTask
 
         # TASK 980
         update_material_cost(material_use)
+        update_batch_cost(task.batch.id)
 
         [actual_tx, waste_tx].compact
       end
@@ -65,6 +65,14 @@ module DailyTask
 
       task.actual_material_cost = sub_totals.compact.sum
       task.save!
+    end
+
+    # TASK 980
+    def update_batch_cost(batch_id)
+      batch = Cultivation::Batch.find(batch_id)
+      total_actual_cost = batch.tasks.sum(:actual_material_cost)
+      batch.actual_material_cost = total_actual_cost
+      batch.save!
     end
 
     def create_transaction(event_type, task, material_use, quantity, uom)

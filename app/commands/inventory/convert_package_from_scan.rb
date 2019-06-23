@@ -40,6 +40,7 @@ module Inventory
 
       if valid_user? && valid_data?
         package = save_package!
+        calculate_cost(package)
         package
       end
     end
@@ -172,6 +173,18 @@ module Inventory
       else
         return nil
       end
+    end
+
+    # TASK 980
+    def calculate_cost(package)
+      # Assuming we converted 50g then we need to:
+      #   1. find out total cost to complete the task. Then divide equally to all product created by the task, which is X
+      #   2. Then get the cost of the used fraction from the source product, Y
+      #
+      x = 0
+      # x = task.actual_cost / total_material_produce * quantity
+      production_cost_per_unit = source_package.production_cost / source_package.common_quantity * quantity  # Y
+      total_cost = (x + production_cost * unit)
     end
   end
 end

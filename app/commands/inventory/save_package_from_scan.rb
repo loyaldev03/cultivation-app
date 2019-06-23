@@ -18,13 +18,10 @@ module Inventory
       :production_date,         # Hardcoded to Time.now
       :harvest_batch,           # Deduce from cultivation_batch_id
       :metrc_tag,               # Deduce from tag
-      :name
+      :name,
+      :task_id                  # TODO: need this to find PackagePlan!!!
 
     def initialize(user, args)
-      Rails.logger.debug('>>>>>>>>>>>>>>>')
-      Rails.logger.debug(args)
-      Rails.logger.debug('>>>>>>>>>>>>>>>')
-
       @user = user
       @id = args[:id]
       @tag = args[:tag]

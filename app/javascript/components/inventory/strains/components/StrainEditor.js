@@ -244,8 +244,9 @@ export default class StrainEditor extends React.Component {
               value={this.state.testing_status}
               onChange={this.genericOnChange}
             >
-              <option value="third_party">Third party</option>
-              <option value="in_house">In House</option>
+              <option value="ThirdParty">Third party</option>
+              <option value="InHouse">In House</option>
+              <option value="None">None</option>
             </select>
           </div>
         </div>

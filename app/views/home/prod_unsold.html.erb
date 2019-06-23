@@ -1,3 +1,6 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Home",root_path], 'Product' %>
+<% end %>
 <div class="pa4 mw1200">
   <div class="pb4">
     <%= image_tag 'dummy/product-unsold.png', class: 'w-100' %>

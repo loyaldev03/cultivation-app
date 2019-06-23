@@ -17,6 +17,7 @@ module DailyTask
     end
 
     def call
+      Rails.logger.debug "\t\t>>>>> SaveMaterialUsage called"
       if valid_user? && valid_params?
         task = Cultivation::Task.find_by(id: task_id)
         material_use = task.material_use.find(id: material_used_id)
@@ -46,21 +47,19 @@ module DailyTask
 
     # TASK 980
     def update_material_cost(material_use)
-      return # Temporarily commented out
-
       # In order to reduce mistake from race condition / parallel task, the
       # code loops through all material used under the task and update the cost again.
-      task = Cultivation::Task.find_by(id: material_use.task_id)
-      sub_totals = task.material_used.map do |mu|
+      task = material_use.task
+      sub_totals = task.material_use.map do |mu|
         # For each item under the task, convert all unit to standard unit
         # sum all numbers
         # update sum back to task actual_material_cost
         txs = Inventory::ItemTransaction.where(ref_id: mu.id, ref_type: 'Cultivation::Item')
-        next if tx.empty?
+        next if txs.empty?
 
         total_material = txs.sum(:common_quantity) # Naively assume it is same unit
-        price = txs.product.average_price
-        sub_total = total_material * price         # TODO: Ensure the cost is positive or change it to be so!
+        price = txs.first.product.average_price
+        sub_total = (total_material * price).abs         # TODO: Ensure the cost is positive or change it to be so!
         sub_total
       end
 

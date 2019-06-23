@@ -129,7 +129,7 @@ class Api::V1::DailyTasksController < Api::V1::BaseApiController
     actual = params[:actual]
     waste = params[:waste]
 
-    Rails.logger.debug "\t\t\t\t>>>>> add_material_used id. task id: #{task_id}, date: #{date.inspect}, material_used_id: #{material_used_id}, actual: #{actual}, waste: #{waste}"
+    # Rails.logger.debug "\t\t\t\t>>>>> add_material_used id. task id: #{task_id}, date: #{date.inspect}, material_used_id: #{material_used_id}, actual: #{actual}, waste: #{waste}"
 
     command = DailyTask::SaveMaterialUsage.call(current_user, task_id, date, material_used_id, actual, waste)
     if command.success?

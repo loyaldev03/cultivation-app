@@ -32,7 +32,6 @@ Rails.application.routes.draw do
   get 'prod/manifest' => "home#prod_manifest"
   get "procurement" => "home#procurement"
   get "integration" => "home#integration"
-  put "set_default_facility" => "home#set_default_facility"
 
   # End of dummy pages
 

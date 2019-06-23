@@ -26,10 +26,6 @@ class HomeController < ApplicationController
     authorize! :timesheets, HomeController
   end
 
-  def set_default_facility
-    redirect_to url_for(facility_id: params[:change_facility][:default_facility_id])
-  end
-
   def cult_batches
     authorize! :cult_batches, HomeController
   end

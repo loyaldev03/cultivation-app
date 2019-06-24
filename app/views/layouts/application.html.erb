@@ -16,7 +16,7 @@
               <div class="flex items-center">
                 <span class="f5 fw4 gray flex items-center">
                   <i class="material-icons mr2 black-20 md-18">location_on</i>
-                  <%= current_default_facility&.name %> 
+                  <%= select_tag :facility_id, options_from_collection_for_select(Facility.where(id: {'$in': current_user.facilities}), "id", "name",selected: params[:facility_id]), :onchange => "changeDefaultFacility()"%>
                 </span>
               </div>
               
@@ -69,6 +69,16 @@
       </div>
     </div>
     <%= render "layouts/before_body_end" %>
+
+    <script type="text/javascript">
+      function changeDefaultFacility(){
+        var x = document.getElementById("facility_id").value;
+        var url = new URL(window.location.href);
+        url.searchParams.set('facility_id',x);
+        window.location.href = url.href;   
+
+        //window.location.reload()
+      }
+    </script>
   </body>
 </html>
-

@@ -19,7 +19,9 @@ module Inventory
       :production_date,         # Hardcoded to Time.now
       :harvest_batch,           # Deduce from source package
       :metrc_tag,               # Deduce from tag
-      :name
+      :name,
+      :task_id,
+      :task
 
     def initialize(user, args)
       Rails.logger.debug('>>>>>>>>>>>>>>>')
@@ -32,6 +34,7 @@ module Inventory
       @source_package_id = args[:source_package_id]
       @product_type = args[:product_type]
       @package_type = args[:package_type]
+      @task_id = args[:task_id]
     end
 
     def call
@@ -48,6 +51,7 @@ module Inventory
     private
 
     def validate_params!
+      raise 'task_id is required' if task_id.nil?
       raise 'source_package_id is required' if source_package_id.nil?
       raise 'product_type is required' if product_type.nil?
       raise 'package_type is required' if package_type.nil?
@@ -55,6 +59,7 @@ module Inventory
     end
 
     def prepare!
+      @task = Cultivation::Task.find(task_id)
       @source_package = Inventory::ItemTransaction.find(source_package_id)
       @facility = @source_package.facility
       @facility_strain = @source_package.facility_strain
@@ -181,10 +186,11 @@ module Inventory
       #   1. find out total cost to complete the task. Then divide equally to all product created by the task, which is X
       #   2. Then get the cost of the used fraction from the source product, Y
       #
-      x = 0
-      # x = task.actual_cost / total_material_produce * quantity
-      production_cost_per_unit = source_package.production_cost / source_package.common_quantity * quantity  # Y
-      total_cost = (x + production_cost * unit)
+      x = task.actual_cost / package.common_quantity
+      y = source_package.production_cost / source_package.common_quantity
+      production_cost = (x + y) * package.common_quantity
+      package.production_cost = production_cost
+      package.save!
     end
   end
 end

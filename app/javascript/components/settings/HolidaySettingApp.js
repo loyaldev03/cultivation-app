@@ -65,9 +65,14 @@ class HolidaySettingApp extends React.Component {
     window.editorSidebar.close()
   }
 
-  handleShowHolidayForm = date => {
-    console.log(date)
-    this.holidayForm.setDate(date)
+  handleShowHolidayForm = async date => {
+    await HolidayStore.showHoliday(date)
+    if (HolidayStore.holiday != '') {
+      this.holidayForm.setHoliday(HolidayStore.holiday)
+    } else {
+      this.holidayForm.setDate(date)
+    }
+
     this.setState({
       showHolidayForm: !this.state.showHolidayForm
     })
@@ -151,7 +156,11 @@ class HolidaySettingApp extends React.Component {
                 onClose={() => this.setState({ showHolidayForm: false })}
                 onSave={holiday => {
                   this.setState({ showHolidayForm: false })
-                  HolidayStore.createHoliday(holiday)
+                  if (holiday.id) {
+                    HolidayStore.updateHoliday(holiday)
+                  } else {
+                    HolidayStore.createHoliday(holiday)
+                  }
                 }}
                 title={'Holiday'}
               />

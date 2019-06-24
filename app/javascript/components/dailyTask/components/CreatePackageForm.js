@@ -79,7 +79,6 @@ class PackageTracking extends React.Component {
     errors: null
   }
 
-
   async componentDidMount() {
     const data = await loadScannedPackages(
       this.props.batchId,

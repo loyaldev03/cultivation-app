@@ -36,6 +36,7 @@ module Inventory
 
       if valid_user? && valid_data?
         package = save_package!
+        calculate_cost(package)
         package
       end
     end
@@ -160,6 +161,15 @@ module Inventory
         return 1, 'oz'
       else
         return nil
+      end
+    end
+
+    def calculate_cost(package)
+      cost_per_unit = harvest_batch.cultivation_batch.output_cost_per_unit
+      txs = Inventory::ItemTransaction.where(event_type: 'create_package_from_scan', harvest_batch: harvest_batch)
+      txs.each do |tx|
+        tx.production_cost = tx.common_quantity * cost_per_unit
+        tx.save!
       end
     end
   end

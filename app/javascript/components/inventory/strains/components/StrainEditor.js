@@ -68,6 +68,12 @@ export default class StrainEditor extends React.Component {
     const key = event.target.attributes.fieldname.value
     const value = event.target.value
     this.setState({ [key]: value })
+
+    if (key == 'indica_makeup') {
+      this.setState({ sativa_makeup: 100 - value })
+    } else if (key == 'sativa_makeup') {
+      this.setState({ indica_makeup: 100 - value })
+    }
   }
 
   onFacilityChanged = data => {

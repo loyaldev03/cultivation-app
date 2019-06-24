@@ -1,5 +1,10 @@
 import { observable, action, runInAction, toJS } from 'mobx'
-import { httpGetOptions, httpPostOptions, httpPutOptions, toast } from '../utils'
+import {
+  httpGetOptions,
+  httpPostOptions,
+  httpPutOptions,
+  toast
+} from '../utils'
 
 import { addDays, differenceInCalendarDays, parse } from 'date-fns'
 
@@ -18,9 +23,8 @@ class HolidayStore {
   @observable holidays = []
   @observable holiday = ''
 
-
   @action
-  async showHoliday(date){
+  async showHoliday(date) {
     this.isLoading = true
     const url = `/api/v1/holidays?date=${date}`
     try {
@@ -28,7 +32,7 @@ class HolidayStore {
       if (response && response.data) {
         this.holiday = response.data
         console.log(response.data)
-        
+
         this.isDataLoaded = true
       } else {
         console.log(response.data)

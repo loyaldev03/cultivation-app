@@ -7,33 +7,33 @@ module Common
     end
 
     def call
-      preferences = Facility.find(@facility_id)
+      facility = Facility.find(@facility_id)
 
-      preferences.find_or_create_by!(code: 'ONBOARDING_COMP_INFO')
+      facility.preferences.find_or_create_by!(code: 'ONBOARDING_COMP_INFO')
 
-      preferences.find_or_create_by!(code: 'ONBOARDING_GROW_METHOD')
+      facility.preferences.find_or_create_by!(code: 'ONBOARDING_GROW_METHOD')
 
-      preferences.find_or_create_by!(code: 'ONBOARDING_COMP_PHASES')
+      facility.preferences.find_or_create_by!(code: 'ONBOARDING_COMP_PHASES')
 
-      preferences.find_or_create_by!(code: 'ONBOARDING_UOM')
+      facility.preferences.find_or_create_by!(code: 'ONBOARDING_UOM')
 
-      preferences.find_or_create_by!(code: 'ONBOARDING_MATERIAL_TYPE')
+      facility.preferences.find_or_create_by!(code: 'ONBOARDING_MATERIAL_TYPE')
 
-      preferences.find_or_create_by!(code: 'ONBOARDING_INVITE_TEAM')
+      facility.preferences.find_or_create_by!(code: 'ONBOARDING_INVITE_TEAM')
 
-      preferences.find_or_create_by!(code: 'ONBOARDING_ACTIVE_PLANTS')
+      facility.preferences.find_or_create_by!(code: 'ONBOARDING_ACTIVE_PLANTS')
 
-      preferences.find_or_create_by!(code: 'ONBOARDING_PACKAGE_INVENTORY')
+      facility.preferences.find_or_create_by!(code: 'ONBOARDING_PACKAGE_INVENTORY')
 
-      preferences.find_or_create_by!(code: 'ONBOARDING_RAW_MATERIALS')
+      facility.preferences.find_or_create_by!(code: 'ONBOARDING_RAW_MATERIALS')
 
-      preferences.find_or_create_by!(code: 'ONBOARDING_FACILITY')
+      facility.preferences.find_or_create_by!(code: 'ONBOARDING_FACILITY')
 
-      preferences.find_or_create_by!(code: 'ONBOARDING_OTHER_MATERIALS')
+      facility.preferences.find_or_create_by!(code: 'ONBOARDING_OTHER_MATERIALS')
 
-      preferences.find_or_create_by!(code: 'ONBOARDING_SETUP_BATCH')
+      facility.preferences.find_or_create_by!(code: 'ONBOARDING_SETUP_BATCH')
 
-      preferences.find_or_create_by!(code: 'ONBOARDING_DONE')
+      facility.preferences.find_or_create_by!(code: 'ONBOARDING_DONE')
 
       nil
     end

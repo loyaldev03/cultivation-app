@@ -439,7 +439,7 @@ Rails.application.routes.draw do
       end
 
       resources :harvests, only: [:index]
-      resources :holidays, only: [:index, :create]
+      resources :holidays, only: [:index, :create, :update]
     end
   end
 end

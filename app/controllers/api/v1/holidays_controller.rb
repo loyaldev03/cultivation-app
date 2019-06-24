@@ -23,12 +23,9 @@ class Api::V1::HolidaysController < Api::V1::BaseApiController
   end
 
   def update
-    Rails.logger.debug("DATEEE===>#{params[:id]}")
     holiday = CompanyInfo.last.holidays.find_by(id: "#{params[:id]}")
-    Rails.logger.debug("HOLIDAY===>#{holiday.inspect}")
 
     if holiday
-      Rails.logger.debug("TITLE---->#{params[:holiday][:title]}")
       holiday.title = params[:holiday][:title]
       holiday.date = Time.zone.parse(params[:holiday][:date], Time.current)
     end

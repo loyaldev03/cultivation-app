@@ -14,7 +14,6 @@ class HolidayForm extends React.Component {
   }
 
   setHoliday(holiday) {
-    console.log('HOLIDAY==>' + holiday.id)
     this.setState({
       id: holiday.id,
       title: holiday.attributes.title,
@@ -39,7 +38,6 @@ class HolidayForm extends React.Component {
   }
 
   onSave = async () => {
-    console.log(this.state.title)
     await this.props.onSave({
       id: this.state.id,
       title: this.state.title,

@@ -67,7 +67,6 @@ class HolidaySettingApp extends React.Component {
 
   handleShowHolidayForm = async date => {
     await HolidayStore.showHoliday(date)
-    console.log(JSON.stringify(HolidayStore.holiday))
     if (HolidayStore.holiday != '') {
       this.holidayForm.setHoliday(HolidayStore.holiday)
     } else {
@@ -157,8 +156,6 @@ class HolidaySettingApp extends React.Component {
                 onClose={() => this.setState({ showHolidayForm: false })}
                 onSave={holiday => {
                   this.setState({ showHolidayForm: false })
-                  console.log('HOLIDAY' + JSON.stringify(holiday))
-                  console.log('HOLIDAY ID' + holiday.id)
                   if (holiday.id) {
                     HolidayStore.updateHoliday(holiday)
                   } else {

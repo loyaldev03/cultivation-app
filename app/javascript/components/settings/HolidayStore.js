@@ -31,11 +31,8 @@ class HolidayStore {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
         this.holiday = response.data
-        console.log(response.data)
-
         this.isDataLoaded = true
       } else {
-        console.log(response.data)
         this.holiday = ''
 
         this.isDataLoaded = false
@@ -79,8 +76,6 @@ class HolidayStore {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
         const holidays = response.data.map(res => parseTask(res.attributes))
-        //console.log('Test!!!')
-        console.log(holidays)
         this.holidays = holidays
         this.isDataLoaded = true
       } else {

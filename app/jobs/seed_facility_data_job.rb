@@ -42,6 +42,10 @@ class SeedFacilityDataJob < ApplicationJob
     Inventory::SeedCatalogue.call(facility_id: @facility_id)
   end
 
+  def seed_preferences
+    Common::SeedOnBoardingPreference.call(@facility_id)
+  end
+
   def seed_uom
     Common::SeedUnitOfMeasure.call
   end

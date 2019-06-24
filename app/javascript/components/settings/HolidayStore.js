@@ -26,7 +26,7 @@ class HolidayStore {
   @action
   async showHoliday(date) {
     this.isLoading = true
-    const url = `/api/v1/holidays?date=${date}`
+    const url = `/api/v1/holidays/show_by_date/?date=${date}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {

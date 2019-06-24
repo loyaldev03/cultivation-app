@@ -439,7 +439,9 @@ Rails.application.routes.draw do
       end
 
       resources :harvests, only: [:index]
-      resources :holidays, only: [:index, :create, :update]
+      resources :holidays, only: [:index, :create, :update] do 
+        get 'show_by_date', on: :collection
+      end
     end
   end
 end

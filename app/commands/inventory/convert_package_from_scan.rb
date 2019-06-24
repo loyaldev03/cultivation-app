@@ -24,10 +24,6 @@ module Inventory
       :task
 
     def initialize(user, args)
-      Rails.logger.debug('>>>>>>>>>>>>>>>')
-      Rails.logger.debug(args)
-      Rails.logger.debug('>>>>>>>>>>>>>>>')
-
       @user = user
       @id = args[:id]
       @tag = args[:tag]
@@ -73,7 +69,7 @@ module Inventory
       raise 'No size found for package type' if size.nil?
       raise 'No UOM found for package type' if uom.nil?
 
-      @product = Product.find_or_create_by!(
+      @product = Inventory::Product.find_or_create_by!(
         facility: @facility,
         facility_strain: facility_strain,
         catalogue: @catalogue,
@@ -139,17 +135,13 @@ module Inventory
       )
 
       deduction = source_package.dup
-      deduction.quantity = -package.quantity
+      deduction.quantity -= package.quantity
       deduction.uom = package.uom
       deduction.event_type = 'deduction_of_convert_package_from_scan'
       deduction.event_date = Time.now
       deduction.ref_id = deduction.id
       deduction.ref_type = 'Inventory::ItemTransaction'
       deduction.save!
-
-      Rails.logger.debug '>>>>>>>>>>>>>>> deduction'
-      Rails.logger.debug deduction.inspect
-      Rails.logger.debug ">>>>>>>>>>>>>>>\n\r"
 
       metrc_tag.update!(status: 'assigned')
       package

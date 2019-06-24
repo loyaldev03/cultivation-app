@@ -3,6 +3,7 @@ class MetrcUpdateStrainsWorker
   sidekiq_options queue: 'low'
 
   def perform(facility_id)
+    @facility_id = facility_id
     # Overview of the logic flow
     # Get strains from API (1)
     # Get strains from db (2)
@@ -11,12 +12,9 @@ class MetrcUpdateStrainsWorker
     # When found existing strains
     #   call update strains api
 
-    facility = Facility.find(facility_id)
-    remote_strains = MetrcApi.get_strains(facility.site_license) # Hash format
-    remote_strains_name = remote_strains.map { |s| s['Name'] }
+    metrc_strains = MetrcApi.get_strains(facility.site_license) # Hash format
     local_strains = facility.strains.to_a # Ruby object format
-    local_strains_name = local_strains.map(&:strain_name)
-    new_strains_name = local_strains_name - remote_strains_name
+    new_strains_name = get_new_strains(metrc_strains, local_strains)
 
     # Create new strains in Metrc
     create_strains_on_metrc(facility.site_license,
@@ -26,7 +24,7 @@ class MetrcUpdateStrainsWorker
     # Detect changes and update in Metrc
     update_strains_on_metrc(facility.site_license,
                             local_strains,
-                            remote_strains)
+                            metrc_strains)
 
     # Update Metrc Id to local record
     update_local_metrc_ids(facility.site_license,
@@ -34,6 +32,27 @@ class MetrcUpdateStrainsWorker
     true
     # rescue RestClient::ExceptionWithResponse => e
     #   pp JSON.parse(e.response.body)
+  end
+
+  private
+
+  def facility
+    @facility ||= Facility.find(@facility_id)
+  end
+
+  def get_new_strains(metrc_strains, local_strains)
+    remote_strains_name = metrc_strains.map { |s| s['Name'] }
+    new_strains = []
+    local_strains.each do |strain|
+      if !remote_strains_name.include?(strain.strain_name)
+        # Clear metrc_id if room not found on Metrc (possibly being deleted)
+        strain.metrc_id = nil
+        strain.save
+        # Remember all new records
+        new_strains << strain.strain_name
+      end
+    end
+    new_strains
   end
 
   def create_strains_on_metrc(site_license, new_strains_name, local_strains)
@@ -58,10 +77,10 @@ class MetrcUpdateStrainsWorker
     end
   end
 
-  def update_strains_on_metrc(site_license, local_strains, remote_strains)
+  def update_strains_on_metrc(site_license, local_strains, metrc_strains)
     if local_strains.any?
       local_strains.each do |s|
-        found = remote_strains.detect { |i| i['Name'] == s.strain_name }
+        found = metrc_strains.detect { |i| i['Name'] == s.strain_name }
         # Rule: sativa + indica should be 100
         sativa_pct = 100 - (s.indica_makeup&.to_f || 0)
         if found && s.metrc_id && !equal?(s, found)
@@ -87,10 +106,10 @@ class MetrcUpdateStrainsWorker
   end
 
   def update_local_metrc_ids(site_license, local_strains)
-    remote_strains = MetrcApi.get_strains(site_license) # Hash format
+    metrc_strains = MetrcApi.get_strains(site_license) # Hash format
     if local_strains.any?
       local_strains.each do |s|
-        found = remote_strains.detect { |i| i['Name'] == s.strain_name }
+        found = metrc_strains.detect { |i| i['Name'] == s.strain_name }
         if found
           s.metrc_id = found['Id']
           s.save

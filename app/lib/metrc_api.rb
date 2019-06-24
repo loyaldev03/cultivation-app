@@ -51,5 +51,23 @@ class MetrcApi
       res = RestClient.post(url, params.to_json, HEADERS)
       res.code == 200
     end
+
+    def get_rooms(facility_license)
+      url = "#{BASE_URL}/rooms/v1/active?licenseNumber=#{facility_license}"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
+    def create_rooms(facility_license, params)
+      url = "#{BASE_URL}/rooms/v1/create?licenseNumber=#{facility_license}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
+    end
+
+    def update_rooms(facility_license, params)
+      url = "#{BASE_URL}/rooms/v1/update?licenseNumber=#{facility_license}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
+    end
   end
 end

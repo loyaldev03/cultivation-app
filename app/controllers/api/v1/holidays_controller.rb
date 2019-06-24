@@ -7,7 +7,7 @@ class Api::V1::HolidaysController < Api::V1::BaseApiController
 
   def show_by_date
     if params[:date]
-      daterange = params[:date].to_datetime.utc.at_beginning_of_day..params[:date].to_datetime.utc.at_end_of_day
+      daterange = params[:date].to_datetime.at_beginning_of_day..params[:date].to_datetime.at_end_of_day
       holidays = CompanyInfo.last.holidays.where(date: daterange).first
     end
     render json: Common::HolidaySerializer.new(holidays).serialized_json

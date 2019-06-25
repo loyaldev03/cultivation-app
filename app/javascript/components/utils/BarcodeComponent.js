@@ -31,6 +31,7 @@ class BarCodeComponent extends React.Component {
         .then(result => {
           console.log(result)
           that.props.onChangeBarcode(result)
+          that.props.onBarcodeScan(result)
           that.props.onShowScanner()
         })
         .catch(err => {

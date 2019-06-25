@@ -24,7 +24,7 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
     metrc.perform_async
     metrc_hist = @company_info.metrc_histories.find_by(metrc_type: params[:type])
     if metrc_hist
-      metrc_hist.update(value: DateTime.now)
+      metrc_hist.update(value: Time.current)
     end
     flash[:notice] = 'Metrc updated'
     redirect_to metrc_setup_settings_company_metrc_integrations_path

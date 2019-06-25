@@ -65,6 +65,8 @@ module RequestScoping
   def current_facility
     if @current_facility.blank? && params[:facility_id].present?
       @current_facility = Facility.find(params[:facility_id])
+    elsif @current_facility.blank? && params[:facility_id].blank?
+      @current_facility = FindDefaultFacility.call(current_user).result
     else
       @current_facility
     end

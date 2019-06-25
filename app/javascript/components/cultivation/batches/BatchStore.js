@@ -41,9 +41,9 @@ class BatchStore {
   }
 
   @action
-  async loadBatches() {
+  async loadBatches(facilityId) {
     this.isLoading = true
-    const url = '/api/v1/batches/list_infos'
+    const url = `/api/v1/batches/list_infos?facility_id=${facilityId}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       runInAction(() => {

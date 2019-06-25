@@ -15,20 +15,201 @@ import {
 import BatchStore from '../batches/BatchStore'
 
 const dummyData = [
-
-  { package: 'CAMPOS DE KUSH', package_id: 'PCK94457', group: 'pre-rolls', type: 'lb', package_date: '11/12/2019', use_type: 'medical', strain: 'God Bud', genome: 'indica', thc: '9%', cbd: '8%', total_qty: '', qty_hold: '', unsold: ''},
-  { package: 'SKUNKWORX PACKAGING', package_id: 'PCK94457', group: 'pre-rolls', type: 'lb', package_date: '11/12/2019', use_type: 'medical', strain: 'GLASS VIAL WITH BLACK CHILD RESISTANT CAP', genome: 'indica', thc: '9%', cbd: '8%', total_qty: '', qty_hold: '', unsold: '' },
-  { package: 'PHYTO ALASKAN', package_id: 'PCK94457', group: 'pre-rolls', type: 'lb', package_date: '11/12/2019', use_type: 'medical', strain: 'Alaskan Thunder Fuck', genome: 'sativa', thc: '9%', cbd: '8%', total_qty: '', qty_hold: '', unsold: '' },
-  { package: 'CREAM OF THE CROP GARDENS', package_id: 'PCK94457', group: 'pre-rolls', type: 'lb', package_date: '11/12/2019', use_type: 'medical', strain: 'Do Si Dos', genome: 'indica', thc: '9%', cbd: '8%', total_qty: '', qty_hold: '', unsold: '' },
-  { package: 'CANNASOL FARMS', package_id: 'PCK94457', group: 'pre-rolls', type: 'lb', package_date: '11/12/2019', use_type: 'medical', strain: 'Alaskan Thunder Fuck', genome: 'sativa', thc: '9%', cbd: '8%', total_qty: '', qty_hold: '', unsold: '' },
-  { package: 'ARTIZEN CANNABIS', package_id: 'PCK94457', group: 'pre-rolls', type: 'lb', package_date: '11/12/2019', use_type: 'medical', strain: 'Allen Wrench', genome: 'sativa', thc: '9%', cbd: '8%', total_qty: '', qty_hold: '', unsold: '' },
-  { package: 'LAUGHING MAN FARMS', package_id: 'PCK94457', group: 'pre-rolls', type: 'lb', package_date: '11/12/2019', use_type: 'medical', strain: 'Allen Wrench', genome: 'sativa', thc: '9%', cbd: '8%', total_qty: '', qty_hold: '', unsold: '' },
-  { package: 'CANNASOL FARMS', package_id: 'PCK94457', group: 'pre-rolls', type: 'lb', package_date: '11/12/2019', use_type: 'medical', strain: 'Allen Wrench', genome: 'sativa', thc: '9%', cbd: '8%', total_qty: '', qty_hold: '', unsold: '' },
-  { package: '7 POINTS OREGON', package_id: 'PCK94457', group: 'pre-rolls', type: 'lb', package_date: '11/12/2019', use_type: 'medical', strain: 'Cherry Pie', genome: 'hybrid', thc: '9%', cbd: '8%', total_qty: '', qty_hold: '', unsold: ''},
-  { package: 'SPINACH CANNABIS', package_id: 'PCK94457', group: 'pre-rolls', type: 'lb', package_date: '11/12/2019', use_type: 'medical', strain: 'Dancehall', genome: 'hybrid', thc: '9%', cbd: '8%', total_qty: '', qty_hold: '', unsold: ''},
-  { package: 'DOUBLE DUTCH FARMS', package_id: 'PCK94457', group: 'pre-rolls', type: 'lb', package_date: '11/12/2019', use_type: 'medical', strain: 'Dutch Treat', genome: 'hybrid', thc: '9%', cbd: '8%', total_qty: '', qty_hold: '', unsold: ''},
-  { package: 'TKO RESERVE', package_id: 'PCK94457', group: 'pre-rolls', type: 'lb', package_date: '11/12/2019', use_type: 'medical', strain: 'Gelato', genome: 'hyrbid', thc: '9%', cbd: '8%', total_qty: '', qty_hold: '', unsold: ''},
-  { package: 'LAZY BEE GARDENS', package_id: 'PCK94457', group: 'pre-rolls', type: 'lb', package_date: '11/12/2019', use_type: 'medical', strain: 'Gelato', genome: 'hybrid', thc: '9%', cbd: '8%', total_qty: '', qty_hold: '', unsold: ''},
+  {
+    package: 'CAMPOS DE KUSH',
+    package_id: 'PCK94457',
+    group: 'pre-rolls',
+    type: 'lb',
+    package_date: '11/12/2019',
+    use_type: 'medical',
+    strain: 'God Bud',
+    genome: 'indica',
+    thc: '9%',
+    cbd: '8%',
+    total_qty: '',
+    qty_hold: '',
+    unsold: ''
+  },
+  {
+    package: 'SKUNKWORX PACKAGING',
+    package_id: 'PCK94457',
+    group: 'pre-rolls',
+    type: 'lb',
+    package_date: '11/12/2019',
+    use_type: 'medical',
+    strain: 'GLASS VIAL WITH BLACK CHILD RESISTANT CAP',
+    genome: 'indica',
+    thc: '9%',
+    cbd: '8%',
+    total_qty: '',
+    qty_hold: '',
+    unsold: ''
+  },
+  {
+    package: 'PHYTO ALASKAN',
+    package_id: 'PCK94457',
+    group: 'pre-rolls',
+    type: 'lb',
+    package_date: '11/12/2019',
+    use_type: 'medical',
+    strain: 'Alaskan Thunder Fuck',
+    genome: 'sativa',
+    thc: '9%',
+    cbd: '8%',
+    total_qty: '',
+    qty_hold: '',
+    unsold: ''
+  },
+  {
+    package: 'CREAM OF THE CROP GARDENS',
+    package_id: 'PCK94457',
+    group: 'pre-rolls',
+    type: 'lb',
+    package_date: '11/12/2019',
+    use_type: 'medical',
+    strain: 'Do Si Dos',
+    genome: 'indica',
+    thc: '9%',
+    cbd: '8%',
+    total_qty: '',
+    qty_hold: '',
+    unsold: ''
+  },
+  {
+    package: 'CANNASOL FARMS',
+    package_id: 'PCK94457',
+    group: 'pre-rolls',
+    type: 'lb',
+    package_date: '11/12/2019',
+    use_type: 'medical',
+    strain: 'Alaskan Thunder Fuck',
+    genome: 'sativa',
+    thc: '9%',
+    cbd: '8%',
+    total_qty: '',
+    qty_hold: '',
+    unsold: ''
+  },
+  {
+    package: 'ARTIZEN CANNABIS',
+    package_id: 'PCK94457',
+    group: 'pre-rolls',
+    type: 'lb',
+    package_date: '11/12/2019',
+    use_type: 'medical',
+    strain: 'Allen Wrench',
+    genome: 'sativa',
+    thc: '9%',
+    cbd: '8%',
+    total_qty: '',
+    qty_hold: '',
+    unsold: ''
+  },
+  {
+    package: 'LAUGHING MAN FARMS',
+    package_id: 'PCK94457',
+    group: 'pre-rolls',
+    type: 'lb',
+    package_date: '11/12/2019',
+    use_type: 'medical',
+    strain: 'Allen Wrench',
+    genome: 'sativa',
+    thc: '9%',
+    cbd: '8%',
+    total_qty: '',
+    qty_hold: '',
+    unsold: ''
+  },
+  {
+    package: 'CANNASOL FARMS',
+    package_id: 'PCK94457',
+    group: 'pre-rolls',
+    type: 'lb',
+    package_date: '11/12/2019',
+    use_type: 'medical',
+    strain: 'Allen Wrench',
+    genome: 'sativa',
+    thc: '9%',
+    cbd: '8%',
+    total_qty: '',
+    qty_hold: '',
+    unsold: ''
+  },
+  {
+    package: '7 POINTS OREGON',
+    package_id: 'PCK94457',
+    group: 'pre-rolls',
+    type: 'lb',
+    package_date: '11/12/2019',
+    use_type: 'medical',
+    strain: 'Cherry Pie',
+    genome: 'hybrid',
+    thc: '9%',
+    cbd: '8%',
+    total_qty: '',
+    qty_hold: '',
+    unsold: ''
+  },
+  {
+    package: 'SPINACH CANNABIS',
+    package_id: 'PCK94457',
+    group: 'pre-rolls',
+    type: 'lb',
+    package_date: '11/12/2019',
+    use_type: 'medical',
+    strain: 'Dancehall',
+    genome: 'hybrid',
+    thc: '9%',
+    cbd: '8%',
+    total_qty: '',
+    qty_hold: '',
+    unsold: ''
+  },
+  {
+    package: 'DOUBLE DUTCH FARMS',
+    package_id: 'PCK94457',
+    group: 'pre-rolls',
+    type: 'lb',
+    package_date: '11/12/2019',
+    use_type: 'medical',
+    strain: 'Dutch Treat',
+    genome: 'hybrid',
+    thc: '9%',
+    cbd: '8%',
+    total_qty: '',
+    qty_hold: '',
+    unsold: ''
+  },
+  {
+    package: 'TKO RESERVE',
+    package_id: 'PCK94457',
+    group: 'pre-rolls',
+    type: 'lb',
+    package_date: '11/12/2019',
+    use_type: 'medical',
+    strain: 'Gelato',
+    genome: 'hyrbid',
+    thc: '9%',
+    cbd: '8%',
+    total_qty: '',
+    qty_hold: '',
+    unsold: ''
+  },
+  {
+    package: 'LAZY BEE GARDENS',
+    package_id: 'PCK94457',
+    group: 'pre-rolls',
+    type: 'lb',
+    package_date: '11/12/2019',
+    use_type: 'medical',
+    strain: 'Gelato',
+    genome: 'hybrid',
+    thc: '9%',
+    cbd: '8%',
+    total_qty: '',
+    qty_hold: '',
+    unsold: ''
+  }
 ]
 
 @observer
@@ -141,7 +322,7 @@ class PackageDashboardApp extends React.Component {
         accessor: 'unsold',
         className: ' pr3',
         width: 110
-      },
+      }
     ]
   }
   componentDidMount() {
@@ -165,8 +346,7 @@ class PackageDashboardApp extends React.Component {
     const { columns } = this.state
     return (
       <div className="pa4 mw1200">
-        <div className="flex flex-row-reverse">
-        </div>
+        <div className="flex flex-row-reverse" />
         <div className="pv4">
           <img src={TempPackagesWidgets} />
         </div>

@@ -3,6 +3,10 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
   before_action :get_company
 
   def metrc_setup
+    @metrc_histories = @company_info.metrc_histories
+  end
+
+  def show
   end
 
   def update
@@ -18,6 +22,10 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
   def update_metrc
     metrc = params[:type].constantize
     metrc.perform_async
+    metrc_hist = @company_info.metrc_histories.find_by(metrc_type: params[:type])
+    if metrc_hist
+      metrc_hist.update(value: DateTime.now)
+    end
     flash[:notice] = 'Metrc updated'
     redirect_to metrc_setup_settings_company_metrc_integrations_path
   end

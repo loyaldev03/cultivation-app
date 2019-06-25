@@ -13,4 +13,5 @@ class CompanyInfo
 
   embeds_many :work_schedules, class_name: 'Common::WorkSchedule'
   embeds_many :holidays, class_name: 'Common::Holiday'
+  embeds_many :metrc_histories, class_name: 'Common::MetrcHistory'
 end

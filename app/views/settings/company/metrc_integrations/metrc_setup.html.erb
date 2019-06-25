@@ -32,265 +32,39 @@
         <% end %>
       </div>
     </div>
-    <div class="pa4 min-h-300">
-      <div class="grey subtitle-2 ttc">Data</div>
-      <div class="mt4">
-        <div class="grey subtitle-2 ttc underline">State (CA)</div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Item Categories</label>
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: 'MetrcUpdateItemCategoryWorker'), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
+
+    <div class="dt pb4" style="table-layout: auto">
+        <div class="dt-row">
+          <div class="b dtc pa4 pv3 bg-black-10">
+            Data
           </div>
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Unit of measure</label>
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: 'MetrcUpdateUomWorker'), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
+          <div class="b dtc tc pv3 bg-black-10">
+            Last Updated At
           </div>
+          <div class="dtc tc pv3 bg-black-10"></div>
         </div>
-      </div>
-      <div class="mt4">
-        <div class="grey subtitle-2 ttc underline">Facility</div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Facility - Read</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
+      <%@metrc_histories.group_by{|d| d.category }.each do |group, histories| %>
+        <div class="dt-row">
+          <div class="b dtc pa4 pv2 bg-near-white underline">
+            <%= group %>
           </div>
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Strains</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Items (E.g. Bud's Blue Dream)</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Rooms</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
+          <div class="dtc pa4 pv2 bg-near-white"></div>
+          <div class="dtc pa4 pv2 bg-near-white"></div>
         </div>
-      </div>
-      <div class="mt4">
-        <div class="grey subtitle-2 ttc underline">Tags</div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Receive Tags into Metrc</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
+        
+        <% histories.each do |h|%>
+          
+          <div class="dt-row">
+            <div class="dtc pa4 pv2 bg-black-5" style="width: 70%">
+              <%= h.code %>
+            </div>
+            <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= h.value ? h.value.strftime("%d-%m-%Y %H:%M") : "--" %></div>
+            <div class="dtc tc pv2 bg-black-5" style="width: 15%">
+              <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="<%= update_metrc_settings_company_metrc_integrations_path(type: h.metrc_type ? h.metrc_type : "") %>" data-method="put" data-remote="false" >Update</a>
+            </div>
           </div>
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Void unused tag</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-      </div>
-      <div class="mt4">
-        <div class="grey subtitle-2 ttc underline">Batches</div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Batch Types</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Create Batch</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Active Batch</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Change Growth Phase</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Move Plants Batches</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Create Packages</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Destroyed (immature plants)</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-      </div>
-      <div class="mt4">
-        <div class="grey subtitle-2 ttc underline">Plants</div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Waste Methods</label>
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: 'MetrcUpdatePlantWasteMethods'), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Waste Reason</label>
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: 'MetrcUpdatePlantWasteReasons'), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Growth Phases</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Create Plantings</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Moving</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Destroy Plants</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Destroyed by rooms</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Replace Tag</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Record Plant Waste</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Create Harvest</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Manicure</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-      </div>
-      <div class="mt4">
-        <div class="grey subtitle-2 ttc underline">Harvest</div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Info</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Create Package</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Remove Package</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Finish</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Unfinish</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-      </div>
-      <div class="mt4">
-        <div class="grey subtitle-2 ttc underline">Package</div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Types</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Adjust Reasons</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Info</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">List Active</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">List on hold</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Create from harvest batch</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Adjust</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Create for testing</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Change Item</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Change room</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Finish</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-        <div class="mt4">
-          <div class="flex justify-between mt3">
-            <label class="grey subtitle-2 ttc">Unfinish</label>
-            <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="#">Update</a>
-          </div>
-        </div>
-      </div>
+        <%end%>
+      <%end%>
     </div>
-  </div>
+    
 </div>

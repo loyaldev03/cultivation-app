@@ -53,7 +53,7 @@ module RequestScoping
   end
 
   def current_ip_facility
-    @current_default_facility ||= Facility.where(:whitelist_ips => request.remote_ip)
+    @current_ip_facility ||= Facility.where(whitelist_ips: request.remote_ip)
   end
 
   def current_default_facility

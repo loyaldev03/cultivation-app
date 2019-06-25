@@ -440,6 +440,13 @@ Rails.application.routes.draw do
 
       resources :harvests, only: [:index]
       resources :holidays, only: [:index, :create]
+      resources :charts, only: [:index] do
+        collection do
+          get 'batch_test_result'
+          get 'strain_distribution'
+          get 'worker_capacity'
+        end
+      end
     end
   end
 end

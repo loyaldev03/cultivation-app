@@ -64,7 +64,7 @@ module Inventory
       raise 'No size found for package type' if size.nil?
       raise 'No UOM found for package type' if uom.nil?
 
-      @product = Product.find_or_create_by!(
+      @product = Inventory::Product.find_or_create_by!(
         facility: @facility,
         facility_strain: facility_strain,
         catalogue: @catalogue,
@@ -166,11 +166,14 @@ module Inventory
 
     def calculate_cost(package)
       cost_per_unit = harvest_batch.cultivation_batch.output_cost_per_unit
-      txs = Inventory::ItemTransaction.where(event_type: 'create_package_from_scan', harvest_batch: harvest_batch)
-      txs.each do |tx|
-        tx.production_cost = tx.common_quantity * cost_per_unit
-        tx.save!
-      end
+      package.production_cost = package.common_quantity * cost_per_unit
+      package.save!
+      # TODO: confirm with Karg
+      # txs = Inventory::ItemTransaction.where(event_type: 'create_package_from_scan', harvest_batch: harvest_batch)
+      # txs.each do |tx|
+      #   tx.production_cost = tx.common_quantity * cost_per_unit
+      #   tx.save!
+      # end
     end
   end
 end

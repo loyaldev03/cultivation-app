@@ -1,8 +1,9 @@
 <% content_for :breadcrumb do %>
   <%= breadcrumbs ["Home",root_path], 'Product' %>
 <% end %>
-<div class="pa4 mw1200">
-  <div class="pb4">
-    <%= image_tag 'dummy/product-unsold.png', class: 'w-100' %>
-  </div>
-</div>
+<%= react_component 'cultivation/dashboards/PackagesUnsoldDashboardApp',
+  {
+    defaultFacilityId: current_default_facility&.id.to_s,
+    currentTime: Time.current,
+  }
+%>

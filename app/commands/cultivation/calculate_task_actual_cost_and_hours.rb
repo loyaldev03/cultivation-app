@@ -40,12 +40,17 @@ module Cultivation
         start_time.day
       )
       ws = @user.work_schedules.find_by(date: work_date)
-      return if ws.nil?
+      user_overtime_hourly_rate = @user.overtime_hourly_rate || 0
+      user_hourly_rate = @user.hourly_rate || 0
+
+      if ws.nil?
+        actual_cost = @time_log.duration_in_minutes * (user_overtime_hourly_rate / 60)
+        actual_minutes = @time_log.duration_in_minutes
+        return {actual_cost: actual_cost, actual_minutes: actual_minutes}
+      end
 
       working_hour_start = Time.find_zone(tz).local(ws.date.year, ws.date.month, ws.date.day, ws.start_time.hour, ws.start_time.min)
       working_hour_end = Time.find_zone(tz).local(ws.date.year, ws.date.month, ws.date.day, ws.end_time.hour, ws.end_time.min)
-      user_overtime_hourly_rate = @user.overtime_hourly_rate || 0
-      user_hourly_rate = @user.hourly_rate || 0
 
       #assume time format is 24
       # working_hour_start = Time.zone.local(@time_log.start_time.year, @time_log.start_time.month, @time_log.start_time.day, 8, 00)

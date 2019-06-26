@@ -19,6 +19,7 @@ class Facility
   has_many :strains, class_name: 'Inventory::FacilityStrain'
   has_many :catalogue, class_name: 'Inventory::Catalogue'
   has_many :metrc_tags, class_name: 'Inventory::MetrcTag'
+  has_many :metrc_histories, class_name: 'MetrcHistory'
 
   scope :completed, -> { where(is_complete: true) }
 

@@ -3,7 +3,6 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
   before_action :get_company
 
   def metrc_setup
-    @metrc_histories = @company_info.metrc_histories
   end
 
   def show
@@ -22,7 +21,7 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
   def update_metrc
     metrc = params[:type].constantize
     metrc.perform_async
-    metrc_hist = @company_info.metrc_histories.find_by(metrc_type: params[:type])
+    metrc_hist = current_facility.metrc_histories.find_by(code: params[:code])
     if metrc_hist
       metrc_hist.update(value: Time.current)
     end

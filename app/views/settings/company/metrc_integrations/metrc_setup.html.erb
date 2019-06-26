@@ -43,28 +43,29 @@
           </div>
           <div class="dtc tc pv3 bg-black-10"></div>
         </div>
-      <%@metrc_histories.group_by{|d| d.category }.each do |group, histories| %>
-        <div class="dt-row">
-          <div class="b dtc pa4 pv2 bg-near-white underline">
-            <%= group %>
-          </div>
-          <div class="dtc pa4 pv2 bg-near-white"></div>
-          <div class="dtc pa4 pv2 bg-near-white"></div>
-        </div>
-        
-        <% histories.each do |h|%>
-          
+
+        <% metrc_histories.each do |group| %>
           <div class="dt-row">
-            <div class="dtc pa4 pv2 bg-black-5" style="width: 70%">
-              <%= h.code %>
+            <div class="b dtc pa4 pv2 bg-near-white underline">
+              <%= group[:category] %>
             </div>
-            <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= h.value ? h.value.strftime("%d-%m-%Y %H:%M") : "--" %></div>
-            <div class="dtc tc pv2 bg-black-5" style="width: 15%">
-              <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="<%= update_metrc_settings_company_metrc_integrations_path(type: h.metrc_type ? h.metrc_type : "") %>" data-method="put" data-remote="false" >Update</a>
-            </div>
+            <div class="dtc pa4 pv2 bg-near-white"></div>
+            <div class="dtc pa4 pv2 bg-near-white"></div>
           </div>
+          
+          <% group[:data].each do |h|%>
+            
+            <div class="dt-row">
+              <div class="dtc pa4 pv2 bg-black-5" style="width: 70%">
+                <%= h[:desc] %>
+              </div>
+              <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= current_facility.metrc_histories.find_by(code: h[:code])%> </div>
+              <div class="dtc tc pv2 bg-black-5" style="width: 15%">
+                <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="<% update_metrc_settings_company_metrc_integrations_path(type: h[:type], code: h[:code]) %>" data-method="put" data-remote="false" >Update</a>
+              </div>
+            </div>
+          <%end%>
         <%end%>
-      <%end%>
     </div>
     
 </div>

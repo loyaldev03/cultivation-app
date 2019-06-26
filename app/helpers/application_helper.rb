@@ -104,4 +104,75 @@ module ApplicationHelper
       {label: 'Setup batches', desc: 'Lorem ipsum dolor sit amet, vel te ceteros luptatum atomorum', code: 'ONBOARDING_SETUP_BATCH', link: '/cultivation/batches/new?'},
     ]
   end
+
+  def metrc_histories
+    [
+      {category: 'State (CA)',
+       data: [
+        {code: 'state_item_categories', type: 'MetrcUpdateItemCategoryWorker', desc: 'Item Categories'},
+        {code: 'state_unit_of_measures', type: 'MetrcUpdateUomWorker', desc: 'Unit of measure'},
+      ]},
+      {category: 'Facility',
+       data: [
+        {code: 'facility_facility_read', type: '', desc: 'Facility - Read'},
+        {code: 'facility_strains', type: '', desc: 'Strains'},
+        {code: 'facility_items', type: '', desc: "Items (E.g. Bud's Blue Dream)"},
+        {code: 'facility_rooms', type: '', desc: 'Rooms'},
+
+      ]},
+      {category: 'Tags',
+       data: [
+        {code: 'tags_receive_tags', type: '', desc: 'Receive Tags into Metrc'},
+        {code: 'tags_void_unused_tag', type: '', desc: 'Void unused tag - Read'},
+      ]},
+      {category: 'Batches',
+       data: [
+        {code: 'batches_batch_types', type: '', desc: 'Batch Types'},
+        {code: 'batches_create_batch', type: '', desc: 'Create Batch'},
+        {code: 'batches_active_batch', type: '', desc: 'Active Batch'},
+        {code: 'batches_change_grow_phase', type: '', desc: 'Change Growth Phase'},
+        {code: 'batches_move_plant_batches', type: '', desc: 'Move Plants Batches'},
+        {code: 'batches_create_package', type: '', desc: 'Create Packages'},
+        {code: 'batches_destroyed_plant', type: '', desc: 'Destroyed (immature plants)'},
+      ]},
+      {category: 'Plants',
+       data: [
+        {code: 'plants_waste_methods', type: '', desc: 'Waste Methods'},
+        {code: 'plants_waste_reasons', type: '', desc: 'Waste Reason'},
+        {code: 'plants_growth_phase', type: '', desc: 'Growth Phases'},
+        {code: 'plants_create_planting', type: '', desc: 'Create Plantings'},
+        {code: 'plants_moving', type: '', desc: 'Moving'},
+        {code: 'plants_destroy_plant', type: '', desc: 'Destroy Plants'},
+        {code: 'plants_destroyed_by_rooms', type: '', desc: 'Destroyed by rooms'},
+        {code: 'plants_replace_tags', type: '', desc: 'Replace Tag'},
+        {code: 'plants_record_plant_waste', type: '', desc: 'Record Plant Waste'},
+        {code: 'plants_create_harvest', type: '', desc: 'Create Harvest'},
+        {code: 'plants_manicure', type: '', desc: 'Manicure'},
+      ]},
+      {category: 'Harvest',
+       data: [
+        {code: 'harvest_info', type: '', desc: 'Info'},
+        {code: 'harvest_create_package', type: '', desc: 'Create Package'},
+        {code: 'harvest_remove_package', type: '', desc: 'Remove Package'},
+        {code: 'harvest_finish', type: '', desc: 'Finish'},
+        {code: 'harvest_unfinish', type: '', desc: 'Unfinish'},
+      ]},
+      {category: 'Package',
+       data: [
+        {code: 'package_types', type: '', desc: 'Types'},
+        {code: 'package_adjust_reasons', type: '', desc: 'Adjust Reasons'},
+        {code: 'package_info', type: '', desc: 'Info'},
+        {code: 'package_list_active', type: '', desc: 'List Active'},
+        {code: 'package_list_on_hold', type: '', desc: 'List on hold'},
+        {code: 'package_create_from_harvest_batch', type: '', desc: 'Create from harvest batch'},
+        {code: 'package_adjust', type: '', desc: 'Adjust'},
+        {code: 'package_create_for_testing', type: '', desc: 'Create for testing'},
+        {code: 'package_change_item', type: '', desc: 'Change Item'},
+        {code: 'package_change_room', type: '', desc: 'Change room'},
+        {code: 'package_finish', type: '', desc: 'Finish'},
+        {code: 'package_unfinish', type: '', desc: 'Unfinish'},
+      ]},
+
+    ]
+  end
 end

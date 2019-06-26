@@ -1,4 +1,5 @@
 class Settings::Company::MetrcIntegrationsController < ApplicationController
+  authorize_resource class: false
   before_action :get_company
 
   def metrc_setup
@@ -12,6 +13,13 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
     else
       render 'metrc_setup'
     end
+  end
+
+  def update_metrc
+    metrc = params[:type].constantize
+    metrc.perform_async
+    flash[:notice] = 'Metrc updated'
+    redirect_to metrc_setup_settings_company_metrc_integrations_path
   end
 
   private

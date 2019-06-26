@@ -13,8 +13,17 @@ class HolidayForm extends React.Component {
     this.state = {}
   }
 
+  setHoliday(holiday) {
+    this.setState({
+      id: holiday.id,
+      title: holiday.attributes.title,
+      date: holiday.attributes.date
+    })
+  }
+
   setDate(date) {
     this.setState({
+      id: '',
       title: '',
       date: date
     })
@@ -29,8 +38,11 @@ class HolidayForm extends React.Component {
   }
 
   onSave = async () => {
-    console.log(this.state.title)
-    await this.props.onSave({ title: this.state.title, date: this.state.date })
+    await this.props.onSave({
+      id: this.state.id,
+      title: this.state.title,
+      date: this.state.date
+    })
   }
 
   render() {

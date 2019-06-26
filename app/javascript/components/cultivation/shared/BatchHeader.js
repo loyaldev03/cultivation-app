@@ -168,13 +168,29 @@ class BatchHeader extends React.PureComponent {
                     </div>
                   </div>
                   <hr />
+                  <div className=" flex">
+                    <div className="w-50">
+                      <a
+                        href={`/cultivation/batches/${id}?select_location=1`}
+                        className="link grey underline"
+                        title="Click to change location"
+                      >
+                        Number of Plants
+                      </a>
+                    </div>
+                    <div className="w-50">
+                      <div className="tr">
+                        <label>{batchQuantity}</label>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="w-30 ml5">
                   <hr />
                   <div className=" flex">
                     <div className="w-50">
-                      <label>Estimated Harvest Date </label>
+                      <label>Estimated Harvest Date</label>
                     </div>
                     <div className="w-50">
                       <div className="tr">

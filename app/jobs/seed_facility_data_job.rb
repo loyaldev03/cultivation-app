@@ -18,6 +18,7 @@ class SeedFacilityDataJob < ApplicationJob
     seed_facility_users
     seed_uom
     seed_raw_materials
+    seed_preferences
   rescue StandardError => error
     Rollbar.error(error)
   end
@@ -40,6 +41,10 @@ class SeedFacilityDataJob < ApplicationJob
 
   def seed_raw_materials
     Inventory::SeedCatalogue.call(facility_id: @facility_id)
+  end
+
+  def seed_preferences
+    Common::SeedOnBoardingPreference.call(@facility_id)
   end
 
   def seed_uom

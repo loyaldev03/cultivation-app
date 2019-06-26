@@ -47,29 +47,27 @@ class BatchListTable extends React.Component {
                 <ActiveBadge status={b.status} />
               </td>
               <td>
-                {b.status !== 'ACTIVE' ? (
-                  <Tippy
-                    placement="bottom-end"
-                    trigger="click"
-                    duration="0"
-                    content={
-                      <div className="bg-white f6 flex">
-                        <div className="db shadow-4">
-                          <MenuButton
-                            icon="delete_outline"
-                            text="Delete Draft"
-                            className="red"
-                            onClick={() => onDelete(b.id)}
-                          />
-                        </div>
+                <Tippy
+                  placement="bottom-end"
+                  trigger="click"
+                  duration="0"
+                  content={
+                    <div className="bg-white f6 flex">
+                      <div className="db shadow-4">
+                        <MenuButton
+                          icon="delete_outline"
+                          text="Delete Draft"
+                          className="red"
+                          onClick={() => onDelete(b.id)}
+                        />
                       </div>
-                    }
-                  >
-                    <i className={'pointer material-icons show-on-batch'}>
-                      more_horiz
-                    </i>
-                  </Tippy>
-                ) : null}
+                    </div>
+                  }
+                >
+                  <i className={'pointer material-icons show-on-batch'}>
+                    more_horiz
+                  </i>
+                </Tippy>
               </td>
             </tr>
           ))}

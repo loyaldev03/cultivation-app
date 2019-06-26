@@ -41,6 +41,12 @@ class ClippingPanel extends React.Component {
       this.props.strainId,
       BatchStore.batch.selected_location
     )
+    if (BatchStore.batch.selected_plants.length == 0) {
+      BatchStore.batch.selected_plants = motherPlantList.map(plant => {
+        plant.quantity = 0
+        return plant
+      })
+    }
     let isHasMotherPlant = roomData.length > 0
     let codeSelected = motherRoomList.map(x => {
       if (x.room_id === BatchStore.batch.selected_location) {

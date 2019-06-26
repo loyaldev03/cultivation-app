@@ -1,9 +1,9 @@
 <div id="sidebar" class="sidebar fixed min-vh-100 uncollapsed overflow-hidden" data-turbolinks="false">
-  <%= link_to root_path, class: 'tc pv3 flex justify-center show-collapsed box--shadow-header outline-0', style: 'height: 50px' do %>
+  <%= link_to root_path(facility_id: params[:facility_id]), class: 'tc pv3 flex justify-center show-collapsed box--shadow-header outline-0', style: 'height: 50px' do %>
     <%= image_tag 'logo-small.svg' %>
   <% end %>
 
-  <%= link_to root_path, class: 'pl3 hide box--shadow-header outline-0', style: 'height: 50px; padding-top: 12px;' do %>
+  <%= link_to root_path(facility_id: params[:facility_id]), class: 'pl3 hide box--shadow-header outline-0', style: 'height: 50px; padding-top: 12px;' do %>
     <%= image_tag 'logo.svg' %>
   <% end %>
 
@@ -21,7 +21,7 @@
 </style>
 
   <ul class="list pl0 mt0 hide overflow-y-scroll" style="height: calc(100vh - 100px);">
-    <%= link_to root_path, class: "link" do %>
+    <%= link_to root_path(facility_id: params[:facility_id]), class: "link" do %>
       <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0 <%= active_link(root_path)%>">
         <i class="material-icons md-16 mr3 ml1">home</i>
         <span class="link subtitle-2-regular">Home</span>
@@ -29,7 +29,7 @@
     <% end %>
     
     <li class="pv3 ph3 flex flex-column nav-ex ba bt-0 bl-0 br-0 bb-0">
-      <%= link_to dashboard_cultivation_batches_path, id: 'hide1', class: "link hide #{parent_active_link('cultivation')}" do %>
+      <%= link_to dashboard_cultivation_batches_path(facility_id: params[:facility_id]), id: 'hide1', class: "link hide #{parent_active_link('cultivation')}" do %>
         <div class="flex flex-row items-center">
           <i class="material-icons md-16 mr3 ml1">spa</i>
           <span class="link subtitle-2-regular">Cultivation Planning</span>
@@ -38,28 +38,28 @@
 
       <ul class="ul list f6 gray ml4 pl2 mt2 details <%= parent_active_link('cultivation')%>">
         <li class="pv2">
-          <%= link_to 'Batches', cult_batches_path, class: "link gray f6 #{active_link(cult_batches_path)}" %>
+          <%= link_to 'Batches', cult_batches_path(facility_id: params[:facility_id]), class: "link gray f6 #{active_link(cult_batches_path)}" %>
         </li>
         <li class="pv2">
           <%= link_to 'Schedule', '', class: "link gray f6 #{active_link('')}" %>
         </li>
         <li class="pv2">
-          <%= link_to 'Plants', cult_plants_path, class: "link gray f6 #{active_link(cult_plants_path)}" %>
+          <%= link_to 'Plants', cult_plants_path(facility_id: params[:facility_id]), class: "link gray f6 #{active_link(cult_plants_path)}" %>
         </li>
         <li class="pv2">
-          <%= link_to 'Harvest', cult_harvests_path, class: "link gray f6 #{active_link(cult_harvests_path)}" %>
+          <%= link_to 'Harvest', cult_harvests_path(facility_id: params[:facility_id]), class: "link gray f6 #{active_link(cult_harvests_path)}" %>
         </li>
         <li class="pv2">
-          <%= link_to 'Tasks', cult_tasks_path, class: "link gray f6 #{active_link(cult_tasks_path)}" %>
+          <%= link_to 'Tasks', cult_tasks_path(facility_id: params[:facility_id]), class: "link gray f6 #{active_link(cult_tasks_path)}" %>
         </li>
         <li class="pv2">
-          <%= link_to 'Issues', cult_issues_path, class: "link gray f6 #{active_link(cult_issues_path)}" %>
+          <%= link_to 'Issues', cult_issues_path(facility_id: params[:facility_id]), class: "link gray f6 #{active_link(cult_issues_path)}" %>
         </li>
       </ul>
     </li>
     
     <li class="pv3 ph3 flex flex-column nav-ex ba bt-0 bl-0 br-0 bb-0">
-      <%= link_to prod_dashboard_path, class: "link hide #{parent_active_link('product')}" do %>
+      <%= link_to prod_dashboard_path(facility_id: params[:facility_id]), class: "link hide #{parent_active_link('product')}" do %>
         <div class="flex flex-row items-center">
           <i class="material-icons md-16 grey mr3 ml1">layers</i>
             <span class="link subtitle-2-regular grey">Products</span>
@@ -67,26 +67,26 @@
       <% end %>
       <ul class="ul list f6 ml4 pl2 mt2 details <%= parent_active_link('product') %>">
         <li class="pv2">
-          <%= link_to 'Packages', prod_packages_path, class: "link gray f6 #{active_link(prod_packages_path)}" %>
+          <%= link_to 'Packages', prod_packages_path(facility_id: params[:facility_id]), class: "link gray f6 #{active_link(prod_packages_path)}" %>
         </li>
         <li class="pv2">
-          <%= link_to 'Packages Sold', prod_sold_path, class: "link gray f6 #{active_link(prod_sold_path)}" %>
+          <%= link_to 'Packages Sold', prod_sold_path(facility_id: params[:facility_id]), class: "link gray f6 #{active_link(prod_sold_path)}" %>
         </li>
         <li class="pv2">
-          <%= link_to 'Packages Unsold', prod_unsold_path, class: "link gray f6 #{active_link(prod_unsold_path)}" %>
+          <%= link_to 'Packages Unsold', prod_unsold_path(facility_id: params[:facility_id]), class: "link gray f6 #{active_link(prod_unsold_path)}" %>
         </li>
         <li class="pv2">
-          <%= link_to 'Orders', prod_orders_path, class: "link gray f6 #{active_link(prod_orders_path)}" %>
+          <%= link_to 'Orders', prod_orders_path(facility_id: params[:facility_id]), class: "link gray f6 #{active_link(prod_orders_path)}" %>
         </li>
         <li class="pv2">
-          <%= link_to 'Manifests', prod_manifest_path, class: "link gray f6 #{active_link(prod_manifest_path)}" %>
+          <%= link_to 'Manifests', prod_manifest_path(facility_id: params[:facility_id]), class: "link gray f6 #{active_link(prod_manifest_path)}" %>
         </li>
       </ul>
     </li>
 
   
     <li class="pv3 ph3 flex flex-column nav-ex ba bt-0 bl-0 br-0 bb-0">
-      <%= link_to inventory_setup_path, id: 'hide2', class: "link hide #{parent_active_link('inventory')}" do %>
+      <%= link_to inventory_setup_path(facility_id: params[:facility_id]), id: 'hide2', class: "link hide #{parent_active_link('inventory')}" do %>
         <div class="flex flex-row items-center">
           <i class="material-icons md-16 mr3 ml1">list_alt</i>
           <span class="link subtitle-2-regular">Inventory</span>
@@ -196,7 +196,7 @@
     </li>
 
     <li class="pv3 ph3 flex flex-column nav-ex ba bt-0 bl-0 br-0 bb-0">
-      <%= link_to integration_path, id: 'hide6', class: "link hide #{parent_active_link('integration')} " do %>
+      <%= link_to integration_path(facility_id: params[:facility_id]), id: 'hide6', class: "link hide #{parent_active_link('integration')} " do %>
         <div class="flex flex-row items-center">
         <i class="material-icons md-16 grey mr3 ml1">settings_input_composite</i>
         <span class="link subtitle-2-regular grey">Integration</span>
@@ -206,7 +206,7 @@
 
       <ul class="ul list f6 gray ml4 pl2 mt2 details <%= parent_active_link('integration') %>">
         <li class="pv2">
-          <%= link_to 'METRC', metrc_setup_settings_company_metrc_integrations_path, class: 'link gray f6' %>
+          <%= link_to 'METRC', metrc_setup_settings_company_metrc_integrations_path(facility_id: params[:facility_id]), class: 'link gray f6' %>
         </li>
         <li class="pv2">
           <%= link_to 'Quickbooks', '', class: 'link gray f6' %>
@@ -223,7 +223,7 @@
 
 
     
-    <%= link_to cultivation_batches_path, class: "link" do %>
+    <%= link_to cultivation_batches_path(facility_id: params[:facility_id]), class: "link" do %>
       <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0 <%= active_link(cultivation_batches_path)%>">
         <i class="material-icons md-16 mr3 ml1">track_changes</i>
         <span class="link f7">Legacy cultivation batches</span>
@@ -248,25 +248,25 @@
   </ul>
 
   <ul class="list mt0 pa0 show-collapsed">
-    <%= link_to root_path, class: "link" do %>
+    <%= link_to root_path(facility_id: params[:facility_id]), class: "link" do %>
       <li class="pv3 justify-center grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
         <i class="material-icons md-16 grey">home</i>
       </li>
     <% end %>
 
-    <%= link_to dashboard_cultivation_batches_path, class: "link" do %>
+    <%= link_to dashboard_cultivation_batches_path(facility_id: params[:facility_id]), class: "link" do %>
       <li class="pv3 justify-center grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
         <i class="material-icons md-16 grey">layers</i>
       </li>
     <% end %>
 
-    <%= link_to prod_dashboard_path, class: "link" do %>
+    <%= link_to prod_dashboard_path(facility_id: params[:facility_id]), class: "link" do %>
       <li class="pv3 justify-center grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
         <i class="material-icons md-16 grey">spa</i>
       </li>
     <% end %>
 
-    <%= link_to inventory_setup_path, class: "link" do %>
+    <%= link_to inventory_setup_path(facility_id: params[:facility_id]), class: "link" do %>
       <li class="pv3 justify-center grow flex flex-row items-center tc nav-cl ba bt-0 bl-0 br-0 bb-0">
         <i class="material-icons md-16 grey">list_alt</i>
         

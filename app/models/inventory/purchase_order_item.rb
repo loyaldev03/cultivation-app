@@ -11,6 +11,7 @@ module Inventory
     field :currency, type: String, default: 'USD'
     field :tax, type: Float, default: -> { 0 }
     field :uom, type: String
+    field :product_id, type: BSON::ObjectId
 
     has_one :invoice_item, class_name: 'Inventory::VendorInvoiceItem'
     belongs_to :purchase_order, class_name: 'Inventory::PurchaseOrder'

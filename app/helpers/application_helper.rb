@@ -72,7 +72,7 @@ module ApplicationHelper
     when 'procurement'
       paths = [procurement_path]
     when 'facility'
-      paths = [facility_setup_new_path, facility_dashboard_summary_path, facility_dashboard_summary_path, facility_setup_rooms_info_path, facility_setup_room_summary_path, facility_setup_row_shelf_info_path]
+      paths = [facility_dashboard_path, facility_setup_new_path, facility_dashboard_summary_path, facility_dashboard_summary_path, facility_setup_rooms_info_path, facility_setup_room_summary_path, facility_setup_row_shelf_info_path]
     when 'integration'
       paths = [integration_path]
     when 'product'

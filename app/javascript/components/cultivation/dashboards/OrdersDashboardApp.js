@@ -7,6 +7,7 @@ import {
   HeaderFilter,
   ActiveBadge
 } from '../../utils'
+import classNames from 'classnames'
 
 const dummyData = [
   {
@@ -213,7 +214,16 @@ class OrdersDashboardApp extends React.Component {
         accessor: 'status',
         className: 'justify-center',
         minWidth: 88,
-        Cell: props => <ActiveBadge status={props.value} />
+        Cell: props => (
+          <span
+            className={classNames(`f7 fw6 ph3 pv1 ba br2 dib tc `, {
+              'bg-green b--green white': props.value === 'Delivered',
+              'bg-orange b--orange white': props.value === 'Fulfilled'
+            })}
+          >
+            {props.value}
+          </span>
+        )
       },
       {
         headerClassName: '',

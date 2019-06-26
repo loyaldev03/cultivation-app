@@ -59,9 +59,10 @@
               <div class="dtc pa4 pv2 bg-black-5" style="width: 70%">
                 <%= h[:desc] %>
               </div>
-              <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= current_facility.metrc_histories.find_by(code: h[:code])%> </div>
+              <% metrc_h = current_facility.metrc_histories.find_by(code: h[:code]) %>
+              <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= metrc_h.value ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
               <div class="dtc tc pv2 bg-black-5" style="width: 15%">
-                <a class="ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer" href="<% update_metrc_settings_company_metrc_integrations_path(type: h[:type], code: h[:code]) %>" data-method="put" data-remote="false" >Update</a>
+                <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: h[:type], code: h[:code]), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
               </div>
             </div>
           <%end%>

@@ -179,7 +179,7 @@
       <ul class="ul list f6 gray ml4 pl2 mt2 details <%= parent_active_link('facility') %>">
         <li class="pv2">
           <% if current_facility %>
-            <%= link_to 'Facility', facility_dashboard_path(facility_id: current_facility.id), class: "link f6 #{active_link(facility_setup_new_path)} " %>
+            <%= link_to 'Facility', facility_dashboard_path(facility_id: current_facility.id), class: "link f6 #{active_link(facility_dashboard_path)} " %>
           <% else %>
             <%= link_to 'Facility', facility_setup_new_path, class: "link f6 #{active_link(facility_setup_new_path)}" %>
           <% end %>

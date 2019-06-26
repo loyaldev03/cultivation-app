@@ -1,11 +1,7 @@
 import 'babel-polyfill'
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
-import {
-  CheckboxSelect,
-  ListingTable,
-  TempPackagesWidgets
-} from '../../utils'
+import { CheckboxSelect, ListingTable, TempPackagesWidgets } from '../../utils'
 
 const dummyData = [
   {
@@ -22,7 +18,7 @@ const dummyData = [
     total_net_weight: '',
     price_per_unit: '',
     total_price: '',
-    location: ''    
+    location: ''
   },
   {
     package: 'SKUNKWORX PACKAGING',
@@ -38,7 +34,7 @@ const dummyData = [
     total_net_weight: '',
     price_per_unit: '',
     total_price: '',
-    location: ''    
+    location: ''
   },
   {
     package: 'PHYTO ALASKAN',
@@ -54,7 +50,7 @@ const dummyData = [
     total_net_weight: '',
     price_per_unit: '',
     total_price: '',
-    location: ''    
+    location: ''
   },
   {
     package: 'CREAM OF THE CROP GARDENS',
@@ -70,7 +66,7 @@ const dummyData = [
     total_net_weight: '',
     price_per_unit: '',
     total_price: '',
-    location: ''    
+    location: ''
   },
   {
     package: 'CANNASOL FARMS',
@@ -86,7 +82,7 @@ const dummyData = [
     total_net_weight: '',
     price_per_unit: '',
     total_price: '',
-    location: ''    
+    location: ''
   },
   {
     package: 'ARTIZEN CANNABIS',
@@ -102,7 +98,7 @@ const dummyData = [
     total_net_weight: '',
     price_per_unit: '',
     total_price: '',
-    location: ''    
+    location: ''
   },
   {
     package: 'LAUGHING MAN FARMS',
@@ -118,7 +114,7 @@ const dummyData = [
     total_net_weight: '',
     price_per_unit: '',
     total_price: '',
-    location: ''    
+    location: ''
   },
   {
     package: 'CANNASOL FARMS',
@@ -134,7 +130,7 @@ const dummyData = [
     total_net_weight: '',
     price_per_unit: '',
     total_price: '',
-    location: ''    
+    location: ''
   },
   {
     package: '7 POINTS OREGON',
@@ -150,7 +146,7 @@ const dummyData = [
     total_net_weight: '',
     price_per_unit: '',
     total_price: '',
-    location: ''    
+    location: ''
   },
   {
     package: 'SPINACH CANNABIS',
@@ -166,7 +162,7 @@ const dummyData = [
     total_net_weight: '',
     price_per_unit: '',
     total_price: '',
-    location: ''    
+    location: ''
   },
   {
     package: 'DOUBLE DUTCH FARMS',
@@ -182,7 +178,7 @@ const dummyData = [
     total_net_weight: '',
     price_per_unit: '',
     total_price: '',
-    location: ''    
+    location: ''
   },
   {
     package: 'TKO RESERVE',
@@ -198,7 +194,7 @@ const dummyData = [
     total_net_weight: '',
     price_per_unit: '',
     total_price: '',
-    location: ''    
+    location: ''
   },
   {
     package: 'LAZY BEE GARDENS',
@@ -214,7 +210,7 @@ const dummyData = [
     total_net_weight: '',
     price_per_unit: '',
     total_price: '',
-    location: ''    
+    location: ''
   }
 ]
 

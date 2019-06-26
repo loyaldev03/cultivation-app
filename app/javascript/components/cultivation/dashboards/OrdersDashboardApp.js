@@ -5,7 +5,7 @@ import {
   CheckboxSelect,
   ListingTable,
   HeaderFilter,
-  ActiveBadge,
+  ActiveBadge
 } from '../../utils'
 
 const dummyData = [
@@ -20,7 +20,7 @@ const dummyData = [
     total_net_weight: '73lbs',
     total_revenue: '$1,300',
     customer: 'ABC Distributor',
-    manifest: 'MON198',
+    manifest: 'MON198'
   },
   {
     order_id: 'ORD14499',
@@ -33,7 +33,7 @@ const dummyData = [
     total_net_weight: '89lbs',
     total_revenue: '$7,300',
     customer: 'MNC Distributor',
-    manifest: 'MON201',
+    manifest: 'MON201'
   },
   {
     order_id: 'ORD13490',
@@ -46,7 +46,7 @@ const dummyData = [
     total_net_weight: '230lbs',
     total_revenue: '$11,880',
     customer: 'PEL Distributor',
-    manifest: 'MON301',
+    manifest: 'MON301'
   },
   {
     order_id: 'ORD15871',
@@ -59,7 +59,7 @@ const dummyData = [
     total_net_weight: '140lbs',
     total_revenue: '$2,100',
     customer: 'LKO Distributor',
-    manifest: 'MON126',
+    manifest: 'MON126'
   },
   {
     order_id: 'ORD17833',
@@ -72,7 +72,7 @@ const dummyData = [
     total_net_weight: '300lbs',
     total_revenue: '$3,399',
     customer: 'ABC Distributor',
-    manifest: 'MON156',
+    manifest: 'MON156'
   },
   {
     order_id: 'ORD19999',
@@ -85,7 +85,7 @@ const dummyData = [
     total_net_weight: '30lbs',
     total_revenue: '$1,910',
     customer: 'LLP Distributor',
-    manifest: 'MON200',
+    manifest: 'MON200'
   },
   {
     order_id: 'ORD11890',
@@ -98,7 +98,7 @@ const dummyData = [
     total_net_weight: '73lbs',
     total_revenue: '$1,999',
     customer: '888 Distributor',
-    manifest: 'MON130',
+    manifest: 'MON130'
   },
   {
     order_id: 'ORD12387',
@@ -111,7 +111,7 @@ const dummyData = [
     total_net_weight: '193lbs',
     total_revenue: '$5,300',
     customer: 'BLU Distributor',
-    manifest: 'MON120',
+    manifest: 'MON120'
   },
   {
     order_id: 'ORD1299',
@@ -124,7 +124,7 @@ const dummyData = [
     total_net_weight: '20lbs',
     total_revenue: '$900',
     customer: 'JME Distributor',
-    manifest: 'MON198',
+    manifest: 'MON198'
   },
   {
     order_id: 'ORD19850',
@@ -137,7 +137,7 @@ const dummyData = [
     total_net_weight: '129lbs',
     total_revenue: '$4,300',
     customer: 'LES Distributor',
-    manifest: 'MON281',
+    manifest: 'MON281'
   },
   {
     order_id: 'ORD1211',
@@ -150,7 +150,7 @@ const dummyData = [
     total_net_weight: '73lbs',
     total_revenue: '$1,300',
     customer: 'NPE Distributor',
-    manifest: 'MON198',
+    manifest: 'MON198'
   },
   {
     order_id: 'ORD12881',
@@ -163,7 +163,7 @@ const dummyData = [
     total_net_weight: '73lbs',
     total_revenue: '$1,300',
     customer: 'LAKSA Distributor',
-    manifest: 'MON198',
+    manifest: 'MON198'
   },
   {
     order_id: 'ORD12775',
@@ -176,7 +176,7 @@ const dummyData = [
     total_net_weight: '73lbs',
     total_revenue: '$1,300',
     customer: 'ABC Distributor',
-    manifest: 'MON198',
+    manifest: 'MON198'
   }
 ]
 
@@ -277,7 +277,7 @@ class OrdersDashboardApp extends React.Component {
         accessor: 'manifest',
         className: ' pr3 justify-center',
         width: 110
-      },
+      }
     ]
   }
   componentDidMount() {
@@ -317,7 +317,7 @@ class OrdersDashboardApp extends React.Component {
           <ListingTable
             data={dummyData}
             columns={columns}
-          // isLoading={BatchStore.isLoading}
+            // isLoading={BatchStore.isLoading}
           />
         </div>
       </div>

@@ -16,8 +16,6 @@ import TempStrainWidgets from '../../../assets/images/dummy/strain-overview.png'
 import TempPackagesWidgets from '../../../assets/images/dummy/packages.png'
 import TempPackagesSoldWidgets from '../../../assets/images/dummy/packages-sold.png'
 
-
-
 import DefaultAvatar from '../../../assets/images/blank-avatar.png'
 export {
   ImgAdd,

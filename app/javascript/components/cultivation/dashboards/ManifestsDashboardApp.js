@@ -5,7 +5,7 @@ import {
   CheckboxSelect,
   ListingTable,
   HeaderFilter,
-  ActiveBadge,
+  ActiveBadge
 } from '../../utils'
 
 const dummyData = [
@@ -18,7 +18,7 @@ const dummyData = [
     revenue: '$54,300',
     tax: '$41',
     sub_total: '$54,300',
-    payment_date: '07/12/2019',
+    payment_date: '07/12/2019'
   },
   {
     manifest_id: 'IS14499',
@@ -29,7 +29,7 @@ const dummyData = [
     revenue: '$7,300',
     tax: '$29',
     sub_total: '$7,300',
-    payment_date: '17/03/2019', 
+    payment_date: '17/03/2019'
   },
   {
     manifest_id: 'IS13490',
@@ -40,7 +40,7 @@ const dummyData = [
     revenue: '$11,880',
     tax: '$200',
     sub_total: '$11,880',
-    payment_date: '20/06/2019',
+    payment_date: '20/06/2019'
   },
   {
     manifest_id: 'IS15871',
@@ -51,7 +51,7 @@ const dummyData = [
     revenue: '$2,100',
     tax: '$56',
     sub_total: '$2,100',
-    payment_date: '22/07/2019',
+    payment_date: '22/07/2019'
   },
   {
     manifest_id: 'IS17833',
@@ -62,7 +62,7 @@ const dummyData = [
     revenue: '$3,399',
     tax: '$77',
     sub_total: '$3,399',
-    payment_date: '07/01/2019',
+    payment_date: '07/01/2019'
   },
   {
     manifest_id: 'IS19999',
@@ -73,7 +73,7 @@ const dummyData = [
     revenue: '$1,910',
     tax: '$10',
     sub_total: '$1,910',
-    payment_date: '07/08/2019',
+    payment_date: '07/08/2019'
   },
   {
     manifest_id: 'IS11890',
@@ -84,7 +84,7 @@ const dummyData = [
     revenue: '$1,999',
     tax: '$41',
     sub_total: '$1,999',
-    payment_date: '07/02/2019',
+    payment_date: '07/02/2019'
   },
   {
     manifest_id: 'IS12387',
@@ -95,7 +95,7 @@ const dummyData = [
     revenue: '$5,300',
     tax: '$90',
     sub_total: '$5,300',
-    payment_date: '21/09/2019',
+    payment_date: '21/09/2019'
   },
   {
     manifest_id: 'IS1299',
@@ -106,7 +106,7 @@ const dummyData = [
     revenue: '$900',
     tax: '$11',
     sub_total: '$900',
-    payment_date: '20/11/2019',
+    payment_date: '20/11/2019'
   },
   {
     manifest_id: 'IS19850',
@@ -117,7 +117,7 @@ const dummyData = [
     revenue: '$4,300',
     tax: '$50',
     sub_total: '$4,300',
-    payment_date: '23/12/2019',
+    payment_date: '23/12/2019'
   },
   {
     manifest_id: 'IS1211',
@@ -128,7 +128,7 @@ const dummyData = [
     revenue: '$1,300',
     tax: '$41',
     sub_total: '$1,300',
-    payment_date: '07/12/2019',
+    payment_date: '07/12/2019'
   },
   {
     manifest_id: 'IS12881',
@@ -139,7 +139,7 @@ const dummyData = [
     revenue: '$1,300',
     tax: '$41',
     sub_total: '$1,300',
-    payment_date: '07/12/2019',
+    payment_date: '07/12/2019'
   },
   {
     manifest_id: 'IS12775',
@@ -150,7 +150,7 @@ const dummyData = [
     revenue: '$1,300',
     tax: '$41',
     sub_total: '$1,300',
-    payment_date: '07/12/2019',
+    payment_date: '07/12/2019'
   }
 ]
 
@@ -228,7 +228,7 @@ class ManifestsDashboardApp extends React.Component {
         Header: 'Payment Date',
         accessor: 'payment_date',
         className: ' pr3 justify-center'
-      },
+      }
     ]
   }
   componentDidMount() {
@@ -258,9 +258,9 @@ class ManifestsDashboardApp extends React.Component {
             type="text"
             className="input w5"
             placeholder="Search"
-          // onChange={e => {
-          //   BatchStore.filter = e.target.value
-          // }}
+            // onChange={e => {
+            //   BatchStore.filter = e.target.value
+            // }}
           />
           <CheckboxSelect options={columns} onChange={this.onToggleColumns} />
         </div>
@@ -268,7 +268,7 @@ class ManifestsDashboardApp extends React.Component {
           <ListingTable
             data={dummyData}
             columns={columns}
-          // isLoading={BatchStore.isLoading}
+            // isLoading={BatchStore.isLoading}
           />
         </div>
       </div>

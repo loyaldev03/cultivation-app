@@ -13,6 +13,7 @@ import TempTaskWidgets from '../../../assets/images/dummy/cult-tasks.png'
 import TempIssueWidgets from '../../../assets/images/dummy/cult-issues.png'
 import TempHarvestWidgets from '../../../assets/images/dummy/cult-harvest.png'
 import TempStrainWidgets from '../../../assets/images/dummy/strain-overview.png'
+import TempPackagesWidgets from '../../../assets/images/dummy/packages.png'
 import DefaultAvatar from '../../../assets/images/blank-avatar.png'
 export {
   ImgAdd,
@@ -29,6 +30,7 @@ export {
   TempIssueWidgets,
   TempHarvestWidgets,
   TempStrainWidgets,
+  TempPackagesWidgets,
   WorkerDashboardGraph,
   DefaultAvatar
 }

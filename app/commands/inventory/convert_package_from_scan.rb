@@ -19,19 +19,18 @@ module Inventory
       :production_date,         # Hardcoded to Time.now
       :harvest_batch,           # Deduce from source package
       :metrc_tag,               # Deduce from tag
-      :name
+      :name,
+      :task_id,
+      :task
 
     def initialize(user, args)
-      Rails.logger.debug('>>>>>>>>>>>>>>>')
-      Rails.logger.debug(args)
-      Rails.logger.debug('>>>>>>>>>>>>>>>')
-
       @user = user
       @id = args[:id]
       @tag = args[:tag]
       @source_package_id = args[:source_package_id]
       @product_type = args[:product_type]
       @package_type = args[:package_type]
+      @task_id = args[:task_id]
     end
 
     def call
@@ -40,6 +39,7 @@ module Inventory
 
       if valid_user? && valid_data?
         package = save_package!
+        calculate_cost(package)
         package
       end
     end
@@ -47,6 +47,7 @@ module Inventory
     private
 
     def validate_params!
+      raise 'task_id is required' if task_id.nil?
       raise 'source_package_id is required' if source_package_id.nil?
       raise 'product_type is required' if product_type.nil?
       raise 'package_type is required' if package_type.nil?
@@ -54,6 +55,7 @@ module Inventory
     end
 
     def prepare!
+      @task = Cultivation::Task.find(task_id)
       @source_package = Inventory::ItemTransaction.find(source_package_id)
       @facility = @source_package.facility
       @facility_strain = @source_package.facility_strain
@@ -67,7 +69,7 @@ module Inventory
       raise 'No size found for package type' if size.nil?
       raise 'No UOM found for package type' if uom.nil?
 
-      @product = Product.find_or_create_by!(
+      @product = Inventory::Product.find_or_create_by!(
         facility: @facility,
         facility_strain: facility_strain,
         catalogue: @catalogue,
@@ -133,17 +135,13 @@ module Inventory
       )
 
       deduction = source_package.dup
-      deduction.quantity = -package.quantity
+      deduction.quantity -= package.quantity
       deduction.uom = package.uom
       deduction.event_type = 'deduction_of_convert_package_from_scan'
       deduction.event_date = Time.now
       deduction.ref_id = deduction.id
       deduction.ref_type = 'Inventory::ItemTransaction'
       deduction.save!
-
-      Rails.logger.debug '>>>>>>>>>>>>>>> deduction'
-      Rails.logger.debug deduction.inspect
-      Rails.logger.debug ">>>>>>>>>>>>>>>\n\r"
 
       metrc_tag.update!(status: 'assigned')
       package
@@ -172,6 +170,19 @@ module Inventory
       else
         return nil
       end
+    end
+
+    # TASK 980
+    def calculate_cost(package)
+      # Assuming we converted 50g then we need to:
+      #   1. find out total cost to complete the task. Then divide equally to all product created by the task, which is X
+      #   2. Then get the cost of the used fraction from the source product, Y
+      #
+      x = task.actual_cost / package.common_quantity
+      y = source_package.production_cost / source_package.common_quantity
+      production_cost = (x + y) * package.common_quantity
+      package.production_cost = production_cost
+      package.save!
     end
   end
 end

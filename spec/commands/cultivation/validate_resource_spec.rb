@@ -44,8 +44,15 @@ RSpec.describe Cultivation::ValidateResource, type: :command do
   end
 
   let!(:task_1) do 
-    task = batch1.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "plants", estimated_hours: 20.0 })
-    task.save
+    task = batch1.tasks.create!({ 
+      wbs: "1.1.1", 
+      phase: "clone", 
+      name: "Select clones or seeds", 
+      duration: "", 
+      indelible: "plants", 
+      estimated_hours: 20.0,
+      facility: facility, 
+    })
     task
   end
 
@@ -94,6 +101,7 @@ RSpec.describe Cultivation::ValidateResource, type: :command do
   context ".call" do
     it "return error if estimated hours available but no user assigned" do
       result = Cultivation::ValidateResource.call(current_user: current_user, batch_id: batch1.id)
+      
       expect(result.success?).to be false
       expect(result.errors['resource'].count).to be > 0
       pp result.errors['resource']

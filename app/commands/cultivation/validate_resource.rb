@@ -27,9 +27,6 @@ module Cultivation
       end
       errors.add('resource', @resource_errors.join(', ')) if @resource_errors.present? # if estimated hours is set but no user assign
       errors.add('resource', 'Resource overallocation') if @over_hours > 0 # if overhours
-    rescue
-      Rails.logger.debug "#{$!.message}"
-      errors.add(:error, $!.message)
     end
 
     def check_task_assigned(batch, task)

@@ -4,6 +4,8 @@ module Inventory
     include Mongoid::Timestamps::Short
 
     field :product_name, type: String
+    field :product_id, type: BSON::ObjectId
+
     field :description, type: String
     field :manufacturer, type: String
     field :quantity, type: Float, default: -> { 0 }

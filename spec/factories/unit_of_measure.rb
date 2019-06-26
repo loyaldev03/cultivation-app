@@ -5,6 +5,7 @@ FactoryBot.define do
       unit { "kg" }
       base_unit { "g" }
       conversion { 1000 }
+      dimension { 'weight' }
     end
 
     trait :ea do
@@ -31,6 +32,24 @@ FactoryBot.define do
     trait :oz do
       name { "Ounce" }
       unit { "Oz" }
+    end      
+
+    trait :pc do
+      name { 'piece' }
+      unit { 'pc' }
+      dimension { 'piece' }
+      is_base_unit { true }
+      base_unit { 'pc' }
+      conversion { 1 }
+    end
+
+    trait :bag do
+      name { 'bag' }
+      unit { 'bag' }
+      dimension { 'piece' }
+      is_base_unit { true }
+      base_unit { 'pc' }
+      conversion { 1 }
     end
   end
 end

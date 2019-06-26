@@ -11,7 +11,16 @@ module Cultivation
     field :start_date, type: Time
     field :estimated_harvest_date, type: Time
     field :estimated_hours, type: Float, default: -> { 0 }
-    field :estimated_cost, type: Float, default: -> { 0 }
+
+    # Labor cost
+    field :actual_hours, type: Float, default: -> { 0 }
+    field :estimated_labor_cost, type: Float, default: -> { 0 }
+    field :actual_labor_cost, type: Float, default: -> { 0 }
+
+    # Material cost
+    field :estimated_material_cost, type: Float, default: -> { 0 }
+    field :actual_material_cost, type: Float, default: -> { 0 }
+
     # Planned quantity for the batch (capacity needed)
     field :quantity, type: Integer
     field :current_growth_stage, type: String
@@ -26,8 +35,7 @@ module Cultivation
     # Draft - Draft batch should not trigger validation
     # Scheduled, Active - Take up spaces in Tray Plan
     field :status, type: String, default: Constants::BATCH_STATUS_DRAFT
-    field :actual_cost, type: Float, default: -> { 0 }
-    field :actual_hours, type: Float, default: -> { 0 }
+
     field :destroyed_plants_count, type: Integer, default: -> { 0 }
 
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain'
@@ -99,6 +107,21 @@ module Cultivation
         )
       end
       new_materials
+    end
+
+    def actual_cost
+      actual_labor_cost + actual_material_cost
+    end
+
+    def estimated_cost
+      estimated_labor_cost + estimated_material_cost
+    end
+
+    # TASK 980
+    def output_cost_per_unit
+      total_weight = harvest_batch.sum { |x| x.total_cure_weight }
+      total_weight_uom = harvest_batch.first.uom
+      actual_cost / total_weight
     end
   end
 end

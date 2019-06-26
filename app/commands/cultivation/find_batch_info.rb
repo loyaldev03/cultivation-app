@@ -19,6 +19,8 @@ module Cultivation
       batch_tasks = Cultivation::QueryTasks.call(@batch).result
 
       children_tasks = batch_tasks.select { |x| !x.have_children?(batch_tasks) }
+
+      # TODO: Should be rewritten to just read from batch.
       total_estimated_hour = children_tasks.sum { |a| a.estimated_hours }
       total_estimated_cost = children_tasks.sum { |a| a.estimated_cost }
 

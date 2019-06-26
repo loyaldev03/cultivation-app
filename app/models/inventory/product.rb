@@ -15,6 +15,10 @@ module Inventory
     # This replaces the one in Inventory::Catalogue
     field :uom_dimension, type: String
     field :common_uom, type: String
+
+    field :order_quantity, type: Float
+    field :order_uom, type: String
+
     field :size, type: Float, default: -> { 0 }
     field :package_type, type: String
     field :ppm, type: Integer
@@ -22,6 +26,8 @@ module Inventory
     field :upc, type: String
     field :model, type: String
     field :epa_number, type: String # => nutrients , supplements
+
+    field :average_price, type: Float, default: -> { 0 }
 
     embeds_many :nutrients, as: :nutrition, class_name: 'Inventory::Nutrient'
     embeds_many :attachments, as: :attachable, class_name: 'FileAttachment'

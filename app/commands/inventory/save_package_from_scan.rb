@@ -18,13 +18,10 @@ module Inventory
       :production_date,         # Hardcoded to Time.now
       :harvest_batch,           # Deduce from cultivation_batch_id
       :metrc_tag,               # Deduce from tag
-      :name
+      :name,
+      :task_id                  # TODO: need this to find PackagePlan!!!
 
     def initialize(user, args)
-      Rails.logger.debug('>>>>>>>>>>>>>>>')
-      Rails.logger.debug(args)
-      Rails.logger.debug('>>>>>>>>>>>>>>>')
-
       @user = user
       @id = args[:id]
       @tag = args[:tag]
@@ -39,6 +36,7 @@ module Inventory
 
       if valid_user? && valid_data?
         package = save_package!
+        calculate_cost(package)
         package
       end
     end
@@ -66,7 +64,7 @@ module Inventory
       raise 'No size found for package type' if size.nil?
       raise 'No UOM found for package type' if uom.nil?
 
-      @product = Product.find_or_create_by!(
+      @product = Inventory::Product.find_or_create_by!(
         facility: @facility,
         facility_strain: facility_strain,
         catalogue: @catalogue,
@@ -164,6 +162,18 @@ module Inventory
       else
         return nil
       end
+    end
+
+    def calculate_cost(package)
+      cost_per_unit = harvest_batch.cultivation_batch.output_cost_per_unit
+      package.production_cost = package.common_quantity * cost_per_unit
+      package.save!
+      # TODO: confirm with Karg
+      # txs = Inventory::ItemTransaction.where(event_type: 'create_package_from_scan', harvest_batch: harvest_batch)
+      # txs.each do |tx|
+      #   tx.production_cost = tx.common_quantity * cost_per_unit
+      #   tx.save!
+      # end
     end
   end
 end

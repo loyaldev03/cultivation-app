@@ -35,11 +35,45 @@ module DailyTask
           end
         end
 
+        # TASK 980
+        update_material_cost(material_use)
+        update_batch_cost(task.batch.id)
+
         [actual_tx, waste_tx].compact
       end
     end
 
     private
+
+    # TASK 980
+    def update_material_cost(material_use)
+      # In order to reduce mistake from race condition / parallel task, the
+      # code loops through all material used under the task and update the cost again.
+      task = material_use.task
+      sub_totals = task.material_use.map do |mu|
+        # For each item under the task, convert all unit to standard unit
+        # sum all numbers
+        # update sum back to task actual_material_cost
+        txs = Inventory::ItemTransaction.where(ref_id: mu.id, ref_type: 'Cultivation::Item')
+        next if txs.empty?
+
+        total_material = txs.sum(:common_quantity) # Naively assume it is same unit
+        price = txs.first.product.average_price
+        sub_total = (total_material * price).abs         # TODO: Ensure the cost is positive or change it to be so!
+        sub_total
+      end
+
+      task.actual_material_cost = sub_totals.compact.sum
+      task.save!
+    end
+
+    # TASK 980
+    def update_batch_cost(batch_id)
+      batch = Cultivation::Batch.find(batch_id)
+      total_actual_cost = batch.tasks.sum(:actual_material_cost)
+      batch.actual_material_cost = total_actual_cost
+      batch.save!
+    end
 
     def create_transaction(event_type, task, material_use, quantity, uom)
       tx = Inventory::ItemTransaction.find_or_initialize_by(

@@ -41,7 +41,7 @@ class BatchStore {
   }
 
   @action
-  async loadBatches(facilityId) {
+  async loadBatches(facilityId = '') {
     this.isLoading = true
     const url = `/api/v1/batches/list_infos?facility_id=${facilityId}`
     try {

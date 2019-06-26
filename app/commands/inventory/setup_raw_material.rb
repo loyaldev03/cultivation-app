@@ -145,7 +145,7 @@ module Inventory
     def save_purchase_info(product)
       handle_po_invoice_switching
       vendor = save_vendor
-      po_item = save_purchase_order(vendor)
+      po_item = save_purchase_order(vendor, product)
       invoice_item = save_invoice(po_item, product)
 
       invoice_item
@@ -242,7 +242,7 @@ module Inventory
       end
     end
 
-    def save_purchase_order(vendor)
+    def save_purchase_order(vendor, product)
       po = nil
       if purchase_order_id.blank?
         po = Inventory::PurchaseOrder.new
@@ -274,6 +274,7 @@ module Inventory
       po_item.description = description
       po_item.product_name = product_name
       po_item.manufacturer = manufacturer
+      po_item.product_id = product.id
 
       po.save!
       po_item.save!

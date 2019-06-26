@@ -19,7 +19,7 @@ const build_facilities_options = facilities =>
 
 const build_user_manager_options = users =>
   users
-    .filter(e => e.user_mode === 'manager')
+    .filter(e => (e.user_mode === 'manager' && e.is_active))
     .map(f => ({ value: f.id, label: `${f.first_name} ${f.last_name}` }))
 
 const build_roles_options = roles =>

@@ -1,4 +1,5 @@
 import {
+  parse,
   format,
   addMonths,
   startOfDay,
@@ -93,6 +94,10 @@ export const formatDuration = seconds => {
     return format(durationToDate(seconds), 'm [mn]')
   }
   return format(durationToDate(seconds), 'H [hr] m [mn]')
+}
+
+export const parseDate = dateString => {
+  return parse(dateString, 'YYYY-MM-DD', new Date())
 }
 
 export const formatTime = time => format(time, 'hh:mm A')

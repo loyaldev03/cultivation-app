@@ -109,7 +109,7 @@ class Cultivation::BatchesController < ApplicationController
     schedules = Cultivation::QueryBatchPhases.call(batch).booking_schedules
     if schedules.any?
       available_trays_cmd = QueryAvailableTrays.call(
-        start_date: batch.start_date,
+        start_date: start_date,
         end_date: batch.estimated_harvest_date,
         facility_id: batch.facility_id,
         purpose: cultivation_phases,

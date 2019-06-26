@@ -48,6 +48,9 @@ module Cultivation
       end
       action_notify(task)
       task
+    rescue StandardError => error
+      Rails.logger.debug error
+      raise
     end
 
     private
@@ -155,7 +158,7 @@ module Cultivation
       if args_depend_on.present?
         predecessor = get_task(batch_tasks, args_depend_on)
         if predecessor.present? && task.child_of?(predecessor.wbs, batch_tasks)
-          errors.add(:depend_on, 'Cannot set parent node as predecessor')
+          errors.add(:error, 'Cannot set parent task as a predecessor')
           return nil
         end
         args_depend_on.to_bson_id
@@ -337,10 +340,10 @@ module Cultivation
 
     def valid_batch?(batch)
       if batch.facility_id.nil?
-        errors.add(:facility_id, 'Missing Facility in Batch')
+        errors.add(:error, 'Missing facility_id in Batch')
       end
       if batch.quantity.nil?
-        errors.add(:quantity, 'Missing Quantity in Batch. Did you skipped quanity location selection?')
+        errors.add(:error, 'Missing quantity in Batch. Did you skipped quanity location selection?')
       end
       errors.empty? # No Errors => Valid
     end
@@ -380,7 +383,7 @@ module Cultivation
               error_message += 'Overlapping tray planning with batch: '
               error_message += batch_nos.join(', ') if !batch_nos.empty?
             end
-            errors.add(:end_date, error_message)
+            errors.add(:error, error_message)
           end
           break
         end

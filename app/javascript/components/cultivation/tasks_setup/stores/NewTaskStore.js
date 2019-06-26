@@ -353,8 +353,9 @@ class TaskStore {
             return t.id === taskId ? updated : t
           })
         }
-      } else {
+      } else if (response.errors) {
         console.error(response.errors)
+        toast(response.errors.error[0], 'error')
       }
     } catch (error) {
       console.log(error)

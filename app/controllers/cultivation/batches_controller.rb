@@ -49,18 +49,20 @@ class Cultivation::BatchesController < ApplicationController
 
   def show
     if params[:select_location].present?
-      @batch_info = OpenStruct.new({
+      quantity = params[:quantity].blank? ? @batch.quantity : params[:quantity]
+      start_date = params[:start_date].blank? ? @batch.start_date : params[:start_date]
+      @batch_info = OpenStruct.new(
         id: @batch.id.to_s,
         batchSource: @batch.batch_source,
         cloneSelectionType: get_plants_selection_type(@batch.batch_source),
-        quantity: @batch.quantity,
-        startDate: @batch.start_date,
+        quantity: quantity,
+        startDate: start_date,
         strainDisplayName: "#{@batch.facility_strain.strain_name} (#{@batch.facility_strain.strain_type})",
         strainId: @batch.facility_strain_id.to_s,
         harvestDate: @batch.estimated_harvest_date,
-      }).marshal_dump
+      ).marshal_dump
       # Set the plantType for react BatchPlantSelectionList
-      @locations = get_cultivation_locations(@batch)
+      @locations = get_cultivation_locations(@batch, start_date)
     end
   end
 
@@ -100,14 +102,14 @@ class Cultivation::BatchesController < ApplicationController
     end
   end
 
-  def get_cultivation_locations(batch)
+  def get_cultivation_locations(batch, start_date)
     # Get phases from Facility
     cultivation_phases = batch.facility_strain.facility.growth_stages
     # Get start_date and end_date from batch
     schedules = Cultivation::QueryBatchPhases.call(batch).booking_schedules
     if schedules.any?
       available_trays_cmd = QueryAvailableTrays.call(
-        start_date: batch.start_date,
+        start_date: start_date,
         end_date: batch.estimated_harvest_date,
         facility_id: batch.facility_id,
         purpose: cultivation_phases,

@@ -13,7 +13,7 @@ class BatchListApp extends React.Component {
     tabIndex: 0
   }
   componentDidMount() {
-    store.loadBatches()
+    store.loadBatches(this.props.facilityId)
   }
   onDelete = batchId => {
     if (window.confirm('Are you sure you want to delete this batch?')) {
@@ -21,7 +21,7 @@ class BatchListApp extends React.Component {
     }
   }
   render() {
-    const { defaultFacilityId } = this.props
+    const { facilityId } = this.props
     return (
       <React.Fragment>
         <div className="pa4 fl w-100">
@@ -38,7 +38,7 @@ class BatchListApp extends React.Component {
               )
             )}
             <a
-              href={`/cultivation/batches/new?facility_id=${defaultFacilityId}`}
+              href={`/cultivation/batches/new?facility_id=${facilityId}`}
               className="btn btn--primary"
             >
               Create new batch

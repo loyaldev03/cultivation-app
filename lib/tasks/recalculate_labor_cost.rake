@@ -1,4 +1,4 @@
-task recalculate_labor_cost:, :batch_id => :environment  do |t, args|
+task :recalculate_labor_cost, [:batch_id] => :environment do |t, args|
   batch = Cultivation::Batch.find(args[:batch_id])
   batch_tasks = Cultivation::QueryTasks.call(batch, [:modifier, :users]).result
   batch_tasks.each do |t|

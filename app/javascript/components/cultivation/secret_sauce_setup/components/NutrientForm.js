@@ -85,7 +85,7 @@ class NutrientForm extends React.Component {
     // get water_intake_usage_uom eg: daily
   }
   setSelectedWeek(week) {
-    if (week.light_hours){
+    if (week.light_hours) {
       this.setState({
         selectedWeek: week.name,
         light_hours: week.light_hours,
@@ -99,7 +99,7 @@ class NutrientForm extends React.Component {
         water_frequency_uom: week.water_frequency_uom,
         dissolveNutrients: week.dissolveNutrients
       })
-    }else{
+    } else {
       this.setState({
         selectedWeek: week.name,
         light_hours: '',
@@ -114,7 +114,6 @@ class NutrientForm extends React.Component {
         dissolveNutrients: []
       })
     }
-
   }
   onSave = async () => {
     await this.props.onSave(this.state)

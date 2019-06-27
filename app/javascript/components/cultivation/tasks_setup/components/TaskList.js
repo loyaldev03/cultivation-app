@@ -252,10 +252,10 @@ class TaskList extends React.Component {
 
                   {indelible === 'create_harvest_batch' ? (
                     <div className="bt bw1">
-                      <p className="i tc silver">Create batch ID</p>
+                      <p className="i tc silver">Create Harvest Batch</p>
 
                       <MenuButton
-                        text="Create batch ID"
+                        text="Create Harvest Batch"
                         indelible={indelible}
                         onClick={() =>
                           this.handleShowHarvestBatchForm(id, items)
@@ -271,7 +271,7 @@ class TaskList extends React.Component {
                       <p className="i tc silver">Create packages</p>
 
                       <MenuButton
-                        text="Create batch ID"
+                        text="Create Package Plan"
                         indelible={indelible}
                         onClick={() =>
                           this.handleShowPackagePlanForm(id, items)

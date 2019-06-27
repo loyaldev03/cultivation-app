@@ -129,6 +129,7 @@ module Inventory
         harvest_batch: harvest_batch,
         product_name: name,
         facility_strain: facility_strain,
+        common_uom: harvest_batch.uom,
       )
 
       metrc_tag.update!(status: 'assigned')
@@ -166,14 +167,12 @@ module Inventory
 
     def calculate_cost(package)
       cost_per_unit = harvest_batch.cultivation_batch.output_cost_per_unit
+
+      # TODO: Calculation over here is not really correct.
+      # I should calculate cost at end of the day after all logged hours are completed.
+      # Only then divide the final hours spent to all produced packages.
       package.production_cost = package.common_quantity * cost_per_unit
       package.save!
-      # TODO: confirm with Karg
-      # txs = Inventory::ItemTransaction.where(event_type: 'create_package_from_scan', harvest_batch: harvest_batch)
-      # txs.each do |tx|
-      #   tx.production_cost = tx.common_quantity * cost_per_unit
-      #   tx.save!
-      # end
     end
   end
 end

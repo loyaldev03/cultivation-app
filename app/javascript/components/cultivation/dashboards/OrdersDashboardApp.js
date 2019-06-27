@@ -194,14 +194,7 @@ class OrdersDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: (
-          <HeaderFilter
-            title="Status"
-            accessor="status"
-            // getOptions={BatchStore.getUniqPropValues}
-            // onUpdate={BatchStore.updateFilterOptions}
-          />
-        ),
+        Header: 'Status',
         accessor: 'status',
         className: 'justify-center',
         minWidth: 88,

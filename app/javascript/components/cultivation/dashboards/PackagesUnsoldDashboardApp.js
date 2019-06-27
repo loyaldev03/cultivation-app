@@ -223,7 +223,7 @@ class PackageDashboardApp extends React.Component {
         Header: 'Package',
         accessor: 'package',
         className: 'dark-grey pl3 fw6',
-        minWidth: 150,
+        minWidth: 150
       },
       {
         headerClassName: '',

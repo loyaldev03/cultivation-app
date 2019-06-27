@@ -163,7 +163,7 @@ class ManifestsDashboardApp extends React.Component {
         Header: 'Manifest ID',
         accessor: 'manifest_id',
         className: 'dark-grey pl3 fw6',
-        width: 120,
+        width: 120
       },
       {
         headerClassName: '',

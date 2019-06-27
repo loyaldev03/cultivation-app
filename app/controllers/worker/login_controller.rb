@@ -18,6 +18,9 @@ class Worker::LoginController < ApplicationController
         @users = @users.select { |a| "#{a['first_name']} #{a['last_name']}" == params[:search] } if params[:search].present?
         @user = @users.detect { |a| a[:id].to_s == params[:selected] } if params[:selected].present?
       end
+    else
+      flash[:notice] = 'Your public ip is not registered in the system'
+      redirect_to root_path
     end
   end
 
@@ -46,10 +49,6 @@ class Worker::LoginController < ApplicationController
   private
 
   def check_ip_whitelist
-    #comment out for now , how do we know current default facility if the user doesnt even log in yet ?
-    #before it was checking user default_facility_id
-
-    # facility = Facility.find(current_user.default_facility_id)
-    @ip_included = true #facility.whitelist_ips.include? request.remote_ip
+    @ip_included = current_ip_facility.present?
   end
 end

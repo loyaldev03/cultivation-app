@@ -18,6 +18,9 @@ class Mobile::Worker::LoginsController < ApplicationController
         @users = @users.select { |a| "#{a['first_name']} #{a['last_name']}" == params[:search] } if params[:search].present?
         @user = @users.detect { |a| a[:id].to_s == params[:selected] } if params[:selected].present?
       end
+    else
+      flash[:notice] = 'Your public ip is not registered in the system'
+      redirect_to root_path
     end
   end
 

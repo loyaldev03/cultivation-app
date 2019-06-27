@@ -63,7 +63,7 @@ module ApplicationHelper
     when 'cultivation'
       paths = [dashboard_cultivation_batches_path, cult_batches_path, cult_plants_path, cult_harvests_path, cult_tasks_path, cult_issues_path]
     when 'inventory'
-      paths = [inventory_setup_path, inventory_strains_path, mothers_inventory_plants_path, nutrients_inventory_raw_materials_path, products_inventory_sales_products_path, inventory_metrc_index_path, convert_products_inventory_sales_products_path]
+      paths = [inventory_strains_path, mothers_inventory_plants_path, nutrients_inventory_raw_materials_path, products_inventory_sales_products_path, inventory_metrc_index_path, convert_products_inventory_sales_products_path]
       plant_paths = [mothers_inventory_plants_path, cultivation_batches_inventory_plants_path, clones_inventory_plants_path, vegs_inventory_plants_path, flowers_inventory_plants_path, harvests_inventory_plants_path, harvest_batches_inventory_plants_path]
       raw_material_path = [nutrients_inventory_raw_materials_path, grow_medium_inventory_raw_materials_path, grow_lights_inventory_raw_materials_path, supplements_inventory_raw_materials_path, others_inventory_raw_materials_path, seeds_inventory_raw_materials_path, purchased_clones_inventory_raw_materials_path]
       paths = paths + plant_paths + raw_material_path

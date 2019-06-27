@@ -6,6 +6,7 @@ class ListingTable extends React.PureComponent {
     const {
       data,
       columns,
+      SubComponent,
       isLoading,
       onFetchData,
       pages = -1,
@@ -17,6 +18,7 @@ class ListingTable extends React.PureComponent {
         <ReactTable
           className="-highlight dashboard-theme"
           columns={columns}
+          SubComponent={SubComponent}
           data={data}
           loading={isLoading}
           minRows={5}
@@ -33,6 +35,7 @@ class ListingTable extends React.PureComponent {
       <ReactTable
         className="-highlight dashboard-theme"
         columns={columns}
+        SubComponent={SubComponent}
         data={data}
         loading={isLoading}
         minRows={5}

@@ -99,6 +99,8 @@ module Cultivation
             )
           end
           end_date = x[:start_date] + x[:duration].days
+          est_labor_cost = x[:estimated_labor_cost] || 0
+          est_material_cost = x[:estimated_material_cost] || 0
           TaskInfo.new(
             x[:wbs],
             x[:issue_count],
@@ -109,12 +111,12 @@ module Cultivation
             x[:start_date],
             end_date,
             x[:estimated_hours],
-            (x[:estimated_labor_cost] + x[:estimated_material_cost]),
+            est_labor_cost + est_material_cost,
             x[:actual_hours],
             x[:actual_cost],
             x[:phase],
             x[:work_status],
-            workers
+            workers,
           )
         end
         tasks

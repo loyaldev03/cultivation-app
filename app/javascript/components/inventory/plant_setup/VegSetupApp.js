@@ -7,31 +7,7 @@ import plantStore from './store/PlantStore'
 import loadPlants from './actions/loadPlants'
 
 const columns = [
-  {
-    Header: '',
-    accessor: 'attributes.status',
-    filterable: false,
-    width: 30,
-    Cell: props => {
-      let color = 'red'
-      if (props.value === 'available') {
-        color = '#00cc77'
-      }
-      return (
-        <div className="flex justify-center items-center h-100">
-          <span
-            style={{
-              width: '8px',
-              height: '8px',
-              color: 'green',
-              borderRadius: '50%',
-              backgroundColor: color
-            }}
-          />
-        </div>
-      )
-    }
-  },
+ 
   {
     Header: 'Plant ID',
     accessor: 'attributes.plant_id',

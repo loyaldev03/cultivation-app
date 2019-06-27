@@ -53,7 +53,11 @@ module RequestScoping
   end
 
   def current_ip_facility
-    @current_ip_facility ||= Facility.where(whitelist_ips: request.remote_ip)
+    if ENV['ENABLE_WHITELIST_CHECKING']
+      @current_ip_facility ||= Facility.where(whitelist_ips: request.remote_ip)
+    else
+      true
+    end
   end
 
   def current_default_facility

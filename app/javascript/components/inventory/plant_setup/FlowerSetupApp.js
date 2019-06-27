@@ -7,7 +7,6 @@ import plantStore from './store/PlantStore'
 import loadPlants from './actions/loadPlants'
 
 const columns = [
- 
   {
     Header: 'Plant ID',
     accessor: 'attributes.plant_id',

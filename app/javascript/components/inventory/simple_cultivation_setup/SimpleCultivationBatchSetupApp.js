@@ -8,7 +8,6 @@ import loadCultivationBatch from './actions/loadCultivationBatch'
 import BatchEditor from './components/BatchEditor'
 
 const columns = [
-  
   {
     Header: 'Batch No',
     accessor: 'attributes.batch_no',

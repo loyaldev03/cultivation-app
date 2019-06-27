@@ -8,7 +8,6 @@ import harvestBatchStore from './store/HarvestBatchStore'
 import loadHarvests from './actions/loadHarvests'
 
 const columns = [
- 
   {
     Header: 'Harvest Batch Name',
     accessor: 'attributes.cultivation_batch_name',

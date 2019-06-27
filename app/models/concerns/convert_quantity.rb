@@ -6,6 +6,9 @@ module ConvertQuantity
   end
 
   def calculate_common_value
+    # TODO: Change this logic as common_quanity & common_uom may not follow catalogue anymore
+    # This is more of a philosophical question on the concepts of each objects.
+
     Rails.logger.debug "\t\t\t>>>>> uom: #{uom}, catalogue: #{catalogue.common_uom}"
     temp_uom = Common::UnitOfMeasure.find_by(unit: uom)
     self.common_uom = catalogue.common_uom

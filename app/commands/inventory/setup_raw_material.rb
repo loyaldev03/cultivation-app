@@ -54,7 +54,6 @@ module Inventory
       @location_id = args[:location_id]
       @catalogue_id = args[:catalogue]
       @catalogue = Inventory::Catalogue.find(@catalogue_id)
-
       @product_id = args[:product_id]
       @product_name = args[:product_name]
       @description = args[:description]
@@ -330,8 +329,8 @@ module Inventory
         product.description = description
         product.catalogue = catalogue
         product.facility = facility
-        product.common_uom = uom,
-        product.order_uom = product_uom
+        product.common_uom = product_uom
+        product.order_uom = uom
         product.size = product_size
         product.ppm = product_ppm
         product.uom_dimension = uom_dimension
@@ -345,8 +344,8 @@ module Inventory
           description: description,
           catalogue: catalogue,
           facility: facility,
-          order_uom: product_uom,
-          common_uom: uom,
+          order_uom: uom,
+          common_uom: product_uom,
           size: product_size,
           ppm: product_ppm,
           epa_number: epa_number,

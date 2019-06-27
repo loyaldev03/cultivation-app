@@ -68,7 +68,7 @@ class NutrientForm extends React.Component {
       light_hours: '',
       temperature_day: '',
       temperature_night: '',
-      humidity_level: '',
+      humidity_level: 0,
       water_intake_value: '',
       water_intake_uom: 'gallon',
       water_ph: '',
@@ -85,19 +85,36 @@ class NutrientForm extends React.Component {
     // get water_intake_usage_uom eg: daily
   }
   setSelectedWeek(week) {
-    this.setState({
-      selectedWeek: week.name,
-      light_hours: week.light_hours,
-      temperature_day: week.temperature_day,
-      temperature_night: week.temperature_night,
-      humidity_level: week.humidity_level,
-      water_intake_value: week.water_intake_value,
-      water_intake_uom: week.water_intake_uom,
-      water_ph: week.water_ph,
-      water_frequency_value: week.water_frequency_value,
-      water_frequency_uom: week.water_frequency_uom,
-      dissolveNutrients: week.dissolveNutrients
-    })
+    if (week.light_hours){
+      this.setState({
+        selectedWeek: week.name,
+        light_hours: week.light_hours,
+        temperature_day: week.temperature_day,
+        temperature_night: week.temperature_night,
+        humidity_level: week.humidity_level,
+        water_intake_value: week.water_intake_value,
+        water_intake_uom: week.water_intake_uom,
+        water_ph: week.water_ph,
+        water_frequency_value: week.water_frequency_value,
+        water_frequency_uom: week.water_frequency_uom,
+        dissolveNutrients: week.dissolveNutrients
+      })
+    }else{
+      this.setState({
+        selectedWeek: week.name,
+        light_hours: '',
+        temperature_day: '',
+        temperature_night: '',
+        humidity_level: 0,
+        water_intake_value: '',
+        water_intake_uom: 'gallon',
+        water_ph: '',
+        water_frequency_value: '',
+        water_frequency_uom: 'daily',
+        dissolveNutrients: []
+      })
+    }
+
   }
   onSave = async () => {
     await this.props.onSave(this.state)

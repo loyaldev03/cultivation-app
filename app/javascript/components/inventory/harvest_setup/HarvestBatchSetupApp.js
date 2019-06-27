@@ -9,6 +9,26 @@ import loadHarvests from './actions/loadHarvests'
 
 const columns = [
   {
+    Header: 'Cultivation Batch Name',
+    accessor: 'attributes.harvest_name',
+    headerStyle: { textAlign: 'left' },
+    Cell: x => (
+      <a
+        href="#0"
+        className="link grey"
+        onClick={event => openSidebar(event, x.original.id)}
+      >
+        {x.value}
+      </a>
+    )
+  },
+  {
+    Header: 'Strain',
+    accessor: 'attributes.strain_name',
+    headerStyle: { textAlign: 'left' },
+    width: 160
+  },
+  {
     Header: 'Harvest Batch Name',
     accessor: 'attributes.cultivation_batch_name',
     headerStyle: { textAlign: 'left' }

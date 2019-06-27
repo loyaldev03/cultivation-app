@@ -15,7 +15,7 @@ module Cultivation
       nutrient_profiles = batch.nutrient_profiles
       result = []
       if tasks
-        selected_tasks = tasks.select { |a| a.indelible == 'add_nutrient' }
+        selected_tasks = tasks.select { |a| a.indelible == 'add_nutrient' && a.indent == 2 }
         selected_tasks.each do |task|
           children = WbsTree.children(tasks, task.wbs)
           weeks = []

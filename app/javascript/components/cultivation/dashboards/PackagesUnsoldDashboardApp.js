@@ -224,15 +224,6 @@ class PackageDashboardApp extends React.Component {
         accessor: 'package',
         className: 'dark-grey pl3 fw6',
         minWidth: 150,
-        Cell: props => (
-          <a
-            className="link dark-grey truncate"
-            href={`/cultivation/batches/${props.row.id}`}
-            title={props.row.batch_no}
-          >
-            {props.value}
-          </a>
-        )
       },
       {
         headerClassName: '',
@@ -359,7 +350,7 @@ class PackageDashboardApp extends React.Component {
             //   BatchStore.filter = e.target.value
             // }}
           />
-          <div class="flex">
+          <div className="flex">
             <a className="btn btn--primary ml2">Create new order</a>
             <a className="btn btn--primary ml2 mr2 ">Convert package</a>
             <CheckboxSelect options={columns} onChange={this.onToggleColumns} />

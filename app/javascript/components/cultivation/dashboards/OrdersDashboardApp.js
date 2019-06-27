@@ -5,7 +5,8 @@ import {
   CheckboxSelect,
   ListingTable,
   HeaderFilter,
-  ActiveBadge
+  ActiveBadge,
+  TempPackagesHistory
 } from '../../utils'
 import classNames from 'classnames'
 
@@ -194,14 +195,7 @@ class OrdersDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: (
-          <HeaderFilter
-            title="Status"
-            accessor="status"
-            // getOptions={BatchStore.getUniqPropValues}
-            // onUpdate={BatchStore.updateFilterOptions}
-          />
-        ),
+        Header: 'Status',
         accessor: 'status',
         className: 'justify-center',
         minWidth: 88,
@@ -318,7 +312,11 @@ class OrdersDashboardApp extends React.Component {
           <ListingTable
             data={dummyData}
             columns={columns}
-            // isLoading={BatchStore.isLoading}
+            SubComponent={v => (
+              <div style={{ padding: '10px' }}>
+                <img src={TempPackagesHistory} />
+              </div>
+            )}
           />
         </div>
       </div>

@@ -154,7 +154,7 @@ class TasksDashboardApp extends React.Component {
         headerClassName: 'pl3 tl',
         Header: (
           <HeaderFilter
-            title="Status"
+            title="Phase"
             accessor="phase"
             getOptions={() => {
               return [

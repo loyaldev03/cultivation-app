@@ -164,15 +164,6 @@ class ManifestsDashboardApp extends React.Component {
         accessor: 'manifest_id',
         className: 'dark-grey pl3 fw6',
         width: 120,
-        Cell: props => (
-          <a
-            className="link dark-grey truncate"
-            href={`/cultivation/batches/${props.row.id}`}
-            title={props.row.batch_no}
-          >
-            {props.value}
-          </a>
-        )
       },
       {
         headerClassName: '',

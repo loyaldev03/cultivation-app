@@ -191,15 +191,6 @@ class OrdersDashboardApp extends React.Component {
         accessor: 'order_id',
         className: 'dark-grey pl3 fw6',
         minWidth: 150,
-        Cell: props => (
-          <a
-            className="link dark-grey truncate"
-            href={`/cultivation/batches/${props.row.id}`}
-            title={props.row.batch_no}
-          >
-            {props.value}
-          </a>
-        )
       },
       {
         headerClassName: 'tl',

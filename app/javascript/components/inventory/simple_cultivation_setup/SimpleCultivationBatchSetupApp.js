@@ -9,31 +9,6 @@ import BatchEditor from './components/BatchEditor'
 
 const columns = [
   {
-    Header: '',
-    accessor: 'attributes.status',
-    filterable: false,
-    width: 30,
-    Cell: props => {
-      let color = 'red'
-      if (props.value === 'ACTIVE' || props.value === 'SCHEDULED') {
-        color = '#00cc77'
-      }
-      return (
-        <div className="flex justify-center items-center h-100">
-          <span
-            style={{
-              width: '8px',
-              height: '8px',
-              color: 'green',
-              borderRadius: '50%',
-              backgroundColor: color
-            }}
-          />
-        </div>
-      )
-    }
-  },
-  {
     Header: 'Batch No',
     accessor: 'attributes.batch_no',
     headerClassName: 'tl',

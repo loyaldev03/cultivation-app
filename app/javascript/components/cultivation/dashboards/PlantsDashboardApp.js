@@ -30,7 +30,7 @@ class PlantsDashboardApp extends React.Component {
         Header: 'Plant ID',
         accessor: 'plant_tag',
         className: 'dark-grey pl3 fw6',
-        minWidth: 138,
+        minWidth: 184,
         Cell: props => (
           <a
             className="link grey truncate"
@@ -46,7 +46,7 @@ class PlantsDashboardApp extends React.Component {
         Header: 'Batch ID',
         accessor: 'cultivation_batch_name',
         className: 'pl3 fw6',
-        minWidth: 138,
+        minWidth: 144,
         Cell: props => (
           <a
             className="link grey truncate"
@@ -82,7 +82,7 @@ class PlantsDashboardApp extends React.Component {
         ),
         accessor: 'batch_growth_stage',
         className: 'justify-center ttc',
-        minWidth: 130
+        minWidth: 128
       },
       {
         headerClassName: 'tl',
@@ -95,7 +95,7 @@ class PlantsDashboardApp extends React.Component {
           />
         ),
         accessor: 'location_name',
-        minWidth: 180,
+        minWidth: 100,
         Cell: props => <span className="truncate">{props.value}</span>
       },
       {

@@ -40,9 +40,10 @@
         <li class="pv2">
           <%= link_to 'Batches', cult_batches_path(facility_id: current_facility.id.to_s), class: "link gray f6 #{active_link(cult_batches_path)}" %>
         </li>
-        <li class="pv2">
-          <%= link_to 'Schedule', '', class: "link gray f6 #{active_link('')}" %>
-        </li>
+        <%# COMMENT OUT FOR DEMO %>
+        <!--li class="pv2">
+          <%#= link_to 'Schedule', '', class: "link gray f6 #{active_link('')}" %>
+        </li -->
         <li class="pv2">
           <%= link_to 'Plants', cult_plants_path(facility_id: current_facility.id.to_s), class: "link gray f6 #{active_link(cult_plants_path)}" %>
         </li>
@@ -177,13 +178,7 @@
 
 
       <ul class="ul list f6 gray ml4 pl2 mt2 details <%= parent_active_link('facility') %>">
-        <li class="pv2">
-          <% if current_facility %>
-            <%= link_to 'Facility', facility_dashboard_path(facility_id: current_facility.id), class: "link f6 #{active_link(facility_setup_new_path)} " %>
-          <% else %>
-            <%= link_to 'Facility', facility_setup_new_path, class: "link f6 #{active_link(facility_setup_new_path)}" %>
-          <% end %>
-        </li>
+        <%# <li class="pv2"> <%= link_to 'Setup', facility_setup_rooms_info_path(facility_id: current_facility.id), class: "link f6 #{active_link(facility_setup_rooms_info_path)}" %1> </li> %>
 
         <li class="pv2">
           <% if current_facility %>
@@ -222,22 +217,28 @@
     <% end %>
 
 
+<<<<<<< HEAD
     
     <%= link_to cultivation_batches_path(facility_id: current_facility.id.to_s), class: "link" do %>
       <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0 <%= active_link(cultivation_batches_path)%>">
+=======
+    <%# COMMENT OUT FOR DEMO %>
+    <%#= link_to cultivation_batches_path, class: "link" do %>
+      <!--li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0 <%= active_link(cultivation_batches_path)%>">
+>>>>>>> master
         <i class="material-icons md-16 mr3 ml1">track_changes</i>
         <span class="link f7">Legacy cultivation batches</span>
-      </li>
-    <% end %>
+      </li -->
+    <%# end %>
     
 
 
-    <%= link_to first_setup_path, class: 'link' do %>
-      <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0 <%= active_link(first_setup_path)%>">
+    <%#= link_to first_setup_path, class: 'link' do %>
+      <!--li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0 <%= active_link(first_setup_path)%>">
         <i class="material-icons md-16 mr3 ml1">track_changes</i>
         <span class="link f7">Legacy first time setup</span>
-      </li>
-    <% end %>
+      </li -->
+    <%# end %>
 
     <%= link_to mobile_worker_logins_path, class: 'link' do %>
       <li class="pv3 ph3 flex flex-row items-center nav-ex ba bt-0 bl-0 br-0 bb-0 <%= active_link(mobile_worker_logins_path)%>">

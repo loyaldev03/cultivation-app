@@ -191,7 +191,7 @@ class OrdersDashboardApp extends React.Component {
         Header: 'Order ID',
         accessor: 'order_id',
         className: 'dark-grey pl3 fw6',
-        minWidth: 150,
+        minWidth: 150
       },
       {
         headerClassName: 'tl',

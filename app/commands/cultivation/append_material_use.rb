@@ -38,8 +38,6 @@ module Cultivation
 
       record.save!
       record
-    rescue
-      errors.add(:error, $!.message)
     end
 
     def resolve_uom(uom, product_id)

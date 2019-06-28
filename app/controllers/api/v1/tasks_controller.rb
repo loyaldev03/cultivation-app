@@ -5,14 +5,6 @@ class Api::V1::TasksController < Api::V1::BaseApiController
     facility_id = params[:facility_id]
     tasks = Cultivation::QueryTasks.call(@batch, [:issues], facility_id).result
     render json: TaskSerializer.new(tasks).serialized_json
-
-    # if @batch.present?
-    #   facility_id = params[:facility_id]
-    #   tasks = Cultivation::QueryTasks.call(@batch, [:issues], facility_id).result
-    #   render json: TaskSerializer.new(tasks).serialized_json
-    # else
-    #   render json: {data: 'Batch Not Found'}, status: 422
-    # end
   end
 
   def active_tasks

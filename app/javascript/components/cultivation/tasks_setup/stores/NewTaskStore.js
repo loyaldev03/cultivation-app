@@ -25,17 +25,12 @@ function getChildren(wbs, tasks = []) {
   return tasks.filter(t => t.wbs.startsWith(childWbs))
 }
 
-function haveChildren(nodeWbs, tasks) {
-  const childWbs = nodeWbs + '.'
-  return tasks.some(t => t.wbs.startsWith(childWbs))
-}
-
 function cascadeIndelible(task, tasks) {
-  if (task.haveChildren && task.indelible === 'add_nutrient') {
+  if (task.is_parent && task.indelible === 'add_nutrient') {
     const children = getChildren(task.wbs, tasks)
     children.forEach(x => {
       x.indelible = task.indelible
-      if (x.haveChildren) {
+      if (x.is_parent) {
         cascadeIndelible(x, tasks)
       }
     })
@@ -44,13 +39,11 @@ function cascadeIndelible(task, tasks) {
 
 function updateFlags(singleTarget, tasks) {
   if (singleTarget && tasks) {
-    singleTarget.haveChildren = haveChildren(singleTarget.wbs, tasks)
     cascadeIndelible(singleTarget, tasks)
     return singleTarget
   }
   if (tasks) {
     tasks.forEach(task => {
-      task.haveChildren = haveChildren(task.wbs, tasks)
       cascadeIndelible(task, tasks)
     })
     return tasks
@@ -199,7 +192,7 @@ class TaskStore {
 
   @computed get childTasks() {
     if (this.isDataLoaded) {
-      return this.tasks.filter(t => !t.haveChildren)
+      return this.tasks.filter(t => !t.is_parent)
     } else {
       return []
     }
@@ -273,11 +266,6 @@ class TaskStore {
 
   getChildren(nodeWbs) {
     getChildren(nodeWbs, this.tasks)
-  }
-
-  haveChildren(nodeWbs) {
-    const childWbs = nodeWbs + '.'
-    return this.tasks.some(t => t.wbs.startsWith(childWbs))
   }
 
   @action

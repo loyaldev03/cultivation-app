@@ -17,7 +17,7 @@ const GET_DEFAULT_STATE = (start_date = null) => {
     phase: '',
     estimated_hours: 0.0,
     indelible: '',
-    haveChildren: false
+    is_parent: false
   }
 }
 
@@ -35,7 +35,7 @@ class SidebarTaskEditor extends React.Component {
         phase: task.phase,
         estimated_hours: task.estimated_hours || '',
         indelible: task.indelible,
-        haveChildren: task.haveChildren,
+        is_parent: task.is_parent,
         location_id: task.location_id || ''
       })
     } else {
@@ -114,7 +114,7 @@ class SidebarTaskEditor extends React.Component {
       estimated_hours,
       indelible,
       actual_hours,
-      haveChildren,
+      is_parent,
       location_id,
       errors
     } = this.state
@@ -182,7 +182,7 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         )}
-        {indelible !== 'clip_mother_plant' && !haveChildren && (
+        {indelible !== 'clip_mother_plant' && !is_parent && (
           <div className="ph4 mb3 flex flex-column">
             <label className="f6 fw6 db mb1 gray ttc">Location</label>
             <LocationPicker
@@ -193,7 +193,7 @@ class SidebarTaskEditor extends React.Component {
             />
           </div>
         )}
-        {!haveChildren ? (
+        {!is_parent ? (
           <div className="ph4 mb3 flex flex-column">
             <div className="w-40">
               <NumericInput
@@ -207,7 +207,7 @@ class SidebarTaskEditor extends React.Component {
             </div>
           </div>
         ) : null}
-        {!!haveChildren ? (
+        {!!is_parent ? (
           <div className="mt3">
             <hr className="mt3 m b--light-gray w-100" />
             <div className="ph4 mt3 mb3">

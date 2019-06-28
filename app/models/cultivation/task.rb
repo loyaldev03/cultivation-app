@@ -6,6 +6,7 @@ module Cultivation
     include Mongoid::History::Trackable
 
     attr_accessor :wbs
+    attr_accessor :is_parent
 
     field :phase, type: String
     field :name, type: String

@@ -1,9 +1,11 @@
 import React from 'react'
+import isEmpty from 'lodash.isempty'
 import { observer } from 'mobx-react'
 import BatchStore from '../../batches/BatchStore'
 import TaskStore from '../stores/NewTaskStore'
 import loadPlants from '../../../inventory/plant_setup/actions/loadPlants'
 import {
+  groupBy,
   SlidePanelHeader,
   SlidePanelFooter,
   ProgressBar,
@@ -23,31 +25,37 @@ class ClippingPanel extends React.Component {
     codeSelected: null,
     motherPlantList: [],
     hasSection: false,
-    isHasMotherPlant: true
+    hasMotherRoom: true
   }
   async componentDidMount() {
-    await Promise.all([
+    const [, , roomData] = await Promise.all([
       BatchStore.loadBatch(this.props.batchId),
-      loadPlants('mother', this.props.strainId, this.props.facilityId)
+      loadPlants('mother', this.props.strainId, this.props.facilityId),
+      TaskStore.roomData(this.props.facilityId, 'mother')
     ])
-    let roomData = await TaskStore.roomData(this.props.facilityId, 'mother')
-    let motherRoomList = roomData.map(e => {
-      return e.room_name
+    const roomsGroup = groupBy(roomData, 'room_id')
+    const firstRoomId = isEmpty(roomData) ? '' : roomData[0].room_id
+    const motherRoomList = Object.keys(roomsGroup).map(roomId => {
+      return roomsGroup[roomId][0].room_name
     })
-    motherRoomList = [...new Set(motherRoomList)]
-    let hasSection = roomData[0] && roomData[0].section_code !== null
-    let motherPlantList = await TaskStore.getPlantOnSelect(
-      this.props.facilityId,
-      this.props.strainId,
-      BatchStore.batch.selected_location
-    )
-    if (BatchStore.batch.selected_plants.length == 0) {
-      BatchStore.batch.selected_plants = motherPlantList.map(plant => {
-        plant.quantity = 0
-        return plant
-      })
+    const hasSection = !isEmpty(roomData) && !isEmpty(roomData[0].section_id)
+    const defaultRoomId = BatchStore.batch.selected_location || firstRoomId
+    let motherPlantList = []
+    if (defaultRoomId) {
+      motherPlantList = await TaskStore.getPlantOnSelect(
+        this.props.facilityId,
+        this.props.strainId,
+        defaultRoomId
+      )
+      if (isEmpty(BatchStore.batch.selected_plants)) {
+        BatchStore.batch.selected_plants = motherPlantList.map(plant => {
+          plant.quantity = 0
+          return plant
+        })
+      }
     }
-    let isHasMotherPlant = roomData.length > 0
+
+    let hasMotherRoom = roomData.length > 0
     let codeSelected = motherRoomList.map(x => {
       if (x.room_id === BatchStore.batch.selected_location) {
         return x.room_id
@@ -66,9 +74,8 @@ class ClippingPanel extends React.Component {
       }
     })
     codeSelected = codeSelected[0]
-
-    let currentplant = BatchStore.batch.selected_plants.reduce(
-      (a, b) => a + (Number(b['quantity']) || 0),
+    const currentplant = BatchStore.batch.selected_plants.reduce(
+      (a, b) => a + (+b['quantity'] || 0),
       0
     )
     this.setState({
@@ -77,7 +84,7 @@ class ClippingPanel extends React.Component {
       roomData,
       hasSection,
       codeSelected,
-      isHasMotherPlant,
+      hasMotherRoom,
       locationSelected: BatchStore.batch.selected_location,
       currentplant,
       maxQuantity: BatchStore.batch.quantity,
@@ -94,8 +101,7 @@ class ClippingPanel extends React.Component {
       this.props.strainId,
       element.data.id
     )
-    // console.log(motherPlantList)
-    let isHasMotherPlant = motherPlantList.length > 0
+    let hasMotherRoom = motherPlantList.length > 0
     let hasSection =
       roomData.filter(node => node.room_name === roomChoice)[0].section_code !==
       null
@@ -105,7 +111,7 @@ class ClippingPanel extends React.Component {
       motherPlantList,
       locationSelected: element.data.id,
       selectedId: element.data.id,
-      isHasMotherPlant,
+      hasMotherRoom,
       hasSection
     })
   }
@@ -117,7 +123,7 @@ class ClippingPanel extends React.Component {
       return plant
     })
     BatchStore.setOnePlant(id, e.target.value)
-    let currentplant = BatchStore.batch.selected_plants.reduce(
+    const currentplant = BatchStore.batch.selected_plants.reduce(
       (a, b) => a + (Number(b['quantity']) || 0),
       0
     )
@@ -125,7 +131,7 @@ class ClippingPanel extends React.Component {
   }
   onUpdatePlant = () => {
     BatchStore.setAllPlants(this.state.motherPlantList)
-    let currentplant = BatchStore.batch.selected_plants.reduce(
+    const currentplant = BatchStore.batch.selected_plants.reduce(
       (a, b) => a + (Number(b['quantity']) || 0),
       0
     )
@@ -146,7 +152,7 @@ class ClippingPanel extends React.Component {
       roomSelected,
       motherPlantList,
       hasSection,
-      isHasMotherPlant,
+      hasMotherRoom,
       currentplant,
       maxQuantity
     } = this.state
@@ -159,9 +165,9 @@ class ClippingPanel extends React.Component {
       roomData.length > 0 && (
         <div>
           <SlidePanelHeader onClose={onClose} title={this.props.title} />
-          {isHasMotherPlant &&
+          {hasMotherRoom &&
             BatchStore.batch.selected_location === '' &&
-            codeSelected == undefined && (
+            isEmpty(codeSelected) && (
               <div className="orange tc mt4 f4">
                 Please select any section on the diagram
               </div>
@@ -202,7 +208,7 @@ class ClippingPanel extends React.Component {
             </div>
           ) : null}
 
-          {!isHasMotherPlant && BatchStore.batch.selected_location && (
+          {!hasMotherRoom && BatchStore.batch.selected_location && (
             <div className="orange tc mt4">
               There's no mother plant in this room or section.
             </div>
@@ -275,7 +281,7 @@ class TableSection extends React.Component {
   componentDidMount() {
     const listSelected =
       BatchStore.batch.selected_plants.map(x => x.plant_id) || []
-    let plantList = this.props.data
+    const plantList = this.props.data
       .map(plant => {
         plant.quantity = 0
         if (listSelected.indexOf(plant.plant_id) >= 0) {
@@ -290,7 +296,7 @@ class TableSection extends React.Component {
     let getSection = plantList.map(x => {
       let { location_code } = x
       let name = location_code.split(/[..]/)
-      if (name[1] === undefined) return name[0]
+      if (isEmpty(name[1])) return name[0]
       else return name[1]
     })
     getSection = [...new Set(getSection)]

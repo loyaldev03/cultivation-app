@@ -17,6 +17,9 @@ module Cultivation
         tasks.each_with_index do |t, i|
           t.wbs = wbs_list[i][:wbs]
         end
+        tasks.each do |t|
+          t.is_parent = t.have_children?(tasks)
+        end
         tasks
       elsif @facility_id.present?
         Cultivation::Task.includes(includes).where(facility_id: @facility_id, batch_id: nil)

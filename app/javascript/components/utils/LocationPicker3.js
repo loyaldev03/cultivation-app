@@ -26,8 +26,6 @@ class LocationStore {
       }
     }
     const res = await (await fetch(url, httpGetOptions)).json()
-    console.log(res.data)
-
     if (res.data) {
       this.locationOptions = res.data
     } else {

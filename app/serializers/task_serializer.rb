@@ -12,6 +12,7 @@ class TaskSerializer
     :actual_hours,
     :actual_cost,
     :wbs,
+    :is_parent,
     :indent,
     :indelible,
     :location_type,

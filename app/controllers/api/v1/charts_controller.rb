@@ -14,4 +14,9 @@ class Api::V1::ChartsController < Api::V1::BaseApiController
     result = Charts::QueryWorkerCapacity.call(current_user, {batch_id: params[:batch_id]}).result
     render json: result.to_json, status: 200
   end
+
+  def batch_distribution
+    result = Charts::QueryBatchDistribution.call(current_user, {}).result
+    render json: result.to_json, status: 200
+  end
 end

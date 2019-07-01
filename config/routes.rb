@@ -445,6 +445,7 @@ Rails.application.routes.draw do
           get 'batch_test_result'
           get 'strain_distribution'
           get 'worker_capacity'
+          get 'batch_distribution'
         end
       end
     end

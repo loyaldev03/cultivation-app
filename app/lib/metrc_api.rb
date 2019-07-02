@@ -10,17 +10,24 @@ class MetrcApi
   }.freeze
 
   class << self
+
+    # + Unit of Measure
+
     def get_unit_of_measure
       url = "#{BASE_URL}/unitsofmeasure/v1/active"
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end
 
+    # - Unit of Measure
+
     def get_item_categories
       url = "#{BASE_URL}/items/v1/categories"
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end
+
+    # + Plant Waste Methods and Reasons
 
     def get_plant_waste_methods
       url = "#{BASE_URL}/plants/v1/waste/methods?licenseNumber=#{FACILITY_LICENSE}"
@@ -33,6 +40,10 @@ class MetrcApi
       res = RestClient.get(url, HEADERS)
       JSON.parse(res.body)
     end
+
+    # - Plant Waste Methods and Reasons
+
+    # + Strain
 
     def get_strains(facility_license)
       url = "#{BASE_URL}/strains/v1/active?licenseNumber=#{facility_license}"
@@ -52,6 +63,10 @@ class MetrcApi
       res.code == 200
     end
 
+    # - Strain
+
+    # + Room
+
     def get_rooms(facility_license)
       url = "#{BASE_URL}/rooms/v1/active?licenseNumber=#{facility_license}"
       res = RestClient.get(url, HEADERS)
@@ -69,5 +84,29 @@ class MetrcApi
       res = RestClient.post(url, params.to_json, HEADERS)
       res.code == 200
     end
+
+    # - Room
+
+    # + Item API
+
+    def get_items(facility_license)
+      url = "#{BASE_URL}/items/v1/active?licenseNumber=#{facility_license}"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
+    def create_items(facility_license, params)
+      url = "#{BASE_URL}/items/v1/create?licenseNumber=#{facility_license}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
+    end
+
+    def update_items(facility_license, params)
+      url = "#{BASE_URL}/items/v1/update?licenseNumber=#{facility_license}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
+    end
+
+    # - Item API
   end
 end

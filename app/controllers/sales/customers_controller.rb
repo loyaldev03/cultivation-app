@@ -8,8 +8,22 @@ class Sales::CustomersController < ApplicationController
   end
 
   def create
-    @record = SaleForm::CustomerForm.new
-    if @record.submit(record_params)
+    @record = Sales::Customer.new
+    @record.name = record_params[:name]
+    @record.account_no = record_params[:account_no]
+    if record_params[:addresses].present?
+      @record.addresses = []
+      Rails.logger.debug('TRUE!!!')
+      Rails.logger.debug("TRUE!!! #{record_params[:addresses][:address]}")
+      @record.addresses.build({
+        address: record_params[:addresses][:address],
+        zipcode: record_params[:addresses][:zipcode],
+        country: record_params[:addresses][:country],
+        city: record_params[:addresses][:city],
+        state: record_params[:addresses][:state],
+      })
+    end
+    if @record.save
       render 'layouts/hide_sidebar', layouts: nil
     else
       render 'new', layout: nil

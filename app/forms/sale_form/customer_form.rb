@@ -25,13 +25,13 @@ module SaleForm
       self.id = record[:id] if record[:id]
       self.name = record[:name] if record[:name]
       self.account_no = record[:account_no] if record[:account_no]
-      if record[:addresses].any?
+      if record[:addresses]
         self.addresses = []
         self.addresses.build({
-
-          id: record[:addresses][:id],
           address: record[:addresses][:address],
           zipcode: record[:addresses][:zipcode],
+          state: record[:addresses][:state],
+          city: record[:addresses][:city],
         })
       end
     end

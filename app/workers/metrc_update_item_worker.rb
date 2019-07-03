@@ -16,15 +16,12 @@ class MetrcUpdateItemWorker
     new_items = get_new_items(metrc_items, local_items)
 
     # Create new Item in Metrc
-    pp 'create_items_on_metrc:'
-    create_items_on_metrc(new_items)
+    create_items_on_metrc(new_items, local_items)
 
     # Detect changes and update local changes to Metrc
-    pp 'update_items_on_metrc:'
-    update_items_on_metrc(new_items)
+    update_items_on_metrc(new_items, local_items)
 
     # Update metrc_id to local copy
-    pp 'update_local_metrc_ids'
     update_local_metrc_ids(local_items)
 
     true
@@ -63,7 +60,7 @@ class MetrcUpdateItemWorker
     new_items
   end
 
-  def create_items_on_metrc(new_items)
+  def create_items_on_metrc(new_items, local_items)
     if new_items.any?
       new_items.each do |item_name|
         found = local_items.detect { |i| i.name == item_name }
@@ -81,15 +78,13 @@ class MetrcUpdateItemWorker
             "ServingSize": found.serving_size,
             "Ingredients": found.ingredients,
           }
-          pp 'Calling Metrc API to create items'
-          pp params
           MetrcApi.create_items(facility.site_license, [params])
         end
       end
     end
   end
 
-  def update_items_on_metrc(metrc_items)
+  def update_items_on_metrc(metrc_items, local_items)
     if local_items.any?
       local_items.each do |item|
         if item.metrc_id
@@ -110,8 +105,6 @@ class MetrcUpdateItemWorker
               "ServingSize": item.serving_size,
               "Ingredients": item.ingredients,
             }
-            pp 'Calling Metrc API to update item'
-            pp params
             MetrcApi.update_items(site_license, [params])
           end
         end

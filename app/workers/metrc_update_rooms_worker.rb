@@ -12,15 +12,13 @@ class MetrcUpdateRoomsWorker
     # When found existing rooms
     #   call update rooms api
 
-    metrc_rooms = MetrcApi.get_rooms(facility.site_license) # Hash format
-    local_rooms = facility.rooms.to_a # Ruby object format
     new_rooms = get_new_rooms(metrc_rooms, local_rooms)
 
     # Create new rooms in Metrc
     create_rooms_on_metrc(new_rooms, local_rooms)
 
     # Detect changes and update in Metrc
-    update_rooms_on_metrc(local_rooms, metrc_rooms)
+    update_rooms_on_metrc(metrc_rooms, local_rooms)
 
     # Update Metrc Id to local copy
     update_local_metrc_ids(local_rooms)
@@ -35,6 +33,14 @@ class MetrcUpdateRoomsWorker
 
   def facility
     @facility ||= Facility.find(@facility_id)
+  end
+
+  def metrc_rooms
+    @metrc_rooms ||= MetrcApi.get_rooms(facility.site_license) # Hash
+  end
+
+  def local_rooms
+    local_rooms ||= facility.rooms.to_a # Ruby object format
   end
 
   def get_new_rooms(metrc_rooms, local_rooms)
@@ -61,13 +67,13 @@ class MetrcUpdateRoomsWorker
           params = {
             "Name": found.name,
           }
-          MetrcApi.create_rooms(site_license, [params])
+          MetrcApi.create_rooms(facility.site_license, [params])
         end
       end
     end
   end
 
-  def update_rooms_on_metrc(local_rooms, metrc_rooms)
+  def update_rooms_on_metrc(metrc_rooms, local_rooms)
     if local_rooms.any?
       local_rooms.each do |room|
         if room.metrc_id
@@ -79,7 +85,7 @@ class MetrcUpdateRoomsWorker
               "Id": room.metrc_id,
               "Name": room.name,
             }
-            MetrcApi.update_rooms(site_license, [params])
+            MetrcApi.update_rooms(facility.site_license, [params])
           end
         end
       end
@@ -87,7 +93,7 @@ class MetrcUpdateRoomsWorker
   end
 
   def update_local_metrc_ids(local_rooms)
-    metrc_rooms = MetrcApi.get_rooms(site_license) # Hash format
+    metrc_rooms = MetrcApi.get_rooms(facility.site_license) # Hash format
     if local_rooms.any?
       local_rooms.each do |room|
         found = metrc_rooms.detect { |i| i['Name'].casecmp(room.name).zero? }

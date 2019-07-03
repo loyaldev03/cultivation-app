@@ -92,6 +92,10 @@ Rails.application.routes.draw do
     resources :vendor_invoices, only: [:index, :show]
   end
 
+  namespace 'sales', as: :sales do
+    resources :customers, only: [:index, :edit, :update, :new, :create, :destroy, :show]
+  end
+
   namespace 'worker' do
     resources :login, only: [:index] do
       post    'generate_code', on: :collection

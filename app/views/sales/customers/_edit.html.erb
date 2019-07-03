@@ -1,0 +1,102 @@
+<div class="ph4 pv3 bb b--light-grey">
+  <h5 class="h6--font dark-grey ma0 ttc"><%= @record.name %></h5>
+</div>
+
+<%= simple_form_for :record, url: sales_customer_path(id: @record.id), method: :patch, remote: true, 
+    html: { class: 'h-100 justify-between pa3' } do |f| %>
+  
+<div class="mv4 flex flex-row-l">
+
+      <div class="fl w-100 pt0-l pt3 flex flex-column">
+        <div class="flex flex-row">
+          <div class="w-100 mr4">
+            <%= f.input :account_no, 
+              label_html: { class: 'db mb1 grey subtitle-2 ttc' }, 
+              input_html: { class: 'grey ba b--light-grey br2 outline-0 pa2 db w-100' } 
+            %>
+          </div>
+
+        </div>
+      </div>
+    
+  </div>
+  <div class="mv4 flex flex-row-l">
+
+      <div class="fl w-100 pt0-l pt3 flex flex-column">
+        <div class="flex flex-row ">
+          <div class="w-100 mr4">
+            <%= f.input :name, 
+              label_html: { class: 'db mb1 grey subtitle-2 ttc' }, 
+              input_html: { class: 'grey ba b--light-grey br2 outline-0 pa2 db w-100' } 
+            %>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+  <%= f.simple_fields_for  :addresses do |p| %>
+  <div class="mv4 flex flex-row-l flex-column">
+
+      <div class="fl w-100 pt0-l flex flex-column">
+        <div class="flex flex-row">
+          <div class="w-100 mr4">
+            <%= p.input :address, 
+              label_html: { class: 'db mb1 grey subtitle-2 ttc' }, 
+              input_html: { class: 'grey ba b--light-grey br2 outline-0 pa2 db w-100', value: @record.addresses.first.address } 
+            %>
+          </div>
+
+        </div>
+      </div>
+    
+  </div>
+  <div class="mv4 flex flex-row-l flex-column">
+
+      <div class="fl w-100 pt0-l flex flex-column">
+        <div class="flex flex-row">
+          <div class="w-100 mr4">
+            <%= p.input :zipcode, 
+              label_html: { class: 'db mb1 grey subtitle-2 ttc' }, 
+              input_html: { class: 'grey ba b--light-grey br2 outline-0 pa2 db w-100', value: @record.addresses.first.zipcode } 
+            %>
+          </div>
+          <div class="w-100 mr4">
+            <%= p.input :city, 
+              label_html: { class: 'db mb1 grey subtitle-2 ttc' }, 
+              input_html: { class: 'grey ba b--light-grey br2 outline-0 pa2 db w-100', value: @record.addresses.first.city } 
+            %>
+          </div>
+
+        </div>
+      </div>
+    
+  </div>
+  <div class="mv4 flex flex-row-l flex-column">
+
+      <div class="fl w-100 pt0-l flex flex-column">
+        <div class="flex flex-row">
+          <div class="w-100 mr4">
+            <%= p.input :state, 
+              label_html: { class: 'db mb1 grey subtitle-2 ttc' }, 
+              input_html: { class: 'grey ba b--light-grey br2 outline-0 pa2 db w-100', value: @record.addresses.first.state } 
+            %>
+          </div>
+          <div class="w-100 mr4">
+            <%= p.input :country, 
+              label_html: { class: 'db mb1 grey subtitle-2 ttc' }, 
+              input_html: { class: 'grey ba b--light-grey br2 outline-0 pa2 db w-100' }, selected: @record.addresses.first.country
+            %>
+          </div>
+          
+
+        </div>
+      </div>
+    
+  </div>
+  <%end%>
+  <div class="bt b--light-grey pv3 ph4">
+      <%= f.submit "Update", class: "fr pa3 bg-orange button--font white bn box--br3 ttu link dim pointer" %>
+  </div>
+<% end %>
+
+

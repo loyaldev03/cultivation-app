@@ -25,17 +25,12 @@ function getChildren(wbs, tasks = []) {
   return tasks.filter(t => t.wbs.startsWith(childWbs))
 }
 
-function haveChildren(nodeWbs, tasks) {
-  const childWbs = nodeWbs + '.'
-  return tasks.some(t => t.wbs.startsWith(childWbs))
-}
-
 function cascadeIndelible(task, tasks) {
-  if (task.haveChildren && task.indelible === 'add_nutrient') {
+  if (task.is_parent && task.indelible === 'add_nutrient') {
     const children = getChildren(task.wbs, tasks)
     children.forEach(x => {
       x.indelible = task.indelible
-      if (x.haveChildren) {
+      if (x.is_parent) {
         cascadeIndelible(x, tasks)
       }
     })
@@ -44,13 +39,11 @@ function cascadeIndelible(task, tasks) {
 
 function updateFlags(singleTarget, tasks) {
   if (singleTarget && tasks) {
-    singleTarget.haveChildren = haveChildren(singleTarget.wbs, tasks)
     cascadeIndelible(singleTarget, tasks)
     return singleTarget
   }
   if (tasks) {
     tasks.forEach(task => {
-      task.haveChildren = haveChildren(task.wbs, tasks)
       cascadeIndelible(task, tasks)
     })
     return tasks
@@ -199,7 +192,7 @@ class TaskStore {
 
   @computed get childTasks() {
     if (this.isDataLoaded) {
-      return this.tasks.filter(t => !t.haveChildren)
+      return this.tasks.filter(t => !t.is_parent)
     } else {
       return []
     }
@@ -275,11 +268,6 @@ class TaskStore {
     getChildren(nodeWbs, this.tasks)
   }
 
-  haveChildren(nodeWbs) {
-    const childWbs = nodeWbs + '.'
-    return this.tasks.some(t => t.wbs.startsWith(childWbs))
-  }
-
   @action
   toggleCollapseNode(wbs) {
     const found = this.collapsedNodes.find(i => i === wbs)
@@ -353,8 +341,9 @@ class TaskStore {
             return t.id === taskId ? updated : t
           })
         }
-      } else {
+      } else if (response.errors) {
         console.error(response.errors)
+        toast(response.errors.error[0], 'error')
       }
     } catch (error) {
       console.log(error)
@@ -482,15 +471,20 @@ class TaskStore {
   async roomData(id, roomPurpose) {
     const url = `/api/v1/batches/search_locations?facility_id=${id}&purpose[]=${roomPurpose}`
     const response = await (await fetch(url, httpGetOptions)).json()
-    return response.data
+    return response.data || []
   }
 
   @action
   async getPlantOnSelect(facility_id, strain_id, location_id) {
-    const url = `/api/v1/plants/search_by_location?facility_id=${facility_id}&strain_id=${strain_id}&location_id=${location_id}`
-    const response = await (await fetch(url, httpGetOptions)).json()
-    return response
+    if (facility_id && strain_id && location_id) {
+      const url = `/api/v1/plants/search_by_location?facility_id=${facility_id}&strain_id=${strain_id}&location_id=${location_id}`
+      const response = await (await fetch(url, httpGetOptions)).json()
+      return response || []
+    } else {
+      return []
+    }
   }
+
   @action
   async editAssignedMaterial(
     batchId,

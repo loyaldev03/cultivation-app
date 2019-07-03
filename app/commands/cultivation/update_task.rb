@@ -48,6 +48,9 @@ module Cultivation
       end
       action_notify(task)
       task
+    rescue StandardError => error
+      Rails.logger.debug error
+      raise
     end
 
     private
@@ -155,7 +158,7 @@ module Cultivation
       if args_depend_on.present?
         predecessor = get_task(batch_tasks, args_depend_on)
         if predecessor.present? && task.child_of?(predecessor.wbs, batch_tasks)
-          errors.add(:depend_on, 'Cannot set parent node as predecessor')
+          errors.add(:error, 'Cannot set parent task as a predecessor')
           return nil
         end
         args_depend_on.to_bson_id
@@ -221,25 +224,30 @@ module Cultivation
         # Task with children task would deduce from child tasks.
         children = task.children(batch_tasks)
         task.estimated_hours = sum_children_hours(children, batch_tasks)
-        task.estimated_cost = sum_children_cost(children, batch_tasks)
+        task.estimated_labor_cost = sum_children_labor_cost(children, batch_tasks)
+
+        # TASK 980 - not sure should we call this because caller of this command
+        # is usually when there is a task assigned or date changed.
+        #
+        task.estimated_material_cost = sum_children_est_material_cost(children, batch_tasks)
         return
       end
 
       if task.estimated_hours && task.duration && task.user_ids.present?
         hours_per_person = task.estimated_hours / task.user_ids.length
-        estimated_cost = 0.00
+        estimated_labor_cost = 0.00
         task.user_ids.each do |user_id|
           user = users.detect { |u| u.id == user_id }
           if user.present?
-            estimated_cost += user.hourly_rate * hours_per_person
+            estimated_labor_cost += user.hourly_rate * hours_per_person
           else
             # Remove user from task if not found
             task.user_ids.delete_if { |i| i == user_id }
           end
         end
-        task.estimated_cost = estimated_cost
+        task.estimated_labor_cost = estimated_labor_cost
       else
-        task.estimated_cost = 0
+        task.estimated_labor_cost = 0
       end
     end
 
@@ -294,10 +302,21 @@ module Cultivation
       end
     end
 
-    def sum_children_cost(children, batch_tasks)
+    def sum_children_labor_cost(children, batch_tasks)
       children.reduce(0.0) do |sum, e|
-        if !e.have_children?(batch_tasks) && e.estimated_cost
-          sum + e.estimated_cost
+        if !e.have_children?(batch_tasks) && e.estimated_labor_cost
+          sum + e.estimated_labor_cost
+        else
+          sum
+        end
+      end
+    end
+
+    # TASK 980
+    def sum_children_est_material_cost(children, batch_tasks)
+      children.reduce(0.0) do |sum, e|
+        if !e.have_children?(batch_tasks) && e.estimated_material_cost
+          sum + e.estimated_material_cost
         else
           sum
         end
@@ -326,7 +345,9 @@ module Cultivation
     def update_parent_fields(task, parent, batch_tasks)
       children = parent.children(batch_tasks)
       parent.estimated_hours = sum_children_hours(children, batch_tasks)
-      parent.estimated_cost = sum_children_cost(children, batch_tasks)
+      parent.estimated_labor_cost = sum_children_labor_cost(children, batch_tasks)
+      parent.estimated_material_cost = sum_children_est_material_cost(children, batch_tasks)
+
       if task.first_child? && task.depend_on.present?
         parent.start_date = task.start_date
       end
@@ -337,10 +358,10 @@ module Cultivation
 
     def valid_batch?(batch)
       if batch.facility_id.nil?
-        errors.add(:facility_id, 'Missing Facility in Batch')
+        errors.add(:error, 'Missing facility_id in Batch')
       end
       if batch.quantity.nil?
-        errors.add(:quantity, 'Missing Quantity in Batch. Did you skipped quanity location selection?')
+        errors.add(:error, 'Missing quantity in Batch. Did you skipped quanity location selection?')
       end
       errors.empty? # No Errors => Valid
     end
@@ -380,7 +401,7 @@ module Cultivation
               error_message += 'Overlapping tray planning with batch: '
               error_message += batch_nos.join(', ') if !batch_nos.empty?
             end
-            errors.add(:end_date, error_message)
+            errors.add(:error, error_message)
           end
           break
         end

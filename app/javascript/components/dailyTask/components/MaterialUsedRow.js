@@ -40,9 +40,11 @@ class MaterialUsedRow extends React.PureComponent {
   }
 
   render() {
-    const { material, expected, uom, showTarget = false } = this.props
+    const { material, expected, uom } = this.props
 
     const { actual, waste } = this.state
+
+    const showTarget = expected > 0
 
     return (
       <div className="flex items-center pv2">
@@ -55,7 +57,7 @@ class MaterialUsedRow extends React.PureComponent {
         </div>
         <div
           className="f6 dark-gray flex items-center justify-start mr2"
-          style={{ width: '100px' }}
+          style={{ width: '100px', minWidth: '100px' }}
         >
           <input
             value={actual}
@@ -72,7 +74,7 @@ class MaterialUsedRow extends React.PureComponent {
         </div>
         <div
           className="f6 dark-gray flex items-center justify-start"
-          style={{ width: '100px' }}
+          style={{ width: '100px', minWidth: '100px' }}
         >
           <input
             value={waste}

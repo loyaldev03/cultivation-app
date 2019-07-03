@@ -24,6 +24,7 @@ const InputBarcode = forwardRef(
     let scannerRef = null
     const [hidden, setHidden] = useState(false)
     const [valueBarcode, onChangeBarcode] = useState('')
+
     const onShowScanner = e => {
       setHidden(!hidden)
     }
@@ -48,7 +49,7 @@ const InputBarcode = forwardRef(
                 ref={ref}
                 readOnly={readOnly}
                 type="text"
-                value={valueBarcode}
+                value={value}
                 className={`grey input input--with-icon ${className}`}
                 autoFocus={autoFocus}
                 onKeyPress={onKeyPress}
@@ -66,6 +67,7 @@ const InputBarcode = forwardRef(
         {hidden && (
           <BarCodeComponent
             onChangeBarcode={onChangeBarcode}
+            onBarcodeScan={onBarcodeScan}
             onShowScanner={onShowScanner}
           />
         )}

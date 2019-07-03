@@ -6,6 +6,7 @@ module Cultivation
     include Mongoid::History::Trackable
 
     attr_accessor :wbs
+    attr_accessor :is_parent
 
     field :phase, type: String
     field :name, type: String
@@ -15,8 +16,15 @@ module Cultivation
     field :end_date, type: Time
     field :estimated_hours, type: Float, default: -> { 0 }
     field :actual_hours, type: Float, default: -> { 0 }
-    field :estimated_cost, type: Float, default: -> { 0 }
-    field :actual_cost, type: Float, default: -> { 0 }
+
+    # Labor  cost
+    field :estimated_labor_cost, type: Float, default: -> { 0 }
+    field :actual_labor_cost, type: Float, default: -> { 0 }
+
+    # Material cost
+    field :estimated_material_cost, type: Float, default: -> { 0 }
+    field :actual_material_cost, type: Float, default: -> { 0 }
+
     field :water_ph, type: Float, default: -> { 0.0 }
     # Indelible task cannot be remove, possible values: 'cleaning', 'moving' (see template json for more example)
     field :indelible, type: String
@@ -134,6 +142,14 @@ module Cultivation
 
     def sum_actual_hours
       time_logs.map { |a| a.duration_in_hours }.sum
+    end
+
+    def actual_cost
+      actual_labor_cost + actual_material_cost
+    end
+
+    def estimated_cost
+      estimated_labor_cost + estimated_material_cost
     end
   end
 end

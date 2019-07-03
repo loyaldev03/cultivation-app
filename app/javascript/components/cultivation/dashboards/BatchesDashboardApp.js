@@ -183,7 +183,7 @@ class BatchesDashboardApp extends React.Component {
     ]
   }
   componentDidMount() {
-    BatchStore.loadBatches()
+    BatchStore.loadBatches(this.props.facilityId)
   }
 
   onToggleColumns = (header, value) => {
@@ -199,13 +199,13 @@ class BatchesDashboardApp extends React.Component {
   }
 
   render() {
-    const { defaultFacilityId } = this.props
+    const { facilityId } = this.props
     const { columns } = this.state
     return (
       <div className="pa4 mw1200">
         <div className="flex flex-row-reverse">
           <a
-            href={`/cultivation/batches/new?facility_id=${defaultFacilityId}`}
+            href={`/cultivation/batches/new?facility_id=${facilityId}`}
             className="btn btn--primary"
           >
             Create new batch

@@ -21,7 +21,7 @@ class HarvestDashboard extends React.Component {
         headerClassName: 'tl',
         Header: 'Harvest Name',
         accessor: 'harvest_name',
-        minWidth: 88,
+        minWidth: 120,
         className: 'ttu',
         Cell: props => <span className="truncate black fw6">{props.value}</span>
       },

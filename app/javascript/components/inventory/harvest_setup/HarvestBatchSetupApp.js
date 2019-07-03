@@ -28,7 +28,6 @@ const columns = [
     headerStyle: { textAlign: 'left' },
     width: 160
   },
-
   {
     Header: 'Harvest Batch Name',
     accessor: 'attributes.cultivation_batch_name',

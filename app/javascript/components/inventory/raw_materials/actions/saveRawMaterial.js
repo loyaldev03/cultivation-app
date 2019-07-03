@@ -6,6 +6,7 @@ export const saveRawMaterial = async payload => {
   const url = '/api/v1/raw_materials/setup'
   try {
     const response = await (await fetch(url, httpPostOptions(payload))).json()
+    console.log(response)
     if (response.data) {
       RawMaterialStore.update(response.data)
       return { status: 200, data: response.data }

@@ -92,7 +92,7 @@ Rails.application.routes.draw do
     resources :vendor_invoices, only: [:index, :show]
   end
 
-  namespace 'worker' do 
+  namespace 'worker' do
     resources :login, only: [:index] do
       post    'generate_code', on: :collection
       post    'check_code', on: :collection
@@ -100,9 +100,9 @@ Rails.application.routes.draw do
   end
 
   namespace 'mobile' do
-    namespace 'worker' do 
+    namespace 'worker' do
       resources :logins, only: [:index] do
-        collection do 
+        collection do
           get     'pin_request'
           post    'generate_code'
           post    'check_code'
@@ -350,13 +350,13 @@ Rails.application.routes.draw do
             get 'load_issues'
           end
         end
+        
         resources :nutrient_profiles, only: [:index, :create, :update] do 
           collection do 
             get 'by_phases'
             post 'update_week_nutrient'
           end
         end
-
 
         # resources :product_plans, only: [:index, :create] do
         #   post ':product_type_id/destroy', action: 'destroy'
@@ -409,7 +409,7 @@ Rails.application.routes.draw do
         get '/schedule_by_date', to: 'daily_tasks#schedule_by_date'
 
         post ':id/save_material_used', to: 'daily_tasks#save_material_used'
-        post 'materials_used', to: 'daily_tasks#materials_used' 
+        post 'materials_used', to: 'daily_tasks#materials_used'
 
         get ':batch_id/harvest_batch_status', to: 'daily_tasks#harvest_batch_status'
         post ':batch_id/save_harvest_batch_weight', to: 'daily_tasks#save_harvest_batch_weight'
@@ -439,7 +439,6 @@ Rails.application.routes.draw do
       end
 
       resources :harvests, only: [:index]
-      resources :holidays, only: [:index, :create]
       resources :charts, only: [:index] do
         collection do
           get 'batch_test_result'
@@ -447,6 +446,8 @@ Rails.application.routes.draw do
           get 'worker_capacity'
           get 'batch_distribution'
         end
+      resources :holidays, only: [:index, :create, :update] do 
+        get 'show_by_date', on: :collection
       end
     end
   end

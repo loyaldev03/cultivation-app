@@ -53,6 +53,7 @@ class CultivationCalendar extends React.Component {
     )
 
     if (response.errors) {
+      toast('Batch saved successfully', 'success')
       const err1 = Object.keys(response.errors)[0]
       console.log(response.errors[err1])
       this.setState({ errors: response.errors[err1] })

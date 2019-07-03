@@ -58,6 +58,12 @@ FactoryBot.define do
       purpose { Constants::CONST_CURE }
     end
 
+    trait :storage do
+      name { "Storage Room" }
+      code { "ST01" }
+      purpose { Constants::CONST_STORAGE }
+    end
+
     trait :is_complete do
       is_complete { true }
       wz_generated { false }

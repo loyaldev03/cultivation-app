@@ -107,6 +107,7 @@ class PackageTracking extends React.Component {
   }
 
   onAddPackageID = event => {
+    // console.log(event.key)
     if (event.key === 'Enter') {
       const tag = event.target.value
       const data = {

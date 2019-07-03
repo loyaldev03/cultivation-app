@@ -18,13 +18,10 @@ module Inventory
       :production_date,         # Hardcoded to Time.now
       :harvest_batch,           # Deduce from cultivation_batch_id
       :metrc_tag,               # Deduce from tag
-      :name
+      :name,
+      :task_id                  # TODO: need this to find PackagePlan!!!
 
     def initialize(user, args)
-      Rails.logger.debug('>>>>>>>>>>>>>>>')
-      Rails.logger.debug(args)
-      Rails.logger.debug('>>>>>>>>>>>>>>>')
-
       @user = user
       @id = args[:id]
       @tag = args[:tag]
@@ -39,6 +36,7 @@ module Inventory
 
       if valid_user? && valid_data?
         package = save_package!
+        calculate_cost(package)
         package
       end
     end
@@ -66,7 +64,7 @@ module Inventory
       raise 'No size found for package type' if size.nil?
       raise 'No UOM found for package type' if uom.nil?
 
-      @product = Product.find_or_create_by!(
+      @product = Inventory::Product.find_or_create_by!(
         facility: @facility,
         facility_strain: facility_strain,
         catalogue: @catalogue,
@@ -131,6 +129,7 @@ module Inventory
         harvest_batch: harvest_batch,
         product_name: name,
         facility_strain: facility_strain,
+        common_uom: harvest_batch.uom,
       )
 
       metrc_tag.update!(status: 'assigned')
@@ -164,6 +163,16 @@ module Inventory
       else
         return nil
       end
+    end
+
+    def calculate_cost(package)
+      cost_per_unit = harvest_batch.cultivation_batch.output_cost_per_unit
+
+      # TODO: Calculation over here is not really correct.
+      # I should calculate cost at end of the day after all logged hours are completed.
+      # Only then divide the final hours spent to all produced packages.
+      package.production_cost = package.common_quantity * cost_per_unit
+      package.save!
     end
   end
 end

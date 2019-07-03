@@ -31,11 +31,11 @@ module Inventory
     field :other_harvest_batch, type: String    # for package which harvest no longer available
     field :drawdown_quantity, type: Float, default: -> { 0 }   # how much was taken from harvest
     field :drawdown_uom, type: String
-    field :cost_per_unit, type: Float, default: -> { 0 }       # this cost per unit is cost for each quantity
-
+    field :cost_per_unit, type: Float, default: -> { 0 }       # purchase cost per unit is cost for each quantity
     field :breakdowns, type: Array
-
     field :created_by, type: BSON::ObjectId #whodunnit
+
+    field :production_cost, type: Float, default: -> { 0 }     # For sales product from harvest batch & conversion
 
     belongs_to :facility, class_name: 'Facility'
     belongs_to :facility_strain, class_name: 'Inventory::FacilityStrain', optional: true

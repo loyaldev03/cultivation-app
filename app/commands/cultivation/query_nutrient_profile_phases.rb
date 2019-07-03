@@ -15,7 +15,7 @@ module Cultivation
       nutrient_profiles = batch.nutrient_profiles
       result = []
       if tasks
-        selected_tasks = tasks.select { |a| a.indelible == 'add_nutrient' }
+        selected_tasks = tasks.select { |a| a.indelible == 'add_nutrient' && a.indent == 2 }
         selected_tasks.each do |task|
           children = WbsTree.children(tasks, task.wbs)
           weeks = []
@@ -35,11 +35,11 @@ module Cultivation
                 water_frequency_uom: nutrient_profile.water_frequency_uom,
                 water_ph: nutrient_profile.water_ph,
                 dissolveNutrients: nutrient_profile.nutrients.map { |a|
-                  product = Inventory::Product.find(a.product_id)
+                  product = a.product_id ? Inventory::Product.find(a.product_id) : nil
                   {
                     product_id: a.product_id.to_s,
-                    product_name: product.name,
-                    product: {label: product.name, value: product.id.to_s, ppm: a.ppm},
+                    product_name: product&.name,
+                    product: {label: product&.name, value: product&.id.to_s, ppm: a.ppm},
                     amount: a.amount,
                     amount_uom: a.amount_uom,
                     ppm: a.ppm,

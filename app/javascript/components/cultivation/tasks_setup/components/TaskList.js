@@ -252,10 +252,10 @@ class TaskList extends React.Component {
 
                   {indelible === 'create_harvest_batch' ? (
                     <div className="bt bw1">
-                      <p className="i tc silver">Create batch ID</p>
+                      <p className="i tc silver">Create Harvest Batch</p>
 
                       <MenuButton
-                        text="Create batch ID"
+                        text="Create Harvest Batch"
                         indelible={indelible}
                         onClick={() =>
                           this.handleShowHarvestBatchForm(id, items)
@@ -271,7 +271,7 @@ class TaskList extends React.Component {
                       <p className="i tc silver">Create packages</p>
 
                       <MenuButton
-                        text="Create batch ID"
+                        text="Create Package Plan"
                         indelible={indelible}
                         onClick={() =>
                           this.handleShowPackagePlanForm(id, items)
@@ -377,7 +377,7 @@ class TaskList extends React.Component {
       show: false
     },
     {
-      accessor: 'haveChildren',
+      accessor: 'is_parent',
       show: false
     },
     {
@@ -507,10 +507,10 @@ class TaskList extends React.Component {
       className: 'tr pr2',
       show: this.checkVisibility('end_date'),
       Cell: data => {
-        const { id, end_date, haveChildren } = data.row
+        const { id, end_date, is_parent } = data.row
         return (
           <InlineEditDateField
-            editable={!haveChildren}
+            editable={!is_parent}
             text={end_date}
             onHighlight={() => this.setState({ taskSelected: id })}
             onDoneClick={value => {
@@ -528,10 +528,10 @@ class TaskList extends React.Component {
       className: 'tr pr3',
       show: this.checkVisibility('duration'),
       Cell: data => {
-        const { id, duration, haveChildren } = data.row
+        const { id, duration, is_parent } = data.row
         return (
           <InlineEditNumberField
-            editable={!haveChildren}
+            editable={!is_parent}
             text={duration}
             min="1"
             step="1"
@@ -551,10 +551,10 @@ class TaskList extends React.Component {
       className: 'tr pr2',
       show: this.checkVisibility('estimated_hours'),
       Cell: data => {
-        const { id, estimated_hours, haveChildren } = data.row
+        const { id, estimated_hours, is_parent } = data.row
         return (
           <InlineEditNumberField
-            editable={!haveChildren}
+            editable={!is_parent}
             text={estimated_hours}
             min="0"
             step=".25"
@@ -599,8 +599,8 @@ class TaskList extends React.Component {
       className: 'justify-center',
       show: this.checkVisibility('resource_assigned'),
       Cell: data => {
-        const { id, user_ids, wbs, haveChildren } = data.row
-        if (haveChildren) {
+        const { id, user_ids, wbs, is_parent } = data.row
+        if (is_parent) {
           return null
         }
         return (
@@ -640,8 +640,8 @@ class TaskList extends React.Component {
       show: this.checkVisibility('materials'),
       className: 'justify-center',
       Cell: data => {
-        const { id, items, haveChildren } = data.row
-        if (haveChildren) {
+        const { id, items, is_parent } = data.row
+        if (is_parent) {
           return null
         }
         return (

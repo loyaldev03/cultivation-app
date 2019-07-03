@@ -14,6 +14,7 @@ class BatchInfoSerializer
              :current_stage_start_date,
              :quantity,
              :destroyed_plants_count,
+             :facility_id,
              :status
 
   attribute :id do |object|

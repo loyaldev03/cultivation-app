@@ -38,13 +38,20 @@ class BatchLocationApp extends React.Component {
     isNotified: false,
     selectedPlants: [],
     editingPlant: {},
-    quantity: '',
+    quantity: this.props.batchInfo.quantity || '',
     locations: this.props.locations || []
   }
 
   componentDidMount() {
     // Setup sidebar editor
     window.editorSidebar.setup(document.querySelector('[data-role=sidebar]'))
+    setTimeout(() => {
+      const hasStartDate = window.location.href.includes('start_date')
+      const hasQuantity = window.location.href.includes('quantity')
+      if (hasStartDate && hasQuantity) {
+        this.onClickSelectionEdit('clone')
+      }
+    })
   }
 
   closeSidebar = () => {
@@ -55,6 +62,7 @@ class BatchLocationApp extends React.Component {
   }
 
   onClickSelectionEdit = (phase, plant = null) => {
+    console.log(phase, plant)
     const editingPlant = plant ? this.getSelected(plant.id) : null
     if (editingPlant) {
       this.setState({ editingPlant })
@@ -379,6 +387,9 @@ class BatchLocationApp extends React.Component {
               <BatchLocationEditor
                 key={editingPlant.id}
                 plantConfig={editingPlant}
+                batchId={batchInfo.id}
+                quantity={quantity}
+                startDate={batchInfo.startDate}
                 locations={this.getAvailableLocations(
                   editingPlant.id,
                   editingPlant.phase

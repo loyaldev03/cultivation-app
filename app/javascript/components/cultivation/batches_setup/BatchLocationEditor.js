@@ -1,7 +1,10 @@
 import React from 'react'
 import classNames from 'classnames'
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import {
+  parseDate,
+  formatYDM,
   groupBy,
   sumBy,
   joinBy,
@@ -215,6 +218,12 @@ class BatchLocationEditor extends React.PureComponent {
 
   onChange = (field, value) => e => this.setState({ [field]: value })
 
+  onChangeStartDate = startDate => {
+    let url = `/cultivation/batches/${this.props.batchId}?select_location=1`
+    url += `&start_date=${formatYDM(startDate)}&quantity=${this.props.quantity}`
+    window.location.href = url
+  }
+
   onChangeInput = field => e => this.setState({ [field]: e.target.value })
 
   getSelectedTrayCapacity = trayId => {
@@ -269,7 +278,7 @@ class BatchLocationEditor extends React.PureComponent {
   }
 
   render() {
-    const { locations, plantConfig, onSave, onClose } = this.props
+    const { startDate, locations, plantConfig, onSave, onClose } = this.props
     const {
       tabIndex,
       showRowList,
@@ -320,6 +329,15 @@ class BatchLocationEditor extends React.PureComponent {
           >
             <i className="material-icons mid-gray md-18 pa1">close</i>
           </a>
+        </div>
+        <div className="ph4 pt3">
+          <label className="dib grey fl pt2 pr3">Batch Start Date:</label>
+          <DatePicker
+            className="fl f5 measure-wide"
+            value={parseDate(startDate)}
+            fieldname="start_date"
+            onChange={this.onChangeStartDate}
+          />
         </div>
         <form
           className="pv3 h-100 flex-auto flex flex-column justify-between"

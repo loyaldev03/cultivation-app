@@ -1,5 +1,6 @@
 import 'babel-polyfill'
 import isEmpty from 'lodash.isempty'
+import uniq from 'lodash.uniq'
 import React, { memo, useState } from 'react'
 import classNames from 'classnames'
 import { differenceInDays } from 'date-fns'
@@ -11,6 +12,7 @@ import {
   httpGetOptions,
   ActiveBadge,
   CheckboxSelect,
+  HeaderFilter,
   Loading,
   ListingTable,
   TempTaskWidgets
@@ -27,6 +29,7 @@ class ActiveTaskStore {
     page: 0,
     limit: 20
   }
+  @observable columnFilters = {}
 
   constructor() {
     autorun(
@@ -79,8 +82,43 @@ class ActiveTaskStore {
     }
   }
 
-  @computed get filteredList() {
-    return this.tasks
+  /* + column filters */
+  isFiltered = record => {
+    let f = Object.keys(this.columnFilters).find(key => {
+      const filter = this.columnFilters[key].filter(x => x.value === false)
+      return filter.find(x => x.label === record[key])
+    })
+    return f ? true : false
+  }
+
+  updateFilterOptions = (propName, filterOptions) => {
+    const updated = {
+      ...this.columnFilters,
+      [propName]: filterOptions
+    }
+    this.columnFilters = updated
+  }
+
+  getUniqPropValues = propName => {
+    return uniq(this.filteredList.map(x => x[propName]).sort())
+  }
+  /* - column filters */
+
+  @computed
+  get filteredList() {
+    if (!isEmpty(this.filter) || !isEmpty(this.columnFilters)) {
+      return this.tasks.filter(b => {
+        if (this.isFiltered(b)) {
+          return false
+        }
+        const filterLc = this.searchTerm.toLowerCase()
+        const nameLc = `${b.name}`.toLowerCase()
+        const results = nameLc.includes(filterLc)
+        return results
+      })
+    } else {
+      return this.tasks
+    }
   }
 }
 
@@ -114,10 +152,29 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'pl3 tl',
-        Header: 'Phase',
+        Header: (
+          <HeaderFilter
+            title="Phase"
+            accessor="phase"
+            getOptions={() => {
+              return [
+                'clone',
+                'veg1',
+                'veg2',
+                'flower',
+                'harvest',
+                'dry',
+                'trim',
+                'cure',
+                'packaging'
+              ]
+            }}
+            onUpdate={activeTaskStore.updateFilterOptions}
+          />
+        ),
         accessor: 'phase',
         className: 'pl3 ttc',
-        minWidth: 70
+        minWidth: 90
       },
       {
         headerClassName: 'pl3 tl',
@@ -153,7 +210,15 @@ class TasksDashboardApp extends React.Component {
       },
       {
         headerClassName: 'tl',
-        Header: 'Status',
+        Header: (
+          <HeaderFilter
+            title="Status"
+            accessor="work_status"
+            getOptions={activeTaskStore.getUniqPropValues}
+            onUpdate={activeTaskStore.updateFilterOptions}
+          />
+        ),
+        accessor: 'work_status',
         accessor: 'work_status',
         className: 'justify-center',
         width: 90,

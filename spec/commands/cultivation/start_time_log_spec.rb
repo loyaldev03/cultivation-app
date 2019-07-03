@@ -44,7 +44,16 @@ RSpec.describe DailyTask::StartTimeLog, type: :command do
   end
 
   let!(:task_1) do
-    task = batch1.tasks.new({ "wbs": "1.1.1", "phase": "clone", "name": "Select clones or seeds", "duration": "", "indelible": "plants", user_ids: [current_user.id] })
+    task = batch1.tasks.new({ 
+      "wbs": "1.1.1", 
+      "phase": "clone", 
+      "name": 
+      "Select clones or seeds", 
+      "duration": "", 
+      "indelible": "plants", 
+      facility: facility,
+      user_ids: [current_user.id] 
+    })
     task.save
     task
   end

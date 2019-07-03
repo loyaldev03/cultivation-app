@@ -5,6 +5,9 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
   def metrc_setup
   end
 
+  def show
+  end
+
   def update
     @company_info.metrc_user_key = company_info_params[:metrc_user_key]
     if @company_info.save
@@ -16,6 +19,11 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
   end
 
   def update_metrc
+    metrc_hist = current_facility.metrc_histories.find_or_create_by(code: params[:code])
+    if metrc_hist
+      metrc_hist.value = Time.current
+      metrc_hist.save
+    end
     metrc = params[:type].constantize
     metrc.perform_async
     flash[:notice] = 'Metrc updated'

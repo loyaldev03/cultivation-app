@@ -80,6 +80,19 @@
   }
 }
 
+.react-tabs--primary.react-tabs--boxed-panel {
+  .react-tabs__tab-list {
+    margin: 0;
+  }
+  .react-tabs__tab-panel {
+    border-left: 1px solid $lightGrey;
+    border-right: 1px solid $lightGrey;
+    border-bottom: 1px solid $lightGrey;
+    float: left;
+    width: 100%;
+  }
+}
+
 .react-tabs--secret-sause {
   .react-tabs {
     &__tab-list {

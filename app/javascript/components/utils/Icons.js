@@ -17,6 +17,8 @@ import TempPackagesWidgets from '../../../assets/images/dummy/packages.png'
 import TempPackagesSoldWidgets from '../../../assets/images/dummy/packages-sold.png'
 import TempPackagesHistory from '../../../assets/images/dummy/product-history.png'
 
+import TempHomeUnassignTask from '../../../assets/images/dummy/home-unassign-tasks.png'
+
 import DefaultAvatar from '../../../assets/images/blank-avatar.png'
 export {
   ImgAdd,
@@ -36,6 +38,7 @@ export {
   TempPackagesWidgets,
   TempPackagesSoldWidgets,
   TempPackagesHistory,
+  TempHomeUnassignTask,
   WorkerDashboardGraph,
   DefaultAvatar
 }

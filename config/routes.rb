@@ -445,7 +445,9 @@ Rails.application.routes.draw do
           get 'strain_distribution'
           get 'worker_capacity'
           get 'batch_distribution'
+          get 'cost_breakdown'
         end
+      end
       resources :holidays, only: [:index, :create, :update] do 
         get 'show_by_date', on: :collection
       end

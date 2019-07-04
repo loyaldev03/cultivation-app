@@ -8,7 +8,7 @@ module Charts
     end
 
     def call
-      month = Date.parse("#{args[:month]} #{args[:year]}")
+      month = Date.parse("#{@args[:month]} #{@args[:year]}")
       tasks = Cultivation::Task.where(:start_date.lte => month.beginning_of_month, :end_date.gte => month.end_of_month)
       material_cost = 0
       labour_cost = 0
@@ -19,6 +19,8 @@ module Charts
       {
         material_cost: material_cost,
         labour_cost: labour_cost,
+        water_cost: 200,
+        electricity: 1200,
       }
     end
   end

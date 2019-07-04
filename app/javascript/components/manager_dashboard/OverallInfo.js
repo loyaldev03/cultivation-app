@@ -1,5 +1,5 @@
 import React from 'react'
-import { TempHomeUnassignTask} from '../utils'
+import { TempHomeUnassignTask } from '../utils'
 import WorkerCapacityChart from './WorkerCapacityChart'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
@@ -12,7 +12,7 @@ let data = [
     stage: 'Stage 1',
     actualColor: '#f86822',
     neededColor: '#4a65b3',
-    index: 1,
+    index: 1
   },
   {
     actual: 25,
@@ -20,7 +20,7 @@ let data = [
     stage: 'Stage 2',
     actualColor: '#f86822',
     neededColor: '#4a65b3',
-    index: 2,
+    index: 2
   },
   {
     actual: 19,
@@ -28,7 +28,7 @@ let data = [
     stage: 'Stage 3',
     actualColor: '#f86822',
     neededColor: '#4a65b3',
-    index: 3,
+    index: 3
   },
   {
     actual: 21,
@@ -36,7 +36,7 @@ let data = [
     stage: 'Stage 4',
     actualColor: '#f86822',
     neededColor: '#4a65b3',
-    index: 4,
+    index: 4
   },
   {
     actual: 17,
@@ -44,7 +44,7 @@ let data = [
     stage: 'Stage 5',
     actualColor: '#f86822',
     neededColor: '#4a65b3',
-    index: 5,
+    index: 5
   },
   {
     actual: 22,
@@ -52,7 +52,7 @@ let data = [
     stage: 'Stage 6',
     actualColor: '#f86822',
     neededColor: '#4a65b3',
-    index: 6,
+    index: 6
   },
   {
     actual: 16,
@@ -60,8 +60,8 @@ let data = [
     stage: 'Stage 7',
     actualColor: '#f86822',
     neededColor: '#4a65b3',
-    index: 7,
-  },
+    index: 7
+  }
 ]
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
@@ -79,15 +79,14 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
 @observer
 export default class OverallInfo extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      selectedBatch: this.props.batches[0],
-    };
+      selectedBatch: this.props.batches[0]
+    }
   }
 
-
-  onChangeWorkerCapacityBatch = (batch) => {
-    this.setState({selectedBatch: batch})
+  onChangeWorkerCapacityBatch = batch => {
+    this.setState({ selectedBatch: batch })
     ChartStore.loadWorkerCapacity(batch.id)
   }
 
@@ -105,7 +104,6 @@ export default class OverallInfo extends React.Component {
                 keyboard_arrow_down
               </i>
             </div>
-            
           </div>
 
           <div className="flex justify-between mt2">
@@ -154,7 +152,7 @@ export default class OverallInfo extends React.Component {
                 <b className="f3 fw6">74%</b>
               </div>
             </div>
-          </div>  
+          </div>
         </div>
         <div className="flex mt4 h-50">
           <div className="w-50">
@@ -165,7 +163,9 @@ export default class OverallInfo extends React.Component {
           <div className="w-50">
             <div className="ba b--light-gray pa3 bg-white br2">
               <div className="flex justify-between mb4">
-                <h1 className="f5 fw6">Staff Capacity vs Production Schedule</h1>
+                <h1 className="f5 fw6">
+                  Staff Capacity vs Production Schedule
+                </h1>
 
                 <Tippy
                   placement="bottom-end"
@@ -174,38 +174,35 @@ export default class OverallInfo extends React.Component {
                   content={
                     <div className="bg-white f6 flex">
                       <div className="db shadow-4">
-                        {this.props.batches.map(e =>
+                        {this.props.batches.map(e => (
                           <MenuButton
                             // icon="delete_outline"
                             text={e.name}
                             className=""
                             onClick={() => this.onChangeWorkerCapacityBatch(e)}
                           />
-                          
-                        )}
-
+                        ))}
                       </div>
                     </div>
                   }
                 >
                   <div className="flex ba b--light-silver br2 pointer dim">
-                    <h1 className="f6 fw6 ml2 grey">{this.state.selectedBatch.name}</h1>
+                    <h1 className="f6 fw6 ml2 grey">
+                      {this.state.selectedBatch.name}
+                    </h1>
                     <i className="material-icons grey mr2  md-21 mt2">
                       keyboard_arrow_down
-                  </i>
+                    </i>
                   </div>
                 </Tippy>
               </div>
-              {ChartStore.worker_capacity_loaded ?
-                (
-                  <WorkerCapacityChart data={ChartStore.data_worker_capacity} />
-                )
-                :
+              {ChartStore.worker_capacity_loaded ? (
+                <WorkerCapacityChart data={ChartStore.data_worker_capacity} />
+              ) : (
                 'loading...'
-              }
+              )}
             </div>
           </div>
-
         </div>
       </React.Fragment>
     )

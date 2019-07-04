@@ -1,25 +1,31 @@
 import React from 'react'
-import { sortData } from './DrawLineBarChart';
+import { sortData } from './DrawLineBarChart'
 
 export default class WorkerCapacityChart extends React.Component {
-
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       width: this.props.width || 450,
-      height: this.props.height || 250,
-    };
+      height: this.props.height || 250
+    }
   }
 
   componentDidMount() {
     console.log('load data chart')
     const result = {
       xTicks: [30, 25, 20, 15, 10, null, null],
-      data: this.props.data,
-    };
+      data: this.props.data
+    }
 
-    const resp = sortData(result.data);
-    const { barDatasets, lineDatasets, xlabel, tooltipLabel, barColors, lineColors } = resp;
+    const resp = sortData(result.data)
+    const {
+      barDatasets,
+      lineDatasets,
+      xlabel,
+      tooltipLabel,
+      barColors,
+      lineColors
+    } = resp
 
     var config = {
       type: 'bar',
@@ -33,26 +39,26 @@ export default class WorkerCapacityChart extends React.Component {
             borderColor: lineColors,
 
             // Changes this dataset to become a line
-            type: 'line',
+            type: 'line'
           },
           {
             label: 'Bar Dataset',
             data: barDatasets,
             backgroundColor: barColors,
-            borderColor: barColors,
-          },
+            borderColor: barColors
+          }
         ],
-        labels: xlabel,
+        labels: xlabel
       },
       options: {
         responsive: false,
         legend: {
-          display: false,
+          display: false
         },
         elements: {
           line: {
-            tension: 0,
-          },
+            tension: 0
+          }
         },
         scales: {
           xAxes: [
@@ -62,10 +68,10 @@ export default class WorkerCapacityChart extends React.Component {
               barThickness: 10,
               gridLines: {
                 display: false,
-                drawBorder: false,
+                drawBorder: false
               },
               categoryPercentage: 1.0,
-              barPercentage: 1.0,
+              barPercentage: 1.0
             },
             {
               type: 'time',
@@ -73,48 +79,48 @@ export default class WorkerCapacityChart extends React.Component {
               display: false,
               gridLines: {
                 display: false,
-                drawBorder: false,
-              },
-            },
+                drawBorder: false
+              }
+            }
           ],
           yAxes: [
             {
               ticks: {
-                callback: function (tickValue, index, ticks) {
-                  return result.xTicks[index];
+                callback: function(tickValue, index, ticks) {
+                  return result.xTicks[index]
                 },
                 beginAtZero: true,
                 fixedStepSize: 5,
                 max: 30,
                 min: 0,
-                padding: 15,
+                padding: 15
               },
               gridLines: {
                 color: '#eceded',
                 display: true,
                 drawBorder: false,
                 zeroLineWidth: 0,
-                lineWidth: [1, 1, 1, 1, 1, 0, 0],
+                lineWidth: [1, 1, 1, 1, 1, 0, 0]
               },
               max: 30,
-              min: 0,
-            },
-          ],
+              min: 0
+            }
+          ]
         },
         tooltips: {
           callbacks: {
             title: () => {
-              return '                            ';
+              return '                            '
             },
             beforeLabel: (tooltipItems, data) => {
-              return `${tooltipLabel[tooltipItems.index].actual}`;
+              return `${tooltipLabel[tooltipItems.index].actual}`
             },
             label: (tooltipItems, data) => {
-              return `${tooltipLabel[tooltipItems.index].needed}`;
+              return `${tooltipLabel[tooltipItems.index].needed}`
             },
             footer: () => {
-              return '                            ';
-            },
+              return '                            '
+            }
           },
           bodyFontColor: '#111',
           backgroundColor: '#fff',
@@ -132,21 +138,21 @@ export default class WorkerCapacityChart extends React.Component {
           xAlign: 'center',
           caretPadding: 15,
           borderColor: 'rgba(0, 0, 0, 0.35)',
-          borderWidth: 1,
+          borderWidth: 1
         },
         plugins: {
           datalabels: {
-            display: false,
-          },
-        },
-      },
-    };
+            display: false
+          }
+        }
+      }
+    }
 
-    var myChart = new Chart(this.mixLineBarChart, config);
+    var myChart = new Chart(this.mixLineBarChart, config)
   }
 
   render() {
-    const { width, height } = this.state;
+    const { width, height } = this.state
 
     return (
       <React.Fragment>

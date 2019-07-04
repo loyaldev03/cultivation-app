@@ -15,7 +15,7 @@ class ManagerDashboardApp extends React.Component {
     return (
       <React.Fragment>
         <h1>Manager Dashboard App</h1>
-        <OverallInfo batches={this.state.batches}/>
+        <OverallInfo batches={this.state.batches} />
       </React.Fragment>
     )
   }

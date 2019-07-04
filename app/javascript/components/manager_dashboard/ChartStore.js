@@ -1,5 +1,10 @@
 import { observable, action, computed, toJS, set } from 'mobx'
-import { httpGetOptions, httpPostOptions, httpPutOptions, httpDeleteOptions } from '../utils'
+import {
+  httpGetOptions,
+  httpPostOptions,
+  httpPutOptions,
+  httpDeleteOptions
+} from '../utils'
 
 class ChartStore {
   @observable data_worker_capacity = []
@@ -24,16 +29,9 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
-
     }
   }
-
-
-
-
-
 }
-
 
 const chartStore = new ChartStore()
 

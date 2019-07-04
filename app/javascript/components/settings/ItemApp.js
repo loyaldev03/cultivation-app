@@ -51,6 +51,11 @@ class CategoryStore {
         this.categories = this.categories.map(x =>
           x.id === response.data.id ? response.data.attributes : x
         )
+        const cat = {
+          name: response.data.attributes.name,
+          status: response.data.attributes.is_active ? 'active' : 'inactive'
+        }
+        toast(`${cat.name} is now ${cat.status}`, 'success')
       } else {
         console.log(response)
       }

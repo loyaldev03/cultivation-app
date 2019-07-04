@@ -308,6 +308,8 @@ Rails.application.routes.draw do
       resources :products, only: [:index] do
         get :non_nutrients, on: :collection
         get :upc, on: :collection
+        get :item_categories, on: :collection
+        post 'item_categories/:id/update', on: :collection, action: :update_item_category
       end
 
       resources :strains, only: [:index, :create, :show] do

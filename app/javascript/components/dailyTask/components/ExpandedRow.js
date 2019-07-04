@@ -370,7 +370,7 @@ class ExpandedRow extends React.Component {
             {items.map(x => {
               const actual = MaterialUsedStore.get(`${x.id}.material_used`)
               const waste = MaterialUsedStore.get(`${x.id}.material_waste`)
-              
+
               return (
                 <MaterialUsedRow
                   key={x.id}

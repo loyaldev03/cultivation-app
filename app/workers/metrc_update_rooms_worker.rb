@@ -12,23 +12,17 @@ class MetrcUpdateRoomsWorker
     # When found existing rooms
     #   call update rooms api
 
-    metrc_rooms = MetrcApi.get_rooms(facility.site_license) # Hash format
-    local_rooms = facility.rooms.to_a # Ruby object format
     new_rooms = get_new_rooms(metrc_rooms, local_rooms)
 
     # Create new rooms in Metrc
-    create_rooms_on_metrc(facility.site_license,
-                          new_rooms,
-                          local_rooms)
+    create_rooms_on_metrc(new_rooms, local_rooms)
 
     # Detect changes and update in Metrc
-    update_rooms_on_metrc(facility.site_license,
-                          local_rooms,
-                          metrc_rooms)
+    update_rooms_on_metrc(metrc_rooms, local_rooms)
 
-    # Update Metrc Id to local record
-    update_local_metrc_ids(facility.site_license,
-                           local_rooms)
+    # Update Metrc Id to local copy
+    update_local_metrc_ids(local_rooms)
+
     true
   rescue RestClient::ExceptionWithResponse => e
     pp JSON.parse(e.response.body)
@@ -39,6 +33,14 @@ class MetrcUpdateRoomsWorker
 
   def facility
     @facility ||= Facility.find(@facility_id)
+  end
+
+  def metrc_rooms
+    @metrc_rooms ||= MetrcApi.get_rooms(facility.site_license) # Hash
+  end
+
+  def local_rooms
+    local_rooms ||= facility.rooms.to_a # Ruby object format
   end
 
   def get_new_rooms(metrc_rooms, local_rooms)
@@ -56,7 +58,7 @@ class MetrcUpdateRoomsWorker
     new_rooms
   end
 
-  def create_rooms_on_metrc(site_license, new_rooms, local_rooms)
+  def create_rooms_on_metrc(new_rooms, local_rooms)
     if new_rooms.any?
       new_rooms.each do |room_name|
         found = local_rooms.detect { |i| i.name == room_name }
@@ -65,32 +67,33 @@ class MetrcUpdateRoomsWorker
           params = {
             "Name": found.name,
           }
-          pp "Calling Metrc API to create: #{found.name}"
-          MetrcApi.create_rooms(site_license, [params])
+          MetrcApi.create_rooms(facility.site_license, [params])
         end
       end
     end
   end
 
-  def update_rooms_on_metrc(site_license, local_rooms, metrc_rooms)
+  def update_rooms_on_metrc(metrc_rooms, local_rooms)
     if local_rooms.any?
       local_rooms.each do |room|
-        found = metrc_rooms.detect { |i| i['Name'].casecmp(room.name).zero? }
-        if found && room.metrc_id && found['Name'] != room.name
-          # Only call update when metrc_id exists and
-          # room name not same (case sensitive)
-          params = {
-            "Id": room.metrc_id,
-            "Name": room.name,
-          }
-          MetrcApi.update_rooms(site_license, [params])
+        if room.metrc_id
+          found = metrc_rooms.detect { |i| i['Name'].casecmp(room.name).zero? }
+          if found && found['Name'] != room.name
+            # Only call update when metrc_id exists and
+            # room name not same (case sensitive)
+            params = {
+              "Id": room.metrc_id,
+              "Name": room.name,
+            }
+            MetrcApi.update_rooms(facility.site_license, [params])
+          end
         end
       end
     end
   end
 
-  def update_local_metrc_ids(site_license, local_rooms)
-    metrc_rooms = MetrcApi.get_rooms(site_license) # Hash format
+  def update_local_metrc_ids(local_rooms)
+    metrc_rooms = MetrcApi.get_rooms(facility.site_license) # Hash format
     if local_rooms.any?
       local_rooms.each do |room|
         found = metrc_rooms.detect { |i| i['Name'].casecmp(room.name).zero? }

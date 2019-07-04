@@ -59,10 +59,13 @@
           <% metrc_h = current_facility.metrc_histories.find_by(code: "state_item_categories") %>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%">
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "MetrcUpdateItemCategoryWorker", code: "state_item_categories"), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "MetrcUpdateItemCategoryWorker",
+                                                                                        code: "state_item_categories"),
+                                                                                        class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer',
+                                                                                        method: :put, data: {remote: false}%>
           </div>
         </div>
-      
+
         <div class="dt-row">
           <div class="dtc pa4 pv2 bg-black-5" style="width: 70%">
             Unit of measure
@@ -70,7 +73,10 @@
           <% metrc_h = current_facility.metrc_histories.find_by(code: "state_unit_of_measures") %>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%">
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "MetrcUpdateUomWorker", code: "state_unit_of_measures"), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "MetrcUpdateUomWorker",
+                                                                                        code: "state_unit_of_measures"),
+                                                                                        class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer',
+                                                                                        method: :put, data: {remote: false}%>
           </div>
         </div>
 
@@ -86,10 +92,13 @@
           <div class="dtc pa4 pv2 bg-black-5" style="width: 70%">
             Facility - Read
           </div>
-          <% metrc_h = current_facility.metrc_histories.find_by(code: "facility_facility_read") %>
+          <% metrc_h = current_facility.metrc_histories.find_by(code: "facility_facility_info") %>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%">
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "", code: "facility_facility_read"), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "",
+                                                                                        code: "facility_facility_info"),
+                                                                                        class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer',
+                                                                                        method: :put, data: {remote: false}%>
           </div>
         </div>
         <div class="dt-row">
@@ -99,17 +108,24 @@
           <% metrc_h = current_facility.metrc_histories.find_by(code: "facility_strains") %>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%">
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "", code: "facility_strains"), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "",
+                                                                                        code: "facility_strains"),
+                                                                                        class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer',
+                                                                                        method: :put, data: {remote: false}%>
           </div>
         </div>
         <div class="dt-row">
           <div class="dtc pa4 pv2 bg-black-5" style="width: 70%">
-            Items (E.g. Bud's Blue Dream)
+            Items
           </div>
           <% metrc_h = current_facility.metrc_histories.find_by(code: "facility_items") %>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%">
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "", code: "facility_items"), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "MetrcUpdateItemWorker",
+                                                                                        code: "facility_items",
+                                                                                        facility_id: current_facility.id),
+                                                                                        class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer',
+                                                                                        method: :put, data: {remote: false}%>
           </div>
         </div>
         <div class="dt-row">
@@ -119,7 +135,10 @@
           <% metrc_h = current_facility.metrc_histories.find_by(code: "facility_rooms") %>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= metrc_h.present? ?  metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%">
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "", code: "facility_rooms"), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "",
+                                                                                        code: "facility_rooms"),
+                                                                                        class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer',
+                                                                                        method: :put, data: {remote: false}%>
           </div>
         </div>
         <div class="dt-row">
@@ -136,7 +155,10 @@
           <% metrc_h = current_facility.metrc_histories.find_by(code: "tags_receive_tags") %>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%">
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "", code: "tags_receive_tags"), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "",
+                                                                                        code: "tags_receive_tags"),
+                                                                                        class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer',
+                                                                                        method: :put, data: {remote: false}%>
           </div>
         </div>
         <div class="dt-row">
@@ -146,7 +168,10 @@
           <% metrc_h = current_facility.metrc_histories.find_by(code: "tags_void_unused_tag") %>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%">
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "", code: "tags_void_unused_tag"), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "",
+                                                                                        code: "tags_void_unused_tag"),
+                                                                                        class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer',
+                                                                                        method: :put, data: {remote: false}%>
           </div>
         </div>
         <div class="dt-row">
@@ -163,7 +188,10 @@
           <% metrc_h = current_facility.metrc_histories.find_by(code: "batches_batch_types") %>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%">
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "", code: "batches_batch_types"), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "",
+                                                                                        code: "batches_batch_types"),
+                                                                                        class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer',
+                                                                                        method: :put, data: {remote: false}%>
           </div>
         </div>
         <div class="dt-row">
@@ -173,7 +201,11 @@
           <% metrc_h = current_facility.metrc_histories.find_by(code: "batches_create_batch") %>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
           <div class="dtc tc pv2 bg-black-5" style="width: 15%">
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "", code: "batches_create_batch"), class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer', method: :put, data: {remote: false}%>
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "",
+                                                                                        code: "batches_create_batch"),
+                                                                                        class: 'ttu button--font white link dim bg-orange bn box--br3 ph2 pv2 dib pointer',
+                                                                                        method: :put,
+                                                                                        data: {remote: false}%>
           </div>
         </div>
         <div class="dt-row">

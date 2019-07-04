@@ -121,6 +121,11 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
     render json: ItemCategorySerializer.new(categories).serialized_json
   end
 
+  def items
+    items = Inventory::Item.order(name: 1)
+    render json: ItemSerializer.new(items).serialized_json
+  end
+
   def update_item_category
     category = Inventory::ItemCategory.find(params[:id])
     category.is_active = params[:is_active]

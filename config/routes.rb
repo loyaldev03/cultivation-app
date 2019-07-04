@@ -174,7 +174,7 @@ Rails.application.routes.draw do
       resources :packages do
         put 'bulk_update', on: :collection
       end
-      
+
       resources :raw_materials do
         put 'bulk_update', on: :collection
       end
@@ -182,7 +182,7 @@ Rails.application.routes.draw do
       resources :grow_methods do
         put 'bulk_update', on: :collection
       end
-      
+
       resources :grow_phases do
         put 'bulk_update', on: :collection
       end
@@ -309,6 +309,7 @@ Rails.application.routes.draw do
         get :non_nutrients, on: :collection
         get :upc, on: :collection
         get :item_categories, on: :collection
+        get :items, on: :collection
         post 'item_categories/:id/update', on: :collection, action: :update_item_category
       end
 

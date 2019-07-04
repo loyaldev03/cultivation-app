@@ -23,5 +23,7 @@ module Inventory
     field :requires_product_photo, type: Boolean, default: -> { false }
     field :can_contain_seeds, type: Boolean, default: -> { false }
     field :can_be_remediated, type: Boolean, default: -> { false }
+    # indicate this item category is active or not in this facility
+    field :is_active, type: Boolean, default: -> { false }
   end
 end

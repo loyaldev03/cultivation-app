@@ -101,7 +101,68 @@ class CategoryStore {
   /* - column filters */
 }
 
+class ItemStore {
+  @observable isLoading = false
+  @observable isDataLoaded = false
+  @observable columnFilters = {}
+  @observable items = []
+
+  async loadItems(facilityId) {
+    this.isLoading = false
+    const url = `/api/v1/products/items?facility_id=${facilityId}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response && response.data) {
+        this.items = response.data.map(x => x.attributes)
+        this.isDataLoaded = true
+      } else {
+        this.isDataLoaded = false
+      }
+    } catch (error) {
+      this.items = []
+      this.isDataLoaded = false
+      console.error(error)
+    } finally {
+      this.isLoading = false
+    }
+  }
+
+  /* + column filters */
+  isFiltered = record => {
+    let f = Object.keys(this.columnFilters).find(key => {
+      const filter = this.columnFilters[key].filter(x => x.value === false)
+      return filter.find(x => x.label === record[key])
+    })
+    return f ? true : false
+  }
+
+  updateFilterOptions = (propName, filterOptions) => {
+    const updated = {
+      ...this.columnFilters,
+      [propName]: filterOptions
+    }
+    this.columnFilters = updated
+  }
+
+  getUniqPropValues = propName => {
+    return uniq(this.filteredList.map(x => x[propName]).sort())
+  }
+
+  @computed
+  get filteredList() {
+    if (!isEmpty(this.columnFilters)) {
+      return this.items.filter(b => {
+        return !this.isFiltered(b)
+      })
+    } else {
+      return this.items
+    }
+  }
+  /* - column filters */
+}
+
 const categoryStore = new CategoryStore()
+const itemStore = new ItemStore()
 
 @observer
 class ItemApp extends React.Component {
@@ -119,7 +180,6 @@ class ItemApp extends React.Component {
         minWidth: 250
       },
       {
-        headerClassName: 'tl',
         Header: (
           <HeaderFilter
             title="Category Type"
@@ -159,11 +219,69 @@ class ItemApp extends React.Component {
           )
         }
       }
+    ],
+    itemColumns: [
+      {
+        accessor: 'id',
+        show: false
+      },
+      {
+        headerClassName: 'tl',
+        Header: 'Name',
+        accessor: 'name',
+        minWidth: 250
+      },
+      {
+        Header: (
+          <HeaderFilter
+            title="Item Category"
+            accessor="product_category_name"
+            getOptions={itemStore.getUniqPropValues}
+            onUpdate={itemStore.updateFilterOptions}
+          />
+        ),
+        minWidth: 200,
+        accessor: 'product_category_name'
+      },
+      {
+        Header: (
+          <HeaderFilter
+            title="Strain"
+            accessor="strain_name"
+            getOptions={itemStore.getUniqPropValues}
+            onUpdate={itemStore.updateFilterOptions}
+          />
+        ),
+        accessor: 'strain_name',
+      },
+      {
+        Header: (
+          <HeaderFilter
+            title="Unit of Measure"
+            accessor="uom_name"
+            getOptions={itemStore.getUniqPropValues}
+            onUpdate={itemStore.updateFilterOptions}
+          />
+        ),
+        accessor: 'uom_name',
+      },
+      {
+        Header: (
+          <HeaderFilter
+            title="Quantity Type"
+            accessor="quantity_type"
+            getOptions={itemStore.getUniqPropValues}
+            onUpdate={itemStore.updateFilterOptions}
+          />
+        ),
+        accessor: 'quantity_type'
+      }
     ]
   }
 
   componentDidMount() {
     categoryStore.loadCategories()
+    itemStore.loadItems(this.props.facilityId)
   }
 
   onSelectTab = tabIndex => {
@@ -176,7 +294,7 @@ class ItemApp extends React.Component {
 
   render() {
     const { facilityId } = this.props
-    const { categoryColumns, tabIndex } = this.state
+    const { itemColumns, categoryColumns, tabIndex } = this.state
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
@@ -214,7 +332,19 @@ class ItemApp extends React.Component {
                     />
                   </div>
                 </TabPanel>
-                <TabPanel />
+                <TabPanel>
+                  <div className="pb4 ph3">
+                    <p className="grey pt2">
+                      Items that are automatically generated when you create
+                      package plans.
+                    </p>
+                    <ListingTable
+                      data={itemStore.filteredList}
+                      columns={itemColumns}
+                      isLoading={itemStore.isLoading}
+                    />
+                  </div>
+                </TabPanel>
               </Tabs>
             </div>
           </div>

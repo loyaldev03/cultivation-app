@@ -120,6 +120,16 @@ class MetrcUpdateItemWorker
         if found
           item.metrc_id = found['Id']
           item.metrc_strain_id = found['StrainId']
+          item.product_category_name = found['ProductCategoryName']
+          item.product_category_type = found['ProductCategoryType']
+          item.quantity_type = found['QuantityType']
+          item.uom_name = found['UnitOfMeasureName']
+          item.approval_status = found['ApprovalStatus']
+          item.strain_name = found['StrainName']
+          item.unit_volume = found['UnitVolume']
+          item.unit_volume_uom_name = found['UnitVolumeUnitOfMeasureName']
+          item.unit_weight = found['UnitWeight']
+          item.unit_weight_uom_name = found['UnitWeightUnitOfMeasureName']
           item.is_used = found['IsUsed']
           item.save
         end

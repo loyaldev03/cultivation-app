@@ -10,5 +10,4 @@ class ItemCategorySerializer
   attribute :id do |object|
     object.id.to_s
   end
-
 end

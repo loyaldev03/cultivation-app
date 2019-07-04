@@ -7,28 +7,28 @@ module Common
       ## Plants
       UOM.find_or_create_by!(name: 'plant',
                              unit: 'plant',
-                             dimension: Constants::PLANTS_KEY,
+                             dimension: Constants::UOM_DMS_PIECES,
                              is_base_unit: true,
                              base_unit: 'plant',
                              conversion: 1)
 
       UOM.find_or_create_by!(name: 'seed',
                              unit: 'seed',
-                             dimension: Constants::PLANTS_KEY,
+                             dimension: Constants::UOM_DMS_PIECES,
                              is_base_unit: false,
                              base_unit: 'plant',
                              conversion: 1)
 
       UOM.find_or_create_by!(name: 'pot',
                              unit: 'pot',
-                             dimension: Constants::PLANTS_KEY,
+                             dimension: Constants::UOM_DMS_PIECES,
                              is_base_unit: false,
                              base_unit: 'plant',
                              conversion: 1)
 
       UOM.find_or_create_by!(name: 'cup',
                              unit: 'cup',
-                             dimension: Constants::PLANTS_KEY,
+                             dimension: Constants::UOM_DMS_PIECES,
                              is_base_unit: false,
                              base_unit: 'plant',
                              conversion: 1)

@@ -31,7 +31,7 @@ module Constants
   UOM_QTY_TYPE_COUNT = 'CountBased'.freeze
   UOM_QTY_TYPE_VOLUME = 'VolumeBased'.freeze
   UOM_QTY_TYPE_WEIGHT = 'WeightBased'.freeze
-  
+
   UOM_DMS_PIECES = 'pieces'.freeze
   UOM_DMS_VOLUME = 'volume'.freeze
   UOM_DMS_WEIGHT = 'weight'.freeze

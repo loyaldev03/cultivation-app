@@ -1,0 +1,43 @@
+<% content_for :breadcrumb do %>
+  <%= breadcrumbs ["Settings", settings_path], ["Purchasing", purchasing_path], "Customers" %>
+<% end %>
+
+<%= render 'layouts/right_sidebar' %>
+
+<div class="ph4 bg-white ma4 flex items-center pb3 pt3">
+  <div class="w-70">
+    <h2 class="pa0 ma0">Customers</h2>
+  </div>
+  <div class="w-30 tr">
+    <a href="#0"
+       data-toggle-right="<%= new_sales_customer_path %>"
+       class="btn btn--primary"
+    >
+      + Add New
+    </a>
+  </div>
+</div>
+
+<div class="bg-white mv3 mh4">
+  <table class="w-100 table collapse">
+    <thead>
+      <tr>
+        <th class="f6 dark-grey pv3 tl pl4 pr3">#</th>
+        <th class="f6 dark-grey pv3 tl ">Account No</th>
+        <th class="f6 dark-grey pv3 tl ">Name</th>
+        <th class="f6 dark-grey pv3 tl">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @records.try(:each_with_index) do |f, i| %>
+        <tr data-toggle-right="<%= edit_sales_customer_path(f.id)%>" class="pointer striped--light-gray">
+          <td class="f6 pv3 tl pl4 pr3 gray"><%= i+1 %></td>
+          <td class="f6 tl"><%= blank(f.account_no) %></td>
+          <td class="f6 tl"><%= blank(f.name) %></td>
+          <td class="f6 tl"><%= blank(f.status) %></td>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

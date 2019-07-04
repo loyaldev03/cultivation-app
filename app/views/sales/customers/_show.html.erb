@@ -1,0 +1,30 @@
+<div class="ph4 pv3 bb b--light-grey">
+  <h5 class="h6--font dark-grey ma0 ttc"><%= @record.name %></h5>
+</div>
+
+  
+  <div class="ph4 flex mt3">
+    <div class="w-100">
+      <label class="f6 fw6 db mb1 gray ttc">Name</label>      
+      <label class="f6 black"><%= @record.name%> </label>
+    </div>
+  </div>
+
+  <div class="ph4 flex mt3">
+    <div class="w-100">
+      <label class="f6 fw6 db mb1 gray ttc">Addresses</label>    
+      <% if @record.addresses.present? %>
+        <% @record.addresses.each do |address|%>  
+          <label class="f6 db mb1 ttc"><%= address['name'] %> </label>
+          <label class="f6 db mb1 ttc"><%= address['address'] %> </label>
+          <label class="f6 db mb1 ttc"><%= address['city'] %> </label>
+          <label class="f6 db mb1 ttc"><%= address['state'] %> </label>
+          <label class="f6 db mb1 ttc"><%= address['zipcode'] %> </label>
+          <label class="f6 db mb1 ttc"><%= address['country'] %> </label>
+          <br/>
+        <% end %>
+      <% else %>
+        <label class="f6 black">No Address</label>
+      <% end %>
+    </div>
+  </div>

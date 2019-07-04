@@ -22,7 +22,7 @@ task seed_until_po: :environment  do
   # Setup kg UOM
   UOM.find_or_create_by(name: 'kg',
                         unit: 'kg', 
-                        dimension: 'weight', 
+                        dimension: Constants::UOM_DMS_WEIGHT, 
                         is_base_unit: true, 
                         base_unit: 'kg',
                         conversion: 1)
@@ -62,56 +62,56 @@ task seed_until_po: :environment  do
                                             category: '', 
                                             sub_category: '', 
                                             key: 'nutrients',
-                                            uom_dimension: 'weight')
+                                            uom_dimension: Constants::UOM_DMS_WEIGHT)
 
   potassium = Inventory::Catalogue.create!( label: 'Potassium Product', 
                                             catalogue_type: 'raw_materials',
                                             category: 'nutrients', 
                                             sub_category: '', 
                                             key: 'potassium',
-                                            uom_dimension: 'weight')
+                                            uom_dimension: Constants::UOM_DMS_WEIGHT)
 
   seaweed   = Inventory::Catalogue.create!( label: 'Seaweed', 
                                             catalogue_type: 'raw_materials',
                                             category: 'nutrients', 
                                             sub_category: 'potassium', 
                                             key: 'seaweed', 
-                                            uom_dimension: 'weight')
+                                            uom_dimension: Constants::UOM_DMS_WEIGHT)
 
   nitrogen  = Inventory::Catalogue.create!( label: 'Nitrogen Product', 
                                             catalogue_type: 'raw_materials',
                                             category: 'nutrients', 
                                             sub_category: '', 
                                             key: 'nitrogen',
-                                            uom_dimension: 'weight')
+                                            uom_dimension: Constants::UOM_DMS_WEIGHT)
 
   blood_meal = Inventory::Catalogue.create!(label: 'Nitrogen Product', 
                                             catalogue_type: 'raw_materials',
                                             category: 'nutrients', 
                                             sub_category: 'nitrogen', 
                                             key: 'blood_meal',
-                                            uom_dimension: 'weight')
+                                            uom_dimension: Constants::UOM_DMS_WEIGHT)
 
   urea      = Inventory::Catalogue.create!( label: 'Nitrogen Product', 
                                             catalogue_type: 'raw_materials',
                                             category: 'nutrients', 
                                             sub_category: 'nitrogen', 
                                             key: 'urea',
-                                            uom_dimension: 'weight')
+                                            uom_dimension: Constants::UOM_DMS_WEIGHT)
 
   grow_lights = Inventory::Catalogue.create!( label: 'Grow Lights',
                                             catalogue_type: 'raw_materials',
                                             category: '', 
                                             sub_category: '', 
                                             key: 'grow_lights',
-                                            uom_dimension: 'weight')
+                                            uom_dimension: Constants::UOM_DMS_WEIGHT)
 
   eye_drops  = Inventory::Catalogue.create!(label: 'Eye drops',
                                             catalogue_type: 'raw_materials',
                                             category: '', 
                                             sub_category: '', 
                                             key: 'eye_drops',
-                                            uom_dimension: 'weight')
+                                            uom_dimension: Constants::UOM_DMS_WEIGHT)
 
   _desk      = Inventory::Catalogue.create!(label: 'Desk',
                                             catalogue_type: 'non_sales_product',
@@ -126,7 +126,7 @@ task seed_until_po: :environment  do
                                             category: '', 
                                             sub_category: '', 
                                             key: 'plant',
-                                            uom_dimension: 'pieces')
+                                            uom_dimension: Constants::UOM_DMS_PIECES)
 
   # 3. Setup vendor
   vendor =    Inventory::Vendor.find_or_create_by(name: 'vendor #1', vendor_no: 'VendOne')
@@ -140,7 +140,7 @@ task seed_until_po: :environment  do
 
   po.items.create!(                         catalogue: seaweed,
                                             quantity: 5,
-                                            uom: UOM.custom('bag'),
+                                            uom: UOM.pieces('pie'),
                                             price: 5,
                                             currency: 'USD',
                                             tax: 0,
@@ -211,7 +211,7 @@ task seed_until_po: :environment  do
   # Setup pot UOM
   UOM.find_or_create_by(name:         'Pot',
                         unit:         'pot', 
-                        dimension:    'plants', 
+                        dimension:    Constants::UOM_DMS_PIECES, 
                         is_base_unit: true, 
                         base_unit:    'pot',
                         conversion:   1)

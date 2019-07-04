@@ -71,18 +71,26 @@ function HeaderFilter({ title, accessor, getOptions, onUpdate }) {
                 data-placement={placement}
               >
                 <ul className="list pa1 ma0" style={{ minWidth: 150 }}>
-                  {options.map((x, i) => (
-                    <li key={i}>
-                      <label className="hover-bg-grey pointer pa2 flex justify-between items-center">
-                        <span className="pr4 ttc">{x.label}</span>
-                        <input
-                          type="checkbox"
-                          checked={x.value}
-                          onChange={handleChange(x)}
-                        />
-                      </label>
-                    </li>
-                  ))}
+                  {options.map((x, i) => {
+                    let label
+                    if (typeof x.label === 'boolean') {
+                      label = !!x.label ? 'Yes' : 'No'
+                    } else {
+                      label = x.label
+                    }
+                    return (
+                      <li key={i}>
+                        <label className="hover-bg-grey pointer pa2 flex justify-between items-center">
+                          <span className="pr4 ttc">{label}</span>
+                          <input
+                            type="checkbox"
+                            checked={x.value}
+                            onChange={handleChange(x)}
+                          />
+                        </label>
+                      </li>
+                    )
+                  })}
                 </ul>
                 <button
                   className="btn btn--secondary btn--small ma2"

@@ -1,6 +1,7 @@
 import 'babel-polyfill'
 import React from 'react'
 import isEmpty from 'lodash.isempty'
+import uniq from 'lodash.uniq'
 import classNames from 'classnames'
 import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
@@ -11,13 +12,13 @@ import {
   httpPostOptions,
   httpGetOptions,
   Loading,
+  HeaderFilter,
   ListingTable
 } from '../utils'
 
 class CategoryStore {
   @observable isLoading = false
   @observable isDataLoaded = false
-  @observable searchTerm = ''
   @observable columnFilters = {}
   @observable categories = []
 
@@ -91,13 +92,7 @@ class CategoryStore {
   get filteredList() {
     if (!isEmpty(this.columnFilters)) {
       return this.categories.filter(b => {
-        if (this.isFiltered(b)) {
-          return false
-        }
-        const filterLc = this.searchTerm.toLowerCase()
-        const nameLc = `${b.name}`.toLowerCase()
-        const results = nameLc.includes(filterLc)
-        return results
+        return !this.isFiltered(b)
       })
     } else {
       return this.categories
@@ -106,13 +101,13 @@ class CategoryStore {
   /* - column filters */
 }
 
-const store = new CategoryStore()
+const categoryStore = new CategoryStore()
 
 @observer
 class ItemApp extends React.Component {
   state = {
     tabIndex: 0,
-    columns: [
+    categoryColumns: [
       {
         accessor: 'id',
         show: false
@@ -121,16 +116,30 @@ class ItemApp extends React.Component {
         headerClassName: 'tl',
         Header: 'Name',
         accessor: 'name',
-        width: 300
+        minWidth: 250
       },
       {
         headerClassName: 'tl',
-        Header: 'Category Type',
+        Header: (
+          <HeaderFilter
+            title="Category Type"
+            accessor="product_category_type"
+            getOptions={categoryStore.getUniqPropValues}
+            onUpdate={categoryStore.updateFilterOptions}
+          />
+        ),
+        minWidth: 200,
         accessor: 'product_category_type'
       },
       {
-        headerClassName: 'tc',
-        Header: 'Active',
+        Header: (
+          <HeaderFilter
+            title="Active"
+            accessor="is_active"
+            getOptions={categoryStore.getUniqPropValues}
+            onUpdate={categoryStore.updateFilterOptions}
+          />
+        ),
         accessor: 'is_active',
         width: 100,
         Cell: props => {
@@ -154,7 +163,7 @@ class ItemApp extends React.Component {
   }
 
   componentDidMount() {
-    store.loadCategories()
+    categoryStore.loadCategories()
   }
 
   onSelectTab = tabIndex => {
@@ -162,12 +171,12 @@ class ItemApp extends React.Component {
   }
 
   onToggleActive = (id, value) => e => {
-    store.updateCategory(id, !value)
+    categoryStore.updateCategory(id, !value)
   }
 
   render() {
     const { facilityId } = this.props
-    const { columns, tabIndex } = this.state
+    const { categoryColumns, tabIndex } = this.state
     return (
       <React.Fragment>
         <div id="toast" className="toast" />
@@ -199,9 +208,9 @@ class ItemApp extends React.Component {
                       setting it to "Active"
                     </p>
                     <ListingTable
-                      data={store.filteredList}
-                      columns={columns}
-                      isLoading={store.isLoading}
+                      data={categoryStore.filteredList}
+                      columns={categoryColumns}
+                      isLoading={categoryStore.isLoading}
                     />
                   </div>
                 </TabPanel>

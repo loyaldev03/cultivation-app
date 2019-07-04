@@ -309,6 +309,7 @@ Rails.application.routes.draw do
         get :non_nutrients, on: :collection
         get :upc, on: :collection
         get :item_categories, on: :collection
+        get :items, on: :collection
         post 'item_categories/:id/update', on: :collection, action: :update_item_category
       end
 

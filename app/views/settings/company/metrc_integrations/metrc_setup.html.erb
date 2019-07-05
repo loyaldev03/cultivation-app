@@ -9,19 +9,33 @@
         <h5 class="tl pa0 ma0 h5--font dark-grey ttc">Metrc Integration</h5>
         <%= form_with model: @company_info, url: metrc_setup_settings_company_metrc_integrations_path, local: true do |f| %>
           <div class="flex mt3 justify-between">
+            <p>
+              <span class="db dark-grey">Enable METRC Integration</span>
+              <span class="grey">When enabled, item categories will be pulled from Metrc</span>
+            </p>
+            <div class="self-center">
+              <%= f.check_box :enable_metrc_integration,
+                checked: @company_info.enable_metrc_integration,
+                class: "toggle toggle-default",
+                data: { toggle: 'metric_enabled_options' }
+              %>
+              <label class="toggle-button" for="company_info_enable_metrc_integration"></label>
+            </div>
+          </div>
+          <div class="flex mt3 justify-between" data-collapse="metric_enabled_options">
             <div class="flex flex-column w-40">
               <%= f.label "User Key", class: "db mb1 grey subtitle-2 ttc" %>
               <%= f.text_field :metrc_user_key,
                 value: @company_info.metrc_user_key,
                 class: "grey ba b--light-grey br2 outline-0 pa2 db w-100" %>
             </div>
-            <%= f.submit "Save", class: "btn btn--primary btn--small self-end" %>
           </div>
+          <%= f.submit "Save", class: "btn btn--primary btn--small fr" %>
         <% end %>
       </div>
     </div>
 
-    <div class="dt pb4" style="table-layout: auto">
+    <div class="dt pb4" style="table-layout: auto" data-collapse="metric_enabled_options">
         <div class="dt-row">
           <div class="fw6 dtc pa4 pv3 bg-black-10">
             Data
@@ -548,3 +562,11 @@
         </div>
     </div>
 </div>
+
+<% content_for :before_body_end do %>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      setupCollapsible();
+    })
+  </script>
+<% end %>

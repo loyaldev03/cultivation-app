@@ -1,6 +1,6 @@
 class Settings::Company::MetrcIntegrationsController < ApplicationController
   authorize_resource class: false
-  before_action :get_company
+  before_action :set_company
 
   def metrc_setup
   end
@@ -10,8 +10,9 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
 
   def update
     @company_info.metrc_user_key = company_info_params[:metrc_user_key]
+    @company_info.enable_metrc_integration = company_info_params[:enable_metrc_integration]
     if @company_info.save
-      flash[:notice] = 'Update to METRC'
+      flash[:notice] = 'Updated'
       redirect_to metrc_setup_settings_company_metrc_integrations_path
     else
       render 'metrc_setup'
@@ -41,11 +42,13 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
 
   private
 
-  def get_company
-    @company_info = CompanyInfo.last
+  def set_company
+    # Because there's only 1 company per host
+    @company_info = CompanyInfo.first
   end
 
   def company_info_params
-    params.require(:company_info).permit(:metrc_user_key)
+    params.require(:company_info).permit(:metrc_user_key,
+                                         :enable_metrc_integration)
   end
 end

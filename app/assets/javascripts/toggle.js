@@ -48,28 +48,17 @@ function updateCollapsibleState() {
 
 function updateToggleCollapsible(e) {
   const targetClass = e.target.getAttribute('data-toggle')
-  const invertTarget = e.target.getAttribute('data-invert');
-  const targetElm = $_(`[data-collapse="${targetClass}"]`)
-  if (targetElm) {
+  const invertTarget = e.target.getAttribute('data-invert')
+  $$(`[data-collapse="${targetClass}"]`).forEach(function(targetElm) {
     if (invertTarget) {
-      if (e.target.checked) {
-        hide(targetElm)
-      }
-      else {
-        show(targetElm)
-      }
+      if (e.target.checked) { hide(targetElm) }
+      else { show(targetElm) }
     }
     else{
-      if (e.target.checked) {
-        show(targetElm)
-      }
-      else {
-        hide(targetElm)
-      }
-
+      if (e.target.checked) { show(targetElm) }
+      else { hide(targetElm) }
     }
-   
-  }
+  })
 }
 
 function updateToggleSelect(e) {

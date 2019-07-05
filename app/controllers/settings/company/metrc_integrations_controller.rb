@@ -11,7 +11,7 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
   def update
     @company_info.metrc_user_key = company_info_params[:metrc_user_key]
     if @company_info.save
-      flash[:notice] = 'Metrc Integration info saved'
+      flash[:notice] = 'Update to METRC'
       redirect_to metrc_setup_settings_company_metrc_integrations_path
     else
       render 'metrc_setup'

@@ -188,7 +188,7 @@ class ItemApp extends React.Component {
             onUpdate={categoryStore.updateFilterOptions}
           />
         ),
-        minWidth: 200,
+        minWidth: 180,
         accessor: 'product_category_type'
       },
       {
@@ -240,8 +240,8 @@ class ItemApp extends React.Component {
             onUpdate={itemStore.updateFilterOptions}
           />
         ),
-        minWidth: 200,
-        accessor: 'product_category_name'
+        accessor: 'product_category_name',
+        minWidth: 150
       },
       {
         Header: (
@@ -253,8 +253,10 @@ class ItemApp extends React.Component {
           />
         ),
         accessor: 'strain_name',
+        minWidth: 200
       },
       {
+        headerClassName: 'tl',
         Header: (
           <HeaderFilter
             title="Unit of Measure"
@@ -264,8 +266,10 @@ class ItemApp extends React.Component {
           />
         ),
         accessor: 'uom_name',
+        minWidth: 120
       },
       {
+        headerClassName: 'tl',
         Header: (
           <HeaderFilter
             title="Quantity Type"
@@ -274,7 +278,8 @@ class ItemApp extends React.Component {
             onUpdate={itemStore.updateFilterOptions}
           />
         ),
-        accessor: 'quantity_type'
+        accessor: 'quantity_type',
+        minWidth: 120
       }
     ]
   }
@@ -300,7 +305,7 @@ class ItemApp extends React.Component {
         <div id="toast" className="toast" />
         <div className="pa4">
           <div className="bg-white box--shadow pa4 fl w-100">
-            <div className="fl w-70-l w-100-m">
+            <div className="fl w-80-l w-100-m">
               <h5 className="tl pa0 ma0 h5--font dark-grey ttc">
                 Product Setup
               </h5>
@@ -308,7 +313,7 @@ class ItemApp extends React.Component {
                 Manage your facility's product categories &amp; items
               </p>
             </div>
-            <div className="fl w-70-l w-100-m">
+            <div className="fl w-80-l w-100-m">
               <Tabs
                 className="react-tabs--primary react-tabs--boxed-panel"
                 selectedIndex={tabIndex}

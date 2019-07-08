@@ -209,8 +209,6 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
 
     result = []
     params[:product_plans].each do |i|
-      Rails.logger.debug "\t\t\t>>>> params.inspect - i: #{i.inspect}"
-
       p = Cultivation::ProductTypePlan.new(
         product_type: i[:product_type],
         batch_id: batch,
@@ -224,6 +222,11 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
           conversion: j[:conversion],
           total_weight: j[:quantity].to_f * j[:conversion].to_f,
         )
+      end
+
+      # Convert Package Plans into Metrc Items in the background.
+      if enable_metrc_integration?
+        GenerateItemFromPackagePlan.perform_async(batch_id)
       end
 
       p.save!

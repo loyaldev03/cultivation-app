@@ -201,11 +201,11 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   end
 
   def save_product_plans
-    batch = Cultivation::Batch.find(params[:batch_id])
-    harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: params[:batch_id])
+    batch_id = params[:batch_id]
+    batch = Cultivation::Batch.find(batch_id)
+    harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: batch_id)
 
-    Cultivation::ProductTypePlan.where(batch_id: params[:batch_id]).destroy_all
-    Rails.logger.debug "\t\t\t>>>> params.inspect: #{params.inspect}"
+    Cultivation::ProductTypePlan.where(batch_id: batch_id).destroy_all
 
     result = []
     params[:product_plans].each do |i|

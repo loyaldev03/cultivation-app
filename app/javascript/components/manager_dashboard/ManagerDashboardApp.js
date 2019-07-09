@@ -70,9 +70,7 @@ class ManagerDashboardApp extends React.Component {
           </div>
           <div className="w-50">
             <div className="ba b--light-gray pa3 bg-white br2">
-              <StaffCapacity
-                batches={this.props.batches}
-              />
+              <StaffCapacity batches={this.props.batches} />
             </div>
           </div>
         </div>

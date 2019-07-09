@@ -1,7 +1,5 @@
 import React from 'react'
-import {
-  TempBatchDistribution,
-} from '../utils'
+import { TempBatchDistribution } from '../utils'
 export default class UnassignedTask extends React.Component {
   constructor(props) {
     super(props)

@@ -4,7 +4,6 @@ import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import { Doughnut } from 'react-chartjs-2'
 
-
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
     <a
@@ -59,17 +58,15 @@ export default class CostBreakdown extends React.Component {
               <h1 className="f6 fw6 ml2 grey">This Month 3 months</h1>
               <i className="material-icons grey mr2  md-21 mt2">
                 keyboard_arrow_down
-                    </i>
+              </i>
             </div>
           </Tippy>
         </div>
-        {
-          ChartStore.cost_breakdown_loaded ? (
-            <Doughnut data={ChartStore.costBreakdown} />
-          ) : (
-              'loading...'
-            )
-        }
+        {ChartStore.cost_breakdown_loaded ? (
+          <Doughnut data={ChartStore.costBreakdown} />
+        ) : (
+          'loading...'
+        )}
       </React.Fragment>
     )
   }

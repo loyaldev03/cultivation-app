@@ -1,7 +1,5 @@
 import React from 'react'
-import {
-  TempHomeUnassignTask,
-} from '../utils'
+import { TempHomeUnassignTask } from '../utils'
 import Tippy from '@tippy.js/react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
@@ -36,9 +34,7 @@ export default class StaffCapacity extends React.Component {
     return (
       <React.Fragment>
         <div className="flex justify-between mb4">
-          <h1 className="f5 fw6">
-            Staff Capacity vs Production Schedule
-                </h1>
+          <h1 className="f5 fw6">Staff Capacity vs Production Schedule</h1>
 
           <Tippy
             placement="bottom-end"
@@ -64,15 +60,15 @@ export default class StaffCapacity extends React.Component {
               </h1>
               <i className="material-icons grey mr2  md-21 mt2">
                 keyboard_arrow_down
-                    </i>
+              </i>
             </div>
           </Tippy>
         </div>
         {ChartStore.worker_capacity_loaded ? (
           <WorkerCapacityChart data={ChartStore.data_worker_capacity} />
         ) : (
-            'loading...'
-          )}
+          'loading...'
+        )}
       </React.Fragment>
     )
   }

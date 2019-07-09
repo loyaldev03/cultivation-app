@@ -1,7 +1,5 @@
 import React from 'react'
-import {
-  TempHomeStrain,
-} from '../utils'
+import { TempHomeStrain } from '../utils'
 export default class UnassignedTask extends React.Component {
   constructor(props) {
     super(props)

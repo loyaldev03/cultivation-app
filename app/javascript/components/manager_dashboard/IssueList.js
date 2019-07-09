@@ -1,7 +1,5 @@
 import React from 'react'
-import {
-  TempHomeIssue,
-} from '../utils'
+import { TempHomeIssue } from '../utils'
 export default class UnassignedTask extends React.Component {
   constructor(props) {
     super(props)

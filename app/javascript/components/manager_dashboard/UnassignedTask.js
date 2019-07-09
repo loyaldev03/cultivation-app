@@ -1,7 +1,5 @@
 import React from 'react'
-import {
-  TempHomeUnassignTask,
-} from '../utils'
+import { TempHomeUnassignTask } from '../utils'
 export default class UnassignedTask extends React.Component {
   constructor(props) {
     super(props)
@@ -12,5 +10,6 @@ export default class UnassignedTask extends React.Component {
       <React.Fragment>
         <img src={TempHomeUnassignTask} />
       </React.Fragment>
-    )}
+    )
+  }
 }

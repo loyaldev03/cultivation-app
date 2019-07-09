@@ -1,15 +1,20 @@
 import React from 'react'
-import { TempHomeUnassignTask, TempHomeSchedule, TempHomeIssue, 
-  TempHomePerformer, TempTestResult, TempBatchDistribution, 
-  TempHomeTaskHighestCost, TempHomeStrain} from '../utils'
+import {
+  TempHomeUnassignTask,
+  TempHomeSchedule,
+  TempHomeIssue,
+  TempHomePerformer,
+  TempTestResult,
+  TempBatchDistribution,
+  TempHomeTaskHighestCost,
+  TempHomeStrain
+} from '../utils'
 import WorkerCapacityChart from './WorkerCapacityChart'
 import CostBreakdownChart from './CostBreakdownChart'
-import { Doughnut } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
-
-
 
 @observer
 export default class OverallInfo extends React.Component {
@@ -89,7 +94,6 @@ export default class OverallInfo extends React.Component {
             </div>
           </div>
         </div>
-
       </React.Fragment>
     )
   }

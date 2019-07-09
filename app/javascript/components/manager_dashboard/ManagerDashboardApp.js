@@ -4,12 +4,17 @@ import { observer } from 'mobx-react'
 import OverallInfo from './OverallInfo'
 import ChartStore from './ChartStore'
 import {
-  TempHomeUnassignTask, TempHomeSchedule, TempHomeIssue,
-  TempHomePerformer, TempTestResult, TempBatchDistribution,
-  TempHomeTaskHighestCost, TempHomeStrain
+  TempHomeUnassignTask,
+  TempHomeSchedule,
+  TempHomeIssue,
+  TempHomePerformer,
+  TempTestResult,
+  TempBatchDistribution,
+  TempHomeTaskHighestCost,
+  TempHomeStrain
 } from '../utils'
 import WorkerCapacityChart from './WorkerCapacityChart'
-import { Doughnut } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2'
 import Tippy from '@tippy.js/react'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
@@ -28,12 +33,15 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
 class ManagerDashboardApp extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { date: new Date(), batches: props.batches, selectedBatch: this.props.batches[0] }
+    this.state = {
+      date: new Date(),
+      batches: props.batches,
+      selectedBatch: this.props.batches[0]
+    }
 
     ChartStore.loadWorkerCapacity(props.batches[0].id)
     ChartStore.loadCostBreakdown('June', '2019')
   }
-
 
   onChangeWorkerCapacityBatch = batch => {
     this.setState({ selectedBatch: batch })
@@ -89,8 +97,8 @@ class ManagerDashboardApp extends React.Component {
               {ChartStore.worker_capacity_loaded ? (
                 <WorkerCapacityChart data={ChartStore.data_worker_capacity} />
               ) : (
-                  'loading...'
-                )}
+                'loading...'
+              )}
             </div>
           </div>
         </div>
@@ -103,9 +111,7 @@ class ManagerDashboardApp extends React.Component {
           <div className="w-40">
             <div className="ba b--light-gray pa3 bg-white br2">
               <div className="flex justify-between mb4">
-                <h1 className="f5 fw6">
-                  Cost Breakdown
-                </h1>
+                <h1 className="f5 fw6">Cost Breakdown</h1>
 
                 <Tippy
                   placement="bottom-end"
@@ -126,9 +132,7 @@ class ManagerDashboardApp extends React.Component {
                   }
                 >
                   <div className="flex ba b--light-silver br2 pointer dim">
-                    <h1 className="f6 fw6 ml2 grey">
-                      This Month 3 months
-                    </h1>
+                    <h1 className="f6 fw6 ml2 grey">This Month 3 months</h1>
                     <i className="material-icons grey mr2  md-21 mt2">
                       keyboard_arrow_down
                     </i>
@@ -138,8 +142,8 @@ class ManagerDashboardApp extends React.Component {
               {ChartStore.cost_breakdown_loaded ? (
                 <Doughnut data={ChartStore.costBreakdown} />
               ) : (
-                  'loading...'
-                )}
+                'loading...'
+              )}
             </div>
           </div>
         </div>

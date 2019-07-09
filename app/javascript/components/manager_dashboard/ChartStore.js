@@ -12,7 +12,6 @@ class ChartStore {
   @observable worker_capacity_loaded = false
   @observable cost_breakdown_loaded = false
 
-
   @action
   async loadWorkerCapacity(batchId) {
     this.isLoading = true
@@ -34,7 +33,6 @@ class ChartStore {
     } finally {
     }
   }
-
 
   @action
   async loadCostBreakdown(month, year) {
@@ -61,31 +59,17 @@ class ChartStore {
     }
   }
 
-
   @computed get costBreakdown() {
     if (this.cost_breakdown_loaded) {
       let final_result = {
-        labels: [
-          'Materials',
-          'Labor',
-          'Water',
-          'Electricity'
-        ],
-        datasets: [{
-          data: this.data_cost_breakdown.map(e => e.value),
-          backgroundColor: [
-            '#a29cfe',
-            '#4a69bd',
-            '#efaa1a',
-            '#00b894'
-          ],
-          hoverBackgroundColor: [
-            '#a29cfe',
-            '#4a69bd',
-            '#efaa1a',
-            '#00b894'
-          ]
-        }]
+        labels: ['Materials', 'Labor', 'Water', 'Electricity'],
+        datasets: [
+          {
+            data: this.data_cost_breakdown.map(e => e.value),
+            backgroundColor: ['#a29cfe', '#4a69bd', '#efaa1a', '#00b894'],
+            hoverBackgroundColor: ['#a29cfe', '#4a69bd', '#efaa1a', '#00b894']
+          }
+        ]
       }
 
       return final_result
@@ -93,8 +77,6 @@ class ChartStore {
       return {}
     }
   }
-
-
 }
 
 const chartStore = new ChartStore()

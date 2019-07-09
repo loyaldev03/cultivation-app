@@ -66,4 +66,4 @@ class ItemStore {
 
 const itemStore = new ItemStore()
 
-export default itemStore;
+export default itemStore

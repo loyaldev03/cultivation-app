@@ -9,6 +9,12 @@ class HomeController < ApplicationController
   def dashboard
     if ['manager', 'admin'].include? current_user.user_mode
       @dashboard = DashboardForm::DashboardForm.new
+      @batches = Cultivation::Batch.all.active.map do |b|
+        {
+          id: b.id.to_s,
+          name: b.name,
+        }
+      end
     else
       redirect_to worker_dashboard_path
     end

@@ -21,5 +21,6 @@ module Inventory
 
     belongs_to :facility, class_name: 'Facility'
     belongs_to :created_by, class_name: 'User'
+    has_many :plants, class_name: 'Inventory::Plant'
   end
 end

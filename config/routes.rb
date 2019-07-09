@@ -446,6 +446,15 @@ Rails.application.routes.draw do
       end
 
       resources :harvests, only: [:index]
+      resources :charts, only: [:index] do
+        collection do
+          get 'batch_test_result'
+          get 'strain_distribution'
+          get 'worker_capacity'
+          get 'batch_distribution'
+          get 'cost_breakdown'
+        end
+      end
       resources :holidays, only: [:index, :create, :update] do 
         get 'show_by_date', on: :collection
       end

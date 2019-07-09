@@ -14,8 +14,17 @@ import {
   TempHomeStrain
 } from '../utils'
 import WorkerCapacityChart from './WorkerCapacityChart'
-import { Doughnut } from 'react-chartjs-2'
-import Tippy from '@tippy.js/react'
+import UnassignedTask from './UnassignedTask'
+import StaffCapacity from './StaffCapacity'
+import ScheduleList from './ScheduleList'
+import CostBreakdown from './CostBreakdown'
+
+import IssueList from './IssueList'
+import PerformerList from './PerformerList'
+import TestResultList from './TestResultList'
+import BatchDistribution from './BatchDistribution'
+import HighestCostTaskList from './HighestCostTaskList'
+import StrainDistribution from './StrainDistribution'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -56,130 +65,62 @@ class ManagerDashboardApp extends React.Component {
         <div className="flex mt4 h-50">
           <div className="w-50">
             <div className="ba b--light-gray pa3 bg-white br2 mr3">
-              <img src={TempHomeUnassignTask} />
+              <UnassignedTask />
             </div>
           </div>
           <div className="w-50">
             <div className="ba b--light-gray pa3 bg-white br2">
-              <div className="flex justify-between mb4">
-                <h1 className="f5 fw6">
-                  Staff Capacity vs Production Schedule
-                </h1>
-
-                <Tippy
-                  placement="bottom-end"
-                  trigger="click"
-                  duration="0"
-                  content={
-                    <div className="bg-white f6 flex">
-                      <div className="db shadow-4">
-                        {this.props.batches.map(e => (
-                          <MenuButton
-                            text={e.name}
-                            className=""
-                            onClick={() => this.onChangeWorkerCapacityBatch(e)}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <div className="flex ba b--light-silver br2 pointer dim">
-                    <h1 className="f6 fw6 ml2 grey">
-                      {this.state.selectedBatch.name}
-                    </h1>
-                    <i className="material-icons grey mr2  md-21 mt2">
-                      keyboard_arrow_down
-                    </i>
-                  </div>
-                </Tippy>
-              </div>
-              {ChartStore.worker_capacity_loaded ? (
-                <WorkerCapacityChart data={ChartStore.data_worker_capacity} />
-              ) : (
-                'loading...'
-              )}
+              <StaffCapacity
+                batches={this.props.batches}
+              />
             </div>
           </div>
         </div>
         <div className="flex mt4 h-50">
           <div className="w-60">
             <div className="ba b--light-gray pa3 bg-white br2 mr3">
-              <img src={TempHomeSchedule} />
+              <ScheduleList />
             </div>
           </div>
           <div className="w-40">
             <div className="ba b--light-gray pa3 bg-white br2">
-              <div className="flex justify-between mb4">
-                <h1 className="f5 fw6">Cost Breakdown</h1>
-
-                <Tippy
-                  placement="bottom-end"
-                  trigger="click"
-                  duration="0"
-                  content={
-                    <div className="bg-white f6 flex">
-                      <div className="db shadow-4">
-                        {this.props.batches.map(e => (
-                          <MenuButton
-                            text={e.name}
-                            className=""
-                            onClick={() => this.onChangeWorkerCapacityBatch(e)}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  }
-                >
-                  <div className="flex ba b--light-silver br2 pointer dim">
-                    <h1 className="f6 fw6 ml2 grey">This Month 3 months</h1>
-                    <i className="material-icons grey mr2  md-21 mt2">
-                      keyboard_arrow_down
-                    </i>
-                  </div>
-                </Tippy>
-              </div>
-              {ChartStore.cost_breakdown_loaded ? (
-                <Doughnut data={ChartStore.costBreakdown} />
-              ) : (
-                'loading...'
-              )}
+              <CostBreakdown batches={this.props.batches} />
             </div>
           </div>
         </div>
         <div className="flex mt4 h-50">
           <div className="w-50">
             <div className="ba b--light-gray pa3 bg-white br2 mr3">
-              <img src={TempHomeIssue} height={350} />
+              <IssueList />
             </div>
           </div>
           <div className="w-50">
             <div className="ba b--light-gray pa3 bg-white br2 mr3">
-              <img src={TempHomePerformer} height={350} />
-            </div>
-          </div>
-        </div>
-        <div className="flex mt4 h-50">
-          <div className="w-50">
-            <div className="ba b--light-gray pa3 bg-white br2 mr3">
-              <img src={TempTestResult} height={350} />
-            </div>
-          </div>
-          <div className="w-50">
-            <div className="ba b--light-gray pa3 bg-white br2 mr3">
-              <img src={TempBatchDistribution} height={350} />
+              <PerformerList />
             </div>
           </div>
         </div>
         <div className="flex mt4 h-50">
           <div className="w-50">
             <div className="ba b--light-gray pa3 bg-white br2 mr3">
-              <img src={TempHomeTaskHighestCost} height={350} />
+              <TestResultList />
             </div>
           </div>
           <div className="w-50">
             <div className="ba b--light-gray pa3 bg-white br2 mr3">
-              <img src={TempHomeStrain} height={350} />
+              <BatchDistribution />
+            </div>
+          </div>
+        </div>
+        <div className="flex mt4 h-50">
+          <div className="w-50">
+            <div className="ba b--light-gray pa3 bg-white br2 mr3">
+              <HighestCostTaskList />
+            </div>
+          </div>
+          <div className="w-50">
+            <div className="ba b--light-gray pa3 bg-white br2 mr3">
+              <StrainDistribution />
             </div>
           </div>
         </div>

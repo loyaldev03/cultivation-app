@@ -252,7 +252,7 @@ class ItemApp extends React.Component {
             onUpdate={itemStore.updateFilterOptions}
           />
         ),
-        accessor: 'strain_name',
+        accessor: 'strain_name'
       },
       {
         Header: (
@@ -263,7 +263,7 @@ class ItemApp extends React.Component {
             onUpdate={itemStore.updateFilterOptions}
           />
         ),
-        accessor: 'uom_name',
+        accessor: 'uom_name'
       },
       {
         Header: (

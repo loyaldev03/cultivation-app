@@ -111,7 +111,10 @@ class HarvestBatchForm extends React.Component {
   render() {
     const { onClose } = this.props
     const { harvest_name, location_id, errors, uom } = this.state
-    const uomOptions = ['g', 'lb'].map(x => ({ label: x, value: x }))
+    const uomOptions = [
+      { value: 'g', label: 'Grams (g)', },
+      { value: 'lb', label: 'Pound (lb)' }
+    ]
 
     return (
       <div>

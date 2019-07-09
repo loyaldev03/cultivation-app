@@ -16,12 +16,24 @@ module Charts
         labour_cost += task.actual_labor_cost
         material_cost += task.actual_material_cost
       end
-      {
-        material_cost: material_cost,
-        labour_cost: labour_cost,
-        water_cost: 200,
-        electricity: 1200,
-      }
+      [
+        {
+          cost_type: 'material',
+          value: material_cost,
+        },
+        {
+          cost_type: 'labour',
+          value: labour_cost,
+        },
+        {
+          cost_type: 'water',
+          value: 200,
+        },
+        {
+          cost_type: 'electricity',
+          value: 1200,
+        },
+      ]
     end
   end
 end

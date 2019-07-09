@@ -7633,6 +7633,14 @@ react-calendar@^2.19.0:
     prop-types "^15.6.0"
     react-lifecycles-compat "^3.0.4"
 
+react-chartjs-2@^2.7.6:
+  version "2.7.6"
+  resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-2.7.6.tgz#b8cd29bed00bf55b9e8172b06466b4ecf2b86bfb"
+  integrity sha512-xDr0jhgt/o26atftXxTVsepz+QYZI2GNKBYpxtLvYgwffLUm18a9n562reUJAHvuwKsy2v+qMlK5HyjFtSW0mg==
+  dependencies:
+    lodash "^4.17.4"
+    prop-types "^15.5.8"
+
 react-date-picker@7.5.1:
   version "7.5.1"
   resolved "https://registry.yarnpkg.com/react-date-picker/-/react-date-picker-7.5.1.tgz#bf2b997e0433e422d6466c5eeaaed084f578b449"

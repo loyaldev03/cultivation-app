@@ -18,6 +18,13 @@ import TempPackagesSoldWidgets from '../../../assets/images/dummy/packages-sold.
 import TempPackagesHistory from '../../../assets/images/dummy/product-history.png'
 
 import TempHomeUnassignTask from '../../../assets/images/dummy/home-unassign-tasks.png'
+import TempHomeSchedule from '../../../assets/images/dummy/home-schedule.png'
+import TempHomeIssue from '../../../assets/images/dummy/home-issue.png'
+import TempHomePerformer from '../../../assets/images/dummy/home-performers.png'
+import TempTestResult from '../../../assets/images/dummy/home-test-result.png'
+import TempBatchDistribution from '../../../assets/images/dummy/home-batch-distribution.png'
+import TempHomeTaskHighestCost from '../../../assets/images/dummy/home-task-highest-cost.png'
+import TempHomeStrain from '../../../assets/images/dummy/home-strain-distribution.png'
 
 import DefaultAvatar from '../../../assets/images/blank-avatar.png'
 export {
@@ -39,6 +46,13 @@ export {
   TempPackagesSoldWidgets,
   TempPackagesHistory,
   TempHomeUnassignTask,
+  TempHomeSchedule,
+  TempHomeIssue,
+  TempHomePerformer,
+  TempTestResult,
+  TempBatchDistribution,
+  TempHomeTaskHighestCost,
+  TempHomeStrain,
   WorkerDashboardGraph,
   DefaultAvatar
 }

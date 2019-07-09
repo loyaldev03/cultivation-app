@@ -1,0 +1,10 @@
+<tr>
+  <td>
+    <%= f.input_field :_destroy, as: :hidden %>
+    <%= link_to 'Delete', '#', class: 'remove_record' %>
+  </td>
+  <td><%= f.input :address, label: false %></td>
+  <td><%= f.input :zipcode, label: false %></td>
+  <td><%= f.input :city, label: false, as: :string %></td>
+  <td><%= f.input :country, label: false, as: :string %></td>
+</tr>

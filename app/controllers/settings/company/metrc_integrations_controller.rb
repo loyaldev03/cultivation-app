@@ -19,13 +19,22 @@ class Settings::Company::MetrcIntegrationsController < ApplicationController
   end
 
   def update_metrc
-    metrc_hist = current_facility.metrc_histories.find_or_create_by(code: params[:code])
+    metrc_hist = current_facility.
+      metrc_histories.
+      find_or_create_by(code: params[:code])
+
     if metrc_hist
       metrc_hist.value = Time.current
       metrc_hist.save
     end
+
     metrc = params[:type].constantize
-    metrc.perform_async
+    if params[:facility_id]
+      metrc.perform_async params[:facility_id]
+    else
+      metrc.perform_async
+    end
+
     flash[:notice] = 'Metrc updated'
     redirect_to metrc_setup_settings_company_metrc_integrations_path
   end

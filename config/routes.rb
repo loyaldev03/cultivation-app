@@ -92,6 +92,10 @@ Rails.application.routes.draw do
     resources :vendor_invoices, only: [:index, :show]
   end
 
+  namespace 'sales', as: :sales do
+    resources :customers, only: [:index, :edit, :update, :new, :create, :destroy, :show]
+  end
+
   namespace 'worker' do
     resources :login, only: [:index] do
       post    'generate_code', on: :collection
@@ -170,7 +174,7 @@ Rails.application.routes.draw do
       resources :packages do
         put 'bulk_update', on: :collection
       end
-      
+
       resources :raw_materials do
         put 'bulk_update', on: :collection
       end
@@ -178,7 +182,7 @@ Rails.application.routes.draw do
       resources :grow_methods do
         put 'bulk_update', on: :collection
       end
-      
+
       resources :grow_phases do
         put 'bulk_update', on: :collection
       end
@@ -304,6 +308,9 @@ Rails.application.routes.draw do
       resources :products, only: [:index] do
         get :non_nutrients, on: :collection
         get :upc, on: :collection
+        get :item_categories, on: :collection
+        get :items, on: :collection
+        post 'item_categories/:id/update', on: :collection, action: :update_item_category
       end
 
       resources :strains, only: [:index, :create, :show] do

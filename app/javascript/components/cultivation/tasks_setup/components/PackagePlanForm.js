@@ -1,6 +1,5 @@
 import React from 'react'
 import Select from 'react-select'
-import reactSelectStyle from '../../../utils/reactSelectStyle'
 import {
   SlidePanelHeader,
   SlidePanelFooter,
@@ -12,6 +11,7 @@ import ProductTypeSection, {
   convertToHarvestBatchUom
 } from './ProductTypeSection'
 import loadHarvestBatch from '../actions/loadHarvestBatch'
+import ItemCategorySelector from './ItemCategorySelector'
 // import { TextInput, NumericInput, FieldError } from '../../../utils/FormHelpers'
 
 class PackagePlanForm extends React.Component {
@@ -59,6 +59,7 @@ class PackagePlanForm extends React.Component {
 
   onAddProductType = event => {
     event.preventDefault()
+    const category = this.categorySelector.getSelectedCategory()
     const product_type = this.state.productType.value
 
     this.setState({
@@ -152,24 +153,21 @@ class PackagePlanForm extends React.Component {
     }
 
     const selectedProductTypes = this.state.data.map(x => x.product_type)
-    const options = ProductTypes.filter(
-      x => selectedProductTypes.indexOf(x) < 0
-    ).map(x => ({ value: x, label: x }))
 
     return (
       <div className="ph4 mt2 flex">
         <div className="w-100 flex bg-black-05 pa3 items-center">
           <div className="w-60">
-            <Select
-              options={options}
-              styles={reactSelectStyle}
+            <ItemCategorySelector
+              ref={select => (this.categorySelector = select)}
               value={this.state.productType}
+              excludes={selectedProductTypes}
               onChange={this.onPickProductType}
             />
           </div>
           <div className="w-30 pl3">
             <a
-              href="#"
+              href="#0"
               className="btn btn--primary btn--small"
               onClick={this.onAddProductType}
             >
@@ -200,7 +198,6 @@ class PackagePlanForm extends React.Component {
             y.quantity,
             this.state.harvestBatch.uom
           )
-          // console.log(x.product_type, converted_qty, this.state.harvestBatch.uom, y)
           return innerSum + converted_qty
         }, 0)
       )
@@ -249,6 +246,7 @@ class PackagePlanForm extends React.Component {
 
 export default PackagePlanForm
 
+// TODO: ProductTypes or Item Category
 const ProductTypes = [
   'Whole plant',
   'Flowers (buds)',

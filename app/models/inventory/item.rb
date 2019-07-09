@@ -33,6 +33,7 @@ module Inventory
     field :ingredients, type: String
     field :is_used, type: Boolean, default: -> { false }
 
+    belongs_to :batch, class_name: 'Cultivation::Batch'
     belongs_to :facility, class_name: 'Facility'
   end
 end

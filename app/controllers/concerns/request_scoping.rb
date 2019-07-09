@@ -75,4 +75,8 @@ module RequestScoping
       @current_facility
     end
   end
+
+  def enable_metrc_integration?
+    @enable_metrc_integration ||= CompanyInfo.first.enable_metrc_integration
+  end
 end

@@ -13,6 +13,11 @@ import reactSelectStyle from '../../../utils/reactSelectStyle'
 import saveHarvestBatch from '../actions/saveHarvestBatch'
 import loadHarvestBatch from '../actions/loadHarvestBatch'
 
+const UOM_OPTIONS = [
+  { value: 'g', label: 'Grams (g)' },
+  { value: 'lb', label: 'Pound (lb)' }
+]
+
 class HarvestBatchForm extends React.Component {
   state = {
     harvest_name: '',
@@ -24,11 +29,14 @@ class HarvestBatchForm extends React.Component {
   loadData() {
     loadHarvestBatch(this.props.batchId).then(x => {
       if (x.status === 200 && x.data.data) {
-        // console.log(x.data.data)
         const attr = x.data.data.attributes
+        let uomOpt = UOM_OPTIONS.find(x => x.value === attr.uom)
+        if (!uomOpt) {
+          uomOpt = { value: attr.uom, label: attr.uom }
+        }
         this.setState({
           harvest_name: attr.harvest_name,
-          uom: { value: attr.uom, label: attr.uom },
+          uom: uomOpt,
           location_id: attr.location_id
         })
       }
@@ -111,7 +119,6 @@ class HarvestBatchForm extends React.Component {
   render() {
     const { onClose } = this.props
     const { harvest_name, location_id, errors, uom } = this.state
-    const uomOptions = ['g', 'lb'].map(x => ({ label: x, value: x }))
 
     return (
       <div>
@@ -132,7 +139,7 @@ class HarvestBatchForm extends React.Component {
           <label className="subtitle-2 grey fl pb2">Unit of measure</label>
           <div className="w-100 flex flex-column">
             <Select
-              options={uomOptions}
+              options={UOM_OPTIONS}
               value={uom}
               onChange={this.onUomChanged}
               styles={reactSelectStyle}

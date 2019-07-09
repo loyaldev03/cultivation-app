@@ -34,21 +34,21 @@ module Inventory
         c.label = 'Plants'
         c.category = Constants::PLANTS_KEY
         c.is_active = true
-        c.uom_dimension = Constants::PLANTS_KEY
+        c.uom_dimension = Constants::UOM_DMS_PIECES
       end
 
       # Inventory::Catalogue.find_or_create_by!(catalogue_type: Constants::PLANTS_KEY, key: Constants::SEEDS_KEY) do |c|
       #   c.label = Constants::PLANTS_KEY
       #   c.category = Constants::PLANTS_KEY
       #   c.is_active = true
-      #   c.uom_dimension = Constants::PLANTS_KEY
+      #   c.uom_dimension = Constants::UOM_DMS_PIECES
       # end
 
       # Inventory::Catalogue.find_or_create_by!(catalogue_type: Constants::PLANTS_KEY, key: Constants::PURCHASED_CLONES_KEY) do |c|
       #   c.label = 'Purchased Clones'
       #   c.category = Constants::PLANTS_KEY
       #   c.is_active = true
-      #   c.uom_dimension = Constants::PLANTS_KEY
+      #   c.uom_dimension = Constants::UOM_DMS_PIECES
       # end
     end
 

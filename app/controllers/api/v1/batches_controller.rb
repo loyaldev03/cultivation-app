@@ -226,7 +226,7 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
 
       # Convert Package Plans into Metrc Items in the background.
       if enable_metrc_integration?
-        GenerateItemFromPackagePlan.perform_async(batch_id)
+        GenerateItemFromPackageplan.perform_async(batch_id)
       end
 
       p.save!

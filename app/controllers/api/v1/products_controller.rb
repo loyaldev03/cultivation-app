@@ -122,7 +122,9 @@ class Api::V1::ProductsController < Api::V1::BaseApiController
   end
 
   def items
-    items = Inventory::Item.order(name: 1)
+    items = Inventory::Item.
+      where(facility_id: params[:facility_id]).
+      order(name: 1)
     render json: ItemSerializer.new(items).serialized_json
   end
 

@@ -31,8 +31,9 @@ class ProductTypeSection extends React.Component {
 
   onAddRow = event => {
     event.preventDefault()
-
-    console.log(this.props.harvestBatchUom)
+    if (!this.props.harvestBatchUom) {
+      console.warn('Missing harvest batch / uom', this.props.harvestBatchUom)
+    }
 
     const converted_qty = convertToHarvestBatchUom(
       this.state.packageType.value,

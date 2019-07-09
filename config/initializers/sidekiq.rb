@@ -12,6 +12,7 @@ end
 # Perform sidekiq async job immediately in development
 if Rails.env.development?
   require 'sidekiq/testing'
+  Sidekiq::Logging.logger = Rails.logger
   Sidekiq::Testing.inline!
 end
 

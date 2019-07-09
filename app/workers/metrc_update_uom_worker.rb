@@ -7,21 +7,20 @@ class MetrcUpdateUomWorker
     results = MetrcApi.get_unit_of_measure
     results.each do |h|
       # Parse downloaded data, and map to local UoM model
-      uom = Common::UnitOfMeasure.find_or_create_by(
+      uom = Common::UnitOfMeasure.find_or_initialize_by(
         name: h['Name'],
         unit: h['Abbreviation'],
       )
-      qty_type = h['QuantityType']
-      uom.dimension = if qty_type == 'CountBased'
-                        'pieces'
-                      elsif qty_type == 'VolumeBased'
-                        'volume'
-                      elsif qty_type == 'WeightBased'
-                        'weight'
+      uom.quantity_type = h['QuantityType']
+      uom.dimension = if uom.quantity_type == Constants::UOM_QTY_TYPE_COUNT
+                        Constants::UOM_DMS_PIECES
+                      elsif uom.quantity_type == Constants::UOM_QTY_TYPE_VOLUME
+                        Constants::UOM_DMS_VOLUME
+                      elsif uom.quantity_type == Constants::UOM_QTY_TYPE_WEIGHT
+                        Constants::UOM_DMS_WEIGHT
                       end
-
       if uom.dimension
-        # Update changes to database, create if not exists,
+        # Update changes to database
         uom.is_metrc = true
         uom.save!
       end

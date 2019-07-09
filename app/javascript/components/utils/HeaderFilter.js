@@ -53,7 +53,7 @@ function HeaderFilter({ title, accessor, getOptions, onUpdate }) {
               <span>{title}</span>
               <span
                 ref={ref}
-                className={classNames('f7 pointer', { blue: isActive })}
+                className={classNames('f7 pointer self-start', { blue: isActive })}
                 onClick={handleExpand}
               >
                 ▼

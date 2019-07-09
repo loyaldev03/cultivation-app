@@ -7,162 +7,9 @@ import { action, observable, computed, autorun } from 'mobx'
 import { observer } from 'mobx-react'
 import { toast } from '../utils/toast'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
-import {
-  ActiveBadge,
-  httpPostOptions,
-  httpGetOptions,
-  Loading,
-  HeaderFilter,
-  ListingTable
-} from '../utils'
-
-class CategoryStore {
-  @observable isLoading = false
-  @observable isDataLoaded = false
-  @observable columnFilters = {}
-  @observable categories = []
-
-  async loadCategories() {
-    this.isLoading = true
-    const url = '/api/v1/products/item_categories'
-    try {
-      const response = await (await fetch(url, httpGetOptions)).json()
-      if (response && response.data) {
-        this.categories = response.data.map(x => x.attributes)
-        this.isDataLoaded = true
-      } else {
-        this.isDataLoaded = false
-      }
-    } catch (error) {
-      this.categories = []
-      this.isDataLoaded = false
-      console.error(error)
-    } finally {
-      this.isLoading = false
-    }
-  }
-
-  async updateCategory(id, isActive) {
-    this.isLoading = true
-    const url = `/api/v1/products/item_categories/${id}/update`
-    try {
-      const params = { is_active: isActive }
-      const response = await (await fetch(url, httpPostOptions(params))).json()
-      if (response && response.data) {
-        this.categories = this.categories.map(x =>
-          x.id === response.data.id ? response.data.attributes : x
-        )
-        const cat = {
-          name: response.data.attributes.name,
-          status: response.data.attributes.is_active ? 'active' : 'inactive'
-        }
-        toast(`${cat.name} is now ${cat.status}`, 'success')
-      } else {
-        console.log(response)
-      }
-    } catch (error) {
-      console.error(error)
-    } finally {
-      this.isLoading = false
-    }
-  }
-
-  /* + column filters */
-  isFiltered = record => {
-    let f = Object.keys(this.columnFilters).find(key => {
-      const filter = this.columnFilters[key].filter(x => x.value === false)
-      return filter.find(x => x.label === record[key])
-    })
-    return f ? true : false
-  }
-
-  updateFilterOptions = (propName, filterOptions) => {
-    const updated = {
-      ...this.columnFilters,
-      [propName]: filterOptions
-    }
-    this.columnFilters = updated
-  }
-
-  getUniqPropValues = propName => {
-    return uniq(this.filteredList.map(x => x[propName]).sort())
-  }
-
-  @computed
-  get filteredList() {
-    if (!isEmpty(this.columnFilters)) {
-      return this.categories.filter(b => {
-        return !this.isFiltered(b)
-      })
-    } else {
-      return this.categories
-    }
-  }
-  /* - column filters */
-}
-
-class ItemStore {
-  @observable isLoading = false
-  @observable isDataLoaded = false
-  @observable columnFilters = {}
-  @observable items = []
-
-  async loadItems(facilityId) {
-    this.isLoading = false
-    const url = `/api/v1/products/items?facility_id=${facilityId}`
-    try {
-      const response = await (await fetch(url, httpGetOptions)).json()
-      if (response && response.data) {
-        this.items = response.data.map(x => x.attributes)
-        this.isDataLoaded = true
-      } else {
-        this.isDataLoaded = false
-      }
-    } catch (error) {
-      this.items = []
-      this.isDataLoaded = false
-      console.error(error)
-    } finally {
-      this.isLoading = false
-    }
-  }
-
-  /* + column filters */
-  isFiltered = record => {
-    let f = Object.keys(this.columnFilters).find(key => {
-      const filter = this.columnFilters[key].filter(x => x.value === false)
-      return filter.find(x => x.label === record[key])
-    })
-    return f ? true : false
-  }
-
-  updateFilterOptions = (propName, filterOptions) => {
-    const updated = {
-      ...this.columnFilters,
-      [propName]: filterOptions
-    }
-    this.columnFilters = updated
-  }
-
-  getUniqPropValues = propName => {
-    return uniq(this.filteredList.map(x => x[propName]).sort())
-  }
-
-  @computed
-  get filteredList() {
-    if (!isEmpty(this.columnFilters)) {
-      return this.items.filter(b => {
-        return !this.isFiltered(b)
-      })
-    } else {
-      return this.items
-    }
-  }
-  /* - column filters */
-}
-
-const categoryStore = new CategoryStore()
-const itemStore = new ItemStore()
+import { HeaderFilter, ListingTable } from '../utils'
+import CategoryStore from './ItemCategoryStore'
+import ItemStore from './ItemStore'
 
 @observer
 class ItemApp extends React.Component {
@@ -184,11 +31,11 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Category Type"
             accessor="product_category_type"
-            getOptions={categoryStore.getUniqPropValues}
-            onUpdate={categoryStore.updateFilterOptions}
+            getOptions={CategoryStore.getUniqPropValues}
+            onUpdate={CategoryStore.updateFilterOptions}
           />
         ),
-        minWidth: 200,
+        minWidth: 180,
         accessor: 'product_category_type'
       },
       {
@@ -196,8 +43,8 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Active"
             accessor="is_active"
-            getOptions={categoryStore.getUniqPropValues}
-            onUpdate={categoryStore.updateFilterOptions}
+            getOptions={CategoryStore.getUniqPropValues}
+            onUpdate={CategoryStore.updateFilterOptions}
           />
         ),
         accessor: 'is_active',
@@ -236,52 +83,57 @@ class ItemApp extends React.Component {
           <HeaderFilter
             title="Item Category"
             accessor="product_category_name"
-            getOptions={itemStore.getUniqPropValues}
-            onUpdate={itemStore.updateFilterOptions}
+            getOptions={ItemStore.getUniqPropValues}
+            onUpdate={ItemStore.updateFilterOptions}
           />
         ),
-        minWidth: 200,
-        accessor: 'product_category_name'
+        accessor: 'product_category_name',
+        minWidth: 150
       },
       {
         Header: (
           <HeaderFilter
             title="Strain"
             accessor="strain_name"
-            getOptions={itemStore.getUniqPropValues}
-            onUpdate={itemStore.updateFilterOptions}
+            getOptions={ItemStore.getUniqPropValues}
+            onUpdate={ItemStore.updateFilterOptions}
           />
         ),
         accessor: 'strain_name',
+        minWidth: 200
       },
       {
+        headerClassName: 'tl',
         Header: (
           <HeaderFilter
             title="Unit of Measure"
             accessor="uom_name"
-            getOptions={itemStore.getUniqPropValues}
-            onUpdate={itemStore.updateFilterOptions}
+            getOptions={ItemStore.getUniqPropValues}
+            onUpdate={ItemStore.updateFilterOptions}
           />
         ),
         accessor: 'uom_name',
+        minWidth: 120
       },
       {
+        headerClassName: 'tl',
         Header: (
           <HeaderFilter
             title="Quantity Type"
             accessor="quantity_type"
-            getOptions={itemStore.getUniqPropValues}
-            onUpdate={itemStore.updateFilterOptions}
+            getOptions={ItemStore.getUniqPropValues}
+            onUpdate={ItemStore.updateFilterOptions}
           />
         ),
-        accessor: 'quantity_type'
+        accessor: 'quantity_type',
+        minWidth: 120
       }
     ]
   }
 
   componentDidMount() {
-    categoryStore.loadCategories()
-    itemStore.loadItems(this.props.facilityId)
+    CategoryStore.loadCategories()
+    ItemStore.loadItems(this.props.facilityId)
   }
 
   onSelectTab = tabIndex => {
@@ -289,7 +141,7 @@ class ItemApp extends React.Component {
   }
 
   onToggleActive = (id, value) => e => {
-    categoryStore.updateCategory(id, !value)
+    CategoryStore.updateCategory(id, !value)
   }
 
   render() {
@@ -300,7 +152,7 @@ class ItemApp extends React.Component {
         <div id="toast" className="toast" />
         <div className="pa4">
           <div className="bg-white box--shadow pa4 fl w-100">
-            <div className="fl w-70-l w-100-m">
+            <div className="fl w-80-l w-100-m">
               <h5 className="tl pa0 ma0 h5--font dark-grey ttc">
                 Product Setup
               </h5>
@@ -308,7 +160,7 @@ class ItemApp extends React.Component {
                 Manage your facility's product categories &amp; items
               </p>
             </div>
-            <div className="fl w-70-l w-100-m">
+            <div className="fl w-80-l w-100-m">
               <Tabs
                 className="react-tabs--primary react-tabs--boxed-panel"
                 selectedIndex={tabIndex}
@@ -326,9 +178,9 @@ class ItemApp extends React.Component {
                       setting it to "Active"
                     </p>
                     <ListingTable
-                      data={categoryStore.filteredList}
+                      data={CategoryStore.filteredList}
                       columns={categoryColumns}
-                      isLoading={categoryStore.isLoading}
+                      isLoading={CategoryStore.isLoading}
                     />
                   </div>
                 </TabPanel>
@@ -339,9 +191,9 @@ class ItemApp extends React.Component {
                       package plans.
                     </p>
                     <ListingTable
-                      data={itemStore.filteredList}
+                      data={ItemStore.filteredList}
                       columns={itemColumns}
-                      isLoading={itemStore.isLoading}
+                      isLoading={ItemStore.isLoading}
                     />
                   </div>
                 </TabPanel>

@@ -50,53 +50,22 @@ module Common
     field :conversion, type: Float, default: -> { 0 }  # multiplier to get to base unit
     field :dimension, type: String      # { weight, volume, length, pieces, plants, custom }
     field :is_metrc, type: Boolean, default: -> { false }
+    field :quantity_type, type: String # refer UOM_QTY_TYPE_* under constants.rb
 
     scope :base_unit, -> { where(is_base_unit: true) }
 
     validates_uniqueness_of :unit
 
-    # TODO: all self.XXX below should be removed.
-    def self.custom(unit)
-      find_by(dimension: 'custom', unit: unit)
-    end
-
-    def self.plants(unit)
-      find_by(dimension: 'plants', unit: unit)
-    end
-
     def self.pieces(unit)
-      find_by(dimension: 'piece', unit: unit)
+      find_by(dimension: Constants::UOM_DMS_PIECES, unit: unit)
     end
 
     def self.weights(unit)
-      find_by(dimension: 'weight', unit: unit)
+      find_by(dimension: Constants::UOM_DMS_WEIGHT, unit: unit)
     end
 
     def self.volumes(unit)
-      find_by(dimension: 'volume', unit: unit)
-    end
-
-    def self.lengths(unit)
-      find_by(dimension: 'length', unit: unit)
-    end
-
-    def self.uom_of(dimension, unit)
-      case dimension
-      when 'custom'
-        self.custom(unit)
-      when 'plants'
-        self.plants(unit)
-      when 'piece'
-        self.pieces(unit)
-      when 'weight'
-        self.weights(unit)
-      when 'volume'
-        self.volumes(unit)
-      when 'length'
-        self.length(unit)
-      else
-        raise 'Invalid dimension'
-      end
+      find_by(dimension: Constants::UOM_DMS_VOLUME, unit: unit)
     end
 
     ###

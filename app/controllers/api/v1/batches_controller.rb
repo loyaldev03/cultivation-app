@@ -172,7 +172,6 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
 
   def harvest_batch
     harvest_batch = Inventory::HarvestBatch.find_by({cultivation_batch_id: params[:batch_id]})
-    Rails.logger.debug "\t\t\t\t>>>> harvest_batch: #{harvest_batch.inspect}"
     render json: Inventory::HarvestBatchSerializer.new(harvest_batch).serialized_json
   end
 
@@ -224,13 +223,14 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
         )
       end
 
-      # Convert Package Plans into Metrc Items in the background.
-      if enable_metrc_integration?
-        GenerateItemFromPackageplan.perform_async(batch_id)
-      end
-
       p.save!
       result << p
+    end
+
+    # Convert Package Plans into Metrc Items in the background
+    # after plans are saved.
+    if enable_metrc_integration?
+      GenerateItemFromPackageplan.perform_async(batch_id)
     end
 
     render json: ProductTypePlanSerializer.new(result).serialized_json, status: 200

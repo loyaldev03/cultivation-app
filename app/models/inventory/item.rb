@@ -7,8 +7,8 @@ module Inventory
 
     field :metrc_id, type: Integer # Item Id used by Metrc when updating
     field :name, type: String
-    field :product_category_name, type: String # => item_category
-    field :product_category_type, type: String # => item_category
+    field :product_category_name, type: String # => item_category.name
+    field :product_category_type, type: String # => item_cateogry.product_category_type
     field :quantity_type, type: String
     field :default_lab_testing_state, type: String
     field :uom_name, type: String
@@ -31,6 +31,7 @@ module Inventory
     field :unit_quantity, type: String
     field :unit_quantity_uom_name, type: String
     field :ingredients, type: String
+    field :deleted, type: Boolean, default: -> { false }
     field :is_used, type: Boolean, default: -> { false }
 
     belongs_to :batch, class_name: 'Cultivation::Batch'

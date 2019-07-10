@@ -26,7 +26,8 @@ class MetrcUpdateItemWorker
 
     true
   rescue RestClient::ExceptionWithResponse => e
-    pp JSON.parse(e.response.body)
+    logger.debug e
+    logger.error JSON.parse(e.response.body)
     raise
   end
 
@@ -64,8 +65,9 @@ class MetrcUpdateItemWorker
     if new_items.any?
       new_items.each do |item_name|
         found = local_items.detect { |i| i.name == item_name }
-        if found&.metrc_id.nil?
-          # Only create new record when no metrc_id found
+        # Only create new Metrc Item if metrc_id found (have not create in Metrc)
+        # and not mark as deleted
+        if found&.metrc_id.nil? && !found&.deleted
           params = {
             "Name": found.name,
             "ItemCategory": found.product_category_name,
@@ -79,6 +81,10 @@ class MetrcUpdateItemWorker
             "Ingredients": found.ingredients,
           }
           MetrcApi.create_items(facility.site_license, [params])
+        end
+        # If item is mark as deleted, delete it from Metrc
+        if found&.metrc_id && found&.deleted
+          MetrcApi.delete_items(facility.site_license, found.metrc_id)
         end
       end
     end

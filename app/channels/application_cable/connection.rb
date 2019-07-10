@@ -3,7 +3,6 @@ module ApplicationCable
     identified_by :current_user
 
     def connect
-      Rails.logger.debug "\033[31m >>> ActionCable >>>> \033[0m"
       self.current_user = find_verified_user
     end
 

@@ -43,7 +43,7 @@ class MetrcApi
 
     # - Plant Waste Methods and Reasons
 
-    # + Strain
+    # + Strain API
 
     def get_strains(facility_license)
       url = "#{BASE_URL}/strains/v1/active?licenseNumber=#{facility_license}"
@@ -65,7 +65,7 @@ class MetrcApi
 
     # - Strain
 
-    # + Room
+    # + Room API
 
     def get_rooms(facility_license)
       url = "#{BASE_URL}/rooms/v1/active?licenseNumber=#{facility_license}"
@@ -104,6 +104,12 @@ class MetrcApi
     def update_items(facility_license, params)
       url = "#{BASE_URL}/items/v1/update?licenseNumber=#{facility_license}"
       res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
+    end
+
+    def delete_items(facility_license, metrc_item_id)
+      url = "#{BASE_URL}/items/v1/#{metrc_item_id}?licenseNumber=#{facility_license}"
+      res = RestClient.delete(url, HEADERS)
       res.code == 200
     end
 

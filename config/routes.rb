@@ -446,7 +446,7 @@ Rails.application.routes.draw do
       end
 
       resources :harvests, only: [:index]
-      resources :charts, only: [:index] do
+      resources :dashboard_charts, only: [:index] do
         collection do
           get 'batch_test_result'
           get 'strain_distribution'

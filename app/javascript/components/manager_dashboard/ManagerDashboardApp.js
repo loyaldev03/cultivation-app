@@ -25,6 +25,7 @@ import TestResultList from './TestResultList'
 import BatchDistribution from './BatchDistribution'
 import HighestCostTaskList from './HighestCostTaskList'
 import StrainDistribution from './StrainDistribution'
+import { subMonths } from 'date-fns'
 
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
@@ -42,14 +43,31 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
 class ManagerDashboardApp extends React.Component {
   constructor(props) {
     super(props)
+
+    let current_month = new Date().toLocaleString('en-us', { month: 'long' })
+    let current_year = new Date().getFullYear()
+    let arr_months = [{ month: current_month, year: current_year, label: 'This Month' }]
+    for (let i = 0; i < 2; i++) {
+      let month_subtracted = subMonths(new Date(), i + 1)
+      let month = month_subtracted.toLocaleString('en-us', { month: 'long' })
+      let year = month_subtracted.getFullYear()
+      arr_months.push({
+        month: month,
+        year: year,
+        label: `${month} ${year}`
+      })
+    }
+
+
     this.state = {
       date: new Date(),
       batches: props.batches,
-      selectedBatch: this.props.batches[0]
+      selectedBatch: this.props.batches[0],
+      arr_months: arr_months
     }
 
     ChartStore.loadWorkerCapacity(props.batches[0].id)
-    ChartStore.loadCostBreakdown('June', '2019')
+    ChartStore.loadCostBreakdown(current_month, current_year)
   }
 
   onChangeWorkerCapacityBatch = batch => {
@@ -61,7 +79,7 @@ class ManagerDashboardApp extends React.Component {
     return (
       <React.Fragment>
         <h1>Manager Dashboard App</h1>
-        <OverallInfo batches={this.state.batches} />
+        <OverallInfo batches={this.state.batches} arr_months={this.state.arr_months} />
         <div className="flex mt4 h-50">
           <div className="w-50">
             <div className="ba b--light-gray pa3 bg-white br2 mr3">
@@ -82,7 +100,7 @@ class ManagerDashboardApp extends React.Component {
           </div>
           <div className="w-40">
             <div className="ba b--light-gray pa3 bg-white br2">
-              <CostBreakdown batches={this.props.batches} />
+              <CostBreakdown batches={this.props.batches} arr_months={this.state.arr_months} />
             </div>
           </div>
         </div>

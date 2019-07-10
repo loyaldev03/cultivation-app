@@ -1,4 +1,4 @@
-class Api::V1::ChartsController < Api::V1::BaseApiController
+class Api::V1::DashboardChartsController < Api::V1::BaseApiController
   def batch_test_result
     # NOTE : should be re write the code for test_results not facility_strain
     result = Charts::QueryBatchTestResult.call(current_user, {}).result

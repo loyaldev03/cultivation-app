@@ -127,6 +127,23 @@ class ItemApp extends React.Component {
         ),
         accessor: 'quantity_type',
         minWidth: 120
+      },
+      {
+        headerClassName: 'tl',
+        Header: (
+          <HeaderFilter
+            title="Added to Metrc"
+            accessor="updated_metrc"
+            getOptions={ItemStore.getUniqPropValues}
+            onUpdate={ItemStore.updateFilterOptions}
+          />
+        ),
+        accessor: 'updated_metrc',
+        minWidth: 120,
+        className: 'justify-end pr3',
+        Cell: props => {
+          return props.value ? 'Yes' : 'No'
+        }
       }
     ]
   }

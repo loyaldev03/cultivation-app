@@ -48,7 +48,7 @@ class BatchesDashboardApp extends React.Component {
         ),
         accessor: 'status',
         className: 'justify-center',
-        minWidth: 88,
+        minWidth: 100,
         Cell: props => <ActiveBadge status={props.value} />
       },
       {

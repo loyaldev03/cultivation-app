@@ -2,12 +2,6 @@ module Inventory
   class QueryProductPackagePlans
     prepend SimpleCommand
 
-    ProductPlanItem = Struct.new(:product_type,
-                                 :product_uom,
-                                 :no,
-                                 :strain,
-                                 :harvest_name)
-
     def initialize(args = {})
       args = {
         batch_id: nil, # BSON::ObjectId, Batch.id - Batch to query
@@ -17,11 +11,11 @@ module Inventory
     end
 
     def call
-      criteria = Cultivation::ProductTypePlan.collection.aggregate [
+      criteria = Cultivation::ProductTypePlan.collection.aggregate([
         {"$match": {"batch_id": @batch_id}},
         {"$unwind": {
           "path": '$package_plans',
-          "includeArrayIndex": 'no',
+          "includeArrayIndex": 'position',
           "preserveNullAndEmptyArrays": true,
         }},
         {"$lookup": {
@@ -39,15 +33,31 @@ module Inventory
         }},
         {"$unwind": '$strain'},
         {"$project": {
-          "product_type": 1,
+          "_id": 0,
+          "product_category": '$product_type',
           "product_uom": '$package_plans.package_type',
-          "no": 1,
-          "strain": '$strain.strain_name',
+          "position": 1,
+          "strain_name": '$strain.strain_name',
           "harvest_name": '$harvest.harvest_name',
         }},
-      ]
+      ])
 
-      criteria.map { |x| ProductPlanItem.new(x) } || []
+      results = criteria.map do |x|
+        ProductPlanItem.new(
+          x[:product_category],
+          x[:product_uom],
+          x[:position],
+          x[:strain_name],
+          x[:harvest_name],
+        )
+      end
+      results || []
     end
+
+    ProductPlanItem = Struct.new(:product_category,
+                                 :product_uom,
+                                 :position,
+                                 :strain_name,
+                                 :harvest_name)
   end
 end

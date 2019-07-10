@@ -3,7 +3,7 @@ import Tippy from '@tippy.js/react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import { Doughnut } from 'react-chartjs-2'
-
+import { subMonths } from 'date-fns'
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
     <a
@@ -20,17 +20,21 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
 export default class CostBreakdown extends React.Component {
   constructor(props) {
     super(props)
+
     this.state = {
-      selectedBatch: this.props.batches[0]
+      selectedMonth: this.props.arr_months[0],
+      arr_months: this.props.arr_months
     }
   }
 
-  onChangeWorkerCapacityBatch = batch => {
-    this.setState({ selectedBatch: batch })
-    ChartStore.loadWorkerCapacity(batch.id)
+  onChangeWorkerCapacityBatch = selectedMonth => {
+    this.setState({ selectedMonth: selectedMonth })
+    console.log(selectedMonth)
+    ChartStore.loadCostBreakdown(selectedMonth.month, selectedMonth.year)
   }
 
   render() {
+    const { arr_months } = this.state
     return (
       <React.Fragment>
         <div className="flex justify-between mb4">
@@ -43,9 +47,9 @@ export default class CostBreakdown extends React.Component {
             content={
               <div className="bg-white f6 flex">
                 <div className="db shadow-4">
-                  {this.props.batches.map(e => (
+                  {arr_months.map(e => (
                     <MenuButton
-                      text={e.name}
+                      text={e.label}
                       className=""
                       onClick={() => this.onChangeWorkerCapacityBatch(e)}
                     />
@@ -55,7 +59,9 @@ export default class CostBreakdown extends React.Component {
             }
           >
             <div className="flex ba b--light-silver br2 pointer dim">
-              <h1 className="f6 fw6 ml2 grey">This Month 3 months</h1>
+              <h1 className="f6 fw6 ml2 grey">
+                {this.state.selectedMonth.label}
+              </h1>
               <i className="material-icons grey mr2  md-21 mt2">
                 keyboard_arrow_down
               </i>

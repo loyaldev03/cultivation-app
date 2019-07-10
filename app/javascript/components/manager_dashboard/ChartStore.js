@@ -16,7 +16,7 @@ class ChartStore {
   async loadWorkerCapacity(batchId) {
     this.isLoading = true
     this.worker_capacity_loaded = false
-    const url = `/api/v1/charts/worker_capacity?batch_id=${batchId}`
+    const url = `/api/v1/dashboard_charts/worker_capacity?batch_id=${batchId}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
@@ -41,7 +41,7 @@ class ChartStore {
 
     this.isLoading = true
     this.cost_breakdown_loaded = false
-    const url = `/api/v1/charts/cost_breakdown?month=${month}&year=${year}`
+    const url = `/api/v1/dashboard_charts/cost_breakdown?month=${month}&year=${year}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {

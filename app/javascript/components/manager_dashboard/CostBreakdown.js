@@ -3,7 +3,7 @@ import Tippy from '@tippy.js/react'
 import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import { Doughnut } from 'react-chartjs-2'
-import { subMonths} from 'date-fns'
+import { subMonths } from 'date-fns'
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
     <a
@@ -34,7 +34,7 @@ export default class CostBreakdown extends React.Component {
   }
 
   render() {
-    const {arr_months} = this.state
+    const { arr_months } = this.state
     return (
       <React.Fragment>
         <div className="flex justify-between mb4">
@@ -59,7 +59,9 @@ export default class CostBreakdown extends React.Component {
             }
           >
             <div className="flex ba b--light-silver br2 pointer dim">
-              <h1 className="f6 fw6 ml2 grey">{this.state.selectedMonth.label}</h1>
+              <h1 className="f6 fw6 ml2 grey">
+                {this.state.selectedMonth.label}
+              </h1>
               <i className="material-icons grey mr2  md-21 mt2">
                 keyboard_arrow_down
               </i>

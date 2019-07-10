@@ -46,7 +46,9 @@ class ManagerDashboardApp extends React.Component {
 
     let current_month = new Date().toLocaleString('en-us', { month: 'long' })
     let current_year = new Date().getFullYear()
-    let arr_months = [{ month: current_month, year: current_year, label: 'This Month' }]
+    let arr_months = [
+      { month: current_month, year: current_year, label: 'This Month' }
+    ]
     for (let i = 0; i < 2; i++) {
       let month_subtracted = subMonths(new Date(), i + 1)
       let month = month_subtracted.toLocaleString('en-us', { month: 'long' })
@@ -57,7 +59,6 @@ class ManagerDashboardApp extends React.Component {
         label: `${month} ${year}`
       })
     }
-
 
     this.state = {
       date: new Date(),
@@ -79,7 +80,10 @@ class ManagerDashboardApp extends React.Component {
     return (
       <React.Fragment>
         <h1>Manager Dashboard App</h1>
-        <OverallInfo batches={this.state.batches} arr_months={this.state.arr_months} />
+        <OverallInfo
+          batches={this.state.batches}
+          arr_months={this.state.arr_months}
+        />
         <div className="flex mt4 h-50">
           <div className="w-50">
             <div className="ba b--light-gray pa3 bg-white br2 mr3">
@@ -100,7 +104,10 @@ class ManagerDashboardApp extends React.Component {
           </div>
           <div className="w-40">
             <div className="ba b--light-gray pa3 bg-white br2">
-              <CostBreakdown batches={this.props.batches} arr_months={this.state.arr_months} />
+              <CostBreakdown
+                batches={this.props.batches}
+                arr_months={this.state.arr_months}
+              />
             </div>
           </div>
         </div>

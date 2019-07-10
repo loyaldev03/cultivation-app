@@ -3,7 +3,6 @@ import ChartStore from './ChartStore'
 import { observer } from 'mobx-react'
 import Tippy from '@tippy.js/react'
 
-
 const MenuButton = ({ icon, text, onClick, className = '' }) => {
   return (
     <a
@@ -33,7 +32,7 @@ export default class OverallInfo extends React.Component {
   }
 
   render() {
-    const {arr_months} = this.state
+    const { arr_months } = this.state
 
     return (
       <React.Fragment>
@@ -61,10 +60,12 @@ export default class OverallInfo extends React.Component {
               }
             >
               <div className="flex ba b--light-silver br2 pointer dim">
-                <h1 className="f6 fw6 ml2 grey">{this.state.selectedMonth.label}</h1>
+                <h1 className="f6 fw6 ml2 grey">
+                  {this.state.selectedMonth.label}
+                </h1>
                 <i className="material-icons grey mr2  md-21 mt2">
                   keyboard_arrow_down
-              </i>
+                </i>
               </div>
             </Tippy>
           </div>

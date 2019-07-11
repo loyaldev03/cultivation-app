@@ -15,6 +15,9 @@ class MetrcUpdateItemWorker
 
     new_items = get_new_items(metrc_items, local_items)
 
+    # Delee locally deleted items from Metrc
+    delete_items_on_metrc(local_items)
+
     # Create new Item in Metrc
     create_items_on_metrc(new_items, local_items)
 
@@ -26,7 +29,8 @@ class MetrcUpdateItemWorker
 
     true
   rescue RestClient::ExceptionWithResponse => e
-    pp JSON.parse(e.response.body)
+    logger.debug e
+    logger.error JSON.parse(e.response.body)
     raise
   end
 
@@ -60,12 +64,35 @@ class MetrcUpdateItemWorker
     new_items
   end
 
+  def delete_items_on_metrc(local_items)
+    if local_items.any?
+      local_items.each do |item|
+        # If item is mark as deleted, delete it from Metrc
+        if item.metrc_id && item.deleted
+          call_delete_item(item)
+          item.delete
+          # item.destroy
+        end
+      end
+    end
+  end
+
+  def call_delete_item(item)
+    MetrcApi.delete_items(facility.site_license, item.metrc_id)
+    item.metrc_id = nil
+  rescue RestClient::ExceptionWithResponse => e
+    item.metrc_id = nil
+    logger.error 'error while deleting from metrc'
+    logger.error JSON.parse(e.response.body)
+  end
+
   def create_items_on_metrc(new_items, local_items)
     if new_items.any?
       new_items.each do |item_name|
         found = local_items.detect { |i| i.name == item_name }
-        if found&.metrc_id.nil?
-          # Only create new record when no metrc_id found
+        # Only create new Metrc Item if metrc_id found (have not create in Metrc)
+        # and not mark as deleted
+        if found&.metrc_id.nil? && !found&.deleted
           params = {
             "Name": found.name,
             "ItemCategory": found.product_category_name,
@@ -88,7 +115,13 @@ class MetrcUpdateItemWorker
     if local_items.any?
       local_items.each do |item|
         if item.metrc_id
-          found = metrc_items.detect { |i| i['Name'].casecmp(item.name).zero? }
+          found = metrc_items.detect do |i|
+            if i['Name'].blank?
+              false
+            else
+              i['Name'].casecmp(item.name).zero?
+            end
+          end
           if found && found['Name'] != item.name
             # Only call update when metrc_id exists and
             # item name not same (case sensitive)
@@ -116,7 +149,13 @@ class MetrcUpdateItemWorker
     metrc_items = MetrcApi.get_items(facility.site_license) # Hash format
     if local_items.any?
       local_items.each do |item|
-        found = metrc_items.detect { |i| i['Name'].casecmp(item.name).zero? }
+        found = metrc_items.detect do |i|
+          if i['Name'].blank?
+            false
+          else
+            i['Name'].casecmp(item.name).zero?
+          end
+        end
         if found
           item.metrc_id = found['Id']
           item.metrc_strain_id = found['StrainId']

@@ -1,19 +1,10 @@
 import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
+import { subMonths, format, startOfMonth, endOfMonth } from 'date-fns'
+
 import OverallInfo from './OverallInfo'
 import ChartStore from './ChartStore'
-import {
-  TempHomeUnassignTask,
-  TempHomeSchedule,
-  TempHomeIssue,
-  TempHomePerformer,
-  TempTestResult,
-  TempBatchDistribution,
-  TempHomeTaskHighestCost,
-  TempHomeStrain
-} from '../utils'
-import WorkerCapacityChart from './WorkerCapacityChart'
 import UnassignedTask from './UnassignedTask'
 import StaffCapacity from './StaffCapacity'
 import ScheduleList from './ScheduleList'
@@ -25,19 +16,6 @@ import TestResultList from './TestResultList'
 import BatchDistribution from './BatchDistribution'
 import HighestCostTaskList from './HighestCostTaskList'
 import StrainDistribution from './StrainDistribution'
-import { subMonths } from 'date-fns'
-
-const MenuButton = ({ icon, text, onClick, className = '' }) => {
-  return (
-    <a
-      className={`pa2 flex link dim pointer items-center ${className}`}
-      onClick={onClick}
-    >
-      <i className="material-icons md-17 pr2">{icon}</i>
-      <span className="pr2">{text}</span>
-    </a>
-  )
-}
 
 @observer
 class ManagerDashboardApp extends React.Component {
@@ -67,8 +45,16 @@ class ManagerDashboardApp extends React.Component {
       arr_months: arr_months
     }
 
+    let start_of_month = startOfMonth(new Date())
+    let end_of_month = endOfMonth(new Date())
+
     ChartStore.loadWorkerCapacity(props.batches[0].id)
     ChartStore.loadCostBreakdown(current_month, current_year)
+    ChartStore.loadScheduleList(format(new Date(), 'YYYY-MM-DD'))
+    ChartStore.loadScheduleDateRange(
+      format(start_of_month, 'YYYY-MM-DD'),
+      format(end_of_month, 'YYYY-MM-DD')
+    )
   }
 
   onChangeWorkerCapacityBatch = batch => {
@@ -79,31 +65,42 @@ class ManagerDashboardApp extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <h1>Manager Dashboard App</h1>
         <OverallInfo
           batches={this.state.batches}
           arr_months={this.state.arr_months}
         />
         <div className="flex mt4 h-50">
           <div className="w-50">
-            <div className="ba b--light-gray pa3 bg-white br2 mr3">
+            <div
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: 420 + 'px' }}
+            >
               <UnassignedTask />
             </div>
           </div>
           <div className="w-50">
-            <div className="ba b--light-gray pa3 bg-white br2">
+            <div
+              className="ba b--light-gray pa3 bg-white br2"
+              style={{ height: 420 + 'px' }}
+            >
               <StaffCapacity batches={this.props.batches} />
             </div>
           </div>
         </div>
         <div className="flex mt4 h-50">
           <div className="w-60">
-            <div className="ba b--light-gray pa3 bg-white br2 mr3">
+            <div
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: 420 + 'px' }}
+            >
               <ScheduleList />
             </div>
           </div>
           <div className="w-40">
-            <div className="ba b--light-gray pa3 bg-white br2">
+            <div
+              className="ba b--light-gray pa3 bg-white br2"
+              style={{ height: 420 + 'px' }}
+            >
               <CostBreakdown
                 batches={this.props.batches}
                 arr_months={this.state.arr_months}
@@ -113,36 +110,54 @@ class ManagerDashboardApp extends React.Component {
         </div>
         <div className="flex mt4 h-50">
           <div className="w-50">
-            <div className="ba b--light-gray pa3 bg-white br2 mr3">
+            <div
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: 420 + 'px' }}
+            >
               <IssueList />
             </div>
           </div>
           <div className="w-50">
-            <div className="ba b--light-gray pa3 bg-white br2 mr3">
+            <div
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: 420 + 'px' }}
+            >
               <PerformerList />
             </div>
           </div>
         </div>
         <div className="flex mt4 h-50">
           <div className="w-50">
-            <div className="ba b--light-gray pa3 bg-white br2 mr3">
+            <div
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: 420 + 'px' }}
+            >
               <TestResultList />
             </div>
           </div>
           <div className="w-50">
-            <div className="ba b--light-gray pa3 bg-white br2 mr3">
+            <div
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: 420 + 'px' }}
+            >
               <BatchDistribution />
             </div>
           </div>
         </div>
         <div className="flex mt4 h-50">
           <div className="w-50">
-            <div className="ba b--light-gray pa3 bg-white br2 mr3">
+            <div
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: 420 + 'px' }}
+            >
               <HighestCostTaskList />
             </div>
           </div>
           <div className="w-50">
-            <div className="ba b--light-gray pa3 bg-white br2 mr3">
+            <div
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: 420 + 'px' }}
+            >
               <StrainDistribution />
             </div>
           </div>

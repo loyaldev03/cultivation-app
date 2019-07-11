@@ -8,7 +8,7 @@ export default class UnassignedTask extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <img src={TempHomeUnassignTask} />
+        <img src={TempHomeUnassignTask} style={{ height: 400 + 'px' }} />
       </React.Fragment>
     )
   }

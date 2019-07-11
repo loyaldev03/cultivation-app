@@ -24,4 +24,9 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
     result = Charts::CalculateCostBreakdown.call(current_user, {month: params[:month]}).result
     render json: result.to_json, status: 200
   end
+
+  def unassigned_task
+    result = Charts::UnassignedTask.call(current_user).result
+    render json: result.to_json, status: 200
+  end
 end

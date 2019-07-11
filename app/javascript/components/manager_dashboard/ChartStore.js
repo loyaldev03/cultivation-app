@@ -9,6 +9,8 @@ import {
 class ChartStore {
   @observable data_worker_capacity = []
   @observable data_cost_breakdown = []
+  @observable data_unassigned_task = []
+  @observable unassigned_task = false
   @observable worker_capacity_loaded = false
   @observable cost_breakdown_loaded = false
 
@@ -21,15 +23,32 @@ class ChartStore {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
         // const tasks = response.data.map(res => parseTask(res.attributes))
-        console.log(response)
         this.data_worker_capacity = response
         this.worker_capacity_loaded = true
-        console.log('finish')
       } else {
         this.data_worker_capacity = []
       }
     } catch (error) {
       console.error(error)
+    } finally {
+    }
+  }
+
+  @action
+  async UnassignedTask() {
+    this.isLoading = true
+    this.unassigned_task = false
+    const url = `/api/v1/dashboard_charts/unassigned_task`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.data_unassigned_task = response
+        this.unassigned_task = true
+      } else {
+        this.data_unassigned_task = []
+      }
+    } catch (error) {
+        console.error(error)
     } finally {
     }
   }
@@ -46,15 +65,13 @@ class ChartStore {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
         // const tasks = response.data.map(res => parseTask(res.attributes))
-        console.log(response)
         this.data_cost_breakdown = response
         this.cost_breakdown_loaded = true
-        console.log('finish')
       } else {
         this.data_cost_breakdown = []
       }
     } catch (error) {
-      console.error(error)
+        console.error(error)
     } finally {
     }
   }

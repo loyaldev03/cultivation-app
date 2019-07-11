@@ -453,6 +453,7 @@ Rails.application.routes.draw do
           get 'worker_capacity'
           get 'batch_distribution'
           get 'cost_breakdown'
+          get 'unassigned_task'
         end
       end
       resources :holidays, only: [:index, :create, :update] do 

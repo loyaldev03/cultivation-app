@@ -69,6 +69,7 @@ class ManagerDashboardApp extends React.Component {
 
     ChartStore.loadWorkerCapacity(props.batches[0].id)
     ChartStore.loadCostBreakdown(current_month, current_year)
+    ChartStore.UnassignedTask()
   }
 
   onChangeWorkerCapacityBatch = batch => {

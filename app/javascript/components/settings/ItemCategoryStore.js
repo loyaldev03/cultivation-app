@@ -98,7 +98,7 @@ class ItemCategoryStore {
   @computed
   get selectOptions() {
     const res = this.categories
-      .filter(c => !this.excludes.includes(c.name))
+      .filter(c => !this.excludes.includes(c.name) && c.is_active)
       .map(c => {
         return {
           value: c.name,

@@ -40,34 +40,39 @@ class PackagePlanForm extends React.Component {
     }
   }
 
-  onPickProductType = productType => {
-    this.setState({ productType })
+  onPickProductType = (productType, quantityType) => {
+    console.log('onPickProductType', productType, quantityType)
+    this.setState({ productType, quantityType })
   }
 
   onShowAddProductType = event => {
-    event.preventDefault()
     this.setState({ showAddProductType: !this.state.showAddProductType })
   }
 
   onCancelAddProductType = event => {
-    event.preventDefault()
     this.setState({
-      productType: null,
+      productType: '',
       showAddProductType: !this.state.showAddProductType
     })
   }
 
   onAddProductType = event => {
-    event.preventDefault()
-    const category = this.categorySelector.getSelectedCategory()
     const product_type = this.state.productType.value
+    const quantity_type = this.state.quantityType
+    // e.g. product_type = Kief
 
     this.setState({
       data: [
         ...this.state.data,
-        { product_type, id: product_type, package_plans: [] }
+        {
+          product_type,
+          quantity_type,
+          id: product_type,
+          package_plans: [],
+        }
       ],
-      productType: null,
+      productType: '',
+      quantityType: '',
       showAddProductType: false
     })
   }
@@ -114,7 +119,6 @@ class PackagePlanForm extends React.Component {
   }
 
   onSave = event => {
-    event.preventDefault()
     savePackagePlans(this.props.batchId, this.state.data).then(result => {
       if (result.length > 0) {
         toast('Package plan created.', 'success')
@@ -129,6 +133,8 @@ class PackagePlanForm extends React.Component {
     if (data.length == 0) {
       return null
     }
+
+    console.log(data)
 
     return (
       <div className="mt4">
@@ -176,7 +182,7 @@ class PackagePlanForm extends React.Component {
           </div>
           <div>
             <a
-              href="#"
+              href="#0"
               className="f6 orange link"
               onClick={this.onCancelAddProductType}
             >
@@ -225,7 +231,7 @@ class PackagePlanForm extends React.Component {
             Split into packages
             {!showAddProductType && (
               <a
-                href="#"
+                href="#0"
                 className="ml3 link orange"
                 onClick={this.onShowAddProductType}
               >

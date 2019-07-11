@@ -3,6 +3,11 @@ import Select from 'react-select'
 import convert from 'convert-units'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import { NumericInput } from '../../../utils/FormHelpers'
+import {
+  PACKAGE_TYPES_WEIGHT,
+  PACKAGE_TYPES_VOLUME,
+  PACKAGE_TYPES_COUNT
+} from '../../../utils'
 
 class ProductTypeSection extends React.Component {
   constructor(props) {
@@ -79,6 +84,28 @@ class ProductTypeSection extends React.Component {
     this.props.onRemoveProductType(this.props.productTypeData.product_type)
   }
 
+  getOptionsByQuantityType = quantityType => {
+    // package type that already added previously
+    const selectedPackageTypes = this.props.productTypeData.package_plans.map(
+      x => x.package_type
+    )
+
+    if (quantityType === 'CountBased') {
+      return PACKAGE_TYPES_COUNT.filter(
+        x => selectedPackageTypes.indexOf(x.value) < 0
+      )
+    } else if (quantityType === 'VolumeBased') {
+      return PACKAGE_TYPES_VOLUME.filter(
+        x => selectedPackageTypes.indexOf(x.value) < 0
+      )
+    } else {
+      // default to WeightBased
+      return PACKAGE_TYPES_WEIGHT.filter(
+        x => selectedPackageTypes.indexOf(x.value) < 0
+      )
+    }
+  }
+
   renderAddNewRow() {
     if (!this.state.showNewRow) {
       return null
@@ -87,6 +114,11 @@ class ProductTypeSection extends React.Component {
     const selectedPackageTypes = this.props.productTypeData.package_plans.map(
       x => x.package_type
     )
+
+    const quantityType = this.props.productTypeData.quantity_type
+
+    const unitOptions = this.getOptionsByQuantityType(quantityType)
+
     const options = PackageTypes.filter(
       x => selectedPackageTypes.indexOf(x.value) < 0
     )
@@ -96,7 +128,7 @@ class ProductTypeSection extends React.Component {
         <div className="w-100 pa2 bg-black-05 flex items-center">
           <div className="w-40 pr2">
             <Select
-              options={options}
+              options={unitOptions}
               styles={reactSelectStyle}
               value={this.state.packageType}
               onChange={this.onChangePackageType}

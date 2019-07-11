@@ -44,36 +44,32 @@ export const NUTRITION_LIST = [
   { id: 14, element: 'zinc', label: 'Zinc (Zn)', value: 0, uom: '%' }
 ]
 
-const PACKAGE_TYPES_WEIGHT = [
-  { value: 'Eighth', label: 'Eighth', uom: 'g', qty_per_package: 0.35 },
+export const PACKAGE_TYPES_WEIGHT = [
+  { value: 'Eighth', label: 'Eighth g', uom: 'g', qty_per_package: 0.35 },
   { value: '1/2 grams', label: '1/2 grams', uom: 'g', qty_per_package: 0.5 },
-  { value: 'Grams', label: 'Grams', uom: 'g', qty_per_package: 1 },
-  { value: '1/4 Lb', label: '1/4 Lb', uom: 'lb', qty_per_package: 0.25 },
+  { value: 'Grams', label: 'Grams g', uom: 'g', qty_per_package: 1 },
+  { value: '1/4 lb', label: '1/4 lb', uom: 'lb', qty_per_package: 0.25 },
   { value: 'Lb', label: 'Lb', uom: 'lb', qty_per_package: 1 },
-  { value: '1/4 Oz', label: '1/4 Oz', uom: 'oz', qty_per_package: 0.25 },
-  { value: '1/2 Oz', label: '1/2 Oz', uom: 'oz', qty_per_package: 0.5 },
+  { value: '1/4 oz', label: '1/4 oz', uom: 'oz', qty_per_package: 0.25 },
+  { value: '1/2 oz', label: '1/2 oz', uom: 'oz', qty_per_package: 0.5 },
   { value: 'Ounce', label: 'Ounce', uom: 'oz', qty_per_package: 1 },
   { value: '1/2 kg', label: '1/2 kg', uom: 'kg', qty_per_package: 0.5 }
 ]
 
-const PACKAGE_TYPES_VOLUME = [
-  { value: 'Liters', label: 'Liters', uom: 'l', qty_per_package: 1 },
-  { value: 'Milliliters', label: 'Milliliters', uom: 'ml', qty_per_package: 1 },
-  { value: 'Pints', label: 'Pints', uom: 'pt', qty_per_package: 1 },
+export const PACKAGE_TYPES_VOLUME = [
+  { value: 'Liters', label: 'Liters l', uom: 'l', qty_per_package: 1 },
+  { value: 'Milliliters', label: 'Milliliters ml', uom: 'ml', qty_per_package: 1 },
+  { value: 'Pints', label: 'Pints pt', uom: 'pt', qty_per_package: 1 },
   {
     value: 'Fluid Ounces',
-    label: 'Fluid Ounces',
+    label: 'Fluid Ounces fl oz',
     uom: 'fl oz',
     qty_per_package: 1
   },
-  { value: 'Gallons', label: 'Gallons', uom: 'gal', qty_per_package: 1 },
-  { value: 'Quarts', label: 'Quarts', uom: 'qt', qty_per_package: 1 }
+  { value: 'Gallons', label: 'Gallons gal', uom: 'gal', qty_per_package: 1 },
+  { value: 'Quarts', label: 'Quarts qt', uom: 'qt', qty_per_package: 1 }
 ]
 
-const PACKAGE_TYPES_COUNT = [
-  { value: 'Each', label: 'Each', uom: 'ea', qty_per_package: 1 }
+export const PACKAGE_TYPES_COUNT = [
+  { value: 'Each', label: 'Each ea', uom: 'ea', qty_per_package: 1 }
 ]
-
-Object.freeze(PACKAGE_TYPES_WEIGHT)
-Object.freeze(PACKAGE_TYPES_VOLUME)
-Object.freeze(PACKAGE_TYPES_COUNT)

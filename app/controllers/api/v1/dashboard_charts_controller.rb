@@ -29,4 +29,21 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
     result = Charts::UnassignedTask.call(current_user).result
     render json: result.to_json, status: 200
   end
+
+  def tasklist_by_day
+    tasks = Cultivation::Task.expected_on(params[:date])
+    batches = Cultivation::Batch.find(tasks.map { |a| a.batch_id }.uniq)
+    query_locations = batches.map { |a| {batch_id: a.id.to_s, query: QueryLocations.call(a.facility_id)} }
+    json_serializer = TaskCalendarSerializer.new(
+      tasks,
+      params: {query: query_locations},
+    ).serializable_hash[:data]
+
+    render json: json_serializer
+  end
+
+  def tasks_by_date_range
+    result = DailyTask::QueryTaskByDateRange.call(params[:start_date], params[:end_date]).result
+    render json: result
+  end
 end

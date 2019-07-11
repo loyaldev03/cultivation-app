@@ -40,48 +40,53 @@ class PackagePlanForm extends React.Component {
     }
   }
 
-  onPickProductType = productType => {
-    this.setState({ productType })
+  onPickProductType = (productType, quantityType) => {
+    this.setState({ productType, quantityType })
   }
 
   onShowAddProductType = event => {
-    event.preventDefault()
     this.setState({ showAddProductType: !this.state.showAddProductType })
   }
 
   onCancelAddProductType = event => {
-    event.preventDefault()
     this.setState({
-      productType: null,
+      productType: '',
       showAddProductType: !this.state.showAddProductType
     })
   }
 
   onAddProductType = event => {
-    event.preventDefault()
-    const category = this.categorySelector.getSelectedCategory()
+    // e.g. product_type = Kief
     const product_type = this.state.productType.value
+    const quantity_type = this.state.quantityType
 
     this.setState({
       data: [
         ...this.state.data,
-        { product_type, id: product_type, package_plans: [] }
+        {
+          product_type,
+          quantity_type,
+          id: product_type,
+          package_plans: []
+        }
       ],
-      productType: null,
+      productType: '',
+      quantityType: '',
       showAddProductType: false
     })
   }
 
   onAddPackage = (productType, packageType, quantity, converted_qty) => {
     const { data } = this.state
+    const harvest_uom = this.state.harvestBatch.uom
     const index = data.findIndex(x => x.product_type === productType)
-
     const item = {
       id: packageType,
       isNew: true,
       package_type: packageType,
       quantity: parseFloat(quantity),
-      converted_qty
+      uom: harvest_uom,
+      conversion: converted_qty
     }
 
     data[index].package_plans.push(item)
@@ -114,7 +119,6 @@ class PackagePlanForm extends React.Component {
   }
 
   onSave = event => {
-    event.preventDefault()
     savePackagePlans(this.props.batchId, this.state.data).then(result => {
       if (result.length > 0) {
         toast('Package plan created.', 'success')
@@ -176,7 +180,7 @@ class PackagePlanForm extends React.Component {
           </div>
           <div>
             <a
-              href="#"
+              href="#0"
               className="f6 orange link"
               onClick={this.onCancelAddProductType}
             >
@@ -195,8 +199,9 @@ class PackagePlanForm extends React.Component {
         x.package_plans.reduce((innerSum, y) => {
           const converted_qty = convertToHarvestBatchUom(
             y.package_type,
-            y.quantity,
-            this.state.harvestBatch.uom
+            y.quantity || 0,
+            this.state.harvestBatch.uom,
+            x.quantity_type
           )
           return innerSum + converted_qty
         }, 0)
@@ -225,7 +230,7 @@ class PackagePlanForm extends React.Component {
             Split into packages
             {!showAddProductType && (
               <a
-                href="#"
+                href="#0"
                 className="ml3 link orange"
                 onClick={this.onShowAddProductType}
               >

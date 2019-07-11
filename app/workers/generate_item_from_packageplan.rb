@@ -10,7 +10,10 @@ class GenerateItemFromPackageplan
     ).result
 
     # mark existing batch items as deleted
-    Inventory::Item.where(batch_id: @batch_id).update_all(deleted: true)
+    Inventory::Item.where(
+      batch_id: @batch_id,
+      is_used: false,
+    ).update_all(deleted: true)
 
     # loop through each plan item and convert them into metrc item
     if !product_plan_items.blank?

@@ -454,6 +454,8 @@ Rails.application.routes.draw do
           get 'batch_distribution'
           get 'cost_breakdown'
           get 'unassigned_task'
+          get 'tasklist_by_day'
+          get 'tasks_by_date_range'
         end
       end
       resources :holidays, only: [:index, :create, :update] do 

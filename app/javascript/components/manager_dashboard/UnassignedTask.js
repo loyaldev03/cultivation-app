@@ -12,7 +12,6 @@ export default class UnassignedTask extends React.Component {
   render() {
     return (
       <React.Fragment>
-
         <h3>Unassigned Task</h3>
         <div className="overflow-y-scroll" style={{ height: 280 + 'px' }}>
           <table className="w-100">

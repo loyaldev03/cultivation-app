@@ -96,9 +96,14 @@ class ItemCategoryStore {
   }
 
   @computed
-  get selectOptions() {
+  get weightOptions() {
     const res = this.categories
-      .filter(c => !this.excludes.includes(c.name))
+      .filter(
+        c =>
+          !this.excludes.includes(c.name) &&
+          c.quantity_type === 'WeightBased' &&
+          c.is_active
+      )
       .map(c => {
         return {
           value: c.name,

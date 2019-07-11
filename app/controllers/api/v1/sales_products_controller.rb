@@ -222,13 +222,6 @@ class Api::V1::SalesProductsController < Api::V1::BaseApiController
     end
   end
 
-  # "product_plans"=>[
-  #   { "product_type"=>"Whole plant",
-  #     "package_plans"=>[
-  #       {"id"=>"1/2 gram", "isNew"=>true, "package_type"=>"1/2 gram", "quantity"=>2, "uom"=>"g", "converted_qty"=>1}
-  #     ]
-  #   }
-  # ]
   def save_product_plans
     package = Inventory::ItemTransaction.find(params[:id])
     Inventory::ConvertProductPlan.where(package: package).destroy_all

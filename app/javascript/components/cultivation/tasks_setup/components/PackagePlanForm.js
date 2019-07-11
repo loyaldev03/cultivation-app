@@ -56,9 +56,9 @@ class PackagePlanForm extends React.Component {
   }
 
   onAddProductType = event => {
+    // e.g. product_type = Kief
     const product_type = this.state.productType.value
     const quantity_type = this.state.quantityType
-    // e.g. product_type = Kief
 
     this.setState({
       data: [
@@ -78,13 +78,15 @@ class PackagePlanForm extends React.Component {
 
   onAddPackage = (productType, packageType, quantity, converted_qty) => {
     const { data } = this.state
+    const harvest_uom = this.state.harvestBatch.uom
     const index = data.findIndex(x => x.product_type === productType)
     const item = {
       id: packageType,
       isNew: true,
       package_type: packageType,
       quantity: parseFloat(quantity),
-      converted_qty
+      uom: harvest_uom,
+      conversion: converted_qty
     }
 
     data[index].package_plans.push(item)

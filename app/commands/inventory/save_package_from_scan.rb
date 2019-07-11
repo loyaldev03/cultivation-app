@@ -176,13 +176,3 @@ module Inventory
     end
   end
 end
-
-# { value: '1/2 gram', label: '1/2 gram', uom: 'g', qty_per_package: 0.5 },
-#   { value: '1/2 kg', label: '1/2 kg', uom: 'kg', qty_per_package: 0.5 },
-#   { value: '1/4 Lb', label: '1/4 Lb', uom: 'lb', qty_per_package: 0.25 },
-#   { value: '1/4 Oz', label: '1/4 Oz', uom: 'oz', qty_per_package: 0.25 },
-#   { value: 'Eigth', label: 'Eigth', uom: 'oz', qty_per_package: 0.125 },
-#   { value: 'Gram', label: 'Gram', uom: 'g', qty_per_package: 1 },
-#   { value: '1/2 Oz', label: '1/2 Oz', uom: 'oz', qty_per_package: 0.5 },
-#   { value: 'Lb', label: 'Lb', uom: 'lb', qty_per_package: 1 },
-#   { value: 'Ounce', label: 'Ounce', uom: 'oz', qty_per_package: 1 }

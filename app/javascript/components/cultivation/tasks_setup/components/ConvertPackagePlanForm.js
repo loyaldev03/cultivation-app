@@ -55,11 +55,8 @@ class ConvertPackagePlanForm extends React.Component {
           if (user) {
             assign_to = { value: user.id, label: user.name }
           }
-
-          // console.log(result.task.start_date)
           if (result.task.start_date) {
             start_date = new Date(result.task.start_date)
-            // console.log(start_date)
           }
         }
 
@@ -105,15 +102,13 @@ class ConvertPackagePlanForm extends React.Component {
   }
 
   onAddPackage = (productType, packageType, quantity, converted_qty, uom) => {
-    // console.log(productType, packageType, quantity, converted_qty)
     const { data } = this.state
     const index = data.findIndex(x => x.product_type === productType)
-
     const item = {
       id: packageType,
       isNew: true,
       package_type: packageType,
-      quantity: parseFloat(quantity),
+      quantity: +quantity,
       uom: uom,
       converted_qty
     }
@@ -250,6 +245,7 @@ class ConvertPackagePlanForm extends React.Component {
       return (
         sum +
         x.package_plans.reduce((innerSum, y) => {
+        console.log("TODO2: read quantity type from plan", y)
           const converted_qty = convertToHarvestBatchUom(
             y.package_type,
             y.quantity,
@@ -274,8 +270,6 @@ class ConvertPackagePlanForm extends React.Component {
       assign_to,
       start_date
     } = this.state
-
-    // console.log(start_date)
 
     const totalQty = productPackage ? productPackage.quantity : 0
     const uom = productPackage ? productPackage.uom : ''
@@ -360,7 +354,6 @@ const ProductTypes = [
 const loadPackagePlans = async packageId => {
   const url = `/api/v1/sales_products/${packageId}/product_plans`
   const response = await (await fetch(url, httpGetOptions)).json()
-  // console.log(response)
   return response
 }
 

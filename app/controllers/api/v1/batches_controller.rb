@@ -202,30 +202,64 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
   def save_product_plans
     batch_id = params[:batch_id]
     batch = Cultivation::Batch.find(batch_id)
-    harvest_batch = Inventory::HarvestBatch.find_by(cultivation_batch_id: batch_id)
+    harvest = Inventory::HarvestBatch.find_by(cultivation_batch_id: batch_id)
 
-    Cultivation::ProductTypePlan.where(batch_id: batch_id).destroy_all
+    # First mark all product type plan as deleted, since we're going to
+    # replace it with a new one
+    Cultivation::ProductTypePlan.where(
+      batch_id: batch_id,
+      is_used: false,
+    ).update_all(deleted: true)
 
     result = []
+
     params[:product_plans].each do |i|
-      p = Cultivation::ProductTypePlan.new(
+      p = Cultivation::ProductTypePlan.find_or_initialize_by(
         product_type: i[:product_type],
-        batch_id: batch,
-        harvest_batch: harvest_batch,
+        batch_id: batch.id,
+        harvest_batch_id: harvest.id,
       )
 
-      i[:package_plans].each do |j|
-        p.package_plans << Cultivation::PackagePlan.new(
-          package_type: j[:package_type],
-          quantity: j[:quantity],
-          conversion: j[:conversion],
-          total_weight: j[:quantity].to_f * j[:conversion].to_f,
-        )
-      end
+      # reuse if same with record mark as deleted
+      p.deleted = false
 
+      # mark existing package plan as deleted, since we're going to
+      # replace it with new one
+      p.package_plans.each { |pp| pp.deleted = true }
+
+      # update package plan if already exists
+      i[:package_plans].each do |j|
+        plan = p.package_plans.find_or_initialize_by(
+          package_type: j[:package_type],
+          quantity_type: j[:quantity_type],
+        )
+        # reuse if same with record mark as deleted
+        plan.deleted = false
+        plan.quantity = j[:quantity]
+        plan.conversion = j[:conversion]
+        plan.total_weight = j[:quantity].to_f * j[:conversion].to_f
+      end
+      # save changes
       p.save!
+
+      # delete package plan marked as delete
+      p.package_plans.each do |pp|
+        if pp.deleted
+          p.remove_package_plan(pp)
+        end
+      end
+      # save again after cleaning deleted package plan
+      p.save!
+
       result << p
     end
+
+    # Finally delete product type plan that are previously marked as delete
+    Cultivation::ProductTypePlan.where(
+      batch_id: batch_id,
+      is_used: false,
+      deleted: true,
+    ).delete_all
 
     # Convert Package Plans into Metrc Items in the background
     # after plans are saved.

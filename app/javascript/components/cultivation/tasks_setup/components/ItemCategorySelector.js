@@ -1,7 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 import CategoryStore from '../../../settings/ItemCategoryStore'
-import { selectStyles } from '../../../utils'
 import reactSelectStyle from '../../../utils/reactSelectStyle'
 import Select from 'react-select'
 
@@ -42,7 +41,7 @@ class ItemCategorySelector extends React.Component {
     return (
       <div>
         <Select
-          styles={selectStyles}
+          styles={reactSelectStyle}
           options={CategoryStore.selectOptions}
           value={this.state.selectedCategory}
           onChange={this.onChange}

@@ -10,5 +10,7 @@ module Cultivation
     field :uom, type: String
     field :conversion, type: Float
     field :total_weight, type: Float
+    field :quantity_type, type: String
+    field :deleted, type: Boolean, default: -> { false }
   end
 end

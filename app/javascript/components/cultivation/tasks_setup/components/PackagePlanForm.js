@@ -134,8 +134,6 @@ class PackagePlanForm extends React.Component {
       return null
     }
 
-    console.log(data)
-
     return (
       <div className="mt4">
         {data.map(productTypeData => (

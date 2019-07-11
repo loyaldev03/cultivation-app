@@ -9,5 +9,11 @@ module Cultivation
     embeds_many :package_plans, class_name: 'Cultivation::PackagePlan'
 
     field :product_type, type: String
+    field :deleted, type: Boolean, default: -> { false }
+    field :is_used, type: Boolean, default: -> { false }
+
+    def remove_package_plan(child)
+      assign_attributes(package_plans: package_plans.reject { |c| c == child })
+    end
   end
 end

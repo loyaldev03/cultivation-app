@@ -43,3 +43,37 @@ export const NUTRITION_LIST = [
   { id: 13, element: 'sulfur', label: 'Sulfer (S)', value: 0, uom: '%' },
   { id: 14, element: 'zinc', label: 'Zinc (Zn)', value: 0, uom: '%' }
 ]
+
+const PACKAGE_TYPES_WEIGHT = [
+  { value: 'Eighth', label: 'Eighth', uom: 'g', qty_per_package: 0.35 },
+  { value: '1/2 grams', label: '1/2 grams', uom: 'g', qty_per_package: 0.5 },
+  { value: 'Grams', label: 'Grams', uom: 'g', qty_per_package: 1 },
+  { value: '1/4 Lb', label: '1/4 Lb', uom: 'lb', qty_per_package: 0.25 },
+  { value: 'Lb', label: 'Lb', uom: 'lb', qty_per_package: 1 },
+  { value: '1/4 Oz', label: '1/4 Oz', uom: 'oz', qty_per_package: 0.25 },
+  { value: '1/2 Oz', label: '1/2 Oz', uom: 'oz', qty_per_package: 0.5 },
+  { value: 'Ounce', label: 'Ounce', uom: 'oz', qty_per_package: 1 },
+  { value: '1/2 kg', label: '1/2 kg', uom: 'kg', qty_per_package: 0.5 }
+]
+
+const PACKAGE_TYPES_VOLUME = [
+  { value: 'Liters', label: 'Liters', uom: 'l', qty_per_package: 1 },
+  { value: 'Milliliters', label: 'Milliliters', uom: 'ml', qty_per_package: 1 },
+  { value: 'Pints', label: 'Pints', uom: 'pt', qty_per_package: 1 },
+  {
+    value: 'Fluid Ounces',
+    label: 'Fluid Ounces',
+    uom: 'fl oz',
+    qty_per_package: 1
+  },
+  { value: 'Gallons', label: 'Gallons', uom: 'gal', qty_per_package: 1 },
+  { value: 'Quarts', label: 'Quarts', uom: 'qt', qty_per_package: 1 }
+]
+
+const PACKAGE_TYPES_COUNT = [
+  { value: 'Each', label: 'Each', uom: 'ea', qty_per_package: 1 }
+]
+
+Object.freeze(PACKAGE_TYPES_WEIGHT)
+Object.freeze(PACKAGE_TYPES_VOLUME)
+Object.freeze(PACKAGE_TYPES_COUNT)

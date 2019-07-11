@@ -47,4 +47,11 @@
 
 <div class="mh4 mt4">
   <%= image_tag "dummy/cultivation-dashboard-cropped.png", style: 'max-width: 1300px; width: 100%;' %>
+<!-- display example-->
+</div>
+<div class="ma4 bg-white br2 pa3-ns mv2 ba b--black-10" style="max-width: 575px">
+    <h1 class="ml3 f5 mb2 dark-gray">Strain Distribution</h1>
+    <div class="bg-white" >
+      <%= react_component 'charts/TreemapApp', url: '/api/v1/dashboard_charts/strain_distribution'%> 
+    </div>
 </div>

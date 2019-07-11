@@ -42,7 +42,7 @@ class ItemCategorySelector extends React.Component {
       <div>
         <Select
           styles={reactSelectStyle}
-          options={CategoryStore.selectOptions}
+          options={CategoryStore.weightOptions}
           value={this.state.selectedCategory}
           onChange={this.onChange}
         />

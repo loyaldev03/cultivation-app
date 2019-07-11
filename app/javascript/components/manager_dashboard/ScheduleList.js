@@ -14,14 +14,17 @@ export default class UnassignedTask extends React.Component {
     }
   }
 
-  onChangeDate = (date) => {
-    this.setState({date: date})
+  onChangeDate = date => {
+    this.setState({ date: date })
   }
 
-  changeActiveDate = async (date) => {
+  changeActiveDate = async date => {
     let start_of_month = startOfMonth(date.activeStartDate)
     let end_of_month = endOfMonth(date.activeStartDate)
-    await ChartStore.loadScheduleDateRange(format(start_of_month, 'YYYY-MM-DD'), format(end_of_month, 'YYYY-MM-DD'))
+    await ChartStore.loadScheduleDateRange(
+      format(start_of_month, 'YYYY-MM-DD'),
+      format(end_of_month, 'YYYY-MM-DD')
+    )
     this.setState({ date: date.activeStartDate })
   }
 
@@ -34,7 +37,9 @@ export default class UnassignedTask extends React.Component {
             <h1 className="f4 ml3">Schedule</h1>
           </div>
           <div className="w-50">
-            <h1 className="f4" style={{marginLeft: 110+'px'}}>{format(this.state.date, 'DD MMMM YYYY')}</h1>
+            <h1 className="f4" style={{ marginLeft: 110 + 'px' }}>
+              {format(this.state.date, 'DD MMMM YYYY')}
+            </h1>
           </div>
         </div>
         <div className="flex">
@@ -49,12 +54,12 @@ export default class UnassignedTask extends React.Component {
                 tileContent={({ date, view }) => (
                   <div
                     className="react-calendar__tile__content"
-                    onClick={e => ChartStore.loadScheduleList((formatYDM(date)))}
+                    onClick={e => ChartStore.loadScheduleList(formatYDM(date))}
                   >
                     {date.getDate()}
                     {ChartStore.schedule_date_range.findIndex(
-                x => x.date === formatYDM(date) && x.numberOfTasks > 0
-              ) >= 0 && <div className="dot"> </div>}
+                      x => x.date === formatYDM(date) && x.numberOfTasks > 0
+                    ) >= 0 && <div className="dot"> </div>}
                   </div>
                 )}
                 showNavigation={true}
@@ -63,20 +68,16 @@ export default class UnassignedTask extends React.Component {
           </div>
           <div className="w-40">
             <div className="overflow-y-scroll" style={{ height: 280 + 'px' }}>
-              {ChartStore.schedule_list_loaded ? 
-                ChartStore.schedule_list.map(e=>(
+              {ChartStore.schedule_list_loaded ? (
+                ChartStore.schedule_list.map(e => (
                   <div className="flex pa3">
-                    <div className="w-50 f6 fw6 ttc">
-                      {e.batch_name}
-                    </div>
-                    <div className=" w-50 f6 fw6 grey">
-                      {e.name}
-                    </div>
+                    <div className="w-50 f6 fw6 ttc">{e.batch_name}</div>
+                    <div className=" w-50 f6 fw6 grey">{e.name}</div>
                   </div>
                 ))
-                :
+              ) : (
                 <div>Loading ...</div>
-              }
+              )}
             </div>
           </div>
         </div>

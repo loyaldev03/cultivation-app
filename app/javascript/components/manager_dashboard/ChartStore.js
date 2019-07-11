@@ -10,7 +10,6 @@ function parseTask(taskAttributes) {
   return Object.assign(taskAttributes)
 }
 
-
 class ChartStore {
   @observable data_worker_capacity = []
   @observable data_cost_breakdown = []
@@ -116,8 +115,6 @@ class ChartStore {
     } finally {
     }
   }
-
-
 }
 
 const chartStore = new ChartStore()

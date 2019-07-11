@@ -55,7 +55,7 @@ class ChartStore {
         this.data_unassigned_task = []
       }
     } catch (error) {
-        console.error(error)
+      console.error(error)
     } finally {
     }
   }
@@ -74,7 +74,7 @@ class ChartStore {
         this.data_cost_breakdown = []
       }
     } catch (error) {
-        console.error(error)
+      console.error(error)
     } finally {
     }
   }

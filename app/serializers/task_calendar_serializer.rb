@@ -16,4 +16,8 @@ class TaskCalendarSerializer
       ''
     end
   end
+
+  attribute :batch_name do |object, params|
+    object.batch.name
+  end
 end

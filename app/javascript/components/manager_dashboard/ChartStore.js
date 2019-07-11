@@ -6,11 +6,20 @@ import {
   httpDeleteOptions
 } from '../utils'
 
+function parseTask(taskAttributes) {
+  return Object.assign(taskAttributes)
+}
+
+
 class ChartStore {
   @observable data_worker_capacity = []
   @observable data_cost_breakdown = []
+  @observable schedule_list = []
+  @observable schedule_date_range = []
   @observable worker_capacity_loaded = false
   @observable cost_breakdown_loaded = false
+  @observable schedule_list_loaded = false
+  @observable schedule_date_range_loaded = false
 
   @action
   async loadWorkerCapacity(batchId) {
@@ -20,11 +29,8 @@ class ChartStore {
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
-        // const tasks = response.data.map(res => parseTask(res.attributes))
-        console.log(response)
         this.data_worker_capacity = response
         this.worker_capacity_loaded = true
-        console.log('finish')
       } else {
         this.data_worker_capacity = []
       }
@@ -36,20 +42,14 @@ class ChartStore {
 
   @action
   async loadCostBreakdown(month, year) {
-    month = 'July'
-    year = '2019'
-
     this.isLoading = true
     this.cost_breakdown_loaded = false
     const url = `/api/v1/dashboard_charts/cost_breakdown?month=${month}&year=${year}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
-        // const tasks = response.data.map(res => parseTask(res.attributes))
-        console.log(response)
         this.data_cost_breakdown = response
         this.cost_breakdown_loaded = true
-        console.log('finish')
       } else {
         this.data_cost_breakdown = []
       }
@@ -77,6 +77,47 @@ class ChartStore {
       return {}
     }
   }
+
+  @action
+  async loadScheduleList(date) {
+    console.log(date)
+    this.isLoading = true
+    this.schedule_list_loaded = false
+    const url = `/api/v1/dashboard_charts/tasklist_by_day?date=${date}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.schedule_list = response.map(res => parseTask(res.attributes))
+        this.schedule_list_loaded = true
+      } else {
+        this.schedule_list = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  @action
+  async loadScheduleDateRange(start_date, end_date) {
+    this.isLoading = true
+    this.schedule_date_range_loaded = false
+    const url = `/api/v1/dashboard_charts/tasks_by_date_range?start_date=${start_date}&end_date=${end_date}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.schedule_date_range = response
+        this.schedule_date_range_loaded = true
+      } else {
+        this.schedule_date_range = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+
 }
 
 const chartStore = new ChartStore()

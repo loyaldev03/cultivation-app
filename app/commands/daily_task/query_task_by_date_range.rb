@@ -2,7 +2,7 @@ module DailyTask
   class QueryTaskByDateRange
     prepend SimpleCommand
 
-    def initialize(start_date, end_date, current_user)
+    def initialize(start_date, end_date, current_user = nil)
       @start_date = start_date
       @end_date = end_date
       @current_user = current_user
@@ -15,7 +15,11 @@ module DailyTask
     private
 
     def query_records
-      tasks = @current_user.cultivation_tasks
+      if @current_user.present?
+        tasks = @current_user.cultivation_tasks
+      else
+        tasks = Cultivation::Task.all
+      end
 
       cond_a = tasks.and({end_date: {"$gte": @start_date}},
                          start_date: {"$lte": @end_date}).selector

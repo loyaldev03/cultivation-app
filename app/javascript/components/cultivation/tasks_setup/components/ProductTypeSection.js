@@ -43,7 +43,8 @@ class ProductTypeSection extends React.Component {
     const converted_qty = convertToHarvestBatchUom(
       this.state.packageType.value,
       this.state.quantity,
-      this.props.harvestBatchUom
+      this.props.harvestBatchUom,
+      this.props.productTypeData.quantity_type
     )
 
     this.props.onAddPackage(
@@ -89,21 +90,8 @@ class ProductTypeSection extends React.Component {
     const selectedPackageTypes = this.props.productTypeData.package_plans.map(
       x => x.package_type
     )
-
-    if (quantityType === 'CountBased') {
-      return PACKAGE_TYPES_COUNT.filter(
-        x => selectedPackageTypes.indexOf(x.value) < 0
-      )
-    } else if (quantityType === 'VolumeBased') {
-      return PACKAGE_TYPES_VOLUME.filter(
-        x => selectedPackageTypes.indexOf(x.value) < 0
-      )
-    } else {
-      // default to WeightBased
-      return PACKAGE_TYPES_WEIGHT.filter(
-        x => selectedPackageTypes.indexOf(x.value) < 0
-      )
-    }
+    const packageTypes = getProductTypesByQuantityType(quantityType)
+    return packageTypes.filter(x => !selectedPackageTypes.includes(x.value))
   }
 
   renderAddNewRow() {
@@ -111,17 +99,8 @@ class ProductTypeSection extends React.Component {
       return null
     }
 
-    const selectedPackageTypes = this.props.productTypeData.package_plans.map(
-      x => x.package_type
-    )
-
     const quantityType = this.props.productTypeData.quantity_type
-
     const unitOptions = this.getOptionsByQuantityType(quantityType)
-
-    const options = PackageTypes.filter(
-      x => selectedPackageTypes.indexOf(x.value) < 0
-    )
 
     return (
       <div className="ph4 mt2 flex items-center">
@@ -210,7 +189,8 @@ class ProductTypeSection extends React.Component {
                     {convertToHarvestBatchUom(
                       x.package_type,
                       x.quantity,
-                      harvestBatchUom
+                      harvestBatchUom,
+                      productTypeData.quantity_type
                     ).toFixed(2)}
                   </td>
                   <td className="tc pv1">
@@ -246,10 +226,27 @@ class ProductTypeSection extends React.Component {
   }
 }
 
-const convertToHarvestBatchUom = (packageType, quantity, harvestBatchUom) => {
-  const foundType = PackageTypes.find(x => x.value == packageType)
+const getProductTypesByQuantityType = quantityType => {
+  if (quantityType === 'CountBased') {
+    return PACKAGE_TYPES_COUNT
+  } else if (quantityType === 'VolumeBased') {
+    return PACKAGE_TYPES_VOLUME
+  } else {
+    // default to WeightBased
+    return PACKAGE_TYPES_WEIGHT
+  }
+}
+
+const convertToHarvestBatchUom = (
+  packageType,
+  quantity,
+  harvestBatchUom,
+  quantityType
+) => {
+  const packageTypes = getProductTypesByQuantityType(quantityType)
+  const foundType = packageTypes.find(x => x.value == packageType)
   if (foundType) {
-    const total_qty = foundType.qty_per_package * parseFloat(quantity)
+    const total_qty = foundType.qty_per_package * +quantity
     const uom = foundType.uom
     return convert(total_qty)
       .from(uom)
@@ -259,17 +256,5 @@ const convertToHarvestBatchUom = (packageType, quantity, harvestBatchUom) => {
   }
 }
 
-const PackageTypes = [
-  { value: '1/2 gram', label: '1/2 gram', uom: 'g', qty_per_package: 0.5 },
-  { value: '1/2 kg', label: '1/2 kg', uom: 'kg', qty_per_package: 0.5 },
-  { value: '1/4 Lb', label: '1/4 Lb', uom: 'lb', qty_per_package: 0.25 },
-  { value: '1/4 Oz', label: '1/4 Oz', uom: 'oz', qty_per_package: 0.25 },
-  { value: 'Eigth', label: 'Eigth', uom: 'oz', qty_per_package: 0.125 },
-  { value: 'Gram', label: 'Gram', uom: 'g', qty_per_package: 1 },
-  { value: '1/2 Oz', label: '1/2 Oz', uom: 'oz', qty_per_package: 0.5 },
-  { value: 'Lb', label: 'Lb', uom: 'lb', qty_per_package: 1 },
-  { value: 'Ounce', label: 'Ounce', uom: 'oz', qty_per_package: 1 }
-]
-
 export default ProductTypeSection
-export { PackageTypes, convertToHarvestBatchUom }
+export { convertToHarvestBatchUom }

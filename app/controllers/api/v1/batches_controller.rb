@@ -214,8 +214,10 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
     result = []
 
     params[:product_plans].each do |i|
+      quantity_type = i[:quantity_type] || Constants::UOM_QTY_TYPE_WEIGHT
       p = Cultivation::ProductTypePlan.find_or_initialize_by(
         product_type: i[:product_type],
+        quantity_type: quantity_type,
         batch_id: batch.id,
         harvest_batch_id: harvest.id,
       )
@@ -231,11 +233,13 @@ class Api::V1::BatchesController < Api::V1::BaseApiController
       i[:package_plans].each do |j|
         plan = p.package_plans.find_or_initialize_by(
           package_type: j[:package_type],
-          quantity_type: j[:quantity_type],
+          quantity_type: quantity_type,
         )
         # reuse if same with record mark as deleted
         plan.deleted = false
+        # update fields with values
         plan.quantity = j[:quantity]
+        plan.uom = j[:uom]
         plan.conversion = j[:conversion]
         plan.total_weight = j[:quantity].to_f * j[:conversion].to_f
       end

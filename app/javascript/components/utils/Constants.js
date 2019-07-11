@@ -45,8 +45,8 @@ export const NUTRITION_LIST = [
 ]
 
 export const PACKAGE_TYPES_WEIGHT = [
-  { value: 'Eighth', label: 'Eighth g', uom: 'g', qty_per_package: 0.35 },
   { value: '1/2 grams', label: '1/2 grams', uom: 'g', qty_per_package: 0.5 },
+  { value: 'Eighth', label: 'Eighth g', uom: 'g', qty_per_package: 3.543 },
   { value: 'Grams', label: 'Grams g', uom: 'g', qty_per_package: 1 },
   { value: '1/4 lb', label: '1/4 lb', uom: 'lb', qty_per_package: 0.25 },
   { value: 'Lb', label: 'Lb', uom: 'lb', qty_per_package: 1 },

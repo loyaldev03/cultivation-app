@@ -9,6 +9,7 @@ module Cultivation
     embeds_many :package_plans, class_name: 'Cultivation::PackagePlan'
 
     field :product_type, type: String
+    field :quantity_type, type: String
     field :deleted, type: Boolean, default: -> { false }
     field :is_used, type: Boolean, default: -> { false }
 

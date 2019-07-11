@@ -41,7 +41,6 @@ class PackagePlanForm extends React.Component {
   }
 
   onPickProductType = (productType, quantityType) => {
-    console.log('onPickProductType', productType, quantityType)
     this.setState({ productType, quantityType })
   }
 
@@ -68,7 +67,7 @@ class PackagePlanForm extends React.Component {
           product_type,
           quantity_type,
           id: product_type,
-          package_plans: [],
+          package_plans: []
         }
       ],
       productType: '',
@@ -80,7 +79,6 @@ class PackagePlanForm extends React.Component {
   onAddPackage = (productType, packageType, quantity, converted_qty) => {
     const { data } = this.state
     const index = data.findIndex(x => x.product_type === productType)
-
     const item = {
       id: packageType,
       isNew: true,
@@ -199,8 +197,9 @@ class PackagePlanForm extends React.Component {
         x.package_plans.reduce((innerSum, y) => {
           const converted_qty = convertToHarvestBatchUom(
             y.package_type,
-            y.quantity,
-            this.state.harvestBatch.uom
+            y.quantity || 0,
+            this.state.harvestBatch.uom,
+            x.quantity_type
           )
           return innerSum + converted_qty
         }, 0)

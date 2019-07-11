@@ -1,7 +1,7 @@
 class ProductTypePlanSerializer
   include FastJsonapi::ObjectSerializer
 
-  attributes :product_type
+  attributes :product_type, :quantity_type
 
   attributes :id do |object|
     object.id.to_s
@@ -16,6 +16,7 @@ class ProductTypePlanSerializer
       {
         id: plan.id.to_s,
         package_type: plan.package_type,
+        quantity_type: plan.quantity_type,
         quantity: plan.quantity,
         uom: plan.uom,
         total_weight: plan.total_weight,

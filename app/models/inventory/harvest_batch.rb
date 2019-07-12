@@ -13,6 +13,7 @@ module Inventory
     field :total_dry_weight, type: Float, default: -> { 0 }  # Weight after finish drying
     field :total_cure_weight, type: Float, default: -> { 0 } # Weight after finish curing
     field :uom, type: String
+    field :uom_name, type: String
     field :status, type: String                 # new, closed (when fully packaged)
     field :location_id, type: BSON::ObjectId
 

@@ -51,10 +51,14 @@ module Inventory
       harvest_batch.harvest_date = harvest_date if harvest_date
       harvest_batch.location_id = location_id
       harvest_batch.uom = uom
+      harvest_batch.uom_name = get_uom_name_by_unit(uom)
       harvest_batch.save!
-
-      Rails.logger.debug "\t\t\t\t>>> harvest_batch: #{harvest_batch.inspect}"
       harvest_batch
+    end
+
+    def get_uom_name_by_unit(unit)
+      unit_of_measure = Common::UnitOfMeasure.find_by(unit: unit)
+      unit_of_measure.name
     end
   end
 end

@@ -132,13 +132,13 @@ class ItemApp extends React.Component {
         headerClassName: 'tl',
         Header: (
           <HeaderFilter
-            title="Deleted"
-            accessor="deleted"
+            title="Added to Metrc"
+            accessor="updated_metrc"
             getOptions={ItemStore.getUniqPropValues}
             onUpdate={ItemStore.updateFilterOptions}
           />
         ),
-        accessor: 'deleted',
+        accessor: 'updated_metrc',
         minWidth: 120,
         className: 'justify-end pr3',
         Cell: props => {
@@ -149,13 +149,13 @@ class ItemApp extends React.Component {
         headerClassName: 'tl',
         Header: (
           <HeaderFilter
-            title="Added to Metrc"
-            accessor="updated_metrc"
+            title="Deleted"
+            accessor="deleted"
             getOptions={ItemStore.getUniqPropValues}
             onUpdate={ItemStore.updateFilterOptions}
           />
         ),
-        accessor: 'updated_metrc',
+        accessor: 'deleted',
         minWidth: 120,
         className: 'justify-end pr3',
         Cell: props => {
@@ -188,7 +188,7 @@ class ItemApp extends React.Component {
           <div className="bg-white box--shadow pa4 fl w-100">
             <div className="fl w-80-l w-100-m">
               <h5 className="tl pa0 ma0 h5--font dark-grey ttc">
-                Product Setup
+                Package Item Setup
               </h5>
               <p className="mt2 mb4 db body-1 grey">
                 Manage your facility's product categories &amp; items

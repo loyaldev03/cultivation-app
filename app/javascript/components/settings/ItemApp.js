@@ -161,7 +161,7 @@ class ItemApp extends React.Component {
         Cell: props => {
           return props.value ? 'Yes' : 'No'
         }
-      },
+      }
     ]
   }
 

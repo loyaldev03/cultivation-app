@@ -68,7 +68,7 @@ export default class StaffCapacity extends React.Component {
           <WorkerCapacityChart data={ChartStore.data_worker_capacity} />
         ) : (
           <div>
-              {this.props.batches.count > 0 ? 'loading...' : 'No active batches'}
+            {this.props.batches.count > 0 ? 'loading...' : 'No active batches'}
           </div>
         )}
       </React.Fragment>

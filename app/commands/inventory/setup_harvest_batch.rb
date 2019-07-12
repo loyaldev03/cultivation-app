@@ -117,8 +117,9 @@ module Inventory
       harvest_batch.harvest_date = harvest_date
       harvest_batch.facility_strain_id = batch.facility_strain_id
       harvest_batch.cultivation_batch_id = batch.id
-      harvest_batch.total_wet_weight = plants.sum { |x| x.wet_weight }
+      harvest_batch.total_wet_weight = plants.sum(&:wet_weight)
       harvest_batch.uom = uom
+      harvest_batch.uom_name = get_uom_name_by_unit(uom)
       harvest_batch.save!
 
       plants.each do |p|
@@ -127,6 +128,11 @@ module Inventory
       end
 
       harvest_batch
+    end
+
+    def get_uom_name_by_unit(unit)
+      unit_of_measure = Common::UnitOfMeasure.find_by(unit: unit)
+      unit_of_measure.name
     end
 
     def save_plants!

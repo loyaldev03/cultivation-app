@@ -51,6 +51,7 @@ module Common
     field :dimension, type: String      # { weight, volume, length, pieces, plants, custom }
     field :is_metrc, type: Boolean, default: -> { false }
     field :quantity_type, type: String # refer UOM_QTY_TYPE_* under constants.rb
+    field :is_active, type: Boolean, default: -> { false }
 
     scope :base_unit, -> { where(is_base_unit: true) }
 

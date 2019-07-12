@@ -58,7 +58,12 @@ export const PACKAGE_TYPES_WEIGHT = [
 
 export const PACKAGE_TYPES_VOLUME = [
   { value: 'Liters', label: 'Liters l', uom: 'l', qty_per_package: 1 },
-  { value: 'Milliliters', label: 'Milliliters ml', uom: 'ml', qty_per_package: 1 },
+  {
+    value: 'Milliliters',
+    label: 'Milliliters ml',
+    uom: 'ml',
+    qty_per_package: 1
+  },
   { value: 'Pints', label: 'Pints pt', uom: 'pt', qty_per_package: 1 },
   {
     value: 'Fluid Ounces',

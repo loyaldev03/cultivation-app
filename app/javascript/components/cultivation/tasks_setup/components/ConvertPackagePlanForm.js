@@ -245,7 +245,7 @@ class ConvertPackagePlanForm extends React.Component {
       return (
         sum +
         x.package_plans.reduce((innerSum, y) => {
-        console.log("TODO2: read quantity type from plan", y)
+          console.log('TODO2: read quantity type from plan', y)
           const converted_qty = convertToHarvestBatchUom(
             y.package_type,
             y.quantity,

@@ -453,6 +453,7 @@ Rails.application.routes.draw do
           get 'worker_capacity'
           get 'batch_distribution'
           get 'cost_breakdown'
+          get 'unassigned_task'
           get 'tasklist_by_day'
           get 'tasks_by_date_range'
         end

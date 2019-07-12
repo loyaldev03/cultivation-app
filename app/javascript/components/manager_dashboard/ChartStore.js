@@ -13,6 +13,8 @@ function parseTask(taskAttributes) {
 class ChartStore {
   @observable data_worker_capacity = []
   @observable data_cost_breakdown = []
+  @observable data_unassigned_task = []
+  @observable unassigned_task = false
   @observable schedule_list = []
   @observable schedule_date_range = []
   @observable worker_capacity_loaded = false
@@ -32,6 +34,25 @@ class ChartStore {
         this.worker_capacity_loaded = true
       } else {
         this.data_worker_capacity = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  @action
+  async UnassignedTask() {
+    this.isLoading = true
+    this.unassigned_task = false
+    const url = `/api/v1/dashboard_charts/unassigned_task`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.data_unassigned_task = response
+        this.unassigned_task = true
+      } else {
+        this.data_unassigned_task = []
       }
     } catch (error) {
       console.error(error)

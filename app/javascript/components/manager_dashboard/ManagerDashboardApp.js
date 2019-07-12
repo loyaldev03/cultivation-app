@@ -50,6 +50,7 @@ class ManagerDashboardApp extends React.Component {
 
     ChartStore.loadWorkerCapacity(props.batches[0].id)
     ChartStore.loadCostBreakdown(current_month, current_year)
+    ChartStore.UnassignedTask()
     ChartStore.loadScheduleList(format(new Date(), 'YYYY-MM-DD'))
     ChartStore.loadScheduleDateRange(
       format(start_of_month, 'YYYY-MM-DD'),

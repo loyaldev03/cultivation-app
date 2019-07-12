@@ -9,12 +9,16 @@ module Charts
 
     def call
       facility_strains = Inventory::FacilityStrain.all.includes(:plants)
-      result = facility_strains.map do |strain|
-        {
-          value: strain.strain_name,
-          detail: "#{strain.plants.count} plants",
-        }
-      end
+      result = {
+        children: facility_strains.group_by(&:strain_name).map do |strain, strain_value|
+          {
+            name: strain,
+            value: strain_value.map { |x| x.plants.count }.sum,
+          }
+        end,
+      }
     end
   end
 end
+
+[children: [{}]]

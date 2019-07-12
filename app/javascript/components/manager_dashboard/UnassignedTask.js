@@ -27,12 +27,12 @@ export default class UnassignedTask extends React.Component {
               {ChartStore.data_unassigned_task.map(e => (
                 <React.Fragment>
                   <tr>
-                    <td className="f4 b" colspan="4">
+                    <td className="f4 b">
                       <div className="mb3 mt3">Batch {e.batch}</div>
                     </td>
                   </tr>
-                  {e.tasks.map(u => (
-                    <tr className="pa2">
+                  {e.tasks.map((u, i) => (
+                    <tr className="pa2" key={i}>
                       <td className="w-40">{u.name}</td>
                       <td>{u.start_date}</td>
                       <td>{u.end_date}</td>

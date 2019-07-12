@@ -47,7 +47,7 @@ class ManagerDashboardApp extends React.Component {
 
     let start_of_month = startOfMonth(new Date())
     let end_of_month = endOfMonth(new Date())
-    if(props.batches[0]){
+    if (props.batches[0]) {
       ChartStore.loadWorkerCapacity(props.batches[0].id)
     }
     ChartStore.loadCostBreakdown(current_month, current_year)

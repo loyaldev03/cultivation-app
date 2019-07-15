@@ -48,8 +48,9 @@ export default class OverallInfo extends React.Component {
               content={
                 <div className="bg-white f6 flex">
                   <div className="db shadow-4">
-                    {arr_months.map(e => (
+                    {arr_months.map((e, index) => (
                       <MenuButton
+                        key={index}
                         text={e.label}
                         className=""
                         onClick={() => this.onChangeWorkerCapacityBatch(e)}

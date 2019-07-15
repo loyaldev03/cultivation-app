@@ -47,7 +47,7 @@ class ManagerDashboardApp extends React.Component {
 
     let start_of_month = startOfMonth(new Date())
     let end_of_month = endOfMonth(new Date())
-    if(props.batches[0]){
+    if (props.batches[0]) {
       ChartStore.loadWorkerCapacity(props.batches[0].id)
     }
     ChartStore.loadCostBreakdown(current_month, current_year)
@@ -160,7 +160,8 @@ class ManagerDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: 420 + 'px' }}
             >
-              <StrainDistribution />
+              <h1 className="f4 ml3">Strain Distribution</h1>
+              <StrainDistribution url="/api/v1/dashboard_charts/strain_distribution" />
             </div>
           </div>
         </div>

@@ -56,7 +56,7 @@ export default class StaffCapacity extends React.Component {
           >
             <div className="flex ba b--light-silver br2 pointer dim">
               <h1 className="f6 fw6 ml2 grey">
-                {this.state.selectedBatch.name}
+                {this.state.selectedBatch ? this.state.selectedBatch.name : ''}
               </h1>
               <i className="material-icons grey mr2  md-21 mt2">
                 keyboard_arrow_down
@@ -67,7 +67,9 @@ export default class StaffCapacity extends React.Component {
         {ChartStore.worker_capacity_loaded ? (
           <WorkerCapacityChart data={ChartStore.data_worker_capacity} />
         ) : (
-          'loading...'
+          <div>
+            {this.props.batches.length > 0 ? 'loading...' : 'No active batches'}
+          </div>
         )}
       </React.Fragment>
     )

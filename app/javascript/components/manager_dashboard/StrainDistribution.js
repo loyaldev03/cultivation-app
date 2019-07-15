@@ -15,8 +15,8 @@ export default class StrainDistribution extends React.Component {
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-    d3.json(this.props.url).then(function (data) {
-      const root = d3.hierarchy(data).sum(function (d) {
+    d3.json(this.props.url).then(function(data) {
+      const root = d3.hierarchy(data).sum(function(d) {
         return d.value
       })
 
@@ -30,10 +30,10 @@ export default class StrainDistribution extends React.Component {
         .data(root.leaves())
         .enter()
         .append('rect')
-        .attr('x', function (d) {
+        .attr('x', function(d) {
           return d.x0
         })
-        .attr('y', function (d) {
+        .attr('y', function(d) {
           return d.y0
         })
         .style('width', d => Math.max(0, d.x1 - d.x0 - 1) + 'px')
@@ -48,25 +48,25 @@ export default class StrainDistribution extends React.Component {
         .data(root.leaves())
         .enter()
         .append('text')
-        .attr('x', function (d) {
+        .attr('x', function(d) {
           return d.x0 + 5
         }) // +10 to adjust position (more right)
-        .attr('y', function (d) {
+        .attr('y', function(d) {
           return d.y0 + 20
         }) // +20 to adjust position (lower)
-        .text(function (d) {
+        .text(function(d) {
           return d.data.name
         })
         .attr('font-size', '12px')
         .attr('fill', 'white')
         .append('tspan')
-        .attr('x', function (d) {
+        .attr('x', function(d) {
           return d.x0 + 5
         })
-        .attr('y', function (d) {
+        .attr('y', function(d) {
           return d.y0 + 40
         })
-        .text(function (d) {
+        .text(function(d) {
           return d.data.value + ' plants'
         })
     })

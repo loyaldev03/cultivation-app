@@ -160,7 +160,10 @@ class ManagerDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: 420 + 'px' }}
             >
-              <StrainDistribution />
+              <h1 className='f4 ml3'>Strain Distribution</h1>
+              <StrainDistribution 
+                url='/api/v1/dashboard_charts/strain_distribution'
+              />
             </div>
           </div>
         </div>

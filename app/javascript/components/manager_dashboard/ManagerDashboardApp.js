@@ -62,7 +62,7 @@ class ManagerDashboardApp extends React.Component {
     ChartStore.loadCostBreakdown(current_month, current_year)
     ChartStore.loadBatchDistribution(formatYDM(new Date()), 'This Year')
     ChartStore.unassignedTask()
-    ChartStore.highestCostTask("all")
+    ChartStore.highestCostTask('all')
     ChartStore.loadScheduleList(formatYDM(new Date()))
     ChartStore.loadScheduleDateRange(
       formatYDM(start_of_month),

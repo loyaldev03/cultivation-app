@@ -21,7 +21,7 @@ export default class HighestCostTaskList extends React.Component {
     super(props)
 
     this.state = {
-      selectedMonth: "All"
+      selectedMonth: 'All'
     }
   }
 
@@ -34,7 +34,9 @@ export default class HighestCostTaskList extends React.Component {
     return (
       <React.Fragment>
         <div className="flex justify-between mb4">
-          <h1 className="f5 fw6">Task with Highest Costs In Time and $ Value</h1>
+          <h1 className="f5 fw6">
+            Task with Highest Costs In Time and $ Value
+          </h1>
 
           <Tippy
             placement="bottom-end"
@@ -46,29 +48,31 @@ export default class HighestCostTaskList extends React.Component {
                   <MenuButton
                     text="All"
                     className=""
-                    onClick={() => this.onChangeMonthly("all")}
+                    onClick={() => this.onChangeMonthly('all')}
                   />
                   <MenuButton
                     text="This year"
                     className=""
-                    onClick={() => this.onChangeMonthly("this_year")}
+                    onClick={() => this.onChangeMonthly('this_year')}
                   />
                   <MenuButton
                     text="This month"
                     className=""
-                    onClick={() => this.onChangeMonthly("this_month")}
+                    onClick={() => this.onChangeMonthly('this_month')}
                   />
                   <MenuButton
                     text="This week"
                     className=""
-                    onClick={() => this.onChangeMonthly("this_week")}
+                    onClick={() => this.onChangeMonthly('this_week')}
                   />
                 </div>
               </div>
             }
           >
             <div className="flex ba b--light-silver br2 pointer dim">
-              <h1 className=" ttc f6 fw6 ml2 grey">{this.state.selectedMonth}</h1>
+              <h1 className=" ttc f6 fw6 ml2 grey">
+                {this.state.selectedMonth}
+              </h1>
               <i className="material-icons grey mr2  md-21 mt2">
                 keyboard_arrow_down
               </i>
@@ -106,7 +110,6 @@ export default class HighestCostTaskList extends React.Component {
             ))}
           </tbody>
         </table>
-        
       </React.Fragment>
     )
   }

@@ -15,7 +15,7 @@ class ChartStore {
   @observable data_cost_breakdown = []
   @observable data_batch_distribution = []
   @observable data_unassigned_task = []
-  
+
   @observable schedule_list = []
   @observable schedule_date_range = []
   @observable performer_list = []
@@ -87,7 +87,7 @@ class ChartStore {
   }
 
   @action
-  async loadBatchDistribution(date,label) {
+  async loadBatchDistribution(date, label) {
     this.isLoading = true
     this.batch_distribution_loaded = false
     const url = `/api/v1/dashboard_charts/batch_distribution?date=${date}&label=${label}`
@@ -111,13 +111,13 @@ class ChartStore {
         labels: this.data_batch_distribution.map(d => d.phase),
         datasets: [
           {
-            label: "Batch",
+            label: 'Batch',
             data: this.data_batch_distribution.map(d => d.batch_count),
-            backgroundColor: "rgba(241, 90, 34, 1)"
+            backgroundColor: 'rgba(241, 90, 34, 1)'
           },
           {
-            label: "Plant",
-            data:  this.data_batch_distribution.map(d => d.plant_count),
+            label: 'Plant',
+            data: this.data_batch_distribution.map(d => d.plant_count),
             type: 'line',
             pointRadius: 0,
             hoverRadius: 0

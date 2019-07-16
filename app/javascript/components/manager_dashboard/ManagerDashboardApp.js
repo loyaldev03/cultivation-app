@@ -67,6 +67,7 @@ class ManagerDashboardApp extends React.Component {
       formatYDM(start_of_month),
       formatYDM(end_of_month)
     )
+    ChartStore.loadPerformerList()
   }
 
   onChangeWorkerCapacityBatch = batch => {

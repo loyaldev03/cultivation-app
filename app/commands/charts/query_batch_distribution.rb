@@ -8,7 +8,7 @@ module Charts
     end
 
     def call
-      date = Date.parse("#{@args[:date]}")
+      date = Time.zone.parse("#{@args[:date]}")
       phases = Common::GrowPhase.all.pluck(:name)
       if (@args[:label] == 'This Week')
         batches = Cultivation::Batch.where(:created_at.gt => date.beginning_of_week, :created_at.lt => date.end_of_week)

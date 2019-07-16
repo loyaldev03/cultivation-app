@@ -27,14 +27,11 @@ class ManagerDashboardApp extends React.Component {
     let arr_months = [
       { month: current_month, year: current_year, label: 'This Month' }
     ]
-
-    let today_date =  new Date()
     let arr_batch_months = [
-      {date: today_date,label: 'This Year'},
-      {date: today_date,label: 'This Month'},
-      {date: today_date,label: 'This Week'},
-      {date: today_date,label: 'All'}
-      
+      { date: new Date(), label: 'This Year' },
+      { date: new Date(), label: 'This Month' },
+      { date: new Date(), label: 'This Week' },
+      { date: new Date(), label: 'All' }
     ]
     for (let i = 0; i < 2; i++) {
       let month_subtracted = subMonths(new Date(), i + 1)
@@ -61,7 +58,7 @@ class ManagerDashboardApp extends React.Component {
       ChartStore.loadWorkerCapacity(props.batches[0].id)
     }
     ChartStore.loadCostBreakdown(current_month, current_year)
-    ChartStore.loadBatchDistribution(today_date, "This Year")
+    ChartStore.loadBatchDistribution(format(new Date(), 'YYYY-MM-DD'), 'This Year')
     ChartStore.UnassignedTask()
     ChartStore.loadScheduleList(format(new Date(), 'YYYY-MM-DD'))
     ChartStore.loadScheduleDateRange(
@@ -153,7 +150,7 @@ class ManagerDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: 420 + 'px' }}
             >
-              <BatchDistribution arr_months={this.state.arr_batch_months}/>
+              <BatchDistribution arr_months={this.state.arr_batch_months} />
             </div>
           </div>
         </div>

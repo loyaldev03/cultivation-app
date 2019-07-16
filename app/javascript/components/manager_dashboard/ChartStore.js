@@ -13,12 +13,14 @@ function parseTask(taskAttributes) {
 class ChartStore {
   @observable data_worker_capacity = []
   @observable data_cost_breakdown = []
+  @observable data_batch_distribution = []
   @observable data_unassigned_task = []
   @observable unassigned_task = false
   @observable schedule_list = []
   @observable schedule_date_range = []
   @observable worker_capacity_loaded = false
   @observable cost_breakdown_loaded = false
+  @observable batch_distribution_loaded = false
   @observable schedule_list_loaded = false
   @observable schedule_date_range_loaded = false
 
@@ -57,6 +59,51 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+    }
+  }
+
+  @action
+  async loadBatchDistribution(date,label) {
+    this.isLoading = true
+    this.batch_distribution_loaded = false
+    const url = `/api/v1/dashboard_charts/batch_distribution?date=${date}&label=${label}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.data_batch_distribution = response
+        this.batch_distribution_loaded = true
+      } else {
+        this.data_batch_distribution = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  @computed get batchDistribution() {
+    if (this.batch_distribution_loaded) {
+      let final_result = {
+        labels: this.data_batch_distribution.map(d => d.phase),
+        datasets: [
+          {
+            label: "Batch",
+            data: this.data_batch_distribution.map(d => d.batch_count),
+            backgroundColor: "rgba(241, 90, 34, 1)"
+          },
+          {
+            label: "Plant",
+            data:  this.data_batch_distribution.map(d => d.plant_count),
+            type: 'line',
+            pointRadius: 0,
+            hoverRadius: 0
+          }
+        ]
+      }
+
+      return final_result
+    } else {
+      return {}
     }
   }
 

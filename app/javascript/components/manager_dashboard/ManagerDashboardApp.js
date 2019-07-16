@@ -17,6 +17,8 @@ import BatchDistribution from './BatchDistribution'
 import HighestCostTaskList from './HighestCostTaskList'
 import StrainDistribution from './StrainDistribution'
 
+import { formatYDM } from '../utils/DateHelper'
+
 @observer
 class ManagerDashboardApp extends React.Component {
   constructor(props) {
@@ -26,6 +28,12 @@ class ManagerDashboardApp extends React.Component {
     let current_year = new Date().getFullYear()
     let arr_months = [
       { month: current_month, year: current_year, label: 'This Month' }
+    ]
+    let arr_batch_months = [
+      { date: new Date(), label: 'This Year' },
+      { date: new Date(), label: 'This Month' },
+      { date: new Date(), label: 'This Week' },
+      { date: new Date(), label: 'All' }
     ]
     for (let i = 0; i < 2; i++) {
       let month_subtracted = subMonths(new Date(), i + 1)
@@ -42,7 +50,8 @@ class ManagerDashboardApp extends React.Component {
       date: new Date(),
       batches: props.batches,
       selectedBatch: this.props.batches[0],
-      arr_months: arr_months
+      arr_months: arr_months,
+      arr_batch_months: arr_batch_months
     }
 
     let start_of_month = startOfMonth(new Date())
@@ -51,11 +60,12 @@ class ManagerDashboardApp extends React.Component {
       ChartStore.loadWorkerCapacity(props.batches[0].id)
     }
     ChartStore.loadCostBreakdown(current_month, current_year)
+    ChartStore.loadBatchDistribution(formatYDM(new Date()), 'This Year')
     ChartStore.UnassignedTask()
-    ChartStore.loadScheduleList(format(new Date(), 'YYYY-MM-DD'))
+    ChartStore.loadScheduleList(formatYDM(new Date()))
     ChartStore.loadScheduleDateRange(
-      format(start_of_month, 'YYYY-MM-DD'),
-      format(end_of_month, 'YYYY-MM-DD')
+      formatYDM(start_of_month),
+      formatYDM(end_of_month)
     )
   }
 
@@ -142,7 +152,7 @@ class ManagerDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: 420 + 'px' }}
             >
-              <BatchDistribution />
+              <BatchDistribution arr_months={this.state.arr_batch_months} />
             </div>
           </div>
         </div>

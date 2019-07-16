@@ -16,7 +16,7 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
   end
 
   def batch_distribution
-    result = Charts::QueryBatchDistribution.call(current_user, {}).result
+    result = Charts::QueryBatchDistribution.call(current_user, {date: params[:date], label: params[:label]}).result
     render json: result.to_json, status: 200
   end
 

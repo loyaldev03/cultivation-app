@@ -92,39 +92,13 @@
 
         <div class="dt-row">
           <div class="dtc pa4 pv2 dark-grey" style="width: 70%">
-            Facility - Read
+            Facility
           </div>
           <% metrc_h = current_facility.metrc_histories.find_by(code: "facility_facility_info") %>
           <div class="dtc tc pv2 dark-grey" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
           <div class="dtc tc pv2 dark-grey" style="width: 15%">
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "",
-                                                                                        code: "facility_facility_info"),
-                                                                                        class: 'btn btn--primary btn--small',
-                                                                                        method: :put, data: {remote: false}%>
-          </div>
-        </div>
-        <div class="dt-row">
-          <div class="dtc pa4 pv2 dark-grey" style="width: 70%">
-            Strains
-          </div>
-          <% metrc_h = current_facility.metrc_histories.find_by(code: "facility_strains") %>
-          <div class="dtc tc pv2 dark-grey" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
-          <div class="dtc tc pv2 dark-grey" style="width: 15%">
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "",
-                                                                                        code: "facility_strains"),
-                                                                                        class: 'btn btn--primary btn--small',
-                                                                                        method: :put, data: {remote: false}%>
-          </div>
-        </div>
-        <div class="dt-row">
-          <div class="dtc pa4 pv2 dark-grey" style="width: 70%">
-            Items
-          </div>
-          <% metrc_h = current_facility.metrc_histories.find_by(code: "facility_items") %>
-          <div class="dtc tc pv2 dark-grey" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
-          <div class="dtc tc pv2 dark-grey" style="width: 15%">
-            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "MetrcUpdateItemWorker",
-                                                                                        code: "facility_items",
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "MetrcUpdateFacilityWorker",
+                                                                                        code: "facility_facility_info",
                                                                                         facility_id: current_facility.id),
                                                                                         class: 'btn btn--primary btn--small',
                                                                                         method: :put, data: {remote: false}%>
@@ -139,6 +113,34 @@
           <div class="dtc tc pv2 dark-grey" style="width: 15%">
             <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "MetrcUpdateRoomsWorker",
                                                                                         code: "facility_rooms"),
+                                                                                        class: 'btn btn--primary btn--small',
+                                                                                        method: :put, data: {remote: false}%>
+          </div>
+        </div>
+        <div class="dt-row">
+          <div class="dtc pa4 pv2 dark-grey" style="width: 70%">
+            Strains
+          </div>
+          <% metrc_h = current_facility.metrc_histories.find_by(code: "facility_strains") %>
+          <div class="dtc tc pv2 dark-grey" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
+          <div class="dtc tc pv2 dark-grey" style="width: 15%">
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "MetrcUpdateStrainsWorker",
+                                                                                        code: "facility_strains",
+                                                                                        facility_id: current_facility.id),
+                                                                                        class: 'btn btn--primary btn--small',
+                                                                                        method: :put, data: {remote: false}%>
+          </div>
+        </div>
+        <div class="dt-row">
+          <div class="dtc pa4 pv2 dark-grey" style="width: 70%">
+            Items
+          </div>
+          <% metrc_h = current_facility.metrc_histories.find_by(code: "facility_items") %>
+          <div class="dtc tc pv2 dark-grey" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
+          <div class="dtc tc pv2 dark-grey" style="width: 15%">
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "MetrcUpdateItemWorker",
+                                                                                        code: "facility_items",
+                                                                                        facility_id: current_facility.id),
                                                                                         class: 'btn btn--primary btn--small',
                                                                                         method: :put, data: {remote: false}%>
           </div>

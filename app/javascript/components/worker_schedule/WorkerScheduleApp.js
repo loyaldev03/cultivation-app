@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React from 'react'
 import { observer } from 'mobx-react'
 import Calendar from 'react-calendar/dist/entry.nostyle'

@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { toJS } from 'mobx'

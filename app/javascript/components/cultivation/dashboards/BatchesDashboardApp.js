@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { differenceInDays } from 'date-fns'
 import { observer } from 'mobx-react'

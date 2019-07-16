@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React from 'react'
 import isEmpty from 'lodash.isempty'
 import uniq from 'lodash.uniq'

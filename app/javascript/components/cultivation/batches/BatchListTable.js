@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React from 'react'
 import { ActiveBadge, formatDate2 } from '../../utils'
 import Tippy from '@tippy.js/react'

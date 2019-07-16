@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React from 'react'
 import store from './UserRoleStore'
 import { observer } from 'mobx-react'

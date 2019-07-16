@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
 import { CheckboxSelect, ListingTable, TempPackagesWidgets } from '../../utils'

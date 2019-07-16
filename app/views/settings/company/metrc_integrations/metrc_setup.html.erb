@@ -98,8 +98,7 @@
           <div class="dtc tc pv2 dark-grey" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
           <div class="dtc tc pv2 dark-grey" style="width: 15%">
             <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "MetrcUpdateFacilityWorker",
-                                                                                        code: "facility_facility_info",
-                                                                                        facility_id: current_facility.id),
+                                                                                        code: "facility_facility_info"),
                                                                                         class: 'btn btn--primary btn--small',
                                                                                         method: :put, data: {remote: false}%>
           </div>

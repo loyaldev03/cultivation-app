@@ -10,6 +10,15 @@ class MetrcApi
   }.freeze
 
   class << self
+    # + Facility
+
+    def get_facilities
+      url = "#{BASE_URL}/facilities/v1"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
+    # - Facility
 
     # + Unit of Measure
 

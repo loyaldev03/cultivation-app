@@ -157,7 +157,6 @@ class ChartStore {
     } finally {
     }
   }
-
 }
 
 const chartStore = new ChartStore()

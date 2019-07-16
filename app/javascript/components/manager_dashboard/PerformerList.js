@@ -26,30 +26,28 @@ export default class UnassignedTask extends React.Component {
     }
   }
 
-
-  onChangeOrder = (order) => {
+  onChangeOrder = order => {
     ChartStore.loadPerformerList(order, this.state.type)
     this.setState({
       order: order
     })
   }
 
-  onChangeType = (order_type) => {
+  onChangeType = order_type => {
     ChartStore.loadPerformerList(this.state.order, order_type)
     this.setState({
       type: order_type
     })
   }
 
-
-  getProgressBarColor (dry_weight) {
-    if (dry_weight < 100){
+  getProgressBarColor(dry_weight) {
+    if (dry_weight < 100) {
       return 'bg-red'
     }
     if (dry_weight > 100 && dry_weight < 200) {
       return 'bg-yellow'
     }
-    if (dry_weight > 200 ) {
+    if (dry_weight > 200) {
       return 'bg-green'
     }
   }
@@ -119,32 +117,30 @@ export default class UnassignedTask extends React.Component {
             </Tippy>
           </div>
         </div>
-          {ChartStore.performer_list_loaded ?
-            (
-              <div className="overflow-y-scroll" style={{ height: 340 + 'px' }}>
-                {ChartStore.performer_list.map(e => (
-                  <div className='flex items-center'>
-                    <h1 className="f6 fw6 w-20">{e.batch_name}</h1>
-                    <ProgressBar percent={e.percentage} height={10} className='w-60 mr2' barColor={this.getProgressBarColor(e.total_dry_weight)} />
-                    <h1 className="f6 fw6 w-20">
-                      {this.state.type === 'yield' ? (
-                          <span>{e.total_dry_weight}lb</span>
-                          )
-                        :
-                          (
-                            <span>${e.revenue}</span>
-                          )
-                      }
-                    </h1>
-                  </div>
-                ))}
+        {ChartStore.performer_list_loaded ? (
+          <div className="overflow-y-scroll" style={{ height: 340 + 'px' }}>
+            {ChartStore.performer_list.map(e => (
+              <div className="flex items-center">
+                <h1 className="f6 fw6 w-20">{e.batch_name}</h1>
+                <ProgressBar
+                  percent={e.percentage}
+                  height={10}
+                  className="w-60 mr2"
+                  barColor={this.getProgressBarColor(e.total_dry_weight)}
+                />
+                <h1 className="f6 fw6 w-20">
+                  {this.state.type === 'yield' ? (
+                    <span>{e.total_dry_weight}lb</span>
+                  ) : (
+                    <span>${e.revenue}</span>
+                  )}
+                </h1>
               </div>
-            )
-          :
-            (
-              <div>Loading ... </div>
-            )
-          }
+            ))}
+          </div>
+        ) : (
+          <div>Loading ... </div>
+        )}
       </React.Fragment>
     )
   }

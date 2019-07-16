@@ -1,7 +1,13 @@
 import React from 'react'
 
 const ProgressBar = React.memo(
-  ({ height = 10, percent = 0, className = '', show = true, barColor = 'bg-orange' }) => {
+  ({
+    height = 10,
+    percent = 0,
+    className = '',
+    show = true,
+    barColor = 'bg-orange'
+  }) => {
     if (!show) return null
     const style = {
       width: `${percent}%`,

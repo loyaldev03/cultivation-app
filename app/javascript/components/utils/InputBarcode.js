@@ -1,7 +1,6 @@
 import React, { useState, forwardRef } from 'react'
 import PropTypes from 'prop-types'
 import { ImgBarcode } from './Icons'
-import { launchBarcodeScanner } from '../utils/BarcodeScanner'
 import BarCodeComponent from './BarcodeComponent'
 
 const InputBarcode = forwardRef(
@@ -10,7 +9,6 @@ const InputBarcode = forwardRef(
       onChange,
       onKeyPress,
       onBarcodeScan,
-      scanditLicense,
       value,
       error,
       readOnly = false,
@@ -20,10 +18,7 @@ const InputBarcode = forwardRef(
     },
     ref
   ) => {
-    let scanner = null
-    let scannerRef = null
     const [hidden, setHidden] = useState(false)
-    const [valueBarcode, onChangeBarcode] = useState('')
 
     const onShowScanner = e => {
       setHidden(!hidden)
@@ -66,7 +61,6 @@ const InputBarcode = forwardRef(
         </div>
         {hidden && (
           <BarCodeComponent
-            onChangeBarcode={onChangeBarcode}
             onBarcodeScan={onBarcodeScan}
             onShowScanner={onShowScanner}
           />
@@ -82,9 +76,6 @@ const InputBarcode = forwardRef(
             </a>
           </div>
         ) : null}
-        <div className="flex items-center mt3">
-          <div className="scanner" ref={x => (scannerRef = x)} />
-        </div>
       </React.Fragment>
     )
   }

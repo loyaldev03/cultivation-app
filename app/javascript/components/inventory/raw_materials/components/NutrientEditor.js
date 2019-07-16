@@ -441,7 +441,6 @@ class NutrientEditor extends React.Component {
   }
 
   onBarcodeScan = e => {
-    console.log(e)
     this.setState({ upc: e }, () => {
       this.loadItemScan()
     })

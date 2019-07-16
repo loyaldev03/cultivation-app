@@ -3,14 +3,16 @@ import React from 'react'
 import { BrowserBarcodeReader } from '@zxing/library'
 import Webcam from './WebCamComponent'
 const codeReader = new BrowserBarcodeReader()
-let selectedVideoDevice = ''
 
 class BarCodeComponent extends React.Component {
   constructor(props) {
     super(props)
-    let that = this
+    this.selectedVideoDevice = ''
+  }
+
+  componentDidMount() {
     codeReader.getVideoInputDevices().then(videoInputDevices => {
-      selectedVideoDevice = videoInputDevices[0].deviceId
+      this.selectedVideoDevice = videoInputDevices[0].deviceId
       const sourceSelect = document.getElementsByClassName('barcode_cam')
       let selectedDeviceId = videoInputDevices[0].deviceId
       if (videoInputDevices.length > 1) {
@@ -29,10 +31,10 @@ class BarCodeComponent extends React.Component {
       codeReader
         .decodeFromInputVideoDevice(selectedDeviceId)
         .then(result => {
-          console.log(result)
-          that.props.onChangeBarcode(result)
-          that.props.onBarcodeScan(result)
-          that.props.onShowScanner()
+          if (result) {
+            this.props.onBarcodeScan(result.text)
+            this.props.onShowScanner()
+          }
         })
         .catch(err => {
           console.error(err)
@@ -47,4 +49,5 @@ class BarCodeComponent extends React.Component {
     return <Webcam className="barcode_cam" height={350} width={350} />
   }
 }
+
 export default BarCodeComponent

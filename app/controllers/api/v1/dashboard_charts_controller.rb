@@ -46,4 +46,9 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
     result = DailyTask::QueryTaskByDateRange.call(params[:start_date], params[:end_date]).result
     render json: result
   end
+
+  def performer_list
+    result = Charts::QueryPerformerList.call(current_user, {order: params[:order], order_type: params[:order_type]}).result
+    render json: result.to_json, status: 200
+  end
 end

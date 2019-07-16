@@ -456,6 +456,7 @@ Rails.application.routes.draw do
           get 'unassigned_task'
           get 'tasklist_by_day'
           get 'tasks_by_date_range'
+          get 'performer_list'
         end
       end
       resources :holidays, only: [:index, :create, :update] do 

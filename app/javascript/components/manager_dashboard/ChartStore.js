@@ -17,10 +17,12 @@ class ChartStore {
   @observable unassigned_task = false
   @observable schedule_list = []
   @observable schedule_date_range = []
+  @observable performer_list = []
   @observable worker_capacity_loaded = false
   @observable cost_breakdown_loaded = false
   @observable schedule_list_loaded = false
   @observable schedule_date_range_loaded = false
+  @observable performer_list_loaded = false
 
   @action
   async loadWorkerCapacity(batchId) {
@@ -136,6 +138,26 @@ class ChartStore {
     } finally {
     }
   }
+
+  @action
+  async loadPerformerList(order = 'top', order_type = 'yield') {
+    this.isLoading = true
+    this.performer_list_loaded = false
+    const url = `/api/v1/dashboard_charts/performer_list?order=${order}&order_type=${order_type}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.performer_list = response
+        this.performer_list_loaded = true
+      } else {
+        this.performer_list = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
 }
 
 const chartStore = new ChartStore()

@@ -57,6 +57,7 @@ class ManagerDashboardApp extends React.Component {
       format(start_of_month, 'YYYY-MM-DD'),
       format(end_of_month, 'YYYY-MM-DD')
     )
+    ChartStore.loadPerformerList()
   }
 
   onChangeWorkerCapacityBatch = batch => {

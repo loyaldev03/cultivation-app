@@ -17,6 +17,8 @@ import BatchDistribution from './BatchDistribution'
 import HighestCostTaskList from './HighestCostTaskList'
 import StrainDistribution from './StrainDistribution'
 
+import { formatYDM } from '../utils/DateHelper'
+
 @observer
 class ManagerDashboardApp extends React.Component {
   constructor(props) {
@@ -58,12 +60,12 @@ class ManagerDashboardApp extends React.Component {
       ChartStore.loadWorkerCapacity(props.batches[0].id)
     }
     ChartStore.loadCostBreakdown(current_month, current_year)
-    ChartStore.loadBatchDistribution(format(new Date(), 'YYYY-MM-DD'), 'This Year')
+    ChartStore.loadBatchDistribution(formatYDM(new Date()), 'This Year')
     ChartStore.UnassignedTask()
-    ChartStore.loadScheduleList(format(new Date(), 'YYYY-MM-DD'))
+    ChartStore.loadScheduleList(formatYDM(new Date()))
     ChartStore.loadScheduleDateRange(
-      format(start_of_month, 'YYYY-MM-DD'),
-      format(end_of_month, 'YYYY-MM-DD')
+      formatYDM(start_of_month),
+      formatYDM(end_of_month)
     )
   }
 

@@ -16,12 +16,18 @@ module Charts
           batch: batch.name,
           thcValue: batch.facility_strain.thc,
           cbdValue: batch.facility_strain.cbd,
-          terpinesValue: '',
-          thcPercentage: 25,
-          cbdPercentage: 15,
-          terpinesPercentage: 60,
+          terpenoidsValue: 419,
+          residualPesticidesValue: 425,
         }
       end
+      if @args[:order].present?
+        if @args[:order] == 'top'
+          json_output = json_output.sort_by { |a| -a[:thcValue] }
+        else
+          json_output = json_output.sort_by { |a| a[:thcValue] }
+        end
+      end
+      json_output
     end
   end
 end

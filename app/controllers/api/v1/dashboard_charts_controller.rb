@@ -1,7 +1,7 @@
 class Api::V1::DashboardChartsController < Api::V1::BaseApiController
   def batch_test_result
     # NOTE : should be re write the code for test_results not facility_strain
-    result = Charts::QueryBatchTestResult.call(current_user, {}).result
+    result = Charts::QueryBatchTestResult.call(current_user, {order: params[:order]}).result
     render json: result.to_json, status: 200
   end
 

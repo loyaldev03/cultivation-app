@@ -1,4 +1,5 @@
 import React, { useState, forwardRef } from 'react'
+import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import { ImgBarcode } from './Icons'
 import BarCodeComponent from './BarcodeComponent'
@@ -11,6 +12,7 @@ const InputBarcode = forwardRef(
       onBarcodeScan,
       value,
       error,
+      metrcTagLookup = false,
       readOnly = false,
       autoFocus = false,
       className = 'w5',
@@ -45,7 +47,11 @@ const InputBarcode = forwardRef(
                 readOnly={readOnly}
                 type="text"
                 value={value}
-                className={`grey input input--with-icon ${className}`}
+                className={classNames('grey input ${}', {
+                  className: true,
+                  'input--with-icon': !metrcTagLookup,
+                  'input--with-icon--2': metrcTagLookup
+                })}
                 autoFocus={autoFocus}
                 onKeyPress={onKeyPress}
                 onChange={onChange}
@@ -56,6 +62,11 @@ const InputBarcode = forwardRef(
                 alt="Scan barcode"
                 onClick={onShowScanner}
               />
+              {metrcTagLookup && (
+                <i class="material-icons input__icon--2" alt="Metrc Tag Lookup">
+                  search
+                </i>
+              )}
             </React.Fragment>
           )}
         </div>

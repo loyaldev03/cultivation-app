@@ -16,8 +16,19 @@
   padding-right: 2.10em;
 }
 
+.input--with-icon--2 {
+  padding-right: 4.10em;
+}
+
 .input__icon {
   margin-left: -2.10em;
+  cursor: pointer;
+  padding: 0.25em;
+}
+
+.input__icon--2 {
+  color: $orange;
+  margin-left: -2.7em;
   cursor: pointer;
   padding: 0.25em;
 }

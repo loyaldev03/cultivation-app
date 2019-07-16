@@ -15,13 +15,12 @@ const MenuButton = ({ icon, text, onClick, className = '' }) => {
   )
 }
 @observer
-export default class BatchDistribution extends React.Component{
-
-  constructor(props){
+export default class BatchDistribution extends React.Component {
+  constructor(props) {
     super(props)
-    this.state={
-        selectedMonth: this.props.arr_months[0],
-        arr_months: this.props.arr_months
+    this.state = {
+      selectedMonth: this.props.arr_months[0],
+      arr_months: this.props.arr_months
     }
   }
 
@@ -30,10 +29,10 @@ export default class BatchDistribution extends React.Component{
     console.log(selectedMonth)
     ChartStore.loadBatchDistribution(selectedMonth.date, selectedMonth.label)
   }
-  
-  render(){
+
+  render() {
     const { arr_months } = this.state
-    const options =  {
+    const options = {
       legend: {
         display: false
       },
@@ -41,36 +40,40 @@ export default class BatchDistribution extends React.Component{
         mode: 'index',
         intersect: false,
         custom: function(tooltip) {
-          if (!tooltip) return;
+          if (!tooltip) return
           // disable displaying the color box;
-          tooltip.displayColors = false;
+          tooltip.displayColors = false
         },
         callbacks: {
-          label: function (t) {
+          label: function(t) {
             if (t.datasetIndex === 0) {
-              return 'Batch: '+t.yLabel.toString()
+              return 'Batch: ' + t.yLabel.toString()
             } else if (t.datasetIndex === 1) {
-              return 'Plant: '+t.yLabel.toString()
+              return 'Plant: ' + t.yLabel.toString()
             }
           }
-        },
+        }
       },
       showLines: false,
       scales: {
-        xAxes: [{
-          gridLines: {
-            display:false
-          },
-          barPercentage: 0.3
-        }],
-        yAxes: [{
-          gridLines: {
-            display:false
-          }   
-        }]
+        xAxes: [
+          {
+            gridLines: {
+              display: false
+            },
+            barPercentage: 0.3
+          }
+        ],
+        yAxes: [
+          {
+            gridLines: {
+              display: false
+            }
+          }
+        ]
       }
     }
-    return(
+    return (
       <React.Fragment>
         <div className="flex justify-between mb4">
           <h1 className="f5 fw6">Batch Distribution</h1>
@@ -98,19 +101,17 @@ export default class BatchDistribution extends React.Component{
                 {this.state.selectedMonth.label}
               </h1>
               <i className="material-icons grey mr2  md-21 mt2">
-                    keyboard_arrow_down
+                keyboard_arrow_down
               </i>
             </div>
           </Tippy>
         </div>
         {ChartStore.batch_distribution_loaded ? (
-          <Bar data={ChartStore.batchDistribution}  options={options}/>
+          <Bar data={ChartStore.batchDistribution} options={options} />
         ) : (
           'loading...'
         )}
       </React.Fragment>
     )
   }
-
-
 }

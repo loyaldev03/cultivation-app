@@ -88,7 +88,7 @@ class ChartStore {
     } finally {
     }
   }
-  
+
   @action
   async issueList() {
     this.isLoading = true

@@ -1,64 +1,9 @@
-import React, { useEffect, useRef, useState, forwardRef } from 'react'
+import React, { useState, forwardRef } from 'react'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
-import { Manager, Reference, Popper } from 'react-popper'
 import { ImgBarcode } from './Icons'
+import { LookupIcon } from './LookupIcon'
 import BarCodeComponent from './BarcodeComponent'
-
-function LookupIcon({ title, mode, className }) {
-  if (!mode) {
-    return null
-  }
-  const node = useRef()
-  const [expand, setExpand] = useState(false)
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClick)
-    return () => {
-      document.removeEventListener('mousedown', handleClick)
-    }
-  }, [])
-  const handleClick = e => {
-    if (node.current.contains(e.target)) {
-      // elided, because clicking inside popup
-      return
-    }
-    // clicking outside popup
-    setExpand(false)
-  }
-  return (
-    <span ref={node}>
-      <Manager>
-        <Reference>
-          {({ ref }) => (
-            <i
-              ref={ref}
-              className={`material-icons ${className}`}
-              title={title}
-              onClick={() => setExpand(!expand)}
-            >
-              search
-            </i>
-          )}
-        </Reference>
-        {expand && (
-          <Popper placement="bottom-start" positionFixed>
-            {({ ref, style, placement, arrowProps }) => (
-              <div
-                ref={ref}
-                style={style}
-                className="z-999 mt1 bg-white shadow-3 ba br2 b--light-grey tc"
-                data-placement={placement}
-              >
-                Lookup mode {mode}
-                <div ref={arrowProps.ref} style={arrowProps.style} />
-              </div>
-            )}
-          </Popper>
-        )}
-      </Manager>
-    </span>
-  )
-}
 
 const InputBarcode = forwardRef(
   (
@@ -80,20 +25,6 @@ const InputBarcode = forwardRef(
     const onShowScanner = () => {
       setHidden(!hidden)
     }
-    // const node = useRef()
-    // const handleLookup = e => {
-    //   if (node.current.contains(e.target)) {
-    //     // elided, because clicking inside popup
-    //     return
-    //   }
-    //   setEnableLookup(false) // clicking outside popup
-    // }
-    // useEffect(() => {
-    //   document.addEventListener('mousedown', handleLookup)
-    //   return () => {
-    //     document.removeEventListener('mousedown', handleLookup)
-    //   }
-    // }, [])
     return (
       <React.Fragment>
         <div className="flex items-center">
@@ -134,6 +65,9 @@ const InputBarcode = forwardRef(
                   className="input__icon--2"
                   title="Metrc tags lookup"
                   mode={lookupMode}
+                  onChange={() => {
+                    console.log('changed metrc tag')
+                  }}
                 />
               )}
             </React.Fragment>

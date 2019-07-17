@@ -28,14 +28,14 @@ module Charts
 
     def check_range(range)
       if range == 'this_month'
-        start_date = Time.now.beginning_of_month
-        end_date = Time.now.end_of_month
+        start_date = Time.current.beginning_of_month
+        end_date = Time.current.end_of_month
       elsif range == 'this_year'
-        start_date = Time.now.beginning_of_year
-        end_date = Time.now.end_of_year
+        start_date = Time.current.beginning_of_year
+        end_date = Time.current.end_of_year
       elsif range == 'this_week'
-        start_date = Time.now.beginning_of_week
-        end_date = Time.now.end_of_week
+        start_date = Time.current.beginning_of_week
+        end_date = Time.current.end_of_week
       else
         start_date = 'all'
       end

@@ -60,13 +60,16 @@ class ManagerDashboardApp extends React.Component {
     }
     ChartStore.loadCostBreakdown(current_month, current_year)
     ChartStore.loadBatchDistribution(formatYDM(new Date()), 'This Year')
-    ChartStore.UnassignedTask()
+    ChartStore.unassignedTask()
+    ChartStore.highestCostTask('all')
+    ChartStore.issueList()
     ChartStore.loadScheduleList(formatYDM(new Date()))
     ChartStore.loadScheduleDateRange(
       formatYDM(start_of_month),
       formatYDM(end_of_month)
     )
     ChartStore.loadPerformerList()
+    ChartStore.loadBatchTestResult()
   }
 
   onChangeWorkerCapacityBatch = batch => {

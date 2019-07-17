@@ -1,7 +1,7 @@
 class Api::V1::DashboardChartsController < Api::V1::BaseApiController
   def batch_test_result
     # NOTE : should be re write the code for test_results not facility_strain
-    result = Charts::QueryBatchTestResult.call(current_user, {}).result
+    result = Charts::QueryBatchTestResult.call(current_user, {order: params[:order]}).result
     render json: result.to_json, status: 200
   end
 
@@ -27,6 +27,16 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
 
   def unassigned_task
     result = Charts::UnassignedTask.call(current_user).result
+    render json: result.to_json, status: 200
+  end
+
+  def highest_cost_task
+    result = Charts::HighestCostTask.call(current_user, {range: params[:range]}).result
+    render json: result.to_json, status: 200
+  end
+
+  def issue_list
+    result = Charts::IssueList.call(current_user).result
     render json: result.to_json, status: 200
   end
 

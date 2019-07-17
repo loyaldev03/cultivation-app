@@ -16,12 +16,14 @@ class ChartStore {
   @observable data_cost_breakdown = []
   @observable data_batch_distribution = []
   @observable data_unassigned_task = []
-  @observable unassigned_task_loaded = false
   @observable schedule_list = []
   @observable data_issue_list = []
   @observable schedule_date_range = []
   @observable performer_list = []
   @observable batch_test_result = []
+  @observable data_highest_cost_task = []
+  @observable unassigned_task_loaded = false
+  @observable highest_cost_task_loaded = false
   @observable issue_list_loaded = false
   @observable worker_capacity_loaded = false
   @observable cost_breakdown_loaded = false
@@ -52,7 +54,7 @@ class ChartStore {
   }
 
   @action
-  async UnassignedTask() {
+  async unassignedTask() {
     this.isLoading = true
     this.unassigned_task = false
     const url = `/api/v1/dashboard_charts/unassigned_task`
@@ -63,6 +65,25 @@ class ChartStore {
         this.unassigned_task = true
       } else {
         this.data_unassigned_task = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  @action
+  async highestCostTask(range) {
+    this.isLoading = true
+    this.highest_cost_task_loaded = false
+    const url = `/api/v1/dashboard_charts/highest_cost_task?range=${range}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.data_highest_cost_task = response
+        this.highest_cost_task_loaded = true
+      } else {
+        this.data_highest_cost_task = []
       }
     } catch (error) {
       console.error(error)

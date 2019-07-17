@@ -10,6 +10,7 @@ class MetrcApi
   }.freeze
 
   class << self
+
     # + Facility
 
     def get_facilities
@@ -123,5 +124,15 @@ class MetrcApi
     end
 
     # - Item API
+
+    # + Plant Batch API
+
+    def create_plant_batch(facility_license, params)
+      url = "#{BASE_URL}/plantbatches/v1/createplantings?licenseNumber=#{facility_license}"
+      res = RestClient.post(url, params.to_json, HEADERS)
+      res.code == 200
+    end
+
+    # - Plant Batch API
   end
 end

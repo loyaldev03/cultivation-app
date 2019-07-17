@@ -20,6 +20,7 @@ class ChartStore {
   @observable data_issue_list = []
   @observable schedule_date_range = []
   @observable performer_list = []
+  @observable batch_test_result = []
   @observable data_highest_cost_task = []
   @observable unassigned_task_loaded = false
   @observable highest_cost_task_loaded = false
@@ -30,6 +31,7 @@ class ChartStore {
   @observable schedule_list_loaded = false
   @observable schedule_date_range_loaded = false
   @observable performer_list_loaded = false
+  @observable batch_test_result_loaded = false
   @observable filter = ''
 
   @action
@@ -259,6 +261,25 @@ class ChartStore {
         this.performer_list_loaded = true
       } else {
         this.performer_list = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  @action
+  async loadBatchTestResult(order = 'top') {
+    this.isLoading = true
+    this.batch_test_result_loaded = false
+    const url = `/api/v1/dashboard_charts/batch_test_result?order=${order}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.batch_test_result = response
+        this.batch_test_result_loaded = true
+      } else {
+        this.batch_test_result = []
       }
     } catch (error) {
       console.error(error)

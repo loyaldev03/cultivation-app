@@ -560,7 +560,7 @@ class NutrientEditor extends React.Component {
                 onKeyPress={this.handleKeyPress}
                 scanditLicense={this.props.scanditLicense}
                 onBarcodeScan={this.onBarcodeScan}
-                metrcTagLookup={true}
+                lookupMode="METRC_PLANT_TAGS"
               />
             </div>
           </div>

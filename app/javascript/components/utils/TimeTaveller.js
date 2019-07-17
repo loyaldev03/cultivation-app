@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import classNames from 'classnames'
 import React from 'react'
 import DatePicker from 'react-date-picker/dist/entry.nostyle'

@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import isEmpty from 'lodash.isempty'
 import uniq from 'lodash.uniq'
 import React, { memo, useState } from 'react'

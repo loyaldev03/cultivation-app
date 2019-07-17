@@ -7,7 +7,7 @@ export class Modal extends React.Component {
       return null
     }
     return (
-      <div className="fixed absolute--fill bg-black-30" tabIndex="0">
+      <div className="fixed absolute--fill bg-black-30 z-9" tabIndex="0">
         {this.props.render(this.state)}
       </div>
     )

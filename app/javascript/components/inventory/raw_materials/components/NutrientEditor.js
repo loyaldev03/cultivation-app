@@ -424,7 +424,6 @@ class NutrientEditor extends React.Component {
   }
 
   loadItemScan = async e => {
-    console.log('call api to retrieve product info')
     const product = await UpcStore.loadItem(this.state.upc)
     if (product.brand) {
       this.setState({
@@ -441,7 +440,6 @@ class NutrientEditor extends React.Component {
   }
 
   onBarcodeScan = e => {
-    console.log(e)
     this.setState({ upc: e }, () => {
       this.loadItemScan()
     })

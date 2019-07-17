@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React from 'react'
 import AsyncSelect from 'react-select/lib/Async'
 import { observe, toJS } from 'mobx'

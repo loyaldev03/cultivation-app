@@ -15,7 +15,7 @@ class UpcStore {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response && response.data) {
         this.item = response.data
-        return toJS(this.item)
+        return response.data
       } else {
         return {}
       }

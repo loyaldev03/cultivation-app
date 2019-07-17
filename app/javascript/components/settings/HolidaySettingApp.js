@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React, { lazy, Suspense } from 'react'
 import { observer } from 'mobx-react'
 import { toast } from '../utils/toast'

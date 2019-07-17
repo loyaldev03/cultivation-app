@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import classNames from 'classnames'
 import React from 'react'
 import BatchPlantSelectionList from './BatchPlantSelectionList'

@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React, { Component, Suspense } from 'react'
 import PropTypes from 'prop-types'
 import { toJS } from 'mobx'

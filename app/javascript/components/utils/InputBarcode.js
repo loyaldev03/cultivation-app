@@ -1,7 +1,8 @@
 import React, { useState, forwardRef } from 'react'
+import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import { ImgBarcode } from './Icons'
-import { launchBarcodeScanner } from '../utils/BarcodeScanner'
+import { LookupIcon } from './LookupIcon'
 import BarCodeComponent from './BarcodeComponent'
 
 const InputBarcode = forwardRef(
@@ -10,9 +11,9 @@ const InputBarcode = forwardRef(
       onChange,
       onKeyPress,
       onBarcodeScan,
-      scanditLicense,
       value,
       error,
+      lookupMode = '',
       readOnly = false,
       autoFocus = false,
       className = 'w5',
@@ -20,15 +21,10 @@ const InputBarcode = forwardRef(
     },
     ref
   ) => {
-    let scanner = null
-    let scannerRef = null
     const [hidden, setHidden] = useState(false)
-    const [valueBarcode, onChangeBarcode] = useState('')
-
-    const onShowScanner = e => {
+    const onShowScanner = () => {
       setHidden(!hidden)
     }
-
     return (
       <React.Fragment>
         <div className="flex items-center">
@@ -50,7 +46,10 @@ const InputBarcode = forwardRef(
                 readOnly={readOnly}
                 type="text"
                 value={value}
-                className={`grey input input--with-icon ${className}`}
+                className={classNames(`grey input ${className}`, {
+                  'input--with-icon': !lookupMode,
+                  'input--with-icon--2': lookupMode
+                })}
                 autoFocus={autoFocus}
                 onKeyPress={onKeyPress}
                 onChange={onChange}
@@ -58,21 +57,30 @@ const InputBarcode = forwardRef(
               <img
                 className="input__icon"
                 src={ImgBarcode}
-                alt="Scan barcode"
+                title="Use camera to scan barcode"
                 onClick={onShowScanner}
               />
+              {lookupMode && (
+                <LookupIcon
+                  className="input__icon--2"
+                  title="Metrc tags lookup"
+                  mode={lookupMode}
+                  onChange={() => {
+                    console.log('changed metrc tag')
+                  }}
+                />
+              )}
             </React.Fragment>
           )}
         </div>
         {hidden && (
           <BarCodeComponent
-            onChangeBarcode={onChangeBarcode}
             onBarcodeScan={onBarcodeScan}
             onShowScanner={onShowScanner}
           />
         )}
         {error && <span className="f7 i red dib pv1">{error}</span>}
-        {multiple ? (
+        {multiple && (
           <div className="w-100 mb2 mt2 flex justify-end">
             <a
               className="ph2 pv2 btn--secondary f6 link pointer"
@@ -81,10 +89,7 @@ const InputBarcode = forwardRef(
               Scan Tags
             </a>
           </div>
-        ) : null}
-        <div className="flex items-center mt3">
-          <div className="scanner" ref={x => (scannerRef = x)} />
-        </div>
+        )}
       </React.Fragment>
     )
   }

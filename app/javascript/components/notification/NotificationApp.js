@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React, { useEffect, useRef, useState } from 'react'
 import isEmpty from 'lodash.isempty'
 import classNames from 'classnames'

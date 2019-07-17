@@ -1,5 +1,3 @@
-import 'babel-polyfill'
-
 import { fadeToast, toast } from '../../../utils/toast'
 
 export default async function createMaterial(state) {

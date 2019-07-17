@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React from 'react'
 import BatchHeader from '../shared/BatchHeader'
 import BatchTabs from '../shared/BatchTabs'

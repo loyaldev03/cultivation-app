@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import React from 'react'
 import Uppy from '@uppy/core'
 import XHRUpload from '@uppy/xhr-upload'

@@ -1,3 +1,4 @@
+import isEmpty from 'lodash.isempty'
 import { observable, action, computed, toJS, set } from 'mobx'
 import {
   httpGetOptions,
@@ -15,16 +16,19 @@ class ChartStore {
   @observable data_cost_breakdown = []
   @observable data_batch_distribution = []
   @observable data_unassigned_task = []
-  @observable unassigned_task = false
+  @observable unassigned_task_loaded = false
   @observable schedule_list = []
+  @observable data_issue_list = []
   @observable schedule_date_range = []
   @observable performer_list = []
+  @observable issue_list_loaded = false
   @observable worker_capacity_loaded = false
   @observable cost_breakdown_loaded = false
   @observable batch_distribution_loaded = false
   @observable schedule_list_loaded = false
   @observable schedule_date_range_loaded = false
   @observable performer_list_loaded = false
+  @observable filter = ''
 
   @action
   async loadWorkerCapacity(batchId) {
@@ -65,7 +69,43 @@ class ChartStore {
   }
 
   @action
-  async loadBatchDistribution(date,label) {
+  async issueList() {
+    this.isLoading = true
+    this.issue_list_loaded = false
+    const url = `/api/v1/dashboard_charts/issue_list`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.data_issue_list = response
+        this.issue_list_loaded = true
+      } else {
+        this.data_issue_list = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  @computed get filterIssueList() {
+    if (!isEmpty(this.filter)) {
+      return this.data_issue_list.filter(t => {
+        const issue_no = t.issue_no.toString().toLowerCase()
+        const batch = t.batch.toString().toLowerCase()
+        const title = t.title.toString().toLowerCase()
+        const result =
+          issue_no.includes(this.filter.toLowerCase()) ||
+          batch.includes(this.filter.toLowerCase()) ||
+          title.includes(this.filter.toLowerCase())
+        return result
+      })
+    } else {
+      return this.data_issue_list
+    }
+  }
+
+  @action
+  async loadBatchDistribution(date, label) {
     this.isLoading = true
     this.batch_distribution_loaded = false
     const url = `/api/v1/dashboard_charts/batch_distribution?date=${date}&label=${label}`
@@ -89,13 +129,13 @@ class ChartStore {
         labels: this.data_batch_distribution.map(d => d.phase),
         datasets: [
           {
-            label: "Batch",
+            label: 'Batch',
             data: this.data_batch_distribution.map(d => d.batch_count),
-            backgroundColor: "rgba(241, 90, 34, 1)"
+            backgroundColor: 'rgba(241, 90, 34, 1)'
           },
           {
-            label: "Plant",
-            data:  this.data_batch_distribution.map(d => d.plant_count),
+            label: 'Plant',
+            data: this.data_batch_distribution.map(d => d.plant_count),
             type: 'line',
             pointRadius: 0,
             hoverRadius: 0

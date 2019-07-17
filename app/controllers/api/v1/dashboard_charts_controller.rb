@@ -30,6 +30,11 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
     render json: result.to_json, status: 200
   end
 
+  def issue_list
+    result = Charts::IssueList.call(current_user).result
+    render json: result.to_json, status: 200
+  end
+
   def tasklist_by_day
     tasks = Cultivation::Task.expected_on(params[:date])
     batches = Cultivation::Batch.find(tasks.map { |a| a.batch_id }.uniq)

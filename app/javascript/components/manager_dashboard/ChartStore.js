@@ -1,3 +1,4 @@
+import isEmpty from 'lodash.isempty'
 import { observable, action, computed, toJS, set } from 'mobx'
 import {
   httpGetOptions,
@@ -15,11 +16,13 @@ class ChartStore {
   @observable data_cost_breakdown = []
   @observable data_batch_distribution = []
   @observable data_unassigned_task = []
-  @observable unassigned_task = false
+  @observable unassigned_task_loaded = false
   @observable schedule_list = []
+  @observable data_issue_list = []
   @observable schedule_date_range = []
   @observable performer_list = []
   @observable batch_test_result = []
+  @observable issue_list_loaded = false
   @observable worker_capacity_loaded = false
   @observable cost_breakdown_loaded = false
   @observable batch_distribution_loaded = false
@@ -27,6 +30,7 @@ class ChartStore {
   @observable schedule_date_range_loaded = false
   @observable performer_list_loaded = false
   @observable batch_test_result_loaded = false
+  @observable filter = ''
 
   @action
   async loadWorkerCapacity(batchId) {
@@ -63,6 +67,42 @@ class ChartStore {
     } catch (error) {
       console.error(error)
     } finally {
+    }
+  }
+
+  @action
+  async issueList() {
+    this.isLoading = true
+    this.issue_list_loaded = false
+    const url = `/api/v1/dashboard_charts/issue_list`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.data_issue_list = response
+        this.issue_list_loaded = true
+      } else {
+        this.data_issue_list = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
+
+  @computed get filterIssueList() {
+    if (!isEmpty(this.filter)) {
+      return this.data_issue_list.filter(t => {
+        const issue_no = t.issue_no.toString().toLowerCase()
+        const batch = t.batch.toString().toLowerCase()
+        const title = t.title.toString().toLowerCase()
+        const result =
+          issue_no.includes(this.filter.toLowerCase()) ||
+          batch.includes(this.filter.toLowerCase()) ||
+          title.includes(this.filter.toLowerCase())
+        return result
+      })
+    } else {
+      return this.data_issue_list
     }
   }
 

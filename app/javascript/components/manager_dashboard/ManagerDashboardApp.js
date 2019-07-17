@@ -63,6 +63,7 @@ class ManagerDashboardApp extends React.Component {
     ChartStore.loadBatchDistribution(formatYDM(new Date()), 'This Year')
     ChartStore.unassignedTask()
     ChartStore.highestCostTask('all')
+    ChartStore.issueList()
     ChartStore.loadScheduleList(formatYDM(new Date()))
     ChartStore.loadScheduleDateRange(
       formatYDM(start_of_month),

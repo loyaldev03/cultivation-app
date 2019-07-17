@@ -458,6 +458,7 @@ Rails.application.routes.draw do
           get 'tasks_by_date_range'
           get 'performer_list'
           get 'highest_cost_task'
+          get 'issue_list'
         end
       end
       resources :holidays, only: [:index, :create, :update] do 

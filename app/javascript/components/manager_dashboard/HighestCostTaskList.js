@@ -114,7 +114,6 @@ export default class HighestCostTaskList extends React.Component {
         ) : (
           'loading...'
         )}
-        
       </React.Fragment>
     )
   }

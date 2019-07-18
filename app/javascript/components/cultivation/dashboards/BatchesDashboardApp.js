@@ -23,10 +23,10 @@ const Batcheslist = ({ title, count, className = '' }) => {
       style={{ height: 210 + 'px', width: '50%' }}
     >
       <div className="flex" style={{ flex: ' 1 1 auto' }}>
-        <i 
+        <i
           className={`material-icons white bg-orange md-48 ${className}`}
           style={{ borderRadius: '50%' }}
-          >
+        >
           access_time
         </i>
         <div className="tc">
@@ -34,7 +34,6 @@ const Batcheslist = ({ title, count, className = '' }) => {
           <b className="f2 fw6">{count}</b>
         </div>
       </div>
-        
     </div>
   )
 }
@@ -251,29 +250,25 @@ class BatchesDashboardApp extends React.Component {
           </div>
           <div className="w-50">
             <div className="flex justify-between">
-                <Batcheslist
-                  title="Active Batches"
-                  count="156"
-                  className="ma3"
-                />
-                <Batcheslist
-                  title="Batches In Draft"
-                  count="23"
-                  className="ma3"
-                />
+              <Batcheslist title="Active Batches" count="156" className="ma3" />
+              <Batcheslist
+                title="Batches In Draft"
+                count="23"
+                className="ma3"
+              />
             </div>
 
             <div className="flex justify-between">
-                <Batcheslist
-                  title="Unscheduled Batches"
-                  count="23"
-                  className="ma3"
-                />
-                <Batcheslist
-                  title="Cost of Active Batches to Date"
-                  count="$ 2345"
-                  className="mt4 mb4"
-                />
+              <Batcheslist
+                title="Unscheduled Batches"
+                count="23"
+                className="ma3"
+              />
+              <Batcheslist
+                title="Cost of Active Batches to Date"
+                count="$ 2345"
+                className="mt4 mb4"
+              />
             </div>
           </div>
         </div>

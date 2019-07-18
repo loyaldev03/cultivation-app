@@ -53,7 +53,6 @@ export default class BatchPhases extends React.Component {
       }
     }
     return (
-      
       <React.Fragment>
         <div className="flex justify-between mb4">
           <h1 className="f5 fw6">Batch In Phases</h1>

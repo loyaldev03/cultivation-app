@@ -15,7 +15,6 @@ class BatchStore {
   @observable data_batch_distribution = []
   @observable batch_distribution_loaded = false
 
-
   @action
   async loadBatchDistribution(date, label) {
     this.isLoading = true

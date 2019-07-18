@@ -27,15 +27,19 @@ class GenerateBatchLots
     # generate plant batch in lot size
     if batch_size&.positive?
       batch_size.times do |i|
-        tag = metrc_tags.shift(1)
-        plant_batches << make_plant_batch(i + 1, tag, MAX_LOT_SIZE)
+        metrc_tag = metrc_tags.shift(1)[0]
+        plant_batches << make_plant_batch(i + 1,
+                                          metrc_tag,
+                                          MAX_LOT_SIZE)
       end
     end
 
     # generate batch for the remainder group
     if last_size&.positive?
-      tag = metrc_tags.shift(1)
-      plant_batches << make_plant_batch(batch_size + 1, tag, last_size)
+      metrc_tag = metrc_tags.shift(1)[0]
+      plant_batches << make_plant_batch(batch_size + 1,
+                                        metrc_tag,
+                                        last_size)
     end
 
     # create plant batch record if no existing records found (check metrc_id)
@@ -53,7 +57,6 @@ class GenerateBatchLots
     Metrc::PlantBatch.where(
       batch_id: batch.id,
       metrc_id: nil,
-      metrc_tag: nil,
     ).delete_all
   end
 

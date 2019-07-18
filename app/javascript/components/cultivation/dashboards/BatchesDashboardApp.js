@@ -1,6 +1,10 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
 import { differenceInDays } from 'date-fns'
 import { observer } from 'mobx-react'
+import BatchPhases from './batches/BatchPhases'
+import DahboardBatchStore from './batches/DahboardBatchStore'
+import { formatYDM } from '../../utils/DateHelper'
+import BatchStore from '../batches/BatchStore'
 import {
   decimalFormatter,
   formatDate2,
@@ -11,10 +15,36 @@ import {
   ListingTable,
   TempBatchWidgets
 } from '../../utils'
-import BatchStore from '../batches/BatchStore'
+
+const Batcheslist = ({ title, count, className = '' }) => {
+  return (
+    <div
+      className="flex items-center ba b--light-gray pa3 bg-white br2 mr1 mb1 "
+      style={{ height: 210 + 'px', width: '50%' }}
+    >
+      <div className="flex" style={{ flex: ' 1 1 auto' }}>
+        <i 
+          className={`material-icons white bg-orange md-48 ${className}`}
+          style={{ borderRadius: '50%' }}
+          >
+          access_time
+        </i>
+        <div className="tc">
+          <h1 className="f5 fw6 grey">{title}</h1>
+          <b className="f2 fw6">{count}</b>
+        </div>
+      </div>
+        
+    </div>
+  )
+}
 
 @observer
 class BatchesDashboardApp extends React.Component {
+  constructor(props) {
+    super(props)
+    DahboardBatchStore.loadBatchDistribution(formatYDM(new Date()), 'All')
+  }
   state = {
     columns: [
       { accessor: 'id', show: false },
@@ -210,8 +240,42 @@ class BatchesDashboardApp extends React.Component {
             Create new batch
           </a>
         </div>
-        <div className="pv4">
-          <img src={TempBatchWidgets} />
+        <div className="flex h-50 pv4">
+          <div className="w-50">
+            <div
+              className="ba b--light-gray pa3 bg-white br2 mr3"
+              style={{ height: 423 + 'px' }}
+            >
+              <BatchPhases />
+            </div>
+          </div>
+          <div className="w-50">
+            <div className="flex justify-between">
+                <Batcheslist
+                  title="Active Batches"
+                  count="156"
+                  className="ma3"
+                />
+                <Batcheslist
+                  title="Batches In Draft"
+                  count="23"
+                  className="ma3"
+                />
+            </div>
+
+            <div className="flex justify-between">
+                <Batcheslist
+                  title="Unscheduled Batches"
+                  count="23"
+                  className="ma3"
+                />
+                <Batcheslist
+                  title="Cost of Active Batches to Date"
+                  count="$ 2345"
+                  className="mt4 mb4"
+                />
+            </div>
+          </div>
         </div>
         <div className="flex justify-between">
           <input

@@ -16,24 +16,28 @@ import {
   TempBatchWidgets
 } from '../../utils'
 
-const Batcheslist = ({ title, count, className = '' }) => {
+const Batcheslist = ({ title, count, className = '', loaded = false }) => {
   return (
     <div
       className="flex items-center ba b--light-gray pa3 bg-white br2 mr1 mb1 "
       style={{ height: 210 + 'px', width: '50%' }}
     >
-      <div className="flex" style={{ flex: ' 1 1 auto' }}>
-        <i
-          className={`material-icons white bg-orange md-48 ${className}`}
-          style={{ borderRadius: '50%' }}
-        >
-          access_time
-        </i>
-        <div className="tc">
-          <h1 className="f5 fw6 grey">{title}</h1>
-          <b className="f2 fw6">{count}</b>
+      {loaded ? (
+        <div className="flex" style={{ flex: ' 1 1 auto' }}>
+          <i
+            className={`material-icons white bg-orange md-48 ${className}`}
+            style={{ borderRadius: '50%' }}
+          >
+            access_time
+          </i>
+          <div className="tc">
+            <h1 className="f5 fw6 grey">{title}</h1>
+            <b className="f2 fw6 dark-grey">{count}</b>
+          </div>
         </div>
-      </div>
+      ) : (
+        'loading...'
+      )}
     </div>
   )
 }
@@ -43,6 +47,7 @@ class BatchesDashboardApp extends React.Component {
   constructor(props) {
     super(props)
     DahboardBatchStore.loadBatchDistribution(formatYDM(new Date()), 'All')
+    DahboardBatchStore.loadBatches_info(this.props.facilityId)
   }
   state = {
     columns: [
@@ -250,24 +255,34 @@ class BatchesDashboardApp extends React.Component {
           </div>
           <div className="w-50">
             <div className="flex justify-between">
-              <Batcheslist title="Active Batches" count="156" className="ma3" />
+              <Batcheslist
+                title="Active Batches"
+                count={DahboardBatchStore.data_batches_info.active_batches}
+                className="ma3"
+                loaded={DahboardBatchStore.batches_info_loaded}
+              />
               <Batcheslist
                 title="Batches In Draft"
-                count="23"
+                count={DahboardBatchStore.data_batches_info.draft_batches}
                 className="ma3"
+                loaded={DahboardBatchStore.batches_info_loaded}
               />
             </div>
 
             <div className="flex justify-between">
               <Batcheslist
-                title="Unscheduled Batches"
-                count="23"
+                title="Scheduled Batches"
+                count={DahboardBatchStore.data_batches_info.scheduled_batches}
                 className="ma3"
+                loaded={DahboardBatchStore.batches_info_loaded}
               />
               <Batcheslist
                 title="Cost of Active Batches to Date"
-                count="$ 2345"
+                count={`$ ${
+                  DahboardBatchStore.data_batches_info.active_batches_cost
+                }`}
                 className="mt4 mb4"
+                loaded={DahboardBatchStore.batches_info_loaded}
               />
             </div>
           </div>

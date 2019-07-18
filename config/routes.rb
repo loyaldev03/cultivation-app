@@ -460,6 +460,7 @@ Rails.application.routes.draw do
           get 'highest_cost_task'
           get 'issue_list'
           get 'cultivation_info'
+          get 'batches_info'
         end
       end
       resources :holidays, only: [:index, :create, :update] do 

@@ -40,7 +40,7 @@ module Charts
         start_date = 'all'
       end
 
-      tasks = Cultivation::Task.all.includes(:time_logs)
+      tasks = Cultivation::Task.in(id: low_levelquery_tasks).includes(:time_logs)
       if start_date == 'all'
         tasks
       else
@@ -52,16 +52,27 @@ module Charts
       cond_a = tasks.and({end_date: {"$gte": start_date}}, start_date: {"$lte": end_date}).selector
       cond_b = tasks.and({start_date: {"$gte": start_date}}, start_date: {"$lte": end_date}).selector
       cond_c = tasks.and({start_date: {"$lte": start_date}}, end_date: {"$gte": end_date}).selector
-      batch_ids = Cultivation::Batch.in(
+      tasks_result = tasks.or(cond_a, cond_b, cond_c)
+      tasks_result.to_a
+    end
+
+    def low_levelquery_tasks
+      tasks = []
+      batches = Cultivation::Batch.in(
         status: [
           Constants::BATCH_STATUS_SCHEDULED,
           Constants::BATCH_STATUS_ACTIVE,
         ],
-      ).pluck(:_id)
-
-      tasks_result = tasks.or(cond_a, cond_b, cond_c)
-      tasks_result = tasks_result.in(batch_id: batch_ids)
-      tasks_result.to_a
+      )
+      batches.all.map do |batch|
+        query_tasks = Cultivation::QueryTasks.call(batch).result
+        query_tasks.map do |qt|
+          unless qt.have_children?(query_tasks)
+            tasks << qt.id
+          end
+        end
+      end
+      tasks
     end
   end
 end

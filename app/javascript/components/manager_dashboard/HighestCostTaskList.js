@@ -79,37 +79,41 @@ export default class HighestCostTaskList extends React.Component {
             </div>
           </Tippy>
         </div>
-        <table className="w-100">
-          <thead>
-            <tr className="tl mb2">
-              <th className="w-40">Tasks</th>
-              <th className="tc">Average Time (hrs)</th>
-              <th className="tc">Average Cost</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ChartStore.data_highest_cost_task.map(e => (
-              <React.Fragment>
-                {e.tasks.map(u => (
+        {ChartStore.highest_cost_task_loaded ? (
+          <table className="w-100">
+            <thead>
+              <tr className="tl mb2">
+                <th className="w-40">Tasks</th>
+                <th className="tc">Average Time (hrs)</th>
+                <th className="tc">Average Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ChartStore.data_highest_cost_task.map(e => (
+                <React.Fragment>
+                  {e.tasks.map(u => (
+                    <tr className="pa2">
+                      <td>
+                        <div className="mb2 mt2">{u.name}</div>
+                      </td>
+                      <td className="tc">{u.sum_actual_hours}</td>
+                      <td className="tc">{u.actual_cost}</td>
+                    </tr>
+                  ))}
                   <tr className="pa2">
                     <td>
-                      <div className="mb2 mt2">{u.name}</div>
+                      <div className="b mb2 mt2">Total</div>
                     </td>
-                    <td className="tc">{u.sum_actual_hours}</td>
-                    <td className="tc">{u.actual_cost}</td>
+                    <td className="tc b">{e.total_sum_actual_hours}</td>
+                    <td className="tc b">{e.total_actual_cost}</td>
                   </tr>
-                ))}
-                <tr className="pa2">
-                  <td>
-                    <div className="b mb2 mt2">Total</div>
-                  </td>
-                  <td className="tc b">{e.total_sum_actual_hours}</td>
-                  <td className="tc b">{e.total_actual_cost}</td>
-                </tr>
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          'loading...'
+        )}
       </React.Fragment>
     )
   }

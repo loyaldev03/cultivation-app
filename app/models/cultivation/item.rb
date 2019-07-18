@@ -21,7 +21,7 @@ module Cultivation
     scope :nutrients, -> { where(catalogue: 'nutrients') }
 
     def catalogue
-      product.catalogue
+      product&.catalogue
     end
   end
 end

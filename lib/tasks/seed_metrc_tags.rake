@@ -2,6 +2,7 @@ desc "Seed Metrc Tags for testing"
 
 task seed_metrc_tags: :environment do
 
+  facility = Facility.first
   last_tag = Inventory::MetrcTag.last&.tag
   last_tag ||= "1A4ZZ0100000022000001"
 
@@ -12,8 +13,9 @@ task seed_metrc_tags: :environment do
     last_tag = last_tag.next
     metrc_tags << {
       tag: last_tag,
-      tag_type: "plant",
-      status: "available",
+      tag_type: Constants::METRC_TAG_TYPE_PLANT,
+      status: Constants::METRC_TAG_STATUS_AVAILABLE,
+      facility_id: facility.id,
     }
   end
 
@@ -22,10 +24,11 @@ task seed_metrc_tags: :environment do
     last_tag = last_tag.next
     metrc_tags << {
       tag: last_tag,
-      tag_type: "package",
-      status: "available",
+      tag_type: Constants::METRC_TAG_TYPE_PACKAGE,
+      status: Constants::METRC_TAG_STATUS_AVAILABLE,
+      facility_id: facility.id,
     }
   end
 
-  Inventory::MetrcTag.create(plant_tags)
+  Inventory::MetrcTag.create(metrc_tags)
 end

@@ -9,7 +9,7 @@ module Charts
 
     def call
       date = Time.zone.parse("#{@args[:date]}")
-      phases = Common::GrowPhase.all.pluck(:name)
+      phases = Constants::FACILITY_ROOMS_ORDER - ['mother', 'storage', 'vault']
       if (@args[:label] == 'This Week')
         batches = Cultivation::Batch.where(:created_at.gt => date.beginning_of_week, :created_at.lt => date.end_of_week)
       elsif (@args[:label] == 'This Year')
@@ -21,13 +21,13 @@ module Charts
       end
       json_array = []
       phases.each do |phase|
-        batch_phase = batches.select { |a| a.current_growth_stage == phase.downcase }
+        batch_phase = batches.select { |a| a.current_growth_stage == phase }
         count = 0
         batch_phase.each do |batch|
           count += batch.plants.count
         end
         json_array << {
-          phase: phase,
+          phase: phase.capitalize,
           batch_count: batch_phase.count,
           plant_count: count,
         }

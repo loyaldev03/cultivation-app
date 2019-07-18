@@ -7,7 +7,6 @@ import {
   ActiveBadge,
   CheckboxSelect,
   HeaderFilter,
-  Loading,
   ListingTable,
   TempBatchWidgets
 } from '../../utils'

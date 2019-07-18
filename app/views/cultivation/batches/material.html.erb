@@ -1,30 +1,6 @@
-<% content_for :breadcrumb do %>
-  <%= breadcrumbs ["Home",root_path], 
-      'Cultivation Batches', 
-      'Locations & Tasks' 
-  %>
-<% end %>
-
+<%= react_component 'metrcs/PlantBatchesApp', batchId: @batch.id.to_s, batch: @batch_attributes %>
   <div class="pa4 grey">
       <div class="fl w-100 flex flex-column">
-      <%= @batch_attributes[:batch_no]%>
-        <%= react_component 'cultivation/shared/BatchHeader', { 
-          batch_no: @batch_attributes[:batch_no],
-          batch_source: @batch_attributes[:batch_source],
-          quantity: @batch_attributes[:quantity],
-          status: @batch_attributes[:status],
-          name: @batch_attributes[:name],
-          id: @batch_attributes[:id],
-          strain: @batch_attributes[:strain],
-          grow_method: @batch_attributes[:grow_method],
-          start_date: @batch_attributes[:start_date],
-          total_estimated_cost: @batch_attributes[:total_estimated_cost],
-          total_estimated_hour: @batch_attributes[:total_estimated_hour],
-          estimated_harvest_date: @batch_attributes[:estimated_harvest_date]
-        }%>
-
-        <%= react_component 'cultivation/shared/BatchTabs', { batch_id: @batch.id.to_s, batch: @batch_attributes, currentTab: "materials", unresolvedIssueCount: @unresolvedIssueCount } %>
-        
         <div class="flex flex-column justify-between bg-white box--shadow">
           <div class="pa4">
             <div class="fl w-100 flex flex-column">
@@ -36,7 +12,7 @@
                     <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Quantity Available</th>
                   </tr>
                   <% @batch_attributes[:materials].each do |material| %>
-                    <tr class="striped--light-gray dim pointer <%= 'red' if material.quantity > material.inventory_quantity%>">
+                    <tr class="dim pointer <%= 'red' if material.quantity > material.inventory_quantity%>">
                       <td class="tl pv2 ph3 w5"><%= material.name %></td>
                       <td class="tl pv2 ph3"><%= material.quantity%> <%= material.uom%></td>
                       <td class="tl pv2 ph3"><%= material.inventory_quantity %> <%= material.uom%></td>

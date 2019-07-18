@@ -16,7 +16,7 @@ class Api::V1::MetrcController < Api::V1::BaseApiController
           facility_id: params[:facility_id].to_bson_id,
           tag: tag,
           tag_type: tag_type,
-          status: 'available',
+          status: Constants::METRC_TAG_STATUS_AVAILABLE,
         )
       end
     end
@@ -45,13 +45,21 @@ class Api::V1::MetrcController < Api::V1::BaseApiController
 
     if tag.nil?
       render json: {errors: ['METRC tag not exists']}, status: 422
-    elsif tag.status == 'assigned'
+    elsif tag.status == Constants::METRC_TAG_STATUS_ASSIGNED
       render json: {errors: ['METRC tag already assigend']}, status: 422
-    elsif tag.status != 'available'
+    elsif tag.status != Constants::METRC_TAG_STATUS_AVAILABLE
       render json: {errors: ['METRC tag not available/ disposed']}, status: 422
     else
       render json: {tag: tag.tag}, status: 200
     end
+  end
+
+  def plant_batches
+    batch_id = params[:batch_id]
+    batches = Metrc::PlantBatch.where(batch_id: batch_id)
+    render json: MetrcPlantBatchSerializer.
+             new(batches).
+             serialized_json
   end
 
   private

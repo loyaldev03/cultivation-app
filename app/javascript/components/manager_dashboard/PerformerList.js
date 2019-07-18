@@ -57,7 +57,7 @@ export default class UnassignedTask extends React.Component {
       <React.Fragment>
         {/* <img src={TempHomePerformer} height={350} /> */}
         <div className="flex justify-between mb2">
-          <h1 className="f5 fw6">Performers</h1>
+          <h1 className="f5 fw6 dark-grey">Performers</h1>
           <div className="flex">
             <Tippy
               placement="bottom-end"
@@ -121,14 +121,14 @@ export default class UnassignedTask extends React.Component {
           <div className="overflow-y-scroll" style={{ height: 340 + 'px' }}>
             {ChartStore.performer_list.map(e => (
               <div className="flex items-center">
-                <h1 className="f6 fw6 w-20">{e.batch_name}</h1>
+                <h1 className="f6 fw6 w-20 dark-grey">{e.batch_name}</h1>
                 <ProgressBar
                   percent={e.percentage}
                   height={10}
                   className="w-60 mr2"
                   barColor={this.getProgressBarColor(e.total_dry_weight)}
                 />
-                <h1 className="f6 fw6 w-20">
+                <h1 className="f6 fw6 w-20 dark-grey">
                   {this.state.type === 'yield' ? (
                     <span>{e.total_dry_weight}lb</span>
                   ) : (

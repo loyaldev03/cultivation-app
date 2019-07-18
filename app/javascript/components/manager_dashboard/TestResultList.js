@@ -127,7 +127,7 @@ export default class TestResultList extends React.Component {
     return (
       <div>
         <div className="flex justify-between">
-          <h1 className="f5 fw6">Test Results</h1>
+          <h1 className="f5 fw6 dark-grey">Test Results</h1>
           <div className="flex">
             <Tippy
               placement="bottom-end"

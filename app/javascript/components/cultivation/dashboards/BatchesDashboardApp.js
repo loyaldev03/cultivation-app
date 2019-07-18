@@ -32,7 +32,7 @@ const Batcheslist = ({ title, count, className = '', loaded = false }) => {
           </i>
           <div className="tc">
             <h1 className="f5 fw6 grey">{title}</h1>
-            <b className="f2 fw6">{count}</b>
+            <b className="f2 fw6 dark-grey">{count}</b>
           </div>
         </div>
       ) : (

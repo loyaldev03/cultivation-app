@@ -55,7 +55,7 @@ export default class BatchPhases extends React.Component {
     return (
       <React.Fragment>
         <div className="flex justify-between mb4">
-          <h1 className="f5 fw6">Batch In Phases</h1>
+          <h1 className="f5 fw6 dark-grey">Batch In Phases</h1>
         </div>
         {DahboardBatchStore.batch_distribution_loaded ? (
           <Bar data={DahboardBatchStore.batchDistribution} options={options} />

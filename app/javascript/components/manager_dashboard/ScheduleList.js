@@ -70,7 +70,9 @@ export default class UnassignedTask extends React.Component {
               {ChartStore.schedule_list_loaded ? (
                 ChartStore.schedule_list.map(e => (
                   <div className="flex pa3">
-                    <div className="w-50 f6 fw6 ttc dark-grey">{e.batch_name}</div>
+                    <div className="w-50 f6 fw6 ttc dark-grey">
+                      {e.batch_name}
+                    </div>
                     <div className=" w-50 f6 fw6 grey">{e.name}</div>
                   </div>
                 ))

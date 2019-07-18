@@ -35,10 +35,9 @@ const Batcheslist = ({ title, count, className = '', loaded = false }) => {
             <b className="f2 fw6">{count}</b>
           </div>
         </div>
-        ) : (
-          'loading...'
-        )}
-      
+      ) : (
+        'loading...'
+      )}
     </div>
   )
 }
@@ -256,7 +255,12 @@ class BatchesDashboardApp extends React.Component {
           </div>
           <div className="w-50">
             <div className="flex justify-between">
-              <Batcheslist title="Active Batches" count={DahboardBatchStore.data_batches_info.active_batches} className="ma3" loaded={DahboardBatchStore.batches_info_loaded} />
+              <Batcheslist
+                title="Active Batches"
+                count={DahboardBatchStore.data_batches_info.active_batches}
+                className="ma3"
+                loaded={DahboardBatchStore.batches_info_loaded}
+              />
               <Batcheslist
                 title="Batches In Draft"
                 count={DahboardBatchStore.data_batches_info.draft_batches}
@@ -268,13 +272,15 @@ class BatchesDashboardApp extends React.Component {
             <div className="flex justify-between">
               <Batcheslist
                 title="Scheduled Batches"
-                count={DahboardBatchStore.data_batches_info.scheduled_batches} 
+                count={DahboardBatchStore.data_batches_info.scheduled_batches}
                 className="ma3"
                 loaded={DahboardBatchStore.batches_info_loaded}
               />
               <Batcheslist
                 title="Cost of Active Batches to Date"
-                count={`$ ${DahboardBatchStore.data_batches_info.active_batches_cost}`}
+                count={`$ ${
+                  DahboardBatchStore.data_batches_info.active_batches_cost
+                }`}
                 className="mt4 mb4"
                 loaded={DahboardBatchStore.batches_info_loaded}
               />

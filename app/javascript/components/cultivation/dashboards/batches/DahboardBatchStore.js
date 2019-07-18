@@ -35,7 +35,7 @@ class BatchStore {
     } finally {
     }
   }
-  
+
   @action
   async loadBatchDistribution(date, label) {
     this.isLoading = true

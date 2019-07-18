@@ -40,7 +40,7 @@ module Charts
         start_date = 'all'
       end
 
-      tasks = Cultivation::Task.all
+      tasks = Cultivation::Task.all.includes(:time_logs)
       if start_date == 'all'
         tasks
       else

@@ -13,7 +13,7 @@ module Inventory
         facility_id: @facility_id,
         status: Constants::METRC_TAG_STATUS_AVAILABLE,
         tag_type: @tag_type,
-      ).limit(@count).to_a
+      ).limit(@count).to_a.pluck(:tag)
     end
   end
 end

@@ -76,7 +76,7 @@ export default class BatchDistribution extends React.Component {
     return (
       <React.Fragment>
         <div className="flex justify-between mb4">
-          <h1 className="f5 fw6">Batch Distribution</h1>
+          <h1 className="f5 fw6 dark-grey">Batch Distribution</h1>
 
           <Tippy
             placement="bottom-end"

@@ -31,13 +31,12 @@ export default class UnassignedTask extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {/* <img src={TempHomeSchedule} /> */}
         <div className="flex">
           <div className="w-50">
-            <h1 className="f4 ml3">Schedule</h1>
+            <h1 className="f5 fw6 dark-grey">Schedule</h1>
           </div>
           <div className="w-50">
-            <h1 className="f4" style={{ marginLeft: 110 + 'px' }}>
+            <h1 className="f5 fw6 dark-grey" style={{ marginLeft: 110 + 'px' }}>
               {format(this.state.date, 'DD MMMM YYYY')}
             </h1>
           </div>
@@ -71,7 +70,9 @@ export default class UnassignedTask extends React.Component {
               {ChartStore.schedule_list_loaded ? (
                 ChartStore.schedule_list.map(e => (
                   <div className="flex pa3">
-                    <div className="w-50 f6 fw6 ttc">{e.batch_name}</div>
+                    <div className="w-50 f6 fw6 ttc dark-grey">
+                      {e.batch_name}
+                    </div>
                     <div className=" w-50 f6 fw6 grey">{e.name}</div>
                   </div>
                 ))

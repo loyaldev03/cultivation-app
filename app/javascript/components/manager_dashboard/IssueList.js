@@ -14,7 +14,7 @@ export default class UnassignedTask extends React.Component {
     return (
       <React.Fragment>
         <div className="flex justify-between mb2">
-          <h1 className="f5 fw6">Issues</h1>
+          <h1 className="f5 fw6 dark-grey">Issues</h1>
           <input
             placeholder="Filter Issue"
             className="input w6"
@@ -39,7 +39,7 @@ export default class UnassignedTask extends React.Component {
                   <br />
                   <span className="f7 mt1 grey">{e.created_at}</span>
                   <br />
-                  <span className="black">{e.title}</span>
+                  <span className="dark-grey">{e.title}</span>
                 </a>
               </div>
             </React.Fragment>

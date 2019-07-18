@@ -38,7 +38,7 @@ export default class CostBreakdown extends React.Component {
     return (
       <React.Fragment>
         <div className="flex justify-between mb4">
-          <h1 className="f5 fw6">Cost Breakdown</h1>
+          <h1 className="f5 fw6 dark-grey">Cost Breakdown</h1>
 
           <Tippy
             placement="bottom-end"

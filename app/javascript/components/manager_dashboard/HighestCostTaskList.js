@@ -34,7 +34,7 @@ export default class HighestCostTaskList extends React.Component {
     return (
       <React.Fragment>
         <div className="flex justify-between mb4">
-          <h1 className="f5 fw6">
+          <h1 className="f5 fw6 dark-grey">
             Task with Highest Costs In Time and $ Value
           </h1>
 
@@ -82,7 +82,7 @@ export default class HighestCostTaskList extends React.Component {
         {ChartStore.highest_cost_task_loaded ? (
           <table className="w-100">
             <thead>
-              <tr className="tl mb2">
+              <tr className="tl mb2 dark-grey">
                 <th className="w-40">Tasks</th>
                 <th className="tc">Average Time (hrs)</th>
                 <th className="tc">Average Cost</th>
@@ -92,7 +92,7 @@ export default class HighestCostTaskList extends React.Component {
               {ChartStore.data_highest_cost_task.map(e => (
                 <React.Fragment>
                   {e.tasks.map(u => (
-                    <tr className="pa2">
+                    <tr className="pa2 dark-grey">
                       <td>
                         <div className="mb2 mt2">{u.name}</div>
                       </td>
@@ -100,7 +100,7 @@ export default class HighestCostTaskList extends React.Component {
                       <td className="tc">{u.actual_cost}</td>
                     </tr>
                   ))}
-                  <tr className="pa2">
+                  <tr className="pa2 dark-grey">
                     <td>
                       <div className="b mb2 mt2">Total</div>
                     </td>

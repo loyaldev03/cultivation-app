@@ -64,11 +64,13 @@ module Charts
           Constants::BATCH_STATUS_ACTIVE,
         ],
       )
-      batches.all.map do |batch|
-        query_tasks = Cultivation::QueryTasks.call(batch).result
-        query_tasks.map do |qt|
-          unless qt.have_children?(query_tasks)
-            tasks << qt.id
+      batches.map do |batch|
+        if batch.tasks.present?
+          query_tasks = Cultivation::QueryTasks.call(batch).result
+          query_tasks.map do |qt|
+            unless qt.have_children?(query_tasks)
+              tasks << qt.id
+            end
           end
         end
       end

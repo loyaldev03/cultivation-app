@@ -13,9 +13,9 @@ export default class UnassignedTask extends React.Component {
     return (
       <React.Fragment>
         <h3 className="f5 fw6 dark-grey">Unassigned Task</h3>
-        <div className="overflow-y-scroll" style={{ height: 280 + 'px' }}>
+        <div className="overflow-y-scroll" style={{ height: 320 + 'px' }}>
           <table className="w-100">
-            <thead className="dark-grey">
+            <thead className="grey">
               <tr className="tl mb2">
                 <th className="w-40">Tasks</th>
                 <th>Start Date</th>
@@ -28,16 +28,20 @@ export default class UnassignedTask extends React.Component {
                 <React.Fragment>
                   <tr>
                     <td className="f4 b">
-                      <div className="mb3 mt3 dark-grey">Batch {e.batch}</div>
+                      <div className="mb3 mt2 dark-grey">Batch {e.batch}</div>
                     </td>
                   </tr>
                   {e.tasks.map((u, i) => (
-                    <tr className="pa2 grey" key={i}>
-                      <td className="w-40 ">
-                        <div className="mb3 mt3">{u.name}</div>
+                    <tr className="grey" key={i}>
+                      <td className="w-50 ">
+                        <div className="fw6 mb3 dark-grey">{u.name}</div>
                       </td>
-                      <td>{u.start_date}</td>
-                      <td>{u.end_date}</td>
+                      <td>
+                        <div className="fw6 mb3">{u.start_date}</div>
+                      </td>
+                      <td>
+                        <div className="fw6 mb3">{u.end_date}</div>
+                      </td>
                       {/* <td className="tc">
                         <a
                           href={`/cultivation/batches/${

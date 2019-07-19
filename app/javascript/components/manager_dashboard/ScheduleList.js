@@ -66,7 +66,7 @@ export default class UnassignedTask extends React.Component {
             </div>
           </div>
           <div className="w-40">
-            <div className="overflow-y-scroll" style={{ height: 280 + 'px' }}>
+            <div className="overflow-y-scroll" style={{ height: 320 + 'px' }}>
               {ChartStore.schedule_list_loaded ? (
                 ChartStore.schedule_list.map(e => (
                   <div className="flex pa3">

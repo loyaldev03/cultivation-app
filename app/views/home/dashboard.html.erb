@@ -3,5 +3,5 @@
 <% end %>
 
 <div class="mh4 mt4">
-  <%= react_component 'manager_dashboard/ManagerDashboardApp', {batches: @batches} %>
+  <%= react_component 'manager_dashboard/ManagerDashboardApp', {batches: @batches, facilityId: current_facility&.id.to_s} %>
 </div>

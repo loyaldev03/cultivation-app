@@ -62,6 +62,7 @@ class ManagerDashboardApp extends React.Component {
     ChartStore.loadBatchDistribution(formatYDM(new Date()), 'This Year')
     ChartStore.unassignedTask()
     ChartStore.highestCostTask('all')
+    ChartStore.cultivationInfo(this.props.facilityId, 'all')
     ChartStore.issueList()
     ChartStore.loadScheduleList(formatYDM(new Date()))
     ChartStore.loadScheduleDateRange(
@@ -83,6 +84,7 @@ class ManagerDashboardApp extends React.Component {
         <OverallInfo
           batches={this.state.batches}
           arr_months={this.state.arr_months}
+          facility_id={this.props.facilityId}
         />
         <div className="flex mt4 h-50">
           <div className="w-50">

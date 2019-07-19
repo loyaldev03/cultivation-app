@@ -46,7 +46,7 @@ class BatchHeader extends React.PureComponent {
     return (
       <React.Fragment>
         <div className="flex flex-column justify-between bg-white box--shadow">
-          <div className="ph4 pb4 pt3">
+          <div className="ph4 pv3">
             <div className="fl w-100 flex justify-center">
               <ActiveBadge className="fr" status={status} />
             </div>

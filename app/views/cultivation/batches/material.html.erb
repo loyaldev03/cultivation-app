@@ -1,28 +1,28 @@
 <%= react_component 'metrcs/PlantBatchesApp', batchId: @batch.id.to_s, batch: @batch_attributes %>
-  <div class="pa4 grey">
-      <div class="fl w-100 flex flex-column">
-        <div class="flex flex-column justify-between bg-white box--shadow">
-          <div class="pa4">
-            <div class="fl w-100 flex flex-column">
-              <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-60">
-                <tbody>
-                  <tr class="striped--light-gray">
-                    <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Material</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Quantity Required</th>
-                    <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Quantity Available</th>
+
+<div class="pa4 grey">
+    <div class="fl w-100 flex flex-column pb4">
+      <div class="flex flex-column justify-between bg-white box--shadow">
+        <div class="pa4">
+          <div class="fl w-100 flex flex-column">
+            <table class="collapse ba b--light-grey box--br3 pv2 ph3 f6 mt1 w-60">
+              <tbody>
+                <tr class="striped--light-gray">
+                  <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Material</th>
+                  <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Quantity Required</th>
+                  <th class="pv2 ph3 subtitle-2 dark-grey tl ttu">Quantity Available</th>
+                </tr>
+                <% @batch_attributes[:materials].each do |material| %>
+                  <tr class="dim pointer <%= 'red' if material.quantity > material.inventory_quantity%>">
+                    <td class="tl pv2 ph3 w5"><%= material.name %></td>
+                    <td class="tl pv2 ph3"><%= material.quantity%> <%= material.uom%></td>
+                    <td class="tl pv2 ph3"><%= material.inventory_quantity %> <%= material.uom%></td>
                   </tr>
-                  <% @batch_attributes[:materials].each do |material| %>
-                    <tr class="dim pointer <%= 'red' if material.quantity > material.inventory_quantity%>">
-                      <td class="tl pv2 ph3 w5"><%= material.name %></td>
-                      <td class="tl pv2 ph3"><%= material.quantity%> <%= material.uom%></td>
-                      <td class="tl pv2 ph3"><%= material.inventory_quantity %> <%= material.uom%></td>
-                    </tr>
-                  <% end%>
-                </tbody>
-              </table>
-            </div>
+                <% end%>
+              </tbody>
+            </table>
           </div>
         </div>
-
       </div>
-  </div>
+    </div>
+</div>

@@ -32,9 +32,8 @@ module Cultivation
         UpdateTask.call(@current_user, args, true)
       end
 
+      GenerateBatchLots.perform_async(@batch_id)
       validate
-      # rescue StandardError
-      #   errors.add(:error, $!.message)
     end
 
     def validate

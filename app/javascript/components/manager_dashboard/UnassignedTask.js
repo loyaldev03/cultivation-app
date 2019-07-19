@@ -20,7 +20,7 @@ export default class UnassignedTask extends React.Component {
                 <th className="w-40">Tasks</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th className="tc">Worker</th>
+                {/* <th className="tc">Worker</th> */}
               </tr>
             </thead>
             <tbody>
@@ -33,10 +33,12 @@ export default class UnassignedTask extends React.Component {
                   </tr>
                   {e.tasks.map((u, i) => (
                     <tr className="pa2 grey" key={i}>
-                      <td className="w-40">{u.name}</td>
+                      <td className="w-40 ">
+                        <div className="mb3 mt3">{u.name}</div>
+                      </td>
                       <td>{u.start_date}</td>
                       <td>{u.end_date}</td>
-                      <td className="tc">
+                      {/* <td className="tc">
                         <a
                           href={`/cultivation/batches/${
                             u.batch_id
@@ -46,7 +48,7 @@ export default class UnassignedTask extends React.Component {
                             person_add
                           </span>
                         </a>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </React.Fragment>

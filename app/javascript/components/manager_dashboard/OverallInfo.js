@@ -21,19 +21,17 @@ export default class OverallInfo extends React.Component {
     super(props)
 
     this.state = {
-      selectedMonth: this.props.arr_months[0],
-      arr_months: this.props.arr_months
+      selectedMonth: 'All'
     }
   }
 
-  onChangeWorkerCapacityBatch = selectedMonth => {
-    this.setState({ selectedMonth: selectedMonth })
-    console.log(selectedMonth)
+  onChangeMonthly = range => {
+    this.setState({ selectedMonth: range.split('_').join(' ') })
+    console.log(this.props.facility_id)
+    ChartStore.cultivationInfo(this.props.facility_id, range)
   }
 
   render() {
-    const { arr_months } = this.state
-
     return (
       <React.Fragment>
         <div className="ba b--light-gray pa3 bg-white br2">
@@ -48,22 +46,32 @@ export default class OverallInfo extends React.Component {
               content={
                 <div className="bg-white f6 flex">
                   <div className="db shadow-4">
-                    {arr_months.map((e, index) => (
-                      <MenuButton
-                        key={index}
-                        text={e.label}
-                        className=""
-                        onClick={() => this.onChangeWorkerCapacityBatch(e)}
-                      />
-                    ))}
+                    <MenuButton
+                      text="All"
+                      className=""
+                      onClick={() => this.onChangeMonthly('all')}
+                    />
+                    <MenuButton
+                      text="This year"
+                      className=""
+                      onClick={() => this.onChangeMonthly('this_year')}
+                    />
+                    <MenuButton
+                      text="This month"
+                      className=""
+                      onClick={() => this.onChangeMonthly('this_month')}
+                    />
+                    <MenuButton
+                      text="This week"
+                      className=""
+                      onClick={() => this.onChangeMonthly('this_week')}
+                    />
                   </div>
                 </div>
               }
             >
               <div className="flex ba b--light-silver br2 pointer dim">
-                <h1 className="f6 fw6 ml2 grey">
-                  {this.state.selectedMonth.label}
-                </h1>
+                <h1 className="f6 fw6 ml2 grey">{this.state.selectedMonth}</h1>
                 <i className="material-icons grey mr2  md-21 mt2">
                   keyboard_arrow_down
                 </i>
@@ -78,45 +86,62 @@ export default class OverallInfo extends React.Component {
               </i>
               <div>
                 <h1 className="f5 fw6 grey">Total plants</h1>
-                <b className="f3 fw6">1,532</b>
+                <b className="f3 fw6">
+                  {ChartStore.cultivation_info.total_plants}
+                </b>
               </div>
             </div>
-            <div className="flex" style={{ flex: ' 1 1 auto' }}>
-              <i className="material-icons mt3  orange mr3 dim md-48 pointer mt2">
-                location_on
-              </i>
-              <div>
-                <h1 className="f5 fw6 grey">Total yield</h1>
-                <b className="f3 fw6">5,990lb</b>
-              </div>
-            </div>
-            <div className="flex" style={{ flex: ' 1 1 auto' }}>
-              <i className="material-icons mt3  orange mr3 dim md-48 pointer mt2">
-                assignment
-              </i>
-              <div>
-                <h1 className="f5 fw6 grey">Projected yield</h1>
-                <b className="f3 fw6">1,000lb</b>
-              </div>
-            </div>
-            <div className="flex" style={{ flex: ' 1 1 auto' }}>
-              <i className="material-icons mt3  orange mr3 dim md-48 pointer mt2">
-                assignment_turned_in
-              </i>
-              <div>
-                <h1 className="f5 fw6 grey">Active batches cost to date</h1>
-                <b className="f3 fw6">$10,042</b>
-              </div>
-            </div>
-            <div className="flex" style={{ flex: ' 1 1 auto' }}>
-              <i className="material-icons mt3  orange mr3 dim md-48 pointer mt2">
-                home
-              </i>
-              <div>
-                <h1 className="f5 fw6 grey">Facility capacity</h1>
-                <b className="f3 fw6">74%</b>
-              </div>
-            </div>
+
+            {ChartStore.cultivation_info_loaded ? (
+              <React.Fragment>
+                <div className="flex" style={{ flex: ' 1 1 auto' }}>
+                  <i className="material-icons mt3  orange mr3 dim md-48 pointer mt2">
+                    location_on
+                  </i>
+                  <div>
+                    <h1 className="f5 fw6 grey">Total yield</h1>
+                    <b className="f3 fw6">
+                      {ChartStore.cultivation_info.total_yield}
+                    </b>
+                  </div>
+                </div>
+                <div className="flex" style={{ flex: ' 1 1 auto' }}>
+                  <i className="material-icons mt3  orange mr3 dim md-48 pointer mt2">
+                    assignment
+                  </i>
+                  <div>
+                    <h1 className="f5 fw6 grey">Projected yield</h1>
+                    <b className="f3 fw6">
+                      {ChartStore.cultivation_info.facility_capacity}
+                    </b>
+                  </div>
+                </div>
+                <div className="flex" style={{ flex: ' 1 1 auto' }}>
+                  <i className="material-icons mt3  orange mr3 dim md-48 pointer mt2">
+                    assignment_turned_in
+                  </i>
+                  <div>
+                    <h1 className="f5 fw6 grey">Active batches cost to date</h1>
+                    <b className="f3 fw6">{`$ ${
+                      ChartStore.cultivation_info.active_batches_cost
+                    }`}</b>
+                  </div>
+                </div>
+                <div className="flex" style={{ flex: ' 1 1 auto' }}>
+                  <i className="material-icons mt3  orange mr3 dim md-48 pointer mt2">
+                    home
+                  </i>
+                  <div>
+                    <h1 className="f5 fw6 grey">Facility capacity</h1>
+                    <b className="f3 fw6">{`${
+                      ChartStore.cultivation_info.facility_capacity
+                    }%`}</b>
+                  </div>
+                </div>
+              </React.Fragment>
+            ) : (
+              'loading...'
+            )}
           </div>
         </div>
       </React.Fragment>

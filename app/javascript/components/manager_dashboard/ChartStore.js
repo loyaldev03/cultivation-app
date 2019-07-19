@@ -22,6 +22,8 @@ class ChartStore {
   @observable performer_list = []
   @observable batch_test_result = []
   @observable data_highest_cost_task = []
+  @observable cultivation_info = []
+  @observable cultivation_info_loaded = []
   @observable unassigned_task_loaded = false
   @observable highest_cost_task_loaded = false
   @observable issue_list_loaded = false
@@ -33,6 +35,25 @@ class ChartStore {
   @observable performer_list_loaded = false
   @observable batch_test_result_loaded = false
   @observable filter = ''
+
+  @action
+  async cultivationInfo(facilityId, period) {
+    this.isLoading = true
+    this.cultivation_info_loaded = false
+    const url = `/api/v1/dashboard_charts/cultivation_info?facility_id=${facilityId}&period="${period}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.cultivation_info = response
+        this.cultivation_info_loaded = true
+      } else {
+        this.cultivation_info = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
 
   @action
   async loadWorkerCapacity(batchId) {

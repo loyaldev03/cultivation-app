@@ -21,9 +21,9 @@ class ChartStore {
   @observable schedule_date_range = []
   @observable performer_list = []
   @observable batch_test_result = []
+  @observable data_highest_cost_task = []
   @observable cultivation_info = []
   @observable cultivation_info_loaded = []
-  @observable unassigned_task_loaded = false
   @observable unassigned_task_loaded = false
   @observable highest_cost_task_loaded = false
   @observable issue_list_loaded = false

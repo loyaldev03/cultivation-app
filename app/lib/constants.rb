@@ -32,6 +32,13 @@ module Constants
   UOM_QTY_TYPE_VOLUME = 'VolumeBased'.freeze
   UOM_QTY_TYPE_WEIGHT = 'WeightBased'.freeze
 
+  METRC_TAG_TYPE_PLANT = 'plant'.freeze
+  METRC_TAG_TYPE_PACKAGE = 'package'.freeze
+
+  METRC_TAG_STATUS_AVAILABLE = 'available'.freeze
+  METRC_TAG_STATUS_ASSIGNED = 'assigned'.freeze
+  METRC_TAG_STATUS_DISPOSED = 'disposed'.freeze
+
   UOM_DMS_PIECES = 'pieces'.freeze
   UOM_DMS_VOLUME = 'volume'.freeze
   UOM_DMS_WEIGHT = 'weight'.freeze

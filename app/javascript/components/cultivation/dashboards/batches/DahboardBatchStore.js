@@ -13,7 +13,28 @@ function parseTask(taskAttributes) {
 
 class BatchStore {
   @observable data_batch_distribution = []
+  @observable data_batches_info = []
   @observable batch_distribution_loaded = false
+  @observable batches_info_loaded = false
+
+  @action
+  async loadBatches_info(facility_id) {
+    this.isLoading = true
+    this.batches_info_loaded = false
+    const url = `/api/v1/dashboard_charts/batches_info?facility_id=${facility_id}`
+    try {
+      const response = await (await fetch(url, httpGetOptions)).json()
+      if (response) {
+        this.data_batches_info = response
+        this.batches_info_loaded = true
+      } else {
+        this.data_batches_info = []
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+  }
 
   @action
   async loadBatchDistribution(date, label) {

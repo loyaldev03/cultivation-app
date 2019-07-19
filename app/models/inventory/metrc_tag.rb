@@ -5,7 +5,7 @@ module Inventory
     belongs_to :facility, class_name: 'Facility'
 
     field :tag, type: String
-    field :tag_type, type: String       # Plant Tag or Package Tag
+    field :tag_type, type: String       # plant, package
     field :status, type: String         # available, assigned, disposed
     field :replaced_by, type: String
   end

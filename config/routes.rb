@@ -321,6 +321,7 @@ Rails.application.routes.draw do
         collection do
           post 'bulk_create/:facility_id', action: 'bulk_create'
           get 'verify/:facility_id', action: 'verify'
+          get 'plant_batches/:batch_id', action: :plant_batches
         end
       end
 
@@ -460,6 +461,7 @@ Rails.application.routes.draw do
           get 'highest_cost_task'
           get 'issue_list'
           get 'cultivation_info'
+          get 'batches_info'
         end
       end
       resources :holidays, only: [:index, :create, :update] do 

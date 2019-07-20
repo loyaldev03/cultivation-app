@@ -57,7 +57,7 @@ class Api::V1::MetrcController < Api::V1::BaseApiController
   def generate_plant_batches
     batch_id = params[:batch_id]
     GenerateBatchLots.perform_async(batch_id)
-    render json: {status: "ok"}, status: 200
+    render json: {status: 'ok'}, status: 200
   end
 
   def plant_batches

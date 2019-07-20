@@ -143,23 +143,6 @@ class ItemApp extends React.Component {
         Cell: props => {
           return props.value ? 'Yes' : 'No'
         }
-      },
-      {
-        headerClassName: 'tl',
-        Header: (
-          <HeaderFilter
-            title="Deleted"
-            accessor="deleted"
-            getOptions={ItemStore.getUniqPropValues}
-            onUpdate={ItemStore.updateFilterOptions}
-          />
-        ),
-        accessor: 'deleted',
-        minWidth: 120,
-        className: 'justify-end pr3',
-        Cell: props => {
-          return props.value ? 'Yes' : 'No'
-        }
       }
     ]
   }

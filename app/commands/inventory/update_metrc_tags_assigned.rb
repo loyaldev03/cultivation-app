@@ -23,6 +23,7 @@ module Inventory
         :tag.in => @metrc_tags,
       ).update_all(
         status: Constants::METRC_TAG_STATUS_ASSIGNED,
+        u_at: Time.current,
       )
     end
   end

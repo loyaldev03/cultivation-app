@@ -8,6 +8,9 @@ import {
   ListingTable
 } from '../../utils'
 import classNames from 'classnames'
+import HarvestAverageWidget from '../dashboards/harvests/HarvestAverageWidget'
+import HarvestByYeildWidget from '../dashboards/harvests/HarvestByYeildWidget'
+import HarvestCostByGramWidget from '../dashboards/harvests/HarvestCostByGramWidget'
 
 import HarvestBatchStore from '../../dailyTask/stores/HarvestBatchStore'
 @observer
@@ -131,7 +134,27 @@ class HarvestDashboard extends React.Component {
           </span> */}
         </div>
         <div className="pv4">
-          <img src={TempHarvestWidgets} className="w-100" />
+          <div className="flex h-50">
+            <div className="w-30">
+              <HarvestAverageWidget />
+            </div>
+            <div className="w-50">
+              <div
+                className="ba b--light-gray pa3 bg-white br2 mr3"
+                style={{ height: 320 + 'px' }}
+              >
+                <HarvestByYeildWidget />
+              </div>
+            </div>
+            <div className="w-50">
+              <div
+                className="ba b--light-gray pa3 bg-white br2"
+                style={{ height: 320 + 'px' }}
+              >
+                <HarvestCostByGramWidget />
+              </div>
+            </div>
+          </div>
         </div>
         <div className="flex justify-between">
           <input

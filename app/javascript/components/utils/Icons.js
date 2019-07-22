@@ -12,6 +12,8 @@ import TempPlantWidgets from '../../../assets/images/dummy/cult-plants-widget.pn
 import TempTaskWidgets from '../../../assets/images/dummy/cult-tasks.png'
 import TempIssueWidgets from '../../../assets/images/dummy/cult-issues.png'
 import TempHarvestWidgets from '../../../assets/images/dummy/cult-harvest.png'
+import TempHarvestCostWidgets from '../../../assets/images/dummy/cult-harvest-cost.png'
+import TempHarvestYieldWidgets from '../../../assets/images/dummy/cult-harvest-yield.png'
 import TempStrainWidgets from '../../../assets/images/dummy/strain-overview.png'
 import TempPackagesWidgets from '../../../assets/images/dummy/packages.png'
 import TempPackagesSoldWidgets from '../../../assets/images/dummy/packages-sold.png'
@@ -41,6 +43,8 @@ export {
   TempTaskWidgets,
   TempIssueWidgets,
   TempHarvestWidgets,
+  TempHarvestCostWidgets,
+  TempHarvestYieldWidgets,
   TempStrainWidgets,
   TempPackagesWidgets,
   TempPackagesSoldWidgets,

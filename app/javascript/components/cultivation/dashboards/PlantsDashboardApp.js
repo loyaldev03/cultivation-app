@@ -16,9 +16,14 @@ import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 import PlantStore from '../../inventory/plant_setup/store/PlantStore'
 import ReportDestroyedPlants from '../tasks_setup/components/ReportDestroyedPlants'
 import PlantWidgetApp from './plants/PlantWidgetApp'
+import DashboardPlantStore from './plants/DashboardPlantStore'
 
 @observer
 class PlantsDashboardApp extends React.Component {
+  constructor(props) {
+    super(props)
+    DashboardPlantStore.loadBatchDistribution('all', this.props.defaultFacilityId)
+  }
   state = {
     showDestroyedPlants: false,
     columns: [

@@ -190,7 +190,6 @@ class PlantsDashboardApp extends React.Component {
           </a>
         </div>
         <div className="pv4">
-          <img src={TempPlantWidgets} className="w-100" />
           <PlantWidgetApp />
         </div>
         <div className="flex justify-between">

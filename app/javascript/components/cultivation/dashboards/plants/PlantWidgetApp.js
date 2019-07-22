@@ -10,7 +10,7 @@ class PlantWidgetApp extends React.Component {
 
   render() {
     return (
-      <div className="flex h-50 pv4">
+      <div className="flex h-50">
         <div className="w-50">
           <div
             className="ba b--light-gray pa3 bg-white br2 mr3"

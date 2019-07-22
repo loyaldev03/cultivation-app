@@ -30,6 +30,7 @@ module Charts
       )
       json_array = []
       total_batches = 0
+      total_plant = 0
       phases.each do |phase|
         batch_phase = batches.select { |a| a.current_growth_stage == phase }
         count = 0
@@ -37,6 +38,7 @@ module Charts
         batch_phase.each do |batch|
           count += batch.plants.count
         end
+        total_plant += count
         json_array << {
           phase: phase.capitalize,
           batch_count: batch_phase.count,
@@ -44,7 +46,7 @@ module Charts
         }
       end
       {
-        total_plant: Charts::QueryTotalActivePlant.call(@user, {facility_id: @facility_id}).result,
+        total_plant: total_plant,
         total_batches: total_batches,
         query_batches: json_array,
       }

@@ -4,7 +4,7 @@ RSpec.describe Inventory::QueryAvailableMetrcTags, type: :command do
   context "When no available metrc tags" do
     let(:facility) { create(:facility) }
 
-    it ".call" do
+    it ".call should return 0" do
       result = Inventory::QueryAvailableMetrcTags.call(
         facility.id,
         10,
@@ -24,7 +24,7 @@ RSpec.describe Inventory::QueryAvailableMetrcTags, type: :command do
       res << create(:metrc_tag, facility: facility)
     end
 
-    it ".call" do
+    it ".call should return available tags" do
       result = Inventory::QueryAvailableMetrcTags.call(
         facility.id,
         10,

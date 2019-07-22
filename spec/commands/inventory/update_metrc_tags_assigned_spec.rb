@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Inventory::UpdateMetrcTagsAssigned, type: :command do
-  context "when missing args", focus: true do
+  context "when missing args" do
 
     it "missing facility_id would raise error" do
       args = {metrc_tags: []}
@@ -20,7 +20,7 @@ RSpec.describe Inventory::UpdateMetrcTagsAssigned, type: :command do
     end
   end
 
-  context "when given correct params", focus: true do
+  context "when given correct params" do
 
     let!(:facility) { create(:facility) }
     let!(:tags) do

@@ -1,11 +1,12 @@
 import React from 'react'
 import ReactTable from 'react-table'
+import classnames from 'classnames'
 import {
   SlidePanel,
   SlidePanelFooter,
   SlidePanelHeader
 } from '../../utils/SlidePanel'
-import { httpGetOptions, httpPostOptions } from '../../utils/FetchHelper'
+import { formatAgo, httpGetOptions, httpPostOptions } from '../../utils'
 
 class MetrcInventoryApp extends React.Component {
   state = {
@@ -17,7 +18,7 @@ class MetrcInventoryApp extends React.Component {
   componentDidMount() {
     getMetrcs(this.props.facility_id).then(({ status, data }) => {
       if (status === 200) {
-        // console.log(data)
+        console.log(data)
         const metrcData = data.map(x => ({ ...x.attributes, id: x.id }))
         this.setState({ data: metrcData })
       }
@@ -39,7 +40,35 @@ class MetrcInventoryApp extends React.Component {
 
   render() {
     const { data, isLoading, showEditor } = this.state
-    const columns = getColumns()
+    const columns = [
+      { Header: 'Tag', accessor: 'tag' },
+      { Header: 'Type', accessor: 'tag_type' },
+      {
+        Header: 'Status',
+        accessor: 'status',
+        width: 200,
+        Cell: props => {
+          return (
+            <span
+              className={classnames('ttc', {
+                grey: props.value === 'assigned',
+                green: props.value === 'available'
+              })}
+            >
+              {props.value === 'assigned' ? 'used' : props.value}
+            </span>
+          )
+        }
+      },
+      {
+        Header: 'Last Update',
+        accessor: 'u_at',
+        Cell: props => {
+          return <span className="">{formatAgo(props.value)}</span>
+        }
+      }
+    ]
+
     return (
       <div className="w-100 bg-white pa3">
         <div className="flex mb4 mt2">
@@ -157,14 +186,6 @@ class MetricEditor extends React.Component {
       </div>
     )
   }
-}
-
-const getColumns = () => {
-  return [
-    { Header: 'Tag', accessor: 'tag' },
-    { Header: 'Type', accessor: 'tag_type' },
-    { Header: 'Status', accessor: 'status' }
-  ]
 }
 
 const getMetrcs = facilityId => {

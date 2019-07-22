@@ -174,5 +174,18 @@ RSpec.describe Cultivation::ActivateBatch, type: :command do
         end
       end
     end
+
+  end
+
+  context "metrc integration", focus: true do
+    it "active batch should enqueue MetrcUpdatePlantBatches worker" do
+      Time.use_zone(facility.timezone) do
+        Timecop.freeze(batch1.start_date) do
+          expect {
+            Cultivation::ActivateBatch.call(Time.current)
+          }.to change(MetrcUpdatePlantBatches.jobs, :size).by(1)
+        end
+      end
+    end
   end
 end

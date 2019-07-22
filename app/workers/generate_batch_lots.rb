@@ -8,8 +8,6 @@ class GenerateBatchLots
   def perform(batch_id)
     @batch_id = batch_id
 
-    purge_dangling_batches
-
     # calculate number of batch needed in group of lot size
     batch_size, last_size = batch.quantity.divmod(MAX_LOT_SIZE)
 
@@ -20,6 +18,17 @@ class GenerateBatchLots
       tag_required,
       Constants::METRC_TAG_TYPE_PLANT,
     ).result
+
+    if metrc_tags.blank? || metrc_tags.size < tag_required
+      # notify manager regarding insufficient tags
+      notify_insufficient_tags(tag_required)
+      return 0
+    end
+
+    # check for existing plant batch
+    if existing_plant_batches.size == tag_required
+      return 0
+    end
 
     # placeholder for all generated batches
     plant_batches = []
@@ -45,6 +54,10 @@ class GenerateBatchLots
     # create plant batch record if no existing records found (check metrc_id)
     if plant_batches.present?
       Metrc::PlantBatch.create(plant_batches)
+      used_tags = plant_batches.map { |x| x[:metrc_tag] }
+      # Mark tags as "assigned" in db
+      Inventory::UpdateMetrcTagsAssigned.call(facility_id: batch.facility_id,
+                                              metrc_tags: used_tags)
     end
 
     #
@@ -53,11 +66,30 @@ class GenerateBatchLots
     plant_batches.size
   end
 
-  def purge_dangling_batches
-    Metrc::PlantBatch.where(
-      batch_id: batch.id,
-      metrc_id: nil,
-    ).delete_all
+  def notify_insufficient_tags(tag_required)
+    managers_ids = get_facility_managers(batch)
+    CreateNotificationsWorker.perform_async(
+      nil,
+      'insufficient_metrc_tags',
+      managers_ids,
+      batch.id.to_s,
+      Constants::NOTIFY_TYPE_BATCH,
+      "#{batch.batch_no} (#{batch.name}) requires #{tag_required} Metrc Tags",
+    )
+  end
+
+  def get_facility_managers(batch)
+    users = QueryUsers.call(batch.facility_id).result
+    managers = users.reject { |u| u.user_mode == 'worker' }
+    if managers.present?
+      managers.map { |m| m.id.to_s }
+    else
+      []
+    end
+  end
+
+  def existing_plant_batches
+    @existing_plant_batches ||= Metrc::PlantBatch.where(batch_id: batch.id).to_a
   end
 
   def make_plant_batch(lot_no, tag, count)

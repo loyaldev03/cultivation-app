@@ -27,6 +27,19 @@ class PlantBatchStore {
     }
   }
 
+  @action
+  async generatePlantBatches(batchId) {
+    this.isLoading = false
+    const url = '/api/v1/metrc/generate_plant_batches'
+    try {
+      await (await fetch(url, httpPostOptions({ batch_id: batchId }))).json()
+      await this.loadPlantBatches(batchId)
+    } catch (e) {
+    } finally {
+      this.isLoading = false
+    }
+  }
+
   @computed
   get filteredList() {
     return this.batches

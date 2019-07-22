@@ -321,6 +321,7 @@ Rails.application.routes.draw do
         collection do
           post 'bulk_create/:facility_id', action: 'bulk_create'
           get 'verify/:facility_id', action: 'verify'
+          post 'generate_plant_batches', action: :generate_plant_batches
           get 'plant_batches/:batch_id', action: :plant_batches
         end
       end

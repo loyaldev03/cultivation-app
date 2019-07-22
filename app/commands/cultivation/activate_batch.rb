@@ -54,6 +54,8 @@ module Cultivation
       elsif current_time >= batch.start_date
         # Activate batch by changing it's status to active
         batch.update(status: Constants::BATCH_STATUS_ACTIVE)
+        # Schedule job to update plant batches to Metrc
+        MetrcUpdatePlantBatches.perform_async(batch.id.to_s)
       else
         # Revert back to schedule state
         batch.update(status: Constants::BATCH_STATUS_SCHEDULED)

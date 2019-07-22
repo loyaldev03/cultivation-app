@@ -127,8 +127,18 @@ class MetrcApi
 
     # + Plant Batch API
 
-    def create_plant_batch(facility_license, params)
-      url = "#{BASE_URL}/plantbatches/v1/createplantings?licenseNumber=#{facility_license}"
+    # By default, query for Batches that was created within the last hour
+    def get_plant_batches(lic_no, modified_start = nil, modified_end = nil)
+      modified_start ||= (Time.current - 1.hours).utc.iso8601
+      modified_end ||= Time.current.utc.iso8601
+      url = "#{BASE_URL}/plantbatches/v1/active?licenseNumber=#{lic_no}"
+      url += "&lastModifiedStart=#{modified_start}&lastModifiedEnd=#{modified_end}"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
+    def create_plant_batches(lic_no, params)
+      url = "#{BASE_URL}/plantbatches/v1/createplantings?licenseNumber=#{lic_no}"
       res = RestClient.post(url, params.to_json, HEADERS)
       res.code == 200
     end

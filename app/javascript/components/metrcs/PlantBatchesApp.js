@@ -38,6 +38,17 @@ class PlantBatchesApp extends React.Component {
         accessor: 'metrc_tag',
         headerClassName: 'tl f6',
         className: 'tl'
+      },
+      {
+        Header: 'Updated to Metrc',
+        accessor: 'metrc_id',
+        headerClassName: 'tc f6',
+        width: 150,
+        className: 'tc',
+        Cell: props => {
+          const text = props.value ? 'Yes' : 'No'
+          return <span>{text}</span>
+        }
       }
     ]
   }
@@ -46,6 +57,10 @@ class PlantBatchesApp extends React.Component {
     if (!PlantBatchStore.isDataLoaded) {
       PlantBatchStore.loadPlantBatches(this.props.batchId)
     }
+  }
+
+  onAutoAssign = () => {
+    PlantBatchStore.generatePlantBatches(this.props.batchId)
   }
 
   render() {
@@ -66,7 +81,16 @@ class PlantBatchesApp extends React.Component {
           />
         </div>
         <div className="pa4 flex flex-column justify-between bg-white box--shadow">
-          <label className="pb2">Metrc Plant Batches</label>
+          <div className="flex justify-between items-center pb2">
+            <label className="pl1 pb2 dark-grey">Metrc Plant Batches:</label>
+            <a
+              href="#0"
+              className="btn btn--secondary btn--small"
+              onClick={this.onAutoAssign}
+            >
+              Auto assign Metrc tags
+            </a>
+          </div>
           <ReactTable
             columns={this.state.columns}
             data={PlantBatchStore.filteredList}

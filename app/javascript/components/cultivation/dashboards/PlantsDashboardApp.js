@@ -9,7 +9,6 @@ import {
   Loading,
   HeaderFilter,
   ListingTable,
-  TempPlantWidgets,
   SlidePanel
 } from '../../utils'
 import loadPlants from '../../inventory/plant_setup/actions/loadPlants'

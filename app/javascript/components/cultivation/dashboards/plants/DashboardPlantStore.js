@@ -15,7 +15,6 @@ class PlantStore {
   @observable data_batch_distribution = []
   @observable batch_distribution_loaded = false
 
-
   @action
   async loadBatchDistribution(range, facility_id) {
     this.isLoading = true

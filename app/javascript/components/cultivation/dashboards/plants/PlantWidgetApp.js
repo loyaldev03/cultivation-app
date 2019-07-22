@@ -20,10 +20,10 @@ class PlantWidgetApp extends React.Component {
           </div>
         </div>
         <div className="w-50">
-        <div
-          className="ba b--light-gray pa3 bg-white br2 mr3"
-          style={{ height: 400 + 'px' }}
-        >
+          <div
+            className="ba b--light-gray pa3 bg-white br2 mr3"
+            style={{ height: 400 + 'px' }}
+          >
             <PlantByRoomWidget />
           </div>
         </div>

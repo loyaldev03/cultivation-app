@@ -56,13 +56,15 @@ export default class PlantByPhaseWidget extends React.Component {
         <div className="flex justify-between">
           <div>
             <h1 className="f5 fw6 dark-grey">Plant Distribution by Phases</h1>
-            <h1 className="f5 fw6 grey">Total Plants: {DashboardPlantStore.data_batch_distribution.total_plant} </h1>
+            <h1 className="f5 fw6 grey">
+              Total Plants:{' '}
+              {DashboardPlantStore.data_batch_distribution.total_plant}{' '}
+            </h1>
           </div>
         </div>
         <br />
         {DashboardPlantStore.batch_distribution_loaded ? (
           <Bar data={DashboardPlantStore.batchDistribution} options={options} />
-          
         ) : (
           'loading...'
         )}

@@ -15,6 +15,7 @@ import {
 import loadPlants from '../../inventory/plant_setup/actions/loadPlants'
 import PlantStore from '../../inventory/plant_setup/store/PlantStore'
 import ReportDestroyedPlants from '../tasks_setup/components/ReportDestroyedPlants'
+import PlantWidgetApp from './plants/PlantWidgetApp'
 
 @observer
 class PlantsDashboardApp extends React.Component {
@@ -182,6 +183,7 @@ class PlantsDashboardApp extends React.Component {
         </div>
         <div className="pv4">
           <img src={TempPlantWidgets} className="w-100" />
+          <PlantWidgetApp />
         </div>
         <div className="flex justify-between">
           <input

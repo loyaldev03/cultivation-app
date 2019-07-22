@@ -16,7 +16,6 @@ class PlantByRoomWidget extends React.Component {
         </div> */}
         <img src={TempHarvestCostWidgets} />
       </React.Fragment>
-      
     )
   }
 }

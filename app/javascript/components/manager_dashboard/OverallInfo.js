@@ -71,7 +71,9 @@ export default class OverallInfo extends React.Component {
               }
             >
               <div className="flex ba b--light-silver br2 pointer dim">
-                <h1 className="f6 fw6 ml2 grey ttc">{this.state.selectedMonth}</h1>
+                <h1 className="f6 fw6 ml2 grey ttc">
+                  {this.state.selectedMonth}
+                </h1>
                 <i className="material-icons grey mr2  md-21 mt2">
                   keyboard_arrow_down
                 </i>

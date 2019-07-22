@@ -157,7 +157,10 @@ class ManagerDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: 420 + 'px' }}
             >
-              <BatchDistribution arr_months={this.state.arr_batch_months} facility_id={this.props.facilityId} />
+              <BatchDistribution
+                arr_months={this.state.arr_batch_months}
+                facility_id={this.props.facilityId}
+              />
             </div>
           </div>
         </div>

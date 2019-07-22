@@ -27,7 +27,10 @@ export default class BatchDistribution extends React.Component {
   onChangeBatchDistribution = selectedMonth => {
     this.setState({ selectedMonth: selectedMonth })
     console.log(selectedMonth)
-    ChartStore.loadBatchDistribution(selectedMonth.label, this.props.facility_id)
+    ChartStore.loadBatchDistribution(
+      selectedMonth.label,
+      this.props.facility_id
+    )
   }
 
   render() {

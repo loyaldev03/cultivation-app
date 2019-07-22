@@ -174,12 +174,16 @@ class ChartStore {
         datasets: [
           {
             label: 'Batch',
-            data: this.data_batch_distribution.query_batches.map(d => d.batch_count),
+            data: this.data_batch_distribution.query_batches.map(
+              d => d.batch_count
+            ),
             backgroundColor: 'rgba(241, 90, 34, 1)'
           },
           {
             label: 'Plant',
-            data: this.data_batch_distribution.query_batches.map(d => d.plant_count),
+            data: this.data_batch_distribution.query_batches.map(
+              d => d.plant_count
+            ),
             type: 'line',
             pointRadius: 0,
             hoverRadius: 0

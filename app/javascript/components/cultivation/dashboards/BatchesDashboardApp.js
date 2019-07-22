@@ -3,7 +3,6 @@ import { differenceInDays } from 'date-fns'
 import { observer } from 'mobx-react'
 import BatchPhases from './batches/BatchPhases'
 import DahboardBatchStore from './batches/DahboardBatchStore'
-import { formatYDM } from '../../utils/DateHelper'
 import BatchStore from '../batches/BatchStore'
 import {
   decimalFormatter,
@@ -45,7 +44,7 @@ const Batcheslist = ({ title, count, className = '', loaded = false }) => {
 class BatchesDashboardApp extends React.Component {
   constructor(props) {
     super(props)
-    DahboardBatchStore.loadBatchDistribution(formatYDM(new Date()), 'All')
+    DahboardBatchStore.loadBatchDistribution('all', this.props.facilityId)
     DahboardBatchStore.loadBatches_info(this.props.facilityId)
   }
   state = {
@@ -249,7 +248,7 @@ class BatchesDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: 423 + 'px' }}
             >
-              <BatchPhases />
+              <BatchPhases facility_id={this.props.facilityId} />
             </div>
           </div>
           <div className="w-50">

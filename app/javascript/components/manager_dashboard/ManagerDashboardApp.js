@@ -59,7 +59,7 @@ class ManagerDashboardApp extends React.Component {
       ChartStore.loadWorkerCapacity(props.batches[0].id)
     }
     ChartStore.loadCostBreakdown(current_month, current_year)
-    ChartStore.loadBatchDistribution(formatYDM(new Date()), 'This Year')
+    ChartStore.loadBatchDistribution('This Year', this.props.facilityId)
     ChartStore.unassignedTask()
     ChartStore.highestCostTask('all')
     ChartStore.cultivationInfo(this.props.facilityId, 'all')
@@ -157,7 +157,10 @@ class ManagerDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: 420 + 'px' }}
             >
-              <BatchDistribution arr_months={this.state.arr_batch_months} />
+              <BatchDistribution
+                arr_months={this.state.arr_batch_months}
+                facility_id={this.props.facilityId}
+              />
             </div>
           </div>
         </div>

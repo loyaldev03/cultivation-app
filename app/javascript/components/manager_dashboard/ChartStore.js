@@ -149,10 +149,10 @@ class ChartStore {
   }
 
   @action
-  async loadBatchDistribution(date, label) {
+  async loadBatchDistribution(range, facility_id) {
     this.isLoading = true
     this.batch_distribution_loaded = false
-    const url = `/api/v1/dashboard_charts/batch_distribution?date=${date}&label=${label}`
+    const url = `/api/v1/dashboard_charts/batch_distribution?range=${range}&facility_id=${facility_id}`
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
@@ -170,16 +170,20 @@ class ChartStore {
   @computed get batchDistribution() {
     if (this.batch_distribution_loaded) {
       let final_result = {
-        labels: this.data_batch_distribution.map(d => d.phase),
+        labels: this.data_batch_distribution.query_batches.map(d => d.phase),
         datasets: [
           {
             label: 'Batch',
-            data: this.data_batch_distribution.map(d => d.batch_count),
+            data: this.data_batch_distribution.query_batches.map(
+              d => d.batch_count
+            ),
             backgroundColor: 'rgba(241, 90, 34, 1)'
           },
           {
             label: 'Plant',
-            data: this.data_batch_distribution.map(d => d.plant_count),
+            data: this.data_batch_distribution.query_batches.map(
+              d => d.plant_count
+            ),
             type: 'line',
             pointRadius: 0,
             hoverRadius: 0

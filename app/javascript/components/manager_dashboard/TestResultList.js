@@ -48,7 +48,7 @@ const options = {
           zeroLineWidth: 0
         },
         ticks: {
-          fontSize: 11,
+          fontSize: 14,
           padding: 52
         },
         stacked: true
@@ -190,7 +190,7 @@ export default class TestResultList extends React.Component {
           </div>
         </div>
         {ChartStore.batch_test_result_loaded ? (
-          <div className="overflow-y-scroll" style={{ height: 340 + 'px' }}>
+          <div className="overflow-y-scroll" style={{ height: 320 + 'px' }}>
             <HorizontalBar
               data={data}
               height={400}

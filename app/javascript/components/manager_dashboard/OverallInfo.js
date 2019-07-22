@@ -37,7 +37,7 @@ export default class OverallInfo extends React.Component {
         <div className="ba b--light-gray pa3 bg-white br2">
           <div className="flex justify-between">
             <div>
-              <h1 className="f5 fw6 ml4">Overall Info</h1>
+              <h1 className="f5 fw6 ml4 dark-grey">Overall Info</h1>
             </div>
             <Tippy
               placement="bottom-end"
@@ -71,7 +71,9 @@ export default class OverallInfo extends React.Component {
               }
             >
               <div className="flex ba b--light-silver br2 pointer dim">
-                <h1 className="f6 fw6 ml2 grey">{this.state.selectedMonth}</h1>
+                <h1 className="f6 fw6 ml2 grey ttc">
+                  {this.state.selectedMonth}
+                </h1>
                 <i className="material-icons grey mr2  md-21 mt2">
                   keyboard_arrow_down
                 </i>
@@ -86,7 +88,7 @@ export default class OverallInfo extends React.Component {
               </i>
               <div>
                 <h1 className="f5 fw6 grey">Total plants</h1>
-                <b className="f3 fw6">
+                <b className="f2 fw6 dark-grey">
                   {ChartStore.cultivation_info.total_plants}
                 </b>
               </div>
@@ -100,7 +102,7 @@ export default class OverallInfo extends React.Component {
                   </i>
                   <div>
                     <h1 className="f5 fw6 grey">Total yield</h1>
-                    <b className="f3 fw6">
+                    <b className="f2 fw6 dark-grey">
                       {ChartStore.cultivation_info.total_yield}
                     </b>
                   </div>
@@ -111,7 +113,7 @@ export default class OverallInfo extends React.Component {
                   </i>
                   <div>
                     <h1 className="f5 fw6 grey">Projected yield</h1>
-                    <b className="f3 fw6">
+                    <b className="f2 fw6 dark-grey">
                       {ChartStore.cultivation_info.facility_capacity}
                     </b>
                   </div>
@@ -122,7 +124,7 @@ export default class OverallInfo extends React.Component {
                   </i>
                   <div>
                     <h1 className="f5 fw6 grey">Active batches cost to date</h1>
-                    <b className="f3 fw6">{`$ ${
+                    <b className="f2 fw6 dark-grey">{`$ ${
                       ChartStore.cultivation_info.active_batches_cost
                     }`}</b>
                   </div>
@@ -133,7 +135,7 @@ export default class OverallInfo extends React.Component {
                   </i>
                   <div>
                     <h1 className="f5 fw6 grey">Facility capacity</h1>
-                    <b className="f3 fw6">{`${
+                    <b className="f2 fw6 dark-grey">{`${
                       ChartStore.cultivation_info.facility_capacity
                     }%`}</b>
                   </div>

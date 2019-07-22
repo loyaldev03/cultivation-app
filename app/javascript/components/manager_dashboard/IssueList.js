@@ -24,7 +24,7 @@ export default class UnassignedTask extends React.Component {
           />
         </div>
 
-        <div className="overflow-y-scroll" style={{ height: 280 + 'px' }}>
+        <div className="overflow-y-scroll" style={{ height: 320 + 'px' }}>
           {ChartStore.filterIssueList.map(e => (
             <React.Fragment>
               <div className="mb4">

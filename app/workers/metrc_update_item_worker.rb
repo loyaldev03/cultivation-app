@@ -90,7 +90,7 @@ class MetrcUpdateItemWorker
     if new_items.any?
       new_items.each do |item_name|
         found = local_items.detect { |i| i.name == item_name }
-        # Only create new Metrc Item if metrc_id found (have not create in Metrc)
+        # Only create new Metrc Item if metrc_id not found (have not create in Metrc)
         # and not mark as deleted
         if found&.metrc_id.nil? && !found&.deleted
           params = {
@@ -146,8 +146,8 @@ class MetrcUpdateItemWorker
   end
 
   def update_local_metrc_ids(local_items)
-    metrc_items = MetrcApi.get_items(facility.site_license) # Hash format
     if local_items.any?
+      metrc_items = MetrcApi.get_items(facility.site_license) # Hash format
       local_items.each do |item|
         found = metrc_items.detect do |i|
           if i['Name'].blank?

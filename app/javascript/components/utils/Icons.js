@@ -9,6 +9,7 @@ import RoomIcon from '../../../assets/images/room-icon.svg'
 import WorkerDashboardGraph from '../../../assets/images/worker_dashboard_graph.png'
 import TempBatchWidgets from '../../../assets/images/dummy/cult-batches.png'
 import TempPlantWidgets from '../../../assets/images/dummy/cult-plants-widget.png'
+import TempPlantByRooomWidgets from '../../../assets/images/dummy/cult-plants-distribution-by-room.png'
 import TempTaskWidgets from '../../../assets/images/dummy/cult-tasks.png'
 import TempIssueWidgets from '../../../assets/images/dummy/cult-issues.png'
 import TempHarvestWidgets from '../../../assets/images/dummy/cult-harvest.png'
@@ -38,6 +39,7 @@ export {
   RoomIcon,
   TempBatchWidgets,
   TempPlantWidgets,
+  TempPlantByRooomWidgets,
   TempTaskWidgets,
   TempIssueWidgets,
   TempHarvestWidgets,

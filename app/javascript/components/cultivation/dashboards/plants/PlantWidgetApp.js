@@ -10,14 +10,20 @@ class PlantWidgetApp extends React.Component {
 
   render() {
     return (
-      <div className="flex">
+      <div className="flex h-50">
         <div className="w-50">
-          <div className="flex ba b--light-gray pa3 bg-white br2 mr1 mb1 ">
+          <div
+            className="ba b--light-gray pa3 bg-white br2 mr3"
+            style={{ height: 400 + 'px' }}
+          >
             <PlantByPhaseWidget />
           </div>
         </div>
-        <div className="w-50 ml2">
-          <div className="flex ba b--light-gray pa3 bg-white br2 mr1 mb1 ">
+        <div className="w-50">
+          <div
+            className="ba b--light-gray pa3 bg-white br2 mr3"
+            style={{ height: 400 + 'px' }}
+          >
             <PlantByRoomWidget />
           </div>
         </div>

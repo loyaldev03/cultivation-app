@@ -71,4 +71,9 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
     result = Charts::QueryBatchesInfo.call(current_user, {facility_id: params[:facility_id]}).result
     render json: result.to_json, status: 200
   end
+
+  def plant_distribution_room
+    result = Charts::QueryPlantDistributionByRoom.call(current_user, {facility_id: params[:facility_id]}).result
+    render json: result.to_json, status: 200
+  end
 end

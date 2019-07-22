@@ -462,6 +462,7 @@ Rails.application.routes.draw do
           get 'issue_list'
           get 'cultivation_info'
           get 'batches_info'
+          get 'plant_distribution_room'
         end
       end
       resources :holidays, only: [:index, :create, :update] do 

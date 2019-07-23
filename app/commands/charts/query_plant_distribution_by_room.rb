@@ -16,16 +16,18 @@ module Charts
         location = locations.query_trays(a.location_id)
         location&.first&.first[:row_purpose] if location&.first&.first.present? and location&.first&.first[:row_purpose].present?
       end
+
       group_plant_json = []
+
       group_plants.map do |b, c|
         if b.present?
           group_plant_json << {
-            room_type: b,
-            count: c.count,
+            name: b,
+            value: c.count,
           }
         end
       end
-      group_plant_json
+      return {children: group_plant_json}
     end
   end
 end

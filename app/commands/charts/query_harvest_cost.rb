@@ -12,16 +12,18 @@ module Charts
       harvest_batches = Inventory::HarvestBatch.in(cultivation_batch_id: batches.map { |a| a.id.to_s }).includes(:cultivation_batch)
       sum_cost = 0
       harvest_json = harvest_batches.map do |a|
-        cost = (a.cultivation_batch.actual_labor_cost + a.cultivation_batch.actual_material_cost) / a.total_wet_weight
+        cost = (a.cultivation_batch.actual_labor_cost.to_f + a.cultivation_batch.actual_material_cost.to_f) / a.total_wet_weight.to_f
+        cost = a.total_wet_weight == 0.0 ? 0.0 : cost
         sum_cost += cost
         {
+          id: a.id.to_s,
           harvest_batch: a.harvest_name,
-          cost: cost,
+          cost: cost.round(2),
         }
       end
 
       {
-        average_harvest_cost: (sum_cost / harvest_batches.count),
+        average_harvest_cost: (sum_cost.to_f / harvest_batches.size).round(2),
         harvest_cost: harvest_json,
       }
     end

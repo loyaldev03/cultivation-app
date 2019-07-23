@@ -4,6 +4,7 @@ class MetrcPlantBatchSerializer
   attributes :lot_no,
     :count,
     :strain,
+    :room,
     :metrc_tag,
     :metrc_tag_verified,
     :metrc_id

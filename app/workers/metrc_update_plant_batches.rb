@@ -31,8 +31,14 @@ class MetrcUpdatePlantBatches
       update_plant_batches_metrc_ids(c_batches)
 
       # Mark metrc tags as reported to metrc
-      Inventory::UpdateMetrcTagsReported.call(facility_id: facility.id,
-                                              metrc_tags: new_batches)
+      if new_batches.any?
+        Inventory::UpdateMetrcTagsReported.call(facility_id: facility.id,
+                                                metrc_tags: new_batches)
+      else
+        batch_tags = c_batches.map(&:metrc_tag)
+        Inventory::UpdateMetrcTagsReported.call(facility_id: facility.id,
+                                                metrc_tags: new_batches)
+      end
 
       true
     end
@@ -49,7 +55,7 @@ class MetrcUpdatePlantBatches
       metrc_batches = MetrcApi.get_plant_batches(facility.site_license) # Hash format
       db_batches.each do |plant_batch|
         found = metrc_batches.detect do |i|
-          i['Name'].casecmp(item.metrc_tag).zero?
+          i['Name'].casecmp(plant_batch.metrc_tag).zero?
         end
         if found
           plant_batch.metrc_id = found['Id']

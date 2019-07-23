@@ -34,6 +34,12 @@ class PlantBatchesApp extends React.Component {
         className: 'tl'
       },
       {
+        Header: 'Room',
+        accessor: 'room',
+        headerClassName: 'tl f6',
+        className: 'tl'
+      },
+      {
         Header: 'Metrc Tag',
         accessor: 'metrc_tag',
         headerClassName: 'tl f6',

@@ -115,8 +115,9 @@ module Cultivation
       batch.save!
 
       # NOTE: Background job would activate all scheduled batch
-      # if batch.start_date <= Time.current
-      ActivateBatchWorker.new.perform
+      if batch.start_date <= Time.current
+        ActivateBatchWorker.new.perform
+      end
 
       update_tray_plans(batch)
       batch

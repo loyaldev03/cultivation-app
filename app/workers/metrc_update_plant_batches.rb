@@ -2,38 +2,40 @@ class MetrcUpdatePlantBatches
   include Sidekiq::Worker
   sidekiq_options queue: 'low'
 
+  # Overview of the logic flow
+  # - Get list of Plant Batch from METRC (1)
+  # - Get list of Plant Batch from db (2)
+  #
+  # Compare both array and:
+  # - when found new record in db (2)
+  #   - create Plant Batch in METRC
+  #   - download Active Batch from METRC
+  # - when found existing db record that exists in API
+  #   - update the quantity on METRC (check if this is posible)
+  #    - update metrc_id to PlantBatch record in db
+  # - mark metrc tag as "reported" in database.
   def perform(batch_id)
     @batch_id = batch_id
+    # Only trigger logic if batch is already active.
+    if batch.status == Constants::BATCH_STATUS_ACTIVE
+      m_batches = MetrcApi.get_plant_batches(facility.site_license) # Hash format
+      c_batches = Metrc::PlantBatch.where(batch_id: batch.id).to_a  # Ruby object
 
-    # Overview of the logic flow
-    # - Get list of Plant Batch from METRC (1)
-    # - Get list of Plant Batch from db (2)
-    #
-    # Compare both array and:
-    # - when found new record in db (2)
-    #   - create Plant Batch in METRC
-    #   - download Active Batch from METRC
-    # - when found existing db record that exists in API
-    #   - update the quantity on METRC (check if this is posible)
-    #    - update metrc_id to PlantBatch record in db
-    # - mark metrc tag as "reported" in database.
-    m_batches = MetrcApi.get_plant_batches(facility.site_license) # Hash format
-    c_batches = Metrc::PlantBatch.where(batch_id: batch.id).to_a  # Ruby object
+      # Find new plant batches that need to be push to metrc
+      new_batches = get_new_batches_tags(m_batches, c_batches)
 
-    # Find new plant batches that need to be push to metrc
-    new_batches = get_new_batches_tags(m_batches, c_batches)
+      # Create new Plant Batch on Metrc
+      create_plant_batches_on_metrc(new_batches, c_batches)
 
-    # Create new Plant Batch on Metrc
-    create_plant_batches_on_metrc(new_batches, c_batches)
+      # Save metrc_id from Metrc to database
+      update_plant_batches_metrc_ids(c_batches)
 
-    # Save metrc_id from Metrc to database
-    update_plant_batches_metrc_ids(c_batches)
+      # Mark metrc tags as reported to metrc
+      Inventory::UpdateMetrcTagsReported.call(facility_id: facility.id,
+                                              metrc_tags: new_batches)
 
-    # Mark metrc tags as reported to metrc
-    Inventory::UpdateMetrcTagsReported.call(facility_id: facility.id,
-                                            metrc_tags: new_batches)
-
-    true
+      true
+    end
   rescue RestClient::ExceptionWithResponse => e
     logger.debug e
     logger.error JSON.parse(e.response.body)

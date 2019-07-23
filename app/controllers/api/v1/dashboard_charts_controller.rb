@@ -76,4 +76,9 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
     result = Charts::QueryPlantDistributionByRoom.call(current_user, {facility_id: params[:facility_id]}).result
     render json: result.to_json, status: 200
   end
+
+  def harvest_cost
+    result = Charts::QueryHarvestCost.call(current_user, {facility_id: params[:facility_id]}).result
+    render json: result.to_json, status: 200
+  end
 end

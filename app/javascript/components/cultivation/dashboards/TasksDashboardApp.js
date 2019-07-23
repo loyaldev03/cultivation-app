@@ -315,7 +315,7 @@ class TasksDashboardApp extends React.Component {
     return (
       <div className="pa4 mw1200">
         <div className="pb4">
-          <TaskWidget facility_id={this.props.facilityId}/>
+          <TaskWidget facility_id={this.props.facilityId} />
         </div>
         <div className="flex justify-between">
           <input

@@ -23,11 +23,7 @@ const TaskWidgetList = ({
         </i>
         <div className="tc">
           <h1 className="f5 fw6 grey">{title}</h1>
-          {loaded ? (
-            <b className="f2 fw6 dark-grey">{count}</b>
-          ) : (
-            'loading...'
-          )}
+          {loaded ? <b className="f2 fw6 dark-grey">{count}</b> : 'loading...'}
         </div>
       </div>
     </div>
@@ -46,22 +42,28 @@ class TaskWidget extends React.Component {
         <div className="flex justify-between">
           <TaskWidgetList
             title="Unassigned task"
-            count={DashboardTaskStore.data_task_dashboard.unassigned_tasks_count}
+            count={
+              DashboardTaskStore.data_task_dashboard.unassigned_tasks_count
+            }
             className="ma3"
             loaded={DashboardTaskStore.task_dashboard_loaded}
           />
           <TaskWidgetList
             title="Tasks with issues"
-            count={DashboardTaskStore.data_task_dashboard.tasks_with_issues_count}
+            count={
+              DashboardTaskStore.data_task_dashboard.tasks_with_issues_count
+            }
             className="ma3"
             loaded={DashboardTaskStore.task_dashboard_loaded}
           />
           <TaskWidgetList
             title="Delayed tasks"
-            count={DashboardTaskStore.data_task_dashboard.unscheduled_tasks_count}
+            count={
+              DashboardTaskStore.data_task_dashboard.unscheduled_tasks_count
+            }
             className="ma3"
             loaded={DashboardTaskStore.task_dashboard_loaded}
-            />
+          />
           <TaskWidgetList
             title="Unscheduled tasks"
             count={DashboardTaskStore.data_task_dashboard.delayed_tasks_count}
@@ -69,7 +71,6 @@ class TaskWidget extends React.Component {
             loaded={DashboardTaskStore.task_dashboard_loaded}
           />
         </div>
-        
       </React.Fragment>
     )
   }

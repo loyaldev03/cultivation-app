@@ -21,10 +21,7 @@ import DashboardPlantStore from './plants/DashboardPlantStore'
 class PlantsDashboardApp extends React.Component {
   constructor(props) {
     super(props)
-    DashboardPlantStore.loadBatchDistribution(
-      'all',
-      this.props.facilityId
-    )
+    DashboardPlantStore.loadBatchDistribution('all', this.props.facilityId)
   }
   state = {
     showDestroyedPlants: false,

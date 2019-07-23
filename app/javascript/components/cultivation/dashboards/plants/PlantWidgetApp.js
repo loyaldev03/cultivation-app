@@ -25,7 +25,7 @@ class PlantWidgetApp extends React.Component {
             style={{ height: 400 + 'px' }}
           >
             <h1 className="f5 fw6 dark-grey">Plant Distribution by Room</h1>
-            <PlantByRoomWidget facility_id={this.props.facility_id}/>
+            <PlantByRoomWidget facility_id={this.props.facility_id} />
           </div>
         </div>
       </div>

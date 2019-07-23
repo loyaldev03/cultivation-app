@@ -21,7 +21,11 @@ class PlantByRoomWidget extends React.Component {
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-    d3.json(`/api/v1/dashboard_charts/plant_distribution_room?facility_id=${this.props.facility_id}`).then(function(data) {
+    d3.json(
+      `/api/v1/dashboard_charts/plant_distribution_room?facility_id=${
+        this.props.facility_id
+      }`
+    ).then(function(data) {
       const root = d3.hierarchy(data).sum(function(d) {
         return d.value
       })
@@ -79,12 +83,7 @@ class PlantByRoomWidget extends React.Component {
   }
 
   render() {
-    return (
-      <React.Fragment>
-        {<div id="treemap" />}
-        
-      </React.Fragment>
-    )
+    return <React.Fragment>{<div id="treemap" />}</React.Fragment>
   }
 }
 

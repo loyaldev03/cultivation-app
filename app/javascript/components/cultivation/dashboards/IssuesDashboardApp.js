@@ -10,6 +10,8 @@ import {
 import classNames from 'classnames'
 
 import IssueStore from '../../issues/store/IssueStore'
+import IssueByPriority from './issues/IssueByPriority'
+import IssueByGroup from './issues/IssueByGroup'
 
 @observer
 class IssuesDashboard extends React.Component {
@@ -142,7 +144,24 @@ class IssuesDashboard extends React.Component {
           </span>
         </div>
         <div className="pv4">
-          <img src={TempIssueWidgets} className="w-100" />
+          <div className="flex h-50">
+            <div className="w-50">
+              <div
+                className="ba b--light-gray pa3 bg-white br2 mr3"
+                style={{ height: 350 + 'px' }}
+              >
+                <IssueByPriority />
+              </div>
+            </div>
+            <div className="w-50">
+              <div
+                className="ba b--light-gray pa3 bg-white br2"
+                style={{ height: 350 + 'px' }}
+              >
+                <IssueByGroup facility_id={this.props.facilityId} />
+              </div>
+            </div>
+          </div>
         </div>
         <div className="flex justify-between">
           <input

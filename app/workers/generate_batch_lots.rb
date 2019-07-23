@@ -113,9 +113,9 @@ class GenerateBatchLots
     if @clone_room_name.nil?
       rooms = QueryRoomsByBatch.call(@batch_id).result
       clone_room = rooms.detect do |r|
-        r["room_purpose"] == Constants::CONST_CLONE
+        r['room_purpose'] == Constants::CONST_CLONE
       end
-      @clone_room_name = clone_room["room_name"]
+      @clone_room_name = clone_room['room_name']
     end
     @clone_room_name
   end

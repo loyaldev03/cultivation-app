@@ -189,7 +189,7 @@ class PlantsDashboardApp extends React.Component {
           </a>
         </div>
         <div className="pv4">
-          <PlantWidgetApp />
+          <PlantWidgetApp facility_id={this.props.defaultFacilityId} />
         </div>
         <div className="flex justify-between">
           <input

@@ -21,10 +21,7 @@ import DashboardPlantStore from './plants/DashboardPlantStore'
 class PlantsDashboardApp extends React.Component {
   constructor(props) {
     super(props)
-    DashboardPlantStore.loadBatchDistribution(
-      'all',
-      this.props.defaultFacilityId
-    )
+    DashboardPlantStore.loadBatchDistribution('all', this.props.facilityId)
   }
   state = {
     showDestroyedPlants: false,
@@ -155,7 +152,7 @@ class PlantsDashboardApp extends React.Component {
     ]
   }
   componentDidMount() {
-    loadPlants('', '', this.props.defaultFacilityId, ['mother'])
+    loadPlants('', '', this.props.facilityId, ['mother'])
   }
 
   onToggleColumns = (header, value) => {
@@ -171,7 +168,7 @@ class PlantsDashboardApp extends React.Component {
   }
 
   render() {
-    const { defaultFacilityId } = this.props
+    const { facilityId } = this.props
     const { columns, showDestroyedPlants } = this.state
     return (
       <div className="pa4 mw1200">
@@ -189,7 +186,7 @@ class PlantsDashboardApp extends React.Component {
           </a>
         </div>
         <div className="pv4">
-          <PlantWidgetApp facility_id={this.props.defaultFacilityId} />
+          <PlantWidgetApp facility_id={this.props.facilityId} />
         </div>
         <div className="flex justify-between">
           <input
@@ -213,7 +210,7 @@ class PlantsDashboardApp extends React.Component {
           show={showDestroyedPlants}
           renderBody={props => (
             <ReportDestroyedPlants
-              batch_id={defaultFacilityId}
+              batch_id={facilityId}
               title="Report Destroyed Plants"
               onClose={() => this.setState({ showDestroyedPlants: false })}
             />

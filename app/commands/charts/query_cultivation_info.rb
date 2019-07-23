@@ -8,22 +8,26 @@ module Charts
     end
 
     def call
-      #things needed
-      #total active plants
-      #total weight of all yield
-      #projected yield of all active batches
-      #active batches cost to date
-      #facility capacity
-
       total_plants = Charts::QueryTotalActivePlant.call(@args[:current_user], {facility_id: @args[:facility_id]}).result
       total_yield = Charts::QueryTotalYield.call(@args[:current_user], {facility_id: @args[:facility_id], period: @args[:period]}).result
       active_batches_cost = Charts::QueryActiveBatchesCost.call(@args[:current_user], {facility_id: @args[:facility_id], period: @args[:period]}).result
+
+      result = QueryFacilitySummary.call(facility_id: @args[:facility_id]).result
+      total_used = 0
+      total_capacity = 0
+      result.map do |c|
+        total_capacity += c[:total_capacity]
+        total_used += (c[:total_capacity] - c[:available_capacity])
+      end
+
+      facility_capacity_used = (total_used / total_capacity) * 100
+
       json = {
         total_plants: total_plants,
         total_yield: total_yield,
         projected_yield: 0,
         active_batches_cost: active_batches_cost,
-        facility_capacity: 20,
+        facility_capacity: facility_capacity_used,
       }
     end
   end

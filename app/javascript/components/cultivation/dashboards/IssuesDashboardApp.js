@@ -150,7 +150,7 @@ class IssuesDashboard extends React.Component {
                 className="ba b--light-gray pa3 bg-white br2 mr3"
                 style={{ height: 350 + 'px' }}
               >
-                <IssueByPriority/>
+                <IssueByPriority />
               </div>
             </div>
             <div className="w-50">

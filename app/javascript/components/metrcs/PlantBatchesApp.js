@@ -98,13 +98,15 @@ class PlantBatchesApp extends React.Component {
           )}
           <div className="flex justify-between items-center pb2">
             <label className="pl1 pb2 dark-grey">Metrc Plant Batches:</label>
-            <a
-              href="#0"
-              className="btn btn--secondary btn--small"
-              onClick={this.onAutoAssign}
-            >
-              Auto assign Metrc tags
-            </a>
+            {!PlantBatchStore.hasData && (
+              <a
+                href="#0"
+                className="btn btn--secondary btn--small"
+                onClick={this.onAutoAssign}
+              >
+                Auto assign Metrc tags
+              </a>
+            )}
           </div>
           <ReactTable
             columns={this.state.columns}

@@ -465,6 +465,7 @@ Rails.application.routes.draw do
           get 'batches_info'
           get 'plant_distribution_room'
           get 'harvest_cost'
+          get 'harvest_yield'
           get 'tasks_dashboard'
         end
       end

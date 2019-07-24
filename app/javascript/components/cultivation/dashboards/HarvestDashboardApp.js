@@ -136,14 +136,18 @@ class HarvestDashboard extends React.Component {
         <div className="pv4">
           <div className="flex h-50">
             <div className="w-30">
-              <HarvestAverageWidget facility_id={this.props.defaultFacilityId} />
+              <HarvestAverageWidget
+                facility_id={this.props.defaultFacilityId}
+              />
             </div>
             <div className="w-50">
               <div
                 className="ba b--light-gray pa3 bg-white br2 mr3"
                 style={{ height: 320 + 'px' }}
               >
-                <HarvestByYeildWidget facility_id={this.props.defaultFacilityId} />
+                <HarvestByYeildWidget
+                  facility_id={this.props.defaultFacilityId}
+                />
               </div>
             </div>
             <div className="w-50">
@@ -151,7 +155,9 @@ class HarvestDashboard extends React.Component {
                 className="ba b--light-gray pa3 bg-white br2"
                 style={{ height: 320 + 'px' }}
               >
-                <HarvestCostByGramWidget facility_id={this.props.defaultFacilityId} />
+                <HarvestCostByGramWidget
+                  facility_id={this.props.defaultFacilityId}
+                />
               </div>
             </div>
           </div>

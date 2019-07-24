@@ -465,13 +465,10 @@ Rails.application.routes.draw do
           get 'batches_info'
           get 'plant_distribution_room'
           get 'harvest_cost'
-<<<<<<< Updated upstream
           get 'tasks_dashboard'
-=======
           get 'harvest_yield'
           get 'issue_by_group'
           get 'issue_by_priority'
->>>>>>> Stashed changes
         end
       end
       resources :holidays, only: [:index, :create, :update] do 

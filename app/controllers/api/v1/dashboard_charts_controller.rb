@@ -91,4 +91,14 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
     result = Charts::QueryTaskDashboard.call(current_user, {facility_id: params[:facility_id]}).result
     render json: result.to_json, status: 200
   end
+
+  def issue_by_priority
+    result = Charts::QueryIssueByPriority.call(current_user, {facility_id: params[:facility_id], order: params[:order]}).result
+    render json: result.to_json, status: 200
+  end
+
+  def issue_by_group
+    result = Charts::QueryIssueByGroup.call(current_user, {facility_id: params[:facility_id], order: params[:order]}).result
+    render json: result.to_json, status: 200
+  end
 end

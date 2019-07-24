@@ -44,7 +44,10 @@ const Batcheslist = ({ title, count, className = '', loaded = false }) => {
 class BatchesDashboardApp extends React.Component {
   constructor(props) {
     super(props)
-    DahboardBatchStore.loadBatchDistribution('all', this.props.currentFacilityId)
+    DahboardBatchStore.loadBatchDistribution(
+      'all',
+      this.props.currentFacilityId
+    )
     DahboardBatchStore.loadBatches_info(this.props.currentFacilityId)
   }
   state = {

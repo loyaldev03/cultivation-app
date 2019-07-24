@@ -45,8 +45,9 @@ export default class StaffCapacity extends React.Component {
             content={
               <div className="bg-white f6 flex">
                 <div className="db shadow-4">
-                  {this.props.batches.map(e => (
+                  {this.props.batches.map((e, i) => (
                     <MenuButton
+                      key={i}
                       text={e.name}
                       className=""
                       onClick={() => this.onChangeWorkerCapacityBatch(e)}

@@ -81,6 +81,7 @@ class Cultivation::BatchesController < ApplicationController
   def resource
   end
 
+  # This is METRC IDs tab
   def material
     @unresolvedIssueCount = Issues::Issue.where(
       status: {:$ne => 'resolved'},

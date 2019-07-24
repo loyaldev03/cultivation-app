@@ -1,12 +1,13 @@
 import React, { memo, useState, lazy, Suspense } from 'react'
-import { observer } from 'mobx-react'
+import { observer, action } from 'mobx-react'
+import HarvestStore from './HarvestStore'
 
 const AverageWidget = ({
   title,
   count,
   icon,
   className = '',
-  loaded = false
+  loaded = HarvestStore.isLoading
 }) => {
   return (
     <div
@@ -22,7 +23,7 @@ const AverageWidget = ({
         </i>
         <div className="tc">
           <h1 className="f5 fw6 grey">{title}</h1>
-          <b className="f2 fw6 dark-grey">{count}</b>
+          <b className="f2 fw6 dark-grey">{loaded ? 'Loading..' : count}</b>
         </div>
       </div>
       {/* {loaded ? (
@@ -39,20 +40,24 @@ class PlantByRoomWidget extends React.Component {
   constructor(props) {
     super(props)
   }
+  componentDidMount() {
+    HarvestStore.loadAvgHarvestCost(this.props.facility_id)
+    HarvestStore.loadAvgHarvestYield(this.props.facility_id)
+  }
 
   render() {
     return (
       <React.Fragment>
         <AverageWidget
           title="Average Cost per gram"
-          count="$ 4.2"
+          count={'$ ' + HarvestStore.average_harvest_cost.toLocaleString()}
           icon="attach_money"
           className="mb3"
           // loaded={DahboardBatchStore.batches_info_loaded}
         />
         <AverageWidget
           title="Average yeild / square feet"
-          count="125 lbs"
+          count={HarvestStore.average_harvest_yield.toLocaleString() + ' lbs'}
           icon="attach_money"
           className="mt3"
           // loaded={DahboardBatchStore.batches_info_loaded}

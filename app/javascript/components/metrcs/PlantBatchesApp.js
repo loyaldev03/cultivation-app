@@ -87,15 +87,26 @@ class PlantBatchesApp extends React.Component {
           />
         </div>
         <div className="pa4 flex flex-column justify-between bg-white box--shadow">
+          {PlantBatchStore.hasData && (
+            <p className="pa3 bg-light-yellow ba br2 b--light-grey flex items-center">
+              <i className="orange material-icons">notification_important</i>
+              <span className="pl2">
+                Remember to remove the following METRC Plant Tags from your
+                inventory.
+              </span>
+            </p>
+          )}
           <div className="flex justify-between items-center pb2">
             <label className="pl1 pb2 dark-grey">Metrc Plant Batches:</label>
-            <a
-              href="#0"
-              className="btn btn--secondary btn--small"
-              onClick={this.onAutoAssign}
-            >
-              Auto assign Metrc tags
-            </a>
+            {!PlantBatchStore.hasData && (
+              <a
+                href="#0"
+                className="btn btn--secondary btn--small"
+                onClick={this.onAutoAssign}
+              >
+                Auto assign Metrc tags
+              </a>
+            )}
           </div>
           <ReactTable
             columns={this.state.columns}

@@ -1,4 +1,5 @@
 import { action, observable, computed } from 'mobx'
+import isEmpty from 'lodash.isempty'
 import { toast } from '../utils/toast'
 import { httpPostOptions, httpGetOptions } from '../utils'
 
@@ -38,6 +39,11 @@ class PlantBatchStore {
     } finally {
       this.isLoading = false
     }
+  }
+
+  @computed
+  get hasData() {
+    return !isEmpty(this.batches)
   }
 
   @computed

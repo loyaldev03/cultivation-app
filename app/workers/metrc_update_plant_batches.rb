@@ -57,7 +57,7 @@ class MetrcUpdatePlantBatches
         found = metrc_batches.detect do |i|
           i['Name'].casecmp(plant_batch.metrc_tag).zero?
         end
-        if found
+        if found.present?
           plant_batch.metrc_id = found['Id']
           plant_batch.metrc_strain_id = found['StrainId']
           plant_batch.metrc_tracked_count = found['TrackedCount']
@@ -93,16 +93,11 @@ class MetrcUpdatePlantBatches
   end
 
   def get_new_batches_tags(metrc_batches, db_batches = [])
-    metrc_batch_names = metrc_batches.map { |x| x['Name'].upcase }
+    metrc_batch_names = metrc_batches.map { |x| x['Name'] }
     new_batches = []
     db_batches.each do |plant_batch|
-      if !metrc_batch_names.include?(plant_batch.metrc_tag.upcase)
-        # clear metrc_id if record not found on metrc (possibly being deleted)
-        plant_batch.metrc_id = nil
-        plant_batch.metrc_strain_id = nil
-        plant_batch.metrc_tracked_count = nil
-        plant_batch.metrc_untracked_count = nil
-        plant_batch.save!
+      if !metrc_batch_names.include?(plant_batch.metrc_tag) &&
+         plant_batch.metrc_id.nil?
         # remember this new plant batch so it can be push to metrc
         new_batches << plant_batch.metrc_tag
       end

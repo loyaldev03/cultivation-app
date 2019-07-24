@@ -17,6 +17,9 @@ import {
   TempTaskWidgets
 } from '../../utils'
 
+import TaskWidget from './tasks/TaskWidget'
+import DashboardTaskStore from './tasks/DashboardTaskStore'
+
 class ActiveTaskStore {
   @observable tasks = []
   @observable isLoading = false
@@ -125,6 +128,10 @@ const activeTaskStore = new ActiveTaskStore()
 
 @observer
 class TasksDashboardApp extends React.Component {
+  constructor(props) {
+    super(props)
+    DashboardTaskStore.loadTasks_dashboard(this.props.facilityId)
+  }
   state = {
     columns: [
       {
@@ -283,7 +290,7 @@ class TasksDashboardApp extends React.Component {
 
   onFetchData = (state, instance) => {
     activeTaskStore.setFilter({
-      facility_id: this.props.defaultFacilityId,
+      facility_id: this.props.facilityId,
       page: state.page,
       limit: state.pageSize
     })
@@ -303,12 +310,12 @@ class TasksDashboardApp extends React.Component {
   }
 
   render() {
-    const { defaultFacilityId } = this.props
+    const { facilityId } = this.props
     const { columns } = this.state
     return (
       <div className="pa4 mw1200">
         <div className="pb4">
-          <img src={TempTaskWidgets} className="w-100" />
+          <TaskWidget facility_id={this.props.facilityId} />
         </div>
         <div className="flex justify-between">
           <input

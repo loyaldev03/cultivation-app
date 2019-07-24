@@ -86,4 +86,9 @@ class Api::V1::DashboardChartsController < Api::V1::BaseApiController
     result = Charts::QueryHarvestYield.call(current_user, {facility_id: params[:facility_id], order: params[:order]}).result
     render json: result.to_json, status: 200
   end
+
+  def tasks_dashboard
+    result = Charts::QueryTaskDashboard.call(current_user, {facility_id: params[:facility_id]}).result
+    render json: result.to_json, status: 200
+  end
 end

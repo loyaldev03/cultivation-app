@@ -10,7 +10,7 @@
 
   <div class="flex flex-column justify-center items-center mv4">
     <%= image_tag 'shelf-icon.svg', class: "h3 w3 db" %>
-    <span class="dark-grey h6--font">Shelf &amp; Tray</span>
+    <span class="dark-grey h6--font">Shelf &amp; Table</span>
   </div>
 </div>
 
@@ -59,12 +59,12 @@
       <% end %>
     <% else %>
       <div class="mt4 w-100">
-        <h3 class="subtitle-2 grey db mt0 mb3">Trays Details</h3>
+        <h3 class="subtitle-2 grey db mt0 mb3">Tables Details</h3>
         <table class="w-100">
           <tbody>
             <tr>
               <th style="min-width: 42px;"></th>
-              <th class="caption grey tl">Tray ID</th>
+              <th class="caption grey tl">Table ID</th>
               <th class="w3 caption grey tl">Capacity</th>
               <th class="caption grey tl">Container Type</th>
             </tr>
@@ -72,7 +72,7 @@
               <tr class="">
                 <%= hidden_field_tag "shelf_trays_info[trays][][id]", tray.id, id: nil %>
                 <td class="grey caption tl">
-                  <span>Tray <%= i+1%></span>
+                  <span>Table <%= i+1%></span>
                 </td>
                 <td class="tl">
                   <%= text_field_tag "shelf_trays_info[trays][][code]", tray.code, required: true,
@@ -125,12 +125,12 @@
       remote: true,
       method: :post,
       data: {
-        confirm: "Add tray to shelf?"
+        confirm: "Add table to shelf?"
       } do
       %>
       <div class="flex flex-row items-center">
         <i class="material-icons orange md-18">add_circle_outline</i>
-        <span class="ml2 orange subtitle-2">Add a New Tray</span>
+        <span class="ml2 orange subtitle-2">Add a New Table</span>
       </div>
     <% end %>
 

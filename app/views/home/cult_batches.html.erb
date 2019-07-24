@@ -3,7 +3,7 @@
 <% end %>
 <%= react_component 'cultivation/dashboards/BatchesDashboardApp',
   {
-    facilityId: current_facility&.id.to_s,
+    currentFacilityId: current_facility&.id.to_s,
     currentTime: Time.current,
   }
 %>

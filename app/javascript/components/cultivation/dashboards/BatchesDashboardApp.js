@@ -44,8 +44,8 @@ const Batcheslist = ({ title, count, className = '', loaded = false }) => {
 class BatchesDashboardApp extends React.Component {
   constructor(props) {
     super(props)
-    DahboardBatchStore.loadBatchDistribution('all', this.props.facilityId)
-    DahboardBatchStore.loadBatches_info(this.props.facilityId)
+    DahboardBatchStore.loadBatchDistribution('all', this.props.currentFacilityId)
+    DahboardBatchStore.loadBatches_info(this.props.currentFacilityId)
   }
   state = {
     columns: [
@@ -214,7 +214,7 @@ class BatchesDashboardApp extends React.Component {
     ]
   }
   componentDidMount() {
-    BatchStore.loadBatches(this.props.facilityId)
+    BatchStore.loadBatches(this.props.currentFacilityId)
   }
 
   onToggleColumns = (header, value) => {
@@ -230,13 +230,13 @@ class BatchesDashboardApp extends React.Component {
   }
 
   render() {
-    const { facilityId } = this.props
+    const { currentFacilityId } = this.props
     const { columns } = this.state
     return (
       <div className="pa4 mw1200">
         <div className="flex flex-row-reverse">
           <a
-            href={`/cultivation/batches/new?facility_id=${facilityId}`}
+            href={`/cultivation/batches/new?facility_id=${currentFacilityId}`}
             className="btn btn--primary"
           >
             Create new batch
@@ -248,7 +248,7 @@ class BatchesDashboardApp extends React.Component {
               className="ba b--light-gray pa3 bg-white br2 mr3"
               style={{ height: 423 + 'px' }}
             >
-              <BatchPhases facility_id={this.props.facilityId} />
+              <BatchPhases facility_id={this.props.currentFacilityId} />
             </div>
           </div>
           <div className="w-50">

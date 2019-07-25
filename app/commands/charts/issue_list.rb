@@ -10,7 +10,7 @@ module Charts
     def call
       json_array = []
       Issues::Issue.includes(:cultivation_batch).all.map do |issue|
-        if issue.cultivation_batch.facility_id == @args[:facility_id]
+        if issue&.cultivation_batch&.facility_id == @args[:facility_id]
           json_array << {
             id: issue.id.to_s,
             issue_no: issue.issue_no,

@@ -434,6 +434,16 @@
             <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "", code: "harvest_unfinish"), class: 'btn btn--primary btn--small', method: :put, data: {remote: false}%>
           </div>
         </div>
+        <div class="dt-row">
+          <div class="dtc pa4 pv2 dark-grey" style="width: 70%">
+            Waste Type
+          </div>
+          <% metrc_h = current_facility.metrc_histories.find_by(code: "harvest_waste_type") %>
+          <div class="dtc tc pv2 dark-grey" style="width: 15%"> <%= metrc_h.present? ? metrc_h.value.strftime("%d-%m-%Y %H:%M") : "--" %> </div>
+          <div class="dtc tc pv2 dark-grey" style="width: 15%">
+            <%= link_to 'Update', update_metrc_settings_company_metrc_integrations_path(type: "MetrcUpdateHarvestWasteType", code: "harvest_waste_type"), class: 'btn btn--primary btn--small', method: :put, data: {remote: false}%>
+          </div>
+        </div>
          <div class="dt-row">
           <div class="fw6 dtc pa4 pv2 bg-near-white underline">
             Package

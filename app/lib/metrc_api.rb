@@ -144,5 +144,17 @@ class MetrcApi
     end
 
     # - Plant Batch API
+
+
+    # - Harvest
+
+    def get_harvest_waste_type
+      url = "#{BASE_URL}/harvests/v1/waste/types?licenseNumber=#{FACILITY_LICENSE}"
+      res = RestClient.get(url, HEADERS)
+      JSON.parse(res.body)
+    end
+
+
+
   end
 end

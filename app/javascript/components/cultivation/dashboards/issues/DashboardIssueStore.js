@@ -25,7 +25,6 @@ class IssueDashboard {
     try {
       const response = await (await fetch(url, httpGetOptions)).json()
       if (response) {
-        console.log(response)
         this.data_issue_by_priority = response
         this.issue_by_priority_loaded = true
       } else {
